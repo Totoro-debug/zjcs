@@ -654,7 +654,33 @@
   ],
   "generator": {
     "path": "scripts/prepare_unity_profession_native_textures.py",
-    "sha256": "b2963fa2c077bcfb4c1e8534556a10d3cd9c79658710435eaa5cee3230e4f1e8"
+    "sha256": "5572e678176749cf81d7c45fa7fe299ea51ef1973f86de723cdd28cb81bb599e"
+  },
+  "decoder_source": {
+    "path": "scripts/prepare_unity_map13_native_scene.py",
+    "sha256": "64548e5dc5cf77322f20ecf0f6f8627f4ee85aff2d724036e7fead73b90382b1"
+  },
+  "decoder": {
+    "package": "astc_encoder_py",
+    "version": "0.1.12",
+    "binaries": [
+      {
+        "path": ".tools/character-art-python/astc_encoder/_encoder_avx2.pyd",
+        "sha256": "d4cd289885af9f0b05d2043d5ab7dbbaa590cccf4615f8f32cebe8531549d769"
+      },
+      {
+        "path": ".tools/character-art-python/astc_encoder/_encoder_none.pyd",
+        "sha256": "6fc0c52566373322ef39f25f0a4d4e4ec217e06e5c3629e5ad81cc5618d944f0"
+      },
+      {
+        "path": ".tools/character-art-python/astc_encoder/_encoder_sse2.pyd",
+        "sha256": "050c4e3260322d338c47c83384f1ddd824c510ee456c73c2d9361903c3229c06"
+      },
+      {
+        "path": ".tools/character-art-python/astc_encoder/_encoder_sse41.pyd",
+        "sha256": "02b3ab83f649ca73ecb67ca449cd4a7ff76d6d2f88fb95e800fb52d636c59155"
+      }
+    ]
   },
   "operation": "Preserve original native Texture2D GUID, dimensions, mip order, color space and sampler fields. Decode original ASTC with UNORM8; keep Alpha8/RGBA32 source bytes. Replace only the converter PNG importer, avoiding a second lossy compression. Incoming fileID 2800000 references remain unchanged."
 }

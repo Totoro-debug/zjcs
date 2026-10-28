@@ -4,7 +4,8 @@ import json
 from pathlib import Path
 import yaml
 
-from official_apk import Apk, ROOT
+from prepare_unity_profession_native_inputs import ROOT, CACHE
+from official_apk import Apk
 from official_manifest import read_asset_manifest
 from prepare_unity_profession_native_bindings import CACHE, guid, sha
 from prepare_unity_profession_reward_sprites import Dumper, source_header
@@ -77,7 +78,7 @@ def build():
         generator=record(Path(__file__)),
         operation="Create explicit local lookup entries for four original reward Sprite logical addresses and AssetTable GUIDs, plus the source-configured native HintTip prefab. Keep the actual imported Sprite/prefab local IDs and GUIDs; asynchronous local requests have the original already-completed subscription behavior. No UI hierarchy is generated.",
         validation="Actual isolated Unity Play Mode renders the original ItemIcon prefab for all four current reward definitions, checks the source quality Sprite and numeric text, binds the original TTF via the ported font service, confirms all count glyphs use that font, simulates mouse down/up through StandaloneInputModule to the original ItemIcon detail-popup dispatch, and checks Clear/unsubscription. GPU readback verifies every original mip byte in four UI textures before dynamic glyph generation.",
-        limitations=["Detail-popup contents, attachment manager/pool, full profession GUI layout, player provider/state wiring and Windows Player release remain incomplete.", "Numeric text 300 is fixture data for all four items; actual gift amounts come from the achievement configuration."])
+        limitations=["Detail-popup contents, full profession GUI layout, player provider/state wiring and Windows Player release remain incomplete. Original attachment manager/pools are verified separately by item-pools-source-manifest.json.", "Numeric text 300 is fixture data for all four items; actual gift amounts come from the achievement configuration."])
     proof = ROOT / "assets/reference/profession-ui/item-catalog-source-manifest.json"
     proof.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     fixture = dict(items=items, global_colors=configs["global_colors"]["fields"],

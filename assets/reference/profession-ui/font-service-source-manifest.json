@@ -176,7 +176,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_unity_profession_font_service.py",
-    "sha256": "922a643339d3dfb64a6754c5073956d38055daa8047ddcddff52e8a57be6a14d"
+    "sha256": "b6292804850331faaeeec89624c11dd3fd86218cef807f9875ccddf215115d97"
   },
   "operation": "Port original FontAssetFontService initialization, lazy config load, source-font check, per-font retained handles, reflection assignment and release order. Replace logging and resource handle boundary; inject config deserialization (original JSON dictionary predecoded at packaging). Package exact verified official raw TTF bytes as Windows dynamic Font objects. Keep original TMP glyph/atlas/material/rendering parameters.",
   "limitations": [

@@ -310,7 +310,11 @@
   },
   "component_sources": {
     "path": "assets/reference/profession-ui/item-components-source-manifest.json",
-    "sha256": "a62ffc303ab6b8ae8131d51ca186bdd1f70e4ec95f4962f76ce8892bd98853ef"
+    "sha256": "368db3e0c8a607ce63b29f05388e848b322c2cb33ad1a967db31cafc7b551eb4"
+  },
+  "pool_sources": {
+    "path": "assets/reference/profession-ui/item-pools-source-manifest.json",
+    "sha256": "25009f6da2210b9079f4d7acc83a91d30c8ffe9eb993bf8d814ab69a56a47d31"
   },
   "native_export": {
     "path": "assets/reference/profession-ui/native-export-source-manifest.json",
@@ -322,11 +326,11 @@
     "scope": "item-hint",
     "binding_plan": {
       "path": ".tools/profession-native-ui/871_156598/typed/native-bindings-item-hint.json",
-      "sha256": "feae3e024764f2aa09bc0079d2d0e043c47d125e13b8649f71fef02f1c9694df"
+      "sha256": "744fe4f048f7b06627282060eaab76ec6dc726992cafc47dbc8a2a73d1adc7be"
     },
     "installer": {
       "path": "scripts/install_unity_profession_native_assets.py",
-      "sha256": "037857d7f077786e33730ec7dfff5a6056af5faaf3a5ba87ed6bcb52c98d507e"
+      "sha256": "a1c74e36dd0947938029519ec29e008d734ddbadb0b62eeb88f82df6b90dc894"
     },
     "outputs": [
       {
@@ -342,28 +346,40 @@
         "meta_sha256": "372dcec3ba49f903ca7ff160028002e26e89c94b6ab47e53fd1c2cf5ba536e97"
       },
       {
-        "native_relative_path": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat",
+        "native_relative_path": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset",
         "source": {
-          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat",
-          "sha256": "7cdc21462aa35e452392091d8209f40680b4eed1309bd9fc6a8e6e7400e001f6",
+          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset",
+          "sha256": "826e261baf39635c1e9a8f399eda18df6e5fa78bda0bd4545877f424a574620a",
           "owner": "Prefabs/UI/Item/Attachments/CenterHintContent.prefab"
         },
-        "installed_path": "Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat",
-        "sha256": "856dac3104488386cf62a8d3ff785f1b85d806e8cbeeb75231a7e69f00e4e4b5",
-        "guid": "e24c9512a238d2b489d041be2d069c7d",
-        "meta_sha256": "350b68bf9475ccfdd7cacf0785de3ff237692a624ead8c33e939be4922973285"
+        "installed_path": "Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset",
+        "sha256": "85e4d7c4e0926b657a91d787fd09c72930a3c2f9077199ea940ec71f75cf8bdd",
+        "guid": "66657f3ffe66d19408ff3def3018fe50",
+        "meta_sha256": "2090fccfdbfc90e93788b4aac3d1bfa1612229db998c8e983b9e589bd8df9c81"
       },
       {
         "native_relative_path": "ProfessionNativeTextures/FZY4K SDF - dynamic Atlas.texture2d.asset",
         "source": {
           "path": ".tools/profession-native-ui/871_156598/typed/native-textures/ProfessionNativeTextures/FZY4K SDF - dynamic Atlas.texture2d.asset",
           "sha256": "3c2d4082c52c96edb636f8e4a27bd11616b531b1ed30720d662b2d1d2201f8c9",
-          "owner": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat"
+          "owner": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset"
         },
         "installed_path": "Assets/Official/ProfessionUI/Native/ProfessionNativeTextures/FZY4K SDF - dynamic Atlas.texture2d.asset",
         "sha256": "3c2d4082c52c96edb636f8e4a27bd11616b531b1ed30720d662b2d1d2201f8c9",
         "guid": "044798c4214f0a74086efa374c7cdd17",
         "meta_sha256": "552bdfa7cc5c25828c86753e0e6871ab90594a9976aa4ffafbd999e2461b730f"
+      },
+      {
+        "native_relative_path": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat",
+          "sha256": "7cdc21462aa35e452392091d8209f40680b4eed1309bd9fc6a8e6e7400e001f6",
+          "owner": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat",
+        "sha256": "856dac3104488386cf62a8d3ff785f1b85d806e8cbeeb75231a7e69f00e4e4b5",
+        "guid": "e24c9512a238d2b489d041be2d069c7d",
+        "meta_sha256": "350b68bf9475ccfdd7cacf0785de3ff237692a624ead8c33e939be4922973285"
       },
       {
         "native_relative_path": "Image/UI/Common/Common_Atlas/ImgItemTipBg.asset",
@@ -388,26 +404,14 @@
         "sha256": "d9fa5cf869d6674d386c40c1b773c0870096d049d1a980b1f257a976548b0446",
         "guid": "340cb31d4cc94f442b8185ef1bc1c3b8",
         "meta_sha256": "9d0eb933add5153571b63e1e592f876d75321d4577616b5088087724adb85bc3"
-      },
-      {
-        "native_relative_path": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset",
-        "source": {
-          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset",
-          "sha256": "826e261baf39635c1e9a8f399eda18df6e5fa78bda0bd4545877f424a574620a",
-          "owner": "Prefabs/UI/Item/Attachments/CenterHintContent.prefab"
-        },
-        "installed_path": "Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset",
-        "sha256": "85e4d7c4e0926b657a91d787fd09c72930a3c2f9077199ea940ec71f75cf8bdd",
-        "guid": "66657f3ffe66d19408ff3def3018fe50",
-        "meta_sha256": "2090fccfdbfc90e93788b4aac3d1bfa1612229db998c8e983b9e589bd8df9c81"
       }
     ],
     "guid_remap": {
-      "3f96b1d166d19b209697e35b35d65c76": "f4688fdb7df04437aeb418b961361dc5",
-      "3cf5a44414476512e00c3e7a2569a919": "fe87c0e1cc204ed48ad3b37840f39efc",
-      "862f1d198bc59dcff2781e140850384e": "2f0fba7ac4814ad75de2926c97601c2c",
-      "9af3f11a55794eeb92472fe769e4bfc1": "231cab3c6fd951b7a2d14633a5465cbf",
       "eef129d5e40c07af534a8e24da6b5c16": "71c1514a6bd24e1e882cebbe1904ce04",
+      "3cf5a44414476512e00c3e7a2569a919": "fe87c0e1cc204ed48ad3b37840f39efc",
+      "3f96b1d166d19b209697e35b35d65c76": "f4688fdb7df04437aeb418b961361dc5",
+      "9af3f11a55794eeb92472fe769e4bfc1": "231cab3c6fd951b7a2d14633a5465cbf",
+      "862f1d198bc59dcff2781e140850384e": "2f0fba7ac4814ad75de2926c97601c2c",
       "4c4606d8ec42d7546a73f34de54ecb41": "e82bdf526f90515ef7be909a2bb66b19"
     },
     "folder_metadata": [
@@ -478,11 +482,11 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_item_resources.py",
-    "sha256": "c490d3132cc97565343ce3f23c5af49ec446a1bc0aca6632eaabbad22a469f72"
+    "sha256": "4326bd7a3d01081a187a4836ffda4555c500e0544a0a9bbc6b133f3e1ae849a4"
   },
-  "validation": "Isolated Unity imports the complete original HintTip prefab with all five script types and its original Windows shader binding. Actual Play Mode checks serialized child/text references, inactive lazy creation, cached lookup activation behavior, explicit show/hide, cache clearing and recycling. The original prefab and atlas Sprite are rendered to a GPU target and the runtime frame is inspected. The numeric probe text is test data, not a replacement game UI or a localization claim.",
+  "validation": "Isolated Unity imports the complete original HintTip prefab with all five script types and its original Windows shader binding. Actual Play Mode checks serialized child/text references, inactive lazy creation, cached lookup activation behavior, explicit show/hide and recycling through the original attachment manager/pool. It verifies FIFO reuse, reset/clear parent and activation order, reverse shrink, low-memory release followed by destruction/recreation, and manager event unsubscription. The original prefab and atlas Sprite render on GPU with original source-font glyphs; the runtime frame is inspected. The numeric probe text is test data, not a replacement game UI or a localization claim.",
   "limitations": [
-    "ItemIcon and its four reward bindings are verified separately by item-catalog-source-manifest.json. The attachment manager/pool, item detail popup contents and full profession panel service wiring remain pending.",
+    "ItemIcon and its four reward bindings are verified separately by item-catalog-source-manifest.json. Item detail popup contents and full profession panel service wiring remain pending.",
     "This small original prefab validation does not cover profession GUI mouse input, full layout, appearance animation or Windows Player release.",
     "No full asset backup snapshot has been generated for these additions."
   ]

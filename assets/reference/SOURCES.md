@@ -413,7 +413,7 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 `prepare_unity_profession_dynamic_sources.py` 从所选版本的原始成就、物品和规则提示 TextAsset 完全解码三张 Luban 表，记录全部构造器／字节哈希；只将职业组 10、四种奖励定义和 `ProfessionLevelInfo` 条目与旧打包投影逐项核对，不把整份历史配置标成当前版本。原 `ItemIconManager` 的 ID 覆盖与 `IconConfigPool` 类型覆盖／默认分支确认四种奖励均选择 APK 中的 `ItemIconDefault`；`RuleDialog` 也按原调用取回。来源、实际 prefab／Sprite 对象、资源地址、转换和加载闭包见 [dynamic-resources-source-manifest.json](profession-ui/dynamic-resources-source-manifest.json)。`RuleDialog`、`TipInfo` 代码已迁入并通过隔离 Unity 编译，规则数据接口与实际弹窗调用仍待连接。现有 `BgDialogElement`、`ItemProgress` 及原生代码恢复的 `TMPEffect` 经来源／输出哈希核对后复用。
 
-单张奖励图标的导出 PNG importer pivot 与原 Sprite 不符，`prepare_unity_profession_reward_sprites.py` 改为恢复 4 个原生 Sprite 的原矩形、pivot、PPU、border、顶点／索引字节、UV 变换、渲染键和纹理引用；4 张原 ASTC 纹理用既有解码器按原颜色空间／UNORM8 逐 mip 解码成原生 RGBA32 Texture2D，保留原采样和可读标记，不二次压缩。隔离 Unity 实际导入后验证全部几何、UV、纹理设置，以及 4 张纹理 GPU 读回像素的 SHA256，全部通过；尚未验证职业列表中的实际画面和鼠标交互。加入服务动态资源后的闭包为 871 个资产、84 种脚本，尚有 19 种脚本待迁移，断开 GUID 为 0。没有构建或发布职业可执行版本。
+单张奖励图标的导出 PNG importer pivot 与原 Sprite 不符，`prepare_unity_profession_reward_sprites.py` 改为恢复 4 个原生 Sprite 的原矩形、pivot、PPU、border、顶点／索引字节、UV 变换、渲染键和纹理引用；4 张原 ASTC 纹理用既有解码器按原颜色空间／UNORM8 逐 mip 解码成原生 RGBA32 Texture2D，保留原采样和可读标记，不二次压缩。隔离 Unity 实际导入后验证全部几何、UV、纹理设置，以及 4 张纹理 GPU 读回像素的 SHA256，全部通过；尚未验证职业列表中的实际画面和鼠标交互。加入服务动态资源与原物品配置后的闭包为 881 个资产、87 种脚本，尚有 18 种脚本待迁移，断开 GUID 为 0。没有构建或发布职业可执行版本。
 
 奖励包中的 `GachaOneRewardGo` 按实际反编译字段顺序恢复序列化 schema，保留原 `StateSwitcher<bool>` 配置／owner 与 Wwise Event 字段；严格解码覆盖整个包，不以跳过组件解决失败。原生 YAML 校验器已修正 YAML 1.1 将对象名 `On`／`Off` 误解为布尔值的问题，同时保持打包数组的原始数字词法；独立回归测试及全部新增原生注册表／引用比对通过。
 
@@ -423,7 +423,7 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 图标原始图片代理和加载器五类、所消费的原资源操作接口、R3 集合释放的 APK 指令及本地资源边界见 `assets/reference/profession-ui/image-resource-source-manifest.json`。保留原字段和请求／清理顺序；隔离 Unity 使用已导入的原奖励 Sprite 验证异步乱序、迟到、失败、即时完成和销毁路径。原 ItemIcon 控件及四种奖励的模拟点击验证见本节后续记录；完整馈赠列表尚未接通。
 
-原物品 UI 生命周期、附件和配置 12 类迁入的来源与输出哈希见 `profession-ui/item-components-source-manifest.json`。原配置 HintTip 的 GUID 经当前 AssetTable 解析到 APK 中的 CenterHintContent 原 prefab；6 个原生资产及 5 类脚本、1 个 Windows shader 的显式加载绑定见 `profession-ui/item-resources-source-manifest.json`。实际 Play Mode 的字段引用、启停、缓存复用、回收重借及 GPU 渲染检查通过，画面已查看；附件管理器／池、弹窗内容和正式职业界面鼠标流程仍待完成。新增资源未生成完整备份快照。
+原物品 UI 生命周期、附件和配置 12 类迁入的来源与输出哈希见 `profession-ui/item-components-source-manifest.json`。原配置 HintTip 的 GUID 经当前 AssetTable 解析到 APK 中的 CenterHintContent 原 prefab；6 个原生资产及 5 类脚本、1 个 Windows shader 的显式加载绑定见 `profession-ui/item-resources-source-manifest.json`。原附件管理器、附件池、两级通用池、销毁监听和非泛型 GAction 六类的源代码、适配边界及输出哈希见 `profession-ui/item-pools-source-manifest.json`；保留原 FIFO、回调／父节点／显隐顺序、反向缩减、GUID 句柄与低内存释放。实际 Play Mode 验证原附件同实例重借、低内存释放后销毁并重建、管理器退订事件和原字体 GPU 渲染，画面已查看。应用级内存策略、弹窗内容和正式职业界面鼠标流程仍待完成。新增资源未生成完整备份快照。
 
 原 ItemIcon、四个消费枚举、原品质／附件配置、本地目录、33 个原生资产及其哈希分别见 `profession-ui/item-icon-source-manifest.json`、`item-configs-source-manifest.json` 和 `item-catalog-source-manifest.json`。原公共／品质图集、遮罩和字体图集绕过 PNG 再压缩，恢复原生 Texture2D，保留 GUID、fileID、mip 与采样；原 Alpha8／RGBA32 或 ASTC 解码 RGBA 的每个 mip 均通过 GPU 字节 SHA256 核对，来源见 `native-textures-source-manifest.json`。原字体服务及两个原始 TTF 的 Windows 导入与完整配置字典绑定见 `font-service-source-manifest.json`；保留原 TMP 材质／字形参数，不迁移 Android 流式缓存。实际 Play Mode 以正式本地目录渲染四种奖励，确认官方字体字形、品质与清理状态，并以模拟鼠标经过原 ItemIcon 监听派发详情请求；运行画面已查看。此验证不包含详情弹窗内容和完整职业界面，不代表功能发布。当前动态主面板闭包 881 个资产、87 类脚本、8 类托管引用、7 个 shader、0 断开 GUID，尚有 18 类运行组件及服务待迁入。未生成完整素材快照。
 

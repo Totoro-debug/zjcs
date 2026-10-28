@@ -1,0 +1,111 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "ports": [
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/GAction.cs",
+        "sha256": "89cffeb6e4af0389ed8d5917d69f95172e2a83e25004cab18717a1704de17ef7"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/GAction.cs",
+        "sha256": "5ccfd93784b7071d36c4569d7e043fbc8741681e8ef5be9ae71221eafb3f5832"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/GAction.cs.meta",
+        "sha256": "f18dde4b5d71a237ec1548b6cc347a503ca53e4a02c0146803f0f1e5d6b0fd95"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/framework-source/GameObjectDestoryListener.cs",
+        "sha256": "fc792cca3866e8973bef2cd0077926619b788de6e25df68c33ff77a37c8c73a1"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/GameObjectDestoryListener.cs",
+        "sha256": "e237f445c307c49acc08e48bae0830bf33e2dea9a5d8e3d8b1327d802f1185a5"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/GameObjectDestoryListener.cs.meta",
+        "sha256": "0bfd37c53156f815e1fb83a09053f62ec455a000bb1b8585b7476602c4f4ca1f"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/framework-source/GameObjectPoolBase.cs",
+        "sha256": "584df7509df5e20cf615b96fd62d18b3ac982e3be839a8dfaa21ad2e5de0120c"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/GameObjectPoolBase.cs",
+        "sha256": "c1737ab68913f96610e3d167693089c68c8ad725224d85a7b4965543113b1a9b"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/GameObjectPoolBase.cs.meta",
+        "sha256": "2d70898fd26df848c7128b84f7c7596878fe1351103be9301ad87afe416331dd"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/framework-source/GameObjectPool.cs",
+        "sha256": "60ed58e8935f2c0fb5a8850fd7f521476bda0b549f535361116bfa7fa6e03aab"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/GameObjectPool.cs",
+        "sha256": "b877c2d6381094e2bb873764a6c7ad04271ea4bca0a904ca42e628e15df97372"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/GameObjectPool.cs.meta",
+        "sha256": "89f922f444fbab427b173600735612365f58f8dc6da6e62799e098338e4ad858"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/ItemIconAttachmentPool.cs",
+        "sha256": "10022b8d0980c7440447fde990c49657f709fb548d32a14d31066d37ca5b6c66"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ItemIconAttachmentPool.cs",
+        "sha256": "7090a12452e3c2f234f6a4bc00b4a1d597a212b9c504db07ff6104090dfce87d"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ItemIconAttachmentPool.cs.meta",
+        "sha256": "016a1b5471ea5617fcb210facd28d0b194e20799cc304179d2c5c3402b028b51"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/ItemIconAttachmentManager.cs",
+        "sha256": "b8b2d5b83c7bca290750bd2445159471bbb4e0a59b930595ce6586ff79da009d"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ItemIconAttachmentManager.cs",
+        "sha256": "21561774866077aa0e7d77d0fa818d96e1f267556437e0a08ad29693442e0373"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ItemIconAttachmentManager.cs.meta",
+        "sha256": "5156835373825918facfc579758ad0faa507983ecc2def15d877396d47b8e388"
+      }
+    }
+  ],
+  "bridge": {
+    "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionGameObjectPoolBridge.cs",
+    "sha256": "a461ca896b62ee24da24fc4839b2e164d484d7d1ab7c9a67d565e85344a4530c"
+  },
+  "bridge_meta": {
+    "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionGameObjectPoolBridge.cs.meta",
+    "sha256": "b43d1915ee2aeeac28d0edc93d3f5f0810ab829efe1e928b493e22ac01423b3e"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_profession_item_pools.py",
+    "sha256": "0300df0a41d8cf4af13ca3bab119089a728c8e15fbc4d551c5c131b274e19d23"
+  },
+  "validation": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionItemAttachmentValidation.cs",
+    "sha256": "aa8dd0c30f5a9f0c32bb24836b104d6e4bf580b74ecb01bd9d00d81781203b56"
+  },
+  "operation": "Retain original FIFO pool, reset/clear callbacks, inactive pool roots, create/borrow/return order, reverse shrink traversal, low-memory release, config first-match lookup, retained GUID resource handles and disposal order. Port non-generic GAction linked observers/version/reentrancy, original destroy listener and constructor forwarding; replace logging, resource/config/application and scene-injection boundaries with explicit consumed adapters. Newly created pool root has no listener, so direct AddComponent is equivalent to source GetOrAddComponent.",
+  "limitations": [
+    "Application-wide lifecycle/GC policy is external; the manager consumes its original low-memory event only.",
+    "Scene injection must explicitly bind the original item/attachment dependencies before exposure; full profession panel integration remains pending."
+  ]
+}

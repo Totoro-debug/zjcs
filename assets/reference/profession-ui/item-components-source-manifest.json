@@ -173,11 +173,11 @@
   ],
   "generator": {
     "path": "scripts/prepare_unity_profession_item_components.py",
-    "sha256": "91d4e70c80c765bdff5bf80fe63ba154b4ecdba1baadc1da57ae79e42256be62"
+    "sha256": "223654c704fad782ff871e85a75d12fd9117d90782fe1f6bad2840afa6c2d766"
   },
   "validation": {
     "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionItemAttachmentValidation.cs",
-    "sha256": "2fc615a473b0271fed3a12a235537da51874ce3df6c98ea40505bbe70ed9d88a"
+    "sha256": "aa8dd0c30f5a9f0c32bb24836b104d6e4bf580b74ecb01bd9d00d81781203b56"
   },
   "validation_meta": {
     "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionItemAttachmentValidation.cs.meta",
@@ -189,7 +189,7 @@
   },
   "operation": "Copy original lifecycle, initialization wrappers, exception boundaries, reset order, attachment lookup/sorting/recycling, custom attachment behavior and configuration fields. Replace framework logging with Unity logging, dependency injection with an explicit manager binding, and use existing original PopupWindow/MultiLanguageText ports. Keep enum values and original empty pool hooks.",
   "limitations": [
-    "Full ItemIcon, attachment manager/pools and their service binding remain pending. The original HintTip prefab is restored and verified separately.",
+    "ItemIcon and attachment manager/pools are migrated and verified separately; full profession panel service binding and item detail popup contents remain pending.",
     "These source ports do not constitute rendered profession UI or mouse interaction validation."
   ]
 }

@@ -74,7 +74,7 @@ def build():
         validation_meta=record(editor / "ProfessionItemAttachmentValidation.cs.meta"),
         editor_assembly=record(editor / "Zjcs.Editor.ProfessionUI.asmdef"),
         operation="Copy original lifecycle, initialization wrappers, exception boundaries, reset order, attachment lookup/sorting/recycling, custom attachment behavior and configuration fields. Replace framework logging with Unity logging, dependency injection with an explicit manager binding, and use existing original PopupWindow/MultiLanguageText ports. Keep enum values and original empty pool hooks.",
-        limitations=["Full ItemIcon, attachment manager/pools and their service binding remain pending. The original HintTip prefab is restored and verified separately.",
+        limitations=["ItemIcon and attachment manager/pools are migrated and verified separately; full profession panel service binding and item detail popup contents remain pending.",
             "These source ports do not constitute rendered profession UI or mouse interaction validation."])
     target = ROOT / "assets/reference/profession-ui/item-components-source-manifest.json"
     target.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

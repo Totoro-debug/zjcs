@@ -5,12 +5,12 @@ import json
 from pathlib import Path
 import re
 
-from official_apk import Apk, ROOT
+from prepare_unity_profession_native_inputs import ROOT, CACHE
+from official_apk import Apk
 import yaml
 from UnityPy.classes import PPtr
 from official_manifest import read_asset_manifest
 from map13_native_schemas import NativeSchemas
-from prepare_unity_profession_native_inputs import CACHE
 from prepare_unity_profession_native_bindings import guid, sha
 from prepare_unity_profession_reward_sprites import Dumper, source_header
 from official_tables import Constructors

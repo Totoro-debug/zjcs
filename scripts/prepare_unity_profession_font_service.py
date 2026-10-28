@@ -5,8 +5,8 @@ from pathlib import Path
 import re
 import shutil
 import yaml
-from official_apk import Apk, ROOT
-from prepare_unity_profession_native_inputs import CACHE
+from prepare_unity_profession_native_inputs import ROOT, CACHE
+from official_apk import Apk
 from prepare_unity_profession_reward_sprites import Dumper, source_header
 
 

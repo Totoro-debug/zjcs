@@ -5,11 +5,12 @@ import json
 from pathlib import Path
 import re
 import yaml
-from official_apk import Apk, ROOT
-from prepare_unity_profession_native_inputs import CACHE
+from prepare_unity_profession_native_inputs import ROOT, CACHE
+from official_apk import Apk
 from UnityPy.enums import TextureFormat
 from prepare_unity_profession_reward_sprites import Dumper, fields, source_header
 from prepare_unity_map13_native_scene import decode_mips
+import astc_encoder
 
 
 def sha(raw):
@@ -100,6 +101,8 @@ def build():
             original_fields=original, profile=profile, mips=mips, pixels_sha256=sha(pixels),
             texture_format=target_format, incoming=sorted(set(incoming))))
     result = dict(format=1, manifest=apk.version, native_assets=outputs, generator=record(Path(__file__)),
+        decoder_source=record(ROOT / "scripts/prepare_unity_map13_native_scene.py"),
+        decoder=dict(package="astc_encoder_py", version="0.1.12", binaries=[record(path) for path in sorted(Path(astc_encoder.__file__).parent.rglob("*.pyd"))]),
         operation="Preserve original native Texture2D GUID, dimensions, mip order, color space and sampler fields. Decode original ASTC with UNORM8; keep Alpha8/RGBA32 source bytes. Replace only the converter PNG importer, avoiding a second lossy compression. Incoming fileID 2800000 references remain unchanged.")
     proof = ROOT / "assets/reference/profession-ui/native-textures-source-manifest.json"
     proof.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

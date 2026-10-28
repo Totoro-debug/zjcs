@@ -5,8 +5,7 @@ import json
 from pathlib import Path
 import re
 
-from official_apk import ROOT
-from prepare_unity_profession_native_bindings import CACHE, TEXT, guid, sha
+from prepare_unity_profession_native_bindings import ROOT, CACHE, TEXT, guid, sha
 
 
 def install(scope, project):
