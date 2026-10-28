@@ -665,3 +665,13 @@ unity/Assets/Game/Editor/ProfessionUI/ProfessionAudioPlaybackValidation.cs* text
 scripts/prepare_unity_profession_windows_audio.py text eol=lf
 unity/Assets/Official/ProfessionUI/** -text
 unity/Assets/Official/ProfessionUI.meta -text
+
+# Map13 original entity textures, full native mip payloads and provenance.
+scripts/prepare_unity_map13_entity_textures.py text eol=lf
+scripts/prepare_unity_map13_entity_inputs.py text eol=lf
+unity/Assets/Game/Editor/Map13EntityTextures* text eol=lf
+unity/Assets/Game/Editor/Map13EntityTextures/** text eol=lf
+unity/Assets/Official/World/Map/13/NativeEntityTextures* -text
+unity/Assets/Official/World/Map/13/NativeEntityTextures/** -text
+unity/Assets/Game/Resources/Map13/Native/native-entity-textures-catalog.asset* text eol=lf
+assets/reference/official-map/map13-native-entity-textures*-source-manifest.json text eol=lf

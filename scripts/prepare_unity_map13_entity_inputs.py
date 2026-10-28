@@ -4,6 +4,8 @@ import argparse
 import json
 import sys
 import importlib.metadata
+import os
+import tempfile
 
 # Keep this long conversion independent of shared extraction-cache cleanup.
 _python = Path(__file__).resolve().parents[1] / ".tools/map13-entity-native-cache-871_156598/python"
@@ -27,19 +29,40 @@ OUTPUT = ROOT / "unity/Assets/Official/World/Map/13/Source/native-entity-compone
 def roots(apk):
     data_path = ROOT / "unity/Assets/Game/Resources/Map13/entity-presentation.json"
     map_path = ROOT / "unity/Assets/Official/World/Map/13/map13.json"
+    stories_path = ROOT / "unity/Assets/Official/World/Map/13/Source/stories.json"
     data, map_data = json.loads(data_path.read_bytes()), json.loads(map_path.read_bytes())
     if data["manifest"] != apk.version or map_data["ClassId"] != 13:
         raise ValueError("Map13 entity selector source differs")
+    stories = json.loads(stories_path.read_bytes())
+    follower_nodes = []
+    for story_name, story in stories.items():
+        if not isinstance(story, dict):
+            continue
+        for node in story.get("nodes", {}).values():
+            if not isinstance(node, dict) or node.get("_type") != "AddNpcFollowerNode":
+                continue
+            class_ids = node.get("NpcClassIds")
+            if not isinstance(class_ids, list) or not class_ids or any(
+                    not isinstance(class_id, int) or class_id <= 0 for class_id in class_ids):
+                raise ValueError("Official Map13 story follower node has invalid NPC classes: " + story_name)
+            follower_nodes.append(dict(story=story_name, node_id=node["NodeId"], class_ids=class_ids))
+    follower_class_ids = sorted({class_id for node in follower_nodes for class_id in node["class_ids"]})
+    if len(follower_nodes) != 6 or follower_class_ids != [8402, 8440, 8441, 8442]:
+        raise ValueError("Official Map13 story follower source closure differs")
     directories = {}
     for item in data["Directories"]:
         for value in item["Ids"]:
             directories.setdefault(value, item["Directory"])
     class_ids = {entity["EntityId"] for entity in map_data["Entities"]}
     class_ids.update([map_data["Navigation"]["CharacterId"], map_data["Navigation"]["MemberId"]])
+    class_ids.update(follower_class_ids)
     requested = {}
     for class_id in sorted(class_ids):
         path = "Assets/Prefabs/EcEntity/" + directories[class_id] + "/" + str(class_id) + ".prefab"
-        requested.setdefault(path, []).append(dict(kind="ec_entity", class_id=class_id))
+        uses = [dict(kind="ec_entity", class_id=class_id)]
+        if class_id in follower_class_ids:
+            uses.append(dict(kind="story_follower", class_id=class_id))
+        requested.setdefault(path, []).extend(uses)
     for number, row in enumerate(data["Displays"]):
         if row["EntityClassId"] not in class_ids or row["GroupId"] not in (0, 13) or row["MapClassId"] not in (0, 13):
             continue
@@ -68,13 +91,15 @@ def roots(apk):
                             object_sha256=sha(obj.get_raw_data())))
     result = dict(manifest=apk.version, roots=sorted(bundles), prefabs=records,
                   map=dict(path=source_path(map_path), sha256=sha(map_path.read_bytes())),
-                  selectors=dict(path=source_path(data_path), sha256=sha(data_path.read_bytes())))
+                  selectors=dict(path=source_path(data_path), sha256=sha(data_path.read_bytes())),
+                  story_followers=dict(path=source_path(stories_path), sha256=sha(stories_path.read_bytes()),
+                                      nodes=follower_nodes, class_ids=follower_class_ids))
     write(CACHE / "roots.json", encode(result))
     print("Resolved original entity/display prefabs:", len(records), "in", len(bundles), "root bundles", flush=True)
     return result
 
 
-def build(roots_only=False):
+def build(roots_only=False, *, unity_project=None):
     tool_paths = [Path(__file__).resolve()] + [ROOT / "scripts" / name for name in
         ("prepare_unity_map13_water_entity_inputs.py", "official_managed_reference_conversion.py",
          "map13_native_schemas.py", "map13_entity_native_schemas.py", "map13_entity_dynamic_textures.py",
@@ -98,7 +123,7 @@ def build(roots_only=False):
         if sha(path.read_bytes()) != entry["decoded_sha256"]:
             raise ValueError("Original entity schema assembly differs: " + name)
         assembly_records.append(dict(path=source_path(path), sha256=sha(path.read_bytes())))
-    schemas = NativeSchemas(code)
+    schemas = NativeSchemas(code, unity_project=unity_project)
     schema_proof = install(schemas, code)
     selection["dynamic_textures"] = collect_textures(apk, schemas)
     assets, missing = collect(apk, selection["roots"] + selection["dynamic_textures"]["roots"])
@@ -146,7 +171,18 @@ def build(roots_only=False):
         outputs=[dict(path=source_path(OUTPUT), sha256=sha(OUTPUT.read_bytes()))],
         operation="Resolve original EC index and display-selector prefab paths against actual selected APK/cloud containers; close every CAB and dynamic texture dependency. Strictly decode all original component fields and reversibly expose heterogeneous managed references to the converter. Temporary CAB/path ID fields distinguish copied reference nodes during export and are independently verified and stripped. Compare original fields after native binary encoding, strict reading and reopening; preserve every other object payload byte. Record modified temporary payload hashes independently.",
         limitations=["Converter inputs only; original entity runtime and Windows-native prefab/script/shader/animation binding and complete map verification remain required."])
-    write(RECEIPT, encode(result)); write(CACHE / "inputs/source-manifest.json", encode(result))
+    receipt_bytes = encode(result)
+    write(CACHE / "inputs/source-manifest.json", receipt_bytes)
+    # Publish the complete proof atomically; never truncate the shared receipt.
+    handle, temporary = tempfile.mkstemp(prefix="map13-entity-proof-", dir=CACHE)
+    try:
+        with os.fdopen(handle, "wb") as stream:
+            stream.write(receipt_bytes)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, RECEIPT)
+    finally:
+        Path(temporary).unlink(missing_ok=True)
     (CACHE / "unresolved-schemas.json").unlink(missing_ok=True)
     print("Original Map13 entity converter inputs prepared:", result["counts"], flush=True)
 
@@ -154,4 +190,6 @@ def build(roots_only=False):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--roots-only", action="store_true")
-    build(parser.parse_args().roots_only)
+    parser.add_argument("--unity-project", type=Path, help="Read compiled Unity references from this project")
+    args = parser.parse_args()
+    build(args.roots_only, unity_project=args.unity_project)
