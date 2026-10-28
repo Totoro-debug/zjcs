@@ -228,11 +228,15 @@
   },
   "audio": {
     "path": "assets/reference/profession-ui/audio-source-manifest.json",
-    "sha256": "4452113526b3822b0b385a25cddf6e8a2aae0d33f0e523953992949a6daab43b"
+    "sha256": "50a22684daa9c45eadf2278a18891840470470791c05d33f8545dc6b9561f94a"
   },
   "windows_audio": {
     "path": "assets/reference/profession-ui/windows-audio-source-manifest.json",
-    "sha256": "cc9a6442445bdabd1ef2ffb59490c4128e78473bfa649dd3ee650e6a0efb32dc"
+    "sha256": "386ba299d66c2f38a31aa60d2e35f9c6318f16e56bfd55990710bd5a3b68dfc8"
+  },
+  "sound_objects": {
+    "path": "assets/reference/profession-ui/sound-objects-source-manifest.json",
+    "sha256": "77959d59d5afa1e3ca9c65b646be626fe6026c36e3f6608700af56171e05e33a"
   },
   "image_resources": {
     "path": "assets/reference/profession-ui/image-resource-source-manifest.json",
@@ -424,7 +428,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "d8c1f3725ca34aecf97d46e75ee58c52327bb16b06829e112b6ac44ddece9c83"
+    "sha256": "695acc17f09b456ab267b2fe62e37b7e1ae6353fffffc2d94eed7f68a7e8394c"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",

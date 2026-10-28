@@ -113,7 +113,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_unity_profession_audio_sources.py",
-    "sha256": "4a4df7c4f8b361f69b1e0f0f6bb715951d340a0db4c274674e0af21027583717"
+    "sha256": "cbdd40c2eabf2ce8c16c9e1e1619deccbdf6e04340de5fa4695be35de8cec5ef"
   },
   "validation": {
     "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionEventFieldValidation.cs",
@@ -121,7 +121,7 @@
   },
   "scope": "Original serialized event references and source UI click/popup dispatch; source AkEvent enable/start trigger, emitter selection and simple Post path. All eight typed source components have actions/callbacks disabled. Unsupported triggers/actions/callbacks fail explicitly. SDK simple Post validates the native object reference, posts its actual ID and preserves the returned playing ID.",
   "limitations": [
-    "The Windows sound-bank playback host, mixer/media bindings and AkGameObj adapter remain unconnected.",
+    "This event contract does not install the full profession window or game-wide settings mixer. The Windows PCM host and three scoped AkGameObj configurations have separate source proofs.",
     "Native event-field import and direct Post contract validation are separate from profession Play Mode UI/mouse/rendering acceptance."
   ]
 }

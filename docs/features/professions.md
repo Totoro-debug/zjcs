@@ -248,7 +248,7 @@ prepare_profession_playable.py 从 PlayerWorldProfessionUpgradeConfig.asset 的�
 
 官方游戏自有的 `BaseSkeletonFollower`、UI／世界跟随器、跟随接口及效果／骨骼部件共 6 个类型已迁入，骨骼 SDK 的类型消费改由显式原生接口提供，未读取或移植其实现。隔离 Play Mode 核对父子／跨层级变换、RectTransform 骨骼坐标缩放、UI 的原 Z 间距 ×100 与世界间距、绘制顺序索引历史、旋转／镜像／缩放开关、未激活骨骼和附件身份显隐，以及启停／清理／销毁／重建订阅。原部件按目标动画名建立源名称字典，但播放仍传入原请求名；该分支、缓存与配置初始化失败后不重试的状态均按源码保留并通过检查。验证使用骨骼／插槽／图形端点，真实角色和动态部件 prefab 尚未连接。代码位于 `Runtime/Official/ProfessionUI/`，来源见[原挂点跟随与部件](../../assets/reference/profession-ui/followers-source-manifest.json)。
 
-原 `PlayerInfoUI`／`PlayerIconMe` 的全部字段和应用方法，以及目标／组队上下文两种枚举已迁入；原数据结构仅迁入消费字段与 Id 属性，玩家／简讯／简略／守卫的构造仍是明确的上游接口，未编造服务器数据。保留自身／其他玩家、NPC、UI／场景／头像、称号、位面名、职业图标、收藏／置灰和协助冷却分支。内置屏 Play Mode 验证九类事件、初始化／启停／重置、真实帧的自动 Start、字段与原外观对象身份、资源保留至销毁释放，并以模拟鼠标按下／抬起触发原按钮监听和延后详情窗口回调通过。重复玩家管理器通知会追加原事件订阅、重置只移除一次，以及 Init 不写入传入目标的原行为均保留。实际查看的 GPU 画面仅为中性按钮夹具，用于检查输入目标与遮挡；不作为原职业页面的画面验证。子控件、目标数据／配置／资源提供器仍为验证端点，正式绑定尚未完成。来源见[原玩家信息与自身头像](../../assets/reference/profession-ui/player-info-source-manifest.json)。当前主页面依赖检查剩余音频对象与骨骼图形 2 类组件、0 个缺失 GUID。
+原 `PlayerInfoUI`／`PlayerIconMe` 的全部字段和应用方法，以及目标／组队上下文两种枚举已迁入；原数据结构仅迁入消费字段与 Id 属性，玩家／简讯／简略／守卫的构造仍是明确的上游接口，未编造服务器数据。保留自身／其他玩家、NPC、UI／场景／头像、称号、位面名、职业图标、收藏／置灰和协助冷却分支。内置屏 Play Mode 验证九类事件、初始化／启停／重置、真实帧的自动 Start、字段与原外观对象身份、资源保留至销毁释放，并以模拟鼠标按下／抬起触发原按钮监听和延后详情窗口回调通过。重复玩家管理器通知会追加原事件订阅、重置只移除一次，以及 Init 不写入传入目标的原行为均保留。实际查看的 GPU 画面仅为中性按钮夹具，用于检查输入目标与遮挡；不作为原职业页面的画面验证。子控件、目标数据／配置／资源提供器仍为验证端点，正式绑定尚未完成。来源见[原玩家信息与自身头像](../../assets/reference/profession-ui/player-info-source-manifest.json)。当前主页面依赖检查剩余骨骼图形 1 类组件、0 个缺失 GUID；音频对象的限定分支验证见后文。
 
 ### 已迁移代码与局部资源
 
@@ -268,8 +268,9 @@ prepare_profession_playable.py 从 PlayerWorldProfessionUpgradeConfig.asset 的�
 
 依据：`profession-ui/appearance-ui-source-manifest.json`。
 
-当前职业外观配置与解析：七张原 `871_156598` 配置表的字节已完整解码并核对来源，其中皮肤 1,723 条、附加外观 1,567 条、男女职业范围 62 组。迁入原外观／默认外观构建、装备与装饰覆盖、绑定皮肤、染色、黑白名单和按穿戴时间／物品 ID 排序的互斥／循环处理；组范围展开及前置职业列表合并保留原顺序和重复项。配置以可离线加载的有序投影进入 `Resources/ProfessionUI/appearance-tables.json`，本地解析器显式替代全局配置服务；协议模型保留原字段，网络封装不迁入。隔离 Unity 编译、全局校验及实际 Play Mode 通过；全部 62 组默认外观、全部黑白名单和允许皮肤列表与独立 Python 投影一致，并核对原法师预览皮肤、装备／副手空值和零值、绑定皮肤、染色和互斥分支。根仓库静态检查受另一会话新增的 6 个共享配置文件元数据未齐影响，隔离工程的 73,716 个 GUID 静态检查通过。此处未输出角色画面，真实玩家、渲染器和原职业页面仍待接线。来源见[外观表](../../assets/reference/profession-ui/appearance-tables-source-manifest.json)和[原外观解析](../../assets/reference/profession-ui/appearance-resolver-source-manifest.json)。
+当前职业外观配置与解析：七张原 `871_156598` 配置表的字节已完整解码并核对来源，其中皮肤 1,723 条、附加外观 1,567 条、男女职业范围 62 组。迁入原外观／默认外观构建、装备与装饰覆盖、绑定皮肤、染色、黑白名单和按穿戴时间／物品 ID 排序的互斥／循环处理；组范围展开及前置职业列表合并保留原顺序和重复项。配置以可离线加载的有序投影进入 `Resources/ProfessionUI/appearance-tables.json`，本地解析器显式替代全局配置服务；协议模型保留原字段，网络封装不迁入。隔离 Unity 编译、全局校验及实际 Play Mode 通过；全部 62 组默认外观、全部黑白名单和允许皮肤列表与独立 Python 投影一致，并核对原法师预览皮肤、装备／副手空值和零值、绑定皮肤、染色和互斥分支。隔离工程的 73,716 个 GUID 静态检查通过，当前仓库 74,149 个 GUID 的静态检查也已通过。此处未输出角色画面，真实玩家、渲染器和原职业页面仍待接线。来源见[外观表](../../assets/reference/profession-ui/appearance-tables-source-manifest.json)和[原外观解析](../../assets/reference/profession-ui/appearance-resolver-source-manifest.json)。
 
+原职业音频对象：从固定 APK 原生方法恢复 `AkGameObj` 的注册标记、Awake 初始化顺序、位置／旋转偏移与缓存阈值、动态更新、禁用保留和销毁注销；三个原 prefab 实例均使用无 Collider、默认监听器、空监听列表和零偏移，原字段保留。仅该作用域接入现有五事件 Windows PCM 播放器，未安装 Wwise 初始化配置时按原代码采用缩放 1；其他监听器、Collider／环境和旧偏移配置明确拒绝。隔离 Direct3D Play Mode 验证三个原字段载体、真实帧更新、原注册失败标记分支及本地注册／注销，并实际读到原 PCM 音效的前进采样和非零输出；编译、全局校验与隔离静态检查通过。第一次音频夹具缺少监听器，补齐后重跑通过。当前仓库 74,149 个 GUID 的静态检查通过。依赖闭包为 881 资源、87 类脚本、剩余骨骼图形 1 类、0 个缺失 GUID；这不是原页面或 Windows Player 验证，角色后端与生产服务仍待接线。来源见[原音频对象](../../assets/reference/profession-ui/sound-objects-source-manifest.json)。
 
 ## 自定义实现
 

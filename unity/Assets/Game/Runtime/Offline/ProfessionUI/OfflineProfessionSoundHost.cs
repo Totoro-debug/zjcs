@@ -7,12 +7,53 @@ namespace Zjcs.Offline.ProfessionUI
 {
     // Platform playback for the five resolved profession UI Wwise events.
     // Source bus/event gain is baked in the verified PCM clips.
-    public sealed class OfflineProfessionSoundHost : MonoBehaviour, IProfessionSoundHost
+    public sealed class OfflineProfessionSoundHost : MonoBehaviour, IProfessionSoundHost, IProfessionSoundObjectHost
     {
+        private sealed class SoundObject
+        {
+            public string Name;
+            public Vector3 Position, Forward, Up;
+            public float ScalingFactor;
+            public bool DefaultListeners, EnvironmentInitialized;
+        }
+        private readonly Dictionary<int, SoundObject> objects = new Dictionary<int, SoundObject>();
         private readonly Dictionary<uint, AudioClip> clips = new Dictionary<uint, AudioClip>();
         private uint nextPlayingId;
         private IProfessionSoundHost previous;
         private bool bound;
+
+        public bool IsInitialized => bound;
+        // No Wwise initialization asset is installed in this local host. The
+        // original AkGameObj fallback for a missing settings instance is 1.
+        public float DefaultScalingFactor => 1;
+        public int RegisteredObjectCount => objects.Count;
+        public int RegisterGameObject(GameObject emitter, string objectName)
+        {
+            if (!bound) throw new InvalidOperationException("Profession sound catalog is unbound.");
+            int key = emitter.GetInstanceID();
+            if (!objects.ContainsKey(key)) objects.Add(key, new SoundObject { Name = objectName });
+            return 1;
+        }
+        private SoundObject RequiredObject(GameObject emitter)
+        {
+            if (!bound || !objects.TryGetValue(emitter.GetInstanceID(), out var value))
+                throw new InvalidOperationException("Profession sound object is unregistered.");
+            return value;
+        }
+        public void SetObjectPosition(GameObject emitter, Vector3 position, Vector3 forward, Vector3 up)
+        { var value = RequiredObject(emitter); value.Position = position; value.Forward = forward; value.Up = up; }
+        public void InitializeEmptyEnvironment(GameObject emitter, Collider sourceCollider)
+        {
+            if (sourceCollider != null) throw new InvalidOperationException("Profession UI audio does not bind collider environments.");
+            RequiredObject(emitter).EnvironmentInitialized = true;
+        }
+        public void UpdateEmptyEnvironment(GameObject emitter, Vector3 position)
+        {
+            if (!RequiredObject(emitter).EnvironmentInitialized) throw new InvalidOperationException("Profession environment was not initialized.");
+        }
+        public void SetDefaultListeners(GameObject emitter) { RequiredObject(emitter).DefaultListeners = true; }
+        public void SetScalingFactor(GameObject emitter, float factor) { RequiredObject(emitter).ScalingFactor = factor; }
+        public void UnregisterGameObject(GameObject emitter) { objects.Remove(emitter.GetInstanceID()); }
 
         public void Bind(OfflineProfessionAudioCatalog catalog)
         {

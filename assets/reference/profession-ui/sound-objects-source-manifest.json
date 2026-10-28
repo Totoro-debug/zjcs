@@ -1,0 +1,308 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "native_inputs": [
+    {
+      "path": ".tools/source-packages/commerce-native/libil2cpp-restored.bin",
+      "sha256": "8e49906e085ba3819c4b47fd3bd12dcdd594ff0fcc75d418a87ac35a4566305b"
+    },
+    {
+      "path": ".tools/source-packages/official-code/global-metadata.dat",
+      "sha256": "58884b94b56ef35665f44d3f186fce8b8c854cf3bab0a74e4733a18b6a9175b4"
+    }
+  ],
+  "methods": [
+    {
+      "method": "AkGameObj.Register",
+      "metadata_index": 334188,
+      "address": "0x794b9cc",
+      "byte_count": 176,
+      "sha256": "621d4c4df7448a4f6c023b9963a067d2d1d2821a63d0159373951c9dba8288f8"
+    },
+    {
+      "method": "AkGameObj.SetPosition",
+      "metadata_index": 334189,
+      "address": "0x794ec1c",
+      "byte_count": 480,
+      "sha256": "2f297062297da59c1efe720b317897a07d96f9785ba2be1d1ba0c818722af84f"
+    },
+    {
+      "method": "AkGameObj.Awake",
+      "metadata_index": 334190,
+      "address": "0x794edfc",
+      "byte_count": 636,
+      "sha256": "8f7385abed04935b4a431417173959782bfd9ad519d2a3f7b932d21d909b6257"
+    },
+    {
+      "method": "AkGameObj.OnEnable",
+      "metadata_index": 334192,
+      "address": "0x794f584",
+      "byte_count": 20,
+      "sha256": "f8d6404926d56e4963d630fae8fbefdaf9ace50a658164bb06bf24c9b959cfc5"
+    },
+    {
+      "method": "AkGameObj.OnDestroy",
+      "metadata_index": 334193,
+      "address": "0x794f598",
+      "byte_count": 328,
+      "sha256": "6cf1f949dae3ec3c92a7d889c27b862bba85fa829fef1d9fcef3760e6629afd0"
+    },
+    {
+      "method": "AkGameObj.Update",
+      "metadata_index": 334194,
+      "address": "0x794f758",
+      "byte_count": 112,
+      "sha256": "1c450b8b4220369e0e4b94c5c4d15a6e56101c14d5c78ad14c49b48c10773ea7"
+    },
+    {
+      "method": "AkGameObj.GetPosition",
+      "metadata_index": 334195,
+      "address": "0x794f7c8",
+      "byte_count": 152,
+      "sha256": "c0c61dd9d941c7b3278b4d3ed48f9f23462c3cd2aaed9de234e1f045df4fd19c"
+    },
+    {
+      "method": "AkGameObj.GetForward",
+      "metadata_index": 334196,
+      "address": "0x794f860",
+      "byte_count": 32,
+      "sha256": "cb4d6870e0de1d4b7bab36c1310c09e0a87f0dba4eb69459e99874d15e54e209"
+    },
+    {
+      "method": "AkGameObj.GetUpward",
+      "metadata_index": 334197,
+      "address": "0x794f880",
+      "byte_count": 32,
+      "sha256": "ca5dd074a7ba481fe175bb7925e2112b486d918d2762c17ea8512b025f19ae5e"
+    },
+    {
+      "method": "AkGameObj..ctor",
+      "metadata_index": 334200,
+      "address": "0x794fb7c",
+      "byte_count": 124,
+      "sha256": "2f92d09d3aec240777eb41ec38b2073572e85d18806312b611ca2de61ca6c648"
+    },
+    {
+      "method": "AkGameObjListenerList.Init",
+      "metadata_index": 334211,
+      "address": "0x794f47c",
+      "byte_count": 260,
+      "sha256": "89f1bd4d729e60f4e73cd6a7731b3ce5ba00394b2be1d8511f3b0f95467af5ae"
+    }
+  ],
+  "position_threshold": {
+    "address": "0x3982ee8",
+    "value": 9.999999439624929e-11,
+    "sha256": "709fd740a6681c449b5c336168003ac5842af9551739600a9de696d5a0f70980"
+  },
+  "source_objects": [
+    {
+      "native_relative_path": "Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
+      "file_id": 114960809166267819,
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
+        "sha256": "2b9c8184afc97e07e03b8c3cec373858d2e51fe117968a7b1ec5ac3ff572c359",
+        "owner": "explicit original prefab"
+      },
+      "fields": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0
+        },
+        "m_PrefabInstance": {
+          "fileID": 0
+        },
+        "m_PrefabAsset": {
+          "fileID": 0
+        },
+        "m_GameObject": {
+          "fileID": 1693329660128220
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "e320416bf6a3822423e363d75eacb098",
+          "type": 3
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "m_listeners": {
+          "initialListenerList": [],
+          "useDefaultListeners": 1
+        },
+        "isEnvironmentAware": 1,
+        "isStaticObject": 0,
+        "m_positionOffsetData": {
+          "KeepMe": 0,
+          "positionOffset": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "m_posOffsetData": {
+          "fileID": 0
+        },
+        "listenerMask": 1
+      },
+      "game_object_name": "sfx",
+      "sibling_types": [
+        "Transform",
+        "MonoBehaviour",
+        "MonoBehaviour"
+      ]
+    },
+    {
+      "native_relative_path": "Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
+      "file_id": 114446264768455463,
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
+        "sha256": "2b9c8184afc97e07e03b8c3cec373858d2e51fe117968a7b1ec5ac3ff572c359",
+        "owner": "explicit original prefab"
+      },
+      "fields": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0
+        },
+        "m_PrefabInstance": {
+          "fileID": 0
+        },
+        "m_PrefabAsset": {
+          "fileID": 0
+        },
+        "m_GameObject": {
+          "fileID": 1743393880019028
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "e320416bf6a3822423e363d75eacb098",
+          "type": 3
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "m_listeners": {
+          "initialListenerList": [],
+          "useDefaultListeners": 1
+        },
+        "isEnvironmentAware": 1,
+        "isStaticObject": 0,
+        "m_positionOffsetData": {
+          "KeepMe": 0,
+          "positionOffset": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "m_posOffsetData": {
+          "fileID": 0
+        },
+        "listenerMask": 1
+      },
+      "game_object_name": "Btn",
+      "sibling_types": [
+        "RectTransform",
+        "CanvasRenderer",
+        "MonoBehaviour",
+        "MonoBehaviour",
+        "MonoBehaviour",
+        "MonoBehaviour",
+        "MonoBehaviour"
+      ]
+    },
+    {
+      "native_relative_path": "Prefabs/UI/Profession/ProfessionPropItem.prefab",
+      "file_id": 114919942235722503,
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/Prefabs/UI/Profession/ProfessionPropItem.prefab",
+        "sha256": "754883f7415b1bca63621ac28bcc87f372a698c2c6b45f34c78f5d4ce9bc8331",
+        "owner": "Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab"
+      },
+      "fields": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0
+        },
+        "m_PrefabInstance": {
+          "fileID": 0
+        },
+        "m_PrefabAsset": {
+          "fileID": 0
+        },
+        "m_GameObject": {
+          "fileID": 1589667821646929
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "e320416bf6a3822423e363d75eacb098",
+          "type": 3
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "m_listeners": {
+          "initialListenerList": [],
+          "useDefaultListeners": 1
+        },
+        "isEnvironmentAware": 1,
+        "isStaticObject": 0,
+        "m_positionOffsetData": {
+          "KeepMe": 0,
+          "positionOffset": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "m_posOffsetData": {
+          "fileID": 0
+        },
+        "listenerMask": 1
+      },
+      "game_object_name": "sfx",
+      "sibling_types": [
+        "Transform",
+        "MonoBehaviour",
+        "MonoBehaviour"
+      ]
+    }
+  ],
+  "runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AkGameObj.cs",
+      "sha256": "c8e6cb58543d06618ba239c28fa8e3d021da3556ad9c78200b1ddcc6553f7354"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AkGameObj.cs.meta",
+      "sha256": "ed3a32c7989f29fa666f3549d3753443504cf58db4ce17d2fcc3732df89b9cf9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionSoundHost.cs",
+      "sha256": "5b2c5ce4f403caba7f83384ce4418abcf66e208cfca758830d8d07c2923b1ce1"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_profession_sound_objects.py",
+    "sha256": "1b5ce4644cefc241286722f9b034270039b9f4ba3553363a0a7ddfd5cf39c3ed"
+  },
+  "validation": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionSoundObjectValidation.cs",
+    "sha256": "234e9d78e70d805787b0a621ea4f954959be06cf697600881e110856256c3344"
+  },
+  "source_audio": {
+    "path": "assets/reference/profession-ui/windows-audio-source-manifest.json",
+    "sha256": "386ba299d66c2f38a31aa60d2e35f9c6318f16e56bfd55990710bd5a3b68dfc8"
+  },
+  "operation": "Recover the original APK native registration, position/rotation-offset/cache threshold, Awake/OnEnable/Update/OnDestroy order and original registration-failure flag. Bind the three verified collider-free, default-listener UI objects to the existing local five-event PCM host. Serialized prefab fields and source transform are preserved; standalone probe carriers isolate the original three documents only, not the game prefab.",
+  "limitations": [
+    "Only the three verified profession UI object configurations are supported. Non-default listeners, legacy offsets, collider/environment routing and destroy-trigger callbacks fail explicitly and remain outside this port.",
+    "The local host uses the original missing-initialization-settings scaling fallback of 1. Spatial audio, general Wwise runtime and game-wide settings mixer are not implemented here.",
+    "No full profession prefab or Windows Player validation has been performed."
+  ],
+  "validated_scope": "Passed Direct3D Play Mode after fixing the test scene AudioListener: all three original prefab field carriers and exact Awake registration/position/environment/listener/scaling order, actual-frame position/rotation offset/cache threshold, disable/destroy behavior, original failed-registration flag. All three register with the real local Windows host; an original catalog PCM event advances and yields nonzero output samples. ProjectTools.Validate and isolated static metadata check passed (73722 GUIDs). Complete UI and Player have not been exercised."
+}

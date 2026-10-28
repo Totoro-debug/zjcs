@@ -289,7 +289,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_unity_profession_windows_audio.py",
-    "sha256": "f5e3d132dda1112799365fa274e7abc86c5139dc4cc77cc3e67267a17728b400"
+    "sha256": "316004f919a6d57b15d25f5afdbe9c82fd1dafb51b69cfd02c795ff6052a1d2e"
   },
   "tools": [
     {
@@ -352,7 +352,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionSoundHost.cs",
-      "sha256": "183e53b97afcb4c2a3b897c81d20dc195d20e3c0168b988ef6aea1ee91f4893b"
+      "sha256": "5b2c5ce4f403caba7f83384ce4418abcf66e208cfca758830d8d07c2923b1ce1"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionSoundHost.cs.meta",
@@ -390,6 +390,6 @@
   "operation": "Resolve all five native SDK references through current EventBankMapping and actual APK banks. Preserve event/action/sound/media identity; wwiser zero master gain, original bus/voice gain baked via vgmstream to uncompressed PCM; native Unity importer preserves channels/rate with no normalization or second lossy compression.",
   "limitations": [
     "Profession UI window installation and local settings mixer are not yet connected.",
-    "Only resolved simple UI one-shot events are supported; original callbacks/actions/AkGameObj remain separate migration work."
+    "Only resolved simple UI one-shot events are supported. The three collider-free/default-listener AkGameObj configurations have a separate source proof; other Wwise callbacks/actions/environments/listeners remain unported."
   ]
 }

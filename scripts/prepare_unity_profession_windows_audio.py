@@ -206,11 +206,38 @@ def build():
         validation=source_file(ROOT / "unity/Assets/Game/Editor/ProfessionUI/ProfessionAudioPlaybackValidation.cs"),
         operation="Resolve all five native SDK references through current EventBankMapping and actual APK banks. Preserve event/action/sound/media identity; wwiser zero master gain, original bus/voice gain baked via vgmstream to uncompressed PCM; native Unity importer preserves channels/rate with no normalization or second lossy compression.",
         limitations=["Profession UI window installation and local settings mixer are not yet connected.",
-            "Only resolved simple UI one-shot events are supported; original callbacks/actions/AkGameObj remain separate migration work."])
+            "Only resolved simple UI one-shot events are supported. The three collider-free/default-listener AkGameObj configurations have a separate source proof; other Wwise callbacks/actions/environments/listeners remain unported."])
     PROOF.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print("Prepared original profession Windows PCM:", len(events), "events;", len(outputs), "native outputs")
     return result
 
 
+def refresh_runtime():
+    """Refresh code provenance while retaining and checking every decoded PCM output."""
+    result = json.loads(PROOF.read_bytes())
+    selected = OfficialSource()
+    if result['manifest'] != selected.version or result['apk_sha256'] != selected.apk_sha256:
+        raise ValueError('Existing audio proof does not match the selected official source')
+    for output in result['outputs']:
+        path = ROOT / output['path']
+        if path.stat().st_size != output['bytes'] or sha(path.read_bytes()) != output['sha256']:
+            raise ValueError('Verified native PCM output changed: ' + output['path'])
+    owned_host = 'unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionSoundHost.cs'
+    for output in result['runtime']:
+        path = ROOT / output['path']
+        if output['path'] != owned_host and source_file(path) != output:
+            raise ValueError('Unrelated audio runtime changed: ' + output['path'])
+        if output['path'] == owned_host:
+            output.update(source_file(path))
+    result['generator'] = source_file(Path(__file__))
+    result['limitations'][1] = 'Only resolved simple UI one-shot events are supported. The three collider-free/default-listener AkGameObj configurations have a separate source proof; other Wwise callbacks/actions/environments/listeners remain unported.'
+    PROOF.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    print('Verified existing PCM outputs and refreshed the owned sound-host code provenance')
+
+
 if __name__ == "__main__":
-    build()
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--refresh-runtime', action='store_true')
+    args = parser.parse_args()
+    refresh_runtime() if args.refresh_runtime else build()

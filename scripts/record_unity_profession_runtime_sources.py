@@ -64,6 +64,7 @@ def build():
         dynamic_resources=file_record(ROOT / "assets/reference/profession-ui/dynamic-resources-source-manifest.json"),
         audio=file_record(ROOT / "assets/reference/profession-ui/audio-source-manifest.json"),
         windows_audio=file_record(ROOT / "assets/reference/profession-ui/windows-audio-source-manifest.json"),
+        sound_objects=file_record(ROOT / "assets/reference/profession-ui/sound-objects-source-manifest.json"),
         image_resources=file_record(ROOT / "assets/reference/profession-ui/image-resource-source-manifest.json"),
         item_components=file_record(ROOT / "assets/reference/profession-ui/item-components-source-manifest.json"),
         item_pools=file_record(ROOT / "assets/reference/profession-ui/item-pools-source-manifest.json"),

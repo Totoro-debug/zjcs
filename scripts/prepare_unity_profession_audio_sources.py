@@ -52,7 +52,7 @@ def build(project=None):
             for name in ("ButtonSound", "UIClickSound", "PopupWindowSound")], runtime=runtime,
         generator=record(Path(__file__)), validation=record(ROOT / "unity/Assets/Game/Editor/ProfessionUI/ProfessionEventFieldValidation.cs"),
         scope="Original serialized event references and source UI click/popup dispatch; source AkEvent enable/start trigger, emitter selection and simple Post path. All eight typed source components have actions/callbacks disabled. Unsupported triggers/actions/callbacks fail explicitly. SDK simple Post validates the native object reference, posts its actual ID and preserves the returned playing ID.",
-        limitations=["The Windows sound-bank playback host, mixer/media bindings and AkGameObj adapter remain unconnected.",
+        limitations=["This event contract does not install the full profession window or game-wide settings mixer. The Windows PCM host and three scoped AkGameObj configurations have separate source proofs.",
             "Native event-field import and direct Post contract validation are separate from profession Play Mode UI/mouse/rendering acceptance."])
     target = ROOT / "assets/reference/profession-ui/audio-source-manifest.json"
     target.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
