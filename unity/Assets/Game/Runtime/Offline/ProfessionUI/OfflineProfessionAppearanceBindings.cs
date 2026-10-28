@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using Zjcs.Offline.Progression;
 using Zjcs.Official.ProfessionUI;
 
@@ -14,6 +15,7 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly Func<int, int?> itemType;
         private readonly ProfessionAppearanceTables tables;
         private readonly ProfessionAppearanceResolver resolver;
+        private readonly ProfessionAppearanceSkinDefaults skinDefaults;
         private AppearanceData appearance;
         private int initialWeaponType;
         private int? equippedWeaponType;
@@ -29,7 +31,7 @@ namespace Zjcs.Offline.ProfessionUI
 
         public OfflineProfessionAppearanceBindings(long playerId, Func<OfflinePlayerProgress> readPlayer,
             Func<int, int?> itemType, ProfessionAppearanceTables tables, AppearanceConfig config,
-            AppearanceAnimNameCombineRule animationRules)
+            AppearanceAnimNameCombineRule animationRules, ProfessionAppearanceSkinDefaults skinDefaults = null)
         {
             if (playerId <= 0) throw new ArgumentOutOfRangeException(nameof(playerId));
             Id = playerId;
@@ -39,6 +41,9 @@ namespace Zjcs.Offline.ProfessionUI
             Config = config ? config : throw new ArgumentNullException(nameof(config));
             AnimationRules = animationRules ? animationRules : throw new ArgumentNullException(nameof(animationRules));
             resolver = new ProfessionAppearanceResolver(tables);
+            this.skinDefaults = skinDefaults ?? new ProfessionAppearanceSkinDefaults(tables,
+                (Resources.Load<TextAsset>("ProfessionUI/skin-defaults") ?? throw new InvalidOperationException("Original skin-default settings are unbound.")).text,
+                message => Debug.LogError(message));
             Refresh(AppearanceOperateSource.Normal, false);
         }
 
@@ -51,12 +56,32 @@ namespace Zjcs.Offline.ProfessionUI
             int? weapon = ReadEquippedWeaponType(player);
             long revision = Math.Max(DateTime.UtcNow.Ticks, checked((appearance?.ModifyTimeStamp ?? 0) + 1));
             var snapshot = ReadAppearance(wardrobe, revision);
+            RestoreOmittedProfessionSkinTypes(player, snapshot);
             Sex = (Sex)wardrobe.Sex;
             Profession = wardrobe.Profession;
             initialWeaponType = player.InitialWeaponType;
             equippedWeaponType = weapon;
             appearance = snapshot;
             if (notify) OnAppearanceUpdate?.Invoke(source);
+        }
+
+        // Compatibility for the local wardrobe schema, not a save migration or a
+        // profession transaction. The original methods run on a private candidate;
+        // event publication still happens only after the complete snapshot exists.
+        private void RestoreOmittedProfessionSkinTypes(OfflinePlayerProgress player, AppearanceData snapshot)
+        {
+            if (snapshot.SkinMap.Count == 0) return;
+            var candidate = new AppearanceData();
+            var sex = (Sex)player.Wardrobe.Sex;
+            var profession = (Official.ProfessionUI.Profession)player.Wardrobe.Profession;
+            if (profession == Official.ProfessionUI.Profession.None)
+                skinDefaults.SetInitialWeaponSkin(sex, profession, candidate, player.InitialWeaponType, _ => { });
+            else
+                skinDefaults.SetProfessionDefaultSkin(sex, profession, candidate, profession,
+                    AppearanceOperateSource.Normal, _ => { });
+            foreach (var pair in candidate.SkinMap)
+                if (!Config.GetPlayerSkinType(pair.Key).BaseSkin && !snapshot.SkinMap.ContainsKey(pair.Key))
+                    snapshot.SkinMap.Add(pair.Key, pair.Value);
         }
 
         private int? ReadEquippedWeaponType(OfflinePlayerProgress player)

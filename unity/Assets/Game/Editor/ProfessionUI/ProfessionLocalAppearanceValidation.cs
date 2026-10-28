@@ -73,7 +73,7 @@ namespace Zjcs.Editor.ProfessionUI
             var graph = new OfflineProfessionAppearanceBindings(17, () => player, _ => currentItemType, tables, config, rules);
             Require(graph.MainPlayer == graph && graph.Player == graph && graph.Id == 17 && graph.Sex == Sex.Male && graph.Profession == 10 && graph.Config == config && graph.AnimationRules == rules, "selected local player identity/configuration");
             var snapshot = (AppearanceData)graph.AppearanceData;
-            Require(graph.IsAppearanceValid(snapshot) && snapshot.SkinMap.Count == defaults.SkinMap.Count && graph.GetSkinNames(snapshot).SequenceEqual(defaults.SkinMap.Values.Select(x => resolver.GetSkinName(x.SkinId))), "saved base skin order and real source skin names");
+            Require(graph.IsAppearanceValid(snapshot) && snapshot.SkinMap.Count == defaults.SkinMap.Count + 1 && graph.GetSkinNames(snapshot).Take(defaults.SkinMap.Count).SequenceEqual(defaults.SkinMap.Values.Select(x => resolver.GetSkinName(x.SkinId))) && snapshot.SkinMap[SkinType.pWeapon].SkinId == 36000, "saved base skin order and real source skin names");
             Require(snapshot.AppearanceLevel == 6 && snapshot.HonorItemDict[HonorType.Title] == 12345 && snapshot.AppendAppearanceWearTimeDict[SkinType.body] == new DateTime(2023, 11, 14, 22, 13, 20, DateTimeKind.Utc), "level, title and exact Unix-to-UTC wear time");
             Require(snapshot.EquipSkinDict.Count == 1 && snapshot.EquipSkinDict[EquipPos.Weapon] == 0 && !snapshot.EquipSkinDict.ContainsKey(EquipPos.SecondWeapon), "local skin-type to original equipment-position mapping and absent/zero");
             foreach (var dye in defaults.DyeMap) Require(snapshot.DyeMap[dye.Key].ColorId == dye.Value.ColorId && snapshot.DyeMap[dye.Key].Hsv == dye.Value.Hsv, "saved dye values");
@@ -125,7 +125,7 @@ namespace Zjcs.Editor.ProfessionUI
         private static void CheckClone(OfflineProfessionAppearanceBindings graph, AppearanceData source)
         {
             source.FullBodyAppearanceId = 123; source.LimitItemExpSet.Add(456);
-            source.SkinMap.Add(SkinType.pWeapon, null); source.DyeMap.Add((DyeType)99, null);
+            source.SkinMap[SkinType.pWeapon] = null; source.DyeMap.Add((DyeType)99, null);
             var view = graph.CloneAppearance(source); var clone = (AppearanceData)view.Source;
             Require(!ReferenceEquals(clone, source) && ReferenceEquals(view.AppendAppearanceDict, clone.AppendAppearanceDict) && ReferenceEquals(view.EquipSkinDict, clone.EquipSkinDict), "preview dictionary views address the clone");
             Require(clone.ModifyTimeStamp == source.ModifyTimeStamp && clone.AppearanceLevel == source.AppearanceLevel && clone.FullBodyAppearanceId == 123 && clone.LimitItemExpSet.SetEquals(source.LimitItemExpSet) && clone.HonorItemDict.SequenceEqual(source.HonorItemDict) && clone.AppendAppearanceWearTimeDict.SequenceEqual(source.AppendAppearanceWearTimeDict) && clone.AppendAppearanceDict.SequenceEqual(source.AppendAppearanceDict) && clone.EquipSkinDict.SequenceEqual(source.EquipSkinDict), "all ten original protocol fields survive cloning");

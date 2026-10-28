@@ -274,6 +274,10 @@
     "path": "assets/reference/profession-ui/native-followers-source-manifest.json",
     "sha256": "09ec469aa79ec0c864eae4a615f03f3d9c1c48a218f73fa6ee494c297a611c13"
   },
+  "skin_defaults": {
+    "path": "assets/reference/profession-ui/skin-defaults-source-manifest.json",
+    "sha256": "5bc0307cb634871e98df41103709bed6eb72dcbca608def841621a7f84d07d70"
+  },
   "image_resources": {
     "path": "assets/reference/profession-ui/image-resource-source-manifest.json",
     "sha256": "58e2e246bd0c4c66915b8fd78873c0d274bcd45adb4e04a5e64e0db101b5715e"
@@ -464,7 +468,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "a8e82d1ae6d89621b20548f7e4d60883faab386c49e6d1efb9aeb2f6689f2d15"
+    "sha256": "21818aa6cd48684d6e2fba2a94cf13f5b36ea47a2940c47d536ce1a4a10c46d8"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",
