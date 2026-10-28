@@ -192,6 +192,8 @@ Map12主线任务1165～1270沿用官方顺序、前置和奖励；其中1215要
 
 原邀请页五种模式的源码及序列化字段已恢复：保留好友／公会／NPC／近期页签的初始化顺序、显隐条件、取消旧请求与关闭回收，补齐原 Room／Challenge／Companion 筛选、Robot 选择／排序／剩余协助次数消费和三秒补充列表超时。原伴侣标记、称号显示／隐藏与特效调度、子画布排序组件沿官方代码迁入，外部数据、资源和演出管理器保留显式接口，未添加离线次数规则。排序通知沿原 GAction 保留重复监听先移除首项、调用中移除监听与延后新增监听的语义。规则夹具覆盖新增 Robot 排序及通知语义；独立编译、隔离 Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和根工程静态检查（75986个 GUID）通过。共享窗口变动后的既有原 TeamPanel 在450×800、720×1280下重新通过模拟射线点击、目标窗、队员池、踢出／离队、成员邀请权限、显隐动画及生命周期回归；单人、目标、两人和满员共八张实际画面已查看，仍使用隔离数据及原加载头像。共享窗口文件统一为 LF，来源哈希与 Git 中的实际字节一致。原邀请 prefab、正式角色／NPC 外观、本地队伍／站位存档及战斗仍待接通；这些源码验证不代表新增邀请页已完成实际交互。来源见[原邀请模式与共享控件](../../assets/reference/official-map/map12-team-invite-panels-source-manifest.json)。
 
+原邀请窗口的五份外部列表模板 `TeamInvitePanelChallengePlayerItem`、`DropdownItem`、`ActivityCompanionPanelPlayerItem`、`RoomInvitePanelPlayerItem`、`TeamInvitePanelRobotItem` 已从同一871来源完整提取，保留377个节点、598份脚本载荷及原组件顺序。原生 YAML 已逐项核对19,829个字段值、5,464个指针和24组压缩数组，并恢复1298项托管引用的完整导出依赖证明；一张导出纹理的解码差异保留原像素覆盖层。隔离工程静态检查（74321个 GUID）、Windows Unity 导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 通过。此处完成的是原始层级与原生转换源核对；最终运行时组件、模型、资源绑定和实际交互仍待完成。来源见[原依赖提取](../../assets/reference/official-map/map12-team-invite-extra-source-manifest.json)与[原生字段核对](../../assets/reference/official-map/map12-team-invite-extra-native-source-manifest.json)。
+
 ### 已迁移代码与局部资源
 
 以下为局部代码／资源接入，完整流程仍受本页缺项限制。
