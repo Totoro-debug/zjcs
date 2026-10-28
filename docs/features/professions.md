@@ -268,6 +268,9 @@ prepare_profession_playable.py 从 PlayerWorldProfessionUpgradeConfig.asset 的�
 
 依据：`profession-ui/appearance-ui-source-manifest.json`。
 
+当前职业外观配置与解析：七张原 `871_156598` 配置表的字节已完整解码并核对来源，其中皮肤 1,723 条、附加外观 1,567 条、男女职业范围 62 组。迁入原外观／默认外观构建、装备与装饰覆盖、绑定皮肤、染色、黑白名单和按穿戴时间／物品 ID 排序的互斥／循环处理；组范围展开及前置职业列表合并保留原顺序和重复项。配置以可离线加载的有序投影进入 `Resources/ProfessionUI/appearance-tables.json`，本地解析器显式替代全局配置服务；协议模型保留原字段，网络封装不迁入。隔离 Unity 编译、全局校验及实际 Play Mode 通过；全部 62 组默认外观、全部黑白名单和允许皮肤列表与独立 Python 投影一致，并核对原法师预览皮肤、装备／副手空值和零值、绑定皮肤、染色和互斥分支。根仓库静态检查受另一会话新增的 6 个共享配置文件元数据未齐影响，隔离工程的 73,716 个 GUID 静态检查通过。此处未输出角色画面，真实玩家、渲染器和原职业页面仍待接线。来源见[外观表](../../assets/reference/profession-ui/appearance-tables-source-manifest.json)和[原外观解析](../../assets/reference/profession-ui/appearance-resolver-source-manifest.json)。
+
+
 ## 自定义实现
 
 角色动画沿用已确认的[免费原生迁移方案](../asset-management.md#spine-角色动画迁移决策)。当前自定义适配完成源骨骼标量曲线到 Unity 加权曲线的映射、原局部姿态、普通／仅平移继承及待机 IK 几何／姿态、插槽／绘制顺序绑定的验证，未改变动作或游戏规则；完整角色动画尚未实现。
