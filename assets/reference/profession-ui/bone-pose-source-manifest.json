@@ -33,7 +33,7 @@
   },
   "runtime": {
     "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBonePose.cs",
-    "sha256": "64253b99bdb7bed6bb440e5d5cb44dda74adeaddf8b26f6a27f53378ba8b82de"
+    "sha256": "7cea1e9ae4c68cdf99c130d2edae210f9d539273dd9b750ed1cdf9be1fc8f7da"
   },
   "runtime_meta": {
     "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBonePose.cs.meta",
@@ -49,11 +49,11 @@
   },
   "generator": {
     "path": "scripts/prepare_unity_profession_bone_pose.py",
-    "sha256": "d5874b9cdfdfc6c4576a9145ca56f97c1f1a956d82142f8abe65ba0944f7ddcf"
+    "sha256": "7095cd6c8acdb244f3fd026c07f99c6577db057d0e370794c5fe58effd639bd5"
   },
-  "operation": "Independent Unity affine/local-pose adapter. Bind all six original scalar bone timelines to setup transforms without any SDK runtime, pose baking, character prefab creation or alternate art. Skin-required activation includes selected bone ancestors. Only normal and translation-only world inheritance are implemented; selective rotation/scale/reflection modes fail explicitly.",
+  "operation": "Independent Unity affine/local-pose adapter. Bind all six original scalar bone timelines to setup transforms without any SDK runtime, pose baking, character prefab creation or alternate art. Skin-required activation includes selected bone ancestors. World ancestors are evaluated lazily and rotation updates invalidate cached matrices. Only normal and translation-only world inheritance are implemented; selective rotation/scale/reflection modes fail explicitly.",
   "validated_scope": "Unity 2022.3.57f1c2 Play Mode: 3542 original bones, 1171 source curves, 48 local poses and 425108 scalar checks; maximum absolute local difference 0.00006389618 within 0.0004 + 0.000007 * abs(expected). Synthetic normal affine matrices match native Unity transforms; translation-only inheritance, shear, skin-required activation and ancestors, source ownership, invalid input and explicit unsupported inheritance checks pass. No original full world pose, constraints or character rendering is covered.",
   "limitations": [
-    "No character rendering or constraints are implemented here. Selective inheritance, IK, transform/physics constraints, original native renderer and full profession page remain required."
+    "No character rendering or constraints are implemented in this pose type. Idle IK is bound separately; selective inheritance, transform/physics constraints, original native renderer and full profession page remain required."
   ]
 }

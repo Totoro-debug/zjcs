@@ -451,9 +451,11 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 职业肖像 studio：原管理器配置从 APK 的实际对象指针指向 `defaultpackage_assets_prefabs_appearance_portrait.bundle`（MD5 `9466f2e5b048b0119c9d63e6cdf26406`）。八个 bundle 依赖、15 个脚本组件已严格解码并完成写回／重开比较；原 studio 与管理器／参数根包的 5 个节点、11 个脚本组件及相机／网格组件核对 485 项值、85 处引用。转换文件、来源和工具哈希见 `profession-ui/portrait-studio-source-manifest.json` 及其输入收据。原节点、脚本、引用、浮点负零与默认运行时光照字段保留，仅放转换缓存；未安装不完整 prefab，未执行此 studio 的 Unity／角色 Play Mode 或 Windows Player 验证。
 
-职业角色骨骼姿态：独立 `ProfessionNativeBonePose` 使用 Unity 矩阵与已验证的原加权曲线，不使用动画 SDK 或烘焙姿态。原男女共 3,542 根骨骼、六组待机的 1,171 条曲线，在隔离 Play Mode 以 48 个局部姿态完成 425,108 项标量检查，最大局部绝对差 `0.00006389618`；普通仿射矩阵对照原生 Unity Transform，仅平移、剪切、皮肤骨骼／祖先启用及异常检查通过。来源与代码／夹具哈希见 `profession-ui/bone-pose-source-manifest.json`。完整世界姿态、选择性继承、IK／变换／物理约束、角色网格及职业页仍未完成，没有角色画面或 Player 发布结论。
+职业角色骨骼姿态：独立 `ProfessionNativeBonePose` 使用 Unity 矩阵与已验证的原加权曲线，不使用动画 SDK 或烘焙姿态。原男女共 3,542 根骨骼、六组待机的 1,171 条曲线，在隔离 Play Mode 以 48 个局部姿态完成 425,108 项标量检查，最大局部绝对差 `0.00006389618`；普通仿射矩阵对照原生 Unity Transform，仅平移、剪切、皮肤骨骼／祖先启用及异常检查通过。来源与代码／夹具哈希见 `profession-ui/bone-pose-source-manifest.json`。完整世界姿态、选择性继承、变换／物理约束、角色网格及职业页仍未完成，没有角色画面或 Player 发布结论。
 
-职业待机 IK：独立 `ProfessionNativeIk` 从原男女骨骼数据核对各八条约束和六组待机的常量混合／弯曲键，仅实现这些动作使用的单位缩放、无剪切分支；不使用 SDK 实现。来源与代码／夹具哈希见 `profession-ui/native-ik-source-manifest.json`。隔离 Play Mode 核对 384 个几何用例，以独立圆交点解作参考，最大圆周角差 `0.0000305175781°`，并检查端点／弯曲／零与分数混合及显式异常。求解器尚未接入真实骨骼姿态，完整约束、角色渲染及职业页待完成，没有原 SDK 世界姿态或 Player 验证结论。
+职业待机 IK：独立 `ProfessionNativeIk` 从原男女骨骼数据核对各八条约束和六组待机的常量混合／弯曲键，仅实现这些动作使用的单位缩放、无剪切分支；不使用 SDK 实现。来源与代码／夹具哈希见 `profession-ui/native-ik-source-manifest.json`。隔离 Play Mode 核对 384 个几何用例，以独立圆交点解作参考，最大圆周角差 `0.0000305175781°`，并检查端点／弯曲／零与分数混合及显式异常。求解器的原待机分支已接入局部姿态，完整约束、角色渲染及职业页待完成，没有原 SDK 世界姿态或 Player 验证结论。
+
+职业待机 IK 姿态绑定：`ProfessionNativeIdleIk` 按原约束顺序更新局部旋转，延迟计算所需世界祖先并在旋转后使缓存失效；来源／夹具／输出哈希见 `profession-ui/idle-ik-source-manifest.json`。隔离 Play Mode 的 48 个源姿态、576 个最终旋转和 960 个世界矩阵通过独立几何参考比对，最大圆周角差 `0.00020724535°`、世界值最大绝对差 `0.00008010864`；零混合、顺序及失败分支通过。尚未覆盖原 SDK 完整姿态、变换／物理约束、真实角色或职业页。
 
 ## 技能首页与安装流程复核
 

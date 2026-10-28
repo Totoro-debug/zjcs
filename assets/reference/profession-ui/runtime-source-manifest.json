@@ -280,11 +280,15 @@
   },
   "bone_pose": {
     "path": "assets/reference/profession-ui/bone-pose-source-manifest.json",
-    "sha256": "638ff30a18115eb0e7351928dc2e721b8261cbafa9f30319219cc72580fe6eb9"
+    "sha256": "6a685085b9bcabcb8e3f482c6d8b23d8431a19a90918f4caf6e8b1b90612a684"
   },
   "native_ik": {
     "path": "assets/reference/profession-ui/native-ik-source-manifest.json",
-    "sha256": "86c00b8b578e396597a3fd3d5a0ad5b12c6fe068bdbde3a89196313dfa7232fa"
+    "sha256": "4019b56aa069e275cca5a1d975b317748a1ad4e77c1a21442bb31f97b946288b"
+  },
+  "idle_ik": {
+    "path": "assets/reference/profession-ui/idle-ik-source-manifest.json",
+    "sha256": "994d9e35475e5e618a284d71db5fe242fe958cab01e2c27ea72a4c2b080914b8"
   },
   "photographer": {
     "path": "assets/reference/profession-ui/photographer-source-manifest.json",
@@ -332,7 +336,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "cff06b62e8fc1753004d6ddf983974a6cb728a03f09d22ae48ea65fd54879085"
+    "sha256": "ab6ef6fb8833b72eb272953263df7b6c8ef5dc601dbe5dd09eb5e8040be0111d"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",

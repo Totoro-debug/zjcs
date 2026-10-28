@@ -1,0 +1,70 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": "assets/reference/profession-ui/bone-pose-source-manifest.json",
+      "sha256": "6a685085b9bcabcb8e3f482c6d8b23d8431a19a90918f4caf6e8b1b90612a684"
+    },
+    {
+      "path": "assets/reference/profession-ui/native-ik-source-manifest.json",
+      "sha256": "4019b56aa069e275cca5a1d975b317748a1ad4e77c1a21442bb31f97b946288b"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/typed/bone-pose-validation.json",
+      "sha256": "efa174c5f6be38aae1058ff9267a11c7726331cf33560722fac4de0a29697c0e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/typed/native-ik-validation.json",
+      "sha256": "a570b0e72bed7974cccee16e5a9689f09f9e6a08e428de4fcf36416ab024ca99"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/male/skeleton.json",
+      "sha256": "21bc0198abc44620e65f308c6acb9a78f3ed9d6feb1d2558acdc72ba76dd3e15"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/female/skeleton.json",
+      "sha256": "eb1c26d31879c9832bd3d88a75cfe057d8712eddfe08e5dd85fc9208d8a666ed"
+    }
+  ],
+  "fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/idle-ik-validation.json",
+    "sha256": "304564bfc57e56fb54b8d7d6aa5a7fc9eeff8176320aedcd193ea28174fd5565"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_profession_idle_ik.py",
+    "sha256": "0894b292607cfac7fafeb2476d83a301d63344e5dd8113d203e66c000187eaef"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeIdleIk.cs",
+      "sha256": "9e2ea2f896a25d6ffe257d137f22a59706ebf133c2c0e820c100b948dfa68578"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeIdleIk.cs.meta",
+      "sha256": "1ee99fe10e31491a9b920edc81a33d46816e6ee05cab11b9a71127791d1d2239"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBonePose.cs",
+      "sha256": "7cea1e9ae4c68cdf99c130d2edae210f9d539273dd9b750ed1cdf9be1fc8f7da"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBonePose.cs.meta",
+      "sha256": "028d2ee0033d09b65a5feec9b6e98495b7c577f80e0ac54794c7c4cc489b9fe3"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeIdleIkValidation.cs",
+      "sha256": "a16fce7921e4312922a188a4554c67d1c0124de82cd824ec3929ac96eb7c692c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeIdleIkValidation.cs.meta",
+      "sha256": "54421194fa601b84fcfb811f35099ed32ad407970f6df2743341ef486e7d38df"
+    }
+  ],
+  "cases": 48,
+  "operation": "Bind source order and constant idle mix/bend states to the independent local pose and IK geometry. Lazily evaluate only requested world ancestors, invalidate cached transforms after each rotation. Circle-intersection references come from the independently generated geometry fixture; no skeleton SDK implementation is used.",
+  "validated_scope": "Unity 2022.3.57f1c2 Play Mode: 48 source poses, 576 final angles and 960 world matrices; maximum circular angle difference 0.00020724535 degrees within 0.0004 degrees and maximum absolute world difference 0.00008010864 within 0.001 + 0.000007 * abs(expected). Source order, zero mix, parent/descendant cache invalidation, independent geometry references and explicit unsupported chain rejection pass. No original SDK full pose, character rendering or profession UI is validated.",
+  "limitations": [
+    "Only the six verified idle IK branches are bound. General IK scale/shear/softness, selective inheritance, transform/physics constraints, skins/mesh/materials, original appearance components and complete profession UI remain required. These generated references are independent geometry, not original SDK poses or visual references."
+  ]
+}

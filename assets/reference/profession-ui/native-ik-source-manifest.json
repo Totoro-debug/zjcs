@@ -4,7 +4,7 @@
   "inputs": [
     {
       "path": "assets/reference/profession-ui/bone-pose-source-manifest.json",
-      "sha256": "638ff30a18115eb0e7351928dc2e721b8261cbafa9f30319219cc72580fe6eb9"
+      "sha256": "6a685085b9bcabcb8e3f482c6d8b23d8431a19a90918f4caf6e8b1b90612a684"
     },
     {
       "path": ".tools/source-packages/current/871_156598/profession-ui/typed/bone-pose-validation.json",
@@ -25,7 +25,7 @@
   },
   "generator": {
     "path": "scripts/prepare_unity_profession_native_ik.py",
-    "sha256": "9546837c5086617b4e57df24ea2862f319167d2dee968818cc6b893eee9db454"
+    "sha256": "be4478f51747d0008b5c34796796229278cee47d7b4949268051951d8f535a44"
   },
   "runtime": [
     {
@@ -52,6 +52,6 @@
   "operation": "Independent single-joint aiming and law-of-cosines two-joint geometry for verified unit-scale, unsheared idle chains. Recover original setup, constant idle mix/bend keys and order; generate independent circle-intersection angle references. No skeleton SDK source or runtime is used.",
   "validated_scope": "Unity 2022.3.57f1c2 Play Mode: 384 source geometry cases, 192 pairs, 192 single-joint aims and 188 zero-mix branches; maximum circular angle difference 0.0000305175781 degrees within 0.0002 degrees. Independent circle-intersection angles, reachable/clamped endpoints, bend direction, fractional mixes, reflected target coordinates and explicit invalid/degenerate input rejection pass. No source SDK world pose, live character or profession UI is validated.",
   "limitations": [
-    "The solver is not yet bound to the native character pose/renderer. General scale/shear, compression/stretch/softness, coincident targets and other animations are not covered. The generated source-chain geometry is not an original SDK pose or visual reference."
+    "The verified idle solver is bound to the native pose separately; the production character renderer remains unbound. General scale/shear, compression/stretch/softness, coincident targets and other animations are not covered. The generated source-chain geometry is not an original SDK pose or visual reference."
   ]
 }

@@ -30,12 +30,16 @@ namespace Zjcs.Offline.ProfessionUI
 
         private readonly Bone[] source;
         private readonly bool[] active;
+        private readonly bool[] ready;
         private readonly Matrix4x4[] world;
         private readonly Vector2[] position, scale;
         private readonly float[] rotation;
         public int Count => source.Length;
         public bool IsActive(int bone) => active[bone];
-        public Matrix4x4 World(int bone) => world[bone];
+        public Matrix4x4 World(int bone) => EvaluateWorld(bone);
+        public int Parent(int bone) => source[bone].parent;
+        public int Inheritance(int bone) => source[bone].inherit;
+        public Vector2 Shear(int bone) => new Vector2(source[bone].shearX, source[bone].shearY);
         public Vector2 LocalPosition(int bone) => position[bone];
         public Vector2 LocalScale(int bone) => scale[bone];
         public float LocalRotation(int bone) => rotation[bone];
@@ -54,7 +58,7 @@ namespace Zjcs.Offline.ProfessionUI
                 source[i] = new Bone { name = b.name, parent = b.parent, skinRequired = b.skinRequired, inherit = b.inherit,
                     x = b.x, y = b.y, rotation = b.rotation, scaleX = b.scaleX, scaleY = b.scaleY, shearX = b.shearX, shearY = b.shearY };
             }
-            active = new bool[bones.Length]; world = new Matrix4x4[bones.Length];
+            active = new bool[bones.Length]; ready = new bool[bones.Length]; world = new Matrix4x4[bones.Length];
             position = new Vector2[bones.Length]; scale = new Vector2[bones.Length]; rotation = new float[bones.Length];
             SetSkinBones(Array.Empty<int>());
             Reset();
@@ -63,7 +67,7 @@ namespace Zjcs.Offline.ProfessionUI
         public void SetSkinBones(IReadOnlyList<int> skinBones)
         {
             if (skinBones == null) throw new ArgumentNullException(nameof(skinBones));
-            for (int i = 0; i < source.Length; i++) active[i] = !source[i].skinRequired;
+            for (int i = 0; i < source.Length; i++) { active[i] = !source[i].skinRequired; ready[i] = false; }
             for (int i = 0; i < skinBones.Count; i++)
             {
                 int bone = skinBones[i];
@@ -78,6 +82,7 @@ namespace Zjcs.Offline.ProfessionUI
             {
                 Bone b = source[i]; position[i] = new Vector2(b.x, b.y);
                 scale[i] = new Vector2(b.scaleX, b.scaleY); rotation[i] = b.rotation;
+                ready[i] = false;
             }
         }
 
@@ -106,22 +111,33 @@ namespace Zjcs.Offline.ProfessionUI
 
         public void UpdateWorld()
         {
-            for (int i = 0; i < source.Length; i++)
-            {
-                if (!active[i]) { world[i] = Matrix4x4.zero; continue; }
-                Bone b = source[i];
-                Matrix4x4 parent = b.parent < 0 ? Matrix4x4.identity : world[b.parent];
-                Vector3 origin = parent.MultiplyPoint3x4(position[i]);
-                Matrix4x4 basis;
-                if (b.parent < 0 || b.inherit == 1)
-                    basis = Axes(rotation[i], b.shearX, b.shearY, scale[i]);
-                else if (b.inherit == 0)
-                    basis = parent * Axes(rotation[i], b.shearX, b.shearY, scale[i]);
-                else
-                    throw new NotSupportedException("The original selective rotation/scale/reflection inheritance needs its own verified native binding.");
-                basis.m03 = origin.x; basis.m13 = origin.y; world[i] = basis;
-            }
+            for (int i = 0; i < source.Length; i++) EvaluateWorld(i);
         }
+
+        public void SetRotation(int bone, float value)
+        {
+            Finite(value); rotation[bone] = value;
+            Array.Clear(ready, 0, ready.Length);
+        }
+
+        private Matrix4x4 EvaluateWorld(int i)
+        {
+            if (ready[i]) return world[i];
+            if (!active[i]) { ready[i] = true; return world[i] = Matrix4x4.zero; }
+            Bone b = source[i];
+            Matrix4x4 parent = b.parent < 0 ? Matrix4x4.identity : EvaluateWorld(b.parent);
+            Vector3 origin = parent.MultiplyPoint3x4(position[i]);
+            Matrix4x4 basis;
+            if (b.parent < 0 || b.inherit == 1)
+                basis = Axes(rotation[i], b.shearX, b.shearY, scale[i]);
+            else if (b.inherit == 0)
+                basis = parent * Axes(rotation[i], b.shearX, b.shearY, scale[i]);
+            else
+                throw new NotSupportedException("The original selective rotation/scale/reflection inheritance needs its own verified native binding.");
+            basis.m03 = origin.x; basis.m13 = origin.y; world[i] = basis; ready[i] = true;
+            return basis;
+        }
+
 
         private static Matrix4x4 Axes(float rotation, float shearX, float shearY, Vector2 scale)
         {

@@ -115,7 +115,7 @@ def build():
         constraints_per_skeleton=8,cases=len(rows),
         operation='Independent single-joint aiming and law-of-cosines two-joint geometry for verified unit-scale, unsheared idle chains. Recover original setup, constant idle mix/bend keys and order; generate independent circle-intersection angle references. No skeleton SDK source or runtime is used.',
         validated_scope='Unity 2022.3.57f1c2 Play Mode: 384 source geometry cases, 192 pairs, 192 single-joint aims and 188 zero-mix branches; maximum circular angle difference 0.0000305175781 degrees within 0.0002 degrees. Independent circle-intersection angles, reachable/clamped endpoints, bend direction, fractional mixes, reflected target coordinates and explicit invalid/degenerate input rejection pass. No source SDK world pose, live character or profession UI is validated.',
-        limitations=['The solver is not yet bound to the native character pose/renderer. General scale/shear, compression/stretch/softness, coincident targets and other animations are not covered. The generated source-chain geometry is not an original SDK pose or visual reference.'])
+        limitations=['The verified idle solver is bound to the native pose separately; the production character renderer remains unbound. General scale/shear, compression/stretch/softness, coincident targets and other animations are not covered. The generated source-chain geometry is not an original SDK pose or visual reference.'])
     (ROOT/'assets/reference/profession-ui/native-ik-source-manifest.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print('Recovered original idle IK geometry:',len(rows),'cases.')
 
