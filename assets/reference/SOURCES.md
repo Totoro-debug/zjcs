@@ -30,6 +30,7 @@ APK 与热更新版本分别记录。原输入、转换产物及其前后哈希�
 | 龙之国共享配置与根实体查询 | [共享配置来源清单](official-map/map14-shared-config-source-manifest.json)：固定 871 Config AOT 方法／元数据、原 Console／Launch、Luban 表 bundle／对象及输入输出 SHA256；实现、单机绑定和验证边界见[龙之国](../../docs/maps/map-14.md) |
 | 当前职业外观表与解析 | [七张原表](profession-ui/appearance-tables-source-manifest.json)、[原应用解析与显式加载](profession-ui/appearance-resolver-source-manifest.json)；`871_156598`，包含输入对象、完整字节消费、输出与处理工具 SHA256；运行与接线边界见[职业功能页](../../docs/features/professions.md) |
 | 职业音频对象 | [原 APK 方法、三个实例与 Windows 绑定](profession-ui/sound-objects-source-manifest.json)；保留注册／位置／销毁次序，限定原无 Collider／默认监听器配置；PCM 输入与输出见[音效来源](profession-ui/windows-audio-source-manifest.json) |
+| 职业本地外观绑定 | [原应用方法、当前配置与本地存档投影](profession-ui/local-appearance-source-manifest.json)；原职业预览使用独立深副本，当前物品类型与角色会话显式注入；未完成边界见[职业功能页](../../docs/features/professions.md) |
 | 历史输入与非运行参考 | [LEGACY_SOURCES.md](LEGACY_SOURCES.md)；历史版本证据保留原身份 |
 | 转换素材备份 | `asset-pack/layout.json`、`asset-pack/lock.json`；实际覆盖以已生成并校验的归档为准 |
 

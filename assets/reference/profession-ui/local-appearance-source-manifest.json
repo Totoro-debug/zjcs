@@ -1,0 +1,136 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "code_manifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "sources": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem.Runtime/AppearanceUtils.cs",
+      "sha256": "f44c5bd234aedd06e9f7845b8b1eaf66963a81675b8eb5b204ca4e2c8189c109"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ProfessionUtils.cs",
+      "sha256": "61b1f0c7b6d3a936b2734936f2faae4e9e4cd36a3420093b361e0d95a9b2b37f"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayerAppearanceInfo.cs",
+      "sha256": "c248a0db212170981f180408c113d977c8b141e70c11efad098543069f66bf12"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/AppearanceData.cs",
+      "sha256": "b4eee243d246e9e98e5e4cb39b5da92caf6a279a20907f2599542b045aeae451"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/SkinData.cs",
+      "sha256": "5ff299e76e61047a6d76cafb01a7153027ac779274285d59283f343d384f4920"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/SkinDyeData.cs",
+      "sha256": "c41931f877b44fefcaa057cd34bc5a61bf5eae3e643cbc16dd1aee8b6f6ebb7b"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/ItemType.cs",
+      "sha256": "8a1a33483ed28de00b9bc37dd60899ae0cb2fa7d7bd821b42f6e43cdcb3dbcaf"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/DataWrapExtension.cs",
+      "sha256": "5c3c955f62e887895201503947698277b4c81ddbd5133954d18f6de2823975e8"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/ProfessionBaseInfoParser.cs",
+      "sha256": "801c076f2df4bce5ad6db9e9647066af7dc111438bdbc80ec556465381225e10"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/PlayerAppearanceDataWrap.cs",
+      "sha256": "e91089e055ca347c495b56e2d7573d0c4e5aa727bc8cf9bc86fd45127168c7c3"
+    }
+  ],
+  "configuration": {
+    "path": "assets/reference/profession-ui/appearance-resolver-source-manifest.json",
+    "sha256": "3c2b54cd55d4ccd771022762997418d3aa35ea2820d6a02e876394755360b6d4"
+  },
+  "application": {
+    "path": "assets/reference/profession-ui/player-appearance-source-manifest.json",
+    "sha256": "fce9cbf0304c537a5b536973e3ad5591303a3bd0ce428d171b4c56fdb267fdbe"
+  },
+  "local_schema": {
+    "path": "unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineProgressSession.cs",
+    "sections": [
+      {
+        "name": "OfflinePlayerProgress",
+        "utf8_lf_sha256": "becae0b7010e043d3dfa639c935e49c6016b9d9f69f3ba52b525ab5fa8ee1424"
+      },
+      {
+        "name": "OfflineWardrobeProgress",
+        "utf8_lf_sha256": "3489ffb26db103f95c7703985ea68690a320c4946092926fefdfb3faa16843fd"
+      },
+      {
+        "name": "OfflineAppearanceSkin",
+        "utf8_lf_sha256": "e580cbe036ad53584386578d943379c53d3241a59d4cd2d490b8bbcd097f3432"
+      },
+      {
+        "name": "OfflineAppearanceDye",
+        "utf8_lf_sha256": "ae5f116598b58c4dad90d813c65204ea1edcc42f73d6c300e05df799dcc09e1d"
+      },
+      {
+        "name": "OfflineAppearanceWearTime",
+        "utf8_lf_sha256": "f7ee9382fc6daac168cc5e25633a117ee87935844f94f8fb55d00698170e1cc6"
+      }
+    ]
+  },
+  "local_equipment_writer": {
+    "path": "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.cs",
+    "sha256": "9b3292f5216f407c77ee89d109a2df33f0dbf98b53ca4c0f60c230d5c36f17e4"
+  },
+  "runtime": {
+    "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionAppearanceBindings.cs",
+    "sha256": "eb1bb87f21fe8a3a22f44d2a7d88f50ca476da11ac61e8d763b33f4506e71225"
+  },
+  "runtime_meta": {
+    "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionAppearanceBindings.cs.meta",
+    "sha256": "f1b44c303cede486cc51b1c1a8057d008b48391f236e4a8bae9c7d56995bdbe5"
+  },
+  "assembly": {
+    "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/Zjcs.Offline.ProfessionUI.asmdef",
+    "sha256": "ee2b79b3d598e1acdbf51f7979e96c4730cbc3cd47e50aae9f21ec67c24e8a51"
+  },
+  "validation": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionLocalAppearanceValidation.cs",
+    "sha256": "7172f2a897955c16482b79185e01d11640bd1b092fa4aeb87ca2b8b59b87e684"
+  },
+  "validation_meta": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionLocalAppearanceValidation.cs.meta",
+    "sha256": "4d0b357d7bfc989b15bd4ad96799045900540dcc333fd23a847219f26682ecbe"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_profession_local_appearance.py",
+    "sha256": "a777c3769bb104c915582fb434fba70f3b4e8ec2eec5bf43a6b7ba17238595b3"
+  },
+  "binding": "Explicit selected player ID, local profile accessor, current item-type lookup, original AppearanceConfig and AppearanceAnimNameCombineRule; no historic equipment catalog, global auto-install, network or user-save write.",
+  "scope": "Project local base skins, equipment SkinType->EquipPos, appended item IDs, UTC wear times, HSV dyes, title and appearance level into the migrated original model; original base-profession/animation-ID methods use explicit local initial/equipped weapon context. Deep clone all ten protocol fields before the original preview.",
+  "adaptations": [
+    "The owning session explicitly refreshes after a successful local transaction; snapshot replacement precedes event dispatch.",
+    "Local ModifyTimeStamp is an in-memory strictly increasing UTC-tick portrait-cache revision, not a server timestamp or saved progression rule.",
+    "FullBodyAppearanceId and LimitItemExpSet have no local save counterpart; their protocol defaults remain unchanged. Expiry rules are not inferred.",
+    "The protocol clone is an independent deep-copy adapter replacing network wrapper serialization; preserves fields, nulls and dictionary order.",
+    "Unavailable current item types and other player IDs are reported explicitly; no historic table or remote player is substituted."
+  ],
+  "limitations": [
+    "Not installed in the actual profession window yet. The window owner must bind current item data and transaction events.",
+    "Character capture endpoint in the data validation is a fixture; native actor constraints/graphic/parts are still incomplete.",
+    "No full native page, mouse flow, Windows Player or release validation is claimed."
+  ],
+  "validated_scope": "Unity 2022.3.57f1c2 Direct3D Play Mode passed: selected local save-schema projection, exact UTC/dye/skin-type mapping, all current profession chains, original animation naming, original self event filters and enable/disable lifecycle, atomic failure without a current item type, self lite-info, all ten clone fields/nulls/order/deep ownership, real mage/warrior preview skin delivery and unchanged isolated profile file. Global ProjectTools.Validate passed; frozen static metadata passed (73724 GUIDs), current repository static metadata passed (74159 GUIDs). Character endpoint is a capture fixture; no full page, actor render, mouse flow or Windows Player claim."
+}

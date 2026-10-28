@@ -268,11 +268,15 @@ prepare_profession_playable.py 从 PlayerWorldProfessionUpgradeConfig.asset 的�
 
 依据：`profession-ui/appearance-ui-source-manifest.json`。
 
-当前职业外观配置与解析：七张原 `871_156598` 配置表的字节已完整解码并核对来源，其中皮肤 1,723 条、附加外观 1,567 条、男女职业范围 62 组。迁入原外观／默认外观构建、装备与装饰覆盖、绑定皮肤、染色、黑白名单和按穿戴时间／物品 ID 排序的互斥／循环处理；组范围展开及前置职业列表合并保留原顺序和重复项。配置以可离线加载的有序投影进入 `Resources/ProfessionUI/appearance-tables.json`，本地解析器显式替代全局配置服务；协议模型保留原字段，网络封装不迁入。隔离 Unity 编译、全局校验及实际 Play Mode 通过；全部 62 组默认外观、全部黑白名单和允许皮肤列表与独立 Python 投影一致，并核对原法师预览皮肤、装备／副手空值和零值、绑定皮肤、染色和互斥分支。隔离工程的 73,716 个 GUID 静态检查通过，当前仓库 74,149 个 GUID 的静态检查也已通过。此处未输出角色画面，真实玩家、渲染器和原职业页面仍待接线。来源见[外观表](../../assets/reference/profession-ui/appearance-tables-source-manifest.json)和[原外观解析](../../assets/reference/profession-ui/appearance-resolver-source-manifest.json)。
+当前职业外观配置与解析：七张原 `871_156598` 配置表的字节已完整解码并核对来源，其中皮肤 1,723 条、附加外观 1,567 条、男女职业范围 62 组。迁入原外观／默认外观构建、装备与装饰覆盖、绑定皮肤、染色、黑白名单和按穿戴时间／物品 ID 排序的互斥／循环处理；组范围展开及前置职业列表合并保留原顺序和重复项。配置以可离线加载的有序投影进入 `Resources/ProfessionUI/appearance-tables.json`，本地解析器显式替代全局配置服务；协议模型保留原字段，网络封装不迁入。隔离 Unity 编译、全局校验及实际 Play Mode 通过；全部 62 组默认外观、全部黑白名单和允许皮肤列表与独立 Python 投影一致，并核对原法师预览皮肤、装备／副手空值和零值、绑定皮肤、染色和互斥分支。隔离工程的 73,716 个 GUID 静态检查通过，当前仓库 74,149 个 GUID 的静态检查也已通过。此处未输出角色画面；本地玩家外观投影见后文，渲染器与原职业页面仍待接线。来源见[外观表](../../assets/reference/profession-ui/appearance-tables-source-manifest.json)和[原外观解析](../../assets/reference/profession-ui/appearance-resolver-source-manifest.json)。
 
 原职业音频对象：从固定 APK 原生方法恢复 `AkGameObj` 的注册标记、Awake 初始化顺序、位置／旋转偏移与缓存阈值、动态更新、禁用保留和销毁注销；三个原 prefab 实例均使用无 Collider、默认监听器、空监听列表和零偏移，原字段保留。仅该作用域接入现有五事件 Windows PCM 播放器，未安装 Wwise 初始化配置时按原代码采用缩放 1；其他监听器、Collider／环境和旧偏移配置明确拒绝。隔离 Direct3D Play Mode 验证三个原字段载体、真实帧更新、原注册失败标记分支及本地注册／注销，并实际读到原 PCM 音效的前进采样和非零输出；编译、全局校验与隔离静态检查通过。第一次音频夹具缺少监听器，补齐后重跑通过。当前仓库 74,149 个 GUID 的静态检查通过。依赖闭包为 881 资源、87 类脚本、剩余骨骼图形 1 类、0 个缺失 GUID；这不是原页面或 Windows Player 验证，角色后端与生产服务仍待接线。来源见[原音频对象](../../assets/reference/profession-ui/sound-objects-source-manifest.json)。
 
+本地角色外观边界：已将本地存档的基础皮肤、装备皮肤类型到原装备位置、装饰物品、UTC 穿戴时间、HSV 染色、称号和外观等级接入原解析器，当前物品类型由调用方显式绑定，不引用历史装备配置。原职业链与武器职业选择分支保留；选中角色的快照在事件派发前整体替换。预览独立深复制原协议全部十个字段、集合及嵌套对象，保留空值和字典顺序；Unity 实际 Play Mode 已核对原事件过滤／启停订阅、当前全部职业链、真实法师与战士预览资源名、失败时不发布半份状态和只读存档保持。Unity 全局校验通过，隔离工程 73,724 个 GUID、当前仓库 74,159 个 GUID 的静态检查通过。角色端点在本次验证中仅捕获数据，尚未显示角色或安装完整职业窗口；实际页面、模拟点击和 Windows Player 仍待完成。来源见[本地外观绑定](../../assets/reference/profession-ui/local-appearance-source-manifest.json)。
+
 ## 自定义实现
+
+本地外观会话将原网络玩家／序列化副本替换为已选角色存档的只读投影和深副本；原肖像缓存的修改标记使用会话内单调递增的 UTC ticks，不写回存档或作为玩法时间。存档没有整身外观 ID 和过期集合的对应字段，本作用域不推导其规则。
 
 角色动画沿用已确认的[免费原生迁移方案](../asset-management.md#spine-角色动画迁移决策)。当前自定义适配完成源骨骼标量曲线到 Unity 加权曲线的映射、原局部姿态、普通／仅平移继承及待机 IK 几何／姿态、插槽／绘制顺序绑定的验证，未改变动作或游戏规则；完整角色动画尚未实现。
 
