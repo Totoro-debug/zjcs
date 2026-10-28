@@ -692,3 +692,11 @@ unity/Assets/Game/Resources/Map13/Native/native-entity-materials-catalog.asset* 
 assets/reference/official-map/map13-entity-material-shaders-source-manifest.json text eol=lf
 assets/reference/official-map/map13-native-entity-materials-native-source-manifest.json text eol=lf
 assets/reference/official-map/map13-native-entity-materials-binding-source-manifest.json text eol=lf
+
+# Map13 complete entity graph, lossless skeleton sources and lazy animation bytes.
+scripts/prepare_unity_map13_entity_graph.py text eol=lf
+scripts/prepare_unity_map13_entity_skeletons.py text eol=lf
+unity/Assets/Official/World/Map/13/Source/EntitySkeletons* -text
+unity/Assets/Official/World/Map/13/Source/EntitySkeletons/** -text whitespace=cr-at-eol
+unity/Assets/Official/World/Map/13/Source/native-entity-skeletons.json* text eol=lf
+assets/reference/official-map/map13-entity-skeletons-source-manifest.json text eol=lf

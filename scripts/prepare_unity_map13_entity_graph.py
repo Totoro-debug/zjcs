@@ -5,6 +5,7 @@ verified inventory intact; derive the object closure to drive explicit native
 bindings, including the original on-demand appearance texture references.
 """
 from collections import Counter, OrderedDict, deque
+import argparse
 import gc
 import importlib.metadata
 import json
@@ -13,7 +14,7 @@ from pathlib import Path
 from prepare_unity_map13_entity_inputs import CACHE, OUTPUT as COMPONENTS, RECEIPT as INPUT_RECEIPT
 from prepare_unity_map13_entity_materials import pointers
 from prepare_unity_bundle_inputs import serialized_files
-from prepare_unity_map13_sources import encode, meta, sha, source_path, write
+from prepare_unity_map13_sources import encode, meta, sha, source_path
 from official_apk import ROOT
 import UnityPy
 
@@ -52,13 +53,27 @@ class Inputs:
         return self.load(info["input_index"])[info["cab"]].objects[int(info["path_id"])]
 
 
-def build():
+def write(path, raw):
+    import os, tempfile
+    path.parent.mkdir(parents=True, exist_ok=True)
+    old = path.read_bytes() if path.exists() else None
+    if old == raw:
+        return
+    fd, temporary = tempfile.mkstemp(prefix="map13-entity-graph-", dir=ROOT / ".tools")
+    with os.fdopen(fd, "wb") as stream:
+        stream.write(raw)
+    if (path.read_bytes() if path.exists() else None) != old:
+        raise ValueError("Concurrent entity graph modification: " + str(path))
+    os.replace(temporary, path)
+
+
+def build(output=OUTPUT, receipt_path=RECEIPT):
     receipt = json.loads(INPUT_RECEIPT.read_bytes())
     if receipt["manifest"] != "871_156598" or receipt["mapClassId"] != 13:
         raise ValueError("Wrong Map13 source selection")
-    for output in receipt["outputs"]:
-        if sha((ROOT / output["path"]).read_bytes()) != output["sha256"]:
-            raise ValueError("Native component source changed: " + output["path"])
+    for record in receipt["outputs"]:
+        if sha((ROOT / record["path"]).read_bytes()) != record["sha256"]:
+            raise ValueError("Native component source changed: " + record["path"])
     components = {identity(c["cab"], c["path_id"]): c
                   for c in json.loads(COMPONENTS.read_bytes())["components"]}
     inputs = Inputs(receipt["inputs"])
@@ -169,11 +184,12 @@ def build():
         reachable_types=dict(sorted(Counter(o["type"] for o in objects).items())),
         reachable_managed_types=dict(sorted(Counter(o["managed_type"] for o in objects
                                                     if "managed_type" in o).items())))
-    write(OUTPUT, encode(dict(manifest=receipt["manifest"], mapClassId=13, roots=roots, objects=objects)))
-    meta(OUTPUT)
+    write(output, encode(dict(manifest=receipt["manifest"], mapClassId=13, roots=roots, objects=objects)))
+    if output == OUTPUT:
+        meta(output)
     tools = [Path(__file__), ROOT / "scripts/prepare_unity_map13_entity_materials.py",
              ROOT / "scripts/prepare_unity_bundle_inputs.py"]
-    write(RECEIPT, encode(dict(format=1, manifest=receipt["manifest"], mapClassId=13,
+    write(receipt_path, encode(dict(format=1, manifest=receipt["manifest"], mapClassId=13,
         input_receipt=dict(path=source_path(INPUT_RECEIPT), sha256=sha(INPUT_RECEIPT.read_bytes())),
         component_source=dict(path=source_path(COMPONENTS), sha256=sha(COMPONENTS.read_bytes())),
         inputs=[dict(path=source_path(CACHE / "inputs" / e["output"]), sha256=e["converter_input_sha256"])
@@ -183,11 +199,15 @@ def build():
             schema_database=dict(path=source_path(Path(UnityPy.__file__).parent / "resources/lzma.tpk"),
                 sha256=sha((Path(UnityPy.__file__).parent / "resources/lzma.tpk").read_bytes())))],
         tools=[dict(path=source_path(t), sha256=sha(t.read_bytes())) for t in tools],
-        outputs=[dict(path=source_path(OUTPUT), sha256=sha(OUTPUT.read_bytes()))],
-        operation="Follow every nonzero native PPtr from the 335 byte-verified prefab roots, resolving CAB and object ID across the complete verified bundle inventory. Use original managed fields, traverse serialized map pairs as well as arrays, and add original on-demand appearance texture GUID edges only for reachable loader components. Reject unresolved references and ambiguous targets; retain cycles without repeated traversal.",
+        outputs=[dict(path=source_path(output), sha256=sha(output.read_bytes()))],
+        operation=f"Follow every nonzero native PPtr from the {len(roots)} byte-verified prefab roots, resolving CAB and object ID across the complete verified bundle inventory. Use original managed fields, traverse serialized map pairs as well as arrays, and add original on-demand appearance texture GUID edges only for reachable loader components. Reject unresolved references and ambiguous targets; retain cycles without repeated traversal.",
         limitations=["Object-reference closure for entity prefab roots, not runtime code analysis. String-based scene/UI/audio and dynamically instantiated gameplay content require their own official loading paths and bindings. Shader fallback names require separate source-name bindings. Windows asset import, runnable entities, input, saves and full-map validation remain required."])))
     print("Original entity object graph:", json.dumps(counts, ensure_ascii=False), flush=True)
 
 
 if __name__ == "__main__":
-    build()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, default=OUTPUT)
+    parser.add_argument("--receipt", type=Path, default=RECEIPT)
+    args = parser.parse_args()
+    build(args.output.resolve(), args.receipt.resolve())

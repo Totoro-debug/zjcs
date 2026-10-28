@@ -4,11 +4,11 @@
   "mapClassId": 13,
   "object_graph": {
     "path": "unity/Assets/Official/World/Map/13/Source/native-entity-object-graph.json",
-    "sha256": "9b2becd2ecee8795bc9f300a8fd860fa114b02f5f32747db525f543ed6d79dd4"
+    "sha256": "18f89ebe23f05d61849a699f980948603fdfcd055df04fb19ae770617b5fe813"
   },
   "graph_receipt": {
     "path": "assets/reference/official-map/map13-native-entity-object-graph-source-manifest.json",
-    "sha256": "bb766f06600308949a5c1d9f9e32504c00db57c880856a54314db422b0922c25"
+    "sha256": "d4bb1d441da3ef4321235d88f2f4091674bfff00e89126315ec75b49f935b6f7"
   },
   "previous_shader_receipt": {
     "path": "assets/reference/official-map/map13-entity-shaders-source-manifest.json",
@@ -40,7 +40,7 @@
         ],
         "name": "Universal Render Pipeline/2D/Sprite-Unlit-Default",
         "fallback": "Sprites/Default",
-        "input_index": 1332
+        "input_index": 1372
       },
       "original_lod": 0,
       "programs": [
@@ -81,7 +81,7 @@
         ],
         "name": "Universal Render Pipeline/2D/Spine/Skeleton",
         "fallback": "Universal Render Pipeline/2D/Sprite-Unlit-Default",
-        "input_index": 1332
+        "input_index": 1372
       },
       "original_lod": 100,
       "programs": [
@@ -115,7 +115,7 @@
         "references": [],
         "name": "Universal Render Pipeline/2D/Spine/WaterMask",
         "fallback": "",
-        "input_index": 1332
+        "input_index": 1372
       },
       "output": {
         "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpineWaterMask_53f54bd9.shader",
@@ -141,7 +141,7 @@
         ],
         "name": "Universal Render Pipeline/2D/Sprite-Lit-ColorShift",
         "fallback": "Sprites/Default",
-        "input_index": 1332
+        "input_index": 1372
       },
       "output": {
         "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpriteLitColorShift_8de0c09e.shader",
@@ -161,7 +161,7 @@
         "references": [],
         "name": "Sprites/DefaultZWrite",
         "fallback": "",
-        "input_index": 1332
+        "input_index": 1372
       },
       "output": {
         "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/SpritesDefaultZWrite_a1002d66.shader",
@@ -192,7 +192,7 @@
         ],
         "name": "Universal Render Pipeline/2D/Spine/Skeleton-Lit-Atten",
         "fallback": "Universal Render Pipeline/2D/Sprite-Lit-Default",
-        "input_index": 1332
+        "input_index": 1372
       },
       "output": {
         "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpineSkeletonLitAtten_28ddc61f.shader",
@@ -218,7 +218,7 @@
         ],
         "name": "Universal Render Pipeline/2D/Sprite-Lit-Atten",
         "fallback": "Sprites/Default",
-        "input_index": 1332
+        "input_index": 1372
       },
       "output": {
         "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpriteLitAtten_15542ddd.shader",
@@ -238,7 +238,7 @@
         "references": [],
         "name": "Hidden/JSZX/TextMeshPro",
         "fallback": "",
-        "input_index": 1332
+        "input_index": 1372
       },
       "output": {
         "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/WorldText.shader",
@@ -258,7 +258,7 @@
         "references": [],
         "name": "Spine/Skeleton",
         "fallback": "",
-        "input_index": 1332
+        "input_index": 1372
       },
       "output": {
         "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/SpineSkeleton_ef302479.shader",
@@ -278,7 +278,7 @@
         "references": [],
         "name": "Sprites/WaterMaskOverwrite",
         "fallback": "",
-        "input_index": 1332
+        "input_index": 1372
       },
       "output": {
         "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/WaterMaskOverwrite.shader",
@@ -304,7 +304,7 @@
         ],
         "name": "Effect/Noise_Mask_Pro",
         "fallback": "Hidden/InternalErrorShader",
-        "input_index": 1332
+        "input_index": 1372
       },
       "output": {
         "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/EnvironmentNoise.shader",
@@ -330,7 +330,7 @@
         ],
         "name": "Sprites/Submersion",
         "fallback": "Sprites/Default",
-        "input_index": 1332
+        "input_index": 1372
       },
       "output": {
         "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/Submersion.shader",
@@ -350,7 +350,7 @@
         "references": [],
         "name": "Universal Render Pipeline/2D/Sprite-Mask",
         "fallback": "",
-        "input_index": 1332
+        "input_index": 1372
       },
       "output": {
         "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpriteMask_b13d7dc4.shader",
@@ -370,7 +370,7 @@
         "references": [],
         "name": "Sprites/Default",
         "fallback": "",
-        "input_index": 1332
+        "input_index": 1372
       },
       "output": {
         "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/SpritesDefault_b64456be.shader",
@@ -396,7 +396,7 @@
         ],
         "name": "Universal Render Pipeline/2D/Sprite-Lit-Default",
         "fallback": "Sprites/Default",
-        "input_index": 1332
+        "input_index": 1372
       },
       "output": {
         "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/TerrainLit.shader",
@@ -416,7 +416,7 @@
         "references": [],
         "name": "Sprites/WaterMask",
         "fallback": "",
-        "input_index": 1332
+        "input_index": 1372
       },
       "output": {
         "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/WaterMask.shader",
@@ -452,7 +452,7 @@
         ],
         "name": "Universal Render Pipeline/2D/Spine/Submersion",
         "fallback": "Universal Render Pipeline/2D/Spine/Skeleton",
-        "input_index": 1332
+        "input_index": 1372
       },
       "output": {
         "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpineSubmersion_4b760304.shader",
@@ -478,7 +478,7 @@
         ],
         "name": "Universal Render Pipeline/2D/Sprite-Lit-Fording",
         "fallback": "Sprites/Default",
-        "input_index": 1332
+        "input_index": 1372
       },
       "output": {
         "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpriteLitFording_e257809f.shader",
@@ -504,7 +504,7 @@
         ],
         "name": "Universal Render Pipeline/2D/Sprite-Lit-Misc",
         "fallback": "Sprites/Default",
-        "input_index": 1332
+        "input_index": 1372
       },
       "output": {
         "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpriteLitMisc_e2daabda.shader",
@@ -535,7 +535,7 @@
         ],
         "name": "Universal Render Pipeline/Spine/SkeletonEffect-2D",
         "fallback": "Universal Render Pipeline/2D/Sprite-Lit-Default",
-        "input_index": 1332
+        "input_index": 1372
       },
       "output": {
         "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipelineSpineSkeletonEffect2D_19e49995.shader",
@@ -2202,11 +2202,11 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Map13EntityBindings/OfficialMap13EntityBindingGpuAcceptance.cs",
-      "sha256": "ee60f12394a3717755b847b8b8a26e8113d5d2335e0345e0a8dccf49ff13b30c"
+      "sha256": "5b6fb826805a3bef89a283a2fb9804825d90494dbe854084bb122bfbe2450c94"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13EntityBindings/OfficialMap13EntityBindingTools.cs",
-      "sha256": "e4c1c63a177c140c037debd8ac5f5122514151395275a3090be5e0e0f43274bc"
+      "sha256": "0a8f6bec54b3ce69868bf08edf00a070392557f89fa161bff980d46074bdec6a"
     }
   ],
   "operation": "Bind every shader in the native entity object graph, including the original m_Dependencies and fallback names. Preserve 18 previously verified programs byte-for-byte while changing only shader identity and fallback binding. Convert both remaining original fallback shaders with native LOD, properties, passes and GLES3 executables. Before using the Windows engine error shader, compare every original non-program state field and all 12 original GLES executable profiles; normalize only a framebuffer-fetch declaration whose output is unconditionally fully overwritten and never read. Windows adds only its API tables, editor build hashes and empty package-requirement metadata. Serialize all 21 native Shader references in a local runtime catalog to retain dependencies in the Player.",
