@@ -1,0 +1,51 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "execution": {
+    "source_sha256": "980b13f0bd52b9bc988cff3b588ce57e823a80c1b242c44e3c1e313b1b085561",
+    "editor": "2022.3.57f1c2",
+    "backend": "Direct3D11",
+    "coverage": "Two complete original Model subtrees with source components/order/transforms, native sprites and clocks, apple LateUpdate anchors and original application fades/PMA. Source outer/UI transforms are inert diagnostic anchors; full EC, UI, Timeline, map input/save and Player remain pending.",
+    "transforms": 104,
+    "original_nontransform_components": 92,
+    "sprite_bindings": 26,
+    "follower_samples": 1200,
+    "color_samples": 382,
+    "fade_events": 8,
+    "rendered_pixels": 139277,
+    "play_mode": true
+  },
+  "acceptance": {
+    "path": "unity/Assets/Game/Editor/Map13TreeModels/OfficialMap13TreeModelAcceptance.cs",
+    "sha256": "c59ecf6437d56fcc8aba3061fb60d6f63c0ff7dda841a2a27f2cd89e12c87e6f"
+  },
+  "checks": {
+    "unity_import_compile": true,
+    "root_project_tools_validate": true,
+    "root_static_guids": 73591,
+    "actual_runtime_images_viewed": true,
+    "full_existing_prop_regression": true
+  },
+  "regression_receipts": [
+    {
+      "path": "assets/reference/official-map/map13-native-skeleton-model-bindings-source-manifest.json",
+      "sha256": "7075df1f458ab6a43fcd0f7a0d4ee24f66161d0c37488e588d2496ee11d0e634"
+    },
+    {
+      "path": "assets/reference/official-map/map13-native-prop-animators-playmode-source-manifest.json",
+      "sha256": "5d73c01e3b23f588d4a1dba478f47c2ac4c3789ae3577d06fda737ad15d9dbdb"
+    },
+    {
+      "path": "assets/reference/official-map/map13-native-mecanim-pose-source-manifest.json",
+      "sha256": "eebfd2f406244ffe74f6fb3747ec97c06e07fa372b3ddabbb4b8e896e59e841a"
+    },
+    {
+      "path": "assets/reference/official-map/map13-native-prop-parts-playmode-source-manifest.json",
+      "sha256": "72bc5f303e1188a3b87e3c0635bf6e721df8eb2c833ccb80e2a0637d00399d0e"
+    },
+    {
+      "path": "assets/reference/official-map/map13-native-attachment-follower-playmode-source-manifest.json",
+      "sha256": "18494366dfb568ce3f748206af2b7c187c0036bc16fee2870187a9c9c2866d91"
+    }
+  ]
+}

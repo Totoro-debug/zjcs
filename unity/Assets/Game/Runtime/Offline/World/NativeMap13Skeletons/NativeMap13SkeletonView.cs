@@ -35,6 +35,7 @@ namespace Zjcs.Offline.World.NativeMap13Skeletons
         private NativeMap13Animation animation;
         private float elapsed;
         private bool loop, disposed;
+        private Color skeletonColor = Color.white;
         public Transform Transform { get; }
         public bool IsAnimationFinished { get; private set; }
         public IReadOnlyList<Matrix4x4> BoneMatrices => matrices;
@@ -44,6 +45,13 @@ namespace Zjcs.Offline.World.NativeMap13Skeletons
         public Matrix4x4 BoneSkeletonMatrix(int bone) => Matrix4x4.Scale(new Vector3(profile.initialFlipX ? -1 : 1, profile.initialFlipY ? -1 : 1, 1)) * matrices[bone];
         public int VisibleTriangles { get; private set; }
         public Bounds LocalBounds { get; private set; }
+        // Application SpriteRendererList fading writes the original skeleton
+        // color separately from slot animation colors. Apply it before PMA.
+        public Color SkeletonColor
+        {
+            get => skeletonColor;
+            set { if (disposed) throw new ObjectDisposedException(nameof(NativeMap13SkeletonView)); skeletonColor = value; DrawGeometry(); }
+        }
 
         // Bind the original prefab's mesh targets. Their transforms, sorting,
         // renderer flags and native Animator clocks remain on the original objects.
@@ -296,7 +304,7 @@ namespace Zjcs.Offline.World.NativeMap13Skeletons
                         if (clipping == null) Append(triangle);
                         else foreach (var piece in clipping) Append(Clip(triangle, piece));
                     }
-                    var color = colors[slot]; if (profile.pmaVertexColors) { color.r *= color.a; color.g *= color.a; color.b *= color.a; }
+                    var color = colors[slot] * skeletonColor; if (profile.pmaVertexColors) { color.r *= color.a; color.g *= color.a; color.b *= color.a; }
                     var draw = draws[id]; draw.Mesh.Clear(); draw.Mesh.SetVertices(vertices); draw.Mesh.SetUVs(0, uv);
                     draw.Mesh.SetColors(Enumerable.Repeat(color, vertices.Count).ToList()); draw.Mesh.SetTriangles(triangles, 0); draw.Mesh.RecalculateBounds();
                     draw.Renderer.sortingOrder = drawOrder;

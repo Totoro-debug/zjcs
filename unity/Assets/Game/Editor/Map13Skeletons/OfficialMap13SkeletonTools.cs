@@ -96,7 +96,11 @@ namespace Zjcs.Editor.Map13Skeletons
         }
         private static void WriteProof(Proof proof)
         {
-            string path = Path.Combine(Repository, BindingProof), temp = Path.Combine(Repository, ".tools/map13-skeleton-bindings.tmp");
+            string session = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR") ?? throw new InvalidDataException("Validation workspace is not set.");
+            string validationRoot = Path.GetFullPath(Path.Combine(Repository, "output/validation")) + Path.DirectorySeparatorChar;
+            if (!Path.GetFullPath(session).StartsWith(validationRoot, StringComparison.OrdinalIgnoreCase) || !Directory.Exists(session))
+                throw new InvalidDataException("Use an existing validation session inside output/validation.");
+            string path = Path.Combine(Repository, BindingProof), temp = Path.Combine(session, "map13-skeleton-bindings.tmp");
             File.WriteAllText(temp, JsonUtility.ToJson(proof, true) + "\n", new UTF8Encoding(false));
             if (File.Exists(path)) File.Replace(temp, path, null); else File.Move(temp, path);
         }
