@@ -306,6 +306,10 @@
     "path": "assets/reference/profession-ui/appearance-spine-source-manifest.json",
     "sha256": "22f235c51929d914ea280d21ea41b7f9d915c0148ac44c784e51788eb55c2625"
   },
+  "native_skins": {
+    "path": "assets/reference/profession-ui/native-skins-source-manifest.json",
+    "sha256": "ee1f6afee7eb6c150535335ccc40f28169b8df22d6f4844166b4c51d7c68b625"
+  },
   "native_curves": {
     "path": "assets/reference/profession-ui/native-curves-source-manifest.json",
     "sha256": "007f22f0dd2be5eb07b831a7a7722f00836c03d28bfe2ff0c0f700a791d2bf77"
@@ -368,7 +372,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "d3f9e085a5c7999a358b4fc88d3a73cf950a5f48c074d1569d6cf2879657c80c"
+    "sha256": "9bbac245af24f7a55e7aef6051a38995012f88b000f9e43252b1cefbf6504038"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",

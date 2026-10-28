@@ -479,6 +479,8 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 职业组合皮肤与骨骼调用：完整迁入官方应用层 `AppearanceSpine`，保留组合皮肤复用／清理、原皮肤顺序、同／异皮肤的槽位处理、setup／事件顺序、HSV、原失败分支和选择性卸载；骨骼 SDK 行为通过明确接口接入。源码、程序集、依赖端口、接口及 Play Mode 验证器哈希见 `profession-ui/appearance-spine-source-manifest.json`。隔离组件验证通过；实际原生皮肤／骨骼数据后端、约束、角色渲染和完整职业页未覆盖。
 
+职业原生皮肤表：独立读取当前版全部 1,007 个皮肤、34,009 个附件键及原骨骼／约束成员，保留共享身份、覆盖、并集和默认皮肤回退；来源与代码／夹具哈希见 `profession-ui/native-skins-source-manifest.json`。全部条目及 1,007 组组合的隔离 Play Mode 检查通过；验证附件为身份对象，尚未绑定生产几何、材质、约束及角色渲染。
+
 ## 技能首页与安装流程复核
 
 2026-10-13：复核固定版本 `854_156383` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。

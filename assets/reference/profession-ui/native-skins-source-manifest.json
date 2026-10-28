@@ -1,0 +1,63 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": "assets/reference/profession-ui/bone-pose-source-manifest.json",
+      "sha256": "6a685085b9bcabcb8e3f482c6d8b23d8431a19a90918f4caf6e8b1b90612a684"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/male/skeleton.json",
+      "sha256": "21bc0198abc44620e65f308c6acb9a78f3ed9d6feb1d2558acdc72ba76dd3e15"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/female/skeleton.json",
+      "sha256": "eb1c26d31879c9832bd3d88a75cfe057d8712eddfe08e5dd85fc9208d8a666ed"
+    }
+  ],
+  "bindings": {
+    "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceSpineBindings.cs",
+    "sha256": "c79baef7286b3fa103eed910b0ad7a22dd50457879886cbe9d93d5f7012b39a8"
+  },
+  "fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/native-skins-validation.json",
+    "sha256": "3cbf7a0fc09850eb469b14371479adc5b7652666d8b32f807cb0b5d6ad90fb68"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_profession_native_skins.py",
+    "sha256": "b07376966fa21073cd95b85fa55138b60b2b22207629a626a5c98a32e94e67d0"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkin.cs",
+      "sha256": "c5da19578f79ff0bd3d0038364a3c3b3fb33ea94380c62ef16d47db4e74c3d75"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkin.cs.meta",
+      "sha256": "f8699201d5e991d9b0110cd0aa0cf9649403539ea244b6cdc6fc737850984a23"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeSkinValidation.cs",
+      "sha256": "5897017ba4bf28ff0d83ff3db8cb70d68fd3da24c2ecc977a4949e79c195acd0"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeSkinValidation.cs.meta",
+      "sha256": "be771f05e1db0bd23557c4dfa10459db23f3b7a23c66b3796264ec6ba43dfe29"
+    }
+  ],
+  "counts": {
+    "skins": 1007,
+    "attachments": 34009,
+    "bones": 9749,
+    "constraints": 9633,
+    "combinations": 1007
+  },
+  "format_references": [
+    "https://esotericsoftware.com/spine-json-format#Skins"
+  ],
+  "operation": "Independently preserve each source compound slot/name key and shared attachment identity, ordered bone/constraint membership and original ordinal skin names. Combined skins overwrite identical attachment keys with later skins and union membership without duplicate entries. Resolve active skin before the original default skin. This native table implements the migrated application interface; no skeleton SDK implementation or alternate art is used.",
+  "validated_scope": "Unity 2022.3.57f1c2 Play Mode: 1007 source skins, 34009 attachment identities, original ordered membership and 1007 pair combinations pass. Last-skin overwrite, duplicate-free unions, clear/reuse, unchanged source tables, default fallback, ordinal names, cloned input arrays/shared attachment objects and invalid layouts pass. Source identities are represented by validation objects; production native geometry/material objects are not bound here.",
+  "limitations": [
+    "This table does not implement skin-change slot migration, world constraints, native rendering or the full profession page."
+  ]
+}
