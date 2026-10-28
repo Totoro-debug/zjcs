@@ -152,6 +152,8 @@ Map13 正式实体／谜题／剧情空间输入：`prepare_unity_map13_entity_c
 
 ## 完整还原部分
 
+泽之国原小地图无遮挡层：完整迁入 `MiniMapNonMaskableManager` 与原 `MinimapNonMaskable` prefab，保留 5 个节点、11 个组件、原 Quad、相机及 URP 附加相机、材质、背景 Sprite 和原 ASTC 纹理；只替换脚本命名空间及显式绑定，原内置网格／材质／shader 标识保持不变。Play Mode 验证显示、关闭和再次打开、缩放尺寸、LateUpdate 跟随、同一渲染纹理绑定及事件取消订阅，并在原 URP 中实际渲染地区图块，经查看画面确认。Unity 编译、`ProjectTools.Validate` 和元数据检查通过。此项是原组件与原 prefab 的局部验证，正式小地图根组件、鼠标／存档及 Windows Player 仍待接通；来源见 [无遮挡层代码与资源](../../assets/reference/official-map/map13-minimap-nonmaskable-source-manifest.json)，未生成完整素材快照。
+
 泽之国原小地图相机与配置：完整复用 `MiniMapCameraController`、`MiniMapSettings` 和原虚线网格类，恢复完整配置 SO 及其全部原 Tile、Sprite、虚线 prefab、材质和纹理依赖，包含 5 组相机配置和 10 组地形配置。保留纹理质量 0.6 与原 URP renderScale 的相乘／截断、原相机裁剪与绘制顺序、缩放上下限／输入比例／事件顺序、区域回退查找和缓存；Windows 鼠标滚轮接入原缩放公式，拖拽沿用原 `DragControllerBase`，未改变界面布局。Play Mode 验证 2,930 次原图块查找、五组配置字段、原虚线 360 个顶点／180 个三角形、缩放顺序和输入取消订阅、渲染目标缓存／销毁；在恢复的原 URP 下实际运行原相机回调并已查看地区渲染画面，无运行错误。Unity 编译、`ProjectTools.Validate` 与元数据检查通过。输入检查仅覆盖指针回调；正式全屏 prefab／根组件绑定、完整地图鼠标与存档、Windows Player 仍待完成。来源见 [相机代码及验证](../../assets/reference/official-map/map13-minimap-camera-code-source-manifest.json) 与 [完整原配置资源](../../assets/reference/official-map/map13-native-minimap-settings-source-manifest.json)；未生成完整素材快照。
 
 泽之国小地图原地区管理器：完整迁移 `MapMeCharacterUIBase` 与 `MiniMapPrivateRegionMaskManager`，复用原 UI 生命周期、GUID 代理与地区状态枚举；保留 106 个地区的原反序遍历、按视野加载、公开状态 Z 切换、对象复用、资源句柄寿命、10 秒延迟回收／重置和原 LateUpdate 等待顺序。Play Mode 使用全部原地区边界／GUID 和原生地区 prefab，实际等待验证计时重置、只回收隐藏对象、角色空值／重新进入、其他地图不订阅当前玩家状态，以及销毁取消任务并释放全部 5 个已加载句柄；运行错误为零，Unity 编译、`ProjectTools.Validate` 和元数据检查通过。此项为管理器核心；正式小地图根组件及本地状态接线、完整输入存档和 Windows Player 仍待完成。见 [原地区管理器代码与验证](../../assets/reference/official-map/map13-minimap-region-manager-code-source-manifest.json)。
