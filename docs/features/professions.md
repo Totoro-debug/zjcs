@@ -16,7 +16,7 @@
 
 主页面立绘按原 `ProfessionSettings` 的 GUID 从官方 Sprite 提取，38 个职业的男女映射复用 12 张原图片，保留 alpha、PPU、pivot、border；原 `ImageLocator` 的原生尺寸及锚点修正代码已迁移。职业总览、雷达、职业树的五种状态与条件分组，以及馈赠的原面板控制代码已迁入 `Runtime/Official/ProfessionUI/`。关闭、倒计时、导师入口和剧情节点登记通过服务接口连接本地运行环境；服务和原生 prefab 接线仍未完成。不能把旧节点投影界面算作原生 prefab 迁移完成。
 
-两份原始字体由官方 `FontAssetFontConfig` 的路径、长度和 MD5 取回。原 `MPLUSRounded1c-Medium Atlas` 是 0×0、无像素载荷的动态 Alpha8 图集，已恢复并验证原生导入。当前含动态物品／配置的主面板依赖检查覆盖 881 个资产、87 种脚本、8 种托管类型和 7 个 shader，断开 GUID 为 0；尚有 18 种运行组件及相关服务未接入，主要是外观预览、离屏角色渲染及顶部信息栏，不能视为原生职业界面已经可运行。
+两份原始字体由官方 `FontAssetFontConfig` 的路径、长度和 MD5 取回。原 `MPLUSRounded1c-Medium Atlas` 是 0×0、无像素载荷的动态 Alpha8 图集，已恢复并验证原生导入。当前含动态物品／配置的主面板依赖检查覆盖 881 个资产、87 种脚本、8 种托管类型和 7 个 shader，断开 GUID 为 0；尚有 16 种运行组件及相关服务未接入，主要是外观预览、离屏角色渲染、玩家信息和音频对象，不能视为原生职业界面已经可运行。
 
 馈赠使用的 `ItemIconDefault`、总职业等级说明使用的 `RuleDialog` 及四种奖励 Sprite 已从 APK 的实际对象取回，并记录调用、配置、CAB、对象 ID 和原始哈希。当前版本的成就、物品及规则提示三张 Luban 表已完全解码；组 10 的十条成就配置、四种奖励物品定义及 `ProfessionLevelInfo` 的标题／三条说明与现有打包配置相符。原图标管理器的 ID 覆盖、类型覆盖、默认图标选择顺序已核对，这四种奖励均使用原 `ItemIconDefault`，没有改用手写图标控件。
 
@@ -36,7 +36,11 @@
 原 `FontAssetFontService` 已迁入，保留延迟加载配置、源字体已绑定判断、句柄保留、反射绑定、按名称释放及销毁顺序；两个原始 TTF 以 Windows 动态 Font 交付，原 JSON 字典在打包时解析为等值本地配置，运行时核对原 JSON 后交回原服务。未迁移 Android 流式缓存路径，也未声称完成多语言字体服务。隔离 Unity 的实际 Play Mode 使用正式本地图标／字体目录渲染四种奖励，逐项核对原品质背景、文字和字体归属，模拟鼠标按下／抬起进入原 `ItemIcon` 详情调用入口，清理后核对监听解除和控件状态；四项通过，实际运行画面已查看。附件提示也使用原字体重跑。测试中的统一数字 300 只验证控件，正式馈赠数量仍由成就配置决定。此处没有验证详情弹窗内容、完整馈赠列表或职业主页面。字体来源见[字体服务](../../assets/reference/profession-ui/font-service-source-manifest.json)。
 
 
-`RuleDialog` 的全部设置重载、原列表复用、行激活及 `UIUtils` 的变换复位顺序和 `TipInfo` 的图文设置代码已迁入；原规则解析器结果通过本地接口提供，实际说明弹窗仍待接线。已核对并复用原 `BgDialogElement`、`ItemProgress` 的现有迁移组件，以及从原生代码恢复的 `TMPEffect`，未用空脚本消除原 prefab 引用。包含上述动态资源及物品配置的闭包为 881 个资产、87 种脚本，断开 GUID 为 0，仍有 18 种运行脚本待接入。
+`RuleDialog` 的全部设置重载、原列表复用、行激活及 `UIUtils` 的变换复位顺序和 `TipInfo` 的图文设置代码已迁入；原规则解析器结果通过本地接口提供，实际说明弹窗仍待接线。已核对并复用原 `BgDialogElement`、`ItemProgress` 的现有迁移组件，以及从原生代码恢复的 `TMPEffect`，未用空脚本消除原 prefab 引用。包含上述动态资源及物品配置的闭包为 881 个资产、87 种脚本，断开 GUID 为 0，仍有 16 种运行脚本待接入。
+
+原 `TopBarHandler`、`TopBarItem`、管理器接口、货币数据及枚举等七类已迁入，保留空列表判断、父节点与矩形复位、窗口显示／隐藏订阅、停止数量更新及回收顺序；外部货币控件通过原代码消费的 Component／方法接口接入。主面板闭包内三个原始顶部栏的两份货币列表均为空，原分支不会借出栏位。隔离 Play Mode 控件测试验证空列表、更新、窗口事件和重复启停；非空货币栏的完整 prefab／服务仍待迁移。来源见[顶部栏](../../assets/reference/profession-ui/auxiliary-source-manifest.json)。
+
+原 `WikiEntry` 保留启停订阅、服务器／玩家／配置／条件检查顺序、URL 分支、SDK 参数、上报字段和通知顺序。当前完整 `wiki` 表有四条 US 配置，原解析器固定筛选 CN，因此职业入口按原缺配置分支隐藏。完整表和原地区筛选已打包；隔离 Play Mode 控件测试验证各短路条件，并以模拟鼠标核对连续启停后的单次点击、SDK 结果消息、上报／通知及空 URL 提示，测试渲染已查看。此测试使用服务夹具，不代表完整职业 prefab 的布局、外观或其他地区 Web 服务已完成。来源见[百科入口](../../assets/reference/profession-ui/wiki-source-manifest.json)。
 
 
 音效触发字段已按 APK 原始组件恢复。转换工具曾把 8 个 `AkEvent.triggerList` 的原始值 `-320808462` 写成无效的十六进制字符串；现以原始整数的小端字节重新写入，并逐个保留原层级、事件引用及其余字段。原生 `AkTriggerHandler.OnEnable` 的指令核实该值为启用触发。`ButtonSound`、`UIClickSound`、`PopupWindowSound` 及实际使用的 `AkEvent` 启用／Start、事件引用和单参数 `Post` 路径已迁入；动作、回调等本页未使用分支显式保留为未接入范围。隔离 Unity 导入验证 8 组触发列表、原生事件 ID／名称／GUID、自身发声对象及原序列化播放 ID，核对无效引用返回零和有效请求传递／保存返回 ID 的顺序。该探针只证明原生字段与请求契约，该字段探针没有覆盖声音播放或界面输入；Windows 播放适配另见下述验证。来源见[音效字段与代码](../../assets/reference/profession-ui/audio-source-manifest.json)。

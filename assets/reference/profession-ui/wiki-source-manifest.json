@@ -1,0 +1,132 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "source": {
+    "path": ".tools/source-packages/current/871_156598/official-code/client-source/WikiEntry.cs",
+    "sha256": "3e3f06eae29a577bb19ed47fc5f871a9a24487dcdbe3d5d3799e3c154eabe9f6"
+  },
+  "port": {
+    "runtime": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/WikiEntry.cs",
+      "sha256": "ac0f27c1575bb8237fb7f975748f83f9cbec361978f80fdeaa4240b5e5a21508"
+    },
+    "meta": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/WikiEntry.cs.meta",
+      "sha256": "10d84c2cfda39f259c412de315a3846a869a67d92bc07d36cbbcc5c348c88675"
+    }
+  },
+  "native_components": [
+    {
+      "prefab": {
+        "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
+        "sha256": "d699740791491854404751758f0bd33caa58dfe3404ad60c9f81e5fcadfcd231"
+      },
+      "relative_path": "Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
+      "component_header": "--- !u!114 &114453693399945115",
+      "serialized_fields": {
+        "WikiType": "Profession",
+        "mButtonGo": "{fileID: 1595241695221947}",
+        "mButton": "{fileID: 114907483490667087}",
+        "mClickClearNewTip": "0"
+      }
+    }
+  ],
+  "native_script_metadata": {
+    "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Scripts/Assembly-CSharp/WikiEntry.cs.meta",
+    "sha256": "58f75dbdb661f2501b8841e2b6603d89ffc0795ff93f0b7ae9544574d803e05c"
+  },
+  "parser": {
+    "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/WikiInfoParser.cs",
+    "sha256": "cac4ea6879ad8cbce1135c5b6c3192e66f1d482337bf71da283dde9ccd402874"
+  },
+  "region_enum": {
+    "path": ".tools/source-packages/current/871_156598/official-code/launch-source/Common/RegionCodeEnum.cs",
+    "sha256": "80f27e92de15af96d5dd7e36bc300563ecbc2e9ef045486841e03d8516d02253"
+  },
+  "constructor": {
+    "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/WikiInfo.cs",
+    "sha256": "5459d2017e16e6274aba34a29a8aa411d1e2c42a1e1494e3aa7dd8f9dea66c53"
+  },
+  "table": {
+    "source": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e04fddc7c66a3ec739276f0e0a270715",
+      "path_id": "5375907000201801761",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/e04fddc7c66a3ec739276f0e0a270715.bundle",
+      "manifest": "871_156598",
+      "bundle_size": 2143410,
+      "bundle_sha256": "c48baf0dc6d594a11444db97ad55918727c2cd3f3b91a3e8ce5e9e503f448619"
+    },
+    "object_sha256": "f3c4a34a638e0ac07cee13ed9cbbf533cbc9e768c0c5438198e79b89784c49f1",
+    "payload_sha256": "336c1ed1cff6cb6409f7ea04c56b6c0874b1f3223251484998a32c19b1da0a48",
+    "consumed_bytes": 271,
+    "rows": [
+      {
+        "Type": "Main",
+        "Region": 7,
+        "LimitConditionId": 3010,
+        "URL": "https://swordxstaff.fandom.com/wiki/SwordxStaff_Wiki"
+      },
+      {
+        "Type": "Profession",
+        "Region": 7,
+        "LimitConditionId": 3010,
+        "URL": "https://swordxstaff.fandom.com/wiki/Class_Selection"
+      },
+      {
+        "Type": "DailyDungeon",
+        "Region": 7,
+        "LimitConditionId": 3010,
+        "URL": "https://swordxstaff.fandom.com/wiki/Daily_Dungeons"
+      },
+      {
+        "Type": "AstrologicalDestiny",
+        "Region": 7,
+        "LimitConditionId": 3010,
+        "URL": "https://swordxstaff.fandom.com/wiki/Seasonal_Systems"
+      }
+    ],
+    "selected_cn_rows": []
+  },
+  "config": {
+    "path": "unity/Assets/Official/ProfessionUI/Config/ProfessionWiki.json",
+    "sha256": "2eadfc730114fd52248d43ef3e3bc37f59b314b42b53d665ee974f50b77b6cef"
+  },
+  "config_meta": {
+    "path": "unity/Assets/Official/ProfessionUI/Config/ProfessionWiki.json.meta",
+    "sha256": "2115b6cd6e1edb22bfc8198348d39795cb94782ac727bb5beca7507be746198a"
+  },
+  "config_folder_meta": {
+    "path": "unity/Assets/Official/ProfessionUI/Config.meta",
+    "sha256": "eb9cd8e93b2362dbf23cfadfd8c3334b40266601aec27eac54dd21b4bba9dd5e"
+  },
+  "context": {
+    "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IProfessionWikiContext.cs",
+    "sha256": "ac42010cea808ec3376b66d4388c0b5e658fa5be4b548a22760a90d52e26ddad"
+  },
+  "context_meta": {
+    "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IProfessionWikiContext.cs.meta",
+    "sha256": "40b7ef94d01038054439db06af620b9114658eb85650bdae24f51a5cac0f72ed"
+  },
+  "region_adapter": {
+    "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionWikiTable.cs",
+    "sha256": "68fa66efd65e07463b49523786f4bfaddcd5435a47da16b5cfea6d8949a90397"
+  },
+  "region_adapter_meta": {
+    "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionWikiTable.cs.meta",
+    "sha256": "6911ddf3b076f4b4772e49a5392edcaee649db34c77ddacda8ba0c5d3f860ab5"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_profession_wiki.py",
+    "sha256": "b6aba752259adb17ea517e44772989b523da6f2edde97357dffd3052e9098d6e"
+  },
+  "validation": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionAuxiliaryValidation.cs",
+    "sha256": "02cd6a60520d5ccea30ba0a906225a03cffaccb070459a71ac43d7279811f6dc"
+  },
+  "operation": "Retain original WikiEntry fields, enable subscription/disable disposal, server/player/config/condition guard order, URL/message branches, SDK arguments, report metadata and click event order. Port the generated Goto state machine to C# async Task with explicit consumed service boundaries. Decode the complete selected Luban wiki table and preserve the original CN-only, first-entry region filter. The four current rows are US-only, so Profession has no CN configuration and its original IsLimit hides the entry; no new offline disable rule is added.",
+  "limitations": [
+    "Full profession integration and its player/window/condition bindings remain pending. The source current CN branch never opens external HTML; other regions and a web SDK are not implemented or claimed."
+  ]
+}
