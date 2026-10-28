@@ -1,0 +1,574 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "source_graph": {
+    "path": "unity/Assets/Official/World/Map/14/Source/native-entity-object-graph.json",
+    "sha256": "95b94110032812200cf8f237e72f911ff5db9a5456947dda98f996d7d92478b4"
+  },
+  "converter_input": {
+    "path": "output/validation/map14-shared-core-dc0a4c10515c48d0b07697df7a3cc697/hero-statue-native/input-source-manifest.json",
+    "sha256": "3ae801122f244e0164c241d7a29e05363306bd1eb9fe12da30c0c768402f189d"
+  },
+  "component_records": {
+    "path": "output/validation/map14-shared-core-dc0a4c10515c48d0b07697df7a3cc697/hero-statue-native/components.json",
+    "sha256": "beb17a4ca47aba0266dd4d021e3c0c17918a91489ad9b9e477fc45b24775a9eb"
+  },
+  "inputs": [
+    {
+      "path": "output/validation/map14-shared-core-dc0a4c10515c48d0b07697df7a3cc697/hero-statue-native/export/ExportedProject/Assets/Prefabs/Map/Common/EntityUI/RadarTip/StageCostTip.prefab",
+      "sha256": "bdfa0e799843d904cb2fd847a00dbcfb5ec8f450e59d9dd8547929d6f5543e02"
+    },
+    {
+      "path": "output/validation/map14-shared-core-dc0a4c10515c48d0b07697df7a3cc697/hero-statue-native/export/ExportedProject/Assets/Animation/UI/MapRadarTipFade/StageCostTipFadeIn.anim",
+      "sha256": "87e27dd4a6f4921d1da61f0438887208049905da31b502b2e9aef771bc7e5c3a"
+    },
+    {
+      "path": "output/validation/map14-shared-core-dc0a4c10515c48d0b07697df7a3cc697/hero-statue-native/export/ExportedProject/Assets/Animation/UI/MapRadarTipFade/StageCostTipFadeOut.anim",
+      "sha256": "f5f4a543d12ee56ca274095816eaff94449dec100a61ed8391d3dc787bd11e10"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TextMeshPro.cs",
+      "sha256": "c5b1965cd925f0f8ff20f80191096bad6b018deabddcfdd12e12aca78d0c745c"
+    },
+    {
+      "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TextMeshPro.cs.meta",
+      "sha256": "bfc1c894d80c341bb285b62a75d087caa4d8b3d76eff799b6cda9f36849fd63e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadarCost/MapControllerEntityRadarTipStageCost.cs",
+      "sha256": "7f0b1821ee4914bfabed581292a6792fdf49798c489a32fe67dca17c398227f8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadarCost/MapControllerEntityRadarTipStageCost.cs.meta",
+      "sha256": "57c665f566fc07f2fb557cca207cb0282d7ca4f939ab4e93182e9a96922efb7d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/MultiLanguageText.cs",
+      "sha256": "cee26fc59b7993ff48217c32c76c4f9de8072599bdd0e2a9f3121fe5a138234c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/MultiLanguageText.cs.meta",
+      "sha256": "0cc699b754306805784db4b03bfc704b836fd10b51406dc674075ec14dbbc16c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeText/TMPEffect.cs",
+      "sha256": "dedd18b23f6c5577acf8c20695a5101a35f077f8984286ce4aa0a42046577641"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeText/TMPEffect.cs.meta",
+      "sha256": "af602f224b9bf014dc051480db5d18c7443115793fea4406cb9781abf643fcd3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Font/FZY4K-Dynamic.asset",
+      "sha256": "cd7a870cd6011646534fa7b72bd7c808ecf63ba772ff01849e538ec8136e6eac"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Font/FZY4K-Dynamic.asset.meta",
+      "sha256": "353d473c7f4664f3a7dd06428c3efceda7eb40809a12e2a0e4dad9ace1e28dc6"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Font/FZY4K-Dynamic.mat",
+      "sha256": "643d741aef5212453acabb75fab92bfb6abe156e46b3cf4e03faff4982044420"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Font/FZY4K-Dynamic.mat.meta",
+      "sha256": "a6702f309e720f81607e6eb402c71934a6aade47733a8746029beab8bd9f04b4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Font/FZY4K-Dynamic-Atlas.texture.asset",
+      "sha256": "1e74c3dad775fc85fc5c27f7c75efd31d6ed113475af63fd0eecd644f77b21a5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Font/FZY4K-Dynamic-Atlas.texture.asset.meta",
+      "sha256": "9d46409f6b6094912122c9f78670e5751bb84800a5eb913f48bfd2a26755b6f9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeText/FZY4K.ttf",
+      "sha256": "90023872dffe6a58503de655bd0631bf3334ce3b6b72cc75a6625b685c94c386"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeText/FZY4K.ttf.meta",
+      "sha256": "0a5540b36c84777b4844a6d20dc83d478f7baf1643eb02c3125362067c3e3471"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityMaterials/08c41716e96c66ddcf71bd56dd72f6e2/1419505037369228759.mat",
+      "sha256": "b61b6ed7a34321dde277790b046d44cfe94b23d1e621b67b6b6f8f1cdee2dc95"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityMaterials/08c41716e96c66ddcf71bd56dd72f6e2/1419505037369228759.mat.meta",
+      "sha256": "d5ccc0ae0ce63bdf296ab60a8c0d3ac6663d1093659f11996891a7e50caf7190"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntitySprites/Sprites-Default.mat",
+      "sha256": "b772bc5611580ca5609c0c7b28c819294484c81759d16a519ccfd137283582d4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntitySprites/Sprites-Default.mat.meta",
+      "sha256": "7f85b05fe70cd8dc348f1a93cfe9896de6b49649d8d89e6801045a0d02582caa"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Animation/UI/MapRadarTipFade/StageCostTipFadeIn.anim",
+      "sha256": "668a328a2af4a176fc8332c354b901fe582e7f7386462df7a398fdfaeb339ad6"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Animation/UI/MapRadarTipFade/StageCostTipFadeIn.anim.meta",
+      "sha256": "6c384dd02bd1efc38837308e7e918d33a6a6fee3c7d254bdf91d780d59ba959b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Animation/UI/MapRadarTipFade/StageCostTipFadeOut.anim",
+      "sha256": "6af8be5e4e3483417efd40438138a0053bf8c80ecf93c58d3bfaed63943a7360"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Animation/UI/MapRadarTipFade/StageCostTipFadeOut.anim.meta",
+      "sha256": "fb1bbc6eba924f24c0ee20c5b9f8de14d42ecaab3adc5b96b31ca558c978f2d2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14HeroStatues/NativeMap14HeroStatueSprites.cs",
+      "sha256": "4d619f6316c554a1b95617521e1fa51f7c200b37d5171253e428077062aa6313"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14HeroStatues/NativeMap14HeroStatueSprites.cs.meta",
+      "sha256": "ea5b3b8cbc0a8e86650ec11c5e9f4b412672bcf10d53b721996479315fb5d3e7"
+    }
+  ],
+  "font_source": {
+    "path": "assets/reference/official-map/map13-native-text-font-source-manifest.json",
+    "sha256": "61d7a8dd4f21485b4a7b9cb4c02801ed396e886060ad21466d4fd25b9a4af2a5"
+  },
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map14_radar_native.py",
+      "sha256": "250eb6f58574d3e620164185b8f973cb1928f4a5f367423df2333443a4987174"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Editor/Map14/RadarNative/OfficialMap14RadarNativeAcceptance.cs",
+      "sha256": "3523e0182e11d34a805d551eeca6f62d5ec04fe0f204759b2993037437bef136"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/RadarNative/OfficialMap14RadarNativeAcceptance.cs.meta",
+      "sha256": "d4bfd351c4c01321db420180b166bfa6396070e446da770bc32c3751e12edb05"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/RadarNative/Zjcs.Editor.Map14.RadarNative.asmdef",
+      "sha256": "6ec173f3bff15d28c1041cc04efac060faabaa8180f40300c154de15037f5b3d"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/RadarNative/Zjcs.Editor.Map14.RadarNative.asmdef.meta",
+      "sha256": "b756d0c72799f04497ad23b64ba93f9444b975a03682df514793f0de8b5a90cc"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/RadarNative.meta",
+      "sha256": "df850e590fc62b3acf1c53b66fb25982afaa749b0f0350773090d7de0209cf36"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/radar-tips-catalog.asset",
+      "sha256": "fe9f20a02c2ceeff24b57d19ad871b6367846b86e8215821b791287ca5eda08b"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/radar-tips-catalog.asset.meta",
+      "sha256": "4898e013f72559652054d51258d024ff0b73fde7000bfc55eac3ddeadc215830"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14RadarTips/NativeMap14RadarTipBinding.cs",
+      "sha256": "fecd1859cd9a6f664a512d8cb8458a27beeeb5df7982b7f512dd6f7db731d810"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14RadarTips/NativeMap14RadarTipBinding.cs.meta",
+      "sha256": "77a86184e3a6f39b21fa8c3db5e1e259ab29fd65abbf9c1c3ff5a97f22797866"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14RadarTips/NativeMap14RadarTipCatalog.cs",
+      "sha256": "aed4d9bc5223bb64bf6f16243312e1e3068b638b614383890d00d0a71d95cde6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14RadarTips/NativeMap14RadarTipCatalog.cs.meta",
+      "sha256": "66c303e767887e630f686b45844b9c5f6b67f25421cd1a95716b0eaccd197e31"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14RadarTips/Zjcs.Offline.World.NativeMap14RadarTips.asmdef",
+      "sha256": "a595f5fc2814ba772c93bec27db476a159d973284f705ac76ce2702d163f4c68"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14RadarTips/Zjcs.Offline.World.NativeMap14RadarTips.asmdef.meta",
+      "sha256": "145bbe6f8ca94269a28d327284d43e22579cb9ec15f6ba3a01b2dd0f8cd005e6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14RadarTips.meta",
+      "sha256": "779c056726626d8e55ba9c0978c7da8728d54617565dd4092d155270bef53625"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Animation/UI/MapRadarTipFade/StageCostTipFadeIn.anim",
+      "sha256": "668a328a2af4a176fc8332c354b901fe582e7f7386462df7a398fdfaeb339ad6"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Animation/UI/MapRadarTipFade/StageCostTipFadeIn.anim.meta",
+      "sha256": "6c384dd02bd1efc38837308e7e918d33a6a6fee3c7d254bdf91d780d59ba959b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Animation/UI/MapRadarTipFade/StageCostTipFadeOut.anim",
+      "sha256": "6af8be5e4e3483417efd40438138a0053bf8c80ecf93c58d3bfaed63943a7360"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Animation/UI/MapRadarTipFade/StageCostTipFadeOut.anim.meta",
+      "sha256": "fb1bbc6eba924f24c0ee20c5b9f8de14d42ecaab3adc5b96b31ca558c978f2d2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Animation/UI/MapRadarTipFade.meta",
+      "sha256": "277361553c03a30086c717d6202e5ecac5b143db38be086172234362d941a805"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Animation/UI.meta",
+      "sha256": "fdadbd6eef448b41308a453df7566090d1c02df473bd58f2f635714c7ccc6d8c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Animation.meta",
+      "sha256": "72ab60d1fc80efba910c8acdcf8cc6f3a0f5362651215b6e37bf5a919e06180c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Font/FZY4K-Dynamic-Atlas.texture.asset",
+      "sha256": "1e74c3dad775fc85fc5c27f7c75efd31d6ed113475af63fd0eecd644f77b21a5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Font/FZY4K-Dynamic-Atlas.texture.asset.meta",
+      "sha256": "9d46409f6b6094912122c9f78670e5751bb84800a5eb913f48bfd2a26755b6f9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Font/FZY4K-Dynamic.asset",
+      "sha256": "cd7a870cd6011646534fa7b72bd7c808ecf63ba772ff01849e538ec8136e6eac"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Font/FZY4K-Dynamic.asset.meta",
+      "sha256": "353d473c7f4664f3a7dd06428c3efceda7eb40809a12e2a0e4dad9ace1e28dc6"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Font/FZY4K-Dynamic.mat",
+      "sha256": "643d741aef5212453acabb75fab92bfb6abe156e46b3cf4e03faff4982044420"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Font/FZY4K-Dynamic.mat.meta",
+      "sha256": "a6702f309e720f81607e6eb402c71934a6aade47733a8746029beab8bd9f04b4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Font.meta",
+      "sha256": "94ca352f864fa859d764e4b716043cabd85dd02f853c56f90d2e8e40a3204017"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Prefabs/StageCostTip.prefab",
+      "sha256": "3b6f78ac657d1151f33e726378360793f38b098755cf792607799c1dbc9c7c5c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Prefabs/StageCostTip.prefab.meta",
+      "sha256": "321f47df1e7cd8210e52eef0b85817bdb7d0637ba82677b1ef7f71be1822cb6f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Prefabs.meta",
+      "sha256": "9dff88f0ba12ea591ee7e0a53a1f6e8ec3516ecb15e5439e08d57d7e993ac0c9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeRadarTips.meta",
+      "sha256": "45735c266461f7a47481b784d97c8e3683bd9cb70aad008cc12a4e2ff104a5d2"
+    }
+  ],
+  "prefab": {
+    "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Prefabs/StageCostTip.prefab",
+    "guid": "831d812fe07c5d60b65705e0785448b2",
+    "originalRoot": [
+      "CAB-23bef326149fbeb0f636881d59f9eecc",
+      "-6973730358550827748"
+    ]
+  },
+  "field_checks": [
+    {
+      "cab": "CAB-23bef326149fbeb0f636881d59f9eecc",
+      "path_id": "6415706721519693084",
+      "type": "Transform",
+      "fields": [
+        "m_LocalPosition",
+        "m_LocalRotation",
+        "m_LocalScale"
+      ]
+    },
+    {
+      "cab": "CAB-23bef326149fbeb0f636881d59f9eecc",
+      "path_id": "5603993812614540572",
+      "type": "MapControllerEntityRadarTipStageCost",
+      "fields": [
+        "m_GameObject",
+        "m_Enabled",
+        "m_Script",
+        "m_Name",
+        "HorizontalAnchor",
+        "VerticalAnchor",
+        "FixedOffset",
+        "Animation",
+        "ShowClip",
+        "HideClip",
+        "mIconImg",
+        "mCostTxt",
+        "mIconPosXList"
+      ]
+    },
+    {
+      "cab": "CAB-23bef326149fbeb0f636881d59f9eecc",
+      "path_id": "9213619483002498332",
+      "type": "Animation",
+      "fields": [
+        "m_Enabled",
+        "m_Animation",
+        "m_Animations",
+        "m_WrapMode",
+        "m_PlayAutomatically",
+        "m_AnimatePhysics",
+        "m_CullingType"
+      ]
+    },
+    {
+      "cab": "CAB-23bef326149fbeb0f636881d59f9eecc",
+      "path_id": "-2447708422295687908",
+      "type": "Transform",
+      "fields": [
+        "m_LocalPosition",
+        "m_LocalRotation",
+        "m_LocalScale"
+      ]
+    },
+    {
+      "cab": "CAB-23bef326149fbeb0f636881d59f9eecc",
+      "path_id": "3154049626077621532",
+      "type": "SpriteRenderer",
+      "fields": [
+        "m_Enabled",
+        "m_SortingLayerID",
+        "m_SortingOrder",
+        "m_Color",
+        "m_FlipX",
+        "m_FlipY",
+        "m_DrawMode",
+        "m_Size",
+        "m_Materials",
+        "m_Sprite"
+      ]
+    },
+    {
+      "cab": "CAB-23bef326149fbeb0f636881d59f9eecc",
+      "path_id": "1544632691189902620",
+      "type": "Transform",
+      "fields": [
+        "m_LocalPosition",
+        "m_LocalRotation",
+        "m_LocalScale"
+      ]
+    },
+    {
+      "cab": "CAB-23bef326149fbeb0f636881d59f9eecc",
+      "path_id": "7631631214633643292",
+      "type": "SpriteRenderer",
+      "fields": [
+        "m_Enabled",
+        "m_SortingLayerID",
+        "m_SortingOrder",
+        "m_Color",
+        "m_FlipX",
+        "m_FlipY",
+        "m_DrawMode",
+        "m_Size",
+        "m_Materials",
+        "m_Sprite"
+      ]
+    },
+    {
+      "cab": "CAB-23bef326149fbeb0f636881d59f9eecc",
+      "path_id": "2275515632009964828",
+      "type": "RectTransform",
+      "fields": [
+        "m_LocalPosition",
+        "m_LocalRotation",
+        "m_LocalScale",
+        "m_AnchorMin",
+        "m_AnchorMax",
+        "m_AnchoredPosition",
+        "m_SizeDelta",
+        "m_Pivot"
+      ]
+    },
+    {
+      "cab": "CAB-23bef326149fbeb0f636881d59f9eecc",
+      "path_id": "7566977312001060124",
+      "type": "MeshRenderer",
+      "fields": [
+        "m_Enabled",
+        "m_SortingLayerID",
+        "m_SortingOrder",
+        "m_Materials"
+      ]
+    },
+    {
+      "cab": "CAB-23bef326149fbeb0f636881d59f9eecc",
+      "path_id": "-7258807929479467748",
+      "type": "TMPro.TextMeshPro",
+      "fields": [
+        "m_GameObject",
+        "m_Enabled",
+        "m_Script",
+        "m_Name",
+        "m_Material",
+        "m_Color",
+        "m_RaycastTarget",
+        "m_RaycastPadding",
+        "m_Maskable",
+        "m_OnCullStateChanged",
+        "m_text",
+        "m_isRightToLeft",
+        "m_fontAsset",
+        "m_sharedMaterial",
+        "m_fontSharedMaterials",
+        "m_fontMaterial",
+        "m_fontMaterials",
+        "m_fontColor32",
+        "m_fontColor",
+        "m_enableVertexGradient",
+        "m_colorMode",
+        "m_fontColorGradient",
+        "m_fontColorGradientPreset",
+        "m_spriteAsset",
+        "m_tintAllSprites",
+        "m_StyleSheet",
+        "m_TextStyleHashCode",
+        "m_overrideHtmlColors",
+        "m_faceColor",
+        "m_fontSize",
+        "m_fontSizeBase",
+        "m_fontWeight",
+        "m_enableAutoSizing",
+        "m_fontSizeMin",
+        "m_fontSizeMax",
+        "m_fontStyle",
+        "m_HorizontalAlignment",
+        "m_VerticalAlignment",
+        "m_textAlignment",
+        "m_characterSpacing",
+        "m_wordSpacing",
+        "m_lineSpacing",
+        "m_lineSpacingMax",
+        "m_paragraphSpacing",
+        "m_charWidthMaxAdj",
+        "m_enableWordWrapping",
+        "m_wordWrappingRatios",
+        "m_overflowMode",
+        "m_linkedTextComponent",
+        "parentLinkedComponent",
+        "m_enableKerning",
+        "m_enableExtraPadding",
+        "checkPaddingRequired",
+        "m_isRichText",
+        "m_parseCtrlCharacters",
+        "m_isOrthographic",
+        "m_isCullingEnabled",
+        "m_horizontalMapping",
+        "m_verticalMapping",
+        "m_uvLineOffset",
+        "m_geometrySortingOrder",
+        "m_IsTextObjectScaleStatic",
+        "m_VertexBufferAutoSizeReduction",
+        "m_useMaxVisibleDescender",
+        "m_pageToDisplay",
+        "m_margin",
+        "m_isUsingLegacyAnimationComponent",
+        "m_isVolumetricText",
+        "_SortingLayer",
+        "_SortingLayerID",
+        "_SortingOrder",
+        "m_hasFontAssetChanged",
+        "m_renderer",
+        "m_maskType"
+      ]
+    },
+    {
+      "cab": "CAB-23bef326149fbeb0f636881d59f9eecc",
+      "path_id": "-8153466209694618340",
+      "type": "MultiLanguageText",
+      "fields": [
+        "m_GameObject",
+        "m_Enabled",
+        "m_Script",
+        "m_Name",
+        "myKey"
+      ]
+    },
+    {
+      "cab": "CAB-23bef326149fbeb0f636881d59f9eecc",
+      "path_id": "-4270703872832475876",
+      "type": "TMPro.TMPEffect",
+      "fields": [
+        "m_GameObject",
+        "m_Enabled",
+        "m_Script",
+        "m_Name",
+        "dilate",
+        "linearDodge",
+        "useVertexColor",
+        "RealtimeUpdate",
+        "outline",
+        "outlineColor",
+        "outlineWidth",
+        "outline2",
+        "outlineColor2",
+        "outlineWidth2",
+        "underlay",
+        "underlayColor",
+        "shadowAngle",
+        "shadowDis",
+        "shadowBlur",
+        "glow",
+        "glowColor",
+        "glowOffset",
+        "glowInner",
+        "glowOuter",
+        "glowPower",
+        "gray"
+      ]
+    }
+  ],
+  "sprite_bindings": [
+    {
+      "renderer": 212061268324235159,
+      "sourceKey": "cab-23bef326149fbeb0f636881d59f9eecc:3154049626077621532"
+    },
+    {
+      "renderer": 212709867586078768,
+      "sourceKey": "cab-23bef326149fbeb0f636881d59f9eecc:7631631214633643292"
+    }
+  ],
+  "assets": [
+    {
+      "input": {
+        "path": "output/validation/map14-shared-core-dc0a4c10515c48d0b07697df7a3cc697/hero-statue-native/export/ExportedProject/Assets/Animation/UI/MapRadarTipFade/StageCostTipFadeIn.anim",
+        "sha256": "87e27dd4a6f4921d1da61f0438887208049905da31b502b2e9aef771bc7e5c3a"
+      },
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Animation/UI/MapRadarTipFade/StageCostTipFadeIn.anim",
+        "sha256": "668a328a2af4a176fc8332c354b901fe582e7f7386462df7a398fdfaeb339ad6"
+      }
+    },
+    {
+      "input": {
+        "path": "output/validation/map14-shared-core-dc0a4c10515c48d0b07697df7a3cc697/hero-statue-native/export/ExportedProject/Assets/Animation/UI/MapRadarTipFade/StageCostTipFadeOut.anim",
+        "sha256": "f5f4a543d12ee56ca274095816eaff94449dec100a61ed8391d3dc787bd11e10"
+      },
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Animation/UI/MapRadarTipFade/StageCostTipFadeOut.anim",
+        "sha256": "6af8be5e4e3483417efd40438138a0053bf8c80ecf93c58d3bfaed63943a7360"
+      }
+    }
+  ],
+  "operation": "Preserve original StageCostTip GameObject/component hierarchy and exported scalar YAML text. Compare complete consumed original MonoBehaviour fields including TMP/font/effect data and original pointer identities, float32 bits, transform/renderer/animation properties. Bind exact current original font and migrated scripts/materials, original animation clips and packed Sprite library before activation. Add only explicit sprite-loading metadata.",
+  "validation_entry": "Zjcs.Editor.Map14.OfficialMap14RadarNativeAcceptance.Run",
+  "validation": "Unity 2022.3.57f1c2 internal-display D3D11 isolated import/compile and Play Mode passed: original hierarchy, nonempty text 1/10/100, character-count icon offsets, cloned original dynamic font, original native prefab icon, fade curves/event, original tip-pool inactive return/reactivated reuse, sprite-operation release and localization teardown. Actual rendered frames and four-statue regression viewed. Root project static metadata check passed.",
+  "limitations": [
+    "Cost values and item icon lookup use explicit presentation fixtures; no claim of original item 325 configuration or icon. Formal item-icon loading, player/map/HUD/simulated pointer/save, complete ProjectTools.Validate and Windows Player remain required."
+  ]
+}
