@@ -271,3 +271,5 @@ Unity 支持在编辑器 Play Mode 中真实运行场景、驱动交互并截取
 ## Windows 发布
 
 Windows 正式成品统一输出到 `D:/Desktop/杖剑传说/`，入口为 `杖剑传说.exe`。完整 Unity 游戏尚未整体验证前，不得发布、覆盖现有成品或修改桌面快捷方式。只有需要验证导出行为、修改构建链或用户要求更新成品时才构建；复用正式目录的增量基准。
+
+龙之国剧情气泡的恢复入口为 `scripts/prepare_unity_map14_bubble_ui.py`／`prepare_unity_story_bubble_runtime.py`，原生窗口在 `Resources/Map14/BubbleUI/`，官方投影在 `Assets/Official/World/Map/14/BubbleUI/`。当前 APK-first 原来源保留完整层级、组件字段、原始字节哈希和两张精灵；原 UI 坐标和绑定直接转换。Windows 运行时在独立字体副本中以官方 TTF 重建空动态图集内的旧字形记录，并校验原字形编号和指标，保持源素材不变。来源及输入输出哈希见两份 Map14 bubble UI／runtime 清单；导入、编译、全工程校验与内置屏两种竖屏画面、模拟点击／原打字机和跟随已验证，正式地图／Timeline／存档与 Windows Player 仍未完成，详见[龙之国](maps/map-14.md)。本批尚未进入完整素材快照。

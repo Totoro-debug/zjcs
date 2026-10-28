@@ -1,0 +1,126 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "operation": "Recover original BubbleDialog hierarchy, native transforms, all component fields and pointer bindings, original sprites and native object SHA256. Selected APK-first verified cloud resolution; no replacement layout.",
+  "prefab": {
+    "address": "UI/Story/BubbleDialog.prefab",
+    "path": "Assets/Prefabs/UI/Story/BubbleDialog.prefab",
+    "guid": "581a956da87be0b41a7a2f6ba1b3ef2f",
+    "tags": [],
+    "bundle": "defaultpackage_assets_prefabs_ui_story.bundle"
+  },
+  "source": {
+    "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+    "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+    "path_id": "-5944595170634845623",
+    "origin": "apk_zip",
+    "manifest": "871_156598",
+    "apk_manifest": "854_156383",
+    "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+    "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+    "raw_size": 126656,
+    "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+    "path": "Assets/Prefabs/UI/Story/BubbleDialog.prefab"
+  },
+  "resources": {
+    "res://unity/Assets/Official/World/Map/14/BubbleUI/Sprites/Imgzhengchang-18515749c9.png": {
+      "bundle": "defaultpackage_assets_image_ui_dialogue.bundle",
+      "bundle_hash": "9a2956525b907e44fbdf9e255fb3c2ad",
+      "path_id": "7240923616665694128",
+      "origin": "apk_zip",
+      "manifest": "871_156598",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/9a2956525b907e44fbdf9e255fb3c2ad.bundle",
+      "raw_size": 74651,
+      "raw_sha256": "42afdfb2bf24409e43eab3f281f3f3e47ff766d9e380e07438223232910c1816",
+      "sha256": "18515749c914cbe6fee816f6e378e50bb8c4081ff65390cd3248a684d3e7beec"
+    },
+    "res://unity/Assets/Official/World/Map/14/BubbleUI/Sprites/ImgFennu-690b7ac155.png": {
+      "bundle": "defaultpackage_assets_image_ui_dialogue.bundle",
+      "bundle_hash": "9a2956525b907e44fbdf9e255fb3c2ad",
+      "path_id": "-6357345146055522057",
+      "origin": "apk_zip",
+      "manifest": "871_156598",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/9a2956525b907e44fbdf9e255fb3c2ad.bundle",
+      "raw_size": 74651,
+      "raw_sha256": "42afdfb2bf24409e43eab3f281f3f3e47ff766d9e380e07438223232910c1816",
+      "sha256": "690b7ac155c92efc40110a276cc7cb75ed641969052d94e1c8a6aad9acf2ff0e"
+    }
+  },
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Framework.dll",
+      "sha256": "2b2bed9a863049192ab828f305f8ad36e0f72fd673d7624ffe2078d0fb81795e"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map14_bubble_ui.py",
+      "sha256": "52c44cb22c2816e983a6bc0635683ff9823cd8bab324cff1b6a21465e1dbfc5a"
+    },
+    {
+      "path": "scripts/map11_support_ui.py",
+      "sha256": "8402f6b43054e50f71ed5cd4570352aa90c9e2105c28b3e12c1c9381ee3328ee"
+    },
+    {
+      "path": "scripts/prepare_unity_map11_ui.py",
+      "sha256": "5d0b9ba223e639131a8ff214b04148a57cee8706835db7f870f3995359ed6cd0"
+    }
+  ],
+  "schemaDependencies": [
+    {
+      "path": "unity/Library/ScriptAssemblies/Unity.TextMeshPro.dll",
+      "sha256": "55c187073ef63fa95dcc44b7871eaba8c3ec371df8f82f8b4ae26503cce208ec"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "assets/reference/official-map/map13-native-text-font-source-manifest.json",
+      "sha256": "61d7a8dd4f21485b4a7b9cb4c02801ed396e886060ad21466d4fd25b9a4af2a5"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/14/BubbleUI/bubble-ui.json",
+      "sha256": "446dff381ff9acdec9bcc7d9d637268f830fb328a991d965506fe11e82399656"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/BubbleUI/bubble-ui.json.meta",
+      "sha256": "0b5284107ee5ce0d66d043da4ec96ef838e43b067429a8726106b669c6050b8d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/BubbleUI/Sprites.meta",
+      "sha256": "b99ab084634ad1f476b1a85310ae565f1e78a6cc54e0fca6c3eb65a5bf1d6c6a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/BubbleUI/Sprites/ImgFennu-690b7ac155.png",
+      "sha256": "690b7ac155c92efc40110a276cc7cb75ed641969052d94e1c8a6aad9acf2ff0e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/BubbleUI/Sprites/ImgFennu-690b7ac155.png.meta",
+      "sha256": "77ac2663d764369294c888db336c4a128a89ea76f916b70237a307aafa34cd48"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/BubbleUI/Sprites/Imgzhengchang-18515749c9.png",
+      "sha256": "18515749c914cbe6fee816f6e378e50bb8c4081ff65390cd3248a684d3e7beec"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/BubbleUI/Sprites/Imgzhengchang-18515749c9.png.meta",
+      "sha256": "9dce23fed8d2a5d30908347f187bb638d7c3c2b6e605a8f34aa87eb400f5cf01"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/BubbleUI.meta",
+      "sha256": "751217516315aec74f836148384cab6415b4760908a6b5462a0d816b6f09bd47"
+    }
+  ],
+  "limitations": [
+    "Native Windows prefab import, original BubbleDialog/Timeline behavior and graphical input validation still required."
+  ]
+}

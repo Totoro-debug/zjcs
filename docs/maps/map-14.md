@@ -64,6 +64,8 @@
 
 - 原外部剧情节点注册接口、管理器、启停注册组件及 `CinemachineTrackStoryBinder` 已迁入 `Runtime/Official/StoryNodes/`，保留同键覆盖后通知、缺项注销仍通知、Unity 已销毁对象语义、匹配列表注册／全部键注销，以及相机轨道仅补空绑定。两份异步方法按原 MoveNext 调用链恢复：可选 `UniTask.WaitUntil`、原 PlayerLoopTiming 8、原令牌与非立即取消，等待后再次读取原节点；不等待分支沿原实现不使用令牌。显式注入替代 DI，职业界面注册可复用同一宿主。内置屏隔离 Unity 导入／编译、`ProjectTools.Validate` 与 Play Mode 的注册、覆盖、启停、类型查找、延迟注册、取消、已销毁对象及原生 Cinemachine Timeline 绑定通过。来源 `map14-story-nodes-runtime-source-manifest.json`，恢复器 `scripts/prepare_unity_story_nodes_runtime.py`；原完整 Timeline／虚拟相机／角色／气泡、实际地图画面、输入和存档仍待接通。
 
+- 原 `BubbleDialog`、`AttachToObjUI`、`TMP_TypeWriterEffect`、两份 bloom 分组及 `ButtonSound` 已按当前官方源码迁移；原气泡 prefab 的 10 层级／43 组件字段／2 张精灵已恢复为 `Resources/Map14/BubbleUI/BubbleDialog.prefab`，保留原坐标、锚点、布局、字体、颜色、引用和窗口元数据。实体投影、固定时长／逐字间隔、打断回调、队列点击／自动播放、HUD 隐藏与恢复顺序沿用原逻辑，单例服务改为显式绑定。内置屏隔离 Unity 导入／编译、`ProjectTools.Validate`、450×800／720×1280 实际画面、四句实体 Timeline 台词、省略号像素、跟随、遮挡射线及模拟鼠标推进／关闭通过；原字体源资产保持不变。根工程静态检查通过。来源为 `map14-bubble-ui-source-manifest.json` 与 `map14-story-bubble-runtime-source-manifest.json`，恢复器为 `scripts/prepare_unity_map14_bubble_ui.py`、`scripts/prepare_unity_story_bubble_runtime.py`；正式实体 Timeline、地图输入／业务／存档和 Windows Player 尚未接通，此子模块不代表地图交付完成。
+
 ## 自定义实现
 
 原演出核心以显式中心注入及调用方提供两个原帧阶段替代 DI／R3 注册；日志接入 Unity，移除只用于 Inspector／MessagePack 的属性。调度、数值、状态和回调顺序保留，正式宿主的生命周期接入仍待验证。
@@ -77,6 +79,8 @@
 火炮终端共 7 个：`1512`、`2914`、`5015`、`6912`、`8011`、`8516`、`9413`，原类型为 `MapWorldPuzzleType.Cannon=4`。自动解谜使用原实体类 `6502` 的道具费用 `325×1`，仅清除该终端 `NeedRemoveLoEntityIds` 中的障碍，重复目标去重。不模拟炮弹发射、成功演出或失败状态，不生成额外奖励。重置只清除这些障碍的 `destroyed` 标记，不改变终端状态、玩家位置、其他机关、费用或奖励。
 
 五组走格子终端为 `909`、`1715`、`3612`、`4214`、`4505`，放置配置将 `PuzzleType` 覆盖为 6；分别指定辅助锁 `903`、`1708`、`3613`、`4215`、`4517`。用户确认沿用[鲸背岛](map-16.md)方案：辅助消耗 `325×1`，仅解开配置指定的锁；重置只恢复本组踏板和辅助锁，保留奖励及领取记录；完成后按原顺序执行奖励生成链。当前 Common／客户端只有自动完成和重置标记，没有服务端执行器，不能将此适配写成官方服务器实现。
+
+剧情气泡的 Windows 字体缓存适配：原 Android 动态字体图集无像素，但保留省略号和下划线记录；`Runtime/Offline/StoryBubbles/BubbleFontBinding` 为窗口克隆字体、图集和材质，使用同一份官方 TTF 重建初始字形，并要求字形编号及指标完全一致。随后按原 TMP 机制动态添加正文字符，不替换字体或改写官方源资产。
 
 ## 尚未实现
 

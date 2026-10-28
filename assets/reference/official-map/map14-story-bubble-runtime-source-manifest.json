@@ -1,0 +1,251 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Framework.FirstPass.Runtime.dll",
+      "sha256": "fe49d4ce3611fbd7f9a2fe73fdd0986253b9f44517eb1044e717d901dd2caabe"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TMP_TypeWriterEffect.cs",
+      "sha256": "97adcf6e2acd9b6e7c101cc5da05457592317ee86f71a0d465cbc2525275e776"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/AttachToObjUI.cs",
+      "sha256": "dfa8e5905e2e3e65c9d27d7cca8685cd238323763611aa7c956639fb7b510e31"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/BubbleDialog.cs",
+      "sha256": "c7e85739748d709f07dc4cb32269251197b7ffd3b4a54d1b31d62a70260cc4d2"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/UIBloomGroupBase.cs",
+      "sha256": "71d223aa6113944e73237858a9c791bd13fa932b4e5c980ff714168037dc4106"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/UIBloomGroup.cs",
+      "sha256": "8b0067368de53b85fa7e005eb79189a404a7ebe36f7e80ba48feed550c1886d1"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/ButtonSound.cs",
+      "sha256": "25c466a171758877aefabd0c2f61337d6534bfb198c4a21dcf0538f3945830a0"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/UIUtils.cs",
+      "sha256": "b6a88b20df5a8222afafd086f2ae949a5dc661380901bfed6f92449802f57fcf"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MathUtils.cs",
+      "sha256": "d963ca73abf2c4ce64cabb09591ccda5ddfec29cba86ed895214a1c5d89333fb"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/BubbleDialogInfo.cs",
+      "sha256": "0ad4c90c2e49db6368eb2f8e47f0206bf034e7b6bb94ec7cfd5248cb8a1678f3"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "assets/reference/official-map/map14-bubble-ui-source-manifest.json",
+      "sha256": "b52b01aeae98ee025503ff17db6a67a62bbbdf2c611f19fbd0f515f93b71f5a9"
+    },
+    {
+      "path": "assets/reference/official-map/map13-native-text-font-source-manifest.json",
+      "sha256": "61d7a8dd4f21485b4a7b9cb4c02801ed396e886060ad21466d4fd25b9a4af2a5"
+    },
+    {
+      "path": "assets/reference/official-map/map14-entity-timelines-source-manifest.json",
+      "sha256": "c44655d3240d41383bebe6fcbcd5f6eb0f360ff1cf56c8e5ba9af094b097ab8f"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_story_bubble_runtime.py",
+      "sha256": "e21009028210a18dccbfe019c287dcfd6ef671229dc9b3bb2e45af641f5b3325"
+    },
+    {
+      "path": "scripts/prepare_unity_story_sound_runtime.py",
+      "sha256": "7c9e2f9f102b8dd9b832b01bccd73d89748f04a252ca1a4d984dc33f7ed5cbcf"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/TMP_TypeWriterEffect.cs",
+      "sha256": "78e53822989bd7ab5f3b11e84df55d4b655068ff5e83c45cf26ea13a8454b3fa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/TMP_TypeWriterEffect.cs.meta",
+      "sha256": "e4298e66917f8576a5f59984cbed848d44b5047bd0338bc47ef9cab7b65c2d33"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/AttachToObjUI.cs",
+      "sha256": "086ca28a6bca2cba84837f4e1055786dc6040c4877fb61077a03dfa0cde880e5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/AttachToObjUI.cs.meta",
+      "sha256": "ba2a4a17d81a521ea8d42aa1a55b8d53e14f397ab396cd23cb382ce2e9170834"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/BubbleDialog.cs",
+      "sha256": "fa5b9b31021ae6846db7da7058b1866b316cabac535f715d811370b43c585fe5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/BubbleDialog.cs.meta",
+      "sha256": "88ec4b0e79cb2db97ae30b6d97391d0c432fb32738c1dd2df38b08fbe1537355"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/UIBloomGroupBase.cs",
+      "sha256": "60fb1e248ac91bd2b7b50f7aeea00a26a5204f63678293b6f6bd43d78358c0fc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/UIBloomGroupBase.cs.meta",
+      "sha256": "71ef81373dc55ea7b81b56904b8e9aaca5684c2da9cdded052c627cf65501375"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/UIBloomGroup.cs",
+      "sha256": "34034f6a8c96e6f2ffb2bacde6f1b5196773546e62c8ba388aad8dfaa5d6b7de"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/UIBloomGroup.cs.meta",
+      "sha256": "04725ae13c8fe2193c5c91937dc673fcf701e7d4626a9029238b713666de25a2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/ButtonSound.cs",
+      "sha256": "8e3730b189296af5ea24453d63a4b7fcb5fa8b923f98adf6bf11908d4c3aaecd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/ButtonSound.cs.meta",
+      "sha256": "2c75958293b04e4feb66a34801ab10a5e064626d24cee0bb3884bc82bd0118a8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/Zjcs.Official.StoryBubbles.asmdef",
+      "sha256": "3d153818d53a6d5e42e0e6e5d1318c63ace6d45a373ed750036c17e05f1a5ddd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/Zjcs.Official.StoryBubbles.asmdef.meta",
+      "sha256": "6a5cc8d49e8666d00ddf561fa76fab6e768a15f39fe01e26068b462d2a7412b2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles.meta",
+      "sha256": "31f9f180c809abcccdaaed5141fb494af5d4c2563e29aca4e0be8904d2e94314"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/BubbleServices.cs",
+      "sha256": "b0c19c9719d47d1c38b788418aa3d47564883e803f64fd685d74e54bfc6237f2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/BubbleServices.cs.meta",
+      "sha256": "db94da61118c1bc059ab0c800748b7bcc94633538709ca92872b19397db3c773"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/BubbleEntityBinding.cs",
+      "sha256": "33f4da7bfac48fed997e122998503d3a6f59a64f9d5d8343d660448a2de7ad85"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/BubbleEntityBinding.cs.meta",
+      "sha256": "4f35c28f99ade8fd479d4c2e67065c2aa14594863e30f23de23f896e7c6b5cc8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/BubbleProjection.cs",
+      "sha256": "1876dc96e575f683746256f3fcaa4eefa226fe237b9fdca22258957bea2ed33a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/BubbleProjection.cs.meta",
+      "sha256": "50a2e886b48e407ce4913d804958aa879396e118e36ce9604372b9d85d2e6cd6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/BubbleMath.cs",
+      "sha256": "37f83ff79c846c96fe90c82502089e57f5224e73b1e199ecaa47b20c4b39f0bf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/BubbleMath.cs.meta",
+      "sha256": "86a108d3c7ca1e4f26976249964aeabd10bf18a193c37067451670edea3b0a4f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/BubbleWindowSettings.cs",
+      "sha256": "1e67aa8ac1ed3ddc478ad9f97bfba23afa935bee2b65261d347971ec346a9680"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/BubbleWindowSettings.cs.meta",
+      "sha256": "da315a27f1dda2047bc627165c94c8b753b0342b9d49464fd2e34b9969320791"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/StoryBubbles/BubbleFontBinding.cs",
+      "sha256": "6c28dfb6eee46089b757e03924f29b24ac8931553a1e098df74133557838fa0b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/StoryBubbles/BubbleFontBinding.cs.meta",
+      "sha256": "4312142472d49c2a4c1636f80c576ea2d9c4b8569ad03149d01c57cd11c14258"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/StoryBubbles/BubbleFontInstance.cs",
+      "sha256": "f59bfc1fe918e3515b2bfc094ad2b3295b20db1ab66621bdad9de5c97fa62cda"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/StoryBubbles/BubbleFontInstance.cs.meta",
+      "sha256": "739aeea1daf7116977f5358cdde7cb8addc3739b4f464d4435c101f55a5d672d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/StoryBubbles/Zjcs.Offline.StoryBubbles.asmdef",
+      "sha256": "a16273fdc9787384b81a208e8e78851ebef4a5f4da94e20b0c3320bd293e57d8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/StoryBubbles/Zjcs.Offline.StoryBubbles.asmdef.meta",
+      "sha256": "6f7b24914dea48a7d46835fd75c936f15f98c02433329bfa86b9292bc1e3e323"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/StoryBubbles.meta",
+      "sha256": "191c0e571538d168833e5786f7461426319b7ca632f6f3d869ef960e10e39e70"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/Bubbles/OfficialMap14BubbleAcceptance.cs",
+      "sha256": "73ed1220d9715199d2eabb319d4049346f7af94b31c0e11d794a259c2c082469"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/Bubbles/OfficialMap14BubbleAcceptance.cs.meta",
+      "sha256": "7d1574f991a2e2649d1eb1eaf392c3f007e592fde28c31239c9379be8bf60bed"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/Bubbles/OfficialMap14BubbleTools.cs",
+      "sha256": "169f8e2906d5b9fb484fad9e0ed89be8657351e977ba1f3763a7dd726daa38fa"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/Bubbles/OfficialMap14BubbleTools.cs.meta",
+      "sha256": "0396ea76cc3e1be0ac7daceacc7b7bca99357c64810f358267f3852dcb3f8c5c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/Bubbles/Zjcs.Editor.Map14.Bubbles.asmdef",
+      "sha256": "1c8c400034cb97140f38d629b365dd45f4ba7083ad3538788476b3dae0b721fa"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/Bubbles/Zjcs.Editor.Map14.Bubbles.asmdef.meta",
+      "sha256": "72829c4f4c283191a8ce751356c728d1e9c83179738ef43bb8178f6218850beb"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/Bubbles.meta",
+      "sha256": "3a5cb3a644cb8d7bf534185c1543ae3c0368bbd924ccdb7023cd14c34619bcf7"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/BubbleUI/BubbleDialog.prefab",
+      "sha256": "557af3cdf8b8f7c39f01dcba5e66037167ea8d1a1281c80f43c19e5d612366b9"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/BubbleUI/BubbleDialog.prefab.meta",
+      "sha256": "77bc3b59ea00e17e88d70877cd52c2886e2462f34fbeaaad564d3b592b63fda2"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/BubbleUI.meta",
+      "sha256": "1efabf3fdbfae9e766f80e7331b4e044ad40011240ecd626a085c4eab8c461eb"
+    }
+  ],
+  "operation": "Copy official BubbleDialog queue/click/autoplay/typewriter/layout/lifecycle, AttachToObjUI position following, TMP_TypeWriterEffect fixed/interval duration/cancellation, empty bloom grouping and ButtonSound. Preserve original world projection and decimal-rounded integer interpolation. Replace DI/singleton dependencies by explicit IBubbleServices, and MyEntity by an explicit presentation binding carrying original entity class ID and GameObject; no gameplay rules supplied by this adapter.",
+  "fontAdaptation": "Clone the original font, atlas and material per window. If the Android dynamic atlas is empty but retains serialized glyph records, rebuild those glyphs from the same original TTF and require unchanged glyph indices and metrics. Never modify the source font asset.",
+  "limitations": [
+    "Formal map host, Timeline bubble callbacks, map/save flow and Windows Player integration remain pending; isolated Play Mode verification is documented in map-14.md."
+  ]
+}
