@@ -74,13 +74,13 @@ namespace Zjcs.Editor.Map13Skeletons
                 throw new InvalidDataException("Native animation validation must use one repository output/validation session.");
             return output;
         }
-        private static void Reset(Animator animator, NativeMap13AnimatorLibrary.Entry entry)
+        internal static void Reset(Animator animator, NativeMap13AnimatorLibrary.Entry entry)
         {
             animator.Rebind();
             foreach (var p in entry.parameters)
                 if (p.type == 9) animator.ResetTrigger(p.name); else animator.SetBool(p.name, false);
         }
-        private static void HoldState(Animator animator, NativeMap13AnimatorLibrary.Entry entry, int index)
+        internal static void HoldState(Animator animator, NativeMap13AnimatorLibrary.Entry entry, int index)
         {
             var bools = entry.parameters.Where(p => p.type == 4).ToArray();
             Require(bools.Length < 16, "Native state probe requires too many bool combinations.");
@@ -98,7 +98,7 @@ namespace Zjcs.Editor.Map13Skeletons
             }
             throw new InvalidDataException("Original state has no stable immediate-parameter assignment: " + entry.name + "/" + entry.states[index].name);
         }
-        private static void VerifyNativeControllers()
+        internal static void VerifyNativeControllers()
         {
             string receiptPath = Path.Combine(OfficialMap13SkeletonTools.Repository,
                 "assets/reference/official-map/map13-native-prop-animators-source-manifest.json");

@@ -81,7 +81,7 @@ namespace Zjcs.Editor.Map13Skeletons
             camera.gameObject.AddComponent<UniversalAdditionalCameraData>();
             var light = new GameObject("Native geometry diagnostic global illumination").AddComponent<Light2D>();
             light.lightType = Light2D.LightType.Global; light.intensity = 1;
-            var target = new RenderTexture(256, 256, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB); target.Create(); camera.targetTexture = target;
+            var target = new RenderTexture(256, 256, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB); target.Create(); camera.targetTexture = target; camera.aspect = 1;
             var readback = new Texture2D(256, 256, TextureFormat.RGBA32, false, false);
             int poses = 0, animations = 0, finite = 0, pixels = 0, index = 0;
             var best = new Dictionary<string, Tuple<NativeMap13Animation, float>>();
@@ -126,7 +126,7 @@ namespace Zjcs.Editor.Map13Skeletons
                 var data = catalog.Require(profile.model); var chosen = best[profile.model];
                 using (var view = new NativeMap13SkeletonView(data, profile.fields, null, data.name))
                 {
-                    view.ApplyPose(chosen.Item1, chosen.Item2); var bounds = view.LocalBounds;
+                    view.ApplyPose(chosen.Item1, chosen.Item2); yield return null;
                     // Diagnostic framing only. Source vertex positions and original renderer
                     // profile/material are preserved; this does not stand in for the map layout.
                     var renderBounds = new Bounds(); bool first = true;
@@ -145,7 +145,9 @@ namespace Zjcs.Editor.Map13Skeletons
                     index++;
                     if (index % 16 == 0 || index == catalog.renderers.Length)
                     {
-                        gallery.Apply(); string folder = Path.GetFullPath(".tools/map13-native-skeletons"); Directory.CreateDirectory(folder);
+                        string session = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+                        if (string.IsNullOrEmpty(session)) throw new InvalidDataException("Set the native skeleton validation output session.");
+                        gallery.Apply(); string folder = Path.Combine(session, "native-skeletons"); Directory.CreateDirectory(folder);
                         File.WriteAllBytes(Path.Combine(folder, "original-profiles-" + ((index - 1) / 16) + ".png"), gallery.EncodeToPNG());
                         gallery.SetPixels(Enumerable.Repeat(Color.clear, 1024 * 1024).ToArray());
                     }
@@ -159,6 +161,8 @@ namespace Zjcs.Editor.Map13Skeletons
                 acceptance_sha256 = OfficialMap13SkeletonTools.Hash(File.ReadAllBytes("Assets/Game/Editor/Map13Skeletons/OfficialMap13SkeletonAcceptance.cs")),
                 coverage = "Play Mode: all source key times and an interior time per segment, affine/clipping invariants, named loop/end playback, 57 original material/profile camera draws. Animator transitions, separated prefab parts, full map layout/input and saves are not exercised." });
             Debug.Log($"Original Map13 native skeleton Play Mode passed: 27 models, {animations} animations, {poses} poses, {finite} finite matrix fields, {index} original profile camera draws, {pixels} visible pixels. Formal prefab/Animator/input/save integration remains outstanding.");
+            yield return OfficialMap13MecanimAcceptance.Verify(catalog, camera, target, readback);
+            if (error) throw new InvalidDataException("Original native Mecanim geometry execution logged errors.");
             camera.targetTexture = null; target.Release(); UnityEngine.Object.Destroy(target); UnityEngine.Object.Destroy(readback); UnityEngine.Object.Destroy(gallery);
         }
         private static void VerifyAffineAndClipping()

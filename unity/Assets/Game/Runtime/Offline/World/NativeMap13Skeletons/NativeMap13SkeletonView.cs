@@ -81,6 +81,23 @@ namespace Zjcs.Offline.World.NativeMap13Skeletons
 
         public void ApplyPose(NativeMap13Animation pose, float time)
         {
+            ResetPose(); ApplyAnimation(pose, time, 1); UpdateGeometry();
+        }
+
+        // Independently implemented from the documented Mix Next operation:
+        // apply the outgoing pose, then interpolate the incoming keyed channels.
+        // https://us.esotericsoftware.com/spine-unity-main-components-4.2
+        public void ApplyBlend(NativeMap13Animation previous, float previousTime,
+            NativeMap13Animation next, float nextTime, float incomingWeight)
+        {
+            if (float.IsNaN(incomingWeight) || incomingWeight < 0 || incomingWeight > 1)
+                throw new ArgumentOutOfRangeException(nameof(incomingWeight));
+            ResetPose(); ApplyAnimation(previous, previousTime, 1);
+            ApplyAnimation(next, nextTime, incomingWeight); UpdateGeometry();
+        }
+
+        private void ResetPose()
+        {
             if (disposed) throw new ObjectDisposedException(nameof(NativeMap13SkeletonView));
             for (int i = 0; i < matrices.Length; i++)
             {
@@ -93,23 +110,47 @@ namespace Zjcs.Offline.World.NativeMap13Skeletons
                 if (source.slots[i].blend != "normal" || !ColorUtility.TryParseHtmlString("#" + source.slots[i].color, out colors[i]))
                     throw new InvalidOperationException("Original prop slot blend/color differs.");
             }
-            if (pose != null)
+        }
+        private void ApplyAnimation(NativeMap13Animation pose, float time, float weight)
+        {
+            if (pose != null && weight > 0)
             {
                 foreach (var track in pose.tracks)
                 {
                     if (track.keys.Length == 0 || time < track.keys[0].time) continue;
                     if (track.Curve == null) throw new InvalidOperationException("Original prop curve is not imported.");
                     float v = track.Curve.Evaluate(time); int i = track.index, axis = track.axis;
-                    if (track.kind == 0 && axis == 2) rotations[i] += v;
-                    else if (track.kind == 0) { var p = positions[i]; p[axis] += v * source.scale; positions[i] = p; }
-                    else if (track.kind == 1) { var s = scales[i]; s[axis] *= v; scales[i] = s; }
-                    else if (track.kind == 2) { var c = colors[i]; c[axis] = v; colors[i] = c; }
-                    else if (track.kind == 4) { var s = shears[i]; s[axis] += v; shears[i] = s; }
+                    if (track.kind == 0 && axis == 2)
+                    {
+                        float target = source.bones[i].rotation + v;
+                        rotations[i] = weight == 1 ? target : rotations[i] + Mathf.DeltaAngle(rotations[i], target) * weight;
+                    }
+                    else if (track.kind == 0)
+                    {
+                        var p = positions[i]; var b = source.bones[i];
+                        float target = (axis == 0 ? b.x : b.y) * source.scale + v * source.scale;
+                        p[axis] = weight == 1 ? target : Mathf.LerpUnclamped(p[axis], target, weight); positions[i] = p;
+                    }
+                    else if (track.kind == 1)
+                    {
+                        var s = scales[i]; var b = source.bones[i]; float target = (axis == 0 ? b.scaleX : b.scaleY) * v;
+                        s[axis] = weight == 1 ? target : Mathf.LerpUnclamped(s[axis], target, weight); scales[i] = s;
+                    }
+                    else if (track.kind == 2)
+                    { var c = colors[i]; c[axis] = weight == 1 ? v : Mathf.LerpUnclamped(c[axis], v, weight); colors[i] = c; }
+                    else if (track.kind == 4)
+                    {
+                        var s = shears[i]; var b = source.bones[i]; float target = (axis == 0 ? b.shearX : b.shearY) + v;
+                        s[axis] = weight == 1 ? target : Mathf.LerpUnclamped(s[axis], target, weight); shears[i] = s;
+                    }
                     else throw new InvalidOperationException("Unsupported original prop timeline.");
                 }
                 foreach (var key in pose.attachments) if (key.time <= time) attachments[key.slot] = key.attachment;
                 foreach (var key in pose.drawOrders) if (key.time <= time) Array.Copy(key.slots, order, order.Length);
             }
+        }
+        private void UpdateGeometry()
+        {
             for (int i = 0; i < matrices.Length; i++)
             {
                 var b = source.bones[i]; if (b.parent >= i) throw new InvalidOperationException("Bone parent order differs.");

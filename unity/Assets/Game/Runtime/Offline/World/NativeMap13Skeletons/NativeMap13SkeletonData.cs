@@ -71,5 +71,8 @@ namespace Zjcs.Offline.World.NativeMap13Skeletons
         public bool initialFlipX,initialFlipY,pmaVertexColors,tintBlack,useClipping;
         public float zSpacing;
         public string initialSkinName;
+        public NativeMap13Translator translator;
     }
+    [Serializable] public sealed class NativeMap13Translator
+    { public bool autoReset,useCustomMixMode; public int[] layerMixModes,layerBlendModes; }
 }
