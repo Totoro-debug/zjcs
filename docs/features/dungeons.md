@@ -10,6 +10,24 @@
 
 日常副本与竞技的规则、存档及 Home 接入已实现；官方 UI prefab、界面资源绑定和实际战斗流程尚未完整还原或验收，因此本功能未完成。
 
+## 原始官方实现
+
+游记、每日副本与竞技使用各自的原入口、地图／房间、难度、队伍邀请、评级和奖励配置；原 UI 的引用与脚本字段保持独立。
+
+### 官方代码与资源依据
+
+以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
+
+`prepare_dungeon_assets.py` 从固定 APK 的 `image_ui_notes_dailydungeon_map_11`、`image_ui_notes_mopup` 提取原始 Sprite：日常场景、建筑、列表缩略图、秘境工具及卡片底图；按 StageType 18 的 `Stage.Icon` 提取八张关卡图。仅解码、裁切和格式转换，新增 12 项实际使用的运行时资源，显式加载清单同步更新。映射见 `assets/official/dungeons.json`，逐资源 bundle / 对象 / 输出哈希见 source-manifest.json。当前共 1,329 项资源、69 个 prefab、77 张完整配置表。
+
+历史核查（2026-10-12）只检查 APK ZIP，因而将游记插画和专用面板记为未打包，并使用本地卡片与物品图标。2026-10-13 已通过固定 manifest `854_156383` 的校验 CDN 缓存实际转换并接入 77 个专用 prefab、662 个相关图片对象和 23 张配置表，替换游记首页、日常副本、四类采集场、幻想阶梯、羁绊冒险及每日 / 每周 / 竞技玩法入口；原采集配置的 GUID 绑定复用 50 份已转换的官方怪物网格，圣兽原始 UI 模型配置另复用七份；龙神的 `TempRTUI.RTTarget` 按原引用解析为原生网格，替代 Unity 专用渲染纹理相机。历史缺项保留在总清单 `resolved` 的 `previous` 中，不能再据此声称官方资源缺失。未使用自绘素材。
+
+`scripts/prepare_battle_arena.py --runtime --verify-apk` 按固定 APK `854_156383` 校验并完整解码 `arena_guard_template`、`arena_rank_template`、`arena_match_rule`、`arena_match_strategy`、`arena_score_ratio`、`arena_daily_award`、`arena_season_award` 与 `item_count_limit` 八张原表。运行配置为 `assets/official/arena-rules.json`；守卫记录包含原始 `AppendAppearances` 的性别分组及皮肤类型／ID。各表源 bundle、对象路径、Luban 构造器、输入字节哈希及当前输出哈希见 [arena-source-manifest.json](../../assets/reference/arena-source-manifest.json)。竞技面板继续使用已转换的原 `ArenaPanel` prefab；未从静态守卫模板推断真人占位或赛季服务端记录。
+
+`scripts/prepare_dungeon_bindings.py` 从固定 manifest `854_156383` 的 `prefabs_ui_dailydungeon`、`prefabs_ui_demonbattlefield`、`prefabs_ui_mopup`、`prefabs_ui_npcadventure`、`prefabs_ui_team` 及 `prefabs_ui_common` 读取原组件字段、RectTransform、Grid／LayoutGroup、StateSwitcher 和嵌入的规则行；原 `rule_tip.g.bytes` 与语言包提供说明与品质／难度／排序名称。生成原始配置数据，未重新设计窗口。
+
+此前未转换的四张原 Sprite 独立解码到 `assets/official/dungeon-ui/`。对象 CAB、bundle／APK或原 CDN 凭据、对象名、输入及输出 SHA256、原 prefab 和配置输入记录在 `assets/reference/dungeon-ui/source-manifest.json`；其余图像复用已转换的同一原对象。来源不包含新版同名包或自绘素材。官方规则和 NPC 战力公式分别来自 DailyDungeonTipInfoDialogItem、RewardRuleInfoParser、NpcFightData、BattleFormulaHandler 等原代码；用户补充的离线规则另见对应功能／地图文档。
+
 ## 完整还原部分
 
 官方资源已按固定版 `854_156383` 转换为本地运行目录：`scripts/prepare_dungeons_runtime.py` 导出日常副本地图、房间、难度条件、奖励规则及战斗场景；`scripts/prepare_battle_arena.py --runtime --verify-apk` 导出竞技守卫（含原性别分组附加皮肤）、名次模板、匹配策略和竞技战斗场景。资源由 `OfflineDailyDungeonSession`、`OfflineArenaSession` 读取并校验。
@@ -20,7 +38,7 @@
 
 日常副本目录只列入口区域进度为 `10000` 的公开副本并排除剧情难度 50；难度页签按原 tab 条件显示，默认选择最高永久解锁难度，锁页显示等级、战力／阶位压制及前难度评级条件，左右翻页按公开副本／可见难度组合顺序推进。日常副本按官方配置检查永久难度解锁、独立入场条件、每日次数和额外次数消耗，保存当前路线、清理房间、评级及战斗检查点；奖励按官方 `RewardRuleInfoParser` 的条件、`Percent`、候选权重及数量结算；`RandomReward` 装备占位项通过固定版 `random_reward` 的候选装备及权重生成实际装备实例，装备等级和祝福等级使用对应地图组、难度的官方范围。主动离开仅结算清理房间配置掉落且不返次数，战斗失败保留当前路线并清除本场战斗检查点以允许重打；已清理房间不能重复挑战。区域公开通过已保存的主线区域进度判定。竞技场按 `ArenaEntry` Type 58 的地图预览／开放门槛显示，读取原匹配区间和守卫权重，支持免费／付费刷新、购买挑战次数、本地挑战名次和胜负奖励；胜利后名次移至对手名次。挑战前按官方守卫战力与 `ArenaCombatRatingDirectWinPercent` 提供正常战斗／直接胜利选择，直接胜利消耗次数并走同一胜场结算；守卫使用模板附加外观，性别按本地均衡随机选择并随挑战保存。`DailyDungeonBattleRunner`、`ArenaBattleRunner` 使用官方战斗配置和场景接入战斗控制器，并保存战斗检查点。
 
-副本目录通过 `HomeFeatureRuntime.MapRegionProgress` 读取统一离线主线区域进度接口；进度达到 `10000` 时视为公开。该接口由主线区域目标推进，本次不扩展地图类 11–23 的运行时接线。
+副本目录通过 `HomeFeatureRuntime.MapRegionProgress` 读取统一离线主线区域进度接口；进度达到 `10000` 时视为公开。该接口由主线区域目标推进，不扩展地图类 11–23 的运行时接线。
 
 机神山私图详情已接回原解锁、进入按钮和标题栏三组状态切换及无难度奖励标题；状态对象引用和原语言键由官方 prefab／代码提取。该变更仅恢复原显示分支，费用、奖励和次数保持既定边界，实际界面输入仍待验收。
 
@@ -38,7 +56,7 @@
 
 机神山私图匹配显示动画现保留原60 Hz／0.9333333373秒 Legacy clip 的31条浮点曲线和5条缩放曲线，逐项核对 float32 关键帧、切线、权重及事件；原第5帧 `PostEvent(0)` 通过迁移的 AnimationSoundPlayer 播放已验证的 TeamMatch_Waiting_1。原播放参数、两处 CanvasGroup 原值与17组实际目标已绑定；共享动画另外6条曲线的原目标在本 prefab 缺席，保留完整原曲线并记录来源。来源见 `assets/reference/official-map/map12-matching-animation-source-manifest.json`。无覆盖复现、独立 C# 编译、路径回放和静态检查通过；实际播放夹具尚未执行，匹配业务和正式控件输入仍待验证。
 
-机神山匹配图另接回两处原 `RotateAnimation`，圆环和光晕分别沿本地 Z 轴以50°／80°每秒更新，保留原启用值及 `Time.deltaTime` 执行方式；组件和原代码哈希并入同一匹配来源清单。实际帧旋转夹具已补齐，随用户暂停的自动运行验收保留待执行；UIMesh 与原扭曲材质的实际运行仍待验证。 本次旋转来源与绑定无覆盖复现、三项独立 C# 编译及72,510 GUID静态检查通过；自动运行验收仍按用户要求暂停。
+机神山匹配图另接回两处原 `RotateAnimation`，圆环和光晕分别沿本地 Z 轴以50°／80°每秒更新，保留原启用值及 `Time.deltaTime` 执行方式；组件和原代码哈希并入同一匹配来源清单。实际帧旋转夹具已补齐，随用户暂停的自动运行验收保留待执行；UIMesh 与原扭曲材质的实际运行仍待验证。 旋转来源与绑定无覆盖复现、三项独立 C# 编译及72,510 GUID静态检查通过；自动运行验收仍按用户要求暂停。
 
 机神山匹配两处 UIMesh 已恢复原82顶点／240索引 Mesh、两份原扭曲材质与五张原贴图，并复用来源对象哈希相同的 Windows `UI/EffectDistort`。原 Mesh 缓冲、材质字段、四个 GLES 变体及完整纹理 mip 已逐项核对；原 `UIMesh`／`UIMeshUtils` 的 CanvasRenderer 提交与材质属性更新已迁移，资源按原路径显式加载。来源为 `assets/reference/official-map/map12-matching-mesh-source-manifest.json`。来源与绑定复现、三项独立 C# 编译通过；全工程静态检查通过（72,572 GUID）。原材质／网格和实际画面夹具尚未运行，完整私人副本流程仍未验收。
 
@@ -64,9 +82,7 @@
 - 实际鼠标／键盘输入、战斗胜负与失败重打、奖励结算、路线中断后恢复、竞技排名变化及相关存档恢复均待 Play Mode 核验；当前验收仅通过业务状态断言，驱动器调用回调不等于真实输入或战斗。
 - 最新静态工程检查通过；Unity Player 构建、启动与逐项流程验收尚未执行。
 
-### 依据与代码定位
-
-以下为官方来源、既有规则与回归参考；
+## 代码与资源入口
 
 [TravelNotesPanel](../../.tools/source-packages/official-code/client-source/TravelNotesPanel.cs)、[PlayerDailyDungeonDataExt.CanUnlockDailyDungeonDifficulty／CanEntryDailyDungeonDifficulty](../../.tools/source-packages/official-code/common-source/Common/PlayerDailyDungeonDataExt.cs)、[Player.IsUnlockDailyDungeonByInfo](../../.tools/source-packages/official-code/common-source/Common/Player.cs)、[DailyDungeonDifficultyContent.RefreshTabItem](../../.tools/source-packages/official-code/client-source/DailyDungeonDifficultyContent.cs)、[DailyDungeonLockContent.Refresh／OnClickUnlockBtn](../../.tools/source-packages/official-code/client-source/DailyDungeonLockContent.cs)
 

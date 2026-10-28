@@ -6,9 +6,103 @@
 
 ## 地图简介
 
-地图 ID：12。原目录：坎斯汀大陆/山之国。场景类型：`map_world`；原区域配置99项，BGM配置12。
+12 山之国，范围按下列原配置与本地决策维护。
 
-当前验收对象为 Unity / C#。
+## 原始官方实现
+
+原目录：坎斯汀大陆/山之国。场景类型：`map_world`；原区域配置99项，BGM配置12。
+
+### 官方代码与资源依据
+
+以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
+
+山之国战斗碑原 Team 界面依赖已按 APK 优先、选定871云端补充顺序核对：10份原 prefab、645节点、2914个序列化对象、1105个完整脚本载荷及3104个实际引用，171份 CAB 输入均有原字节哈希。复用已证明的同 APK 原生元数据描述，保留 TMP／外观／布局全字段、节点／组件顺序和64位指针；这是解码源，Windows 原生资源／脚本绑定与队伍运行接线尚未完成。
+
+依据：[原队伍界面来源](../../assets/reference/official-map/map12-team-ui-source-manifest.json)。
+
+山之国七战斗碑的原 `BattleSteleWorldStageDialog`／StageUI／UIBase、目标身份及等级／战力规则，已按选定871程序集和配置恢复窗口本地服务绑定与三类队伍事件生命周期。尚未完成原生窗口导入、正式地图宿主／队伍接线和运行验收。原输入、程序集、依赖及适配哈希见[窗口数据与队伍事件](../../assets/reference/official-map/map12-stele-context-source-manifest.json)，复现入口为 `scripts/prepare_unity_map12_stele_context.py`、`scripts/test_map12_stele_context.ps1`。
+
+山之国原 Team NPC 候选：已按 `NpcInfoParser.GetNpcs(ignoreType)` 的排除语义、`NpcInfo.IsFightAssist` 与 `NpcUtils.IsNpcAssistLimit` 核对95名候选。正式窗口、地图队伍、次数事务、模型及战斗未接线。六张现有打包配置逐项匹配当前构造证明；输入、原代码／程序集及适配输出见[战斗碑 NPC 来源](../../assets/reference/official-map/map12-stele-npcs-source-manifest.json)，范围见[山之国](map-12.md)。
+
+山之国战斗碑及原队伍邀请的玩法状态门槛：`prepare_unity_player_play.py` 复用选定 `871_156598` 的 Common 参数／互斥表，仅转换命名空间与三处 C# 主构造语法；`PlayerPlayStateModule` 按原异步状态机恢复取消、重新检查、10轮边界和开战回调顺序，以本地接口替代玩家／关卡解析器／退出处理器／语言广播。21份原代码、两份程序集、生成／测试适配和37项输出哈希见[原玩法状态来源](../../assets/reference/official-map/map12-player-play-source-manifest.json)，范围见[山之国](map-12.md)。
+
+山之国七战斗碑：`prepare_unity_map12_steles.py` 从当前 `871_156598` 官方配置与两个显示 prefab 提取七个放置关卡、原窗口操作、52条条件奖励和50种奖品的原物品记录。`Map12/steles` 用于区域等级／阶位、怪物+7与本地一次结算；奖励表原空引用1850／1853按客户端空返回保留。专用 UI 新增四个原 prefab 依赖及50种奖品图标闭包，转换源扩为72份／943张；原方法与64位状态绑定已迁入；原确认窗的生命周期、确认／取消分支、帧尾对齐、计时锁及完整时间格式代码也已迁入，并追加计时文字原组件来源与显式绑定。新增 Windows 导入、地图宿主、NPC 队伍及运行验收尚未完成。规则来源见 [Map12 战斗碑](../../assets/reference/official-map/map12-steles-source-manifest.json)，窗口原代码／输入／输出哈希见[专用 UI 清单](../../assets/reference/official-map/map12-stele-ui-source-manifest.json)，范围见[山之国](map-12.md)。
+
+`prepare_map12_rendering.py` 复用固定 manifest `854_156383` 的 APK／匹配 CDN，重新读取 `MapGround_12_bare.prefab` 的原 TilemapRenderer 材质与输入对象。522个Sprite层、110176个Tile、448个Mesh、2591个放置实体保持原地形；水面57个启用Water2保留原四类纹理、参数及0.55水位，另一个原禁用Sea不绘制。WaterMask按原最大值混合和64采样／世界单位转换为本地遮罩，原Submersion上下两遍保留高度图和atlas映射。
+
+依据：`official-map/materials-12-source-manifest.json`。
+
+三处原 `Sprites/Lava` Tilemap材质从官方编译Shader的GLES程序解码，使用原完整Sprite纹理、噪声、世界坐标、0／90／180度流向及原速度、扰动、亮度起伏参数，转换为可供 Unity 验证的格式。原Shader对象、原始字节哈希和解码程序随上述来源收据保存。采用原unlit分支，未移植Unity URP形状光叠加；格式适配不声明与原版逐像素相同。没有自绘图像。共同6530平台仍复用已核对的原空idle和一秒Start；本地图收据独立记录原配置与8个发射器，声音复用既有官方Wwise转换。
+
+七座战碑按放置的原StageId选择905／906／907／908／930／931／932，`prepare_map11_dialogs.py` 的地图参数选择原关卡表与19个原中文键，输出 `assets/official/map12-dialogs.json`；表与语言来源哈希见 `official-map/dialogs-12-source-manifest.json`。界面复用原BattleSteleWorldStageDialog及官方模型。`register_map_assets.py --map12` 仅登记这两份原来源收据的实际输出，`verify_official_assets.py --map12` 核对原输入对象、输出和显式绑定；原APK／CDN预期哈希与185个原版缺项保持原记录。
+
+山之国机神山原教学弹窗另由 `scripts/prepare_map12_dialogs.py` 读取854_156383的DailyDungeonSettings（输入对象SHA256 fd285604245dbaf7f6740bf2f4d186ec55d1e4edea18214879cb55c1aa10061e），按原公共显示ID21／私人关卡ID121绑定原GUID。背景DetailBg_Map_12_1与建筑DetailBuilding_Map_12_1复用既有dungeon-ui来源收据及已转换PNG；原中文标题和描述从匹配语言分包解码，加入map12-dialogs.json。原GUID、对应资源、输入／输出哈希在dialogs-12-source-manifest.json登记；不是新绘图或其他地图占位图。
+
+机神山奖励701熔铸碎片的原Sprite位于 `defaultpackage_assets_image_itemicon_box_equip_map12_noatlas.bundle`（854_156383，MD5 9a2b7c5c790e7766400b2a6f17782542），原路径 `Assets/Image/ItemIcon/Box/Equip_Map12_NoAtlas/item_701.png`。同脚本读取已校验CDN缓存并按原atlas裁切／旋转解码，输出 `assets/official/sprites/item_701-8d9d6962bf.png`，SHA256 3542a8aeb14a68f08e8aa684a1abc1a77c20027b4027dc81a9d4d3e22c852b4a；在icons.json增加701实际绑定。上述独立来源收据保留实际URL、包与对象输入哈希、PNG输出哈希；未用空图或自绘替代。
+
+山之国小地图使用固定 `854_156383` 的 `MiniMap_12`、`MiniMapFullScreenPanel`、`MiniMapMaskedUI`、原筛选与三种标记弹窗 prefab，复用原图标并转换原角色三层动画、区域文字／强度、村庄高亮、虚线、迷雾 TilePattern、99 区公开视野数据及 `UI/Masked` 的灰度遮罩。原 `GridModule` 类型由严格字节解析恢复，未重绘图标或遮罩。区域通知保留 `MapNotifyUI` 的原图标、两秒动画曲线及队列；原动画中无法绑定到 prefab 层级的孤立 `mFillAmount` 轨道如实记录在清单，不据此生成控件。主地图迷雾沿原 `12.prefab` 的 `CloudController2`，保留速度5、两格外边界、原遮罩与云纹理、材质参数和 GLES 程序依据；转换入口为 `scripts/prepare_map12_minimap_ui.py`；原对象、APK／CDN 凭据、脚本及中文二进制哈希、输出哈希统一见 `assets/reference/official-map/minimap-12-source-manifest.json`，运行目录为 `assets/official/map12-minimap.json` 和 `assets/official/map12-minimap-sprites/`，Unity 独立加载绑定尚待接入。
+
+山之国 map-12：`prepare_unity_map12.py` 按 `871_156598` 解码当前程序集、99区／2591实体／原始剧情／模板与92张配置，复用旧转换前严格比对对应记录及有效剧情端口。129个实际美术 bundle 校验长度、MD5和SHA-256，变化的 shader bundle 中7个引用对象核对原始对象SHA-256；没有混用不一致版本。新增26725块原 Ground Tilemap／56批次及原实体、剧情、战斗、小地图载荷，显式绑定原生地图目录与 prefab。新增素材尚未生成完整备份快照。
+
+依据：[当前解码清单](../../assets/reference/official-map/map12-source-manifest.json)、[转换清单](../../assets/reference/official-map/map12-unity-source-manifest.json)、[剧情载荷](../../assets/reference/official-map/map12-runtime-source-manifest.json)、[战斗载荷](../../assets/reference/official-map/map12-battles-source-manifest.json)。
+
+山之国原生界面：`prepare_unity_map12_ui.py` 从选定 `871_156598` 的实际 APK／已缓存云端对象重新解析65份 prefab、928张 Sprite、原 JSZX 布局、状态清单、动画曲线与序列化引用；APK 内资源先解析，云端资源按当前索引与实际字节身份读取。尚未代表整图业务、完整粒子效果或 Windows Player 交付，未生成完整素材备份快照。
+
+依据：[原生界面清单](../../assets/reference/official-map/map12-ui-native-source-manifest.json)、`unity/Assets/Official/World/Map/12/Source/ui-prefabs-source-manifest.json`、`UI/source-manifest.json`。
+
+山之国原立绘与区域光：从当前871实际对象提取8份立绘 prefab／28张 Sprite，沿用原 `PortraitFaceData` 区域代理、左右图与 `PortraitFace.ChangeFace` 未知表情保留行为；CN=0，8421使用原中国区域图。原98组区域光包含111个 Light2D（13个 Day 节点），保留形状、falloff、颜色、强度、排序、节点和开雾曲线，使用固定 Unity LightUtility／UTess／Clipper 生成111份网格；输入输出见 [区域光清单](../../assets/reference/official-map/map12-region-lights-source-manifest.json)及[原生网格清单](../../assets/reference/official-map/map12-light-meshes-source-manifest.json)。资源分别采用各自原导入参数，不将立绘或光照查找纹理交给世界贴图导入器。原始推箱点击／冷读及终端原按钮输入已验证，完整光照、粒子、地图业务与 Windows 交付仍见地图页，素材尚未生成完整备份快照。
+
+依据：[对话立绘清单](../../assets/reference/official-map/map12-dialogue-source-manifest.json)。
+
+山之国延迟生成：`prepare_unity_map12_runtime_data.py` 按当前 Common `LoEntityComponentSpawnInfo.BlockDefaultSpawnInMap` 的私有地图分支保留 `SupportSpawnInMap` 与 `BlockDefaultSpawn`，不再把实体 Active 当作默认生成。原代码哈希写入 map12-runtime-source-manifest.json；依赖剧情哈希的对话及 UI 收据同步重建。
+
+山之国剧情空间与原生场景源：当前871的138份 EC prefab 保留原 StoryTalk 标签、根注册点及原 StorySettings；原 Selector 对应端口证明仅其他地图可选的六个子图，保留全部原图。输入对象、官方代码、原始哈希和显式 `Map12/story-spatial` 绑定见 [剧情空间来源](../../assets/reference/official-map/map12-story-spatial-source-manifest.json)。升降台／机神山原图镜头与冷读夹具通过，未覆盖建筑窗口输入。`prepare_unity_map12_native.py` 从 APK／选定缓存恢复93包完整 CAB 依赖、4160个剥离类型组件，21416个对象原始字节逐一保持不变；组件字段独立重读一致。官方程序集、原生 metadata、引用程序集、工具、每包输入输出及 `Source/native-components.json` 哈希见 [原生转换输入](../../assets/reference/official-map/map12-native-input-source-manifest.json)。
+
+山之国原生地形：`prepare_unity_map12_native_terrain.py` 沿原 chunk／PartitionData 的 GUID 闭包恢复1684个原生资产（186 chunk、747 Tile、739 Sprite、11张原贴图及PartitionData）；原 ASTC 解码保留编码、像素、尺寸与采样，未重新绘制。原 `-6_0` Tile数组第63槽为空，转换器以已核对字节的官方组件为依据逐槽记录并验证空值及其他GUID／对象ID。导出输入、原对象、解码器、脚本实际绑定和输出 SHA-256 见 [转换来源](../../assets/reference/official-map/map12-native-terrain-source-manifest.json)；Unity 导入后元数据、验证器与 `Map12/Native/native-terrain-catalog` 实际绑定见 [导入清单](../../assets/reference/official-map/map12-native-terrain-binding-source-manifest.json)。
+
+山之国原生主体与环境：原 `MapGround_12_bare` 及其152个新依赖、109个已核实地形复用、8张完整 mip 纹理见 [主体转换](../../assets/reference/official-map/map12-native-scene-source-manifest.json) 与 [导入绑定](../../assets/reference/official-map/map12-native-scene-binding-source-manifest.json)。187份原非文字环境 prefab、358个新资产和64张原纹理见 [环境转换](../../assets/reference/official-map/map12-native-environment-scene-source-manifest.json) 与 [环境导入](../../assets/reference/official-map/map12-native-environment-scene-binding-source-manifest.json)；额外熔岩边缘 shader 从原 GLES 两变体机械转换并通过 Windows 双阶段编译，见 [shader来源](../../assets/reference/official-map/map12-environment-shader-source-manifest.json)。全局 APK 管线／当前环境代码复用逐对象及资产哈希证明见 [共享实现来源](../../assets/reference/official-map/map12-shared-environment-source-manifest.json)。
+
+山之国本地音频：先核对 APK，再读取当前871缓存，逐个验证原 Wwise 包、原媒体偏移／长度与输入输出 SHA-256；源包字节一致才复用既有 Vorbis 转换。原 BGM12媒体664663381、四事件／Sine渐变、236份剧情语音、原停声顺序及唯一+2dB MakeUpGain 分别见 [BGM来源](../../assets/reference/official-map/map12-audio-source-manifest.json)／[语音来源](../../assets/reference/official-map/map12-dialogue-audio-source-manifest.json)。[本地音频绑定](../../assets/reference/official-map/map12-audio-binding-source-manifest.json) 保留237份实际 AudioClip 的本地路径、采样／声道／频率／流式设置、元数据与代码哈希。
+
+山之国原生区域文字：`prepare_unity_map12_label_components.py` 核对当前871程序集与反编译方法，迁移世界标签所需区域描述、状态、等级与战力样式；`prepare_unity_map12_region_labels.py` 从已验证93包原生提取缓存恢复80份原 prefab、124个原生资产及400条原托管状态引用，核对原始字体对象后复用共享官方中文字体与文字特效。原语言二进制补齐两个横排标签键，原空战力列表以显式标记保留。正式玩家存档、正常游玩路线与完整定制 TMP 等价性仍待接入验证，未生成新的素材快照。
+
+依据：`official-map/map12-label-components-code-source-manifest.json`、`official-map/map12-native-region-labels-source-manifest.json`、`official-map/map12-native-region-labels-binding-source-manifest.json`。
+
+山之国正式原生场景：APK `assets/bin/Data/data.unity3d` 的 PlayerSettings／TagManager 原始对象证明 Linear 色彩空间和23个有序 Sorting Layer；原3001玩家渲染器的 Object层／顺序0、原实体独立层与顺序接入正式玩家场景。四份原生目录显式绑定 `Map12/Native/world-assets`，本地玩家／探索度／女神存档驱动原 PartitionController、环境与区域文字；来源及资源／代码哈希见[正式场景绑定](../../assets/reference/official-map/map12-native-world-source-manifest.json)。共享环境 shader 恢复原局部关键字作用域及动态 ColorMask，保留全部520份原程序、原公式和参数；转换清单同步更新。
+
+山之国建筑操作与预览：当前871的6103／6302原 ECViewDriver 保留7种状态、5项条件及原 managed-reference ID，来源及移植代码哈希见[建筑操作链](../../assets/reference/official-map/map12-building-operations-source-manifest.json)。界面目录为68份原 prefab／934张 Sprite；原魔能邃渊窗口及两份建筑图标接入 Map12/UI。6302三个 SkeletonGraphic 的 startingAnimation 原值均为空，使用固定 MIT 格式读取器解码原4.2.28骨骼／图集，独立生成144个初始姿态顶点；完整 mip、材质、6份原程序及原生资产绑定见[建筑预览资源](../../assets/reference/official-map/map12-building-preview-source-manifest.json)。没有使用 Spine runtime、截图贴图或历史采样帧。双尺寸 实际窗口、可见像素与模拟点击顺序夹具通过；前置剧情／选项经真实地图指针、原对话按钮和冷启动恢复通过。建筑中文窗口绑定原语言表。阶段102已到原战斗准备流程并核对七个怪物等级／阶位／属性，正式战斗结果及奖励状态事务仍待验证。
+
+山之国战斗怪物头像：按APK优先的原生提取从当前871包内恢复地图12全部44种被阶段配置引用的怪物 Sprite；逐对象记录APK bundle、原始Sprite／Texture来源、PathID与对象哈希，保留pivot、PPU、filter、wrap及Linear色彩空间。每张PNG及Unity Sprite元数据、按地图隔离的原生目录均显式哈希记录于[来源清单](../../assets/reference/official-map/map12-battle-portraits-source-manifest.json)。该资源闭包不包含战斗行为或AI裁决。
+
+`prepare_dungeon_ui_bindings.py` 从选定 `871_156598` 的 APK／匹配云端恢复 `DailyDungeonDialogPrivateMap`、`DailyDungeonBigMapDialog`、`DailyDungeonBigMapRoomItem` 和 `DailyDungeonGradeItem`，保留原层级及 Transform、Image／TMP、SafeArea、网格／纵向／JSZX 布局、尺寸适配、裁切、循环滚动、按钮输入和多语言引用。绑定清单合计11份 prefab、1468个 Image、514个 TMP、154张实际引用 Sprite；当前 `DailyDungeonSettings` 的 GUID、房间类型图标／边框／选择图／道路颜色、评级颜色及机神山背景／建筑图标全部按所选 AssetTable 解析，PNG 保留原图素、pivot、border和PPU。原私图窗口按6103的普通组件展示21的名称和难度，私图组件启动121／50，均由原模板和 `DailyDungeonDialog.DoInit` 消费关系证明。中文值来自所选 `WwiseBnk` 原始语言文件，先校验 MD5／大小／SHA256；复用原首个读取器优先和缺键返回原键规则，不把格式串 `{0}`／`{0}-{1}` 伪造为缺失素材。四份原生 prefab 的34项非脚本素材递归依赖逐项比对既有官方转换记录并写入 `native_route_dependencies`，保留原动画、控制器、材质及纹理；脚本执行逻辑的绑定与尚未实现范围分别记录，不把 AssetRipper 空脚本当成已迁移实现。原程序集对应反编译源码、模板、bundle／CAB、语言文件及输出哈希记录于 [prefab-binding-source-manifest.json](../../assets/reference/dungeon-ui/prefab-binding-source-manifest.json)，运行载荷为 `unity/Assets/StreamingAssets/Dungeons/UI/official-bindings.json`，由 `OfficialDungeonUiBindingRuntime` 显式绑定；`WorldDailyDungeonRoute`／`WorldDailyDungeonRoomItem`／`WorldDailyDungeonGradeItem`／`WorldDailyDungeonBigMapDialogGradeGrid` 迁移原显示计算和执行顺序。源载荷可无覆盖复现；运行验收范围及尚未接通部分见[山之国](map-12.md)。
+
+副本原组件绑定的路径解析修复沿用已提取的官方索引路径，不改动图像、文本或布局载荷。新增 C# 方法回放直接执行 `OfficialDungeonUiBindingRuntime.Find` 的当前方法体，以当前11份 prefab 的3158个原节点和31个按钮 Graphic 引用构造层级，证明无名称断言的合法引用可解析，并保留名称／父层级错误的拒绝；它仅证明路径解析行为，不能作为 Unity 画面或交互已还原的证据。
+
+机神山私图遮罩从所选 `prefabs_ui_map_world/WorldCanvas.prefab` 解析原 `WindowBlurMask` 的完整64位 `mImage`／`mBtn` 引用，复用已转换的 `Content/Popup/BlurMask` 原层级，并显式恢复原按钮的全部已有解码字段。WorldCanvas 载荷／meta、原 ScreenBlur shader／材质均核对原转换收据；APK 内置 `unity_builtin_extra:4800000` 对象哈希与旧转换输入完全相同，APK 基线与所选 prefab 的版本分别保留，不修改预期哈希。原 `WindowMaskBase`／`WindowBlurMask`／`BlurManager`／`ScreenBlurPass`／`WindowContainer` 代码哈希追加到同一副本绑定清单；Windows 图形调用沿既有转换的原片元程序执行相同4层滤波及1/13截图尺寸。运行时绑定、关闭计时与显隐回收逻辑已迁移，实际画面与输入仍须按山之国页执行，新增素材未进入新的完整快照。
+
+机神山匹配旋转：同一当前源 prefab 的 `RotateAnimation` 对象−3342941180293060381／5267701306155428067，原对象SHA-256分别为 `bb5f54b0740b63395f89a0bcf3675f8b66c605b9caeb687ed0b75f9938b037ab`／`0f96defb8b7405a5c02dfa933d3cf3d35a9cf9828e54c111f6fe099a2d42800d`；两处原 Z 轴速度为50／80，启用值与原 `launch-source/RotateAnimation.cs` 哈希写入匹配动画来源清单。`WorldRotateAnimation` 直接迁移原本地旋转更新；运行绑定按原数字路径和完整对象名称恢复组件。真实旋转和渲染仍待恢复自动验收后核对。
+
+机神山匹配 UIMesh：`prepare_unity_map12_matching_meshes.py` 从当前所选 APK 读取 `dd012d1e6008db0019d5dd3c80b1c7b6.bundle` 的网格−8219740664882560100，原对象SHA-256 `207713df343b530a2c9a73a07a80fdbf03d93160a4933dcc27264ff738ba4f5f`，保留82顶点、240索引及原 UV／顶点缓冲。两份材质原对象哈希为 `3667cad74d5fafcb2415bb090e01f4acb6916174018f75b1a592179e2802e7da`／`82b7f8fc6c0927112ad5d667ef034b362288138283747c9dc6d716d0319ff947`；五张纹理均来自 APK，按各自原 sRGB ASTC profile 转换完整 mip 为原生 RGBA32，保留尺寸、采样与包裹字段。当前云端原 shader 对象哈希 `b2cf77bf0010f66f8df0169aba68352aa467c2dce28eab3ee36720b8e48d6ddc` 与已有 Windows `UIEffectDistort_72c67609.shader` 转换相同，四种原 GLES 程序与已有输出字节核对后复用，材质以 GUID 直接绑定。网格原生序列化模板、原材质导出、原 prefab Renderer 字段、源代码、原对象、全部输入输出及 metadata 哈希见 `assets/reference/official-map/map12-matching-mesh-source-manifest.json`。资源位于 `unity/Assets/Official/World/Map/12/Resources/Map12/Matching/`，`WorldUiMesh`／`WorldUiMeshUtils` 保留官方 CanvasRenderer 与 MaterialPropertyBlock 执行顺序。Unity 导入与实际几何、材质、遮罩和画面仍待运行验证；未生成新完整素材快照。
+
+机神山私图难度标签：`prepare_unity_map12_private_difficulty.py` 读取所选871_156598原云端 prefab，恢复五个 TabItem、原 TabGroup 和五个 TabAnimatorTransition 的全部字段，按相同层级及组件顺序重映射本地指针，仅替换到已迁移 WorldTab* 脚本 GUID；原控制器和动画字节保留。原组件对象哈希、反编译代码、schema 适配 DLL、原生基线、输入输出与 metadata 哈希见 `official-map/map12-private-difficulty-source-manifest.json`。6103原模板确定显示副本21，当前配置仅普通／困难；本地适配迁移原锁定判断、标签回调和语言提示，不写私人奖励或公共次数。三项独立 C# 编译、原字段／来源复现和静态检查通过；实际输入、动画和画面仍待恢复自动验收，个人评级、排行、红点与奖励预览不在已完成范围，未生成新完整素材快照。
+
+机神山私图标签／按钮音效：在 `popup.sound.clicks` 中逐项登记原5个 UIClickSound 与14个 ButtonSound 的路径、父节点名、启用字段、Wwise 事件身份、原组件及事件对象哈希；所选官方 `UIClickSound.cs`／`ButtonSound.cs` 哈希保留在副本绑定清单。`Main_Tag`／`Main_Cursor_Normal`／`Main_Cursor_Fail` 由同版原播放图分别按−6／−6／−8 dB解码，`TeamMatch_Waiting_1` 同时保留原−3 dB；全部使用原媒体长度／采样率／声道的 PCM16 WAV，AudioImporter 不归一化、不再次有损压缩。原资源路径及已使用 GUID 保留，声音载荷位于 `unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/`，组件恢复仍使用原 ButtonSound 与 UIClickSound 左键筛选。
+
+机神山私图 `SFX/PopupWindowSound` 音效绑定：从所选 `871_156598` 的原 prefab 和 WwiseEventReference 解码空 ShowSound 及 HideSound=`Main_Cursor_Back`／3686182067；官方 `PopupWindowSound.cs` 的输入哈希保留在 `assets/reference/dungeon-ui/prefab-binding-source-manifest.json`。`prepare_unity_map12_ui_audio.py` 先查 APK，缺少的包再使用已下载官方 WwiseBnk，逐份校验当前索引 MD5、长度和完整 SHA-256；从原 Event／ActionPlay／Sound 图生成固定0 dB主增益的 TXTP，保留事件−16 dB，不使用自动增益补偿。嵌入 WEM、BNK 与包偏移、原组件及事件引用、完整播放图、工具和五份 PCM／metadata 输出哈希记录在 `assets/reference/official-map/map12-ui-audio-source-manifest.json`；关闭 WAV 的 SHA-256 为 `2ad53c943b98c5d0d6d8d0e83a96667b8f13835a6869f321d6ee8e001b522194`。副本绑定引用该清单并逐项核对实际原包与原生输出；`OfficialDungeonUiAudio` 提供本地播放及窗口销毁后的事件寿命，游戏入口连接现有音效设置通道。
+
+机神山私图原 `PopupWindow` 的显示／隐藏引用从当前 prefab 的完整64位 PPtr 解析，回溯 APK 的 `UIDialogCommon_Show`／`UIDialogCommon_Hide` 对象；复用 Map12 已转换的同源 `.anim`，严格核对转换收据的载荷／meta 哈希，再将实际运行用的缩放／浮点曲线与所选 APK 解码的目标、时间、值、切线逐项比对（每份4通道）。原事件为空，时长与非循环参数保持来源值；6条缺席目标通道仅记录原对象情况，不创建替代节点。单个原动画对象字节 SHA-256、原生资源路径及绑定由同一副本组件清单记录，原 `PopupWindow`／`WindowMaskType` 源码哈希一并纳入；原模糊遮罩和关闭分支已按上述来源绑定，实际运行验证仍暂停。
+
+机神山私图控件参数追加19个原按钮、149项布局／尺寸／裁切、1个奖励横向滚动和1个顶部安全区；原导航目标及 SpriteState 为空、原按钮／滚动序列化事件为空的条件均严格核对。标准横排／纵排、网格、尺寸适配、布局元素与矩形裁切直接恢复原字段，两处尺寸上限复用 `WorldLayoutElementClamper` 并写回原序列化字段；原 `LayoutElementClamper.cs` 输入哈希纳入同一来源清单。奖励区滚动对原128字节载荷逐字段解析，保留内容／视口、弹性、惯性、衰减和灵敏度。源绑定结构比较只涉及私图新增控件及循环滚动类型标识，未改变原图像、文本和样式载荷；实际输入与画面仍待验收。
+
+机神山私图详情追加原 `DailyDungeonDialog.mTitleStateSwitcher`、`DailyDungeonDetailContent.LockContentStateSwitcher`、`DailyDungeonUnlockContent.BtnStateSwitcher` 的三组状态器／13条对象组，以及无难度奖励标题和原布局引用。提取过程保留 managed-reference 的完整64位 ID，再解析为原层级路径；运行时通过迁移的 `WorldStateGameObjectConfig.SetState` 执行原显隐顺序。当前 `DailyDungeonUnlockContent`、`StateGameObjectConfig` 和 `StateGameObjectData` 反编译文件哈希已纳入同一绑定来源清单，新增动态语言键按所选原文件严格验证，不推导费用或结算规则。实际窗口与输入验证仍暂停，范围见[山之国](map-12.md)。
+
+剧情外部节点及相机轨道恢复：`scripts/prepare_unity_story_nodes_runtime.py` 从当前官方程序集／源码迁移四份接口和实现，保留字典、事件、启停与相机空绑定规则，按原 MoveNext 还原两份 UniTask 等待方法。
+
+依据：`official-map/map14-story-nodes-runtime-source-manifest.json`。
+
+官方 `MyPlayableManager`、FIFO prefab 池、原销毁监听器、预载与激活消息共 10 份框架代码已迁入；保留借出／Reset／Init／设置销毁回调／TryPlay、停止后 ResetData／Clear／隐藏／归位／入队、批量移除重入保护和低内存释放顺序。原场景作用域、服务注入、激活发布和低内存事件改为显式调用方边界；两个各仅持有一项订阅的原 DisposableBag 以同位置的 IDisposable 释放承接，不改变回调顺序。运行范围：原混沌演出经真实管理器预载 2 份、连续播放 3 次，前两份实例不同、第三次复用第一份，未分配第三份；核对源／目标／父级／参数／停止对象、OnStop 先于归还重置、自然结束、三次原声音事件、低内存销毁、并发移除与重入拒绝。已查看对象池驱动的原特效地图画面。保留原空活跃列表时 RemoveAllPlayable 提前返回、不释放空闲对象的分支；显式 ForceReleaseObjectPool 则释放已归还对象。
+
+依据：`map14-story-playable-manager-source-manifest.json`。
 
 ## 完整还原部分
 
@@ -54,7 +148,7 @@ Water2 已按固定来源的57个原 `MeshRenderer` 名称绑定，运行时沿�
 
 机神山私图匹配显示现按原 `DailyDungeonDetailContent_GameMatch_Show` 接回 Legacy Animation：保留60 Hz、0.9333333373秒时长、31条浮点曲线、5条缩放曲线，以及关键帧时间／数值／入出切线／权重／前后外推与原组件播放参数。第5帧（0.0833333358秒）原 `PostEvent(0)` 指向 `TeamMatch_Waiting_1`，由迁移的 `WorldAnimationSoundPlayer` 沿原列表索引和调用顺序交给已有本地音频服务。原两处 CanvasGroup 的透明度与交互字段按序列化值恢复；共享动画中6条曲线指向本 prefab 原本缺席的 DescTxt1／Progress，完整曲线保留，实际17组目标按原层级绑定。`prepare_unity_map12_matching_animation.py` 从当前 APK 原动画逐字段核对已有原生导出，仅转换 Image／TMP 脚本 GUID；原对象、源代码、原生输入输出、脚本 GUID 与事件来源见 [匹配动画来源](../../assets/reference/official-map/map12-matching-animation-source-manifest.json)。动画／副本绑定无覆盖复现、三项独立 C# 编译及71,047 GUID静态检查通过；实际 C# 路径回放覆盖3158节点、31个按钮目标、匹配宿主、2个 CanvasGroup、17组曲线目标和3组原缺席目标，改变缩放关键帧或事件时间的输入会被拒绝且不改交付载荷。Play Mode 夹具已覆盖原节点自动播放、第5帧事件、独立静音 PCM 音源、只播放一次和存档不变，但尚未执行；匹配业务、实际动画／音效与完整私图流程仍未验收。 原 APK 的 AnimationClip 长度内核已通过 ARM64 仿真核对：实际时长由原曲线和事件范围得到，未使用导出设置中的默认1秒；同一内核回归测试已加入 scripts/test_map12_matching_animation.py。
 
-匹配区域两处 `RotateAnimation` 已按原代码迁移为 `WorldRotateAnimation`，`ImgMatchW_Circle1`／`ImgMatchW_Glow` 保留原启用值与 Z 轴每秒50°／80°，逐帧按 `Time.deltaTime` 在自身坐标系旋转。来源清单追加原组件字节、序列化速度与 `RotateAnimation.cs` 哈希；现有播放夹具追加真实 Update 帧的旋转检查，但尚未执行。两处 UIMesh 的原网格、材质与 `UI/EffectDistort` 已按下述来源生成并绑定，实际运行仍待验证。 本次旋转来源与绑定无覆盖复现、三项独立 C# 编译及72,510 GUID静态检查通过；自动运行验收仍按用户要求暂停。
+匹配区域两处 `RotateAnimation` 已按原代码迁移为 `WorldRotateAnimation`，`ImgMatchW_Circle1`／`ImgMatchW_Glow` 保留原启用值与 Z 轴每秒50°／80°，逐帧按 `Time.deltaTime` 在自身坐标系旋转。来源清单追加原组件字节、序列化速度与 `RotateAnimation.cs` 哈希；现有播放夹具追加真实 Update 帧的旋转检查，但尚未执行。两处 UIMesh 的原网格、材质与 `UI/EffectDistort` 已按下述来源生成并绑定，实际运行仍待验证。 旋转来源与绑定无覆盖复现、三项独立 C# 编译及72,510 GUID静态检查通过；自动运行验收仍按用户要求暂停。
 
 匹配两处 UIMesh 现显式绑定原 `Cylinder001`（82顶点／240索引）、`GameMatch_Circle3`／`GameMatch_Circle2` 和五张原贴图。`prepare_unity_map12_matching_meshes.py` 从当前 APK 读取实际引用，保留原顶点／UV／索引字节及全部 Mesh 字段，按已有原生序列化模板生成 Mesh；五张 ASTC 纹理均保留原尺寸、唯一 mip、sRGB 解码、滤波和包裹参数，转为原生 RGBA32。原 `UI/EffectDistort` 对象哈希与已有 Windows 转换相同，四种原 GLES 变体逐字节核对后显式绑定。`WorldUiMesh`／`WorldUiMeshUtils` 迁移原 PreRender 提交、运行时材质实例、逐帧 MaterialPropertyBlock 和非零值写入顺序；沿原层级复用两份 MeshRenderer，不改原变换。来源见[匹配网格与材质](../../assets/reference/official-map/map12-matching-mesh-source-manifest.json)。来源／绑定无覆盖复现与三项独立 C# 编译通过；全工程静态检查通过（72,572 GUID）。CanvasRenderer 几何／UV／索引／材质和画面夹具已补齐，自动运行验收仍暂停；Windows 导入、实际扭曲／遮罩和完整私人路线仍待验证。
 
@@ -74,9 +168,9 @@ Map12主线任务1165～1270沿用官方顺序、前置和奖励；其中1215要
 
 本地音频已接入正式 `OfficialMainlineMapRuntime`：BGM12使用原 Wwise 媒体664663381，播放／停止／暂停／恢复保留原 Sine 曲线与1000／250／250／500ms时间；236个主图／子图语音事件逐一核对当前871包、原媒体区段和已提取 Vorbis 字节，作为本地流式 AudioClip 打包。`chapter_3_main_42_03` 的原 MakeUpGain 为+2dB，其余235条为0；`OfficialWorldVoiceGain` 以原分贝对应的线性幅度处理 PCM，避免正增益被 AudioSource 的音量上限截断。共用播放器保留先 `Voice_StopAll`、文本行停声、异步版本取消、对白关闭停声和当前音量设置，不将音乐或语音请求发到网络。原剧情转换头仍为854，但236事件来自已用当前871逐端口证明一致的山之国剧情闭包；收据同时保留两种来源，不改写版本标识。
 
-`RunRuntimeAudio` 已以 启动实际 map-12／独立测试档，验证 BGM 循环、四种淡入淡出、暂停／恢复采样位置和当前设置，236份语音均可在 Windows 本地流式导入；直接开启原对白组后，通过原“下一句”按钮的模拟指针输入验证换声，文本对白替换取消旧异步加载，并核对+2dB处理的 PCM 数值。已查看本次入口运行画面。森之国共用播放器的原 BGM 与207份语音回归通过；音源在自动验证中静音，未进行听音检查，直接对白夹具不证明剧情触发或主线连续路线。来源与原事件／媒体区段见 [BGM](../../assets/reference/official-map/map12-audio-source-manifest.json)／[语音](../../assets/reference/official-map/map12-dialogue-audio-source-manifest.json)，237份实际 AudioClip、Resources 路径、导入设置与适配代码哈希见 [音频绑定](../../assets/reference/official-map/map12-audio-binding-source-manifest.json)。Unity 导入／编译、`ProjectTools.Validate` 和静态检查通过。
+`RunRuntimeAudio` 已以 启动实际 map-12／独立测试档，验证 BGM 循环、四种淡入淡出、暂停／恢复采样位置和当前设置，236份语音均可在 Windows 本地流式导入；直接开启原对白组后，通过原“下一句”按钮的模拟指针输入验证换声，文本对白替换取消旧异步加载，并核对+2dB处理的 PCM 数值。已查看入口运行画面。森之国共用播放器的原 BGM 与207份语音回归通过；音源在自动验证中静音，未进行听音检查，直接对白夹具不证明剧情触发或主线连续路线。来源与原事件／媒体区段见 [BGM](../../assets/reference/official-map/map12-audio-source-manifest.json)／[语音](../../assets/reference/official-map/map12-dialogue-audio-source-manifest.json)，237份实际 AudioClip、Resources 路径、导入设置与适配代码哈希见 [音频绑定](../../assets/reference/official-map/map12-audio-binding-source-manifest.json)。Unity 导入／编译、`ProjectTools.Validate` 和静态检查通过。
 
-`prepare_unity_map12.py` 可重新提取并转换以上载荷；`OfficialMap12Tools.ImportAndValidate` 已完成 Unity 2022.3.57f1c2 导入／编译。来源等价、剧情倒计时、未消费战斗引用、终端原清单及原生坐标及默认生成标记共7项专项测试通过；Map11战斗提取2项回归通过。Map11实体旧测试期望161批次而 HEAD 本身生成171，属于既有断言差异。Map10立绘素材测试的1项在共享 `adventure.json` 输入哈希处失败（实际 `a6820d65…`，原收据 `84b92c87…`）；该测试不调用本次生成器，本次未改该输入或原收据；原边界、表情和对话样式测试通过。Play Mode 使用 实际加载18683+56地形批次与2591实体，已查看入口101、华容道746和建筑202三处450×800运行截图。逐个核对当前官方 prefab 后移除56份会被 Spine 组件覆盖的重复预览网格，恢复旧导出向下的Y／V坐标；骨骼本身Y保持原值。贴图按原图尺寸、过滤、wrap和颜色空间导入，不再默认缩放非方形图集。建筑／箱子的白块已修复，瀑布等原特效 shader 仍显示白片，水／熔岩／光照和完整动画尚未还原。这次检查只覆盖场景载荷，未覆盖玩家输入、官方界面、机关结算和存档，不代表本图可玩或完成。
+`prepare_unity_map12.py` 可重新提取并转换以上载荷；`OfficialMap12Tools.ImportAndValidate` 已完成 Unity 2022.3.57f1c2 导入／编译。来源等价、剧情倒计时、未消费战斗引用、终端原清单及原生坐标及默认生成标记共7项专项测试通过；Map11战斗提取2项回归通过。Map11实体旧测试期望161批次而 HEAD 本身生成171，属于既有断言差异。Map10立绘素材测试的1项在共享 `adventure.json` 输入哈希处失败（实际 `a6820d65…`，原收据 `84b92c87…`）；该测试不调用生成器，未改该输入或原收据；原边界、表情和对话样式测试通过。Play Mode 使用 实际加载18683+56地形批次与2591实体，已查看入口101、华容道746和建筑202三处450×800运行截图。逐个核对当前官方 prefab 后移除56份会被 Spine 组件覆盖的重复预览网格，恢复旧导出向下的Y／V坐标；骨骼本身Y保持原值。贴图按原图尺寸、过滤、wrap和颜色空间导入，不再默认缩放非方形图集。建筑／箱子的白块已修复，瀑布等原特效 shader 仍显示白片，水／熔岩／光照和完整动画尚未还原。这次检查只覆盖场景载荷，未覆盖玩家输入、官方界面、机关结算和存档，不代表本图可玩或完成。
 
 战斗碑开战前的原玩法状态检查已迁入 `Runtime/Official/PlayerPlay/`：直接复用所选 Common 的状态／动作参数、原互斥表及比较／哈希，按 `PlayerPlayStateModule` 原异步状态机恢复“硬互斥通知→逐个退出软互斥→重新检查→执行开战回调”，保留最多10轮与最后一轮退出仍不收敛的边界。`PlayerPlayFightAction` 是状态门槛，不是角色动画；关卡的组队／中途加入／后台／两阶段可退出字段保留原位标记，未增加延时或新限制。本地接口替代原玩家、配置读取、退出处理器及语言广播；正式地图的状态观察器、具体退出处理器和专用窗口回调仍未接线。`scripts/test_player_play.ps1` 独立运行通过参数、硬软优先级、异步取消、退出后新硬互斥、10轮边界、异常和开战／关窗回调顺序；Unity 引用下的 C# 9 编译通过。全工程静态元数据检查通过（73767个 GUID）；Unity 导入、`ProjectTools.Validate`、实际地图输入／画面及 Windows 发布仍未执行，自动运行验收保持暂停。来源与哈希见[原玩法状态检查](../../assets/reference/official-map/map12-player-play-source-manifest.json)。
 
@@ -86,19 +180,47 @@ Map12主线任务1165～1270沿用官方顺序、前置和奖励；其中1215要
 
 原队伍邀请的 `PlayerPlayTeamAction` 现直接复用所选 Common 原实现，与开战检查共用原互斥表，不把组队动作当成开战动作。独立 C# 9 编译及规则夹具已检查聊天／梦境舞会／匹配完成时阻止邀请、等待匹配退出、取消退出、成功退出及退出房间后新增硬互斥；正式邀请窗口、具体退出处理器与本地队伍服务尚未接线，未执行 Unity 运行验收。六个受影响源码程序集编译、七点位窗口数据规则及全工程静态元数据检查（74007个 GUID）通过。来源仍记入上述原玩法状态清单。
 
+### 已迁移代码与局部资源
+
+以下为局部代码／资源接入，完整流程仍受本页缺项限制。
+
+山之国原 Team 窗口的171份 CAB 已恢复21413个组件／1298份托管引用并复开核对57677个对象载荷；原生导出核对全部托管引用的8469个指针、85484项值和989组打包数组。本图所需10份原窗口原生 YAML 已保留至 `Source/native-team-ui-prefabs.json`，645节点／2914对象／1105个脚本及9675个指针逐字段通过原源比对，保留原层级／组件顺序、浮点位和脚本程序集／类型。默认头像的原生导出存在 ASTC 解码舍入差异，原生源中保留按既有 UnityPy 路径解码的同源无损 PNG 修正并记录解码工具哈希、原／输出像素及 PNG 哈希；没有改绘图片或改变尺寸／GUID。缺失字段描述按同 APK 原元数据核对，零行为引用类型声明只供转换、不进游戏。正式 prefab／运行时脚本与美术绑定、队伍服务、运行验收和发布待完成；新增载荷尚未纳入完整素材快照。
+
+依据：[原队伍转换输入](../../assets/reference/official-map/map12-team-ui-native-input-source-manifest.json)、[原生窗口源](../../assets/reference/official-map/map12-team-ui-native-source-manifest.json)。
+
+七战斗碑原演出：`prepare_unity_map12_stele_playable_inputs.py` 校验两份原显示的四个精确 PPtr，按 APK 优先／已下载云端顺序校验并准备29个实际 CAB 依赖；`prepare_unity_map12_stele_playables.py` 使用独立 AssetRipper 1.3.14 服务恢复四份原 prefab，严格核对84节点／64粒子／72渲染器、166632个值与1794个指针，仅重映射原脚本／shader／完整原纹理 mip 依赖的 GUID 和原生纹理引用类型。17份材质、2份网格、18张同 CAB／PathID／对象哈希纹理及原 Windows 噪声 shader 均显式绑定；原周期交互状态代码及本地 Resources 目录已迁入。Unity 导入、地图宿主、挂点、完成显示／小地图与实际演出尚未验证，自动运行验收暂停。输入／程序集／转换设置／输出／适配哈希见[演出输入](../../assets/reference/official-map/map12-stele-playable-input-source-manifest.json)与[原生演出绑定](../../assets/reference/official-map/map12-native-stele-playables-source-manifest.json)，范围见[山之国](map-12.md)；新增素材尚未进入完整快照。
+
+七战斗碑原实体：`prepare_unity_map12_stele_entity_inputs.py` 按 APK 优先核对309个实际依赖包，从已校验程序集／原生元数据恢复4493个组件并重读13290个对象；选定两份原实体各4节点，共20个原对象。`prepare_unity_map12_stele_entity_export.py` 从独立转换结果选取54项真实引用依赖，恢复两份原 `ECViewDriver` 的12条托管引用，校验170个值与14个非空指针，保留原64位 RID／顺序／挂点；另核对原8个 GameObject／8个 Transform／2个 SpriteRenderer 的166个值与46个指针，保留18处原负零及未烘焙光照默认值。`prepare_unity_map12_stele_sprites.py` 按实际源 Sprite PPtr、CAB／PathID／原对象哈希复用同版完整 Windows 图像包，逐字节／字段核对两张原 Sprite 并显式绑定 `Map12/Native/stele-sprite-catalog`，不生成替代图片。两份正式原生 prefab 已通过 `prepare_unity_map12_stele_entities.py` 显式绑定四视图脚本／程序集、四个原演出、两张原精灵及同 CAB／PathID／对象 SHA 的原材质／Windows shader，目录为 `Map12/Native/stele-entities-catalog`。逐项逆向还原显式替换与源文本完全一致，只在原 Statues 上追加精灵加载绑定；原节点／组件顺序、RID、变换、排序、颜色与负零不变。七个放置点与永久一次周期配置、原始代码／程序集、共享资源、适配代码和输出哈希见[原生实体绑定](../../assets/reference/official-map/map12-native-stele-entities-source-manifest.json)。所选四视图与地图内独立原演出池服务已接入正式显示工厂／周期事件和退出回收。主地图状态消费按所选 Common 的 `WorldStageComponent.IsActive`、原 `MiniMapPrivateMarkManager.CreateEntityIconCheck`／`MiniMapEntityMark.EntityActive` 及两份原模板的单公共状态／不自动推进／不销毁配置修复：个人一次结算保留碑体，演出读取个人周期，标记继续读取公共状态；未改奖励或公共状态。代码入口为 `OfficialMainlineMapRuntime.Map12SteleEntities.cs`，专用窗口操作上下文、Unity 导入及运行仍待完成；自动验收暂停，素材尚未进入完整快照，范围见[山之国](map-12.md)。
+
+依据：[实体输入](../../assets/reference/official-map/map12-stele-entity-input-source-manifest.json)、[引用恢复](../../assets/reference/official-map/map12-stele-entity-export-source-manifest.json)、[精灵绑定](../../assets/reference/official-map/map12-native-stele-sprites-source-manifest.json)。
+
+机神山私图匹配动画：`prepare_unity_map12_matching_animation.py` 读取当前871_156598所选 APK 内 `73c8ef90624abf10ff0babfe7401c498.bundle` 的原 Legacy clip，对象−7677826505346372514、原对象SHA-256 `7cbb304d4de10364a842a7e6b94647260b3d7f7f17e80933dac1aee674554f9f`。已有原生导出与原始31条浮点曲线／5条缩放曲线的所有关键帧、权重、切线、外推、采样率、时长和事件按 float32 字节核对，原生输入仅替换 Image／TMP 到工程原生脚本 GUID，目标meta哈希也记录；输出原动画SHA-256 `271e705a7561815739e5bcd16c39ae1d960332067419d6620fe1a7ecdaa15ae4`。原 prefab 的 Animation／AnimationSoundPlayer、两处 CanvasGroup、原 Event 引用及 `AnimationSoundPlayer.cs` 哈希、17组实际曲线目标、3组原缺席目标（6条浮点曲线）、原第5帧 PostEvent(0) 和完整输入输出见 `assets/reference/official-map/map12-matching-animation-source-manifest.json`。运行时显式加载 `Map12/Matching/DailyDungeonDetailContent_GameMatch_Show`，用原事件索引调用本地 PCM 服务；既有音频来源清单保持不变。Unity 导入、实际动画事件及声音、正式匹配业务仍待运行验证，未生成新完整素材快照。 实际0.9333333373秒时长由原 APK 引擎 get_length 的原生时间范围内核仿真确认，内核与本地规则代码哈希写入 duration_rule；未将导出默认1秒当作原播放时长。
+
+山之国战斗碑所需的共享原玩法互斥表、参数和异步开战门槛已迁入 `Official/PlayerPlay/`，保留原先硬互斥、软退出及回调顺序；独立规则测试与 Unity 引用编译通过。玩家状态观察器／退出处理器和正式窗口尚未接线，自动运行验收暂停，范围与来源见[山之国](map-12.md)。
+
+山之国战斗碑窗口已补齐原等级／阶位、战力主题、队伍目标与三类队伍事件的配置／服务适配，并调用原开战状态门槛；六程序集源码编译与七点位独立数据检查通过。正式地图宿主、原 TeamPanel 和原生窗口输入／画面／存档仍待接线／验收，自动运行验收暂停，见[山之国](map-12.md)。
+
+山之国原 Team 界面的10份原生窗口源已保留并核对645节点／2914对象／1105个脚本及9675个指针；171份 CAB 输入复开核对，全部1298份托管引用完成原生导出恢复。默认头像保留同源无损 PNG 解码修正。正式 prefab／图片与脚本绑定、队伍／邀请／站位和运行验收仍待完成，见[山之国](map-12.md)。
+
+山之国战斗碑的原 Team 队伍／NPC 邀请界面已提取10份预制体、645节点与1105个完整脚本载荷，保留原层级、布局／TMP／外观字段和64位引用；已核对原普通 Player 邀请链及171份实际 CAB 输入。Windows 原生转换／绑定、正式队伍与站位服务和运行验收仍待完成，见[山之国](map-12.md)。
+
+山之国原 Team 邀请候选按排除探索首领、存在战斗实体／等级详情及原遇见／助战条件筛选，共95名；显式 Team 资格／单位入口已接入共享战斗目录，沿用原属性与技能计算，独立规则测试和 Unity 引用编译通过。正式 Team 窗口、地图队伍／站位及次数事务尚未接线，见[山之国](map-12.md)。
+
+山之国七座战斗碑已按当前原关卡配置接入区域等级／阶位、怪物+7及原属性重算；本地胜利奖励、一次完成和胜场同事务，败北保留次数，支持结算重试与档案到地图的冷启动恢复。原专用窗口、NPC队伍及真实输入／显示／存档验收仍待完成，详见[山之国](map-12.md)。当前已追加战斗碑四个原窗口／图标依赖、全50种奖品图标、原窗口方法和64位状态绑定，源资产为72份／943张；另迁入原确认窗回调、帧尾自动对齐和计时锁，原生字段／64位锁状态已绑定；新增原生导入及双尺寸指针夹具尚未执行，地图宿主与 NPC 队伍仍待接线。另已恢复四份原循环／结束演出，逐字段核对84节点／64粒子／72渲染器并显式绑定原生目录；原周期状态代码已迁入，地图挂点／事件宿主与实际演出仍待接通验证，自动验收继续暂停。
+
+山之国另已恢复两份原实体的309包转换输入及12条原托管引用，核对四节点层级和挂点 PPtr；两张原碑精灵通过同源对象字节校验并绑定本地精灵目录。两份正式原生实体、七点位目录、四视图及独立原演出池宿主已迁入，显式资源引用／逆向补丁核对、8项独立编译和静态检查通过；原生显示工厂／周期事件与回收已接入主地图，个人一次领奖保留碑体，小地图按原公共状态显示；角色档案先提交时的周期数及恢复不重复计数夹具已追加，主地图42项依赖与夹具独立编译通过，原专用弹窗／NPC 及实际运行仍待完成，具体来源与未完成范围仍见[山之国](map-12.md)。
+
 ## 自定义实现
 
 魔能邃渊102的服务端生成战斗等级执行体未取得；按用户确认，建筑相对等级为原区域等级加 Lo.Level，Lo.SubRank=0继承区域阶位，非0使用显式配置；怪物等级使用建筑实体等级加原 StageBehStageComponent、Lo 组件、关卡及阵型位置偏移，阶位使用建筑实体阶位，保留原怪物属性公式。此处基准为50／6，不使用关卡表静态1／1。
 
 山之国关卡102的方向型技能施法朝向也未能由服务端 AI 确定；相关命中格旋转由客户端源码证明，目标选择后的施法朝向仍待用户确认。等级／属性验证不代表战斗胜负 AI 已还原。
 
-以下为已确认的单机处理要求，尚未代表完整 Unity 流程已经接入或验收。
-
 历史验证中的九组机关开发求解只在复制状态寻找合法路径；缺有限MovableRect时用原区域约束开发搜索范围，生产碰撞、推动规则和奖励不变。九组机关原生点击在450×800通过584项、在720×1280对关键8702终端通过85项；这些历史点击结果不代表当前 Unity 验收通过。公共怪物／食材刷新以本地时钟及保存代次替代服务器。
 
 固定 APK 客户端与 Common 程序集提供 `MapPuzzleTerminalDataHuarongDao`／`PushBox`、`ResetPuzzle`／`AutoPuzzle` 调用与原费用，但未取得服务端执行体。按用户明确确认，华容道重置恢复原 `NeedRemoveLoEntityIds` 与 `BoxLoEntityIds` 清单的箱子／障碍，将角色移回终端旁可站立格；自动解谜消耗原物品325×1，华容道只移除 `NeedRemoveLoEntityIds`，推箱只解除 `LockLoEntityIds`。奖励仍须实际交互或战斗领取，原领取记录保留，不能重复发放。六处终端的原对话、费用、逐项作用范围、重置与自动解谜冷读已接入 Unity 并验证；支付中断恢复与实际领奖仍待验证。
 
-推动成功后角色跟进到箱子原格，按本次用户确认迁移。客户端 `MyStageResultEntityPushed.CanMoveToNextPos` 及共享 `StageResultEntityPushedComponent.GetTargetPosNextPosAndDir` 提供目标格、方向、可站立格与 `MovableRect` 约束；服务端推动执行体未取得，跟进位置属于已确认的单机差异，不能标作官方服务端代码。
+推动成功后角色跟进到箱子原格，按用户确认迁移。客户端 `MyStageResultEntityPushed.CanMoveToNextPos` 及共享 `StageResultEntityPushedComponent.GetTargetPosNextPosAndDir` 提供目标格、方向、可站立格与 `MovableRect` 约束；服务端推动执行体未取得，跟进位置属于已确认的单机差异，不能标作官方服务端代码。
 
 1401、4602、6305、8702四处 `EntityLockPushBox` 按用户确认，以全部 `LoOverlapDetectorEntityIds` 目标格被 `LoBoxEntityIds` 中指定箱子占据作为完成条件；完成后保持解锁，执行原 `EntityUnlockWorldStateCompleteComponent` 对应的生成实体／更新状态结果，奖励仍需实际领取。`OfflineMapPuzzleSession` 已保存独立的箱子坐标、解锁和生成状态，旧存档没有坐标时使用原放置坐标；返回的保存快照与会话状态相互独立。机关初始生成另按原 `LoEntityComponentSpawnInfo.BlockDefaultSpawnInMap(Private)` 判断，不能把 `WorldActiveable.Active` 当作“已生成”；四个推箱奖励宝箱初始隐藏，解锁后才执行原234生成结果。已重新运行58次规则推动与六终端模拟输入／冷读，核对解锁前后生成状态；奖励尚未直接发放。推动沿用官方 GroundType 位掩码、实体占位、自身原占位白名单与包含端点的 `MovableRect`，6511箱子使用当前配置的移动键2／掩码1。
 
@@ -116,13 +238,19 @@ Map12主线任务1165～1270沿用官方顺序、前置和奖励；其中1215要
 
 私图窗口和路线通过 `OfflineDailyDungeonSession.OpenPrivateMap` 读取本地副本档案，不执行公共副本的跨日次数重置；私图胜负和终点事务继续只更新活动路线。跨日夹具以昨日日期、已使用次数2和购买次数1开始，核对打开时文件字节不变、胜负／终点冷读后日期和次数仍保留；夹具已加入，尚未由 Unity 执行。本边界按用户已确认的“不发副本奖励、不修改公共次数或购买次数”处理；公共副本仍通过原 `Open` 执行原有日重置。
 
-本项代码已通过 `Zjcs.Official.WorldUI`、`Zjcs.Offline.World`、`Zjcs.Presentation.World` 的独立 C# 编译；`prepare_dungeon_ui_bindings.py` 在不覆盖输出的模式下复现通过，`python -B scripts/check_unity_project.py` 通过64167个 GUID。独立编译复用 Unity 缓存引用，不代表 Unity 导入或运行验收。用户已暂停自动验收，本次变更后的 `ProjectTools.Validate`、Play Mode 连续选路／战斗／冷读、窗口画面与 Windows Player 均未执行。既有 SafeArea 单项点击证据不能代替本次列表、语言和模式切换的运行验证。
+本项代码已通过 `Zjcs.Official.WorldUI`、`Zjcs.Offline.World`、`Zjcs.Presentation.World` 的独立 C# 编译；`prepare_dungeon_ui_bindings.py` 在不覆盖输出的模式下复现通过，`python -B scripts/check_unity_project.py` 通过64167个 GUID。独立编译复用 Unity 缓存引用，不代表 Unity 导入或运行验收。用户已暂停自动验收，变更后的 `ProjectTools.Validate`、Play Mode 连续选路／战斗／冷读、窗口画面与 Windows Player 均未执行。既有 SafeArea 单项点击证据不能代替列表、语言和模式切换的运行验证。
 
 离线窗口宿主以关闭完成回调释放动态详情窗、遮罩和临时图形资源，替代原 WindowManager／Factory 窗口池；保留原遮罩关闭门槛与先播放 Hide 再回收的顺序。原 URP 截图／模糊通过既有 Windows shader 转换及本地 Graphics.Blit 接口执行，不依赖网络。
 
 关闭音效沿用已迁移的原 `WorldPopupWindowSound`，以 `OfficialDungeonUiAudio` 的本地 AudioSource 承接 Wwise Post。音频对象独立于待销毁窗口，播放结束后销毁；游戏入口通过 `MapSoundRegistration` 注册／注销现有 Sound 设置通道，保留总音量和音效音量控制，不修改用户存档。
 
 原 AnimationSoundPlayer 的事件列表索引、越界日志与 PostEvent 顺序保留；Windows 单机适配将 AK.Wwise.Event 引用换为已核对的 AudioClip，Post 使用上述本地音频服务承接。
+
+### 已确认的本地接线与边界
+
+山之国推箱适配：剧情载荷另记录当前 `StageResultEntityPushedComponent`、`ECStageResultEntityPushedView`、`GridMoverComponent`、`GridGroundComponent`、`GridTransformComponent` 与终端数据代码哈希，保留移动键2／掩码1、原体型、目标／箱子清单与原始可移动矩形。角色跟进、全部指定目标占据后完成并保持解锁属于用户确认的单机服务端差异；原结果链生成实体，未直接授予奖励。
+
+山之国固定宝箱：83处原 Lo 等级、区域与奖励索引／追加清单、当前871原奖励表／倍率／包展开的复用等价证明见 [宝箱来源](../../assets/reference/official-map/map12-chests-source-manifest.json)。阶位0继承所在区域、非0显式配置为用户确认的单机规则；奖励、随机状态、开箱计数与完成标记原子保存。6401的规则782所需物品61925图标从官方资源补齐，原 UI 来源与绑定清单同步更新为929张 Sprite。83处事务、五处实际指针领奖及保存失败／冷读通过；正常路线、机关连续领奖与原交互动画范围仍见地图页。
 
 ## 尚未实现
 
@@ -141,7 +269,7 @@ Map12主线任务1165～1270沿用官方顺序、前置和奖励；其中1215要
 
 七座战斗碑的点位覆盖 1813／2530／3013／5519／6406／6614／8320，分别绑定906／908／931／930／905／907／932；已从当前官方两份显示 prefab 解码原 `BattleSteleWorldStageDialog` 窗口操作，保留原64位引用与52条奖励条件分支。用户确认实体继承自身所在区域等级／阶位，怪物应用原+7及编队偏移；已接入原怪物属性重算。胜利奖励按原条件优先级取固定物品，再按已确认的地图属性29加成结算；奖励、随机状态、一次完成标志与胜场同属本地档案事务，败北不扣次数，档案读写失败均保留结算重试，冷启动可从档案恢复地图次数标志。官方完整奖励表没有1850／1853，按原 `RewardRuleInfoParser.Get` 的空引用行为不生成对应奖励，不补造金币等条目。入口为 `Map12/steles`，来源见[七战斗碑规则与操作](../../assets/reference/official-map/map12-steles-source-manifest.json)，运行接线为 `OfficialMainlineMapRuntime.Map12Steles.cs`。来源复现、三个程序集独立编译与静态检查已通过；`RunSteleRuleChecks` 覆盖七点位的败北、写入拒绝、重试、重复结算和档案／地图分步保存恢复，但尚未执行。自动运行验收按用户要求暂停；专用原生窗口、NPC组队、战后点位显示／小地图和真实指针开战／冷启动仍未完成，不把当前通用弹窗入口视为战斗碑完整迁移。
 
-七战斗碑专用 UI 已从同一选定官方来源补齐 `BattleSteleWorldStageDialog`、6650／6655图标和 `ConfirmDialog` 四个依赖，转换源现在为72份 prefab、943张 Sprite，覆盖全部50种原奖励物品的图标／品质底图。既有已导入目录仍为68份／934张，本次新增四份尚未执行 Windows 原生导入；通过 `OfficialMap11UiTools.ImportForMap(12)` 恢复，不以手写层级替代。迁移的 `WorldBattleSteleStageUI` 保留原初始化顺序、个人／队伍推荐文字、位阶压制、战力颜色输入、人数不足确认、单人碑拒绝组队和“玩家战斗动作→开始关卡→关闭”顺序；`WorldStateMultiLanguagesConfig` 保留遇到缺键即终止该数组的原分支，原三份托管状态按64位整数绑定。确认框的四个自动对齐字段按原64字节组件完整读取，排除非序列化 SafeAction。原缩放补偿、红点及预览／Bloom 元数据已接入导入器。`WorldConfirmDialog` 已按原 `ConfirmDialog` 接入确认／取消／停用自动取消、保留窗口、按钮文字、提示及宽度分支；`WorldAutoAlignForSingleMultiLineText` 复用原 UIBase 初始化生命周期，按帧尾测量选择单行／多行对齐。原 `LockMaskWithTime`、`ShowRemainTimeInfo` 与完整 `CultureTimeSpanArg` 格式分支已迁入，保留 prefab 的10秒默认值、0.1秒刷新及停用解锁顺序；仅以本地时钟替代在线时间服务。新增计时文字组件按原引用绑定，既有4404条组件记录未改变。相关独立 C# 编译及来源校验通过，确认／取消、可见提示对齐、遮罩拦截和停用恢复的双尺寸夹具已编写但未执行。新增原生导入、地图宿主接线、超链接、音效、TMPEffect 及 NPC 队伍仍待完成。四个相关程序集独立编译通过，提取脚本及943张图像哈希检查通过；`RunSteleUi` 已编写七点位、两种竖屏尺寸、组队人数／压制切换与真实射线模拟点击夹具，按暂停要求尚未执行，不能据此认定窗口可玩或画面已还原。代码、原始输入与转换输出哈希见[专用 UI 来源](../../assets/reference/official-map/map12-stele-ui-source-manifest.json)。
+七战斗碑专用 UI 已从同一选定官方来源补齐 `BattleSteleWorldStageDialog`、6650／6655图标和 `ConfirmDialog` 四个依赖，转换源现在为72份 prefab、943张 Sprite，覆盖全部50种原奖励物品的图标／品质底图。既有已导入目录仍为68份／934张，新增四份尚未执行 Windows 原生导入；通过 `OfficialMap11UiTools.ImportForMap(12)` 恢复，不以手写层级替代。迁移的 `WorldBattleSteleStageUI` 保留原初始化顺序、个人／队伍推荐文字、位阶压制、战力颜色输入、人数不足确认、单人碑拒绝组队和“玩家战斗动作→开始关卡→关闭”顺序；`WorldStateMultiLanguagesConfig` 保留遇到缺键即终止该数组的原分支，原三份托管状态按64位整数绑定。确认框的四个自动对齐字段按原64字节组件完整读取，排除非序列化 SafeAction。原缩放补偿、红点及预览／Bloom 元数据已接入导入器。`WorldConfirmDialog` 已按原 `ConfirmDialog` 接入确认／取消／停用自动取消、保留窗口、按钮文字、提示及宽度分支；`WorldAutoAlignForSingleMultiLineText` 复用原 UIBase 初始化生命周期，按帧尾测量选择单行／多行对齐。原 `LockMaskWithTime`、`ShowRemainTimeInfo` 与完整 `CultureTimeSpanArg` 格式分支已迁入，保留 prefab 的10秒默认值、0.1秒刷新及停用解锁顺序；仅以本地时钟替代在线时间服务。新增计时文字组件按原引用绑定，既有4404条组件记录未改变。相关独立 C# 编译及来源校验通过，确认／取消、可见提示对齐、遮罩拦截和停用恢复的双尺寸夹具已编写但未执行。新增原生导入、地图宿主接线、超链接、音效、TMPEffect 及 NPC 队伍仍待完成。四个相关程序集独立编译通过，提取脚本及943张图像哈希检查通过；`RunSteleUi` 已编写七点位、两种竖屏尺寸、组队人数／压制切换与真实射线模拟点击夹具，按暂停要求尚未执行，不能据此认定窗口可玩或画面已还原。代码、原始输入与转换输出哈希见[专用 UI 来源](../../assets/reference/official-map/map12-stele-ui-source-manifest.json)。
 
 七战斗碑的四份原循环／结束演出已从同一选定来源恢复，保留84个节点、64个粒子系统、72个粒子渲染器、17份材质与2份网格；原层级、启用值、变换、组件／子项顺序、粒子参数、材质／网格字节及原指针逐字段核对，共166632个值与1794个指针。18张实际纹理复用同 CAB／PathID／对象哈希的完整原生 mip 转换，原 `Effect/Noise_Mask_Pro` 对象哈希核对后显式绑定已有 Windows 实现；未带入导出器的占位 shader 或脚本。目录为 `Map12/Native/stele-playables-catalog`，原生资产位于 `Assets/Official/World/Map/12/NativeStelePlayables/`。`ECPeriodicityInteractionStateView` 保留刷新先停旧演出、按当前组过滤事件、从可交互转为完成才播结束演出、冷载已完成时不播放及卸载解除订阅的原顺序，仅将 EC／玩家／配置／演出服务替换成本地接口。四项相关程序集独立 C# 编译与全工程静态检查（73279个 GUID）通过；`OfficialMap12StelePlayableTools.Validate` 已编写原生依赖／脚本、原1.85秒结束时长、挂点、未烘焙光照默认值及状态分支检查，尚未执行。原生显示工厂／周期事件与完成后实体／小地图语义已接入主地图，实际演出和画面仍待运行验证，自动运行验收继续暂停。输入、实际转换设置、原始代码、GUID重映射及输出哈希见[演出输入](../../assets/reference/official-map/map12-stele-playable-input-source-manifest.json)与[原生演出绑定](../../assets/reference/official-map/map12-native-stele-playables-source-manifest.json)；新增素材尚未进入完整快照。
 
@@ -155,7 +283,7 @@ Map12主线任务1165～1270沿用官方顺序、前置和奖励；其中1215要
 
 原 Team 界面已完成原生转换源核对：171份 CAB 输入恢复21413个组件、1298份托管引用，重新打开核对57677个对象载荷；全部托管引用的8469个非空指针、85484项值和989组打包数组通过核对。另将本图所需10份原窗口的原生 YAML 保留至 `Source/native-team-ui-prefabs.json`，逐项比对645节点／2914对象／1105个脚本、9675个指针、原字段、组件及子节点顺序、浮点位和脚本程序集／类型。字段中的空／数字样式字符串按原类型比较词法文本，64位文件 ID 保留为文本。直接引用的默认头像在 AssetRipper ASTC 解码中出现各通道至多1级舍入差异，源载荷保留原 Texture2D 按既有 UnityPy 流程解码的无损 PNG 修正，校验 RGBA 与 PNG 复开一致；没有改绘素材，也未变更 GUID、尺寸或布局。缺失转换结构依据同 APK 原生元数据验证继承、可见性／属性、类型和顺序；临时引用类型声明只供转换识别对象指针，不进入游戏。原范围音频回调数组为空，未推定未出现的回调编码。入口为 `scripts/prepare_unity_map12_team_native_inputs.py`／`prepare_unity_map12_team_native_export.py`／`prepare_unity_map12_team_native_sources.py`；完整依据见[原队伍转换输入](../../assets/reference/official-map/map12-team-ui-native-input-source-manifest.json)和[原生窗口源](../../assets/reference/official-map/map12-team-ui-native-source-manifest.json)。原始 APK／云端包未修改。正式 prefab 装配、精确图片／字体／材质／shader 与脚本绑定、队伍／邀请／站位服务、实际交互／存档和发布仍未完成；自动运行验收保持暂停，新增载荷未进入完整素材快照。默认只读复现逐字节一致，全工程静态元数据检查通过（73938个 GUID）；Unity 导入／运行与发布未执行。
 
-### 依据与代码定位
+## 代码与资源入口
 
 - [当前程序集、配置、剧情与模板来源](../../assets/reference/official-map/map12-source-manifest.json)、[资源转换与哈希](../../assets/reference/official-map/map12-unity-source-manifest.json)。
 - [原坐标、网格组件与贴图导入适配](../../assets/reference/official-map/map12-coordinate-source-manifest.json)、[官方界面原对象与转换](../../unity/Assets/Official/World/Map/12/UI/source-manifest.json)、[原生界面加载绑定及哈希](../../assets/reference/official-map/map12-ui-native-source-manifest.json)。

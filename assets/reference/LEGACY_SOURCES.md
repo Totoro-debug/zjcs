@@ -1,0 +1,30 @@
+# 非运行参考来源
+
+[文档索引](../../docs/README.md) · [当前官方来源](SOURCES.md)
+
+以下网页／实机图片仅供流程与视觉对照，不是客户端原始资源，不进入当前运行素材，也不证明官方数值或服务器规则。当前规则、单机决策及旧存档兼容性分别由所属功能／地图页维护；旧实现及处理历史通过 Git 追溯。
+
+- [公测兽耳实机](https://www.taptap.cn/moment/677127478027750298)
+- [官方自定义形象活动](https://www.taptap.cn/moment/619133911917660408)
+- [官方发型征集](https://actscpzjcs.leiting.com/zjcs/act/202603/zjcsvote/)
+- [体型与起名截图](https://www.jinghua.cn/game/35948.html)
+- [武器与职业实机对话](https://www.taptap.cn/moment/677132656709732845)
+- [杖剑传说官网](https://zjcs.leiting.com/)
+- [官方安装包 zjcs_M509085.apk](https://zhangjcsdlf.leiting.com/full/zjcs_M509085.apk)
+- [Bilibili 玩家角色内容](https://www.bilibili.com/video/BV15zkdBpEWH/)
+- [玩家实机](https://www.bilibili.com/video/BV1BW14BDELh/)
+- [3DM 创角说明](https://shouyou.3dmgame.com/gl/577575.html)
+- [TapTap 界面盘点](https://www.taptap.cn/moment/718225565101851508)
+- [原始图片地址](https://img2-tc.tapimg.com/moment/etag/a0ab195c77c646ab4bb4d181f5e9d2b4.png)
+- [原始图片地址](https://img2-tc.tapimg.com/moment/etag/bdcf0e987a8547e6ab64e201e26c466e.png)
+- [原始图片地址](https://img2-tc.tapimg.com/moment/etag/78edca134b921a9384481a7de9b00d9a.png)
+- [TapTap 家园个人玩法整理](https://www.taptap.cn/moment/804069113319131552)
+- [TapTap 家园拜访介绍](https://www.taptap.cn/moment/804465756447182628)
+- [TapTap 9 月 29 日更新公告](https://www.taptap.cn/moment/854125639052037659)
+- [Bilibili 新手玩法视频](https://www.bilibili.com/video/BV1WNTiz3EyP/)
+- [家园拜访视频](https://www.bilibili.com/video/BV1jHVT6EE1D/)
+- [森之国攻略中的实机局部](https://shouyou.3dmgame.com/gl/582092.html)
+- [原图](https://syimg.3dmgame.com/uploadimg/xiaz/2025/0612/1749712805645.png)
+- [原图](https://img2-tc.tapimg.com/moment/etag/a0ab195c77c646ab4bb4d181f5e9d2b4.png/_tap_ugc.jpg)
+- [外观组成展示图](https://truth.bahamut.com.tw/s01/202507/forum/80389/ee6f167031545f59f26970e27aee0db5.JPG)
+- [取名功能维护的玩家反馈](https://www.taptap.cn/moment/678667485204974238)

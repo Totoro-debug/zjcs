@@ -10,9 +10,63 @@
 
 入口由家园游记的 `DemonBattleEntry` 打开。四个入口分别保存最高通关层；普通挑战只能启动当前层。四塔合计585层，战斗、奖励、自动推关和后台结果均在本地保存。
 
+## 原始官方实现
+
+幻想阶梯读取官方塔层关卡、阵型、地图、挑战条件、奖励与自动推关配置，使用原挑战／结算界面及战斗 HUD。
+
+### 待迁移的规则与表现
+
+以下表现目标尚未完整迁移；已实现的规则见上文。
+
+入口及四塔楼层列表使用 Unity `ScrollRect` 和官方 viewport、行高与层索引；原 `LoopScrollRectBase` 的速度采样、滚轮灵敏度及0.5秒 `ScrollToCellWithinTime` 对齐行为仍待复原和实测。需要验证入口和楼层按钮命中、拖动不误触、滚动惯性及边缘回弹。
+
+楼层保留原已通关、当前、自动推关和下一层状态，以及四种塔原 UI 动画、入场／离场粒子和玩家 Spine 序列。推关时旧当前层播放原 `Passing` 的 `idle_01` 一次并播放 UI 离场片段；新当前层先播原 UI 入场片段，再播放 `portal_01` 一次并循环 `idle_01`，入场粒子在 UI 片段结束后出现。初次打开按原 instant 状态采样稳定姿势；下一层使用原 `Init` UI 片段，已通关层播放原 `Passed` 片段并隐藏玩家。入／离场 Wwise 事件 `Note_FantasyLadder_Flash`、`Note_FantasyLadder_Elevator` 使用固定原版本转换的本地音频。
+
+男、女动作资源按原 `SplitAnimationSO` 转换 `map/portal_01`；动作缺失时的职业外观回退需替换成可正确变形的原始分体动作。`win_03` 按用户确认不触发。
+
+开放检查原地图、阶位和前塔通关条件，必须挑战当前层；敌人等级为推荐，不添加体力或等级硬锁。奖励取原关卡，未结算战斗先结算，不增加自创经验或祈愿材料。
+
+进度遵循 `PlayerStageDemonBattlefieldUtils.GetLayer(EntryIndex)` 的指定入口最高已结算层语义；其他入口胜场和未结算胜利不计，旧无累计字段的有效记录仍识别。
+
+自动按钮、开关／锁定状态、楼层“推关中”及“切入”按钮采用原 `FightDemonBattlefieldMainPanel`、`StageDemonBattlefieldPanelItem` 和组件绑定。开启时保留当前前台战斗；切出、切入保留实际角色、敌人、行动队列、技能状态和随机检查点，不重新判胜。前台胜负使用原 `GameEndPanelDemonBattlefield`，胜利后按 `DemonBattlefield.AutoPushCountdown=5` 秒继续下一配置层；失败或完成该塔后停止。
+
+后台战胜按原关卡推进层数并累积原奖励，不直接发入背包；切回前台或停止时保留每段推关的起止层、耗时、胜负与奖励。当前已接结果通知、最早结果选择和本地一次性领取；官方 `StageDemonBattlefieldAutoPushResultPanel` 的原奖励格、空奖励及完成状态表现仍需核对。
+
+### 官方代码与资源依据
+
+以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
+
+本节记录非主线还原实施的实际替换，保留前文来源历史。使用固定 `854_156383` 的 APK 与已校验同版本 CDN，不混入新版同名包，没有新增自绘位图。
+
+运行 `python scripts/prepare_fidelity_ui.py` 转换原公共 ConfirmDialog、TaskPanel 与任务行和详情、AchievementGroupPanel 与组内容和行、TreasurePanel、四槽、套装行、TreasureDetailDialog、TreasurePieceDialog、TreasurePromotePanel 和觉醒选材面板。输入 prefab 的真实 bundle、MD5、对象 ID、纹理输出及 SHA256 记录在 [fidelity/source-manifest.json](../../assets/reference/fidelity/source-manifest.json)。已转出的星命入口、容器和详情 prefab 尚未完整接入，不将提取完成当作功能完成。
+
+原 Luban 表包括 treasure_suit、achievement_group、fixed_reward、reward_config、system_level_limit、system_level_gap_limit 和 level_prop_default_value；根据原 Console 构造器完整解码并记录哈希。原 WwiseBnk level_prop 二进制使用 LevelPropBinaryReader 的索引和有符号 varint 格式，提取遗物所需 21 个属性类，保留原值和默认值。运行数据进入 `assets/official/fidelity-rules.json`。原语言表按 XXHash64 键读取，任务、成就、遗物描述和 prefab 文本进入 `assets/official/fidelity-texts.json`，原语言文件哈希及输出哈希同样登记。
+
+实际已接入：任务与独立成就专用界面、遗物主页和详情／培养／碎片／套装、原关闭导航及本地恢复公共弹窗。遗物属性计算按 BattleFormulaHandler，替换此前每级固定攻击／生命的简化公式；原槽位升级和累计碎片费用同时用于 UI 与事务。1382 个遗物及其碎片图标来自原 manifest 的精确路径或原子目录下唯一同名对象，没有用别的图标替代。
+
+星命按原 AstrologicalDestiny 代码接回入口、契约、属性、等级与标签、规则以及六种季节 prefab，原长按加速、520 级消耗和属性已接入；季节资格、历史快照、商店和结算仍未完成。不能将六种 prefab 的提取作为季节玩法完整实现的证据。
+
+`prepare_fidelity_pets.py` 转换 40 套原模型、40 条形态绑定及原初始网格动画，使用原 PetUI 与 PetModelSpawnerForUI 的挂点、缩放和皮肤；游戏运行不依赖 Spine。输入 bundle／对象与输入输出哈希见 [pet-models/source-manifest.json](../../assets/reference/pet-models/source-manifest.json)。`prepare_fidelity_pet_ui.py` 完整读取原幻兽面板绑定、托管 StateSwitcher、语言及 LevelPropBinaryReader 属性，转换详情、食物、潜力行、属性行、进化预览和原幻兽技能图标，来源见 [pet-fidelity-ui/source-manifest.json](../../assets/reference/pet-fidelity-ui/source-manifest.json)。原技能图标位于 PetSkill 下的原子目录，按唯一同名对象转换；保留实际 GUID 与 bundle 来源。经验与属性规则迁移不等于能力树、编队、导师、祝福及幻兽独立战斗已完成。
+
+原果树、公会首领完整流程、后期养成及原战斗尚未全量完成，未删除仍有引用的共享资源。
+
+固定APK与匹配CDN的prefabs_ui_demonbattlefield、prefabs_ui_npcadventure、npcadventuremap_map_11／12／13／14／17及npcadventuregeography原包，使用原RectTransform、LoopVerticalScrollRect、Slider尾字段、StateSwitcher引用、原AnimationClip、PlayerInfoUI／PlayerIcon本人模型绑定。prepare_dungeon_bindings.py记录各对象输入SHA256、实际包URL／MD5与语言文件哈希、素材输入清单并入assets/reference/dungeon-ui/source-manifest.json。复用既有667项原纹理，无自绘／拼图替代。NpcAdventureSettings.ConfigData保留原地形旋转6及快进参数；旋转实现来源为official-code/launch-source/RotateAnimation.cs。地域19未使用另国图替代，原／新版清单检索结果和处置边界见对应功能／地图文档。
+
+`prepare_tower_push.py` 从固定854_156383的 `prefabs_ui_fight_fightmainpanel_extmodel_fightdemonbattlefieldmainpanel`、`prefabs_ui_fight_gameendpaneldemonbattlefield`、`prefabs_ui_demonbattlefield` 和 `prefabs_ui_home` 迁移原自动按钮、胜负结算、后台结果及家园提醒。保留原层级、布局、状态切换、动画曲线、贴图和组件引用，文字从原语言二进制读取；本地运行资源位于 `assets/official/tower-push/`，原家园提醒复用既有主城贴图。包版本、实际URL、对象、语言和输入输出哈希见 [tower-push/source-manifest.json](../../assets/reference/tower-push/source-manifest.json)，未使用新版替代包或自绘素材。
+
+幻想阶梯的滚动、楼层 prefab、粒子和状态数据来自固定版本 `854_156383` 的 `defaultpackage_assets_prefabs_ui_demonbattlefield.bundle` 与 `LoopScrollRectBase` 原组件；动作按原玩家 `SplitAnimationSO` 转换，Wwise 入／离场事件按原 prefab 引用补入本地战斗音频。对象及输入输出哈希分别见 `dungeon-ui/source-manifest.json`、`official-map/player-actions-source-manifest.json`、`character-genders/source-manifest.json` 和 `battle-audio/source-manifest.json`；重建入口为 `prepare_dungeon_bindings.py`、`prepare_map_player_actions.py`、`prepare_female_character.py` 与 `prepare_battle_audio.py --reuse-bindings --tower-only`。
+
 ## 完整还原部分
 
 已接通入口、逐层挑战、共用官方战斗执行器、官方奖励配置、本地存档、自动推关、后台检查点与结果领取。尚未通过 Unity Play Mode 输入、画面及存档恢复验收，不能据此标记模块完成。
+
+### 已迁移代码与局部资源
+
+以下为局部代码／资源接入，完整流程仍受本页缺项限制。
+
+`scripts/prepare_tower_push.py` 从固定 APK manifest `854_156383` 解码 `stage_demon_battlefield.g.bytes`、`stage.g.bytes`、`stage_monster_array.g.bytes`、`skill.g.bytes`，并复用已校验的官方战斗场景与战斗/技能/通用规则，生成四入口共585层的官方战斗数据。编队按 `StageMonsterArrayInfoParser.GenerateMonsters` 的连续 GroupId 顺序展开；小数等级按 `LevelPropParser.GetPropsByFloat` 与 `BattleFormulaHandler.LerpProps` 插值。`scripts/prepare_tower_push_ui.py` 转换 `defaultpackage_assets_prefabs_ui_demonbattlefield.bundle` 中的入口、入口行、逐层页与四种塔层行 prefab，并导出原面板 Sprite、动态入口图及逐项输入／输出哈希；`scripts/prepare_tower_push_audio.py` 按固定 Wwise 来源校验并打包 `Note_FantasyLadder_Flash`、`Note_FantasyLadder_Elevator` 两条 OGG。玩法及奖励已接入本地运行时；塔行状态动画和粒子仍待从官方动画依赖恢复，Unity Play Mode 尚未验收，详见[幻想阶梯](fantasy-tower.md)。
+
+依据：`tower-push/tower-battle-source-manifest.json`、`tower-push/ui-source-manifest.json`、`battle-audio/source-manifest.json`、`character-creation/native-mesh-source-manifest.json`。
 
 ## 自定义实现
 
@@ -42,27 +96,7 @@
 - 男、女原生角色动画载荷已加入 `map/portal_01`，但仅覆盖资源动作表中对应的91个男性和90个女性皮肤 ID；缺动作的职业外观目前冻结显示其本身官方 idle 网格，不等同于官方 portal 变形。`win_03` 不接入，符合已确认的无榜单身份处理。
 - Home 与 Editor 程序集编译通过。`HomeHudView.Dungeons` 的官方内容节点类型及行高读取已修正；塔玩法仍缺 Play Mode 的真实输入、画面、连续结算及存档恢复验证。
 
-### 待迁移的规则与表现
-
-以下表现目标尚未完整迁移；已实现的规则见上文。
-
-入口及四塔楼层列表使用 Unity `ScrollRect` 和官方 viewport、行高与层索引；原 `LoopScrollRectBase` 的速度采样、滚轮灵敏度及0.5秒 `ScrollToCellWithinTime` 对齐行为仍待复原和实测。需要验证入口和楼层按钮命中、拖动不误触、滚动惯性及边缘回弹。
-
-楼层保留原已通关、当前、自动推关和下一层状态，以及四种塔原 UI 动画、入场／离场粒子和玩家 Spine 序列。推关时旧当前层播放原 `Passing` 的 `idle_01` 一次并播放 UI 离场片段；新当前层先播原 UI 入场片段，再播放 `portal_01` 一次并循环 `idle_01`，入场粒子在 UI 片段结束后出现。初次打开按原 instant 状态采样稳定姿势；下一层使用原 `Init` UI 片段，已通关层播放原 `Passed` 片段并隐藏玩家。入／离场 Wwise 事件 `Note_FantasyLadder_Flash`、`Note_FantasyLadder_Elevator` 使用固定原版本转换的本地音频。
-
-男、女动作资源按原 `SplitAnimationSO` 转换 `map/portal_01`；动作缺失时的职业外观回退需替换成可正确变形的原始分体动作。`win_03` 按用户确认不触发。
-
-开放检查原地图、阶位和前塔通关条件，必须挑战当前层；敌人等级为推荐，不添加体力或等级硬锁。奖励取原关卡，未结算战斗先结算，不增加自创经验或祈愿材料。
-
-进度遵循 `PlayerStageDemonBattlefieldUtils.GetLayer(EntryIndex)` 的指定入口最高已结算层语义；其他入口胜场和未结算胜利不计，旧无累计字段的有效记录仍识别。
-
-自动按钮、开关／锁定状态、楼层“推关中”及“切入”按钮采用原 `FightDemonBattlefieldMainPanel`、`StageDemonBattlefieldPanelItem` 和组件绑定。开启时保留当前前台战斗；切出、切入保留实际角色、敌人、行动队列、技能状态和随机检查点，不重新判胜。前台胜负使用原 `GameEndPanelDemonBattlefield`，胜利后按 `DemonBattlefield.AutoPushCountdown=5` 秒继续下一配置层；失败或完成该塔后停止。
-
-后台战胜按原关卡推进层数并累积原奖励，不直接发入背包；切回前台或停止时保留每段推关的起止层、耗时、胜负与奖励。当前已接结果通知、最早结果选择和本地一次性领取；官方 `StageDemonBattlefieldAutoPushResultPanel` 的原奖励格、空奖励及完成状态表现仍需核对。
-
-### 依据与代码定位
-
-以下为官方来源、既有规则与回归参考；
+## 代码与资源入口
 
 [PlayerStageDemonBattlefieldUtils](../../.tools/source-packages/official-code/common-source/Common/PlayerStageDemonBattlefieldUtils.cs)、[LoopScrollRectBase](../../.tools/source-packages/official-code/loop-scroll-source/UnityEngine.UI.LoopScrollRectBase.decompiled.cs)、[StageDemonBattlefieldPanelItem](../../.tools/source-packages/official-code/client-source/StageDemonBattlefieldPanelItem.cs)、[StageDemonBattlefieldPanelItemPlayerPlayable](../../.tools/source-packages/official-code/client-source/StageDemonBattlefieldPanelItemPlayerPlayable.cs)、[SkeletonGraphicAnimSequence](../../.tools/source-packages/official-code/client-source/AppearanceSystem/SkeletonGraphicAnimSequence.cs)
 
@@ -70,10 +104,8 @@
 
 [StageDemonBattlefieldAutoPushResultPanel](../../.tools/source-packages/official-code/client-source/StageDemonBattlefieldAutoPushResultPanel.cs)、
 
-[prepare_map_player_actions.py](../../scripts/prepare_map_player_actions.py)、[prepare_female_character.py](../../scripts/prepare_female_character.py)、[player-actions-source-manifest.json](../../assets/reference/official-map/player-actions-source-manifest.json)、[character-genders/source-manifest.json](../../assets/reference/character-genders/source-manifest.json)、[prepare_battle_audio.py](../../scripts/prepare_battle_audio.py)
+[prepare_map_player_actions.py](../../scripts/prepare_map_player_actions.py)、`scripts/prepare_female_character.py`（来源工具标识）、[player-actions-source-manifest.json](../../assets/reference/official-map/player-actions-source-manifest.json)、[character-genders/source-manifest.json](../../assets/reference/character-genders/source-manifest.json)、`scripts/prepare_battle_audio.py`（来源工具标识）
 
 [battle-audio/source-manifest.json](../../assets/reference/battle-audio/source-manifest.json)、
 
 [prepare_tower_push.py](../../scripts/prepare_tower_push.py)、[prepare_tower_push_ui.py](../../scripts/prepare_tower_push_ui.py)、[prepare_tower_push_audio.py](../../scripts/prepare_tower_push_audio.py)、[界面来源清单](../../assets/reference/tower-push/source-manifest.json)、[UI 输出清单](../../assets/reference/tower-push/ui-source-manifest.json)、[塔层战斗来源清单](../../assets/reference/tower-push/tower-battle-source-manifest.json)、[音频来源清单](../../assets/reference/battle-audio/source-manifest.json)、[原生角色动作清单](../../assets/reference/character-creation/native-mesh-source-manifest.json)
-
-

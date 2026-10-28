@@ -6,15 +6,164 @@
 
 ## 地图简介
 
+14 龙之国，范围按下列原配置与本地决策维护。
+
+## 原始官方实现
+
 地图 ID 为 14，原目录为坎斯汀大陆／龙之国，场景类型为 `map_world`。原配置包含 111 个地区、2,961 个放置实体，导航为 280×280，原点为 `(-134.5, -134.5, 0)`。BGM 配置为 14，后继地图为 15，默认入口为 101，地形入口为 `Assets/Partition/MapGround_14/MapGround_14_bare.prefab`。
 
 使用 `official-source.json` 选择的 `871_156598`；APK 基础清单为 `854_156383`。先核对 APK 清单、实际包及内部对象，再读取所选索引下已校验的云端缓存，来源及哈希分别记录，不使用旧版数据补缺。
 
+### 官方代码与资源依据
+
+以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
+
+`prepare_map12_dialogs.py --task-bindings-only` 从同一原版语言包及 `prefabs_ui_task` 提取山之国22个任务的89项文案和原状态控制器；`prefabs_ui_directionguider` 的两种方向控件、`prefabs_worldstageiconhead/6302_IconHead` 的层级及三个 `SkeletonGraphic` 参数直接转换为 Unity 可用格式。骨骼按相同 CAB／对象／皮肤身份复用已经转换的原网格和全部动画；未绘制头像或箭头。语言与官方调用代码的 SHA256 记录于来源清单。原 prefab／组件凭据及复用图片哈希见 的 `INPUTS`／`RESOURCE_SOURCES`。
+
+`prepare_map12_stele_ui.py` 从固定版 `BattleSteleWorldStageDialog`、`WorldDialogEntityContent`、`6650_DialogIcon`、`6655_DialogIcon` 及相关官方 C#／prefab 配置生成 ；运行时Unity 接入时须绑定原布局组、尺寸适配、奖励插槽和快照图标。原战斗碑素材、中文键、组件字段及输入 SHA256 均保存在生成脚本和 的 `SOURCE_INPUT_SHA256`／`BINDINGS`／`RESOURCE_SOURCES`，未绘制替代窗口。
+
+龙之国当前配置与原生地形：固定 `871_156598` 的程序集／反编译代码、111区、2961实体、169模板、93关联表、85剧情及64对白组已解码，来源见 [配置清单](../../assets/reference/official-map/map14-source-manifest.json)。五个原地图 bundle 的113份完整CAB输入恢复5400组件并逐字节核对29773对象；原 SkeletonAnimation 只补齐序列化描述，不包含运行时替代。240区块共2386份地形资产，裸场景新增270份／复用102份依赖；新增10张纹理的47个mip完整保留并通过GPU回读。原 Movable-Sprite 程序已机械转换并通过材质pass编译。新增原生载荷独立交付，尚未生成完整素材备份快照。
+
+依据：[原生输入](../../assets/reference/official-map/map14-native-input-source-manifest.json)、[地形](../../assets/reference/official-map/map14-native-terrain-source-manifest.json)、[裸场景](../../assets/reference/official-map/map14-native-scene-source-manifest.json)、[shader](../../assets/reference/official-map/map14-scene-shaders-source-manifest.json)。
+
+龙之国实体转换输入：按当前871官方 EC 索引、地图放置与全部显示状态选择器定位416个实际 prefab、33个根 bundle；CAB 与动态贴图闭包为1544份已核对输入和3228条绑定。25419个组件及2643个托管引用注册表恢复字段描述，117858个内部对象在二进制重编码／严格重读后核对，其他原载荷逐字节保留。CinemachineComposer 的15字段、属性、继承与 APK 元数据核验后补齐序列化描述，没有实现替代相机逻辑。转换输入不是可运行实体，原生 prefab／脚本／shader／动画绑定与完整地图验证仍待完成，范围见[龙之国](map-14.md)。
+
+依据：[实体来源](../../assets/reference/official-map/map14-native-entity-input-source-manifest.json)。
+
+龙之国实体原生导出：私有 AssetRipper 1.3.14 完成1544份已核验输入的 UnityProject 转换；1822份原生缓存载荷恢复2643个注册表及10376条原引用记录，保留43个空注册表。独立核对193131个值、16576个实际非空指针、1001个按原类型解包的数组及原RID／顺序／浮点位表示，剥离并核验2643组临时来源标记。此成果仅为原生缓存，游戏脚本、shader、动画、正式实体宿主及运行验证仍待接入，范围见[龙之国](map-14.md)。
+
+依据：[实体导出来源](../../assets/reference/official-map/map14-native-entity-export-source-manifest.json)。
+
+龙之国原生环境与蝴蝶：当前871的389个非标签环境 prefab 恢复766份原生资产，复用22份已核对依赖并转换59张原纹理；共享环境、管线和113份载荷重新核对同一原对象。139个 prefab 的238个蝴蝶实例沿用原皮肤、动画、Transform及材质，原9／7骨骼的两模型、3／1皮肤及9／2动画由独立仿射／曲线求值器驱动原生网格，不使用 Spine runtime。两套原 shader 全程序机械转换并逐变体编译。
+
+依据：[蝴蝶来源](../../assets/reference/official-map/map14-native-butterflies-source-manifest.json)、[蝴蝶绑定](../../assets/reference/official-map/map14-native-butterflies-binding-source-manifest.json)、[共享环境](../../assets/reference/official-map/map14-shared-environment-source-manifest.json)、[环境来源](../../assets/reference/official-map/map14-native-environment-scene-source-manifest.json)、[环境绑定](../../assets/reference/official-map/map14-native-environment-scene-binding-source-manifest.json)。
+
+龙之国完整实体材质来源：按1544份当前871已核验输入的CAB／PathID清单严格解码2040个原生材质，逐项JSON往返二进制与原载荷字节一致；5747个原shader／纹理指针完整解析，涉及36个shader对象／族和1650个原纹理对象，完整清单117858对象。输出保留全部原字段及原指针，不采用导出器自行生成的字体材质。此步骤不代表Windows材质／纹理绑定、实体演出或玩法验收，范围见[龙之国](map-14.md)。
+
+依据：[实体材质来源](../../assets/reference/official-map/map14-native-entity-materials-source-manifest.json)。
+
+龙之国原生实体材质与贴图：2,034个 AssetRipper Unity YAML 模板的非指针字段已逐项匹配原 APK 材质对象，再按原 CAB／PathID 重写 shader 与纹理引用，生成2,034个 Unity 原生材质和显式资源目录；四个没有独立模板的 Unity 默认资源材质由引擎提供，六个原始零尺寸动态字体 atlas 保留空运行时槽位并等待字体初始化链。1,644张有像素的原纹理保留原格式、色彩空间、采样参数及全部8,068个 mip， Play Mode GPU 回读与原字节一致。材质、纹理和 shader 指针来源／输出哈希见[原生材质来源](../../assets/reference/official-map/map14-native-entity-materials-native-source-manifest.json)、[材质 Unity 绑定](../../assets/reference/official-map/map14-native-entity-materials-binding-source-manifest.json)、[纹理来源](../../assets/reference/official-map/map14-native-entity-textures-source-manifest.json)、[shader 来源](../../assets/reference/official-map/map14-entity-shaders-source-manifest.json)及[shader Unity 绑定](../../assets/reference/official-map/map14-entity-shaders-binding-source-manifest.json)。当前尚未完成实体 prefab 重绑定、正式实体渲染、字体初始化及玩法存档，范围见[龙之国](map-14.md)。
+龙之国原地区标签：97个原 prefab 恢复130份原生资产、78份复用依赖与440条原状态切换托管记录，原代码可达分支按当前871程序集迁移；111区名称及横排文本读取当前APK语言表，原字体／材质／图集按原对象哈希复用。隔离验证工程须包含既有TMP Settings；源字体未被动态字形写入修改。正式玩家状态、交互、存档与Windows发布仍待完成，见[龙之国](map-14.md)。
+
+依据：[代码／配置](../../assets/reference/official-map/map14-label-components-code-source-manifest.json)、[原生素材](../../assets/reference/official-map/map14-native-region-labels-source-manifest.json)、[显式绑定](../../assets/reference/official-map/map14-native-region-labels-binding-source-manifest.json)。
+
+龙之国主线剧情数据载荷：以当前871来源收据校验原85张 Map14 剧情图、93张关联表和64组对白，校验图／子图闭包、72个 MapTalk 入口及17项条件闭包、原角色和奖励引用后生成 Unity 载荷；包含64张主线图、21张子图、1,333节点、417句对白、15个角色、60个逻辑标签、8项固定奖励和1项交付配置。转换脚本、输入／输出SHA-256及当前待接入项见[剧情运行时来源清单](../../assets/reference/official-map/map14-story-runtime-source-manifest.json)。共享执行器尚未覆盖37种节点类型；载荷未绑定原生剧情UI、Playables、实体模板或主线地图宿主，不代表可运行剧情。
+
+龙之国统一地图定义 `map14.json`：生成器核对 `map14-source-manifest.json` 的当前输入与全部输出哈希，再映射原导航、111个地区、2,961个放置实体及 `map_world.DefEntryId=101`；Unity 定义输出 SHA-256 为 `91ea216097003756f359d010a01db07a7a6198424389ba9b2835406ec2d41ff0`。定义尚未绑定主线资源目录、实体渲染或战斗载荷，不代表入口可玩。
+
+龙之国提交窗口的 Windows 原生绑定另见 [map14-handin-ui-bindings-source-manifest.json](../../assets/reference/official-map/map14-handin-ui-bindings-source-manifest.json)：原窗口／图标共 58 节点、94 份组件字段、18 张切片、3 个 Animator 配置、两段 60 Hz 弹窗动画与五态按钮 controller；原 `UI/Gray` shader 四变体由当前 GLES 程序机械转换，`UIGray` 材质来自 `GlobalUIConfig.GrayMat`。原 `Main_Cursor_Normal`／`Main_Cursor_Back` 事件由当前 WwiseEventReference 解析，复用音频前逐字节核对当前五份 Wwise 包与原转换输入相同，并核对 APK 实际包内输入及转换输出哈希。正式地图主线宿主、图标详情和全局遮罩仍未完成，范围见[地图页](map-14.md)。
+
+Map14 当前版战斗数据按已校验的 871 源收据与当前程序集重新解码，包含 217 关卡、20 场景、90 阵型、909 组实体关卡绑定、63 怪物组及三处剧情战斗引用。原对象、Luban 构造器、EC formatter、属性二进制及九份逐字节相同的官方公式来源记录于 `assets/reference/official-map/map14-battles-source-manifest.json`；Unity 运行载荷、单位构造和校验入口记录于 `map14-battle-runtime-source-manifest.json`。
+
+Map14 辉／残影来源解码：`scripts/prepare_unity_map14_fightother_sources.py` 先核对官方 APK，再按当前 `871_156598` 清单解析 FightOther 4651／4652 的原 prefab、`SkeletonDataAsset`、组合皮肤、HSV、Animator／Controller；`map14-fightother-source-manifest.json` 记录原对象与 schema、生成器及缓存输出哈希。原 NPC 骨骼与全部拆分动画使用固定 MIT 格式读取器解码，不使用 Spine runtime；皮肤骨骼和约束成员已补全，辉／残影分别保留 54／58 条物理约束。源缓存位于 `.tools/source-packages/current/871_156598/skeletons/npc_middle_model/`，尚未作为运行时模型或素材快照交付。
+
+Map14 统一原生宿主：`scripts/record_unity_map14_native_host.py` 核对原生地形／场景／环境／标签四份导入回执及实际目录、官方三维原点数据和共享原配置；来源与加载绑定见 `map14-native-host-source-manifest.json`。验证包含入口与跨位置加载、fixture 私有／公共状态刷新、卸载和重新挂载；正式地图入口、实体交互、进度存档及 Player 发布仍未覆盖。
+
+- 龙之国通用 UI：`scripts/prepare_unity_map14_ui.py` 严格使用当前 `871_156598`、按 APK 优先解析原 prefab 与共享支持界面，恢复 68 个面板／956 张精灵。`scripts/record_unity_map14_ui.py` 记录本地 `Resources/Map14/UI/` 原生输出、源投影、精灵导入参数及转换代码哈希；来源为 `assets/reference/official-map/map14-ui-binding-source-manifest.json`。资源未生成完整素材快照，正式业务、粒子／音频与 Windows Player 仍待完成。
+
+- 龙之国当前雕像／实体规则投影：`scripts/prepare_unity_map14_interactions.py` 与 `scripts/prepare_unity_map14_story_runtime.py` 验证 `map14-source-manifest.json` 后读取当前 169 个 EC 模板及表，原组件顺序、结果索引、状态、权重、区域和费用逐字段保留。女巫召唤按 Map14 解析至关卡 20004，默认 Map11 转换行为保持兼容；来源 `assets/reference/official-map/map14-interactions-source-manifest.json` 及 `map14-story-runtime-source-manifest.json` 记录输入、输出、原代码和显式 getter／图标绑定。正式进度、资源结果事务及 Windows 发布待完成。
+
+龙之国公共剧情恢复入口为 `scripts/prepare_unity_map14_story_dependencies.py`；复用保持默认 Map13 数据不变的恢复器。`official-map/map14-story-dependencies-source-manifest.json` 记录所选 `871_156598` 的 9 张原公共图／155 节点、25 条对白、5 类跟随实体、2 份补入 EC、1 份快捷购买及实际路径／GUID；保留 `EntityVineLock` 配置路径差异。统一剧情载荷为 94 图／1,488 节点／171 模板，正式执行和演出待接入。
+
+龙之国音频：`scripts/map14_audio_source.py` 依据当前 `871_156598` 实际 EventBankMapping、APK 优先／所选云端包及完整 HIRC 字节恢复引用，保留嵌入媒体和流式预取片段的各自偏移／哈希。BGM、400 个直接对白及剧情／实体 Timeline 共 418 个独立素材由原 WEM 直接解码为 PCM WAV，不使用旧 Ogg 缓存再次编码；17 项演出引用的 24 个动作保留顺序、延迟和静音目标。`prepare_unity_map14_entity_timelines.py` 恢复 5 个原实体 Timeline 和 4 条气泡配置／中文，确认咒文 `_36_17` 在原实体 Timeline 中以 `_17_1`／`_17_2` 分段播放。内置屏 Unity Play Mode 已对全部 418 个素材核对原采样并实际输出；正式事件／DSP／界面／存档与 Windows 发布待接入。独立素材尚未生成完整备份快照。
+
+依据：`official-map/map14-audio-source-manifest.json`、`map14-dialogue-audio-source-manifest.json`、`map14-playable-audio-source-manifest.json`、`map14-entity-timelines-source-manifest.json`。
+
+龙之国声音执行代码恢复器 `scripts/prepare_unity_story_sound_runtime.py` 校验所选 Assembly-CSharp／GameFramework.Runtime 程序集后复制 `MyPlayableSound`、`MyPlayableTimeLine`、`WwiseEventPlayableAsset`／Behaviour／Track 五份源码，保留循环和手动 Timeline 生命周期；仅适配命名空间、诊断与 ILSpy 隐式转换语法，复用现有已核对 SDK Post 桥接。原程序集、源码、桥接依赖、Unity MonoScript／asmdef 及验证脚本哈希见 `official-map/map14-story-sound-runtime-source-manifest.json`；内置屏 Unity Play Mode 已验证循环边界、停止／重用、目标回退、双段语音 Timeline 和时钟／外推／绑定。实际总线 DSP／RTPC 与完整原生地图演出待接通。
+
+龙之国 Animator 代码：`scripts/prepare_unity_story_animator_runtime.py` 校验当前官方程序集后迁移 `AnimationController`、`StateMergeList<T>` 和 `MyPlayableAnimator`，保留参数缓冲、同来源覆盖、来源恢复顺序、暂停计数、允许状态、层权重快照、停止／复用及控制器替换行为，仅适配命名空间、诊断和等价 C# 9 自动属性。原程序集／源码、三份 C#、元数据、依赖工具和验证脚本哈希见 `official-map/map14-story-animator-runtime-source-manifest.json`。原控制器／动画／模型及骨骼、换装、正式流程与 Windows 发布仍待完成。
+
+龙之国剧情气泡：按所选 APK-first 原 `BubbleDialog.prefab` 恢复 10 层级、43 组件字段与原始字节哈希、2 张精灵，复用已核对的原 FZY4K 字体；六份官方窗口／跟随／打字机／分组／按钮声音代码校验 Assembly-CSharp 与 Framework.FirstPass.Runtime 后迁移，保留原队列、时序和生命周期。原对象、程序集、源码、TMP 解码程序集、输入输出、原生 prefab、离线字体缓存适配、工具及运行检查代码哈希见 `official-map/map14-bubble-ui-source-manifest.json` 和 `official-map/map14-story-bubble-runtime-source-manifest.json`。正式 Timeline／地图／存档及 Windows 发布仍待完成。
+
+实体冒泡 Timeline 恢复：`scripts/prepare_unity_story_bubble_timeline.py` 校验当前官方程序集后迁移五份原类，显式窗口服务保留创建、延后完成与暂停关闭顺序。原完整 Timeline 资产、相机／角色／动画／音频及正式地图／存档／Windows Player 仍待完成。
+
+依据：`official-map/map14-story-bubble-timeline-source-manifest.json`。
+
+Animator 参数 Timeline 恢复：`scripts/prepare_unity_story_animator_timeline.py` 从当前官方程序集迁移三份原类，保留首次帧写入、各参数快照、控制器优先查找、触发后原生 Update(0)、暂停重入及结束恢复分支。隔离参数控制器不代表原角色或场景动画还原，原素材与完整地图／存档／Windows Player 仍待接通。
+
+依据：`official-map/map14-story-animator-timeline-source-manifest.json`。
+
+玩家 Animator Timeline：`scripts/prepare_unity_story_animator_timeline.py` 继续迁移三份玩家轨道原类，总计六份。`official-map/map14-story-animator-timeline-source-manifest.json` 记录官方程序集／代码、原参数数据、输出和验证代码哈希。当前玩家查找经显式服务适配，其余分支与调用顺序保留。
+
+岁末原生镜头／特效：`scripts/prepare_unity_map14_suimo_performance.py` 与 `scripts/verify_unity_map14_suimo_native.py` 恢复原 SuiMo StoryShow prefab、Timeline／Cinemachine、网格、动画和事件引用，以原 CAB／PathID 绑定十份材质及其纹理；五份材质和一张七级 mip 纹理为新增转换，其余复用已校验输出。`official-map/map14-suimo-native-performance-source-manifest.json` 记录全部官方输入、原材质字段、原 shader 身份、复用来源、转换器、原生字段核对、资产／代码／元数据和显式加载目录哈希。声音仅派发、玩家仅参数控制器，完整角色／音频／主线地图／存档及 Windows Player 待接通。260 份原转换输入已重建且全部字节哈希与此前记录一致；可复用官方转换缓存入口移至 `.tools/source-packages/conversion-cache/871_156598/map14-story-playables/`，未混用原版本。
+
+实体 Timeline 原生接入：四份原 Timeline 及其 73 份原生依赖保留本地对象 ID 和字段，17 类脚本引用绑定已迁移原类／已安装 Timeline、Cinemachine 包；五份源 Timeline 的 127 个转换输入复现完整实体来源的 SHA256，165 个原轨道／片段对象及所有原脚本字段／指针已核对。六个原导演与 314 份目标／父级对象的场景及暴露引用按原 CAB／PathID 恢复，不凭同名对象推断。角色／相机为隔离绑定对象，声音仅派发，第五段骨骼轨道、正式实体／剧情地图／存档及 Windows Player 尚未完成。
+
+依据：`assets/reference/official-map/map14-native-entity-timeline-input-source-manifest.json`、`map14-native-entity-timeline-export-source-manifest.json`、`map14-entity-timeline-native-fields-source-manifest.json`、`map14-entity-timeline-bindings-source-manifest.json`、`map14-native-entity-timelines-source-manifest.json`。
+
+依据：`map14-native-npc-animator-playables-source-manifest.json`。
+
+依据：`map14-story-attachment-runtime-source-manifest.json`、`map14-story-attachment-transform-runtime-source-manifest.json`、`map14-native-npc-visibility-playables-source-manifest.json`。
+
+主工程及隔离工程静态检查、Unity 导入／编译、全工程校验与内置屏 Play Mode 通过：原演出重复两次，自然结束，保持根序列立即淡出、0.1 秒骨骼挂接／声音请求、0.43 秒子动作淡入的原配置顺序，26 个新增纹理 mip GPU 字节逐项一致。
+
+已查看两份原特效同时显示在原地图的实际画面。
+
+依据：`map14-story-playable-requests-source-manifest.json`。
+
+所属范围见 `docs/maps/map-14.md`；未新增图像载荷或完整素材快照。
+
+所属范围见 `docs/maps/map-14.md`；没有新增素材载荷或生成完整快照。
+
+所属范围见 `docs/maps/map-14.md`；未新增素材载荷或生成完整快照。
+
+龙之国原旧版世界关卡客户端代码：`map14-legacy-world-stage-source-manifest.json` 核验当前官方 Assembly-CSharp／Console 程序集、完整 `MyWorldStage`、所消费的 `MyComponent` 成员与原配置依赖及输出哈希。仅适配命名空间、反编译运算符、显式注入及必需状态／可见性／实体查找输入，保留原分支与执行顺序；四类原显示资源已核实，正式 prefab 与业务接入继续迁移。
+
+龙之国实体变换视图：`map14-entity-transform-views-source-manifest.json` 记录当前官方程序集、完整原 Animator／挂点／变换／网格视图、Z 工具、位置事件接口、原方向旋转方法及复用依赖和输出哈希。共享状态／网格坐标查询与移动代理为显式必需输入，保留原数值／顺序／分支；Unity 托管引用往返、原生 Sprite／Animator 与分项运行验证已通过，正式原雕像 prefab 和业务继续接入。
+
+龙之国四类英雄雕像显示：`map14-native-hero-statues-source-manifest.json` 记录原显示 prefab、状态特效、控制器／动画、网格、显式脚本／托管类型／材质指针和 16 个原 Sprite CAB／对象 ID 绑定；输入依据当前 APK／871 云端已验证闭包，102 个原生组件坐标／旋转／缩放及渲染字段追加 float32 位和值核对。原提示点／所有权消费代码及窗口操作完整来源分别见 `map14-entity-tipdot-views-source-manifest.json`、`map14-entity-stage-operations-source-manifest.json`。原生导入／编译和隔离带画面 Play Mode 通过，完整地图业务与 Player 尚未完成；素材未声称进入完整快照。
+
+龙之国原地图显示服务：`map14-map-display-runtime-source-manifest.json` 记录完整原 MapDisplayManager／MapDisplayPoolHandle／MyMapDisplay 与接口、同版本已迁入的原选择解析器，以及全部 1,253 条原选择行和四份原 DisplayPath 的本地资源绑定。运行前注入使用 `NativeMap14DisplayInstantiation`，未迁入地址显式失败。带画面隔离运行通过动态取得／FIFO 回收复用／低内存释放后重新加载，正式地图实体根／业务／存档和 Player 待接入。
+
+龙之国原实体生命周期：`map14-entity-lifecycle-source-manifest.json` 核验当前 Assembly-CSharp／Console、22 份原类／接口／委托及同版本原事件分发器。`Runtime/Official/EntityLifecycle/` 保留完整客户端执行顺序；`Runtime/Offline/World/NativeMap14EntityLifecycle/NativeMyEntityBinding.cs` 只适配已迁视图接口，正式共享状态须另外提供。四种原雕像显示已在原 MyEntity 生命周期中运行并核对画面，正式实体根／业务／存档／Player 待接通。
+
+龙之国原根可见性：`map14-entity-root-visibility-source-manifest.json` 记录完整 MyVisibility／MyVisibilityGrid、同版本原可见性依赖及原程序集哈希。原 MapClientVisibilitySupporter 驱动四类雕像隐藏／恢复、请求重建与结束解绑已在带画面隔离运行中验证；正式共享处理器、地图条件、淡出桥及 Player 继续绑定。
+
+龙之国原共享 EC：`map14-shared-ec-runtime-source-manifest.json` 记录未修改的 Console／Luban／Framework.FirstPass.Runtime、APK 元数据接口、固定 SHA-512 的 Microsoft.Extensions.Logging.Abstractions 8.0.0／ZLogger 2.5.10 与出版者许可、七组日志 ABI 和四类原雕像配置。原 DLL 以本地 TextAsset 显式绑定，加载检查 SHA-256／MVID；四种雕像共 44 份原组件的真实网格和生命周期已通过隔离 Play Mode。
+
+龙之国共享实体显示绑定：`scripts/prepare_unity_map14_shared_views.py` 与 `map14-shared-view-source-manifest.json` 记录当前 871 的原 EntityUtils／EntityHandler／客户端初始化调用、原实体／网格／阶段及两个事件接口／委托的源码和程序集哈希。新适配只转接数据与接口 ABI，原两向坐标换算、配置／状态／活动查询及事件派发继续执行原 Console IL；不复制任何骨骼 SDK 实现。原 SubStageStateInfo.Select 的 null 行为保留，旧显示 DTO 的整数槽不作为规则。正式容器配置 AOT API、实际条件／提示图／窗口业务、地图输入、存档和 Player 尚待接通。
+
+龙之国剧情气泡的恢复入口为 `scripts/prepare_unity_map14_bubble_ui.py`／`prepare_unity_story_bubble_runtime.py`，原生窗口在 `Resources/Map14/BubbleUI/`，官方投影在 `Assets/Official/World/Map/14/BubbleUI/`。当前 APK-first 原来源保留完整层级、组件字段、原始字节哈希和两张精灵；原 UI 坐标和绑定直接转换。Windows 运行时在独立字体副本中以官方 TTF 重建空动态图集内的旧字形记录，并校验原字形编号和指标，保持源素材不变。尚未进入完整素材快照。
+
+依据：[龙之国](map-14.md)。
+
+依据：`official-map/map14-story-bubble-timeline-source-manifest.json`、[龙之国](map-14.md)。
+
+依据：`official-map/map14-story-animator-timeline-source-manifest.json`、[龙之国](map-14.md)。
+
+`assets/reference/official-map/map14-suimo-native-performance-source-manifest.json` 记录全部官方输入、原材质字段、原 shader 身份、复用来源、转换器、原生字段核对、资产／代码／元数据和显式加载目录哈希。
+
+依据：[龙之国](map-14.md)。
+
+依据：`assets/reference/official-map/map14-native-entity-timeline-input-source-manifest.json`、`map14-native-entity-timeline-export-source-manifest.json`、`map14-entity-timeline-native-fields-source-manifest.json`、`map14-entity-timeline-bindings-source-manifest.json`、`map14-native-entity-timelines-source-manifest.json`、[龙之国](map-14.md)。
+
+依据：`map14-native-npc-animator-playables-source-manifest.json`、[龙之国](map-14.md)。
+
+依据：`map14-story-attachment-runtime-source-manifest.json`、`map14-story-attachment-transform-runtime-source-manifest.json`、`map14-native-npc-visibility-playables-source-manifest.json`、[龙之国](map-14.md)。
+
+依据：[龙之国](map-14.md)。
+
+依据：[龙之国](map-14.md)。
+
+已查看两份原特效同时显示在原地图的实际画面。
+
+依据：`map14-story-playable-requests-source-manifest.json`、[龙之国](map-14.md)。
+
+依据：[龙之国](map-14.md)。
+
+龙之国旧版关卡组件使用 `python scripts/prepare_unity_legacy_world_stage_runtime.py` 恢复至 `Runtime/Official/LegacyWorldStages/`；来源与输出哈希见 `map14-legacy-world-stage-source-manifest.json`。原 `MyWorldStage` 与 EC 显示视图共同使用：雕像根通过 `MyMapDisplay` 动态加载本图 `_14_view`，不以旧组件代替原显示 prefab。内置屏隔离 Play Mode 已验证原生命周期、原生池化特效与 EC 委托；完整工程校验、正式 prefab／输入／存档和 Player 仍待接通。
+
+龙之国四类雕像显示先在本会话 `output/validation/<模块>-GUID>/hero-statue-native/` 内执行 `python -B scripts/prepare_unity_map14_hero_statue_inputs.py --convert`，也可用 `--verify-export` 重新校验并复用已完成的导出；设置仓库根及验证目录环境变量后，由 `prepare_unity_map14_hero_statues_native.py` 保留原 YAML 数值文本并显式绑定已迁入的原脚本、托管类型、Windows 原材质和原控制器／动画／网格／特效，落盘到 `Assets/Official/World/Map/14/NativeHeroStatues/`。`NativeMap14HeroStatueSprites.Bind` 必须在原 prefab 激活前调用，以原 renderer CAB／对象 ID 从现有原生 Sprite／Atlas 库加载；不拷贝导出器近似纹理／材质或生成的 SDK 源码。
+
+依据：`map14-native-hero-statues-source-manifest.json`。
+
+Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式绑定的 Console IL，以原 EventDelegateBasicBase 的加减运算注册／移除接收器；动态类型仅实现两个原应用接收接口并原样转发参数，不实现共享事件遍历或网格／阶段规则。EntityUtils 按原 UtilsHandlerBinder 初始化原 EntityHandler，坐标换算直接执行原方法。运行时仍只加载本地字节；Unity Mono／Direct3D11 的四类雕像显示 Play Mode 已验证，Windows Player 与正式配置／窗口／存档宿主尚未验证。
+
 ## 完整还原部分
 
-- 当前版本的 169 个原地图实体模板／1,483 个组件已按原顺序接入剧情运行载荷；加入公共剧情跟随实体后为 171 个模板／1,505 个组件；女巫 14 个激活档位、22 个结果索引及 7 项探访权重均保留，召唤组按 Map14 选择原关卡 `20004`／实体 `5100`。四种英雄雕像效果、621 项实体参数、111 区及 115 个 Area 使用本图当前配置，共享主线 getter 已验证选择本图来源。修复共享预览窗口固定加载 `_11` 图标的问题，按当前 UI 地图 ID 加载 `_14`。完整工程校验及内置屏 Play Mode 在 450×800、720×1280 各通过 33 个原结果预览、按钮遮挡射线与空白处关闭点击，并查看 66 张实际画面。5 项新来源／地图选择检查与原森之国构建回归通过。本轮使用隔离预览状态，尚未验证正式实体激活、结果应用、每日次数、主线进度或存档；HUD 未初始化完整数据。
+- 当前版本的 169 个原地图实体模板／1,483 个组件已按原顺序接入剧情运行载荷；加入公共剧情跟随实体后为 171 个模板／1,505 个组件；女巫 14 个激活档位、22 个结果索引及 7 项探访权重均保留，召唤组按 Map14 选择原关卡 `20004`／实体 `5100`。四种英雄雕像效果、621 项实体参数、111 区及 115 个 Area 使用本图当前配置，共享主线 getter 已验证选择本图来源。修复共享预览窗口固定加载 `_11` 图标的问题，按当前 UI 地图 ID 加载 `_14`。完整工程校验及内置屏 Play Mode 在 450×800、720×1280 各通过 33 个原结果预览、按钮遮挡射线与空白处关闭点击，并查看 66 张实际画面。5 项新来源／地图选择检查与原森之国构建回归通过。使用隔离预览状态，尚未验证正式实体激活、结果应用、每日次数、主线进度或存档；HUD 未初始化完整数据。
 
-- 龙之国官方通用 UI 已按当前 `871_156598` 从原 prefab／组件字段恢复为 68 个面板、3,657 个节点、4,235 条组件记录及 956 张原精灵；保留原 Transform／RectTransform、层级顺序、锚点、四元数、Image 启用位与遮罩。另恢复对话图标等子 prefab、本地图小地图标记与原字体绑定。原生导入、编译、全项目校验及所有面板的层级／锚点／脚本绑定检查已通过；内置屏 Play Mode 在 450×800 与 720×1280 两种尺寸完成女神像／失落女神像锁定、激活、传送、图标切换、原动画关闭及遮挡射线检查，14 张实际画面已查看。修复共享夹具把尺寸写入已废弃 WebPlayer 组的问题，按当前编辑器实际 Standalone 组设置并断言尺寸。测试使用隔离 UI 状态，HUD 的玩家数值、头像、小地图和提示点未初始化；本轮不包含正式进度、存档或 Windows Player。雕像、命运探寻、HUD 和剧情正式业务尚未完整接通，粒子、音频与其余组件行为继续迁移，不据此认定全部界面已完成。
+- 龙之国官方通用 UI 已按当前 `871_156598` 从原 prefab／组件字段恢复为 68 个面板、3,657 个节点、4,235 条组件记录及 956 张原精灵；保留原 Transform／RectTransform、层级顺序、锚点、四元数、Image 启用位与遮罩。另恢复对话图标等子 prefab、本地图小地图标记与原字体绑定。原生导入、编译、全项目校验及所有面板的层级／锚点／脚本绑定检查已通过；内置屏 Play Mode 在 450×800 与 720×1280 两种尺寸完成女神像／失落女神像锁定、激活、传送、图标切换、原动画关闭及遮挡射线检查，14 张实际画面已查看。修复共享夹具把尺寸写入已废弃 WebPlayer 组的问题，按当前编辑器实际 Standalone 组设置并断言尺寸。测试使用隔离 UI 状态，HUD 的玩家数值、头像、小地图和提示点未初始化；不包含正式进度、存档或 Windows Player。雕像、命运探寻、HUD 和剧情正式业务尚未完整接通，粒子、音频与其余组件行为继续迁移，不据此认定全部界面已完成。
 
 - 原地形、场景、水体／环境及区域标签已接入 `OfficialMap14NativeWorldView` 统一宿主；修复官方原点 X／Y／Z 三坐标被误判为二维的问题。完整工程导入、编译、`ProjectTools.Validate` 和 Play Mode 通过；实际查看原入口（放置 101）、区域状态刷新、另一位置及卸载后重新挂载的运行截图。已核对 111 区状态查询、分区加载、管线与新增相机组件清理。此处状态由隔离 fixture 提供，尚未绑定正式地图进度、实体点击、存档或 Windows Player。
 
@@ -46,7 +195,7 @@
 
 - Map14 官方 `HandInItemNode` 客户端只发送提交请求，扣物品规则由服务端执行。已按用户确认接入单机原子事务：`hand_in_item[4]` 提交 `2208×1`、最多 1 次；成功后增加次数，失败回滚，相同凭证回放不重复扣除，旧存档补齐独立提交次数列表。`CanHandInItemNode` 保留官方只检查次数的查询。正式地图剧情入口尚未接通；原窗口恢复与独立运行覆盖见下文。
 - 提交物品窗口从当前 `ItemDetail/DialogHandInItemDialog` 与原 APK 默认 `ItemIconDefault` 严格恢复，保留 39＋19 个原节点、94 份组件字段记录、18 张原切片贴图、三个原 Animator 配置、两段 60 Hz 弹出／关闭曲线及原五态按钮 controller。controller 的五个参数、五个状态、四条转场、条件、时间和剪辑曲线与官方二进制解析值逐项核对。`AwardPanelLayoutElement`、`ItemProgress`、原状态切换器、全局缩放补偿、标题／红点／bloom 元数据、按钮音及 `PopupWindowSound` 绑定已恢复；`PreviewTool` 按原空组件保留。官方 `UI/Gray` 四个 GLES 变体机械转换为 Windows shader，保留原禁用材质参数，TMP 灰阶复用已迁移的官方 `TMPEffect`。本图 catalog 使用 `871_156598`，共享 APK 载荷保留实际基础包来源；两段 UI 音频复用前核对当前五份 Wwise 输入包与既有转换输入完全相同。
-- 本次提交窗口在主工程 Unity 2022.3.57f1c2 完成原生 prefab 重建、导入／编译、`Zjcs.Editor.ProjectTools.Validate` 与 Play Mode 实测，并通过静态元数据检查。以 1080×1920 原弹窗基准在内置屏竖屏 Game View 显示，已查看物品不足与持有物品两种实际画面；模拟鼠标经过 EventSystem 射线及输入模块，核验禁用确认、取消、确认、原窗口关闭事件中断、销毁中断、原 UI 音实际播放与释放、原子扣除、次数上限、凭证回放、多物品缺项回滚和磁盘冷读。夹具使用独立存档，未进入 Map14 正式主线；图标点击详情、全局窗口遮罩与正式宿主仍待接通，不据此认定整个窗口功能或地图已完成。
+- 提交窗口在主工程 Unity 2022.3.57f1c2 完成原生 prefab 重建、导入／编译、`Zjcs.Editor.ProjectTools.Validate` 与 Play Mode 实测，并通过静态元数据检查。以 1080×1920 原弹窗基准在内置屏竖屏 Game View 显示，已查看物品不足与持有物品两种实际画面；模拟鼠标经过 EventSystem 射线及输入模块，核验禁用确认、取消、确认、原窗口关闭事件中断、销毁中断、原 UI 音实际播放与释放、原子扣除、次数上限、凭证回放、多物品缺项回滚和磁盘冷读。夹具使用独立存档，未进入 Map14 正式主线；图标点击详情、全局窗口遮罩与正式宿主仍待接通，不据此认定整个窗口功能或地图已完成。
 
 - 已恢复地图选择之外的 9 张公共剧情图：`CombatDoorActive`、`EntityVineLock`、`LevelDoorActive`、`ProfessionTutor4_public`、`PuzzleEnd`、`PuzzleSolve`、`RankDoorActive`、`TowerActive3`、`WitchStory2`，共 155 个节点。统一载荷现有 94 张图、1,488 个节点、207 组／442 条对白、16 个角色、79 条 MapTalk 入口、18 项入口条件、9 份固定奖励及 1 份快捷购买配置。保留原图端口、节点字段和跟随实体组件顺序；5 类跟随实体中补入 `8402`、`8454` 两份缺少的原模板。4 项公共剧情检查、5 项雕像来源检查及 9 项 Map13 剧情回归通过；静态检查通过（65,521 个 GUID）。隔离 Unity 完整校验与两种竖屏共 66 次雕像预览模拟点击复跑通过，已查看实际截图；正式剧情执行与演出仍未完成。
 
@@ -56,9 +205,9 @@
 
 - 龙之国音频已从所选官方 APK／871 云端包恢复为 418 个无损 PCM 素材：400 个直接对白、17 个演出独立素材及地图 BGM。读取实际 EventBankMapping、HIRC、DIDX／DATA 与流式 WEM，保留来源哈希、原总线／FX／RTPC 字段和对象原始字节；不使用旧 Ogg 二次有损转换。BGM 保留原四类事件、Sine 渐变时长与 −1dB MakeUpGain 配置，实际总线 DSP 尚待实现。
 - `chapter_5_main_36_17` 并非缺少官方语音：原 `CallDragon` 设置“龙国圣兽地台”状态后，由 `SuiMo_StoryShow02Timeline` 在 5.5166667／7.7333333 秒触发 `_17_1`／`_17_2`，并显示 `bubble_dialog_16_0`／`16_1`。已恢复全部 5 份实体 Timeline、原轨道／片段字段和 4 条气泡配置／中文；不把两段语音拼接为直接对白，也不以静音代替。六项实体 Timeline 音频连同原演出共 17 项引用、24 个顺序动作，保留 400／1000／1700／5000 毫秒延迟及对象静音／取消静音动作；流式预取片段与完整 WEM 分别记录。
-- 音频来源解析 5 项回归、根工程静态检查（68,630 个 GUID）、隔离 Unity 导入／编译及 `ProjectTools.Validate` 通过。内置屏带画面 Play Mode 对全部 418 个素材逐采样比较原 PCM、核对导入参数并执行实际 AudioSource／监听器输出，全部通过。本次只验证素材与设备播放；正式对白／Timeline 调用、原总线 DSP／RTPC、气泡窗和实体绑定、地图输入／存档及 Windows Player 尚未完成。恢复入口为 `scripts/prepare_unity_map14_audio.py`、`prepare_unity_map14_dialogue_audio.py`、`prepare_unity_map14_playable_audio.py`、`prepare_unity_map14_entity_timelines.py`；来源为 Map14 audio／dialogue-audio／playable-audio／entity-timelines 四份清单。
+- 音频来源解析 5 项回归、根工程静态检查（68,630 个 GUID）、隔离 Unity 导入／编译及 `ProjectTools.Validate` 通过。内置屏带画面 Play Mode 对全部 418 个素材逐采样比较原 PCM、核对导入参数并执行实际 AudioSource／监听器输出，全部通过。只验证素材与设备播放；正式对白／Timeline 调用、原总线 DSP／RTPC、气泡窗和实体绑定、地图输入／存档及 Windows Player 尚未完成。恢复入口为 `scripts/prepare_unity_map14_audio.py`、`prepare_unity_map14_dialogue_audio.py`、`prepare_unity_map14_playable_audio.py`、`prepare_unity_map14_entity_timelines.py`；来源为 Map14 audio／dialogue-audio／playable-audio／entity-timelines 四份清单。
 
-- 原 `MyPlayableSound`、`MyPlayableTimeLine` 及三份 Wwise Timeline 代码已迁入 `Runtime/Official/StorySounds/`，复用已核对官方 SDK 简单 Post 的事件 ID／Playing ID 桥接。保留 `Time - deltaTime` 循环边界、跨大帧只补一次、目标为空回退自身、停止／重用顺序；Timeline 源绑定优先于目标绑定、手动时钟使用缩放 delta，仅 None 外推采用有限时长，原音频片段暂停／结束不额外发送停止事件。内置屏隔离 Unity 导入／编译、`ProjectTools.Validate` 及 Play Mode 的原组件绑定、循环／暂停／重用和两段咒文实际 Timeline 调度通过。来源为 `map14-story-sound-runtime-source-manifest.json`，恢复器为 `scripts/prepare_unity_story_sound_runtime.py`；本轮记录原事件调度，未接通音频总线 DSP／RTPC、完整原生 Timeline／气泡／地图流程或存档，也未发布完整功能。
+- 原 `MyPlayableSound`、`MyPlayableTimeLine` 及三份 Wwise Timeline 代码已迁入 `Runtime/Official/StorySounds/`，复用已核对官方 SDK 简单 Post 的事件 ID／Playing ID 桥接。保留 `Time - deltaTime` 循环边界、跨大帧只补一次、目标为空回退自身、停止／重用顺序；Timeline 源绑定优先于目标绑定、手动时钟使用缩放 delta，仅 None 外推采用有限时长，原音频片段暂停／结束不额外发送停止事件。内置屏隔离 Unity 导入／编译、`ProjectTools.Validate` 及 Play Mode 的原组件绑定、循环／暂停／重用和两段咒文实际 Timeline 调度通过。来源为 `map14-story-sound-runtime-source-manifest.json`，恢复器为 `scripts/prepare_unity_story_sound_runtime.py`；记录原事件调度，未接通音频总线 DSP／RTPC、完整原生 Timeline／气泡／地图流程或存档，也未发布完整功能。
 
 - 原 `AnimationController`、`StateMergeList<T>`、`MyPlayableAnimator` 已迁入 `Runtime/Official/StoryAnimation/`，保留初始化前缓冲、同一来源覆盖／取消、来源分层恢复、嵌套暂停、Animator 替换通知、允许状态限制，以及淡出／停止恢复和池复用。保留原层权重使用各自快照、布尔／浮点／整数使用来源栈的差异，未改写为另一种合并规则。仅将反编译 C# 13 自动属性适配为等价 C# 9，并替换诊断日志。内置屏隔离 Unity 导入／编译、`ProjectTools.Validate` 和原生 Animator Play Mode 的参数／状态调度验证通过；夹具使用隔离控制器，不代表原角色／原控制器、骨骼／换装／物理约束或实际画面已经恢复。来源 `map14-story-animator-runtime-source-manifest.json`，恢复器 `scripts/prepare_unity_story_animator_runtime.py`；原模型／动画资源绑定、正式地图输入／存档和 Windows 发布继续迁移。
 
@@ -68,7 +217,7 @@
 
 - 原 `EntityBehaviour`／`EntityClip`、`EntityTalkBehaviour`／`EntityTalkAsset` 及 `EntityTrack` 已迁入 `Runtime/Official/StoryBubbleTimeline/`，保留实体绑定、模板克隆、片段时长查找、可选本地化 UTF-16 字数间隔、窗口创建／完成回调及暂停关闭。核对原 IL 的 `IL_004e call TrackAsset.CreateTrackMixer` 后恢复直接基类调用，避免照抄反编译强转造成递归。内置屏隔离 Unity 导入／编译、全工程校验和 Play Mode 通过：从原 `SuiMo_StoryShow02Timeline` 字段构造三条冒泡轨道／四个片段，使用原气泡窗与四句原文验证延后完成、实体绑定、原起止时间、打字结束、暂停关闭、间隔覆盖和未绑定实体不弹窗，实际画面已查看。根工程静态检查通过。来源 `map14-story-bubble-timeline-source-manifest.json`，恢复器 `scripts/prepare_unity_story_bubble_timeline.py`；验证仅覆盖冒泡轨道，原完整 Timeline 资产、虚拟相机、角色／动画／音频、正式地图／存档及 Windows Player 尚未接通。
 
-- 原 `TlAnimatorParamTrack`、`TlAnimatorParamClip` 和 `TlAnimatorParamBehaviour` 已迁入 `Runtime/Official/StoryAnimatorTimeline/`，保留哈希初始化、首帧参数快照、后续帧不重写、`AnimationController` 优先查找、触发后 `Animator.Update(0)`、暂停重入和 `EndResume` 分支；按原 `IL_0002 call PlayableBehaviour.OnPlayableCreate` 恢复直接基类调用。根工程静态检查、内置屏隔离 Unity 导入／编译、全工程校验与 Play Mode 通过，覆盖 bool／int／float 快照与恢复、重入、保留参数、控制器优先级、模板隔离及原四份 `land_02`／`float_02`／`rise`／`rise_02` 配置的实际原生 Animator／Timeline 触发。本轮使用隔离参数控制器，只证明原代码调度；原模型、控制器／动画素材、完整实体 Timeline、地图输入／存档及 Windows Player 未完成。来源 `map14-story-animator-timeline-source-manifest.json`，恢复器 `scripts/prepare_unity_story_animator_timeline.py`。
+- 原 `TlAnimatorParamTrack`、`TlAnimatorParamClip` 和 `TlAnimatorParamBehaviour` 已迁入 `Runtime/Official/StoryAnimatorTimeline/`，保留哈希初始化、首帧参数快照、后续帧不重写、`AnimationController` 优先查找、触发后 `Animator.Update(0)`、暂停重入和 `EndResume` 分支；按原 `IL_0002 call PlayableBehaviour.OnPlayableCreate` 恢复直接基类调用。根工程静态检查、内置屏隔离 Unity 导入／编译、全工程校验与 Play Mode 通过，覆盖 bool／int／float 快照与恢复、重入、保留参数、控制器优先级、模板隔离及原四份 `land_02`／`float_02`／`rise`／`rise_02` 配置的实际原生 Animator／Timeline 触发。使用隔离参数控制器，只证明原代码调度；原模型、控制器／动画素材、完整实体 Timeline、地图输入／存档及 Windows Player 未完成。来源 `map14-story-animator-timeline-source-manifest.json`，恢复器 `scripts/prepare_unity_story_animator_timeline.py`。
 
 - 原 `TlPlayerAnimatorParamTrack`、`TlPlayerAnimatorParamClip` 和 `TlPlayerAnimatorParamBehaviour` 已迁入同一官方运行时模块，保留忽略 `playerData`、读取当前玩家实体、只取其 `AnimationController`、先执行可选 clip 替换再返回 Animator 的顺序；依赖注入改为显式当前玩家服务。内置屏隔离 Unity 导入／编译、`ProjectTools.Validate` 与 Play Mode 通过，核对六份原类绑定、玩家／控制器缺失不回退、替换条件，以及从原 CAB `5d4c2c5d1454464f2497d6b3e36e10f9`／PathID `-3612460611401424567` 读取参数后，无场景绑定 Timeline 实际触发 `affirmative`、不影响旁侧 Animator。验证使用隔离参数控制器，只证明轨道执行；原玩家模型、动画素材、完整演出、地图存档和 Windows Player 仍未完成。
 
@@ -76,15 +225,15 @@
 
 - 五份原实体 Timeline 的独立闭包已恢复为 127 个转换输入，与此前完整实体提取的 SHA256 逐包一致；原生导出核对全部 165 个轨道／片段对象、171 份脚本对象、6,919 项值和 855 个指针，维持原 CAB／PathID 到文件／本地 ID 的一一对应。四份 `GriffinShakeTimeline 4`、`SuiMo_StoryShow02Timeline`、`SuiMo_StoryShow05`、`XianHaiYunZhou` 已迁入 `NativeEntityTimelines/`：73 份原生载荷、17 类已迁移／原生包脚本，保留本地对象 ID／字段，仅改绑 GUID；显式目录为 `Map14/Native/native-entity-timelines-catalog`。隔离工程静态检查（72,644 个 GUID）、内置屏 Unity 导入、编译、`ProjectTools.Validate` 和 Play Mode 通过，四段真实资产创建原生图；手动时钟运行原 `SuiMo_StoryShow02Timeline`，四个原气泡窗及全部六个原音频事件（包括 `_36_17_1`／`_36_17_2`）按原片段时序执行，450×800 的四张实际画面已查看。此验证使用隔离角色／相机绑定，只验证事件派发，未播放原音频；第五段 `SuiMo_StoryShow06` 保留完整源轨道，原生骨骼轨道未完成。另按原指针恢复六个导演、314 份目标／层级对象以及全部原场景／暴露引用表，包括原空项和旧项，尚未据此恢复完整实体 prefab。正式角色、相机、特效、声音、剧情入口、地图输入／存档及 Windows Player 仍未完成。恢复器 `prepare_unity_map14_entity_timeline_inputs.py`、`verify_unity_map14_entity_timeline_export.py`、`prepare_unity_map14_entity_timeline_native.py`、`prepare_unity_map14_entity_timeline_bindings.py`，来源为 entity-timeline input／export／native-fields／bindings 与 native-entity-timelines 五份清单。
 
-- NPC 的 idle、run、float_02 三个原演出 prefab 已恢复为原生资产，保留原节点／组件顺序、本地 ID、序列子引用、时长与结束恢复标志；3 个脚本绑定迁移后的官方调度／Animator 类，原资产 GUID 通过 `Map14/Native/native-npc-animator-playables-catalog` 显式加载。Unity 导入、编译、全工程校验及内置屏 Play Mode 通过：每份原资产重复播放两次，核对 ApplyBySource 选择源控制器、原布尔参数应用与停止恢复、半秒触发动作自然完成、无限动作显式停止及池化重置。已查看原地图地形的运行画面；Animator 参数控制器为隔离夹具，本轮不证明 NPC 原模型／动作画面、完整剧情、正式地图／存档或 Windows Player 已完成。来源为 `map14-native-npc-animator-playables-source-manifest.json`，转换入口 `prepare_unity_map14_npc_animator_playables.py`。
+- NPC 的 idle、run、float_02 三个原演出 prefab 已恢复为原生资产，保留原节点／组件顺序、本地 ID、序列子引用、时长与结束恢复标志；3 个脚本绑定迁移后的官方调度／Animator 类，原资产 GUID 通过 `Map14/Native/native-npc-animator-playables-catalog` 显式加载。Unity 导入、编译、全工程校验及内置屏 Play Mode 通过：每份原资产重复播放两次，核对 ApplyBySource 选择源控制器、原布尔参数应用与停止恢复、半秒触发动作自然完成、无限动作显式停止及池化重置。已查看原地图地形的运行画面；Animator 参数控制器为隔离夹具，不证明 NPC 原模型／动作画面、完整剧情、正式地图／存档或 Windows Player 已完成。来源为 `map14-native-npc-animator-playables-source-manifest.json`，转换入口 `prepare_unity_map14_npc_animator_playables.py`。
 
-- NPC 隐藏／再显现的两个原 prefab 与原声音事件引用已恢复，显式目录为 `Map14/Native/native-npc-visibility-playables-catalog`。官方应用类 `AttachAgent`、`MyPlayableActiveBone`、`AttachPosCfg`、`AttachPosRotCfg`、`MyPlayableAttachToBone` 和两个原字典工具方法已迁入；保留骨骼显隐计数、初始激活状态、停止恢复开关、原四方向／偏移／旋转／缩放、挂接目标和父级恢复顺序。主工程静态检查通过（73,100 个 GUID），隔离工程静态检查通过（72,682 个 GUID）；Unity 导入、编译、全工程校验及内置屏 Play Mode 通过：原隐藏／显示时长为 0.2／0.1 秒，结束后保持原显隐；两次隐藏均只派发一次原事件 `3790049959`，并核对源／目标／Skill／Damage 选择、命名骨骼回退、重叠隐藏计数及停止后的下一调度阶段恢复。已查看原地图作为隔离显隐目标的相机实际渲染，隐藏画面为空、再显现后恢复原地图。来源为 `map14-story-attachment-runtime-source-manifest.json`、`map14-story-attachment-transform-runtime-source-manifest.json`、`map14-native-npc-visibility-playables-source-manifest.json`。本轮声音仅派发，NPC 原模型／骨骼动画、实际音频／DSP、正式剧情／地图／存档及 Windows Player 尚未接通。
+- NPC 隐藏／再显现的两个原 prefab 与原声音事件引用已恢复，显式目录为 `Map14/Native/native-npc-visibility-playables-catalog`。官方应用类 `AttachAgent`、`MyPlayableActiveBone`、`AttachPosCfg`、`AttachPosRotCfg`、`MyPlayableAttachToBone` 和两个原字典工具方法已迁入；保留骨骼显隐计数、初始激活状态、停止恢复开关、原四方向／偏移／旋转／缩放、挂接目标和父级恢复顺序。主工程静态检查通过（73,100 个 GUID），隔离工程静态检查通过（72,682 个 GUID）；Unity 导入、编译、全工程校验及内置屏 Play Mode 通过：原隐藏／显示时长为 0.2／0.1 秒，结束后保持原显隐；两次隐藏均只派发一次原事件 `3790049959`，并核对源／目标／Skill／Damage 选择、命名骨骼回退、重叠隐藏计数及停止后的下一调度阶段恢复。已查看原地图作为隔离显隐目标的相机实际渲染，隐藏画面为空、再显现后恢复原地图。来源为 `map14-story-attachment-runtime-source-manifest.json`、`map14-story-attachment-transform-runtime-source-manifest.json`、`map14-native-npc-visibility-playables-source-manifest.json`。声音仅派发，NPC 原模型／骨骼动画、实际音频／DSP、正式剧情／地图／存档及 Windows Player 尚未接通。
 
 - NPC／菲乐出现和消失的四个原 prefab 及其原依赖已恢复：37 个粒子系统、44 个粒子渲染器、1 个 Animator、24 份原材质（10 份新增）及 7 张新增原纹理；原字段验证核对 902 处指针、94,949 项值与 176 项原运行时光照默认值。`MyPlayableFollowBone`、`TransformUtils`、显隐／淡出回调及其配置、字典等 11 个官方应用／框架类已迁入；异步淡出按原 MoveNext 恢复为 UniTask，保留原先增加 deltaTime、求曲线、应用粒子／图片／文字、再等待下一帧的顺序。MySizeCfg 的实体体型查询改为显式绑定原 BodyRangeInfos 数量，保留缺失 Info 时用手工值及 sqrt／RoundToInt 公式；正式实体提供方仍待绑定。原配置注入改为显式属性，四份演出原配置均不使用格子缩放。两个挂接生成器已改用可重复运行且核对原 GUID／导入器的既有元数据函数，19 份已提交运行输出逐字节不变。主工程静态检查通过（73,188 个 GUID），隔离工程静态检查通过（72,740 个 GUID）；Unity 导入、编译、全工程校验及内置屏 Play Mode 通过：四份原资产各重复两次，原序列／粒子使用同一实际 deltaTime，核对自然结束、最终显隐、8 次原声音事件顺序、动态跟随／停止位置恢复、体型查询和异步颜色淡出／恢复；53 个新增纹理 mip 的 GPU 字节与原解码收据逐项一致，实际查看四张有原特效的地图画面。显式入口为 `Map14/Native/native-npc-appearance-playables-catalog`，来源为 `map14-native-npc-appearance-playables-source-manifest.json` 与 `map14-story-follow-bone-runtime-source-manifest.json`。NPC 参数／骨骼来源为隔离夹具，未以替代角色美术呈现；NPC 本体原模型／骨骼动画、实际声音／DSP、正式剧情／地图／存档和 Windows Player 仍未完成。
 
 - 混沌出现的原 `playable_chaos_appear` 已恢复：18 个节点、12 个粒子系统／渲染器、10 份原材质（9 份新增）及 3 张新增原纹理；核对 240 处指针、33,263 项值和 48 项原运行时光照默认值。源角色淡入／淡出回调、桥接接口、优先级支持器、SpriteRendererList、CustomRendererFade、FordingSpriteRenderer 共 9 份官方应用代码已迁入；骨骼颜色调用显式连接独立原生角色边界，未复制动画 SDK 实现，真实角色绑定仍待接通。保留原协程先累加 deltaTime 再 Lerp／yield、提前完成事件、禁用时排队淡入及完成后重置、挂点显隐计数、优先级比较和原 FadeOut 无实体桥接时的空值判断分支。主工程及隔离工程静态检查、Unity 导入／编译、全工程校验与内置屏 Play Mode 通过：原演出重复两次，自然结束，保持根序列立即淡出、0.1 秒骨骼挂接／声音请求、0.43 秒子动作淡入的原配置顺序，26 个新增纹理 mip GPU 字节逐项一致；已查看有原混沌粒子的地图画面。独立夹具验证淡入／淡出事件顺序、透明度、完成挂点计数、禁用排队／复位和优先级；两次声音仅派发原事件 `2969657999`。显式目录为 `Map14/Native/native-chaos-appearance-playable-catalog`；来源为 `map14-story-source-fade-runtime-source-manifest.json` 与 `map14-native-chaos-appearance-playable-source-manifest.json`。源角色／颜色边界为隔离夹具，原角色本体、实际音频／DSP、正式剧情／地图／存档和 Windows Player 仍未完成。
 
-- 官方 `MyPlayableManager`、FIFO prefab 池、原销毁监听器、预载与激活消息共 10 份框架代码已迁入；保留借出／Reset／Init／设置销毁回调／TryPlay、停止后 ResetData／Clear／隐藏／归位／入队、批量移除重入保护和低内存释放顺序。原场景作用域、服务注入、激活发布和低内存事件改为显式调用方边界；两个各仅持有一项订阅的原 DisposableBag 以同位置的 IDisposable 释放承接，不改变回调顺序。主工程及隔离工程静态检查、内置屏 Unity 导入／编译、全工程校验及 Play Mode 通过。本次运行范围：原混沌演出经真实管理器预载 2 份、连续播放 3 次，前两份实例不同、第三次复用第一份，未分配第三份；核对源／目标／父级／参数／停止对象、OnStop 先于归还重置、自然结束、三次原声音事件、低内存销毁、并发移除与重入拒绝。已查看对象池驱动的原特效地图画面。保留原空活跃列表时 RemoveAllPlayable 提前返回、不释放空闲对象的分支；显式 ForceReleaseObjectPool 则释放已归还对象。来源为 `map14-story-playable-manager-source-manifest.json`，入口为 `Runtime/Official/StoryPlayableManager/`；原角色本体与正式剧情请求／等待／跳过、地图／音频／存档和 Windows Player 仍待接通。
+- 官方 `MyPlayableManager`、FIFO prefab 池、原销毁监听器、预载与激活消息共 10 份框架代码已迁入；保留借出／Reset／Init／设置销毁回调／TryPlay、停止后 ResetData／Clear／隐藏／归位／入队、批量移除重入保护和低内存释放顺序。原场景作用域、服务注入、激活发布和低内存事件改为显式调用方边界；两个各仅持有一项订阅的原 DisposableBag 以同位置的 IDisposable 释放承接，不改变回调顺序。主工程及隔离工程静态检查、内置屏 Unity 导入／编译、全工程校验及 Play Mode 通过。运行范围：原混沌演出经真实管理器预载 2 份、连续播放 3 次，前两份实例不同、第三次复用第一份，未分配第三份；核对源／目标／父级／参数／停止对象、OnStop 先于归还重置、自然结束、三次原声音事件、低内存销毁、并发移除与重入拒绝。已查看对象池驱动的原特效地图画面。保留原空活跃列表时 RemoveAllPlayable 提前返回、不释放空闲对象的分支；显式 ForceReleaseObjectPool 则释放已归还对象。来源为 `map14-story-playable-manager-source-manifest.json`，入口为 `Runtime/Official/StoryPlayableManager/`；原角色本体与正式剧情请求／等待／跳过、地图／音频／存档和 Windows Player 仍待接通。
 
 - 两类原剧情播放节点 `PlayPlayableNode`／`PlayPlayableForGameObjectNode`、`StoryPlayable` 回调包装器、原选择器及枚举已迁入；另迁入 `StoryHandleProxy` 的播放、管理器绑定／解绑和预定义资源查询四个原方法。按原 MoveNext 恢复 DoRun 后计数、播放后订阅 OnStop、可选等待、PlayerLoopTiming 8／取消令牌／cancelImmediately=false、20 秒 scaled timeout，再返回原 ClientRunNode 的 OK；保留实体节点超时 OK 与 GameObject 节点继承 SafeEnd 的差异。保留动态索引源／目标端口、强制可见与原世界动作停／启、时长覆盖、跳过／转跳过、剧情结束开关及选择器 Load／UnLoad 分支。图执行器生命周期、实际 EC 视图和资源代理为显式绑定边界，未用空基类冒充完整官方图／服务器执行器。内置屏 Unity 导入／编译、全工程校验及隔离 Play Mode 通过：两份原混沌特效分别绑定相反源／目标，只有两份实际停止后才继续；验证重复实体不去重的可见／停启顺序、资源按原顺序释放、非等待继续、跳过后下一帧停止、正时长覆盖、取消、20 秒缩放时钟超时、None／Custom／PreDefine／缺失选择、双代理卸载分支，以及原注册器驱动的 StoryPlayable 单次完成回调。已查看两份原特效同时显示在原地图的实际画面。来源为 `map14-story-playable-requests-source-manifest.json`，代码入口为 `Runtime/Official/StoryPlayableRequests/`；正式主线宿主仍未接线，原角色、实际音频／DSP、地图／存档和 Windows Player 尚未完成。
 
@@ -92,15 +241,15 @@
 
 - 原 `ECViewDriver`、`ECViewBase`、视图／事件接口、普通显隐控制器及地图／恒定可见性支持器与工厂共 23 份源码已迁入 `Runtime/Official/EntityViews/`，保留原追加遍历、排序、注入／初始化、四类实体事件、加载／显隐／暂停／卸载、协程签名与取消、逐键隐藏与强制显示、地图销毁分支及淡入淡出重置。原 RunTask 按 MoveNext 恢复；UniTask 取消停止迭代但不 Dispose IEnumerator；原 OnDestroy 仅注销，Unload 由 RemoveEvent 触发。实体／事件、依赖注入、R3 帧流和地图生命周期为必须显式接入的宿主边界。此前内置屏 Unity 导入／编译、ProjectTools.Validate 及隔离 Play Mode 通过，实际查看原雕像 Sprite 显示画面，并验证隐藏／恢复、−1 执行顺序、追加／排序／首次匹配、8 份帧订阅释放与重载、静态／新实体、独立隐藏键与强制恢复、协程完成／取消／移除、原注销诊断、销毁令牌与地图销毁分支。当前静态元数据检查通过；重新建立的完整工程复核因既有战斗骨骼依赖、Map12 水体程序集引用及 Map13 外观适配依赖不齐未通过，不能据此宣称当前整工程编译成功。正式 managed-reference 子类、实体 prefab、地图交互、存档及 Windows Player 仍未完成。来源：`map14-entity-view-runtime-source-manifest.json`。
 
-- 实体视图当前已在 22 个程序集的显式调用链隔离工程中再次编译并通过 Play Mode，实际查看原雕像 Sprite 画面；本轮明确跳过全工程 ProjectTools.Validate，不能替代完整工程检查。
+- 实体视图当前已在 22 个程序集的显式调用链隔离工程中再次编译并通过 Play Mode，实际查看原雕像 Sprite 画面；明确跳过全工程 ProjectTools.Validate，不能替代完整工程检查。
 
-- 原 `ECPlayableSupporterView`、`IECPlayableSupporter`、`ECPlayableBaseHandler` 与处理器数据共 4 份应用源码已迁入 `Runtime/Official/EntityViewPlayables/`。保留原父实体作为 Source、静态／新实体标记、淡入与客户端可见性门槛、出现结束再进入循环和处理器显示的顺序、泛型处理器操作、隐藏时先解绑回调再请求立即停止、卸载释放处理器及移除淡入淡出订阅。原立即 Stop 由后续播放器帧处理完成，未改为同步完成。静态元数据检查、生成器复跑和原程序集／源码／依赖／输出哈希核对通过；内置屏 Unity 显式程序集隔离导入、编译与 Play Mode 通过，使用原混沌出现 prefab、真实原对象池／播放器／淡入淡出／雕像 Sprite，核对出现转循环、2 个对象复用、109 个原生粒子峰值及实际 RGB 运行画面、3 次原音频事件派发、显隐与重播、配置音频触发偏移、静态实体、淡入淡出门槛、卸载后的回调清理。音频宿主仅记录事件，未验证实际声音；实体／桥接及状态处理器是隔离输入。本轮明确未执行完整 ProjectTools.Validate；正式状态处理器、managed-reference 实体 prefab、地图交互与存档、Windows Player 和发布仍未完成。来源：`map14-entity-playable-views-source-manifest.json`。
+- 原 `ECPlayableSupporterView`、`IECPlayableSupporter`、`ECPlayableBaseHandler` 与处理器数据共 4 份应用源码已迁入 `Runtime/Official/EntityViewPlayables/`。保留原父实体作为 Source、静态／新实体标记、淡入与客户端可见性门槛、出现结束再进入循环和处理器显示的顺序、泛型处理器操作、隐藏时先解绑回调再请求立即停止、卸载释放处理器及移除淡入淡出订阅。原立即 Stop 由后续播放器帧处理完成，未改为同步完成。静态元数据检查、生成器复跑和原程序集／源码／依赖／输出哈希核对通过；内置屏 Unity 显式程序集隔离导入、编译与 Play Mode 通过，使用原混沌出现 prefab、真实原对象池／播放器／淡入淡出／雕像 Sprite，核对出现转循环、2 个对象复用、109 个原生粒子峰值及实际 RGB 运行画面、3 次原音频事件派发、显隐与重播、配置音频触发偏移、静态实体、淡入淡出门槛、卸载后的回调清理。音频宿主仅记录事件，未验证实际声音；实体／桥接及状态处理器是隔离输入。明确未执行完整 ProjectTools.Validate；正式状态处理器、managed-reference 实体 prefab、地图交互与存档、Windows Player 和发布仍未完成。来源：`map14-entity-playable-views-source-manifest.json`。
 
-- 原 `ECWorldStageView`、普通状态配置提供器、配置／交互／事件接口与数据、替换事件接收器、完整 StageComponentType 数值及 `ECPlayableWorldStageHandler` 共 13 份源码，加上原 `MyWorldStage.StageStateCfg` 声明已迁入 `Runtime/Official/EntityWorldStages/`。保留替换事件注册→初始化显示→缓冲事件订阅、先切换显示再转发原组件／前状态／载荷、旧配置临时对象复用、卸载时先释放订阅再注销替换事件和释放配置、起始／循环演出切换、强制可见及地图销毁时停止／解除引用的原分支。共享状态查询和替换／缓冲事件发布为必须提供的宿主边界，事件载荷作为 object 原样转发，不编造状态转换、交互或奖励规则。生成器复跑、源码／依赖／输出哈希及静态元数据检查通过；内置屏 Unity 显式程序集隔离编译与 Play Mode 通过，使用原状态切换器、雕像 Sprite、原出现 prefab 和真实播放器／对象池，实际查看状态显示与粒子画面，并验证配置边界、查询／旧配置转发、事件顺序、替换刷新、起始转循环及强制显示恢复、普通状态停止、地图销毁抑制停止／解绑、卸载后订阅清理和配置操作释放顺序。实体／状态／事件为隔离输入，本轮未执行完整 ProjectTools.Validate，正式规则、交互操作、实体 prefab、地图输入与存档、Windows Player 和发布仍未完成。此分项不替代四类 6570–6573 英雄雕像的旧 `MyWorldStage` 组件链；原对象图已核实它们采用该旧组件链。来源：`map14-entity-world-stage-views-source-manifest.json`。
+- 原 `ECWorldStageView`、普通状态配置提供器、配置／交互／事件接口与数据、替换事件接收器、完整 StageComponentType 数值及 `ECPlayableWorldStageHandler` 共 13 份源码，加上原 `MyWorldStage.StageStateCfg` 声明已迁入 `Runtime/Official/EntityWorldStages/`。保留替换事件注册→初始化显示→缓冲事件订阅、先切换显示再转发原组件／前状态／载荷、旧配置临时对象复用、卸载时先释放订阅再注销替换事件和释放配置、起始／循环演出切换、强制可见及地图销毁时停止／解除引用的原分支。共享状态查询和替换／缓冲事件发布为必须提供的宿主边界，事件载荷作为 object 原样转发，不编造状态转换、交互或奖励规则。生成器复跑、源码／依赖／输出哈希及静态元数据检查通过；内置屏 Unity 显式程序集隔离编译与 Play Mode 通过，使用原状态切换器、雕像 Sprite、原出现 prefab 和真实播放器／对象池，实际查看状态显示与粒子画面，并验证配置边界、查询／旧配置转发、事件顺序、替换刷新、起始转循环及强制显示恢复、普通状态停止、地图销毁抑制停止／解绑、卸载后订阅清理和配置操作释放顺序。实体／状态／事件为隔离输入，未执行完整 ProjectTools.Validate，正式规则、交互操作、实体 prefab、地图输入与存档、Windows Player 和发布仍未完成。此分项不替代四类 6570–6573 英雄雕像的旧 `MyWorldStage` 组件链；原对象图已核实它们采用该旧组件链。来源：`map14-entity-world-stage-views-source-manifest.json`。
 
-- 四类英雄雕像根 prefab 的完整原 `MyWorldStage` 客户端类与其实际使用的 `MyComponent` 基类成员已迁入 `Runtime/Official/LegacyWorldStages/`；复用已迁入的原 `StageStateCfg` 字段声明。保留 Awake／开始／结束、先切显示再播放、登场重试、独立非状态循环、显隐与淡入淡出门控、替换／缓冲事件、EC 配置委托、移动后交互开关及重定向查询顺序。根对象的 `MyMapDisplay` 还会加载 `6570_14_view`～`6573_14_view`；四份原显示 prefab 已在当前官方闭包中核实，使用 EC 视图／Animator／精灵／提示点及原循环演出，不能仅迁入旧组件就视为雕像完成。共享状态、可见性与查找是显式必需宿主输入，不由适配层推测规则。隔离程序集 Unity 导入／编译及内置屏 Play Mode 通过，使用原生池化特效验证登场中隐藏再显示重试、登场／状态演出转循环、空／越界状态、替换、查询／重定向、EC 委托、淡入淡出和结束解绑，实际运行画面已查看；根工程静态检查通过。本轮未执行完整工程 `ProjectTools.Validate`，正式原雕像根／显示 prefab 绑定、点击／业务／存档与 Windows Player 尚未完成。来源为 `map14-legacy-world-stage-source-manifest.json`，恢复器为 `scripts/prepare_unity_legacy_world_stage_runtime.py`。
+- 四类英雄雕像根 prefab 的完整原 `MyWorldStage` 客户端类与其实际使用的 `MyComponent` 基类成员已迁入 `Runtime/Official/LegacyWorldStages/`；复用已迁入的原 `StageStateCfg` 字段声明。保留 Awake／开始／结束、先切显示再播放、登场重试、独立非状态循环、显隐与淡入淡出门控、替换／缓冲事件、EC 配置委托、移动后交互开关及重定向查询顺序。根对象的 `MyMapDisplay` 还会加载 `6570_14_view`～`6573_14_view`；四份原显示 prefab 已在当前官方闭包中核实，使用 EC 视图／Animator／精灵／提示点及原循环演出，不能仅迁入旧组件就视为雕像完成。共享状态、可见性与查找是显式必需宿主输入，不由适配层推测规则。隔离程序集 Unity 导入／编译及内置屏 Play Mode 通过，使用原生池化特效验证登场中隐藏再显示重试、登场／状态演出转循环、空／越界状态、替换、查询／重定向、EC 委托、淡入淡出和结束解绑，实际运行画面已查看；根工程静态检查通过。未执行完整工程 `ProjectTools.Validate`，正式原雕像根／显示 prefab 绑定、点击／业务／存档与 Windows Player 尚未完成。来源为 `map14-legacy-world-stage-source-manifest.json`，恢复器为 `scripts/prepare_unity_legacy_world_stage_runtime.py`。
 
-- 四类雕像显示资源所需的完整原 `ECAnimatorView`、`ECAttachAgentView`、`ECTransformView`、`ECGridTransformView` 及 `ZSetUtils`、位置事件接口和 `EnumUtils.DirToRotation` 已迁入 `Runtime/Official/EntityTransformViews/`，复用原 `Pos2d`／四方向值、`AnimationController` 与 `AttachAgent`。保留父实体变换、零优先级初始化、挂点清除／注册、位置／旋转／缩放通知、移动代理先停止再定位再通知、中心偏移与 Z 公式、翻转尺度幅度、空／非空客户端体型列表回退；原可选变换字段没有赋值的行为也原样保留。共享网格状态／坐标查询与事件发布仍是必需宿主输入，本轮不替代共享网格规则。隔离 Unity 导入／编译、内置屏 Play Mode 及根工程静态检查通过；验证原生 Sprite 与原 Animator controller 的绑定／控制器复用、全部四方向、原 Z／中心／偏移、翻转幅度、事件顺序和解绑，并完成真实 Unity 托管引用往返，原视图类型／字段保留，实际运行截图已查看。本轮未执行完整工程 `ProjectTools.Validate`；四份原雕像显示 prefab 的完整层级／动画／状态资源、正式地图点击／业务／存档与 Windows Player 继续接入。来源 `map14-entity-transform-views-source-manifest.json`，恢复器 `scripts/prepare_unity_entity_transform_views.py`。
+- 四类雕像显示资源所需的完整原 `ECAnimatorView`、`ECAttachAgentView`、`ECTransformView`、`ECGridTransformView` 及 `ZSetUtils`、位置事件接口和 `EnumUtils.DirToRotation` 已迁入 `Runtime/Official/EntityTransformViews/`，复用原 `Pos2d`／四方向值、`AnimationController` 与 `AttachAgent`。保留父实体变换、零优先级初始化、挂点清除／注册、位置／旋转／缩放通知、移动代理先停止再定位再通知、中心偏移与 Z 公式、翻转尺度幅度、空／非空客户端体型列表回退；原可选变换字段没有赋值的行为也原样保留。共享网格状态／坐标查询与事件发布仍是必需宿主输入，不替代共享网格规则。隔离 Unity 导入／编译、内置屏 Play Mode 及根工程静态检查通过；验证原生 Sprite 与原 Animator controller 的绑定／控制器复用、全部四方向、原 Z／中心／偏移、翻转幅度、事件顺序和解绑，并完成真实 Unity 托管引用往返，原视图类型／字段保留，实际运行截图已查看。未执行完整工程 `ProjectTools.Validate`；四份原雕像显示 prefab 的完整层级／动画／状态资源、正式地图点击／业务／存档与 Windows Player 继续接入。来源 `map14-entity-transform-views-source-manifest.json`，恢复器 `scripts/prepare_unity_entity_transform_views.py`。
 
 - 四类英雄雕像 `6570..6573` 的原 Map14 显示 prefab 已完整绑定至 `Assets/Official/World/Map/14/NativeHeroStatues/`：保留原层级、Transform 文本、原控制器／两段动画、网格及两份状态特效，共 10 份原生资产；16 处 Sprite 通过已验证的原 CAB／对象 ID 素材库在激活前加载，材质使用已迁入的原 Windows shader／纹理，未采用导出器近似图像。恢复输入再次核对 APK／871 云端闭包的 673 份 bundle、31,250 个对象及原始／解码／补全哈希；恢复的托管引用经逐值、类型、RID 和原指针核对，102 个 Transform／SpriteRenderer／Animator 的坐标、四元数、缩放和渲染字段另按原 float32 位及值核验。完整原 `ECTipdotLinkerView`、`MapEntityTipDotNodeLinker`、节点位置身份、所有权显示分支与 `ECWorldStageInteractionOperationWindow`／窗口点击数据及应用域启动入口已迁入对应 Official 模块，保留显式必需宿主依赖。根工程静态检查（73,850 GUID）及隔离工程导入／编译、内置屏 Play Mode 通过四份实际 prefab 的原 EC 驱动 Awake、加载／卸载、托管引用配置、三态特效／原窗口请求、提示标记状态／显示开关／所有权与订阅释放；两张实际渲染画面已查看。网格／状态查询和事件已接入原共享 DLL；提示图、可见性条件和窗口请求宿主仍为隔离输入，未据此声称正式点击或弹窗已完成；完整工程 ProjectTools.Validate、真实地图实体根／规则／窗口业务／存档和 Windows Player 尚未完成，地图入口继续关闭。来源见 `map14-native-hero-statues-source-manifest.json`、`map14-entity-tipdot-views-source-manifest.json` 和 `map14-entity-stage-operations-source-manifest.json`；恢复器 `scripts/prepare_unity_map14_hero_statue_inputs.py`、`prepare_unity_map14_hero_statues_native.py`，运行检查入口 `Zjcs.Editor.Map14.OfficialMap14HeroStatueAcceptance.Run`。
 
@@ -113,6 +262,16 @@
 - 原共享 EC 程序集已通过 `scripts/prepare_unity_map14_shared_ec_runtime.py` 接入：当前 871 的 Console／Luban／Framework.FirstPass.Runtime 保持原 DLL 字节，七个本地载荷按哈希与模块标识显式绑定；补齐 APK 元数据中的完整 GConfig.IConfig 标记接口及 IGSerializable 的 GetOpCode 接口，七组应用日志调用逐参转到固定版本的 Microsoft 日志／ZLogger。原容器、配置表类及共享规则方法继续直接执行原 IL，没有另外实现占格、阶段或组件生命周期规则。四种雕像的 44 个原共享组件按原配置次序恢复并执行原 Info.Init；SubStageStateInfo.Select 保留原生成反序列化器读取后不赋值的行为。内置屏 Unity 2022.3.57f1c2 导入／编译及隔离 Play Mode 通过原组件归属、两格体型、三态查询／切换、Awake／Start／End／Destroy、真实网格占位的注册／移动／移除和再次进入不重复加载程序集。测试使用独立 4×4 原网格及显式根／地面缓存，未初始化正式全局配置解析器；这是共享逻辑分项，没有模拟地图点击、显示画面、实际窗口、存档或 Player 验收，也未执行完整工程 ProjectTools.Validate。GFrameCore／Config 的其余原 AOT API、正式地图宿主及本地持久状态继续恢复。来源 `map14-shared-ec-runtime-source-manifest.json`，运行入口 `OfficialMap14SharedEcAcceptance.Run`。
 
 - 原共享实体到显示层的绑定位于 `Runtime/Offline/World/NativeMap14SharedViews/`：实体身份、位置／方向／翻转、两格体型、原坐标双向换算、三态配置／组件索引／可交互判断均读取原 Console IL；按原 `UtilsHandlerBinder` 绑定原 EntityHandler，保留已有处理器并只释放本适配持有的绑定。两个接收接口仅恢复 ABI，订阅、快照遍历和移除继续由原事件委托执行；原组件、前位置、前状态及载荷保持原身份／数值后转给已迁入的客户端视图。原共享 Select 仍为 null，旧显示 DTO 的整数槽不参与共享选择规则。内置屏 Unity 2022.3.57f1c2／Direct3D11 隔离工程导入、编译及 Play Mode 通过：四类真实雕像的原共享实体驱动根网格／EC 网格事件、原不立即移动分支、坐标往返、三态效果／三个原窗口请求、隐藏／恢复、低内存与 FIFO 重借／重载及卸载解绑；三张实际渲染画面已查看，根工程静态检查通过。测试宿主使用 16×16 原网格及显式根／地面缓存，未接全局 Parsers；原 RootEntity getter 依赖的 ConfigManager 等 Config AOT API 仍待恢复。提示图、所有权夹具、可见性条件与窗口请求宿主仍隔离；没有模拟正式地图鼠标点击，也未验证真实窗口业务、存档、Windows Player 或完整工程 ProjectTools.Validate。来源 `map14-shared-view-source-manifest.json`，生成器 `scripts/prepare_unity_map14_shared_views.py`；运行入口沿用 `OfficialMap14HeroStatueAcceptance.Run`。
+
+### 已迁移代码与局部资源
+
+以下为局部代码／资源接入，完整流程仍受本页缺项限制。
+
+地图 14 使用固定 APK／原版本 CDN 清单 `854_156383`。原始地形、导航、2,961 个实体放置、31 组地图分层和昼夜状态、地图粒子沿通用地图转换链运行；原 `MiniMap_14` 转换包含 102 条地图标记配置、原资源点板、玩家动画、区域说明、迷雾 TilePattern 和公开解锁格。转换入口为 `python -B scripts/prepare_map13_minimap_ui.py --map-id 14`；原始对象、依赖、客户端代码、中文语言表、贴图输入输出 SHA256 见 [minimap-14-source-manifest.json](../../assets/reference/official-map/minimap-14-source-manifest.json)，运行目录为 `assets/official/map14-minimap.json`、`assets/official/map14-minimap-sprites/`，Unity 显式加载绑定尚待接入。地形、分层和粒子输出分别登记于 `regions-source-manifest.json`、`layers-source-manifest.json` 与 `particles-source-manifest.json`；未使用新版替代包或自绘素材。
+
+龙之国原剧情演出恢复使用 `scripts/prepare_unity_map14_story_playables.py`、`prepare_unity_map14_story_playable_inputs.py`、`prepare_unity_map14_story_playable_export.py` 与 `verify_unity_map14_story_playable_hierarchy.py`：`871_156598` 的 16 个原 prefab、4 个预定义键及 260 个 CAB。原始字段及转换输出分别记入 Map14 story-playables／native-story-playable-input／native-story-playable-export／story-playable-hierarchy 来源清单；验证 621 层对象、194 个脚本组件及 2,449 条引用。粒子、Timeline 全闭包、运行时绑定及可视播放继续恢复。`prepare_unity_story_playable_runtime.py` 将原 MyPlayable 核心与依赖 22 份 C# 迁入 `Runtime/Official/StoryPlayables/`，程序集／源码／输出哈希与适配记录见 `official-map/map14-story-playable-runtime-source-manifest.json`；未使用 Spine runtime。
+
+龙之国 BGM、直接对白与原剧情／实体 Timeline 音频的当前来源、延迟／静音动作和验证范围见[龙之国](map-14.md)。418 个 PCM 素材已在内置屏 Play Mode 逐采样比较并实际输出，原实体 Timeline 的分段咒文语音及四条气泡已定位；正式事件宿主、总线 DSP／RTPC、气泡界面和完整剧情接线仍待实现，不能据此认定主线模块已完成。
 
 ## 自定义实现
 
@@ -130,6 +289,14 @@
 
 剧情气泡的 Windows 字体缓存适配：原 Android 动态字体图集无像素，但保留省略号和下划线记录；`Runtime/Offline/StoryBubbles/BubbleFontBinding` 为窗口克隆字体、图集和材质，使用同一份官方 TTF 重建初始字形，并要求字形编号及指标完全一致。随后按原 TMP 机制动态添加正文字符，不替换字体或改写官方源资产。
 
+### 已确认的本地接线与边界
+
+龙之国机关规则：当前官方十二终端的109个实体闭包已绑定为 `Map14/Native/puzzle-catalog`，保留原阶段结果顺序、27个去重火炮目标、60个踏板、五组锁与独立奖励。原325×1费用只绑定配置，扣费交易尚未接通。火炮仅改变指定 destroyed 标记；用户确认的走格子辅助仅解开指定锁，重置保留独立奖励及领取状态。方向、一次／两次计数和四处传送目标／ActionId按原Common实现与配置核对；传送通过明确宿主回调交付，正式角色移动待接。
+
+依据：[机关代码／配置](../../assets/reference/official-map/map14-puzzles-source-manifest.json)、[Unity绑定](../../assets/reference/official-map/map14-puzzles-binding-source-manifest.json)。
+
+龙之国提交物品窗口：以 `871_156598` 当前索引读取已校验云端 `defaultpackage_assets_prefabs_ui_itemdetail.bundle`（MD5 `0357a149ba1473547a8de2eea5f24d32`、SHA256 `71b84596e909fb2148302b27e8ca04dc6b2be0d272cea68f2369c7da10e56542`），恢复 `DialogHandInItemDialog` 的39个原节点；默认19节点物品图标按当前索引指向的原APK载荷复用，并分别保留实际来源。严格提取94份组件记录、18张原切片贴图、本地化及两段弹出／关闭曲线；五态按钮controller和clip GUID显式重绑定。占位脚本导出的可解析GUID不视为字段恢复。[字段与素材转换](../../scripts/prepare_unity_map14_handin_ui.py)、[来源与输入输出哈希](../../assets/reference/official-map/map14-handin-ui-source-manifest.json)、[所属地图与实际验证范围](map-14.md)。用户确认按 `hand_in_item[4]` 在本地事务内原子扣除 `2208×1`，成功后增加次数；不将此离线确认规则声称为服务端源码。
+
 ## 尚未实现
 
 - 恢复实体 prefab、角色／实体骨骼、粒子、动画、MiniMap_14 迷雾／标记、BGM 与剧情音频，并接入官方 HUD、对话和交互界面；将已恢复的地区标签绑定正式本地地图状态。
@@ -137,7 +304,7 @@
 - 接通正式地图背包交易、本地状态和存档，完成正常游玩、失败回滚、退出与冷读恢复。提交窗口的隔离夹具已覆盖模拟鼠标与存档事务；其他资源夹具不代表正式地图流程。
 - 完成编辑器与 Windows Player 的受影响流程、模拟输入、完整画面及存档验证，提交并发布包含本图成果的 Windows 可执行版本。当前没有本图可游玩版本交付结论。
 
-### 官方来源与入口
+## 代码与资源入口
 
 - [当前实体模板／雕像配置转换](../../scripts/prepare_unity_map14_interactions.py)、[来源与运行绑定](../../assets/reference/official-map/map14-interactions-source-manifest.json)、[来源与地图选择回归](../../scripts/test_prepare_unity_map14_interactions.py)及[原结果预览／模拟关闭检查](../../unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Map14Statues.cs)。目录为 `Map14/interactions` 与 `Map14/stories`；运行检查入口 `Zjcs.Editor.OfficialMap12PlayModeAcceptance.RunUiMap14Statues`。
 

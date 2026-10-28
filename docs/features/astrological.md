@@ -8,7 +8,11 @@
 
 家园命运星象设施（家具类型 12、物品 ID 4019）进入星命契约。官方位阶／赛季门槛、520 级灌注、原初之星消耗及契约累计属性已接入本地运行时；赛季历史、结算、奖励与星命商店数据仍属于[赛季](seasons.md)及商店服务器数据缺口，当前没有捏造记录或货架。
 
-本功能的规则核心已移植，但共享 Unity Editor 正被其他验收会话使用，本次没有执行 Editor 导入／编译和 Play Mode 实际输入、画面或存档恢复验证，因此功能仍标为未完成。
+本功能的规则核心已移植，但共享 Unity Editor 正被其他验收会话使用，没有执行 Editor 导入／编译和 Play Mode 实际输入、画面或存档恢复验证，因此功能仍标为未完成。
+
+## 原始官方实现
+
+命运星象按官方星象配置、节点连线、解锁条件、消耗与属性计算；原星象界面负责节点选择及详情。
 
 ## 完整还原部分
 
@@ -31,7 +35,7 @@
 - 星命商店的本地货架与购买规则。已取得客户端只显示服务端货架的调用关系，没有可据以重建货品及刷新状态的独立客户端初始数据。
 - Unity Editor 导入／编译、契约及属性弹窗画面、真实鼠标按住／松开／移出、材料和属性存档回读验证。
 
-### 依据与代码定位
+## 代码与资源入口
 
 官方入口和门槛：[AstrologicalDestinyWindowFurniture](../../.tools/source-packages/official-code/client-source/AstrologicalDestinyWindowFurniture.cs)、[AstrologicalSeasonConfigParser](../../.tools/source-packages/official-code/common-source/Common/AstrologicalSeasonConfigParser.cs)。灌注交互和公式：[AstrologicalContractChargeButton](../../.tools/source-packages/official-code/client-source/AstrologicalContractChargeButton.cs)、[AstrologicalContractContent](../../.tools/source-packages/official-code/client-source/AstrologicalContractContent.cs)、[AstrologicalContractTag](../../.tools/source-packages/official-code/client-source/AstrologicalContractTag.cs)。赛季记录及单机保存边界见 [赛季功能页](seasons.md)。
 

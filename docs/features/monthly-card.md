@@ -26,6 +26,10 @@
 | 规则与价格表 | 星眷规则入口显示 `AccumulatedPayRule` 及价格／累计星值两列，按官方价格排序；周期卡特权、原规则和公共支付说明按官方窗口接入 | [`PayInfoTableUtils.PopupAccumulatedPayRuleTable`](../../.tools/source-packages/official-code/client-source/PayInfoTableUtils.cs)；[`PayPeriodicCardItem`](../../.tools/source-packages/official-code/client-source/PayPeriodicCardItem.cs) |
 | UI、动画和输入 | 独立月卡模板、原导航与按钮状态、字体、标题 `TMProWarp` 弯曲、`TMPEffect` 描边／双描边／阴影、显示／关闭动画、累计页开场动画、音效、滚动、遮罩与真实命中 | [商城 UI 清单](../../assets/reference/commerce-ui/source-manifest.json)；[组件清单](../../assets/reference/commerce-components/source-manifest.json) |
 
+## 原始官方实现
+
+官方月卡、祈愿祝福及星眷累计奖励按原有效期、购买／领取状态、奖励档位和对应界面刷新。
+
 ## 完整还原部分
 
 `scripts/prepare_unity_commerce_catalog.py` 从固定 manifest `854_156383` 的 `rules.json`、官方商城 UI 及 SHA-256 已核对的简中本地化 rawfile 生成 [commerce-runtime.json](../../unity/Assets/Game/Resources/Commerce/commerce-runtime.json)，保留周期属性名称、累计档位描述／进度格式、主副奖励和多主奖励原动画事件。
@@ -40,7 +44,7 @@
 
 周期卡剩余时间现在按官方重置点倒计时，并以 `ShowRemainTimeInfo` 的 Brief 分支格式显示；本地化格式和 `PeriodicCardRemindRemainDay=3` 已进入生成目录。月卡变更后主页已存在收益会话的属性重载通知仍待接通。
 
-Play Mode 逻辑、真实鼠标／键盘输入、渲染画面、动画／音效、存档退出重开和 Windows Player 尚未验证。全工程静态元数据检查通过（38,252 个 GUID）；Commerce 的 207 项素材清单逐项通过文件、字节数和 SHA-256 核对，17 个新增或复用品质框／锁图绑定均通过校验，生成目录包含 75 档累计奖励和 2 类周期卡。静态检查不覆盖 Editor 导入、编译和运行。Home 验收 Editor 仍停留在 Safe Mode；本轮新增资源没有被该进程导入，最新 Editor 编译和 Play Mode 状态尚未复核。
+Play Mode 逻辑、真实鼠标／键盘输入、渲染画面、动画／音效、存档退出重开和 Windows Player 尚未验证。全工程静态元数据检查通过（38,252 个 GUID）；Commerce 的 207 项素材清单逐项通过文件、字节数和 SHA-256 核对，17 个新增或复用品质框／锁图绑定均通过校验，生成目录包含 75 档累计奖励和 2 类周期卡。静态检查不覆盖 Editor 导入、编译和运行。Home 验收 Editor 仍停留在 Safe Mode；新增资源没有被该进程导入，最新 Editor 编译和 Play Mode 状态尚未复核。
 
 开场战斗发布所需的既有周期卡接口已纳入提交：`OfflineCommerceSession` 的状态更新、有效属性投影、到期记录同步、购买及每日领取接口与已提交的展示层保持一致。所用基线已通过 Editor 编译与 Windows 构建；本页的激活、续期、到期和属性重载运行检查仍待完成。
 

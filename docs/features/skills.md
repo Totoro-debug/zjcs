@@ -10,6 +10,30 @@
 
 人物页的技能入口已连接三套方案面板。技能档案与角色主档案共同保存，离线规则和人物页数据源已接入；技能窗口、推荐、碎片详情、合成确认、培养页及升阶结果均按官方布局数据构造并连接本地事务。推荐页使用 `skill_recommend`、`skill_recommend_item` 与 `skill_tab` 官方布局，按当前职业前置链和阶位显示方案。官方确认弹窗已绑定，纯祝福一键升级在预演达到 40 次时要求确认。技能页、详情、培养和结果弹窗使用 `skill-ui.json` 的官方动画轨道；结果列表逐项展示、跳过和自动滚动，槽位培养播放官方动画和 `Skill_Upgrade.ogg`。技能页现在使用 `character_skills` 的官方整屏 `CharacterPanelSkillPanel` prefab，包括返回条、方案与技能槽、战技／秘法／碎片列表和底部“技能／馈赠”双页；底部第二页按官方 `Achievement` 状态切换。技能列表使用官方 `skill_list_row` 与 `skill_list_separator`，行列数和间距按 `AdaptiveRowLayoutCalculator` 计算（155 px 项目、两侧各 50 px、最小间距 20 px），合成、收藏和未收藏分组各自起行，收藏组与未收藏组之间按官方条件显示虚线分隔；碎片页按官方 160×160 网格尺寸排布。打开技能时播放官方 `CharacterPanel_Skill` 状态：保留人物预览和背景，按原动画隐藏资料区并调整模型位置；返回时播放 `CharacterPanel_SkillSwitchmain` 并恢复被修改的动画属性。整屏界面与主要技能操作已经通过本页所述 Play Mode 验证；40 级伤害测试及通用窗口表现仍未完成，不能据此将整个技能功能标为完成。
 
+## 原始官方实现
+
+官方技能页按职业、前置链、品质、元素、标签、范围、安装槽、附加属性和升级／突破配置刷新；详情与模型预览使用原控件、数值计算及显示规则。
+
+### 官方代码与资源依据
+
+以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
+
+复核固定版本 `854_156383` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。
+
+`python scripts/prepare_skill_ui.py` 使用既有 APK 读取器、同版本 CDN 缓存和已校验中文文本分包，转换上述五个原始 prefab、禁用图像状态、遮罩、高亮框、中文文字及脚本引用目标；运行时资源继续纳入 `ui.json` 和显式本地加载清单。`skill_recommend.g` 经原始 `TbSkillRecommendInfo` 构造器完整读取，名称和说明取自原始中文表，输出为 `assets/official/skills.json`。bundle / 对象、APK / CDN 来源、原始配置与输出 SHA256、中文分包凭据及行为来源代码哈希见 [skill-ui/source-manifest.json](../../assets/reference/skill-ui/source-manifest.json)。没有新增自绘图片。
+
+技能页恢复四个战技与四个秘法槽位的原始空槽素材，详情使用技能专用 prefab 和同一套官方遮罩图标；点击安装 / 替换后使用原版暗色遮罩与同类型四槽高亮，选择目标槽位后才提交本地事务，取消不改档。推荐页使用原始方案与说明，仅安装已拥有且职业适用的技能，未获得部分保持空位。新增槽位位置与方案名称兼容旧紧凑数组，并随本地存档保存；原技能等级、升阶费用和战斗公式仍属已有单机适配。
+
+技能列表排序／收藏字段的原 C# 输入哈希见 skill-ui/source-manifest.json 的 list_behavior；全部开关使用原 CommonCheckItem_On／Off。CharacterPanel_Skill 的原 AnchorMin／AnchorMax 曲线从固定 APK AnimationClip 解码，输入对象哈希见 character_animation_inputs；未用手调坐标补偿。收藏值保存到本地存档以替代原网络操作，界面状态和分组仍取原客户端实现。
+
+`prepare_skill_quality_text.py` 从固定 `854_156383` 的 APK／匹配 CDN 读取 `GlobalColors.asset.QualityColorConfig` 的 Normal 调色板，以及 `SkillPromotePanel`、`SkillRankUpNotifyDialog`、`SkillPanelSkillDetailDialog`、`SkillDetailDialog` 中六个品质文字的 `TMPColorGradient`。原四个 RGB 关键点、两个独立 alpha 关键点、Blend 模式和各组件 0°／45° 角度导出到 `unity/Assets/Official/Skills/skill-quality-gradient.json`（SHA256 `bc42085e3ee9d8bcf4edcf8283d083516cced5c04c3eadbc6ff4abf6d1fba4e0`）；没有使用 `GreenRainbow` 四角预设或绘制图片。`OfficialSkillQualityTextGradient` 将官方关键点应用到技能详情、培养和升阶结果的 UGUI 文本网格。原 bundle、对象、CDN URL、输入字节、调用源码及生成绑定 SHA256 见 [skill-quality-text/source-manifest.json](../../assets/reference/skill-quality-text/source-manifest.json)。
+
+渲染迁移依据恢复后的同 APK `TMPColorGradient.OnPreRenderText`（`0x1121dd44`）、`SetGradientColor` 和 `UpdateMesh`，保留每行未旋转范围与绕原 RectTransform 原点旋转后的顶点归一化、顶点颜色替换和 Color32 的 ties-to-even 舍入。`generate_skill_quality_reference.py` 直接执行原顶点计算块、原 `Matrix4x4.MultiplyPoint3x4` 及固定 `libunity.so` 的 `Gradient.Evaluate`，夹具保存在 `scripts/fixtures/skill_quality_native.json`；原生镜像、metadata、Unity 引擎和方法字节哈希同存来源清单。
+
+技能详情与角色预览继续使用固定 APK `854_156383`：`prepare_skill_detail_data.py` 解码原 `SkillItemRangeInfos.g.bytes` 的 1,365 条范围记录，恢复 `SkillTagItem`、标签枚举及职业归属／前置链；布局明确绑定 174 张原 UI 精灵。`prepare_skill_native_text.py` 先比对固定 APK 原始对象 SHA-256，再复用对象完全一致的既有原生 FZY4K 字体／材质／Alpha8 图集与 TMP shader 转换，为技能建立独立 GUID 和运行时副本；保留初始图集，避免 TMP 构建处理修改共享资源。`prepare_skill_character_shader.py` 同样核对 APK 中 `Universal Render Pipeline/Spine/SkeletonDye-2D` 原对象与既有转换凭据，保留全部 544 组 GPU 程序，仅调整桌面预览 pass 标签；没有自绘替代角色素材。
+
+依据：`assets/reference/skill-ui/unity-icon-source-manifest.json`、`assets/reference/skill-quality-text/source-manifest.json`。
+
 ## 完整还原部分
 
 Unity 已新增离线技能档案与规则服务 [OfflineSkillProfile.cs](../../unity/Assets/Game/Runtime/Offline/Skills/OfflineSkillProfile.cs)、[OfflineSkillProgression.cs](../../unity/Assets/Game/Runtime/Offline/Skills/OfflineSkillProgression.cs)。模型保存三套方案、主动／被动槽位、基础等级、按赛季分开的祝福等级、技能阶位与道具数量；服务提供方案切换／改名、技能安装／替换／卸下、单槽及一键培养、单技能及批量升阶。培养和升阶在档案副本核算费用后提交。
@@ -28,17 +52,15 @@ Editor 程序集显式引用 `Zjcs.Presentation.Character`，以供技能 Play M
 
 人物预览的阴影已恢复原 `AttachmentFollower` 对 `shadow` 骨骼的位置与局部缩放跟随，不再保留 prefab 编辑态的静止位置。Windows 程序通过正常本地启动进入隔离技能档案，使用 EventSystem 首个射线命中、按下／抬起／点击验证入口、方案、推荐、分类和返回，且实看运行截图、重新读取档案核对方案与装配；测试存档与用户存档分开。已发布入口为 `D:/Desktop/杖剑传说/杖剑传说.exe`；新增馈赠流程已在重建后的 Windows Player 中完成两类奖励领取、重复领取防护、页签切换和存档重载验证，未将整体技能功能标为完成。
 
-技能页按官方 `CharacterPanel.mCharacterPanelSkillPanelParent` 挂入 `/CharacterPanel/BgPanel1/Content/TopGo/SkillContent`，恢复人物页、共享 HUD 和技能窗口的 `SafeArea` 参数。返回人物页按原节点字体绑定恢复 FZY4K 中文字体，避免原生 prefab 的缺失字体回落为方块。系统消息从 APK 原 `SystemMsgPanel` 提取层级、镜像背景、Canvas 排序与 Show／Hide 动画，收藏／取消收藏使用原文案。详情、碎片、合成确认、培养及升阶通知按原 `PopupWindow.mMaskType` 选择原生普通或模糊遮罩；模糊复用原 `ScreenBlur` 材质和四级处理，外部点击保留原 0.5 秒防误触条件。新增流程已在带画面的 Play Mode 中通过模拟点击验证：收藏提示可见，模糊背景方向正确，遮罩保持在弹窗下一层，外部点击关闭后技能页继续操作；拖拽、培养、升阶、批量结果、两类馈赠和存档重载一并回归通过。本次静态元数据检查、Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 已通过；Windows Player 验证待本次重建后执行。
+技能页按官方 `CharacterPanel.mCharacterPanelSkillPanelParent` 挂入 `/CharacterPanel/BgPanel1/Content/TopGo/SkillContent`，恢复人物页、共享 HUD 和技能窗口的 `SafeArea` 参数。返回人物页按原节点字体绑定恢复 FZY4K 中文字体，避免原生 prefab 的缺失字体回落为方块。系统消息从 APK 原 `SystemMsgPanel` 提取层级、镜像背景、Canvas 排序与 Show／Hide 动画，收藏／取消收藏使用原文案。详情、碎片、合成确认、培养及升阶通知按原 `PopupWindow.mMaskType` 选择原生普通或模糊遮罩；模糊复用原 `ScreenBlur` 材质和四级处理，外部点击保留原 0.5 秒防误触条件。新增流程已在带画面的 Play Mode 中通过模拟点击验证：收藏提示可见，模糊背景方向正确，遮罩保持在弹窗下一层，外部点击关闭后技能页继续操作；拖拽、培养、升阶、批量结果、两类馈赠和存档重载一并回归通过。静态元数据检查、Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 已通过；Windows Player 验证待重建后执行。
 
-技能详情已恢复固定 APK 的原生 FZY4K TMP 字体、材质和初始 Alpha8 字体图集，修复弹窗 Canvas 缺少 UV1 通道造成的方块文字；字体、材质与动态图集按窗口克隆，技能页独立副本保留原始初始图集，避免 Windows 构建清空共享字体。品质背景、普通品质文字色、星级空星、战技／秘法背景状态、技能等级及祝福显示条件按原组件恢复。`OfficialSkillDetailProperties` 迁移 `PropConfigUtils.CalcSkillViewProps` 与 `SkillPanelPropPanel.Sort` 的主动、被动、状态及召唤属性展示规则；全部 394 个技能在两组等级／阶位条件下的 788 次计算已通过 Play Mode。标签取自原 `SkillTagItem` 和 `ESkillTag`，职业图标沿用 `ProfessionBaseInfoParser.PostParse` 的归属及前置职业链；范围图从 APK `SkillItemRangeInfos.g.bytes` 恢复 1,365 条数据，保留原格子 prefab、五类颜色、间隔和行列顺序，当前可用主动技能均具有有效范围数据。新增标签、范围、属性、收藏、弹窗外部关闭与整屏培养／升阶／馈赠／存档流程已通过模拟点击 Play Mode 回归并查看实际画面；本批 Windows Player 重建验证仍待执行。
+技能详情已恢复固定 APK 的原生 FZY4K TMP 字体、材质和初始 Alpha8 字体图集，修复弹窗 Canvas 缺少 UV1 通道造成的方块文字；字体、材质与动态图集按窗口克隆，技能页独立副本保留原始初始图集，避免 Windows 构建清空共享字体。品质背景、普通品质文字色、星级空星、战技／秘法背景状态、技能等级及祝福显示条件按原组件恢复。`OfficialSkillDetailProperties` 迁移 `PropConfigUtils.CalcSkillViewProps` 与 `SkillPanelPropPanel.Sort` 的主动、被动、状态及召唤属性展示规则；全部 394 个技能在两组等级／阶位条件下的 788 次计算已通过 Play Mode。标签取自原 `SkillTagItem` 和 `ESkillTag`，职业图标沿用 `ProfessionBaseInfoParser.PostParse` 的归属及前置职业链；范围图从 APK `SkillItemRangeInfos.g.bytes` 恢复 1,365 条数据，保留原格子 prefab、五类颜色、间隔和行列顺序，当前可用主动技能均具有有效范围数据。新增标签、范围、属性、收藏、弹窗外部关闭与整屏培养／升阶／馈赠／存档流程已通过模拟点击 Play Mode 回归并查看实际画面； Windows Player 重建验证仍待执行。
 
 人物预览和头像改用经原始对象 SHA-256 核验一致的官方 `Universal Render Pipeline/Spine/SkeletonDye-2D` shader 转换结果，保留 544 组原 GPU 程序、透明度截断、染色及渲染状态；仅适配桌面预览相机的 pass 选择。运行截图确认面部／头发的白色三角残片已消失。技能模块目前显式绑定 174 张官方 UI 精灵；转换与原对象哈希、字体隔离方式见 `assets/reference/skill-ui/unity-icon-source-manifest.json`，重建入口增加 `prepare_skill_native_text.py`、`prepare_skill_character_shader.py` 和 `prepare_skill_detail_data.py`。
 
 ## 自定义实现
 
 伤害测试的公共结算适配已通过规则验证：StageType 43 的怪物伤害在护盾结算前固定为 1，无限生命保留 HP 并累计完整伤害，设置可随战斗检查点恢复；关闭选项或进入普通关卡恢复普通结算。入口为 `Runtime/Offline/Combat/FightDamageTestRules.cs`，验证为 `scripts/test_skill_damage_test.ps1`；普通战斗 97 组公式及规则回归亦已通过。参数页、实际战斗和结算窗口仍在接入及 Play Mode 验证中。
-
-以下为已确认的单机处理要求，尚未代表完整 Unity 流程已经接入或验收。
 
 Windows 竖屏显示适配按用户参考画面保留顶部安全留白：1080 UI 单位宽度对应约 137 UI 单位顶部留白，随窗口宽度缩放；这是桌面显示适配参数。原 `SafeArea` 的边界计算、PaddingTop／PaddingBottom、DisableTopAdapt／DisableBottomAdapt 与技能父级绑定保持官方数据，不修改内部槽位、方案或列表坐标。模糊遮罩恢复 APK 原 RawImage UV，并按 Windows 图形接口的纹理方向适配截图采样；不改变原 ScreenBlur 算法。
 
@@ -54,7 +76,7 @@ Windows 竖屏显示适配按用户参考画面保留顶部安全留白：1080 U
 
 - 馈赠奖励图标的原道具详情弹窗仍待接入；列表、两类进度、领取事务和 Windows Player 模拟输入验证已完成。
 - 伤害测试原开放条件为人物 40 级（Function 148），当前已按原条件隐藏未开放入口；开放后的怪物／难度／回合参数页及测试战斗尚未接入。
-- 通用弹窗的原遮罩／点击外部关闭和系统消息已通过 Play Mode、待完成本次 Windows Player 验证；详情附属规则／皮肤入口、道具来源跳转及培养对比属性仍需迁移；已移除手写后备详情和培养布局及技能底部自定义状态文字，不能视为这些公共表现已补齐。
+- 通用弹窗的原遮罩／点击外部关闭和系统消息已通过 Play Mode、待完成 Windows Player 验证；详情附属规则／皮肤入口、道具来源跳转及培养对比属性仍需迁移；已移除手写后备详情和培养布局及技能底部自定义状态文字，不能视为这些公共表现已补齐。
 
 ### 实现范围
 
@@ -64,6 +86,6 @@ Windows 竖屏显示适配按用户参考画面保留顶部安全留白：1080 U
 
 彩虹品质调色板取自原 `LanguageUtils.SetSkillQualityWithColor → GlobalColors.SetTextColorByQuality → MultiLanguageText.SetColor(Gradient)` 数据路径，并由 `prepare_skill_quality_text.py` 导出固定包 Normal 调色板及六个 `TMPColorGradient` 角度。技能运行时将品质 7 的渐变应用于详情、培养两端与升阶结果文字网格；其他品质移除该效果。渐变关键点和 0°／45° 配置见 [OfficialSkillQualityGradient.cs](../../unity/Assets/Game/Runtime/Presentation/Skills/OfficialSkillQualityGradient.cs) 与 [skill-quality-gradient.json](../../unity/Assets/Official/Skills/skill-quality-gradient.json)。UGUI 网格迁移与实际效果仍须通过 Unity Editor／Play Mode 验证。
 
-### 依据与代码定位
+## 代码与资源入口
 
 以下为官方来源、既有规则与回归参考：`OfflineSkillProfile`、`OfflineSkillProgression`、`OfflineCharacterProgressionService`、`CharacterSkillPanel`、`OfficialCharacterPanelView.OpenSkillPanel()`、`OfficialSkillAssetCatalog`、`Zjcs.Editor.Skills.OfficialSkillAssetTools.Validate()`；客户端依据包括 `CharacterPanelSkillContent`、`CharacterPanelSkillListContent`、`SkillPieceDetailDialog`、`SkillMergeConfirmDialog`、`SkillPromotePanel` 与 `SkillMutiPromoteNotifyPanel`。

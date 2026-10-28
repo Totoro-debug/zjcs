@@ -8,6 +8,22 @@
 
 主线地图通过 `OfficialMainlineMapRuntime.Begin(mapClassId, …)` 使用同一套运行时。目前有完整数据绑定的入口是 Map10、Map11；地图资源、区域条件、剧情、实体和进度仍按地图 ID 隔离。新增地图须先迁移其官方数据与专属流程，再登记 `OfficialMainlineMapProfile`，不能仅替换地图 ID 后宣称地图完成。
 
+## 原始官方实现
+
+主线地图共享原 WorldCanvas／WorldStage 界面、地区条件、导航、交互、剧情、机关、雕像、小地图和进度规则；单图放置及差异由地图页维护。
+
+### 官方代码与资源依据
+
+以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
+
+遗失女神8364的原领奖层级另由同一提取入口读取 `defaultpackage_assets_prefabs_ui_map_upgraderesult.bundle`，包括触碰窗、三类结果窗及属性行；原 `ItemIconManagerConfig` 绑定 `ItemIconSkill`，新增394条主动／被动技能图标。完整来源数据现为65份原面板、945张Sprite和1,055条图标记录，保留35条原技能阶位、`MapLostGoddessAwardDialogConfig`、星级品质图、三类原标题及属性行动画。新增客户端代码、对象／bundle真实来源和提取输出哈希见 `unity/Assets/Official/World/Map/11/UI/source-manifest.json`；原生 prefab／动画、图标元数据和转换器的换行归一化哈希见同目录 `native-source-manifest.json`。Unity 导入器已同步层级与图标基础绑定；结果控制器、原关闭交互、地图入口、粒子／泛光／音效仍未完成，不能将提取或导入通过等同于领奖流程已迁移。
+
+原结果窗的 Button 类型、离散启用曲线及各窗动画目标子集已在 Unity 中核对；共享原动画的转换结果按窗口分别保存，不覆盖其他结果窗。新增六份 prefab、十份被引用动画及其稳定元数据随源数据提交，验证范围见所属功能页。
+
+固定 `854_156383` APK 优先提取；英雄、探寻和奖励 UI 的原面板／对象、sprite、动画及返回对象池事件由 `prepare_unity_map11_ui.py` 保留至59份原面板、535张sprite。`map11_support_ui.py` 按原 `ItemIconManagerConfig` 的ID／类型／默认优先级绑定661条本图奖励道具记录，使用原普通、装备、宝具模板；宝具素材取Map11原地区 `DropItems` 并集。名称、品质框、奖励高品质光效、GraphicRaycaster和原数字标题均显式绑定。完整输入、各对象来源、客户端／共享代码哈希及输出见 Map11 `UI/source-manifest.json`。奖励列表 `UIImgAdd` 的 `UI/EffectAdditive` shader 来自 APK `defaultpackage_unityshaders.bundle`（解码包 SHA256 `f6cc2ad49028110a87744a116bc2fd193af9d8e2f2e7e452b7d90c0bc934dabe`），使用既有 GLES→HLSL 转换并保留四种裁剪变体及原材质参数；输出和源码见 Map11 UI 来源清单。
+
+`prepare_mainline_loop_scroll.py` 从固定官方 `LoopScrollRect.Runtime.dll` 完整反编译并恢复9个类，保留原拖动、惯性、网格和回收分支，仅修复C#反编译基类调用及工程命名空间；程序集、逐文件源码与输出哈希见 [循环列表来源](../../assets/reference/official-map/loop-scroll-source-manifest.json)。`prepare_mainline_popup_effects.py` 核对 APK 恢复的ARM64实现，迁移 `TMPColorGradient` 的原顶点计算以及 `ScreenBlur` 原程序；原窗口模糊保留4级下采样、3级上采样、七个权重、screen/13快照、原遮罩颜色及半秒关闭门槛。元数据／原生映像、方法地址／字节哈希、原shader／material及显式加载绑定见 [弹窗表现来源](../../assets/reference/official-map/popup-effects-source-manifest.json)。这些恢复只覆盖当前原窗口使用的分支，原动作、奖励粒子、图标附件和完整实体交互尚未完成；未生成素材快照。
+
 ## 完整还原部分
 
 公共代码位于 [`Presentation/World/Mainline`](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/)。`OfficialMainlineMapRuntime` 在 `Awake` 为每次入图分别创建 HUD、区域、导航、雕像、体力、探寻、小地图七个模块，负责按原顺序组装、更新和退出；窗口、路线、待交互对象、区域进度、刷新计时、动态实体和渲染目标由所属模块持有。模块实现使用宿主内的私有类型保持封装，不把单张地图或单个角色的可变状态放入全局单例。各图专属剧情、首战引导、机关、音频与实体载荷留在原适配层。
@@ -35,37 +51,31 @@
 
 验证入口为 `Zjcs.Editor.MainlineMapModuleValidation.Run`，使用 `-verify-mainline-modules <隔离输出目录>`；同一检查也可在 Windows development Player 运行。Unity `2022.3.57f1c2` 已通过编译、`ProjectTools.Validate`、主线／雕像事务检查与带图形的 Play Mode 回归。地图移动通过注入屏幕点击走 UI 遮挡、实体命中与寻路；Map11 小地图开关、跨图页签、筛选和女神激活使用原按钮的指针按下／抬起／点击事件，并核对最上层射线命中。检查覆盖区域探索／剧情门槛、Map10／Map11 位置冷读、筛选 JSON 冷读、女神激活恢复、英雄／魔女每日共享额度及待战斗效果恢复。七类模块拆分后已在隔离工程以 重跑该完整流程，并覆盖探寻概率／历史页签、令牌拖动、单次／十连费用、原引导宝箱地图点击免体力领取及冷读恢复。女神地区完成度及打开弹窗由测试设置，未覆盖自然探索到 100% 或从地图点击雕像的完整路线。
 
-已实际查看 Map10 地图、Map11 HUD、全屏小地图和失落女神弹窗截图；Map10 HUD 当前不可见，Map11 地形／水面／遮挡仍有原有缺项，完整画面和地图验收继续由所属页维护。Python Map11 运行载荷生成与小地图转换三项检查通过。另一次 Map10 旧输入来源检查失败：未纳入当前 Git HEAD 的 `assets/official/adventure.json` 实际哈希为 `a6820d65…`，原清单期望 `84b92c87…`；本次未修改该输入或预期哈希，不能据此声明旧输入来源校验通过。
+已实际查看 Map10 地图、Map11 HUD、全屏小地图和失落女神弹窗截图；Map10 HUD 当前不可见，Map11 地形／水面／遮挡仍有原有缺项，完整画面和地图验收继续由所属页维护。Python Map11 运行载荷生成与小地图转换三项检查通过。另一次 Map10 旧输入来源检查失败：未纳入当前 Git HEAD 的 `assets/official/adventure.json` 实际哈希为 `a6820d65…`，原清单期望 `84b92c87…`；未修改该输入或预期哈希，不能据此声明旧输入来源校验通过。
 
-Windows 普通 Player 已成功构建，在内置屏以 真实运行并通过上述同一套模拟指针、拖动、区域条件、女神／英雄、金币采集／刷新、探寻和冷读检查；已查看小地图、清雾、探寻概率／历史的实际画面。构建入口 `BuildWindowsPlayer` 支持 `-mainline-player-output <exe>` 和 `-mainline-release-probe`；后者仅为本次普通回归构建增加 `ZJCS_MAINLINE_MODULE_VALIDATION`，启动参数仍为 `-verify-mainline-modules <隔离目录>`，并阻止正常启动流程另开存档界面，测试不写入用户档案。沿用本机已安装的 Mono Windows 支持，构建后恢复原脚本后端。回归版本位于 `.tools/mainline-modules-player/杖剑传说.exe`，不带验证参数时仍走正常游戏入口。当前 Unity 日志仍有原生 `PresentFrame／WaitForLastPresentationAndGetTimestamp` 呈现时序告警；development 控制台遮挡的截图不作为画面通过证据，未声明该引擎告警已修复。本次为既有实现的公共模块抽取，完整玩法缺项见下文，未覆盖桌面正式版本。
+Windows 普通 Player 已成功构建，在内置屏以 真实运行并通过上述同一套模拟指针、拖动、区域条件、女神／英雄、金币采集／刷新、探寻和冷读检查；已查看小地图、清雾、探寻概率／历史的实际画面。构建入口 `BuildWindowsPlayer` 支持 `-mainline-player-output <exe>` 和 `-mainline-release-probe`；后者仅为普通回归构建增加 `ZJCS_MAINLINE_MODULE_VALIDATION`，启动参数仍为 `-verify-mainline-modules <隔离目录>`，并阻止正常启动流程另开存档界面，测试不写入用户档案。沿用本机已安装的 Mono Windows 支持，构建后恢复原脚本后端。回归版本位于 `.tools/mainline-modules-player/杖剑传说.exe`，不带验证参数时仍走正常游戏入口。当前 Unity 日志仍有原生 `PresentFrame／WaitForLastPresentationAndGetTimestamp` 呈现时序告警；development 控制台遮挡的截图不作为画面通过证据，未声明该引擎告警已修复。为既有实现的公共模块抽取，完整玩法缺项见下文，未覆盖桌面正式版本。
 
 新增载荷固定 `854_156383`：`scripts/prepare_mainline_interactions.py` 导出英雄参数、地区等级、区域刷新和体力点奖励；`scripts/prepare_unity_world_exploration.py` 解码7种令牌、65条实体组变体、28种模板及68条递归条件，已接入公共探寻事务与原窗口入口。`prepare_unity_map11_ui.py` 扩展至59份官方面板、535张sprite，保留英雄、探寻、奖励列表层级与原动画事件；来源分别见 `mainline-interactions-source-manifest.json`、`world-exploration-source-manifest.json` 及 Map11 UI 清单。探寻令牌列表恢复原LoopScrollRect的9个类，模糊和渐变的原生方法及程序转换分别记录在所属来源清单。
 
 遗失女神领奖 UI 的来源准备将提取数据进一步扩为65份面板、945张Sprite和1,055条图标记录，新增六份原层级及394项主动／被动技能图标；导入器同步接受原结果窗和技能图标基础组件。该批工作保留原阶位／窗口映射／星级图／属性行动画及来源哈希，尚未接通地图入口和结果控制器，完整边界见[命运探寻](world-exploration.md)。各地图未完成页及配套提取／转换工具一并保留，入口见[世界地图](world-map.md)。
 
-本批65份原面板已通过 Unity 导入／编译与 `ProjectTools.Validate`，既有公共流程的内置屏 图形 Play Mode 回归通过；新增结果窗仅验证原基础组件与动画资产，不作为完整交互验收或 Windows 发布结论。
+65份原面板已通过 Unity 导入／编译与 `ProjectTools.Validate`，既有公共流程的内置屏 图形 Play Mode 回归通过；新增结果窗仅验证原基础组件与动画资产，不作为完整交互验收或 Windows 发布结论。
 
-本轮带图形 Play Mode 已通过英雄首次领取、永久生命170／HP恢复、周期访问与每日共享额度、冷读，以及通过地图模拟指针采集金币（扣5体力、入包、点位隐藏、原3秒间隔刷新）。隔离事务检查覆盖体力不足回滚、金币／铁矿／时之砂数量倍率、离线刷新、怪物开始去重、失败重试、胜利历战精华与重复回包。已查看英雄面板和实际金币采集画面；奖励条已恢复原叠加材质、CanvasGroup动画和位置，粒子尚未完成，故未声明本功能完整验收或发布。
+带图形 Play Mode 已通过英雄首次领取、永久生命170／HP恢复、周期访问与每日共享额度、冷读，以及通过地图模拟指针采集金币（扣5体力、入包、点位隐藏、原3秒间隔刷新）。隔离事务检查覆盖体力不足回滚、金币／铁矿／时之砂数量倍率、离线刷新、怪物开始去重、失败重试、胜利历战精华与重复回包。已查看英雄面板和实际金币采集画面；奖励条已恢复原叠加材质、CanvasGroup动画和位置，粒子尚未完成，故未声明本功能完整验收或发布。
 
 Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode 和实际截图复查：未公开区域使用原 Light2D 颜色／强度，模拟指针激活女神后播放原 `map_region_active_anim`，半径从0增至30，在2.01666665秒关闭对应阴影，冷读按已公开地区恢复。保留原全局白光、0.7倍光照纹理、HDR格式选择、受光排序层16／17／18和原衰减纹理；GLES程序机械转换为HLSL，网格由固定Unity Graphics的 `LightUtility.GenerateShapeMesh`／UTess／Clipper生成。来源与全部输出哈希分别见 `map11-region-lights-source-manifest.json`、`map11-light-meshes-source-manifest.json`、`map11-light-shaders-source-manifest.json`。这项验证覆盖区域地表阴影；未把日夜专属装饰、其他局部灯光或小地图未探索遮罩算作完成，也未发布新的完整功能版本。
 
-山之国战斗碑所需的共享原玩法互斥表、参数和异步开战门槛已迁入 `Official/PlayerPlay/`，保留原先硬互斥、软退出及回调顺序；独立规则测试与 Unity 引用编译通过。玩家状态观察器／退出处理器和正式窗口尚未接线，自动运行验收暂停，范围与来源见[山之国](../maps/map-12.md)。
+地图 12 的专属实现、决策和缺口见[山之国](../maps/map-12.md)。
 
-山之国战斗碑窗口已补齐原等级／阶位、战力主题、队伍目标与三类队伍事件的配置／服务适配，并调用原开战状态门槛；六程序集源码编译与七点位独立数据检查通过。正式地图宿主、原 TeamPanel 和原生窗口输入／画面／存档仍待接线／验收，自动运行验收暂停，见[山之国](../maps/map-12.md)。
+### 已迁移代码与局部资源
 
-山之国原 Team 界面的10份原生窗口源已保留并核对645节点／2914对象／1105个脚本及9675个指针；171份 CAB 输入复开核对，全部1298份托管引用完成原生导出恢复。默认头像保留同源无损 PNG 解码修正。正式 prefab／图片与脚本绑定、队伍／邀请／站位和运行验收仍待完成，见[山之国](../maps/map-12.md)。
+以下为局部代码／资源接入，完整流程仍受本页缺项限制。
 
-山之国战斗碑的原 Team 队伍／NPC 邀请界面已提取10份预制体、645节点与1105个完整脚本载荷，保留原层级、布局／TMP／外观字段和64位引用；已核对原普通 Player 邀请链及171份实际 CAB 输入。Windows 原生转换／绑定、正式队伍与站位服务和运行验收仍待完成，见[山之国](../maps/map-12.md)。
-
-山之国原 Team 邀请候选按排除探索首领、存在战斗实体／等级详情及原遇见／助战条件筛选，共95名；显式 Team 资格／单位入口已接入共享战斗目录，沿用原属性与技能计算，独立规则测试和 Unity 引用编译通过。正式 Team 窗口、地图队伍／站位及次数事务尚未接线，见[山之国](../maps/map-12.md)。
+`assets/reference/official-map/mainline-interactions-source-manifest.json` 记录620类实体扩展参数、英雄410等级属性、Map10／11地区等级、刷新间隔与体力点奖励的官方输入；`world-exploration-source-manifest.json` 记录7种令牌、65条实体组变体、28份完整实体模板、68条递归条件，以及奖励／随机包／宝物选择器／等级映射的原配置。运行时显式加载 `Resources/World/Mainline/interactions.json`、英雄属性及 `exploration.json`。探寻本地生成、保底、费用、奖励和存档事务，以及原窗口鼠标操作、令牌拖动、十连、历史分页与动态实体冷启动已通过隔离 Unity 编辑器验证；完整生成实体交互、模型材质、动画与 Player 尚未完成，范围见[命运探寻](world-exploration.md)和[公共模块](mainline-map-modules.md)。旧云端缓存不再保留，历史重建显式复用当前871缓存的相同哈希字节，核对原清单MD5／大小及真实凭据SHA256，来源保持实际版本及URL，不重建旧目录或替换变化资源。
 
 ## 自定义实现
 
 沿用已确认的本地地图存档、神像最近可站立格传送和英雄／魔女共享每日访问额度。规则细节分别见[森之国](../maps/map-11.md)、[战斗执行](battle-execution.md)；地图奖励沿用户确认方案：原权重选取、原数量乘等级／阶位倍率，小数按概率取整，再应用原属性29加成并向下取整。普通点位按原配置扣体力57×5；命运探寻来源实体须按官方来源规则免体力。刷新沿用户确认的本地方案：保留点位、区域开放、原组间隔与上限，计入离线时间。
-
-山之国七座战斗碑已按当前原关卡配置接入区域等级／阶位、怪物+7及原属性重算；本地胜利奖励、一次完成和胜场同事务，败北保留次数，支持结算重试与档案到地图的冷启动恢复。原专用窗口、NPC队伍及真实输入／显示／存档验收仍待完成，详见[山之国](../maps/map-12.md)。当前已追加战斗碑四个原窗口／图标依赖、全50种奖品图标、原窗口方法和64位状态绑定，源资产为72份／943张；另迁入原确认窗回调、帧尾自动对齐和计时锁，原生字段／64位锁状态已绑定；新增原生导入及双尺寸指针夹具尚未执行，地图宿主与 NPC 队伍仍待接线。另已恢复四份原循环／结束演出，逐字段核对84节点／64粒子／72渲染器并显式绑定原生目录；原周期状态代码已迁入，地图挂点／事件宿主与实际演出仍待接通验证，自动验收继续暂停。
-
-山之国另已恢复两份原实体的309包转换输入及12条原托管引用，核对四节点层级和挂点 PPtr；两张原碑精灵通过同源对象字节校验并绑定本地精灵目录。两份正式原生实体、七点位目录、四视图及独立原演出池宿主已迁入，显式资源引用／逆向补丁核对、8项独立编译和静态检查通过；原生显示工厂／周期事件与回收已接入主地图，个人一次领奖保留碑体，小地图按原公共状态显示；角色档案先提交时的周期数及恢复不重复计数夹具已追加，主地图42项依赖与夹具独立编译通过，原专用弹窗／NPC 及实际运行仍待完成，具体来源与未完成范围仍见[山之国](../maps/map-12.md)。
 
 ## 尚未实现
 
@@ -77,7 +87,7 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 
 共享原演出核心见 `Runtime/Official/StoryPlayables/` 与 `scripts/prepare_unity_story_playable_runtime.py`：原 `MyPlayable` 状态机、双阶段中心、序列、触发器、有序容器与粒子淡入淡出保留；离线显式注入及调用方帧阶段替代原服务注册。隔离 Unity 完整校验、Play Mode 调度／状态／异常恢复及 3 项迁移回归通过，视觉和输入未覆盖；正式宿主、原 prefab、动画／骨骼、Timeline、相机和音频仍待绑定。来源与验证范围见[龙之国](../maps/map-14.md)，不据此开放完整地图。
 
-龙之国 BGM、直接对白与原剧情／实体 Timeline 音频的当前来源、延迟／静音动作和验证范围见[龙之国](../maps/map-14.md)。418 个 PCM 素材已在内置屏 Play Mode 逐采样比较并实际输出，原实体 Timeline 的分段咒文语音及四条气泡已定位；正式事件宿主、总线 DSP／RTPC、气泡界面和完整剧情接线仍待实现，不能据此认定主线模块已完成。
+地图 14 的专属实现、决策和缺口见[龙之国](../maps/map-14.md)。
 
 共享原声音及 Timeline 驱动已恢复至 `Runtime/Official/StorySounds/`：保留官方循环、停止、事件目标和手动时钟绑定；内置屏隔离 Play Mode 调度验证通过。原事件 ID 桥接复用官方 SDK Post，完整原声总线 DSP／RTPC、原演出 prefab／气泡与正式剧情入口仍待接通，范围见[龙之国](../maps/map-14.md)。
 

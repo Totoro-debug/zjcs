@@ -10,6 +10,10 @@
 
 本页只覆盖登录前的启动阶段；接续的官方位面选择界面转换见[设置、拍照与本地存档](settings-and-save.md)，角色创建、开场演出及后续玩法见[新建存档与角色创建](character-creation.md)。
 
+## 原始官方实现
+
+官方 BootSplash、ThemeCanvas、LaunchPanel 和 AgeTipsDialog 定义健康提示、默认主题、标志、适龄弹窗及资源进度显示；在线初始化／更新与本地加载的差异见下文。
+
 ## 完整还原部分
 
 固定来源为官方 APK 内 `854_156383` 的 Boot／Launch 资源；本模块没有使用云端其他版本。恢复 `BootSplash`、`ThemeCanvas`、`LaunchRoot/LaunchCanvas`、`AgeTipsDialog` 四个官方 prefab 中的 80 个对象层级、24 张 Sprite、原始锚点／尺寸／颜色、已迁移组件的引用和中文文本。使用原版默认主题背景与中文标志，不以截图充当界面；尚未迁移的弹窗组件见下文。
@@ -26,6 +30,12 @@
 
 复验入口为 `Zjcs.Editor.Startup.StartupPlayModeValidation.Run`；Windows Player 可传 `--zjcs-validate-startup <临时输出目录>`，输出运行画面及结果后退出，不新建存档。原生资产和显式加载绑定的输出哈希由 `scripts/record_startup_native_sources.py` 记录到[原生来源清单](../../assets/reference/startup/native-source-manifest.json)。测试日志、截图和隔离草稿在结论写回本页后清理。
 
+### 已迁移代码与局部资源
+
+以下为局部代码／资源接入，完整流程仍受本页缺项限制。
+
+`scripts/prepare_official_startup.py` 优先核对官方 APK 的 Boot／Launch 包内清单、实际载荷、CAB 和 PPtr，所需资源均在固定 `854_156383` APK 中，无需混用云端版本。恢复 BootSplash、ThemeCanvas、LaunchRoot/LaunchCanvas 和 AgeTipsDialog 的 80 个对象、24 张 Sprite、原字体／材质、启动曲线及按钮 Animator；字体额外字段、流式字体配置长度／MD5、原顶点／三角形和 TMP 裁剪／描边程序均核实后转换。Windows 使用 Unity 原生 prefab、Sprite、字体、HLSL 和显式 `Startup/OfficialStartupAssets` 引用。输入对象、代码／APK／bundle／字体与输出哈希见[原始来源](../../assets/reference/startup/source-manifest.json)，导入后的资源和运行绑定见[原生来源](../../assets/reference/startup/native-source-manifest.json)，实际流程与发布边界见[功能页](startup.md)。
+
 ## 自定义实现
 
 离线版以 `Resources.LoadAsync` 加载实际本地创角和角色目录，进度条反映加载进度；资源失败时停在启动页显示错误。加载成功后显示原“正在初始化”文本，切换到现有本地存档入口。用户正在阅读适龄弹窗时等待其关闭。没有联网更新、区服选择、客户端修复或登录请求；这些属于本地启动流程适配，不声称服务器登录逻辑已还原。
@@ -35,4 +45,4 @@ Windows 使用原 1080×1920 参考尺寸与缩放参数，沿用原 CanvasWidth
 ## 尚未实现
 
 - 适龄弹窗的原 `PopupWindow` 显示／隐藏曲线、模糊背景及点击遮罩关闭尚未接入；当前通过原适龄按钮打开、原确认按钮关闭。原 `ButtonSound`／`PopupWindowSound` 点击及开合音效、版号文本的 `OpenUrlHandler` 链接点击也尚未迁移。已核对 APK prefab 中这些组件及官方代码，不将当前弹窗声明为完整原版表现。
-- 与仅含已提交代码／资源的工程完全对应的发布尚未完成。本次 Windows 验证使用隔离复制的当前工作区，包含其他会话尚未提交的既有依赖。隔离检出任务开始时的提交 `0f7e9e3` 无法通过编译，缺少已被引用的 `Zjcs.Offline.State`、`ProfileSlotCatalog`、`OfficialEquipmentCatalog` 等既有实现；因此桌面输出是当前工作区测试版，不以其构建成功推定提交后的完整工程可独立重建。
+- 与仅含已提交代码／资源的工程完全对应的发布尚未完成。 Windows 验证使用隔离复制的当前工作区，包含其他会话尚未提交的既有依赖。隔离检出任务开始时的提交 `0f7e9e3` 无法通过编译，缺少已被引用的 `Zjcs.Offline.State`、`ProfileSlotCatalog`、`OfficialEquipmentCatalog` 等既有实现；因此桌面输出是当前工作区测试版，不以其构建成功推定提交后的完整工程可独立重建。

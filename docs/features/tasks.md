@@ -8,6 +8,24 @@
 
 本页记录 Unity 主线任务目录、本地进度事务及主城任务入口。委托刷新、每日／每周及活动任务缺少服务端决策的部分明确显示为未开放；成就独立维护。
 
+## 原始官方实现
+
+官方主线／委托任务读取目标目录、阶段、条件、奖励与地图背景，原任务条目和追踪窗口按对应进度刷新。
+
+### 官方代码与资源依据
+
+以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
+
+本地成长目标不再使用通用文字卡片，改用已提取 HomeShopPanel 内的 AchievementPanel / AchievementPanelItem 原始背景、宝箱图像、进度、领奖状态和 RewardSlot 物品图标。没有新增位图素材，资源数量不变。
+
+独立 defaultpackage_assets_prefabs_ui_achievement.bundle 的清单哈希为 95045fde8488e6c55418ef3a9131ede9，APK ZIP 中没有对应文件；本地成长目标名称、目标筛选和组合位置不能据此视为已取得完整独立原版布局。具体状态记录在 source-manifest.json 的 growth_goals_interface。
+
+删除  的 nav 生成入口及所有额外跨页快捷栏，删除挑战页上方本地新增的技能 / 装备 / 幻兽快捷按钮。核对 TaskPanel.mTabGroupGo / mTabToggleGroup 与已提取 prefab 的 BottomGo/TabGroup_11，原始底部任务分类保留；未将名称相同的原始分类误删为额外导航。
+
+`scripts/prepare_task_bindings.py --convert-art` 从固定 manifest `854_156383` 的 `defaultpackage_assets_image_ui_itemnotes.bundle` 读取原始 Sprite，并复用既有 Unity 解码、裁切规则，补入 12 张地图阶段背景；没有重绘或改变布局。卡片使用 `Map/map_ui_display.MapBgPath` 及当前真实来源地图选择背景；发布者和怪物图片复用既有官方转换，原始 UI 字段和语言文件哈希内嵌于 。
+
+依据：`assets/reference/task/source-manifest.json`。
+
 ## 完整还原部分
 
 [`OfficialMainlineTaskCatalog`](../../unity/Assets/Game/Runtime/Offline/Progression/OfficialMainlineTaskCatalog.cs) 读取主线目录与来源清单，资源位于 `Resources/Official/Progression/mainline-tasks*.json`。目录由1000～1160的33项扩展到1000～1270的55项，增加山之国1165～1270的22项任务。既有转换保留 `854_156383` 来源；新增任务逐项核对选定 `871_156598` 的山之国原表，条件及奖励全部相同才复用转换。目录生成器为 [`prepare_unity_mainline_tasks.py`](../../scripts/prepare_unity_mainline_tasks.py)，目录、当前原表及比对结果的哈希见 `Resources/Official/Progression/mainline-tasks-source-manifest.json`；主城任务素材来源仍见 `assets/reference/task/source-manifest.json`。目录扩展不代表山之国完整主线路线已经验证。

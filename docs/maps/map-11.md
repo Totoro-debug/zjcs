@@ -6,9 +6,57 @@
 
 ## 地图简介
 
-地图 ID：11。原目录：坎斯汀大陆/森之国。场景类型：`map_world`；原区域配置77项，BGM配置11。
+11 森之国，范围按下列原配置与本地决策维护。
 
-当前验收对象为 Unity / C#。
+## 原始官方实现
+
+原目录：坎斯汀大陆/森之国。场景类型：`map_world`；原区域配置77项，BGM配置11。
+
+### 官方代码与资源依据
+
+以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
+
+`prepare_unity_map11_base_ground.py` 补取固定版 `defaultpackage_assets_partition_mapground_11_mapground_11_bare.bundle` 的原 `Ground` Tilemap：17,752 格、55 张原 Sprite、55 批多边形，保留原 Tile 矩阵、锚点、颜色及 Unity 坐标；`Resources/Map11/BaseGround/geometry.bytes` SHA256 为 `f7e948cec6dce80d3fbe252715bfcdf8ed2b7b984621cb37d6f7e105889d0cba`。同一转换器读取原世界角色 `3001.prefab` 的模型偏移、缩放和渲染槽位，以及原 `WorldCamera.prefab` 的视野适配、裁剪面。当前地面沿用既有材质适配，原 URP 光照、水面与遮挡排序未完整恢复；不能据此声称场景完整还原。
+
+依据：`unity/Assets/Official/World/Map/11/base-ground-source-manifest.json`。
+
+Map11 女巫原界面沿固定版本 `854_156383` 的 `defaultpackage_assets_prefabs_ui_worldmap.bundle` 提取 `WorldWitchTouchDialog`（PathID `-3082449800091456431`）、`WorldStageInteractionPreviewDialogWitch`（PathID `8230908895915710719`）和 `WorldTouchDialogWitchPeriodicityInteraction`（PathID `640011520031964919`）。该 bundle 原始 SHA256 `b89571df3f7eca7a6d9bf9f7d6f03af49b38191d4f3324fbd40559fe70f9916a`，大小 1,186,915 字节。逐对象来源、原始引用、可选动画目标核对及输出哈希统一保存在 `unity/Assets/Official/World/Map/11/UI/source-manifest.json`；当前行为与验证边界见地图所属页。
+
+Unity 森之国载荷固定使用 `854_156383`。`prepare_unity_map11_runtime_data.py` 将基础实体模板与地图 `Lo` 覆盖分别保留，生成 110 类实体组件、44 个故事图（666 节点）与四个子图（64 节点）、50 条地图对话、61 条选项、8 条固定奖励、24 条主线及 129 个战斗阶段；输入、官方客户端／共享程序集来源与输出哈希见 `official-map/map11-runtime-source-manifest.json`。`prepare_unity_map10_battle_data.py --map-id 11` 保留 57 个怪物编队数组、17 个场景和 591 个实体阶段绑定，来源见 `unity/Assets/Official/World/Map/11/battle-source-manifest.json`。
+
+森之国 `5110` 动态怪物显示：`prepare_unity_map11_world_monsters.py` 沿固定版 `ECStageBehStageView.GetMonsterId`、`Formula.GetMainMonster`、`MapMonsterLoader` 和 `MapMonsterLoadHandler` 核验六个阶段绑定，以及 3212、3215、3216、3217、3218 的官方 `MonsterModel` prefab。原 `5110.prefab` 的 `ModelSlot`、`Shadow` 挂点及偏移均记录在来源清单；`MonsterShadow` prefab 跟随 `shadow` 骨骼，其 Sprite 从 APK 原 bundle 提取为 `unity/Assets/Official/World/Map/11/Resources/Map11/Textures/MonsterShadow.png`。官方 CDN／APK 来源 URL、bundle 哈希、CAB 名、path ID、对象与纹理哈希、缩放和复用的战斗骨骼映射见 `official-map/map11-world-monsters-source-manifest.json`；运行时显式从 `Resources/Map11/Textures/MonsterShadow` 加载。
+
+`prepare_unity_map11_dialogue_audio.py` 同样先查 APK 实际内容，再核对固定版云端语音包，验证 207 个剧情事件的 Play 动作、原媒体切片和已转换 Vorbis 哈希；`Voice_StopAll` 的两个立即停止动作保留原调用顺序。原语音以 Windows 原生流式 AudioClip 绑定 `Resources/Map11/Audio/voices`，来源、代码及输入输出哈希见 `official-map/map11-dialogue-audio-source-manifest.json`。带图形的后台 Play Mode 检查了全部导入、实际主图／子图换句与关闭、过期加载取消及语音音量，音源静音，未进行试听或真实输入检查。
+
+`prepare_unity_map11_story_spatial.py` 从 APK 实际 DefaultPackage 清单定位 EC 索引及 113 类 Map11／本地玩家 prefab，严格读取原 `MapEntityTag`、`StoryNodeRegister`、玩家活动范围及距离设置，保留 bundle、对象和组件来源哈希；结果绑定 `Resources/Map11/story-spatial.json`，清单为 `official-map/map11-story-spatial-source-manifest.json`。Play Mode 核对了 6101 世界树注册和主角回退位置。原 `StoryUtils` 会根据动态 AttachAgent 骨骼可见性筛掉地图 NPC，这部分自制地图视图尚未复原，不能将空间查询记作完整 NPC 可见性迁移。
+
+Map11 实体转换保留 105 类模型中的 24 类状态模型、64 份状态几何和空状态原始字节。补充纹理 `building_naka1`、`building_luzi` 从原 `6330_11_view` 的真实 SpriteRenderer 引用定位至 `defaultpackage_assets_image_mapentity_entity11_building_grave.bundle`（SHA256 `6b24112c0669a6a45628ee51d92a568a8eecedea97ab91eb12ba877a2ec263ae`）；重新提取 PNG 与既有文件逐字节一致。161 份几何、27 个 Spine 实例、203 张纹理及额外对象来源保存在 `unity/Assets/Official/World/Map/11/entity-source-manifest.json`，未修改原 APK／CDN 预期哈希。
+
+地图11继续使用固定 manifest `854_156383` 的 APK／匹配 CDN。`prepare_map11_rendering.py` 直接读取 `MapGround_11_bare.prefab` 的活跃 Renderer、原材质和原输入对象，不再依赖临时检查输出。转换1188个地形Sprite、67510个Tile、192个Mesh与1803个放置实体；Ground1按原高度图保留水面上下两遍，Water2的原Mask按64采样／世界单位转换为本地纹理。`map11-rendering.json`、两份11区域文件、Mask及复用纹理的对象／输入输出哈希见 `official-map/materials-11-source-manifest.json`，历史区域／水面来源保留。
+
+`prepare_map11_lighting.py` 从固定 APK／校验 CDN 转换 MapGround_11 的原全局 Light2D、85 个地图可用显示 prefab 中的89盏局部灯和 FalloffLookupTexture 衰减；43个活跃 Water2 渲染器均核对为排序层16。`assets/official/map11-lighting.json`、衰减贴图及所有输入／输出哈希见 `official-map/lighting-11-source-manifest.json`；其余原版本缺包记录保持不变。
+
+6530原两种idle为空，仅0→1的原一秒Start播放8个原粒子发射器；声音由原 `Map_Entity_MiniGame_Bonus` Wwise事件解析到media163983865，其1.5秒尾音按原无StopSoundEvent规则播放。真实PCK来源、bank／event／action／sound／media身份、输入与OGG输出哈希见 `official-map/audio-11-state-source-manifest.json`；保留冻结OGG，不因重新编码的容器序号不同替换现有音频哈希。
+
+`prepare_map11_stone_states.py` 从原6503 prefab、Animator、Spine及附着轨道重建close／middle／open与各自loop；按原中断规则和normalized entry mix采样64组12fps本地网格动画。输出及原对象来源见 `official-map/stone-11-source-manifest.json`。`prepare_map11_logic_views.py` 核对五包清单、原实体显示表与模板，确认6533的413／3210／6105是原定义的逻辑节点，没有对应显示Prefab；`official-map/logic-11-source-manifest.json` 记录检索范围与原对象，不为这些节点绘制假素材。
+
+`prepare_battle_stele.py` 将 APK 固定版本 `854_156383` 的 `stage_battle_stele`、`game_settings` 转换为 `assets/official/battle-stele.json`：65 条关卡记录，每条保留 4 档战力阈值，推荐索引为 2。该文件与其他官方配置转换结果集中存放；迁移仅变更路径，9,390 字节及 SHA256 `f3d6f8bc7ea42f115e07a98c87ab4ebac01c618c02b7bbac81dd267dfff0c239` 保持不变。官方表输入哈希、bundle／对象身份和输出路径见 `official-map/battle-stele-source-manifest.json`；地图 11／12／13 的来源清单同步引用新路径，运行时载荷和加载绑定不变。隔离验证按来源哈希读取 APK 原语言，保留现有地图载荷的后续增量。
+
+`prepare_map11_dialogs.py` 从原 `stage_battle_stele` 表选择900／901／902／925／926／927，并按XXHash64读取原两份中文语言二进制的17个名称／说明／界面键，输出 `assets/official/map11-dialogs.json`。原关卡表、语言来源及哈希见 `official-map/dialogs-11-source-manifest.json`；界面复用原BattleSteleWorldStageDialog和已转换官方敌人模型。
+
+`register_map_assets.py --map11` 仅登记上述独立来源收据验证的输出，保留其余模块绑定与历史来源；不以当前文件哈希覆盖未核对的预期值。既有位阶教学中文增量另由 `--localization` 逐键核对两份原语言输入后登记，中央来源保留旧摘要和原增量链。资源进入显式本地加载清单及匹配素材包，旧APK／CDN预期哈希和原版本185个缺项保留。
+
+登记发现既有 `season-lifecycle.json`／`season-lifecycle-ui.json` 的中央摘要停留在较早转换。`--season-lifecycle` 重新核对固定 APK 中的原表、完整构造器、中文二进制、客户端代码及序列化输入，再登记独立 `season-lifecycle/source-manifest.json` 已记录的现有输出；原摘要由该模块 `history/` 中真实旧来源证明并保留在中央 `registration_sources.previous_data`。没有重新绘制、替换现有素材或改写原包哈希。
+
+不同阶数的历战精华匣／箱子按原Item.RawIcon共用图片，运行时对缺少独立ID绑定的9200／9217等解析到完整同名路径。白箱`ItemIcon/Other/itembox_white_5`与蓝箱`ItemIcon/Other/itembox_blue_5`复用已转换的`assets/official/sprites/itembox_white_5-9cc50ec3de.png`、`itembox_blue_5-fd88304460.png`；没有新增或重新绘制图像，没有修改图标目录或图片字节。
+
+两图来自固定854_156383的校验CDN包`defaultpackage_assets_image_itemicon_other_homeresource_noatlas.bundle`，MD5 `88c8ec63019259f1e41216df57277da1`；原Sprite对象分别为1938551758088215332与-661215029578351316。原URL、bundle SHA256、Sprite解码／atlas裁切及输出SHA256均沿用[原城市素材来源](../../assets/reference/official-city/source-manifest.json)的resources条目；显式加载绑定和既有素材包已包含两图。此项仅补运行时物品与已有原图片的对应关系，原来源和历史记录保留。
+
+存档选择界面：`scripts/prepare_official_save_selection.py` 复用启动页提取工具，从固定854官方 APK 恢复 `PlanesListPanel`、列表内嵌 `PlanesRoleItem` 与原启动模糊遮罩，共131个对象、37张 Sprite、16个原动画片段；保留原层级、锚点、TMP字体／描边、Sprite几何、RawImage UV、页签 Animator 与窗口显示曲线。角色头像复用原外观网格、摄影参数及待机姿势；本地槽位替代在线位面提供者。APK、bundle／CAB／对象、官方代码及载荷哈希见 [source-manifest.json](../../assets/reference/save-selection/source-manifest.json)，Unity原生转换、资源目录和显式绑定哈希见 [native-source-manifest.json](../../assets/reference/save-selection/native-source-manifest.json)。实际验证范围见[设置、拍照与本地存档](../features/settings-and-save.md)。
+
+主线地图七类公共模块的原实现 Git 来源、官方客户端代码、模块输出及探寻页签原动画绑定见 [mainline-modules-source-manifest.json](../../assets/reference/official-map/mainline-modules-source-manifest.json)。沿用854固定版与既有官方载荷；仅拆分状态／生命周期和恢复四份原页签动画的名称及 prefab 引用，没有新增绘制素材。
+
+原102女神已通过正式地图指针／原按钮激活及冷读，实际画面恢复明亮地形；本地地图保持在活动场景，以保留原 FollowSceneActiveSelfController 的全局灯光控制，不改原灯光参数。
 
 ## 完整还原部分
 
@@ -62,13 +110,21 @@ Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD�
 
 带图形后台 Play Mode 已通过魔女原书页、首次结果预览、成功后计数、周期访问及其原 ActionTime、英雄／魔女每日额度互斥、未用效果冷读恢复和结果文本绑定检查；实际进入战斗确认 `-100%` 保留 1 HP、绑定官方战斗状态，并等待战斗结束核对效果清除且每日额度保留。已查看首次预览与战斗运行帧。该检查调用脚本回调，音源静音，没有真实鼠标输入；战斗画面仍有地图 HUD 叠加，不能作为整体战斗界面还原结论。资源转换、38 种怪物头像来源／PNG／Sprite 绑定检查与工程静态检查通过；没有据此发布 Windows Player。
 
-四类英雄雕像6570～6573的官方触摸／首次奖励／周期访问面板已接入公共 `OfficialMainlineStatuesModule` 的 `HeroStatues.cs` 实现，首次激活按地区等级读取410生命属性；本轮实际指针已验证永久生命170与生命恢复、周期访问和跨雕像每日共享额度。普通金币点位115已通过地图模拟点击验证扣5体力、奖励入包、隐藏和原3秒间隔刷新。铁矿、时之砂与历战精华奖励、怪物回执去重和离线刷新已有隔离事务检查；完整地图刷怪操作、英雄原角色／粒子演出、探寻动态实体及雾层尚未完成。规则和来源统一见[主线地图公共模块](../features/mainline-map-modules.md)。
+四类英雄雕像6570～6573的官方触摸／首次奖励／周期访问面板已接入公共 `OfficialMainlineStatuesModule` 的 `HeroStatues.cs` 实现，首次激活按地区等级读取410生命属性；实际指针已验证永久生命170与生命恢复、周期访问和跨雕像每日共享额度。普通金币点位115已通过地图模拟点击验证扣5体力、奖励入包、隐藏和原3秒间隔刷新。铁矿、时之砂与历战精华奖励、怪物回执去重和离线刷新已有隔离事务检查；完整地图刷怪操作、英雄原角色／粒子演出、探寻动态实体及雾层尚未完成。规则和来源统一见[主线地图公共模块](../features/mainline-map-modules.md)。
 
 本图73份 `LightRegion` 原生阴影已绑定 `OfficialMainlineRegionFog`，恢复原形状／falloff网格、衰减贴图、Multiply光照和女神解锁时2.01666665秒的消雾曲线。原73份资源不包含地区21／28／57／62，未补造阴影。图形 Play Mode 已用模拟指针激活女神，检查渐退结束、公开地区冷读并查看前后实际画面；`ProjectTools.Validate` 与原地图回归通过。日夜专属装饰、局部灯光及小地图未探索遮罩仍未完成，完整边界与来源见[公共模块](../features/mainline-map-modules.md)。
 
-## 自定义实现
+### 已迁移代码与局部资源
 
-以下为已确认的单机处理要求，尚未代表完整 Unity 流程已经接入或验收。
+以下为局部代码／资源接入，完整流程仍受本页缺项限制。
+
+`prepare_unity_map11_audio.py` 先核对 APK 的 WwiseBnk 清单及实际包内文件，再读取同版云端包，验证 `map_bgm_01` 的包与原 Wwise 媒体哈希。原 `750073388` Vorbis 转换载荷复制为原生 AudioClip；四个事件的动作、无限循环、Sine 曲线和 1,000／250／250／500 毫秒参数从原 bank 解出。代码、输入、处理方式及输出哈希见 `official-map/map11-audio-source-manifest.json`，显式加载绑定为 `Resources/Map11/Audio`；试听、战斗音乐和语音不属于已完成验证。
+
+`prepare_unity_map11_ui.py`、`map11_support_ui.py` 与 `map11_minimap_ui.py` 从 APK 实际文件及固定版本补充资源恢复 37 份原生 panel、325 张 Sprite、37 份原生小地图标记和 1,707 条实体标记绑定。包含 WorldCanvas、TalkDialog／OptionTalkDialogPanel、圆形／全屏小地图及筛选、FunctionEntryDialog、原 FirstPayBtn、任务项、物品及女神／魔女窗口。跨图标签提取同组 Map10／Map11 的原 `MapInfo`、`MiniMapSettings` 和 `ImgMapSwitch_0`／`_1`，原 parser 顺序、图标及逐图缩放配置均进入同一载荷；运行时只显示已访问地图。原 `MiniMapWorldStageSwitcherSupport` 的对象状态引用及源码哈希一并导出，由本地实体阶段驱动标记图标互斥切换。功能入口／快捷消息的默认 Animator 状态、默认片段与 Controller 来源同样保留在该载荷中。原 MonoBehaviour 引用、严格读取的 UI／Framework 字段、CanvasScaler／遮罩启用状态、中文、GlobalColors、PopupWindow／Animation 曲线和半程事件、UGUIJszx 横纵布局及自定义网格、MirrorImage、战力推荐和数字格式均记录输入代码、对象及资源哈希；输出 `map11-ui.json` SHA256 为 `f30126a7a7a619aaec8f5a12da04c083e0d71bcb47c5c24e0b1b5fc01b3be5ae`。`map11_tmp_sprites.py` 提取 Common 七个原 TMP 字形、字符及 400×200 图集，恢复 Texture2D／材质及原序列化哈希。显式加载为 `Resources/Map11/UI`。真实输入、跨图离线标记及点击、完整场景渲染和 Windows Player 仍未完成验证。失落女神经验／罗拉各 +1%、最近可站立格传送及兑换关闭后的剧情返回属于所属页记录的单机差异，未改动官方输入或预期哈希。
+
+`scripts/prepare_mainline_fog.py` 读取固定854官方 `partition_mapground_11_extensions` 的73份 `LightRegion` 原层级、Light2D字段和 `map_region_active_anim`，从 APK builtin 取原 `2D Renderer Data` 与2048×128 `FalloffLookupTexture`；全局白光来自已核实的同版本 bare 地形依赖。APK／缓存实际对象、输入与输出哈希见 [区域阴影来源](../../assets/reference/official-map/map11-region-lights-source-manifest.json)。`prepare_mainline_fog_meshes.py` 在隔离 Unity 2022.3.57f1c2 工程中调用固定原 Unity Graphics `LightUtility.GenerateShapeMesh`、UTess／Clipper；固定Git blob、Mathematics包和73份网格哈希见 [网格来源](../../assets/reference/official-map/map11-light-meshes-source-manifest.json)。`prepare_mainline_fog_shaders.py` 机械转换 APK 原 Light2D 与 Sprite-Lit GLES 程序，保持原表达式、深度／剔除和 Multiply 分支，见 [程序来源](../../assets/reference/official-map/map11-light-shaders-source-manifest.json)。显式加载 `Resources/Map11/Fog` 与 `World/Mainline/RegionLight2D`／`RegionSpriteLit`，运行范围和仍缺的日夜装饰／小地图遮罩见 [公共模块](../features/mainline-map-modules.md)。
+
+## 自定义实现
 
 原线上组队按已确认原剧情 NPC 资格、等级、位阶和技能适配，不生成真人玩家。公共刷新使用本地时钟；普通路线保留真实败北、产出和等待，后期资格回访不能记作普通角色自然成长。
 
@@ -76,7 +132,7 @@ Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD�
 
 此奖励是已确认的单机差异：固定版本官方 `map_region.GoddessActivePropAwardDict` 为全部 49 座配置经验 +1%，另一项按地区分为不同资源，仅 8 座配置罗拉 +1%。`OfflineGoddessPropSource` 在原属性流水线中替换 `LostGoddess` 来源，对森之国失落女神统一汇总 1001／1005 各 100，保留原表及哈希，避免与原表资源加成叠加；普通女神地区没有该字典，不计入家具奖励。家园实际收益与界面仍需运行核验。
 
-女神像传送采用用户确认的单机落点：优先神像所在格；该格不可站立时取最近可站立格，等距按行、列确定，落点写入本地图位置存档。官方 `PlayerWorldTransferRequest` 只提交目标实体 ID，包内没有服务器选落点实现，因此此项是单机规则。森之国官方出口目标为 Map12；用户已确认本次不迁移 Map12，后续按主线地图逐步扩展。
+女神像传送采用用户确认的单机落点：优先神像所在格；该格不可站立时取最近可站立格，等距按行、列确定，落点写入本地图位置存档。官方 `PlayerWorldTransferRequest` 只提交目标实体 ID，包内没有服务器选落点实现，因此此项是单机规则。森之国官方出口目标为 Map12；用户已确认不迁移 Map12，后续按主线地图逐步扩展。
 
 机关终端结果 254／258 的服务器类为空，单机按用户确认依关联锁配置满足解锁状态，重置恢复机关初始状态和踏板计数。锁 413 的官方结果仍保留对 423 设置状态 1 的原始数据；重新反编译并核对原始 EC、MapInfoWrap、客户端实体定位与生成调用后，423 无放置定义或生成入口。用户确认仅跳过这条无目标更新，继续执行生成奖励实体 401 等其余结果；其他未知目标仍报错，不套用此例外。
 
@@ -87,6 +143,18 @@ Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD�
 `GetMapWitchExploreInfoNode` 只读取服务器返回的 `ActiveCount`，缺少服务端计数实现；用户确认沿用 `WorldWitchTouchUI` 的所有地图已激活魔女总数。`OfflineMainlineProgressSession.ActivatedWitches` 账本按地图／放置实体持久化，重复激活不重复计数，缺少新字段的旧档从零开始；原查询节点及 Switch 输入已接入该总数，并通过跨地图累计、重复回执和存档冷读校验。Map11 两处魔女实体 6620（放置 ID 2801、6901）已接入原书页、结果预览、世界阶段成功结算和周期访问；预览不发奖，阶段成功后按激活前全图计数选择原 `WitchInfo`，应用奖励、HP、状态或实体组生成结果。实现入口为 `OfficialMainlineMapRuntime.Witch.cs`、`OfficialMap11WitchWindow.cs`，运行载荷保留 14 条激活规则和七条原权重周期奖励。完整剧情与召唤战斗循环仍待验证。
 
 按用户确认，英雄／魔女共用每日一次访问额度，访问记录、道具和待战斗效果在同一本地事务中写入。状态退出游戏后保留，进入下一场任意战斗生效，战斗结束后清除；HP 减少按入场最大生命百分比结算，`-100%` 至少保留 1 HP。首次剧情激活与周期访问沿原阶段图分别处理。普通女神／失落女神的探索激活不占该每日额度；Map11 没有英雄雕像放置点，英雄界面与随机增益入口仍待所属地图迁移。
+
+### 已确认的本地接线与边界
+
+机关规则从原 EC／Lo 配置恢复 116 个相关记录、九组锁与七座终端。锁 413 对缺失实体 423 的原结果保留，独立记录用户确认的单机跳过例外；已重新反编译原程序集并核对原始地图数据，未创建替代实体或修改官方源配置。
+
+终端物品 325 的 `quick_buy` 行从同版 APK 的 `config_luban` 提取，保留 50 晨星、每次一张、无购买次数上限及物品 4013 持有条件。剧情分支清单记录 `SelectorNode`、`SwitchNode`、`StoryGraph`、布尔条件及 `SerializableObj` 原代码哈希；按用户确认补全服务器缺失的首项匹配规则，未改动故事图的端口、顺序或默认出口。
+
+剧情来源清单同时记录 `GetEntityBaseNode`／`GetEntityPosNode` 的枚举和偏移代码，以及 `GetMapWitchExploreInfoNode`／`WorldWitchTouchUI` 的查询与跨地图计数调用。单机沿用户确认使用所有地图魔女激活账本，按地图／放置实体去重，计数与主角定位均已用实际故事图检查；魔女界面和完整主线仍见地图页缺项。
+
+`prepare_unity_map11_runtime_data.py` 沿固定版 `854_156383` 的实体 6620 EC 组件、`WitchInfo`、`map_periodicity_random_award_interaction` 与 APK 内 `reward_rule.g.bytes`，保留 14 条全图激活计数规则、七条周期奖励权重，以及原结果组件类型／索引；实体组 2000 解析到官方召唤阶段 20001，战斗载荷由 129 个放置阶段补为 130 个。输入对象、版本、奖励原始载荷及输出哈希见 `official-map/map11-runtime-source-manifest.json` 和 `unity/Assets/Official/World/Map/11/battle-source-manifest.json`，显式加载为 `Resources/Map11/stories` 与 `Resources/Map11/battle-runtime`。缺失服务端的结果结算、共享每日额度、下一场战斗状态及 HP 至少保留 1 点均按用户确认处理，不能标作服务器源码还原。
+
+`prepare_unity_mainline_tasks.py` 复用已核验官方 `task`／`npc_friendship_level` 及奖励表，生成 33 项本地主线目录（含 1045～1160 的 24 项森之国目标）与 10,000 条好感门槛。来源与输出哈希随 `Resources/Official/Progression/mainline-tasks-source-manifest.json` 交付，由 `OfficialMainlineTaskCatalog` 加载；正式入口采用用户确认的 Map10 任务 1040 领取门槛，祈愿宝箱计数在原奖励／消耗事务中写入。整图与正式入口仍按地图页所列范围验证。
 
 ## 尚未实现
 
@@ -134,7 +202,7 @@ Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD�
 
 上述均为可继续查找和实现的技术工作，现阶段不需要用户决定基础架构或重复确认既定规则。若客户端实现、配置、调用方和既有单机约定核查后，仍无法确定具体公式、概率、条件或状态变化，再提供相关类／函数、配置项、资源名称、已查范围和行为缺口，请用户决定；等待时继续不依赖该答案的部分。
 
-### 依据与代码定位
+## 代码与资源入口
 
 官方转换数据：[regions/11.json](../../assets/official/regions/11.json)、[adventure.json](../../assets/official/adventure.json)、[map11-rendering.json](../../assets/official/map11-rendering.json)、[map11-lighting.json](../../assets/official/map11-lighting.json)、[map11-stone-animations.json](../../assets/official/map11-stone-animations.json)、[map11-logic-views.json](../../assets/official/map11-logic-views.json)、[map11-dialogs.json](../../assets/official/map11-dialogs.json)。Unity 载荷：[map11.json](../../unity/Assets/Official/World/Map/11/map11.json)、[OfficialMap11Tools](../../unity/Assets/Game/Editor/OfficialMap11Tools.cs)。
 

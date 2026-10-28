@@ -6,9 +6,41 @@
 
 ## 功能简介
 
-本页的“NPC 助战”专指可邀请加入我方队伍的伙伴，不包含敌方怪物。当前规则版本 `871_156598` 中，伙伴候选按 `NpcType=4`、`CanDevelop=true`、存在战斗实体和等级详情筛选，共 85 名；职业导师和商人不属于此集合。日常副本、秘境、道路属性门槛、探索首领、节庆首领、联合行动和羁绊冒险等玩法使用伙伴助战时，按各玩法资格进入我方战斗。地图战斗可保存邀请、站位和准备状态；开始战斗时才扣除本次助战次数。
+本页的“NPC 助战”专指可邀请加入我方队伍的伙伴，不包含敌方怪物。当前规则版本 `871_156598` 中，伙伴候选按 `NpcType=4`、`CanDevelop=true`、存在战斗实体和等级详情筛选，共 85 名；职业导师和商人不属于此集合。日常副本、秘境、道路属性门槛、探索首领、节庆首领、联合行动和羁绊冒险等玩法使用伙伴助战时，按各玩法资格进入我方战斗。地图战斗可保存邀请、站位和准备状态；开始战斗时才扣除助战次数。
 
-以上为 Unity / C# 的目标范围，尚未完整接入和验收。
+## 原始官方实现
+
+原 NPC 助战使用邀请资格、NeedUnlock 正反分支、队伍上限、站位／拖拽、属性技能装配及原战前准备流程。
+
+### 待迁移的规则与表现
+
+以下要求中每日挑战及日常副本已经接入；其余玩法仍是迁移目标，不构成当前实现结论。
+
+邀请资格、NPC 遭遇／职业限制、最大人数、累计次数、单 NPC 次数和原冷却来自 `PlayerRobotInvite`、`npc` 与助战属性配置。选人继续使用原 NPC 邀请窗口；原地图道路窗口、探索首领组队窗口、节庆首领面板、节庆助战说明窗及其条目沿固定 APK prefab 和布局接入。节庆邀请列表将 `ActivityBuff` 作为首个排序项，并按 `activity_festival_boss_npc` 标出对应助战。日常使用 `RobotInvitePlayType.All`（10），秘境为 2，道路属性门槛为 `PropGate`（1），探索首领使用 `All`（10），节庆首领为 5，联合行动为 4，羁绊冒险为 6。
+
+地图属性门槛按 `StageConPropStandard` 累加已选 NPC 的官方战斗属性；条件满足后，NPC 作为实际战斗实体加入队伍。地图战斗运行时记录助战次数快照，站位准备阶段不扣次，点击开始后保留扣次记录；日常副本、挑战与羁绊战斗复用同一 NPC 属性、技能、阶位和战前站位规则。
+
+探索首领按地图 `StageResultExploreBossComponent.Info.StageIds` 顺序查找首个满足 `CanShowMapClass` 且须实现 `CheckStageId` 的配置，使用原挑战信件和组队窗口。挑战时限来自 `stage_map_explore_boss.Duration`；开始、胜利结算和放弃均保存到本地地图进度。
+
+节庆首领读取 `activity_festival_boss`、`activity_festival_boss_layer` 与 `activity_festival_boss_npc`，分别保存每层基础剩余血量、当日最高单次伤害、击破数和领奖数，并按原层序推进；面板血量显示基础血量扣除当日最高单次伤害后的结果，次日刷新将该伤害计入基础血量并清零当日记录。击破判定沿用 `PlayerActivityFestivalBossDataExt.UpdateActivityFestivalBossLayerData` 的伤害规则；重复层在每日刷新后恢复。每日战斗奖励按活动每日一次发放，重复层等级偏移按击破次数套用 `RepeatLevelOffset`。关卡奖项、怪物掉落和普通通关标记不会重复计入活动奖励。
+
+### 官方代码与资源依据
+
+以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
+
+`scripts/prepare_fidelity_npc_assist.py` 从固定 APK 的 `defaultpackage_assets_config_luban.bundle` 读取 `npc_level_detail`、`npc_profession_detail`、`player_robot_invite`、`team_target`、`game_play_mode`，逐字节对照提取缓存后按原构造器完整解析，共 5 表 2,178 条。另从已校验原版本 WwiseBnk 的 `level_prop.g.bytes` 提取 450–456 共 7 个属性类，输出 `assets/official/npc-assist.json`，纳入显式加载清单。
+
+`scripts/generate_npc_assist_reference.py` 编译固定原 C# 属性方法，产生 24 组 NPC 属性及 7 组最终属性对照，见同目录 `reference.json`。没有新增图像、自绘或新版混入；这里的转换与规则验证不表示邀请界面、助战等级下发或实际战斗已经完成。
+
+依据：`assets/reference/npc-assist/source-manifest.json`。
+
+scripts/prepare_dungeon_bindings.py 从 prefabs_ui_fight_changebattleposarea 的 ChangeBattlePosArea SpriteRenderer 直接提取 ImgChangeBattlePosArea，并保留原颜色、边界、PPU、DrawMode、TileMode 与 SortingOrder；从 prefabs_ecentity_fight_fightcharacter_3100 的 PrepareBattlePlayerDrag 提取 DownKeepTime 与 DragThreshold。新增 assets/official/dungeon-ui/ImgChangeBattlePosArea-41679de83e.png 为官方同版本 PNG 解码，无自绘或新版替换。输入原对象与源包 URL／哈希、输出 SHA256 归入 assets/reference/dungeon-ui/source-manifest.json；ChangeBattlePosHandler、PrepareBattlePlayerDrag／Base、FightComponent、GridGroundComponentInfo 和 Pos2d 代码 SHA256 由  保存。
+
+`prepare_npc_assistance_ui.py` 从固定 `854_156383` APK／校验 CDN 转换 `ExploreBossTeamDialog`、`ActivityFestivalBossPanel`、`ActivityFestivalBossAssistDialog`、助战说明条目、邀请面板及邀请条目；运行布局为 `assets/official/npc-assistance-ui.json`，原 prefab、Sprite、调用代码、状态说明文本及 SHA256 见 [npc-assistance/source-manifest.json](../../assets/reference/npc-assistance/source-manifest.json)。道路属性门槛复用原 `RoadblockTeamPropStageDialog` 与地图 UI；未绘制替代图片。
+
+通天塔地图组（map 15）任务 HUD：`scripts/prepare_map15_ui.py` 从固定版任务 prefab 与语言包提取 81 条任务、366 项文本及原控件状态字段，复用已转换地图 UI 和战力颜色配置。未重建开发素材 ZIP，本地新增 `assets/official/map15-ui.json` 尚未进入完整快照。
+
+依据：`assets/reference/official-map/tower-ui-source-manifest.json`。
 
 ## 完整还原部分
 
@@ -36,6 +68,10 @@
 
 节庆首领击破、血量同步、层推进和领奖原由服务器保存；单机根据原层配置维护这些状态，并将待领奖励合并为本地逐层领取操作。活动 200、216 标记 `UseSeverLevelAndRank=true`，服务器的玩家等级／阶位公式无法在客户端复用；经用户确认，本地使用活动 `DefaultLevel + LevelOffset` 计算等级（首层为 `25 - 14 = 11`），并沿用关卡 `SubRank`。重复层偏移仍按官方 `ActivityFestivalBossUtils.GetLevelOffset` 使用该层击破数。此等级基准是确认过的单机规则，不代表官方服务器算法。活动开启时间在本地首次打开时记录，`UnlockTimeOffset` 按官方的小时单位计算；线上时间基准来自活动服务器数据。助战说明中的 NPC 获取提示依赖服务器 `NavigateManager.Navigate`；单机保留原按钮并提示该导航目标不可用，不虚构 NPC 获取路线。
 
+### 已确认的本地接线与边界
+
+`prepare_official_rules.py` 导出 `stage_map_explore_boss`、`activity_festival_boss`、`activity_festival_boss_layer`、`activity_festival_boss_npc`，并更新运行时 `rules.json` 的数据哈希与显式绑定；APK 表、Luban 构造器和客户端／共用 C# 调用哈希见 `official-city/rules-manifest.json`。调用依据包括 `ExploreBossTeamDialog.OnConfirmBtnClicked`、`ActivityFestivalBossPanelBattleContent.StartBattle`、`ActivityFestivalBossUtils.GetLevelOffset`／`GetLayerBossLevelAndRank`、`PlayerActivityFestivalBossDataExt.UpdateActivityFestivalBossLayerData` 与 `RoadblockTeamPropStageTouchUI.HandleTouchBtnClicked`。单机流程由 、 和 接入；服务端缺失及经用户确认的本地选择／结算／等级规则见 [NPC邀请与战前准备](npc-assistance.md)。
+
 ## 尚未实现
 
 - 素材秘境（2）、道路属性门槛（1）、探索首领（All=10）、节庆首领（5）、联合行动（4）各自的实际选择入口、条件筛选、官方属性排序／门槛、站位、战斗加入、快照提交及结算接线；不能用日常副本的 All 规则替代这些玩法。
@@ -44,19 +80,7 @@
 - 将用户确认的等级／阶位规则扩展到其余通用助战玩法；当前日常战斗按玩家等级与存档 `SubRank` 创建伙伴。
 - 在 Unity Play Mode 验证候选列表、真实鼠标选择、人数限制、战斗表现、次数保存恢复及失败回滚；静态检查和 prefab 可加载不计入该验收。
 
-### 待迁移的规则与表现
-
-以下要求中每日挑战及日常副本已经接入；其余玩法仍是迁移目标，不构成当前实现结论。
-
-邀请资格、NPC 遭遇／职业限制、最大人数、累计次数、单 NPC 次数和原冷却来自 `PlayerRobotInvite`、`npc` 与助战属性配置。选人继续使用原 NPC 邀请窗口；原地图道路窗口、探索首领组队窗口、节庆首领面板、节庆助战说明窗及其条目沿固定 APK prefab 和布局接入。节庆邀请列表将 `ActivityBuff` 作为首个排序项，并按 `activity_festival_boss_npc` 标出对应助战。日常使用 `RobotInvitePlayType.All`（10），秘境为 2，道路属性门槛为 `PropGate`（1），探索首领使用 `All`（10），节庆首领为 5，联合行动为 4，羁绊冒险为 6。
-
-地图属性门槛按 `StageConPropStandard` 累加已选 NPC 的官方战斗属性；条件满足后，NPC 作为实际战斗实体加入队伍。地图战斗运行时记录助战次数快照，站位准备阶段不扣次，点击开始后保留扣次记录；日常副本、挑战与羁绊战斗复用同一 NPC 属性、技能、阶位和战前站位规则。
-
-探索首领按地图 `StageResultExploreBossComponent.Info.StageIds` 顺序查找首个满足 `CanShowMapClass` 且须实现 `CheckStageId` 的配置，使用原挑战信件和组队窗口。挑战时限来自 `stage_map_explore_boss.Duration`；开始、胜利结算和放弃均保存到本地地图进度。
-
-节庆首领读取 `activity_festival_boss`、`activity_festival_boss_layer` 与 `activity_festival_boss_npc`，分别保存每层基础剩余血量、当日最高单次伤害、击破数和领奖数，并按原层序推进；面板血量显示基础血量扣除当日最高单次伤害后的结果，次日刷新将该伤害计入基础血量并清零当日记录。击破判定沿用 `PlayerActivityFestivalBossDataExt.UpdateActivityFestivalBossLayerData` 的本次伤害规则；重复层在每日刷新后恢复。每日战斗奖励按活动每日一次发放，重复层等级偏移按击破次数套用 `RepeatLevelOffset`。关卡奖项、怪物掉落和普通通关标记不会重复计入活动奖励。
-
-### 依据与代码定位
+## 代码与资源入口
 
 官方实现：`.tools/source-packages/official-code/common-source/Common/NpcFightData.cs` (`CalcPropsWithSkill`)、`.tools/source-packages/official-code/common-source/Common/NpcLevelDetailInfoParser.cs` (`Get`)、`.tools/source-packages/official-code/client-source/NpcUtils.cs` (`IsNpcAssistLimit`)、`.tools/source-packages/official-code/client-source/TeamInviteNpc.cs` (`GetAssistNpcActorTargetDatas`)、`.tools/source-packages/official-code/client-source/TeamInvitePanel.cs` (NPC 邀请页)、`.tools/source-packages/official-code/common-source/PlayerInviteInfoManager.cs` (助战候选资料请求)、`.tools/source-packages/official-code/client-source/NpcAdventurePanelMainContent.cs` (伙伴冒险等级同步)、`.tools/source-packages/official-code/client-source/TeamInvitePanelPrivateMap.cs` 与 `TeamInviteNPCNode.cs` (剧情伙伴等级)、`.tools/source-packages/official-code/common-source/PlayerBriefInfoUtils.cs` (跨赛季数据校正)。客户端代码来自旧版固定 APK `854_156383`；当前伙伴候选按新版 `871_156598` 的 `NpcType=4`、`CanDevelop`、战斗实体和等级详情识别。
 

@@ -10,6 +10,26 @@
 
 原 HUD、确认、令牌选择、概率、奖励详情与历史入口已接入 Unity。完整实体交互、演出和 Windows 发布仍未完成。
 
+## 原始官方实现
+
+官方命运果实探寻读取令牌、地区／等级、实体组、随机包、奖励、保底及条件；Explore 窗口负责令牌选择、数量、结果与历史，服务器生成部分按下文已确认规则接线。
+
+### 待迁移的规则与表现
+
+保留原单次／多次按钮，单批最多10次，令牌功能开放后可选择真实持有令牌。消耗、每日上限、生命、区域、剧情／副本和待领奖状态均校验。
+
+首次使用原引导实体组51，之后按原探寻组、地区、权重、保底、数量和额外数据生成实体；奖励经过原地图交互、战斗和领奖取得，不直接将预览入包。
+
+原 `WorldExploreAction`、`AppearAction`、角色动作、MyPlayable轨道、粒子和音效须接入。动态实体、每日次数、保底、历史、果实／令牌和随机在同一事务保存，失败回滚，重开不重抽。
+
+### 官方代码与资源依据
+
+以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
+
+`prepare_world_explore.py` 从固定 APK／校验原版 CDN 的 `prefabs_ui_map_world`、`prefabs_ui_map_explore`、`prefabs_ecentity_mapworld_actionworld_actionworldexplorer` 读取原 WorldExploreBtn、八份探寻UI层级、序列化控件绑定及动作22002／22003／22041／22042。未自绘图片、重排确认窗或设计概率卡片。20个实体组图标及六种令牌图标按原Icon／RawIcon地址取得，重复素材复用现有输出。
+
+独立输出 `assets/official/world-explore/`；`assets/reference/world-explore/source-manifest.json` 登记原bundle／对象／URL、版本、代码与配置输入SHA256、复用纹理及全部输出SHA256。规则使用 explore_token_group、explore_entity_group、map_explore_limit、rule_tip 及既有固定版 adventure／map-entities／rules 转换。原语言包提供地区、实体、规则、时间格式等文本，RuleTipNumer和TextReplacer按原代码处理编号及参数。
+
 ## 完整还原部分
 
 已接入 Unity 本地规则层：原个人与区域条件、7种令牌、65条实体组变体、原权重与保底记录、首次组51、生成实体的等级／阶位与额外奖励数据、原费用、每日上限、累计产出限制、持续时间和180天历史。动态实体、随机、费用、记录与首次固定奖励以同一存档事务保存；重复请求不重抽，整批失败全部回滚。
@@ -24,8 +44,6 @@
 
 ## 自定义实现
 
-以下为已确认的单机处理要求，尚未代表完整 Unity 流程已经接入或验收。
-
 未取得 `OperPlayerWorldExplore` 服务端体，用户允许本地结算：候选取当前Map／Area的原地区 `DropItems` 与原宝物选择器交集；多保底同时命中按 `ExplorePriorities` 及原配置次序选择。
 
 实体落在同Area最近的可通行、允许地表、未占用格，范围使用原 `RefreshDistance`／`ExploreEntityMaxDist`。`LastMapRefreshOnly` 替换前一同组结果，保留原数量上限、持续时间和180天历史，过期按本地时间清理。附近空位不足时整批回滚费用、随机和记录，显示原 `WORLD_EXPLORE_POS_NOT_ENOUGH` 提示。连续生成可能先占满距离1的格，玩家须清理附近实体或移动后再试；未擅自扩大原生成距离。
@@ -38,23 +56,17 @@
 
 探寻实体8364“遗失女神”使用独立的 `WorldTouchDialogLostGoddness`／`StageResultAwardLostGoddess` 领奖流程，不沿用地图失落女神像激活。服务器实现未取得，用户确认：按原 `LostGoddnessAwardWeights` 抽可用类型；人物升原配置1级并保留等级内经验；已拥有且未满阶技能等概率免费升1阶；永久属性按原410／Level1及原属性组权重发放；封顶或无候选的类型排除后重抽。奖励、随机、原完成状态和响应内容一同保存，重复领取不重抽。三类结算、封顶排除和存档恢复已通过隔离规则检查，原领奖界面与地图入口仍待接入。
 
+### 已确认的本地接线与边界
+
+Map_Action_PeachExplore_1／2／3沿原map_sfx_01的Wwise Event→Action→Sound取得内嵌DIDX／DATA媒体53374149、990872803、88127107，经vgmstream解码再转换OGG。清单保留原分包凭据、媒体输入哈希、偏移处理和输出哈希。运行时使用显式加载绑定，无网络获取。服务端RPC缺失、用户批准的本地结算裁决与尚未确认的引导礼包触发，分别写入对应功能／地图文档，不冒称官方服务端实现。
+
 ## 尚未实现
 
 - 补齐所有原图标附件、奖励粒子与道具详情交互；现有窗口入口、历史分页及主要指针操作已接通。
 - 完成生成实体的地图显示、碰撞／寻路与小地图绑定，以及宝箱、战斗、副本、商店和活动实体的完整交互。部分模型仍出现白片、黑块，原材质／UV绑定须修复；动态物体的剧情标签闭包仍待补齐，现有静态剧情登记校验不再误拒绝冷启动后的探寻实体。
 - 恢复原动作、MyPlayable、粒子及音效，完成 Play Mode 正常操作、画面与存档恢复，并构建、运行和发布 Windows Player。
 
-### 待迁移的规则与表现
-
-以下要求均须在 Unity 中重新接入和验证；它们描述迁移目标，不构成当前实现结论。
-
-保留原单次／多次按钮，单批最多10次，令牌功能开放后可选择真实持有令牌。消耗、每日上限、生命、区域、剧情／副本和待领奖状态均校验。
-
-首次使用原引导实体组51，之后按原探寻组、地区、权重、保底、数量和额外数据生成实体；奖励经过原地图交互、战斗和领奖取得，不直接将预览入包。
-
-原 `WorldExploreAction`、`AppearAction`、角色动作、MyPlayable轨道、粒子和音效须接入。动态实体、每日次数、保底、历史、果实／令牌和随机在同一事务保存，失败回滚，重开不重抽。
-
-### 依据与代码定位
+## 代码与资源入口
 
 固定 APK 原规则由 `scripts/prepare_unity_world_exploration.py` 重新解码，输出 `Resources/World/Mainline/exploration.json`；包含7种令牌、65条实体组变体、28种完整实体模板、68条递归条件、奖励规则、随机奖励包、宝物选择器、等级映射及每表原字节哈希。来源见 `assets/reference/official-map/world-exploration-source-manifest.json`；规则入口为 `OfficialWorldExplorationCatalog`、`OfflineWorldExplorationService` 及 `OfflineMainlineProgressSession.Exploration`，隔离验证入口为 `Zjcs.Editor.Progression.OfflineWorldExplorationValidation.Run`。`JsonUtility` 对原始 JSON 空对象引用的处理已逐字段校正，避免将原空条件误当成未迁移的条件。
 
@@ -62,7 +74,7 @@
 
 遗失女神的来源准备另已提取原触碰窗、技能升阶／人物升级／永久属性结果窗、属性行和 `ItemIconSkill`，共享 UI 数据扩为65份原面板、945张Sprite及1,055条道具图标记录，其中新增394条原主动／被动技能。保留原35条技能阶位、`MapLostGoddessAwardDialogConfig`、星级品质图、属性行动画、组件引用和三类标题，并补录相关反编译代码哈希。Unity 导入器接受这批层级及图标基础绑定；技能星级／结果数据控制器、关闭交互、地图领奖入口、粒子／泛光／音效仍待接通，不能把来源提取或 prefab 生成视为三类领奖窗口已可游玩。
 
-该批载荷已通过 Unity 2022.3.57f1c2 导入／编译和 `ProjectTools.Validate`；原三类结果窗的 Button 绑定与离散启用时刻3.183333／2.8／2.416667秒均与原曲线核对，共用原动画按各窗实际目标子集分别保存，避免转换结果互相覆盖。新增六份 prefab、十份被引用动画及技能图标基础资产已入工程，既有运行 prefab 未在本次批量覆盖。Map10／Map11 图形 Play Mode 的移动、HUD、小地图、女神激活、英雄奖励、金币采集／刷新、探寻窗口／拖动／十连及冷读回归通过，并已查看实际截图；使用内置屏与 。遗失女神结果控制器及实际领奖交互仍未完成，也未构建或发布本批 Windows Player。
+该批载荷已通过 Unity 2022.3.57f1c2 导入／编译和 `ProjectTools.Validate`；原三类结果窗的 Button 绑定与离散启用时刻3.183333／2.8／2.416667秒均与原曲线核对，共用原动画按各窗实际目标子集分别保存，避免转换结果互相覆盖。新增六份 prefab、十份被引用动画及技能图标基础资产已入工程，既有运行 prefab 未在批量覆盖。Map10／Map11 图形 Play Mode 的移动、HUD、小地图、女神激活、英雄奖励、金币采集／刷新、探寻窗口／拖动／十连及冷读回归通过，并已查看实际截图；使用内置屏与 。遗失女神结果控制器及实际领奖交互仍未完成，也未构建或发布 Windows Player。
 
 原始 APK 保留，旧版云端目录按用户要求清理；如需重建，显式启用 `Apk(reuse_current_cache=True)`，直接读取当前871缓存中大小／MD5符合旧清单且SHA256符合真实下载凭据的同哈希文件，保留真实来源版本和URL。此选项不会恢复旧缓存，也不会以新版同名变化资源填充旧输入。
 

@@ -8,15 +8,21 @@
 
 统一解释本地单机的开放条件。适用于人物突破、养成、地图与功能入口；世界阶段和赛季记录仍独立存在。
 
-以上为 Unity / C# 的目标范围，尚未完整接入和验收。
+## 原始官方实现
+
+官方条件对象分别检查个人等级／阶位、材料、主线／探索、NPC 资格、服务器阶位及日历／注册天数；客户端消费这些条件，不等同于取得全部服务器判定实现。
+
+### 待迁移的规则与表现
+
+个人等级、人物阶位、材料、主线目标、探索进度、NPC 原邀请资格和冷却继续读取固定版本原配置。活动持续时间、停止挑战、阶段推进及圣兽／双影的期次刷新继续有效。
+
+条件解释分别经过基础、玩法和地图调用路径；`NpcAdventureUnlockCondition` 的 `NeedUnlock=false` 保留否定分支语义，不把正反条件同时判定为满足。
 
 ## 完整还原部分
 
 已有 [OfflineOpeningPolicy.Evaluate](../../unity/Assets/Game/Runtime/Offline/State/OfflineOpeningPolicy.cs) 与 [OfflineConditionAdapter.Evaluate](../../unity/Assets/Game/Runtime/Offline/State/OfflineConditionAdapter.cs) 的门槛策略及委托适配。通用官方条件目录、地图和玩法调用方尚未完成接线，未取得端到端验证结论。
 
 ## 自定义实现
-
-以下为已确认的单机处理要求，尚未代表完整 Unity 流程已经接入或验收。
 
 用户已明确取消服务器阶位、服务器／注册天数及地图／功能的日历开放门槛。 对相应原条件返回单机结果，原条件和配置仍保留供追溯。
 
@@ -26,7 +32,7 @@
 
 ### 暂不开放的联动活动及伙伴
 
-用户于2026-10-21明确决定：暂不开放以下两个联动活动及其全部关联伙伴。
+用户已明确决定：暂不开放以下两个联动活动及其全部关联伙伴。
 
 | 活动 | 官方活动标识 | 全部关联伙伴 |
 | --- | --- | --- |
@@ -42,20 +48,10 @@
 ## 尚未实现
 
 - 通用条件、人物突破、地图与玩法入口统一接入已确认的本地开放政策；个人资格、原配置及NPC NeedUnlock否定分支继续校验。
-- 恢复官方 Unity 代码、配置、prefab、资源与调用关系，完成本地事务、实际入口和界面接线。
-- 在 Unity 中验证规则、正常操作、动画／音效、保存恢复和失败回滚；相关参考测试的旧通过结果不计入 Unity 验收。
 
-### 待迁移的规则与表现
+- 完成 Unity 实际入口、交互／表现、存档与失败恢复验证，并发布对应 Windows 可执行版本。
 
-以下要求均须在 Unity 中重新接入和验证；它们描述迁移目标，不构成当前实现结论。
-
-个人等级、人物阶位、材料、主线目标、探索进度、NPC 原邀请资格和冷却继续读取固定版本原配置。活动持续时间、停止挑战、阶段推进及圣兽／双影的期次刷新继续有效。
-
-条件解释分别经过基础、玩法和地图调用路径；`NpcAdventureUnlockCondition` 的 `NeedUnlock=false` 保留否定分支语义，不把正反条件同时判定为满足。
-
-### 依据与代码定位
-
-以下为官方来源、既有规则与回归参考；
+## 代码与资源入口
 
 [ServerRankUnlockDaysCondition](../../.tools/source-packages/official-code/common-source/Common/ServerRankUnlockDaysCondition.cs)、[PlayerRankAtServerRankCondition](../../.tools/source-packages/official-code/common-source/Common/PlayerRankAtServerRankCondition.cs)、
 
