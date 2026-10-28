@@ -473,6 +473,8 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 职业图集几何：按 APK 优先解析当前版男女 atlas，男模型所选版本来自已校验云端，女模型仍使用 APK 中相同哈希的包。保留 19,805 个区域、929 页描述及原裁边／旋转；11,716 个网格的 165,309 组 UV 和 22,230 个区域附件的 88,920 个四角在隔离 Play Mode 与独立仿射参考比较通过，最大 UV 差 `5.96046448E-08`、原坐标差 `0.0000305175781`。输入、转换工具、原 atlas 对象来源和输出哈希见 `profession-ui/atlas-geometry-source-manifest.json`。生产贴图采样和完整角色渲染未覆盖。
 
+职业角色外观生命周期：从当前 Assembly-CSharp 与 Console 程序集迁入完整角色组件、运行数据／HSV／接口／性别类型及三个原地址方法；输入、端口、边界、验证器和闭包哈希见 `profession-ui/appearance-character-source-manifest.json`。隔离 Play Mode 核对加载／释放、皮肤／部件／染色顺序和原错误分支通过，原覆盖旧 split 句柄行为未改写。主面板闭包剩 11 类运行组件、无缺失 GUID；正式资源和骨骼服务未接入，不能视为完整职业页面。
+
 ## 技能首页与安装流程复核
 
 2026-10-13：复核固定版本 `854_156383` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。

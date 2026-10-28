@@ -298,6 +298,10 @@
     "path": "assets/reference/profession-ui/atlas-geometry-source-manifest.json",
     "sha256": "c5848e1d52574e67b9d69042796a8ed3f24cdd3a3448660b4ef160b229bdc1bb"
   },
+  "appearance_character": {
+    "path": "assets/reference/profession-ui/appearance-character-source-manifest.json",
+    "sha256": "3570feee08f737bb21a78f691aba46c436bcb89c24e7870c06ab5dd8aaf5b411"
+  },
   "native_curves": {
     "path": "assets/reference/profession-ui/native-curves-source-manifest.json",
     "sha256": "007f22f0dd2be5eb07b831a7a7722f00836c03d28bfe2ff0c0f700a791d2bf77"
@@ -360,7 +364,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "dd0c4e73b2b5432faa1f023da399317440afaf3e348f2c1043e932d74eb5a8ca"
+    "sha256": "1c03ae3e2e186118ad846ac9ec7beb84fd7d0e50f045ed294678782c34572e86"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",

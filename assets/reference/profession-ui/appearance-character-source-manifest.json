@@ -1,0 +1,137 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "code_manifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "ports": [
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem.Runtime/HsvChange.cs",
+        "sha256": "e431fa9f9371620184884e54275f973912fb1e44857e91d089a6b954a739c497"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/HsvChange.cs",
+        "sha256": "c0a78cb4077dc30e7714ebf0dd2f374e0306f391c071d34933906218be3c67cf"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/HsvChange.cs.meta",
+        "sha256": "12144cd5a3a0f051e07fff71e603fc81add161aae9e3685c0cd29f8804fc0f4e"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem.Runtime/AppearanceRuntimeData.cs",
+        "sha256": "8ed07f536d8662bbf48009543afd0efb63418ace6ff859bcf3b64c405b812356"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceRuntimeData.cs",
+        "sha256": "2627dfc127d50c9ccd107406a7d21774a7ad9795047763584de123e010befe03"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceRuntimeData.cs.meta",
+        "sha256": "5da70442d70441469e9494403296658f11645c71bc8eefedcddbcdceecde88b5"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem.Runtime/IAppearanceComponent.cs",
+        "sha256": "0cf4b8ed45817f59ad38031bb72503d8fef2a1b02fbf79ba7f7c530c130a71a4"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IAppearanceComponent.cs",
+        "sha256": "c21352162bc08fa33098c2e8601473a6ffdb4c81c4ea4ba99dcdf54d21f74930"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IAppearanceComponent.cs.meta",
+        "sha256": "c0be9ac5589d37dbf7431646a234930f6d5eea2bd33316b9cc9a8975589fe511"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/Sex.cs",
+        "sha256": "721cc2dac07d1f838cbb2cd9d3553d5f5d971245d9ad56ddc4afae00892ae893"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/Sex.cs",
+        "sha256": "e4f55e149cc3b4ff5432a6d7fb91ee60be778d1c466ef9d5453019d6fa45f43f"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/Sex.cs.meta",
+        "sha256": "d904fd9e775b5dada8c936adfa586728fe024a97d0db93c3b6ca2e3ed2801081"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem.Runtime/AppearanceAddressUtils.cs",
+        "sha256": "97d0805f9ab9c32bddbbd4cee9321acae6653441c512f539b52c1320ec95be22"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceCharacterPaths.cs",
+        "sha256": "81a0fdd2e1c78edc43fd27bc826a1e0b630dd11eed4fdd0d9c44b98857c47e0b"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceCharacterPaths.cs.meta",
+        "sha256": "84adec1a12c36dd2af6065ee92a26ef44904b194584f45663bb5f40d692a77d4"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem.Runtime/AppearanceCharacter.cs",
+        "sha256": "0e0d22b9da23692a8fd2e3b098061210b8fa734dd6de1687cbf4ee780838eedb"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceCharacter.cs",
+        "sha256": "dc4a212b52f40146b63e34a4307fa95bbd104702689e8f8e39a65ab823622cf4"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceCharacter.cs.meta",
+        "sha256": "9392e87aeaf85747cf9e8db0ad1e8b03fcd8fe3e8a7734c72ab899f7ebee33c6"
+      }
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_profession_appearance_character.py",
+    "sha256": "b85f93be4bc5460f969a49a6fdea46edf3bcac0e0c384b0e0e8ea9457724745d"
+  },
+  "native_binding_closure": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/appearance-character-binding-closure.json",
+    "sha256": "a73ca9bb438e849bd8b3981f3e08095fd6d4c165f68f10ff85a029abb67e4ff6"
+  },
+  "bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceCharacterBindings.cs",
+      "sha256": "361b7d1c92ae72eb880041f7213eb77bbc13d5a60a6be5a98810fa96f9f51760"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceCharacterBindings.cs.meta",
+      "sha256": "15ea3f772672d0d60360099563f7fa99d03c799f5f6090df3aa5a649a0501575"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionAppearanceCharacterValidation.cs",
+      "sha256": "72790a0b5ab3e26e11369d80be449206573c8f3fdfd87857c38501823732eb81"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionAppearanceCharacterValidation.cs.meta",
+      "sha256": "e8fd6a0d57fdbb812bd420e173d2cd87b5b183eaf3eb91407fa1b03767ffc69f"
+    }
+  ],
+  "operation": "Copy every original AppearanceCharacter method and serialized field, plus the full runtime-data/HSV/interface/sex types. Scope AppearanceAddressUtils to its three exact character source-path methods. Adapt asset handles, config and part calls through explicit native bindings and skeleton assets to ScriptableObject references. Retain release-before-validity, skin ordering, empty/part filtering, dye copying, append duplicates, handle overwrite/dispose order and event-free execution. No skeleton SDK implementation is used.",
+  "validated_scope": "Unity 2022.3.57f1c2 Play Mode: source asset/result/dispose order (including the original overwritten split-handle behavior), exact sex enum values and character paths, release-before-validity, ordered skin filtering/append duplicates, part routing, copied dye entries, one-channel dye cache, null/invalid error branches, runtime-data reference/default constructors and destruction pass. Main native closure has 881 assets, 87 script types, 11 pending types and no missing GUIDs. Production native skeleton renderer and resource/part bindings are not installed by this component port.",
+  "limitations": [
+    "Actual source character assets, native skeleton renderer, part handlers and full profession UI remain unbound. This port does not complete skin composition, animation or persistence."
+  ]
+}
