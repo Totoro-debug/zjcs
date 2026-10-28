@@ -99,3 +99,5 @@
 - [地区组件迁移](../../scripts/prepare_unity_map13_region_components.py)、[代码／配置来源](../../assets/reference/official-map/map13-label-components-code-source-manifest.json)、[88 份原标签转换](../../scripts/prepare_unity_map13_region_labels.py)、[原生来源](../../assets/reference/official-map/map13-native-region-labels-source-manifest.json)、[Unity 绑定](../../assets/reference/official-map/map13-native-region-labels-binding-source-manifest.json)、[导入检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13RegionLabelTools.Binding.cs)及[完整分区／标签 Play Mode](../../unity/Assets/Game/Editor/Map13/OfficialMap13RegionLabelAcceptance.cs)。组件入口 `NativeMap13Labels/`，数据为 `Resources/Map13/Native/region-label-data`／`combat-rating-config`，原字典 IL 为 `Source/native-label-dictionary-il.json`。
 
 新增素材与程序尚未生成完整快照，不能声称已进入 `asset-pack` 备份。历史 `854_156383` 的 materials／dialogs／minimap／lighting-13 来源独立保留，不作为当前 Unity 完整功能证据。
+
+公共剧情依赖恢复器现支持 Map14；默认 Map13 依赖载荷保持逐字节相同（SHA256 `edda63c09c8f94f0a57745b0f5445114d338436229065b327c713a6726a8587a`），仅补充原资产路径／GUID 绑定证据及工具来源哈希。

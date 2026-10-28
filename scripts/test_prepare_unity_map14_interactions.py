@@ -29,7 +29,8 @@ class CurrentDragonStatueSources(unittest.TestCase):
             self.assertEqual([value["Type"] for value in row["Components"]], list(original))
             self.assertEqual({value["Type"]: json.loads(value["Json"]) for value in row["Components"]}, original)
         runtime = json.loads((migration.ROOT / "unity/Assets/Game/Resources/Map14/stories.json").read_bytes())
-        self.assertEqual(runtime["entityTemplates"], self.entities)
+        self.assertEqual(runtime["entityTemplates"][:len(self.entities)], self.entities)
+        self.assertEqual([row["EntityClassId"] for row in runtime["entityTemplates"][len(self.entities):]], [8402, 8454])
 
     def test_hero_weights_status_identity_and_region_source_order(self):
         payload = migration.interaction_payload(self.templates, self.tables)

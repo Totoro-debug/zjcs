@@ -19,6 +19,71 @@
       "sha256": "2bdecd8914261c66b502ed527c264ab07cf4c1de78f6f1923c306511b759c585"
     }
   ],
+  "resourceBindings": {
+    "CombatDoorActive": {
+      "configuredPath": "Assets/ScriptableConfig/Story/Map/CombatDoorActive.asset",
+      "assetPath": "Assets/ScriptableConfig/Story/Map/CombatDoorActive.asset",
+      "guid": "69828f2163c4bd4489c33080efc2f36b",
+      "bundle": "defaultpackage_assets_scriptableconfig_story_map.bundle",
+      "configuredPathMatches": true
+    },
+    "ProfessionTutor3_public_fashi": {
+      "configuredPath": "Assets/ScriptableConfig/Story/Profession/ProfessionTutor3_public_fashi.asset",
+      "assetPath": "Assets/ScriptableConfig/Story/Profession/ProfessionTutor3_public_fashi.asset",
+      "guid": "0f4c5bfc0af4a034f8bf5fd5dc725769",
+      "bundle": "defaultpackage_assets_scriptableconfig_story_profession.bundle",
+      "configuredPathMatches": true
+    },
+    "ProfessionTutor3_public_zhanshi": {
+      "configuredPath": "Assets/ScriptableConfig/Story/Profession/ProfessionTutor3_public_zhanshi.asset",
+      "assetPath": "Assets/ScriptableConfig/Story/Profession/ProfessionTutor3_public_zhanshi.asset",
+      "guid": "523d68d47f2cfa74bbfeb4d10d0d5f24",
+      "bundle": "defaultpackage_assets_scriptableconfig_story_profession.bundle",
+      "configuredPathMatches": true
+    },
+    "PuzzleEnd": {
+      "configuredPath": "Assets/ScriptableConfig/Story/Map/PuzzleEnd.asset",
+      "assetPath": "Assets/ScriptableConfig/Story/Map/PuzzleEnd.asset",
+      "guid": "1c0397ece69b8664ca87b04de05e634a",
+      "bundle": "defaultpackage_assets_scriptableconfig_story_map.bundle",
+      "configuredPathMatches": true
+    },
+    "PuzzleEndRabbit": {
+      "configuredPath": "Assets/ScriptableConfig/Story/Map/PuzzleEndRabbit.asset",
+      "assetPath": "Assets/ScriptableConfig/Story/Map/PuzzleEndRabbit.asset",
+      "guid": "185dc921b205c6b4faf4a2cae69e09c3",
+      "bundle": "defaultpackage_assets_scriptableconfig_story_map.bundle",
+      "configuredPathMatches": true
+    },
+    "PuzzleSolve": {
+      "configuredPath": "Assets/ScriptableConfig/Story/Map/PuzzleSolve.asset",
+      "assetPath": "Assets/ScriptableConfig/Story/Map/PuzzleSolve.asset",
+      "guid": "be8711c5409f10c4cb87b91f97121550",
+      "bundle": "defaultpackage_assets_scriptableconfig_story_map.bundle",
+      "configuredPathMatches": true
+    },
+    "PuzzleSolveReset": {
+      "configuredPath": "Assets/ScriptableConfig/Story/Map/PuzzleSolveReset.asset",
+      "assetPath": "Assets/ScriptableConfig/Story/Map/PuzzleSolveReset.asset",
+      "guid": "3e35b945417a97b4196a308132101a1a",
+      "bundle": "defaultpackage_assets_scriptableconfig_story_map.bundle",
+      "configuredPathMatches": true
+    },
+    "PuzzleSolveResetRabbit": {
+      "configuredPath": "Assets/ScriptableConfig/Story/Map/PuzzleSolveResetRabbit.asset",
+      "assetPath": "Assets/ScriptableConfig/Story/Map/PuzzleSolveResetRabbit.asset",
+      "guid": "605ad28a9506ebd41972f1f2aa18f281",
+      "bundle": "defaultpackage_assets_scriptableconfig_story_map.bundle",
+      "configuredPathMatches": true
+    },
+    "WitchStory2": {
+      "configuredPath": "Assets/ScriptableConfig/Story/Entity/WitchStory2.asset",
+      "assetPath": "Assets/ScriptableConfig/Story/Entity/WitchStory2.asset",
+      "guid": "79d6235d7754aa242baf72b2a1e96480",
+      "bundle": "defaultpackage_assets_scriptableconfig_story_entity.bundle",
+      "configuredPathMatches": true
+    }
+  },
   "graphs": {
     "WitchStory2": {
       "source": {
@@ -31009,7 +31074,7 @@
   "tools": [
     {
       "path": "scripts/prepare_unity_map13_story_dependencies.py",
-      "sha256": "d0a6a49ad198afa3e6091cb01354767f106fdef6f0749848d4f17e3aecabb15b"
+      "sha256": "499487fe242dda8660f0ca7ddaefbf7c04c2dc34119df0dac4b5e77df574f23b"
     },
     {
       "path": "scripts/official_ec_codec.py",
@@ -31018,6 +31083,10 @@
     {
       "path": "scripts/official_unity_schema.py",
       "sha256": "5ec21a2e168115e596dfeac36ace6a786f08e2d05eb56e7b9760c6a3ccb15e58"
+    },
+    {
+      "path": "scripts/official_manifest.py",
+      "sha256": "51c8f0e50a5196f34a4767f938cc59ab724018cdcd3b3e0f39b154277582756d"
     }
   ],
   "officialCode": [
@@ -31208,6 +31277,10 @@
     {
       "path": ".tools/source-packages/current/871_156598/official-code/client-source/StoryInvokeNode.cs",
       "sha256": "b0cfc98e80d1ac46b4f09a0cbeb4a375816dd7e42b50556c4c004c4139d389cb"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/StoryResourceManager.cs",
+      "sha256": "728ec19dfbfd1080ac9a477562fb5b46b8f599c8552dd4ae9bf2c2dc13d2afee"
     },
     {
       "path": ".tools/source-packages/current/871_156598/official-code/client-source/StringFormatNode.cs",

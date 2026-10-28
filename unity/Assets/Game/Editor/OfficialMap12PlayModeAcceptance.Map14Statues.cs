@@ -44,8 +44,8 @@ namespace Zjcs.Editor
         private static void ValidateMap14InteractionData()
         {
             var story = JsonUtility.FromJson<Map10RuntimeStoryData>(Resources.Load<TextAsset>("Map14/stories").text);
-            if (story.manifest != "871_156598" || story.entityTemplates.Length != 169
-                || story.entityTemplates.Sum(row => row.Components.Length) != 1483
+            if (story.manifest != "871_156598" || story.entityTemplates.Length != 171
+                || story.entityTemplates.Sum(row => row.Components.Length) != 1505
                 || story.witchInfos.Length != 14 || story.witchResultEffects.Length != 22
                 || story.witchPeriodicityAwards.Length != 7 || story.witchPeriodicityAwards.Sum(row => row.Weight) != 100)
                 throw new InvalidDataException("Map14 current template/statue source closure differs.");
@@ -66,7 +66,7 @@ namespace Zjcs.Editor
                 || catalog.heroes.Any(hero => hero.PeriodicAwards.Length != 3
                     || !hero.PeriodicAwards.Select(award => award.Weight).SequenceEqual(new[] { 5, 25, 70 })))
                 throw new InvalidDataException("The mainline Map14 interaction getter selected another map/version.");
-            Debug.Log("Map14 current interaction data passed: 169 ordered EC templates/1483 components, 14 witch activations, 22 results, 7 periodic awards, own summon stage 20004 and four hero types.");
+            Debug.Log("Map14 current interaction data passed: 171 ordered EC templates/1505 components including public story followers, 14 witch activations, 22 results, 7 periodic awards, own summon stage 20004 and four hero types.");
         }
 
         private static IEnumerator VerifyMap14StatueSteps(OfficialMap11UiData data, Transform parent,

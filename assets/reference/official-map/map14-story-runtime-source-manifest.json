@@ -35,8 +35,8 @@
     },
     {
       "path": "scripts/prepare_unity_map14_story_runtime.py",
-      "bytes": 8972,
-      "sha256": "2140d9f8e99493c0096fd4f219609352f5b618d5ccb387568ed05082f3351180"
+      "bytes": 11509,
+      "sha256": "86e6888ebe5670e0ceb95cbe700e68c3536379ca45353c68b945de72a9d3ea73"
     },
     {
       "path": "scripts/prepare_unity_map14_interactions.py",
@@ -52,13 +52,33 @@
       "path": "scripts/prepare_unity_map13_story_runtime.py",
       "bytes": 20049,
       "sha256": "83e3a2cfcede892f9637abec8e3eccc47c9af8c062becc1fdf613c2afa691823"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/story-dependencies.json",
+      "bytes": 349396,
+      "sha256": "7cd1c81c5b4fb190ef26ebab1d9fedfa9bfa6602200bb6a11049f1c3866d0d6e"
+    },
+    {
+      "path": "assets/reference/official-map/map14-story-dependencies-source-manifest.json",
+      "bytes": 632507,
+      "sha256": "b937fcb8e2a2aeee9ea1e6328d8735f200fcd0e1ce18af62d122e453f9b9330c"
+    },
+    {
+      "path": "scripts/prepare_unity_map14_story_dependencies.py",
+      "bytes": 266,
+      "sha256": "bf44be97bacf8e291a3b5de7bbd81d15393ee452ec52eb65e793cb9badd5e8e9"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_story_dependencies.py",
+      "bytes": 15199,
+      "sha256": "499487fe242dda8660f0ca7ddaefbf7c04c2dc34119df0dac4b5e77df574f23b"
     }
   ],
   "outputs": [
     {
       "path": "unity/Assets/Game/Resources/Map14/stories.json",
-      "bytes": 4609029,
-      "sha256": "e9e6a523d57101e9f3753ba720c005ea836d57c094ff859e195e2736561cfebc"
+      "bytes": 5073314,
+      "sha256": "3e213550926a79e968c2f4823f90a79f9486cf766f9571a452480cdda66f32de"
     },
     {
       "path": "unity/Assets/Game/Resources/Map14/stories.json.meta",
@@ -67,20 +87,22 @@
     }
   ],
   "counts": {
-    "graphs": 85,
-    "mainStories": 64,
+    "graphs": 94,
+    "mainStories": 73,
     "subgraphs": 21,
-    "nodes": 1333,
-    "dialogueGroups": 190,
-    "dialogueLines": 417,
-    "dialogRoles": 15,
+    "nodes": 1488,
+    "dialogueGroups": 207,
+    "dialogueLines": 442,
+    "dialogRoles": 16,
     "mapLogicTags": 60,
-    "mapTalkEntries": 72,
-    "mapTalkConditions": 17,
-    "fixedRewards": 8,
+    "mapTalkEntries": 79,
+    "mapTalkConditions": 18,
+    "fixedRewards": 9,
     "handInItems": 1,
-    "entityTemplates": 169,
-    "templateComponents": 1483,
+    "entityTemplates": 171,
+    "quickBuys": 1,
+    "followerClasses": 5,
+    "templateComponents": 1505,
     "witchInfos": 14,
     "witchResultEffects": 22,
     "witchPeriodicityAwards": 7

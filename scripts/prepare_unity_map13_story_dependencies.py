@@ -10,6 +10,7 @@ from UnityPy.classes.PPtr import PPtr
 from official_ec_codec import Formats
 from official_tables import Constructors
 from official_map_codec import unpack
+from official_manifest import read_asset_manifest
 from official_unity_schema import ScriptSchemas
 from prepare_unity_map13_sources import encode, meta, sha, source_path, write
 
@@ -19,11 +20,17 @@ OUTPUT = SOURCE / "story-dependencies.json"
 RECEIPT = ROOT / "assets/reference/official-map/map13-story-dependencies-source-manifest.json"
 
 
-def build():
+def build(map_class_id=13):
+    if map_class_id not in (13, 14):
+        raise ValueError("Unsupported current mainline story dependency map")
+    SOURCE = ROOT / f"unity/Assets/Official/World/Map/{map_class_id}/Source"
+    BASE_RECEIPT = ROOT / f"assets/reference/official-map/map{map_class_id}-source-manifest.json"
+    OUTPUT = SOURCE / "story-dependencies.json"
+    RECEIPT = ROOT / f"assets/reference/official-map/map{map_class_id}-story-dependencies-source-manifest.json"
     base = json.loads(BASE_RECEIPT.read_bytes())
     apk = Apk.current()
-    if base["manifest"] != apk.version or base["mapClassId"] != 13:
-        raise ValueError("Original Map13 source version differs")
+    if base["manifest"] != apk.version or base["mapClassId"] != map_class_id:
+        raise ValueError("Original Map" + str(map_class_id) + " source version differs")
     expected = {Path(r["path"]).name: r["sha256"] for r in base["outputs"]}
     inputs = [BASE_RECEIPT]
     def read(name):
@@ -37,21 +44,39 @@ def build():
         if sha((ROOT / record["path"]).read_bytes()) != record["decoded_sha256"]:
             raise ValueError("Official assembly differs from the pinned source")
     schemas = ScriptSchemas(code_root=code)
-    logic = [r for r in tables["Map/map_logic_entity_tag"] if r["MapClass"] == 13]
+    logic = [r for r in tables["Map/map_logic_entity_tag"] if r["MapClass"] == map_class_id]
     tags = {(f"entity_{r['EntityClass']}_name", r["Tag"]) for r in logic}
     tags.update((f"entity_{i}_name", "") for i in templates)
     talks = [r for r in tables["Map/map_talk"] if (r["EntityId"], r["Tag"]) in tags]
     story_rows = {r["StoryName"]: r for r in tables["story"]}
     required = {r["TalkId"] for r in talks if r["TalkId"]} - set(original)
     roots = {}
-    for folder in sorted({story_rows[n]["ResPath"].split("/")[0].lower() for n in required}):
-        bundle = "defaultpackage_assets_scriptableconfig_story_" + folder + ".bundle"
+    manifest_assets = read_asset_manifest(apk.source.manifest_bytes("DefaultPackage"))
+    resource_bindings = {}
+    bundles = set()
+    for name in sorted(required):
+        configured = "Assets/ScriptableConfig/Story/" + story_rows[name]["ResPath"] + ".asset"
+        matches = [row for row in manifest_assets if row["path"] == configured]
+        if not matches:
+            # Preserve the configured path discrepancy as evidence. Recovery
+            # requires a single official StoryGraph asset with the configured
+            # StoryName, its actual manifest GUID and bundle, then exact m_Name
+            # and object-type checks below. No graph or condition is invented.
+            matches = [row for row in manifest_assets if row["path"].startswith("Assets/ScriptableConfig/Story/")
+                       and Path(row["path"]).name == name + ".asset"]
+        if len(matches) != 1:
+            raise ValueError("Original story asset identity is unresolved or ambiguous: " + name)
+        row = matches[0]
+        resource_bindings[name] = dict(configuredPath=configured, assetPath=row["path"], guid=row["guid"],
+                                       bundle=row["bundle"], configuredPathMatches=row["path"] == configured)
+        bundles.add(row["bundle"])
+    for bundle in sorted(bundles):
         for path, ptr in apk.container(bundle):
             name = Path(path).stem
             if name not in required: continue
             obj = ptr.deref()
             if obj.type.name != "MonoBehaviour" or obj.read(check_read=False).m_Script.read().m_ClassName != "StoryGraph": continue
-            if not path.endswith("/" + story_rows[name]["ResPath"] + ".asset"):
+            if path != resource_bindings[name]["assetPath"] or obj.read(check_read=False).m_Name != name:
                 raise ValueError("Original story resource path differs: " + name)
             if name in roots and roots[name].path_id != obj.path_id: raise ValueError("Ambiguous original story: " + name)
             roots[name] = obj
@@ -92,7 +117,7 @@ def build():
             for field in ("m_GameObject", "m_Script", "m_Enabled", "graph", "position", "Mono", "IsMonoShow"): data.pop(field, None)
         graphs[name] = dict(nodes=nodes, properties={k: v for k, v in definition.items() if k != "nodes"})
         graph_sources[name] = dict(source=apk.provenance(graph), object_sha256=sha(graph.get_raw_data()))
-    followers = sorted({i for graph in original.values() for n in graph["nodes"].values()
+    followers = sorted({i for graph in [*original.values(), *graphs.values()] for n in graph["nodes"].values()
         if n["_type"] == "AddNpcFollowerNode" for i in n["NpcClassIds"]})
     extra_templates, template_sources = {}, {}
     formats = Formats(code)
@@ -165,23 +190,25 @@ def build():
         if not path.endswith(".json") or Path(path).stem not in graphs: continue
         obj = ptr.deref(); raw = obj.read().m_Script.encode("utf8", "surrogateescape")
         server[Path(path).stem] = dict(records=json.loads(raw), source=apk.provenance(obj), object_sha256=sha(obj.get_raw_data()))
-    data = dict(manifest=apk.version, mapClassId=13, mapTalkEntries=talks, primaryStories=sorted(required), graphs=graphs,
+    data = dict(manifest=apk.version, mapClassId=map_class_id, mapTalkEntries=talks, primaryStories=sorted(required), graphs=graphs,
         dialogues=dialogues, localization=localized, followerEntityClassIds=followers, entityTemplates=extra_templates, quickBuys=quick_buys, serverStoryRecords=server)
     write(OUTPUT, encode(data)); meta(OUTPUT)
-    tools = [Path(__file__).resolve(), ROOT / "scripts/official_ec_codec.py", ROOT / "scripts/official_unity_schema.py"]
+    tools = [Path(__file__).resolve(), ROOT / "scripts/official_ec_codec.py", ROOT / "scripts/official_unity_schema.py", ROOT / "scripts/official_manifest.py"]
+    if map_class_id == 14: tools.append(ROOT / "scripts/prepare_unity_map14_story_dependencies.py")
     source_files = [code / "client-source" / (n["_type"] + ".cs") for g in graphs.values() for n in g["nodes"].values()]
+    source_files += [code / "client-source/StoryResourceManager.cs"]
     source_files += list(formats.sources.values())
     for name in constructors.sources:
         source_files += [code / "common-source" / folder / (name + ".cs") for folder in ("Common", "Common.LubanGen")]
-    receipt = dict(manifest=apk.version, mapClassId=13, inputs=[dict(path=source_path(p), sha256=sha(p.read_bytes())) for p in inputs],
-        graphs=graph_sources, nodes=node_sources, templates=template_sources, quickBuyTable=quick_source, languages=language_sources, schemas=schemas.records,
+    receipt = dict(manifest=apk.version, mapClassId=map_class_id, inputs=[dict(path=source_path(p), sha256=sha(p.read_bytes())) for p in inputs],
+        resourceBindings=resource_bindings, graphs=graph_sources, nodes=node_sources, templates=template_sources, quickBuyTable=quick_source, languages=language_sources, schemas=schemas.records,
         tools=[dict(path=source_path(p), sha256=sha(p.read_bytes())) for p in tools],
         officialCode=[dict(path=source_path(p), sha256=sha(p.read_bytes())) for p in sorted(set(source_files)) if p.is_file()],
         outputs=[dict(path=source_path(p), sha256=sha(p.read_bytes())) for p in (OUTPUT, Path(str(OUTPUT) + ".meta"))],
         counts=dict(mapTalkEntries=len(talks), primaryStories=len(required), extraGraphs=len(graphs), extraNodes=sum(len(g["nodes"]) for g in graphs.values()),
             followerClasses=len(followers), extraEntityTemplates=len(extra_templates), quickBuys=len(quick_buys), dialogueLines=sum(len(rows) for groups in dialogues.values() for rows in groups.values())),
-        operation="Recover original Map13 MapTalk shared graph/subgraph closure and follower EC templates missing from the map-local source selection; preserve raw node order/ports, source field values and Chinese text. No server behavior is inferred; runtime binding remains required.")
-    write(RECEIPT, encode(receipt)); apk.archive.close(); print("Map13 story dependencies:", receipt["counts"], flush=True)
+        operation=f"Recover original Map{map_class_id} MapTalk shared graph/subgraph closure and follower EC templates missing from the map-local source selection; preserve raw node order/ports, source field values and Chinese text. No server behavior is inferred; runtime binding remains required.")
+    write(RECEIPT, encode(receipt)); apk.archive.close(); print("Map" + str(map_class_id) + " story dependencies:", receipt["counts"], flush=True)
     return data
 
 

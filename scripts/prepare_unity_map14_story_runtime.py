@@ -47,6 +47,37 @@ def build() -> dict:
     if len(story_rows) != 74 or set(story_rows) - set(graphs):
         raise ValueError("Map14 story table or graph closure differs from the pinned source.")
 
+    dependency_path = SOURCE / "story-dependencies.json"
+    dependency_receipt_path = ROOT / "assets/reference/official-map/map14-story-dependencies-source-manifest.json"
+    dependency_receipt = read_json(dependency_receipt_path)
+    if dependency_receipt.get("manifest") != VERSION or dependency_receipt.get("mapClassId") != 14:
+        raise ValueError("Map14 public story dependency version differs")
+    pinned_dependencies = {row["path"]: row["sha256"] for row in dependency_receipt["outputs"]}
+    if sha(dependency_path.read_bytes()) != pinned_dependencies.get(dependency_path.relative_to(ROOT).as_posix()):
+        raise ValueError("Map14 public story dependency source changed")
+    dependency = read_json(dependency_path)
+    if set(dependency["graphs"]) & set(graphs):
+        raise ValueError("Map14 public story dependency duplicates a map-local graph")
+    graphs.update(dependency["graphs"])
+    for target, extra in ((dialogues, dependency["dialogues"]),
+                          (localization, dependency["localization"])):
+        for key, value in extra.items():
+            if key in target and target[key] != value:
+                raise ValueError("Conflicting original Map14 public story data: " + key)
+            target[key] = value
+    entity_ids = {row["EntityClassId"] for row in entity_templates}
+    for identity, components in dependency["entityTemplates"].items():
+        if int(identity) in entity_ids:
+            raise ValueError("Duplicated Map14 follower EC template")
+        entity_templates.append({"EntityClassId": int(identity), "Components": [
+            {"Type": name, "Json": json.dumps(value, ensure_ascii=False, separators=(",", ":"))}
+            for name, value in components.items()]})
+        entity_ids.add(int(identity))
+    all_story_rows = {row["StoryName"]: row for row in tables["story"]}
+    for name in dependency["graphs"]:
+        if name in all_story_rows:
+            story_rows[name] = all_story_rows[name]
+
     subgraph_names = {
         node.get("subgraph_name", node.get("SubgraphName", ""))
         for graph in graphs.values()
@@ -58,7 +89,9 @@ def build() -> dict:
         raise ValueError("Map14 story subgraph closure is incomplete: "
                          + repr(sorted(subgraph_names - set(graphs))))
 
-    talk_entries = [row for row in tables["Map/map_talk"] if row.get("TalkId") in graphs]
+    talk_entries = dependency["mapTalkEntries"]
+    if any(row.get("TalkId") and row["TalkId"] not in graphs for row in talk_entries):
+        raise ValueError("Map14 public MapTalk graph closure is incomplete")
     all_conditions = {row["ClassId"]: row for row in tables["conditions"]}
     pending_conditions = {
         condition_id
@@ -98,7 +131,7 @@ def build() -> dict:
         raise ValueError("Map14 dialogue references a missing official role.")
     option_rows = [row for row in tables["story_option_dialog"] if row["StoryName"] in graphs]
     fixed_ids = {node["fixedRewardId"] for story in records for node in story["nodes"]
-                 if node["type"] == "GetFixAwardNode"}
+                 if node["type"] in ("GetFixAwardNode", "CanGetFixedRewardNode")}
     fixed_rows = [row for row in tables["fixed_reward"] if row["Id"] in fixed_ids]
     if {row["Id"] for row in fixed_rows} != fixed_ids:
         raise ValueError("Map14 story graph references a missing fixed reward.")
@@ -127,6 +160,7 @@ def build() -> dict:
                          "Items": [{"ItemId": int(item_id), "Count": count}
                                    for item_id, count in row["Items"].items()]}
                         for row in hand_in_rows],
+        "quickBuys": dependency["quickBuys"],
         "nativeDialogs": [],
         "playables": [],
         "stories": main_stories,
@@ -142,7 +176,10 @@ def build() -> dict:
         "operation": "Normalize the pinned Map14 story graphs, subgraph closure, localized dialogue, roles, options, configured fixed rewards, hand-in item rules, ordered EC templates and map-specific witch results for the shared offline runtime.",
         "inputs": [source_record(path) for path in [SOURCE_RECEIPT, *inputs.values(), Path(__file__), ROOT / "scripts/prepare_unity_map14_interactions.py",
                     ROOT / "scripts/prepare_unity_map11_runtime_data.py",
-                    ROOT / "scripts/prepare_unity_map13_story_runtime.py"]],
+                    ROOT / "scripts/prepare_unity_map13_story_runtime.py",
+                    dependency_path, dependency_receipt_path,
+                    ROOT / "scripts/prepare_unity_map14_story_dependencies.py",
+                    ROOT / "scripts/prepare_unity_map13_story_dependencies.py"]],
         "outputs": [source_record(OUTPUT), source_record(OUTPUT.with_name(OUTPUT.name + ".meta"))],
         "counts": {"graphs": len(records), "mainStories": len(main_stories),
                    "subgraphs": len(subgraphs), "nodes": sum(len(row["nodes"]) for row in records),
@@ -153,6 +190,8 @@ def build() -> dict:
                    "mapTalkEntries": len(talk_entries), "mapTalkConditions": len(talk_conditions),
                    "fixedRewards": len(fixed_rows), "handInItems": len(hand_in_rows),
                    "entityTemplates": len(entity_templates),
+                   "quickBuys": len(dependency["quickBuys"]),
+                   "followerClasses": len(dependency["followerEntityClassIds"]),
                    "templateComponents": sum(len(row["Components"]) for row in entity_templates),
                    **{key: len(value) for key, value in witch.items()}},
         "pendingRuntimeBindings": ["Map14 map-talk entries and conditions", "native dialogs",
