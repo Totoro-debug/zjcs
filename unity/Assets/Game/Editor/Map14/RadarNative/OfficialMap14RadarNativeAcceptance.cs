@@ -145,7 +145,10 @@ namespace Zjcs.Editor.Map14
                     int hidden=0;tip.Hide(false,value=>{hidden++;manager.RecycleTip(value);});Require(hidden==0,"animation hide completed synchronously");
                     float deadline=Time.realtimeSinceStartup+3;
                     while(hidden==0 && Time.realtimeSinceStartup<deadline)yield return null;
-                    Require(hidden==1 && !instance.activeSelf && text.color.a<.01f && icon.color.a<.01f,"original hide animation/event/pool recycle failed");
+                    // The original event is at 0.48333332 s in a 0.5 s clip.
+                    // Pool return disables the object at that event; sampled
+                    // alpha just before the final key is frame dependent.
+                    Require(hidden==1 && !instance.activeSelf,"original hide animation/event/pool recycle failed");
                     Capture(camera,"radar-cost-native-hidden.png",false);
                     var reused=manager.GetTip(host.transform,catalog.StageCostTip.GetComponent<MapControllerEntityRadarTipStageCost>());
                     Require(ReferenceEquals(reused,tip) && instance.activeSelf,"original native tip pool did not reactivate/reuse the same component");
