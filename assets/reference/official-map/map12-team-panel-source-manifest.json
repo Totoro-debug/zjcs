@@ -1,0 +1,194 @@
+{
+  "adapters": [
+    {
+      "path": "scripts/prepare_unity_map12_team_panel.py",
+      "sha256": "1e47efd66f840b0c96fc302c9f3223af75eebb21a34364bb99a45f21a5d84bc5"
+    }
+  ],
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "format": 1,
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+      "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+    }
+  ],
+  "limitations": [
+    "Full native TeamPanel/member/button prefabs and isolated DX12 input fixtures are supplied separately. Formal map host, real player/NPC services, equipped skills, roster/formation persistence and battle integration remain pending.",
+    "Only consumed team action/confirmation methods are ported; unrelated client helpers are not replaced by empty methods. Optional HpSpriteSlider retains its contract; the selected TeamPanelItem original pointer is null."
+  ],
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "operation": "Migrate original TeamPanel/member/button lifecycle, event order, selected-target keys, pool size/order, guards, direct leave operation, team-action dismissal confirmation, portrait and HP controls. Recover async bodies from original MoveNext and use Task at the same await boundaries. Project manager/RPC/data/icon services explicitly; preserve the exact Main(-1,-1) ActiveSkill selection and slot-level operations in the host projection. Reuse official UIBase/pools/state/text components and portrait request pipeline. Chat/nearby operations reach approved offline policy.",
+  "originalCode": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TeamPanel.cs",
+      "sha256": "c7e4645ab865294d1a864696364af77dce48b26ea6e53418773c7750bd253a87"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TeamPanelItem.cs",
+      "sha256": "64ed1c0637b7cd11f785c066b5dac23e5ef2e3e3165d46c8aa5340156031b0fa"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TeamPanelItemButton.cs",
+      "sha256": "b1961a722f66d879cc77ed5cc71b0c53988af7d13292ca322b80eca8ab04400a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/HeadCharacterPortrait.cs",
+      "sha256": "7dd14d8735f05c2fe2a6cd9cb1e169ff9a577672f94d44ba38148a97f1cdcc77"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayerUIBase.cs",
+      "sha256": "75c025c1a350a752d92962887fa9d978ce7258f5854df6b968145c5420a89a81"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayerIconMeHpSlider.cs",
+      "sha256": "04ecec847661dd5d21c8026c2a66a4c1858c697ea2b8e10e5230c50faad9b572"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayerIconMeHpSliderNormal.cs",
+      "sha256": "20f1b0d030c7cab4440784249f3f2f9ca63231df048fa5cfa8838c2a6929a24d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayerPlayConfirmEnv.cs",
+      "sha256": "4d12a23d6dffba517b3b66bc759560e4dc454b8d0e6c084437900d6b012e8e26"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayerPlayStateClientUtils.cs",
+      "sha256": "61ae277f6d0e21f2b96e34625a57e2c92fa9a353cd56664777017363f78e379e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/UIToggleStatusBase.cs",
+      "sha256": "3909960d6a42e75197a5b76faa3cd7b375dc5a2e6486b1425697b3605fa97ecb"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/UIToggleObject.cs",
+      "sha256": "f022c13fe487d29ed46d584722c8526d47488fed8be6d96773a109e6ebfd9a36"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-source/Framework/TransformExtensions.cs",
+      "sha256": "79fa1bf15205d678778cc6274b45722eef60e686f0070a3a66f2fc8de21b02c1"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPanel.cs",
+      "sha256": "bb2c28b7793eed310496073a3b204ae2219a941568fddcfe558043670be520b3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPanel.cs.meta",
+      "sha256": "6028138200c254ff704393b6043b98f8fb980bd6f6f749003206876835e513c2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPanelItem.cs",
+      "sha256": "2f4cf1ca6cb1d4470620e8d90e20278eac0dceaadb07325799afd4eb546a2e62"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPanelItem.cs.meta",
+      "sha256": "4bdeebc4fd601224831c7b51d4dd53a0527fb69d29c069529569b74598412726"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPanelItemButton.cs",
+      "sha256": "3a2d3caa1194fc5e0f50b5a1bec5da5d8301b99a968425fe2e924529ad994d9f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPanelItemButton.cs.meta",
+      "sha256": "544b826b793d9c1ee9e269cf53ac507a964f0716cf3b6573557da055a5b596a4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPanelServices.cs",
+      "sha256": "1b49e1735f434e8fa6f877c05bd0d67cc38d73d639931b4b1bca5a14d6cbf7cf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPanelServices.cs.meta",
+      "sha256": "b23ca1a1f310d91fff31bcddaa31242e337a26117e1f49f43f76880adf5f5a2c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamHeadCharacterPortrait.cs",
+      "sha256": "37b529b368bd3d6464e177ab13580251d046deb84e1cae83978242c495bde362"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamHeadCharacterPortrait.cs.meta",
+      "sha256": "af3a1e3864740e905b74ca0f82f520e3116136490ee30bd636cbe3c0f77288d8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamToggleStatusBase.cs",
+      "sha256": "5b4f92b6e3dc25e95aae2649a3eff2ed53697169357b6d2ee0d3f9ab85216eec"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamToggleStatusBase.cs.meta",
+      "sha256": "e97b7a4522be8bac8cd24f1fe443cf868c4cb21d9d420b0f7bac089dd66f405a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamToggleObject.cs",
+      "sha256": "757fda9daf86178df90dcb6e82763abc993fa8a01bf001df6954846aa69a721b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamToggleObject.cs.meta",
+      "sha256": "fd018957c53328fde2081e7d7aa290c09760a64bed946a44a8e73ff4818a114b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPlayerUIBase.cs",
+      "sha256": "e7a3328d30111610636606c9953fb8484638f122bcd8a0f71134035d52d5941e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPlayerUIBase.cs.meta",
+      "sha256": "4c2827b4685bb4ac21870c336c53a32b02d178249ed6827ce63f336063920e1e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPlayerIconMeHpSliderNormal.cs",
+      "sha256": "4142e83a55b3d0f18533babb2ec06d9e3b12fffc3688263c7c215ae98b5cc443"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPlayerIconMeHpSliderNormal.cs.meta",
+      "sha256": "8fe387c38638a475327c00f8dec971c6bdb1645a2632b6114a7e397bf44fe982"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/PlayerPlay/PlayerPlayConfirmEnv.cs",
+      "sha256": "36312bd336ae40e63130196f9e33e874e9e2229b874221bcf4480d63e28d4ae2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/PlayerPlay/PlayerPlayConfirmEnv.cs.meta",
+      "sha256": "bbf36914cdf8800e20c0992368bc4eced4b199f0cbbc07ededb9db58ba93819d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/PlayerPlay/PlayerPlayStateClientUtils.cs",
+      "sha256": "3c87f24f99bedd0d5eb452c7c92f8c369f9b278ff02eaa9657ed6345f527ab3b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/PlayerPlay/PlayerPlayStateClientUtils.cs.meta",
+      "sha256": "fa1b5161ed3cf9a31f0eeef17d01f6fd0f2e3b51c983732443f3ed7647140415"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/Zjcs.Official.TeamUI.asmdef",
+      "sha256": "ee1059f37f503304935c54669964bcf00d4ebf0f931af3658d91de63f57dca71"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.TeamPanelImport.cs",
+      "sha256": "e9add7b80382f1bc6bd53537bac15aa78198a5308d4dc8f5bf8f4fbee7abb6ad"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.TeamPanelImport.cs.meta",
+      "sha256": "f35953cc81abd491049cc7b9c68d1b623317c393433fdaa15b497a830ed12622"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.TeamPanel.cs",
+      "sha256": "daf64e300be4eed46ea72c5e65c8cc8fe820d6b3e6863d1f19b3f0b26a87bf77"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.TeamPanel.cs.meta",
+      "sha256": "82daff102aab0b05679f04bb6080b925b42473d733cd0d828a8fa1a96c4c0e4d"
+    }
+  ]
+}
