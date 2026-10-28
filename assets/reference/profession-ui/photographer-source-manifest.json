@@ -1,0 +1,113 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "ports": [
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/RendererZSortComparer.cs",
+        "sha256": "7ac8b1b3bd026a1aeafd0f5c05c43f72742369f860d72d9cdb5ffd4ac873545d"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/RendererZSortComparer.cs",
+        "sha256": "714ee3c66828f0e9e5e4fcfede546ba4488cdb37612e9bdec5fd8a87a48cd250"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/RendererZSortComparer.cs.meta",
+        "sha256": "0833fe1e24769f4e34938dff12a94803cdd3922824907a0e83249f0bbb9bdfd2"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearancePortraitParticleProvider.cs",
+        "sha256": "f6a37c81babb276c0eb4138f0b78c68f0583ff38c68aa232f09574a928bce013"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearancePortraitParticleProvider.cs",
+        "sha256": "69343a0f094199a3bad9b700804a8d0df3131c530ba19f3c5a938369a7c2d1f3"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearancePortraitParticleProvider.cs.meta",
+        "sha256": "5d888da3e5e389bfcf1fb677c50306770588566b3c81e5fecd199fea4057e021"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/ICharacterPortraitBuilder.cs",
+        "sha256": "6cda2be8342d6d68bcb42524394d4aba26c2d5322cdeaf71228627fbafbadf48"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ICharacterPortraitBuilder.cs",
+        "sha256": "df01ca6494db5b883d2a5c2d5fbfb883f6e887ea55d86f36e0786f58e49130b2"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ICharacterPortraitBuilder.cs.meta",
+        "sha256": "437d17587daa995889004edfe714aace9d83fe29dce7e79430ec995c7f108974"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/CharacterPortraitPhotographer.cs",
+        "sha256": "9f6e3fc08ad5a97ca6cbee7b9548b028bb981b6af54c31afe89be3a9f17bb963"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/CharacterPortraitPhotographer.cs",
+        "sha256": "a59b48beb2dec961142a897f29dd89227be46f40b02d45181d99e3ff6fadc1d6"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/CharacterPortraitPhotographer.cs.meta",
+        "sha256": "ae99ee2638a5a66223928a07c2d11c1aa552a147d511e709e1534bbaec069dc1"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearancePortraitUtils.cs",
+        "sha256": "a861b8c90893e6ac85a6779f472d0b33ede18f5be971139b3cc8ec3bbc04634f"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPortraitRendererCollector.cs",
+        "sha256": "fef9c69ba2eec9d8e13ee10847eb16d6c4137b9b4e5a592ea5acbca2805d0267"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPortraitRendererCollector.cs.meta",
+        "sha256": "59cc9abe3a82db6cda037cfb3d6553754c505bbb7f532e0a1ca9d59cc89b8a48"
+      }
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_profession_photographer.py",
+    "sha256": "21b43ad45b60fea01af75928c8213b54045ec4461a54bb8e411a571382c6d282"
+  },
+  "adapters": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPortraitPhotographerBindings.cs",
+      "sha256": "ca07bcf9d3371cf2bf401f03f2518f24957dcc4c0de1e82e170d2d7f98e757d5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPortraitPhotographerBindings.cs.meta",
+      "sha256": "86d381aeb9bb10e3a64b7059fb13cd3e414038588f8dead1700757f020a4e92a"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionPhotographerValidation.cs",
+      "sha256": "4ddb183587e97e77dd2b62b44d6d6e04b57b00c64ce2cc761447d62d143eccfa"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionPhotographerValidation.cs.meta",
+      "sha256": "a9af6f1774b09effef5a6116bfeaac4cb7df30092cf4a85cfe3797fc6a4472bf"
+    }
+  ],
+  "settings": {
+    "path": "assets/reference/profession-ui/portrait-settings-source-manifest.json",
+    "sha256": "f2c1af8608a3bd10dbc47ada1a180badb4fab9e871d3213457a70f4bb78c96b4"
+  },
+  "texture_lifecycle": {
+    "path": "assets/reference/profession-ui/portrait-lifecycle-source-manifest.json",
+    "sha256": "41b56be3c7fa90d936293015a461c62ed68e287509d854a11754565a54f7506f"
+  },
+  "operation": "Copy original camera/RenderTexture/CommandBuffer/material-submesh capture, builder caching, texture-pool readback, exception boundaries and release order. Port the complete original particle-provider and descending world-Z comparer, plus the two original renderer collectors. Adapt appearance/studio-builder/separator/part-handler access to explicit interfaces for the independent native backend; no skeleton runtime is used and no placeholder character component is installed.",
+  "validated_scope": "Unity 2022.3.57f1c2 Direct3D Play Mode: real GPU capture at original 260x310 and 100x120 dimensions, transparent background and last non-null submesh material, camera parameters, builder caching, original call/release order and three expected setup failures; renderer/separator/part/particle collection, original provider cache and color mask. Actual output viewed. Geometry, appearance and renderer graph are fixtures; no real character or full profession-page validation.",
+  "limitations": [
+    "The original studio prefab, full appearance preparation/builders and production renderer graph are not bound. A test renderer graph does not prove live character rendering or profession UI completion."
+  ]
+}

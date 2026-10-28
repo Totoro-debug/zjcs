@@ -447,6 +447,8 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 免费原生动画适配的曲线来源见 `profession-ui/native-curves-source-manifest.json`。输入为当前男女骨骼及拆分动画的已验证二进制与 MIT 格式解码结果，固定工具及每个原始输入哈希逐项核对；新增适配不读取或依赖 Spine runtime。`ProfessionNativeCurve` 将三种原待机动作的全部 1,171 条标量骨骼轨道映射到 Unity 原生加权曲线，保留 5,177 个原始关键帧及线性／阶跃／Bezier 参数；隔离 Play Mode 对照独立曲线反解验证 19,537 个采样，最大绝对差 `0.00022315979`。该结论仅覆盖曲线求值，不覆盖完整骨骼姿态、约束、网格、换装或职业界面画面；未生成角色替代图。
 
+职业肖像拍摄：原 `CharacterPortraitPhotographer`、`AppearancePortraitParticleProvider`、`RendererZSortComparer`、构建器接口和两个原收集方法已迁入；保留相机／CommandBuffer／临时 RT、子网格材质顺序、纹理池读回与异常／释放边界。来源与代码哈希见 `profession-ui/photographer-source-manifest.json`。隔离 Direct3D Play Mode 实际验证两组原尺寸、透明背景、子网格结果、原收集／排序／粒子 ColorMask、构建器缓存及三个设置失败分支，GPU 图片已查看。角色、构建器和渲染图为夹具，原 studio、真实角色及完整职业页仍未绑定；未构建发布或生成完整素材快照。
+
 ## 技能首页与安装流程复核
 
 2026-10-13：复核固定版本 `854_156383` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。

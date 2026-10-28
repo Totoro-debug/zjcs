@@ -28,6 +28,8 @@
 
 原 `AppearanceConfig` 及其九个值类型／枚举已完整迁入；配置直接取自 APK，保留 13 类皮肤及基础／可设置标记、四组附加皮肤、三个挂点动画组、男女覆盖 ID、1,742 条有符号 64 位皮肤哈希和 466 条骨骼路径。隔离 Unity 导入和实际 Play Mode 逐项核对全部字段、查询返回的原列表／实例、延迟字典、重复键异常及异常后部分缓存、哈希追加不去重／排序与反向删除，均通过；变更测试只修改克隆，不写入正式配置。此配置不包含渲染器，真实角色、studio 和完整职业页接线仍未完成。来源见[外观配置](../../assets/reference/profession-ui/appearance-config-source-manifest.json)，代码入口为 `AppearanceConfig.cs`，资源入口为 `Assets/Official/ProfessionUI/Portrait/AppearanceConfig.asset`。
 
+原 `CharacterPortraitPhotographer` 的相机、临时 RenderTexture、CommandBuffer、材质／子网格绘制、纹理池读回、构建器缓存及异常／释放顺序已迁入；两个原渲染器收集方法、粒子提供器和世界 Z 倒序比较器一并迁移。外观准备、构建器及渲染后端通过显式接口连接，尚未安装原 studio prefab 或正式角色。隔离 Direct3D Play Mode 使用测试网格，实际检查原 260×310／100×120 尺寸、透明背景、最后一个非空子网格材质、相机参数、缓存与调用／释放次序；原根渲染器／分段／挂件／粒子收集、粒子缓存与 ColorMask 以及三条设置失败分支通过，GPU 输出图片已查看。测试网格不代表真实角色画面或职业页完成。来源见[原肖像拍摄与收集](../../assets/reference/profession-ui/photographer-source-manifest.json)。
+
 独立的 `ProfessionNativeCurve` 将原三种待机动作（`home/idle_01`、`100/idle_01`、`200/idle_01`）的标量骨骼轨道转为 Unity 加权 `AnimationCurve`，保留原时间、数值、绝对 Bezier 控制点、线性／阶跃分段及首关键帧之前不应用的语义；不使用 Spine runtime。男女共 1,171 条曲线、5,177 个关键帧，隔离 Play Mode 以每个原关键帧、每段三个内部时间及两端边界共 19,537 个点，对照独立二分反解的三次 Bezier，最大绝对差 `0.00022315979`，最大归一化差 `0.0000860095`，满足本数值检查的 `0.0002 + 0.000005 × abs(value)` 容差。未输出角色画面，也未完成骨骼世界变换、附件组合、IK／变换／物理约束及实际角色绑定，不能作为动作视觉一致性的结论。来源见[原生曲线适配](../../assets/reference/profession-ui/native-curves-source-manifest.json)。
 
 两份原始字体由官方 `FontAssetFontConfig` 的路径、长度和 MD5 取回。原 `MPLUSRounded1c-Medium Atlas` 是 0×0、无像素载荷的动态 Alpha8 图集，已恢复并验证原生导入。当前含动态物品／配置的主面板依赖检查覆盖 881 个资产、87 种脚本、8 种托管类型和 7 个 shader，断开 GUID 为 0；尚有 15 种运行组件及相关服务未接入，主要是外观预览、离屏角色渲染、玩家信息和音频对象，不能视为原生职业界面已经可运行。
