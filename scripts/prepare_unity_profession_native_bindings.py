@@ -26,7 +26,8 @@ ALIASES = {
     "ClampingScrollRect": "WorldClampingScrollRect", "SafeArea": "WorldSafeArea",
     "MaintainGlobalScaleUI": "WorldMaintainGlobalScaleUI", "LayoutElementClamper": "WorldLayoutElementClamper",
     "CountRedDotImage": "WorldCountRedDotImage", "PopupWindow": "WorldPopupWindow", "PreviewTool": "WorldPreviewTool",
-    "UIBloomGroup": "WorldUIBloomGroup",
+    "UIBloomGroup": "WorldUIBloomGroup", "BgDialogElement": "WorldBgDialogElement",
+    "ItemProgress": "WorldItemProgress",
 }
 STANDARD = {"Image", "RawImage", "Button", "Mask", "RectMask2D", "ScrollRect", "ContentSizeFitter", "LayoutElement",
             "HorizontalLayoutGroup", "VerticalLayoutGroup", "GridLayoutGroup", "AspectRatioFitter", "GraphicRaycaster", "Slider", "Shadow"}
@@ -60,6 +61,8 @@ def runtime_script(original):
         return paths[0]
     if name in ("TextMeshProUGUI", "TMP_FontAsset"):
         return ROOT / "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime" / (name + ".cs")
+    if name == "TMPEffect":
+        return ROOT / "unity/Assets/Game/Runtime/Official/World/NativeText/TMPEffect.cs"
     if name == "UIParticle":
         return ROOT / "unity/Assets/Game/Runtime/Presentation/Opening/OfficialCoffeeUIParticle/UIParticle.cs"
     name = ALIASES.get(name, name)
@@ -70,7 +73,7 @@ def runtime_script(original):
     return None
 
 
-def build(scope="main"):
+def build(scope="main", bind_shaders=True):
     cache = CACHE / "typed"
     exported = cache / "export/ExportedProject/Assets"
     proof_path = ROOT / "assets/reference/profession-ui/native-export-source-manifest.json"
@@ -103,8 +106,32 @@ def build(scope="main"):
             raise ValueError("Recovered zero-size atlas conflicts with a converter output")
         index[row["guid"]] = row["native_relative_path"]
         restored[row["native_relative_path"]] = path
-    seeds = [ORIGINAL] if scope == "main" else sorted(path.relative_to(exported).as_posix()
-        for path in (exported / "Prefabs/UI/Profession").glob("*.prefab"))
+    dynamic_proof = None
+    if scope == "main-dynamic":
+        dynamic_path = ROOT / "assets/reference/profession-ui/dynamic-resources-source-manifest.json"
+        dynamic_proof = json.loads(dynamic_path.read_bytes())
+        if dynamic_proof["manifest"] != proof["manifest"]:
+            raise ValueError("Dynamic profession resource source version differs")
+        for row in dynamic_proof["native_assets"]:
+            path = ROOT / row["path"]
+            if sha(path) != row["sha256"] or sha(path.with_name(path.name + ".meta")) != row["meta_sha256"] or guid(path) != row["guid"]:
+                raise ValueError("Restored dynamic profession asset changed: " + str(path))
+            if row["guid"] in index:
+                raise ValueError("Restored dynamic profession GUID conflicts with converter output")
+            index[row["guid"]] = row["native_relative_path"]
+            restored[row["native_relative_path"]] = path
+        seeds = [ORIGINAL] + [row["native_relative_path"] for row in dynamic_proof["resources"]]
+        for row in dynamic_proof["resources"]:
+            path = restored.get(row["native_relative_path"], exported / row["native_relative_path"])
+            if sha(path) != row["export_sha256"] or guid(path) != row["export_guid"]:
+                raise ValueError("Dynamic profession resource export changed: " + str(path))
+    elif scope == "main":
+        seeds = [ORIGINAL]
+    elif scope == "all":
+        seeds = sorted(path.relative_to(exported).as_posix()
+            for path in (exported / "Prefabs/UI/Profession").glob("*.prefab"))
+    else:
+        raise ValueError("Unknown native profession binding scope: " + scope)
     selected, missing, scripts, script_uses, managed, shaders = {}, [], {}, Counter(), Counter(), []
     queue = [(path, "explicit original prefab") for path in seeds]
     while queue:
@@ -142,7 +169,7 @@ def build(scope="main"):
                        binding=list(MANAGED[key]) if key in MANAGED else None) for key, count in sorted(managed.items())]
     shader_proof_path = ROOT / "assets/reference/profession-ui/shader-bindings-source-manifest.json"
     shader_bindings = {}
-    if shader_proof_path.exists():
+    if bind_shaders and shader_proof_path.exists():
         shader_proof = json.loads(shader_proof_path.read_bytes())
         if shader_proof["manifest"] != proof["manifest"]:
             raise ValueError("Native profession shader version differs")
@@ -162,7 +189,8 @@ def build(scope="main"):
         generator=dict(path=Path(__file__).resolve().relative_to(ROOT).as_posix(), sha256=sha(Path(__file__))),
         assets=selected, script_bindings=scripts, pending_scripts=pending,
         managed_reference_types=references, shaders=shaders, shader_bindings=shader_bindings, pending_shaders=pending_shaders, missing=missing,
-        dynamic_resources="Original service-loaded resources (reward icons, rule popup, portraits and tutor windows) require explicit source-backed seeds before installation.")
+        verified_dynamic_resources=None if dynamic_proof is None else dict(path=dynamic_path.relative_to(ROOT).as_posix(), sha256=sha(dynamic_path)),
+        dynamic_resources="Reward icons and rule popup have explicit source-backed seeds in main-dynamic scope; portrait and tutor resources remain incomplete.")
     dest = cache / ("native-bindings-" + scope + ".json")
     dest.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print("Native profession binding closure:", len(selected), "assets;", len(scripts), "script types;", len(pending), "pending scripts;", len(references), "managed types;", len(shaders), "shaders;", len(pending_shaders), "pending shaders;", len(missing), "missing GUIDs")
@@ -176,5 +204,5 @@ def build(scope="main"):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--scope", choices=("main", "all"), default="main")
+    parser.add_argument("--scope", choices=("main", "main-dynamic", "all"), default="main")
     build(parser.parse_args().scope)

@@ -7,7 +7,7 @@ import re
 from official_apk import Apk, ROOT
 from prepare_battle_hud_materials import shader_text
 from prepare_unity_profession_native_inputs import CACHE
-from prepare_unity_profession_native_bindings import guid
+from prepare_unity_profession_native_bindings import guid, build as native_plan
 
 RECEIPT = ROOT / "assets/reference/profession-ui/shader-bindings-source-manifest.json"
 
@@ -43,8 +43,7 @@ def checked_programs(programs):
 
 
 def build():
-    plan_path = CACHE / "typed/native-bindings-main.json"
-    plan = json.loads(plan_path.read_bytes())
+    plan = native_plan(bind_shaders=False)
     if plan["manifest"] != "871_156598":
         raise ValueError("Unexpected original profession version")
     entity_path, entity = load("assets/reference/official-map/map13-entity-shaders-source-manifest.json")
@@ -115,6 +114,7 @@ def build():
         operation="Follow the recovered profession dependency closure; match each selected original shader CAB/path ID and raw SHA-256 to an existing official GLES-to-HLSL translation. Reuse existing native shader GUIDs and preserve every original material reference, property and keyword. No substitute shader or generated UI.",
         limitations=["This source check does not prove actual profession UI rendering. Native prefab installation, appearance animation and interactive validation remain pending."])
     RECEIPT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    native_plan()
     print("Verified profession shader bindings:", len(bindings), "original objects;", sum(len(x["programs"]) for x in bindings), "program variants")
     return result
 

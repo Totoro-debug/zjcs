@@ -397,9 +397,9 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 职业页的官方实现为 `ProfessionOverviewPanel`、`ProfessionTreePanel`、`ProfessionTreePanelItem`、`ProfessionPanel`、`ProfessionUpgradePanel`、`ProfessionChangePanel`、`ProfessionPromotionPanel`；等级属性、消耗与奖励继续核对官方 `profession_base`、`level_prop`、`profession_level_cost` 和 `achievement`。旧 `ui.json` 节点投影和历史本地接线不作为 Unity 原生 prefab 迁移或可玩验证的完成依据，当前状态见[职业功能页](../../docs/features/professions.md)。
 
-当前原生转换从 APK 和已校验的 `871_156598` 官方资源取得 355 个 bundle 的依赖闭包；职业 prefab 包 MD5 为 `66728446397356c9e2febcd2ebf9f057`，与 APK 的 `854_156383` 同名包一致。`scripts/prepare_unity_profession_native_inputs.py` 严格恢复职业包 8357 个、规则弹窗包 241 个组件及字体／外观／提示图依赖，共 14035 个组件的序列化字段，写入、重开并逐字段对比；所有未更改对象保持原字节。Spine、Wwise 和布局组件仅恢复用于转换的真实序列化 schema，不构造替代 runtime。程序集、原生 metadata、类型表、工具、原始／转换输入哈希见 [native-input-source-manifest.json](profession-ui/native-input-source-manifest.json)。
+当前原生转换从 APK 和已校验的 `871_156598` 官方资源取得 357 个 bundle 的依赖闭包；职业 prefab 包 MD5 为 `66728446397356c9e2febcd2ebf9f057`，与 APK 的 `854_156383` 同名包一致。`scripts/prepare_unity_profession_native_inputs.py` 严格恢复职业包 8357 个、规则弹窗包 241 个、奖励图标包 1900 个、说明弹窗包 100 个组件及字体／外观／提示图依赖，共 16035 个组件的序列化字段，写入、重开并逐字段对比；所有未更改对象保持原字节。Spine、Wwise 和布局组件仅恢复用于转换的真实序列化 schema，不构造替代 runtime。程序集、原生 metadata、类型表、工具、原始／转换输入哈希见 [native-input-source-manifest.json](profession-ui/native-input-source-manifest.json)。
 
-`prepare_unity_profession_native_export.py` 复用独立 AssetRipper 1.3.14 导出和反向恢复工具，把临时有类型向量还原为原始托管引用注册表。1485 个导出资产中的 1791 个注册表、3313 条记录、12000 个对象引用、1665 组打包数组和 132427 个值已核对，包含 CAB／对象身份、RID、原始顺序、字段、标量、浮点位值和完整层级身份，其中 25 个为空注册表。凭据见 [native-export-source-manifest.json](profession-ui/native-export-source-manifest.json)。这些结果仍是转换缓存；尚未完成所有官方运行时组件、材质引用和原生 prefab 的显式绑定，不能视为可运行界面。
+`prepare_unity_profession_native_export.py` 复用独立 AssetRipper 1.3.14 导出和反向恢复工具，把临时有类型向量还原为原始托管引用注册表。1485 个导出资产中的 1853 个注册表、3377 条记录、12734 个对象引用、1665 组打包数组和 134878 个值已核对，包含 CAB／对象身份、RID、原始顺序、字段、标量、浮点位值和完整层级身份，其中 26 个为空注册表。凭据见 [native-export-source-manifest.json](profession-ui/native-export-source-manifest.json)。这些结果仍是转换缓存；尚未完成所有官方运行时组件、材质引用和原生 prefab 的显式绑定，不能视为可运行界面。
 
 职业主页面立绘按 `ProfessionSettings.mColors` 的男女 GUID，从 APK YooAsset `AssetTable` 定位原角色 Sprite，保留透明像素、尺寸、PPU、pivot 和 border。38 个职业的男女映射复用 12 个唯一图片，进入 `OfficialCharacterAssetCatalog.sprites` 显式绑定；不复制多份相同图片。原始 bundle、版本、MD5、对象、GUID 和输出 SHA256 见 [portraits-source-manifest.json](profession-ui/portraits-source-manifest.json)。职业树须由原 `ProfessionCharacterPortrait`／`ProfessionAppearance` 使用官方骨骼、网格、外观和动作构建，不能以主页面立绘代替。
 
@@ -410,6 +410,12 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 `prepare_unity_profession_tipdot_sources.py` 直接迁移原红点聚合、激活、条件、图读取、linker 和计数显示代码，保留原 `SafeAction` 去重／快照／可重入语义；只读玩家、解析器及图生命周期接口尚待实际接入。原始代码、枚举常量、32 个迁入文件、图导入校验和输入输出哈希见 [tipdot-source-manifest.json](profession-ui/tipdot-source-manifest.json)。`prepare_unity_profession_tipdot_probe.py` 在隔离 Unity 工程导入原 2 张图、16 个节点，验证 6 种托管类型、字段、预设、条件数据、端口及完整连接顺序，完成后删除本次探针资产；不重建图拓扑。
 
 职业主面板的 7 个 shader 按原 CAB／对象 ID／原始 SHA256，复用地图模块已机械转换的官方 GLES 程序。`prepare_unity_profession_shader_bindings.py` 核验全部原始程序凭据、原生源码与 GUID，灰化程序重新生成后逐字节核对；来源和绑定见 [shader-bindings-source-manifest.json](profession-ui/shader-bindings-source-manifest.json)。隔离 Unity 已验证 7 个绑定及 662 组原始程序的 1324 个 Windows D3D 阶段编译，未将其计为职业 prefab 的实际渲染验证。此次仅新增代码和来源映射，未生成完整素材快照，也未发布可执行版本。
+
+`prepare_unity_profession_dynamic_sources.py` 从所选版本的原始成就、物品和规则提示 TextAsset 完全解码三张 Luban 表，记录全部构造器／字节哈希；只将职业组 10、四种奖励定义和 `ProfessionLevelInfo` 条目与旧打包投影逐项核对，不把整份历史配置标成当前版本。原 `ItemIconManager` 的 ID 覆盖与 `IconConfigPool` 类型覆盖／默认分支确认四种奖励均选择 APK 中的 `ItemIconDefault`；`RuleDialog` 也按原调用取回。来源、实际 prefab／Sprite 对象、资源地址、转换和加载闭包见 [dynamic-resources-source-manifest.json](profession-ui/dynamic-resources-source-manifest.json)。`RuleDialog`、`TipInfo` 代码已迁入并通过隔离 Unity 编译，规则数据接口与实际弹窗调用仍待连接。现有 `BgDialogElement`、`ItemProgress` 及原生代码恢复的 `TMPEffect` 经来源／输出哈希核对后复用。
+
+单张奖励图标的导出 PNG importer pivot 与原 Sprite 不符，`prepare_unity_profession_reward_sprites.py` 改为恢复 4 个原生 Sprite 的原矩形、pivot、PPU、border、顶点／索引字节、UV 变换、渲染键和纹理引用；4 张原 ASTC 纹理用既有解码器按原颜色空间／UNORM8 逐 mip 解码成原生 RGBA32 Texture2D，保留原采样和可读标记，不二次压缩。隔离 Unity 实际导入后验证全部几何、UV、纹理设置，以及 4 张纹理 GPU 读回像素的 SHA256，全部通过；尚未验证职业列表中的实际画面和鼠标交互。加入服务动态资源后的闭包为 871 个资产、84 种脚本，尚有 25 种脚本待迁移，断开 GUID 为 0。没有构建或发布职业可执行版本。
+
+奖励包中的 `GachaOneRewardGo` 按实际反编译字段顺序恢复序列化 schema，保留原 `StateSwitcher<bool>` 配置／owner 与 Wwise Event 字段；严格解码覆盖整个包，不以跳过组件解决失败。原生 YAML 校验器已修正 YAML 1.1 将对象名 `On`／`Off` 误解为布尔值的问题，同时保持打包数组的原始数字词法；独立回归测试及全部新增原生注册表／引用比对通过。
 
 ## 技能首页与安装流程复核
 

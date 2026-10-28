@@ -39,6 +39,9 @@ def _float(loader, node):
 
 NativeLoader.add_constructor("tag:yaml.org,2002:int", _integer)
 NativeLoader.add_constructor("tag:yaml.org,2002:float", _float)
+# Unity serializes bool fields as 0/1. Unquoted words such as On/Off are
+# legitimate object/string names; YAML 1.1's bool resolver must not change them.
+NativeLoader.add_constructor("tag:yaml.org,2002:bool", lambda loader, node: node.value)
 HEADER = re.compile(r"(?m)^--- !u!\d+ &(-?\d+)\n")
 
 

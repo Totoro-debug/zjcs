@@ -60,6 +60,22 @@
       "scope": "Original five statuses, update order, native condition-prefab creation, grouping and tutor routing; appearance, map, tip and detail services are injected."
     },
     {
+      "official": "client-source/RuleDialog.cs",
+      "official_sha256": "88deae4491e04d2d6ad7ebf1282eba1e05dfb98da8a049e7ee044b92c901e3db",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/RuleDialog.cs",
+      "runtime_sha256": "c8d63e8ad0f53bd845af14ad9acbb96361c0719ef6beafbb5b8cccf9b31535a5",
+      "meta_sha256": "fef2d182f4c27ba79cd1711946d7d3b0ab6ef224dee27a4c753beabd85e8598a",
+      "scope": "All original overloads, ordered row reuse/activation, source UIUtils transform reset; original RuleTipInfoParser data is injected."
+    },
+    {
+      "official": "client-source/TipInfo.cs",
+      "official_sha256": "96ea936a1d6b259a60942b726935f2103e94e6ded1e895c12c396f1c50e443a3",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/TipInfo.cs",
+      "runtime_sha256": "4cbfadda4b4f228b273070a5658bd572574446866a6b69e6f8909bd2fbe0cc22",
+      "meta_sha256": "46994ae72fcc67ff655620625ef1b0fed6e3f32811913a72c864d78696ea3fac",
+      "scope": "Original image visibility and localized key/arguments order."
+    },
+    {
       "official": "client-source/PanelTitle.cs",
       "official_sha256": "62caf8ffc1bea0355134c9d96ede3f2f6d9914965ed52f1d9a7c48a47a4d2944",
       "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/PanelTitle.cs",
@@ -200,11 +216,23 @@
   },
   "tipdot": {
     "path": "assets/reference/profession-ui/tipdot-source-manifest.json",
-    "sha256": "700201dc10e5021b23fe7d883aa58e6ea559a07e0474e6598048f3f549ac4d8c"
+    "sha256": "a1638136fe35ebcb409669cb4945c188c8f337b678c6150aa0192189bcb15d7b"
   },
   "shaders": {
     "path": "assets/reference/profession-ui/shader-bindings-source-manifest.json",
-    "sha256": "bc903c04c89cfe99371448dbab5db1a8863e9b9615c351da227225d1a62fe3ad"
+    "sha256": "6509c67d0c7233277be8f52ef7f4f3357d4f1c2be55df0f157e2c21c5f42bd88"
+  },
+  "dynamic_resources": {
+    "path": "assets/reference/profession-ui/dynamic-resources-source-manifest.json",
+    "sha256": "30e363b5d2e0c00de23548f58e8d641ef83c0bfdd486cfe454f4f606b04b85b4"
+  },
+  "rule_adapter": {
+    "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IProfessionRuleTipData.cs",
+    "sha256": "82564b3617e65d38c12b499c431be396cc626def96e59cc1461226903c576344"
+  },
+  "rule_instantiation_source": {
+    "path": ".tools/source-packages/official-code/client-source/UIUtils.cs",
+    "sha256": "b6a88b20df5a8222afafd086f2ae949a5dc661380901bfed6f92449802f57fcf"
   },
   "validation": {
     "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionProgressionValidation.cs",
@@ -212,7 +240,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "90980b2378397309588fe99c7ba42bf14a80583dd7d6f799db45b193001f687a"
+    "sha256": "2780964a1971f83d731aeba87e11eb0b58a1d51b8461ff8dea174896cef8db02"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",

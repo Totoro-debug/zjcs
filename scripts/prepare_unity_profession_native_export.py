@@ -25,7 +25,7 @@ def build(run_converter=False):
         convert(cache)
     proof = ROOT / 'assets/reference/profession-ui/native-export-source-manifest.json'
     verify_export(receipt_path=receipt, component_path=receipt,
-                  roots=[BUNDLE], cache_root=cache, proof_path=proof,
+                  roots=source.get("roots", [BUNDLE]), cache_root=cache, proof_path=proof,
                   expected_counts=None, entry_path=Path(__file__),
                   map_class_id=None, subject='profession UI')
     compact = {key: value for key, value in source.items()
