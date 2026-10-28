@@ -1,0 +1,142 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapControllerEntityRadarTipFastKill.cs",
+      "sha256": "f7d97e268d68d5c899b5b4ff7b70bd2c6dbba6c6749805c45d6ba3d8005291cf"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/MapUtils.cs",
+      "sha256": "c61cc6fd38cb18ce4f42a72d96d93c78fe3792c0412415c25f58dcd0d9009dcd"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntityHandler.cs",
+      "sha256": "fe35786dcc2c2f369b162cfe35b15375e77ae33383e1ac743ac824b545af45d7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntityUtils.cs",
+      "sha256": "2b2d26dafea17d28732ce76d03cc7f89e47f5d74c56f9753f7ecf2a6d14563cb"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EnumExt.cs",
+      "sha256": "245e7b2e1352e2e86a3e85227bf8dc0e36b6b3d080c6070d67a403443b805d52"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IStageBehStageFast.cs",
+      "sha256": "194283d3b930ea29084d80d3b5bb1aa0e5ed7612fb5c45c78d09993698b20858"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapStageFastForwardType.cs",
+      "sha256": "cba4e36d112585588a9311d14b0d2332699aeacd79f602be4b844928131bc638"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GameFastType.cs",
+      "sha256": "b66717cbfcb48f7ff241cc5dc7065c21ca5c87df353a637a482ba3bf8b0c35e7"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadar/MapControllerEntityRadarTipBase.cs",
+      "sha256": "4771367103884805d3802f582cb22bdfff8f86e46819c6e155b3baede95984cd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/LegacyWorldStages/LegacyWorldStageBindings.cs",
+      "sha256": "daf17b1714c932a86fce12a9b25776949007bcd16c8e91ac09366a3146346668"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map14_radar_fast_kill_tip.py",
+      "sha256": "83c82c7b8338fada7312fb3719e89bc2b067b2e08a1553f26d4664845a99b3b4"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadarFastKill/MapControllerEntityRadarTipFastKill.cs",
+      "sha256": "f1e555d51d7ad52d962c84aba5a7011674214c3919f8c1dcda645508e1274357"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadarFastKill/MapControllerEntityRadarTipFastKill.cs.meta",
+      "sha256": "849e88ee8e4564426d03891c4cb39d7a46d07c229d2c79898e094a95ffc1202f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadarFastKill/RadarFastKillBindings.cs",
+      "sha256": "92e56df18e7169511a85142f5a4ecb9f11dec3c63d6d63fa17328b819b746337"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadarFastKill/RadarFastKillBindings.cs.meta",
+      "sha256": "45f15ff8f0fde895b015795555beb158890ee00152a2af1e2ee6e01130a5a258"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadarFastKill/Zjcs.Official.EntityRadarFastKill.asmdef",
+      "sha256": "39778bef3dcd09731f35ca78309957a86510652ae94a2afbeca712b7b2b0707b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadarFastKill/Zjcs.Official.EntityRadarFastKill.asmdef.meta",
+      "sha256": "c5931643e192b4568fc9716c5d09ac9bb50b4ee3b708a8913d5cc96836e436ca"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadarFastKill.meta",
+      "sha256": "6eaf76eff0a8b41e6ef1bca88f9da7741cdc05f0fe263afcc52ef3160c240d0b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14RadarFastKill/NativeMap14RadarFastKillQueries.cs",
+      "sha256": "5ac43ccb9ca83b573eb9bc38cd96a31d17799d6755cfbecee1b516a80c2269ca"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14RadarFastKill/NativeMap14RadarFastKillQueries.cs.meta",
+      "sha256": "acbe18de340a023bf3286f8ed58bca77d595994e6b93ee7a57cf1ed0d6ce86da"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14RadarFastKill/Zjcs.Offline.World.NativeMap14RadarFastKill.asmdef",
+      "sha256": "2e347cb568da65a84c5bf923040a95f02f271cf288ca31fb5e8dfa6ee91dcd73"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14RadarFastKill/Zjcs.Offline.World.NativeMap14RadarFastKill.asmdef.meta",
+      "sha256": "0727288f484590f81efeb41cceb893c5bbc8e52763e86b471d87ffb64b5c903c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14RadarFastKill.meta",
+      "sha256": "fc18495c57fb729b0e692092ed2d146ff6301714df5b9d52d5471ad0eb36c626"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/RadarFastKill/OfficialMap14RadarFastKillAcceptance.cs",
+      "sha256": "62527734fc8220ef29b3515ba111323f918b67408b7be4cef77ff0fc7a846400"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/RadarFastKill/OfficialMap14RadarFastKillAcceptance.cs.meta",
+      "sha256": "1701be60c71988a43a32a1a69d76101a8ffab675090d765e5da28a29479d99e0"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/RadarFastKill/Zjcs.Editor.Map14.RadarFastKill.asmdef",
+      "sha256": "4015648801b5e98e3114ad745ea45495308fddb4878c70404ab46744a52361e1"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/RadarFastKill/Zjcs.Editor.Map14.RadarFastKill.asmdef.meta",
+      "sha256": "c4c6938f654a40373b297e44651231239cf6bc236cb360398ebf7c4f4a39b50a"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/RadarFastKill.meta",
+      "sha256": "5ea1ec53deae4f73cd1dcec0406dc0cc3f514a08470b1345ba06dda1a3578798"
+    }
+  ],
+  "operation": "Copy complete original fast-game radar hint, retaining lazy service resolution, camp-owner existence guard, region/player reads before redirection, redirected stage lookup and rule argument order. Explicit services supply existing host state. Unchanged Console EntityHandler, MapUtils.GetGameFastType and EnumExt.IsFastGame own camp lookup and fast-game rules.",
+  "validation": {
+    "entry": "Zjcs.Editor.Map14.OfficialMap14RadarFastKillAcceptance.Run",
+    "graphicalPlayMode": true
+  },
+  "limitations": [
+    "Original fast-kill tip prefab and formal map/player/region/parsers/battle/input/UI/save/Windows Player require integration. Hint visibility does not execute or settle combat."
+  ]
+}
