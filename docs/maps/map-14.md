@@ -98,6 +98,8 @@
 
 - 原 `ECWorldStageView`、普通状态配置提供器、配置／交互／事件接口与数据、替换事件接收器、完整 StageComponentType 数值及 `ECPlayableWorldStageHandler` 共 13 份源码，加上原 `MyWorldStage.StageStateCfg` 声明已迁入 `Runtime/Official/EntityWorldStages/`。保留替换事件注册→初始化显示→缓冲事件订阅、先切换显示再转发原组件／前状态／载荷、旧配置临时对象复用、卸载时先释放订阅再注销替换事件和释放配置、起始／循环演出切换、强制可见及地图销毁时停止／解除引用的原分支。共享状态查询和替换／缓冲事件发布为必须提供的宿主边界，事件载荷作为 object 原样转发，不编造状态转换、交互或奖励规则。生成器复跑、源码／依赖／输出哈希及静态元数据检查通过；内置屏 Unity 显式程序集隔离编译与 Play Mode 通过，使用原状态切换器、雕像 Sprite、原出现 prefab 和真实播放器／对象池，实际查看状态显示与粒子画面，并验证配置边界、查询／旧配置转发、事件顺序、替换刷新、起始转循环及强制显示恢复、普通状态停止、地图销毁抑制停止／解绑、卸载后订阅清理和配置操作释放顺序。实体／状态／事件为隔离输入，本轮未执行完整 ProjectTools.Validate，正式规则、交互操作、实体 prefab、地图输入与存档、Windows Player 和发布仍未完成。此分项不替代四类 6570–6573 英雄雕像的旧 `MyWorldStage` 组件链；原对象图已核实它们采用该旧组件链。来源：`map14-entity-world-stage-views-source-manifest.json`。
 
+- 四类英雄雕像根 prefab 的完整原 `MyWorldStage` 客户端类与其实际使用的 `MyComponent` 基类成员已迁入 `Runtime/Official/LegacyWorldStages/`；复用已迁入的原 `StageStateCfg` 字段声明。保留 Awake／开始／结束、先切显示再播放、登场重试、独立非状态循环、显隐与淡入淡出门控、替换／缓冲事件、EC 配置委托、移动后交互开关及重定向查询顺序。根对象的 `MyMapDisplay` 还会加载 `6570_14_view`～`6573_14_view`；四份原显示 prefab 已在当前官方闭包中核实，使用 EC 视图／Animator／精灵／提示点及原循环演出，不能仅迁入旧组件就视为雕像完成。共享状态、可见性与查找是显式必需宿主输入，不由适配层推测规则。隔离程序集 Unity 导入／编译及内置屏 Play Mode 通过，使用原生池化特效验证登场中隐藏再显示重试、登场／状态演出转循环、空／越界状态、替换、查询／重定向、EC 委托、淡入淡出和结束解绑，实际运行画面已查看；根工程静态检查通过。本轮未执行完整工程 `ProjectTools.Validate`，正式原雕像根／显示 prefab 绑定、点击／业务／存档与 Windows Player 尚未完成。来源为 `map14-legacy-world-stage-source-manifest.json`，恢复器为 `scripts/prepare_unity_legacy_world_stage_runtime.py`。
+
 ## 自定义实现
 
 原演出核心以显式中心注入及调用方提供两个原帧阶段替代 DI／R3 注册；日志接入 Unity，移除只用于 Inspector／MessagePack 的属性。调度、数值、状态和回调顺序保留，正式宿主的生命周期接入仍待验证。

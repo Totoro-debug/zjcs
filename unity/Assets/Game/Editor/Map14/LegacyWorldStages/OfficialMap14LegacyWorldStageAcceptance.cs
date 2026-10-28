@@ -1,0 +1,128 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+using Zjcs.Official.EntityViews;
+using Zjcs.Official.EntityViewPlayables;
+using Zjcs.Official.EntityWorldStages;
+using Zjcs.Official.LegacyWorldStages;
+using Zjcs.Official.StoryAttachment;
+using Zjcs.Official.StoryPlayables;
+using Zjcs.Official.StoryPlayableManager;
+using Zjcs.Official.StorySourceFade;
+using Zjcs.Official.ProfessionUI;
+using Zjcs.Official.World;
+using Zjcs.Official.WorldUI;
+using Zjcs.Offline.World.NativeMap13;
+using Zjcs.Offline.World.NativeMap14EntityAssets;
+
+namespace Zjcs.Editor.Map14
+{
+    public static class OfficialMap14LegacyWorldStageAcceptance
+    {
+        private const string Key="Map14.LegacyWorldStage";
+        private static bool started;private static int errors;
+        private static readonly List<string> Trace=new List<string>();
+        private static string Output=>Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+        [InitializeOnLoadMethod] private static void Hook(){if(!SessionState.GetBool(Key,false))return;started=false;errors=0;EditorApplication.update-=Tick;EditorApplication.update+=Tick;EditorApplication.playModeStateChanged-=Mode;EditorApplication.playModeStateChanged+=Mode;}
+        public static void Run()
+        {
+            if(Environment.GetEnvironmentVariable("ZJCS_ISOLATED_ENTITY_VIEWS")=="1")Debug.Log("Explicit world-stage assembly isolation; full ProjectTools.Validate is not executed.");
+            else{var tools=AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("Zjcs.Editor.ProjectTools")).First(t=>t!=null);tools.GetMethod("Validate").Invoke(null,null);}
+            SessionState.SetString(Key+".pipeline",AssetDatabase.GetAssetPath(GraphicsSettings.defaultRenderPipeline));SessionState.SetString(Key+".quality",AssetDatabase.GetAssetPath(QualitySettings.renderPipeline));SessionState.SetInt(Key+".color",(int)PlayerSettings.colorSpace);
+            GraphicsSettings.defaultRenderPipeline=AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>("Assets/Official/World/Map/13/NativePipeline/UniversalRenderPipeline.asset");QualitySettings.renderPipeline=null;PlayerSettings.colorSpace=ColorSpace.Linear;
+            SessionState.SetBool(Key,true);SessionState.SetInt(Key+".result",1);SessionState.SetFloat(Key+".deadline",(float)EditorApplication.timeSinceStartup+240);EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);Hook();EditorApplication.isPlaying=true;
+        }
+        private static void Mode(PlayModeStateChange state){if(state!=PlayModeStateChange.EnteredEditMode||!SessionState.GetBool(Key,false))return;SessionState.SetBool(Key,false);EditorApplication.update-=Tick;Application.logMessageReceived-=Observe;GraphicsSettings.defaultRenderPipeline=AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>(SessionState.GetString(Key+".pipeline",""));QualitySettings.renderPipeline=AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>(SessionState.GetString(Key+".quality",""));PlayerSettings.colorSpace=(ColorSpace)SessionState.GetInt(Key+".color",0);EditorApplication.Exit(SessionState.GetInt(Key+".result",1));}
+        private static void Tick(){if(EditorApplication.timeSinceStartup>SessionState.GetFloat(Key+".deadline",0)){Debug.LogError("World-stage view validation timed out.");EditorApplication.Exit(1);return;}if(started||!EditorApplication.isPlaying||EditorApplication.isCompiling)return;started=true;Application.logMessageReceived+=Observe;new GameObject("Original world-stage view validation").AddComponent<Runner>().StartCoroutine(Verify());}
+        private static void Observe(string text,string stack,LogType type){if(type==LogType.Error||type==LogType.Exception||type==LogType.Assert)errors++;}
+        private static IEnumerator Verify()
+        {
+            var stack=new Stack<IEnumerator>();stack.Push(Steps());while(stack.Count>0){object value;try{var top=stack.Peek();if(!top.MoveNext()){stack.Pop();continue;}value=top.Current;if(value is IEnumerator nested&&!(value is CustomYieldInstruction)){stack.Push(nested);continue;}}catch(Exception e){Debug.LogException(e);EditorApplication.isPlaying=false;yield break;}yield return value;}
+            if(errors==0){SessionState.SetInt(Key+".result",0);Debug.Log("Map14 original legacy MyWorldStage Play Mode passed: native state display, appearance retry/loop, buffered event order, EC delegation, fade/visibility gates, redirect lookup and end subscriptions. Shared state/event/entity inputs are isolated; native statue prefab/map/input/save/Player remain pending.");}EditorApplication.isPlaying=false;
+        }
+        private static void Require(bool value,string message){if(!value)throw new InvalidDataException("World-stage view: "+message);}
+        private static void Set(object target,string field,object value)=>target.GetType().GetField(field,BindingFlags.NonPublic|BindingFlags.Instance).SetValue(target,value);
+        private static MyPlayable Current(MyWorldStage stage)=>(MyPlayable)typeof(MyWorldStage).GetField("mStatePlayable",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(stage);
+        private static MyPlayable Uncontrolled(MyWorldStage stage)=>(MyPlayable)typeof(MyWorldStage).GetField("mLoopPlayable",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(stage);
+        private static bool Forced(ClientVisibilitySupporterBase visibility)=>(bool)typeof(ClientVisibilitySupporterBase).GetField("mIsForceVisible",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(visibility);
+        private static IEnumerator Frames(MyPlayableCenter center,float seconds){float elapsed=0;while(elapsed<seconds){yield return null;elapsed+=Time.deltaTime;center.Update(Time.deltaTime);center.LateUpdate();}}
+        private static IEnumerator Steps()
+        {
+            Application.runInBackground=true;Application.targetFrameRate=60;Trace.Clear();
+            var camera=new GameObject("Original stage display camera").AddComponent<Camera>();camera.orthographic=true;camera.orthographicSize=12;camera.aspect=450f/800;camera.transform.position=new Vector3(0,6,-100);camera.clearFlags=CameraClearFlags.SolidColor;camera.backgroundColor=new Color(.08f,.08f,.08f,1);camera.gameObject.AddComponent<UniversalAdditionalCameraData>();
+            var light=new GameObject("Stage Sprite illumination").AddComponent<Light2D>();light.lightType=Light2D.LightType.Global;
+            var catalog=Resources.Load<NativeMap14EntitySpriteCatalog>("Map14/Native/entity-sprite-catalog");
+            using(var sprites=new NativeMap14EntitySpriteLibrary(catalog))
+            {
+                var source=new GameObject("Isolated original legacy stage source");var entity=source.AddComponent<EntityInput>();var services=new Services();var data=entity.Data.Stage;
+                var bone=new GameObject("CommonEffectSlot");bone.transform.SetParent(source.transform,false);source.AddComponent<AttachAgent>().GenerateBoneMap();var fade=source.AddComponent<FadeBridge>();
+                var owner=source;
+                var displays=Enumerable.Range(0,2).Select(i=>new GameObject("Original legacy state "+i)).ToArray();
+                for(int i=0;i<2;i++){displays[i].transform.SetParent(owner.transform,false);displays[i].transform.localPosition=new Vector3(i*6-3,0,0);var renderer=displays[i].AddComponent<SpriteRenderer>();renderer.sprite=sprites.Require(catalog.sprites.Single(s=>s.originalName=="building_statue_doushi_TaoYuan").key);renderer.sharedMaterial=AssetDatabase.LoadAssetAtPath<Material>("Assets/Official/World/Map/14/NativeEntityMaterials/08c41716e96c66ddcf71bd56dd72f6e2/1419505037369228759.mat");}
+                var displayConfig=WorldStateGameObjectConfig.FromBindings(new WorldStateGameObjectData{GoConfig=new List<WorldStateGameObjectData.StateGameObjectKV>{new WorldStateGameObjectData.StateGameObjectKV{State=0,GameObjects=new List<GameObject>{displays[0]}},new WorldStateGameObjectData.StateGameObjectKV{State=1,GameObjects=new List<GameObject>{displays[1]}}}});
+                var prefab=Resources.Load<NativeMap13AssetCatalog>("Map14/Native/native-chaos-appearance-playable-catalog").Load<GameObject>("dd56c0b7ddba41545a66512acc8f5ea1");
+                Require(prefab.GetComponentsInChildren<Transform>(true).All(t=>GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(t.gameObject)==0),"native dynamic scripts are not fully bound");
+                var visibility=new MapECViewClientVisibilitySupporter(services,null,null,owner.transform);visibility.Register(entity);entity.PublishStart();
+                var scope=new GameObject("Original legacy stage playback scope");var staging=new GameObject("Inactive original stage injection");staging.SetActive(false);var center=new MyPlayableCenter();var factory=new Factory(center,staging.transform);var manager=new MyPlayableManager{ScopeRoot=scope,InstanceFactory=factory,MyPlayableCenter=center,LowMemory=new Zjcs.Official.StoryPlayables.GAction(),ActivePublisher=_=>{},InactivePublisher=_=>{}};
+                var oldFactory=StoryPlayableInstantiation.Resolve;StoryPlayableInstantiation.Resolve=root=>root.IsChildOf(scope.transform)?factory:null;manager.Initialize();manager.OnActivate();var oldSound=OfficialWwiseEvent.Host;OfficialWwiseEvent.Host=new SoundInput();
+                var rows=new List<LegacyWorldStageStateCfg>{new LegacyWorldStageStateCfg{myUIName="isolated zero",myLoopPlayable=prefab},new LegacyWorldStageStateCfg{myUIName="isolated one",myStartPlayable=prefab,myLoopPlayable=prefab},new LegacyWorldStageStateCfg{myUIName="isolated empty"}};
+                var legacy=source.AddComponent<MyWorldStage>();legacy.MyPlayableManager=manager;legacy.MapRootManagerProxy=services;legacy.EcEntityBufferEventHandleModule=services;legacy.myStateCfgs=rows;legacy.myAppearPlayable=prefab;legacy.StageSwitcher=WorldStateSwitcher<int>.FromBindings(owner,new IWorldStateConfig[]{new SwitchInput(),displayConfig});legacy.Bind();
+                Require(ReferenceEquals(legacy.Component,data)&&ReferenceEquals(legacy.myEntity,entity),"original base entity cache/bind differs");
+                Set(legacy,"mStateNotControlLoopPlayable",prefab);Trace.Clear();legacy.OnStart(true);
+                Require(Trace.SequenceEqual(new[]{"switch:0","replace+","buffer+"})&&Current(legacy)&&Uncontrolled(legacy)&&Current(legacy)!=Uncontrolled(legacy)&&displays[0].activeSelf&&!displays[1].activeSelf,"legacy start order/state/uncontrolled-loop differs");
+                var appearance=Current(legacy);visibility.SetEntityVisible(42,false);Require(Current(legacy)==null,"hide did not request original appearance stop");yield return Frames(center,.1f);Require(Current(legacy)==null,"hidden appearance stop must leave loop gated");visibility.SetEntityVisible(42,true);var retried=Current(legacy);Require(retried,"hidden appearance must be retried when visible");
+                float elapsed=0;while(elapsed<4&&Current(legacy)==retried){yield return null;elapsed+=Time.deltaTime;center.Update(Time.deltaTime);center.LateUpdate();}
+                Require(Current(legacy)&&Current(legacy)!=retried,"appearance completion did not start original state loop");yield return Frames(center,.65f);Capture(camera,"legacy-world-stage-original-loop.png");
+                Require(ReferenceEquals(legacy.GetCurStateCfg(),rows[0])&&ReferenceEquals(legacy.GetCurStateInfo(),data.Info)&&legacy.GetStateComponentIndex(StageComponentType.BehStageBattleStele,4)==9&&data.LastSubState==4&&legacy.CanInteractAfterMove(),"legacy state/config/component query differs");Set(legacy,"mCanInteractAfterMove",false);Require(!legacy.CanInteractAfterMove(),"serialized move interaction flag differs");
+                data.Value=1;Trace.Clear();services.Emit(data,0);var start=Current(legacy);Require(Trace.SequenceEqual(new[]{"switch:1"})&&start&&!displays[0].activeSelf&&displays[1].activeSelf,"state switch must precede start playback");
+                elapsed=0;while(elapsed<4&&Current(legacy)==start){yield return null;elapsed+=Time.deltaTime;center.Update(Time.deltaTime);center.LateUpdate();}Require(Current(legacy)&&Current(legacy)!=start,"state-start completion did not start loop");
+                data.Value=2;services.Emit(data,1);Require(Current(legacy)==null&&ReferenceEquals(legacy.GetCurStateCfg(),rows[2]),"empty state must stop old playback");yield return Frames(center,.1f);
+                data.Value=3;Require(legacy.GetCurStateCfg()==null,"out-of-range legacy configuration differs");data.Value=-1;Require(legacy.GetCurStateCfg()==null,"negative state configuration differs");data.Value=0;entity.PublishReplace();Require(Current(legacy)&&legacy.StageSwitcher.State==0,"replacement must reinitialize legacy display and playback");
+                data.Redirect=data;services.Lookup=entity;Require(legacy.GetInteractionRedirectEnt()==entity&&services.LookedUp.Equals(entity.Data.Id),"redirect must use original target entity identifier");services.Lookup=null;Require(legacy.GetInteractionRedirectEnt()==null,"missing redirect entity must return null");data.Redirect=null;Require(legacy.GetInteractionRedirectEnt()==null,"no redirect stage must return null");
+                Trace.Clear();legacy.OnEnd(services.Payload);Require(Trace.SequenceEqual(new[]{"buffer-","replace-"})&&Current(legacy)==null&&services.Subscribers==0&&entity.Replacements==0,"legacy end disposal/removal order differs");yield return Frames(center,.1f);entity.PublishReplace();services.Emit(data,0);visibility.SetEntityVisible(42,false);visibility.SetEntityVisible(42,true);Require(Current(legacy)==null,"ended legacy stage retained input callbacks");
+                // With an ECWorldStageView present the original legacy class
+                // delegates configuration and never drives its legacy switcher.
+                var ecObject=new GameObject("Inactive original EC delegation");ecObject.SetActive(false);ecObject.transform.SetParent(source.transform,false);var driver=ecObject.AddComponent<ECViewDriver>();var ec=new ECWorldStageView{EcEntityBufferEventHandleModule=services};var provider=new ECWorldStageCfgNormalProvider();var ecRows=new List<WorldStageStateCfg>{new WorldStageStateCfg{myUIName="EC delegated",myLoopPlayable=prefab}};Set(provider,"mStateCfgs",ecRows);Set(ec,"mWorldStageCfgProviderData",new ECWorldStageStateCfgBaseProviderItemData{ECWorldStageCfgProvider=provider});Set(driver,"mECViews",new List<IECView>{ec});var life=(IECView)ec;life.Init(new BridgeInput(ecObject,visibility,fade,services,ec));life.Load(entity.Data,true);Trace.Clear();legacy.OnStart(false);Require(!Trace.Any(t=>t.StartsWith("switch:"))&&Current(legacy)==null&&legacy.GetCurStateCfg().myUIName=="EC delegated","legacy EC delegation differs");legacy.OnEnd(null);life.Unload();UnityEngine.Object.Destroy(ecObject);yield return null;
+                // Exercise the original fade subscriptions without the native
+                // appearance effect's own source fades.
+                var gatePrefab=new GameObject("Isolated no-visual original playable");gatePrefab.SetActive(false);var gatePlayable=gatePrefab.AddComponent<MyPlayable>();gatePlayable.myTriggerList=new List<MyPlayableTriggerTimeCfg>();gatePlayable.myFadeoutTrigerList=new List<MyPlayableTrigger>();gatePlayable.myEndTrigerList=new List<MyPlayableTrigger>();
+                var gateStage=source.AddComponent<MyWorldStage>();gateStage.MyPlayableManager=manager;gateStage.MapRootManagerProxy=services;gateStage.EcEntityBufferEventHandleModule=services;gateStage.myStateCfgs=new List<LegacyWorldStageStateCfg>{new LegacyWorldStageStateCfg{myLoopPlayable=gatePrefab}};gateStage.Bind();
+                var spriteList=source.AddComponent<SpriteListInput>();var gate=new EntityFadeAnimationSupporter(spriteList);fade.Supporter=gate;gate.ImmediateFadeOut(false);gateStage.OnStart(false);Require(!gate.IsIn&&Current(gateStage)==null,"fade-out gate differs");gate.ImmediateFadeIn();Require(gate.IsIn&&Current(gateStage),"fade-in completion must start the state loop");gate.ImmediateFadeOut();Require(Current(gateStage)==null,"fade-out start must stop the loop");yield return Frames(center,.1f);gate.ImmediateFadeIn();Require(Current(gateStage),"fade-in restart differs");gateStage.OnEnd(null);yield return Frames(center,.1f);gate.ImmediateFadeOut();gate.ImmediateFadeIn();Require(Current(gateStage)==null&&services.Subscribers==0&&entity.Replacements==0,"ended stage retained fade callbacks");UnityEngine.Object.Destroy(gatePrefab);
+                visibility.Unregister();manager.RemoveAllPlayable(false);manager.ForceReleaseObjectPool();manager.OnDeactivate();manager.Dispose();center.RemoveAll();StoryPlayableInstantiation.Resolve=oldFactory;OfficialWwiseEvent.Host=oldSound;
+                Debug.Log("Original legacy MyWorldStage verified with native pooled FX; created roots="+factory.Created);
+                UnityEngine.Object.Destroy(scope);UnityEngine.Object.Destroy(staging);UnityEngine.Object.Destroy(source);yield return null;
+            }
+            UnityEngine.Object.Destroy(camera.gameObject);UnityEngine.Object.Destroy(light);Require(errors==0,"unexpected runtime errors");
+        }
+        private static void Capture(Camera camera,string name){var surface=new RenderTexture(450,800,24);surface.Create();var previous=RenderTexture.active;camera.targetTexture=surface;camera.Render();RenderTexture.active=surface;var image=new Texture2D(450,800,TextureFormat.RGB24,false);image.ReadPixels(new Rect(0,0,450,800),0,0);image.Apply();var p=image.GetPixels32();var bg=p[0];Require(p.Count(c=>Math.Abs(c.r-bg.r)>2||Math.Abs(c.g-bg.g)>2||Math.Abs(c.b-bg.b)>2)>100,"original runtime RGB frame is empty");File.WriteAllBytes(Path.Combine(Output,name),image.EncodeToPNG());RenderTexture.active=previous;camera.targetTexture=null;UnityEngine.Object.Destroy(image);surface.Release();UnityEngine.Object.Destroy(surface);}
+        private sealed class StateInput:LegacyWorldStageComponentData{public int Value,LastSubState;public StateInput Redirect;public DataInput Owner;public override LegacyWorldStageComponentData InteractionRedirectStage=>Redirect;public override ECViewEntityData Entity=>Owner;public readonly OfficialStageStateInfo Info=new OfficialStageStateInfo();public override int State=>Value;public override OfficialStageStateInfo GetCurStateInfo()=>Info;public override int GetStateComponentIndex(StageComponentType type,int index=0){LastSubState=index;return type==StageComponentType.BehStageBattleStele?9:-1;}}
+        private sealed class DataInput:ECViewEntityData{public readonly StateInput Stage=new StateInput();public DataInput(){Stage.Owner=this;}public override int ClassId=>6570;public override EcEntityIdentifier Id=>new EcEntityIdentifier(14,101);public override T GetComponent<T>()=>(typeof(T)==typeof(ECWorldStageStateData)||typeof(T)==typeof(LegacyWorldStageComponentData))?(T)(object)Stage:throw new InvalidOperationException("Unexpected fixture component query.");}
+        private sealed class EntityInput:ECViewEntityBinding,IECWorldStageReplacementSource,ILegacyWorldStageVisibilitySource
+        {
+            public readonly DataInput Data=new DataInput();public override ECViewEntityData Entity=>Data;private readonly List<IMyEntityReplaceEventReceiver> replaced=new List<IMyEntityReplaceEventReceiver>();private readonly List<IMyEntityStartPostEventReceiver> posts=new List<IMyEntityStartPostEventReceiver>();private readonly List<IMyEntityRemovePreEventReceiver> pres=new List<IMyEntityRemovePreEventReceiver>();public int Replacements=>replaced.Count;
+            public void AddReplaceReceiver(IMyEntityReplaceEventReceiver value){replaced.Add(value);Trace.Add("replace+");}public void RemoveReplaceReceiver(IMyEntityReplaceEventReceiver value){replaced.Remove(value);Trace.Add("replace-");}public void PublishReplace(){foreach(var v in replaced.ToArray())v.MyEntity_OnReplace(this,Data.Id);}public void PublishStart(){foreach(var v in posts.ToArray())v.MyEntity_OnStartPost(this);}
+            public IClientVisibilitySupporter ClientVisibilitySupporter{get;private set;}public override void SetClientVisibilitySupporter(IClientVisibilitySupporter value){ClientVisibilitySupporter=value;Require(value!=null,"visibility was not bound");}public override void AddStartPostReceiver(IMyEntityStartPostEventReceiver v)=>posts.Add(v);public override void RemoveStartPostReceiver(IMyEntityStartPostEventReceiver v)=>posts.Remove(v);public override void AddRemovePreReceiver(IMyEntityRemovePreEventReceiver v)=>pres.Add(v);public override void RemoveRemovePreReceiver(IMyEntityRemovePreEventReceiver v)=>pres.Remove(v);
+            public override void AddStartReceiver(IMyEntityStartEventReceiver v)=>throw new InvalidOperationException();public override void RemoveStartReceiver(IMyEntityStartEventReceiver v)=>throw new InvalidOperationException();public override void AddRemoveReceiver(IMyEntityRemoveEventReceiver v)=>throw new InvalidOperationException();public override void RemoveRemoveReceiver(IMyEntityRemoveEventReceiver v)=>throw new InvalidOperationException();
+        }
+        private sealed class Services:IServiceProvider,IECViewMapRootLifetime,IEcEntityBufferEventHandleModule,ILegacyWorldStageEntityLookup
+        {private Action<EntityWorldStageUpdateEventMessage> callback;public ECViewEntityBinding Lookup;public EcEntityIdentifier LookedUp;public ECViewEntityBinding GetEntity(EcEntityIdentifier id){LookedUp=id;return Lookup;}public bool Destroying{get;set;}public readonly object Payload=new object();public int Subscribers=>callback==null?0:1;public object GetService(Type type)=>type==typeof(IECViewMapRootLifetime)?this:throw new InvalidOperationException("Unexpected fixture service query.");public IDisposable Subscribe<T>(ECViewEntityData entity,Action<T> value) where T:IEcEntityBufferEventContext{Require(typeof(T)==typeof(EntityWorldStageUpdateEventMessage),"unexpected subscription");var action=(Action<EntityWorldStageUpdateEventMessage>)(object)value;callback+=action;Trace.Add("buffer+");return new Lease(()=>{callback-=action;Trace.Add("buffer-");});}public void Emit(StateInput data,int previous)=>callback?.Invoke(new EntityWorldStageUpdateEventMessage{StageComp=data,PreState=previous,Param=Payload});}
+        private sealed class Lease:IDisposable{private Action action;public Lease(Action value){action=value;}public void Dispose(){var old=action;action=null;old?.Invoke();}}
+        private sealed class SwitchInput:IWorldStateConfig{public void SetState(WorldStateConfigValue state)=>Trace.Add("switch:"+(int)state);public void Clear()=>throw new InvalidOperationException();}
+        private sealed class OperationInput:IECWorldStageInteractionOperation{private readonly int id;public OperationInput(int id){this.id=id;}public bool DoOper(IServiceProvider provider,ECWorldStageStateData state)=>throw new InvalidOperationException("Interaction operations are not inferred by this fixture.");public bool ExistOperation<T>() where T:IECWorldStageInteractionOperation=>this is T;public void Release()=>Trace.Add("release:"+id);}
+        private sealed class BridgeInput:IECViewBridge{private readonly IECView[] views;public BridgeInput(GameObject owner,IClientVisibilitySupporter visible,IEntityFadeAnimationBridge fade,IServiceProvider provider,params IECView[] values){GameObject=owner;ClientVisibilitySupporter=visible;EntityFadeAnimationBridge=fade;ServiceProvider=provider;views=values;}public IServiceProvider ServiceProvider{get;}public CancellationToken DestroyCancellationToken=>CancellationToken.None;public GameObject GameObject{get;}public IClientVisibilitySupporter ClientVisibilitySupporter{get;}public IEntityFadeAnimationBridge EntityFadeAnimationBridge{get;}public long StartCoroutine(IEnumerator value)=>throw new InvalidOperationException();public void StopCoroutine(long id)=>throw new InvalidOperationException();public T GetView<T>() where T:class,IECView=>views.OfType<T>().FirstOrDefault();}
+        private sealed class Factory:IStoryPlayableInstanceFactory{private readonly MyPlayableCenter center;private readonly Transform staging;public int Created;public Factory(MyPlayableCenter value,Transform parent){center=value;staging=parent;}public GameObject Instantiate(GameObject prefab,Transform parent,bool worldPositionStays){var value=UnityEngine.Object.Instantiate(prefab,staging,false);foreach(var p in value.GetComponentsInChildren<MyPlayable>(true))p.MyPlayableCenter=center;value.transform.SetParent(parent,worldPositionStays);Created++;return value;}}
+        private sealed class FadeBridge:MonoBehaviour,IEntityFadeAnimationBridge{public IEntityFadeAnimationSupporter Supporter=new EntityFadeAnimationSupporter(null);public IEntityFadeAnimationSupporter EntityFadeAnimationSupporter=>Supporter;}
+        private sealed class SpriteListInput:SpriteRendererList{public SpriteListInput(){mySpriteList=new List<SpriteRenderer>();FadeInCompleteActiveGO=new List<GameObject>();typeof(SpriteRendererList).GetField("mFordingSpriteList",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(this,new List<FordingSpriteRenderer>());typeof(SpriteRendererList).GetField("mCustomFadeList",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(this,new List<CustomRendererFade>());}}
+        private sealed class SoundInput:IProfessionSoundHost{private uint next;public uint PostEvent(uint id,GameObject emitter)=>++next;}
+        private sealed class Runner:MonoBehaviour{}
+    }
+}

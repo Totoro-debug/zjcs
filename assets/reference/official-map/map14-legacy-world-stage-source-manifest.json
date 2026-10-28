@@ -1,0 +1,86 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyWorldStage.cs",
+      "sha256": "9aab7850ff249a91188f262c44a56dd3dd96e4fcf59e52aaae5e2fc9711e3085"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyComponent.cs",
+      "sha256": "def26b7d72f4ccc2863950b815e4156ddf5599b4962dcbfe904346b24c721720"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_legacy_world_stage_runtime.py",
+      "sha256": "2cd85950163a9f6ca8841c90e3a678a9ac05d270a6da27133677e23036aae976"
+    },
+    {
+      "path": "scripts/prepare_unity_story_sound_runtime.py",
+      "sha256": "7c9e2f9f102b8dd9b832b01bccd73d89748f04a252ca1a4d984dc33f7ed5cbcf"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/LegacyWorldStageStateCfg.cs",
+      "sha256": "681085c6357315cc1ce7151fa97c9dddd70e5aaa80080a0f5b6e642d1d5e5663"
+    },
+    {
+      "path": "assets/reference/official-map/map14-entity-world-stage-views-source-manifest.json",
+      "sha256": "a96c9fbf0e0c47236eac17e594b57107190dc5c757047d6d284cac2626556b04"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/LegacyWorldStages/MyWorldStage.cs",
+      "sha256": "7720fd14c6b329344ae1da3e9f85596fe69062c76e0be6d6334c284e0ebf22e0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/LegacyWorldStages/MyWorldStage.cs.meta",
+      "sha256": "bf256b0be39d2a9fc0a2c50405c21e8fd15a9e34c8066dde6dce23f88ec76e42"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/LegacyWorldStages/LegacyWorldStageComponent.cs",
+      "sha256": "789a3c15cfbd6a79bc3a7c748d224aaafa71adbd27293a86bfe1258069072f19"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/LegacyWorldStages/LegacyWorldStageComponent.cs.meta",
+      "sha256": "fbf91c0b9a73fc81ac911d79115be9593470aa756a3bb6af20a2219c0d31f34b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/LegacyWorldStages/LegacyWorldStageBindings.cs",
+      "sha256": "daf17b1714c932a86fce12a9b25776949007bcd16c8e91ac09366a3146346668"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/LegacyWorldStages/LegacyWorldStageBindings.cs.meta",
+      "sha256": "0294aad5ded46041d7a6d850a5247a41c99a7e794212bf5bab044a9604cf282b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/LegacyWorldStages/Zjcs.Official.LegacyWorldStages.asmdef",
+      "sha256": "85874cba81d8d03e61886662453f437363aa30c5c7597e8d2b8132c8c30cccb0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/LegacyWorldStages/Zjcs.Official.LegacyWorldStages.asmdef.meta",
+      "sha256": "c712beaf6f9fa173dc79ea4d59921c1d5d8e71406dda310125ebe7aac145f269"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/LegacyWorldStages.meta",
+      "sha256": "ba6d2009c2164648960117bf1ce69a9519539c09c038ab416bc3e65c7c970792"
+    }
+  ],
+  "operation": "Copy the complete original MyWorldStage, reuse its original nested StageStateCfg declaration, and mechanically select its consumed MyComponent members. Preserve Awake/start/end order, EC-view delegation, visibility/fade gates, replacement, state switcher, appearance and state/start/loop callbacks, asynchronous stop behavior, separate uncontrolled loop, state queries, movement interaction flag and redirect lookup. Replace DI with explicit properties and original entity/shared-state access with required host surfaces; do not invent state transitions or interaction rules.",
+  "limitations": [
+    "Four native hero-statue prefabs, formal entity/shared state, interaction rules, map/input/save and Windows Player remain required. This client component alone is not completed statue gameplay."
+  ]
+}
