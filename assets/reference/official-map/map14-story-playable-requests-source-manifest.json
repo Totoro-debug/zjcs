@@ -1,0 +1,224 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayPlayableNode.cs",
+      "sha256": "331021fa4cdca5dd13c1d50e2de8dece1e6b6a31d5e092e16d6ab761ccd6c999"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayPlayableForGameObjectNode.cs",
+      "sha256": "4b1b9f9f2640dc14e4131dbc8f98b1d49dc08dc7ed2733acd24a75ba3841e10c"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/StoryPlayable.cs",
+      "sha256": "4b6742d6fdd8816ec4b54f5af04c1dba46de94b8e0174802bef9a734f6ce9f4d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/StoryPlayableSelect.cs",
+      "sha256": "57d9daf29812c69aabbd4540fcfdaa58081ec25b60bd686d7c29d9e194a486a4"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/EStoryPlayableSelectType.cs",
+      "sha256": "80452133300a13615e631482c0ee42f6db139429f365626e00ef53053d195a00"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/StoryRunNodeResultCode.cs",
+      "sha256": "0a7b59b2d3269914088e2866808dfb126ddbaac8f784961ed68a084e2b27a421"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ClientRunNode.cs",
+      "sha256": "49b715f4d8ab78f7c43a7ecde0506966401f18d2f98149dd312bd3dcf211be35"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/RunNode.cs",
+      "sha256": "eaa764d74585208fe89cfde5c1a695021b8bc5b6a0cf5a726a1d9c569a6ecbb9"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/StoryHandleProxy.cs",
+      "sha256": "cc3dbc7ee4e7d35b3519cc0860288b4fcbd060f63347fa00d5793cfa56370662"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionImageResourceBridge.cs",
+      "sha256": "acdb7d8a803632b80a5dc4140676980e2fb1e9b596a155ba6b704cf4632dd412"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "assets/reference/official-map/map14-story-playable-manager-source-manifest.json",
+      "sha256": "8c4551d8976083685c9c0cea1669c8098efd00298aa78f5b48522beb9c7603ed"
+    },
+    {
+      "path": "assets/reference/official-map/map14-story-nodes-runtime-source-manifest.json",
+      "sha256": "0159352812c7e62a4fd7d3f227fd936ae4ed4243005411997db19641234e0065"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_story_playable_requests.py",
+      "sha256": "c1f9359a5ba247c2c658db556ade422f9046ce212b32bcc12dab7f12299c98f3"
+    },
+    {
+      "path": "scripts/prepare_unity_story_playable_runtime.py",
+      "sha256": "8901da0cedbce77ece9f81c2e2c35f4bbefb20f0f48f3fb26f32bc60afcfd2c0"
+    },
+    {
+      "path": "scripts/prepare_unity_story_sound_runtime.py",
+      "sha256": "7c9e2f9f102b8dd9b832b01bccd73d89748f04a252ca1a4d984dc33f7ed5cbcf"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/PlayPlayableNode.cs",
+      "sha256": "f981ccd03fd0b06ec9baf67a969d916b56f5f0149dc18c464d3c77e4c9c0fbbf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/PlayPlayableNode.cs.meta",
+      "sha256": "f55e65164dc2fe0cd3c889a7a5d66b6952b18df7315f96149bcdf2a678286760"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/PlayPlayableForGameObjectNode.cs",
+      "sha256": "b2fc7dc34fc93d8467780052663e7ccf6397c2aa7553aa79833556412f0ff109"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/PlayPlayableForGameObjectNode.cs.meta",
+      "sha256": "11bfedcdbb64a65d653c9cb06e73cb9ce9bb0fe047551cecb1dfe8d4319232f7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/StoryPlayable.cs",
+      "sha256": "ddc5539f20bc96d8c414315ed9a95b9d80ba7346d9d5f0123a46c90277a0118c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/StoryPlayable.cs.meta",
+      "sha256": "a3167a9dc48d3c70f9ceb2fb7950a2b11d8b349538db5e2c697d4f311cee09a5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/StoryPlayableSelect.cs",
+      "sha256": "d167756f23c8c9ceef9953d8d3a2d52adbc86fa8983a16cf8ed2b3b883bb6ab8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/StoryPlayableSelect.cs.meta",
+      "sha256": "6f563031aed9d862603fa9f7bee8fabfc7cfb456168d5109128a6d22e4af52e2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/EStoryPlayableSelectType.cs",
+      "sha256": "7424b23b279575916d4a45c1303644917966a3d0e1dbcda48c4a0401c5e9ecc7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/EStoryPlayableSelectType.cs.meta",
+      "sha256": "97197a1a2b60bd8cf08edeebc56fdb9c9a072bdf4e7b4d4bc6a860f3f0ed923e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/StoryRunNodeResultCode.cs",
+      "sha256": "fe17cee49bbf1dffea81a48a9a449ecf2a6812247f37c56344a06501e933689e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/StoryRunNodeResultCode.cs.meta",
+      "sha256": "af812ab1ab1970b0a82f1b56326376749909442be32a7094ad14e7128311dc68"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/StoryPlayableResourceBag.cs",
+      "sha256": "d8ded979d85c8ce094a1f9475eef6fae84561217fe2740743adeba412de30a21"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/StoryPlayableResourceBag.cs.meta",
+      "sha256": "000cfe7a9d54b0a1194d70d7282900752b771b9e7f0aceb165bf174c435069c2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/StoryPlayableRequestNode.cs",
+      "sha256": "7be5801039073a8b8e34109acbe19875b7ec61c2d59f1052c9ffbee83885929e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/StoryPlayableRequestNode.cs.meta",
+      "sha256": "c6aa8af02940d579f30ef84104b41831d69d575fc90a3f5bcd79fc3c98b74f2a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/StoryHandleProxy.cs",
+      "sha256": "118ef81f73999ca7d04bad5898433f8b66020140e5e73dbfb0391b73580d4847"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/StoryHandleProxy.cs.meta",
+      "sha256": "192f68ed2c7a5dcfcc8c71e4f2a4b01fb4ae0f9a00f80bae7f6486335e1e8147"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/Zjcs.Official.StoryPlayableRequests.asmdef",
+      "sha256": "3712cf796afb16283177a7f638ca2661d48a7cf80b1adf21040d22fa3ca50fc0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/Zjcs.Official.StoryPlayableRequests.asmdef.meta",
+      "sha256": "0675ef0cfa565839d2424a9577b896b1ed07e0fe817240e54c812d785652faac"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests.meta",
+      "sha256": "7f0b51faa2b23b102a00129b152024a8bd07b6ec227a08411a7aa9834e2d0c8d"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/PlayableRequests/OfficialMap14PlayableRequestsAcceptance.cs",
+      "sha256": "441d5cb95eafb397deb2ca90dc8421cabfc58995a6160c3490ffb1b2237aa05a"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/PlayableRequests/OfficialMap14PlayableRequestsAcceptance.cs.meta",
+      "sha256": "f652f041caca8acf15b0edc98a7ac96f2c99edd92ab99d8427be0636bd7f2c72"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/PlayableRequests/Zjcs.Editor.Map14.PlayableRequests.asmdef",
+      "sha256": "9515300ddf3a53caab3adbd0c08bfe1ce68163e8a349cc3124a5fbd2e8d09a74"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/PlayableRequests/Zjcs.Editor.Map14.PlayableRequests.asmdef.meta",
+      "sha256": "144fccb9bce2310e0081a938229f64c2455432568c646f25dd883a1c6d02d6ae"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/PlayableRequests.meta",
+      "sha256": "1a69c6063eef1eb6218fb4e85e1521125737e3f43313278c87f7bfe6e01be68a"
+    }
+  ],
+  "adaptations": [
+    {
+      "source": "PlayPlayableNode.cs",
+      "diagnosticBlocks": 0,
+      "asyncRestoredFromOriginalMoveNext": true,
+      "explicitGraphAndEntityBoundary": true
+    },
+    {
+      "source": "PlayPlayableForGameObjectNode.cs",
+      "diagnosticBlocks": 0,
+      "asyncRestoredFromOriginalMoveNext": true,
+      "explicitGraphAndEntityBoundary": true
+    },
+    {
+      "source": "StoryPlayable.cs",
+      "diagnosticBlocks": 1,
+      "asyncRestoredFromOriginalMoveNext": false,
+      "explicitGraphAndEntityBoundary": false
+    },
+    {
+      "source": "StoryPlayableSelect.cs",
+      "diagnosticBlocks": 0,
+      "asyncRestoredFromOriginalMoveNext": false,
+      "explicitGraphAndEntityBoundary": false
+    },
+    {
+      "source": "EStoryPlayableSelectType.cs",
+      "diagnosticBlocks": 0,
+      "asyncRestoredFromOriginalMoveNext": false,
+      "explicitGraphAndEntityBoundary": false
+    },
+    {
+      "source": "StoryRunNodeResultCode.cs",
+      "diagnosticBlocks": 0,
+      "asyncRestoredFromOriginalMoveNext": false,
+      "explicitGraphAndEntityBoundary": false
+    }
+  ],
+  "operation": "Copy both original playable node bodies, StoryPlayable callback wrapper, selector and enums. Restore emitted async waits exactly: DoRun, count, subscribe after play, optional WaitUntil at PlayerLoopTiming 8 with original token/cancelImmediately=false, original 20-second scaled timeout, then original ClientRunNode OK continuation. Preserve skip/transition stop gates, duration overrides, per-index dynamic source/target ports, forced visibility and world-stage stop/start order, lease disposal, story-end cleanup and selector load/unload branches. Explicit boundaries supply the actual graph lifecycle, EC views, prefab proxy and native resource operations; no substitute graph/server executor is implemented here.",
+  "limitations": [
+    "Node-body boundary requires a consuming real graph owner and actual entity/asset bindings. Formal shared mainline executor still needs integration; map/actor/audio/save and Windows Player remain pending."
+  ]
+}
