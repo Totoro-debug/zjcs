@@ -1,0 +1,66 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": "assets/reference/profession-ui/bone-pose-source-manifest.json",
+      "sha256": "6a685085b9bcabcb8e3f482c6d8b23d8431a19a90918f4caf6e8b1b90612a684"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/typed/bone-pose-validation.json",
+      "sha256": "efa174c5f6be38aae1058ff9267a11c7726331cf33560722fac4de0a29697c0e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/male/skeleton.json",
+      "sha256": "21bc0198abc44620e65f308c6acb9a78f3ed9d6feb1d2558acdc72ba76dd3e15"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/female/skeleton.json",
+      "sha256": "eb1c26d31879c9832bd3d88a75cfe057d8712eddfe08e5dd85fc9208d8a666ed"
+    }
+  ],
+  "fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/slot-pose-validation.json",
+    "sha256": "c2bc64a5ac4e80c7e32441ad00c5a951b9c46393f9d7de41ebceb114470d28d3"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_profession_slot_pose.py",
+    "sha256": "8baa622aae3252378b81286abee3ab817413431f0111689ed8cd37065dfa6e4d"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSlotPose.cs",
+      "sha256": "cc0d1b4ea9b5261726679f80fb4023d2fce7d2ab5313ff7fa5e9a94990188070"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSlotPose.cs.meta",
+      "sha256": "c90102fe007f953b9c9d9e429f4676441998c95fc6576caee57f6e9365282d4a"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeSlotPoseValidation.cs",
+      "sha256": "5e93eba288544a802d0a2e08ddf7e168d47f9cd24be4fea2b3c93a30ca95bbad"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeSlotPoseValidation.cs.meta",
+      "sha256": "a2439cd25b9c97076e836b2e5b159ad247ef0b83090502fc2f8904eaabdbda3b"
+    }
+  ],
+  "counts": {
+    "slots": 252,
+    "tracks": 54,
+    "attachment_keys": 84,
+    "draw_order_keys": 4,
+    "samples": 109
+  },
+  "format_references": [
+    "https://esotericsoftware.com/spine-json-format#Slots",
+    "https://esotericsoftware.com/spine-json-format#Slot-timelines",
+    "https://esotericsoftware.com/spine-json-format#Draw-order-timeline",
+    "https://esotericsoftware.com/spine-binary-format#Varint"
+  ],
+  "operation": "Independently bind unmixed discrete attachment keys, preserving null clears, key boundaries and inactive bones. Preserve every setup slot name/bone/color/dark-color flag/blend. Recover each stable draw-order permutation by explicit destination assignment and filling untouched slots in source order. Interpret varint+ bit patterns as signed 32-bit offsets (4294967290 becomes -6) without altering the verified converter JSON. No skeleton SDK implementation is used.",
+  "validated_scope": "Unity 2022.3.57f1c2 Play Mode: 252 setup slots, 54 attachment timelines, 84 attachment keys, four draw-order keys, 109 time samples and 27468 exact attachment/order comparisons pass. Key boundaries, null clears/blinks, backward sampling, source weapon destination offsets +4/-6 and untouched relative order, setup color/dark/blend values, inactive skin bones, input ownership and invalid bindings pass. These are discrete source-data checks, not an SDK pose, character render or full profession-page validation.",
+  "limitations": [
+    "This stage does not implement animation mixing, skin/attachment resolution, weighted geometry, constraints, character rendering or full profession UI. Generated discrete references are not original SDK pose or visual captures."
+  ]
+}

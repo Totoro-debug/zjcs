@@ -465,6 +465,8 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 职业头发／头饰裁剪：原 `AppearanceSkinClip` 全部方法、字段与事件顺序迁入，骨骼及边界顶点通过显式接口接入；来源、代码、闭包及验证哈希见 `profession-ui/skin-clip-source-manifest.json`。隔离 Direct3D Play Mode 核对四边／对角线系数、MeshScale、镜像／变换、凹四边形重排、CanvasRenderer 材质匹配／重置和事件／失败分支；实际官方 shader 测试图显示中心被裁去、外围保留，已查看。夹具不证明真实角色加权边界或页面已完成。
 
+职业插槽／绘制顺序：独立适配器保留 setup 骨骼、颜色／暗色、混合模式及原附件离散键。按公开数据格式将转换 JSON 的 32 位 varint 位值恢复为有符号偏移，`4294967290` 对应 `-6`，原输入未改写。来源／格式参考／代码／夹具哈希见 `profession-ui/slot-pose-source-manifest.json`。隔离 Play Mode 核对 252 个槽、54 条时间线、84 个附件键、4 个绘制顺序键、109 个样本及 27,468 项精确检查，关键帧边界、空附件、未启用骨骼、顺序和输入隔离检查通过。未接通皮肤、动画混合或角色渲染。
+
 ## 技能首页与安装流程复核
 
 2026-10-13：复核固定版本 `854_156383` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。

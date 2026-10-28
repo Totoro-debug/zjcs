@@ -286,6 +286,10 @@
     "path": "assets/reference/profession-ui/skin-clip-source-manifest.json",
     "sha256": "2cbfd61c4441aad5bfaaf52f3b564b7341c23bbb0bf966206d67a6adf63612c0"
   },
+  "slot_pose": {
+    "path": "assets/reference/profession-ui/slot-pose-source-manifest.json",
+    "sha256": "69e53f2ffb4576d63d664ddafbab9a6bc98d1d7f80e5a64e05ef242eb69195fb"
+  },
   "native_curves": {
     "path": "assets/reference/profession-ui/native-curves-source-manifest.json",
     "sha256": "007f22f0dd2be5eb07b831a7a7722f00836c03d28bfe2ff0c0f700a791d2bf77"
@@ -348,7 +352,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "d7b77cdcbb91acca36c4652ae719dbb0385e7e8cc025c092c1509e0d5ffec71e"
+    "sha256": "caf0276dc707ac178e32a2f2c9a5b694f7b0ae0fd81429ba080570bf7e8fbe20"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",
