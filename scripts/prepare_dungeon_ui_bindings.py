@@ -311,6 +311,36 @@ def private_matching_binding(apk, schemas, root):
                 object_raw_sha256=sha256(component.get_raw_data())))
     if rotations != binding['rotations']:
         raise ValueError('Private matching original rotation bindings changed')
+    mesh_path = ROOT / 'assets/reference/official-map/map12-matching-mesh-source-manifest.json'
+    meshes = json.loads(mesh_path.read_bytes())
+    if meshes['manifest'] != VERSION or len(meshes['binding']) != 2:
+        raise ValueError('Private matching mesh source selection changed')
+    for output in meshes['outputs']:
+        if sha256((ROOT / output['path']).read_bytes()) != output['sha256']:
+            raise ValueError('Private matching native mesh dependency changed')
+        if 'meta_sha256' in output and sha256((ROOT / (output['path'] + '.meta')).read_bytes()) != output['meta_sha256']:
+            raise ValueError('Private matching native mesh dependency GUID changed')
+    for reference in meshes['references'] + meshes['code_sources']:
+        if sha256((ROOT / reference['path']).read_bytes()) != reference['sha256']:
+            raise ValueError('Private matching verified mesh reference changed')
+    nodes = {'/'.join(map(str, indices)): (node, list(names)) for node, indices, names, _ in relative_transform_path(go)}
+    mesh_objects = {row['source']['bundle'] + ':' + row['source']['path_id']: row for row in meshes['meshes'] + meshes['materials']}
+    for expected in meshes['binding']:
+        node, names = nodes[expected['path']]
+        if names != expected['objects']: raise ValueError('Private matching UIMesh source hierarchy changed')
+        components = [pair.component.deref() for pair in node.m_Component if pair.component.type.name == 'MonoBehaviour'
+                      and pair.component.deref().read(check_read=False).m_Script.read().m_ClassName == 'UIMesh']
+        if len(components) != 1 or sha256(components[0].get_raw_data()) != expected['object_raw_sha256']:
+            raise ValueError('Private matching original UIMesh component changed')
+        fields = schemas.read(components[0])
+        for field in ('Mesh', 'm_Material', 'mMeshRenderer'):
+            obj = PPtr(**fields[field], assetsfile=components[0].assets_file).deref()
+            source = apk.provenance(obj)
+            record = expected['renderer'] if field == 'mMeshRenderer' else mesh_objects[source['bundle'] + ':' + source['path_id']]
+            if sha256(obj.get_raw_data()) != record['object_raw_sha256']:
+                raise ValueError('Private matching original mesh/material/renderer changed')
+    binding.update(meshes=meshes['binding'], native_mesh_outputs=meshes['outputs'],
+        mesh_source_receipt=dict(path=mesh_path.relative_to(ROOT).as_posix(), sha256=sha256(mesh_path.read_bytes())))
     binding.update(native_outputs=receipt['outputs'], source_receipt=dict(path=path.relative_to(ROOT).as_posix(), sha256=sha256(path.read_bytes())))
     return binding
 
@@ -855,7 +885,7 @@ def build():
     code_sources = [dict(path=(CODE / path).relative_to(ROOT).as_posix(),
         sha256=sha256((CODE / path).read_bytes())) for path in code_paths]
     receipt = {"manifest": VERSION, "code_sources": code_sources,
-        "operation": "Read original prefab transforms, Image/TMP fields and route GridLayoutGroup, ContentSizeFitter, RectMask2D, SafeArea, LoopVerticalScrollRect and Button fields. Resolve DailyDungeonSettings room Sprite GUIDs against the selected AssetTable; verify private popup show/hide runtime curves against the current source and reuse the recorded native Map12 clips; resolve nullable PopupWindowSound and click events, verify all selected original bank hashes and bind PCM decoded from original Wwise graphs at fixed 0 dB master with original event gain; verify original matching clip/event sources and native Legacy animation; decode original atlas pixels and preserve pivot, border and PPU.", "bindings": {
+        "operation": "Read original prefab transforms, Image/TMP fields and route GridLayoutGroup, ContentSizeFitter, RectMask2D, SafeArea, LoopVerticalScrollRect and Button fields. Resolve DailyDungeonSettings room Sprite GUIDs against the selected AssetTable; verify private popup show/hide runtime curves against the current source and reuse the recorded native Map12 clips; resolve nullable PopupWindowSound and click events, verify all selected original bank hashes and bind PCM decoded from original Wwise graphs at fixed 0 dB master with original event gain; verify original matching clip/event sources, native Legacy animation and original UIMesh/mesh/material/texture dependencies; decode original atlas pixels and preserve pivot, border and PPU.", "bindings": {
         "path": BINDINGS.relative_to(ROOT).as_posix(), "sha256": sha256(encoded),
         "meta_sha256": sha256(meta.read_bytes())},
         "prefabs": sources, "sprites": sprite_outputs, "route_settings": settings_source,

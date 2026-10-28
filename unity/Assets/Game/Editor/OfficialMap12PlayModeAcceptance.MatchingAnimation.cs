@@ -66,6 +66,7 @@ namespace Zjcs.Editor
                     throw new InvalidDataException("Original Legacy event did not post once to the independent muted PCM player.");
                 yield return new WaitForSeconds(.5f);
                 yield return new WaitForEndOfFrame();
+                VerifyPrivateMatchingMeshes(receiver.gameObject);
                 ScreenCapture.CaptureScreenshot(Path.Combine(output, "iron-mount-private-matching-animation.png"));
                 yield return new WaitForSeconds(.6f);
                 if (posts != 1) throw new InvalidDataException("Original finite matching animation repeated its sound event.");
@@ -79,6 +80,29 @@ namespace Zjcs.Editor
             {
                 if (receiver != null) receiver.Post = post;
                 if (matching != null) matching.SetActive(false);
+            }
+        }
+
+        private static void VerifyPrivateMatchingMeshes(GameObject host)
+        {
+            WorldUiMesh[] graphics = host.GetComponentsInChildren<WorldUiMesh>(true);
+            if (graphics.Length != 2) throw new InvalidDataException("Original matching UIMesh components are missing.");
+            foreach (WorldUiMesh graphic in graphics)
+            {
+                var renderer = graphic.GetComponent<MeshRenderer>();
+                string expectedMaterial = graphic.name == "Mesh" ? "GameMatch_Circle3" : "GameMatch_Circle2";
+                if (!graphic.enabled || !graphic.maskable || graphic.raycastTarget || graphic.raycastPadding != Vector4.zero
+                    || graphic.color != Color.white || graphic.Mesh == null || graphic.Mesh.name != "Cylinder001"
+                    || graphic.Mesh.vertexCount != 82 || graphic.Mesh.GetIndexCount(0) != 240 || renderer == null || !renderer.enabled
+                    || renderer.sharedMaterial == null || !renderer.sharedMaterial.name.StartsWith(expectedMaterial, StringComparison.Ordinal)
+                    || graphic.materialForRendering != renderer.material || !renderer.material.shader.isSupported
+                    || renderer.material.shader.name != "Zjcs/Official/World/Map13/Entity/UIEffectDistort_72c67609")
+                    throw new InvalidDataException("Original matching mesh or Graphic/renderer/material settings differ.");
+                Mesh rendered = graphic.canvasRenderer.GetMesh();
+                if (rendered == null || !rendered.vertices.SequenceEqual(graphic.Mesh.vertices) || !rendered.uv.SequenceEqual(graphic.Mesh.uv)
+                    || !rendered.triangles.SequenceEqual(graphic.Mesh.triangles)
+                    || graphic.canvasRenderer.GetMaterial(0) != graphic.materialForRendering)
+                    throw new InvalidDataException("Original matching geometry was changed or not submitted to CanvasRenderer.");
             }
         }
     }

@@ -26,6 +26,7 @@ namespace Zjcs.Presentation.World
             public MatchingClipBinding clip; public MatchingSoundBinding sound;
             public MatchingCanvasBinding[] canvasGroups; public MatchingTargetBinding[] targets;
             public MatchingRotationBinding[] rotations;
+            public MatchingMeshBinding[] meshes;
         }
         [Serializable] private sealed class MatchingClipBinding
         { public string name, resource; public float duration, sampleRate; }
@@ -37,6 +38,17 @@ namespace Zjcs.Presentation.World
         { public string path, type; }
         [Serializable] private sealed class MatchingRotationBinding
         { public string path; public string[] objects; public bool enabled; public float[] speeds; }
+        [Serializable] private sealed class MatchingMeshBinding
+        {
+            public string path; public string[] objects; public bool enabled, raycastTarget, maskable;
+            public float[] color, raycastPadding; public MatchingNativeMeshBinding mesh;
+            public MatchingMaterialBinding material; public MatchingRendererBinding renderer;
+        }
+        [Serializable] private sealed class MatchingNativeMeshBinding
+        { public string resource, name; public int vertexCount, indexCount; }
+        [Serializable] private sealed class MatchingMaterialBinding
+        { public string resource, name, shader; }
+        [Serializable] private sealed class MatchingRendererBinding { public bool enabled; }
         [Serializable] private sealed class PopupSoundBinding
         { public string path; public string[] objects; public bool enabled; public PopupSoundEventBinding show, hide; public PopupClickSoundBinding[] clicks; }
         [Serializable] private sealed class PopupClickSoundBinding
@@ -209,6 +221,29 @@ namespace Zjcs.Presentation.World
                 || binding.sound.events[0].id != 1386996041 || binding.sound.events[0].name != "TeamMatch_Waiting_1" || postSound == null)
                 throw new InvalidDataException("Original private matching animation/event binding is incomplete.");
             Transform host = Find(root.transform, binding.path, binding.objects);
+            if (binding.meshes == null || binding.meshes.Length != 2 || host.gameObject.activeInHierarchy)
+                throw new InvalidDataException("Original private matching meshes must be restored before activation.");
+            foreach (MatchingMeshBinding source in binding.meshes)
+            {
+                GameObject node = Find(host, source.path, source.objects).gameObject;
+                var renderer = node.GetComponent<MeshRenderer>();
+                var canvasRenderer = node.GetComponent<CanvasRenderer>();
+                Mesh mesh = Resources.Load<Mesh>(source.mesh.resource);
+                Material material = Resources.Load<Material>(source.material.resource);
+                if (renderer == null || canvasRenderer == null || mesh == null || material == null
+                    || mesh.name != source.mesh.name || mesh.vertexCount != source.mesh.vertexCount || mesh.subMeshCount != 1
+                    || mesh.GetIndexCount(0) != (uint)source.mesh.indexCount || material.name != source.material.name
+                    || material.shader == null || material.shader.name != source.material.shader
+                    || source.color == null || source.color.Length != 4 || source.raycastPadding == null || source.raycastPadding.Length != 4)
+                    throw new InvalidDataException("Original private matching mesh, renderer or material is missing or mismatched.");
+                renderer.sharedMaterial = material; renderer.enabled = source.renderer.enabled;
+                var graphic = node.GetComponent<WorldUiMesh>() ?? node.AddComponent<WorldUiMesh>();
+                graphic.Configure(mesh, renderer); graphic.material = material;
+                graphic.color = new Color(source.color[0], source.color[1], source.color[2], source.color[3]);
+                graphic.raycastTarget = source.raycastTarget; graphic.maskable = source.maskable;
+                graphic.raycastPadding = new Vector4(source.raycastPadding[0], source.raycastPadding[1], source.raycastPadding[2], source.raycastPadding[3]);
+                graphic.enabled = source.enabled;
+            }
             if (binding.rotations == null || binding.rotations.Length != 2)
                 throw new InvalidDataException("Original private matching rotation bindings are incomplete.");
             foreach (MatchingRotationBinding source in binding.rotations)

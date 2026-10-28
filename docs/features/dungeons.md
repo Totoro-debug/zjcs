@@ -38,7 +38,9 @@
 
 机神山私图匹配显示动画现保留原60 Hz／0.9333333373秒 Legacy clip 的31条浮点曲线和5条缩放曲线，逐项核对 float32 关键帧、切线、权重及事件；原第5帧 `PostEvent(0)` 通过迁移的 AnimationSoundPlayer 播放已验证的 TeamMatch_Waiting_1。原播放参数、两处 CanvasGroup 原值与17组实际目标已绑定；共享动画另外6条曲线的原目标在本 prefab 缺席，保留完整原曲线并记录来源。来源见 `assets/reference/official-map/map12-matching-animation-source-manifest.json`。无覆盖复现、独立 C# 编译、路径回放和静态检查通过；实际播放夹具尚未执行，匹配业务和正式控件输入仍待验证。
 
-机神山匹配图另接回两处原 `RotateAnimation`，圆环和光晕分别沿本地 Z 轴以50°／80°每秒更新，保留原启用值及 `Time.deltaTime` 执行方式；组件和原代码哈希并入同一匹配来源清单。实际帧旋转夹具已补齐，随用户暂停的自动运行验收保留待执行；UIMesh 与原扭曲材质尚未接通。 本次旋转来源与绑定无覆盖复现、三项独立 C# 编译及72,510 GUID静态检查通过；自动运行验收仍按用户要求暂停。
+机神山匹配图另接回两处原 `RotateAnimation`，圆环和光晕分别沿本地 Z 轴以50°／80°每秒更新，保留原启用值及 `Time.deltaTime` 执行方式；组件和原代码哈希并入同一匹配来源清单。实际帧旋转夹具已补齐，随用户暂停的自动运行验收保留待执行；UIMesh 与原扭曲材质的实际运行仍待验证。 本次旋转来源与绑定无覆盖复现、三项独立 C# 编译及72,510 GUID静态检查通过；自动运行验收仍按用户要求暂停。
+
+机神山匹配两处 UIMesh 已恢复原82顶点／240索引 Mesh、两份原扭曲材质与五张原贴图，并复用来源对象哈希相同的 Windows `UI/EffectDistort`。原 Mesh 缓冲、材质字段、四个 GLES 变体及完整纹理 mip 已逐项核对；原 `UIMesh`／`UIMeshUtils` 的 CanvasRenderer 提交与材质属性更新已迁移，资源按原路径显式加载。来源为 `assets/reference/official-map/map12-matching-mesh-source-manifest.json`。来源与绑定复现、三项独立 C# 编译通过；全工程静态检查通过（72,572 GUID）。原材质／网格和实际画面夹具尚未运行，完整私人副本流程仍未验收。
 
 ## 自定义实现
 
