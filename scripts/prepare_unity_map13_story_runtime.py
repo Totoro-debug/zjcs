@@ -184,6 +184,42 @@ def normalize_story(name: str, graph: dict, metadata: dict, dialogues: dict,
     }
 
 
+def mainline_tasks(rows: list[dict], map_id: int) -> list[dict]:
+    """Follow original NextIds, including intervening non-region task 1355."""
+    by_id = {r["ClassId"]: r for r in rows if r["TaskType"] == 10}
+    seeds = {i for i, r in by_id.items() if r["FinishCondition"].get("MapClassId") == map_id}
+    if not seeds: raise ValueError("No original map mainline tasks")
+    reachable = {}
+    for seed in seeds:
+        queue, seen = [seed], set()
+        while queue:
+            current = queue.pop(0)
+            if current in seen: continue
+            seen.add(current)
+            row = by_id[current]
+            target_map = row["FinishCondition"].get("MapClassId")
+            if target_map is not None and target_map != map_id: continue
+            reachable[current] = row
+            for child in row["NextIds"]:
+                if child not in by_id: raise ValueError("Broken original mainline task edge: " + str(child))
+                queue.append(child)
+    if not seeds <= set(reachable): raise ValueError("Incomplete original mainline task chain")
+    return sorted(reachable.values(), key=lambda r: (r["Order"], r["ClassId"]))
+
+
+def condition_closure(talks: list[dict], conditions: list[dict], extra_ids=()) -> list[dict]:
+    by_id = {r["ClassId"]: r for r in conditions}
+    pending = [*extra_ids, *[i for r in talks for i in (r.get("Condition") or {}).get("Ids", [])]]
+    found = {}
+    while pending:
+        identity = pending.pop()
+        if identity in found: continue
+        if identity not in by_id: raise ValueError("Missing original MapTalk condition: " + str(identity))
+        found[identity] = by_id[identity]
+        pending.extend((by_id[identity].get("Condition") or {}).get("Ids", []))
+    return [found[i] for i in sorted(found)]
+
+
 def build() -> dict:
     source_receipt = read_json(SOURCE_RECEIPT)
     if source_receipt.get("manifest") != VERSION or source_receipt.get("mapClassId") != 13:
@@ -199,8 +235,29 @@ def build() -> dict:
     tables = read_json(inputs["tables.json"])
     dialogues = read_json(inputs["dialogues.json"])
     localization = read_json(inputs["localization.json"])
+    dependencies_path = SOURCE / "story-dependencies.json"
+    dependencies_receipt = ROOT / "assets/reference/official-map/map13-story-dependencies-source-manifest.json"
+    dependencies = read_json(dependencies_path)
+    dep_receipt = read_json(dependencies_receipt)
+    if dependencies["manifest"] != VERSION or dep_receipt["outputs"][0]["sha256"] != sha(dependencies_path.read_bytes()):
+        raise ValueError("Map13 shared story dependencies differ from verified source")
+    for row in dep_receipt["inputs"]:
+        if sha((ROOT / row["path"]).read_bytes()) != row["sha256"]:
+            raise ValueError("Map13 dependency input changed: " + row["path"])
+    if set(graphs) & set(dependencies["graphs"]): raise ValueError("Duplicate Map13 shared graph identity")
+    graphs.update(dependencies["graphs"])
+    dialogues.update(dependencies["dialogues"])
+    for key, text in dependencies["localization"].items():
+        if key in localization and localization[key] != text: raise ValueError("Conflicting original Chinese text: " + key)
+        localization[key] = text
+    templates_path = SOURCE / "templates.json"
+    if sha(templates_path.read_bytes()) != expected[templates_path.name]: raise ValueError("Pinned Map13 EC templates changed")
+    templates = read_json(templates_path)
+    if set(templates) & set(dependencies["entityTemplates"]): raise ValueError("Duplicate original EC template identity")
+    templates.update(dependencies["entityTemplates"])
+    inputs.update(dependencies=dependencies_path, dependenciesReceipt=dependencies_receipt, templates=templates_path)
     story_rows = {row["StoryName"]: row for row in tables["story"]
-                  if row.get("ResPath", "").startswith("Map13Story/")}
+                  if row.get("ResPath", "").startswith("Map13Story/") or row["StoryName"] in dependencies["graphs"]}
     missing_graphs = set(story_rows) - set(graphs)
     if missing_graphs:
         raise ValueError("Map13 story table references missing graphs: " + repr(sorted(missing_graphs)))
@@ -255,6 +312,8 @@ def build() -> dict:
     hand_in_rows = [row for row in tables["hand_in_item"] if row["Id"] in hand_in_ids]
     if {row["Id"] for row in hand_in_rows} != hand_in_ids:
         raise ValueError("Map13 story references a missing official hand-in item configuration.")
+    access_condition_ids = sorted({r["AccessibleConditionId"] for r in tables["Map/map_region"]
+                                   if r["ClassId"] == 13 and r["AccessibleConditionId"] > 0})
     runtime = {
         "manifest": VERSION,
         "mapClassId": 13,
@@ -264,8 +323,9 @@ def build() -> dict:
                         for row in roles],
         "mapLogicTags": logic_tags,
         "playerConditions": player_conditions,
-        "mapTalkEntries": [],
-        "mapTalkConditions": [],
+        "mapTalkEntries": dependencies["mapTalkEntries"],
+        "mapTalkConditions": condition_closure(dependencies["mapTalkEntries"], tables["conditions"], access_condition_ids),
+        "requiredAccessConditionIds": access_condition_ids,
         "storyOptions": option_rows,
         "fixedRewards": [{"Id": row["Id"], "CanGetTimes": row["CanGetTimes"],
                            "Items": [{"ItemId": int(item_id), "Count": count}
@@ -279,7 +339,11 @@ def build() -> dict:
         "playables": [],
         "stories": main_stories,
         "subgraphs": subgraphs,
-        "entityTemplates": [],
+        "entityTemplates": [{"EntityClassId": int(key), "Components": [
+            {"Type": name, "Json": json.dumps(fields, ensure_ascii=False, separators=(",", ":"))}
+            for name, fields in value.items()]} for key, value in sorted(templates.items(), key=lambda p: int(p[0]))],
+        "quickBuys": dependencies["quickBuys"],
+        "mainlineTasks": mainline_tasks(tables["task"], 13),
     }
     write_json(OUTPUT, runtime)
     json_meta(OUTPUT)
@@ -295,8 +359,11 @@ def build() -> dict:
                    "dialogueLines": sum(len(group["Lines"]) for row in records for group in row["dialogueGroups"]),
                    "dialogRoles": len(roles), "mapLogicTags": len(logic_tags),
                    "playerConditions": len(player_conditions),
-                   "fixedRewards": len(fixed_rows), "handInItems": len(hand_in_rows)},
-        "pendingRuntimeBindings": ["official playables", "MapTalk/native dialog data", "Map13 entity templates"],
+                   "fixedRewards": len(fixed_rows), "handInItems": len(hand_in_rows),
+                   "mapTalkEntries": len(runtime["mapTalkEntries"]), "mapTalkConditions": len(runtime["mapTalkConditions"]),
+                   "entityTemplates": len(runtime["entityTemplates"]), "mainlineTasks": len(runtime["mainlineTasks"]),
+                   "quickBuys": len(runtime["quickBuys"]), "requiredAccessConditions": len(access_condition_ids)},
+        "pendingRuntimeBindings": ["official playables", "native dialog UI", "puzzle and witch runtime result bindings"],
     }
     write_json(OUTPUT_RECEIPT, receipt)
     print(json.dumps(receipt["counts"], ensure_ascii=False, sort_keys=True))

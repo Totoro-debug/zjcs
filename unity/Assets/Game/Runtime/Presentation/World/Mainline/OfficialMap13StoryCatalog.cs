@@ -10,6 +10,10 @@ namespace Zjcs.Presentation.World
     public sealed class OfficialMap13StoryCatalog
     {
         public const string Manifest = "871_156598";
+        [Serializable] private sealed class MapActivationFields { public int MapClassId; }
+        [Serializable] private sealed class AloneWorldFields { public int MapAloneWorldClassId; }
+        [Serializable] private sealed class NpcFollowerFields { public int[] NpcClassIds; }
+        [Serializable] private sealed class SceneConditionFields { public int SceneType; }
         public Map10RuntimeStoryData Data { get; }
         private readonly Dictionary<string, Map10RuntimeStory> stories;
         private readonly Dictionary<string, Map10RuntimeStory> subgraphs;
@@ -31,7 +35,8 @@ namespace Zjcs.Presentation.World
             return new OfficialMap13StoryCatalog(data);
         }
 
-        public bool TryGetStory(string key, out Map10RuntimeStory story) => stories.TryGetValue(key, out story);
+        public bool TryGetStory(string key, out Map10RuntimeStory story) => stories.TryGetValue(key, out story)
+            || subgraphs.TryGetValue(key, out story);
 
         public bool TryGetSubgraph(string key, out Map10RuntimeStory story) => subgraphs.TryGetValue(key, out story);
 
@@ -125,14 +130,55 @@ namespace Zjcs.Presentation.World
         private void Validate()
         {
             if (Data.manifest != Manifest || Data.mapClassId != 13 || Data.stories == null
-                || Data.stories.Length != 65 || Data.subgraphs == null || Data.subgraphs.Length != 23
-                || Data.dialogRoles == null || Data.dialogRoles.Length != 18
+                || Data.stories.Length != 74 || Data.subgraphs == null || Data.subgraphs.Length != 23
+                || Data.dialogRoles == null || Data.dialogRoles.Length != 20
                 || Data.mapLogicTags == null || Data.mapLogicTags.Length != 49
-                || Data.storyOptions == null || Data.fixedRewards == null || Data.fixedRewards.Length != 6
+                || Data.playerConditions == null || Data.playerConditions.Length != 2
+                || Data.storyOptions == null || Data.fixedRewards == null || Data.fixedRewards.Length != 7
                 || Data.handInItems == null || Data.handInItems.Length != 3)
                 throw new InvalidDataException("Official Map13 story catalog does not match its pinned source closure.");
 
+            if (Data.mapTalkEntries == null || Data.mapTalkEntries.Length != 64
+                || Data.mapTalkConditions == null || Data.mapTalkConditions.Length != 23
+                || Data.entityTemplates == null || Data.entityTemplates.Length != 165
+                || Data.mainlineTasks == null || Data.mainlineTasks.Length != 20
+                || Data.quickBuys == null || Data.quickBuys.Length != 1)
+                throw new InvalidDataException("Official Map13 common story dependencies are incomplete.");
+            foreach (int follower in new[] { 8402, 8440, 8441, 8442 })
+                if (!Data.entityTemplates.Any(value => value != null && value.EntityClassId == follower
+                    && value.Components != null && value.Components.Length > 0))
+                    throw new InvalidDataException("Official Map13 follower EC template is missing: " + follower);
+            foreach (Map10RuntimeMapTalkEntry talk in Data.mapTalkEntries)
+                if (talk == null || (!string.IsNullOrEmpty(talk.TalkId) && !stories.ContainsKey(talk.TalkId)
+                    && !subgraphs.ContainsKey(talk.TalkId)))
+                    throw new InvalidDataException("Official Map13 MapTalk story is missing.");
+
             HashSet<string> all = new HashSet<string>(StringComparer.Ordinal);
+            HashSet<string> logicTags = new HashSet<string>(Data.mapLogicTags.Select(value => value?.Tag), StringComparer.Ordinal);
+            var playerConditions = new Dictionary<int, Map13RuntimePlayerConditionData>();
+            foreach (Map13RuntimePlayerCondition condition in Data.playerConditions)
+            {
+                if (condition == null || condition.ClassId <= 0 || condition.Condition == null
+                    || playerConditions.ContainsKey(condition.ClassId)
+                    || (condition.Condition._type != "HasItemCondition"
+                        && condition.Condition._type != "StoryCountCondition"
+                        && condition.Condition._type != "CompositeOrCondition"))
+                    throw new InvalidDataException("Official Map13 player condition catalog is malformed.");
+                if (condition.Condition._type == "CompositeOrCondition"
+                    && (condition.Condition.Ids == null || condition.Condition.Ids.Length == 0
+                        || condition.Condition.Ids.Any(id => id <= 0)))
+                    throw new InvalidDataException("Official Map13 composite player condition is malformed.");
+                playerConditions.Add(condition.ClassId, condition.Condition);
+            }
+            if (Data.playerConditions.Any(value => value.Condition._type == "CompositeOrCondition"
+                && value.Condition.Ids.Any(id => !Data.playerConditions.Any(target => target.ClassId == id))))
+                throw new InvalidDataException("Official Map13 composite player condition references a missing ID.");
+            int mapActivations = 0;
+            int aloneWorldAppearances = 0;
+            int npcFollowerAdds = 0;
+            int npcFollowerRemovals = 0;
+            int mapSceneConditions = 0;
+            HashSet<int> npcFollowerClasses = new HashSet<int>();
             foreach (Map10RuntimeStory story in Data.stories.Concat(Data.subgraphs))
             {
                 if (story == null || string.IsNullOrWhiteSpace(story.key) || !all.Add(story.key)
@@ -152,8 +198,75 @@ namespace Zjcs.Presentation.World
                     if (node.type == "HandInItemNode"
                         && !Data.handInItems.Any(value => value != null && value.Id == node.handInItemId))
                         throw new InvalidDataException("Official Map13 hand-in item configuration is not loaded: " + node.handInItemId);
+                    if (node.type == "SetMapLogicEntitySetStateNode"
+                        && (node.mapLogicStates == null || node.mapLogicStates.Length == 0
+                            || node.mapLogicStates.Any(state => state == null || string.IsNullOrWhiteSpace(state.Tag))))
+                        throw new InvalidDataException("Official Map13 story references an unknown map-logic tag: " + story.key);
+                    if (node.type == "SetMapLogicEntitySetStateNode")
+                        foreach (Map10RuntimeMapLogicState state in node.mapLogicStates)
+                            if (!logicTags.Contains(state.Tag)) logicTags.Add(state.Tag);
+                    if (node.type == "PlayerActiveMapNode")
+                    {
+                        MapActivationFields target = JsonUtility.FromJson<MapActivationFields>(node.sourceJson);
+                        if (target == null || target.MapClassId <= 0)
+                            throw new InvalidDataException("Official Map13 story has an invalid map activation target: " + story.key);
+                        mapActivations++;
+                    }
+                    if (node.type == "PlayerWorldAloneAppearNode")
+                    {
+                        AloneWorldFields target = JsonUtility.FromJson<AloneWorldFields>(node.sourceJson);
+                        if (target == null || target.MapAloneWorldClassId <= 0)
+                            throw new InvalidDataException("Official Map13 story has an invalid alone-world target: " + story.key);
+                        aloneWorldAppearances++;
+                    }
+                    if (node.type == "AddNpcFollowerNode")
+                    {
+                        NpcFollowerFields followers = JsonUtility.FromJson<NpcFollowerFields>(node.sourceJson);
+                        if (followers?.NpcClassIds == null || followers.NpcClassIds.Length == 0
+                            || followers.NpcClassIds.Any(id => id <= 0))
+                            throw new InvalidDataException("Official Map13 follower node has an invalid class ID list: " + story.key);
+                        npcFollowerClasses.UnionWith(followers.NpcClassIds);
+                        npcFollowerAdds++;
+                    }
+                    if (node.type == "RemovePlayerNpcFollowerAllNode") npcFollowerRemovals++;
+                    if (node.type == "PlayerOnSceneConditionNode")
+                    {
+                        SceneConditionFields scene = JsonUtility.FromJson<SceneConditionFields>(node.sourceJson);
+                        if (scene == null || scene.SceneType != 3)
+                            throw new InvalidDataException("Official Map13 story waits for an unsupported scene type: " + story.key);
+                        mapSceneConditions++;
+                    }
+                    if (node.type == "PlayerConditionNode")
+                    {
+                        if (string.IsNullOrWhiteSpace(node.playerConditionType)
+                            || node.playerConditionParam == null)
+                            throw new InvalidDataException("Official Map13 player condition node is malformed: " + story.key);
+                        switch (node.playerConditionType)
+                        {
+                            case "CompositeOr":
+                                if (node.playerConditionIds == null || node.playerConditionIds.Length == 0
+                                    || node.playerConditionIds.Any(id => !playerConditions.ContainsKey(id)))
+                                    throw new InvalidDataException("Official Map13 composite player condition references a missing ID: " + story.key);
+                                break;
+                            case "MapLogicEntityEndByTag":
+                            case "StagePass":
+                            case "StoryCount":
+                            case "StoryStatus":
+                            case "WorldMapProgress":
+                                break;
+                            default:
+                                throw new InvalidDataException("Unsupported official Map13 player condition node: " + node.playerConditionType);
+                        }
+                    }
                 }
             }
+            if (mapActivations != 1 || aloneWorldAppearances != 1)
+                throw new InvalidDataException("Official Map13 story map activation/alone-world node closure is incomplete.");
+            if (npcFollowerAdds != 6 || npcFollowerRemovals != 8
+                || !npcFollowerClasses.SetEquals(new[] { 8402, 8440, 8441, 8442 }))
+                throw new InvalidDataException("Official Map13 NPC follower node closure is incomplete.");
+            if (mapSceneConditions != 12)
+                throw new InvalidDataException("Official Map13 map-scene condition closure is incomplete.");
             if (Data.handInItems.Any(value => value == null || value.Id <= 0 || value.CanHandTimes < 0
                     || value.Items == null || value.Items.Length == 0
                     || value.Items.Any(item => item == null || item.ItemId <= 0 || item.Count <= 0)))

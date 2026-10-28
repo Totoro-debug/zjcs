@@ -29,16 +29,31 @@
       "sha256": "45bffc960b233c35ea824bd2fd39696e534545a931e970ba8459181e519d55c2"
     },
     {
+      "path": "unity/Assets/Official/World/Map/13/Source/story-dependencies.json",
+      "bytes": 534428,
+      "sha256": "edda63c09c8f94f0a57745b0f5445114d338436229065b327c713a6726a8587a"
+    },
+    {
+      "path": "assets/reference/official-map/map13-story-dependencies-source-manifest.json",
+      "bytes": 706190,
+      "sha256": "b95c57ae28fdf298287d1e43f846addb35a0184caf9c87279afccab518d5b8c4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/templates.json",
+      "bytes": 430971,
+      "sha256": "d2244e946dd2e860381f67570bc3495d73efa790e1b783faf6841194d9d9580d"
+    },
+    {
       "path": "scripts/prepare_unity_map13_story_runtime.py",
-      "bytes": 15535,
-      "sha256": "7c718b66cb994cb81894556d5617b3ec554a1ea1a055100bedcc1672810c15a5"
+      "bytes": 20049,
+      "sha256": "83e3a2cfcede892f9637abec8e3eccc47c9af8c062becc1fdf613c2afa691823"
     }
   ],
   "outputs": [
     {
       "path": "unity/Assets/Game/Resources/Map13/stories.json",
-      "bytes": 4151430,
-      "sha256": "e21cb3336e2ffc739d84661cdf26f3bfb27c8e2547f087bf289217bcf3154183"
+      "bytes": 5262173,
+      "sha256": "a111a7424dac29763bef90ff5f33c70f5186f67ca6500f315a162fd77521c5f8"
     },
     {
       "path": "unity/Assets/Game/Resources/Map13/stories.json.meta",
@@ -47,21 +62,27 @@
     }
   ],
   "counts": {
-    "graphs": 88,
-    "mainStories": 65,
+    "graphs": 97,
+    "mainStories": 74,
     "subgraphs": 23,
-    "nodes": 1327,
-    "dialogueGroups": 183,
-    "dialogueLines": 412,
-    "dialogRoles": 18,
+    "nodes": 1576,
+    "dialogueGroups": 218,
+    "dialogueLines": 466,
+    "dialogRoles": 20,
     "mapLogicTags": 49,
     "playerConditions": 2,
-    "fixedRewards": 6,
-    "handInItems": 3
+    "fixedRewards": 7,
+    "handInItems": 3,
+    "mapTalkEntries": 64,
+    "mapTalkConditions": 23,
+    "entityTemplates": 165,
+    "mainlineTasks": 20,
+    "quickBuys": 1,
+    "requiredAccessConditions": 13
   },
   "pendingRuntimeBindings": [
     "official playables",
-    "MapTalk/native dialog data",
-    "Map13 entity templates"
+    "native dialog UI",
+    "puzzle and witch runtime result bindings"
   ]
 }

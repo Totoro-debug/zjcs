@@ -13,6 +13,9 @@ namespace Zjcs.Presentation.World
         private static readonly OfficialMainlineMapProfile Map12 = new OfficialMainlineMapProfile(
             12, 155, 49, "Map12/UI/", new[] { 1211, 1212, 1213, 1218, 1219, 1221, 1222, 1223, 4108, 4110, 4113 }, 98);
 
+        private static readonly OfficialMainlineMapProfile Map13 = new OfficialMainlineMapProfile(
+            13, 158, 74, null, new[] { 1224, 1225, 1226, 1227, 1228, 1229, 1230, 1231, 4139, 4153, 4157, 4160, 4163 });
+
         public int MapClassId { get; }
         public int StageCount { get; }
         public int StoryCount { get; }
@@ -45,6 +48,7 @@ namespace Zjcs.Presentation.World
                 case 10: return Map10;
                 case 11: return Map11;
                 case 12: return Map12;
+                case 13: return Map13;
                 default: throw new ArgumentOutOfRangeException(nameof(mapClassId), "Only migrated world maps can be opened.");
             }
         }

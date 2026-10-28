@@ -33,6 +33,8 @@ namespace Zjcs.Presentation.World
 
             Map10RuntimeBattleData battles = JsonUtility.FromJson<Map10RuntimeBattleData>(battleData.text);
             Map10RuntimeStoryData storyDataValue = JsonUtility.FromJson<Map10RuntimeStoryData>(storyData.text);
+            string expectedBattleManifest = "854_156383";
+            string expectedStoryManifest = mapClassId == 13 ? "871_156598" : "854_156383";
             puzzleRules = storyDataValue?.puzzleRules;
             statues.witchInfos = storyDataValue?.witchInfos ?? Array.Empty<Map11RuntimeWitchInfo>();
             statues.witchResults = storyDataValue?.witchResultEffects ?? Array.Empty<Map11RuntimeWitchResult>();
@@ -40,17 +42,18 @@ namespace Zjcs.Presentation.World
             hud.quickBuys = storyDataValue?.quickBuys ?? Array.Empty<Map11RuntimeQuickBuy>();
             int expectedStages = MapProfile.StageCount;
             int expectedStories = MapProfile.StoryCount;
-            if (battles == null || battles.manifest != "854_156383" || battles.mapClassId != mapClassId
+            if (battles == null || battles.manifest != expectedBattleManifest || battles.mapClassId != mapClassId
                 || battles.stages == null || battles.monsterRosters == null || battles.battleScenes == null
                 || battles.stages.Length != expectedStages || battles.monsterRosters.Length != expectedStages
                 || (mapClassId == 11 && (battles.entityStageBindings == null || battles.entityStageBindings.Length != 591))
                 || (mapClassId == 12 && (battles.entityStageBindings == null || battles.entityStageBindings.Length != 858))
-                || storyDataValue == null || storyDataValue.manifest != "854_156383"
+                || storyDataValue == null || storyDataValue.manifest != expectedStoryManifest
                 || storyDataValue.mapClassId != mapClassId || storyDataValue.stories == null
                 || storyDataValue.dialogRoles == null || storyDataValue.mapLogicTags == null
                 || storyDataValue.mapTalkEntries == null || storyDataValue.mapTalkConditions == null
                 || storyDataValue.storyOptions == null || storyDataValue.nativeDialogs == null
                 || storyDataValue.playables == null
+                || (mapClassId == 13 && storyDataValue.playerConditions == null)
                 || (mapClassId == 11 && (storyDataValue.fixedRewards == null
                     || storyDataValue.mainlineTasks == null || storyDataValue.mainlineTasks.Length != 24
                     || storyDataValue.entityTemplates == null || storyDataValue.entityTemplates.Length != 110
@@ -102,6 +105,16 @@ namespace Zjcs.Presentation.World
                     throw new InvalidDataException("Official Map" + mapClassId + " story subgraph is malformed.");
                 storySubgraphs.Add(value.key, value);
             }
+            // Some original Map13 graphs are both subgraph targets and direct MapTalk entries.
+            // Keep one payload per graph while exposing those entries to the root dispatcher.
+            if (mapClassId == 13)
+                foreach (Map10RuntimeMapTalkEntry talk in storyDataValue.mapTalkEntries)
+                {
+                    if (talk == null || string.IsNullOrEmpty(talk.TalkId) || stories.ContainsKey(talk.TalkId)) continue;
+                    if (!storySubgraphs.TryGetValue(talk.TalkId, out Map10RuntimeStory graph))
+                        throw new InvalidDataException("Official Map13 MapTalk graph is missing: " + talk.TalkId);
+                    stories.Add(talk.TalkId, graph);
+                }
             foreach (Map10RuntimeFixedReward value in storyDataValue.fixedRewards ?? Array.Empty<Map10RuntimeFixedReward>())
             {
                 if (value == null || value.Id <= 0 || value.CanGetTimes < 0 || value.Items == null
@@ -132,7 +145,7 @@ namespace Zjcs.Presentation.World
             {
                 if (value == null || value.RoleId <= 0 || value.EntityClassId < 0
                     || string.IsNullOrWhiteSpace(value.RoleName)
-                    || (value.EntityClassId > 0 && string.IsNullOrWhiteSpace(value.PortraitPath))
+                    || (mapClassId != 13 && value.EntityClassId > 0 && string.IsNullOrWhiteSpace(value.PortraitPath))
                     || (value.EntityClassId == 0 && value.RoleId != 100000))
                     throw new InvalidDataException("Official Map" + mapClassId + " dialogue role is malformed.");
                 dialogRoles.Add(value.RoleId, value);

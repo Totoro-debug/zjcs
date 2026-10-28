@@ -608,3 +608,9 @@ assets/reference/official-map/map14-ui-binding-source-manifest.json text eol=lf
 unity/Assets/Game/Resources/Map14/UI/** -text
 unity/Assets/Official/World/Map/14/UI/** -text
 unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Map14Ui.cs* text eol=lf
+
+# Map13 shared story dependencies and runtime payload source bytes.
+scripts/prepare_unity_map13_story_dependencies.py text eol=lf
+scripts/test_prepare_unity_map13_story_runtime.py text eol=lf
+unity/Assets/Game/Resources/Map13/stories.json* text eol=lf
+assets/reference/official-map/map13-story-dependencies-source-manifest.json text eol=lf

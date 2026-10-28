@@ -4,7 +4,7 @@ import json
 import unittest
 from pathlib import Path
 
-from prepare_unity_map13_story_runtime import ROOT, SOURCE, normalize_story
+from prepare_unity_map13_story_runtime import ROOT, SOURCE, normalize_story, mainline_tasks, condition_closure
 
 
 class Map13StoryPlayableRegression(unittest.TestCase):
@@ -83,6 +83,66 @@ class Map13StoryPlayableRegression(unittest.TestCase):
                 check(child)
         for prefab in prefabs.values():
             check(prefab["hierarchy"])
+
+
+class Map13StoryDependencyRegression(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.tables = json.loads((SOURCE / "tables.json").read_bytes())
+        cls.dependencies = json.loads((SOURCE / "story-dependencies.json").read_bytes())
+        cls.runtime = json.loads((ROOT / "unity/Assets/Game/Resources/Map13/stories.json").read_bytes())
+
+    def test_shared_dependency_receipt_matches_sources_and_outputs(self):
+        receipt = json.loads((ROOT / "assets/reference/official-map/map13-story-dependencies-source-manifest.json").read_bytes())
+        self.assertEqual(receipt["manifest"], "871_156598")
+        for key in ("inputs", "outputs", "tools", "officialCode"):
+            for record in receipt[key]:
+                self.assertEqual(hashlib.sha256((ROOT / record["path"]).read_bytes()).hexdigest(),
+                                 record["sha256"], record["path"])
+
+    def test_shared_graphs_keep_original_nodes_and_dialogue(self):
+        self.assertEqual(len(self.dependencies["graphs"]), 9)
+        self.assertEqual(sum(len(g["nodes"]) for g in self.dependencies["graphs"].values()), 249)
+        converted = {g["key"]: g for g in self.runtime["stories"] + self.runtime["subgraphs"]}
+        for name, graph in self.dependencies["graphs"].items():
+            expected = normalize_story(name, graph, {}, self.dependencies["dialogues"],
+                                       self.dependencies["localization"], set())
+            self.assertEqual(converted[name]["nodes"], expected["nodes"], name)
+            self.assertEqual(converted[name]["dialogueGroups"], expected["dialogueGroups"], name)
+        for talk in self.runtime["mapTalkEntries"]:
+            if talk["TalkId"]:
+                self.assertIn(talk["TalkId"], converted)
+        self.assertEqual(len(self.runtime["mapTalkEntries"]), 64)
+
+    def test_followers_use_original_ec_components_in_order(self):
+        templates = json.loads((SOURCE / "templates.json").read_bytes())
+        templates.update(self.dependencies["entityTemplates"])
+        actual = {r["EntityClassId"]: r for r in self.runtime["entityTemplates"]}
+        for identity in (8402, 8440, 8441, 8442):
+            fields = templates[str(identity)]
+            self.assertEqual([c["Type"] for c in actual[identity]["Components"]], list(fields))
+            self.assertEqual({c["Type"]: json.loads(c["Json"]) for c in actual[identity]["Components"]}, fields)
+
+    def test_mainline_retains_non_region_task_and_stops_at_next_map(self):
+        actual = mainline_tasks(self.tables["task"], 13)
+        self.assertEqual(self.runtime["mainlineTasks"], actual)
+        self.assertIn(1355, [r["ClassId"] for r in actual])
+        for row in actual:
+            self.assertIn(row["FinishCondition"].get("MapClassId"), (None, 13))
+        def task(identity, map_id, children):
+            return dict(ClassId=identity, TaskType=10, FinishCondition={} if map_id is None else {"MapClassId": map_id}, NextIds=children, Order=identity)
+        rows = [task(1, 13, [2]), task(2, None, [3]), task(3, 14, [4]), task(4, None, [])]
+        self.assertEqual([r["ClassId"] for r in mainline_tasks(rows, 13)], [1, 2])
+
+    def test_condition_closure_keeps_composites_cycles_and_rejects_missing(self):
+        talks = [{"Condition": {"Ids": [1]}}]
+        conditions = [{"ClassId": 1, "Condition": {"Ids": [2]}}, {"ClassId": 2, "Condition": {"Ids": [1]}}]
+        self.assertEqual(condition_closure(talks, conditions), conditions)
+        with self.assertRaisesRegex(ValueError, "Missing original MapTalk condition: 3"):
+            condition_closure(talks, conditions, [3])
+        expected = condition_closure(self.runtime["mapTalkEntries"], self.tables["conditions"], self.runtime["requiredAccessConditionIds"])
+        self.assertEqual(self.runtime["mapTalkConditions"], expected)
+        self.assertEqual(len(self.runtime["requiredAccessConditionIds"]), 13)
 
 
 if __name__ == "__main__":

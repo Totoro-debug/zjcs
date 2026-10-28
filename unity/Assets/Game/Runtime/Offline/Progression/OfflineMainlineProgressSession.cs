@@ -61,6 +61,7 @@ namespace Zjcs.Offline.Progression
         public int InitialWeaponType;
         public string GuildName = string.Empty;
         public List<OfflineItemStack> Inventory = new List<OfflineItemStack>();
+        public List<int> NpcFollowerClassIds = new List<int>();
         public string CommerceStateJson = string.Empty;
         public OfflineWishProgress Wishes = new OfflineWishProgress();
         public OfflineTreasureGachaProgress TreasureGacha = new OfflineTreasureGachaProgress();
@@ -870,6 +871,23 @@ namespace Zjcs.Offline.Progression
             return stack == null ? 0 : stack.Count;
         }
 
+        public ProgressionResult SetNpcFollowerClassIds(IEnumerable<int> classIds)
+        {
+            if (classIds == null) throw new ArgumentNullException(nameof(classIds));
+            int[] desired = classIds.Distinct().OrderBy(value => value).ToArray();
+            if (desired.Any(value => value <= 0) || desired.Length > 1000)
+                return Result(ProgressionResultStatus.InvalidState, message: "NPC follower class IDs are invalid.");
+            Reload();
+            if (Save.Player.NpcFollowerClassIds.SequenceEqual(desired))
+                return Result(ProgressionResultStatus.Unchanged);
+            OfflineMainlineSave next = Clone(Save);
+            next.Player.NpcFollowerClassIds = desired.ToList();
+            if (!Validate(next))
+                return Result(ProgressionResultStatus.InvalidState,
+                    message: "NPC follower update produced an invalid player save.");
+            return Commit(next, Result(ProgressionResultStatus.Applied));
+        }
+
         public int FriendshipLevel(int npcClassId, long experience, int subRank)
         {
             return FriendshipCatalog.FriendshipLevel(npcClassId, experience, subRank);
@@ -1061,6 +1079,9 @@ namespace Zjcs.Offline.Progression
                 || save.Player.PendingStatueBattleEffects.Count > 10000
                 || save.Player.CommerceStateJson == null || save.Player.CommerceStateJson.Length > 2_000_000
                 || save.Player.Inventory.Count > 20000 || save.Player.UnlockedMapClassIds.Count > 1000
+                || save.Player.NpcFollowerClassIds == null || save.Player.NpcFollowerClassIds.Count > 1000
+                || save.Player.NpcFollowerClassIds.Any(value => value <= 0)
+                || save.Player.NpcFollowerClassIds.Distinct().Count() != save.Player.NpcFollowerClassIds.Count
                 || save.Player.RankUnlockTimes == null || save.Player.RankUnlockTimes.Count > 100
                 || save.World.Maps.Count > 1000 || save.World.BattleCounts.Count > 100000
                 || save.World.StageWinCounts.Count > 100000
@@ -1147,6 +1168,7 @@ namespace Zjcs.Offline.Progression
             if (save.World == null) save.World = new OfflineWorldProgress();
             if (save.Tasks == null) save.Tasks = new OfflineTaskProgress();
             if (save.Player.Inventory == null) save.Player.Inventory = new List<OfflineItemStack>();
+            if (save.Player.NpcFollowerClassIds == null) save.Player.NpcFollowerClassIds = new List<int>();
             if (save.Player.AppliedInventoryEventIds == null) save.Player.AppliedInventoryEventIds = new List<string>();
             if (save.Player.CommerceStateJson == null) save.Player.CommerceStateJson = string.Empty;
             if (save.Player.Wishes == null) save.Player.Wishes = new OfflineWishProgress();
