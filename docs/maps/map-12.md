@@ -82,6 +82,8 @@ Map12主线任务1165～1270沿用官方顺序、前置和奖励；其中1215要
 
 原 `TeamInviteNpc` 的候选链已核对：`NpcInfoParser.GetNpcs(ignoreType)` 排除传入类型，随后 `NpcInfo.IsFightAssist` 检查战斗实体与等级详情，`NpcUtils.IsNpcAssistLimit` 再检查遇见状态及助战条件。因此当前来源的原 Team 窗口候选为95名（85名伙伴、9名导师、1名商人），并非只枚举49名探索首领；是否可邀请仍取决于原资格。`FightOfficialNpcAssistanceCatalog.TeamInviteNpcClassIds`／`CanInviteTeamNpc` 保留这条原筛选链，`CreateTeamInviteUnit` 共用既有原等级区间／属性／主动被动技能装配；现有伙伴 API 保持85名范围。`test_map12_stele_npcs.ps1` 已实际运行，核对95名的条件与遇见门槛、10名额外角色在等级60／rank 2／SubRank 6的真实属性与技能装配及三个既有伙伴的两入口结果一致；战斗程序集在 Unity 引用下独立编译通过。该检查是规则和单位数据验证，尚未连接战斗碑队伍、站位、次数事务、原 TeamPanel、模型和地图战斗。原 Team 目标为 `TeamTargetBattleStele(StageId, GroupId)`；没有改用日常副本目标或次数上限。输入、构造证明、原客户端／共享实现及适配哈希见[战斗碑 NPC 来源](../../assets/reference/official-map/map12-stele-npcs-source-manifest.json)。
 
+战斗碑窗口的本地配置／服务绑定已迁入 `WorldBattleSteleContextFactory`：复用原区域位阶压制、BattleStele 战力颜色主题与推荐索引，保持实体等级先取整再加原怪物加成的奖励预览输入，以及 `TeamTargetBattleStele(StageId, GroupId)` 的目标身份。`WorldBattleSteleStageUI` 接回原 UIBase 初始化生命周期，按原步骤读取玩家状态，并在启用／停用及重新初始化时订阅／解除三类队伍事件；开战回调经过已迁入的原玩法状态门槛。`test_map12_stele_context.ps1` 已实际编译六个源码程序集并运行七座碑的数据规则检查，覆盖阈值相等颜色、压制方向、空队伍与单人分支、目标身份、事件退订、奖励预览及硬互斥拦截。全工程静态元数据检查通过（73851个 GUID）。这是配置与服务适配，正式地图宿主、原 TeamPanel／队伍、四份新增窗口的原生导入和运行输入／画面／存档及 Windows 发布仍待完成；没有把独立规则检查记为 MonoBehaviour 生命周期或窗口交互验收，自动运行验收保持暂停。原代码、四份程序集、配置及适配哈希见[窗口数据与队伍事件来源](../../assets/reference/official-map/map12-stele-context-source-manifest.json)。
+
 ## 自定义实现
 
 魔能邃渊102的服务端生成战斗等级执行体未取得；按用户确认，建筑相对等级为原区域等级加 Lo.Level，Lo.SubRank=0继承区域阶位，非0使用显式配置；怪物等级使用建筑实体等级加原 StageBehStageComponent、Lo 组件、关卡及阵型位置偏移，阶位使用建筑实体阶位，保留原怪物属性公式。此处基准为50／6，不使用关卡表静态1／1。

@@ -2,6 +2,8 @@
 
 [返回文档索引](../../docs/README.md)
 
+山之国七战斗碑的原 `BattleSteleWorldStageDialog`／StageUI／UIBase、目标身份及等级／战力规则，已按选定871程序集和配置恢复窗口本地服务绑定与三类队伍事件生命周期。六个源码程序集编译、七点位独立数据规则和静态元数据检查通过；尚未完成原生窗口导入、正式地图宿主／队伍接线和运行验收。原输入、程序集、依赖及适配哈希见[窗口数据与队伍事件](official-map/map12-stele-context-source-manifest.json)，复现入口为 `scripts/prepare_unity_map12_stele_context.py`、`scripts/test_map12_stele_context.ps1`。
+
 山之国原 Team NPC 候选：已按 `NpcInfoParser.GetNpcs(ignoreType)` 的排除语义、`NpcInfo.IsFightAssist` 与 `NpcUtils.IsNpcAssistLimit` 核对95名候选。显式 Team 目录／资格／战斗单位 API 共用原属性和技能装配；95名条件与遇见门槛、10名额外候选单位及伙伴入口一致性检查通过，Unity 引用编译通过。正式窗口、地图队伍、次数事务、模型及战斗未接线。六张现有打包配置逐项匹配当前构造证明；输入、原代码／程序集及适配输出见[战斗碑 NPC 来源](official-map/map12-stele-npcs-source-manifest.json)，范围见[山之国](../../docs/maps/map-12.md)。
 
 山之国战斗碑原玩法状态门槛：`prepare_unity_player_play.py` 复用选定 `871_156598` 的 Common 参数／互斥表，仅转换命名空间与三处 C# 主构造语法；`PlayerPlayStateModule` 按原异步状态机恢复取消、重新检查、10轮边界和开战回调顺序，以本地接口替代玩家／关卡解析器／退出处理器／语言广播。独立规则测试及 Unity 引用编译通过，正式状态服务和窗口接线、Unity 运行及发布未完成；自动运行验收暂停。20份原代码、两份程序集、生成／测试适配和35项输出哈希见[原玩法状态来源](official-map/map12-player-play-source-manifest.json)，范围见[山之国](../../docs/maps/map-12.md)。

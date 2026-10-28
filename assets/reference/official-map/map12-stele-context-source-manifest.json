@@ -1,0 +1,163 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "originalCode": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/BattleSteleWorldStageDialog.cs",
+      "sha256": "ef598748bd3cebd2378f10cad13eb2f439209d6a065dfe18d9625e08be3a30de"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/StageDialog.cs",
+      "sha256": "db2550b5747e91cbada15e255ced29ca54dd750f641704243dd7f0644a957295"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/StageUI.cs",
+      "sha256": "aa5a26bc557218593e57f5baf9398b5067f107c7da00acd7e0c8de23d71c686d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/UIBase.cs",
+      "sha256": "fd029496b78172ec9e9e0710366106bcdaf493c1270dfff6311d1c79400abc61"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/CombatRatingConfig.cs",
+      "sha256": "85aafcd9b8416e5e414f0b68903a961e1b679d82dda08fffe22424177ae2a1d3"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StagePartInfoBattleStele.cs",
+      "sha256": "5768b58c75e3d752644b04efa65b17bb65ce2a193892fa7b08672f7d4b9084ff"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/TeamTargetBattleStele.cs",
+      "sha256": "a047e36b23559bc67bbe6cb851e65675b3a62e4bc6badf1463f15fd0624899f0"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/TeamTargetCatalog.cs",
+      "sha256": "1f2a46b740491f8ff55befd5d0ad284dbb97cbdd39ec436ef6320968892b6876"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FormulaHandler.cs",
+      "sha256": "1c9d25ef741f342b419a85f53ed3287a7c86a7397847a6170176a62276fbce98"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/BattleFormulaHandler.cs",
+      "sha256": "d464f1f70a436185e946194eb37419685d3fca441f35d829789654281e4e17da"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/PlayerPlayFightAction.cs",
+      "sha256": "f43d06e655cbf163b07df3782076e178857ab9ee0eead9c1417457d37841105a"
+    }
+  ],
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Framework.dll",
+      "sha256": "2b2bed9a863049192ab828f305f8ad36e0f72fd673d7624ffe2078d0fb81795e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Framework.FirstPass.Runtime.dll",
+      "sha256": "fe49d4ce3611fbd7f9a2fe73fdd0986253b9f44517eb1044e717d901dd2caabe"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/steles.json",
+      "sha256": "77957658a9ae12d24594feef3219b1cb64ac4aaf9b54dcbcc0d1da672b639b3a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Native/region-label-data.json",
+      "sha256": "94149adb0144fd7115e021d80c54faf05292d904f3d7c8105b36d891ae49aebf"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/map12-battles.json",
+      "sha256": "07b5b481782651fedeea0e5d862728c9b254cb5f7c89187c91d233477668e33e"
+    },
+    {
+      "path": "assets/reference/official-map/map12-steles-source-manifest.json",
+      "sha256": "8e7fa248727199c313039620e6759aae974583b1a0df9b0b04bc28a764f73b75"
+    },
+    {
+      "path": "assets/reference/official-map/map12-label-components-code-source-manifest.json",
+      "sha256": "9c362068dbd3b77abaf21a571b9569896742292137aab4d94ceef03e36014fa4"
+    },
+    {
+      "path": "assets/reference/official-map/map12-native-region-labels-source-manifest.json",
+      "sha256": "e8b93d065d9a8a04ca5354ff2b0dd44cd02d84603c8ec57c36d326e897118ac0"
+    },
+    {
+      "path": "assets/reference/official-map/map12-player-play-source-manifest.json",
+      "sha256": "d9fb1b9da427e2c30540a7c5add596a08e23d353461aed4eaae20601c09bc5eb"
+    },
+    {
+      "path": "assets/reference/official-map/map12-stele-ui-source-manifest.json",
+      "sha256": "e5397de314da878ec270250e7911bb24c4bd36885756a87b924b9edd403b8df7"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleSteleContextFactory.cs",
+      "sha256": "ae9bac03c5579c86890a644ed6f7a2241abd9d3e1deb0fdf63c3dc4796f28565"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleSteleContextFactory.cs.meta",
+      "sha256": "83c711d627e8eb51d33b8ee484ac5ab3a2ecabd203b428a5103bfb403eaa242f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleSteleStageUI.cs",
+      "sha256": "ce616a610f9bf729aac791d13ba5660dd688f19dd4038bdc17ce30f756da0553"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/Zjcs.Official.WorldUI.asmdef",
+      "sha256": "1bcee2bc1fd155846182694bd1f2ab6bc0ed9ac649a560b0042c8594a514439f"
+    },
+    {
+      "path": "scripts/fixtures/map12_stele_context_harness.cs",
+      "sha256": "7fc2950af77b7f523957452d3e6146f9b5907ee706bec0d78df85b43d93fe7c6"
+    },
+    {
+      "path": "scripts/test_map12_stele_context.ps1",
+      "sha256": "67c9ea720f63127aa57d2c0a31b33de1d510fa13edbdb71785a9ddcc680845c8"
+    },
+    {
+      "path": "scripts/test_map12_stele_context.py",
+      "sha256": "7f6ab4e8959113d2e7bbbf89ebff6692e36f561aa8a4ecaf32089d75397943b5"
+    },
+    {
+      "path": "scripts/prepare_unity_map12_stele_context.py",
+      "sha256": "f2abc7c609510918ff97d6370dbabf56064ef1855f91d2d8260f52bc1075ee7a"
+    }
+  ],
+  "bindings": {
+    "stageIds": [
+      906,
+      908,
+      931,
+      930,
+      905,
+      907,
+      932
+    ],
+    "teamTargetCatalog": 9,
+    "labelResource": "Map12/Native/region-label-data",
+    "originalFightStageFlags": [
+      "SupportTeam",
+      "JoinInMiddle",
+      "Background",
+      "LeaveInPreparing",
+      "LeaveInPlaying"
+    ]
+  },
+  "adaptation": "Replace injected online/ECS services with explicit local interfaces; retain original UI initialization order, rank and combat-rating formulas, reward preview inputs, target identity, team event lifecycle and actual PlayerPlayStateModule gate. Use existing original UIBase lifecycle.",
+  "validation": "Standalone source compilation and data-rule execution through test_map12_stele_context.ps1; this check neither starts Unity nor exercises MonoBehaviour lifecycle, input or rendering.",
+  "limitations": [
+    "Formal map host and original team panel/roster are not wired by this binding.",
+    "Native window import, Play Mode input/visual/save checks and Windows Player release remain pending."
+  ]
+}

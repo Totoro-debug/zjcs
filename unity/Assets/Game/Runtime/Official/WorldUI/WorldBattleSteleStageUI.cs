@@ -6,7 +6,7 @@ namespace Zjcs.Official.WorldUI
 {
     // BattleSteleWorldStageDialog, with ECS/team/player-play-state services
     // supplied by the local map host. Serialized references retain prefab paths.
-    public sealed class WorldBattleSteleStageUI : MonoBehaviour, IStageUI
+    public sealed class WorldBattleSteleStageUI : WorldInitializedUI, IStageUI
     {
         public Transform mRewardSlot;
         public Button mTeamBtn, mBattleBtn;
@@ -22,20 +22,35 @@ namespace Zjcs.Official.WorldUI
             mBattleBtn.onClick.AddListener(OnClickBattleBtn);
         }
 
-        public void Init(WorldStageUiContext context)
+        protected override void OnEnableAndInited()
+        {
+            base.OnEnableAndInited();
+            info.SubscribeTeamChanges?.Invoke(RefreshTeamMemberCount);
+        }
+
+        protected override void OnDisableAndInited()
+        {
+            info.UnsubscribeTeamChanges?.Invoke(RefreshTeamMemberCount);
+            base.OnDisableAndInited();
+        }
+
+        public void Init(WorldStageUiContext context) => InitWrapper(() =>
         {
             stage = context;
             info = context.BattleStele ?? throw new ArgumentException("Original stele UI context is missing.");
+            info.PrepareRankSuppression?.Invoke();
             mRankSuppressionSwitcher.SetState(info.RankSuppressed);
             mTeamStateSwitcher.SetState(info.SupportTeam);
+            info.PrepareTeamTarget?.Invoke();
             RefreshTeamMemberCount();
             mTitleText.SetKey("stage_" + info.StageId + "_name");
             mRecommendCombatRatingText.Format(info.Compact(info.RecommendCombatRating));
             mRankSuppressionText.Format(info.Compact(info.RecommendCombatRating));
+            info.PrepareCombatRating?.Invoke();
             mCurrentCombatRatingText.SetKey("ui_battle_stele_current_combat_rating",
                 ColorUtility.ToHtmlStringRGBA(info.CombatRatingColor), info.Compact(info.CombatRating));
             stage.ShowRewardPreview(mRewardSlot);
-        }
+        });
 
         // The offline team service invokes this after the same add/remove/update
         // events handled by the original dialog; it queries the current roster.
@@ -86,5 +101,7 @@ namespace Zjcs.Official.WorldUI
         public Action<string, Action> Confirm;
         public Action<string> Notify;
         public Action<int, Action> PlayFightAction;
+        public Action<Action> SubscribeTeamChanges, UnsubscribeTeamChanges;
+        public Action PrepareRankSuppression, PrepareTeamTarget, PrepareCombatRating;
     }
 }
