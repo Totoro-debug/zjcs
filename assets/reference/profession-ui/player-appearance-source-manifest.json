@@ -1,0 +1,393 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "code_manifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "ports": [
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/AppearanceOperateSource.cs",
+        "sha256": "f44208f79081bb3aa5e546e6e27b4adec3d490ec377985fbd7ca85d79e364636"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceOperateSource.cs",
+        "sha256": "0c43cb42ce18b30b0a9ff16989814e783a750b3aea6aa0d35476be290122ccd1"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceOperateSource.cs.meta",
+        "sha256": "107cd5ac1a32cb85c2d2eaefcf4e7d5020b23c5a8dbecf9cfcab2768bef0a35d"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EquipPos.cs",
+        "sha256": "676871f4c5841fcedd1f85fe58a0806b31214eecb268eaa57875b788504f453a"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/EquipPos.cs",
+        "sha256": "60248c93269a47f76c83caee5435c33adc44d5466637ea1446fed3ea9613f1cd"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/EquipPos.cs.meta",
+        "sha256": "7417976f8f1b7a60271f9c882567cc102fd243401c842e5dbb562112b6e69773"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/common-source/AppearanceAnimNameCombineRule.cs",
+        "sha256": "d73b3fb57316c3f7026352f5aebddf39c683c6ebdcccb32bb352c1c7159a2931"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceAnimNameCombineRule.cs",
+        "sha256": "d5e74e0319d401141831f9c0031d6d52a286dc6a37e700ce532d12346e48b43d"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceAnimNameCombineRule.cs.meta",
+        "sha256": "b88a2a7917ced5d8b60863b9b064e943e79e32997086ef38ba37cd8f7b3d102e"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/common-source/AnimCombineRule.cs",
+        "sha256": "625b6feae6d004541c496f6e6d583878fc92965954e43e2651f1e819945bc78e"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AnimCombineRule.cs",
+        "sha256": "39ee48a60df07779d5e83f73da2eef9a11ea2678a88e30540d077a8c2b504a6f"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AnimCombineRule.cs.meta",
+        "sha256": "483bcca7066ef75a6f92c8a131242aadee1e3c6f7cb59ebb51886e79a313fe08"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/common-source/RuleFillType.cs",
+        "sha256": "262cae3fba77cafcd30442220be2ad22882129c3309095d93d77fec0d99cd40e"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/RuleFillType.cs",
+        "sha256": "8f5c94466814ecb1a814dc2fd9a0b5bb9b7c42db115f7d2d166a3dcc7fcfbf70"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/RuleFillType.cs.meta",
+        "sha256": "43b886ce746a009f517311bdc464b98cd173c0ea47ae538ad9089e89e24ce0d3"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/LiteInfoCallbackBase.cs",
+        "sha256": "9050ce192d6cb485129b9470f77c6ca7ec4642f9c9d605230d6043b6392f7284"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionLiteInfoCallbackBase.cs",
+        "sha256": "24b40ad627ae8fc265178352d0c1e3ed0483b3ba566d53338b08d102f1d3f4a9"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionLiteInfoCallbackBase.cs.meta",
+        "sha256": "14213c76933cc4bd756ed79f46af2b52a80dd13ffb525936f5446b5c262fab4a"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/LiteInfoCallback.cs",
+        "sha256": "727f64de417ee60c6d60af9d4964e69454c59fb62cf8397af93940d21b4a997a"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionLiteInfoCallback.cs",
+        "sha256": "3b75d950d1c991fe494178dc1c67eb9fd84ec83ed5b1c5d93259ff3ba046d21a"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionLiteInfoCallback.cs.meta",
+        "sha256": "b97d4618ab599c78daf73385c4c3e546c3da9f800f2b148cc380b0e7020c527d"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayerAppearanceInfo.cs",
+        "sha256": "c248a0db212170981f180408c113d977c8b141e70c11efad098543069f66bf12"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerAppearanceInfo.cs",
+        "sha256": "a730a1f9e18e7b6916a17d56a61ff2f796032098e8b8c3aad31a8bd7d40ecc30"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerAppearanceInfo.cs.meta",
+        "sha256": "ab17db14815828f18904e82ce7c86f50bfc323ee5439a9c3dbb59ce2e91c5139"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem/APlayerAppearanceInfo.cs",
+        "sha256": "8be90e56ec8c1ecb7fdeda83405c1e08e6fddd7208c6c60146bc799bacb00db0"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/APlayerAppearanceInfo.cs",
+        "sha256": "d5d1b9ffd4f8b289d7239019a6cb366f4639001a304192385198eaf694d2b9bd"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/APlayerAppearanceInfo.cs.meta",
+        "sha256": "4a79ea5e7a09c2d704c1e047debf90cf451f58c0dedeb8027bb98267bf3154fe"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem/IAppearanceRuntimeDataOverride.cs",
+        "sha256": "38a6883f09c9bef83654cb733263babd1ef9d897501213f2c30a50c308ae1582"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IAppearanceRuntimeDataOverride.cs",
+        "sha256": "c2c06abe6d3e2a583aa6cf2fe9a4aef96cfced60f0a32e6e2d61a761bf5ebeeb"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IAppearanceRuntimeDataOverride.cs.meta",
+        "sha256": "2eba3a84a4b3e5d92c511d50e3c600b7986f220bac56adfed0a3ab425c5830f0"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem/PlayerAppearance.cs",
+        "sha256": "42066169c856b75de01208e36413022c144d37a2b596360bce2b3086b4fdcefb"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerAppearance.cs",
+        "sha256": "7160b65c68a3b2db7f97f362f1e914254e8ee852294b6e60474b90ca04abcb0f"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerAppearance.cs.meta",
+        "sha256": "8ee98f0d1450ce2e6b8a636a705cc975c362244eecfd39ee576e6ef649aee9f0"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem/PlayerAnimationAppearance.cs",
+        "sha256": "61aac786ea6044bb7e6e803e8d368fbb5576fc6837efa197b7062cac5e8f0f3d"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerAnimationAppearance.cs",
+        "sha256": "b0d7c6323f4edfaeaadf421a26dc5371cebd67e7787381138c059269525775ec"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerAnimationAppearance.cs.meta",
+        "sha256": "1d49ba70e419145d0cba98e7aa21667830518fdc963ba89937ed24c3943c415c"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem.Runtime/AppearanceAnimUtils.cs",
+        "sha256": "32b704601acfdd112d8d289ef4082fa51fb5e7e0dd78281a76a1b56ebd1748c3"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceAnimationNames.cs",
+        "sha256": "24f9c7a11a77f1d032cddfc12dfb144c447cd069d078b010fe9c689e4213619a"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceAnimationNames.cs.meta",
+        "sha256": "dbc6069e4c6260b19fe2b25c62c567971a8b2e139738fb3d4b6fa78facda5f45"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/ProfessionUtils.cs",
+        "sha256": "61b1f0c7b6d3a936b2734936f2faae4e9e4cd36a3420093b361e0d95a9b2b37f"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearancePreview.cs",
+        "sha256": "1e111965f1be67574c6a63def18771951093ac026f7500471eafeccf9ae532b1"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearancePreview.cs.meta",
+        "sha256": "6fc31409c1521a7e54ddab2c01c631e71cc2a5baaafd30ed68072fe200bd5f24"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/ProfessionAppearance.cs",
+        "sha256": "dc7fed204601509a7bfacbda5e0fa04eff5ee541275af9073810f80e6f9d5584"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearance.cs",
+        "sha256": "9731ead5f6a43bf491a3dbd5a41184dcfa59acea45dd6c67e771b88c9594d354"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearance.cs.meta",
+        "sha256": "3536b244436524ca598e308addea3ba7ce482a275365a386d3307d01584fd7e6"
+      }
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_profession_player_appearance.py",
+    "sha256": "ec2e98cb086a31985f2e3ddd03a3c9501a6548c1dc268162d996e5aeac8b79c3"
+  },
+  "native_binding_closure": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/player-appearance-binding-closure.json",
+    "sha256": "96b06eb42adafb4ac16e8bc3685dec0c4e3bf811cea722aeea7d8f86def30efe"
+  },
+  "additional_source": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem.Runtime/AppearanceUtils.cs",
+      "sha256": "f44c5bd234aedd06e9f7845b8b1eaf66963a81675b8eb5b204ca4e2c8189c109"
+    }
+  ],
+  "animation_rules": {
+    "source": {
+      "bundle": "defaultpackage_assets_scriptableconfig_modules_appearance.bundle",
+      "bundle_hash": "2719b9183d3296a439780b070ce4743c",
+      "path_id": "2234969898516398862",
+      "origin": "apk_zip",
+      "manifest": "871_156598",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/2719b9183d3296a439780b070ce4743c.bundle",
+      "raw_size": 30231,
+      "raw_sha256": "355c83b77a342a0883c3fa63e6d553fe248fe1049364791e0a33acf6f99c72a1"
+    },
+    "payload_sha256": "229893a8d1c835f49f070ede218116760fd74cbe9d45724f52e77a69108e179a",
+    "original_fields": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      },
+      "m_Enabled": 1,
+      "m_Script": {
+        "m_FileID": 0,
+        "m_PathID": 8775534341331226624
+      },
+      "m_Name": "AppearanceAnimNameCombineRule",
+      "mRules": [
+        {
+          "Key": "profession",
+          "Content": "{0}/{1}_{2}",
+          "Desc": "职业/动作_Id",
+          "FillList": [
+            20,
+            0,
+            1
+          ]
+        },
+        {
+          "Key": "profession_sex",
+          "Content": "{0}/{1}_{2}_{3}",
+          "Desc": "职业/动作_性别_Id",
+          "FillList": [
+            20,
+            0,
+            30,
+            1
+          ]
+        },
+        {
+          "Key": "profession_ui",
+          "Content": "{0}/{1}_UI_{2}",
+          "Desc": "职业/动作_UI_Id",
+          "FillList": [
+            20,
+            0,
+            1
+          ]
+        },
+        {
+          "Key": "phase",
+          "Content": "{0}/{1}_{2}",
+          "Desc": "场景/动作_Id",
+          "FillList": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "Key": "phase_sex",
+          "Content": "{0}/{1}_{2}_{3}",
+          "Desc": "场景/动作_性别_Id",
+          "FillList": [
+            0,
+            0,
+            30,
+            1
+          ]
+        },
+        {
+          "Key": "appearance",
+          "Content": "{0}/{1}_{2}",
+          "Desc": "职业/动作_名称",
+          "FillList": [
+            20,
+            0,
+            0
+          ]
+        },
+        {
+          "Key": "phase_1",
+          "Content": "{0}/{1}_{2}_{3}",
+          "Desc": "场景/动作_Id_动画类型",
+          "FillList": [
+            0,
+            0,
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    "outputs": [
+      {
+        "path": "unity/Assets/Official/ProfessionUI/Portrait/AppearanceAnimNameCombineRule.asset",
+        "sha256": "594e444f08eb77fbc27b65fbca272ec0928a9902038aa6c5d59a988936e6fbe3"
+      },
+      {
+        "path": "unity/Assets/Official/ProfessionUI/Portrait/AppearanceAnimNameCombineRule.asset.meta",
+        "sha256": "a89dcbc9e78f25c2e7e602cc2d419a02df338d1b9e4de464f391ddf41c38d199"
+      }
+    ]
+  },
+  "fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/player-appearance-validation.json",
+    "sha256": "057f4e3789a6757027899693bcaf784f6c603a070c5687713c82bc13cc1e1da7"
+  },
+  "bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerAppearanceBindings.cs",
+      "sha256": "bb2d7fb4f85322fc76128c16fc721698b7d87fcbe869aa638163a71dff2a6b08"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerAppearanceBindings.cs.meta",
+      "sha256": "0c04091081bbae6cb767606a56c288a89dcae2b6074a92b872112a71ac7944c8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearancePreviewBindings.cs",
+      "sha256": "6f78210319e6408edd4976dffa1113b3e900d596c81556fed6afd245a43c4475"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearancePreviewBindings.cs.meta",
+      "sha256": "55683adf03ef3fd5712cc8035f748b3a96025fde80dd2ea2226d769ea4660923"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionPlayerAppearanceValidation.cs",
+      "sha256": "f2a6ddade7c9b71f910f79a0a2c472e39dcd4a1595040d5e487085beca7e06bf"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionPlayerAppearanceValidation.cs.meta",
+      "sha256": "bac814b52cbda531c684fc202f239060b7eb4ee2e42b843ac0308aa04de140bb"
+    }
+  ],
+  "operation": "Migrate full original PlayerAppearanceInfo, PlayerAppearance, PlayerAnimationAppearance, APlayerAppearanceInfo, ProfessionAppearance, runtime-data override contract, lite callback lifecycle, appearance-event/equipment enums and animation-format rule classes. Scope ProfessionUtils to its complete SetProfessionAppearance method: clone, default weapon overwrite/removal, appended rewards, runtime build, character apply and looping UI animation retain source order. Preserve registration, refresh/animation/load order, exact data identity, runtime object reuse, override restoration, event exception boundaries, cancellation and Clear behavior. Protocol AppearanceData and profession enum cross explicit bindings as object/int without serialization or substitute rules; clone dictionary views address the actual cloned object. Animation-name formatting is scoped to the original GetAnimName and GetFormatId methods; all seven rule records are recovered from the APK without changes. No skeleton SDK implementation is used.",
+  "validated_scope": "Isolated Unity 2022.3.57f1c2 Play Mode passed: self registration/enable/disable and event filtering, released/replaced/late lite callbacks including original Clear behavior, runtime/data identity, override restoration, observer order and exception boundary, animation before loading, cached names/loop/base-profession/sex and formatting; seven original rule records match every field/order and actual native deserialized lookup/format. Profession preview clones before default weapon/reward updates, retains original data, preserves missing-sex defaults and None behavior, and routes the looping UI animation after appearance application. Player/protocol/resource/animation endpoints and dictionary clone are fixtures. Native character rendering and full profession page remain unbound.",
+  "limitations": [
+    "Source data construction, protocol player/lite-info providers, native character rendering and full profession UI are not installed by this application-layer port."
+  ]
+}

@@ -326,6 +326,10 @@
     "path": "assets/reference/profession-ui/mesh-batches-source-manifest.json",
     "sha256": "1811e83c80aa23ab00d22a034e13994bc86a00081ffaa7b3d177d3d36289a8c2"
   },
+  "player_appearance": {
+    "path": "assets/reference/profession-ui/player-appearance-source-manifest.json",
+    "sha256": "fce9cbf0304c537a5b536973e3ad5591303a3bd0ce428d171b4c56fdb267fdbe"
+  },
   "appearance_ui": {
     "path": "assets/reference/profession-ui/appearance-ui-source-manifest.json",
     "sha256": "b51c202d49624d9862d5219dea3dd389428ddb20e747085db6f8ba33b86ab899"
@@ -396,7 +400,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "a4fbf320c6e73f006937a5fd0b4e8e1f7dcc701acc68cd5a267d21cf847c7a9e"
+    "sha256": "7b998436fee36d29fa44ac492e67fced122933e74329e4a2731fe005f250f867"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",

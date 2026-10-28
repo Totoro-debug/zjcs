@@ -491,6 +491,8 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 职业原生几何裁剪与批次：独立半平面求交覆盖原男女模型 6 个凸裁剪附件，960 组交集与 GEOS 双精度参考核对；保留边界绕序、UV 插值及结束槽位身份。`ProfessionNativeMeshBatches` 按完整原绘制顺序聚合连续图集／混合组、保留显式分隔和槽位颜色，清理旧网格并复用自有 Mesh。两份原职业 prefab 的裁剪、预乘色和零深度字段通过已核验导出链读取；空／禁用／重排／自身结束槽位、分组与释放在 Play Mode 通过，原转换 UI shader 的 D3D11 红蓝几何截图已查看。输入骨骼、几何和白贴图为夹具，不代表真实角色或完整页面通过；未读取骨骼 SDK 实现。哈希、来源和限制见 `profession-ui/native-clipping-source-manifest.json` 及 `profession-ui/mesh-batches-source-manifest.json`。
 
+原玩家外观与职业预览：`prepare_unity_profession_player_appearance.py` 迁移完整玩家外观基类、刷新／动画组件、职业预览及其原克隆／默认武器／追加奖励方法、回调和覆盖契约。保留原对象身份、事件过滤、回调与 Clear、动画／资源执行顺序；协议与本地玩家数据通过显式接口连接，未提供替代规则。原 871 APK 的外观配置包中 7 条动画命名规则按原字段恢复到 `Assets/Official/ProfessionUI/Portrait/AppearanceAnimNameCombineRule.asset`，绑定迁入的原规则类，包／对象、程序集和输入输出哈希见 `profession-ui/player-appearance-source-manifest.json`。隔离 Play Mode 检查生命周期、覆盖还原、原克隆预览分支与数据不变、规则全部字段／原顺序及反序列化／格式化通过；提供方为夹具，正式角色／页面未完成。主面板原依赖尚有 6 类组件，未生成完整素材快照，未使用骨骼 SDK 实现。
+
 ## 技能首页与安装流程复核
 
 2026-10-13：复核固定版本 `854_156383` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。
