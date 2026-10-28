@@ -20,6 +20,8 @@
 
 原 `CharacterPortraitPersister`、磁盘集合、状态、详细请求数据及其接口已迁入，复用原 `IStorage`／`IPersistentState` 和 UniTask 契约。保留版本 3 失配时先清缓存、再改版本并写状态、最后清过期项的次序；文件名只含请求 ID 与外观哈希，不含 VersionId，原始纹理字节不重新编码，过期按最后访问时间加三天判断。Windows 沙箱根目录由调用方显式传入，尚未选择正式玩家存档路径或接入正式状态提供器。隔离 Play Mode 实际写盘、重新创建状态提供器／持久化器并读回 GPU 像素，再载入新纹理；核对版本、空数据、文件独占读写失败、过期与清空后复用，通过并查看读回纹理画面。文件占用探针产生的两条共享冲突和两条空数据错误为已断言的原失败分支。来源见[肖像持久化](../../assets/reference/profession-ui/portrait-persistence-source-manifest.json)。此验证不覆盖真实角色拍摄或职业页面的存档恢复。
 
+原 `PlayerPortraitSettings`、完整序列化字典和皮肤类型枚举已迁入；四组拍摄参数及默认／加载／禁用三张 Sprite 直接取自 APK，保留原网格、UV、pivot、边框和纹理采样字段，ASTC 各 mip 解码为 Windows RGBA32 原生 Texture2D。职业拍摄尺寸为 260×310、正交尺寸 1.9、偏移为 `(0, 1.9, -5)`、深度 24，并捕获粒子；其他三组参数、皮肤哈希权重与排除项均保留。隔离 Play Mode 核对全部配置、原字典反序列化和删除分支、延迟纹理封装及不销毁标记，三张 Sprite 几何与每个 mip 的 GPU 读回哈希通过，运行图片已查看。原占位肖像只用于其默认／加载／禁用分支；真实角色拍摄及职业树角色仍未接通。来源见[肖像配置与资源](../../assets/reference/profession-ui/portrait-settings-source-manifest.json)，代码入口为 `PlayerPortraitSettings.cs`，资源入口为 `Assets/Official/ProfessionUI/Portrait/PlayerPortraitSettings.asset`；未生成完整素材快照。
+
 两份原始字体由官方 `FontAssetFontConfig` 的路径、长度和 MD5 取回。原 `MPLUSRounded1c-Medium Atlas` 是 0×0、无像素载荷的动态 Alpha8 图集，已恢复并验证原生导入。当前含动态物品／配置的主面板依赖检查覆盖 881 个资产、87 种脚本、8 种托管类型和 7 个 shader，断开 GUID 为 0；尚有 15 种运行组件及相关服务未接入，主要是外观预览、离屏角色渲染、玩家信息和音频对象，不能视为原生职业界面已经可运行。
 
 馈赠使用的 `ItemIconDefault`、总职业等级说明使用的 `RuleDialog` 及四种奖励 Sprite 已从 APK 的实际对象取回，并记录调用、配置、CAB、对象 ID 和原始哈希。当前版本的成就、物品及规则提示三张 Luban 表已完全解码；组 10 的十条成就配置、四种奖励物品定义及 `ProfessionLevelInfo` 的标题／三条说明与现有打包配置相符。原图标管理器的 ID 覆盖、类型覆盖、默认图标选择顺序已核对，这四种奖励均使用原 `ItemIconDefault`，没有改用手写图标控件。

@@ -435,6 +435,8 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 肖像持久化的六个原类型及 `IStorage`／`IPersistentState` 契约见 `profession-ui/portrait-persistence-source-manifest.json`，记录源码、C# 输出、程序集与验证入口哈希。保留版本 3 清理／写状态顺序、请求 ID＋外观哈希文件名、原始字节和最后访问时间加三天的期限；沙箱根目录显式注入。隔离 Unity Play Mode 通过 GPU 字节写盘与重建提供器后恢复、版本与空数据、真实文件独占失败、过期与清空后复用，读回纹理画面已查看。测试状态提供器未作为正式玩家存档实现，真实角色拍摄及完整职业页面仍待接线。
 
+肖像配置与原占位美术见 `profession-ui/portrait-settings-source-manifest.json`：先核对 APK 中实际 `defaultpackage_assets_scriptableconfig_modules_playerportrait.bundle`（MD5 `b2bbdefda767f3b9f00117861247e457`）及其引用的 `defaultpackage_assets_image_ui_portrait.bundle`（`b205bc1f1618a18ee23a313c861cffec`），取得四组参数和三个原 Sprite，无需云端替代。迁入原 `PlayerPortraitSettings`、序列化字典和皮肤枚举；三张 Sprite、三张 RGBA32 Texture2D 与设置资产的源对象、字段、mip、转换和交付哈希均记录在该清单，显式入口为 `Assets/Official/ProfessionUI/Portrait/PlayerPortraitSettings.asset`。隔离 Unity Play Mode 验证配置、原字典分支、纹理所有权、Sprite 几何／UV 及全部 GPU mip 字节，运行图片已查看。仅恢复原默认／加载／禁用分支，真实角色拍摄和页面未完成，未生成完整素材快照。
+
 ## 技能首页与安装流程复核
 
 2026-10-13：复核固定版本 `854_156383` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。

@@ -71,6 +71,7 @@ def build():
         wiki=file_record(ROOT / "assets/reference/profession-ui/wiki-source-manifest.json"),
         portrait_lifecycle=file_record(ROOT / "assets/reference/profession-ui/portrait-lifecycle-source-manifest.json"),
         portrait_persistence=file_record(ROOT / "assets/reference/profession-ui/portrait-persistence-source-manifest.json"),
+        portrait_settings=file_record(ROOT / "assets/reference/profession-ui/portrait-settings-source-manifest.json"),
         item_resources=file_record(ROOT / "assets/reference/profession-ui/item-resources-source-manifest.json"),
         item_icon=file_record(ROOT / "assets/reference/profession-ui/item-icon-source-manifest.json"),
         item_configs=file_record(ROOT / "assets/reference/profession-ui/item-configs-source-manifest.json"),
