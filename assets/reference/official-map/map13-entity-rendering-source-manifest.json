@@ -1,0 +1,75 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "method": "Official application mesh generation, fill branches, radial cuts, color and dirty-refresh order retained. Namespace and C# decompilation syntax repaired; original injected background service registry is explicitly shared and ticked by the offline owner. Sprite injection must precede Awake. No SDK code or replacement art.",
+  "components": 84,
+  "coverage": "Entity sliced renderer source/asset recovery. Full original prefabs, EC view lifecycle, map input/save and Player require separate verification.",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/SlicedFilledRender.cs",
+      "sha256": "268ce972693a815b024682437f8d44b39c99222a3c48f7698f1c82e092cb895c"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/SlicedFilledRenderService.cs",
+      "sha256": "43f4e85b62221494e1ca94ef47d46a620600305647e76996e6a21a858a684590"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_entity_rendering.py",
+      "sha256": "63099be60ec35185a551544ba563e349ebf80b21241a315d19d73af5065f4917"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-entity-object-graph.json",
+      "sha256": "18f89ebe23f05d61849a699f980948603fdfcd055df04fb19ae770617b5fe813"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-entity-components.json",
+      "sha256": "8e555c849c373c923fcaa87cfd16b06e1caebe8b65614648130958cdd7b55eb3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-entity-material-bindings.json",
+      "sha256": "9b3d3a0b4ed41b9ba66b223c86947094f716321c9eec46efb194504ee96e0ade"
+    },
+    {
+      "path": "assets/reference/official-map/map13-native-entity-sprites-source-manifest.json",
+      "sha256": "64a74a54d1008d942d8ecc5fe6fc9705e25d392edaec5d7f10b8d0ffe622a4c2"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityRendering/SlicedFilledRender.cs",
+      "sha256": "6a4b10d515444d4e137081244aa683a292b216a79666c3cbe282f7df9c1054fc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityRendering/SlicedFilledRender.cs.meta",
+      "sha256": "f20c2f3f3e78f4e43f80c95a3ba27939ac72a2d3eaeb17f78fe00e0f7a5ffbaa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityRendering/SlicedFilledRenderService.cs",
+      "sha256": "a0cf80ae652a5f95622c8d4274441bf6517355a709126783ad34da076b2c2e35"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityRendering/SlicedFilledRenderService.cs.meta",
+      "sha256": "1f71027687589cbea9f6337de0612f61c9d6ef2c8be19b13182c6c0687aac9b0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityRendering/Zjcs.Official.World.Map13EntityRendering.asmdef",
+      "sha256": "1e368272dcbdd739834447573c434274029eb7b6f61e822c32453cf1c8aa9408"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityRendering/Zjcs.Official.World.Map13EntityRendering.asmdef.meta",
+      "sha256": "bd8a9a5291a2017be20dd5fe5b7202dc556d72784db6a9ef93c54aa1078fbd76"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityRendering.meta",
+      "sha256": "0424e1ff0743d29ba2b8a4d71bb537f4f3663835fe572b2190a03658ef8804cb"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-entity-sliced-renderers.json",
+      "sha256": "974c5d09794b6a57000b96d2a585f3094fb556b36a7d8eefb2e5b04427a99106"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-entity-sliced-renderers.json.meta",
+      "sha256": "cd158f9829c15562cfae9707d083a227776f9cd29725cb361701f9c423ca5da0"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "source_sha256": "12228fd52fe669486fee152dde53bcfe192f8aff145c5bb7cc3288d215da601f",
+  "backend": "Direct3D11",
+  "editor": "2022.3.57f1c2",
+  "coverage": "Original sliced renderer lifecycle, original 84 configurations, native Sprite/atlas material binding, linear/radial fill meshes, dirty service LateUpdate and enable/disable. Diagnostic source-size objects only; full native prefab, entity EC/input/save and Windows Player remain pending.",
+  "components": 84,
+  "sampled_meshes": 504,
+  "mesh_fields": 52800,
+  "rendered_pixels": 881632,
+  "play_mode": true,
+  "verification_inputs": [
+    {
+      "path": "unity/Assets/Game/Editor/Map13EntityRendering/OfficialMap13SlicedRendererAcceptance.cs",
+      "sha256": "d2f6273019b7731cc15d43628474e85307c22adc7d8c1a8f1724dbdb2dfe62eb"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13EntityRendering/Zjcs.Editor.Map13.EntityRendering.asmdef",
+      "sha256": "d6ca20c08e8d8684056519f61ca05e3d3b324f1238fce309c4eaa0c5257afed8"
+    }
+  ],
+  "actual_runtime_galleries_reviewed": 2,
+  "unity_import_compile_global_validate": "passed",
+  "static_guid_check": 73523
+}
