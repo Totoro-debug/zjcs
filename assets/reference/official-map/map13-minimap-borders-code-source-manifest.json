@@ -1,0 +1,86 @@
+{
+  "format": 1,
+  "mapClassId": 13,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PrivateRegionUtility.cs",
+      "sha256": "1b3a02b16afbc8d7409cccd13af68b33b229e168a4dbb50aa5b02ea447c81e94"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PrivateRegionExtendUtils.cs",
+      "sha256": "0916155cab9e6ef37f2d454a476777a2f8fbbcceda6ddf70c06055f53ff38318"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapBorders/PrivateRegionUtility.cs",
+      "sha256": "ca07eecd62d322087d4a00e8f123834dd9de2f019165dc37b3653788d691cc56"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapBorders/PrivateRegionExtendUtils.cs",
+      "sha256": "3e400e000f12bf28167ffec02defc62eec369546f2c4823ba822e37bf29cd599"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapBorders/MiniMapBorderDiagnostic.cs",
+      "sha256": "06cdf91c384848e9cd13d4eea427acdf1d913dbb80c9ad7cc0781e3ad54891b0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapBorders/Zjcs.Official.World.Map13MiniMapBorders.asmdef",
+      "sha256": "91f55927ed1c14e8f7318f1e5cc5f5ab89d4728a5651636afa33a1b6bba83155"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeTerrain/Common/Pos2d.cs",
+      "sha256": "b03c06ed220bf27da5aefebcad7c8e27f73316ebe9c3accec8ee39fb78dee78b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeTerrain/Common/Direction.cs",
+      "sha256": "19142745fa33747fdd248634b5b4ea0e1d7bc60dd1d069cd440ab68b0864f555"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_map13_minimap_borders.py",
+    "sha256": "21fc940dfaa2fbf0f9c58e31dc6e16fd5fb46f2526a13eea74eef1d09fff2d0b",
+    "worktree_sha256": "21fc940dfaa2fbf0f9c58e31dc6e16fd5fb46f2526a13eea74eef1d09fff2d0b",
+    "normalization": "Repository LF text; original executed worktree bytes recorded separately"
+  },
+  "operation": "Copy all 767 lines of the original PrivateRegionUtility and PrivateRegionExtendUtils. Preserve one-unit grid and half-cell vertices, boundary direction order, line/point traversal, preferred directions, polygon simplification and original loop guards, ray-crossing containment, offset edge intersections and concave-neighbor extension. Reuse original Pos2d/Direction. Change only namespace and logging backend.",
+  "limitations": [
+    "Region description/highlight/native root binding, formal map input/save and Windows Player remain required."
+  ],
+  "local_validation": {
+    "editor": "2022.3.57f1c2",
+    "play_mode": {
+      "result": {
+        "editor": "2022.3.57f1c2",
+        "regions": 106,
+        "cells": 27227,
+        "edges": 7608,
+        "polygons": 25,
+        "village_vertices": 12,
+        "village_area": 362,
+        "containment_cases": 58564,
+        "grid_cases": 10,
+        "original_area_traversal": true,
+        "full_source_classes": true
+      },
+      "log_sha256": "105a0dc4a262341eda001f524e8cc7875b8be943bb4ebda986c779e46e2e80ae",
+      "runtime_errors": 0
+    },
+    "project_validation": {
+      "exit_code": 0,
+      "log_sha256": "711fe49c69170a48c5e724c12f6010baad2ad210d5b2adb019ffaacbba249595"
+    },
+    "static_metadata": {
+      "passed": true,
+      "guid_count": 75892
+    },
+    "validation_source": {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapBordersAcceptance.cs",
+      "sha256": "ec3024261420ff11766d04094abaec86dbb4f4d0557fe16bc637e173f8cf4aa7"
+    },
+    "scope": "Original geometry and real Play Mode only. Formal native UI/root/render/input/save and Windows Player remain pending."
+  }
+}
