@@ -10,6 +10,8 @@
 
 ## 原始官方实现
 
+队伍窗口复用职业头像时，已移除 `Zjcs.Official.ProfessionUI.asmdef` 中不存在的 `Unity.Collections` 程序集引用；此 Unity 版本的 `NativeArray` 由已引用的引擎核心程序集提供，保留原 GPU 像素读回代码。受影响源码及隔离 Unity 编译、全工程验证通过，关联的本地来源哈希已同步。
+
 原职业总览、职业树、导师、晋升与自由转职使用 Profession 配置、前置／条件、技能与装备关系、角色原模型和演出。
 
 ### 待迁移的规则与表现
@@ -298,7 +300,13 @@ prepare_profession_playable.py 从 PlayerWorldProfessionUpgradeConfig.asset 的�
 
 原轻量 UI 外观与材质管理：已迁入原应用 `AppearanceUILite`、完整 `AppearanceAssetManager`、原接口／配置及共享材质记录。保留原高清地址拼接、启用时先更新网格再增加加载器／贴图引用、停用时清空覆盖再释放请求、缓存加载器再次启用、多个渲染器跳过空／重复占位图；同时保留原共享材质克隆与计数、普通材质池重置／复用、低内存／逐帧清理及关闭顺序。SDK Graphic、资源和低内存事件通过显式本地接口适配，未引入 SDK 实现。隔离 Direct3D Play Mode 使用真实默认剑／杖纹理，验证两个使用者互不误卸载、五次请求释放／图集占位恢复、四个共享材质槽位及原材质池生命周期，并实际查看两张 GPU 图；Graphic／加载器端点、图集访问和资源句柄仍是夹具。Unity 导入／编译、全局校验和静态检查通过（仓库 75,006 个 GUID，隔离工程 73,834 个 GUID）。正式原生 Graphic、完整原加载器／图集资产、武器 prefab 接线和整页交互／存档／Windows 发布尚未完成。来源见[原轻量外观与材质管理](../../assets/reference/profession-ui/appearance-ui-lite-source-manifest.json)。
 
+原武器高清加载器／图集：已恢复完整 398 项占位贴图、主图／染色 GUID 映射和原顺序的 398 个图集材质，保留原空染色代理对象及其空结果请求分支；原 `AppearanceAssetManagerConfig` 的 UI shader、默认材质和完整 shader 回退依赖也已显式绑定。缺少现成转换的 GLES3 程序按实际平台／GPU 表解码，保留无可执行条目的原剥离 pass、LOD、关键字作用域和原程序，不从其他 pass 猜取代码。原材质同时引用的 `IceNoise`／`IceTexture` 已提取；默认剑／杖沿用已验证的真实高清页及占位对象身份，其他高清 GUID 完整保留，请求尚未转换的页时明确报错。本地入口为 `Resources/ProfessionUI/weapon-texture-resources`；请求句柄独立释放，目录继续拥有打包资源，不误卸载其他使用者。
+
+隔离 Direct3D Play Mode 已核对 399 个原材质、12,349 个精确浮点／颜色参数、400 个 GPU mip 哈希（4,563,564 字节）及 22 个新增 Windows D3D shader 阶段；真实本地请求接入原 `AppearanceUILite` 后，双使用者保留、空染色代理、原索引卸载恢复和原图集材质克隆／归还通过，并实际查看剑／杖 GPU 图。Unity 导入／编译及全局校验通过，仓库 75,876 个 GUID、隔离工程 74,657 个 GUID 静态检查通过。Graphic 端点和低内存订阅仍为夹具；正式武器 prefab／Graphic、角色物理与混合、整页点击／存档及 Windows 发布尚未完成。来源见[原武器加载器与图集](../../assets/reference/profession-ui/weapon-texture-loader-source-manifest.json)。
+
 ## 自定义实现
+
+职业武器资源通过本地显式目录加载；释放句柄只移除该次请求引用，由目录继续持有打包资产。
 
 本地外观会话将原网络玩家／序列化副本替换为已选角色存档的只读投影和深副本；本地结构遗漏的武器类别仅在该投影中按原默认设置方法补齐；原肖像缓存的修改标记使用会话内单调递增的 UTC ticks，不写回存档或作为玩法时间。存档没有整身外观 ID 和过期集合的对应字段，本作用域不推导其规则。
 
