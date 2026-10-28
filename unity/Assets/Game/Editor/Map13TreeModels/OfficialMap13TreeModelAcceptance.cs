@@ -231,7 +231,7 @@ namespace Zjcs.Editor.Map13TreeModels
                     int events = 0; list.OnFadeOutStart += () => events++; list.OnFadeOutCompleted += () => events++; list.OnFadeInStart += () => events++; list.OnFadeInCompleted += () => events++;
                     list.FadeOut(.08f); for (int frame = 0; events < 2 && frame < 60; frame++) yield return null;
                     Require(list.Alpha == 0 && !skeleton.gameObject.activeSelf && events == 2, "Original fade-out lifecycle differs.");
-                    list.FadeIn(.08f); for (int frame = 0; events < 4 && frame < 60; frame++) yield return null;
+                    list.FadeIn(.08f); for (int frame = 0; (events < 4 || (SpriteRendererList.State)typeof(SpriteRendererList).GetField("mCurrentState", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(list) != SpriteRendererList.State.FadeIned) && frame < 60; frame++) yield return null;
                     Require(list.Alpha == 1 && skeleton.gameObject.activeSelf && events == 4 && list.IsIn, "Original fade-in lifecycle differs."); fadeEvents += events;
                     var bounds = skeleton.View.LocalBounds; camera.transform.position = skeleton.transform.TransformPoint(bounds.center) + new Vector3(0, 0, -50);
                     camera.orthographicSize = Mathf.Max(bounds.extents.y * skeleton.transform.lossyScale.y, bounds.extents.x * skeleton.transform.lossyScale.x) * 1.3f;

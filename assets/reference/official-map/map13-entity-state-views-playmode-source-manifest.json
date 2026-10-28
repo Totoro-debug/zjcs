@@ -1,0 +1,35 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "execution": {
+    "source_sha256": "a459aab706eb88c28dac15bc28057437cc3ef169869e7da104bf09ab7e237e5a",
+    "editor": "2022.3.57f1c2",
+    "backend": "Direct3D11",
+    "coverage": "Original source attachment/animator/reward-count views run through IECView.Init/Load/Unload with exact original Model sprites/anchors and fade coroutines. State/config/result readers use explicit diagnostic inputs; outer EC/UI, gameplay/state-event host, input/save and Player are pending.",
+    "queries": 13,
+    "original_animators": 4,
+    "original_attachments": 107,
+    "count_cases": 12,
+    "fade_cycles": 10,
+    "rendered_pixels": 71302,
+    "play_mode": true
+  },
+  "acceptance": {
+    "path": "unity/Assets/Game/Editor/Map13EntityStateViews/OfficialMap13EntityStateViewAcceptance.cs",
+    "sha256": "49513427ab9a862c9318f37ea1778376d0b0648952b5c84dca5df8fd284fa0eb"
+  },
+  "checks": {
+    "unity_import_compile": true,
+    "root_static_guids": 73650,
+    "actual_runtime_images_viewed": true,
+    "tree_models_ahead_in_time_regression": true,
+    "root_project_tools_validate": false,
+    "root_project_tools_validate_limitation": "Attempted twice; root project is already open in another session. Previous complete tree-model module root validation passed; this module compiled and executed in the isolated Unity project."
+  },
+  "regression_receipts": [
+    {
+      "path": "assets/reference/official-map/map13-native-tree-models-playmode-source-manifest.json",
+      "sha256": "2e4604b63a2dfedf89b6f16bcef927748aae0428a329cfcd904090cf7f4e5331"
+    }
+  ]
+}
