@@ -152,6 +152,8 @@ Map13 正式实体／谜题／剧情空间输入：`prepare_unity_map13_entity_c
 
 ## 完整还原部分
 
+泽之国原小地图地区资源：106 份原 Tilemap prefab 的完整资源闭包已恢复，保留 7,577 条图块记录、12 份原 Tile、原 Sprite 网格及材质状态；两张官方 ASTC 纹理按原色彩空间和采样参数无翻转转换为原生 RGBA32。原 `Sprites/MaskableTilemap` 的四组 GPU 程序机械转换为 Windows 着色器，保留未公开区域混色、透明混合、像素对齐和外部 alpha 分支，未使用导出器占位 shader。隔离 Play Mode 验证全部地区导入／显式引用、图块身份／数量与两张纹理，8 个 Windows GPU 阶段均编译通过；已查看全部地区公开／未公开两张实际渲染画面，无运行错误，`ProjectTools.Validate` 通过。此项为地区资源与着色器；正式小地图根组件、区域状态加载、标记、输入存档及 Windows Player 仍待完成。见 [原地区资源与验证](../../assets/reference/official-map/map13-native-minimap-regions-source-manifest.json)；未生成完整素材快照。
+
 泽之国原小地图视野模块：完整迁移四份原视野处理器，保留矩形重叠的含边界判定、半径向上取整、X 优先的格子顺序、原身体偏移裁剪和控制器订阅顺序；复用原 `MyGridTransform`。隔离 Play Mode 已验证 483 个有序可见格、25 组矩形边界、真实原格子事件、同格不更新、角色替换／空角色／重新进入及释放时取消订阅；无运行错误，Unity 编译、`ProjectTools.Validate` 和元数据检查通过。此项为视野核心；正式相机／小地图根组件、区域标记、完整输入存档与 Windows Player 仍待接通。见 [原视野代码与验证](../../assets/reference/official-map/map13-minimap-view-code-source-manifest.json)。
 
 泽之国小地图原始层级与遮罩核心：已核对 `MiniMap_13` 的完整 40 包 CAB 闭包、9,052 个对象和 4,283 个组件；小地图原资源包保留 908 个原 GameObject／Transform、107 个 Tilemap 和 324 个应用组件的来源身份，12 处托管引用按原 RID、字段、浮点位和指针目标恢复。完整原导出层级以来源文本保存，尚未作为可运行 prefab 绑定。原 `MiniMapMaskHandler` 的十组图块条件、四向旋转、边缘／拐角优先级、可见格子更新和状态切换已迁入 C#；隔离 Play Mode 验证全部 256 种邻格组合、原生 Tilemap 旋转和最后一格解锁移除，运行错误为零。Unity 导入／编译与 `ProjectTools.Validate` 已通过。正式入口的小地图资源修正、其余管理器、区域遮罩／标记、完整输入存档和 Windows Player 仍待完成。来源见 [原小地图层级](../../assets/reference/official-map/map13-native-minimap-source-manifest.json) 与 [遮罩原代码及验证](../../assets/reference/official-map/map13-minimap-mask-code-source-manifest.json)；素材未进入完整快照。
