@@ -1,0 +1,338 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "receipt": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/male/source-manifest.json",
+        "sha256": "e670cdd902d9c8426b9b161abeec6577da0934e7ad8f6d0e56c9d8de87f71b13"
+      },
+      "skeleton": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/male/skeleton.json",
+        "sha256": "21bc0198abc44620e65f308c6acb9a78f3ed9d6feb1d2558acdc72ba76dd3e15"
+      },
+      "atlas": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/male/atlas.txt",
+        "sha256": "5a47a720a985b699e1152b4bb6c3eaa460bf5d8b66a62d39c7dd8993ee1b5e32"
+      },
+      "model": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_character_model_male_1.bundle",
+          "bundle_hash": "2ec21d403056db00dacfd3f6a0dbb3d5",
+          "path_id": "-1532103129496961130",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/2ec21d403056db00dacfd3f6a0dbb3d5.bundle",
+          "manifest": "871_156598",
+          "bundle_size": 2172416,
+          "bundle_sha256": "81ade0adc895094a0ebf6593a5d5822199995cd8a77560b561b61d1eb9280e87"
+        },
+        "payload_sha256": "0b10a99c0b554cc17e14f0b4baf6073e39fc97890b97e9267bc61d903fa30f1f",
+        "fields": {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "m_Enabled": 1,
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": -6887505452609033796
+          },
+          "m_Name": "character_Male_1_SkeletonData",
+          "atlasAssets": [
+            {
+              "m_FileID": 0,
+              "m_PathID": -5349680241044865977
+            }
+          ],
+          "scale": 0.009999999776482582,
+          "skeletonJSON": {
+            "m_FileID": 0,
+            "m_PathID": -6726923984513529141
+          },
+          "isUpgradingBlendModeMaterials": false,
+          "blendModeMaterials": {
+            "requiresBlendModeMaterials": false,
+            "applyAdditiveMaterial": true,
+            "additiveMaterials": [],
+            "multiplyMaterials": [],
+            "screenMaterials": []
+          },
+          "skeletonDataModifiers": [
+            {
+              "m_FileID": 5,
+              "m_PathID": -4869832580021117775
+            }
+          ],
+          "fromAnimation": [],
+          "toAnimation": [],
+          "duration": [],
+          "defaultMix": 0.20000000298023224,
+          "controller": {
+            "m_FileID": 6,
+            "m_PathID": -4159799457695958954
+          },
+          "zSlots": [
+            "W_jian_D/W_jian_D",
+            "sWeapon_dunpai",
+            "sWeapon_quantao",
+            "faqiu/sWeapon_faqiu",
+            "wings/backDecoration_A01",
+            "hair_toufaD/hair_toufaD_B02",
+            "body_shenti_S/body_shenti1_A01",
+            "body_shenti_S/body_shenti2_A01",
+            "body_pifengR_B/body_pifengR_B01",
+            "body_pifengR/body_pifengR_A01",
+            "body_tou_S/hair_toufaA_A02",
+            "body_shenti_X/body_shenti1_B03",
+            "body_pifeng01/body_pifeng01_B02",
+            "body_pifeng01/body_pifeng01_B01",
+            "body_tou_S/faceDecoration_1_S",
+            "hair_toufachaoqian_A01",
+            "body_tuiL/body_tuiL2_A01",
+            "body_tuiR/body_tuiR2_A01"
+          ]
+        }
+      }
+    },
+    {
+      "receipt": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/female/source-manifest.json",
+        "sha256": "e67172b6f722421ea23c56ee230f98e2cf41231d4b6cf4878f9486e58a870c2d"
+      },
+      "skeleton": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/female/skeleton.json",
+        "sha256": "eb1c26d31879c9832bd3d88a75cfe057d8712eddfe08e5dd85fc9208d8a666ed"
+      },
+      "atlas": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/female/atlas.txt",
+        "sha256": "984f4e8cff9de1ceea6d6c79de023c9b76f28c0d355ecf5c5dc2953c56be8a7e"
+      },
+      "model": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_character_model_female_1.bundle",
+          "bundle_hash": "7c3ddfe5c1cd06cb60518dddb063438f",
+          "path_id": "-8680167266147450406",
+          "origin": "apk_zip",
+          "manifest": "871_156598",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "apk_entry": "assets/yoo/DefaultPackage/7c3ddfe5c1cd06cb60518dddb063438f.bundle",
+          "raw_size": 2768341,
+          "raw_sha256": "768f5107528d1bdc038dd5a41a13d5aec44956a4c277ebb01cad5c0c401b91c1"
+        },
+        "payload_sha256": "f65901e14f0556ca0067bdfc8e5a1b5729f283387df97c1bfb93d8e1d6caa8c6",
+        "fields": {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "m_Enabled": 1,
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": -6887505452609033796
+          },
+          "m_Name": "character_Female_1_SkeletonData",
+          "atlasAssets": [
+            {
+              "m_FileID": 0,
+              "m_PathID": -5861140587217933129
+            }
+          ],
+          "scale": 0.009999999776482582,
+          "skeletonJSON": {
+            "m_FileID": 0,
+            "m_PathID": 3025417951719913151
+          },
+          "isUpgradingBlendModeMaterials": false,
+          "blendModeMaterials": {
+            "requiresBlendModeMaterials": false,
+            "applyAdditiveMaterial": true,
+            "additiveMaterials": [],
+            "multiplyMaterials": [],
+            "screenMaterials": []
+          },
+          "skeletonDataModifiers": [
+            {
+              "m_FileID": 4,
+              "m_PathID": -4869832580021117775
+            }
+          ],
+          "fromAnimation": [],
+          "toAnimation": [],
+          "duration": [],
+          "defaultMix": 0.20000000298023224,
+          "controller": {
+            "m_FileID": 5,
+            "m_PathID": 1049759555230375551
+          },
+          "zSlots": [
+            "W_jian_D/W_jian_D",
+            "sWeapon_dunpai",
+            "sWeapon_quantao",
+            "faqiu/sWeapon_faqiu",
+            "wings/backDecoration_A01",
+            "hair_toufaD/hair_toufaD_B02",
+            "body_shenti_S/body_shenti2_A01",
+            "body_shenti_S/body_shenti1_A01",
+            "body_pifengR_B/body_pifengR_B01",
+            "body_pifengR/body_pifengR_A01",
+            "body_tou_S/hair_toufaA_A02",
+            "body_shenti_X/body_shenti1_B03",
+            "body_pifeng01/body_pifeng01_B02",
+            "body_pifeng01/body_pifeng01_B01",
+            "body_tou_S/faceDecoration_1_S",
+            "hair_toufachaoqian_A01",
+            "body_tuiL/body_tuiL2_A01",
+            "body_tuiR/body_tuiR2_A01",
+            "body_tou_S/headOrnament_1_S2",
+            "body_tuiL/body_tuiL1",
+            "body_tuiR/body_tuiR1"
+          ]
+        }
+      }
+    }
+  ],
+  "prerequisite": {
+    "path": "assets/reference/profession-ui/native-attachments-source-manifest.json",
+    "sha256": "9cd4c0c18ed4103922fcb4ec4bb2a52ab013c406403dbd6352cfd349d8eb297b"
+  },
+  "outputs": [
+    {
+      "sex": "male",
+      "resource": "ProfessionUI/NativeSkeletons/male",
+      "file": {
+        "path": "unity/Assets/Official/ProfessionUI/NativeSkeletonData/Resources/ProfessionUI/NativeSkeletons/male.bytes",
+        "sha256": "7209fd0c72cbc5b32f44374d0c8921b9fe53d60b1dd404da3fc068359415f41f"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/NativeSkeletonData/Resources/ProfessionUI/NativeSkeletons/male.bytes.meta",
+        "sha256": "61c82fccd37bd0ef3581762e2e84223f2fe60e6d5a31aa0a6496741515bbed08"
+      },
+      "skeleton_sha256": "21bc0198abc44620e65f308c6acb9a78f3ed9d6feb1d2558acdc72ba76dd3e15",
+      "skeleton_bytes": 27797068,
+      "atlas_sha256": "762206f794d30ab8732342b6377e96114bb18b69d33567610615051ba0d24eaf",
+      "atlas_bytes": 1407398,
+      "scale": 0.009999999776482582,
+      "counts": {
+        "bones": 1656,
+        "slots": 126,
+        "skins": 503,
+        "animations": 445,
+        "ik": 8,
+        "transform": 11,
+        "physics": 1534,
+        "regions": 9692,
+        "attachments": {
+          "point": 16,
+          "clipping": 3,
+          "mesh": 5529,
+          "region": 11059,
+          "boundingbox": 12
+        }
+      }
+    },
+    {
+      "sex": "female",
+      "resource": "ProfessionUI/NativeSkeletons/female",
+      "file": {
+        "path": "unity/Assets/Official/ProfessionUI/NativeSkeletonData/Resources/ProfessionUI/NativeSkeletons/female.bytes",
+        "sha256": "6f12515b949321a7697392b81b99e4a3c293b729bf832cf324979cdc12ec2bef"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/NativeSkeletonData/Resources/ProfessionUI/NativeSkeletons/female.bytes.meta",
+        "sha256": "4d4047266f0410bebaa59afbbb499394d1b64c6602b3730d310fe44fe242f803"
+      },
+      "skeleton_sha256": "eb1c26d31879c9832bd3d88a75cfe057d8712eddfe08e5dd85fc9208d8a666ed",
+      "skeleton_bytes": 32694582,
+      "atlas_sha256": "d937e91730f745d8f5fb2db11e71d330f056602f1068bd4b336a47a2300dc178",
+      "atlas_bytes": 1468528,
+      "scale": 0.009999999776482582,
+      "counts": {
+        "bones": 1886,
+        "slots": 126,
+        "skins": 504,
+        "animations": 451,
+        "ik": 8,
+        "transform": 7,
+        "physics": 1767,
+        "regions": 10113,
+        "attachments": {
+          "point": 16,
+          "clipping": 3,
+          "mesh": 6187,
+          "region": 11171,
+          "boundingbox": 13
+        }
+      }
+    }
+  ],
+  "membership_source": {
+    "path": "assets/reference/profession-ui/native-skins-source-manifest.json",
+    "sha256": "4c16e1d1494f6927a73ba0ca66e576fc033d11747030b7836a559c6d9768f527"
+  },
+  "membership_fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/native-skins-validation.json",
+    "sha256": "3cbf7a0fc09850eb469b14371479adc5b7652666d8b32f807cb0b5d6ad90fb68"
+  },
+  "supporting_fixtures": [
+    {
+      "source": {
+        "path": "assets/reference/profession-ui/bone-pose-source-manifest.json",
+        "sha256": "6a685085b9bcabcb8e3f482c6d8b23d8431a19a90918f4caf6e8b1b90612a684"
+      },
+      "fixture": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/bone-pose-validation.json",
+        "sha256": "efa174c5f6be38aae1058ff9267a11c7726331cf33560722fac4de0a29697c0e"
+      }
+    },
+    {
+      "source": {
+        "path": "assets/reference/profession-ui/slot-pose-source-manifest.json",
+        "sha256": "69e53f2ffb4576d63d664ddafbab9a6bc98d1d7f80e5a64e05ef242eb69195fb"
+      },
+      "fixture": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/slot-pose-validation.json",
+        "sha256": "c2bc64a5ac4e80c7e32441ad00c5a951b9c46393f9d7de41ebceb114470d28d3"
+      }
+    }
+  ],
+  "fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/skeleton-data-validation.json",
+    "sha256": "bf0218629760d1cc358e7377adf713d36544ac251bfa7c40894424ee59be7aac"
+  },
+  "geometry_fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/native-attachments-validation.json",
+    "sha256": "8bd0b3e885ecc57d50889ddcd2abe32aaf85f50b14cc9e2cae89fa80e2b6bd92"
+  },
+  "runtime": {
+    "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkeletonData.cs",
+    "sha256": "2eb1be8ca0b876f53892af761e900e36ef8abb2956401b6440cab0f66abdd191"
+  },
+  "runtime_meta": {
+    "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkeletonData.cs.meta",
+    "sha256": "338a07265b6762a1bd4d963aaae5e4e29246a8d1a627c23c348187051fea6743"
+  },
+  "validation": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionSkeletonDataValidation.cs",
+    "sha256": "4b4294a37798807e984b2866dd634393bb6e4e7655b0ef1e9d848d8baf5bbcd3"
+  },
+  "validation_meta": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionSkeletonDataValidation.cs.meta",
+    "sha256": "28310a6b6a8e591133c1fc050c9b469088e0f4b6ea7e0f2c1cbf6cc078234c4f"
+  },
+  "parser": {
+    "path": "unity/Assets/Game/Runtime/Offline/Equipment/OfficialEquipmentJson.cs",
+    "sha256": "45112dc35deadc8b55b64f71442eaa964463e28d76af91a8707b932a99d22ea9"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_profession_skeleton_data.py",
+    "sha256": "308ed647a43a89aef77ca7d91d06124213fd0b18431ca8743834ae267697548c"
+  },
+  "operation": "Losslessly gzip the verified independent MIT-format-decoder JSON and original atlas-region projection. Preserve every animation, event, constraint and attachment field; native runtime verifies decompressed byte hashes and builds actual bone/slot/skin/attachment objects. No SDK runtime, pose baking or alternate art.",
+  "limitations": [
+    "Data loading is not constraint evaluation, animation mixing or native character rendering.",
+    "All source channels and constraints remain in the package; unimplemented evaluators are not replaced by zero values.",
+    "Texture/material/graphic/window services and actual profession page/Windows Player validation remain incomplete."
+  ],
+  "validated_scope": "Unity 2022.3.57f1c2 Direct3D Play Mode passed: both lossless skeleton/atlas SHA256 blocks, 3542 complete original bone setups, 252 complete slot setups (including absent attachment null and dark alpha), 1007 ordered skin bone/constraint memberships, all 34009 attachment identities and independent weighted/unweighted geometry/UV/index references, all 896 animations and original events/constraint inventories retained. Changed format/hash/trailing data is rejected. Default dark alpha was corrected and JsonUtility reference null-string normalization made explicit before the passing rerun. Global ProjectTools.Validate passed; frozen static metadata passed (73732 GUIDs), current repository static metadata passed (74180 GUIDs). No full constraint evaluation, mixed animation, actor raster, native profession page or Windows Player claim."
+}
