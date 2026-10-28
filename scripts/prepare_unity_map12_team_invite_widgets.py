@@ -103,13 +103,14 @@ def build(write):
                 'zjcs/map12/team-invite/' + path.name).hex + '\n').encode())
         outputs.extend((record(path), record(meta)))
     inputs.extend(record(SOURCE / (name + '.cs')) for name in
-                  ('TeamInvitePlayerItem', 'TeamInviteSubPanel', 'InviterBase', 'TeamInviter'))
+                  ('TeamInvitePlayerItem', 'TeamInviteSubPanel', 'InviterBase', 'TeamInviter', 'LoopScrollRectUtil'))
+    outputs.append(record(DEST / 'Zjcs.Official.TeamUI.asmdef'))
     inputs.append(record(SOURCE.parent / 'common-source/Common/LanguageUtils.cs'))
     result = dict(format=1, manifest='871_156598', mapClassId=12, inputs=inputs, outputs=outputs,
                   script=record(Path(__file__)), adaptation='Original widget branches, arithmetic, resource disposal and event order. '
                   'Manager/parser calls are injected and original player-icon ports are reused.',
-                  scope='Player-mode row/list lifecycle and invitation awaits only; robot toggle navigation, '
-                        'native invitation prefab and real-profile integration remain pending.')
+                  scope='Row/list lifecycle, invitation awaits and original robot-toggle navigation/three-second '
+                        'refill timeout. Native invitation prefab and real-profile integration remain pending.')
     raw = (json.dumps(result, ensure_ascii=False, indent=2) + '\n').encode()
     if write:
         RECEIPT.write_bytes(raw)

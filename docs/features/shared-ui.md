@@ -55,6 +55,8 @@ Compatibility Canvas 不自动解码 sRGB 采样，`prepare_battle_linear_textur
 
 ## 完整还原部分
 
+共享 `WorldPopupWindow` 已补齐原 `Canvas` 读取与 `SetCanvasSortingOrder` 的“覆盖排序→设置顺序→发送通知”执行顺序，原 `SortingOrderSetter` 随弹窗通知更新子画布／排序组。通知复用原非泛型 GAction 的监听列表实现，保留先移除首个重复监听、跳过已移除监听和延后本次调用中新增监听的行为。相关规则、Unity 编译／全工程验证，以及山之国原队伍窗口两种尺寸的实际点击与显隐回归通过；新邀请页的完整表现仍见[山之国](../maps/map-12.md)。源码与来源见[原邀请模式与共享控件](../../assets/reference/official-map/map12-team-invite-panels-source-manifest.json)。
+
 尚无完整 Unity 流程的完成结论。
 
 ## 自定义实现

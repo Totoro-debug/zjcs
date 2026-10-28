@@ -12,6 +12,9 @@ namespace Zjcs.Official.WorldUI
     {
         public AnimationClip mShowClip, mHideClip, mLoopClip;
         public event Action<WorldPopupWindow> OnShowing, OnHiding, OnShow, OnHide;
+        public WorldGAction OnCanvasSortingOrderChanged = new WorldGAction();
+        private Canvas mCanvas;
+        public Canvas Canvas => mCanvas != null ? mCanvas : (mCanvas = GetComponent<Canvas>());
         private PlayableGraph graph;
         private AnimationPlayableOutput output;
         private Coroutine transition;
@@ -55,6 +58,13 @@ namespace Zjcs.Official.WorldUI
         }
 
         public void SetMaskClickAction(Action action) => mMaskClickAction = action;
+
+        public void SetCanvasSortingOrder(int order)
+        {
+            Canvas.overrideSorting = true;
+            Canvas.sortingOrder = order;
+            OnCanvasSortingOrderChanged.Invoke();
+        }
 
         public void OnMaskClick()
         {

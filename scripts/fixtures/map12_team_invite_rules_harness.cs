@@ -123,6 +123,38 @@ public static class Map12TeamInviteRulesHarness
             && joint.GetProfessionLimitVal(rows[102]) == 1, "Joint-strike eligibility/online short circuit changed.");
         joint.SetOnlineCheck(false);
         Require(joint.GetProfessionLimitVal(rows[101]) == 1, "Original online check override changed.");
+        var assistCounts = new Dictionary<long, int> { [101] = 2, [102] = 1, [103] = 3 };
+        var robot = new TeamInviteRobotComparer(id => rows[id], id => assistCounts[id], false, services);
+        ids.Sort(robot.RobotCombatRatingComparer);
+        Require(ids.SequenceEqual(new long[] { 103, 101, 102 }),
+            "Robot priority must use remaining assistance before rating and must not sort by online state.");
+        robot.SetCompanionId(102); ids.Sort(robot.RobotCombatRatingComparer);
+        Require(ids.SequenceEqual(new long[] { 102, 103, 101 }), "Robot companion priority precedes assistance.");
+        robot.SetCompanionId(0); services.IsNpcPinLimited = false;
+        ids.Sort(robot.RobotCombatRatingComparer);
+        Require(ids.SequenceEqual(new long[] { 101, 102, 103 }),
+            "Robot pinned NPC priority precedes assistance; remaining assistance precedes pin time.");
+        assistCounts[102] = 2; ids.Sort(robot.RobotCombatRatingComparer);
+        Require(ids.SequenceEqual(new long[] { 102, 101, 103 }), "Robot pin time remains ascending when earlier keys tie.");
+        var robotJoint = new TeamInviteRobotComparer(id => rows[id], id => assistCounts[id], true, services);
+        Require(robotJoint.GetProfessionLimitVal(rows[101]) == 1,
+            "Robot joint-strike compatibility must ignore the offline player-state check.");
+        var order = new List<int>();
+        var action = new Zjcs.Official.WorldUI.WorldGAction();
+        Action duplicate = () => order.Add(1);
+        action += duplicate;
+        action += () => order.Add(2);
+        action += duplicate;
+        action -= duplicate;
+        action.Invoke();
+        Require(order.SequenceEqual(new[] { 2, 1 }), "Original popup sorting notification removes the first matching listener.");
+        order.Clear();
+        var mutation = new Zjcs.Official.WorldUI.WorldGAction();
+        IDisposable removed = null;
+        mutation += () => { order.Add(3); removed.Dispose(); mutation += () => order.Add(5); };
+        removed = mutation.Subscribe(() => order.Add(4));
+        mutation.Invoke();
+        Require(order.SequenceEqual(new[] { 3 }), "Original notification suppresses removed and newly added listeners during invocation.");
         Console.WriteLine("Original TeamInviteNpc async/identity/filter and multi-priority comparer checks passed.");
     }
 

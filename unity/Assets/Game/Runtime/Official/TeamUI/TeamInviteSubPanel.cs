@@ -7,11 +7,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Official.WorldUI;
+using Cysharp.Threading.Tasks;
 
 namespace Zjcs.Official.TeamUI
 {
-    // Original list lifecycle and RefreshPlayerAsync.MoveNext used by PlayerPanel.
-    // Robot-only toggle navigation is not part of this PlayerPanel route.
+    // Original list lifecycle and async-state-machine branches.
     public class TeamInviteSubPanel : TeamInviteSubPanelBase, LoopScrollDataSource
     {
         [SerializeField] protected GameObject mEmptyGo;
@@ -157,6 +157,40 @@ namespace Zjcs.Official.TeamUI
                 transform.GetComponent<TeamInvitePlayerItem>().Init(GetPlayerInfo(PlayerList[index]), GetCurSortType(), mGetTeamTarget);
         }
         private TeamTargetData GetTeamTarget() => TeamTarget;
+        public async UniTask<Toggle> GetValidRobotAssistanceTg(CancellationToken token)
+        {
+            int totalCount = PlayerList.Count;
+            if (totalCount == 0) return null;
+            int originStart = mLoopRect.ItemTypeStart;
+            GameObject item = GetItemByIndex(originStart);
+            if (item == null || item.GetComponent<TeamInviteRobotItem>() == null) return null;
+            for (int index = 0; index < totalCount; index++)
+            {
+                if (index < mLoopRect.ItemTypeStart || index >= mLoopRect.ItemTypeEnd)
+                    await RefillCells(index, token);
+                Toggle toggle = GetItemByIndex(index).GetComponent<TeamInviteRobotItem>().GetInvitedToggle();
+                if (toggle != null) return toggle;
+            }
+            await RefillCells(originStart, token);
+            return null;
+        }
+        private UniTask RefillCells(int startItem, CancellationToken token)
+        {
+            var completion = new UniTaskCompletionSource();
+            mLoopRect.RefillCells(startItem, 0f, () => { completion.TrySetResult(); });
+            return completion.Task.AttachExternalCancellation(token).Timeout(
+                TimeSpan.FromSeconds(3.0), (DelayType)0, (PlayerLoopTiming)8, null);
+        }
+        // Original LoopScrollRectUtil.GetItemByIndex, including its strict end comparison.
+        private GameObject GetItemByIndex(int index)
+        {
+            if (mLoopRect.content == null) return null;
+            if (index < mLoopRect.ItemTypeStart || index > mLoopRect.ItemTypeEnd) return null;
+            int position = index - mLoopRect.ItemTypeStart;
+            if (position < 0 || position >= mLoopRect.content.childCount) return null;
+            Transform child = mLoopRect.content.GetChild(position);
+            return child == null ? null : child.gameObject;
+        }
         public Button GetNPCAssistanceButton(int npcClassId)
         {
             if (mLoopRect.content.childCount == 0) return null;
