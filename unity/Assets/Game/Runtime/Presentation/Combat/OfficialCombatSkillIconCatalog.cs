@@ -52,7 +52,12 @@ namespace Zjcs.Presentation.Combat
                     sprites.Add(binding.itemId, sprite);
                 }
             }
-            return sprites.TryGetValue(itemId, out Sprite result) ? result : null;
+            if (sprites.TryGetValue(itemId, out Sprite result)) return result;
+            // The pinned base icon index omits skin effect items. Their official
+            // sprites are explicitly packaged by the character skin importer.
+            result = Resources.Load<Sprite>("Character/SkillSkinIcons/skill_" + itemId);
+            if (result != null) sprites.Add(itemId, result);
+            return result;
         }
 
         public int Count => icons == null ? 0 : icons.Length;

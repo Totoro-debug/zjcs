@@ -30,7 +30,7 @@ namespace Zjcs.Presentation.Character
             DontDestroyOnLoad(host);
             var runner = host.AddComponent<SkillPlayerValidation>();
             runner.output = Path.GetFullPath(args[index + 1]);
-            runner.saveRoot = Path.Combine(Path.GetTempPath(), "zjcs-skills-player-" + Guid.NewGuid().ToString("N"));
+            runner.saveRoot = Path.Combine(runner.output, "save-" + Guid.NewGuid().ToString("N"));
             runner.deadline = Time.realtimeSinceStartup + 180f;
             Directory.CreateDirectory(runner.output);
             Application.logMessageReceived += runner.CaptureFailure;
@@ -108,10 +108,44 @@ namespace Zjcs.Presentation.Character
             Require(panel.IsOpen, "The Player skill entry did not open its full original panel.");
             yield return new WaitForSecondsRealtime(.8f);
             yield return new WaitForEndOfFrame(); Capture("skills-opening");
+            Click(ButtonNamed("SkillListItem_10015"));
+            yield return new WaitForSecondsRealtime(.7f);
+            var linkedText = FindObjectsOfType<TMPro.TMP_Text>().First(value => value.name == "FuncDetailText" && value.isActiveAndEnabled);
+            linkedText.ForceMeshUpdate();
+            Require(linkedText.textInfo.linkCount > 0, "The Windows Player skill entry hyperlink is absent.");
+            var link = linkedText.textInfo.linkInfo[0];
+            var character = linkedText.textInfo.characterInfo[link.linkTextfirstCharacterIndex];
+            Vector2 linkPosition = RectTransformUtility.WorldToScreenPoint(null,
+                linkedText.transform.TransformPoint((character.bottomLeft + character.topRight) * .5f));
+            var linkPointer = new PointerEventData(EventSystem.current) { position = linkPosition, button = PointerEventData.InputButton.Left };
+            var linkHits = new List<RaycastResult>(); EventSystem.current.RaycastAll(linkPointer, linkHits);
+            Require(linkHits.Count > 0 && linkHits[0].gameObject == linkedText.gameObject, "The Windows Player entry hyperlink is obstructed.");
+            linkPointer.pointerPressRaycast = linkHits[0];
+            ExecuteEvents.ExecuteHierarchy(linkHits[0].gameObject, linkPointer, ExecuteEvents.pointerDownHandler);
+            ExecuteEvents.ExecuteHierarchy(linkHits[0].gameObject, linkPointer, ExecuteEvents.pointerUpHandler);
+            ExecuteEvents.ExecuteHierarchy(linkHits[0].gameObject, linkPointer, ExecuteEvents.pointerClickHandler);
+            yield return new WaitForSecondsRealtime(.7f);
+            Require(FindObjectsOfType<Transform>().Any(value => value.name == "skill_entry_tip"), "The Windows Player entry hyperlink did not open its native tip.");
+            yield return new WaitForEndOfFrame(); Capture("skills-entry-tip");
+            Require(panel.HandleEscape(), "The Windows Player entry tip did not close.");
+            yield return null;
+            Require(panel.HandleEscape(), "The Windows Player linked skill detail did not close.");
+            yield return null;
             RawImage head = page.GetComponentsInChildren<RawImage>(true).First(value => value.name == "HeadImg");
             Require(head.texture != null && head.uvRect.width > 0f, "The Player portrait is not bound.");
             Click(ButtonNamed("NextPlanBtn"));
             Require(progression.Player.Skills.SelectedPlan == 1, "The Player plan pointer click did not persist.");
+            Require(progression.Player.Skills.Plans.Length == 7, "The Player does not contain all seven official skill plans.");
+            var planBar = page.GetComponentsInChildren<Scrollbar>(true).First(value => value.name == "PlanSelectedBar");
+            for (int i = 0; i < 7; i++)
+            {
+                int before = progression.Player.Skills.SelectedPlan;
+                Click(ButtonNamed("NextPlanBtn"));
+                yield return null;
+                int after = progression.Player.Skills.SelectedPlan;
+                Require(after == (before + 1) % 7 && planBar.numberOfSteps == 7 && Mathf.Approximately(planBar.value, after / 6f),
+                    "The Player seven-plan navigation or original scrollbar did not update.");
+            }
             yield return null;
             Click(ButtonNamed("RecommendBtn"));
             yield return new WaitForSecondsRealtime(.5f);
@@ -127,7 +161,9 @@ namespace Zjcs.Presentation.Character
             Click(ButtonContaining("ActiveSkillTab"));
             yield return new WaitForSecondsRealtime(.4f);
             yield return new WaitForEndOfFrame(); Capture("skills-equipped");
-            Click(ButtonContaining("SkillListItem_"));
+            Click(FindPointerTarget(value => value.name.StartsWith("SkillListItem_", StringComparison.Ordinal)
+                && int.TryParse(value.name.Substring("SkillListItem_".Length), out int id)
+                && OfflineSkillProgression.OwnedRank(progression.Player.Skills, id) > 0, "owned skill detail"));
             yield return new WaitForSecondsRealtime(.7f);
             yield return new WaitForEndOfFrame(); Capture("skills-detail");
             Click(ButtonNamed("CollectionBtn"));
@@ -143,6 +179,13 @@ namespace Zjcs.Presentation.Character
                 "The original Player popup outside click did not close its detail window.");
             Click(ButtonNamed("AchievementTabGroupItem_11"));
             yield return new WaitForSecondsRealtime(.4f);
+            Click(ButtonNamed("ItemIconDefault"));
+            yield return new WaitForSecondsRealtime(.7f);
+            var giftDetail = FindObjectsOfType<Transform>().First(value => value.name == "skill_gift_item_detail");
+            yield return new WaitForEndOfFrame(); Capture("skills-gift-item-detail");
+            Click(FindObjectsOfType<Button>().First(value => value.name == "BlurMask" && value.isActiveAndEnabled),
+                new Vector2(8f, Screen.height * .5f));
+            yield return null;
             Click(ButtonNamed("ReceiveBtn"));
             yield return null;
             Require(progression.Player.Inventory.Where(value => value.ItemId == 41300).Sum(value => value.Count) == 60,

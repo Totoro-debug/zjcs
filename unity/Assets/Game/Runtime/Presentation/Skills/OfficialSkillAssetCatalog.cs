@@ -27,6 +27,7 @@ namespace Zjcs.Presentation.Skills
         [SerializeField] private TextAsset qualityGradient;
         [SerializeField] private TMP_FontAsset nativeUiFont;
         [SerializeField] private Shader nativeCharacterShader;
+        [SerializeField] private Shader nativeCharacterUrpShader;
         [SerializeField] private OfficialSkillSpriteBinding[] sprites = Array.Empty<OfficialSkillSpriteBinding>();
 
         public TextAsset SkillRecommendations => skillRecommendations;
@@ -38,7 +39,9 @@ namespace Zjcs.Presentation.Skills
         public TextAsset SourceManifest => sourceManifest;
         public TextAsset QualityGradient => qualityGradient;
         public TMP_FontAsset NativeUiFont => nativeUiFont;
-        public Shader NativeCharacterShader => nativeCharacterShader;
+        public Shader NativePortraitShader => nativeCharacterShader;
+        public Shader NativeCharacterShader => UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline != null
+            ? nativeCharacterUrpShader : nativeCharacterShader;
 
         public static OfficialSkillAssetCatalog LoadDefault()
         {

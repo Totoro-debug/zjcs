@@ -13,6 +13,8 @@ namespace Zjcs.Offline.Skills
         public OfflineSkillProgression(OfflineSkillRules rules)
         {
             this.rules = rules ?? throw new ArgumentNullException(nameof(rules));
+            if (rules.PlanCount != OfflineSkillProfile.PlanCount)
+                throw new ArgumentException("Skill plan count differs from the fixed official configuration.", nameof(rules));
         }
 
         /// <summary>
@@ -30,6 +32,14 @@ namespace Zjcs.Offline.Skills
             if (profile.ActiveSlotLevels == null) profile.ActiveSlotLevels = new[] { 1, 1, 1, 1 };
             if (profile.PassiveSlotLevels == null) profile.PassiveSlotLevels = new[] { 1, 1, 1, 1 };
             if (profile.Plans == null) profile.Plans = OfflineSkillProfile.CreatePlans();
+            // The earlier offline release stored only three plans. Preserve each
+            // existing plan and fill the four omitted official plans on load.
+            if (profile.Plans.Length == 3)
+            {
+                OfflineSkillPlan[] plans = OfflineSkillProfile.CreatePlans();
+                Array.Copy(profile.Plans, plans, profile.Plans.Length);
+                profile.Plans = plans;
+            }
             for (int i = 0; i < profile.Plans.Length; i++)
             {
                 OfflineSkillPlan plan = profile.Plans[i];
@@ -43,8 +53,8 @@ namespace Zjcs.Offline.Skills
 
         public static bool IsValid(OfflineSkillProfile profile)
         {
-            if (profile == null || profile.SeniorMaterialSpentOnLevelUp < 0 || profile.Version != 1 || profile.SelectedPlan < 0 || profile.SelectedPlan >= 3
-                || profile.Plans == null || profile.Plans.Length != 3
+            if (profile == null || profile.SeniorMaterialSpentOnLevelUp < 0 || profile.Version != 1 || profile.SelectedPlan < 0 || profile.SelectedPlan >= OfflineSkillProfile.PlanCount
+                || profile.Plans == null || profile.Plans.Length != OfflineSkillProfile.PlanCount
                 || !ValidLevels(profile.ActiveSlotLevels) || !ValidLevels(profile.PassiveSlotLevels)
                 || profile.BlessRecords == null || profile.Skills == null || profile.Items == null
                 || profile.FavoriteSkills == null)

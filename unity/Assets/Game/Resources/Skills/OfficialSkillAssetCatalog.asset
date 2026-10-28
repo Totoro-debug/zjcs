@@ -22,6 +22,7 @@ MonoBehaviour:
   qualityGradient: {fileID: 4900000, guid: d7541c002928438cb27d0654e79800f6, type: 3}
   nativeUiFont: {fileID: 11400000, guid: 53e1a3bbebfa51df82e1188642c7aaa0, type: 2}
   nativeCharacterShader: {fileID: 4800000, guid: 08a4cc4dfff856209374c0b7281c000b, type: 3}
+  nativeCharacterUrpShader: {fileID: 4800000, guid: 43ec8f73bde5e678743264dfc98a5027, type: 3}
   sprites:
   - sourcePath: sprites/349-921a3edeb1.png
     sprite: {fileID: 21300000, guid: ee66a47949575f51a448ce72a39359e3, type: 3}
@@ -85,10 +86,14 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: ab2409bb24a9529dbe9b0143536d28df, type: 3}
   - sourcePath: sprites/379-f410b5a5d1.png
     sprite: {fileID: 21300000, guid: 2897f4186c8f5c8c95213c591f63c99f, type: 3}
+  - sourcePath: sprites/BgMiddleVs-acb34536bb.png
+    sprite: {fileID: 21300000, guid: ad8a7bcb9a0b504fb0469d6147045339, type: 3}
   - sourcePath: sprites/BtnCheck_Nor-3b5c5a72eb.png
     sprite: {fileID: 21300000, guid: fe60efee81d37d44d075f539a81dc605, type: 3}
   - sourcePath: sprites/BtnCheck_Sel-cbe9e7c698.png
     sprite: {fileID: 21300000, guid: aecc32a3c6f0290edecdbcb54be9d122, type: 3}
+  - sourcePath: sprites/BtnExclamation-e046a83a12.png
+    sprite: {fileID: 21300000, guid: 55050adadc0b5eb2bcedc027b89dd153, type: 3}
   - sourcePath: sprites/BtnExclamation_Bless-ab4c1fa1b7.png
     sprite: {fileID: 21300000, guid: af0ca13a62d6345ec337011e2f31dcd8, type: 3}
   - sourcePath: sprites/BtnNo-aa425a44c4.png
@@ -97,6 +102,8 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: a618c5323ba629d67726c50a88db59ef, type: 3}
   - sourcePath: sprites/BtnOk_Notice-2f696d05cf.png
     sprite: {fileID: 21300000, guid: 73cfa2266b1b41b9d4284c58ea682b95, type: 3}
+  - sourcePath: sprites/BtnScreen_Sel-b309ae607e.png
+    sprite: {fileID: 21300000, guid: 27684342bb325cd0b7b37e05841341dc, type: 3}
   - sourcePath: sprites/BtnTest-6cb4f63ec5.png
     sprite: {fileID: 21300000, guid: 7470d0eb2bd8833a4eedaf01a3bb6d6a, type: 3}
   - sourcePath: sprites/BtnTuiJian-1d639be514.png
@@ -109,6 +116,14 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 81ccd4efb1eac6988aa1fbe2b9c4a8f6, type: 3}
   - sourcePath: sprites/IconAppearance-c1887b401d.png
     sprite: {fileID: 21300000, guid: a6addd1780273de64dc632946ada0702, type: 3}
+  - sourcePath: sprites/IconBattle_Buff-1c9b790cf8.png
+    sprite: {fileID: 21300000, guid: a474613ed36a5b859ba8426064c13cc7, type: 3}
+  - sourcePath: sprites/IconBattle_Dot-271d56ea3c.png
+    sprite: {fileID: 21300000, guid: 6ed8d3ab44855318a79563969b76be8c, type: 3}
+  - sourcePath: sprites/IconBattle_Hps-ee94769260.png
+    sprite: {fileID: 21300000, guid: 58ea6d8e4b8b51e2a993994b5b239f27, type: 3}
+  - sourcePath: sprites/IconHuawen-33ef251b14.png
+    sprite: {fileID: 21300000, guid: e222c29b734d5835b9118a5cc6f4d098, type: 3}
   - sourcePath: sprites/IconRemind-e81e057cb3.png
     sprite: {fileID: 21300000, guid: ff47d1f79035ed5c8a3e830c5415edef, type: 3}
   - sourcePath: sprites/IconRemind3-b56ecd66a6.png
@@ -119,12 +134,18 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 77eb5f2fb3ea8d2d9fe5fb4078752c16, type: 3}
   - sourcePath: sprites/ImgArrow-a9dc698e46.png
     sprite: {fileID: 21300000, guid: 106e20cd5066c0ac649533279ad738f5, type: 3}
+  - sourcePath: sprites/ImgArrow-c6743d23bd.png
+    sprite: {fileID: 21300000, guid: 390b6ab6a22e55af98febee0ca7c1860, type: 3}
   - sourcePath: sprites/ImgArrow_2-759294d034.png
     sprite: {fileID: 21300000, guid: f1f1479c546079835909a26a865edcc5, type: 3}
   - sourcePath: sprites/ImgArrow_Page-1a3c6652ff.png
     sprite: {fileID: 21300000, guid: a4cc66e59ab13e41f045077325a4ad57, type: 3}
   - sourcePath: sprites/ImgBgAtt-9ad59b702c.png
     sprite: {fileID: 21300000, guid: 3eecba3fa938de1a377af1356bae086d, type: 3}
+  - sourcePath: sprites/ImgBgScreen-c6d4114ea4.png
+    sprite: {fileID: 21300000, guid: 3549d333b9b35fe5992edcee42230bf1, type: 3}
+  - sourcePath: sprites/ImgBgScreen_Fillet-d5a44e3ca4.png
+    sprite: {fileID: 21300000, guid: 1b66d1b1fc0f5f65813cf8bdaeab503f, type: 3}
   - sourcePath: sprites/ImgBgTitle-39d2ed304a.png
     sprite: {fileID: 21300000, guid: 821bc2744f83805a22b7d6cb31eebf6c, type: 3}
   - sourcePath: sprites/ImgBgWenLi_Passive-006c03ee2a.png
@@ -135,10 +156,20 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 5523bb2d757af6182b6c6519833f8a3a, type: 3}
   - sourcePath: sprites/ImgBg_Arrow-e3cdda5297.png
     sprite: {fileID: 21300000, guid: 5577c5fa48b0f7c4c33330027e66e8b6, type: 3}
+  - sourcePath: sprites/ImgBg_Banner-44b6f5e1ff.png
+    sprite: {fileID: 21300000, guid: 873b614b9bd6536daf7e2971ec7458da, type: 3}
   - sourcePath: sprites/ImgBg_Banner-e2bb932c72.png
     sprite: {fileID: 21300000, guid: 8f9c84b8ff1e5e06a4d212d66ba3c748, type: 3}
+  - sourcePath: sprites/ImgBg_BannerWenLi-7a9e224932.png
+    sprite: {fileID: 21300000, guid: 195668ccc7165dcf8ae00125d57d611b, type: 3}
+  - sourcePath: sprites/ImgBg_Battle-671b684600.png
+    sprite: {fileID: 21300000, guid: 29526827e8b650cb8b6eddb07d445a9f, type: 3}
+  - sourcePath: sprites/ImgBg_CombatValue-e6daa5f604.png
+    sprite: {fileID: 21300000, guid: 57548ed2a3c256548c12c04918052424, type: 3}
   - sourcePath: sprites/ImgBg_CountText-43bcc7f5cb.png
     sprite: {fileID: 21300000, guid: 2a986b048106aec5818de3b47901cd89, type: 3}
+  - sourcePath: sprites/ImgBg_Fail-0abe0bbc86.png
+    sprite: {fileID: 21300000, guid: a02f488847b95d3f856df0d11d155298, type: 3}
   - sourcePath: sprites/ImgBg_Figure-2ebfbfa458.png
     sprite: {fileID: 21300000, guid: a2c6d254ee4642f1003410dc116b4b34, type: 3}
   - sourcePath: sprites/ImgBg_Hourglass-413b857a69.png
@@ -163,6 +194,16 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: ada40d1c091dd0851549e4e950792132, type: 3}
   - sourcePath: sprites/ImgBg_Title-497505d3a3.png
     sprite: {fileID: 21300000, guid: 0c522e3a7ed7bfbf2c20cd94fe1e7be8, type: 3}
+  - sourcePath: sprites/ImgBg_WenLi-b1e908f8fa.png
+    sprite: {fileID: 21300000, guid: 632df92d26935fe1a880922db878e0e9, type: 3}
+  - sourcePath: sprites/ImgBg_WenLi2-2204507c17.png
+    sprite: {fileID: 21300000, guid: 3d343a3a9bac5a1da24b9eb9ccc08d74, type: 3}
+  - sourcePath: sprites/ImgBg_WenLi3-50f55ef955.png
+    sprite: {fileID: 21300000, guid: 797892baff385be093f1503d354684fd, type: 3}
+  - sourcePath: sprites/ImgBg_WenLi4-9e1ad332f5.png
+    sprite: {fileID: 21300000, guid: abc2158dfa9357beb9fad125ac6c2aef, type: 3}
+  - sourcePath: sprites/ImgBg_swap-e3a307d70b.png
+    sprite: {fileID: 21300000, guid: 5987c30006145afbbe2c2019faa668df, type: 3}
   - sourcePath: sprites/ImgBlue-797552ab98.png
     sprite: {fileID: 21300000, guid: 236f2e1a75fc12208f2dff303073c81a, type: 3}
   - sourcePath: sprites/ImgBlueDot-a28b58f9f6.png
@@ -185,6 +226,8 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 474611bbf935750bf0e3c2f446144c92, type: 3}
   - sourcePath: sprites/ImgDashedLine-0a992f9dca.png
     sprite: {fileID: 21300000, guid: 4bfa2f81ad7de5445f25dce4dd4f882c, type: 3}
+  - sourcePath: sprites/ImgDivider-5b99d32b07.png
+    sprite: {fileID: 21300000, guid: 0c178490aa655747a8384d272db89118, type: 3}
   - sourcePath: sprites/ImgDot-4ed3349f24.png
     sprite: {fileID: 21300000, guid: 6771b6a9232ccd1b69ff573a522c508b, type: 3}
   - sourcePath: sprites/ImgDrop_Title2-e8c9abf761.png
@@ -199,12 +242,20 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: d859fe9041b85c9ea787d0e2caffa679, type: 3}
   - sourcePath: sprites/ImgFast_Frame_01-d980456dc2.png
     sprite: {fileID: 21300000, guid: 709e2687dc2c1c3b584b8b8f1be9129c, type: 3}
+  - sourcePath: sprites/ImgFunction_Bg2-59e2c36e6c.png
+    sprite: {fileID: 21300000, guid: 57947499e50f5ca7ac5e34c0a41cc6b2, type: 3}
   - sourcePath: sprites/ImgGold_PopUps-15d8ddf955.png
     sprite: {fileID: 21300000, guid: f32224c0d50c5907b5c07732141915a6, type: 3}
   - sourcePath: sprites/ImgGradient-42a795b441.png
     sprite: {fileID: 21300000, guid: e5b748ed2db4c9716b9863d5b67ed862, type: 3}
   - sourcePath: sprites/ImgGradient-92cc441952.png
     sprite: {fileID: 21300000, guid: 3a606e0ba0fe34f11b45485512574be0, type: 3}
+  - sourcePath: sprites/ImgHp_Bg-bc8eefd3fb.png
+    sprite: {fileID: 21300000, guid: 73dd60d351ff51f685bf6fa9e2d92ea5, type: 3}
+  - sourcePath: sprites/ImgIcon_DamageTest_03-363099f6eb.png
+    sprite: {fileID: 21300000, guid: 5fb32f5338275a4da8388f9b5d0fefee, type: 3}
+  - sourcePath: sprites/ImgInfoBG_Bless-dd1ae407b4.png
+    sprite: {fileID: 21300000, guid: de3c252ce5c052c5ae306387e126001c, type: 3}
   - sourcePath: sprites/ImgItemEmpty-725d8512ac.png
     sprite: {fileID: 21300000, guid: 1c09becc2674477c997d09ad1d2f7b81, type: 3}
   - sourcePath: sprites/ImgItemIcon_NumBg-8659cef746.png
@@ -213,6 +264,8 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 50493b15b6abc613e95628a66826a764, type: 3}
   - sourcePath: sprites/ImgItem_CombatRating-e67301a9fd.png
     sprite: {fileID: 21300000, guid: 2a03b87b300c52dc99da0b5b6c7300a3, type: 3}
+  - sourcePath: sprites/ImgItem_Lock2-148ba0ff6e.png
+    sprite: {fileID: 21300000, guid: 71086bbc6d135c6aa3d74766219cab5d, type: 3}
   - sourcePath: sprites/ImgLightElement-0a6acd7d50.png
     sprite: {fileID: 21300000, guid: 5544f4a30288856aadaceb1ec1615c40, type: 3}
   - sourcePath: sprites/ImgLight_Color-692bd4b948.png
@@ -253,6 +306,8 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: eb8601367bdb51dade5382aa2a945883, type: 3}
   - sourcePath: sprites/ImgPageS_Sel-e82cd8fc4f.png
     sprite: {fileID: 21300000, guid: 622918def041379ca72b86968795aff0, type: 3}
+  - sourcePath: sprites/ImgPlayerList4-5730dbdb99.png
+    sprite: {fileID: 21300000, guid: a8caaa7d42795ba3a89e392e1b78d7d0, type: 3}
   - sourcePath: sprites/ImgPresent-b98847ead9.png
     sprite: {fileID: 21300000, guid: a1b69193ff138533933ad21bff1b73d3, type: 3}
   - sourcePath: sprites/ImgPurple_PopUps-38b5295192.png
@@ -295,6 +350,8 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 86a02114665ec733f85a8ae6501e7037, type: 3}
   - sourcePath: sprites/ImgRound-f7cf02c86e.png
     sprite: {fileID: 21300000, guid: bebfdeda9e215f019f60c970254d711b, type: 3}
+  - sourcePath: sprites/ImgRoundTitle_IconBg-708e0f9847.png
+    sprite: {fileID: 21300000, guid: 215dd9d31af351539ea562ed582c0c81, type: 3}
   - sourcePath: sprites/ImgSelected_bg-ab2290a60f.png
     sprite: {fileID: 21300000, guid: 5118f6b720ba1cfbf26640cdb76d90fd, type: 3}
   - sourcePath: sprites/ImgShare-376b21345a.png
@@ -315,6 +372,8 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: e873737253d0ef2d2184c3fc826762e0, type: 3}
   - sourcePath: sprites/ImgStar_Bg-156d4887df.png
     sprite: {fileID: 21300000, guid: 02a892cd643f09d40eb34b3f4312eb86, type: 3}
+  - sourcePath: sprites/ImgTab-a8859eeafb.png
+    sprite: {fileID: 21300000, guid: 3c782d40ae8359d4a75863d25f43b54a, type: 3}
   - sourcePath: sprites/ImgTabSel-919700ec02.png
     sprite: {fileID: 21300000, guid: 92a54051528539e61ba516acaf497875, type: 3}
   - sourcePath: sprites/ImgTimeLimitBg2-d3e255c7ba.png
@@ -323,6 +382,8 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 31320e2ec1dfe658079ace704e3000fe, type: 3}
   - sourcePath: sprites/ImgToggle_Sel-a73a3cc285.png
     sprite: {fileID: 21300000, guid: 2277765ae1352ca4a32bdf42601a2a82, type: 3}
+  - sourcePath: sprites/ImgTop_Zs2-adacf53152.png
+    sprite: {fileID: 21300000, guid: cc4a3278544852fa96fce76c1e40c858, type: 3}
   - sourcePath: sprites/ImgTxtSwitch-f322e0fb0e.png
     sprite: {fileID: 21300000, guid: 7a9302275ecd3a3ebbc58263698578dc, type: 3}
   - sourcePath: sprites/ImgUnuse-3ea76fae9b.png
@@ -343,10 +404,18 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: b0ab9e4e61d622fb0f816f51d3d08a4a, type: 3}
   - sourcePath: sprites/InputFieldBackground-699701cff6.png
     sprite: {fileID: 21300000, guid: 417b6df011fc8c32d2cd11d1b7e1dd77, type: 3}
+  - sourcePath: sprites/ItemBattleData-21e0f5558d.png
+    sprite: {fileID: 21300000, guid: 84f6a294bcc2530a8f9b0f1394d9bb22, type: 3}
+  - sourcePath: sprites/ItemFromArrow-7c865053ca.png
+    sprite: {fileID: 21300000, guid: 967daf49bb7e5bf6b7eeb15bf81e2847, type: 3}
   - sourcePath: sprites/ItemPiece2-a7d67a73d7.png
     sprite: {fileID: 21300000, guid: bd678b49b2d785dfb811dbaedcc637f7, type: 3}
   - sourcePath: sprites/UISprite-3eb5b5a559.png
     sprite: {fileID: 21300000, guid: 225b62cef04aca323fd1e7d8a2eda470, type: 3}
+  - sourcePath: sprites/die_shadow-5a836fa939.png
+    sprite: {fileID: 21300000, guid: 498f5955c6675a27b29e5fda9e4e703e, type: 3}
+  - sourcePath: sprites/equip_20016-6ee1d8f847.png
+    sprite: {fileID: 21300000, guid: debc766f4f325a09bd1c196c1a637a5d, type: 3}
   - sourcePath: sprites/item_100-d078fbaf3a.png
     sprite: {fileID: 21300000, guid: dcddcc74eb425fa7afa40c55b182eb65, type: 3}
   - sourcePath: sprites/item_1530-14ba98a95c.png
@@ -369,5 +438,127 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 9bca1e07f02e58838d49c0b0dc71a999, type: 3}
   - sourcePath: sprites/item_42200-617dec24f0.png
     sprite: {fileID: 21300000, guid: e9457981c88b5589af02d5f9fdea4ae8, type: 3}
+  - sourcePath: sprites/skill_aux_01f8824b94085095936f6172d38d8fd4a845bce49fa984109547c9b07a7d319d.png
+    sprite: {fileID: 21300000, guid: c2a6138956355bce8cc2ce7564620261, type: 3}
+  - sourcePath: sprites/skill_aux_026ac3aea939a2691d23971d9778008c15747c4365120b1686b699724562b183.png
+    sprite: {fileID: 21300000, guid: a8233e14883357599979be02531c53b1, type: 3}
+  - sourcePath: sprites/skill_aux_03dcd60401fbd1168a2e38f0243a1c8c4e3091465f11873124ced73f856a6c20.png
+    sprite: {fileID: 21300000, guid: dbc013e035e958f38e00aabfdf4f4c3e, type: 3}
+  - sourcePath: sprites/skill_aux_042efa2873a8044ababa2a5dd4ddd6d16a91c4de174ab36944f3da4c731bd331.png
+    sprite: {fileID: 21300000, guid: 10e8e6aff6885b21a0b47f0aee10f66b, type: 3}
+  - sourcePath: sprites/skill_aux_08119e431f56c72ee289e800fe35ea77e37582965419a89b9f439542c9d10f97.png
+    sprite: {fileID: 21300000, guid: 8231a2a3cece53f2a9e0197fa1a95874, type: 3}
+  - sourcePath: sprites/skill_aux_08b6c84f80332f345f98d9f8eaa04cbccf260cb6709ead20b4172997dd7a4b94.png
+    sprite: {fileID: 21300000, guid: ca9d00c053075bb6aa71dd27ae360bf4, type: 3}
+  - sourcePath: sprites/skill_aux_10ac7e84d7e729f9e7998f0f78f8b589839fc88476b9a02c7d4c394e696ed49f.png
+    sprite: {fileID: 21300000, guid: 78ca3595aabb53428a826dd0106e5ac9, type: 3}
+  - sourcePath: sprites/skill_aux_13ecb08ecfe7c6b87de06207f6a62dea4948d35e3bed0ed13de49e14ac579b7f.png
+    sprite: {fileID: 21300000, guid: 1d493a6058d85508a776691aefdb6379, type: 3}
+  - sourcePath: sprites/skill_aux_1480e8df6c6d7f220065f2467eba65ddb670bfdd9e6607b103671833538f9243.png
+    sprite: {fileID: 21300000, guid: 742cfd98c542585686a4866ce6725c6e, type: 3}
+  - sourcePath: sprites/skill_aux_17ffff62ae9c7b06369affbab7655ff11088b3df5c0eaaa7e7f4be5394aac3e3.png
+    sprite: {fileID: 21300000, guid: 1dee4fde0b525e71ad6c40764bc57e76, type: 3}
+  - sourcePath: sprites/skill_aux_18aaddd7a3ba7b5e3f3b1d478b6ec347a6082ed7f467cbd90d3077f4ae911135.png
+    sprite: {fileID: 21300000, guid: 3b8c1f3bf7bc5d3ea2accfd3ebe52182, type: 3}
+  - sourcePath: sprites/skill_aux_23065d4aef19b0a233ba8e5799999984722e2a0cb170105138fa7c67801cb6b8.png
+    sprite: {fileID: 21300000, guid: 566d82c5453f52edbd6590be7c3dd5ce, type: 3}
+  - sourcePath: sprites/skill_aux_244a63fd756afa98e5d74b1b24b47e6e512cfe7d5ca21bbb1671bba120ccc685.png
+    sprite: {fileID: 21300000, guid: 57b775f692d65e00b6992037fb5110cf, type: 3}
+  - sourcePath: sprites/skill_aux_2887335e56914974d476203f0447ef4158df6848c0046d3f25f42f5fe19b581e.png
+    sprite: {fileID: 21300000, guid: 69e598ccbc205793905c00bb4352a584, type: 3}
+  - sourcePath: sprites/skill_aux_2c9b0b56808fe94d91319316211c27c3e279bc34d4c3fdda52262abdb1ca0901.png
+    sprite: {fileID: 21300000, guid: c83906271a35544f93ced1318bd95aea, type: 3}
+  - sourcePath: sprites/skill_aux_38e9263b09f04fff1f4e8b43fa3600acf89bfc459b87ae39dffe25839a56e398.png
+    sprite: {fileID: 21300000, guid: 64b10bb31955580b9b7a187efaebfb39, type: 3}
+  - sourcePath: sprites/skill_aux_3c499f4225c0ba4e2792daa44c27a5abd8c1e7229e9bf3f3b299291a49f0aa29.png
+    sprite: {fileID: 21300000, guid: bb56d01d80e657b8a9edb87f6484bd88, type: 3}
+  - sourcePath: sprites/skill_aux_3ff50a6d6ffd64110e649943923d79ba2ad5aa16b15558878e56981a984da96b.png
+    sprite: {fileID: 21300000, guid: 0e779987c6b0592db97af552ee794e17, type: 3}
+  - sourcePath: sprites/skill_aux_40e2eb3be48f3c46645b80e0ead88a0445801fb4fb747b6ce7ab4cee4f5d6497.png
+    sprite: {fileID: 21300000, guid: f482a5a8082859f48fb34fe579168e96, type: 3}
+  - sourcePath: sprites/skill_aux_41c2f8f5d851e16a9b60ba2fbeedf89a48eddd6a88099740f3b62e7ef5d07d0c.png
+    sprite: {fileID: 21300000, guid: bd8be77ce48659598ca65e516e19a2e1, type: 3}
+  - sourcePath: sprites/skill_aux_42f47ba512d889e9be897d6a6cee2e94ab2b1aefa0983d5a17f4e95ba9298d1e.png
+    sprite: {fileID: 21300000, guid: b2948159d35f525a8dacf5da3bfced73, type: 3}
+  - sourcePath: sprites/skill_aux_46193c9f3a976fe22c67182995dcb8145c026e0b9c521895237d99d85918875e.png
+    sprite: {fileID: 21300000, guid: 5aaa1655aaf95b12b740596b2ae13d37, type: 3}
+  - sourcePath: sprites/skill_aux_5077b7ddb657dbf27af0a42ed51473ca42ce260d5ef92c866abc01e5d3760ff1.png
+    sprite: {fileID: 21300000, guid: d21ac1afd7025569974f47380fb39945, type: 3}
+  - sourcePath: sprites/skill_aux_5977448c96992028dbcd7ad041373f26d653289e8baabbc8eb92298cbba587fa.png
+    sprite: {fileID: 21300000, guid: 5e2b3ebede5b5cccbe93cd008347798f, type: 3}
+  - sourcePath: sprites/skill_aux_5bbe74fa874bdbf2699be4f0bf96179136c837e07645464a5929e251c6e95704.png
+    sprite: {fileID: 21300000, guid: cc47baf7d09155d99c466f3ec8453a53, type: 3}
+  - sourcePath: sprites/skill_aux_5fda0fde2246137c6917ac43559d63c9db776c8e7109f4e4222c110c481a20b7.png
+    sprite: {fileID: 21300000, guid: 7987ab504f6c59e9b555609a2ce84bcd, type: 3}
+  - sourcePath: sprites/skill_aux_5fe7674256f2a5bec2b9dc37f5b30a2151d632069f470dec65b7688faaeb389b.png
+    sprite: {fileID: 21300000, guid: ea85a05315495586988c355c23b12ddc, type: 3}
+  - sourcePath: sprites/skill_aux_60961d06bb81ccaaeaa570fbf3ebdf9a1e3c119d544889406d1c980e458a4d6b.png
+    sprite: {fileID: 21300000, guid: c1686dba76b45ff69e04741d88eeaf14, type: 3}
+  - sourcePath: sprites/skill_aux_61ce7c6c2329c5e6d7c1f3d203725e4bba463ab6ee232a2970e759ece959c549.png
+    sprite: {fileID: 21300000, guid: 31f86fa38c6c570f80a0d5588c9b8891, type: 3}
+  - sourcePath: sprites/skill_aux_66b2d289495dfb9c8998007ef5e20276952122a59192505c77e832e3387cf06e.png
+    sprite: {fileID: 21300000, guid: 5d3cda17857b53d1a419fe5f387eafdb, type: 3}
+  - sourcePath: sprites/skill_aux_69ed94ee8bc7dc6b042d491a1c81ed5d183a1d54c572bdbdfc559b38ea8eff52.png
+    sprite: {fileID: 21300000, guid: 6f09a1a6cb6554ecbcaced0a040478ad, type: 3}
+  - sourcePath: sprites/skill_aux_6b29cf1430bcf5c3fed98d14e5085bf4d8e63d79f21ea9840f3dab89a340469b.png
+    sprite: {fileID: 21300000, guid: 6e692585385d5893a83d7e0372e79f4d, type: 3}
+  - sourcePath: sprites/skill_aux_86996c44cbd7b920548434365babb572ddda648c62cc378ef98f0fb4b1a78a35.png
+    sprite: {fileID: 21300000, guid: c467ce9ee82a58a092d6f4d6b7b668cb, type: 3}
+  - sourcePath: sprites/skill_aux_895092fe27e85f08590d9fb4298a47b83441636dc3f7d2bf35dad82ec675a6fb.png
+    sprite: {fileID: 21300000, guid: d35293f1124a5824a72542ebe18a2950, type: 3}
+  - sourcePath: sprites/skill_aux_8ca75078b5bc01de18ca976a027b80a28f86570b40e6a4e9a5aa45113c842254.png
+    sprite: {fileID: 21300000, guid: f5e6e89dbcf050c89708b1bc12159810, type: 3}
+  - sourcePath: sprites/skill_aux_921332ccb19d837d63047ff4e527ebede35889c849aea2bef67c0a49dd7ddd08.png
+    sprite: {fileID: 21300000, guid: d9ba3aa1f3cd53b3aeea796d11d040b0, type: 3}
+  - sourcePath: sprites/skill_aux_9a3203117ae57af62d4c46ace7b4240b38c047f642a5c169ab3d7770379c2937.png
+    sprite: {fileID: 21300000, guid: 3ba79e892b2b5ebe8ce04de88fb9b4a7, type: 3}
+  - sourcePath: sprites/skill_aux_a02cff5906916d937f4cb0f9636efabf6444b91b1ff567f9c89edea0f151c2a4.png
+    sprite: {fileID: 21300000, guid: 745f53766fe75dfbbdb29e6b3f58b346, type: 3}
+  - sourcePath: sprites/skill_aux_a4700c6638bf210911a4ea1d59e8725b809137732db16626a402d173b2f1afb0.png
+    sprite: {fileID: 21300000, guid: a9b4f5298302576f9774337fca16b8eb, type: 3}
+  - sourcePath: sprites/skill_aux_a77345ef6505642b894579c89b2f772c7e22b0943a58e7ff9aa8f6b349fe61a9.png
+    sprite: {fileID: 21300000, guid: 6c2eb25c684f511c95b06d3615711cc0, type: 3}
+  - sourcePath: sprites/skill_aux_a7aa2cc05f3f9bed8edf74c406abf488b266f1f4147c97b3048c8cfae0bf1684.png
+    sprite: {fileID: 21300000, guid: 9fca85bba11e584f8b8129920421cae5, type: 3}
+  - sourcePath: sprites/skill_aux_a7e6c6c8e28c5d17a64db451aa11b6f89261db53a5e9cb862ef28953175d4b76.png
+    sprite: {fileID: 21300000, guid: c9bbac015b255a2fae768c557d7ef5e2, type: 3}
+  - sourcePath: sprites/skill_aux_a8777205712767b43b8f9dcea2dff7ca9636e06d9e6fc9e9bd2d217f45c496c9.png
+    sprite: {fileID: 21300000, guid: a1c52f14802050269182f8cc551d7b5a, type: 3}
+  - sourcePath: sprites/skill_aux_a8b6ceb0957ef0036e6a9c5a97b4c531caca6f09f92dfbb38651b3101edc9551.png
+    sprite: {fileID: 21300000, guid: 5efe1b735fdf5a46a35a9b97201ca42d, type: 3}
+  - sourcePath: sprites/skill_aux_a8bc105036e28e5a9a61f44d96d6a7839bc771464f12d2aa819d74c531054564.png
+    sprite: {fileID: 21300000, guid: 682265ba01855eeda7a0e1e498c00ba4, type: 3}
+  - sourcePath: sprites/skill_aux_ae22cf4a6b01dbb0c05d8b3cde711ec451824990b05a9085df7aa28114d6c3c7.png
+    sprite: {fileID: 21300000, guid: 7b87fd8fa5495fadacfcd4b330c1e42f, type: 3}
+  - sourcePath: sprites/skill_aux_ae526888cd952226e5cd2024af51f1a9453d60afd12cb1020e36ede112fc0e75.png
+    sprite: {fileID: 21300000, guid: 940adc7460d75262bfa05b4db846cc15, type: 3}
+  - sourcePath: sprites/skill_aux_b4e84c75543c43e6773c83cb10c63b7de7b46d18fe4a19b41a7ba3089cc24e35.png
+    sprite: {fileID: 21300000, guid: cc99f6924cbb54d6808ab39f3471dfa0, type: 3}
+  - sourcePath: sprites/skill_aux_b6b8d0ecb649edb86448bd18e0d239c2770593ea3d92f5179022fa5e990d4559.png
+    sprite: {fileID: 21300000, guid: 3badf6d336835671b22c5971471c67b5, type: 3}
+  - sourcePath: sprites/skill_aux_bab85fd1b78ddd13aeb730853117ebfa0a2c6507737084ffd564826be9272ba8.png
+    sprite: {fileID: 21300000, guid: 827941910d3f50e89a01c21ee3fabfe2, type: 3}
+  - sourcePath: sprites/skill_aux_bcbe5bf5835c1cea87c2798f8498612b907b09a93e70a7169526e1f795f6fd62.png
+    sprite: {fileID: 21300000, guid: 8455734f5f975a74b9f5c9e6810b1dc1, type: 3}
+  - sourcePath: sprites/skill_aux_c7d47ac64c3a738a2c631fe9aa5a89c78b5c7379b769235a657d9fe6915e06e9.png
+    sprite: {fileID: 21300000, guid: 5dc21a9bb72850e98b524eac9b2b8340, type: 3}
+  - sourcePath: sprites/skill_aux_cfdb576d740f67b192d3ade152467af9431fcf359cae4874bdb4c221e62ed05d.png
+    sprite: {fileID: 21300000, guid: 3322ae63a3755e3097575204011562ef, type: 3}
+  - sourcePath: sprites/skill_aux_d501139424a0ca8b4b329a439e446b65837a11726c9489ea14776a9eeb7a7cc2.png
+    sprite: {fileID: 21300000, guid: 2cfece9b784d55b49ef39ecbc4635433, type: 3}
+  - sourcePath: sprites/skill_aux_d6e8f95d532c786a598dbc850e8a0a74a33604d3b3b42a01c97affd8bb6557e8.png
+    sprite: {fileID: 21300000, guid: 90d360f27a4053d68343e5cae0051be0, type: 3}
+  - sourcePath: sprites/skill_aux_d8ff3c45cd8d5f4cff48cbacbb5fecd12dca93786468d83c9c2c510539f7ca87.png
+    sprite: {fileID: 21300000, guid: f937fa17b89151aca6a50bd8f5b07ffd, type: 3}
+  - sourcePath: sprites/skill_aux_e81d5cb2ac8ed7229587e3572d4802ddb561b72b6b7ea29762a0961335f53d39.png
+    sprite: {fileID: 21300000, guid: 4377daa4639a5470acaa470f0d0b941a, type: 3}
+  - sourcePath: sprites/skill_aux_ea8b8705f01d8cde2bcc86ebe1ffeea00be2ceb6d4e61f9350606366788a4180.png
+    sprite: {fileID: 21300000, guid: fa0fa47d8c825fdbaf226de4ced5cd2f, type: 3}
+  - sourcePath: sprites/skill_aux_f3be79d65e9af67f70810395cdbb31e19412261f560c092b3274e36cb89fd41e.png
+    sprite: {fileID: 21300000, guid: 96050fe947d552c1ac0776a5894d1d87, type: 3}
+  - sourcePath: sprites/skill_aux_f56dd3f9d597e3cf737e87f797e42f49e76a45fc5eb3a2b657bfee4dc881858d.png
+    sprite: {fileID: 21300000, guid: a4007cd7f73754f3a82b61dbd3746bb2, type: 3}
+  - sourcePath: sprites/skill_aux_fa6f4e2e6afa5618a123a95408d2a9c168515e8c1d62da81c49b122ac479ee8b.png
+    sprite: {fileID: 21300000, guid: 9fd226ad03355bc6b816143077f60555, type: 3}
   - sourcePath: sprites/treasure_61001-90446d948d.png
     sprite: {fileID: 21300000, guid: 28a6d800ad5af5d32c1769d1fd03d814, type: 3}

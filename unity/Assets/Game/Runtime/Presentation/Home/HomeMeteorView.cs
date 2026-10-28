@@ -25,7 +25,7 @@ namespace Zjcs.Presentation.Home
                 if (template == null || string.IsNullOrEmpty(template.assetGuid)
                     || template.systems == null || template.systems.Length == 0)
                     throw new InvalidDataException("Official Home meteor template is incomplete.");
-            if (Shader.Find(EffectShaderName) == null)
+            if (HomeRuntimeShaderBindings.Resolve(EffectShaderName) == null)
                 throw new InvalidOperationException("Windows Home effect shader is unavailable: " + EffectShaderName);
         }
 
@@ -242,7 +242,7 @@ namespace Zjcs.Presentation.Home
                 throw new InvalidDataException("Official Home meteor particle material is missing.");
             if (materials.TryGetValue(data.name, out Material cached) && cached != null) return cached;
 
-            Shader shader = Shader.Find(EffectShaderName);
+            Shader shader = HomeRuntimeShaderBindings.Resolve(EffectShaderName);
             if (shader == null) throw new InvalidOperationException("Windows Home effect shader is unavailable: " + EffectShaderName);
             var material = new Material(shader) { name = "HomeMeteor_" + data.name };
             material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;

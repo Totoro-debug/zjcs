@@ -17,6 +17,8 @@ namespace Zjcs.Official.WorldUI
         public WorldMultiLanguageText HeadLabelText;
         public string AnimationWorkCondition;
         public string HeadKey;
+        // Windows prefab conversion can play the recovered original clips.
+        [NonSerialized] public Action<bool> AnimationStateChanged;
         public List<string> ItemsKey = new List<string>();
         private HashSet<GameObject> mDropdownContainer;
         private bool mIsOn;
@@ -87,13 +89,15 @@ namespace Zjcs.Official.WorldUI
             if (mIsOn) return;
             mIsOn = true;
             Refresh();
-            Animator.SetBool(mAnimationWorkConditionHash, mIsOn);
+            if (AnimationStateChanged != null) AnimationStateChanged(mIsOn);
+            else Animator.SetBool(mAnimationWorkConditionHash, mIsOn);
         }
         public void Hide()
         {
             if (!mIsOn) return;
             mIsOn = false;
-            Animator.SetBool(mAnimationWorkConditionHash, mIsOn);
+            if (AnimationStateChanged != null) AnimationStateChanged(mIsOn);
+            else Animator.SetBool(mAnimationWorkConditionHash, mIsOn);
         }
         public void ProvideData(Transform transform, int idx)
         {

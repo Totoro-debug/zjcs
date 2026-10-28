@@ -56,8 +56,16 @@ namespace Zjcs.Presentation.Home
                     Curve = new AnimationCurve(keyframes)
                 });
             }
-            if (tracks.Count == 0 || duration <= 0f) return false;
+            if (tracks.Count == 0) return false;
             if (playback != null) StopCoroutine(playback);
+            if (duration <= 0f)
+            {
+                // Official default-state clips can contain only a pose at time zero.
+                playback = null;
+                foreach (BoundTrack track in tracks) Apply(track, track.Curve.Evaluate(0f));
+                completed?.Invoke();
+                return true;
+            }
             playback = StartCoroutine(Run(tracks, duration, loop ?? animation.loop, completed));
             return true;
         }

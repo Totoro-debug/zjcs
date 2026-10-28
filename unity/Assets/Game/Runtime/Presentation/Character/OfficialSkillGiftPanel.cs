@@ -24,18 +24,20 @@ namespace Zjcs.Presentation.Character
         private readonly OfficialSkillAchievementRules rules;
         private readonly Action<Button, string> animate;
         private readonly Action changed;
+        private readonly Action<int> openItem;
         private readonly Dictionary<Button, int> tabs = new Dictionary<Button, int>();
         private readonly List<GameObject> rewardIcons = new List<GameObject>();
         private int group = 33;
 
         public OfficialSkillGiftPanel(Dictionary<string, RectTransform> sourceNodes, Dictionary<string, object> ui,
             OfflineCharacterProgressionService service, OfficialCharacterAssetCatalog catalog,
-            OfficialSkillAssetCatalog skillCatalog, Action<Button, string> tabAnimation, Action onChanged)
+            OfficialSkillAssetCatalog skillCatalog, Action<Button, string> tabAnimation, Action onChanged, Action<int> onOpenItem)
         {
             nodes = sourceNodes; templates = ui; progression = service; assets = catalog; skillAssets = skillCatalog;
             bindings = Object(ui["gift_bindings"]); texts = Object(ui["gift_texts"]); icons = Object(ui["gift_item_icons"]);
             factory = new CharacterPanelNodeFactory(assets); rules = new OfficialSkillAchievementRules(service.SkillRules);
             animate = tabAnimation; changed = onChanged;
+            openItem = onOpenItem;
             foreach (var entry in bindings)
             {
                 var components = Object(entry.Value);
@@ -111,6 +113,13 @@ namespace Zjcs.Presentation.Character
             RectTransform instance = factory.Build(source, slot, itemNodes, itemButtons);
             rewardIcons.Add(instance.gameObject);
             foreach (Graphic graphic in instance.GetComponentsInChildren<Graphic>(true)) graphic.raycastTarget = false;
+            var target = instance.GetComponent<Image>() ?? instance.gameObject.AddComponent<Image>();
+            target.color = Color.clear;
+            target.raycastTarget = true;
+            target.canvasRenderer.cullTransparentMesh = false;
+            var button = instance.GetComponent<Button>() ?? instance.gameObject.AddComponent<Button>();
+            button.targetGraphic = target;
+            button.onClick.AddListener(() => openItem(reward.ItemId));
             Transform content = instance.Find("Content");
             Image icon = content.Find("mask/icon").GetComponent<Image>();
             icon.sprite = skillAssets.FindSprite(Text(icons[reward.ItemId.ToString(CultureInfo.InvariantCulture)]));

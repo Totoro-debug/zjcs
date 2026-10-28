@@ -103,6 +103,26 @@ $skillItems = [Zjcs.Combat.Official.FightOfficialSkillItemCatalog]::Load(
     $rulesJson, $rulesSource.output_sha256, $rulesSource.manifest)
 $swordStarter = $skillItems.Required(10012)
 $wandStarter = $skillItems.Required(10028)
+foreach ($skinRow in $rules.skill_skin) {
+    $effect = $skillItems.RequiredForSkin($skinRow.SkillId, $skinRow.ClassId)
+    Assert-Combat ($effect.ItemId -eq $skinRow.EffectSkillId -and $effect.EntityId -gt 0) 'An official skill skin did not select its configured combat effect'
+}
+Assert-Combat ($skillItems.RequiredForSkin(10014, 0).EntityId -eq 10660 -and
+    $skillItems.RequiredForSkin(10014, 999999).EntityId -eq 10660 -and
+    $skillItems.RequiredForSkin(10014, 39503).ItemId -eq 10125) 'Default, absent or equipped skin resolution differs from FightSkillBaseInfo.GetUseSkillId'
+$skinUnit = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$skinUnit.Id = 1
+$skinBinding = [Zjcs.Combat.Official.FightOfficialSkillBinding]::new()
+$skinBinding.EntityId = $skillItems.RequiredForSkin(10014, 39503).EntityId
+$skinBinding.ItemId = 10014; $skinBinding.UseItemId = 10125; $skinBinding.SkillSkinId = 39503
+$skinBinding.Rank = 3; $skinBinding.Level = 7
+$skinBindings = [System.Collections.Generic.List[Zjcs.Combat.Official.FightOfficialSkillBinding]]::new()
+$skinBindings.Add($skinBinding)
+$officialCatalog.AssembleUnit($skinUnit, $skinBindings, $null)
+Assert-Combat ($skinUnit.Skills[0].EntityId -eq $skinBinding.EntityId -and
+    $skinUnit.Skills[0].ItemId -eq 10014 -and $skinUnit.Skills[0].UseItemId -eq 10125 -and
+    $skinUnit.Skills[0].SkillSkinId -eq 39503 -and $skinUnit.Skills[0].Rank -eq 3 -and
+    $skinUnit.Skills[0].Level -eq 7) 'Equipping a skin lost the base skill identity or progression'
 Assert-Combat ($skillItems.Count -eq 1874 -and $swordStarter.EntityId -eq 10640 -and $wandStarter.EntityId -eq 10800) 'Official skill item to EC entity mapping mismatch'
 Assert-Combat ($skillItems.InitialActiveSkill(200) -eq 10012 -and $skillItems.InitialActiveSkill(201) -eq 10028 -and $skillItems.InitialActiveSkill(0) -eq 10012) 'Official initial weapon skill settings mismatch'
 Assert-Combat ($skillItems.ProfessionAvailabilityFor(10008, 1, 0, 0) -eq [Zjcs.Combat.Official.FightSkillProfessionAvailability]::Available -and $skillItems.ProfessionAvailabilityFor(10008, 10, 0, 0) -eq [Zjcs.Combat.Official.FightSkillProfessionAvailability]::Mismatch) 'Official profession skill ownership lookup mismatch'

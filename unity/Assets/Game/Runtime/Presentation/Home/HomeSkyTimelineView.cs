@@ -92,7 +92,7 @@ namespace Zjcs.Presentation.Home
             }
             if (!hasLight2D) return "the Universal Render Pipeline runtime is not loaded";
             foreach (HomeSkyMaterialData material in data.materials ?? Array.Empty<HomeSkyMaterialData>())
-                if (material == null || Shader.Find(material.shader) == null)
+                if (material == null || HomeRuntimeShaderBindings.Resolve(material.shader) == null)
                     return "the official shader is not loaded: " + (material == null ? "<null>" : material.shader);
             return null;
         }
@@ -287,11 +287,10 @@ namespace Zjcs.Presentation.Home
         private Type ResolveLight2DType()
         {
             const string typeName = "UnityEngine.Rendering.Universal.Light2D";
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                Type type = assembly.GetType(typeName, false);
-                if (type != null && typeof(Component).IsAssignableFrom(type)) return type;
-            }
+            // Recovered prefab schema assemblies also declare Light2D. They are
+            // serialization carriers; the active URP asset owns the rendering type.
+            Type type = GraphicsSettings.currentRenderPipeline?.GetType().Assembly.GetType(typeName, false);
+            if (type != null && typeof(Component).IsAssignableFrom(type)) return type;
             throw new InvalidOperationException("The pinned Home scene requires URP Light2D, but the Universal Render Pipeline runtime is not loaded.");
         }
 
@@ -304,7 +303,7 @@ namespace Zjcs.Presentation.Home
 
         private static Material CreateMaterial(HomeSkyMaterialData source)
         {
-            Shader shader = Shader.Find(source.shader);
+            Shader shader = HomeRuntimeShaderBindings.Resolve(source.shader);
             if (shader == null) throw new InvalidOperationException("The official Home sky shader is not loaded: " + source.shader);
             var material = new Material(shader) { name = source.name };
             foreach (HomeSkyFloatProperty property in source.floats ?? Array.Empty<HomeSkyFloatProperty>())

@@ -40,6 +40,9 @@ namespace Zjcs.Presentation.Character
         public string name;
         public string path;
         public bool active = true;
+        public bool is_rect_transform = true;
+        public float[] local_position, local_rotation;
+        public float alpha = 1f;
         public float[] anchor_min;
         public float[] anchor_max;
         public float[] anchored_position;
@@ -55,14 +58,17 @@ namespace Zjcs.Presentation.Character
         public OfficialCharacterPanelText text;
         public OfficialCharacterPanelLayoutElement layout_element;
         public OfficialCharacterPanelGroupLayout layout;
+        public OfficialCharacterPanelGridLayout grid;
         public int[] size_fitter;
         public bool button;
         public bool mask;
+        public bool mask_show_graphic = true;
     }
 
     [Serializable]
     internal sealed class OfficialCharacterPanelImage
     {
+        public bool enabled = true;
         public int mirror_type = -1;
         public bool reversed;
         public OfficialCharacterPanelSprite sprite;
@@ -81,6 +87,7 @@ namespace Zjcs.Presentation.Character
     [Serializable]
     internal sealed class OfficialCharacterPanelText
     {
+        public bool enabled = true;
         public string value;
         public float[] color;
         public float font_size;
@@ -108,6 +115,7 @@ namespace Zjcs.Presentation.Character
     [Serializable]
     internal sealed class OfficialCharacterPanelGroupLayout
     {
+        public bool enabled = true;
         public int axis;
         public int[] padding;
         public int alignment;
@@ -116,6 +124,14 @@ namespace Zjcs.Presentation.Character
         public bool[] control;
         public bool[] child_scale;
         public bool reverse;
+    }
+
+    [Serializable]
+    internal sealed class OfficialCharacterPanelGridLayout
+    {
+        public int alignment, axis, constraint, corner, count;
+        public int[] padding;
+        public float[] cell, spacing;
     }
 
     public sealed class OfficialCharacterPanelView : MonoBehaviour
@@ -169,6 +185,21 @@ namespace Zjcs.Presentation.Character
         public event Action RankUpgradeRequested;
         public event Action StoredExperienceHelpRequested;
         public event Action<string> OfficialModuleRequested;
+        public event Action<OfficialSkillDamageTestRequest> SkillDamageTestRequested;
+        public Func<int, string, string> SkillGiftSourceLimitCode;
+        public Func<int, bool> SkillGiftSourceBlockConditionMet;
+        public void ShowSkillDamageTestResult(OfficialSkillDamageTestRequest request, Zjcs.Combat.Official.FightBattleCheckpoint checkpoint,
+            Action again, Action settings, Action leave)
+        {
+            ResumeSkillPage();
+            skillPanel.ShowOriginalDamageTestResult(request, checkpoint, again, settings, leave);
+        }
+
+        public void ResumeSkillPage()
+        {
+            if (skillPanel != null && skillPanel.IsOpen) SetSkillPageState(true, true);
+        }
+
 
         private void OnDestroy()
         {
@@ -413,6 +444,7 @@ namespace Zjcs.Presentation.Character
             if (equipSlots != null) equipSlots.Refresh(transform);
             if (petEquipmentView != null) petEquipmentView.RefreshCurrent();
             if (characterModel != null) characterModel.Refresh();
+            if (skillPanel != null) skillPanel.ReloadProfile();
             RefreshHonorTitle();
             RefreshProfession();
         }
@@ -575,7 +607,9 @@ namespace Zjcs.Presentation.Character
             equipSlots.Initialize(assets, progression, progression.EquipmentCatalog);
             equipSlots.Changed += Refresh;
             skillPanel = holder.AddComponent<CharacterSkillPanel>();
-            skillPanel.Initialize(assets, progression);
+            skillPanel.Initialize(assets, progression, characterSlotId, characterSavesRoot);
+            skillPanel.NavigationRequested += module => OfficialModuleRequested?.Invoke(module);
+            skillPanel.DamageTestRequested += request => SkillDamageTestRequested?.Invoke(request);
             skillPanel.Changed += HandleSkillPanelChanged;
             skillPanel.PlayerHeaderVisibilityChanged += visible =>
             {
@@ -705,9 +739,14 @@ namespace Zjcs.Presentation.Character
         private bool skillPageShown;
         private OfficialCharacterSkillHeader skillHeader;
 
-        private void SetSkillPageState(bool show)
+        internal void SetSkillAuxiliaryFullScreen(bool fullScreen)
         {
-            if (skillPageShown == show)
+            if (skillHeader != null) skillHeader.gameObject.SetActive(skillPageShown && !fullScreen);
+        }
+
+        private void SetSkillPageState(bool show, bool force = false)
+        {
+            if (skillPageShown == show && !force)
             {
                 if (show && skillHeader != null) skillHeader.Refresh();
                 return;

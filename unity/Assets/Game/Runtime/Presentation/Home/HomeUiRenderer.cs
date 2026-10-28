@@ -404,7 +404,10 @@ namespace Zjcs.Presentation.Home
                     hitTarget.color = new Color(0f, 0f, 0f, 0f);
                     target = hitTarget;
                 }
-                if (target != null) target.raycastTarget = true;
+                if (target != null) {
+                    target.raycastTarget = true;
+                    target.canvasRenderer.cullTransparentMesh = false;
+                }
                 if (toggle || tabItem)
                 {
                     Toggle control = gameObject.AddComponent<Toggle>();

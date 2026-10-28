@@ -19,6 +19,9 @@ namespace Zjcs.Presentation.Character
 
         public OfflineCharacterProgressionService Progression => progression;
         public event Action<string> NavigationRequested;
+        public event Action<OfficialSkillDamageTestRequest> DamageTestRequested;
+        public void ShowDamageTestResult(OfficialSkillDamageTestRequest request, Zjcs.Combat.Official.FightBattleCheckpoint checkpoint,
+            Action again, Action settings, Action leave) => panelView.ShowSkillDamageTestResult(request, checkpoint, again, settings, leave);
 
         public void OpenProfile(string selectedSlotId)
         {
@@ -69,7 +72,11 @@ namespace Zjcs.Presentation.Character
             panelView.Initialize(assetCatalog, progression, activeSlotId, activeSavesRoot);
             panelView.OfficialModuleRequested -= ForwardNavigation;
             panelView.OfficialModuleRequested += ForwardNavigation;
+            panelView.SkillDamageTestRequested -= ForwardDamageTest;
+            panelView.SkillDamageTestRequested += ForwardDamageTest;
         }
+
+        private void ForwardDamageTest(OfficialSkillDamageTestRequest request) => DamageTestRequested?.Invoke(request);
 
         private void Update()
         {
@@ -119,6 +126,14 @@ namespace Zjcs.Presentation.Character
         {
             if (progression == null) throw new InvalidOperationException("Open a selected profile before refreshing the character page.");
             panelView.Refresh();
+        }
+
+        public void ReloadProfile()
+        {
+            if (session == null) throw new InvalidOperationException("Open a profile before returning from a skill source.");
+            session.Reload();
+            panelView.Refresh();
+            panelView.ResumeSkillPage();
         }
 
         private void ForwardNavigation(string module)

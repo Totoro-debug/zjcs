@@ -22,7 +22,7 @@ namespace Zjcs.Offline.Progression
 
         public IReadOnlyList<OfflinePetInstance> Candidates(int planIndex)
         {
-            if (planIndex < 0 || planIndex >= 3) return Array.Empty<OfflinePetInstance>();
+            if (planIndex < 0 || planIndex >= session.Save.Player.Skills.Plans.Length) return Array.Empty<OfflinePetInstance>();
             return CandidatesFor();
         }
 
@@ -43,7 +43,7 @@ namespace Zjcs.Offline.Progression
 
         public ProgressionResult EquipPlanPet(int planIndex, long petIndex)
         {
-            if (planIndex < 0 || planIndex >= 3 || petIndex == 0 || petIndex < -1
+            if (planIndex < 0 || planIndex >= session.Save.Player.Skills.Plans.Length || petIndex == 0 || petIndex < -1
                 || (petIndex > 0 && !State.Pets.Any(value => value.Index == petIndex)))
                 return Invalid("幻兽或技能方案无效");
             if (session.Save.Player.Skills.Plans[planIndex].PetIndex == petIndex)

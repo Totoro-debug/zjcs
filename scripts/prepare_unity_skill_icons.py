@@ -120,6 +120,9 @@ def restore():
     text_schemas.generator.load_dll((ROOT / ".tools/source-packages/official-code/managed/decoded/LoopScrollRect.Runtime.dll").read_bytes())
     from prepare_skill_detail_data import restore_grid
     restore_grid(reader, text_schemas, data)
+    from prepare_skill_extra_ui import restore as restore_auxiliary
+    auxiliary_sprites = restore_auxiliary(reader, text_schemas, data, city, rules)
+    uris.update(auxiliary_sprites)
     text_sources = {}
     safe_sources = {}
     character_fonts = {}
@@ -138,16 +141,25 @@ def restore():
                 continue
             for entry in node.m_Component:
                 component = entry.component.deref()
-                if component.type.name != "MonoBehaviour" or component.read(check_read=False).m_Script.read().m_ClassName != "TextMeshProUGUI":
+                if component.type.name != "MonoBehaviour":
+                    continue
+                class_name = component.read(check_read=False).m_Script.read().m_ClassName
+                if class_name == "Mask":
+                    by_path[path]["mask_show_graphic"] = bool(text_schemas.read(component)["m_ShowMaskGraphic"])
+                if class_name in ("Image", "MirrorImage") and "image" in by_path[path]:
+                    fields = text_schemas.read(component) if class_name == "Image" else reader.schemas.read(component)
+                    by_path[path]["image"]["enabled"] = bool(fields["m_Enabled"])
+                if class_name != "TextMeshProUGUI":
                     continue
                 fields = text_schemas.read(component)
                 text = by_path[path].setdefault("text", {})
-                text.update(font_size=fields["m_fontSizeBase"], auto_size=bool(fields["m_enableAutoSizing"]),
+                text.update(enabled=bool(fields["m_Enabled"]), font_size=fields["m_fontSizeBase"], auto_size=bool(fields["m_enableAutoSizing"]),
                     font_size_min=fields["m_fontSizeMin"], font_size_max=fields["m_fontSizeMax"],
                     word_wrap=bool(fields["m_enableWordWrapping"]), overflow=fields["m_overflowMode"],
                     horizontal=fields["m_HorizontalAlignment"], vertical=fields["m_VerticalAlignment"])
-                text.update(native_tmp=path.startswith("/SkillPanelSkillDetailDialog/") and
-                    ("/DetailContent/" in path or path.endswith("/LevelGo/LevelText")),
+                text.update(native_tmp=(path.startswith(("/SkillPanelSkillDetailDialog/", "/SkillDetailDialog/")) and
+                    ("/DetailContent/" in path or path.endswith("/LevelGo/LevelText"))) or any(path.startswith("/" + prefix + "/")
+                    for prefix in ("StageDamageTestPanel", "StageLevelCellItem", "StageSetToggleItem", "ToggleText", "DropdownItem", "SkillSkinReplaceDialog", "PlayVideoDialog", "GameEndPanelDamageTest", "ItemDetailDialog", "ItemSourceItem", "PopTipMutilDesc", "TipInfo2", "PopTipEntry", "EntryDetailItem", "FightEndReportPanel", "LocalFightRecordPanel", "FightRecordInfoItem")),
                     font_style=fields["m_fontStyle"], character_spacing=fields["m_characterSpacing"],
                     word_spacing=fields["m_wordSpacing"], line_spacing=fields["m_lineSpacing"],
                     margin=[fields["m_margin"][key] for key in ("x", "y", "z", "w")])
@@ -223,6 +235,69 @@ def restore():
         position = offset_start + entries[xxhash.xxh64_intdigest(key.encode("utf-8"))]
         size = struct.unpack_from("<H", raw, position)[0]
         texts[key] = raw[position + 2:position + 2 + size].decode("utf-8")
+    auxiliary_keys = {"ItemSourceType.Gacha", "ItemSourceType.ItemMerge", "ui_blessing_level", "ui_common_level_style_3",
+        "ui_blessing_skill_level_tip_0", "ui_blessing_skill_level_tip_1", "ui_blessing_skill_level_tip_3",
+        "ui_dmagae_test_time_out", "ui_dmagae_test_complete", "ui_battle_win_text", "ui_battle_lose_text",
+        "ui_skill_stage_monsterhp_text_label", "ui_skill_stage_monsterhurt_text_label",
+        "ui_skill_stage_monsterhurt_text_normal", "ui_skill_stage_monsterhp_text_endless", "ui_skill_stage_monsterhurt_text_one"}
+    for template in data.values():
+        if not isinstance(template, dict) or "root" not in template:
+            continue
+        for node in layout_nodes(template["root"]):
+            binding = node.get("original_bindings", {}).get("MultiLanguageText", {})
+            if binding.get("myKey"):
+                auxiliary_keys.add(binding["myKey"])
+            sprite = node.get("image", {}).get("sprite")
+            if sprite:
+                uris.add(sprite["file"])
+    auxiliary_keys.update("damage_test_stage_monster_" + str(row["Id"]) + "_name" for row in data["auxiliary_data"]["damage_test_stage_monster"])
+    for row in data["auxiliary_data"]["entry"]:
+        auxiliary_keys.update("entry_" + str(row["Id"]) + suffix for suffix in ("_name", "_desc"))
+        uris.update(row[field] for field in ("Icon_uri", "Bg_uri") if row[field])
+    rank_source = ROOT / ".tools/source-packages/official-code/common-source/Common/Rank.cs"
+    rank_names = re.findall(r"^\s*([A-Za-z0-9]+)\s*,?\s*$", rank_source.read_text(encoding="utf-8-sig"), re.M)
+    data["auxiliary_data"]["rank_names"] = rank_names
+    item_type_source = ROOT / ".tools/source-packages/official-code/common-source/Common/ItemType.cs"
+    item_type_names = {number: name for name, number in re.findall(r"^\s*(\w+)\s*=\s*(\d+)\s*,?\s*$", item_type_source.read_text(encoding="utf-8-sig"), re.M)}
+    data["auxiliary_data"]["item_type_names"] = item_type_names
+    source_type_path = ROOT / ".tools/source-packages/official-code/common-source/Common/ItemSourceType.cs"
+    source_type_names = re.findall(r"^\s*([A-Za-z0-9]+)\s*,?\s*$", source_type_path.read_text(encoding="utf-8-sig"), re.M)
+    data["auxiliary_data"]["item_source_type_names"] = {str(index): name for index, name in enumerate(source_type_names)}
+    auxiliary_keys.update("ItemSourceType." + name for name in source_type_names)
+    material_type_path = ROOT / ".tools/source-packages/official-code/common-source/Common/MaterialDungeonType.cs"
+    material_type_names = re.findall(r"^\s*([A-Za-z0-9]+)\s*,?\s*$", material_type_path.read_text(encoding="utf-8-sig"), re.M)
+    data["auxiliary_data"]["material_dungeon_type_names"] = {str(index): name for index, name in enumerate(material_type_names)}
+    auxiliary_keys.update("ItemSourceType.NormalMaterial_" + name for name in material_type_names)
+    auxiliary_keys.update("ItemInfoDialog.Limit." + name for name in (
+        "FantasyLadder", "PetGacha", "DelegateTask", "NormalMaterial", "FunctionLimitLegion", "LegionNotJoin", "FurnitureHangUp"))
+    auxiliary_keys.update("FurnitureSourceTitle_" + str(row["Param"]) for row in data["auxiliary_data"]["item_source"] if row["ItemSourceType"] == 12)
+    data["auxiliary_inputs"]["material_dungeon_type_enum"] = {"path": material_type_path.relative_to(ROOT).as_posix(), "sha256": digest(material_type_path)}
+    data["auxiliary_inputs"]["item_source_type_enum"] = {"path": source_type_path.relative_to(ROOT).as_posix(), "sha256": digest(source_type_path)}
+    data["auxiliary_inputs"]["item_type_enum"] = {"path": item_type_source.relative_to(ROOT).as_posix(), "sha256": digest(item_type_source)}
+    gift_ids = set(map(int, item_icons))
+    data["auxiliary_data"]["item_output_groups"] = rules["game_settings"]["OutputAdditionSetting"]["ItemOutputGroupTypeDict"]
+    assert not gift_ids.intersection(map(int, data["auxiliary_data"]["item_output_groups"])), "A skill gift requires its original output-addition detail"
+    for row in rules["item"]:
+        if row["ClassId"] not in gift_ids:
+            continue
+        assert not row["CanUse"], "A skill gift requires its specialized official use dialog"
+        auxiliary_keys.update("item_" + str(row["ClassId"]) + suffix for suffix in ("_name", "_func_desc", "_desc"))
+        auxiliary_keys.add("ItemType." + item_type_names[str(row["ItemType"])])
+    data["auxiliary_inputs"]["rank_enum"] = {"path": rank_source.relative_to(ROOT).as_posix(), "sha256": digest(rank_source)}
+    auxiliary_keys.update("Rank." + name for name in rank_names)
+    from prepare_character_skill_skin_videos import load_official_rows
+    for row in load_official_rows():
+        auxiliary_keys.add("item_" + str(row["ClassId"]) + "_name")
+        auxiliary_keys.add("skill_skin_" + str(row["ClassId"]) + "_desc")
+    auxiliary_keys.update("skill_plan_default_name_" + str(i) for i in range(1, rules["game_settings"]["SkillPlanMaxCount"] + 1))
+    data["auxiliary_data"]["texts"] = {}
+    for key in sorted(auxiliary_keys):
+        offset = entries.get(xxhash.xxh64_intdigest(key.encode("utf-8")))
+        if offset is None:
+            continue
+        position = offset_start + offset
+        size = struct.unpack_from("<H", raw, position)[0]
+        data["auxiliary_data"]["texts"][key] = raw[position + 2:position + 2 + size].decode("utf-8")
     data["gift_texts"] = texts
     data["gift_language_input"] = language_input
     shared_path = ROOT / "unity/Assets/Official/World/Map/11/UI/map11-ui.json"
@@ -325,13 +400,18 @@ def restore():
     template = next((module / "Art/sprites").glob("*.png.meta")).read_text(encoding="utf-8")
     for uri in sorted(uris):
         relative = uri.removeprefix("res://assets/official/")
+        extra = auxiliary_sprites.get(uri)
         source = ROOT / "assets/official" / relative
-        expected = city["resources"][uri]["sha256"]
-        assert digest(source) == expected
+        expected = extra["sha256"] if extra else city["resources"][uri]["sha256"]
+        if not extra:
+            assert digest(source) == expected
         target = module / "Art" / relative
         if not target.exists():
             target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(source, target)
+            if extra:
+                target.write_bytes(extra["bytes"])
+            else:
+                shutil.copyfile(source, target)
             guid = uuid.uuid5(uuid.NAMESPACE_URL, "zjcs-official-skills/" + relative).hex
             target.with_suffix(target.suffix + ".meta").write_text(
                 re.sub(r"^guid: .*$", "guid: " + guid, template, flags=re.M), encoding="utf-8")
@@ -341,16 +421,20 @@ def restore():
     layout.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     files["Assets/Official/Skills/skill-ui.json"] = {"path": "Assets/Official/Skills/skill-ui.json",
         "bytes": layout.stat().st_size, "sha256": digest(layout)}
+    from prepare_skill_auxiliary_code import source_records
     receipt = {"manifest": "854_156383", "bundle": bundle, "bundle_hash": apk.index[bundle],
+               "native_auxiliary_code": source_records(),
                "components": records, "threshold": threshold, "empty_prefab": data["item_empty"]["source"],
                "shared_header": data["shared_header"], "character_followers": followers,
                "native_text": native_text,
                "detail_data_inputs": data["detail_data"]["inputs"],
+               "auxiliary_inputs": data["auxiliary_inputs"],
+               "auxiliary_sprites": {uri: {key: value for key, value in row.items() if key != "bytes"} for uri, row in auxiliary_sprites.items()},
                "safe_area_bindings": safe_sources, "character_fonts": character_fonts, "system_message": data["system_message"], "popup_mask": data["popup_mask"], "popup_masks": data["popup_masks"],
                "gift_bindings": gift_bindings, "gift_language_input": data["gift_language_input"], "text_style_inputs": text_sources,
                "rules_input": "assets/official/rules.json", "rules_input_sha256": digest(rules_path),
                "ui_input": "assets/official/ui.json", "ui_input_sha256": digest(ui_path),
-               "resources": {uri: city["resources"][uri] for uri in sorted(uris)},
+               "resources": {uri: city["resources"][uri] for uri in sorted(uris) if uri in city["resources"]},
                "operation": "Recover pinned original skill UI, shared header, safe areas, fonts, system message, popup masks and icon bindings; copy verified decoded sprites."}
     receipt_path = ROOT / "assets/reference/skill-ui/unity-icon-source-manifest.json"
     receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

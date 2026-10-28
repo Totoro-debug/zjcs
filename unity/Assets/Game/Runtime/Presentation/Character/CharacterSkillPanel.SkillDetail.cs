@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zjcs.Offline.Equipment;
 using Zjcs.Offline.Skills;
+using Zjcs.Combat.Official;
 
 namespace Zjcs.Presentation.Character
 {
@@ -16,17 +17,28 @@ namespace Zjcs.Presentation.Character
     {
         private Dictionary<string, object> originalDetailTexts;
         private OfficialSkillDetailProperties detailProperties;
+        private Dictionary<string, RectTransform> currentDetailNodes;
+        private int currentDetailSkillId;
 
         private string OriginalDetailText(string key)
         {
             if (originalDetailTexts == null)
                 originalDetailTexts = CharacterModelPackage.AsObject(OfficialEquipmentJson.Parse(skillAssets.FidelityTexts.text), "original skill text");
-            return originalDetailTexts.TryGetValue(key, out object value) ? Convert.ToString(value, CultureInfo.InvariantCulture) : null;
+            if (originalDetailTexts.TryGetValue(key, out object value)) return Convert.ToString(value, CultureInfo.InvariantCulture);
+            if (skillUiTemplates.TryGetValue("auxiliary_data", out object auxiliary)
+                && CharacterModelPackage.AsObject(auxiliary, "auxiliary text").TryGetValue("texts", out object texts)
+                && CharacterModelPackage.AsObject(texts, "auxiliary text values").TryGetValue(key, out value))
+                return Convert.ToString(value, CultureInfo.InvariantCulture);
+            return null;
         }
 
-        private void BindOriginalSkillDetail(int skillId, Dictionary<string, RectTransform> dialogNodes)
+        private void BindOriginalSkillDetail(int skillId, Dictionary<string, RectTransform> dialogNodes, bool bindActions = true,
+            FightBattleSkillDefinition snapshot = null, string templateKey = "skill_panel_detail")
         {
-            var template = CharacterModelPackage.AsObject(skillUiTemplates["skill_panel_detail"], "skill detail");
+            currentDetailNodes = dialogNodes;
+            currentDetailSkillId = skillId;
+            int effectSkillId = snapshot == null ? OriginalEffectSkillId(skillId) : snapshot.UseItemId > 0 ? snapshot.UseItemId : skillId;
+            var template = CharacterModelPackage.AsObject(skillUiTemplates[templateKey], "skill detail");
             var root = CharacterModelPackage.AsObject(template["root"], "skill detail root");
             var itemBinding = FindOriginalComponent(root, "ItemDetailDialog");
             var skillBinding = FindOriginalComponent(root, "SkillDetailDialog");
@@ -38,13 +50,18 @@ namespace Zjcs.Presentation.Character
                 if (node == null) throw new InvalidOperationException("Original detail text binding is absent: " + field);
                 string value = OriginalDetailText(key);
                 node.gameObject.SetActive(value != null);
-                if (value != null) node.GetComponent<TMP_Text>().text = RestoreOriginalMidSize(value, node.GetComponent<TMP_Text>().fontSize);
+                if (value != null) {
+                    var text = node.GetComponent<TMP_Text>();
+                    text.text = RestoreOriginalMidSize(value, text.fontSize);
+                    BindOriginalSkillHyperlinks(effectSkillId, text);
+                }
                 return value != null;
             }
-            bool function = Description("FuncDescText", "item_" + skillId + "_func_desc");
-            bool description = Description("DescText", "item_" + skillId + "_desc");
+            bool function = Description("FuncDescText", "item_" + effectSkillId + "_func_desc");
+            bool description = Description("DescText", "item_" + effectSkillId + "_desc");
             Bound(itemBinding, "DetailGo").gameObject.SetActive(function || description);
-            int quality = Quality(skillId);
+            int rank = snapshot?.Rank ?? Math.Max(1, OfflineSkillProgression.OwnedRank(progression.Player.Skills, skillId));
+            int quality = progression.SkillRules.RankDisplays.First(value => value.Rank == rank).Quality;
             string[] names = { "None", "White", "Blue", "Purple", "Orange", "Gold", "Red", "Rainbow" };
             Text qualityText = Bound(itemBinding, "QualityText").GetComponent<Text>();
             qualityText.text = OriginalDetailText("Quality." + names[quality]);
@@ -67,30 +84,40 @@ namespace Zjcs.Presentation.Character
             int level = index >= 0 ? progression.SkillProgression.SlotLevel(progression.Player.Skills, definition.ItemType, index, season)
                 : new[] { ActiveSkillItemType, PassiveSkillItemType }.SelectMany(type => Enumerable.Range(0, 4)
                     .Select(slot => progression.SkillProgression.SlotLevel(progression.Player.Skills, type, slot, season))).Min();
+            if (snapshot != null) level = snapshot.Level;
             var levelText = Bound(skillBinding, "LevelText").GetComponent<TMP_Text>();
             levelText.text = RestoreOriginalMidSize(string.Format(CultureInfo.InvariantCulture,
                 OriginalDetailText("ui_common_level_style_10"), level), levelText.fontSize);
-            int subRank = progression.Player.SubRank;
+            int subRank = snapshot?.SubRank ?? progression.Player.SubRank;
             int playerRank = subRank < 2 ? subRank : 2 + (subRank - 2) / 3;
             int baseLimit = progression.SkillRules.BaseLevelLimits.FirstOrDefault(value => value.SubRank == playerRank)?.SkillLevel ?? 0;
-            SetOfficialState("skill_panel_detail", "SkillDetailDialog", "mBlessLevelView.mIsBlessStateSwitcher", level > baseLimit ? 1 : 0, dialogNodes);
+            SetOfficialState(templateKey, "SkillDetailDialog", "mBlessLevelView.mIsBlessStateSwitcher", level > baseLimit ? 1 : 0, dialogNodes);
             Bound(skillBinding, "mBlessLevelRuleBtn").gameObject.SetActive(level > baseLimit);
-            int rank = Math.Max(1, OfflineSkillProgression.OwnedRank(progression.Player.Skills, skillId));
+            Bound(skillBinding, "mBlessLevelRuleBtn").GetComponent<Button>().onClick.AddListener(() =>
+                OpenBlessLevelRule(baseLimit, level, RectTransformUtility.WorldToScreenPoint(null,
+                    Bound(skillBinding, "mBlessLevelRuleBtn").position)));
             Bound(skillBinding, "SkillTypeText").GetComponent<Text>().text = OriginalDetailText(
                 definition.ItemType == ActiveSkillItemType ? "ItemType.ActiveSkill" : "ItemType.PassiveSkill");
-            SetOfficialState("skill_panel_detail", "SkillDetailDialog", "mSkillBgIconStateSwithcer", definition.ItemType, dialogNodes);
+            SetOfficialState(templateKey, "SkillDetailDialog", "mSkillBgIconStateSwithcer", definition.ItemType, dialogNodes);
             BindOriginalDetailStars(root, dialogNodes, rank);
-            BindOriginalDetailTags(skillId, root, dialogNodes);
-            BindOriginalDetailProfession(skillId, root, dialogNodes);
+            if (bindActions) {
+                BindOriginalDetailSources(skillId, root, dialogNodes);
+                BindOriginalSkillSkinButton(skillId, root, dialogNodes);
+            }
+            BindOriginalDetailTags(effectSkillId, root, dialogNodes);
+            BindOriginalDetailProfession(effectSkillId, root, dialogNodes);
             RectTransform range = Bound(skillBinding, "RangeUI");
             var detailData = CharacterModelPackage.AsObject(skillUiTemplates["detail_data"], "original skill detail data");
             bool showRange = ((List<object>)detailData["active_skill_types"]).Any(value => Convert.ToInt32(value) == definition.ItemType);
             range.gameObject.SetActive(showRange);
-            if (showRange) StartCoroutine(BindOriginalDetailRange(skillId, root, dialogNodes));
+            if (showRange) StartCoroutine(BindOriginalDetailRange(effectSkillId, root, dialogNodes));
             // ItemDetailDialogUseResult.TryInit only accepts reward/chest items.
             Bound(itemBinding, "mItemDetailDialogUseResult").gameObject.SetActive(false);
+            SetOfficialState(templateKey, "ItemDetailDialog", "mRemainTimeStateSwitcher", 0, dialogNodes);
+            var addition = FindOriginalComponent(root, "ItemDetailDialogAddition");
+            if (addition != null) dialogNodes[Convert.ToString(addition["mAdditionDetailButton"])].gameObject.SetActive(false);
             if (detailProperties == null) detailProperties = new OfficialSkillDetailProperties(progression.Catalog, skillAssets);
-            var props = detailProperties.Calculate(skillId, rank, level, Math.Max(1, progression.Player.SubRank));
+            var props = detailProperties.Calculate(effectSkillId, rank, level, Math.Max(1, subRank));
             var propPanel = FindOriginalComponent(root, "SkillPanelPropPanel");
             var propPaths = (List<object>)propPanel["mSkillPropItems"];
             for (int i = 0; i < propPaths.Count; i++)
@@ -166,7 +193,8 @@ namespace Zjcs.Presentation.Character
                 positionsToType.Add(new Vector2Int(Convert.ToInt32(pos[0]), Convert.ToInt32(pos[1])), Convert.ToInt32(types[i]));
             }
             var info = CharacterModelPackage.AsObject(data["range_grid"], "original range grid");
-            var grid = gridNode.gameObject.AddComponent<GridLayoutGroup>();
+            var grid = gridNode.GetComponent<GridLayoutGroup>();
+            if (grid == null) grid = gridNode.gameObject.AddComponent<GridLayoutGroup>();
             var padding = CharacterModelPackage.AsObject(info["m_Padding"], "original range padding");
             grid.padding = new RectOffset(Convert.ToInt32(padding["m_Left"]), Convert.ToInt32(padding["m_Right"]),
                 Convert.ToInt32(padding["m_Top"]), Convert.ToInt32(padding["m_Bottom"]));

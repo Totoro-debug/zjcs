@@ -455,8 +455,8 @@ namespace Zjcs.Presentation.World
             {
                 int itemId = equipped[slot];
                 if (itemId <= 0) continue;
-                if (!skillItems.TryGet(itemId, out FightOfficialSkillItem item))
-                    throw new InvalidDataException("Official player skill item is missing: " + itemId);
+                int skinId = progression.Player.Wardrobe?.SkillSkins?.FirstOrDefault(value => value.SkillId == itemId)?.SkillSkinId ?? 0;
+                FightOfficialSkillItem item = skillItems.RequiredForSkin(itemId, skinId);
                 if (item.EntityId <= 0)
                     throw new InvalidDataException("Official active skill item has no fight entity: " + itemId);
                 int rank = OfflineSkillProgression.OwnedRank(profile, itemId);
@@ -469,9 +469,11 @@ namespace Zjcs.Presentation.World
                     EntityId = item.EntityId,
                     Slot = slot,
                     ItemId = itemId,
+                    UseItemId = item.ItemId,
+                    SkillSkinId = skinId,
                     Rank = rank,
                     Level = level,
-                    ProfessionAvailability = skillItems.ProfessionAvailabilityFor(itemId,
+                    ProfessionAvailability = skillItems.ProfessionAvailabilityFor(item.ItemId,
                         player.Profession, currentWeaponType, progression.Player.InitialWeaponType),
                     SubRank = player.SubRank,
                     Cooldown = combatCatalog.CalculateSkillCooldown(item.EntityId, rank, level,

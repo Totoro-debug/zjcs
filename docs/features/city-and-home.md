@@ -160,6 +160,8 @@ prepare_home_ui.py 从原 prefabs_ui_itemdetail 的 FurnitureDecorationItemDetai
 
 ## 完整还原部分
 
+主页进入技能与伤害测试时保持原 URP 2D 管线，并在退出时恢复前一管线；主城输入与消息在人物页或测试战斗期间停止穿透。`HomeRuntimeShaderBindings` 显式绑定主城流星特效、经固定 APK 原对象哈希核对的天空 ColorShift Windows 转换及 URP 引擎 Sprite-Lit shader，防止独立 Player 裁剪仅按名称加载的程序。主页真实技能入口、测试结算与本次战斗统计已通过 Play Mode 模拟点击及独立 Windows Player 运行；最新按用户决定移除战报持久化后的流程亦已通过 Play Mode 和独立 Windows Player 复测，详见[技能](skills.md)。主城功能入口恢复原 `FunctionEntrys.controller` 默认的 `FunctionEntrysUI_Folded` 零时长姿势，避免展开按钮遮住收起按钮；战报不另接主页历史入口。
+
 当前完成范围是官方载荷恢复和部分本地底层，没有主城整模块已在 Unity 完整接入并验收的结论。
 
 当前热更新 `871_156598` 已重新转换家园原生资源、图层、材质、配置和语言，来源分别记录于 `assets/reference/home-unity/source-manifest.json` 与 `assets/reference/official-map/current-*-source-manifest.json`。`HomeUiRenderer.CreateNode` 使用完整官方 Sprite 边框、pivot 和像素比例；`HomeAssetCatalog.FindSprite(HomeSpriteRef)` 按完整引用缓存，避免先加载纯贴图时丢失九宫格边框。官方 `TabItem` 映射为可选中的 Toggle。官方 Mask 的启用和显示标记已补回载荷，渲染器保留不显示遮罩图片的配置。`HomeSpriteBindingValidation.RunAndRender` 已在图形设备验证床铺完整背景子树的边框、pivot、九宫格角部和遮罩渲染。 `HomeAcceptanceLauncher.Run` 已通过目录加载、维修、收益、加速、邮件、环境、奖励、菜单／页签事件、商店货架与购买、仓库场景输入路由及存档恢复，并查看真实运行截图；使用 Unity 模拟输入，没有操作系统鼠标／键盘检查，不代表本页全部目标功能已完成。

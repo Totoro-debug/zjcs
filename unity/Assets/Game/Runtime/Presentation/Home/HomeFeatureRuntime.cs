@@ -66,6 +66,7 @@ namespace Zjcs.Presentation.Home
         private HomeMeteorView meteorView;
         private HomeRewardView rewards;
         private HomeHudView hud;
+        private IDisposable homeRenderPipeline;
         private TreasureGachaRuntimeCatalog treasureGachaCatalog;
         private OfflineTreasureGachaService treasureGacha;
         private PetGachaRuntimeCatalog petGachaCatalog;
@@ -646,8 +647,12 @@ namespace Zjcs.Presentation.Home
                 throw new ArgumentException("An existing profile slot is required.", nameof(selectedSlotId));
             var go = new GameObject("HomeGameRuntime");
             HomeFeatureRuntime runtime = go.AddComponent<HomeFeatureRuntime>();
-            runtime.Open(selectedSlotId, string.IsNullOrEmpty(savesRoot) ? Application.persistentDataPath : savesRoot,
-                uiParent, onClose, onOpenMainland);
+            try {
+                runtime.homeRenderPipeline = Resources.Load<OfficialBattleRenderPipelineAssets>("Combat/OfficialBattleRenderPipelineAssets")
+                    .Enter();
+                runtime.Open(selectedSlotId, string.IsNullOrEmpty(savesRoot) ? Application.persistentDataPath : savesRoot,
+                    uiParent, onClose, onOpenMainland);
+            } catch { Destroy(go); throw; }
             return runtime;
         }
 
@@ -1302,7 +1307,13 @@ namespace Zjcs.Presentation.Home
             }
         }
 
-        private void OpenWishes()
+        public void OpenSkillGachaFromSource(Action onClosed)
+        {
+            profile.Reload();
+            OpenWishes(onClosed);
+        }
+
+        private void OpenWishes(Action onClosed = null)
         {
             if (wishes != null && wishes.IsOpen) return;
             Action refreshWishCurrency = null;
@@ -1313,6 +1324,7 @@ namespace Zjcs.Presentation.Home
                 {
                     wishes = null;
                     refreshWishCurrency = null;
+                    onClosed?.Invoke();
                 });
         }
 
@@ -1764,12 +1776,17 @@ namespace Zjcs.Presentation.Home
             catalog = null;
             if (hud != null) hud.Dispose();
             hud = null;
+            homeRenderPipeline?.Dispose();
+            homeRenderPipeline = null;
             if (invokeCallback) onClose?.Invoke();
             Destroy(gameObject);
         }
 
         private void Update()
         {
+            // The damage-test scene owns input and presentation until its battle ends.
+            // Home income catches up from its existing timestamp on return.
+            if (hud != null && hud.SkillDamageTestRunning) return;
             input?.Update();
             TickAstrologicalCharge();
             environment?.Tick(Time.unscaledDeltaTime);
@@ -1827,6 +1844,8 @@ namespace Zjcs.Presentation.Home
             HomeAudioSettings.Unregister(settingsClickSource);
             if (settingsClickClip != null) Destroy(settingsClickClip);
             settingsClickClip = null;
+            homeRenderPipeline?.Dispose();
+            homeRenderPipeline = null;
         }
 
         private void OnApplicationPause(bool pauseStatus)

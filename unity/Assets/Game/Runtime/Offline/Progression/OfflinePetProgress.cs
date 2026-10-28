@@ -111,7 +111,7 @@ namespace Zjcs.Offline.Progression
                 || progress.SeasonRecords == null || progress.SeasonRecords.Count > 100) return false;
 
             var petsByIndex = new Dictionary<long, OfflinePetInstance>();
-            if (skills == null || skills.Plans == null || skills.Plans.Length != 3) return false;
+            if (skills == null || skills.Plans == null || skills.Plans.Length != OfflineSkillProfile.PlanCount) return false;
             var engagedPetIds = new HashSet<long>(skills.Plans.Where(value => value != null && value.PetIndex > 0)
                 .Select(value => value.PetIndex));
             foreach (OfflinePetInstance pet in progress.Pets)

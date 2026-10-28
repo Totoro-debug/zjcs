@@ -69,7 +69,7 @@ namespace Zjcs.Presentation.Home
 
         public Transform CanvasTransform => canvas == null ? null : canvas.transform;
 
-        public bool AnyModalOpen => activeDialog != null || inventoryRoot != null || host.FeatureModalOpen
+        public bool AnyModalOpen => CharacterPageOpen || activeDialog != null || inventoryRoot != null || host.FeatureModalOpen || skillDamageTest != null
             || DungeonModalOpen
             || (functionsPanel != null && functionsPanel.activeSelf) || homeSkin != null && homeSkin.IsOpen;
 
@@ -128,6 +128,10 @@ namespace Zjcs.Presentation.Home
             // Official fade/screenshot guider nodes start hidden; their white mask must not cover the scene.
             homeRenderer.SetActiveByName("Guider", false);
             homeRenderer.SetActiveByName("HomeFadeProxy", false);
+            // FunctionEntrys.controller starts in FunctionEntrysUI_Folded.
+            // Its time-zero pose hides the overlapping expanded entry button.
+            if (!homeRenderer.PlayAnimation("FunctionEntrysUI_Folded", loop: false))
+                throw new InvalidOperationException("Official function-entry default animation is missing.");
         }
 
         private void BuildAvatar()
@@ -443,28 +447,37 @@ namespace Zjcs.Presentation.Home
         private void CloseCharacterPage()
         {
             if (characterRoot != null) characterRoot.SetActive(false);
+            if (homePanel != null) homePanel.SetActive(true);
             selectedTab = 2;
             ApplyTabVisuals();
         }
 
         private void OpenCharacterPage()
         {
+            if (noticeRoot != null) noticeRoot.SetActive(false);
+            CancelInvoke();
             if (characterRoot == null)
             {
-                characterRoot = new GameObject("HomeCharacterPage", typeof(RectTransform));
-                characterRoot.transform.SetParent(canvas.transform, false);
+                // A nested Canvas ignores its own CanvasScaler. Keep the official
+                // character Expand scaler independent of Home's mixed-axis scaler.
+                characterRoot = new GameObject("HomeCharacterPage", typeof(RectTransform), typeof(Canvas));
+                characterRoot.GetComponent<Canvas>().sortingOrder = canvas.sortingOrder + 80;
                 RectTransform rect = (RectTransform)characterRoot.transform;
                 rect.anchorMin = Vector2.zero;
                 rect.anchorMax = Vector2.one;
                 rect.offsetMin = Vector2.zero;
                 rect.offsetMax = Vector2.zero;
                 var view = characterRoot.AddComponent<Zjcs.Presentation.Character.OfficialCharacterPanelView>();
+                BindSkillGiftSources(view);
                 characterRuntime = characterRoot.AddComponent<Zjcs.Presentation.Character.CharacterFeatureRuntime>();
                 view.CloseRequested += CloseCharacterPage;
             }
             characterRuntime.NavigationRequested -= OnCharacterNavigationRequested;
             characterRuntime.NavigationRequested += OnCharacterNavigationRequested;
+            characterRuntime.DamageTestRequested -= OnSkillDamageTestRequested;
+            characterRuntime.DamageTestRequested += OnSkillDamageTestRequested;
             characterRoot.SetActive(true);
+            if (homePanel != null) homePanel.SetActive(false);
             try
             {
                 characterRuntime.OpenProfile(host.ActiveProfileSlotId, host.SavesRoot);
@@ -472,8 +485,9 @@ namespace Zjcs.Presentation.Home
             catch (Exception error)
             {
                 Debug.LogWarning("Home character page unavailable: " + error.Message);
-                Notify("人物页打开失败：" + error.Message);
                 characterRoot.SetActive(false);
+                if (homePanel != null) homePanel.SetActive(true);
+                Notify("人物页打开失败：" + error.Message);
             }
         }
         public bool IsClosedByNetworkPolicy(int type)
@@ -730,6 +744,7 @@ namespace Zjcs.Presentation.Home
 
         private void Notify(string message)
         {
+            if (SkillDamageTestRunning || CharacterPageOpen) return;
             if (toast == null) return;
             toast.text = message ?? string.Empty;
             noticeRoot.SetActive(true);
@@ -1313,6 +1328,9 @@ namespace Zjcs.Presentation.Home
             if (inventoryRoot != null) UnityEngine.Object.Destroy(inventoryRoot);
             inventoryRoot = null;
             inventoryRuntime = null;
+            if (characterRoot != null) UnityEngine.Object.Destroy(characterRoot);
+            characterRoot = null;
+            characterRuntime = null;
             owned.Clear();
             if (canvas != null) UnityEngine.Object.Destroy(canvas.gameObject);
             canvas = null;

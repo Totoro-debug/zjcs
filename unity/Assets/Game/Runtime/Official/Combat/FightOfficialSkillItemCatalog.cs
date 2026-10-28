@@ -34,6 +34,7 @@ namespace Zjcs.Combat.Official
         private readonly Dictionary<int, FightOfficialSkillItem> items =
             new Dictionary<int, FightOfficialSkillItem>();
         private readonly Dictionary<int, int> itemTypes = new Dictionary<int, int>();
+        private readonly Dictionary<int, int> skinEffectSkills = new Dictionary<int, int>();
         private readonly Dictionary<int, int> initialSkillByWeaponType =
             new Dictionary<int, int>();
         private readonly Dictionary<int, int[]> aiPriorities = new Dictionary<int, int[]>();
@@ -95,6 +96,13 @@ namespace Zjcs.Combat.Official
                 };
             }
             foreach (object row in FightOfficialCombatCatalog.ParseArray(
+                FightOfficialCombatCatalog.RequiredField(rules, "skill_skin"), "rules.skill_skin"))
+            {
+                var skin = FightOfficialCombatCatalog.ParseObject(row, "rules.skill_skin row");
+                catalog.skinEffectSkills.Add(FightOfficialCombatCatalog.ReadInt(skin, "ClassId"),
+                    FightOfficialCombatCatalog.ReadInt(skin, "EffectSkillId"));
+            }
+            foreach (object row in FightOfficialCombatCatalog.ParseArray(
                 FightOfficialCombatCatalog.RequiredField(rules, "ai_priority"), "rules.ai_priority"))
             {
                 Dictionary<string, object> priority = FightOfficialCombatCatalog.ParseObject(row,
@@ -151,6 +159,13 @@ namespace Zjcs.Combat.Official
             if (!items.TryGetValue(itemId, out FightOfficialSkillItem item))
                 throw new KeyNotFoundException("Official skill item is absent: " + itemId);
             return item;
+        }
+
+        // FightSkillBaseInfo.GetUseSkillId -> FightSkillData.InitByBattleComponent.
+        public FightOfficialSkillItem RequiredForSkin(int itemId, int skinId)
+        {
+            return Required(skinId > 0 && skinEffectSkills.TryGetValue(skinId, out int effectSkillId)
+                ? effectSkillId : itemId);
         }
 
         public int[] PriorityTypes(int priorityId)

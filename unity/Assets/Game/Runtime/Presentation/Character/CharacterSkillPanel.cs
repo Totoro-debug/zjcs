@@ -56,6 +56,7 @@ namespace Zjcs.Presentation.Character
         private readonly Dictionary<string, Button> buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
         private Text planName;
         private InputField planInput;
+        private Scrollbar planSelectedBar;
         private RectTransform activeGroup;
         private RectTransform passiveGroup;
         private RectTransform skillGrid;
@@ -91,10 +92,13 @@ namespace Zjcs.Presentation.Character
         public string LastMessage { get; private set; } = string.Empty;
 
         public bool IsOpen => panel != null;
+        private string profileSlotId, profileSavesRoot;
 
         public void Initialize(OfficialCharacterAssetCatalog assetCatalog,
-            OfflineCharacterProgressionService characterProgression)
+            OfflineCharacterProgressionService characterProgression, string selectedSlotId = null, string savesRoot = null)
         {
+            profileSlotId = selectedSlotId;
+            profileSavesRoot = savesRoot;
             assets = assetCatalog ?? throw new ArgumentNullException(nameof(assetCatalog));
             progression = characterProgression ?? throw new ArgumentNullException(nameof(characterProgression));
             CharacterPanelNodeFactory.SetUiFont(assets.UiFont);
@@ -144,6 +148,7 @@ namespace Zjcs.Presentation.Character
 
         public void Close()
         {
+            CloseAuxiliary();
             if (messageRoutine != null) StopCoroutine(messageRoutine);
             messageRoutine = null;
             if (systemMessage != null) Destroy(systemMessage);
@@ -185,6 +190,9 @@ namespace Zjcs.Presentation.Character
 
         public bool HandleEscape()
         {
+            if (skillVideoDialog != null) { CloseSkillVideo(); return true; }
+            if (detailDialog != null && detailDialog.name == "skill_plain_detail") { CloseSkillDetail(); return true; }
+            if (auxiliaryDialog != null) { var back = auxiliaryReturn; CloseAuxiliary(); back?.Invoke(); return true; }
             if (installMask != null)
             {
                 ClearPendingInstall();
@@ -259,9 +267,11 @@ namespace Zjcs.Presentation.Character
                 }
             }
             BindButtonName("PrevPlanBtn", () => SwitchPlan(-1));
+            BindPlanSelectedBar();
             BindButtonName("FastLevelUpBtn", UpgradeAllSlots);
             BindButtonName("FastPromotionBtn", PromoteAllSkills);
             BindButtonName("RecommendBtn", OpenRecommendations);
+            BindButtonName("StageDamageTestBtn", OpenOriginalDamageTest);
             BindButtonName("NextPlanBtn", () => SwitchPlan(1));
             activeGroup = FindDeep("ActiveSkill");
             passiveGroup = FindDeep("PassiveSkill");
@@ -303,7 +313,7 @@ namespace Zjcs.Presentation.Character
                 if (button.targetGraphic != null)
                     button.targetGraphic.canvasRenderer.cullTransparentMesh = false;
             giftPanel = new OfficialSkillGiftPanel(nodes, skillUiTemplates, progression, assets, skillAssets,
-                PlayTabTransition, () => { Changed?.Invoke(); });
+                PlayTabTransition, () => { Changed?.Invoke(); }, OpenOriginalGiftItemDetail);
             SetBottomPageState(showSkills: true);
             RefreshCategoryTabs();
             if (panel == null) return;
@@ -497,6 +507,13 @@ namespace Zjcs.Presentation.Character
             Changed?.Invoke();
         }
 
+        public void ReloadProfile()
+        {
+            if (!IsOpen) return;
+            plan = progression.Player.Skills.SelectedPlan;
+            Refresh();
+        }
+
         private void Refresh()
         {
             if (panel == null) return;
@@ -504,6 +521,7 @@ namespace Zjcs.Presentation.Character
             plan = profile.SelectedPlan;
             if (planName != null) planName.text = profile.Plans[plan].Name;
             if (planInput != null) planInput.SetTextWithoutNotify(profile.Plans[plan].Name);
+            if (planSelectedBar != null) planSelectedBar.SetValueWithoutNotify((float)plan / (profile.Plans.Length - 1));
             RefreshSlots(activeGroup, ActiveSkillItemType);
             RefreshSlots(passiveGroup, PassiveSkillItemType);
             RefreshList();
@@ -601,12 +619,17 @@ namespace Zjcs.Presentation.Character
             {
                 if (definition.ItemType != listType) continue;
                 bool has = owned.ContainsKey(definition.ClassId);
-                bool craftable = !has && HasPiece(definition.PieceItemId);
-                bool available = OfflineSkillProgression.IsAvailableFor(definition, progression.SkillContext());
-                if (!has && !available && !(showAll != null && showAll.isOn)) continue;
-                if (has && Array.IndexOf(equipped, definition.ClassId) >= 0) continue;
-                if (craftable) mergeable.Add(definition.ClassId);
-                else if (OfflineSkillProgression.IsFavorite(profile, definition.ClassId)) collected.Add(definition.ClassId);
+                int mergeCount = progression.SkillMergePiece(definition.ClassId);
+                long pieces = progression.Player.Inventory.Where(value => value != null && value.ItemId == definition.PieceItemId).Sum(value => value.Count);
+                if (!has)
+                {
+                    if (mergeCount > 0 && pieces >= mergeCount) mergeable.Add(definition.ClassId);
+                    continue;
+                }
+                bool available = IsAvailableForCurrentProfession(definition.ClassId, progression.SkillContext());
+                if (!(showAll != null && showAll.isOn) && !available && !CanPromoteSkill(definition.ClassId)) continue;
+                if (Array.IndexOf(equipped, definition.ClassId) >= 0) continue;
+                if (OfflineSkillProgression.IsFavorite(profile, definition.ClassId)) collected.Add(definition.ClassId);
                 else uncollected.Add(definition.ClassId);
             }
             OfflineSkillPlayerContext context = progression.SkillContext();
@@ -620,12 +643,15 @@ namespace Zjcs.Presentation.Character
                 int rank = OfflineSkillProgression.OwnedRank(profile, right)
                     .CompareTo(OfflineSkillProgression.OwnedRank(profile, left));
                 if (rank != 0) return rank;
-                int leftProfession = progression.SkillDefinition(left)?.AvailableProfessions?.DefaultIfEmpty(0).Min() ?? 0;
-                int rightProfession = progression.SkillDefinition(right)?.AvailableProfessions?.DefaultIfEmpty(0).Min() ?? 0;
-                int profession = rightProfession.CompareTo(leftProfession);
+                int profession = OriginalSkillProfessionScore(right).CompareTo(OriginalSkillProfessionScore(left));
                 return profession != 0 ? profession : left.CompareTo(right);
             };
-            mergeable.Sort(bySkillPanel);
+            mergeable.Sort((left, right) => {
+                int quality = Quality(right).CompareTo(Quality(left));
+                if (quality != 0) return quality;
+                long Count(int skill) => progression.Player.Inventory.Where(value => value != null && value.ItemId == SkillPieceId(skill)).Sum(value => value.Count);
+                return Count(right).CompareTo(Count(left));
+            });
             collected.Sort(bySkillPanel);
             uncollected.Sort(bySkillPanel);
             int rowCapacity = SkillListRowCapacity(out float rowSpacing);
@@ -713,7 +739,19 @@ namespace Zjcs.Presentation.Character
                 item.name = "SkillListItem_" + skillId.ToString(CultureInfo.InvariantCulture);
                 item.sizeDelta = new Vector2(155f, 155f);
                 Transform mount = FindDeep(item, "Anchor") ?? item;
-                BuildSkillIcon(skillId, mount, "SkillIcon");
+                GameObject icon = BuildSkillIcon(owned.ContainsKey(skillId) ? skillId : SkillPieceId(skillId), mount, "SkillIcon");
+                if (owned.ContainsKey(skillId)) {
+                    // CharacterPanelSkillListPanelItem.RefreshSkillIcon uses the
+                    // minimum of all eight slot levels, independent of this row.
+                    int season = progression.SkillContext().CurrentSeasonId;
+                    int level = new[] { ActiveSkillItemType, PassiveSkillItemType }
+                        .SelectMany(type => Enumerable.Range(0, 4).Select(slot =>
+                            progression.SkillProgression.SlotLevel(progression.Player.Skills, type, slot, season))).Min();
+                    var label = FindDeep(icon.transform, "BottomText");
+                    label.gameObject.SetActive(level != 0);
+                    SetTextValue(label.GetComponent<Text>(), string.Format(CultureInfo.InvariantCulture,
+                        OriginalDetailText("ui_common_level_style_3"), level));
+                }
                 Graphic target = item.GetComponent<Graphic>();
                 if (target == null)
                 {
@@ -727,7 +765,7 @@ namespace Zjcs.Presentation.Character
                 Button button = item.GetComponent<Button>() ?? item.gameObject.AddComponent<Button>();
                 button.targetGraphic = target;
                 if (owned.ContainsKey(skillId)) button.onClick.AddListener(() => OpenSkillDetail(skillId));
-                else button.onClick.AddListener(() => Install(skillId));
+                else button.onClick.AddListener(() => OpenMergeConfirm(skillId));
             }
             return row.gameObject;
         }
@@ -777,25 +815,12 @@ namespace Zjcs.Presentation.Character
             {
                 var rowNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
                 var rowButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
-                RectTransform row = factory.Build(CharacterPanelNodeFactory.ReadRoot(listItemTemplate), grid,
+                RectTransform row = factory.Build(CharacterPanelNodeFactory.ReadRoot(
+                    CharacterModelPackage.AsObject(skillUiTemplates["skill_piece_list_item"], "original piece list item")), grid,
                     rowNodes, rowButtons);
                 Transform mount = FindDeep(row, "Anchor") ?? row;
-                BuildSkillIcon(stack.ItemId, mount, "SkillIcon");
-                var labelObject = new GameObject("SkillPieceLabel", typeof(RectTransform), typeof(Text));
-                labelObject.transform.SetParent(row, false);
-                RectTransform labelRect = (RectTransform)labelObject.transform;
-                labelRect.anchorMin = new Vector2(0f, 0f);
-                labelRect.anchorMax = new Vector2(1f, 0f);
-                labelRect.pivot = new Vector2(0.5f, 0f);
-                labelRect.sizeDelta = new Vector2(0f, 34f);
-                labelRect.anchoredPosition = new Vector2(0f, 4f);
-                Text text = labelObject.GetComponent<Text>();
-                text.font = CharacterPanelNodeFactory.UiFont;
-                text.fontSize = 18;
-                text.alignment = TextAnchor.MiddleCenter;
-                text.color = Color.white;
-                text.text = ItemName(stack.ItemId) + " \u00d7" + stack.Count.ToString("N0", CultureInfo.InvariantCulture);
-                text.raycastTarget = false;
+                GameObject pieceIcon = BuildSkillIcon(stack.ItemId, mount, "SkillIcon");
+                ShowOriginalPieceProgress(pieceIcon.transform, stack.ItemId, stack.Count);
                 OfflineSkillDefinition pieceDefinition = progression.SkillRules?.Skills
                     .FirstOrDefault(value => value.PieceItemId == stack.ItemId);
                 if (pieceDefinition != null)
@@ -854,7 +879,7 @@ namespace Zjcs.Presentation.Character
                 : Convert.ToString(item["Name"], CultureInfo.InvariantCulture);
         }
 
-        private GameObject BuildSkillIcon(int itemId, Transform parent, string name)
+        private GameObject BuildSkillIcon(int itemId, Transform parent, string name, int? snapshotRank = null, int? snapshotSkin = null)
         {
             var iconNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
             var iconButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
@@ -864,7 +889,8 @@ namespace Zjcs.Presentation.Character
                 iconNodes, iconButtons);
             root.gameObject.name = name;
             Dictionary<string, object> item = progression.Catalog.FindItem(itemId);
-            int quality = Quality(itemId);
+            int quality = snapshotRank.HasValue && snapshotRank.Value > 0
+                ? progression.SkillRules.RankDisplays.First(value => value.Rank == snapshotRank.Value).Quality : Quality(itemId);
             foreach (RectTransform rect in iconNodes.Values)
             {
                 if (rect.name == "QualityImg")
@@ -881,6 +907,9 @@ namespace Zjcs.Presentation.Character
             RectTransform icon = iconNodes.Values.FirstOrDefault(value => value.name == "icon");
             string uri = progression.Catalog.ItemIconUri(itemId);
             Sprite sprite = string.IsNullOrEmpty(uri) ? null : assets.FindSprite(uri);
+            int equippedSkin = snapshotSkin ?? progression.EquippedSkillSkinId(itemId);
+            if (equippedSkin > 0) sprite = assets.FindSkillSkinSprite(progression.Catalog, equippedSkin)
+                ?? throw new InvalidOperationException("Original equipped skill skin icon is absent: " + equippedSkin);
             if (icon != null)
             {
                 Image image = icon.GetComponent<Image>();
@@ -891,19 +920,41 @@ namespace Zjcs.Presentation.Character
                     image.enabled = sprite != null;
                 }
             }
-            ConfigureSkillStars(root, itemId, quality);
-            Transform count = FindDeep(root, "BgCountText");
-            if (count != null) count.gameObject.SetActive(false);
+            ConfigureSkillStars(root, itemId, quality, snapshotRank);
+            // ItemIcon.Clear hides prefab editor placeholders before Init.
+            // The piece prefab's count container has a trailing space.
+            foreach (RectTransform node in iconNodes.Values)
+                if (node.name.TrimEnd() == "BgCountText" || node.name == "BottomText"
+                    || node.name == "Progress" || node.name == "DebugProfessionRankText") node.gameObject.SetActive(false);
             foreach (Button value in root.GetComponentsInChildren<Button>(true)) value.enabled = false;
             foreach (Graphic value in root.GetComponentsInChildren<Graphic>(true)) value.raycastTarget = false;
             return root.gameObject;
         }
 
-        private void ConfigureSkillStars(RectTransform icon, int skillId, int quality)
+        private void ShowOriginalPieceProgress(Transform icon, int pieceId, long count)
+        {
+            // ItemIconSkillPiece.ShowProgress: the next rank's piece requirement,
+            // or zero at maximum rank; use the original ItemProgress subtree.
+            var definition = progression.SkillRules.Skills.First(value => value.PieceItemId == pieceId);
+            int rank = OfflineSkillProgression.OwnedRank(progression.Player.Skills, definition.ClassId);
+            long required = rank == 0 ? progression.SkillMergePiece(definition.ClassId)
+                : rank >= definition.MaximumRank ? 0
+                : definition.RankCosts.FirstOrDefault(value => value.CurrentRank == rank)?.Items
+                    .Where(value => value.ItemId == pieceId).Sum(value => value.Count) ?? 0;
+            Transform progress = FindDeep(icon, "Progress");
+            if (progress == null) throw new InvalidOperationException("Original skill piece progress is absent.");
+            progress.gameObject.SetActive(true);
+            Transform countRoot = progress.Find("BgCountText");
+            countRoot.gameObject.SetActive(true);
+            SetTextValue(countRoot.Find("LeftTxt").GetComponent<Text>(), OfficialPropFormat.Compact(count));
+            SetTextValue(countRoot.Find("RightTxt").GetComponent<Text>(), OfficialPropFormat.Compact(required));
+        }
+
+        private void ConfigureSkillStars(RectTransform icon, int skillId, int quality, int? snapshotRank = null)
         {
             Transform stars = FindDeep(icon, "SkillStarInfo");
             if (stars == null) return;
-            int rank = OfflineSkillProgression.OwnedRank(progression.Player.Skills, skillId);
+            int rank = snapshotRank ?? OfflineSkillProgression.OwnedRank(progression.Player.Skills, skillId);
             OfflineSkillRankDisplay display = progression.SkillRules.RankDisplays.FirstOrDefault(value => value.Rank == rank);
             int addition = display?.RankAddition ?? 0;
             stars.gameObject.SetActive(addition > 0);
@@ -1554,6 +1605,7 @@ namespace Zjcs.Presentation.Character
             if (property.StartsWith("scale.", StringComparison.Ordinal))
                 return x ? target.localScale.x : property.EndsWith(".y", StringComparison.Ordinal) ? target.localScale.y : target.localScale.z;
             if (property == "m_IsActive") return target.gameObject.activeSelf ? 1f : 0f;
+            if (property == "m_Interactable") return target.GetComponent<CanvasGroup>()?.interactable == false ? 0f : 1f;
             Graphic graphic = target.GetComponent<Graphic>();
             if (property == "m_Alpha")
             {
@@ -1624,6 +1676,11 @@ namespace Zjcs.Presentation.Character
                 group.alpha = value;
             }
             else if (property == "m_IsActive") target.gameObject.SetActive(value >= 0.5f);
+            else if (property == "m_Interactable")
+            {
+                var group = target.GetComponent<CanvasGroup>() ?? target.gameObject.AddComponent<CanvasGroup>();
+                group.interactable = value >= 0.5f;
+            }
             else if (property.StartsWith("m_Color.", StringComparison.Ordinal)
                 || property.StartsWith("m_fontColor.", StringComparison.Ordinal))
             {
@@ -1961,6 +2018,7 @@ namespace Zjcs.Presentation.Character
             SetOfficialState("skill_promote", "SkillPromotePanel", "mPopTipStates", 0, dialogNodes);
             int currentLevel = equippedSlot < 0 ? 0 : progression.SkillProgression.SlotLevel(
                 progression.Player.Skills, itemType, equippedSlot, progression.SkillContext().CurrentSeasonId);
+            BindOriginalPromoteProperties(skillId, rank, currentLevel, dialogNodes);
             SetTextValue(DialogNode(dialogNodes, "NameText")?.GetComponent<Text>(), SkillName(skillId));
             SetTextValue(DialogNode(dialogNodes, "CurrentLevelText")?.GetComponent<Text>(), currentLevel.ToString(CultureInfo.InvariantCulture));
             SetTextValue(DialogNode(dialogNodes, "NextLevelText")?.GetComponent<Text>(), (currentLevel + 1).ToString(CultureInfo.InvariantCulture));
@@ -2191,9 +2249,26 @@ namespace Zjcs.Presentation.Character
             return -1;
         }
 
+        private void BindPlanSelectedBar()
+        {
+            var auxiliary = CharacterModelPackage.AsObject(skillUiTemplates["auxiliary_data"], "skill auxiliary data");
+            var fields = CharacterModelPackage.AsObject(auxiliary["plan_scrollbar"], "original skill plan scrollbar");
+            RectTransform rect = FindDeep("PlanSelectedBar");
+            planSelectedBar = rect.GetComponent<Scrollbar>() ?? rect.gameObject.AddComponent<Scrollbar>();
+            OfficialSkillComponentBindings.Apply(planSelectedBar, fields.Where(value => value.Key == "m_Colors"
+                || value.Key == "m_Transition" || value.Key == "m_Navigation").ToDictionary(value => value.Key, value => value.Value), nodes);
+            planSelectedBar.handleRect = nodes[Convert.ToString(fields["m_HandleRect"], CultureInfo.InvariantCulture)];
+            planSelectedBar.targetGraphic = nodes[Convert.ToString(fields["m_TargetGraphic"], CultureInfo.InvariantCulture)].GetComponent<Graphic>();
+            planSelectedBar.direction = (Scrollbar.Direction)Convert.ToInt32(fields["m_Direction"], CultureInfo.InvariantCulture);
+            planSelectedBar.size = Convert.ToSingle(fields["m_Size"], CultureInfo.InvariantCulture);
+            planSelectedBar.numberOfSteps = Convert.ToInt32(fields["number_of_steps"], CultureInfo.InvariantCulture);
+            planSelectedBar.interactable = Convert.ToBoolean(fields["m_Interactable"], CultureInfo.InvariantCulture);
+        }
+
         private void SwitchPlan(int delta)
         {
-            int target = (plan + delta + 3) % 3;
+            int count = progression.Player.Skills.Plans.Length;
+            int target = (plan + delta + count) % count;
             ProgressionResult result = progression.SelectSkillPlan(target);
             LastMessage = result.Message ?? result.Status.ToString();
             if (!result.IsApplied) return;
@@ -2228,11 +2303,26 @@ namespace Zjcs.Presentation.Character
 
         private string SkillName(int itemId)
         {
-            Dictionary<string, object> item = progression.Catalog.FindItem(itemId);
+            Dictionary<string, object> item = progression.Catalog.FindItem(OriginalEffectSkillId(itemId)) ?? progression.Catalog.FindItem(itemId);
             string name = item == null ? itemId.ToString(CultureInfo.InvariantCulture)
                 : Convert.ToString(item["Name"], CultureInfo.InvariantCulture);
             int rank = OfflineSkillProgression.OwnedRank(progression.Player.Skills, itemId);
             return rank > 1 ? name + " +" + (rank - 1).ToString(CultureInfo.InvariantCulture) : name;
+        }
+
+        private long OriginalSkillProfessionScore(int skillId)
+        {
+            var skill = progression.Catalog.Find("skill", skillId);
+            if (skill == null || !skill.TryGetValue("UnlockProfession", out object rawProfession)) return 0;
+            int id = Convert.ToInt32(rawProfession);
+            var profession = progression.Catalog.Rows("profession_base").FirstOrDefault(row => AuxInt(row, "Profession") == id);
+            if (profession == null) return 0;
+            int rank = AuxInt(profession, "Rank"), serial = id;
+            while (AuxInt(profession, "PrePro") != 0) {
+                serial = AuxInt(profession, "PrePro");
+                profession = progression.Catalog.Rows("profession_base").First(row => AuxInt(row, "Profession") == serial);
+            }
+            return ((long)rank * 100 + serial) * 1000 + id;
         }
 
         private int Quality(int itemId)

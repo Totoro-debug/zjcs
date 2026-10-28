@@ -60,6 +60,7 @@ namespace Zjcs.Presentation.Character
                 if (material == null || material.shader.name != "Zjcs/Official/UI/ScreenBlur")
                     throw new InvalidOperationException("The converted original ScreenBlur shader is missing.");
                 var capture = RenderTexture.GetTemporary(Screen.width, Screen.height, 0);
+                RenderTexture previousTarget = RenderTexture.active;
                 try
                 {
                     ScreenCapture.CaptureScreenshotIntoRenderTexture(capture);
@@ -67,7 +68,7 @@ namespace Zjcs.Presentation.Character
                     blurMaterial = new Material(material);
                     Blur(capture, snapshot);
                 }
-                finally { RenderTexture.ReleaseTemporary(capture); }
+                finally { RenderTexture.active = previousTarget; RenderTexture.ReleaseTemporary(capture); }
             }
             mask = Instantiate(original.gameObject, parent.transform, false);
             mask.name = original.name;
@@ -132,6 +133,7 @@ namespace Zjcs.Presentation.Character
 
         private void Blur(RenderTexture capture, RenderTexture target)
         {
+            RenderTexture previousTarget = RenderTexture.active;
             var up = new RenderTexture[4];
             var down = new RenderTexture[4];
             RenderTexture source = capture;
@@ -166,6 +168,7 @@ namespace Zjcs.Presentation.Character
             }
             finally
             {
+                RenderTexture.active = previousTarget;
                 foreach (RenderTexture texture in up) if (texture != null) RenderTexture.ReleaseTemporary(texture);
                 foreach (RenderTexture texture in down) if (texture != null) RenderTexture.ReleaseTemporary(texture);
             }

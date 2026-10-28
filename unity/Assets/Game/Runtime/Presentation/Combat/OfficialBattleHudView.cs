@@ -193,8 +193,9 @@ namespace Zjcs.Presentation.Combat
                     card.SetUIState(WorldGameSkillIcon.State.None);
                     continue;
                 }
-                Sprite icon = skillIcon(skill.ItemId);
-                if (icon == null) throw new InvalidOperationException("Official battle skill icon is not bound for item " + skill.ItemId);
+                int iconItemId = skill.UseItemId > 0 ? skill.UseItemId : skill.ItemId;
+                Sprite icon = skillIcon(iconItemId);
+                if (icon == null) throw new InvalidOperationException("Official battle skill icon is not bound for item " + iconItemId);
                 card.Icon.sprite = icon;
                 OfficialBattleSkillQualityCatalog.Load().Apply(card.QualityImg, skill.ItemId);
                 FightSkillSlotState slotState = FindSlot(player.SkillState, index);

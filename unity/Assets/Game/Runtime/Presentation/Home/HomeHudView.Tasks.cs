@@ -347,6 +347,7 @@ namespace Zjcs.Presentation.Home
 
         private void NavigateMainlineTask(OfficialMainlineTaskDefinition task)
         {
+            if (CharacterPageOpen) return;
             if (!CanNavigateMainlineTask(task)) return;
             OfficialTaskCondition condition = task.finishCondition;
             if (condition.type == "MapLogicEntityEndByTagCondition")

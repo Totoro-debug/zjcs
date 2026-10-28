@@ -755,6 +755,8 @@ namespace Zjcs.Combat.Official
                         throw new InvalidOperationException("Official combat unit has duplicate skill slot " + binding.Slot);
                     FightBattleSkillDefinition skill = CreateSkill(binding.EntityId, binding.Slot,
                         binding.ItemId, binding.Rank, binding.Level, binding.SubRank, binding.Properties);
+                    skill.UseItemId = binding.UseItemId;
+                    skill.SkillSkinId = binding.SkillSkinId;
                     skill.SkillCost = binding.SkillCost;
                     skill.ProfessionAvailability = binding.ProfessionAvailability;
                     assembledSkills.Add(skill);
@@ -2572,6 +2574,8 @@ namespace Zjcs.Combat.Official
         public int EntityId;
         public int Slot;
         public int ItemId;
+        public int UseItemId;
+        public int SkillSkinId;
         public int Rank;
         public int Level;
         public int SubRank;

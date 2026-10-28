@@ -200,6 +200,7 @@ namespace Zjcs.Presentation.Character
         private Vector2 modelCenter;
         private readonly List<CharacterModelMeshGraphic> graphics = new List<CharacterModelMeshGraphic>();
         private GameObject nativeWorldRoot;
+        private static int nativePreviewSequence;
         private GameObject nativeModel;
         private Animator nativeAnimator;
         private Camera nativeCamera;
@@ -492,7 +493,9 @@ namespace Zjcs.Presentation.Character
 
             nativeWorldRoot = new GameObject("CharacterPageNativePreviewWorld");
             // RenderTexture geometry stays in world units while the UI canvas changes its screen scale.
-            nativeWorldRoot.transform.localPosition = Vector3.zero;
+            // Each live preview has its own camera but shares layer 31. Keep its
+            // geometry outside the other preview cameras' frustums.
+            nativeWorldRoot.transform.localPosition = new Vector3(10000f + 100f * ++nativePreviewSequence, 10000f, 0f);
             nativeWorldRoot.transform.localRotation = Quaternion.identity;
             nativeWorldRoot.transform.localScale = Vector3.one;
             var cameraObject = new GameObject("CharacterPageNativePreviewCamera", typeof(Camera));
@@ -541,7 +544,7 @@ namespace Zjcs.Presentation.Character
             imageRect.anchoredPosition = new Vector2(center.x, center.y) * 100f;
         }
 
-        private bool PlayNativeAnimation(string animationName, float mixDuration = 0f)
+        public bool PlayNativeAnimation(string animationName, float mixDuration = 0f)
         {
             if (nativeAnimator == null || !HasNativeAnimation(animationName)) return false;
             int stateHash = Animator.StringToHash("Base Layer." + animationName);

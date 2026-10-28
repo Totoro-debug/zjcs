@@ -51,6 +51,16 @@ namespace Zjcs.Presentation.Home
 
         private void OnCharacterNavigationRequested(string module)
         {
+            if (NavigateSkillGiftSource(module)) return;
+            if (string.Equals(module, "skill-gacha", StringComparison.Ordinal))
+            {
+                characterRoot.SetActive(false);
+                host.OpenSkillGachaFromSource(() => {
+                    characterRoot.SetActive(true);
+                    characterRuntime.ReloadProfile();
+                });
+                return;
+            }
             if (!string.Equals(module, "decoration-appearance", StringComparison.Ordinal)) return;
             ShowHomeSkins(true);
         }

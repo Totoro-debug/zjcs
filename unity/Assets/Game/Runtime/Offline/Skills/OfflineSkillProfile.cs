@@ -6,6 +6,8 @@ namespace Zjcs.Offline.Skills
     [Serializable]
     public sealed class OfflineSkillProfile
     {
+        // Fixed APK GameSettings.SkillPlanMaxCount; names use skill_plan_default_name_1..7.
+        public const int PlanCount = 7;
         public int Version = 1;
         public int SelectedPlan;
         // Original CostItem(42200, SkillLevelUp): record actual committed costs; old saves start at zero.
@@ -24,7 +26,11 @@ namespace Zjcs.Offline.Skills
             {
                 new OfflineSkillPlan { Name = "方案一" },
                 new OfflineSkillPlan { Name = "方案二" },
-                new OfflineSkillPlan { Name = "方案三" }
+                new OfflineSkillPlan { Name = "方案三" },
+                new OfflineSkillPlan { Name = "方案四" },
+                new OfflineSkillPlan { Name = "方案五" },
+                new OfflineSkillPlan { Name = "方案六" },
+                new OfflineSkillPlan { Name = "方案七" }
             };
         }
 
@@ -142,6 +148,7 @@ namespace Zjcs.Offline.Skills
     [Serializable]
     public sealed class OfflineSkillRules
     {
+        public int PlanCount = OfflineSkillProfile.PlanCount;
         public OfflineSkillDefinition[] Skills = Array.Empty<OfflineSkillDefinition>();
         public int GiftShowCount = 5;
         public OfflineSkillAchievementTemplate[] GiftTemplates = Array.Empty<OfflineSkillAchievementTemplate>();

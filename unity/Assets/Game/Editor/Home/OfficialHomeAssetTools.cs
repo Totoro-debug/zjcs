@@ -13,6 +13,25 @@ namespace Zjcs.Editor.Home
 {
     public static class OfficialHomeAssetTools
     {
+        [MenuItem("Zjcs/Home/Bind Runtime Shaders")]
+        public static void BindRuntimeShaders()
+        {
+            const string path = "Assets/Game/Resources/Home/RuntimeShaderBindings.asset";
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
+            var binding = AssetDatabase.LoadAssetAtPath<Zjcs.Presentation.Home.HomeRuntimeShaderBindings>(path);
+            if (binding == null) {
+                binding = ScriptableObject.CreateInstance<Zjcs.Presentation.Home.HomeRuntimeShaderBindings>();
+                AssetDatabase.CreateAsset(binding, path);
+            }
+            binding.Effect = AssetDatabase.LoadAssetAtPath<Shader>("Assets/Game/Runtime/Presentation/World/OfficialMap10PlayableView.shader");
+            binding.SkyColorShift = AssetDatabase.LoadAssetAtPath<Shader>("Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpriteLitColorShift_8de0c09e.shader");
+            binding.SkyDefault = AssetDatabase.LoadAssetAtPath<Shader>("Packages/com.unity.render-pipelines.universal/Shaders/2D/Sprite-Lit-Default.shader");
+            if (!binding.Effect || !binding.SkyColorShift || !binding.SkyDefault)
+                throw new BuildFailedException("Home runtime requires the migrated effect, verified native ColorShift and URP Sprite-Lit shaders.");
+            EditorUtility.SetDirty(binding);
+            AssetDatabase.SaveAssets();
+        }
+
         private const string PayloadRoot = "Assets/Official/Home";
         private const string ScenePath = PayloadRoot + "/Scenes/Main.unity";
         private const string SourceManifestPath = "assets/reference/home-unity/source-manifest.json";

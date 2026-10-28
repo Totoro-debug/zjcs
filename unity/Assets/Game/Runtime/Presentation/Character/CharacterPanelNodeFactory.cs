@@ -77,6 +77,18 @@ namespace Zjcs.Presentation.Character
             Dictionary<string, RectTransform> nodes, Dictionary<string, Button> buttons)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
+            if (!source.is_rect_transform)
+            {
+                var spatial = new GameObject(source.name);
+                spatial.layer = parent.gameObject.layer;
+                spatial.transform.SetParent(parent, false);
+                spatial.transform.localPosition = new Vector3(Value(source.local_position, 0, 0), Value(source.local_position, 1, 0), Value(source.local_position, 2, 0));
+                spatial.transform.localRotation = new Quaternion(Value(source.local_rotation, 0, 0), Value(source.local_rotation, 1, 0), Value(source.local_rotation, 2, 0), Value(source.local_rotation, 3, 1));
+                spatial.transform.localScale = new Vector3(Value(source.scale, 0, 1), Value(source.scale, 1, 1), Value(source.scale, 2, 1));
+                spatial.SetActive(source.active);
+                foreach (var child in source.children ?? Array.Empty<OfficialCharacterPanelNode>()) Build(child, spatial.transform, nodes, buttons);
+                return null;
+            }
             var instance = new GameObject(source.name, typeof(RectTransform));
             instance.layer = parent.gameObject.layer;
             instance.transform.SetParent(parent, false);
@@ -92,6 +104,7 @@ namespace Zjcs.Presentation.Character
             ApplySafeAreaLayout(source, rect);
             instance.SetActive(source.active);
             nodes[source.path] = rect;
+            if (HasScript(source, "CanvasGroup")) instance.AddComponent<CanvasGroup>().alpha = source.alpha;
 
             if (source.image != null)
             {
@@ -116,6 +129,7 @@ namespace Zjcs.Presentation.Character
                 image.color = ImageColor(source.image, ColorValue(source.image.color, Color.white));
                 image.type = (Image.Type)Mathf.Clamp(source.image.type, 0, 3);
                 image.preserveAspect = source.image.preserve_aspect;
+                image.enabled = source.image.enabled;
                 image.raycastTarget = HasScript(source, "Button") || source.button || HasScript(source, "TabItem");
             }
             if (source.text != null && source.text.native_tmp)
@@ -128,6 +142,7 @@ namespace Zjcs.Presentation.Character
                     text = instance.AddComponent<Text>();
                     text.font = CharacterPanelNodeFactory.UiFont;
                     text.text = source.text.value ?? string.Empty;
+                    text.enabled = source.text.enabled;
                     text.color = ColorValue(source.text.color, Color.black);
                     text.fontSize = Mathf.Max(1, Mathf.RoundToInt(source.text.font_size));
                     text.resizeTextForBestFit = source.text.auto_size;
@@ -169,7 +184,7 @@ namespace Zjcs.Presentation.Character
             if (source.mask)
             {
                 Mask mask = instance.AddComponent<Mask>();
-                mask.showMaskGraphic = instance.GetComponent<Graphic>() != null;
+                mask.showMaskGraphic = source.mask_show_graphic && instance.GetComponent<Graphic>() != null;
             }
             if (source.layout_element != null)
             {
@@ -182,7 +197,34 @@ namespace Zjcs.Presentation.Character
                 element.flexibleWidth = Value(source.layout_element.flexible, 0, -1f);
                 element.flexibleHeight = Value(source.layout_element.flexible, 1, -1f);
             }
-            if (source.layout != null) AddLayout(source, instance);
+            if (source.layout != null && (source.original_bindings == null ||
+                (!source.original_bindings.ContainsKey("HorizontalLayoutGroupJSZX") &&
+                 !source.original_bindings.ContainsKey("VerticalLayoutGroupJSZX")))) AddLayout(source, instance);
+            if (source.original_bindings != null)
+                foreach (var binding in source.original_bindings)
+                {
+                    Type type = binding.Key == "HorizontalLayoutGroupJSZX" ? typeof(Zjcs.Official.SkillsUI.HorizontalLayoutGroupJSZX)
+                        : binding.Key == "VerticalLayoutGroupJSZX" ? typeof(Zjcs.Official.SkillsUI.VerticalLayoutGroupJSZX)
+                        : binding.Key == "GridLayoutGroupJSZX" ? typeof(UGUIJszx.GridLayoutGroupJSZX)
+                        : binding.Key == "LayoutElementClamper" ? typeof(Zjcs.Official.SkillsUI.LayoutElementClamper) : null;
+                    if (type != null) OfficialSkillComponentBindings.Apply(instance.AddComponent(type),
+                        CharacterModelPackage.AsObject(binding.Value, "original layout fields"), nodes);
+                }
+            if (source.grid != null)
+            {
+                var group = instance.AddComponent<GridLayoutGroup>();
+                var data = source.grid;
+                int[] padding = data.padding ?? Array.Empty<int>();
+                group.padding = new RectOffset(IntValue(padding, 0, 0), IntValue(padding, 1, 0),
+                    IntValue(padding, 2, 0), IntValue(padding, 3, 0));
+                group.childAlignment = (TextAnchor)data.alignment;
+                group.startAxis = (GridLayoutGroup.Axis)data.axis;
+                group.startCorner = (GridLayoutGroup.Corner)data.corner;
+                group.constraint = (GridLayoutGroup.Constraint)data.constraint;
+                group.constraintCount = data.count;
+                group.cellSize = Vector(data.cell, Vector2.zero);
+                group.spacing = Vector(data.spacing, Vector2.zero);
+            }
             if (HasScript(source, "ContentSizeFitter"))
             {
                 var fitter = instance.AddComponent<ContentSizeFitter>();
@@ -203,6 +245,9 @@ namespace Zjcs.Presentation.Character
                 name = String(data, "name"),
                 path = String(data, "path"),
                 active = Boolean(data, "active", true),
+                is_rect_transform = Boolean(data, "is_rect_transform", true),
+                local_position = Floats(data, "local_position"), local_rotation = Floats(data, "local_rotation"),
+                alpha = Number(data, "alpha", 1f),
                 anchor_min = Floats(data, "anchor_min"),
                 anchor_max = Floats(data, "anchor_max"),
                 anchored_position = Floats(data, "anchored_position"),
@@ -216,12 +261,16 @@ namespace Zjcs.Presentation.Character
                     : Array.Empty<string>(),
                 button = Boolean(data, "button", false),
                 mask = Boolean(data, "mask", false),
-                localization_key = String(data, "localization_key")
+                mask_show_graphic = Boolean(data, "mask_show_graphic", true),
+                localization_key = String(data, "localization_key"),
+                original_bindings = data.TryGetValue("original_bindings", out object bindingRaw)
+                    ? CharacterModelPackage.AsObject(bindingRaw, "original component bindings") : null
             };
             if (data.TryGetValue("image", out object imageRaw) && imageRaw is Dictionary<string, object> image)
             {
                 node.image = new OfficialCharacterPanelImage
                 {
+                    enabled = Boolean(image, "enabled", true),
                     color = Floats(image, "color"),
                     mirror_type = (int)Number(image, "mirror_type", -1),
                     reversed = Boolean(image, "reversed", false),
@@ -237,6 +286,7 @@ namespace Zjcs.Presentation.Character
             {
                 node.text = new OfficialCharacterPanelText
                 {
+                    enabled = Boolean(text, "enabled", true),
                     value = String(text, "value"),
                     color = Floats(text, "color"),
                     font_size = Number(text, "font_size", 16f),
@@ -255,6 +305,12 @@ namespace Zjcs.Presentation.Character
                     margin = Floats(text, "margin")
                 };
             }
+            if (data.TryGetValue("grid", out object gridRaw) && gridRaw is Dictionary<string, object> grid)
+                node.grid = new OfficialCharacterPanelGridLayout {
+                    alignment = (int)Number(grid, "alignment", 0), axis = (int)Number(grid, "axis", 0),
+                    constraint = (int)Number(grid, "constraint", 0), corner = (int)Number(grid, "corner", 0),
+                    count = (int)Number(grid, "count", 1), padding = Ints(grid, "padding"),
+                    cell = Floats(grid, "cell"), spacing = Floats(grid, "spacing") };
             if (data.TryGetValue("layout_element", out object layoutElementRaw)
                 && layoutElementRaw is Dictionary<string, object> layoutElement)
                 node.layout_element = new OfficialCharacterPanelLayoutElement
@@ -267,6 +323,7 @@ namespace Zjcs.Presentation.Character
             if (data.TryGetValue("layout", out object groupRaw) && groupRaw is Dictionary<string, object> group)
                 node.layout = new OfficialCharacterPanelGroupLayout
                 {
+                    enabled = Boolean(group, "enabled", true),
                     axis = (int)Number(group, "axis", 0),
                     padding = Ints(group, "padding"),
                     alignment = (int)Number(group, "alignment", 4),
@@ -306,6 +363,7 @@ namespace Zjcs.Presentation.Character
             group.childAlignment = (TextAnchor)Mathf.Clamp(data.alignment, 0, 8);
             group.spacing = data.spacing;
             group.childControlWidth = Flag(data.control, 0, false);
+            group.enabled = data.enabled;
             group.childControlHeight = Flag(data.control, 1, false);
             group.childForceExpandWidth = Flag(data.expand, 0, false);
             group.childForceExpandHeight = Flag(data.expand, 1, false);
@@ -427,6 +485,7 @@ namespace Zjcs.Presentation.Character
                 Zjcs.Presentation.Skills.OfficialSkillAssetCatalog.LoadDefault().NativeUiFont);
             if (font == null) throw new InvalidOperationException("Original skill detail CJK font is missing.");
             var text = instance.AddComponent<TextMeshProUGUI>();
+            text.enabled = source.enabled;
             text.font = font;
             text.fontSize = source.font_size;
             text.fontStyle = (FontStyles)source.font_style;

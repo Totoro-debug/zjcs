@@ -17,6 +17,18 @@ namespace Zjcs.Offline.Progression
 
         public int HandleType => CharacterPropHandleType.Pet;
 
+        // BattleFormulaHandler.CalculatePetAbilityProps, also used by the
+        // original PetSkillEnergyEntryNavigateHandler outside a battle.
+        public IReadOnlyDictionary<int, long> CalculateAbilityProps(int petClassId, List<OfflinePetAbilityLevel> abilities)
+        {
+            var result = new Dictionary<int, long>();
+            var definition = catalog.Find("pet", petClassId)
+                ?? throw new InvalidOperationException("Original pet definition is absent: " + petClassId);
+            AddAbilityProps(result, definition, abilities);
+            HandleSystemPercentProps(result);
+            return result;
+        }
+
         public IReadOnlyDictionary<int, long> CalculateProps(OfflinePlayerProgress player)
         {
             var result = new Dictionary<int, long>();

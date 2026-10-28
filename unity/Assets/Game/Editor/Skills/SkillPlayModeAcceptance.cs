@@ -21,6 +21,14 @@ namespace Zjcs.Editor.Skills
         private const string SlotKey = "Zjcs.Skills.Acceptance.Slot";
         private const string ResultKey = "Zjcs.Skills.Acceptance.Passed";
         private const string ExitKey = "Zjcs.Skills.Acceptance.ExitPending";
+        private static string ValidationDirectory {
+            get {
+                string path = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+                if (string.IsNullOrWhiteSpace(path) || !Path.IsPathRooted(path))
+                    throw new InvalidOperationException("Skills validation requires ZJCS_VALIDATION_DIR.");
+                return path;
+            }
+        }
         private static bool started;
         private static bool reloadLocked;
         private static Exception runtimeFailure;
@@ -67,7 +75,7 @@ namespace Zjcs.Editor.Skills
                 throw new InvalidOperationException("Exit Play Mode before running skill acceptance.");
             OfficialSkillAssetTools.Validate();
             ConfigurePortraitGameView(675, 1463);
-            string root = Path.Combine(Directory.GetParent(Application.dataPath).FullName, "output", "skills-smoke-" + Guid.NewGuid().ToString("N"));
+            string root = Path.Combine(ValidationDirectory, "save-" + Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(root);
             var slots = new ProfileSlotCatalog(root);
             string slot = slots.CreateSlot();
@@ -138,15 +146,18 @@ namespace Zjcs.Editor.Skills
 
         private static IEnumerator Guarded(IEnumerator scenario)
         {
-            while (true)
+            var stack = new System.Collections.Generic.Stack<IEnumerator>();
+            stack.Push(scenario);
+            while (stack.Count > 0)
             {
                 object value;
                 try
                 {
                     if (runtimeFailure != null) throw runtimeFailure;
-                    if (!scenario.MoveNext())
-                        yield break;
-                    value = scenario.Current;
+                    var current = stack.Peek();
+                    if (!current.MoveNext()) { stack.Pop(); continue; }
+                    value = current.Current;
+                    if (value is IEnumerator child) { stack.Push(child); continue; }
                 }
                 catch (Exception exception)
                 {
@@ -167,8 +178,8 @@ namespace Zjcs.Editor.Skills
             int count = 0;
             foreach (var skill in progression.SkillRules.Skills)
             {
-                calculate.Invoke(provider, new object[] { skill.ClassId, 1, 1, 1 });
-                calculate.Invoke(provider, new object[] { skill.ClassId, 1, 20, 2 });
+                calculate.Invoke(provider, new object[] { skill.ClassId, 1, 1, 1, 4 });
+                calculate.Invoke(provider, new object[] { skill.ClassId, 1, 20, 2, 4 });
                 count++;
             }
             Require(count == 394, "Original detail property validation omitted skills: " + count);
@@ -205,6 +216,17 @@ namespace Zjcs.Editor.Skills
             OfficialSkillRecommendationSet recommendations = assets.LoadSkillRecommendations();
             progression.AttachSkillRules(assets.LoadSkillRules(), recommendations.recommendations);
             ValidateOriginalDetailProperties(progression);
+            if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_HOME_ONLY") == "1") {
+                Require(session.ApplyCharacterMutation(player => {
+                    player.Level = 40;
+                    player.Experience = assets.Load().CumulativeLevelExperience[40];
+                    player.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = 10014, Rank = 1 });
+                }, "skills-home-damage-fixture").IsApplied, "Could not save the damage-test fixture.");
+                Require(progression.EquipSkill(10014, 0).IsApplied, "Could not prepare the damage-test character's active skill.");
+                yield return ValidateHomeDamageTest(slot, root);
+                Finish(true, null);
+                yield break;
+            }
             OfflineSkillPlayerContext skillContext = progression.SkillContext();
             foreach (OfficialSkillRecommendation recommendation in recommendations.recommendations.Where(value => value != null && skillContext.CurrentProfessionChain.Contains(value.Profession)))
             {
@@ -286,8 +308,32 @@ namespace Zjcs.Editor.Skills
             Texture2D headTexture = head.texture as Texture2D;
             Require(headTexture != null && headTexture.GetPixels32().Count(value => value.a > 10) > 100,
                 "The original shared player portrait rendered an empty image.");
-            File.WriteAllBytes(Path.Combine(Path.GetTempPath(), "zjcs-skills-head.png"), headTexture.EncodeToPNG());
-            ScreenCapture.CaptureScreenshot(Path.Combine(Path.GetTempPath(), "zjcs-skills-opening.png"));
+            File.WriteAllBytes(Path.Combine(ValidationDirectory, "zjcs-skills-head.png"), headTexture.EncodeToPNG());
+            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-opening.png"));
+            yield return null;
+            Button entrySkill = FindVisibleOwnedSkillRowButton("SkillListItem", progression, 10015, out _);
+            Require(entrySkill != null, "The owned skill with original entry links is missing.");
+            SimulatePointerClick(entrySkill);
+            yield return new WaitForSecondsRealtime(.7f);
+            var linkedText = UnityEngine.Object.FindObjectsOfType<TMPro.TMP_Text>()
+                .First(value => value.name == "FuncDetailText" && value.isActiveAndEnabled);
+            linkedText.ForceMeshUpdate();
+            Require(linkedText.textInfo.linkCount > 0, "Original skill description lost its entry hyperlinks.");
+            var link = linkedText.textInfo.linkInfo[0];
+            var firstCharacter = linkedText.textInfo.characterInfo[link.linkTextfirstCharacterIndex];
+            Vector3 localLinkPoint = (firstCharacter.bottomLeft + firstCharacter.topRight) * .5f;
+            Vector2 linkPoint = RectTransformUtility.WorldToScreenPoint(null, linkedText.transform.TransformPoint(localLinkPoint));
+            SimulatePointerClickAt(linkedText.gameObject, linkPoint);
+            yield return new WaitForSecondsRealtime(.7f);
+            var entryTip = UnityEngine.Object.FindObjectsOfType<Transform>()
+                .FirstOrDefault(value => value.name == "skill_entry_tip" && value.gameObject.activeInHierarchy);
+            Require(entryTip != null && entryTip.GetComponentsInChildren<TMPro.TMP_Text>()
+                .Any(value => !string.IsNullOrEmpty(value.text)), "Clicking an original entry link did not populate its native tip.");
+            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "skills-entry-tip.png"));
+            yield return new WaitForEndOfFrame();
+            Require(panel.HandleEscape(), "The original entry tip did not close.");
+            yield return null;
+            Require(panel.HandleEscape(), "The underlying skill detail did not close.");
             yield return null;
             Button returnButton = FindButton("CloseBtn_dark");
             Button skillPageTab = FindButton("CharacterPanelSkillDetailPanelSkillTabGroupItem_11");
@@ -302,6 +348,20 @@ namespace Zjcs.Editor.Skills
             SimulatePointerClick(achievementPageTab);
             Require(!skillContent.gameObject.activeInHierarchy && achievementContent.gameObject.activeInHierarchy, "The official gift tab did not switch to its Achievement state.");
             yield return null;
+            Button giftIcon = achievementContent.GetComponentsInChildren<Button>()
+                .First(value => value.name == "ItemIconDefault");
+            SimulatePointerClick(giftIcon);
+            yield return new WaitForSecondsRealtime(.7f);
+            var giftDetail = UnityEngine.Object.FindObjectsOfType<Transform>()
+                .FirstOrDefault(value => value.name == "skill_gift_item_detail" && value.gameObject.activeInHierarchy);
+            Require(giftDetail != null && giftDetail.GetComponentsInChildren<TMPro.TMP_Text>()
+                .Any(value => !string.IsNullOrEmpty(value.text)), "A gift reward icon did not open its native item detail.");
+            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "skills-gift-item-detail.png"));
+            yield return new WaitForEndOfFrame();
+            Require(giftDetail.GetComponentsInChildren<TMPro.TMP_Text>().All(value => !value.text.Contains("{0}")),
+                "A visible gift item label retains its original formatting placeholder.");
+            SimulatePointerClick(UnityEngine.Object.FindObjectsOfType<Button>().First(value => value.name == "BlurMask"));
+            yield return null;
             Button giftReceive = achievementContent.GetComponentsInChildren<Button>(false).First(value => value.name == "ReceiveBtn");
             SimulatePointerClick(giftReceive);
             yield return null;
@@ -311,21 +371,21 @@ namespace Zjcs.Editor.Skills
                 && !progression.ClaimSkillAchievements(33).IsApplied, "A skill gift reward can be claimed repeatedly.");
             yield return new WaitForSecondsRealtime(.4f);
             yield return new WaitForEndOfFrame();
-            ScreenCapture.CaptureScreenshot(Path.Combine(Path.GetTempPath(), "zjcs-skills-gifts.png"));
+            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-gifts.png"));
             yield return null;
             Button qualityGift = achievementContent.GetComponentsInChildren<Button>(false)
                 .First(value => value.name == "AchievementTabGroupItem_14 (1)");
             SimulatePointerClick(qualityGift);
             yield return new WaitForSecondsRealtime(.4f);
             yield return new WaitForEndOfFrame();
-            ScreenCapture.CaptureScreenshot(Path.Combine(Path.GetTempPath(), "zjcs-skills-quality-gifts.png"));
+            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-quality-gifts.png"));
             yield return null;
             SimulatePointerClick(skillPageTab);
             Require(skillContent.gameObject.activeInHierarchy && !achievementContent.gameObject.activeInHierarchy, "The official skill tab did not restore its skill content.");
             float animationDeadline = Time.realtimeSinceStartup + 3f;
             while (Time.realtimeSinceStartup < animationDeadline)
                 yield return null;
-            string screenshot = Path.Combine(Path.GetTempPath(), "zjcs-skills-playmode.png");
+            string screenshot = Path.Combine(ValidationDirectory, "zjcs-skills-playmode.png");
             int selectedPlan = progression.Player.Skills.SelectedPlan;
             ScreenCapture.CaptureScreenshot(screenshot);
             Button nextPlanButton = FindButton("NextPlanBtn");
@@ -341,9 +401,22 @@ namespace Zjcs.Editor.Skills
             Debug.Log("[Skills acceptance] skill panel ready; mouse target=" + buttonPosition + "; screen=" + Screen.width + "x" + Screen.height + "; hit=" + topHit + "; button=" + nextPlanButton.interactable + "; screenshot=" + screenshot);
             yield return null;
             SimulatePointerClick(nextPlanButton);
+            Require(progression.Player.Skills.Plans.Length == 7, "The original seven skill plans were not restored.");
+            var planBar = nextPlanButton.transform.parent.GetComponentInChildren<Scrollbar>(true);
+            Require(planBar != null && planBar.numberOfSteps == 7 && Mathf.Approximately(planBar.size, .2f)
+                && !planBar.interactable, "The original plan scrollbar binding is incomplete.");
+            for (int i = 0; i < 7; i++)
+            {
+                int before = progression.Player.Skills.SelectedPlan;
+                SimulatePointerClick(nextPlanButton);
+                yield return null;
+                int after = progression.Player.Skills.SelectedPlan;
+                Require(after == (before + 1) % 7 && Mathf.Approximately(planBar.value, after / 6f),
+                    "Seven-plan pointer navigation or scrollbar position is incorrect.");
+            }
             GameObject recommendationDialog = null;
             Button applyRecommendation = null;
-            string recommendationScreenshot = Path.Combine(Path.GetTempPath(), "zjcs-skills-recommend.png");
+            string recommendationScreenshot = Path.Combine(ValidationDirectory, "zjcs-skills-recommend.png");
             Require(progression.Player.Skills.SelectedPlan != selectedPlan, "A simulated Unity pointer click did not switch the skill plan.");
             Button recommendButton = FindButton("RecommendBtn");
             Require(recommendButton != null, "The skill recommendation button is missing.");
@@ -415,7 +488,7 @@ namespace Zjcs.Editor.Skills
             if (pieceScroll != null)
                 pieceScroll.verticalNormalizedPosition = 1f;
             Canvas.ForceUpdateCanvases();
-            Button pieceRow = UnityEngine.Object.FindObjectsOfType<Button>(true).FirstOrDefault(value => value.name.StartsWith("CharacterPanelSkillDetailPanelSkillItem", StringComparison.Ordinal) && value.gameObject.activeInHierarchy);
+            Button pieceRow = UnityEngine.Object.FindObjectsOfType<Button>(true).FirstOrDefault(value => value.name.StartsWith("CharacterPanelSkillDetailPanelSkillPieceItem", StringComparison.Ordinal) && value.gameObject.activeInHierarchy);
             Require(pieceRow != null, "The owned skill piece did not render as an interactive list row.");
             yield return null;
             SimulatePointerClick(pieceRow);
@@ -426,7 +499,7 @@ namespace Zjcs.Editor.Skills
             yield return null;
             Canvas.ForceUpdateCanvases();
             yield return new WaitForSecondsRealtime(0.4f);
-            ScreenCapture.CaptureScreenshot(Path.Combine(Path.GetTempPath(), "zjcs-skills-reference-match.png"));
+            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-reference-match.png"));
             Button detailButton = FindVisibleOwnedSkillRowButton("SkillListItem", progression, 0, out _);
             Require(detailButton != null, "The skill list detail button is missing after slot selection.");
             yield return null;
@@ -442,7 +515,7 @@ namespace Zjcs.Editor.Skills
             yield return new WaitForSecondsRealtime(.3f);
             Require(UnityEngine.Object.FindObjectsOfType<Text>().Any(value => value.text == "已置顶该技能" && value.isActiveAndEnabled),
                 "The original favorite system message did not render.");
-            ScreenCapture.CaptureScreenshot(Path.Combine(Path.GetTempPath(), "zjcs-skills-system-message.png"));
+            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-system-message.png"));
             Require(UnityEngine.Object.FindObjectsOfType<RectTransform>(true).Any(value => value.name == "CharacterPanelSkillListSeparator" && value.gameObject.activeInHierarchy), "Favoriting a skill did not restore the official separator between collected and uncollected skills.");
             Require(panel.IsOpen, "Collecting a skill closed the full skill page.");
             Require(favoriteButton != null && favoriteButton.gameObject.activeInHierarchy,
@@ -554,10 +627,12 @@ namespace Zjcs.Editor.Skills
             Button skillUpgradeButton = FindButton("UpgradeBtn");
             Require(skillUpgradeButton != null && skillUpgradeButton.isActiveAndEnabled, "The official skill detail rank promotion action is missing.");
             yield return new WaitForSecondsRealtime(.4f);
+            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "skills-rank-detail.png"));
+            yield return new WaitForEndOfFrame();
             SimulatePointerClick(skillUpgradeButton);
             Button rankUpgradeButton = UnityEngine.Object.FindObjectsOfType<Button>(true).FirstOrDefault(value => value.name == "UseItemBtn" && value.transform.parent != null && value.transform.parent.parent != null && value.transform.parent.parent.name == "RankUpContent");
             Require(rankUpgradeButton != null && rankUpgradeButton.interactable, "The official rank promotion button is missing or disabled.");
-            yield return null;
+            yield return new WaitForSecondsRealtime(.6f);
             SimulatePointerClick(rankUpgradeButton);
             Require(OfflineSkillProgression.OwnedRank(progression.Player.Skills, promotionSkillId) == rankBeforePromotion + 1, "A simulated pointer click did not apply the official skill rank promotion: " + panel.LastMessage);
             Require(UnityEngine.Object.FindObjectsOfType<Text>(true).Any(value => value.name == "SkillNameText" && value.isActiveAndEnabled), "The official rank promotion result dialog did not render.");
@@ -637,6 +712,112 @@ namespace Zjcs.Editor.Skills
             yield return null;
             Require(batchDialog == null || !batchDialog.gameObject.activeInHierarchy, "The batch result remained open after clicking its close control.");
 
+            // Exercise the original skin dialog through actual pointer hit testing.
+            if (!progression.Player.Skills.Skills.Any(value => value.ClassId == 10014))
+                progression.Player.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = 10014, Rank = 1 });
+            if (!progression.Player.Inventory.Any(value => value.ItemId == 39503 && value.Count > 0))
+                progression.Player.Inventory.Add(new OfflineItemStack { ItemId = 39503, Count = 1 });
+            Require(progression.EquipSkill(10014, 0).IsApplied, "The skin validation skill could not be equipped.");
+            panel.ReloadProfile();
+            yield return null;
+            SimulatePointerClick(FindFirstSkillSlot("ActiveSkill"));
+            yield return new WaitForSecondsRealtime(.5f);
+            Button appearance = FindButton("AppearanceBtn");
+            Require(appearance != null && appearance.gameObject.activeInHierarchy, "Owned skill skin did not reveal the original appearance entry.");
+            SimulatePointerClick(appearance);
+            yield return new WaitForSecondsRealtime(.7f);
+            Transform skinDialog = UnityEngine.Object.FindObjectsOfType<Transform>().First(value => value.name == "skill_skin_replace");
+            Button alternateSkin = skinDialog.GetComponentsInChildren<Button>(true).First(value => value.name == "ItemIconSkill (1)");
+            SimulatePointerClick(alternateSkin);
+            yield return new WaitForSecondsRealtime(.3f);
+            Button wearSkin = skinDialog.GetComponentsInChildren<Button>().First(value => value.name == "ConfirmBtn");
+            SimulatePointerClick(wearSkin);
+            Require(progression.EquippedSkillSkinId(10014) == 39503, "The original skin confirm button did not save the selected skin.");
+            Require(OfflineMainlineProgressSession.OpenCharacter(slots, slot).Save.Player.Wardrobe.SkillSkins.Any(value => value.SkillId == 10014 && value.SkillSkinId == 39503), "The selected skill skin did not survive save reload.");
+            float previewDeadline = Time.realtimeSinceStartup + 15f;
+            var preview = skinDialog.GetComponentInChildren<UnityEngine.Video.VideoPlayer>();
+            while (preview != null && !preview.isPlaying && Time.realtimeSinceStartup < previewDeadline) yield return null;
+            Require(preview != null && preview.isPlaying && preview.targetTexture != null, "The original local skill preview did not render video frames.");
+            float visibleVideoDeadline = Time.realtimeSinceStartup + 15f;
+            while (preview.frame < 30 && Time.realtimeSinceStartup < visibleVideoDeadline) yield return null;
+            Require(preview.frame >= 30, "The preview did not advance beyond its original opening fade.");
+            var previousVideoTarget = RenderTexture.active;
+            RenderTexture.active = preview.targetTexture;
+            var videoPixels = new Texture2D(preview.targetTexture.width, preview.targetTexture.height, TextureFormat.RGB24, false);
+            videoPixels.ReadPixels(new Rect(0, 0, videoPixels.width, videoPixels.height), 0, 0);
+            videoPixels.Apply();
+            var colors = videoPixels.GetPixels();
+            Require(colors.Average(value => value.r) > .05f && colors.Average(value => value.b) > .05f,
+                "The native preview has lost red/blue video channels on Windows.");
+            RenderTexture.active = previousVideoTarget;
+            UnityEngine.Object.Destroy(videoPixels);
+            Require(skinDialog.GetComponentsInChildren<TMPro.TMP_Text>().Any(value => value.name == "Desc" && !string.IsNullOrWhiteSpace(value.text)),
+                "The original skin description is blank.");
+            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "skills-skin.png"));
+            yield return null;
+            SimulatePointerClick(skinDialog.GetComponentsInChildren<Button>().First(value => value.name == "CommonBtn_PlayVideo"));
+            yield return new WaitForSecondsRealtime(.5f);
+            Transform expandedVideo = UnityEngine.Object.FindObjectsOfType<Transform>().First(value => value.name == "skill_video_preview");
+            var expandedPlayer = expandedVideo.GetComponentInChildren<UnityEngine.Video.VideoPlayer>();
+            float expandedDeadline = Time.realtimeSinceStartup + 15f;
+            while ((expandedPlayer == null || !expandedPlayer.isPlaying || expandedPlayer.frame < 30) && Time.realtimeSinceStartup < expandedDeadline) yield return null;
+            Require(expandedPlayer != null && expandedPlayer.isPlaying && expandedPlayer.targetTexture != null,
+                "The original video magnify button did not play its local movie.");
+            var aspect = expandedVideo.GetComponentInChildren<AspectRatioFitter>();
+            Require(aspect != null && Math.Abs(aspect.aspectRatio - (float)expandedPlayer.width / expandedPlayer.height) < .001f,
+                "The expanded official video did not preserve its native aspect ratio.");
+            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "skills-skin-video.png"));
+            yield return null;
+            SimulatePointerClick(expandedVideo.GetComponentsInChildren<Button>().First(value => value.name == "CloseBtn"));
+            yield return null;
+            Require(skinDialog != null && skinDialog.gameObject.activeInHierarchy, "Closing the video also closed skill appearance selection.");
+            Button defaultSkin = skinDialog.GetComponentsInChildren<Button>().First(value => value.name == "ItemIconSkill");
+            SimulatePointerClick(defaultSkin);
+            yield return null;
+            SimulatePointerClick(wearSkin);
+            Require(progression.EquippedSkillSkinId(10014) == 0, "Choosing the default skill skin did not remove the appearance override.");
+            Require(panel.HandleEscape(), "The original skin dialog did not close.");
+            yield return null;
+            Require(panel.HandleEscape(), "The skill detail did not close after skin replacement.");
+            yield return null;
+
+            progression.Player.Level = 40;
+            progression.Player.Experience = assets.Load().CumulativeLevelExperience[40];
+            panel.ReloadProfile();
+            yield return null;
+            OfficialSkillDamageTestRequest damageRequest = null;
+            panel.DamageTestRequested += request => damageRequest = request;
+            SimulatePointerClick(FindButton("StageDamageTestBtn"));
+            yield return new WaitForSecondsRealtime(.5f);
+            Transform damageDialog = UnityEngine.Object.FindObjectsOfType<Transform>().First(value => value.name == "damage_test");
+            var damageDropdown = damageDialog.GetComponentInChildren<Zjcs.Official.WorldUI.WorldUIDropdown>();
+            Require(damageDropdown.ItemsKey.Count == 5, "The original damage-test monster dropdown omitted stages.");
+            SimulatePointerClick(damageDropdown.DropdownButton);
+            yield return new WaitForSecondsRealtime(.3f);
+            var dropdownEntry = damageDialog.GetComponentsInChildren<Zjcs.Official.WorldUI.WorldDropdownItem>()
+                .First(value => value.Texts.Any(text => text.Text == damageDropdown.ItemsKey[1]));
+            SimulatePointerClick(dropdownEntry.Button);
+            yield return new WaitForSecondsRealtime(.3f);
+            Require(damageDropdown.SelectedItemIndex == 1, "The native monster dropdown did not select the simulated click.");
+            var difficultyButton = damageDialog.GetComponentsInChildren<Button>()
+                .First(value => value.GetComponentsInChildren<TMPro.TMP_Text>().Any(text => text.name == "NumTxt" && text.text == "02"));
+            SimulatePointerClick(difficultyButton);
+            yield return new WaitForSecondsRealtime(.4f);
+            Toggle DamageToggle(string group, string name) => damageDialog.GetComponentsInChildren<Toggle>()
+                .First(value => value.transform.parent.name == name && value.GetComponentsInParent<Transform>().Any(parent => parent.name == group));
+            SimulatePointerClick(DamageToggle("Round", "ToggleText (2)"));
+            SimulatePointerClick(DamageToggle("MonsterHp", "ToggleText (1)"));
+            SimulatePointerClick(DamageToggle("MonsterHurt", "ToggleText (1)"));
+            yield return null;
+            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "skills-damage-settings.png"));
+            yield return null;
+            SimulatePointerClick(damageDialog.GetComponentsInChildren<Button>().First(value => value.name == "StartTest"));
+            Require(damageRequest != null && damageRequest.StageId == 72001 && damageRequest.Difficulty == 1
+                && damageRequest.MonsterLevel == 20 && damageRequest.MaxRound == 50 && !damageRequest.EnableMonsterOneDamage
+                && !damageRequest.EnableMonsterUnlimitHp, "The original damage-test input did not preserve the selected settings.");
+            SimulatePointerClick(damageDialog.GetComponentsInChildren<Button>().First(value => value.name == "CloseBtn"));
+            yield return null;
+
             OfflineSkillDefinition skill = progression.SkillDefinition(10000);
             Require(skill != null && skill.PieceItemId == 12000, "Official skill or piece rule is unavailable.");
             ProgressionResult merged = progression.MergeSkill(skill.ClassId);
@@ -655,9 +836,16 @@ namespace Zjcs.Editor.Skills
                 "The character property page was not restored after closing skills.");
             Debug.Log("[Skills acceptance] official skill panel rendered; plan switched, recommendation applied, favorite and detail interactions passed, skill merged and equipped, profile reload passed. Screenshot: " + screenshot);
             UnityEngine.Object.Destroy(canvasObject);
+            yield return null;
+            yield return ValidateHomeDamageTest(slot, root);
             if (ownsEventSystem)
                 UnityEngine.Object.Destroy(eventSystem);
             Finish(true, null);
+        }
+
+        private static IEnumerator ValidateHomeDamageTest(string slot, string root)
+        {
+            yield return Zjcs.Presentation.Home.SkillDamageTestValidation.Exercise(slot, root, ValidationDirectory, SimulatePointerClick);
         }
 
         private static Button FindButton(string name)
@@ -776,10 +964,6 @@ namespace Zjcs.Editor.Skills
         private static void SimulatePointerClick(Selectable control)
         {
             Require(control != null && control.isActiveAndEnabled && control.interactable, "Cannot click an inactive skill UI button.");
-            Canvas targetCanvas = control.GetComponentInParent<Canvas>()?.rootCanvas;
-            foreach (GraphicRaycaster raycaster in UnityEngine.Object.FindObjectsOfType<GraphicRaycaster>(true))
-                if (raycaster.GetComponent<Canvas>()?.rootCanvas != targetCanvas)
-                    raycaster.enabled = false;
             Canvas.ForceUpdateCanvases();
             Transform hitTarget = control.targetGraphic == null ? control.transform : control.targetGraphic.transform;
             var pointer = new PointerEventData(EventSystem.current)
@@ -807,6 +991,22 @@ namespace Zjcs.Editor.Skills
             ExecuteEvents.ExecuteHierarchy(hit, pointer, ExecuteEvents.pointerDownHandler);
             ExecuteEvents.ExecuteHierarchy(hit, pointer, ExecuteEvents.pointerUpHandler);
             ExecuteEvents.ExecuteHierarchy(hit, pointer, ExecuteEvents.pointerClickHandler);
+        }
+
+        private static void SimulatePointerClickAt(GameObject target, Vector2 position)
+        {
+            var pointer = new PointerEventData(EventSystem.current) {
+                button = PointerEventData.InputButton.Left, position = position
+            };
+            var hits = new System.Collections.Generic.List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointer, hits);
+            Require(hits.Count > 0 && (hits[0].gameObject == target || hits[0].gameObject.transform.IsChildOf(target.transform)),
+                "The original skill text is obstructed at its link: " + position);
+            pointer.pointerEnter = hits[0].gameObject;
+            pointer.pointerPressRaycast = hits[0];
+            ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerDownHandler);
+            ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerUpHandler);
+            ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerClickHandler);
         }
 
         private static bool TryFindPointerPosition(GameObject target, out Vector2 position)
@@ -889,6 +1089,15 @@ namespace Zjcs.Editor.Skills
             bool passed = SessionState.GetBool(ResultKey, false);
             SessionState.SetBool(ExitKey, false);
             SessionState.SetBool(ResultKey, false);
+            if (passed && Environment.GetEnvironmentVariable("ZJCS_SKILLS_BUILD_AFTER_ACCEPTANCE") == "1")
+            {
+                try
+                {
+                    ProjectTools.Validate();
+                    OfficialSkillAssetTools.BuildWindowsValidation();
+                }
+                catch (Exception error) { Debug.LogException(error); passed = false; }
+            }
             EditorApplication.Exit(passed ? 0 : 1);
         }
 

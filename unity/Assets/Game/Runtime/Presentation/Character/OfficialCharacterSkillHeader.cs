@@ -172,13 +172,30 @@ namespace Zjcs.Presentation.Character
 
         private void CapturePortrait(string slotId, string savesRoot)
         {
-            var settings = CharacterModelPackage.AsObject(header["head_photography"], "head photography");
+            portrait = CaptureOriginalPortrait(progression, slotId, savesRoot,
+                CharacterModelPackage.AsObject(header["head_photography"], "head photography"));
+            RawImage image = player.Find("PublicPlayerIconHome/IconGo/ImgMask/HeadImg").GetComponent<RawImage>();
+            image.texture = portrait;
+            image.SetNativeSize();
+        }
+
+        internal static Texture2D CaptureOriginalPortrait(OfflineCharacterProgressionService progression,
+            string slotId, string savesRoot, Dictionary<string, object> settings = null)
+        {
+            if (settings == null)
+            {
+                var layout = CharacterModelPackage.AsObject(Offline.Equipment.OfficialEquipmentJson.Parse(
+                    OfficialSkillAssetCatalog.LoadDefault().UiLayouts.text, allowNonFinite: true), "skill layouts");
+                var source = CharacterModelPackage.AsObject(layout["shared_header"], "shared skill header");
+                settings = CharacterModelPackage.AsObject(source["head_photography"], "head photography");
+            }
             var offset = CharacterModelPackage.AsObject(settings["mOffset"], "head offset");
             var appearance = progression.ResolveAppearance();
             foreach (object type in (List<object>)settings["mExcludeSkinTypes"])
                 appearance.SkinByType.Remove(Convert.ToInt32(type, CultureInfo.InvariantCulture));
             GameObject model = CharacterCreationNativeModelFactory.CreatePreviewModel(slotId, savesRoot, appearance);
-            OfficialSkillPreviewMaterials.Bind(model, OfficialSkillAssetCatalog.LoadDefault().NativeCharacterShader);
+            // Portrait capture draws the verified GPU pass directly through a command buffer.
+            OfficialSkillPreviewMaterials.Bind(model, OfficialSkillAssetCatalog.LoadDefault().NativePortraitShader);
             try
             {
                 var photography = new CharacterPortraitPhotography
@@ -190,10 +207,7 @@ namespace Zjcs.Presentation.Character
                     offset = new[] { Convert.ToSingle(offset["x"], CultureInfo.InvariantCulture),
                         Convert.ToSingle(offset["y"], CultureInfo.InvariantCulture), Convert.ToSingle(offset["z"], CultureInfo.InvariantCulture) }
                 };
-                portrait = CharacterNativePortraitCapture.Capture(model, photography, "home/idle_01");
-                RawImage image = player.Find("PublicPlayerIconHome/IconGo/ImgMask/HeadImg").GetComponent<RawImage>();
-                image.texture = portrait;
-                image.SetNativeSize();
+                return CharacterNativePortraitCapture.Capture(model, photography, "home/idle_01");
             }
             finally { Destroy(model); }
         }

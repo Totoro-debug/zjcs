@@ -3,7 +3,9 @@ param(
     [string]$WatchProjectRoot = '',
     [string]$StatusPath = '',
     [int]$TimeoutSeconds = 0,
-    [switch]$ShowEditor
+    [switch]$ShowEditor,
+    [int]$ClientWidth = 0,
+    [int]$ClientHeight = 0
 )
 
 # Dot-source this file to launch a Unity editor/validation process on the laptop panel.
@@ -44,6 +46,7 @@ namespace Zjcs {
             public IntPtr Handle;
             public string ClassName, Title;
             public bool IsEditorMain;
+            public bool IsPlayerMain;
             public bool Visible;
         }
         delegate bool MonitorCallback(IntPtr monitor, IntPtr dc, ref Rect bounds, IntPtr data);
@@ -61,6 +64,7 @@ namespace Zjcs {
         [DllImport("user32.dll")] static extern bool IsZoomed(IntPtr window);
         [DllImport("user32.dll")] static extern bool ShowWindow(IntPtr window, int command);
         [DllImport("user32.dll", SetLastError = true)] static extern bool GetWindowRect(IntPtr window, out Rect bounds);
+        [DllImport("user32.dll", SetLastError = true)] static extern bool GetClientRect(IntPtr window, out Rect bounds);
         [DllImport("user32.dll", SetLastError = true)] static extern bool SetWindowPos(IntPtr window, IntPtr after, int x, int y, int width, int height, uint flags);
         [DllImport("user32.dll")] static extern IntPtr SetThreadDpiAwarenessContext(IntPtr context);
 
@@ -97,6 +101,7 @@ namespace Zjcs {
                     result.Add(new Window { Handle = window, ClassName = name.ToString(), Title = title.ToString(),
                         IsEditorMain = name.ToString() == "UnityContainerWndClass" && GetWindow(window, 4) == IntPtr.Zero &&
                             title.ToString().IndexOf("Unity", StringComparison.OrdinalIgnoreCase) >= 0,
+                        IsPlayerMain = name.ToString() == "UnityWndClass" && GetWindow(window, 4) == IntPtr.Zero,
                         Visible = IsWindowVisible(window) });
                 }
                 return true;
@@ -110,6 +115,29 @@ namespace Zjcs {
                 Rect bounds;
                 if (!GetWindowRect(window, out bounds)) throw new Win32Exception(Marshal.GetLastWin32Error());
                 return bounds;
+            } finally { if (previous != IntPtr.Zero) SetThreadDpiAwarenessContext(previous); }
+        }
+
+        public static bool PlacePlayer(IntPtr window, Display display, int clientWidth, int clientHeight) {
+            var previous = SetThreadDpiAwarenessContext(new IntPtr(-4));
+            try {
+                Rect outer, client;
+                if (!GetWindowRect(window, out outer) || !GetClientRect(window, out client)) return false;
+                int frameWidth = Math.Max(0, outer.Right - outer.Left - (client.Right - client.Left));
+                int frameHeight = Math.Max(0, outer.Bottom - outer.Top - (client.Bottom - client.Top));
+                var work = display.WorkArea;
+                double scale = Math.Min(1.0, Math.Min((work.Right - work.Left - frameWidth - 8.0) / clientWidth,
+                    (work.Bottom - work.Top - frameHeight - 8.0) / clientHeight));
+                int width = Math.Max(1, (int)Math.Round(clientWidth * scale)) + frameWidth;
+                int height = Math.Max(1, (int)Math.Round(clientHeight * scale)) + frameHeight;
+                int x = work.Left + (work.Right - work.Left - width) / 2;
+                int y = work.Top + (work.Bottom - work.Top - height) / 2;
+                // A hidden Player initially exposes a placeholder Win32 rectangle.
+                // Apply its requested client dimensions before showing it, or a
+                // placeholder WM_SIZE can replace Unity's portrait resolution.
+                if (!SetWindowPos(window, IntPtr.Zero, x, y, width, height, 0x14)) return false;
+                if (!IsWindowVisible(window)) ShowWindow(window, 4);
+                return true;
             } finally { if (previous != IntPtr.Zero) SetThreadDpiAwarenessContext(previous); }
         }
 
@@ -157,10 +185,22 @@ function Get-UnityInternalDisplay {
 function Start-UnityOnInternalDisplay {
     param([Parameter(Mandatory)][string]$Editor, [Parameter(Mandatory)][string[]]$ArgumentList)
     $display = Get-UnityInternalDisplay
-    $process = Start-Process -FilePath $Editor -ArgumentList $ArgumentList -WindowStyle Hidden -PassThru
+    # Launch the native executable directly. Preserve the existing argument
+    # quoting contract and keep the window hidden until the display watcher places it.
+    $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
+    $startInfo.FileName = $Editor
+    $startInfo.Arguments = $ArgumentList -join ' '
+    $startInfo.UseShellExecute = $false
+    $startInfo.WindowStyle = [System.Diagnostics.ProcessWindowStyle]::Hidden
+    $process = [System.Diagnostics.Process]::Start($startInfo)
     $helperPath = $MyInvocation.MyCommand.ScriptBlock.File
     $watchArguments = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', "`"$helperPath`"", '-WatchProcessId', $process.Id)
     if ($ArgumentList -notcontains '-batchmode') { $watchArguments += '-ShowEditor' }
+    $widthIndex = [Array]::IndexOf($ArgumentList, '-screen-width')
+    $heightIndex = [Array]::IndexOf($ArgumentList, '-screen-height')
+    if ($widthIndex -ge 0 -and $heightIndex -ge 0 -and $widthIndex + 1 -lt $ArgumentList.Length -and $heightIndex + 1 -lt $ArgumentList.Length) {
+        $watchArguments += @('-ClientWidth', $ArgumentList[$widthIndex + 1], '-ClientHeight', $ArgumentList[$heightIndex + 1])
+    }
     $engine = (Get-Process -Id $PID).Path
     Start-Process -FilePath $engine -ArgumentList $watchArguments -WindowStyle Hidden | Out-Null
     Write-Host "Unity process $($process.Id) targets internal display $($display.Device) ($($display.HardwareId))."
@@ -232,8 +272,10 @@ if ($WatchProcessId -gt 0) {
                 if (-not $firstSeen.ContainsKey($key)) { $firstSeen[$key] = [DateTime]::UtcNow }
                 # Let startup layout restoration finish, then allow the user to move windows freely.
                 if (([DateTime]::UtcNow - $firstSeen[$key]).TotalSeconds -le 10) {
-                    $show = $ShowEditor -and $window.IsEditorMain
-                    if ($window.Visible -or $show) { [void][Zjcs.UnityDisplay]::Place($window.Handle, $display, $show) }
+                    $show = $ShowEditor -and ($window.IsEditorMain -or $window.IsPlayerMain)
+                    if ($window.IsPlayerMain -and $show -and $ClientWidth -gt 0 -and $ClientHeight -gt 0) {
+                        [void][Zjcs.UnityDisplay]::PlacePlayer($window.Handle, $display, $ClientWidth, $ClientHeight)
+                    } elseif ($window.Visible -or $show) { [void][Zjcs.UnityDisplay]::Place($window.Handle, $display, $show) }
                 }
             }
             Start-Sleep -Milliseconds 250

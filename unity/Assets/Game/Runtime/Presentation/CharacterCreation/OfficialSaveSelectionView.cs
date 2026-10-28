@@ -138,13 +138,14 @@ namespace Zjcs.Presentation.CharacterCreation
             yield return null;
             yield return new WaitForEndOfFrame();
             var capture = RenderTexture.GetTemporary(Screen.width, Screen.height, 0);
+            RenderTexture previousTarget = RenderTexture.active;
             background = RenderTexture.GetTemporary(Mathf.Max(1, Screen.width / 13), Mathf.Max(1, Screen.height / 13), 0);
             try
             {
                 ScreenCapture.CaptureScreenshotIntoRenderTexture(capture);
                 Blur(capture, background);
             }
-            finally { RenderTexture.ReleaseTemporary(capture); }
+            finally { RenderTexture.active = previousTarget; RenderTexture.ReleaseTemporary(capture); }
             mask = Instantiate(assets.blurMask, transform, false);
             mask.name = "OfficialSaveBlurMask";
             Canvas maskCanvas = mask.GetComponent<Canvas>();
@@ -167,6 +168,7 @@ namespace Zjcs.Presentation.CharacterCreation
         // Original WindowBlurMask's four-level separable ScreenBlur passes.
         private static void Blur(RenderTexture capture, RenderTexture target)
         {
+            RenderTexture previousTarget = RenderTexture.active;
             Material material = Resources.Load<Material>("World/Mainline/ScreenBlur");
             if (material == null) throw new InvalidOperationException("Original ScreenBlur material is not bound.");
             var up = new RenderTexture[4];
@@ -203,6 +205,7 @@ namespace Zjcs.Presentation.CharacterCreation
             }
             finally
             {
+                RenderTexture.active = previousTarget;
                 foreach (var value in up) if (value != null) RenderTexture.ReleaseTemporary(value);
                 foreach (var value in down) if (value != null) RenderTexture.ReleaseTemporary(value);
             }

@@ -51,7 +51,8 @@ def restore(reader, rules, ui, city):
                 skill_professions[str(skill_id)] = row["Profession"]
     return {
         "ranges": ranges,
-        "skills": {str(row["ClassId"]): {"tags": row["Tags"], "user_type": row["UserType"]} for row in rules["skill"]},
+        "skills": {str(row["ClassId"]): {"tags": row["Tags"], "user_type": row["UserType"],
+            "hyperlink_data": row["HyperLinkDatas"], "hyperlink_types": row["HyperLinkTypes"]} for row in rules["skill"]},
         "tag_names": tag_names,
         "professions": professions,
         "skill_professions": skill_professions,

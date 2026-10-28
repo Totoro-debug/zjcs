@@ -36,7 +36,18 @@ def restore(reader):
         folder_meta.write_text("fileFormatVersion: 2\nguid: "
             + uuid.uuid5(uuid.NAMESPACE_URL, "zjcs-official-character-code").hex
             + "\nfolderAsset: yes\nDefaultImporter:\n  externalObjects: {}\n  userData:\n  assetBundleName:\n  assetBundleVariant:\n", encoding="utf-8")
+    # The skill entrance keeps the native Home sky alive. Reuse its Windows
+    # program only after checking the pinned APK object, independently of Map13.
+    home_name = "Universal Render Pipeline/2D/Sprite-Lit-ColorShift"
+    home_original = next(row["original"] for row in receipt["inputs"] if row["original"]["name"] == home_name)
+    home_obj = reader.object(home_original["input"], home_original["path_id"])
+    assert sha(home_obj.get_raw_data()) == home_original["payload_sha256"]
+    home_output = next(row for row in receipt["outputs"] if row.get("original_shader") == home_name)
+    assert sha((ROOT / home_output["path"]).read_bytes()) == home_output["sha256"]
     return {"source": reader.apk.provenance(obj), "object_sha256": sha(obj.get_raw_data()),
             "conversion_reference": receipt_path.relative_to(ROOT).as_posix(), "verified_conversion": output,
+            "urp_output": output,
+            "home_sky_dependency": {"source": reader.apk.provenance(home_obj),
+                "object_sha256": sha(home_obj.get_raw_data()), "verified_conversion": home_output},
             "output": {"path": target.relative_to(ROOT).as_posix(), "sha256": sha(target.read_bytes())},
             "adaptation": "Select the original Universal2D pass with the built-in desktop preview camera. Preserve all original GPU variants, alpha unpremultiplication, HSV arithmetic, saturation clamp, alpha discard, blending and depth/stencil state."}

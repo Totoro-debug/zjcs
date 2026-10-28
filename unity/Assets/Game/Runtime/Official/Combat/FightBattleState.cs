@@ -367,6 +367,8 @@ namespace Zjcs.Combat.Official
     {
         public int Slot;
         public int ItemId;
+        public int UseItemId;
+        public int SkillSkinId;
         public int EntityId;
         public int Rank;
         public int Level;

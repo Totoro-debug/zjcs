@@ -460,13 +460,14 @@ namespace Zjcs.Presentation.Home
             for (int slot = 0; slot < equipped.Length; slot++)
             {
                 int itemId = equipped[slot]; if (itemId <= 0) continue;
-                FightOfficialSkillItem item = items.Required(itemId);
+                int skinId = player.Wardrobe?.SkillSkins?.FirstOrDefault(value => value.SkillId == itemId)?.SkillSkinId ?? 0;
+                FightOfficialSkillItem item = items.RequiredForSkin(itemId, skinId);
                 int rank = Math.Max(1, OfflineSkillProgression.OwnedRank(player.Skills, itemId));
                 int level = player.Skills.ActiveSlotLevels != null && slot < player.Skills.ActiveSlotLevels.Length
                     ? Math.Max(1, player.Skills.ActiveSlotLevels[slot]) : 1;
-                active.Add(new FightOfficialSkillBinding { EntityId = item.EntityId, Slot = slot, ItemId = itemId,
+                active.Add(new FightOfficialSkillBinding { EntityId = item.EntityId, Slot = slot, ItemId = itemId, UseItemId = item.ItemId, SkillSkinId = skinId,
                     Rank = rank, Level = level,
-                    ProfessionAvailability = items.ProfessionAvailabilityFor(itemId,
+                    ProfessionAvailability = items.ProfessionAvailabilityFor(item.ItemId,
                         unit.Profession, currentWeaponType, player.InitialWeaponType),
                     SubRank = player.SubRank,
                     Cooldown = combat.CalculateSkillCooldown(item.EntityId, rank, level, player.SubRank, properties),

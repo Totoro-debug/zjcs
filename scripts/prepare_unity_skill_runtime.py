@@ -144,6 +144,7 @@ def build(data):
         maximum_by_rank[rank] = max(maximum_by_rank.get(rank, 0), row["SkillLevel"])
     cultivation = data["cultivation"]["tables"]
     return {
+        "PlanCount": rules["game_settings"]["SkillPlanMaxCount"],
         "Skills": definitions,
         "GiftShowCount": rules["game_settings"]["AchievementPanelShowCount"],
         "GiftTemplates": [{"RawId": row["Id"], "Group": row["Group"],

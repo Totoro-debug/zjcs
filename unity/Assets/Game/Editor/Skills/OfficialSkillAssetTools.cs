@@ -5,6 +5,8 @@ using System.Security.Cryptography;
 using System.Text;
 using UnityEditor;
 using UnityEditor.Build;
+using UnityEditor.Build.Reporting;
+using System.Linq;
 using UnityEngine;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.Skills;
@@ -14,6 +16,31 @@ namespace Zjcs.Editor.Skills
 {
     public static class OfficialSkillAssetTools
     {
+        public static void BuildWindowsValidation()
+        {
+            string root = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+            if (string.IsNullOrWhiteSpace(root) || !Path.IsPathRooted(root))
+                throw new BuildFailedException("A skills Windows validation requires ZJCS_VALIDATION_DIR.");
+            Validate();
+            ScriptingImplementation previous = PlayerSettings.GetScriptingBackend(NamedBuildTarget.Standalone);
+            try {
+                PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, ScriptingImplementation.Mono2x);
+                string destination = Path.Combine(root, "Player", "杖剑传说.exe");
+                Directory.CreateDirectory(Path.GetDirectoryName(destination));
+                OfficialSkillRuntimeShaderBuild.Prepare();
+                var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
+                    scenes = EditorBuildSettings.scenes.Where(value => value.enabled).Select(value => value.path).ToArray(),
+                    locationPathName = destination, target = BuildTarget.StandaloneWindows64, options = BuildOptions.None
+                });
+                if (report == null || report.summary.result != BuildResult.Succeeded)
+                    throw new BuildFailedException("Skills Windows Player build failed.");
+                Debug.Log("[Skills] Windows Player built: " + destination);
+            } finally {
+                OfficialSkillRuntimeShaderBuild.Restore();
+                PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, previous);
+            }
+        }
+
         private const string PayloadRoot = "Assets/Official/Skills/";
         private const string ResourcesRoot = "Assets/Game/Resources/Skills";
         private const string CatalogPath = ResourcesRoot + "/OfficialSkillAssetCatalog.asset";
@@ -47,6 +74,7 @@ namespace Zjcs.Editor.Skills
         [MenuItem("Zjcs/Validate/Official Skills Assets")]
         public static void Validate()
         {
+            Zjcs.Editor.Home.OfficialHomeAssetTools.BindRuntimeShaders();
             string catalogFolder = "Assets/Game/Resources";
             if (!AssetDatabase.IsValidFolder(catalogFolder)) AssetDatabase.CreateFolder("Assets/Game", "Resources");
             if (!AssetDatabase.IsValidFolder(ResourcesRoot)) AssetDatabase.CreateFolder(catalogFolder, "Skills");
@@ -96,6 +124,11 @@ namespace Zjcs.Editor.Skills
             if (nativeCharacterShader == null || !nativeCharacterShader.isSupported)
                 throw new BuildFailedException("Original skill character preview shader did not compile.");
             serialized.FindProperty("nativeCharacterShader").objectReferenceValue = nativeCharacterShader;
+            var nativeUrpShader = AssetDatabase.LoadAssetAtPath<Shader>(
+                "Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipelineSpineSkeletonDye2D_ffd6b8c6.shader");
+            if (nativeUrpShader == null || !nativeUrpShader.isSupported)
+                throw new BuildFailedException("Original URP character shader did not compile.");
+            serialized.FindProperty("nativeCharacterUrpShader").objectReferenceValue = nativeUrpShader;
             spriteArray.arraySize = sprites.Count;
             for (int i = 0; i < sprites.Count; i++)
             {
@@ -137,6 +170,8 @@ namespace Zjcs.Editor.Skills
             ValidateSourceHashes(payloads[6].text);
             ValidateDerivedSkillPieceMetadata(characterCatalog.Load());
             OfflineSkillRules progressionRules = catalog.LoadProgressionRules();
+            if (progressionRules.PlanCount != OfflineSkillProfile.PlanCount)
+                throw new BuildFailedException("Official skill plans must match GameSettings.SkillPlanMaxCount.");
             if (progressionRules.Skills.Length != 394)
                 throw new BuildFailedException("Official skill progression rules did not load all 394 active and passive skills.");
             if (catalog.FindSprite("res://assets/official/sprites/ImgDot-4ed3349f24.png") == null)

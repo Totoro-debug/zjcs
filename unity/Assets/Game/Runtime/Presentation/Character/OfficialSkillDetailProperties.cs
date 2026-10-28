@@ -40,7 +40,7 @@ namespace Zjcs.Presentation.Character
             texts = Obj(OfficialEquipmentJson.Parse(assets.FidelityTexts.text));
         }
 
-        public List<Row> Calculate(int skillId, int rank, int level, int subRank)
+        public List<Row> Calculate(int skillId, int rank, int level, int subRank, int validDigits = 3)
         {
             if (!skills.TryGetValue(skillId, out var skill))
                 throw new InvalidOperationException("Original skill view configuration is absent: " + skillId);
@@ -64,18 +64,18 @@ namespace Zjcs.Presentation.Character
             var rows = new List<Row>();
             Fill(0, formula.CalculatePassiveSkillProps(Int(skill, "PassiveRankPropId"),
                 Int(skill, "PassiveGroupLevelPropId"), Int(skill, "PassiveRankFactorId"),
-                LongMap(skill, "PassivePropFactors"), rank, level, subRank), addition, rank, rows);
+                LongMap(skill, "PassivePropFactors"), rank, level, subRank), addition, rank, rows, validDigits);
             foreach (int id in views)
             {
                 if (Component(id, "FightSkillComponent") != null || Component(id, "FightStatusComponent") != null)
-                    Fill(id, formula.CalculateSkillProps(id, rank, level, subRank), addition, rank, rows);
+                    Fill(id, formula.CalculateSkillProps(id, rank, level, subRank), addition, rank, rows, validDigits);
                 else
                 {
                     int summon = SummonId(Component(id, "FightHitSummonComponent"));
                     var config = Table("summon_monster_fix_prop").FirstOrDefault(row => Int(row, "EntityId") == summon);
                     if (config != null)
                         Fill(id, formula.CalculatePassiveSkillProps(Int(config, "RankPropId"),
-                            Int(config, "GroupLevelPropId"), 0, LongMap(config, "PropFactors"), rank, level, subRank), addition, rank, rows);
+                            Int(config, "GroupLevelPropId"), 0, LongMap(config, "PropFactors"), rank, level, subRank), addition, rank, rows, validDigits);
                 }
             }
             foreach (string key in List(skill, "ViewPropBlackList").Select(Convert.ToString))
@@ -91,14 +91,14 @@ namespace Zjcs.Presentation.Character
         }
 
         private void Fill(int entityId, IReadOnlyDictionary<int, long> props,
-            Dictionary<string, object> addition, int rank, List<Row> rows)
+            Dictionary<string, object> addition, int rank, List<Row> rows, int validDigits)
         {
             foreach (var pair in props)
             {
                 OfficialPropDefinition definition = character.Props.Get(pair.Key);
                 if (definition == null) throw new InvalidOperationException("Original skill property config is absent: " + pair.Key);
                 if (definition.SkillHide) continue;
-                string value = pair.Value == 0 ? string.Empty : Format(definition, pair.Value, false);
+                string value = pair.Value == 0 ? string.Empty : Format(definition, pair.Value, false, validDigits);
                 if (addition != null)
                 {
                     var additions = LongMap(addition, "PropAdditions");
@@ -108,12 +108,12 @@ namespace Zjcs.Presentation.Character
                             Int(row, "RankGroup") == Int(addition, "RankGroup") && Int(row, "Rank") == rank);
                         long rankFactor = factor != null && LongMap(factor, "PropFactors").TryGetValue(pair.Key, out long f) ? f : 0;
                         long percent = (long)((multiplier / 10000.0) * (rankFactor / 10000.0) * 10000.0);
-                        value = Format(definition, percent, true) + (pair.Value == 0 ? string.Empty : "+" + Format(definition, pair.Value, false));
+                        value = Format(definition, percent, true, validDigits) + (pair.Value == 0 ? string.Empty : "+" + Format(definition, pair.Value, false, validDigits));
                     }
                 }
                 else if (definition.Percent && percentValues.TryGetValue(pair.Key.ToString(CultureInfo.InvariantCulture), out object rawValueId)
                     && props.TryGetValue(Convert.ToInt32(rawValueId), out long extra) && extra != 0)
-                    value += "+" + Format(character.Props.Get(Convert.ToInt32(rawValueId)), extra, false);
+                    value += "+" + Format(character.Props.Get(Convert.ToInt32(rawValueId)), extra, false, validDigits);
                 string propName = Convert.ToString(propertyNames[pair.Key.ToString(CultureInfo.InvariantCulture)]);
                 string key = entityId > 0 ? entityId.ToString(CultureInfo.InvariantCulture) + "." + propName : null;
                 if (key == null || !texts.ContainsKey(key)) key = "PropType." + propName;
@@ -123,10 +123,20 @@ namespace Zjcs.Presentation.Character
             }
         }
 
-        private static string Format(OfficialPropDefinition definition, long value, bool percent)
+        private static string Format(OfficialPropDefinition definition, long value, bool percent, int validDigits)
         {
             value = Math.Abs(value);
-            return percent ? OfficialPropFormat.Percent(value) : OfficialPropFormat.Value(definition, value);
+            if (percent) return OfficialPropFormat.Percent(value);
+            if (validDigits == 3 || definition.Percent || definition.Float) return OfficialPropFormat.Value(definition, value);
+            // CultureNumberFormatterBase.FormatCompact / NumberFormatHelper.
+            string[] symbols = { "", "万", "亿", "兆", "京" };
+            double number = value;
+            int symbol = 0;
+            while (number >= 10000 && symbol < symbols.Length - 1) { symbol++; number /= 10000; }
+            string text = number.ToString(CultureInfo.InvariantCulture);
+            int point = text.IndexOf('.');
+            if (point >= 0) text = point >= validDigits ? text.Substring(0, point) : text.Substring(0, Math.Min(validDigits + 1, text.Length));
+            return double.Parse(text, CultureInfo.InvariantCulture).ToString(CultureInfo.InvariantCulture) + symbols[symbol];
         }
 
         private void CollectSummons(int id, HashSet<int> found, HashSet<int> closed)
