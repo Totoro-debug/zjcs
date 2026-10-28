@@ -54,6 +54,10 @@
 
 - 原演出核心的 22 份 C# 源码已迁移，包含 `MyPlayable`、序列、双阶段调度、延迟增删、互斥、引用计数、触发器、回调、原始有序容器、源对象应用与粒子淡入淡出，保留原数值和状态顺序。隔离工程的 Unity 编译、完整工程校验及 Play Mode 逻辑验证通过：速度／初始帧、淡入淡出／回调顺序、互斥延时、引用计数、帧内增删、暂停／隐藏／恢复、序列及错误停止。3 项迁移回归防止日志适配吞掉原编号异常分支与后续方法。当前只证明调度状态逻辑；原生视觉、Timeline、相机／音频、正式地图输入和存档仍未完成。
 
+- 龙之国音频已从所选官方 APK／871 云端包恢复为 418 个无损 PCM 素材：400 个直接对白、17 个演出独立素材及地图 BGM。读取实际 EventBankMapping、HIRC、DIDX／DATA 与流式 WEM，保留来源哈希、原总线／FX／RTPC 字段和对象原始字节；不使用旧 Ogg 二次有损转换。BGM 保留原四类事件、Sine 渐变时长与 −1dB MakeUpGain 配置，实际总线 DSP 尚待实现。
+- `chapter_5_main_36_17` 并非缺少官方语音：原 `CallDragon` 设置“龙国圣兽地台”状态后，由 `SuiMo_StoryShow02Timeline` 在 5.5166667／7.7333333 秒触发 `_17_1`／`_17_2`，并显示 `bubble_dialog_16_0`／`16_1`。已恢复全部 5 份实体 Timeline、原轨道／片段字段和 4 条气泡配置／中文；不把两段语音拼接为直接对白，也不以静音代替。六项实体 Timeline 音频连同原演出共 17 项引用、24 个顺序动作，保留 400／1000／1700／5000 毫秒延迟及对象静音／取消静音动作；流式预取片段与完整 WEM 分别记录。
+- 音频来源解析 5 项回归、根工程静态检查（68,630 个 GUID）、隔离 Unity 导入／编译及 `ProjectTools.Validate` 通过。内置屏带画面 Play Mode 对全部 418 个素材逐采样比较原 PCM、核对导入参数并执行实际 AudioSource／监听器输出，全部通过。本次只验证素材与设备播放；正式对白／Timeline 调用、原总线 DSP／RTPC、气泡窗和实体绑定、地图输入／存档及 Windows Player 尚未完成。恢复入口为 `scripts/prepare_unity_map14_audio.py`、`prepare_unity_map14_dialogue_audio.py`、`prepare_unity_map14_playable_audio.py`、`prepare_unity_map14_entity_timelines.py`；来源为 Map14 audio／dialogue-audio／playable-audio／entity-timelines 四份清单。
+
 ## 自定义实现
 
 原演出核心以显式中心注入及调用方提供两个原帧阶段替代 DI／R3 注册；日志接入 Unity，移除只用于 Inspector／MessagePack 的属性。调度、数值、状态和回调顺序保留，正式宿主的生命周期接入仍待验证。
