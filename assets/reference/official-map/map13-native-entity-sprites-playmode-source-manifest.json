@@ -1,0 +1,31 @@
+{
+  "source_sha256": "64a74a54d1008d942d8ecc5fe6fc9705e25d392edaec5d7f10b8d0ffe622a4c2",
+  "backend": "Direct3D11",
+  "editor": "2022.3.57f1c2",
+  "coverage": "Original native Sprite resources, GPU mip bytes, geometry, material gallery and explicit component binding only. Full entities, map inputs/save and Windows Player remain pending.",
+  "packages": 62,
+  "sprites": 230,
+  "renderer_bindings": 808,
+  "original_null_bindings": 4,
+  "textures": 484,
+  "gpu_mips": 506,
+  "rendered_pixels": 1532069,
+  "play_mode": true,
+  "verification_inputs": [
+    {
+      "path": "unity/Assets/Game/Editor/Map13EntitySprites/OfficialMap13EntitySpriteAcceptance.cs",
+      "sha256": "72cc2f57ead0c2d5f339897c968bc999cb3517472c3e087c6ea1ca6e09979c11"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13EntitySprites/Zjcs.Editor.Map13.EntitySprites.asmdef",
+      "sha256": "ea4d56d7a5bfbc9ba16889a21fe6382aa79f5db7319ac1fe320a25586de10fea"
+    }
+  ],
+  "source_unity_version": "2022.3.57f1",
+  "native_platform": 19,
+  "source_sprite_atlas_payloads": "byte-identical, verified after repack",
+  "actual_runtime_galleries_reviewed": 4,
+  "unity_import_compile_global_validate": "passed",
+  "source_manifest": "assets/reference/official-map/map13-native-entity-sprites-source-manifest.json",
+  "static_guid_check": 73419
+}
