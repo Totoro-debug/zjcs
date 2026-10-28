@@ -1,0 +1,142 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyVisibility.cs",
+      "sha256": "3dec179e45442314a76f598244a56bab2867175c820ebb153e2cf001491b398e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyVisibilityGrid.cs",
+      "sha256": "3d4ed9d1860e76d549d27a50d422d2f1c6f58d2b5b4030ca6ea14073945d9751"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews/ECClientVisibilityView.cs",
+      "sha256": "05587f2d97bca9c2779548724245fa0c9cf1f03bf8bdb517893082f0d554d551"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews/ECEntityInteractionShowView.cs",
+      "sha256": "ce0941612d26a8930590490b4668b9e1bcd2384dba2b0e50712ffbbbe99d4d7f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews/ClientVisibilityType.cs",
+      "sha256": "ff3e9313add9ccc85997b823cf016c39c2d7d73e097b338210c38badac128fce"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews/EcEntitySourceType.cs",
+      "sha256": "be531bfd45843bd6c507074bd5a2ab3e7e6a7a7346f843e7d82f55f609eec5b4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews/EntityOwnershipType.cs",
+      "sha256": "396a0996705db874e0e074003d599afa6329f7be1238759462b45867de0ca3df"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews/EntitySourceTypeShowNode.cs",
+      "sha256": "2654ade65af3365a9a4a2a58459f147ffbc18ce19c59dc07436ff2af27c81558"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews/IMyVisibility.cs",
+      "sha256": "4ee35e7a5742a028948186338ac58d28b3c054b2e4d2d8d0490fcc47233ddde7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews/IClientVisibilityHandler.cs",
+      "sha256": "f67369e818710323df030f01d7209bf84b79a401408b0deb74f3780672044fa2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews/IEntityClientVisibilityHandlerFactory.cs",
+      "sha256": "2bdfaac7613c963e5ec528091089c25fd469d371464db9017e7373f3e8d482b2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews/EcEntityClientVisibilityUpdatedEventDelegate.cs",
+      "sha256": "9d2f666a3526ee09f9ad5fb7f17d7f29cf5d000da93a4e957f0238041cf11bb6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews/EcEntityPlayerInteractionUpdateEventDelegate.cs",
+      "sha256": "d86c4bbd9f1e574c68e29fcc39a58baf8fa428c9ae9c6e79a42efdb50b8286ba"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews/IEcEntityClientVisibilityUpdatedEventReceiver.cs",
+      "sha256": "015a8205eef059d35ad4ab67b3bb03095843025b2c36a723d7ea7bb76809adcc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews/IEcEntityPlayerInteractionUpdateEventReceiver.cs",
+      "sha256": "94c9e1e55f4db124d0ffd965229a2e9072b5891d2cf666f74ba9e1afe523321b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews/PresentationBoundaries.cs",
+      "sha256": "458d4ef5a7dcf16d5876e0a97b594443cd94c9a273701232926332480b7756fb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews/Map13VisibilityData.cs",
+      "sha256": "4653852cea2eca07b8b74e5ea70a8022370793a7e6126509fd38560538860291"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews/Map13EntitySourceQuery.cs",
+      "sha256": "7abd3007d88ad119da232b42be0d71ef444581b4b54a4f2e79dc50f5d4c0c05d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews/Map13EntityInteractionQuery.cs",
+      "sha256": "79e264bfe2b339b29b0189a425651a5317a23e996d348a58959fe9ccc3c88bdb"
+    },
+    {
+      "path": "assets/reference/official-map/map13-entity-visibility-views-source-manifest.json",
+      "sha256": "c1e5452e8ba02393e9ac3aa1d5c9814bd06393420cb2fccdaaea384f2dc7d896"
+    },
+    {
+      "path": "assets/reference/official-map/map14-entity-lifecycle-source-manifest.json",
+      "sha256": "84b6b0ee469c17535d6831a70e7327841a661e4ac73d22b5e8ec51ab4b5501ab"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_entity_root_visibility.py",
+      "sha256": "22a1716fa278b5900772d8ea2653437f737b7d1f53ece93ce977ac292d1af1e8"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRootVisibility/MyVisibility.cs",
+      "sha256": "fb2dc8ac93aa6e29a28b11d2a9307310e1e7ed6eac284c368f020ed984eedece"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRootVisibility/MyVisibility.cs.meta",
+      "sha256": "df97a8da617ef0c980ebaa4127804fd45a217fee3fecd17b4a6154cc0b6f2f7e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRootVisibility/MyVisibilityGrid.cs",
+      "sha256": "6257c8e585510fa2cad7e4781baed1a81c8516cbe90ada4b4bf3317253a59f8f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRootVisibility/MyVisibilityGrid.cs.meta",
+      "sha256": "8995db159e0d55daadd80cdc19ebaba0ecdfade6475891f5c8e68312f6c68c9b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRootVisibility/Zjcs.Official.EntityRootVisibility.asmdef",
+      "sha256": "c1f63ac6514f07a252c4b9e86b4f526ea385ff77f1fb03358d4bdec099d88951"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRootVisibility/Zjcs.Official.EntityRootVisibility.asmdef.meta",
+      "sha256": "e9a6f95f2576aa1782f04be2cad980bd78fc908375ed42cfa2ed17c4d437f284"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRootVisibility.meta",
+      "sha256": "daae698c52fc0de152042e125c0aaf7c5676a0bda7a582f2f943a71c88013947"
+    }
+  ],
+  "operation": "Copy complete original MyVisibility generic classes and MyVisibilityGrid. Reuse same-version original visibility flags, update delegates, handler interfaces/factory and EC view. Bind consumed visibility state through the existing shared-state surface; generic source visibility field access casts that required surface, with no state rules supplied. Preserve EC-view bypass, start flag, fade event gates, clear/create/init/subscribe ordering, all-handler visibility check, source request rebuild, changed-only visibility/fade/event publication and end teardown. Dependency injection becomes explicit host property.",
+  "limitations": [
+    "Formal shared visibility state/handlers, native root prefab/input/save and Player remain required."
+  ]
+}

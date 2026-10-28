@@ -2070,3 +2070,8 @@ Map13 原世界进度渲染：`scripts/prepare_unity_map13_entity_rendering.py` 
 龙之国原地图显示服务：`map14-map-display-runtime-source-manifest.json` 记录完整原 MapDisplayManager／MapDisplayPoolHandle／MyMapDisplay 与接口、同版本已迁入的原选择解析器，以及全部 1,253 条原选择行和四份原 DisplayPath 的本地资源绑定。运行前注入使用 `NativeMap14DisplayInstantiation`，未迁入地址显式失败。带画面隔离运行通过动态取得／FIFO 回收复用／低内存释放后重新加载，正式地图实体根／业务／存档和 Player 待接入。
 
 Map13 完整原藤蔓实体：`scripts/prepare_unity_map13_tree_entities.py` 以已验证的原 Model、原外层层级／组件／托管引用和原三份演出恢复普通／雪地两份完整 prefab，共 340 个原对象、18 个原视图；原 UI／寿命条、Sprite、材质、原引用和字段均显式保留。具体可序列化身份继承完整原共享代码，不实现替代规则。两种实体在内置屏 Direct3D11 Play Mode 通过原驱动器注册／加载、出生转循环、结果数量显示、显隐恢复、阶段切换、消散和卸载解绑，6 份原池化演出及四张实际画面已核对；全部运行依赖哈希、Unity 导入／编译、全局校验及 73,931 个 GUID 静态检查通过。完整来源／输出／执行哈希见 `official-map/map13-native-tree-entities-source-manifest.json` 与 `official-map/map13-native-tree-entities-playmode-source-manifest.json`。正式地图输入／状态／奖励／存档及 Player 仍待接入，见[泽之国](../../docs/maps/map-13.md)；本批未生成完整素材快照。
+
+龙之国原实体生命周期：`map14-entity-lifecycle-source-manifest.json` 核验当前 Assembly-CSharp／Console、22 份原类／接口／委托及同版本原事件分发器。`Runtime/Official/EntityLifecycle/` 保留完整客户端执行顺序；`Runtime/Offline/World/NativeMap14EntityLifecycle/NativeMyEntityBinding.cs` 只适配已迁视图接口，正式共享状态须另外提供。四种原雕像显示已在原 MyEntity 生命周期中运行并核对画面，正式实体根／业务／存档／Player 待接通。
+
+龙之国原根可见性：`map14-entity-root-visibility-source-manifest.json` 记录完整 MyVisibility／MyVisibilityGrid、同版本原可见性依赖及原程序集哈希。原 MapClientVisibilitySupporter 驱动四类雕像隐藏／恢复、请求重建与结束解绑已在带画面隔离运行中验证；正式共享处理器、地图条件、淡出桥及 Player 继续绑定。
+

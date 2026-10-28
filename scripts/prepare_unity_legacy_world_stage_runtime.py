@@ -104,9 +104,12 @@ def build():
     base_text = re.sub(r'\bMyEntity\b', 'ECViewEntityBinding', base_text)
     base_text = re.sub(r'\bMySerializable\b', 'object', base_text)
     base_text = re.sub(r'\bT\b', 'LegacyWorldStageComponentData', base_text)
-    base_text = base_text.replace('public override void Bind()', 'public virtual void Bind()')
+    base_text = base_text.replace('public virtual void OnStart(', 'public override void OnStart(')
+    base_text = base_text.replace('public virtual void OnEnd(', 'public override void OnEnd(')
+    base_text = base_text.replace('protected ECViewEntityBinding _myEntity;', 'protected new ECViewEntityBinding _myEntity;')
+    base_text = base_text.replace('public ECViewEntityBinding myEntity', 'public new ECViewEntityBinding myEntity')
     base_text = ('// Consumed original MyComponent members, selected mechanically.\nusing UnityEngine;\n' + imports +
-                 'namespace ' + NAMESPACE + '\n{\npublic abstract class LegacyWorldStageComponent : UnityEngine.MonoBehaviour\n{\n' +
+                 'namespace ' + NAMESPACE + '\n{\npublic abstract class LegacyWorldStageComponent : Zjcs.Official.EntityLifecycle.MyComponent\n{\n' +
                  base_text + '\n}\n}\n')
     outputs = []
     for name, content in (('MyWorldStage.cs', text), ('LegacyWorldStageComponent.cs', base_text),
@@ -116,7 +119,7 @@ def build():
         outputs += [target, target.with_suffix(target.suffix + '.meta')]
     asmdef = OUTPUT / (NAMESPACE + '.asmdef')
     write(asmdef, encode(dict(name=NAMESPACE, rootNamespace=NAMESPACE, autoReferenced=True,
-          references=['Zjcs.Official.EntityViews', 'Zjcs.Official.EntityWorldStages',
+          references=['Zjcs.Official.EntityLifecycle', 'Zjcs.Official.EntityViews', 'Zjcs.Official.EntityWorldStages',
                       'Zjcs.Official.StoryPlayables', 'Zjcs.Official.StorySourceFade',
                       'Zjcs.Official.StoryPlayableManager',
                       'Zjcs.Official.World', 'Zjcs.Official.WorldUI'])))
@@ -126,7 +129,8 @@ def build():
         assemblies=[record(p) for p in assemblies], inputs=[record(source), record(base)],
         tools=[record(ROOT / 'scripts/prepare_unity_legacy_world_stage_runtime.py'),
                record(ROOT / 'scripts/prepare_unity_story_sound_runtime.py')],
-        dependencies=[record(ROOT / 'unity/Assets/Game/Runtime/Official/EntityWorldStages/LegacyWorldStageStateCfg.cs'),
+        dependencies=[record(ROOT / 'assets/reference/official-map/map14-entity-lifecycle-source-manifest.json'),
+                      record(ROOT / 'unity/Assets/Game/Runtime/Official/EntityWorldStages/LegacyWorldStageStateCfg.cs'),
                       record(ROOT / 'assets/reference/official-map/map14-entity-world-stage-views-source-manifest.json')],
         outputs=[record(p) for p in outputs],
         operation='Copy the complete original MyWorldStage, reuse its original nested StageStateCfg declaration, and mechanically select its consumed MyComponent members. Preserve Awake/start/end order, EC-view delegation, visibility/fade gates, replacement, state switcher, appearance and state/start/loop callbacks, asynchronous stop behavior, separate uncontrolled loop, state queries, movement interaction flag and redirect lookup. Replace DI with explicit properties and original entity/shared-state access with required host surfaces; do not invent state transitions or interaction rules.',

@@ -10,11 +10,11 @@ using Zjcs.Official.World;
 using Zjcs.Official.WorldUI;
 namespace Zjcs.Official.LegacyWorldStages
 {
-public abstract class LegacyWorldStageComponent : UnityEngine.MonoBehaviour
+public abstract class LegacyWorldStageComponent : Zjcs.Official.EntityLifecycle.MyComponent
 {
-	protected ECViewEntityBinding _myEntity;
+	protected new ECViewEntityBinding _myEntity;
 
-	public ECViewEntityBinding myEntity
+	public new ECViewEntityBinding myEntity
 	{
 		get
 		{
@@ -26,11 +26,11 @@ public abstract class LegacyWorldStageComponent : UnityEngine.MonoBehaviour
 		}
 	}
 
-	public virtual void OnStart(bool newEntity)
+	public override void OnStart(bool newEntity)
 	{
 	}
 
-	public virtual void OnEnd(object userData)
+	public override void OnEnd(object userData)
 	{
 	}
 
@@ -40,7 +40,7 @@ public abstract class LegacyWorldStageComponent : UnityEngine.MonoBehaviour
 	{
 	}
 
-	public virtual void Bind()
+	public override void Bind()
 	{
 		Component = myEntity.Entity.GetComponent<LegacyWorldStageComponentData>();
 	}

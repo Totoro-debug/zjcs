@@ -24,7 +24,7 @@
   "tools": [
     {
       "path": "scripts/prepare_unity_legacy_world_stage_runtime.py",
-      "sha256": "2cd85950163a9f6ca8841c90e3a678a9ac05d270a6da27133677e23036aae976"
+      "sha256": "dfe628bc069b9d48da79fbf1631797b5399e2abcb96f3dffeba60f7175e997aa"
     },
     {
       "path": "scripts/prepare_unity_story_sound_runtime.py",
@@ -32,6 +32,10 @@
     }
   ],
   "dependencies": [
+    {
+      "path": "assets/reference/official-map/map14-entity-lifecycle-source-manifest.json",
+      "sha256": "84b6b0ee469c17535d6831a70e7327841a661e4ac73d22b5e8ec51ab4b5501ab"
+    },
     {
       "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/LegacyWorldStageStateCfg.cs",
       "sha256": "681085c6357315cc1ce7151fa97c9dddd70e5aaa80080a0f5b6e642d1d5e5663"
@@ -52,7 +56,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/LegacyWorldStages/LegacyWorldStageComponent.cs",
-      "sha256": "789a3c15cfbd6a79bc3a7c748d224aaafa71adbd27293a86bfe1258069072f19"
+      "sha256": "6c77c48953f0c92ee0ed60ecf25162426994a42c9dd2d7c9bd8eea6a4a4c22c5"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/LegacyWorldStages/LegacyWorldStageComponent.cs.meta",
@@ -68,7 +72,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/LegacyWorldStages/Zjcs.Official.LegacyWorldStages.asmdef",
-      "sha256": "85874cba81d8d03e61886662453f437363aa30c5c7597e8d2b8132c8c30cccb0"
+      "sha256": "b3ec99e6c5497bafb823ef0f41c774300dc953c2884514ddc48feff05c3d83e7"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/LegacyWorldStages/Zjcs.Official.LegacyWorldStages.asmdef.meta",

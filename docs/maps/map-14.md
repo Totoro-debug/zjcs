@@ -106,6 +106,10 @@
 
 - 原 `MapDisplayManager`、`MapDisplayPoolHandle`、`MyMapDisplay` 与接口已迁入 `Runtime/Official/MapDisplays/`，复用同为 871 版本且已核验来源的原 `EntityMapDisplayInfoParser`；保留对象引用作为池键、完整 Group／Map／Area／Ground／Tag 选择与逐层回退、资源有效位／状态 2 条件、FIFO 队列、借出计数、首子节点／位置／激活顺序、回收分支和低内存逆序移除。`Resources/Map14/Native/map-display-catalog` 随包保留全部 1,253 条原选择配置，四份已迁入显示 prefab 按原 DisplayPath 显式绑定，尚未迁入的显示地址明确失败；本地实例工厂在激活前绑定原 Sprite 与依赖。隔离 Unity 导入／编译、内置屏 Play Mode 已实际通过四种雕像的绑定前动态选择／加载、三态演出、回收并复用同一实例、低内存保留借出对象／释放空闲对象、释放后重新加载及订阅卸载，实际画面已查看；根工程静态检查通过。运行验证仍使用隔离共享实体／地区／服务器禁用查询与窗口请求宿主，未执行完整工程 ProjectTools.Validate；正式原实体根生命周期、全图共享规则、点击／实际 UI 业务／存档与 Windows Player 继续接入。来源 `map14-map-display-runtime-source-manifest.json`，恢复入口 `scripts/prepare_unity_map_display_runtime.py`，实际运行入口沿用 `OfficialMap14HeroStatueAcceptance.Run`。
 
+- 原 `MyEntity`、完整 `MyComponent` 泛型基类、`MyTransform`／`MyGridTransform`、可见性／空信息接口和八组原生命周期事件共 22 份源码已迁入 `Runtime/Official/EntityLifecycle/`，复用当前 871 版原事件分发器；保留 BindPre 先于实体／容器赋值、组件缓存与按序绑定／启动／结束／移除、异常恢复、替换、淡出等待及池重置。`LegacyWorldStageComponent` 已接入原组件基类；Windows 的 `NativeMyEntityBinding` 仅转换已有视图接口，事件仍由原委托分发，按接收者身份与事件类别回收适配对象。隔离 Unity 编译及内置屏 Play Mode 已通过四类原雕像的完整 Bind／MyStart／End／Remove／池重置、原根网格与 Z 排序初始化、八类事件执行顺序、双网格订阅结束清理、低内存回收复用，实际画面已查看，根工程静态检查通过。原旧世界阶段显示的演出、淡出、可见性、重定向与订阅结束回归亦通过；正式四份实体根 prefab 的其余组件、共享规则、全图输入／实际 UI／存档与 Windows Player 尚未接通，未执行完整工程 ProjectTools.Validate。原共享程序集直接加载已验证部分基础路径，正式依赖闭包与共享规则接入仍待完成。来源 `map14-entity-lifecycle-source-manifest.json`，可通过 `scripts/prepare_unity_entity_lifecycle_runtime.py` 与原旧阶段恢复脚本复建。
+
+- 原 `MyVisibility` 两层泛型类及 `MyVisibilityGrid` 已完整迁入 `Runtime/Official/EntityRootVisibility/`，复用同版本原可见性标志、状态更新委托、处理器／工厂接口和 EC 视图；共享可见性数据仍由宿主显式绑定。保留启动标志、已有 EC 视图的跳过分支、淡入淡出订阅、先清理再重建处理器、全部处理器联合判断、仅变化时发布可见性／淡入／事件与结束解绑顺序。四类雕像已在原实体生命周期和原 MapClientVisibilitySupporter 中运行，内置屏 Play Mode 通过原默认子节点隐藏／恢复、请求移除／重建、结束退还处理器、显示回收复用及低内存释放，三张实际画面已查看。当前测试使用隔离可见性处理器，未覆盖正式地图可见性条件、根实体淡入桥及 EC 视图跳过分支的业务绑定；正式点击／UI／存档／Player 仍待接通。恢复入口为 `scripts/prepare_unity_entity_root_visibility.py`，来源 `map14-entity-root-visibility-source-manifest.json`。
+
 ## 自定义实现
 
 原演出核心以显式中心注入及调用方提供两个原帧阶段替代 DI／R3 注册；日志接入 Unity，移除只用于 Inspector／MessagePack 的属性。调度、数值、状态和回调顺序保留，正式宿主的生命周期接入仍待验证。
