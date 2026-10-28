@@ -51,6 +51,10 @@ namespace Zjcs.Editor.Map13Skeletons
         {
             SessionState.SetBool(Key + ".partsOnly", true); ImportAndRun();
         }
+        public static void RunAttachmentOnly()
+        {
+            SessionState.SetBool(Key + ".attachmentOnly", true); ImportAndRun();
+        }
         private static void Observe(string text, string trace, LogType type) { if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert) error = true; }
         private static void Tick()
         {
@@ -82,6 +86,12 @@ namespace Zjcs.Editor.Map13Skeletons
         private static IEnumerator VerifySteps()
         {
             Application.runInBackground = true; Application.targetFrameRate = 60;
+            if (SessionState.GetBool(Key + ".attachmentOnly", false))
+            {
+                var attachmentLight = new GameObject("Original attachment diagnostic illumination").AddComponent<Light2D>();
+                attachmentLight.lightType = Light2D.LightType.Global; attachmentLight.intensity = 1;
+                yield return OfficialMap13AttachmentFollowerAcceptance.Verify(); yield break;
+            }
             if (SessionState.GetBool(Key + ".partsOnly", false))
             {
                 var partLight = new GameObject("Original parts diagnostic illumination").AddComponent<Light2D>();
@@ -179,6 +189,7 @@ namespace Zjcs.Editor.Map13Skeletons
             Debug.Log($"Original Map13 native skeleton Play Mode passed: 27 models, {animations} animations, {poses} poses, {finite} finite matrix fields, {index} original profile camera draws, {pixels} visible pixels. Formal prefab/Animator/input/save integration remains outstanding.");
             yield return OfficialMap13MecanimAcceptance.Verify(catalog, camera, target, readback);
             yield return OfficialMap13PropPartsAcceptance.Verify();
+            yield return OfficialMap13AttachmentFollowerAcceptance.Verify();
             if (error) throw new InvalidDataException("Original native Mecanim geometry execution logged errors.");
             camera.targetTexture = null; target.Release(); UnityEngine.Object.Destroy(target); UnityEngine.Object.Destroy(readback); UnityEngine.Object.Destroy(gallery);
         }

@@ -38,6 +38,10 @@ namespace Zjcs.Offline.World.NativeMap13Skeletons
         public Transform Transform { get; }
         public bool IsAnimationFinished { get; private set; }
         public IReadOnlyList<Matrix4x4> BoneMatrices => matrices;
+        public IReadOnlyList<int> SlotDrawOrder => order;
+        public IReadOnlyList<int> SlotAttachments => attachments;
+        public Vector2 BoneLocalScale(int bone) => scales[bone];
+        public Matrix4x4 BoneSkeletonMatrix(int bone) => Matrix4x4.Scale(new Vector3(profile.initialFlipX ? -1 : 1, profile.initialFlipY ? -1 : 1, 1)) * matrices[bone];
         public int VisibleTriangles { get; private set; }
         public Bounds LocalBounds { get; private set; }
 

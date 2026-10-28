@@ -52,6 +52,10 @@ namespace Zjcs.Editor.Map13Skeletons
                         reference.Transform.gameObject.SetActive(false);
                         var animator = view.Transform.gameObject.AddComponent<Animator>(); animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
                         animator.runtimeAnimatorController = library.Controller(entry.key); animator.Update(0);
+                        // This probe advances the native clock explicitly. Camera capture
+                        // yields must not add automatic Animator frames between samples.
+                        // The prop lifecycle probe separately exercises real engine updates.
+                        animator.enabled = false;
                         var pose = new NativeMap13MecanimPose(animator, view, data, profile.fields);
                         pose.Sample(); CheckFinite(view); // Empty controllers retain original setup pose.
                         foreach (var state in entry.states)
@@ -91,7 +95,7 @@ namespace Zjcs.Editor.Map13Skeletons
                             }
                             animator.Update(transition.has_exit_time ? animator.GetCurrentAnimatorStateInfo(0).length * .02f + .001f : .001f);
                             Require(animator.IsInTransition(0) && animator.GetAnimatorTransitionInfo(0).duration == transition.duration,
-                                "Original native geometry transition clock differs.");
+                                "Original native geometry transition clock differs: " + entry.name + "/" + transition.source + "->" + transition.destination + "; current=" + animator.GetCurrentAnimatorStateInfo(0).fullPathHash + "; transition=" + animator.IsInTransition(0));
                             float weight = -1;
                             for (int step = 0; step <= 10; step++)
                             {

@@ -1,0 +1,63 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "method": "Original game AttachmentFollower methods, branches, lifecycle and draw-order cache. Namespace/logging/ILSpy repairs and explicit live native geometry data aliases only. No animation SDK implementation.",
+  "diagnostics": 3,
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/AttachmentFollower.cs",
+      "sha256": "d8f8077dbbc72c21783e2af0d9b34b5b9109b829c51980cf7e6decf3b8ce79b2"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_attachment_follower.py",
+      "sha256": "b9552218a13b50d1eb67f9f8e799925ee24712e3d495650b9f6678dc94f5c79e"
+    },
+    {
+      "path": "scripts/prepare_unity_story_playable_runtime.py",
+      "sha256": "8901da0cedbce77ece9f81c2e2c35f4bbefb20f0f48f3fb26f32bc60afcfd2c0"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-prop-hierarchies.json",
+      "sha256": "69cf5dcd45bb69c8b1af4265e4e05ad76b1f5435954bf640817c5b56bfb3e84e"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Attachment/AttachmentFollower.cs",
+      "sha256": "3c377e3900bee8641ddaadd6159c85d25c7170db5b78f06849f605f0ddf8ed0b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Attachment/AttachmentFollower.cs.meta",
+      "sha256": "d4c60f7862028a9872e329a510ad0d5fbb4b71c47cb413da9c779bed85bf0101"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Attachment/Zjcs.Official.World.Map13Attachment.asmdef",
+      "sha256": "5ac5816cfee17f720ed9ca5df5cefebe508929f9cfe96728abf790b7c2b63a54"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Attachment/Zjcs.Official.World.Map13Attachment.asmdef.meta",
+      "sha256": "f861c6281122bc0d6cc20c1e45fb2dabc1afd32ab888c7459e3d9450c8fbfa1a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Attachment.meta",
+      "sha256": "0ca52983a638981864f6f391bd3424b4103c2508ee418ce6d81b390e651def74"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons/NativeMap13ApplicationPose.cs",
+      "sha256": "36899e771919e9153e4fe2a02dd47b0d25194b798c8ae5f7fa76a12e081131d3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons/NativeMap13ApplicationPose.cs.meta",
+      "sha256": "0d733f8f88c049b1f49758df5c2de0fa0e9b11e61cf7424fbce2b0a74dc3b9c3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-attachment-followers.json",
+      "sha256": "94494dfa93a4ff631d5af025107758765c5e866fbbba7c96793ac336eb3534b1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-attachment-followers.json.meta",
+      "sha256": "e995d72203818f2b0cc312db66c213bc977c6f321309159e66cec51b5d07f423"
+    }
+  ],
+  "boundary": "Only unconstrained native prop skeletons. The original UI SkeletonGraphic field must be null; UI and constrained NPC animation need their own bindings."
+}

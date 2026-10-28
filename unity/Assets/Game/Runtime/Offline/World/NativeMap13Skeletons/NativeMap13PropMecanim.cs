@@ -19,6 +19,16 @@ namespace Zjcs.Offline.World.NativeMap13Skeletons
         private NativeMap13MecanimPose pose;
         private MaterialPropertyBlock propertyBlock;
         public NativeMap13SkeletonView View => view;
+        public NativeMap13ApplicationPose Skeleton { get; private set; }
+        public event Action<NativeMap13PropMecanim> OnRebuild;
+        public bool valid => view != null;
+        public bool IsValid => valid;
+        public int updateWhenInvisible => UpdateWhenInvisible;
+        public int UpdateMode => UpdateWhenInvisible == 0 && !Parts.Renderers.Any(r => r && r.isVisible) ? 0 : 3;
+        public float zSpacing => Profile.zSpacing;
+        // The owning world must inject the shared verified animation library.
+        // The application's lazy initialization probe cannot create that owner.
+        public void Initialize(bool overwrite = false, bool quiet = false) { }
 
         public void Initialize(NativeMap13AnimatorLibrary library)
         {
@@ -34,6 +44,8 @@ namespace Zjcs.Offline.World.NativeMap13Skeletons
             view.SetSeparationEnabled(Parts.isActiveAndEnabled);
             pose = new NativeMap13MecanimPose(Animator, view, Data, Profile);
             pose.Sample(); CopyPropertyBlock();
+            Skeleton = new NativeMap13ApplicationPose(Data.Source, view);
+            OnRebuild?.Invoke(this);
         }
 
         // The pinned APK enum metadata defines InUpdate=1, invisible Nothing=0,
