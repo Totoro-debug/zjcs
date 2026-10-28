@@ -76,7 +76,7 @@ namespace Zjcs.Offline.World.NativeMap14ClientEntities
             if (entity == null) return null;
             if (!views.TryGetValue(entity, out var view))
             {
-                view = new NativeMap14SharedViewEntity(shared, entity); views.Add(entity, view);
+                view = new NativeMap14SharedViewEntity(shared, entity, Wrap); views.Add(entity, view);
                 try { bindComponents?.Invoke(view); }
                 catch { views.Remove(entity); view.Dispose(); throw; }
             }

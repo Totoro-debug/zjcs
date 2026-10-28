@@ -29,9 +29,12 @@ namespace Zjcs.Offline.World.NativeMap14SharedViews
             get { var id = Get(Original, "Id"); return new EcEntityIdentifier((long)Get(id, "ContainerId"), (int)Get(id, "EntityId")); }
         }
 
-        public NativeMap14SharedViewEntity(NativeMap14SharedAssemblies assemblies, object entity)
+        private readonly Func<object, NativeMap14SharedViewEntity> entityLookup;
+        public NativeMap14SharedViewEntity(NativeMap14SharedAssemblies assemblies, object entity,
+            Func<object, NativeMap14SharedViewEntity> entityLookup = null)
         {
             this.assemblies = assemblies ?? throw new ArgumentNullException(nameof(assemblies));
+            this.entityLookup = entityLookup;
             Original = entity ?? throw new ArgumentNullException(nameof(entity));
             if (entity.GetType() != assemblies.CommonType("EcEntity")) throw new ArgumentException("Original EcEntity is required.");
             var grid = Component("GridTransformComponent");
@@ -130,7 +133,10 @@ namespace Zjcs.Offline.World.NativeMap14SharedViews
                     var redirect = Get(Original, "InteractionRedirectStage");
                     if (redirect == null) return null;
                     if (ReferenceEquals(redirect, Original)) return this;
-                    throw new InvalidOperationException("Original redirect entity lookup is not bound.");
+                    var target = owner.entityLookup?.Invoke(Get(redirect, "Entity"));
+                    if (target?.Stage == null || !ReferenceEquals(target.Stage.Original, redirect))
+                        throw new InvalidOperationException("Original redirect entity lookup is not bound.");
+                    return target.Stage;
                 }
             }
             internal StageData(NativeMap14SharedViewEntity owner, object original) { this.owner = owner; Original = original; }

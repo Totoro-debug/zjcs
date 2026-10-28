@@ -1,0 +1,226 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/AWorldEntityInput.cs",
+      "sha256": "2f25d5a58bf0b656bca1059df9c8eadb8b53892475d38431fa9f65beda1fa13c"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/WorldStageInput.cs",
+      "sha256": "79cfbc5c2adb2e251e5b7cf848d92ec1d1d58554e24bed180a8e9f95368ad4c6"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/WorldEntityInputPriority.cs",
+      "sha256": "9dae1bb3c2f02c5127d0e6b4e39353c28826297e45330cd88fdc2399f79a5797"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyStageBehaviourUtils.cs",
+      "sha256": "29ebc6184359c825f0b1188c368abe12dd88d1972ded5c1acde20ffa9943f90a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IMyStageBehaviour.cs",
+      "sha256": "4c10954869b77ee75c356e5af8832e90e9535945ec2996019919a844347c1710"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECStageBehaviourBaseView.cs",
+      "sha256": "fc1aaa893e8287829bded9311d1541831ba8044b9ca7bc3fc35268deef55c974"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyEntityPlayerInteraction.cs",
+      "sha256": "329dbaef860c5a6a69514d92051f8df750f6155c1d9b220a93262f15cbfba699"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GridRect.cs",
+      "sha256": "7d6568580a770bb26c02445592a89cae0022bded1d25154205082870e5c1d0aa"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/AwardDialogType.cs",
+      "sha256": "d9c8e1fc52e787e4e5a09cc6adfc94df40980633fdd0bebbe81f84d59911ddff"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntityPlayerInteractionComponent.cs",
+      "sha256": "e8e4e353115e34c6cd15825c519f363fc3dcb113dfb84a1e603ea87950f65792"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FormulaHandler.cs",
+      "sha256": "1c9d25ef741f342b419a85f53ed3287a7c86a7397847a6170176a62276fbce98"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/WorldStageComponent.cs",
+      "sha256": "2f17ef2e71858d2ad8e5333951a83fe6e59c8188cdd4793b1d10d4a67b890266"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map14_world_input.py",
+      "sha256": "fe23fd073f2cb2d0e1c9a9458fae87b0ed788614b1d3b62c5d12706276464cc5"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionImageResourceBridge.cs",
+      "sha256": "acdb7d8a803632b80a5dc4140676980e2fb1e9b596a155ba6b704cf4632dd412"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedViews/NativeMap14SharedViewEntity.cs",
+      "sha256": "4cad4af40ad619db89d2e4be1bca1c398c040d579228eaed340d6f61965bdc8c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientEntities/NativeMap14ClientEntityState.cs",
+      "sha256": "bb083709a067657d9e67ecc678a92ce772446015b8052b7cf0d13ef2a7412eb0"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/AwardDialogType.cs",
+      "sha256": "b1f328e8ed6bc5aa1eb94ae058903761f52f47fc38e09e6fee85132d444eebb1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/AwardDialogType.cs.meta",
+      "sha256": "96f158dbd706f1589b573e6f4f545756039b7eb0fae0b9682207da2edbf9f695"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/AWorldEntityInput.cs",
+      "sha256": "c9d6e6a9404ce32f24bf805a283034367bcfdcee214caf0e75a53505f0c2956b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/AWorldEntityInput.cs.meta",
+      "sha256": "178703b8344f2506b27ad31cf74d9c66326f5a6bc792fb93f1c83216e42706a3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/ECStageBehaviourBaseView.cs",
+      "sha256": "af8b9a349bdeacb24bfe6fbe74be5cdfc03f053f44167f92de38e6cb6d8eedaa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/ECStageBehaviourBaseView.cs.meta",
+      "sha256": "7b9b8fa5720473d8d3416736b77acd7f9ce79d719f34368b22657d869ca121a6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/GridRect.cs",
+      "sha256": "6b72e40c6c4366d7daed1eafb73b48b4a23abd59666c58f7cb12c44bfbcb49b0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/GridRect.cs.meta",
+      "sha256": "0220b11489d891b70df09cf839e9b52a4b61f0d27cb3dcd551fd2633db63347c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/IMyStageBehaviour.cs",
+      "sha256": "f6a3f5a75b31cdf6b53cabab9a6b2e55237d7e8f9e5d5d68aef9cfa8cd5be00b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/IMyStageBehaviour.cs.meta",
+      "sha256": "e62038444f20a831c4d974595a86ed64181bea6ed2d3787e836b070bccbf8e3b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/MyEntityPlayerInteraction.cs",
+      "sha256": "41553a450934b6ed640d005dce1d4ac0aa32528416ad2935e2b45f81b982090e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/MyEntityPlayerInteraction.cs.meta",
+      "sha256": "447715199854480e66d86cbc8f430003b29f9c878ef1ae8046acd92ab3647140"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/MyStageBehaviourUtils.cs",
+      "sha256": "be831f193343b76bc85195da948a1d1101f2a20efdd254f195327d2e32997f20"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/MyStageBehaviourUtils.cs.meta",
+      "sha256": "3bf212b64766598cf89dfd5f590d6f8d6cd937646baa463c5dab80855b4d836c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/WorldEntityInputBindings.cs",
+      "sha256": "9d017f519cc584785632cb10dbc085136f92a6812f11bda6e83dcee25fb93cee"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/WorldEntityInputBindings.cs.meta",
+      "sha256": "54b7f0a816bb745b5d0019f4fd816fd043d0ce803822d76dca9e264f06e18d5e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/WorldEntityInputPriority.cs",
+      "sha256": "404d4e9c01acd517d02d0d840749d3dde9048abb1cd417c28f95cd3dd9df69a0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/WorldEntityInputPriority.cs.meta",
+      "sha256": "95b283e8b2bcd9e67633026dab8757796bc8ace60f7651eed9b6f14a8ce609c1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/WorldStageInput.cs",
+      "sha256": "75338b0eed38ac32268eb08d8a702f5c750357df04697960b693af3c8317d49a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/WorldStageInput.cs.meta",
+      "sha256": "b985802c7d3f326d666bdcacc3b5031bd191fe41c740e47644693e1b388f1871"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/Zjcs.Official.EntityWorldInput.asmdef",
+      "sha256": "9e79599880074935aaa618bdcb4c621c10596e7c4b5b15ed189be57ad64dd401"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/Zjcs.Official.EntityWorldInput.asmdef.meta",
+      "sha256": "baf577c61a1a03b30139bdc97135168dced25184332f19b7edccc96382bd8cde"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput.meta",
+      "sha256": "6a0ce18165783015033c10c1ccebdacdcfb5f06762ea136687a724e80525be9e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14WorldInput/NativeMap14WorldInputQueries.cs",
+      "sha256": "6b6a0d06cb259055c75e5cf4ba9d491b3f665848405119b4efb6d0be3091ca27"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14WorldInput/NativeMap14WorldInputQueries.cs.meta",
+      "sha256": "4ca9e4113834f1caca3e221f394c7eedafe4661a7f7ca203b0cd9388ee3ce98a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14WorldInput/Zjcs.Offline.World.NativeMap14WorldInput.asmdef",
+      "sha256": "3c6bedba32601eb496b7452030de38d2a55103e4057f436efc3d3e0f47640630"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14WorldInput/Zjcs.Offline.World.NativeMap14WorldInput.asmdef.meta",
+      "sha256": "6b859d38d1da7c8e47ef8df75ab78266544d99319950067cac65db8bb1d7a504"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14WorldInput.meta",
+      "sha256": "cdf77dc7ef968b02d4941f5a6a77c60baf37e2b824a7b8866d61751caa8b2057"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/WorldInput/OfficialMap14WorldInputAcceptance.cs",
+      "sha256": "288f25967af0c065b201a084e5a90116318d8923ad9dde9fdb78525fe413269f"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/WorldInput/OfficialMap14WorldInputAcceptance.cs.meta",
+      "sha256": "44bf35f38af69d1aa18524f576a6ea000431b00836d4f7efab23d43672201a6a"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/WorldInput/Zjcs.Editor.Map14.WorldInput.asmdef",
+      "sha256": "07561b75945f713a78c1a88a5d01149b1a805db65cba6d99f2ac69c2c07cbb54"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/WorldInput/Zjcs.Editor.Map14.WorldInput.asmdef.meta",
+      "sha256": "52d44d6977e2613625cf6be2b1dcf5e577ca7f1d5304d6a850a3b682585c52db"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/WorldInput.meta",
+      "sha256": "a829e785ca19fd4c7933fd4f8af905bb591ddd3107772e054d4d1df6f610ae98"
+    }
+  ],
+  "operation": "Copy the complete original world-stage input/base, priority, grid rectangle, behaviour lookup/interface/base and player-interaction client component. Preserve exact team/source/interacting/visibility/activity short-circuit order, redirect selection, click arguments and resource lifetime. Bind original shared state and geometry explicitly; opaque original monster-list/stage-behaviour values retain native references. Player-input conflict consumes its original IsMyself interface. Resource bag reuses the already recovered APK R3 disposal semantics.",
+  "validation": {
+    "entry": "Zjcs.Editor.Map14.OfficialMap14WorldInputAcceptance.Run",
+    "graphicalPlayMode": true
+  },
+  "limitations": [
+    "Formal map pointer dispatch, complete player/team/presentation/resource services, native root prefab binding, UI/save and Windows Player remain required. Logical input fixture checks do not claim formal mouse interaction."
+  ]
+}
