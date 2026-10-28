@@ -1,0 +1,126 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "code_manifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "ports": [
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/ActorTargetType.cs",
+        "sha256": "59f43ca540f16bf0b74113079811e1723df0bbaaf5dc110db2bc5fdab655b30b"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ActorTargetType.cs",
+        "sha256": "bf48a155f21f34c4499a02cb2dab34fee8d6e82e7a44f9a37255999ac3696e90"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ActorTargetType.cs.meta",
+        "sha256": "529b96fb0520dfb8b71b519d581e1bb2696d745edce19aa67c8d37eaf3864614"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/TeamTargetCatalog.cs",
+        "sha256": "1f2a46b740491f8ff55befd5d0ad284dbb97cbdd39ec436ef6320968892b6876"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/TeamTargetCatalog.cs",
+        "sha256": "00e2465af87c70c4e8ffb15cb6972367d66b8a6476b5456b25a51d711866bad7"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/TeamTargetCatalog.cs.meta",
+        "sha256": "2739bce8391b932b6a41245ad817aff4626cf12784a01a25f29c7a288574e56d"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayerInfoData.cs",
+        "sha256": "c1107135cca4dc6cfdf1c98bb69784c8b93649412085b286902541903a71b6b9"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerInfoData.cs",
+        "sha256": "bb76039f9c8c2b0f92922fe653b8dc5986aebef5b3ee95d78571e519eb349fe7"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerInfoData.cs.meta",
+        "sha256": "53bbd4d9d750c448ddd1d3d7145c59b16cb10d7e58ca60b0ec6ab85a57f66221"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayerInfoUI.cs",
+        "sha256": "69bd9ce64a612bc52536e57503f623b54cf1ed98ace54b52aa336c611d8cd90e"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerInfoUI.cs",
+        "sha256": "f615b718bf0c94f79212401feb9589a6350a538f4018ae4248e720d2fec3f21a"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerInfoUI.cs.meta",
+        "sha256": "d8c71fa2d771c091abf9c014bbca68ff4d01b2131e8f894def542fe5cb7ef624"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayerIconMe.cs",
+        "sha256": "906d4192a420ae943e7ed09f77d7373b0ba65a1b4f1c947e4b9211f92d513cad"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerIconMe.cs",
+        "sha256": "2c52fb866696a75494f66f01601d0325011bff619c06de44d3f2a88c6d70e53e"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerIconMe.cs.meta",
+        "sha256": "8f49c81533f2ebb3d0cc785931ef1ebf30283d4a1e07b403fa49eddbe11185cd"
+      }
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_profession_player_info.py",
+    "sha256": "f984726a68e1c0c000fde99c31de9312f38e654727a85c8279de15fc888d9ad2"
+  },
+  "bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerInfoBindings.cs",
+      "sha256": "3464b51bf40955579437499b91f5e6a347ab0191476631530c41f941ae24726a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerInfoBindings.cs.meta",
+      "sha256": "75d21c38ac6c5e4dbf30ba4d3ee3827fc54db3687cde42ed9aa0f9d201c2866d"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionPlayerInfoValidation.cs",
+      "sha256": "23d62b1fe472c69c65577e35809b985e2225404d9f75b96d07f1325ea83a8112"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionPlayerInfoValidation.cs.meta",
+      "sha256": "d84571e1c63fd057abc66a913b4fba477c84d4571373b4878821f1fade988269"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "assets/reference/profession-ui/player-appearance-source-manifest.json",
+      "sha256": "fce9cbf0304c537a5b536973e3ad5591303a3bd0ce428d171b4c56fdb267fdbe"
+    },
+    {
+      "path": "assets/reference/profession-ui/image-resource-source-manifest.json",
+      "sha256": "58e2e246bd0c4c66915b8fd78873c0d274bcd45adb4e04a5e64e0db101b5715e"
+    }
+  ],
+  "operation": "Copy complete PlayerInfoUI and PlayerIconMe application methods/fields and both consumed target/context enums. Scope PlayerInfoData to its original consumed field projection and Id getter; full/lite/brief/guard data constructors remain upstream provider boundaries, not fabricated constructors. Protocol appearance/lite data remain opaque original references and SubRank/Profession/status/context values remain integers. Preserve every player/NPC/self/UI/scene/head/title/planes/collection/pin/cooldown branch and event/window/resource lifecycle. Original state switchers and resource disposal bag are reused.",
+  "validated_scope": "Unity 2022.3.57f1c2 Play Mode and simulated mouse down/up passed data/appearance reference identity, refresh-state order, all nine event routes including original repeated-subscription behavior, init/enable/disable/reset and actual Start AutoInit, self/UI/scene/head/NPC routing, title/planes/text/icons, collection/pin/joint/assist branches, retained handles and destruction disposal, and delayed detail-popup callback. D3D button fixture screenshot inspected and pointer raycast checked; it is not source page artwork. Player/config/resource/target-data producers and child widgets are fixtures; production services and complete profession UI remain unbound."
+}

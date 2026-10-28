@@ -499,6 +499,8 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 原挂点跟随：`prepare_unity_profession_followers.py` 从所选版本的游戏自有应用源码复制基础／UI／世界跟随器、接口与效果／骨骼部件，保留全部原字段、坐标变换、附件身份、逐帧显隐、Z 间距／绘制顺序索引历史、重建订阅及动画映射／缓存／失败状态。SDK 类型消费改为独立原生接口，未读取 SDK 实现。内置屏 Unity Play Mode 验证上述分支通过，端点为自有夹具，原生后端、原部件 prefab 和完整页面尚未连接。程序集、源文件、转换程序、运行代码和验证哈希见 `profession-ui/followers-source-manifest.json`；无新增替代美术。
 
+原玩家信息与自身头像：`prepare_unity_profession_player_info.py` 保留完整 `PlayerInfoUI`／`PlayerIconMe` 应用方法与字段、两种原枚举，数据结构只迁入消费字段和 Id 属性；全部数据构造明确留给上游，不以夹具替代生产规则。协议外观／简讯保持原对象引用，职业／位阶等值保持整数；复用已迁移状态切换和原资源释放顺序。Play Mode 与模拟鼠标按下／抬起检查自身／他人／NPC、UI／场景／头像、文字／称号／位面、职业图标、收藏／置灰／协助上下文、九类事件及原重复订阅、启停／重置／自动 Start、延后弹窗回调与句柄释放通过；测试按钮实际画面已查看。真实子控件和生产数据／资源服务尚未绑定，无完整职业页面结论。输入输出、程序集、范围和限制见 `profession-ui/player-info-source-manifest.json`；主页面当前依赖剩余 2 类组件，0 个缺失 GUID。
+
 ## 技能首页与安装流程复核
 
 2026-10-13：复核固定版本 `854_156383` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。
