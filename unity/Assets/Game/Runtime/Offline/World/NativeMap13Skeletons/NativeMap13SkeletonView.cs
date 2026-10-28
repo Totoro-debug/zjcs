@@ -25,6 +25,13 @@ namespace Zjcs.Offline.World.NativeMap13Skeletons
         private readonly int[] attachments, order;
         private readonly Color[] colors;
         private readonly Transform skeletonRoot;
+        private MeshRenderer[] nativeTargets;
+        private Mesh[] nativeMeshes;
+        private HashSet<int> separatorSlots;
+        private bool[] nativeEnabled;
+        private MeshRenderer fallbackTarget;
+        private Mesh fallbackMesh;
+        private bool separationEnabled = true;
         private NativeMap13Animation animation;
         private float elapsed;
         private bool loop, disposed;
@@ -33,6 +40,48 @@ namespace Zjcs.Offline.World.NativeMap13Skeletons
         public IReadOnlyList<Matrix4x4> BoneMatrices => matrices;
         public int VisibleTriangles { get; private set; }
         public Bounds LocalBounds { get; private set; }
+
+        // Bind the original prefab's mesh targets. Their transforms, sorting,
+        // renderer flags and native Animator clocks remain on the original objects.
+        // Segments follow the current slot draw order, ending at each separator.
+        public void BindMeshTargets(MeshRenderer[] targets, string[] separators, MeshRenderer fallback = null)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(NativeMap13SkeletonView));
+            if (nativeTargets != null) throw new InvalidOperationException("Original mesh targets are already bound.");
+            if (targets == null || separators == null || targets.Length != separators.Length + 1 || targets.Any(t => !t))
+                throw new InvalidOperationException("Original separator/parts renderer inventory differs.");
+            var indices = new HashSet<int>();
+            foreach (string separator in separators)
+            {
+                int slot = Array.FindIndex(source.slots, s => s.name == separator);
+                if (slot < 0 || !indices.Add(slot)) throw new InvalidOperationException("Original separator slot is absent/duplicated.");
+            }
+            foreach (var target in targets)
+                if (!target.GetComponent<MeshFilter>()) throw new InvalidOperationException("Original mesh filter is not bound.");
+            if (fallback && (!fallback.GetComponent<MeshFilter>() || fallback.sharedMaterials.Length != targets.Length))
+                throw new InvalidOperationException("Original unsplit renderer/submesh binding differs.");
+            nativeTargets = (MeshRenderer[])targets.Clone(); separatorSlots = indices;
+            nativeEnabled = targets.Select(t => t.enabled).ToArray();
+            nativeMeshes = targets.Select(t => new Mesh { name = t.name + " original slot segment" }).ToArray();
+            for (int i = 0; i < targets.Length; i++)
+            {
+                nativeMeshes[i].MarkDynamic();
+                targets[i].GetComponent<MeshFilter>().sharedMesh = nativeMeshes[i];
+            }
+            if (fallback)
+            {
+                fallbackTarget = fallback; fallbackMesh = new Mesh { name = fallback.name + " original unsplit slot mesh" };
+                fallbackMesh.MarkDynamic(); fallback.GetComponent<MeshFilter>().sharedMesh = fallbackMesh;
+            }
+            DrawGeometry();
+        }
+        public void SetSeparationEnabled(bool value)
+        {
+            if (nativeTargets == null || !fallbackTarget) throw new InvalidOperationException("Original separator fallback is not bound.");
+            separationEnabled = value;
+            for (int i = 0; i < nativeTargets.Length; i++) nativeTargets[i].enabled = value && nativeEnabled[i] && nativeMeshes[i].vertexCount > 0;
+            fallbackTarget.enabled = !value && fallbackMesh.vertexCount > 0;
+        }
 
         public NativeMap13SkeletonView(NativeMap13SkeletonData asset, NativeMap13Renderer renderer,
             Transform parent, string name, int sortingOrder = 0)
@@ -207,6 +256,9 @@ namespace Zjcs.Offline.World.NativeMap13Skeletons
         private void DrawGeometry()
         {
             foreach (var draw in draws) if (draw != null) draw.Renderer.enabled = false;
+            List<CombineInstance>[] segments = nativeTargets == null ? null :
+                Enumerable.Range(0, nativeTargets.Length).Select(_ => new List<CombineInstance>()).ToArray();
+            int segment = 0;
             List<Vector2[]> clipping = null; int clipEnd = -1; VisibleTriangles = 0;
             bool anyBounds = false; Bounds bounds = default;
             for (int drawOrder = 0; drawOrder < order.Length; drawOrder++)
@@ -218,6 +270,7 @@ namespace Zjcs.Offline.World.NativeMap13Skeletons
                     if (a.kind == "clipping")
                     {
                         if (profile.useClipping && clipping == null) { clipping = ConvexPieces(points); clipEnd = a.endSlot; }
+                        if (separatorSlots != null && separatorSlots.Contains(slot)) segment++;
                         continue;
                     }
                     var vertices = new List<Vector3>(); var uv = new List<Vector2>(); var triangles = new List<int>();
@@ -242,9 +295,34 @@ namespace Zjcs.Offline.World.NativeMap13Skeletons
                     var color = colors[slot]; if (profile.pmaVertexColors) { color.r *= color.a; color.g *= color.a; color.b *= color.a; }
                     var draw = draws[id]; draw.Mesh.Clear(); draw.Mesh.SetVertices(vertices); draw.Mesh.SetUVs(0, uv);
                     draw.Mesh.SetColors(Enumerable.Repeat(color, vertices.Count).ToList()); draw.Mesh.SetTriangles(triangles, 0); draw.Mesh.RecalculateBounds();
-                    draw.Renderer.sortingOrder = drawOrder; draw.Renderer.enabled = triangles.Count > 0; VisibleTriangles += triangles.Count / 3;
+                    draw.Renderer.sortingOrder = drawOrder;
+                    draw.Renderer.enabled = nativeTargets == null && triangles.Count > 0; VisibleTriangles += triangles.Count / 3;
+                    if (segments != null && triangles.Count > 0)
+                        segments[segment].Add(new CombineInstance { mesh = draw.Mesh,
+                            transform = Matrix4x4.Scale(skeletonRoot.localScale) });
                 }
                 if (slot == clipEnd) { clipping = null; clipEnd = -1; }
+                if (separatorSlots != null && separatorSlots.Contains(slot)) segment++;
+            }
+            if (segments != null)
+                for (int i = 0; i < segments.Length; i++)
+                {
+                    var mesh = nativeMeshes[i]; mesh.Clear();
+                    if (segments[i].Count > 0) mesh.CombineMeshes(segments[i].ToArray(), true, true, false);
+                    mesh.RecalculateBounds(); nativeTargets[i].enabled = separationEnabled && nativeEnabled[i] && mesh.vertexCount > 0;
+                }
+            if (fallbackMesh)
+            {
+                fallbackMesh.Clear();
+                var populated = nativeMeshes.Where(m => m.vertexCount > 0).Select(m => new CombineInstance { mesh = m }).ToArray();
+                if (populated.Length > 0) fallbackMesh.CombineMeshes(populated, true, false, false);
+                fallbackMesh.subMeshCount = nativeMeshes.Length; int offset = 0;
+                for (int i = 0; i < nativeMeshes.Length; i++)
+                {
+                    fallbackMesh.SetTriangles(nativeMeshes[i].triangles.Select(index => index + offset).ToArray(), i, false);
+                    offset += nativeMeshes[i].vertexCount;
+                }
+                fallbackMesh.RecalculateBounds(); fallbackTarget.enabled = !separationEnabled && fallbackMesh.vertexCount > 0;
             }
             LocalBounds = bounds;
         }
@@ -299,6 +377,19 @@ namespace Zjcs.Offline.World.NativeMap13Skeletons
         {
             if (disposed) return; disposed = true;
             foreach (var draw in draws) if (draw != null) UnityEngine.Object.Destroy(draw.Mesh);
+            if (nativeMeshes != null)
+                for (int i = 0; i < nativeMeshes.Length; i++)
+                {
+                    if (nativeTargets[i] && nativeTargets[i].GetComponent<MeshFilter>().sharedMesh == nativeMeshes[i])
+                        nativeTargets[i].GetComponent<MeshFilter>().sharedMesh = null;
+                    UnityEngine.Object.Destroy(nativeMeshes[i]);
+                }
+            if (fallbackMesh)
+            {
+                if (fallbackTarget && fallbackTarget.GetComponent<MeshFilter>().sharedMesh == fallbackMesh)
+                    fallbackTarget.GetComponent<MeshFilter>().sharedMesh = null;
+                UnityEngine.Object.Destroy(fallbackMesh);
+            }
             if (Transform) UnityEngine.Object.Destroy(Transform.gameObject);
         }
     }

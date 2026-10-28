@@ -1,0 +1,72 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "method": "Original native GameObject/Transform/component fields and verified managed fields; no hierarchy synthesis.",
+  "serialized_enum_constants": {
+    "UpdateTiming": {
+      "ManualUpdate": 0,
+      "InUpdate": 1,
+      "InFixedUpdate": 2,
+      "InLateUpdate": 3
+    },
+    "UpdateMode": {
+      "Nothing": 0,
+      "OnlyAnimationStatus": 1,
+      "OnlyEventTimelines": 4,
+      "EverythingExceptMesh": 2,
+      "FullUpdate": 3
+    }
+  },
+  "counts": {
+    "profiles": 57,
+    "roots": 23,
+    "gameObjects": 490,
+    "objects": 1667,
+    "bundles": 7,
+    "separators": 2
+  },
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-entity-object-graph.json",
+      "sha256": "18f89ebe23f05d61849a699f980948603fdfcd055df04fb19ae770617b5fe813"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-entity-components.json",
+      "sha256": "8e555c849c373c923fcaa87cfd16b06e1caebe8b65614648130958cdd7b55eb3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeSkeletonModels/catalog.json",
+      "sha256": "e71b6d0faa1c99ae91770f627b67a4133e77600c4bb6852c54a16ee757f80c4c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-entity-material-bindings.json",
+      "sha256": "9b3d3a0b4ed41b9ba66b223c86947094f716321c9eec46efb194504ee96e0ade"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_prop_hierarchies.py",
+      "sha256": "6f2dae25494a4907539ea9f499c35920029567757131efee656159a5db025987"
+    },
+    {
+      "path": ".tools/source-packages/official-code/global-metadata.dat",
+      "sha256": "58884b94b56ef35665f44d3f186fce8b8c854cf3bab0a74e4733a18b6a9175b4"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-prop-hierarchies.json",
+      "sha256": "69cf5dcd45bb69c8b1af4265e4e05ad76b1f5435954bf640817c5b56bfb3e84e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-prop-hierarchies.json.meta",
+      "sha256": "282974fc0f18d55d4136844e599ef4bee5d6acbd9f56e3a16852ae3327506776"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-prop-separators.json",
+      "sha256": "376fb5e759ba326db1805dbdf73a7c3722dd6baa65080799de3e1429712311e7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-prop-separators.json.meta",
+      "sha256": "e2ae917afc67bc02fd968ab03702c0bc502a8f76aee95e9b1737a98bc8597478"
+    }
+  ]
+}

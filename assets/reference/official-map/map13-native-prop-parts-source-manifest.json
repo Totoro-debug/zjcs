@@ -1,0 +1,396 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "scope": "Original tree renderer sub-prefabs only; enclosing entity gameplay, sprites and interactions remain outside these assets.",
+  "method": "Original native fields and component order; local PPtr/GUID relocation; independent geometry adapters replace Spine rendering components.",
+  "prefabs": [
+    {
+      "renderer": "cab-6585e135989a91ebeae613b4264b0589:215062122320439856",
+      "path": "unity/Assets/Game/Resources/Map13/Native/PropParts/94d7ca0e3ef07147e7410c1b/Tree.prefab",
+      "objects": 28,
+      "gameObjects": 5
+    },
+    {
+      "renderer": "cab-6585e135989a91ebeae613b4264b0589:5308668491876856091",
+      "path": "unity/Assets/Game/Resources/Map13/Native/PropParts/3bf7e798b65f620d1fe25655/Tree.prefab",
+      "objects": 31,
+      "gameObjects": 6
+    }
+  ],
+  "sprite_sources": [
+    {
+      "identity": "cab-4cec8fbd14e9d94c117ebbaf3dbd1d27:7540184991996499401",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapentity_entity14_others.bundle",
+        "bundle_hash": "e3695f2244bb444d6062db03e35ad903",
+        "path_id": "7540184991996499401",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/e3695f2244bb444d6062db03e35ad903.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 652537,
+        "bundle_sha256": "1bf6155edb3301d50c1486a9b7f424ef979efecec0bd69efd4dc25fc29c9a2fa"
+      },
+      "payload_sha256": "eda7c437ac4dcfefbca2b0f318a6b8981401017ab2bdcc109c359df5574ac675",
+      "vertices_sha256": "191ea8406650878a746acb4d452a22c9ed9856d5932a518a25ff16e56b9f1b53",
+      "indices_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b",
+      "vertices": [
+        {
+          "x": -1.5,
+          "y": 1.5535714626312256
+        },
+        {
+          "x": 1.5,
+          "y": 1.5535714626312256
+        },
+        {
+          "x": -1.5,
+          "y": 0.0
+        },
+        {
+          "x": 1.5,
+          "y": 0.0
+        }
+      ],
+      "triangles": [
+        0,
+        1,
+        2,
+        2,
+        1,
+        3
+      ],
+      "pixels_per_unit": 168.0,
+      "width": 504.0,
+      "height": 261.0,
+      "pivot": {
+        "x": 252.0,
+        "y": 0.0
+      },
+      "texture": {
+        "source": {
+          "bundle": "defaultpackage_assets_image_mapentity_entity14_others.bundle",
+          "bundle_hash": "e3695f2244bb444d6062db03e35ad903",
+          "path_id": "1679857031533221321",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/e3695f2244bb444d6062db03e35ad903.bundle",
+          "manifest": "871_156598",
+          "source_manifest": "854_156383",
+          "bundle_size": 652537,
+          "bundle_sha256": "1bf6155edb3301d50c1486a9b7f424ef979efecec0bd69efd4dc25fc29c9a2fa"
+        },
+        "payload_sha256": "1179d5eb8390505d1eb1e38876df4863ce271e9bc2c8dcb1e9854539eea26a4c",
+        "decoded_rgba_sha256": "8105606ee8c50ee38bc371ee129057b6b0826f929496a881829a7864b55406ab",
+        "mips": [
+          {
+            "level": 0,
+            "width": 504,
+            "height": 261,
+            "astc_offset": 0,
+            "astc_size": 59136,
+            "astc_sha256": "3d201d3a6405a2939e2fcd70256e65136df9195469e9ed6c3207183016422cf8",
+            "rgba_offset": 0,
+            "rgba_size": 526176,
+            "rgba_sha256": "8105606ee8c50ee38bc371ee129057b6b0826f929496a881829a7864b55406ab"
+          }
+        ],
+        "profile": "LDR_SRGB",
+        "native_format": 4
+      },
+      "serialization_template": {
+        "path": "unity/Assets/Official/World/Map/13/NativeEntityTextures/50c5ac60e7dfbffee63c900a7d4d97b6/-9203820619277488241.texture.asset",
+        "sha256": "81689f221251f1f8324099d5c0e3a262aedc076da30103833c1c18aee83f87a9"
+      },
+      "sprite_serialization_template": {
+        "path": "unity/Assets/Official/World/Map/13/NativeScene/Effect/CustomWater/Textures/default_water_mask.asset",
+        "sha256": "9229c8d4180b4d57c00b003e364a033e55a080241d83aec8e518f03e2fd44e9b"
+      }
+    }
+  ],
+  "original_script_metadata": [
+    {
+      "original_type": "Spine.Unity.SkeletonMecanim",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_map_common_entitydisplaysworldbonusexplore.bundle",
+        "bundle_hash": "84df53fcb4cf9f732a5f7cfcd3a39aa4",
+        "path_id": "-623833692247436080",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/84df53fcb4cf9f732a5f7cfcd3a39aa4.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 56097,
+        "bundle_sha256": "b5e8295cfcb2ff67d1a93c5968cf71c7e1edfda41e025437046082e3deb1235a"
+      },
+      "payload_sha256": "364a9e4163b570c594db78c4bc0d08e6f6f9342cfb901ebf2de411621c1aa9c7",
+      "fields": {
+        "m_Name": "SkeletonMecanim",
+        "m_ExecutionOrder": 0,
+        "m_PropertiesHash": {
+          "bytes[0]": 135,
+          "bytes[1]": 53,
+          "bytes[2]": 173,
+          "bytes[3]": 203,
+          "bytes[4]": 239,
+          "bytes[5]": 175,
+          "bytes[6]": 110,
+          "bytes[7]": 96,
+          "bytes[8]": 226,
+          "bytes[9]": 41,
+          "bytes[10]": 25,
+          "bytes[11]": 75,
+          "bytes[12]": 143,
+          "bytes[13]": 168,
+          "bytes[14]": 196,
+          "bytes[15]": 14
+        },
+        "m_ClassName": "SkeletonMecanim",
+        "m_Namespace": "Spine.Unity",
+        "m_AssemblyName": "spine-unity"
+      },
+      "replacement": "NativeMap13PropMecanim",
+      "replacement_guid": "45a35123f9a65f4cb970035fb95b7392"
+    },
+    {
+      "original_type": "Spine.Unity.SkeletonRenderSeparator",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_map_common_entitydisplaysworldbonustouch.bundle",
+        "bundle_hash": "2ed82bd0b3e0ee535529af521f202b0e",
+        "path_id": "2734677121303131094",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2ed82bd0b3e0ee535529af521f202b0e.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 51337,
+        "bundle_sha256": "ffce49276163ee82e76be0a4889a31e6dea47f152f1dfc77af3f73b61e37f15a"
+      },
+      "payload_sha256": "cb5b4a4527f30fa732efc6f7d9ebcff42542e3a23081fa910ecb5b251eba9743",
+      "fields": {
+        "m_Name": "SkeletonRenderSeparator",
+        "m_ExecutionOrder": 0,
+        "m_PropertiesHash": {
+          "bytes[0]": 222,
+          "bytes[1]": 122,
+          "bytes[2]": 185,
+          "bytes[3]": 252,
+          "bytes[4]": 202,
+          "bytes[5]": 23,
+          "bytes[6]": 104,
+          "bytes[7]": 4,
+          "bytes[8]": 227,
+          "bytes[9]": 180,
+          "bytes[10]": 26,
+          "bytes[11]": 115,
+          "bytes[12]": 16,
+          "bytes[13]": 250,
+          "bytes[14]": 238,
+          "bytes[15]": 214
+        },
+        "m_ClassName": "SkeletonRenderSeparator",
+        "m_Namespace": "Spine.Unity",
+        "m_AssemblyName": "spine-unity"
+      },
+      "replacement": "NativeMap13PartsBinding",
+      "replacement_guid": "9bad21dc05e753c3b94bc8a5d46ebe21"
+    },
+    {
+      "original_type": "Spine.Unity.SkeletonPartsRenderer",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_map_common_entitydisplaysworldbonustouch.bundle",
+        "bundle_hash": "2ed82bd0b3e0ee535529af521f202b0e",
+        "path_id": "4541788988834951701",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2ed82bd0b3e0ee535529af521f202b0e.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 51337,
+        "bundle_sha256": "ffce49276163ee82e76be0a4889a31e6dea47f152f1dfc77af3f73b61e37f15a"
+      },
+      "payload_sha256": "d1b925da2fb5578ccdd9b2ba7e836db884244a4c138950eee7e55fabaa6e14f8",
+      "fields": {
+        "m_Name": "SkeletonPartsRenderer",
+        "m_ExecutionOrder": 0,
+        "m_PropertiesHash": {
+          "bytes[0]": 188,
+          "bytes[1]": 183,
+          "bytes[2]": 62,
+          "bytes[3]": 93,
+          "bytes[4]": 33,
+          "bytes[5]": 176,
+          "bytes[6]": 147,
+          "bytes[7]": 161,
+          "bytes[8]": 76,
+          "bytes[9]": 45,
+          "bytes[10]": 161,
+          "bytes[11]": 165,
+          "bytes[12]": 71,
+          "bytes[13]": 50,
+          "bytes[14]": 139,
+          "bytes[15]": 32
+        },
+        "m_ClassName": "SkeletonPartsRenderer",
+        "m_Namespace": "Spine.Unity",
+        "m_AssemblyName": "spine-unity"
+      },
+      "replacement": "NativeMap13PartRenderer",
+      "replacement_guid": "eac322d899ed56fa92393132a577449a"
+    },
+    {
+      "original_type": "ResetMaterialPropertyBlock",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_map_common_entitydisplaysworldbonustouch.bundle",
+        "bundle_hash": "2ed82bd0b3e0ee535529af521f202b0e",
+        "path_id": "-4286223900480332219",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2ed82bd0b3e0ee535529af521f202b0e.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 51337,
+        "bundle_sha256": "ffce49276163ee82e76be0a4889a31e6dea47f152f1dfc77af3f73b61e37f15a"
+      },
+      "payload_sha256": "9f082525c835c042c96021ed641f60c323f9faca883e11d4b22fd29b6a7c4e41",
+      "fields": {
+        "m_Name": "ResetMaterialPropertyBlock",
+        "m_ExecutionOrder": 0,
+        "m_PropertiesHash": {
+          "bytes[0]": 95,
+          "bytes[1]": 122,
+          "bytes[2]": 108,
+          "bytes[3]": 233,
+          "bytes[4]": 48,
+          "bytes[5]": 18,
+          "bytes[6]": 187,
+          "bytes[7]": 196,
+          "bytes[8]": 97,
+          "bytes[9]": 182,
+          "bytes[10]": 84,
+          "bytes[11]": 102,
+          "bytes[12]": 230,
+          "bytes[13]": 138,
+          "bytes[14]": 43,
+          "bytes[15]": 7
+        },
+        "m_ClassName": "ResetMaterialPropertyBlock",
+        "m_Namespace": "",
+        "m_AssemblyName": "Assembly-CSharp"
+      },
+      "replacement": "ResetMaterialPropertyBlock",
+      "replacement_guid": "24b927401af15f39a0ac5f142b4e129b"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-prop-hierarchies.json",
+      "sha256": "69cf5dcd45bb69c8b1af4265e4e05ad76b1f5435954bf640817c5b56bfb3e84e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-prop-separators.json",
+      "sha256": "376fb5e759ba326db1805dbdf73a7c3722dd6baa65080799de3e1429712311e7"
+    },
+    {
+      "path": "assets/reference/official-map/map13-native-prop-hierarchies-source-manifest.json",
+      "sha256": "c4f24dd709ca15a2b5ec1b8cc33aaee44c4d5e3f28ed728734894bb22ccbcca8"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ResetMaterialPropertyBlock.cs",
+      "sha256": "410829e8992ca3debc08f87bb5af01da0f6daf357361485d89867f40a521b005"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_prop_parts.py",
+      "sha256": "003d3849eb58205f1507ce3a66eecb9aebbd8d0219186e2f359811f69962c791"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Map13/Native/PropParts/3bf7e798b65f620d1fe25655/Tree.prefab",
+      "sha256": "dae2655f2fd051c82c1cc2028c4a38a0a566e062ede1de97079135302363c7fa"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/Native/PropParts/3bf7e798b65f620d1fe25655/Tree.prefab.meta",
+      "sha256": "5203f47cb188da848f3602510d67642396e97e1d216c0e854a1f5bf0152aacb1"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/Native/PropParts/3bf7e798b65f620d1fe25655.meta",
+      "sha256": "a5d8055ae6cf0e098d7ea89b0ff3e9db8ed2aadf65f26fbeb9dd649d698f9f10"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/Native/PropParts/94d7ca0e3ef07147e7410c1b/Tree.prefab",
+      "sha256": "909939f43df0d8fde496e73339a9d85196e75fdaccaf263fae066977766193d7"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/Native/PropParts/94d7ca0e3ef07147e7410c1b/Tree.prefab.meta",
+      "sha256": "b05a047efbf47aae31bcb7015a43136036be255fb87a16936ae90dc4e24eca2f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/Native/PropParts/94d7ca0e3ef07147e7410c1b.meta",
+      "sha256": "3d6c9024fc1f1b144c64f3e2aa80141816b80a7708cfff4f27f396f41130fc5b"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/Native/PropParts.meta",
+      "sha256": "420fadeb1fd9efde60ce952689441c3794ac45abca8ce839605ecc080c4bd59a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Rendering/ResetMaterialPropertyBlock.cs",
+      "sha256": "75d3e2a16492ef3cc84fb9f3b82dc4d1ca81c2be0fcf55ab116d91cdd7f1bec5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Rendering/ResetMaterialPropertyBlock.cs.meta",
+      "sha256": "329429f5f2635df8efbe81ea4516724eec3e97f9e9808023d92b1f0758df31c6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Rendering/Zjcs.Official.World.Map13Rendering.asmdef",
+      "sha256": "1315e7bc56030c4d8537dff7c0e3bef4d16a827af95eaa5d380695c71e21dc84"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Rendering/Zjcs.Official.World.Map13Rendering.asmdef.meta",
+      "sha256": "c5111fad897f9529aff41be1bb343c94f7c926069cc525902c3bff2bb5233857"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Rendering.meta",
+      "sha256": "03696bee5e73b5425460dea2d9b8ae4be79cd05c7d9fe6c6f2f00410a11fc0d9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons/NativeMap13PartRenderer.cs",
+      "sha256": "e14798bc7e13674f05c45de8a395b87efaf3403ba55fc5e604038997db504cee"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons/NativeMap13PartRenderer.cs.meta",
+      "sha256": "3b167e2b405f51c80e31a535f6eb2487cf8ec6e3e35b71bd68df4881de5478fb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons/NativeMap13PartsBinding.cs",
+      "sha256": "d666914608adeaa70c2430622413ccdb81d79c904e2d3915188cc23fe6de0363"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons/NativeMap13PartsBinding.cs.meta",
+      "sha256": "faae158a9e9a9a461771cea86b0a0a1591a8e6b983437fb9ad0ad4fd17d0b855"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons/NativeMap13PropMecanim.cs",
+      "sha256": "7ea453a714ba15097d2fc897747fe9ecfdd9698af68b892b3f0930df7e8e7fd2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons/NativeMap13PropMecanim.cs.meta",
+      "sha256": "d8c12e103426cbd7cc6139bb1ee972b766325da52e6f2c420abacb9e090d59cc"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativePropPartsArt/Building_tree_snow.sprite.asset",
+      "sha256": "79c9094187b2d3179b6c18688b041be4396f429e821dac4433dcd2d1e3f42f2c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativePropPartsArt/Building_tree_snow.sprite.asset.meta",
+      "sha256": "da2802aa7454fc3b78a097c3dcbd6c13b609b5318661b573d30d737ca2794097"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativePropPartsArt/Building_tree_snow.texture.asset",
+      "sha256": "45ba6d4636e4e2281f3a61bbbccbde21320f659f7ddd420605dbdc3902f5cc23"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativePropPartsArt/Building_tree_snow.texture.asset.meta",
+      "sha256": "9ce2e221e413b9bcc20aec490ce630f998d2595aaa772006c6a3cfc40507e3d2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativePropPartsArt.meta",
+      "sha256": "4cee3aaedee81386f4bb7439dd43792bd6332c0ecc1f679bd14c009f8ef6f9b8"
+    }
+  ]
+}

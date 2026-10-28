@@ -47,6 +47,10 @@ namespace Zjcs.Editor.Map13Skeletons
             }
             catch (Exception e) { Debug.LogException(e); EditorApplication.Exit(1); }
         }
+        public static void RunPropPartsOnly()
+        {
+            SessionState.SetBool(Key + ".partsOnly", true); ImportAndRun();
+        }
         private static void Observe(string text, string trace, LogType type) { if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert) error = true; }
         private static void Tick()
         {
@@ -58,11 +62,17 @@ namespace Zjcs.Editor.Map13Skeletons
         }
         private static IEnumerator Verify()
         {
-            Application.logMessageReceived += Observe; var steps = VerifySteps();
-            while (true)
+            Application.logMessageReceived += Observe; var stack = new Stack<IEnumerator>(); stack.Push(VerifySteps());
+            while (stack.Count > 0)
             {
                 object next;
-                try { if (!steps.MoveNext()) break; next = steps.Current; }
+                try
+                {
+                    var steps = stack.Peek();
+                    if (!steps.MoveNext()) { stack.Pop(); continue; }
+                    next = steps.Current;
+                    if (next is IEnumerator nested && !(next is CustomYieldInstruction)) { stack.Push(nested); continue; }
+                }
                 catch (Exception e) { Debug.LogException(e); EditorApplication.isPlaying = false; yield break; }
                 yield return next;
             }
@@ -72,6 +82,12 @@ namespace Zjcs.Editor.Map13Skeletons
         private static IEnumerator VerifySteps()
         {
             Application.runInBackground = true; Application.targetFrameRate = 60;
+            if (SessionState.GetBool(Key + ".partsOnly", false))
+            {
+                var partLight = new GameObject("Original parts diagnostic illumination").AddComponent<Light2D>();
+                partLight.lightType = Light2D.LightType.Global; partLight.intensity = 1;
+                yield return OfficialMap13PropPartsAcceptance.Verify(); yield break;
+            }
             VerifyAffineAndClipping();
             var catalog = Resources.Load<NativeMap13SkeletonCatalog>("Map13/Native/Skeletons/catalog");
             if (!catalog || catalog.models.Length != 27 || catalog.renderers.Length != 57) throw new InvalidDataException("Runtime native skeleton inventory differs.");
@@ -162,6 +178,7 @@ namespace Zjcs.Editor.Map13Skeletons
                 coverage = "Play Mode: all source key times and an interior time per segment, affine/clipping invariants, named loop/end playback, 57 original material/profile camera draws. Animator transitions, separated prefab parts, full map layout/input and saves are not exercised." });
             Debug.Log($"Original Map13 native skeleton Play Mode passed: 27 models, {animations} animations, {poses} poses, {finite} finite matrix fields, {index} original profile camera draws, {pixels} visible pixels. Formal prefab/Animator/input/save integration remains outstanding.");
             yield return OfficialMap13MecanimAcceptance.Verify(catalog, camera, target, readback);
+            yield return OfficialMap13PropPartsAcceptance.Verify();
             if (error) throw new InvalidDataException("Original native Mecanim geometry execution logged errors.");
             camera.targetTexture = null; target.Release(); UnityEngine.Object.Destroy(target); UnityEngine.Object.Destroy(readback); UnityEngine.Object.Destroy(gallery);
         }

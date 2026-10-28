@@ -766,3 +766,19 @@ unity/Assets/Game/Runtime/Official/WorldUI/WorldShowRemainTimeInfo.cs* text eol=
 unity/Assets/Game/Runtime/Official/WorldUI/WorldCultureTimeSpanArg.cs* text eol=lf
 unity/Assets/Game/Editor/OfficialMap11UiTools.Confirm.cs* text eol=lf
 unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.ConfirmUi.cs* text eol=lf
+
+# Map13 original prop hierarchy and renderer sub-prefab byte provenance.
+scripts/prepare_unity_map13_prop_hierarchies.py text eol=lf
+scripts/prepare_unity_map13_prop_parts.py text eol=lf
+unity/Assets/Official/World/Map/13/Source/native-prop-*.json* text eol=lf
+unity/Assets/Official/World/Map/13/NativePropPartsArt* -text
+unity/Assets/Official/World/Map/13/NativePropPartsArt/** -text whitespace=cr-at-eol,-blank-at-eol
+unity/Assets/Game/Resources/Map13/Native/PropParts* -text
+unity/Assets/Game/Resources/Map13/Native/PropParts/** -text whitespace=cr-at-eol,-blank-at-eol
+unity/Assets/Game/Runtime/Official/World/Map13Rendering* text eol=lf
+unity/Assets/Game/Runtime/Official/World/Map13Rendering/** text eol=lf
+unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons/NativeMap13Part*.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons/NativeMap13PropMecanim.cs* text eol=lf
+unity/Assets/Game/Editor/Map13Skeletons/OfficialMap13PropPartsAcceptance.cs* text eol=lf
+assets/reference/official-map/map13-native-prop-hierarchies-source-manifest.json text eol=lf
+assets/reference/official-map/map13-native-prop-parts*-source-manifest.json text eol=lf
