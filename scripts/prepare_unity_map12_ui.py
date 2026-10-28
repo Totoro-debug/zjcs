@@ -19,8 +19,10 @@ def prepare_context():
     source, prefabs = dict(extra_trees), dict(extra_sources)
     for key in ("GoddessTouchDialog", "LostGoddessTouchDialog", "6010_12_DialogIcon",
                 "6011_12_DialogIcon", "6620_12_DialogIcon", "WorldCanvas",
-                "WorldFantasyLadderDialog", "6103_DialogIcon", "6302_DialogIcon"):
-        bundle = "prefabs_ui_map_world" if key == "WorldCanvas" else "prefabs_ui_worldmap"
+                "WorldFantasyLadderDialog", "6103_DialogIcon", "6302_DialogIcon",
+                "BattleSteleWorldStageDialog", "6650_DialogIcon", "6655_DialogIcon", "ConfirmDialog"):
+        bundle = ("prefabs_ui_map_world" if key == "WorldCanvas" else
+                  "prefabs_ui_confirmdialog" if key == "ConfirmDialog" else "prefabs_ui_worldmap")
         native, _ = exporter.object_tree(key, bundle)
         nodes = native["nodes"]
         for node in nodes:
@@ -29,7 +31,8 @@ def prepare_context():
             nodes[node["parentIndex"]]["children"].append(node)
         source[key] = nodes[0]
         prefabs[key] = dict(native["source"], path=native["source_path"])
-        if key in ("WorldFantasyLadderDialog", "6103_DialogIcon", "6302_DialogIcon"):
+        if key in ("WorldFantasyLadderDialog", "6103_DialogIcon", "6302_DialogIcon",
+                   "BattleSteleWorldStageDialog", "6650_DialogIcon", "6655_DialogIcon", "ConfirmDialog"):
             extra_trees[key] = nodes[0]
             extra_sources[key] = prefabs[key]
     base = ROOT / "unity/Assets/Official/World/Map/12/Source"
@@ -52,6 +55,78 @@ def prepare_context():
 def build():
     from prepare_unity_map11_ui import build as restore
     restore(12)
+    record_stele_ui_sources()
+
+
+def record_stele_ui_sources():
+    """Verify the converted source closure; this does not import or run Unity."""
+    from prepare_unity_map10_entities import write_texture_meta
+    ui_root = ROOT / "unity/Assets/Official/World/Map/12/UI"
+    ui_path = ui_root / "map12-ui.json"
+    data = json.loads(ui_path.read_bytes())
+    ui_manifest = json.loads((ui_root / "source-manifest.json").read_bytes())
+    keys = ("BattleSteleWorldStageDialog", "6650_DialogIcon", "6655_DialogIcon", "ConfirmDialog")
+    if data["manifest"] != "871_156598" or data["mapClassId"] != 12 or len(data["panels"]) != 72:
+        raise ValueError("Unexpected selected stele UI source closure")
+    if sha(ui_path.read_bytes()) != ui_manifest["output"]["sha256"]:
+        raise ValueError("Converted stele UI source differs from its receipt")
+    if any(len([p for p in data["panels"] if p["key"] == key]) != 1 for key in keys):
+        raise ValueError("An original stele prefab is missing or duplicated")
+    steles_path = ROOT / "unity/Assets/Official/World/Map/12/Resources/Map12/steles.json"
+    steles = json.loads(steles_path.read_bytes())
+    if len(steles["Items"]) != 50 or not {r["ClassId"] for r in steles["Items"]}.issubset(r["itemId"] for r in data["itemIcons"]):
+        raise ValueError("Stele preview item icon closure is incomplete")
+    component = next(c for c in data["components"] if c["type"] == keys[0])
+    fields = component["fields"]
+    refs = {r["rid"]: r for r in fields["references"]["RefIds"]}
+    if len(refs) != 3 or any(not (2**53 < rid <= 2**63-1) for rid in refs) or len(fields["mTeamStateSwitcher"]["mStateConfigs"]) != 2 or len(fields["mRankSuppressionSwitcher"]["mStateConfigs"]) != 1:
+        raise ValueError("Original stele managed state closure changed")
+    for switch in ("mTeamStateSwitcher", "mRankSuppressionSwitcher"):
+        if any(r["rid"] not in refs for r in fields[switch]["mStateConfigs"]):
+            raise ValueError("Original stele managed state ID is unbound")
+    sprites = []
+    for row in data["sprites"]:
+        path = ROOT / "unity" / row["unityAssetPath"]
+        if sha(path.read_bytes()) != row["sha256"]:
+            raise ValueError("Converted stele sprite differs: " + str(path))
+        metadata = path.with_name(path.name + ".meta")
+        if not metadata.exists():
+            write_texture_meta(path)
+            # Final native Sprite settings are applied by ImportSprites, after
+            # runtime acceptance resumes. Keep stable source metadata meanwhile.
+            metadata.write_text("\n".join(line.rstrip() for line in metadata.read_text(encoding="utf8").splitlines()) + "\n", encoding="utf8", newline="\n")
+        reward_ids = {r["ClassId"] for r in steles["Items"]}
+        reward_sprites = {item[field] for item in data["itemIcons"] if item["itemId"] in reward_ids
+                          for field in ("sprite", "qualitySprite")}
+        if row["uri"] in reward_sprites or any(node.get("image_sprite_file") == row["uri"]
+                for p in data["panels"] if p["key"] in keys for node in p["nodes"]):
+            sprites.extend((path, metadata))
+    record = lambda p: dict(path=source_path(p), sha256=sha(p.read_bytes()), bytes=p.stat().st_size)
+    code = ROOT / ".tools/source-packages/current/871_156598/official-code"
+    originals = [code / "client-source" / (name + ".cs") for name in
+        ("BattleSteleWorldStageDialog", "WorldSteleStageInput", "ConfirmDialog", "AutoAlignForSingleMultiLineText")]
+    originals += [code / "framework-source" / (name + ".cs") for name in ("StateMultiLanguagesConfig", "StateMultiLanguageData")]
+    adapters = [ROOT / p for p in (
+        "scripts/prepare_unity_map12_ui.py", "scripts/prepare_unity_map11_ui.py", "scripts/map11_support_ui.py",
+        "unity/Assets/Game/Runtime/Official/WorldUI/StageDialog.cs", "unity/Assets/Game/Runtime/Official/WorldUI/WorldStateSwitcher.cs",
+        "unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleSteleStageUI.cs", "unity/Assets/Game/Runtime/Official/WorldUI/WorldStateMultiLanguagesConfig.cs",
+        "unity/Assets/Game/Runtime/Presentation/World/OfficialMap11UiData.cs", "unity/Assets/Game/Editor/OfficialMap11UiTools.cs",
+        "unity/Assets/Game/Editor/OfficialMap11UiTools.Stage.cs", "unity/Assets/Game/Editor/OfficialMap11UiTools.Steles.cs",
+        "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.SteleUi.cs")]
+    inputs = [steles_path, ROOT / "assets/reference/official-map/map12-steles-source-manifest.json",
+              ui_root / "source-manifest.json", ROOT / "unity/Assets/Official/World/Map/12/Source/ui-prefabs-source-manifest.json"]
+    receipt = dict(manifest=data["manifest"], mapClassId=12,
+        operation="Decode four original native prefab dependencies, preserve signed Int64 managed references and original UI methods, and retain all 50 original reward item icons. Windows native import and runtime integration are pending.",
+        inputs=[record(p) for p in inputs], originalCode=[record(p) for p in originals], adapters=[record(p) for p in adapters],
+        prefabs={key: ui_manifest["source"]["prefabs"][key] for key in keys},
+        outputs=[record(ui_path)] + [record(p) for p in sorted(set(sprites))],
+        counts=dict(panels=len(data["panels"]), sprites=len(data["sprites"]), rewardItems=50, stateReferences=len(refs)),
+        limitations=["Native Windows prefabs/catalog still require explicit Unity import; this receipt records source conversion only.",
+            "NPC team binding, map window entry, native ConfirmDialog callbacks/alignment, UI audio/text effects and complete reward rendering remain pending.",
+            "The two-size seven-placement simulated-input fixture is authored and not executed while automatic runtime acceptance is paused."])
+    target = ROOT / "assets/reference/official-map/map12-stele-ui-source-manifest.json"
+    write(target, encode(receipt))
+    print("Map12 stele UI source closure verified: 72 panels, 50 reward item icons, three exact Int64 managed references.", flush=True)
 
 
 def record_native_bindings():
@@ -98,5 +173,6 @@ def record_native_bindings():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--record-native-bindings", action="store_true")
+    parser.add_argument("--record-stele-ui-sources", action="store_true")
     args = parser.parse_args()
-    record_native_bindings() if args.record_native_bindings else build()
+    record_native_bindings() if args.record_native_bindings else record_stele_ui_sources() if args.record_stele_ui_sources else build()

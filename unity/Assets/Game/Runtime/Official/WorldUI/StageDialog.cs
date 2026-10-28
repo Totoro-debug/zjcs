@@ -36,6 +36,7 @@ namespace Zjcs.Official.WorldUI
         public Sprite TitleIcon, Background;
         public GameObject DialogIconPrefab;
         public int Level;
+        public WorldBattleSteleContext BattleStele;
         public Func<bool> IsActive;
         public Action<int> StartStage;
         public Action<Transform> ShowRewardPreview;

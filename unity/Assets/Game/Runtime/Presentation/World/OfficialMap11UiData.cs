@@ -227,6 +227,12 @@ namespace Zjcs.Presentation.World
         public string myTouchBtn, myBtnText, myFuncDescText, mDialogContent, mExtraPropItemText;
         public string myStageIcon, myBgIcon;
         public string mWorldDialogEntityContent, myBattleBtn, myAwardSlot, myLevelText, ReWardDescText, mLayerText;
+        public string mRewardSlot, mTeamBtn, mBattleBtn, mRecommendCombatRatingText, mCurrentCombatRatingText, mRankSuppressionText, mTeamInviteText;
+        public OfficialMap11StateSwitcher mTeamStateSwitcher, mRankSuppressionSwitcher;
+        public UnityEngine.Vector3 mFixedGlobalScale;
+        public string[] Masks;
+        public int IsOverrideMask, OccluderCount;
+        public string mCountLanguage;
         public OfficialMap11StageClickData[] mDatas;
         public string mItemNameText, mLightImage, mParticle;
         public string mOutputAdditionItemNameText, mOutputAdditionItemCountText, mExtraContentSlot;
@@ -309,6 +315,7 @@ namespace Zjcs.Presentation.World
         public OfficialMap11ObjectStateData mStateGameObjectData;
         public OfficialMap11ColorStateData mStateColorData;
         public OfficialMap11TextStateData mStateMultiLanguageTextData;
+        public OfficialMap11TextStateData[] mStateMultiLanguageTextDatas;
     }
     [Serializable] public sealed class OfficialMap11StateValue { public int mValue; }
     [Serializable] public sealed class OfficialMap11ObjectStateData { public OfficialMap11ObjectState[] GoConfig; }

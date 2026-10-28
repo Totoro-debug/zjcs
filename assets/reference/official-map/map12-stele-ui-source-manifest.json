@@ -1,0 +1,469 @@
+{
+  "adapters": [
+    {
+      "bytes": 12309,
+      "path": "scripts/prepare_unity_map12_ui.py",
+      "sha256": "e78f2fb0e9787f50f82eb96cafe961a802a33221868ace5da5f111fb679e7d1f"
+    },
+    {
+      "bytes": 72931,
+      "path": "scripts/prepare_unity_map11_ui.py",
+      "sha256": "eb1acfc19aa433e6c6132f2a8c7b7250dca600b15d3d4554166aac7c75e3f99e"
+    },
+    {
+      "bytes": 16148,
+      "path": "scripts/map11_support_ui.py",
+      "sha256": "3dd5625182aaf1ed6075db213cebd92e49ff2fa1c11ab2a6bd5b378e0ca9ba5a"
+    },
+    {
+      "bytes": 1793,
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/StageDialog.cs",
+      "sha256": "c6f1df0187ae45609f32c92a989451659e0a8571e90f05139bc1c694bf7b7c1c"
+    },
+    {
+      "bytes": 5819,
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldStateSwitcher.cs",
+      "sha256": "e2fd20a63aa5e3b82ab98ec3d17cc8c973c3558bb0b2083ef54a2bf80188a2dc"
+    },
+    {
+      "bytes": 3452,
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleSteleStageUI.cs",
+      "sha256": "8822dacf6e4fbb02d238df1372778a93ad933877e4053af0117cea39d0a3e7a3"
+    },
+    {
+      "bytes": 1211,
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldStateMultiLanguagesConfig.cs",
+      "sha256": "92d7eb0769663bc17d409e911e84064c66f19c0a1867c6c78005176c92cb0c1b"
+    },
+    {
+      "bytes": 21981,
+      "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialMap11UiData.cs",
+      "sha256": "cc4a799c69794aad5ea63f8f087dd2acb52a2110fbfbb3a22f1c78b5e8f05d14"
+    },
+    {
+      "bytes": 28338,
+      "path": "unity/Assets/Game/Editor/OfficialMap11UiTools.cs",
+      "sha256": "7a62b545c9b962538fc5cf5b4cdfdcbd67cb12787df6ad4f8f51c61628df714f"
+    },
+    {
+      "bytes": 3595,
+      "path": "unity/Assets/Game/Editor/OfficialMap11UiTools.Stage.cs",
+      "sha256": "834efa0347645f2b44ba32c77f29b042d0ed4b944a6b7661e78144784839847b"
+    },
+    {
+      "bytes": 5228,
+      "path": "unity/Assets/Game/Editor/OfficialMap11UiTools.Steles.cs",
+      "sha256": "50a82464aaf10333fd690c5b06de4a4323348c5ab00d78cfba4ffb4399fe3b1e"
+    },
+    {
+      "bytes": 10116,
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.SteleUi.cs",
+      "sha256": "3599952f2e2e631a8392e7e5890beb12436ca6b4d08fad665bc62ab1618a08df"
+    }
+  ],
+  "counts": {
+    "panels": 72,
+    "rewardItems": 50,
+    "sprites": 943,
+    "stateReferences": 3
+  },
+  "inputs": [
+    {
+      "bytes": 67308,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/steles.json",
+      "sha256": "77957658a9ae12d24594feef3219b1cb64ac4aaf9b54dcbcc0d1da672b639b3a"
+    },
+    {
+      "bytes": 12152,
+      "path": "assets/reference/official-map/map12-steles-source-manifest.json",
+      "sha256": "8e7fa248727199c313039620e6759aae974583b1a0df9b0b04bc28a764f73b75"
+    },
+    {
+      "bytes": 2066634,
+      "path": "unity/Assets/Official/World/Map/12/UI/source-manifest.json",
+      "sha256": "607db6ea980ad3f26c7f6aa3902afdf9edd8723d002cfa76a0736f4257982cc1"
+    },
+    {
+      "bytes": 648896,
+      "path": "unity/Assets/Official/World/Map/12/Source/ui-prefabs-source-manifest.json",
+      "sha256": "9823140661c39193dc31f31d73086a76d6dc65cd22e1ee3561d8b45fb51b4811"
+    }
+  ],
+  "limitations": [
+    "Native Windows prefabs/catalog still require explicit Unity import; this receipt records source conversion only.",
+    "NPC team binding, map window entry, native ConfirmDialog callbacks/alignment, UI audio/text effects and complete reward rendering remain pending.",
+    "The two-size seven-placement simulated-input fixture is authored and not executed while automatic runtime acceptance is paused."
+  ],
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "operation": "Decode four original native prefab dependencies, preserve signed Int64 managed references and original UI methods, and retain all 50 original reward item icons. Windows native import and runtime integration are pending.",
+  "originalCode": [
+    {
+      "bytes": 7201,
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/BattleSteleWorldStageDialog.cs",
+      "sha256": "ef598748bd3cebd2378f10cad13eb2f439209d6a065dfe18d9625e08be3a30de"
+    },
+    {
+      "bytes": 627,
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/WorldSteleStageInput.cs",
+      "sha256": "c9e1cf7c3debe90b7e014668c10608d87c34cc2f2c126e4883be69fc90d748b7"
+    },
+    {
+      "bytes": 5085,
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ConfirmDialog.cs",
+      "sha256": "32a90151042cfa5bdd68bad7da388741fdbb1d1ddb79e7df91a4b232b225a5d2"
+    },
+    {
+      "bytes": 1787,
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/AutoAlignForSingleMultiLineText.cs",
+      "sha256": "3b8553b9437839796abeac16700260d1cf6e8502da5ed9d714170862db147a73"
+    },
+    {
+      "bytes": 685,
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-source/StateMultiLanguagesConfig.cs",
+      "sha256": "95fa544c48d71dab5a843cfaa205e822c26ff47b34c52270ec51326d498f7926"
+    },
+    {
+      "bytes": 147,
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-source/StateMultiLanguageData.cs",
+      "sha256": "b54a3699e8dc10249e261b8f33b5155c63646bb74bb2cd1ab81f5e86e5912788"
+    }
+  ],
+  "outputs": [
+    {
+      "bytes": 21057472,
+      "path": "unity/Assets/Official/World/Map/12/UI/map12-ui.json",
+      "sha256": "e2720777383a326bf4aa5449049583acd7e8fcaac560ad6c4c62bd8b19cb069a"
+    },
+    {
+      "bytes": 9868,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/BtnNo-fef0ddc591.png",
+      "sha256": "fef0ddc59129e7a5136f6bac11369284e494e1964add4d2aea8901671756802a"
+    },
+    {
+      "bytes": 2627,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/BtnNo-fef0ddc591.png.meta",
+      "sha256": "da969348bbf3deec0f57a708f98379295cb959fbc79a687bb56c72ca3acc6741"
+    },
+    {
+      "bytes": 15689,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/BtnOk-27952bd12b.png",
+      "sha256": "27952bd12b6b60e0cfcc870ea8e3278f0aa47cd48c7048a1a7868b745648d599"
+    },
+    {
+      "bytes": 2627,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/BtnOk-27952bd12b.png.meta",
+      "sha256": "c72ccb200d5c04a81a0c3f567a0ad46d6984ade9e90f9570be912cacfe758ee2"
+    },
+    {
+      "bytes": 20054,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ChallengeMonumenticon_For-17334a6f2d.png",
+      "sha256": "17334a6f2d6aa37aa2b4a0980163776d613b7cab159138674ba4759fe4360775"
+    },
+    {
+      "bytes": 493,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ChallengeMonumenticon_For-17334a6f2d.png.meta",
+      "sha256": "3b337dee9b464c73c88570f73896881b48d87982f506bd691123504dab98d4d8"
+    },
+    {
+      "bytes": 115742,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_Assault1-6fab0d93ab.png",
+      "sha256": "6fab0d93abc102b584e13c3e1c606d39dcbae54daf92f34965c11d0af125cfa4"
+    },
+    {
+      "bytes": 493,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_Assault1-6fab0d93ab.png.meta",
+      "sha256": "55c202dcf223f15bf2a43ccc826289552c1cea92939697bfc864b590ead8fcb1"
+    },
+    {
+      "bytes": 266211,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_BattleStele-3b6f595ac1.png",
+      "sha256": "3b6f595ac18f6340106a93dad198a8fe87b704d19ff81168111e6710ee9e208c"
+    },
+    {
+      "bytes": 493,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_BattleStele-3b6f595ac1.png.meta",
+      "sha256": "0afe69077580aab418e927a9e9b7fe7dd377aac79330cbdce9986719b59399a9"
+    },
+    {
+      "bytes": 14200,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_Claw-7e14ad5a28.png",
+      "sha256": "7e14ad5a289abf9e2b81207007b9e4d4ef1a09731730e07fd36731f53f46eef5"
+    },
+    {
+      "bytes": 493,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_Claw-7e14ad5a28.png.meta",
+      "sha256": "8f3d286579af447c2bfd7fae1c038e12faa7e9dac7a25dc987d3be9ab24d5422"
+    },
+    {
+      "bytes": 629,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_CountText-31498f0e88.png",
+      "sha256": "31498f0e8895dce861cf88210bb81c26ac96ed09df5556edc6614418fc574f71"
+    },
+    {
+      "bytes": 2627,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_CountText-31498f0e88.png.meta",
+      "sha256": "978457c9206e503b10bc3859981f97c6d6bc90530f441725a7a973e3d6f89b06"
+    },
+    {
+      "bytes": 12783,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_PopUps-20ee64ac9f.png",
+      "sha256": "20ee64ac9f8b6824c26ca389c68ecd05b2862d66305dc2bfb6fcec4b6b113920"
+    },
+    {
+      "bytes": 2630,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_PopUps-20ee64ac9f.png.meta",
+      "sha256": "4cce8dced0871c36912b092c69b5244f07fcb14dae8875d047c1743d5ea7e0a8"
+    },
+    {
+      "bytes": 9877,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_PopUpsTitle-4b683e8fe6.png",
+      "sha256": "4b683e8fe6816c3ff7f4e127beb8e577cfb5e9331626e5b31fa81595a3064599"
+    },
+    {
+      "bytes": 2623,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_PopUpsTitle-4b683e8fe6.png.meta",
+      "sha256": "94471b2fc7c7c3913110eaa4a03f6ad27d8d7e932f7533a39b1cf80a43980e40"
+    },
+    {
+      "bytes": 8227,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_PopUpsWenLi-68058e4df2.png",
+      "sha256": "68058e4df2fc9aa171d0e654156dedd97995be2187490d9e0a0c798b4d3a5339"
+    },
+    {
+      "bytes": 2623,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_PopUpsWenLi-68058e4df2.png.meta",
+      "sha256": "60988230789d91cc3c194e84569893d85de7a5d9fe08932ff4cf7743c3cd11f8"
+    },
+    {
+      "bytes": 5702,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_Prompt-9d9be6a566.png",
+      "sha256": "9d9be6a566f60025b0e590ae632337372eda660c4a6b9c2245fc8853c623ce6c"
+    },
+    {
+      "bytes": 493,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_Prompt-9d9be6a566.png.meta",
+      "sha256": "17ad970a633ca92dfb5467b8a65e5561f9ea2aa3c0bfc1252d4373f86d2f68d1"
+    },
+    {
+      "bytes": 4372,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_TipInfo-e26851fa21.png",
+      "sha256": "e26851fa21de312e3d6176d0ba3495ed23282d5c988a679826ea08573334d55f"
+    },
+    {
+      "bytes": 2630,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_TipInfo-e26851fa21.png.meta",
+      "sha256": "b35c7ec8611158d19f0471b3d15f1ffb6e9baa3d052d7c0c98592c2cee2eaecc"
+    },
+    {
+      "bytes": 1580,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBlue-852756b231.png",
+      "sha256": "852756b23165ca4c2a377acee93125060d2948f3157b9b29094debbd5aa8d913"
+    },
+    {
+      "bytes": 2625,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBlue-852756b231.png.meta",
+      "sha256": "260f023d710fd0e14d1253da932fba3378377b91b148a78231eae7de85a131b9"
+    },
+    {
+      "bytes": 1790,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBlue_Upgrade-f77095c4c9.png",
+      "sha256": "f77095c4c9da7a0b4544f2117b6e048084f17d724229e0992de796fe7add22f1"
+    },
+    {
+      "bytes": 2623,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBlue_Upgrade-f77095c4c9.png.meta",
+      "sha256": "53c2e0844268207f3b05327cdced0f631dbb6aab32f4faeb8214417322637eee"
+    },
+    {
+      "bytes": 2066,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBlueDot-d245e09217.png",
+      "sha256": "d245e092178e3753282c32c895dc1f8c050c9013f4dbfb50c59be696074a3261"
+    },
+    {
+      "bytes": 2623,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBlueDot-d245e09217.png.meta",
+      "sha256": "565186a1a1ef3531c460ccb7086d9d8800834f0d0c6095c472ba4e08e60cf8f9"
+    },
+    {
+      "bytes": 3848,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgLine-273bb8cd8c.png",
+      "sha256": "273bb8cd8ce1cb9a6a292b842bc7b2383bb185a08ac8c0dd88c08a3e90cb46f4"
+    },
+    {
+      "bytes": 2623,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgLine-273bb8cd8c.png.meta",
+      "sha256": "8db94d92e480c2b4651bb7dd7c7be2475ff5faae75f2c93a6be675e06d54d6e8"
+    },
+    {
+      "bytes": 1157,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgMask_BgDialog3-89be95b6ea.png",
+      "sha256": "89be95b6ea6e00fa690a1ec710527e0420493ddd8a2d343e683f7c969385d8a8"
+    },
+    {
+      "bytes": 2627,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgMask_BgDialog3-89be95b6ea.png.meta",
+      "sha256": "01878a2fef312f7354dd7ed535a83300ef19c07ec2b218b9c26a5e5f397120db"
+    },
+    {
+      "bytes": 5136,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgNew-f37ed67204.png",
+      "sha256": "f37ed6720455fd649b8458d715dccfc2771655cdf4b8cb8d2f5598e5056a1021"
+    },
+    {
+      "bytes": 2623,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgNew-f37ed67204.png.meta",
+      "sha256": "bce2a752d8651b4935c2e05b503512166b71992535217707811046628414f7d0"
+    },
+    {
+      "bytes": 24295,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgQuality_Blue-d7af3c8915.png",
+      "sha256": "d7af3c8915139d2d876cb2f85ca24e63135c48c028cd83474a8248802ab5a93f"
+    },
+    {
+      "bytes": 2623,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgQuality_Blue-d7af3c8915.png.meta",
+      "sha256": "e42f33b31c0e0175b58d1ba23ec3dd2a8bf9e9daa349fbf16a880a061ecdef74"
+    },
+    {
+      "bytes": 23905,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgQuality_Orange-062c6607e3.png",
+      "sha256": "062c6607e362f475331c72fd86330e63aa5e0bc1bb5678a8e880419c6bff6ce2"
+    },
+    {
+      "bytes": 2623,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgQuality_Orange-062c6607e3.png.meta",
+      "sha256": "6ab1a8ec534c7137a34c1979927fa19df59ac0f7906735fdc7e26ffed5210431"
+    },
+    {
+      "bytes": 24635,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgQuality_Purple-7d444d87c0.png",
+      "sha256": "7d444d87c09fb7ec19312d1e2570399002dfa897c8e94f82689acefa0d734699"
+    },
+    {
+      "bytes": 2623,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgQuality_Purple-7d444d87c0.png.meta",
+      "sha256": "44cd409ae8d38a629322bf1bc9a9d28de3232d0fffa6db6c2afd788fbcc6fdb5"
+    },
+    {
+      "bytes": 1977,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgRedDot-02ebb92c90.png",
+      "sha256": "02ebb92c906b1b9fe1166b9882dbdd92e545769b61dfc7462f2b410965c8a81c"
+    },
+    {
+      "bytes": 2623,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgRedDot-02ebb92c90.png.meta",
+      "sha256": "c7aa425a759b2b39a2b07448bc82c92909937318644420e2c93d1188f64a4c29"
+    },
+    {
+      "bytes": 57245,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/item_110-1c9046ce48.png",
+      "sha256": "1c9046ce4855e28889c7744396e9ce3d58b869cd23c3ec8efd0efa3261c6d1de"
+    },
+    {
+      "bytes": 2623,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/item_110-1c9046ce48.png.meta",
+      "sha256": "95fa5daf91a88a841d9e1b4ad97d47af475d48ad0226a0eaad7599af55a6531e"
+    },
+    {
+      "bytes": 44522,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/itembox_blue_5-1676ff1043.png",
+      "sha256": "1676ff1043232a0f59f54078ceb0fc9172212089498cbd27db3a51cf7ccdb70d"
+    },
+    {
+      "bytes": 493,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/itembox_blue_5-1676ff1043.png.meta",
+      "sha256": "3110f9fc6bda75186e33fce7f96f8ec2fa741fdd46ae1aabb888cbf08bd94456"
+    },
+    {
+      "bytes": 36066,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/itembox_white_5-c8ad5c6fc8.png",
+      "sha256": "c8ad5c6fc89a1cc9ed526e4b349de44717290a4f0a937bd826d17598082ff1b7"
+    },
+    {
+      "bytes": 493,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/itembox_white_5-c8ad5c6fc8.png.meta",
+      "sha256": "177c6b21be0721e0afd0940f1fbf8f4a00ccd944f355d0e30bc586e4d1f45080"
+    },
+    {
+      "bytes": 38646,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/Money_2-6608ae9402.png",
+      "sha256": "6608ae940213cc9aad44993ac179dacc0d8c5f905a6a98db66ff382720715698"
+    },
+    {
+      "bytes": 2623,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/Money_2-6608ae9402.png.meta",
+      "sha256": "19e15d57ea2ba5c88e818752aa1f4af00eb3fb795a353bbf78353e6ffe0941d2"
+    },
+    {
+      "bytes": 14063,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/SoloChallenge_For-6336d77662.png",
+      "sha256": "6336d77662e3554a362b58ae81abc11bb778bf0e5a450b34443e34a212c610fa"
+    },
+    {
+      "bytes": 493,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/SoloChallenge_For-6336d77662.png.meta",
+      "sha256": "f122f14589f6e92feb5408465e9c63d89c1c123d8f0f285669ea37b542c485fb"
+    },
+    {
+      "bytes": 11175,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/SoloChallengeicon_For-0d904e418c.png",
+      "sha256": "0d904e418c24eb80294652635c72c4e5d273dae9ffa1e4fc57d004710a30a37e"
+    },
+    {
+      "bytes": 493,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/SoloChallengeicon_For-0d904e418c.png.meta",
+      "sha256": "dc0096a8103e2a3e4c24ffb89ebc663eb48a2afb22f1910cbc9e8319596e54a5"
+    }
+  ],
+  "prefabs": {
+    "6650_DialogIcon": {
+      "bundle": "defaultpackage_assets_prefabs_ui_worldmap.bundle",
+      "bundle_hash": "d9407811f279c9152607a68853fe492b",
+      "bundle_sha256": "b89571df3f7eca7a6d9bf9f7d6f03af49b38191d4f3324fbd40559fe70f9916a",
+      "bundle_size": 1186915,
+      "manifest": "871_156598",
+      "origin": "official_cdn",
+      "path": "Assets/Prefabs/UI/WorldMap/WorldStageDialogIcon/Common/6650_DialogIcon.prefab",
+      "path_id": "7583502609981466813",
+      "source_manifest": "854_156383",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d9407811f279c9152607a68853fe492b.bundle"
+    },
+    "6655_DialogIcon": {
+      "bundle": "defaultpackage_assets_prefabs_ui_worldmap.bundle",
+      "bundle_hash": "d9407811f279c9152607a68853fe492b",
+      "bundle_sha256": "b89571df3f7eca7a6d9bf9f7d6f03af49b38191d4f3324fbd40559fe70f9916a",
+      "bundle_size": 1186915,
+      "manifest": "871_156598",
+      "origin": "official_cdn",
+      "path": "Assets/Prefabs/UI/WorldMap/WorldStageDialogIcon/Common/6655_DialogIcon.prefab",
+      "path_id": "-3485726338732082363",
+      "source_manifest": "854_156383",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d9407811f279c9152607a68853fe492b.bundle"
+    },
+    "BattleSteleWorldStageDialog": {
+      "bundle": "defaultpackage_assets_prefabs_ui_worldmap.bundle",
+      "bundle_hash": "d9407811f279c9152607a68853fe492b",
+      "bundle_sha256": "b89571df3f7eca7a6d9bf9f7d6f03af49b38191d4f3324fbd40559fe70f9916a",
+      "bundle_size": 1186915,
+      "manifest": "871_156598",
+      "origin": "official_cdn",
+      "path": "Assets/Prefabs/UI/WorldMap/BattleSteleWorldStageDialog.prefab",
+      "path_id": "-7157387139162149852",
+      "source_manifest": "854_156383",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d9407811f279c9152607a68853fe492b.bundle"
+    },
+    "ConfirmDialog": {
+      "bundle": "defaultpackage_assets_prefabs_ui_confirmdialog.bundle",
+      "bundle_hash": "e9fb11a95f5ca61a90de42fc3fd90258",
+      "bundle_sha256": "872b72513cc17d918891383990fb4dbe92c0bb5add97a4561840197b468578d3",
+      "bundle_size": 181189,
+      "manifest": "871_156598",
+      "origin": "official_cdn",
+      "path": "Assets/Prefabs/UI/ConfirmDialog/ConfirmDialog.prefab",
+      "path_id": "5569979765835515756",
+      "source_manifest": "854_156383",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/e9fb11a95f5ca61a90de42fc3fd90258.bundle"
+    }
+  }
+}

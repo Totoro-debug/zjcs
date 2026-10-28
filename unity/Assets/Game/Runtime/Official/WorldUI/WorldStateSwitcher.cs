@@ -22,6 +22,8 @@ namespace Zjcs.Official.WorldUI
     public class WorldStateKVMatch<TValue> : IEnumerable<WorldMonoKeyValuePair<WorldStateConfigValue, TValue>>
     {
         [SerializeField] private List<WorldMonoKeyValuePair<WorldStateConfigValue, TValue>> mSerializeBuffer;
+        public static WorldStateKVMatch<TValue> FromBindings(IEnumerable<WorldMonoKeyValuePair<WorldStateConfigValue, TValue>> values)
+            => new WorldStateKVMatch<TValue> { mSerializeBuffer = new List<WorldMonoKeyValuePair<WorldStateConfigValue, TValue>>(values) };
         public bool TryGetValue(WorldStateConfigValue key, out TValue value)
         {
             foreach (var item in mSerializeBuffer)
@@ -45,6 +47,8 @@ namespace Zjcs.Official.WorldUI
         [SerializeReference] private List<IWorldStateConfig> mStateConfigs;
         [SerializeField] private GameObject mOwner;
         public T State { get; protected set; }
+        public static WorldStateSwitcher<T> FromBindings(GameObject owner, IEnumerable<IWorldStateConfig> configs)
+            => new WorldStateSwitcher<T> { mOwner = owner, mStateConfigs = new List<IWorldStateConfig>(configs) };
         public void SetState(T state)
         {
             if (state is int integer) Switch(integer);

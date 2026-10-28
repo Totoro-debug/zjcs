@@ -365,6 +365,28 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
                 components.append({"panel": key, "path": paths[(obj.assets_file.name, obj.path_id)],
                                    "type": script.m_ClassName, "fields": resolve(ui_schemas.read(obj), obj),
                                    "source": apk.provenance(obj)})
+            elif key == "ConfirmDialog" and script.m_ClassName == "AutoAlignForSingleMultiLineText":
+                # The original SafeAction is not Unity-serializable. Match the
+                # four selected client fields and require their complete extent.
+                native = obj.get_raw_data()
+                if len(native) != 64:
+                    raise ValueError("Original confirmation AutoAlign extent differs")
+                def pointer(at):
+                    file_id, path_id = struct.unpack_from("<iq", native, at)
+                    return dict(m_FileID=file_id, m_PathID=path_id)
+                fields = dict(mTxt=pointer(32), mTmp=pointer(44),
+                              mSingleLineAlignment=struct.unpack_from("<i", native, 56)[0],
+                              mMultiLineAlignment=struct.unpack_from("<i", native, 60)[0])
+                components.append({"panel": key, "path": paths[(obj.assets_file.name, obj.path_id)],
+                                   "type": script.m_ClassName, "fields": resolve(fields, obj),
+                                   "source": dict(apk.provenance(obj), object_sha256=sha256(native),
+                                                  operation="Four original serialized fields; strict 64-byte extent; SafeAction excluded.")})
+            elif key in ("BattleSteleWorldStageDialog", "6650_DialogIcon", "6655_DialogIcon", "ConfirmDialog") and script.m_ClassName in (
+                    "MaintainGlobalScaleUI", "CountRedDotImage", "PreviewTool", "UIBloomGroup",
+                    "AutoAlignForSingleMultiLineText", "LockMaskWithTime", "ButtonSound", "PopupWindowSound", "TMPEffect"):
+                components.append({"panel": key, "path": paths[(obj.assets_file.name, obj.path_id)],
+                                   "type": script.m_ClassName, "fields": resolve(schemas.read(obj), obj),
+                                   "source": apk.provenance(obj)})
             elif script.m_ClassName.startswith("StateSwitcher"):
                 components.append({"panel": key, "path": paths[(obj.assets_file.name, obj.path_id)],
                                    "type": script.m_ClassName, "fields": resolve(schemas.read(obj), obj),
@@ -668,6 +690,16 @@ def build(map_id=11):
             "ui_goddess_region_progress_100_text", "STAGE_CONDITION_REGION_PROGRESS_NOT_FULL",
             "PropType.HangUpExpAddPercent", "PropType.HangUpMoneyAddPercent", "item_1_name", "suit_tip_with_parenthesis"]
     keys.extend(("ui_witch_book_collect", "ui_map_region_rank_suppression_text"))
+    if map_id == 12:
+        stele_data = json.loads((ROOT / "unity/Assets/Official/World/Map/12/Resources/Map12/steles.json").read_bytes())
+        keys.extend("stage_" + str(row["StageId"]) + "_name" for row in stele_data["Steles"])
+        keys.extend(("ui_battle_stele_current_combat_rating", "ui_battle_stele_team_member_count_tip",
+                     "ui_battle_stele_not_support_team_tip"))
+        for component in components:
+            for reference in component["fields"].get("references", {}).get("RefIds", []):
+                if reference.get("type", {}).get("class") == "StateMultiLanguagesConfig":
+                    for row in reference["data"]["mStateMultiLanguageTextDatas"]:
+                        keys.extend(entry["Value"] for entry in row["Keys"]["mSerializeBuffer"])
     keys.extend("ui_witch_result_" + str(i) for i in range(14))
     keys.extend("ui_witch_content_" + str(i) for i in range(14))
     keys.extend("story_book_" + str(i) + "_title" for i in range(1, 15))

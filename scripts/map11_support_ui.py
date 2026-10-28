@@ -119,6 +119,19 @@ def load_support_ui(apk, schemas, map_id=11, code_root=None):
         if chests["manifest"] != apk.version:
             raise ValueError("Placed chest UI source version differs")
         placed_chest_items = {item for rule in chests["rewards"]["rewardRules"] for item in rule["IdList"]}
+        # The seven placed steles also preview manual-use rank reward boxes.
+        # Keep the selected original item records/icons, including ranks above
+        # the current character; they are not exploration entity-group rewards.
+        stele_path = ROOT / "unity/Assets/Official/World/Map/12/Resources/Map12/steles.json"
+        stele_raw = stele_path.read_bytes()
+        stele_receipt = json.loads((ROOT / "assets/reference/official-map/map12-steles-source-manifest.json").read_bytes())
+        stele_output = next(row for row in stele_receipt["outputs"] if row["path"] == stele_path.relative_to(ROOT).as_posix())
+        if hashlib.sha256(stele_raw).hexdigest() != stele_output["sha256"]:
+            raise ValueError("Placed stele reward UI source differs from its receipt")
+        steles = json.loads(stele_raw)
+        if steles["manifest"] != apk.version or steles["mapClassId"] != map_id:
+            raise ValueError("Placed stele reward UI source version differs")
+        placed_chest_items.update(row["ClassId"] for row in steles["Items"])
     # Treasure-gacha tables span every mainland. Their selector intersects the
     # active region's DropItems; retain all common rewards and this map's union.
     item_rows = [row for row in all_items if row["ClassId"] in item_ids or row["ClassId"] in placed_chest_items or row["ItemType"] in (100, 101) or row["ClassId"] in exploration_ids

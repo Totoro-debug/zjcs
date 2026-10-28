@@ -34,6 +34,9 @@ namespace Zjcs.Editor
                         dialog.myStageIcon = Component<Image>(fields.myStageIcon);
                         dialog.myBgIcon = Component<Image>(fields.myBgIcon);
                         break;
+                    case "BattleSteleWorldStageDialog":
+                        BindBattleStelePrefab(node, source, require, Text);
+                        break;
                     case "StageTouchUI":
                         var touch = node.AddComponent<StageTouchUI>();
                         touch.myTouchBtn = Component<Button>(fields.myTouchBtn);

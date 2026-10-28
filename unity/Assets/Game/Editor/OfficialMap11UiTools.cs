@@ -97,7 +97,7 @@ namespace Zjcs.Editor
             string path = SourceRoot + "/map" + activeMapId + "-ui.json";
             OfficialMap11UiData data = JsonUtility.FromJson<OfficialMap11UiData>(File.ReadAllText(path));
             if (data.manifest != (activeMapId == 11 ? "854_156383" : "871_156598")
-                || data.mapClassId != activeMapId || data.panels.Length != (activeMapId == 11 ? 65 : 68))
+                || data.mapClassId != activeMapId || data.panels.Length != (activeMapId == 11 ? 65 : activeMapId == 12 ? 72 : 68))
                 throw new InvalidDataException("Official map UI data is incomplete: " + activeMapId);
             Directory.CreateDirectory(ResourceRoot);
             string catalogPath = ResourceRoot + "/catalog.json";
@@ -250,7 +250,7 @@ namespace Zjcs.Editor
                         || panel.key.StartsWith("WorldTouchDialog", StringComparison.Ordinal)
                         || panel.key == "WitchStoryCollectContent"
                         || panel.key == "WorldStageDialogWithWitchStoryCollect"
-                        || panel.key == "WorldFantasyLadderDialog"
+                        || panel.key == "WorldFantasyLadderDialog" || panel.key == "BattleSteleWorldStageDialog"
                         || panel.key == "StoryWitchBookDialog" || panel.key == "StoryBookDialog"
                         || panel.key == "OpenStoryBookItem" || panel.key == "PreviewContentGroup"
                         || panel.key == "ItemAwardIcon"
@@ -260,7 +260,9 @@ namespace Zjcs.Editor
                         || panel.key.StartsWith("LostGoddessResult", StringComparison.Ordinal))
                     {
                         BindSupportPrefab(root, panel.key, data, Require, sprites);
-                        if (panel.key == "WorldFantasyLadderDialog") BindStagePrefab(panel.key, data, Require);
+                        if (panel.key == "BattleSteleWorldStageDialog") BindSteleAuxiliary(panel.key, data, Require);
+                        if (panel.key == "WorldFantasyLadderDialog" || panel.key == "BattleSteleWorldStageDialog")
+                            BindStagePrefab(panel.key, data, Require);
                         if (PrefabUtility.SaveAsPrefabAsset(root, ResourceRoot + "/" + panel.key + ".prefab") == null)
                             throw new InvalidOperationException("Could not save restored official witch UI hierarchy: " + panel.key);
                         UnityEngine.Object.DestroyImmediate(root);
@@ -310,6 +312,8 @@ namespace Zjcs.Editor
                     {
                         BindSupportPrefab(root, panel.key, data, Require, sprites);
                         if (activeMapId == 12 && panel.key == "6302_DialogIcon") OfficialMap12BuildingPreviewTools.Bind(Require);
+                        if (activeMapId == 12 && (panel.key == "6650_DialogIcon" || panel.key == "6655_DialogIcon"))
+                            BindSteleAuxiliary(panel.key, data, Require);
                         foreach (OfficialMap11UiIconBinding iconBinding in data.iconBindings.Where(value => value.key == panel.key))
                         {
                             GoddessDialogIcon icon = Require(iconBinding.path).gameObject.AddComponent<GoddessDialogIcon>();
@@ -320,7 +324,7 @@ namespace Zjcs.Editor
                         UnityEngine.Object.DestroyImmediate(root);
                         continue;
                     }
-                    if (panel.key == "CostItemConfirmDialog" || panel.key == "ItemIconDefault"
+                    if (panel.key == "ConfirmDialog" || panel.key == "CostItemConfirmDialog" || panel.key == "ItemIconDefault"
                         || panel.key == "ItemIconEquip" || panel.key == "ItemIconTreasure" || panel.key == "ItemIconSkill" || panel.key == "PayMoneyChangeDialog")
                     {
                         BindSupportPrefab(root, panel.key, data, Require, sprites);

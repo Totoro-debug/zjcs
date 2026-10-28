@@ -72,7 +72,7 @@ namespace Zjcs.Editor
 
         private static void RunCore(bool verifyUi, bool import = true, int uiMapClassId = 12, bool verifyRuntime = false,
             bool verifyDialogueInput = false, bool verifyAudio = false, bool verifyChests = false, bool verifyNativeWorld = false,
-            bool verifyBuildingUi = false, bool verifyBuildingPrelude = false, bool verifyBuildingBattle = false)
+            bool verifyBuildingUi = false, bool verifyBuildingPrelude = false, bool verifyBuildingBattle = false, bool verifySteleUi = false)
         {
             try
             {
@@ -91,6 +91,7 @@ namespace Zjcs.Editor
                 SessionState.SetBool(Key + ".chests", verifyChests);
                 SessionState.SetBool(Key + ".nativeWorld", verifyNativeWorld);
                 SessionState.SetBool(Key + ".buildingUi", verifyBuildingUi);
+                SessionState.SetBool(Key + ".steleUi", verifySteleUi);
                 SessionState.SetBool(Key + ".buildingPrelude", verifyBuildingPrelude);
                 SessionState.SetBool(Key + ".buildingBattle", verifyBuildingBattle);
                 SessionState.SetInt(Key + ".uiMap", uiMapClassId);
@@ -159,6 +160,12 @@ namespace Zjcs.Editor
 
         private static IEnumerator VerifySteps()
         {
+            if (SessionState.GetBool(Key + ".steleUi", false))
+            {
+                IEnumerator steleSteps = VerifySteleUiSteps();
+                while (steleSteps.MoveNext()) yield return steleSteps.Current;
+                yield break;
+            }
             if (SessionState.GetBool(Key + ".buildingUi", false))
             {
                 IEnumerator buildingSteps = VerifyBuildingUiSteps();
