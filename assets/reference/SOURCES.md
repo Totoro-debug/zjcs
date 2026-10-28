@@ -471,6 +471,8 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 职业加权顶点：原 871 男女骨骼中的全部 11,747 个网格／包围框／裁剪附件、165,433 个顶点和 264,312 个骨骼影响由独立仿射适配器读取，原权重及影响顺序不变，不读取骨骼 SDK 实现。隔离 Play Mode 与独立双精度参考逐坐标比较，最大差 `0.000366210938`，容差 `0.0004 + 0.000007 × abs(expected)`；所有权、非法输入及未启用骨骼分支通过。来源、输入输出哈希与限制见 `profession-ui/vertex-geometry-source-manifest.json`。参考矩阵是合成几何输入，不代表原动作或生产角色渲染。
 
+职业图集几何：按 APK 优先解析当前版男女 atlas，男模型所选版本来自已校验云端，女模型仍使用 APK 中相同哈希的包。保留 19,805 个区域、929 页描述及原裁边／旋转；11,716 个网格的 165,309 组 UV 和 22,230 个区域附件的 88,920 个四角在隔离 Play Mode 与独立仿射参考比较通过，最大 UV 差 `5.96046448E-08`、原坐标差 `0.0000305175781`。输入、转换工具、原 atlas 对象来源和输出哈希见 `profession-ui/atlas-geometry-source-manifest.json`。生产贴图采样和完整角色渲染未覆盖。
+
 ## 技能首页与安装流程复核
 
 2026-10-13：复核固定版本 `854_156383` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。

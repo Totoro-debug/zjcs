@@ -1,0 +1,85 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": "assets/reference/profession-ui/bone-pose-source-manifest.json",
+      "sha256": "6a685085b9bcabcb8e3f482c6d8b23d8431a19a90918f4caf6e8b1b90612a684"
+    },
+    {
+      "path": "scripts/prepare_native_character_geometry.py",
+      "sha256": "cf62f215a6664f2ffe8f3801c603d38b18bbe0dcfa9ded59ec92303d2ab0bbcf"
+    },
+    {
+      "path": "scripts/official_apk.py",
+      "sha256": "daeb1d36238a159e3095db0fd8ea90b0a25c88e23af0c44a7e9d9f202cf65c18"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/male/skeleton.json",
+      "sha256": "21bc0198abc44620e65f308c6acb9a78f3ed9d6feb1d2558acdc72ba76dd3e15"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/male/atlas.txt",
+      "sha256": "5a47a720a985b699e1152b4bb6c3eaa460bf5d8b66a62d39c7dd8993ee1b5e32"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/male/atlas-source-manifest.json",
+      "sha256": "f08799f6738d272faf08d50044413a50df02d5cbf48fc10399e2dc0f6b685533"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/female/skeleton.json",
+      "sha256": "eb1c26d31879c9832bd3d88a75cfe057d8712eddfe08e5dd85fc9208d8a666ed"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/female/atlas.txt",
+      "sha256": "984f4e8cff9de1ceea6d6c79de023c9b76f28c0d355ecf5c5dc2953c56be8a7e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/female/atlas-source-manifest.json",
+      "sha256": "430e493c773684db438c8c8310a45ac04b4d78578fd9c551324fd69ae66769df"
+    }
+  ],
+  "fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/atlas-geometry-validation.json",
+    "sha256": "252dec810558e393a010f1b1741197ee87e02eef81fc2fece08e15e87ae63bbc"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_profession_atlas_geometry.py",
+    "sha256": "da0a87d1f3da29d65fb759c2170770d1bb9c142f49901d86e829401d0a8eed92"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAtlasRegion.cs",
+      "sha256": "31a29cf906ad06b7b22b5eb3297f7135c6ca64bf6915298c019443fe72176e48"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAtlasRegion.cs.meta",
+      "sha256": "cde8fc5a10eb5d0285378c681ad81d14929839ca6dc84dbb174f07352333422c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeAtlasGeometryValidation.cs",
+      "sha256": "45cd0b454326df263dcc8c73871516287d467f3afd7acc2e91594e64cb074152"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeAtlasGeometryValidation.cs.meta",
+      "sha256": "7c423a8772e7fe4fe5061aa218afeaf5725d07a4b7de03282c9bc1ed32066062"
+    }
+  ],
+  "counts": {
+    "regions": 19805,
+    "pages": 929,
+    "mesh": 11716,
+    "region": 22230,
+    "uvs": 165309,
+    "corners": 88920
+  },
+  "format_references": [
+    "https://esotericsoftware.com/spine-atlas-format",
+    "https://esotericsoftware.com/spine-json-format#Attachments"
+  ],
+  "operation": "Read the APK-first, pinned-current bundle via the verified local CDN resolver only when needed. Reuse the independent atlas text parser. Independently map untrimmed source UVs through trim and quarter-turn packing to Unity page UVs; retain original attachment transforms and region trim geometry. References use a centred affine rotation rather than the runtime branch mapping. No skeleton SDK implementation or baked prefab is used.",
+  "validated_scope": "Unity 2022.3.57f1c2 Play Mode: 19805 original atlas regions, all 11716 source meshes / 165309 UVs and 22230 textured rectangle attachments / 88920 corners match independent centred-affine references. Maximum UV difference 5.96046448E-08 within 0.000002; maximum source-coordinate difference 0.0000305175781 within 0.0004 + 0.000007 * abs(expected). All quarter turns, original trim and attachment transforms, reflected geometry and invalid inputs pass. No real character or complete profession page is rendered by this stage.",
+  "limitations": [
+    "GPU sampling of production atlas textures, attachment material resolution, original constraints and full character/page rendering remain required."
+  ]
+}
