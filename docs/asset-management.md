@@ -334,3 +334,5 @@ Map14 的 416 个原实体 prefab 根已从 APK／所选云端原字节直接追
 原 EC 世界关卡视图、状态配置／事件／操作接口和状态演出处理器位于 `Runtime/Official/EntityWorldStages/`；来源与哈希见 `assets/reference/official-map/map14-entity-world-stage-views-source-manifest.json`。复用既有原状态切换器与显式原生素材目录；宿主查询／事件边界和正式 prefab 接线仍须完成。四类英雄雕像原对象图采用旧 MyWorldStage 链，不能用此 EC 分项代替。运行范围及缺项见[龙之国](maps/map-14.md)；本批未新增素材载荷或生成完整快照。
 
 龙之国旧版关卡组件使用 `python scripts/prepare_unity_legacy_world_stage_runtime.py` 恢复至 `Runtime/Official/LegacyWorldStages/`；来源与输出哈希见 `map14-legacy-world-stage-source-manifest.json`。原 `MyWorldStage` 与 EC 显示视图共同使用：雕像根通过 `MyMapDisplay` 动态加载本图 `_14_view`，不以旧组件代替原显示 prefab。内置屏隔离 Play Mode 已验证原生命周期、原生池化特效与 EC 委托；完整工程校验、正式 prefab／输入／存档和 Player 仍待接通。
+
+实体 Animator／挂点／变换／网格视图由 `python scripts/prepare_unity_entity_transform_views.py` 恢复至 `Runtime/Official/EntityTransformViews/`，来源见 `map14-entity-transform-views-source-manifest.json`。复用原地形 `Pos2d`／Direction 及已迁入的 AnimationController／AttachAgent，保持原字段与执行顺序；Unity 原生托管引用往返已验证类型和配置保留，未据此改写原类型序列化属性。隔离带画面 Play Mode 通过，正式原 prefab、完整工程校验、地图输入／存档与 Player 仍待接入。

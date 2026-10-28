@@ -100,6 +100,8 @@
 
 - 四类英雄雕像根 prefab 的完整原 `MyWorldStage` 客户端类与其实际使用的 `MyComponent` 基类成员已迁入 `Runtime/Official/LegacyWorldStages/`；复用已迁入的原 `StageStateCfg` 字段声明。保留 Awake／开始／结束、先切显示再播放、登场重试、独立非状态循环、显隐与淡入淡出门控、替换／缓冲事件、EC 配置委托、移动后交互开关及重定向查询顺序。根对象的 `MyMapDisplay` 还会加载 `6570_14_view`～`6573_14_view`；四份原显示 prefab 已在当前官方闭包中核实，使用 EC 视图／Animator／精灵／提示点及原循环演出，不能仅迁入旧组件就视为雕像完成。共享状态、可见性与查找是显式必需宿主输入，不由适配层推测规则。隔离程序集 Unity 导入／编译及内置屏 Play Mode 通过，使用原生池化特效验证登场中隐藏再显示重试、登场／状态演出转循环、空／越界状态、替换、查询／重定向、EC 委托、淡入淡出和结束解绑，实际运行画面已查看；根工程静态检查通过。本轮未执行完整工程 `ProjectTools.Validate`，正式原雕像根／显示 prefab 绑定、点击／业务／存档与 Windows Player 尚未完成。来源为 `map14-legacy-world-stage-source-manifest.json`，恢复器为 `scripts/prepare_unity_legacy_world_stage_runtime.py`。
 
+- 四类雕像显示资源所需的完整原 `ECAnimatorView`、`ECAttachAgentView`、`ECTransformView`、`ECGridTransformView` 及 `ZSetUtils`、位置事件接口和 `EnumUtils.DirToRotation` 已迁入 `Runtime/Official/EntityTransformViews/`，复用原 `Pos2d`／四方向值、`AnimationController` 与 `AttachAgent`。保留父实体变换、零优先级初始化、挂点清除／注册、位置／旋转／缩放通知、移动代理先停止再定位再通知、中心偏移与 Z 公式、翻转尺度幅度、空／非空客户端体型列表回退；原可选变换字段没有赋值的行为也原样保留。共享网格状态／坐标查询与事件发布仍是必需宿主输入，本轮不替代共享网格规则。隔离 Unity 导入／编译、内置屏 Play Mode 及根工程静态检查通过；验证原生 Sprite 与原 Animator controller 的绑定／控制器复用、全部四方向、原 Z／中心／偏移、翻转幅度、事件顺序和解绑，并完成真实 Unity 托管引用往返，原视图类型／字段保留，实际运行截图已查看。本轮未执行完整工程 `ProjectTools.Validate`；四份原雕像显示 prefab 的完整层级／动画／状态资源、正式地图点击／业务／存档与 Windows Player 继续接入。来源 `map14-entity-transform-views-source-manifest.json`，恢复器 `scripts/prepare_unity_entity_transform_views.py`。
+
 ## 自定义实现
 
 原演出核心以显式中心注入及调用方提供两个原帧阶段替代 DI／R3 注册；日志接入 Unity，移除只用于 Inspector／MessagePack 的属性。调度、数值、状态和回调顺序保留，正式宿主的生命周期接入仍待验证。

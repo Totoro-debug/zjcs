@@ -1,0 +1,188 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECAnimatorView.cs",
+      "sha256": "e5c5f8113b984e8192df3c12ecd75ef998ee1410906a66200a22f3ee07f5cab8"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECAttachAgentView.cs",
+      "sha256": "a4c76494ee5f151e4ed1e9096fa4ed3b618ae6b20ec224272ef0ff3d56d82bb8"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECTransformView.cs",
+      "sha256": "1262243ca2437579c593e16acff2436874be5713d3cf4df9c9b8edc857ccea45"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECGridTransformView.cs",
+      "sha256": "0a27127b67d9de5f8fa13eb0962119aade0053e5c931ad43450fa25388dd7e99"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ZSetUtils.cs",
+      "sha256": "f4db23868ddbd2b318994473b37d01213c090accfe7567c4159a775af1533e5b"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IGridTransformPosUpdatedEventReceiver.cs",
+      "sha256": "2d3257949e4c19e0242f192bcaf65e8bc7be48deff0dce1a835751bf0b422c2d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EnumUtils.cs",
+      "sha256": "d785f96e6a03ef86f71b385351542a66a302e90284ae1f4d531635e2cee360a6"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_entity_transform_views.py",
+      "sha256": "1d4db285676b91fbfeb5776d48b22e2b6fdd822945c8113f453bfb3daae04502"
+    },
+    {
+      "path": "scripts/prepare_unity_story_playable_runtime.py",
+      "sha256": "8901da0cedbce77ece9f81c2e2c35f4bbefb20f0f48f3fb26f32bc60afcfd2c0"
+    },
+    {
+      "path": "scripts/prepare_unity_story_sound_runtime.py",
+      "sha256": "7c9e2f9f102b8dd9b832b01bccd73d89748f04a252ca1a4d984dc33f7ed5cbcf"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeTerrain/Common/Pos2d.cs",
+      "sha256": "b03c06ed220bf27da5aefebcad7c8e27f73316ebe9c3accec8ee39fb78dee78b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeTerrain/Common/Direction.cs",
+      "sha256": "19142745fa33747fdd248634b5b4ea0e1d7bc60dd1d069cd440ab68b0864f555"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/AnimationController.cs",
+      "sha256": "66864b1ce56faa7901cac1f959f7848ccb67f7529789c315d22f04ef86aec1d0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/AttachAgent.cs",
+      "sha256": "3e350ecb7ef285d12eca47f4767dcf0231a0511822e90550f31a459494c57700"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTransformViews/ECAnimatorView.cs",
+      "sha256": "f4154c561e724592ba3d3465812948591d8e73313c05711a5c74126b0de4f2f2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTransformViews/ECAnimatorView.cs.meta",
+      "sha256": "48b8379808c3e58477d2fe5b93d6921a254b380cd2e36261837a59c46d63c131"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTransformViews/ECAttachAgentView.cs",
+      "sha256": "bd24e24988f53620f74afd2648bcf9f17a1bb7bd7a763c334711cbe71e800aec"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTransformViews/ECAttachAgentView.cs.meta",
+      "sha256": "c4467e523d08691f0a15b7654672bb1af7e3e33f6eeedcdaa4ea480f27fa9b7f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTransformViews/ECTransformView.cs",
+      "sha256": "7f85e7500a7ef38dae43d16652ccf61a430dfea09f15b49238b6cd42e45ae56d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTransformViews/ECTransformView.cs.meta",
+      "sha256": "a1fd1e5e3e76fc2cbb3d5bea7f08b88b85a38965ad96fb191da16ce89a60e26a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTransformViews/ECGridTransformView.cs",
+      "sha256": "0c60018b767bd4fa5ac75b69c9f430cdc3c5547f579f6e5bbdb257ff55f190d6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTransformViews/ECGridTransformView.cs.meta",
+      "sha256": "ed5127ec2446f5dbdfd64f62ec1cb4d7b7847a7b0c39b5f7e2948a6993c7497e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTransformViews/ZSetUtils.cs",
+      "sha256": "da7fe366bad475c2a790104e354775596058ca276c68053ccdda7d48a6b18889"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTransformViews/ZSetUtils.cs.meta",
+      "sha256": "b283fc0ac9cadb0fe2c1084dd10bb353333a90fb855ef2a24c6b45e404ef1d4d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTransformViews/IGridTransformPosUpdatedEventReceiver.cs",
+      "sha256": "f0ff67551dd0a09a76d17363d79af3b8e43d32ca9d6376a9c502116630e64167"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTransformViews/IGridTransformPosUpdatedEventReceiver.cs.meta",
+      "sha256": "e07e4b15acb15d617b1c420b1bde68e3bce5d65aaf91f6245e1de7463d313374"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTransformViews/EntityDirectionRotation.cs",
+      "sha256": "14365590909cb7aa87b4e845864f2d245b5dc1a58a17ac511dcf09c367a02644"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTransformViews/EntityDirectionRotation.cs.meta",
+      "sha256": "22d62748479d1695a6caf4ee66848aca4d7cb669345f0f5229ef2d4f4b65c018"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTransformViews/EntityTransformBindings.cs",
+      "sha256": "4020eeea1c752b98bdf52c29d5053f7454c85fce11369858d57c6c0af2f897aa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTransformViews/EntityTransformBindings.cs.meta",
+      "sha256": "b607c7970447516dc3f7b07fa86dd5c80429f7f59a2d11c8baf99acb9599325a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTransformViews/Zjcs.Official.EntityTransformViews.asmdef",
+      "sha256": "b9a2572a1d23a9ccd8c1fbb761bf502875674cf59859a747d0764cf2f05caf92"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTransformViews/Zjcs.Official.EntityTransformViews.asmdef.meta",
+      "sha256": "fdade17455b0a1b1bbcbb28bc69e2d2d13cae1d40f566659ec02064ce05b7b98"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTransformViews.meta",
+      "sha256": "8c5fe6728da7f00e8bbefd5efb2fcbfbbb7eeb8f2d54bc3c3edea733411ff6eb"
+    }
+  ],
+  "adaptations": [
+    {
+      "output": "ECAnimatorView.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "output": "ECAttachAgentView.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "output": "ECTransformView.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "output": "ECGridTransformView.cs",
+      "diagnosticBlocks": 1
+    },
+    {
+      "output": "ZSetUtils.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "output": "IGridTransformPosUpdatedEventReceiver.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "output": "EntityDirectionRotation.cs",
+      "diagnosticBlocks": 1
+    }
+  ],
+  "operation": "Copy complete ECAnimatorView, ECAttachAgentView, ECTransformView, ECGridTransformView, ZSetUtils and grid position receiver; select complete original EnumUtils.DirToRotation. Reuse migrated original Pos2d/Direction, Animator controller and attachment registry. Preserve order-zero Animator/attachment initialization, registry clear/add order, parent-entity transforms, position/rotation/scale notifications, grid subscription, moving-agent stop before position and callback, original Z/offset/center formula, nullable horizontal flip, scale magnitude and body-range fallback. Keep the original unassigned optional ECTransformView field rather than inventing discovery. Shared data, conversion queries, movement and event publication remain explicit required host inputs.",
+  "limitations": [
+    "Concrete shared grid/entity rules and publication, native managed-reference display prefabs, formal map/input/save and Windows Player remain required."
+  ]
+}
