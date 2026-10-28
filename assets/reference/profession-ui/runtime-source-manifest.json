@@ -256,7 +256,11 @@
   },
   "portrait_lifecycle": {
     "path": "assets/reference/profession-ui/portrait-lifecycle-source-manifest.json",
-    "sha256": "0082c2e89c4e213089dba38f99984822d1791327293341dd308e52dc0975f5df"
+    "sha256": "41b56be3c7fa90d936293015a461c62ed68e287509d854a11754565a54f7506f"
+  },
+  "portrait_persistence": {
+    "path": "assets/reference/profession-ui/portrait-persistence-source-manifest.json",
+    "sha256": "410f479ba1534ece30945f77c9f43ef5da8022c65c6cbfa932ddea395d37a7e4"
   },
   "item_resources": {
     "path": "assets/reference/profession-ui/item-resources-source-manifest.json",
@@ -296,7 +300,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "d18e822210eccdc3ddc72b3877ab02ab0d0e03949829c43dd714c4378b95b3dc"
+    "sha256": "5f3836c7375cc6c164e3ac47d33f3e8fa327f25a82a3e23b9d93f6e3c4b85993"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",

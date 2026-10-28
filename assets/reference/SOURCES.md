@@ -433,6 +433,8 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 原肖像生命周期的 8 个类型、官方 MessagePipe 取消对象的原生方法范围／哈希、显式绑定及源文件见 `profession-ui/portrait-lifecycle-source-manifest.json`；隔离 Unity 实际验证 GPU 读回与像素重载、请求键、取消／通知顺序、订阅与过期、纹理池回收和低内存释放，通过并查看测试纹理。此范围未接通真实角色拍摄、持久化或原生职业页面。职业缓存固定在 `.tools/source-packages/current/871_156598/profession-ui/`；`profession-ui/native-guid-identities.json` 保留已接入资源标识，余者按版本／导出路径固定 GUID，原生导出凭据记录一致重写后逐字段／对象引用校验及八个事件数组。幂等重放保留全部 1525 项已核实输入／输出资产哈希。验证输出按仓库会话目录约定隔离，不进入素材交付。
 
+肖像持久化的六个原类型及 `IStorage`／`IPersistentState` 契约见 `profession-ui/portrait-persistence-source-manifest.json`，记录源码、C# 输出、程序集与验证入口哈希。保留版本 3 清理／写状态顺序、请求 ID＋外观哈希文件名、原始字节和最后访问时间加三天的期限；沙箱根目录显式注入。隔离 Unity Play Mode 通过 GPU 字节写盘与重建提供器后恢复、版本与空数据、真实文件独占失败、过期与清空后复用，读回纹理画面已查看。测试状态提供器未作为正式玩家存档实现，真实角色拍摄及完整职业页面仍待接线。
+
 ## 技能首页与安装流程复核
 
 2026-10-13：复核固定版本 `854_156383` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。
