@@ -296,6 +296,8 @@ prepare_profession_playable.py 从 PlayerWorldProfessionUpgradeConfig.asset 的�
 
 默认武器 Direct3D Play Mode 已核对 96 组倒序采样动画姿态和 1,536 个独立世界矩阵，最大标量差 `0.00004577637`；四个 GPU mip 哈希、共 1,021,792 字节与源数据一致，原 shader 的 16 个变体／32 个 Windows D3D 阶段通过编译，实际剑／杖 GPU 图已查看。源武器平移在 `t=3.2` 暴露 Unity 加权曲线求值约 `0.00413` 的差异；现保留原控制点与 Unity 加权键表示，对单调三次曲线直接用双精度反解时间，不重采样或烘焙；原 1,171 条角色曲线的 19,537 个独立样本回归通过，最大绝对差 `0.0000152587891`。角色应用／原生网格的 96 组姿态和四张核心外观 GPU 诊断图也已回归通过并查看。Unity 编译／全局校验通过，仓库 74,856 个 GUID、隔离工程 73,826 个 GUID 静态检查通过。原武器 prefab、正式 `SkeletonGraphic`／`AppearanceUILite`、部件池、混合／角色物理、完整页面交互／存档和 Windows 发布仍待完成；未声明完整素材备份。来源见[原剑／杖模型、贴图及程序](../../assets/reference/profession-ui/weapon-resources-source-manifest.json)。
 
+原轻量 UI 外观与材质管理：已迁入原应用 `AppearanceUILite`、完整 `AppearanceAssetManager`、原接口／配置及共享材质记录。保留原高清地址拼接、启用时先更新网格再增加加载器／贴图引用、停用时清空覆盖再释放请求、缓存加载器再次启用、多个渲染器跳过空／重复占位图；同时保留原共享材质克隆与计数、普通材质池重置／复用、低内存／逐帧清理及关闭顺序。SDK Graphic、资源和低内存事件通过显式本地接口适配，未引入 SDK 实现。隔离 Direct3D Play Mode 使用真实默认剑／杖纹理，验证两个使用者互不误卸载、五次请求释放／图集占位恢复、四个共享材质槽位及原材质池生命周期，并实际查看两张 GPU 图；Graphic／加载器端点、图集访问和资源句柄仍是夹具。Unity 导入／编译、全局校验和静态检查通过（仓库 75,006 个 GUID，隔离工程 73,834 个 GUID）。正式原生 Graphic、完整原加载器／图集资产、武器 prefab 接线和整页交互／存档／Windows 发布尚未完成。来源见[原轻量外观与材质管理](../../assets/reference/profession-ui/appearance-ui-lite-source-manifest.json)。
+
 ## 自定义实现
 
 本地外观会话将原网络玩家／序列化副本替换为已选角色存档的只读投影和深副本；本地结构遗漏的武器类别仅在该投影中按原默认设置方法补齐；原肖像缓存的修改标记使用会话内单调递增的 UTC ticks，不写回存档或作为玩法时间。存档没有整身外观 ID 和过期集合的对应字段，本作用域不推导其规则。

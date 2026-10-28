@@ -51,6 +51,7 @@ APK 与热更新版本分别记录。原输入、转换产物及其前后哈希�
 | 职业实际原生挂点 | [原跟随组件与实际骨骼／插槽视图](profession-ui/native-followers-source-manifest.json)；原数据缩放、附件／顺序身份、UI 与场景挂点及零深度分支；验证与缺项见[职业功能页](../../docs/features/professions.md) |
 | 职业原默认武器皮肤 | [原初始武器／职业默认皮肤与配置](profession-ui/skin-defaults-source-manifest.json)；完整解码当前配置、原皮肤验证／移除／事件顺序及本地只读快照缺字段恢复；验证与缺项见[职业功能页](../../docs/features/professions.md) |
 | 职业原剑杖资源 | [原默认剑／杖资源与可执行 shader](profession-ui/weapon-resources-source-manifest.json)；四个原 UI 层级、完整共享模型与图集、实际高分辨率纹理、原高度裁剪程序及精确曲线采样；验证与缺项见[职业功能页](../../docs/features/professions.md) |
+| 职业原轻量外观与材质管理 | 当前 871_156598 官方应用程序集及反编译类 | 原 AppearanceUILite 生命周期、完整 AppearanceAssetManager 与配置／共享材质记录；本地资源／Graphic 边界，实际剑杖贴图生命周期 Play Mode 和 GPU 验证；正式 prefab／整页尚未接通 | [来源与哈希](profession-ui/appearance-ui-lite-source-manifest.json) |
 | 历史输入与非运行参考 | [LEGACY_SOURCES.md](LEGACY_SOURCES.md)；历史版本证据保留原身份 |
 | 转换素材备份 | `asset-pack/layout.json`、`asset-pack/lock.json`；实际覆盖以已生成并校验的归档为准 |
 
