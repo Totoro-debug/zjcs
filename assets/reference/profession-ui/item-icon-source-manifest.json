@@ -1,0 +1,115 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "ports": [
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/ItemIcon.cs",
+        "sha256": "767aecf58005653613080af4d23138cb9209c4abed97db2744e0ec64962db774"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ItemIcon.cs",
+        "sha256": "726e72ad27a939377c985cd3fcfdbd8efca22166ff29c9bd7e8603ba1177d1dc"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ItemIcon.cs.meta",
+        "sha256": "7fe12e331916bf01ed0e0376844f3b2435ef0c586f29b0581fdcc645442139b4"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/common-source/ThemeColorType.cs",
+        "sha256": "0b01df19e760b4ed4955712ea28ee75726aa76e683d6e259febf9177f184e6b7"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ThemeColorType.cs",
+        "sha256": "5a01c2d9692fc561985b544908c26c5d1a6b7e5fb7b1a8ea0d4723ba439ca4ee"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ThemeColorType.cs.meta",
+        "sha256": "e9fe7b1f5a6189c385a99d185c0155cd0586472d5e189332e354af672c329f6e"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/common-source/ColorType.cs",
+        "sha256": "bc18f8586101d279d51973e8349d6825b52a105a804990ba1d8bf1193c911bf9"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ColorType.cs",
+        "sha256": "f76b84601359a292a0aca4896f0d5f065c5128cc4ef74bffe8604e4a4dd5fda4"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ColorType.cs.meta",
+        "sha256": "a29c0f19cc5f0f54c5aa01dc6f2978f3a9a9b858524a22dbb292d4598f0b828f"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/ItemSourceType.cs",
+        "sha256": "73d86073429ab79f08289e42f51f71a2e9127f18ebdb32214d457b5fed8b41c1"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ItemSourceType.cs",
+        "sha256": "ae2f60a950e4856a6693d635ff021682f9dd665277cb1f0a020fc70704ee777a"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ItemSourceType.cs.meta",
+        "sha256": "8a202628d6781f27e3bb451fe8912fbfd272528208e0d3e3c6ce8e3101ee871f"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/EUIInstantiateFlag.cs",
+        "sha256": "75fcad2295edf2361f46434beaa63315b8d96db58059af41b6e98212d253fed2"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/EUIInstantiateFlag.cs",
+        "sha256": "c8bf780fd66e17e21c2841cfea28d4aaa1856520c907f592630282de14f20177"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/EUIInstantiateFlag.cs.meta",
+        "sha256": "a93bc191eee85f5d0e2c7864d92acc99199a469d735d7bdc2f40a05d473b1d76"
+      }
+    }
+  ],
+  "context": {
+    "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IProfessionItemIconContext.cs",
+    "sha256": "55fdb91cf9ce78b12dc49173067c8d25049c10c0ed715b4d5b4a81038e781cd0"
+  },
+  "context_meta": {
+    "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IProfessionItemIconContext.cs.meta",
+    "sha256": "653cb123fd72e11d452e76196f641e663dc88d292c22409506c4d509e177d177"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_profession_item_icon.py",
+    "sha256": "37de69655eeaca37180a6dc328871b11f8c40ec9537db850c0d4eb04262928c8"
+  },
+  "reused_action_source": {
+    "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/SafeAction.cs",
+    "sha256": "e798e1f556d7fd4311ed67a47f45c851efb6fc63dc80ae34fa8dabd217ad8668"
+  },
+  "destroy_children_source": {
+    "path": ".tools/source-packages/current/871_156598/official-code/framework-source/Framework/TransformExtensions.cs",
+    "sha256": "79fa1bf15205d678778cc6274b45722eef60e686f0070a3a66f2fc8de21b02c1"
+  },
+  "operation": "Retain original ItemIcon serialized fields, enum values, initialization/clear order, quality/effect branches, counts/progress, attachment priority, listener behavior and detail popup dispatch. Adapt player/parser/config/resource/formatting/window dependencies to explicit consumed interfaces; reuse existing original ImageProxy, SafeAction and shared UI ports. Preserve reverse DestroyChildren traversal. Correct decompiler GameObject.gameObject and Object.op_Implicit expressions.",
+  "validation_sources": [
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionItemIconValidation.cs",
+      "sha256": "d8c65003aeb36d3af55609c99c5bab80d5a2aa75793c4c07e7459b4a7554bc06"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/Zjcs.Official.ProfessionUI.asmdef",
+      "sha256": "e0a054f7f50db57ec84f3109ed95372c7e501c46737ba7048c90e0d49c4d191f"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/Zjcs.Editor.ProfessionUI.asmdef",
+      "sha256": "c66c81f0e222d8926133d01e718a09d0a5fcfc8c52054276485c608c289a48bf"
+    }
+  ],
+  "limitations": [
+    "Native prefab, quality configuration, local Sprite lookup and font binding are verified separately by the item catalog proof. Complete player provider, detail popup contents and full profession panel wiring remain incomplete.",
+    "The profession default prefab has an empty FrameEffectInfo list. Sound-switch SDK service and time-limited inventory attachments are external consumed interfaces, not claimed as SDK or inventory feature ports."
+  ]
+}

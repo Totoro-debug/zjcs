@@ -16,14 +16,33 @@ def install(scope, project):
         raise ValueError("Wrong native profession closure")
     if plan["pending_scripts"] or plan["pending_shaders"] or plan["missing"]:
         raise ValueError("Original closure still has unbound dependencies")
-    for key in ("verified_export", "verified_fonts", "generator"):
+    for key in ("verified_export", "verified_fonts", "generator", "verified_dynamic_resources", "verified_item_configs", "verified_native_textures"):
         row = plan[key]
+        if row is None:
+            continue
         if sha(ROOT / row["path"]) != row["sha256"]:
             raise ValueError("Original closure input changed: " + row["path"])
     if any(row["binding"] is None for row in plan["managed_reference_types"]):
         raise ValueError("Original managed reference type is unbound")
     project = project.resolve()
     destination = project / "Assets/Official/ProfessionUI/Native"
+    native_texture_guids = set()
+    if plan["verified_native_textures"] is not None:
+        textures = json.loads((ROOT / plan["verified_native_textures"]["path"]).read_bytes())
+        selected = {guid(ROOT / row["path"]) for row in plan["assets"].values()}
+        for row in textures["native_assets"]:
+            native_texture_guids.add(row["guid"])
+            old = row["replaces_import"]
+            target = destination / old["native_relative_path"]
+            if row["guid"] in selected and target.exists():
+                meta = target.with_name(target.name + ".meta")
+                # Unity rewrites importer defaults on import. Ownership is
+                # established by exact PNG payload and original asset GUID;
+                # the verified export separately checks the source metadata.
+                if not target.resolve().is_relative_to(destination.resolve()) or sha(target) != old["sha256"] or guid(target) != row["guid"] or "TextureImporter:" not in meta.read_text(encoding="utf-8"):
+                    raise ValueError("Existing PNG replacement is not the verified converter output")
+                target.unlink()
+                meta.unlink()
     exports = CACHE / "typed/export/ExportedProject/Assets"
     remap = {}
     for relative, binding in plan["script_bindings"].items():
@@ -50,6 +69,10 @@ def install(scope, project):
         if source.suffix.lower() in TEXT:
             text = raw.decode("utf-8")
             text = re.sub(r"guid: ([0-9a-f]{32})", lambda match: "guid: " + remap.get(match[1], match[1]), text)
+            # PNG importer references use external type 3; native Texture2D
+            # assets use type 2. Preserve the exact GUID and local object ID.
+            text = re.sub(r"\{fileID: 2800000, guid: ([0-9a-f]{32}), type: 3\}",
+                lambda match: match[0].replace("type: 3", "type: 2") if match[1] in native_texture_guids else match[0], text)
             for entry in plan["managed_reference_types"]:
                 assembly, namespace, name = entry["binding"]
                 old = "type:\n        class: " + entry["type"] + "\n        ns:" + (" " + entry["namespace"] if entry["namespace"] else "") + "\n        asm: " + entry["assembly"]
@@ -80,7 +103,8 @@ def install(scope, project):
         binding_plan=dict(path=plan_path.relative_to(ROOT).as_posix(), sha256=sha(plan_path)),
         installer=dict(path=Path(__file__).relative_to(ROOT).as_posix(), sha256=sha(Path(__file__))),
         outputs=outputs, guid_remap=remap, folder_metadata=list({row["path"]: row for row in folder_metadata}.values()),
-        operation="Copy verified original native assets and import metadata; replace only explicitly bound script/shader GUIDs and managed-reference assembly/type names. Preserve native hierarchy, serialized values, asset identity and all other payload bytes.")
+        native_texture_guids=sorted(native_texture_guids),
+        operation="Copy verified original native assets and import metadata; replace explicitly bound script/shader GUIDs and managed-reference assembly/type names. For PNG-to-native Texture2D conversion change external reference type 3 to 2, retaining GUID/fileID. Preserve native hierarchy, other serialized values and asset identity.")
     proof = CACHE / "typed" / ("installed-" + scope + ".json")
     proof.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print("Installed", len(outputs), "original native assets in", project)
@@ -89,7 +113,7 @@ def install(scope, project):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--scope", required=True, choices=("main", "main-dynamic", "all", "item-hint"))
+    parser.add_argument("--scope", required=True, choices=("main", "main-dynamic", "all", "item-hint", "item-icons"))
     parser.add_argument("--project", type=Path, default=ROOT / "unity")
     args = parser.parse_args()
     install(args.scope, args.project)

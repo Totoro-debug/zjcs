@@ -46,7 +46,7 @@ def build(unity_project=None):
         native_export=record(ROOT / "assets/reference/profession-ui/native-export-source-manifest.json"),
         native_installation=installed, recorder=record(Path(__file__)),
         validation="Isolated Unity imports the complete original HintTip prefab with all five script types and its original Windows shader binding. Actual Play Mode checks serialized child/text references, inactive lazy creation, cached lookup activation behavior, explicit show/hide, cache clearing and recycling. The original prefab and atlas Sprite are rendered to a GPU target and the runtime frame is inspected. The numeric probe text is test data, not a replacement game UI or a localization claim.",
-        limitations=["ItemIcon, the attachment manager/pool, item detail popup and full profession panel service wiring remain pending.",
+        limitations=["ItemIcon and its four reward bindings are verified separately by item-catalog-source-manifest.json. The attachment manager/pool, item detail popup contents and full profession panel service wiring remain pending.",
             "This small original prefab validation does not cover profession GUI mouse input, full layout, appearance animation or Windows Player release.",
             "No full asset backup snapshot has been generated for these additions."])
     target = ROOT / "assets/reference/profession-ui/item-resources-source-manifest.json"

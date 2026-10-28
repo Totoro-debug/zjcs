@@ -16,16 +16,22 @@
 
 主页面立绘按原 `ProfessionSettings` 的 GUID 从官方 Sprite 提取，38 个职业的男女映射复用 12 张原图片，保留 alpha、PPU、pivot、border；原 `ImageLocator` 的原生尺寸及锚点修正代码已迁移。职业总览、雷达、职业树的五种状态与条件分组，以及馈赠的原面板控制代码已迁入 `Runtime/Official/ProfessionUI/`。关闭、倒计时、导师入口和剧情节点登记通过服务接口连接本地运行环境；服务和原生 prefab 接线仍未完成。不能把旧节点投影界面算作原生 prefab 迁移完成。
 
-两份原始字体由官方 `FontAssetFontConfig` 的路径、长度和 MD5 取回。原 `MPLUSRounded1c-Medium Atlas` 是 0×0、无像素载荷的动态 Alpha8 图集，转换工具未输出图片；现已按原字段恢复原生 Texture2D，Unity 导入后核对尺寸、格式、可读性、空数据、过滤及环绕参数。主面板静态闭包检查覆盖 845 个资产、77 种脚本和 7 个 shader，断开 GUID 为 0；尚有 23 种运行脚本及服务动态加载资源待接入；提示图的 6 种托管类型已恢复，7 个 shader 已逐对象核实原始哈希与现有 Windows 转换结果。以上不代表原生界面已经可以运行。
+两份原始字体由官方 `FontAssetFontConfig` 的路径、长度和 MD5 取回。原 `MPLUSRounded1c-Medium Atlas` 是 0×0、无像素载荷的动态 Alpha8 图集，已恢复并验证原生导入。当前含动态物品／配置的主面板依赖检查覆盖 881 个资产、87 种脚本、8 种托管类型和 7 个 shader，断开 GUID 为 0；尚有 18 种运行组件及相关服务未接入，主要是外观预览、离屏角色渲染及顶部信息栏，不能视为原生职业界面已经可运行。
 
 馈赠使用的 `ItemIconDefault`、总职业等级说明使用的 `RuleDialog` 及四种奖励 Sprite 已从 APK 的实际对象取回，并记录调用、配置、CAB、对象 ID 和原始哈希。当前版本的成就、物品及规则提示三张 Luban 表已完全解码；组 10 的十条成就配置、四种奖励物品定义及 `ProfessionLevelInfo` 的标题／三条说明与现有打包配置相符。原图标管理器的 ID 覆盖、类型覆盖、默认图标选择顺序已核对，这四种奖励均使用原 `ItemIconDefault`，没有改用手写图标控件。
 
 转换工具对单张奖励 Sprite 的裁剪 pivot 与原 Sprite 不同，现按原逻辑矩形、pivot、PPU、border、网格／索引字节、UV 变换及纹理引用恢复 4 个原生 Sprite；原 ASTC 按既有 UNORM8 解码流程转成 4 个原生 RGBA32 Texture2D，保留 mip、颜色空间和采样参数，Windows 不再二次压缩。`ProfessionRewardSpriteValidation.Run` 在隔离 Unity 中核对全部原始顶点、三角形顺序、UV、pivot、尺寸、PPU、border、纹理绑定、采样与格式；四张纹理上传 GPU 后读回的 SHA256 与解码 RGBA 完全一致。此验证没有覆盖职业馈赠列表的实际渲染和点击。
 
-馈赠图标的原 `ImageProxy`、`ImageLoaderProxy`、`LoaderProxyBase`、`PreviewableProxyBase`、`AssetGuidProxy` 已按原源码迁入，保留嵌套序列化字段、Image 属性委托、路径前缀、同步／GUID／异步加载、当前请求身份检查和清理／销毁顺序。资源操作替换为显式本地接口；原 R3 资源集合的按当前数量正序释放、末尾清空及销毁标记顺序由原 APK 原生指令核实。`ProfessionImageLoaderValidation.Run` 在隔离 Unity 中以原奖励 Sprite 验证乱序完成、失败结果、清理后迟到结果、已完成请求的即时订阅，以及销毁后的请求拒绝和资源释放。完整 `ItemIcon` 控件、实际提供器和相关弹窗仍待接入；此组件验证没有覆盖馈赠界面渲染或点击。代码及原生证据见[图标加载来源](../../assets/reference/profession-ui/image-resource-source-manifest.json)。
+馈赠图标的原 `ImageProxy`、`ImageLoaderProxy`、`LoaderProxyBase`、`PreviewableProxyBase`、`AssetGuidProxy` 已按原源码迁入，保留嵌套序列化字段、Image 属性委托、路径前缀、同步／GUID／异步加载、当前请求身份检查和清理／销毁顺序。资源操作替换为显式本地接口；原 R3 资源集合的按当前数量正序释放、末尾清空及销毁标记顺序由原 APK 原生指令核实。`ProfessionImageLoaderValidation.Run` 在隔离 Unity 中以原奖励 Sprite 验证乱序完成、失败结果、清理后迟到结果、已完成请求的即时订阅，以及销毁后的请求拒绝和资源释放。原 `ItemIcon` 与本地 Sprite 提供器的接入和验证见下文；此加载器验证没有覆盖馈赠列表。代码及原生证据见[图标加载来源](../../assets/reference/profession-ui/image-resource-source-manifest.json)。
 
 
-`UIBase`、物品附件／自定义附件、提示附件、品质与附件配置等 12 个原始类型已迁入，保留初始化前后启停回调、异常边界、重置顺序、附件缓存、排序及回收。原附件配置的 `HintTip=13` 按实际 AssetTable GUID 指向 `CenterHintContent.prefab`；其 6 个原生资产（含原 atlas Sprite、贴图、字体和材质）已安装到 `Assets/Official/ProfessionUI/Native/`，沿用已核实的 Windows 字体 shader。隔离 Unity 的实际 Play Mode 验证原层级／引用、延迟创建、缓存不自动激活、显式显示隐藏及回收重借，并通过 GPU 渲染检查，运行截图已查看。测试数字仅用于附件控件验证，未覆盖完整馈赠列表或鼠标输入。完整 `ItemIcon`、附件管理器／池和弹窗服务仍待接通。来源见[附件代码](../../assets/reference/profession-ui/item-components-source-manifest.json)与[原生附件资源](../../assets/reference/profession-ui/item-resources-source-manifest.json)。
+`UIBase`、物品附件／自定义附件、提示附件、品质与附件配置等 12 个原始类型已迁入，保留初始化前后启停回调、异常边界、重置顺序、附件缓存、排序及回收。原附件配置的 `HintTip=13` 按实际 AssetTable GUID 指向 `CenterHintContent.prefab`；其 6 个原生资产（含原 atlas Sprite、贴图、字体和材质）已安装到 `Assets/Official/ProfessionUI/Native/`，沿用已核实的 Windows 字体 shader。隔离 Unity 的实际 Play Mode 验证原层级／引用、延迟创建、缓存不自动激活、显式显示隐藏及回收重借，并通过 GPU 渲染检查，运行截图已查看。测试数字仅用于附件控件验证，未覆盖完整馈赠列表或鼠标输入。完整馈赠列表所需的附件管理器／池及弹窗服务仍待接通。来源见[附件代码](../../assets/reference/profession-ui/item-components-source-manifest.json)与[原生附件资源](../../assets/reference/profession-ui/item-resources-source-manifest.json)。
+
+原 `ItemIcon` 的字段、初始化／清理顺序、品质与效果分支、计数、进度、附件及点击行为已迁入，依赖通过原代码实际消费的接口连接。原 `ItemIconConfig` 的 8 个有序品质引用（含重复白色）、附件配置的 42 个 GUID，以及四种当前奖励的图标路径／品质已核对；`ChestInfo` 和 `AppendAppearanceInfo` 两种图标覆盖表均不包含这些物品。33 个原生资产安装到 `Assets/Official/ProfessionUI/Native/`，本地资源目录保持原逻辑地址和 AssetTable GUID，不生成界面层级。来源见[原控件](../../assets/reference/profession-ui/item-icon-source-manifest.json)、[配置](../../assets/reference/profession-ui/item-configs-source-manifest.json)和[本地绑定](../../assets/reference/profession-ui/item-catalog-source-manifest.json)。
+
+公共图集、品质图集、遮罩和字体图集恢复为原生 Texture2D，保留全部 mip、颜色空间、可读性和采样参数；原 ASTC 解码成 RGBA32，原 Alpha8／RGBA32 保持像素字节，不经过 PNG importer 再次压缩。替换保留原 GUID／fileID，并将 Texture2D 外部引用类型从导入资产 3 改为原生资产 2。隔离 Unity GPU 读回四张纹理的每个 mip，字节数与 SHA256 均与源转换结果一致；动态图集检查在生成新字形之前进行。来源见[原生纹理](../../assets/reference/profession-ui/native-textures-source-manifest.json)。
+
+原 `FontAssetFontService` 已迁入，保留延迟加载配置、源字体已绑定判断、句柄保留、反射绑定、按名称释放及销毁顺序；两个原始 TTF 以 Windows 动态 Font 交付，原 JSON 字典在打包时解析为等值本地配置，运行时核对原 JSON 后交回原服务。未迁移 Android 流式缓存路径，也未声称完成多语言字体服务。隔离 Unity 的实际 Play Mode 使用正式本地图标／字体目录渲染四种奖励，逐项核对原品质背景、文字和字体归属，模拟鼠标按下／抬起进入原 `ItemIcon` 详情调用入口，清理后核对监听解除和控件状态；四项通过，实际运行画面已查看。附件提示也使用原字体重跑。测试中的统一数字 300 只验证控件，正式馈赠数量仍由成就配置决定。此处没有验证详情弹窗内容、完整馈赠列表或职业主页面。字体来源见[字体服务](../../assets/reference/profession-ui/font-service-source-manifest.json)。
 
 
 `RuleDialog` 的全部设置重载、原列表复用、行激活及 `UIUtils` 的变换复位顺序和 `TipInfo` 的图文设置代码已迁入；原规则解析器结果通过本地接口提供，实际说明弹窗仍待接线。已核对并复用原 `BgDialogElement`、`ItemProgress` 的现有迁移组件，以及从原生代码恢复的 `TMPEffect`，未用空脚本消除原 prefab 引用。包含上述动态资源的闭包为 871 个资产、84 种脚本，断开 GUID 为 0，仍有 19 种运行脚本待接入。

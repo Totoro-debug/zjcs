@@ -6,6 +6,8 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using Zjcs.Offline.ProfessionUI;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Official.WorldUI;
 using Object = UnityEngine.Object;
@@ -23,6 +25,7 @@ namespace Zjcs.Editor.ProfessionUI
         private static RenderTexture target;
         private static Func<string, string> previousLanguage;
         private static ItemIconAttachmentHint hint;
+        private static FontAssetFontService fonts;
         private sealed class AttachmentManager : IItemIconAttachmentManager
         {
             public GameObject Prefab;
@@ -59,6 +62,7 @@ namespace Zjcs.Editor.ProfessionUI
             Require(prefab.GetComponentsInChildren<Transform>(true).Sum(t => GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(t.gameObject)) == 0, "all original components bound");
             Require(prefab.GetComponent<ItemIconAttachmentHint>() != null, "original attachment root script");
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             SessionState.SetBool(Active, true);
             EditorApplication.EnterPlaymode();
         }
@@ -88,6 +92,10 @@ namespace Zjcs.Editor.ProfessionUI
         private static void Initialize()
         {
             initialized = true; startedFrame = Time.frameCount;
+            var fontCatalog = AssetDatabase.LoadAssetAtPath<OfflineProfessionImageCatalog>("Assets/Official/ProfessionUI/Fonts/ProfessionFontResources.asset");
+            var fontConfig = AssetDatabase.LoadAssetAtPath<OfflineProfessionFontConfig>("Assets/Official/ProfessionUI/Fonts/ProfessionFontConfig.asset");
+            fonts = new FontAssetFontService(new OfflineProfessionImageResourceLoader(fontCatalog), fontConfig.Deserialize);
+            fonts.Initialize();
             previousLanguage = WorldMultiLanguageText.Localize;
             WorldMultiLanguageText.Localize = key => key;
             var cameraGo = new GameObject("OriginalAttachmentProbeCamera");
@@ -123,6 +131,8 @@ namespace Zjcs.Editor.ProfessionUI
             hint = (ItemIconAttachmentHint)next;
             hint.SetCenterHintObjActive(true); hint.SetKey("{0}");
             ((WorldMultiLanguageText)Field(typeof(ItemIconAttachmentHint), "Text").GetValue(hint)).Format(300);
+            var nativeText = hint.GetComponentInChildren<TMP_Text>(true); nativeText.ForceMeshUpdate();
+            Require(nativeText.textInfo.characterCount == 3 && nativeText.textInfo.characterInfo.Take(3).All(c => c.fontAsset == nativeText.font), "original source font renders every hint glyph");
         }
         private static FieldInfo Field(Type type, string name) => type.GetField(name, BindingFlags.Instance | BindingFlags.NonPublic);
         private static void Require(bool value, string message)
@@ -133,6 +143,7 @@ namespace Zjcs.Editor.ProfessionUI
         {
             SessionState.SetBool(Active, false);
             WorldMultiLanguageText.Localize = previousLanguage;
+            fonts?.Dispose();
             if (camera != null) camera.targetTexture = null;
             if (target != null) { target.Release(); Object.Destroy(target); }
             EditorApplication.Exit(code);

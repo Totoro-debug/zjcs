@@ -1,0 +1,672 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "dynamic_sources": {
+    "path": "assets/reference/profession-ui/dynamic-resources-source-manifest.json",
+    "sha256": "0f2d120857578acf902b0764e454bf91ff9646f2918dbb85769208b1fca3ae50"
+  },
+  "item_configs": {
+    "path": "assets/reference/profession-ui/item-configs-source-manifest.json",
+    "sha256": "22c2678d1c0886fb168f7352d26797592264589fa4ba28f095e446fe5a20037b"
+  },
+  "bindings": [
+    {
+      "item_id": 301,
+      "original_asset": {
+        "address": "Assets/Image/ItemIcon/Other/item_301",
+        "path": "Assets/Image/ItemIcon/Other/Common_NoAtlas/item_301.png",
+        "guid": "b0b28137e0a5f9346a6b67f057b3d690",
+        "tags": [
+          "Payd_Priority"
+        ],
+        "bundle": "defaultpackage_assets_image_itemicon_other_common_noatlas.bundle"
+      },
+      "reference": {
+        "fileID": 21300000,
+        "guid": "3d1eb6538cdb496ad1d66500d7ce5302",
+        "type": 2
+      },
+      "installed_sprite": "Assets/Official/ProfessionUI/Native/ProfessionDynamic/item_301.sprite.asset"
+    },
+    {
+      "item_id": 302,
+      "original_asset": {
+        "address": "Assets/Image/ItemIcon/Other/item_302",
+        "path": "Assets/Image/ItemIcon/Other/Common_NoAtlas/item_302.png",
+        "guid": "b5331937fa6090f4e908c9d1d3ed5f1e",
+        "tags": [
+          "Payd_Priority"
+        ],
+        "bundle": "defaultpackage_assets_image_itemicon_other_common_noatlas.bundle"
+      },
+      "reference": {
+        "fileID": 21300000,
+        "guid": "5b85b9b613b03dccaa77101573cef32a",
+        "type": 2
+      },
+      "installed_sprite": "Assets/Official/ProfessionUI/Native/ProfessionDynamic/item_302.sprite.asset"
+    },
+    {
+      "item_id": 303,
+      "original_asset": {
+        "address": "Assets/Image/ItemIcon/Other/item_303",
+        "path": "Assets/Image/ItemIcon/Other/Common_NoAtlas/item_303.png",
+        "guid": "37c1aaa0c1b2653499201c20f5317e31",
+        "tags": [],
+        "bundle": "defaultpackage_assets_image_itemicon_other_common_noatlas.bundle"
+      },
+      "reference": {
+        "fileID": 21300000,
+        "guid": "41037e97d541749fababb2a7ba79f40d",
+        "type": 2
+      },
+      "installed_sprite": "Assets/Official/ProfessionUI/Native/ProfessionDynamic/item_303.sprite.asset"
+    },
+    {
+      "item_id": 42200,
+      "original_asset": {
+        "address": "Assets/Image/ItemIcon/Materials/item_42200",
+        "path": "Assets/Image/ItemIcon/Materials/Public_NoAtlas/item_42200.png",
+        "guid": "0f4e37b3c9b77224aa1eac2c8964328e",
+        "tags": [
+          "Payd_Base"
+        ],
+        "bundle": "defaultpackage_assets_image_itemicon_materials_public_noatlas.bundle"
+      },
+      "reference": {
+        "fileID": 21300000,
+        "guid": "6f8deafffbcfbcba983487ee5821a77f",
+        "type": 2
+      },
+      "installed_sprite": "Assets/Official/ProfessionUI/Native/ProfessionDynamic/item_42200.sprite.asset"
+    }
+  ],
+  "catalog": {
+    "path": "unity/Assets/Official/ProfessionUI/Catalogs/ProfessionItemImages.asset",
+    "sha256": "2294a5835233cfff596007e4013809f0e0d61b7db49e1ffe723591ab95b3a72f"
+  },
+  "catalog_meta": {
+    "path": "unity/Assets/Official/ProfessionUI/Catalogs/ProfessionItemImages.asset.meta",
+    "sha256": "1c0ddf4bfb9b52bc3d0ae0dd636ae8c35e9382e12e48cef88e1c34c0ab17d07c"
+  },
+  "folder_meta": {
+    "path": "unity/Assets/Official/ProfessionUI/Catalogs.meta",
+    "sha256": "129ebbf435787d38c27c23e5a4b3d2c23d4f821e18768e5c8e81638f5a645396"
+  },
+  "runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionImageCatalog.cs",
+      "sha256": "96b0f859ff834b5bdf6e8ff8312e7ed9332550571a09eb5c52228ebf3ccfe915"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionImageCatalog.cs.meta",
+      "sha256": "ca99072f583f870732573cb8397c064291deafdc86a1674f2f947ccb24797447"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionImageResourceLoader.cs",
+      "sha256": "321e629ba6822070afce844d7d48b28c40076b877e4f771b09fb03f565404b88"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionImageResourceLoader.cs.meta",
+      "sha256": "421f2af7e045916ead32b660cdd6399abccc92b4f61a2ecb64612a69e8ec5f38"
+    }
+  ],
+  "native_installation": {
+    "format": 1,
+    "manifest": "871_156598",
+    "scope": "item-icons",
+    "binding_plan": {
+      "path": ".tools/profession-native-ui/871_156598/typed/native-bindings-item-icons.json",
+      "sha256": "c055aae70c07902ba6b2fe5c8ee692c9c0f6012cddd02ea23ced8a7ed6e75795"
+    },
+    "installer": {
+      "path": "scripts/install_unity_profession_native_assets.py",
+      "sha256": "037857d7f077786e33730ec7dfff5a6056af5faaf3a5ba87ed6bcb52c98d507e"
+    },
+    "outputs": [
+      {
+        "native_relative_path": "Prefabs/UI/Item/Attachments/CenterHintContent.prefab",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Item/Attachments/CenterHintContent.prefab",
+          "sha256": "b71f76585a9d98c32761566911a7c5b64f107a30c7745e164d50aefcade9765c",
+          "owner": "explicit original prefab"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/Prefabs/UI/Item/Attachments/CenterHintContent.prefab",
+        "sha256": "f1af59a4664a690760792258fc3f63571b6dcc4bb973cfcf03691b9f9cb06450",
+        "guid": "c13ce4882b782384ebc0e20362bca4b1",
+        "meta_sha256": "372dcec3ba49f903ca7ff160028002e26e89c94b6ab47e53fd1c2cf5ba536e97"
+      },
+      {
+        "native_relative_path": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset",
+          "sha256": "826e261baf39635c1e9a8f399eda18df6e5fa78bda0bd4545877f424a574620a",
+          "owner": "Prefabs/UI/Item/Attachments/CenterHintContent.prefab"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset",
+        "sha256": "85e4d7c4e0926b657a91d787fd09c72930a3c2f9077199ea940ec71f75cf8bdd",
+        "guid": "66657f3ffe66d19408ff3def3018fe50",
+        "meta_sha256": "2090fccfdbfc90e93788b4aac3d1bfa1612229db998c8e983b9e589bd8df9c81"
+      },
+      {
+        "native_relative_path": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat",
+          "sha256": "7cdc21462aa35e452392091d8209f40680b4eed1309bd9fc6a8e6e7400e001f6",
+          "owner": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat",
+        "sha256": "856dac3104488386cf62a8d3ff785f1b85d806e8cbeeb75231a7e69f00e4e4b5",
+        "guid": "e24c9512a238d2b489d041be2d069c7d",
+        "meta_sha256": "350b68bf9475ccfdd7cacf0785de3ff237692a624ead8c33e939be4922973285"
+      },
+      {
+        "native_relative_path": "ProfessionNativeTextures/FZY4K SDF - dynamic Atlas.texture2d.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/native-textures/ProfessionNativeTextures/FZY4K SDF - dynamic Atlas.texture2d.asset",
+          "sha256": "3c2d4082c52c96edb636f8e4a27bd11616b531b1ed30720d662b2d1d2201f8c9",
+          "owner": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/ProfessionNativeTextures/FZY4K SDF - dynamic Atlas.texture2d.asset",
+        "sha256": "3c2d4082c52c96edb636f8e4a27bd11616b531b1ed30720d662b2d1d2201f8c9",
+        "guid": "044798c4214f0a74086efa374c7cdd17",
+        "meta_sha256": "552bdfa7cc5c25828c86753e0e6871ab90594a9976aa4ffafbd999e2461b730f"
+      },
+      {
+        "native_relative_path": "Image/UI/Common/Common_Atlas/ImgItemTipBg.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgItemTipBg.asset",
+          "sha256": "8187e3a8d36920219e1ad91cb59146ebff0155d497d4706d9808bb71bc039561",
+          "owner": "Prefabs/UI/Item/Attachments/CenterHintContent.prefab"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgItemTipBg.asset",
+        "sha256": "b50658bb9e22b2946651eb13f7d3849395cc7f09cae329f7be1155c6ed112d20",
+        "guid": "deda51f843cf83f42b90782f237444b8",
+        "meta_sha256": "5eb785447a8dd5a849fd19d3282ff8fe2be8c6ec35b4933a67607b24b376291f"
+      },
+      {
+        "native_relative_path": "ProfessionNativeTextures/sactx-0-2048x2048-ASTC 6x6-Common_Atlas-7a2befb3.texture2d.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/native-textures/ProfessionNativeTextures/sactx-0-2048x2048-ASTC 6x6-Common_Atlas-7a2befb3.texture2d.asset",
+          "sha256": "d9fa5cf869d6674d386c40c1b773c0870096d049d1a980b1f257a976548b0446",
+          "owner": "Image/UI/Common/Common_Atlas/ImgItemTipBg.asset"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/ProfessionNativeTextures/sactx-0-2048x2048-ASTC 6x6-Common_Atlas-7a2befb3.texture2d.asset",
+        "sha256": "d9fa5cf869d6674d386c40c1b773c0870096d049d1a980b1f257a976548b0446",
+        "guid": "340cb31d4cc94f442b8185ef1bc1c3b8",
+        "meta_sha256": "9d0eb933add5153571b63e1e592f876d75321d4577616b5088087724adb85bc3"
+      },
+      {
+        "native_relative_path": "ScriptableConfig/Modules/ItemIcon/ItemIconAttachmentConfig.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/item-configs/ScriptableConfig/Modules/ItemIcon/ItemIconAttachmentConfig.asset",
+          "sha256": "9e3e21cbcf9ca2de51c9885b178bd338719fbcae0e27e0f2b33aeb28a08118c5",
+          "owner": "explicit original prefab"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/ScriptableConfig/Modules/ItemIcon/ItemIconAttachmentConfig.asset",
+        "sha256": "648a72c0444c74acae3470178f22416a57926ad7fc85e65df30c181ab7de1d38",
+        "guid": "c479dfa764fc18b4ba9bee3618a144f0",
+        "meta_sha256": "a65d3270478f5ebabba197b5428eae5042e37ea572e9101e1302db5728621c78"
+      },
+      {
+        "native_relative_path": "ScriptableConfig/Modules/ItemIcon/ItemIconConfig.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/item-configs/ScriptableConfig/Modules/ItemIcon/ItemIconConfig.asset",
+          "sha256": "87c618f74547fd43875fef33d9876a87f291c95e32a67dddf8d7fcca906bf8d6",
+          "owner": "explicit original prefab"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/ScriptableConfig/Modules/ItemIcon/ItemIconConfig.asset",
+        "sha256": "df86f10b6158ef506926b16db332826dcf4906722cd78a71038f0b3fc534800e",
+        "guid": "639b3f8be5334384d948e4caba7d9029",
+        "meta_sha256": "2804a26651e63f5f574453d95847f657ab5731d9285093c4653de6cd4a712447"
+      },
+      {
+        "native_relative_path": "Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_White.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_White.asset",
+          "sha256": "e40d96a3aaa874ecc04aaf3ab10f60aa3862a1278787ed5e71356cbff95fc1cf",
+          "owner": "ScriptableConfig/Modules/ItemIcon/ItemIconConfig.asset"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_White.asset",
+        "sha256": "57063a0b9991ba100ee62b5393c9118eee8de9b60a90b6c41c0082239d837938",
+        "guid": "39129950bb379b74daf36b23b4785971",
+        "meta_sha256": "c2ea68f6d77cb86a74a4c855e6fd309dd2f0422fbb6340386d583deffc46458c"
+      },
+      {
+        "native_relative_path": "ProfessionNativeTextures/sactx-0-1024x512-ASTC 6x6-ItemQuality_Atlas-748d1aea.texture2d.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/native-textures/ProfessionNativeTextures/sactx-0-1024x512-ASTC 6x6-ItemQuality_Atlas-748d1aea.texture2d.asset",
+          "sha256": "db9c9f489e7be2529dcb328b7f0af12b6198bf467375547495eb415cc92928b4",
+          "owner": "Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_White.asset"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/ProfessionNativeTextures/sactx-0-1024x512-ASTC 6x6-ItemQuality_Atlas-748d1aea.texture2d.asset",
+        "sha256": "db9c9f489e7be2529dcb328b7f0af12b6198bf467375547495eb415cc92928b4",
+        "guid": "b2f30c1dce166874095f1c6304aeede5",
+        "meta_sha256": "30fd0546ecd8281e2ef707529d59329187348ee043e8195ffdd69455fd760787"
+      },
+      {
+        "native_relative_path": "Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Purple.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Purple.asset",
+          "sha256": "9b80d1ededb41bfcfc9442961c4e57aeb7abdfd5991c5d7b3627073c6f022eef",
+          "owner": "ScriptableConfig/Modules/ItemIcon/ItemIconConfig.asset"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Purple.asset",
+        "sha256": "d123e86b964cf6cb7195ff7b2fa3ae53f243b9e591e9dcf823d714fe5d859d80",
+        "guid": "970553cd948a9a54abd0441235c9020f",
+        "meta_sha256": "fe14bf4d463b2adb3df3bbfbcfa5bb1c52a94c89de564f2fc07972dd82c07477"
+      },
+      {
+        "native_relative_path": "Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Gold.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Gold.asset",
+          "sha256": "83fef974dcb14cda30405d1fcae664e8596e26cc14b7f34195de2f19d894ff87",
+          "owner": "ScriptableConfig/Modules/ItemIcon/ItemIconConfig.asset"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Gold.asset",
+        "sha256": "d75169563af04d03b642afb5b2b0fcebfb6c4bac05744f4ef490ae9058ea0f77",
+        "guid": "ad0170c0ed3ba284f9385f88780253a9",
+        "meta_sha256": "b4ddb5a8ec50c304d5a612518ed53a02f812231345ad31d274dcf04205500197"
+      },
+      {
+        "native_relative_path": "Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Orange.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Orange.asset",
+          "sha256": "2982f00cffad043c14d7fb1df22073eebef690f841b9e3b74b40514af49d86c7",
+          "owner": "ScriptableConfig/Modules/ItemIcon/ItemIconConfig.asset"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Orange.asset",
+        "sha256": "ea4d0a346a37d792b4e3be5a350248fd49e002fcbcbc80fcb18bd2bf0cbc1871",
+        "guid": "6bd3e7b0786f85046ae1fee404461bdd",
+        "meta_sha256": "e4318f3066ed18157badbd5f83c4419bc2020cb0937edbc60e170fa373cc0cb6"
+      },
+      {
+        "native_relative_path": "Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Red.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Red.asset",
+          "sha256": "857fc96cf503c170eb58faeab8e7ec04ab758d188e1c1bffb435e377c6bb3138",
+          "owner": "ScriptableConfig/Modules/ItemIcon/ItemIconConfig.asset"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Red.asset",
+        "sha256": "3a0131a0d350b089d0aa13f5635e8e67f8440eb09da5c408c92d324917b70d6e",
+        "guid": "35ce04ac496cc024ba72eefc6196ae7a",
+        "meta_sha256": "53f8ebc9161d7338717773a7c867a3953946279bb9c05d13398b8d9af897d292"
+      },
+      {
+        "native_relative_path": "Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Multicolour.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Multicolour.asset",
+          "sha256": "195ef3b5e283fde0116007a9cb33845748c8a53223e79617524fe6dc73138af5",
+          "owner": "ScriptableConfig/Modules/ItemIcon/ItemIconConfig.asset"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Multicolour.asset",
+        "sha256": "4bc6a9bbbbea2ec48a01771209223b12e77a837a1a73e6cb2061840251d03062",
+        "guid": "4f601a61f0e063d4eb1d0c9020751448",
+        "meta_sha256": "ef3a3dda22ac20a1debcabd84e028f4e16e6201447031594709ebff841fa5704"
+      },
+      {
+        "native_relative_path": "Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Blue.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Blue.asset",
+          "sha256": "a39cebe538576ec9c39d708b176c7ee4b683d98dc012459bb52a7a3cdbf854e0",
+          "owner": "ScriptableConfig/Modules/ItemIcon/ItemIconConfig.asset"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Blue.asset",
+        "sha256": "37bc53d91f2c0f74f6dd923b0eea2c64e5cbf9ae74fab20c975a952febf363a6",
+        "guid": "d7aaa6d5fa28eba41b73af9c6e65a05b",
+        "meta_sha256": "ed31df14bec2b22822ae1719fffff43f2df1db4c5e13ca17b021dc013dd0f1db"
+      },
+      {
+        "native_relative_path": "ProfessionDynamic/item_42200.sprite.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/dynamic/ProfessionDynamic/item_42200.sprite.asset",
+          "sha256": "f2b229103ed1bc82ef409023786969c233cc2654d5bf6ff8b11dba26a839e6ee",
+          "owner": "explicit original prefab"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/ProfessionDynamic/item_42200.sprite.asset",
+        "sha256": "f2b229103ed1bc82ef409023786969c233cc2654d5bf6ff8b11dba26a839e6ee",
+        "guid": "6f8deafffbcfbcba983487ee5821a77f",
+        "meta_sha256": "06bda6265330090a6c12feaae344335cc04b78daedd7465851c330f3c5a7ab1c"
+      },
+      {
+        "native_relative_path": "ProfessionDynamic/item_42200.texture2d.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/dynamic/ProfessionDynamic/item_42200.texture2d.asset",
+          "sha256": "2fd4f45e70ce32a3335e7776ba7a431d077bc23cb869a0ce2f8b1696f70c8ee2",
+          "owner": "ProfessionDynamic/item_42200.sprite.asset"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/ProfessionDynamic/item_42200.texture2d.asset",
+        "sha256": "2fd4f45e70ce32a3335e7776ba7a431d077bc23cb869a0ce2f8b1696f70c8ee2",
+        "guid": "eb915fc0a3bb2f2e3a8e660b0cf462ee",
+        "meta_sha256": "197185d01d73c9f4227a7ae6da3d780ed53da4a1c7096d17f747f3fe380e0589"
+      },
+      {
+        "native_relative_path": "ProfessionDynamic/item_303.sprite.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/dynamic/ProfessionDynamic/item_303.sprite.asset",
+          "sha256": "e546516a3b360ee8347731697fded59103abdde97b2084bb78e492794720b8a2",
+          "owner": "explicit original prefab"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/ProfessionDynamic/item_303.sprite.asset",
+        "sha256": "e546516a3b360ee8347731697fded59103abdde97b2084bb78e492794720b8a2",
+        "guid": "41037e97d541749fababb2a7ba79f40d",
+        "meta_sha256": "8de378348f7073b09feb290816d017c0acb6080ddf40a34f54373996dfc5f520"
+      },
+      {
+        "native_relative_path": "ProfessionDynamic/item_303.texture2d.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/dynamic/ProfessionDynamic/item_303.texture2d.asset",
+          "sha256": "4822fa34cc43f21835a8e74411d765e8b9bd07af05c9dbd497cb4550b6f65fd7",
+          "owner": "ProfessionDynamic/item_303.sprite.asset"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/ProfessionDynamic/item_303.texture2d.asset",
+        "sha256": "4822fa34cc43f21835a8e74411d765e8b9bd07af05c9dbd497cb4550b6f65fd7",
+        "guid": "b647c8b3796c4a516a9a11a256f3f4f3",
+        "meta_sha256": "9836cb44ef5581e9bd767734b14b236ef15f2608a54496a600db722689bdcf89"
+      },
+      {
+        "native_relative_path": "ProfessionDynamic/item_302.sprite.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/dynamic/ProfessionDynamic/item_302.sprite.asset",
+          "sha256": "04db8bb7b0d73aa1ef1ee5f7986b9aa0672fa9c60ee8b35b3f178b4ec05edf9d",
+          "owner": "explicit original prefab"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/ProfessionDynamic/item_302.sprite.asset",
+        "sha256": "04db8bb7b0d73aa1ef1ee5f7986b9aa0672fa9c60ee8b35b3f178b4ec05edf9d",
+        "guid": "5b85b9b613b03dccaa77101573cef32a",
+        "meta_sha256": "278e0b8fd83a8a06e4f39cce6360e0cb0ca940ab53d24076bf162fa997d1c947"
+      },
+      {
+        "native_relative_path": "ProfessionDynamic/item_302.texture2d.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/dynamic/ProfessionDynamic/item_302.texture2d.asset",
+          "sha256": "85dc8f6938f47f5efac06152c467c77cf3b6cc63346b5824190de7684c291af2",
+          "owner": "ProfessionDynamic/item_302.sprite.asset"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/ProfessionDynamic/item_302.texture2d.asset",
+        "sha256": "85dc8f6938f47f5efac06152c467c77cf3b6cc63346b5824190de7684c291af2",
+        "guid": "50ecdcf3faf70aff1cae54c71d73880c",
+        "meta_sha256": "fa54f3cd538bce853f730f1ff525ffc68056fca929bf58f57fd4a0dd53a63d67"
+      },
+      {
+        "native_relative_path": "ProfessionDynamic/item_301.sprite.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/dynamic/ProfessionDynamic/item_301.sprite.asset",
+          "sha256": "92c69db69a564bd9e9c8a4156718a17c94c4571955e369756e4ad19f262cd950",
+          "owner": "explicit original prefab"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/ProfessionDynamic/item_301.sprite.asset",
+        "sha256": "92c69db69a564bd9e9c8a4156718a17c94c4571955e369756e4ad19f262cd950",
+        "guid": "3d1eb6538cdb496ad1d66500d7ce5302",
+        "meta_sha256": "bbd5b1e0e7c5629f1d8d534da400ee99a50b50adf7b19bf6ab08a2e0f1c24945"
+      },
+      {
+        "native_relative_path": "ProfessionDynamic/item_301.texture2d.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/dynamic/ProfessionDynamic/item_301.texture2d.asset",
+          "sha256": "04613cc4a0566db7ef7a2537a8227dae766f2020e342c789948db3fee786bad4",
+          "owner": "ProfessionDynamic/item_301.sprite.asset"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/ProfessionDynamic/item_301.texture2d.asset",
+        "sha256": "04613cc4a0566db7ef7a2537a8227dae766f2020e342c789948db3fee786bad4",
+        "guid": "4ce748272f9534cf9e17558f0a99eedc",
+        "meta_sha256": "81b45e42af9c7e2173111bab44df6a34d4395106ec3558a40323cf17356e4ad4"
+      },
+      {
+        "native_relative_path": "Prefabs/UI/Item/ItemIconDefault.prefab",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Item/ItemIconDefault.prefab",
+          "sha256": "bafb4d309e4c71be7b68f21bfcc41f9b0d20791d95b61614f318dd72b7d39daa",
+          "owner": "explicit original prefab"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/Prefabs/UI/Item/ItemIconDefault.prefab",
+        "sha256": "8122f822f530741e0a958bdf1aea320306bb4b14c4a2dbbcc8ef827e5422a0f0",
+        "guid": "b1eb400eced13f448b4a9750d2b53f6d",
+        "meta_sha256": "9df1ec10adaa10fde62cfe97fac627da9222da7bb033f89a94dd6fdda089789d"
+      },
+      {
+        "native_relative_path": "Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3.asset",
+          "sha256": "6a8f0cc86f73dc50271e473bcbb8ae86bad731c8d95b39140bbd7bbe685f7e18",
+          "owner": "Prefabs/UI/Item/ItemIconDefault.prefab"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3.asset",
+        "sha256": "a63d984748f87ec6cb80c5383e7051098b5181e53fd58ac4f731cd3d0cfaf570",
+        "guid": "650914f161bbbfa4c86a28939dcb2d8d",
+        "meta_sha256": "8f40eca753041ce1034fa9ada942f845daf123b68698c31c633502177150a9ec"
+      },
+      {
+        "native_relative_path": "Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Shadow.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Shadow.asset",
+          "sha256": "748535b5c2720b466f92fa7fac2ce21909cd949efb6ee901568d4fffe165cb40",
+          "owner": "Prefabs/UI/Item/ItemIconDefault.prefab"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Shadow.asset",
+        "sha256": "1f86345be59df279758f634893664451f9fe17d70dd98a582e4e13e77e412868",
+        "guid": "772d1920c7c04d545a640ba0d92ba70a",
+        "meta_sha256": "497fc2e8277f6a4d7a1d44466d75b0f0041f4c5c69a96efbe43794a43ded5a76"
+      },
+      {
+        "native_relative_path": "Image/UI/Common/Common_Atlas/ImgItemIcon_NumBg.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgItemIcon_NumBg.asset",
+          "sha256": "9e1bc792dde0782ecf74b71f0d9e2815e6ccbdb03c93b2966807876c710fab5f",
+          "owner": "Prefabs/UI/Item/ItemIconDefault.prefab"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgItemIcon_NumBg.asset",
+        "sha256": "4dcf3f9e01816078a2442086604d3594f47b0b8b59ed7dfe487de0f396be65c8",
+        "guid": "6b53e1b4c24373f4292c1dbf0272861f",
+        "meta_sha256": "a1f79714957064245f871db965da17cfef5bf8def307a0b79e38f55fcb36d68e"
+      },
+      {
+        "native_relative_path": "Image/UI/Common/Common_Atlas/ItemPiece2.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ItemPiece2.asset",
+          "sha256": "eb978d14b4e8dbdc023a1290bff4977323c5bf1b002a67af9fa2e28f59e1e362",
+          "owner": "Prefabs/UI/Item/ItemIconDefault.prefab"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ItemPiece2.asset",
+        "sha256": "407c69e0a58fdc1710b96225902a2cec35e1bc7dc099454a3eb9b60b8f76097e",
+        "guid": "eb5146db9257c594d9594c908b50091c",
+        "meta_sha256": "0a228490591b6af5031b00218f3bd087dafb61c3f31b0dc951a5524fbc2d8d22"
+      },
+      {
+        "native_relative_path": "Image/UI/Common/Common_Atlas/ImgBg_CountText.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBg_CountText.asset",
+          "sha256": "1993f28624145ce3daa3d1f5b4e551d3cb72ca2401b50864b0cc6746d5c5263e",
+          "owner": "Prefabs/UI/Item/ItemIconDefault.prefab"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgBg_CountText.asset",
+        "sha256": "9eb9e71f786b0f4c403a22818fd8ae8425c62e608feb113b689de23905b83686",
+        "guid": "7d8a947396001744094dae9df13d5400",
+        "meta_sha256": "3ca4e43d1de5f2e20fdc37f7e6d630d7842670586ba9fb7030d07cb8c97b6a22"
+      },
+      {
+        "native_relative_path": "Image/UI/Common/Mask/ImgMask.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Image/UI/Common/Mask/ImgMask.asset",
+          "sha256": "af89bebaedcd1d39948b37ff885c9ea508ee835e46147845fee16777619e1cf2",
+          "owner": "Prefabs/UI/Item/ItemIconDefault.prefab"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/Image/UI/Common/Mask/ImgMask.asset",
+        "sha256": "46881553cc6a2c42e6496547b75cf143652c353cd03a2f6a67e4a6beaf5ebbab",
+        "guid": "217a496cf2bfb1d4883a7f68327a497a",
+        "meta_sha256": "daaf1229f6ef86403fdc2fa20a563b6416611b4e21abd42281e7fd5d5ad21537"
+      },
+      {
+        "native_relative_path": "ProfessionNativeTextures/ImgMask.texture2d.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/native-textures/ProfessionNativeTextures/ImgMask.texture2d.asset",
+          "sha256": "f6eb4f2f2c58f607e3ff3a204db770bd060644ba1376b4fda39ecdcb04ee77c0",
+          "owner": "Image/UI/Common/Mask/ImgMask.asset"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/ProfessionNativeTextures/ImgMask.texture2d.asset",
+        "sha256": "f6eb4f2f2c58f607e3ff3a204db770bd060644ba1376b4fda39ecdcb04ee77c0",
+        "guid": "9025b22dc6c4de64b99a00fd9dcde05d",
+        "meta_sha256": "3fd91d16e8c9d54c0b338f6d5b62a25c4b5bca0035fc54b5f7394691c8742c76"
+      },
+      {
+        "native_relative_path": "Image/UI/Common/Common_Atlas/C_none.asset",
+        "source": {
+          "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/C_none.asset",
+          "sha256": "7344ebc1ae1ab7d904e3bc7af330ace7dab49370f27fb86e1bf5324c7d97d781",
+          "owner": "Prefabs/UI/Item/ItemIconDefault.prefab"
+        },
+        "installed_path": "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/C_none.asset",
+        "sha256": "4383b73024798b940e1b4c03b2b3fa23442977aa019f761532aeb76db533de16",
+        "guid": "d91fcd8ce5228b443a3478a28f5b3d5a",
+        "meta_sha256": "78ea6e5024cdb2af89f3c6cb58c94716e30ed504e4f5feff456ab13aac476ba7"
+      }
+    ],
+    "guid_remap": {
+      "eef129d5e40c07af534a8e24da6b5c16": "71c1514a6bd24e1e882cebbe1904ce04",
+      "3cf5a44414476512e00c3e7a2569a919": "fe87c0e1cc204ed48ad3b37840f39efc",
+      "862f1d198bc59dcff2781e140850384e": "2f0fba7ac4814ad75de2926c97601c2c",
+      "3f96b1d166d19b209697e35b35d65c76": "f4688fdb7df04437aeb418b961361dc5",
+      "9af3f11a55794eeb92472fe769e4bfc1": "231cab3c6fd951b7a2d14633a5465cbf",
+      "fc83037defa42b6d8727affa7634e275": "cdace2191f5a4d2d3513c447854e839a",
+      "de4ec67eb430bff6e54ecc248509240e": "b648c109daefda97b04239b217626e5d",
+      "4293fd42559bc8bb1c81715179adf536": "306cc8c2b49d7114eaa3623786fc2126",
+      "5c337bacb1b26c004cbbd16fa65c84ee": "eda62e0b27051dfd578214e537c3c072",
+      "21c7954052da7655d96bff866c2b7662": "3245ec927659c4140ac4f8d17403cc18",
+      "1ff0172e9fbc49c54d73ae46df8a915e": "68f60e1c85746567e946a9f72f70c441",
+      "7a067c232c6d5e99b34bf30e73592735": "775fbf1866bbdd0ad21c597788961a97",
+      "c889ef8734d79cf2753af8858e79ffe0": "af15cc145e0c5ce081a320cbc5d9d74d",
+      "869d74d70a8dffb0f4d0a329c6c0fe12": "26fc32eae8ae20e4c3ce956f63542480",
+      "5f53c9c840d4e8cf602b73a5a2a5e8b4": "2ce371f9f2affe420feb6e805df12194",
+      "19fbb4a32b59286cd89b624f52ff7943": "30649d3a9faa99c48a7b1166b86bf2a0",
+      "18d0a90695249463551c00f45766e642": "4e29b1a8efbd4b44bb3f3716e73f07ff",
+      "16c0ec1e295995dd9a2d2df2d7b6cc7e": "31a19414c41e5ae4aae2af33fee712f6",
+      "3b66221f5aa9e1298ea12f74281d00d8": "3e2d40fcb3febb5d237c6eaab0dd385a",
+      "4c4606d8ec42d7546a73f34de54ecb41": "e82bdf526f90515ef7be909a2bb66b19"
+    },
+    "folder_metadata": [
+      {
+        "path": "Assets/Official/ProfessionUI/Native/Prefabs/UI/Item/Attachments.meta",
+        "sha256": "69b42b036a10274670ff49bef37f12e12aea53841441f53690955e2d96b54dbf"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native/Prefabs/UI/Item.meta",
+        "sha256": "ecfe68a15ccbdaba61dfb65083d74d8c158f1a0d2f4c2529f97214e25ad4079a"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native/Prefabs/UI.meta",
+        "sha256": "86c533d137754ec96e1d2ac057d4b3c70f36943f1f7b1d7f9b94ecc6dda4234b"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native/Prefabs.meta",
+        "sha256": "bc63351d17f87cb15f360286ba45f469e7bd03a5ca95a681e18cf8df0976b053"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native.meta",
+        "sha256": "5d32352e8ed2b1bd58d06f537d8f1e6fbb63e06a5c263c725219795c999148eb"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI.meta",
+        "sha256": "78983b1c47af3ca3fbcfcfaa13093473b5a6d8219d4d9120f2c4ba4f3df549f8"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials.meta",
+        "sha256": "94299c9f6a0c2d8ebd36a9bfbd11f018ba27341d845bbbac81bc4e73970c4db3"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets.meta",
+        "sha256": "c5c8d3a9562e7d6d4f6b85c069c1ef03aac8f70371671a70305ca27a79d0073b"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native/TextMesh Pro.meta",
+        "sha256": "a6db460390cf6b1bb04e8cfd863cd69a611b1651c77c9b71e4363a7865a021b0"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native/ProfessionNativeTextures.meta",
+        "sha256": "df720a97c48adb1f7dfb90f700ace6b32356ce26d017882c4dabae6288c5f5fe"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas.meta",
+        "sha256": "56407a2ef36c344fb8184080e578e947784b0c0b16c73c8e24a6d4f0303307cb"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native/Image/UI/Common.meta",
+        "sha256": "fcf846e6bcf60fcf4047625957908d5c4c03420653581679fb3a248a1b3cda45"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native/Image/UI.meta",
+        "sha256": "2805aeffc4637e417c436af784d4217e184f17b9b1ef94112b4c34631c3adc25"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native/Image.meta",
+        "sha256": "a60284f72022e538b80940367626511d777b05e1ca01186b420b88b2b0400860"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native/ScriptableConfig/Modules/ItemIcon.meta",
+        "sha256": "ae3e72621066b3309237852bf737e23cf93603d373b8eac977ebf5a429474ebc"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native/ScriptableConfig/Modules.meta",
+        "sha256": "176b256027a3cc49097318ad56f6f3bf08dc54682a2152a57c1151e5baf007cd"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native/ScriptableConfig.meta",
+        "sha256": "a456028fdd57d44119c9f84eb02023dda9a1793729e8f82c3cc73067d0034787"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native/Image/UI/ItemQuality/ItemQuality_Atlas.meta",
+        "sha256": "7bda1b931d251de9a356d47bb141f2a6761b5090e5d1eee71e46c56e604e96a5"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native/Image/UI/ItemQuality.meta",
+        "sha256": "bba4260e2f6acb3d986a081c3608e490c8b94b7210feea450065f99c09227147"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native/ProfessionDynamic.meta",
+        "sha256": "e3876cf1e14c6e5a5d2c1aea7d6393c9da6723e57b776a56e7745c8a4b1f3bfe"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native/Wwise/ScriptableObjects/Event.meta",
+        "sha256": "1deef045ce8f046f0be91e137ca3196de7c0d9e600a4d149220c77972ea2845f"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native/Wwise/ScriptableObjects.meta",
+        "sha256": "563833e9f71b21250b44f7925d1cd65a9dc02f10f58aa87f46d10b6dd2edc9b3"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native/Wwise.meta",
+        "sha256": "773eff9e30ee38af8d6eb6eea989bb371cc431ebb62e5b304c105ae5affcf573"
+      },
+      {
+        "path": "Assets/Official/ProfessionUI/Native/Image/UI/Common/Mask.meta",
+        "sha256": "8729cf30972ddebf08ef6bfa28bea5c36863388b23a4a797ed27c659f24c1916"
+      }
+    ],
+    "native_texture_guids": [
+      "044798c4214f0a74086efa374c7cdd17",
+      "340cb31d4cc94f442b8185ef1bc1c3b8",
+      "9025b22dc6c4de64b99a00fd9dcde05d",
+      "b2f30c1dce166874095f1c6304aeede5"
+    ],
+    "operation": "Copy verified original native assets and import metadata; replace explicitly bound script/shader GUIDs and managed-reference assembly/type names. For PNG-to-native Texture2D conversion change external reference type 3 to 2, retaining GUID/fileID. Preserve native hierarchy, other serialized values and asset identity."
+  },
+  "validation_sources": [
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionItemIconValidation.cs",
+      "sha256": "d8c65003aeb36d3af55609c99c5bab80d5a2aa75793c4c07e7459b4a7554bc06"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeTextureValidation.cs",
+      "sha256": "1919e542bdcecf5a478d1678c9153ba04947476a592c170805151e6505d59c61"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_profession_item_catalog.py",
+    "sha256": "608b804c3f8801340e89863e7c741f4865a44d89ce7bddc9466a9af465b7c30b"
+  },
+  "operation": "Create explicit local lookup entries for four original reward Sprite logical addresses and AssetTable GUIDs, plus the source-configured native HintTip prefab. Keep the actual imported Sprite/prefab local IDs and GUIDs; asynchronous local requests have the original already-completed subscription behavior. No UI hierarchy is generated.",
+  "validation": "Actual isolated Unity Play Mode renders the original ItemIcon prefab for all four current reward definitions, checks the source quality Sprite and numeric text, binds the original TTF via the ported font service, confirms all count glyphs use that font, simulates mouse down/up through StandaloneInputModule to the original ItemIcon detail-popup dispatch, and checks Clear/unsubscription. GPU readback verifies every original mip byte in four UI textures before dynamic glyph generation.",
+  "limitations": [
+    "Detail-popup contents, attachment manager/pool, full profession GUI layout, player provider/state wiring and Windows Player release remain incomplete.",
+    "Numeric text 300 is fixture data for all four items; actual gift amounts come from the achievement configuration."
+  ]
+}

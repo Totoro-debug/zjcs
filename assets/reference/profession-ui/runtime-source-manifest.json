@@ -240,11 +240,31 @@
   },
   "item_components": {
     "path": "assets/reference/profession-ui/item-components-source-manifest.json",
-    "sha256": "25cf79b285e8e2de8d7c9ab63bb21477a506731ba62bed14721d18a9553c2e57"
+    "sha256": "a62ffc303ab6b8ae8131d51ca186bdd1f70e4ec95f4962f76ce8892bd98853ef"
   },
   "item_resources": {
     "path": "assets/reference/profession-ui/item-resources-source-manifest.json",
-    "sha256": "151ec389182aeb33208ef5bcdff3780e03fc5a51cfdfffc1f495150634f2843a"
+    "sha256": "f4f0c61f3957f8894122345cb37923170f387250a977eb8118895f5d24af99e2"
+  },
+  "item_icon": {
+    "path": "assets/reference/profession-ui/item-icon-source-manifest.json",
+    "sha256": "7479da39996b445aee9546c117fae22e44357652f101c2d6fcf99df34d3457ef"
+  },
+  "item_configs": {
+    "path": "assets/reference/profession-ui/item-configs-source-manifest.json",
+    "sha256": "22c2678d1c0886fb168f7352d26797592264589fa4ba28f095e446fe5a20037b"
+  },
+  "item_catalog": {
+    "path": "assets/reference/profession-ui/item-catalog-source-manifest.json",
+    "sha256": "b4c8debc6895b7fe114167eb27fdcbc0199f3d4fcaeef54eb8f722efbf50fbfc"
+  },
+  "native_textures": {
+    "path": "assets/reference/profession-ui/native-textures-source-manifest.json",
+    "sha256": "ca00eb1af87c0803f4097652de0dcff9c10c2e861d346337fb4e1d5d9268928c"
+  },
+  "font_service": {
+    "path": "assets/reference/profession-ui/font-service-source-manifest.json",
+    "sha256": "d27358a93e5e22776b19d104e3d9c41a4bcd497c3fb3e8e8f9fce1cc4b8b3cd6"
   },
   "rule_adapter": {
     "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IProfessionRuleTipData.cs",
@@ -260,7 +280,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "172057a7632a15f958fe087826fcf41e4fb55b6dada740081bee2659d28aac73"
+    "sha256": "9bab28176526affadb2265e484edb4e216031cd5305152819be3ed0fc363e48d"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",
