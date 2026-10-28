@@ -60,6 +60,8 @@
 
 - 原 `MyPlayableSound`、`MyPlayableTimeLine` 及三份 Wwise Timeline 代码已迁入 `Runtime/Official/StorySounds/`，复用已核对官方 SDK 简单 Post 的事件 ID／Playing ID 桥接。保留 `Time - deltaTime` 循环边界、跨大帧只补一次、目标为空回退自身、停止／重用顺序；Timeline 源绑定优先于目标绑定、手动时钟使用缩放 delta，仅 None 外推采用有限时长，原音频片段暂停／结束不额外发送停止事件。内置屏隔离 Unity 导入／编译、`ProjectTools.Validate` 及 Play Mode 的原组件绑定、循环／暂停／重用和两段咒文实际 Timeline 调度通过。来源为 `map14-story-sound-runtime-source-manifest.json`，恢复器为 `scripts/prepare_unity_story_sound_runtime.py`；本轮记录原事件调度，未接通音频总线 DSP／RTPC、完整原生 Timeline／气泡／地图流程或存档，也未发布完整功能。
 
+- 原 `AnimationController`、`StateMergeList<T>`、`MyPlayableAnimator` 已迁入 `Runtime/Official/StoryAnimation/`，保留初始化前缓冲、同一来源覆盖／取消、来源分层恢复、嵌套暂停、Animator 替换通知、允许状态限制，以及淡出／停止恢复和池复用。保留原层权重使用各自快照、布尔／浮点／整数使用来源栈的差异，未改写为另一种合并规则。仅将反编译 C# 13 自动属性适配为等价 C# 9，并替换诊断日志。内置屏隔离 Unity 导入／编译、`ProjectTools.Validate` 和原生 Animator Play Mode 的参数／状态调度验证通过；夹具使用隔离控制器，不代表原角色／原控制器、骨骼／换装／物理约束或实际画面已经恢复。来源 `map14-story-animator-runtime-source-manifest.json`，恢复器 `scripts/prepare_unity_story_animator_runtime.py`；原模型／动画资源绑定、正式地图输入／存档和 Windows 发布继续迁移。
+
 ## 自定义实现
 
 原演出核心以显式中心注入及调用方提供两个原帧阶段替代 DI／R3 注册；日志接入 Unity，移除只用于 Inspector／MessagePack 的属性。调度、数值、状态和回调顺序保留，正式宿主的生命周期接入仍待验证。

@@ -1,0 +1,101 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/AnimationController.cs",
+      "sha256": "cd59a6e68288133c542c5b7a8f03049be528775a299ddc841f883f1a1fd15a47"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/StateMergeList.cs",
+      "sha256": "8f7dbe190902cb536759bbcc4322c2f1b828c5bba80f0512aa239967242dbe09"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyPlayableAnimator.cs",
+      "sha256": "833f0b99dc83f3db92dc90400d8cea36596dde43a024f1ceb3f326e84d0e17b2"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_story_animator_runtime.py",
+      "sha256": "8c49255105d710285b4e95a296c33c5b78013e87fb6c9754a2c41b04c06783ee"
+    },
+    {
+      "path": "scripts/prepare_unity_story_playable_runtime.py",
+      "sha256": "8901da0cedbce77ece9f81c2e2c35f4bbefb20f0f48f3fb26f32bc60afcfd2c0"
+    },
+    {
+      "path": "scripts/prepare_unity_story_sound_runtime.py",
+      "sha256": "7c9e2f9f102b8dd9b832b01bccd73d89748f04a252ca1a4d984dc33f7ed5cbcf"
+    }
+  ],
+  "adaptations": [
+    {
+      "source": "AnimationController",
+      "diagnosticBlocks": 1,
+      "autoPropertyCSharp9": true
+    },
+    {
+      "source": "StateMergeList",
+      "diagnosticBlocks": 0,
+      "autoPropertyCSharp9": false
+    },
+    {
+      "source": "MyPlayableAnimator",
+      "diagnosticBlocks": 0,
+      "autoPropertyCSharp9": false
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/AnimationController.cs",
+      "sha256": "66864b1ce56faa7901cac1f959f7848ccb67f7529789c315d22f04ef86aec1d0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/AnimationController.cs.meta",
+      "sha256": "0cd40b498a2dc825a004e46075510344b09aaf612d2f50bfd701d87b1cbdbdc0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/StateMergeList.cs",
+      "sha256": "ae1af91d73c9b56ee7d546b52a0edd4f6036b94dacf99b3e2ccc21e2197c694e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/StateMergeList.cs.meta",
+      "sha256": "0b9e157601591a35a89cdb235262c807ed09ddcb90c35932afd588cb01e02d4d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableAnimator.cs",
+      "sha256": "181799c5ed613f948e546380413f1362015d9e12e619b8f890461a7f544e3333"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableAnimator.cs.meta",
+      "sha256": "942fca0e8ff73062890f7a349b61a34694d7426b34bd05afe80bcff9c9881324"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/Zjcs.Official.StoryAnimation.asmdef",
+      "sha256": "f49afd4c15ac55f1b98bcc8447728953b9e54730c5bcceb365d5d5240b16199f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/Zjcs.Official.StoryAnimation.asmdef.meta",
+      "sha256": "d861a2165474a296df82bc4a501d426aae4bf0a7f97b7c161e59464e142a8feb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation.meta",
+      "sha256": "0ed6e566e284a63340ad169e82de9751bb831de70e72df17103e748c830ec615"
+    }
+  ],
+  "validation": {
+    "path": "unity/Assets/Game/Editor/Map14/StoryAnimation/OfficialMap14StoryAnimatorAcceptance.cs",
+    "sha256": "d34f6847289616824ada27a357445bf76b8bcb6ef3e30838d5a4efc7cf8d7f2e"
+  },
+  "operation": "Copy official AnimationController, StateMergeList and MyPlayableAnimator. Preserve initial parameter buffering, keyed layering/removal order, pause counters, Animator override callbacks, allowed-state checks, fade/stop parameter restoration and pool reuse. Adapt namespace, diagnostic logger and C# 13 field auto-property to equivalent Unity C# 9 only.",
+  "limitations": [
+    "Original visual model, Animator controller/clip and prefab binding, bone/attachment/skin behavior, free native skeleton animation and formal map flow remain pending."
+  ]
+}
