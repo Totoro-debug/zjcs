@@ -41,6 +41,23 @@ namespace Zjcs.Editor
                 matching.SetActive(true);
                 float deadline = Time.realtimeSinceStartup + 5f;
                 while (posts == 0 && Time.realtimeSinceStartup < deadline) yield return null;
+                Transform circle = receiver.transform.Find("ImgMatchW_Circle1");
+                Transform glow = receiver.transform.Find("ImgMatchW_Glow");
+                if (receiver.GetComponentsInChildren<WorldRotateAnimation>(true).Length != 2
+                    || circle == null || glow == null || !circle.GetComponent<WorldRotateAnimation>().enabled
+                    || !glow.GetComponent<WorldRotateAnimation>().enabled)
+                    throw new InvalidDataException("Original matching rotation components were not restored.");
+                // Observe real Update frames; do not invoke the rotation component's callback.
+                for (int frame = 0; frame < 3; frame++)
+                {
+                    Quaternion circleBefore = circle.localRotation, glowBefore = glow.localRotation;
+                    yield return null;
+                    Quaternion circleExpected = circleBefore * Quaternion.Euler(0f, 0f, 50f * Time.deltaTime);
+                    Quaternion glowExpected = glowBefore * Quaternion.Euler(0f, 0f, 80f * Time.deltaTime);
+                    if (Quaternion.Angle(circle.localRotation, circleExpected) > .1f
+                        || Quaternion.Angle(glow.localRotation, glowExpected) > .1f)
+                        throw new InvalidDataException("Original matching local rotation speed or delta-time update changed.");
+                }
                 var source = UnityEngine.Object.FindObjectsOfType<AudioSource>()
                     .SingleOrDefault(value => value.gameObject.name == "OfficialDungeonUiSound:TeamMatch_Waiting_1");
                 if (posts != 1 || source == null || source.clip != receiver.mEvents[0] || source.loop

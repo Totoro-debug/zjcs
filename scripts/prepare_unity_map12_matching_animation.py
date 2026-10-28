@@ -118,14 +118,23 @@ def build(native_path=NATIVE, update=False):
     audio=json.loads(AUDIO.read_bytes());record=next(row for row in audio['events'] if row['id']==event_fields['id'])
     if audio['manifest']!=VERSION or sha((ROOT/record['path']).read_bytes())!=record['sha256']: raise ValueError('Original matching PCM changed')
     canvas=[]
+    rotations=[]
     for child,path,objects,_ in relative_transform_path(go):
         for pair in child.m_Component:
             obj=pair.component.deref()
+            if obj.type.name=='MonoBehaviour' and obj.read(check_read=False).m_Script.read().m_ClassName=='RotateAnimation':
+                fields=schemas.read(obj)
+                if set(fields)!={'m_GameObject','m_Enabled','m_Script','m_Name','mSpeeds'}:
+                    raise ValueError('Unmapped original RotateAnimation field')
+                rotations.append(dict(path='/'.join(map(str,path)),objects=list(objects),enabled=bool(fields['m_Enabled']),
+                    speeds=[fields['mSpeeds'][axis] for axis in ('x','y','z')],**source_record(apk,obj)))
             if obj.type.name!='CanvasGroup':continue
             fields=obj.read_typetree()
             canvas.append(dict(path='/'.join(map(str,path)),objects=list(objects),enabled=bool(fields['m_Enabled']),
                 alpha=fields['m_Alpha'],interactable=fields['m_Interactable'],blocksRaycasts=fields['m_BlocksRaycasts'],
                 ignoreParentGroups=fields['m_IgnoreParentGroups'],**source_record(apk,obj)))
+    if [(row['path'],row['speeds']) for row in rotations]!=[('2',[0.,0.,50.]),('3',[0.,0.,80.])]:
+        raise ValueError('Original private matching rotation sources changed')
     native_scripts=[]
     package_metas={'Image':'com.unity.ugui@1.0.0/Runtime/UI/Core/Image.cs.meta',
                    'TextMeshProUGUI':'com.unity.textmeshpro@3.0.6/Scripts/Runtime/TextMeshProUGUI.cs.meta'}
@@ -146,18 +155,18 @@ def build(native_path=NATIVE, update=False):
         wrapMode=settings['m_WrapMode'],playAutomatically=settings['m_PlayAutomatically'],animatePhysics=settings['m_AnimatePhysics'],cullingType=settings['m_CullingType'],
         clip=dict(name=NAME,resource='Map12/Matching/'+NAME,duration=duration,sampleRate=original['m_SampleRate'],**source_record(apk,clip)),
         sound=dict(enabled=bool(sound_fields['m_Enabled']),events=[dict(name=record['name'],id=record['id'],resource=record['resource'],**source_record(apk,reference))],**source_record(apk,sound)),
-        canvasGroups=canvas,absentSourceTargets=absent_targets,targets=[dict(path=path,type=kind) for path,kind in sorted(targets)],**source_record(apk,animation))
-    code=CODE/'launch-source/AnimationSoundPlayer.cs'
+        canvasGroups=canvas,rotations=rotations,absentSourceTargets=absent_targets,targets=[dict(path=path,type=kind) for path,kind in sorted(targets)],**source_record(apk,animation))
+    codes=[CODE/'launch-source'/name for name in ('AnimationSoundPlayer.cs','RotateAnimation.cs')]
     receipt=dict(manifest=VERSION,mapClassId=12,binding=binding,events=source_events,script_sources=script_sources,
         source_hierarchy=hierarchy,absent_source_curves=absent_curves,
         native_input=dict(path=native_path.relative_to(ROOT).as_posix(),sha256=sha(payload)),
-        code_sources=[dict(path=code.relative_to(ROOT).as_posix(),sha256=sha(code.read_bytes()))],native_script_targets=native_scripts,
+        code_sources=[dict(path=code.relative_to(ROOT).as_posix(),sha256=sha(code.read_bytes())) for code in codes],native_script_targets=native_scripts,
         duration_rule=dict(engine_path=engine.relative_to(ROOT).as_posix(),engine_sha256=ENGINE_SHA256,
             icall='UnityEngine.AnimationClip::get_length',icall_address='0x5755e0',range_kernel='0xf9c434',
             port_path='scripts/commerce_clip_time.py',port_sha256=sha((ROOT/'scripts/commerce_clip_time.py').read_bytes())),
         audio_source_receipt=dict(path=AUDIO.relative_to(ROOT).as_posix(),sha256=sha(AUDIO.read_bytes())),
         verified=dict(float_curves=31,scale_curves=5,float32_keys_exact=True,event_time_exact=True,source_sample_rate=original['m_SampleRate'],present_target_groups=len(targets),absent_float_curves=len(absent_curves)),
-        operation='Compare all original Legacy curve fields, float32 key values/slopes/weights, script identities, clip settings and events; reuse native export with only Image/TMP script GUID mapping. Local audio adapter replaces Wwise Post; preserve event indexing and Animation settings.',outputs=outputs)
+        operation='Compare all original Legacy curve fields, float32 key values/slopes/weights, script identities, clip settings and events; reuse native export with only Image/TMP script GUID mapping. Local audio adapter replaces Wwise Post; preserve event indexing and Animation settings. Restore the two original RotateAnimation enabled flags and serialized speeds with the original delta-time local-space update.',outputs=outputs)
     write(RECEIPT,encode(receipt),update)
     print(json.dumps(dict(clip=NAME,float_curves=31,scale_curves=5,events=source_events,targets=len(targets),outputs=len(outputs)),ensure_ascii=False))
 

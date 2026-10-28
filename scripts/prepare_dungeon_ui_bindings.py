@@ -299,6 +299,18 @@ def private_matching_binding(apk, schemas, root):
         reference = PPtr(**event['WwiseObjectReference'], assetsfile=sounds[0].assets_file).deref()
         if sha256(reference.get_raw_data()) != expected['object_raw_sha256']:
             raise ValueError('Private matching original event changed')
+    rotations = []
+    for node, indices, names, _ in relative_transform_path(go):
+        for pair in node.m_Component:
+            component = pair.component.deref()
+            if component.type.name != 'MonoBehaviour' or component.read(check_read=False).m_Script.read().m_ClassName != 'RotateAnimation':
+                continue
+            fields = schemas.read(component)
+            rotations.append(dict(path='/'.join(map(str, indices)), objects=list(names), enabled=bool(fields['m_Enabled']),
+                speeds=[fields['mSpeeds'][axis] for axis in ('x', 'y', 'z')], source=apk.provenance(component),
+                object_raw_sha256=sha256(component.get_raw_data())))
+    if rotations != binding['rotations']:
+        raise ValueError('Private matching original rotation bindings changed')
     binding.update(native_outputs=receipt['outputs'], source_receipt=dict(path=path.relative_to(ROOT).as_posix(), sha256=sha256(path.read_bytes())))
     return binding
 

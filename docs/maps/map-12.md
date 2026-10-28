@@ -54,6 +54,8 @@ Water2 已按固定来源的57个原 `MeshRenderer` 名称绑定，运行时沿�
 
 机神山私图匹配显示现按原 `DailyDungeonDetailContent_GameMatch_Show` 接回 Legacy Animation：保留60 Hz、0.9333333373秒时长、31条浮点曲线、5条缩放曲线，以及关键帧时间／数值／入出切线／权重／前后外推与原组件播放参数。第5帧（0.0833333358秒）原 `PostEvent(0)` 指向 `TeamMatch_Waiting_1`，由迁移的 `WorldAnimationSoundPlayer` 沿原列表索引和调用顺序交给已有本地音频服务。原两处 CanvasGroup 的透明度与交互字段按序列化值恢复；共享动画中6条曲线指向本 prefab 原本缺席的 DescTxt1／Progress，完整曲线保留，实际17组目标按原层级绑定。`prepare_unity_map12_matching_animation.py` 从当前 APK 原动画逐字段核对已有原生导出，仅转换 Image／TMP 脚本 GUID；原对象、源代码、原生输入输出、脚本 GUID 与事件来源见 [匹配动画来源](../../assets/reference/official-map/map12-matching-animation-source-manifest.json)。动画／副本绑定无覆盖复现、三项独立 C# 编译及71,047 GUID静态检查通过；实际 C# 路径回放覆盖3158节点、31个按钮目标、匹配宿主、2个 CanvasGroup、17组曲线目标和3组原缺席目标，改变缩放关键帧或事件时间的输入会被拒绝且不改交付载荷。Play Mode 夹具已覆盖原节点自动播放、第5帧事件、独立静音 PCM 音源、只播放一次和存档不变，但尚未执行；匹配业务、实际动画／音效与完整私图流程仍未验收。 原 APK 的 AnimationClip 长度内核已通过 ARM64 仿真核对：实际时长由原曲线和事件范围得到，未使用导出设置中的默认1秒；同一内核回归测试已加入 scripts/test_map12_matching_animation.py。
 
+匹配区域两处 `RotateAnimation` 已按原代码迁移为 `WorldRotateAnimation`，`ImgMatchW_Circle1`／`ImgMatchW_Glow` 保留原启用值与 Z 轴每秒50°／80°，逐帧按 `Time.deltaTime` 在自身坐标系旋转。来源清单追加原组件字节、序列化速度与 `RotateAnimation.cs` 哈希；现有播放夹具追加真实 Update 帧的旋转检查，但尚未执行。两处 UIMesh 的原网格、材质与 `UI/EffectDistort` 已定位，Windows 依赖与运行绑定仍未完成。 本次旋转来源与绑定无覆盖复现、三项独立 C# 编译及72,510 GUID静态检查通过；自动运行验收仍按用户要求暂停。
+
 Map12主线任务1165～1270沿用官方顺序、前置和奖励；其中1215要求逻辑标签“山壁电梯”。该标签在当前官方地图逻辑配置中绑定实体3501，升降台胜利事务现与原奖励、内部完成标志原子写入该官方标签；加载旧的内部完成标志时也会补齐主线标签。 实际升降台胜利验收确认任务1215从0/1变为1/1，重开角色档案后标签、任务进度和奖励仍恰好各写入一次。
 
 原生场景转换输入由 `prepare_unity_map12_native.py` 先查 APK，再按当前871索引读取缓存并补齐93个包的 CAB 依赖。复用已验证的原生 schema 恢复器，恢复4160个组件并逐对象核对21416个原始载荷字节不变，另独立重读全部字段；保留原 Unity 版本、Android目标、CAB身份及引用。转换缓存用于后续原生地形／场景／Water资产恢复，正式运行绑定与实际验证范围见下文。

@@ -25,6 +25,7 @@ namespace Zjcs.Presentation.World
             public bool enabled, playAutomatically, animatePhysics; public int wrapMode, cullingType;
             public MatchingClipBinding clip; public MatchingSoundBinding sound;
             public MatchingCanvasBinding[] canvasGroups; public MatchingTargetBinding[] targets;
+            public MatchingRotationBinding[] rotations;
         }
         [Serializable] private sealed class MatchingClipBinding
         { public string name, resource; public float duration, sampleRate; }
@@ -34,6 +35,8 @@ namespace Zjcs.Presentation.World
         { public string path; public string[] objects; public bool enabled, interactable, blocksRaycasts, ignoreParentGroups; public float alpha; }
         [Serializable] private sealed class MatchingTargetBinding
         { public string path, type; }
+        [Serializable] private sealed class MatchingRotationBinding
+        { public string path; public string[] objects; public bool enabled; public float[] speeds; }
         [Serializable] private sealed class PopupSoundBinding
         { public string path; public string[] objects; public bool enabled; public PopupSoundEventBinding show, hide; public PopupClickSoundBinding[] clicks; }
         [Serializable] private sealed class PopupClickSoundBinding
@@ -206,6 +209,17 @@ namespace Zjcs.Presentation.World
                 || binding.sound.events[0].id != 1386996041 || binding.sound.events[0].name != "TeamMatch_Waiting_1" || postSound == null)
                 throw new InvalidDataException("Original private matching animation/event binding is incomplete.");
             Transform host = Find(root.transform, binding.path, binding.objects);
+            if (binding.rotations == null || binding.rotations.Length != 2)
+                throw new InvalidDataException("Original private matching rotation bindings are incomplete.");
+            foreach (MatchingRotationBinding source in binding.rotations)
+            {
+                if (source.speeds == null || source.speeds.Length != 3)
+                    throw new InvalidDataException("Original private matching rotation speed is incomplete.");
+                GameObject node = Find(host, source.path, source.objects).gameObject;
+                var rotation = node.GetComponent<WorldRotateAnimation>() ?? node.AddComponent<WorldRotateAnimation>();
+                rotation.SetSpeeds(new Vector3(source.speeds[0], source.speeds[1], source.speeds[2]));
+                rotation.enabled = source.enabled;
+            }
             foreach (MatchingCanvasBinding source in binding.canvasGroups)
             {
                 GameObject node = Find(host, source.path, source.objects).gameObject;

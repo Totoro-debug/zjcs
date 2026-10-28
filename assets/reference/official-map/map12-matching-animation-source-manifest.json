@@ -137,6 +137,58 @@
     ],
     "path": "0/0/4/0/4/1/0",
     "playAutomatically": true,
+    "rotations": [
+      {
+        "enabled": true,
+        "object_raw_sha256": "bb5f54b0740b63395f89a0bcf3675f8b66c605b9caeb687ed0b75f9938b037ab",
+        "objects": [
+          "Content",
+          "ImgMatchW_Circle1"
+        ],
+        "path": "2",
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ui_dailydungeon.bundle",
+          "bundle_hash": "1e21f7d170ead460b4df9499e94b49df",
+          "bundle_sha256": "45134a83b372998156db5f81d4008c95d81f6c89d2b6b0059738ad02fc8adb47",
+          "bundle_size": 807989,
+          "manifest": "871_156598",
+          "origin": "official_cdn",
+          "path_id": "-3342941180293060381",
+          "source_manifest": "854_156383",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/1e21f7d170ead460b4df9499e94b49df.bundle"
+        },
+        "speeds": [
+          0.0,
+          0.0,
+          50.0
+        ]
+      },
+      {
+        "enabled": true,
+        "object_raw_sha256": "0f96defb8b7405a5c02dfa933d3cf3d35a9cf9828e54c111f6fe099a2d42800d",
+        "objects": [
+          "Content",
+          "ImgMatchW_Glow"
+        ],
+        "path": "3",
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ui_dailydungeon.bundle",
+          "bundle_hash": "1e21f7d170ead460b4df9499e94b49df",
+          "bundle_sha256": "45134a83b372998156db5f81d4008c95d81f6c89d2b6b0059738ad02fc8adb47",
+          "bundle_size": 807989,
+          "manifest": "871_156598",
+          "origin": "official_cdn",
+          "path_id": "5267701306155428067",
+          "source_manifest": "854_156383",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/1e21f7d170ead460b4df9499e94b49df.bundle"
+        },
+        "speeds": [
+          0.0,
+          0.0,
+          80.0
+        ]
+      }
+    ],
     "sound": {
       "enabled": true,
       "events": [
@@ -257,6 +309,10 @@
     {
       "path": ".tools/source-packages/current/871_156598/official-code/launch-source/AnimationSoundPlayer.cs",
       "sha256": "bcd2cd4ec55b7302a4fe97003526758438ab73674923e10a5a769f038fe428c3"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/launch-source/RotateAnimation.cs",
+      "sha256": "b0ea630e06ca115d0d5234f620bf33995fcd4e145518eda7fdde81098c076b2c"
     }
   ],
   "duration_rule": {
@@ -302,7 +358,7 @@
       "type": "TextMeshProUGUI"
     }
   ],
-  "operation": "Compare all original Legacy curve fields, float32 key values/slopes/weights, script identities, clip settings and events; reuse native export with only Image/TMP script GUID mapping. Local audio adapter replaces Wwise Post; preserve event indexing and Animation settings.",
+  "operation": "Compare all original Legacy curve fields, float32 key values/slopes/weights, script identities, clip settings and events; reuse native export with only Image/TMP script GUID mapping. Local audio adapter replaces Wwise Post; preserve event indexing and Animation settings. Restore the two original RotateAnimation enabled flags and serialized speeds with the original delta-time local-space update.",
   "outputs": [
     {
       "bytes": 30838,
