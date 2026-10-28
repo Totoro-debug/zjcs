@@ -1,0 +1,32 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "execution": {
+    "source_sha256": "8a2b36ce631087ccb3d0c3e0fe71da782f1f883f0e778d08c1aafbdeb30d767f",
+    "editor": "2022.3.57f1c2",
+    "backend": "Direct3D11",
+    "coverage": "Complete original grid/transform source views with both source tree configurations, actual native transforms, movement-stop/event order, fractional-center/depth conversion, directions, flip/body-range branches, transform forwarding, unload and original models rendered. Ground/body/movement are explicit diagnostic inputs; formal map input/save/Player pending.",
+    "cases": 44,
+    "rendered_pixels": 77768,
+    "play_mode": true
+  },
+  "acceptance": {
+    "path": "unity/Assets/Game/Editor/Map13EntityGridViews/OfficialMap13EntityGridViewAcceptance.cs",
+    "sha256": "a7d4735d62d93084ea60e15eb14912edc4ba88b9008c67eaf383dd829272609d"
+  },
+  "checks": {
+    "unity_import_compile": true,
+    "root_static_guids": 73768,
+    "actual_runtime_images_viewed": true,
+    "isolated_project_tools_validate": true
+  },
+  "global_validation": {
+    "method": "Zjcs.Editor.ProjectTools.Validate",
+    "editor": "2022.3.57f1c2",
+    "backend": "Direct3D11",
+    "exit_code": 0,
+    "scope": "Isolated complete working-source compilation with original combat/Map10 validation resources. The shared root project was occupied. Map13 view Play Mode uses the separately pinned original-model fixture.",
+    "source_files": 2333,
+    "source_snapshot_sha256": "1dfb5bf3d53f690ca1ef5156742aa1511189bbaef13c9329048d455aa4a1f1a3"
+  }
+}

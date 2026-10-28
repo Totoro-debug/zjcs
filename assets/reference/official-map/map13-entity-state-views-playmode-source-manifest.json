@@ -24,12 +24,22 @@
     "actual_runtime_images_viewed": true,
     "tree_models_ahead_in_time_regression": true,
     "root_project_tools_validate": false,
-    "root_project_tools_validate_limitation": "Attempted twice; root project is already open in another session. Previous complete tree-model module root validation passed; this module compiled and executed in the isolated Unity project."
+    "root_project_tools_validate_limitation": "Attempted twice; root project is already open in another session. Previous complete tree-model module root validation passed; this module compiled and executed in the isolated Unity project.",
+    "isolated_project_tools_validate": true
   },
   "regression_receipts": [
     {
       "path": "assets/reference/official-map/map13-native-tree-models-playmode-source-manifest.json",
       "sha256": "2e4604b63a2dfedf89b6f16bcef927748aae0428a329cfcd904090cf7f4e5331"
     }
-  ]
+  ],
+  "global_validation": {
+    "method": "Zjcs.Editor.ProjectTools.Validate",
+    "editor": "2022.3.57f1c2",
+    "backend": "Direct3D11",
+    "exit_code": 0,
+    "scope": "Isolated complete working-source compilation with original combat/Map10 validation resources. The shared root project was occupied. Map13 view Play Mode uses the separately pinned original-model fixture.",
+    "source_files": 2333,
+    "source_snapshot_sha256": "1dfb5bf3d53f690ca1ef5156742aa1511189bbaef13c9329048d455aa4a1f1a3"
+  }
 }
