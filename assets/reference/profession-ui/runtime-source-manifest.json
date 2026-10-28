@@ -254,6 +254,10 @@
     "path": "assets/reference/profession-ui/idle-transform-source-manifest.json",
     "sha256": "619aa6834aa39ccbae3a597608ef047c4d4a6a44af99218ec7ee56af61efee0f"
   },
+  "character_textures": {
+    "path": "assets/reference/profession-ui/character-textures-source-manifest.json",
+    "sha256": "601f70b18e589336b7a0b60676b505e3aaa131cdd3314e2ec470949d921f8dc7"
+  },
   "image_resources": {
     "path": "assets/reference/profession-ui/image-resource-source-manifest.json",
     "sha256": "58e2e246bd0c4c66915b8fd78873c0d274bcd45adb4e04a5e64e0db101b5715e"
@@ -444,7 +448,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "027cbc4e8a8fa17b3fee20855a14c4bc41d9a1c99957a6725e02ce4ce2a44517"
+    "sha256": "c8c7c36253b3c748b8d505e1bfba0491d4e0b35515c2262073e372b3c1dac79c"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",
