@@ -1,0 +1,754 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9c277582d605878b75b39f1cc363ca4, type: 3}
+  m_Name: catalog
+  m_EditorClassIdentifier: 
+  models:
+  - key: 7eda445bcb87d809f8f28c5b
+    data: {fileID: 11400000, guid: 114d97cc879975242b023507583f44b9, type: 2}
+  - key: 1c676b25892752d180488c11
+    data: {fileID: 11400000, guid: cb2d9bb162d42214c8221716338c075f, type: 2}
+  - key: cec8d52807a326994d6cdaa9
+    data: {fileID: 11400000, guid: 808e0a0e746c0d2479e0f65c866d114a, type: 2}
+  - key: de78c5e5215e1e8aaf8389a3
+    data: {fileID: 11400000, guid: 7c26404c35dda0e448e3517acd6fa53d, type: 2}
+  - key: 7832bbc0d8f890878dd923f7
+    data: {fileID: 11400000, guid: 61a0757e96b9d6a49bfa1967f4dcfb32, type: 2}
+  - key: 347f677d113b882db548be27
+    data: {fileID: 11400000, guid: c3e7d5ca4a31350439c51c12f59922f2, type: 2}
+  - key: 48daab918ae2fddfbc0427fe
+    data: {fileID: 11400000, guid: 1b0eecf56f034044a802c672e2b9c637, type: 2}
+  - key: 5b0f66fc8b1607abd8afa547
+    data: {fileID: 11400000, guid: 15a3445564989314d9354d39d9931b0e, type: 2}
+  - key: 8aef2268283e76e1c31e6f5d
+    data: {fileID: 11400000, guid: 7b4857c29bba4864ca8f8c877e553241, type: 2}
+  - key: e91192e7937bc47bf9ff4b93
+    data: {fileID: 11400000, guid: cb987fd454279a245a6dbe025b63e518, type: 2}
+  - key: 2e616d607943bf29bebe0574
+    data: {fileID: 11400000, guid: 42504dcb67c653f4c9acfc8f7f0bf8c8, type: 2}
+  - key: 85b86e78a2fe6829fd0024ca
+    data: {fileID: 11400000, guid: 6802b029632f0bf4fa4b3232a2c30122, type: 2}
+  - key: 5731b3764d9fd369d7dd098b
+    data: {fileID: 11400000, guid: 52ddbc525aa6e4949b225fd92d4281a1, type: 2}
+  - key: d37541b992d8637a90a7d036
+    data: {fileID: 11400000, guid: d3ebf58617446584b9edc45e3f1c9439, type: 2}
+  - key: 3485ec52570b2536f4b53326
+    data: {fileID: 11400000, guid: ff5e8c3a79fa06e4cbaa7b5048a31188, type: 2}
+  - key: 65cfa4258c10e11f2055b3e3
+    data: {fileID: 11400000, guid: 5704091192ff0b64ba1feb053bad706a, type: 2}
+  - key: 24495870ed2b84c0d905778d
+    data: {fileID: 11400000, guid: 4d8186dd91e0bfd42a4463e8a5f0ebad, type: 2}
+  - key: 9a38328928e93c536d3da937
+    data: {fileID: 11400000, guid: 0e0b5617f99a01d4eb93436e8a6f67c2, type: 2}
+  - key: 7d0f8b8076962e2e4b0f68f7
+    data: {fileID: 11400000, guid: 0ad2197d9f7c97f42ad5aa05b22d8204, type: 2}
+  - key: 6c4833c47b1d3965192b9406
+    data: {fileID: 11400000, guid: 7938545efd5c31748bfad5a8439abeb5, type: 2}
+  - key: a73ab823e651762b51e32e34
+    data: {fileID: 11400000, guid: b4996095ba31f2c438caf4b77caa41eb, type: 2}
+  - key: f6c3939b234aeb04bac42b99
+    data: {fileID: 11400000, guid: 633614f4f6e8a0c4d97e1221d74ced49, type: 2}
+  - key: ab5a45281db93686a1e83e0e
+    data: {fileID: 11400000, guid: c96ff3fb539f4884a8e5f13b4eb4f38a, type: 2}
+  - key: b188681441e160c1146afe91
+    data: {fileID: 11400000, guid: 1ac0bad54d77f5442a6389a72cbb5df5, type: 2}
+  - key: 96688d4360668f2da3ce0522
+    data: {fileID: 11400000, guid: cb60323e0ff3de94d852b29de8978fce, type: 2}
+  - key: 1ae5d54fdc2f123345eb2060
+    data: {fileID: 11400000, guid: 04331d5ade491d84e9ae86f0688f1ea5, type: 2}
+  - key: b768782e006040dc821d7653
+    data: {fileID: 11400000, guid: 69a10c55c924dad4196cd8aee2b79547, type: 2}
+  renderers:
+  - cab: CAB-8c2369faea47208a8998e9df006656c6
+    path_id: -1792721449497196252
+    model: 7eda445bcb87d809f8f28c5b
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: 6121199113569443455
+    model: 1c676b25892752d180488c11
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-5b4f9215ae32c80332730893d9ea2c90
+    path_id: 5589920252595806609
+    model: cec8d52807a326994d6cdaa9
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-e5d704f506163f73db7a9f405e818ecf
+    path_id: 2637246064851636048
+    model: cec8d52807a326994d6cdaa9
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-8c2369faea47208a8998e9df006656c6
+    path_id: -1015419248975629015
+    model: de78c5e5215e1e8aaf8389a3
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: -0.0035
+      initialSkinName: 
+  - cab: CAB-5cea625335b157bf8247ac1ce217e85d
+    path_id: -5759306493221188012
+    model: 7832bbc0d8f890878dd923f7
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-6585e135989a91ebeae613b4264b0589
+    path_id: 215062122320439856
+    model: 347f677d113b882db548be27
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-6585e135989a91ebeae613b4264b0589
+    path_id: 5308668491876856091
+    model: 347f677d113b882db548be27
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: -2728102339213608634
+    model: 48daab918ae2fddfbc0427fe
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-8c2369faea47208a8998e9df006656c6
+    path_id: -3727402263279102375
+    model: 5b0f66fc8b1607abd8afa547
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-8709b762fd8fb5b37ef7f3a93a7c4e3e
+    path_id: 8269580493738802180
+    model: 8aef2268283e76e1c31e6f5d
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-8c2369faea47208a8998e9df006656c6
+    path_id: -6005032319043305990
+    model: e91192e7937bc47bf9ff4b93
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-5b4f9215ae32c80332730893d9ea2c90
+    path_id: 1743251999910225868
+    model: 2e616d607943bf29bebe0574
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-e5d704f506163f73db7a9f405e818ecf
+    path_id: 8878786512517181140
+    model: 2e616d607943bf29bebe0574
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: -3975858958066595196
+    model: 85b86e78a2fe6829fd0024ca
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-8c2369faea47208a8998e9df006656c6
+    path_id: 41382553001072217
+    model: 5731b3764d9fd369d7dd098b
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: -0.0035
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: 7444780369195303337
+    model: d37541b992d8637a90a7d036
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-8c2369faea47208a8998e9df006656c6
+    path_id: -3235699397930648070
+    model: 3485ec52570b2536f4b53326
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: -979086743814594945
+    model: 65cfa4258c10e11f2055b3e3
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-5cea625335b157bf8247ac1ce217e85d
+    path_id: 7454821971372887636
+    model: 24495870ed2b84c0d905778d
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-5b4f9215ae32c80332730893d9ea2c90
+    path_id: 5539236587530612148
+    model: 9a38328928e93c536d3da937
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-e5d704f506163f73db7a9f405e818ecf
+    path_id: -2027708328564195621
+    model: 9a38328928e93c536d3da937
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-8c2369faea47208a8998e9df006656c6
+    path_id: -4352529392125352163
+    model: 7d0f8b8076962e2e4b0f68f7
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-8c2369faea47208a8998e9df006656c6
+    path_id: -638214555722810101
+    model: 6c4833c47b1d3965192b9406
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: -0.0035
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: 2403950782660405
+    model: a73ab823e651762b51e32e34
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: -0.0022
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: -8880677990733512279
+    model: f6c3939b234aeb04bac42b99
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: -6237382517901295191
+    model: f6c3939b234aeb04bac42b99
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: -5091997824800128599
+    model: f6c3939b234aeb04bac42b99
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: -5020998352155704919
+    model: f6c3939b234aeb04bac42b99
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: -2998560561100291671
+    model: f6c3939b234aeb04bac42b99
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: -2818890029037846103
+    model: f6c3939b234aeb04bac42b99
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: -2623259676920381015
+    model: f6c3939b234aeb04bac42b99
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: -752516638651579991
+    model: f6c3939b234aeb04bac42b99
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: 1633431539376128425
+    model: f6c3939b234aeb04bac42b99
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: 2082296390781305257
+    model: f6c3939b234aeb04bac42b99
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: 2487611661642432937
+    model: f6c3939b234aeb04bac42b99
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: 2789045795409822121
+    model: f6c3939b234aeb04bac42b99
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: 4750440011682283945
+    model: f6c3939b234aeb04bac42b99
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: 5369736797098934697
+    model: f6c3939b234aeb04bac42b99
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: 5511801222262292905
+    model: f6c3939b234aeb04bac42b99
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: 6368683445702689193
+    model: f6c3939b234aeb04bac42b99
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-5b4f9215ae32c80332730893d9ea2c90
+    path_id: -3763944858124218224
+    model: ab5a45281db93686a1e83e0e
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-e5d704f506163f73db7a9f405e818ecf
+    path_id: 3226088395074936590
+    model: ab5a45281db93686a1e83e0e
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-8c2369faea47208a8998e9df006656c6
+    path_id: -1588604433041529059
+    model: b188681441e160c1146afe91
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: -7477482706761219671
+    model: 96688d4360668f2da3ce0522
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: -6999009579158666839
+    model: 96688d4360668f2da3ce0522
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: -6867861872646946391
+    model: 96688d4360668f2da3ce0522
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: -4258106342033063511
+    model: 96688d4360668f2da3ce0522
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: -3184836087511580247
+    model: 96688d4360668f2da3ce0522
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: -1041117572992466519
+    model: 96688d4360668f2da3ce0522
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: 1354800569594479017
+    model: 96688d4360668f2da3ce0522
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: 1495104580739531177
+    model: 96688d4360668f2da3ce0522
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: 4606263772693791145
+    model: 96688d4360668f2da3ce0522
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-a84201c34cb5cc8e7c457257ac5df4a9
+    path_id: 7278828511920521641
+    model: 96688d4360668f2da3ce0522
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-8c2369faea47208a8998e9df006656c6
+    path_id: -3819149555417020124
+    model: 1ae5d54fdc2f123345eb2060
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: -0.0035
+      initialSkinName: 
+  - cab: CAB-8c2369faea47208a8998e9df006656c6
+    path_id: -3252247186124735221
+    model: b768782e006040dc821d7653
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 
+  - cab: CAB-8c2369faea47208a8998e9df006656c6
+    path_id: 4440515241638016297
+    model: b768782e006040dc821d7653
+    managed_type: Spine.Unity.SkeletonMecanim
+    fields:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 1
+      tintBlack: 0
+      useClipping: 1
+      zSpacing: 0
+      initialSkinName: 

@@ -1,0 +1,383 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab080abe3f4c50479f5b6d6e4b7a6368, type: 3}
+  m_Name: map_zhanLiZhiZhu_C_2_SkeletonData
+  m_EditorClassIdentifier: 
+  Source:
+    name: map_zhanLiZhiZhu_C_2_SkeletonData
+    cab: CAB-9878a9ad9e208519f2a9a12847b35c22
+    path_id: -693939395354206115
+    materialPath: Assets/Official/World/Map/13/NativeEntityMaterials/7a06e1f2ba893d03d782dfb6aae73d36/7875308547387484221.mat
+    sortingLayer: 0
+    sortingOrder: 0
+    showOnRoundProgress: 0
+    scale: 0.01
+    defaultMix: 0.2
+    bones:
+    - name: root
+      inherit: normal
+      parent: -1
+      x: 0
+      y: 0
+      rotation: 0
+      shearX: 0
+      shearY: 0
+      scaleX: 1
+      scaleY: 1
+      length: 0
+    slots:
+    - name: dimian2_4
+      color: ffffffff
+      blend: normal
+      bone: 0
+      attachment: 0
+    - name: dimian2_3
+      color: ffffffff
+      blend: normal
+      bone: 0
+      attachment: 1
+    - name: dimian2_2
+      color: ffffffff
+      blend: normal
+      bone: 0
+      attachment: 2
+    - name: dimian2_1
+      color: ffffffff
+      blend: normal
+      bone: 0
+      attachment: 3
+    constraints: []
+    attachments:
+    - name: dimian2_4
+      kind: region
+      slot: 0
+      endSlot: -1
+      vertices:
+      - first: 0
+        count: 1
+      - first: 1
+        count: 1
+      - first: 2
+        count: 1
+      - first: 3
+        count: 1
+      influences:
+      - bone: 0
+        x: -297.75714
+        y: 59.469757
+        weight: 1
+      - bone: 0
+        x: -297.75714
+        y: 356.46976
+        weight: 1
+      - bone: 0
+        x: -118.757126
+        y: 356.46976
+        weight: 1
+      - bone: 0
+        x: -118.757126
+        y: 59.469757
+        weight: 1
+      uv:
+      - 0.44494048
+      - 0.23046875
+      - 0.0029761905
+      - 0.23046875
+      - 0.0029761905
+      - 0.9296875
+      - 0.44494048
+      - 0.9296875
+      triangles: 000000000100000002000000020000000300000000000000
+    - name: dimian2_3
+      kind: region
+      slot: 1
+      endSlot: -1
+      vertices:
+      - first: 0
+        count: 1
+      - first: 1
+        count: 1
+      - first: 2
+        count: 1
+      - first: 3
+        count: 1
+      influences:
+      - bone: 0
+        x: 114.242905
+        y: 59.469757
+        weight: 1
+      - bone: 0
+        x: 114.242905
+        y: 342.46976
+        weight: 1
+      - bone: 0
+        x: 279.24292
+        y: 342.46976
+        weight: 1
+      - bone: 0
+        x: 279.24292
+        y: 59.469757
+        weight: 1
+      uv:
+      - 0.86904764
+      - 0.23046875
+      - 0.44791666
+      - 0.23046875
+      - 0.44791666
+      - 0.875
+      - 0.86904764
+      - 0.875
+      triangles: 000000000100000002000000020000000300000000000000
+    - name: dimian2_2
+      kind: region
+      slot: 2
+      endSlot: -1
+      vertices:
+      - first: 0
+        count: 1
+      - first: 1
+        count: 1
+      - first: 2
+        count: 1
+      - first: 3
+        count: 1
+      influences:
+      - bone: 0
+        x: -127.75714
+        y: 275.46976
+        weight: 1
+      - bone: 0
+        x: -127.75714
+        y: 356.46976
+        weight: 1
+      - bone: 0
+        x: 121.24286
+        y: 356.46976
+        weight: 1
+      - bone: 0
+        x: 121.24286
+        y: 275.46976
+        weight: 1
+      uv:
+      - 0.99255955
+      - 0.01953125
+      - 0.8720238
+      - 0.01953125
+      - 0.8720238
+      - 0.9921875
+      - 0.99255955
+      - 0.9921875
+      triangles: 000000000100000002000000020000000300000000000000
+    - name: dimian2_1
+      kind: region
+      slot: 3
+      endSlot: -1
+      vertices:
+      - first: 0
+        count: 1
+      - first: 1
+        count: 1
+      - first: 2
+        count: 1
+      - first: 3
+        count: 1
+      influences:
+      - bone: 0
+        x: -243.7571
+        y: 11.469761
+        weight: 1
+      - bone: 0
+        x: -243.7571
+        y: 63.46976
+        weight: 1
+      - bone: 0
+        x: 260.2429
+        y: 63.46976
+        weight: 1
+      - bone: 0
+        x: 260.2429
+        y: 11.469761
+        weight: 1
+      uv:
+      - 0.0029761905
+      - 0.01953125
+      - 0.0029761905
+      - 0.22265625
+      - 0.7529762
+      - 0.22265625
+      - 0.7529762
+      - 0.01953125
+      triangles: 000000000100000002000000020000000300000000000000
+    animations:
+    - name: close_loop
+      duration: 0.6666667
+      tracks:
+      - kind: 0
+        index: 0
+        axis: 0
+        keys:
+        - time: 0.6666667
+          value: 0
+          stepped: 0
+          curve: []
+        Curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0.6666667
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - kind: 0
+        index: 0
+        axis: 1
+        keys:
+        - time: 0.6666667
+          value: 0
+          stepped: 0
+          curve: []
+        Curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0.6666667
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      attachments: []
+      drawOrders: []
+    - name: open
+      duration: 1.3333334
+      tracks:
+      - kind: 0
+        index: 0
+        axis: 0
+        keys:
+        - time: 1.3333334
+          value: 0
+          stepped: 0
+          curve: []
+        Curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 1.3333334
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - kind: 0
+        index: 0
+        axis: 1
+        keys:
+        - time: 1.3333334
+          value: 0
+          stepped: 0
+          curve: []
+        Curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 1.3333334
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      attachments: []
+      drawOrders: []
+    - name: open_loop
+      duration: 1.3333334
+      tracks:
+      - kind: 0
+        index: 0
+        axis: 0
+        keys:
+        - time: 1.3333334
+          value: 0
+          stepped: 0
+          curve: []
+        Curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 1.3333334
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - kind: 0
+        index: 0
+        axis: 1
+        keys:
+        - time: 1.3333334
+          value: 0
+          stepped: 0
+          curve: []
+        Curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 1.3333334
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      attachments: []
+      drawOrders: []
+    transforms: []
+    renderer:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 0
+      tintBlack: 0
+      useClipping: 0
+      zSpacing: 0
+      initialSkinName: 
+  Material: {fileID: 2100000, guid: 84ab97e6c47036b30a8899837cf61f9d, type: 2}

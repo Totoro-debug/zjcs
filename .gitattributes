@@ -700,3 +700,16 @@ unity/Assets/Official/World/Map/13/Source/EntitySkeletons* -text
 unity/Assets/Official/World/Map/13/Source/EntitySkeletons/** -text whitespace=cr-at-eol
 unity/Assets/Official/World/Map/13/Source/native-entity-skeletons.json* text eol=lf
 assets/reference/official-map/map13-entity-skeletons-source-manifest.json text eol=lf
+
+# Map13 native prop skeleton geometry and original renderer profiles.
+scripts/map13_native_skeleton_geometry.py text eol=lf
+scripts/prepare_unity_map13_native_skeleton_models.py text eol=lf
+unity/Assets/Game/Editor/Map13Skeletons* text eol=lf
+unity/Assets/Game/Editor/Map13Skeletons/** text eol=lf
+unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons* text eol=lf
+unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons/** text eol=lf
+unity/Assets/Official/World/Map/13/NativeSkeletonModels* text eol=lf
+unity/Assets/Official/World/Map/13/NativeSkeletonModels/** text eol=lf
+unity/Assets/Game/Resources/Map13/Native/Skeletons* -text whitespace=cr-at-eol,-blank-at-eol
+unity/Assets/Game/Resources/Map13/Native/Skeletons/** -text whitespace=cr-at-eol,-blank-at-eol
+assets/reference/official-map/map13-native-skeleton-model*-source-manifest.json text eol=lf

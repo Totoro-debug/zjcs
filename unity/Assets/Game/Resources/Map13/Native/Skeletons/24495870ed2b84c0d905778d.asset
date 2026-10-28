@@ -1,0 +1,1224 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab080abe3f4c50479f5b6d6e4b7a6368, type: 3}
+  m_Name: map_fangJianBei_C_2_SkeletonData
+  m_EditorClassIdentifier: 
+  Source:
+    name: map_fangJianBei_C_2_SkeletonData
+    cab: CAB-a4921c734569381496b958087887c893
+    path_id: -4626843127569937476
+    materialPath: Assets/Official/World/Map/13/NativeEntityMaterials/8cc6c05b86dfea1adfe1c3739addc9a2/565368595482067616.mat
+    sortingLayer: 0
+    sortingOrder: 0
+    showOnRoundProgress: 0
+    scale: 0.01
+    defaultMix: 0.2
+    bones:
+    - name: root
+      inherit: normal
+      parent: -1
+      x: 0
+      y: 0
+      rotation: 0
+      shearX: 0
+      shearY: 0
+      scaleX: 1
+      scaleY: 1
+      length: 0
+    - name: bone
+      inherit: normal
+      parent: 0
+      x: 0
+      y: 0
+      rotation: 0
+      shearX: 0
+      shearY: 0
+      scaleX: 1
+      scaleY: 1
+      length: 0
+    - name: bone2
+      inherit: normal
+      parent: 1
+      x: 0
+      y: 999.38165
+      rotation: 0
+      shearX: 0
+      shearY: 0
+      scaleX: 1
+      scaleY: 1
+      length: 0
+    - name: bone3
+      inherit: normal
+      parent: 1
+      x: 0
+      y: 405.19144
+      rotation: 0
+      shearX: 0
+      shearY: 0
+      scaleX: 1
+      scaleY: 1
+      length: 0
+    slots:
+    - name: D_muzhuang2
+      color: ffffffff
+      blend: normal
+      bone: 1
+      attachment: 0
+    - name: dizuo2
+      color: ffffffff
+      blend: normal
+      bone: 1
+      attachment: 1
+    - name: beishen2
+      color: ffffffff
+      blend: normal
+      bone: 3
+      attachment: 2
+    - name: hexin
+      color: ffffffff
+      blend: normal
+      bone: 2
+      attachment: 3
+    - name: beishen1
+      color: ffffffff
+      blend: normal
+      bone: 3
+      attachment: 4
+    - name: D_shitou2
+      color: ffffffff
+      blend: normal
+      bone: 1
+      attachment: 5
+    - name: D_shitou1
+      color: ffffffff
+      blend: normal
+      bone: 1
+      attachment: 6
+    - name: D_muzhuang
+      color: ffffffff
+      blend: normal
+      bone: 1
+      attachment: 7
+    constraints: []
+    attachments:
+    - name: D_muzhuang2
+      kind: region
+      slot: 0
+      endSlot: -1
+      vertices:
+      - first: 0
+        count: 1
+      - first: 1
+        count: 1
+      - first: 2
+        count: 1
+      - first: 3
+        count: 1
+      influences:
+      - bone: 1
+        x: -321.14417
+        y: 372.28412
+        weight: 1
+      - bone: 1
+        x: -321.14417
+        y: 529.2841
+        weight: 1
+      - bone: 1
+        x: -117.144165
+        y: 529.2841
+        weight: 1
+      - bone: 1
+        x: -117.144165
+        y: 372.28412
+        weight: 1
+      uv:
+      - 0.6755319
+      - 0.6497525
+      - 0.6755319
+      - 0.8440594
+      - 0.8925532
+      - 0.8440594
+      - 0.8925532
+      - 0.6497525
+      triangles: 000000000100000002000000020000000300000000000000
+    - name: D_dizuo
+      kind: region
+      slot: 1
+      endSlot: -1
+      vertices:
+      - first: 0
+        count: 1
+      - first: 1
+        count: 1
+      - first: 2
+        count: 1
+      - first: 3
+        count: 1
+      influences:
+      - bone: 1
+        x: -423.1442
+        y: 10.284119
+        weight: 1
+      - bone: 1
+        x: -423.1442
+        y: 529.2841
+        weight: 1
+      - bone: 1
+        x: 444.8558
+        y: 529.2841
+        weight: 1
+      - bone: 1
+        x: 444.8558
+        y: 10.284119
+        weight: 1
+      uv:
+      - 0.0021276595
+      - 0.004950495
+      - 0.0021276595
+      - 0.64727724
+      - 0.9255319
+      - 0.64727724
+      - 0.9255319
+      - 0.004950495
+      triangles: 000000000100000002000000020000000300000000000000
+    - name: beishen2
+      kind: region
+      slot: 2
+      endSlot: -1
+      vertices:
+      - first: 0
+        count: 1
+      - first: 1
+        count: 1
+      - first: 2
+        count: 1
+      - first: 3
+        count: 1
+      influences:
+      - bone: 3
+        x: -84.14413
+        y: 513.8003
+        weight: 1
+      - bone: 3
+        x: -84.14413
+        y: 635.8003
+        weight: 1
+      - bone: 3
+        x: 87.85587
+        y: 635.8003
+        weight: 1
+      - bone: 3
+        x: 87.85587
+        y: 513.8003
+        weight: 1
+      uv:
+      - 0.6755319
+      - 0.84653467
+      - 0.6755319
+      - 0.99752474
+      - 0.8585106
+      - 0.99752474
+      - 0.8585106
+      - 0.84653467
+      triangles: 000000000100000002000000020000000300000000000000
+    - name: hexin
+      kind: region
+      slot: 3
+      endSlot: -1
+      vertices:
+      - first: 0
+        count: 1
+      - first: 1
+        count: 1
+      - first: 2
+        count: 1
+      - first: 3
+        count: 1
+      influences:
+      - bone: 2
+        x: -46.14415
+        y: -105.38989
+        weight: 1
+      - bone: 2
+        x: -46.14415
+        y: 87.61011
+        weight: 1
+      - bone: 2
+        x: 48.85585
+        y: 87.61011
+        weight: 1
+      - bone: 2
+        x: 48.85585
+        y: -105.38989
+        weight: 1
+      uv:
+      - 0.89468086
+      - 0.6497525
+      - 0.89468086
+      - 0.8886139
+      - 0.9957447
+      - 0.8886139
+      - 0.9957447
+      - 0.6497525
+      triangles: 000000000100000002000000020000000300000000000000
+    - name: beishen1
+      kind: region
+      slot: 4
+      endSlot: -1
+      vertices:
+      - first: 0
+        count: 1
+      - first: 1
+        count: 1
+      - first: 2
+        count: 1
+      - first: 3
+        count: 1
+      influences:
+      - bone: 3
+        x: -121.144135
+        y: -3.1996155
+        weight: 1
+      - bone: 3
+        x: -121.144135
+        y: 627.8004
+        weight: 1
+      - bone: 3
+        x: 123.855865
+        y: 627.8004
+        weight: 1
+      - bone: 3
+        x: 123.855865
+        y: -3.1996155
+        weight: 1
+      uv:
+      - 0.6734043
+      - 0.6497525
+      - 0.0021276595
+      - 0.6497525
+      - 0.0021276595
+      - 0.9529703
+      - 0.6734043
+      - 0.9529703
+      triangles: 000000000100000002000000020000000300000000000000
+    - name: D_shitou2
+      kind: region
+      slot: 5
+      endSlot: -1
+      vertices:
+      - first: 0
+        count: 1
+      - first: 1
+        count: 1
+      - first: 2
+        count: 1
+      - first: 3
+        count: 1
+      influences:
+      - bone: 1
+        x: 92.85586
+        y: 62.28412
+        weight: 1
+      - bone: 1
+        x: 92.85586
+        y: 88.28412
+        weight: 1
+      - bone: 1
+        x: 133.85587
+        y: 88.28412
+        weight: 1
+      - bone: 1
+        x: 133.85587
+        y: 62.28412
+        weight: 1
+      uv:
+      - 0.0021276595
+      - 0.9554455
+      - 0.0021276595
+      - 0.98762375
+      - 0.04574468
+      - 0.98762375
+      - 0.04574468
+      - 0.9554455
+      triangles: 000000000100000002000000020000000300000000000000
+    - name: D_shitou1
+      kind: region
+      slot: 6
+      endSlot: -1
+      vertices:
+      - first: 0
+        count: 1
+      - first: 1
+        count: 1
+      - first: 2
+        count: 1
+      - first: 3
+        count: 1
+      influences:
+      - bone: 1
+        x: 308.85583
+        y: 274.28412
+        weight: 1
+      - bone: 1
+        x: 308.85583
+        y: 315.28412
+        weight: 1
+      - bone: 1
+        x: 380.85583
+        y: 315.28412
+        weight: 1
+      - bone: 1
+        x: 380.85583
+        y: 274.28412
+        weight: 1
+      uv:
+      - 0.8606383
+      - 0.8910891
+      - 0.8606383
+      - 0.9418317
+      - 0.93723404
+      - 0.9418317
+      - 0.93723404
+      - 0.8910891
+      triangles: 000000000100000002000000020000000300000000000000
+    - name: D_muzhuang
+      kind: region
+      slot: 7
+      endSlot: -1
+      vertices:
+      - first: 0
+        count: 1
+      - first: 1
+        count: 1
+      - first: 2
+        count: 1
+      - first: 3
+        count: 1
+      influences:
+      - bone: 1
+        x: -334.1442
+        y: 67.28412
+        weight: 1
+      - bone: 1
+        x: -334.1442
+        y: 182.28412
+        weight: 1
+      - bone: 1
+        x: -290.1442
+        y: 182.28412
+        weight: 1
+      - bone: 1
+        x: -290.1442
+        y: 67.28412
+        weight: 1
+      uv:
+      - 0.9276596
+      - 0.5049505
+      - 0.9276596
+      - 0.64727724
+      - 0.9744681
+      - 0.64727724
+      - 0.9744681
+      - 0.5049505
+      triangles: 000000000100000002000000020000000300000000000000
+    animations:
+    - name: close_loop
+      duration: 0.33333334
+      tracks:
+      - kind: 0
+        index: 2
+        axis: 0
+        keys:
+        - time: 0.33333334
+          value: 0
+          stepped: 0
+          curve: []
+        Curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0.33333334
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - kind: 0
+        index: 2
+        axis: 1
+        keys:
+        - time: 0.33333334
+          value: 0
+          stepped: 0
+          curve: []
+        Curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0.33333334
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      attachments: []
+      drawOrders: []
+    - name: open
+      duration: 4
+      tracks:
+      - kind: 0
+        index: 2
+        axis: 0
+        keys:
+        - time: 0
+          value: 0
+          stepped: 0
+          curve:
+          - 0.015644444
+          - 0
+          - 0.22897775
+          - 0
+        - time: 0.26666668
+          value: 0
+          stepped: 0
+          curve: []
+        - time: 1.4000001
+          value: 0
+          stepped: 0
+          curve: []
+        - time: 1.5333334
+          value: 0
+          stepped: 0
+          curve: []
+        - time: 2.6000001
+          value: 0
+          stepped: 0
+          curve:
+          - 2.666667
+          - 0
+          - 2.733333
+          - 0
+        - time: 2.8000002
+          value: 0
+          stepped: 0
+          curve:
+          - 2.9276354
+          - 0
+          - 3.1390316
+          - 0
+        - time: 3.266667
+          value: 0
+          stepped: 0
+          curve:
+          - 3.5111105
+          - 0
+          - 3.7555563
+          - 0
+        - time: 4
+          value: 0
+          stepped: 0
+          curve: []
+        Curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.05866666
+          - serializedVersion: 3
+            time: 0.26666668
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.14133346
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1.4000001
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1.5333334
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 2.6000001
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333412
+          - serializedVersion: 3
+            time: 2.8000002
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.3333353
+            outWeight: 0.27350408
+          - serializedVersion: 3
+            time: 3.266667
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.27350408
+            outWeight: 0.33333236
+          - serializedVersion: 3
+            time: 4
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333236
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - kind: 0
+        index: 2
+        axis: 1
+        keys:
+        - time: 0
+          value: 7.328491
+          stepped: 0
+          curve:
+          - 0.015644444
+          - 7.328491
+          - 0.22897775
+          - -33.7416
+        - time: 0.26666668
+          value: -42.50708
+          stepped: 0
+          curve: []
+        - time: 1.4000001
+          value: -39.16217
+          stepped: 0
+          curve: []
+        - time: 1.5333334
+          value: 96.29401
+          stepped: 0
+          curve: []
+        - time: 2.6000001
+          value: 227.63617
+          stepped: 0
+          curve:
+          - 2.666667
+          - 163.16995
+          - 2.733333
+          - 59.93573
+        - time: 2.8000002
+          value: 59.93573
+          stepped: 0
+          curve:
+          - 2.9276354
+          - 59.93573
+          - 3.1390316
+          - 87.53412
+        - time: 3.266667
+          value: 87.53412
+          stepped: 0
+          curve:
+          - 3.5111105
+          - 87.53412
+          - 3.7555563
+          - 59.93573
+        - time: 4
+          value: 59.93573
+          stepped: 0
+          curve: []
+        Curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 7.328491
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.05866666
+          - serializedVersion: 3
+            time: 0.26666668
+            value: -42.50708
+            inSlope: -232.57442
+            outSlope: 2.9513905
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.14133346
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1.4000001
+            value: -39.16217
+            inSlope: 2.9513905
+            outSlope: 1015.9214
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1.5333334
+            value: 96.29401
+            inSlope: 1015.9214
+            outSlope: 123.13327
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 2.6000001
+            value: 227.63617
+            inSlope: 123.13327
+            outSlope: -966.9907
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333412
+          - serializedVersion: 3
+            time: 2.8000002
+            value: 59.93573
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.3333353
+            outWeight: 0.27350408
+          - serializedVersion: 3
+            time: 3.266667
+            value: 87.53412
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.27350408
+            outWeight: 0.33333236
+          - serializedVersion: 3
+            time: 4
+            value: 59.93573
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333236
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - kind: 1
+        index: 2
+        axis: 0
+        keys:
+        - time: 1.4000001
+          value: 1
+          stepped: 0
+          curve: []
+        - time: 1.5333334
+          value: 0.4509157
+          stepped: 0
+          curve: []
+        - time: 2.6000001
+          value: 0.13181096
+          stepped: 0
+          curve: []
+        - time: 2.8000002
+          value: 1
+          stepped: 0
+          curve: []
+        Curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 1.4000001
+            value: 1
+            inSlope: 0
+            outSlope: -4.1181326
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1.5333334
+            value: 0.4509157
+            inSlope: -4.1181326
+            outSlope: -0.29916066
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 2.6000001
+            value: 0.13181096
+            inSlope: -0.29916066
+            outSlope: 4.3409443
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 2.8000002
+            value: 1
+            inSlope: 4.3409443
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - kind: 1
+        index: 2
+        axis: 1
+        keys:
+        - time: 1.4000001
+          value: 1
+          stepped: 0
+          curve: []
+        - time: 1.5333334
+          value: 0.4509157
+          stepped: 0
+          curve: []
+        - time: 2.6000001
+          value: 0.13181096
+          stepped: 0
+          curve: []
+        - time: 2.8000002
+          value: 1
+          stepped: 0
+          curve: []
+        Curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 1.4000001
+            value: 1
+            inSlope: 0
+            outSlope: -4.1181326
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1.5333334
+            value: 0.4509157
+            inSlope: -4.1181326
+            outSlope: -0.29916066
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 2.6000001
+            value: 0.13181096
+            inSlope: -0.29916066
+            outSlope: 4.3409443
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 2.8000002
+            value: 1
+            inSlope: 4.3409443
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - kind: 0
+        index: 0
+        axis: 2
+        keys:
+        - time: 3.8666668
+          value: -0.064704895
+          stepped: 0
+          curve: []
+        Curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 3.8666668
+            value: -0.064704895
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - kind: 2
+        index: 3
+        axis: 0
+        keys:
+        - time: 1.5333334
+          value: 1
+          stepped: 0
+          curve: []
+        - time: 2.6000001
+          value: 1
+          stepped: 0
+          curve: []
+        - time: 2.7
+          value: 1
+          stepped: 0
+          curve: []
+        Curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 1.5333334
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 2.6000001
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 2.7
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - kind: 2
+        index: 3
+        axis: 1
+        keys:
+        - time: 1.5333334
+          value: 1
+          stepped: 0
+          curve: []
+        - time: 2.6000001
+          value: 1
+          stepped: 0
+          curve: []
+        - time: 2.7
+          value: 1
+          stepped: 0
+          curve: []
+        Curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 1.5333334
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 2.6000001
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 2.7
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - kind: 2
+        index: 3
+        axis: 2
+        keys:
+        - time: 1.5333334
+          value: 1
+          stepped: 0
+          curve: []
+        - time: 2.6000001
+          value: 1
+          stepped: 0
+          curve: []
+        - time: 2.7
+          value: 1
+          stepped: 0
+          curve: []
+        Curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 1.5333334
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 2.6000001
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 2.7
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - kind: 2
+        index: 3
+        axis: 3
+        keys:
+        - time: 1.5333334
+          value: 1
+          stepped: 0
+          curve: []
+        - time: 2.6000001
+          value: 0
+          stepped: 0
+          curve: []
+        - time: 2.7
+          value: 1
+          stepped: 0
+          curve: []
+        Curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 1.5333334
+            value: 1
+            inSlope: 0
+            outSlope: -0.93749994
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 2.6000001
+            value: 0
+            inSlope: -0.93749994
+            outSlope: 10.00001
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 2.7
+            value: 1
+            inSlope: 10.00001
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      attachments:
+      - slot: 3
+        attachment: -1
+        time: 1.5333334
+      drawOrders: []
+    - name: open_loop
+      duration: 2
+      tracks:
+      - kind: 0
+        index: 2
+        axis: 0
+        keys:
+        - time: 0
+          value: 0
+          stepped: 0
+          curve:
+          - 0.33162382
+          - 0
+          - 0.66837627
+          - 0
+        - time: 1
+          value: 0
+          stepped: 0
+          curve:
+          - 1.3316236
+          - 0
+          - 1.6683767
+          - 0
+        - time: 2
+          value: 0
+          stepped: 0
+          curve: []
+        Curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33162382
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33162373
+            outWeight: 0.33162355
+          - serializedVersion: 3
+            time: 2
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33162332
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      - kind: 0
+        index: 2
+        axis: 1
+        keys:
+        - time: 0
+          value: 59.93573
+          stepped: 0
+          curve:
+          - 0.33162382
+          - 59.93573
+          - 0.66837627
+          - 80.20563
+        - time: 1
+          value: 80.20563
+          stepped: 0
+          curve:
+          - 1.3316236
+          - 80.20563
+          - 1.6683767
+          - 59.93573
+        - time: 2
+          value: 59.93573
+          stepped: 0
+          curve: []
+        Curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 59.93573
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33333334
+            outWeight: 0.33162382
+          - serializedVersion: 3
+            time: 1
+            value: 80.20563
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33162373
+            outWeight: 0.33162355
+          - serializedVersion: 3
+            time: 2
+            value: 59.93573
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 3
+            inWeight: 0.33162332
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      attachments: []
+      drawOrders: []
+    transforms: []
+    renderer:
+      initialFlipX: 0
+      initialFlipY: 0
+      pmaVertexColors: 0
+      tintBlack: 0
+      useClipping: 0
+      zSpacing: 0
+      initialSkinName: 
+  Material: {fileID: 2100000, guid: 860c1bf3507975bb7e2fe0f020e7fcbf, type: 2}
