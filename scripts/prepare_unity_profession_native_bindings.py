@@ -130,6 +130,8 @@ def build(scope="main", bind_shaders=True):
     elif scope == "all":
         seeds = sorted(path.relative_to(exported).as_posix()
             for path in (exported / "Prefabs/UI/Profession").glob("*.prefab"))
+    elif scope == "item-hint":
+        seeds = ["Prefabs/UI/Item/Attachments/CenterHintContent.prefab"]
     else:
         raise ValueError("Unknown native profession binding scope: " + scope)
     selected, missing, scripts, script_uses, managed, shaders = {}, [], {}, Counter(), Counter(), []
@@ -176,6 +178,8 @@ def build(scope="main", bind_shaders=True):
         for binding in shader_proof["bindings"]:
             native = ROOT / "unity" / binding["native"]["path"]
             rel = binding["native_relative_path"]
+            if scope == "item-hint" and rel not in selected:
+                continue
             if sha(native) != binding["native"]["sha256"] or guid(native) != binding["native"]["guid"]:
                 raise ValueError("Verified profession shader binding changed: " + rel)
             if rel not in selected or selected[rel]["sha256"] != binding["export_sha256"] or guid(ROOT / selected[rel]["path"]) != binding["export_guid"]:
@@ -204,5 +208,5 @@ def build(scope="main", bind_shaders=True):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--scope", choices=("main", "main-dynamic", "all"), default="main")
+    parser.add_argument("--scope", choices=("main", "main-dynamic", "all", "item-hint"), default="main")
     build(parser.parse_args().scope)

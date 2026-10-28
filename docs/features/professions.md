@@ -25,7 +25,10 @@
 馈赠图标的原 `ImageProxy`、`ImageLoaderProxy`、`LoaderProxyBase`、`PreviewableProxyBase`、`AssetGuidProxy` 已按原源码迁入，保留嵌套序列化字段、Image 属性委托、路径前缀、同步／GUID／异步加载、当前请求身份检查和清理／销毁顺序。资源操作替换为显式本地接口；原 R3 资源集合的按当前数量正序释放、末尾清空及销毁标记顺序由原 APK 原生指令核实。`ProfessionImageLoaderValidation.Run` 在隔离 Unity 中以原奖励 Sprite 验证乱序完成、失败结果、清理后迟到结果、已完成请求的即时订阅，以及销毁后的请求拒绝和资源释放。完整 `ItemIcon` 控件、实际提供器和相关弹窗仍待接入；此组件验证没有覆盖馈赠界面渲染或点击。代码及原生证据见[图标加载来源](../../assets/reference/profession-ui/image-resource-source-manifest.json)。
 
 
-`RuleDialog` 的全部设置重载、原列表复用、行激活及 `UIUtils` 的变换复位顺序和 `TipInfo` 的图文设置代码已迁入；原规则解析器结果通过本地接口提供，实际说明弹窗仍待接线。已核对并复用原 `BgDialogElement`、`ItemProgress` 的现有迁移组件，以及从原生代码恢复的 `TMPEffect`，未用空脚本消除原 prefab 引用。包含上述动态资源的闭包为 871 个资产、84 种脚本，断开 GUID 为 0，仍有 20 种运行脚本待接入。
+`UIBase`、物品附件／自定义附件、提示附件、品质与附件配置等 12 个原始类型已迁入，保留初始化前后启停回调、异常边界、重置顺序、附件缓存、排序及回收。原附件配置的 `HintTip=13` 按实际 AssetTable GUID 指向 `CenterHintContent.prefab`；其 6 个原生资产（含原 atlas Sprite、贴图、字体和材质）已安装到 `Assets/Official/ProfessionUI/Native/`，沿用已核实的 Windows 字体 shader。隔离 Unity 的实际 Play Mode 验证原层级／引用、延迟创建、缓存不自动激活、显式显示隐藏及回收重借，并通过 GPU 渲染检查，运行截图已查看。测试数字仅用于附件控件验证，未覆盖完整馈赠列表或鼠标输入。完整 `ItemIcon`、附件管理器／池和弹窗服务仍待接通。来源见[附件代码](../../assets/reference/profession-ui/item-components-source-manifest.json)与[原生附件资源](../../assets/reference/profession-ui/item-resources-source-manifest.json)。
+
+
+`RuleDialog` 的全部设置重载、原列表复用、行激活及 `UIUtils` 的变换复位顺序和 `TipInfo` 的图文设置代码已迁入；原规则解析器结果通过本地接口提供，实际说明弹窗仍待接线。已核对并复用原 `BgDialogElement`、`ItemProgress` 的现有迁移组件，以及从原生代码恢复的 `TMPEffect`，未用空脚本消除原 prefab 引用。包含上述动态资源的闭包为 871 个资产、84 种脚本，断开 GUID 为 0，仍有 19 种运行脚本待接入。
 
 
 音效触发字段已按 APK 原始组件恢复。转换工具曾把 8 个 `AkEvent.triggerList` 的原始值 `-320808462` 写成无效的十六进制字符串；现以原始整数的小端字节重新写入，并逐个保留原层级、事件引用及其余字段。原生 `AkTriggerHandler.OnEnable` 的指令核实该值为启用触发。`ButtonSound`、`UIClickSound`、`PopupWindowSound` 及实际使用的 `AkEvent` 启用／Start、事件引用和单参数 `Post` 路径已迁入；动作、回调等本页未使用分支显式保留为未接入范围。隔离 Unity 导入验证 8 组触发列表、原生事件 ID／名称／GUID、自身发声对象及原序列化播放 ID，核对无效引用返回零和有效请求传递／保存返回 ID 的顺序。该探针只证明原生字段与请求契约，该字段探针没有覆盖声音播放或界面输入；Windows 播放适配另见下述验证。来源见[音效字段与代码](../../assets/reference/profession-ui/audio-source-manifest.json)。

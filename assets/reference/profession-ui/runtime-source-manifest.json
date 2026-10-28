@@ -238,6 +238,14 @@
     "path": "assets/reference/profession-ui/image-resource-source-manifest.json",
     "sha256": "d66a02c2fcfc7ff8aadeabb5c983896b25261e7bc193434c82f32338d77754b1"
   },
+  "item_components": {
+    "path": "assets/reference/profession-ui/item-components-source-manifest.json",
+    "sha256": "25cf79b285e8e2de8d7c9ab63bb21477a506731ba62bed14721d18a9553c2e57"
+  },
+  "item_resources": {
+    "path": "assets/reference/profession-ui/item-resources-source-manifest.json",
+    "sha256": "151ec389182aeb33208ef5bcdff3780e03fc5a51cfdfffc1f495150634f2843a"
+  },
   "rule_adapter": {
     "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IProfessionRuleTipData.cs",
     "sha256": "82564b3617e65d38c12b499c431be396cc626def96e59cc1461226903c576344"
@@ -252,7 +260,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "bed9561ee72e66cec8f0450b2aa7ae1ec02a0370e23f3c7bf7ebc45acfce4ee5"
+    "sha256": "172057a7632a15f958fe087826fcf41e4fb55b6dada740081bee2659d28aac73"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",
