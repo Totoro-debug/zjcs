@@ -2058,3 +2058,5 @@ Map13 原世界进度渲染：`scripts/prepare_unity_map13_entity_rendering.py` 
 龙之国实体变换视图：`map14-entity-transform-views-source-manifest.json` 记录当前官方程序集、完整原 Animator／挂点／变换／网格视图、Z 工具、位置事件接口、原方向旋转方法及复用依赖和输出哈希。共享状态／网格坐标查询与移动代理为显式必需输入，保留原数值／顺序／分支；Unity 托管引用往返、原生 Sprite／Animator 与分项运行验证已通过，正式原雕像 prefab 和业务继续接入。
 
 龙之国四类英雄雕像显示：`map14-native-hero-statues-source-manifest.json` 记录原显示 prefab、状态特效、控制器／动画、网格、显式脚本／托管类型／材质指针和 16 个原 Sprite CAB／对象 ID 绑定；输入依据当前 APK／871 云端已验证闭包，102 个原生组件坐标／旋转／缩放及渲染字段追加 float32 位和值核对。原提示点／所有权消费代码及窗口操作完整来源分别见 `map14-entity-tipdot-views-source-manifest.json`、`map14-entity-stage-operations-source-manifest.json`。原生导入／编译和隔离带画面 Play Mode 通过，完整地图业务与 Player 尚未完成；本次素材未声称进入完整快照。
+
+龙之国原地图显示服务：`map14-map-display-runtime-source-manifest.json` 记录完整原 MapDisplayManager／MapDisplayPoolHandle／MyMapDisplay 与接口、同版本已迁入的原选择解析器，以及全部 1,253 条原选择行和四份原 DisplayPath 的本地资源绑定。运行前注入使用 `NativeMap14DisplayInstantiation`，未迁入地址显式失败。带画面隔离运行通过动态取得／FIFO 回收复用／低内存释放后重新加载，正式地图实体根／业务／存档和 Player 待接入。

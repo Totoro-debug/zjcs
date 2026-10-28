@@ -1,0 +1,180 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapDisplayManager.cs",
+      "sha256": "d2b253565d7d23cef0e635760aba5f7e9d7556759c6ebe37cbcd8eb3f11ba28e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapDisplayPoolHandle.cs",
+      "sha256": "c10cf87516724149eb09cd4ad981e5029defd9a9c0af318d5ba96e6675a2089b"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IMapDisplayManager.cs",
+      "sha256": "0db031a76c807ef56edbe6c3f4ac0d6924593841c663d4924d1f11effb57d583"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyMapDisplay.cs",
+      "sha256": "a15b02f4853a248f2be42ca24b8a8d8494ae47f1866d861cce6eda5c32c4312c"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Entities/GroundType.cs",
+      "sha256": "a145c2b65ef54c92cfa45a6b63fe9c2cc438436a3ce0ffa9e864f968a494647c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Entities/EntityMapDisplayInfo.cs",
+      "sha256": "659446601b774754ee4443c30cb041e1776ee9d88460728bcaef20092046fec4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Entities/EntityMapDisplayInfoParser.cs",
+      "sha256": "ed0cc2ab9b1e1531a354cb478f7f44879b17c7cb5738ed8332a4a08308d73d67"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/tables.json",
+      "sha256": "e54c871ff3f6dbbb1e0a5a9cb0891153824e280442424760ad2523bbddbcc09c"
+    },
+    {
+      "path": "assets/reference/official-map/map14-source-manifest.json",
+      "sha256": "04a160772dd26a9d367858ab8e9eac6a82f1886d02248d27a0d403804d5c8a2e"
+    },
+    {
+      "path": "assets/reference/official-map/map14-native-hero-statues-source-manifest.json",
+      "sha256": "d0ef2948529afccbeb0263dc05ce6747016b32be1978f092040f23a0e2904be8"
+    },
+    {
+      "path": "assets/reference/official-map/map13-entity-presentation-source-manifest.json",
+      "sha256": "8cf7c7e33ffa999915918d67af92ec805c23107028744b9655db9849d8ecfd89"
+    }
+  ],
+  "adaptations": [
+    {
+      "source": "MapDisplayManager.cs",
+      "diagnosticBlocks": 3
+    },
+    {
+      "source": "MapDisplayPoolHandle.cs",
+      "diagnosticBlocks": 7
+    },
+    {
+      "source": "IMapDisplayManager.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "MyMapDisplay.cs",
+      "diagnosticBlocks": 0
+    }
+  ],
+  "counts": {
+    "original_selector_rows": 1253,
+    "native_display_addresses": 4
+  },
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map_display_runtime.py",
+      "sha256": "765bd6a53c5eb913cbff5c31b3d5f656e0d53d84d6c7d86943e74f5a86b70fd2"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/MapDisplays/MapDisplayManager.cs",
+      "sha256": "73251e51acaff37574d095af68921698d69b746755b75ea842fa55e4d0661a47"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/MapDisplays/MapDisplayManager.cs.meta",
+      "sha256": "cf23c4388abc2d3734a348a5f55a49df0631f2ec62aeeb30843ec1c733880e7a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/MapDisplays/MapDisplayPoolHandle.cs",
+      "sha256": "a02ec9a9dacecdac975bd10722453bb872b99df7bdfb4afce70f0627a5104fc4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/MapDisplays/MapDisplayPoolHandle.cs.meta",
+      "sha256": "b4c1d17fc09344b88973d21cafb11d796653e7f73ab461cdbe9ec555fe9543b8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/MapDisplays/IMapDisplayManager.cs",
+      "sha256": "dfff11df7a4e549036c41bf340acd59ce7c14a243179c608c4389a9dcbbf18fc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/MapDisplays/IMapDisplayManager.cs.meta",
+      "sha256": "67d99256a63f4e4d1f547e0f35d67989ea13c3aa692a0a18acef78d713f8b000"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/MapDisplays/MyMapDisplay.cs",
+      "sha256": "5bbcf84528cba0ebcb1e4764440fa86a501eaff89980318c72e0a684632c5ac9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/MapDisplays/MyMapDisplay.cs.meta",
+      "sha256": "f7db78ac8765fb73c58fcb41d691054ddfbc6d64b6d121068514101cc42d3074"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/MapDisplays/MapDisplayBindings.cs",
+      "sha256": "c115d487dc6a853947b4d9c32dce8ba2034780c3dc8a672e21eded81a421b617"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/MapDisplays/MapDisplayBindings.cs.meta",
+      "sha256": "f473330cef4684514eeaa231b9e1fa5cde8524eea03ef19346d696a6970d88e8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/MapDisplays/Zjcs.Official.MapDisplays.asmdef",
+      "sha256": "2f5ceffd3389533744ded36010aac99e6870749f9d32d1fe42398e69ec008724"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/MapDisplays/Zjcs.Official.MapDisplays.asmdef.meta",
+      "sha256": "d06cb3c26bef49849e0e80bb0a18cdbd1c5b5bdba2050a1ec0c15c46a5943096"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/MapDisplays.meta",
+      "sha256": "a6bbae3f3587ebfe6d8ed7aef7a79d44557b3f221b1fb5c0e4ee20a01e16864c"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/map-display-catalog.asset",
+      "sha256": "ebc70c0bab88dabdddd61cffb80246bf2a3988772d8873983c24a467b1f4e129"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/map-display-catalog.asset.meta",
+      "sha256": "d4b34f60e4709cfd02c3b985f6ded9b9ae3d191014f3aafb847cb8f6062da28d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14HeroStatues/NativeMap14DisplayCatalog.cs",
+      "sha256": "cd622240442c2b0dc95203c04224c60c158549d499feb74c2d8f15294d9fb2f6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14HeroStatues/NativeMap14DisplayCatalog.cs.meta",
+      "sha256": "4596bed97859c0302fe3e1b7b541246138285a3c0751d744306617f2b7e269de"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14HeroStatues/NativeMap14DisplayInstantiation.cs",
+      "sha256": "7b88efe1106092e124477f582f7f1173a4ce39cf415517186ba0a91582f7e8f9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14HeroStatues/NativeMap14DisplayInstantiation.cs.meta",
+      "sha256": "3b872de980905710c39e4692706b4ee9cf12e1e7cdf167b2e41ed031eb0d08c5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14HeroStatues/Zjcs.Offline.World.NativeMap14HeroStatues.asmdef",
+      "sha256": "e75599e33c9b221164712c1e463649397d2cf5354cd92bfd32412c7552c4a7e9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14HeroStatues/Zjcs.Offline.World.NativeMap14HeroStatues.asmdef.meta",
+      "sha256": "b54589407ddbfbc02b6aabc502ef525e78a5a7a5fcac9f8401bed636787228c0"
+    }
+  ],
+  "operation": "Copy complete original MapDisplayManager, MapDisplayPoolHandle, MyMapDisplay and interface. Reuse the verified current-version original ordered selector. Preserve config identity pool keys, original asset-valid/status-2 branch, FIFO borrowing, loaned counts, null/non-Mono guards, hierarchy/activation order, reverse low-memory removal, disposed-handle behavior, bind-pre source fields and destroy/remove branches. Replace framework service lifecycle entry, dependency injection, consumed state/config/resource inputs and diagnostics with explicit host bindings. No map or entity rules are inferred.",
+  "limitations": [
+    "Formal original entity root/shared components, real map routing/input/UI/save and Windows Player remain required."
+  ]
+}

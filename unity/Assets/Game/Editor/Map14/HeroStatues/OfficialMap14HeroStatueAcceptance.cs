@@ -16,6 +16,7 @@ using Zjcs.Official.EntityViewPlayables;
 using Zjcs.Official.EntityTransformViews;
 using Zjcs.Official.EntityTipDotViews;
 using Zjcs.Official.EntityStageOperations;
+using Zjcs.Official.MapDisplays;
 using Zjcs.Official.StoryPlayables;
 using Zjcs.Official.StoryPlayableManager;
 using Zjcs.Official.ProfessionUI;
@@ -25,6 +26,8 @@ using Zjcs.Offline.World.NativeMap14EntityAssets;
 using Zjcs.Offline.World.NativeMap14HeroStatues;
 using Pos2d = Zjcs.Official.World.NativeTerrain.Common.Pos2d;
 using Direction = Zjcs.Official.World.NativeTerrain.Common.Direction;
+using DisplayGround = Zjcs.Official.World.Map13Entities.GroundType;
+using DisplayInfoParser = Zjcs.Official.World.Map13Entities.EntityMapDisplayInfoParser;
 
 namespace Zjcs.Editor.Map14
 {
@@ -48,7 +51,7 @@ namespace Zjcs.Editor.Map14
         private static IEnumerator Verify()
         {
             var stack=new Stack<IEnumerator>();stack.Push(Steps());while(stack.Count>0){object value;try{var top=stack.Peek();if(!top.MoveNext()){stack.Pop();continue;}value=top.Current;if(value is IEnumerator nested&&!(value is CustomYieldInstruction)){stack.Push(nested);continue;}}catch(Exception e){Debug.LogException(e);EditorApplication.isPlaying=false;yield break;}yield return value;}
-            if(errors==0){SessionState.SetInt(Key+".result",0);Debug.Log("Map14 original four hero-statue display prefabs Play Mode passed: complete native hierarchy, original managed references, renderers/animators, real driver Awake/load/unload, tip-dot state/ownership and three original window requests/state effects. Shared entity queries are isolated; formal map input, UI workflow, save and Player remain pending.");}EditorApplication.isPlaying=false;
+            if(errors==0){SessionState.SetInt(Key+".result",0);Debug.Log("Map14 original four hero-statue display prefabs Play Mode passed: native hierarchy/managed references/renderers/animators, original bind-pre selection and dynamic acquisition, FIFO reuse, low-memory loan retention/release/reload, real driver lifecycle, tip-dot ownership and three window requests/state effects. Shared entity queries are isolated; formal map input, UI workflow, save and Player remain pending.");}EditorApplication.isPlaying=false;
         }
         private static void Require(bool value,string message){if(!value)throw new InvalidDataException("Original statues: "+message);}
         private static MyPlayable StatePlayable(ECPlayableWorldStageHandler value)=>(MyPlayable)typeof(ECPlayableWorldStageHandler).GetField("mStatePlayable",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(value);
@@ -66,6 +69,9 @@ namespace Zjcs.Editor.Map14
             var catalog=Resources.Load<NativeMap14EntitySpriteCatalog>("Map14/Native/entity-sprite-catalog");
             using(var sprites=new NativeMap14EntitySpriteLibrary(catalog))
             {
+                var displayCatalog=Resources.Load<NativeMap14DisplayCatalog>("Map14/Native/map-display-catalog");Require(displayCatalog&&displayCatalog.selectors.Length==1253&&displayCatalog.displays.Length==4,"original display catalog row/address coverage differs");services.Catalog=displayCatalog;services.Root=scope.transform;
+                services.DisplayFactory=new NativeMap14DisplayInstantiation(staging.transform,services,new ConstantClientVisibilitySupporterFactory(),sprites,services.InjectMono);
+                var memory=new Zjcs.Official.StoryPlayables.GAction();var displayManager=new MapDisplayManager{MapRootManagerProxy=services,ResourceLoader=displayCatalog,ServiceProvider=services,Queries=services,LowMemory=memory};displayManager.Initialize();
                 var entities=new List<EntityInput>();var drivers=new List<ECViewDriver>();
                 for(int i=0;i<4;i++)
                 {
@@ -73,17 +79,17 @@ namespace Zjcs.Editor.Map14
                     var prefab=AssetDatabase.LoadAssetAtPath<GameObject>(path);Require(prefab,"native display did not import: "+classId);
                     Require(prefab.GetComponentsInChildren<Transform>(true).All(t=>GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(t.gameObject)==0),"native display has missing scripts");
                     var source=new GameObject("Isolated original statue entity "+classId);source.SetActive(false);source.transform.position=new Vector3((i%2==0?-1:1)*2.1f,i<2?5:1,0);var entity=source.AddComponent<EntityInput>();entity.Data.Class=classId;entity.Data.Stage.Owner=entity.Data;services.Entities.Add(entity.Data);entities.Add(entity);
-                    var display=UnityEngine.Object.Instantiate(prefab,source.transform,false);display.name=prefab.name;
-                    var binding=display.GetComponent<NativeMap14HeroStatueSprites>();Require(binding&&binding.bindings.Length==4,"original Sprite reference count differs");binding.Bind(sprites);Require(display.GetComponentsInChildren<SpriteRenderer>(true).All(r=>r.sprite&&r.sharedMaterials.All(m=>m&&m.shader&&m.shader.isSupported)),"original renderer has missing Sprite/material/shader");
-                    var driver=display.GetComponent<ECViewDriver>();drivers.Add(driver);driver.ServiceProvider=services;driver.ClientVisibilitySupporterFactory=new ConstantClientVisibilitySupporterFactory();
-                    foreach(var linker in display.GetComponentsInChildren<MapEntityTipDotNodeLinker>(true)){linker.Controller=services;linker.TipDotSystem=services;}
+                    var selector=source.AddComponent<MyMapDisplay>();typeof(MyMapDisplay).GetField("mMyEntity",BindingFlags.NonPublic|BindingFlags.Instance).SetValue(selector,entity);selector.MapRootManagerProxy=services;selector.MapDisplayManager=displayManager;selector.MyMapPositionHandler=services;selector.Queries=services;
+                    source.SetActive(true);entity.BindPre();var driver=source.GetComponentInChildren<ECViewDriver>(true);Require(driver,"original bind-pre did not acquire a display");drivers.Add(driver);var display=driver.gameObject;
+                    var binding=display.GetComponent<NativeMap14HeroStatueSprites>();Require(binding&&binding.bindings.Length==4,"original Sprite reference count differs");Require(display.GetComponentsInChildren<SpriteRenderer>(true).All(r=>r.sprite&&r.sharedMaterials.All(m=>m&&m.shader&&m.shader.isSupported)),"original renderer has missing Sprite/material/shader");
                     Require(driver.GetView<ECWorldStageView>()!=null&&driver.GetView<ECAnimatorView>()!=null&&driver.GetView<ECAttachAgentView>().Configs.Values.Count==9&&driver.GetView<ECTipdotLinkerView>()!=null&&driver.GetView<ECPlayableSupporterView>().GetPlayableHandler<ECPlayableWorldStageHandler>()!=null,"original managed-reference types/fields failed to deserialize");
-                    source.SetActive(true);entity.StartEntity();
+                    entity.StartEntity();
                     Require(driver.GetView<ECAnimatorView>().AnimationController.myAnimator.runtimeAnimatorController&&driver.GetView<ECWorldStageView>().State==0,"original Animator/state not loaded");
                     yield return Frames(center,.15f);
                     var state=driver.GetView<ECWorldStageView>();var cfg=state.GetCurStateCfg();Require(cfg.myLoopPlayable&&cfg.myLoopPlayable.name=="herostatue_active_playable"&&cfg.InteractionOperation.InteractionOperation is ECWorldStageInteractionOperationWindow,"state zero native effect/window differs");
                     Require(cfg.InteractionOperation.InteractionOperation.DoOper(services,entity.Data.Stage)&&services.LastWindow=="WorldMap/WorldTouchDialogWithPreview"&&services.InputHooks==0,"state zero window/hook request differs");
                 }
+                memory.SafeInvoke();Require(drivers.All(d=>d&&d.gameObject.activeInHierarchy)&&services.Created==4,"low-memory cleanup removed loaned original displays");
                 Require(services.Linked.Count==4,"original tip-dot nodes were not registered");
                 foreach(var callback in services.Linked.Values.ToArray())callback(new TipDotStateInfo{TipLevel=ETipDotLevelType.Important,Data="101"});
                 foreach(var d in drivers){var linker=d.GetComponentInChildren<MapEntityTipDotNodeLinker>(true);Require(linker.TipLevelState.State==ETipDotLevelType.Important,"original tip state did not switch");}
@@ -98,6 +104,10 @@ namespace Zjcs.Editor.Map14
                 VerifyOwnership(services,entities[0].Data);
                 foreach(var entity in entities)entity.RemoveEntity();Require(services.Linked.Count==0&&services.Buffered.Count==0,"original unload leaked tip/buffer subscriptions");
                 yield return Frames(center,.1f);
+                for(int i=0;i<entities.Count;i++){entities[i].BindPre();Require(entities[i].GetComponentInChildren<ECViewDriver>()==drivers[i],"original FIFO display was not reused");entities[i].StartEntity();}
+                Require(services.Created==4,"original pool instantiated during reuse");foreach(var entity in entities)entity.RemoveEntity();yield return Frames(center,.1f);
+                memory.SafeInvoke();yield return null;Require(drivers.All(d=>!d),"idle original display pools were not destroyed");
+                entities[0].BindPre();entities[0].StartEntity();Require(services.Created==5&&entities[0].GetComponentInChildren<ECViewDriver>(),"original display did not reload after low-memory release");entities[0].RemoveEntity();yield return Frames(center,.1f);displayManager.Dispose();yield return null;
                 manager.RemoveAllPlayable(true);
                 foreach(var entity in entities)UnityEngine.Object.Destroy(entity.gameObject);
                 yield return null;
@@ -110,22 +120,24 @@ namespace Zjcs.Editor.Map14
             var source=data.Tip;source.Value=null;Require(EntityTipDotOwnership.EntityShowTipForMe(source),"null ownership");source.Value=new EntityOwnershipData{OwnerId=0,Type=EntityOwnershipType.Player};Require(EntityTipDotOwnership.EntityShowTipForMe(source),"nonpositive owner");source.Value.OwnerId=services.MainPlayerId;Require(EntityTipDotOwnership.EntityShowTipForMe(source),"self owner");source.Value.OwnerId=services.MainPlayerId+1;services.Unique=true;Require(!EntityTipDotOwnership.EntityShowTipForMe(source),"foreign unique owner");services.Unique=false;Require(EntityTipDotOwnership.EntityShowTipForMe(source),"foreign shared owner");source.Value.Type=EntityOwnershipType.Entity;services.Unique=true;Require(EntityTipDotOwnership.EntityShowTipForMe(source),"entity ownership");
         }
         private static void Capture(Camera camera,string name){var rt=new RenderTexture(450,800,24);rt.Create();var old=RenderTexture.active;camera.targetTexture=rt;camera.Render();RenderTexture.active=rt;var image=new Texture2D(450,800,TextureFormat.RGB24,false);image.ReadPixels(new Rect(0,0,450,800),0,0);image.Apply();var pixels=image.GetPixels32();var bg=pixels[0];Require(pixels.Count(c=>Math.Abs(c.r-bg.r)>2||Math.Abs(c.g-bg.g)>2||Math.Abs(c.b-bg.b)>2)>500,"native display frame is empty");File.WriteAllBytes(Path.Combine(Output,name),image.EncodeToPNG());camera.targetTexture=null;RenderTexture.active=old;UnityEngine.Object.Destroy(image);rt.Release();UnityEngine.Object.Destroy(rt);}
-        private sealed class DataInput:ECViewEntityData
-        {public int Class;public readonly StateInput Stage=new StateInput();public readonly GridInput Grid=new GridInput();public readonly TipSource Tip;public DataInput(){Tip=new TipSource{Owner=this};}public override int ClassId=>Class;public override EcEntityIdentifier Id=>new EcEntityIdentifier(14,Class);public override T GetComponent<T>(){object v=typeof(T)==typeof(ECWorldStageStateData)?Stage:typeof(T)==typeof(ECGridTransformData)?Grid:typeof(T)==typeof(ECEntityTipDotSourceData)?Tip:null;if(v==null)throw new InvalidOperationException("Unexpected original component query: "+typeof(T));return(T)v;}}
+        private sealed class DataInput:ECViewEntityData,IMapDisplayEntityState
+        {public int Class;public readonly StateInput Stage=new StateInput();public readonly GridInput Grid=new GridInput();public readonly TipSource Tip;public DataInput(){Tip=new TipSource{Owner=this};}public bool Removing=>false;public Pos2d GridPosition=>Grid.Pos;public string EntityTag=>"";public override int ClassId=>Class;public override EcEntityIdentifier Id=>new EcEntityIdentifier(14,Class);public override T GetComponent<T>(){object v=typeof(T)==typeof(ECWorldStageStateData)?Stage:typeof(T)==typeof(ECGridTransformData)?Grid:typeof(T)==typeof(ECEntityTipDotSourceData)?Tip:null;if(v==null)throw new InvalidOperationException("Unexpected original component query: "+typeof(T));return(T)v;}}
         private sealed class StateInput:ECWorldStageStateData,IWorldStageOperationState{public int Value;public DataInput Owner;public override int State=>Value;public ECViewEntityData Entity=>Owner;public bool IsActive()=>true;public override OfficialStageStateInfo GetCurStateInfo()=>new OfficialStageStateInfo();public override int GetStateComponentIndex(StageComponentType t,int i=0)=>-1;}
         private sealed class TipSource:ECEntityTipDotSourceData{public DataInput Owner;public EntityOwnershipData Value;public override ECViewEntityData Entity=>Owner;public override EntityOwnershipData Ownership=>Value;}
         private sealed class GridInput:ECGridTransformData{public override Pos2d Pos=>new Pos2d(2,3);public override Direction Direction=>Direction.Up;public override bool FlipX=>false;public override ECGridTransformInfo Info=>throw new InvalidOperationException();public override Vector3 GridToPosition(Pos2d v)=>throw new InvalidOperationException();public override Pos2d PositionToGrid(Vector3 v)=>throw new InvalidOperationException();public override void AddPosUpdatedReceiver(IGridTransformPosUpdatedEventReceiver v){}public override void RemovePosUpdatedReceiver(IGridTransformPosUpdatedEventReceiver v){}}
-        private sealed class EntityInput:ECViewEntityBinding,IECWorldStageReplacementSource
+        private sealed class EntityInput:ECViewEntityBinding,IECWorldStageReplacementSource,IMapDisplayEntityEvents
         {
             public readonly DataInput Data=new DataInput();public override ECViewEntityData Entity=>Data;
             private readonly List<IMyEntityStartEventReceiver> starts=new List<IMyEntityStartEventReceiver>();private readonly List<IMyEntityRemoveEventReceiver> removes=new List<IMyEntityRemoveEventReceiver>();private readonly List<IMyEntityStartPostEventReceiver> posts=new List<IMyEntityStartPostEventReceiver>();private readonly List<IMyEntityRemovePreEventReceiver> pres=new List<IMyEntityRemovePreEventReceiver>();
+            private readonly List<Zjcs.Official.MapDisplays.IMyEntityBindPreEventReceiver> binds=new List<Zjcs.Official.MapDisplays.IMyEntityBindPreEventReceiver>();public void AddBindPreReceiver(Zjcs.Official.MapDisplays.IMyEntityBindPreEventReceiver r)=>binds.Add(r);public void RemoveBindPreReceiver(Zjcs.Official.MapDisplays.IMyEntityBindPreEventReceiver r)=>binds.Remove(r);public void BindPre(){foreach(var r in binds.ToArray())r.MyEntity_OnBindPre(Data);}
             public void StartEntity(){foreach(var v in starts.ToArray())v.MyEntity_OnStart(this,false);foreach(var v in posts.ToArray())v.MyEntity_OnStartPost(this);}public void RemoveEntity(){foreach(var v in pres.ToArray())v.MyEntity_RemovePre(this);foreach(var v in removes.ToArray())v.MyEntity_OnRemove(this);}
             public override void SetClientVisibilitySupporter(IClientVisibilitySupporter v){}public override void AddStartReceiver(IMyEntityStartEventReceiver v)=>starts.Add(v);public override void RemoveStartReceiver(IMyEntityStartEventReceiver v)=>starts.Remove(v);public override void AddRemoveReceiver(IMyEntityRemoveEventReceiver v)=>removes.Add(v);public override void RemoveRemoveReceiver(IMyEntityRemoveEventReceiver v)=>removes.Remove(v);public override void AddStartPostReceiver(IMyEntityStartPostEventReceiver v)=>posts.Add(v);public override void RemoveStartPostReceiver(IMyEntityStartPostEventReceiver v)=>posts.Remove(v);public override void AddRemovePreReceiver(IMyEntityRemovePreEventReceiver v)=>pres.Add(v);public override void RemoveRemovePreReceiver(IMyEntityRemovePreEventReceiver v)=>pres.Remove(v);public void AddReplaceReceiver(IMyEntityReplaceEventReceiver v){}public void RemoveReplaceReceiver(IMyEntityReplaceEventReceiver v){}
         }
-        private sealed class Services:IServiceProvider,IECViewInjection,IECViewMapRootLifetime,IEcEntityBufferEventHandleModule,IEntityTipDotQueries,IProfessionTipDotSystem,IProfessionTipDotSystemController,IWorldStageWindowMapRoot,IWorldStageWindowHost
+        private sealed class Services:IServiceProvider,IECViewInjection,IECViewMapRootLifetime,IEcEntityBufferEventHandleModule,IEntityTipDotQueries,IProfessionTipDotSystem,IProfessionTipDotSystemController,IWorldStageWindowMapRoot,IWorldStageWindowHost,IMapDisplayRoot,IMapDisplayQueries,IMapDisplayPosition,IMapDisplayInstantiation
         {
             public MyPlayableManager Manager;public readonly List<DataInput> Entities=new List<DataInput>();public readonly Dictionary<TipDotNodeKey,Action<TipDotStateInfo>> Linked=new Dictionary<TipDotNodeKey,Action<TipDotStateInfo>>();public readonly Dictionary<ECViewEntityData,Action<EntityWorldStageUpdateEventMessage>> Buffered=new Dictionary<ECViewEntityData,Action<EntityWorldStageUpdateEventMessage>>();
             public bool Show=true,Unique;public int InputHooks;public string LastWindow;public bool Destroying=>false;public bool Initialized=>true;public bool IsLeader=>true;public long MainPlayerId=>123;public bool IsShowTipDot=>Show;public bool TempLimitShowTip=>false;public Action OnTipDotShowChanged{get;set;}public SafeAction OnTipDotSystemInited{get;set;}public SafeAction OnTipDotSystemPreClear{get;set;}public TipDotGraphType? GetGraphType(string name)=>null;
+            public NativeMap14DisplayCatalog Catalog;public NativeMap14DisplayInstantiation DisplayFactory;public Transform Root;public int Created;public Transform MapRoot=>Root;public int CurrentMapClassId=>14;public DisplayGround GetGridGroundType(Pos2d p)=>DisplayGround.Wall;public DisplayInfoParser Selector=>Catalog.Selector;public int GetMapGroupId(int id)=>1;public string GetAreaTag(int id,int area)=>"isolated source area";public bool IsMapForbidLowMemoryDeal()=>false;public int QueryArea(Pos2d p)=>1;public GameObject Instantiate(GameObject prefab){Created++;return DisplayFactory.Instantiate(prefab);}public void InjectMono(MonoBehaviour value){Inject(value);if(value is MapEntityTipDotNodeLinker linker){linker.Controller=this;linker.TipDotSystem=this;}}
             public object GetService(Type t)=>t==typeof(IECViewMapRootLifetime)||t==typeof(IWorldStageWindowMapRoot)?this:throw new InvalidOperationException("Unexpected original service query: "+t);
             public void Inject(object value){if(value is ECWorldStageView stage)stage.EcEntityBufferEventHandleModule=this;if(value is ECPlayableSupporterView p){p.MyPlayableManager=Manager;p.ServiceProvider=this;}}
             public IDisposable Subscribe<T>(ECViewEntityData e,Action<T> callback) where T:IEcEntityBufferEventContext{Buffered.Add(e,(Action<EntityWorldStageUpdateEventMessage>)(object)callback);return new Lease(()=>Buffered.Remove(e));}public void Emit(DataInput e,int previous)=>Buffered[e](new EntityWorldStageUpdateEventMessage{StageComp=e.Stage,PreState=previous});
