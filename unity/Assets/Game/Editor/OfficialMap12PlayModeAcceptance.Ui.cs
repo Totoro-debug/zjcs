@@ -136,6 +136,11 @@ namespace Zjcs.Editor
                     if (transferred != 1 || closed != 2 || dialog != null)
                         throw new InvalidDataException("Native goddess transfer/close click state: " + key);
                 }
+                if (uiMap == 14 && SessionState.GetBool(Key + ".map14Statues", false))
+                {
+                    IEnumerator statueSteps = VerifyMap14StatueSteps(data, overlay.transform, uiCamera, camera, frame, output, width);
+                    while (statueSteps.MoveNext()) yield return statueSteps.Current;
+                }
                 UnityEngine.Object.Destroy(hud);
                 UnityEngine.Object.Destroy(overlay);
                 camera.targetTexture = null;

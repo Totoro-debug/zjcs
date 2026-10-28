@@ -1,0 +1,94 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "operation": "Normalize the pinned Map14 story graphs, subgraph closure, localized dialogue, roles, options, configured fixed rewards, hand-in item rules, ordered EC templates and map-specific witch results for the shared offline runtime.",
+  "inputs": [
+    {
+      "path": "assets/reference/official-map/map14-source-manifest.json",
+      "bytes": 1110205,
+      "sha256": "04a160772dd26a9d367858ab8e9eac6a82f1886d02248d27a0d403804d5c8a2e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/stories.json",
+      "bytes": 1550869,
+      "sha256": "d318d0a4ba0b8bbd2abf4b196e9c3ecb8dc5c394d866c72b27a436a63703ca2e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/tables.json",
+      "bytes": 20174824,
+      "sha256": "e54c871ff3f6dbbb1e0a5a9cb0891153824e280442424760ad2523bbddbcc09c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/dialogues.json",
+      "bytes": 135369,
+      "sha256": "c6dcda6c65ffd3191c824fc53c121c4275b0f5629f56fc1abf94e1d0fb456d43"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/localization.json",
+      "bytes": 55183,
+      "sha256": "5100699319c8070751702c7811e4e1b42c136dfcd39a180843c18c819c3e356d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/templates.json",
+      "bytes": 506577,
+      "sha256": "0c4c5ad2cf9a3fa54ce290993e85a5bc8c81b390bfaee3a723f2a7e18396d824"
+    },
+    {
+      "path": "scripts/prepare_unity_map14_story_runtime.py",
+      "bytes": 8972,
+      "sha256": "2140d9f8e99493c0096fd4f219609352f5b618d5ccb387568ed05082f3351180"
+    },
+    {
+      "path": "scripts/prepare_unity_map14_interactions.py",
+      "bytes": 9323,
+      "sha256": "231b032a9e72f3d376ba2fa37e46fc5b10175acb8255d07d23ce1e3ff4450c73"
+    },
+    {
+      "path": "scripts/prepare_unity_map11_runtime_data.py",
+      "bytes": 42438,
+      "sha256": "1192d21b3f9aa5d89860d9113ab482772841b9f24ae42d5e245ce9dceae66493"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_story_runtime.py",
+      "bytes": 20049,
+      "sha256": "83e3a2cfcede892f9637abec8e3eccc47c9af8c062becc1fdf613c2afa691823"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Map14/stories.json",
+      "bytes": 4609029,
+      "sha256": "e9e6a523d57101e9f3753ba720c005ea836d57c094ff859e195e2736561cfebc"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/stories.json.meta",
+      "bytes": 155,
+      "sha256": "dac2d716f8e1ed6a59e8802f5fb73c099db9cbc448a7f61d7a8f924e04820e7a"
+    }
+  ],
+  "counts": {
+    "graphs": 85,
+    "mainStories": 64,
+    "subgraphs": 21,
+    "nodes": 1333,
+    "dialogueGroups": 190,
+    "dialogueLines": 417,
+    "dialogRoles": 15,
+    "mapLogicTags": 60,
+    "mapTalkEntries": 72,
+    "mapTalkConditions": 17,
+    "fixedRewards": 8,
+    "handInItems": 1,
+    "entityTemplates": 169,
+    "templateComponents": 1483,
+    "witchInfos": 14,
+    "witchResultEffects": 22,
+    "witchPeriodicityAwards": 7
+  },
+  "pendingRuntimeBindings": [
+    "Map14 map-talk entries and conditions",
+    "native dialogs",
+    "story playables",
+    "mainline map host"
+  ]
+}

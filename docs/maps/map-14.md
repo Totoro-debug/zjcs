@@ -12,6 +12,8 @@
 
 ## 完整还原部分
 
+- 当前版本的 169 个原实体模板／1,483 个组件已按原顺序接入剧情运行载荷；女巫 14 个激活档位、22 个结果索引及 7 项探访权重均保留，召唤组按 Map14 选择原关卡 `20004`／实体 `5100`。四种英雄雕像效果、621 项实体参数、111 区及 115 个 Area 使用本图当前配置，共享主线 getter 已验证选择本图来源。修复共享预览窗口固定加载 `_11` 图标的问题，按当前 UI 地图 ID 加载 `_14`。完整工程校验及内置屏 Play Mode 在 450×800、720×1280 各通过 33 个原结果预览、按钮遮挡射线与空白处关闭点击，并查看 66 张实际画面。5 项新来源／地图选择检查与原森之国构建回归通过。本轮使用隔离预览状态，尚未验证正式实体激活、结果应用、每日次数、主线进度或存档；HUD 未初始化完整数据。
+
 - 龙之国官方通用 UI 已按当前 `871_156598` 从原 prefab／组件字段恢复为 68 个面板、3,657 个节点、4,235 条组件记录及 956 张原精灵；保留原 Transform／RectTransform、层级顺序、锚点、四元数、Image 启用位与遮罩。另恢复对话图标等子 prefab、本地图小地图标记与原字体绑定。原生导入、编译、全项目校验及所有面板的层级／锚点／脚本绑定检查已通过；内置屏 Play Mode 在 450×800 与 720×1280 两种尺寸完成女神像／失落女神像锁定、激活、传送、图标切换、原动画关闭及遮挡射线检查，14 张实际画面已查看。修复共享夹具把尺寸写入已废弃 WebPlayer 组的问题，按当前编辑器实际 Standalone 组设置并断言尺寸。测试使用隔离 UI 状态，HUD 的玩家数值、头像、小地图和提示点未初始化；本轮不包含正式进度、存档或 Windows Player。雕像、命运探寻、HUD 和剧情正式业务尚未完整接通，粒子、音频与其余组件行为继续迁移，不据此认定全部界面已完成。
 
 - 原地形、场景、水体／环境及区域标签已接入 `OfficialMap14NativeWorldView` 统一宿主；修复官方原点 X／Y／Z 三坐标被误判为二维的问题。完整工程导入、编译、`ProjectTools.Validate` 和 Play Mode 通过；实际查看原入口（放置 101）、区域状态刷新、另一位置及卸载后重新挂载的运行截图。已核对 111 区状态查询、分区加载、管线与新增相机组件清理。此处状态由隔离 fixture 提供，尚未绑定正式地图进度、实体点击、存档或 Windows Player。
@@ -64,6 +66,8 @@
 - 完成编辑器与 Windows Player 的受影响流程、模拟输入、完整画面及存档验证，提交并发布包含本图成果的 Windows 可执行版本。当前没有本图可游玩版本交付结论。
 
 ### 官方来源与入口
+
+- [当前实体模板／雕像配置转换](../../scripts/prepare_unity_map14_interactions.py)、[来源与运行绑定](../../assets/reference/official-map/map14-interactions-source-manifest.json)、[来源与地图选择回归](../../scripts/test_prepare_unity_map14_interactions.py)及[原结果预览／模拟关闭检查](../../unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Map14Statues.cs)。目录为 `Map14/interactions` 与 `Map14/stories`；运行检查入口 `Zjcs.Editor.OfficialMap12PlayModeAcceptance.RunUiMap14Statues`。
 
 - [通用 UI 提取](../../scripts/prepare_unity_map14_ui.py)、[共享原生导入器](../../unity/Assets/Game/Editor/OfficialMap11UiTools.cs)、[UI 显式绑定与哈希](../../assets/reference/official-map/map14-ui-binding-source-manifest.json)及[原生层级／模拟点击检查](../../unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Map14Ui.cs)。原始投影在 `Assets/Official/World/Map/14/UI/`，本地原生 prefab 入口为 `Resources/Map14/UI/`；提交窗口仍使用独立 `HandIn/` 及其原来源收据。
 

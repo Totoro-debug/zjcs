@@ -1,0 +1,121 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "operation": "Preserve current official hero effect component/index, ordered periodic weights, original costs and all Dragon Country region/area bindings. Resolve witch spawn against Map14 rather than another map.",
+  "inputs": [
+    {
+      "path": "assets/reference/official-map/map14-source-manifest.json",
+      "bytes": 1110205,
+      "sha256": "04a160772dd26a9d367858ab8e9eac6a82f1886d02248d27a0d403804d5c8a2e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/templates.json",
+      "bytes": 506577,
+      "sha256": "0c4c5ad2cf9a3fa54ce290993e85a5bc8c81b390bfaee3a723f2a7e18396d824"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/tables.json",
+      "bytes": 20174824,
+      "sha256": "e54c871ff3f6dbbb1e0a5a9cb0891153824e280442424760ad2523bbddbcc09c"
+    },
+    {
+      "path": "scripts/prepare_unity_map14_interactions.py",
+      "bytes": 9323,
+      "sha256": "231b032a9e72f3d376ba2fa37e46fc5b10175acb8255d07d23ce1e3ff4450c73"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_story_runtime.py",
+      "bytes": 20049,
+      "sha256": "83e3a2cfcede892f9637abec8e3eccc47c9af8c062becc1fdf613c2afa691823"
+    },
+    {
+      "path": "scripts/prepare_mainline_interactions.py",
+      "bytes": 9578,
+      "sha256": "2070383662372b04fa98d1e93c35e7d7842713d8682f5cc45336ce8e50603151"
+    }
+  ],
+  "officialCode": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapPeriodicityRandomAwardInteractionInfoParser.cs",
+      "bytes": 4231,
+      "sha256": "7c91237ded34e6ed7ab53745b780eaa89f52ff00df172a7a9029310aa8614521"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapEntityPeriodicityInteractionInfoPackParser.cs",
+      "bytes": 1918,
+      "sha256": "56d5c6ed7f0d564e035e0c819c466a88ecbda34b9af7bece9388fa2efc42c386"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StageResultAwardExtraPropComponentInfo.cs",
+      "bytes": 486,
+      "sha256": "9fc1c8c54ad7bf7086077a40668835a446b068e7d8658895074aa2c42614bee9"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StageResultSpawnEntityComponentInfo.cs",
+      "bytes": 501,
+      "sha256": "25f420332704810e6ceff05501f921c2bf4509259d20807f547276e2e25fbede"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/WitchInfo.cs",
+      "bytes": 1409,
+      "sha256": "e70a22bc760f00298a0fd41554f8c0bcefdd19e92280e6fc6b5f5a5e02de7aa1"
+    }
+  ],
+  "runtimeBindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineInteractionCatalog.cs",
+      "hashLineEndings": "LF",
+      "sha256": "328611a9eaab1eecf2ebc264739e0a0e8bbcf11f5eb4228d8132792a3f95d0cd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Catalogs.cs",
+      "hashLineEndings": "LF",
+      "sha256": "b529fe45dc93dcf7b5cb461d2d3a26ad6fe6e58d77eda1682ba6f9012f1da502"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialMap11WitchWindow.cs",
+      "hashLineEndings": "LF",
+      "sha256": "82a9d827e5e77ef567328949bdad39bd66c0272ff2e091fb9b4bfb56d4087c63"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Map14Statues.cs",
+      "hashLineEndings": "LF",
+      "sha256": "d4257647212039bc6c481bd465da950cae12cfcfab7a5c0162ce0afb256b823c"
+    }
+  ],
+  "sharedPort": {
+    "path": "scripts/prepare_unity_map11_runtime_data.py",
+    "symbol": "build_witch_results",
+    "sourceSha256LF": "d98a36662307bfa3b08e378fa8bb69d980f55dd8490a86627200b9d047db5609"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Map14/interactions.json",
+      "bytes": 169001,
+      "sha256": "9aa7271ab93c548565e370070f2a3fc3ad814e0ce5b99e5483234cb12a341fc9"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/interactions.json.meta",
+      "bytes": 155,
+      "sha256": "cc88cc5febefffbb3dbcf304da365afb9e3e8ba53ce68f5da2996166ed146c9f"
+    }
+  ],
+  "counts": {
+    "entityTemplates": 169,
+    "components": 1483,
+    "heroes": 4,
+    "parameters": 621,
+    "regions": 111,
+    "areas": 115,
+    "witchInfos": 14,
+    "witchResultEffects": 22,
+    "witchPeriodicityAwards": 7
+  },
+  "remaining": [
+    "formal mainline state and UI integration",
+    "statue interaction visual effects",
+    "full Map14 gameplay and persistence",
+    "Windows Player release"
+  ]
+}

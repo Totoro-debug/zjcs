@@ -26,7 +26,7 @@ DEFAULT_MANIFEST_PATH = ROOT / "assets/reference/official-map/map11-runtime-sour
 MAINLINE_TASK_IDS = tuple(range(1045, 1161, 5))
 
 
-def build_witch_results(tables, entity_templates, rules):
+def build_witch_results(tables, entity_templates, rules, map_id=11):
     """Resolve EC result indices without losing their original type/index identity."""
     template = next(row for row in entity_templates if row["EntityClassId"] == 6620)
     components = {row["Type"]: json.loads(row["Json"]) for row in template["Components"]}
@@ -56,9 +56,9 @@ def build_witch_results(tables, entity_templates, rules):
              "EntryId": statuses[value]["EntryId"], "EffectType": statuses[value]["EffectType"]} for value in ids]})
     for index, info in enumerate(components["StageResultSpawnEntityComponent"]["SpawnEntityInfos"]):
         matches = [row for row in tables["Map/map_entity_group"] if row["Group"] == info["GroupId"]
-                   and row["FilterCondition"].get("MapClassId") == 11]
+                   and row["FilterCondition"].get("MapClassId") == map_id]
         if len(matches) != 1 or len(matches[0]["Entitys"]) != 1:
-            raise ValueError("Witch spawn must resolve its pinned Map11 group.")
+            raise ValueError("Witch spawn must resolve its pinned Map" + str(map_id) + " group.")
         extra = matches[0]["ExtraDataInfos"]
         if len(extra) != 1 or extra[0]["_type"] != "MapEntityGroupInfoExtraStageIdsData" \
                 or len(extra[0]["StageIdsList"]) != 1 or len(extra[0]["StageIdsList"][0]) != 1:

@@ -14,6 +14,6 @@ namespace Zjcs.Presentation.World
         private OfficialMainlineUiCatalog nativeUi;
         private OfficialMainlineUiCatalog NativeUi => nativeUi ??= new OfficialMainlineUiCatalog(MapProfile);
         private OfficialMainlineInteractionCatalog interactionCatalog;
-        private OfficialMainlineInteractionCatalog Interactions => interactionCatalog ??= OfficialMainlineInteractionCatalog.Load();
+        private OfficialMainlineInteractionCatalog Interactions => interactionCatalog ??= OfficialMainlineInteractionCatalog.Load(mapClassId);
     }
 }

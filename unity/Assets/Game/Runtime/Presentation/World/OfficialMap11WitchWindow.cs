@@ -141,7 +141,7 @@ namespace Zjcs.Presentation.World
         public void EntityIcon()
         {
             Transform slot = Find(Source("WorldDialogEntityContent").fields.mIconSlot.mPreviewSlot);
-            GameObject prefab = Resources.Load<GameObject>(uiRoot + entityClassId + "_11_DialogIcon");
+            GameObject prefab = Resources.Load<GameObject>(uiRoot + entityClassId + "_" + data.mapClassId + "_DialogIcon");
             if (prefab == null) throw new InvalidDataException("Official witch dialog icon is missing.");
             UnityEngine.Object.Instantiate(prefab, slot, false);
         }
