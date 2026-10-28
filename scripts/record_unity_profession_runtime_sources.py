@@ -90,6 +90,7 @@ def build():
         player_appearance=file_record(ROOT / "assets/reference/profession-ui/player-appearance-source-manifest.json"),
         player_weapon=file_record(ROOT / "assets/reference/profession-ui/player-weapon-source-manifest.json"),
         ui_parts=file_record(ROOT / "assets/reference/profession-ui/ui-parts-source-manifest.json"),
+        followers=file_record(ROOT / "assets/reference/profession-ui/followers-source-manifest.json"),
         appearance_ui=file_record(ROOT / "assets/reference/profession-ui/appearance-ui-source-manifest.json"),
         offscreen_player=file_record(ROOT / "assets/reference/profession-ui/offscreen-player-source-manifest.json"),
         native_curves=file_record(ROOT / "assets/reference/profession-ui/native-curves-source-manifest.json"),
