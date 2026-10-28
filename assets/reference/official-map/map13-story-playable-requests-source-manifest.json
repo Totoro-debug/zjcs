@@ -1,0 +1,1061 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "inputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Map13/stories.json",
+      "sha256": "fe44788a6f42bd88b58732f0cf3a7b8346fd8e5ace7697e493d74c7eb2a7c699"
+    },
+    {
+      "path": "assets/reference/official-map/map13-native-npc-story-playables-source-manifest.json",
+      "sha256": "cbb9d778bb3d9c685489729223b3faeb8042828da418058d190dc800a6a6fc15"
+    },
+    {
+      "path": "assets/reference/official-map/map13-native-npc-appearance-bindings-source-manifest.json",
+      "sha256": "6cddfffe3fd6feedccab713f5e8262f8fc86f28dab9662cb93421675a6773ebd"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayPlayableNode.cs",
+      "sha256": "331021fa4cdca5dd13c1d50e2de8dece1e6b6a31d5e092e16d6ab761ccd6c999"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/GetEntityBaseNode.cs",
+      "sha256": "88200ed80a8dc1369afe73f0fc12ce6094697c00daaad515fba2c818fda8bc33"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/XNode/Node.cs",
+      "sha256": "dbf7770ed051787eb6373d3c095883d4ffe38660efd9bad23145941bc2bc1f74"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/XNode/NodePort.cs",
+      "sha256": "a7ceb4f5e0812656262f2715be96dc4ed3252627bc33dadcc78c2c6b7b94c0d0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/PlayPlayableNode.cs",
+      "sha256": "f981ccd03fd0b06ec9baf67a969d916b56f5f0149dc18c464d3c77e4c9c0fbbf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/StoryPlayableRequestNode.cs",
+      "sha256": "7be5801039073a8b8e34109acbe19875b7ec61c2d59f1052c9ffbee83885929e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableRequests/StoryHandleProxy.cs",
+      "sha256": "118ef81f73999ca7d04bad5898433f8b66020140e5e73dbfb0391b73580d4847"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map13_story_playable_requests.py",
+      "sha256": "2f021987a34594161d4ca9afd88e80a255a1251c3ee1aefa050df48dabb6472d"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Editor/Map13StoryPlayableRequests/OfficialMap13StoryPlayableRequestsAcceptance.cs",
+      "sha256": "36345653a1a0f3e5114663c34a8b6ed301924f1d90fedae2fb05496e62e1063b"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13StoryPlayableRequests/OfficialMap13StoryPlayableRequestsAcceptance.cs.meta",
+      "sha256": "b061830beaa6df0c60d5f9f6898df71634df4d128a6ecfa22295f38f6cc32736"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13StoryPlayableRequests/Zjcs.Editor.Map13.StoryPlayableRequests.asmdef",
+      "sha256": "06378c183ff6b4498dc5fde9bfd04a58a92fc756199830ccaf0af5fb45c52a65"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13StoryPlayableRequests/Zjcs.Editor.Map13.StoryPlayableRequests.asmdef.meta",
+      "sha256": "ff8b2aa2f06a9f437237db937a12600889df3f096acb38f2584b50466f530162"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13StoryPlayableRequests.meta",
+      "sha256": "6c87807392cfe750c92d3683bf027f3fad9437e3a9f1b52f99dead4ddd613988"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13StoryPlayables/NativeMap13StoryPlayableAssets.cs",
+      "sha256": "f95f9724922f223cd4157afbb23c41c19feb4926439c8d83852d04cc80ced584"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13StoryPlayables/NativeMap13StoryPlayableAssets.cs.meta",
+      "sha256": "fb8db6acb7e7bcabfeb6327e865ee5f493b8965bcffef84b89d6fd158e79dc44"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13StoryPlayables/NativeMap13StoryPlayableScope.cs",
+      "sha256": "8378442426104a2a40f69c26cd934a57e528654909fdd6b4769939b69116c339"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13StoryPlayables/NativeMap13StoryPlayableScope.cs.meta",
+      "sha256": "017d606b6818a804119cadfd25f83c6a0a800aac473300cb10e0195bd0a16a7e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13StoryPlayables/Zjcs.Offline.World.NativeMap13StoryPlayables.asmdef",
+      "sha256": "59dbbcf586940dfebd6d081774529abd2d0fe1b22974ce730b2d51f5c18419bb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13StoryPlayables/Zjcs.Offline.World.NativeMap13StoryPlayables.asmdef.meta",
+      "sha256": "596a8b9ccae791cf47dd3aa673b8340fa75354db38904c949e80e0859c3a588d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13StoryPlayables.meta",
+      "sha256": "1945b1740e13bb55ad11057ca87c281de48144af2362ecd0b39ddc0d36cee2cf"
+    }
+  ],
+  "counts": {
+    "requests": 29,
+    "indexedActors": 55,
+    "unconnectedIndexedTargets": 1,
+    "unconnectedGroupedPorts": 58,
+    "nativeAssets": 12,
+    "waits": 20,
+    "stopStageBefore": 2
+  },
+  "requests": [
+    {
+      "graph": "ByebyeWeiYang",
+      "nodeId": 72,
+      "sourceSha256": "bb1ff6af13ea804f14c37608730ac68624971bfc582376c6931b257bd32ebdbe",
+      "assetGuids": [
+        "f4d2e846f96581348aa326c7686926cc",
+        "f4d2e846f96581348aa326c7686926cc",
+        "f4d2e846f96581348aa326c7686926cc",
+        "5fd5bec6c4f91f54799a4b823888f49a"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 73,
+          "type": "GetEntityNode",
+          "sourceSha256": "ebadf8172cc8895a27d1b4e1f22d94a88247d1c3a98c47c533b090c107b0a6bb"
+        },
+        {
+          "name": "SourceEntitys 1",
+          "nodeId": 74,
+          "type": "GetEntityNode",
+          "sourceSha256": "d41d4025b09254a28db3a909ea9767e10cf9f6d50007e2a4ec5755542321726c"
+        },
+        {
+          "name": "SourceEntitys 2",
+          "nodeId": 75,
+          "type": "GetEntityNode",
+          "sourceSha256": "25219667132b3bb916d629c8fd43f53c6beae327b22c14fffab57f6676669d72"
+        },
+        {
+          "name": "SourceEntitys 3",
+          "nodeId": 84,
+          "type": "AddMapExclusiveNpcAroundPlayerNode",
+          "sourceSha256": "3f9243c0c4cb5ec70a129c6745c6257afb658e4ed4622d7e811cd608f4752f80"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 1,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "CallNaraku",
+      "nodeId": 71,
+      "sourceSha256": "64069e11ef7ea187c7bb078fd0b4a483d7d97c0793aaa13d4023608a9589e331",
+      "assetGuids": [
+        "861c890ded796394a82cc519daf31d5e",
+        "861c890ded796394a82cc519daf31d5e",
+        "861c890ded796394a82cc519daf31d5e"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 72,
+          "type": "GetEntityNode",
+          "sourceSha256": "0d203eddde07ec4c7271e2803e85b1fb438e112e171a3e6ee78856159cb0e2b9"
+        },
+        {
+          "name": "SourceEntitys 1",
+          "nodeId": 73,
+          "type": "GetEntityNode",
+          "sourceSha256": "dd418f4048c7126a8830548ac563b3fa8ce3d42237a8a6b97a581eef7bd8e1d7"
+        },
+        {
+          "name": "SourceEntitys 2",
+          "nodeId": 74,
+          "type": "GetEntityNode",
+          "sourceSha256": "26a8c44c5d44f3e279895362636d4b5a02da5fd04186fbf37a5ad7abcaa3037a"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 0,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "CallNaraku",
+      "nodeId": 75,
+      "sourceSha256": "f88b640fd525a25ee6f49b965842f9a46c46f67c38ef2d3f8a9fe8c1e0f7a62f",
+      "assetGuids": [
+        "d2ba623f311ea224e811e7b6b130ef4a",
+        "d2ba623f311ea224e811e7b6b130ef4a",
+        "d2ba623f311ea224e811e7b6b130ef4a"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 76,
+          "type": "GetEntityNode",
+          "sourceSha256": "ecada69ad0369d7c1f9aad0427ec7b6ba089fd5972a45b855e15e7e424261128"
+        },
+        {
+          "name": "SourceEntitys 1",
+          "nodeId": 77,
+          "type": "GetEntityNode",
+          "sourceSha256": "67e8b66a8a40a79894eba7f8669272b3ffb50318c29a105230415e13bbca9768"
+        },
+        {
+          "name": "SourceEntitys 2",
+          "nodeId": 78,
+          "type": "GetEntityNode",
+          "sourceSha256": "1d98491bd3edc6b66c644de319477dd1712236a9d8af3bb2d466d36ce63fa42b"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 0,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "CloudVortexAfterBattle",
+      "nodeId": 79,
+      "sourceSha256": "d45dfe55e99015de1f3b11cfadbe091a6533d179dedf263318669d5735570dd9",
+      "assetGuids": [
+        "9b248cde91299ee4287533b25b7dd468"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 29,
+          "type": "GetEntityNode",
+          "sourceSha256": "0ebbaa3aa430eb9fa1f5634cec7e3074ee826981c747c8e00c854da3fb05cc5f"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 1,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "DefeatFakeWeiYang",
+      "nodeId": 82,
+      "sourceSha256": "1b7e3458b410ce14ff2c20d636daa7394f8e9d0b7eaa4725bb807f2682b8cb04",
+      "assetGuids": [
+        "861c890ded796394a82cc519daf31d5e",
+        "861c890ded796394a82cc519daf31d5e"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 93,
+          "type": "AddMapExclusiveNpcAtPosNode",
+          "sourceSha256": "1daccc99dc26f0253c1cab5a2d06509ef53db70cbac5f36c3cd0a44639e38860"
+        },
+        {
+          "name": "SourceEntitys 1",
+          "nodeId": 83,
+          "type": "GetEntityNode",
+          "sourceSha256": "9b04c44670091d1fc8952aeacd8c0521cb4aa50e683b66313e0fb780b4a496e7"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 0,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "DefeatFakeWeiYang",
+      "nodeId": 85,
+      "sourceSha256": "3ef3a1b6bc971ba653a3db9b7ad49ab4e23f7181ff10304567aecafcdfe0303a",
+      "assetGuids": [
+        "d2ba623f311ea224e811e7b6b130ef4a"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 93,
+          "type": "AddMapExclusiveNpcAtPosNode",
+          "sourceSha256": "1daccc99dc26f0253c1cab5a2d06509ef53db70cbac5f36c3cd0a44639e38860"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 1,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "FakeWeiYangAfterBattle",
+      "nodeId": 71,
+      "sourceSha256": "5094a5bbd147704d7e331e5be79ef3ddc04a9ff34bd5d25a0b5c0b02261ecb9a",
+      "assetGuids": [
+        "9b248cde91299ee4287533b25b7dd468"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 68,
+          "type": "GetEntityNode",
+          "sourceSha256": "b7e4349289500580f24f82b05247c1d167f05a561d652722086a3de85b2cc713"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 1,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "FirstMeetDaZe",
+      "nodeId": 61,
+      "sourceSha256": "c3b90b176ca1588a4279e731333169ea5bfea6b44f498434555b8ebeeabda9ec",
+      "assetGuids": [
+        "bb73792b166b5cb46bdcff12ba4582ee"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 62,
+          "type": "GetEntityNode",
+          "sourceSha256": "31ac99c9df0c3abc2e0757d861f5adf099374e8e15b0d623f9c3855a888d75cc"
+        }
+      ],
+      "duration": 1.0,
+      "flags": {
+        "IsWaitPlayableStop": 1,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 1,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "FirstMeetLanternGhost",
+      "nodeId": 54,
+      "sourceSha256": "04391b66590793bb4add2fcc69e26e25678f4da5aebddb9349e40adfb878ac40",
+      "assetGuids": [
+        "9b248cde91299ee4287533b25b7dd468"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 55,
+          "type": "GetEntityNode",
+          "sourceSha256": "801fc43f4f105982ab0ac910691bb78feb5a3580bc860ae70273cf8ed6f83f6f"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 1,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "FirstMeetWeiYang",
+      "nodeId": 25,
+      "sourceSha256": "c37e45476dfe683084b7de78725a4d5e36965e8b773f36d02f7aa10da383ee38",
+      "assetGuids": [
+        "9b248cde91299ee4287533b25b7dd468",
+        "5fd5bec6c4f91f54799a4b823888f49a"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 26,
+          "type": "GetEntityNode",
+          "sourceSha256": "cd62da3baa383c4c9a4471315a79cdb9dcfa95a0e003c27c5731cb1b053bdaa5"
+        },
+        {
+          "name": "SourceEntitys 1",
+          "nodeId": 29,
+          "type": "AddMapExclusiveNpcAroundPlayerNode",
+          "sourceSha256": "bece9631e71f46318a4e342e9f11d5bd50efa2f6a87acc25347f80f8194f8ded"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 1,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "FirstMeetZhongMo",
+      "nodeId": 36,
+      "sourceSha256": "ad97f3fc6ace208dd1ed80e6af61b93704ea94adf9c22030667e36e01bf30220",
+      "assetGuids": [
+        "788103ec08321564c82d10a6cd501b6b",
+        "5fd5bec6c4f91f54799a4b823888f49a"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 33,
+          "type": "GetEntityNode",
+          "sourceSha256": "aa07b31540a3807db00922a6328a545d45dcee8bcedb3e45f2ca3cdcec7da2ee"
+        },
+        {
+          "name": "SourceEntitys 1",
+          "nodeId": 37,
+          "type": "AddMapExclusiveNpcAroundPlayerNode",
+          "sourceSha256": "cbab3274940514086c321d8be135fe84ea616de73eb61d846eb26b5d7b4ed9e5"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 0,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 1,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "GhostGoHome",
+      "nodeId": 65,
+      "sourceSha256": "7d6e49672dbc2b54a7aed2b1cf308eb6937275a515093e834f937dbf6743b862",
+      "assetGuids": [
+        "9b248cde91299ee4287533b25b7dd468",
+        "5fd5bec6c4f91f54799a4b823888f49a"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 66,
+          "type": "GetEntityNode",
+          "sourceSha256": "a3cb7054b28b933624e4b7acdfd5b5857fd3387dd15bc1257fb7409f0e4a4d53"
+        },
+        {
+          "name": "SourceEntitys 1",
+          "nodeId": 78,
+          "type": "AddMapExclusiveNpcAroundPlayerNode",
+          "sourceSha256": "d862795fa1c6a0fb0c2e1e158c9b4121031146fa27d23d2ecfa1d304b1815474"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 1,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "GhostGoHome",
+      "nodeId": 76,
+      "sourceSha256": "c5aa73c2f4e34bfcc351dec16be1de6704b23be6034f33b0651a8ad0c0098dfb",
+      "assetGuids": [
+        "861c890ded796394a82cc519daf31d5e"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 66,
+          "type": "GetEntityNode",
+          "sourceSha256": "a3cb7054b28b933624e4b7acdfd5b5857fd3387dd15bc1257fb7409f0e4a4d53"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 0,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "GhostGoHome",
+      "nodeId": 77,
+      "sourceSha256": "4c58ecd13fd9e2b4b3e394e45e16dffb141b81fbe656c84c7989842803baf1c3",
+      "assetGuids": [
+        "d2ba623f311ea224e811e7b6b130ef4a"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 66,
+          "type": "GetEntityNode",
+          "sourceSha256": "a3cb7054b28b933624e4b7acdfd5b5857fd3387dd15bc1257fb7409f0e4a4d53"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 0,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "JvBeiFinish",
+      "nodeId": 35,
+      "sourceSha256": "101317520ae0194b6ac9236f0423eb3bc66bc4ba2f05490f483376043114bdac",
+      "assetGuids": [
+        "9b248cde91299ee4287533b25b7dd468",
+        "5fd5bec6c4f91f54799a4b823888f49a"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 36,
+          "type": "GetEntityNode",
+          "sourceSha256": "a97e1617cbfc804c1dfb37adea022417c85fbecbb11a900d80dfb8b4be0bd863"
+        },
+        {
+          "name": "SourceEntitys 1",
+          "nodeId": 54,
+          "type": "AddMapExclusiveNpcAtPosNode",
+          "sourceSha256": "477d599e185adc81ec616e5a42729150f4665628e89b0c144168fea59a3d036e"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 1,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "NarakuFinish",
+      "nodeId": 26,
+      "sourceSha256": "a441c7843d3a47c50ed1c727f7f920b6cf8df80f10318b23d14e7efee85d607e",
+      "assetGuids": [
+        "9b248cde91299ee4287533b25b7dd468",
+        "9b248cde91299ee4287533b25b7dd468",
+        "9b248cde91299ee4287533b25b7dd468",
+        "5fd5bec6c4f91f54799a4b823888f49a"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 25,
+          "type": "GetEntityNode",
+          "sourceSha256": "5eb94d2581124fde6aa679aa8f27635cd7eeaa8ad7722a879e88d15642426d54"
+        },
+        {
+          "name": "SourceEntitys 1",
+          "nodeId": 27,
+          "type": "GetEntityNode",
+          "sourceSha256": "8e46742a030d1d79b1f8bd9701e454ef6206316168628227c184e1701b37829a"
+        },
+        {
+          "name": "SourceEntitys 2",
+          "nodeId": 50,
+          "type": "GetEntityNode",
+          "sourceSha256": "b55d38e452ba756a74bd483f45fe3c2e4b131cb37cc14b2348e1f930c7f58209"
+        },
+        {
+          "name": "SourceEntitys 3",
+          "nodeId": 70,
+          "type": "AddMapExclusiveNpcAroundPlayerNode",
+          "sourceSha256": "902c0fae5c34e93b0592924d9afbb22735fa4f032d0293e1fcfb1054bf300019"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 1,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "NarakuFinish",
+      "nodeId": 56,
+      "sourceSha256": "afa37f04981b8fd75b673748e218dd1d3eff5f0150afecb28057e94609168870",
+      "assetGuids": [
+        "861c890ded796394a82cc519daf31d5e",
+        "861c890ded796394a82cc519daf31d5e",
+        "861c890ded796394a82cc519daf31d5e"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 55,
+          "type": "GetEntityNode",
+          "sourceSha256": "663acc790fab6279c8566d2631f5906412d8469c392581477775b683b40dcb50"
+        },
+        {
+          "name": "SourceEntitys 1",
+          "nodeId": 57,
+          "type": "GetEntityNode",
+          "sourceSha256": "535f49f7f4a640979c8e758a79d65dbf0feaaa560814b62752cfba037af1483f"
+        },
+        {
+          "name": "SourceEntitys 2",
+          "nodeId": 71,
+          "type": "AddMapExclusiveNpcAtPosNode",
+          "sourceSha256": "be57058ba3aac6bec301eaf39d5d9d0dc9b240699411f124bc9836ef1f4a8521"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 0,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "NarakuFinish",
+      "nodeId": 59,
+      "sourceSha256": "ce6ab8e3314707b3f593be62863ae59515f65f3c8f9d90bbba0411cf8adc7949",
+      "assetGuids": [
+        "d2ba623f311ea224e811e7b6b130ef4a",
+        "d2ba623f311ea224e811e7b6b130ef4a"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 55,
+          "type": "GetEntityNode",
+          "sourceSha256": "663acc790fab6279c8566d2631f5906412d8469c392581477775b683b40dcb50"
+        },
+        {
+          "name": "SourceEntitys 1",
+          "nodeId": 57,
+          "type": "GetEntityNode",
+          "sourceSha256": "535f49f7f4a640979c8e758a79d65dbf0feaaa560814b62752cfba037af1483f"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 1,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "NarakuUnlock",
+      "nodeId": 24,
+      "sourceSha256": "d6e6bac37b0540763f7393a732746f94030e7e29781f43bc9c5b462c0552ee0e",
+      "assetGuids": [
+        "9b248cde91299ee4287533b25b7dd468",
+        "9b248cde91299ee4287533b25b7dd468",
+        "9b248cde91299ee4287533b25b7dd468"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 27,
+          "type": "GetEntityNode",
+          "sourceSha256": "022a75827d71bfb59319010fff83172eb1f648fa576c2f08a575c1881585134f"
+        },
+        {
+          "name": "SourceEntitys 1",
+          "nodeId": 33,
+          "type": "GetEntityNode",
+          "sourceSha256": "41babf87a55eb141e7816b02cd250ce4daeb07f88bbdc4391a68fe316831a2ab"
+        },
+        {
+          "name": "SourceEntitys 2",
+          "nodeId": 34,
+          "type": "GetEntityNode",
+          "sourceSha256": "db70f482c4356e6f15a5d369e1691e64b0ae5afa8e1871e0a059440fe237c14c"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 1,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "RankBridgeMeetDaZe",
+      "nodeId": 30,
+      "sourceSha256": "bcbf8ec981507ab065ffbf9ac5449fdc4bf5ef42157af40e692d796d2fef2eae",
+      "assetGuids": [
+        "c881d7e69cf5e69409ec893c8bd6457b"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 68,
+          "type": "AddMapExclusiveNpcAtPosNode",
+          "sourceSha256": "2118c3376e49706b9948897f346d4ebb44e34c571d777c8579e87a01ac7ddb7d"
+        }
+      ],
+      "duration": 1.5,
+      "flags": {
+        "IsWaitPlayableStop": 1,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "RankBridgeMeetDaZe",
+      "nodeId": 62,
+      "sourceSha256": "33d9726cea6a1f4d85ef900e6bffd8710bdd3bd7da6e40990bfb048962fefa1b",
+      "assetGuids": [
+        "bb73792b166b5cb46bdcff12ba4582ee"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 68,
+          "type": "AddMapExclusiveNpcAtPosNode",
+          "sourceSha256": "2118c3376e49706b9948897f346d4ebb44e34c571d777c8579e87a01ac7ddb7d"
+        }
+      ],
+      "duration": 0.10000000149011612,
+      "flags": {
+        "IsWaitPlayableStop": 1,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "RankBridgeMeetDaZe",
+      "nodeId": 64,
+      "sourceSha256": "8c36bc90534ea42c2d500565dd34758af0a702db0d15ebacb9c59e1cbb6ce8d7",
+      "assetGuids": [
+        "0ea65bdaf9715d7499b37dfbfa841d91"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 68,
+          "type": "AddMapExclusiveNpcAtPosNode",
+          "sourceSha256": "2118c3376e49706b9948897f346d4ebb44e34c571d777c8579e87a01ac7ddb7d"
+        }
+      ],
+      "duration": 0.800000011920929,
+      "flags": {
+        "IsWaitPlayableStop": 1,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 1,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "RepairedRankBridge",
+      "nodeId": 17,
+      "sourceSha256": "3f336abd022cd5c03c3900ace94615e7ff444762db04b64de81a3173d3e177f9",
+      "assetGuids": [
+        "9b248cde91299ee4287533b25b7dd468",
+        "5fd5bec6c4f91f54799a4b823888f49a"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 57,
+          "type": "GetEntityNode",
+          "sourceSha256": "8849b4950423b2915b71f7cf1b439c19efc98da45aee64491fa45c364e09d23b"
+        },
+        {
+          "name": "SourceEntitys 1",
+          "nodeId": 60,
+          "type": "AddMapExclusiveNpcAroundPlayerNode",
+          "sourceSha256": "19eaa70a388ac837f39c7e080174b0750dd3f6380b67f4f8d886b627cb11d428"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 1,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "SecondMeetLanternGhost",
+      "nodeId": 61,
+      "sourceSha256": "310fb340e4cc71d680993c48cda2da6a3c64408881a0ccf568fe3ad4782c7a91",
+      "assetGuids": [
+        "788103ec08321564c82d10a6cd501b6b",
+        "5fd5bec6c4f91f54799a4b823888f49a"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 57,
+          "type": "GetEntityNode",
+          "sourceSha256": "71c4c99e297ae537906cf4b12a0601f646ede4f00fe46a27f9397813c35c62ba"
+        },
+        {
+          "name": "SourceEntitys 1",
+          "nodeId": 62,
+          "type": "AddMapExclusiveNpcAroundPlayerNode",
+          "sourceSha256": "fe698bff4d9f7257a65d0545c9862beba5be41e4db77862b17a6eac6381934bc"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 0,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 1,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "WaterShrineAfterBattle",
+      "nodeId": 28,
+      "sourceSha256": "f333d351f75310f6c28856e5d2c140471789c20a5232f11ada37788bf09c7501",
+      "assetGuids": [
+        "9b248cde91299ee4287533b25b7dd468",
+        "5fd5bec6c4f91f54799a4b823888f49a"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 50,
+          "type": "GetEntityNode",
+          "sourceSha256": "5d9d2dbcd612b4db54c0073379bfd8701726b919f9941ddc4c3f9f0305b003be"
+        },
+        {
+          "name": "SourceEntitys 1",
+          "nodeId": 57,
+          "type": "AddMapExclusiveNpcAroundPlayerNode",
+          "sourceSha256": "d87aeecf760cf5ef178f1df7213d854d68794b811681622295b12c0b8e5dc68e"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 1,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "WhaleIslandArrive",
+      "nodeId": 46,
+      "sourceSha256": "5ed84b35e1e3382b87cb09eda52ccf87155a1228e9c97af00bb9e20db2eca7dc",
+      "assetGuids": [
+        "9b248cde91299ee4287533b25b7dd468",
+        "5fd5bec6c4f91f54799a4b823888f49a"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 47,
+          "type": "GetEntityNode",
+          "sourceSha256": "9c1d2bd3baeefbff81087593380351fd3eb9be714fc15e0b97c49c438900a6dd"
+        },
+        {
+          "name": "SourceEntitys 1",
+          "nodeId": 53,
+          "type": "AddMapExclusiveNpcAroundPlayerNode",
+          "sourceSha256": "d2fb6a605b054af1ce40fe0303a4d46ea55aae94b4c3f6027a1bf4fbaa9e487c"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 1,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "AfterSubmitSeaTears",
+      "nodeId": 91,
+      "sourceSha256": "b24e292231148e2ae5a148f18847fe801fb614636fd757445bd95fdb065a7e19",
+      "assetGuids": [
+        "788103ec08321564c82d10a6cd501b6b",
+        "9b248cde91299ee4287533b25b7dd468",
+        "5fd5bec6c4f91f54799a4b823888f49a"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 87,
+          "type": "GetEntityNode",
+          "sourceSha256": "d4ae52b98233348a2ad4b828c3ee811cd7823b1caf58461350bf6f2160dc23ed"
+        },
+        {
+          "name": "SourceEntitys 1",
+          "nodeId": 95,
+          "type": "GetEntityNode",
+          "sourceSha256": "20658dd08d437f8397831ea17f34557cabc6de747f2e4adbd24bf2515c873327"
+        },
+        {
+          "name": "SourceEntitys 2",
+          "nodeId": 92,
+          "type": "AddMapExclusiveNpcAroundPlayerNode",
+          "sourceSha256": "c0b65c9e7e96517bd7752ae659c63b3a330c159dd6a56cbd8a4d4de2ebfaf6aa"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 0,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 1,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "AfterSubmitSword",
+      "nodeId": 68,
+      "sourceSha256": "bed0d7370264b111678c91a9b3b9ffb675e5bb35609b64c69bdf9a28003535e3",
+      "assetGuids": [
+        "9b248cde91299ee4287533b25b7dd468"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 62,
+          "type": "GetEntityNode",
+          "sourceSha256": "fc141bf2d7fc1932c4196b4f32e175cc1954725a69a8eecbb05d08a5cf5b6870"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 1,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    },
+    {
+      "graph": "SubmitRopes",
+      "nodeId": 90,
+      "sourceSha256": "354ccb4b04f5f86e41f1d597a9c2121c1e8e56d7a38a297747409ba7ec19a94f",
+      "assetGuids": [
+        "9b248cde91299ee4287533b25b7dd468"
+      ],
+      "indexedPorts": [
+        {
+          "name": "SourceEntitys 0",
+          "nodeId": 89,
+          "type": "GetEntityNode",
+          "sourceSha256": "843383091350de1aa5b7b0e27794b7d1e3174a1a834f9b07f53245f54dbbd876"
+        }
+      ],
+      "duration": -1.0,
+      "flags": {
+        "IsWaitPlayableStop": 1,
+        "IsRunWhenSkip": 0,
+        "IsStopAllPlayableWhenStoryFinish": 0,
+        "IsStopEntitesPlayableSupportBeforeNodeRun": 0,
+        "IsStartEntitiesPlayableSupportAfterNodeRun": 0
+      }
+    }
+  ],
+  "operation": "Bind all twelve original native NPC prefabs by original GUID. Deserialize every configured asset and numeric flag; retain -1 as native duration. Use the migrated original PlayPlayableNode, manager/center and FIFO pools for actual dispatch, indexed actor inputs, waits, stage stop/restart, skip, resource leases and graph cleanup. Preserve XNode exact grouped-port lookup: unconnected SourceEntitys/TargetEntitys return null, not the indexed dynamic-port contents. Retain the single unconnected target input. No duration-only substitute or invented actor/model.",
+  "pending": [
+    "Formal actor EC view/visibility/stage bindings and full story graph integration",
+    "Original NPC native skeleton/skin/constraint animation",
+    "Actual sound media",
+    "Map mouse/save interaction and Windows Player verification"
+  ],
+  "validation": {
+    "editor": "2022.3.57f1c2",
+    "backend": "Direct3D11",
+    "internalDisplayHardware": "BOE0CD1",
+    "playMode": true,
+    "exitCode": 0,
+    "projectToolsValidate": true,
+    "rootStaticGuidCount": 74159,
+    "results": {
+      "requests": 29,
+      "indexedInputs": 55,
+      "waits": 20,
+      "stageStops": 2,
+      "soundEvents": [
+        1758751829,
+        1758751829,
+        1758751829,
+        2315213594,
+        3790049959,
+        3790049959,
+        3790049959,
+        1758751830,
+        3790049959,
+        3790049959,
+        1758751830,
+        1758751830,
+        1758751830,
+        2315213594,
+        1758751830,
+        2315213594,
+        3790049959,
+        1758751830,
+        2315213594,
+        1758751830,
+        1758751830,
+        1758751830,
+        2315213594,
+        3790049959,
+        3790049959,
+        3790049959,
+        1758751830,
+        1758751830,
+        1758751830,
+        1758751830,
+        2315213594,
+        1758751830,
+        2315213594,
+        1758751830,
+        2315213594,
+        1758751830,
+        1758751830
+      ]
+    },
+    "log": {
+      "sha256": "3b23f0e3ac7d37a803a379882946d9ca01bc4952ba5855b3914b0fecec96b862",
+      "bytes": 234568
+    },
+    "viewedScreenshot": {
+      "sha256": "0c60e06dfeab612a5c4b93d57fafedb86b83c9149f37cda07caa7177fe6beedb",
+      "bytes": 575349
+    },
+    "scope": "All 29 configured original requests execute through original PlayPlayableNode and native map-owned FIFO pools/center. Verify 55 indexed actors, 20 waits, 2 stage stops, exact unconnected grouped/target semantics and original graph cleanup. Real original Map13 ground renders the multi-actor effects; actor animation-parameter/bone sources are isolated fixtures. Full story graph, real NPC skeleton/EC view, audible media, pointer/save and Player remain pending."
+  }
+}
