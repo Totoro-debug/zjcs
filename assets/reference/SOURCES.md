@@ -481,6 +481,8 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 职业原生皮肤表：独立读取当前版全部 1,007 个皮肤、34,009 个附件键及原骨骼／约束成员，保留共享身份、覆盖、并集和默认皮肤回退；来源与代码／夹具哈希见 `profession-ui/native-skins-source-manifest.json`。全部条目及 1,007 组组合的隔离 Play Mode 检查通过；验证附件为身份对象，尚未绑定生产几何、材质、约束及角色渲染。
 
+原 `AppearanceUI` 与 `IAppearanceAnimComponent` 已逐方法迁入，SDK 的图形／动画端点改为显式原生接口，Unity 的遮罩、CanvasRenderer、材质 API 保持原调用。来源与验证范围见 `profession-ui/appearance-ui-source-manifest.json`：实际 Play Mode 核对零 stencil 的延迟换装／染色、原字典身份、占位贴图材质复用、加载引用、网格异常清空及释放顺序。原 `OffScreenUISpinePlayer` 保留原异步状态机的取消／释放／两帧延迟及层级刷新顺序，来源见 `profession-ui/offscreen-player-source-manifest.json`；真实游戏帧核对通过。原骨骼图形／挂件端点仍未生产接入，不作为完整角色或职业页通过结论；没有复制骨骼 SDK 实现。主页面依赖闭包为 881 资产、87 类脚本、9 类待迁入、零缺失 GUID。
+
 ## 技能首页与安装流程复核
 
 2026-10-13：复核固定版本 `854_156383` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。

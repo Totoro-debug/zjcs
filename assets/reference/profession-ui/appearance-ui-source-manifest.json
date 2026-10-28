@@ -1,0 +1,81 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "code_manifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+  },
+  "ports": [
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem.Runtime/IAppearanceAnimComponent.cs",
+        "sha256": "e3818f1b34e18d1c05a548d04be442c520c50dfe34620e1a7f389250465ecd75"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IAppearanceAnimComponent.cs",
+        "sha256": "9eae2d5e47dd654bab2277414d79d01395a11a5969fed2fd468047cb56b2b5ad"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IAppearanceAnimComponent.cs.meta",
+        "sha256": "571a51a17fe7610a2c45552a93368a76d156b51a2cfbc2a9d8e763fd0dad8b1a"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem.Runtime/AppearanceUI.cs",
+        "sha256": "5e5bd0a4f7fdd7adf12b96e8243c0a7d9f4c819cd37d7cb59b1390062636c263"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceUI.cs",
+        "sha256": "4f85fc8e4f1471c64c9e75cd84ce784370ae747f4913e74e66271d1ad148e0a3"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceUI.cs.meta",
+        "sha256": "11ab75a37b0b7114acf1cb17a79d4258adeaf891912d55201e82d5a87a3086a8"
+      }
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_profession_appearance_ui.py",
+    "sha256": "4fb69fc078d3cf4d0f5c4623ee3df00e8a7828e7418071052af32a4f452e75dd"
+  },
+  "dependencies": [
+    {
+      "path": "assets/reference/profession-ui/appearance-spine-source-manifest.json",
+      "sha256": "22f235c51929d914ea280d21ea41b7f9d915c0148ac44c784e51788eb55c2625"
+    },
+    {
+      "path": "assets/reference/profession-ui/texture-loader-source-manifest.json",
+      "sha256": "ba72e0651b7da9e29ecebedf9f594b46162c41339ef47715c6ab0ea8d3b74fdb"
+    }
+  ],
+  "bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceUIBindings.cs",
+      "sha256": "aabbfa39bcf829ba52e6da7ca56e4e8af50c30eb06bdffe920b5c5470e1d73b3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceUIBindings.cs.meta",
+      "sha256": "de9e2a86139e86f2a98831861f95a887b55878992bc690215a9a1ab82bcb7e4f"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionAppearanceUIValidation.cs",
+      "sha256": "ccbe7a8eb184267fc5076b2ced0ae0c9c0280d00900cfe4a9e9e2a4ff7f4c13c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionAppearanceUIValidation.cs.meta",
+      "sha256": "2139471ae07638d38267f08f3e0f1bfa1027302756c4c3fd44d40b4ebe6c3a1d"
+    }
+  ],
+  "operation": "Copy every original AppearanceUI application method and serialized field plus its animation interface. Preserve multi-canvas initialization/events, mesh bounds guard and contextual error, mask-driven deferred skin/dye application, placeholder/material/texture request ordering, loaded references, original callbacks, animation and release. Adapt only native graphic/animation/resource service operations through explicit interfaces; use actual Unity Graphic/CanvasRenderer/mask/material APIs. No skeleton SDK implementation or replacement UI layout is used.",
+  "validated_scope": "Isolated Unity Play Mode passed using actual Unity Graphic, CanvasRenderer, sorting canvases, nested masks and materials: initialization/ref/lazy-load ordering, mesh bounds errors and clearing, zero-stencil deferred skin/dye with original dictionary identity, dirty-callback retry/removal, texture placeholder/material reuse and loaded-reference ordering, animation dispatch, release and original destroy subscription behavior. Native skeleton endpoints are fixtures; source character rendering and full profession-page input/save are not validated.",
+  "limitations": [
+    "Native skeleton graphic, original character data/material loading, constraints and full profession-page interactions still require production integration."
+  ]
+}

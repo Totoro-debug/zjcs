@@ -83,6 +83,8 @@ def build():
         appearance_character=file_record(ROOT / "assets/reference/profession-ui/appearance-character-source-manifest.json"),
         appearance_spine=file_record(ROOT / "assets/reference/profession-ui/appearance-spine-source-manifest.json"),
         native_skins=file_record(ROOT / "assets/reference/profession-ui/native-skins-source-manifest.json"),
+        appearance_ui=file_record(ROOT / "assets/reference/profession-ui/appearance-ui-source-manifest.json"),
+        offscreen_player=file_record(ROOT / "assets/reference/profession-ui/offscreen-player-source-manifest.json"),
         native_curves=file_record(ROOT / "assets/reference/profession-ui/native-curves-source-manifest.json"),
         bone_pose=file_record(ROOT / "assets/reference/profession-ui/bone-pose-source-manifest.json"),
         native_ik=file_record(ROOT / "assets/reference/profession-ui/native-ik-source-manifest.json"),

@@ -58,7 +58,7 @@
 
 独立 `ProfessionNativeSkin`／`ProfessionNativeSkinCatalog` 实现原应用接口，读取全部 1,007 个原皮肤、34,009 个插槽／名称附件键、9,749 个骨骼成员及 9,633 个约束成员，保留附件对象共享身份、后加入皮肤覆盖和成员有序并集。查找优先活动皮肤，再回退到 `default`，名称按原大小写区分。隔离 Play Mode 核对全部原条目与 1,007 组组合，清空／复用、输入所有权和源表不被修改均通过。验证附件目前为身份对象，尚未绑定生产几何／材质；换皮肤时的插槽迁移、世界约束和实际渲染仍待连接。来源见[原生皮肤表](../../assets/reference/profession-ui/native-skins-source-manifest.json)。
 
-两份原始字体由官方 `FontAssetFontConfig` 的路径、长度和 MD5 取回。原 `MPLUSRounded1c-Medium Atlas` 是 0×0、无像素载荷的动态 Alpha8 图集，已恢复并验证原生导入。当前含动态物品／配置的主面板依赖检查覆盖 881 个资产、87 种脚本、8 种托管类型和 7 个 shader，断开 GUID 为 0；尚有 11 种运行组件及相关服务未接入，主要是外观预览、离屏角色渲染、玩家信息和音频对象，不能视为原生职业界面已经可运行。
+两份原始字体由官方 `FontAssetFontConfig` 的路径、长度和 MD5 取回。原 `MPLUSRounded1c-Medium Atlas` 是 0×0、无像素载荷的动态 Alpha8 图集，已恢复并验证原生导入。当前含动态物品／配置的主面板依赖检查覆盖 881 个资产、87 种脚本、8 种托管类型和 7 个 shader，断开 GUID 为 0；尚有 9 种运行组件及相关服务未接入，主要是外观预览、离屏角色渲染、玩家信息和音频对象，不能视为原生职业界面已经可运行。
 
 馈赠使用的 `ItemIconDefault`、总职业等级说明使用的 `RuleDialog` 及四种奖励 Sprite 已从 APK 的实际对象取回，并记录调用、配置、CAB、对象 ID 和原始哈希。当前版本的成就、物品及规则提示三张 Luban 表已完全解码；组 10 的十条成就配置、四种奖励物品定义及 `ProfessionLevelInfo` 的标题／三条说明与现有打包配置相符。原图标管理器的 ID 覆盖、类型覆盖、默认图标选择顺序已核对，这四种奖励均使用原 `ItemIconDefault`，没有改用手写图标控件。
 
@@ -104,6 +104,10 @@
 成就 C# 规则已按官方 `AchievementRawInfoParser`、`CycleTemplateInfo` 和 `AchievementInfo` 生成 10005 个档位，保留已领取／处理中条目的过滤和排序。点击任一可领取行时，按原 `AchievementPanelItem` 的组 10／`count=-1` 请求及共享 `Player.TryRecordAlreadyGotAchievementReward`，领取该组所有已达成、未领取档位；本地奖励和记录使用一次事务。原配置边界、五行显示、循环尾档、批量领取和重复领取保护的独立 C# 测试通过。
 
 隔离 Unity 工程已完成迁入控制组件的导入、编译及 `Zjcs.Editor.ProjectTools.Validate`。`ProfessionProgressionValidation.Run` 使用独立存档验证总等级 5 时一次取得 1200 个原奖励物品、四条记录，重复请求不写盘，冷读恢复，总等级 6 时只领取循环起始奖励；真实文件锁导致的写盘失败和物品数量溢出均保持原存档与内存状态。职业预览的服装／武器处理按原 `ProfessionUtils.SetProfessionAppearance` 克隆玩家外观，不改写装备和存档。尚未完成职业原生 prefab 的 Play Mode 点击、画面与保存恢复验证，以上不代表功能完整还原。
+
+原 `AppearanceUI` 的完整应用层代码已迁入，保留多 Canvas 初始化、网格越界清空、零 stencil 时延迟换装／染色、原字典引用、材质与贴图请求顺序、动画及释放逻辑。隔离 Play Mode 使用实际 Unity Graphic、CanvasRenderer、排序 Canvas、嵌套 Mask 和材质验证：遮罩回调重试／解除、换装先于染色、重复占位贴图复用材质、加载引用计数、异常网格清空、释放与原订阅行为均通过。骨骼和资源端点使用验证对象，尚未据此验证真实角色画面。来源见[原 UI 外观代码](../../assets/reference/profession-ui/appearance-ui-source-manifest.json)。
+
+原 `OffScreenUISpinePlayer` 的两帧异步更新和取消流程已恢复；隔离 Play Mode 逐帧核对重复事件取消、令牌释放、包含未激活子对象的原遍历顺序、所有角色更新模式归零、仅活跃非根角色重新计算边界、禁用取消及销毁退订。保留原代码只检查层级激活状态的行为。原 prefab 的两处角色参数已核对：循环、速度 1、未冻结、按实际帧更新；不能使用静态姿态替代完整动画。来源见[原离屏角色刷新](../../assets/reference/profession-ui/offscreen-player-source-manifest.json)。
 
 ## 自定义实现
 

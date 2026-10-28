@@ -1,0 +1,57 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "code_manifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+  },
+  "ports": [
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/OffScreenUISpinePlayer.cs",
+        "sha256": "82a08cb9cd52673ac5df92ac2f98ccb7f5dce0d1c6bbcc6fb67b8e2903c5179b"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/OffScreenUISpinePlayer.cs",
+        "sha256": "a22b69728f393045f88732f27bfcf4fbc44898961a4767395e9715c3a9084bba"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/OffScreenUISpinePlayer.cs.meta",
+        "sha256": "9090d85df835cc12482f7276f55157a57668fbe272d2b43ffde16472bfa4151c"
+      }
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_profession_offscreen_player.py",
+    "sha256": "a62e41061ae1337e1fa494577171369e3df9b970f2c3c6e8eefde133ca80defb"
+  },
+  "bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionOffScreenGraphic.cs",
+      "sha256": "fbb77e6c1f7ac1ad78df7b5a09e4098152869536ceb7e1b6081574e4d00eb363"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionOffScreenGraphic.cs.meta",
+      "sha256": "468198d8a7b3011ae40e764036cad10f8f1db9a0865e1b562d50212e8a1fc941"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionOffScreenPlayerValidation.cs",
+      "sha256": "9b55cb84090c54cd18dbc1d77a0afecec51fa39c7b8f6a2d2fe6fa7c4441f7f1"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionOffScreenPlayerValidation.cs.meta",
+      "sha256": "8b93ec638062251e6e9c8e04eada6acdae81d115cc49d0ea9eb1d57580ec4696"
+    }
+  ],
+  "operation": "Copy all original OffScreenUISpinePlayer application methods. Restore the decompiled UniTask state machine as async with its exact cancel/dispose/new-token/DelayFrame(2, timing 8)/dispose/update order. Preserve hierarchy traversal including inactive descendants, update mode zero for every live graphic, auto-size only active non-root graphics, activeInHierarchy-only event guard and part listener lifecycle. Adapt SDK component lookup to explicit native interfaces; no skeleton SDK implementation is used.",
+  "validated_scope": "Isolated Unity real Play Mode frames passed: replacement cancellation, two-frame timing, ordered hierarchy collection including inactive children, mode zero on every graphic, bounds updates only for active non-root graphics, disable cancellation, inactive hierarchy guard, original disabled-component behavior, token disposal and destroy unsubscription. Native graphic/part endpoints are fixtures; source character rendering and full profession UI remain incomplete.",
+  "limitations": [
+    "Actual source native skeleton graphics/parts and complete profession-page rendering remain unbound."
+  ]
+}
