@@ -1,0 +1,143 @@
+{
+  "format": 1,
+  "mapClassId": 13,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MiniMapResourcePointData.cs",
+      "sha256": "f72dd13144e3ec406ef7e21eb0c85700a768b9c1843e671ab61e74265686c0b9"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/AreaMiniMapResourcePointData.cs",
+      "sha256": "de7188c375cecb665ce56661da1d32b33ffb6643d7f9e7024bec80cf8e5057fb"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IMiniMapResourcePointBoard.cs",
+      "sha256": "651404b0a2e97c5b2a546714f45380920de0e8a5c4d4822d966935e5e9455f9a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MiniMapResourcePointManager.cs",
+      "sha256": "17c6c656f6f6f8e808913b03cec1d7a6c0e0196f8b29fa430fdc542330ae8ae5"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MiniMapResourcePointBoard.cs",
+      "sha256": "089678224d2c72605889ef0874f8cf9bffb37fc7a0a5dd895432f9ce31883cd4"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MiniMapResourcePointTapItem.cs",
+      "sha256": "84ffceaa9198672dd9da87a1fce921940a3d03f9cf06da364a3c83bcb71de6f6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMap/MiniMapDiagnostic.cs",
+      "sha256": "c1ab49bd0de276372963702d023c327efd5f181b7de3c44a4fa586fb5be38449"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapResourcePoints/MiniMapResourcePointData.cs",
+      "sha256": "28023c9c90dd67f0c34e7b177db0da7a6913c83929eec092769ee17fece2cc0f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapResourcePoints/AreaMiniMapResourcePointData.cs",
+      "sha256": "48dd5081be3d261df320cb42d2ce2e1fa68b03a653e2acf4affc4a5338ede639"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapResourcePoints/IMiniMapResourcePointBoard.cs",
+      "sha256": "22906a29f214d45892f0d109950a19068dcb1eaf0cb333d3d13b2063c6ca465f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapResourcePoints/MiniMapResourcePointManager.cs",
+      "sha256": "38274198b9a57c84d0ae9c9e7d8981e9fe7e4b5992869464f9340c5b758149e7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapResourcePoints/MiniMapResourcePointBoard.cs",
+      "sha256": "18afdf6f68540519a1d7361c20fee68483790bfd70a6af976ed8d1d1b9bcaff8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapResourcePoints/MiniMapResourcePointTapItem.cs",
+      "sha256": "600c1c55d0329b7fec4c8c4c266c3bae456a1fee6cae4c42173dd8910a736b5b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapResourcePoints/MiniMapResourcePointContext.cs",
+      "sha256": "7426bfd70b46eb1576b800520fe49ec4fce95244bcd4889e301b8dd6f9f9c51c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapResourcePoints/MiniMapResourcePointDiagnostic.cs",
+      "sha256": "0878d976eb31bf8d2a537c64bf1efd1a5c95e1061b18aa9f63adbade59da82c6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapResourcePoints/Zjcs.Official.World.Map13MiniMapResourcePoints.asmdef",
+      "sha256": "8d46b2c021ec08fb213f016e78ebb1d9937f195a0145c21a07861705884a55e3"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Labels/MapUIBase.cs",
+      "sha256": "46031a28a73256a97a7e79bd08bd9e1a4912b150c62cc6c484f8a975b7b35485"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Labels/UIBase.cs",
+      "sha256": "0a4740857df7bab6b99a325aedd0451290e99cff0bd9337136eed8c096cb7707"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Labels/MonoDictionary.cs",
+      "sha256": "140c9e299df3967088da6c2916f93a2167c9590083e0f6053165c5c604190451"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_map13_minimap_resource_points.py",
+    "sha256": "8682019fcdb6ae4e207a51a505f47f5496624707417223de43464f1394d77f17",
+    "worktree_sha256": "8682019fcdb6ae4e207a51a505f47f5496624707417223de43464f1394d77f17",
+    "normalization": "Repository LF text; original executed worktree bytes recorded separately"
+  },
+  "operation": "Copy all six complete original resource-point manager/board/tap/data classes. Reuse original MapUIBase/UIBase lifecycle, MonoDictionary and AssetGuidProxy. Preserve selection versus guide selection, cached board creation, area grouping, Public-only visibility, whole-board status-event refresh, custom-icon ordering/cache and retained asset leases. Replace only online DI/resource/parser/player accesses by consumed local interfaces, and logging backend; preserve original formulas, branch order and lifecycle.",
+  "limitations": [
+    "Complete native resource-board layer, its actual local service adapter and source-native assets are locally verified. Formal original minimap root, actual map mouse/save and Windows Player remain required."
+  ],
+  "local_validation": {
+    "editor": "2022.3.57f1c2",
+    "play_mode": {
+      "log_sha256": "b05cd7d79c9cb57e5a966df15e2f094ab047161fabb09ab60c11ef1891a84058",
+      "result": {
+        "editor": "2022.3.57f1c2",
+        "boards": 23,
+        "points": 178,
+        "icons": 23,
+        "item_lookups": 106,
+        "monster_lookups": 149,
+        "prefab_loads": 23,
+        "sprite_loads": 234,
+        "leases_disposed": 257,
+        "rendered_pixels": 192950,
+        "original_prefabs": true,
+        "original_geometry": true,
+        "selection_and_guide": true,
+        "public_only": true,
+        "event_refresh": true,
+        "cached_reentry": true,
+        "custom_icon": true,
+        "asset_lifecycle": true
+      },
+      "runtime_errors": 0
+    },
+    "rendered_image": {
+      "sha256": "6314a9681e7f01f3525846ae95d0e9e785685be6d8220d7bf794299304e60a96",
+      "viewed": true,
+      "original_urp": true
+    },
+    "project_validation": {
+      "log_sha256": "69a51530119ce6dee36ab888fb0820a3484aeb5266bdcb951b4670fb57ad1707",
+      "exit_code": 0
+    },
+    "static_metadata": {
+      "passed": true,
+      "guid_count": 75023
+    },
+    "validation_source": {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapResourcePointsAcceptance.cs",
+      "sha256": "e075603faa54d756442224d9d83c016debe14e4bd23a1a2261412294a2e51c6e"
+    },
+    "formal_minimap": false,
+    "windows_player": false
+  }
+}

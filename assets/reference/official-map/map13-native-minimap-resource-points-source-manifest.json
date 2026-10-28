@@ -1,0 +1,4651 @@
+{
+  "format": 1,
+  "mapClassId": 13,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/NativeMiniMapSource/native-minimap-components.json",
+      "sha256": "a121ea55c323d60479b9c9c0d4d90d07d6395c3ca81ac32500cf280f2059c943"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/tables.json",
+      "sha256": "e54c871ff3f6dbbb1e0a5a9cb0891153824e280442424760ad2523bbddbcc09c"
+    }
+  ],
+  "bundle_inputs": [
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/bin/Data/unity default resources",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "assets/bin/Data/unity default resources",
+      "manifest": "871_156598",
+      "raw_size": 1121184,
+      "raw_md5": "a70ec45961dd854039c5c69c763c9298",
+      "raw_sha256": "a9a74ab363888de3ea14ef01e780f851a395d4c6f5d5bcebad74a2a3e4785d16",
+      "decoded_size": 1121184,
+      "decoded_sha256": "a9a74ab363888de3ea14ef01e780f851a395d4c6f5d5bcebad74a2a3e4785d16",
+      "decoding": "none",
+      "output": "unity default resources",
+      "converter_input_sha256": "a9a74ab363888de3ea14ef01e780f851a395d4c6f5d5bcebad74a2a3e4785d16"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/e64ddd2905926d89597e6ebd4f0178fd.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_assets_animation_ui.bundle",
+      "manifest": "871_156598",
+      "raw_size": 7330,
+      "raw_md5": "e64ddd2905926d89597e6ebd4f0178fd",
+      "raw_sha256": "1c77e30ceb3f2e0120d428888f2a51f0b7dcc6edfcdc034615a2588061ce48ff",
+      "decoded_size": 7330,
+      "decoded_sha256": "1c77e30ceb3f2e0120d428888f2a51f0b7dcc6edfcdc034615a2588061ce48ff",
+      "decoding": "none",
+      "output": "defaultpackage_assets_animation_ui.bundle",
+      "converter_input_sha256": "715e697eb6a4b59e5bebd59f778ece7051f7200ceedfd9fe14fd5b60c80fb233"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/7c31564a61be1cb16bf2df7a7344bd2b.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_assets_animation_ui_common.bundle",
+      "manifest": "871_156598",
+      "raw_size": 4061,
+      "raw_md5": "7c31564a61be1cb16bf2df7a7344bd2b",
+      "raw_sha256": "8ea02cdf6a840568357a00744070e16d1d05014caa9549b448a4169bf503bcf5",
+      "decoded_size": 4061,
+      "decoded_sha256": "8ea02cdf6a840568357a00744070e16d1d05014caa9549b448a4169bf503bcf5",
+      "decoding": "none",
+      "output": "defaultpackage_assets_animation_ui_common.bundle",
+      "converter_input_sha256": "68928d36e465785349cbaf3984a98ca494b1178d6d0e8c00784098bd85d56556"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/e9d920b114d4b6e29119b6fda545133a.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_assets_image_itemicon_materials_public_noatlas.bundle",
+      "manifest": "871_156598",
+      "raw_size": 518666,
+      "raw_md5": "e9d920b114d4b6e29119b6fda545133a",
+      "raw_sha256": "3647b913bce201e5a81b404da748b3131c185a9c8d1e2ebb6859cfb38e3a9822",
+      "decoded_size": 518666,
+      "decoded_sha256": "3647b913bce201e5a81b404da748b3131c185a9c8d1e2ebb6859cfb38e3a9822",
+      "decoding": "none",
+      "output": "defaultpackage_assets_image_itemicon_materials_public_noatlas.bundle",
+      "converter_input_sha256": "fcb3a0e29e220700ff850c233b419d064a5808a8274565e55fa71cc26f0ac7fd"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/fd0f242bd73f2ca555eb6b64662b3fb3.bundle",
+      "manifest": "871_156598",
+      "size": 470384,
+      "sha256": "95ec2e0b40f90b959afd8d4d69f76eb28395f22f88d4426bca20a9431d5bc72b",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_assets_image_mapworld_minimap_atlas.bundle",
+      "raw_size": 470384,
+      "raw_md5": "fd0f242bd73f2ca555eb6b64662b3fb3",
+      "raw_sha256": "95ec2e0b40f90b959afd8d4d69f76eb28395f22f88d4426bca20a9431d5bc72b",
+      "decoded_size": 470384,
+      "decoded_sha256": "95ec2e0b40f90b959afd8d4d69f76eb28395f22f88d4426bca20a9431d5bc72b",
+      "decoding": "none",
+      "output": "defaultpackage_assets_image_mapworld_minimap_atlas.bundle",
+      "converter_input_sha256": "dd0a4102482bce6fc5d08571a2e8c4029f3365b8cbc60e597b4ca8b733287335"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7e34da1e0e5c9640bc9a842185fe935e.bundle",
+      "manifest": "871_156598",
+      "size": 4237,
+      "sha256": "7d78894984d7053ce5201873a842d5295ab352c07e9a38545c8c2bbb00d2c82e",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_assets_image_mapworld_minimap_atlas_mask.bundle",
+      "raw_size": 4237,
+      "raw_md5": "7e34da1e0e5c9640bc9a842185fe935e",
+      "raw_sha256": "7d78894984d7053ce5201873a842d5295ab352c07e9a38545c8c2bbb00d2c82e",
+      "decoded_size": 4237,
+      "decoded_sha256": "7d78894984d7053ce5201873a842d5295ab352c07e9a38545c8c2bbb00d2c82e",
+      "decoding": "none",
+      "output": "defaultpackage_assets_image_mapworld_minimap_atlas_mask.bundle",
+      "converter_input_sha256": "eab8d66bdfdb0be0e6ee4ae72e451e30a33ddff6639b8cbc96dda2c5fc7abf3d"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/54b501fe38356fa8288cd4f93b54079d.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_assets_image_ui_appearance.bundle",
+      "manifest": "871_156598",
+      "raw_size": 957511,
+      "raw_md5": "54b501fe38356fa8288cd4f93b54079d",
+      "raw_sha256": "c0fcdcf79eef2fcd963e144089cef9a72ea9d387f4065a8e7b15480f21033a01",
+      "decoded_size": 957511,
+      "decoded_sha256": "c0fcdcf79eef2fcd963e144089cef9a72ea9d387f4065a8e7b15480f21033a01",
+      "decoding": "none",
+      "output": "defaultpackage_assets_image_ui_appearance.bundle",
+      "converter_input_sha256": "f5e8b5c158379cb0cf0f7af94323efa451007e2e742992a752994137496aac28"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/3d76017b4b89f53e04c41a5e9f0369b2.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_assets_image_ui_bg.bundle",
+      "manifest": "871_156598",
+      "raw_size": 4454718,
+      "raw_md5": "3d76017b4b89f53e04c41a5e9f0369b2",
+      "raw_sha256": "b7422bab8c8a38ca1be17e238e255fa60aea120cc49741e7341743af2c9ae907",
+      "decoded_size": 4454718,
+      "decoded_sha256": "b7422bab8c8a38ca1be17e238e255fa60aea120cc49741e7341743af2c9ae907",
+      "decoding": "none",
+      "output": "defaultpackage_assets_image_ui_bg.bundle",
+      "converter_input_sha256": "f4bf95f3c57eef7f893239324bb21739f44b6722d2b7033225370b0647cec82a"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_assets_image_ui_common.bundle",
+      "manifest": "871_156598",
+      "raw_size": 1344739,
+      "raw_md5": "56625bf3a050a757882ec6e93d9fdeaa",
+      "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1",
+      "decoded_size": 1344739,
+      "decoded_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1",
+      "decoding": "none",
+      "output": "defaultpackage_assets_image_ui_common.bundle",
+      "converter_input_sha256": "b68a0bc639f8970deefc3df537f7770f43621c24b5c71c7d22b5f771e68a381b"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/5bbe18be3487ffa81e87f54662255814.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_assets_image_ui_minimap.bundle",
+      "manifest": "871_156598",
+      "raw_size": 117577,
+      "raw_md5": "5bbe18be3487ffa81e87f54662255814",
+      "raw_sha256": "0500e87f6845017dba0aec9264754a7e2142b0bf1c9be5e8a6e92f7aa407e522",
+      "decoded_size": 117577,
+      "decoded_sha256": "0500e87f6845017dba0aec9264754a7e2142b0bf1c9be5e8a6e92f7aa407e522",
+      "decoding": "none",
+      "output": "defaultpackage_assets_image_ui_minimap.bundle",
+      "converter_input_sha256": "44d199278b95e7621879313293c6f20049cdb4d37fd8996081b22131dafc1012"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/8cfa5c3090966b11ed9f6feaa2f94a69.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_assets_image_ui_world.bundle",
+      "manifest": "871_156598",
+      "raw_size": 3009638,
+      "raw_md5": "8cfa5c3090966b11ed9f6feaa2f94a69",
+      "raw_sha256": "c99182cef377fabcb864c9e2622f15b1248dfbc2db0525546a1737466096620e",
+      "decoded_size": 3009638,
+      "decoded_sha256": "c99182cef377fabcb864c9e2622f15b1248dfbc2db0525546a1737466096620e",
+      "decoding": "none",
+      "output": "defaultpackage_assets_image_ui_world.bundle",
+      "converter_input_sha256": "01204dc53f3ca996cc1ae94ddcf05cbe9cd6b2b0b2bcc7131060d3c76b2d48df"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/bb60a35b88da8f691fb1cb43566589ad.bundle",
+      "manifest": "871_156598",
+      "size": 4847,
+      "sha256": "ce129ae387e067d9100ab851bb6fd03dd7f06e9df42b1ef6b30089f4943fc31e",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_assets_prefabs_map_common_minimap.bundle",
+      "raw_size": 4847,
+      "raw_md5": "bb60a35b88da8f691fb1cb43566589ad",
+      "raw_sha256": "ce129ae387e067d9100ab851bb6fd03dd7f06e9df42b1ef6b30089f4943fc31e",
+      "decoded_size": 4847,
+      "decoded_sha256": "ce129ae387e067d9100ab851bb6fd03dd7f06e9df42b1ef6b30089f4943fc31e",
+      "decoding": "none",
+      "output": "defaultpackage_assets_prefabs_map_common_minimap.bundle",
+      "converter_input_sha256": "c62af5bd6de46adf59445d2489758165145c35200b0541668cdf430bf6913294"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/0c10d516df293c884ea9823fb75fa258.bundle",
+      "manifest": "871_156598",
+      "size": 188940,
+      "sha256": "331625262037464bbf54c6d28e9e595af0c28bdb1c29eb435136ac54cbed8ccd",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_assets_prefabs_map_map_13_minimap.bundle",
+      "raw_size": 188940,
+      "raw_md5": "0c10d516df293c884ea9823fb75fa258",
+      "raw_sha256": "331625262037464bbf54c6d28e9e595af0c28bdb1c29eb435136ac54cbed8ccd",
+      "decoded_size": 188940,
+      "decoded_sha256": "331625262037464bbf54c6d28e9e595af0c28bdb1c29eb435136ac54cbed8ccd",
+      "decoding": "none",
+      "output": "defaultpackage_assets_prefabs_map_map_13_minimap.bundle",
+      "converter_input_sha256": "e5d61d1131a89829f93b78cad5fae23f9888f889019e89ec96d483dbea43e300"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2119056cbcbfb79247224cc56d8e8160.bundle",
+      "manifest": "871_156598",
+      "size": 28158,
+      "sha256": "76d3697a2d0cd78c990a8a487e5bdfd49b4e2791bd4d43e0df11d01706ecb981",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_assets_prefabs_ui_map_minimap.bundle",
+      "raw_size": 28158,
+      "raw_md5": "2119056cbcbfb79247224cc56d8e8160",
+      "raw_sha256": "76d3697a2d0cd78c990a8a487e5bdfd49b4e2791bd4d43e0df11d01706ecb981",
+      "decoded_size": 28158,
+      "decoded_sha256": "76d3697a2d0cd78c990a8a487e5bdfd49b4e2791bd4d43e0df11d01706ecb981",
+      "decoding": "none",
+      "output": "defaultpackage_assets_prefabs_ui_map_minimap.bundle",
+      "converter_input_sha256": "26c3c0bc62f6692b2745d823a16b46ca9c8f78206594026cf798cf0cb2181d40"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/1fa5da80086c7d5e574c7eb79ab9042a.bundle",
+      "manifest": "871_156598",
+      "size": 7763,
+      "sha256": "bc1e93cc3529692a345b472d50387d462e9e5430ba74355ee0c57fccc036fe3e",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_assets_prefabs_ui_map_minimap_filter.bundle",
+      "raw_size": 7763,
+      "raw_md5": "1fa5da80086c7d5e574c7eb79ab9042a",
+      "raw_sha256": "bc1e93cc3529692a345b472d50387d462e9e5430ba74355ee0c57fccc036fe3e",
+      "decoded_size": 7763,
+      "decoded_sha256": "bc1e93cc3529692a345b472d50387d462e9e5430ba74355ee0c57fccc036fe3e",
+      "decoding": "none",
+      "output": "defaultpackage_assets_prefabs_ui_map_minimap_filter.bundle",
+      "converter_input_sha256": "d996418d68b23a50f53d457f10f0f7ab9b5ddb05f82dc6922de7690bb097578d"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/bf62732f37a5a423ddbac02681e054a4.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+      "manifest": "871_156598",
+      "raw_size": 409901,
+      "raw_md5": "bf62732f37a5a423ddbac02681e054a4",
+      "raw_sha256": "ebee921d1efee60b02445c5d09faebdef159fdd6c7284658d2c05cf9e3826434",
+      "decoded_size": 409901,
+      "decoded_sha256": "ebee921d1efee60b02445c5d09faebdef159fdd6c7284658d2c05cf9e3826434",
+      "decoding": "none",
+      "output": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+      "converter_input_sha256": "caee9ed533354719b586b3464ee4e16d4dba5eaf1f5deae5c8f1bd46f76ca1e9"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/67049d59bbf125aa8a182d972f80a2d3.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_assets_textmesh_pro_fonts.bundle",
+      "manifest": "871_156598",
+      "raw_size": 10993759,
+      "raw_md5": "67049d59bbf125aa8a182d972f80a2d3",
+      "raw_sha256": "56dd023e863923aa7296b2b1ffe4d6155f291e369c2e8848e4458be319507ed4",
+      "decoded_size": 10993759,
+      "decoded_sha256": "56dd023e863923aa7296b2b1ffe4d6155f291e369c2e8848e4458be319507ed4",
+      "decoding": "none",
+      "output": "defaultpackage_assets_textmesh_pro_fonts.bundle",
+      "converter_input_sha256": "1fb35670fbb87b883d93182548f33780d2389b25f603bfd3312d2cc0abbce05f"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/d0ea86beaa052471f6138a9bddaa19f0.bundle",
+      "manifest": "871_156598",
+      "size": 440942,
+      "sha256": "c4009d466fcf8199fd5c4b7ba92f9915f0509ced7ea74c28ddec8b4867a6970a",
+      "name": "defaultpackage_assets_wwise_scriptableobjects_event.bundle",
+      "raw_size": 440942,
+      "raw_md5": "d0ea86beaa052471f6138a9bddaa19f0",
+      "raw_sha256": "c4009d466fcf8199fd5c4b7ba92f9915f0509ced7ea74c28ddec8b4867a6970a",
+      "decoded_size": 440942,
+      "decoded_sha256": "0f440f885210e6ff86f429310f582b38e6e17f55f01769ea3366ba74039cb484",
+      "decoding": "xor_0x40",
+      "output": "defaultpackage_assets_wwise_scriptableobjects_event.bundle",
+      "converter_input_sha256": "3da0c86a3e0913c57c9a3c54c16d833c6f5a65fcdaf9bb8ac80ef3f2edd7bccf"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/43dd56e8e26005adad56a2d278c69045.bundle",
+      "manifest": "871_156598",
+      "size": 602,
+      "sha256": "116e29e1bc5acca219434e21fdaf4ba8b1734074f8a2ae6f44809de57a1405f4",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_share_15026f51a6c477438e2fb1cf9257dca6.bundle",
+      "raw_size": 602,
+      "raw_md5": "43dd56e8e26005adad56a2d278c69045",
+      "raw_sha256": "116e29e1bc5acca219434e21fdaf4ba8b1734074f8a2ae6f44809de57a1405f4",
+      "decoded_size": 602,
+      "decoded_sha256": "116e29e1bc5acca219434e21fdaf4ba8b1734074f8a2ae6f44809de57a1405f4",
+      "decoding": "none",
+      "output": "defaultpackage_share_15026f51a6c477438e2fb1cf9257dca6.bundle",
+      "converter_input_sha256": "01c41f83d00a4420bf656dc5d85b8b3910951dde84ba69c423ae5962fb83cfda"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/14e69ea07beedc3bdf886d2dcc713279.bundle",
+      "manifest": "871_156598",
+      "size": 761,
+      "sha256": "85ab699bab4b2081f589082ec2ed4b91930f3955f4381ac6f7273147035aeaf0",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_share_1ec277e51f595ad1ab79493cbdcd5629.bundle",
+      "raw_size": 761,
+      "raw_md5": "14e69ea07beedc3bdf886d2dcc713279",
+      "raw_sha256": "85ab699bab4b2081f589082ec2ed4b91930f3955f4381ac6f7273147035aeaf0",
+      "decoded_size": 761,
+      "decoded_sha256": "85ab699bab4b2081f589082ec2ed4b91930f3955f4381ac6f7273147035aeaf0",
+      "decoding": "none",
+      "output": "defaultpackage_share_1ec277e51f595ad1ab79493cbdcd5629.bundle",
+      "converter_input_sha256": "d30b97bc19b31f977dc7b3214bfa0bd699f4c6fa4618e5f31f413ca4d9f34052"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/557580f038a32a7cd66917f50a3e7247.bundle",
+      "manifest": "871_156598",
+      "size": 698,
+      "sha256": "2fa8a6ce9f96b2652a2f93f4a213c1f631933a732d6f7dea6925431606d5d7da",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_share_2d0cd453f867635adcea22f33bf0dea5.bundle",
+      "raw_size": 698,
+      "raw_md5": "557580f038a32a7cd66917f50a3e7247",
+      "raw_sha256": "2fa8a6ce9f96b2652a2f93f4a213c1f631933a732d6f7dea6925431606d5d7da",
+      "decoded_size": 698,
+      "decoded_sha256": "2fa8a6ce9f96b2652a2f93f4a213c1f631933a732d6f7dea6925431606d5d7da",
+      "decoding": "none",
+      "output": "defaultpackage_share_2d0cd453f867635adcea22f33bf0dea5.bundle",
+      "converter_input_sha256": "cc9fe5f2262253eb3db87e084cc46debfc5e08c980de8b5ce8adbbc5e0ba9d2e"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/dcef3acd3443ce90e35e78d1e4e659d3.bundle",
+      "manifest": "871_156598",
+      "size": 970,
+      "sha256": "00c220438a18e15126b814a7d8e0a7d5b797268c2d6053ec5026568ec9a2a14a",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_share_31e033207b953043207f27364e893abf.bundle",
+      "raw_size": 970,
+      "raw_md5": "dcef3acd3443ce90e35e78d1e4e659d3",
+      "raw_sha256": "00c220438a18e15126b814a7d8e0a7d5b797268c2d6053ec5026568ec9a2a14a",
+      "decoded_size": 970,
+      "decoded_sha256": "00c220438a18e15126b814a7d8e0a7d5b797268c2d6053ec5026568ec9a2a14a",
+      "decoding": "none",
+      "output": "defaultpackage_share_31e033207b953043207f27364e893abf.bundle",
+      "converter_input_sha256": "2d8c86e3797111d9605ab78e8a53aa9df6c1f78427bdbb66bc4a5d221c12551a"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/34915153dbb2af24423957aae01f1a68.bundle",
+      "manifest": "871_156598",
+      "size": 38381,
+      "sha256": "590e9531b3b0ab70f7c4c95cd5a76f2ca196d7da651df6e983276ea67af80c34",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_share_38af36ef948614992548d9c1da04f7be.bundle",
+      "raw_size": 38381,
+      "raw_md5": "34915153dbb2af24423957aae01f1a68",
+      "raw_sha256": "590e9531b3b0ab70f7c4c95cd5a76f2ca196d7da651df6e983276ea67af80c34",
+      "decoded_size": 38381,
+      "decoded_sha256": "590e9531b3b0ab70f7c4c95cd5a76f2ca196d7da651df6e983276ea67af80c34",
+      "decoding": "none",
+      "output": "defaultpackage_share_38af36ef948614992548d9c1da04f7be.bundle",
+      "converter_input_sha256": "93661bd02cac8bfd85acc736df315cb887d0d05ae18253e9f7c57fe9258e6102"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/59a4c6285c52752a0d4b483c0aa5a45c.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_share_5c7dd369ea4acf0b5b9a522d0ab52d69.bundle",
+      "manifest": "871_156598",
+      "raw_size": 1273,
+      "raw_md5": "59a4c6285c52752a0d4b483c0aa5a45c",
+      "raw_sha256": "d49957bbd89445635673918689c4d5807734a23f6329b963fc1e852d54c01a95",
+      "decoded_size": 1273,
+      "decoded_sha256": "d49957bbd89445635673918689c4d5807734a23f6329b963fc1e852d54c01a95",
+      "decoding": "none",
+      "output": "defaultpackage_share_5c7dd369ea4acf0b5b9a522d0ab52d69.bundle",
+      "converter_input_sha256": "c4b20b18c1b1012c43abe6357a01b88ac2ce50c92274cc63571ca5feb420118f"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/0d677aceacea69e0af0518c6be800a26.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_share_5dd60402bbe15b1330ea988515cfd180.bundle",
+      "manifest": "871_156598",
+      "raw_size": 1591,
+      "raw_md5": "0d677aceacea69e0af0518c6be800a26",
+      "raw_sha256": "340a74b9150b4cc3de7ca61b623f06ffde1004e9d947d5f3a539d45c08e62878",
+      "decoded_size": 1591,
+      "decoded_sha256": "340a74b9150b4cc3de7ca61b623f06ffde1004e9d947d5f3a539d45c08e62878",
+      "decoding": "none",
+      "output": "defaultpackage_share_5dd60402bbe15b1330ea988515cfd180.bundle",
+      "converter_input_sha256": "18d6b126b6f85bb57fb72c501d31a41e4ecf125e6c304ebdafba9f9b84be7e7d"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/62ac7645287f1bd2e2e729f7baa384d9.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_share_63a2adcf08da5c3de2ce707e008beaef.bundle",
+      "manifest": "871_156598",
+      "raw_size": 21293,
+      "raw_md5": "62ac7645287f1bd2e2e729f7baa384d9",
+      "raw_sha256": "7b8b1bfcbcdc719fe37312fb8aa717524a701b71d26f13423ff6a37209a166dd",
+      "decoded_size": 21293,
+      "decoded_sha256": "7b8b1bfcbcdc719fe37312fb8aa717524a701b71d26f13423ff6a37209a166dd",
+      "decoding": "none",
+      "output": "defaultpackage_share_63a2adcf08da5c3de2ce707e008beaef.bundle",
+      "converter_input_sha256": "7fcc2728824b722c7f74214c02554264784fec67d07266efe060c64fd757acc8"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3d65d17d24ab0f44c2a92d0ea9199d23.bundle",
+      "manifest": "871_156598",
+      "size": 637,
+      "sha256": "a5f263525030531c526ab113073a625f8579351fc269759b917dd4e239014ede",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_share_6c19f08842ebae486cb3ad3adb4221d6.bundle",
+      "raw_size": 637,
+      "raw_md5": "3d65d17d24ab0f44c2a92d0ea9199d23",
+      "raw_sha256": "a5f263525030531c526ab113073a625f8579351fc269759b917dd4e239014ede",
+      "decoded_size": 637,
+      "decoded_sha256": "a5f263525030531c526ab113073a625f8579351fc269759b917dd4e239014ede",
+      "decoding": "none",
+      "output": "defaultpackage_share_6c19f08842ebae486cb3ad3adb4221d6.bundle",
+      "converter_input_sha256": "ab28708b9887c54a98e83e592459682353f04c87b5831822973d9f236e013dc7"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/1f4100a6ca296977fbbfd23d15ca5c6d.bundle",
+      "manifest": "871_156598",
+      "size": 625,
+      "sha256": "437859d5d2623a994e7a283f13e34b2feb66bba513a402ca8cb9e336b87958aa",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_share_6e294ebf9da05b88cde89ca46806bd4e.bundle",
+      "raw_size": 625,
+      "raw_md5": "1f4100a6ca296977fbbfd23d15ca5c6d",
+      "raw_sha256": "437859d5d2623a994e7a283f13e34b2feb66bba513a402ca8cb9e336b87958aa",
+      "decoded_size": 625,
+      "decoded_sha256": "437859d5d2623a994e7a283f13e34b2feb66bba513a402ca8cb9e336b87958aa",
+      "decoding": "none",
+      "output": "defaultpackage_share_6e294ebf9da05b88cde89ca46806bd4e.bundle",
+      "converter_input_sha256": "7791bf491447080f8ff41e1bb407a9001a495a98975edb4a8e33a43d322b4625"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2639c22a6d9f0025ecfc03afc76beee2.bundle",
+      "manifest": "871_156598",
+      "size": 622,
+      "sha256": "2d923af9f642d814a136912be4d289b6ebaf4b08a43f7f6e40084f40240f1545",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_share_6fdd0decd25c0c19f83f593c577b77e5.bundle",
+      "raw_size": 622,
+      "raw_md5": "2639c22a6d9f0025ecfc03afc76beee2",
+      "raw_sha256": "2d923af9f642d814a136912be4d289b6ebaf4b08a43f7f6e40084f40240f1545",
+      "decoded_size": 622,
+      "decoded_sha256": "2d923af9f642d814a136912be4d289b6ebaf4b08a43f7f6e40084f40240f1545",
+      "decoding": "none",
+      "output": "defaultpackage_share_6fdd0decd25c0c19f83f593c577b77e5.bundle",
+      "converter_input_sha256": "2016bee841d631beaaeaa0b86abab20ee43ec9ec222ba9aea7a48b3ed29da719"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2f741861bbb0ea445b6025e344179073.bundle",
+      "manifest": "871_156598",
+      "size": 751,
+      "sha256": "e8310f7c225ee0be5fdc6bac1cf9371bfbf336689fc9b9dace52de4dc59d2e8e",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_share_7467c8f215154c81be50ae1e57a4730b.bundle",
+      "raw_size": 751,
+      "raw_md5": "2f741861bbb0ea445b6025e344179073",
+      "raw_sha256": "e8310f7c225ee0be5fdc6bac1cf9371bfbf336689fc9b9dace52de4dc59d2e8e",
+      "decoded_size": 751,
+      "decoded_sha256": "e8310f7c225ee0be5fdc6bac1cf9371bfbf336689fc9b9dace52de4dc59d2e8e",
+      "decoding": "none",
+      "output": "defaultpackage_share_7467c8f215154c81be50ae1e57a4730b.bundle",
+      "converter_input_sha256": "5af1afd15ae8956f6190c2313722d9c86ebdab77437f25bc2fa1a33b63b21eba"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/7ba4309e92ecb6ed3feb4306aa5a3944.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_share_74eee7d19a454a9f4a4b6912f5726976.bundle",
+      "manifest": "871_156598",
+      "raw_size": 1898,
+      "raw_md5": "7ba4309e92ecb6ed3feb4306aa5a3944",
+      "raw_sha256": "3d886480cb3c4841d70003cef18399c0fcfaa0e932d6d0528eb6486d3597f240",
+      "decoded_size": 1898,
+      "decoded_sha256": "3d886480cb3c4841d70003cef18399c0fcfaa0e932d6d0528eb6486d3597f240",
+      "decoding": "none",
+      "output": "defaultpackage_share_74eee7d19a454a9f4a4b6912f5726976.bundle",
+      "converter_input_sha256": "8c2bd0654fd1a42b3a5040ab3e53f22cb1016bc302ac23def57548769d1b5d3d"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/1a0c17cd4219a11ca47b3c21eb219be9.bundle",
+      "manifest": "871_156598",
+      "size": 717,
+      "sha256": "1191a74508e0f2fdefa0d0dc9c0943782d0ac03894175e9b1818ab0efdf10e91",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_share_8713b9301222b39e87ac76b43f5019e5.bundle",
+      "raw_size": 717,
+      "raw_md5": "1a0c17cd4219a11ca47b3c21eb219be9",
+      "raw_sha256": "1191a74508e0f2fdefa0d0dc9c0943782d0ac03894175e9b1818ab0efdf10e91",
+      "decoded_size": 717,
+      "decoded_sha256": "1191a74508e0f2fdefa0d0dc9c0943782d0ac03894175e9b1818ab0efdf10e91",
+      "decoding": "none",
+      "output": "defaultpackage_share_8713b9301222b39e87ac76b43f5019e5.bundle",
+      "converter_input_sha256": "ab355d34a6f20de286ec6ea608931ce40d2a84b15f95c6e4208920de4a6ba7b5"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/1292c3025df85c48c494ed42b02d7107.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_share_92a8f2415e5a582ff53cdf9e6b389f53.bundle",
+      "manifest": "871_156598",
+      "raw_size": 711,
+      "raw_md5": "1292c3025df85c48c494ed42b02d7107",
+      "raw_sha256": "05d7a28fa953c91c0d92b813afaa4ab96f0aa194694c0a6dee99f4161903b1c9",
+      "decoded_size": 711,
+      "decoded_sha256": "05d7a28fa953c91c0d92b813afaa4ab96f0aa194694c0a6dee99f4161903b1c9",
+      "decoding": "none",
+      "output": "defaultpackage_share_92a8f2415e5a582ff53cdf9e6b389f53.bundle",
+      "converter_input_sha256": "7d4d55fe51009325b547d75e401d8ede6524f41b92e145ddf0e87e33f50f239c"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/21f2b376c27e0990977c2597be99fa99.bundle",
+      "manifest": "871_156598",
+      "size": 875,
+      "sha256": "17ff0d43c2ba91da12ff8c6794712feb626fbd7cd5c06579ea7107bf1e8d9429",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_share_9d31b583b8df31f731edf8b80fa5ac6c.bundle",
+      "raw_size": 875,
+      "raw_md5": "21f2b376c27e0990977c2597be99fa99",
+      "raw_sha256": "17ff0d43c2ba91da12ff8c6794712feb626fbd7cd5c06579ea7107bf1e8d9429",
+      "decoded_size": 875,
+      "decoded_sha256": "17ff0d43c2ba91da12ff8c6794712feb626fbd7cd5c06579ea7107bf1e8d9429",
+      "decoding": "none",
+      "output": "defaultpackage_share_9d31b583b8df31f731edf8b80fa5ac6c.bundle",
+      "converter_input_sha256": "292865fd4a8d735ec796651b264264913b86e29d98a376d79ec9615022baf1a2"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/26707f9e8bf9ee0a6fd299c2646141e5.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_share_a5a6025f3f65b6fdbb82919af92ec071.bundle",
+      "manifest": "871_156598",
+      "raw_size": 860,
+      "raw_md5": "26707f9e8bf9ee0a6fd299c2646141e5",
+      "raw_sha256": "e284a159c426c9782e920edecbb4c13b444485519f679c2320381cf5ebac7ed0",
+      "decoded_size": 860,
+      "decoded_sha256": "e284a159c426c9782e920edecbb4c13b444485519f679c2320381cf5ebac7ed0",
+      "decoding": "none",
+      "output": "defaultpackage_share_a5a6025f3f65b6fdbb82919af92ec071.bundle",
+      "converter_input_sha256": "fe815ea7861e4908bee79c9c010a65b908b42d801e2e604b54c01edc895d13f7"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/6c407e5dbb9d2d46cbc523d7f435f5ab.bundle",
+      "manifest": "871_156598",
+      "size": 713,
+      "sha256": "c1d82649d5c28de786d4e6473b31acdfffda298318d3ff90e4fb2431cc4bed1a",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_share_b492b8650b807dc61bd604c2b373549d.bundle",
+      "raw_size": 713,
+      "raw_md5": "6c407e5dbb9d2d46cbc523d7f435f5ab",
+      "raw_sha256": "c1d82649d5c28de786d4e6473b31acdfffda298318d3ff90e4fb2431cc4bed1a",
+      "decoded_size": 713,
+      "decoded_sha256": "c1d82649d5c28de786d4e6473b31acdfffda298318d3ff90e4fb2431cc4bed1a",
+      "decoding": "none",
+      "output": "defaultpackage_share_b492b8650b807dc61bd604c2b373549d.bundle",
+      "converter_input_sha256": "0fbfc67384d5e68b710be69b362a4cf61380c7a13947f73d27180515adb43bd1"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/ba7d10f709983d7c9eca4e4f15248b81.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_share_cd4324308e1e2fe44cfcf83572280a26.bundle",
+      "manifest": "871_156598",
+      "raw_size": 899,
+      "raw_md5": "ba7d10f709983d7c9eca4e4f15248b81",
+      "raw_sha256": "e50b3a47b3822424759c88ca29d1a0afe9b8713cc84fb6afd0b89e965b9fdac5",
+      "decoded_size": 899,
+      "decoded_sha256": "e50b3a47b3822424759c88ca29d1a0afe9b8713cc84fb6afd0b89e965b9fdac5",
+      "decoding": "none",
+      "output": "defaultpackage_share_cd4324308e1e2fe44cfcf83572280a26.bundle",
+      "converter_input_sha256": "fc5d29f8a1898eb0853498017faf884eba955e69505748bfcfb948ff06759a21"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7dfcc25240161dac9be4603c84cc9313.bundle",
+      "manifest": "871_156598",
+      "size": 756,
+      "sha256": "62f023de8cd1c947e16babd6e6f5d6340ad209e62bf3e350cc2f012a747398ea",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_share_d45c2ed0a61e6d1fd911d20730b29e29.bundle",
+      "raw_size": 756,
+      "raw_md5": "7dfcc25240161dac9be4603c84cc9313",
+      "raw_sha256": "62f023de8cd1c947e16babd6e6f5d6340ad209e62bf3e350cc2f012a747398ea",
+      "decoded_size": 756,
+      "decoded_sha256": "62f023de8cd1c947e16babd6e6f5d6340ad209e62bf3e350cc2f012a747398ea",
+      "decoding": "none",
+      "output": "defaultpackage_share_d45c2ed0a61e6d1fd911d20730b29e29.bundle",
+      "converter_input_sha256": "057e896dd07e6672718deab76885fb198ebc72bfceae00e81f07bc70bc26ea07"
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/3dcf82b05011c687f737ad1fe13c19bd.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_share_de2c3eed47f79ceb7e6a7b7b58676278.bundle",
+      "manifest": "871_156598",
+      "raw_size": 66779,
+      "raw_md5": "3dcf82b05011c687f737ad1fe13c19bd",
+      "raw_sha256": "1501493ede175b5648e80eeea9ff71b1adc25c8105d584d3c083ca1770880462",
+      "decoded_size": 66779,
+      "decoded_sha256": "1501493ede175b5648e80eeea9ff71b1adc25c8105d584d3c083ca1770880462",
+      "decoding": "none",
+      "output": "defaultpackage_share_de2c3eed47f79ceb7e6a7b7b58676278.bundle",
+      "converter_input_sha256": "654bcc56068bc7241bfe70367d145dae55d5be6c955c2d7316ae678434cc26e5"
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/b44cadacfabd37f97ebaf88173e3e2a1.bundle",
+      "manifest": "871_156598",
+      "size": 853119,
+      "sha256": "2183d28b18f8b5f2d1f8f3cc2995749570b80fdbe41a39a2680f8b1350f31108",
+      "name": "defaultpackage_unityshaders.bundle",
+      "raw_size": 853119,
+      "raw_md5": "b44cadacfabd37f97ebaf88173e3e2a1",
+      "raw_sha256": "2183d28b18f8b5f2d1f8f3cc2995749570b80fdbe41a39a2680f8b1350f31108",
+      "decoded_size": 853119,
+      "decoded_sha256": "2183d28b18f8b5f2d1f8f3cc2995749570b80fdbe41a39a2680f8b1350f31108",
+      "decoding": "none",
+      "output": "defaultpackage_unityshaders.bundle",
+      "converter_input_sha256": "aaf263b17f032f0e3c1822ce7e83288c907111ff83989ecde773d7d34381281c"
+    }
+  ],
+  "converter_input_receipt_sha256": "98931e792fd76604fb96b8fb028a699a49831352b433bc54a4b06a4f2806fbdb",
+  "export_proof_sha256": "f40ba3693577322b0efc9075422880f91a010219b2999e5bb8a4b034654928d0",
+  "exported_inputs": [
+    {
+      "relative": "Image/ItemIcon/Materials/Public_NoAtlas/item_40102.asset",
+      "sha256": "3f69dbd827043e6fbfabbe0f3ab9780480a547a743f23da577db8ddcf79e4209",
+      "meta_sha256": "b0d482ff90217b9a9699337ad1fcbcbbfa2a678c823fc415ee78fb251302af6e"
+    },
+    {
+      "relative": "Image/ItemIcon/Materials/Public_NoAtlas/item_40102.png",
+      "sha256": "1b0c82b7abcfc4c58af2f95e8d037539b8155c51714bb3f253fcb137d86caf45",
+      "meta_sha256": "0694a8c649787c1f50a377b415e4a6af42edf391a884ae2ec6bb126dee6b84e3"
+    },
+    {
+      "relative": "Image/UI/Appearance/Appearance_Atlas/ImgBgIcon.asset",
+      "sha256": "8683a765db2b46a093deed6756494fba243274d03168151f5c4dd72f5f91c7b4",
+      "meta_sha256": "8a9acb36e07ee1e0f4aa2fb8741d717363667a9ac0e87e0f10fbeba3ef196336"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_1.prefab",
+      "sha256": "817c159db5b75cb2fad88bd95b4a17a4a68b2d0215e01bb3d5ba0b8c9699aa26",
+      "meta_sha256": "0d3e75548d9a77b757901f2f355a815e4d0d627229a91f07114f7f3622c15ad0"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_2.prefab",
+      "sha256": "4de5ed744a2be872e7e9cb1e5f62c6067cdd4077183c51265c8f08ed45688760",
+      "meta_sha256": "27e08bae0d966a390363ca5ab2438d21838869f20bccd6cba58b399c618244c6"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_3.prefab",
+      "sha256": "f33fc2255c35a4fc4a498fba00b22855c58f04348d7aadfcc8f5dd469cba6090",
+      "meta_sha256": "2831dbddc08ed0a2bc9adf2dda91db0b19abece8257bff1a9cf03d5be90590a3"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_4.prefab",
+      "sha256": "0ae8f683c80787d878f2144ae8ad897a5a9884b070c0d55c8d4006d0411418d7",
+      "meta_sha256": "e817fa152301de724986c6427a070ffc98e78b4f01a2853144069e418ff12466"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_401.prefab",
+      "sha256": "a21c9b4628bb3983ba469d403f7e3ce0a70cea266b814fe0a33e5a2f98d732c1",
+      "meta_sha256": "1c156679f47d3c50f9b37c6f4def64eb4e4947538b761c355963c5bde6b24bfc"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_402.prefab",
+      "sha256": "e2f68eb35bcd7660ad43fdd4cf6a7b3282d4095950bb7c2b14352cff91f9a82a",
+      "meta_sha256": "b4a4e61cdfa0c7959f9afdab6f099c72e3ab6f6ece9c8dc6e575af1c0195dceb"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_403.prefab",
+      "sha256": "636dd86a32f88f607737684ac74b9f832f3dfc9e3265bceb81cb84db7da62a70",
+      "meta_sha256": "8950d51123a6966d66da85e903a02c52f6f6498e9e9b64abb4e9ede74e08e3ae"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_404.prefab",
+      "sha256": "5779c553f2e09083386b126e98d971fbde56b079097b1b2a1c5be12c441d42f7",
+      "meta_sha256": "bb2ce8032e3c973d01e59a9f034543a3602f53c7c543caa5173b180db8388fd6"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_405.prefab",
+      "sha256": "dc8c5374b04357bda597affadb1cf72a4826ec96be0e097ec71fd71ef37c3568",
+      "meta_sha256": "e1f83a438665c8dd8be5e91747bf76f8e1787e679f585a6af3096a1cfe92bd70"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_406.prefab",
+      "sha256": "efbc60b2786d223c03b8ba69f49632e89da3a9daf4922bf9b127c96912a03650",
+      "meta_sha256": "bf256be262e4de833d59e8a743a37224d185900812e0cf50e9c267c4be7028d4"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_407.prefab",
+      "sha256": "578d24357b52d4f5d4217a059f0ec027fa02f2d0691d1ba3267e627bd58b1524",
+      "meta_sha256": "c81b10e0e6c5849f6be4c1f6708dd64d720ac5a3e7b52d68cd8644127a72fd1e"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_408.prefab",
+      "sha256": "b7605d5da774af0eeaab0d825ed82419a10877238c26b0149c95f8eb15c7bb41",
+      "meta_sha256": "6c97274e7c70b8eea3aa8cdee781ea99ae7882bef57bab058ff763cca81377cf"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_409.prefab",
+      "sha256": "4044d053e66fe4c30a47de5daf39321c125740778041c53d34c0481405db91b5",
+      "meta_sha256": "6dc6d49d406096df9b7eb802b243a777981c2df18efda84c3c0283dfe8788ebf"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_410.prefab",
+      "sha256": "48069b4250d1e06207a92f25af537a0209a582935ebc14e396436d55bc2bf9c9",
+      "meta_sha256": "d8c0fef63d62ef2897d99ad929737da02c21434e92ce9d113d9639fdf8962f3f"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_411.prefab",
+      "sha256": "bef0c8a11ee86027a8d1f4774fc5e04dad6e1c5ea93498a5ef6cd460a7e3f0eb",
+      "meta_sha256": "a683323bf7c76557970d86dc9e7880ade9b8c94dd659fbee11d4f609c2796eee"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_412.prefab",
+      "sha256": "0dfc5a72cdfaf4db05c2cbe9ba29c490f75d937d53dd578e9b831f0ba414c694",
+      "meta_sha256": "fbf899b5661253519be85db8d406edff03a7c7678230d65faa84c6ebd569df4d"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_413.prefab",
+      "sha256": "c1e978721a079be8d81cc9ca2f05abb70e1ab8f64139e96e3bb95aec6f0c4c57",
+      "meta_sha256": "d919a6f35dad71644ce9eb2e19c4338ec359a5b8adb0bc0e4feada376b6398c5"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_414.prefab",
+      "sha256": "ca1f2bc6a19302cba2bdc57ea2bb5d30afe6534e85f5db9febbbd2fa5f94d72a",
+      "meta_sha256": "b24d9fcc92b77634e5fdbec6257cb194ff159f53e4fcfd0e9d0cf95cccd15675"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_415.prefab",
+      "sha256": "2aaf304ee5f4ec96b54d96ce72f9645ea183c4e104b04792d14200a9b1f667d5",
+      "meta_sha256": "e5148075eddd31a33dc412b2bb4720a6310b577257e24ce5a2f47d2d00934fc9"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_416.prefab",
+      "sha256": "b7041ec20e214ecad536e7d186a29140051c858fdd799651751becc4c31b0d1e",
+      "meta_sha256": "65b6caba75e79f3c3fd1512636df952ca112fe9e81cb6b60442858b818ea4ee2"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_417.prefab",
+      "sha256": "31bb1626afb5463e014ee9cd544315f037e2296aaf054cc9ffbf4fd32160e68e",
+      "meta_sha256": "ba1b47ff1482b776db67f6c022d4a25a8f66e426b9d054c8ae6fa37b7b084b01"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_419.prefab",
+      "sha256": "9af595b7c9eb45ee23541caa7e0c776d78c3d1c3f2020ec8793b5d0bf6d2f048",
+      "meta_sha256": "8ea7ed2801d2661ab1b0e8594c1abaca1560986b37cf14292932f8eb3b2b1cfd"
+    },
+    {
+      "relative": "Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_490.prefab",
+      "sha256": "4a1848abdb844350ecc9d068af1a646805500275d9023e4eafeba2767f16d383",
+      "meta_sha256": "62a8610758544f1a5f576a99aac24cd2f35d5fc000af44b6ca41e87b163221bf"
+    },
+    {
+      "relative": "Texture2D/sactx-0-1024x512-ASTC 6x6-Appearance_Atlas-15876def.png",
+      "sha256": "655271170960b05f59ac00cf4e682d60aebde14402d0c1a0611a80df02022c10",
+      "meta_sha256": "0bc7eaa2e362ad4e95fbe2af1bd6a02728db6dd0dee80968cc41c0f68003b488"
+    }
+  ],
+  "script_bindings": [
+    {
+      "original": "Scripts/Assembly-CSharp/MiniMapResourcePointBoard.cs",
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapResourcePoints/MiniMapResourcePointBoard.cs",
+      "sha256": "18afdf6f68540519a1d7361c20fee68483790bfd70a6af976ed8d1d1b9bcaff8",
+      "guid": "01ef873c31035cc895b2b6ecd74c5d67"
+    },
+    {
+      "original": "Scripts/Assembly-CSharp/MiniMapResourcePointTapItem.cs",
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapResourcePoints/MiniMapResourcePointTapItem.cs",
+      "sha256": "600c1c55d0329b7fec4c8c4c266c3bae456a1fee6cae4c42173dd8910a736b5b",
+      "guid": "40767dfc9d6c5cc6a341c141672d2210"
+    },
+    {
+      "original": "Scripts/Assembly-CSharp/MiniMapResourcePointManager.cs",
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapResourcePoints/MiniMapResourcePointManager.cs",
+      "sha256": "38274198b9a57c84d0ae9c9e7d8981e9fe7e4b5992869464f9340c5b758149e7",
+      "guid": "8f71eebf0a3852deb23b742dabb6b065"
+    }
+  ],
+  "textures": [
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_materials_public_noatlas.bundle",
+        "bundle_hash": "e9d920b114d4b6e29119b6fda545133a",
+        "path_id": "4827133840094265777",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/e9d920b114d4b6e29119b6fda545133a.bundle",
+        "raw_size": 518666,
+        "raw_sha256": "3647b913bce201e5a81b404da748b3131c185a9c8d1e2ebb6859cfb38e3a9822"
+      },
+      "object_sha256": "4833cf0ea8473b0f427f950568de755a2edbaf5b49bc3b0a4a58bd66be1285b5",
+      "compressed_sha256": "38bd3edd53d69ee27cf714dac3d45123ebc7ab577fbda1b5b67acdb86392f2fe",
+      "rgba_sha256": "ab32426e3279b0c6f4f53bff1fdc10318fca11e170ff57ba80515abb30644318",
+      "mips": [
+        {
+          "level": 0,
+          "width": 256,
+          "height": 256,
+          "astc_offset": 0,
+          "astc_size": 65536,
+          "astc_sha256": "38bd3edd53d69ee27cf714dac3d45123ebc7ab577fbda1b5b67acdb86392f2fe",
+          "rgba_offset": 0,
+          "rgba_size": 262144,
+          "rgba_sha256": "ab32426e3279b0c6f4f53bff1fdc10318fca11e170ff57ba80515abb30644318"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "output": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Image/ItemIcon/Materials/Public_NoAtlas/item_40102.texture.asset"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_appearance.bundle",
+        "bundle_hash": "54b501fe38356fa8288cd4f93b54079d",
+        "path_id": "3224981416040739974",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/54b501fe38356fa8288cd4f93b54079d.bundle",
+        "raw_size": 957511,
+        "raw_sha256": "c0fcdcf79eef2fcd963e144089cef9a72ea9d387f4065a8e7b15480f21033a01"
+      },
+      "object_sha256": "313e63c056adbe246c33a35728a45e5aa8755addcc963b403c57795286d5c7e0",
+      "compressed_sha256": "7566f0180bd1f9a6f552ce244564b932d39b5681e8d5d90a9492ab7403e48e3e",
+      "rgba_sha256": "b990e985926b0ed75ce187590e610e50cfea1867344974dd390ab5759c985fe7",
+      "mips": [
+        {
+          "level": 0,
+          "width": 1024,
+          "height": 512,
+          "astc_offset": 0,
+          "astc_size": 235296,
+          "astc_sha256": "7566f0180bd1f9a6f552ce244564b932d39b5681e8d5d90a9492ab7403e48e3e",
+          "rgba_offset": 0,
+          "rgba_size": 2097152,
+          "rgba_sha256": "b990e985926b0ed75ce187590e610e50cfea1867344974dd390ab5759c985fe7"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "output": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Texture2D/sactx-0-1024x512-ASTC 6x6-Appearance_Atlas-15876def.texture.asset"
+    }
+  ],
+  "icons": [
+    {
+      "path": "ItemIcon/GameHeadIcon/Monster/G_3203",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "1169807068144872781",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "object_sha256": "45bea39f3e12fd2db90e1c2541216095b1c05e1d0a15c2fec9731d18f579e072",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "8637908313940372813",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "texture_object_sha256": "26bf8853012513f9bc85bb7ad8b76b24f5b212c7412a6ba8b9b205fdf16a0d9d",
+      "compressed_sha256": "962e1aae73f516b2f52a060bf6704c521fa27127d9fd2f6baa96decc427e47ca",
+      "rgba_sha256": "f35b368179c48ed482410ea3e8f4ea54f574695d674e3959b8097184175bf5d6",
+      "mips": [
+        {
+          "level": 0,
+          "width": 192,
+          "height": 192,
+          "astc_offset": 0,
+          "astc_size": 16384,
+          "astc_sha256": "962e1aae73f516b2f52a060bf6704c521fa27127d9fd2f6baa96decc427e47ca",
+          "rgba_offset": 0,
+          "rgba_size": 147456,
+          "rgba_sha256": "f35b368179c48ed482410ea3e8f4ea54f574695d674e3959b8097184175bf5d6"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 0.6000000238418579,
+          "y": -0.029999999329447746
+        },
+        {
+          "x": 0.5899999737739563,
+          "y": -0.5
+        },
+        {
+          "x": 0.6000000238418579,
+          "y": -0.4399999976158142
+        },
+        {
+          "x": 0.4699999988079071,
+          "y": -0.6100000143051147
+        },
+        {
+          "x": 0.17000000178813934,
+          "y": 0.5899999737739563
+        },
+        {
+          "x": 0.15000000596046448,
+          "y": 0.6000000238418579
+        },
+        {
+          "x": -0.10000000149011612,
+          "y": 0.6000000238418579
+        },
+        {
+          "x": -0.47999998927116394,
+          "y": -0.6100000143051147
+        },
+        {
+          "x": -0.5600000023841858,
+          "y": 0.0
+        },
+        {
+          "x": -0.5600000023841858,
+          "y": -0.5799999833106995
+        }
+      ],
+      "triangles": [
+        9,
+        8,
+        7,
+        6,
+        7,
+        8,
+        3,
+        7,
+        6,
+        5,
+        3,
+        6,
+        4,
+        3,
+        5,
+        0,
+        3,
+        4,
+        1,
+        3,
+        0,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 96.0,
+        "y": 96.0
+      },
+      "asset": {
+        "guid": "6cd5f0ff103f1672ae66da0e82f7ac24",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3203.sprite.asset",
+        "sha256": "a3486cb5ba33295a279f9b946f182150ae4b983976a3f96014c0cff28e14aff5"
+      }
+    },
+    {
+      "path": "ItemIcon/GameHeadIcon/Monster/G_3209",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "-4816288516853867747",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "object_sha256": "9ba45199f530c7913d7d35fb3225450d5aabcc16195c0e6a6d8132e67bc72e35",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "-3723759182375298275",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "texture_object_sha256": "9b36926d05077fec910bfe02a749571e7e03366b0b63fce500ff4e1094d515e7",
+      "compressed_sha256": "31cff8e56f1a0c9a8ff9198deeccc3613b900ae292f41f50a2d68f3f11af6922",
+      "rgba_sha256": "16c29f43327d43b1fc6ba75ac51851744fe1d30506fab6bc1c199689f457e429",
+      "mips": [
+        {
+          "level": 0,
+          "width": 192,
+          "height": 192,
+          "astc_offset": 0,
+          "astc_size": 16384,
+          "astc_sha256": "31cff8e56f1a0c9a8ff9198deeccc3613b900ae292f41f50a2d68f3f11af6922",
+          "rgba_offset": 0,
+          "rgba_size": 147456,
+          "rgba_sha256": "16c29f43327d43b1fc6ba75ac51851744fe1d30506fab6bc1c199689f457e429"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 0.30000001192092896,
+          "y": 0.5
+        },
+        {
+          "x": 0.5799999833106995,
+          "y": -0.6200000047683716
+        },
+        {
+          "x": 0.5799999833106995,
+          "y": 0.25999999046325684
+        },
+        {
+          "x": 0.18000000715255737,
+          "y": 0.5400000214576721
+        },
+        {
+          "x": -0.14000000059604645,
+          "y": 0.5400000214576721
+        },
+        {
+          "x": -0.5799999833106995,
+          "y": 0.0
+        },
+        {
+          "x": -0.5799999833106995,
+          "y": -0.6200000047683716
+        }
+      ],
+      "triangles": [
+        6,
+        5,
+        1,
+        4,
+        1,
+        5,
+        3,
+        1,
+        4,
+        0,
+        1,
+        3,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 96.0,
+        "y": 96.0
+      },
+      "asset": {
+        "guid": "0253379d2b06c7179354ef94c2a5a987",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3209.sprite.asset",
+        "sha256": "ca4e3d52edf212c060d5473ac9aee77c25792fab8941740173be1fa076f2f1ce"
+      }
+    },
+    {
+      "path": "ItemIcon/GameHeadIcon/Monster/G_3230",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "251413539648442370",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "object_sha256": "cd4ee3de34d62e86fef5690b6d2d19c1a0bf3d39098f3a1e7fd90be26f438f6f",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "-1732557404014768126",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "texture_object_sha256": "5118e309eccdc14f244354039fa84537ff03046b8556713ae3eaa835b6a2ec05",
+      "compressed_sha256": "f0ceb2c09cf17c09ded5b0ada5bd8c12c5c7f879af9434c882fd72e67616cd0a",
+      "rgba_sha256": "78026fa95300de4fb7b4f0aacb6fcd54cd59b719c08edddd595e0458481250f5",
+      "mips": [
+        {
+          "level": 0,
+          "width": 192,
+          "height": 192,
+          "astc_offset": 0,
+          "astc_size": 16384,
+          "astc_sha256": "f0ceb2c09cf17c09ded5b0ada5bd8c12c5c7f879af9434c882fd72e67616cd0a",
+          "rgba_offset": 0,
+          "rgba_size": 147456,
+          "rgba_sha256": "78026fa95300de4fb7b4f0aacb6fcd54cd59b719c08edddd595e0458481250f5"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 0.5799999833106995,
+          "y": 0.5899999737739563
+        },
+        {
+          "x": 0.49000000953674316,
+          "y": -0.6000000238418579
+        },
+        {
+          "x": 0.5799999833106995,
+          "y": -0.4099999964237213
+        },
+        {
+          "x": -0.47999998927116394,
+          "y": -0.6000000238418579
+        },
+        {
+          "x": -0.5199999809265137,
+          "y": 0.5899999737739563
+        },
+        {
+          "x": -0.5699999928474426,
+          "y": 0.5600000023841858
+        },
+        {
+          "x": -0.5799999833106995,
+          "y": 0.49000000953674316
+        },
+        {
+          "x": -0.5799999833106995,
+          "y": -0.4399999976158142
+        }
+      ],
+      "triangles": [
+        7,
+        6,
+        3,
+        5,
+        3,
+        6,
+        4,
+        3,
+        5,
+        0,
+        3,
+        4,
+        1,
+        3,
+        0,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 96.0,
+        "y": 96.0
+      },
+      "asset": {
+        "guid": "a0002075035e1479e9e8b8fedc607200",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3230.sprite.asset",
+        "sha256": "7cbd8415d1c9f4029c7fbbf66c86dd960d92911632a16ef6fce633dc398417d1"
+      }
+    },
+    {
+      "path": "ItemIcon/GameHeadIcon/Monster/G_3231",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "-3675553770638693348",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "object_sha256": "e68658c10208ab704b96e6ce85877b13938b78c9d8ff2c4b08c4f15ab64a7ceb",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "186127123480357916",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "texture_object_sha256": "83dddc24272caf0e0ca5d508e3c2d426b156df00737a1b428b793e585bc0ace5",
+      "compressed_sha256": "408e8bdae44f0d393d6051c0e7e05557878efd47283898f358347975ab891cba",
+      "rgba_sha256": "d2c956b8826e9fef7842bc6a9823595e9b1b471ca561c84205e522aed1ce068d",
+      "mips": [
+        {
+          "level": 0,
+          "width": 192,
+          "height": 192,
+          "astc_offset": 0,
+          "astc_size": 16384,
+          "astc_sha256": "408e8bdae44f0d393d6051c0e7e05557878efd47283898f358347975ab891cba",
+          "rgba_offset": 0,
+          "rgba_size": 147456,
+          "rgba_sha256": "d2c956b8826e9fef7842bc6a9823595e9b1b471ca561c84205e522aed1ce068d"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 0.3499999940395355,
+          "y": 0.6899999976158142
+        },
+        {
+          "x": 0.6399999856948853,
+          "y": -0.5400000214576721
+        },
+        {
+          "x": 0.6399999856948853,
+          "y": 0.41999998688697815
+        },
+        {
+          "x": 0.1899999976158142,
+          "y": -0.6899999976158142
+        },
+        {
+          "x": -0.1599999964237213,
+          "y": 0.6899999976158142
+        },
+        {
+          "x": -0.33000001311302185,
+          "y": -0.6899999976158142
+        },
+        {
+          "x": -0.5400000214576721,
+          "y": -0.5699999928474426
+        },
+        {
+          "x": -0.6399999856948853,
+          "y": 0.38999998569488525
+        },
+        {
+          "x": -0.6399999856948853,
+          "y": 0.03999999910593033
+        }
+      ],
+      "triangles": [
+        8,
+        7,
+        6,
+        4,
+        6,
+        7,
+        5,
+        6,
+        4,
+        3,
+        5,
+        4,
+        0,
+        3,
+        4,
+        1,
+        3,
+        0,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 96.0,
+        "y": 96.0
+      },
+      "asset": {
+        "guid": "2d4ec388e9d1483c4613abfe036629a7",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3231.sprite.asset",
+        "sha256": "c45d0a72791fdb8dafd5d1366bfb204d75ed905435582e2bba3e0ca4b4c5af44"
+      }
+    },
+    {
+      "path": "ItemIcon/GameHeadIcon/Monster/G_3232",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "-4759696109534590827",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "object_sha256": "395408a5d5cc7474f953110b11ae67c608ce1146fb4ed382e19120314d7a9044",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "-1837611045929432939",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "texture_object_sha256": "2d707037df1e49525ca13c3aefac036de11e0162e8180fdb800bfd6399943e85",
+      "compressed_sha256": "8a096a1c20962ef52f9bf672ddc85d90669280cc45e36712f39d480b74c8325f",
+      "rgba_sha256": "04f1ab12f71073c9e97e5f7dae5987e7fc922472c276d63b8b581f163bfeaf52",
+      "mips": [
+        {
+          "level": 0,
+          "width": 192,
+          "height": 192,
+          "astc_offset": 0,
+          "astc_size": 16384,
+          "astc_sha256": "8a096a1c20962ef52f9bf672ddc85d90669280cc45e36712f39d480b74c8325f",
+          "rgba_offset": 0,
+          "rgba_size": 147456,
+          "rgba_sha256": "04f1ab12f71073c9e97e5f7dae5987e7fc922472c276d63b8b581f163bfeaf52"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 0.6299999952316284,
+          "y": 0.4300000071525574
+        },
+        {
+          "x": 0.6600000262260437,
+          "y": -0.3499999940395355
+        },
+        {
+          "x": 0.6600000262260437,
+          "y": 0.27000001072883606
+        },
+        {
+          "x": 0.46000000834465027,
+          "y": -0.5699999928474426
+        },
+        {
+          "x": 0.4099999964237213,
+          "y": 0.5699999928474426
+        },
+        {
+          "x": -0.46000000834465027,
+          "y": -0.5699999928474426
+        },
+        {
+          "x": -0.550000011920929,
+          "y": 0.5699999928474426
+        },
+        {
+          "x": -0.6600000262260437,
+          "y": 0.3400000035762787
+        },
+        {
+          "x": -0.6600000262260437,
+          "y": -0.3400000035762787
+        }
+      ],
+      "triangles": [
+        8,
+        7,
+        5,
+        6,
+        5,
+        7,
+        4,
+        5,
+        6,
+        3,
+        5,
+        4,
+        0,
+        3,
+        4,
+        1,
+        3,
+        0,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 96.0,
+        "y": 96.0
+      },
+      "asset": {
+        "guid": "e74df5962fbc32bdbe6405aa36207fdb",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3232.sprite.asset",
+        "sha256": "572ebdeb5b2c83eaea1c51e98fcb0f22674717920da1b346eb13f4fa27f34b2b"
+      }
+    },
+    {
+      "path": "ItemIcon/GameHeadIcon/Monster/G_3233",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "-4166407722728134285",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "object_sha256": "01191cc494bc3e2164ab3400e5c6c91bca706cc7adfdbe23068da2bb6e7e5743",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "-4622199334205691533",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "texture_object_sha256": "a9d5a0f6b05f991552f2af91f77b50696c2efcbac29af9eff426bb152599870c",
+      "compressed_sha256": "00583b7131ff8714845cdbe29127c0b5eeb36c13ce2b9995b16a01479e67af4c",
+      "rgba_sha256": "869e1e4873a11dc1adc1011da4eede4b8a0bf45da149a84c7d41c61cfa578475",
+      "mips": [
+        {
+          "level": 0,
+          "width": 192,
+          "height": 192,
+          "astc_offset": 0,
+          "astc_size": 16384,
+          "astc_sha256": "00583b7131ff8714845cdbe29127c0b5eeb36c13ce2b9995b16a01479e67af4c",
+          "rgba_offset": 0,
+          "rgba_size": 147456,
+          "rgba_sha256": "869e1e4873a11dc1adc1011da4eede4b8a0bf45da149a84c7d41c61cfa578475"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 0.5899999737739563,
+          "y": 0.27000001072883606
+        },
+        {
+          "x": 0.4399999976158142,
+          "y": -0.7099999785423279
+        },
+        {
+          "x": 0.5899999737739563,
+          "y": -0.6100000143051147
+        },
+        {
+          "x": 0.20000000298023224,
+          "y": 0.7099999785423279
+        },
+        {
+          "x": -0.1899999976158142,
+          "y": 0.7099999785423279
+        },
+        {
+          "x": -0.30000001192092896,
+          "y": -0.7099999785423279
+        },
+        {
+          "x": -0.36000001430511475,
+          "y": 0.6700000166893005
+        },
+        {
+          "x": -0.5799999833106995,
+          "y": -0.6499999761581421
+        },
+        {
+          "x": -0.5899999737739563,
+          "y": 0.11999999731779099
+        },
+        {
+          "x": -0.5899999737739563,
+          "y": -0.6499999761581421
+        }
+      ],
+      "triangles": [
+        9,
+        8,
+        7,
+        6,
+        7,
+        8,
+        5,
+        7,
+        6,
+        4,
+        5,
+        6,
+        1,
+        5,
+        4,
+        3,
+        1,
+        4,
+        0,
+        1,
+        3,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 96.0,
+        "y": 96.0
+      },
+      "asset": {
+        "guid": "0311a10e21bd343ca024c84bda291e4d",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3233.sprite.asset",
+        "sha256": "fa13c5e1d6e9f3c9e6a8b91956f1d5401bb222972fd1864881123c62e0f09d79"
+      }
+    },
+    {
+      "path": "ItemIcon/GameHeadIcon/Monster/G_3234",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "4495646224212629127",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "object_sha256": "aebeb5b1acb96f62218ff81f2f5ff9559062603dad67af8b962cc00154a64b61",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "-1617517858184620409",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "texture_object_sha256": "e41bc9a15da8d78ea73397e9bd431efba2b2ae68a5a120d2aa960bd8fb46af81",
+      "compressed_sha256": "3b0b376fa9652961179e60cdb06534d4364f192afd2785fc8163bd6854c6157a",
+      "rgba_sha256": "f790eaadbc8f5c4571a22cc40c389742eaadd879dc1f34a4efe6fc911d243efb",
+      "mips": [
+        {
+          "level": 0,
+          "width": 192,
+          "height": 192,
+          "astc_offset": 0,
+          "astc_size": 16384,
+          "astc_sha256": "3b0b376fa9652961179e60cdb06534d4364f192afd2785fc8163bd6854c6157a",
+          "rgba_offset": 0,
+          "rgba_size": 147456,
+          "rgba_sha256": "f790eaadbc8f5c4571a22cc40c389742eaadd879dc1f34a4efe6fc911d243efb"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 0.5099999904632568,
+          "y": 0.5299999713897705
+        },
+        {
+          "x": 0.6299999952316284,
+          "y": -0.5400000214576721
+        },
+        {
+          "x": 0.6299999952316284,
+          "y": 0.44999998807907104
+        },
+        {
+          "x": -0.4399999976158142,
+          "y": 0.5299999713897705
+        },
+        {
+          "x": -0.49000000953674316,
+          "y": 0.4699999988079071
+        },
+        {
+          "x": -0.5199999809265137,
+          "y": -0.5400000214576721
+        },
+        {
+          "x": -0.6200000047683716,
+          "y": 0.1899999976158142
+        },
+        {
+          "x": -0.6200000047683716,
+          "y": -0.4300000071525574
+        }
+      ],
+      "triangles": [
+        7,
+        6,
+        5,
+        4,
+        5,
+        6,
+        1,
+        5,
+        4,
+        3,
+        1,
+        4,
+        0,
+        1,
+        3,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 96.0,
+        "y": 96.0
+      },
+      "asset": {
+        "guid": "00347af7b853764c2595759f8e04b2e9",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3234.sprite.asset",
+        "sha256": "8d7455b039464f6f76eedb389744f0ed5d804e3024ac9dbf32a5fb4c01cf7cab"
+      }
+    },
+    {
+      "path": "ItemIcon/GameHeadIcon/Monster/G_3235",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "-3296044478286893249",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "object_sha256": "88faae344a158487ab8cda00226a4644cda5aa51a6a96a5ee9d5693b18e996d1",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "-4704383735194357953",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "texture_object_sha256": "f53bf5a512b5bdae777c1fd7ff1c502e504ae51c64658640f0340fcf1523bbe3",
+      "compressed_sha256": "adf24a422f8396d59892e5a262b2f44b43540ac74c6b2e1a143561a21b5016bc",
+      "rgba_sha256": "fca16d289313e8c325c8153c602333c16732167fb6939b41404301cd4c59a88a",
+      "mips": [
+        {
+          "level": 0,
+          "width": 192,
+          "height": 192,
+          "astc_offset": 0,
+          "astc_size": 16384,
+          "astc_sha256": "adf24a422f8396d59892e5a262b2f44b43540ac74c6b2e1a143561a21b5016bc",
+          "rgba_offset": 0,
+          "rgba_size": 147456,
+          "rgba_sha256": "fca16d289313e8c325c8153c602333c16732167fb6939b41404301cd4c59a88a"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 0.46000000834465027,
+          "y": 0.6200000047683716
+        },
+        {
+          "x": 0.5299999713897705,
+          "y": -0.44999998807907104
+        },
+        {
+          "x": 0.5299999713897705,
+          "y": 0.46000000834465027
+        },
+        {
+          "x": 0.4300000071525574,
+          "y": 0.6299999952316284
+        },
+        {
+          "x": 0.28999999165534973,
+          "y": -0.6299999952316284
+        },
+        {
+          "x": -0.3100000023841858,
+          "y": -0.6299999952316284
+        },
+        {
+          "x": -0.46000000834465027,
+          "y": 0.6299999952316284
+        },
+        {
+          "x": -0.46000000834465027,
+          "y": -0.4099999964237213
+        },
+        {
+          "x": -0.5199999809265137,
+          "y": 0.3700000047683716
+        },
+        {
+          "x": -0.5199999809265137,
+          "y": -0.30000001192092896
+        }
+      ],
+      "triangles": [
+        9,
+        8,
+        7,
+        6,
+        7,
+        8,
+        5,
+        7,
+        6,
+        3,
+        5,
+        6,
+        4,
+        5,
+        3,
+        1,
+        4,
+        3,
+        0,
+        1,
+        3,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 96.0,
+        "y": 96.0
+      },
+      "asset": {
+        "guid": "975a082114cb3dc8aa65651c1d0eb333",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3235.sprite.asset",
+        "sha256": "2a3ac273b9ff1705a13b200dd6ab9b7b75fb7c70ac7c627b35964c4689ff169c"
+      }
+    },
+    {
+      "path": "ItemIcon/GameHeadIcon/Monster/G_3236",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "-126650391112219800",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "object_sha256": "a1f3b2954c673cbd243108773a3c12d219ae7ce2d57b396900f41cbf50339a0b",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "-5015807967363628184",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "texture_object_sha256": "388fc9da323ec6f1218eee1cdeb34ec30157f97b5e4b546a9f016b8493467cc7",
+      "compressed_sha256": "2981b84043d46069c74ae7925c3a2b6f4dde59378e8b67da9fa79db94f07a1da",
+      "rgba_sha256": "4b2e7650403af1e5b5cb098ea3dd0bcafb33c0838b47dcfab0111062d49a8a38",
+      "mips": [
+        {
+          "level": 0,
+          "width": 192,
+          "height": 192,
+          "astc_offset": 0,
+          "astc_size": 16384,
+          "astc_sha256": "2981b84043d46069c74ae7925c3a2b6f4dde59378e8b67da9fa79db94f07a1da",
+          "rgba_offset": 0,
+          "rgba_size": 147456,
+          "rgba_sha256": "4b2e7650403af1e5b5cb098ea3dd0bcafb33c0838b47dcfab0111062d49a8a38"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 0.6700000166893005,
+          "y": 0.25999999046325684
+        },
+        {
+          "x": 0.38999998569488525,
+          "y": -0.5799999833106995
+        },
+        {
+          "x": 0.6700000166893005,
+          "y": -0.3199999928474426
+        },
+        {
+          "x": 0.30000001192092896,
+          "y": 0.5799999833106995
+        },
+        {
+          "x": -0.4699999988079071,
+          "y": -0.5799999833106995
+        },
+        {
+          "x": -0.5600000023841858,
+          "y": 0.5799999833106995
+        },
+        {
+          "x": -0.6700000166893005,
+          "y": 0.18000000715255737
+        },
+        {
+          "x": -0.6700000166893005,
+          "y": -0.4699999988079071
+        }
+      ],
+      "triangles": [
+        7,
+        6,
+        4,
+        5,
+        4,
+        6,
+        3,
+        4,
+        5,
+        1,
+        4,
+        3,
+        0,
+        1,
+        3,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 96.0,
+        "y": 96.0
+      },
+      "asset": {
+        "guid": "7b635cede240473696be8df3dbdd0484",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3236.sprite.asset",
+        "sha256": "97a5c9cc72bc3a60585175d88268eeb6609eb3202e255d2c12f452e002e76e60"
+      }
+    },
+    {
+      "path": "ItemIcon/GameHeadIcon/Monster/G_3237",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "-7044681626053410325",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "object_sha256": "dfed8e09453446b46e2cf04dfdebd388ab1cdbd08b66d91ca73a590e9299ab44",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "4052986114736292331",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "texture_object_sha256": "72c164f2eb7d2d09c306e482e1ed6764bcfc0443bea083a92803360a23efee67",
+      "compressed_sha256": "640aefd3beeed616426bc91b485e4e4c0e69b5500c0542485648bba25eb311be",
+      "rgba_sha256": "651f2ad924edcc6d8eb86089d208f906445ab80cb77a49e5ebc9b72e26989183",
+      "mips": [
+        {
+          "level": 0,
+          "width": 192,
+          "height": 192,
+          "astc_offset": 0,
+          "astc_size": 16384,
+          "astc_sha256": "640aefd3beeed616426bc91b485e4e4c0e69b5500c0542485648bba25eb311be",
+          "rgba_offset": 0,
+          "rgba_size": 147456,
+          "rgba_sha256": "651f2ad924edcc6d8eb86089d208f906445ab80cb77a49e5ebc9b72e26989183"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 0.5799999833106995,
+          "y": 0.17000000178813934
+        },
+        {
+          "x": 0.550000011920929,
+          "y": -0.550000011920929
+        },
+        {
+          "x": 0.5799999833106995,
+          "y": -0.41999998688697815
+        },
+        {
+          "x": 0.5400000214576721,
+          "y": 0.3700000047683716
+        },
+        {
+          "x": 0.14000000059604645,
+          "y": 0.550000011920929
+        },
+        {
+          "x": -0.20999999344348907,
+          "y": 0.550000011920929
+        },
+        {
+          "x": -0.5199999809265137,
+          "y": 0.36000001430511475
+        },
+        {
+          "x": -0.5799999833106995,
+          "y": 0.11999999731779099
+        },
+        {
+          "x": -0.5799999833106995,
+          "y": -0.550000011920929
+        }
+      ],
+      "triangles": [
+        8,
+        7,
+        1,
+        6,
+        1,
+        7,
+        5,
+        1,
+        6,
+        4,
+        1,
+        5,
+        3,
+        1,
+        4,
+        0,
+        1,
+        3,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 96.0,
+        "y": 96.0
+      },
+      "asset": {
+        "guid": "c278e3e93717fe0f21338699561e4ac9",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3237.sprite.asset",
+        "sha256": "a10153b4f295254bce59a78208e33c3adffc7781f43a461c30e6ab4f97d4590c"
+      }
+    },
+    {
+      "path": "ItemIcon/GameHeadIcon/Monster/G_3238",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "8466073419129713840",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "object_sha256": "7ecbe558dc3ca6365e4ab3c1b373d75a7cc985292ea667fa7c3cf35df779bb86",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "3323160726062855344",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "texture_object_sha256": "420cba73a46cd1028ff1d41e98b6a918de84cceaa9720857fd58e2cb22138ce1",
+      "compressed_sha256": "3decd381e2f16a172ed734649c8e6621b43e78c81e17203e3d904f8ec4c29bbf",
+      "rgba_sha256": "97918906eac69273f89c4b04132e7fc9571f0bfdabbce698a0d7f8a4779f3480",
+      "mips": [
+        {
+          "level": 0,
+          "width": 192,
+          "height": 192,
+          "astc_offset": 0,
+          "astc_size": 16384,
+          "astc_sha256": "3decd381e2f16a172ed734649c8e6621b43e78c81e17203e3d904f8ec4c29bbf",
+          "rgba_offset": 0,
+          "rgba_size": 147456,
+          "rgba_sha256": "97918906eac69273f89c4b04132e7fc9571f0bfdabbce698a0d7f8a4779f3480"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 0.4399999976158142,
+          "y": 0.6700000166893005
+        },
+        {
+          "x": 0.2199999988079071,
+          "y": -0.6700000166893005
+        },
+        {
+          "x": 0.4399999976158142,
+          "y": -0.5600000023841858
+        },
+        {
+          "x": -0.3100000023841858,
+          "y": -0.6700000166893005
+        },
+        {
+          "x": -0.3400000035762787,
+          "y": 0.6700000166893005
+        },
+        {
+          "x": -0.41999998688697815,
+          "y": 0.6100000143051147
+        },
+        {
+          "x": -0.4399999976158142,
+          "y": 0.5199999809265137
+        },
+        {
+          "x": -0.4399999976158142,
+          "y": -0.44999998807907104
+        }
+      ],
+      "triangles": [
+        7,
+        6,
+        3,
+        5,
+        3,
+        6,
+        4,
+        3,
+        5,
+        0,
+        3,
+        4,
+        1,
+        3,
+        0,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 96.0,
+        "y": 96.0
+      },
+      "asset": {
+        "guid": "5aa2a5c0131a5ef116688eea75cc9806",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3238.sprite.asset",
+        "sha256": "c683146a976ec92b6c0c786609aee3039d0226790f4d5e54239d2532ee574529"
+      }
+    },
+    {
+      "path": "ItemIcon/GameHeadIcon/Monster/G_3239",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "4277947370182962833",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "object_sha256": "c92ef6b4a0df9c6b1b0c124f1758bd473cc46f281dd4f7dc6b37641fa6d2018e",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "5544307247392583313",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "texture_object_sha256": "ffd40a6246de2f90766b4f44ee38bbd75cf2e5c8e944ee0d86216fc7fd3e489c",
+      "compressed_sha256": "4f6a672e1b0b44cec5940b50add1a564e6c236db1ba7352e150d0b72b469e878",
+      "rgba_sha256": "90d3b7b2e406d269f6777a18af681a95e1ad3832429da219ff33a1169bb17caa",
+      "mips": [
+        {
+          "level": 0,
+          "width": 192,
+          "height": 192,
+          "astc_offset": 0,
+          "astc_size": 16384,
+          "astc_sha256": "4f6a672e1b0b44cec5940b50add1a564e6c236db1ba7352e150d0b72b469e878",
+          "rgba_offset": 0,
+          "rgba_size": 147456,
+          "rgba_sha256": "90d3b7b2e406d269f6777a18af681a95e1ad3832429da219ff33a1169bb17caa"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 0.6800000071525574,
+          "y": -0.10000000149011612
+        },
+        {
+          "x": 0.5899999737739563,
+          "y": -0.5899999737739563
+        },
+        {
+          "x": 0.6800000071525574,
+          "y": -0.550000011920929
+        },
+        {
+          "x": 0.5299999713897705,
+          "y": 0.5799999833106995
+        },
+        {
+          "x": -0.5299999713897705,
+          "y": 0.5799999833106995
+        },
+        {
+          "x": -0.6800000071525574,
+          "y": -0.03999999910593033
+        },
+        {
+          "x": -0.6800000071525574,
+          "y": -0.5899999737739563
+        }
+      ],
+      "triangles": [
+        6,
+        5,
+        1,
+        4,
+        1,
+        5,
+        3,
+        1,
+        4,
+        0,
+        1,
+        3,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 96.0,
+        "y": 96.0
+      },
+      "asset": {
+        "guid": "0d53363979af0dc0a4edbe9497cc437a",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3239.sprite.asset",
+        "sha256": "940b9e55f0e29c8c1ddfb91400c849085ecb9e0adc3d2b8dd8222af1ef4d02c6"
+      }
+    },
+    {
+      "path": "ItemIcon/GameHeadIcon/Monster/G_3240",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "6692855544507170687",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "object_sha256": "ffcca87a409d6eda4252e58058a3b0a40a55846b7a32b4b8ae988a9ceb3a7468",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "-321368725155446913",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "texture_object_sha256": "b3a8356d68b6cf803bf53151c33965d94a51c139811c4ae0dea7190b25289fea",
+      "compressed_sha256": "310c09a5975984b7184a359ec8261c55d82723bf0b029b05f76c25df90ecb48a",
+      "rgba_sha256": "ce87b3d7391ef8978af78106fee38a6913516dfb11d9a9f831002e6db393fe44",
+      "mips": [
+        {
+          "level": 0,
+          "width": 192,
+          "height": 192,
+          "astc_offset": 0,
+          "astc_size": 16384,
+          "astc_sha256": "310c09a5975984b7184a359ec8261c55d82723bf0b029b05f76c25df90ecb48a",
+          "rgba_offset": 0,
+          "rgba_size": 147456,
+          "rgba_sha256": "ce87b3d7391ef8978af78106fee38a6913516dfb11d9a9f831002e6db393fe44"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 0.6800000071525574,
+          "y": 0.5799999833106995
+        },
+        {
+          "x": 0.7400000095367432,
+          "y": -0.5799999833106995
+        },
+        {
+          "x": 0.7400000095367432,
+          "y": 0.25
+        },
+        {
+          "x": -0.6800000071525574,
+          "y": 0.5799999833106995
+        },
+        {
+          "x": -0.7400000095367432,
+          "y": 0.3700000047683716
+        },
+        {
+          "x": -0.7400000095367432,
+          "y": -0.5799999833106995
+        }
+      ],
+      "triangles": [
+        5,
+        4,
+        1,
+        3,
+        1,
+        4,
+        0,
+        1,
+        3,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 96.0,
+        "y": 96.0
+      },
+      "asset": {
+        "guid": "18e2c3e7ba51109578697a751260f1cd",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3240.sprite.asset",
+        "sha256": "7467902a712ed0bdc675121720ef29b4ae5da3d6c69c961b27463c7796110515"
+      }
+    },
+    {
+      "path": "ItemIcon/GameHeadIcon/Monster/G_3241",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "4759435464746567178",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "object_sha256": "88565d668798b49eac9426789af22ca888ee4c147a474325cc68597b6ec70d6d",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "-2621724990189042166",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "texture_object_sha256": "d69d03afdd7b58217ac7573c94fd36b370d3170edfc7a3b4b12992e8a35ad92d",
+      "compressed_sha256": "97208dd6d53697a3adc1ab47601baf91b23d5c4f8dca4158e0d555a0af21e7f3",
+      "rgba_sha256": "0153ffbf900f992e3a68c9d0c4ec72884de9957e00ccc647f91505b7248ab867",
+      "mips": [
+        {
+          "level": 0,
+          "width": 192,
+          "height": 192,
+          "astc_offset": 0,
+          "astc_size": 16384,
+          "astc_sha256": "97208dd6d53697a3adc1ab47601baf91b23d5c4f8dca4158e0d555a0af21e7f3",
+          "rgba_offset": 0,
+          "rgba_size": 147456,
+          "rgba_sha256": "0153ffbf900f992e3a68c9d0c4ec72884de9957e00ccc647f91505b7248ab867"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 0.6299999952316284,
+          "y": 0.4099999964237213
+        },
+        {
+          "x": 0.6000000238418579,
+          "y": -0.5099999904632568
+        },
+        {
+          "x": 0.6299999952316284,
+          "y": -0.38999998569488525
+        },
+        {
+          "x": 0.36000001430511475,
+          "y": 0.4699999988079071
+        },
+        {
+          "x": 0.30000001192092896,
+          "y": -0.5699999928474426
+        },
+        {
+          "x": -0.38999998569488525,
+          "y": -0.5699999928474426
+        },
+        {
+          "x": -0.41999998688697815,
+          "y": 0.4699999988079071
+        },
+        {
+          "x": -0.6200000047683716,
+          "y": 0.33000001311302185
+        },
+        {
+          "x": -0.6200000047683716,
+          "y": -0.4099999964237213
+        }
+      ],
+      "triangles": [
+        8,
+        7,
+        5,
+        6,
+        5,
+        7,
+        3,
+        5,
+        6,
+        4,
+        5,
+        3,
+        1,
+        4,
+        3,
+        0,
+        1,
+        3,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 96.0,
+        "y": 96.0
+      },
+      "asset": {
+        "guid": "9922c392406e8e09ee89282ee9139af6",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3241.sprite.asset",
+        "sha256": "0e4551709e65b36c000bf87f7656ba63871c9f61a58cded2a3fe5d24dcf89048"
+      }
+    },
+    {
+      "path": "ItemIcon/GameHeadIcon/Monster/G_3243",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "-1267971553180879830",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "object_sha256": "22988c3c7cc3f54d6bd1accca6cbb4a7b6a21d301be7c9f3085b7d60f6709b78",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "4212793174658020394",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "texture_object_sha256": "a45972328378364f84b68dbb692360d83b1657a719c2200ffaaed6b51fa19c56",
+      "compressed_sha256": "6b23247308b3373f2239fca0f6715fc7615bf9d2dde988bc49dc0e4d61eeb1fb",
+      "rgba_sha256": "6ce4a337dfd70750158f2bb62b0b356a7d5d31bbe00ceae37bb2c05191a463e6",
+      "mips": [
+        {
+          "level": 0,
+          "width": 192,
+          "height": 192,
+          "astc_offset": 0,
+          "astc_size": 16384,
+          "astc_sha256": "6b23247308b3373f2239fca0f6715fc7615bf9d2dde988bc49dc0e4d61eeb1fb",
+          "rgba_offset": 0,
+          "rgba_size": 147456,
+          "rgba_sha256": "6ce4a337dfd70750158f2bb62b0b356a7d5d31bbe00ceae37bb2c05191a463e6"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 0.6700000166893005,
+          "y": 0.23999999463558197
+        },
+        {
+          "x": 0.6600000262260437,
+          "y": -0.3700000047683716
+        },
+        {
+          "x": 0.6700000166893005,
+          "y": -0.20999999344348907
+        },
+        {
+          "x": 0.2800000011920929,
+          "y": -0.6399999856948853
+        },
+        {
+          "x": 0.12999999523162842,
+          "y": 0.6399999856948853
+        },
+        {
+          "x": -0.07000000029802322,
+          "y": 0.6399999856948853
+        },
+        {
+          "x": -0.23000000417232513,
+          "y": -0.6399999856948853
+        },
+        {
+          "x": -0.6299999952316284,
+          "y": -0.3700000047683716
+        },
+        {
+          "x": -0.6700000166893005,
+          "y": 0.30000001192092896
+        },
+        {
+          "x": -0.6700000166893005,
+          "y": -0.20999999344348907
+        }
+      ],
+      "triangles": [
+        9,
+        8,
+        7,
+        5,
+        7,
+        8,
+        6,
+        7,
+        5,
+        3,
+        6,
+        5,
+        4,
+        3,
+        5,
+        0,
+        3,
+        4,
+        1,
+        3,
+        0,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 96.0,
+        "y": 96.0
+      },
+      "asset": {
+        "guid": "a84dfde5ceb7f5e1b1a7f14db940c3ef",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3243.sprite.asset",
+        "sha256": "614ec11d59caf57aa2ebfdb391d6a2d585c33dcdbbe11444922d1e28c892c357"
+      }
+    },
+    {
+      "path": "ItemIcon/GameHeadIcon/Monster/G_3251",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "6082187932679899636",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "object_sha256": "836ae6a196b3992ef2a78c5cc74dedce2d2855cc17e5ecae1ef44a5dc8d59e7d",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "-5655643672480806412",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "texture_object_sha256": "b76c81c7d4f80d3d3139e44bc3ad3c32f6fd8405861a7bc359d60a411928e580",
+      "compressed_sha256": "3d132aa3f5039e9cdd64d3b74455dc97a74f28d3c0adadd3cc604dc057c4df5a",
+      "rgba_sha256": "443655374a4d43d4da4cc4f0fa52ed710bbb4a22f84e4297f2f0e7a906c3c5fd",
+      "mips": [
+        {
+          "level": 0,
+          "width": 192,
+          "height": 192,
+          "astc_offset": 0,
+          "astc_size": 16384,
+          "astc_sha256": "3d132aa3f5039e9cdd64d3b74455dc97a74f28d3c0adadd3cc604dc057c4df5a",
+          "rgba_offset": 0,
+          "rgba_size": 147456,
+          "rgba_sha256": "443655374a4d43d4da4cc4f0fa52ed710bbb4a22f84e4297f2f0e7a906c3c5fd"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 0.4099999964237213,
+          "y": 0.4399999976158142
+        },
+        {
+          "x": 0.5199999809265137,
+          "y": -0.5299999713897705
+        },
+        {
+          "x": 0.5199999809265137,
+          "y": 0.4399999976158142
+        },
+        {
+          "x": 0.14000000059604645,
+          "y": 0.5400000214576721
+        },
+        {
+          "x": -0.17000000178813934,
+          "y": 0.5400000214576721
+        },
+        {
+          "x": -0.46000000834465027,
+          "y": 0.4300000071525574
+        },
+        {
+          "x": -0.5,
+          "y": 0.3700000047683716
+        },
+        {
+          "x": -0.5199999809265137,
+          "y": 0.28999999165534973
+        },
+        {
+          "x": -0.5199999809265137,
+          "y": -0.5299999713897705
+        }
+      ],
+      "triangles": [
+        8,
+        7,
+        1,
+        6,
+        1,
+        7,
+        5,
+        1,
+        6,
+        4,
+        1,
+        5,
+        3,
+        1,
+        4,
+        0,
+        1,
+        3,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 96.0,
+        "y": 96.0
+      },
+      "asset": {
+        "guid": "7287ce5257fd03471e0254074819b5ef",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3251.sprite.asset",
+        "sha256": "72819e627621b31490aba210941f6072c52c8043014cb654a1864822a9e9c946"
+      }
+    },
+    {
+      "path": "ItemIcon/GameHeadIcon/Monster/G_3261",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "5215377881861291301",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "object_sha256": "5eea56c3425cac52ee4ba8f43f041dcf7192e9218a7254fcda87f22b55becb68",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "-2302357962395976411",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "texture_object_sha256": "96b621489273874664118331a0ba3f01da08c2c54cf0397caae250ca575dd34d",
+      "compressed_sha256": "9bedbbf5fc1af4ff03e58f5569943aa8c9743cd543693cd8ea66d90e0af42256",
+      "rgba_sha256": "c5693cd519649b53d3f89b66db55f75aabcd260dbc2fc52397da22816ca6e2cc",
+      "mips": [
+        {
+          "level": 0,
+          "width": 192,
+          "height": 192,
+          "astc_offset": 0,
+          "astc_size": 16384,
+          "astc_sha256": "9bedbbf5fc1af4ff03e58f5569943aa8c9743cd543693cd8ea66d90e0af42256",
+          "rgba_offset": 0,
+          "rgba_size": 147456,
+          "rgba_sha256": "c5693cd519649b53d3f89b66db55f75aabcd260dbc2fc52397da22816ca6e2cc"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 0.7099999785423279,
+          "y": 0.07000000029802322
+        },
+        {
+          "x": 0.6299999952316284,
+          "y": -0.6100000143051147
+        },
+        {
+          "x": 0.7099999785423279,
+          "y": -0.4399999976158142
+        },
+        {
+          "x": 0.5400000214576721,
+          "y": 0.5600000023841858
+        },
+        {
+          "x": -0.18000000715255737,
+          "y": -0.6100000143051147
+        },
+        {
+          "x": -0.5400000214576721,
+          "y": -0.5600000023841858
+        },
+        {
+          "x": -0.5799999833106995,
+          "y": 0.5600000023841858
+        },
+        {
+          "x": -0.6200000047683716,
+          "y": -0.5699999928474426
+        },
+        {
+          "x": -0.7099999785423279,
+          "y": -0.09000000357627869
+        },
+        {
+          "x": -0.7099999785423279,
+          "y": -0.5600000023841858
+        }
+      ],
+      "triangles": [
+        9,
+        8,
+        7,
+        6,
+        7,
+        8,
+        5,
+        7,
+        6,
+        3,
+        5,
+        6,
+        4,
+        5,
+        3,
+        1,
+        4,
+        3,
+        0,
+        1,
+        3,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 96.0,
+        "y": 96.0
+      },
+      "asset": {
+        "guid": "ad1c671f6fe25383019dcebc83dc684b",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3261.sprite.asset",
+        "sha256": "59fdfabfd66d04f6ee2bee57b982e5c711d51f0a1d41f580bf1fb4fdaba83d05"
+      }
+    },
+    {
+      "path": "ItemIcon/GameHeadIcon/Monster/G_3262",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "-2754358683495314512",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "object_sha256": "02eb9483219412595c36aca928bf6986dc75c82f1209cc4dbc1c5f98ff5cb6d4",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "path_id": "8568132605501033392",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "raw_size": 993057,
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e"
+      },
+      "texture_object_sha256": "c0aceeceea8c7f17648462e04d844cfadace7a0934637cf9f2911d4a2c8be8fa",
+      "compressed_sha256": "aad60efdea372176c636a4002ac55425544abb3940b5fde98fcb65fc0917a29f",
+      "rgba_sha256": "5f97c8a847aae51f10f697a6d460d26ffa30a371f989c9feec20a86ebe4a753d",
+      "mips": [
+        {
+          "level": 0,
+          "width": 192,
+          "height": 192,
+          "astc_offset": 0,
+          "astc_size": 16384,
+          "astc_sha256": "aad60efdea372176c636a4002ac55425544abb3940b5fde98fcb65fc0917a29f",
+          "rgba_offset": 0,
+          "rgba_size": 147456,
+          "rgba_sha256": "5f97c8a847aae51f10f697a6d460d26ffa30a371f989c9feec20a86ebe4a753d"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": -0.46000000834465027,
+          "y": 0.5600000023841858
+        },
+        {
+          "x": 0.6700000166893005,
+          "y": -0.6200000047683716
+        },
+        {
+          "x": 0.6700000166893005,
+          "y": 0.5600000023841858
+        },
+        {
+          "x": -0.7099999785423279,
+          "y": 0.14000000059604645
+        },
+        {
+          "x": -0.7099999785423279,
+          "y": -0.6200000047683716
+        }
+      ],
+      "triangles": [
+        4,
+        3,
+        1,
+        0,
+        1,
+        3,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 96.0,
+        "y": 96.0
+      },
+      "asset": {
+        "guid": "b0f4a6a861f5f291ff956c6114df525b",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3262.sprite.asset",
+        "sha256": "467abb399cb085406f1aa4dc0db524363650644c7771b8e41da2d2a432adea9c"
+      }
+    },
+    {
+      "path": "ItemIcon/Materials/item_40102",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_materials_public_noatlas.bundle",
+        "bundle_hash": "e9d920b114d4b6e29119b6fda545133a",
+        "path_id": "5346337881308725681",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/e9d920b114d4b6e29119b6fda545133a.bundle",
+        "raw_size": 518666,
+        "raw_sha256": "3647b913bce201e5a81b404da748b3131c185a9c8d1e2ebb6859cfb38e3a9822"
+      },
+      "object_sha256": "6cefcd20466e806d89a5007640f0ce1bbd0fc0ee5c5569c1dde8fbd3c6e6f876",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_materials_public_noatlas.bundle",
+        "bundle_hash": "e9d920b114d4b6e29119b6fda545133a",
+        "path_id": "4827133840094265777",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/e9d920b114d4b6e29119b6fda545133a.bundle",
+        "raw_size": 518666,
+        "raw_sha256": "3647b913bce201e5a81b404da748b3131c185a9c8d1e2ebb6859cfb38e3a9822"
+      },
+      "texture_object_sha256": "4833cf0ea8473b0f427f950568de755a2edbaf5b49bc3b0a4a58bd66be1285b5",
+      "compressed_sha256": "38bd3edd53d69ee27cf714dac3d45123ebc7ab577fbda1b5b67acdb86392f2fe",
+      "rgba_sha256": "ab32426e3279b0c6f4f53bff1fdc10318fca11e170ff57ba80515abb30644318",
+      "mips": [
+        {
+          "level": 0,
+          "width": 256,
+          "height": 256,
+          "astc_offset": 0,
+          "astc_size": 65536,
+          "astc_sha256": "38bd3edd53d69ee27cf714dac3d45123ebc7ab577fbda1b5b67acdb86392f2fe",
+          "rgba_offset": 0,
+          "rgba_size": 262144,
+          "rgba_sha256": "ab32426e3279b0c6f4f53bff1fdc10318fca11e170ff57ba80515abb30644318"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 0.6000000238418579,
+          "y": 0.7099999785423279
+        },
+        {
+          "x": 0.9399999976158142,
+          "y": -0.6899999976158142
+        },
+        {
+          "x": 0.9399999976158142,
+          "y": 0.47999998927116394
+        },
+        {
+          "x": 0.3499999940395355,
+          "y": -0.8700000047683716
+        },
+        {
+          "x": -0.12999999523162842,
+          "y": -0.8700000047683716
+        },
+        {
+          "x": -0.38999998569488525,
+          "y": -0.7799999713897705
+        },
+        {
+          "x": -0.44999998807907104,
+          "y": 0.7099999785423279
+        },
+        {
+          "x": -0.9300000071525574,
+          "y": -0.38999998569488525
+        },
+        {
+          "x": -1.0199999809265137,
+          "y": 0.25
+        },
+        {
+          "x": -1.0199999809265137,
+          "y": -0.05000000074505806
+        }
+      ],
+      "triangles": [
+        9,
+        8,
+        7,
+        6,
+        7,
+        8,
+        5,
+        7,
+        6,
+        0,
+        5,
+        6,
+        4,
+        5,
+        0,
+        3,
+        4,
+        0,
+        1,
+        3,
+        0,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 128.0,
+        "y": 128.0
+      },
+      "asset": {
+        "guid": "81398b1af0604de1a2fac093b40365f3",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/item_40102.sprite.asset",
+        "sha256": "2073c8c099caf2d7bfac43ee77740b83f00aaaeb71190a0b770e2b9fe5fccf35"
+      }
+    },
+    {
+      "path": "ItemIcon/Materials/item_40502",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_materials_map13_noatlas.bundle",
+        "bundle_hash": "f45bbc96cf0832986b4e6768d25e2a62",
+        "path_id": "1735906113518483658",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f45bbc96cf0832986b4e6768d25e2a62.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 404238,
+        "bundle_sha256": "8c21a64d3e64910731e74156448c68de09eda65fa2f08456db622831315974ea"
+      },
+      "object_sha256": "609084a9e78392d1336f0969e4caa0c377332e39ffc188c5fd796fc96a7482ee",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_materials_map13_noatlas.bundle",
+        "bundle_hash": "f45bbc96cf0832986b4e6768d25e2a62",
+        "path_id": "-1884602522209765174",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f45bbc96cf0832986b4e6768d25e2a62.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 404238,
+        "bundle_sha256": "8c21a64d3e64910731e74156448c68de09eda65fa2f08456db622831315974ea"
+      },
+      "texture_object_sha256": "22ff9e07e9ed6b4bfda3bcb4538aabcaf2224e89e3b413eb8822b0671ce20cc7",
+      "compressed_sha256": "b20b6b4955dad843820fc3b1f8d483fa626b9f853aab64b8890a596936317935",
+      "rgba_sha256": "e20077a53f4c8afc6af19758d22d3bf2e97e1a6e4674f709d2291bc90e75d0a2",
+      "mips": [
+        {
+          "level": 0,
+          "width": 256,
+          "height": 256,
+          "astc_offset": 0,
+          "astc_size": 65536,
+          "astc_sha256": "b20b6b4955dad843820fc3b1f8d483fa626b9f853aab64b8890a596936317935",
+          "rgba_offset": 0,
+          "rgba_size": 262144,
+          "rgba_sha256": "e20077a53f4c8afc6af19758d22d3bf2e97e1a6e4674f709d2291bc90e75d0a2"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 0.8999999761581421,
+          "y": 0.18000000715255737
+        },
+        {
+          "x": 0.8199999928474426,
+          "y": -0.8799999952316284
+        },
+        {
+          "x": 0.8999999761581421,
+          "y": -0.6899999976158142
+        },
+        {
+          "x": 0.6000000238418579,
+          "y": 0.800000011920929
+        },
+        {
+          "x": 0.5400000214576721,
+          "y": 0.8199999928474426
+        },
+        {
+          "x": 0.009999999776482582,
+          "y": 0.8199999928474426
+        },
+        {
+          "x": -0.7300000190734863,
+          "y": -0.8799999952316284
+        },
+        {
+          "x": -0.949999988079071,
+          "y": 0.30000001192092896
+        },
+        {
+          "x": -0.949999988079071,
+          "y": -0.5199999809265137
+        }
+      ],
+      "triangles": [
+        8,
+        7,
+        6,
+        5,
+        6,
+        7,
+        1,
+        6,
+        5,
+        4,
+        1,
+        5,
+        3,
+        1,
+        4,
+        0,
+        1,
+        3,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 128.0,
+        "y": 128.0
+      },
+      "asset": {
+        "guid": "8a071e97dfd9e4497d0d994c231a3f28",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/item_40502.sprite.asset",
+        "sha256": "6f6ed6d53835ff4ad122718654f4f17ad52936dd223ad50ca2ca31fafac0e08d"
+      }
+    },
+    {
+      "path": "ItemIcon/Materials/item_41300",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_materials_public_noatlas.bundle",
+        "bundle_hash": "e9d920b114d4b6e29119b6fda545133a",
+        "path_id": "9045594290410485634",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/e9d920b114d4b6e29119b6fda545133a.bundle",
+        "raw_size": 518666,
+        "raw_sha256": "3647b913bce201e5a81b404da748b3131c185a9c8d1e2ebb6859cfb38e3a9822"
+      },
+      "object_sha256": "bc379e3692462b50cb2d5ec6c402c6876a1e3df2c119e1f7e839862c9324dd59",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_materials_public_noatlas.bundle",
+        "bundle_hash": "e9d920b114d4b6e29119b6fda545133a",
+        "path_id": "-5147879143067158654",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/e9d920b114d4b6e29119b6fda545133a.bundle",
+        "raw_size": 518666,
+        "raw_sha256": "3647b913bce201e5a81b404da748b3131c185a9c8d1e2ebb6859cfb38e3a9822"
+      },
+      "texture_object_sha256": "3570988c26fdac218a898ad30dc9a8a5fb5992386dae717a28c4291d84525774",
+      "compressed_sha256": "31dfd483b888e6a0a0298a5cac66e99215bb09974c15bbba8115b8c9a8b6acad",
+      "rgba_sha256": "06bc67e0a77cce114cf312537e7a34c4956707fd25a61a11d062b7848d6b795a",
+      "mips": [
+        {
+          "level": 0,
+          "width": 256,
+          "height": 256,
+          "astc_offset": 0,
+          "astc_size": 65536,
+          "astc_sha256": "31dfd483b888e6a0a0298a5cac66e99215bb09974c15bbba8115b8c9a8b6acad",
+          "rgba_offset": 0,
+          "rgba_size": 262144,
+          "rgba_sha256": "06bc67e0a77cce114cf312537e7a34c4956707fd25a61a11d062b7848d6b795a"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 0.8399999737739563,
+          "y": 0.3700000047683716
+        },
+        {
+          "x": 0.5099999904632568,
+          "y": -0.8299999833106995
+        },
+        {
+          "x": 0.8399999737739563,
+          "y": -0.49000000953674316
+        },
+        {
+          "x": 0.4699999988079071,
+          "y": 1.0
+        },
+        {
+          "x": 0.3199999928474426,
+          "y": -1.0399999618530273
+        },
+        {
+          "x": -0.1599999964237213,
+          "y": 1.0
+        },
+        {
+          "x": -0.23000000417232513,
+          "y": -1.0399999618530273
+        },
+        {
+          "x": -0.7900000214576721,
+          "y": -0.8700000047683716
+        },
+        {
+          "x": -0.8299999833106995,
+          "y": 0.3100000023841858
+        },
+        {
+          "x": -0.8299999833106995,
+          "y": -0.6200000047683716
+        }
+      ],
+      "triangles": [
+        9,
+        8,
+        7,
+        5,
+        7,
+        8,
+        6,
+        7,
+        5,
+        4,
+        6,
+        5,
+        3,
+        4,
+        5,
+        1,
+        4,
+        3,
+        0,
+        1,
+        3,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 128.0,
+        "y": 128.0
+      },
+      "asset": {
+        "guid": "8e96c5c3c1b8b7e648cab9fb4e5ff18b",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/item_41300.sprite.asset",
+        "sha256": "2c2090621a063f1af741bfeae4f33ddd5233d1ed3addaa4c3ee6d1a18227591b"
+      }
+    },
+    {
+      "path": "ItemIcon/Materials/item_41400",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_materials_public_noatlas.bundle",
+        "bundle_hash": "e9d920b114d4b6e29119b6fda545133a",
+        "path_id": "723566710066943500",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/e9d920b114d4b6e29119b6fda545133a.bundle",
+        "raw_size": 518666,
+        "raw_sha256": "3647b913bce201e5a81b404da748b3131c185a9c8d1e2ebb6859cfb38e3a9822"
+      },
+      "object_sha256": "580171e9a651f02661d0794131c21850e006692e1de7f91d10316d7281ab1a79",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_materials_public_noatlas.bundle",
+        "bundle_hash": "e9d920b114d4b6e29119b6fda545133a",
+        "path_id": "-403566526285638132",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/e9d920b114d4b6e29119b6fda545133a.bundle",
+        "raw_size": 518666,
+        "raw_sha256": "3647b913bce201e5a81b404da748b3131c185a9c8d1e2ebb6859cfb38e3a9822"
+      },
+      "texture_object_sha256": "72124e8f10be7e00c177c748c0933f8fab129266f45dcd2a8a12161ceafcad53",
+      "compressed_sha256": "2bafed5d483aec63221c60681c61c2c7e9eaf7161eec36bfaf7c469013247a4b",
+      "rgba_sha256": "e170604814894f98bb2a4b4bd1eb4a777a03e0f1d80b1ee658924af3ec157dac",
+      "mips": [
+        {
+          "level": 0,
+          "width": 256,
+          "height": 256,
+          "astc_offset": 0,
+          "astc_size": 65536,
+          "astc_sha256": "2bafed5d483aec63221c60681c61c2c7e9eaf7161eec36bfaf7c469013247a4b",
+          "rgba_offset": 0,
+          "rgba_size": 262144,
+          "rgba_sha256": "e170604814894f98bb2a4b4bd1eb4a777a03e0f1d80b1ee658924af3ec157dac"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 1.0499999523162842,
+          "y": -0.20000000298023224
+        },
+        {
+          "x": 0.8799999952316284,
+          "y": -0.6299999952316284
+        },
+        {
+          "x": 1.0499999523162842,
+          "y": -0.4399999976158142
+        },
+        {
+          "x": 0.5799999833106995,
+          "y": -0.6499999761581421
+        },
+        {
+          "x": 0.27000001072883606,
+          "y": 0.6200000047683716
+        },
+        {
+          "x": -0.10999999940395355,
+          "y": 0.6200000047683716
+        },
+        {
+          "x": -0.44999998807907104,
+          "y": -0.6499999761581421
+        },
+        {
+          "x": -0.7200000286102295,
+          "y": -0.6100000143051147
+        },
+        {
+          "x": -1.0099999904632568,
+          "y": -0.03999999910593033
+        },
+        {
+          "x": -1.0099999904632568,
+          "y": -0.5199999809265137
+        }
+      ],
+      "triangles": [
+        9,
+        8,
+        7,
+        5,
+        7,
+        8,
+        6,
+        7,
+        5,
+        3,
+        6,
+        5,
+        4,
+        3,
+        5,
+        0,
+        3,
+        4,
+        1,
+        3,
+        0,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 128.0,
+        "y": 128.0
+      },
+      "asset": {
+        "guid": "8978f85722ac8b82172c30ded1602404",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/item_41400.sprite.asset",
+        "sha256": "5064aee57558bc37ae54599f58626a700818dec037a6da9a17fd71738c48eab6"
+      }
+    },
+    {
+      "path": "ItemIcon/Materials/item_8101",
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_materials_map11_noatlas.bundle",
+        "bundle_hash": "ceaa910379c7b4e461e578edf8957d32",
+        "path_id": "-7867637781128989350",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/ceaa910379c7b4e461e578edf8957d32.bundle",
+        "raw_size": 509744,
+        "raw_sha256": "bef47b25fa1088a08f557c47a8db8a91d478867d963c0b0567d418288bb97a3d"
+      },
+      "object_sha256": "f9ab669e40e0d0170921b8d6eebb342fb7cbfeb0f139f3a0ea0f69ad29249b2f",
+      "texture_source": {
+        "bundle": "defaultpackage_assets_image_itemicon_materials_map11_noatlas.bundle",
+        "bundle_hash": "ceaa910379c7b4e461e578edf8957d32",
+        "path_id": "4745546157044544858",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/ceaa910379c7b4e461e578edf8957d32.bundle",
+        "raw_size": 509744,
+        "raw_sha256": "bef47b25fa1088a08f557c47a8db8a91d478867d963c0b0567d418288bb97a3d"
+      },
+      "texture_object_sha256": "e2ba6e3afd9f199b7fd51c40bddefb606b9bb6dc05e533e6358b3f8d457593f2",
+      "compressed_sha256": "b820eeb457e838c86c81a562adeaf06709a76a3530e1fe7762a5b4ef4cbb45c4",
+      "rgba_sha256": "01ea0ab3370672503d9f8d83f346dbcb9d3f0dc00a13078ea67f0ec486664c60",
+      "mips": [
+        {
+          "level": 0,
+          "width": 256,
+          "height": 256,
+          "astc_offset": 0,
+          "astc_size": 65536,
+          "astc_sha256": "b820eeb457e838c86c81a562adeaf06709a76a3530e1fe7762a5b4ef4cbb45c4",
+          "rgba_offset": 0,
+          "rgba_size": 262144,
+          "rgba_sha256": "01ea0ab3370672503d9f8d83f346dbcb9d3f0dc00a13078ea67f0ec486664c60"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "vertices": [
+        {
+          "x": 0.4099999964237213,
+          "y": 0.8299999833106995
+        },
+        {
+          "x": 0.28999999165534973,
+          "y": 0.7599999904632568
+        },
+        {
+          "x": 0.38999998569488525,
+          "y": 0.6800000071525574
+        },
+        {
+          "x": 0.2800000011920929,
+          "y": 0.7599999904632568
+        },
+        {
+          "x": 0.27000001072883606,
+          "y": 0.800000011920929
+        },
+        {
+          "x": 0.9200000166893005,
+          "y": 0.15000000596046448
+        },
+        {
+          "x": 0.8799999952316284,
+          "y": 0.23999999463558197
+        },
+        {
+          "x": 0.9100000262260437,
+          "y": 0.15000000596046448
+        },
+        {
+          "x": 0.949999988079071,
+          "y": 0.12999999523162842
+        },
+        {
+          "x": 0.9200000166893005,
+          "y": 0.14000000059604645
+        },
+        {
+          "x": 1.0099999904632568,
+          "y": -0.5
+        },
+        {
+          "x": 1.0099999904632568,
+          "y": 0.09000000357627869
+        },
+        {
+          "x": 0.8399999737739563,
+          "y": 0.44999998807907104
+        },
+        {
+          "x": 0.6000000238418579,
+          "y": 0.75
+        },
+        {
+          "x": 0.5400000214576721,
+          "y": -1.0
+        },
+        {
+          "x": 0.30000001192092896,
+          "y": 0.7400000095367432
+        },
+        {
+          "x": 0.2800000011920929,
+          "y": 0.7599999904632568
+        },
+        {
+          "x": 0.11999999731779099,
+          "y": 0.9399999976158142
+        },
+        {
+          "x": -0.14000000059604645,
+          "y": -1.0
+        },
+        {
+          "x": -0.2199999988079071,
+          "y": -0.23999999463558197
+        },
+        {
+          "x": -0.25999999046325684,
+          "y": -0.2800000011920929
+        },
+        {
+          "x": -0.28999999165534973,
+          "y": -0.2800000011920929
+        },
+        {
+          "x": -0.3100000023841858,
+          "y": 0.029999999329447746
+        },
+        {
+          "x": -0.3799999952316284,
+          "y": -0.11999999731779099
+        },
+        {
+          "x": -0.3100000023841858,
+          "y": 0.019999999552965164
+        },
+        {
+          "x": -0.5799999833106995,
+          "y": -0.38999998569488525
+        },
+        {
+          "x": -0.46000000834465027,
+          "y": -0.4399999976158142
+        },
+        {
+          "x": -0.6800000071525574,
+          "y": 0.9399999976158142
+        },
+        {
+          "x": -0.6800000071525574,
+          "y": 0.14000000059604645
+        },
+        {
+          "x": -0.75,
+          "y": 0.05999999865889549
+        },
+        {
+          "x": -0.7799999713897705,
+          "y": -0.10999999940395355
+        },
+        {
+          "x": -0.800000011920929,
+          "y": 0.029999999329447746
+        },
+        {
+          "x": -0.25999999046325684,
+          "y": -0.7200000286102295
+        },
+        {
+          "x": -0.3100000023841858,
+          "y": 0.0
+        },
+        {
+          "x": -0.3199999928474426,
+          "y": -0.009999999776482582
+        },
+        {
+          "x": -0.33000001311302185,
+          "y": -0.05999999865889549
+        },
+        {
+          "x": -0.33000001311302185,
+          "y": -0.23999999463558197
+        },
+        {
+          "x": -0.7900000214576721,
+          "y": 0.07000000029802322
+        },
+        {
+          "x": -0.8299999833106995,
+          "y": -0.07999999821186066
+        },
+        {
+          "x": -0.9599999785423279,
+          "y": -0.17000000178813934
+        },
+        {
+          "x": -0.9800000190734863,
+          "y": 0.6299999952316284
+        },
+        {
+          "x": -0.9800000190734863,
+          "y": -0.15000000596046448
+        },
+        {
+          "x": -0.36000001430511475,
+          "y": -0.20000000298023224
+        },
+        {
+          "x": 0.12999999523162842,
+          "y": 1.090000033378601
+        },
+        {
+          "x": 0.14000000059604645,
+          "y": 1.0299999713897705
+        },
+        {
+          "x": 0.15000000596046448,
+          "y": 1.0700000524520874
+        },
+        {
+          "x": 0.11999999731779099,
+          "y": 1.0199999809265137
+        },
+        {
+          "x": 0.10999999940395355,
+          "y": 1.090000033378601
+        },
+        {
+          "x": 0.10000000149011612,
+          "y": 1.0199999809265137
+        },
+        {
+          "x": 0.07999999821186066,
+          "y": 1.059999942779541
+        },
+        {
+          "x": 0.07999999821186066,
+          "y": 1.0399999618530273
+        },
+        {
+          "x": -0.1899999976158142,
+          "y": 1.0199999809265137
+        },
+        {
+          "x": -0.18000000715255737,
+          "y": 0.9800000190734863
+        },
+        {
+          "x": -0.18000000715255737,
+          "y": 1.0099999904632568
+        },
+        {
+          "x": -0.1899999976158142,
+          "y": 0.9599999785423279
+        },
+        {
+          "x": -0.2199999988079071,
+          "y": 0.9599999785423279
+        },
+        {
+          "x": -0.23999999463558197,
+          "y": 1.0199999809265137
+        },
+        {
+          "x": -0.23999999463558197,
+          "y": 0.9700000286102295
+        }
+      ],
+      "triangles": [
+        57,
+        56,
+        55,
+        51,
+        55,
+        56,
+        54,
+        55,
+        51,
+        52,
+        54,
+        51,
+        53,
+        52,
+        51,
+        50,
+        49,
+        48,
+        47,
+        48,
+        49,
+        46,
+        48,
+        47,
+        43,
+        46,
+        47,
+        44,
+        46,
+        43,
+        45,
+        44,
+        43,
+        26,
+        23,
+        42,
+        41,
+        40,
+        39,
+        27,
+        39,
+        40,
+        38,
+        39,
+        27,
+        37,
+        38,
+        27,
+        29,
+        37,
+        27,
+        28,
+        29,
+        27,
+        36,
+        35,
+        21,
+        34,
+        21,
+        35,
+        33,
+        21,
+        34,
+        24,
+        21,
+        33,
+        22,
+        21,
+        24,
+        32,
+        19,
+        18,
+        16,
+        3,
+        1,
+        7,
+        5,
+        9,
+        31,
+        29,
+        30,
+        25,
+        30,
+        29,
+        28,
+        25,
+        29,
+        27,
+        25,
+        28,
+        17,
+        25,
+        27,
+        22,
+        25,
+        17,
+        23,
+        25,
+        22,
+        26,
+        25,
+        23,
+        24,
+        23,
+        22,
+        21,
+        22,
+        17,
+        20,
+        21,
+        17,
+        19,
+        20,
+        17,
+        18,
+        19,
+        17,
+        14,
+        18,
+        17,
+        3,
+        14,
+        17,
+        16,
+        14,
+        3,
+        1,
+        14,
+        16,
+        15,
+        14,
+        1,
+        2,
+        14,
+        15,
+        0,
+        14,
+        2,
+        13,
+        14,
+        0,
+        10,
+        14,
+        13,
+        12,
+        10,
+        13,
+        6,
+        10,
+        12,
+        7,
+        10,
+        6,
+        9,
+        10,
+        7,
+        8,
+        10,
+        9,
+        11,
+        10,
+        8,
+        9,
+        5,
+        8,
+        7,
+        6,
+        5,
+        4,
+        0,
+        3,
+        1,
+        3,
+        0,
+        2,
+        1,
+        0
+      ],
+      "ppu": 100.0,
+      "pivot": {
+        "x": 128.0,
+        "y": 128.0
+      },
+      "asset": {
+        "guid": "0b004db14b3ffdc27040cc7f8dd4b453",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/item_8101.sprite.asset",
+        "sha256": "c8d205b42e060892ff55823dc0f27ff52f391210a36ad148fa58d279edfa5878"
+      }
+    }
+  ],
+  "static_sprites": [
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_materials_public_noatlas.bundle",
+        "bundle_hash": "e9d920b114d4b6e29119b6fda545133a",
+        "path_id": "5346337881308725681",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/e9d920b114d4b6e29119b6fda545133a.bundle",
+        "raw_size": 518666,
+        "raw_sha256": "3647b913bce201e5a81b404da748b3131c185a9c8d1e2ebb6859cfb38e3a9822"
+      },
+      "object_sha256": "6cefcd20466e806d89a5007640f0ce1bbd0fc0ee5c5569c1dde8fbd3c6e6f876",
+      "atlas": null,
+      "vertices": [
+        {
+          "x": 0.6000000238418579,
+          "y": 0.7099999785423279
+        },
+        {
+          "x": 0.9399999976158142,
+          "y": -0.6899999976158142
+        },
+        {
+          "x": 0.9399999976158142,
+          "y": 0.47999998927116394
+        },
+        {
+          "x": 0.3499999940395355,
+          "y": -0.8700000047683716
+        },
+        {
+          "x": -0.12999999523162842,
+          "y": -0.8700000047683716
+        },
+        {
+          "x": -0.38999998569488525,
+          "y": -0.7799999713897705
+        },
+        {
+          "x": -0.44999998807907104,
+          "y": 0.7099999785423279
+        },
+        {
+          "x": -0.9300000071525574,
+          "y": -0.38999998569488525
+        },
+        {
+          "x": -1.0199999809265137,
+          "y": 0.25
+        },
+        {
+          "x": -1.0199999809265137,
+          "y": -0.05000000074505806
+        }
+      ],
+      "triangles": [
+        9,
+        8,
+        7,
+        6,
+        7,
+        8,
+        5,
+        7,
+        6,
+        0,
+        5,
+        6,
+        4,
+        5,
+        0,
+        3,
+        4,
+        0,
+        1,
+        3,
+        0,
+        2,
+        1,
+        0
+      ],
+      "uv": [
+        {
+          "x": 0.7343750093132257,
+          "y": 0.7773437416180968
+        },
+        {
+          "x": 0.8671874990686774,
+          "y": 0.23046875093132257
+        },
+        {
+          "x": 0.8671874990686774,
+          "y": 0.6874999958090484
+        },
+        {
+          "x": 0.6367187476716936,
+          "y": 0.16015624813735485
+        },
+        {
+          "x": 0.44921875186264515,
+          "y": 0.16015624813735485
+        },
+        {
+          "x": 0.34765625558793545,
+          "y": 0.1953125111758709
+        },
+        {
+          "x": 0.3242187546566129,
+          "y": 0.7773437416180968
+        },
+        {
+          "x": 0.13671874720603228,
+          "y": 0.34765625558793545
+        },
+        {
+          "x": 0.1015625074505806,
+          "y": 0.59765625
+        },
+        {
+          "x": 0.1015625074505806,
+          "y": 0.4804687497089617
+        }
+      ],
+      "rect": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 256.0,
+        "height": 256.0
+      },
+      "ppu": 100.0,
+      "pivot": {
+        "x": 128.0,
+        "y": 128.0
+      },
+      "asset": {
+        "guid": "84ce32dececce0f0fbf0008c6f27ae6e",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Image/ItemIcon/Materials/Public_NoAtlas/item_40102.asset",
+        "sha256": "b1b20f9e4f720a19f3f39dd746a729024994db978a41ead8198acfb41ff8aa39"
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_appearance.bundle",
+        "bundle_hash": "54b501fe38356fa8288cd4f93b54079d",
+        "path_id": "8312656304548450390",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/54b501fe38356fa8288cd4f93b54079d.bundle",
+        "raw_size": 957511,
+        "raw_sha256": "c0fcdcf79eef2fcd963e144089cef9a72ea9d387f4065a8e7b15480f21033a01"
+      },
+      "object_sha256": "2954943d829900819da00b33afacdccdce155132e2ff5c3d4b4e2b1c9e368162",
+      "atlas": {
+        "source": {
+          "bundle": "defaultpackage_assets_image_ui_appearance.bundle",
+          "bundle_hash": "54b501fe38356fa8288cd4f93b54079d",
+          "path_id": "2932570335844971654",
+          "origin": "apk_zip",
+          "manifest": "871_156598",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "apk_entry": "assets/yoo/DefaultPackage/54b501fe38356fa8288cd4f93b54079d.bundle",
+          "raw_size": 957511,
+          "raw_sha256": "c0fcdcf79eef2fcd963e144089cef9a72ea9d387f4065a8e7b15480f21033a01"
+        },
+        "object_sha256": "c7da521948316f1cb2bbe8ec01081712447101422e4b73ff48805959af3df476",
+        "effective_render_data": {
+          "texture": {
+            "m_FileID": 0,
+            "m_PathID": 3224981416040739974
+          },
+          "alphaTexture": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "textureRect": {
+            "x": 534.0,
+            "y": 158.0,
+            "width": 96.0,
+            "height": 96.0
+          },
+          "textureRectOffset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "atlasRectOffset": {
+            "x": 534.0,
+            "y": 158.0
+          },
+          "uvTransform": {
+            "x": 100.0,
+            "y": 582.0,
+            "z": 100.0,
+            "w": 206.0
+          },
+          "downscaleMultiplier": 1.0,
+          "settingsRaw": 67,
+          "secondaryTextures": []
+        }
+      },
+      "vertices": [
+        {
+          "x": 0.3799999952316284,
+          "y": 0.47999998927116394
+        },
+        {
+          "x": 0.47999998927116394,
+          "y": -0.47999998927116394
+        },
+        {
+          "x": 0.47999998927116394,
+          "y": 0.3499999940395355
+        },
+        {
+          "x": -0.30000001192092896,
+          "y": 0.47999998927116394
+        },
+        {
+          "x": -0.3400000035762787,
+          "y": -0.47999998927116394
+        },
+        {
+          "x": -0.47999998927116394,
+          "y": 0.25999999046325684
+        },
+        {
+          "x": -0.47999998927116394,
+          "y": -0.2199999988079071
+        }
+      ],
+      "triangles": [
+        6,
+        5,
+        4,
+        3,
+        4,
+        5,
+        1,
+        4,
+        3,
+        0,
+        1,
+        3,
+        2,
+        1,
+        0
+      ],
+      "uv": [
+        {
+          "x": 0.6054687495343387,
+          "y": 0.4960937479045242
+        },
+        {
+          "x": 0.6152343739522621,
+          "y": 0.3085937520954758
+        },
+        {
+          "x": 0.6152343739522621,
+          "y": 0.4707031238358468
+        },
+        {
+          "x": 0.5390624988358468,
+          "y": 0.4960937479045242
+        },
+        {
+          "x": 0.535156249650754,
+          "y": 0.3085937520954758
+        },
+        {
+          "x": 0.5214843760477379,
+          "y": 0.45312499813735485
+        },
+        {
+          "x": 0.5214843760477379,
+          "y": 0.35937500023283064
+        }
+      ],
+      "rect": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 96.0,
+        "height": 96.0
+      },
+      "ppu": 100.0,
+      "pivot": {
+        "x": 48.0,
+        "y": 48.0
+      },
+      "asset": {
+        "guid": "86b68763145ab4c97f2b2b7a341aef49",
+        "file_id": 21300000,
+        "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Image/UI/Appearance/Appearance_Atlas/ImgBgIcon.asset",
+        "sha256": "a245a0c81ee63496c0dfad06466e7883052f1c206bec73650da33bb3ddd6ae90"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Image/ItemIcon/Materials/Public_NoAtlas/item_40102.asset",
+      "sha256": "b1b20f9e4f720a19f3f39dd746a729024994db978a41ead8198acfb41ff8aa39",
+      "meta_sha256": "7c06b77053582904c0cc86852dd8e93ee7a3624a39225b71278393126e343485"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Image/ItemIcon/Materials/Public_NoAtlas/item_40102.texture.asset",
+      "sha256": "7bb35c61631ceccb583edddd8f27aa221f9f2e640123d96bd8a48337f2f27766",
+      "meta_sha256": "252d7d2e7da126893e3155ce95d11552bd8223c39b6dc4482a06dd6f6254bb1d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Image/UI/Appearance/Appearance_Atlas/ImgBgIcon.asset",
+      "sha256": "a245a0c81ee63496c0dfad06466e7883052f1c206bec73650da33bb3ddd6ae90",
+      "meta_sha256": "c6e9427e055ea07ec9913f4701b4a379ffe647d1d55c67e9200c81c8b4b2d8ec"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_1.prefab",
+      "sha256": "a9503252d6b3360f46a1b95251cbe69dee49bd711205a6a47442a42e6f668025",
+      "meta_sha256": "b6c9fe7bfa93071ac207942d16338cd523b52e3ab7ef694dc4e9277ac952c921"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_2.prefab",
+      "sha256": "de45874fdb441a3428b897c4c5a93799467c574b03238bab77964a7a4375ad23",
+      "meta_sha256": "a57e9f998b7c3e2a343cdc5281d7103eb2400da74f9a9b98a0b2840e85a4b215"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_3.prefab",
+      "sha256": "6d269eba560a017f0a4d905b6fe298146ab185bb368c97321b864b0790368b97",
+      "meta_sha256": "762d457837f109e9411c61484ea56791b8a6c18d4e880f9d7770647100ebbcc9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_4.prefab",
+      "sha256": "f1067bbce5c0729954be0572642882df5f4bf08d7f7fc743bf672d563d2edbbb",
+      "meta_sha256": "75c2fa105ea8e516d020494c34c155561f1b59a41b2ce9403a6f5c7c391b72da"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_401.prefab",
+      "sha256": "e12036b2c25462159bab82bff8f7979cee5243596c4a70a55064bb732dc068ce",
+      "meta_sha256": "6c7c725b1672514cb9513eb944ceaec0e98be040c49069ba53d7d1aa5a59ba96"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_402.prefab",
+      "sha256": "8c151f6d30f5ecd5908de515ac62e66224d78f6e0145629bfbb0a4d97fd9d536",
+      "meta_sha256": "69dae93e5064cc9bd9dc8d671aa2dd8adb19f072ac6532f1812cecfa50f704d7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_403.prefab",
+      "sha256": "810e1c4f6765e9134f9f51a7b14e38ee3c7e1314f3713d08cb01b7565af892aa",
+      "meta_sha256": "733bf7f681886c2a02022b3396a9035904aa3ebc591c74e5367bdd279ef6e015"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_404.prefab",
+      "sha256": "dffd9b151e2ca7b1a9c2a824a0a3ebd9ef45587a0c1254ef6ba73826f80b0b7a",
+      "meta_sha256": "548ab0c2c8db0fc36c8d126d6c15882f37220a826ba1e687aa9bf286ae1e6597"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_405.prefab",
+      "sha256": "272ea55c7132c450c6b479ed214a6732a6a978f538180459fa90168e01441bfc",
+      "meta_sha256": "2d3992206fd7eefe93f8d5f4a2dc75a1a7d599c9ad076114544fd052e52f39f8"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_406.prefab",
+      "sha256": "a8264f1419eb5615ca497d5b2efd18fec4afa115ecb2ae6fcc74e50238fe862a",
+      "meta_sha256": "0b4199184e19c153d5e83d4e573b8cddecaf0cf002163bf92d5309b4e3849204"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_407.prefab",
+      "sha256": "7a43c71143378a22edb3162fa7763652b41e23123230f6b659eecfd519a52e2e",
+      "meta_sha256": "e0e1c9f2a5425d13ecbbb82afc06f21d6d24451d94f1a3a9bd1f34cd786be4ec"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_408.prefab",
+      "sha256": "8564bf6962e01816f7ce6b6ee09c6878d8865531c59b3c23d7ecd471b34a233b",
+      "meta_sha256": "655b66534fb08d8bfb5229da0f0e59e6b5031f275194efab78d01f3e6e22d839"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_409.prefab",
+      "sha256": "aa5c1be8f605e2a72d75b858a6f9bc5f5fa7edc6c9a6da945d8ad58f676bcc58",
+      "meta_sha256": "4896d4c6c404b6602fc1133513e7916be133eb58625d1d7255fbff1234c6c30e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_410.prefab",
+      "sha256": "da895c57c419a0d526be720a36f6405510af2cb1d3f689859dbcb1849d3de55d",
+      "meta_sha256": "5276422fb1598b7448c529e323eb06f326f5d5b61d3ec592c104f6c4a4356fbf"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_411.prefab",
+      "sha256": "be625ef6094cbf56ea31545d32d2ab84c7e7ef01ed42661c8b3ed1d0c2bce739",
+      "meta_sha256": "b9bd000017cfc54b62b1d450c0d2b297200fd50be89fcb492338f9e19138cd87"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_412.prefab",
+      "sha256": "e564f46a4732fca2744c5ab646445b7e4de72554f195e7af3e958a7cb7050f8a",
+      "meta_sha256": "d5a51ca4321245c880db4d868386e202027cc82748c56ae4168309f9a07448cd"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_413.prefab",
+      "sha256": "dd19ea953bee7cf97ab1f89ff8bb29b7abadc229deff916c2d789e6b27dd7117",
+      "meta_sha256": "c3104418cdbc28e77b9481ef5f1b1513d93accd7ede2c88e51fb7096bed65806"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_414.prefab",
+      "sha256": "c499e25230f7c048e5cd3ac0d0eeba0f53da6c0ce1560b4a2974017b64ebe22b",
+      "meta_sha256": "e87ee7ce52e649b3f8dbd753ed167601eb082455bb1e3a9d8d8b6b578749358c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_415.prefab",
+      "sha256": "b1b5f5d5c95f77a5b4274553d6055e8a5326cdee26dc713f23ff0a132b5ab0db",
+      "meta_sha256": "409ef4f00a573ea5dc11c7b91967cf5269a2dcb32d2006f8706e8bf9053a71fe"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_416.prefab",
+      "sha256": "ab268a807ccfcc70df23e09124020e9f698713190246c18d7b34c22d9793880f",
+      "meta_sha256": "e0602ebe38c739244b5161a9672bb9cee4b2dd588153e6d9b3055d46b1f04ad9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_417.prefab",
+      "sha256": "a63c15c590e3b83c1d7bafffbda1bcfb6a7af5fc29369fa153ed88fe0b96bce6",
+      "meta_sha256": "db175c00fc32e2f3a29214d755eed1c13985c83dd44e775fad3567c7cd332561"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_419.prefab",
+      "sha256": "f150d07924e2cceed07fb84724f329c444412be888d79877097ac9725d0d2ac7",
+      "meta_sha256": "6132372126d3dcc077986672ebe4132948ec65e2c04712f252d4dea805041dee"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/MapResourcePoint13/ResourcePoint_13_490.prefab",
+      "sha256": "0304153b7fe86a344fcddf17366f883188bdf7ec51ef00fe01fb7b91f53d8898",
+      "meta_sha256": "b0458ca57ca440afc09c00e82cd54173ea75ac0084f18f5a689d7ac6241c865d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Texture2D/sactx-0-1024x512-ASTC 6x6-Appearance_Atlas-15876def.texture.asset",
+      "sha256": "fd15810e183de20ff00de703286c26794ac44c465292133856e6e43b98c381e6",
+      "meta_sha256": "53f1ad62bfd69e6c7d165554d9258647763191ee4f5d10ab5c1269c6f7a75fd1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Prefabs/Map/Map_13/MiniMap/ResourcePointManager.prefab",
+      "sha256": "cfc35b8fbf80427a459c570579f55a623f411452c4d00676283924e4b13de46e",
+      "meta_sha256": "e9af6dc0f14158b175883cbc1917984731218841c35f1c77563da22d4a438efc"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3203.texture.asset",
+      "sha256": "3258e20d52a373838e4ef081b57fb5086e0c3bf02524385dcc3f2f461aaec20b",
+      "meta_sha256": "c0079347e89e655b99d97302a7b76c81208fd1c50e61f3d49e9533dfe2a4852d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3203.sprite.asset",
+      "sha256": "a3486cb5ba33295a279f9b946f182150ae4b983976a3f96014c0cff28e14aff5",
+      "meta_sha256": "ef23d426b4f0a171361b0772a33099d3e017f29126b6f3d7c28b3283199aa640"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3209.texture.asset",
+      "sha256": "78fcc63cf3e040df7f42a9fb8b202a5615f057eab48c3314ed2bab19007cb72f",
+      "meta_sha256": "220c615d2efdf10a827868be17341937283207b90febb3ca23598da2294567c9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3209.sprite.asset",
+      "sha256": "ca4e3d52edf212c060d5473ac9aee77c25792fab8941740173be1fa076f2f1ce",
+      "meta_sha256": "6f455a347406c330cd26d1a77b5b88f78165381675a64c7127bb29cd1470a101"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3230.texture.asset",
+      "sha256": "15db9ddfe5bdc54d567ade2d42e631756863594a69b0ef1bbea0420f8a20016b",
+      "meta_sha256": "2f71e99037d49f04c6fbed8c7b5d065ffb026f033c1cb42d4fcb014dec4198b8"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3230.sprite.asset",
+      "sha256": "7cbd8415d1c9f4029c7fbbf66c86dd960d92911632a16ef6fce633dc398417d1",
+      "meta_sha256": "0891104baf4f758b5283a4a5e0c7fc04bec5749ea6104bf7c3abb9ba8b191ee4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3231.texture.asset",
+      "sha256": "205d7a6dcf27fb55f3140e225cdbddc4bcd7e6eb1e3ca675563559d072df23e5",
+      "meta_sha256": "654b8a8fb1bd0a2f7b2b72b97632e82ca34932657a00a3492c3e2231603b594e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3231.sprite.asset",
+      "sha256": "c45d0a72791fdb8dafd5d1366bfb204d75ed905435582e2bba3e0ca4b4c5af44",
+      "meta_sha256": "211dcc28e5a81e6207a6fb5eaaf3b9bcb2c833959382a5826d3b6b212dc013c3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3232.texture.asset",
+      "sha256": "b1be4a8a6d2d3457e8f63d9fef2c476c6cc37647050feb1543f04c32b52192ec",
+      "meta_sha256": "101c79bd83c067c4ffa5f3a499cf68dcb1e1eb44e08bc60abeda6e0fb98ee420"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3232.sprite.asset",
+      "sha256": "572ebdeb5b2c83eaea1c51e98fcb0f22674717920da1b346eb13f4fa27f34b2b",
+      "meta_sha256": "523c548279ad1b67d84387b22135c67d5ee9de99ce77f8efe5f1dda5887cb387"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3233.texture.asset",
+      "sha256": "25db6d3f6b8a4ebf1a21287c870a1fe55848494678d18907f9ef37518b02e159",
+      "meta_sha256": "845ce48dda551aab09587b66e7fb8340a4291a76656990afa00c4ed01c05284b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3233.sprite.asset",
+      "sha256": "fa13c5e1d6e9f3c9e6a8b91956f1d5401bb222972fd1864881123c62e0f09d79",
+      "meta_sha256": "66e682f603950488a50f6ef8b1d060d8a402507109ecfaf0dac07c95ef26e6f5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3234.texture.asset",
+      "sha256": "34bb854ed4652a16f46e4f004bac264b38136924b9a05045c1ece0aea446ee7d",
+      "meta_sha256": "f68eebd68633320eeb3ed559a034aa7df8ffb2a3a8890d81fc001aed3ef78870"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3234.sprite.asset",
+      "sha256": "8d7455b039464f6f76eedb389744f0ed5d804e3024ac9dbf32a5fb4c01cf7cab",
+      "meta_sha256": "fafc12919d98a8954294bdda638a72dcba542bfe62043352f211222daeeb3a3b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3235.texture.asset",
+      "sha256": "258ff85e3a5470b208775b747033389c3fe9de6b6e6ee0f8eeeb12e282f2864c",
+      "meta_sha256": "b4e398b07b0a1340f5a9e9136a99d006934bbbeb8a3628f78d7e3b11bba91ce0"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3235.sprite.asset",
+      "sha256": "2a3ac273b9ff1705a13b200dd6ab9b7b75fb7c70ac7c627b35964c4689ff169c",
+      "meta_sha256": "bf1e0200a87e53f88f05b5d75a3bf4787eaadb61758806489d697f352c62c204"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3236.texture.asset",
+      "sha256": "19329426f3d72791034439cf5dbd69d67e80a72a9a950aaa5f0362b01bf20780",
+      "meta_sha256": "330d0b56f139abab1f5bb775245664c6cbfceae3c3aaff7ef4d0c5b3efdd8d97"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3236.sprite.asset",
+      "sha256": "97a5c9cc72bc3a60585175d88268eeb6609eb3202e255d2c12f452e002e76e60",
+      "meta_sha256": "1179dfcb7a35f43b35ce9109c630c8bf0551d415307e80afd803e42350350d10"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3237.texture.asset",
+      "sha256": "2a438d81eafd8e03e9bef442f3ce546f47101187db52d0761ec67ff130fe7add",
+      "meta_sha256": "f4c8f721620814a8ddf8255c4e26e85100487273e4143ca09e27b2c5dd481109"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3237.sprite.asset",
+      "sha256": "a10153b4f295254bce59a78208e33c3adffc7781f43a461c30e6ab4f97d4590c",
+      "meta_sha256": "4cd236d191f928b8b4c45f39578889bf2cdedd88ad20e7ee43435a875bebc129"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3238.texture.asset",
+      "sha256": "dbbc4c2ddc417f34f5e6913778939d955f1b5590b4124267f0ee4b64c7960f51",
+      "meta_sha256": "bb14355f240f6c82882f5a1092e78b3c103f4115cb2bb507e970c285a7442cbe"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3238.sprite.asset",
+      "sha256": "c683146a976ec92b6c0c786609aee3039d0226790f4d5e54239d2532ee574529",
+      "meta_sha256": "2a59f26bc8cc5f76865028d62e3a536c494f9bc5c5631dfb07bae7ec9270981c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3239.texture.asset",
+      "sha256": "83030e2799ee322445c8473a04d1683b1fcde0898f0bd8aae007ea89b60fbeb5",
+      "meta_sha256": "2a9bf3aa91ff8e8a455f7ccce400648adbf563c3f6f0753b285405d058f7e6b6"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3239.sprite.asset",
+      "sha256": "940b9e55f0e29c8c1ddfb91400c849085ecb9e0adc3d2b8dd8222af1ef4d02c6",
+      "meta_sha256": "cd172a038af1797fdee60f6f920dd4b72e55a0756f7d6fefce7611726d878fb7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3240.texture.asset",
+      "sha256": "334410f457295826209d557e9b718e6904f4a6c82dd79a94a77a5c0fd4057662",
+      "meta_sha256": "ec5f6460408de26beba8558764a8566e8bb7298cd094a728bd5419c92fafa9fd"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3240.sprite.asset",
+      "sha256": "7467902a712ed0bdc675121720ef29b4ae5da3d6c69c961b27463c7796110515",
+      "meta_sha256": "22021ed36a001d98f5c6163a99ffe66b1dd12eabf9ec74401dbef03eba5abcaa"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3241.texture.asset",
+      "sha256": "e106c035f08af34efd6a8245cff345a6e9b897fc348ba682c9143b5455e77f61",
+      "meta_sha256": "005e81354cf864878fed89c48e712491983ee291b9009233218942bfcaf6bead"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3241.sprite.asset",
+      "sha256": "0e4551709e65b36c000bf87f7656ba63871c9f61a58cded2a3fe5d24dcf89048",
+      "meta_sha256": "1aba42fbad2837501a5c0168b425374bc885c6d8927d939d369755a5d11558b2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3243.texture.asset",
+      "sha256": "4195ec0ebfa95ec0adb9f6561ebc6b5382a84822a97ed734eeeb92b77ff7291f",
+      "meta_sha256": "0db0faaaa763e22f86ee5736a837c5a328a0cba5b28a336e7885fe65facf4d94"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3243.sprite.asset",
+      "sha256": "614ec11d59caf57aa2ebfdb391d6a2d585c33dcdbbe11444922d1e28c892c357",
+      "meta_sha256": "2c9198db5316d88edb7fc886338a6fab8ac9ec8da31a7257e1e177410b7aa33b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3251.texture.asset",
+      "sha256": "b32060c7274e649acd83e967a11e8a86b345cf9800c85b53d0f804de963eba4d",
+      "meta_sha256": "d2cb60434d8c9f5a865b39ad8aae0a97947bf9e304a78528baa227934cc5af26"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3251.sprite.asset",
+      "sha256": "72819e627621b31490aba210941f6072c52c8043014cb654a1864822a9e9c946",
+      "meta_sha256": "28003f6bf2f12b9821315d03263742403e0a066444b9bc8bf363dc94b01b590a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3261.texture.asset",
+      "sha256": "e9dbb39184cf16acb976b1f24c7b5c0262760a23a938da7b389562fe6b9f7405",
+      "meta_sha256": "59a9fce1c607049bb7182713fe1fc77e1bf08f74445347ac00d36e253d44ef73"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3261.sprite.asset",
+      "sha256": "59fdfabfd66d04f6ee2bee57b982e5c711d51f0a1d41f580bf1fb4fdaba83d05",
+      "meta_sha256": "9544488699e896d9b0b8f7503dcef473395b7363c9a0161b0a693574c41d6d84"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3262.texture.asset",
+      "sha256": "69e5bd75820a3fb6214e53a4374563177705a27d7f3112addbbee1785a2fe772",
+      "meta_sha256": "261a68dc54e66891a7bb8d0a22b9472858a49c4876aaed4451eadf0069c5e709"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/G_3262.sprite.asset",
+      "sha256": "467abb399cb085406f1aa4dc0db524363650644c7771b8e41da2d2a432adea9c",
+      "meta_sha256": "5501dacaf39a378390ef78a3e59ee7f6008a42774a1015a220a8f4261b4aef64"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/item_40102.texture.asset",
+      "sha256": "7bb35c61631ceccb583edddd8f27aa221f9f2e640123d96bd8a48337f2f27766",
+      "meta_sha256": "5b95988b4f10fc8594696724a6af2b0cb830958ada86aaf3a9e3200b01944ca0"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/item_40102.sprite.asset",
+      "sha256": "2073c8c099caf2d7bfac43ee77740b83f00aaaeb71190a0b770e2b9fe5fccf35",
+      "meta_sha256": "5c8f4a0243792a27d749bbd105821836f65bc0bb1416abdcd707d6c64f45f00b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/item_40502.texture.asset",
+      "sha256": "9b4287a0b96aff5bbe9e3e2592b027711f1d717b2f499002385e78d1cc50a16a",
+      "meta_sha256": "5dd0b386ee6cfe779a29ecf1f23d38f36a3eeee19520a203f3a82cfad39ffa78"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/item_40502.sprite.asset",
+      "sha256": "6f6ed6d53835ff4ad122718654f4f17ad52936dd223ad50ca2ca31fafac0e08d",
+      "meta_sha256": "8ff6865ac12a1c561d99f42315745d8cb117bd75b7111440f9c871909c5046bd"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/item_41300.texture.asset",
+      "sha256": "1ac3904604201578abe2dbe52c80713136b1829a85c8328b6a8a6288116049e9",
+      "meta_sha256": "b917165d3308d7920cb0883aa414d6d94f30ca58b7b3a6992f7d942b99a0bf23"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/item_41300.sprite.asset",
+      "sha256": "2c2090621a063f1af741bfeae4f33ddd5233d1ed3addaa4c3ee6d1a18227591b",
+      "meta_sha256": "40892827060cc81676dab3f41d890377b889387d21dbfb26521f505fce1b0b8f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/item_41400.texture.asset",
+      "sha256": "a5cf2dad9e02c64f2ade90745df5ddab19ce44adbc5c846464a49f25c41b12e1",
+      "meta_sha256": "0e83c0407170e7ce6d051ec47224a3abe22af965787cb2d883238fd5109f3894"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/item_41400.sprite.asset",
+      "sha256": "5064aee57558bc37ae54599f58626a700818dec037a6da9a17fd71738c48eab6",
+      "meta_sha256": "2885f7b3933ff16c3c2e14360ab65ef5a985127fc7958eff8cc3a84abaf9a488"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/item_8101.texture.asset",
+      "sha256": "dc9cd978eca16d701de45da58eac8ca65fa570a10ddd343783d6c0e6fbda59ab",
+      "meta_sha256": "c63d1a2f059f18dcc6de8f993c5719eb869c51e1cdbc85e16279b51e5da55686"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/Icons/item_8101.sprite.asset",
+      "sha256": "c8d205b42e060892ff55823dc0f27ff52f391210a36ad148fa58d279edfa5878",
+      "meta_sha256": "c391652115132318b230f9b09118d07fd96b33358cb039fcfdbc6c20a60e3789"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/resource-point-data.json",
+      "sha256": "81ca7c4a21bf93af67ce73947b0da63595a8a347aa922470164be9d8f4d16538"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/resource-point-manager-fields.json",
+      "sha256": "be93cda26c2f8cdfdd6ec02f33be3793f7d02a326c60196690dc8085cf1e914d"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/Native/minimap-resource-point-assets.asset",
+      "sha256": "076a9634b0e2c6d8f92a20f972c1ceaf47a24cfcd58c2dec92263dbbb0f86050"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_map13_minimap_resource_boards.py",
+    "sha256": "7dbcfaeb68100b9e9fd689ff10c059bfd859186f6c7610d967cd36f9a917cfc7",
+    "worktree_sha256": "7dbcfaeb68100b9e9fd689ff10c059bfd859186f6c7610d967cd36f9a917cfc7",
+    "normalization": "Repository LF text; original executed worktree bytes recorded separately"
+  },
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map13_native_sprite_yaml.py",
+      "sha256": "c024b634c01e3046a1bb5759604dacb6d36156e68928da995cf59f91ad411e6c",
+      "worktree_sha256": "c024b634c01e3046a1bb5759604dacb6d36156e68928da995cf59f91ad411e6c",
+      "normalization": "Repository LF text; original executed worktree bytes recorded separately"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_native_scene.py",
+      "sha256": "64548e5dc5cf77322f20ecf0f6f8627f4ee85aff2d724036e7fead73b90382b1",
+      "worktree_sha256": "64548e5dc5cf77322f20ecf0f6f8627f4ee85aff2d724036e7fead73b90382b1",
+      "normalization": "Repository LF text; original executed worktree bytes recorded separately"
+    }
+  ],
+  "runtime_assets": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13MiniMapResources/LocalMiniMapResourcePointContext.cs",
+      "sha256": "493e53ca3586c789583bd03be5b1bf3889bbe3d6925c6d563cad6209e0097353"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13MiniMapResources/MiniMapResourcePointAssets.cs",
+      "sha256": "1a354af1b73640cbbbbd9355de5fb2a08b8fa37336c8f49290e80e634de72f5c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13MiniMapResources/Zjcs.Offline.World.NativeMap13MiniMapResources.asmdef",
+      "sha256": "cdd620c9479d8c14b574be3bf52c6c66d10e162652aaebc7f865cff1b8a7174a"
+    }
+  ],
+  "operation": "Restore all 23 original resource-board prefabs and every referenced native object. Extract the original manager GameObject/Transform/component as a standalone loadable component prefab; change only its parent reference to detach the subtree. Explicitly bind original group GUIDs, exact official configuration rows and all 23 dynamic icon paths. Preserve complete original Sprite logical rectangles, geometry, UVs, pivot, PPU, render keys and sampler flags; resolve the original packed background Sprite using its actual Atlas render data and explicit native texture binding. Decode exact original ASTC mips to native RGBA32 without resampling/recompression. No UI layouts or substitute assets are created.",
+  "limitations": [
+    "Complete native resource-board layer, its actual local service adapter and source-native assets are locally verified. Formal original minimap root, actual map mouse/save and Windows Player remain required."
+  ],
+  "local_validation": {
+    "editor": "2022.3.57f1c2",
+    "play_mode": {
+      "log_sha256": "b05cd7d79c9cb57e5a966df15e2f094ab047161fabb09ab60c11ef1891a84058",
+      "result": {
+        "editor": "2022.3.57f1c2",
+        "boards": 23,
+        "points": 178,
+        "icons": 23,
+        "item_lookups": 106,
+        "monster_lookups": 149,
+        "prefab_loads": 23,
+        "sprite_loads": 234,
+        "leases_disposed": 257,
+        "rendered_pixels": 192950,
+        "original_prefabs": true,
+        "original_geometry": true,
+        "selection_and_guide": true,
+        "public_only": true,
+        "event_refresh": true,
+        "cached_reentry": true,
+        "custom_icon": true,
+        "asset_lifecycle": true
+      },
+      "runtime_errors": 0
+    },
+    "rendered_image": {
+      "sha256": "6314a9681e7f01f3525846ae95d0e9e785685be6d8220d7bf794299304e60a96",
+      "viewed": true,
+      "original_urp": true
+    },
+    "project_validation": {
+      "log_sha256": "69a51530119ce6dee36ab888fb0820a3484aeb5266bdcb951b4670fb57ad1707",
+      "exit_code": 0
+    },
+    "static_metadata": {
+      "passed": true,
+      "guid_count": 75023
+    },
+    "validation_source": {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapResourcePointsAcceptance.cs",
+      "sha256": "e075603faa54d756442224d9d83c016debe14e4bd23a1a2261412294a2e51c6e"
+    },
+    "formal_minimap": false,
+    "windows_player": false,
+    "serializer_refactor": {
+      "helpers_ast_identical": true,
+      "all_77_output_hashes_identical": true,
+      "verified_output_manifest_sha256": "21188028c8cc525936f1d7a11a0c57788abed480abe8e6669f35c1e92cf0a58b"
+    }
+  }
+}
