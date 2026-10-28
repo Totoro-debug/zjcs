@@ -1,0 +1,570 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "method": "Copy complete ApplyAnimatorTriggerByAwardItemCount, ApplyByBone, AttachAgentGoType and MyPlayableMaterialPropertyBlock application code. Copy original MyStageResultAwardItem.GetStatusItemCount on an explicit stage/award read binding. Preserve original lifecycle, trigger lookup, source/target/bone choice, property-block curve equations and order; adapt namespaces/diagnostics only.",
+  "coverage": "Source application components only. Original tree performance prefab/particle binding, complete entity lifecycle, map input/save and Player still require integration.",
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/GameFramework.Runtime.dll",
+      "sha256": "6ca97373f53a249575525a5df2ca0c261a455c0b5ddd312db8b08087a3afe1dd"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ApplyAnimatorTriggerByAwardItemCount.cs",
+      "sha256": "5b8341eb73ec2e17b3c87ad7652c51fbade941d5eef289e1462a47e77bf06947"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ApplyByBone.cs",
+      "sha256": "c56f44356f94efa0c6cb99b5b0cf17baa3ab0b8db849fd2809d24659fcdbeeff"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/AttachAgentGoType.cs",
+      "sha256": "d377079d986c96fc2ec59abca7f6eeca6edd78e886a7628187fd3919b72b5488"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyStageResultAwardItem.cs",
+      "sha256": "e7138236e16d271aa46c06d674c7e07a52add50352d889b7be29c04e270641f4"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/gameframework-source/GameFramework/MyPlayableMaterialPropertyBlock.cs",
+      "sha256": "8965b1504987a7926cac7cd437114332934d466809cf0590033a6ebff371b45e"
+    },
+    {
+      "path": "assets/reference/official-map/map13-entity-state-views-source-manifest.json",
+      "sha256": "a459aab706eb88c28dac15bc28057437cc3ef169869e7da104bf09ab7e237e5a"
+    },
+    {
+      "path": "assets/reference/official-map/map14-story-animator-runtime-source-manifest.json",
+      "sha256": "644e9c821a6fdf4e6c38d2778e8ce6f3a5e01313bec45454118e7248db3cd13d"
+    },
+    {
+      "path": "assets/reference/official-map/map14-story-attachment-runtime-source-manifest.json",
+      "sha256": "b2845c7366f9a54accbf4bfe171ad4db45a785e0efb29b67c73dec8daab9dbd6"
+    },
+    {
+      "path": "assets/reference/official-map/map14-story-follow-bone-runtime-source-manifest.json",
+      "sha256": "5a3dc23aa084bcc65ed42a8af2359b6486233998b59721fd282aa3c8a7942eeb"
+    },
+    {
+      "path": "assets/reference/official-map/map14-story-playable-runtime-source-manifest.json",
+      "sha256": "281534ee3a6ab2cc400df1fa63c282ce4c61c219394de0c7c52a577e0db07434"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/AnimationController.cs",
+      "sha256": "66864b1ce56faa7901cac1f959f7848ccb67f7529789c315d22f04ef86aec1d0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/AnimationController.cs.meta",
+      "sha256": "0cd40b498a2dc825a004e46075510344b09aaf612d2f50bfd701d87b1cbdbdc0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableAnimator.cs",
+      "sha256": "181799c5ed613f948e546380413f1362015d9e12e619b8f890461a7f544e3333"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableAnimator.cs.meta",
+      "sha256": "942fca0e8ff73062890f7a349b61a34694d7426b34bd05afe80bcff9c9881324"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/StateMergeList.cs",
+      "sha256": "ae1af91d73c9b56ee7d546b52a0edd4f6036b94dacf99b3e2ccc21e2197c694e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/StateMergeList.cs.meta",
+      "sha256": "0b9e157601591a35a89cdb235262c807ed09ddcb90c35932afd588cb01e02d4d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/Zjcs.Official.StoryAnimation.asmdef",
+      "sha256": "f49afd4c15ac55f1b98bcc8447728953b9e54730c5bcceb365d5d5240b16199f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/Zjcs.Official.StoryAnimation.asmdef.meta",
+      "sha256": "d861a2165474a296df82bc4a501d426aae4bf0a7f97b7c161e59464e142a8feb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation.meta",
+      "sha256": "0ed6e566e284a63340ad169e82de9751bb831de70e72df17103e748c830ec615"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/AttachAgent.cs",
+      "sha256": "3e350ecb7ef285d12eca47f4767dcf0231a0511822e90550f31a459494c57700"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/AttachAgent.cs.meta",
+      "sha256": "65b7319f818099c31e20b767a00dcd017a69c728f2e5226bca7118fdc0e54411"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/AttachmentRegistryUtils.cs",
+      "sha256": "a39b3ae9bdfb0ac3033052654bf375c3844a90f79f066581c57ce0ae51782480"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/AttachmentRegistryUtils.cs.meta",
+      "sha256": "c43a417171215e1005a4114a81db68460c1977743ca207b08f918eb89a8be3b4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/MyPlayableActiveBone.cs",
+      "sha256": "38a36147fb5eb9038a276f1e89036c1070084bba4645d5a1c6500d6e6e9474cb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/MyPlayableActiveBone.cs.meta",
+      "sha256": "844f05083e186ee5cf33e501ebfbbf72823a20983319c7a3df7d1fca6c3db8ae"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/Zjcs.Official.StoryAttachment.asmdef",
+      "sha256": "1f4274d7c8990323783f32d9820db8e48650172fe2707195bbc3affb68e1ff6b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/Zjcs.Official.StoryAttachment.asmdef.meta",
+      "sha256": "cbfe728e3a2ab3a25e640ef0daa275c35ccfa3a634ee5f3a7d3ea54e66401b55"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment.meta",
+      "sha256": "93a2cf7cac432442ed94fa54768cb5ad0639e53ae0cb3dcb2f691626d57e88a5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStop.cs",
+      "sha256": "731e5245f79547788fd5e1d915198cc5850613d1b079dc8ee1e81e24e04d243a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStop.cs.meta",
+      "sha256": "402f953f29fb5c54270d589ab9bcc3fa8de20905c096e5d13295dc9acc7d000c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStopFadeOut.cs",
+      "sha256": "0fa84be21af44d6309db17944569885e8c55a6e2aec495012395c31a0abbcd7c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStopFadeOut.cs.meta",
+      "sha256": "f27b7b5efd7adbbfc4a6095e0147ab959cafe531b792529252dd0c2bb31e3c6d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/IPlayableOverrideAttachOffset.cs",
+      "sha256": "a93451f341a70f247dd2872a3381be8e74ddd2bdfa1f7cb9cf17aee6f49b5650"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/IPlayableOverrideAttachOffset.cs.meta",
+      "sha256": "c4a5bf04689bbb23106be8aac3fc2a5a75d43b5431fc0116d3cb6ae6688ad3db"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MonoDictionary.cs",
+      "sha256": "de795a50a03380e1f16dab5dfa676c098f6c66107fcb89ca2d9ab6c019c87632"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MonoDictionary.cs.meta",
+      "sha256": "b2039759692850be48ea4ec541323bc1be0947af7c70c3996a581cd1fc9d5716"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MonoKeyValuePair.cs",
+      "sha256": "b7d3a947a7be019f8da783ef65e2a8b99a364d3231f671ff656fb071befc6149"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MonoKeyValuePair.cs.meta",
+      "sha256": "1ac89ae447579cae80a023dd3fa112d1dccf26ee347018b21c47d680e01802c1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyEffectFadeOut.cs",
+      "sha256": "f957a45eaa17d810e0f064b82436a1591d85b3d3b7d7763106348704cfc3f398"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyEffectFadeOut.cs.meta",
+      "sha256": "2e1bf2f80e578c8eef68246be42ec2d3bcc5a20de1e8eb242132858fb084fe64"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyPlayableConfig.cs",
+      "sha256": "bd69d9c9f07695386a1875e1d6fb9b5c14aedb195bc4b13c32beadc62c7ee17f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyPlayableConfig.cs.meta",
+      "sha256": "fbaa8f8e8cf12e947d6bfb3ca6663cc5cdcde26cba8afe84e66a33544d83b34a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyPlayableFollowBone.cs",
+      "sha256": "aff2a82efe73d67d25f79a9cf370118604c4e484461e3448897cd65bc6f03dee"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyPlayableFollowBone.cs.meta",
+      "sha256": "ea838d9ef7baf0829d25e6728edf919546b95cffd329203a4227e406ce588751"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MySizeCfg.cs",
+      "sha256": "2b73633f32036bc98513722cb2e6fd16127f2f223b04906d09a3bc2cb66d694f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MySizeCfg.cs.meta",
+      "sha256": "bbb64e65d62134a246ab700880bc2a37c31d5db216ff3e5db2e8ef39dc7fb900"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/TransformSyncType.cs",
+      "sha256": "9ef007534f4ccc190552fc2d4aaa8a058b3b8e4e43645e70198e3fd34554489e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/TransformSyncType.cs.meta",
+      "sha256": "d0afb21db26e25f47748629167126001432a1b99b1b0f3f2d1d1c1f6bf7fd6b9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/TransformUtils.cs",
+      "sha256": "6f4892bca09ddc2c59ab9afb1f91057feef07ad41d1e933114ce4f33b6b42e9c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/TransformUtils.cs.meta",
+      "sha256": "29142d30d9796a0b2d79fa33c45cd53aec231b42c4da15fca6eeee241973e1ea"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/Zjcs.Official.StoryFollowBone.asmdef",
+      "sha256": "d7853e9a92cbd28ef65e54dc2c048c9ac811e62a9fbd4eee2634d4c243b5c2c5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/Zjcs.Official.StoryFollowBone.asmdef.meta",
+      "sha256": "a2a9f8654a87a3479b6e8432aa5c6e0749ef9692060df1a855b16304bc203c06"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone.meta",
+      "sha256": "ac2447415afbb48691393e128ca1582ec79f8223995df6d3bcbeb835a5a13db7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ActionBehaviour.cs",
+      "sha256": "680e19dff570829474d5d48c75e88ccaf075ccf9588e89cc9afd2f18bb57ad1e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ActionBehaviour.cs.meta",
+      "sha256": "2242b290f55e4b93c526c0b6147a117bf02f60bb025cc2881d94bb837c143e9a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyBySource.cs",
+      "sha256": "9d741f962881f9e20f10787a4a192d0f2c3dad39fd568d85599bd65c55a477a5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyBySource.cs.meta",
+      "sha256": "0de6d5dbdac81a17982f7c68790b459a8d7889bb7e2db4e057724e1cc3df9474"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyEnableOnPlay.cs",
+      "sha256": "04510c621eded13f8db658a273635c652ea75b4e2c311132e4a8f1559c9af9ee"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyEnableOnPlay.cs.meta",
+      "sha256": "792947a4351a8ab7f4471e8f4a632e38426fd1cbf12df2a3dad06ff557b8f46f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyOnInit.cs",
+      "sha256": "e8cd2055c3566ed83238ac14afd0581ce5a531caee02cc2b7ffd3a1b85e8a251"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyOnInit.cs.meta",
+      "sha256": "a3c65be722b0cfecb32d019de6a6ebf17a0ef17b9901d72db9bba5456a3cd24f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/EcEntityIdentifier.cs",
+      "sha256": "c6be9758d9c43f4b8cbffe1ffdd5f45a0cf0a6a36a0dcbcf7888cc0e59a6e0f6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/EcEntityIdentifier.cs.meta",
+      "sha256": "533ab4e1350363bf675d06c570a352ff352c50072842e2a8935bd230011adf40"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/FloatUtils.cs",
+      "sha256": "f4727c42764d3bdbf3099823ae30f9e5e11f98fa4b2090b643fc01f9cdfc2950"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/FloatUtils.cs.meta",
+      "sha256": "70c40f9dd13e10b10d726bc6b17c6d0511138296cf3f45b94c7cd785e7ecc1cc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/GAction.cs",
+      "sha256": "eb46f37f6a5dd7550dd5fc088ff1e3ca18c9ddb14f6a3ce7b154abd09978c4a0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/GAction.cs.meta",
+      "sha256": "0baefa8393c2f71213e4a4e7e5f8163fcd4fcbe85af6e19eac5b99e4da779a5e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/IGameObjectPoolItem.cs",
+      "sha256": "fdc4d1b70a3cda89615fe37e900937c81444aac5c5cf257a27f9790f38555c30"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/IGameObjectPoolItem.cs.meta",
+      "sha256": "488867fc0c9ba27c1c89820114e46d889575195c4430b5fb19ed7e5644591efa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/IMyPlayableCenter.cs",
+      "sha256": "b53df90e1b99dc04a4ed75be06d0f452e92d6c25e22c5dff330bc73022331186"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/IMyPlayableCenter.cs.meta",
+      "sha256": "633e064735b3587c9098b5f10d021056b912db802fb36a466da47522705b7533"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/IMyPlayableNeedStop.cs",
+      "sha256": "f6867418649ea1ee441af7497db180abaea7abe12d10e71d444f4c5a5a60ecd4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/IMyPlayableNeedStop.cs.meta",
+      "sha256": "8a31fb0e003966e03dbfedc391c763d28530fa6777981ae44dc7fa19a73c97c5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/IMyPlayableStateMutex.cs",
+      "sha256": "51d0166261e506966000bb6530fab8a7c92e14442c9f023f94c6ce30227088ac"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/IMyPlayableStateMutex.cs.meta",
+      "sha256": "1636a4aa4b217849056efa34a00aa5da579feb8353022bd562b09821a621121b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayable.cs",
+      "sha256": "2f54bfbb45d62ce21a33fb13ae3d938810087c96734a91fb27d82d2d944c8da0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayable.cs.meta",
+      "sha256": "c7858d7b174039b687d782b957ce8a49f00316797fb5f99a174c4d4e2027a514"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableApplyAttribute.cs",
+      "sha256": "22b2fe1a58eb45c7a397b4e3a0c36b862efdebaefb464493231efe30a65e2ee3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableApplyAttribute.cs.meta",
+      "sha256": "33247a55158d6db5cde1d146fc019eacdae07bbfe8b28bcc87ad60b5ba29556f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableApplyObj.cs",
+      "sha256": "0a195a80993847014b0e3a5974b6b6869f3a6f9ab8b1523dd3e85e45f3f8327d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableApplyObj.cs.meta",
+      "sha256": "e55a21e510b2b4b4c01231cbcc5506f28c7a50a02c77cde854fe5f95b2eaab45"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableApplyUtils.cs",
+      "sha256": "03c679b774d333629b8bfc27615cf2a75f3ddf2a9833b7157beb41ee95c4bd88"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableApplyUtils.cs.meta",
+      "sha256": "14385170be607490bf5fd81b92dfec9a283114c8788ee3b1449c6142f27a6071"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableCenter.cs",
+      "sha256": "aea7efb24a944d54589c9b749c9c7d4105142e9184d25ccdb34e6f385a0daec9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableCenter.cs.meta",
+      "sha256": "40d78437047c37902954b2eaec4f361099a2a8e4075d3647c8e5d8ce8d453d8d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableOnInit.cs",
+      "sha256": "cdfe0e3cb0373d3e6005f6de09472d42e361cd9c7e765a6f372af3cd53fc81d9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableOnInit.cs.meta",
+      "sha256": "b1db4d46be57943af16e1de4dd87c26bf6b863fb499ca86adf9cfc73a4341d72"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableSequence.cs",
+      "sha256": "1369a92abaf77eb0edcc3559fd9152910b676797e944639478fa27bd01a9ed29"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableSequence.cs.meta",
+      "sha256": "fded68a502ae384ab61ed9f4a137ab3ecb7d4c325901380d7973d5f408c60f94"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableTrigger.cs",
+      "sha256": "537144740d05b4ef144ae8f0a2275e5e166c8456c6ae30c2a99878e2a163b481"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableTrigger.cs.meta",
+      "sha256": "e9a10d34fd55e51a26b88012255060099f81e858617d5e029ff12c52e0365ce1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableTriggerTimeCfg.cs",
+      "sha256": "94efe0efb9fa3b57f0dfcd59da66725544daa482990c736df65421ccc2fec4da"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableTriggerTimeCfg.cs.meta",
+      "sha256": "1de47f58d349a5bdc68ca2303e09210622f56dcb3e51131ffe9d925fd82deca8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/OrderedFastList.cs",
+      "sha256": "352047fec52af6b3ed1d1db0ef7a05f1d1d695d670a3687e376b76ace626840b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/OrderedFastList.cs.meta",
+      "sha256": "f56bee68316b8df645a1e82051616833884aafe84c28ec4fdc03d097e813648b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ProfilerScope.cs",
+      "sha256": "c9345a7c893b078562d8dc2343c355afc7f05fa2f0ba048ffe2bd15f8bdd09aa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ProfilerScope.cs.meta",
+      "sha256": "6fa657e35b9654fbcd1b87bb7f15a4a8e5dfa04f17b762dd10ce7e4a3a4d3cb2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/Zjcs.Official.StoryPlayables.asmdef",
+      "sha256": "0f7eeb595465bfc30fc926c074705d31fbd282b6288270eee6b7fb6aa94f6ac7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/Zjcs.Official.StoryPlayables.asmdef.meta",
+      "sha256": "8e2959073ea753a1af869adc3de3a9815c7420584b3b26352f3838040121c4a6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables.meta",
+      "sha256": "0e17e1a5b476860568baab3efa1ba92679574a38748c9efaab55dc9a965e9d73"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/ECAnimatorView.cs",
+      "sha256": "b5d68ae15e4eb7a0f187ef1b5e226d441642334d92011cd9d93b2df6f631cfaa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/ECAnimatorView.cs.meta",
+      "sha256": "b70a6e5b9ebbcd75626d42c536c52924439db00184afac6078d18c657146e703"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/ECAttachAgentView.cs",
+      "sha256": "916936dad36a729294755c8f18f2489823164ed6eac0baf21662e7782b15f813"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/ECAttachAgentView.cs.meta",
+      "sha256": "b1fd61289562dacc104d10c637133a9fe9bcafb61388354e4d3ad4acc0c9f6f5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/ECMapAwardItemCountSwitcherView.cs",
+      "sha256": "b68d900363fdd02c268fb891a98ad026ebb8bda9c2e49e50cfa46b1ec1b50ccd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/ECMapAwardItemCountSwitcherView.cs.meta",
+      "sha256": "9bef30607097f49de7f8a76c0daa53c1bace6b5c3379d210d7cca33591336cd5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/Map13AwardItemQuery.cs",
+      "sha256": "4ca81e1f59ce0eb574dcf48924c6aa19beaccb1a3f7455b6108c4ae4f66fe138"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/Map13AwardItemQuery.cs.meta",
+      "sha256": "d428ca2aa1c3f1a3b4376970bda7cc402d1b36d5ef0f74a9646769ee3f865b07"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/Map13WorldStageQuery.cs",
+      "sha256": "2bd67036c575f752594f1ce67833f295e661344abbf84b171054c5b012f540fc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/Map13WorldStageQuery.cs.meta",
+      "sha256": "a839a218b18ef64dc1546d041d3fe4f0ffd8fe98e67948d097633da85ab764ab"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/StageCompCfg.cs",
+      "sha256": "616227bf9af4a1a54a817a430040c133243b1257dd06cd20e2e7be0a44bc26a1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/StageCompCfg.cs.meta",
+      "sha256": "3a74853e05b2699bc05b82fb765f9e07042cec307e7e564acdfd113184003ec2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/StageComponentType.cs",
+      "sha256": "1efb733811503dda5e5252636c385b6cab9d43510f96180b6fd293c3e65082e4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/StageComponentType.cs.meta",
+      "sha256": "f33ca6e8db848aa66a7700c1eeca832e35033dd53ac10cf6b0bb115056b22e3a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/StageSingleAwardItemInfo.cs",
+      "sha256": "cae57318b02077fbd9cf6a619ec324a518a3b5e0045f268d7c7d2b6160a2b79b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/StageSingleAwardItemInfo.cs.meta",
+      "sha256": "2e0975dbf07ab19731128d0a88214e4c2d263690deb3800b9ada64b8cf25bad4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/StageStateInfo.cs",
+      "sha256": "48f0bfc5cd68782df0592a4b7819ab0f1687ac1469d884ef9228abc283490558"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/StageStateInfo.cs.meta",
+      "sha256": "551235a7f2ac592aa4a0e5b7fb312b65bf4c1e67855502de860443358be54f0c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/SubStageStateInfo.cs",
+      "sha256": "6e252ae0a6a076ce7fce23c3391ec7bab3e2ca87d4e15b2eacc643cfc69cc059"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/SubStageStateInfo.cs.meta",
+      "sha256": "c63d694533950a044d4f7cef698dd5acf11042414c3643042dc978826e8f468d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/Zjcs.Official.World.Map13EntityStateViews.asmdef",
+      "sha256": "2d66994019af37e2b4c0004615e53d6258cded990d3e66b4d430a0c01a5b64c6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/Zjcs.Official.World.Map13EntityStateViews.asmdef.meta",
+      "sha256": "bb1051ea068ccdd1b88779c33ba53b818027086f08a65f72dfa50572c8577dad"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews.meta",
+      "sha256": "4d9bf9224ea2644dc8d1f34512723f70eaff1db53877f1d87b41362281825b02"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13TreePlayables/ApplyAnimatorTriggerByAwardItemCount.cs",
+      "sha256": "1a15e38f267e42e78aefee559217b61af0ce8bffea1048b1bce87980e63d836c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13TreePlayables/ApplyAnimatorTriggerByAwardItemCount.cs.meta",
+      "sha256": "0a7375362ef5588836a2ab5d3aa0865d36a094850ba5052ab0b0041b0b574f88"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13TreePlayables/ApplyByBone.cs",
+      "sha256": "76a30a691656802464e73b7f6506f91a4427040727c3c9ac830bf256a4862e9d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13TreePlayables/ApplyByBone.cs.meta",
+      "sha256": "7d6e24ec7fe2e395bfe44469900496dfb5da479a74d4491153487bb61d2f2476"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13TreePlayables/AttachAgentGoType.cs",
+      "sha256": "f66e3f4b60a0ded5fb939b79fef82e2237ca788bea6a63eda85dd8178e252af7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13TreePlayables/AttachAgentGoType.cs.meta",
+      "sha256": "dee86f5e81a7dcd4c3b6c69e23f2957b3f13babd07767ea16ecf88a39f172506"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13TreePlayables/MyPlayableMaterialPropertyBlock.cs",
+      "sha256": "cec9eff44f54f4c0c2ce5a862659a7d5930a9780d2aee2a65d9589691858da7b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13TreePlayables/MyPlayableMaterialPropertyBlock.cs.meta",
+      "sha256": "10cae40d86c06af4f83200fd4e08c1441d7779cd8a3f9c69d1d13b9b96fce993"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13TreePlayables/Map13AwardCountBinding.cs",
+      "sha256": "6927535904dea3457e7dcabb12f013419ab04616e0cf0ce25506bedc3aac64f4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13TreePlayables/Map13AwardCountBinding.cs.meta",
+      "sha256": "050f9c89de5910770230ff73b0f7f0a631cc41499e8a9345a0120057c94be038"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13TreePlayables/Zjcs.Official.World.Map13TreePlayables.asmdef",
+      "sha256": "993e77a91e662d72ad3c677371ffff70d3565f6d7fe0472cb3cdbc4749d1d2b8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13TreePlayables/Zjcs.Official.World.Map13TreePlayables.asmdef.meta",
+      "sha256": "0e3988a6166f0214bbb58507a2cd678ec0bd736823bf7c31c5911c63d7641815"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13TreePlayables.meta",
+      "sha256": "77a69f73e47ec0be85fea9e2251fb4b922b3adfc0af9cbf84a49a9a2c72e3c3c"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map13_tree_playable_runtime.py",
+      "sha256": "3961efb5b5de367306a803c9b27dd7d55115d7a5150600b36e61a5ca7187350b"
+    }
+  ]
+}

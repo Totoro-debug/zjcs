@@ -1,0 +1,61 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "method": "Follow the two verified original tree EC drivers into their actual appear, loop and fade-out prefab references. Read each complete native hierarchy from official bundle bytes, verify every source payload hash, and retain every managed field and native particle parameter. No runtime prefab conversion is claimed by this inventory.",
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-entity-object-graph.json",
+      "sha256": "18f89ebe23f05d61849a699f980948603fdfcd055df04fb19ae770617b5fe813"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-entity-components.json",
+      "sha256": "8e555c849c373c923fcaa87cfd16b06e1caebe8b65614648130958cdd7b55eb3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-prop-hierarchies.json",
+      "sha256": "69cf5dcd45bb69c8b1af4265e4e05ad76b1f5435954bf640817c5b56bfb3e84e"
+    },
+    {
+      "path": "assets/reference/official-map/map13-native-tree-models-source-manifest.json",
+      "sha256": "980b13f0bd52b9bc988cff3b588ce57e823a80c1b242c44e3c1e313b1b085561"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-attachment-followers.json",
+      "sha256": "94494dfa93a4ff631d5af025107758765c5e866fbbba7c96793ac336eb3534b1"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-tree-playables.json",
+      "sha256": "1f3e678155dd2da422262649d6ef5588195dd1e77a5ae251b8f2d8a6764fd684"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-tree-playables.json.meta",
+      "sha256": "552b1873919b8069ba7c7665072deb09c10d67711fef136c993e300729a77200"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map13_tree_playable_sources.py",
+      "sha256": "1ed94d7b4b2fa39aa58090308663a767494bd51e5fdaa0aa7efb4bec4437b463"
+    }
+  ],
+  "prefabs": 3,
+  "objects": 205,
+  "types": {
+    "GameObject": 58,
+    "Transform": 58,
+    "ParticleSystem": 27,
+    "ParticleSystemRenderer": 27,
+    "MyPlayableAttachToBone": 11,
+    "GameFramework.ApplyEnableOnPlay": 12,
+    "MyPlayableAnimator": 2,
+    "ApplyAnimatorTriggerByAwardItemCount": 2,
+    "GameFramework.MyPlayableSequence": 3,
+    "MyPlayableActiveBone": 1,
+    "GameFramework.ApplyBySource": 1,
+    "GameFramework.MyPlayableMaterialPropertyBlock": 1,
+    "ApplyByBone": 1,
+    "MyPlayableFollowBone": 1
+  }
+}

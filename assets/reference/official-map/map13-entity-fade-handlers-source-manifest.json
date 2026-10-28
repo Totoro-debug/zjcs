@@ -1,0 +1,542 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "method": "Copy all three complete original fade-out effect/playable/delayed-destruction handler classes and original SplashStatus enum. Preserve original multicast hook ordering, map-front/splash gates, visibility, play/stop state, native Time.time deadlines and append-playable transition; adapt namespace, diagnostics and required owner/map consumption interfaces.",
+  "coverage": "Source application handlers only. Real original entity/playable prefab binding, map lifetime/destruction host, map input/save and Windows Player remain pending.",
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/GameFramework.Runtime.dll",
+      "sha256": "6ca97373f53a249575525a5df2ca0c261a455c0b5ddd312db8b08087a3afe1dd"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/EcEntityFadeOutEffectHandlerBase.cs",
+      "sha256": "8d8f8f6f2c6035c54595c6508f3e74a9487a7805eceaaa88fd46869087eba14f"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/EcMapEntityFadeOutDelayDestoryHandler.cs",
+      "sha256": "db1d609d228ee1d607d87bb648280800dbf5b7700c48d5ec57b69be15ee333f7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/EcMapEntityFadeOutPlayableHandlerBase.cs",
+      "sha256": "a17af8ba20e2437a2669e1fec0bf61fb73b19eab668672fff983bb5c09baffd9"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/gameframework-source/GameFramework/SplashStatus.cs",
+      "sha256": "2269fdc1390176f2ac5fac6c1c6cba675ed600ee69692367c698e42664a5f5e8"
+    },
+    {
+      "path": "assets/reference/official-map/map14-entity-playable-views-source-manifest.json",
+      "sha256": "98cd78c25c0cad25c7b618af8ce5cd2929460ba3255a4d98c348028f3e2a8c22"
+    },
+    {
+      "path": "assets/reference/official-map/map14-entity-view-runtime-source-manifest.json",
+      "sha256": "dbd5cec204b6654c4dc841b21f651185d1b9ebe33786acfcfc110b8120531479"
+    },
+    {
+      "path": "assets/reference/official-map/map14-story-playable-runtime-source-manifest.json",
+      "sha256": "281534ee3a6ab2cc400df1fa63c282ce4c61c219394de0c7c52a577e0db07434"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables/ECPlayableBaseHandler.cs",
+      "sha256": "37d226b4b20324308579e80c6e67450b2a02e8dc19d45e97478bbc401fc0520d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables/ECPlayableBaseHandler.cs.meta",
+      "sha256": "895893493361e8d757e5a91a9a31f0edacad85b8002760b92907ee68d54d1667"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables/ECPlayableBaseHandlerData.cs",
+      "sha256": "bedf4a0251b7c35caadd2cbf156c87985ee1e9417eb3c9bed1e3b9d6bb558bcf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables/ECPlayableBaseHandlerData.cs.meta",
+      "sha256": "1d3efbb6894559e13235fed6525aaa85df4a1bdc4426dd3d1868ebe1bc20b909"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables/ECPlayableSupporterView.cs",
+      "sha256": "8543e9cb46966fd27008c4499b498f19b9f3817968a327ae33aed07ed129953b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables/ECPlayableSupporterView.cs.meta",
+      "sha256": "a3fbb97ebaef35499f00488e81ad04b0123266ce0e9ece7ddc5a6bb4af3d3514"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables/IECPlayableSupporter.cs",
+      "sha256": "163f7b8bac13400fa0328da10d93e7ed5e07b48674c45d61a5187d5d006b0359"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables/IECPlayableSupporter.cs.meta",
+      "sha256": "ca21a3634e67f99daa8fcc216c516c1ce58bf3bac9b79f4db308da15190fcda3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables/Zjcs.Official.EntityViewPlayables.asmdef",
+      "sha256": "f602a9cb393d2d444902eb2e0104dd50accf236e65fe6aa5de1893c4804129af"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables/Zjcs.Official.EntityViewPlayables.asmdef.meta",
+      "sha256": "465c790c2be968e35abd0bd9d5af7968d130f6aa7cb35f0a31d6799c08cebab6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables.meta",
+      "sha256": "f37614fa4b7ab4feadc4f82e63c080becebd66a97565c58e45105138e113736d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ClientVisibilitySupporterBase.cs",
+      "sha256": "d80af57275f859131f9824ed91d50e9f6373d087f4e51a2b261a234d9f52e468"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ClientVisibilitySupporterBase.cs.meta",
+      "sha256": "c7d6e570f25357c6ac0991b9db261b24f6fb91277f34540494aecb9557c4adb3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ConstantClientVisibilitySupporter.cs",
+      "sha256": "0cef920efac80cc731310f597baebfd60d12e49c8eec920c089a91dcaa75189a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ConstantClientVisibilitySupporter.cs.meta",
+      "sha256": "7b09978c4b7f5615c6fc4b6f2b45b4b8d94b2eee363129f4157f17fc0da44a5e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ConstantClientVisibilitySupporterFactory.cs",
+      "sha256": "4cf610f2839c9191c4c029fc8c12d719c910bd89567f2b5811873ddafb2f9d4b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ConstantClientVisibilitySupporterFactory.cs.meta",
+      "sha256": "c915f991156e28a04eaafc0cf6aae488d2953268c2d895c2757711e4bd58546f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECViewBase.cs",
+      "sha256": "d7367c826f099e2d6f5019fdf91d7bfecb443e83cf17809342dbb619db767a29"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECViewBase.cs.meta",
+      "sha256": "afa742a2e262f7627100456507bb2662b62eadcbce4ba501d03a6c9cd0d4d81e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECViewDriver.cs",
+      "sha256": "10498f1f45e3cfd36c178ad29313be40df944f39cd7db335c4855551089b8d4f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECViewDriver.cs.meta",
+      "sha256": "72ea3392750cf39c0fab31e7f5759eee510cdd221f147bba420fa210a12e797e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECViewEntityBinding.cs",
+      "sha256": "3c3ab3a7438ed872a2ffee316604635f28e61561939f89fa50fa87e5e3e4ad00"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECViewEntityBinding.cs.meta",
+      "sha256": "db8da8f209ee4acfda96ee281d10d558e6b788cd9c666ab3b8c960168327dd4e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECVisibleControlerNormalView.cs",
+      "sha256": "6c2f39e3cbeec7ade4bdb1e7ae718109916bff0701b0199a4e3759bbc61b21de"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECVisibleControlerNormalView.cs.meta",
+      "sha256": "6387da3149d20f65763dc7b6469b379825479bf41e5c7caba84cfa46b00f4b35"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECVisibleControlerViewBase.cs",
+      "sha256": "00fc4e72266d6688b5dce3b7ec9f3a42cbbea8b418a1b88f6ec9cba0e5927fde"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECVisibleControlerViewBase.cs.meta",
+      "sha256": "397d1f95e9bda5616cec90bcbac01e5fd48b5b86c97284e79652225d99c9f0a5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IClientVisibilitySupporter.cs",
+      "sha256": "2de486f62687ab12734f7d38364cf6879fdbc1e3ca79d99ae5db88572b797eb4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IClientVisibilitySupporter.cs.meta",
+      "sha256": "fc47d4263f96f87a7b94e02b1fae9aad3fefaadc55fea58ca5a0cfd06839a3db"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IClientVisibilitySupporterFactory.cs",
+      "sha256": "939f03a4b372cb08f001ea32eb37cfc3bdf0183a40574c914df80544b714c09b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IClientVisibilitySupporterFactory.cs.meta",
+      "sha256": "de8f172d2845142d2cbb704d7b4be3a063e227ea9cb7c9089eea6f005a134e61"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IECView.cs",
+      "sha256": "eb308453b230599ce41681c1e0acf84c2474060efe1b3f3eda2e54e89bf1ceaa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IECView.cs.meta",
+      "sha256": "ea7f0e8099428eb1343c69c7de142e43a49b0859741ef56341fbe63b16514d31"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IECViewBridge.cs",
+      "sha256": "0322f1da093f898dbd95b9ad358193b76aa1cdf3d8ae0fda9d1ee96a07287a83"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IECViewBridge.cs.meta",
+      "sha256": "3da378082ce755d3234eb91ffe2827a51fd2b971eb1fb29a2a3735ca421c9847"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IECViewDriver.cs",
+      "sha256": "2571452045469a7a91f8bf9ab95c269cb54705019a1df0e39591b87b3e26891b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IECViewDriver.cs.meta",
+      "sha256": "5491de48a0c14063c0b5c65cb1f418bade0dfb178c2cf55663dd7c499bc6e553"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IEventReceiver.cs",
+      "sha256": "3f7073c61289c7735533b5a92d4b3f9fe3370208cd2b41d4a81dbdaa9db3fd45"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IEventReceiver.cs.meta",
+      "sha256": "459cc269becab3dca9e87dc7678cc9dce8f3b6c01e25ac73333bb544ece65096"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ILateUpdatable.cs",
+      "sha256": "ea8d0bbba77ab942a879577d6b539bea951fd0288f1ad319051c34d820bccbd5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ILateUpdatable.cs.meta",
+      "sha256": "64db5e2c003b009c61ba2ab6a1d8a187d72ee7c730f1842e91f5b940278e89fd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IMyEntityRemoveEventReceiver.cs",
+      "sha256": "7fdd785eedcf1d7d1c6454e1cb2c30867e52e24e8a5d8b647015919fe89c4462"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IMyEntityRemoveEventReceiver.cs.meta",
+      "sha256": "ca5eda410918e8f504fa2b9ed84c3fe96d81429b582587216760935405d23a5d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IMyEntityRemovePreEventReceiver.cs",
+      "sha256": "aba5bf21aa4be7ec2ab8e093689b55ac5148bd77214b28e03b224546b3efe301"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IMyEntityRemovePreEventReceiver.cs.meta",
+      "sha256": "4308368c7ff16850f3b77472614b6d404d71b69c29b267fe46a5654a5f0f6f43"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IMyEntityStartEventReceiver.cs",
+      "sha256": "6ae92818a83cb56ef4c6649dc45b2650c33f689884e52e2bb2d9197d8a619cea"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IMyEntityStartEventReceiver.cs.meta",
+      "sha256": "4af9ddb774fc53740d205ba05628a6058c29089277e099110b664b0207314309"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IMyEntityStartPostEventReceiver.cs",
+      "sha256": "79f811a7fe457e58136785d55e5e2f93bc049c7ab96825ed2d189721e7178247"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IMyEntityStartPostEventReceiver.cs.meta",
+      "sha256": "46a953059acb2a26a30285da2c62e207309ce1826f2f3c19184ea9d1048c92c8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IMyEntityViewModelControler.cs",
+      "sha256": "9fb858c62f64d74d0c3b5fc3a0e8ca2753c18ccdf51f37d4ac9f0fd3baa5c0c9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IMyEntityViewModelControler.cs.meta",
+      "sha256": "0fffcb03d91b3aea6744ec396cb1c6d0f6e3c0727316a972508f50838d55fa70"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IUpdatable.cs",
+      "sha256": "26ab9189a32170ab06af18473a539aba8050a266ea20ec7fd82d9b928fb4b9c2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IUpdatable.cs.meta",
+      "sha256": "0322f4e48cf811d908681eff7874273d89bb6eb99ec6f1fdc17c0348fcbf81c0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/MapClientVisibilitySupporterFactory.cs",
+      "sha256": "a46d16ee6a8547a9dba712ef0e57cc7fbb2d1c3b915a4f051fae35c197594781"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/MapClientVisibilitySupporterFactory.cs.meta",
+      "sha256": "36077e7f6d29388d1bdcf06bdf0579d2ea98f6333a41bef0d37b7e7a9e2619d1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/MapECViewClientVisibilitySupporter.cs",
+      "sha256": "699de81264eb3af5ad0eda8d56ca34246d86fd6b43b69a5eb544081fa26c5c7a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/MapECViewClientVisibilitySupporter.cs.meta",
+      "sha256": "ff14b9bd501e7e97b020dfbad3c8f9636cfb8124ce17a381a63f11890e51fedc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/MyEntityViewModelControlerUtils.cs",
+      "sha256": "bde5edfc865cf2deb639126389c60c0f949b91b6fbd9c7cae60dc82162724e83"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/MyEntityViewModelControlerUtils.cs.meta",
+      "sha256": "fccb02c1106a0e92b8f74dca778ff29ec56f8699439bf1db26923a728b49fcd3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/Zjcs.Official.EntityViews.asmdef",
+      "sha256": "e1c94615487efe957ea99ea45757ecdf6c9170de2c596bed8cc45aa87948d471"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/Zjcs.Official.EntityViews.asmdef.meta",
+      "sha256": "63d0777ecdd218e13f3c6ace8e2db027d593e2551fae48b54cf2e90da0142c08"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews.meta",
+      "sha256": "2f7627790d6ad2ffc65c7a9b6ec4fdc65ad1695c2804d1508b6172185ab2aed6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ActionBehaviour.cs",
+      "sha256": "680e19dff570829474d5d48c75e88ccaf075ccf9588e89cc9afd2f18bb57ad1e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ActionBehaviour.cs.meta",
+      "sha256": "2242b290f55e4b93c526c0b6147a117bf02f60bb025cc2881d94bb837c143e9a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyBySource.cs",
+      "sha256": "9d741f962881f9e20f10787a4a192d0f2c3dad39fd568d85599bd65c55a477a5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyBySource.cs.meta",
+      "sha256": "0de6d5dbdac81a17982f7c68790b459a8d7889bb7e2db4e057724e1cc3df9474"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyEnableOnPlay.cs",
+      "sha256": "04510c621eded13f8db658a273635c652ea75b4e2c311132e4a8f1559c9af9ee"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyEnableOnPlay.cs.meta",
+      "sha256": "792947a4351a8ab7f4471e8f4a632e38426fd1cbf12df2a3dad06ff557b8f46f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyOnInit.cs",
+      "sha256": "e8cd2055c3566ed83238ac14afd0581ce5a531caee02cc2b7ffd3a1b85e8a251"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyOnInit.cs.meta",
+      "sha256": "a3c65be722b0cfecb32d019de6a6ebf17a0ef17b9901d72db9bba5456a3cd24f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/EcEntityIdentifier.cs",
+      "sha256": "c6be9758d9c43f4b8cbffe1ffdd5f45a0cf0a6a36a0dcbcf7888cc0e59a6e0f6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/EcEntityIdentifier.cs.meta",
+      "sha256": "533ab4e1350363bf675d06c570a352ff352c50072842e2a8935bd230011adf40"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/FloatUtils.cs",
+      "sha256": "f4727c42764d3bdbf3099823ae30f9e5e11f98fa4b2090b643fc01f9cdfc2950"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/FloatUtils.cs.meta",
+      "sha256": "70c40f9dd13e10b10d726bc6b17c6d0511138296cf3f45b94c7cd785e7ecc1cc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/GAction.cs",
+      "sha256": "eb46f37f6a5dd7550dd5fc088ff1e3ca18c9ddb14f6a3ce7b154abd09978c4a0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/GAction.cs.meta",
+      "sha256": "0baefa8393c2f71213e4a4e7e5f8163fcd4fcbe85af6e19eac5b99e4da779a5e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/IGameObjectPoolItem.cs",
+      "sha256": "fdc4d1b70a3cda89615fe37e900937c81444aac5c5cf257a27f9790f38555c30"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/IGameObjectPoolItem.cs.meta",
+      "sha256": "488867fc0c9ba27c1c89820114e46d889575195c4430b5fb19ed7e5644591efa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/IMyPlayableCenter.cs",
+      "sha256": "b53df90e1b99dc04a4ed75be06d0f452e92d6c25e22c5dff330bc73022331186"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/IMyPlayableCenter.cs.meta",
+      "sha256": "633e064735b3587c9098b5f10d021056b912db802fb36a466da47522705b7533"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/IMyPlayableNeedStop.cs",
+      "sha256": "f6867418649ea1ee441af7497db180abaea7abe12d10e71d444f4c5a5a60ecd4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/IMyPlayableNeedStop.cs.meta",
+      "sha256": "8a31fb0e003966e03dbfedc391c763d28530fa6777981ae44dc7fa19a73c97c5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/IMyPlayableStateMutex.cs",
+      "sha256": "51d0166261e506966000bb6530fab8a7c92e14442c9f023f94c6ce30227088ac"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/IMyPlayableStateMutex.cs.meta",
+      "sha256": "1636a4aa4b217849056efa34a00aa5da579feb8353022bd562b09821a621121b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayable.cs",
+      "sha256": "2f54bfbb45d62ce21a33fb13ae3d938810087c96734a91fb27d82d2d944c8da0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayable.cs.meta",
+      "sha256": "c7858d7b174039b687d782b957ce8a49f00316797fb5f99a174c4d4e2027a514"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableApplyAttribute.cs",
+      "sha256": "22b2fe1a58eb45c7a397b4e3a0c36b862efdebaefb464493231efe30a65e2ee3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableApplyAttribute.cs.meta",
+      "sha256": "33247a55158d6db5cde1d146fc019eacdae07bbfe8b28bcc87ad60b5ba29556f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableApplyObj.cs",
+      "sha256": "0a195a80993847014b0e3a5974b6b6869f3a6f9ab8b1523dd3e85e45f3f8327d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableApplyObj.cs.meta",
+      "sha256": "e55a21e510b2b4b4c01231cbcc5506f28c7a50a02c77cde854fe5f95b2eaab45"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableApplyUtils.cs",
+      "sha256": "03c679b774d333629b8bfc27615cf2a75f3ddf2a9833b7157beb41ee95c4bd88"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableApplyUtils.cs.meta",
+      "sha256": "14385170be607490bf5fd81b92dfec9a283114c8788ee3b1449c6142f27a6071"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableCenter.cs",
+      "sha256": "aea7efb24a944d54589c9b749c9c7d4105142e9184d25ccdb34e6f385a0daec9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableCenter.cs.meta",
+      "sha256": "40d78437047c37902954b2eaec4f361099a2a8e4075d3647c8e5d8ce8d453d8d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableOnInit.cs",
+      "sha256": "cdfe0e3cb0373d3e6005f6de09472d42e361cd9c7e765a6f372af3cd53fc81d9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableOnInit.cs.meta",
+      "sha256": "b1db4d46be57943af16e1de4dd87c26bf6b863fb499ca86adf9cfc73a4341d72"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableSequence.cs",
+      "sha256": "1369a92abaf77eb0edcc3559fd9152910b676797e944639478fa27bd01a9ed29"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableSequence.cs.meta",
+      "sha256": "fded68a502ae384ab61ed9f4a137ab3ecb7d4c325901380d7973d5f408c60f94"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableTrigger.cs",
+      "sha256": "537144740d05b4ef144ae8f0a2275e5e166c8456c6ae30c2a99878e2a163b481"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableTrigger.cs.meta",
+      "sha256": "e9a10d34fd55e51a26b88012255060099f81e858617d5e029ff12c52e0365ce1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableTriggerTimeCfg.cs",
+      "sha256": "94efe0efb9fa3b57f0dfcd59da66725544daa482990c736df65421ccc2fec4da"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableTriggerTimeCfg.cs.meta",
+      "sha256": "1de47f58d349a5bdc68ca2303e09210622f56dcb3e51131ffe9d925fd82deca8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/OrderedFastList.cs",
+      "sha256": "352047fec52af6b3ed1d1db0ef7a05f1d1d695d670a3687e376b76ace626840b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/OrderedFastList.cs.meta",
+      "sha256": "f56bee68316b8df645a1e82051616833884aafe84c28ec4fdc03d097e813648b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ProfilerScope.cs",
+      "sha256": "c9345a7c893b078562d8dc2343c355afc7f05fa2f0ba048ffe2bd15f8bdd09aa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ProfilerScope.cs.meta",
+      "sha256": "6fa657e35b9654fbcd1b87bb7f15a4a8e5dfa04f17b762dd10ce7e4a3a4d3cb2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/Zjcs.Official.StoryPlayables.asmdef",
+      "sha256": "0f7eeb595465bfc30fc926c074705d31fbd282b6288270eee6b7fb6aa94f6ac7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/Zjcs.Official.StoryPlayables.asmdef.meta",
+      "sha256": "8e2959073ea753a1af869adc3de3a9815c7420584b3b26352f3838040121c4a6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables.meta",
+      "sha256": "0e17e1a5b476860568baab3efa1ba92679574a38748c9efaab55dc9a965e9d73"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityFadeHandlers/EcEntityFadeOutEffectHandlerBase.cs",
+      "sha256": "ba6a0e72a02fd1acc85f89ea82f4878700dc06240d5552c1cae9420cf4ddf2bc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityFadeHandlers/EcEntityFadeOutEffectHandlerBase.cs.meta",
+      "sha256": "99a04000dce023a4186811bbb556f6f8de7cc6b7611b4bed48cf60416a8a9392"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityFadeHandlers/EcMapEntityFadeOutPlayableHandlerBase.cs",
+      "sha256": "04351b462a57710847cffeb2bdf37b079dc54e712d17f09d7c52cc850b062c0b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityFadeHandlers/EcMapEntityFadeOutPlayableHandlerBase.cs.meta",
+      "sha256": "0038cf5189473b66d2dfb9c5ea4851e6a024cee86d720a06e2a7f3f6679b4ea1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityFadeHandlers/EcMapEntityFadeOutDelayDestoryHandler.cs",
+      "sha256": "a5aa731ca4bd4a6656e45c19a1213a90a93a470979f20a7b7d2d70b1aeed43ff"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityFadeHandlers/EcMapEntityFadeOutDelayDestoryHandler.cs.meta",
+      "sha256": "b868c779b6cfee9cdde58be19a06ecaea34517b0720f12996f01318cc5f9e8ae"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityFadeHandlers/SplashStatus.cs",
+      "sha256": "e434b7f78b9dc9b341b070f3711274b53fe2aedb7685f452b04e0f9bbcd99113"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityFadeHandlers/SplashStatus.cs.meta",
+      "sha256": "460f23da1adc6c578cedb087c3d19693632622943f7bde42cdf7d984076a8e12"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityFadeHandlers/FadePresentationBoundaries.cs",
+      "sha256": "dc7e3334b30ba94df1f53cc13fedb8ae1e0d1bf68a76868b99b5e4dd6d3fc05a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityFadeHandlers/FadePresentationBoundaries.cs.meta",
+      "sha256": "276337fee45431560dc8ddddd6105a6ed883cd01b75d01f1f7b10cb5812a831e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityFadeHandlers/Zjcs.Official.World.Map13EntityFadeHandlers.asmdef",
+      "sha256": "736ad2111703d9c16c1b5f027fececa1866aac5f9cd4eccadbf0c6f5c31d654a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityFadeHandlers/Zjcs.Official.World.Map13EntityFadeHandlers.asmdef.meta",
+      "sha256": "b6b1c3d3d8d6d85d729434ba5eb37068f5ca4ccbf2e3b7407d2fd1f10e8a16d4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityFadeHandlers.meta",
+      "sha256": "3d2995deb8748d810107d1e76fa36df2aa73f0fdff42f3300d0c781015aec324"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map13_entity_fade_handlers.py",
+      "sha256": "a060c10bbdce4a93efe76f908bfa00e8992da718ed3c0017c6c42affbc51e8f6"
+    }
+  ]
+}
