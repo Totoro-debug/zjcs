@@ -5,6 +5,7 @@ or Unity processes are produced by this intermediate conversion step.
 """
 import argparse
 import json
+import os
 from pathlib import Path
 import re
 import shutil
@@ -164,7 +165,10 @@ def build(stage_dir, run_converter=False):
     exported = stage_dir / "export/ExportedProject/Assets"
     index = {}
     for path in exported.rglob("*.meta"):
-        match = GUID.search(path.read_text(encoding="utf8"))
+        # AssetRipper can export unrelated deep shader/package paths beyond
+        # MAX_PATH while scanning this closure. Keep their original names.
+        readable = Path("\\\\?\\" + str(path.resolve())) if os.name == "nt" else path
+        match = GUID.search(readable.read_text(encoding="utf8"))
         if match:
             if match[1] in index:
                 raise ValueError("Ambiguous original stele export GUID")

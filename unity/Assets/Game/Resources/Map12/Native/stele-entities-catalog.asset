@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bf304fce7a428f4532234aa20958ff9, type: 3}
+  m_Name: stele-entities-catalog
+  m_EditorClassIdentifier:
+  manifest: 871_156598
+  displays:
+  - entityClassId: 6650
+    prefab: {fileID: 1709254077376921, guid: b06958641ea7c53b3c16a96231eb20ce, type: 3}
+    realCenter: {x: 0, y: 0}
+    bodyRange:
+    - {X: 0, Y: 0}
+  - entityClassId: 6655
+    prefab: {fileID: 1709254077376921, guid: 0d819c89b36887eba94a75e7944256a4, type: 3}
+    realCenter: {x: 0, y: 0}
+    bodyRange:
+    - {X: 0, Y: 0}
+  placements:
+  - placementId: 1813
+    entityClassId: 6655
+    periodicityGroupId: 110
+    periodicityMaxCount: 1
+    x: 189
+    y: 105
+    direction: 0
+  - placementId: 2530
+    entityClassId: 6655
+    periodicityGroupId: 112
+    periodicityMaxCount: 1
+    x: 142
+    y: 71
+    direction: 0
+  - placementId: 3013
+    entityClassId: 6650
+    periodicityGroupId: 111
+    periodicityMaxCount: 1
+    x: 170
+    y: 80
+    direction: 0
+  - placementId: 5519
+    entityClassId: 6650
+    periodicityGroupId: 113
+    periodicityMaxCount: 1
+    x: 125
+    y: 62
+    direction: 0
+  - placementId: 6406
+    entityClassId: 6655
+    periodicityGroupId: 114
+    periodicityMaxCount: 1
+    x: 70
+    y: 120
+    direction: 0
+  - placementId: 6614
+    entityClassId: 6655
+    periodicityGroupId: 115
+    periodicityMaxCount: 1
+    x: 82
+    y: 59
+    direction: 0
+  - placementId: 8320
+    entityClassId: 6650
+    periodicityGroupId: 116
+    periodicityMaxCount: 1
+    x: 107
+    y: 159
+    direction: 0
