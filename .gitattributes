@@ -628,3 +628,12 @@ unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Map14Statues.cs* text e
 # Preserve verified Map12 popup audio payload and importer hashes.
 unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/** -text
 unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound.meta -text
+
+# Original Unity camera/timeline embedded package byte identity.
+unity/Packages/com.unity.cinemachine/** -text
+unity/Packages/com.unity.timeline/** -text
+scripts/prepare_unity_map13_camera_source.py text eol=lf
+scripts/prepare_unity_map13_camera_timeline_packages.py text eol=lf
+unity/Assets/Game/Editor/Map13CameraPackages/** text eol=lf
+assets/reference/official-map/map13-world-camera-source-manifest.json text eol=lf
+assets/reference/official-map/map13-camera-timeline-packages-source-manifest.json text eol=lf
