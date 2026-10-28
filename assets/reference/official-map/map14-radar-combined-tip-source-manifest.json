@@ -1,0 +1,98 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapControllerEntityRadarTipCombinate.cs",
+      "sha256": "b682920970c47d2f7cb4997c20a78e50eb2999b6a0c35a1c01eb0d0b7ce9ac15"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadar/MapControllerEntityRadarTipBase.cs",
+      "sha256": "4771367103884805d3802f582cb22bdfff8f86e46819c6e155b3baede95984cd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadar/MapControllerEntityRadarTipManager.cs",
+      "sha256": "ba509a50ec0aa260e0b730eac7bd306e15f71c42673ae573505954db1e6aa93a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/GameObjectPool.cs",
+      "sha256": "427c3ae89a74c6d366f92dfafd09c50c13407504d50f5983e78831710dc9f2dc"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map14_radar_combined_tip.py",
+      "sha256": "bdddcb1fbf970794dc4f42d0b026534369b4a4607148912246832270a8a086f3"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadarCombined/MapControllerEntityRadarTipCombinate.cs",
+      "sha256": "575b3c6961456c07b150caaa6aeb4444123888978ef89c4046cceb2cee121cd1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadarCombined/MapControllerEntityRadarTipCombinate.cs.meta",
+      "sha256": "ad9bce6a79403e0b1a284c31dd2c00c58c071321ea387fe6680c71333255a718"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadarCombined/Zjcs.Official.EntityRadarCombined.asmdef",
+      "sha256": "0767bd8ee098fbaeaf0a87c851512efec187a9f50396756560e1d4af8892f622"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadarCombined/Zjcs.Official.EntityRadarCombined.asmdef.meta",
+      "sha256": "ef142b4f1e881c51396831c242a8c7e63963682349eb46bf2a705cdb4340685c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadarCombined.meta",
+      "sha256": "cd8bbeaa3cee1b9cb4327daec48e8da994f5e40be926dcd7ecfb5a2c22a0ed6b"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/RadarCombined/OfficialMap14RadarCombinedAcceptance.cs",
+      "sha256": "fc4b52c9761e8ba8670813fe57ac3f7d1394b50315fb1e80d86bf236ac87a2fc"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/RadarCombined/OfficialMap14RadarCombinedAcceptance.cs.meta",
+      "sha256": "5a36a45ad89fb3017d00b6dd74d174affa45012c730aeaa23db2a0a503b55caa"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/RadarCombined/Zjcs.Editor.Map14.RadarCombined.asmdef",
+      "sha256": "7306eb8a2397fa7c2d041115a9e3bbcdff9ccbb036648a1c3f36423b4387d582"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/RadarCombined/Zjcs.Editor.Map14.RadarCombined.asmdef.meta",
+      "sha256": "cb3746574302f07997ad89a5245af38ea5dd752e6ec4be3853ecee65a1264653"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/RadarCombined.meta",
+      "sha256": "9c43f6ae9bd2d65a2bca42027b0fe271ab92f642ab0365b720571893118dd813"
+    }
+  ],
+  "operation": "Copy complete original combined tip. Reconstruct async/await directly from original compiler-generated MoveNext, preserving scaled WaitForSeconds, timing 8, deferred cancellation and cleanup/callback order. Preserve immediate hide, disable/re-enable, show cancellation, child filtering and original pooled children.",
+  "asyncRuntime": {
+    "package": {
+      "path": "unity/Packages/com.cysharp.unitask/package.json",
+      "sha256": "f688fcb8699bfaf6dd20e1468e4d7069eefd2e6b5b4abc5bd66d16519f07a822"
+    },
+    "delay": {
+      "path": "unity/Packages/com.cysharp.unitask/Runtime/UniTask.Delay.cs",
+      "sha256": "62924377807d071b59fcf416df91ef0736915fcd8575e84c85d1df99066136ae"
+    },
+    "version": "2.5.10",
+    "origin": "Existing MIT UniTask package; external runtime, not claimed as official APK payload."
+  },
+  "validation": {
+    "entry": "Zjcs.Editor.Map14.OfficialMap14RadarCombinedAcceptance.Run",
+    "graphicalPlayMode": true
+  },
+  "limitations": [
+    "Original combined-tip prefab, specialized child tips and formal map/HUD/player/input/save/Windows Player are not completed by component fixtures."
+  ]
+}
