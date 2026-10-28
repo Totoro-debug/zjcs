@@ -84,6 +84,8 @@
 
 - 混沌出现的原 `playable_chaos_appear` 已恢复：18 个节点、12 个粒子系统／渲染器、10 份原材质（9 份新增）及 3 张新增原纹理；核对 240 处指针、33,263 项值和 48 项原运行时光照默认值。源角色淡入／淡出回调、桥接接口、优先级支持器、SpriteRendererList、CustomRendererFade、FordingSpriteRenderer 共 9 份官方应用代码已迁入；骨骼颜色调用显式连接独立原生角色边界，未复制动画 SDK 实现，真实角色绑定仍待接通。保留原协程先累加 deltaTime 再 Lerp／yield、提前完成事件、禁用时排队淡入及完成后重置、挂点显隐计数、优先级比较和原 FadeOut 无实体桥接时的空值判断分支。主工程及隔离工程静态检查、Unity 导入／编译、全工程校验与内置屏 Play Mode 通过：原演出重复两次，自然结束，保持根序列立即淡出、0.1 秒骨骼挂接／声音请求、0.43 秒子动作淡入的原配置顺序，26 个新增纹理 mip GPU 字节逐项一致；已查看有原混沌粒子的地图画面。独立夹具验证淡入／淡出事件顺序、透明度、完成挂点计数、禁用排队／复位和优先级；两次声音仅派发原事件 `2969657999`。显式目录为 `Map14/Native/native-chaos-appearance-playable-catalog`；来源为 `map14-story-source-fade-runtime-source-manifest.json` 与 `map14-native-chaos-appearance-playable-source-manifest.json`。源角色／颜色边界为隔离夹具，原角色本体、实际音频／DSP、正式剧情／地图／存档和 Windows Player 仍未完成。
 
+- 官方 `MyPlayableManager`、FIFO prefab 池、原销毁监听器、预载与激活消息共 10 份框架代码已迁入；保留借出／Reset／Init／设置销毁回调／TryPlay、停止后 ResetData／Clear／隐藏／归位／入队、批量移除重入保护和低内存释放顺序。原场景作用域、服务注入、激活发布和低内存事件改为显式调用方边界；两个各仅持有一项订阅的原 DisposableBag 以同位置的 IDisposable 释放承接，不改变回调顺序。隔离工程静态检查、内置屏 Unity 导入／编译、全工程校验及 Play Mode 通过；主工作区静态检查仍有并行改动缺少元数据，整体通过尚待复核。本次运行范围：原混沌演出经真实管理器预载 2 份、连续播放 3 次，前两份实例不同、第三次复用第一份，未分配第三份；核对源／目标／父级／参数／停止对象、OnStop 先于归还重置、自然结束、三次原声音事件、低内存销毁、并发移除与重入拒绝。已查看对象池驱动的原特效地图画面。保留原空活跃列表时 RemoveAllPlayable 提前返回、不释放空闲对象的分支；显式 ForceReleaseObjectPool 则释放已归还对象。来源为 `map14-story-playable-manager-source-manifest.json`，入口为 `Runtime/Official/StoryPlayableManager/`；原角色本体与正式剧情请求／等待／跳过、地图／音频／存档和 Windows Player 仍待接通。
+
 ## 自定义实现
 
 原演出核心以显式中心注入及调用方提供两个原帧阶段替代 DI／R3 注册；日志接入 Unity，移除只用于 Inspector／MessagePack 的属性。调度、数值、状态和回调顺序保留，正式宿主的生命周期接入仍待验证。

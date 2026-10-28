@@ -1,0 +1,264 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/GameFramework.Runtime.dll",
+      "sha256": "6ca97373f53a249575525a5df2ca0c261a455c0b5ddd312db8b08087a3afe1dd"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Framework.dll",
+      "sha256": "2b2bed9a863049192ab828f305f8ad36e0f72fd673d7624ffe2078d0fb81795e"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-source/GameObjectPoolBase.cs",
+      "sha256": "584df7509df5e20cf615b96fd62d18b3ac982e3be839a8dfaa21ad2e5de0120c"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-source/GameObjectPool.cs",
+      "sha256": "60ed58e8935f2c0fb5a8850fd7f521476bda0b549f535361116bfa7fa6e03aab"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-source/GameObjectDestoryListener.cs",
+      "sha256": "fc792cca3866e8973bef2cd0077926619b788de6e25df68c33ff77a37c8c73a1"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-source/GamePrefabTypeSetPools.cs",
+      "sha256": "20605df0f5041a9cbb2046f571bcb233685a8bb1cd6bd9a059c987aeeb7316af"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-source/IGamePrefabTypeSetPools.cs",
+      "sha256": "38b14ffc936fe375a56b9bb98e465483cff3d968f98c932455d0040e6854eb88"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/gameframework-csharp9-source/GameFramework/MyPlayableManager.cs",
+      "sha256": "d350360819ddf059b963b7375c8068970d2772204b8a7876af57b58d031ae6a0"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/gameframework-csharp9-source/GameFramework/IMyPlayableManager.cs",
+      "sha256": "38f7b8818fce91d290d0c233181eaee62458d44bf4f1480056d782d22bce205e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/gameframework-csharp9-source/GameFramework/PreLoadData.cs",
+      "sha256": "aa8432d9001d8b293c0c59c1ee2cdcfa1c7ed3422b33b3ec0ead5c3aec411975"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/gameframework-csharp9-source/ActivePlayableManagerInfo.cs",
+      "sha256": "e3ca610d40649f2c864ebf9c468651791baac9272e5f70a0e2cbe244f02445c1"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/gameframework-csharp9-source/InactivePlayableManagerInfo.cs",
+      "sha256": "f5f33c6fae17c757f9bc02754c668a6ea4fd78549d3d7021558adf15f6c51574"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "assets/reference/official-map/map14-story-playable-runtime-source-manifest.json",
+      "sha256": "281534ee3a6ab2cc400df1fa63c282ce4c61c219394de0c7c52a577e0db07434"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_story_playable_manager.py",
+      "sha256": "12dddfed7c5b67444fde7c8e65773455a6cf49e903382ec23579a38f9f5b160a"
+    },
+    {
+      "path": "scripts/prepare_unity_story_playable_runtime.py",
+      "sha256": "8901da0cedbce77ece9f81c2e2c35f4bbefb20f0f48f3fb26f32bc60afcfd2c0"
+    },
+    {
+      "path": "scripts/prepare_unity_story_sound_runtime.py",
+      "sha256": "7c9e2f9f102b8dd9b832b01bccd73d89748f04a252ca1a4d984dc33f7ed5cbcf"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/GameObjectPoolBase.cs",
+      "sha256": "2bcac91bfe9a39fc667467e4f0c1628c9ec0fdadc164093df3f15eba23f3096e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/GameObjectPoolBase.cs.meta",
+      "sha256": "b33c7c31326819be30654d47b0378f91b00aba3f784865e0f0e2a93d935f58c9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/GameObjectPool.cs",
+      "sha256": "427c3ae89a74c6d366f92dfafd09c50c13407504d50f5983e78831710dc9f2dc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/GameObjectPool.cs.meta",
+      "sha256": "eef7259d85b5f383a49495f83b1f1e54639f17a7ade705c33899b1185a6145df"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/GameObjectDestoryListener.cs",
+      "sha256": "d4b03dbb0907c51a100b180f50c4ebb45e1c8e758c00b81887d40ca0f08c3c99"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/GameObjectDestoryListener.cs.meta",
+      "sha256": "06714ec70c7e923bc801c1a20f22ad0ff571ee4ccbd130a2b1328876b6d99de5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/GamePrefabTypeSetPools.cs",
+      "sha256": "9905a26aa4cf4510fa9c1b20478c32c32a4b17c8e404081b83119032f18fd44e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/GamePrefabTypeSetPools.cs.meta",
+      "sha256": "3abe095ca39e73206bf4896d06b47a39b82be1ab286eb1659b09f1a4408ae566"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/IGamePrefabTypeSetPools.cs",
+      "sha256": "f917b5d67b899acdedc59c01f9b6810f4d568207e1583e51860682cbd81b0ffd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/IGamePrefabTypeSetPools.cs.meta",
+      "sha256": "23a25f0232b9e050083504b60e962b6c0bf19c0c2cdd5c7a6313ba5beab79f12"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/MyPlayableManager.cs",
+      "sha256": "aad774a83afd43cfc587905d6c62523d3395e4c582cd375191a30ad30ea3b2db"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/MyPlayableManager.cs.meta",
+      "sha256": "f95237b1cd7ff52c9fb9f996632171df35519f1018691fd06f6c5b931d9118e2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/IMyPlayableManager.cs",
+      "sha256": "3f74ff276ad675c5b80c3ce7df353a253451717abc77eb268f3958333ced07e2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/IMyPlayableManager.cs.meta",
+      "sha256": "773c8dd3962df3e98974dd025c00372f4ce5e63e0cc631f8ffb11079063a5d17"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/PreLoadData.cs",
+      "sha256": "5f8af8d054952f2ae7bc62167d1eea15d570365f99d3ff741c5fae216d467ff5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/PreLoadData.cs.meta",
+      "sha256": "7ba8e55b36ac2011cfef458820701de5f04382983f77b88816a5458dae59385a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/ActivePlayableManagerInfo.cs",
+      "sha256": "ee20f4e3d7382f456a3c3752aad256b59a43724b017933c63204c619ff329964"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/ActivePlayableManagerInfo.cs.meta",
+      "sha256": "e83101b62752e2fb8a1aa5a0ac49c594395a5d5dd4febd2515550ba2fd2109a4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/InactivePlayableManagerInfo.cs",
+      "sha256": "ac9b0a823ca186e9fd2af5f1e5d136375dc4544f3c871fb677f21a13ac9ca29a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/InactivePlayableManagerInfo.cs.meta",
+      "sha256": "cf880006f5032da8f8bfd1f17657baef548e8e9b4300107ede4de21d34913795"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/StoryPlayableInstantiation.cs",
+      "sha256": "65e86b0fa7db017a5f3f56244fe8556d535248e7ce7ee80fdc1267957c6227c9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/StoryPlayableInstantiation.cs.meta",
+      "sha256": "143eb27d565cc9959c79f9e329048d5c46fe6507838058bcf5fb22a46f56e5ae"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/Zjcs.Official.StoryPlayableManager.asmdef",
+      "sha256": "a91f465982e9927e67206f4e4cae084bd071a2803196e941b58dae0361715bd0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/Zjcs.Official.StoryPlayableManager.asmdef.meta",
+      "sha256": "462e96584e929ec9b421c9abbab111b6f1d26b14edcac1649f55944619c5a3e1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager.meta",
+      "sha256": "02fd23fb4c21c619d89381726fbf46d36fe48953c7eea91113ffb86067b6ea40"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/PlayableManager/OfficialMap14PlayableManagerAcceptance.cs",
+      "sha256": "f1c77c9fddcef422af49e910e3e3e4720fe000a7e7bff185a24260d0397960e5"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/PlayableManager/OfficialMap14PlayableManagerAcceptance.cs.meta",
+      "sha256": "38ed60601197a912333772fdfd0dc5523371c6e7f3d172f49b2ff5595cce718f"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/PlayableManager/Zjcs.Editor.Map14.PlayableManager.asmdef",
+      "sha256": "cb118552c6f1f4dfd5ac7b55317ee446968f2c56d58ab301ccc40767445e19d4"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/PlayableManager/Zjcs.Editor.Map14.PlayableManager.asmdef.meta",
+      "sha256": "2a4e0f22ea07521821e88e06403453c1a8b2cbc1980d47e901365ca68ec284f5"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/PlayableManager.meta",
+      "sha256": "6831acbc687fb348c8f4b408c2cd9dfdb84a52e93776c4a09b932192644a14b6"
+    }
+  ],
+  "adaptations": [
+    {
+      "source": "GameObjectPoolBase.cs",
+      "diagnosticBlocks": 3,
+      "lifecycleAndServiceBoundary": false,
+      "singleSubscriptionBoundary": false
+    },
+    {
+      "source": "GameObjectPool.cs",
+      "diagnosticBlocks": 1,
+      "lifecycleAndServiceBoundary": false,
+      "singleSubscriptionBoundary": true
+    },
+    {
+      "source": "GameObjectDestoryListener.cs",
+      "diagnosticBlocks": 0,
+      "lifecycleAndServiceBoundary": false,
+      "singleSubscriptionBoundary": false
+    },
+    {
+      "source": "GamePrefabTypeSetPools.cs",
+      "diagnosticBlocks": 1,
+      "lifecycleAndServiceBoundary": false,
+      "singleSubscriptionBoundary": false
+    },
+    {
+      "source": "IGamePrefabTypeSetPools.cs",
+      "diagnosticBlocks": 0,
+      "lifecycleAndServiceBoundary": false,
+      "singleSubscriptionBoundary": false
+    },
+    {
+      "source": "MyPlayableManager.cs",
+      "diagnosticBlocks": 3,
+      "lifecycleAndServiceBoundary": true,
+      "singleSubscriptionBoundary": true
+    },
+    {
+      "source": "IMyPlayableManager.cs",
+      "diagnosticBlocks": 0,
+      "lifecycleAndServiceBoundary": false,
+      "singleSubscriptionBoundary": false
+    },
+    {
+      "source": "PreLoadData.cs",
+      "diagnosticBlocks": 0,
+      "lifecycleAndServiceBoundary": false,
+      "singleSubscriptionBoundary": false
+    },
+    {
+      "source": "ActivePlayableManagerInfo.cs",
+      "diagnosticBlocks": 0,
+      "lifecycleAndServiceBoundary": false,
+      "singleSubscriptionBoundary": false
+    },
+    {
+      "source": "InactivePlayableManagerInfo.cs",
+      "diagnosticBlocks": 0,
+      "lifecycleAndServiceBoundary": false,
+      "singleSubscriptionBoundary": false
+    }
+  ],
+  "operation": "Copy all original manager, FIFO prefab pool, destroy-listener, preload and activation-message methods. Preserve borrow/reset/init/destroy-callback/play order, return reset/clear/deactivate/reparent/enqueue order, removal reentrancy guard, exception recovery, original empty-active early return, low-memory release and preload extension. Replace scoped base lifecycle and DI/R3/MessagePipe entry points with explicit caller-owned lifecycle, native scope factory, original GAction low-memory input, typed activation publishers, and each single IDisposable subscription at its original disposal site. Repair only two decompiled constructor forwarders and diagnostics.",
+  "limitations": [
+    "Scope lifecycle, factory injection, native catalog loading and story-node request/wait/skip integration require a consuming host. Complete map/actor/audio/save and Windows Player remain pending."
+  ]
+}
