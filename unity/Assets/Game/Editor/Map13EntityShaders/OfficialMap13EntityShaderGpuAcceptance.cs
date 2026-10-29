@@ -131,7 +131,7 @@ namespace Zjcs.Editor.Map13EntityShaders
                     if(actual!=expected) throw new InvalidDataException("Original 16-entry dither coverage: "+fade+" expected "+expected+", actual "+actual);
                     if(fade==.5f) Save(readback,"dither-half.png");
                 }
-                Debug.Log("Map13 entity shader Play Mode GPU checks passed: four Spine color/transform renders, all 16384 UI clipping pixels, and three original dither coverage states. Formal entities, mouse input and saves are not covered.");
+                Debug.Log("Map13 entity shader  Play Mode GPU checks passed: four Spine color/transform renders, all 16384 UI clipping pixels, and three original dither coverage states. Formal entities, mouse input and saves are not covered.");
             }
             finally
             {

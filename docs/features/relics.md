@@ -6,11 +6,26 @@
 
 ## 功能简介
 
-官方古遗物包含收藏、培养、套装、赐福及战斗计数，原详情／培养／快捷操作窗口消费相应配置。
+家园书桌进入五元素收藏，每元素四槽。扭蛋及女神牌购买见[古遗物扭蛋](treasure-gacha.md)。
 
 ## 原始官方实现
 
 官方古遗物包含收藏、培养、套装、赐福及战斗计数，原详情／培养／快捷操作窗口消费相应配置。
+
+### 待迁移的规则与表现
+
+- 原首页、四槽、元素页签、筛选、碎片、套装、详情及培养界面须接入。遗物只能放同元素，同件移槽不复制；替换保留收藏，等级投资属于槽位。
+- 已激活收藏按原等级／星级和任务计数计算，陈列后加原20%槽位加成；未陈列持有物按同元素四槽最低共鸣读取。任务原 `PerCount`、生效上限和属性截断不变。
+- 升星使用原品质、星级、累计碎片差额、特殊碎片和材料；重复取得按 `Agio` 返还。原六进一自动合成只扣实际不足，不制造中间领奖；觉醒开关独立，品质5普通觉醒消耗733×120。
+- 通用觉醒选材窗口迁移原 `TreasureAwakeMaterialPanel`、`UseItemSliderGroup` 和 `CommonMaterial`：原布局、同品质候选、预留供体自身满星所需碎片、余量升序、数量滑条、总需求约束、一键选择、空态、确认返回及重开保留选择。入口遵循 `TreasureUpgradePanel.RefreshCommanMaterials`，仅费用包含 `-2147483555` 时显示；固定版配置不含该占位项，普通觉醒仍使用原733材料，不添加新费用。
+- 元素收藏使用原 `MainTypeTitleTreasure`、`TreasurePanelTreasureSet` 和四个 `TreasureMultiLayerItem` 槽位；按品质／首个等级属性分组，标题遵循原 `_For_Treasure` 文案回退，沿用筛选／反向排序的结果顺序，每组独立换行。保留原尺寸、边距、间距、星级、觉醒状态、等级、未激活／可合成提示和对应点击行为。
+- 收藏页头显示同元素实际持有数／配置总数及战斗外亲和、庇护；空态区分筛选无结果与已有陈列。列表沿用原 `LoopScrollRect` 的拖动门槛、惯性、回弹和减速参数，向下寻找可操作项按原提示优先级显示跳转按钮，并按原0.9秒定位到对应物品行。
+- 持有十件且存在可操作项时显示原快捷按钮，激活优先；激活／合成后陈列同元素首个空槽，满槽不替换。
+- 培养材料按原 `TreasureLevelupPanel.RefreshMaterials` 标记可合成物品：仅当材料存在可用 `ItemMerge` 来源，且八卦炉与该材料的合成功能均已解锁时，叠加原 `MergeTip` 类型9附件；沿用官方附件层级与原 prefab。
+- 升星页按原 `TreasureUpgradePanelStarInfo.Refresh` 显示当前星级、下一星及空星；仅 Upgrade 状态播放目标星原 `Star_Twinkle_On` 循环动画，Wake 与 Waked 状态不闪烁。
+- 培养成功后按原 `PropEffectPlayAgent.mPropItems` 顺序启动属性行效果；前后属性值来自事务前后状态。固定版 prefab 的 `mEffectInterval` 序列化值为 `0`，所以各行同帧启动；文字在原 `PlayerPropItem.myChangeTextTime` 后切换，特效按 `myEffectDuration` 结束。
+- 基础槽位、当季赐福分开保存，首次赐福核对五元素二十槽陈列满级、原人物／共鸣条件和费用。原数量／赐福拆分说明、当季名和满星状态须接入。
+- 任务读取真实消耗、取得来源、技能培养、装备等级、分解、日常、已结束地图实体及战斗记录。
 
 ### 官方代码与资源依据
 
@@ -30,11 +45,15 @@ scripts/prepare_relic_bindings.py只读固定854_156383的TreasureElementTab、T
 
 ## 完整还原部分
 
-尚无完整 Unity 流程的完成结论。
+尚无完整 Unity 流程的完成结论；已取得源码和转换素材仅作迁移依据。
 
 ## 自定义实现
 
-开放与本地保存遵循[共同离线政策](offline-access.md)，具体本地接线和未确认规则见下文。
+用户确认获取／激活前的真实历史和超过当前等级上限的次数保留，升级后立即生效；不从当前等级或库存补造历史。批量培养按用户确认每件最多一星、低星优先，不觉醒、不用通用碎片。
+
+三类服务端写入时机由用户确认本地接线：圣境当天实际参战计一次，失败也计；逐次实际命中统计角色暴击／被暴击／格挡／被格挡，未命中、免疫和治疗不计，护盾吸收仍计；普通／首领地图目标获胜各计一次。进行中事件随检查点保存，结算写历史，继续和重读不重复。
+
+服务器开放条件采用[离线政策](offline-access.md)，材料、个人培养和赛季归属仍保留。
 
 ### 已确认的本地接线与边界
 
@@ -42,4 +61,14 @@ prepare_relic_text.py保留原中文rawfile、TreasureDetailDialog及Introductio
 
 ## 尚未实现
 
-接通官方代码、原生界面／资源、本地状态与存档，完成实际入口、模拟输入、画面及失败恢复验证，并发布对应 Windows 版本。
+- 五元素各四槽、收藏、装备、任务历史、基础／祝福培养、觉醒、碎片和批量培养。
+
+- 完成 Unity 实际入口、交互／表现、存档与失败恢复验证，并发布对应 Windows 可执行版本。
+
+## 代码与资源入口
+
+`scripts/prepare_treasure_cultivation.py`（来源工具标识）、`scripts/prepare_bag_items.py`（来源工具标识）、[source-manifest.json](../../assets/reference/treasure-cultivation/source-manifest.json)
+
+[bag-items-source-manifest.json](../../assets/reference/bag-items-source-manifest.json)、
+
+`scripts/prepare_relic_components.py`（来源工具标识）、

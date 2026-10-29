@@ -103,6 +103,9 @@ def recover_prefab(reader, text_schemas, bundle, prefab_name, city):
                     "FightEndReportPanelTabItem", "FightEndReportSkillTabItem", "TabGroup", "TabItem",
                     "LocalFightRecordPanel", "LocalFightRecordInfoItem", "FightRecordInfoItem",
                     "FightRecordDownloadPlayButton", "TMP_InputField", "ContentModerationClickMask",
+                    "MonsterBriefInfoPanel", "FightRoleFightHpView", "PlayerBattleHpBar", "PlayerShieldText",
+                    "PlayerBuffShow", "FightStatusItemBase", "CharacterDetailPropsDialogOverallContent",
+                    "CommonRankShow", "SkillWithOuterTagItem", "ItemIconPetSkill", "MonsterDetailPropsDialog",
                     "CharacterPanelSkillListPanelItem", "CharacterPanelSkillListPanelItemNewMark",
                     "SkillPanelRedDotItem", "SkillPanelCanRankUpRedDotItem", "SkillCanMergeRedDotItem",
                     "ItemIconAttachmentRedDotHandler", "ItemIconAttachmentHint", "RedDotMultiItem",
@@ -200,6 +203,8 @@ def restore(reader, schemas, data, city, rules):
         "skill_rule_tip_item": ("prefabs_ui_common", "TipInfo2"),
         "skill_entry_tip": ("prefabs_ui_tips", "PopTipEntry"),
         "skill_entry_tip_item": ("prefabs_ui_item", "EntryDetailItem"),
+        "monster_brief": ("prefabs_ui_briefinfo", "MonsterBriefInfoPanel"),
+        "monster_detail_props": ("prefabs_ui_character", "MonsterDetailPropsDialog"),
         "damage_test_report": ("prefabs_ui_fight_fightendreportpanel_fightendreportpanel", "FightEndReportPanel"),
         "damage_test_records": ("prefabs_ui_record", "LocalFightRecordPanel"),
         "damage_test_record_item": ("prefabs_ui_record", "FightRecordInfoItem"),
@@ -208,7 +213,9 @@ def restore(reader, schemas, data, city, rules):
     inputs = {}
     inputs["hyperlink_code"] = []
     for name in ("HyperLinkClickListener", "SkillHyperLinkDataProvider", "HyperLinkClickHandlerEntry", "EntryDetailDialog", "EntryDetailDialogItem",
-                 "HyperLinkClickHandlerPetEnergyEntry", "SkillDetailDialog", "FightEndReportSkillTabViewItem"):
+                 "HyperLinkClickHandlerPetEnergyEntry", "HyperLinkClickHandlerMonster", "HyperLinkClickHandlerPetEntity",
+                 "MonsterInfoPanelNavigateHandler", "PetEntityInfoPanelNavigateHandler", "MonsterBriefInfoPanel",
+                 "MonsterDetailPropsDialog", "NonPlayerBriefInfo", "SkillDetailDialog", "FightEndReportSkillTabViewItem"):
         path = ROOT / ".tools/source-packages/official-code/client-source" / (name + ".cs")
         inputs["hyperlink_code"].append({"source": path.relative_to(ROOT).as_posix(),
             "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})

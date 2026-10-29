@@ -173,7 +173,7 @@ namespace Zjcs.Presentation.CharacterCreation
                 "New profile button did not create an independent draft and enter creation.");
             yield return new WaitForEndOfFrame(); Capture("created");
             Debug.Log("Save selection validation passed: native UI, portraits, tabs, simulated scroll/click, no browse writes, continue, corrupt profile preservation and creation.");
-            File.WriteAllText(Path.Combine(output, "result.json"), "{\"passed\":true,\"simulatedInput\":true}");
+                File.WriteAllText(Path.Combine(output, "result.json"), "{\"passed\":true,\"simulatedInput\":true}");
             Complete(true);
         }
 

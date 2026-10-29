@@ -12,6 +12,8 @@ namespace Zjcs.Offline.Cooking
         public string manifest;
         public int maxCookingCountAtATime;
         public int cookingRecoveryCountThreshold;
+        public int minBatchUseCount;
+        public int maxBatchUseCount;
         public List<OfficialCookingRecipe> recipes = new List<OfficialCookingRecipe>();
         public List<OfficialCookingItem> items = new List<OfficialCookingItem>();
     }
@@ -59,6 +61,9 @@ namespace Zjcs.Offline.Cooking
         public string icon;
         public int itemType;
         public int quality;
+        public bool canUse;
+        public bool canUseInBatches;
+        public int itemUseEffectType;
     }
 
     public sealed class OfficialCookingCatalog
@@ -95,7 +100,8 @@ namespace Zjcs.Offline.Cooking
         public static bool IsValid(OfficialCookingCatalogData data)
         {
             if (data == null || data.manifest != ExpectedManifest || data.maxCookingCountAtATime <= 0
-                || data.cookingRecoveryCountThreshold < 0 || data.recipes == null || data.items == null
+                || data.cookingRecoveryCountThreshold < 0 || data.minBatchUseCount != 1
+                || data.maxBatchUseCount != 100 || data.recipes == null || data.items == null
                 || data.recipes.Count != 110 || data.items.Count != 305)
                 return false;
             var recipeIds = new HashSet<int>();
@@ -126,5 +132,16 @@ namespace Zjcs.Offline.Cooking
         public bool TryGetItem(int itemId, out OfficialCookingItem item) => items.TryGetValue(itemId, out item);
         public bool TryGetFormulaRecipe(int formulaItemId, out OfficialCookingRecipe recipe)
             => formulaRecipes.TryGetValue(formulaItemId, out recipe);
+
+        public long MaxPermanentPropertyUseCount(int itemId, long availableCount)
+        {
+            if (availableCount <= 0 || !TryGetItem(itemId, out OfficialCookingItem item)
+                || !item.canUse || item.itemType != 323 || item.itemUseEffectType != 8
+                || !TryGetRecipe(itemId, out OfficialCookingRecipe recipe)
+                || !recipe.effects.Any(effect => effect.type == 2 && effect.kind == "CookingExtraInfoProp"))
+                return 0;
+            long limit = item.canUseInBatches ? Data.maxBatchUseCount : 1;
+            return Math.Min(availableCount, limit);
+        }
     }
 }

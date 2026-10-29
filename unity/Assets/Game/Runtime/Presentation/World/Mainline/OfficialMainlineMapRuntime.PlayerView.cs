@@ -11,7 +11,7 @@ namespace Zjcs.Presentation.World
         {
             public Vector3 modelScale, modelOffset, cameraSafeExtents;
             public int sortingOrder, sortingLayerId, nativeSortingOrder, cameraAdaptPriority;
-            public float cameraDefaultSize, cameraNear, cameraFar;
+            public float cameraDefaultSize, cameraNear, cameraFar, cameraZ;
         }
         private Map11PlayerViewSource map11WorldViewSource;
         private Vector2Int map11CameraResolution;
@@ -53,7 +53,7 @@ namespace Zjcs.Presentation.World
             model.transform.localScale = data.modelScale;
             var sorting = root.AddComponent<SortingGroup>();
             sorting.sortingOrder = data.sortingOrder;
-            if (mapClassId == 12)
+            if (mapClassId == 12 || mapClassId == 13)
             {
                 sorting.sortingLayerID = data.sortingLayerId;
                 sorting.sortingOrder = data.nativeSortingOrder;

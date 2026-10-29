@@ -6,6 +6,14 @@ output/*
 tmp/*
 __pycache__/
 
+# Local build and validation outputs
+/build/
+/Build/
+/Builds/
+/unity/Build/
+/unity/Builds/
+/unity/output/
+
 # Independent asset pack payloads; code and compact pack metadata stay in Git.
 /assets/official/
 /assets/characters/

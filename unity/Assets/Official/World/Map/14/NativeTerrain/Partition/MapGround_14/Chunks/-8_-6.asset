@@ -1,0 +1,233 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55386bceb3c80b1a25400e7802f9bc1e, type: 3}
+  m_Name: -8_-6
+  m_EditorClassIdentifier:
+  IsPartial: 0
+  Pos:
+    x: -8
+    y: -6
+  Bounds:
+    m_Position:
+      x: -112
+      y: -84
+      z: 0
+    m_Size:
+      x: 14
+      y: 14
+      z: 1
+  TilemapDatas:
+  - Name: UnderObject
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 0
+      TileIndex: 0
+    - Index: 190
+      TileIndex: 1
+    - Index: 192
+      TileIndex: 1
+    - Index: 195
+      TileIndex: 2
+    HasOffset: 1
+    MatrixIndexes: 0000010001000200
+  - Name: UnderObjec01
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 14
+      TileIndex: 0
+    - Index: 28
+      TileIndex: 3
+    HasOffset: 1
+    MatrixIndexes: 00000300
+  - Name: Object
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 0
+      TileIndex: 4
+    - Index: 14
+      TileIndex: 5
+    HasOffset: 1
+    MatrixIndexes: 04000500
+  - Name: Shadow
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 1
+      TileIndex: 6
+    - Index: 14
+      TileIndex: 7
+    - Index: 15
+      TileIndex: 8
+    HasOffset: 1
+    MatrixIndexes: 060007000800
+  Matrices:
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.07
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: -0.05
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 5.9604645E-08
+    e01: 0.99999994
+    e02: -8.742278E-08
+    e03: 0
+    e10: 0.99999994
+    e11: 5.9604645E-08
+    e12: 0
+    e13: 0.6
+    e20: 0
+    e21: -8.742278E-08
+    e22: -0.9999999
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 5.9604645E-08
+    e01: -0.99999994
+    e02: 0
+    e03: 1.3
+    e10: 0.99999994
+    e11: 5.9604645E-08
+    e12: 0
+    e13: 0.7
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: -1
+    e01: 8.742278E-08
+    e02: 0
+    e03: 0.9
+    e10: -8.742278E-08
+    e11: -1
+    e12: 0
+    e13: 0.95
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -84
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -83
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0.301
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -83.699
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.1
+    e10: 0
+    e11: 0.8
+    e12: 0
+    e13: 0.01
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -82.99
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0.3
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -82.7
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  Tiles:
+  - {fileID: 11400000, guid: 7d1178c5c44aeb15e94d134e001a3b3d, type: 2}
+  - {fileID: 11400000, guid: 25470a99fda6e70e5b196ea4ba8f5c50, type: 2}
+  - {fileID: 11400000, guid: 6943c55884fa5e603d8a8e9484c45221, type: 2}
+  - {fileID: 11400000, guid: 03c63c4b5cf15dfa1a789c8c9e9643d6, type: 2}
+  - {fileID: 11400000, guid: d9a6a193e1e7bc8209b4b577c0641cf0, type: 2}
+  - {fileID: 11400000, guid: 4c446676f86aa4917d6326f9a5cb3227, type: 2}
+  - {fileID: 11400000, guid: 934645deb456843b901596debc9882f1, type: 2}
+  - {fileID: 11400000, guid: 02ac3d7bf3dc7588a4b7df84b6361bd5, type: 2}
+  - {fileID: 11400000, guid: e79f8fc870147af6e6b6324cbb3acf5f, type: 2}

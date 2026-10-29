@@ -72,6 +72,10 @@ namespace Zjcs.Editor
             Invoke("CloseNativeFullMiniMap");
             yield return null;
             filters.Clear(); // Force the real local JSON reader rather than its in-memory selection.
+            typeof(OfficialMainlineMapRuntime).GetNestedType("OfficialMainlineMiniMapModule",
+                System.Reflection.BindingFlags.NonPublic)
+                .GetField("miniMapFilterState", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                .SetValue(Field<object>("miniMap"), null);
             Invoke("ToggleExpandedMinimap");
             yield return null;
             Require((bool)filters["MiniMapGoddess"] != selected, "Filter selection restores from local save");

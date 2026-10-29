@@ -94,7 +94,7 @@ namespace Zjcs.Editor.Map14
                 yield return value;
             }
             SessionState.SetInt(Key + ".result", 0);
-            Debug.Log("Map14 native environment Play Mode passed: 240 original tile chunks and 486 original scene resources through original partition/controller/environment callbacks, public/private fixtures, native texture GPU upload and rendering. Original world labels are bound; real world state, map interaction and saves remain unverified.");
+            Debug.Log("Map14 native environment Play Mode passed: 240 original tile chunks and 486 original scene resources through original partition/controller/environment callbacks, public/private fixtures, native texture GPU upload and  rendering. Original world labels are bound; real world state, map interaction and saves remain unverified.");
             EditorApplication.isPlaying = false;
         }
 
@@ -211,7 +211,7 @@ namespace Zjcs.Editor.Map14
                         throw new InvalidDataException("Original visible butterfly animation clock did not advance: " + group.Key);
                     var readback = AsyncGPUReadback.Request(target, 0, TextureFormat.RGBA32);
                     while (!readback.done) yield return null;
-                    if (readback.hasError) throw new InvalidDataException("Original butterfly camera readback failed.");
+                    if (readback.hasError) throw new InvalidDataException("Original butterfly  camera readback failed.");
                     var closeup = new Texture2D(384, 640, TextureFormat.RGBA32, false, true);
                     closeup.SetPixels32(readback.GetData<Color32>().ToArray()); closeup.Apply();
                     File.WriteAllBytes(Path.Combine(rootPath, "output/map14-butterfly-" + status + "-" + group.Key + ".png"), closeup.EncodeToPNG());
@@ -224,7 +224,7 @@ namespace Zjcs.Editor.Map14
                     yield return new WaitForSeconds(0.15f); yield return null; yield return null;
                     var request = AsyncGPUReadback.Request(target, 0, TextureFormat.RGBA32);
                     while (!request.done) yield return null;
-                    if (request.hasError) throw new InvalidDataException("Original partition camera readback failed.");
+                    if (request.hasError) throw new InvalidDataException("Original partition  camera readback failed.");
                     var image = new Texture2D(384, 640, TextureFormat.RGBA32, false, true);
                     image.SetPixels32(request.GetData<Color32>().ToArray()); image.Apply();
                     File.WriteAllBytes(Path.Combine(rootPath, "output/map14-labeled-partition-" + status + "-" + (view.y == 0 ? "center" : view.x == 0 ? "mountain" : "region") + "-20261027.png"), image.EncodeToPNG());

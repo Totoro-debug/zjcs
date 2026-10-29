@@ -520,6 +520,23 @@ namespace Zjcs.Offline.Progression
             return Commit(next, Result(ProgressionResultStatus.Applied));
         }
 
+        public ProgressionResult ApplyMapActivationResult(int mapClassId, bool won, string eventId)
+        {
+            if (mapClassId <= 0 || string.IsNullOrWhiteSpace(eventId) || eventId.Length > 256)
+                return Result(ProgressionResultStatus.InvalidState, message: "An activated map and result receipt are required.");
+            if (!won) return Result(ProgressionResultStatus.NotReady);
+            Reload();
+            if (Save.World.AppliedEventIds.Contains(eventId))
+                return Result(ProgressionResultStatus.Unchanged);
+
+            OfflineMainlineSave next = Clone(Save);
+            bool newlyUnlocked = !next.Player.UnlockedMapClassIds.Contains(mapClassId);
+            if (newlyUnlocked) next.Player.UnlockedMapClassIds.Add(mapClassId);
+            next.World.AppliedEventIds.Add(eventId);
+            return Commit(next, Result(newlyUnlocked ? ProgressionResultStatus.Applied
+                : ProgressionResultStatus.Unchanged));
+        }
+
         public ProgressionResult SetMapRegionProgress(int mapClassId, int region, int fixedProgress)
         {
             if (fixedProgress < 0 || fixedProgress > 10000 || !HasMapRegion(Save, mapClassId, region))

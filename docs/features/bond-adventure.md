@@ -6,11 +6,21 @@
 
 ## 功能简介
 
-羁绊冒险读取原 NPC、地图、关卡、邀请资格、站位、战前演出与奖励配置，使用官方对应界面和队伍流程。
+从游记原羁绊入口进入NPC冒险；原配置880节点，当前按用户意见开放720节点，至第17国第8区第20节点15860。
 
 ## 原始官方实现
 
 羁绊冒险读取原 NPC、地图、关卡、邀请资格、站位、战前演出与奖励配置，使用官方对应界面和队伍流程。
+
+### 待迁移的规则与表现
+
+原MapSlot、GeographySlot、旋转、节点状态／头像／动画、挑战按钮、三人选择、刷新和基础奖励说明须接入。每天最多原十次，节点属性按连续实际通关推进。
+
+羁绊战斗阵容读取助战类型6的三名NPC（不是旅行派遣队伍），按原NpcInfo的FigureModelWithWeaponUI／FigureModelUI路径显示原模型，并播放原RunAnimName／IdleAnimName或职业run_03／idle_01。主角播放原100/run_03或200/run_03，角色与地图使用原AnimTimeScale／RotateSpeeds。挑战时停止地图旋转、切换主角和伙伴待机，播放NpcAdventurePanel_CombatTrigger；原动画0.5667秒结束后才提交本地战斗动作。
+
+原奖励说明展示当前区域全部未通关节点；区域全清后，直到下一地区首节点完成再切图。已取得原玩家模型放原槽位，第一节点通过后进入伙伴旅行，不跳到幻兽派遣。
+
+地图、区域、当前节点、下一挑战、旅行候选与新派遣的节点属性共用实际开放范围。
 
 ### 官方代码与资源依据
 
@@ -24,12 +34,23 @@
 
 ## 完整还原部分
 
-尚无完整 Unity 流程的完成结论。
+尚无完整 Unity 流程的完成结论；已取得源码和转换素材仅作迁移依据。
 
 ## 自定义实现
 
-开放与本地保存遵循[共同离线政策](offline-access.md)，具体本地接线和未确认规则见下文。
+第19国160节点配置和旧通过记录保留，因原两版本完整清单尚未取得对应专用地图，用户明确暂不开放，取得真实地图后再恢复；不绘制替代地图。已有旅行仍按原派遣快照领取。
+
+节点、次数、奖励和属性由本地事务保存，不以直接写通关取代实际战斗。
 
 ## 尚未实现
 
-接通官方代码、原生界面／资源、本地状态与存档，完成实际入口、模拟输入、画面及失败恢复验证，并发布对应 Windows 版本。
+- 原羁绊入口、NPC模型与主角外观、地图路线、战前触发及真实节点战斗；当前授权只开放720节点至15860。
+
+- 完成 Unity 实际入口、交互／表现、存档与失败恢复验证，并发布对应 Windows 可执行版本。
+- 第19国真实地图未取得，按用户决定不开放；NPC11015～11022所属联动继续暂停，不以替代模型或已取得资源开放。
+
+## 代码与资源入口
+
+`scripts/prepare_npc_adventure_models.py`（来源工具标识）、`scripts/prepare_profession_appearance.py`（来源工具标识）、`scripts/prepare_character_appearance.py`（来源工具标识）、[NpcAdventureModelItem.cs](../../.tools/source-packages/official-code/client-source/NpcAdventureModelItem.cs)
+
+[NpcAdventurePanelMainContent.cs](../../.tools/source-packages/official-code/client-source/NpcAdventurePanelMainContent.cs)、[NpcAdventurePanelMainContentAnimController.cs](../../.tools/source-packages/official-code/client-source/NpcAdventurePanelMainContentAnimController.cs)、[ui.json](../../assets/official/ui.json)、

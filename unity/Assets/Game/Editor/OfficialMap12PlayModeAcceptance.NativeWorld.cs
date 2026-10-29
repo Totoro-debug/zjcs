@@ -15,9 +15,16 @@ namespace Zjcs.Editor
     {
         public static void RunRuntimeNativeWorld()
         {
+            UnityEditor.SessionState.SetBool(Key + ".runtime", false);
             UnityEditor.SessionState.SetBool(Key + ".runtimeTerminals", false);
             UnityEditor.SessionState.SetBool(Key + ".runtimeSpatial", false);
             UnityEditor.SessionState.SetBool(Key + ".runtimeDialogue", false);
+            UnityEditor.SessionState.SetBool(Key + ".audio", false);
+            UnityEditor.SessionState.SetBool(Key + ".chests", false);
+            UnityEditor.SessionState.SetBool(Key + ".buildingUi", false);
+            UnityEditor.SessionState.SetBool(Key + ".buildingPrelude", false);
+            UnityEditor.SessionState.SetBool(Key + ".buildingBattle", false);
+            UnityEditor.SessionState.SetBool(Key + ".privateDungeonEntry", false);
             RunCore(false, false, 12, true, verifyNativeWorld: true);
         }
 

@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zjcs.Offline.State;
+using Zjcs.Official.World.Map13MiniMap;
 
 namespace Zjcs.Presentation.World
 {
@@ -13,16 +14,11 @@ namespace Zjcs.Presentation.World
     {
         private sealed partial class OfficialMainlineMiniMapModule
         {
-            [Serializable] private sealed class MiniMapFilterSave
-            {
-                public int schema = 1;
-                public MiniMapFilterValue[] filters = Array.Empty<MiniMapFilterValue>();
-            }
-            [Serializable] private sealed class MiniMapFilterValue { public string name; public bool selected; }
             private readonly Dictionary<string, bool> miniMapFilters = new Dictionary<string, bool>();
             private readonly Dictionary<string, GameObject> miniMapFilterItems = new Dictionary<string, GameObject>();
             private GameObject miniMapFilterEntry, miniMapFilterDropdown;
             private OfficialMap11UiComponentFields miniMapFilterFields;
+            private MainlineMiniMapFilterPersistentState miniMapFilterState;
 
             private Transform FullMiniMapObject(string path) => path == "/MiniMapFullScreenPanel" ? fullMiniMapPanel.transform
                 : fullMiniMapPanel.transform.Find(path.Substring("/MiniMapFullScreenPanel/".Length));
@@ -35,24 +31,11 @@ namespace Zjcs.Presentation.World
                 miniMapFilterEntry = FullMiniMapObject(miniMapFilterFields.mEntry).gameObject;
                 miniMapFilterDropdown = FullMiniMapObject(miniMapFilterFields.mFilter).gameObject;
                 miniMapFilterItems.Clear();
-                if (miniMapFilters.Count == 0)
+                if (miniMapFilterState == null)
                 {
-                    bool Validate(string json)
-                    {
-                        try
-                        {
-                            var value = JsonUtility.FromJson<MiniMapFilterSave>(json);
-                            return value != null && value.schema == 1 && value.filters != null
-                                && value.filters.All(row => row != null && !string.IsNullOrEmpty(row.name))
-                                && value.filters.Select(row => row.name).Distinct().Count() == value.filters.Length;
-                        }
-                        catch { return false; }
-                    }
-                    var saved = LocalJsonSaveFile.Read(MiniMapFilterPath, Validate);
-                    if (saved.Status == SaveReadStatus.Corrupt) throw new InvalidDataException("小地图筛选存档损坏。");
-                    if (saved.Json != null)
-                        foreach (var row in JsonUtility.FromJson<MiniMapFilterSave>(saved.Json).filters)
-                            miniMapFilters.Add(row.name, row.selected);
+                    miniMapFilterState = new MainlineMiniMapFilterPersistentState(
+                        new ProfileSlotCatalog(host.persistentDataPath), host.slotId);
+                    foreach (var row in miniMapFilterState.State.FilterState) miniMapFilters.Add(row.Key, row.Value);
                 }
                 var assets = Resources.Load<OfficialMap11UiAssets>(host.NativeUiResource("DynamicItems"));
                 foreach (var mark in miniMapUiData.minimapMarks)
@@ -137,16 +120,14 @@ namespace Zjcs.Presentation.World
                 RefreshNativeMiniMapMarks();
             }
 
-            private string MiniMapFilterPath => Path.Combine(new ProfileSlotCatalog(host.persistentDataPath).GetSlotDirectory(host.slotId), "minimap-filter.json");
             private void SaveMiniMapFilter()
             {
-                var saved = new MiniMapFilterSave { filters = miniMapFilters.OrderBy(value => value.Key)
-                    .Select(value => new MiniMapFilterValue { name = value.Key, selected = value.Value }).ToArray() };
-                LocalJsonSaveFile.Write(MiniMapFilterPath, JsonUtility.ToJson(saved, true), json =>
-                {
-                    var value = JsonUtility.FromJson<MiniMapFilterSave>(json);
-                    return value != null && value.schema == 1 && value.filters != null;
-                });
+                miniMapFilterState.State.FilterState = new Dictionary<string, bool>(miniMapFilters, StringComparer.Ordinal);
+                bool all = miniMapUiData.minimapMarks.All(value => miniMapFilters[value.name]);
+                bool none = miniMapUiData.minimapMarks.All(value => !miniMapFilters[value.name]);
+                miniMapFilterState.State.SelectionState = all ? MiniMapMarkUIFilterSetting.SelectionType.All
+                    : none ? MiniMapMarkUIFilterSetting.SelectionType.None : MiniMapMarkUIFilterSetting.SelectionType.Free;
+                miniMapFilterState.WriteStateAsync().GetAwaiter().GetResult();
             }
         }
     }

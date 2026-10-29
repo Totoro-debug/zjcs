@@ -105,7 +105,7 @@ namespace Zjcs.Editor.Map13EntityBindings
                     Debug.Log("Map13 bound shader: " + shader.name + " supported=" + shader.isSupported);
                 }
                 Debug.Log("Map13 native entity shader bindings passed: 21 serialized shader references, " +
-                    "all original fallback chains, " + stages + " newly converted executable stages. Precompiled engine shader is checked by GPU execution.");
+                    "all original fallback chains, " + stages + " newly converted executable stages; . Precompiled engine shader is checked by GPU execution.");
             }
             finally { ShaderUtil.allowAsyncCompilation = asynchronous; }
         }

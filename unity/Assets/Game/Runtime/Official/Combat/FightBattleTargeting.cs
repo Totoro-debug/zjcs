@@ -283,6 +283,13 @@ namespace Zjcs.Combat.Official
                         break;
                     }
             }
+            if (inRange.Count == 0) return inRange;
+
+            // Preserve the configured target priority, then turn to that target's
+            // cardinal direction and keep only targets in the same facing range.
+            int direction = DirectionTo(actor, inRange[0]);
+            actor.Direction = direction;
+            inRange.RemoveAll(target => DirectionTo(actor, target) != direction);
             return inRange;
         }
 
@@ -744,13 +751,18 @@ namespace Zjcs.Combat.Official
         private static bool FacesTarget(FightBattleUnitState actor,
             FightBattleUnitState target)
         {
+            return actor.Direction == DirectionTo(actor, target);
+        }
+
+        private static int DirectionTo(FightBattleUnitState actor,
+            FightBattleUnitState target)
+        {
             int dx = target.X - actor.X;
             int dy = target.Y - actor.Y;
-            if (dx == 0 && dy == 0) return false;
-            int direction = Math.Abs(dx) >= Math.Abs(dy)
+            if (dx == 0 && dy == 0) return actor.Direction;
+            return Math.Abs(dx) >= Math.Abs(dy)
                 ? dx < 0 ? 1 : 3
                 : dy > 0 ? 2 : 0;
-            return actor.Direction == direction;
         }
 
         private static int CompareSaferPositions(FightBattleUnitState actor,

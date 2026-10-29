@@ -92,7 +92,7 @@ namespace Zjcs.Editor.Map13
                 yield return value;
             }
             SessionState.SetInt(Key + ".result", 0);
-            Debug.Log("Map13 native flag Play Mode passed: 200 original tile chunks and 183 original non-label scene resources through original partition/controller/environment callbacks, public/private fixtures, native texture GPU upload and rendering. The 88 world labels, real world state, map interaction and saves remain unverified.");
+            Debug.Log("Map13 native flag Play Mode passed: 200 original tile chunks and 183 original non-label scene resources through original partition/controller/environment callbacks, public/private fixtures, native texture GPU upload and  rendering. The 88 world labels, real world state, map interaction and saves remain unverified.");
             EditorApplication.isPlaying = false;
         }
 
@@ -188,7 +188,7 @@ namespace Zjcs.Editor.Map13
                     yield return new WaitForSeconds(0.15f); yield return null; yield return null;
                     var request = AsyncGPUReadback.Request(target, 0, TextureFormat.RGBA32);
                     while (!request.done) yield return null;
-                    if (request.hasError) throw new InvalidDataException("Original partition camera readback failed.");
+                    if (request.hasError) throw new InvalidDataException("Original partition  camera readback failed.");
                     var image = new Texture2D(384, 640, TextureFormat.RGBA32, false, true);
                     image.SetPixels32(request.GetData<Color32>().ToArray()); image.Apply();
                     File.WriteAllBytes(Path.Combine(rootPath, "output/map13-partition-" + status + "-" + (view.x == 0 ? "center" : "shrine") + "-20261027.png"), image.EncodeToPNG());

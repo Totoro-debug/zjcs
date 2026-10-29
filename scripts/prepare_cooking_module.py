@@ -437,7 +437,8 @@ class CookingConverter:
             if sha256(raw) != expected or sha256(raw) != table_receipts[name]["sha256"]:
                 raise ValueError("Pinned official config bytes differ from the rules manifest: " + name)
         settings = normalized(settings_source)
-        if settings.get("MaxCookingCountAtATime") != 9999 or settings.get("CookingRecoveryCountThreshold") != 10:
+        if settings.get("MaxCookingCountAtATime") != 9999 or settings.get("CookingRecoveryCountThreshold") != 10 \
+                or settings.get("ItemBatchUseMinCount") != 1 or settings.get("ItemBatchUseMaxCount") != 100:
             raise ValueError("Pinned official cooking limits differ from the verified source table")
 
         item_ids = {row["Id"] for row in cooking_source}
@@ -451,7 +452,10 @@ class CookingConverter:
                 raise ValueError("A cooking output, material or formula is absent from the pinned item table: " + str(item_id))
             parsed_item = source_items[item_id]
             items.append({"id": item_id, "name": parsed_item["Name"], "icon": parsed_item["RawIcon"],
-                          "itemType": parsed_item["ItemType"], "quality": parsed_item["Quality"]})
+                          "itemType": parsed_item["ItemType"], "quality": parsed_item["Quality"],
+                          "canUse": parsed_item["CanUse"],
+                          "canUseInBatches": parsed_item["CanUseInBatches"],
+                          "itemUseEffectType": parsed_item["ItemUseEffectType"]})
 
         recipes = []
         for row in cooking_source:
@@ -481,6 +485,8 @@ class CookingConverter:
                                   "settingsTable": sha256(settings_raw)},
                  "maxCookingCountAtATime": settings["MaxCookingCountAtATime"],
                  "cookingRecoveryCountThreshold": settings["CookingRecoveryCountThreshold"],
+                 "minBatchUseCount": settings["ItemBatchUseMinCount"],
+                 "maxBatchUseCount": settings["ItemBatchUseMaxCount"],
                  "recipes": recipes, "items": items},
                 {"cooking": sha256(cooking_raw), "item": sha256(item_raw),
                  "game_settings": sha256(settings_raw), "cooking_count": len(recipes), "item_count": len(items)})
@@ -668,7 +674,7 @@ TextureImporter:
                 "The prefab is rebuilt from original UGUI transforms, images, text, layout and input component fields; original Unity Animation and custom particle/UI-mesh runtime components are recorded but not executed by this offline panel.",
                 "The original LoopVerticalScrollRect and LoopScrollGridLayoutGroup runtime sources are unavailable; native ScrollRect and a responsive grid use the official 100x100 item-row size.",
                 "The official OperPlayerCooking server settlement is not present in the client sources; offline craft settlement follows the official recipe costs/output and commits through the local inventory transaction.",
-                "The original cooking buff, permanent-property application, recovery consumption and combat refresh flow are outside this module's crafting scope.",
+                "Cooking permanent-property use is applied by the inventory character-profile transaction; buff, recovery and combat-refresh use remain outside that path.",
             ],
         }
         (REFERENCE / "source-manifest.json").write_text(json.dumps(source_manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

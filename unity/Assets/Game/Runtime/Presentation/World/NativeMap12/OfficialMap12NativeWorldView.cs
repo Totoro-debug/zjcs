@@ -66,6 +66,7 @@ namespace Zjcs.Presentation.World.NativeMap12
             environment = new Map12WorldEnvironment(GroundRoot, assets.EnvironmentData, state);
             labels = new Map12WorldLabels(state, environment, assets.Font);
             NativeMap13EnvironmentBinding.Bind(instance, environment);
+            gameObject.AddComponent<OfficialMap12WaterView>().Initialize(instance);
             var resources = gameObject.AddComponent<NativeMap13ResourceLoader>();
             resources.Catalog = catalog;
             resources.BindInstance = child => { NativeMap13EnvironmentBinding.Bind(child, environment); labels.Bind(child); };

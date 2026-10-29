@@ -106,6 +106,7 @@ namespace Zjcs.Presentation.World
                 host.RefreshEntityActivity();
                 host.regions.regionFog?.Refresh(host.navigation.GridToWorld(entity.Grid));
                 host.nativeMap12World?.UnlockRegion(host.navigation.GridToWorld(entity.Grid));
+                host.nativeMap13World?.UnlockRegion(host.navigation.GridToWorld(entity.Grid));
                 host.SaveLocalProgress();
             }
 

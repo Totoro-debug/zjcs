@@ -8,6 +8,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Zjcs.Official.World;
 using Zjcs.Presentation.World;
 
 namespace Zjcs.Editor
@@ -26,6 +27,22 @@ namespace Zjcs.Editor
             public int mapClassId;
             public Map14HeroProbe[] heroes;
         }
+        [Serializable] private sealed class Map14RegionConditionRecord
+        {
+            public int ClassId;
+            public Map14RegionCondition Condition;
+        }
+        [Serializable] private sealed class Map14RegionCondition
+        {
+            public string _type, StoryKey, Tag, Op;
+            public int MapClassId, Region, Progress, Count;
+            public int[] Ids;
+        }
+        [Serializable] private sealed class Map14RegionConfig
+        {
+            public int ClassId, Region, AccessibleConditionId;
+            public int[] Areas;
+        }
 
         public static void RunUiMap14Statues()
         {
@@ -34,11 +51,77 @@ namespace Zjcs.Editor
                 Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
                 Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_SIMULATED", "1");
                 ProjectTools.Validate();
+                ValidateMap14RegionAccessConditions();
                 ValidateMap14InteractionData();
                 SessionState.SetBool(Key + ".map14Statues", true);
                 RunCore(true, false, 14);
             }
             catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
+        }
+
+        private static void ValidateMap14RegionAccessConditions()
+        {
+            TextAsset source = AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/Official/World/Map/14/map14.json");
+            if (source == null) throw new InvalidDataException("Official Map14 definition is missing.");
+            OfficialMapDefinition definition = JsonUtility.FromJson<OfficialMapDefinition>(source.text);
+            var profile = OfficialMainlineMapProfile.Get(14);
+            var policy = new OfficialMainlineRegionPolicy(definition, profile);
+            Map14RegionConfig[] regions = definition.Configs.Where(row => row.TableName == "TbMapRegionInfo")
+                .Select(row => JsonUtility.FromJson<Map14RegionConfig>(row.Json)).ToArray();
+            var gates = regions.Where(region => region.AccessibleConditionId > 0).ToArray();
+            if (definition.ClassId != 14 || profile.RegionCount != 111 || gates.Length != 16
+                || !profile.RequiredAccessConditions.OrderBy(id => id).SequenceEqual(gates.Select(region => region.AccessibleConditionId).Distinct().OrderBy(id => id)))
+                throw new InvalidDataException("Map14 region gate closure differs from its pinned profile.");
+
+            var progressLimits = definition.MaxRegionProgress.ToDictionary(row => row.Region, row => row.Value);
+            var completedRegions = new Dictionary<int, int>(progressLimits);
+            foreach (var region in gates)
+            {
+                OfficialWorldConfigRecord record = definition.Configs.Single(row => row.TableName == "TbConditionInfo"
+                    && row.RecordId == region.AccessibleConditionId.ToString());
+                Map14RegionCondition condition = JsonUtility.FromJson<Map14RegionConditionRecord>(record.Json).Condition;
+                Func<string, int> noStories = _ => 0;
+                Func<string, bool> noTags = _ => false;
+                if (condition._type == "WorldMapProgressCondition")
+                {
+                    int maximum = progressLimits[condition.Region];
+                    var before = new Dictionary<int, int>(completedRegions) { [condition.Region] = maximum - 1 };
+                    if (policy.IsAccessible(region.Region, before, noStories, _ => 0, noTags))
+                        throw new InvalidDataException("Map14 region opened before its source progress reached 100%.");
+                    if (!policy.IsAccessible(region.Region, completedRegions, noStories, _ => 0, noTags))
+                        throw new InvalidDataException("Map14 region did not open at its source progress boundary.");
+                }
+                else if (condition._type == "StoryCountCondition")
+                {
+                    Func<string, int> before = key => key == condition.StoryKey ? condition.Count - 1 : condition.Count;
+                    Func<string, int> after = key => key == condition.StoryKey ? condition.Count : condition.Count - 1;
+                    if (policy.IsAccessible(region.Region, completedRegions, before, _ => 0, noTags)
+                        || !policy.IsAccessible(region.Region, completedRegions, after, _ => 0, noTags))
+                        throw new InvalidDataException("Map14 region does not follow its source story-count boundary.");
+                }
+                else if (condition._type == "CompositeAndCondition")
+                {
+                    if (condition.Ids == null || condition.Ids.Length != 2)
+                        throw new InvalidDataException("Map14 source composite changed its expected child shape.");
+                    Map14RegionCondition firstChild = JsonUtility.FromJson<Map14RegionConditionRecord>(definition.Configs.Single(row =>
+                        row.TableName == "TbConditionInfo" && row.RecordId == condition.Ids[0].ToString()).Json).Condition;
+                    if (firstChild._type != "StoryCountCondition")
+                        throw new InvalidDataException("Map14 source composite changed its expected child shape.");
+                    Func<string, int> firstOnly = key => key == firstChild.StoryKey ? firstChild.Count : 0;
+                    Func<string, int> both = _ => 1;
+                    if (policy.IsAccessible(region.Region, completedRegions, firstOnly, _ => 0, noTags)
+                        || !policy.IsAccessible(region.Region, completedRegions, both, _ => 0, noTags))
+                        throw new InvalidDataException("Map14 region does not require every source AND condition.");
+                }
+                else if (condition._type == "MapLogicEntityEndByTagCondition")
+                {
+                    if (policy.IsAccessible(region.Region, completedRegions, _ => 1, _ => 0, noTags)
+                        || !policy.IsAccessible(region.Region, completedRegions, _ => 1, _ => 0, _ => true))
+                        throw new InvalidDataException("Map14 region does not follow its source logic-tag completion.");
+                }
+                else throw new InvalidDataException("Unexpected Map14 source region condition: " + condition._type);
+            }
+            Debug.Log("Map14 official region access regression passed: all 16 source gates tested closed/open at their original progress, story-count, AND and logic-tag boundaries.");
         }
 
         private static void ValidateMap14InteractionData()

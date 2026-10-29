@@ -40,6 +40,23 @@ namespace Zjcs.Editor
             SessionState.SetBool(Key + ".runtimeDialogue", true);
             RunCore(false, false, 12, true);
         }
+        public static void RunPrivateDungeonEntry()
+        {
+            SessionState.SetBool(Key + ".runtime", false);
+            SessionState.SetBool(Key + ".runtimeTerminals", false);
+            SessionState.SetBool(Key + ".runtimeSpatial", false);
+            SessionState.SetBool(Key + ".runtimeDialogue", false);
+            SessionState.SetBool(Key + ".nativeWorld", false);
+            SessionState.SetBool(Key + ".audio", false);
+            SessionState.SetBool(Key + ".chests", false);
+            SessionState.SetBool(Key + ".buildingUi", false);
+            SessionState.SetBool(Key + ".buildingPrelude", false);
+            SessionState.SetBool(Key + ".buildingBattle", false);
+            SessionState.SetBool(Key + ".ui", false);
+            SessionState.SetBool(Key + ".dialogueInput", false);
+            SessionState.SetBool(Key + ".privateDungeonEntry", true);
+            RunCore(false, false, 12, true);
+        }
         public static void RunRuntimeTerminals()
         {
             try

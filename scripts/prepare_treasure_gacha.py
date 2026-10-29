@@ -238,8 +238,11 @@ def convert_rules(tables, icon_index, navigation, relic_draw):
             "Reward": amounts(row.get("Reward")),
         })
 
-    treasures_out = [{"ClassId": row["ClassId"], "TreasurePieceId": row.get("TreasurePieceId", 0)}
-                     for row in tables["treasure"] if row["ClassId"] in item_ids]
+    treasures_out = [{
+        "ClassId": row["ClassId"], "TreasurePieceId": row.get("TreasurePieceId", 0),
+        "EffectTypeName": row.get("EffectTypeName") or "None",
+        "InitialHitCount": 0 if row.get("EffectTypeName") == "Task" else 1,
+    } for row in tables["treasure"] if row["ClassId"] in item_ids]
     settings = tables["game_settings"]
     return {
         "Manifest": "854_156383", "Gachas": gachas, "Chests": chests_out,

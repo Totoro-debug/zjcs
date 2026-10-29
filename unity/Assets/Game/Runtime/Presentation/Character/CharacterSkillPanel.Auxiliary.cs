@@ -6,12 +6,16 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zjcs.Presentation.Combat;
 
 namespace Zjcs.Presentation.Character
 {
     public sealed partial class CharacterSkillPanel
     {
         private GameObject auxiliaryDialog;
+        private OfficialBattleNativeAnimationLibrary auxiliaryModelLibrary;
+        private OfficialBattleNativeModelView auxiliaryNativeModel;
+        private CharacterPropPanels auxiliaryMonsterProps;
         public event Action<string> NavigationRequested;
 
         private Dictionary<string, object> AuxiliaryData => CharacterModelPackage.AsObject(skillUiTemplates["auxiliary_data"], "original auxiliary skill data");
@@ -24,6 +28,11 @@ namespace Zjcs.Presentation.Character
             CloseSkillVideo();
             if (auxiliaryDialog != null) { auxiliaryDialog.SetActive(false); Destroy(auxiliaryDialog); }
             auxiliaryDialog = null;
+            auxiliaryMonsterProps = null;
+            auxiliaryNativeModel?.Dispose();
+            auxiliaryNativeModel = null;
+            auxiliaryModelLibrary?.Dispose();
+            auxiliaryModelLibrary = null;
             GetComponentInParent<OfficialCharacterPanelView>()?.SetSkillAuxiliaryFullScreen(false);
         }
 

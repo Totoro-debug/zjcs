@@ -90,7 +90,7 @@ namespace Zjcs.Editor.Map13
                 yield return value;
             }
             SessionState.SetInt(Key + ".result", 0);
-            Debug.Log("Map13 native flag Play Mode passed: original Animator clocks, native weighted curves, independent reference poses, dynamic weighted meshes, original texture GPU upload, seven original shrine prefabs and rendering. Complete map interaction and saves remain unverified.");
+            Debug.Log("Map13 native flag Play Mode passed: original Animator clocks, native weighted curves, independent reference poses, dynamic weighted meshes, original texture GPU upload, seven original shrine prefabs and  rendering. Complete map interaction and saves remain unverified.");
             EditorApplication.isPlaying = false;
         }
 
@@ -192,7 +192,7 @@ namespace Zjcs.Editor.Map13
                 yield return null; yield return null;
                 var request = AsyncGPUReadback.Request(target, 0, TextureFormat.RGBA32);
                 while (!request.done) yield return null;
-                if (request.hasError) throw new InvalidDataException("Original flag camera output failed.");
+                if (request.hasError) throw new InvalidDataException("Original flag  camera output failed.");
                 var image = new Texture2D(384, 512, TextureFormat.RGBA32, false, true);
                 image.SetPixels32(request.GetData<Color32>().ToArray()); image.Apply();
                 File.WriteAllBytes(Path.Combine(root, "output/map13-native-flag-frame-" + frame + "-20261027.png"), image.EncodeToPNG());
@@ -224,7 +224,7 @@ namespace Zjcs.Editor.Map13
                 yield return null; yield return null;
                 var request = AsyncGPUReadback.Request(target, 0, TextureFormat.RGBA32);
                 while (!request.done) yield return null;
-                if (request.hasError) throw new InvalidDataException("Original shrine partition camera readback failed.");
+                if (request.hasError) throw new InvalidDataException("Original shrine partition  camera readback failed.");
                 var image = new Texture2D(384, 512, TextureFormat.RGBA32, false, true);
                 image.SetPixels32(request.GetData<Color32>().ToArray()); image.Apply();
                 File.WriteAllBytes(Path.Combine(root, "output/map13-original-shrine-" + scene.name.Replace("(Clone)", "") + "-frame-" + frame + "-20261027.png"), image.EncodeToPNG());

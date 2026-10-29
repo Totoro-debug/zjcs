@@ -1,0 +1,241 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_GameObject:
+    fileID: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script:
+    fileID: 11500000
+    guid: 44fd4e4508bd5b63a5af76c451aa5caa
+    type: 3
+  m_Name: tree-world-assets
+  m_EditorClassIdentifier: ""
+  manifest: '871_156598'
+  animationSha256: 65211c5a2dd5a677d26a0f37f88a518c306e7968425048cab263b54e0951bd4f
+  animationBinary:
+    fileID: 4900000
+    guid: 641df8f882d551e79b253c630ee26701
+    type: 3
+  animationCatalog:
+    fileID: 4900000
+    guid: 3d3557e3d73a5d44be681d18f43b49c9
+    type: 3
+  dissolveBinary:
+    fileID: 4900000
+    guid: cdf504a1effc5e138db46476abbf4ef9
+    type: 3
+  dissolveCatalog:
+    fileID: 4900000
+    guid: 614d77302e2f5384a79b230c7a531f8b
+    type: 3
+  spriteCatalogResource: Map13/Native/entity-sprite-catalog
+  displays:
+  - path: Map/Common/EntityDisplaysWorldBonusTouch/8363_view
+    prefab:
+      fileID: 400001
+      guid: 0394804e4e915cdfb621a76be0b75da4
+      type: 3
+  - path: Map/Common/EntityDisplaysWorldBonusTouch/8363_snow_view
+    prefab:
+      fileID: 400001
+      guid: bcc7463d47b95ab295f379f48b1118d8
+      type: 3
+  placements:
+  - placementId: 2701
+    entityClassId: 8363
+    position:
+      X: 90
+      Y: 140
+    direction: 0
+    flipX: 0
+    tag: ""
+    body:
+      BodyRangeInfos:
+      - Pos:
+          X: 0
+          Y: 0
+        GroundType: 7
+        IgnoreClick: 0
+        OverrideGroundType: 0
+      BodyCrossBlockedInfos:
+      - PosOne:
+          X: 0
+          Y: 0
+        PosTwo:
+          X: 0
+          Y: 1
+      UnlockWholeRequestCount: 1
+      RealCenter:
+        x: 0.0
+        y: 0.0
+      IsRigidBody: 1
+    stage:
+      DestroyOnEnd: 1
+      AutoNextState: 1
+      StageWorldType: 510
+      StateInfos:
+      - EnterResults: []
+        SubStateList:
+        - Conditions: []
+          Behaviour:
+            CompType: 2
+            CompIndex: 0
+          Results:
+          - CompType: 232
+            CompIndex: 0
+          Select: 7
+      InteractiveRange:
+      - X: 0
+        Y: 0
+      InteractionFirst: 0
+    stageQuery:
+      StateInfos:
+      - EnterResults: []
+        SubStateList:
+        - Conditions: []
+          Behaviour:
+            CompType: 2
+            CompIndex: 0
+          Results:
+          - CompType: 232
+            CompIndex: 0
+          Select: 7
+    awards:
+      AwardItemInfos:
+      - ItemId: 115
+        Count: 4
+  - placementId: 4105
+    entityClassId: 8363
+    position:
+      X: 219
+      Y: 92
+    direction: 0
+    flipX: 0
+    tag: ""
+    body:
+      BodyRangeInfos:
+      - Pos:
+          X: 0
+          Y: 0
+        GroundType: 7
+        IgnoreClick: 0
+        OverrideGroundType: 0
+      BodyCrossBlockedInfos:
+      - PosOne:
+          X: 0
+          Y: 0
+        PosTwo:
+          X: 0
+          Y: 1
+      UnlockWholeRequestCount: 1
+      RealCenter:
+        x: 0.0
+        y: 0.0
+      IsRigidBody: 1
+    stage:
+      DestroyOnEnd: 1
+      AutoNextState: 1
+      StageWorldType: 510
+      StateInfos:
+      - EnterResults: []
+        SubStateList:
+        - Conditions: []
+          Behaviour:
+            CompType: 2
+            CompIndex: 0
+          Results:
+          - CompType: 232
+            CompIndex: 0
+          Select: 7
+      InteractiveRange:
+      - X: 0
+        Y: 0
+      InteractionFirst: 0
+    stageQuery:
+      StateInfos:
+      - EnterResults: []
+        SubStateList:
+        - Conditions: []
+          Behaviour:
+            CompType: 2
+            CompIndex: 0
+          Results:
+          - CompType: 232
+            CompIndex: 0
+          Select: 7
+    awards:
+      AwardItemInfos:
+      - ItemId: 115
+        Count: 5
+  - placementId: 7302
+    entityClassId: 8363
+    position:
+      X: 73
+      Y: 114
+    direction: 0
+    flipX: 0
+    tag: ""
+    body:
+      BodyRangeInfos:
+      - Pos:
+          X: 0
+          Y: 0
+        GroundType: 7
+        IgnoreClick: 0
+        OverrideGroundType: 0
+      BodyCrossBlockedInfos:
+      - PosOne:
+          X: 0
+          Y: 0
+        PosTwo:
+          X: 0
+          Y: 1
+      UnlockWholeRequestCount: 1
+      RealCenter:
+        x: 0.0
+        y: 0.0
+      IsRigidBody: 1
+    stage:
+      DestroyOnEnd: 1
+      AutoNextState: 1
+      StageWorldType: 510
+      StateInfos:
+      - EnterResults: []
+        SubStateList:
+        - Conditions: []
+          Behaviour:
+            CompType: 2
+            CompIndex: 0
+          Results:
+          - CompType: 232
+            CompIndex: 0
+          Select: 7
+      InteractiveRange:
+      - X: 0
+        Y: 0
+      InteractionFirst: 0
+    stageQuery:
+      StateInfos:
+      - EnterResults: []
+        SubStateList:
+        - Conditions: []
+          Behaviour:
+            CompType: 2
+            CompIndex: 0
+          Results:
+          - CompType: 232
+            CompIndex: 0
+          Select: 7
+    awards:
+      AwardItemInfos:
+      - ItemId: 115
+        Count: 6

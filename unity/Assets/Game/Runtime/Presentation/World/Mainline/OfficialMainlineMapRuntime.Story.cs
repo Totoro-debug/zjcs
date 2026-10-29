@@ -24,6 +24,15 @@ namespace Zjcs.Presentation.World
 {
     public sealed partial class OfficialMainlineMapRuntime
     {
+        [Serializable]
+        private sealed class StoryMapActivationFields { public int MapClassId; }
+
+        [Serializable]
+        private sealed class StoryAloneWorldFields { public int MapAloneWorldClassId; }
+
+        [Serializable]
+        private sealed class StoryFollowerFields { public int[] NpcClassIds, FollowerClassId; }
+
         private Map10RuntimeMapTalkEntry ResolveMapTalk(Map10RuntimeEntity entity, int scenario)
         {
             string entityId = "entity_" + entity.EntityClassId + "_name";
@@ -183,6 +192,40 @@ namespace Zjcs.Presentation.World
                             // used by EvaluateStoryValue for this node's ActiveCount output.
                             nodeId = StoryNext(node, "Exit");
                             continue;
+                        case "HandInItemNode":
+                            RunHandInItemNode(node);
+                            return;
+                        case "PlayerActiveMapNode":
+                            int activeMapClassId = JsonUtility.FromJson<StoryMapActivationFields>(node.sourceJson)?.MapClassId ?? 0;
+                            if (activeMapClassId <= 0)
+                                throw new InvalidDataException("Official story map activation target is invalid: " + activeStory.key);
+                            ProgressionResult activation = progressionSave.ApplyMapActivationResult(activeMapClassId, true,
+                                "story:" + activeStoryRootKey + ":node:" + node.id + ":active-map:" + activeMapClassId);
+                            if (activation.Status == ProgressionResultStatus.InvalidState)
+                                throw new InvalidOperationException(activation.Message);
+                            nodeId = StoryNext(node, "Exit");
+                            continue;
+                        case "PlayerWorldAloneAppearNode":
+                            int aloneWorldClassId = JsonUtility.FromJson<StoryAloneWorldFields>(node.sourceJson)?.MapAloneWorldClassId ?? 0;
+                            if (aloneWorldClassId <= 0)
+                                throw new InvalidDataException("Official story alone-world target is invalid: " + activeStory.key);
+                            if (!localSave.aloneWorldClassIds.Contains(aloneWorldClassId))
+                            {
+                                localSave.aloneWorldClassIds = localSave.aloneWorldClassIds.Concat(new[] { aloneWorldClassId })
+                                    .Distinct().OrderBy(value => value).ToArray();
+                                SaveLocalProgress();
+                            }
+                            nodeId = StoryNext(node, "Exit");
+                            continue;
+                        case "AddNpcFollowerNode":
+                            StoryFollowerFields followerAdd = JsonUtility.FromJson<StoryFollowerFields>(node.sourceJson);
+                            SetNpcFollowers(localSaveFollowerClassIds.Concat(followerAdd?.NpcClassIds ?? Array.Empty<int>()));
+                            nodeId = StoryNext(node, "Exit");
+                            continue;
+                        case "RemovePlayerNpcFollowerAllNode":
+                            SetNpcFollowers(Array.Empty<int>());
+                            nodeId = StoryNext(node, "Exit");
+                            continue;
                         case "WaitWindowOpenedNode":
                             if (activeStory.key != "WitchStory2" || storyContextEntity == null
                                 || storyContextEntity.EntityClassId != 6620)
@@ -200,9 +243,6 @@ namespace Zjcs.Presentation.World
                             // not a mainline map lock. No such activity is active here.
                             nodeId = StoryNext(node, "NotComplete");
                             continue;
-                        case "HandInItemNode":
-                            RunHandInItemNode(node);
-                            return;
                         case "GoToNode":
                             StoryValueFields jump = StoryFields(node);
                             nodeId = jump.GoByNodeId != 0 ? jump.GoByNodeId : jump.GotoId != 0
@@ -285,6 +325,11 @@ namespace Zjcs.Presentation.World
                             nodeId = subgraph.entryNodeId;
                             continue;
                         case "PlayPlayableNode":
+                            if (mapClassId == 13)
+                            {
+                                StartCoroutine(RunMap13StoryPlayable(activeStory, node));
+                                return;
+                            }
                             if (string.IsNullOrWhiteSpace(node.playableAssetGuid)
                                 || !officialPlayables.ContainsKey(node.playableAssetGuid))
                                 throw new InvalidDataException("Official Map10 story playable is not loaded: " + node.playableAssetGuid);
@@ -371,6 +416,47 @@ namespace Zjcs.Presentation.World
             storyEntityClasses[node.id] = node.entityClassId;
         }
 
+        private IEnumerable<int> localSaveFollowerClassIds => progressionSave.Save.Player.NpcFollowerClassIds;
+
+        private void SetNpcFollowers(IEnumerable<int> classIds)
+        {
+            ProgressionResult result = progressionSave.SetNpcFollowerClassIds(classIds);
+            if (result.Status == ProgressionResultStatus.InvalidState)
+                throw new InvalidDataException("NPC follower state could not be saved: " + result.Message);
+            if (mapClassId == 13) RefreshMap13FollowerObjects();
+        }
+
+        private void RefreshMap13FollowerObjects()
+        {
+            foreach (GameObject follower in map13FollowerObjects.Values)
+                if (follower != null) Destroy(follower);
+            map13FollowerObjects.Clear();
+            if (avatar == null || entityRoot == null || progressionSave?.Save?.Player?.NpcFollowerClassIds == null) return;
+            int index = 0;
+            foreach (int classId in progressionSave.Save.Player.NpcFollowerClassIds)
+            {
+                GameObject follower = Instantiate(avatar, entityRoot, false);
+                follower.name = "Map13Follower_" + classId;
+                follower.transform.position = avatar.transform.position + new Vector3(-0.8f - index * 0.45f, -0.55f, 0.01f + index * 0.001f);
+                follower.SetActive(true);
+                map13FollowerObjects[classId] = follower;
+                index++;
+            }
+        }
+
+        private void UpdateMap13FollowerObjects()
+        {
+            if (mapClassId != 13 || avatar == null) return;
+            int index = 0;
+            foreach (int classId in progressionSave?.Save?.Player?.NpcFollowerClassIds ?? new System.Collections.Generic.List<int>())
+            {
+                if (!map13FollowerObjects.TryGetValue(classId, out GameObject follower) || follower == null) continue;
+                Vector3 target = avatar.transform.position + new Vector3(-0.8f - index * 0.45f, -0.55f, 0.01f + index * 0.001f);
+                follower.transform.position = Vector3.MoveTowards(follower.transform.position, target, 5f * Time.deltaTime);
+                index++;
+            }
+        }
+
         [Serializable] private sealed class StoryNpcRemovalFields { public StoryNpcRemoval[] RemoveEntities; }
         [Serializable] private sealed class StoryNpcRemoval { public StoryNpcRemovalPlayable StoryPlayableSelect; }
         [Serializable] private sealed class StoryNpcRemovalPlayable { public int Type; }
@@ -394,47 +480,54 @@ namespace Zjcs.Presentation.World
             Map10RuntimeStoryNode targetNode = link == null ? null : FindStoryNode(story, link.nodeId);
             if (targetNode == null)
                 return new Vector2(cameraNode.moveTargetX, cameraNode.moveTargetY);
-            if (targetNode.type == "GetPosAroundStoryObjectNode")
+            if (targetNode.type == "GetPosAroundStoryObjectNode" || targetNode.type == "GetEntityPosNode")
+                return ResolveStoryPositionNode(targetNode);
+            return new Vector2(cameraNode.moveTargetX, cameraNode.moveTargetY);
+        }
+
+        private Vector2 ResolveStoryPositionNode(Map10RuntimeStoryNode node)
+        {
+            if (node.type == "GetPosAroundStoryObjectNode")
             {
-                if (MapProfile.HasNativeUi)
-                    return ResolveRegisteredStoryPoint(targetNode.registerKey)
-                        + new Vector2(targetNode.offsetX, targetNode.offsetY);
-                Map10RuntimeEntity registered = targetNode.registerKey == "Fangjianbei"
+                StorySpatialNodeFields fields = StorySpatialFields(node);
+                if (storySpatial != null)
+                    return ResolveRegisteredStoryPoint(fields.RegisterKey) + fields.Offset;
+                Map10RuntimeEntity registered = fields.RegisterKey == "Fangjianbei"
                     ? mapEntities.Values.FirstOrDefault(value => value.EntityClassId == 6001)
                     : null;
                 if (registered == null)
-                    throw new InvalidDataException("Official Map10 story register key is not bound: " + targetNode.registerKey);
-                return new Vector2(registered.Grid.X + targetNode.offsetX,
-                    registered.Grid.Y + targetNode.offsetY);
+                    throw new InvalidDataException("Official Map10 story register key is not bound: " + fields.RegisterKey);
+                return new Vector2(registered.Grid.X, registered.Grid.Y) + fields.Offset;
             }
-            if (targetNode.type != "GetEntityPosNode")
-                return new Vector2(cameraNode.moveTargetX, cameraNode.moveTargetY);
+            if (node.type != "GetEntityPosNode")
+                throw new InvalidDataException("Unsupported official story position node: " + node.type);
+            StorySpatialNodeFields positionFields = StorySpatialFields(node);
             // GetEntityBaseNode.GetEntityType.MainPlayer is 0. A stale LoEntityId
             // field is ignored for this mode by the official GetEntityPosNode.
-            if (targetNode.selectGetType == 0)
-                return new Vector2(navigation.currentGrid.X + targetNode.offsetX, navigation.currentGrid.Y + targetNode.offsetY);
-            if (targetNode.selectGetType == 6)
+            if (positionFields.SelectGetType == 0)
+                return new Vector2(navigation.currentGrid.X, navigation.currentGrid.Y) + positionFields.Offset;
+            if (positionFields.SelectGetType == 6)
             {
-                if (MapProfile.HasNativeUi)
-                    return ResolveStoryTalkCenter() + new Vector2(targetNode.offsetX, targetNode.offsetY);
+                if (storySpatial != null)
+                    return ResolveStoryTalkCenter() + positionFields.Offset;
                 GameObject storyNpc = storyEntities.OrderBy(value => value.Key).Select(value => value.Value)
                     .LastOrDefault(value => value != null);
-                if (storyNpc != null) return StoryGridPosition(storyNpc.transform.position);
+                if (storyNpc != null) return StoryGridPosition(storyNpc.transform.position) + positionFields.Offset;
                 if (storyContextEntity != null)
-                    return new Vector2(storyContextEntity.Grid.X, storyContextEntity.Grid.Y);
+                    return new Vector2(storyContextEntity.Grid.X, storyContextEntity.Grid.Y) + positionFields.Offset;
             }
-            else if (targetNode.selectGetType == 4 || targetNode.selectGetType == 5)
+            else if (positionFields.SelectGetType == 4 || positionFields.SelectGetType == 5)
             {
-                Map10RuntimeLogicTag tag = targetNode.selectGetType == 5
-                    ? mapLogicTags.Values.FirstOrDefault(value => value.Tag == targetNode.tag) : null;
-                int targetId = targetNode.selectGetType == 4 ? targetNode.loEntityId : tag?.LogicId ?? 0;
+                Map10RuntimeLogicTag tag = positionFields.SelectGetType == 5
+                    ? mapLogicTags.Values.FirstOrDefault(value => value.Tag == positionFields.Tag) : null;
+                int targetId = positionFields.SelectGetType == 4 ? positionFields.LoEntityId : tag?.LogicId ?? 0;
                 if ((tag == null || tag.MapClass == mapClassId)
                     && mapEntities.TryGetValue(targetId, out Map10RuntimeEntity targetEntity))
-                    return new Vector2(targetEntity.Grid.X + targetNode.offsetX, targetEntity.Grid.Y + targetNode.offsetY);
-                string target = tag == null ? "logic entity " + targetId : "Map" + tag.MapClass + " " + targetNode.tag;
+                    return new Vector2(targetEntity.Grid.X, targetEntity.Grid.Y) + positionFields.Offset;
+                string target = tag == null ? "logic entity " + targetId : "Map" + tag.MapClass + " " + positionFields.Tag;
                 throw new InvalidDataException("Official story camera target is outside the loaded map: " + target);
             }
-            throw new InvalidDataException("Official Map10 story camera target cannot be resolved: " + targetNode.tag);
+            throw new InvalidDataException("Official Map10 story camera target cannot be resolved: " + positionFields.Tag);
         }
 
         private Vector3 StoryWorldPoint(float x, float y)
@@ -529,7 +622,16 @@ namespace Zjcs.Presentation.World
             int logicId = node.loEntityId;
             if (!string.IsNullOrEmpty(node.entityTag))
                 logicId = mapLogicTags.Values.FirstOrDefault(value => value.Tag == node.entityTag)?.LogicId ?? 0;
-            if (logicId <= 0 || !mapEntities.TryGetValue(logicId, out Map10RuntimeEntity entity)) return false;
+            if (logicId <= 0 || !mapEntities.TryGetValue(logicId, out Map10RuntimeEntity entity))
+            {
+                if (mapClassId == 13 && !string.IsNullOrEmpty(node.entityTag))
+                {
+                    Map10RuntimeMapLogicState virtualState = localSave.mapLogicStates.FirstOrDefault(value =>
+                        value != null && value.Tag == node.entityTag);
+                    return (virtualState?.State ?? 0) == node.entityState;
+                }
+                return false;
+            }
             Map10RuntimeLogicTag tag = mapLogicTags.TryGetValue(logicId, out Map10RuntimeLogicTag byId)
                 ? byId : mapLogicTags.Values.FirstOrDefault(value => value.LogicId == logicId);
             if (tag == null) return false;
@@ -621,6 +723,7 @@ namespace Zjcs.Presentation.World
 
         private void FinishStoryGraph(bool invokeCompletion)
         {
+            if (mapClassId == 13) CleanMap13StoryPlayables();
             mapVoice?.StopVoice();
             Action completed = invokeCompletion ? storyFinished : null;
             if (!invokeCompletion && MapProfile.HasNativeUi && !string.IsNullOrEmpty(activeStoryRootKey)

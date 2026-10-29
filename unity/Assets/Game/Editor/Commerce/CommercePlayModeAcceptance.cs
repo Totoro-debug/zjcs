@@ -235,10 +235,37 @@ namespace Zjcs.Editor.Commerce
             foreach (Transform transform in UnityEngine.Object.FindObjectsOfType<Transform>(true))
                 if (transform.name.StartsWith("Accumulated_", StringComparison.Ordinal)
                     && transform.gameObject.activeInHierarchy) accumulatedRows++;
-            Require(accumulatedRows >= 75, "The accumulated page did not show all 15 groups.");
+            int activeGroup = runtime.Offers.CurrentAccumulatedGroup();
+            int expectedRows = runtime.Catalog.Data.accumulatedAwards.Count(value => value.group == activeGroup);
+            Require(accumulatedRows == expectedRows,
+                "The accumulated page did not show exactly the current official group.");
             ClickInDialog("CommerceAccumulated", "CloseBtn");
             yield return WaitFrames(2);
             Require(FindByName("CommerceAccumulated") == null, "The accumulated page did not close.");
+            ClickByName("PeriodicCardTabItem");
+            yield return WaitFrames(2);
+            Require(FindByName("PayPeriodicCardItem1") != null
+                && FindByName("PayPeriodicCardItem2") != null,
+                "The official periodic-card entries were not shown.");
+            yield return Capture("commerce-periodic-cards");
+            CommerceOffer monthly = runtime.Offers.Periodic(1);
+            CommerceTransactionResult monthlyBuy = runtime.Offers.Purchase(monthly,
+                runtime.Offers.PaymentMethod(monthly));
+            Require(monthlyBuy.Code == CommerceTransactionCode.Applied
+                && runtime.Offers.PeriodicExpiryDay(1) > runtime.Session.State.Day,
+                "The monthly card did not activate and persist.");
+            RequirePeriodicCharacterProperties(runtime);
+            Require(runtime.Offers.PeriodicCanClaim(1), "The monthly daily award was not unlocked.");
+            CommerceTransactionResult monthlyClaim = runtime.Offers.ClaimPeriodic(1);
+            Require(monthlyClaim.Code == CommerceTransactionCode.Applied
+                && !runtime.Offers.PeriodicCanClaim(1), "The monthly daily award did not persist its receipt.");
+            CommerceOffer weeklyWish = runtime.Offers.Periodic(2);
+            CommerceTransactionResult weeklyBuy = runtime.Offers.Purchase(weeklyWish,
+                runtime.Offers.PaymentMethod(weeklyWish));
+            Require(weeklyBuy.Code == CommerceTransactionCode.Applied
+                && runtime.Offers.PeriodicExpiryDay(2) > runtime.Session.State.Day,
+                "The seven-day wish card did not activate and persist.");
+            RequirePeriodicCharacterProperties(runtime);
             ClickByName("ActivityEntryTabItem");
             yield return WaitFrames(2);
 
@@ -365,8 +392,9 @@ namespace Zjcs.Editor.Commerce
             reopened.Close();
             yield return WaitFrames(2);
 
-            Debug.Log("Commerce Play Mode acceptance passed: official main/direct/voucher/daily/weekly/first/accumulated/exchange "
-                + "prefabs, voucher payment, free gifts, daily mutual exclusion, first-pay activation/claim, exchange, "
+            Debug.Log("Commerce Play Mode acceptance passed: official main/direct/voucher/daily/weekly/periodic/first/accumulated/exchange "
+                + "prefabs, voucher payment, free gifts, periodic-card activation/claims and character-property sync, "
+                + "daily mutual exclusion, first-pay activation/claim, exchange, "
                 + "save persistence, reopening, and preservation of another feature's inventory grant.");
             Finish(true, null);
         }
@@ -383,6 +411,25 @@ namespace Zjcs.Editor.Commerce
             foreach (CommerceAmount item in controller.Feature.Session.State.Inventory)
                 if (item.ItemId == itemId) return item.Count;
             return 0;
+        }
+
+        private static void RequirePeriodicCharacterProperties(CommerceFeatureRuntime runtime)
+        {
+            string root = SessionState.GetString(RootKey, string.Empty);
+            string slot = SessionState.GetString(SlotKey, string.Empty);
+            var slots = new ProfileSlotCatalog(root);
+            OfflineMainlineSave profile = OfflineMainlineProgressSession.OpenForCommerce(slots, slot).Save;
+            OfficialCharacterCatalog catalog = OfficialCharacterAssetCatalog.LoadDefault().Load();
+            var source = new OfflineCharacterConfiguredPropSource(catalog, CharacterPropHandleType.PeriodIcCar);
+            IReadOnlyDictionary<int, long> actual = source.CalculateProps(profile.Player, null,
+                DateTimeOffset.Now.ToUnixTimeSeconds());
+            IReadOnlyDictionary<int, long> expected = OfflineCommerceSession.ActivePeriodicProperties(
+                runtime.Catalog, runtime.Session.State);
+            Require(actual.Count == expected.Count,
+                "The active periodic-card properties were not synchronized to the character save.");
+            foreach (KeyValuePair<int, long> property in expected)
+                Require(actual.TryGetValue(property.Key, out long value) && value == property.Value,
+                    "The character property source does not match active periodic-card property " + property.Key + ".");
         }
 
 

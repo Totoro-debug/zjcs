@@ -59,7 +59,9 @@ namespace Zjcs.Presentation.World
             }
 
             public bool IsRegionAccessible(int regionId) =>
-                regionPolicy.IsAccessible(regionId, regionPoints, host.GetStoryPlayCount, host.progressionSave.StoryStatus);
+                regionPolicy.IsAccessible(regionId, regionPoints, host.GetStoryPlayCount, host.progressionSave.StoryStatus,
+                    tag => host.progressionSave.Save.World.CompletedEntityTags.Contains(tag)
+                        || host.localSave.mapLogicStates.Any(value => value != null && value.Tag == tag && value.State < 0));
         }
     }
 }

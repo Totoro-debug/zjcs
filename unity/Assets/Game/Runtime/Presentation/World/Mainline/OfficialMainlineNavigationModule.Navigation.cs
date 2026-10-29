@@ -81,7 +81,7 @@ namespace Zjcs.Presentation.World
             public void StartMovement(MapGridPoint target, Map10RuntimeEntity interact)
             {
                 if (movementPath != null || host.battleController != null) return;
-                bool originalRange = host.mapClassId == 12 && interact != null;
+                bool originalRange = (host.mapClassId == 12 || host.mapClassId == 13) && interact != null;
                 Func<MapGridPoint, bool> canInteract = interact == null ? null
                     : originalRange ? point => InOriginalInteractionRange(interact, point)
                     : point => Manhattan(point, target) <= 1;
@@ -136,7 +136,7 @@ namespace Zjcs.Presentation.World
                 if (Vector2.Distance(host.avatar.transform.position, target) < 0.025f)
                 {
                     MapGridPoint previous = currentGrid;
-                    if (host.mapClassId == 12)
+                    if (host.mapClassId == 12 || host.mapClassId == 13)
                     {
                         if (!host.SavePuzzleMutation(() =>
                         {
@@ -173,10 +173,10 @@ namespace Zjcs.Presentation.World
                     currentGrid = movementPath[movementPath.Count - 1];
                 movementPath = null;
                 movementIndex = 0;
-                if (host.mapClassId != 12) host.SaveLocalProgress();
+                if (host.mapClassId != 12 && host.mapClassId != 13) host.SaveLocalProgress();
                 Map10RuntimeEntity selected = pendingInteraction;
                 pendingInteraction = null;
-                if (selected != null && (host.mapClassId != 12 || InOriginalInteractionRange(selected, currentGrid)))
+                if (selected != null && ((host.mapClassId != 12 && host.mapClassId != 13) || InOriginalInteractionRange(selected, currentGrid)))
                     host.Interact(selected);
                 Action complete = movementCompletion;
                 movementCompletion = null;
@@ -186,8 +186,10 @@ namespace Zjcs.Presentation.World
             private bool InOriginalInteractionRange(Map10RuntimeEntity entity, MapGridPoint point)
             {
                 // WorldStageComponent.InInteractiveRange uses the configured offsets from GridTransform.Pos.
-                OfficialWorldStageRule stage = host.puzzleRules.FirstOrDefault(value => value.PlacementId == entity.PlacementId)?.Stage;
-                return stage != null && stage.InteractiveRange.Any(offset =>
+                IReadOnlyList<OfficialStageInteractionOffset> range = host.puzzles != null && host.puzzles.Contains(entity.PlacementId)
+                    ? host.puzzles.InteractionRange(entity.PlacementId)
+                    : host.puzzleRules.FirstOrDefault(value => value.PlacementId == entity.PlacementId)?.Stage?.InteractiveRange;
+                return range != null && range.Any(offset =>
                     point.X == entity.Grid.X + offset.X && point.Y == entity.Grid.Y + offset.Y);
             }
 

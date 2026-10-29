@@ -1,0 +1,451 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55386bceb3c80b1a25400e7802f9bc1e, type: 3}
+  m_Name: 3_-5
+  m_EditorClassIdentifier:
+  IsPartial: 0
+  Pos:
+    x: 3
+    y: -5
+  Bounds:
+    m_Position:
+      x: 42
+      y: -70
+      z: 0
+    m_Size:
+      x: 14
+      y: 14
+      z: 1
+  TilemapDatas:
+  - Name: Maprug01
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 188
+      TileIndex: 0
+    - Index: 189
+      TileIndex: 0
+    - Index: 190
+      TileIndex: 1
+    - Index: 191
+      TileIndex: 1
+    - Index: 192
+      TileIndex: 1
+    - Index: 193
+      TileIndex: 1
+    - Index: 194
+      TileIndex: 1
+    - Index: 195
+      TileIndex: 1
+    HasOffset: 0
+    MatrixIndexes: ffffffffffffffffffffffffffffffff
+  - Name: Maprug_Verdant01
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 179
+      TileIndex: 2
+    - Index: 180
+      TileIndex: 2
+    - Index: 181
+      TileIndex: 2
+    - Index: 188
+      TileIndex: 2
+    - Index: 189
+      TileIndex: 2
+    - Index: 190
+      TileIndex: 2
+    - Index: 191
+      TileIndex: 2
+    - Index: 192
+      TileIndex: 2
+    - Index: 193
+      TileIndex: 2
+    - Index: 194
+      TileIndex: 2
+    - Index: 195
+      TileIndex: 2
+    HasOffset: 0
+    MatrixIndexes: ffffffffffffffffffffffffffffffffffffffffffff
+  - Name: Maprug_Verdant01_Soft
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 195
+      TileIndex: 3
+    HasOffset: 1
+    MatrixIndexes: 0000
+  - Name: Maprug_Verdant02
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 178
+      TileIndex: 4
+    - Index: 179
+      TileIndex: 4
+    - Index: 180
+      TileIndex: 4
+    - Index: 181
+      TileIndex: 4
+    - Index: 192
+      TileIndex: 4
+    - Index: 193
+      TileIndex: 4
+    - Index: 194
+      TileIndex: 4
+    - Index: 195
+      TileIndex: 4
+    HasOffset: 0
+    MatrixIndexes: ffffffffffffffffffffffffffffffff
+  - Name: Maprug_Verdant02_Soft
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 191
+      TileIndex: 5
+    - Index: 194
+      TileIndex: 6
+    - Index: 195
+      TileIndex: 6
+    HasOffset: 1
+    MatrixIndexes: 000000000000
+  - Name: UnderObject
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 164
+      TileIndex: 7
+    - Index: 167
+      TileIndex: 8
+    - Index: 174
+      TileIndex: 7
+    - Index: 177
+      TileIndex: 9
+    - Index: 178
+      TileIndex: 10
+    - Index: 179
+      TileIndex: 10
+    - Index: 180
+      TileIndex: 10
+    - Index: 181
+      TileIndex: 10
+    - Index: 187
+      TileIndex: 7
+    - Index: 188
+      TileIndex: 10
+    - Index: 189
+      TileIndex: 10
+    - Index: 190
+      TileIndex: 10
+    - Index: 191
+      TileIndex: 10
+    - Index: 192
+      TileIndex: 10
+    - Index: 193
+      TileIndex: 11
+    - Index: 195
+      TileIndex: 11
+    HasOffset: 1
+    MatrixIndexes: 01000200010003000400040004000400050004000400040004000400ffffffff
+  - Name: Object
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 178
+      TileIndex: 12
+    - Index: 179
+      TileIndex: 13
+    - Index: 180
+      TileIndex: 12
+    - Index: 181
+      TileIndex: 14
+    - Index: 188
+      TileIndex: 13
+    - Index: 189
+      TileIndex: 15
+    - Index: 192
+      TileIndex: 14
+    - Index: 193
+      TileIndex: 12
+    - Index: 194
+      TileIndex: 14
+    - Index: 195
+      TileIndex: 16
+    HasOffset: 1
+    MatrixIndexes: 0600060006000600070008000700070007000700
+  - Name: UnderObject_Decoration
+    CellSize:
+      x: 0.2
+      y: 0.2
+    Tiles:
+    - Index: 4751
+      TileIndex: 17
+    - Index: 4878
+      TileIndex: 17
+    HasOffset: 0
+    MatrixIndexes: ffffffff
+  - Name: Shadow
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 178
+      TileIndex: 18
+    - Index: 179
+      TileIndex: 18
+    - Index: 180
+      TileIndex: 18
+    - Index: 181
+      TileIndex: 18
+    - Index: 191
+      TileIndex: 19
+    - Index: 192
+      TileIndex: 18
+    HasOffset: 1
+    MatrixIndexes: 09000a0009000a000b000c00
+  Matrices:
+  - e00: 2
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 2
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 2
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 5.9604645E-08
+    e01: 0.99999994
+    e02: -8.742278E-08
+    e03: 0
+    e10: 0.99999994
+    e11: 5.9604645E-08
+    e12: 0
+    e13: 0.6
+    e20: 0
+    e21: -8.742278E-08
+    e22: -0.9999999
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 5.9604645E-08
+    e01: -0.99999994
+    e02: 0
+    e03: 1.3
+    e10: 0.99999994
+    e11: 5.9604645E-08
+    e12: 0
+    e13: 0.7
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: 0.1
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0.05
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.07
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: -0.01
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: 0.6
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -58
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -57
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.25
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -57
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1.6
+    e01: 0
+    e02: 0
+    e03: 0.2
+    e10: 0
+    e11: 1.38
+    e12: 0
+    e13: 0.01
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -57.99
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1.6
+    e01: 0
+    e02: 0
+    e03: 0.5
+    e10: 0
+    e11: 1.8
+    e12: 0
+    e13: 0.01
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -57.99
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0.01
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -56.99
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1.6
+    e01: 0
+    e02: 0
+    e03: 0.5
+    e10: 0
+    e11: 1.8
+    e12: 0
+    e13: 0.01
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -56.99
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  Tiles:
+  - {fileID: 11400000, guid: f27267a3ea710ca422773e46e588d0a2, type: 2}
+  - {fileID: 11400000, guid: 70c26a4382c94025923b9fe16d24597d, type: 2}
+  - {fileID: 11400000, guid: 89d999b0537a9e0219cf8a252c39125a, type: 2}
+  - {fileID: 11400000, guid: 891349cd018e84830ce415f995afeb91, type: 2}
+  - {fileID: 11400000, guid: ffe0b716fcaab15a9efc508d30ba8306, type: 2}
+  - {fileID: 11400000, guid: 447310121599c0ddc458a0d15f83ddbb, type: 2}
+  - {fileID: 11400000, guid: 11c60771be32e6c6cc7dfae198153c3d, type: 2}
+  - {fileID: 11400000, guid: c8cb6463974c1f11089bb03805c81a27, type: 2}
+  - {fileID: 11400000, guid: eae7a80023e9d2862d491b3c1cb318b4, type: 2}
+  - {fileID: 11400000, guid: 361938e556a30d2eda284465e7ea725d, type: 2}
+  - {fileID: 11400000, guid: 18926393c0db61712f885a13e828820d, type: 2}
+  - {fileID: 11400000, guid: 37efe84fac5ded7dd48b236941515339, type: 2}
+  - {fileID: 11400000, guid: 4613eb7b96fc363755a9e96770bdb5b2, type: 2}
+  - {fileID: 11400000, guid: f94667cabeaca7528b77e2f3d48a596f, type: 2}
+  - {fileID: 11400000, guid: 6daf17929b2ff62ee984e24238d7a399, type: 2}
+  - {fileID: 11400000, guid: e742a7cc75384dd339a75cda48e1afd6, type: 2}
+  - {fileID: 11400000, guid: 4ff43d59965a094f66e1781d30b27d46, type: 2}
+  - {fileID: 11400000, guid: 2fac17332b9f616f4d31391fed77ee6e, type: 2}
+  - {fileID: 11400000, guid: afd247a4ad567dfc1cdb25b941875f0c, type: 2}
+  - {fileID: 11400000, guid: 02ac3d7bf3dc7588a4b7df84b6361bd5, type: 2}

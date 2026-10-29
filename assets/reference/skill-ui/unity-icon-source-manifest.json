@@ -3289,6 +3289,34 @@
         "sha256": "d0a6dea22f7277e9d5f6d205a9a74258ec50c492f013b46a46e9370761c9753d"
       },
       {
+        "source": ".tools/source-packages/official-code/client-source/HyperLinkClickHandlerMonster.cs",
+        "sha256": "0021cd8699bfde1c0cafc0bad3f7a0fad8e6defec8cd427a63e578a20ee22a54"
+      },
+      {
+        "source": ".tools/source-packages/official-code/client-source/HyperLinkClickHandlerPetEntity.cs",
+        "sha256": "848eb0137acab86583f414cdcebfdca8b62f559c6717bd946a2e884423c82c4b"
+      },
+      {
+        "source": ".tools/source-packages/official-code/client-source/MonsterInfoPanelNavigateHandler.cs",
+        "sha256": "81a4ea1d69c0b4453ddac2d27494c513ee7f4f884063afcea650b1e896397b72"
+      },
+      {
+        "source": ".tools/source-packages/official-code/client-source/PetEntityInfoPanelNavigateHandler.cs",
+        "sha256": "28680371aa798f014622bfb317da8e98087f024e61dd4f62e269cd094318c43e"
+      },
+      {
+        "source": ".tools/source-packages/official-code/client-source/MonsterBriefInfoPanel.cs",
+        "sha256": "fe3fd9c4e408083f0f1adb85d679a45670c8de84d66c4a244ed529b4a9485deb"
+      },
+      {
+        "source": ".tools/source-packages/official-code/client-source/MonsterDetailPropsDialog.cs",
+        "sha256": "48dfe39407162c01e1aed6bb225ae8607450d5fc48f2d580a56d28f7d7133909"
+      },
+      {
+        "source": ".tools/source-packages/official-code/client-source/NonPlayerBriefInfo.cs",
+        "sha256": "759226d713908a477387b85dde5e92397c97dd0408d8b881279404ad771292e0"
+      },
+      {
         "source": ".tools/source-packages/official-code/client-source/SkillDetailDialog.cs",
         "sha256": "9bc984dc55da7406fd8fddfa7fd2afae523424bfa2c3653bd3b98659b904e04f"
       },
@@ -3380,6 +3408,18 @@
       "bundle_hash": "414cf104c6bdea9eddf3a365b4d345e2",
       "path_id": "3119809450549239651",
       "prefab": "Assets/Prefabs/UI/Item/EntryDetailItem.prefab"
+    },
+    "monster_brief": {
+      "bundle": "defaultpackage_assets_prefabs_ui_briefinfo.bundle",
+      "bundle_hash": "0b2c9e59e6fce00f612f9070d73609c2",
+      "path_id": "-7449710455489340385",
+      "prefab": "Assets/Prefabs/UI/BriefInfo/MonsterBriefInfoPanel.prefab"
+    },
+    "monster_detail_props": {
+      "bundle": "defaultpackage_assets_prefabs_ui_character.bundle",
+      "bundle_hash": "3cf170a685b29b8aa194eade334f439b",
+      "path_id": "2498071862795049301",
+      "prefab": "Assets/Prefabs/UI/Character/MonsterDetailPropsDialog.prefab"
     },
     "damage_test_report": {
       "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportpanel.bundle",
@@ -67978,6 +68018,919 @@
         "sha256": "993fe9f48bba80bc3f729c6cfabf269fdf7b91ac69fb2d013625ee8ac8a68031",
         "name": "FZY4K SDF - dynamic"
       }
+    },
+    "/MonsterBriefInfoPanel/BgDialog3/Content/TopContent/CommonRankShow/RankTxt": {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_briefinfo.bundle",
+        "bundle_hash": "0b2c9e59e6fce00f612f9070d73609c2",
+        "path_id": "-845274798002578401",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/0b2c9e59e6fce00f612f9070d73609c2.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 24354,
+        "bundle_sha256": "99225ab53bc4b3cf3b01c614a9252b22f9926175bcfd64a7c47982dac91cbb48"
+      },
+      "sha256": "f444e0ad7c8ecae13281fa1c2cf368ab142511214d47cb183616a3cadcc4552e",
+      "style": {
+        "font_asset_name": "MPLUSRounded1c-Medium SDF",
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "font_size": 34.0,
+        "horizontal": 2,
+        "vertical": 512,
+        "overflow": 0,
+        "word_wrap": true,
+        "margin": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "enabled": true,
+        "auto_size": true,
+        "font_size_min": 20.0,
+        "font_size_max": 34.0,
+        "native_tmp": true,
+        "font_style": 0,
+        "character_spacing": 9.0,
+        "word_spacing": 0.0,
+        "line_spacing": -30.0
+      },
+      "localized_font": [
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_prefabs_ui_briefinfo.bundle",
+            "bundle_hash": "0b2c9e59e6fce00f612f9070d73609c2",
+            "path_id": "-7805110480948798433",
+            "origin": "official_cdn",
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/0b2c9e59e6fce00f612f9070d73609c2.bundle",
+            "manifest": "871_156598",
+            "source_manifest": "854_156383",
+            "bundle_size": 24354,
+            "bundle_sha256": "99225ab53bc4b3cf3b01c614a9252b22f9926175bcfd64a7c47982dac91cbb48"
+          },
+          "sha256": "f30e3ba2a545c4c8de2256951f7fc05af2a8f0dac9bfd3cd1034c7612809a177",
+          "enabled": true
+        }
+      ],
+      "font": {
+        "source": {
+          "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+          "bundle_hash": "bf62732f37a5a423ddbac02681e054a4",
+          "path_id": "-1377676961714441466",
+          "origin": "apk_zip",
+          "manifest": "854_156383",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "apk_entry": "assets/yoo/DefaultPackage/bf62732f37a5a423ddbac02681e054a4.bundle",
+          "raw_size": 409901,
+          "raw_sha256": "ebee921d1efee60b02445c5d09faebdef159fdd6c7284658d2c05cf9e3826434"
+        },
+        "sha256": "330c55d759bc348731e22e0653a7c7f47e6db1ad6f173408febfd489a0610e04",
+        "name": "MPLUSRounded1c-Medium SDF"
+      }
+    },
+    "/MonsterBriefInfoPanel/BgDialog3/Content/TopContent/CommonRankShow/RankTxt:effect": {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_briefinfo.bundle",
+        "bundle_hash": "0b2c9e59e6fce00f612f9070d73609c2",
+        "path_id": "1500136710485531679",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/0b2c9e59e6fce00f612f9070d73609c2.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 24354,
+        "bundle_sha256": "99225ab53bc4b3cf3b01c614a9252b22f9926175bcfd64a7c47982dac91cbb48"
+      },
+      "sha256": "d1e573be11ebc34e920bc81b96c988b5755f94f5a4f5730e63b42315e203f6fd"
+    },
+    "/MonsterBriefInfoPanel/BgDialog3/Content/TopContent/TypeText": {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_briefinfo.bundle",
+        "bundle_hash": "0b2c9e59e6fce00f612f9070d73609c2",
+        "path_id": "-5385409875777987553",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/0b2c9e59e6fce00f612f9070d73609c2.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 24354,
+        "bundle_sha256": "99225ab53bc4b3cf3b01c614a9252b22f9926175bcfd64a7c47982dac91cbb48"
+      },
+      "sha256": "4eb0aaf68f3add308de98aa7e469c56a2a7a32ba0c2adab6e271fccabd3113b3",
+      "style": {
+        "font_asset_name": "MPLUSRounded1c-Medium SDF",
+        "color": [
+          0.13333334028720856,
+          0.13333334028720856,
+          0.13333334028720856,
+          1.0
+        ],
+        "font_size": 42.0,
+        "horizontal": 4,
+        "vertical": 512,
+        "overflow": 0,
+        "word_wrap": false,
+        "margin": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "enabled": true,
+        "auto_size": true,
+        "font_size_min": 18.0,
+        "font_size_max": 54.0,
+        "native_tmp": true,
+        "font_style": 0,
+        "character_spacing": 0.0,
+        "word_spacing": 0.0,
+        "line_spacing": 0.0
+      },
+      "localized_font": [
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_prefabs_ui_briefinfo.bundle",
+            "bundle_hash": "0b2c9e59e6fce00f612f9070d73609c2",
+            "path_id": "-4481898115519587297",
+            "origin": "official_cdn",
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/0b2c9e59e6fce00f612f9070d73609c2.bundle",
+            "manifest": "871_156598",
+            "source_manifest": "854_156383",
+            "bundle_size": 24354,
+            "bundle_sha256": "99225ab53bc4b3cf3b01c614a9252b22f9926175bcfd64a7c47982dac91cbb48"
+          },
+          "sha256": "68eb1b9aeac9dc002375cac665232cc3acfab0810583bc4bbc23e31c814ef0ba",
+          "enabled": true
+        }
+      ],
+      "font": {
+        "source": {
+          "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+          "bundle_hash": "bf62732f37a5a423ddbac02681e054a4",
+          "path_id": "-1377676961714441466",
+          "origin": "apk_zip",
+          "manifest": "854_156383",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "apk_entry": "assets/yoo/DefaultPackage/bf62732f37a5a423ddbac02681e054a4.bundle",
+          "raw_size": 409901,
+          "raw_sha256": "ebee921d1efee60b02445c5d09faebdef159fdd6c7284658d2c05cf9e3826434"
+        },
+        "sha256": "330c55d759bc348731e22e0653a7c7f47e6db1ad6f173408febfd489a0610e04",
+        "name": "MPLUSRounded1c-Medium SDF"
+      }
+    },
+    "/MonsterBriefInfoPanel/BgDialog3/Content/TopContent/TypeText:effect": {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_briefinfo.bundle",
+        "bundle_hash": "0b2c9e59e6fce00f612f9070d73609c2",
+        "path_id": "-3392822290788033505",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/0b2c9e59e6fce00f612f9070d73609c2.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 24354,
+        "bundle_sha256": "99225ab53bc4b3cf3b01c614a9252b22f9926175bcfd64a7c47982dac91cbb48"
+      },
+      "sha256": "c6401fbbebcf77482e58835dbd27136305e5ac5b27388c979a40cd36f3279ff6"
+    },
+    "/MonsterBriefInfoPanel/BgDialog3/Content/TopContent/NameText:gradient": {
+      "source": {
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_color_gradient_presets.bundle",
+        "bundle_hash": "a87bdaa9f21e03e32891bd93b38af7df",
+        "path_id": "3562502139719141016",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/a87bdaa9f21e03e32891bd93b38af7df.bundle",
+        "raw_size": 985,
+        "raw_sha256": "e92ded39ab4966efe3dec8d385e27d4f21ea4e325e944297e805e90166ef0e79"
+      },
+      "sha256": "e06eb967754f6a8b79e1ca7e7a61eba6af953ad857f8e213e3416dfc2fe91faf"
+    },
+    "/MonsterBriefInfoPanel/BgDialog3/Content/TopContent/NameText": {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_briefinfo.bundle",
+        "bundle_hash": "0b2c9e59e6fce00f612f9070d73609c2",
+        "path_id": "1448316085945326623",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/0b2c9e59e6fce00f612f9070d73609c2.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 24354,
+        "bundle_sha256": "99225ab53bc4b3cf3b01c614a9252b22f9926175bcfd64a7c47982dac91cbb48"
+      },
+      "sha256": "acf9f23e3cf45e03cfbcc78ee9c10476dc88aaf3a3040aa117394a7d6a81bbdd",
+      "style": {
+        "font_asset_name": "MPLUSRounded1c-Medium SDF",
+        "color": [
+          0.13333334028720856,
+          0.13333334028720856,
+          0.13333334028720856,
+          1.0
+        ],
+        "font_size": 54.0,
+        "horizontal": 1,
+        "vertical": 512,
+        "overflow": 0,
+        "word_wrap": true,
+        "margin": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "enabled": true,
+        "auto_size": true,
+        "font_size_min": 18.0,
+        "font_size_max": 54.0,
+        "native_tmp": true,
+        "font_style": 0,
+        "character_spacing": 0.0,
+        "word_spacing": 0.0,
+        "line_spacing": -20.0
+      },
+      "localized_font": [
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_prefabs_ui_briefinfo.bundle",
+            "bundle_hash": "0b2c9e59e6fce00f612f9070d73609c2",
+            "path_id": "3774140396734536735",
+            "origin": "official_cdn",
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/0b2c9e59e6fce00f612f9070d73609c2.bundle",
+            "manifest": "871_156598",
+            "source_manifest": "854_156383",
+            "bundle_size": 24354,
+            "bundle_sha256": "99225ab53bc4b3cf3b01c614a9252b22f9926175bcfd64a7c47982dac91cbb48"
+          },
+          "sha256": "2633d9c631d22ca727933e9798fc1bbeb9a82286c9f97178c86d63bbf749fd5b",
+          "enabled": true
+        }
+      ],
+      "font": {
+        "source": {
+          "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+          "bundle_hash": "bf62732f37a5a423ddbac02681e054a4",
+          "path_id": "-1377676961714441466",
+          "origin": "apk_zip",
+          "manifest": "854_156383",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "apk_entry": "assets/yoo/DefaultPackage/bf62732f37a5a423ddbac02681e054a4.bundle",
+          "raw_size": 409901,
+          "raw_sha256": "ebee921d1efee60b02445c5d09faebdef159fdd6c7284658d2c05cf9e3826434"
+        },
+        "sha256": "330c55d759bc348731e22e0653a7c7f47e6db1ad6f173408febfd489a0610e04",
+        "name": "MPLUSRounded1c-Medium SDF"
+      }
+    },
+    "/MonsterBriefInfoPanel/BgDialog3/Content/TopContent/NameText:effect": {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_briefinfo.bundle",
+        "bundle_hash": "0b2c9e59e6fce00f612f9070d73609c2",
+        "path_id": "929595690941439007",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/0b2c9e59e6fce00f612f9070d73609c2.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 24354,
+        "bundle_sha256": "99225ab53bc4b3cf3b01c614a9252b22f9926175bcfd64a7c47982dac91cbb48"
+      },
+      "sha256": "f432777ee443e4586e9336a3d56c04d059de996e545670d4ad0b206b19f0b704"
+    },
+    "/MonsterBriefInfoPanel/BgDialog3/Content/TopContent/LevelText": {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_briefinfo.bundle",
+        "bundle_hash": "0b2c9e59e6fce00f612f9070d73609c2",
+        "path_id": "-2798853880274265057",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/0b2c9e59e6fce00f612f9070d73609c2.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 24354,
+        "bundle_sha256": "99225ab53bc4b3cf3b01c614a9252b22f9926175bcfd64a7c47982dac91cbb48"
+      },
+      "sha256": "d2f1ca92aa4300bfd52f16cb46e39bdaa2797ffd7e2a2617511121ad0588b5ed",
+      "style": {
+        "font_asset_name": "MPLUSRounded1c-Medium SDF",
+        "color": [
+          0.13333334028720856,
+          0.13333334028720856,
+          0.13333334028720856,
+          1.0
+        ],
+        "font_size": 54.0,
+        "horizontal": 1,
+        "vertical": 512,
+        "overflow": 0,
+        "word_wrap": false,
+        "margin": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "enabled": true,
+        "auto_size": true,
+        "font_size_min": 18.0,
+        "font_size_max": 54.0,
+        "native_tmp": true,
+        "font_style": 0,
+        "character_spacing": 0.0,
+        "word_spacing": 0.0,
+        "line_spacing": 0.0
+      },
+      "localized_font": [
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_prefabs_ui_briefinfo.bundle",
+            "bundle_hash": "0b2c9e59e6fce00f612f9070d73609c2",
+            "path_id": "-7691972625748567009",
+            "origin": "official_cdn",
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/0b2c9e59e6fce00f612f9070d73609c2.bundle",
+            "manifest": "871_156598",
+            "source_manifest": "854_156383",
+            "bundle_size": 24354,
+            "bundle_sha256": "99225ab53bc4b3cf3b01c614a9252b22f9926175bcfd64a7c47982dac91cbb48"
+          },
+          "sha256": "db24f81ab6034e5f4b8a92b5bb12bce818d317995461383e8fec6ae14c4ff484",
+          "enabled": true
+        }
+      ],
+      "font": {
+        "source": {
+          "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+          "bundle_hash": "bf62732f37a5a423ddbac02681e054a4",
+          "path_id": "-1377676961714441466",
+          "origin": "apk_zip",
+          "manifest": "854_156383",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "apk_entry": "assets/yoo/DefaultPackage/bf62732f37a5a423ddbac02681e054a4.bundle",
+          "raw_size": 409901,
+          "raw_sha256": "ebee921d1efee60b02445c5d09faebdef159fdd6c7284658d2c05cf9e3826434"
+        },
+        "sha256": "330c55d759bc348731e22e0653a7c7f47e6db1ad6f173408febfd489a0610e04",
+        "name": "MPLUSRounded1c-Medium SDF"
+      }
+    },
+    "/MonsterBriefInfoPanel/BgDialog3/Content/TopContent/LevelText:effect": {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_briefinfo.bundle",
+        "bundle_hash": "0b2c9e59e6fce00f612f9070d73609c2",
+        "path_id": "-7920641128208180193",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/0b2c9e59e6fce00f612f9070d73609c2.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 24354,
+        "bundle_sha256": "99225ab53bc4b3cf3b01c614a9252b22f9926175bcfd64a7c47982dac91cbb48"
+      },
+      "sha256": "4f49f4901d04b25576b90919aad5ac83acb5230b60a64ec076113d95555653ab"
+    },
+    "/MonsterBriefInfoPanel/BgDialog3/Content/Status/Health/Text/Txt": {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_briefinfo.bundle",
+        "bundle_hash": "0b2c9e59e6fce00f612f9070d73609c2",
+        "path_id": "-419943367376348129",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/0b2c9e59e6fce00f612f9070d73609c2.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 24354,
+        "bundle_sha256": "99225ab53bc4b3cf3b01c614a9252b22f9926175bcfd64a7c47982dac91cbb48"
+      },
+      "sha256": "99c96c7eafb6186cc0174c1840ac377fcc249a72ce48efd66a87c8961d2ace68",
+      "style": {
+        "font_asset_name": "MPLUSRounded1c-Medium SDF",
+        "color": [
+          0.13333334028720856,
+          0.13333334028720856,
+          0.13333334028720856,
+          1.0
+        ],
+        "font_size": 36.0,
+        "horizontal": 1,
+        "vertical": 512,
+        "overflow": 0,
+        "word_wrap": false,
+        "margin": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "enabled": true,
+        "auto_size": false,
+        "font_size_min": 18.0,
+        "font_size_max": 72.0,
+        "native_tmp": true,
+        "font_style": 0,
+        "character_spacing": 0.0,
+        "word_spacing": 0.0,
+        "line_spacing": 0.0
+      },
+      "localized_font": [
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_prefabs_ui_briefinfo.bundle",
+            "bundle_hash": "0b2c9e59e6fce00f612f9070d73609c2",
+            "path_id": "-739550543869354977",
+            "origin": "official_cdn",
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/0b2c9e59e6fce00f612f9070d73609c2.bundle",
+            "manifest": "871_156598",
+            "source_manifest": "854_156383",
+            "bundle_size": 24354,
+            "bundle_sha256": "99225ab53bc4b3cf3b01c614a9252b22f9926175bcfd64a7c47982dac91cbb48"
+          },
+          "sha256": "3f103e404a81a7cbf98402dd042dd01100b343f045295d82328639309a48f08e",
+          "enabled": true
+        }
+      ],
+      "font": {
+        "source": {
+          "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+          "bundle_hash": "bf62732f37a5a423ddbac02681e054a4",
+          "path_id": "-1377676961714441466",
+          "origin": "apk_zip",
+          "manifest": "854_156383",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "apk_entry": "assets/yoo/DefaultPackage/bf62732f37a5a423ddbac02681e054a4.bundle",
+          "raw_size": 409901,
+          "raw_sha256": "ebee921d1efee60b02445c5d09faebdef159fdd6c7284658d2c05cf9e3826434"
+        },
+        "sha256": "330c55d759bc348731e22e0653a7c7f47e6db1ad6f173408febfd489a0610e04",
+        "name": "MPLUSRounded1c-Medium SDF"
+      }
+    },
+    "/MonsterBriefInfoPanel/BgDialog3/Content/Status/Health/ShieldTxt/Txt": {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_briefinfo.bundle",
+        "bundle_hash": "0b2c9e59e6fce00f612f9070d73609c2",
+        "path_id": "6862016102879419423",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/0b2c9e59e6fce00f612f9070d73609c2.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 24354,
+        "bundle_sha256": "99225ab53bc4b3cf3b01c614a9252b22f9926175bcfd64a7c47982dac91cbb48"
+      },
+      "sha256": "d6bba49680b9dd4f16e6026b092e6b18110884c119cef4986bc09c68c01aa531",
+      "style": {
+        "font_asset_name": "MPLUSRounded1c-Medium SDF",
+        "color": [
+          0.13333334028720856,
+          0.13333334028720856,
+          0.13333334028720856,
+          1.0
+        ],
+        "font_size": 36.0,
+        "horizontal": 1,
+        "vertical": 512,
+        "overflow": 0,
+        "word_wrap": false,
+        "margin": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "enabled": true,
+        "auto_size": false,
+        "font_size_min": 18.0,
+        "font_size_max": 72.0,
+        "native_tmp": true,
+        "font_style": 0,
+        "character_spacing": 0.0,
+        "word_spacing": 0.0,
+        "line_spacing": 0.0
+      },
+      "localized_font": [
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_prefabs_ui_briefinfo.bundle",
+            "bundle_hash": "0b2c9e59e6fce00f612f9070d73609c2",
+            "path_id": "-6636767166682473441",
+            "origin": "official_cdn",
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/0b2c9e59e6fce00f612f9070d73609c2.bundle",
+            "manifest": "871_156598",
+            "source_manifest": "854_156383",
+            "bundle_size": 24354,
+            "bundle_sha256": "99225ab53bc4b3cf3b01c614a9252b22f9926175bcfd64a7c47982dac91cbb48"
+          },
+          "sha256": "25db1e185c8a1a66cacc71342ce3b415c5d264a4051c1ba885b1cbef673060a8",
+          "enabled": true
+        }
+      ],
+      "font": {
+        "source": {
+          "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+          "bundle_hash": "bf62732f37a5a423ddbac02681e054a4",
+          "path_id": "-1377676961714441466",
+          "origin": "apk_zip",
+          "manifest": "854_156383",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "apk_entry": "assets/yoo/DefaultPackage/bf62732f37a5a423ddbac02681e054a4.bundle",
+          "raw_size": 409901,
+          "raw_sha256": "ebee921d1efee60b02445c5d09faebdef159fdd6c7284658d2c05cf9e3826434"
+        },
+        "sha256": "330c55d759bc348731e22e0653a7c7f47e6db1ad6f173408febfd489a0610e04",
+        "name": "MPLUSRounded1c-Medium SDF"
+      }
+    },
+    "/MonsterBriefInfoPanel/BgDialog3/Content/PropsContent/PropLabel/LabelText": {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_briefinfo.bundle",
+        "bundle_hash": "0b2c9e59e6fce00f612f9070d73609c2",
+        "path_id": "-2248736974378017761",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/0b2c9e59e6fce00f612f9070d73609c2.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 24354,
+        "bundle_sha256": "99225ab53bc4b3cf3b01c614a9252b22f9926175bcfd64a7c47982dac91cbb48"
+      },
+      "sha256": "fca393402e9a44b25dd9b2b185a0082603ac090278ba717207b03bdb33f052b1",
+      "style": {
+        "font_asset_name": "MPLUSRounded1c-Medium SDF",
+        "color": [
+          0.30980393290519714,
+          0.30980393290519714,
+          0.30980393290519714,
+          1.0
+        ],
+        "font_size": 38.0,
+        "horizontal": 1,
+        "vertical": 512,
+        "overflow": 0,
+        "word_wrap": false,
+        "margin": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "enabled": true,
+        "auto_size": false,
+        "font_size_min": 18.0,
+        "font_size_max": 72.0,
+        "native_tmp": true,
+        "font_style": 0,
+        "character_spacing": 0.0,
+        "word_spacing": 0.0,
+        "line_spacing": 0.0
+      },
+      "localized_font": [
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_prefabs_ui_briefinfo.bundle",
+            "bundle_hash": "0b2c9e59e6fce00f612f9070d73609c2",
+            "path_id": "-1332943295256962017",
+            "origin": "official_cdn",
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/0b2c9e59e6fce00f612f9070d73609c2.bundle",
+            "manifest": "871_156598",
+            "source_manifest": "854_156383",
+            "bundle_size": 24354,
+            "bundle_sha256": "99225ab53bc4b3cf3b01c614a9252b22f9926175bcfd64a7c47982dac91cbb48"
+          },
+          "sha256": "a7c2e78b4e3d9467b11f1600f9d4d51a6eb4ed7225b8b5941ce5d75d5dc703fe",
+          "enabled": true
+        }
+      ],
+      "font": {
+        "source": {
+          "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+          "bundle_hash": "bf62732f37a5a423ddbac02681e054a4",
+          "path_id": "-1377676961714441466",
+          "origin": "apk_zip",
+          "manifest": "854_156383",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "apk_entry": "assets/yoo/DefaultPackage/bf62732f37a5a423ddbac02681e054a4.bundle",
+          "raw_size": 409901,
+          "raw_sha256": "ebee921d1efee60b02445c5d09faebdef159fdd6c7284658d2c05cf9e3826434"
+        },
+        "sha256": "330c55d759bc348731e22e0653a7c7f47e6db1ad6f173408febfd489a0610e04",
+        "name": "MPLUSRounded1c-Medium SDF"
+      }
+    },
+    "/MonsterBriefInfoPanel/BgDialog3/Content/SkillContent/SkillLabel/LabelText": {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_briefinfo.bundle",
+        "bundle_hash": "0b2c9e59e6fce00f612f9070d73609c2",
+        "path_id": "-1582152991713371105",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/0b2c9e59e6fce00f612f9070d73609c2.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 24354,
+        "bundle_sha256": "99225ab53bc4b3cf3b01c614a9252b22f9926175bcfd64a7c47982dac91cbb48"
+      },
+      "sha256": "bc33dec9359c4558d996d333d6b9864ac2dcfed43553ccbb8aecf4416fe86827",
+      "style": {
+        "font_asset_name": "MPLUSRounded1c-Medium SDF",
+        "color": [
+          0.30980393290519714,
+          0.30980393290519714,
+          0.30980393290519714,
+          1.0
+        ],
+        "font_size": 38.0,
+        "horizontal": 1,
+        "vertical": 512,
+        "overflow": 0,
+        "word_wrap": false,
+        "margin": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "enabled": true,
+        "auto_size": false,
+        "font_size_min": 18.0,
+        "font_size_max": 72.0,
+        "native_tmp": true,
+        "font_style": 0,
+        "character_spacing": 0.0,
+        "word_spacing": 0.0,
+        "line_spacing": 0.0
+      },
+      "localized_font": [
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_prefabs_ui_briefinfo.bundle",
+            "bundle_hash": "0b2c9e59e6fce00f612f9070d73609c2",
+            "path_id": "3178400804993522719",
+            "origin": "official_cdn",
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/0b2c9e59e6fce00f612f9070d73609c2.bundle",
+            "manifest": "871_156598",
+            "source_manifest": "854_156383",
+            "bundle_size": 24354,
+            "bundle_sha256": "99225ab53bc4b3cf3b01c614a9252b22f9926175bcfd64a7c47982dac91cbb48"
+          },
+          "sha256": "c223dfbf2b6dfd2da3e363236357fa255da0dff091e2bcc7b225698fb7f614e4",
+          "enabled": true
+        }
+      ],
+      "font": {
+        "source": {
+          "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+          "bundle_hash": "bf62732f37a5a423ddbac02681e054a4",
+          "path_id": "-1377676961714441466",
+          "origin": "apk_zip",
+          "manifest": "854_156383",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "apk_entry": "assets/yoo/DefaultPackage/bf62732f37a5a423ddbac02681e054a4.bundle",
+          "raw_size": 409901,
+          "raw_sha256": "ebee921d1efee60b02445c5d09faebdef159fdd6c7284658d2c05cf9e3826434"
+        },
+        "sha256": "330c55d759bc348731e22e0653a7c7f47e6db1ad6f173408febfd489a0610e04",
+        "name": "MPLUSRounded1c-Medium SDF"
+      }
+    },
+    "/MonsterDetailPropsDialog/BgDialog1/BgImg/BgTitle/TitleText": {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_character.bundle",
+        "bundle_hash": "3cf170a685b29b8aa194eade334f439b",
+        "path_id": "-2978514845480117931",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/3cf170a685b29b8aa194eade334f439b.bundle",
+        "raw_size": 710862,
+        "raw_sha256": "8a88c5ae332eb2e1ee419064a6c4421ed6efee16dacee501e2f21f9e4fcbfe97"
+      },
+      "sha256": "9f0b34501405f2b45577efdd8d53b24aba09235a10d409084a71c7987b05c0ff",
+      "style": {
+        "font_asset_name": "FZY4K SDF - dynamic",
+        "color": [
+          0.8862745761871338,
+          0.8862745761871338,
+          0.8862745761871338,
+          1.0
+        ],
+        "font_size": 52.0,
+        "horizontal": 2,
+        "vertical": 512,
+        "overflow": 0,
+        "word_wrap": false,
+        "margin": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "enabled": true,
+        "auto_size": true,
+        "font_size_min": 18.0,
+        "font_size_max": 52.0,
+        "native_tmp": true,
+        "font_style": 0,
+        "character_spacing": 0.0,
+        "word_spacing": 0.0,
+        "line_spacing": 0.0
+      },
+      "localized_font": [
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_prefabs_ui_character.bundle",
+            "bundle_hash": "3cf170a685b29b8aa194eade334f439b",
+            "path_id": "-5353850755312248491",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/3cf170a685b29b8aa194eade334f439b.bundle",
+            "raw_size": 710862,
+            "raw_sha256": "8a88c5ae332eb2e1ee419064a6c4421ed6efee16dacee501e2f21f9e4fcbfe97"
+          },
+          "sha256": "bcde685b27096475092ead4cd386cda2d8b23464f00ee88ff92bc426f6853c23",
+          "enabled": true
+        }
+      ],
+      "font": {
+        "source": {
+          "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+          "bundle_hash": "bf62732f37a5a423ddbac02681e054a4",
+          "path_id": "-1054575886599457342",
+          "origin": "apk_zip",
+          "manifest": "854_156383",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "apk_entry": "assets/yoo/DefaultPackage/bf62732f37a5a423ddbac02681e054a4.bundle",
+          "raw_size": 409901,
+          "raw_sha256": "ebee921d1efee60b02445c5d09faebdef159fdd6c7284658d2c05cf9e3826434"
+        },
+        "sha256": "993fe9f48bba80bc3f729c6cfabf269fdf7b91ac69fb2d013625ee8ac8a68031",
+        "name": "FZY4K SDF - dynamic"
+      }
+    },
+    "/MonsterDetailPropsDialog/BgDialog1/Content/OverallContent/Scroll/Viewprot/Content/BasePropTitle/Txt": {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_character.bundle",
+        "bundle_hash": "3cf170a685b29b8aa194eade334f439b",
+        "path_id": "-7844372885704009387",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/3cf170a685b29b8aa194eade334f439b.bundle",
+        "raw_size": 710862,
+        "raw_sha256": "8a88c5ae332eb2e1ee419064a6c4421ed6efee16dacee501e2f21f9e4fcbfe97"
+      },
+      "sha256": "36d5f901998dd3b4f50d9d4866ca9ee4a0880073c991ba21abed71c1e2a11a6f",
+      "style": {
+        "font_asset_name": "FZY4K SDF - dynamic",
+        "color": [
+          0.30980393290519714,
+          0.30980393290519714,
+          0.30980393290519714,
+          1.0
+        ],
+        "font_size": 38.0,
+        "horizontal": 2,
+        "vertical": 512,
+        "overflow": 0,
+        "word_wrap": false,
+        "margin": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "enabled": true,
+        "auto_size": false,
+        "font_size_min": 18.0,
+        "font_size_max": 30.0,
+        "native_tmp": true,
+        "font_style": 0,
+        "character_spacing": 0.0,
+        "word_spacing": 0.0,
+        "line_spacing": 0.0
+      },
+      "localized_font": [
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_prefabs_ui_character.bundle",
+            "bundle_hash": "3cf170a685b29b8aa194eade334f439b",
+            "path_id": "-3443354148725909163",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/3cf170a685b29b8aa194eade334f439b.bundle",
+            "raw_size": 710862,
+            "raw_sha256": "8a88c5ae332eb2e1ee419064a6c4421ed6efee16dacee501e2f21f9e4fcbfe97"
+          },
+          "sha256": "9eb80bd89b22275a477ce10279c9cd9f99981c60b2d59522661fc3bbdd1b89bc",
+          "enabled": true
+        }
+      ],
+      "font": {
+        "source": {
+          "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+          "bundle_hash": "bf62732f37a5a423ddbac02681e054a4",
+          "path_id": "-1054575886599457342",
+          "origin": "apk_zip",
+          "manifest": "854_156383",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "apk_entry": "assets/yoo/DefaultPackage/bf62732f37a5a423ddbac02681e054a4.bundle",
+          "raw_size": 409901,
+          "raw_sha256": "ebee921d1efee60b02445c5d09faebdef159fdd6c7284658d2c05cf9e3826434"
+        },
+        "sha256": "993fe9f48bba80bc3f729c6cfabf269fdf7b91ac69fb2d013625ee8ac8a68031",
+        "name": "FZY4K SDF - dynamic"
+      }
+    },
+    "/MonsterDetailPropsDialog/BgDialog1/Content/OverallContent/Scroll/Viewprot/Content/AdditionPropTitle/Txt": {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_character.bundle",
+        "bundle_hash": "3cf170a685b29b8aa194eade334f439b",
+        "path_id": "-2255293250574739115",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/3cf170a685b29b8aa194eade334f439b.bundle",
+        "raw_size": 710862,
+        "raw_sha256": "8a88c5ae332eb2e1ee419064a6c4421ed6efee16dacee501e2f21f9e4fcbfe97"
+      },
+      "sha256": "3537e115bde3fa30d22103314d15a36782e55c92788ed887f3264f5bd244426f",
+      "style": {
+        "font_asset_name": "FZY4K SDF - dynamic",
+        "color": [
+          0.30980393290519714,
+          0.30980393290519714,
+          0.30980393290519714,
+          1.0
+        ],
+        "font_size": 38.0,
+        "horizontal": 2,
+        "vertical": 512,
+        "overflow": 0,
+        "word_wrap": false,
+        "margin": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "enabled": true,
+        "auto_size": false,
+        "font_size_min": 18.0,
+        "font_size_max": 30.0,
+        "native_tmp": true,
+        "font_style": 0,
+        "character_spacing": 0.0,
+        "word_spacing": 0.0,
+        "line_spacing": 0.0
+      },
+      "localized_font": [
+        {
+          "source": {
+            "bundle": "defaultpackage_assets_prefabs_ui_character.bundle",
+            "bundle_hash": "3cf170a685b29b8aa194eade334f439b",
+            "path_id": "-5717439953891878571",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/3cf170a685b29b8aa194eade334f439b.bundle",
+            "raw_size": 710862,
+            "raw_sha256": "8a88c5ae332eb2e1ee419064a6c4421ed6efee16dacee501e2f21f9e4fcbfe97"
+          },
+          "sha256": "6589bef23cc7c4ed5f6567c7f616e00ce142a5e3c8dac161fc29c43223901913",
+          "enabled": true
+        }
+      ],
+      "font": {
+        "source": {
+          "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+          "bundle_hash": "bf62732f37a5a423ddbac02681e054a4",
+          "path_id": "-1054575886599457342",
+          "origin": "apk_zip",
+          "manifest": "854_156383",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "apk_entry": "assets/yoo/DefaultPackage/bf62732f37a5a423ddbac02681e054a4.bundle",
+          "raw_size": 409901,
+          "raw_sha256": "ebee921d1efee60b02445c5d09faebdef159fdd6c7284658d2c05cf9e3826434"
+        },
+        "sha256": "993fe9f48bba80bc3f729c6cfabf269fdf7b91ac69fb2d013625ee8ac8a68031",
+        "name": "FZY4K SDF - dynamic"
+      }
     }
   },
   "rules_input": "assets/official/rules.json",
@@ -68300,6 +69253,14 @@
       "operation": "Unity Sprite decode, atlas crop and unpack rotation",
       "sha256": "d714b1165f55c1d89a4b52c8311f6aa00a246fe623a6de8d9ebb6e4b68afb3dd"
     },
+    "res://assets/official/sprites/BtnLook-0efdbcfe10.png": {
+      "bundle": "defaultpackage_assets_image_ui_common.bundle",
+      "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+      "path_id": "-4339526682437295492",
+      "object": "BtnLook",
+      "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+      "sha256": "a5d744a5fa0e641d85000826c7dac7fe8abb826c0518394bda61ee45a481e34c"
+    },
     "res://assets/official/sprites/BtnNo-aa425a44c4.png": {
       "bundle": "defaultpackage_assets_image_ui_common.bundle",
       "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
@@ -68588,6 +69549,14 @@
       "operation": "Unity Sprite decode, atlas crop and unpack rotation",
       "sha256": "31498f0e8895dce861cf88210bb81c26ac96ed09df5556edc6614418fc574f71"
     },
+    "res://assets/official/sprites/ImgBg_Countdown-d742e5732b.png": {
+      "bundle": "defaultpackage_assets_image_ui_task.bundle",
+      "bundle_hash": "63d5ce3b03de9c5fbfbdb324aa41c059",
+      "path_id": "-4961813565538125528",
+      "object": "ImgBg_Countdown",
+      "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+      "sha256": "9240d64b8fd1a17b7d8205023a867817e2c167f7aebde761f959526b197d9848"
+    },
     "res://assets/official/sprites/ImgBg_Fail-0abe0bbc86.png": {
       "bundle": "defaultpackage_assets_image_ui_game.bundle",
       "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
@@ -68683,6 +69652,14 @@
       "object": "ImgBg_Recommend",
       "operation": "Unity Sprite decode, atlas crop and unpack rotation",
       "sha256": "1ac9c211e4a2b06fd3b8c7bd336f316c9cf8fded54c76874c551a6eebcc501c9"
+    },
+    "res://assets/official/sprites/ImgBg_TipInfo-00747eeea6.png": {
+      "bundle": "defaultpackage_assets_image_ui_bg.bundle",
+      "bundle_hash": "3d76017b4b89f53e04c41a5e9f0369b2",
+      "path_id": "-6038788662344031492",
+      "object": "ImgBg_TipInfo",
+      "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+      "sha256": "e26851fa21de312e3d6176d0ba3495ed23282d5c988a679826ea08573334d55f"
     },
     "res://assets/official/sprites/ImgBg_Title-497505d3a3.png": {
       "bundle": "defaultpackage_assets_image_ui_common.bundle",
@@ -68998,6 +69975,22 @@
       "operation": "Unity Sprite decode, atlas crop and unpack rotation",
       "sha256": "ad367ebab347bd4b6fa24c7799628789c64e20864966f73d886d1474989ba217"
     },
+    "res://assets/official/sprites/ImgLIne-dd77af014e.png": {
+      "bundle": "defaultpackage_assets_image_ui_task.bundle",
+      "bundle_hash": "63d5ce3b03de9c5fbfbdb324aa41c059",
+      "path_id": "-4478107544474619428",
+      "object": "ImgLIne",
+      "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+      "sha256": "1a3e4990d5d0c8d68adf23bd77cecfa8cf4b3a87222342a71d17fab15afc29cd"
+    },
+    "res://assets/official/sprites/ImgLIne_Star-3957c8478e.png": {
+      "bundle": "defaultpackage_assets_image_ui_task.bundle",
+      "bundle_hash": "63d5ce3b03de9c5fbfbdb324aa41c059",
+      "path_id": "5612905899632318827",
+      "object": "ImgLIne_Star",
+      "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+      "sha256": "e2b7dacf322e1bd7698a36831fe3f29371ea98d0a8457058725fc6626e92350d"
+    },
     "res://assets/official/sprites/ImgLightElement-0a6acd7d50.png": {
       "bundle": "defaultpackage_assets_image_ui_common.bundle",
       "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
@@ -69054,6 +70047,14 @@
       "operation": "Unity Sprite decode, atlas crop and unpack rotation",
       "sha256": "0ab0532bd61059221f243ce61024f8467d8e3ec23986e61abf0c4b94f56cefe2"
     },
+    "res://assets/official/sprites/ImgLoad3_Bg-c36ccdfb75.png": {
+      "bundle": "defaultpackage_assets_image_ui_common.bundle",
+      "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+      "path_id": "8104768337883395613",
+      "object": "ImgLoad3_Bg",
+      "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+      "sha256": "fb7f7bc92c63c286df37de90aa172e68c66c75f50f60297e67bc174da5d05b7f"
+    },
     "res://assets/official/sprites/ImgLoad_Bg-b19835449f.png": {
       "bundle": "defaultpackage_assets_image_ui_common.bundle",
       "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
@@ -69093,6 +70094,14 @@
       "object": "ImgMask",
       "operation": "Unity Sprite decode, atlas crop and unpack rotation",
       "sha256": "4b8fcf1e081b5f29b8e698c0dd9d297a11e0ac8a992e25d43d0d175ef805dfea"
+    },
+    "res://assets/official/sprites/ImgMask_BgDialog3-90add1fe9f.png": {
+      "bundle": "defaultpackage_assets_image_ui_common.bundle",
+      "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+      "path_id": "1032192415935155083",
+      "object": "ImgMask_BgDialog3",
+      "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+      "sha256": "89be95b6ea6e00fa690a1ec710527e0420493ddd8a2d343e683f7c969385d8a8"
     },
     "res://assets/official/sprites/ImgMask_Piece-71644e05c0.png": {
       "bundle": "defaultpackage_assets_image_ui_common.bundle",
@@ -69446,6 +70455,19 @@
       "operation": "Unity Sprite decode, atlas crop and unpack rotation",
       "sha256": "4114e8c492147e93d1b53713000cec3ec56e934ad7556cfb1349ff3f320cf3b1"
     },
+    "res://assets/official/sprites/ImgTitle_Iron_1-5586169bd8.png": {
+      "bundle": "defaultpackage_assets_image_ui_notes_therion_title.bundle",
+      "bundle_hash": "fb0e7a483c9c00ab58b0f970a254a766",
+      "path_id": "2244170340490877045",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/fb0e7a483c9c00ab58b0f970a254a766.bundle",
+      "manifest": "854_156383",
+      "bundle_size": 74253,
+      "bundle_sha256": "b1fa76301a3e9fa673cbedb12171a6e4ab965fae7ff9d6c2c35b8182132354ae",
+      "object": "ImgTitle_Iron_1",
+      "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+      "sha256": "372976ef072b046f8e11e013e7ea4298e51b01fc530a0919d21567a19141b8a5"
+    },
     "res://assets/official/sprites/ImgToggle_Nor-29efc97423.png": {
       "bundle": "defaultpackage_assets_image_ui_skill.bundle",
       "bundle_hash": "a1dc5dcdd8d09188f9e34f3c27081176",
@@ -69700,6 +70722,15 @@
       "object": "item_42200",
       "operation": "Unity Sprite decode, atlas crop and unpack rotation",
       "sha256": "b393e52c4b122c5743d99d211bee1e8e0b552b98ef4461a5a15b0489b8be646c"
+    },
+    "res://assets/official/sprites/map_14_bronze_stage_bg-c8529ef2a9.png": {
+      "bundle": "defaultpackage_assets_image_ui_itemnotes.bundle",
+      "bundle_hash": "2eaa50b2c790ade27d9842bb6faba5e2",
+      "path_id": "-8120652376499980529",
+      "object": "map_14_bronze_stage_bg",
+      "input_sha256": "5dae0dc533c5acc25eb015628d0ce7005f04365995e6a608b5c2eddb484ca5bf",
+      "sha256": "03c2a352c9eed2428ee231955823d5e24029765a3bca00033b7fe1c9abd553b3",
+      "operation": "Original Unity Sprite decode, atlas crop and unpack rotation"
     },
     "res://assets/official/sprites/treasure_61001-90446d948d.png": {
       "bundle": "defaultpackage_assets_image_itemicon_treasure_map12_noatlas.bundle",

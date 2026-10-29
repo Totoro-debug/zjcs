@@ -464,8 +464,8 @@ def existing_output_hashes(payload_path: Path, manifest_path: Path, map_id: int 
 
 
 def build(apk: Apk | None = None, output: Path | None = None, map_id: int = 10) -> dict:
-    if map_id not in (10, 11, 12):
-        raise ValueError("Only Maps 10, 11 and 12 have pinned battle placement sources")
+    if map_id not in (10, 11, 12, 13):
+        raise ValueError("Only Maps 10, 11, 12 and 13 have pinned battle placement sources")
     apk = apk or Apk()
     output = Path(output or (ROOT / "unity/Assets/Official/World/Map" / str(map_id))).resolve()
     constructors = Constructors()
@@ -505,7 +505,7 @@ def build(apk: Apk | None = None, output: Path | None = None, map_id: int = 10) 
     map_stage_obj = apk.asset(MAP_STAGE_TABLE[0], MAP_STAGE_TABLE[1])
     map_stage_bytes = text_asset_bytes(map_stage_obj)
     map_stage_rows = constructors.table(map_stage_bytes, MAP_STAGE_TABLE[2])
-    stage_count = {10: 82, 11: 1803, 12: 2591}[map_id]
+    stage_count = {10: 82, 11: 1803, 12: 2591, 13: 2690}[map_id]
     stage_ids = map_stage_ids(map_id, placements, map_stage_rows, stage_count)
     if map_id in (11, 12):
         stage_ids.update(component_stage_ids)
@@ -563,7 +563,7 @@ def build(apk: Apk | None = None, output: Path | None = None, map_id: int = 10) 
     arrays, scenes = collect_battle_data(stage_rows, all_arrays, all_scenes)
     rosters = collect_monster_rosters(stage_rows, all_arrays, scenes, combat_rules, general_rules,
                                       skill_rows, skill_rules["entities"], property_ids,
-                                      allow_unused_monster_ids=map_id in (11, 12))
+                                      allow_unused_monster_ids=map_id in (11, 12, 13))
 
     parser_hash = sha256(PARSER_SOURCE_PATH.read_bytes())
     scene_manifest_hash = sha256(BATTLE_SCENES_MANIFEST_PATH.read_bytes())
@@ -648,7 +648,7 @@ def build(apk: Apk | None = None, output: Path | None = None, map_id: int = 10) 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--map-id", type=int, choices=(10, 11, 12), default=10)
+    parser.add_argument("--map-id", type=int, choices=(10, 11, 12, 13), default=10)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     output = args.output or ROOT / "unity/Assets/Official/World/Map" / str(args.map_id)

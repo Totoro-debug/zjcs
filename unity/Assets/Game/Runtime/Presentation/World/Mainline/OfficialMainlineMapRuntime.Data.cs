@@ -187,7 +187,8 @@ namespace Zjcs.Presentation.World
                 || !officialPlayables.ContainsKey("FeiLe_disappear")
                 || !officialPlayables.ContainsKey("9b248cde91299ee4287533b25b7dd468")))
                 throw new InvalidDataException("Official Map10 story playable bindings are incomplete.");
-            foreach (Map10RuntimeStory story in stories.Values)
+            if (mapClassId == 13) ValidateMap13StoryPlayables();
+            foreach (Map10RuntimeStory story in stories.Values.Where(_ => mapClassId != 13))
                 foreach (Map10RuntimeStoryNode node in story.nodes.Where(value => value != null
                              && value.type == "PlayPlayableNode"))
                     if ((node.playableDuration <= 0f && node.waitPlayableStop)
@@ -199,6 +200,12 @@ namespace Zjcs.Presentation.World
                     || value.EntityClass <= 0 || string.IsNullOrWhiteSpace(value.Tag))
                     throw new InvalidDataException("Official Map" + mapClassId + " logic entity tag is malformed.");
                 mapLogicTags.Add(value.LogicId, value);
+            }
+            if (mapClassId == 13)
+            {
+                map13PlayerConditionEvaluator = new Map13OfflinePlayerConditionEvaluator(storyDataValue.playerConditions,
+                    StoryItemCount, GetStoryPlayCount, key => progressionSave.StoryStatus(key),
+                    id => progressionSave.StageWinCount(id), Map13RegionProgress, IsMap13StoryTagCompleted);
             }
             foreach (Map10RuntimeTalkConditionInfo value in storyDataValue.mapTalkConditions)
             {
@@ -233,10 +240,22 @@ namespace Zjcs.Presentation.World
                 || !storySubgraphs.ContainsKey("FangjianbeiActive") || !storySubgraphs.ContainsKey("ChaosAfterBattle")
                 || fixedRewards.Count != 12))
                 throw new InvalidDataException("Official Map12 story support data is incomplete.");
+            else if (mapClassId == 14 && (stories.Count + storySubgraphs.Count != expectedStories || storySubgraphs.Count != 21
+                || handInItems.Count != 1 || !handInItems.ContainsKey(4)))
+                throw new InvalidDataException("Official Map14 story support data is incomplete.");
             if (mapClassId == 11 && (!storySubgraphs.ContainsKey("FangjianbeiActive")
                 || !storySubgraphs.ContainsKey("GriffonTeamUp") || !storySubgraphs.ContainsKey("CombatAssistance")
                 || !storySubgraphs.ContainsKey("HolyMonsterActive") || fixedRewards.Count != 8))
                 throw new InvalidDataException("Official Map11 story support data is incomplete.");
         }
+
+        private int Map13RegionProgress(int map, int region) => map == 13
+            ? progressionSave.Save.World.Maps.FirstOrDefault(value => value.MapClassId == map)?.Regions
+                .FirstOrDefault(value => value.Region == region)?.Progress ?? 0
+            : 0;
+
+        private bool IsMap13StoryTagCompleted(string tag) => mapClassId == 13 &&
+            (progressionSave.Save.World.CompletedEntityTags.Contains(tag)
+                || localSave.mapLogicStates.Any(value => value != null && value.Tag == tag && value.State < 0));
     }
 }

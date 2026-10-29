@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Zjcs.Presentation.Combat;
@@ -10,6 +11,7 @@ namespace Zjcs.Combat.Official.EditorTools
         [MenuItem("Zjcs/Combat/Run Rule Smoke Test")]
         public static void RunSmokeTest()
         {
+            RunDirectionalSkillTargetRangeTest();
             RunMovementRulesTest();
             RunWorldHudShieldBarTest();
             RunWorldHudUnitBarSelectionTest();
@@ -58,8 +60,66 @@ namespace Zjcs.Combat.Official.EditorTools
                 throw new InvalidOperationException("Fight checkpoint replay changed the resolved battle state.");
 
             RunOfficialCatalogBattleTest();
-            Debug.Log("Fight combat validation passed: movement, hit graph, damage settlement, official configuration assembly, outcome, and checkpoint replay. Unity "
+            Debug.Log("Fight combat validation passed: cardinal skill target selection, movement, hit graph, damage settlement, official configuration assembly, outcome, and checkpoint replay. Unity "
                 + Application.unityVersion);
+        }
+
+        private static void RunDirectionalSkillTargetRangeTest()
+        {
+            var cases = new[]
+            {
+                (x: 0, y: 1, direction: 2),
+                (x: 0, y: -1, direction: 0),
+                (x: -1, y: 0, direction: 1),
+                (x: 1, y: 0, direction: 3),
+                (x: 2, y: 2, direction: 3)
+            };
+            foreach (var test in cases)
+            {
+                FightBattleUnitState actor = Unit(1, 1);
+                actor.X = actor.Y = 5;
+                actor.Direction = (test.direction + 2) % 4;
+                FightBattleUnitState target = Unit(2, 2);
+                target.X = actor.X + test.x;
+                target.Y = actor.Y + test.y;
+                var skill = new FightBattleSkillDefinition { TargetType = 1 };
+                skill.Range.Add(new FightGridPoint(test.x, test.y));
+
+                List<FightBattleUnitState> selected = FightBattleTargeting.SelectInSkillRange(
+                    actor, new[] { actor, target }, skill);
+                if (selected.Count != 1 || selected[0] != target || actor.Direction != test.direction)
+                    throw new InvalidOperationException("Directional skill targeting did not choose the matching cardinal facing.");
+            }
+
+            FightBattleUnitState unchangedActor = Unit(1, 1);
+            unchangedActor.Direction = 2;
+            FightBattleUnitState outOfRange = Unit(2, 2);
+            outOfRange.X = 2;
+            var excludedSkill = new FightBattleSkillDefinition { TargetType = 1 };
+            excludedSkill.Range.Add(new FightGridPoint(1, 0));
+            if (FightBattleTargeting.SelectInSkillRange(unchangedActor,
+                    new[] { unchangedActor, outOfRange }, excludedSkill).Count != 0
+                || unchangedActor.Direction != 2)
+                throw new InvalidOperationException("Directional skill targeting released outside its selection range.");
+
+            FightBattleUnitState multiActor = Unit(1, 1);
+            multiActor.X = multiActor.Y = 5;
+            FightBattleUnitState rightNear = Unit(2, 2);
+            rightNear.X = 6; rightNear.Y = 5;
+            FightBattleUnitState rightFar = Unit(3, 2);
+            rightFar.X = 7; rightFar.Y = 5;
+            FightBattleUnitState left = Unit(4, 2);
+            left.X = 4; left.Y = 5;
+            var multiSkill = new FightBattleSkillDefinition { TargetType = 4 };
+            multiSkill.Range.Add(new FightGridPoint(1, 0));
+            multiSkill.Range.Add(new FightGridPoint(2, 0));
+            multiSkill.Range.Add(new FightGridPoint(-1, 0));
+            List<FightBattleUnitState> sameFacing = FightBattleTargeting.SelectInSkillRange(
+                multiActor, new[] { multiActor, rightNear, rightFar, left }, multiSkill);
+            if (sameFacing.Count == 0 || sameFacing.Count >= 3
+                || sameFacing.Exists(target => target.X < multiActor.X && multiActor.Direction == 3
+                    || target.X > multiActor.X && multiActor.Direction == 1))
+                throw new InvalidOperationException("Directional skill targeting mixed target cells from different facings.");
         }
 
         private static void RunWorldHudShieldBarTest()

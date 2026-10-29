@@ -44,10 +44,12 @@ namespace Zjcs.Presentation.World
         private readonly Dictionary<string, Map10RuntimePlayable> officialPlayables =
             new Dictionary<string, Map10RuntimePlayable>(StringComparer.Ordinal);
         private readonly Dictionary<int, Map10RuntimeLogicTag> mapLogicTags = new Dictionary<int, Map10RuntimeLogicTag>();
+        private Map13OfflinePlayerConditionEvaluator map13PlayerConditionEvaluator;
         private readonly Dictionary<int, Map10RuntimeTalkCondition> mapTalkConditions = new Dictionary<int, Map10RuntimeTalkCondition>();
         private readonly Dictionary<string, Map10RuntimeStoryOption> storyOptions = new Dictionary<string, Map10RuntimeStoryOption>(StringComparer.Ordinal);
         private readonly Dictionary<int, GameObject> storyEntities = new Dictionary<int, GameObject>();
         private readonly Dictionary<int, int> storyEntityClasses = new Dictionary<int, int>();
+        private readonly Dictionary<int, GameObject> map13FollowerObjects = new Dictionary<int, GameObject>();
         private Map10RuntimeMapTalkEntry[] mapTalkEntries = Array.Empty<Map10RuntimeMapTalkEntry>();
         private readonly Dictionary<int, Map10RuntimeBattleEntityStageBinding> battleEntityStageBindings =
             new Dictionary<int, Map10RuntimeBattleEntityStageBinding>();
@@ -126,8 +128,18 @@ namespace Zjcs.Presentation.World
         public static int ResolveHomeReturnMap(OfflineMainlineSave save)
         {
             if (save == null) throw new ArgumentNullException(nameof(save));
-            if (save.Player?.UnlockedMapClassIds?.Contains(12) == true) return 12;
-            return HasClaimedMap11Unlock(save) ? 11 : 10;
+            for (int mapClassId = 14; mapClassId >= 11; mapClassId--)
+            {
+                OfficialMainlineMapProfile profile = OfficialMainlineMapProfile.Get(mapClassId);
+                if (!profile.IsRuntimeEntryReady) continue;
+                if (mapClassId == 11)
+                {
+                    if (HasClaimedMap11Unlock(save)) return 11;
+                    continue;
+                }
+                if (save.Player?.UnlockedMapClassIds?.Contains(mapClassId) == true) return mapClassId;
+            }
+            return 10;
         }
 
         private static bool HasClaimedMap11Unlock(OfflineMainlineSave save) =>
@@ -143,7 +155,9 @@ namespace Zjcs.Presentation.World
             Transform targetUiParent, GameObject characterModel, string displayName, Action onClose)
         {
             if (session != null) throw new InvalidOperationException("A world map is already open.");
-            OfficialMainlineMapProfile.Get(selectedMapClassId);
+            OfficialMainlineMapProfile profile = OfficialMainlineMapProfile.Get(selectedMapClassId);
+            if (!profile.IsRuntimeEntryReady)
+                throw new InvalidOperationException("Map" + selectedMapClassId + " is registered, but its mainline runtime host and resource bindings are not ready.");
             if (!ProfileSlotCatalog.TryParseSlotId(selectedSlotId)) throw new ArgumentException("Invalid profile slot id.", nameof(selectedSlotId));
             if (string.IsNullOrWhiteSpace(savesRoot)) throw new ArgumentException("A persistent data root is required.", nameof(savesRoot));
             if (targetUiParent == null) throw new ArgumentNullException(nameof(targetUiParent));
@@ -161,7 +175,7 @@ namespace Zjcs.Presentation.World
             // Original FollowSceneActiveSelfController enables the global
             // map light only in its active Unity scene. Map12 closes through
             // this runtime's existing lifecycle and has no scene transition.
-            if (mapClassId != 12) DontDestroyOnLoad(gameObject);
+            if (mapClassId != 12 && mapClassId != 13) DontDestroyOnLoad(gameObject);
 
             try
             {
@@ -193,6 +207,7 @@ namespace Zjcs.Presentation.World
         private void Update()
         {
             if (session == null || closed) return;
+            UpdateMap13FollowerObjects();
             FlushPuzzleRegionProgress();
             FlushMap12ChestProgress();
             stamina.RefreshStaminaPoints();
@@ -202,6 +217,7 @@ namespace Zjcs.Presentation.World
             miniMap.UpdateMiniMapFilter();
             if (Input.GetKeyDown(KeyCode.Escape))
             {
+                if (map12PrivateDungeonBattleActive) return;
                 if (exploration.exploreWindows.Count != 0) exploration.CloseExploreUi();
                 else if (hud.worldFunctions != null) hud.CloseNativeWorldFunctions();
                 else if (miniMap.fullMiniMapPanel != null) miniMap.CloseNativeFullMiniMap();
@@ -212,9 +228,12 @@ namespace Zjcs.Presentation.World
                 else if (battleController != null) LeaveBattle();
                 else if (statues.goddessDialog != null) statues.goddessDialog.Close();
                 else if (selectedStageEntity != null) CloseStageDialog();
+                else if (map12PrivateDungeonDialog != null) CloseMap12PrivateDungeonDialog();
                 else if (map12BuildingDialog != null) CloseMap12BuildingDialog();
                 else CloseMap();
             }
+
+            if (map12PrivateDungeonBattleActive) return;
 
             if (dialogueWaiting)
             {
@@ -278,11 +297,13 @@ namespace Zjcs.Presentation.World
         {
             if (worldCamera == null || avatar == null || closed) return;
             RefreshNativeMap12State();
+            RefreshNativeMap13State();
             if (UpdateBattleSceneCamera()) return;
             RefreshMap11CameraResolution();
             Vector3 target = storyCameraActive
                 ? storyCameraTarget
                 : avatar.transform.position + new Vector3(0f, 0f, -20f);
+            if (mapClassId == 13) target.z = map11WorldViewSource.cameraZ;
             worldCamera.transform.position = storyCameraActive
                 ? Vector3.SmoothDamp(worldCamera.transform.position, target, ref storyCameraVelocity, 0.18f)
                 : Vector3.SmoothDamp(worldCamera.transform.position, target, ref cameraVelocity, 0.18f);
@@ -302,6 +323,8 @@ namespace Zjcs.Presentation.World
                 throw new InvalidOperationException("完成并领取 Map10 主线任务 1040 后才能进入森之国。");
             if (mapClassId == 12 && progressionSave.Save.Player.UnlockedMapClassIds?.Contains(12) != true)
                 throw new InvalidOperationException("激活森之国方尖碑后才能进入山之国。");
+            if (mapClassId == 13 && progressionSave.Save.Player.UnlockedMapClassIds?.Contains(13) != true)
+                throw new InvalidOperationException("完成山之国方尖碑后才能进入泽之国。");
             if (!progressionSave.Save.Player.CharacterCreated || progressionSave.Save.Player.InitialWeaponType == 0)
                 throw new InvalidOperationException("Finish character creation and weapon selection before entering Map" + mapClassId + ".");
             OfficialCharacterAssetCatalog characterAssets = OfficialCharacterAssetCatalog.LoadDefault();
@@ -323,7 +346,7 @@ namespace Zjcs.Presentation.World
             mapRoot.SetParent(transform, false);
             WorldMapAssets assets = session.Assets;
             GameObject terrain = null;
-            if (mapClassId != 12)
+            if (mapClassId != 12 && mapClassId != 13)
             {
                 terrain = Instantiate(assets.GroundPrefab, mapRoot, false);
                 terrain.name = "Map" + mapClassId + "Terrain";
@@ -349,6 +372,7 @@ namespace Zjcs.Presentation.World
             Vector2 mapOrigin = new Vector2(session.Definition.Navigation.Origin.X,
                 session.Definition.Navigation.Origin.Y);
             if (mapClassId == 12) InitializeMap12SteleEntities(mapOrigin);
+            if (mapClassId == 13) InitializeMap13TreeEntities(mapOrigin);
             entityView.Initialize(entityData, entityRoot, mapOrigin, worldCamera, mapClassId);
             entityView.EntitySelected += navigation.OnEntitySelected;
             mapEntities.Clear();
@@ -382,6 +406,7 @@ namespace Zjcs.Presentation.World
 
             avatar.transform.SetParent(mapRoot, false);
             avatar.name = "Map" + mapClassId + "Player_" + slotId;
+            if (mapClassId == 13) RefreshMap13FollowerObjects();
             if (localSaveCreated && MapProfile.HasNativeUi)
             {
                 int entryId = GetDefaultEntryId();
@@ -405,6 +430,7 @@ namespace Zjcs.Presentation.World
             SaveLocalProgress();
             RefreshEntityActivity();
             if (mapClassId == 12) InitializeNativeMap12();
+            else if (mapClassId == 13) InitializeNativeMap13();
             else regions.InitializeFog(terrain.transform);
         }
 
@@ -518,9 +544,15 @@ namespace Zjcs.Presentation.World
             CloseHandInView();
             if (map12BuildingDialog != null) Destroy(map12BuildingDialog);
             map12BuildingDialog = null;
+            if (map12PrivateDungeonDialog != null) Destroy(map12PrivateDungeonDialog);
+            map12PrivateDungeonDialog = null;
+            if (map12PrivateDungeonRunner != null) Destroy(map12PrivateDungeonRunner);
+            map12PrivateDungeonRunner = null;
+            map12PrivateDungeonBattleActive = false;
             map12SteleEntities?.Dispose();
             map12SteleEntities = null;
             nativeMap12World?.Dispose();
+            DisposeNativeMap13();
             miniMap.CloseNativeFullMiniMap();
             hud.CloseNativeWorldFunctions();
             hud.DisposePortrait();

@@ -7,8 +7,11 @@ using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zjcs.Combat.Official;
 using Zjcs.Official.SkillsUI;
 using Zjcs.Offline.Progression;
+using Zjcs.Offline.Skills;
+using Zjcs.Presentation.Combat;
 
 namespace Zjcs.Presentation.Character
 {
@@ -29,6 +32,14 @@ namespace Zjcs.Presentation.Character
                     Match match = Regex.Match(Convert.ToString(parameters[index]), @"EntryId:(\d+)");
                     if (match.Success) OpenOriginalEntry(int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture), position);
                 }
+                else if (Convert.ToInt32(kinds[index]) == 1) {
+                    Match match = Regex.Match(Convert.ToString(parameters[index]), @"MonsterId:(\d+)");
+                    if (match.Success) OpenMonsterBrief(int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture), skillId);
+                }
+                else if (Convert.ToInt32(kinds[index]) == 8) {
+                    Match match = Regex.Match(Convert.ToString(parameters[index]), @"PetId:(\d+)");
+                    if (match.Success) OpenPetEntityBrief(int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture));
+                }
                 else if (Convert.ToInt32(kinds[index]) == 9) {
                     string parameter = Convert.ToString(parameters[index]);
                     int petId = int.Parse(Regex.Match(parameter, @"PetId:(\d+)").Groups[1].Value, CultureInfo.InvariantCulture);
@@ -44,6 +55,86 @@ namespace Zjcs.Presentation.Character
                         setting["NaturalRecoverEnergy"], setting["MasterLoseHpRecoverEnergy"] });
                 }
             };
+        }
+
+        private void OpenMonsterBrief(int monsterId, int sourceSkillId = 0)
+        {
+            var combatAssets = OfficialCombatAssetCatalog.LoadDefault();
+            var combat = combatAssets.Load();
+            var dialog = BuildAuxiliary("monster_brief", out var view, out var buttons);
+            var root = AuxObject(AuxObject(skillUiTemplates["monster_brief"])["root"]);
+            var binding = FindOriginalComponent(root, "MonsterBriefInfoPanel");
+            int level = 1;
+            int subRank = 0;
+            Dictionary<int, long> props = new Dictionary<int, long>(combat.CalculateMonsterProps(monsterId, 0, level, subRank));
+            Dictionary<int, long> ownerProps = progression.PropertyCalculator.Evaluate(progression.Player,
+                DateTimeOffset.Now.ToUnixTimeSeconds()).OutOfFightBattleProps.ToDictionary(value => value.Key, value => value.Value);
+            if (sourceSkillId > 0 && combat.HasSummonInheritance(monsterId))
+            {
+                int rank = Math.Max(1, OfflineSkillProgression.OwnedRank(progression.Player.Skills, sourceSkillId));
+                FightSummonPropertyInheritance inheritance = combat.CalculateSummonInheritance(monsterId,
+                    level, rank, subRank, ownerProps);
+                MergePropertyValues(props, inheritance.Fixed);
+                MergePropertyValues(props, inheritance.Summoner);
+            }
+
+            TransformAt(binding, "mMonseterNameText", view).GetComponent<TMP_Text>().text = combat.MonsterName(monsterId) ?? monsterId.ToString(CultureInfo.InvariantCulture);
+            TransformAt(binding, "mMonsterTypeText", view).GetComponent<TMP_Text>().text = OriginalDetailText("ui_monster_type_" + monsterId) ?? string.Empty;
+            TransformAt(binding, "mMonsterLevelText", view).GetComponent<TMP_Text>().text = level.ToString(CultureInfo.InvariantCulture);
+            TransformAt(binding, "mFightUiRoot", view).gameObject.SetActive(false);
+            TransformAt(binding, "mSkillSlot", view).gameObject.SetActive(false);
+            TransformAt(binding, "mCommonRankShow", view).gameObject.SetActive(false);
+            Transform modelSlot = TransformAt(binding, "mMonsterIconContent", view);
+            auxiliaryModelLibrary = OfficialBattleNativeAnimationLibrary.LoadDefault();
+            string modelKey = auxiliaryModelLibrary.ResolveModelKey(new FightBattleUnitState { MonsterId = monsterId });
+            OfficialBattleNativeModelRecord model = auxiliaryModelLibrary.FindModel(modelKey);
+            if (model != null)
+            {
+                auxiliaryNativeModel = new OfficialBattleNativeModelView(auxiliaryModelLibrary, model,
+                    modelSlot, "MonsterBrief_" + monsterId);
+                auxiliaryNativeModel.Play("idle_01", true);
+            }
+
+            var snapshot = new CharacterPropSnapshot
+            {
+                BaseBattleProps = props, BattleProps = props, OutOfFightBattleProps = props,
+                NonBattleProps = new Dictionary<int, long>(), CombatRating = 0,
+                Chunks = new Dictionary<int, IReadOnlyDictionary<int, long>>(),
+                DetailProps = new Dictionary<int, IReadOnlyDictionary<int, long>>(), DetailOrder = Array.Empty<int>()
+            };
+            auxiliaryMonsterProps = dialog.AddComponent<CharacterPropPanels>();
+            auxiliaryMonsterProps.Initialize(OfficialCharacterAssetCatalog.LoadDefault(), progression.Catalog,
+                () => snapshot);
+            Button detail = view[Convert.ToString(binding["mDetailPropBtn"])].GetComponent<Button>();
+            if (detail != null) detail.onClick.AddListener(() => auxiliaryMonsterProps.OpenDialog(dialog.transform,
+                "ui_monster_detail_props_title_text"));
+        }
+
+        private void OpenPetEntityBrief(int petClassId)
+        {
+            OpenMonsterBrief(OfflinePetEntityMonsterId(petClassId));
+        }
+
+        private int OfflinePetEntityMonsterId(int petClassId)
+        {
+            Dictionary<string, object> pet = progression.Catalog.Find("pet", petClassId);
+            return pet == null ? 0 : Convert.ToInt32(pet["FightEntityClassId"], CultureInfo.InvariantCulture);
+        }
+
+        private static Transform TransformAt(Dictionary<string, object> binding, string field,
+            Dictionary<string, RectTransform> nodes)
+        {
+            string path = Convert.ToString(binding[field], CultureInfo.InvariantCulture);
+            return nodes.TryGetValue(path, out RectTransform node) ? node : null;
+        }
+
+        private static void MergePropertyValues(Dictionary<int, long> target,
+            IReadOnlyDictionary<int, long> additions)
+        {
+            if (additions == null) return;
+            foreach (KeyValuePair<int, long> pair in additions)
+                target[pair.Key] = target.TryGetValue(pair.Key, out long current)
+                    ? checked(current + pair.Value) : pair.Value;
         }
 
         // HyperLinkClickHandlerEntry -> EntryDetailDialog -> EntryDetailDialogItem.

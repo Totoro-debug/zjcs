@@ -230,6 +230,53 @@ namespace Zjcs.Offline.Cooking
                 : Result(CookingResultStatus.SaveRejected, recipeId, message: transaction?.Message ?? "制作结果无法保存。");
         }
 
+        public CookingResult UsePermanentPropertyCooking(int cookingId, long useCount)
+        {
+            if (!catalog.TryGetRecipe(cookingId, out OfficialCookingRecipe recipe))
+                return Result(CookingResultStatus.InvalidSelection, cookingId, message: "未找到该料理。");
+            if (!recipe.effects.Any(effect => effect.type == 2 && effect.kind == "CookingExtraInfoProp"))
+                return Result(CookingResultStatus.Disabled, cookingId, message: "该料理没有永久属性效果。");
+            if (useCount <= 0) return Result(CookingResultStatus.InvalidAmount, cookingId, message: "使用数量无效。");
+
+            try { profile.Reload(); }
+            catch (Exception exception) { return Result(CookingResultStatus.SaveRejected, cookingId, message: exception.Message); }
+            long availableCount = InventoryCount(cookingId);
+            long maxUseCount = catalog.MaxPermanentPropertyUseCount(cookingId, availableCount);
+            if (maxUseCount <= 0)
+                return Result(CookingResultStatus.Disabled, cookingId, message: "该料理当前不可使用。");
+            if (useCount > maxUseCount)
+                return Result(availableCount < useCount
+                    ? CookingResultStatus.MissingMaterials : CookingResultStatus.InvalidAmount,
+                    cookingId, message: "料理使用数量超出当前可用范围。");
+
+            long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            string eventId = "cooking:use:" + cookingId + ":" + Guid.NewGuid().ToString("N");
+            ProgressionResult transaction = profile.ApplyInventoryTransaction(eventId, save =>
+            {
+                InventoryOperationResult consumed = OfflineInventoryOperations.Consume(save.Player,
+                    cookingId, useCount, now);
+                if (!consumed.IsApplied) throw new InvalidOperationException("料理数量不足。");
+                OfflineCharacterPropertyProgress properties = save.Player.CharacterProperties;
+                if (properties == null)
+                    save.Player.CharacterProperties = properties = new OfflineCharacterPropertyProgress();
+                if (properties.CookingUses == null) properties.CookingUses = new List<OfflineCookingUse>();
+                OfflineCookingUse usage = properties.CookingUses.FirstOrDefault(value =>
+                    value != null && value.CookingId == cookingId);
+                if (usage == null)
+                    properties.CookingUses.Add(usage = new OfflineCookingUse { CookingId = cookingId });
+                usage.UseTimes = checked(usage.UseTimes + useCount);
+            });
+            return transaction != null && transaction.IsApplied
+                ? Result(CookingResultStatus.Applied, cookingId, useCount)
+                : Result(CookingResultStatus.SaveRejected, cookingId,
+                    message: transaction?.Message ?? "料理使用结果无法保存。");
+        }
+
+        public long MaxPermanentPropertyUseCount(int cookingId, long availableCount)
+        {
+            return catalog.MaxPermanentPropertyUseCount(cookingId, availableCount);
+        }
+
         private int CompareRecipes(CookingEntry left, CookingEntry right, float maxHp)
         {
             int compare = right.IsBestRecovery.CompareTo(left.IsBestRecovery);

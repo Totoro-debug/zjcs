@@ -227,6 +227,8 @@ namespace Zjcs.Presentation.World
                     && (entity.TypeId == 223 || IsMap12StelePresentation(entity)
                         || !localSave.completedEntityPlacements.Contains(entity.PlacementId))
                     && !IsMapLogicEntityDestroyed(entity.PlacementId);
+                if (mapClassId == 13 && localSave.completedEntityPlacements.Contains(entity.PlacementId)
+                    && map13Trees != null && map13Trees.KeepRemovalActive(entity.PlacementId)) active = true;
                 entityView.SetEntityActive(entity.PlacementId, active);
             }
             SynchronizePuzzleGround();
@@ -248,7 +250,8 @@ namespace Zjcs.Presentation.World
                 if (state == null || string.IsNullOrWhiteSpace(state.Tag))
                     throw new InvalidDataException("Official Map10 story map-logic state is malformed.");
                 Map10RuntimeLogicTag logicTag = mapLogicTags.Values.FirstOrDefault(value => value.Tag == state.Tag);
-                if (logicTag == null || !mapEntities.ContainsKey(logicTag.LogicId))
+                bool virtualMap13Tag = mapClassId == 13 && logicTag == null;
+                if (!virtualMap13Tag && (logicTag == null || !mapEntities.ContainsKey(logicTag.LogicId)))
                     throw new InvalidDataException("Official Map10 story map-logic tag is not in the loaded map: " + state.Tag);
                 if (state.State < 0)
                 {

@@ -16,6 +16,12 @@ namespace Zjcs.Presentation.World
             public int EntityClassId, TagType;
             public string[] RegisterKeys;
         }
+        [Serializable] private sealed class StorySpatialNodeFields
+        {
+            public string RegisterKey, Tag;
+            public int SelectGetType, LoEntityId;
+            public Vector2 Offset;
+        }
         [Serializable] private sealed class StorySpatialPayload
         {
             public string manifest;
@@ -32,12 +38,13 @@ namespace Zjcs.Presentation.World
 
         private void InitializeStorySpatial()
         {
-            if (!MapProfile.HasNativeUi) return;
+            if (!MapProfile.HasNativeUi && mapClassId != 14) return;
             TextAsset source = Resources.Load<TextAsset>(MapResource("story-spatial"));
             storySpatial = source == null ? null : JsonUtility.FromJson<StorySpatialPayload>(source.text);
-            if (storySpatial == null || storySpatial.manifest != (mapClassId == 12 ? "871_156598" : "854_156383")
+            int expectedCount = mapClassId == 12 ? 138 : mapClassId == 13 ? 150 : mapClassId == 14 ? 158 : 113;
+            if (storySpatial == null || storySpatial.manifest != (mapClassId == 11 ? "854_156383" : "871_156598")
                 || storySpatial.mapClassId != mapClassId
-                || storySpatial.Entities == null || storySpatial.Entities.Length != (mapClassId == 12 ? 138 : 113)
+                || storySpatial.Entities == null || storySpatial.Entities.Length != expectedCount
                 || storySpatial.PlayerArroundRangeSize == null || storySpatial.PlayerArroundRangeSize.X <= 0
                 || storySpatial.PlayerArroundRangeSize.Y <= 0 || storySpatial.PlayerTalkDistException <= 0)
                 throw new InvalidDataException("Original Map" + mapClassId + " story spatial bindings are malformed.");
@@ -62,13 +69,17 @@ namespace Zjcs.Presentation.World
             {
                 if (!storySpatialEntities.TryGetValue(entity.EntityClassId, out StorySpatialEntity binding)
                     || !binding.RegisterKeys.Contains(key)) continue;
-                GameObject instance = entityView.FindEntityObject(entity.PlacementId);
-                if (instance == null || !instance.activeInHierarchy) continue;
-                // Every referenced Map11 StoryNodeRegister points at its prefab root.
-                OfficialMapNavigationView.WorldToGrid(session.Definition.Navigation,
-                    new OfficialMapVector3 { X = instance.transform.position.x, Y = instance.transform.position.y },
-                    out int x, out int y);
-                return new Vector2(x, y);
+                GameObject instance = entityView == null ? null : entityView.FindEntityObject(entity.PlacementId);
+                if (instance != null)
+                {
+                    if (!instance.activeInHierarchy) continue;
+                    // Original StoryNodeRegister entries point to the prefab root.
+                    OfficialMapNavigationView.WorldToGrid(session.Definition.Navigation,
+                        new OfficialMapVector3 { X = instance.transform.position.x, Y = instance.transform.position.y },
+                        out int x, out int y);
+                    return new Vector2(x, y);
+                }
+                if (mapClassId == 14) return new Vector2(entity.Grid.X, entity.Grid.Y);
             }
             throw new InvalidDataException("Original story object is not registered in the loaded map: " + key);
         }
@@ -76,20 +87,36 @@ namespace Zjcs.Presentation.World
         private bool HasStoryTalkTag(int classId) => storySpatialEntities.TryGetValue(classId,
             out StorySpatialEntity binding) && (binding.TagType & 1) != 0;
 
+        private StorySpatialNodeFields StorySpatialFields(Map10RuntimeStoryNode node)
+        {
+            if (mapClassId == 13 || mapClassId == 14)
+                return JsonUtility.FromJson<StorySpatialNodeFields>(node.sourceJson);
+            return new StorySpatialNodeFields
+            {
+                RegisterKey = node.registerKey,
+                Tag = node.tag,
+                SelectGetType = node.selectGetType,
+                LoEntityId = node.loEntityId,
+                Offset = new Vector2(node.offsetX, node.offsetY)
+            };
+        }
+
         private Vector2 ResolveStoryTalkCenter()
         {
             Vector3 player = avatar.transform.position;
             Bounds bounds = new Bounds(Vector3.zero, Vector3.zero);
             bool hasBounds = false;
-            if (battleController == null)
+            if (battleController == null && storySpatial != null)
             {
                 // Both original local-player prefabs (3001 and 3002) carry StoryTalk.
                 if (HasStoryTalkTag(3001)) Append(player);
                 foreach (Map10RuntimeEntity entity in mapEntities.Values)
                 {
                     if (!HasStoryTalkTag(entity.EntityClassId) || !InRange(entity.Grid.X, entity.Grid.Y)) continue;
-                    GameObject instance = entityView.FindEntityObject(entity.PlacementId);
+                    GameObject instance = entityView == null ? null : entityView.FindEntityObject(entity.PlacementId);
                     if (instance != null && instance.activeInHierarchy) Append(instance.transform.position);
+                    else if (mapClassId == 14 && entity.Active)
+                        Append(StoryWorldPoint(entity.Grid.X, entity.Grid.Y));
                 }
                 foreach (KeyValuePair<int, GameObject> entity in storyEntities)
                 {

@@ -32,9 +32,11 @@ namespace Zjcs.Presentation.Inventory
         private bool reverse;
         private GameObject detailWindow;
         private Func<OfflineInventoryItemView, IReadOnlyList<int>> itemSourceTypes;
+        private Func<int, long, long> maxCookingUseCount;
 
         public event Action<OfflineInventoryItemView> ItemSelected;
         public event Action<OfflineInventoryItemView, int> TreasureGachaSourceSelected;
+        public event Action<int, long> CookingUseRequested;
         public event Action Closed;
 
         public void Initialize(OfficialInventoryAssetCatalog assetCatalog,
@@ -111,12 +113,23 @@ namespace Zjcs.Presentation.Inventory
             itemSourceTypes = provider;
         }
 
+        public void SetCookingUseHandler(Func<int, long, long> maxUseCount)
+        {
+            maxCookingUseCount = maxUseCount;
+        }
+
         public bool ReopenItemDetail(int itemId)
         {
             OfflineInventoryItemView item = displayedItems.FirstOrDefault(value => value.ItemId == itemId);
             if (item == null) return false;
             ShowDetail(item);
             return true;
+        }
+
+        public void CloseItemDetail()
+        {
+            if (detailWindow != null) Destroy(detailWindow);
+            detailWindow = null;
         }
 
         public void Close()
@@ -377,8 +390,10 @@ namespace Zjcs.Presentation.Inventory
 
         private void ShowDetail(OfflineInventoryItemView item)
         {
-            if (detailWindow != null) Destroy(detailWindow);
-            Dictionary<string, object> template = assets.LoadTemplate("item_detail");
+            CloseItemDetail();
+            bool isCooking = item.ItemType == 323;
+            string dialogPath = isCooking ? "/CookingUseDetailDialog" : "/ItemDetailDialog";
+            Dictionary<string, object> template = assets.LoadTemplate(isCooking ? "cooking_detail" : "item_detail");
             if (template == null || !template.TryGetValue("root", out object rawRoot)) return;
             detailWindow = new GameObject("InventoryItemDetail", typeof(RectTransform));
             detailWindow.transform.SetParent(transform, false);
@@ -389,49 +404,95 @@ namespace Zjcs.Presentation.Inventory
             root.offsetMax = Vector2.zero;
             var detailNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
             BuildNode(Object(rawRoot, "item detail root"), root, detailNodes);
-            SetDetailText(detailNodes, "/ItemDetailDialog/BgDialog1/Content/TopGo/NameGo/NameText", OfficialItemName(item));
-            SetDetailText(detailNodes, "/ItemDetailDialog/BgDialog1/Content/TopGo/TypeText",
+            SetDetailText(detailNodes, dialogPath + "/BgDialog1/Content/TopGo/NameGo/NameText", OfficialItemName(item));
+            SetDetailText(detailNodes, dialogPath + "/BgDialog1/Content/TopGo/TypeText",
                 assets.FindItemTypeText(item.ItemType));
-            SetDetailText(detailNodes, "/ItemDetailDialog/BgDialog1/Content/TopGo/CountGo/CountContent/CountText",
+            SetDetailText(detailNodes, dialogPath + "/BgDialog1/Content/TopGo/CountGo/CountContent/CountText",
                 FormatCount(item.Count));
+            SetDetailText(detailNodes, dialogPath + "/BgDialog1/Content/TopGo/CountGo/CountContent/MaxCountText", string.Empty);
             Sprite sprite = assets.FindItemSprite(item.ItemId);
-            if (detailNodes.TryGetValue("/ItemDetailDialog/BgDialog1/Content/TopGo/IconSlot/Icon", out RectTransform icon))
+            if (detailNodes.TryGetValue(dialogPath + "/BgDialog1/Content/TopGo/IconSlot/Icon", out RectTransform icon))
             {
                 Image image = icon.GetComponent<Image>();
                 if (image != null) image.sprite = sprite;
             }
-            if (detailNodes.TryGetValue("/ItemDetailDialog/BgDialog1/Content/TopGo/IconSlot/FakeIcon", out RectTransform fakeIcon))
+            if (detailNodes.TryGetValue(dialogPath + "/BgDialog1/Content/TopGo/IconSlot/FakeIcon", out RectTransform fakeIcon))
             {
-                Text label = fakeIcon.GetComponent<Text>();
-                if (label != null) label.text = sprite == null ? OfficialItemName(item) : string.Empty;
+                SetDetailText(detailNodes, dialogPath + "/BgDialog1/Content/TopGo/IconSlot/FakeIcon",
+                    sprite == null ? OfficialItemName(item) : string.Empty);
                 fakeIcon.gameObject.SetActive(sprite == null);
             }
             foreach (RectTransform node in detailNodes.Values)
             {
                 Button action = node.GetComponent<Button>();
-                if (action != null && node.name != "ShareBtn" && node.name != "CommonBtn_11")
-                    action.interactable = false;
+                if (action == null) continue;
+                bool closeAction = node.name == "ShareBtn" || node.name == "CommonBtn_11";
+                action.interactable = closeAction;
+                if (closeAction) action.onClick.AddListener(CloseItemDetail);
             }
-            RectTransform close = detailNodes.Values.FirstOrDefault(node => node.name == "ShareBtn");
-            if (close != null)
+            if (isCooking)
             {
-                Button button = close.GetComponent<Button>();
-                if (button != null) button.onClick.AddListener(() =>
-                {
-                    Destroy(detailWindow);
-                    detailWindow = null;
-                });
+                BindCookingUse(item, dialogPath, detailNodes);
             }
-            RectTransform cancel = detailNodes.Values.FirstOrDefault(node => node.name == "CommonBtn_11");
-            Button cancelButton = cancel == null ? null : cancel.GetComponent<Button>();
-            if (cancelButton != null) cancelButton.onClick.AddListener(() =>
-            {
-                Destroy(detailWindow);
-                detailWindow = null;
-            });
 
-            if (detailNodes.TryGetValue(ItemSourcePath, out RectTransform sourceContainer))
+            if (!isCooking && detailNodes.TryGetValue(ItemSourcePath, out RectTransform sourceContainer))
                 BuildTreasureGachaSourceRows(item, sourceContainer);
+        }
+
+        private void BindCookingUse(OfflineInventoryItemView item, string dialogPath,
+            Dictionary<string, RectTransform> detailNodes)
+        {
+            string contentPath = dialogPath + "/BgDialog1/Content/BottomGo/ItemUseContent";
+            if (!detailNodes.TryGetValue(contentPath, out RectTransform useContent)) return;
+            long maxCount = Math.Max(0, maxCookingUseCount?.Invoke(item.ItemId, item.Count) ?? 0);
+            useContent.gameObject.SetActive(maxCount > 0);
+            if (maxCount <= 0) return;
+
+            string sliderRootPath = contentPath + "/Content/SliderGo";
+            if (detailNodes.TryGetValue(sliderRootPath, out RectTransform sliderRoot))
+                sliderRoot.gameObject.SetActive(maxCount > 1);
+            string sliderPath = sliderRootPath + "/Slider";
+            Slider slider = detailNodes.TryGetValue(sliderPath, out RectTransform sliderNode)
+                ? sliderNode.GetComponent<Slider>() : null;
+            if (maxCount > 1 && slider == null)
+                throw new FormatException("The official cooking item-use slider is missing.");
+            if (slider != null)
+            {
+                slider.minValue = 1;
+                slider.maxValue = Math.Max(1, maxCount);
+                slider.wholeNumbers = true;
+                slider.value = 1;
+                slider.interactable = maxCount > 1;
+            }
+
+            BindCookingCountButton(detailNodes, sliderRootPath + "/ReduceButton", slider, -1, maxCount);
+            BindCookingCountButton(detailNodes, sliderRootPath + "/AddButton", slider, 1, maxCount);
+            string usePath = contentPath + "/ButtonsGo/CommonBtn_12";
+            if (!detailNodes.TryGetValue(usePath, out RectTransform useNode))
+                throw new FormatException("The original cooking item-use button is missing.");
+            Button useButton = useNode.GetComponent<Button>();
+            if (useButton == null) throw new FormatException("The original cooking item-use button has no Button component.");
+            useButton.interactable = true;
+            SetDetailText(detailNodes, usePath + "/Content/Text", assets.FindText("ui_item_use_btn_text"));
+            useButton.onClick.AddListener(() =>
+            {
+                long count = slider == null ? 1 : Math.Max(1, Mathf.RoundToInt(slider.value));
+                CookingUseRequested?.Invoke(item.ItemId, count);
+            });
+        }
+
+        private static void BindCookingCountButton(Dictionary<string, RectTransform> detailNodes,
+            string path, Slider slider, int change, long maxCount)
+        {
+            if (slider == null || !detailNodes.TryGetValue(path, out RectTransform node)) return;
+            Button button = node.GetComponent<Button>();
+            if (button == null) return;
+            button.interactable = maxCount > 1;
+            button.onClick.AddListener(() =>
+            {
+                float next = Mathf.Clamp(Mathf.Round(slider.value) + change, 1f, (float)maxCount);
+                slider.value = next;
+            });
         }
 
         private void BuildTreasureGachaSourceRows(OfflineInventoryItemView item, RectTransform sourceContainer)
@@ -471,8 +532,12 @@ namespace Zjcs.Presentation.Inventory
 
         private static void SetDetailText(Dictionary<string, RectTransform> detailNodes, string path, string value)
         {
-            if (detailNodes.TryGetValue(path, out RectTransform rect) && rect.GetComponent<Text>() != null)
-                rect.GetComponent<Text>().text = value ?? string.Empty;
+            if (!detailNodes.TryGetValue(path, out RectTransform rect)) return;
+            string textValue = value ?? string.Empty;
+            Text text = rect.GetComponent<Text>();
+            if (text != null) text.text = textValue;
+            TextMeshProUGUI tmp = rect.GetComponent<TextMeshProUGUI>();
+            if (tmp != null) tmp.text = textValue;
         }
 
         private string OfficialItemName(OfflineInventoryItemView item)
@@ -578,6 +643,27 @@ namespace Zjcs.Presentation.Inventory
                 }
                 Button button = instance.AddComponent<Button>();
                 button.targetGraphic = graphic;
+            }
+            if (HasScript(data, "Slider"))
+            {
+                Slider slider = instance.AddComponent<Slider>();
+                slider.targetGraphic = instance.GetComponent<Graphic>();
+                if (slider.targetGraphic != null) slider.targetGraphic.raycastTarget = true;
+                if (data.TryGetValue("original_bindings", out object rawBindings)
+                    && rawBindings is Dictionary<string, object> bindings
+                    && bindings.TryGetValue("Slider", out object rawSlider)
+                    && rawSlider is Dictionary<string, object> sliderBindings)
+                {
+                    string fillPath = Text(sliderBindings, "mFillRect");
+                    string handlePath = Text(sliderBindings, "mHandleRect");
+                    if (targetNodes.TryGetValue(fillPath, out RectTransform fill)) slider.fillRect = fill;
+                    if (targetNodes.TryGetValue(handlePath, out RectTransform handle)) slider.handleRect = handle;
+                    slider.direction = (Slider.Direction)Mathf.Clamp(Integer(sliderBindings, "mDirection", 0), 0, 3);
+                    slider.minValue = Number(sliderBindings, "mMinValue", 0f);
+                    slider.maxValue = Number(sliderBindings, "mMaxValue", 1f);
+                    slider.wholeNumbers = Boolean(sliderBindings, "mWholeNumbers", false);
+                    slider.value = Mathf.Clamp(Number(sliderBindings, "mValue", 0f), slider.minValue, slider.maxValue);
+                }
             }
             if (data.TryGetValue("grid", out object rawGrid) && rawGrid is Dictionary<string, object> gridData)
                 ApplyGrid(instance, gridData);

@@ -85,7 +85,7 @@ namespace Zjcs.Editor.Map14EntityTextures
             }
             if (mips != source.counts.mips) throw new InvalidDataException("Original material texture mip inventory differs.");
             Debug.Log("Map14 original material textures Play Mode passed: 1644 explicit CAB/PathID bindings, " + mips +
-                "Exact native GPU mip readbacks and original texture/sampler settings. Six original empty dynamic font atlases, dynamic loader variants, entity rendering, input and saves remain unverified.");
+                " exact native GPU mip readbacks and original texture/sampler settings on . Six original empty dynamic font atlases, dynamic loader variants, entity rendering, input and saves remain unverified.");
         }
         private sealed class Runner : MonoBehaviour { }
     }

@@ -102,7 +102,7 @@ namespace Zjcs.Presentation.Home
         private readonly List<GameObject> cards = new List<GameObject>();
         private HomeFeatureRuntime host;
         private HomeAssetCatalog catalog;
-        private HomeUiRenderer renderer;
+        private HomeUiRenderer stageRenderer;
         private IReadOnlyList<OfflinePetGachaAward> awards;
         private Transform rewardLayer;
         private Transform collectTarget;
@@ -124,7 +124,7 @@ namespace Zjcs.Presentation.Home
         {
             host = runtime ?? throw new ArgumentNullException(nameof(runtime));
             catalog = assets ?? throw new ArgumentNullException(nameof(assets));
-            renderer = stageRenderer ?? throw new ArgumentNullException(nameof(stageRenderer));
+            this.stageRenderer = stageRenderer ?? throw new ArgumentNullException(nameof(stageRenderer));
             awards = result ?? throw new ArgumentNullException(nameof(result));
             if (drawCount != 1 && drawCount != 10 && drawCount != 100 || awards.Count != drawCount)
                 throw new ArgumentException("Pet Gacha performance result count is invalid.", nameof(result));
@@ -170,8 +170,8 @@ namespace Zjcs.Presentation.Home
             Dictionary<string, object> performanceObject = OpeningJson.Object(
                 OpeningJson.Parse(File.ReadAllBytes(performancePath)), "Pet Gacha performance");
             dropPolygon = ReadDropPolygon(performanceObject);
-            rewardLayer = renderer.Find(PerformerPath + "SlotContent")?.transform;
-            collectTarget = renderer.Find(PerformerPath + "CollectTarget")?.transform;
+            rewardLayer = stageRenderer.Find(PerformerPath + "SlotContent")?.transform;
+            collectTarget = stageRenderer.Find(PerformerPath + "CollectTarget")?.transform;
             if (rewardLayer == null || collectTarget == null)
                 throw new InvalidOperationException("Official Pet Gacha performance anchors are missing.");
             effects = gameObject.AddComponent<PetGachaRuntimeEffectRenderer>();
@@ -239,7 +239,7 @@ namespace Zjcs.Presentation.Home
 
         private void BuildActor()
         {
-            Transform target = renderer.Find(PerformerPath + "PlayerModel_UI")?.transform;
+            Transform target = stageRenderer.Find(PerformerPath + "PlayerModel_UI")?.transform;
             if (target == null) throw new InvalidOperationException("Official Pet Gacha character anchor is missing.");
             GameObject model = CharacterCreationNativeModelFactory.CreateWorldModel(
                 host.ActiveProfileSlotId, host.SavesRoot, out _);
@@ -266,7 +266,7 @@ namespace Zjcs.Presentation.Home
             PetGachaActionAnimation action = config.actions[UnityEngine.Random.Range(0, config.actions.Length)];
             PlaySound(action.sound);
             if (!string.IsNullOrEmpty(config.scene_animation))
-                renderer.PlayAnimation(config.scene_animation);
+                stageRenderer.PlayAnimation(config.scene_animation);
             if (action.animations != null && action.animations.Length > 0)
                 StartCoroutine(PlayActionSequence(action.animations));
             return action;

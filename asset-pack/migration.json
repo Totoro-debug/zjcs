@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-14",
+  "operation": "Move native shader adapters into the code tree; preserve shader and UID bytes. Historical module receipts retain their original paths.",
+  "files": [
+    {
+      "previous_path": "assets/characters/character_recolor.gdshader",
+      "current_path": "shaders/character_recolor.gdshader",
+      "sha256": "599d9462281d888aa622c6c7d285efd8ee20b816703c9f3fc39056cc260496d5"
+    },
+    {
+      "previous_path": "assets/characters/character_recolor.gdshader.uid",
+      "current_path": "shaders/character_recolor.gdshader.uid",
+      "sha256": "62784065baa99fe2969a10ecda43d847be6c3865407c72fa451f20849b988e2a"
+    },
+    {
+      "previous_path": "assets/official/ui_fill.gdshader",
+      "current_path": "shaders/ui_fill.gdshader",
+      "sha256": "1294e35dac20778fe6685722cd7051903b0a96edf836cbdf83490a82f67e21cf"
+    },
+    {
+      "previous_path": "assets/official/ui_fill.gdshader.uid",
+      "current_path": "shaders/ui_fill.gdshader.uid",
+      "sha256": "43b27707ffbff84d4ce2d351897b605647da30e28f4bc1e6b3f1b02188678436"
+    },
+    {
+      "previous_path": "assets/official/ui_stencil.gdshader",
+      "current_path": "shaders/ui_stencil.gdshader",
+      "sha256": "86285e89b4b2b1de9ccce2109c0ca2c1e25f9fbee598d1ed3019c3b7fdbc8c7c"
+    },
+    {
+      "previous_path": "assets/official/ui_stencil.gdshader.uid",
+      "current_path": "shaders/ui_stencil.gdshader.uid",
+      "sha256": "928589ea22fa27828a7ac6e69c0cd28ad9747efc52ffae45311aa3c75eb618ee"
+    },
+    {
+      "previous_path": "assets/official/home_sky.gdshader",
+      "current_path": "shaders/home_sky.gdshader",
+      "sha256": "d99077611514b4a5efeed574fb4c53c9fd615da4b69c6b6a8d6e3accb1e3a4c5"
+    },
+    {
+      "previous_path": "assets/official/home_sky.gdshader.uid",
+      "current_path": "shaders/home_sky.gdshader.uid",
+      "sha256": "c85953e8c1e0c9356161010085f916e91fb982bdd89828ee56de1c11a22ffa4d"
+    },
+    {
+      "previous_path": "assets/official/wish_particle.gdshader",
+      "current_path": "shaders/wish_particle.gdshader",
+      "sha256": "6118efadd21a8cb83156c0d241ae088a1ca40f3f8788552d485632ca9ce35140"
+    },
+    {
+      "previous_path": "assets/official/wish_particle.gdshader.uid",
+      "current_path": "shaders/wish_particle.gdshader.uid",
+      "sha256": "c9a186b1a4889dbfd6db89038dafb325dd15f0bb51562c7e4526b90fd5a5f3bb"
+    }
+  ],
+  "shared_manifest": {
+    "path": "assets/reference/official-city/source-manifest.json",
+    "previous_sha256": "8ce14e9177fc3121f1c558ceb70dff421a86db392fc2497e95abbe256ad5fa1f",
+    "current_sha256": "20b025ac0825b7f363016680f566ba3d4e80beefd4548805e9ce50dfe9f558c6",
+    "removed_code_entry": {
+      "path": "ui_stencil.gdshader",
+      "sha256": "86285e89b4b2b1de9ccce2109c0ca2c1e25f9fbee598d1ed3019c3b7fdbc8c7c",
+      "current_path": "shaders/ui_stencil.gdshader"
+    }
+  }
+}

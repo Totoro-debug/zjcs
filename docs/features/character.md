@@ -149,6 +149,8 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 
 ### 已确认的本地接线与边界
 
+技能附属窗口由 `prepare_skill_extra_ui.py` 从固定 APK 与同版本 `854_156383` 已下载缓存恢复，包含伤害测试参数与结算、战报与本地记录、技能皮肤／视频、规则／词条及馈赠物品详情；当前显式技能图像共 269 张。原 prefab、脚本字段、布局与动画、原 RawImage 肖像参数和幻兽能量设置的输入对象／输出哈希均纳入 `skill-ui/unity-icon-source-manifest.json`。`prepare_skill_auxiliary_code.py` 记录直接迁移的 23 份官方 UI 组件源文件和输出哈希；技能战报另复用 `Official/WorldUI` 已迁移的 `UGUIJszx.GridLayoutGroupJSZX` 和原设置类型；主页进入技能所需的天空 ColorShift shader 按固定 APK 原对象 SHA-256 核对后复用 Windows 转换结果，主城特效、天空及 URP 引擎 shader 通过 `Home/RuntimeShaderBindings` 显式引用进入 Player；Windows 本地战报保存属于用户确认的离线适配，行为和验证范围见技能功能页。 方案条补取同一 APK `CharacterPanelSkillPanel` 中原 Scrollbar 对象 `-4354697964205878964`（原始 SHA-256 `53972465f66e438fa93ab2217ff461a62d6b579c6ffbcea23b42e78b90e219fc`），保留 Handle、颜色、20% 尺寸及禁用状态，按 `GameSettings.SkillPlanMaxCount=7` 与原刷新公式定位；七个默认名取自 APK 中文语言表。
+
 原战斗 Spine 包保留全部迁移皮肤与所需 follower，`prepare_battle_spine.py` 生成每种皮肤依赖页面；运行时仅载入当前组合使用的图集页。所有动态纹理、JSON 及 mesh.gz 已纳入显式资源绑定和 Windows 分包清单。限时装扮重复获得的续期按用户确认的配置叠加与上限处理，差异在[人物与衣柜](character.md)记录。
 
 ## 尚未实现

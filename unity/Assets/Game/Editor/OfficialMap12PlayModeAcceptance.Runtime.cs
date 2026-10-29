@@ -56,6 +56,13 @@ namespace Zjcs.Editor
                 save.Player.SubRank = 12;
                 save.Player.InitialWeaponType = 201;
             }
+            else if (UnityEditor.SessionState.GetBool(Key + ".privateDungeonEntry", false))
+            {
+                save.Player.Level = 90;
+                save.Player.Experience = OfficialCharacterAssetCatalog.LoadDefault().Load().CumulativeLevelExperience[90];
+                save.Player.SubRank = 12;
+                save.Player.InitialWeaponType = 201;
+            }
             save.Player.Wardrobe.Profession = 1;
             save.Player.UnlockedMapClassIds.AddRange(new[] { 11, 12 });
             if (UnityEditor.SessionState.GetBool(Key + ".runtimeTerminals", false))
@@ -116,6 +123,14 @@ namespace Zjcs.Editor
             {
                 IEnumerator building = VerifyBuildingBattleSteps(root, slot, canvas.transform, output);
                 while (building.MoveNext()) yield return building.Current;
+                RuntimeCall("CloseMap");
+                yield break;
+            }
+
+            if (UnityEditor.SessionState.GetBool(Key + ".privateDungeonEntry", false))
+            {
+                IEnumerator entry = VerifyPrivateDungeonEntrySteps(root, slot, canvas.transform, output);
+                while (entry.MoveNext()) yield return entry.Current;
                 RuntimeCall("CloseMap");
                 yield break;
             }

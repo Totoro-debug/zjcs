@@ -5,6 +5,7 @@ using UnityEngine;
 using Zjcs.Combat.Official;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.Skills;
+using Zjcs.Offline.State;
 using Zjcs.Offline.World;
 using Zjcs.Presentation.Combat;
 
@@ -29,11 +30,23 @@ namespace Zjcs.Presentation.Home
         private int challengeActivityId;
         private int challengeDurationHours;
         private int challengeDifficulty;
+        private OfflineMainlineProgressSession battleProfile;
+        private OfflineCharacterProgressionService battleProgression;
+        private DailyDungeonRuntimeData battleCatalog;
+        private Transform battleCanvas;
+        private Transform battlePlayer;
+        private bool privateMapEntry;
+        private int privateMapRoomId;
 
         public void Begin(HomeFeatureRuntime runtime, int selectedRoomId, string assistEntryId,
             Action<bool> onCompleted)
         {
             host = runtime ?? throw new ArgumentNullException(nameof(runtime));
+            battleProfile = host.Profile;
+            battleProgression = host.DailyDungeonProgression;
+            battleCatalog = host.DailyDungeons.Catalog;
+            battleCanvas = host.Hud.CanvasTransform;
+            battlePlayer = host.HomePlayerTransform;
             completed = onCompleted;
             if (string.IsNullOrWhiteSpace(assistEntryId))
                 throw new ArgumentException("Daily dungeon assistance entry identity is required.", nameof(assistEntryId));
@@ -106,10 +119,44 @@ namespace Zjcs.Presentation.Home
             }
         }
 
+        public void BeginPrivateMapRoom(OfflineMainlineProgressSession profile,
+            OfflineCharacterProgressionService progression, OfflineDailyDungeonSession dungeons,
+            Transform player, Transform canvas, Action<bool> onCompleted)
+        {
+            if (profile == null || progression == null || dungeons == null || player == null || canvas == null)
+                throw new ArgumentNullException("Private daily dungeon battle dependencies are incomplete.");
+            battleProfile = profile;
+            battleProgression = progression;
+            battleCatalog = dungeons.Catalog;
+            battlePlayer = player;
+            battleCanvas = canvas;
+            privateMapEntry = true;
+            completed = onCompleted;
+
+            DailyDungeonRunSave run = dungeons.ActiveRun;
+            DailyDungeonRuntimeRoom room = run == null ? null : dungeons.FindRoom(run.currentRoomId);
+            DailyDungeonRuntimeStage stage = room == null ? null : dungeons.FindStage(room.stageId);
+            DailyDungeonRuntimeBattleScene scene = stage == null ? null
+                : battleCatalog.battleScenes.FirstOrDefault(value => value.gameId == stage.gameId);
+            if (run?.dungeonId != 121 || run.difficulty != 50 || room == null || stage == null || scene == null)
+                throw new InvalidOperationException("Official private daily dungeon route room is incomplete.");
+            privateMapRoomId = room.id;
+
+            OfficialCombatAssetCatalog combatAssets = OfficialCombatAssetCatalog.LoadDefault();
+            FightOfficialCombatCatalog combat = combatAssets.Load();
+            FightBattleCheckpoint checkpoint = BuildCheckpoint(run, stage, scene, combatAssets, combat, Array.Empty<int>());
+            MountBattle(checkpoint, scene, combatAssets, false, false);
+        }
+
         public void BeginChallenge(HomeFeatureRuntime runtime, int activityId, int stageId,
             int stageType, int durationHours, int dailyLimit, int difficulty, Action<bool> onCompleted)
         {
             host = runtime ?? throw new ArgumentNullException(nameof(runtime));
+            battleProfile = host.Profile;
+            battleProgression = host.DailyDungeonProgression;
+            battleCatalog = host.DailyDungeons.Catalog;
+            battleCanvas = host.Hud.CanvasTransform;
+            battlePlayer = host.HomePlayerTransform;
             completed = onCompleted;
             challengeMode = true;
             challengeActivityId = activityId;
@@ -193,7 +240,7 @@ namespace Zjcs.Presentation.Home
             FightOfficialCombatCatalog combat = combatAssets.Load();
             var world = new GameObject(isChallenge ? "DailyChallengeBattleWorld" : "DailyDungeonBattleWorld");
             battleRoot = world.transform;
-            playerTransform = host.HomePlayerTransform;
+            playerTransform = battlePlayer;
             if (playerTransform == null) throw new InvalidOperationException("Official home character model is unavailable.");
             previousPlayerParent = playerTransform.parent;
             previousPlayerPosition = playerTransform.localPosition;
@@ -216,7 +263,7 @@ namespace Zjcs.Presentation.Home
             OfficialCombatSkillIconCatalog skillIcons = OfficialCombatSkillIconCatalog.TryLoadDefault();
             OfficialBattleMonsterPortraitCatalog portraits = OfficialBattleMonsterPortraitCatalog.TryLoadDefault();
             OfficialBattleModelCatalog models = OfficialBattleModelCatalog.LoadDefault();
-            controller.Begin(checkpoint, battleRoot, host.Hud.CanvasTransform, gridMapper,
+            controller.Begin(checkpoint, battleRoot, battleCanvas, gridMapper,
                 itemId => skillIcons == null ? fallback : skillIcons.Find(itemId) ?? fallback,
                 unit => unit.MonsterId > 0 && portraits != null
                     ? portraits.Find(combat.MonsterIconId(unit.MonsterId)) : fallback,
@@ -228,11 +275,11 @@ namespace Zjcs.Presentation.Home
                     scale.x = Mathf.Abs(scale.x) * (unit.Direction == 1 ? -1f : 1f);
                     root.localScale = scale;
                 },
-                null, null, hudCatalog, restore, statueProgress: host.Profile);
+                null, null, hudCatalog, restore, statueProgress: battleProfile);
             controller.AttachUnitTransform(1, playerTransform);
             controller.ConfigureSpeeds(combatAssets.Load().SpeedSettings, 0, IsBattleSpeedConditionMet);
             string serialized = FightBattleCheckpointSerializer.Save(checkpoint);
-            if (!isChallenge && !host.DailyDungeons.SaveBattleCheckpoint(serialized))
+            if (!isChallenge && !privateMapEntry && !host.DailyDungeons.SaveBattleCheckpoint(serialized))
                 throw new InvalidOperationException("Daily dungeon battle checkpoint could not be saved.");
             stepTimer = 0.8f;
         }
@@ -246,11 +293,7 @@ namespace Zjcs.Presentation.Home
                 CompleteBattle(checkpoint.Outcome.Won);
                 return;
             }
-            if (!controller.CanAdvance) return;
-            stepTimer -= Time.deltaTime;
-            if (stepTimer > 0f) return;
-            controller.Advance();
-            stepTimer = controller.LastStepSeconds;
+            OfficialBattleProgressDriver.Tick(controller, ref stepTimer, Time.deltaTime);
         }
 
         private void OnStepCompleted(FightBattleExecutionResult result)
@@ -258,7 +301,7 @@ namespace Zjcs.Presentation.Home
             if (result?.Checkpoint == null) return;
             string serialized = FightBattleCheckpointSerializer.Save(result.Checkpoint);
             if (challengeMode) host.DailyChallenges.SaveBattleCheckpoint(challengeActivityId, serialized);
-            else if (!host.DailyDungeons.SaveBattleCheckpoint(serialized))
+            else if (!privateMapEntry && !host.DailyDungeons.SaveBattleCheckpoint(serialized))
                 throw new InvalidOperationException("Daily dungeon battle checkpoint could not be saved.");
             if (result.Checkpoint.Finished) CompleteBattle(result.Checkpoint.Outcome.Won);
         }
@@ -268,6 +311,14 @@ namespace Zjcs.Presentation.Home
             if (resultHandled) return;
             resultHandled = true;
             FightBattleCheckpoint checkpoint = controller.Checkpoint;
+            if (privateMapEntry)
+            {
+                Action<bool> privateMapCallback = completed;
+                DisposeBattle();
+                privateMapCallback?.Invoke(won);
+                Destroy(gameObject);
+                return;
+            }
             if (challengeMode) FinishDailyChallengeAssist(challengeActivityId, checkpoint.StageId);
             else FinishDailyDungeonAssist(checkpoint.StageId);
             IReadOnlyList<OfficialChallengeReward> rewards = Array.Empty<OfficialChallengeReward>();
@@ -338,7 +389,7 @@ namespace Zjcs.Presentation.Home
             {
                 string serialized = FightBattleCheckpointSerializer.Save(controller.Checkpoint);
                 if (challengeMode) host.DailyChallenges.SaveBattleCheckpoint(challengeActivityId, serialized);
-                else host.DailyDungeons.SaveBattleCheckpoint(serialized);
+                else if (!privateMapEntry) host.DailyDungeons.SaveBattleCheckpoint(serialized);
             }
         }
 
@@ -351,10 +402,10 @@ namespace Zjcs.Presentation.Home
 
         private bool IsBattleSpeedConditionMet(int conditionId)
         {
-            OfficialConditionContext context = new OfficialConditionContext { Level = host.Level };
-            foreach (int mapClassId in host.Profile.Save.Player.UnlockedMapClassIds ?? new List<int>())
+            OfficialConditionContext context = new OfficialConditionContext { Level = battleProfile.Save.Player.Level };
+            foreach (int mapClassId in battleProfile.Save.Player.UnlockedMapClassIds ?? new List<int>())
                 context.UnlockedMapClassIds.Add(mapClassId);
-            return host.DailyDungeonProgression.Catalog.EvaluateCondition(conditionId, context);
+            return battleProgression.Catalog.EvaluateCondition(conditionId, context);
         }
 
         private void OnDestroy() => DisposeBattle();
@@ -411,11 +462,11 @@ namespace Zjcs.Presentation.Home
             }
             if (moveMask == 0) throw new InvalidOperationException("Official daily dungeon grid has no walkable cells.");
             DailyDungeonRuntimeBattleFaction playerFaction = scene.factions?.FirstOrDefault(value => value.id == 0);
-            if (playerFaction?.entryPositions == null || playerFaction.entryPositions.Length == 0
-                || playerFaction.entryPositions[0].Length < 2)
+            int[] playerEntry = EntryPosition(playerFaction);
+            if (playerEntry == null)
                 throw new InvalidOperationException("Official daily dungeon scene has no player entry position.");
-            OfflineCharacterProgressionService progression = host.DailyDungeonProgression;
-            OfflinePlayerProgress playerSave = host.Profile.Save.Player;
+            OfflineCharacterProgressionService progression = battleProgression;
+            OfflinePlayerProgress playerSave = battleProfile.Save.Player;
             FightOfficialSkillItemCatalog skillItems = combatAssets.LoadSkillItems();
             FightDamageFormula formula = combatAssets.LoadDamageFormula();
             var checkpoint = new FightBattleCheckpoint
@@ -432,7 +483,7 @@ namespace Zjcs.Presentation.Home
                     combatAssets.LoadStageStatusCatalog().ClassIdOfStage(stage.id))
             };
             var playerProperties = new Dictionary<int, long>(progression.PropertyCalculator.Evaluate(
-                playerSave, host.Profile.Save.World, DateTimeOffset.Now.ToUnixTimeSeconds()).OutOfFightBattleProps);
+                playerSave, battleProfile.Save.World, DateTimeOffset.Now.ToUnixTimeSeconds()).OutOfFightBattleProps);
             int[] playerPassiveItems = OfflineSkillProgression.EquippedPassiveSkills(playerSave.Skills);
             ApplyPassiveProperties(combat, skillItems, playerProperties, playerPassiveItems,
                 itemId => OfflineSkillProgression.OwnedRank(playerSave.Skills, itemId),
@@ -450,7 +501,7 @@ namespace Zjcs.Presentation.Home
             {
                 Id = 1, Side = 1, CharacterType = 1, Level = playerSave.Level,
                 SubRank = playerSave.SubRank, Profession = playerSave.Wardrobe.Profession,
-                X = playerFaction.entryPositions[0][0], Y = playerFaction.entryPositions[0][1],
+                X = playerEntry[0], Y = playerEntry[1],
                 Hp = Property(playerProperties, maxHpId), MaxHp = Property(playerProperties, maxHpId),
                 LastMaxHp = Property(playerProperties, maxHpId), MoveMask = moveMask,
                 Properties = ToProperties(playerProperties)
@@ -463,15 +514,16 @@ namespace Zjcs.Presentation.Home
             checkpoint.Units.Add(player);
             AssemblePlayer(combat, skillItems, player, playerSave);
 
-            Dictionary<int, DailyDungeonRuntimeFormation> formations = host.DailyDungeons.Catalog.formations
+            Dictionary<int, DailyDungeonRuntimeFormation> formations = battleCatalog.formations
                 .ToDictionary(value => value.id);
             foreach (DailyDungeonRuntimeFormation formation in additionalFormations
                          ?? Array.Empty<DailyDungeonRuntimeFormation>())
                 if (formation != null && !formations.ContainsKey(formation.id))
                     formations.Add(formation.id, formation);
-            for (int waveIndex = 0; waveIndex < stage.waveMonsterIds.Length; waveIndex++)
+            int[][] waves = WaveMonsterIds(stage);
+            for (int waveIndex = 0; waveIndex < waves.Length; waveIndex++)
             {
-                int[] monsterIds = stage.waveMonsterIds[waveIndex] ?? Array.Empty<int>();
+                int[] monsterIds = waves[waveIndex] ?? Array.Empty<int>();
                 if (monsterIds.Length == 0) continue;
                 int arrayId = stage.waveArrayIds != null && waveIndex < stage.waveArrayIds.Length
                     ? stage.waveArrayIds[waveIndex] : 0;
@@ -527,6 +579,44 @@ namespace Zjcs.Presentation.Home
             return checkpoint;
         }
 
+        private static int[] EntryPosition(DailyDungeonRuntimeBattleFaction faction)
+        {
+            if (faction?.entryPosition != null && faction.entryPosition.Length >= 2)
+                return faction.entryPosition;
+            return EntryPositions(faction).FirstOrDefault();
+        }
+
+        private static IEnumerable<int[]> EntryPositions(DailyDungeonRuntimeBattleFaction faction)
+        {
+            int[][] nested = faction?.entryPositions;
+            if (nested != null && nested.Any(value => value != null && value.Length >= 2))
+                return nested.Where(value => value != null && value.Length >= 2);
+            int[] flat = faction?.entryPositionsFlat;
+            if (flat == null || flat.Length < 2) return Array.Empty<int[]>();
+            return Enumerable.Range(0, flat.Length / 2)
+                .Select(index => new[] { flat[index * 2], flat[index * 2 + 1] });
+        }
+
+        private static int[][] WaveMonsterIds(DailyDungeonRuntimeStage stage)
+        {
+            if (stage?.waveMonsterIds != null && stage.waveMonsterIds.Length > 0)
+                return stage.waveMonsterIds;
+            if (stage?.waveMonsterOffsets == null || stage.waveMonsterOffsets.Length < 2
+                || stage.waveMonsterIdsFlat == null) return Array.Empty<int[]>();
+            int waveCount = stage.waveMonsterOffsets.Length - 1;
+            var waves = new int[waveCount][];
+            for (int index = 0; index < waveCount; index++)
+            {
+                int start = stage.waveMonsterOffsets[index];
+                int end = stage.waveMonsterOffsets[index + 1];
+                if (start < 0 || end < start || end > stage.waveMonsterIdsFlat.Length)
+                    throw new InvalidOperationException("Official daily dungeon wave offsets are malformed: " + stage.id);
+                waves[index] = new int[end - start];
+                Array.Copy(stage.waveMonsterIdsFlat, start, waves[index], 0, end - start);
+            }
+            return waves;
+        }
+
         private int[] ResolveDailyChallengeAssistSelection(FightOfficialNpcAssistanceCatalog npcCatalog,
             FightOfficialNpcInviteRule inviteRule, string entryId)
         {
@@ -564,12 +654,14 @@ namespace Zjcs.Presentation.Home
             if (npcClassIds == null || npcClassIds.Count == 0) return;
             var occupied = new HashSet<FightGridPoint>(checkpoint.Units
                 .Select(unit => new FightGridPoint(unit.X, unit.Y)));
-            int startX = playerFaction.entryPositions[0][0];
-            int startY = playerFaction.entryPositions[0][1];
-            var entryPoints = (playerFaction.entryPositions ?? Array.Empty<int[]>())
-                .Where(value => value != null && value.Length >= 2)
+            int[] firstEntry = EntryPosition(playerFaction);
+            if (firstEntry == null) throw new InvalidOperationException("Official daily dungeon scene has no player entry position.");
+            int startX = firstEntry[0];
+            int startY = firstEntry[1];
+            var entryPoints = EntryPositions(playerFaction)
                 .Select(value => new FightGridPoint(value[0], value[1]))
                 .Distinct().ToList();
+            if (entryPoints.Count == 0) entryPoints.Add(new FightGridPoint(firstEntry[0], firstEntry[1]));
             var cells = (scene.cells ?? Array.Empty<DailyDungeonRuntimeBattleCell>())
                 .Where(cell => cell != null)
                 .Select(cell => new FightGridPoint(cell.x, cell.y))

@@ -26,6 +26,8 @@
 
 `OfflineGemForgeService` 使用 `OfficialEquipmentCatalog` 的 `gem`、`item` 表读取宝石类型、等级与 ID。普通配方按 `RequireCount + 1` 计总颗数；主石与材料等级相同则主石计入总数，镶嵌主石也适用。玩家可选择背包堆叠数量或其他装备孔位中的同类宝石作为材料；合成事务按所选孔位扣除材料，成功时原主石孔位升级。高阶配方按 `BaseRate + StepRate[min(PercentMininum, missCount)]` 计算成功概率；保底故事播放完后，达到 `PercentMininum` 次失败时必成。失败类型使用官方 `FailedResult`。公式依据官方 `PlayerGemDataExt.GetSuccessRateByGemRank`、`GetGemEnergyStorageValue`、`NeedTriggerStory` 与 `NeedTriggerDownExplodeStory`。
 
+规则校验只要求高阶配方具有非空 `StepRate`。Unity `JsonUtility` 会把简单配方 JSON 中的 `StepRate: null` 读为空数组；简单合成不使用阶梯概率，因此保留其官方空值语义，不将其误判为损坏规则。
+
 熔炉记录、炉能失败次数、故事序号、随机状态、材料和货币在 `OfflineMainlineProgressSession.ApplyInventoryTransaction` 的同一存档事务中提交。重复 receipt 不重复执行。失败保留主石并消耗材料；按用户确认，仅前三次保底失败返还当次材料，不返还此前累计材料。新版赛季宝石不开放旧回收分支。
 
 角色装备星石窗口提供“宝石合成”入口。普通配方读取官方 `BagualuPanel/GemPanel` 树，高阶配方读取官方 `MechanicalFurnacePanel` 树；两种配方都先选择主石，再逐件选择背包堆叠数量或已装备孔位中的同类材料。普通面板将主石、已选材料和目标预览绑定到官方中心槽；高阶面板在列表首行标明主石、将已选材料写回机械熔炉材料槽，并在列表显示目标、材料数和金币，另显示成功率与炉能。两类合成均使用官方确认窗和结果窗的状态/图标。结算后镶嵌主石按装备实例和孔位替换，不再按相同物品 ID 任意查找。官方 UI 树与精灵由 `scripts/prepare_unity_gem_forge_ui.py` 从固定版 bundle 解码并按来源哈希校验，运行时绑定在 `CharacterPanelNodeFactory` 与 `CharacterEquipSlots`。

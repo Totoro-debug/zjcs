@@ -30,8 +30,41 @@ namespace Zjcs.Editor.Progression
                     slots, slot, catalog, readDemonBattleLayer);
                 Require(session.Save.CreatedAtUnixSeconds == slotCreatedAt,
                     "Copy the profile creation time into its progress save");
+                OfficialMainlineMapProfile dragonProfile = OfficialMainlineMapProfile.Get(14);
+                Require(dragonProfile.RegionCount == 111 && dragonProfile.DefaultEntryPlacementId == 101
+                    && dragonProfile.RequiredAccessConditions.Count == 16 && !dragonProfile.IsRuntimeEntryReady,
+                    "Register Dragon Country source metadata while keeping its incomplete runtime entry gated");
+                session.Save.Player.UnlockedMapClassIds.Add(14);
+                session.Save.Player.UnlockedMapClassIds.Add(13);
+                int expectedReturnMap = OfficialMainlineMapProfile.Get(13).IsRuntimeEntryReady ? 13 : 10;
+                Require(OfficialMainlineMapRuntime.ResolveHomeReturnMap(session.Save) == expectedReturnMap,
+                    "Route home to an unlocked map only when its runtime entry is ready");
+                session.Save.Player.UnlockedMapClassIds.Remove(13);
+                session.Save.Player.UnlockedMapClassIds.Add(12);
+                Require(OfficialMainlineMapRuntime.ResolveHomeReturnMap(session.Save) == 12,
+                    "Route home to the highest unlocked map whose runtime entry is ready");
+                session.Save.Player.UnlockedMapClassIds.Remove(12);
                 Require(session.InitializeMap(10, new[] { 0, 1, 2, 3, 4 }).IsApplied,
                     "Initialize the five official Map10 regions");
+                string activationSlot = slots.CreateSlot();
+                OfflineMainlineProgressSession activation = OfflineMainlineProgressSession.Open(
+                    slots, activationSlot, catalog, readDemonBattleLayer);
+                Require(!activation.Save.Player.UnlockedMapClassIds.Contains(13),
+                    "Keep Map13 closed before its official Map12 activation result");
+                Require(activation.ApplyMapActivationResult(13, false, "map12:8101:activate:loss").Status
+                    == ProgressionResultStatus.NotReady
+                    && !activation.Save.Player.UnlockedMapClassIds.Contains(13),
+                    "Do not activate Map13 after a lost Map12 result");
+                Require(activation.ApplyMapActivationResult(13, true, "map12:8101:activate:stage-win").IsApplied
+                    && activation.Save.Player.UnlockedMapClassIds.Contains(13),
+                    "Activate Map13 from the confirmed Map12 result component target");
+                Require(activation.ApplyMapActivationResult(13, true, "map12:8101:activate:stage-win").Status
+                    == ProgressionResultStatus.Unchanged,
+                    "Ignore a replayed Map13 activation result receipt");
+                OfflineMainlineProgressSession activationRestored = OfflineMainlineProgressSession.Open(
+                    slots, activationSlot, catalog, readDemonBattleLayer);
+                Require(activationRestored.Save.Player.UnlockedMapClassIds.Contains(13),
+                    "Restore Map13 activation from the local profile save");
                 Require(OfficialMainlineMapRuntime.ResolveHomeReturnMap(session.Save) == 10,
                     "Keep Map11 closed until Map10 task 1040 is claimed");
                 session.Save.Tasks.ClaimedMainlineTaskIds.Add(1040);

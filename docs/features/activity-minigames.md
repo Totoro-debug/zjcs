@@ -6,11 +6,45 @@
 
 ## 功能简介
 
-各活动使用自己的官方入口、关卡、计分、道具、奖励与界面；节奏、三消、拼图、伐木、宾果、刮卡、烧烤及其他小游戏不能共用一套近似规则。
+活动列表进入成长试炼、宾果抽抽乐、幸运刮刮乐、两套音乐节奏配置（206、221）、四套三消主题（204、208、214、226）、星霜派对伐木（209）及七个拼图主题（200、2076、213、2151、2161、222、2242，其中2161复用界面与题图）。地图中的机关、厨房、躲猫猫和音乐节场景按对应地图维护。
 
 ## 原始官方实现
 
 各活动使用自己的官方入口、关卡、计分、道具、奖励与界面；节奏、三消、拼图、伐木、宾果、刮卡、烧烤及其他小游戏不能共用一套近似规则。
+
+### 待迁移的规则与表现
+
+成长试炼使用原任务、积分档、职业奖励和领奖去重。宾果使用原券、未中格候选、连线和轮次奖励；单次与批量抽取共同结算格子和连线，完成轮次与手动领取轮奖分别记录。刮刮乐使用原三品质、权重、19图案与三同结算。
+
+宾果／刮卡各保留30套已提取配置及页首切换，进度独立；未完卡片、抽定奖励和刮开位置保存。活动材料任务仅登记原目录中的真实完成事件，仍检查原功能／等级、每日条件和去重。
+
+宾果接入原 `BingoActivityPanelContent` 的16格与10条连线、原布局和奖励格。单抽／全部抽取保留原数量、费用及交互保护，依次执行格子 `GetAnimTrigger`、非阻塞奖励列表、连线 `LightAnimTrigger`、连线奖励和原 `AwardPanel`；关闭奖励后在原窗口切换下一轮，轮奖仍须点击原轮次按钮手动领取。已领取轮奖显示原 `GotTip`。原规则、任务列表、进度详情、批量领取和地图跳转确认／取消须接入，关闭详情回到原列表，再关闭列表回到原棋盘。两种活动的任务行按原 `TryCheckPreviewConditionLimit` 显示结缘、扭蛋、日常副本和素材秘境的解锁提示，沿 `BaseTaskListLiteItem.CanBeClick` 拦截未解锁任务的详情／单项领取／跳转，原 `PlayerTaskComparer` 把未解锁任务排在可用任务之后；原文及语言输入哈希由 保存。
+
+刮卡接入原 `ScratchCardActivityPanel`、16格、卡片堆叠及三档奖品预览。首次卡片、按原背包时间顺序自动使用下一张、品质状态、点击／75像素拖动阈值和5秒提示沿原脚本／配置迁移。原刮擦溶解、提示、奖级完成、奖励图案闪光和切卡曲线使用原网格、贴图及材质程序；第三个相同图案的刮擦动画播完再显示奖励，关闭奖励后由原 `SwitchCardEvent` 在窗口内切换下一张。未刮完退出后仍保留同一张卡及刮开位置，不再次扣卡。原规则、任务列表与详情接入，通用详情单次提交、任务行批量提交，领奖后保留原列表。
+
+音乐节奏的左右／双向接取直接迁移 `Common/PickGame`：原种子随机序列、9个预备物件、禁止奖励物件相邻、先补尾再弹出、奖励物件转换前6个位置、60秒计时、连击加分、狂热门槛／时长／倍率、失误清除连击及保留狂热等级下限。暂停冻结游戏与狂热时钟；结束后不能继续得分。
+
+原 `ActivityPickGameMainPanel`、队列、左右按钮、暂停与结果弹窗接入；Unity 同名兄弟物件保留各自引用。开始时机读取原准备动画的 `OnStartReadyAnimEnd` 事件（约4.53秒），双向物件读取原2秒输入间隔。原奖励按钮打开 `ActivityFestivalMusicTaskPanel`，任务卡使用 `TaskListLiteItemForActivityTask` 的原状态及领取按钮，206／221各自的参与、分数、连击和累计分数在真实结算时更新，不接受直接传入分数的操作。
+
+音乐界面的五档动态评级、原规则弹窗、游戏内返回按钮隐藏、任务排序和动态文字布局须接入。原 NPC 的组合皮肤、材质、挂件跟随及分离动画按狂热等级切换，保留左右角色的五档演出；队列按原位置／缩放曲线与0.1秒过渡移动，失误先播放失败动画。原 UIParticle、按钮正误效果、倒数／狂热动画的音频事件及场景开局／结算音频由原 prefab、动画事件和 Wwise 容器驱动，22个事件、26条音频保留随机候选、循环、增益和停止动作。
+
+伐木单轮场景须接入原 `ActivityTreeFellingGamePanel`、树干、障碍、背景适配与基座定位；按钮按下及 A／D、左右键调用真实砍伐。男女当前自定义角色采用原 `PlayerAnimCtrlAnimator` 的待机、三段连击、眩晕与返回待机状态及原转换条件；树干飞出、障碍掉落、0.1秒下落曲线和命中特效读取原对象。原个人头像位置／遮罩、`FlickerCounter` 延迟及逐步数字、0.05秒刷新倒计时和原 Wwise 砍伐音频须接入；七个原事件及七条音频由两个原分包转换。原圣诞活动列表图标、活动主页、盛典任务和整局完成界面须接入，保留原按钮、动态名称、状态切换、任务类型文字、进度条、滚动及奖励图；任务按原圣诞面板的自定义优先级排序。
+
+三消底层规则须迁移原 `Common/Match3Game`：60套关卡、原权重随机、初始消除重抽、无解棋盘重建、三连／四连／五连／交叉判定、特殊棋子生成位置、血量链、特殊技能命中顺序、重力补位和连锁。原 `StageScoreHandler` 的普通／技能分数、连锁倍率和中点取偶舍入保留；分数关按成功交换次数扣步并折算剩余步数，限时关按原倒数总时长结束。
+
+三消的本地开局／结算事务须接入原关卡前置、通关集合及一次性原表奖励，通关关卡不能再次进入；限时模式单独保存最高分。参与、分数及连锁只取实际棋盘结果，未结束不能提交，退出使用独立停止操作，重复提交不计数。`Match3GamePassLevelCondition` 按原活动号、关卡号和次数计算已接取实例的真实通关；万圣节40601～40614保留 `BattlePassSeason` 任务归属，不移入小游戏奖励表。
+
+三消的菜狗、旅程庆典、春日出游及万圣节原入口、主页、十四关列表、限时挑战和结算界面须接入。关卡列表保留原交错锚点、显示间隔、默认入场／循环动画、倒计时解锁、奖励逆序、锁定灰度及领取附件；原物品表绑定奖励图。棋盘按各主题的原格宽／高／间距布局，拖动阈值、方向、无效交换回弹、移动／加速下落、血量图片链、特殊棋子特效、浮动分数和连锁显示直接读取原组件参数。限时挑战保留3秒准备及90秒游玩，退局确认期间时钟继续；结束先播放原2秒结束演出，再提交真实结果。
+
+冰淇淋的顾客生成与食材顺序须迁移：按原候选顺序排除仍在队列中的 NPC，候选耗尽时回退全部 NPC，再按原配方权重生成杯底、球体、装饰及分数；保留原随机调用次序。食材添加按原杯底／球体／顶饰边界和顺序逐项检查，最大球数从允许配方计算；关卡按原开放小时与上一普通订单通关状态解锁。
+
+烧烤的原15关、72份配方及7种食材须接入底层计算：NPC占用排除且候选耗尽不回退、NPC先于配方的随机调用、分配／提交生成／回滚分离、精确食材顺序、生串零分／熟串全分／焦串原倍率及中点取偶、准备状态与挂点容量限制、逐帧单精度烹饪和顾客耐心。烤熟帧不把超出的时间带入焦化计时，拖动暂停烹饪，游戏暂停同时冻结烹饪和顾客耐心；顾客入场演出完成后才倒数，超时只触发一次。
+
+烧烤整局控制接入原准备区、三个烤架及顾客槽的占用和释放。首位顾客延迟2秒、随后间隔3秒读取实际 `BBQGameContent` prefab，而非类默认值；初始入场期间交单不会提前补客，后续仍按原引用顺序寻找空槽。入场完成才接受交单；生串、错误配方仍按原控制器完成一次零分交单，等待退场演出结束后补客并判断普通关结束。无尽使用原150秒时钟，暂停不消耗时间。烧烤入口、操作界面和历史纪录页须接入。
+
+知识问答规则使用原题池筛选、权重抽题、选项洗牌、排除已答题、阶段解锁及奖励；当前入口与本地阶段结算见下文 。
+
+拼图的183份原关卡须接入交换与条件计算：保留任意两块交换、有效交换计步、查看参考时禁止操作、重置恢复原排列与计步、逐块归位判定。原解析器按活动／关卡／难度排序生成前置链，逐项检查完成记录和原小时开放时间；快速完成跳过已领奖难度，并在第一个不允许或未到时间的难度停止。实际逐块还原后的首次通关按原 `AwardIds` 发奖并记录领奖集合，已通关可练习但不重复发奖；`JigsawPassLevelCondition` 只累计已接取实例对应的活动、关卡及难度。
 
 ### 官方代码与资源依据
 
@@ -56,11 +90,45 @@
 
 ## 完整还原部分
 
-尚无完整 Unity 流程的完成结论。
+尚无完整 Unity 流程的完成结论；已取得源码和转换素材仅作迁移依据。
 
 ## 自定义实现
 
-开放与本地保存遵循[共同离线政策](offline-access.md)，具体本地接线和未确认规则见下文。
+知识问答客户端原通过 `KnowledgeQuizQuestionPanelAnswerContent.Init`／`SelectQuestion` 请求服务器返回初题、`NextQuestionId`、`AnsweredCount` 和 `IsCleared`；Common 的 `ActivityKnowledgeQuizQuestionInfoParser.DrawQuestions`／`BuildShuffledOptionMap`、原题表及 `KnowledgeQuizSetting` 则提供本地可用的题池、权重、选项洗牌、每阶段3个正确答案和0.5秒反馈间隔。为满足项目离线运行，本地用这套官方抽题／洗牌逻辑和配置替代服务器下发的题号与状态，并在本地保存正确进度、阶段奖励和领取记录；随机种子与线上服务端不同，因此不声称每局题序与线上一致。聊天助战及排行榜仍依赖在线服务，本地页不提供助战，相关排名目标按用户确认停用。
+
+史莱姆、孤独摇滚联动的全部关联小游戏现按用户最新决定暂不开放，包含史莱姆拼图2161，范围见[暂不开放约定](offline-access.md#暂不开放的联动活动及伙伴)。下述常驻入口及史莱姆题图／界面复用的旧授权不再作为开放这些联动小游戏的依据；既有迁移说明仅记录实现现状。
+
+固定版客户端、Common 及序列化代码只有 `ItemParamScratchCard.RandomIcons`／`RewardRecord` 的读取和同步，未取得服务端生成各奖级图案与16格分布的实现。用户明确确认保留既有本地结算：先按原奖励表和权重抽定奖励，三个相同图案中奖，其余图案各不相同；另外两档预览各使用原19图案中不进入本卡格子的一个图案。图案、奖品、权重和刮擦动画取原内容，此处分布为已确认的本地补充。活动取消运营开放日历，保留原个人条件、消耗、阶段与领取语义。
+
+本地任务成员登记替代服务器下发，不直接把任务标为完成；所有材料、随机、卡片与奖励共同保存。
+
+宾果／刮卡循环任务的服务端提交后进度写回未取得；用户明确确认按本地真实累计进度批量提交，每次扣除相应任务进度、保留余量，奖励与次数上限使用原表。宾果11601从本地活动激活后记录实际消耗，刮卡11900使用独立活动扫荡事件。此处为经确认的单机结算，不能标为原服务端实现。
+
+音乐节奏的服务端开局种子与结果提交由本地真实操作和原子存档替代；原关卡规则不变。未提交的局在退出后放弃，已结算最高分与任务进度保留；重复提交不重复计数，保存失败回滚。活动列表复用原音乐节小游戏卡片提供两套常驻入口；键盘左右／A、D等价于原左右按钮。
+
+音乐恢复官方 Wwise 音频的本地播放；打开小游戏时暂停本地家园背景音乐，关闭后按当前音量设置恢复，避免两个播放链叠加。活动剩余时间因常驻入口而隐藏。
+
+伐木的固定版客户端、Common、程序集、五条轮次配置和 prefab 仅有 `ActivityGame.Rounds`、`TreeFellingStatusCountdownComponent.Time` 的读取，未取得服务端每局轮数和提示等待写入器。参数0／1相同、2／3相同、4的障碍最密；原游戏及房间面板未发现难度选择控件，`RoundNo` 直接读取当前轮次，不能证明原作每局必玩五轮。用户已确认单机按原表0～4依次各玩一轮，每轮11秒，开场／轮次／结束提示按原动画播完继续。五轮汇总真实砍伐分数并保存个人最高分、参与次数和已接取任务进度；未取得原服务端名次换算，不发放排名游戏币。退出放弃未提交局，重复提交、失败写盘不重复计数，原圣诞主页开放伐木和已支持任务，其余子活动保持原图但禁用入口；不代表整个圣诞活动已经迁移。
+
+三消使用同一常驻活动适配，首次打开／实际开局记录本地活动起点；仍按原 `UnlockTime` 小时数解锁，且须通关前一关。服务端种子／局号和结果写入改为本地真实引擎及原子存档，奖励、任务、最高分共同提交；万圣节战令目标仅支持真实已接取实例的计算，战令发放入口不由三消额外创建。
+
+小游戏历史纪录的原 `HistoricalSegmentRecordScopeType` 只有位面／全局范围，客户端及 Common 未提供服务端纪录写入器。用户明确确认将这类共享纪录改为本地真实挑战首次达到原分数档后开放该档原奖励，每档只领一次；保存本地角色标识0与首次提交时间，同一次活动领奖发放所有已达成未领档并保存累计索引。普通关、未提交局和退出局不写入挑战纪录。此处为单机自定义，原分数档和奖励不变。
+
+烧烤采用同一常驻活动起点及本地事务适配。服务端局号和结果写入由本地实际对局与原子存档代替；开局保存失败时回滚新建的内存对局并保留旧局，结算或退出保存失败时保留原实际对局供重试，原奖励及计数规则不变。
+
+拼图沿用常驻活动起点与本地事务适配，原小时解锁和逐难度前置保持；服务端领奖请求由本地实际完成的棋盘提交。中途退出不领奖，练习不重复发奖或补记任务；保存失败保留可重试的实际完成局，同时回滚物品、随机状态、领奖记录和任务。
+
+史莱姆拼图2161缺少专用 `ActivitySlime/Jigasaw/ActivitySlimeJigsawPanel.prefab`、`ImgBg_JigsawActivityKv_Slime01`～`09` 及 `ItemIcon/Money/Money_3034`。重新读取固定APK五包清单、新版864清单、原APK／已校验CDN中26个相关UI／图片容器及原货币图包，未找到这些对象；现有版本保留其配置，但资源未随这两版清单发布，原因无法由现有内容确定。该主题的27份原奖励包含共4,950枚魔素结晶，原兑换商品72001～72017使用该币；直接关闭会减少奖励。用户明确允许在影响玩法或奖励时复用已有界面和题图，因此 `prepare_jigsaw_game.py.singleplayer_slime` 登记2161复用200的原SimpleSunny界面、入口外观及九张题图；缺失货币图使用原 `ItemIconDefault.FakeIcon` 名称占位，显示原物品名。原2161布局、小时解锁、逐档前置、活动编号、奖励和存档独立保留，未把复用外观计为史莱姆原素材。
+
+拼图一键完成的原客户端 `JigsawGameContent.OnConfirmFastComplete` 只发送请求，未取得服务端结算写入器。用户已确认单机按原 `JigsawFastCompleteSetting` 一次消耗1张道具325，完成当前题图所有符合原 `JigsawUIUtils.GetFastCompletableOrders` 的未领奖难度，逐档发放原奖励并累计对应已接取任务。成本、奖励、领奖记录和任务共同保存；重复请求、已完成题图及保存失败均不会重复扣费或计数，保存失败后保留可重试状态。
+
+用户确认保留个人游玩、分数和参与任务，停用依赖其他玩家的名次／胜负目标。`ActivityGameOutpaceRivalCountCondition`、`ActivityGameFirstPlaceCountCondition`、`ActivityDreamDanceRankCondition` 不生成可领奖目标，音乐节奏和三消的排行榜入口隐藏。
+
+官方 `FCGameStateComponent` 的房间状态、对手操作和胜负提交依赖在线服务。按用户确认，足球在官方 prefab 布局和球场图上绘制本地物理快照、提供拖动蓄力输入，并增加确定性对手：最近球员朝球射门，蓄力距离为官方曲线归一化长度的72%；每方每局各射一次，进球或全队倒下判胜，双方均未得分则该局平局。总局数和所需胜局数读取官方 `MaxStages`／`WinStages`，本地只记录个人胜／负／平，不创建在线任务、奖励或排名。Unity 实现须管理本地对手及赛制，并按官方固定步长和碰撞处理顺序迁移物理；应优先复用原 `Framework.FixedPoint`，不沿用跨语言浮点近似。物理依据见 [FootballCollisionWorld](../../.tools/source-packages/official-code/common-source/Common/FootballCollisionWorld.cs)、[LWPhysicsWorld](../../.tools/source-packages/official-code/framework-firstpass-source/Framework.Physics.LightweightPhysics/LWPhysicsWorld.cs)、[ContactSolver](../../.tools/source-packages/official-code/framework-firstpass-source/Framework.Physics.LightweightPhysics/ContactSolver.cs)、[FP64](../../.tools/source-packages/official-code/framework-firstpass-source/Framework.FixedPoint/FP64.cs)；界面、蓄力和官方 prefab 来源见 [FootballCollisionPanel](../../.tools/source-packages/official-code/client-source/FootballCollisionPanel.cs)、[FootballChargeController](../../.tools/source-packages/official-code/client-source/Common.FootballPhysics.UI/FootballChargeController.cs)、[FootballPitchView](../../.tools/source-packages/official-code/client-source/Common.FootballPhysics.UI/FootballPitchView.cs)、[football-panel.json](../../assets/official/activity-games/football-panel.json) 及 `scripts/prepare_football_assets.py`（来源工具标识）。来源文件与55项图片绑定哈希见 `activity-games/source-manifest.json` 的 `football_offline`。
+
+固定版 `ActivityFestivalStageDanceComponent.DanceInfo` 未提供个人入口到 `QuizId` 的映射，`DreamDanceNetService` 的答题提交和评分依赖服务端。按用户确认，舞蹈题列固定按 `activity_dream_dance_quiz` 的 `Id` 顺序播放168条；本地通过数和最长连击仅作个人记录，不伪造服务端分数、任务或排行。舞蹈专用 prefab 尚未定位，须继续从官方内容恢复；当前没有可验收的 Unity 舞台入口。
+
+聊天助战、房间邀请和依赖其他玩家的排名目标均不开放；它们属于在线服务，没有离线等价。地图元素连线／能量回路由对应地图关卡规则提供，不属于本功能缺项。
 
 ### 已确认的本地接线与边界
 
@@ -74,4 +142,51 @@
 
 ## 尚未实现
 
-接通官方代码、原生界面／资源、本地状态与存档，完成实际入口、模拟输入、画面及失败恢复验证，并发布对应 Windows 版本。
+- 成长试炼、宾果、刮卡、音乐节奏、三消、伐木、拼图、知识问答、足球和舞蹈；逐项恢复官方入口、操作、动画、音效、结算与存档。
+
+- 完成 Unity 实际入口、交互／表现、存档与失败恢复验证，并发布对应 Windows 可执行版本。
+- 舞蹈专用舞台 prefab 尚未定位；史莱姆2161及孤独摇滚相关小游戏暂停开放，旧外观复用授权不覆盖后续暂停决定。
+
+## 代码与资源入口
+
+`scripts/prepare_bingo_activity.py`（来源工具标识）、`scripts/prepare_scratch_activity.py`（来源工具标识）、`scripts/prepare_activity_card_audio.py`（来源工具标识）、[bingo-activity/source-manifest.json](../../assets/reference/bingo-activity/source-manifest.json)
+
+[scratch-activity/source-manifest.json](../../assets/reference/scratch-activity/source-manifest.json)、
+
+[BingoActivityPanelContent](../../.tools/source-packages/official-code/client-source/BingoActivityPanelContent.cs)、[PlayerBingoActivityDataExt](../../.tools/source-packages/official-code/common-source/Common/PlayerBingoActivityDataExt.cs)、[TaskDataUtils.GetCanSubmitTimes](../../.tools/source-packages/official-code/client-source/TaskDataUtils.cs)
+
+[PlayerTaskDataUtils](../../.tools/source-packages/official-code/common-source/Common/PlayerTaskDataUtils.cs)、[TaskDetailDialog.OnClaim](../../.tools/source-packages/official-code/client-source/TaskDetailDialog.cs)、
+
+[test_jigsaw_reference.ps1](../../scripts/test_jigsaw_reference.ps1)、[引擎／配置适配夹具](../../scripts/fixtures/jigsaw_reference_harness.cs)、[期望值及来源哈希](../../scripts/fixtures/jigsaw-reference.json)、
+
+[test_ice_cream_reference.ps1](../../scripts/test_ice_cream_reference.ps1)、[引擎／配置适配夹具](../../scripts/fixtures/ice_cream_reference_harness.cs)、[原配置、期望值及输入哈希](../../scripts/fixtures/ice-cream-reference.json)
+
+[generate_bbq_reference.py](../../scripts/generate_bbq_reference.py)、[引擎／配置适配夹具](../../scripts/fixtures/bbq_reference_harness.cs)、[test_bbq_reference.ps1](../../scripts/test_bbq_reference.ps1)、[原配置、输入哈希与期望值](../../scripts/fixtures/bbq-reference.json)
+
+[test_knowledge_quiz_reference.ps1](../../scripts/test_knowledge_quiz_reference.ps1)、[引擎／配置适配夹具](../../scripts/fixtures/knowledge_quiz_reference_harness.cs)、[原表、期望结果及输入哈希](../../scripts/fixtures/knowledge-quiz-reference.json)、
+
+`scripts/prepare_activity_games.py`（来源工具标识）、
+
+`scripts/prepare_tree_felling.py`（来源工具标识）、[tree-felling/source-manifest.json](../../assets/reference/tree-felling/source-manifest.json)
+
+[tree-felling/audio/source-manifest.json](../../assets/reference/tree-felling/audio/source-manifest.json)、
+
+`scripts/test_match3_reference.ps1`（来源工具标识）、[运行适配夹具](../../scripts/fixtures/match3_reference_harness.cs)、[原代码测试输入及源文件哈希](../../scripts/fixtures/match3-reference.json)、
+
+`scripts/prepare_match3_game.py`（来源工具标识）、
+
+[match3-game/source-manifest.json](../../assets/reference/match3-game/source-manifest.json)、[match3-game/audio/source-manifest.json](../../assets/reference/match3-game/audio/source-manifest.json)、`scripts/prepare_activity_game_assets.py`（来源工具标识）
+
+`scripts/prepare_activity_game_audio.py`（来源工具标识）、[activity-games/source-manifest.json](../../assets/reference/activity-games/source-manifest.json)、[activity-games/audio/source-manifest.json](../../assets/reference/activity-games/audio/source-manifest.json)、`scripts/prepare_jigsaw_game.py`（来源工具标识）、
+
+[jigsaw-game/source-manifest.json](../../assets/reference/jigsaw-game/source-manifest.json)、[jigsaw-game/audio/source-manifest.json](../../assets/reference/jigsaw-game/audio/source-manifest.json)、
+
+[test_jump_score_reference.ps1](../../scripts/test_jump_score_reference.ps1)、[ActivityKnowledgeQuizQuestionInfoParser.DrawQuestions／BuildShuffledOptionMap](../../.tools/source-packages/official-code/common-source/Common/ActivityKnowledgeQuizQuestionInfoParser.cs)
+
+[KnowledgeQuizQuestionPanelAnswerContent](../../.tools/source-packages/official-code/client-source/KnowledgeQuizQuestionPanelAnswerContent.cs)、[KnowledgeQuizSetting](../../.tools/source-packages/official-code/common-source/Common/KnowledgeQuizSetting.cs)
+
+[FootballCollisionWorld](../../.tools/source-packages/official-code/common-source/Common/FootballCollisionWorld.cs)、[LWPhysicsWorld](../../.tools/source-packages/official-code/framework-firstpass-source/Framework.Physics.LightweightPhysics/LWPhysicsWorld.cs)
+
+[ContactSolver](../../.tools/source-packages/official-code/framework-firstpass-source/Framework.Physics.LightweightPhysics/ContactSolver.cs)、[FP64](../../.tools/source-packages/official-code/framework-firstpass-source/Framework.FixedPoint/FP64.cs)、[FootballCollisionPanel](../../.tools/source-packages/official-code/client-source/FootballCollisionPanel.cs)、[FootballChargeController](../../.tools/source-packages/official-code/client-source/Common.FootballPhysics.UI/FootballChargeController.cs)、[FootballPitchView](../../.tools/source-packages/official-code/client-source/Common.FootballPhysics.UI/FootballPitchView.cs)
+
+[football-panel.json](../../assets/official/activity-games/football-panel.json)、`scripts/prepare_football_assets.py`（来源工具标识）

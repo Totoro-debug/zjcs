@@ -653,6 +653,7 @@ namespace Zjcs.Presentation.World
         public int activeBattlePlacementId;
         public long activeBattleSavedAt;
         public int[] aloneWorldClassIds = Array.Empty<int>();
+        public string map13GridVisibility;
     }
 
     [Serializable]

@@ -72,6 +72,13 @@ def build() -> dict:
     worlds = [row for row in tables["Map/map_world"] if row.get("ClassId") == 14]
     if len(map_rows) != 1 or len(regions) != 111 or len(worlds) != 1:
         raise ValueError("Map14 official map, region, or world table rows are incomplete")
+    gated_regions = [row["Region"] for row in regions
+                     if row.get("LimitServerRank", 0) != 0
+                     or row.get("LimitServerRankUnlockDayOffset", 0) != 0
+                     or row.get("ReleaseTimeId", 0) != 0
+                     or row.get("ReleaseTimeOffset", 0) != 0]
+    if gated_regions:
+        raise ValueError("Map14 region release rules need explicit offline migration: " + str(gated_regions))
     world = worlds[0]
     if world.get("DefEntryId") != 101 or world.get("AccessibleCondition", {}).get("MapClassId") != 14:
         raise ValueError("Map14 world entry or activation condition differs from its official table")
@@ -84,6 +91,24 @@ def build() -> dict:
         raise ValueError("Map14 mover does not match the already verified original player mover")
     mover = map10["CharacterMover"]
     map_info = map_rows[0]
+    condition_rows = {row["ClassId"]: row for row in tables["conditions"]}
+    condition_ids = {row["AccessibleConditionId"] for row in regions if row["AccessibleConditionId"] > 0}
+    pending_conditions = list(condition_ids)
+    while pending_conditions:
+        condition_id = pending_conditions.pop()
+        row = condition_rows.get(condition_id)
+        if row is None:
+            raise ValueError("Map14 region references a missing official condition: " + str(condition_id))
+        condition = row.get("Condition") or {}
+        if condition.get("_type") == "CompositeAndCondition":
+            for child in condition.get("Ids") or []:
+                if child not in condition_ids:
+                    condition_ids.add(child)
+                    pending_conditions.append(child)
+    if any((condition_rows[value].get("Condition") or {}).get("_type") not in {
+        "WorldMapProgressCondition", "StoryCountCondition", "CompositeAndCondition", "MapLogicEntityEndByTagCondition"
+    } for value in condition_ids):
+        raise ValueError("Map14 contains an unbound official region condition type")
     table_names = {
         "Map/map": "TbMapInfo", "Map/map_region": "TbMapRegionInfo", "Map/map_area": "TbMapAreaInfo",
         "Map/map_world": "TbMapWorldInfo", "Map/map_logic_entity_tag": "TbMapLogicEntityTag",
@@ -141,6 +166,13 @@ def build() -> dict:
             or ("EntityClassId" in row and row["EntityClassId"] in {item["entity"] for item in placement["entities"]})
         ],
     }
+    definition["Configs"].extend(
+        {"TableName": "TbConditionInfo", "RecordId": str(condition_id),
+         "Json": json.dumps(condition_rows[condition_id], ensure_ascii=False, separators=(",", ":"), sort_keys=True),
+         "Sha256": sha(encode(condition_rows[condition_id])),
+         "SourceBundle": "Map14/Source/tables.json", "SourcePathId": "conditions"}
+        for condition_id in sorted(condition_ids)
+    )
     definition_bytes = encode(definition)
     inputs = source_inputs + [{"path": "unity/Assets/Official/World/Map/10/map10.json", "sha256": sha(MAP10_DEFINITION.read_bytes())}]
     inputs_json = json.dumps(inputs, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
@@ -166,7 +198,8 @@ def build() -> dict:
         if not path.exists() or path.read_bytes() != raw:
             path.write_bytes(raw)
         write_meta(path, relative)
-    return {"mapClassId": 14, "regions": len(regions), "entities": len(definition["Entities"]),
+    return {"mapClassId": 14, "regions": len(regions), "regionAccessConditions": len(condition_ids),
+            "timedOrRankRegionGates": 0, "entities": len(definition["Entities"]),
             "entityComponents": len(definition["EntityComponents"]), "entryId": world["DefEntryId"],
             "sha256": sha(definition_bytes)}
 

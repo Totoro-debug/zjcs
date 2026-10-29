@@ -18,6 +18,9 @@ namespace Zjcs.Combat.Official
         private readonly Dictionary<int, Dictionary<int, Dictionary<int, long>>> summonRankFactors =
             new Dictionary<int, Dictionary<int, Dictionary<int, long>>>();
 
+        public bool HasSummonInheritance(int entityId) => summonFixedProps.ContainsKey(entityId)
+            && summonAdditions.ContainsKey(entityId);
+
         private sealed class SummonAddition
         {
             public int RankGroup;

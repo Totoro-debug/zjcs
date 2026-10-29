@@ -6,7 +6,7 @@
 
 ## 功能简介
 
-官方 prefab、组件和调用代码规定层级、锚点、布局、字体、遮罩、材质、输入、动画、粒子与声音；动态资源按原 CAB／PathID 或明确资源身份绑定。
+本页维护 Unity 竖屏场景、官方 UI prefab、控件、动画、字体、材质、粒子、音频及本地资源加载的共享要求；各玩法差异在所属页面维护。
 
 ## 原始官方实现
 
@@ -57,12 +57,28 @@ Compatibility Canvas 不自动解码 sRGB 采样，`prepare_battle_linear_textur
 
 共享 `WorldPopupWindow` 已补齐原 `Canvas` 读取与 `SetCanvasSortingOrder` 的“覆盖排序→设置顺序→发送通知”执行顺序，原 `SortingOrderSetter` 随弹窗通知更新子画布／排序组。通知复用原非泛型 GAction 的监听列表实现，保留先移除首个重复监听、跳过已移除监听和延后本次调用中新增监听的行为。相关规则、Unity 编译／全工程验证，以及山之国原队伍窗口两种尺寸的实际点击与显隐回归通过；新邀请页的完整表现仍见[山之国](../maps/map-12.md)。源码与来源见[原邀请模式与共享控件](../../assets/reference/official-map/map12-team-invite-panels-source-manifest.json)。
 
-尚无完整 Unity 流程的完成结论。
+尚无完整 Unity 流程的完成结论；已取得源码和转换素材仅作迁移依据。
 
 ## 自定义实现
 
-开放与本地保存遵循[共同离线政策](offline-access.md)，具体本地接线和未确认规则见下文。
+离线版没有远端玩家身份。已确认的233个玩家槽使用当前本地角色预览，不生成线上玩家头像或身份；Unity 须按原 prefab 的挂载位置恢复这项数据绑定。
+
+Unity 须恢复官方组件、资源、材质与渲染参数；无法恢复的部分按实际官方证据另行列出。
 
 ## 尚未实现
 
-接通官方代码、原生界面／资源、本地状态与存档，完成实际入口、模拟输入、画面及失败恢复验证，并发布对应 Windows 版本。
+- 官方prefab层级、布局组、字体、遮罩、材质、原生粒子、Spine动画／混合、音频及本地显式加载；逐项验证Windows兼容性。
+
+- 完成 Unity 实际入口、交互／表现、存档与失败恢复验证，并发布对应 Windows 可执行版本。
+
+## 代码与资源入口
+
+`scripts/prepare_character_appearance.py`（来源工具标识）
+
+[ui-source-manifest.json](../../assets/reference/character-appearance/ui-source-manifest.json)、[test_home_spine_clipping.mjs](../../scripts/test_home_spine_clipping.mjs)、[ui-spines-source-manifest.json](../../assets/reference/official-map/ui-spines-source-manifest.json)
+
+[prepare_official_panels.py](../../scripts/prepare_official_panels.py)、[UIParticleBloom.cs](../../.tools/source-packages/official-code/client-source/UIParticleBloom.cs)、[UIBloomRequirer.cs](../../.tools/source-packages/official-code/client-source/UIBloomRequirer.cs)
+
+`scripts/prepare_official_ui_materials.py`（来源工具标识）、[source-manifest.json](../../assets/reference/official-city/source-manifest.json)、`scripts/verify_official_assets.py`（来源工具标识）
+
+`scripts/official_particle_codec.py`（来源工具标识）

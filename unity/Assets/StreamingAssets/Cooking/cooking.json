@@ -7,6 +7,8 @@
   },
   "maxCookingCountAtATime": 9999,
   "cookingRecoveryCountThreshold": 10,
+  "minBatchUseCount": 1,
+  "maxBatchUseCount": 100,
   "recipes": [
     {
       "id": 7500,
@@ -4594,2135 +4596,3050 @@
       "name": "百味串串食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7023,
       "name": "百味锅食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7024,
       "name": "千霄果冻食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7051,
       "name": "愉悦沙拉食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7052,
       "name": "土豆烩肉食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7053,
       "name": "时蔬炖肉食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7054,
       "name": "蜜汁烤肉食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7055,
       "name": "坎斯汀汉堡食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7056,
       "name": "酸甜嘟嘟肉食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7057,
       "name": "嘟嘟果酿食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7058,
       "name": "黄金散蛋食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7059,
       "name": "树莓蛋糕食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7060,
       "name": "皇冠肉片披萨食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7061,
       "name": "松露甜饼食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7100,
       "name": "菇肉串烧食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7101,
       "name": "蘑菇浓汤食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7102,
       "name": "刺刺鲜汁食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7103,
       "name": "煎肉排食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7104,
       "name": "鲜果烧肉食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7105,
       "name": "塔吉锅炖肉食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7106,
       "name": "滚栗子烤肉食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7107,
       "name": "焦甜壳栗食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7108,
       "name": "太阳光晕食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7109,
       "name": "咖喱大乱炖食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7110,
       "name": "飞升之舞食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7111,
       "name": "月圆之夜食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7150,
       "name": "爽口海菜食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7151,
       "name": "青米寿司食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7152,
       "name": "御田烧食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7154,
       "name": "源式拉面食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7155,
       "name": "海之味食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7156,
       "name": "花鱼天妇罗食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7158,
       "name": "源式章鱼烧食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7159,
       "name": "解厄刺身食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7160,
       "name": "海珍本味刺身食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7161,
       "name": "黄油焗龙虾食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7200,
       "name": "绝味火烧食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7201,
       "name": "豆子焖肉食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7202,
       "name": "盐卤豆腐食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7203,
       "name": "青玉汤面食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7204,
       "name": "蜜汁豆饼食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7205,
       "name": "酱香卤肉食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7206,
       "name": "竹笋焖肉食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7207,
       "name": "红烧狮子头食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7208,
       "name": "将军破阵食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7209,
       "name": "身披金甲食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7210,
       "name": "山珍海味锅食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7211,
       "name": "黄金仙饺食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7250,
       "name": "星夜沙拉食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7251,
       "name": "幻云小炒食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7252,
       "name": "鲜果浓汤食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7253,
       "name": "天穹卷食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7254,
       "name": "军团烧肉食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7255,
       "name": "芳香裹肉卷食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7256,
       "name": "符文烧螺片食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7257,
       "name": "云端果塔食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7258,
       "name": "阳光炖菜食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7259,
       "name": "圣辉拔丝食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7260,
       "name": "璀璨冰点食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7261,
       "name": "幻巧方糕食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7300,
       "name": "海洋甜冻食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7301,
       "name": "甜蜜夹心饼食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7302,
       "name": "黄金南瓜派食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7303,
       "name": "玩偶布丁食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7304,
       "name": "流心巧克力食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7305,
       "name": "跳跳汽水食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7306,
       "name": "南瓜蜜冻食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7307,
       "name": "醇香雪顶食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7308,
       "name": "水晶奶昔食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7309,
       "name": "凤梨热狗食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7310,
       "name": "流星特调食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7311,
       "name": "星空慕斯食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7350,
       "name": "火龙果沙拉食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7351,
       "name": "火龙奶油浓汤食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7352,
       "name": "香草雪糕食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7353,
       "name": "炽热果糊食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7354,
       "name": "热辣大虾食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7355,
       "name": "爆辣肉汤食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7356,
       "name": "黄金虾球食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7357,
       "name": "火龙酱烤虾食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7358,
       "name": "极地虾荟食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7359,
       "name": "晶果蛋糕卷食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7360,
       "name": "冰与火之舞食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7361,
       "name": "冰火的交融食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7400,
       "name": "苹果挞食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7401,
       "name": "宝石果盘食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7402,
       "name": "果碎抓饭食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7403,
       "name": "青晶团子食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7404,
       "name": "琥珀酱饼食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7405,
       "name": "海参琥珀汤食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7406,
       "name": "蓝色晶点食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7407,
       "name": "琥珀奶酪煲食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7408,
       "name": "粉钻焖肉食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7409,
       "name": "粉钻烧海参食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7410,
       "name": "众星捧月食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7411,
       "name": "宝石荟萃食谱",
       "icon": "ItemIcon/Food/item_7000",
       "itemType": 322,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 7
     },
     {
       "id": 7500,
       "name": "青草团子",
       "icon": "ItemIcon/Food/item_7500",
       "itemType": 323,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7501,
       "name": "炭烤蘑菇",
       "icon": "ItemIcon/Food/item_7501",
       "itemType": 323,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7502,
       "name": "青露",
       "icon": "ItemIcon/Food/item_7502",
       "itemType": 323,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7503,
       "name": "荠菜煎饼",
       "icon": "ItemIcon/Food/item_7503",
       "itemType": 323,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7504,
       "name": "星辉面包",
       "icon": "ItemIcon/Food/item_7504",
       "itemType": 323,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7505,
       "name": "奶香爆米花",
       "icon": "ItemIcon/Food/item_7505",
       "itemType": 323,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7506,
       "name": "香草奶油包",
       "icon": "ItemIcon/Food/item_7506",
       "itemType": 323,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7507,
       "name": "果片飞饼",
       "icon": "ItemIcon/Food/item_7507",
       "itemType": 323,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7520,
       "name": "炒卷心菜",
       "icon": "ItemIcon/Food/item_7520",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7521,
       "name": "冒险者特制套餐",
       "icon": "ItemIcon/Food/item_7521",
       "itemType": 323,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7522,
       "name": "百味串串",
       "icon": "ItemIcon/Food/item_7522",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7523,
       "name": "百味锅",
       "icon": "ItemIcon/Food/item_7523",
       "itemType": 323,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7524,
       "name": "千霄果冻",
       "icon": "ItemIcon/Food/item_7524",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7525,
       "name": "梦幻一周年",
       "icon": "ItemIcon/Food/item_7525",
       "itemType": 323,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7526,
       "name": "御品青棕",
       "icon": "ItemIcon/Food/item_7526",
       "itemType": 323,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7527,
       "name": "月华鎏金饼",
       "icon": "ItemIcon/Food/item_7527",
       "itemType": 323,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7550,
       "name": "糖豆小人",
       "icon": "ItemIcon/Food/item_7550",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7551,
       "name": "愉悦沙拉",
       "icon": "ItemIcon/Food/item_7551",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7552,
       "name": "土豆烩肉",
       "icon": "ItemIcon/Food/item_7552",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7553,
       "name": "时蔬炖肉",
       "icon": "ItemIcon/Food/item_7553",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7554,
       "name": "蜜汁烤肉",
       "icon": "ItemIcon/Food/item_7554",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7555,
       "name": "坎斯汀汉堡",
       "icon": "ItemIcon/Food/item_7555",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7556,
       "name": "酸甜嘟嘟肉",
       "icon": "ItemIcon/Food/item_7556",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7557,
       "name": "嘟嘟果酿",
       "icon": "ItemIcon/Food/item_7557",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7558,
       "name": "黄金散蛋",
       "icon": "ItemIcon/Food/item_7558",
       "itemType": 323,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7559,
       "name": "树莓蛋糕",
       "icon": "ItemIcon/Food/item_7559",
       "itemType": 323,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7560,
       "name": "皇冠肉片披萨",
       "icon": "ItemIcon/Food/item_7560",
       "itemType": 323,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7561,
       "name": "松露甜饼",
       "icon": "ItemIcon/Food/item_7561",
       "itemType": 323,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7600,
       "name": "菇肉串烧",
       "icon": "ItemIcon/Food/item_7600",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7601,
       "name": "蘑菇浓汤",
       "icon": "ItemIcon/Food/item_7601",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7602,
       "name": "刺刺鲜汁",
       "icon": "ItemIcon/Food/item_7602",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7603,
       "name": "煎肉排",
       "icon": "ItemIcon/Food/item_7603",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7604,
       "name": "鲜果烧肉",
       "icon": "ItemIcon/Food/item_7604",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7605,
       "name": "塔吉锅炖肉",
       "icon": "ItemIcon/Food/item_7605",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7606,
       "name": "滚栗子烤肉",
       "icon": "ItemIcon/Food/item_7606",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7607,
       "name": "焦甜壳栗",
       "icon": "ItemIcon/Food/item_7607",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7608,
       "name": "太阳光晕",
       "icon": "ItemIcon/Food/item_7608",
       "itemType": 323,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7609,
       "name": "咖喱大乱炖",
       "icon": "ItemIcon/Food/item_7609",
       "itemType": 323,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7610,
       "name": "飞升之舞",
       "icon": "ItemIcon/Food/item_7610",
       "itemType": 323,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7611,
       "name": "月圆之夜",
       "icon": "ItemIcon/Food/item_7611",
       "itemType": 323,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7650,
       "name": "爽口海菜",
       "icon": "ItemIcon/Food/item_7650",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7651,
       "name": "青米寿司",
       "icon": "ItemIcon/Food/item_7651",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7652,
       "name": "御田烧",
       "icon": "ItemIcon/Food/item_7652",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7654,
       "name": "源式拉面",
       "icon": "ItemIcon/Food/item_7654",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7655,
       "name": "海之味",
       "icon": "ItemIcon/Food/item_7655",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7656,
       "name": "花鱼天妇罗",
       "icon": "ItemIcon/Food/item_7656",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7658,
       "name": "源式章鱼烧",
       "icon": "ItemIcon/Food/item_7658",
       "itemType": 323,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7659,
       "name": "解厄刺身",
       "icon": "ItemIcon/Food/item_7659",
       "itemType": 323,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7660,
       "name": "海珍本味刺身",
       "icon": "ItemIcon/Food/item_7660",
       "itemType": 323,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7661,
       "name": "黄油焗龙虾",
       "icon": "ItemIcon/Food/item_7661",
       "itemType": 323,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7700,
       "name": "绝味火烧",
       "icon": "ItemIcon/Food/item_7700",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7701,
       "name": "豆子焖肉",
       "icon": "ItemIcon/Food/item_7701",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7702,
       "name": "盐卤豆腐",
       "icon": "ItemIcon/Food/item_7702",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7703,
       "name": "青玉汤面",
       "icon": "ItemIcon/Food/item_7703",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7704,
       "name": "蜜汁豆饼",
       "icon": "ItemIcon/Food/item_7704",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7705,
       "name": "酱香卤肉",
       "icon": "ItemIcon/Food/item_7705",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7706,
       "name": "竹笋焖肉",
       "icon": "ItemIcon/Food/item_7706",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7707,
       "name": "红烧狮子头",
       "icon": "ItemIcon/Food/item_7707",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7708,
       "name": "将军破阵",
       "icon": "ItemIcon/Food/item_7708",
       "itemType": 323,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7709,
       "name": "身披金甲",
       "icon": "ItemIcon/Food/item_7709",
       "itemType": 323,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7710,
       "name": "山珍海味锅",
       "icon": "ItemIcon/Food/item_7710",
       "itemType": 323,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7711,
       "name": "黄金仙饺",
       "icon": "ItemIcon/Food/item_7711",
       "itemType": 323,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7750,
       "name": "星夜沙拉",
       "icon": "ItemIcon/Food/item_7750",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7751,
       "name": "幻云小炒",
       "icon": "ItemIcon/Food/item_7751",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7752,
       "name": "鲜果浓汤",
       "icon": "ItemIcon/Food/item_7752",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7753,
       "name": "天穹卷",
       "icon": "ItemIcon/Food/item_7753",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7754,
       "name": "军团烧肉",
       "icon": "ItemIcon/Food/item_7754",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7755,
       "name": "芳香裹肉卷",
       "icon": "ItemIcon/Food/item_7755",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7756,
       "name": "符文烧螺片",
       "icon": "ItemIcon/Food/item_7756",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7757,
       "name": "云端果塔",
       "icon": "ItemIcon/Food/item_7757",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7758,
       "name": "阳光炖菜",
       "icon": "ItemIcon/Food/item_7758",
       "itemType": 323,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7759,
       "name": "圣辉拔丝",
       "icon": "ItemIcon/Food/item_7759",
       "itemType": 323,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7760,
       "name": "璀璨冰点",
       "icon": "ItemIcon/Food/item_7760",
       "itemType": 323,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7761,
       "name": "幻巧方糕",
       "icon": "ItemIcon/Food/item_7761",
       "itemType": 323,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7800,
       "name": "海洋甜冻",
       "icon": "ItemIcon/Food/item_7800",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7801,
       "name": "甜蜜夹心饼",
       "icon": "ItemIcon/Food/item_7801",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7802,
       "name": "黄金南瓜派",
       "icon": "ItemIcon/Food/item_7802",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7803,
       "name": "玩偶布丁",
       "icon": "ItemIcon/Food/item_7803",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7804,
       "name": "流心巧克力",
       "icon": "ItemIcon/Food/item_7804",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7805,
       "name": "跳跳汽水",
       "icon": "ItemIcon/Food/item_7805",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7806,
       "name": "南瓜蜜冻",
       "icon": "ItemIcon/Food/item_7806",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7807,
       "name": "醇香雪顶",
       "icon": "ItemIcon/Food/item_7807",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7808,
       "name": "水晶奶昔",
       "icon": "ItemIcon/Food/item_7808",
       "itemType": 323,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7809,
       "name": "凤梨热狗",
       "icon": "ItemIcon/Food/item_7809",
       "itemType": 323,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7810,
       "name": "流星特调",
       "icon": "ItemIcon/Food/item_7810",
       "itemType": 323,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7811,
       "name": "星空慕斯",
       "icon": "ItemIcon/Food/item_7811",
       "itemType": 323,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7850,
       "name": "火龙果沙拉",
       "icon": "ItemIcon/Food/item_7850",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7851,
       "name": "火龙奶油浓汤",
       "icon": "ItemIcon/Food/item_7851",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7852,
       "name": "香草雪糕",
       "icon": "ItemIcon/Food/item_7852",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7853,
       "name": "炽热果糊",
       "icon": "ItemIcon/Food/item_7853",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7854,
       "name": "热辣大虾",
       "icon": "ItemIcon/Food/item_7854",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7855,
       "name": "爆辣肉汤",
       "icon": "ItemIcon/Food/item_7855",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7856,
       "name": "黄金虾球",
       "icon": "ItemIcon/Food/item_7856",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7857,
       "name": "火龙酱烤虾",
       "icon": "ItemIcon/Food/item_7857",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7858,
       "name": "极地虾荟",
       "icon": "ItemIcon/Food/item_7858",
       "itemType": 323,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7859,
       "name": "晶果蛋糕卷",
       "icon": "ItemIcon/Food/item_7859",
       "itemType": 323,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7860,
       "name": "冰与火之舞",
       "icon": "ItemIcon/Food/item_7860",
       "itemType": 323,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7861,
       "name": "冰火的交融",
       "icon": "ItemIcon/Food/item_7861",
       "itemType": 323,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7900,
       "name": "苹果挞",
       "icon": "ItemIcon/Food/item_7900",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7901,
       "name": "宝石果盘",
       "icon": "ItemIcon/Food/item_7901",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7902,
       "name": "果碎抓饭",
       "icon": "ItemIcon/Food/item_7902",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7903,
       "name": "青晶团子",
       "icon": "ItemIcon/Food/item_7903",
       "itemType": 323,
-      "quality": 2
+      "quality": 2,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7904,
       "name": "琥珀酱饼",
       "icon": "ItemIcon/Food/item_7904",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7905,
       "name": "海参琥珀汤",
       "icon": "ItemIcon/Food/item_7905",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7906,
       "name": "蓝色晶点",
       "icon": "ItemIcon/Food/item_7906",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7907,
       "name": "琥珀奶酪煲",
       "icon": "ItemIcon/Food/item_7907",
       "itemType": 323,
-      "quality": 3
+      "quality": 3,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7908,
       "name": "粉钻焖肉",
       "icon": "ItemIcon/Food/item_7908",
       "itemType": 323,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7909,
       "name": "粉钻烧海参",
       "icon": "ItemIcon/Food/item_7909",
       "itemType": 323,
-      "quality": 4
+      "quality": 4,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7910,
       "name": "众星捧月",
       "icon": "ItemIcon/Food/item_7910",
       "itemType": 323,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 7911,
       "name": "宝石荟萃",
       "icon": "ItemIcon/Food/item_7911",
       "itemType": 323,
-      "quality": 5
+      "quality": 5,
+      "canUse": true,
+      "canUseInBatches": false,
+      "itemUseEffectType": 8
     },
     {
       "id": 8000,
       "name": "生肉",
       "icon": "ItemIcon/Materials/item_8000",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8001,
       "name": "嫩肉",
       "icon": "ItemIcon/Materials/item_8000",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8002,
       "name": "精肉",
       "icon": "ItemIcon/Materials/item_8002",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8003,
       "name": "绝品肉",
       "icon": "ItemIcon/Materials/item_8002",
       "itemType": 324,
-      "quality": 4
+      "quality": 4,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8010,
       "name": "百味底料",
       "icon": "ItemIcon/Materials/item_8010",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8011,
       "name": "千味底料",
       "icon": "ItemIcon/Materials/item_8010",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8050,
       "name": "水",
       "icon": "ItemIcon/Materials/item_8050",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8051,
       "name": "胡椒",
       "icon": "ItemIcon/Materials/item_8051",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8052,
       "name": "糖",
       "icon": "ItemIcon/Materials/item_8052",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8053,
       "name": "盐",
       "icon": "ItemIcon/Materials/item_8053",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8054,
       "name": "木果粉",
       "icon": "ItemIcon/Materials/item_8054",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8055,
       "name": "乐园牛奶",
       "icon": "ItemIcon/Materials/item_8055",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8056,
       "name": "奶油",
       "icon": "ItemIcon/Materials/item_8056",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8057,
       "name": "黄玉奶酪",
       "icon": "ItemIcon/Materials/item_8057",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8101,
       "name": "青禾",
       "icon": "ItemIcon/Materials/item_8101",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8102,
       "name": "蘑菇",
       "icon": "ItemIcon/Materials/item_8102",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8104,
       "name": "芥菜",
       "icon": "ItemIcon/Materials/item_8104",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8105,
       "name": "琥珀凝胶",
       "icon": "ItemIcon/Materials/item_8105",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8106,
       "name": "玉米",
       "icon": "ItemIcon/Materials/item_8106",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8107,
       "name": "微光香草",
       "icon": "ItemIcon/Materials/item_8107",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8108,
       "name": "琉璃苹果",
       "icon": "ItemIcon/Materials/item_8108",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8120,
       "name": "面粉",
       "icon": "ItemIcon/Materials/item_8120",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8121,
       "name": "蜂蜜",
       "icon": "ItemIcon/Materials/item_8121",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8122,
       "name": "百花蜜",
       "icon": "ItemIcon/Materials/item_8121",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8123,
       "name": "蜂王浆",
       "icon": "ItemIcon/Materials/item_8121",
       "itemType": 324,
-      "quality": 4
+      "quality": 4,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8124,
       "name": "土豆",
       "icon": "ItemIcon/Materials/item_8124",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8125,
       "name": "甜土豆",
       "icon": "ItemIcon/Materials/item_8124",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8126,
       "name": "嘟嘟莓",
       "icon": "ItemIcon/Materials/item_8126",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8127,
       "name": "多汁嘟嘟莓",
       "icon": "ItemIcon/Materials/item_8126",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8128,
       "name": "蓝鸟蛋",
       "icon": "ItemIcon/Materials/item_8128",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8129,
       "name": "钴蓝鸟蛋",
       "icon": "ItemIcon/Materials/item_8128",
       "itemType": 324,
-      "quality": 4
+      "quality": 4,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8130,
       "name": "洁白松露",
       "icon": "ItemIcon/Materials/item_8130",
       "itemType": 324,
-      "quality": 4
+      "quality": 4,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8140,
       "name": "黄油",
       "icon": "ItemIcon/Materials/item_8140",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8141,
       "name": "咸黄油",
       "icon": "ItemIcon/Materials/item_8140",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8142,
       "name": "脱脂黄油",
       "icon": "ItemIcon/Materials/item_8140",
       "itemType": 324,
-      "quality": 4
+      "quality": 4,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8143,
       "name": "咖喱",
       "icon": "ItemIcon/Materials/item_8143",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8144,
       "name": "浓香咖喱",
       "icon": "ItemIcon/Materials/item_8143",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8145,
       "name": "刺刺果",
       "icon": "ItemIcon/Materials/item_8145",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8146,
       "name": "尖刺刺果",
       "icon": "ItemIcon/Materials/item_8145",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8147,
       "name": "甲壳栗",
       "icon": "ItemIcon/Materials/item_8147",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8148,
       "name": "铁甲壳栗",
       "icon": "ItemIcon/Materials/item_8147",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8149,
       "name": "绿洲之星",
       "icon": "ItemIcon/Materials/item_8149",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8150,
       "name": "绿洲新星",
       "icon": "ItemIcon/Materials/item_8149",
       "itemType": 324,
-      "quality": 4
+      "quality": 4,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8151,
       "name": "宝藏驼奶",
       "icon": "ItemIcon/Materials/item_8151",
       "itemType": 324,
-      "quality": 4
+      "quality": 4,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8160,
       "name": "味噌",
       "icon": "ItemIcon/Materials/item_8160",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8161,
       "name": "辛味噌",
       "icon": "ItemIcon/Materials/item_8160",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8162,
       "name": "水舞叶",
       "icon": "ItemIcon/Materials/item_8162",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8163,
       "name": "天舞青叶",
       "icon": "ItemIcon/Materials/item_8162",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8164,
       "name": "花瓣鱼",
       "icon": "ItemIcon/Materials/item_8164",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8165,
       "name": "鲜花瓣鱼",
       "icon": "ItemIcon/Materials/item_8164",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8166,
       "name": "八爪鱼",
       "icon": "ItemIcon/Materials/item_8166",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8167,
       "name": "潮汐八爪鱼",
       "icon": "ItemIcon/Materials/item_8166",
       "itemType": 324,
-      "quality": 4
+      "quality": 4,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8168,
       "name": "绀青龙虾",
       "icon": "ItemIcon/Materials/item_8168",
       "itemType": 324,
-      "quality": 4
+      "quality": 4,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8180,
       "name": "辣椒",
       "icon": "ItemIcon/Materials/item_8180",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8181,
       "name": "妖魔辣椒",
       "icon": "ItemIcon/Materials/item_8180",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8182,
       "name": "豆子",
       "icon": "ItemIcon/Materials/item_8182",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8183,
       "name": "干脆豆子",
       "icon": "ItemIcon/Materials/item_8182",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8184,
       "name": "竹笋",
       "icon": "ItemIcon/Materials/item_8184",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8185,
       "name": "山珍竹笋",
       "icon": "ItemIcon/Materials/item_8184",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8186,
       "name": "大螯蟹",
       "icon": "ItemIcon/Materials/item_8186",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8187,
       "name": "大鳌蟹王",
       "icon": "ItemIcon/Materials/item_8186",
       "itemType": 324,
-      "quality": 4
+      "quality": 4,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8188,
       "name": "金盏灵芝",
       "icon": "ItemIcon/Materials/item_8188",
       "itemType": 324,
-      "quality": 4
+      "quality": 4,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8200,
       "name": "雷电香油",
       "icon": "ItemIcon/Materials/item_8200",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8201,
       "name": "纯净雷电香油",
       "icon": "ItemIcon/Materials/item_8200",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8202,
       "name": "兰香茸",
       "icon": "ItemIcon/Materials/item_8202",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8203,
       "name": "星夜兰香茸",
       "icon": "ItemIcon/Materials/item_8202",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8204,
       "name": "云海螺肉",
       "icon": "ItemIcon/Materials/item_8204",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8205,
       "name": "风飘云海螺肉",
       "icon": "ItemIcon/Materials/item_8204",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8206,
       "name": "阳光果",
       "icon": "ItemIcon/Materials/item_8206",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8207,
       "name": "黄金阳光果",
       "icon": "ItemIcon/Materials/item_8206",
       "itemType": 324,
-      "quality": 4
+      "quality": 4,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8208,
       "name": "女神之泪",
       "icon": "ItemIcon/Materials/item_8208",
       "itemType": 324,
-      "quality": 4
+      "quality": 4,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8220,
       "name": "醇香可可脂",
       "icon": "ItemIcon/Materials/item_8220",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8221,
       "name": "浓香可可脂",
       "icon": "ItemIcon/Materials/item_8220",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8222,
       "name": "南瓜",
       "icon": "ItemIcon/Materials/item_8222",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8223,
       "name": "巨型南瓜",
       "icon": "ItemIcon/Materials/item_8222",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8224,
       "name": "跳跳果",
       "icon": "ItemIcon/Materials/item_8224",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8225,
       "name": "活力跳跳果",
       "icon": "ItemIcon/Materials/item_8224",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8226,
       "name": "水晶凤梨",
       "icon": "ItemIcon/Materials/item_8226",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8227,
       "name": "阳光水晶凤梨",
       "icon": "ItemIcon/Materials/item_8226",
       "itemType": 324,
-      "quality": 4
+      "quality": 4,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8228,
       "name": "星流果",
       "icon": "ItemIcon/Materials/item_8228",
       "itemType": 324,
-      "quality": 4
+      "quality": 4,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8240,
       "name": "热辣果浆",
       "icon": "ItemIcon/Materials/item_8240",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8241,
       "name": "超热辣果浆",
       "icon": "ItemIcon/Materials/item_8240",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8242,
       "name": "火龙果",
       "icon": "ItemIcon/Materials/item_8242",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8243,
       "name": "多汁火龙果",
       "icon": "ItemIcon/Materials/item_8242",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8244,
       "name": "冰冻海虾",
       "icon": "ItemIcon/Materials/item_8244",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8245,
       "name": "急冻海虾",
       "icon": "ItemIcon/Materials/item_8244",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8246,
       "name": "冰晶果",
       "icon": "ItemIcon/Materials/item_8246",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8247,
       "name": "蔚蓝冰晶果",
       "icon": "ItemIcon/Materials/item_8246",
       "itemType": 324,
-      "quality": 4
+      "quality": 4,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8248,
       "name": "冰炎果",
       "icon": "ItemIcon/Materials/item_8248",
       "itemType": 324,
-      "quality": 4
+      "quality": 4,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8260,
       "name": "琥珀酱",
       "icon": "ItemIcon/Materials/item_8260",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8261,
       "name": "百香琥珀酱",
       "icon": "ItemIcon/Materials/item_8260",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8262,
       "name": "青晶蓝莓",
       "icon": "ItemIcon/Materials/item_8262",
       "itemType": 324,
-      "quality": 1
+      "quality": 1,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8263,
       "name": "香甜青晶蓝莓",
       "icon": "ItemIcon/Materials/item_8262",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8264,
       "name": "黑曜海参",
       "icon": "ItemIcon/Materials/item_8264",
       "itemType": 324,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8265,
       "name": "珍宝黑曜海参",
       "icon": "ItemIcon/Materials/item_8264",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8266,
       "name": "粉钻果",
       "icon": "ItemIcon/Materials/item_8266",
       "itemType": 324,
-      "quality": 3
+      "quality": 3,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8267,
       "name": "璀璨粉钻果",
       "icon": "ItemIcon/Materials/item_8266",
       "itemType": 324,
-      "quality": 4
+      "quality": 4,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 8268,
       "name": "月石果",
       "icon": "ItemIcon/Materials/item_8268",
       "itemType": 324,
-      "quality": 4
+      "quality": 4,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     },
     {
       "id": 43001,
       "name": "莱姆胶",
       "icon": "ItemIcon/Materials/item_43001",
       "itemType": 108,
-      "quality": 2
+      "quality": 2,
+      "canUse": false,
+      "canUseInBatches": false,
+      "itemUseEffectType": 0
     }
   ]
 }

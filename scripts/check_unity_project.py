@@ -15,7 +15,7 @@ def check():
     errors = []
     assets = PROJECT / 'Assets'
     required = [
-        '.gdignore', 'Packages/manifest.json', 'ProjectSettings/ProjectVersion.txt',
+        'Packages/manifest.json', 'ProjectSettings/ProjectVersion.txt',
         'ProjectSettings/ProjectSettings.asset', 'ProjectSettings/EditorBuildSettings.asset',
         'Assets/Game/Editor/ProjectTools.cs', 'Assets/Game/Editor/Zjcs.Editor.asmdef',
         'Assets/Game/Scenes/Bootstrap.unity', 'Assets/Game/Runtime/Official',

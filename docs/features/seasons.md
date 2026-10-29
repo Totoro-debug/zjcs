@@ -6,11 +6,25 @@
 
 ## 功能简介
 
-官方赛季记录、装备继承及装备柜按赛季配置、原快照字段和只读详情界面展示，阶段和期限规则保持各自身份。
+当前赛季由人物 `Rank` 按固定 `astrological_season_config.Rank` 映射，`play.seasons.rank` 保存映射出的赛季编号；世界阶段独立控制原内容分档，不推进赛季。星命页进入固定版本 `854_156383` 的原S1～S6界面及已记录赛季。原表S7作为后续阶段保留，固定版本没有对应赛季详情页和继续推进入口。
 
 ## 原始官方实现
 
 官方赛季记录、装备继承及装备柜按赛季配置、原快照字段和只读详情界面展示，阶段和期限规则保持各自身份。
+
+### 待迁移的规则与表现
+
+赛季记录按原 `PlayerSeasonRecordData` 保存身份、姓名、真实性别、职业、外观、第一套战斗方案幻兽的种类与进化阶段、起止时间、赐福前后战力、五类赐福、玩法记录、评分及独立领奖标记。幻兽快照取战斗主位，与地图跟随幻兽分开；历史页面按原 `AstrologicalDestinyRoleContent` 在原角色和幻兽锚点显示该季模型。
+
+人物、装备、技能、古遗物、幻兽的基础投资与当季赐福分开保存。推进时先保存旧季真实状态、积分和结束时间，再建立新季五类赐福记录，重新计算等级与属性。幻兽只重置当季赐福等级及当季赐福经验；拥有列表、基础经验、阵容、跟随、进化、技能、能力、名称、潜能、设置及终身培养统计保留，旧季赐福仍用于历史评分。
+
+原玩法记录覆盖固定配置启用的魔王之塔最高层、日常副本难度与最佳评价、秘境首领伤害／击杀、地图进度、地图组进度、地区数、地图标签完成时间和羁绊冒险到达节点。完成时间、秘境所属阶位与实际登录日一并存档，积分、完成时效加分及奖励读取原表。
+
+已结束赛季的外观、幻兽、战力、玩法、装备柜与积分封存，后续换装、换性别或换幻兽不改写历史。养成与玩法奖励分别按原配置预览、领取和防重，成功保存后才生效；失败恢复物品、记录与领奖标记。
+
+赛季装备柜五部位读取该季真实快照，当前季随穿戴更新，结束后封存；普通与星石评分、总分、评价、进度和累计属性使用原配置。星石槽按原 `GetUnlcokInlaySiteIndex` 保存连续解锁的最后索引，无槽时为 `-1`，与槽位数量分开。
+
+点击已有装备打开原只读详情、词条、槽位养成和祝福说明，空槽按原点击无操作，下一赛季按实际记录显示。
 
 ### 官方代码与资源依据
 
@@ -40,12 +54,28 @@
 
 ## 完整还原部分
 
-尚无完整 Unity 流程的完成结论。
+尚无完整 Unity 流程的完成结论；已取得源码和转换素材仅作迁移依据。
 
 ## 自定义实现
 
-开放与本地保存遵循[共同离线政策](offline-access.md)，具体本地接线和未确认规则见下文。
+官方原由服务器下发玩法统计和赛季状态，本地改为由实际战斗、地图与推进事务更新同结构记录并计算原评分，不回扫胜利编造历史。只接受完整的当前版本字段；旧版本、缺字段或格式错误的记录均拒绝读取，不补默认值。首次建立的赛季记录只使用当前可观察状态，未记录的历史幻兽保持未知。
+
+赛末个人经验回落按用户补证，见[人物](character.md)；幻兽永久数据保留、仅重置赛季赐福已由用户明确确认。赛季记录按本地事务保存，失败整笔回滚。
+
+服务器天数与开放条件按[单机政策](offline-access.md)移除；赛季编号只按人物 `Rank` 配置映射，不依赖世界阶段或角色等级门槛。真人排行榜、排名奖励、竞技场及真人组队挑战统计不提供替代，不生成虚构玩家成绩。
 
 ## 尚未实现
 
-接通官方代码、原生界面／资源、本地状态与存档，完成实际入口、模拟输入、画面及失败恢复验证，并发布对应 Windows 版本。
+- 独立世界阶段与赛季记录、原评分、赛季赐福、装备柜、期末个人经验及幻兽永久数据处理。
+
+- 完成 Unity 实际入口、交互／表现、存档与失败恢复验证，并发布对应 Windows 可执行版本。
+
+### 已核实的官方评分依据
+
+固定配置 `854_156383` 的 `season-rules.json` 已含日常副本、魔王战场、秘境、地图进度、地图组、地区进度、地图完成时效及装备柜星石评分表。固定 APK 中 `destiny_score_award.g.bytes` 由 [prepare_official_season_score_awards.py](../../scripts/prepare_official_season_score_awards.py) 提取为 126 行，来源与输出哈希记录在 `assets/reference/season-lifecycle/source-manifest.json`；人物规则目录已将这些表纳入 `character-progression.json`。
+
+官方公共源码 [PlayerSeasonRecordDataWrapExtra](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/PlayerSeasonRecordDataWrapExtra.cs) 明确总分为赐福分、启用玩法分、装备柜分之和；玩家位阶低于记录位阶时赐福分和玩法分为0，玩法只累加该季 `GamePlayRecordTypes` 启用项。评分档位由 [DestinyScoreAwardInfoParser](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/DestinyScoreAwardInfoParser.cs) 按门槛选择不高于当前分数的最高档；玩法奖励读该档 `AwardItems`。赐福奖励为 `floor(赐福分 / SourceStarRateMatrialValue) + BaseBlessAwardCount`，物品为官方星命升级材料。该源码快照为 `871_156598`，数据表仍严格固定于 `854_156383`，二者未混写为同一版本。
+
+## 代码与资源入口
+
+官方记录字段与生命周期见 [PlayerSeasonRecordData](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/PlayerSeasonRecordData.cs)、[PlayerSeasonRecordDataWrap](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/PlayerSeasonRecordDataWrap.cs) 和 [SeasonRecordUtils](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/SeasonRecordUtils.cs)。Unity 表提取及合并入口为 [prepare_official_season_score_awards.py](../../scripts/prepare_official_season_score_awards.py) 和 [prepare_unity_character_catalog.py](../../scripts/prepare_unity_character_catalog.py)。

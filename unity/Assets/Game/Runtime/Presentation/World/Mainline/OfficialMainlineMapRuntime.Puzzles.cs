@@ -22,7 +22,7 @@ namespace Zjcs.Presentation.World
         {
             if (!MapProfile.HasNativeUi) return;
             if (puzzleRules == null || (mapClassId == 11 && puzzleRules.Count(value => value.TerminalLockIds.Length > 0) != 7)
-                || (mapClassId == 12 && puzzleRules.Count(value => value.TerminalPuzzleType > 0) != 11))
+                || ((mapClassId == 12 || mapClassId == 13) && puzzleRules.Count(value => value.TerminalPuzzleType > 0) != 11))
                 throw new InvalidDataException("Map" + mapClassId + " official puzzle bindings are incomplete.");
             puzzleEntityIds = new HashSet<int>(puzzleRules.Where(value => value.TerminalPuzzleType > 0
                 || value.HasPushResult || value.HasOverlapDetector || value.LockType > 1
@@ -42,7 +42,7 @@ namespace Zjcs.Presentation.World
                         if (mapEntities.ContainsKey(id)) added |= puzzleEntityIds.Add(id);
             } while (added);
             CreatePuzzleSession(localSave.puzzleStates);
-            if (mapClassId == 12) entityView.ContainsGridInput = (id, position) =>
+            if (mapClassId == 12 || mapClassId == 13) entityView.ContainsGridInput = (id, position) =>
             {
                 OfficialMapNavigationView.WorldToGrid(session.Definition.Navigation,
                     new OfficialMapVector3 { X = position.x, Y = position.y }, out int x, out int y);
@@ -182,6 +182,7 @@ namespace Zjcs.Presentation.World
             string before = JsonUtility.ToJson(localSave);
             MapPuzzleEntityState[] states = puzzles.Save();
             MapGridPoint player = navigation.currentGrid;
+            byte[] map13VisibilityBefore = map13GridVisibility?.Snapshot();
             bool progressPendingBefore = puzzleRegionProgressPending;
             puzzleMutationActive = true;
             try { mutation(); SaveLocalProgress(); }
@@ -190,6 +191,7 @@ namespace Zjcs.Presentation.World
                 localSave = JsonUtility.FromJson<Map10LocalSave>(before);
                 CreatePuzzleSession(states);
                 navigation.SetAvatarPosition(player);
+                if (map13VisibilityBefore != null) RestoreMap13Visibility(map13VisibilityBefore);
                 SynchronizePuzzleEntities();
                 puzzleRegionProgressPending = progressPendingBefore;
                 if (hud.ui != null) hud.ShowOfficialNotice("保存失败，请稍后重试");

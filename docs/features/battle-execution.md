@@ -52,7 +52,7 @@
 
 `prepare_unity_battle_skill_playables.py` 从上述固定目录提取 1,451 个含默认 Playable 的技能实体、1,480 个动作 cue（1,191 个 Animator 参数 cue、289 个 clip override），生成 `Combat/skill-playables.json` 并将官方 AnimationClip 复制到 `unity/Assets/Game/Resources/Combat/SkillAnimations/`。8 个 NPC／召唤物 clip 均由固定版技能 prefab 的 `OverrideClip` PPtr 解析到原始对象：7 个来自 APK 内 `defaultpackage_assets_appearanceassets_npc_npc_middle_model_anim.bundle`，另 1 个 `npc_10206/skill_01` 来自固定版本 CDN 的 `defaultpackage_assets_appearanceassets_npc_npc_big_model_anim.bundle`。7 个中型 NPC 动画来自既有 AssetRipper 缓存；新增大体型动画从该固定 bundle 单独转换，按 bundle 名、`m_Name` 和 `m_StopTime` 与原对象核对（1.8333 秒），原始 AnimationClip SHA256 为 `92777a742fd1146f6725d7b9d9a84686ac470bdc18f0a331caff6e5fbdf380c4`，导出 `.anim` SHA256 为 `b331f45ad0117359f3e34242bb01f8195612c014c93d8bf388c2c18295e410f7`。所有 132 个包内 clip 的来源文件／来源对象、APK 或 CDN bundle provenance、输入／输出 SHA256 及目录 GUID 写入 `battle-animation/skill-playables-source-manifest.json`。Unity Editor 导入和 Play Mode 动画结果尚未验证。
 
-`scripts/prepare_battle_native_mesh_pack.py` 将固定 APK 版本 `854_156383` 的已校验原 Spine 抽帧 JSON 规整为 Unity 可读网格帧，并仅绑定哈希匹配的官方 atlas 页，生成 `unity/Assets/StreamingAssets/Combat/native-battle-meshes.zip`。包内含403个模型、4609条动画记录及其引用纹理页；未找到匹配 atlas 页或模型 Spine 绑定的记录保留在来源清单的失败／跳过项，不补画替代素材。该包是原动画帧数据的运行载荷，不包含 Animator 状态机／过渡，也不代表完整战斗画面验收；内置屏 Play Mode 当前只验证岩灵／替身代表模型及姿态采样。
+`scripts/prepare_battle_native_mesh_pack.py` 将固定 APK 版本 `854_156383` 的已校验原 Spine 抽帧 JSON 规整为 Unity 可读网格帧，并仅绑定哈希匹配的官方 atlas 页，生成 `unity/Assets/StreamingAssets/Combat/native-battle-meshes.zip`。包内含403个模型、4609条动画记录及其引用纹理页；未找到匹配 atlas 页或模型 Spine 绑定的记录保留在来源清单的失败／跳过项，不补画替代素材。该包是原动画帧数据的运行载荷，不包含 Animator 状态机／过渡，也不代表完整战斗画面验收；内置屏  Play Mode 当前只验证岩灵／替身代表模型及姿态采样。
 
 依据：`unity/Assets/Official/Combat/native-battle-meshes-source-manifest.json`。
 
@@ -76,13 +76,7 @@ prepare_home_ui.py 从固定 854_156383 的 FurnitureFastHangUpDialog、其 Item
 
 固定版 `854_156383` 的 `FightUtilsHandler.IsSkillMeetProfession` 经 `ProfessionBaseInfoParser.IsSkillAvailableForProfession` 计算玩家主动／被动技能可用性；对应官方共享实现位于 `.tools/source-packages/official-code/common-source/Common/FightUtilsHandler.cs`、`FightSkillData.cs`、`PassiveSkillData.cs`、`ProfessionBaseInfoParser.cs` 与 `ProfessionUtils.cs`，数据来自 `assets/official/rules.json` 的 `profession_base`。离线目录按 `Skills`、`FightUsedSkills` 和 `PrePro` 继承链计算同一标记；职业为0时依据 `OfflineEquipmentProfile` 的装备位置10解析当前武器类型，按官方 Sword→Zhanshi（1）、Wand→Fashi（10）映射优先回退当前武器，再回退初始武器。Map10、日常副本、幻想塔和竞技场玩家技能绑定均写入 `ProfessionAvailability`。客户端 `FightMainPanelSkillUI` 将不匹配技能显示为 `GameSkillIcon.State.ProfessionLimit`。未找到施放执行链消费 `IsAvailable` 并拒绝技能的证据，故本地只迁移可用性标记与 HUD 状态，不添加释放禁令。
 
-开场对话原生布局与载荷完整性：`prepare_character_creation_opening.py --ui-layout-only` 从固定 APK `854_156383` 的 `defaultpackage_assets_prefabs_ui_story.bundle`（MD5 `5473f9c47986ea5caafb199bd112f7fe`）重新读取 `OptionTalkDialog` 的 22 个布局组件，记录各组件 pathID、原始字节 SHA256 与 bundle／APK 来源，沿已有官方 `UGUIJszx.HorizontalLayoutGroupJSZX` 恢复姓名框。输出 `unity/Assets/StreamingAssets/Opening/ui/opening-ui.json` 的 SHA256 为 `08c4186721aa51ff3103bf283e0060690a4c4c477b9603f6fea03bd5683e5f52`，清单为 `character-creation/opening-source-manifest.json`；原 Sprite、字体、材质和动画资源未替换。开场粒子网格保留 `opening-skill-effects-source-manifest.json` 与运行载荷已有 SHA256，五个文件仅恢复原 LF 字节，Git 属性固定换行，未调整预期哈希。模型沿原 SkeletonDataAsset 的 `0.01` 导入比例，并由 `prepare_opening_model_transforms.py` 提取 APK 内 7 个 FightMonster／FightNpc prefab 的完整模型 Transform 父链（怪物 XY 为 0.3，4201 为 0.3、4202 为 0.23，保留落脚偏移），输出 `Opening/model-transforms.json`，并恢复怪物原材质 `_StraightAlphaInput = 1` 与透明输入，消除透明区域白块，`Resources/Opening/OpeningShaderVariants.shadervariants` 显式保留相应 Windows shader 变体与四个转场 UI shader，避免 Player 剔除动态查找资源后黑屏；清单逐层记录 pathID、原始 SHA256 与 APK 来源，运行时取消按 Boss 高度二次归一缩放；对话选项按官方 `OptionSlot.Reset` 隐藏，Windows 点击推进为用户明确指定的单机交互差异。
-
-开场战斗单位与 HUD：固定 APK `854_156383` 的 FightNpc 4201／4202、Appearance 8401／8402、Boss 3803、GameRoundUI／GameRoundCharacterItem、GamePlayManagerConfig、CharacterDamageUI／DamageSequenceImage 及五套原位图字体已按 `prepare_opening_fighters.py`、`prepare_opening_unit_ui.py`、`prepare_opening_damage_ui.py` 和 `prepare_opening_skill_effects.py` 提取并显式绑定。Boss 原 107 节点／47 粒子、模板缓冲遮罩、网格描边和星空纹理保留；Windows 程序适配保留原材质属性、槽位深度和常量颜色。原生 HP Sprite 的九宫边框与世界单位换算已恢复。输入 APK／bundle／对象、官方类与输出 SHA256 见 [opening-source-manifest.json](../../assets/reference/character-creation/opening-source-manifest.json) 和 [opening-skill-effects-source-manifest.json](../../assets/reference/character-creation/opening-skill-effects-source-manifest.json)。 47 个运行网格保留已有 SHA256，Git 以二进制字节保存；不修改预期哈希。
-
 通用战斗准备与规则补全：`854_156383` 原战斗 prefab 的407项输入／初始化绑定由 `prepare_battle_hud_graphic_bindings.py` 提取并在 Resources 显式加载；404项为 Graphic／CanvasGroup 字段，3项为官方组件字段指向的初始隐藏对象，见 [graphic-bindings-source-manifest.json](../../assets/reference/battle-hud/graphic-bindings-source-manifest.json) 和 [session-source-manifest.json](../../assets/reference/battle-hud/session-source-manifest.json)。`prepare_battle_prop_defaults.py` 从 APK 的 `config_luban` 重新读取73条默认属性，迁移 `LevelPropParser.TryGetPropDict` 的缺键补齐机制，编译绑定至 `FightOfficialLevelPropDefaults`，输入、源码及生成哈希见 [prop-defaults-source-manifest.json](../../assets/reference/battle-rules/prop-defaults-source-manifest.json)。`prepare_battle_rule_texts.py` 从当前 `871_156598` 已校验语言文件提取5149条原文，输出 `Assets/Official/Combat/battle-texts.json`，版本与输入输出记录见 [text-source-manifest.json](../../assets/reference/battle-rules/text-source-manifest.json)，详情弹窗绑定待接。战斗验证依赖的累充原生曲线从已有官方 bundle 经 AssetRipper 恢复，保留曲线并适配 Legacy Animation，见 [动画来源](../../assets/reference/commerce-components/accumulated-panel-animation-source-manifest.json)。
-
-开场技能移动与受击：`prepare_opening_action_motion.py` 复用固定 APK `854_156383`，提取 11532／11833／15301 的 EC 配置、移动 prefab、轨迹曲线及 15300 的跑动触发器；按官方 `MyFightSkill` 的技能实体播放顺序恢复 9 个 NPC 专用动作。精英 3481／Boss 3803 的 `MeshMaterialProperty` 绑定、材质与 shader 对象及 `_HITEFFECT` GLES 程序哈希收录在 [opening-source-manifest.json](../../assets/reference/character-creation/opening-source-manifest.json) 的 `action_motion`；Windows 受击适配保留模板遮罩、透明裁剪及预乘混合，输出绑定为 `Opening/action-motion.json` 与 `Resources/Opening/OpeningSpineHit.shader`。`AppearanceRendererLite`／`CustomRenderExistingMesh` 的运行时材质登记也由同一来源清单记录，Boss 描边在受击克隆期间保持原替换关系；四个剧情 UI shader 调整 Windows 裁剪参数声明顺序，输出哈希列于同节。
 
 通用战斗场景和单位绑定：`scripts/prepare_battle_scene_bindings.py` 按 APK 优先、固定版 `854_156383` 云端缓存回退，恢复原 TagManager 排序层、344种单位模型 Transform 父链／MeshRenderer／血条排序及256个战斗场景的原相机位置和尺寸，严格解码 `GameCameraController` 依赖。输入对象、CAB、pathID、原始哈希和运行绑定哈希见 [layout-source-manifest.json](../../assets/reference/battle-scenes/layout-source-manifest.json)，载荷由 `Combat/battle-scene-bindings.json` 及 SHA256 侧车显式加载。现有场景网格恢复向下 Y／纹理 V，模型采样网格恢复纹理 V，并保留原 prefab 模型节点变换；这些是历史载荷的渲染修复，不代表已替换旧 Spine 转换依赖或完成原生角色动画。真实鼠标准备、运行至结算和场外节点／镜头恢复通过，角色、头像及完整 HUD 缺项仍见战斗所属页。
 
@@ -91,10 +85,6 @@ prepare_home_ui.py 从固定 854_156383 的 FurnitureFastHangUpDialog、其 Item
 战斗 HUD Sprite 导入：`OfficialBattleHudSpriteTools.Restore` 从上述30个固定版 prefab 节点读取88张实际引用图片的尺寸、边界、像素枢轴及 PPU，恢复38份受影响导入器；其中25张原九宫格边界先前未应用。`OfficialBattleHudAssetTools` 同步修复扁平树初始化和资源路径／文件名查找。原节点、官方来源清单／载荷、PNG、meta 及转换器 SHA256 见 [sprite-import-source-manifest.json](../../assets/reference/battle-hud/sprite-import-source-manifest.json)，显式绑定继续使用 `OfficialBattleHudCatalog`。聊天服务和动态头像仍未迁移完毕，新增元数据未生成完整素材快照。
 
 战斗头像拍摄：`prepare_battle_portraits.py` 分别读取 `854_156383`／`871_156598` 官方 APK 配置，确认头照摄影参数与场景分支开关相同，再从固定854 APK 提取摄影棚和两个场景时间轴 prefab 的原层级／组件引用。76项输入对象、版本、原始字节、官方代码、生成器、运行适配及 JSON 哈希见 [portrait-source-manifest.json](../../assets/reference/battle-hud/portrait-source-manifest.json)。运行载荷为 `Assets/Official/Combat/Portraits/Resources/Combat/battle-portraits.json`；`CharacterNativePortraitCapture` 以当前原生附件网格和已有官方姿势拍摄透明头像，不使用采样帧，不生成替代素材。此阶段尚未绑定完整场景时间轴及其材质、粒子与动画，新增载荷未生成完整素材快照。
-
-场景时间轴迁移：`prepare_battle_timeline.py` 按固定 `854_156383` APK 优先及已校验同版依赖恢复 `GameRoundScene`／`GameRoundCharacterItem_Scene` 的原 Transform、实际序列化字段引用、10张 Sprite、3份材质、3种 GLES shader 及原 Animator 控制器／4个片段。源纹理／图集、裁剪与 Sprite 几何、原对象／CAB／pathID、官方代码及运行适配哈希见 [timeline-source-manifest.json](../../assets/reference/battle-hud/timeline-source-manifest.json)；Windows 原生 prefab、材质、Sprite、controller、AnimationClip 与 meta 哈希见 [timeline-native-source-manifest.json](../../assets/reference/battle-hud/timeline-native-source-manifest.json)。显式绑定为 `Combat/OfficialBattleTimelineAssets`，动态头像复用上述摄影参数和当前原生角色网格，原圆形网格实现保持客户端 UV 修正；shader 从实际使用的 GLES 变体转换。其他角色类别和完整事件调度仍未完成，未生成完整素材快照。
-
-场景时间轴粒子：`prepare_battle_timeline_particles.py` 以固定 `854_156383` APK 的 `GameRoundCharacterItem_Scene` 及已校验依赖，经 AssetRipper 1.3.14 保留两组原生 ParticleSystem／Renderer 和四个 Transform，恢复两份材质／两张原贴图。Windows 材质绑定按原 `USE_MAINTEX` 第一粒子 pass 的 GLES 程序转换，保留第二地图投影 pass 原始程序供后续所属流程使用；没有启用原 prefab 关闭的 `UIParticle` 父节点。原 bundle／组件／材质／shader／贴图哈希、解码包、工具／生成器、导出输入和输出见 [timeline-particles-source-manifest.json](../../assets/reference/battle-hud/timeline-particles-source-manifest.json)，显式引用随场景时间轴原生 prefab 打包。
 
 战斗 NPC 时间轴头像：`prepare_battle_npc_portraits.py` 以固定 `854_156383` APK 的 `npc.g.bytes` 与官方构造器解码148条配置，通过 APK 优先及已校验同版云端 bundle 提取89张原 Texture2D／Sprite，保留原尺寸、中心枢轴、PPU和采样／环绕参数。配置、资源清单、原对象／bundle／APK或云端哈希、官方代码、生成器、显式目录及输出见 [npc-portraits-source-manifest.json](../../assets/reference/battle-hud/npc-portraits-source-manifest.json)，绑定入口为 `Combat/OfficialBattleNpcPortraitCatalog`，由通用场景时间轴的 NPC 分支按 `NpcClassId` 解析。战斗两表引用61个非零NPC，已覆盖53个；11015—11022的8张配置图片经854／871清单和全部9个头像 bundle 实际对象核对仍未定位，查找输入分别记录，未混用版本或替换素材；49条 MapExploreBoss 历史图路径及2条空 Icon 保留未绑定。
 
@@ -136,6 +126,8 @@ prepare_home_ui.py 从固定 854_156383 的 FurnitureFastHangUpDialog、其 Item
 
 战斗召唤继承使用已取得的官方 `BattleFormulaHandler.CalcSummonMonsterInheritProp`、`SummonRankAdditiveFactorParser` 和详情合并调用。当前871与历史854相应反编译文件逐字节一致，运行时保持854已校验配置；输入哈希、程序集与转换入口见 [召唤继承清单](../../assets/reference/battle-rules/summon-inheritance-source-manifest.json)，生成脚本为 `scripts/prepare_battle_summon_inheritance.py`。
 
+战斗岩灵／替身模型：模型3181／4600、原骨骼与atlas文本、完整纹理mip、原shader对象及岩灵头像Sprite原网格按APK优先和当前871云端来源恢复，转换／输入／输出哈希见[模型来源清单](../../assets/reference/battle-rules/summon-models-source-manifest.json)；Unity原生材质、骨骼数据、 shader及原URP管线显式绑定哈希见[模型绑定清单](../../assets/reference/battle-rules/summon-models-binding-source-manifest.json)。Play Mode只证明这两个模型和直接姿态采样，Animator过渡、其他模型、完整特效及Windows Player仍待实现，未生成完整素材快照。
+
 ## 完整还原部分
 
 技能伤害测试的被动技能快照保留战斗装配时的原物品、等阶、完整槽级和来源小阶；统计触发的子实体按原物品关联到详情，不要求子实体与根技能实体相同。快照与主动行动槽分开，状态消失后仍保留在内存检查点。规则检查覆盖状态清除后的检查点往返及不增加主动槽；实际交互和 Windows 验证范围见[技能](skills.md)。
@@ -150,7 +142,7 @@ prepare_home_ui.py 从固定 854_156383 的 FurnitureFastHangUpDialog、其 Item
 - `FightBattleCheckpointSerializer` 提供版本化 JSON 保存／读取，并在恢复时校验；检查点保留战斗状态、事件序号、随机种子和统计，重复或旧步骤不会再次结算。
 - `OfficialBattleRuntimeController`、`OfficialBattleSceneView`、`OfficialBattleHudView`、`OfficialBattleRoundDisplay` 和相关 Catalog 已接入场景、时间轴、血条、Boss、技能槽、状态、战报行、伤害飘字、元素反馈、镜头和公共控件。官方战斗 prefab／材质／字体按来源清单绑定。
 - `OfficialBattleProgressDriver` 统一 Arena、Fantasy Tower 和 Daily Dungeon 的自动进度节拍：只在控制器允许推进时累计时间，逐步调用 `Advance`，并用控制器计算的演出时长安排下一步；各玩法保留自己的进入、隐藏、检查点和结果事务。主线额外的阶段门控暂留在地图模块，但仍复用同一战斗控制器。
-- `OfficialBattleNativeAnimationLibrary` 和 `OfficialBattleNativeModelView` 已能加载已恢复的原生模型数据；固定版原动画采样包包含403个模型的4609条动画数据，纹理页按来源清单校验。岩灵／替身模型、HUD 绑定和部分骨骼姿态已做局部 Play Mode 检查；抽帧网格不等同 Animator 状态切换、逐骨骼混合或完整战斗演出。
+- `OfficialBattleNativeAnimationLibrary` 和 `OfficialBattleNativeModelView` 已能加载已恢复的原生模型数据；固定版原动画采样包包含403个模型的4609条动画数据，纹理页按来源清单校验。岩灵／替身模型、HUD 绑定和部分骨骼姿态已做局部  Play Mode 检查；抽帧网格不等同 Animator 状态切换、逐骨骼混合或完整战斗演出。
 - 战报构建和统计已保留施放、命中、治疗、护盾、承伤、破韧、状态及来源信息；缺失的旧存档字段保持未知，不从剩余 HP／护盾倒推。
 
 ### 已迁移代码与局部资源
@@ -159,11 +151,7 @@ prepare_home_ui.py 从固定 854_156383 的 FurnitureFastHangUpDialog、其 Item
 
 19个原版本缺失CAB依赖按既有独立校验机制读取新版官方同CAB包，真实 `864_156496` 版本、URL、MD5／SHA256和所用对象登记在上述收据的 `counterparts` 字段；其余场景主体保持854版本。没有修改原APK／CDN缓存或原版本185个缺项。场景入口保留原预制体根Transform，逻辑格经地面原点和根矩阵映射到原世界坐标；已转换几何保持同一世界坐标。转换资源加入显式加载清单及Windows导出过滤，运行时无需原Unity包、Python或网络。
 
-Map10 水面 Windows D3D11 编译适配仅为 `TRANSFORM_TEX` 的复合 UV 参数补充整体括号；官方 shader 来源仍为固定版 `854_156383` 的 `defaultpackage_unityshaders.bundle` （bundle hash `cac97355bb4799c415e3cb1ef38b6dc5`、PathID `5093245133389786381`）。原生重建入口为 `unity/Assets/Game/Resources/World/Map10Water.shader`，输出 SHA256 为 `7d8488c9451eb99a4f688d288146dd5059dcc79c8a56c68a6c816536f00ecb43`；已同步 `unity/Assets/Official/World/Map/10/rendering-source-manifest.json` 中的重建输出记录。纹理、官方输入哈希和显式加载路径均沿用原记录，Windows 构建已无水面 shader 编译错误；动态画面仍按地图页验收。
-
 通用战斗复用角色绑定：`OfficialBattleCharacterAnimationTools.Build` 检查既有男女原生 prefab 与实际 AnimatorController，各绑定26个非空 Motion，排除442／449个空状态；`Resources/Combat/OfficialBattleCharacterAnimationCatalog.asset` 按控制器引用和片段名称显式加载。输入 prefab／控制器哈希、既有转换链凭据、生成器及输出哈希见 [character-animation-binding-source-manifest.json](../../assets/reference/battle-models/character-animation-binding-source-manifest.json)。3100模型父链复用上述场景凭据，角色退场还原世界层级、变换、显隐和动画状态。没有重新烘焙 Spine 数据，历史转换依赖和未转换动作继续保留原结论，动态头像仍未完成。
-
-角色附件原生几何：`prepare_native_character_geometry.py` 从当前 `871_156598` 官方 APK 优先读取男女骨骼、分离动画原数据及实际图集，独立使用固定 MIT 格式读取器，保留二进制附件名称覆盖、原骨骼局部顶点、每个影响的权重、region 变换、图集裁剪／旋转及贴图路径。男性654／女性706个现有附件输出至 `Resources/CharacterCreation/native-character-geometry.json`，共享模型工厂绑定 `CharacterNativeAttachmentGeometry` 并校验 SHA256 侧车；原始输入、解码凭据、旧原生 prefab、生成器、运行绑定和输出哈希见 [native-geometry-source-manifest.json](../../assets/reference/character-creation/native-geometry-source-manifest.json)。该几何转换不调用 Spine runtime，也不使用网格帧；既有 Animator 的历史来源继续保留，完整约束／变形／未转换动作不在完成范围。
 
 战斗主面板材质：`prepare_battle_hud_materials.py` 从固定 `854_156383` 官方 FightMainPanel prefab 的三处实际 Image 引用取得序列帧、加亮及胶囊边框材质，沿引用取得原图、Shader 和全部16个 GLES 程序。Windows HLSL 转换保留选定分支的原运算与12个 UI 裁剪变体、材质属性和渲染状态，另外4个原分支归档保留；不复用缺少循环分支的其他 shader。输入对象／CAB／bundle／版本、转换器、运行绑定和输出哈希见 [materials-source-manifest.json](../../assets/reference/battle-hud/materials-source-manifest.json)，Unity 导入参数与原生材质／目录／meta 见 [materials-native-source-manifest.json](../../assets/reference/battle-hud/materials-native-source-manifest.json)。
 
@@ -173,6 +161,7 @@ Map10 水面 Windows D3D11 编译适配仅为 `TRANSFORM_TEX` 的复合 UV 参�
 
 以下内容是因为未取得服务器代码而做的本地替代，不宣称为原版服务器规则：
 
+- 用户确认的单机技能选向规则：技能目标沿用现有候选优先级，从选择范围内首个目标确定上／下／左／右朝向，再只保留同向范围内的目标；方位采用目标偏移主轴判定，等轴时沿用既有水平优先规则。实现位于 `FightBattleTargeting.SelectInSkillRange`，不声称恢复服务器 AI 的面向策略。
 - 离线执行采用固定随机种子、步骤序号、回执和版本化检查点，以便单机续算和重复输入去重；客户端只提供了消费消息和部分公式。
 - `FightBattleResultRules` 提供标准清场、显式保护目标和显式玩家对决三种可配置结果策略；主角死亡、保护目标死亡、双方全灭和回合上限的优先级属于离线策略，调用方必须明确参与者，不能从地图或同阵营猜测。
 - `FightBattlePreparationPositions` 用调用方提供的控制名单替代服务器站位请求，保留官方格网／身体占格校验，允许合法受控单位交换位置。
@@ -186,8 +175,6 @@ prepare_treasure_tasks.py补充固定854_156383的BattleEventType、原TreasureD
 固定版 `854_156383` 的 `assets/official/battle-rules.json` 中状态实体 `25275` 配置 `FightStatusUnflinchingOnDamageComponent.Rate=0.5`；来源与输出哈希由 `assets/reference/battle-rules/source-manifest.json` 核验。官方共享代码 `.tools/source-packages/official-code/common-source/Common/FightStatusUnflinchingOnDamageComponent.cs` 在状态 `OnInvoked` 时向持有者发出 `EStatusCustomAction.Unflinching`，枚举值为 2（`EStatusCustomAction.cs`）；服务端调用时机未取得。离线实现按用户确认的推断在每次实际 HP 损失时掷配置率，并将动作 2 写入战斗步进事件／回执；固定 HUD world prefab 数据的文案绑定为“霸体”。
 
 固定版 `854_156383` 的 `assets/official/battle-rules.json` 为随机命中实体 `13992`、`59361`、`11202` 配置 `MiniHitTargetCount` 与 `NotSameTarget=true`。官方共享类 `.tools/source-packages/official-code/common-source/Common/FightHitRandomTargetComponentInfo.cs` 定义随机范围、HitList 和去重字段；`.tools/source-packages/official-code/common-source/Common/FightHitRandomTargetComponent.cs` 仅提供这些配置，客户端 `.tools/source-packages/official-code/client-source/MyFightHitRandomTarget.cs` 是空包装，未取得服务端选敌器。离线按用户确认的规则，在同一组件的 HitList 子命中间按格网选择：`NotSameTarget` 排除已选单位，`NotSameEmptyScope` 排除已选空格，`NotSameGrid` 排除已选格子；候选耗尽时跳过后续子命中。`FilterOutOfGroundScope=true` 时越界格在分配前滤除，关闭时越界格可作为空格候选；`AllowEmptyScope` 允许空格消耗子命中名额，`NotAllowHitEmpty` 禁止空格命中，空格本身不造成伤害或召唤。选中单位作为子范围命中中心，召唤子命中仅消费选中的有效单位。执行和覆盖测试位于 `FightBattleHitCollector`、`FightBattleTargeting`、`FightBattleExecutor` 及 `scripts/test_unity_combat.ps1`；`FilterCondition` 等其他区域过滤仍未实现。
-
-断罪魔印累计伤害：`prepare_battle_accumulated_damage.py` 重新解析 `854_156383`／`871_156598` 两版 APK `config_ec` 的 `FightSkill_part703.g.bytes` 与 `FightSkill_part157.g.bytes`，核对24062累计组件、13148技能、13149命中与 Unity `battle-rules.json` 实际字段完全一致。原 bundle、CAB／对象、载荷哈希、反编译组件／枚举、当前中文 `entry_24062_desc` 和生成器哈希见 [accumulated-damage-source-manifest.json](../../assets/reference/battle-rules/accumulated-damage-source-manifest.json)。本地规则按说明累计非真实生命伤害、状态结束时执行原30%自定义伤害链；没有新增或替换美术。服务器完整触发排序未由此取得，已确认的来源分摊、优先选敌与承伤加成接线、施加者阵亡后的结算及剩余实体销毁边界见战斗页。
 
 魔印来源归因与优先选敌：两版24062的 `FightStatusComponent.AI.MoreHit` 已从实际 EC 载荷解码并与运行配置核对；官方 `FightStatusUtilsHandler.DistributeLongProportional` 直接保留整数取整及末项余数。输入、官方代码、运行实现哈希和用户确认的两条本地规则写入 [accumulated-damage-source-manifest.json](../../assets/reference/battle-rules/accumulated-damage-source-manifest.json)。触发实际生命伤害按原角色／技能贡献分摊，独立魔印事件保留；候选与嘲讽／混乱限制后优先标记，再沿原技能排序。这两处服务器接线没有取得，按已确认单机规则补足，不作为服务器源码已还原的结论。
 
@@ -223,7 +210,7 @@ prepare_treasure_tasks.py补充固定854_156383的BattleEventType、原TreasureD
 - **召唤和结果**：宠物、格子物件、智能物件及其他召唤的完整继承、数量、寿命、销毁、复活消费者和非命中 HP 变化；各外部玩法的结果策略、资源事务和奖励由所属页接入。
 - **HUD、战报和公共控件**：全部时间轴事件和头像、真实 Boss 视野、单位／阶段状态详情、技能品质／能量、正式战报入口、回放／快进／托管／背包／观战／聊天及完整语言字体服务；自动进度驱动目前合并三种 Runner，主线仍有独立阶段门控。
 - **画面和音频**：完整复合外观、Animator 状态切换／过渡／混合、生成／复活／召唤特效、Playable 精确停止／中断、范围／弹道／挂点／排序、相机环境、粒子、材质、shader、飘字合并和音频速度同步。
-- **验证和发布**：通用战斗全流程 Play Mode 模拟输入、真实画面／遮挡／缩放／声音、重启续战和 Windows Player 验证；完成前不能声称战斗功能完成或发布对应版本。
+- **验证和发布**：通用战斗全流程 Play Mode 模拟输入、真实画面／遮挡／缩放／声音、重启续战和 Windows  Player 验证；完成前不能声称战斗功能完成或发布对应版本。
 
 ### 原版战斗系统
 

@@ -17,7 +17,6 @@ namespace Zjcs.Presentation.Home
         private HomeTutorialGuide guide;
         private HomeTutorialNode node;
         private string receipt;
-        private string windowPath;
         private Button watchedButton;
         private UnityEngine.Events.UnityAction watchedButtonAction;
         private int observedFurnitureClick = -1;
@@ -118,7 +117,6 @@ namespace Zjcs.Presentation.Home
                 repairedFurniture = -1;
                 collectedHangUp = -1;
                 selectedOptionIndex = -1;
-                windowPath = null;
             }
             return StartOrPoll(dialogues, isResume, out reason);
         }
@@ -528,7 +526,7 @@ namespace Zjcs.Presentation.Home
                         || !ReadInt(param, "Count", out int targetCount))
                         return Unsupported("StoryCount condition parameters are incomplete.", out reason);
                     string op = ReadString(param, "Op", out string parsedOp) ? parsedOp : ">=";
-                    met = Compare(runtime.Profile.StoryCount(storyKey), op, targetCount);
+                    met = Compare(runtime.StoryCount(storyKey), op, targetCount);
                     break;
                 default:
                     return Unsupported("Player condition type has no local adapter: " + type, out reason);

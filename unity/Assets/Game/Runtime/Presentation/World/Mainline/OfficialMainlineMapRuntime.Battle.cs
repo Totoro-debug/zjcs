@@ -629,6 +629,15 @@ namespace Zjcs.Presentation.World
                     ProgressionResult win = progressionSave.RecordStageWin(checkpoint.StageId, winReceipt);
                     if (win.Status == ProgressionResultStatus.InvalidState)
                         throw new InvalidOperationException(win.Message);
+                    if (mapClassId == 12 && entity.PlacementId == 8101 && entity.ChangeMapClassId == 13)
+                    {
+                        string activateReceipt = MapReceiptPrefix + slotId + ":map-active:" + entity.PlacementId
+                            + ":" + checkpoint.StageId;
+                        ProgressionResult activated = progressionSave.ApplyMapActivationResult(
+                            entity.ChangeMapClassId, won, activateReceipt);
+                        if (activated.Status == ProgressionResultStatus.InvalidState)
+                            throw new InvalidOperationException(activated.Message);
+                    }
                 }
                 bool oneTimeStage = !stages.TryGetValue(checkpoint.StageId, out Map10RuntimeStage stage)
                     || stage.Repeat >= 0 || entity.PeriodicityGroupIds.Length > 0;

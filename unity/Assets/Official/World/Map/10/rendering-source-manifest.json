@@ -1,0 +1,1407 @@
+{
+  "environment": {
+    "butterflies": {
+      "animationCount": 2,
+      "animations": [
+        {
+          "animation": "loop1",
+          "fps": 12,
+          "frameCount": 26,
+          "payloadPath": "Resources/Map10/Environment/butterfly-loop1.json",
+          "payloadSha256": "aeac83b6382f70e7ccff59bedd753b3358da1802d32d776fedb09a35623a0bb5",
+          "sourceKey": "CAB-5535abce8e2887f21798f25cd34e1bc6:-6891413520483472068:loop1",
+          "textureResource": "Map10/Environment/Textures/Effect_Butterfly-e60d3cb120",
+          "textureUri": "res://assets/official/sprites/Effect_Butterfly-e60d3cb120.png"
+        },
+        {
+          "animation": "loop2",
+          "fps": 12,
+          "frameCount": 29,
+          "payloadPath": "Resources/Map10/Environment/butterfly-loop2.json",
+          "payloadSha256": "b2715911310b66d92a01df5f5aea291c39aafa5b293e39320b73e40fdbf7bc08",
+          "sourceKey": "CAB-5535abce8e2887f21798f25cd34e1bc6:-6891413520483472068:loop2",
+          "textureResource": "Map10/Environment/Textures/Effect_Butterfly-e60d3cb120",
+          "textureUri": "res://assets/official/sprites/Effect_Butterfly-e60d3cb120.png"
+        }
+      ],
+      "instanceCount": 15,
+      "material": {
+        "colorIntensity": 4.0,
+        "keywords": [
+          "USE_MAINTEX"
+        ],
+        "mainColor": [
+          0.1329209953546524,
+          0.9716981053352356,
+          0.15406188368797302,
+          1.0
+        ],
+        "name": "Effect_Butterfly_Material",
+        "reconstructionPath": "unity/Assets/Game/Resources/World/Map10Butterfly.shader",
+        "reconstructionSha256": "aaab10b159bdd513719afed7db23fa517a817e930b3d84cb67bae777869ffc36",
+        "shader": "Effect/Noise_Mask_Pro",
+        "shaderSource": {
+          "bundle": "defaultpackage_unityshaders.bundle",
+          "bundle_hash": "cac97355bb4799c415e3cb1ef38b6dc5",
+          "path_id": "-1464726073327024352"
+        },
+        "source": {
+          "bundle": "defaultpackage_share_59d476a8ec81fca5d04ff10b20762f4c.bundle",
+          "bundle_hash": "513a54afeb773a13940c255da950260a",
+          "path_id": "-7101318670455900551"
+        },
+        "sourceManifest": "assets/reference/official-map/materials-10-source-manifest.json",
+        "sourceManifestSha256": "118e86565fddb5abc529691f51b57d21dfa28acbf9b948e60963bc484e5fb257"
+      },
+      "payloadPath": "Resources/Map10/Environment/10-butterflies.json",
+      "payloadSha256": "5a7202d6dfed6a68354d613523f453c8a63bb18ccc45fc421b5f17fe68e771bb",
+      "runtimePayloadPath": "Resources/Map10/Environment/map10-butterflies-runtime.json",
+      "runtimePayloadSha256": "e7cf8771986a54dbdcdd8c2204504e4f73123268fcfb74a81d36d47bc4b41d96",
+      "source": "assets/official/regions/10-butterflies.json",
+      "sourceSha256": "5a7202d6dfed6a68354d613523f453c8a63bb18ccc45fc421b5f17fe68e771bb",
+      "textureBindings": {
+        "res://assets/official/sprites/Effect_Butterfly-e60d3cb120.png": [
+          "butterfly"
+        ]
+      }
+    },
+    "textures": [
+      {
+        "bindings": [
+          "butterfly"
+        ],
+        "bytes": 11846,
+        "path": "Resources/Map10/Environment/Textures/Effect_Butterfly-e60d3cb120.png",
+        "resource": "Map10/Environment/Textures/Effect_Butterfly-e60d3cb120",
+        "sRGB": true,
+        "sha256": "6c497b083deb9df8225c117baa94ec8371ad2ba88067e25ba2de41efadb3b92e",
+        "textureType": 0,
+        "uri": "res://assets/official/sprites/Effect_Butterfly-e60d3cb120.png"
+      },
+      {
+        "bindings": [
+          "water:_NoiseTex"
+        ],
+        "bytes": 119411,
+        "path": "Resources/Map10/Environment/Textures/IntersectionNoise-e9b08eeb1f.png",
+        "resource": "Map10/Environment/Textures/IntersectionNoise-e9b08eeb1f",
+        "sRGB": true,
+        "sha256": "2ec65768a4c72e3313805af431dbc7d2383da493b8ad030889f37ee66e1c3202",
+        "textureType": 0,
+        "uri": "res://assets/official/sprites/IntersectionNoise-e9b08eeb1f.png"
+      },
+      {
+        "bindings": [
+          "water:_BumpMap"
+        ],
+        "bytes": 111149,
+        "path": "Resources/Map10/Environment/Textures/Normal-b5f9f55d13.png",
+        "resource": "Map10/Environment/Textures/Normal-b5f9f55d13",
+        "sRGB": false,
+        "sha256": "cdd0b5786b311ac9d53cc1b4ae977f06a04539c6fe6b430a1463546f04f82785",
+        "textureType": 1,
+        "uri": "res://assets/official/sprites/Normal-b5f9f55d13.png"
+      },
+      {
+        "bindings": [
+          "water:_CausticsTex"
+        ],
+        "bytes": 757991,
+        "path": "Resources/Map10/Environment/Textures/SWS_Caustics-56d521d0cd.png",
+        "resource": "Map10/Environment/Textures/SWS_Caustics-56d521d0cd",
+        "sRGB": true,
+        "sha256": "5fb587e745fff3259eb7c86678a762fc91bfd5d0311744e9e2eddd5207910582",
+        "textureType": 0,
+        "uri": "res://assets/official/sprites/SWS_Caustics-56d521d0cd.png"
+      },
+      {
+        "bindings": [
+          "water:_FoamTex"
+        ],
+        "bytes": 520148,
+        "path": "Resources/Map10/Environment/Textures/SWS_Foam1-c73b2e901e.png",
+        "resource": "Map10/Environment/Textures/SWS_Foam1-c73b2e901e",
+        "sRGB": true,
+        "sha256": "575a52d20a2508ec76b9d1e60ab4cb8b045b1a045359d137d306eede7c3fe666",
+        "textureType": 0,
+        "uri": "res://assets/official/sprites/SWS_Foam1-c73b2e901e.png"
+      }
+    ],
+    "water": {
+      "mask": {
+        "draws": 430,
+        "path": "Resources/Map10/Environment/map10-water-mask.png",
+        "pixelsPerUnit": 64,
+        "rect": [
+          -24.0,
+          -29.0,
+          50.0,
+          53.0
+        ],
+        "resource": "Map10/Environment/map10-water-mask",
+        "sRGB": false,
+        "sha256": "d7a5649fa781562d844943a07679917d10013fd634af9c050b195e6c9d0a3fed",
+        "source": "res://assets/official/map-water-masks/10.png"
+      },
+      "material": {
+        "name": "Water2",
+        "reconstructionPath": "unity/Assets/Game/Resources/World/Map10Water.shader",
+        "reconstructionSha256": "7d8488c9451eb99a4f688d288146dd5059dcc79c8a56c68a6c816536f00ecb43",
+        "shader": "Universal Render Pipeline/2D/Sprite-Lit-CustomWater2",
+        "shaderSource": {
+          "bundle": "defaultpackage_unityshaders.bundle",
+          "bundle_hash": "cac97355bb4799c415e3cb1ef38b6dc5",
+          "path_id": "5093245133389786381"
+        },
+        "source": {
+          "bundle": "defaultpackage_assets_effect_customwater_materials.bundle",
+          "bundle_hash": "2ac52019735d04813f266bebf458ad2d",
+          "bundle_sha256": "4e96b74930f6f0158cdcdca6381a7de2141d747cadbf38e71ec7dbb5cc1286bf",
+          "bundle_size": 6006,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-6969598333244421885",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2ac52019735d04813f266bebf458ad2d.bundle"
+        },
+        "sourceManifest": "assets/reference/official-map/materials-10-source-manifest.json",
+        "sourceManifestSha256": "118e86565fddb5abc529691f51b57d21dfa28acbf9b948e60963bc484e5fb257"
+      },
+      "payloadPath": "Resources/Map10/Environment/map10-water.json",
+      "payloadSha256": "0bcfb1a06f162ac639cab73c6322dd92be66b300d54f1e5d4f0742b84aeda62a",
+      "rendererCount": 4,
+      "runtimePayloadPath": "Resources/Map10/Environment/map10-water-runtime.json",
+      "runtimePayloadSha256": "e3e6bad005fa455427ce7ba8ce6fc63aa61569541c05db26fa97a11c030fab43",
+      "source": "assets/official/map-water.json#10",
+      "sourceSha256": "c3c95e5bb93572711d11498f2f0ceb8f0d78d7b8ee42c84cb1a6aae5e24e0629",
+      "textureBindings": {
+        "res://assets/official/sprites/IntersectionNoise-e9b08eeb1f.png": [
+          "water:_NoiseTex"
+        ],
+        "res://assets/official/sprites/Normal-b5f9f55d13.png": [
+          "water:_BumpMap"
+        ],
+        "res://assets/official/sprites/SWS_Caustics-56d521d0cd.png": [
+          "water:_CausticsTex"
+        ],
+        "res://assets/official/sprites/SWS_Foam1-c73b2e901e.png": [
+          "water:_FoamTex"
+        ]
+      }
+    }
+  },
+  "geometry": {
+    "batches": 1404,
+    "bytes": 939780,
+    "indices": 26784,
+    "sha256": "cdd26c364ce85d62bd5225bd23fda7b1f7b5ec7d7dd446fba5f3bec6f08618ff",
+    "source": "assets/official/regions/10.geom",
+    "unityPath": "map10.geom.bytes",
+    "vertices": 17856
+  },
+  "manifest": "854_156383",
+  "mapClassId": 10,
+  "monsters": [
+    {
+      "animation": "idle_01",
+      "fps": 12,
+      "frameCount": 33,
+      "modelGeometryId": "7d63115af90f8892",
+      "modelGeometrySha256": "a9651fc8728be176f99814be52a771cfe635638041871ed06595f0d6a1c3178b",
+      "modelPath": "Appearance/Monster/3204/MonsterModel_3204",
+      "monsterId": 3204,
+      "payloadPath": "Resources/Map10/Monsters/3204.json",
+      "payloadSha256": "e62043ce4ed3870fe6d50d188b3ada7bb1b456ee6fb8b7866bfc3cea50c3b722",
+      "skeletonSha256": "92d1a70c772af4a1f8a90aa7918b93077f233c0268714b75d6c766b0ac7b16c6",
+      "skeletonSource": "spines/d0d64e8482fb7b6303f1.json",
+      "texturePath": "Resources/Map10/Textures/monster_3204-153c176735.png",
+      "textureSha256": "59ac42130001033b2613bff79327e27cf414c2fc29c24e19c9105551b072daea",
+      "textureUri": "res://assets/official/sprites/monster_3204-153c176735.png"
+    },
+    {
+      "animation": "idle_01",
+      "fps": 12,
+      "frameCount": 33,
+      "modelGeometryId": "f446af3074c6b7a5",
+      "modelGeometrySha256": "7d04606cce6a8855620f78ed87be0703c6da764f98f1e3e9dc9817f264d5b3cf",
+      "modelPath": "Appearance/Monster/3206/MonsterModel_3206",
+      "monsterId": 3206,
+      "payloadPath": "Resources/Map10/Monsters/3206.json",
+      "payloadSha256": "d737a69f99dc258b3b2b54aabf0d995d910abe73d1b0595a30f38b6604f10ce9",
+      "skeletonSha256": "ba15ba9c911ebf3752556dc422b86a230ae6568671f02589263c666b4c88eba8",
+      "skeletonSource": "spines/fd60bb11dd9408adbdfc.json",
+      "texturePath": "Resources/Map10/Textures/monster_3206-ba95eea5e3.png",
+      "textureSha256": "5d78e4e90bf9a66ad66dabc8b5f2958b318d31b6d285ea19f0628c7b63bfd63d",
+      "textureUri": "res://assets/official/sprites/monster_3206-ba95eea5e3.png"
+    },
+    {
+      "animation": "idle_01",
+      "fps": 12,
+      "frameCount": 33,
+      "modelGeometryId": "70aac1d486fe6f54",
+      "modelGeometrySha256": "f02ca906c16caedab144b28363b5a88ae02eb1f810b8c20529445f0bd85dd934",
+      "modelPath": "Appearance/Monster/3207/MonsterModel_3207",
+      "monsterId": 3207,
+      "payloadPath": "Resources/Map10/Monsters/3207.json",
+      "payloadSha256": "86b7b92b05bf84a42d9e729570013dc2f94ea838e82acdfda61f7bc2e07fc809",
+      "skeletonSha256": "320264b89f3ef527527779aa9f62abd60590feb19606bba7fbbf5493145dc365",
+      "skeletonSource": "spines/7c6f830469366ffd6f71.json",
+      "texturePath": "Resources/Map10/Textures/monster_3207-6776c66f79.png",
+      "textureSha256": "2ec26e841e625b11590014c22debbb725c0a9d67cda31778416aa08230fe56d2",
+      "textureUri": "res://assets/official/sprites/monster_3207-6776c66f79.png"
+    },
+    {
+      "animation": "idle_01",
+      "fps": 12,
+      "frameCount": 33,
+      "modelGeometryId": "e55bb3efed206fd2",
+      "modelGeometrySha256": "8e74c6b99f8c0d254d768ed133ca124ab7e17654d451f52d420c619170ccbb36",
+      "modelPath": "Appearance/Monster/3254/MonsterModel_3254",
+      "monsterId": 3254,
+      "payloadPath": "Resources/Map10/Monsters/3254.json",
+      "payloadSha256": "f35019b7d57d655eb51b33c6189821aeb81f7fce8d3f0389eaf1d378136be769",
+      "skeletonSha256": "bc44b09cbd4b5648c57ed8ba7463780ff763454166974f8fb3f7d1c63d975a33",
+      "skeletonSource": "spines/c582deee6002fc32159a.json",
+      "texturePath": "Resources/Map10/Textures/monster_3254-bef60bcd48.png",
+      "textureSha256": "f10d4b15df32d71083527f474206566e98f3905897b50bf70b89dba15a87e3f4",
+      "textureUri": "res://assets/official/sprites/monster_3254-bef60bcd48.png"
+    },
+    {
+      "animation": "idle_01",
+      "fps": 12,
+      "frameCount": 33,
+      "modelGeometryId": "889cb26615297068",
+      "modelGeometrySha256": "8526d80dc55b6a9e27cee385d96a7f75a9c694f42f06d4731448dd85c24287aa",
+      "modelPath": "Appearance/Monster/3255/MonsterModel_3255",
+      "monsterId": 3255,
+      "payloadPath": "Resources/Map10/Monsters/3255.json",
+      "payloadSha256": "3ff390fcf729c3d384168841111ad19a1009619c03f5623522f41c5a36210c8f",
+      "skeletonSha256": "b2bbadee7b86fa2dd1b4e667399cf339a8b7b7969ce2917063ed0c62b714b80b",
+      "skeletonSource": "spines/74403492c80195502ee9.json",
+      "texturePath": "Resources/Map10/Textures/monster_3255-d6524a7709.png",
+      "textureSha256": "03f5e1b9b6f632941b24af6c376cbadb0ca56f3c164f6edf65ad1bc4ed69cea4",
+      "textureUri": "res://assets/official/sprites/monster_3255-d6524a7709.png"
+    },
+    {
+      "animation": "idle_01",
+      "fps": 12,
+      "frameCount": 12,
+      "modelGeometryId": "bf5f1a507ed28c29",
+      "modelGeometrySha256": "19992133a0ecfb23c328cf1556b5f88faadb3784d9557ccd262b8898e46d2a7a",
+      "modelPath": "Appearance/Monster/3281/MonsterModel_3281",
+      "monsterId": 3281,
+      "payloadPath": "Resources/Map10/Monsters/3281.json",
+      "payloadSha256": "5c84d5a656f201feb2973aff52c4dd765bb3554b1267ca6b39b08035da7cb805",
+      "skeletonSha256": "0c9767c3bba56fdcf5989940eca96b0ba0b566bf10edd464cc2df0db33b938bd",
+      "skeletonSource": "spines/52bca2e36af1b4fab243.json",
+      "texturePath": "Resources/Map10/Textures/monster_3281-81ac396ff2.png",
+      "textureSha256": "da870bb37277d2835aa1ddc117166c3af9dc8b2d2bc0dc53cd84c59f3e1b2bbb",
+      "textureUri": "res://assets/official/sprites/monster_3281-81ac396ff2.png"
+    },
+    {
+      "animation": "idle_01",
+      "fps": 12,
+      "frameCount": 17,
+      "modelGeometryId": "e527855625d5c668",
+      "modelGeometrySha256": "ecb083eb2681fbb17af706423b9b16d8d543e2072848e079d65a72431f1bb98d",
+      "modelPath": "Appearance/Monster/3282/MonsterModel_3282",
+      "monsterId": 3282,
+      "payloadPath": "Resources/Map10/Monsters/3282.json",
+      "payloadSha256": "57141734d568dfc2638ab4891773435c894323fb5ac857c4b5afdcf52c6aef10",
+      "skeletonSha256": "f30ca0b763fc907548b38af9bcbfbc8409279da0e6f1790fb68e4de37c267db9",
+      "skeletonSource": "spines/ced301b221e1933a9d59.json",
+      "texturePath": "Resources/Map10/Textures/monster_3282-1d249822a9.png",
+      "textureSha256": "68fba978eb16125e88feccd1acfa15b25c7278d5329a4819f1bf1d7bf0106c73",
+      "textureUri": "res://assets/official/sprites/monster_3282-1d249822a9.png"
+    },
+    {
+      "animation": "idle_01",
+      "fps": 12,
+      "frameCount": 17,
+      "modelGeometryId": "df40ac1ab5b41f81",
+      "modelGeometrySha256": "863b49ab27ded995ad6459675c1354ceec2fa65763b99a26437f5d99eed48d9d",
+      "modelPath": "Appearance/Monster/3283/MonsterModel_3283",
+      "monsterId": 3283,
+      "payloadPath": "Resources/Map10/Monsters/3283.json",
+      "payloadSha256": "6634b04a7097b5b56a05e99313e722f29ee6d7dbe526590b7037f11f9721c9e2",
+      "skeletonSha256": "ebf11546ac6d8eaf256b2b7e35d6ce060a14e050294c0d388a113d49afeaad5d",
+      "skeletonSource": "spines/64f3adcbadbf4fd118d5.json",
+      "texturePath": "Resources/Map10/Textures/monster_3283-7d1ccca9d9.png",
+      "textureSha256": "9eb0ac2eb6ae2c2f3187152456bc46b88412c61401de9741ac9610268bd701f9",
+      "textureUri": "res://assets/official/sprites/monster_3283-7d1ccca9d9.png"
+    },
+    {
+      "animation": "idle_01",
+      "fps": 12,
+      "frameCount": 33,
+      "modelGeometryId": "b7083b85259c61ad",
+      "modelGeometrySha256": "5bdf746468d521cc21245622a9f6818414136320333f687508fd8b80da5f4f53",
+      "modelPath": "Appearance/Monster/3401/MonsterModel_3401",
+      "monsterId": 3401,
+      "payloadPath": "Resources/Map10/Monsters/3401.json",
+      "payloadSha256": "2ce8c19afefc17bd799c8b47442f23a5a6e52d0c9c304b215e448c5f0b5a16bc",
+      "skeletonSha256": "9fa2b6666fa4a6eec283281af3489a9f6c18ff9ba66093b5bf93f7a6d20e28c2",
+      "skeletonSource": "spines/5833b00fc99582f023a4.json",
+      "texturePath": "Resources/Map10/Textures/monster_3401-a221877d49.png",
+      "textureSha256": "1af6aa61db79d5adbd07edae14c108032e0d9c00aeb5ed20f6cb3072d866f06b",
+      "textureUri": "res://assets/official/sprites/monster_3401-a221877d49.png"
+    },
+    {
+      "animation": "idle_01",
+      "fps": 12,
+      "frameCount": 24,
+      "modelGeometryId": "b7635b8145756adc",
+      "modelGeometrySha256": "8797aeb71225878c8169c422f3fd22708c116b5c74e470a5849ea6a0a104a7ed",
+      "modelPath": "Appearance/Monster/3411/MonsterModel_3411",
+      "monsterId": 3411,
+      "payloadPath": "Resources/Map10/Monsters/3411.json",
+      "payloadSha256": "d1b78dab3f11c7f23cd5cf2a97e206e11414e027c42b3d026ff20b7921573bcd",
+      "skeletonSha256": "7642ad1dee89121a27a93a6624a715da5fe962a3ad47e0a01db94b7e23521777",
+      "skeletonSource": "spines/4f56a04380744f92c7e8.json",
+      "texturePath": "Resources/Map10/Textures/monster_3411-8399764302.png",
+      "textureSha256": "c46a46f38a5f29519c15c335ca80c0d005da0c5d3faca66d7c74d08ad9c01d8f",
+      "textureUri": "res://assets/official/sprites/monster_3411-8399764302.png"
+    },
+    {
+      "animation": "idle_01",
+      "fps": 12,
+      "frameCount": 41,
+      "modelGeometryId": "a1e13824d10a9c7d",
+      "modelGeometrySha256": "c816dcab1ff3d6726d4cb7ad8fb7933ea9ac5e6abf5055a36ffa4f7ec8d7a174",
+      "modelPath": "Appearance/Monster/3603/MonsterModel_3603",
+      "monsterId": 3603,
+      "payloadPath": "Resources/Map10/Monsters/3603.json",
+      "payloadSha256": "6a475081fc77fd60beba3e8f59dd0d8ef1a2ad7792f3e433d5045deb6732e257",
+      "skeletonSha256": "4aab5a02cda5635fa428188158020591ce2b69f95947b890992f989da9b9b055",
+      "skeletonSource": "spines/03c6c5deabaa086a5095.json",
+      "texturePath": "Resources/Map10/Textures/monster_3601-4247f70ca1.png",
+      "textureSha256": "0b7ddba38edea3361cf74ab23ee8d34478c72fe6753c0edc35e529cdbad2bcfc",
+      "textureUri": "res://assets/official/sprites/monster_3601-4247f70ca1.png"
+    }
+  ],
+  "storyActors": [
+    {
+      "animation": "npc_8402/appear_01",
+      "entityClassId": 8402,
+      "fps": 12,
+      "frameCount": 4,
+      "payloadPath": "Resources/Map10/StoryActors/8402-appear_01.json",
+      "payloadSha256": "51c2b4c23ffcfe89281d1e2e2b9129f87f4811ea05d8c062ab091460b34f7f86",
+      "skeletonSha256": "69b7289be625c92af7583287e633e07cb829fb7986b329f450b6555e0a9143d7",
+      "skeletonSource": "map-story-actors/e4107ec67f3a0991cd6cd67f.json",
+      "texturePath": "Resources/Map10/Textures/npc_8402-8796899571.png",
+      "textureSha256": "fa1a94b3eaf2a92424c2a8bc2634a1c3185927d0951c1056028d278dde45f118",
+      "textureUri": "res://assets/official/sprites/npc_8402-8796899571.png"
+    },
+    {
+      "animation": "npc_8402/disappear_01",
+      "entityClassId": 8402,
+      "fps": 12,
+      "frameCount": 12,
+      "payloadPath": "Resources/Map10/StoryActors/8402-disappear_01.json",
+      "payloadSha256": "d4acbaa9b1655c2cdc4876ad667cc8bd48b4a05ee746e3437d8a3daaa64a4e81",
+      "skeletonSha256": "650e584f5a485897c1fb88a0d2fd4a05c1f1743b9a4339e7421332ba82cc29ac",
+      "skeletonSource": "map-story-actors/efc07b532dcb6720c2cef0db.json",
+      "texturePath": "Resources/Map10/Textures/npc_8402-8796899571.png",
+      "textureSha256": "fa1a94b3eaf2a92424c2a8bc2634a1c3185927d0951c1056028d278dde45f118",
+      "textureUri": "res://assets/official/sprites/npc_8402-8796899571.png"
+    }
+  ],
+  "textures": [
+    {
+      "bytes": 224105,
+      "path": "Resources/Map10/Textures/Ground11_Waterfall-469f752bdd.png",
+      "sha256": "d5aca06d9a0c62a2a5b8ac4ded1e55a892602ff59d2387ef6a17452ebfd46180",
+      "uri": "res://assets/official/sprites/Ground11_Waterfall-469f752bdd.png"
+    },
+    {
+      "bytes": 1481,
+      "path": "Resources/Map10/Textures/ImgBg_RankSuppress-42a0f22929.png",
+      "sha256": "6e3c36e43ecd96c05c7c8b00ac0f325adc1b8fb0bc4e3d2648317e7e9f2324ff",
+      "uri": "res://assets/official/sprites/ImgBg_RankSuppress-42a0f22929.png"
+    },
+    {
+      "bytes": 16494,
+      "path": "Resources/Map10/Textures/Obejct11_Forest_Grass01-d00a2f6766.png",
+      "sha256": "5600b2b8692685aef3fca3f87a178c8c2a670bcab083521adbc95f0b17b512ff",
+      "uri": "res://assets/official/sprites/Obejct11_Forest_Grass01-d00a2f6766.png"
+    },
+    {
+      "bytes": 54932,
+      "path": "Resources/Map10/Textures/Object10_Group_Tower01-b10548a474.png",
+      "sha256": "01d003897f5b0463c40d4914d6301cc4b46d650bc9cf05aaeb36da65dce29cd8",
+      "uri": "res://assets/official/sprites/Object10_Group_Tower01-b10548a474.png"
+    },
+    {
+      "bytes": 9201,
+      "path": "Resources/Map10/Textures/Object10_Shadow-94c4141ab2.png",
+      "sha256": "ca3dfa752d54ddfdeeb040b697e33bc9aa6e10154f355bb650083f2bf2274e8f",
+      "uri": "res://assets/official/sprites/Object10_Shadow-94c4141ab2.png"
+    },
+    {
+      "bytes": 24591,
+      "path": "Resources/Map10/Textures/Object11_Decoration_Hedge01-4d04dd54f9.png",
+      "sha256": "028c6992c0d024f367b434cff70f86630f0da9f731f2cf450f9383a46a5703b9",
+      "uri": "res://assets/official/sprites/Object11_Decoration_Hedge01-4d04dd54f9.png"
+    },
+    {
+      "bytes": 26268,
+      "path": "Resources/Map10/Textures/Object11_Decoration_Hedge02-bb8b114f49.png",
+      "sha256": "3131dc055d5c93afa5bc74bbdac041093a922188a95e727fa2bb4dd407fa07a5",
+      "uri": "res://assets/official/sprites/Object11_Decoration_Hedge02-bb8b114f49.png"
+    },
+    {
+      "bytes": 26856,
+      "path": "Resources/Map10/Textures/Object11_Decoration_Hedge03-7d46c5eb68.png",
+      "sha256": "1602f954fa6d4fed4d1d48588433512b863a0d4e4c52d674b1e7938a558754d3",
+      "uri": "res://assets/official/sprites/Object11_Decoration_Hedge03-7d46c5eb68.png"
+    },
+    {
+      "bytes": 29521,
+      "path": "Resources/Map10/Textures/Object11_Decoration_Hedge04-bbba474a2b.png",
+      "sha256": "c8491bbb916b4221fcfb104d17f9e8f507d3663f492adffd75d90a5ab600dff8",
+      "uri": "res://assets/official/sprites/Object11_Decoration_Hedge04-bbba474a2b.png"
+    },
+    {
+      "bytes": 32564,
+      "path": "Resources/Map10/Textures/Object11_Decoration_Relic01-a4cef12b47.png",
+      "sha256": "af46e63ecd68ce0278f9da03ad70130a0f663ad354bdab3ff69237aef75b4048",
+      "uri": "res://assets/official/sprites/Object11_Decoration_Relic01-a4cef12b47.png"
+    },
+    {
+      "bytes": 12501,
+      "path": "Resources/Map10/Textures/Object11_Decoration_Relic02-94e4410fb0.png",
+      "sha256": "fdbd8a655277643e528c8aea82348d2fc7ebd1d70cb560375224f63daae72207",
+      "uri": "res://assets/official/sprites/Object11_Decoration_Relic02-94e4410fb0.png"
+    },
+    {
+      "bytes": 5199,
+      "path": "Resources/Map10/Textures/Object11_Decoration_Relic04-608b94cef7.png",
+      "sha256": "f752db441918bb5c5d1bd9fdf65af4696734649a759a94f322fcbf8cf517e954",
+      "uri": "res://assets/official/sprites/Object11_Decoration_Relic04-608b94cef7.png"
+    },
+    {
+      "bytes": 14680,
+      "path": "Resources/Map10/Textures/Object11_Decoration_Relic05-4cf159af0b.png",
+      "sha256": "330546e1a97215458ff9d894352d274921b01322d8a8effe05d4c4262641f926",
+      "uri": "res://assets/official/sprites/Object11_Decoration_Relic05-4cf159af0b.png"
+    },
+    {
+      "bytes": 23878,
+      "path": "Resources/Map10/Textures/Object11_Decoration_Relic06-3e9b73fb44.png",
+      "sha256": "474b1942c6e96804d4895cf150e83c93790868c5bf3f3191176f1b4a465b498e",
+      "uri": "res://assets/official/sprites/Object11_Decoration_Relic06-3e9b73fb44.png"
+    },
+    {
+      "bytes": 30214,
+      "path": "Resources/Map10/Textures/Object11_Decoration_Seastone01-672ed0e910.png",
+      "sha256": "6b36ac5c0d6c87a534408f0f0505168156c57082cb771b0eba0d83d1f5ec7ef6",
+      "uri": "res://assets/official/sprites/Object11_Decoration_Seastone01-672ed0e910.png"
+    },
+    {
+      "bytes": 33476,
+      "path": "Resources/Map10/Textures/Object11_Decoration_Seastone03-7cb57eab67.png",
+      "sha256": "8ac7466360372d079435c77508d08f6c38d0eed809b8e18724078151d32f3c10",
+      "uri": "res://assets/official/sprites/Object11_Decoration_Seastone03-7cb57eab67.png"
+    },
+    {
+      "bytes": 19643,
+      "path": "Resources/Map10/Textures/Object11_Decoration_Shrub01-ff378fd078.png",
+      "sha256": "3219e99614ceddab2a45735d093d731ebeafb941f6ffbf9b180ed2469c422572",
+      "uri": "res://assets/official/sprites/Object11_Decoration_Shrub01-ff378fd078.png"
+    },
+    {
+      "bytes": 5054,
+      "path": "Resources/Map10/Textures/Object11_Decoration_Shrub02-766f3db70d.png",
+      "sha256": "b37076500c10ba2a24f2aca9c490992ed633506005d965f874e4176f6d3c0412",
+      "uri": "res://assets/official/sprites/Object11_Decoration_Shrub02-766f3db70d.png"
+    },
+    {
+      "bytes": 7869,
+      "path": "Resources/Map10/Textures/Object11_Decoration_Shrub03-851e65adfd.png",
+      "sha256": "b16550928ff719387f8408ae2443dbf3bc95f8e6ee887c6156533f7abf744070",
+      "uri": "res://assets/official/sprites/Object11_Decoration_Shrub03-851e65adfd.png"
+    },
+    {
+      "bytes": 4592,
+      "path": "Resources/Map10/Textures/Object11_Decoration_Shrub04-17e04b4933.png",
+      "sha256": "8886d37ca282375648249964cefba4ccef34d31201a28907913cfcb8f20923dc",
+      "uri": "res://assets/official/sprites/Object11_Decoration_Shrub04-17e04b4933.png"
+    },
+    {
+      "bytes": 1722,
+      "path": "Resources/Map10/Textures/Object11_Decoration_Shrub05-6b89accbba.png",
+      "sha256": "ac650842d5be4667a44aab14ca9cd330d5db5d0befb7872635406b8a820e28ad",
+      "uri": "res://assets/official/sprites/Object11_Decoration_Shrub05-6b89accbba.png"
+    },
+    {
+      "bytes": 23190,
+      "path": "Resources/Map10/Textures/Object11_Flower01_2-78b27fb1cd.png",
+      "sha256": "6861f0c62e5d6f173b697ec33c5f76eda4fbe50b9400bb3ea53440156734453c",
+      "uri": "res://assets/official/sprites/Object11_Flower01_2-78b27fb1cd.png"
+    },
+    {
+      "bytes": 17763,
+      "path": "Resources/Map10/Textures/Object11_Flower01_3-05b75ee60d.png",
+      "sha256": "0ef68a6004dc87e8c2324754812d6ac19633fa69820ca654f47168f322552fbe",
+      "uri": "res://assets/official/sprites/Object11_Flower01_3-05b75ee60d.png"
+    },
+    {
+      "bytes": 18370,
+      "path": "Resources/Map10/Textures/Object11_Flower02-598bf2b50a.png",
+      "sha256": "4c3e2079771e05971ddd973e6f62212654767f70525e253a03d2df65250d9f95",
+      "uri": "res://assets/official/sprites/Object11_Flower02-598bf2b50a.png"
+    },
+    {
+      "bytes": 18428,
+      "path": "Resources/Map10/Textures/Object11_Flower03_1-02315bde76.png",
+      "sha256": "1e8f9005c99bd784572ebe20bb2cafa50162c2c3cc9d08e843328c19503cbbb7",
+      "uri": "res://assets/official/sprites/Object11_Flower03_1-02315bde76.png"
+    },
+    {
+      "bytes": 18419,
+      "path": "Resources/Map10/Textures/Object11_Flower03_2-7c2fb04b7f.png",
+      "sha256": "d0b3c22a3f534fe2da1125690dbc04c077f2109a1e7ade24a794e8b0c999cba7",
+      "uri": "res://assets/official/sprites/Object11_Flower03_2-7c2fb04b7f.png"
+    },
+    {
+      "bytes": 18859,
+      "path": "Resources/Map10/Textures/Object11_Flower03_3-116a47d331.png",
+      "sha256": "edccfb74ed09aff760fe63a1ff3a2021149e211903dcb6ee3922e0bbbbc47b6c",
+      "uri": "res://assets/official/sprites/Object11_Flower03_3-116a47d331.png"
+    },
+    {
+      "bytes": 4170,
+      "path": "Resources/Map10/Textures/Object11_Grass01-c9f85cad32.png",
+      "sha256": "f212627c2d4ca45d3957642455690b189a36570783e57cedb4f3f5685e187451",
+      "uri": "res://assets/official/sprites/Object11_Grass01-c9f85cad32.png"
+    },
+    {
+      "bytes": 4093,
+      "path": "Resources/Map10/Textures/Object11_Grass02-e5c84c299e.png",
+      "sha256": "88bdb4dac1227976fc763b52f95bd749f27673fbcd763e4fdbf5ffb71582ec4c",
+      "uri": "res://assets/official/sprites/Object11_Grass02-e5c84c299e.png"
+    },
+    {
+      "bytes": 6833,
+      "path": "Resources/Map10/Textures/Object11_Grass03-8d8d183b3a.png",
+      "sha256": "ea215e74a3cc00ceec248bb194925880479982a3165a37e0fdffe74ef568173b",
+      "uri": "res://assets/official/sprites/Object11_Grass03-8d8d183b3a.png"
+    },
+    {
+      "bytes": 18161,
+      "path": "Resources/Map10/Textures/Object11_Grass04-7aa645ba9f.png",
+      "sha256": "f610d4b8824740f05eb26f733b587275579c9252b8ea7f2561d50e88ff385fcf",
+      "uri": "res://assets/official/sprites/Object11_Grass04-7aa645ba9f.png"
+    },
+    {
+      "bytes": 2718,
+      "path": "Resources/Map10/Textures/Object11_Grass05-25a762e3da.png",
+      "sha256": "968a503eb9be5112f9d135eba18749ac4eb3d0a21776fdb3b39ea3a4b5ca79e3",
+      "uri": "res://assets/official/sprites/Object11_Grass05-25a762e3da.png"
+    },
+    {
+      "bytes": 82938,
+      "path": "Resources/Map10/Textures/Object11_Mountain01-12a32f8806.png",
+      "sha256": "7df963b0c17084b0aece71e6f869caea155b0c3e174bdc2611a198df43c7e8ec",
+      "uri": "res://assets/official/sprites/Object11_Mountain01-12a32f8806.png"
+    },
+    {
+      "bytes": 166693,
+      "path": "Resources/Map10/Textures/Object11_Mountain02-9ccb5bb0a6.png",
+      "sha256": "2579b034526162c4940be2df50564e6c3620168f32d305df1ade1e7945dd2314",
+      "uri": "res://assets/official/sprites/Object11_Mountain02-9ccb5bb0a6.png"
+    },
+    {
+      "bytes": 160391,
+      "path": "Resources/Map10/Textures/Object11_Mountain03-20e9ad111b.png",
+      "sha256": "10dd3960671c557dd739dcbf5935e8f625211c39ef48e56f3b1a7014c36cb1ba",
+      "uri": "res://assets/official/sprites/Object11_Mountain03-20e9ad111b.png"
+    },
+    {
+      "bytes": 246048,
+      "path": "Resources/Map10/Textures/Object11_Mountain04-4be09e0206.png",
+      "sha256": "663600a461d9555cceaea28c8bfb842c610fa78ccd589e5f3fb1aa02e2f787af",
+      "uri": "res://assets/official/sprites/Object11_Mountain04-4be09e0206.png"
+    },
+    {
+      "bytes": 13849,
+      "path": "Resources/Map10/Textures/Object11_Shadow_Grass01-60d2768c67.png",
+      "sha256": "482743d3377b7dcb8def725b8a518cde73accaa00eeb4f1c224b8ee334478482",
+      "uri": "res://assets/official/sprites/Object11_Shadow_Grass01-60d2768c67.png"
+    },
+    {
+      "bytes": 27402,
+      "path": "Resources/Map10/Textures/Object11_Shadow_Mountain01-1db176dfff.png",
+      "sha256": "585d6c2921621eb64d64f0ee73fccdd443f9dc14e3b0e57a62a955580760ea12",
+      "uri": "res://assets/official/sprites/Object11_Shadow_Mountain01-1db176dfff.png"
+    },
+    {
+      "bytes": 52707,
+      "path": "Resources/Map10/Textures/Object11_Shadow_Mountain02-f208a5761f.png",
+      "sha256": "f9ded2f72121cefd6e79586be94e4dd5fdb0ca16d9ca47b3913facd8b3c74a90",
+      "uri": "res://assets/official/sprites/Object11_Shadow_Mountain02-f208a5761f.png"
+    },
+    {
+      "bytes": 10256,
+      "path": "Resources/Map10/Textures/Object11_Shadow_Mountain03-80016f246a.png",
+      "sha256": "88e717f23d3fe014442a7c5b94c669fa2691567e15f0b2182bb34691cb7a0988",
+      "uri": "res://assets/official/sprites/Object11_Shadow_Mountain03-80016f246a.png"
+    },
+    {
+      "bytes": 12918,
+      "path": "Resources/Map10/Textures/Object11_Shadow_Mountain06-7daa9d5a68.png",
+      "sha256": "655c96564f8b7167cf98b9d3d1c4f28fb64fc95f06a0bcd5dd2ae179071648a5",
+      "uri": "res://assets/official/sprites/Object11_Shadow_Mountain06-7daa9d5a68.png"
+    },
+    {
+      "bytes": 15295,
+      "path": "Resources/Map10/Textures/Object11_Shadow_Mountain07-9cf72dc5bf.png",
+      "sha256": "d121121ef49d211e33a93a41c9d2f6c6a61cdab695c6cdcdbd8d4eca122347ef",
+      "uri": "res://assets/official/sprites/Object11_Shadow_Mountain07-9cf72dc5bf.png"
+    },
+    {
+      "bytes": 10445,
+      "path": "Resources/Map10/Textures/Object11_Shadow_Mountain08-5aac2fef8c.png",
+      "sha256": "1c5bc24f33c29cc0241b30f2ad1fe4403d5267fc8bba10b1d5ca18c2408a01a9",
+      "uri": "res://assets/official/sprites/Object11_Shadow_Mountain08-5aac2fef8c.png"
+    },
+    {
+      "bytes": 10588,
+      "path": "Resources/Map10/Textures/Object11_Shadow_Mountain09-59a438506a.png",
+      "sha256": "2ae563bf4d506e874335286392b29c048478120dece51a2367424e8fbb986890",
+      "uri": "res://assets/official/sprites/Object11_Shadow_Mountain09-59a438506a.png"
+    },
+    {
+      "bytes": 29278,
+      "path": "Resources/Map10/Textures/Object11_Stone01-bbc194c981.png",
+      "sha256": "87939807edd83f57702eeb298edb61f4dc515c4a9821ec8b1787e81d09f7a67e",
+      "uri": "res://assets/official/sprites/Object11_Stone01-bbc194c981.png"
+    },
+    {
+      "bytes": 31886,
+      "path": "Resources/Map10/Textures/Object11_Stone02-0a1e6c1104.png",
+      "sha256": "ba43c7be7ab6bcfe5647a62360bcc1c3b26b43c3e52b20bf1edb05998a39032e",
+      "uri": "res://assets/official/sprites/Object11_Stone02-0a1e6c1104.png"
+    },
+    {
+      "bytes": 13186,
+      "path": "Resources/Map10/Textures/Object11_Stone03-42b5ee509b.png",
+      "sha256": "7e3e3a3a6005e34f52f34de2b3a666f41b4a1b92e7a665636ebd5af16f765664",
+      "uri": "res://assets/official/sprites/Object11_Stone03-42b5ee509b.png"
+    },
+    {
+      "bytes": 18053,
+      "path": "Resources/Map10/Textures/Object11_Stone04-f9a04bccd6.png",
+      "sha256": "bd5a06bec910bfb8f867c0e6fabe07d98c9fe662c5049c794ab804d7e5dd32d8",
+      "uri": "res://assets/official/sprites/Object11_Stone04-f9a04bccd6.png"
+    },
+    {
+      "bytes": 12302,
+      "path": "Resources/Map10/Textures/Object11_Stone05-954e5b7b63.png",
+      "sha256": "7d28aa00b78e56a8844b3b176a37ebc970d2a7753572f178ef4c3d5cf479d39a",
+      "uri": "res://assets/official/sprites/Object11_Stone05-954e5b7b63.png"
+    },
+    {
+      "bytes": 9664,
+      "path": "Resources/Map10/Textures/Object11_Stone06-b5cca5ec71.png",
+      "sha256": "5ca7f211d085223bc3a949a9d79ab1e936760a77a64b7312400dd7d41e4c1bab",
+      "uri": "res://assets/official/sprites/Object11_Stone06-b5cca5ec71.png"
+    },
+    {
+      "bytes": 15759,
+      "path": "Resources/Map10/Textures/Object11_Stone07-aeff207980.png",
+      "sha256": "39ae681355859a28131bb6f4ea9ed55af4f57d3af982d196006046524ea0cb39",
+      "uri": "res://assets/official/sprites/Object11_Stone07-aeff207980.png"
+    },
+    {
+      "bytes": 11852,
+      "path": "Resources/Map10/Textures/Object11_Stone08-ad3e637395.png",
+      "sha256": "3e512d244267b0199152f401534b8356a4aaac45506d603abd124c8b49099e22",
+      "uri": "res://assets/official/sprites/Object11_Stone08-ad3e637395.png"
+    },
+    {
+      "bytes": 10698,
+      "path": "Resources/Map10/Textures/Object11_Stone09-e9c1d5d5aa.png",
+      "sha256": "560fd514f1cfad68077032749d09bad644426a28b16f1e371fdf13ade8659e50",
+      "uri": "res://assets/official/sprites/Object11_Stone09-e9c1d5d5aa.png"
+    },
+    {
+      "bytes": 9423,
+      "path": "Resources/Map10/Textures/Object11_Stone10-20c668368b.png",
+      "sha256": "caac8d778d6c9cb101c2d73bbc538591f198513408db70427737464f799eb3bd",
+      "uri": "res://assets/official/sprites/Object11_Stone10-20c668368b.png"
+    },
+    {
+      "bytes": 28831,
+      "path": "Resources/Map10/Textures/Object11_Tree01-934e1ee4f8.png",
+      "sha256": "72b5a219933379239bc22bce1196f0d431c194711d031df99168123c234b6b62",
+      "uri": "res://assets/official/sprites/Object11_Tree01-934e1ee4f8.png"
+    },
+    {
+      "bytes": 34953,
+      "path": "Resources/Map10/Textures/Object11_Tree02-6f625df55d.png",
+      "sha256": "ecff0ee92b99e1232c33b986d1c3a683a1ff4c2b661c4d8ee3de5a5b06c5bcd6",
+      "uri": "res://assets/official/sprites/Object11_Tree02-6f625df55d.png"
+    },
+    {
+      "bytes": 16746,
+      "path": "Resources/Map10/Textures/Object11_Tree03-b40af84ca5.png",
+      "sha256": "a8f24c1443186fe9b1d1de48b9ba2c1c544d15a7f57915105c243ae89b49e21c",
+      "uri": "res://assets/official/sprites/Object11_Tree03-b40af84ca5.png"
+    },
+    {
+      "bytes": 11572,
+      "path": "Resources/Map10/Textures/Object11_Tree04-11dc154c4b.png",
+      "sha256": "4f20c16635771ab04f5c5175978e72dadf750bdbf2f0d018567f91a5f49c4825",
+      "uri": "res://assets/official/sprites/Object11_Tree04-11dc154c4b.png"
+    },
+    {
+      "bytes": 27855,
+      "path": "Resources/Map10/Textures/Object11_Tree05-71163498d6.png",
+      "sha256": "4881c4e7efb9535214c8c52d41e7016b54b7dcfa294a22f586c460606fc93d68",
+      "uri": "res://assets/official/sprites/Object11_Tree05-71163498d6.png"
+    },
+    {
+      "bytes": 35050,
+      "path": "Resources/Map10/Textures/Object11_Tree06-96e1f0d4eb.png",
+      "sha256": "ebb3b1ee38f68b0d901a51083d44ca8966307d536bd612f7a912154769c31adb",
+      "uri": "res://assets/official/sprites/Object11_Tree06-96e1f0d4eb.png"
+    },
+    {
+      "bytes": 26196,
+      "path": "Resources/Map10/Textures/Object11_Tree07-610595e437.png",
+      "sha256": "39ea9d1e3570db46dc4f4e554688cb53a1523b502bcae178ff5717504753533d",
+      "uri": "res://assets/official/sprites/Object11_Tree07-610595e437.png"
+    },
+    {
+      "bytes": 25043,
+      "path": "Resources/Map10/Textures/Object11_Tree08-7aaae538e9.png",
+      "sha256": "bf65d5d30dcbdafca6393ce5676ed81f3d61219c8efd9503f0060618edbd1a7a",
+      "uri": "res://assets/official/sprites/Object11_Tree08-7aaae538e9.png"
+    },
+    {
+      "bytes": 22543,
+      "path": "Resources/Map10/Textures/Object11_Tree09-26e9b73f24.png",
+      "sha256": "f8f0a4cfca8d3726a92f418264c50e98c5acaf5ed4c3c61245cae5d61d265a5c",
+      "uri": "res://assets/official/sprites/Object11_Tree09-26e9b73f24.png"
+    },
+    {
+      "bytes": 37451,
+      "path": "Resources/Map10/Textures/Object11_Tree10-e9ce0481ef.png",
+      "sha256": "aa1cc8410abfa331eff6dc64ac97176cb422491dda17034b26c561130f07985c",
+      "uri": "res://assets/official/sprites/Object11_Tree10-e9ce0481ef.png"
+    },
+    {
+      "bytes": 31846,
+      "path": "Resources/Map10/Textures/Object11_Tree11-c3034db4d4.png",
+      "sha256": "3dc1fff52021d2955cd23684ad2c7ce70276294574bbf92d338f83d46e31db34",
+      "uri": "res://assets/official/sprites/Object11_Tree11-c3034db4d4.png"
+    },
+    {
+      "bytes": 27031,
+      "path": "Resources/Map10/Textures/Object11_Tree12-3de0c49e62.png",
+      "sha256": "abf5b507bdbc5d4fb1fabe0bf67edce065abf346247794d42a22ce767889c8ac",
+      "uri": "res://assets/official/sprites/Object11_Tree12-3de0c49e62.png"
+    },
+    {
+      "bytes": 46760,
+      "path": "Resources/Map10/Textures/Object11_Tree13-ab21158d94.png",
+      "sha256": "5923e4cb8405944d1c11f45f8ca8170fb822f6765c5b2362a64e919386395e74",
+      "uri": "res://assets/official/sprites/Object11_Tree13-ab21158d94.png"
+    },
+    {
+      "bytes": 76629,
+      "path": "Resources/Map10/Textures/Rock01-c9802a4465.png",
+      "sha256": "0a373a9227a1ea66c5503175d192d749b5f80ed85f39b2163107fff191ab5de9",
+      "uri": "res://assets/official/sprites/Rock01-c9802a4465.png"
+    },
+    {
+      "bytes": 41518,
+      "path": "Resources/Map10/Textures/Rock01_mask-1c9322ecb7.png",
+      "sha256": "e39cf7e480e88ded26e15894aa62055b11212c265d7005e73cfc7fff324def8b",
+      "uri": "res://assets/official/sprites/Rock01_mask-1c9322ecb7.png"
+    },
+    {
+      "bytes": 31764,
+      "path": "Resources/Map10/Textures/Rock03-60a20edbd0.png",
+      "sha256": "7ee7a879d4d874e42786ef982a4290f0dc85b24af8746138f29f0eff981af86d",
+      "uri": "res://assets/official/sprites/Rock03-60a20edbd0.png"
+    },
+    {
+      "bytes": 15933,
+      "path": "Resources/Map10/Textures/Rock03_mask-6e2d6cb6c3.png",
+      "sha256": "32d0d51ba25d9e2721b73c007023a8d4064504b8bc3e54689cbae3e780528ee7",
+      "uri": "res://assets/official/sprites/Rock03_mask-6e2d6cb6c3.png"
+    },
+    {
+      "bytes": 27251,
+      "path": "Resources/Map10/Textures/Rock04-c019f1c270.png",
+      "sha256": "114dea918c42d0be85f1e17094584841e9ad7d500a1a26d290a947f54915e743",
+      "uri": "res://assets/official/sprites/Rock04-c019f1c270.png"
+    },
+    {
+      "bytes": 5796,
+      "path": "Resources/Map10/Textures/Rock04_mask-3d650132d9.png",
+      "sha256": "4209dc1aec9282e66699dc16a656bf37eff44f163e14fe4b44f4f1b7d9b18ab4",
+      "uri": "res://assets/official/sprites/Rock04_mask-3d650132d9.png"
+    },
+    {
+      "bytes": 34181,
+      "path": "Resources/Map10/Textures/UnderObject11_Slate26-6b044e294f.png",
+      "sha256": "c37bbb712a59e65e2fe876e2e07ac62afe971dab07432d0644ca08be0a05d556",
+      "uri": "res://assets/official/sprites/UnderObject11_Slate26-6b044e294f.png"
+    },
+    {
+      "bytes": 28777,
+      "path": "Resources/Map10/Textures/UnderObject11_Slate27-944ded6bc8.png",
+      "sha256": "018744addd440ab8f2caffb39cf7852a9a1d474f929bd7b95228d6af9ea90174",
+      "uri": "res://assets/official/sprites/UnderObject11_Slate27-944ded6bc8.png"
+    },
+    {
+      "bytes": 63738,
+      "path": "Resources/Map10/Textures/Underobject10_Bridge01-fc6a8de765.png",
+      "sha256": "318f76bfdb673bd1a95629096dfb57db19b2d5f9ecc72a1a745cfb51b8983eef",
+      "uri": "res://assets/official/sprites/Underobject10_Bridge01-fc6a8de765.png"
+    },
+    {
+      "bytes": 39922,
+      "path": "Resources/Map10/Textures/Underobject11_Floor01-7b20c98eb1.png",
+      "sha256": "302b4cad3d309034e65b2c84480efe65fdedb062c1e7b7dd1ac9e52382e71e1f",
+      "uri": "res://assets/official/sprites/Underobject11_Floor01-7b20c98eb1.png"
+    },
+    {
+      "bytes": 30010,
+      "path": "Resources/Map10/Textures/Underobject11_Floor02-28eb2df2bb.png",
+      "sha256": "0fe59774f17560b4a78229d225c460f956c14e8ed72adb0a54957f88b37ff5c4",
+      "uri": "res://assets/official/sprites/Underobject11_Floor02-28eb2df2bb.png"
+    },
+    {
+      "bytes": 40501,
+      "path": "Resources/Map10/Textures/Underobject11_Floor03-1a22348139.png",
+      "sha256": "2b13e1fb9b191e2d75d00ca8a8b0219e140565fbe9ce4d78c1e4924443208649",
+      "uri": "res://assets/official/sprites/Underobject11_Floor03-1a22348139.png"
+    },
+    {
+      "bytes": 39637,
+      "path": "Resources/Map10/Textures/Underobject11_Floor04-182f6a6b60.png",
+      "sha256": "d99ca0ac3b31a1dd697e661e73c6ae3f85400f9059528bbe94ad8bfb5e3204b6",
+      "uri": "res://assets/official/sprites/Underobject11_Floor04-182f6a6b60.png"
+    },
+    {
+      "bytes": 28856,
+      "path": "Resources/Map10/Textures/Underobject11_Floor05-466627475c.png",
+      "sha256": "7cadd9aa7d27f59704a894bbee6da1ed07f126b252dc1b40d59cc36c1777fd52",
+      "uri": "res://assets/official/sprites/Underobject11_Floor05-466627475c.png"
+    },
+    {
+      "bytes": 42188,
+      "path": "Resources/Map10/Textures/Underobject11_Floor06-8e9567f4f5.png",
+      "sha256": "20363216178ed51f41096b1195281e1760043098bb7f8724a10cb6f0ba2fd527",
+      "uri": "res://assets/official/sprites/Underobject11_Floor06-8e9567f4f5.png"
+    },
+    {
+      "bytes": 8643,
+      "path": "Resources/Map10/Textures/Underobject11_Floor_Edge01-d9ceb42e1e.png",
+      "sha256": "8c2fb28b28ca37a5e820ed521155a82609f686dd478d7f1acf4d137c8bd14e9d",
+      "uri": "res://assets/official/sprites/Underobject11_Floor_Edge01-d9ceb42e1e.png"
+    },
+    {
+      "bytes": 8803,
+      "path": "Resources/Map10/Textures/Underobject11_Floor_Edge02-c5123cd0f5.png",
+      "sha256": "7e543ae7f86f450e65214625b3e9d847078313684d05aea22ddbae0532ffeb87",
+      "uri": "res://assets/official/sprites/Underobject11_Floor_Edge02-c5123cd0f5.png"
+    },
+    {
+      "bytes": 5045,
+      "path": "Resources/Map10/Textures/Underobject11_Floor_Edge03-e33dd1baf0.png",
+      "sha256": "2819f0d2d279bebd2ea9b8b44917d7065aa6cd77a1cd477da7bdd09c7586da18",
+      "uri": "res://assets/official/sprites/Underobject11_Floor_Edge03-e33dd1baf0.png"
+    },
+    {
+      "bytes": 9003,
+      "path": "Resources/Map10/Textures/Underobject11_Floor_Edge04-de66d12d16.png",
+      "sha256": "6cc1cbc04d6cbacce7b41e21c739388be72c48b46272dbfd4a1f1619596d0f8f",
+      "uri": "res://assets/official/sprites/Underobject11_Floor_Edge04-de66d12d16.png"
+    },
+    {
+      "bytes": 6847,
+      "path": "Resources/Map10/Textures/Underobject11_Floor_Edge05-8d9d7497af.png",
+      "sha256": "c449f320841115ffcb412d55ce87a09514084a9fabaeb30842be17abf3053b3a",
+      "uri": "res://assets/official/sprites/Underobject11_Floor_Edge05-8d9d7497af.png"
+    },
+    {
+      "bytes": 13399,
+      "path": "Resources/Map10/Textures/Underobject11_Floor_Edge06-462150e681.png",
+      "sha256": "ae5751470bf99fbc4b930ad7418a1e213f275165a85ae80d23cfbffdea4dff7d",
+      "uri": "res://assets/official/sprites/Underobject11_Floor_Edge06-462150e681.png"
+    },
+    {
+      "bytes": 15012,
+      "path": "Resources/Map10/Textures/Underobject11_Floor_Edge07-213a539fc3.png",
+      "sha256": "38a9ecbe23d9ee501bedd9e45cc55f90681f49de191eab2b525e63e54fce66ab",
+      "uri": "res://assets/official/sprites/Underobject11_Floor_Edge07-213a539fc3.png"
+    },
+    {
+      "bytes": 11824,
+      "path": "Resources/Map10/Textures/Underobject11_Floor_Edge08-34184d87d8.png",
+      "sha256": "ea3de4adc0cefef280f14657978b1006d6f0ff3d3732a7a25b7e15fab46d3b0a",
+      "uri": "res://assets/official/sprites/Underobject11_Floor_Edge08-34184d87d8.png"
+    },
+    {
+      "bytes": 17625,
+      "path": "Resources/Map10/Textures/Underobject11_Floor_Edge10-d065ff85ea.png",
+      "sha256": "a3c90880a976f4a8a344191385182ac49cf2717e7bc14b0dc322a64f8635274f",
+      "uri": "res://assets/official/sprites/Underobject11_Floor_Edge10-d065ff85ea.png"
+    },
+    {
+      "bytes": 8415,
+      "path": "Resources/Map10/Textures/Underobject11_Floor_Edge11-f3b2dc9a2f.png",
+      "sha256": "59551e8f501b820467bb6521dd1e624f8ae081cbbce1ce25ff0e75fae0a06a95",
+      "uri": "res://assets/official/sprites/Underobject11_Floor_Edge11-f3b2dc9a2f.png"
+    },
+    {
+      "bytes": 7528,
+      "path": "Resources/Map10/Textures/Underobject11_Floor_Edge12-910176862b.png",
+      "sha256": "640e3b572960e7faf5a488d5d08d2e9b982f6131cbbf5f15a2f3fc3fbfa137c6",
+      "uri": "res://assets/official/sprites/Underobject11_Floor_Edge12-910176862b.png"
+    },
+    {
+      "bytes": 7134,
+      "path": "Resources/Map10/Textures/Underobject11_Floor_Edge13-6d411664bc.png",
+      "sha256": "3e6ab600979b4a102b34cee7b13418e796a97f59f3c77ed234c91bbc8f4ead26",
+      "uri": "res://assets/official/sprites/Underobject11_Floor_Edge13-6d411664bc.png"
+    },
+    {
+      "bytes": 5482,
+      "path": "Resources/Map10/Textures/Underobject11_Floor_Edge14-99db20a851.png",
+      "sha256": "f44cfd3cf34c975c3c0caafa032e554f8cbfc8c4565c19ddae1d47e1813e9f6c",
+      "uri": "res://assets/official/sprites/Underobject11_Floor_Edge14-99db20a851.png"
+    },
+    {
+      "bytes": 6785,
+      "path": "Resources/Map10/Textures/Underobject11_Floor_Edge15-1f6895803d.png",
+      "sha256": "1f32d521ab05a745b349aa9126e89e36c7ec3ca3ffb4fcd32f21aca387433367",
+      "uri": "res://assets/official/sprites/Underobject11_Floor_Edge15-1f6895803d.png"
+    },
+    {
+      "bytes": 23646,
+      "path": "Resources/Map10/Textures/Underobject11_Flower01-76e5f3dfa7.png",
+      "sha256": "d8fab28eaa74b4f668da23c45fd527678eaef224fa2d0f9714af2f25d3abc315",
+      "uri": "res://assets/official/sprites/Underobject11_Flower01-76e5f3dfa7.png"
+    },
+    {
+      "bytes": 18217,
+      "path": "Resources/Map10/Textures/Underobject11_Flower02-18188d7ad6.png",
+      "sha256": "5134aaca754009be0cbce6e73eb681827c3ac724933c0bf3b2ec84a919f82599",
+      "uri": "res://assets/official/sprites/Underobject11_Flower02-18188d7ad6.png"
+    },
+    {
+      "bytes": 40371,
+      "path": "Resources/Map10/Textures/Underobject11_Flower03-c50002d6ce.png",
+      "sha256": "820b9e933bffecdb6f5b440405f44f41f048a95d90911c8c46dbb841a79e4d59",
+      "uri": "res://assets/official/sprites/Underobject11_Flower03-c50002d6ce.png"
+    },
+    {
+      "bytes": 33058,
+      "path": "Resources/Map10/Textures/Underobject11_Grass01-3f7bafa8cd.png",
+      "sha256": "f2212ed4105f5b6f3e76f743ab73e726b555099133efff744743ad62790c2fd7",
+      "uri": "res://assets/official/sprites/Underobject11_Grass01-3f7bafa8cd.png"
+    },
+    {
+      "bytes": 37831,
+      "path": "Resources/Map10/Textures/Underobject11_Grass02-1bcc40117e.png",
+      "sha256": "909c98a38eb0b26a85d94ebb5d1bac6c07fe54c8dc7851cf55fed27d66859640",
+      "uri": "res://assets/official/sprites/Underobject11_Grass02-1bcc40117e.png"
+    },
+    {
+      "bytes": 11631,
+      "path": "Resources/Map10/Textures/Underobject11_Grass03-dcd5ddf28a.png",
+      "sha256": "b25a261a6df0af2bf94ff7a25e2bb93014becc93b0ce42f6da69b94ea6ef09b3",
+      "uri": "res://assets/official/sprites/Underobject11_Grass03-dcd5ddf28a.png"
+    },
+    {
+      "bytes": 11055,
+      "path": "Resources/Map10/Textures/Underobject11_Grass04-2f876c0db2.png",
+      "sha256": "1f940affa24423829671197cbe10a5cafbe239b0b1bef07ee28d8459e0ddfed7",
+      "uri": "res://assets/official/sprites/Underobject11_Grass04-2f876c0db2.png"
+    },
+    {
+      "bytes": 1314,
+      "path": "Resources/Map10/Textures/Underobject11_Grass05-c1d849bb46.png",
+      "sha256": "8b4bb13ac2786f57624d9ea9a36a6b26d3ad659285b8d905fa533ff1d68874d7",
+      "uri": "res://assets/official/sprites/Underobject11_Grass05-c1d849bb46.png"
+    },
+    {
+      "bytes": 121274,
+      "path": "Resources/Map10/Textures/WorldRug11_Dust_Soft01-fa53ec1de1.png",
+      "sha256": "1cec2eca07b18c112bb12ceb377bd88b421619f2c28c27787e61339dd26f72e0",
+      "uri": "res://assets/official/sprites/WorldRug11_Dust_Soft01-fa53ec1de1.png"
+    },
+    {
+      "bytes": 41045,
+      "path": "Resources/Map10/Textures/WorldRug11_Grass_S0ft01-dde2764ddd.png",
+      "sha256": "6189c617e2798b306d8bb9ed07e5ff6ed67a234b94dbb4bade5011bf41090421",
+      "uri": "res://assets/official/sprites/WorldRug11_Grass_S0ft01-dde2764ddd.png"
+    },
+    {
+      "bytes": 32713,
+      "path": "Resources/Map10/Textures/WorldRug11_Road_Soft01-807229c5ed.png",
+      "sha256": "bee904453bd5534efc08277ff4bed20bb5a27e829634998f5738569aa163425a",
+      "uri": "res://assets/official/sprites/WorldRug11_Road_Soft01-807229c5ed.png"
+    },
+    {
+      "bytes": 45376,
+      "path": "Resources/Map10/Textures/WorldRug11_Road_Soft05-6c75542742.png",
+      "sha256": "206d7e94b211ab3c36be828ac5647faad31ad5a897af7022842228a5a6d64e30",
+      "uri": "res://assets/official/sprites/WorldRug11_Road_Soft05-6c75542742.png"
+    },
+    {
+      "bytes": 44886,
+      "path": "Resources/Map10/Textures/WorldRug11_Soil_Soft01-826a49c8da.png",
+      "sha256": "d9674a386c7bf578956d563db04e1ccaadf9b7324f8bae65b350e40cba9c515c",
+      "uri": "res://assets/official/sprites/WorldRug11_Soil_Soft01-826a49c8da.png"
+    },
+    {
+      "bytes": 195073,
+      "path": "Resources/Map10/Textures/WorldRug11_Withered01-886aa80efc.png",
+      "sha256": "88fc42564a44752461cb0afa1b82b3f1ff14a817c0ac88de1d9e92ece9bd14af",
+      "uri": "res://assets/official/sprites/WorldRug11_Withered01-886aa80efc.png"
+    },
+    {
+      "bytes": 23443,
+      "path": "Resources/Map10/Textures/WorldRug11_Withered02-40614f77cf.png",
+      "sha256": "dd3e3d219e2b7454662fea8e7626934c5b286d1fefa320598c49854a8443d062",
+      "uri": "res://assets/official/sprites/WorldRug11_Withered02-40614f77cf.png"
+    },
+    {
+      "bytes": 26155,
+      "path": "Resources/Map10/Textures/WorldRug11_Withered_Soft01-bdf371880e.png",
+      "sha256": "ea2beaf8bcaad089916079bc4c9422b157ffeeb66eb3c6c7d12adad828d61aee",
+      "uri": "res://assets/official/sprites/WorldRug11_Withered_Soft01-bdf371880e.png"
+    },
+    {
+      "bytes": 31346,
+      "path": "Resources/Map10/Textures/WorldRug11_Withered_Soft02-ee204da98a.png",
+      "sha256": "5052b642450eeb92fd6212add4c5e3b6ba28525b3fb0215f9ebc750d0f99c845",
+      "uri": "res://assets/official/sprites/WorldRug11_Withered_Soft02-ee204da98a.png"
+    },
+    {
+      "bytes": 529,
+      "path": "Resources/Map10/Textures/ground1_default_water_mask-8d573d0503.png",
+      "sha256": "ec3d249c763135563b861e1aae107849ab8b2799ceb3cf6fa5bb77200a2b8afc",
+      "uri": "res://assets/official/sprites/ground1_default_water_mask-8d573d0503.png"
+    },
+    {
+      "bytes": 14696,
+      "path": "Resources/Map10/Textures/ground_1-4da9bba195.png",
+      "sha256": "64c8e198573fda8e609e35bf07a755e1bb56c16fc45f9586b430829a8d80e2ba",
+      "uri": "res://assets/official/sprites/ground_1-4da9bba195.png"
+    },
+    {
+      "bytes": 4938,
+      "path": "Resources/Map10/Textures/ground_10_mask_s-732592152e.png",
+      "sha256": "054bcf7af79007a33b81bbb2d36d67b678b456fb0c5e3bca2e829ebc3cb197df",
+      "uri": "res://assets/official/sprites/ground_10_mask_s-732592152e.png"
+    },
+    {
+      "bytes": 4422,
+      "path": "Resources/Map10/Textures/ground_5_mask_s-c748780422.png",
+      "sha256": "4c7ea66bdbb8acfed3576e5da0b3c6ffdf2d78bf1109717f9e9c560763b73150",
+      "uri": "res://assets/official/sprites/ground_5_mask_s-c748780422.png"
+    },
+    {
+      "bytes": 20188,
+      "path": "Resources/Map10/Textures/ground_cornerin1-e37315c400.png",
+      "sha256": "f0a7c0582869908eeaf64058e6f5ded443bdfd7bf2c766262a62e0f77a1e5b07",
+      "uri": "res://assets/official/sprites/ground_cornerin1-e37315c400.png"
+    },
+    {
+      "bytes": 12717,
+      "path": "Resources/Map10/Textures/ground_cornerin2-17fd0f3bdd.png",
+      "sha256": "cb0c466ea4f7d7c3ef4ec5d0c6374d705f062d7d997f398f96e0677cd548f7e2",
+      "uri": "res://assets/official/sprites/ground_cornerin2-17fd0f3bdd.png"
+    },
+    {
+      "bytes": 20516,
+      "path": "Resources/Map10/Textures/ground_cornerin3-a552403958.png",
+      "sha256": "192379e69f888b14e051595049a65789a0f85170006e79387b6bf340b1a3886d",
+      "uri": "res://assets/official/sprites/ground_cornerin3-a552403958.png"
+    },
+    {
+      "bytes": 12557,
+      "path": "Resources/Map10/Textures/ground_cornerin4-ad39097972.png",
+      "sha256": "d2351cac5235111e4c2cc26c00b9e0c2574d519ae435c67a33ad52d9264312b9",
+      "uri": "res://assets/official/sprites/ground_cornerin4-ad39097972.png"
+    },
+    {
+      "bytes": 3385,
+      "path": "Resources/Map10/Textures/ground_cornerout1-026244942a.png",
+      "sha256": "cfe3c7454219075a77965bd3a74c75fa28b603144f94c200a131b9cfcacce44b",
+      "uri": "res://assets/official/sprites/ground_cornerout1-026244942a.png"
+    },
+    {
+      "bytes": 3436,
+      "path": "Resources/Map10/Textures/ground_cornerout2-6711904a0e.png",
+      "sha256": "551decfa699405efbb768629e2189621d3790dae17cd84b992b37f25b310d044",
+      "uri": "res://assets/official/sprites/ground_cornerout2-6711904a0e.png"
+    },
+    {
+      "bytes": 12056,
+      "path": "Resources/Map10/Textures/ground_cornerout3-0383622c47.png",
+      "sha256": "c789cb5e485f0fc0285b489973ba0bf110aa1e2f89d84b8d8fcbe1b7a237492d",
+      "uri": "res://assets/official/sprites/ground_cornerout3-0383622c47.png"
+    },
+    {
+      "bytes": 11499,
+      "path": "Resources/Map10/Textures/ground_cornerout4-1dbf5b754a.png",
+      "sha256": "6c478fe187b9ec95e582c12fba344611c57a4bb21bec96981e20569e764d5775",
+      "uri": "res://assets/official/sprites/ground_cornerout4-1dbf5b754a.png"
+    },
+    {
+      "bytes": 21255,
+      "path": "Resources/Map10/Textures/ground_edgedown1-3cb5ecacc0.png",
+      "sha256": "2ef1c57f1ee3a9540b2cdb90ed1787afadf72dba58b1d4a6b3ab2ab15db10562",
+      "uri": "res://assets/official/sprites/ground_edgedown1-3cb5ecacc0.png"
+    },
+    {
+      "bytes": 3171,
+      "path": "Resources/Map10/Textures/ground_edgedown1_mask-00ace8138f.png",
+      "sha256": "a22e3f882df3fb3d28b51968be30a9320cd5c7002a5e2d8196bc1213cbbea6e1",
+      "uri": "res://assets/official/sprites/ground_edgedown1_mask-00ace8138f.png"
+    },
+    {
+      "bytes": 22802,
+      "path": "Resources/Map10/Textures/ground_edgedown2-75753da84a.png",
+      "sha256": "52f2eb9fe19bdaac5d98c91dae985cef8c2304b0d78005eda4aa9ed61c465268",
+      "uri": "res://assets/official/sprites/ground_edgedown2-75753da84a.png"
+    },
+    {
+      "bytes": 19001,
+      "path": "Resources/Map10/Textures/ground_edgedown3-0e429e14cc.png",
+      "sha256": "ae4f65fff34967526e7e2e47166dab4c21ddded1b3dbcdc6001c25651c26d67a",
+      "uri": "res://assets/official/sprites/ground_edgedown3-0e429e14cc.png"
+    },
+    {
+      "bytes": 9419,
+      "path": "Resources/Map10/Textures/ground_edgeleft1-0261ada94d.png",
+      "sha256": "d8911b01c59c4312dcdaf3ac654a13529ace40a0c6b1b005dc4faf9ab5f6f61d",
+      "uri": "res://assets/official/sprites/ground_edgeleft1-0261ada94d.png"
+    },
+    {
+      "bytes": 9993,
+      "path": "Resources/Map10/Textures/ground_edgeleft2-865e8bfdf3.png",
+      "sha256": "2c51d9c39805361e796f0afcb0555dc87bb6d75847e4e69f7ea18f877486e76a",
+      "uri": "res://assets/official/sprites/ground_edgeleft2-865e8bfdf3.png"
+    },
+    {
+      "bytes": 10037,
+      "path": "Resources/Map10/Textures/ground_edgeright1-00f9c1ae87.png",
+      "sha256": "12363db523db1b4b676d10f795c487f752909aa32496f1517e08a1b29f62f895",
+      "uri": "res://assets/official/sprites/ground_edgeright1-00f9c1ae87.png"
+    },
+    {
+      "bytes": 9726,
+      "path": "Resources/Map10/Textures/ground_edgeright2-15ff75dea9.png",
+      "sha256": "c0e575e70591b8a35c83ce4bf5e61aff8f686c8caee84b00745db1a661c9fb7f",
+      "uri": "res://assets/official/sprites/ground_edgeright2-15ff75dea9.png"
+    },
+    {
+      "bytes": 12898,
+      "path": "Resources/Map10/Textures/ground_edgestep1-9932de1414.png",
+      "sha256": "dc49405c1251da297fd3d2e429dadaa52829175f67c860a2a563b4cdfe621f6b",
+      "uri": "res://assets/official/sprites/ground_edgestep1-9932de1414.png"
+    },
+    {
+      "bytes": 12964,
+      "path": "Resources/Map10/Textures/ground_edgestep2-464bf98454.png",
+      "sha256": "7b6603c6c59d6040db578ba22531f738bf751f471b3bdfa2577aeb1f76998ded",
+      "uri": "res://assets/official/sprites/ground_edgestep2-464bf98454.png"
+    },
+    {
+      "bytes": 14014,
+      "path": "Resources/Map10/Textures/ground_edgestep3-d6698926fc.png",
+      "sha256": "0fcca3cafb6fc9d2e02e79b2438f9794cb83843bebe94d4d145e9ae9df071c3d",
+      "uri": "res://assets/official/sprites/ground_edgestep3-d6698926fc.png"
+    },
+    {
+      "bytes": 5298,
+      "path": "Resources/Map10/Textures/ground_edgeup1-b0692fdc08.png",
+      "sha256": "138387f1aee06a3603363f640c6bd44a790462a1258fa6773c20ba4e054c8768",
+      "uri": "res://assets/official/sprites/ground_edgeup1-b0692fdc08.png"
+    },
+    {
+      "bytes": 5272,
+      "path": "Resources/Map10/Textures/ground_edgeup2-1589da08a7.png",
+      "sha256": "c69efb3456bd8b55c1b17f63f553f97a807dac9212acef0b463edc3fd1dcf355",
+      "uri": "res://assets/official/sprites/ground_edgeup2-1589da08a7.png"
+    },
+    {
+      "bytes": 16872,
+      "path": "Resources/Map10/Textures/ground_rampway1-2b03e4d60b.png",
+      "sha256": "76b3ed8a340351691e2d60c19cd9932019488ceffb8c91ed5754d29bd1d3be59",
+      "uri": "res://assets/official/sprites/ground_rampway1-2b03e4d60b.png"
+    },
+    {
+      "bytes": 17808,
+      "path": "Resources/Map10/Textures/ground_rampway10-2f84715a6c.png",
+      "sha256": "df3e2af15651f78ea3b40dabdd8318f1b355662a230e199375c533dc66349a50",
+      "uri": "res://assets/official/sprites/ground_rampway10-2f84715a6c.png"
+    },
+    {
+      "bytes": 12944,
+      "path": "Resources/Map10/Textures/ground_rampway12-2914397ffd.png",
+      "sha256": "dcc5bbdc514dcd380a3608fed40a54eb37b0d2db7961e84a07094d041d1b147a",
+      "uri": "res://assets/official/sprites/ground_rampway12-2914397ffd.png"
+    },
+    {
+      "bytes": 7550,
+      "path": "Resources/Map10/Textures/ground_rampway15-3084e0e80b.png",
+      "sha256": "b0f5b43792ec66a57376b29e87cb32067ff812291bc7f07d2d1d8f16167ca9e3",
+      "uri": "res://assets/official/sprites/ground_rampway15-3084e0e80b.png"
+    },
+    {
+      "bytes": 7494,
+      "path": "Resources/Map10/Textures/ground_rampway16-1e6070fac5.png",
+      "sha256": "40c26c9add7bd66842f808d1f90eaffa7cf5ce74f88a903a3a2affe1089fb0df",
+      "uri": "res://assets/official/sprites/ground_rampway16-1e6070fac5.png"
+    },
+    {
+      "bytes": 17934,
+      "path": "Resources/Map10/Textures/ground_rampway4-5339afb59a.png",
+      "sha256": "1eaf65edb61f4ea25bce6ce695aa6f215bab97014e6f929a76e782c69f104819",
+      "uri": "res://assets/official/sprites/ground_rampway4-5339afb59a.png"
+    },
+    {
+      "bytes": 12866,
+      "path": "Resources/Map10/Textures/ground_rampway7-9ce0debf4a.png",
+      "sha256": "1420caaa08fcee9c0e6dfd0bd8057a0a666503fb2f8026bd066e9f2f4c4c769f",
+      "uri": "res://assets/official/sprites/ground_rampway7-9ce0debf4a.png"
+    },
+    {
+      "bytes": 5112,
+      "path": "Resources/Map10/Textures/ground_rampway8-0d57b440f3.png",
+      "sha256": "93a836589da04569f0be9bfc37f18d693b7981de42418a8dce81a0bf0fff177f",
+      "uri": "res://assets/official/sprites/ground_rampway8-0d57b440f3.png"
+    },
+    {
+      "bytes": 10523,
+      "path": "Resources/Map10/Textures/highlandcorner1-eed02cafb2.png",
+      "sha256": "439866af7a744459bbfdb7c8f35fbf55ef831fb11f1f5429b207061b704fa81a",
+      "uri": "res://assets/official/sprites/highlandcorner1-eed02cafb2.png"
+    },
+    {
+      "bytes": 23177,
+      "path": "Resources/Map10/Textures/highlandcorner10-e41fe372b1.png",
+      "sha256": "ab9d2783cdc8711b0931ffdffb37cacab8eb3965266f23d018f6516a7c939f7d",
+      "uri": "res://assets/official/sprites/highlandcorner10-e41fe372b1.png"
+    },
+    {
+      "bytes": 2906,
+      "path": "Resources/Map10/Textures/highlandcorner11-b28d7cd487.png",
+      "sha256": "06ca6fb9a4582df6b5e5a1f0c17c9033ce2b000dc1776606cb46f8dd643b4985",
+      "uri": "res://assets/official/sprites/highlandcorner11-b28d7cd487.png"
+    },
+    {
+      "bytes": 3039,
+      "path": "Resources/Map10/Textures/highlandcorner12-714de709b3.png",
+      "sha256": "148170666a520e7929f25269f505eedff5f8012b4bc4152986745a0d3ef225de",
+      "uri": "res://assets/official/sprites/highlandcorner12-714de709b3.png"
+    },
+    {
+      "bytes": 11252,
+      "path": "Resources/Map10/Textures/highlandcorner13-3ee583b36a.png",
+      "sha256": "a7962250e1a64002f7b93d4963a78de66739f310897bde1be6a8e5401f1a71ca",
+      "uri": "res://assets/official/sprites/highlandcorner13-3ee583b36a.png"
+    },
+    {
+      "bytes": 11162,
+      "path": "Resources/Map10/Textures/highlandcorner14-56f1e1c6e3.png",
+      "sha256": "d5adc42a8e5e4c6bfc0158a12c77e7b42f787543c576e99caca25ca4fead7092",
+      "uri": "res://assets/official/sprites/highlandcorner14-56f1e1c6e3.png"
+    },
+    {
+      "bytes": 10363,
+      "path": "Resources/Map10/Textures/highlandcorner2-92cf9caf40.png",
+      "sha256": "ffc2ed2ecf28ca5bb1b33d5e771e501736ca5ae06bb743a0dab5cab363d1fec8",
+      "uri": "res://assets/official/sprites/highlandcorner2-92cf9caf40.png"
+    },
+    {
+      "bytes": 10859,
+      "path": "Resources/Map10/Textures/highlandcorner5-710ce10ed0.png",
+      "sha256": "535559704060993ad67c73ab1cf5ff208d3cc3f8e7a39c024142380e29faf65c",
+      "uri": "res://assets/official/sprites/highlandcorner5-710ce10ed0.png"
+    },
+    {
+      "bytes": 22405,
+      "path": "Resources/Map10/Textures/highlandcorner6-ef80f891c3.png",
+      "sha256": "7ef21be95acd5c1ff685999e1c707ebc4c18ce44dd3f65b31e76490c7b72a075",
+      "uri": "res://assets/official/sprites/highlandcorner6-ef80f891c3.png"
+    },
+    {
+      "bytes": 10167,
+      "path": "Resources/Map10/Textures/highlandcorner7-1b1ae66907.png",
+      "sha256": "7cc62e4b9399966b9b2f3a1b4c10a412eb6ded19a7ddcb667300ccace470c1bb",
+      "uri": "res://assets/official/sprites/highlandcorner7-1b1ae66907.png"
+    },
+    {
+      "bytes": 20890,
+      "path": "Resources/Map10/Textures/highlandcorner8-d07379993e.png",
+      "sha256": "93b47542a2247fca0f1e3cdfa1bc2c5790ac4319ab850a4d89b9a2633efbad07",
+      "uri": "res://assets/official/sprites/highlandcorner8-d07379993e.png"
+    },
+    {
+      "bytes": 5136,
+      "path": "Resources/Map10/Textures/highlandcorner8_mask-232c0516c9.png",
+      "sha256": "dea630b82f3eca2e9bf4f85af687ab1e48c79a5c11e8742c1ac0bdad981aa1e5",
+      "uri": "res://assets/official/sprites/highlandcorner8_mask-232c0516c9.png"
+    },
+    {
+      "bytes": 23057,
+      "path": "Resources/Map10/Textures/highlandcorner9-f5d140da40.png",
+      "sha256": "aee67a96286e0e97e157753be45b18a13c3ecb55f872642641b347b8da2b829d",
+      "uri": "res://assets/official/sprites/highlandcorner9-f5d140da40.png"
+    },
+    {
+      "bytes": 10197,
+      "path": "Resources/Map10/Textures/highlandedge1-12ab33dd60.png",
+      "sha256": "50c396e96753a0d7780446a91112744b9f759b3806b8c0eac6b5820573352808",
+      "uri": "res://assets/official/sprites/highlandedge1-12ab33dd60.png"
+    },
+    {
+      "bytes": 11290,
+      "path": "Resources/Map10/Textures/highlandedge2-c0caa35746.png",
+      "sha256": "987ff0fd8fff7ec6e9882348f3bde3a1669b92b12d7c3c967caffa50c623de9e",
+      "uri": "res://assets/official/sprites/highlandedge2-c0caa35746.png"
+    },
+    {
+      "bytes": 11343,
+      "path": "Resources/Map10/Textures/highlandedge3-eb3299b163.png",
+      "sha256": "dc3b2da9da943fa0122246f7cbf6d7a3efc27bb808bd42b6d5e9a742232f5307",
+      "uri": "res://assets/official/sprites/highlandedge3-eb3299b163.png"
+    },
+    {
+      "bytes": 21402,
+      "path": "Resources/Map10/Textures/highlandedge4-095881ff40.png",
+      "sha256": "0796ccc69c53bcdd00ea91ade76df3461286dcd985a4ed0586f07e18d5fb2a87",
+      "uri": "res://assets/official/sprites/highlandedge4-095881ff40.png"
+    },
+    {
+      "bytes": 21078,
+      "path": "Resources/Map10/Textures/highlandedge5-ead57bbbad.png",
+      "sha256": "06c8f9f89b6834a5195f547d018dd4825d7f2f8b66892f8c429c78dae89fa98f",
+      "uri": "res://assets/official/sprites/highlandedge5-ead57bbbad.png"
+    },
+    {
+      "bytes": 18360,
+      "path": "Resources/Map10/Textures/highlandedge6-b57c7e8080.png",
+      "sha256": "28118018efc98204782affa1e7de37e21ede5adf455a75a2e93046ad46f085d0",
+      "uri": "res://assets/official/sprites/highlandedge6-b57c7e8080.png"
+    },
+    {
+      "bytes": 106,
+      "path": "Resources/Map10/Textures/xuxian-55409c8954.png",
+      "sha256": "4cd6dffe8a3eae05b01597830666adb3a68f0249957542b3cf20aa7a761d8ecc",
+      "uri": "res://assets/official/sprites/xuxian-55409c8954.png"
+    }
+  ]
+}

@@ -82,20 +82,35 @@ namespace Zjcs.Presentation.World
         }
 
         public bool IsAccessible(int regionId, IReadOnlyDictionary<int, int> regionPoints, Func<string, int> storyCount,
-            Func<string, int> storyStatus = null)
+            Func<string, int> storyStatus = null, Func<string, bool> logicTagCompleted = null)
         {
             if (!regionConfigs.TryGetValue(regionId, out OfficialMainlineRegionConfig region))
                 throw new InvalidDataException("Map" + mapClassId + " entity references an unknown region: " + regionId);
             if (region.AccessibleConditionId <= 0) return true;
-            if (!mapConditions.TryGetValue(region.AccessibleConditionId, out RegionCondition condition))
-                throw new InvalidDataException("Map" + mapClassId + " references an unknown access condition: " + region.AccessibleConditionId);
+            return IsConditionMet(region.AccessibleConditionId, regionPoints, storyCount, storyStatus, logicTagCompleted, 0);
+        }
+
+        private bool IsConditionMet(int conditionId, IReadOnlyDictionary<int, int> regionPoints, Func<string, int> storyCount,
+            Func<string, int> storyStatus, Func<string, bool> logicTagCompleted, int depth)
+        {
+            if (depth > 16) throw new InvalidDataException("Map" + mapClassId + " region condition nesting is too deep.");
+            if (!mapConditions.TryGetValue(conditionId, out RegionCondition condition))
+                throw new InvalidDataException("Map" + mapClassId + " references an unknown access condition: " + conditionId);
             if (condition.Type == "StoryCountCondition")
                 return Compare(storyCount(condition.StoryKey), condition.Op, condition.Count);
             if (condition.Type == "StoryStatusCondition")
                 return (storyStatus ?? throw new InvalidDataException("Story status provider is required."))(condition.StoryKey) == condition.Status;
+            if (condition.Type == "CompositeAndCondition")
+            {
+                if (condition.Ids == null || condition.Ids.Length == 0)
+                    throw new InvalidDataException("Map" + mapClassId + " has an empty region composite condition.");
+                return condition.Ids.All(id => IsConditionMet(id, regionPoints, storyCount, storyStatus, logicTagCompleted, depth + 1));
+            }
+            if (condition.Type == "MapLogicEntityEndByTagCondition")
+                return (logicTagCompleted ?? throw new InvalidDataException("Logic-tag completion provider is required."))(condition.Tag);
             if (condition.Type != "WorldMapProgressCondition" || condition.MapClassId != mapClassId
                 || condition.Progress != 10000)
-                throw new InvalidDataException("Unsupported official Map" + mapClassId + " access condition: " + region.AccessibleConditionId);
+                throw new InvalidDataException("Unsupported official Map" + mapClassId + " access condition: " + conditionId);
             if (!regionPointLimits.TryGetValue(condition.Region, out int maximum) || maximum <= 0)
                 throw new InvalidDataException("Map" + mapClassId + " access condition references a region without a progress maximum.");
             return regionPoints.TryGetValue(condition.Region, out int progress) && progress >= maximum;
@@ -132,6 +147,8 @@ namespace Zjcs.Presentation.World
             public string StoryKey;
             public int Count;
             public int Status;
+            public int[] Ids;
+            public string Tag;
             public string Op;
             public string Type => _type;
         }

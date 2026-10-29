@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Zjcs.Offline.Cooking;
 using Zjcs.Offline.Equipment;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.State;
@@ -13,6 +14,8 @@ namespace Zjcs.Presentation.Inventory
         [SerializeField] private OfficialInventoryPanelView panelView;
         private OfflineMainlineProgressSession session;
         private OfficialEquipmentCatalog equipmentCatalog;
+        private OfficialInventoryAssetCatalog inventoryAssets;
+        private OfflineCookingService cookingService;
 
         public event Action<OfflineInventoryItemView> ItemSelected;
         public event Action Closed;
@@ -27,21 +30,26 @@ namespace Zjcs.Presentation.Inventory
             if (!ProfileSlotCatalog.TryParseSlotId(selectedSlotId))
                 throw new ArgumentException("A selected profile slot is required.", nameof(selectedSlotId));
 
-            var slots = new ProfileSlotCatalog(string.IsNullOrEmpty(savesRoot) ? Application.persistentDataPath : savesRoot);
+            var slots = new ProfileSlotCatalog(string.IsNullOrEmpty(savesRoot)
+                ? Application.persistentDataPath : savesRoot);
             if (!slots.Contains(selectedSlotId))
                 throw new InvalidOperationException("The selected profile slot no longer exists.");
 
-            OfficialInventoryAssetCatalog inventoryAssets = OfficialInventoryAssetCatalog.LoadDefault();
+            inventoryAssets = OfficialInventoryAssetCatalog.LoadDefault();
             equipmentCatalog = OfficialEquipmentAssetCatalog.LoadDefault().Load();
             session = OfflineMainlineProgressSession.OpenCharacter(slots, selectedSlotId);
+            cookingService = new OfflineCookingService(session, OfficialCookingCatalog.LoadDefault());
             if (panelView == null) panelView = GetComponent<OfficialInventoryPanelView>();
             if (panelView == null) panelView = gameObject.AddComponent<OfficialInventoryPanelView>();
             panelView.Initialize(inventoryAssets, equipmentCatalog, session.Save);
+            panelView.SetCookingUseHandler(cookingService.MaxPermanentPropertyUseCount);
             panelView.SetTreasureGachaSourceProvider(ResolveTreasureGachaSourceTypes);
             panelView.TreasureGachaSourceSelected -= OpenTreasureGachaSource;
             panelView.TreasureGachaSourceSelected += OpenTreasureGachaSource;
             panelView.ItemSelected -= ForwardItemSelection;
             panelView.ItemSelected += ForwardItemSelection;
+            panelView.CookingUseRequested -= UseCooking;
+            panelView.CookingUseRequested += UseCooking;
             panelView.Closed -= ForwardClosed;
             panelView.Closed += ForwardClosed;
         }
@@ -61,6 +69,30 @@ namespace Zjcs.Presentation.Inventory
 
         private void ForwardItemSelection(OfflineInventoryItemView item) => ItemSelected?.Invoke(item);
         private void ForwardClosed() => Closed?.Invoke();
+
+        private void UseCooking(int itemId, long count)
+        {
+            if (cookingService == null || panelView == null || session == null) return;
+            CookingResult result = cookingService.UsePermanentPropertyCooking(itemId, count);
+            if (!result.IsApplied)
+            {
+                FindHomeNavigationContext()?.ShowInventoryNotice(result.Message);
+                return;
+            }
+
+            session.Reload();
+            panelView.Refresh(session.Save);
+            if (cookingService.InventoryCount(itemId) > 0) panelView.ReopenItemDetail(itemId);
+            else panelView.CloseItemDetail();
+
+            string itemName = inventoryAssets.FindText(cookingService.GetItem(itemId)?.name);
+            if (string.IsNullOrEmpty(itemName)) itemName = cookingService.GetItem(itemId)?.name ?? itemId.ToString();
+            string useMessage = inventoryAssets.FindText("ui_cooking_use");
+            string message = string.IsNullOrEmpty(useMessage)
+                ? itemName + " × " + count
+                : string.Format(useMessage, itemName);
+            FindHomeNavigationContext()?.ShowInventoryNotice(message);
+        }
 
         private IReadOnlyList<int> ResolveTreasureGachaSourceTypes(OfflineInventoryItemView item)
         {

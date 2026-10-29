@@ -86,6 +86,31 @@ $ally = New-Unit 5 1 1 0 100 10; $ally.Statuses.Add($mark)
 $confusionUnits = [Zjcs.Combat.Official.FightBattleUnitState[]]@($actor, $near, $far, $ally)
 $confusedTargets = [Zjcs.Combat.Official.FightBattleTargeting]::Select($actor, $confusionUnits, 1, 0, $true, $true, $ordered)
 Assert-Range ($confusedTargets[0].Id -eq 5) 'Eligible confused attacks ignored a marked ally'
+
+# The selected target determines a cardinal facing, and a cast cannot mix directions.
+$directionActor = New-Unit 11 1 5 5 100 10
+$directionActor.Direction = 1
+$directionTarget = New-Unit 12 2 7 5 100 10
+$directionSkill = New-Skill @(@(2, 0), @(-2, 0))
+$directionSelected = [Zjcs.Combat.Official.FightBattleTargeting]::SelectInSkillRange(
+    $directionActor, [Zjcs.Combat.Official.FightBattleUnitState[]]@($directionActor, $directionTarget), $directionSkill)
+Assert-Range ($directionActor.Direction -eq 3 -and $directionSelected.Count -eq 1 -and $directionSelected[0].Id -eq 12) 'Target selection did not face right before selecting the cast target'
+$directionActor.Direction = 2
+$directionTarget.X = 8
+$directionExcluded = [Zjcs.Combat.Official.FightBattleTargeting]::SelectInSkillRange(
+    $directionActor, [Zjcs.Combat.Official.FightBattleUnitState[]]@($directionActor, $directionTarget), $directionSkill)
+Assert-Range ($directionExcluded.Count -eq 0 -and $directionActor.Direction -eq 2) 'Out-of-range directional target changed the caster facing'
+
+$multiActor = New-Unit 21 1 5 5 100 10
+$rightNear = New-Unit 22 2 6 5 100 10
+$rightFar = New-Unit 23 2 7 5 100 10
+$left = New-Unit 24 2 4 5 100 10
+$multiSkill = New-Skill @(@(1, 0), @(2, 0), @(-1, 0))
+$multiSkill.TargetType = 4
+$sameFacing = [Zjcs.Combat.Official.FightBattleTargeting]::SelectInSkillRange(
+    $multiActor, [Zjcs.Combat.Official.FightBattleUnitState[]]@($multiActor, $rightNear, $rightFar, $left), $multiSkill)
+Assert-Range ($sameFacing.Count -eq 2 -and @($sameFacing | Where-Object { $_.X -lt $multiActor.X }).Count -eq 0) 'A directional cast mixed targets from opposite facings'
+
 # Coverage would favor the near pair, but the confirmed marked-target priority wins first.
 $coverageSkill = New-Skill @(@(1, 0), @(2, 0), @(3, 0))
 $coverageSkill.AiPriorityTypes.Add(1)
@@ -108,4 +133,4 @@ $far.Statuses.Add($mark); $checkpoint.StageId = 1; $checkpoint.RandomSeed = 7; $
 $saved = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(
     [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($checkpoint))
 Assert-Range ($saved.Units[0].Statuses[0].AiMoreHit) 'MoreHit flag did not survive persistence'
-Write-Output 'Battle range-order targeting checks passed: near-to-far order, configured index order, in-range preference and AI priority precedence.'
+Write-Output 'Battle range targeting checks passed: configured order, AI priority, cardinal facing, out-of-range rejection and same-facing multi-target selection.'

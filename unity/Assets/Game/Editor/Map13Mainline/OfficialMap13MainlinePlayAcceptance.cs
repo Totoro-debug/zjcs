@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -17,6 +18,7 @@ using Zjcs.Presentation.CharacterCreation;
 using Zjcs.Presentation.World;
 using Zjcs.Presentation.World.NativeMap13;
 using Zjcs.Official.World;
+using Zjcs.Offline.World.NativeMap13TreeEntities;
 
 namespace Zjcs.Editor.Map13Mainline
 {
@@ -38,6 +40,7 @@ namespace Zjcs.Editor.Map13Mainline
         }
         public static void Run()
         {
+            SessionState.SetBool(Key+".trees",false);
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION","1");
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_SIMULATED","1");
             SessionState.SetInt(Key+".color",(int)PlayerSettings.colorSpace);PlayerSettings.colorSpace=ColorSpace.Linear;
@@ -46,6 +49,7 @@ namespace Zjcs.Editor.Map13Mainline
             SessionState.SetFloat(Key+".deadline",(float)EditorApplication.timeSinceStartup+900);
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);EditorApplication.isPlaying=true;
         }
+        public static void RunTrees(){Run();SessionState.SetBool(Key+".trees",true);}
         public static void RunRules()
         {
             try
@@ -105,19 +109,22 @@ namespace Zjcs.Editor.Map13Mainline
             var slots=new ProfileSlotCatalog(saves);string slot=slots.CreateSlot();
             var save=new OfflineMainlineSave{CreatedAtUnixSeconds=DateTimeOffset.UtcNow.ToUnixTimeSeconds()};
             save.Player.CharacterCreated=true;save.Player.CharacterName="泽之国验证";save.Player.InitialWeaponType=201;
-            save.Player.Level=90;save.Player.Experience=OfficialCharacterAssetCatalog.LoadDefault().Load().CumulativeLevelExperience[90];
-            save.Player.Rank=save.Player.SubRank=save.Player.SeasonRank=12;save.Player.Wardrobe.Profession=1;
+            var characterCatalog=OfficialCharacterAssetCatalog.LoadDefault().Load();
+            save.Player.Level=90;save.Player.Experience=characterCatalog.CumulativeLevelExperience[90];
+            save.Player.SubRank=characterCatalog.LevelLimits.Where(r=>r.PlayerBlessLevel==0&&r.PlayerLevel>=90).Min(r=>r.SubRank);
+            save.Player.Rank=characterCatalog.RankOfSubRank(save.Player.SubRank);save.Player.Wardrobe.Profession=1;
             save.Player.UnlockedMapClassIds.AddRange(new[]{11,12,13});
             save.Tasks.ClaimedMainlineTaskIds.AddRange(OfficialMainlineTaskCatalog.LoadDefault().OrderedTasks.Where(t=>t.classId<=1040).Select(t=>t.classId));
             File.WriteAllText(slots.GetProgressPath(slot),JsonUtility.ToJson(save,true));
             var progression=OfflineMainlineProgressSession.OpenCharacter(slots,slot);
-            new OfflineCharacterProgressionService(progression,OfficialCharacterAssetCatalog.LoadDefault().Load()).InitializeWardrobe("map13-formal-entry-wardrobe");
+            var initializedWardrobe=new OfflineCharacterProgressionService(progression,characterCatalog).InitializeWardrobe("map13-formal-entry-wardrobe");
+            Require(initializedWardrobe.Status==ProgressionResultStatus.Applied,"Isolated character fixture must use consistent official rank/subrank/level values.");
             var runtime=Open(slot,saves,canvas.transform);
             var world=Field<OfficialMap13NativeWorldView>(runtime,"nativeMap13World");
             float deadline=Time.realtimeSinceStartup+120;while(!world.IsReady&&Time.realtimeSinceStartup<deadline)yield return null;
             Require(world.IsReady,"Formal Map13 original partitions did not become ready.");
             var navigation=Field<object>(runtime,"navigation");var initial=Field<MapGridPoint>(navigation,"currentGrid");
-            Require(initial.Equals(new MapGridPoint(115,220)),"Map13 original entry 101 was not used.");
+            Require((int)Call(runtime,"GetDefaultEntryId")==11001&&initial.Equals(new MapGridPoint(113,233)),"Original TbMapWorldInfo.DefEntryId 11001 and its (113,233) placement were not used.");
             Require(Field<object>(runtime,"map13GridVisibility")!=null,"Formal original grid component is not bound.");
             yield return new WaitForSecondsRealtime(2);Canvas.ForceUpdateCanvases();
             ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map13-formal-entry.png"));yield return new WaitForSecondsRealtime(.5f);
@@ -146,10 +153,73 @@ namespace Zjcs.Editor.Map13Mainline
             var after=JsonUtility.FromJson<VisibilitySave>(File.ReadAllText(mapSave));Require(before.map13GridVisibility==after.map13GridVisibility,"Formal visibility bytes changed on cold reopen.");
             ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map13-formal-restored.png"));yield return new WaitForSecondsRealtime(.5f);
             Call(runtime,"CloseMap");yield return null;yield return null;
+            if(SessionState.GetBool(Key+".trees",false))yield return TreeSteps(slot,saves,canvas.transform,mapSave);
             Require(!failed,"Formal Map13 entry emitted runtime errors.");
             File.WriteAllText(Path.Combine(Output,"map13-formal-entry.json"),JsonUtility.ToJson(new Proof{editor=Application.unityVersion,backend=SystemInfo.graphicsDeviceType.ToString(),play_mode=true,simulated_pointer=true,save_reopen=true,entry_x=initial.X,entry_y=initial.Y,moved_x=target.X,moved_y=target.Y},true));
             Debug.Log("Map13 formal native entry passed: original environment/HUD, simulated map pointer, local grid visibility/position save and cold reopen.");
         }
+        private static IEnumerator TreeSteps(string slot,string saves,Transform ui,string mapSave)
+        {
+            var source=Resources.Load<NativeMap13TreeWorldAssets>("Map13/Native/tree-world-assets");
+            Require(source&&source.placements.Length==3,"Original tree world fixture source is unbound.");
+            foreach(var placement in source.placements)
+            {
+                string json=File.ReadAllText(mapSave);
+                json=Regex.Replace(json,"\"gridX\"\\s*:\\s*-?[0-9]+","\"gridX\": "+placement.position.X);
+                json=Regex.Replace(json,"\"gridY\"\\s*:\\s*-?[0-9]+","\"gridY\": "+(placement.position.Y-1));
+                File.WriteAllText(mapSave,json);
+                var runtime=Open(slot,saves,ui);
+                var world=Field<OfficialMap13NativeWorldView>(runtime,"nativeMap13World");
+                float deadline=Time.realtimeSinceStartup+120;while(!world.IsReady&&Time.realtimeSinceStartup<deadline)yield return null;
+                Require(world.IsReady,"Original tree region ground failed to load.");
+                yield return new WaitForSecondsRealtime(4);
+                var trees=Field<NativeMap13TreeWorld>(runtime,"map13Trees");
+                Require(trees.Entities.Count==3,"Formal native tree placement closure differs.");
+                var tree=trees.Entities[placement.placementId];
+                Require(tree.gameObject.activeInHierarchy&&tree.ClientVisibilitySupporter.IsVisible,"Original source tree did not become visible in its source region.");
+                Require(tree.Binding.Model.Skeletons.Single().View.VisibleTriangles>0,"Original live tree geometry is empty.");
+                var skeleton = tree.Binding.Model.Skeletons.Single();
+                var treeCamera = Field<Camera>(runtime,"worldCamera");
+                var planes = GeometryUtility.CalculateFrustumPlanes(treeCamera);
+                Require(Mathf.Abs(treeCamera.transform.position.z + 250f) < .01f,
+                    "Original Map13 camera depth must cover the original XY-to-Z entity range.");
+                Require(skeleton.Parts.Renderers.Any(r => r.enabled && r.gameObject.activeInHierarchy
+                    && r.GetComponent<MeshFilter>().sharedMesh.vertexCount > 0 && GeometryUtility.TestPlanesAABB(planes,r.bounds))
+                    && skeleton.View.SkeletonColor.a > .99f,"Original source tree geometry is outside the actual map camera or faded out.");
+                var countView=tree.Binding.Driver.GetView<Zjcs.Official.World.Map13EntityStateViews.ECMapAwardItemCountSwitcherView>();
+                var fruit=Field<List<GameObject>>(countView,"mItemGos");
+                int awardCount=checked((int)placement.awards.AwardItemInfos.Single().Count);
+                Require(fruit.Count==10 && fruit.Select((item,index)=>item.activeSelf==(index<awardCount)).All(value=>value),
+                    "Original placement fruit count does not match its live source award query.");
+                long before=(long)Call(runtime,"StoryItemCount",115);
+                ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map13-tree-"+placement.placementId+"-before.png"));yield return new WaitForSecondsRealtime(.5f);
+                var navigation=Field<object>(runtime,"navigation");var camera=Field<Camera>(runtime,"worldCamera");
+                var position=(Vector3)Call(navigation,"GridToWorld",new MapGridPoint(placement.position.X,placement.position.Y));
+                Vector2 pointer=camera.WorldToScreenPoint(position);
+                var hits=new List<RaycastResult>();EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current){position=pointer},hits);
+                Require(hits.Count==0,"Official HUD occludes the source tree input.");
+                bool sent=false;runtime.PointerPressProvider=()=>{if(sent)return null;sent=true;return pointer;};
+                deadline=Time.realtimeSinceStartup+30;
+                while(!JsonUtility.FromJson<TreeSave>(File.ReadAllText(mapSave)).completedEntityPlacements.Contains(placement.placementId)&&Time.realtimeSinceStartup<deadline)yield return null;
+                runtime.PointerPressProvider=()=>null;
+                Require(sent&&JsonUtility.FromJson<TreeSave>(File.ReadAllText(mapSave)).completedEntityPlacements.Contains(placement.placementId),"Simulated map click did not complete the source tree.");
+                Require((long)Call(runtime,"StoryItemCount",115)==before+placement.awards.AwardItemInfos.Single().Count,"Original placement award differs.");
+                yield return new WaitForSecondsRealtime(.4f);
+                ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map13-tree-"+placement.placementId+"-removing.png"));yield return new WaitForSecondsRealtime(.5f);
+                deadline=Time.realtimeSinceStartup+10;while(tree.gameObject.activeInHierarchy&&Time.realtimeSinceStartup<deadline)yield return null;
+                Require(!tree.gameObject.activeInHierarchy,"Original tree removal performance did not complete.");
+                long total=(long)Call(runtime,"StoryItemCount",115);
+                Call(runtime,"CloseMap");yield return null;yield return null;
+                runtime=Open(slot,saves,ui);yield return new WaitForSecondsRealtime(3);
+                trees=Field<NativeMap13TreeWorld>(runtime,"map13Trees");
+                Require(!trees.Entities[placement.placementId].gameObject.activeInHierarchy,"Completed native tree reappeared on cold reopen.");
+                Require((long)Call(runtime,"StoryItemCount",115)==total,"Cold reopen duplicated the original tree award.");
+                ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map13-tree-"+placement.placementId+"-restored.png"));yield return new WaitForSecondsRealtime(.5f);
+                Call(runtime,"CloseMap");yield return null;yield return null;
+                Debug.Log("Map13 formal source tree passed: "+placement.placementId+", native original geometry, simulated map click, source award "+placement.awards.AwardItemInfos.Single().Count+", original removal and cold restore.");
+            }
+        }
+        [Serializable]private sealed class TreeSave{public int[] completedEntityPlacements;}
         private static OfficialMainlineMapRuntime Open(string slot,string saves,Transform ui)
         {
             var model=CharacterCreationNativeModelFactory.CreateWorldModel(slot,saves,out string name);

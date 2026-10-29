@@ -6,11 +6,23 @@
 
 ## 功能简介
 
-各主题签到及长期活动分别读取官方签到天数、物品、状态、活动入口与原动态展示；活动开放和本地领取回执属于单机接线。
+本页覆盖当前开放的29套官方主题签到、成长试炼、宾果、刮刮乐、赛季七日任务100～105，以及自定义的签到表2入口。活动216与223及其全部关联内容按用户决定暂不开放，见[暂不开放约定](offline-access.md#暂不开放的联动活动及伙伴)。主题活动的关联小游戏范围见[活动小游戏](activity-minigames.md)；签到可领不代表关联玩法完成。
 
 ## 原始官方实现
 
 各主题签到及长期活动分别读取官方签到天数、物品、状态、活动入口与原动态展示；活动开放和本地领取回执属于单机接线。
+
+### 待迁移的规则与表现
+
+官方主题签到使用原活动卡片、签到面板、奖励格、签到状态、领奖反馈与返回流程。每日签到一次；中断后继续领取下一档，不要求连续签到，不会在第七档后自动开启新轮。各活动奖励、个人条件、性别／职业限制、7处换装预览和动态展示按原配置与已转换资源运行。原窗口生命周期、遮罩点击保护、分格演出、跨日刷新和奖励弹窗状态由本地界面接续。
+
+赛季100～105使用固定版本的六套 `SevenDayTaskPanelSeason1`～`Season5`、`SevenDayTaskPanelS6` 原面板，以及对应的任务行和积分奖励格。任务页签按官方 `TaskGroupType` 展示地图探索、赛季养成、赛季玩法三组；每组按完成条件类型分组、按 `ClassId` 排序，显示须实现任务和当前任务。任务行展示本地可确定的当前／目标进度、赛季积分与配置奖励；积分条、阈值奖励、职业奖励、已领状态和领取去重使用原活动及奖励配置。
+
+赛季配置的1255条任务、16种完成条件均接入本地任务状态与进度计算。领取仍经过任务归属、开放条件、完成条件、奖励和收据校验，不直接补写完成状态或跳过原奖励规则。
+
+规则与实现定位：（`seasonal_growth`、`seasonal_task_ids`、`seasonal_task_list`、`seasonal_score_rewards`）、（`task_state`、`task_progress`）、（`execute`）。配置表为 `activity_sign_days`、`seven_day_task_activity`、`seven_day_task`、`seven_day_task_group`、`seven_day_task_phase`、`seven_day_task_score_reward`；赛季活动 ID 为100～105。
+
+对应官方代码为 `ActivityEntrySevenDayTaskHandler.OnActivityOpen`、`SevenDayTaskPanel`、`SevenDayTaskSubPanelTaskWithTaskGroup`、`SevenDayTaskGroup.GetDisplayTask`、`TaskListLiteItemForProgressTask.RefreshProgress`、`TaskListLiteItemForSevenDayTask.RefreshAward` 和 `SevenDayTaskScoreRewardItem`，源文件位于固定版本 `.tools/source-packages/official-code/client-source/`。提取与输出登记见[活动 UI 来源清单](../../assets/reference/activity-ui/source-manifest.json)及[素材来源总览](../../assets/reference/SOURCES.md)。
 
 ### 官方代码与资源依据
 
@@ -36,12 +48,24 @@
 
 ## 完整还原部分
 
-尚无完整 Unity 流程的完成结论。
+尚无完整 Unity 流程的完成结论；已取得源码和转换素材仅作迁移依据。
 
 ## 自定义实现
 
-开放与本地保存遵循[共同离线政策](offline-access.md)，具体本地接线和未确认规则见下文。
+原客户端通过 `DisplayCommonEntry` 控制七日任务是否进入通用活动列表，赛季100～105不显示普通活动卡片；本地目录增加了便于访问的入口卡片，面板、任务行、积分格、奖励和条件配置仍使用固定版官方内容。赛季服务端的 `TaskManager` 处理中状态不可离线取得；本地按配置顺序显示已完成任务和首个未完成任务，并使用已有本地玩法状态或事件记录计算进度。
+
+用户确认移除服务器活动起止日期和开服等待，开放中的主题签到长期可领且不过期，保留原个人条件与每日一次；此排期与领取期限属于单机适配。
+
+固定版提供 `activity_sign_days` 签到表2（ID 2）的七日奖励，但没有对应导航和专用签到面板。按本地离线入口实现，目录新增“签到表2”，复用官方通用七日签到面板与格子，奖励直接读取 ID 2 配置，独立保存天数和每日领取时间；该入口及表2导航属于自定义实现，不作为官方入口还原。
+
+官方 `LegionFightJoinCountNewRecordCondition` 只读取服务端任务记录。按用户确认的离线规则，每次通过公会战攻击校验并实际发起攻击计1次；报名、无效目标、已摧毁据点和次数耗尽均不计数。计数接入（`combat_action`）与（`emit`、`amount`），属于已确认的单机适配。
 
 ## 尚未实现
 
-接通官方代码、原生界面／资源、本地状态与存档，完成实际入口、模拟输入、画面及失败恢复验证，并发布对应 Windows 版本。
+- 已授权开放主题的签到、原奖励格、换装预览、赛季100～105七日任务与积分领奖；暂停联动的入口继续关闭。
+
+- 完成 Unity 实际入口、交互／表现、存档与失败恢复验证，并发布对应 Windows 可执行版本。
+
+## 代码与资源入口
+
+[活动 UI 来源清单](../../assets/reference/activity-ui/source-manifest.json)

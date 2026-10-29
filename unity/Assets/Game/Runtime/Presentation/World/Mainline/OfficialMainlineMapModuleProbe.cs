@@ -285,8 +285,10 @@ namespace Zjcs.Presentation.World
             Invoke("SetMiniMapFilterExpanded", false);
             yield return Click(full.transform.Find("Content/CloseBtn_dark").GetComponent<Button>());
             filters.Clear();
+            typeof(OfficialMainlineMapRuntime).GetNestedType("OfficialMainlineMiniMapModule", BindingFlags.NonPublic)
+                .GetField("miniMapFilterState", Private).SetValue(Field<object>("miniMap"), null);
             yield return Click(mini.transform.Find(buttonPath.Substring("/MiniMapMaskedUI/".Length)).GetComponent<Button>());
-            Require(filters["MiniMapGoddess"] != before, "Minimap filter restores from JSON");
+            Require(filters["MiniMapGoddess"] != before, "Minimap filter cold-reads from its profile save file");
             yield return Click(Field<GameObject>("fullMiniMapPanel").transform.Find("Content/CloseBtn_dark").GetComponent<Button>());
 
             var progress = Field<OfflineMainlineProgressSession>("progressionSave");

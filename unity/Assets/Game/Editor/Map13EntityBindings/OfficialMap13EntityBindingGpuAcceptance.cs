@@ -113,7 +113,7 @@ namespace Zjcs.Editor.Map13EntityBindings
                         throw new InvalidDataException("Native engine depth pass did not write depth: "+string.Join(",",counts));
                 }
                 Debug.Log("Map13 native shader binding Play Mode passed: 21 cold-reloaded serialized references, " +
-                    "two original Spine variants, exact channel discard, both unlit passes and native engine output; all 16384 pixels per draw checked.");
+                    "two original Spine variants, exact channel discard, both unlit passes and native engine output; all 16384 pixels per draw checked under .");
             }
             finally
             {

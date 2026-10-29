@@ -95,7 +95,7 @@ namespace Zjcs.Editor.Map12
             }
             SessionState.SetInt(Key + ".result", 0);
             if (SessionState.GetBool(Key + ".labels", false)) Debug.Log("Map12 full native partition and world-label Play Mode passed; real player/save integration remains unverified.");
-            else Debug.Log("Map12 native environment Play Mode passed: 186 original tile chunks and 187 original non-label scene resources through original partition/controller/environment callbacks, public/private fixtures, native texture GPU upload and rendering. The 80 world labels, real world state, map interaction and saves remain unverified.");
+            else Debug.Log("Map12 native environment Play Mode passed: 186 original tile chunks and 187 original non-label scene resources through original partition/controller/environment callbacks, public/private fixtures, native texture GPU upload and  rendering. The 80 world labels, real world state, map interaction and saves remain unverified.");
             EditorApplication.isPlaying = false;
         }
 
@@ -203,7 +203,7 @@ namespace Zjcs.Editor.Map12
                     yield return new WaitForSeconds(0.15f); yield return null; yield return null;
                     var request = AsyncGPUReadback.Request(target, 0, TextureFormat.RGBA32);
                     while (!request.done) yield return null;
-                    if (request.hasError) throw new InvalidDataException("Original partition camera readback failed.");
+                    if (request.hasError) throw new InvalidDataException("Original partition  camera readback failed.");
                     var image = new Texture2D(384, 640, TextureFormat.RGBA32, false, true);
                     image.SetPixels32(request.GetData<Color32>().ToArray()); image.Apply();
                     File.WriteAllBytes(Path.Combine(rootPath, "output/map12-partition-" + (includeLabels ? "labels-" : "") + status + "-" + (view.y == 0 ? "center" : view.x == 0 ? "mountain" : "region") + "-20261027.png"), image.EncodeToPNG());

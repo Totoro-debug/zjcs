@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Water14 3
+  m_Shader: {fileID: 4800000, guid: 6056bfce819040ad97f44295028abb06, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties:
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+      _BumpMap:
+        m_Texture: {fileID: 2800000, guid: c29786b1bbb0a8583fc9ec36e2e1d2f6, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _CausticsTex:
+        m_Texture: {fileID: 2800000, guid: b4a9066c2348700b42624c8129651c21, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _FoamTex:
+        m_Texture: {fileID: 2800000, guid: be4a9c659e546769266a6c3fc4c69a8c, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _MaskTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: 4f4e2d7eb4bc7bc7eb8be2310f52cc27, type: 2}
+        m_Scale: {x: 0.2, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: {}
+    m_Floats:
+      _CausticsBrightness: 2
+      _CausticsDistortion: 0.15
+      _CausticsSpeed: 0.04
+      _CausticsThreshold: 0.043
+      _CausticsTiling: 0.46
+      _Depth: 0.5
+      _EdgeCutoff: 0.425
+      _EdgeStr: 6.01
+      _EdgeThreshold: 0.35
+      _EnableExternalAlpha: 0
+      _Expand: 0
+      _FoamCutoff: 0.919
+      _FoamSpeed: -0.01
+      _FoamThreshold: 0.407
+      _FoamTiling: -0.15
+      _IntersectionFalloff: 0.636
+      _IntersectionRippleDist: 1
+      _IntersectionRippleStrength: 0.519
+      _IsPond: 0
+      _NoiseFrequency: 0.06
+      _NoiseSpeed: 0.1
+      _NoiseTiling: 0.3
+      _NormalSpeed: 0.01
+      _NormalStrength: 0.09
+      _NormalTiling: -0.06
+      _Test: 0.55
+      _Test2: 1
+      _Wave: -0.003
+      _WaveFrequency: 2
+      _WaveStrength: 0.003
+    m_Colors:
+      _BaseColor: {r: 0.3372549, g: 0.3372549, b: 0.1764706, a: 1}
+      _Color: {r: 1, g: 1, b: 1, a: 1}
+      _EdgeColor: {r: 0.4716981, g: 0.4716981, b: 0.2247241, a: 1}
+      _Flip: {r: 1, g: 1, b: 1, a: 1}
+      _FoamColor: {r: 0.2830189, g: 0.2830189, b: 0.18556428, a: 1}
+      _RendererColor: {r: 1, g: 1, b: 1, a: 1}
+      _ShallowColor: {r: 0.3773585, g: 0.3773585, b: 0.17621928, a: 1}
+  m_BuildTextureStacks: []

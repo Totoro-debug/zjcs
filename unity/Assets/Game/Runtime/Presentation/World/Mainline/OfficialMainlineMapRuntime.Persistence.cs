@@ -45,6 +45,7 @@ namespace Zjcs.Presentation.World
             localSave.receipts ??= Array.Empty<string>();
             localSave.nativeDialogAwardReceipts ??= Array.Empty<string>();
             localSave.battleResults ??= Array.Empty<Map10RuntimeBattleResult>();
+            localSave.aloneWorldClassIds ??= Array.Empty<int>();
             RecoverMap12ChestCompletions();
             RecoverMap12SteleCompletions();
         }
@@ -55,6 +56,7 @@ namespace Zjcs.Presentation.World
             localSave.gridX = navigation.currentGrid.X;
             localSave.gridY = navigation.currentGrid.Y;
             if (puzzles != null) localSave.puzzleStates = puzzles.Save();
+            SnapshotMap13Visibility();
             LocalJsonSaveFile.Write(mapSavePath, JsonUtility.ToJson(localSave, true), ValidLocalSave);
         }
 
@@ -69,10 +71,13 @@ namespace Zjcs.Presentation.World
                     : Mathf.CeilToInt(session.Definition.Navigation.Height);
                 return parsed != null && parsed.schema == 1 && parsed.slotId == slotId
                     && parsed.gridX >= 0 && parsed.gridX < width && parsed.gridY >= 0 && parsed.gridY < height
+                    && (mapClassId != 13 || ValidMap13Visibility(parsed.map13GridVisibility))
                     && (parsed.completedStories == null || parsed.completedStories.All(value => value != null))
                     && (parsed.storyPlayCounts == null || parsed.storyPlayCounts.All(value => value != null
                         && !string.IsNullOrEmpty(value.key) && value.count >= 0))
                     && (parsed.completedEntityPlacements == null || parsed.completedEntityPlacements.All(value => value > 0))
+                    && (parsed.aloneWorldClassIds == null || parsed.aloneWorldClassIds.All(value => value > 0)
+                        && parsed.aloneWorldClassIds.Distinct().Count() == parsed.aloneWorldClassIds.Length)
                     && (parsed.completedPeriodicityGroups == null
                         || parsed.completedPeriodicityGroups.All(value => value > 0))
                     && (parsed.mapLogicStates == null || parsed.mapLogicStates.All(value => value != null

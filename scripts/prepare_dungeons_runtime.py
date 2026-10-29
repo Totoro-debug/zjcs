@@ -237,13 +237,21 @@ def build() -> dict:
         game_id = int(row["GameId"])
         game_ids.add(game_id)
         wave_arrays = [int(value) for value in (row["WaveArrayIds"] or [])]
+        wave_monsters = [[int(value) for value in wave] for wave in (row["WaveMonsterIds"] or [])]
+        wave_monster_ids_flat = []
+        wave_monster_offsets = [0]
+        for wave in wave_monsters:
+            wave_monster_ids_flat.extend(wave)
+            wave_monster_offsets.append(len(wave_monster_ids_flat))
         formation_ids.update(value for value in wave_arrays if value > 0)
         stage_output.append({
             "id": stage_id, "gameId": game_id, "level": row["Level"],
             "subRank": int(row["SubRank"]), "maxRound": int(row["MaxRound"]),
             "waveArrayIds": wave_arrays,
             "waveArrayCatalogs": [int(value) for value in (row["WaveArrayCatalogs"] or [])],
-            "waveMonsterIds": [[int(value) for value in wave] for wave in (row["WaveMonsterIds"] or [])],
+            "waveMonsterIds": wave_monsters,
+            "waveMonsterIdsFlat": wave_monster_ids_flat,
+            "waveMonsterOffsets": wave_monster_offsets,
             "monsterGroupNo": int(row["MonsterGroupNo"]), "monsterLevelAdd": int(row["MonsterLevelAdd"]),
             "playerRoundLimit": int(row["PlayerRoundLimit"]),
             "isPlayerRoundLimit": bool(row["IsPlayerRoundLimit"]),
@@ -271,6 +279,10 @@ def build() -> dict:
             ],
             "factions": [
                 {"id": value["Faction"],
+                 "entryPosition": ([value["EntryPosList"][0]["X"], value["EntryPosList"][0]["Y"]]
+                                   if value["EntryPosList"] else []),
+                 "entryPositionsFlat": [coordinate for pos in value["EntryPosList"]
+                                        for coordinate in (pos["X"], pos["Y"])],
                  "entryPositions": [[pos["X"], pos["Y"]] for pos in value["EntryPosList"]],
                  "entryDirections": value["EntryDirList"]}
                 for value in fight["FactionInfoList"]

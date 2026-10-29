@@ -97,7 +97,7 @@ namespace Zjcs.Editor.Map13
             Application.logMessageReceived -= Log;
             if (errors.Count != 0) { Debug.LogError("TMP effect lifecycle logged errors: " + string.Join("\n", errors)); EditorApplication.isPlaying = false; yield break; }
             SessionState.SetInt(Key + ".result", 0);
-            Debug.Log("Original TMP effects Play Mode passed: official label fields, original colors/normalization, pooled CRC identity and ownership, last-reference release, real OnEnable/OnDisable/Update, gray mutation, autosize TEXT_CHANGED_EVENT and Linear rendering. Full original world label UI remains separate.");
+            Debug.Log("Original TMP effects Play Mode passed: official label fields, original colors/normalization, pooled CRC identity and ownership, last-reference release, real OnEnable/OnDisable/Update, gray mutation, autosize TEXT_CHANGED_EVENT and Linear  rendering. Full original world label UI remains separate.");
             EditorApplication.isPlaying = false;
         }
 

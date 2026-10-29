@@ -65,7 +65,7 @@ namespace Zjcs.Editor.Map13
                 yield return value;
             }
             SessionState.SetInt(Key + ".result", 0);
-            Debug.Log("Map13 native text Play Mode passed: original Alpha8 GPU bytes, dynamic Chinese/ASCII glyphs, source-font identity, native mesh/atlas generation and original shader face/outline/dual-outline/underlay/glow/gray/clipping paths on Linear. Original region UI and effect components remain unverified.");
+            Debug.Log("Map13 native text Play Mode passed: original Alpha8 GPU bytes, dynamic Chinese/ASCII glyphs, source-font identity, native mesh/atlas generation and original shader face/outline/dual-outline/underlay/glow/gray/clipping paths on Linear . Original region UI and effect components remain unverified.");
             EditorApplication.isPlaying = false;
         }
         [Serializable] private sealed class Atlas { public string sha256; public int byte_count; }
