@@ -59,6 +59,11 @@ namespace Zjcs.Editor
             public int nodeId;
             public string port;
         }
+        [Serializable] private sealed class Map14StoryTransferFields
+        {
+            public string LoEntityTag;
+            public int MapClassId, LoEntityId, IsFastTransfer, Direction;
+        }
 
         public static void RunUiMap14Statues()
         {
@@ -203,6 +208,15 @@ namespace Zjcs.Editor
             if (!grid.Equals(new Zjcs.Offline.World.MapGridPoint(12, -4)))
                 throw new InvalidDataException("Official vector-to-grid conversion truncation differs.");
             Debug.Log("Map14 original FengMoXiaFinish spawn position binding passed: StoryTalk logic entity vector -> official truncating grid conversion -> spawned entity position.");
+
+            Map10RuntimeStory transferStory = data.stories.Single(value => value.key == "SuoYaoTowerAfterBattle");
+            Map10RuntimeStoryNode characterTransferNode = transferStory.nodes.Single(value => value.type == "MapMeCharacterTransferNode");
+            Map14StoryTransferFields transferFields = JsonUtility.FromJson<Map14StoryTransferFields>(characterTransferNode.sourceJson);
+            if (transferFields.MapClassId != 14 || transferFields.IsFastTransfer != 0 || transferFields.Direction != 1
+                || string.IsNullOrEmpty(transferFields.LoEntityTag)
+                || !data.mapLogicTags.Any(value => value.MapClass == 14 && value.Tag == transferFields.LoEntityTag))
+                throw new InvalidDataException("Map14 original story transfer target or route parameters are not bound.");
+            Debug.Log("Map14 original story transfer binding passed: same-map tagged logic entity, normal-speed route and left-facing exit.");
         }
 
         private static IEnumerator VerifyMap14StatueSteps(OfficialMap11UiData data, Transform parent,

@@ -122,6 +122,54 @@ namespace Zjcs.Presentation.World
                 if (movementIndex >= movementPath.Count) FinishMovement();
             }
 
+            public void StartStoryTransfer(Map10RuntimeEntity target, int direction, Action complete)
+            {
+                if (target == null || movementPath != null || host.battleController != null)
+                {
+                    complete?.Invoke();
+                    return;
+                }
+                MapGridPoint destination = target.Grid;
+                List<MapGridPoint> path;
+                if (currentGrid.Equals(destination))
+                {
+                    MapGridPoint[] directions =
+                    {
+                        new MapGridPoint(0, -1), new MapGridPoint(-1, 0),
+                        new MapGridPoint(0, 1), new MapGridPoint(1, 0)
+                    };
+                    MapGridPoint? adjacent = directions.Select(offset => destination + offset)
+                        .Where(host.session.Movement.IsFit).Select(point => (MapGridPoint?)point).FirstOrDefault();
+                    if (!adjacent.HasValue)
+                    {
+                        complete?.Invoke();
+                        return;
+                    }
+                    path = new List<MapGridPoint> { currentGrid, adjacent.Value };
+                }
+                else path = host.session.FindPath(new OfficialMapPathRequest
+                {
+                    Start = currentGrid,
+                    End = destination,
+                    PreferDistance = 1,
+                    PreciseTarget = true,
+                    BodyOffsets = new[] { new MapGridPoint(0, 0) }
+                });
+                if (path == null || path.Count < 2)
+                {
+                    complete?.Invoke();
+                    return;
+                }
+                Vector3 scale = host.avatar.transform.localScale;
+                scale.x = Mathf.Abs(scale.x) * (direction == 1 ? -1f : 1f);
+                host.avatar.transform.localScale = scale;
+                movementPath = path;
+                movementIndex = path[0].Equals(currentGrid) ? 1 : 0;
+                movementCompletion = complete;
+                storyTransferActive = true;
+                if (movementIndex >= movementPath.Count) FinishMovement();
+            }
+
             public void AdvanceMovement(float deltaTime)
             {
                 if (movementPath == null || movementIndex >= movementPath.Count)
@@ -180,6 +228,7 @@ namespace Zjcs.Presentation.World
                     host.Interact(selected);
                 Action complete = movementCompletion;
                 movementCompletion = null;
+                storyTransferActive = false;
                 complete?.Invoke();
             }
 

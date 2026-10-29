@@ -282,6 +282,19 @@ namespace Zjcs.Presentation.World
                             StartCoroutine(MoveStoryEntity(movingEntity, node.destinationX, node.destinationY,
                                 Mathf.Max(0.1f, node.moveSpeed), StoryNext(node, "Exit")));
                             return;
+                        case "MapMeCharacterTransferNode":
+                            StoryTransferFields transfer = JsonUtility.FromJson<StoryTransferFields>(node.sourceJson);
+                            Map10RuntimeEntity transferTarget = null;
+                            if (transfer.MapClassId == mapClassId)
+                            {
+                                int logicId = string.IsNullOrEmpty(transfer.LoEntityTag) ? transfer.LoEntityId
+                                    : mapLogicTags.Values.FirstOrDefault(value => value.MapClass == mapClassId
+                                        && value.Tag == transfer.LoEntityTag)?.LogicId ?? 0;
+                                if (logicId != 0) mapEntities.TryGetValue(logicId, out transferTarget);
+                            }
+                            navigation.StartStoryTransfer(transferTarget, transfer.Direction,
+                                () => RunStoryGraph(StoryNext(node, "Exit")));
+                            return;
                         case "EnterStoryWorldCameraNode":
                             if (node.needHideUi) SetStoryWorldUiHidden(true);
                             nodeId = StoryNext(node, "Exit");

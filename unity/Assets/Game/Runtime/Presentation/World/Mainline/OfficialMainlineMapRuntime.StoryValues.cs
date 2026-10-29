@@ -25,6 +25,11 @@ namespace Zjcs.Presentation.World
         [Serializable] private sealed class StoryItemRequirement { public int ItemId; public long ItemCount; }
         [Serializable] private sealed class StoryDialogFields { public int DialogId, Order; }
         [Serializable] private sealed class StoryBooleanFields { public int Input, MapClassId, RegionId, State, LoEntityId, SceneType; public string Tag; }
+        [Serializable] private sealed class StoryTransferFields
+        {
+            public string LoEntityTag;
+            public int MapClassId, LoEntityId, IsFastTransfer, Direction;
+        }
         [Serializable] private sealed class StoryMap14RegionLabels
         {
             public int mapClassId, width, height;

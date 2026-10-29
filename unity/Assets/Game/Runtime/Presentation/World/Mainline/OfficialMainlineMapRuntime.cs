@@ -245,7 +245,9 @@ namespace Zjcs.Presentation.World
                 return;
             }
 
-            if (hud.worldFunctions != null || miniMap.fullMiniMapPanel != null || (storyRunning && battleController == null) || statues.goddessDialog != null || statues.witchDialog != null) return;
+            if (hud.worldFunctions != null || miniMap.fullMiniMapPanel != null
+                || (storyRunning && battleController == null && !navigation.storyTransferActive)
+                || statues.goddessDialog != null || statues.witchDialog != null) return;
 
             if (battleController != null)
             {
