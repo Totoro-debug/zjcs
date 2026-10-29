@@ -92,7 +92,10 @@ namespace Zjcs.Editor.ProfessionUI
             Expect<ArgumentException>(() => new ProfessionNativeCurve(Array.Empty<ProfessionNativeCurve.Key>()));
             Expect<ArgumentException>(() => new ProfessionNativeCurve(new[] { key, key }));
             Expect<ArgumentException>(() => constant.TryEvaluate(float.NaN, out _));
-            Expect<NotSupportedException>(() => new ProfessionNativeCurve(new[] { new ProfessionNativeCurve.Key { time = 0, mode = 2, controls = new Vector4(0, 1, .5f, 1) }, new ProfessionNativeCurve.Key { time = 1 } }));
+            var vertical = new ProfessionNativeCurve(new[] { new ProfessionNativeCurve.Key { time = 0, mode = 2,
+                controls = new Vector4(0, 1, .5f, 1) }, new ProfessionNativeCurve.Key { time = 1 } });
+            Require(vertical.TryEvaluate(.0859375f, out at) && Mathf.Abs(at - .5625f) < .000001f,
+                "vertical source handle retains the original cubic rather than being rejected");
         }
         private static void Expect<T>(Action action) where T : Exception
         { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected explicit source-curve rejection: " + typeof(T).Name); }

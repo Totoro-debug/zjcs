@@ -23,7 +23,7 @@ namespace Zjcs.Offline.ProfessionUI
         {
             public readonly int Bone, Channel;
             public readonly ProfessionNativeCurve Curve;
-            // Channels: rotation, translation X/Y, scale X/Y.
+            // Channels: rotation, translation X/Y, scale X/Y, shear X/Y.
             public Track(int bone, int channel, ProfessionNativeCurve curve)
             { Bone = bone; Channel = channel; Curve = curve ?? throw new ArgumentNullException(nameof(curve)); }
         }
@@ -32,14 +32,15 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly bool[] active;
         private readonly bool[] ready;
         private readonly Matrix4x4[] world;
-        private readonly Vector2[] position, scale;
+        private readonly Vector2[] position, scale, shear;
+        private readonly int[] inheritance;
         private readonly float[] rotation;
         public int Count => source.Length;
         public bool IsActive(int bone) => active[bone];
         public Matrix4x4 World(int bone) => EvaluateWorld(bone);
         public int Parent(int bone) => source[bone].parent;
-        public int Inheritance(int bone) => source[bone].inherit;
-        public Vector2 Shear(int bone) => new Vector2(source[bone].shearX, source[bone].shearY);
+        public int Inheritance(int bone) => inheritance[bone];
+        public Vector2 Shear(int bone) => shear[bone];
         public Vector2 LocalPosition(int bone) => position[bone];
         public Vector2 LocalScale(int bone) => scale[bone];
         public float LocalRotation(int bone) => rotation[bone];
@@ -60,6 +61,7 @@ namespace Zjcs.Offline.ProfessionUI
             }
             active = new bool[bones.Length]; ready = new bool[bones.Length]; world = new Matrix4x4[bones.Length];
             position = new Vector2[bones.Length]; scale = new Vector2[bones.Length]; rotation = new float[bones.Length];
+            shear = new Vector2[bones.Length]; inheritance = new int[bones.Length];
             SetSkinBones(Array.Empty<int>());
             Reset();
         }
@@ -82,6 +84,7 @@ namespace Zjcs.Offline.ProfessionUI
             {
                 Bone b = source[i]; position[i] = new Vector2(b.x, b.y);
                 scale[i] = new Vector2(b.scaleX, b.scaleY); rotation[i] = b.rotation;
+                shear[i] = new Vector2(b.shearX, b.shearY); inheritance[i] = b.inherit;
                 ready[i] = false;
             }
         }
@@ -93,7 +96,7 @@ namespace Zjcs.Offline.ProfessionUI
             Reset();
             foreach (Track track in tracks)
             {
-                if (track == null || track.Bone < 0 || track.Bone >= source.Length || track.Channel < 0 || track.Channel > 4)
+                if (track == null || track.Bone < 0 || track.Bone >= source.Length || track.Channel < 0 || track.Channel > 6)
                     throw new ArgumentException("Original bone timeline binding is invalid.");
                 int i = track.Bone;
                 if (!active[i] || !track.Curve.TryEvaluate(time, out float value)) continue;
@@ -105,6 +108,8 @@ namespace Zjcs.Offline.ProfessionUI
                     case 2: position[i].y = b.y + value; break;
                     case 3: scale[i].x = b.scaleX * value; break;
                     case 4: scale[i].y = b.scaleY * value; break;
+                    case 5: shear[i].x = b.shearX + value; break;
+                    case 6: shear[i].y = b.shearY + value; break;
                 }
             }
         }
@@ -112,6 +117,13 @@ namespace Zjcs.Offline.ProfessionUI
         public void UpdateWorld()
         {
             for (int i = 0; i < source.Length; i++) EvaluateWorld(i);
+        }
+
+        public void SetInheritance(int bone, int mode)
+        {
+            if (bone < 0 || bone >= source.Length || mode < 0 || mode > 4)
+                throw new ArgumentOutOfRangeException(nameof(mode));
+            inheritance[bone] = mode; Array.Clear(ready, 0, ready.Length);
         }
 
         public void SetRotation(int bone, float value)
@@ -148,11 +160,11 @@ namespace Zjcs.Offline.ProfessionUI
             Matrix4x4 parent = b.parent < 0 ? Matrix4x4.identity : EvaluateWorld(b.parent);
             Vector3 origin = parent.MultiplyPoint3x4(position[i]);
             Matrix4x4 basis;
-            if (b.parent < 0 || b.inherit == 1)
-                basis = Axes(rotation[i], b.shearX, b.shearY, scale[i]);
-            else if (b.inherit == 0)
-                basis = parent * Axes(rotation[i], b.shearX, b.shearY, scale[i]);
-            else if (b.inherit == 2)
+            if (b.parent < 0 || inheritance[i] == 1)
+                basis = Axes(rotation[i], shear[i].x, shear[i].y, scale[i]);
+            else if (inheritance[i] == 0)
+                basis = parent * Axes(rotation[i], shear[i].x, shear[i].y, scale[i]);
+            else if (inheritance[i] == 2)
             {
                 // The current female core sleeve chains have orthogonal parent
                 // axes of equal length. Removing rotation and reflection has an
@@ -164,12 +176,12 @@ namespace Zjcs.Offline.ProfessionUI
                 if (Mathf.Abs(x.sqrMagnitude - y.sqrMagnitude) > tolerance || Mathf.Abs(Vector2.Dot(x, y)) > tolerance)
                     throw new NotSupportedException("Nonuniform original no-rotation inheritance is unbound: " + b.name);
                 float magnitude = x.magnitude;
-                basis = Matrix4x4.Scale(new Vector3(magnitude, magnitude, 1)) * Axes(rotation[i], b.shearX, b.shearY, scale[i]);
+                basis = Matrix4x4.Scale(new Vector3(magnitude, magnitude, 1)) * Axes(rotation[i], shear[i].x, shear[i].y, scale[i]);
             }
-            else if (b.inherit == 3)
-                basis = WithoutParentScale(parent, rotation[i], new Vector2(b.shearX, b.shearY), scale[i]);
+            else if (inheritance[i] == 3)
+                basis = WithoutParentScale(parent, rotation[i], shear[i], scale[i]);
             else
-                throw new NotSupportedException("Original selective inheritance is unbound: " + b.name + "/" + b.inherit);
+                throw new NotSupportedException("Original selective inheritance is unbound: " + b.name + "/" + inheritance[i]);
             basis.m03 = origin.x; basis.m13 = origin.y; world[i] = basis; ready[i] = true;
             return basis;
         }

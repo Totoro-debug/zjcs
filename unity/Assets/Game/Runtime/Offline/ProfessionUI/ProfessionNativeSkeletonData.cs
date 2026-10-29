@@ -175,12 +175,16 @@ namespace Zjcs.Offline.ProfessionUI
         public ProfessionNativeSlotPose CreateSlotPose(ProfessionNativeBonePose pose) => new ProfessionNativeSlotPose(slots, pose);
         public IReadOnlyDictionary<string, object> GetAnimation(string name) => Object(animations[name]);
         public ProfessionNativeSlotPose.Clip CreateSlotClip(string animationName)
+            => CreateSlotClip(animationName, false);
+
+        internal ProfessionNativeSlotPose.Clip CreateSlotClip(string animationName, bool separateColorChannels)
         {
             var animation = Object(animations[animationName]);
             var tracks = new List<ProfessionNativeSlotPose.AttachmentTrack>();
             foreach (var slot in OptionalObject(animation, "slots"))
                 foreach (var channel in Object(slot.Value))
                 {
+                    if (separateColorChannels && channel.Key == "rgba") continue;
                     if (channel.Key != "attachment") throw new NotSupportedException("Restore additional original slot timeline: " + channel.Key);
                     tracks.Add(new ProfessionNativeSlotPose.AttachmentTrack { slot = slotIndices[slot.Key], keys = Array(channel.Value).Select(v =>
                     {
@@ -263,6 +267,14 @@ namespace Zjcs.Offline.ProfessionUI
                         case "rotate": axes = new[] { "value" }; firstChannel = 0; break;
                         case "translate": axes = new[] { "x", "y" }; firstChannel = 1; break;
                         case "scale": axes = new[] { "x", "y" }; firstChannel = 3; break;
+                        case "shear": axes = new[] { "x", "y" }; firstChannel = 5; break;
+                        case "translatex": axes = new[] { "value" }; firstChannel = 1; break;
+                        case "translatey": axes = new[] { "value" }; firstChannel = 2; break;
+                        case "scalex": axes = new[] { "value" }; firstChannel = 3; break;
+                        case "scaley": axes = new[] { "value" }; firstChannel = 4; break;
+                        case "shearx": axes = new[] { "value" }; firstChannel = 5; break;
+                        case "sheary": axes = new[] { "value" }; firstChannel = 6; break;
+                        case "inherit": continue; // Applied as a discrete channel by the native animation clip.
                         default: throw new NotSupportedException("Restore additional original bone timeline: " + channel.Key);
                     }
                     var original = Array(channel.Value);
@@ -282,7 +294,7 @@ namespace Zjcs.Offline.ProfessionUI
                                 if (handles.Count != axes.Length * 4) throw new InvalidDataException("Original bone curve handle count differs.");
                                 for (int j = 0; j < 4; j++) controls[j] = Convert.ToSingle(handles[axis * 4 + j], CultureInfo.InvariantCulture);
                             }
-                            keys[i] = new ProfessionNativeCurve.Key { time = Number(row, "time"), value = Number(row, axes[axis], channel.Key == "scale" ? 1 : 0), mode = mode, controls = controls };
+                            keys[i] = new ProfessionNativeCurve.Key { time = Number(row, "time"), value = Number(row, axes[axis], firstChannel >= 3 && firstChannel <= 4 ? 1 : 0), mode = mode, controls = controls };
                         }
                         result.Add(new ProfessionNativeBonePose.Track(boneIndices[bone.Key], firstChannel + axis, new ProfessionNativeCurve(keys)));
                     }

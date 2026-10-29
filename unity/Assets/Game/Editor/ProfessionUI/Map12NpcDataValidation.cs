@@ -112,6 +112,7 @@ namespace Zjcs.Editor.ProfessionUI
             // Keep the existing format's real resource decoder in this regression.
             foreach (string sex in new[] { "male", "female" })
                 Require(ProfessionNativeSkeletonData.LoadResource(sex).Sex == sex, "Original player data compatibility differs.");
+            Map12NpcAnimationValidation.Verify();
             Debug.Log("Map12 native NPC data passed: 34 skeletons, " + attachments + " attachments, " + paths +
                 " paths, " + starts + " distinct initial animations; existing male/female packages loaded. Rendering/constraint evaluation remains separate.");
         }

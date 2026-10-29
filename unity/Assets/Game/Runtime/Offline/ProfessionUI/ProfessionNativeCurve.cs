@@ -54,14 +54,13 @@ namespace Zjcs.Offline.ProfessionUI
                 {
                     Vector4 c = a.controls;
                     Finite(c.x); Finite(c.y); Finite(c.z); Finite(c.w);
-                    // Vertical or extrapolating time handles require a different
-                    // native representation. Reject them rather than alter them.
-                    if (!(c.x > a.time && c.x <= b.time && c.z >= a.time && c.z < b.time && c.x <= c.z))
-                        throw new NotSupportedException("The source Bezier time handles cannot be represented by this native curve binding.");
-                    left.outWeight = (c.x - a.time) / duration;
-                    right.inWeight = (b.time - c.z) / duration;
-                    left.outTangent = (c.y - a.value) / (c.x - a.time);
-                    right.inTangent = (b.value - c.w) / (b.time - c.z);
+                    // Unity carries the original keys; evaluate cubic source handles
+                    // independently when weighted time inversion needs more precision.
+                    // Vertical, crossed and extrapolating handles remain unchanged.
+                    left.outWeight = Mathf.Clamp01((c.x - a.time) / duration);
+                    right.inWeight = Mathf.Clamp01((b.time - c.z) / duration);
+                    left.outTangent = c.x == a.time ? 0 : (c.y - a.value) / (c.x - a.time);
+                    right.inTangent = c.z == b.time ? 0 : (b.value - c.w) / (b.time - c.z);
                 }
                 keys[i] = left; keys[i + 1] = right;
             }
@@ -82,18 +81,53 @@ namespace Zjcs.Offline.ProfessionUI
             Key a = original[lo];
             if (lo == original.Length - 1 || time == a.time) { value = a.value; return true; }
             if (a.mode != 2) { value = curve.Evaluate(time); return true; }
-            // Unity's weighted curve inversion can lose visible source precision
-            // on the weapon's translated handles. Invert the original monotone
-            // cubic in double precision; do not sample or bake a replacement.
-            Key b = original[lo + 1]; double lower = 0, upper = 1;
-            for (int i = 0; i < 48; i++)
-            {
-                double middle = (lower + upper) * .5;
-                if (Cubic(a.time, a.controls.x, a.controls.z, b.time, middle) < time) lower = middle;
-                else upper = middle;
-            }
-            value = (float)Cubic(a.value, a.controls.y, a.controls.w, b.value, (lower + upper) * .5);
+            Key b = original[lo + 1];
+            double parameter = InvertTime(a.time, a.controls.x, a.controls.z, b.time, time);
+            value = (float)Cubic(a.value, a.controls.y, a.controls.w, b.value, parameter);
             return true;
+        }
+
+        private static double InvertTime(double a, double b, double c, double d, double time)
+        {
+            // Split at the derivative roots before inversion. Some original
+            // handles leave the key interval; a single global binary search
+            // would then assume monotonicity which the source does not have.
+            double qa = -a + 3 * b - 3 * c + d, qb = 2 * (a - 2 * b + c), qc = b - a;
+            double first = 1, second = 1;
+            if (Math.Abs(qa) < 1e-14)
+            {
+                if (Math.Abs(qb) > 1e-14) { double r = -qc / qb; if (r > 0 && r < 1) first = r; }
+            }
+            else
+            {
+                double discriminant = qb * qb - 4 * qa * qc;
+                if (discriminant >= 0)
+                {
+                    double root = Math.Sqrt(discriminant);
+                    double r1 = (-qb - root) / (2 * qa), r2 = (-qb + root) / (2 * qa);
+                    if (r1 > r2) { double swap = r1; r1 = r2; r2 = swap; }
+                    if (r1 > 0 && r1 < 1) first = r1;
+                    if (r2 > 0 && r2 < 1) { if (first == 1) first = r2; else second = r2; }
+                }
+            }
+            double lower = 0;
+            for (int span = 0; span < 3; span++)
+            {
+                double upper = span == 0 ? first : span == 1 ? second : 1;
+                double from = Cubic(a, b, c, d, lower), to = Cubic(a, b, c, d, upper);
+                if (time >= Math.Min(from, to) && time <= Math.Max(from, to))
+                {
+                    bool ascending = to >= from;
+                    for (int i = 0; i < 48; i++)
+                    {
+                        double middle = (lower + upper) * .5;
+                        if ((Cubic(a, b, c, d, middle) < time) == ascending) lower = middle; else upper = middle;
+                    }
+                    return (lower + upper) * .5;
+                }
+                lower = upper;
+            }
+            throw new InvalidOperationException("Original cubic time has no root inside the source segment.");
         }
 
         private static double Cubic(double a, double b, double c, double d, double t)
