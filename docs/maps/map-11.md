@@ -70,11 +70,11 @@ UI素材目录的385张Sprite已核对PNG的SHA256、稳定GUID、原尺寸、PP
 
 小地图恢复原圆形遮罩材质、人物标记、地区名／坐标／探索度、全屏面板、缩放、拖拽边界与分类筛选。37 份原生标记 prefab 按官方实体／地图／区域／标签优先级绑定到 1,707 个放置点；标记偏移使用官方身体格中心，缩放与完成状态按原配置处理。`MiniMapWorldStageSwitcherSupport` 直接消费原世界阶段状态，传送点、战场、副本与圣兽标记按各自序列化状态切换，避免未激活／已激活图标叠加。筛选保存至所属档案的 `minimap-filter.json`，关闭、清空内存后重开可冷读恢复。跨地图页签沿 `MiniMapFullScreenPanel`／`MiniMapSwitchTabItem`，按官方 `MapInfo` 顺序筛选同组、已有访问记录且已迁移的 Map10／Map11；使用原 `ImgMapSwitch_0`／`_1`、标题、选中态及各图缩放参数。浏览其他地图不创建访问记录或移动角色，隐藏当前图角色和标记；关闭后恢复当前图。其他地图的离线实体标记、标记点击／详情、公共地区资源点提供器仍未完整接入，不能据此认定完整小地图功能已完成。
 
-Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD、全屏小地图、筛选、功能菜单、单人及双人对话和选项画面，检查世界阶段标记 0／1／2 三种状态的互斥图标分支及跨图页签的未访问过滤、Map10／Map11 切换、位置与访问记录不变及关闭恢复，并检查筛选切换／冷读恢复、逐字显示／首击补全文本、动画半程换句、HUD 遮挡和右侧立绘遮罩状态。该项调用脚本回调，未执行真实鼠标／键盘／拖拽，Windows Player 尚未构建验证。地形／角色遮挡排序、水面缺块和原 URP 材质表现仍须修复后再核对整体画面。代码入口为 `OfficialMainlineMapRuntime` 的 Hud／TopBar／Tasks／MiniMap／MiniMapTabs／MiniMapFilter／MiniMapMarks／Portrait／Functions 分部、`OfficialMap10DialoguePortraitView` 和 `Runtime/Official/WorldUI`；原始对象与代码哈希见 `UI/source-manifest.json`。
+Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD、全屏小地图、筛选、功能菜单、单人及双人对话和选项画面，检查世界阶段标记 0／1／2 三种状态的互斥图标分支及跨图页签的未访问过滤、Map10／Map11 切换、位置与访问记录不变及关闭恢复，并检查筛选切换／冷读恢复、逐字显示／首击补全文本、动画半程换句、HUD 遮挡和右侧立绘遮罩状态。该项调用脚本回调，未执行真实鼠标／键盘／拖拽。地形／角色遮挡排序、水面缺块和原 URP 材质表现仍须修复后再核对整体画面。代码入口为 `OfficialMainlineMapRuntime` 的 Hud／TopBar／Tasks／MiniMap／MiniMapTabs／MiniMapFilter／MiniMapMarks／Portrait／Functions 分部、`OfficialMap10DialoguePortraitView` 和 `Runtime/Official/WorldUI`；原始对象与代码哈希见 `UI/source-manifest.json`。
 
 基础地面补回原 `MapGround_11_bare/GridGround/Ground` 的 17,752 个 Tile，以 55 张原 Sprite 的多边形、三角形、UV、颜色、Tile 矩阵及锚点生成 55 批原生网格，不改变原世界坐标。角色模型挂回原 `3001_view/Model/Offset/Player_Model_Map` 的 `(0.3, 0.3, 1)` 缩放、`(0, -0.5, -0.5)` 偏移，并以排序组适配原单 Renderer 的世界槽位，恢复角色显示。地图相机从原 `WorldCamera` 读取 SafeArea、适配优先级及裁剪面，沿 `OrthographicCameraResolutionAdaptor.AdaptOrthographicSize` 恢复视野和窗口比例，剧情结束恢复同一基准。转换器为 `prepare_unity_map11_base_ground.py`，显式加载 `Resources/Map11/BaseGround`；对象、bundle、原 shader、源码与输出哈希见 `base-ground-source-manifest.json`。带图形 Play Mode 已实际查看基础地面和角色恢复后的 HUD／对话画面；该补载尚未恢复原 URP 光照、水面与完整排序，不代表整图渲染完成。
 
-已在带图形的 Unity Play Mode 运行地图加载、实体显示、踏板、战斗碑、故事路由、怪物和女神像流程：加载 77 区、1,803 个实体、31 个 Spine 实例、14,427 批地形及 85 批小地图；验证九组踏板、七个终端、连接转换、计数、生成、重置和持久化；运行 5110 怪物与主线分支检查；女神像覆盖预览、访问额度、持久效果和进入战斗后的最低 HP。另以独立规则校验覆盖本地准入、回滚、存档冷读、到期、额度竞争、遗失女神等级／技能／属性及每日 08:00 边界。以上使用脚本回调或静音音源，不能替代完整用户流程、真实音频试听及 Windows Player 验证；整图仍未完成验收。
+已在带图形的 Unity Play Mode 运行地图加载、实体显示、踏板、战斗碑、故事路由、怪物和女神像流程：加载 77 区、1,803 个实体、31 个 Spine 实例、14,427 批地形及 85 批小地图；验证九组踏板、七个终端、连接转换、计数、生成、重置和持久化；运行 5110 怪物与主线分支检查；女神像覆盖预览、访问额度、持久效果和进入战斗后的最低 HP。另以独立规则校验覆盖本地准入、回滚、存档冷读、到期、额度竞争、遗失女神等级／技能／属性及每日 08:00 边界。Windows Player 已在隔离验证工程构建并实际启动，退出码 0；模拟 EventSystem 指针流程通过 Map10／Map11 区域条件、导航、HUD、小地图、女神、森林老人奖励／每日效果、体力采集动画／重生、探索玩法和冷读存档，并截取对应运行画面。截图显示本地档案测试角色头像为空，场景仍有未覆盖地形／排序缺陷；此验证未用系统真实输入、未试听音频，也不代表正常入口和完整主线已跑通。整图仍未完成验收。
 
 已转换并放入 `unity/Assets/Official/World/Map/11/` 的官方载荷：地图定义含 77 区、81 面积配置、1,803 个放置实体及其一一对应的实体组件、导航和 8 条区域开放条件；绑定 110 条实体进度参数、247 条实体显示、128 条实体 UI、5 条阶段动作，以及地图、区域、逻辑实体配置。Map 11 有 17 个普通女神像（`EntityClassId=6010`），其所在区域各配置一组 `DropItems`；另有 49 个失落女神像（`EntityClassId=6011`），其所在区域各配置一组 `GoddessActivePropAwardDict`。1045～1160 范围含 24 条主线记录。地形几何为 14,427 批次，引用的 475 张官方纹理已复制至 `Resources/Map11/Textures/`；小地图为 85 批次并绑定 2 张官方纹理。输入版本固定为 `854_156383`，来源和输出哈希见该目录的 `*-source-manifest.json`。转换器为 `scripts/prepare_unity_map11_rendering.py`、`scripts/prepare_unity_map10_minimap.py --map-id 11` 和 `scripts/prepare_unity_map11_definition.py`。地形视图已支持原始 Map11 几何头格式，保留 Map10 默认格式。
 
@@ -158,13 +158,13 @@ Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD�
 
 ## 尚未实现
 
-完整小地图仍需其他地图的离线实体标记、标记点击／详情与公共资源点提供器；功能菜单仍需接通商城、关闭之外的功能窗口。真实鼠标／键盘／拖拽和 Windows Player 验证尚未执行，不能用后台脚本回调代替。
+完整小地图仍需其他地图的离线实体标记、标记点击／详情与公共资源点提供器；功能菜单仍需接通商城、关闭之外的功能窗口。真实鼠标／键盘／拖拽尚未执行；Windows Player 仅完成上述模拟指针模块回归，不代表完整游玩验收。
 
 森之国进入战斗后，地图 HUD 与战斗场景仍有叠加，玩家和战斗镜头比例、场景缺块／排序及完整演出需要继续恢复；魔女召唤阶段 20001 的完整循环尚未 Play Mode 验证。
 
 继续验证 77 区、九组踏板、六块战斗碑、森林老人／世界树／狮鹫完整剧情与 1045～1160 主线领奖路线；任务数据和条件接入不代表任务流程已在主城及地图中完整跑通。还须验证个人资格、公共化、全区激活与 6001 出口条件，不能仅按任务 1160 完成推断可以离图。
 
-正式入口已按 Map10 主线任务 1040 加入运行时门槛；普通祈愿成功开启 6000 宝箱现已原子更新任务计数，但前序任务条件、新档累计 10 次祈愿的实际操作及领奖后进入森之国仍未完成 Play Mode 验收。仍须接通区域、放置实体、条件、交互、战斗、奖励和出口前置状态。共享运行时已支持按地图 ID 加载资源、区域开放条件、位置与状态存档，但 Map10 的正常出口与家园返回入口尚未接通本图。原地图 NPC、建筑、世界奖励、交互物、怪物及小地图 bundle 已提取校验；`map11-lighting.json`、`map11-stone-animations.json`、`map11-logic-views.json`、`map11-dialogs.json` 的完整动态行为、特效和音频仍待绑定。地形与小地图原生 prefab 已生成，Windows 实际画面、输入和完整流程仍待验证。
+正式入口已按 Map10 主线任务 1040 加入运行时门槛；普通祈愿成功开启 6000 宝箱现已原子更新任务计数，但前序任务条件、新档累计 10 次祈愿的实际操作及领奖后进入森之国仍未完成 Play Mode 验收。仍须接通区域、放置实体、条件、交互、战斗、奖励和出口前置状态。共享运行时已支持按地图 ID 加载资源、区域开放条件、位置与状态存档，但 Map10 的正常出口与家园返回入口尚未接通本图。原地图 NPC、建筑、世界奖励、交互物、怪物及小地图 bundle 已提取校验；`map11-lighting.json`、`map11-stone-animations.json`、`map11-logic-views.json`、`map11-dialogs.json` 的完整动态行为、特效和音频仍待绑定。地形与小地图原生 prefab 已生成；本次 Player 截图仍见局部地形／排序缺陷，完整流程及真实输入尚待验证。
 
 普通女神像与失落女神像是不同机制。共享运行时的 Map11 女神处理器已按基础阶段先检查地区 100%，再依次执行结果 204（激活并持久化回执）与 209（自身状态变为 1）；已激活神像按官方输入分支直接打开弹窗。两种基础模板均没有 `StageResultAwardComponent`，地区 `DropItems` 在 `GoddessTouchDialog.RefreshAward` 中仅生成珍宝预览，不在激活时自动发放。珍宝预览及详情操作限制、普通女神祝福等级派生和提示、失落女神奖励提示动画尚待接通。`WorldTouchDialogLostGoddness` 的 `PlayerGetLostGoddessAwardRequest` 是独立的“找回遗失女神奖励”流程，不能作为像的激活奖励。探索里程碑仍须按 `MapGoddessExpProcessItem` 手动领取；命运果实独立核对日常领取与探索事件。
 
