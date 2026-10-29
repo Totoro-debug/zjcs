@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -160,6 +161,49 @@ namespace Zjcs.Editor.Map13MiniMap
             EditorApplication.playModeStateChanged += State;
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             EditorApplication.EnterPlaymode();
+        }
+
+        public static void VerifyPersistentState()
+        {
+            string workspace = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+            Require(!string.IsNullOrWhiteSpace(workspace), "Isolated validation directory is configured");
+            Type slotsType = Type.GetType("Zjcs.Offline.State.ProfileSlotCatalog, Zjcs.Offline.State", true);
+            Type storeType = Type.GetType("Zjcs.Presentation.World.MainlineMiniMapFilterPersistentState, Zjcs.Presentation.World", true);
+            string saveRoot = Path.Combine(workspace, "minimap-filter-persistence");
+            object slots = Activator.CreateInstance(slotsType, saveRoot);
+            string slot = (string)slotsType.GetMethod("CreateSlot").Invoke(slots, null);
+            string path = Path.Combine((string)slotsType.GetMethod("GetSlotDirectory").Invoke(slots, new object[] { slot }), "minimap-filter.json");
+            ConstructorInfo constructor = storeType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic,
+                null, new[] { slotsType, typeof(string) }, null);
+            Require(constructor != null, "Production state adapter accepts the active profile slot");
+            object state = constructor.Invoke(new[] { slots, slot });
+            object settings = storeType.GetProperty("State").GetValue(state);
+            Type settingsType = settings.GetType();
+            var values = (IDictionary)settingsType.GetProperty("FilterState").GetValue(settings);
+            values.Add("C_MiniMap_Entry", false);
+            values.Add("Map13Entity", true);
+            object selection = Enum.Parse(settingsType.GetProperty("SelectionState").PropertyType, "Free");
+            settingsType.GetProperty("SelectionState").SetValue(settings, selection);
+            storeType.GetMethod("WriteStateAsync").Invoke(state, null);
+            Require(File.Exists(path) && File.ReadAllText(path).Contains("C_MiniMap_Entry"), "Atomic profile save writes the selected filters");
+
+            object restored = constructor.Invoke(new[] { slots, slot });
+            object restoredSettings = storeType.GetProperty("State").GetValue(restored);
+            var restoredValues = (IDictionary)settingsType.GetProperty("FilterState").GetValue(restoredSettings);
+            Require((bool)restoredValues["C_MiniMap_Entry"] == false && (bool)restoredValues["Map13Entity"]
+                && Enum.GetName(settingsType.GetProperty("SelectionState").PropertyType,
+                    settingsType.GetProperty("SelectionState").GetValue(restoredSettings)) == "Free",
+                "A fresh production adapter cold-reads filter values and selection mode");
+
+            string corruptPath = Path.Combine(workspace, "minimap-filter-corrupt.json");
+            File.WriteAllText(corruptPath, "{}");
+            bool rejected = false;
+            try { Activator.CreateInstance(storeType, BindingFlags.Instance | BindingFlags.NonPublic, null, new object[] { corruptPath }, null); }
+            catch (TargetInvocationException exception) when (exception.InnerException is InvalidDataException) { rejected = true; }
+            Require(rejected, "Corrupt filter state is rejected instead of silently resetting");
+            File.WriteAllText(Path.Combine(workspace, "minimap-filter-persistence-proof.json"),
+                JsonUtility.ToJson(new PersistenceProof { slot = slot, writes = 1, coldRead = true, corruptRejected = true }, true));
+            Debug.Log("MAP13_MINIMAP_FILTER_PERSISTENCE_PASS");
         }
 
         [InitializeOnLoadMethod]
@@ -320,5 +364,6 @@ namespace Zjcs.Editor.Map13MiniMap
         }
 
         [Serializable] private sealed class ProofData { public string editor; public int config_rows,map13_rows,unique_sprites,pooled_items,simulated_clicks,state_writes,rendered_pixels; public bool reopened_selection,actual_original_prefab,actual_original_pool,actual_event_system; }
+        [Serializable] private sealed class PersistenceProof { public string slot; public int writes; public bool coldRead, corruptRejected; }
     }
 }

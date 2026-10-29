@@ -158,12 +158,12 @@
   ],
   "generator": {
     "path": "scripts/prepare_unity_map13_minimap_mark_filter.py",
-    "sha256": "7983a9b57ea033cd1d46775e2e9d9d9e7c917b918a806332c17aaad3e9a89bba",
-    "worktree_sha256": "7983a9b57ea033cd1d46775e2e9d9d9e7c917b918a806332c17aaad3e9a89bba",
+    "sha256": "8dfc4f95374cc83d86d30844eacab1ba6926ac092811aac57f9e757127524175",
+    "worktree_sha256": "8dfc4f95374cc83d86d30844eacab1ba6926ac092811aac57f9e757127524175",
     "normalization": "Repository LF text; original executed worktree bytes recorded separately"
   },
   "operation": "Copy complete original minimap filter, persistent setting, entry/filter item, multi-text controller and global pointer result components. Reuse complete original tab and generic UI pool implementations and the full pinned R3 disposable bag. Replace singleton/data/pool-scope/input/persistence/resource resolution with explicit ports; adapt the two unused Unit event payloads to direct UnityEvent listeners while preserving callback registration/lifetime/order. Retain every filter selection, absent-key default, resource-layer toggle, all-table persistence update, outside-click raycast, prefab filename lookup, supporter iteration, resource caching and source null/empty behavior. The six-field configuration type is a read-only consumption projection, not a replacement binary parser.",
   "limitations": [
-    "Production mainline pool and local save adapters, official full-screen map/root integration, and Windows Player remain required."
+    "Production mainline integration of the original filter component and object pools, official full-screen map/root integration, and Windows Player remain required."
   ]
 }

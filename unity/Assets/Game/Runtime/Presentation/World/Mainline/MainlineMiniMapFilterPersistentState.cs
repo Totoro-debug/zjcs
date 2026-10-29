@@ -14,9 +14,9 @@ namespace Zjcs.Presentation.World
         [Serializable]
         private sealed class Payload
         {
-            public int schema = 1;
-            public int selection;
-            public Entry[] filters = Array.Empty<Entry>();
+            public int schema;
+            public string selection;
+            public Entry[] filters;
         }
 
         [Serializable]
@@ -45,7 +45,8 @@ namespace Zjcs.Presentation.World
         {
             var payload = new Payload
             {
-                selection = (int)State.SelectionState,
+                schema = 1,
+                selection = State.SelectionState.ToString(),
                 filters = State.FilterState.OrderBy(value => value.Key, StringComparer.Ordinal)
                     .Select(value => new Entry { name = value.Key, selected = value.Value }).ToArray()
             };
@@ -62,7 +63,8 @@ namespace Zjcs.Presentation.World
             var state = new MiniMapMarkUIFilterSetting();
             if (saved.Json == null) return state;
             Payload payload = JsonUtility.FromJson<Payload>(saved.Json);
-            state.SelectionState = (MiniMapMarkUIFilterSetting.SelectionType)payload.selection;
+            state.SelectionState = (MiniMapMarkUIFilterSetting.SelectionType)Enum.Parse(
+                typeof(MiniMapMarkUIFilterSetting.SelectionType), payload.selection, false);
             foreach (Entry row in payload.filters) state.FilterState.Add(row.name, row.selected);
             return state;
         }
@@ -73,7 +75,8 @@ namespace Zjcs.Presentation.World
             {
                 Payload payload = JsonUtility.FromJson<Payload>(json);
                 return payload != null && payload.schema == 1 && payload.filters != null
-                    && Enum.IsDefined(typeof(MiniMapMarkUIFilterSetting.SelectionType), payload.selection)
+                    && Enum.TryParse(payload.selection, false, out MiniMapMarkUIFilterSetting.SelectionType selection)
+                    && Enum.IsDefined(typeof(MiniMapMarkUIFilterSetting.SelectionType), selection)
                     && payload.filters.Length <= 4096
                     && payload.filters.All(row => row != null && !string.IsNullOrWhiteSpace(row.name) && row.name.Length <= 256)
                     && payload.filters.Select(row => row.name).Distinct(StringComparer.Ordinal).Count() == payload.filters.Length;
