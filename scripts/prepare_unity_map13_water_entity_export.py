@@ -110,7 +110,10 @@ def build(receipt_path=RECEIPT, component_path=OUTPUT, roots=ROOT_BUNDLES,
     if receipt["manifest"] != "871_156598":
         raise ValueError("Wrong water-entity input version")
     for entry in receipt["tools"] + receipt["outputs"]:
-        if sha((ROOT / entry["path"]).read_bytes()) != entry["sha256"]:
+        raw = (ROOT / entry["path"]).read_bytes()
+        if entry.get("hashLineEndings") == "LF":
+            raw = raw.replace(b"\r\n", b"\n")
+        if sha(raw) != entry["sha256"]:
             raise ValueError("Water-entity input receipt is stale: " + entry["path"])
     for entry in receipt["inputs"]:
         if sha((cache_root / "inputs" / entry["output"]).read_bytes()) != entry["converter_input_sha256"]:
