@@ -27,7 +27,6 @@ APK 与热更新版本分别记录。原输入、转换产物及其前后哈希�
 | 当前来源切换与转换链 | `assets/reference/official-map/current-*-source-manifest.json`、`assets/reference/character-creation/current-*-source-manifest.json` |
 | 客户端／共享代码来源 | [官方程序集与反编译目录](../../.tools/source-packages/official-code/) 与各模块源码来源清单 |
 | 模块资源来源 | 本目录各模块的 `source-manifest.json`、`*-source-manifest.json` 及所属功能／地图页中的入口 |
-| 龙之国原根雾层与原生输入 | `official-map/map14-native-root-input-source-manifest.json`、`official-map/map14-root-fog-source-manifest.json` | 原根19依赖／1,614对象／23组托管引用，10对象雾层子树、原Sprite／三纹理／三材质／三GLES程序及完整CloudController2；原Console坐标／可见性消费，Windows渲染分项验证，正式地图未完成 |
 | 龙之国原地图根组件 | [来源清单](official-map/map14-root-components-source-manifest.json)：八个原薄客户端根组件、泛型地表基类及真实共享组件／信息绑定；实际验证范围见[龙之国](../../docs/maps/map-14.md) |
 | 龙之国原实体缓冲事件 | [来源清单](official-map/map14-buffered-events-source-manifest.json)：原缓冲模块、两类分发器、原生阶段／交互者／容器事件与动态启动依赖；验证范围见[龙之国](../../docs/maps/map-14.md) |
 | 龙之国稳定客户端视图接线 | [接线来源清单](official-map/map14-client-view-bindings-source-manifest.json)：同一原生实体上的普通组件、可见性、动作、奖励、显示状态与原绑定前／移除消费；实际验证范围见[龙之国](../../docs/maps/map-14.md) |
