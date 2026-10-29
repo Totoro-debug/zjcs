@@ -260,7 +260,7 @@ namespace Zjcs.Presentation.World
                             StartCoroutine(ContinueStoryAfterDelay(node.seconds, StoryNext(node, "Exit")));
                             return;
                         case "AddMapExclusiveNpcAtPosNode":
-                            AddStoryEntity(node, new Vector2(node.positionX, node.positionY));
+                            AddStoryEntity(node, ResolveStorySpawnPosition(activeStory, node));
                             nodeId = StoryNext(node, "Exit");
                             continue;
                         case "AddMapExclusiveNpcAroundPlayerNode":
@@ -414,6 +414,15 @@ namespace Zjcs.Presentation.World
             GameObject entity = entityView.SpawnStoryEntity(node.entityClassId, modelPath, grid);
             storyEntities[node.id] = entity;
             storyEntityClasses[node.id] = node.entityClassId;
+        }
+
+        private Vector2 ResolveStorySpawnPosition(Map10RuntimeStory story, Map10RuntimeStoryNode node)
+        {
+            int positionNodeId = StoryNext(node, "Pos");
+            if (positionNodeId == 0) return new Vector2(node.positionX, node.positionY);
+            object position = EvaluateStoryValue(story, FindStoryNode(story, positionNodeId));
+            if (position is Zjcs.Offline.World.MapGridPoint grid) return new Vector2(grid.X, grid.Y);
+            throw new InvalidDataException("Official story NPC position is not a converted map grid: " + node.id);
         }
 
         private IEnumerable<int> localSaveFollowerClassIds => progressionSave.Save.Player.NpcFollowerClassIds;

@@ -43,6 +43,22 @@ namespace Zjcs.Editor
             public int ClassId, Region, AccessibleConditionId;
             public int[] Areas;
         }
+        [Serializable] private sealed class Map14StoryPositionNode
+        {
+            public int id, SelectGetType, TransferType;
+            public string type, sourceJson;
+            public Map14StoryPositionPort[] ports;
+        }
+        [Serializable] private sealed class Map14StoryPositionPort
+        {
+            public string name;
+            public Map14StoryPositionConnection[] connections;
+        }
+        [Serializable] private sealed class Map14StoryPositionConnection
+        {
+            public int nodeId;
+            public string port;
+        }
 
         public static void RunUiMap14Statues()
         {
@@ -141,6 +157,7 @@ namespace Zjcs.Editor
         private static void ValidateMap14InteractionData()
         {
             var story = JsonUtility.FromJson<Map10RuntimeStoryData>(Resources.Load<TextAsset>("Map14/stories").text);
+            ValidateMap14StoryPositionTransfer(story);
             if (story.manifest != "871_156598" || story.entityTemplates.Length != 171
                 || story.entityTemplates.Sum(row => row.Components.Length) != 1505
                 || story.witchInfos.Length != 14 || story.witchResultEffects.Length != 22
@@ -164,6 +181,28 @@ namespace Zjcs.Editor
                     || !hero.PeriodicAwards.Select(award => award.Weight).SequenceEqual(new[] { 5, 25, 70 })))
                 throw new InvalidDataException("The mainline Map14 interaction getter selected another map/version.");
             Debug.Log("Map14 current interaction data passed: 171 ordered EC templates/1505 components including public story followers, 14 witch activations, 22 results, 7 periodic awards, own summon stage 20004 and four hero types.");
+        }
+
+        private static void ValidateMap14StoryPositionTransfer(Map10RuntimeStoryData data)
+        {
+            Map10RuntimeStory graph = data.stories.Single(value => value.key == "FengMoXiaFinish");
+            Map14StoryPositionNode spawn = JsonUtility.FromJson<Map14StoryPositionNode>(
+                JsonUtility.ToJson(graph.nodes.Single(value => value.id == 20)));
+            Map10RuntimeStoryNode transferNode = graph.nodes.Single(value => value.id == 22);
+            Map10RuntimeStoryNode sourceNode = graph.nodes.Single(value => value.id == 21);
+            Map14StoryPositionNode transfer = JsonUtility.FromJson<Map14StoryPositionNode>(transferNode.sourceJson);
+            Map14StoryPositionNode source = JsonUtility.FromJson<Map14StoryPositionNode>(sourceNode.sourceJson);
+            if (spawn.type != "AddMapExclusiveNpcAtPosNode" || spawn.ports.Single(port => port.name == "Pos").connections.Single().nodeId != 22
+                || transferNode.type != "MapPositionChangeTypeNode" || transfer.TransferType != 1
+                || transferNode.ports.Single(port => port.name == "VectorPosIn").connections.Single().nodeId != 21
+                || sourceNode.type != "GetEntityPosNode" || source.SelectGetType != 5)
+                throw new InvalidDataException("Map14 FengMoXiaFinish position source graph differs from the official route.");
+            MethodInfo conversion = typeof(OfficialMainlineMapRuntime).GetMethod("ConvertStoryVectorPositionToGrid",
+                BindingFlags.Static | BindingFlags.NonPublic);
+            var grid = (Zjcs.Offline.World.MapGridPoint)conversion.Invoke(null, new object[] { new Vector2(12.9f, -4.9f) });
+            if (!grid.Equals(new Zjcs.Offline.World.MapGridPoint(12, -4)))
+                throw new InvalidDataException("Official vector-to-grid conversion truncation differs.");
+            Debug.Log("Map14 original FengMoXiaFinish spawn position binding passed: StoryTalk logic entity vector -> official truncating grid conversion -> spawned entity position.");
         }
 
         private static IEnumerator VerifyMap14StatueSteps(OfficialMap11UiData data, Transform parent,

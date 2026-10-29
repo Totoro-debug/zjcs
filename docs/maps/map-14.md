@@ -48,7 +48,7 @@
 
 依据：[代码／配置](../../assets/reference/official-map/map14-label-components-code-source-manifest.json)、[原生素材](../../assets/reference/official-map/map14-native-region-labels-source-manifest.json)、[显式绑定](../../assets/reference/official-map/map14-native-region-labels-binding-source-manifest.json)。
 
-龙之国主线剧情数据载荷：以当前871来源收据校验原85张 Map14 剧情图、93张关联表和64组对白，校验图／子图闭包、72个 MapTalk 入口及17项条件闭包、原角色和奖励引用后生成 Unity 载荷；包含64张主线图、21张子图、1,333节点、417句对白、15个角色、60个逻辑标签、8项固定奖励和1项交付配置。转换脚本、输入／输出SHA-256及当前待接入项见[剧情运行时来源清单](../../assets/reference/official-map/map14-story-runtime-source-manifest.json)。共享执行器尚未覆盖37种节点类型；载荷未绑定原生剧情UI、Playables、实体模板或主线地图宿主，不代表可运行剧情。
+龙之国主线剧情数据载荷：以当前871来源收据校验原85张 Map14 剧情图、93张关联表和64组对白，校验图／子图闭包、72个 MapTalk 入口及17项条件闭包、原角色和奖励引用后生成 Unity 载荷；包含64张主线图、21张子图、1,333节点、417句对白、15个角色、60个逻辑标签、8项固定奖励和1项交付配置。共享执行器现已迁移原 `MapPositionChangeTypeNode` 的 Vector2→格子截断转换，并由 `FengMoXiaFinish` 的 `8456` 生成节点消费官方 `惠_遗迹` 实体位置连线；编辑器回归核对原图连接和负坐标截断。转换脚本、输入／输出SHA-256及待接入项见[剧情运行时来源清单](../../assets/reference/official-map/map14-story-runtime-source-manifest.json)。其余36种节点类型尚未接入，载荷仍未绑定原生剧情UI、完整Playables、全部实体模板或主线地图宿主，不代表可运行剧情。
 
 龙之国剧情空间：按当前871云端索引核对共享StorySettings bundle哈希，从当前官方Map14实体配置及158个实际EC prefab根对象读取StoryTalk标签和StoryNodeRegister键，生成15个StoryTalk prefab、4个本地图注册键及剧情空间范围／偏移配置；外地图子图引用逐个记录，未从剧情节点推测实体标签。[生成器](../../scripts/prepare_unity_map11_story_spatial.py)、[输入对象、官方代码、bundle来源和输出哈希](../../assets/reference/official-map/map14-story-spatial-source-manifest.json)，运行时数据为 `unity/Assets/Game/Resources/Map14/story-spatial.json`。Unity Editor 导入和 Play Mode 仍待验证。
 

@@ -16,7 +16,7 @@ namespace Zjcs.Presentation.World
         [Serializable] private sealed class StoryValueFields
         {
             public int ItemId, HandInItemId, RequireCount, ActionType, GoByNodeId, GotoId, DialogId, Order, ShowOptionsAtBegin;
-            public int LoEntityId, State;
+            public int LoEntityId, State, TransferType;
             public string GoTo;
             public string Tag;
             public StoryItemRequirement[] ItemConfigs;
@@ -69,6 +69,9 @@ namespace Zjcs.Presentation.World
         }
 
         private int QueryMap14StoryRegion(Vector3 position) => Map14StoryRegionLabels().QueryRegion(position);
+
+        internal static Zjcs.Offline.World.MapGridPoint ConvertStoryVectorPositionToGrid(Vector2 position) =>
+            new Zjcs.Offline.World.MapGridPoint((int)position.x, (int)position.y);
 
         private long StoryItemCount(int itemId) => progressionSave.Save.Player.Inventory
             .FirstOrDefault(value => value.ItemId == itemId)?.Count ?? 0;
@@ -170,6 +173,14 @@ namespace Zjcs.Presentation.World
                 case "QueryPlayerLevelNode": return progressionSave.Save.Player.Level;
                 case "GetEntityPosNode":
                 case "GetPosAroundStoryObjectNode": return ResolveStoryPositionNode(node);
+                case "MapPositionChangeTypeNode":
+                    StoryValueFields transfer = StoryFields(node);
+                    if (transfer.TransferType != 1)
+                        throw new InvalidDataException("Unsupported official story position transfer: " + transfer.TransferType);
+                    Map10RuntimeStoryNode vectorInput = FindStoryNode(story, StoryNext(node, "VectorPosIn"));
+                    if (vectorInput == null) throw new InvalidDataException("Official story grid conversion has no vector input.");
+                    Vector2 vector = (Vector2)EvaluateStoryValue(story, vectorInput, depth + 1);
+                    return ConvertStoryVectorPositionToGrid(vector);
                 case "StringFormatNode":
                     StorySerializableValue[] parameters = StoryFields(node).Params ?? Array.Empty<StorySerializableValue>();
                     return parameters.Select((value, index) =>
