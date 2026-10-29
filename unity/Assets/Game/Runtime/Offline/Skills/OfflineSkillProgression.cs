@@ -302,7 +302,7 @@ namespace Zjcs.Offline.Skills
             OfflineOwnedSkill owned = FindOwned(candidate, skillId);
             OfflineSkillDefinition definition = FindDefinition(skillId);
             if (owned == null) return Result(OfflineSkillResultCode.SkillNotOwned);
-            if (definition == null || !IsAvailable(definition, player)) return Result(OfflineSkillResultCode.SkillUnavailable);
+            if (definition == null) return Result(OfflineSkillResultCode.SkillUnavailable);
             int rank = owned.Rank;
             if (rank >= definition.MaximumRank) return Result(OfflineSkillResultCode.NoUpgradeAvailable);
             OfflineSkillRankCost row = FindRankCost(definition, rank);
@@ -325,7 +325,7 @@ namespace Zjcs.Offline.Skills
             foreach (OfflineOwnedSkill owned in candidate.Skills)
             {
                 OfflineSkillDefinition definition = FindDefinition(owned.ClassId);
-                if (definition == null || !IsAvailable(definition, player)) continue;
+                if (definition == null) continue;
                 int nextRank = owned.Rank;
                 var skillCost = new Dictionary<int, long>();
                 while (nextRank < definition.MaximumRank)
@@ -355,16 +355,17 @@ namespace Zjcs.Offline.Skills
         {
             cost = new Dictionary<int, long>();
             next = current + 1;
+            if (NextSeasonLevelLimit(player, next) >= 0) return OfflineSkillResultCode.LevelLimit;
             int baseLimit = BaseLevelLimit(player.SubRank);
             if (baseLimit <= 0) return OfflineSkillResultCode.LevelLimit;
             if (next > baseLimit && player.CurrentSeasonId <= 0) return OfflineSkillResultCode.LevelLimit;
             OfflineSkillLevelLimit limit = FindLevelLimit(player);
             if (limit == null) return OfflineSkillResultCode.LevelLimit;
-            if (next > baseLimit && (player.PlayerRank != player.CurrentSeasonRank
-                || !AllBaseSlotsAtLimit(profile, baseLimit))) return OfflineSkillResultCode.LevelLimit;
             int available = limit.SkillLevel;
             if (player.PlayerRank == player.CurrentSeasonRank) available += limit.SkillBlessLevel;
             if (next > available) return OfflineSkillResultCode.LevelLimit;
+            if (next > baseLimit && !CheckBlessLevelCanUpgrade(profile, player, next,
+                out _, out _)) return OfflineSkillResultCode.LevelLimit;
 
             OfflineSkillItemCount[] items;
             if (next <= baseLimit)
@@ -393,11 +394,64 @@ namespace Zjcs.Offline.Skills
             return 0;
         }
 
+        public int NextSeasonLevelLimit(OfflineSkillPlayerContext player, int nextLevel)
+        {
+            OfflineSkillSeason season = null;
+            foreach (var row in rules.Seasons ?? Array.Empty<OfflineSkillSeason>())
+                if (row.Rank == player.CurrentSeasonRank + 1) { season = row; break; }
+            if (season == null) return -1;
+            foreach (var row in rules.BaseLevelLimits ?? Array.Empty<OfflineSkillSubRankLimit>())
+                if (row.SubRank == player.CurrentSeasonRank)
+                    return nextLevel > row.SkillLevel + row.SkillBlessLevel ? season.Season : -1;
+            return nextLevel > 0 ? season.Season : -1;
+        }
+
         private static bool AllBaseSlotsAtLimit(OfflineSkillProfile profile, int limit)
         {
-            foreach (int level in profile.ActiveSlotLevels) if (level < limit) return false;
-            foreach (int level in profile.PassiveSlotLevels) if (level < limit) return false;
+            foreach (int level in profile.ActiveSlotLevels) if (level != limit) return false;
+            foreach (int level in profile.PassiveSlotLevels) if (level != limit) return false;
             return true;
+        }
+
+        // PlayerSkillDataExt.CheckSkillBlessLevelCanUpgrade and SystemLevelGapLimitInfoParser,
+        // retaining table order and the strict lower / inclusive upper level boundaries.
+        public bool CheckBlessLevelCanUpgrade(OfflineSkillProfile profile, OfflineSkillPlayerContext player,
+            int nextLevel, out int minimumLevel, out bool otherBaseSlotsLimited)
+        {
+            minimumLevel = 0;
+            otherBaseSlotsLimited = player.PlayerRank != player.CurrentSeasonRank
+                || !AllBaseSlotsAtLimit(profile, BaseLevelLimit(player.SubRank));
+            if (otherBaseSlotsLimited) return false;
+            // Save blessing records use the offline rank key; the original gap
+            // table uses AstrologicalSeasonConfig.Season, which is a different id.
+            int configurationSeason = -1;
+            foreach (var season in rules.Seasons ?? Array.Empty<OfflineSkillSeason>())
+                if (season.Rank == player.CurrentSeasonRank) { configurationSeason = season.Season; break; }
+            var rows = new List<OfflineSkillLevelGapLimit>();
+            foreach (var row in rules.LevelGapLimits ?? Array.Empty<OfflineSkillLevelGapLimit>())
+                if (row != null && row.SeasonId == configurationSeason) rows.Add(row);
+            for (int i = 0; i < rows.Count; i++)
+            {
+                var row = rows[i];
+                if (nextLevel <= row.Level) return true;
+                if (i < rows.Count - 1 && nextLevel > rows[i + 1].Level) continue;
+                minimumLevel = row.LimitLevel;
+                if (!row.IsOpen) return true;
+                foreach (int kind in new[] { ActiveSkillItemType, PassiveSkillItemType })
+                    for (int slot = 0; slot < SlotCount; slot++)
+                        if (SlotLevel(profile, kind, slot, player.CurrentSeasonId) < minimumLevel) return false;
+                return true;
+            }
+            return true;
+        }
+
+        public OfflineSkillLevelLimit NextSkillLevelLimit(OfflineSkillPlayerContext player, int currentLevel)
+        {
+            foreach (var row in rules.LevelLimits ?? Array.Empty<OfflineSkillLevelLimit>())
+                if (row != null && player.BaseLevel <= row.PlayerLevel
+                    && (row.SkillBlessLevel <= 0 || (row.SubRank < 2 ? row.SubRank : 2 + (row.SubRank - 2) / 3) >= player.CurrentSeasonRank)
+                    && row.SkillLevel + row.SkillBlessLevel > currentLevel) return row;
+            return null;
         }
 
         private OfflineSkillLevelLimit FindLevelLimit(OfflineSkillPlayerContext player)

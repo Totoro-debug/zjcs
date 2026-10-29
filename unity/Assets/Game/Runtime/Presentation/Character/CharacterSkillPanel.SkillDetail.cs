@@ -63,13 +63,7 @@ namespace Zjcs.Presentation.Character
             int rank = snapshot?.Rank ?? Math.Max(1, OfflineSkillProgression.OwnedRank(progression.Player.Skills, skillId));
             int quality = progression.SkillRules.RankDisplays.First(value => value.Rank == rank).Quality;
             string[] names = { "None", "White", "Blue", "Purple", "Orange", "Gold", "Red", "Rainbow" };
-            Text qualityText = Bound(itemBinding, "QualityText").GetComponent<Text>();
-            qualityText.text = OriginalDetailText("Quality." + names[quality]);
-            if (qualityGradient == null) qualityGradient = skillAssets.LoadQualityGradient();
-            if (qualityGradient.normalColors == null || qualityGradient.normalColors.Length <= quality)
-                throw new InvalidOperationException("Original normal quality text colors are absent.");
-            qualityText.color = qualityGradient.normalColors[quality];
-            ApplyQualityGradient(qualityText, quality, 45f);
+            BindOriginalQualityText(Bound(itemBinding, "QualityText"), quality, 45f);
             var backgrounds = CharacterModelPackage.AsObject(skillUiTemplates["detail_quality_backgrounds"], "original quality backgrounds");
             string uri = Convert.ToString(backgrounds[names[quality]], CultureInfo.InvariantCulture);
             Image qualityBg = Bound(itemBinding, "QualityBg").GetComponent<Image>();

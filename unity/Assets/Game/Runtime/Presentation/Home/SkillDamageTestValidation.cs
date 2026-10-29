@@ -123,6 +123,7 @@ namespace Zjcs.Presentation.Home
 
         public static IEnumerator Exercise(string slot, string root, string outputDirectory, Action<Selectable> click)
         {
+            bool defeat = Environment.GetEnvironmentVariable("ZJCS_SKILLS_VALIDATE_DEFEAT") == "1";
             var fixture = OfflineMainlineProgressSession.OpenCharacter(new ProfileSlotCatalog(root), slot);
             Require(fixture.ApplyCharacterMutation(player => {
                 if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_VALIDATE_FEMALE") == "1" && player.Wardrobe.Sex != 1) {
@@ -171,9 +172,17 @@ namespace Zjcs.Presentation.Home
             Toggle Choice(string group, string name) => settings.GetComponentsInChildren<Toggle>()
                 .First(value => value.transform.parent.name == name && value.GetComponentsInParent<Transform>().Any(parent => parent.name == group));
             foreach (string group in new[] { "Round", "MonsterHp", "MonsterHurt" }) {
-                Toggle choice = Choice(group, "ToggleText");
+                Toggle choice = Choice(group, defeat && group == "MonsterHp" ? "ToggleText (1)" : "ToggleText");
                 if (!choice.isOn) click(choice);
                 Require(choice.isOn, "The damage-test selection was not retained: " + group);
+            }
+            if (defeat) {
+                yield return new WaitForSecondsRealtime(.4f);
+                var difficultyLabel = settings.GetComponentsInChildren<TMPro.TMP_Text>().First(value => value.text == "02");
+                var difficultyCell = difficultyLabel.GetComponentsInParent<Transform>()
+                    .First(value => value.name.StartsWith("StageLevelCellItem", StringComparison.Ordinal));
+                click(difficultyCell.GetComponentInChildren<Button>());
+                yield return new WaitForSecondsRealtime(.5f);
             }
             yield return null;
             long[] inventory = home.Profile.Save.Player.Inventory.OrderBy(value => value.ItemId)
@@ -185,7 +194,13 @@ namespace Zjcs.Presentation.Home
             Require(home.Hud.AnyModalOpen, "The home world accepted input behind the damage test.");
             var checkpoint = battle.Controller.Checkpoint;
             Require(checkpoint.StageType == 43 && checkpoint.MaxRound == 10 && checkpoint.DamageTest.EnableMonsterOneDamage
-                && checkpoint.DamageTest.EnableMonsterUnlimitHp, "The battle lost its selected damage-test rules.");
+                && checkpoint.DamageTest.EnableMonsterUnlimitHp == !defeat, "The battle lost its selected damage-test rules.");
+            if (defeat) {
+                // Isolated near-death fixture. The actual controller still resolves
+                // the monster hit, death, battle outcome and result navigation.
+                var nearDeath = checkpoint.Units.Single(value => value.Id == 1);
+                nearDeath.Hp = 1; nearDeath.Turn.Hp = 1;
+            }
             var skinnedSkill = checkpoint.Units.First(value => value.Id == 1).Skills.First(value => value.Slot == 0);
             Require(skinnedSkill.ItemId == 10014 && skinnedSkill.UseItemId == 10125 && skinnedSkill.SkillSkinId == 39503,
                 "The actual battle did not assemble the equipped skill appearance.");
@@ -200,12 +215,15 @@ namespace Zjcs.Presentation.Home
             while (battle != null && Time.realtimeSinceStartup < deadline) yield return null;
             Time.timeScale = oldScale;
             Require(battle == null && checkpoint.Outcome.Finished, "The damage test did not finish through its actual battle animation flow.");
+            Require(!defeat || !checkpoint.Outcome.Won && checkpoint.Units.Single(value => value.Id == 1).Hp == 0,
+                "The near-death fixture did not complete an actual losing battle.");
             yield return new WaitForSecondsRealtime(.8f);
             ScreenCapture.CaptureScreenshot(Path.Combine(outputDirectory, "skills-damage-result.png"));
             yield return null;
             Transform result = UnityEngine.Object.FindObjectsOfType<Transform>().First(value => value.name == "damage_test_result");
             var resultPose = FindObjectsOfType<Zjcs.Presentation.Character.OfficialSkillResultNativePose>().Single();
-            Require(resultPose.AnimationName == "map/win_01", "The completed damage test did not bind its original victory animation.");
+            Require(resultPose.AnimationName == (defeat ? "map/injuried_idle" : "map/win_01"),
+                "The completed damage test did not bind the animation for its real outcome.");
             var meshes = resultPose.GetComponentsInChildren<MeshFilter>().Where(value => value.sharedMesh != null
                 && value.GetComponent<Renderer>() is Renderer renderer && renderer.enabled && !renderer.forceRenderingOff).ToArray();
             Require(meshes.Length > 0, "The original result pose has no rendered native attachment meshes.");
@@ -219,7 +237,7 @@ namespace Zjcs.Presentation.Home
             Require(movement > .001, "The original result animation is only a state name; its rendered mesh did not move.");
             ScreenCapture.CaptureScreenshot(Path.Combine(outputDirectory, "skills-damage-result-animated.png"));
             yield return null;
-            // The actual battle above verifies the victory branch through input.
+            // The actual battle above verifies its outcome through input.
             // Probe the other original clip on the same rendered appearance as
             // a separate geometry check, then restore the real battle result.
             var resultPreview = result.GetComponentsInChildren<Zjcs.Presentation.Character.CharacterModelPreview>().Single();
@@ -240,9 +258,9 @@ namespace Zjcs.Presentation.Home
                 "The original injured result lost its performFace eye or mouth attachment.");
             ScreenCapture.CaptureScreenshot(Path.Combine(outputDirectory, "skills-damage-injured-pose-probe.png"));
             yield return null;
-            resultPreview.PlayOriginalResultAnimation("map/win_01");
+            resultPreview.PlayOriginalResultAnimation(defeat ? "map/injuried_idle" : "map/win_01");
             yield return null;
-            Require(result.GetComponentsInChildren<TMPro.TMP_Text>().Any(value => value.text.Contains("测试完成")),
+            Require(result.GetComponentsInChildren<TMPro.TMP_Text>().Any(value => value.text.Contains(defeat ? "失败" : "测试完成")),
                 "The native damage-test result did not render its completion title.");
             Require(inventory.SequenceEqual(home.Profile.Save.Player.Inventory.OrderBy(value => value.ItemId)
                 .SelectMany(value => new[] { (long)value.ItemId, value.Count })), "A damage test changed the character's item amounts.");

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace Zjcs.Presentation.Skills
 {
@@ -16,6 +17,28 @@ namespace Zjcs.Presentation.Skills
         public OfficialSkillGradientAlphaKey[] alphas;
         public OfficialSkillGradientComponent[] components;
         public Color[] normalColors;
+        [NonSerialized] private Gradient nativeGradient;
+
+        public Color32 Evaluate(float t)
+        {
+            if (nativeGradient == null)
+            {
+                var colorKeys = new GradientColorKey[colors.Length];
+                var alphaKeys = new GradientAlphaKey[alphas.Length];
+                for (int i = 0; i < colors.Length; i++) colorKeys[i] = new GradientColorKey(colors[i].color, colors[i].time);
+                for (int i = 0; i < alphas.Length; i++) alphaKeys[i] = new GradientAlphaKey(alphas[i].alpha, alphas[i].time);
+                nativeGradient = new Gradient { mode = (GradientMode)mode };
+                nativeGradient.SetKeys(colorKeys, alphaKeys);
+            }
+            return nativeGradient.Evaluate(t);
+        }
+
+        public Color32 EvaluateVertex(Vector3 position, float minimum, float maximum, float angle)
+        {
+            float radians = angle * Mathf.Deg2Rad;
+            float x = position.x * Mathf.Cos(radians) - position.y * Mathf.Sin(radians);
+            return Evaluate(Mathf.InverseLerp(minimum, maximum, x));
+        }
 
         public static OfficialSkillQualityGradientData Parse(string json)
         {
@@ -85,7 +108,7 @@ namespace Zjcs.Presentation.Skills
             {
                 UIVertex vertex = Vertices[i];
                 int line = FindLine(vertex.position.y);
-                float x = vertex.position.x * cosine - vertex.position.y * sine;
+                float x = vertex.position.x;
                 if (!lineBounds.TryGetValue(line, out Vector2 bounds)) bounds = new Vector2(x, x);
                 else bounds = new Vector2(Mathf.Min(bounds.x, x), Mathf.Max(bounds.y, x));
                 lineBounds[line] = bounds;
@@ -98,7 +121,7 @@ namespace Zjcs.Presentation.Skills
                 Vector2 bounds = lineBounds[line];
                 float t = bounds.y - bounds.x <= Mathf.Epsilon ? 0f
                     : Mathf.Clamp01((x - bounds.x) / (bounds.y - bounds.x));
-                Color32 palette = Evaluate(t);
+                Color32 palette = data.Evaluate(t);
                 vertex.color = palette;
                 vertexHelper.SetUIVertex(vertex, i);
             }
@@ -119,29 +142,55 @@ namespace Zjcs.Presentation.Skills
             return nearest;
         }
 
-        private Color32 Evaluate(float t)
+
+    }
+    // TMPColorGradient.OnPreRenderText: original line extents and rotated vertices
+    // and palette replacement, applied directly to TMP's native material meshes.
+    [AddComponentMenu("")]
+    public sealed class OfficialSkillQualityTmpGradient : MonoBehaviour
+    {
+        private TMP_Text target;
+        private OfficialSkillQualityGradientData data;
+        private float angle;
+
+        public void Configure(TMP_Text text, OfficialSkillQualityGradientData palette, float componentAngle)
         {
-            OfficialSkillGradientColorKey[] colors = data.colors;
-            OfficialSkillGradientAlphaKey[] alphas = data.alphas;
-            int colorIndex = KeyInterval(colors, t, key => key.time);
-            OfficialSkillGradientColorKey from = colors[colorIndex];
-            OfficialSkillGradientColorKey to = colors[Mathf.Min(colorIndex + 1, colors.Length - 1)];
-            float colorT = to.time <= from.time ? 0f : Mathf.Clamp01((t - from.time) / (to.time - from.time));
-            Color color = Color.LerpUnclamped(from.color, to.color, colorT);
-            int alphaIndex = KeyInterval(alphas, t, key => key.time);
-            OfficialSkillGradientAlphaKey alphaFrom = alphas[alphaIndex];
-            OfficialSkillGradientAlphaKey alphaTo = alphas[Mathf.Min(alphaIndex + 1, alphas.Length - 1)];
-            float alphaT = alphaTo.time <= alphaFrom.time ? 0f
-                : Mathf.Clamp01((t - alphaFrom.time) / (alphaTo.time - alphaFrom.time));
-            color.a = Mathf.LerpUnclamped(alphaFrom.alpha, alphaTo.alpha, alphaT);
-            return color;
+            if (target != null) target.OnPreRenderText -= Apply;
+            target = text;
+            data = palette;
+            angle = componentAngle;
+            if (target == null) return;
+            target.OnPreRenderText += Apply;
+            target.SetVerticesDirty();
         }
 
-        private static int KeyInterval<T>(T[] keys, float t, Func<T, float> time)
+        private void OnDestroy()
         {
-            for (int i = 0; i < keys.Length - 1; i++)
-                if (t < time(keys[i + 1])) return i;
-            return keys.Length - 2;
+            if (target != null) target.OnPreRenderText -= Apply;
+        }
+
+        private void Apply(TMP_TextInfo info)
+        {
+            if (data == null) return;
+            for (int line = 0; line < info.lineCount; line++)
+            {
+                TMP_LineInfo row = info.lineInfo[line];
+                // The original native callback reads unrotated TMP_LineInfo.lineExtents
+                // before rotating each vertex around the RectTransform origin.
+                float minimum = row.lineExtents.min.x, maximum = row.lineExtents.max.x;
+                for (int i = row.firstCharacterIndex; i <= row.lastCharacterIndex && i < info.characterCount; i++)
+                {
+                    TMP_CharacterInfo character = info.characterInfo[i];
+                    TMP_MeshInfo mesh = info.meshInfo[character.materialReferenceIndex];
+                    for (int v = 0; v < 4; v++)
+                    {
+                        int index = character.vertexIndex + v;
+                        Vector3 position = mesh.vertices[index];
+                        mesh.colors32[index] = data.EvaluateVertex(position, minimum, maximum, angle);
+                    }
+                }
+            }
         }
     }
+
 }

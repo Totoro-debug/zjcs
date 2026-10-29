@@ -18,9 +18,13 @@ namespace Zjcs.Presentation.Character
             var root = AuxObject(AuxObject(skillUiTemplates["skill_gift_item_detail"])["root"]);
             var binding = FindOriginalComponent(root, "ItemDetailDialog");
             RectTransform Bound(string field) => itemNodes[Convert.ToString(binding[field])];
-            var item = progression.Catalog.FindItem(itemId);
+            var item = OriginalCultivationItem(itemId);
             if (Convert.ToBoolean(item["CanUse"])) throw new InvalidOperationException("A skill gift requires a specialized use dialog: " + itemId);
-            Bound("ItemImage").GetComponent<Image>().sprite = skillAssets.FindSprite(Convert.ToString(AuxObject(skillUiTemplates["gift_item_icons"])[itemId.ToString(CultureInfo.InvariantCulture)]));
+            var icons = AuxObject(skillUiTemplates["gift_item_icons"]);
+            string iconUri = icons.TryGetValue(itemId.ToString(CultureInfo.InvariantCulture), out object giftIcon)
+                ? Convert.ToString(giftIcon) : OriginalCultivationItemIcon(itemId);
+            Bound("ItemImage").GetComponent<Image>().sprite = skillAssets.FindSprite(iconUri) ?? assets.FindSprite(iconUri)
+                ?? throw new InvalidOperationException("Original item detail icon is absent: " + itemId);
             Bound("FakeItemIcon").gameObject.SetActive(false);
             SetAuxiliaryText(Bound("NameText"), OriginalDetailText("item_" + itemId + "_name"));
             string type = Convert.ToString(AuxObject(AuxiliaryData["item_type_names"])[Convert.ToString(item["ItemType"], CultureInfo.InvariantCulture)]);

@@ -26,9 +26,9 @@
 
 技能列表排序／收藏字段的原 C# 输入哈希见 skill-ui/source-manifest.json 的 list_behavior；全部开关使用原 CommonCheckItem_On／Off。CharacterPanel_Skill 的原 AnchorMin／AnchorMax 曲线从固定 APK AnimationClip 解码，输入对象哈希见 character_animation_inputs；未用手调坐标补偿。收藏值保存到本地存档以替代原网络操作，界面状态和分组仍取原客户端实现。
 
-`prepare_skill_quality_text.py` 从固定 `854_156383` 的 APK／匹配 CDN 读取 `GlobalColors.asset.QualityColorConfig` 的 Normal 调色板，以及 `SkillPromotePanel`、`SkillRankUpNotifyDialog`、`SkillPanelSkillDetailDialog`、`SkillDetailDialog` 中六个品质文字的 `TMPColorGradient`。原四个 RGB 关键点、两个独立 alpha 关键点、Blend 模式和各组件 0°／45° 角度导出到 `unity/Assets/Official/Skills/skill-quality-gradient.json`（SHA256 `bc42085e3ee9d8bcf4edcf8283d083516cced5c04c3eadbc6ff4abf6d1fba4e0`）；没有使用 `GreenRainbow` 四角预设或绘制图片。`OfficialSkillQualityTextGradient` 将官方关键点应用到技能详情、培养和升阶结果的 UGUI 文本网格。原 bundle、对象、CDN URL、输入字节、调用源码及生成绑定 SHA256 见 [skill-quality-text/source-manifest.json](../../assets/reference/skill-quality-text/source-manifest.json)。
+`prepare_skill_quality_text.py` 从固定 `854_156383` 的 APK／匹配 CDN 读取 `GlobalColors.asset.QualityColorConfig` 的 Normal 调色板，以及 `SkillPromotePanel`、`SkillRankUpNotifyDialog`、`SkillPanelSkillDetailDialog`、`SkillDetailDialog` 中六个品质文字的 `TMPColorGradient`。原四个 RGB 关键点、两个独立 alpha 关键点、Blend 模式和各组件 0°／45° 角度导出到 `unity/Assets/Official/Skills/skill-quality-gradient.json`（SHA256 `a735d8107a91afa88c592a5077b7955c489fafd1d084123ae728470697cb632e`）；没有使用 `GreenRainbow` 四角预设或绘制图片。技能详情、培养和升阶结果的原生 TMP 文本网格由 `OfficialSkillQualityTmpGradient` 接收原关键点。原 bundle、对象、CDN URL、输入字节、调用源码及生成绑定 SHA256 见 [skill-quality-text/source-manifest.json](../../assets/reference/skill-quality-text/source-manifest.json)。
 
-渲染迁移依据恢复后的同 APK `TMPColorGradient.OnPreRenderText`（`0x1121dd44`）、`SetGradientColor` 和 `UpdateMesh`，保留每行未旋转范围与绕原 RectTransform 原点旋转后的顶点归一化、顶点颜色替换和 Color32 的 ties-to-even 舍入。`generate_skill_quality_reference.py` 直接执行原顶点计算块、原 `Matrix4x4.MultiplyPoint3x4` 及固定 `libunity.so` 的 `Gradient.Evaluate`，夹具保存在 `scripts/fixtures/skill_quality_native.json`；原生镜像、metadata、Unity 引擎和方法字节哈希同存来源清单。
+渲染迁移依据恢复后的同 APK `TMPColorGradient.OnPreRenderText`（`0x1121dd44`）、`SetGradientColor` 和 `UpdateMesh`，保留每行未旋转范围与绕原 RectTransform 原点旋转后的顶点归一化、顶点颜色替换和 Color32 的 ties-to-even 舍入。原顶点与取色样本保存在 `scripts/fixtures/skill_quality_native.json`，`SkillTextValidation` 对运行时计算执行 36 个顶点与 10 个颜色样本的逐字节比对；原生镜像、metadata、Unity 引擎和方法字节哈希同存来源清单。
 
 技能详情与角色预览继续使用固定 APK `854_156383`：`prepare_skill_detail_data.py` 解码原 `SkillItemRangeInfos.g.bytes` 的 1,365 条范围记录，恢复 `SkillTagItem`、标签枚举及职业归属／前置链；布局明确绑定 174 张原 UI 精灵。`prepare_skill_native_text.py` 先比对固定 APK 原始对象 SHA-256，再复用对象完全一致的既有原生 FZY4K 字体／材质／Alpha8 图集与 TMP shader 转换，为技能建立独立 GUID 和运行时副本；保留初始图集，避免 TMP 构建处理修改共享资源。`prepare_skill_character_shader.py` 同样核对 APK 中 `Universal Render Pipeline/Spine/SkeletonDye-2D` 原对象与既有转换凭据，保留全部 544 组 GPU 程序，仅调整桌面预览 pass 标签；没有自绘替代角色素材。
 
@@ -38,7 +38,7 @@
 
 技能列表附件已按原 `ItemIconAttachmentConfig` 的层级顺序恢复：`CenterHintContent`（点击合成）、`ProfessionMismatch`（职业不符）、`NewMark` 和 `RedDotContent` 均使用原 prefab、字体及组件字段。红点沿 `RedDotMultiItem` 组合原升阶、装配及合成条件；原行项目是否考虑职业、碎片列表不挂这些附件等分支保持客户端配置。装配附件属于技能皮肤页的原附件类型 12，不额外叠加到原列表。新获得标记按原 `ItemNewMarkManager` 的零数量到正数量、正数量到零数量分支更新，点击技能、刷新列表或关闭技能列表时移除上次列表涉及的标记（包括视口外项目），当前玩家会话共享，重新登录清空；不写入主档案。规则测试、带画面 Play Mode 及 675×1463 独立 Windows Player 已通过，模拟合成、点击新技能、全部开关、过滤后返回和滚动显示职业不符项目，并实际查看附件截图。同帧重复的数据投影不会提前消费尚未显示的新技能标记；刷新停止旧列表惯性并恢复首项。
 
-伤害测试结算恢复原 `map/win_01`／`map/injuried_idle` 骨骼动画，不再仅切换空 Animator 状态。复用项目独立原生骨骼、曲线、IK、插槽及绘制顺序求值器，沿原骨骼顺序变换官方附件网格；表情附件来自 `AppearanceConfig` 的 UI 附加皮肤 `performFace`／`map_01`，补齐创建角色专用 bake 未包含的眼睛和嘴部附件。源骨骼、图集及纹理沿用已核验的 `871_156598` 人物资源，UI 动作名称与附加皮肤配置仍取固定 APK `854_156383`，不混改原始哈希。男女角色真实伤害测试的胜利动作与受伤动作的独立网格探针已通过带画面 Play Mode 检查，独立 Windows Player 的真实胜利流程与受伤探针也已通过并查看截图；受伤动作探针只证明对应渲染，不代替实际失败战斗流程。
+伤害测试结算恢复原 `map/win_01`／`map/injuried_idle` 骨骼动画，不再仅切换空 Animator 状态。复用项目独立原生骨骼、曲线、IK、插槽及绘制顺序求值器，沿原骨骼顺序变换官方附件网格；表情附件来自 `AppearanceConfig` 的 UI 附加皮肤 `performFace`／`map_01`，补齐创建角色专用 bake 未包含的眼睛和嘴部附件。源骨骼、图集及纹理沿用已核验的 `871_156598` 人物资源，UI 动作名称与附加皮肤配置仍取固定 APK `854_156383`，不混改原始哈希。男女角色真实伤害测试的胜利动作与受伤动作的独立网格探针已通过带画面 Play Mode 检查，独立 Windows Player 的真实胜利流程与受伤探针也已通过并查看截图；实际失败分支另已通过 Play Mode 与独立 Windows Player：隔离档案的濒死角色经真实怪物攻击死亡，进入失败结算、受伤动画、统计与技能快照，并检查返回设置和不创建战报目录。已查看实际运行画面。
 
 方案名称已恢复原 `TMP_InputField`（对象 `5229620140741382476`，原始 580 字节 SHA-256 `12c6afe0debddb1e9a5bd164cc495b7f1f0ede5acc182a01872a6bd0728d104c`），保留原文字视口、字体、32 px 字号、颜色、光标与单行配置，不再添加旧 InputField 或透明替代图像。官方 TMP 分支额外序列化的 `m_EncodingType` 根据 APK 元数据恢复，严格检查完整对象字节。名称校验直接迁移 `Common.CJK` 与 `FormulaHandler.CheckSkillPlanNameLegal`：当前区域配置上限 12 计数单位，中日韩文字及原扩展区计 2，按原 StringInfo 文本元素计数；空名称、超长、`#<>`、半角／全角空格分别保留原错误分支，不执行 Trim。保留旧版本已接受的名称，空名称恢复“方案一”至“方案七”。单机没有在线 ContentCustom 禁用标志，原禁用遮罩保持隐藏；其原用途是禁用时重置名称，并非编辑入口。纯规则测试和带画面 Play Mode 均已通过，实际点击输入框、模拟 Ctrl+A 与逐字键盘输入、点击切换方案、检查成功／拒绝提示及硬盘主档案重读，覆盖六个中文字符、七个中文字符、含空格名称及十二个英文字母；另有表情计数和旧名称兼容规则测试。已查看实际运行截图。
 
@@ -62,7 +62,7 @@ Editor 程序集显式引用 `Zjcs.Presentation.Character`，以供技能 Play M
 
 技能页按官方 `CharacterPanel.mCharacterPanelSkillPanelParent` 挂入 `/CharacterPanel/BgPanel1/Content/TopGo/SkillContent`，恢复人物页、共享 HUD 和技能窗口的 `SafeArea` 参数。返回人物页按原节点字体绑定恢复 FZY4K 中文字体，避免原生 prefab 的缺失字体回落为方块。系统消息从 APK 原 `SystemMsgPanel` 提取层级、镜像背景、Canvas 排序与 Show／Hide 动画，收藏／取消收藏使用原文案。详情、碎片、合成确认、培养及升阶通知按原 `PopupWindow.mMaskType` 选择原生普通或模糊遮罩；模糊复用原 `ScreenBlur` 材质和四级处理，外部点击保留原 0.5 秒防误触条件。新增流程已在带画面的 Play Mode 中通过模拟点击验证：收藏提示可见，模糊背景方向正确，遮罩保持在弹窗下一层，外部点击关闭后技能页继续操作；拖拽、培养、升阶、批量结果、两类馈赠和存档重载一并回归通过。静态元数据检查、Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 已通过；Windows Player 验证待重建后执行。
 
-技能详情已恢复固定 APK 的原生 FZY4K TMP 字体、材质和初始 Alpha8 字体图集，修复弹窗 Canvas 缺少 UV1 通道造成的方块文字；字体、材质与动态图集按窗口克隆，技能页独立副本保留原始初始图集，避免 Windows 构建清空共享字体。品质背景、普通品质文字色、星级空星、战技／秘法背景状态、技能等级及祝福显示条件按原组件恢复。`OfficialSkillDetailProperties` 迁移 `PropConfigUtils.CalcSkillViewProps` 与 `SkillPanelPropPanel.Sort` 的主动、被动、状态及召唤属性展示规则；全部 394 个技能在两组等级／阶位条件下的 788 次计算已通过 Play Mode。标签取自原 `SkillTagItem` 和 `ESkillTag`，职业图标沿用 `ProfessionBaseInfoParser.PostParse` 的归属及前置职业链；范围图从 APK `SkillItemRangeInfos.g.bytes` 恢复 1,365 条数据，保留原格子 prefab、五类颜色、间隔和行列顺序，当前可用主动技能均具有有效范围数据。新增标签、范围、属性、收藏、弹窗外部关闭与整屏培养／升阶／馈赠／存档流程已通过模拟点击 Play Mode 回归并查看实际画面； Windows Player 重建验证仍待执行。
+技能详情已恢复固定 APK 的原生 FZY4K TMP 字体、材质和初始 Alpha8 字体图集，修复弹窗 Canvas 缺少 UV1 通道造成的方块文字；同一来源字体的标签共用一份隔离的字体、材质与动态图集，按使用数量释放；128 标签验证覆盖共享、末次释放和原图集字节不变，技能页独立副本保留原始初始图集，避免 Windows 构建清空共享字体。品质背景、普通品质文字色、星级空星、战技／秘法背景状态、技能等级及祝福显示条件按原组件恢复。`OfficialSkillDetailProperties` 迁移 `PropConfigUtils.CalcSkillViewProps` 与 `SkillPanelPropPanel.Sort` 的主动、被动、状态及召唤属性展示规则；全部 394 个技能在两组等级／阶位条件下的 788 次计算已通过 Play Mode。标签取自原 `SkillTagItem` 和 `ESkillTag`，职业图标沿用 `ProfessionBaseInfoParser.PostParse` 的归属及前置职业链；范围图从 APK `SkillItemRangeInfos.g.bytes` 恢复 1,365 条数据，保留原格子 prefab、五类颜色、间隔和行列顺序，当前可用主动技能均具有有效范围数据。新增标签、范围、属性、收藏、弹窗外部关闭与整屏培养／升阶／馈赠／存档流程已通过模拟点击 Play Mode 回归并查看实际画面； Windows Player 重建验证仍待执行。
 
 人物预览和头像改用经原始对象 SHA-256 核验一致的官方 `Universal Render Pipeline/Spine/SkeletonDye-2D` shader 转换结果，保留 544 组原 GPU 程序、透明度截断、染色及渲染状态；仅适配桌面预览相机的 pass 选择。运行截图确认面部／头发的白色三角残片已消失。技能模块目前显式绑定 270 张官方 UI 精灵，`prepare_skill_extra_ui.py` 恢复附属原 prefab 与脚本字段；`prepare_skill_auxiliary_code.py` 直接适配原切换、滚动和布局代码，战报网格复用 `Official/WorldUI` 中使用非等距间隔的原 `GridLayoutGroupJSZX`，不以自定网格替换。转换与原对象哈希、字体隔离方式见 `assets/reference/skill-ui/unity-icon-source-manifest.json`，重建入口增加 `prepare_skill_native_text.py`、`prepare_skill_character_shader.py` 和 `prepare_skill_detail_data.py`。
 
@@ -84,26 +84,32 @@ Windows 竖屏显示适配按用户参考画面保留顶部安全留白：1080 U
 
 用户明确确认：将官方 Function 138 的一键批量升阶开放等级从 999 级改为与一键升级一致的 12 级；`SkillFastRanklUp`（Function 138）映射到 `SkillFastLevelUp`（Function 23）。费用、升阶上限及按钮优先条件继续使用原规则。
 
-当前可执行版本已发布到 `D:/Desktop/杖剑传说/杖剑传说.exe`，桌面快捷方式指向该入口。构建通过 `ProjectTools.Validate`，独立 Player 的技能入口、七方案、推荐、详情／词条、馈赠及存档重载模拟输入通过；随后从正式发布目录实际启动 675×1463 窗口，完成伤害测试、玩家／技能统计、快照详情、返回设置及不创建战报目录检查，并查看正式程序实际截图。该版本包含官方 TMP 方案输入框、列表附件与新获得标记、结算原生动作和附加表情。正式目录再次启动后，675×1463 的列表合成／新获得／职业提示、键盘名称校验、槽位拖拽、单次升级与进阶、馈赠、存档重载以及伤害测试／统计／快照详情／返回设置均完成模拟输入并通过，已查看正式程序实际画面；培养页的显示残留及下列缺项继续迁移，不代表整个技能功能已完成。发布使用增量复制，保留用户存档。
+当前可执行版本已发布到 `D:/Desktop/杖剑传说/杖剑传说.exe`，桌面快捷方式指向该入口。构建通过 `ProjectTools.Validate`，独立 Player 的技能入口、七方案、推荐、详情／词条、馈赠及存档重载模拟输入通过；随后从正式发布目录实际启动 675×1463 窗口，完成伤害测试、玩家／技能统计、快照详情、返回设置及不创建战报目录检查，并查看正式程序实际截图。该版本包含官方 TMP 方案输入框、列表附件与新获得标记、结算原生动作和附加表情。正式目录再次启动后，675×1463 的列表合成／新获得／职业提示、键盘名称校验、槽位拖拽、单次升级与进阶、馈赠、存档重载以及伤害测试／统计／快照详情／返回设置均完成模拟输入并通过，已查看正式程序实际画面；本轮培养修复及下列缺项仍按各自验证范围记录，不代表整个技能功能已完成。发布使用增量复制，保留用户存档。
 
 ## 尚未实现
 
-- 培养页实际截图仍可见标题 TMP 标记、顶部槽位图标、费用区域及进阶通知的模板残留；单次升级／进阶与存档逻辑已通过模拟输入，原组件的完整显示与切换绑定仍需恢复。
-
-- 技能列表附件已通过 Play Mode，独立 Windows Player 的新增附件流程仍待验证。
+- 培养页标题、四槽选择、真实材料数量／不足颜色、同品质升星与跨品质通知已按原组件绑定，并通过 Play Mode 模拟点击和实际截图检查；未装备横向列表已通过 Play Mode 模拟拖拽及点击原定位提示；角色等级上限提示与培养组前后切换已通过 Play Mode；上述培养流程另已通过 675×1463 独立 Windows Player 的模拟点击、键盘与拖拽，并查看实际截图；祝福／赛季提示的专门画面仍需完成。
 
 - 馈赠原道具详情已接入并通过 Play Mode；当前奖励涉及的单人公会种植、钓鱼、养殖来源（类型 22／23／24，对应道具 1530／1540／1550）尚未连接 Unity 目的界面，不能视为全部来源已可达。
-- 伤害测试参数、真实战斗、结算统计已通过 Play Mode 与独立 Windows Player；最新仅内存查看方案亦已通过；结算动作及附加表情已通过 Play Mode、独立 Windows Player 与正式目录运行验证；实际失败战斗分支仍需验证，不能用受伤动作探针替代。
+- 伤害测试参数、真实战斗、结算统计已通过 Play Mode 与独立 Windows Player；最新仅内存查看方案亦已通过；结算动作及附加表情已通过 Play Mode、独立 Windows Player 与正式目录运行验证；实际失败战斗分支已通过 Play Mode：隔离濒死状态经实际怪物攻击死亡，进入失败结算、原生受伤动画、统计与技能快照；该分支另已通过 675×1463 独立 Windows Player 的实际战斗、失败结算、统计／快照和返回设置验证，并查看画面；全队幻兽参战仍需接入。
 - 通用弹窗的原遮罩／点击外部关闭和系统消息已通过 Play Mode 与 Windows Player 验证；详情规则说明、技能皮肤替换／视频预览、词条窗口已迁移并通过 Play Mode；召唤物／幻兽超链接、完整来源跳转仍需补齐；已移除手写后备详情和培养布局及技能底部自定义状态文字，不能视为这些公共表现已补齐。
 
 ### 实现范围
+
+本地祝福存档仍按既有位面阶位键保存；读取官方 `system_level_gap_limit.SeasonId` 前通过 `astrological_season_config` 映射为原赛季编号，两类编号不直接比较。规则验证包含两者编号不同的情形。
+
+培养页恢复 `SkillPromotePanel`、`PlayerUseItemContent`、`CharacterPanelSkillItem`、`SkillPromotePanelItem`、`ItemProgress`、`SkillStarInfo`、`StarMiniInfo` 与 `SkillRankUpNotifyDialog` 的原引用和状态字段，复用已有原生图标，不另套图标层级。顶部槽位只切换选择，升级按钮才扣除官方材料；升级／进阶后复用原窗口并播放 `SkillPromotePanel_Switch`。材料 42200 从固定原道具表显式补入技能载荷并绑定原图标，点击显示原道具详情；碎片材料去掉未绑定的模板数量，并按原 `GlobalColors.LightRed`／`Green` 显示是否足够。原 Light 调色板用 `TypeList` 定位颜色，不能把颜色枚举当数组下标。培养和通知名称使用原道具名，不追加手写阶数。同品质只刷新星级；只有跨品质才打开原进阶通知，通知显示实际前后品质、星级与原 `PlayerPropItemVariant` 属性行。上述分支已通过 Play Mode 与 675×1463 独立 Windows Player 的真实射线命中／模拟点击，并查看实际画面，存档重载保留最终阶数与装配方案。
+
+`PlayerSkillDataExt.CanSkillRankUp`／`TryGetAllSkillPromoteRank` 不限制已拥有技能的职业，单次与批量进阶已修正，装配仍保留职业限制；规则验证同时检查费用扣除。祝福升级按 `PlayerSkillDataExt.CheckSkillBlessLevelCanUpgrade`、`PlayerSkllSlotDataExt.IsBlessUpgradeLimitOtherSkillMax` 与 `SystemLevelGapLimitInfoParser` 恢复全八槽基础等级必须达到精确上限、当前赛季实际最低槽级及阈值的开闭边界；前一赛季祝福不计入当前赛季。原 `system_level_gap_limit` 的技能行按原顺序纳入本地规则，边界与跨赛季规则验证已通过。横向培养列表直接适配官方 `LoopHorizontalScrollRect`，保留原虚拟化和 `ScrollToCellWithinTime`，没有另写近似滚动公式；已通过原定位提示的射线命中与模拟点击、实际横向拖拽，截图可见原列表及选中状态；角色等级上限原提示已通过 Play Mode 与独立 Windows Player 的模拟点击和实际截图检查；祝福／赛季提示仍需专门画面验证。下一赛季限制先于角色等级和祝福差额判断，使用原赛季映射及当前赛季技能基础／祝福上限，边界规则验证已通过。
 
 技能运行时使用本地事务保存七套方案、装配槽位和共享培养数据；方案切换不复制槽位投资，装备和费用校验按固定客户端规则执行。技能详情、碎片详情、合成确认、培养页、单次升阶成功及批量升阶结果由 [CharacterSkillPanel.cs](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterSkillPanel.cs) 构建。结果列表支持逐项展示、跳过和滚动；批量展示在原 `ShowItems` 动画事件（0.76666665 秒）后启动，并读取原 `ListItemShowSequence` 的 0.1 秒间隔与首次延迟，遮罩准备期间不提前播放结果；培养播放官方槽位升级动画及 `Skill_Upgrade.ogg`。批量升阶按已确认的离线开放规则处理。
 
 固定版本缺少的 18 个技能碎片 `item` 行，按官方 `Formula.GetPieceIdBySkillId` 与其余 190 组稳定字段关系派生显示元数据；相关字段和图标对应由 `OfficialSkillAssetTools.Validate` 检查，不声称这些行来自服务器原始表。
 
-彩虹品质调色板取自原 `LanguageUtils.SetSkillQualityWithColor → GlobalColors.SetTextColorByQuality → MultiLanguageText.SetColor(Gradient)` 数据路径，并由 `prepare_skill_quality_text.py` 导出固定包 Normal 调色板及六个 `TMPColorGradient` 角度。技能运行时将品质 7 的渐变应用于详情、培养两端与升阶结果文字网格；其他品质移除该效果。渐变关键点和 0°／45° 配置见 [OfficialSkillQualityGradient.cs](../../unity/Assets/Game/Runtime/Presentation/Skills/OfficialSkillQualityGradient.cs) 与 [skill-quality-gradient.json](../../unity/Assets/Official/Skills/skill-quality-gradient.json)。UGUI 网格迁移与实际效果仍须通过 Unity Editor／Play Mode 验证。
+彩虹品质调色板取自原 `LanguageUtils.SetSkillQualityWithColor → GlobalColors.SetTextColorByQuality → MultiLanguageText.SetColor(Gradient)` 数据路径，并由 `prepare_skill_quality_text.py` 导出固定包 Normal 调色板及六个 `TMPColorGradient` 角度。技能运行时将品质 7 的渐变应用于详情、培养两端与升阶结果文字网格；培养与通知的原生 TMP 文本通过 `OnPreRenderText` 更新逐行顶点颜色，其他品质移除该效果。渐变关键点和 0°／45° 配置见 [OfficialSkillQualityGradient.cs](../../unity/Assets/Game/Runtime/Presentation/Skills/OfficialSkillQualityGradient.cs) 与 [skill-quality-gradient.json](../../unity/Assets/Official/Skills/skill-quality-gradient.json)。普通品质与品质 7 的培养／通知已通过 Play Mode 与独立 Windows Player 模拟点击，实际截图可见彩虹文字与原品质图标；运行检查确认文字网格具有多个顶点颜色。
 
 ## 代码与资源入口
 
 以下为官方来源、既有规则与回归参考：`OfflineSkillProfile`、`OfflineSkillProgression`、`OfflineCharacterProgressionService`、`CharacterSkillPanel`、`OfficialCharacterPanelView.OpenSkillPanel()`、`OfficialSkillAssetCatalog`、`Zjcs.Editor.Skills.OfficialSkillAssetTools.Validate()`；客户端依据包括 `CharacterPanelSkillContent`、`CharacterPanelSkillListContent`、`SkillPieceDetailDialog`、`SkillMergeConfirmDialog`、`SkillPromotePanel` 与 `SkillMutiPromoteNotifyPanel`。
+
+本轮培养修复的隔离工程静态检查通过（73,879 个稳定 GUID），Unity 导入／编译、`ProjectTools.Validate` 与原技能载荷哈希检查通过。共享工程同期静态检查仍发现其他模块新增脚本缺少 `.meta`；该结果未用于声称共享工作区全量通过。

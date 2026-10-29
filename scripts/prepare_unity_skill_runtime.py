@@ -139,9 +139,13 @@ def build(data):
 
     limits = list(data["fidelity"]["system_level_limit"])
     maximum_by_rank = {}
+    blessing_by_rank = {}
     for row in limits:
         rank = rank_of_subrank(row["SubRank"])
-        maximum_by_rank[rank] = max(maximum_by_rank.get(rank, 0), row["SkillLevel"])
+        if row["SkillBlessLevel"] == 0:
+            maximum_by_rank[rank] = max(maximum_by_rank.get(rank, 0), row["SkillLevel"])
+        else:
+            blessing_by_rank[rank] = max(blessing_by_rank.get(rank, 0), row["SkillBlessLevel"])
     cultivation = data["cultivation"]["tables"]
     return {
         "PlanCount": rules["game_settings"]["SkillPlanMaxCount"],
@@ -163,7 +167,11 @@ def build(data):
         "LevelLimits": [{key: row[key] for key in
                          ("SubRank", "PlayerLevel", "PlayerBlessLevel", "SkillLevel", "SkillBlessLevel")}
                         for row in limits],
-        "BaseLevelLimits": [{"SubRank": rank, "SkillLevel": level}
+        "LevelGapLimits": [{key: row[key] for key in ("SeasonId", "Level", "LimitLevel", "IsOpen")}
+                           for row in data["fidelity"]["system_level_gap_limit"] if row["DevelopType"] == 1],
+        "Seasons": [{key: row[key] for key in ("Season", "Rank")}
+                    for row in data["fidelity"]["astrological_season_config"]],
+        "BaseLevelLimits": [{"SubRank": rank, "SkillLevel": level, "SkillBlessLevel": blessing_by_rank.get(rank, 0)}
                             for rank, level in sorted(maximum_by_rank.items())],
     }
 

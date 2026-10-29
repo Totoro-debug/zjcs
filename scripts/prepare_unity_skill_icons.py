@@ -79,6 +79,8 @@ def restore():
     currency_id = rules["game_settings"]["SkillSeniorMaterialItemId"]
     assert currency_id == 42200
     currency_uri = "res://assets/official/sprites/item_42200-617dec24f0.png"
+    data["cultivation_items"] = {str(currency_id): next(row for row in rules["item"] if row["ClassId"] == currency_id)}
+    data["cultivation_item_icons"] = {str(currency_id): currency_uri}
     uris.add(currency_uri)
     from prepare_character_prop_bindings import BindingReader
     reader = BindingReader()
@@ -120,6 +122,7 @@ def restore():
     text_schemas.generator.load_dll((ROOT / ".tools/source-packages/official-code/managed/decoded/LoopScrollRect.Runtime.dll").read_bytes())
     from prepare_skill_detail_data import restore_grid
     restore_grid(reader, text_schemas, data)
+    data["item"] = ui["item"]
     from prepare_skill_extra_ui import restore as restore_auxiliary
     auxiliary_sprites = restore_auxiliary(reader, text_schemas, data, city, rules)
     uris.update(auxiliary_sprites)
@@ -157,9 +160,9 @@ def restore():
                     font_size_min=fields["m_fontSizeMin"], font_size_max=fields["m_fontSizeMax"],
                     word_wrap=bool(fields["m_enableWordWrapping"]), overflow=fields["m_overflowMode"],
                     horizontal=fields["m_HorizontalAlignment"], vertical=fields["m_VerticalAlignment"])
-                text.update(native_tmp=("/SkillScheme/SkillPlanName/" in path) or (path.startswith(("/SkillPanelSkillDetailDialog/", "/SkillDetailDialog/")) and
-                    ("/DetailContent/" in path or path.endswith("/LevelGo/LevelText"))) or any(path.startswith("/" + prefix + "/")
-                    for prefix in ("StageDamageTestPanel", "StageLevelCellItem", "StageSetToggleItem", "ToggleText", "DropdownItem", "SkillSkinReplaceDialog", "PlayVideoDialog", "GameEndPanelDamageTest", "ItemDetailDialog", "ItemSourceItem", "PopTipMutilDesc", "TipInfo2", "PopTipEntry", "EntryDetailItem", "FightEndReportPanel", "LocalFightRecordPanel", "FightRecordInfoItem", "NewMark", "ProfessionMismatch", "CenterHintContent")),
+                text.update(native_tmp=path.startswith("/ItemIconSkill/") or ("/SkillScheme/SkillPlanName/" in path) or (path.startswith(("/SkillPanelSkillDetailDialog/", "/SkillDetailDialog/")) and
+                    ("/DetailContent/" in path or path.endswith(("/LevelGo/LevelText", "/QualityText")))) or any(path.startswith("/" + prefix + "/")
+                    for prefix in ("StageDamageTestPanel", "StageLevelCellItem", "StageSetToggleItem", "ToggleText", "DropdownItem", "SkillSkinReplaceDialog", "PlayVideoDialog", "GameEndPanelDamageTest", "ItemDetailDialog", "ItemSourceItem", "PopTipMutilDesc", "TipInfo2", "PopTipEntry", "EntryDetailItem", "FightEndReportPanel", "LocalFightRecordPanel", "FightRecordInfoItem", "NewMark", "ProfessionMismatch", "CenterHintContent", "SkillRankUpNotifyDialog", "PlayerPropItemVariant", "SkillPromotePanel", "SkillPromotePanelItem", "SkillPromotePanelPropItem")),
                     font_style=fields["m_fontStyle"], character_spacing=fields["m_characterSpacing"],
                     word_spacing=fields["m_wordSpacing"], line_spacing=fields["m_lineSpacing"],
                     margin=[fields["m_margin"][key] for key in ("x", "y", "z", "w")])
@@ -208,7 +211,6 @@ def restore():
                 for key, value in fields.items() if key not in ("m_GameObject", "m_Script", "m_Name")}
             reader.inputs[component.assets_file.name + ":" + str(component.path_id)] = reader.apk.provenance(component)
     data["gift_bindings"] = gift_bindings
-    data["item"] = ui["item"]
     reward_ids = {int(key) for row in rules["achievement"] if row["Group"] in (9, 33) for key in row["Reward"]}
     item_rows = {row["ClassId"]: row for row in rules["item"]}
     item_icons = {}
@@ -240,7 +242,8 @@ def restore():
         "ui_dmagae_test_time_out", "ui_dmagae_test_complete", "ui_battle_win_text", "ui_battle_lose_text",
         "ui_skill_stage_monsterhp_text_label", "ui_skill_stage_monsterhurt_text_label",
         "ui_skill_stage_monsterhurt_text_normal", "ui_skill_stage_monsterhp_text_endless", "ui_skill_stage_monsterhurt_text_one",
-        "ui_ItemIconSkillPiece_text1"}
+        "ui_ItemIconSkillPiece_text1", "function_limit_level", "function_limit_season",
+        "ui_blessing_player_skill_level_tip", "ui_blessing_player_skill_level_minlevel_limit"}
     for template in data.values():
         if not isinstance(template, dict) or "root" not in template:
             continue
@@ -252,6 +255,7 @@ def restore():
             if sprite:
                 uris.add(sprite["file"])
     auxiliary_keys.update("damage_test_stage_monster_" + str(row["Id"]) + "_name" for row in data["auxiliary_data"]["damage_test_stage_monster"])
+    auxiliary_keys.update("astrological_season_" + str(season) + "_name" for season in range(1, 8))
     for row in data["auxiliary_data"]["entry"]:
         auxiliary_keys.update("entry_" + str(row["Id"]) + suffix for suffix in ("_name", "_desc"))
         uris.update(row[field] for field in ("Icon_uri", "Bg_uri") if row[field])
@@ -441,6 +445,9 @@ def restore():
                "safe_area_bindings": safe_sources, "character_fonts": character_fonts, "system_message": data["system_message"], "popup_mask": data["popup_mask"], "popup_masks": data["popup_masks"],
                "gift_bindings": gift_bindings, "gift_language_input": data["gift_language_input"], "text_style_inputs": text_sources,
                "rules_input": "assets/official/rules.json", "rules_input_sha256": digest(rules_path),
+               "runtime_rules": {"path": "unity/Assets/Official/Skills/skill-runtime-rules.json",
+                                 "sha256": digest(module / "skill-runtime-rules.json"),
+                                 "sources": manifest["runtime_rules_sources"]},
                "ui_input": "assets/official/ui.json", "ui_input_sha256": digest(ui_path),
                "resources": {uri: city["resources"][uri] for uri in sorted(uris) if uri in city["resources"]},
                "operation": "Recover pinned original skill UI, shared header, safe areas, fonts, system message, popup masks and icon bindings; copy verified decoded sprites."}

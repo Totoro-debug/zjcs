@@ -157,7 +157,9 @@ namespace Zjcs.Offline.Skills
         public OfflineSkillLevelCost[] SlotLevelCosts = Array.Empty<OfflineSkillLevelCost>();
         public OfflineSkillBlessCost[] SlotBlessCosts = Array.Empty<OfflineSkillBlessCost>();
         public OfflineSkillLevelLimit[] LevelLimits = Array.Empty<OfflineSkillLevelLimit>();
+        public OfflineSkillLevelGapLimit[] LevelGapLimits = Array.Empty<OfflineSkillLevelGapLimit>();
         public OfflineSkillSubRankLimit[] BaseLevelLimits = Array.Empty<OfflineSkillSubRankLimit>();
+        public OfflineSkillSeason[] Seasons = Array.Empty<OfflineSkillSeason>();
     }
 
     [Serializable]
@@ -195,10 +197,27 @@ namespace Zjcs.Offline.Skills
     }
 
     [Serializable]
+    public sealed class OfflineSkillLevelGapLimit
+    {
+        public int SeasonId;
+        public int Level;
+        public int LimitLevel;
+        public bool IsOpen;
+    }
+
+    [Serializable]
     public sealed class OfflineSkillSubRankLimit
     {
         public int SubRank;
         public int SkillLevel;
+        public int SkillBlessLevel;
+    }
+
+    [Serializable]
+    public sealed class OfflineSkillSeason
+    {
+        public int Season;
+        public int Rank;
     }
 
     public sealed class OfflineSkillPlayerContext

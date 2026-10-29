@@ -105,7 +105,9 @@ def recover_prefab(reader, text_schemas, bundle, prefab_name, city):
                     "FightRecordDownloadPlayButton", "TMP_InputField", "ContentModerationClickMask",
                     "CharacterPanelSkillListPanelItem", "CharacterPanelSkillListPanelItemNewMark",
                     "SkillPanelRedDotItem", "SkillPanelCanRankUpRedDotItem", "SkillCanMergeRedDotItem",
-                    "ItemIconAttachmentRedDotHandler", "ItemIconAttachmentHint", "RedDotMultiItem"))
+                    "ItemIconAttachmentRedDotHandler", "ItemIconAttachmentHint", "RedDotMultiItem",
+                    "SkillPromotePanel", "PlayerUseItemContent", "CharacterPanelSkillItem",
+                    "SkillContentPanelSkillGroup", "SkillRankUpNotifyDialog", "SkillStarInfo", "StarMiniInfo", "SkillPromotePanelItem", "ItemProgress", "ItemIcon", "LoopHorizontalScrollRect", "SkillSlotlCanLevelUpRedDotItem"))
     for node in reader.walk(pointer.read()):
         row = by_path[node_path(node)]
         for entry in node.m_Component:
@@ -116,7 +118,7 @@ def recover_prefab(reader, text_schemas, bundle, prefab_name, city):
                     row["layout"]["enabled"] = bool(text_schemas.read(obj)["m_Enabled"])
                 if name not in classes:
                     continue
-                fields = read_input_field(text_schemas, obj) if name == "TMP_InputField" else text_schemas.read(obj) if name in ("Toggle", "ToggleGroup", "LoopVerticalScrollRect", "ScrollRect",
+                fields = read_input_field(text_schemas, obj) if name == "TMP_InputField" else text_schemas.read(obj) if name in ("Toggle", "ToggleGroup", "LoopVerticalScrollRect", "LoopHorizontalScrollRect", "ScrollRect",
                     "HorizontalLayoutGroupJSZX", "VerticalLayoutGroupJSZX", "GridLayoutGroupJSZX", "AspectRatioFitter", "Slider") else reader.schemas.read(obj)
                 row.setdefault("original_bindings", {})[name] = {key: convert(value, obj) for key, value in fields.items()
                     if key not in ("m_GameObject", "m_Enabled", "m_Script", "m_Name")}
@@ -221,7 +223,7 @@ def restore(reader, schemas, data, city, rules):
     attachments = []
     for layer, row in enumerate(attachment_config["Templates"]):
         kind = int(row["Type"])
-        if kind not in (4, 8, 10, 13):
+        if kind not in (4, 8, 10, 13, 14):
             continue
         asset = next(value for value in manifest_assets if value["guid"] == row["GuidProxy"]["mAssetGuid"])
         key = "skill_attachment_" + str(kind)
@@ -229,7 +231,7 @@ def restore(reader, schemas, data, city, rules):
         sprites.update(extracted)
         attachments.append({"type": kind, "layer": layer, "guid": asset["guid"],
                             "asset_path": asset["path"], "template": key, "source": data[key]["source"]})
-    assert {row["type"] for row in attachments} == {4, 8, 10, 13}
+    assert {row["type"] for row in attachments} == {4, 8, 10, 13, 14}
     data["skill_list_attachments"] = attachments
     inputs["skill_list_attachments"] = {"source": reader.apk.provenance(attachment_object),
         "sha256": hashlib.sha256(attachment_object.get_raw_data()).hexdigest(), "templates": attachments}
@@ -250,7 +252,7 @@ def restore(reader, schemas, data, city, rules):
         yield node
         for child in node.get("children", []):
             yield from walk(child)
-    for key in ("skill_panel_detail", "skill_plain_detail", "skill_promote", "character_skills", "skill_list_item", "skill_piece_list_item"):
+    for key in ("skill_panel_detail", "skill_plain_detail", "skill_promote", "skill_promote_item", "skill_promote_prop", "skill_rank_notify", "skill_rank_notify_prop", "item", "item_skill", "item_skill_piece", "character_skills", "skill_list_item", "skill_piece_list_item"):
         source = data[key]["source"]
         original = reader.object(source["bundle"], source["path_id"])
         template, extracted = recover_prefab(reader, schemas, source["bundle"], original.read().m_Name, city)
@@ -259,6 +261,30 @@ def restore(reader, schemas, data, city, rules):
         for node in walk(template["root"]):
             if node["path"] in nodes:
                 nodes[node["path"]].setdefault("original_bindings", {}).update(node.get("original_bindings", {}))
+    inputs["cultivation_code"] = []
+    for name in ("SkillPromotePanel", "SkillPromotePanelRankUpContent", "SkillPromotePanelLevelUpContent",
+                 "PlayerUseItemContent", "CharacterPanelSkillItem", "SkillPromotePanelItem", "SkillRankUpNotifyDialog",
+                 "SkillStarInfo", "StarMiniInfo", "PlayerPropItem"):
+        path = ROOT / ".tools/source-packages/official-code/client-source" / (name + ".cs")
+        inputs["cultivation_code"].append({"source": path.relative_to(ROOT).as_posix(),
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
+    for source in ("common-source/Common/PlayerSkillDataExt.cs", "common-source/SkillItemComparer.cs",
+                   "common-source/TextColorList.cs", "common-source/GlobalColors.cs", "common-source/ColorType.cs",
+                   "common-source/Common/SystemLevelGapLimitInfoParser.cs", "common-source/Common/SystemLevelLimitInfoParser.cs",
+                   "common-source/Common/PlayerSkllSlotDataExt.cs", "common-source/Common/AstrologicalSeasonConfigParser.cs",
+                   "common-source/Common/FormulaHandler.cs", "common-source/Common/LanguageUtils.cs"):
+        path = ROOT / ".tools/source-packages/official-code" / source
+        inputs["cultivation_code"].append({"source": path.relative_to(ROOT).as_posix(),
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
+    from prepare_skill_cultivation_scroll import restore as restore_cultivation_scroll
+    inputs["cultivation_scroll"] = restore_cultivation_scroll()
+    palette_receipt = __import__("json").loads((ROOT / "assets/reference/skill-quality-text/source-manifest.json").read_text(encoding="utf-8"))["palette"]
+    palette_object = reader.object(palette_receipt["bundle"], palette_receipt["path_id"])
+    assert hashlib.sha256(palette_object.get_raw_data()).hexdigest() == palette_receipt["sha256"]
+    palette_fields = reader.schemas.read(palette_object)
+    light = next(row for row in palette_fields["TextColorConfig"]["TextColorLists"] if row["ThemeColorType"] == 1)
+    data["cultivation_colors"] = {"Green": palette_fields["Green"], "LightRed": light["TextColors"][light["TypeList"].index(3)]["Color"]}
+    inputs["cultivation_colors"] = palette_receipt
     inputs["plan_input_schema"] = encoding_evidence()
     configs = {}
     # CharacterPanelSkillPlan initializes this original non-interactive scrollbar
