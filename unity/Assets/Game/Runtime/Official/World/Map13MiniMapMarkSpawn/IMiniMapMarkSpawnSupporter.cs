@@ -1,0 +1,14 @@
+using System.Collections.Generic;
+
+namespace Zjcs.Official.World.Map13MiniMap
+{
+using Object=UnityEngine.Object;
+using EcEntityIdentifier=Zjcs.Official.StoryPlayables.EcEntityIdentifier;
+using Zjcs.Official.World.NativeTerrain.Common;
+using Zjcs.Official.World.NativeMap13Labels;
+public interface IMiniMapMarkSpawnSupporter
+{
+	void GetAllMarkUI(List<MiniMapMarkUIBase> result);
+}
+
+}
