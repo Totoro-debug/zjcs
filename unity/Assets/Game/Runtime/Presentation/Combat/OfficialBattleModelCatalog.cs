@@ -187,7 +187,7 @@ namespace Zjcs.Presentation.Combat
             if (manifest == null || manifest.manifest != "854_156383"
                 || manifest.source_path != "assets/official/battle-presentation/models.json"
                 || manifest.output_path != "Assets/Official/Combat/Presentation/models.json"
-                || manifest.source_sha256 != Sha256(Encoding.UTF8.GetBytes(sourceModels.text))
+                || manifest.source_sha256 != Sha256(sourceModels.bytes)
                 || manifest.output_sha256 != manifest.source_sha256)
                 throw new InvalidOperationException("Official battle model source hash does not match.");
         }
