@@ -21,7 +21,10 @@ namespace Zjcs.Presentation.World
                 child.gameObject.SetActive(false);
             }
             preBattleCameraSize = worldCamera.orthographicSize;
-            battleOwnsCamera = battleController.TryGetSceneCamera(out Vector3 position, out float size);
+            Vector3 position = default;
+            float size = 0f;
+            battleOwnsCamera = battleController != null
+                && battleController.TryGetSceneCamera(out position, out size);
             if (battleOwnsCamera)
             {
                 worldCamera.transform.position = position;

@@ -261,12 +261,14 @@ namespace Zjcs.Presentation.Home
             Sprite fallback = hudCatalog.FindSprite("C_none-fa3e084e40.png");
             if (fallback == null) throw new InvalidOperationException("Official battle fallback portrait is missing.");
             OfficialCombatSkillIconCatalog skillIcons = OfficialCombatSkillIconCatalog.TryLoadDefault();
-            OfficialBattleMonsterPortraitCatalog portraits = OfficialBattleMonsterPortraitCatalog.TryLoadDefault();
+            OfficialBattleMonsterPortraitCatalog portraits = privateMapEntry
+                ? Resources.Load<OfficialBattleMonsterPortraitCatalog>("Map12/monster-portraits")
+                : OfficialBattleMonsterPortraitCatalog.TryLoadDefault();
             OfficialBattleModelCatalog models = OfficialBattleModelCatalog.LoadDefault();
             controller.Begin(checkpoint, battleRoot, battleCanvas, gridMapper,
                 itemId => skillIcons == null ? fallback : skillIcons.Find(itemId) ?? fallback,
                 unit => unit.MonsterId > 0 && portraits != null
-                    ? portraits.Find(combat.MonsterIconId(unit.MonsterId)) : fallback,
+                    ? portraits.Find(combat.MonsterIconId(unit.MonsterId)) ?? fallback : fallback,
                 unit => unit.Id == 1 ? null : models.ResolveModelKey(unit),
                 (_, __) => "idle_01",
                 (root, unit) =>
@@ -529,8 +531,7 @@ namespace Zjcs.Presentation.Home
                     ? stage.waveArrayIds[waveIndex] : 0;
                 if (!formations.TryGetValue(arrayId, out DailyDungeonRuntimeFormation formation))
                     throw new InvalidOperationException("Official daily dungeon formation is unavailable: " + arrayId);
-                float[] waveOrigin = scene.waveOrigins != null && waveIndex < scene.waveOrigins.Length
-                    ? scene.waveOrigins[waveIndex] : new[] { 0f, 0f };
+                float[] waveOrigin = WaveOrigin(scene, waveIndex);
                 var wave = new FightBattleWaveState { Index = checkpoint.Waves.Count, Spawned = checkpoint.Waves.Count == 0 };
                 int groupIndex = -1;
                 int previousGroupId = int.MinValue;
@@ -615,6 +616,23 @@ namespace Zjcs.Presentation.Home
                 Array.Copy(stage.waveMonsterIdsFlat, start, waves[index], 0, end - start);
             }
             return waves;
+        }
+
+        private static float[] WaveOrigin(DailyDungeonRuntimeBattleScene scene, int waveIndex)
+        {
+            if (scene?.waveOriginOffsets != null && scene.waveOriginsFlat != null
+                && waveIndex + 1 < scene.waveOriginOffsets.Length)
+            {
+                int start = scene.waveOriginOffsets[waveIndex];
+                int end = scene.waveOriginOffsets[waveIndex + 1];
+                if (start < 0 || end - start != 2 || end > scene.waveOriginsFlat.Length)
+                    throw new InvalidOperationException("Official daily dungeon wave origin offsets are malformed.");
+                return new[] { scene.waveOriginsFlat[start], scene.waveOriginsFlat[start + 1] };
+            }
+            if (scene?.waveOrigins != null && waveIndex < scene.waveOrigins.Length
+                && scene.waveOrigins[waveIndex] != null && scene.waveOrigins[waveIndex].Length >= 2)
+                return scene.waveOrigins[waveIndex];
+            return new[] { 0f, 0f };
         }
 
         private int[] ResolveDailyChallengeAssistSelection(FightOfficialNpcAssistanceCatalog npcCatalog,

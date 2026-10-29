@@ -152,6 +152,8 @@ namespace Zjcs.Offline.World
         public DailyDungeonRuntimeBattleCell[] cells;
         public DailyDungeonRuntimeBattleFaction[] factions;
         public float[][] waveOrigins;
+        public float[] waveOriginsFlat;
+        public int[] waveOriginOffsets;
     }
 
     [Serializable]

@@ -267,6 +267,10 @@ def build() -> dict:
         grid = row["FightGridGroundComponent"]
         fight = row["FightComponent"]
         normal = row.get("FightRoleMonsterNormalComponent") or {}
+        wave_origins = [[float(pos["X"]), float(pos["Y"])]
+                        for pos in (normal.get("WaveOriPos") or [])]
+        wave_origins_flat = [coordinate for origin in wave_origins for coordinate in origin]
+        wave_origin_offsets = list(range(0, len(wave_origins_flat) + 1, 2))
         battle_scene_output.append({
             "gameId": game_id,
             "sceneName": fight["SceneName"],
@@ -287,8 +291,9 @@ def build() -> dict:
                  "entryDirections": value["EntryDirList"]}
                 for value in fight["FactionInfoList"]
             ],
-            "waveOrigins": [[float(pos["X"]), float(pos["Y"])]
-                            for pos in (normal.get("WaveOriPos") or [])],
+            "waveOrigins": wave_origins,
+            "waveOriginsFlat": wave_origins_flat,
+            "waveOriginOffsets": wave_origin_offsets,
         })
 
     formation_output = []
@@ -363,7 +368,8 @@ def build() -> dict:
         },
     }
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
-    RECEIPT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    with RECEIPT.open("w", encoding="utf-8", newline="\n") as stream:
+        stream.write(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n")
     return receipt
 
 
