@@ -45,7 +45,7 @@ namespace Zjcs.Presentation.Character
             }
             var fields = CharacterModelPackage.AsObject(messageTemplate["bindings"], "SystemMsgPanel fields");
             string textPath = Convert.ToString(fields["MsgText"], CultureInfo.InvariantCulture);
-            messageNodes[textPath].GetComponent<Text>().text = value;
+            SetAuxiliaryText(messageNodes[textPath], value);
             if (messageRoutine != null) StopCoroutine(messageRoutine);
             messageRoutine = StartCoroutine(ShowOriginalMessage(
                 Convert.ToSingle(fields["ShowStayTime"], CultureInfo.InvariantCulture)));

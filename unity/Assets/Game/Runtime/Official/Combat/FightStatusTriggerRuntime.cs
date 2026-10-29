@@ -38,7 +38,7 @@ namespace Zjcs.Combat.Official
                         || (trigger.TargetPos != 0 && trigger.TargetPos != 1)
                         || (trigger.TargetPos == 1 && source.Id != listener.Id)
                         || !Roll(trigger.BasePercent, random)) continue;
-                    result.Add(trigger);
+                    result.Add(trigger.WithSource(status));
                     added++;
                 }
                 if (added > 0) status.RoundStartTriggeredCount++;
@@ -75,7 +75,7 @@ namespace Zjcs.Combat.Official
                             || !Roll(trigger.BasePercent, random)) continue;
                         result.Add(new FightBattleStatusSkillInvocation
                         {
-                            Trigger = trigger,
+                            Trigger = trigger.WithSource(status),
                             SourceUnitId = status.OwnerId,
                             TargetUnitId = listener.Id,
                             TargetPositionUnitId = listener.Id
@@ -109,7 +109,7 @@ namespace Zjcs.Combat.Official
                             || !Roll(trigger.BasePercent, random)) continue;
                         result.Add(new FightBattleStatusSkillInvocation
                         {
-                            Trigger = trigger,
+                            Trigger = trigger.WithSource(status),
                             SourceUnitId = owner.Id,
                             TargetUnitId = owner.Id,
                             TargetPositionUnitId = owner.Id
@@ -165,7 +165,7 @@ namespace Zjcs.Combat.Official
                                 trigger.BasePercent), random)) continue;
                     result.Add(new FightBattleStatusSkillInvocation
                     {
-                        Trigger = trigger,
+                        Trigger = trigger.WithSource(status),
                         SourceUnitId = sourceId,
                         TargetUnitId = targetId,
                         TargetPositionUnitId = targetPosition.Id
@@ -342,7 +342,7 @@ namespace Zjcs.Combat.Official
                 if (trigger == null || trigger.EntityId <= 0 || trigger.AffectedByProp
                     || trigger.Source != 2 || trigger.Target != 2 || trigger.UseAI
                     || trigger.StackedCountToDamageFactor || !Roll(trigger.BasePercent, random)) continue;
-                output.Add(trigger);
+                output.Add(trigger.WithSource(status));
             }
         }
 

@@ -1334,6 +1334,16 @@ $passiveRunner = [Zjcs.Combat.Official.FightBattleExecutor]::Begin(
     $passiveCheckpoint, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new(),
     $officialCatalog, $skillItems)
 Assert-Combat ($passiveOwner.Statuses.Count -eq 1 -and $passiveOwner.Statuses[0].ClassId -eq 25160 -and $passiveOwner.Statuses[0].StartRound -eq 0) 'Equipped passive status was not initialized at battle start'
+$passiveReportCopy = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(
+    [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($passiveCheckpoint))
+$passiveReportCopy.Units[0].Statuses.Clear()
+$passiveReportCopy = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(
+    [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($passiveReportCopy))
+$passiveSnapshot = $passiveReportCopy.Units[0].ReportSkillSnapshots[0]
+Assert-Combat ($passiveSnapshot.ItemId -eq 10128 -and $passiveSnapshot.EntityId -eq 25160 -and $passiveSnapshot.Rank -eq 2 -and $passiveSnapshot.Level -eq 3 -and $passiveSnapshot.SubRank -eq 1 -and $passiveReportCopy.Units[0].Skills.Count -eq 0 -and $passiveReportCopy.Units[0].SkillState.Slots.Count -eq 0) 'Expired passive report detail lost its original item rank/level or created an active action slot'
+$passiveRoundSkills = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectRoundStartSkills(
+    $passiveOwner, $passiveOwner, $passiveCheckpoint.Units, [Zjcs.Combat.Official.FightRandomStream]::new(18))
+Assert-Combat ($passiveRoundSkills.Count -eq 1 -and $passiveRoundSkills[0].EntityId -eq 12740 -and $passiveRoundSkills[0].SourceSkillItemId -eq 10128 -and $passiveRoundSkills[0].SourceSkillRank -eq 2 -and $passiveRoundSkills[0].SourceSkillLevel -eq 3 -and $passiveRoundSkills[0].SourceSubRank -eq 1) 'Triggered passive skill lost the original FightSourceInfo item/rank/level'
 
 # HP accumulated damage passives retain real damage across healing and release their configured skill.
 $accumulatingOwner = New-WaveUnit 9 2 0 0 1000

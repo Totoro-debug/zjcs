@@ -126,7 +126,11 @@ def restore():
     from prepare_skill_extra_ui import restore as restore_auxiliary
     auxiliary_sprites = restore_auxiliary(reader, text_schemas, data, city, rules)
     uris.update(auxiliary_sprites)
+    from prepare_skill_system_messages import restore_system_message
+    data["system_message"], message_uris = restore_system_message(reader, text_schemas, city)
+    uris.update(message_uris)
     text_sources = {}
+    font_sources = {}
     safe_sources = {}
     character_fonts = {}
     def layout_nodes(node):
@@ -152,6 +156,12 @@ def restore():
                 if class_name in ("Image", "MirrorImage") and "image" in by_path[path]:
                     fields = text_schemas.read(component) if class_name == "Image" else reader.schemas.read(component)
                     by_path[path]["image"]["enabled"] = bool(fields["m_Enabled"])
+                if class_name == "TMPEffect":
+                    fields = reader.schemas.read(component)
+                    by_path[path].setdefault("original_bindings", {})[class_name] = {
+                        key: value for key, value in fields.items() if key not in ("m_GameObject", "m_Script", "m_Name")}
+                    text_sources[path + ":effect"] = {"source": reader.apk.provenance(component),
+                        "sha256": hashlib.sha256(component.get_raw_data()).hexdigest()}
                 if class_name != "TextMeshProUGUI":
                     continue
                 fields = text_schemas.read(component)
@@ -160,13 +170,38 @@ def restore():
                     font_size_min=fields["m_fontSizeMin"], font_size_max=fields["m_fontSizeMax"],
                     word_wrap=bool(fields["m_enableWordWrapping"]), overflow=fields["m_overflowMode"],
                     horizontal=fields["m_HorizontalAlignment"], vertical=fields["m_VerticalAlignment"])
-                text.update(native_tmp=path.startswith("/ItemIconSkill/") or ("/SkillScheme/SkillPlanName/" in path) or (path.startswith(("/SkillPanelSkillDetailDialog/", "/SkillDetailDialog/")) and
-                    ("/DetailContent/" in path or path.endswith(("/LevelGo/LevelText", "/QualityText")))) or any(path.startswith("/" + prefix + "/")
-                    for prefix in ("StageDamageTestPanel", "StageLevelCellItem", "StageSetToggleItem", "ToggleText", "DropdownItem", "SkillSkinReplaceDialog", "PlayVideoDialog", "GameEndPanelDamageTest", "ItemDetailDialog", "ItemSourceItem", "PopTipMutilDesc", "TipInfo2", "PopTipEntry", "EntryDetailItem", "FightEndReportPanel", "LocalFightRecordPanel", "FightRecordInfoItem", "NewMark", "ProfessionMismatch", "CenterHintContent", "SkillRankUpNotifyDialog", "PlayerPropItemVariant", "SkillPromotePanel", "SkillPromotePanelItem", "SkillPromotePanelPropItem")),
+                text.update(native_tmp=True,
                     font_style=fields["m_fontStyle"], character_spacing=fields["m_characterSpacing"],
                     word_spacing=fields["m_wordSpacing"], line_spacing=fields["m_lineSpacing"],
                     margin=[fields["m_margin"][key] for key in ("x", "y", "z", "w")])
-                text_sources[path] = {"source": reader.apk.provenance(component), "style": {key: value for key, value in text.items() if key != "value"}}
+                gradient = fields["m_fontColorGradient"]
+                preset = fields["m_fontColorGradientPreset"]
+                if preset["m_PathID"]:
+                    gradient_object = PPtr(**preset, assetsfile=component.assets_file).deref()
+                    gradient = text_schemas.read(gradient_object)
+                    text_sources[path + ":gradient"] = {"source": reader.apk.provenance(gradient_object),
+                        "sha256": hashlib.sha256(gradient_object.get_raw_data()).hexdigest()}
+                by_path[path].setdefault("original_bindings", {})["TextMeshProUGUI"] = {
+                    "m_enableVertexGradient": fields["m_enableVertexGradient"],
+                    "m_fontColorGradient": gradient}
+                text_sources[path] = {"source": reader.apk.provenance(component),
+                    "sha256": hashlib.sha256(component.get_raw_data()).hexdigest(),
+                    "style": {key: value for key, value in text.items() if key != "value"}}
+                font_object = PPtr(**fields["m_fontAsset"], assetsfile=component.assets_file).deref()
+                language_components = [entry.component.deref() for entry in node.m_Component
+                    if entry.component.deref().type.name == "MonoBehaviour"
+                    and entry.component.deref().read(check_read=False).m_Script.read().m_ClassName == "MultiLanguageText"]
+                text_sources[path]["localized_font"] = [
+                    {"source": reader.apk.provenance(value),
+                     "sha256": hashlib.sha256(value.get_raw_data()).hexdigest(),
+                     "enabled": bool(reader.schemas.read(value)["m_Enabled"])} for value in language_components]
+                font_source = reader.apk.provenance(font_object)
+                font_key = (font_source["bundle_hash"], font_source["path_id"])
+                if font_key not in font_sources:
+                    font_sources[font_key] = {"source": font_source,
+                        "sha256": hashlib.sha256(font_object.get_raw_data()).hexdigest(),
+                        "name": font_object.read(check_read=False).m_Name}
+                text_sources[path]["font"] = font_sources[font_key]
     # Preserve SafeArea flags separately from the prefab's editor-time rectangle.
     for source in (character_source, skill_source):
         for node in reader.walk(reader.object(source["bundle"], source["path_id"]).read()):
@@ -185,9 +220,6 @@ def restore():
                     font = PPtr(**fields["m_fontAsset"], assetsfile=component.assets_file).deref()
                     character_fonts[path] = {"name": font.read(check_read=False).m_Name,
                         "source": reader.apk.provenance(component), "font_source": reader.apk.provenance(font)}
-    from prepare_skill_system_messages import restore_system_message
-    data["system_message"], message_uris = restore_system_message(reader, text_schemas, city)
-    uris.update(message_uris)
     safe_sources.update(data["system_message"]["safe_area_bindings"])
     data["character_fonts"] = character_fonts
     data["safe_area_bindings"] = safe_sources
@@ -405,6 +437,22 @@ def restore():
     from prepare_skill_character_shader import restore as restore_character_shader
     native_text["character_shader"] = restore_character_shader(reader)
     data["native_text"] = native_text
+    font_hash = native_text["font"]["inputs"][0]["object_sha256"]
+    font_config_object = apk.asset("textmesh_pro_assets_fonts_&_materials", "MultiLanguageFontConfig.json")
+    font_config = json.loads(font_config_object.read().m_Script)
+    assert font_config["RegionFontAssetDict"]["CN"] == {"Default": "FZY4K SDF - dynamic", "Fallbacks": []}
+    assert font_config["FontAssetDict"]["zh_CN"] == "FZY4K SDF - dynamic"
+    language_code = ROOT / ".tools/source-packages/official-code/framework-firstpass-source"
+    data["localized_font"] = {
+        "source": apk.provenance(font_config_object),
+        "sha256": hashlib.sha256(font_config_object.get_raw_data()).hexdigest(),
+        "config": font_config, "region": "CN", "language": "zh_CN",
+        "code": [{"path": (language_code / name).relative_to(ROOT).as_posix(),
+                  "sha256": digest(language_code / name)}
+                 for name in ("MultiLanguageText.cs", "MultiLanguageFontService.cs")],
+        "operation": "MultiLanguageText.RefreshFont selects the original CN region FZY4K font before Refresh text; preserve prefab font provenance and verify each differing font has an enabled MultiLanguageText."}
+    assert all(row["font"]["sha256"] == font_hash or any(value["enabled"] for value in row["localized_font"])
+        for row in text_sources.values() if "font" in row), font_sources
     files = {row["path"]: row for row in manifest["files"]}
     for row in native_text["font"]["outputs"]:
         path = (ROOT / row["path"]).relative_to(ROOT / "unity").as_posix()
@@ -438,7 +486,7 @@ def restore():
                "native_auxiliary_code": source_records(),
                "components": records, "threshold": threshold, "empty_prefab": data["item_empty"]["source"],
                "shared_header": data["shared_header"], "character_followers": followers,
-               "native_text": native_text,
+               "native_text": native_text, "localized_font": data["localized_font"],
                "detail_data_inputs": data["detail_data"]["inputs"],
                "auxiliary_inputs": data["auxiliary_inputs"],
                "auxiliary_sprites": {uri: {key: value for key, value in row.items() if key != "bytes"} for uri, row in auxiliary_sprites.items()},

@@ -10,6 +10,7 @@ using System.Linq;
 using UnityEngine;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.Skills;
+using Zjcs.Offline.Equipment;
 using Zjcs.Presentation.Skills;
 
 namespace Zjcs.Editor.Skills
@@ -174,6 +175,16 @@ namespace Zjcs.Editor.Skills
                 throw new BuildFailedException("Official skill plans must match GameSettings.SkillPlanMaxCount.");
             if (progressionRules.Skills.Length != 394)
                 throw new BuildFailedException("Official skill progression rules did not load all 394 active and passive skills.");
+            var ui = (Dictionary<string, object>)OfficialEquipmentJson.Parse(payloads[4].text);
+            var extraIcons = (Dictionary<string, object>)ui["skill_item_icons"];
+            var characterData = characterCatalog.Load();
+            foreach (var skill in progressionRules.Skills) {
+                string uri = characterData.ItemIconUri(skill.ClassId);
+                if (string.IsNullOrEmpty(uri) && extraIcons.TryGetValue(skill.ClassId.ToString(), out var extra))
+                    uri = Convert.ToString(extra);
+                if (characterCatalog.FindSprite(uri) == null && catalog.FindSprite(uri) == null)
+                    throw new BuildFailedException("Original skill icon is not bound: " + skill.ClassId);
+            }
             if (catalog.FindSprite("res://assets/official/sprites/ImgDot-4ed3349f24.png") == null)
                 throw new BuildFailedException("A pinned CharacterPanelSkillPanel sprite binding did not resolve.");
             Debug.Log("Official skill data, quality gradient, 394 progression rules, source hashes and "

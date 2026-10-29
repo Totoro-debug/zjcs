@@ -133,7 +133,7 @@ namespace Zjcs.Presentation.Character
                 image.raycastTarget = HasScript(source, "Button") || source.button || HasScript(source, "TabItem");
             }
             if (source.text != null && source.text.native_tmp)
-                BuildNativeText(instance, source.text);
+                BuildNativeText(instance, source.text, source.original_bindings);
             else if (source.text != null && CharacterPanelNodeFactory.UiFont != null)
             {
                 Text text = null;
@@ -479,7 +479,7 @@ namespace Zjcs.Presentation.Character
                 ? fallback : new Color(values[0], values[1], values[2], values[3]);
         }
 
-        private static void BuildNativeText(GameObject instance, OfficialCharacterPanelText source)
+        private static void BuildNativeText(GameObject instance, OfficialCharacterPanelText source, Dictionary<string, object> bindings)
         {
             var font = instance.AddComponent<OfficialSkillFontLease>().Acquire(
                 Zjcs.Presentation.Skills.OfficialSkillAssetCatalog.LoadDefault().NativeUiFont);
@@ -504,6 +504,7 @@ namespace Zjcs.Presentation.Character
             text.richText = true;
             text.raycastTarget = false;
             text.text = source.value ?? string.Empty;
+            OfficialSkillNativeTextStyle.Apply(text, bindings);
         }
 
         private static TextAnchor TextAlignment(int horizontal, int vertical)

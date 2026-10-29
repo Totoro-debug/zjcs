@@ -43,7 +43,7 @@ namespace Zjcs.Presentation.Character
             string path = windowNodes.First(pair => pair.Value == icon).Key;
             var iconNodes = windowNodes.Where(pair => pair.Key == path || pair.Key.StartsWith(path + "/", StringComparison.Ordinal))
                 .ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal);
-            BindOriginalSkillIcon(skillId, icon, iconNodes);
+            BindOriginalSkillIcon(skillId, icon, iconNodes, iconLayout: FindLayoutNode(root, path));
             FindDeep(icon, "SkillStarInfo")?.gameObject.SetActive(false);
             int rank = OfflineSkillProgression.OwnedRank(progression.Player.Skills, skillId);
             BindOriginalPromoteProperties(skillId, rank, OriginalMinimumSkillLevel(), windowNodes);

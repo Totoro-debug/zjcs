@@ -59,6 +59,8 @@ namespace Zjcs.Combat.Official
         public FightVoodooDollLink VoodooDoll;
         public List<FightPropertyValue> Properties = new List<FightPropertyValue>();
         public List<FightBattleSkillDefinition> Skills = new List<FightBattleSkillDefinition>();
+        // Original report items retain rank/level even after their passive status expires.
+        public List<FightBattleSkillDefinition> ReportSkillSnapshots = new List<FightBattleSkillDefinition>();
         public FightSkillAgentState SkillState = new FightSkillAgentState();
         public FightTurnUnit Turn = new FightTurnUnit();
         public List<FightBattleStatusState> Statuses = new List<FightBattleStatusState>();
@@ -98,6 +100,20 @@ namespace Zjcs.Combat.Official
         public bool UseAI;
         public int TargetPos;
         public bool StackedCountToDamageFactor;
+        public int SourceSkillItemId;
+        public int SourceSkillRank;
+        public int SourceSkillLevel;
+        public int SourceSubRank;
+
+        public FightBattleStatusStateTrigger WithSource(FightBattleStatusState status)
+        {
+            var result = (FightBattleStatusStateTrigger)MemberwiseClone();
+            result.SourceSkillItemId = FightBattleStatusReportSource.Resolve(status).SkillItemId;
+            result.SourceSkillRank = status.SourceSkillRank;
+            result.SourceSkillLevel = status.SourceSkillLevel;
+            result.SourceSubRank = status.SourceSubRank;
+            return result;
+        }
     }
 
     [Serializable]

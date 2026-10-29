@@ -89,6 +89,7 @@ namespace Zjcs.Presentation.Character
 
         public event Action Changed;
         public event Action<bool> PlayerHeaderVisibilityChanged;
+        public event Action<bool> PublicPlayerInfoVisibilityChanged;
         public string LastMessage { get; private set; } = string.Empty;
 
         public bool IsOpen => panel != null;
@@ -171,7 +172,7 @@ namespace Zjcs.Presentation.Character
             promoteNodes = null;
             promoteButtons = null;
             cultivationScrollSource = null;
-            if (installMask != null) Destroy(installMask);
+            if (installMask != null) ToggleOriginalInstallMask(false);
             installMask = null;
             pendingSkillId = 0;
             pendingType = 0;
@@ -200,7 +201,7 @@ namespace Zjcs.Presentation.Character
             if (auxiliaryDialog != null) { var back = auxiliaryReturn; CloseAuxiliary(); back?.Invoke(); return true; }
             if (installMask != null)
             {
-                ClearPendingInstall();
+                CancelOriginalInstall();
                 return true;
             }
             if (recommendDialog != null)
@@ -579,17 +580,7 @@ namespace Zjcs.Presentation.Character
                 for (int i = mount.childCount - 1; i >= 0; i--)
                     if (mount.GetChild(i).name == "SkillIcon") Destroy(mount.GetChild(i).gameObject);
                 BuildSkillIcon(skillId, mount, "SkillIcon");
-                Text level = FindDeep(child, "LevelText")?.GetComponent<Text>();
-                if (level != null)
-                {
-                    int slotLevel = progression.SkillProgression == null ? 0
-                        : progression.SkillProgression.SlotLevel(progression.Player.Skills, itemType, index);
-                    level.text = slotLevel.ToString(CultureInfo.InvariantCulture) + "级";
-                }
-                Transform selected = FindDeep(child, "SelAnimGo");
-                bool highlighted = selectedType == itemType
-                    && (selectedSlot == index || (pendingSkillId != 0 && pendingType == itemType));
-                if (selected != null) selected.gameObject.SetActive(highlighted);
+                RefreshOriginalSlotLevel(child, itemType, index);
                 index++;
             }
         }
@@ -757,6 +748,7 @@ namespace Zjcs.Presentation.Character
                     label.gameObject.SetActive(level != 0);
                     SetAuxiliaryText(label.GetComponent<RectTransform>(), string.Format(CultureInfo.InvariantCulture,
                         OriginalDetailText("ui_common_level_style_3"), level));
+                    RefreshOriginalIconBless(icon.transform, level);
                 }
                 Graphic target = item.GetComponent<Graphic>();
                 if (target == null)
@@ -910,7 +902,8 @@ namespace Zjcs.Presentation.Character
         }
 
         private void BindOriginalSkillIcon(int itemId, RectTransform root,
-            Dictionary<string, RectTransform> iconNodes, int? snapshotRank = null, int? snapshotSkin = null)
+            Dictionary<string, RectTransform> iconNodes, int? snapshotRank = null, int? snapshotSkin = null,
+            Dictionary<string, object> iconLayout = null)
         {
             Dictionary<string, object> item = progression.Catalog.FindItem(itemId);
             int quality = snapshotRank.HasValue && snapshotRank.Value > 0
@@ -930,7 +923,12 @@ namespace Zjcs.Presentation.Character
             }
             RectTransform icon = iconNodes.Values.FirstOrDefault(value => value.name == "icon");
             string uri = progression.Catalog.ItemIconUri(itemId);
-            Sprite sprite = string.IsNullOrEmpty(uri) ? null : assets.FindSprite(uri);
+            int iconItemId = progression.SkillRules?.Skills
+                .FirstOrDefault(value => value.PieceItemId == itemId)?.ClassId ?? itemId;
+            if (string.IsNullOrEmpty(uri) && skillUiTemplates.TryGetValue("skill_item_icons", out var extraIcons)
+                && AuxObject(extraIcons).TryGetValue(iconItemId.ToString(CultureInfo.InvariantCulture), out var extraIcon))
+                uri = Convert.ToString(extraIcon);
+            Sprite sprite = string.IsNullOrEmpty(uri) ? null : assets.FindSprite(uri) ?? skillAssets.FindSprite(uri);
             int equippedSkin = snapshotSkin ?? progression.EquippedSkillSkinId(itemId);
             if (equippedSkin > 0) sprite = assets.FindSkillSkinSprite(progression.Catalog, equippedSkin)
                 ?? throw new InvalidOperationException("Original equipped skill skin icon is absent: " + equippedSkin);
@@ -945,6 +943,11 @@ namespace Zjcs.Presentation.Character
                 }
             }
             ConfigureSkillStars(root, itemId, quality, snapshotRank);
+            if (itemId > 0 && progression.SkillDefinition(itemId) != null)
+            {
+                var binding = FindOriginalComponent(iconLayout ?? AuxObject(itemTemplate["root"]), "ItemIconSkill");
+                RefreshOriginalBless(binding, "CurLevelTextView", iconNodes, false);
+            }
             // ItemIcon.Clear hides prefab editor placeholders before Init.
             // The piece prefab's count container has a trailing space.
             foreach (RectTransform node in iconNodes.Values)
@@ -969,8 +972,8 @@ namespace Zjcs.Presentation.Character
             progress.gameObject.SetActive(true);
             Transform countRoot = progress.Find("BgCountText");
             countRoot.gameObject.SetActive(true);
-            SetTextValue(countRoot.Find("LeftTxt").GetComponent<Text>(), OfficialPropFormat.Compact(count));
-            SetTextValue(countRoot.Find("RightTxt").GetComponent<Text>(), OfficialPropFormat.Compact(required));
+            SetTextValue(countRoot.Find("LeftTxt").GetComponent<TMP_Text>(), OfficialPropFormat.Compact(count));
+            SetTextValue(countRoot.Find("RightTxt").GetComponent<TMP_Text>(), OfficialPropFormat.Compact(required));
         }
 
         private void ConfigureSkillStars(RectTransform icon, int skillId, int quality, int? snapshotRank = null)
@@ -1098,10 +1101,10 @@ namespace Zjcs.Presentation.Character
             BindConfirmationButton(cancelNode, CloseUpgradeConfirmation);
         }
 
-        private static Text FindText(Transform root, string nodeName)
+        private static TMP_Text FindText(Transform root, string nodeName)
         {
             Transform node = FindDeep(root, nodeName);
-            return node == null ? null : node.GetComponentInChildren<Text>(true);
+            return node == null ? null : node.GetComponentInChildren<TMP_Text>(true);
         }
 
         private static void BindConfirmationButton(Transform node, Action action)
@@ -1183,10 +1186,10 @@ namespace Zjcs.Presentation.Character
                         itemNodes, itemButtons);
                     Transform icon = DialogNode(itemNodes, "ItemIconSkill") ?? row;
                     BuildSkillIcon(change.SkillId, icon, "PromotedSkillIcon");
-                    SetTextValue(DialogNode(itemNodes, "BottomText")?.GetComponent<Text>(), SkillName(change.SkillId));
-                    SetTextValue(DialogNode(itemNodes, "CountText")?.GetComponent<Text>(), change.ToRank.ToString(CultureInfo.InvariantCulture));
-                    SetTextValue(DialogNode(itemNodes, "DebugRankText")?.GetComponent<Text>(), change.ToRank.ToString(CultureInfo.InvariantCulture));
-                    SetTextValue(DialogNode(itemNodes, "Count")?.GetComponent<Text>(), change.ToRank.ToString(CultureInfo.InvariantCulture));
+                    SetTextValue(DialogNode(itemNodes, "BottomText")?.GetComponent<TMP_Text>(), SkillName(change.SkillId));
+                    SetTextValue(DialogNode(itemNodes, "CountText")?.GetComponent<TMP_Text>(), change.ToRank.ToString(CultureInfo.InvariantCulture));
+                    SetTextValue(DialogNode(itemNodes, "DebugRankText")?.GetComponent<TMP_Text>(), change.ToRank.ToString(CultureInfo.InvariantCulture));
+                    SetTextValue(DialogNode(itemNodes, "Count")?.GetComponent<TMP_Text>(), change.ToRank.ToString(CultureInfo.InvariantCulture));
                     CanvasGroup rowAlpha = row.GetComponent<CanvasGroup>();
                     if (rowAlpha == null) rowAlpha = row.gameObject.AddComponent<CanvasGroup>();
                     rowAlpha.alpha = 0f;
@@ -1349,7 +1352,7 @@ namespace Zjcs.Presentation.Character
                     target = raycast;
                 }
                 tabButton.targetGraphic = target;
-                SetTextValue(DialogNode(tabNodes, "text")?.GetComponent<Text>(),
+                SetTextValue(DialogNode(tabNodes, "text")?.GetComponent<TMP_Text>(),
                     rank.ToString(CultureInfo.InvariantCulture) + "\u9636");
                 recommendationRankTabs.Add(rank, tab.gameObject);
                 int capturedRank = rank;
@@ -1392,8 +1395,8 @@ namespace Zjcs.Presentation.Character
                     CharacterModelPackage.AsObject(skillUiTemplates["skill_recommend_item"],
                         "skill_recommend_item")), parent, itemNodes, itemButtons);
                 item.gameObject.name = "SkillRecommendItem_" + recommendation.Id.ToString(CultureInfo.InvariantCulture);
-                SetTextValue(DialogNode(itemNodes, "TitleTxt")?.GetComponent<Text>(), recommendation.name);
-                SetTextValue(DialogNode(itemNodes, "DescText")?.GetComponent<Text>(), recommendation.description);
+                SetTextValue(DialogNode(itemNodes, "TitleTxt")?.GetComponent<TMP_Text>(), recommendation.name);
+                SetTextValue(DialogNode(itemNodes, "DescText")?.GetComponent<TMP_Text>(), recommendation.description);
                 BuildRecommendedSkillIcons(itemNodes, "ActiveSkillGo", recommendation.ActiveSkillList);
                 BuildRecommendedSkillIcons(itemNodes, "PassiveSkillGo", recommendation.PassiveSkillList);
                 OfficialSkillRecommendation captured = recommendation;
@@ -1798,8 +1801,8 @@ namespace Zjcs.Presentation.Character
             if (definition == null) return;
             CloseSkillDetail();
             detailDialog = BuildOfficialDialog("skill_panel_detail", out var dialogNodes, out var dialogButtons);
-            Text name = DialogNode(dialogNodes, "NameText")?.GetComponent<Text>();
-            Text rank = DialogNode(dialogNodes, "Count")?.GetComponent<Text>();
+            TMP_Text name = DialogNode(dialogNodes, "NameText")?.GetComponent<TMP_Text>();
+            TMP_Text rank = DialogNode(dialogNodes, "Count")?.GetComponent<TMP_Text>();
             int ownedRank = OfflineSkillProgression.OwnedRank(progression.Player.Skills, skillId);
             SetTextValue(name, SkillName(skillId));
             SetTextValue(rank, ownedRank.ToString(CultureInfo.InvariantCulture));
@@ -1871,14 +1874,14 @@ namespace Zjcs.Presentation.Character
             effect.Configure(target, qualityGradient, angle);
         }
 
-        private static Text FindTextNodeEnding(Dictionary<string, RectTransform> dialogNodes, string suffix)
+        private static TMP_Text FindTextNodeEnding(Dictionary<string, RectTransform> dialogNodes, string suffix)
         {
             RectTransform node = dialogNodes.FirstOrDefault(pair =>
                 pair.Key.EndsWith(suffix, StringComparison.Ordinal)).Value;
-            return node == null ? null : node.GetComponent<Text>();
+            return node == null ? null : node.GetComponent<TMP_Text>();
         }
 
-        private static void SetTextValue(Text text, string value)
+        private static void SetTextValue(TMP_Text text, string value)
         {
             if (text != null) text.text = value ?? string.Empty;
         }
@@ -1906,10 +1909,10 @@ namespace Zjcs.Presentation.Character
             int rank = OfflineSkillProgression.OwnedRank(progression.Player.Skills, skillId);
             long count = progression.Player.Inventory.Where(value => value != null
                 && value.ItemId == definition.PieceItemId).Sum(value => value.Count);
-            SetTextValue(DialogNode(dialogNodes, "NameText")?.GetComponent<Text>(), ItemName(definition.PieceItemId));
-            SetTextValue(DialogNode(dialogNodes, "CountText")?.GetComponent<Text>(),
+            SetTextValue(DialogNode(dialogNodes, "NameText")?.GetComponent<TMP_Text>(), ItemName(definition.PieceItemId));
+            SetTextValue(DialogNode(dialogNodes, "CountText")?.GetComponent<TMP_Text>(),
                 count.ToString("N0", CultureInfo.InvariantCulture));
-            SetTextValue(DialogNode(dialogNodes, "TitleText")?.GetComponent<Text>(), ItemName(definition.PieceItemId));
+            SetTextValue(DialogNode(dialogNodes, "TitleText")?.GetComponent<TMP_Text>(), ItemName(definition.PieceItemId));
             Transform icon = DialogNode(dialogNodes, "Piece") ?? DialogNode(dialogNodes, "PieceIcon");
             Image iconImage = icon == null ? null : icon.GetComponent<Image>();
             string iconUri = progression.Catalog.ItemIconUri(definition.PieceItemId);
@@ -1951,12 +1954,12 @@ namespace Zjcs.Presentation.Character
             if (definition == null || progression.SkillMergePiece(skillId) <= 0) return;
             if (mergeDialog != null) Destroy(mergeDialog);
             mergeDialog = BuildOfficialDialog("skill_merge_confirm", out var dialogNodes, out var dialogButtons);
-            SetTextValue(DialogNode(dialogNodes, "TitleText")?.GetComponent<Text>(), "合成技能");
+            SetTextValue(DialogNode(dialogNodes, "TitleText")?.GetComponent<TMP_Text>(), "合成技能");
             Transform pieceIcon = DialogNode(dialogNodes, "ItemIconSkillPiece");
             Transform skillIcon = DialogNode(dialogNodes, "ItemIconSkill");
             if (pieceIcon != null) BuildSkillIcon(definition.PieceItemId, pieceIcon, "PieceIcon");
             if (skillIcon != null) BuildSkillIcon(skillId, skillIcon, "SkillIcon");
-            SetTextValue(DialogNode(dialogNodes, "CountText")?.GetComponent<Text>(),
+            SetTextValue(DialogNode(dialogNodes, "CountText")?.GetComponent<TMP_Text>(),
                 progression.SkillMergePiece(skillId).ToString(CultureInfo.InvariantCulture));
             DialogButton(dialogButtons, "CancelBtn")?.onClick.AddListener(CloseMergeConfirm);
             Button mergeButton = DialogButton(dialogButtons, "MergeBtn");
@@ -2104,12 +2107,7 @@ namespace Zjcs.Presentation.Character
         private void Install(int skillId)
         {
             if (listType == PieceItemType) return;
-            if (selectedType != listType || selectedSlot < 0)
-            {
-                BeginInstall(skillId);
-                return;
-            }
-            EquipToSlot(skillId, selectedSlot);
+            BeginInstall(skillId);
         }
 
         private void BeginInstall(int skillId)
@@ -2118,32 +2116,7 @@ namespace Zjcs.Presentation.Character
             pendingType = listType;
             selectedType = pendingType;
             selectedSlot = -1;
-            if (installMask == null && panel != null)
-            {
-                installMask = new GameObject("SkillInstallMask", typeof(RectTransform), typeof(Image));
-                installMask.transform.SetParent(panel.transform, false);
-                RectTransform maskRect = (RectTransform)installMask.transform;
-                maskRect.anchorMin = Vector2.zero;
-                maskRect.anchorMax = Vector2.one;
-                maskRect.offsetMin = Vector2.zero;
-                maskRect.offsetMax = Vector2.zero;
-                installMask.transform.SetSiblingIndex(0);
-                Image image = installMask.GetComponent<Image>();
-                image.color = new Color(0f, 0f, 0f, 0.42f);
-                image.raycastTarget = false;
-                var hint = new GameObject("SkillInstallHint", typeof(RectTransform), typeof(Text));
-                hint.transform.SetParent(installMask.transform, false);
-                RectTransform hintRect = (RectTransform)hint.transform;
-                hintRect.anchorMin = new Vector2(0.5f, 0.92f);
-                hintRect.anchorMax = new Vector2(0.5f, 0.92f);
-                hintRect.sizeDelta = new Vector2(420f, 50f);
-                Text text = hint.GetComponent<Text>();
-                text.font = CharacterPanelNodeFactory.UiFont;
-                text.fontSize = 26;
-                text.alignment = TextAnchor.MiddleCenter;
-                text.color = Color.white;
-                text.text = "选择技能槽安装";
-            }
+            ToggleOriginalInstallMask(true);
             Refresh();
         }
 
@@ -2159,7 +2132,7 @@ namespace Zjcs.Presentation.Character
             promoteDialog = null;
             promoteNodes = null;
             promoteButtons = null;
-            if (installMask != null) Destroy(installMask);
+            if (installMask != null) ToggleOriginalInstallMask(false);
             installMask = null;
         }
 
@@ -2279,9 +2252,9 @@ namespace Zjcs.Presentation.Character
             return item == null ? 0 : Convert.ToInt32(item["Quality"], CultureInfo.InvariantCulture);
         }
 
-        private Text FindTextDeep(string name)
+        private TMP_Text FindTextDeep(string name)
         {
-            return FindDeep(name)?.GetComponent<Text>();
+            return FindDeep(name)?.GetComponent<TMP_Text>();
         }
 
         private RectTransform FindDeep(string name)

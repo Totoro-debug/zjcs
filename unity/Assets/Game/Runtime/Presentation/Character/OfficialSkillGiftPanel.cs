@@ -1,3 +1,4 @@
+using TMPro;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -134,12 +135,12 @@ namespace Zjcs.Presentation.Character
             content.Find("Progress").gameObject.SetActive(false);
             content.Find("BottomText").gameObject.SetActive(false);
             content.Find("BgCountText").gameObject.SetActive(reward.Count != 1);
-            Text count = content.Find("BgCountText/CountText").GetComponent<Text>();
+            TMP_Text count = content.Find("BgCountText/CountText").GetComponent<TMP_Text>();
             count.text = OfficialPropFormat.Compact(reward.Count);
         }
         private string[] Rows() => ((List<object>)Component(Root, "AchievementPanelBase")["mPanelItemList"]).Select(Text).ToArray();
         private Dictionary<string, object> Component(string path, string name) => Object(Object(bindings[path])[name]);
-        private void SetText(string path, string value) { var label = nodes[path].GetComponent<Text>(); if (label != null) label.text = value; }
+        private void SetText(string path, string value) { var label = nodes[path].GetComponent<TMP_Text>(); if (label != null) label.text = value; }
         private void ApplyState(Dictionary<string, object> fields, string name, int selected)
         {
             var switcher = Object(fields[name]);

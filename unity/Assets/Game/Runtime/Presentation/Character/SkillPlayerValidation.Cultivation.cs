@@ -170,6 +170,7 @@ namespace Zjcs.Presentation.Character
             Require(panel.HandleEscape(), "The rainbow notification did not close."); yield return null;
             Require(panel.HandleEscape(), "The rainbow cultivation did not close."); yield return null;
             yield return ValidateUnequippedCultivation(progression, panel);
+            yield return ValidateOriginalInstall(progression, panel);
             int retainedLevel = progression.Player.Skills.ActiveSlotLevels[0];
             var context = progression.SkillContext();
             int playerCap = progression.SkillRules.LevelLimits.First(value => value.SubRank == context.SubRank
@@ -187,6 +188,7 @@ namespace Zjcs.Presentation.Character
             Require(panel.HandleEscape(), "The limited cultivation window did not close."); yield return null;
             progression.Player.Skills.ActiveSlotLevels[0] = retainedLevel;
             panel.ReloadProfile(); yield return null;
+            yield return ValidateOriginalBlessing(progression, panel);
         }
 
         private IEnumerator ValidateUnequippedCultivation(OfflineCharacterProgressionService progression, CharacterSkillPanel panel)

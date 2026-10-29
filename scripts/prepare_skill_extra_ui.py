@@ -106,7 +106,8 @@ def recover_prefab(reader, text_schemas, bundle, prefab_name, city):
                     "CharacterPanelSkillListPanelItem", "CharacterPanelSkillListPanelItemNewMark",
                     "SkillPanelRedDotItem", "SkillPanelCanRankUpRedDotItem", "SkillCanMergeRedDotItem",
                     "ItemIconAttachmentRedDotHandler", "ItemIconAttachmentHint", "RedDotMultiItem",
-                    "SkillPromotePanel", "PlayerUseItemContent", "CharacterPanelSkillItem",
+                    "SkillPromotePanel", "PlayerUseItemContent", "CharacterPanelSkillItem", "CharacterPanelSkillContent",
+                    "CharacterPanelSkillPanel", "CharacterPanelSkillItemDragContent", "TMPEffect",
                     "SkillContentPanelSkillGroup", "SkillRankUpNotifyDialog", "SkillStarInfo", "StarMiniInfo", "SkillPromotePanelItem", "ItemProgress", "ItemIcon", "LoopHorizontalScrollRect", "SkillSlotlCanLevelUpRedDotItem"))
     for node in reader.walk(pointer.read()):
         row = by_path[node_path(node)]
@@ -122,6 +123,8 @@ def recover_prefab(reader, text_schemas, bundle, prefab_name, city):
                     "HorizontalLayoutGroupJSZX", "VerticalLayoutGroupJSZX", "GridLayoutGroupJSZX", "AspectRatioFitter", "Slider") else reader.schemas.read(obj)
                 row.setdefault("original_bindings", {})[name] = {key: convert(value, obj) for key, value in fields.items()
                     if key not in ("m_GameObject", "m_Enabled", "m_Script", "m_Name")}
+                if name == "TMPEffect":
+                    row["original_bindings"][name]["m_Enabled"] = bool(fields["m_Enabled"])
                 if name == "ItemIconAttachmentRedDotHandler":
                     for raw, converted in zip(fields["mAttachmentDatas"], row["original_bindings"][name]["mAttachmentDatas"]):
                         reference = PPtr(**raw["RedDotItem"], assetsfile=obj.assets_file).deref().read(check_read=False)
@@ -264,7 +267,8 @@ def restore(reader, schemas, data, city, rules):
     inputs["cultivation_code"] = []
     for name in ("SkillPromotePanel", "SkillPromotePanelRankUpContent", "SkillPromotePanelLevelUpContent",
                  "PlayerUseItemContent", "CharacterPanelSkillItem", "SkillPromotePanelItem", "SkillRankUpNotifyDialog",
-                 "SkillStarInfo", "StarMiniInfo", "PlayerPropItem"):
+                 "SkillStarInfo", "StarMiniInfo", "PlayerPropItem", "CharacterPanelSkillContent",
+                 "CharacterPanelSkillPanel", "CharacterPanelSkillItemDragContent", "BlessLevelTextViewChanger"):
         path = ROOT / ".tools/source-packages/official-code/client-source" / (name + ".cs")
         inputs["cultivation_code"].append({"source": path.relative_to(ROOT).as_posix(),
             "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
@@ -434,4 +438,32 @@ def restore(reader, schemas, data, city, rules):
         stage["image_uri"] = uri
     data["auxiliary_data"] = configs
     data["auxiliary_inputs"] = inputs
+    # The older icons.json omits eighteen skill items present in the pinned
+    # item table. Resolve their actual typed Sprite addresses in the APK.
+    import json
+    from official_apk import ROOT
+    from official_manifest import read_asset_manifest
+    icons = json.loads((ROOT / "assets/official/icons.json").read_text(encoding="utf-8"))
+    manifest = read_asset_manifest(reader.apk.source.manifest_bytes("DefaultPackage", reader.apk.archive))
+    missing_icons = {}
+    for item in rules["item"]:
+        if item["ItemType"] not in (100, 101) or str(item["ClassId"]) in icons:
+            continue
+        address = "Assets/Image/" + item["RawIcon"]
+        matches = [row for row in manifest if row["address"] == address
+                   or row["path"].removesuffix(".png") == address]
+        assert len(matches) == 1, (item["ClassId"], address, matches)
+        record, = matches
+        obj, = [pointer.deref() for path, pointer in reader.apk.container(record["bundle"])
+                if path == record["path"] and pointer.type.name == "Sprite"]
+        raw = io.BytesIO()
+        obj.read().image.save(raw, format="PNG")
+        payload = raw.getvalue()
+        sha = hashlib.sha256(payload).hexdigest()
+        uri = "res://assets/official/sprites/skill_aux_" + sha + ".png"
+        sprites[uri] = {"bytes": payload, "source": reader.apk.provenance(obj),
+                        "sha256": sha, "name": obj.read().m_Name, "address": record,
+                        "object_sha256": hashlib.sha256(obj.get_raw_data()).hexdigest()}
+        missing_icons[str(item["ClassId"])] = uri
+    data["skill_item_icons"] = missing_icons
     return sprites

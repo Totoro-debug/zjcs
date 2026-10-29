@@ -1,3 +1,4 @@
+using TMPro;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -157,7 +158,7 @@ namespace Zjcs.Presentation.Character
                 Refresh();
                 if (detailDialog != null && currentDetailSkillId == skillId && currentDetailNodes != null) {
                     BindOriginalSkillDetail(skillId, currentDetailNodes, false);
-                    SetTextValue(DialogNode(currentDetailNodes, "NameText")?.GetComponent<Text>(), SkillName(skillId));
+                    SetTextValue(DialogNode(currentDetailNodes, "NameText")?.GetComponent<TMP_Text>(), SkillName(skillId));
                     Transform iconSlot = DialogNode(currentDetailNodes, "ItemIconSkill") ?? DialogNode(currentDetailNodes, "IconSlot");
                     if (iconSlot != null) {
                         Transform oldIcon = iconSlot.Find("OfficialSkillIcon");

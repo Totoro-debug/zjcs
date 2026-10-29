@@ -520,7 +520,7 @@ namespace Zjcs.Editor.Skills
             Require(pieceRow != null, "The owned skill piece did not render as an interactive list row.");
             yield return null;
             SimulatePointerClick(pieceRow);
-            Require(UnityEngine.Object.FindObjectsOfType<Text>(true).Any(value => value.name == "CountText" && value.isActiveAndEnabled), "The skill piece detail did not open from a simulated pointer click.");
+            Require(UnityEngine.Object.FindObjectsOfType<TMPro.TMP_Text>(true).Any(value => value.name == "CountText" && value.isActiveAndEnabled), "The skill piece detail did not open from a simulated pointer click.");
             Require(panel.HandleEscape(), "The skill piece detail did not handle Escape.");
             yield return null;
             SimulatePointerClick(activeTab);
@@ -541,7 +541,7 @@ namespace Zjcs.Editor.Skills
             SimulatePointerClick(favoriteButton);
             Require(progression.Player.Skills.FavoriteSkills.Contains(favoriteSkillId), "The official skill detail collection control did not update the favorite state: " + panel.LastMessage);
             yield return new WaitForSecondsRealtime(.3f);
-            Require(UnityEngine.Object.FindObjectsOfType<Text>().Any(value => value.text == "已置顶该技能" && value.isActiveAndEnabled),
+            Require(UnityEngine.Object.FindObjectsOfType<TMPro.TMP_Text>().Any(value => value.text == "已置顶该技能" && value.isActiveAndEnabled),
                 "The original favorite system message did not render.");
             ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-system-message.png"));
             Require(UnityEngine.Object.FindObjectsOfType<RectTransform>(true).Any(value => value.name == "CharacterPanelSkillListSeparator" && value.gameObject.activeInHierarchy), "Favoriting a skill did not restore the official separator between collected and uncollected skills.");
@@ -663,7 +663,7 @@ namespace Zjcs.Editor.Skills
             yield return new WaitForSecondsRealtime(.6f);
             SimulatePointerClick(rankUpgradeButton);
             Require(OfflineSkillProgression.OwnedRank(progression.Player.Skills, promotionSkillId) == rankBeforePromotion + 1, "A simulated pointer click did not apply the official skill rank promotion: " + panel.LastMessage);
-            Require(UnityEngine.Object.FindObjectsOfType<Text>(true).Any(value => value.name == "SkillNameText" && value.isActiveAndEnabled), "The official rank promotion result dialog did not render.");
+            Require(UnityEngine.Object.FindObjectsOfType<TMPro.TMP_Text>(true).Any(value => value.name == "SkillNameText" && value.isActiveAndEnabled), "The official rank promotion result dialog did not render.");
             Require(panel.HandleEscape(), "The rank promotion result did not handle Escape.");
             OfflineSkillProfile beforeInsufficientPromotion = progression.Player.Skills.Clone();
             OfflineOwnedSkill rollbackCandidate = progression.Player.Skills.Skills.FirstOrDefault(value => value != null && value.ClassId != promotionSkillId && progression.SkillDefinition(value.ClassId)?.RankCosts?.Any(cost => cost.CurrentRank == value.Rank) == true);

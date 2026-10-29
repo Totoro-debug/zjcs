@@ -23,6 +23,7 @@ namespace Zjcs.Offline.Progression
         private readonly OfficialCharacterCatalog catalog;
         private readonly CharacterPropCalculator propertyCalculator;
         private readonly OfflinePetPropSource petPropertySource;
+        private OfflinePlayerProgress derivedPlayer;
 
         public OfflineCharacterProgressionService(OfflineMainlineProgressSession session,
             OfficialCharacterCatalog catalog)
@@ -38,9 +39,23 @@ namespace Zjcs.Offline.Progression
             PetProgression = new OfflinePetProgressionService(session, CalculatePetCombatRating);
             LegionBuildings = new OfflineLegionBuildingProgressionService(session, catalog);
             RefreshDerivedProgress(session.Save.Player);
+            derivedPlayer = session.Save.Player;
         }
 
-        public OfflinePlayerProgress Player => session.Save.Player;
+        public OfflinePlayerProgress Player
+        {
+            get
+            {
+                // Local transactions/reload replace Save.Player; refresh the new
+                // object just as construction does before consuming derived levels.
+                var player = session.Save.Player;
+                if (!ReferenceEquals(player, derivedPlayer)) {
+                    RefreshDerivedProgress(player);
+                    derivedPlayer = player;
+                }
+                return player;
+            }
+        }
         public bool IsNewSessionItem(int itemId) => session.IsNewSessionItem(itemId);
         public void RemoveNewSessionItem(int itemId) => session.RemoveNewSessionItem(itemId);
         public OfficialCharacterCatalog Catalog => catalog;
@@ -281,7 +296,8 @@ namespace Zjcs.Offline.Progression
             {
                 Profession = Player.Wardrobe.Profession,
                 SubRank = Player.SubRank,
-                BaseLevel = Player.Level,
+                BaseLevel = Math.Min(Player.Level,
+                    OfflineCharacterExperience.BaseLevelLimit(Player.SubRank, catalog.LevelLimits)),
                 PlayerRank = Player.Rank,
                 CurrentSeasonRank = Player.SeasonRank,
                 // Single-player seasons are represented by the current season rank, matching the
@@ -1955,11 +1971,13 @@ namespace Zjcs.Offline.Progression
         private void RefreshDerivedProgress(OfflinePlayerProgress player)
         {
             player.Rank = RankOf(player.SubRank);
+            int seasonId = CurrentSeasonId(player);
+            // SeasonRank indexes level_bless and rank limits; Season is the
+            // distinct astrological ID used by property records (rank 4 -> season 1).
+            player.SeasonRank = seasonId > 0 ? player.Rank : 0;
             CharacterExperienceSnapshot snapshot = Snapshot(player);
             player.Level = snapshot.Level;
             player.SeasonBaseLevel = OfflineCharacterExperience.BaseLevelLimit(player.SubRank, catalog.LevelLimits);
-            int seasonId = CurrentSeasonId(player);
-            player.SeasonRank = seasonId;
             if (player.CharacterProperties == null)
                 player.CharacterProperties = new OfflineCharacterPropertyProgress();
             OfflineCharacterPropertyProgress.Normalize(player.CharacterProperties);

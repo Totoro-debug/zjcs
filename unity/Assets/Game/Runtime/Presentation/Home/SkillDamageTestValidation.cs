@@ -145,9 +145,31 @@ namespace Zjcs.Presentation.Home
                 "Could not initialize the damage-test fixture's appearance.");
             fixtureProgression.AttachSkillRules(fixtureAssets.LoadSkillRules(), fixtureAssets.LoadSkillRecommendations().recommendations);
             fixtureProgression.EquipSkill(10014, 0);
+            bool blessingFixture = Environment.GetEnvironmentVariable("ZJCS_SKILLS_VALIDATE_BLESSING") == "1";
+            if (blessingFixture) Require(fixture.ApplyCharacterMutation(player => {
+                player.Level = 100; player.SubRank = 10; player.Rank = 4;
+                player.SeasonRank = 1; // Reopen the earlier rank/season-ID mix-up.
+                player.Experience = fixtureProgression.Catalog.CumulativeLevelExperience[100];
+                player.HasActiveSeasonRecord = true;
+                player.BlessingExperience = fixtureProgression.Catalog.BlessLevels.Single(value => value.Rank == 4 && value.BlessLevel == 70).Exp;
+                player.Skills.ActiveSlotLevels = new[] { 100, 100, 100, 100 };
+                player.Skills.PassiveSlotLevels = new[] { 100, 100, 100, 100 };
+                player.Skills.BlessRecords = new List<OfflineSkillBlessRecord> {
+                    new OfflineSkillBlessRecord { SeasonId = 4, ActiveSlotLevels = new[] { 70, 70, 70, 70 }, PassiveSlotLevels = new[] { 70, 70, 70, 70 } } };
+                if (!player.Skills.Skills.Any(value => value.ClassId == 10128))
+                    player.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = 10128, Rank = 6 });
+                player.Skills.Plans[player.Skills.SelectedPlan].PassiveSkills[0] = 10128;
+            }, "skills-damage-blessing-fixture").IsApplied, "Could not persist the isolated blessing battle fixture.");
             Require(fixtureProgression.WearSkillSkin(39503, "skills-home-damage-skin").IsApplied,
                 "Could not wear the damage-test fixture's official skill appearance.");
             var home = Zjcs.Presentation.Home.HomeFeatureRuntime.Begin(slot, root, null);
+            if (blessingFixture) {
+                var context = home.DailyDungeonProgression.SkillContext();
+                Require(context.CurrentSeasonRank == 4 && context.CurrentSeasonId == 4
+                    && context.BaseLevel == 100 && context.PlayerBlessLevel == 70
+                    && home.Profile.Save.Player.Level == 170 && home.Profile.Save.Player.CharacterProperties.SeasonId == 1,
+                    "Reopening a blessing profile mixed the rank, season ID, base level or blessing level.");
+            }
             // This isolated level-40 fixture exercises skills; home introduction
             // graphs have their own acceptance flow and must not mask its input.
             home.TutorialAutoStartEnabled = false;
@@ -193,6 +215,8 @@ namespace Zjcs.Presentation.Home
             Require(battle != null && battle.Controller != null, "Starting the original damage test did not mount a battle.");
             Require(home.Hud.AnyModalOpen, "The home world accepted input behind the damage test.");
             var checkpoint = battle.Controller.Checkpoint;
+            File.WriteAllText(Path.Combine(outputDirectory, "skills-battle-checkpoint.json"),
+                JsonUtility.ToJson(checkpoint, true));
             Require(checkpoint.StageType == 43 && checkpoint.MaxRound == 10 && checkpoint.DamageTest.EnableMonsterOneDamage
                 && checkpoint.DamageTest.EnableMonsterUnlimitHp == !defeat, "The battle lost its selected damage-test rules.");
             if (defeat) {
@@ -204,6 +228,11 @@ namespace Zjcs.Presentation.Home
             var skinnedSkill = checkpoint.Units.First(value => value.Id == 1).Skills.First(value => value.Slot == 0);
             Require(skinnedSkill.ItemId == 10014 && skinnedSkill.UseItemId == 10125 && skinnedSkill.SkillSkinId == 39503,
                 "The actual battle did not assemble the equipped skill appearance.");
+            if (blessingFixture) Require(skinnedSkill.Level == 170,
+                "The actual battle omitted the active slot's current-season blessing levels.");
+            if (blessingFixture) Require(checkpoint.Units.Single(value => value.Id == 1).Statuses
+                .Any(value => value.ApplyingSkillItemId == 10128 && value.SourceSkillLevel == 170),
+                "The actual battle omitted the passive trigger's current-season blessing levels.");
             ScreenCapture.CaptureScreenshot(Path.Combine(outputDirectory, "skills-damage-battle.png"));
             yield return null;
             Button start = UnityEngine.Object.FindObjectsOfType<Button>().First(value => value.name == "Btn"
@@ -283,6 +312,10 @@ namespace Zjcs.Presentation.Home
             yield return null;
             var reportIcon = report.GetComponentsInChildren<Button>().First(value => value.GetComponentsInParent<Transform>()
                 .Any(parent => parent.name == "ReportSkillIcon"));
+            Require(reportIcon.GetComponentsInChildren<Image>().Any(value => value.name == "icon"
+                && value.enabled && value.sprite != null), "The report skill has no original icon sprite.");
+            File.WriteAllText(Path.Combine(outputDirectory, "skills-report-metadata.json"),
+                JsonUtility.ToJson(Zjcs.Combat.Official.FightBattleReportBuilder.Build(checkpoint), true));
             click(reportIcon);
             yield return new WaitForSecondsRealtime(.4f);
             var snapshotDetail = FindObjectsOfType<Transform>().First(value => value.name == "skill_plain_detail");

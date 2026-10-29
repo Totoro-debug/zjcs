@@ -65,8 +65,9 @@ namespace Zjcs.Presentation.Character
                 var skill = skillRows[index];
                 item.GetComponent<WorldBattleReportSkillRow>().Refresh(OfficialBattleReportSkillRowBinder.Values(skill), false, slot => {
                     foreach (Transform old in slot) { old.gameObject.SetActive(false); Destroy(old.gameObject); }
-                    var definition = checkpoint.Units.First(value => value.Id == skill.UnitId).Skills
-                        .FirstOrDefault(value => value.EntityId == skill.SkillEntityId && value.ItemId == skill.SkillItemId);
+                    var owner = checkpoint.Units.First(value => value.Id == skill.UnitId);
+                    var definition = owner.Skills.Concat(owner.ReportSkillSnapshots ?? new List<FightBattleSkillDefinition>())
+                        .FirstOrDefault(value => value.ItemId == skill.SkillItemId);
                     var icon = BuildSkillIcon(skill.SkillItemId, slot, "ReportSkillIcon", definition?.Rank ?? 0, definition?.SkillSkinId ?? 0);
                     var iconButton = icon.GetComponent<Button>();
                     if (iconButton != null) {
@@ -126,7 +127,7 @@ namespace Zjcs.Presentation.Character
             detailDialog = BuildOfficialDialog("skill_plain_detail", out var detailNodes, out _);
             int effectId = snapshot.UseItemId > 0 ? snapshot.UseItemId : snapshot.ItemId;
             var item = progression.Catalog.FindItem(effectId);
-            SetTextValue(DialogNode(detailNodes, "NameText")?.GetComponent<Text>(), Convert.ToString(item["Name"]));
+            SetTextValue(DialogNode(detailNodes, "NameText")?.GetComponent<TMP_Text>(), Convert.ToString(item["Name"]));
             BindOriginalSkillDetail(snapshot.ItemId, detailNodes, false, snapshot, "skill_plain_detail");
             var root = AuxObject(AuxObject(skillUiTemplates["skill_plain_detail"])["root"]);
             var binding = FindOriginalComponent(root, "SkillDetailDialog");

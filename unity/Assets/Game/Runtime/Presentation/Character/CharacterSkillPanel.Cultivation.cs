@@ -46,7 +46,7 @@ namespace Zjcs.Presentation.Character
             string iconPath = windowNodes.First(pair => pair.Value == icon).Key;
             var iconNodes = windowNodes.Where(pair => pair.Key == iconPath || pair.Key.StartsWith(iconPath + "/", StringComparison.Ordinal))
                 .ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal);
-            BindOriginalSkillIcon(skillId, icon, iconNodes);
+            BindOriginalSkillIcon(skillId, icon, iconNodes, iconLayout: FindLayoutNode(root, iconPath));
             FindDeep(icon, "SkillStarInfo")?.gameObject.SetActive(false);
             DialogButton(windowButtons, "CloseBtnDark")?.onClick.AddListener(ClosePromote);
             foreach (object raw in (List<object>)binding["TabDatas"])
@@ -238,6 +238,7 @@ namespace Zjcs.Presentation.Character
                 int cellLevel = progression.SkillProgression.SlotLevel(progression.Player.Skills, itemType, i, progression.SkillContext().CurrentSeasonId);
                 SetAuxiliaryText(windowNodes[Convert.ToString(cell["LevelText"])],
                     string.Format(CultureInfo.InvariantCulture, OriginalDetailText("ui_common_level_style_3"), cellLevel));
+                RefreshOriginalBless(cell, "CurLevelTextView", windowNodes, cellLevel > OriginalSlotBaseLimit());
                 Transform selection = FindDeep(windowNodes[Convert.ToString(paths[i])], "SelAnimGo");
                 if (selection != null) selection.gameObject.SetActive(equipped[i] == promoteSkillId);
                 if (windowButtons.TryGetValue(Convert.ToString(cell["IconSlot"]), out Button button))
@@ -304,8 +305,8 @@ namespace Zjcs.Presentation.Character
             foreach (var field in new[] { ("CurrentLevelText", level), ("NextLevelText", level + 1), ("MaxLevelText", level) })
                 SetAuxiliaryText(windowNodes[Convert.ToString(binding[field.Item1])],
                     string.Format(CultureInfo.InvariantCulture, OriginalDetailText("ui_common_level_style_3"), field.Item2));
-            SetOriginalComponentState(binding, "CurLevelTextView.mIsBlessStateSwitcher", level > baseLimit ? 1 : 0, windowNodes);
-            SetOriginalComponentState(binding, "NextLevelTextView.mIsBlessStateSwitcher", level + 1 > baseLimit ? 1 : 0, windowNodes);
+            RefreshOriginalBless(binding, "CurLevelTextView", windowNodes, level > baseLimit);
+            RefreshOriginalBless(binding, "NextLevelTextView", windowNodes, level + 1 > baseLimit);
             BindOriginalCultivationCost(root, Convert.ToString(binding["UseItemContent"]), maximum ? 2 : limited ? 1 : 0,
                 costs ?? Array.Empty<OfflineSkillItemCount>(), windowNodes, windowButtons, () => { if (slot >= 0) UpgradePromoteSlot(itemType, slot); });
         }
@@ -419,7 +420,7 @@ namespace Zjcs.Presentation.Character
             string iconPath = Convert.ToString(binding["mItemIcon"]);
             var iconNodes = resultNodes.Where(pair => pair.Key == iconPath || pair.Key.StartsWith(iconPath + "/", StringComparison.Ordinal))
                 .ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal);
-            BindOriginalSkillIcon(skillId, Bound("mItemIcon"), iconNodes, toRank);
+            BindOriginalSkillIcon(skillId, Bound("mItemIcon"), iconNodes, toRank, iconLayout: FindLayoutNode(root, iconPath));
             var propSlot = Bound("PropSlot");
             foreach (Transform child in propSlot)
                 if (child.gameObject.activeSelf) { child.gameObject.SetActive(false); Destroy(child.gameObject); }

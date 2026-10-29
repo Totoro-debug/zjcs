@@ -97,6 +97,11 @@ namespace Zjcs.Presentation.Character
             Refresh();
         }
 
+        public void SetPlayerInfoVisible(bool visible)
+        {
+            if (player != null) player.gameObject.SetActive(visible);
+        }
+
         public void Refresh()
         {
             if (progression == null || player == null) return;

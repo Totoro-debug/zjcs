@@ -615,6 +615,7 @@ namespace Zjcs.Presentation.Character
             {
                 if (skillHeader != null) skillHeader.gameObject.SetActive(visible);
             };
+            skillPanel.PublicPlayerInfoVisibilityChanged += visible => skillHeader?.SetPlayerInfoVisible(visible);
 
             petEquipmentView = holder.AddComponent<CharacterPetEquipmentView>();
             RectTransform petModelRoot = ResolvePetModelRoot();

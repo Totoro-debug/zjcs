@@ -786,6 +786,16 @@ namespace Zjcs.Combat.Official
             unit.Skills.AddRange(assembledSkills);
             unit.SkillState.Slots.AddRange(assembledSlots);
             unit.Statuses.AddRange(assembledStatuses);
+            if (unit.ReportSkillSnapshots == null) unit.ReportSkillSnapshots = new List<FightBattleSkillDefinition>();
+            foreach (FightOfficialStatusBinding binding in statuses ?? new List<FightOfficialStatusBinding>())
+            {
+                if (binding.ApplyingSkillItemId <= 0 || unit.ReportSkillSnapshots.Exists(value =>
+                    value.ItemId == binding.ApplyingSkillItemId && value.EntityId == binding.RootSkillId)) continue;
+                unit.ReportSkillSnapshots.Add(new FightBattleSkillDefinition {
+                    ItemId = binding.ApplyingSkillItemId, UseItemId = binding.ApplyingSkillItemId,
+                    EntityId = binding.RootSkillId, Rank = binding.SkillRank, Level = binding.SkillLevel,
+                    SubRank = binding.SourceSubRank });
+            }
         }
 
         public List<FightOfficialStatusBinding> CreatePassiveStatusBindings(

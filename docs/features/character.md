@@ -222,7 +222,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 - [x] 单次升阶已接：列表行“培养”打开原 `SkillPromotePanel` 框架，显示当前／下一等阶与 `RankCosts` 材料持有/需求，确认经 `PromoteSkill` 扣料并刷新；批量升阶仍由 `FastPromotionBtn` 提供。
 - [x] 技能详情层已接：列表行“详情”显示类型、当前/最大等阶、碎片持有与下一等阶材料，并提供安装／培养／收藏（或取消收藏）／关闭；技能描述字段未在固定目录中提取，详情暂不含描述。
 - [x] 技能推荐已接：原 `RecommendBtn` 列出当前职业的推荐方案（名称与核心技能），应用时把已拥有且满足职业条件的技能装入对应槽位，未拥有项跳过并统计；推荐数据来自 `Assets/Official/Skills/skills.json`。
-- [x] 共享槽祝福已接：`SkillContext.CurrentSeasonId` 取当前 `SeasonRank`（与装备祝福的赛季键一致），基础槽全部达到上限且 `PlayerRank == CurrentSeasonRank` 后，批量/单槽培养按 `SlotBlessCosts` 进入祝福等级并写入 `BlessRecords`；单机赛季键假设已记录。
+- [x] 共享槽祝福已接：`SkillContext.CurrentSeasonId` 沿用档案的位面阶位键，`SeasonRank` 保留位面阶位；`CharacterProperties.SeasonId` 另用 `astrological_season_config` 的赛季编号（阶位 4 对应赛季 1），不再在重载时将两者混写。培养上下文使用基础等级，排除总等级中的祝福部分。基础槽全部达到上限且 `PlayerRank == CurrentSeasonRank` 后，批量／单槽培养按 `SlotBlessCosts` 写入 `BlessRecords`；完整交互、战斗槽级与验证范围见[技能](skills.md)。
 - [ ] 原结果动画／音效和品质文字仍缺；规则与已确认差异沿用[技能](skills.md)。
 - [ ] 连接技能成就页签及其任务／领奖状态，切换时同步公共人物资料；接通伤害测试入口、开放判断、怪物／难度／回合／参数选择和实际战斗／结果，战斗规则由[共用战斗](battle-execution.md)维护。
 

@@ -1311,9 +1311,13 @@ namespace Zjcs.Combat.Official
                     FightBattleSkillDefinition skill;
                     try
                     {
-                        skill = statusCatalog.CreateSkill(trigger.EntityId, -1, 0, 1, level, subRank,
-                            ToPropertyList(statusCatalog.CalculateSkillProps(trigger.EntityId, 1,
-                                level, subRank)));
+                        int rank = Math.Max(1, trigger.SourceSkillRank);
+                        int skillLevel = trigger.SourceSkillLevel > 0 ? trigger.SourceSkillLevel : level;
+                        int skillSubRank = trigger.SourceSubRank > 0 ? trigger.SourceSubRank : subRank;
+                        skill = statusCatalog.CreateSkill(trigger.EntityId, -1, trigger.SourceSkillItemId,
+                            rank, skillLevel, skillSubRank,
+                            ToPropertyList(statusCatalog.CalculateSkillProps(trigger.EntityId, rank,
+                                skillLevel, skillSubRank)));
                     }
                     catch (InvalidOperationException)
                     {
@@ -1384,11 +1388,13 @@ namespace Zjcs.Combat.Official
                     FightBattleSkillDefinition skill;
                     try
                     {
-                        skill = statusCatalog.CreateSkill(invocation.Trigger.EntityId, -1, 0,
-                            1, Math.Max(1, source.Level), Math.Max(1, source.SubRank),
-                            ToPropertyList(statusCatalog.CalculateSkillProps(
-                                invocation.Trigger.EntityId, 1, Math.Max(1, source.Level),
-                                Math.Max(1, source.SubRank))));
+                        FightBattleStatusStateTrigger trigger = invocation.Trigger;
+                        int rank = Math.Max(1, trigger.SourceSkillRank);
+                        int level = trigger.SourceSkillLevel > 0 ? trigger.SourceSkillLevel : Math.Max(1, source.Level);
+                        int subRank = trigger.SourceSubRank > 0 ? trigger.SourceSubRank : Math.Max(1, source.SubRank);
+                        skill = statusCatalog.CreateSkill(trigger.EntityId, -1, trigger.SourceSkillItemId,
+                            rank, level, subRank, ToPropertyList(statusCatalog.CalculateSkillProps(
+                                trigger.EntityId, rank, level, subRank)));
                     }
                     catch (InvalidOperationException)
                     {

@@ -85,13 +85,13 @@ namespace Zjcs.Presentation.Character
             int subRank = snapshot?.SubRank ?? progression.Player.SubRank;
             int playerRank = subRank < 2 ? subRank : 2 + (subRank - 2) / 3;
             int baseLimit = progression.SkillRules.BaseLevelLimits.FirstOrDefault(value => value.SubRank == playerRank)?.SkillLevel ?? 0;
-            SetOfficialState(templateKey, "SkillDetailDialog", "mBlessLevelView.mIsBlessStateSwitcher", level > baseLimit ? 1 : 0, dialogNodes);
+            RefreshOriginalBless(skillBinding, "mBlessLevelView", dialogNodes, level > baseLimit);
             Bound(skillBinding, "mBlessLevelRuleBtn").gameObject.SetActive(level > baseLimit);
             Bound(skillBinding, "mBlessLevelRuleBtn").GetComponent<Button>().onClick.AddListener(() =>
                 OpenBlessLevelRule(baseLimit, level, RectTransformUtility.WorldToScreenPoint(null,
                     Bound(skillBinding, "mBlessLevelRuleBtn").position)));
-            Bound(skillBinding, "SkillTypeText").GetComponent<Text>().text = OriginalDetailText(
-                definition.ItemType == ActiveSkillItemType ? "ItemType.ActiveSkill" : "ItemType.PassiveSkill");
+            SetAuxiliaryText(Bound(skillBinding, "SkillTypeText"), OriginalDetailText(
+                definition.ItemType == ActiveSkillItemType ? "ItemType.ActiveSkill" : "ItemType.PassiveSkill"));
             SetOfficialState(templateKey, "SkillDetailDialog", "mSkillBgIconStateSwithcer", definition.ItemType, dialogNodes);
             BindOriginalDetailStars(root, dialogNodes, rank);
             if (bindActions) {

@@ -64,7 +64,7 @@ Editor 程序集显式引用 `Zjcs.Presentation.Character`，以供技能 Play M
 
 技能详情已恢复固定 APK 的原生 FZY4K TMP 字体、材质和初始 Alpha8 字体图集，修复弹窗 Canvas 缺少 UV1 通道造成的方块文字；同一来源字体的标签共用一份隔离的字体、材质与动态图集，按使用数量释放；128 标签验证覆盖共享、末次释放和原图集字节不变，技能页独立副本保留原始初始图集，避免 Windows 构建清空共享字体。品质背景、普通品质文字色、星级空星、战技／秘法背景状态、技能等级及祝福显示条件按原组件恢复。`OfficialSkillDetailProperties` 迁移 `PropConfigUtils.CalcSkillViewProps` 与 `SkillPanelPropPanel.Sort` 的主动、被动、状态及召唤属性展示规则；全部 394 个技能在两组等级／阶位条件下的 788 次计算已通过 Play Mode。标签取自原 `SkillTagItem` 和 `ESkillTag`，职业图标沿用 `ProfessionBaseInfoParser.PostParse` 的归属及前置职业链；范围图从 APK `SkillItemRangeInfos.g.bytes` 恢复 1,365 条数据，保留原格子 prefab、五类颜色、间隔和行列顺序，当前可用主动技能均具有有效范围数据。新增标签、范围、属性、收藏、弹窗外部关闭与整屏培养／升阶／馈赠／存档流程已通过模拟点击 Play Mode 回归并查看实际画面； Windows Player 重建验证仍待执行。
 
-人物预览和头像改用经原始对象 SHA-256 核验一致的官方 `Universal Render Pipeline/Spine/SkeletonDye-2D` shader 转换结果，保留 544 组原 GPU 程序、透明度截断、染色及渲染状态；仅适配桌面预览相机的 pass 选择。运行截图确认面部／头发的白色三角残片已消失。技能模块目前显式绑定 270 张官方 UI 精灵，`prepare_skill_extra_ui.py` 恢复附属原 prefab 与脚本字段；`prepare_skill_auxiliary_code.py` 直接适配原切换、滚动和布局代码，战报网格复用 `Official/WorldUI` 中使用非等距间隔的原 `GridLayoutGroupJSZX`，不以自定网格替换。转换与原对象哈希、字体隔离方式见 `assets/reference/skill-ui/unity-icon-source-manifest.json`，重建入口增加 `prepare_skill_native_text.py`、`prepare_skill_character_shader.py` 和 `prepare_skill_detail_data.py`。
+人物预览和头像改用经原始对象 SHA-256 核验一致的官方 `Universal Render Pipeline/Spine/SkeletonDye-2D` shader 转换结果，保留 544 组原 GPU 程序、透明度截断、染色及渲染状态；仅适配桌面预览相机的 pass 选择。技能附属 prefab 与脚本字段由 `prepare_skill_extra_ui.py` 提取，18 个 `icons.json` 缺项按 APK 地址补入并显式绑定；来源见 `assets/reference/skill-ui/unity-icon-source-manifest.json`。
 
 ## 自定义实现
 
@@ -88,13 +88,15 @@ Windows 竖屏显示适配按用户参考画面保留顶部安全留白：1080 U
 
 ## 尚未实现
 
-- 培养页标题、四槽选择、真实材料数量／不足颜色、同品质升星与跨品质通知已按原组件绑定，并通过 Play Mode 模拟点击和实际截图检查；未装备横向列表已通过 Play Mode 模拟拖拽及点击原定位提示；角色等级上限提示与培养组前后切换已通过 Play Mode；上述培养流程另已通过 675×1463 独立 Windows Player 的模拟点击、键盘与拖拽，并查看实际截图；祝福／赛季提示的专门画面仍需完成。
+- 培养页标题、四槽选择、真实材料数量／不足颜色、同品质升星与跨品质通知已按原组件绑定，并通过 Play Mode 模拟点击和实际截图检查；未装备横向列表已通过 Play Mode 模拟拖拽及点击原定位提示；角色等级上限提示与培养组前后切换已通过 Play Mode；上述培养流程另已通过 675×1463 独立 Windows Player 的模拟点击、键盘与拖拽，并查看实际截图。祝福赛季提示内容和槽级显示另已通过 Play Mode 与 Windows Player 验证。
 
 - 馈赠原道具详情已接入并通过 Play Mode；当前奖励涉及的单人公会种植、钓鱼、养殖来源（类型 22／23／24，对应道具 1530／1540／1550）尚未连接 Unity 目的界面，不能视为全部来源已可达。
-- 伤害测试参数、真实战斗、结算统计已通过 Play Mode 与独立 Windows Player；最新仅内存查看方案亦已通过；结算动作及附加表情已通过 Play Mode、独立 Windows Player 与正式目录运行验证；实际失败战斗分支已通过 Play Mode：隔离濒死状态经实际怪物攻击死亡，进入失败结算、原生受伤动画、统计与技能快照；该分支另已通过 675×1463 独立 Windows Player 的实际战斗、失败结算、统计／快照和返回设置验证，并查看画面；全队幻兽参战仍需接入。
-- 通用弹窗的原遮罩／点击外部关闭和系统消息已通过 Play Mode 与 Windows Player 验证；详情规则说明、技能皮肤替换／视频预览、词条窗口已迁移并通过 Play Mode；召唤物／幻兽超链接、完整来源跳转仍需补齐；已移除手写后备详情和培养布局及技能底部自定义状态文字，不能视为这些公共表现已补齐。
+- 伤害测试参数、真实战斗、胜负结算、仅内存战报、主动与被动技能详情和原技能图标均已通过带画面 Play Mode 与 675×1463 Windows Player 验证；被动触发技能保留 `FightSourceInfo` 对应的物品、品阶和祝福槽级，状态消失后仍能查看本场快照。结算动作、附加表情和失败返回已通过实际运行验证；全队幻兽参战仍需接入。
+- 通用弹窗的原遮罩／点击外部关闭和系统消息已通过 Play Mode 与 Windows Player 验证；详情规则说明、技能皮肤替换／视频预览、词条窗口已迁移并通过 Play Mode；怪物／召唤物／幻兽详情链接与馈赠来源跳转仍需补齐。
 
 ### 实现范围
+
+技能文字、原生 TMP 渐变／效果、安装遮罩、取消与槽位提交及当前赛季祝福显示已恢复，伤害测试主动和被动技能使用完整槽级；带画面 Play Mode 与 Windows Player 交互验证通过。
 
 本地祝福存档仍按既有位面阶位键保存；读取官方 `system_level_gap_limit.SeasonId` 前通过 `astrological_season_config` 映射为原赛季编号，两类编号不直接比较。规则验证包含两者编号不同的情形。
 
@@ -112,4 +114,4 @@ Windows 竖屏显示适配按用户参考画面保留顶部安全留白：1080 U
 
 以下为官方来源、既有规则与回归参考：`OfflineSkillProfile`、`OfflineSkillProgression`、`OfflineCharacterProgressionService`、`CharacterSkillPanel`、`OfficialCharacterPanelView.OpenSkillPanel()`、`OfficialSkillAssetCatalog`、`Zjcs.Editor.Skills.OfficialSkillAssetTools.Validate()`；客户端依据包括 `CharacterPanelSkillContent`、`CharacterPanelSkillListContent`、`SkillPieceDetailDialog`、`SkillMergeConfirmDialog`、`SkillPromotePanel` 与 `SkillMutiPromoteNotifyPanel`。
 
-本轮培养修复的隔离工程静态检查通过（73,879 个稳定 GUID），Unity 导入／编译、`ProjectTools.Validate` 与原技能载荷哈希检查通过。共享工程同期静态检查仍发现其他模块新增脚本缺少 `.meta`；该结果未用于声称共享工作区全量通过。
+本轮技能修复隔离工程通过静态元数据检查（77,491 个稳定 GUID）、Unity 导入／编译、`ProjectTools.Validate` 与技能载荷哈希校验；新触发归属与图标交互另通过实际 Player 验证。

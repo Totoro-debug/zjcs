@@ -161,6 +161,19 @@ namespace Zjcs.Presentation.Character
             Click(recommend);
             yield return new WaitForSecondsRealtime(.5f);
             Require(progression.Player.Skills.Plans[1].ActiveSkills.Any(value => value > 0), "The Player recommendation did not equip skills.");
+            if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_VALIDATE_INSTALL_ONLY") == "1")
+            {
+                foreach (var definition in progression.SkillRules.Skills.Where(value => value.ItemType == 100
+                    && OfflineSkillProgression.IsAvailableFor(value, progression.SkillContext())).Take(12))
+                    if (!progression.Player.Skills.Skills.Any(value => value.ClassId == definition.ClassId))
+                        progression.Player.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = definition.ClassId,
+                            Rank = definition.RankCosts.Min(value => value.CurrentRank) });
+                panel.ReloadProfile(); yield return null;
+                yield return ValidateOriginalInstall(progression, panel);
+                yield return ValidateOriginalBlessing(progression, panel);
+                File.WriteAllText(Path.Combine(output, "result.json"), JsonUtility.ToJson(new Result { passed = true }, true));
+                yield break;
+            }
             yield return null;
             Click(ButtonContaining("PassiveSkillTab"));
             yield return null;
@@ -176,7 +189,7 @@ namespace Zjcs.Presentation.Character
             yield return new WaitForEndOfFrame(); Capture("skills-detail");
             Click(ButtonNamed("CollectionBtn"));
             yield return new WaitForSecondsRealtime(.3f);
-            Require(FindObjectsOfType<Text>().Any(value => value.text == "已置顶该技能"),
+            Require(FindObjectsOfType<TMPro.TMP_Text>().Any(value => value.text == "已置顶该技能"),
                 "The original Player skill collection message is absent.");
             yield return new WaitForEndOfFrame(); Capture("skills-collection-message");
             yield return new WaitForSecondsRealtime(.6f);
@@ -250,7 +263,8 @@ namespace Zjcs.Presentation.Character
                 if (hits.Count > 0 && (hits[0].gameObject == control.gameObject
                     || hits[0].gameObject.transform.IsChildOf(control.transform))) return control;
                 blocked.Add(control.name + " at " + pointer.position + " hit "
-                    + (hits.Count == 0 ? "<none>" : hits[0].gameObject.name + " in " + hits[0].module));
+                    + (hits.Count == 0 ? "<none>" : string.Join("/", hits[0].gameObject.GetComponentsInParent<Transform>()
+                        .Reverse().Select(value => value.name)) + " in " + hits[0].module));
             }
             throw new InvalidOperationException("No unobstructed Player button matches " + description + ": " + string.Join("; ", blocked));
         }
