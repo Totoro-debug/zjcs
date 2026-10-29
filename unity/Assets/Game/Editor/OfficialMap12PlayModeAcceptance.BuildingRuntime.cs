@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Zjcs.Offline.Progression;
+using Zjcs.Offline.State;
 using Zjcs.Offline.World;
 using Zjcs.Presentation.World;
 using Zjcs.Presentation.Combat;
@@ -22,10 +23,20 @@ namespace Zjcs.Editor
         private static IEnumerator VerifyPrivateDungeonEntrySteps(string root, string slot, Transform canvas, string output)
         {
             int soundRegistrations = 0, soundUnregistrations = 0;
+            int closeSoundRegistrations = 0, closeSoundUnregistrations = 0;
             map12Runtime.MapSoundRegistration = (source, registered) =>
             {
-                if (registered) { source.volume = 0f; soundRegistrations++; }
-                else soundUnregistrations++;
+                if (registered)
+                {
+                    source.volume = 0f;
+                    soundRegistrations++;
+                    if (source.gameObject.name == "OfficialDungeonUiSound:Main_Cursor_Back") closeSoundRegistrations++;
+                }
+                else
+                {
+                    soundUnregistrations++;
+                    if (source.gameObject.name == "OfficialDungeonUiSound:Main_Cursor_Back") closeSoundUnregistrations++;
+                }
             };
             RuntimeCall("SetStoryProgress", "IronMountBeforeBattle", 1, 2);
             RuntimeCall("SetStoryProgress", "IronMountActive", 1, 1);
@@ -39,6 +50,15 @@ namespace Zjcs.Editor
             if (!RuntimeField<OfficialWorldMapSession>("session").Movement.IsFit(stand))
                 throw new InvalidDataException("IronMount official interaction point is not walkable.");
             RuntimeCall("SetAvatarPosition", stand);
+            Vector3 placedPosition = RuntimeField<GameObject>("avatar").transform.position;
+            if (!RuntimeField<MapGridPoint>("currentGrid").Equals(stand))
+                throw new InvalidDataException("IronMount fixture placement did not update navigation state.");
+            yield return null;
+            if (!RuntimeField<MapGridPoint>("currentGrid").Equals(stand)
+                || (RuntimeField<GameObject>("avatar").transform.position - placedPosition).sqrMagnitude > 0.001f)
+                throw new InvalidDataException("IronMount fixture position was reset before the pointer click: current="
+                    + RuntimeField<MapGridPoint>("currentGrid").X + "/" + RuntimeField<MapGridPoint>("currentGrid").Y
+                    + ", stand=" + stand.X + "/" + stand.Y + ".");
             IEnumerator pointer = ClickTerminalMapEntity(503);
             while (pointer.MoveNext()) yield return pointer.Current;
             float deadline = Time.realtimeSinceStartup + 12f;
@@ -76,9 +96,16 @@ namespace Zjcs.Editor
                 System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(maskDriver);
             var maskImage = mask == null ? null : mask.GetComponent<RawImage>();
             var maskButton = mask == null ? null : mask.GetComponent<Button>();
+            var maskCanvas = mask == null ? null : mask.GetComponent<Canvas>();
+            var dialogCanvas = dialog.GetComponent<Canvas>();
             if (maskImage == null || maskImage.texture == null || maskButton == null
-                || mask.GetComponent<Canvas>().sortingOrder != dialog.GetComponent<Canvas>().sortingOrder - 1)
-                throw new InvalidDataException("Original private blur image/button/sorting binding is incomplete.");
+                || maskCanvas == null || dialogCanvas == null || maskCanvas.sortingOrder != dialogCanvas.sortingOrder - 1)
+                throw new InvalidDataException("Original private blur image/button/sorting binding is incomplete: "
+                    + "mask=" + (mask != null) + ", image=" + (maskImage != null)
+                    + ", texture=" + (maskImage != null && maskImage.texture != null)
+                    + ", button=" + (maskButton != null) + ", maskCanvas="
+                    + (maskCanvas == null ? "null" : maskCanvas.sortingOrder.ToString())
+                    + ", dialogCanvas=" + (dialogCanvas == null ? "null" : dialogCanvas.sortingOrder.ToString()) + ".");
             var popupSound = dialog.GetComponentsInChildren<WorldPopupWindowSound>(true).Single();
             if (popupSound.ShowSound != null || popupSound.HideSound == null || popupSound.HideSound.name != "Main_Cursor_Back"
                 || popupSound.Post == null || !popupSound.enabled)
@@ -96,7 +123,10 @@ namespace Zjcs.Editor
             float shown = (float)typeof(WorldPopupWindow).GetField("mShowStartTime",
                 System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(dialog.GetComponent<WorldPopupWindow>());
             if (Time.time - shown > .5f) throw new InvalidDataException("The initial half-second mask gate was not observed in time.");
-            SimulateUiClick(maskButton, mask.GetComponent<Canvas>().worldCamera, PrivateMaskInputPoint(maskButton));
+            yield return new WaitForEndOfFrame();
+            ScreenCapture.CaptureScreenshot(Path.Combine(output, "iron-mount-private-mask-preclick.png"));
+            Vector2 maskInputPoint = PrivateMaskInputPoint(maskButton);
+            SimulateUiClick(maskButton, maskCanvas.worldCamera, maskInputPoint);
             yield return null;
             if (closeSoundPosts != 0) throw new InvalidDataException("Early rejected mask click emitted a close sound.");
             if (RuntimeField<GameObject>("map12PrivateDungeonDialog") != dialog)
@@ -106,13 +136,20 @@ namespace Zjcs.Editor
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "iron-mount-private-mask.png"));
             var maskSlots = new Zjcs.Offline.State.ProfileSlotCatalog(root);
             byte[] beforeMaskClose = File.ReadAllBytes(maskSlots.GetProgressPath(slot));
-            SimulateUiClick(maskButton, mask.GetComponent<Canvas>().worldCamera, PrivateMaskInputPoint(maskButton));
-            var closeSoundSource = UnityEngine.Object.FindObjectsOfType<AudioSource>()
-                .SingleOrDefault(source => source.gameObject.name == "OfficialDungeonUiSound:Main_Cursor_Back");
-            if (closeSoundPosts != 1 || soundRegistrations != 1 || closeSoundSource == null || closeSoundSource.clip != popupSound.HideSound
+            SimulateUiClick(maskButton, maskCanvas.worldCamera, maskInputPoint);
+            var closeSoundSources = UnityEngine.Object.FindObjectsOfType<AudioSource>()
+                .Where(source => source.gameObject.name == "OfficialDungeonUiSound:Main_Cursor_Back").ToArray();
+            var closeSoundSource = closeSoundSources.SingleOrDefault();
+            if (closeSoundPosts != 1 || closeSoundRegistrations != 1 || closeSoundSource == null || closeSoundSource.clip != popupSound.HideSound
                 || closeSoundSource.loop || closeSoundSource.spatialBlend != 0f || closeSoundSource.volume != 0f
                 || closeSoundSource.transform.IsChildOf(dialog.transform))
-                throw new InvalidDataException("Original close event did not post once to an independent muted UI source.");
+                throw new InvalidDataException("Original close event did not post once to an independent muted UI source: "
+                    + $"posts={closeSoundPosts}, registrations={soundRegistrations}, sources={closeSoundSources.Length}, "
+                    + $"clip={(closeSoundSource == null || closeSoundSource.clip == null ? "null" : closeSoundSource.clip.name)}, "
+                    + $"volume={(closeSoundSource == null ? -1 : closeSoundSource.volume)}, "
+                    + $"spatial={(closeSoundSource == null ? -1 : closeSoundSource.spatialBlend)}, "
+                    + $"parented={(closeSoundSource != null && closeSoundSource.transform.IsChildOf(dialog.transform))}, "
+                    + $"dialogOpen={RuntimeField<GameObject>("map12PrivateDungeonDialog") == dialog}.");
             deadline = Time.realtimeSinceStartup + 5f;
             while (RuntimeField<GameObject>("map12PrivateDungeonDialog") != null && Time.realtimeSinceStartup < deadline) yield return null;
             yield return null;
@@ -122,7 +159,7 @@ namespace Zjcs.Editor
                 throw new InvalidDataException("Mask close did not release the original window/mask without changing the profile or dungeon state.");
             deadline = Time.realtimeSinceStartup + 5f;
             while (closeSoundSource != null && Time.realtimeSinceStartup < deadline) yield return null;
-            if (closeSoundSource != null || soundUnregistrations != 1)
+            if (closeSoundSource != null || closeSoundUnregistrations != 1)
                 throw new InvalidDataException("Private close sound did not release and unregister its independent source.");
             pointer = ClickTerminalMapEntity(503);
             while (pointer.MoveNext()) yield return pointer.Current;
@@ -152,6 +189,7 @@ namespace Zjcs.Editor
             string dailySave = Path.Combine(slots.GetSlotDirectory(slot), "daily-dungeon-save.json");
             if (File.Exists(dailySave)) throw new InvalidDataException("New isolated profile unexpectedly has daily dungeon state.");
             byte[] profileBefore = File.ReadAllBytes(slots.GetProgressPath(slot));
+            yield return null;
             yield return new WaitForEndOfFrame();
             var battleSound = battle.GetComponent<WorldButtonSound>();
             int battleSoundPosts = 0;
@@ -159,7 +197,6 @@ namespace Zjcs.Editor
             if (postBattleSound == null) throw new InvalidDataException("Original private BattleBtn sound is not bound.");
             battleSound.Post = (clip, emitter) => { battleSoundPosts++; postBattleSound(clip, emitter); };
             SimulateUiClick(battle, battle.GetComponentInParent<Canvas>().worldCamera);
-            if (battleSoundPosts != 1) throw new InvalidDataException("Original private BattleBtn pointer did not emit exactly one normal sound.");
             deadline = Time.realtimeSinceStartup + 12f;
             GameObject route = null;
             while (route == null && Time.realtimeSinceStartup < deadline)
@@ -169,7 +206,14 @@ namespace Zjcs.Editor
                 yield return null;
             }
             if (route == null || RuntimeField<OfficialBattleRuntimeController>("battleController") != null)
-                throw new InvalidDataException("Original private dungeon BattleBtn did not enter the official route map.");
+                throw new InvalidDataException("Original private dungeon BattleBtn did not enter the official route map: "
+                    + $"soundPosts={battleSoundPosts}, soundEnabled={(battleSound != null && battleSound.enabled)}, "
+                    + $"clip={(battleSound == null || battleSound.ClickEvent == null ? "null" : battleSound.ClickEvent.name)}, "
+                    + $"dialogOpen={RuntimeField<GameObject>("map12PrivateDungeonDialog") != null}.");
+            if (battleSoundPosts != 1)
+                throw new InvalidDataException("Original private BattleBtn pointer did not emit exactly one normal sound: "
+                    + $"posts={battleSoundPosts}, enabled={battleSound.enabled}, clip={battleSound.ClickEvent.name}, "
+                    + $"active={(battleSound.isActiveAndEnabled)}, route={route.activeInHierarchy}.");
             deadline = Time.realtimeSinceStartup + 5f;
             while (RuntimeField<GameObject>("map12PrivateDungeonDialog") != null && Time.realtimeSinceStartup < deadline) yield return null;
             if (RuntimeField<GameObject>("map12PrivateDungeonDialog") != null)
@@ -249,10 +293,97 @@ namespace Zjcs.Editor
                 if (retry == null || !retry.gameObject.activeInHierarchy || !retry.IsInteractable())
                     throw new InvalidDataException("Actual private battle loss did not expose the current room for retry.");
             }
+            else
+            {
+                yield return VerifyPrivateVictoryRoute(slots, slot, profileBefore, output);
+            }
             yield return new WaitForEndOfFrame();
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "iron-mount-private-battle-result.png"));
             Debug.Log("Map12 IronMount private entry passed original simulated map and route input; official 121/50 battle 30152 completed with a valid "
                 + (actualOutcome.Won ? "victory" : "loss") + ". Result survived cold read without changing character profile, rewards, public attempts or purchases.");
+        }
+
+        private static IEnumerator VerifyPrivateVictoryRoute(ProfileSlotCatalog slots, string slot,
+            byte[] profileBefore, string output)
+        {
+            foreach (int roomId in new[] { 12104, 12106, 12107, 12108 })
+            {
+                Debug.Log("Map12 private victory route entering room " + roomId + ".");
+                GameObject route = UnityEngine.Object.FindObjectsOfType<Transform>(true)
+                    .FirstOrDefault(value => value.name == "DailyDungeonBigMapDialog")?.gameObject;
+                Button roomButton = route == null ? null : route.GetComponentsInChildren<Button>(true)
+                    .SingleOrDefault(value => value.name == "Room_" + roomId && value.gameObject.activeInHierarchy);
+                if (roomButton == null || !roomButton.IsInteractable())
+                    throw new InvalidDataException("Official private route did not expose next room " + roomId + ".");
+                SimulateUiClick(roomButton, roomButton.GetComponentInParent<Canvas>().worldCamera);
+
+                OfflineDailyDungeonSession session = OfflineDailyDungeonSession.OpenPrivateMap(slots, slot);
+                DailyDungeonRunSave run = session.ActiveRun;
+                DailyDungeonRuntimeRoom room = session.FindRoom(roomId);
+                DailyDungeonRuntimeStage stage = room == null ? null : session.FindStage(room.stageId);
+                bool hasBattle = stage != null && (stage.waveArrayIds?.Length > 0
+                    || stage.waveMonsterIds?.Any(wave => wave?.Length > 0) == true);
+                FightBattleOutcome outcome = null;
+                OfficialBattleRuntimeController controller = null;
+                if (hasBattle)
+                {
+                    float deadline = Time.realtimeSinceStartup + 20f;
+                    while (controller == null && Time.realtimeSinceStartup < deadline)
+                    {
+                        controller = UnityEngine.Object.FindObjectsOfType<OfficialBattleRuntimeController>(true)
+                            .FirstOrDefault(value => value != null && value.Checkpoint != null);
+                        yield return null;
+                    }
+                    if (controller == null || controller.Checkpoint?.StageId != stage.id)
+                        throw new InvalidDataException("Private room " + roomId + " did not enter its official battle.");
+                    // Use the highest speed already unlocked by the official local speed table;
+                    // this keeps the long route acceptance bounded while exercising the same
+                    // controller callback used by the native speed button.
+                    int fastest = controller.UnlockedSpeedIndices.Count == 0
+                        ? controller.SpeedIndex : controller.UnlockedSpeedIndices.Max();
+                    if (fastest != controller.SpeedIndex) controller.SetSpeedIndex(fastest);
+                    controller.StepCompleted += result =>
+                    {
+                        if (result?.Checkpoint?.Finished == true) outcome = result.Checkpoint.Outcome;
+                    };
+                    yield return new WaitForSecondsRealtime(.5f);
+                    yield return new WaitForEndOfFrame();
+                    ScreenCapture.CaptureScreenshot(Path.Combine(output, "iron-mount-private-room-" + roomId + "-battle.png"));
+                    deadline = Time.realtimeSinceStartup + 300f;
+                    while ((outcome == null || controller != null) && Time.realtimeSinceStartup < deadline)
+                        yield return null;
+                    if (controller != null || outcome == null || outcome.Invalid || !outcome.Won)
+                    {
+                        FightBattleCheckpoint state = controller == null ? null : controller.Checkpoint;
+                        string progress = state == null ? "controller destroyed"
+                            : $"phase={controller.Phase}, sequence={state.Sequence}, counter={state.Counter}, "
+                                + $"wave={state.WaveIndex}, finished={state.Finished}, units={state.Units.Count}, "
+                                + $"aliveEnemies={state.Units.Count(unit => unit.Side != 1 && unit.Hp > 0)}";
+                        throw new InvalidDataException("Private room " + roomId
+                            + $" did not complete with a valid local victory (controllerAlive={controller != null}, "
+                            + $"outcomeNull={outcome == null}, invalid={outcome?.Invalid}, won={outcome?.Won}; {progress}).");
+                    }
+                }
+                else yield return null;
+
+                session = OfflineDailyDungeonSession.OpenPrivateMap(slots, slot);
+                run = session.ActiveRun;
+                if (run == null || run.currentRoomId != roomId
+                    || (hasBattle && !run.clearedRoomIds.Contains(roomId))
+                    || session.Save.usedEntries != 0 || session.Save.purchasedEntries != 0
+                    || !File.ReadAllBytes(slots.GetProgressPath(slot)).SequenceEqual(profileBefore))
+                    throw new InvalidDataException("Private route room " + roomId
+                        + " failed to persist its local state without changing public attempts or the character profile.");
+                Debug.Log("Map12 private victory route persisted room " + roomId + ".");
+            }
+
+            OfflineDailyDungeonSession completed = OfflineDailyDungeonSession.OpenPrivateMap(slots, slot);
+            if (completed.ActiveRun == null || !completed.ActiveRun.privateRouteComplete
+                || !completed.ActiveRun.clearedRoomIds.Contains(12104)
+                || !completed.ActiveRun.clearedRoomIds.Contains(12107))
+                throw new InvalidDataException("The official 121/50 victory route did not persist its 12108 endpoint.");
+            yield return new WaitForEndOfFrame();
+            ScreenCapture.CaptureScreenshot(Path.Combine(output, "iron-mount-private-route-complete.png"));
         }
 
         private static Vector2 PrivateMaskInputPoint(Button expected)
@@ -260,6 +391,7 @@ namespace Zjcs.Editor
             var rect = expected.GetComponent<RawImage>().rectTransform;
             Camera camera = expected.GetComponent<Canvas>().worldCamera;
             Canvas.ForceUpdateCanvases();
+            string observations = string.Empty;
             foreach (float x in new[] { .01f, .99f, .1f, .9f, .5f })
                 foreach (float y in new[] { .01f, .99f, .1f, .9f, .5f })
                 {
@@ -272,8 +404,12 @@ namespace Zjcs.Editor
                     GameObject first = hits.FirstOrDefault().gameObject;
                     if (first != null && UnityEngine.EventSystems.ExecuteEvents.GetEventHandler<UnityEngine.EventSystems.IPointerClickHandler>(first) == expected.gameObject)
                         return point;
+                    if (observations.Length < 1200)
+                        observations += $" [{point.x:0},{point.y:0}:{(first == null ? "none" : first.name)}]";
                 }
-            throw new InvalidDataException("Original private blur mask has no reachable area outside its window.");
+            throw new InvalidDataException("Original private blur mask has no reachable area outside its window: "
+                + $"rect={rect.rect}, world={rect.position}, screen={Screen.width}x{Screen.height}, camera={(camera == null ? "null" : camera.name)}"
+                + observations + ".");
         }
 
         private static void VerifyPrivateDungeonSettlementBoundary(Zjcs.Offline.State.ProfileSlotCatalog slots)

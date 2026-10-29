@@ -114,7 +114,9 @@ namespace Zjcs.Editor
                 SessionState.SetInt(Key + ".uiMap", uiMapClassId);
                 SessionState.SetBool(Key, true);
                 SessionState.SetInt(Key + ".result", 1);
-                SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + (verifyBuildingBattle ? 600 : 300));
+                float deadlineSeconds = verifyBuildingBattle ? 600
+                    : SessionState.GetBool(Key + ".privateDungeonEntry", false) ? 900 : 300;
+                SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + deadlineSeconds);
                 EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
                 Hook();
                 EditorApplication.isPlaying = true;
