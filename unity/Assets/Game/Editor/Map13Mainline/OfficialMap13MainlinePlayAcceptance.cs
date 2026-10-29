@@ -55,6 +55,19 @@ namespace Zjcs.Editor.Map13Mainline
             try
             {
                 var data=JsonUtility.FromJson<Map10RuntimeStoryData>(Resources.Load<TextAsset>("Map13/stories").text);
+                var quickBuy=data.quickBuys.SingleOrDefault(value=>value.ItemId==325);
+                Require(data.quickBuys.Length==1&&quickBuy!=null&&quickBuy.CurrencyId==2&&quickBuy.BaseCount==1
+                    &&quickBuy.PriceList.SequenceEqual(new long[]{50})&&quickBuy.PriceBuyCount.SequenceEqual(new long[]{-1})
+                    &&quickBuy.Condition!=null&&quickBuy.Condition._type=="HasItemCondition"
+                    &&quickBuy.Condition.ClassId==4013&&quickBuy.Condition.Count==1&&quickBuy.Condition.Op==">=",
+                    "Original item 325 quick-buy quote or 4013 condition differs.");
+                var quickBuyNodes=(data.stories??Array.Empty<Map10RuntimeStory>()).Concat(data.subgraphs??Array.Empty<Map10RuntimeStory>())
+                    .SelectMany(story=>story.nodes??Array.Empty<Map10RuntimeStoryNode>()).Where(node=>node.type=="ItemQuikBuyNode").ToArray();
+                Require(quickBuyNodes.Length==3&&quickBuyNodes.All(node=>
+                {
+                    var fields=JsonUtility.FromJson<QuickBuyFields>(node.sourceJson);
+                    return fields.ItemId==325&&fields.RequireCount==1;
+                }),"Original item 325 purchase nodes differ.");
                 Require(data.puzzleRules.Length==2690,"Original puzzle placement closure is incomplete.");
                 Require(data.puzzleRules.Count(r=>r.TerminalPuzzleType==6)==6,"Original step-grid terminal count differs.");
                 Require(data.puzzleRules.Count(r=>r.TerminalPuzzleType==2)==5,"Original road-switch terminal count differs.");
@@ -69,12 +82,16 @@ namespace Zjcs.Editor.Map13Mainline
                 Require(JsonUtility.ToJson(new SavedPuzzles{states=snapshot})==JsonUtility.ToJson(new SavedPuzzles{states=restored.Save()}),
                     "All original puzzle states failed their local cold restore.");
                 File.WriteAllText(Path.Combine(Output,"map13-formal-puzzle-rules.json"),JsonUtility.ToJson(new SavedPuzzles{states=snapshot},true));
+                File.WriteAllText(Path.Combine(Output,"map13-formal-quick-buy.json"),JsonUtility.ToJson(new QuickBuyProof
+                {item_id=325,currency_id=2,price_per_item=50,required_item_id=4013,required_item_count=1,story_nodes=quickBuyNodes.Length},true));
                 Debug.Log("Map13 original puzzle rules passed: 2690 placements, 6 step-grid / 5 road-switch terminals, original numeric locks and full local state restore.");
                 EditorApplication.Exit(0);
             }
             catch(Exception e){Debug.LogException(e);EditorApplication.Exit(1);}
         }
         [Serializable] private sealed class SavedPuzzles{public MapPuzzleEntityState[] states;}
+        [Serializable] private sealed class QuickBuyFields{public int ItemId,RequireCount;}
+        [Serializable] private sealed class QuickBuyProof{public int item_id,currency_id,price_per_item,required_item_id,required_item_count,story_nodes;}
         private static void Tick()
         {
             if(!SessionState.GetBool(Key,false))return;
@@ -146,12 +163,12 @@ namespace Zjcs.Editor.Map13Mainline
             runtime.PointerPressProvider=()=>null;Require(sent&&Field<MapGridPoint>(navigation,"currentGrid").Equals(target),"Simulated map pointer did not move the formal player.");
             string mapSave=Path.Combine(slots.GetSlotDirectory(slot),"map-13-save.json");
             var before=JsonUtility.FromJson<VisibilitySave>(File.ReadAllText(mapSave));Require(!string.IsNullOrEmpty(before.map13GridVisibility),"Formal map save omitted original compressed visibility.");
-            ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map13-formal-moved.png"));yield return new WaitForSecondsRealtime(.5f);
+            yield return Capture("map13-formal-moved.png");
             Call(runtime,"CloseMap");yield return null;yield return null;
             runtime=Open(slot,saves,canvas.transform);yield return new WaitForSecondsRealtime(3);
             Require(Field<MapGridPoint>(Field<object>(runtime,"navigation"),"currentGrid").Equals(target),"Formal map position did not survive reopen.");
             var after=JsonUtility.FromJson<VisibilitySave>(File.ReadAllText(mapSave));Require(before.map13GridVisibility==after.map13GridVisibility,"Formal visibility bytes changed on cold reopen.");
-            ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map13-formal-restored.png"));yield return new WaitForSecondsRealtime(.5f);
+            yield return Capture("map13-formal-restored.png");
             Call(runtime,"CloseMap");yield return null;yield return null;
             if(SessionState.GetBool(Key+".trees",false))yield return TreeSteps(slot,saves,canvas.transform,mapSave);
             Require(!failed,"Formal Map13 entry emitted runtime errors.");
@@ -192,7 +209,7 @@ namespace Zjcs.Editor.Map13Mainline
                 Require(fruit.Count==10 && fruit.Select((item,index)=>item.activeSelf==(index<awardCount)).All(value=>value),
                     "Original placement fruit count does not match its live source award query.");
                 long before=(long)Call(runtime,"StoryItemCount",115);
-                ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map13-tree-"+placement.placementId+"-before.png"));yield return new WaitForSecondsRealtime(.5f);
+                yield return Capture("map13-tree-"+placement.placementId+"-before.png");
                 var navigation=Field<object>(runtime,"navigation");var camera=Field<Camera>(runtime,"worldCamera");
                 var position=(Vector3)Call(navigation,"GridToWorld",new MapGridPoint(placement.position.X,placement.position.Y));
                 Vector2 pointer=camera.WorldToScreenPoint(position);
@@ -205,7 +222,7 @@ namespace Zjcs.Editor.Map13Mainline
                 Require(sent&&JsonUtility.FromJson<TreeSave>(File.ReadAllText(mapSave)).completedEntityPlacements.Contains(placement.placementId),"Simulated map click did not complete the source tree.");
                 Require((long)Call(runtime,"StoryItemCount",115)==before+placement.awards.AwardItemInfos.Single().Count,"Original placement award differs.");
                 yield return new WaitForSecondsRealtime(.4f);
-                ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map13-tree-"+placement.placementId+"-removing.png"));yield return new WaitForSecondsRealtime(.5f);
+                yield return Capture("map13-tree-"+placement.placementId+"-removing.png");
                 deadline=Time.realtimeSinceStartup+10;while(tree.gameObject.activeInHierarchy&&Time.realtimeSinceStartup<deadline)yield return null;
                 Require(!tree.gameObject.activeInHierarchy,"Original tree removal performance did not complete.");
                 long total=(long)Call(runtime,"StoryItemCount",115);
@@ -214,7 +231,7 @@ namespace Zjcs.Editor.Map13Mainline
                 trees=Field<NativeMap13TreeWorld>(runtime,"map13Trees");
                 Require(!trees.Entities[placement.placementId].gameObject.activeInHierarchy,"Completed native tree reappeared on cold reopen.");
                 Require((long)Call(runtime,"StoryItemCount",115)==total,"Cold reopen duplicated the original tree award.");
-                ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map13-tree-"+placement.placementId+"-restored.png"));yield return new WaitForSecondsRealtime(.5f);
+                yield return Capture("map13-tree-"+placement.placementId+"-restored.png");
                 Call(runtime,"CloseMap");yield return null;yield return null;
                 Debug.Log("Map13 formal source tree passed: "+placement.placementId+", native original geometry, simulated map click, source award "+placement.awards.AwardItemInfos.Single().Count+", original removal and cold restore.");
             }
@@ -225,6 +242,15 @@ namespace Zjcs.Editor.Map13Mainline
             var model=CharacterCreationNativeModelFactory.CreateWorldModel(slot,saves,out string name);
             var runtime=new GameObject("Map13 formal runtime").AddComponent<OfficialMainlineMapRuntime>();
             runtime.MapMusicVolume=()=>0;runtime.MapVoiceVolume=()=>0;runtime.Begin(13,slot,saves,ui,model,name,null);return runtime;
+        }
+        private static IEnumerator Capture(string name)
+        {
+            string path=Path.Combine(Output,name);
+            yield return new WaitForEndOfFrame();
+            ScreenCapture.CaptureScreenshot(path);
+            float deadline=Time.realtimeSinceStartup+10;
+            while(!File.Exists(path)&&Time.realtimeSinceStartup<deadline)yield return null;
+            Require(File.Exists(path)&&new FileInfo(path).Length>0,"Runtime screenshot was not written: "+name);
         }
         private static void Require(bool value,string message){if(!value)throw new InvalidDataException(message);}
         [Serializable]private sealed class VisibilitySave{public string map13GridVisibility;}

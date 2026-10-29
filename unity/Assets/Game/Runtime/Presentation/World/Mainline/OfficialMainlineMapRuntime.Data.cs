@@ -40,6 +40,17 @@ namespace Zjcs.Presentation.World
             statues.witchResults = storyDataValue?.witchResultEffects ?? Array.Empty<Map11RuntimeWitchResult>();
             statues.witchPeriodicAwards = storyDataValue?.witchPeriodicityAwards ?? Array.Empty<Map11RuntimePeriodicityAward>();
             hud.quickBuys = storyDataValue?.quickBuys ?? Array.Empty<Map11RuntimeQuickBuy>();
+            if (mapClassId == 13)
+            {
+                Map11RuntimeQuickBuy quote = hud.quickBuys.SingleOrDefault(value => value.ItemId == 325);
+                if (hud.quickBuys.Length != 1 || quote == null || quote.CurrencyId != 2 || quote.BaseCount != 1
+                    || quote.RefreshType != 0 || quote.SubRankScaleId != 0 || quote.LevelScaleId != 0
+                    || quote.PriceList == null || quote.PriceList.Length != 1 || quote.PriceList[0] != 50
+                    || quote.PriceBuyCount == null || quote.PriceBuyCount.Length != 1 || quote.PriceBuyCount[0] != -1
+                    || quote.Condition == null || quote.Condition._type != "HasItemCondition"
+                    || quote.Condition.ClassId != 4013 || quote.Condition.Count != 1 || quote.Condition.Op != ">=")
+                    throw new InvalidDataException("Official Map13 item 325 quick-buy quote differs from the pinned source.");
+            }
             int expectedStages = MapProfile.StageCount;
             int expectedStories = MapProfile.StoryCount;
             if (battles == null || battles.manifest != expectedBattleManifest || battles.mapClassId != mapClassId
