@@ -1,0 +1,22 @@
+{
+  "format": 1,
+  "platform": "WindowsStandalone",
+  "apk": {
+    "path": ".tools/source-packages/zjcs_M509085.apk",
+    "manifest": "854_156383",
+    "sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9"
+  },
+  "input": {
+    "path": "res/mipmap-xxxhdpi/app_icon.png",
+    "size": 43635,
+    "dimensions": [192, 192],
+    "sha256": "4b75d2fcc8e3b50f4762246085e3a53d9e2eba951d4f4d71d61b94fe3f7562b4"
+  },
+  "output": {
+    "path": "unity/Assets/Official/ApplicationIcon/app_icon.png",
+    "sha256": "4b75d2fcc8e3b50f4762246085e3a53d9e2eba951d4f4d71d61b94fe3f7562b4",
+    "unityGuid": "36bdc4e98f6048b88d6ce640edac7b27"
+  },
+  "binding": "PlayerSettings.SetIcons(NamedBuildTarget.Standalone, [app_icon.png repeated for every GetIconSizes result], IconKind.Application)",
+  "conversion": "None; copied the original APK PNG bytes without resizing or editing."
+}

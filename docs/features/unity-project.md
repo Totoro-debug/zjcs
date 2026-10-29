@@ -16,6 +16,7 @@
 
 - 工程固定 `2022.3.57f1c2`，配置 450×800 可缩放竖屏、文本序列化、可见 `.meta` 和 `Bootstrap.unity` 构建场景。
 - `ProjectTools.Configure` 配置工程；`ProjectTools.Validate` 检查版本、场景、窗口和相关资源／规则绑定。`BuildWindowsGame` 构建游戏测试版；`BuildFrameworkWindows` 仅为空框架入口。
+- Windows Standalone 的 8 个应用图标尺寸槽使用官方 APK 的 `res/mipmap-xxxhdpi/app_icon.png`；原图及哈希见[官方图标来源清单](../../assets/reference/application-icon-source-manifest.json)。
 - `unity-tools.json` 记录编辑器／工程路径，本机编辑器为 `D:/Tool/Unity/Editor/Unity.exe`；Hub 可选。`scripts/unity.ps1` 提供 `info`、`open` 和 `initialize`，启动前核对版本。
 - `scripts/unity_internal_display.ps1` 按内置屏硬件身份定位，支持隔离工程，不激活窗口或改变系统主屏。内置屏停用／身份不唯一时停止，不回退外接主屏。本机登录定位守护位于 `%LOCALAPPDATA%/UnityInternalDisplay/`，状态为 `status.json`，只匹配本仓库下工程；保持启用。
 

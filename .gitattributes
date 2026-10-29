@@ -1282,11 +1282,3 @@ unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimationChannels
 unity/Assets/Game/Editor/ProfessionUI/Map12NpcAnimationValidation.cs* text eol=lf
 unity/Assets/Official/CharacterCreation/Recovered/NativeCharacterData/Baked/Variants/Female/character_Female_1.skel[[:space:]]Controller.controller filter=lfs diff=lfs merge=lfs -text
 unity/Assets/Official/CharacterCreation/Recovered/NativeCharacterData/Baked/Variants/Male/character_Male_1.skel[[:space:]]Controller.controller filter=lfs diff=lfs merge=lfs -text
-
-# Preserve source-manifested battle model bytes, including mixed line endings.
-unity/Assets/Official/Combat/Presentation/models.json -text
-
-# Preserve the LF bytes recorded by the Map10 native source manifests.
-unity/Assets/Official/World/Map/10/*.prefab text eol=lf
-unity/Assets/Official/World/Map/10/map10.json text eol=lf
-unity/Assets/Game/Resources/Official/Progression/mainline-tasks.json text eol=lf
