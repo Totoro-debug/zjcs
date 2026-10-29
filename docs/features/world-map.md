@@ -74,7 +74,7 @@
 
 `prepare_map_audio.py` 搜索全部已校验的原版 Wwise PCK，随后运行 `prepare_map_music.py` 转换复杂事件；重建时保持这个顺序，后者会扩充前者生成的目录。复杂转换严格解析 113 个原始 bank、734 份 media，使用 [wwiser](https://github.com/bnnm/wwiser) `v20260808`（commit `94580dd3de3280933d69c435e96d4e2c3b443207`）生成原生 TXTP，以 [vgmstream](https://github.com/vgmstream/vgmstream) `r2117` 渲染原始分段、叠层、音量和循环，再用 libsndfile 编码本地 Ogg。保留原 bank 音量、开头与循环起点；没有合成或替代音乐。15 个复杂音乐事件共有 29 个配置分支，另转换 3 份 Map23 过渡音频；13 段内嵌 bank 语音亦已取得。版本、包来源、输入和输出哈希、严格解析结果及工具哈希见 [music-source-manifest.json](../../assets/reference/official-map/music-source-manifest.json)。
 
-运行目录共覆盖 4,632 个音乐／语音事件、49 个 BGM 编号；火／冰、普通／混沌、三种岩层区域和活动歌单按原控制事件选择。`chapter_5_main_36_17` 在已取得的原版音频包及对应事件检索中未找到，继续保留缺项；Map23 的九段顺序过渡片段与原 132 BPM／四拍节拍、来源专用过渡规则、淡入淡出、前奏／尾奏提示点已接入跨区域播放，记录见 music-source-manifest.json。
+运行目录共覆盖 4,632 个音乐／语音事件、49 个 BGM 编号；火／冰、普通／混沌、三种岩层区域和活动歌单按原控制事件选择。Map14 的 `chapter_5_main_36_17` 是原剧情时间轴路由键，对应语音资源与演出时序见[龙之国地图页](../maps/map-14.md)。Map23 的九段顺序过渡片段与原 132 BPM／四拍节拍、来源专用过渡规则、淡入淡出、前奏／尾奏提示点已接入跨区域播放，记录见 music-source-manifest.json。
 
 `prepare_map_activity_boss.py` 按固定版原构造器完整消费解码 4 张首领表，另解码 `monster_group`、`step_award`、`chest` 的共享池和奖励。地图 94、95、96、98 使用原首领、模型挂点、面板、关卡、难度修正、每日挑战／参与奖／击败上限、伤害阶梯和宝箱奖励；大额伤害拆成有界整数保存，符合现有地图存档格式。使用已转换的原始怪物属性公式，实际回合仍由项目本地战斗执行器结算。
 
@@ -101,7 +101,7 @@ Map10、Map11 已接入同一套主线运行时，具有固定 APK 导出的地�
 地图进度与探索采用本地单机数据。运行时不请求服务端；具体条件和奖励只在已有官方配置或明确的离线决定支持时接入。
 
 - 按 `official-source.json` 选择输入，优先核对 APK，再读所选版本已校验的云端缓存；既有转换保留真实版本，跨版同哈希复用另记凭据，不冒充原版本补齐。
-- 固定 APK 和已校验原版本 Wwise 包未找到 chapter_5_main_36_17，用户确认该事件静音，不补造音频；来源见 [audio-source-manifest.json](../../assets/reference/official-map/audio-source-manifest.json)。
+- Map14 对话音频的时间轴路由与本地素材核对见[龙之国地图页](../maps/map-14.md)；该路由键不作为单条直接语音事件处理。
 - 地图、区域、位置、格访问、公共／私人实体、剧情、机关、活动、货架、战斗及领取状态须共同持久化，失败回滚，时钟回拨不刷新。旧 official.play.adventure 是规则映射参考，Unity 完整存档接线尚未完成。
 - 服务器与运营日历开放采用[离线政策](offline-access.md)，个人等级、阶位、材料与真实地图目标继续检查。地图活动首次打开目录建立本地起点，内部阶段按原日界及 UnlockHours 推进；身份、回合、机关与领奖回执分别保存，共享地形不合并活动进度。
 
