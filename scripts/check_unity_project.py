@@ -7,7 +7,7 @@ import json
 import re
 import sys
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).absolute().parents[1]
 PROJECT = ROOT / 'unity'
 
 
