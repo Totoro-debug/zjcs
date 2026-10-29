@@ -122,7 +122,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkData/MiniMapMarkDataPorts.cs",
-      "sha256": "4b12bde9ddcc5108b24e33d7fe16170f1fd1d69814f419f0771e34e0310d0a20"
+      "sha256": "41f623ba2cf6a46523b2043d48e75319c03f3ebbb1104cde975da664a6a84476"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkData/Zjcs.Official.World.Map13MiniMapMarkData.asmdef",
@@ -131,8 +131,8 @@
   ],
   "generator": {
     "path": "scripts/prepare_unity_map13_minimap_mark_data.py",
-    "sha256": "7d8f47917a47ac35f709e4b3848b43c3afbab47a98d5229924d37fa32bcdd8a6",
-    "worktree_sha256": "7d8f47917a47ac35f709e4b3848b43c3afbab47a98d5229924d37fa32bcdd8a6",
+    "sha256": "b1eaef50af2ed9362853c8bb8f4435f46f8b7deed0c47ba55c48d50f2d7a5570",
+    "worktree_sha256": "b1eaef50af2ed9362853c8bb8f4435f46f8b7deed0c47ba55c48d50f2d7a5570",
     "normalization": "Repository LF text; original executed worktree bytes recorded separately"
   },
   "reused": [
@@ -145,7 +145,7 @@
       "sha256": "c0fc46e82cf41da56690cf9d9f492bbd8bc23513fc300929577dfcd06fec4520"
     }
   ],
-  "operation": "Copy all six original live/offline marker classes, including constructors, icon precedence, status/null branches, body-center arithmetic, original factory type selection and transfer/entry dispatch. Recover original name/description lookup helpers. Replace singleton/DI consumption with explicit typed read/command ports; configuration/placement projections expose only consumed fields and preserve actual source identity. Keep original live versus offline position/body-range differences. Adapt logging backend only. Copy complete original live/offline description provider interfaces, ordered provider lists and transport implementations, and both original waypoint usability methods. Preserve Mainland_{map} and region_{map}_{region} localization keys.",
+  "operation": "Copy all six original live/offline marker classes, including constructors, icon precedence, status/null branches, body-center arithmetic, original factory type selection and transfer/entry dispatch. Recover original name/description lookup helpers. Replace singleton/DI consumption with explicit typed read/command ports; configuration/placement projections expose only consumed fields and preserve actual source identity. Keep original live versus offline position/body-range differences. Adapt logging backend only. Copy complete original live/offline description provider interfaces, ordered provider lists and transport implementations, and both original waypoint usability methods. Preserve Mainland_{map} and region_{map}_{region} localization keys. Expose original MiniMapMark/hide/public/offline/InteractionUnique consumed configuration fields for the original marker managers.",
   "limitations": [
     "Formal entity/config/state bindings, original marker prefab/icon rendering, map input/persistence and Windows Player remain pending. These Play Mode checks validate marker data and rules using typed read/command fixtures; they do not establish the full Map13 minimap as playable."
   ],

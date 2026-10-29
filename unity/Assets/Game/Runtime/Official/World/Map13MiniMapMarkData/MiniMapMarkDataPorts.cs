@@ -34,6 +34,8 @@ namespace Zjcs.Official.World.Map13MiniMap
     {
         public int CompleteState;
         public string DialogIconPrefab;
+        public string MiniMapMark;
+        public bool MiniMapMarkHideInEnd,MiniMapMarkShowInPublic,MiniMapMarkShowInOffline,InteractionUnique;
     }
     public sealed class MiniMapMarkMapInfo { public int MapGroupId; }
     public sealed class MiniMapMarkTransportTargetInfo { public int TargetMapClassId,TargetRegion; }
