@@ -39,8 +39,17 @@ def restore(reader):
             pixels = atlas.get_image_data()
             assert digest(pixels) == receipt["atlas"]["sha256"]
             atlas_record = next(row for row in receipt["outputs"] if row["path"].endswith("Atlas.texture.asset"))
-            atlas_bytes = subprocess.check_output(["git", "show", "HEAD:" + atlas_record["path"]], cwd=ROOT)
-            assert digest(atlas_bytes) == atlas_record["sha256"]
+            atlas_bytes = None
+            revisions = subprocess.check_output(
+                ["git", "log", "--all", "--format=%H", "--", atlas_record["path"]],
+                cwd=ROOT, text=True).splitlines()
+            for revision in revisions:
+                candidate = subprocess.check_output(
+                    ["git", "show", revision + ":" + atlas_record["path"]], cwd=ROOT)
+                if digest(candidate) == atlas_record["sha256"]:
+                    atlas_bytes = candidate
+                    break
+            assert atlas_bytes is not None, atlas_record["path"]
             serialized_pixels = bytes.fromhex(re.search(rb"(?m)^  _typelessdata: ([0-9a-f]+)$", atlas_bytes)[1].decode())
             assert serialized_pixels == pixels
             redirects = {}

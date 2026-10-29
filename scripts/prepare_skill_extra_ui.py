@@ -219,6 +219,10 @@ def restore(reader, schemas, data, city, rules):
         path = ROOT / ".tools/source-packages/official-code/client-source" / (name + ".cs")
         inputs["hyperlink_code"].append({"source": path.relative_to(ROOT).as_posix(),
             "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
+    pet_formula = ROOT / ".tools/source-packages/official-code/common-source/Common/BattleFormulaHandler.cs"
+    inputs["pet_entity_formula"] = {"source": pet_formula.relative_to(ROOT).as_posix(),
+        "sha256": hashlib.sha256(pet_formula.read_bytes()).hexdigest(),
+        "methods": ["CalculatePetEntityBaseProps", "GetPetSkillRank"]}
     for key, (bundle, prefab) in templates.items():
         data[key], extracted = recover_prefab(reader, schemas, bundle, prefab, city)
         sprites.update(extracted)

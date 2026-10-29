@@ -94,6 +94,8 @@ Windows 竖屏显示适配按用户参考画面保留顶部安全留白：1080 U
 - 伤害测试参数、真实战斗、胜负结算、仅内存战报、主动与被动技能详情和原技能图标均已通过带画面 Play Mode 与 675×1463 Windows Player 验证；被动触发技能保留 `FightSourceInfo` 对应的物品、品阶和祝福槽级，状态消失后仍能查看本场快照。结算动作、附加表情和失败返回已通过实际运行验证；全队幻兽参战仍需接入。
 - 通用弹窗的原遮罩／点击外部关闭和系统消息已通过 Play Mode 与 Windows Player 验证；详情规则说明、技能皮肤替换／视频预览、词条窗口已迁移并通过 Play Mode；怪物／召唤物／幻兽详情链接与馈赠来源跳转仍需补齐。
 
+已从固定 APK 恢复 `MonsterBriefInfoPanel`、`MonsterDetailPropsDialog` prefab 与原模型绑定。怪物链接已接入原弹窗和战斗模型库；宠物实体链接按本地宠物阶段／等级、主人属性及官方 `CalculatePetEntityBaseProps`／`CalcSummonMonsterInheritProp` 组合属性。技能等级优先读取已保存等级；无保存值时按官方 `PetUtils.GetSkillRank`／`SkillRankInfoParser.GetOrigRank`，从技能品质选择原始最低 rank。详情尚未实例化 `ItemIconPetSkill`、`SkillWithOuterTagItem`，因此主动／被动技能项、技能详情点击与实际画面交互仍未完成；馈赠来源跳转也未接入。隔离工程此前通过 C# 编译、`ProjectTools.Validate` 和技能资源哈希校验，但未验证本次改动后的链接交互。
+
 ### 实现范围
 
 技能文字、原生 TMP 渐变／效果、安装遮罩、取消与槽位提交及当前赛季祝福显示已恢复，伤害测试主动和被动技能使用完整槽级；带画面 Play Mode 与 Windows Player 交互验证通过。
