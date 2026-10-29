@@ -226,10 +226,9 @@ namespace Zjcs.Editor
             yield return new WaitForEndOfFrame();
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "iron-mount-private-battle.png"));
             deadline = Time.realtimeSinceStartup + 300f;
-            while (RuntimeField<OfficialBattleRuntimeController>("battleController") != null
+            while ((actualOutcome == null || controller != null)
                 && Time.realtimeSinceStartup < deadline) yield return null;
-            if (RuntimeField<OfficialBattleRuntimeController>("battleController") != null || actualOutcome == null
-                || actualOutcome.Invalid)
+            if (controller != null || actualOutcome == null || actualOutcome.Invalid)
                 throw new InvalidDataException("Official private battle did not deliver a valid local victory/loss result.");
             privateSession = Zjcs.Offline.World.OfflineDailyDungeonSession.OpenPrivateMap(slots, slot);
             run = privateSession.ActiveRun;
