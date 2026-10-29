@@ -7,6 +7,7 @@ using Spine.Unity;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zjcs.Combat.Official;
 using Zjcs.Offline.Progression;
@@ -30,6 +31,16 @@ namespace Zjcs.Editor
         public static void RunBackground()
         {
             SessionState.SetBool(Key + ".audioOnly", false);
+            SessionState.SetBool(Key + ".treasureOnly", false);
+            SessionState.SetBool(Key + ".ui", false);
+            try { SessionState.SetBool(Key + ".background", true); RunCore(); }
+            catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
+        }
+
+        public static void RunTreasureDetail()
+        {
+            SessionState.SetBool(Key + ".audioOnly", false);
+            SessionState.SetBool(Key + ".treasureOnly", true);
             SessionState.SetBool(Key + ".ui", false);
             try { SessionState.SetBool(Key + ".background", true); RunCore(); }
             catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
@@ -46,8 +57,12 @@ namespace Zjcs.Editor
         private static IEnumerator VerifyBackground(Transform canvas)
         {
             yield return new WaitForSecondsRealtime(1);
-            yield return VerifyMapMusic();
-            yield return VerifyDialogueAudio();
+            bool treasureOnly = SessionState.GetBool(Key + ".treasureOnly", false);
+            if (!treasureOnly)
+            {
+                yield return VerifyMapMusic();
+                yield return VerifyDialogueAudio();
+            }
             if (SessionState.GetBool(Key + ".audioOnly", false))
             {
                 Invoke("CloseMap");
@@ -94,9 +109,71 @@ namespace Zjcs.Editor
                 && save.InventoryCount(goddessRegion.DropItems.First()) == itemCountBeforePreview,
                 "Opening the goddess treasure preview does not activate the goddess or grant its preview items");
             Capture("background-goddess-treasure-preview");
+            int previewItemId = goddessRegion.DropItems.First();
+            OfficialMap11UiAssets itemAssets = Resources.Load<OfficialMap11UiAssets>("Map11/UI/DynamicItems");
+            Require(itemAssets != null, "Official Map11 item asset bindings are loaded");
+            WorldItemIcon previewIcon = previewIcons.Single(value => value.Icon.sprite == itemAssets.Item(previewItemId));
+            Button previewButton = previewIcon.GetComponent<Button>();
+            Require(previewButton != null && previewButton.interactable, "Selected official treasure preview has an active button");
+            yield return SimulatePointerClick(previewButton);
+            OfficialTreasureDetailPopup detail = UnityEngine.Object.FindObjectOfType<OfficialTreasureDetailPopup>();
+            Require(detail != null, "Pointer click opens the official treasure detail prefab");
+            Transform detailPrefab = detail.transform.Find("TreasureDetailDialog");
+            Require(detailPrefab != null, "Original treasure detail prefab is mounted under its full-screen input canvas");
+            float detailShowDeadline = Time.realtimeSinceStartup + 3f;
+            while (!detail.IsShown && Time.realtimeSinceStartup < detailShowDeadline) yield return null;
+            Require(detail.IsShown, "Official treasure detail show animation reaches its completed state");
+            Canvas detailCanvas = detailPrefab.GetComponent<WorldPopupWindow>()?.Canvas;
+            Canvas goddessCanvas = GameObject.Find("Map11GoddessUI")?.GetComponent<Canvas>();
+            Require(detailCanvas != null && goddessCanvas != null && detailCanvas.overrideSorting
+                && detailCanvas.sortingOrder > goddessCanvas.sortingOrder,
+                "Official detail window canvas renders above the goddess dialog");
+            Require(detailPrefab.Find("BgDialog1/Content/TopGo/IconSlot/Icon")
+                    ?.GetComponent<Image>()?.sprite == itemAssets.Item(previewItemId),
+                "Official treasure detail binds the selected item icon");
+            TMP_Text detailName = detailPrefab.Find("BgDialog1/Content/TopGo/NameGo/NameText")?.GetComponent<TMP_Text>();
+            TMP_Text detailType = detailPrefab.Find("BgDialog1/Content/TopGo/TypeText")?.GetComponent<TMP_Text>();
+            TMP_Text detailQuality = detailPrefab.Find("BgDialog1/Content/TopGo/QualityText")?.GetComponent<TMP_Text>();
+            Require(detailName != null && !string.IsNullOrEmpty(detailName.text),
+                "Official treasure detail shows its localized item name");
+            Require(detailType != null && !string.IsNullOrEmpty(detailType.text)
+                && detailQuality != null && !string.IsNullOrEmpty(detailQuality.text),
+                "Official treasure detail shows localized item type and quality");
+            TMP_Text detailCount = detailPrefab.Find("BgDialog1/Content/TopGo/CountGo/CountContent/CountText")
+                ?.GetComponent<TMP_Text>();
+            Require(detailPrefab.Find("BgDialog1/Content/TopGo/CountGo")?.gameObject.activeSelf == true
+                && detailCount != null && detailCount.text == save.InventoryCount(previewItemId).ToString(),
+                "Official treasure detail shows the persisted local inventory count");
+            Require(!detailPrefab.Find("BgDialog1/Content/TopGo/TreasureStarInfo").gameObject.activeSelf
+                && !detailPrefab.Find("BgDialog1/Content/MiddleGo").gameObject.activeSelf,
+                "Unsupported remote star, attribute and set data are not shown as prefab defaults");
+            Require(!detailPrefab.Find("BgDialog1/Content/MiddleGo/DialogButtonGroup").gameObject.activeSelf
+                && !detailPrefab.Find("BgDialog1/Content/TopGo/RightUpBtns/ShareBtn").gameObject.activeSelf,
+                "Read-only treasure detail hides operation and unsupported share controls");
+            yield return new WaitForSecondsRealtime(.6f);
+            Capture("background-goddess-treasure-detail");
+            Image detailMask = detail.GetComponent<Image>();
+            Require(detailMask != null && detailMask.raycastTarget,
+                "Official popup close-by-mask behavior is bound to a full-screen transparent raycast image");
+            yield return SimulatePointerClick(detail.gameObject, detailMask,
+                new Vector2(Mathf.Max(2, Screen.width * .02f), Screen.height * .5f), true);
+            yield return new WaitForSecondsRealtime(.5f);
+            Require(UnityEngine.Object.FindObjectOfType<OfficialTreasureDetailPopup>() == null
+                && goddessDialog != null && goddessDialog.gameObject.activeInHierarchy,
+                "Cancel closes only the detail popup and returns to the goddess dialog");
+            Require(save.InventoryCount(previewItemId) == itemCountBeforePreview,
+                "Viewing and closing treasure detail never grants the preview item");
             yield return new WaitForEndOfFrame();
             Invoke("CloseGoddessDialog");
             yield return new WaitForSecondsRealtime(.5f);
+            if (treasureOnly)
+            {
+                Capture("background-goddess-treasure-detail-closed");
+                SessionState.SetInt(Key + ".result", 0);
+                Debug.Log("Map11 goddess treasure detail passed: simulated UGUI pointer events open and close the official read-only item dialog without granting preview inventory.");
+                EditorApplication.isPlaying = false;
+                yield break;
+            }
             Capture("background-map-world-monsters");
             yield return new WaitForEndOfFrame();
             yield return CaptureWorldMonsterView(3828);
@@ -199,6 +276,67 @@ namespace Zjcs.Editor
             yield return VerifyStatues(canvas);
             SessionState.SetInt(Key + ".result", 0);
             EditorApplication.isPlaying = false;
+        }
+
+        private static IEnumerator SimulatePointerClick(Button button)
+        {
+            Require(button != null && button.interactable, "A live UI button is required for simulated pointer input");
+            Require(button.isActiveAndEnabled, "Simulated pointer target button is active in the UI hierarchy");
+            Require(button.targetGraphic != null, "Original button target graphic is bound");
+            yield return SimulatePointerClick(button.gameObject, button.targetGraphic,
+                RectTransformUtility.WorldToScreenPoint(null,
+                    button.targetGraphic.rectTransform.TransformPoint(button.targetGraphic.rectTransform.rect.center)));
+        }
+
+        private static IEnumerator SimulatePointerClick(GameObject receiver, Graphic targetGraphic, Vector2 position,
+            bool requireGraphicRaycast = false)
+        {
+            EventSystem eventSystem = EventSystem.current;
+            if (eventSystem == null) eventSystem = UnityEngine.Object.FindObjectOfType<EventSystem>(true);
+            if (eventSystem == null)
+                eventSystem = new GameObject("Map11SimulatedInput", typeof(EventSystem)).GetComponent<EventSystem>();
+            if (!eventSystem.gameObject.activeSelf) eventSystem.gameObject.SetActive(true);
+            if (!eventSystem.enabled) eventSystem.enabled = true;
+            RectTransform targetRect = targetGraphic == null ? null : targetGraphic.rectTransform;
+            Require(receiver != null && targetRect != null, "Simulated pointer receiver and graphic are bound");
+            Require(RectTransformUtility.RectangleContainsScreenPoint(targetRect, position),
+                "Simulated pointer position lies inside its visible target graphic");
+            var probe = new PointerEventData(eventSystem) { position = position };
+            var hits = new System.Collections.Generic.List<RaycastResult>();
+            eventSystem.RaycastAll(probe, hits);
+            RaycastResult hit = hits.FirstOrDefault(value => value.gameObject != null
+                && (value.gameObject == receiver || value.gameObject.transform.IsChildOf(receiver.transform)));
+            Require(hit.gameObject != null || !requireGraphicRaycast,
+                "Simulated click raycast reaches its intended UI target");
+            if (hit.gameObject == null)
+            {
+                // Some converted nested official graphics do not participate in GraphicRaycaster.
+                hit = new RaycastResult
+                {
+                    gameObject = targetGraphic.gameObject,
+                    screenPosition = position,
+                    worldPosition = targetRect.position
+                };
+            }
+            var eventData = new PointerEventData(eventSystem)
+            {
+                button = PointerEventData.InputButton.Left,
+                position = position,
+                pressPosition = position,
+                pointerPress = receiver,
+                rawPointerPress = hit.gameObject,
+                pointerClick = receiver,
+                pointerPressRaycast = hit,
+                pointerCurrentRaycast = hit,
+                pointerEnter = hit.gameObject,
+                eligibleForClick = true,
+                clickCount = 1,
+                clickTime = Time.unscaledTime
+            };
+            ExecuteEvents.Execute(receiver, eventData, ExecuteEvents.pointerDownHandler);
+            ExecuteEvents.Execute(receiver, eventData, ExecuteEvents.pointerUpHandler);
+            ExecuteEvents.Execute(receiver, eventData, ExecuteEvents.pointerClickHandler);
+            yield return new WaitForEndOfFrame();
         }
 
         private static IEnumerator AdvanceScriptedDialogue()

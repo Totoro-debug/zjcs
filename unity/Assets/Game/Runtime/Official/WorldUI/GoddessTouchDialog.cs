@@ -23,6 +23,7 @@ namespace Zjcs.Official.WorldUI
 
         public sealed class TreasurePreview
         {
+            public int itemId;
             public GameObject prefab;
             public Sprite icon;
             public Sprite quality;
@@ -46,6 +47,7 @@ namespace Zjcs.Official.WorldUI
         private Action transfer;
         private Action cannotActivate;
         private Action closed;
+        private Action<int> treasureClicked;
         private bool canActivate;
         private readonly List<GameObject> propItems = new List<GameObject>();
         private readonly List<GameObject> treasureItems = new List<GameObject>();
@@ -67,10 +69,19 @@ namespace Zjcs.Official.WorldUI
             string blessing, string[] propDescriptions, TreasurePreview[] treasurePreviews, Action activate, Action doTransfer,
             Action showCannotActivate, Action onClosed)
         {
+            DoInit(isActived, canActiveGoddess, name, condition, blessing, propDescriptions, treasurePreviews,
+                activate, doTransfer, showCannotActivate, onClosed, null);
+        }
+
+        public void DoInit(bool isActived, bool canActiveGoddess, string name, string condition,
+            string blessing, string[] propDescriptions, TreasurePreview[] treasurePreviews, Action activate, Action doTransfer,
+            Action showCannotActivate, Action onClosed, Action<int> onTreasureClicked)
+        {
             startStage = activate;
             transfer = doTransfer;
             cannotActivate = showCannotActivate;
             closed = onClosed;
+            treasureClicked = onTreasureClicked;
             canActivate = canActiveGoddess && !isActived;
             myStageName.text = name;
             mConditionDesc.text = condition;
@@ -116,6 +127,13 @@ namespace Zjcs.Official.WorldUI
                     icon.Init(preview.icon, preview.quality, string.Empty);
                     if (icon.myTextGo != null) icon.myTextGo.SetActive(false);
                     if (icon.BottomGo != null) icon.BottomGo.SetActive(false);
+                    Button button = icon.GetComponent<Button>();
+                    if (button != null && treasureClicked != null)
+                    {
+                        button.enabled = true;
+                        int itemId = preview.itemId;
+                        button.onClick.AddListener(() => treasureClicked(itemId));
+                    }
                     treasureItems.Add(icon.gameObject);
                 }
             }

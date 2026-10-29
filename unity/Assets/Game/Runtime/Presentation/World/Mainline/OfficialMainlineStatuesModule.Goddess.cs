@@ -76,13 +76,36 @@ namespace Zjcs.Presentation.World
                     if (itemPrefab == null) throw new InvalidDataException("Official goddess item template is missing: " + itemId);
                     return new GoddessTouchDialog.TreasurePreview
                     {
+                        itemId = itemId,
                         prefab = itemPrefab, icon = itemAssets.Item(itemId), quality = itemAssets.ItemQuality(itemId)
                     };
                 }).ToArray();
                 goddessDialog.DoInit(IsGoddessActivated(entity), full, host.NativeUi.Text("entity_" + entity.EntityClassId + "_name"),
                     condition, blessing, props, treasurePreviews,
                     () => ActivateGoddess(entity), () => TransferToGoddess(entity),
-                    () => host.hud.ShowOfficialNotice(host.NativeUi.Text("STAGE_CONDITION_REGION_PROGRESS_NOT_FULL")), CloseGoddessDialog);
+                    () => host.hud.ShowOfficialNotice(host.NativeUi.Text("STAGE_CONDITION_REGION_PROGRESS_NOT_FULL")), CloseGoddessDialog,
+                    ShowTreasureDetail);
+            }
+
+            private void ShowTreasureDetail(int itemId)
+            {
+                OfficialMap11UiAssets assets = Resources.Load<OfficialMap11UiAssets>(host.NativeUiResource("DynamicItems"));
+                GameObject prefab = Resources.Load<GameObject>(host.NativeUiResource("TreasureDetailDialog"));
+                if (assets == null || prefab == null)
+                    throw new InvalidDataException("Official goddess treasure detail assets are missing.");
+                int quality = assets.ItemQualityId(itemId);
+                if (quality < 0 || quality > 7)
+                    throw new InvalidDataException("Official goddess treasure quality is invalid: " + itemId);
+                string itemName = host.NativeUi.Text("item_" + itemId + "_name");
+                if (string.IsNullOrEmpty(itemName)) throw new InvalidDataException("Official goddess treasure name is missing: " + itemId);
+                string[] qualities = { "None", "White", "Blue", "Purple", "Orange", "Gold", "Red", "Rainbow" };
+                string qualityName = host.NativeUi.Text("Quality." + qualities[quality]);
+                string itemTypeName = host.NativeUi.Text("ItemType.Treasure");
+                if (string.IsNullOrEmpty(itemTypeName))
+                    throw new InvalidDataException("Official goddess treasure type localization is missing.");
+                long ownedCount = host.progression.Player.Inventory.FirstOrDefault(value => value.ItemId == itemId)?.Count ?? 0;
+                OfficialTreasureDetailPopup.Open(host.uiParent, prefab, assets,
+                    itemId, itemName, itemTypeName, qualityName, ownedCount, null);
             }
 
             private void ActivateGoddess(Map10RuntimeEntity entity)

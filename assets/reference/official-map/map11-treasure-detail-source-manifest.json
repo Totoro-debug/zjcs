@@ -1,0 +1,54 @@
+{
+  "manifest": "854_156383",
+  "mapClassId": 11,
+  "asset": "TreasureDetailDialog",
+  "source": {
+    "package": ".tools/source-packages/zjcs_M509085.apk",
+    "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+    "bundleSha256": "22b593546590624e51bdbaf2164cc72288cf2e6d664d79f881b5d8ae53087cd8",
+    "bundleSize": 1729063,
+    "pathId": "7702841787184371397",
+    "prefab": "/TreasureDetailDialog.prefab",
+    "sourceManifest": {
+      "path": "unity/Assets/Official/World/Map/11/UI/source-manifest.json",
+      "sha256": "75d16adc707f2b82dfc5bb8455117b70e8cdd3d94e683c542c29ea9b1ebd48f5"
+    }
+  },
+  "conversion": {
+    "input": {
+      "path": "unity/Assets/Official/World/Map/11/UI/map11-ui.json",
+      "sha256": "656c1eb1e240af1a05351bfcb052021802ec214eb5e2e1c16a83eca26acacaf3"
+    },
+    "tools": [
+      {
+        "path": "scripts/prepare_unity_map11_ui.py",
+        "sha256": "ab2c8ae0283d6aae910a4fd4bfa5468a805ac66bb97593fe49a29279ecc84113"
+      },
+      {
+        "path": "unity/Assets/Game/Editor/OfficialMap11UiTools.cs",
+        "sha256": "d2cbfd8b3647038e092b627e20fb84fe492758b4f6e9eb21c2e4b236103a6181"
+      }
+    ],
+    "operation": "Extract the pinned official prefab hierarchy and references, restore its original Unity UI components in the native prefab, and keep gameplay-only fields read-only through the runtime binding."
+  },
+  "runtimeBindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/GoddessTouchDialog.cs",
+      "sha256": "ded7c8b1ddd4f553b62dc9b65af35ff81df9e4ae0d673deb5fd789187838be0c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineStatuesModule.Goddess.cs",
+      "sha256": "86fef2308f54e879252af8221ed44f01d772dabf8318b86657d2b0a7795185c3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialTreasureDetailPopup.cs",
+      "sha256": "8a6487e74b552393dc3c81ecb59e7911a34044371f4ab3b607d3dfc493fbde37"
+    }
+  ],
+  "output": {
+    "path": "unity/Assets/Game/Resources/Map11/UI/TreasureDetailDialog.prefab",
+    "sha256": "c14643b02cc4de907db8e2063e56dd86c9dfad79d8fe4952b981c0cfea75373c",
+    "size": 769853,
+    "runtimeResource": "Map11/UI/TreasureDetailDialog"
+  }
+}

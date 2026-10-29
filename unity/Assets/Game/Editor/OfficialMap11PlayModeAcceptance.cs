@@ -127,9 +127,30 @@ namespace Zjcs.Editor
             {
                 ConfigureGameView();
                 GameObject startupFlow = GameObject.Find("CharacterCreationFlow");
-                if (startupFlow != null) UnityEngine.Object.Destroy(startupFlow);
+                if (startupFlow != null)
+                {
+                    startupFlow.SetActive(false);
+                    UnityEngine.Object.Destroy(startupFlow);
+                }
                 GameObject startupCanvas = GameObject.Find("CharacterCreationCanvas");
-                if (startupCanvas != null) UnityEngine.Object.Destroy(startupCanvas);
+                if (startupCanvas != null)
+                {
+                    startupCanvas.SetActive(false);
+                    UnityEngine.Object.Destroy(startupCanvas);
+                }
+                GameObject startup = GameObject.Find("OfficialStartup");
+                if (startup != null)
+                {
+                    startup.SetActive(false);
+                    UnityEngine.Object.Destroy(startup);
+                }
+                GameObject saveSelection = GameObject.Find("OfficialSaveSelectionPanel");
+                if (saveSelection != null)
+                {
+                    GameObject root = saveSelection.transform.root.gameObject;
+                    root.SetActive(false);
+                    UnityEngine.Object.Destroy(root);
+                }
                 if (EventSystem.current == null)
                     new GameObject("Map11Input", typeof(EventSystem), typeof(StandaloneInputModule));
                 var canvas = new GameObject("Map11Canvas", typeof(RectTransform), typeof(Canvas),
