@@ -69,7 +69,7 @@ namespace Zjcs.Editor.Map14
             if (errors == 0)
             {
                 SessionState.SetInt(Key + ".result", 0);
-                Debug.Log("Map14 original audio asset Play Mode passed: 418 imported PCM clips, exact original PCM samples, all mapped clips played through actual AudioSource/listener output, including entity Timeline split chant media. Original bus DSP/RTPC, dialog/playable event invocation, map input and saves remain pending.");
+                Debug.Log("Map14 original audio Play Mode passed: 418 imported PCM clips match exact original samples and played through AudioSource/listener output; the Map14 direct-dialogue player loaded, played and stopped an original VoiceEventKey. Original bus DSP/RTPC, story graph invocation, playable event invocation, map input and saves remain pending.");
             }
             EditorApplication.isPlaying = false;
         }
@@ -148,8 +148,29 @@ namespace Zjcs.Editor.Map14
                 output.Stop(); output.clip = null; clip.UnloadAudioData(); Resources.UnloadAsset(clip);
                 Debug.Log("Map14 exact PCM and actual listener output passed: " + entry.eventKey + " -> " + entry.clip);
             }
+            yield return VerifyVoicePlayer(voice);
             yield return VerifyMap14Music(bgm);
             UnityEngine.Object.Destroy(emitter);
+        }
+        private static IEnumerator VerifyVoicePlayer(Mapping voice)
+        {
+            var playerType = AppDomain.CurrentDomain.GetAssemblies()
+                .Select(assembly => assembly.GetType("Zjcs.Presentation.World.OfficialMap11StoryAudioPlayer", false))
+                .FirstOrDefault(type => type != null);
+            Require(playerType != null, "shared original dialogue voice player is loaded");
+            var host = new GameObject("Map14 original dialogue voice player verification");
+            var player = host.AddComponent(playerType);
+            playerType.GetMethod("Initialize").Invoke(player, new object[] { new Func<float>(() => 1f), 14 });
+            Entry binding = voice.events[0];
+            playerType.GetMethod("RefreshVoice").Invoke(player, new object[] { binding.eventKey });
+            var source = (AudioSource)playerType.GetField("source", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(player);
+            float deadline = Time.realtimeSinceStartup + 10;
+            while ((!source || source.clip == null || !source.isPlaying) && Time.realtimeSinceStartup < deadline) yield return null;
+            Require(source && source.clip != null && source.clip.samples == binding.pcm.frames
+                && source.isPlaying, "Map14 VoiceEventKey loads and plays through the original story voice player");
+            playerType.GetMethod("StopVoice").Invoke(player, null);
+            Require(!source.isPlaying && source.clip == null, "Map14 Voice_StopAll stops and releases the active direct dialogue voice");
+            UnityEngine.Object.Destroy(host);
         }
         private static IEnumerator VerifyMap14Music(Mapping bgm)
         {

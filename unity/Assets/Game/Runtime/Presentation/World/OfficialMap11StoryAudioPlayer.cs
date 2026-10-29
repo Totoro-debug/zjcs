@@ -24,17 +24,19 @@ namespace Zjcs.Presentation.World
 
         public void Initialize(Func<float> volume, int mapClassId = 11)
         {
-            if (mapClassId != 11 && mapClassId != 12) throw new ArgumentOutOfRangeException(nameof(mapClassId));
+            if (mapClassId != 11 && mapClassId != 12 && mapClassId != 14) throw new ArgumentOutOfRangeException(nameof(mapClassId));
             string prefix = "Map" + mapClassId + "/Audio/";
+            int expectedEvents = mapClassId == 11 ? 207 : mapClassId == 12 ? 236 : 400;
+            string clipDirectory = mapClassId == 14 ? "VoicesPcm/" : "Voices/";
             TextAsset payload = Resources.Load<TextAsset>(prefix + "voices");
             Mapping mapping = payload == null ? null : JsonUtility.FromJson<Mapping>(payload.text);
-            if (mapping == null || mapping.manifest != (mapClassId == 12 ? "871_156598" : "854_156383") || mapping.mapClassId != mapClassId
-                || mapping.stopEventKey != "Voice_StopAll" || mapping.events == null || mapping.events.Length != (mapClassId == 12 ? 236 : 207))
+            if (mapping == null || mapping.manifest != (mapClassId == 11 ? "854_156383" : "871_156598") || mapping.mapClassId != mapClassId
+                || mapping.stopEventKey != "Voice_StopAll" || mapping.events == null || mapping.events.Length != expectedEvents)
                 throw new InvalidDataException("Map11 original dialogue voice mapping is invalid.");
             foreach (Event value in mapping.events)
             {
                 if (value == null || string.IsNullOrEmpty(value.eventKey) || string.IsNullOrEmpty(value.clip)
-                    || !value.clip.StartsWith(prefix + "Voices/", StringComparison.Ordinal)
+                    || !value.clip.StartsWith(prefix + clipDirectory, StringComparison.Ordinal)
                     || value.clip.Contains("..") || float.IsNaN(value.gainDb) || float.IsInfinity(value.gainDb) || clips.ContainsKey(value.eventKey))
                     throw new InvalidDataException("Map11 original dialogue voice binding is malformed.");
                 clips.Add(value.eventKey, value);
