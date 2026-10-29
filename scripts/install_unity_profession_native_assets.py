@@ -38,8 +38,14 @@ def install(scope, project):
                 # Unity rewrites importer defaults on import. Ownership is
                 # established by exact PNG payload and original asset GUID;
                 # the verified export separately checks the source metadata.
-                if not target.resolve().is_relative_to(destination.resolve()) or sha(target) != old["sha256"] or guid(target) != row["guid"] or "TextureImporter:" not in meta.read_text(encoding="utf-8"):
+                if not target.resolve().is_relative_to(destination.resolve()) or sha(target) != old["sha256"] or "TextureImporter:" not in meta.read_text(encoding="utf-8"):
                     raise ValueError("Existing PNG replacement is not the verified converter output")
+                if guid(target) != row["guid"]:
+                    # A prior Unity import may have given an unused converter
+                    # PNG a distinct identity after the native Texture2D was
+                    # installed. It no longer duplicates the selected native
+                    # GUID. Keep it; this install does not own that identity.
+                    continue
                 target.unlink()
                 meta.unlink()
     exports = CACHE / "typed/export/ExportedProject/Assets"

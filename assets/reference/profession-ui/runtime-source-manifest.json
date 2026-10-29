@@ -294,6 +294,18 @@
     "path": "assets/reference/profession-ui/detail-controllers-source-manifest.json",
     "sha256": "ac5ae32aa64028d1c66484168a4bf24e009ee63b9bb61d1f2a15381c6f6be9fa"
   },
+  "info_panels": {
+    "path": "assets/reference/profession-ui/info-panels-source-manifest.json",
+    "sha256": "431508fc021d9f95542246c3d7010e9791bb1c01399520b5d6a557368f071bd7"
+  },
+  "skill_resources": {
+    "path": "assets/reference/profession-ui/skill-resources-source-manifest.json",
+    "sha256": "c9859c6ed1ab1ed64da9fd836331ef4c101fb3fb863e8a1d3721ffcb67e596af"
+  },
+  "skill_icons": {
+    "path": "assets/reference/profession-ui/skill-icons-source-manifest.json",
+    "sha256": "d8a17830b96725110c4626ebebac5dba19d369e5e4746d9945f7cd2943ce91ca"
+  },
   "image_resources": {
     "path": "assets/reference/profession-ui/image-resource-source-manifest.json",
     "sha256": "58e2e246bd0c4c66915b8fd78873c0d274bcd45adb4e04a5e64e0db101b5715e"
@@ -484,7 +496,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "17aa7a5320485e423319398ad162325675cf1582660d705a0846df9b096e756b"
+    "sha256": "0745934a97e0f5e64da3988f23f0fed0190b39bf1a5c1ac44f9aa0d5a52a8b79"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",
