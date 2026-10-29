@@ -294,6 +294,14 @@
     "path": "assets/reference/profession-ui/detail-controllers-source-manifest.json",
     "sha256": "ac5ae32aa64028d1c66484168a4bf24e009ee63b9bb61d1f2a15381c6f6be9fa"
   },
+  "upgrade_panel": {
+    "path": "assets/reference/profession-ui/upgrade-panel-source-manifest.json",
+    "sha256": "3ac4b7c37ac4cda7eedc4679a0cdad070f2a009a5050fa6ebbf5538939d7f7f0"
+  },
+  "detail_resources": {
+    "path": "assets/reference/profession-ui/detail-resources-source-manifest.json",
+    "sha256": "0c39ca26f3e074704bbd9fa8a0bab054890aa12ad94d3414b933ce74ab5c27a9"
+  },
   "info_panels": {
     "path": "assets/reference/profession-ui/info-panels-source-manifest.json",
     "sha256": "431508fc021d9f95542246c3d7010e9791bb1c01399520b5d6a557368f071bd7"
@@ -496,7 +504,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "0745934a97e0f5e64da3988f23f0fed0190b39bf1a5c1ac44f9aa0d5a52a8b79"
+    "sha256": "ceabcd753514c484bf2b90096d6b0e7d37d1fef6f0596cc1517ac2a050625d1f"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",

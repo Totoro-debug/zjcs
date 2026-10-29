@@ -1,0 +1,167 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "code_manifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "application_assembly": {
+    "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+  },
+  "ports": [
+    {
+      "name": "PlayerUIBase",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayerUIBase.cs",
+        "sha256": "75c025c1a350a752d92962887fa9d978ce7258f5854df6b968145c5420a89a81"
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerUIBase.cs",
+        "sha256": "3d3c2754d8995be7725ba61645d6ab5e7100fc916b8a981c33fa3a104844749f"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerUIBase.cs.meta",
+        "sha256": "1b16bf5cf5deaba45600db9b9f74ad88262a6f9a217dc90294bd7566b5fce6c9"
+      }
+    },
+    {
+      "name": "RedDotItemBase",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/RedDotItemBase.cs",
+        "sha256": "8270f2bc24effdc5512386aebd2d19f8443856e2ccf5714eee710b56a24d0add"
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionRedDotItemBase.cs",
+        "sha256": "ee7f281607592df107a4e96e912a094bbf77a727e77b10555446c52853f7d8eb"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionRedDotItemBase.cs.meta",
+        "sha256": "6de8da163cdf7718986526410a16b889f9cbbd99bc7f950f52a5c55b3768055d"
+      }
+    },
+    {
+      "name": "ProfessionUpgradeRedDotItem",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/ProfessionUpgradeRedDotItem.cs",
+        "sha256": "3c320f5a97ee21d7e61630d32d2c40241c28c26d5fbe14910937d41547982d69"
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionUpgradeRedDotItem.cs",
+        "sha256": "7ec023744c518897ec09dca7936048dd0a179a9d0bb0cc209e2c60e2f5dc709f"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionUpgradeRedDotItem.cs.meta",
+        "sha256": "98b970402706c2f041de886cc8ebc9e6f8aa90d86a8533d5d002d52ec58e893b"
+      }
+    },
+    {
+      "name": "APropEffectPlayAgent",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/APropEffectPlayAgent.cs",
+        "sha256": "5349a4f44fe99270d6fdfdebfcdefd819ee9b9c080718886938a077272a906f3"
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/APropEffectPlayAgent.cs",
+        "sha256": "b97140c282b9a462bc9708fd5cf26ad25e469d43c0de76001b75448487c6beb0"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/APropEffectPlayAgent.cs.meta",
+        "sha256": "0824adfb2e77c6af8d3635fce6e35f0f55cd70461ce9d9687325003520f1e6f6"
+      }
+    },
+    {
+      "name": "PropUpgradeEffectAgent",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/PropUpgradeEffectAgent.cs",
+        "sha256": "e836e7f48d979284479cc7282615e3f98b614979b1b98f18709165071291294f"
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PropUpgradeEffectAgent.cs",
+        "sha256": "1330fefc5becf03f8f30e1bf016e1dde593687d563920f5619cf1859d0a6aa63"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PropUpgradeEffectAgent.cs.meta",
+        "sha256": "1c88427d11ac851b6ef92f0159744ca8fbf2b8dc588558cb5187731170ad28f9"
+      }
+    },
+    {
+      "name": "ProfessionUpgradePanel",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/ProfessionUpgradePanel.cs",
+        "sha256": "24a2a4898fa24903c1819320afb0d120df4cd673e07b8851185c540aaf7965de"
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionUpgradePanel.cs",
+        "sha256": "e89fc6623da56d1e59e908c01d613f74865241c1f5cac89d9b7060f881b99114"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionUpgradePanel.cs.meta",
+        "sha256": "e0fa688e73bef8d223d8eff9a638161caf770120ab4668252e6e01f005bfe3e7"
+      }
+    },
+    {
+      "name": "PlayerUseItemContent",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayerUseItemContent.cs",
+        "sha256": "2c32e5ed91bc7add41f1433b13e8e20722f1fe42409a6af5708e18a64d71c2be"
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerUseItemContent.cs",
+        "sha256": "26530bc768e17a72297d7a32584062ba3234000fab1c56942b16a158724717cb"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerUseItemContent.cs.meta",
+        "sha256": "969fab63ae61e3b946c4c7bc4526532ff9a44c8ceec621e2af1c8550f6c31dda"
+      }
+    }
+  ],
+  "bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionUpgradeBindings.cs",
+      "sha256": "b3975dbf99074bbce337d83764e03e3c8af8ff1bda49fc65fb705a437ec9f4bb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionUpgradeBindings.cs.meta",
+      "sha256": "242d8cbdd1bc77f24232e7e6dd60644969758bdb308fa6b4793dfdfe728d3531"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_profession_upgrade_panel.py",
+    "sha256": "9fe4be7b9988bb31f18af57ab665e176755f17c5a64e9127897ee71c8ac442bf"
+  },
+  "transform_extensions": {
+    "source": {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-source/Framework/TransformExtensions.cs",
+      "sha256": "79fa1bf15205d678778cc6274b45722eef60e686f0070a3a66f2fc8de21b02c1"
+    },
+    "output": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionUseItemTransformExtensions.cs",
+      "sha256": "025e7803a690ad949201dd17840bd66908721d148d39a1f1cc7b65b12f53b09e"
+    },
+    "meta": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionUseItemTransformExtensions.cs.meta",
+      "sha256": "c3a23d91e9140d64d72adf41f9035d7086afb00b6df00f46ef1030d445fd8ec9"
+    },
+    "scope": "Original DestroyChildren and DestroyActivedChildren only."
+  },
+  "consumed_enum": {
+    "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/ItemType.cs",
+    "sha256": "8a1a33483ed28de00b9bc37dd60899ae0cb2fa7d7bd821b42f6e43cdcb3dbcaf"
+  },
+  "operation": "Copy all methods of seven original upgrade/player-UI/red-dot/effect/use-item components. Preserve update order, next-level cost lookup, pending badge calculation branch, five player subscriptions, dirty red-dot update, property pool/background/effect order, success-only animation, use-item lifecycle, money-only shortage and merge-tip conditions. Adapt application parser/player/formula/typed-property/transaction calls to explicit consumed services; reuse original UIBase, ItemIcon, GameObjectPool and existing property presentation port.",
+  "validated_scope": "Unity 2022.3.57f1c2 Direct3D Play Mode in an isolated project: exact original ProfessionPanel prefab and upgrade row, zero missing MonoBehaviours, original serialized upgrade references/state switcher/show clip and verified CN font config + full original Chinese binary text readers. Simulated mouse checks upgrade failure/deferred success and native use-item money-only shortage/fallthrough; source FIFO rows, zero omission, modulo-four backgrounds, previous/current/diff/cost order, changed-property effects and animation, badge/nonbadge/function/unlock/max red-dot branches, five player subscriptions, disable/re-enable/player-reinit cleanup passed. Native upgrade subtree screenshots were actually viewed at a matching 1080x1920 Game View/render target. Parent detail page initialization, character/level/name/tab data, typed property formatting, popup contents, player/formula/transactions, save and Windows publication are not validated and remain incomplete.",
+  "limitations": [
+    "Production player/formula/transaction/property-format services and full parent detail page initialization remain incomplete; only the original upgrade subtree and an independently owned use-item control are exercised.",
+    "Existing property-row port is still scoped to string presentation; full typed/colorful property and blessing popup paths remain required.",
+    "No complete native profession page, save verification or Windows release is claimed."
+  ],
+  "validation_entry": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionUpgradePanelValidation.cs",
+    "sha256": "c52e7b60b99d13ebd3d4c0f58fc38c7e4d9fca1cb08495a03ba280c516bf80e6"
+  },
+  "language_inputs": {
+    "path": "unity/Assets/Official/World/Map/13/Source/native-label-language.json",
+    "sha256": "e88c4db3b476f650024c1dc9f05b26f9637b5dc7990e17816f03f4d681c87d06"
+  }
+}

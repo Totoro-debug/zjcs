@@ -79,6 +79,8 @@ def build():
         appearance_ui_lite=file_record(ROOT / "assets/reference/profession-ui/appearance-ui-lite-source-manifest.json"),
         weapon_texture_loader=file_record(ROOT / "assets/reference/profession-ui/weapon-texture-loader-source-manifest.json"),
         detail_controllers=file_record(ROOT / "assets/reference/profession-ui/detail-controllers-source-manifest.json"),
+        upgrade_panel=file_record(ROOT / "assets/reference/profession-ui/upgrade-panel-source-manifest.json"),
+        detail_resources=file_record(ROOT / "assets/reference/profession-ui/detail-resources-source-manifest.json"),
         info_panels=file_record(ROOT / "assets/reference/profession-ui/info-panels-source-manifest.json"),
         skill_resources=file_record(ROOT / "assets/reference/profession-ui/skill-resources-source-manifest.json"),
         skill_icons=file_record(ROOT / "assets/reference/profession-ui/skill-icons-source-manifest.json"),

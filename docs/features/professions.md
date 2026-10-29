@@ -30,6 +30,8 @@
 
 ### 官方代码与资源依据
 
+职业原升级面板：原 `ProfessionUpgradePanel`、玩家 UI 基类、升级红点、两个属性特效代理及 `PlayerUseItemContent` 七类全部方法已迁入，保留前后等级／差额／消耗的执行顺序、零属性过滤、FIFO 行复用、四行一组背景、成功回调后动画，以及徽章补足／普通材料／功能锁／未解锁／满级红点分支和五类玩家事件，见 `profession-ui/upgrade-panel-source-manifest.json`。原详情／信息／升级 prefab 闭包的 89 个资产、55 类脚本已显式绑定；86 个载荷中新增 77 个、保留 9 个共享资产，三个 shader 复用已核验的官方 Windows 转换，原托管引用支持 CRLF，见 `detail-resources-source-manifest.json`。完整原中文二进制和原 CN 字体配置用于隔离 Direct3D Play Mode；1080×1920 Game View 与渲染目标一致，原窗口显示动画、升级按钮和独立原材料按钮的模拟鼠标／遮挡、失败与延迟成功、属性效果、禁用／重启／玩家重初始化及回收检查通过，升级前后运行截图已查看。顶层详情 Init 未运行，人物／等级／名称／页签仍为未初始化原 prefab 状态，属性名与玩家／公式／事务为夹具；正式本地服务、完整类型化属性与祝福、完整页面、存档和 Windows 发布尚未完成。隔离 Unity 导入／编译及全局 `ProjectTools.Validate` 通过。
+
 职业信息与技能图标：原 `ProfessionInfoPanel`、武器类型图标、技能条目／插槽、`ItemIconSkill`、星级与祝福显示八类全部方法及原默认排序链已迁入，来源与边界见 `profession-ui/info-panels-source-manifest.json`。六个原技能／附件 prefab 的 43 个资源和 21 类脚本依赖完成显式绑定，恢复原托管引用表，不保留转换器临时注册格式；27 个新资产接入、15 个已有字体／图集资产保持原字节，见 `skill-resources-source-manifest.json`。按 APK 优先核对当前版后解码五张完整原 Luban 表，打包 31 个职业、376 项技能、36 项皮肤及原装备类型配置；418 处图标用途对应 400 个原 Sprite、77 张完整原生纹理，保留网格、UV、采样和原地址／GUID，见 `skill-icons-source-manifest.json`。隔离 Direct3D 验证所有 Sprite 几何与属性、139,984,896 字节 GPU mip 哈希，并在原技能 prefab 中逐项验证 412 项技能／皮肤、31 职业主动／被动及阶位降序、星级严格阈值、祝福／调试／皮肤事件、池与订阅释放，三条模拟鼠标弹窗派发和遮挡检查通过，实际运行截图已查看。文字数值、玩家与弹窗端点为夹具；完整信息页 Init／滚动列表／武器图标／雷达联动、弹窗内容、正式玩家服务、存档及 Windows 发布尚未完成。隔离 Unity 导入／编译及全局 `ProjectTools.Validate` 通过。
 
 职业详情控制器：原 `ProfessionPanel`、`ProfessionSkillBadgeRewarder`、`ProfessionChangeJumpBtn` 的所有方法已迁入，来源与服务边界见 `profession-ui/detail-controllers-source-manifest.json`。保留原初始化／复初始化、三个页签状态、等级上限检查与事件顺序、技能阶位差额／降序展示、领取成功后弹窗、首个后继导师和前置导师回溯；资源句柄按原窗口禁用／导师组件销毁边界释放。隔离 Direct3D Play Mode 的模拟鼠标、遮挡、状态、事件、差额领取和释放检查通过，GPU 控件夹具截图已查看。详情子面板、弹窗内容、正式玩家／导师服务与完整原 prefab 尚未绑定，不代表职业页面完成或 Windows 发布。

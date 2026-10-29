@@ -82,7 +82,10 @@ def install(scope, project):
                 assembly, namespace, name = entry["binding"]
                 old = "type:\n        class: " + entry["type"] + "\n        ns:" + (" " + entry["namespace"] if entry["namespace"] else "") + "\n        asm: " + entry["assembly"]
                 new = "type:\n        class: " + name + "\n        ns: " + namespace + "\n        asm: " + assembly
-                text = text.replace(old, new)
+                # Restored native YAML can retain the converter's CRLF. Match
+                # both forms without changing any other serialized bytes.
+                for newline in ("\r\n", "\n"):
+                    text = text.replace(old.replace("\n", newline), new.replace("\n", newline))
             raw = text.encode("utf-8")
         meta_source = source.with_name(source.name + ".meta")
         meta_raw = meta_source.read_bytes()

@@ -1,0 +1,2893 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "generator": {
+    "path": "scripts/prepare_unity_profession_detail_resources.py",
+    "sha256": "f40ddac964e4b00d27da1b789c327d6cbd1a8f3e2242307418da1ba2541631c6"
+  },
+  "installer": {
+    "path": "scripts/install_unity_profession_native_assets.py",
+    "sha256": "9613d10ba9e7f4910abd1b618ec841fecd909042ce95f1c3b8047b0fdbcaa808"
+  },
+  "closure": {
+    "format": 1,
+    "manifest": "871_156598",
+    "scope": "detail-panels",
+    "seeds": [
+      "Prefabs/UI/Profession/ProfessionPanel.prefab",
+      "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab"
+    ],
+    "verified_export": {
+      "path": "assets/reference/profession-ui/native-export-source-manifest.json",
+      "sha256": "8001aef15b75a6995b66a7e1d4081b4d7a5f5e3fb38fdafb399c502bf12dd382"
+    },
+    "verified_fonts": {
+      "path": "assets/reference/profession-ui/fonts-source-manifest.json",
+      "sha256": "69ccae9e75eec332cff18658aec7c4e5fee5cb93dea9277292b5f11924acded1"
+    },
+    "operation": "Take the full original dependency closure of the original detail window and upgrade-property prefab. Preserve native GUIDs, object IDs, hierarchy, layout, animations, serialized bindings and managed references; no constructed replacement UI.",
+    "generator": {
+      "path": "scripts/prepare_unity_profession_detail_resources.py",
+      "sha256": "f40ddac964e4b00d27da1b789c327d6cbd1a8f3e2242307418da1ba2541631c6"
+    },
+    "assets": {
+      "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab",
+        "sha256": "34fb3c7da85b45a4d16b370c72ace5b24fd51d1f4447797017fb525acf13c1bf",
+        "owner": "explicit original skill presentation prefab"
+      },
+      "Effect/Materials/Fx_Guangzhu_08_1_F.mat": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/Materials/Fx_Guangzhu_08_1_F.mat",
+        "sha256": "8085b6d780484ba7bf21fe99c53e38e3c5fb2c7ba461cb6adb6e41c3047b55c1",
+        "owner": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab"
+      },
+      "Shaders/Effect/Noise_Mask_Pro.shader": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Shaders/Effect/Noise_Mask_Pro.shader",
+        "sha256": "fe209e8b326cc5009b2f702fe2bde5d19c6a07e623d652e9396b78687774bab6",
+        "owner": "Effect/Materials/Fx_Guangzhu_08_1_F.mat"
+      },
+      "Effect/textures/Fx_Guangzhu_08_1_F.png": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/textures/Fx_Guangzhu_08_1_F.png",
+        "sha256": "d584a45744a17292c75bc722d624dbed641de2f2405ae38162838d34aece374d",
+        "owner": "Effect/Materials/Fx_Guangzhu_08_1_F.mat"
+      },
+      "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat",
+        "sha256": "15f4d6300fbcf8dbcd5771091ba5049e4b730286d1cf5876120abfca08a9e2eb",
+        "owner": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab"
+      },
+      "ProfessionNativeTextures/FZY4K SDF - dynamic Atlas.texture2d.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/native-textures/ProfessionNativeTextures/FZY4K SDF - dynamic Atlas.texture2d.asset",
+        "sha256": "3c2d4082c52c96edb636f8e4a27bd11616b531b1ed30720d662b2d1d2201f8c9",
+        "owner": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat"
+      },
+      "Packages/com.unity.textmeshpro/Shaders/TMP_SDF-Mobile.shader": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Packages/com.unity.textmeshpro/Shaders/TMP_SDF-Mobile.shader",
+        "sha256": "9f3de0d5ac1a786cd4db8df77716ef6c6b7132dafe244e8ad1d5d54b85655a93",
+        "owner": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat"
+      },
+      "Effect/Materials/XingZhuang/Fx_XingZhuang_379_F 1.mat": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/Materials/XingZhuang/Fx_XingZhuang_379_F 1.mat",
+        "sha256": "cf3f319b6f7d775c06540a8fb2bc395c83b1c8aa1e6a9f15641ec8a303548802",
+        "owner": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab"
+      },
+      "Effect/textures/XingZhuang/Fx_XingZhuang_379_F.png": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/textures/XingZhuang/Fx_XingZhuang_379_F.png",
+        "sha256": "872ff6f5cbadddb2a8b28835c0ef153a0e07d1e787f965d8bb3ffe77d70e7ee6",
+        "owner": "Effect/Materials/XingZhuang/Fx_XingZhuang_379_F 1.mat"
+      },
+      "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset",
+        "sha256": "105e7a1824224c754e0561081031cb8c1d8e5974719ba130e724072a75999526",
+        "owner": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab"
+      },
+      "Wwise/ScriptableObjects/Event/9B104E93-926C-474B-8ECF-66D30CA68770.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/9B104E93-926C-474B-8ECF-66D30CA68770.asset",
+        "sha256": "1c5cb634ce401a1110742bb467d05333a20614ade209e5c3a786067d2198b180",
+        "owner": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab"
+      },
+      "Effect/Materials/Fx_GuangDian_155.mat": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/Materials/Fx_GuangDian_155.mat",
+        "sha256": "d6c775887f20b30b818e45d503865360341171f0fd07657d22916f8f20063fe4",
+        "owner": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab"
+      },
+      "Effect/textures/Fx_GuangDian_155.png": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/textures/Fx_GuangDian_155.png",
+        "sha256": "2802496fed7c6d6dca5a16c802fb6012f8e4eb93c3fc44fc636255e211939348",
+        "owner": "Effect/Materials/Fx_GuangDian_155.mat"
+      },
+      "Image/UI/Skill/Skill_Atlas/ImgBgAtt.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Skill/Skill_Atlas/ImgBgAtt.asset",
+        "sha256": "957e37c262587b3ee215436d276a20f8cdc8974c35a64551d442cc33c2a58090",
+        "owner": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab"
+      },
+      "Texture2D/sactx-0-1024x1024-ASTC 6x6-Skill_Atlas-97153254.png": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Texture2D/sactx-0-1024x1024-ASTC 6x6-Skill_Atlas-97153254.png",
+        "sha256": "06279fc2e97fc7ae427d7d12b2d9e2351de5e954962559d9c79a7fc2037f14a3",
+        "owner": "Image/UI/Skill/Skill_Atlas/ImgBgAtt.asset"
+      },
+      "Effect/Materials/XingZhuang/Fx_XingZhuang_379_F.mat": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/Materials/XingZhuang/Fx_XingZhuang_379_F.mat",
+        "sha256": "0a88744cf0d32948f558bd069e344acccd7697d9dfcae472c9f413bc4c674d89",
+        "owner": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab"
+      },
+      "Effect/textures/Fx_WenLi_12_6.png": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/textures/Fx_WenLi_12_6.png",
+        "sha256": "50e9769c9720e69900dda8677a37522342d00fca93b7a75b64c3ccd90036a236",
+        "owner": "Effect/Materials/XingZhuang/Fx_XingZhuang_379_F.mat"
+      },
+      "Effect/Materials/XingZhuang/Fx_XingZhuang_379_1_F.mat": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/Materials/XingZhuang/Fx_XingZhuang_379_1_F.mat",
+        "sha256": "dd8ef6fc7bd6a7c7db1e0b71421a21bb50a1a05b07b9abf219d9cadc5eab3710",
+        "owner": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab"
+      },
+      "Effect/textures/XingZhuang/Fx_XingZhuang_379_1_F.png": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/textures/XingZhuang/Fx_XingZhuang_379_1_F.png",
+        "sha256": "d6e6fe2a812781dda5c2b4a5664839737a2d031cdd083b9803e4711bd8e9c8a9",
+        "owner": "Effect/Materials/XingZhuang/Fx_XingZhuang_379_1_F.mat"
+      },
+      "Effect/Materials/XingZhuang/Fx_XingZhuang_379_2_F.mat": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/Materials/XingZhuang/Fx_XingZhuang_379_2_F.mat",
+        "sha256": "01e17902c8727c48d307c15a02fa836f7a2729006761a2c5d4c7eb8d32de6a75",
+        "owner": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab"
+      },
+      "Effect/textures/XingZhuang/Fx_XingZhuang_379_2_F.png": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/textures/XingZhuang/Fx_XingZhuang_379_2_F.png",
+        "sha256": "932e466ef9200abac7651e6028c636e10e3cfebbd7a44a8d1a29f31ea5128377",
+        "owner": "Effect/Materials/XingZhuang/Fx_XingZhuang_379_2_F.mat"
+      },
+      "Prefabs/UI/Profession/ProfessionPanel.prefab": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/Prefabs/UI/Profession/ProfessionPanel.prefab",
+        "sha256": "bcc3988879a3e601f8a7e705ca6b83489f276e5e7a18e658738b3ad2f06177a1",
+        "owner": "explicit original skill presentation prefab"
+      },
+      "TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium Atlas Material.mat": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium Atlas Material.mat",
+        "sha256": "8107e225690046158287dcf17903e12ad1bfab4caa926398cfe1fdcbfae40bf4",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium Atlas.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/fonts/TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium Atlas.asset",
+        "sha256": "af10bde87bc66a1777ceca7d997e15ec25b3b2b9822eb5947fe1c48ac7221e2e",
+        "owner": "TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium Atlas Material.mat"
+      },
+      "Image/UI/Profession/Profession_Atlas/ImgGradient_Career.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Profession/Profession_Atlas/ImgGradient_Career.asset",
+        "sha256": "d8bac11361ae53fa22757bd8bb4b7ec93be0c041ee84567ffff6ec1bdeeabdeb",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Texture2D/sactx-0-1024x1024-ASTC 6x6-Profession_Atlas-c8489b47.png": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Texture2D/sactx-0-1024x1024-ASTC 6x6-Profession_Atlas-c8489b47.png",
+        "sha256": "2ac8b24cc777b7c5571d4017b928e8715d0c272d76bdae763af7e76dd3d99128",
+        "owner": "Image/UI/Profession/Profession_Atlas/ImgGradient_Career.asset"
+      },
+      "Prefabs/UI/PlayerInfo/PropItem.prefab": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Prefabs/UI/PlayerInfo/PropItem.prefab",
+        "sha256": "d10a510c41e78eb43e7937970cca23f2685e82e06e76b804026be8bbec54cf86",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/Common/Common_Atlas/ImgBlueDot.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBlueDot.asset",
+        "sha256": "a5b7e41e03ce3afd4bbc2b284437407878753feebe5278a1b0aa7a5879563e83",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "ProfessionNativeTextures/sactx-0-2048x2048-ASTC 6x6-Common_Atlas-7a2befb3.texture2d.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/native-textures/ProfessionNativeTextures/sactx-0-2048x2048-ASTC 6x6-Common_Atlas-7a2befb3.texture2d.asset",
+        "sha256": "d9fa5cf869d6674d386c40c1b773c0870096d049d1a980b1f257a976548b0446",
+        "owner": "Image/UI/Common/Common_Atlas/ImgBlueDot.asset"
+      },
+      "AnimationClip/ProfessionPanel_Show.anim": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/AnimationClip/ProfessionPanel_Show.anim",
+        "sha256": "47f0bce0d8fdcc60562d9915871a7904e920e9b964f62d6f0dcfbec7672ec173",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Animation/UI/UIPanelFade_Hide.anim": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/UIPanelFade_Hide.anim",
+        "sha256": "1c84cf67d993125452f0c419fa95334e1c969d0fd85ff22a0bb5b82c9cb7018d",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/Common/Common_Atlas/ImgLine.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgLine.asset",
+        "sha256": "dbf48cfcfb6f5e0bfd5e060a44504b172a289cd9c4ad0f805d65455a1d342b0e",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "AnimationClip/ProfessionPanel_LevelGo.anim": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/AnimationClip/ProfessionPanel_LevelGo.anim",
+        "sha256": "d0f8faf0f48eda3f8c90496518c57964554288698c9ad06a5f60b0bc273f8311",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/Common/Common_Atlas/ImgBg_List.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBg_List.asset",
+        "sha256": "ad1074566b0259c25b4efe9a404dbd63c5307c81069b39263a3f12069de264d0",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/ProfessionIcon/351.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/ProfessionIcon/351.asset",
+        "sha256": "dbb834252c2fdc85442cbb22721ea67baf40553579029b2b76b1c732c9e6aee6",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/ProfessionIcon/351.png": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/ProfessionIcon/351.png",
+        "sha256": "22097814402291d4086dfa53bd6b6827869810dc62a5b7c4ede96d44efb3293e",
+        "owner": "Image/UI/ProfessionIcon/351.asset"
+      },
+      "Image/UI/Profession/Profession_Atlas/ImgBg_TransferNPC12.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Profession/Profession_Atlas/ImgBg_TransferNPC12.asset",
+        "sha256": "2730f1f929b87c98396ec8eef8e1d324c04f376137462533b4a67a3fde556196",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/Common/Common_Atlas/ImgSelected_bg.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgSelected_bg.asset",
+        "sha256": "ab752963ea01eaaea107688f69cce5260f9022a25c02edf9e26eaa348b408ddc",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/Common/Common_Atlas/ImgRed.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgRed.asset",
+        "sha256": "f4540e12bf6b931e0dbbd28b1fade1df341c2150f178883e82dc8bae53779984",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Animation/UI/Public/TabBottomBarCellController.overrideController": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/Public/TabBottomBarCellController.overrideController",
+        "sha256": "a844da15a3f23149132dc4b20fc78b8d6699cb72ee5a8980427fffbea0181e6e",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Animation/UI/Public/TabBottomBarCell_On.anim": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/Public/TabBottomBarCell_On.anim",
+        "sha256": "b66fdea5b6fcd4045c4d284450414b31570118edac4dec0b8e41a4c49050a197",
+        "owner": "Animation/UI/Public/TabBottomBarCellController.overrideController"
+      },
+      "Animation/UI/ToggleAnimatorController.controller": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/ToggleAnimatorController.controller",
+        "sha256": "fe76e9bcbf001be178d3f846245a50bcadb9ea2ea6678300e12cc13f92a8696a",
+        "owner": "Animation/UI/Public/TabBottomBarCellController.overrideController"
+      },
+      "Animation/UI/ToggleOn.anim": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/ToggleOn.anim",
+        "sha256": "7a6765b81e76195a20bc3d30de8431e2980e8fc40583a85cb25b60ece31719de",
+        "owner": "Animation/UI/ToggleAnimatorController.controller"
+      },
+      "Animation/UI/ToggleOff.anim": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/ToggleOff.anim",
+        "sha256": "60a1d4ae51219b3b49588fdf37db0b09e0ba88fd2591749557f61ba2d7996651",
+        "owner": "Animation/UI/ToggleAnimatorController.controller"
+      },
+      "Animation/UI/Public/TabBottomBarCell_Off.anim": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/Public/TabBottomBarCell_Off.anim",
+        "sha256": "72f17027fc30cc93b33658f9f51477be7e8f03512bfa2674542d76658128eef5",
+        "owner": "Animation/UI/Public/TabBottomBarCellController.overrideController"
+      },
+      "Image/UI/Role/ImgNan_2.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Role/ImgNan_2.asset",
+        "sha256": "1bd9acadbbb84bb358d797e0fb51d3037e2b6c84523933d3f2face88e1065baf",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/Role/ImgNan_2.png": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Role/ImgNan_2.png",
+        "sha256": "7394b67624e9b96efb6d1c9a345599da9b1ec62f358a17007eb5bdb7f45f1b02",
+        "owner": "Image/UI/Role/ImgNan_2.asset"
+      },
+      "Image/UI/Profession/Profession_Atlas/ImgBg_FourDimensional.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Profession/Profession_Atlas/ImgBg_FourDimensional.asset",
+        "sha256": "091e62f1cdf7e7da93e7875ab13f1ef3a0af90dee7548ae9bce1b63f71aa01b0",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/Common/Summary_Atlas/ImgSubscript_Staff.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Summary_Atlas/ImgSubscript_Staff.asset",
+        "sha256": "464e77324413db6e6a7f861b4da5bc136dd60ca41a8701c58bf5c90fd26ba235",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Texture2D/sactx-0-512x512-ASTC 6x6-Summary_Atlas-bb6e242b.png": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Texture2D/sactx-0-512x512-ASTC 6x6-Summary_Atlas-bb6e242b.png",
+        "sha256": "478cc4da2e6d0b047b3861db823747aa5b28a71d577d384b0663e3e179cde263",
+        "owner": "Image/UI/Common/Summary_Atlas/ImgSubscript_Staff.asset"
+      },
+      "Image/UI/Common/Common_Atlas/ImgJianBian.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgJianBian.asset",
+        "sha256": "596525e1ed6fbfcf4ef2c399d39d2f35eb65d17a18205e2ed6641ec4e241792b",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/Common/Common_Atlas/ImgBlue.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBlue.asset",
+        "sha256": "fab332d8e830c1eeab8ea090c3938231f9b25b4f91707221eb8447eb12ff94d6",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/Common/Common_Atlas/ImgReturn.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgReturn.asset",
+        "sha256": "df7e4f61b2cb744e6a02de47f187e4f51f4cdfe1cae65c2a4794dc45ec5450a1",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/Profession/Profession_Atlas/ImgBg_Describe.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Profession/Profession_Atlas/ImgBg_Describe.asset",
+        "sha256": "6524c30712abd9f4ad78ed88e2beecf252771f65ef1b3ea09e5148fc854de557",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Wwise/ScriptableObjects/Event/164C4624-F19E-4DA6-9ECA-4C36A1C1A09F.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/164C4624-F19E-4DA6-9ECA-4C36A1C1A09F.asset",
+        "sha256": "257a6730cf32d60c4a84aec703d04bc049a02ea51a35aca9065964fb8ad0e028",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/ProfessionIcon/351_1.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/ProfessionIcon/351_1.asset",
+        "sha256": "07f58b859c8c324bad1208af26f99160934a33b3aa3ad2a1b34c18bacce8b799",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/ProfessionIcon/351_1.png": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/ProfessionIcon/351_1.png",
+        "sha256": "5b4ae82fcb3299540f308628f11e0b2dc6259b605c5bdb13f36cde40e1c83fc0",
+        "owner": "Image/UI/ProfessionIcon/351_1.asset"
+      },
+      "Animation/UI/Common/Btn_Base_Click.controller": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/Common/Btn_Base_Click.controller",
+        "sha256": "dcea46c04a55dfcdc6ea27311fd32e11023be8477b6f37b8032e031b169db432",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Animation/UI/Common/Disabled.anim": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/Common/Disabled.anim",
+        "sha256": "fd758250c96b133b3195660a6c88a0591f91af5f7f5df43e83c9f19eaa013e51",
+        "owner": "Animation/UI/Common/Btn_Base_Click.controller"
+      },
+      "Animation/UI/Common/Normal.anim": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/Common/Normal.anim",
+        "sha256": "4dd795bea32dfbcfc1e82ead0098f004f2d9ba93010e9022fb2ce328e2187952",
+        "owner": "Animation/UI/Common/Btn_Base_Click.controller"
+      },
+      "Animation/UI/Common/Highlighted.anim": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/Common/Highlighted.anim",
+        "sha256": "11c0bfc0348200c8a9d70e2ab44c681a447bb73e5ecfd20e0ac930e35e80ee07",
+        "owner": "Animation/UI/Common/Btn_Base_Click.controller"
+      },
+      "Animation/UI/Common/Selected.anim": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/Common/Selected.anim",
+        "sha256": "cc4c01706fbbd7a9bed9fa6f7f01ffc2c050c0909916d85ee553149d6d14a1b3",
+        "owner": "Animation/UI/Common/Btn_Base_Click.controller"
+      },
+      "Animation/UI/Common/Pressed.anim": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/Common/Pressed.anim",
+        "sha256": "6115af211859758598fa85d9e665897bdd12ac92d35237f82aeb4c2d7dfe3a49",
+        "owner": "Animation/UI/Common/Btn_Base_Click.controller"
+      },
+      "Image/UI/Common/Common_Atlas/ImgRedDot.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgRedDot.asset",
+        "sha256": "a627876c6425adef9af497f8436241c7d10ebba51211b5f56d04810d98230752",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/Common/Common_Atlas/ImgReturnBg.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgReturnBg.asset",
+        "sha256": "0f4e78c14df29863840622c93c016e712d6f5e3390a4003a51d359b848307615",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "ScriptableConfig/TipDotGraphAssets/Character/_2__State_职业是否可以升级.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/ScriptableConfig/TipDotGraphAssets/Character/_2__State_职业是否可以升级.asset",
+        "sha256": "e26cdca1a831b9777749d42a8251df09dfb31804f6735b4faeb4f6486b830f31",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "ScriptableConfig/TipDotGraphAssets/Character/_5__Cnd_职业等级是否可以提升.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/ScriptableConfig/TipDotGraphAssets/Character/_5__Cnd_职业等级是否可以提升.asset",
+        "sha256": "f2fe1516dfa17364fea033e6d559cc6f66e0210aeeb7951303244607589cf86c",
+        "owner": "ScriptableConfig/TipDotGraphAssets/Character/_2__State_职业是否可以升级.asset"
+      },
+      "ScriptableConfig/TipDotGraphAssets/Character/ProfessionItem.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Character/ProfessionItem.asset",
+        "sha256": "b4b2a0cb823adff8b991922fe7861456eaf5374103ecfab40eba436aadf1bbdf",
+        "owner": "ScriptableConfig/TipDotGraphAssets/Character/_5__Cnd_职业等级是否可以提升.asset"
+      },
+      "ScriptableConfig/TipDotGraphAssets/Character/_4__Cnd_职业是否可以晋阶.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/ScriptableConfig/TipDotGraphAssets/Character/_4__Cnd_职业是否可以晋阶.asset",
+        "sha256": "68524fa10afc4b16a2fa89546c680a799076f660953719933f60b77b447b8312",
+        "owner": "ScriptableConfig/TipDotGraphAssets/Character/ProfessionItem.asset"
+      },
+      "ScriptableConfig/TipDotGraphAssets/Character/_3__State_职业是否可以晋升.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/ScriptableConfig/TipDotGraphAssets/Character/_3__State_职业是否可以晋升.asset",
+        "sha256": "91cbc8e793592fed3499b3cd04a49cd84c648d2f2102938c8c88114adacdfe04",
+        "owner": "ScriptableConfig/TipDotGraphAssets/Character/_4__Cnd_职业是否可以晋阶.asset"
+      },
+      "ScriptableConfig/TipDotGraphAssets/Character/_1__State_职业是否有提示.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/ScriptableConfig/TipDotGraphAssets/Character/_1__State_职业是否有提示.asset",
+        "sha256": "515dd360404850b62ef189c014ca6747bf166d9c459f991251b142454c8d5acb",
+        "owner": "ScriptableConfig/TipDotGraphAssets/Character/_3__State_职业是否可以晋升.asset"
+      },
+      "Image/UI/Common/Common_Atlas/C_none.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/C_none.asset",
+        "sha256": "7344ebc1ae1ab7d904e3bc7af330ace7dab49370f27fb86e1bf5324c7d97d781",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/Common/Common_Atlas/ImgBlue_Upgrade.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBlue_Upgrade.asset",
+        "sha256": "25b5207fe60f70f9904bb4f96e0ff973fa5a79459bf89d19d1faf7845adc98df",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/Role/ImgNv_2.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Role/ImgNv_2.asset",
+        "sha256": "08ac6cf5e596812e3e6ca6769ee9f56bd1d8466fe5493c3c9fe26f5a533fb45e",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/Role/ImgNv_2.png": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Role/ImgNv_2.png",
+        "sha256": "c201b8bfa4d18cb46cb102fd82c756919d017d81940074f2a4e729702cb9129b",
+        "owner": "Image/UI/Role/ImgNv_2.asset"
+      },
+      "Image/UI/Common/Repeat/ImgDot.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Repeat/ImgDot.asset",
+        "sha256": "631aa4b560708231220787b3b95351441a08faae7c9088b606a16520b712f31a",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/Common/Repeat/ImgDot.png": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Repeat/ImgDot.png",
+        "sha256": "608fb0001ffa76519053a0598239aeb27f05520cad2ca9ba255903738f52845c",
+        "owner": "Image/UI/Common/Repeat/ImgDot.asset"
+      },
+      "Prefabs/UI/Profession/ProfessionInfoPanelSkillItem.prefab": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/ProfessionInfoPanelSkillItem.prefab",
+        "sha256": "fe8f1a4f0027512de39e29345c5ccf20648848ed8638ceb38ef3fe176a3ecd77",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Wwise/ScriptableObjects/Event/1844E599-1636-4634-BE47-E7702A2D75D8.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/1844E599-1636-4634-BE47-E7702A2D75D8.asset",
+        "sha256": "e3291d43f525047eec874588d6b9c01eebadd356ca6af99c7332f468ec5249fe",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium SDF.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium SDF.asset",
+        "sha256": "2dcc3c5788ad5597ef0dd12c531856214fdae73ceec6ccf393b12a50b4317902",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3.asset",
+        "sha256": "0a567e548b65e3b21fc050fc017ace8bf32738d4f5b5f8ab51e779f7776f50c0",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/Common/Common_Atlas/ImgNew.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgNew.asset",
+        "sha256": "ced080c8dd2e73627c3e269e130f4c07f4d7de821a286458bbd42ff7cdbc08a1",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/Profession/Profession_Atlas/ImgBg_Equip.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Profession/Profession_Atlas/ImgBg_Equip.asset",
+        "sha256": "426aec11520dc5ce2c9e874777bff5e3fe03976f8c7efe60b08fdc226e7e29b5",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/Common/Common_Atlas/ButButton.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ButButton.asset",
+        "sha256": "51ff0c2213403211d7a8212390fa4f3844f2e668607c595aec3828c88c31dec7",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/Common/Common_Atlas/ImgArrow_Page.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgArrow_Page.asset",
+        "sha256": "f6a1062dda1ac6bdef8e254c7ee1207bb8e1ab20e54af08a2335a1b729ac5a67",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/Common/Common_Atlas/BtnOk.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/BtnOk.asset",
+        "sha256": "5df10633dad9ee0873266fe66e60c41b83127f4a96cd79de76d03bbd0688137d",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Image/UI/Common/Common_Atlas/ImgBgTitle.asset": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBgTitle.asset",
+        "sha256": "dd77b910637890c3cc0aafc441906f3b918939025c1ee43cfbfc1800606f861a",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "UIEffect/Material/UIImgAdd.mat": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/UIEffect/Material/UIImgAdd.mat",
+        "sha256": "2dab5494ad185be35d91ff5b24d5731bd17fb1bcb9b631650ae37b8d3d8f935a",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "Shaders/UIEffect/UIEffectAdditive.shader": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Shaders/UIEffect/UIEffectAdditive.shader",
+        "sha256": "1ca59b8a41827d41306ef6e2639e3764034e0bf828b9da96ff78fce816492372",
+        "owner": "UIEffect/Material/UIImgAdd.mat"
+      }
+    },
+    "script_bindings": {
+      "Scripts/Framework.FirstPass.Runtime/MultiLanguageText.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldMultiLanguageText.cs",
+        "guid": "231cab3c6fd951b7a2d14633a5465cbf",
+        "sha256": "490825671794bffc638d37170ab39c2e1523cd8bbfdb016cf4bf4e0966ea63ad"
+      },
+      "Scripts/AK.Wwise.Unity.MonoBehaviour/AkGameObj.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AkGameObj.cs",
+        "guid": "f2066e65119e8b708beb2979ab1be75d",
+        "sha256": "c8e6cb58543d06618ba239c28fa8e3d021da3556ad9c78200b1ddcc6553f7354"
+      },
+      "Scripts/Unity.TextMeshPro/TMPro/TMP_FontAsset.cs": {
+        "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TMP_FontAsset.cs",
+        "guid": "71c1514a6bd24e1e882cebbe1904ce04",
+        "sha256": "4944761e316e6c3e6053507283f4c1b310dd47312830346ef7efc4715ac403af"
+      },
+      "Scripts/Unity.TextMeshPro/TMPro/TextMeshProUGUI.cs": {
+        "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TextMeshProUGUI.cs",
+        "guid": "f4688fdb7df04437aeb418b961361dc5",
+        "sha256": "f25b03386b3b6eaef0f6f164ae0230b74f09ea53145fdf8bcb6d4a01786af425"
+      },
+      "Scripts/AK.Wwise.Unity.MonoBehaviour/AkEvent.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AkEvent.cs",
+        "guid": "103498499e9f36c2d20769bb44538654",
+        "sha256": "c012ab14aed9230bcf768bf06abf02c71a5335fa3cf3bed4374a9f919bd3d694"
+      },
+      "Scripts/Coffee.UIParticle/Coffee/UIExtensions/UIParticle.cs": {
+        "path": "unity/Assets/Game/Runtime/Presentation/Opening/OfficialCoffeeUIParticle/UIParticle.cs",
+        "guid": "16f0b0b6d0b7542bfbd20a3e05b04ff1",
+        "sha256": "3bba8971ccc78a82e3c0fb07ba3515a64d30914966f7d1a5c3fc79cd3bfec90d"
+      },
+      "Scripts/UnityEngine.UI/UnityEngine/UI/Image.cs": {
+        "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Image.cs",
+        "guid": "fe87c0e1cc204ed48ad3b37840f39efc",
+        "sha256": "351dd72516d240f5722c55f72f8e95a0a92cf71e83358bbc922eee47bdb78502"
+      },
+      "Scripts/AK.Wwise.Unity.API.WwiseTypes/WwiseEventReference.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/WwiseEventReference.cs",
+        "guid": "eda62e0b27051dfd578214e537c3c072",
+        "sha256": "7c7b698a69a8d3eb424dc94a32ab91b7364ca923979f89be53d405ee5f6d9942"
+      },
+      "Scripts/Assembly-CSharp/PlayerPropItem.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerPropItem.cs",
+        "guid": "724b62b42146b5624624aa85b288ab3b",
+        "sha256": "5bdbf3a29fc7a1769c1e9a1f1e46cc4f0d6750cf15432fee2d88dd37b87b7cd1"
+      },
+      "Scripts/Assembly-CSharp/ProfessionUpgradeRedDotItem.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionUpgradeRedDotItem.cs",
+        "guid": "569f158367535c86b861bd139e1a6730",
+        "sha256": "7ec023744c518897ec09dca7936048dd0a179a9d0bb0cc209e2c60e2f5dc709f"
+      },
+      "Scripts/Framework.FirstPass.Runtime/SafeArea.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldSafeArea.cs",
+        "guid": "c2d0088124f9085b5533afccb0f57c20",
+        "sha256": "8c0458e998b923e64762a34d0c7233d10255c8003be362081d5866c03cc82472"
+      },
+      "Scripts/LoopScrollRect.Runtime/LoopScrollGridLayoutGroup.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/WorldUI/LoopScroll/LoopScrollGridLayoutGroup.cs",
+        "guid": "9077ca8d802a2c57efd082697269d582",
+        "sha256": "e801195ca944ad12f160d4624ddd6cbe31129127f813188f84b9b4ef3b395b83"
+      },
+      "Scripts/UnityEngine.UI/UnityEngine/UI/VerticalLayoutGroup.cs": {
+        "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/VerticalLayoutGroup.cs",
+        "guid": "59f8146938fff824cb5fd77236b75775",
+        "sha256": "55ec0610da9479b4752008b23990fe486df9df4ff78958f92027edf86906d035"
+      },
+      "Scripts/Framework.FirstPass.Runtime/MirrorImage.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/WorldUI/MirrorImage.cs",
+        "guid": "163a3f8effa97cfe560457984d4b3fa0",
+        "sha256": "34f9be3cf447552b0c60c076fd3c67af1d28b7b6f1ad6bdda235d7e374534645"
+      },
+      "Scripts/Assembly-CSharp/ProfessionPropRadar.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPropRadar.cs",
+        "guid": "f505533a6b7755a97b7a07711efee9c5",
+        "sha256": "9f03b27d687c967924c5b29d654a3dcc323463036b7121f48db23c3e2a4400a3"
+      },
+      "Scripts/Assembly-CSharp/ProfessionChangeJumpBtn.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionChangeJumpBtn.cs",
+        "guid": "0b93fdfe1a855787b8a65362e2193245",
+        "sha256": "3ebc08a58938f47475676024bb83b2737bc7c1bdf841e08a4d2753caa7f824da"
+      },
+      "Scripts/Assembly-CSharp/CountRedDotImage.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldCountRedDotImage.cs",
+        "guid": "c4566079c706fa2bf73d6985da79bde5",
+        "sha256": "fa6a0fa46a541c983af18080148c088be281776307e1e16c336eeb1db5ca86fc"
+      },
+      "Scripts/Framework.FirstPass.Runtime/ButtonSound.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ButtonSound.cs",
+        "guid": "b1f0d16cd43104503465bea3630d9453",
+        "sha256": "08e3639c3a38223b87931ed364c22a62205719bf4155db6a3312bf0d9e315437"
+      },
+      "Scripts/UnityEngine.UI/UnityEngine/UI/ContentSizeFitter.cs": {
+        "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/ContentSizeFitter.cs",
+        "guid": "3245ec927659c4140ac4f8d17403cc18",
+        "sha256": "a6b30a3b6e697524ce16f07e1807e870faf8d0c3e8c43004474eb5b8bb3c887b"
+      },
+      "Scripts/Framework.FirstPass.Runtime/NoDrawingRayCast.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/WorldUI/NoDrawingRayCast.cs",
+        "guid": "ca63bc8db6d14902aadb5682859d849b",
+        "sha256": "23f45a9becd801a57e6d40a7a6d53d569564cd3fa7715de3f36bab3db0c4c99d"
+      },
+      "Scripts/UnityEngine.UI/UnityEngine/UI/HorizontalLayoutGroup.cs": {
+        "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/HorizontalLayoutGroup.cs",
+        "guid": "30649d3a9faa99c48a7b1166b86bf2a0",
+        "sha256": "60c993b71761a9b431b8321f58ef397a100cd0f7febcf4d82c3e82e30b58459b"
+      },
+      "Scripts/Assembly-CSharp/UnityEngine/UI/Ext/TabItem.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldTabItem.cs",
+        "guid": "40e873e3119e5372aa62f9679d2a0522",
+        "sha256": "291bf043ac2cf275c627e9832406e63e72f2a6c978ab40afca3be27a6fc6c0bb"
+      },
+      "Scripts/Assembly-CSharp/ProfessionPanel.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPanel.cs",
+        "guid": "24f00f7f2b675454af7fdc137ba93533",
+        "sha256": "a0517c8b95559575eb39b1d28d8a14b0806dedf3fba4cf21d7edb0c887d75e6c"
+      },
+      "Scripts/UnityEngine.UI/UnityEngine/UI/LayoutElement.cs": {
+        "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/LayoutElement.cs",
+        "guid": "306cc8c2b49d7114eaa3623786fc2126",
+        "sha256": "c6e88f6d086a6dfc4111a03024ea1279d6d2c6b755e0a5df50f64dfa06edd732"
+      },
+      "Scripts/Assembly-CSharp/PlayerUseItemContent.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerUseItemContent.cs",
+        "guid": "de276ef0f68b5d02856c2d1bfce03b69",
+        "sha256": "26530bc768e17a72297d7a32584062ba3234000fab1c56942b16a158724717cb"
+      },
+      "Scripts/UnityEngine.UI/UnityEngine/UI/RectMask2D.cs": {
+        "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/RectMask2D.cs",
+        "guid": "3312d7739989d2b4e91e6319e9a96d76",
+        "sha256": "9433b86119e688f9e413190ce2d6b3b0155d9f5e6d4770b59076cb45e6fb2b80"
+      },
+      "Scripts/Assembly-CSharp/UnityEngine/UI/Ext/TabGroup.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldTabGroup.cs",
+        "guid": "7025e6658f4d59c69dbe84a5c559859e",
+        "sha256": "d761030c56cbf9f2b01116893f9bd02d15f7f539663c14e15a9e0b7ced9ffadb"
+      },
+      "Scripts/Framework.FirstPass.Runtime/PopupWindowSound.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PopupWindowSound.cs",
+        "guid": "0b00b7145e14850caff2703d650e189e",
+        "sha256": "1aa92bdb50ef36abe24fe6caca7990457f46eba556921ee0663fe7a456175b28"
+      },
+      "Scripts/LoopScrollRect.Runtime/UnityEngine/UI/LoopVerticalScrollRect.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/WorldUI/LoopScroll/LoopVerticalScrollRect.cs",
+        "guid": "9209043607036019f5b633b9980a2359",
+        "sha256": "d81a5ae1e4c10f6646191b8ccf596c7ec81d64d4447be4d60ea9b95471df7bf9"
+      },
+      "Scripts/Assembly-CSharp/CloseWindowBtn.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/CloseWindowBtn.cs",
+        "guid": "c90f163b1788d025285d879ac7c568df",
+        "sha256": "ef06dd27c0c6ec942b71203c56bfea346cbc54bb1adca0336f4cf2254d04fdc3"
+      },
+      "Scripts/Framework.FirstPass.Runtime/PopupWindow.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldPopupWindow.cs",
+        "guid": "e1b834f19a20cf248af2603124f3bb8f",
+        "sha256": "9290956b765252b9890bff85452260353f857e82b81ecf11edd180f0e2916f85"
+      },
+      "Scripts/Assembly-CSharp/ProfessionEquipTypeIcon.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionEquipTypeIcon.cs",
+        "guid": "74ee7ac511825e3f8a104121deb4f177",
+        "sha256": "cb5e076341863e5ba49d57f00f7bce04be2e925336c9c235c733c045325d8f18"
+      },
+      "Scripts/Unity.TextMeshPro/TMPro/TMPEffect.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeText/TMPEffect.cs",
+        "guid": "3e2d40fcb3febb5d237c6eaab0dd385a",
+        "sha256": "dedd18b23f6c5577acf8c20695a5101a35f077f8984286ce4aa0a42046577641"
+      },
+      "Scripts/UnityEngine.UI/UnityEngine/UI/GraphicRaycaster.cs": {
+        "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/GraphicRaycaster.cs",
+        "guid": "dc42784cf147c0c48a680349fa168899",
+        "sha256": "a7c7eadb563eece18edc99969a570b2421ac7fee0fd39b02ccafa4a8ddd2eee2"
+      },
+      "Scripts/Assembly-CSharp/UIBloomGroup.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldUIBloomGroup.cs",
+        "guid": "5fb27b7f468f97a461e99ee6fa0af5ba",
+        "sha256": "6e778b4b06e6407e662b504bfa84f76dba5cbb609ebe60ee61856fb313b292f6"
+      },
+      "Scripts/Framework.FirstPass.Runtime/UIClickSound.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/UIClickSound.cs",
+        "guid": "26fc32eae8ae20e4c3ce956f63542480",
+        "sha256": "5e460e8158f9f9a033cbbf48cbd78c806f03ddce8edf3a5e16c5bcedd659af60"
+      },
+      "Scripts/Assembly-CSharp/ProfessionPropRadarDrawer.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPropRadarDrawer.cs",
+        "guid": "2d8f3c3e0aab4d4baaa900c2f7b91ef0",
+        "sha256": "9ebcc29cf16ca806c457c6e27dc4eea4ddee543522dadb9bab0b3528b96e7283"
+      },
+      "Scripts/Assembly-CSharp/TipDotGraphNode.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/TipDotGraphNode.cs",
+        "guid": "a60585f4089d5ba88818d9d94dc296aa",
+        "sha256": "76576fc92e4b1a566b14227422c5d67c94eb72a7c68b65370247bb92276f4b4c"
+      },
+      "Scripts/Assembly-CSharp/TipDotGraphConditionNode.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/TipDotGraphConditionNode.cs",
+        "guid": "73d1312f954855f99cd6cbba7a148413",
+        "sha256": "c1fc4e7e9b3165738061ad495deac8b55c66eafaa8bdf6e99311fc1735d66d63"
+      },
+      "Scripts/Assembly-CSharp/TipDotNodeGraph.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/TipDotNodeGraph.cs",
+        "guid": "8e5b2be808a35cf8a8914701067cfea8",
+        "sha256": "ec9f6f40755540a28990313480f2b1bb4946e4a553cfce817aa5de636df9f5c2"
+      },
+      "Scripts/Framework/PreviewTool.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldPreviewTool.cs",
+        "guid": "69e8a521aaaf9b3a4fbbec7048401a00",
+        "sha256": "f05f6f9d6856814596e572e56f5dbe56ee31ab76d6b18a6965dd68b0b0b7f1cb"
+      },
+      "Scripts/UnityEngine.UI/UnityEngine/UI/GridLayoutGroup.cs": {
+        "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/GridLayoutGroup.cs",
+        "guid": "8a8695521f0d02e499659fee002a26c2",
+        "sha256": "2386578edb132a9405c23dfd4f2c6383b978595777bfa80499cf2acd257ad94d"
+      },
+      "Scripts/Assembly-CSharp/TipDotNodeLinker.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/TipDotNodeLinker.cs",
+        "guid": "d6705fb4b18850d8a493c4e40be0ea44",
+        "sha256": "778c5248bffd5895d3ccba1fd42df5757e6dc3f9bc079888245d55f1c4bcc3a9"
+      },
+      "Scripts/Assembly-CSharp/ProfessionInfoPanelSkillItem.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionInfoPanelSkillItem.cs",
+        "guid": "ed185f01cb0152939cf59d8d045c7e6b",
+        "sha256": "4a4c912a4841e61cf838dea006e3513e72ce15a558612cd9eff6e84c5876c118"
+      },
+      "Scripts/Assembly-CSharp/ProfessionSkillSlot.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionSkillSlot.cs",
+        "guid": "63e9e7fa7b245115a969240703800647",
+        "sha256": "a1cc139fa4f6f0836ac3e99c1ab58afe254554eddb54c3edf938a57825c96fc8"
+      },
+      "Scripts/UnityEngine.UI/UnityEngine/UI/AspectRatioFitter.cs": {
+        "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/AspectRatioFitter.cs",
+        "guid": "86710e43de46f6f4bac7c8e50813a599",
+        "sha256": "c433f85be46913c31817c56abbbfbd4869337bc86929c6ad6f45b4861f16c555"
+      },
+      "Scripts/Assembly-CSharp/ImageLocator.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ImageLocator.cs",
+        "guid": "072f6b27761e69ac84a6ebf8ff8b46dc",
+        "sha256": "2d9b6fb35d38c7195b86dcd9f51822ab7ebf31b86d7c2e18cf39fc3e31a7ba74"
+      },
+      "Scripts/UnityEngine.UI/UnityEngine/UI/Button.cs": {
+        "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Button.cs",
+        "guid": "4e29b1a8efbd4b44bb3f3716e73f07ff",
+        "sha256": "e8f00d2c3b759c08408c97c75084e065a2a539662783b7f5835fae5d937e9e26"
+      },
+      "Scripts/Assembly-CSharp/TipDotShowImageController.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/TipDotShowImageController.cs",
+        "guid": "d27aeff862eb5de7a42c382076f41cde",
+        "sha256": "504e85b15809b637cda19166832f7ed6066fad162859d0b5e9abfd9ed8fa4449"
+      },
+      "Scripts/Assembly-CSharp/ProfessionUpgradePanel.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionUpgradePanel.cs",
+        "guid": "73846d45cad35ad88d8247729837f68c",
+        "sha256": "e89fc6623da56d1e59e908c01d613f74865241c1f5cac89d9b7060f881b99114"
+      },
+      "Scripts/Assembly-CSharp/PropUpgradeEffectAgent.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PropUpgradeEffectAgent.cs",
+        "guid": "6981f7fb91145c4d9fddb9ef4567e889",
+        "sha256": "1330fefc5becf03f8f30e1bf016e1dde593687d563920f5619cf1859d0a6aa63"
+      },
+      "Scripts/Assembly-CSharp/MaintainGlobalScaleUI.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldMaintainGlobalScaleUI.cs",
+        "guid": "c3dab9a936d154c4939df9ec9adbf5fc",
+        "sha256": "9f562009e591151a3c8b9ddd299d550b676af99da01d14311e1781e85fb74033"
+      },
+      "Scripts/Assembly-CSharp/TopBarHandler.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/TopBarHandler.cs",
+        "guid": "25add5052e1922ac3f2a0ad2fb1abe07",
+        "sha256": "d82aaa0bd524d80ce954bbb317266c70d95f34850b2dc8122db636b9d2efe5c8"
+      },
+      "Scripts/Assembly-CSharp/ProfessionInfoPanel.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionInfoPanel.cs",
+        "guid": "46a85772abfa51fe877539e3b58e733e",
+        "sha256": "c9ddaf0f99597e92ea4342007ec0b85bf10b1bbd7c4b73114e6d0e4442627485"
+      },
+      "Scripts/Assembly-CSharp/UnityEngine/UI/Ext/TabAnimatorTransition.cs": {
+        "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldTabAnimatorTransition.cs",
+        "guid": "900de1791ca05358a2e96647f00d0506",
+        "sha256": "e37e2cd7727b26c9c5c814f8b4c240c121a7f2fb86a5fd2b8475c3d20b2ba7ac"
+      }
+    },
+    "pending_scripts": [],
+    "managed_reference_types": [
+      {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "type": "TipDotCommonNode",
+        "count": 3,
+        "binding": [
+          "Zjcs.Official.ProfessionUI",
+          "Zjcs.Official.ProfessionUI",
+          "TipDotCommonNode"
+        ]
+      },
+      {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "type": "TipDotProfessionCanUpgradeConditionNode",
+        "count": 1,
+        "binding": [
+          "Zjcs.Official.ProfessionUI",
+          "Zjcs.Official.ProfessionUI",
+          "TipDotProfessionCanUpgradeConditionNode"
+        ]
+      },
+      {
+        "assembly": "Assembly-CSharp",
+        "namespace": "",
+        "type": "TipDotProfessionPromotionCondtionNode",
+        "count": 1,
+        "binding": [
+          "Zjcs.Official.ProfessionUI",
+          "Zjcs.Official.ProfessionUI",
+          "TipDotProfessionPromotionCondtionNode"
+        ]
+      },
+      {
+        "assembly": "Framework",
+        "namespace": "",
+        "type": "StateGameObjectConfig",
+        "count": 8,
+        "binding": [
+          "Zjcs.Official.WorldUI",
+          "Zjcs.Official.WorldUI",
+          "WorldStateGameObjectConfig"
+        ]
+      }
+    ],
+    "shaders": [
+      "Shaders/Effect/Noise_Mask_Pro.shader",
+      "Packages/com.unity.textmeshpro/Shaders/TMP_SDF-Mobile.shader",
+      "Shaders/UIEffect/UIEffectAdditive.shader"
+    ],
+    "shader_bindings": {
+      "Packages/com.unity.textmeshpro/Shaders/TMP_SDF-Mobile.shader": {
+        "path": "Assets/Game/Runtime/Official/World/NativeWater/Shaders/WorldText.shader",
+        "sha256": "b29a0d136e54e7072b0064278c3902166467b7ae1a4af400530e7049ea88eab6",
+        "guid": "e82bdf526f90515ef7be909a2bb66b19",
+        "name": "Zjcs/Official/World/Map13/WorldText"
+      },
+      "Shaders/Effect/Noise_Mask_Pro.shader": {
+        "path": "Assets/Game/Runtime/Official/World/NativeWater/Shaders/EnvironmentNoise.shader",
+        "sha256": "63bd6a58036ba0543e02137abe57c780864a004e3ff463547bf54f38d5932a4e",
+        "guid": "3d296eca22d090137525ad7cf6a159b6",
+        "name": "Zjcs/Official/World/Map13/EnvironmentNoise"
+      },
+      "Shaders/UIEffect/UIEffectAdditive.shader": {
+        "path": "Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UIEffectAdditive_b771f309.shader",
+        "sha256": "ea2520d6a310ea3f673700dd1f04b10fb9d3e18fcf5f575ff3edcfd46694f031",
+        "guid": "7a3272341fa04a13e2a9303909509564",
+        "name": "Zjcs/Official/World/Map13/Entity/UIEffectAdditive_b771f309"
+      }
+    },
+    "pending_shaders": [],
+    "missing": [],
+    "verified_dynamic_resources": null,
+    "verified_item_configs": null,
+    "verified_native_textures": {
+      "path": "assets/reference/profession-ui/native-textures-source-manifest.json",
+      "sha256": "a531de21d4a49795317a877f5030cfc59e0d4dd96c4b4cb57d48cc58f2323fb2"
+    },
+    "dynamic_resources": "Reward icons and rule popup have explicit source-backed seeds in main-dynamic scope; portrait and tutor resources remain incomplete.",
+    "additive_shader": {
+      "original": {
+        "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+        "path_id": "-6192161486129426018",
+        "name": "UI/EffectAdditive",
+        "payload_sha256": "f08c4627de395352ccfc711091fc175027868c93232431d63768663ed8807833",
+        "input": "defaultpackage_unityshaders.bundle",
+        "subshader_passes": [
+          1
+        ]
+      },
+      "source": {
+        "bundle": "defaultpackage_unityshaders.bundle",
+        "bundle_hash": "b44cadacfabd37f97ebaf88173e3e2a1",
+        "path_id": "-6192161486129426018",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/b44cadacfabd37f97ebaf88173e3e2a1.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 853119,
+        "bundle_sha256": "2183d28b18f8b5f2d1f8f3cc2995749570b80fdbe41a39a2680f8b1350f31108"
+      },
+      "native": {
+        "path": "Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UIEffectAdditive_b771f309.shader",
+        "sha256": "ea2520d6a310ea3f673700dd1f04b10fb9d3e18fcf5f575ff3edcfd46694f031",
+        "guid": "7a3272341fa04a13e2a9303909509564",
+        "name": "Zjcs/Official/World/Map13/Entity/UIEffectAdditive_b771f309"
+      },
+      "programs": [
+        {
+          "pass_index": 0,
+          "keywords": []
+        },
+        {
+          "pass_index": 0,
+          "keywords": [
+            "UNITY_UI_ALPHACLIP"
+          ]
+        },
+        {
+          "pass_index": 0,
+          "keywords": [
+            "UNITY_UI_CLIP_RECT"
+          ]
+        },
+        {
+          "pass_index": 0,
+          "keywords": [
+            "UNITY_UI_ALPHACLIP",
+            "UNITY_UI_CLIP_RECT"
+          ]
+        }
+      ],
+      "translation_proof": {
+        "path": "assets/reference/official-map/map13-entity-shaders-source-manifest.json",
+        "sha256": "6cae489d4afbcf88155d4af4d2fd91f9dc2b53418b736afa8fb3b8560c17b747"
+      }
+    },
+    "runtime_dependencies": [
+      {
+        "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldGAction.cs",
+        "sha256": "8c8afaacdc854d4c3bb4128c5f2f81e241b0a7cbd738f979799dd53549d9ab07"
+      },
+      {
+        "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldGAction.cs.meta",
+        "sha256": "0f54ea33075e536496d34214d51baab1e7674f0e3756f1105dae7043711ae513"
+      }
+    ]
+  },
+  "installation": [
+    {
+      "native_relative_path": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab",
+        "sha256": "34fb3c7da85b45a4d16b370c72ace5b24fd51d1f4447797017fb525acf13c1bf",
+        "owner": "explicit original skill presentation prefab"
+      },
+      "original_transformed_sha256": "d7c96bd5cb4ea68367fff7ed154bef89edebf848b0d002f8dfce9704651b0fd7",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab",
+        "sha256": "d7c96bd5cb4ea68367fff7ed154bef89edebf848b0d002f8dfce9704651b0fd7"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab.meta",
+        "sha256": "9c3ba60e198311c4e6d28ab0c0f1bd106dc54dbb34ab5c2b0ae6a93d142d53e0"
+      },
+      "guid": "94d3a769ef9c6730aa97210dc8f9bd17",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Effect/Materials/Fx_Guangzhu_08_1_F.mat",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/Materials/Fx_Guangzhu_08_1_F.mat",
+        "sha256": "8085b6d780484ba7bf21fe99c53e38e3c5fb2c7ba461cb6adb6e41c3047b55c1",
+        "owner": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab"
+      },
+      "original_transformed_sha256": "983efe79c67bac12de6e074ce5545a49cab804a99df9181838a0362223f2cd37",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/Materials/Fx_Guangzhu_08_1_F.mat",
+        "sha256": "983efe79c67bac12de6e074ce5545a49cab804a99df9181838a0362223f2cd37"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/Materials/Fx_Guangzhu_08_1_F.mat.meta",
+        "sha256": "f2f2c2a2ad3a241c5816dbb509ea67bf1216e1b24b6e77a598a5455d5fa6755e"
+      },
+      "guid": "65fd991e9cb811a18371b16803046de9",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Effect/textures/Fx_Guangzhu_08_1_F.png",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/textures/Fx_Guangzhu_08_1_F.png",
+        "sha256": "d584a45744a17292c75bc722d624dbed641de2f2405ae38162838d34aece374d",
+        "owner": "Effect/Materials/Fx_Guangzhu_08_1_F.mat"
+      },
+      "original_transformed_sha256": "d584a45744a17292c75bc722d624dbed641de2f2405ae38162838d34aece374d",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/textures/Fx_Guangzhu_08_1_F.png",
+        "sha256": "d584a45744a17292c75bc722d624dbed641de2f2405ae38162838d34aece374d"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/textures/Fx_Guangzhu_08_1_F.png.meta",
+        "sha256": "fcdef9dd154def9c1aa8818107d79cdcbf31faa3d3dd4b3025d6c966bc9c8473"
+      },
+      "guid": "21b661cd2dad3fb70d458ba8788e5e26",
+      "reused": false
+    },
+    {
+      "native_relative_path": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat",
+        "sha256": "15f4d6300fbcf8dbcd5771091ba5049e4b730286d1cf5876120abfca08a9e2eb",
+        "owner": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab"
+      },
+      "original_transformed_sha256": "856dac3104488386cf62a8d3ff785f1b85d806e8cbeeb75231a7e69f00e4e4b5",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat",
+        "sha256": "856dac3104488386cf62a8d3ff785f1b85d806e8cbeeb75231a7e69f00e4e4b5"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat.meta",
+        "sha256": "350b68bf9475ccfdd7cacf0785de3ff237692a624ead8c33e939be4922973285"
+      },
+      "guid": "e24c9512a238d2b489d041be2d069c7d",
+      "reused": true
+    },
+    {
+      "native_relative_path": "ProfessionNativeTextures/FZY4K SDF - dynamic Atlas.texture2d.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/native-textures/ProfessionNativeTextures/FZY4K SDF - dynamic Atlas.texture2d.asset",
+        "sha256": "3c2d4082c52c96edb636f8e4a27bd11616b531b1ed30720d662b2d1d2201f8c9",
+        "owner": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat"
+      },
+      "original_transformed_sha256": "3c2d4082c52c96edb636f8e4a27bd11616b531b1ed30720d662b2d1d2201f8c9",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/ProfessionNativeTextures/FZY4K SDF - dynamic Atlas.texture2d.asset",
+        "sha256": "63a0645d298c671be4fcae509ec58df567963669e4691e8010a498f4fd2b80f3"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/ProfessionNativeTextures/FZY4K SDF - dynamic Atlas.texture2d.asset.meta",
+        "sha256": "552bdfa7cc5c25828c86753e0e6871ab90594a9976aa4ffafbd999e2461b730f"
+      },
+      "guid": "044798c4214f0a74086efa374c7cdd17",
+      "reused": true
+    },
+    {
+      "native_relative_path": "Effect/Materials/XingZhuang/Fx_XingZhuang_379_F 1.mat",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/Materials/XingZhuang/Fx_XingZhuang_379_F 1.mat",
+        "sha256": "cf3f319b6f7d775c06540a8fb2bc395c83b1c8aa1e6a9f15641ec8a303548802",
+        "owner": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab"
+      },
+      "original_transformed_sha256": "0279db07c2fb10c0ef5191339c208143845275d69ca94a954587f8672bb0f0f5",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/Materials/XingZhuang/Fx_XingZhuang_379_F 1.mat",
+        "sha256": "0279db07c2fb10c0ef5191339c208143845275d69ca94a954587f8672bb0f0f5"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/Materials/XingZhuang/Fx_XingZhuang_379_F 1.mat.meta",
+        "sha256": "9a964a739d4397884b42a9a4b80afa10e0a1fb34eaf708c5b66b092c787a1b4b"
+      },
+      "guid": "034a4ee89bd414bd29ec61aebb293a90",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Effect/textures/XingZhuang/Fx_XingZhuang_379_F.png",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/textures/XingZhuang/Fx_XingZhuang_379_F.png",
+        "sha256": "872ff6f5cbadddb2a8b28835c0ef153a0e07d1e787f965d8bb3ffe77d70e7ee6",
+        "owner": "Effect/Materials/XingZhuang/Fx_XingZhuang_379_F 1.mat"
+      },
+      "original_transformed_sha256": "872ff6f5cbadddb2a8b28835c0ef153a0e07d1e787f965d8bb3ffe77d70e7ee6",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/textures/XingZhuang/Fx_XingZhuang_379_F.png",
+        "sha256": "872ff6f5cbadddb2a8b28835c0ef153a0e07d1e787f965d8bb3ffe77d70e7ee6"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/textures/XingZhuang/Fx_XingZhuang_379_F.png.meta",
+        "sha256": "ccc7eb2c713fe4758148e5aa8cad4a6896a278204cc8b15089ff6e3a1a7758cf"
+      },
+      "guid": "d53497e92d2dd278364f659fce5193f0",
+      "reused": false
+    },
+    {
+      "native_relative_path": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset",
+        "sha256": "105e7a1824224c754e0561081031cb8c1d8e5974719ba130e724072a75999526",
+        "owner": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab"
+      },
+      "original_transformed_sha256": "85e4d7c4e0926b657a91d787fd09c72930a3c2f9077199ea940ec71f75cf8bdd",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset",
+        "sha256": "85e4d7c4e0926b657a91d787fd09c72930a3c2f9077199ea940ec71f75cf8bdd"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset.meta",
+        "sha256": "2090fccfdbfc90e93788b4aac3d1bfa1612229db998c8e983b9e589bd8df9c81"
+      },
+      "guid": "66657f3ffe66d19408ff3def3018fe50",
+      "reused": true
+    },
+    {
+      "native_relative_path": "Wwise/ScriptableObjects/Event/9B104E93-926C-474B-8ECF-66D30CA68770.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/9B104E93-926C-474B-8ECF-66D30CA68770.asset",
+        "sha256": "1c5cb634ce401a1110742bb467d05333a20614ade209e5c3a786067d2198b180",
+        "owner": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab"
+      },
+      "original_transformed_sha256": "b023707b970cb7e4c23222a5322e07fef80c8b66b92e4a3f3acead41838064a1",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Wwise/ScriptableObjects/Event/9B104E93-926C-474B-8ECF-66D30CA68770.asset",
+        "sha256": "b023707b970cb7e4c23222a5322e07fef80c8b66b92e4a3f3acead41838064a1"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Wwise/ScriptableObjects/Event/9B104E93-926C-474B-8ECF-66D30CA68770.asset.meta",
+        "sha256": "9ad2a648786b0c148c98f4613f7893afee3b1f578690eb2659524dea37fda635"
+      },
+      "guid": "8128720eabec502eece622f8ba840089",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Effect/Materials/Fx_GuangDian_155.mat",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/Materials/Fx_GuangDian_155.mat",
+        "sha256": "d6c775887f20b30b818e45d503865360341171f0fd07657d22916f8f20063fe4",
+        "owner": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab"
+      },
+      "original_transformed_sha256": "1283dda03f3ca6b90ca198e523f6d7711a5eb7a7506895956a66a0065bde5bf5",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/Materials/Fx_GuangDian_155.mat",
+        "sha256": "1283dda03f3ca6b90ca198e523f6d7711a5eb7a7506895956a66a0065bde5bf5"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/Materials/Fx_GuangDian_155.mat.meta",
+        "sha256": "2a87862b67d43808a3ab579d3bd859d1823e028494e53e9d716199bf1b961fd3"
+      },
+      "guid": "9dc357e095721073927ab3af309c5140",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Effect/textures/Fx_GuangDian_155.png",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/textures/Fx_GuangDian_155.png",
+        "sha256": "2802496fed7c6d6dca5a16c802fb6012f8e4eb93c3fc44fc636255e211939348",
+        "owner": "Effect/Materials/Fx_GuangDian_155.mat"
+      },
+      "original_transformed_sha256": "2802496fed7c6d6dca5a16c802fb6012f8e4eb93c3fc44fc636255e211939348",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/textures/Fx_GuangDian_155.png",
+        "sha256": "2802496fed7c6d6dca5a16c802fb6012f8e4eb93c3fc44fc636255e211939348"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/textures/Fx_GuangDian_155.png.meta",
+        "sha256": "e841ccb4babfc54cb307d0554882c8823677a03586d4fe2e3b8e9e8589e27e2c"
+      },
+      "guid": "f416f5f6d1a635eea9e4c7a6d19b53e0",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Skill/Skill_Atlas/ImgBgAtt.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Skill/Skill_Atlas/ImgBgAtt.asset",
+        "sha256": "957e37c262587b3ee215436d276a20f8cdc8974c35a64551d442cc33c2a58090",
+        "owner": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab"
+      },
+      "original_transformed_sha256": "957e37c262587b3ee215436d276a20f8cdc8974c35a64551d442cc33c2a58090",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Skill/Skill_Atlas/ImgBgAtt.asset",
+        "sha256": "957e37c262587b3ee215436d276a20f8cdc8974c35a64551d442cc33c2a58090"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Skill/Skill_Atlas/ImgBgAtt.asset.meta",
+        "sha256": "d8c84a6a2430392a498cc13f1455fc8605b38079821f22127849b7bfc2183229"
+      },
+      "guid": "078d5ce20182588e84925477c0f44c7b",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Texture2D/sactx-0-1024x1024-ASTC 6x6-Skill_Atlas-97153254.png",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Texture2D/sactx-0-1024x1024-ASTC 6x6-Skill_Atlas-97153254.png",
+        "sha256": "06279fc2e97fc7ae427d7d12b2d9e2351de5e954962559d9c79a7fc2037f14a3",
+        "owner": "Image/UI/Skill/Skill_Atlas/ImgBgAtt.asset"
+      },
+      "original_transformed_sha256": "06279fc2e97fc7ae427d7d12b2d9e2351de5e954962559d9c79a7fc2037f14a3",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Texture2D/sactx-0-1024x1024-ASTC 6x6-Skill_Atlas-97153254.png",
+        "sha256": "06279fc2e97fc7ae427d7d12b2d9e2351de5e954962559d9c79a7fc2037f14a3"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Texture2D/sactx-0-1024x1024-ASTC 6x6-Skill_Atlas-97153254.png.meta",
+        "sha256": "8a3dc2ec1e7a957da52aebb3c3179ba8360dc239f7a9ee821cac7e1cca79fb1f"
+      },
+      "guid": "b665a921a493ddc09ef224d252f58bee",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Effect/Materials/XingZhuang/Fx_XingZhuang_379_F.mat",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/Materials/XingZhuang/Fx_XingZhuang_379_F.mat",
+        "sha256": "0a88744cf0d32948f558bd069e344acccd7697d9dfcae472c9f413bc4c674d89",
+        "owner": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab"
+      },
+      "original_transformed_sha256": "477a7adba76a8cd56ac2b62ab3cb4c71940ed0e4bcc17e2dc2526f1cdbff5e3b",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/Materials/XingZhuang/Fx_XingZhuang_379_F.mat",
+        "sha256": "477a7adba76a8cd56ac2b62ab3cb4c71940ed0e4bcc17e2dc2526f1cdbff5e3b"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/Materials/XingZhuang/Fx_XingZhuang_379_F.mat.meta",
+        "sha256": "20732c133b0ad98c83e3bf2e61193ccc9f8981aeeafd3862332e0523765302b7"
+      },
+      "guid": "dd17fa04264bebd136117afb404e1eba",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Effect/textures/Fx_WenLi_12_6.png",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/textures/Fx_WenLi_12_6.png",
+        "sha256": "50e9769c9720e69900dda8677a37522342d00fca93b7a75b64c3ccd90036a236",
+        "owner": "Effect/Materials/XingZhuang/Fx_XingZhuang_379_F.mat"
+      },
+      "original_transformed_sha256": "50e9769c9720e69900dda8677a37522342d00fca93b7a75b64c3ccd90036a236",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/textures/Fx_WenLi_12_6.png",
+        "sha256": "50e9769c9720e69900dda8677a37522342d00fca93b7a75b64c3ccd90036a236"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/textures/Fx_WenLi_12_6.png.meta",
+        "sha256": "f5df6077dd06c1a34eaf3fbcea6b681144938bda0a4164ae2dbc8fd2d56f56f3"
+      },
+      "guid": "1be4b6bfb1cafc946a843f86bbf924d6",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Effect/Materials/XingZhuang/Fx_XingZhuang_379_1_F.mat",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/Materials/XingZhuang/Fx_XingZhuang_379_1_F.mat",
+        "sha256": "dd8ef6fc7bd6a7c7db1e0b71421a21bb50a1a05b07b9abf219d9cadc5eab3710",
+        "owner": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab"
+      },
+      "original_transformed_sha256": "f2e3b01423f3d23d3263aa439bb65b2085476b1cf343b032979f285b1979178b",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/Materials/XingZhuang/Fx_XingZhuang_379_1_F.mat",
+        "sha256": "f2e3b01423f3d23d3263aa439bb65b2085476b1cf343b032979f285b1979178b"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/Materials/XingZhuang/Fx_XingZhuang_379_1_F.mat.meta",
+        "sha256": "031a3b480ea701103aa71a063b846b49c12144cfa5fb86e5ed81c6324f57fcd7"
+      },
+      "guid": "118043ca01a4cf409dd28dceb2915e24",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Effect/textures/XingZhuang/Fx_XingZhuang_379_1_F.png",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/textures/XingZhuang/Fx_XingZhuang_379_1_F.png",
+        "sha256": "d6e6fe2a812781dda5c2b4a5664839737a2d031cdd083b9803e4711bd8e9c8a9",
+        "owner": "Effect/Materials/XingZhuang/Fx_XingZhuang_379_1_F.mat"
+      },
+      "original_transformed_sha256": "d6e6fe2a812781dda5c2b4a5664839737a2d031cdd083b9803e4711bd8e9c8a9",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/textures/XingZhuang/Fx_XingZhuang_379_1_F.png",
+        "sha256": "d6e6fe2a812781dda5c2b4a5664839737a2d031cdd083b9803e4711bd8e9c8a9"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/textures/XingZhuang/Fx_XingZhuang_379_1_F.png.meta",
+        "sha256": "4edc00eaf0d34b57c81bbf1f7c939af718d7508fcddc4cb92b8d1dc3f4973f77"
+      },
+      "guid": "64af7faf4299fda9ec2d55322d7fcd03",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Effect/Materials/XingZhuang/Fx_XingZhuang_379_2_F.mat",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/Materials/XingZhuang/Fx_XingZhuang_379_2_F.mat",
+        "sha256": "01e17902c8727c48d307c15a02fa836f7a2729006761a2c5d4c7eb8d32de6a75",
+        "owner": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab"
+      },
+      "original_transformed_sha256": "7e01c825aefe316aca2c72524c1d3a6c7060f24b010be6ee1eb3f49bd043594c",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/Materials/XingZhuang/Fx_XingZhuang_379_2_F.mat",
+        "sha256": "7e01c825aefe316aca2c72524c1d3a6c7060f24b010be6ee1eb3f49bd043594c"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/Materials/XingZhuang/Fx_XingZhuang_379_2_F.mat.meta",
+        "sha256": "5da39c3e6720477d219ac9cc61390c82cc02ac4e24017b0d83a90214efb6dd8f"
+      },
+      "guid": "4f2c32acb8281b048df1014f869648b4",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Effect/textures/XingZhuang/Fx_XingZhuang_379_2_F.png",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Effect/textures/XingZhuang/Fx_XingZhuang_379_2_F.png",
+        "sha256": "932e466ef9200abac7651e6028c636e10e3cfebbd7a44a8d1a29f31ea5128377",
+        "owner": "Effect/Materials/XingZhuang/Fx_XingZhuang_379_2_F.mat"
+      },
+      "original_transformed_sha256": "932e466ef9200abac7651e6028c636e10e3cfebbd7a44a8d1a29f31ea5128377",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/textures/XingZhuang/Fx_XingZhuang_379_2_F.png",
+        "sha256": "932e466ef9200abac7651e6028c636e10e3cfebbd7a44a8d1a29f31ea5128377"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Effect/textures/XingZhuang/Fx_XingZhuang_379_2_F.png.meta",
+        "sha256": "116f70249eeb6a5c1811053564dd82fc1cd5bdb9fbb82ddb567da591c8e91738"
+      },
+      "guid": "d322e6c026add004a9e5bc7ffdb88ccc",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Prefabs/UI/Profession/ProfessionPanel.prefab",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/Prefabs/UI/Profession/ProfessionPanel.prefab",
+        "sha256": "bcc3988879a3e601f8a7e705ca6b83489f276e5e7a18e658738b3ad2f06177a1",
+        "owner": "explicit original skill presentation prefab"
+      },
+      "original_transformed_sha256": "2fd7ba2dbda5c7c0362a2a8cdd6d8282bbb33511bbccbe4109e681fd6872eff7",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Prefabs/UI/Profession/ProfessionPanel.prefab",
+        "sha256": "2fd7ba2dbda5c7c0362a2a8cdd6d8282bbb33511bbccbe4109e681fd6872eff7"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Prefabs/UI/Profession/ProfessionPanel.prefab.meta",
+        "sha256": "3d92d3e18ae1bc27e5086c9102e84c917273b3f5c358d0127fbf658b0dbe6503"
+      },
+      "guid": "17af1a3e75c546451cf2a97dbf4875fd",
+      "reused": false
+    },
+    {
+      "native_relative_path": "TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium Atlas Material.mat",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium Atlas Material.mat",
+        "sha256": "8107e225690046158287dcf17903e12ad1bfab4caa926398cfe1fdcbfae40bf4",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "f82ccc915cc43d3e0491063fac434f813b669e8671092f11e5374deb7b8b8ae6",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium Atlas Material.mat",
+        "sha256": "f82ccc915cc43d3e0491063fac434f813b669e8671092f11e5374deb7b8b8ae6"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium Atlas Material.mat.meta",
+        "sha256": "fde72885c325901ba64b1bbdb55736f23d026cc4bbb5c12c01fef62790e0a048"
+      },
+      "guid": "4c3c3a0613a23c98e39551af04c7b0b5",
+      "reused": true
+    },
+    {
+      "native_relative_path": "TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium Atlas.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/fonts/TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium Atlas.asset",
+        "sha256": "af10bde87bc66a1777ceca7d997e15ec25b3b2b9822eb5947fe1c48ac7221e2e",
+        "owner": "TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium Atlas Material.mat"
+      },
+      "original_transformed_sha256": "af10bde87bc66a1777ceca7d997e15ec25b3b2b9822eb5947fe1c48ac7221e2e",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium Atlas.asset",
+        "sha256": "af10bde87bc66a1777ceca7d997e15ec25b3b2b9822eb5947fe1c48ac7221e2e"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium Atlas.asset.meta",
+        "sha256": "6552cf4b4c8112787ae75569887dfefb465a407bde49300850979db8399e98d1"
+      },
+      "guid": "56c5f5bb57059c240871beea1bbc41ef",
+      "reused": true
+    },
+    {
+      "native_relative_path": "Image/UI/Profession/Profession_Atlas/ImgGradient_Career.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Profession/Profession_Atlas/ImgGradient_Career.asset",
+        "sha256": "d8bac11361ae53fa22757bd8bb4b7ec93be0c041ee84567ffff6ec1bdeeabdeb",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "d8bac11361ae53fa22757bd8bb4b7ec93be0c041ee84567ffff6ec1bdeeabdeb",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Profession/Profession_Atlas/ImgGradient_Career.asset",
+        "sha256": "d8bac11361ae53fa22757bd8bb4b7ec93be0c041ee84567ffff6ec1bdeeabdeb"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Profession/Profession_Atlas/ImgGradient_Career.asset.meta",
+        "sha256": "9f6843a0a7bc1756aca06369396713344fdb51fe1a0ab59e9c8905cede56b4da"
+      },
+      "guid": "d880fae47db1ffe78d2b0cad20824dfe",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Texture2D/sactx-0-1024x1024-ASTC 6x6-Profession_Atlas-c8489b47.png",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Texture2D/sactx-0-1024x1024-ASTC 6x6-Profession_Atlas-c8489b47.png",
+        "sha256": "2ac8b24cc777b7c5571d4017b928e8715d0c272d76bdae763af7e76dd3d99128",
+        "owner": "Image/UI/Profession/Profession_Atlas/ImgGradient_Career.asset"
+      },
+      "original_transformed_sha256": "2ac8b24cc777b7c5571d4017b928e8715d0c272d76bdae763af7e76dd3d99128",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Texture2D/sactx-0-1024x1024-ASTC 6x6-Profession_Atlas-c8489b47.png",
+        "sha256": "2ac8b24cc777b7c5571d4017b928e8715d0c272d76bdae763af7e76dd3d99128"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Texture2D/sactx-0-1024x1024-ASTC 6x6-Profession_Atlas-c8489b47.png.meta",
+        "sha256": "6874a5a9bf20b3240c3f14039099a8ece33f7e1e133c974e111e3342ef84dffb"
+      },
+      "guid": "a1947e2809248dfb346ba062ad5d4b8e",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Prefabs/UI/PlayerInfo/PropItem.prefab",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Prefabs/UI/PlayerInfo/PropItem.prefab",
+        "sha256": "d10a510c41e78eb43e7937970cca23f2685e82e06e76b804026be8bbec54cf86",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "0067f9dc97329eba48008253dbcbe2a489db05f874b18599820acf00040b7b67",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Prefabs/UI/PlayerInfo/PropItem.prefab",
+        "sha256": "0067f9dc97329eba48008253dbcbe2a489db05f874b18599820acf00040b7b67"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Prefabs/UI/PlayerInfo/PropItem.prefab.meta",
+        "sha256": "808ace1c92a81f92f82d914cf4b455dd69b6fd2a4f7c4699fa14ef7bd538cff5"
+      },
+      "guid": "e581c3267ecc7416b5b26c0c37492c31",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Common/Common_Atlas/ImgBlueDot.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBlueDot.asset",
+        "sha256": "a5b7e41e03ce3afd4bbc2b284437407878753feebe5278a1b0aa7a5879563e83",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "69a9db7864d44bcee88cf630dad82f3b5964603622da53748d562909d0c81962",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgBlueDot.asset",
+        "sha256": "69a9db7864d44bcee88cf630dad82f3b5964603622da53748d562909d0c81962"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgBlueDot.asset.meta",
+        "sha256": "da5f88df5c7f32bffa004ae1ec0410c43fcb641b0f9a443cd23b3b668b7576d1"
+      },
+      "guid": "2a429c042acf72c8933fb036a9fe89e3",
+      "reused": false
+    },
+    {
+      "native_relative_path": "ProfessionNativeTextures/sactx-0-2048x2048-ASTC 6x6-Common_Atlas-7a2befb3.texture2d.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/native-textures/ProfessionNativeTextures/sactx-0-2048x2048-ASTC 6x6-Common_Atlas-7a2befb3.texture2d.asset",
+        "sha256": "d9fa5cf869d6674d386c40c1b773c0870096d049d1a980b1f257a976548b0446",
+        "owner": "Image/UI/Common/Common_Atlas/ImgBlueDot.asset"
+      },
+      "original_transformed_sha256": "d9fa5cf869d6674d386c40c1b773c0870096d049d1a980b1f257a976548b0446",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/ProfessionNativeTextures/sactx-0-2048x2048-ASTC 6x6-Common_Atlas-7a2befb3.texture2d.asset",
+        "sha256": "d9fa5cf869d6674d386c40c1b773c0870096d049d1a980b1f257a976548b0446"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/ProfessionNativeTextures/sactx-0-2048x2048-ASTC 6x6-Common_Atlas-7a2befb3.texture2d.asset.meta",
+        "sha256": "9d0eb933add5153571b63e1e592f876d75321d4577616b5088087724adb85bc3"
+      },
+      "guid": "340cb31d4cc94f442b8185ef1bc1c3b8",
+      "reused": true
+    },
+    {
+      "native_relative_path": "AnimationClip/ProfessionPanel_Show.anim",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/AnimationClip/ProfessionPanel_Show.anim",
+        "sha256": "47f0bce0d8fdcc60562d9915871a7904e920e9b964f62d6f0dcfbec7672ec173",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "b309bd449fc4351a9299e7900869819e5b8023a73da3ab2024f0e51a72962075",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/AnimationClip/ProfessionPanel_Show.anim",
+        "sha256": "b309bd449fc4351a9299e7900869819e5b8023a73da3ab2024f0e51a72962075"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/AnimationClip/ProfessionPanel_Show.anim.meta",
+        "sha256": "8b506768c7c892517134d809dfb6bb6cd9fd7a968f9c129b0d67cc4e5ddecc7e"
+      },
+      "guid": "d6426ca92166f03b9141fe56442f3fc8",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Animation/UI/UIPanelFade_Hide.anim",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/UIPanelFade_Hide.anim",
+        "sha256": "1c84cf67d993125452f0c419fa95334e1c969d0fd85ff22a0bb5b82c9cb7018d",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "1c84cf67d993125452f0c419fa95334e1c969d0fd85ff22a0bb5b82c9cb7018d",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/UIPanelFade_Hide.anim",
+        "sha256": "1c84cf67d993125452f0c419fa95334e1c969d0fd85ff22a0bb5b82c9cb7018d"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/UIPanelFade_Hide.anim.meta",
+        "sha256": "8c5b0e96cdbb5084aef5eb1d2d5c06bec9d4114b7be812849da03ed6c379aa9d"
+      },
+      "guid": "286a8ab73fb11dbd7005310e927e559a",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Common/Common_Atlas/ImgLine.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgLine.asset",
+        "sha256": "dbf48cfcfb6f5e0bfd5e060a44504b172a289cd9c4ad0f805d65455a1d342b0e",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "44b05f5d33fa580a2ebf399997c739425ea9c9a74027b2aaec03ab08f5e7e8e1",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgLine.asset",
+        "sha256": "44b05f5d33fa580a2ebf399997c739425ea9c9a74027b2aaec03ab08f5e7e8e1"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgLine.asset.meta",
+        "sha256": "f88140b1c3e13ca6b391a997400e5ce0473f62bc1d10b5536b3567de4ed36a46"
+      },
+      "guid": "b66a0fce592324b121bdf066eb1a2d95",
+      "reused": false
+    },
+    {
+      "native_relative_path": "AnimationClip/ProfessionPanel_LevelGo.anim",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/AnimationClip/ProfessionPanel_LevelGo.anim",
+        "sha256": "d0f8faf0f48eda3f8c90496518c57964554288698c9ad06a5f60b0bc273f8311",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "b83e69aeb4eaa656a87eab2b281778f45f53f602cdb89589c7576964e977fc45",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/AnimationClip/ProfessionPanel_LevelGo.anim",
+        "sha256": "b83e69aeb4eaa656a87eab2b281778f45f53f602cdb89589c7576964e977fc45"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/AnimationClip/ProfessionPanel_LevelGo.anim.meta",
+        "sha256": "06c814584d5542289e72ccfa7787ed696b6b3c55d0b8200ae303bc8336b9d41e"
+      },
+      "guid": "39d94c1a05ddecbd4abcb3afe2e17b87",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Common/Common_Atlas/ImgBg_List.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBg_List.asset",
+        "sha256": "ad1074566b0259c25b4efe9a404dbd63c5307c81069b39263a3f12069de264d0",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "b3aa8d2d9bed196d580a44087566225c0e306c7fd5d40dbe3efb45fbc34e87d0",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgBg_List.asset",
+        "sha256": "b3aa8d2d9bed196d580a44087566225c0e306c7fd5d40dbe3efb45fbc34e87d0"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgBg_List.asset.meta",
+        "sha256": "968bbb788a21953eaf97af603f8ed2c862dd5c44cedf76c35bcb5677955d9e02"
+      },
+      "guid": "cff25b85f4c6f002b5083fa39cab1456",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/ProfessionIcon/351.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/ProfessionIcon/351.asset",
+        "sha256": "dbb834252c2fdc85442cbb22721ea67baf40553579029b2b76b1c732c9e6aee6",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "dbb834252c2fdc85442cbb22721ea67baf40553579029b2b76b1c732c9e6aee6",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/ProfessionIcon/351.asset",
+        "sha256": "dbb834252c2fdc85442cbb22721ea67baf40553579029b2b76b1c732c9e6aee6"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/ProfessionIcon/351.asset.meta",
+        "sha256": "02bd54dfd33797702147f9542b03d3bfb06e31e0b21228a2e2133572cd8cac56"
+      },
+      "guid": "3fa4f1d8afbdc1e71dfde1a56ce97f8c",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/ProfessionIcon/351.png",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/ProfessionIcon/351.png",
+        "sha256": "22097814402291d4086dfa53bd6b6827869810dc62a5b7c4ede96d44efb3293e",
+        "owner": "Image/UI/ProfessionIcon/351.asset"
+      },
+      "original_transformed_sha256": "22097814402291d4086dfa53bd6b6827869810dc62a5b7c4ede96d44efb3293e",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/ProfessionIcon/351.png",
+        "sha256": "22097814402291d4086dfa53bd6b6827869810dc62a5b7c4ede96d44efb3293e"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/ProfessionIcon/351.png.meta",
+        "sha256": "0aaa8ee9a359be58fc28bc422645deaab2ccbb91ad0d4d957909b3062bf85a9e"
+      },
+      "guid": "7484bf823c6db52541dfd449baa28d8b",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Profession/Profession_Atlas/ImgBg_TransferNPC12.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Profession/Profession_Atlas/ImgBg_TransferNPC12.asset",
+        "sha256": "2730f1f929b87c98396ec8eef8e1d324c04f376137462533b4a67a3fde556196",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "2730f1f929b87c98396ec8eef8e1d324c04f376137462533b4a67a3fde556196",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Profession/Profession_Atlas/ImgBg_TransferNPC12.asset",
+        "sha256": "2730f1f929b87c98396ec8eef8e1d324c04f376137462533b4a67a3fde556196"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Profession/Profession_Atlas/ImgBg_TransferNPC12.asset.meta",
+        "sha256": "e03936d93770835fad331aba0a984ecdd9abcfc98f5db16130ff5059f26e598b"
+      },
+      "guid": "f63be5055b85c19644c18dd7649639fd",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Common/Common_Atlas/ImgSelected_bg.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgSelected_bg.asset",
+        "sha256": "ab752963ea01eaaea107688f69cce5260f9022a25c02edf9e26eaa348b408ddc",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "1dffa13595fabdecd62750d8c5c95217aa06a863b0bea1b0f91ce6b920c6e17d",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgSelected_bg.asset",
+        "sha256": "1dffa13595fabdecd62750d8c5c95217aa06a863b0bea1b0f91ce6b920c6e17d"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgSelected_bg.asset.meta",
+        "sha256": "a955f392b84114981854601f527c117ab0b255d477bfc775e4d8e76552c4a744"
+      },
+      "guid": "263e0fb8bcc26af3fb91a2f64da511a5",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Common/Common_Atlas/ImgRed.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgRed.asset",
+        "sha256": "f4540e12bf6b931e0dbbd28b1fade1df341c2150f178883e82dc8bae53779984",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "35b7717cb69b3e373d9e16c6baea15ca11e79a023492e9d8e09ce1f1181ccb24",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgRed.asset",
+        "sha256": "35b7717cb69b3e373d9e16c6baea15ca11e79a023492e9d8e09ce1f1181ccb24"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgRed.asset.meta",
+        "sha256": "2f7272ff7f140719bf9b95c5abeae19de511b9ec52c74d042d77513133781ad5"
+      },
+      "guid": "87ed6db16e85443f68f51e94f488c391",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Animation/UI/Public/TabBottomBarCellController.overrideController",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/Public/TabBottomBarCellController.overrideController",
+        "sha256": "a844da15a3f23149132dc4b20fc78b8d6699cb72ee5a8980427fffbea0181e6e",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "a844da15a3f23149132dc4b20fc78b8d6699cb72ee5a8980427fffbea0181e6e",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/Public/TabBottomBarCellController.overrideController",
+        "sha256": "a844da15a3f23149132dc4b20fc78b8d6699cb72ee5a8980427fffbea0181e6e"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/Public/TabBottomBarCellController.overrideController.meta",
+        "sha256": "4f51dfbd67d97f534991a4cc8aeec9dd3da217f47acde091474224e46bb7fc06"
+      },
+      "guid": "486dd5f17065f9f3ab2769a023ecf82c",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Animation/UI/Public/TabBottomBarCell_On.anim",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/Public/TabBottomBarCell_On.anim",
+        "sha256": "b66fdea5b6fcd4045c4d284450414b31570118edac4dec0b8e41a4c49050a197",
+        "owner": "Animation/UI/Public/TabBottomBarCellController.overrideController"
+      },
+      "original_transformed_sha256": "331beee268410b63be11785ef5cf3bff41c7fa75323756411fc997920e176cd4",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/Public/TabBottomBarCell_On.anim",
+        "sha256": "331beee268410b63be11785ef5cf3bff41c7fa75323756411fc997920e176cd4"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/Public/TabBottomBarCell_On.anim.meta",
+        "sha256": "52cd9adf6d7216f0e88c1e2b73963511f4e8fada04003fdf6fb67f95f5e33393"
+      },
+      "guid": "2d29db9e7fb2d423b5f4e8913f514523",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Animation/UI/ToggleAnimatorController.controller",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/ToggleAnimatorController.controller",
+        "sha256": "fe76e9bcbf001be178d3f846245a50bcadb9ea2ea6678300e12cc13f92a8696a",
+        "owner": "Animation/UI/Public/TabBottomBarCellController.overrideController"
+      },
+      "original_transformed_sha256": "fe76e9bcbf001be178d3f846245a50bcadb9ea2ea6678300e12cc13f92a8696a",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/ToggleAnimatorController.controller",
+        "sha256": "fe76e9bcbf001be178d3f846245a50bcadb9ea2ea6678300e12cc13f92a8696a"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/ToggleAnimatorController.controller.meta",
+        "sha256": "46c22ebdc8ccd16eb785d6bdf3415343cfbfcefa73ff9381a36b300d30c41cc4"
+      },
+      "guid": "388b46b50f1b85d4281e400578e5cdf0",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Animation/UI/ToggleOn.anim",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/ToggleOn.anim",
+        "sha256": "7a6765b81e76195a20bc3d30de8431e2980e8fc40583a85cb25b60ece31719de",
+        "owner": "Animation/UI/ToggleAnimatorController.controller"
+      },
+      "original_transformed_sha256": "7a6765b81e76195a20bc3d30de8431e2980e8fc40583a85cb25b60ece31719de",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/ToggleOn.anim",
+        "sha256": "7a6765b81e76195a20bc3d30de8431e2980e8fc40583a85cb25b60ece31719de"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/ToggleOn.anim.meta",
+        "sha256": "e2b2a0317d3f76b170a42758479d482f81bd579c948081f08d49874576afe9f1"
+      },
+      "guid": "0c5a8243004461d0ac59cc981e223bcc",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Animation/UI/ToggleOff.anim",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/ToggleOff.anim",
+        "sha256": "60a1d4ae51219b3b49588fdf37db0b09e0ba88fd2591749557f61ba2d7996651",
+        "owner": "Animation/UI/ToggleAnimatorController.controller"
+      },
+      "original_transformed_sha256": "60a1d4ae51219b3b49588fdf37db0b09e0ba88fd2591749557f61ba2d7996651",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/ToggleOff.anim",
+        "sha256": "60a1d4ae51219b3b49588fdf37db0b09e0ba88fd2591749557f61ba2d7996651"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/ToggleOff.anim.meta",
+        "sha256": "0b116f97fe79dd7ae65b9645820dd009dfd0fbc995105c2c696c5bdba6a8402e"
+      },
+      "guid": "eab75d2c5866422c3a92172dd04fd458",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Animation/UI/Public/TabBottomBarCell_Off.anim",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/Public/TabBottomBarCell_Off.anim",
+        "sha256": "72f17027fc30cc93b33658f9f51477be7e8f03512bfa2674542d76658128eef5",
+        "owner": "Animation/UI/Public/TabBottomBarCellController.overrideController"
+      },
+      "original_transformed_sha256": "46309870064a363f1c59eb33bffb90d0b5b65b96030d810f40c5a6ed9cd6c54a",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/Public/TabBottomBarCell_Off.anim",
+        "sha256": "46309870064a363f1c59eb33bffb90d0b5b65b96030d810f40c5a6ed9cd6c54a"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/Public/TabBottomBarCell_Off.anim.meta",
+        "sha256": "e171041de9befa658114f9d1302a6ebdd99a5a67f62f05488815965c2a6b2a4b"
+      },
+      "guid": "b3f64811c4fa28b1052609414ed92fff",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Role/ImgNan_2.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Role/ImgNan_2.asset",
+        "sha256": "1bd9acadbbb84bb358d797e0fb51d3037e2b6c84523933d3f2face88e1065baf",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "1bd9acadbbb84bb358d797e0fb51d3037e2b6c84523933d3f2face88e1065baf",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Role/ImgNan_2.asset",
+        "sha256": "1bd9acadbbb84bb358d797e0fb51d3037e2b6c84523933d3f2face88e1065baf"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Role/ImgNan_2.asset.meta",
+        "sha256": "7a754b7290ebd957a657d0b215f8d991cdb13e8c3b499b289b8fc271d448a943"
+      },
+      "guid": "29ede40e64dc8839a4a6a5bbc1dcf07f",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Role/ImgNan_2.png",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Role/ImgNan_2.png",
+        "sha256": "7394b67624e9b96efb6d1c9a345599da9b1ec62f358a17007eb5bdb7f45f1b02",
+        "owner": "Image/UI/Role/ImgNan_2.asset"
+      },
+      "original_transformed_sha256": "7394b67624e9b96efb6d1c9a345599da9b1ec62f358a17007eb5bdb7f45f1b02",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Role/ImgNan_2.png",
+        "sha256": "7394b67624e9b96efb6d1c9a345599da9b1ec62f358a17007eb5bdb7f45f1b02"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Role/ImgNan_2.png.meta",
+        "sha256": "e760315da94cbe9b48ba3ce96932963caae2eb6f93475cf7f15f18586dbd0b18"
+      },
+      "guid": "bf7661eb553d4ac021f3d86581ae64cb",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Profession/Profession_Atlas/ImgBg_FourDimensional.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Profession/Profession_Atlas/ImgBg_FourDimensional.asset",
+        "sha256": "091e62f1cdf7e7da93e7875ab13f1ef3a0af90dee7548ae9bce1b63f71aa01b0",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "091e62f1cdf7e7da93e7875ab13f1ef3a0af90dee7548ae9bce1b63f71aa01b0",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Profession/Profession_Atlas/ImgBg_FourDimensional.asset",
+        "sha256": "091e62f1cdf7e7da93e7875ab13f1ef3a0af90dee7548ae9bce1b63f71aa01b0"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Profession/Profession_Atlas/ImgBg_FourDimensional.asset.meta",
+        "sha256": "23b84ade08532177102115cf2b61c9dd7030e2960ed51e7817334c9bb22e1136"
+      },
+      "guid": "91cfc6a3e10860b8a7667eeadfdcc358",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Common/Summary_Atlas/ImgSubscript_Staff.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Summary_Atlas/ImgSubscript_Staff.asset",
+        "sha256": "464e77324413db6e6a7f861b4da5bc136dd60ca41a8701c58bf5c90fd26ba235",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "464e77324413db6e6a7f861b4da5bc136dd60ca41a8701c58bf5c90fd26ba235",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Summary_Atlas/ImgSubscript_Staff.asset",
+        "sha256": "464e77324413db6e6a7f861b4da5bc136dd60ca41a8701c58bf5c90fd26ba235"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Summary_Atlas/ImgSubscript_Staff.asset.meta",
+        "sha256": "4786f1c9e68fa44ec91b170173a7d0bd5062b37a555fddb814fdee96987607cc"
+      },
+      "guid": "d1ffffa85cfb743efb7fce2166053ef7",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Texture2D/sactx-0-512x512-ASTC 6x6-Summary_Atlas-bb6e242b.png",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Texture2D/sactx-0-512x512-ASTC 6x6-Summary_Atlas-bb6e242b.png",
+        "sha256": "478cc4da2e6d0b047b3861db823747aa5b28a71d577d384b0663e3e179cde263",
+        "owner": "Image/UI/Common/Summary_Atlas/ImgSubscript_Staff.asset"
+      },
+      "original_transformed_sha256": "478cc4da2e6d0b047b3861db823747aa5b28a71d577d384b0663e3e179cde263",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Texture2D/sactx-0-512x512-ASTC 6x6-Summary_Atlas-bb6e242b.png",
+        "sha256": "478cc4da2e6d0b047b3861db823747aa5b28a71d577d384b0663e3e179cde263"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Texture2D/sactx-0-512x512-ASTC 6x6-Summary_Atlas-bb6e242b.png.meta",
+        "sha256": "ab032008e166c69ba71a294e151f469133e5330f7061c9a8e928d3d033d416a3"
+      },
+      "guid": "0a261ed542fcec97e255180a6c86beed",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Common/Common_Atlas/ImgJianBian.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgJianBian.asset",
+        "sha256": "596525e1ed6fbfcf4ef2c399d39d2f35eb65d17a18205e2ed6641ec4e241792b",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "e53162a2d59dfc890ccfd7cfb76fe412ed5b1426c78be086ba8c394c2053bf7a",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgJianBian.asset",
+        "sha256": "e53162a2d59dfc890ccfd7cfb76fe412ed5b1426c78be086ba8c394c2053bf7a"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgJianBian.asset.meta",
+        "sha256": "50076681de7cc14955ef596338385743ac3eb55d3e7f4f5487fd50a6751fb2fb"
+      },
+      "guid": "5224499c836ffbf6fd1ae6433203c671",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Common/Common_Atlas/ImgBlue.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBlue.asset",
+        "sha256": "fab332d8e830c1eeab8ea090c3938231f9b25b4f91707221eb8447eb12ff94d6",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "851cf10cef35b3583ca6a6c2cfbab34ef6f872e6a1649263d32f8e4271bd871f",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgBlue.asset",
+        "sha256": "851cf10cef35b3583ca6a6c2cfbab34ef6f872e6a1649263d32f8e4271bd871f"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgBlue.asset.meta",
+        "sha256": "54fbfa527662c3bc5ce22e077ebdab187ac3d7fe45809746bcbeb9b0b678c51a"
+      },
+      "guid": "b2c05766a5a5cc43eef1f451b4d453d4",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Common/Common_Atlas/ImgReturn.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgReturn.asset",
+        "sha256": "df7e4f61b2cb744e6a02de47f187e4f51f4cdfe1cae65c2a4794dc45ec5450a1",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "2c7374036e1857728e14e41f9759c1321b5c345294b67726d61b3302e889d095",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgReturn.asset",
+        "sha256": "2c7374036e1857728e14e41f9759c1321b5c345294b67726d61b3302e889d095"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgReturn.asset.meta",
+        "sha256": "930f104cb4078b0402e8fe930709ddcc13b2c24444434bc4acb223c035a1ce26"
+      },
+      "guid": "8e207f608c3ec2674c12b71311ed4cd2",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Profession/Profession_Atlas/ImgBg_Describe.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Profession/Profession_Atlas/ImgBg_Describe.asset",
+        "sha256": "6524c30712abd9f4ad78ed88e2beecf252771f65ef1b3ea09e5148fc854de557",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "6524c30712abd9f4ad78ed88e2beecf252771f65ef1b3ea09e5148fc854de557",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Profession/Profession_Atlas/ImgBg_Describe.asset",
+        "sha256": "6524c30712abd9f4ad78ed88e2beecf252771f65ef1b3ea09e5148fc854de557"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Profession/Profession_Atlas/ImgBg_Describe.asset.meta",
+        "sha256": "57723b33cfc24f5dc505ff9e5dd52372c941ae68bf0d8d15c9186b3f4a5821b3"
+      },
+      "guid": "fc0e0b7c1d83dd2057b1e6ecf6c6c37b",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Wwise/ScriptableObjects/Event/164C4624-F19E-4DA6-9ECA-4C36A1C1A09F.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/164C4624-F19E-4DA6-9ECA-4C36A1C1A09F.asset",
+        "sha256": "257a6730cf32d60c4a84aec703d04bc049a02ea51a35aca9065964fb8ad0e028",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "2835f0691bb2eac3be2a686c042ad04ce1541e4d33c563af1a92fee2a9abdfa9",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Wwise/ScriptableObjects/Event/164C4624-F19E-4DA6-9ECA-4C36A1C1A09F.asset",
+        "sha256": "2835f0691bb2eac3be2a686c042ad04ce1541e4d33c563af1a92fee2a9abdfa9"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Wwise/ScriptableObjects/Event/164C4624-F19E-4DA6-9ECA-4C36A1C1A09F.asset.meta",
+        "sha256": "fc022e09d14cc7a34c471df6f17d2b597247606c4e820ec0cd69c47898e8d98c"
+      },
+      "guid": "dd3388fea20e3bb723f33ad3bfbd0c35",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/ProfessionIcon/351_1.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/ProfessionIcon/351_1.asset",
+        "sha256": "07f58b859c8c324bad1208af26f99160934a33b3aa3ad2a1b34c18bacce8b799",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "07f58b859c8c324bad1208af26f99160934a33b3aa3ad2a1b34c18bacce8b799",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/ProfessionIcon/351_1.asset",
+        "sha256": "07f58b859c8c324bad1208af26f99160934a33b3aa3ad2a1b34c18bacce8b799"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/ProfessionIcon/351_1.asset.meta",
+        "sha256": "e6a8a661dd03102325c2205ec6e03933a8b55c4ef0471410a3b1e72fc6cbb356"
+      },
+      "guid": "663cac42e44e93d905e9e16e97163868",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/ProfessionIcon/351_1.png",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/ProfessionIcon/351_1.png",
+        "sha256": "5b4ae82fcb3299540f308628f11e0b2dc6259b605c5bdb13f36cde40e1c83fc0",
+        "owner": "Image/UI/ProfessionIcon/351_1.asset"
+      },
+      "original_transformed_sha256": "5b4ae82fcb3299540f308628f11e0b2dc6259b605c5bdb13f36cde40e1c83fc0",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/ProfessionIcon/351_1.png",
+        "sha256": "5b4ae82fcb3299540f308628f11e0b2dc6259b605c5bdb13f36cde40e1c83fc0"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/ProfessionIcon/351_1.png.meta",
+        "sha256": "17fdcdea2bb8d639858b8f6385e5ab58f1366bd79d4bd5547f75831c88e64c78"
+      },
+      "guid": "12e841413720175a3eaa7aceef48ed62",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Animation/UI/Common/Btn_Base_Click.controller",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/Common/Btn_Base_Click.controller",
+        "sha256": "dcea46c04a55dfcdc6ea27311fd32e11023be8477b6f37b8032e031b169db432",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "dcea46c04a55dfcdc6ea27311fd32e11023be8477b6f37b8032e031b169db432",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/Common/Btn_Base_Click.controller",
+        "sha256": "dcea46c04a55dfcdc6ea27311fd32e11023be8477b6f37b8032e031b169db432"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/Common/Btn_Base_Click.controller.meta",
+        "sha256": "0c8b406d8273814e7bf2332c8380dbabb288554ff026cfdee4fd17742d210f4c"
+      },
+      "guid": "8228b78e685817d6575544f932237924",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Animation/UI/Common/Disabled.anim",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/Common/Disabled.anim",
+        "sha256": "fd758250c96b133b3195660a6c88a0591f91af5f7f5df43e83c9f19eaa013e51",
+        "owner": "Animation/UI/Common/Btn_Base_Click.controller"
+      },
+      "original_transformed_sha256": "fd758250c96b133b3195660a6c88a0591f91af5f7f5df43e83c9f19eaa013e51",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/Common/Disabled.anim",
+        "sha256": "fd758250c96b133b3195660a6c88a0591f91af5f7f5df43e83c9f19eaa013e51"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/Common/Disabled.anim.meta",
+        "sha256": "7ce9723db4820e746b681a5ccf1c826cc57246aa3d3dfa3487741999abd56d54"
+      },
+      "guid": "e5ee4e87fe5e6d47ff589ffac8ad26a9",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Animation/UI/Common/Normal.anim",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/Common/Normal.anim",
+        "sha256": "4dd795bea32dfbcfc1e82ead0098f004f2d9ba93010e9022fb2ce328e2187952",
+        "owner": "Animation/UI/Common/Btn_Base_Click.controller"
+      },
+      "original_transformed_sha256": "4dd795bea32dfbcfc1e82ead0098f004f2d9ba93010e9022fb2ce328e2187952",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/Common/Normal.anim",
+        "sha256": "4dd795bea32dfbcfc1e82ead0098f004f2d9ba93010e9022fb2ce328e2187952"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/Common/Normal.anim.meta",
+        "sha256": "799e57abb64dffd3b8b862ddacf1df0a9fe37725eb8383c7c2b16cf7d5cbbf51"
+      },
+      "guid": "1d135a58c3389c4499dec37e3b570095",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Animation/UI/Common/Highlighted.anim",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/Common/Highlighted.anim",
+        "sha256": "11c0bfc0348200c8a9d70e2ab44c681a447bb73e5ecfd20e0ac930e35e80ee07",
+        "owner": "Animation/UI/Common/Btn_Base_Click.controller"
+      },
+      "original_transformed_sha256": "11c0bfc0348200c8a9d70e2ab44c681a447bb73e5ecfd20e0ac930e35e80ee07",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/Common/Highlighted.anim",
+        "sha256": "11c0bfc0348200c8a9d70e2ab44c681a447bb73e5ecfd20e0ac930e35e80ee07"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/Common/Highlighted.anim.meta",
+        "sha256": "0850b9250cbf64feccd1713bf35a767a0b3cef96fcb336849fb0a5bf725553be"
+      },
+      "guid": "aa0fb9ea104fce94d79850bf9d006c24",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Animation/UI/Common/Selected.anim",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/Common/Selected.anim",
+        "sha256": "cc4c01706fbbd7a9bed9fa6f7f01ffc2c050c0909916d85ee553149d6d14a1b3",
+        "owner": "Animation/UI/Common/Btn_Base_Click.controller"
+      },
+      "original_transformed_sha256": "cc4c01706fbbd7a9bed9fa6f7f01ffc2c050c0909916d85ee553149d6d14a1b3",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/Common/Selected.anim",
+        "sha256": "cc4c01706fbbd7a9bed9fa6f7f01ffc2c050c0909916d85ee553149d6d14a1b3"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/Common/Selected.anim.meta",
+        "sha256": "57343e8ea236f1a2eb287a4f66b2c4e6e97998a16520e254667e404e07e61483"
+      },
+      "guid": "67ffda09bdb7293c01d4877af9f404e2",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Animation/UI/Common/Pressed.anim",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Animation/UI/Common/Pressed.anim",
+        "sha256": "6115af211859758598fa85d9e665897bdd12ac92d35237f82aeb4c2d7dfe3a49",
+        "owner": "Animation/UI/Common/Btn_Base_Click.controller"
+      },
+      "original_transformed_sha256": "6115af211859758598fa85d9e665897bdd12ac92d35237f82aeb4c2d7dfe3a49",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/Common/Pressed.anim",
+        "sha256": "6115af211859758598fa85d9e665897bdd12ac92d35237f82aeb4c2d7dfe3a49"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/Common/Pressed.anim.meta",
+        "sha256": "de27e16759c8ecdce15956688468d6a38cb04f021786440ac4d04baa8a5d4a0f"
+      },
+      "guid": "d4c3f5495b2db808db1a6cefdffa3ef5",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Common/Common_Atlas/ImgRedDot.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgRedDot.asset",
+        "sha256": "a627876c6425adef9af497f8436241c7d10ebba51211b5f56d04810d98230752",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "cac8913319b044493547fde15291808bc2d7f78919474257c03aef2cc9b7e3d0",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgRedDot.asset",
+        "sha256": "cac8913319b044493547fde15291808bc2d7f78919474257c03aef2cc9b7e3d0"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgRedDot.asset.meta",
+        "sha256": "d0c4e971924d2593933516c24403d85600f09cf4b3e6aef9a01e0f24e13eb2f7"
+      },
+      "guid": "9e9953255dd4cfdfc1447e6b130520fd",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Common/Common_Atlas/ImgReturnBg.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgReturnBg.asset",
+        "sha256": "0f4e78c14df29863840622c93c016e712d6f5e3390a4003a51d359b848307615",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "8ac25afaff497666dc8333561dc7f8b99655ddd2abf53cf78a1c945cda829526",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgReturnBg.asset",
+        "sha256": "8ac25afaff497666dc8333561dc7f8b99655ddd2abf53cf78a1c945cda829526"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgReturnBg.asset.meta",
+        "sha256": "18af9fe6ae85d5a7057b12e383f730a2a3d7f6458e9330862f0a4ce7e40d0df7"
+      },
+      "guid": "d9247d59b4ce406f565253463c2637da",
+      "reused": false
+    },
+    {
+      "native_relative_path": "ScriptableConfig/TipDotGraphAssets/Character/_2__State_职业是否可以升级.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/ScriptableConfig/TipDotGraphAssets/Character/_2__State_职业是否可以升级.asset",
+        "sha256": "e26cdca1a831b9777749d42a8251df09dfb31804f6735b4faeb4f6486b830f31",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "e36febe8d9eb0ab283376be05e1337c21b15542f32092362eddd892b86792964",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/ScriptableConfig/TipDotGraphAssets/Character/_2__State_职业是否可以升级.asset",
+        "sha256": "e36febe8d9eb0ab283376be05e1337c21b15542f32092362eddd892b86792964"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/ScriptableConfig/TipDotGraphAssets/Character/_2__State_职业是否可以升级.asset.meta",
+        "sha256": "dfd0541fa06e66b35961253b798fa4f6519cf25b234825c407b0b1d0ad0b2641"
+      },
+      "guid": "6d4d9e33d92b091ac7c8e3a407022f94",
+      "reused": false
+    },
+    {
+      "native_relative_path": "ScriptableConfig/TipDotGraphAssets/Character/_5__Cnd_职业等级是否可以提升.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/ScriptableConfig/TipDotGraphAssets/Character/_5__Cnd_职业等级是否可以提升.asset",
+        "sha256": "f2fe1516dfa17364fea033e6d559cc6f66e0210aeeb7951303244607589cf86c",
+        "owner": "ScriptableConfig/TipDotGraphAssets/Character/_2__State_职业是否可以升级.asset"
+      },
+      "original_transformed_sha256": "adc0e6968ad8f2f6a8cca44d93a2e060e958bb9f7ef98a19e18d3f017ba2784e",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/ScriptableConfig/TipDotGraphAssets/Character/_5__Cnd_职业等级是否可以提升.asset",
+        "sha256": "adc0e6968ad8f2f6a8cca44d93a2e060e958bb9f7ef98a19e18d3f017ba2784e"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/ScriptableConfig/TipDotGraphAssets/Character/_5__Cnd_职业等级是否可以提升.asset.meta",
+        "sha256": "cef729d0a2fc46f634f00d8d5239357a36171b0c23c23a6bd8364fbbcbd46c18"
+      },
+      "guid": "aee0c2b8058d6abb5ea20ef303c67e3f",
+      "reused": false
+    },
+    {
+      "native_relative_path": "ScriptableConfig/TipDotGraphAssets/Character/ProfessionItem.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Character/ProfessionItem.asset",
+        "sha256": "b4b2a0cb823adff8b991922fe7861456eaf5374103ecfab40eba436aadf1bbdf",
+        "owner": "ScriptableConfig/TipDotGraphAssets/Character/_5__Cnd_职业等级是否可以提升.asset"
+      },
+      "original_transformed_sha256": "ce798da36b993719b30b26f899f91b177dea10f8d553fc0f2de573303916ea7a",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/ScriptableConfig/TipDotGraphAssets/Character/ProfessionItem.asset",
+        "sha256": "ce798da36b993719b30b26f899f91b177dea10f8d553fc0f2de573303916ea7a"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/ScriptableConfig/TipDotGraphAssets/Character/ProfessionItem.asset.meta",
+        "sha256": "2b14b9122439ff3ef80f9dc17fe27d496f5678e763e91e7c3ff87f9a3be7d9db"
+      },
+      "guid": "0e75e48b06a22dde16d92aa7f43f1e5a",
+      "reused": false
+    },
+    {
+      "native_relative_path": "ScriptableConfig/TipDotGraphAssets/Character/_4__Cnd_职业是否可以晋阶.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/ScriptableConfig/TipDotGraphAssets/Character/_4__Cnd_职业是否可以晋阶.asset",
+        "sha256": "68524fa10afc4b16a2fa89546c680a799076f660953719933f60b77b447b8312",
+        "owner": "ScriptableConfig/TipDotGraphAssets/Character/ProfessionItem.asset"
+      },
+      "original_transformed_sha256": "bbad9fd3ba7904d543354e5980bf026c607c707c763932237deb4aa59e87f944",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/ScriptableConfig/TipDotGraphAssets/Character/_4__Cnd_职业是否可以晋阶.asset",
+        "sha256": "bbad9fd3ba7904d543354e5980bf026c607c707c763932237deb4aa59e87f944"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/ScriptableConfig/TipDotGraphAssets/Character/_4__Cnd_职业是否可以晋阶.asset.meta",
+        "sha256": "6ab07a809a866c5ddba3048c151f35a90fc3d14c999a365414cac2d8cac7d8ba"
+      },
+      "guid": "a399ef599a821bf671de38009683f93d",
+      "reused": false
+    },
+    {
+      "native_relative_path": "ScriptableConfig/TipDotGraphAssets/Character/_3__State_职业是否可以晋升.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/ScriptableConfig/TipDotGraphAssets/Character/_3__State_职业是否可以晋升.asset",
+        "sha256": "91cbc8e793592fed3499b3cd04a49cd84c648d2f2102938c8c88114adacdfe04",
+        "owner": "ScriptableConfig/TipDotGraphAssets/Character/_4__Cnd_职业是否可以晋阶.asset"
+      },
+      "original_transformed_sha256": "825c0eae4b262d4d461edf880089e6e633f0f868a4a0232e30da60b98444a363",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/ScriptableConfig/TipDotGraphAssets/Character/_3__State_职业是否可以晋升.asset",
+        "sha256": "825c0eae4b262d4d461edf880089e6e633f0f868a4a0232e30da60b98444a363"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/ScriptableConfig/TipDotGraphAssets/Character/_3__State_职业是否可以晋升.asset.meta",
+        "sha256": "a982586253236513b19bbf0ea646c8055ad0a0b8007271495f2c79cda23f0a8f"
+      },
+      "guid": "925a5b8900d05dc3e444cd471c7179ca",
+      "reused": false
+    },
+    {
+      "native_relative_path": "ScriptableConfig/TipDotGraphAssets/Character/_1__State_职业是否有提示.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/ScriptableConfig/TipDotGraphAssets/Character/_1__State_职业是否有提示.asset",
+        "sha256": "515dd360404850b62ef189c014ca6747bf166d9c459f991251b142454c8d5acb",
+        "owner": "ScriptableConfig/TipDotGraphAssets/Character/_3__State_职业是否可以晋升.asset"
+      },
+      "original_transformed_sha256": "65c7a46baa0d7f5017439e94a5ff7e60888546fdea93fed18f70912f154c141d",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/ScriptableConfig/TipDotGraphAssets/Character/_1__State_职业是否有提示.asset",
+        "sha256": "65c7a46baa0d7f5017439e94a5ff7e60888546fdea93fed18f70912f154c141d"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/ScriptableConfig/TipDotGraphAssets/Character/_1__State_职业是否有提示.asset.meta",
+        "sha256": "9c6ee70cf48b306a064001dd56ad62d96b5cf5a5cf8a2e4748ef981a2eeaad1b"
+      },
+      "guid": "acf3fe6fb271ae7f5280d4292d693a9b",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Common/Common_Atlas/C_none.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/C_none.asset",
+        "sha256": "7344ebc1ae1ab7d904e3bc7af330ace7dab49370f27fb86e1bf5324c7d97d781",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "4383b73024798b940e1b4c03b2b3fa23442977aa019f761532aeb76db533de16",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/C_none.asset",
+        "sha256": "4383b73024798b940e1b4c03b2b3fa23442977aa019f761532aeb76db533de16"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/C_none.asset.meta",
+        "sha256": "78ea6e5024cdb2af89f3c6cb58c94716e30ed504e4f5feff456ab13aac476ba7"
+      },
+      "guid": "d91fcd8ce5228b443a3478a28f5b3d5a",
+      "reused": true
+    },
+    {
+      "native_relative_path": "Image/UI/Common/Common_Atlas/ImgBlue_Upgrade.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBlue_Upgrade.asset",
+        "sha256": "25b5207fe60f70f9904bb4f96e0ff973fa5a79459bf89d19d1faf7845adc98df",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "c096b4ca4312ab758354c6fc26afd4bbb40be7004d29b892e33bcedcce6f2303",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgBlue_Upgrade.asset",
+        "sha256": "c096b4ca4312ab758354c6fc26afd4bbb40be7004d29b892e33bcedcce6f2303"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgBlue_Upgrade.asset.meta",
+        "sha256": "4c14a9970e01d5f7d496ba3ec24159495c03ab6814edfb15ea2e6061e317498a"
+      },
+      "guid": "e0207fe80738152023d3a2276317605f",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Role/ImgNv_2.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Role/ImgNv_2.asset",
+        "sha256": "08ac6cf5e596812e3e6ca6769ee9f56bd1d8466fe5493c3c9fe26f5a533fb45e",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "08ac6cf5e596812e3e6ca6769ee9f56bd1d8466fe5493c3c9fe26f5a533fb45e",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Role/ImgNv_2.asset",
+        "sha256": "08ac6cf5e596812e3e6ca6769ee9f56bd1d8466fe5493c3c9fe26f5a533fb45e"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Role/ImgNv_2.asset.meta",
+        "sha256": "b6d037fa652cb501b410623fa1bc0ff3727c41ecbe56b491b78efcf09c2a4b27"
+      },
+      "guid": "a90ea7bf776faacb30452fbe23c10156",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Role/ImgNv_2.png",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Role/ImgNv_2.png",
+        "sha256": "c201b8bfa4d18cb46cb102fd82c756919d017d81940074f2a4e729702cb9129b",
+        "owner": "Image/UI/Role/ImgNv_2.asset"
+      },
+      "original_transformed_sha256": "c201b8bfa4d18cb46cb102fd82c756919d017d81940074f2a4e729702cb9129b",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Role/ImgNv_2.png",
+        "sha256": "c201b8bfa4d18cb46cb102fd82c756919d017d81940074f2a4e729702cb9129b"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Role/ImgNv_2.png.meta",
+        "sha256": "c46b402128ff7d73589c28560f79b9c98ff13d721e68ef42530dc6038fd3baba"
+      },
+      "guid": "d99940f60493e5dc163cb7ab82a0b5e6",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Common/Repeat/ImgDot.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Repeat/ImgDot.asset",
+        "sha256": "631aa4b560708231220787b3b95351441a08faae7c9088b606a16520b712f31a",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "631aa4b560708231220787b3b95351441a08faae7c9088b606a16520b712f31a",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Repeat/ImgDot.asset",
+        "sha256": "631aa4b560708231220787b3b95351441a08faae7c9088b606a16520b712f31a"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Repeat/ImgDot.asset.meta",
+        "sha256": "f7e3c944942166c503db69706484f8d1578d24329bee72a105effcb864521a87"
+      },
+      "guid": "85bfcde0188ccbef5ad483ffd2dced3c",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Common/Repeat/ImgDot.png",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Repeat/ImgDot.png",
+        "sha256": "608fb0001ffa76519053a0598239aeb27f05520cad2ca9ba255903738f52845c",
+        "owner": "Image/UI/Common/Repeat/ImgDot.asset"
+      },
+      "original_transformed_sha256": "608fb0001ffa76519053a0598239aeb27f05520cad2ca9ba255903738f52845c",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Repeat/ImgDot.png",
+        "sha256": "608fb0001ffa76519053a0598239aeb27f05520cad2ca9ba255903738f52845c"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Repeat/ImgDot.png.meta",
+        "sha256": "1f521bc1c7b244a4ed8d0df284bf308c3bdd5bf19dcf882acc9cf6893db7e365"
+      },
+      "guid": "1054b8f5de6c047262cc75b38f8b2a3a",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Prefabs/UI/Profession/ProfessionInfoPanelSkillItem.prefab",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/ProfessionInfoPanelSkillItem.prefab",
+        "sha256": "fe8f1a4f0027512de39e29345c5ccf20648848ed8638ceb38ef3fe176a3ecd77",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "8cb6a4ac8170cd5e81f4f08eea3c0af7bc609c5ca7d97478df29594e7b5ed773",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Prefabs/UI/Profession/ProfessionInfoPanelSkillItem.prefab",
+        "sha256": "8cb6a4ac8170cd5e81f4f08eea3c0af7bc609c5ca7d97478df29594e7b5ed773"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Prefabs/UI/Profession/ProfessionInfoPanelSkillItem.prefab.meta",
+        "sha256": "dae7b3a10d3c78e022f2dc1db4decc435bc643f9e4baaf34badd4e503d90ba43"
+      },
+      "guid": "23f5dd37b94d6dd66755a9573b5a16be",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Wwise/ScriptableObjects/Event/1844E599-1636-4634-BE47-E7702A2D75D8.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/1844E599-1636-4634-BE47-E7702A2D75D8.asset",
+        "sha256": "e3291d43f525047eec874588d6b9c01eebadd356ca6af99c7332f468ec5249fe",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "e891c7a2313e47864ae0e6dc211f4944ef3bf0957c206e374eaa082e3a339c06",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Wwise/ScriptableObjects/Event/1844E599-1636-4634-BE47-E7702A2D75D8.asset",
+        "sha256": "e891c7a2313e47864ae0e6dc211f4944ef3bf0957c206e374eaa082e3a339c06"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Wwise/ScriptableObjects/Event/1844E599-1636-4634-BE47-E7702A2D75D8.asset.meta",
+        "sha256": "3d515ff8a9b691e3929fcd22c77b457c46d0711a70720970e4ef49fece8ae218"
+      },
+      "guid": "d2b62bea5c4406d937c0769eeb8c4dc1",
+      "reused": false
+    },
+    {
+      "native_relative_path": "TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium SDF.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium SDF.asset",
+        "sha256": "2dcc3c5788ad5597ef0dd12c531856214fdae73ceec6ccf393b12a50b4317902",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "1415096520251f98ebc3b2932403bb5657f1455b0ccae809c0da21897f4d61dc",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium SDF.asset",
+        "sha256": "1415096520251f98ebc3b2932403bb5657f1455b0ccae809c0da21897f4d61dc"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium SDF.asset.meta",
+        "sha256": "4510acf3fbeb1e5dd55aadfa2eaaa9562e319fac4160c57048d737a392d8fabd"
+      },
+      "guid": "8a31372c43a7badff2d46ecf0f2b041e",
+      "reused": true
+    },
+    {
+      "native_relative_path": "Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3.asset",
+        "sha256": "0a567e548b65e3b21fc050fc017ace8bf32738d4f5b5f8ab51e779f7776f50c0",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "a63d984748f87ec6cb80c5383e7051098b5181e53fd58ac4f731cd3d0cfaf570",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3.asset",
+        "sha256": "a63d984748f87ec6cb80c5383e7051098b5181e53fd58ac4f731cd3d0cfaf570"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3.asset.meta",
+        "sha256": "8f40eca753041ce1034fa9ada942f845daf123b68698c31c633502177150a9ec"
+      },
+      "guid": "650914f161bbbfa4c86a28939dcb2d8d",
+      "reused": true
+    },
+    {
+      "native_relative_path": "Image/UI/Common/Common_Atlas/ImgNew.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgNew.asset",
+        "sha256": "ced080c8dd2e73627c3e269e130f4c07f4d7de821a286458bbd42ff7cdbc08a1",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "afdb6be982964b8b4bd9816e61bf05b934b6c31125023bc7a491277824e73c80",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgNew.asset",
+        "sha256": "afdb6be982964b8b4bd9816e61bf05b934b6c31125023bc7a491277824e73c80"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgNew.asset.meta",
+        "sha256": "6a6c620a84a80d87bca844dfcd90ba0995ab0d8fab4b6c5d55e6b86615f53503"
+      },
+      "guid": "ba7a61d165f0f5249ec9878a3e33401d",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Profession/Profession_Atlas/ImgBg_Equip.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Profession/Profession_Atlas/ImgBg_Equip.asset",
+        "sha256": "426aec11520dc5ce2c9e874777bff5e3fe03976f8c7efe60b08fdc226e7e29b5",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "426aec11520dc5ce2c9e874777bff5e3fe03976f8c7efe60b08fdc226e7e29b5",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Profession/Profession_Atlas/ImgBg_Equip.asset",
+        "sha256": "426aec11520dc5ce2c9e874777bff5e3fe03976f8c7efe60b08fdc226e7e29b5"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Profession/Profession_Atlas/ImgBg_Equip.asset.meta",
+        "sha256": "b494df56884932ea9099084f4790ae65419fc841760cb65a44c25b5adc58a909"
+      },
+      "guid": "2fa76324654a33e79e315116fa34c86b",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Common/Common_Atlas/ButButton.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ButButton.asset",
+        "sha256": "51ff0c2213403211d7a8212390fa4f3844f2e668607c595aec3828c88c31dec7",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "7b2feed915b502eb0b55ebb1f36ebae0ea2d3814bd6585a322863daa2dd7c940",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ButButton.asset",
+        "sha256": "7b2feed915b502eb0b55ebb1f36ebae0ea2d3814bd6585a322863daa2dd7c940"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ButButton.asset.meta",
+        "sha256": "c9246bc6243383965508f0d9d001c8c681859423219417989eee85858a6463ea"
+      },
+      "guid": "07fb1ce435facc659094bb01ec0bcbb7",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Common/Common_Atlas/ImgArrow_Page.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgArrow_Page.asset",
+        "sha256": "f6a1062dda1ac6bdef8e254c7ee1207bb8e1ab20e54af08a2335a1b729ac5a67",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "411336be97bc5ec44b1920113b82d59abae93c7aabb301ec047576d1e6c32020",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgArrow_Page.asset",
+        "sha256": "411336be97bc5ec44b1920113b82d59abae93c7aabb301ec047576d1e6c32020"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgArrow_Page.asset.meta",
+        "sha256": "11110bb3e0b0d32e49370cd7a12201b07cc7bc7d8dddcbd4809fa0b7490e4429"
+      },
+      "guid": "21ca6491b26fa4e80c8081b969e855f9",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Common/Common_Atlas/BtnOk.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/BtnOk.asset",
+        "sha256": "5df10633dad9ee0873266fe66e60c41b83127f4a96cd79de76d03bbd0688137d",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "d364f2f64d509438b4b9b6038939f6ca5a0a576daae77bd1b641fb37efba896a",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/BtnOk.asset",
+        "sha256": "d364f2f64d509438b4b9b6038939f6ca5a0a576daae77bd1b641fb37efba896a"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/BtnOk.asset.meta",
+        "sha256": "c55cb1faf0069ec0fddbf25ae45edee059cf75a0c28e93757e561100811a378f"
+      },
+      "guid": "557cb335f6f29b8dc556f0186ddf756a",
+      "reused": false
+    },
+    {
+      "native_relative_path": "Image/UI/Common/Common_Atlas/ImgBgTitle.asset",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBgTitle.asset",
+        "sha256": "dd77b910637890c3cc0aafc441906f3b918939025c1ee43cfbfc1800606f861a",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "d49734afd69c48bb7d4e721a124d27c02ffc6b9816ad3b8fedc80fd696fcda5f",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgBgTitle.asset",
+        "sha256": "d49734afd69c48bb7d4e721a124d27c02ffc6b9816ad3b8fedc80fd696fcda5f"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgBgTitle.asset.meta",
+        "sha256": "b6426443d14e52f95a2ab13cb3deb2dc9860242be05afbe364182316afd22296"
+      },
+      "guid": "bed068c0daaba73873765e6216ccc278",
+      "reused": false
+    },
+    {
+      "native_relative_path": "UIEffect/Material/UIImgAdd.mat",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/UIEffect/Material/UIImgAdd.mat",
+        "sha256": "2dab5494ad185be35d91ff5b24d5731bd17fb1bcb9b631650ae37b8d3d8f935a",
+        "owner": "Prefabs/UI/Profession/ProfessionPanel.prefab"
+      },
+      "original_transformed_sha256": "fa8cca8f363128455964d794f2b2b88ab42ab02b594d8b12b12d682fcd4153a3",
+      "installed": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/UIEffect/Material/UIImgAdd.mat",
+        "sha256": "fa8cca8f363128455964d794f2b2b88ab42ab02b594d8b12b12d682fcd4153a3"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/Native/UIEffect/Material/UIImgAdd.mat.meta",
+        "sha256": "b0b14a98e2e4eb9c45dbf8cd182715364977ac830f84082a32ec3e28d892b728"
+      },
+      "guid": "13d30ee9f5539183d18be2748fafeb70",
+      "reused": false
+    }
+  ],
+  "folders": [
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Prefabs/UI/Profession.meta",
+      "sha256": "ffd745645617c2c50687911c712970e45faa7067931fc0272d6dfed6b7e5add4"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Prefabs/UI.meta",
+      "sha256": "3fb600e82a0a4f0d09f73dfa84038a6dfa04e5101129112b8a0c6148329029c4"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Prefabs.meta",
+      "sha256": "9d9da1097d55a9838e35e0087a15fddccf0193e1e95279deace2ded54dde857b"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native.meta",
+      "sha256": "63b0aa2addd45e9af793ed06021d31e5abb7792879b67a3414d658da5a77b047"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI.meta",
+      "sha256": "6d7b35d7e187340f3cec4232743f1531fec0000b052e9b1176e8fed46adc8beb"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Effect/Materials.meta",
+      "sha256": "46f88f4f814582dfa69d233ab770951a809569549155d9b4890a060a9d915315"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Effect.meta",
+      "sha256": "3f8148a5454041ed518d6bfb168a8a32c539552d8635f09d43af98e6ad3edfa6"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Effect/textures.meta",
+      "sha256": "b2f772cddaf0f971c39e0f11cdccdf48c1f0bea9962bfabf672232e89135de88"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials.meta",
+      "sha256": "8ee3688a43d8c419a7bc894915d57927999dd2858cdebaff703fd1ab3ec2d56e"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets.meta",
+      "sha256": "9819d67dbd12e537627f7d898a2b3536098f53f6c12b3d493439cc6ba89c824a"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/TextMesh Pro.meta",
+      "sha256": "67e4009804eb0b560747757d546da5b415b4308dba28d4f2c2c7850b8db12cbe"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/ProfessionNativeTextures.meta",
+      "sha256": "df720a97c48adb1f7dfb90f700ace6b32356ce26d017882c4dabae6288c5f5fe"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Effect/Materials/XingZhuang.meta",
+      "sha256": "09c13ee89cd907a01556f2538bf3c425c7fc6a95c8079c51353d65d8dd3b6785"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Effect/textures/XingZhuang.meta",
+      "sha256": "0f508181760b7531eef175d8727a784b3c8c8333e029c088e24ed5a1a78c8daf"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Wwise/ScriptableObjects/Event.meta",
+      "sha256": "1deef045ce8f046f0be91e137ca3196de7c0d9e600a4d149220c77972ea2845f"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Wwise/ScriptableObjects.meta",
+      "sha256": "563833e9f71b21250b44f7925d1cd65a9dc02f10f58aa87f46d10b6dd2edc9b3"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Wwise.meta",
+      "sha256": "773eff9e30ee38af8d6eb6eea989bb371cc431ebb62e5b304c105ae5affcf573"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Skill/Skill_Atlas.meta",
+      "sha256": "8efc9a44bc1fd2a3cc004046ff2c752d6cfe16f67ba204bfbaea062d9764f336"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Skill.meta",
+      "sha256": "19475ca86c50482a39bc968b2d7a175331a46eab3cc3da6f031d0c82d1244b94"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI.meta",
+      "sha256": "493869e2588a034a704c531d5f1052b66e519d063a170d4d7afc1acb312159e6"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Image.meta",
+      "sha256": "f18af92de99a7a6c45527eddd9092fba3680fcd22484b3502405fecbcea3f9df"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Texture2D.meta",
+      "sha256": "bbe72d604eb0cc1f208f9c3e261b4585e2493151687719a3c735bc49b10b0563"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Profession/Profession_Atlas.meta",
+      "sha256": "55a9acdf2642a741577cf7e977f796acf1429a873a35bb4901116ce021586ca2"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Profession.meta",
+      "sha256": "674000fea9d0905e0d8924ca4ed779c2463aa12b98e11dd9a0581053292519da"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Prefabs/UI/PlayerInfo.meta",
+      "sha256": "da5b18d955d5bdde32b2e0aefce4995e6be91089eb61e702713d0f035d1359ef"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas.meta",
+      "sha256": "c2ea723db7052e90087de0f082d28d6fcdf74ce379e521005229f50f714b8f0e"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common.meta",
+      "sha256": "e0795f4f8e66acc98eaab7774bf3c936637c385b7a324a81cb01fc736c85d25b"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/AnimationClip.meta",
+      "sha256": "ccd90eb99ca9b2ac170579baefbaa642806d5ece66ea2545be097881de372e40"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI.meta",
+      "sha256": "763d85474a0abe29b9b22bf8e979a5d1ec9d744553b25b6aaff04d160f204431"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Animation.meta",
+      "sha256": "2954bf50e7f7e89b58ac17273e7acb77aab45004000f982a6b261ac2fc45f6c7"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/ProfessionIcon.meta",
+      "sha256": "d28557fa7d0a7ececf63118275789443b3d1da251e90a687eb25d3a53bcb2c8c"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/Public.meta",
+      "sha256": "cd3c13942b76f9c47bc4a9f4bf07470a8c26e4f549fb335a2bca58a115bcdece"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Role.meta",
+      "sha256": "d19f0b12ad58b2705e1b9d25b6ae23225c3888e911544d571c3b963f181940ec"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Summary_Atlas.meta",
+      "sha256": "543e96cb69c601877ec017a852621b117087772c44ebcfb2499364072743b706"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Animation/UI/Common.meta",
+      "sha256": "dbf1fc0402ece4998535221422544572880ea3581e975dcaa73fac3526a68bd8"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/ScriptableConfig/TipDotGraphAssets/Character.meta",
+      "sha256": "dfe22c2929a66fef2e87898a76f767f2d4d966a517d110dd76e0fbd0fa718487"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/ScriptableConfig/TipDotGraphAssets.meta",
+      "sha256": "da058bae5b7471a8f91c649c381a7653b21d71aa7dbc3234898e71cc6af97c3a"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/ScriptableConfig.meta",
+      "sha256": "a456028fdd57d44119c9f84eb02023dda9a1793729e8f82c3cc73067d0034787"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/Image/UI/Common/Repeat.meta",
+      "sha256": "4f6c6de3e51f6c8a73bb26c4edb5cb8689dd57d88dd253142a2491ecebb9c10e"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/UIEffect/Material.meta",
+      "sha256": "303dfa281ef2b4a606113dc7441868e286c080fce2712429d540d9119593263f"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Native/UIEffect.meta",
+      "sha256": "284ccab58f144ec18130d9545cbaae4915f18757a6498ef25edf0e322d154999"
+    }
+  ],
+  "added": [
+    "Assets/Official/ProfessionUI/Native/Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab",
+    "Assets/Official/ProfessionUI/Native/Effect/Materials/Fx_Guangzhu_08_1_F.mat",
+    "Assets/Official/ProfessionUI/Native/Effect/textures/Fx_Guangzhu_08_1_F.png",
+    "Assets/Official/ProfessionUI/Native/Effect/Materials/XingZhuang/Fx_XingZhuang_379_F 1.mat",
+    "Assets/Official/ProfessionUI/Native/Effect/textures/XingZhuang/Fx_XingZhuang_379_F.png",
+    "Assets/Official/ProfessionUI/Native/Wwise/ScriptableObjects/Event/9B104E93-926C-474B-8ECF-66D30CA68770.asset",
+    "Assets/Official/ProfessionUI/Native/Effect/Materials/Fx_GuangDian_155.mat",
+    "Assets/Official/ProfessionUI/Native/Effect/textures/Fx_GuangDian_155.png",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Skill/Skill_Atlas/ImgBgAtt.asset",
+    "Assets/Official/ProfessionUI/Native/Texture2D/sactx-0-1024x1024-ASTC 6x6-Skill_Atlas-97153254.png",
+    "Assets/Official/ProfessionUI/Native/Effect/Materials/XingZhuang/Fx_XingZhuang_379_F.mat",
+    "Assets/Official/ProfessionUI/Native/Effect/textures/Fx_WenLi_12_6.png",
+    "Assets/Official/ProfessionUI/Native/Effect/Materials/XingZhuang/Fx_XingZhuang_379_1_F.mat",
+    "Assets/Official/ProfessionUI/Native/Effect/textures/XingZhuang/Fx_XingZhuang_379_1_F.png",
+    "Assets/Official/ProfessionUI/Native/Effect/Materials/XingZhuang/Fx_XingZhuang_379_2_F.mat",
+    "Assets/Official/ProfessionUI/Native/Effect/textures/XingZhuang/Fx_XingZhuang_379_2_F.png",
+    "Assets/Official/ProfessionUI/Native/Prefabs/UI/Profession/ProfessionPanel.prefab",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Profession/Profession_Atlas/ImgGradient_Career.asset",
+    "Assets/Official/ProfessionUI/Native/Texture2D/sactx-0-1024x1024-ASTC 6x6-Profession_Atlas-c8489b47.png",
+    "Assets/Official/ProfessionUI/Native/Prefabs/UI/PlayerInfo/PropItem.prefab",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgBlueDot.asset",
+    "Assets/Official/ProfessionUI/Native/AnimationClip/ProfessionPanel_Show.anim",
+    "Assets/Official/ProfessionUI/Native/Animation/UI/UIPanelFade_Hide.anim",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgLine.asset",
+    "Assets/Official/ProfessionUI/Native/AnimationClip/ProfessionPanel_LevelGo.anim",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgBg_List.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/ProfessionIcon/351.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/ProfessionIcon/351.png",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Profession/Profession_Atlas/ImgBg_TransferNPC12.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgSelected_bg.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgRed.asset",
+    "Assets/Official/ProfessionUI/Native/Animation/UI/Public/TabBottomBarCellController.overrideController",
+    "Assets/Official/ProfessionUI/Native/Animation/UI/Public/TabBottomBarCell_On.anim",
+    "Assets/Official/ProfessionUI/Native/Animation/UI/ToggleAnimatorController.controller",
+    "Assets/Official/ProfessionUI/Native/Animation/UI/ToggleOn.anim",
+    "Assets/Official/ProfessionUI/Native/Animation/UI/ToggleOff.anim",
+    "Assets/Official/ProfessionUI/Native/Animation/UI/Public/TabBottomBarCell_Off.anim",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Role/ImgNan_2.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Role/ImgNan_2.png",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Profession/Profession_Atlas/ImgBg_FourDimensional.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Common/Summary_Atlas/ImgSubscript_Staff.asset",
+    "Assets/Official/ProfessionUI/Native/Texture2D/sactx-0-512x512-ASTC 6x6-Summary_Atlas-bb6e242b.png",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgJianBian.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgBlue.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgReturn.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Profession/Profession_Atlas/ImgBg_Describe.asset",
+    "Assets/Official/ProfessionUI/Native/Wwise/ScriptableObjects/Event/164C4624-F19E-4DA6-9ECA-4C36A1C1A09F.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/ProfessionIcon/351_1.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/ProfessionIcon/351_1.png",
+    "Assets/Official/ProfessionUI/Native/Animation/UI/Common/Btn_Base_Click.controller",
+    "Assets/Official/ProfessionUI/Native/Animation/UI/Common/Disabled.anim",
+    "Assets/Official/ProfessionUI/Native/Animation/UI/Common/Normal.anim",
+    "Assets/Official/ProfessionUI/Native/Animation/UI/Common/Highlighted.anim",
+    "Assets/Official/ProfessionUI/Native/Animation/UI/Common/Selected.anim",
+    "Assets/Official/ProfessionUI/Native/Animation/UI/Common/Pressed.anim",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgRedDot.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgReturnBg.asset",
+    "Assets/Official/ProfessionUI/Native/ScriptableConfig/TipDotGraphAssets/Character/_2__State_职业是否可以升级.asset",
+    "Assets/Official/ProfessionUI/Native/ScriptableConfig/TipDotGraphAssets/Character/_5__Cnd_职业等级是否可以提升.asset",
+    "Assets/Official/ProfessionUI/Native/ScriptableConfig/TipDotGraphAssets/Character/ProfessionItem.asset",
+    "Assets/Official/ProfessionUI/Native/ScriptableConfig/TipDotGraphAssets/Character/_4__Cnd_职业是否可以晋阶.asset",
+    "Assets/Official/ProfessionUI/Native/ScriptableConfig/TipDotGraphAssets/Character/_3__State_职业是否可以晋升.asset",
+    "Assets/Official/ProfessionUI/Native/ScriptableConfig/TipDotGraphAssets/Character/_1__State_职业是否有提示.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgBlue_Upgrade.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Role/ImgNv_2.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Role/ImgNv_2.png",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Common/Repeat/ImgDot.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Common/Repeat/ImgDot.png",
+    "Assets/Official/ProfessionUI/Native/Prefabs/UI/Profession/ProfessionInfoPanelSkillItem.prefab",
+    "Assets/Official/ProfessionUI/Native/Wwise/ScriptableObjects/Event/1844E599-1636-4634-BE47-E7702A2D75D8.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgNew.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Profession/Profession_Atlas/ImgBg_Equip.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ButButton.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgArrow_Page.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/BtnOk.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/ImgBgTitle.asset",
+    "Assets/Official/ProfessionUI/Native/UIEffect/Material/UIImgAdd.mat"
+  ],
+  "reused": [
+    "Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat",
+    "Assets/Official/ProfessionUI/Native/ProfessionNativeTextures/FZY4K SDF - dynamic Atlas.texture2d.asset",
+    "Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset",
+    "Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium Atlas Material.mat",
+    "Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium Atlas.asset",
+    "Assets/Official/ProfessionUI/Native/ProfessionNativeTextures/sactx-0-2048x2048-ASTC 6x6-Common_Atlas-7a2befb3.texture2d.asset",
+    "Assets/Official/ProfessionUI/Native/Image/UI/Common/Common_Atlas/C_none.asset",
+    "Assets/Official/ProfessionUI/Native/TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium SDF.asset",
+    "Assets/Official/ProfessionUI/Native/Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3.asset"
+  ],
+  "language_fonts": {
+    "source": {
+      "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+      "bundle_hash": "bf62732f37a5a423ddbac02681e054a4",
+      "path_id": "-6461299786733695581",
+      "origin": "apk_zip",
+      "manifest": "871_156598",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/bf62732f37a5a423ddbac02681e054a4.bundle",
+      "raw_size": 409901,
+      "raw_sha256": "ebee921d1efee60b02445c5d09faebdef159fdd6c7284658d2c05cf9e3826434"
+    },
+    "raw_object_sha256": "dde5715dcb061a826bbba0bda0ee2185a03fa959379803410e7cd048615c6c8e",
+    "output": {
+      "path": "unity/Assets/Official/ProfessionUI/Fonts/MultiLanguageFontConfig.json",
+      "sha256": "99f1706629e9ec57ffdd8b1faf638127f609948ad57fb61e851c7c2c028aaa0c"
+    },
+    "meta": {
+      "path": "unity/Assets/Official/ProfessionUI/Fonts/MultiLanguageFontConfig.json.meta",
+      "sha256": "7a48b5852f77b024019916b783a360a50020dbc9019f7a40fcde18eacc2ffbd4"
+    },
+    "configuration": {
+      "DefaultFontAssetKey": "zh_CN",
+      "FontAssetDict": {
+        "zh_CN": "FZY4K SDF - dynamic",
+        "zh_TW": "FZY4K SDF - dynamic",
+        "en_US": "MPLUSRounded1c-Medium SDF",
+        "ko": "SpoqaHanSansNeo-Bold SDF",
+        "ja": "GenJyuuGothic-P-Medium SDF",
+        "de": "MPLUSRounded1c-Medium SDF",
+        "fr": "MPLUSRounded1c-Medium SDF",
+        "ru": "MPLUSRounded1c-Medium SDF",
+        "pt": "MPLUSRounded1c-Medium SDF",
+        "es": "MPLUSRounded1c-Medium SDF",
+        "vn": "AsapCondensed-Medium SDF"
+      },
+      "DefaultRegion": "CN",
+      "RegionFontAssetDict": {
+        "CN": {
+          "Default": "FZY4K SDF - dynamic",
+          "Fallbacks": []
+        },
+        "HKMOT": {
+          "Default": "FZY4K SDF - dynamic",
+          "Fallbacks": []
+        },
+        "JP": {
+          "Default": "GenJyuuGothic-P-Medium SDF",
+          "Fallbacks": []
+        },
+        "US": {
+          "Default": "MPLUSRounded1c-Medium SDF",
+          "Fallbacks": [
+            "FZY4K SDF - dynamic"
+          ]
+        },
+        "KR": {
+          "Default": "SpoqaHanSansNeo-Bold SDF",
+          "Fallbacks": []
+        },
+        "VN": {
+          "Default": "AsapCondensed-Medium SDF",
+          "Fallbacks": []
+        }
+      }
+    },
+    "consumed_scope": "Original MultiLanguageFontService CN/zh_CN selection: default FZY4K, clear fallback list, SetupFont before exposing the font to original multi-language text. Other language branches remain unbound.",
+    "source_service": {
+      "path": ".tools/source-packages/official-code/framework-firstpass-source/MultiLanguageFontService.cs",
+      "sha256": "ea21a58a8d6162e331d10ce81f72b19ce9096b15682c700d207f639892e7d0d5"
+    }
+  },
+  "operation": "Install the complete original detail/info/upgrade prefab closure with verified script/shader/managed-reference bindings. Add only absent assets to the source project; retain existing shared font/atlas/material assets and GUIDs byte-for-byte, and copy those retained assets into the isolated project for validation.",
+  "validated_scope": "Unity 2022.3.57f1c2 Direct3D Play Mode in an isolated project: exact original ProfessionPanel prefab and upgrade row, zero missing MonoBehaviours, original serialized upgrade references/state switcher/show clip and verified CN font config + full original Chinese binary text readers. Simulated mouse checks upgrade failure/deferred success and native use-item money-only shortage/fallthrough; source FIFO rows, zero omission, modulo-four backgrounds, previous/current/diff/cost order, changed-property effects and animation, badge/nonbadge/function/unlock/max red-dot branches, five player subscriptions, disable/re-enable/player-reinit cleanup passed. Native upgrade subtree screenshots were actually viewed at a matching 1080x1920 Game View/render target. Parent detail page initialization, character/level/name/tab data, typed property formatting, popup contents, player/formula/transactions, save and Windows publication are not validated and remain incomplete.",
+  "limitations": [
+    "Profession configuration/player/pool/popup/property-format services are consumed interfaces; production information/upgrade page integration remains incomplete.",
+    "No complete profession pages, save validation or Windows release is claimed."
+  ],
+  "validation_entry": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionUpgradePanelValidation.cs",
+    "sha256": "c52e7b60b99d13ebd3d4c0f58fc38c7e4d9fca1cb08495a03ba280c516bf80e6"
+  },
+  "language_inputs": {
+    "path": "unity/Assets/Official/World/Map/13/Source/native-label-language.json",
+    "sha256": "e88c4db3b476f650024c1dc9f05b26f9637b5dc7990e17816f03f4d681c87d06"
+  },
+  "window_instantiation": {
+    "path": ".tools/source-packages/official-code/client-source/UIUtils.cs",
+    "sha256": "b6a88b20df5a8222afafd086f2ae949a5dc661380901bfed6f92449802f57fcf"
+  },
+  "language_reader": {
+    "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/LocalizationBinaryFileReader.cs",
+    "sha256": "3e1369f131d21850432279870fbf15f4c74955d3906a9319201f0dea0a475687"
+  }
+}
