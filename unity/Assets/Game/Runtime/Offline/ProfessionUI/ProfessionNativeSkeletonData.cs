@@ -14,7 +14,7 @@ namespace Zjcs.Offline.ProfessionUI
     // Independent data binding, not an animation SDK. The complete source JSON
     // remains available to subsequent constraint/timeline stages without lossy
     // normalization, pose baking or replacing unsupported fields with defaults.
-    public sealed class ProfessionNativeSkeletonData
+    public sealed partial class ProfessionNativeSkeletonData
     {
         public sealed class Constraint
         {
@@ -153,6 +153,11 @@ namespace Zjcs.Offline.ProfessionUI
                                 result = new ProfessionNativeClippingAttachment(name, bone, bones.Length, Floats(attachment["vertices"]), (int)Number(attachment, "vertexCount"), slotIndices[Text(attachment, "end")], slots.Length, scale); break;
                             case "point":
                                 result = new ProfessionNativePointAttachment(name, bone, Number(attachment, "x"), Number(attachment, "y"), scale); break;
+                            case "path":
+                                result = new ProfessionNativePathAttachment(name, bone, bones.Length,
+                                    Floats(attachment["vertices"]), (int)Number(attachment, "vertexCount"),
+                                    Floats(attachment["lengths"]), Boolean(attachment, "closed"),
+                                    Boolean(attachment, "constantSpeed", true), scale); break;
                             default: throw new NotSupportedException("Restore additional original attachment type: " + kind);
                         }
                         entries.Add(new ProfessionNativeSkin.Entry(slotIndex, entry.Key, result)); attachmentCount++;

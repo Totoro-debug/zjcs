@@ -198,6 +198,8 @@ Map12主线任务1165～1270沿用官方顺序、前置和奖励；其中1215要
 
 原 NPC 邀请模型已按95名候选的 `FigureModelUI` 逐项解析：所选版本中91份实际 prefab 完整保留261个节点、1297个序列化对象及605份脚本载荷；11015～11018的模板包不在所选官方清单中，已记录原路径，11019～11022现存模板也完整保留作来源，正式邀请消费者仍须落实此前确认的11015～11022排除范围。160份实际 APK／云端 CAB 经可逆准备核对14202个对象和2735份组件；全部91份原生 YAML 核对12103项字段值、4272个指针、组件／子节点顺序及原标签，未移除非活动节点。无托管引用载荷需要改写。只读复现、根工程静态检查（76883个 GUID）、隔离 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。这里完成原模型层级和原生转换源，34份被引用骨骼的图形／动画／贴图加载、最终 prefab 安装、真实 NPC 入队、存档及战斗仍待接通。来源见[原 NPC 模板](../../assets/reference/official-map/map12-team-npc-prefabs-source-manifest.json)、[可逆转换输入](../../assets/reference/official-map/map12-team-npc-native-input-source-manifest.json)与[原生字段核对](../../assets/reference/official-map/map12-team-npc-native-source-manifest.json)。
 
+原 NPC 模型引用的34份骨骼已完整解码，保留1952段动画，其中1205段沿原 GUID 拆分表恢复。原 `AppearanceAnimUtils` 先查询内置动作，并以 `SoNoMatch` 拒绝名称不匹配的拆分表；转换按此分支保留31份拒绝记录，仅解码2份匹配表，不把其他模型的动画灌入当前骨骼。所有原图集、曲线、网格／权重、皮肤成员、变形、IK／变换／路径／物理约束及事件保留于确定性无损数据。新增独立 NPC 数据格式及原生路径附件数据载体，共用骨骼／插槽／皮肤读取器只增加路径附件分支，既有角色／武器格式保持兼容。DX12 Play Mode 实际通过 Resources 载入34份包，核对原解压哈希、19092个附件、7份路径附件的控制点布局／长度及92项起始动作绑定，并重载原男女角色包；未使用动画 SDK 或逐帧烘焙。只读复现、根工程静态检查（77110个 GUID）、隔离 Unity 编译和 `Zjcs.Editor.ProjectTools.Validate` 通过。此项是数据加载和对象图验证；路径／物理等约束求解、完整动画播放、原生 NPC 图形、贴图／材质服务、正式入队／存档／战斗和 Windows 发布仍未完成。来源见[原骨骼与拆分动画](../../assets/reference/official-map/map12-team-npc-skeletons-source-manifest.json)及[独立原生数据绑定](../../assets/reference/official-map/map12-team-npc-data-source-manifest.json)。
+
 ### 已迁移代码与局部资源
 
 以下为局部代码／资源接入，完整流程仍受本页缺项限制。
