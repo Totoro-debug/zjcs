@@ -33,6 +33,7 @@ namespace Zjcs.Presentation.World
             public Action movementCompletion;
             public MapGridPoint currentGrid;
             public bool storyTransferActive;
+            public bool storyMapMovementInput;
         }
     }
 }

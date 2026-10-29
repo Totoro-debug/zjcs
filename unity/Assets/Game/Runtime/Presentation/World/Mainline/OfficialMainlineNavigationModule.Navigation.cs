@@ -49,6 +49,24 @@ namespace Zjcs.Presentation.World
                     TryMoveToPointer(press.Value);
             }
 
+            public void ProcessStoryMapPointerPress()
+            {
+                Vector2? press = PointerPressProvider != null ? PointerPressProvider()
+                    : Input.GetMouseButtonDown(0) ? (Vector2?)Input.mousePosition : null;
+                if (!press.HasValue) return;
+                if (EventSystem.current != null)
+                {
+                    if (PointerPressProvider == null && EventSystem.current.IsPointerOverGameObject()) return;
+                    if (PointerPressProvider != null)
+                    {
+                        var hits = new List<RaycastResult>();
+                        EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current) { position = press.Value }, hits);
+                        if (hits.Count > 0) return;
+                    }
+                }
+                TryMoveToPointer(press.Value);
+            }
+
             private void TryMoveToPointer(Vector2 pointer)
             {
                 Vector3 screen = pointer;

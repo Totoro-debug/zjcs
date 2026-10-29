@@ -246,7 +246,7 @@ namespace Zjcs.Presentation.World
             }
 
             if (hud.worldFunctions != null || miniMap.fullMiniMapPanel != null
-                || (storyRunning && battleController == null && !navigation.storyTransferActive)
+                || (storyRunning && battleController == null && !navigation.storyTransferActive && !navigation.storyMapMovementInput)
                 || statues.goddessDialog != null || statues.witchDialog != null) return;
 
             if (battleController != null)
@@ -281,6 +281,13 @@ namespace Zjcs.Presentation.World
                         hud.ShowOfficialNotice("战斗未完成，本次结果未记录");
                     }
                 }
+                return;
+            }
+
+            if (navigation.storyMapMovementInput)
+            {
+                if (navigation.movementPath != null) navigation.AdvanceMovement(Time.deltaTime);
+                else navigation.ProcessStoryMapPointerPress();
                 return;
             }
 
