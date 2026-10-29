@@ -726,6 +726,21 @@ def build(map_id=11):
     keys.extend(("ui_WorldCanvas_explore", "ui_WorldCanvas_explore_moretimes"))
     keys.append("WORLD_EXPLORE_POS_NOT_ENOUGH")
     keys.extend("item_" + str(row["itemId"]) + "_name" for row in item_icons)
+    goddess_drop_item_ids = []
+    goddess_drop_item_source = None
+    if map_id == 11:
+        interaction_path = ROOT / "unity/Assets/Game/Resources/World/Mainline/interactions.json"
+        interaction_data = json.loads(interaction_path.read_bytes())
+        goddess_drop_item_ids = sorted({item_id for row in interaction_data["regions"]
+                                        if row["MapClassId"] == 11 for item_id in row["DropItems"]})
+        if not goddess_drop_item_ids:
+            raise ValueError("Official Map11 goddess drop-item list is empty")
+        goddess_drop_item_source = {"path": interaction_path.relative_to(ROOT).as_posix(),
+                                    "sha256": sha256(interaction_path.read_bytes()),
+                                    "itemIds": goddess_drop_item_ids}
+        keys.extend("item_" + str(item_id) + suffix for item_id in goddess_drop_item_ids
+                    for suffix in ("_desc", "_func_desc"))
+        keys.append("ItemType.Treasure")
     keys.extend("explore_token_group_rule_" + suffix + "_" + str(i)
                 for i in (0, 2011, 2012, 2013, 2014, 2015, 2016) for suffix in ("title", "content"))
     exploration = json.loads((ROOT / 'unity/Assets/Game/Resources/World/Mainline/exploration.json').read_text(encoding='utf-8'))
@@ -898,6 +913,10 @@ def build(map_id=11):
                                       for path in [official_code / "framework-firstpass-source/Framework" / (name + ".cs")
                                           for name in ("NumberWithSizeArg", "CultureNumberFormatterBase", "NumberCultureFormatter_CN", "NumberFormatHelper")]],
                                   "language": language_inputs,
+                                  "goddessDropItems": goddess_drop_item_source,
+                                  "goddessTreasureDetailPrefab": apk.provenance(
+                                      apk.asset("defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+                                                "/TreasureDetailDialog.prefab")) if map_id == 11 else None,
                                   "globalColors": apk.provenance(colors_object),
                                   "sprites": {uri: manifest["resources"][uri] for uri in sorted(sprites)},
                                   "portedCode": [{"path": path.relative_to(ROOT).as_posix(), "sha256": sha256(path.read_bytes())}
