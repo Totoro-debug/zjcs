@@ -21,6 +21,10 @@ namespace Zjcs.Editor
 {
     public static partial class OfficialMap11PlayModeAcceptance
     {
+        [Serializable] private sealed class BackgroundInteractionData { public BackgroundInteractionRegion[] regions; }
+        [Serializable] private sealed class BackgroundInteractionRegion
+        { public int MapClassId, Region; public int[] DropItems; }
+
         // Scripted callbacks verify state and actual rendered frames only.
         // This mode never invokes the native pointer helper or claims input acceptance.
         public static void RunBackground()
@@ -66,6 +70,30 @@ namespace Zjcs.Editor
             VerifyMainPlayerStoryPositions();
             VerifyStorySpatialBindings();
             VerifyWorldMonsterViews();
+            IDictionary entities = Field<IDictionary>("mapEntities");
+            TextAsset interactionSource = Resources.Load<TextAsset>("World/Mainline/interactions");
+            BackgroundInteractionData interactionCatalog = JsonUtility.FromJson<BackgroundInteractionData>(interactionSource.text);
+            object goddess = entities.Values.Cast<object>().Where(value =>
+                    (int)value.GetType().GetField("EntityClassId").GetValue(value) == 6010)
+                .First(value => interactionCatalog.regions.Single(region => region.MapClassId == 11
+                    && region.Region == (int)value.GetType().GetField("Region").GetValue(value)).DropItems.Length > 0);
+            int goddessRegionId = (int)goddess.GetType().GetField("Region").GetValue(goddess);
+            BackgroundInteractionRegion goddessRegion = interactionCatalog.regions
+                .Single(value => value.MapClassId == 11 && value.Region == goddessRegionId);
+            long itemCountBeforePreview = save.InventoryCount(goddessRegion.DropItems.First());
+            Invoke("Interact", goddess);
+            GoddessTouchDialog goddessDialog = GameObject.Find("Map11GoddessUI")
+                .GetComponentInChildren<GoddessTouchDialog>(true);
+            WorldItemIcon[] previewIcons = goddessDialog.GetComponentsInChildren<WorldItemIcon>(true);
+            Require(previewIcons.Length == goddessRegion.DropItems.Length && previewIcons.All(value => value.Icon.sprite != null),
+                "Ordinary goddess renders each official region DropItems entry with its bound icon");
+            Require(save.Save.World.ActivatedGoddessRegions.Count == 0
+                && save.InventoryCount(goddessRegion.DropItems.First()) == itemCountBeforePreview,
+                "Opening the goddess treasure preview does not activate the goddess or grant its preview items");
+            Capture("background-goddess-treasure-preview");
+            yield return new WaitForEndOfFrame();
+            Invoke("CloseGoddessDialog");
+            yield return new WaitForSecondsRealtime(.5f);
             Capture("background-map-world-monsters");
             yield return new WaitForEndOfFrame();
             yield return CaptureWorldMonsterView(3828);
@@ -77,7 +105,6 @@ namespace Zjcs.Editor
             Invoke("RunStoryGraph", 14);
             Require(!Field<bool>("storyRunning") && save.StoryCount(story.key) == 1 && save.StoryStatus(story.key) == 2,
                 "Unconnected selector Exit ends normally and records exactly one completion");
-            IDictionary entities = Field<IDictionary>("mapEntities");
             Invoke("ActivateGoddess", entities[202]);
             Invoke("ActivateGoddess", entities[202]);
             Require(save.Save.World.ActivatedGoddessRegions.Count == 1, "Repeated goddess activation retains one receipt");

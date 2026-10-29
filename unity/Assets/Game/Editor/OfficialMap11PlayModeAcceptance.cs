@@ -50,7 +50,11 @@ namespace Zjcs.Editor
                 OfficialMap11PuzzleValidation.Validate();
                 ProjectTools.Validate();
             }
-            string root = Path.Combine(Path.GetTempPath(), "zjcs-map11-play-" + Guid.NewGuid().ToString("N"));
+            string validationRoot = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+            string root = string.IsNullOrEmpty(validationRoot)
+                ? Path.Combine(Path.GetTempPath(), "zjcs-map11-play-" + Guid.NewGuid().ToString("N"))
+                : Path.Combine(Path.GetFullPath(validationRoot), "map11-playmode");
+            if (Directory.Exists(root)) throw new InvalidOperationException("Map11 validation output already exists: " + root);
             var slots = new ProfileSlotCatalog(root);
             string slot = slots.CreateSlot();
             var save = new OfflineMainlineSave { CreatedAtUnixSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds() };

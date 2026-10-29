@@ -21,6 +21,13 @@ namespace Zjcs.Official.WorldUI
             public GameObject[] objects;
         }
 
+        public sealed class TreasurePreview
+        {
+            public GameObject prefab;
+            public Sprite icon;
+            public Sprite quality;
+        }
+
         public Button myTouchBtn;
         public Button CannotActiveBtn;
         public Button mTransferBtn;
@@ -40,6 +47,7 @@ namespace Zjcs.Official.WorldUI
         private Action closed;
         private bool canActivate;
         private readonly List<GameObject> propItems = new List<GameObject>();
+        private readonly List<GameObject> treasureItems = new List<GameObject>();
 
         private void Awake()
         {
@@ -50,6 +58,12 @@ namespace Zjcs.Official.WorldUI
 
         public void DoInit(bool isActived, bool canActiveGoddess, string name, string condition,
             string blessing, string[] propDescriptions, Action activate, Action doTransfer,
+            Action showCannotActivate, Action onClosed) =>
+            DoInit(isActived, canActiveGoddess, name, condition, blessing, propDescriptions,
+                Array.Empty<TreasurePreview>(), activate, doTransfer, showCannotActivate, onClosed);
+
+        public void DoInit(bool isActived, bool canActiveGoddess, string name, string condition,
+            string blessing, string[] propDescriptions, TreasurePreview[] treasurePreviews, Action activate, Action doTransfer,
             Action showCannotActivate, Action onClosed)
         {
             startStage = activate;
@@ -82,6 +96,26 @@ namespace Zjcs.Official.WorldUI
                     item.GetComponentInChildren<TMP_Text>(true).text = description;
                     item.SetActive(true);
                     propItems.Add(item);
+                }
+            }
+            foreach (GameObject item in treasureItems) Destroy(item);
+            treasureItems.Clear();
+            if (TreasureAwardSlot != null && TreasureAwardSlot.parent != null)
+                TreasureAwardSlot.parent.gameObject.SetActive(treasurePreviews != null && treasurePreviews.Length > 0);
+            if (treasurePreviews != null && treasurePreviews.Length > 0)
+            {
+                if (TreasureAwardSlot == null)
+                    throw new InvalidOperationException("Official goddess treasure preview bindings are missing.");
+                foreach (TreasurePreview preview in treasurePreviews)
+                {
+                    if (preview?.prefab == null || preview.icon == null || preview.quality == null)
+                        throw new InvalidOperationException("Official goddess item preview data is incomplete.");
+                    WorldItemIcon icon = Instantiate(preview.prefab, TreasureAwardSlot, false).GetComponent<WorldItemIcon>();
+                    if (icon == null) throw new InvalidOperationException("Official goddess item icon binding is missing.");
+                    icon.Init(preview.icon, preview.quality, string.Empty);
+                    if (icon.myTextGo != null) icon.myTextGo.SetActive(false);
+                    if (icon.BottomGo != null) icon.BottomGo.SetActive(false);
+                    treasureItems.Add(icon.gameObject);
                 }
             }
             GetComponent<WorldPopupWindow>().Show();

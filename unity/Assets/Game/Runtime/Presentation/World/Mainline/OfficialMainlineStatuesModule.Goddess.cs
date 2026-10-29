@@ -65,8 +65,23 @@ namespace Zjcs.Presentation.World
                     host.NativeUi.Text("PropType.HangUpExpAddPercent") + "<color=#E5A23D>+1%</color>",
                     host.NativeUi.Text("PropType.HangUpMoneyAddPercent") + "<color=#E5A23D>+1%</color>"
                 } : Array.Empty<string>();
+                OfficialMainlineInteractionRegion mapRegion = host.Interactions.regions.Single(value =>
+                    value.MapClassId == host.mapClassId && value.Region == entity.Region);
+                OfficialMap11UiAssets itemAssets = Resources.Load<OfficialMap11UiAssets>(host.NativeUiResource("DynamicItems"));
+                if (mapRegion.DropItems.Length > 0 && itemAssets == null)
+                    throw new InvalidDataException("Official goddess item preview assets are missing.");
+                GoddessTouchDialog.TreasurePreview[] treasurePreviews = mapRegion.DropItems.Select(itemId =>
+                {
+                    GameObject itemPrefab = Resources.Load<GameObject>(host.NativeUiResource(itemAssets.ItemTemplate(itemId)));
+                    if (itemPrefab == null) throw new InvalidDataException("Official goddess item template is missing: " + itemId);
+                    return new GoddessTouchDialog.TreasurePreview
+                    {
+                        prefab = itemPrefab, icon = itemAssets.Item(itemId), quality = itemAssets.ItemQuality(itemId)
+                    };
+                }).ToArray();
                 goddessDialog.DoInit(IsGoddessActivated(entity), full, host.NativeUi.Text("entity_" + entity.EntityClassId + "_name"),
-                    condition, blessing, props, () => ActivateGoddess(entity), () => TransferToGoddess(entity),
+                    condition, blessing, props, treasurePreviews,
+                    () => ActivateGoddess(entity), () => TransferToGoddess(entity),
                     () => host.hud.ShowOfficialNotice(host.NativeUi.Text("STAGE_CONDITION_REGION_PROGRESS_NOT_FULL")), CloseGoddessDialog);
             }
 
