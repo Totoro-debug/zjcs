@@ -9,7 +9,7 @@ from prepare_unity_story_sound_runtime import CODE, record as original_record, r
 
 def record(path):
     entry=original_record(path)
-    if path.suffix=='.cs' and path.is_relative_to(ROOT/'unity'):
+    if path.suffix in ('.cs','.asmdef') and path.is_relative_to(ROOT/'unity'):
         import hashlib
         entry['sha256']=hashlib.sha256(path.read_bytes().replace(b'\r\n',b'\n')).hexdigest()
         entry['hashLineEndings']='LF'

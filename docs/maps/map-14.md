@@ -307,6 +307,8 @@ Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式
 
 - 四类雕像已绑定原共享 VisibilityComponent：可见标志与淡入标记直接读写原组件，增删请求调用未改写的 Console 原方法，并按原接收器接口转发事件；重复绑定复用同一投影，实体视图释放时解除原事件订阅。共享可见性消费数据仅开放虚拟访问器和变更方法，默认标志运算与事件顺序保持原实现。内置屏 Unity 2022.3.57f1c2／D3D11 隔离导入、编译与 Play Mode 已验证原字段双向可见性、同掩码事件、事件所有者、无组件分支、重复绑定及释放；四类整根雕像使用该原组件通过显隐请求／处理器、循环／消失／隐藏画面与费用提示及既有实体模块回归，实际画面已查看；完整根工程检查仍待通过。来源见[共享可见性来源清单](../../assets/reference/official-map/map14-native-visibility-source-manifest.json)，生成器 scripts/prepare_unity_map14_native_visibility.py，接线入口 NativeMap14VisibilityData.Bind，检查入口 OfficialMap14NativeVisibilityAcceptance.Run。初始可见标志仍由显式夹具提供；正式可见性处理器服务、地图／玩家／原 UI／模拟鼠标／存档、完整 ProjectTools.Validate 与 Windows Player 尚待接通。
 
+- 共享视图来源清单的文本哈希统一按 LF 计算，覆盖 C# 和程序集配置；可见性来源清单同步记录相应生成器与输出，保证原始输入哈希与可提交的输出哈希分别可复核。
+
 ## 自定义实现
 
 共享序列化的 Windows 依赖适配：使用固定 MIT MessagePack `1.9.11` 发布包及其仓库提交 `6cbd8196e7dbe9b8810d7620f4542c3db9388753` 的 Unity 类型支持；该版本仅为平台依赖，不声称是官方原版本。依官方固定 AOT 方法修正原始单精度浮点编码，并迁入原 Vector3／Quaternion 方法，通过 GFrameCore 类型转发维持原 Console ABI；原生成格式器 IL 与地图载荷不改写。完整发布许可随本地资源交付，加载器及反射注册表作用域结束后恢复原绑定。
