@@ -74,7 +74,7 @@ Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD�
 
 基础地面补回原 `MapGround_11_bare/GridGround/Ground` 的 17,752 个 Tile，以 55 张原 Sprite 的多边形、三角形、UV、颜色、Tile 矩阵及锚点生成 55 批原生网格，不改变原世界坐标。角色模型挂回原 `3001_view/Model/Offset/Player_Model_Map` 的 `(0.3, 0.3, 1)` 缩放、`(0, -0.5, -0.5)` 偏移，并以排序组适配原单 Renderer 的世界槽位，恢复角色显示。地图相机从原 `WorldCamera` 读取 SafeArea、适配优先级及裁剪面，沿 `OrthographicCameraResolutionAdaptor.AdaptOrthographicSize` 恢复视野和窗口比例，剧情结束恢复同一基准。转换器为 `prepare_unity_map11_base_ground.py`，显式加载 `Resources/Map11/BaseGround`；对象、bundle、原 shader、源码与输出哈希见 `base-ground-source-manifest.json`。带图形 Play Mode 已实际查看基础地面和角色恢复后的 HUD／对话画面；该补载尚未恢复原 URP 光照、水面与完整排序，不代表整图渲染完成。
 
-尚无本图在 Unity 完整运行并验收的结论。
+已在带图形的 Unity Play Mode 运行地图加载、实体显示、踏板、战斗碑、故事路由、怪物和女神像流程：加载 77 区、1,803 个实体、31 个 Spine 实例、14,427 批地形及 85 批小地图；验证九组踏板、七个终端、连接转换、计数、生成、重置和持久化；运行 5110 怪物与主线分支检查；女神像覆盖预览、访问额度、持久效果和进入战斗后的最低 HP。另以独立规则校验覆盖本地准入、回滚、存档冷读、到期、额度竞争、遗失女神等级／技能／属性及每日 08:00 边界。以上使用脚本回调或静音音源，不能替代完整用户流程、真实音频试听及 Windows Player 验证；整图仍未完成验收。
 
 已转换并放入 `unity/Assets/Official/World/Map/11/` 的官方载荷：地图定义含 77 区、81 面积配置、1,803 个放置实体及其一一对应的实体组件、导航和 8 条区域开放条件；绑定 110 条实体进度参数、247 条实体显示、128 条实体 UI、5 条阶段动作，以及地图、区域、逻辑实体配置。Map 11 有 17 个普通女神像（`EntityClassId=6010`），其所在区域各配置一组 `DropItems`；另有 49 个失落女神像（`EntityClassId=6011`），其所在区域各配置一组 `GoddessActivePropAwardDict`。1045～1160 范围含 24 条主线记录。地形几何为 14,427 批次，引用的 475 张官方纹理已复制至 `Resources/Map11/Textures/`；小地图为 85 批次并绑定 2 张官方纹理。输入版本固定为 `854_156383`，来源和输出哈希见该目录的 `*-source-manifest.json`。转换器为 `scripts/prepare_unity_map11_rendering.py`、`scripts/prepare_unity_map10_minimap.py --map-id 11` 和 `scripts/prepare_unity_map11_definition.py`。地形视图已支持原始 Map11 几何头格式，保留 Map10 默认格式。
 
