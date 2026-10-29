@@ -130,6 +130,8 @@ prepare_home_ui.py 从固定 854_156383 的 FurnitureFastHangUpDialog、其 Item
 
 ## 完整还原部分
 
+官方战斗模型索引 `Assets/Official/Combat/Presentation/models.json` 按来源清单逐字节保留 `assets/official/battle-presentation/models.json`，包括 UTF-8 BOM；`OfficialBattleModelCatalog` 使用 `TextAsset.bytes` 对照原始 SHA256，避免 `TextAsset.text` 解码时丢失 BOM 导致来源校验失败。`prepare_unity_battle_assets.py` 的 `copy_verified` 负责恢复并拒绝哈希不符的输入。Unity `ProjectTools.Validate` 会验证该绑定。
+
 技能伤害测试的被动技能快照保留战斗装配时的原物品、等阶、完整槽级和来源小阶；统计触发的子实体按原物品关联到详情，不要求子实体与根技能实体相同。快照与主动行动槽分开，状态消失后仍保留在内存检查点。规则检查覆盖状态清除后的检查点往返及不增加主动槽；实际交互和 Windows 验证范围见[技能](skills.md)。
 
 - 怪物单位使用战斗实际计算的等级和段位建立状态，并将同一等级交给主动／被动技能组装；使用玩家等级的关卡不再把导出时的占位等级 1 写回单位。Map14 数据 Play Mode 已执行 1,649 个实例的属性与技能构造，其中动态实例为 87 个；该夹具不代替完整战斗画面、输入、奖励与存档验证。
