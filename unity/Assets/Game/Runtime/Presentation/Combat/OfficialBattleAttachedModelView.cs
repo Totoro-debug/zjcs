@@ -11,6 +11,9 @@ namespace Zjcs.Presentation.Combat
         private readonly Quaternion previousRotation;
         private readonly bool previousActive;
         private readonly Animator animator;
+        private readonly Transform mapModelRoot;
+        private readonly Vector3 previousMapModelPosition, previousMapModelScale;
+        private readonly Quaternion previousMapModelRotation;
         private readonly AnimatorStateInfo[] previousStates;
         private bool disposed;
 
@@ -31,6 +34,15 @@ namespace Zjcs.Presentation.Combat
             previousActive = source.gameObject.activeSelf;
             animator = source.GetComponent<Animator>();
             if (animator == null) animator = source.GetComponentInChildren<Animator>(true);
+            if (animator != null && animator.transform != source)
+            {
+                mapModelRoot = animator.transform;
+                while (mapModelRoot.parent != source && mapModelRoot.parent != null)
+                    mapModelRoot = mapModelRoot.parent;
+                previousMapModelPosition = mapModelRoot.localPosition;
+                previousMapModelRotation = mapModelRoot.localRotation;
+                previousMapModelScale = mapModelRoot.localScale;
+            }
             previousStates = new AnimatorStateInfo[animator == null ? 0 : animator.layerCount];
             for (int layer = 0; layer < previousStates.Length; layer++)
                 previousStates[layer] = animator.GetCurrentAnimatorStateInfo(layer);
@@ -51,9 +63,16 @@ namespace Zjcs.Presentation.Combat
             source.SetParent(Model, false);
             source.localPosition = Vector3.zero;
             source.localRotation = Quaternion.identity;
-            // The native character prefab already contains its conversion scale.
-            // Facing belongs to the recovered model parent, independently of its world facing.
-            source.localScale = new Vector3(Mathf.Abs(previousScale.x), previousScale.y, previousScale.z);
+            // The recovered battle hierarchy owns the model scale. Carrying the map-view
+            // scale into it multiplies the official 0.3 model scale a second time. Map
+            // wrappers also put that scale and offset on the direct character child.
+            source.localScale = Vector3.one;
+            if (mapModelRoot != null)
+            {
+                mapModelRoot.localPosition = Vector3.zero;
+                mapModelRoot.localRotation = Quaternion.identity;
+                mapModelRoot.localScale = Vector3.one;
+            }
         }
 
         public void Dispose()
@@ -66,6 +85,12 @@ namespace Zjcs.Presentation.Combat
                 Source.localPosition = previousPosition;
                 Source.localRotation = previousRotation;
                 Source.localScale = previousScale;
+                if (mapModelRoot != null)
+                {
+                    mapModelRoot.localPosition = previousMapModelPosition;
+                    mapModelRoot.localRotation = previousMapModelRotation;
+                    mapModelRoot.localScale = previousMapModelScale;
+                }
                 Source.gameObject.SetActive(previousActive);
                 if (animator != null)
                 {

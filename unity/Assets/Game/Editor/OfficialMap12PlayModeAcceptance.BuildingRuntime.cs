@@ -22,6 +22,15 @@ namespace Zjcs.Editor
 
         private static IEnumerator VerifyPrivateDungeonEntrySteps(string root, string slot, Transform canvas, string output)
         {
+            GameObject mapAvatar = RuntimeField<GameObject>("avatar");
+            Animator mapAnimator = mapAvatar.GetComponentInChildren<Animator>(true);
+            Transform mapCharacter = mapAnimator == null ? null : mapAnimator.transform;
+            if (mapCharacter == null || mapCharacter.parent != mapAvatar.transform)
+                throw new InvalidDataException("The Map12 native character model hierarchy is missing before battle.");
+            Transform originalMapCharacterParent = mapCharacter.parent;
+            Vector3 originalMapCharacterPosition = mapCharacter.localPosition;
+            Quaternion originalMapCharacterRotation = mapCharacter.localRotation;
+            Vector3 originalMapCharacterScale = mapCharacter.localScale;
             int soundRegistrations = 0, soundUnregistrations = 0;
             int closeSoundRegistrations = 0, closeSoundUnregistrations = 0;
             map12Runtime.MapSoundRegistration = (source, registered) =>
@@ -254,6 +263,15 @@ namespace Zjcs.Editor
             if (controller == null || controller.Checkpoint == null || controller.Checkpoint.StageId != 30152
                 || controller.Checkpoint.StageType != 11 || controller.Checkpoint.Units.All(value => value.Side != 2))
                 throw new InvalidDataException("Original private dungeon route did not enter the official 12102 / 30152 battle.");
+            Animator battlePlayer = UnityEngine.Object.FindObjectsOfType<Animator>(true)
+                .SingleOrDefault(value => value.name.StartsWith("PlayerCharacter_", StringComparison.Ordinal));
+            Transform battleWrapper = battlePlayer == null ? null : battlePlayer.transform.parent;
+            Transform officialBattleModel = battleWrapper == null ? null : battleWrapper.parent;
+            if (battlePlayer == null || battlePlayer.transform.localScale != Vector3.one
+                || battleWrapper == null || battleWrapper.localScale != Vector3.one
+                || officialBattleModel == null || officialBattleModel.name != "PlayerModel_Game"
+                || !Mathf.Approximately(Mathf.Abs(officialBattleModel.localScale.x), 0.3f))
+                throw new InvalidDataException("The player model did not use the official battle model scale without retaining the map-view scale.");
             privateSession = Zjcs.Offline.World.OfflineDailyDungeonSession.OpenPrivateMap(slots, slot);
             run = privateSession.ActiveRun;
             if (run == null || run.currentRoomId != 12102 || !run.clearedRoomIds.Contains(12101)
@@ -274,6 +292,11 @@ namespace Zjcs.Editor
                 && Time.realtimeSinceStartup < deadline) yield return null;
             if (controller != null || actualOutcome == null || actualOutcome.Invalid)
                 throw new InvalidDataException("Official private battle did not deliver a valid local victory/loss result.");
+            if (mapCharacter.parent != originalMapCharacterParent
+                || mapCharacter.localPosition != originalMapCharacterPosition
+                || mapCharacter.localRotation != originalMapCharacterRotation
+                || mapCharacter.localScale != originalMapCharacterScale)
+                throw new InvalidDataException("The private battle did not restore the original Map12 character transform.");
             privateSession = Zjcs.Offline.World.OfflineDailyDungeonSession.OpenPrivateMap(slots, slot);
             run = privateSession.ActiveRun;
             if (RuntimeField<GameObject>("map12PrivateDungeonDialog") != null)

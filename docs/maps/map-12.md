@@ -240,6 +240,8 @@ NPC 组合皮肤已按官方 `AppearanceCombineSkin.CreateNewSkin` 迁入：按 
 
 用户确认的单机技能选向规则已接入共用 `FightBattleTargeting.SelectInSkillRange`：先沿用现有候选优先级，从选择范围内首个目标确定上／下／左／右朝向，再只保留同向范围内目标；这是本地规则，不代表恢复了关卡102服务端 NPC 的完整 AI。魔能邃渊102的等级／属性验证也不代表战斗胜负 AI 已完整还原。
 
+山之国战斗复用的玩家模型在挂接官方战斗层级时清除地图视图根节点及角色子节点的缩放／偏移，避免地图与战斗的0.3模型比例相乘；战斗退出恢复原地图比例。通用绑定与验证见[战斗执行](../features/battle-execution.md)。
+
 历史验证中的九组机关开发求解只在复制状态寻找合法路径；缺有限MovableRect时用原区域约束开发搜索范围，生产碰撞、推动规则和奖励不变。九组机关原生点击在450×800通过584项、在720×1280对关键8702终端通过85项；这些历史点击结果不代表当前 Unity 验收通过。公共怪物／食材刷新以本地时钟及保存代次替代服务器。
 
 固定 APK 客户端与 Common 程序集提供 `MapPuzzleTerminalDataHuarongDao`／`PushBox`、`ResetPuzzle`／`AutoPuzzle` 调用与原费用，但未取得服务端执行体。按用户明确确认，华容道重置恢复原 `NeedRemoveLoEntityIds` 与 `BoxLoEntityIds` 清单的箱子／障碍，将角色移回终端旁可站立格；自动解谜消耗原物品325×1，华容道只移除 `NeedRemoveLoEntityIds`，推箱只解除 `LockLoEntityIds`。奖励仍须实际交互或战斗领取，原领取记录保留，不能重复发放。六处终端的原对话、费用、逐项作用范围、重置与自动解谜冷读已接入 Unity 并验证；支付中断恢复与实际领奖仍待验证。
