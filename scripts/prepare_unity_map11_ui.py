@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 from pathlib import Path
 import struct
 import os
@@ -113,6 +114,20 @@ def animation_record(apk, animation, tree):
 def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_schemas, support_exporter, raw, output_root=OUTPUT, preserve_native_transforms=False):
     """Restore official panel geometry, serialized component bindings and clips."""
     panels, components, sprites, shader_programs = [], [], {}, {}
+    previous_panels = {}
+    baseline_panels = {}
+    previous_path = output_root / "map11-ui.json"
+    if previous_path.is_file():
+        previous = json.loads(previous_path.read_text(encoding="utf-8"))
+        if previous.get("sourceUiSha256") == sha256(raw):
+            previous_panels = {panel["key"]: panel for panel in previous.get("panels", [])}
+    relative_path = previous_path.relative_to(ROOT).as_posix()
+    try:
+        baseline = json.loads(subprocess.check_output(["git", "show", f"HEAD:{relative_path}"]))
+    except (subprocess.CalledProcessError, json.JSONDecodeError):
+        baseline = {}
+    if baseline.get("sourceUiSha256") == sha256(raw):
+        baseline_panels = {panel["key"]: panel for panel in baseline.get("panels", [])}
     for key in panel_keys:
         root = apk.asset(manifest["prefabs"][key]["bundle"], "/" + key + ".prefab")
         paths, behaviours, native_animations = {}, [], []
@@ -459,17 +474,35 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
                 components.append({"panel": key, "path": paths[(obj.assets_file.name, obj.path_id)],
                                    "type": script.m_ClassName, "fields": resolve(fields, obj), "source": apk.provenance(obj)})
         nodes = flatten_nodes(source[key])
-        if preserve_native_transforms:
-            original = {}
-            def collect_transforms(node):
-                original[node["path"]] = node
-                for child in node.get("children", []):
-                    collect_transforms(child)
-            collect_transforms(source[key])
-            for node in nodes:
-                native = original[node["path"]]
+        original = {}
+        def collect_original_nodes(node):
+            original[node["path"]] = node
+            for child in node.get("children", []):
+                collect_original_nodes(child)
+        collect_original_nodes(source[key])
+        previous_nodes = {node["path"]: node for node in previous_panels.get(key, {}).get("nodes", [])}
+        baseline_nodes = {node["path"]: node for node in baseline_panels.get(key, {}).get("nodes", [])}
+        for node in nodes:
+            native = original[node["path"]]
+            for field in ("animations", "default_animation"):
+                if field in native:
+                    node[field] = native[field]
+                elif field in baseline_nodes.get(node["path"], {}):
+                    node[field] = baseline_nodes[node["path"]][field]
+                elif not baseline_panels and field in previous_nodes.get(node["path"], {}):
+                    node[field] = previous_nodes[node["path"]][field]
+            if preserve_native_transforms:
                 if native.get("is_rect_transform") is False:
                     node.update(native_transform=True, local_position=native["local_position"], local_rotation=native["local_rotation"])
+        if key == "WorldCanvas":
+            for path in (
+                "/WorldCanvas/Content/Content/WorldPanel/Anim/Left/LeftUpGo/PlayAsYouDownloadEntry",
+                "/WorldCanvas/Content/Content/WorldPanel/Anim/Left/LeftUpGo/GameMatchMiniPanel/ContentGo/SimpleContent",
+                "/WorldCanvas/Content/Content/WorldPanel/Anim/Right/FunctionEntryGroup/FunctionEntryPhoto",
+            ):
+                target_node = next((value for value in nodes if value["path"] == path), None)
+                if target_node is not None:
+                    target_node.pop("default_animation", None)
         node_by_path = {node["path"]: node for node in nodes}
         for component in (c for c in components if c["panel"] == key):
             node, fields = node_by_path[component["path"]], component["fields"]
@@ -527,6 +560,67 @@ def build(map_id=11):
     version = apk.version if map_id in (12, 13, 14) else VERSION
     panels, components, sprites, shader_programs = [], [], {}, {}
     extra_trees, extra_sources, extra_resources, item_icons, icon_config_source, quality_sprite, ui_schemas, support_exporter = support
+    additional_source_inputs = []
+    if map_id == 11:
+        detail_ui_path = ROOT / "assets/official/ui.json"
+        detail_ui = json.loads(detail_ui_path.read_text(encoding="utf-8"))
+        detail_record = detail_ui.get("treasure_detail")
+        map11_ui_source_path = OUTPUT / "source-manifest.json"
+        map11_ui_source = json.loads(map11_ui_source_path.read_text(encoding="utf-8"))
+        detail_source = map11_ui_source.get("source", {}).get("goddessTreasureDetailPrefab")
+        if not isinstance(detail_record, dict) or not isinstance(detail_record.get("root"), dict) \
+                or not isinstance(detail_record.get("source"), dict) or not isinstance(detail_source, dict):
+            raise ValueError("Pinned goddess treasure detail prefab source is incomplete")
+        prefab = detail_record["source"]
+        if detail_source.get("manifest") != VERSION or detail_source.get("bundle") != prefab.get("bundle") \
+                or detail_source.get("bundle_hash") != prefab.get("bundle_hash") \
+                or detail_source.get("path_id") != prefab.get("path_id"):
+            raise ValueError("Treasure detail prefab differs from the pinned Map11 source receipt")
+        detail_prefab = apk.asset(prefab["bundle"], prefab["prefab"])
+        if detail_prefab.path_id != int(prefab["path_id"]) \
+                or apk.provenance(detail_prefab).get("raw_sha256") != detail_source.get("raw_sha256"):
+            raise ValueError("Treasure detail prefab object differs from the pinned APK")
+        source["TreasureDetailDialog"] = detail_record["root"]
+        manifest["prefabs"]["TreasureDetailDialog"] = dict(detail_source, prefab=prefab["prefab"])
+        extra_trees["TreasureDetailDialog"] = detail_record["root"]
+
+        detail_sprite_uris = set()
+        pending_detail_nodes = [detail_record["root"]]
+        while pending_detail_nodes:
+            node = pending_detail_nodes.pop()
+            sprite = ((node.get("image") or {}).get("sprite") or {}).get("file")
+            if sprite:
+                detail_sprite_uris.add(sprite)
+            pending_detail_nodes.extend(node.get("children", []))
+        missing_sprite_uris = detail_sprite_uris - set(manifest.get("resources", {}))
+        sprite_source_paths = (
+            ROOT / "assets/reference/equipment-completion/source-manifest.json",
+            ROOT / "assets/reference/fidelity/source-manifest.json",
+        )
+        for sprite_source_path in sprite_source_paths:
+            sprite_source = json.loads(sprite_source_path.read_text(encoding="utf-8"))
+            if sprite_source.get("manifest") != VERSION:
+                raise ValueError("Treasure detail sprite source uses a different official manifest: "
+                                 + sprite_source_path.relative_to(ROOT).as_posix())
+            source_resources = sprite_source.get("resources", {})
+            selected = sorted(missing_sprite_uris.intersection(source_resources))
+            if not selected:
+                continue
+            for uri in selected:
+                manifest["resources"][uri] = source_resources[uri]
+            missing_sprite_uris.difference_update(selected)
+            additional_source_inputs.append({
+                "path": sprite_source_path.relative_to(ROOT).as_posix(),
+                "sha256": sha256(sprite_source_path.read_bytes()),
+            })
+        if missing_sprite_uris:
+            raise ValueError("Treasure detail sprites lack a verified official source: "
+                             + ", ".join(sorted(missing_sprite_uris)))
+        additional_source_inputs = [
+            {"path": detail_ui_path.relative_to(ROOT).as_posix(), "sha256": sha256(detail_ui_path.read_bytes())},
+            {"path": map11_ui_source_path.relative_to(ROOT).as_posix(), "sha256": sha256(map11_ui_source_path.read_bytes())},
+            *additional_source_inputs,
+        ]
     source.update(extra_trees)
     manifest["prefabs"].update(extra_sources)
     manifest["resources"].update(extra_resources)
@@ -858,6 +952,7 @@ def build(map_id=11):
                "itemProgressEnoughColor": [colors["Green"][channel] for channel in "rgba"],
                "itemProgressLackColor": [light_red['Color'][channel] for channel in "rgba"],
                "bindings": bindings, "iconBindings": icon_bindings, "worldBindings": world_bindings,
+               "additionalSourceInputs": additional_source_inputs,
                "texts": [{"key": k, "value": v} for k, v in sorted(texts.items())],
                "sourceUiSha256": sha256(source_path.read_bytes()), "components": components,
                "shaderPrograms": shader_programs}
@@ -875,6 +970,7 @@ def build(map_id=11):
                        "source": {"path": source_path.relative_to(ROOT).as_posix(), "sha256": payload["sourceUiSha256"],
                                   "manifestPath": manifest_path.relative_to(ROOT).as_posix(), "manifestSha256": sha256(manifest_path.read_bytes()),
                                   "prefabs": {k: manifest["prefabs"][k] for k in panel_keys},
+                                  "additionalInputs": additional_source_inputs,
                                   "itemIconConfig": icon_config_source,
                                   "lostGoddessUi": {"skillRanks": apk.provenance(rank_obj), "dialogConfig": apk.provenance(lost_config_obj)},
                                   "explorationCode": [{"path": path.relative_to(ROOT).as_posix(), "sha256": sha256(path.read_bytes())}

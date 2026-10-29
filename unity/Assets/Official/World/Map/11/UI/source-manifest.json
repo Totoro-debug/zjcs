@@ -3,12 +3,30 @@
   "mapClassId": 11,
   "operation": "Preserve official prefab nodes, sprites, fields and managed StateSwitcher references; restore native Unity prefabs with explicit component bindings.",
   "output": {
-    "panels": 65,
+    "panels": 66,
     "path": "map11-ui.json",
-    "sha256": "197f75713456fe07169b599c3015b67b09f600a851dd100a7464358bcbf6d5df",
-    "sprites": 945
+    "sha256": "656c1eb1e240af1a05351bfcb052021802ec214eb5e2e1c16a83eca26acacaf3",
+    "sprites": 979
   },
   "source": {
+    "additionalInputs": [
+      {
+        "path": "assets/official/ui.json",
+        "sha256": "df47707fa51ce3400e9f1f63f87a9b24c2e4f5fe1a1e71d82445173e5780cbb5"
+      },
+      {
+        "path": "unity/Assets/Official/World/Map/11/UI/source-manifest.json",
+        "sha256": "f7758279447049d189a812a218aa8c0843f358bf523c906d0fa84323cb0f80ca"
+      },
+      {
+        "path": "assets/reference/equipment-completion/source-manifest.json",
+        "sha256": "9de8fc5d96f16f69ff0a0f7dfd51c78df4f30810d654f38c8ca93018460bdfd0"
+      },
+      {
+        "path": "assets/reference/fidelity/source-manifest.json",
+        "sha256": "322e0ef382448a611a0ebec1b89002b3c184d4d1eabd06125ad2b09693c39ed2"
+      }
+    ],
     "combatRatingConfig": {
       "bundle": "defaultpackage_assets_scriptableconfig_modules_combatrating.bundle",
       "bundle_hash": "c2e6ae226857a3a7f966c017bd678fdf",
@@ -143,8 +161,8 @@
       },
       "schemaAssemblies": {
         "Unity.TextMeshPro": {
-          "path": "D:\\Desktop\\zjcs\\unity\\Library\\ScriptAssemblies\\Unity.TextMeshPro.dll",
-          "sha256": "bb18c6d7f46c8b674680e7f8f2bb5c1c99cecb61c9cf2183ef6ebabcc25496f2"
+          "path": "D:\\Desktop\\zjcs\\output\\validation\\map11-treasure-detail-a5a3180947aa4672a71474d24bc0fc69\\repo\\unity\\Library\\ScriptAssemblies\\Unity.TextMeshPro.dll",
+          "sha256": "a63e2f490769d2850957cd901d0651892287af5afb4bf54ef49005e7ff6ce798"
         },
         "UnityEngine.TextCoreFontEngineModule": {
           "path": "D:\\Tool\\Unity\\Editor\\Data\\Managed\\UnityEngine\\UnityEngine.TextCoreFontEngineModule.dll",
@@ -1029,11 +1047,11 @@
       },
       {
         "path": "scripts/map11_exploration_ui.py",
-        "sha256": "f79a879dd5fc8a31fece3850663878589d01b8e785c8f69adb1b7948b5d15cf4"
+        "sha256": "8c8afe8beb342c0e6e6dfa86c3b9797db4252c5ad629f6cc208f46040e944c8f"
       },
       {
         "path": "scripts/map11_support_ui.py",
-        "sha256": "f5d521113daa8a41b92bc2694cc58fc67ec700fe3ad5c9460da5ba9abb647c64"
+        "sha256": "3dd5625182aaf1ed6075db213cebd92e49ff2fa1c11ab2a6bd5b378e0ca9ba5a"
       }
     ],
     "globalColors": {
@@ -7579,7 +7597,7 @@
       },
       "schemaAssemblies": {
         "Framework": {
-          "path": "D:\\Desktop\\zjcs\\.tools\\source-packages\\official-code\\managed\\decoded\\Framework.dll",
+          "path": "D:\\Desktop\\zjcs\\output\\validation\\map11-treasure-detail-a5a3180947aa4672a71474d24bc0fc69\\repo\\.tools\\source-packages\\official-code\\managed\\decoded\\Framework.dll",
           "sha256": "0a30864f7433cfae1bf70c376b43cafd42ce148d99dca39c36736380dfaf82b8"
         },
         "UnityEngine.CoreModule": {
@@ -7591,8 +7609,8 @@
           "sha256": "d7b7f77984af98113ba84ff4c8562ea8e22cfcd06a8e1c1482fa9a61d41bdf80"
         },
         "UnityEngine.UI": {
-          "path": "D:\\Desktop\\zjcs\\unity\\Library\\ScriptAssemblies\\UnityEngine.UI.dll",
-          "sha256": "ef5ec6b4220435c408e3f4f81d483e07dd16ced3d724d960fb676c1d13867af6"
+          "path": "D:\\Desktop\\zjcs\\output\\validation\\map11-treasure-detail-a5a3180947aa4672a71474d24bc0fc69\\repo\\unity\\Library\\ScriptAssemblies\\UnityEngine.UI.dll",
+          "sha256": "b8a3f594db46b54c91517e3db9962199222f51050bf121bd3f0260adec350089"
         },
         "mscorlib": {
           "path": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\mscorlib.dll",
@@ -14661,7 +14679,7 @@
       }
     },
     "manifestPath": "assets/reference/official-map/ui-source-manifest.json",
-    "manifestSha256": "a6a209af820415333f6c295323912a2afb3bfac97bb839ea4213c75efb7fcdd5",
+    "manifestSha256": "b8c03ec86b43bec3bc84724d6ac011c5b4d2cf2621c84f7bdbd204e16229b12a",
     "minimapCharacter": {
       "bundle": "defaultpackage_assets_prefabs_map_common_minimap.bundle",
       "bundle_hash": "bb60a35b88da8f691fb1cb43566589ad",
@@ -14680,7 +14698,7 @@
       },
       {
         "path": "unity/Assets/Official/World/Map/11/Resources/Map11/stories.json",
-        "sha256": "2e6810d52c510cb96b46e2c811dcf021004a0148ab1f220fc514f9ec3e631017"
+        "sha256": "52513a31bc2129c84df0d07cf9db4efd020221c5177ee102e56b3259c08943d3"
       }
     ],
     "minimapMarkPrefabs": {
@@ -23009,6 +23027,19 @@
         "path_id": "1052574583766107646",
         "raw_sha256": "1260516c73dd6d79a0cca0c41fcd4c7b2fdf20d94f3fa9f683941c47bf13fabc",
         "raw_size": 310403
+      },
+      "TreasureDetailDialog": {
+        "apk_entry": "assets/yoo/DefaultPackage/ed61998dccf8c8b2451eb16f49b433cb.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+        "bundle_hash": "ed61998dccf8c8b2451eb16f49b433cb",
+        "manifest": "854_156383",
+        "origin": "apk_zip",
+        "path_id": "7702841787184371397",
+        "prefab": "/TreasureDetailDialog.prefab",
+        "raw_sha256": "22b593546590624e51bdbaf2164cc72288cf2e6d664d79f881b5d8ae53087cd8",
+        "raw_size": 1729063
       },
       "WitchStoryCollectContent": {
         "bundle": "defaultpackage_assets_prefabs_ui_worldmap.bundle",
@@ -48508,6 +48539,938 @@
           "type": "SInt64"
         }
       ],
+      "Assembly-CSharp:TreasureDetailDialog": [
+        {
+          "flags": 0,
+          "level": 0,
+          "name": "Base",
+          "type": "TreasureDetailDialog"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_GameObject",
+          "type": "PPtr<GameObject>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_Enabled",
+          "type": "UInt8"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_Script",
+          "type": "PPtr<MonoScript>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_Name",
+          "type": "string"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mTopBar",
+          "type": "PPtr<$TopBarHandler>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mItemDetailDialog",
+          "type": "PPtr<$ItemDetailDialog>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mPieceItemCountGo",
+          "type": "PPtr<$GameObject>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mPieceItemCountText",
+          "type": "PPtr<$MultiLanguageText>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "CurrentStarInfo",
+          "type": "PPtr<$TreasureStarInfo>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mTreasureProps",
+          "type": "TreasureProps"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "mElementPropItem",
+          "type": "PPtr<$ElementPropItem>"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "mElementPropBlessBtn",
+          "type": "PPtr<$BlessPropBtn>"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "mExtraValueText",
+          "type": "PPtr<$MultiLanguageText>"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "mFixedPropValueText",
+          "type": "PPtr<$MultiLanguageText>"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "mNpcEffectContent",
+          "type": "PPtr<$TreasureNpcEffectContent>"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "mTriggerPropValueText",
+          "type": "PPtr<$MultiLanguageText>"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "mPropItems",
+          "type": "vector"
+        },
+        {
+          "flags": 16384,
+          "level": 3,
+          "name": "Array",
+          "type": "Array"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "data",
+          "type": "PPtr<$MultiLanguageText>"
+        },
+        {
+          "flags": 0,
+          "level": 5,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 5,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "mScorePropBtn",
+          "type": "PPtr<$BlessPropBtn>"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "mTaskScorePropBtn",
+          "type": "PPtr<$BlessPropBtn>"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "LockState",
+          "type": "StateSwitcher`1"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "mStateConfigs",
+          "type": "vector"
+        },
+        {
+          "flags": 16384,
+          "level": 4,
+          "name": "Array",
+          "type": "Array"
+        },
+        {
+          "flags": 0,
+          "level": 5,
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 5,
+          "name": "data",
+          "type": "managedReference"
+        },
+        {
+          "flags": 0,
+          "level": 6,
+          "name": "rid",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "mOwner",
+          "type": "PPtr<$GameObject>"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mySuitRoot",
+          "type": "PPtr<$GameObject>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mySuitTitle",
+          "type": "PPtr<$MultiLanguageText>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mySuitCount",
+          "type": "PPtr<$MultiLanguageText>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mySuitItemNameRoot",
+          "type": "PPtr<$Transform>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mySuitItemPrefab",
+          "type": "PPtr<$Transform>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mySuitPropItems",
+          "type": "vector"
+        },
+        {
+          "flags": 16384,
+          "level": 2,
+          "name": "Array",
+          "type": "Array"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "data",
+          "type": "PPtr<$TreasureSuitPropItem>"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mActivateContent",
+          "type": "PPtr<$PlayerCostMoneyContent>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mTrainOpBtn",
+          "type": "PPtr<$Button>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mReplaceBtn",
+          "type": "PPtr<$Button>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mRedDots",
+          "type": "vector"
+        },
+        {
+          "flags": 16384,
+          "level": 2,
+          "name": "Array",
+          "type": "Array"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "data",
+          "type": "PPtr<$TreasureRedDotItem>"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mButtonStateSwither",
+          "type": "StateSwitcher`1"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "mStateConfigs",
+          "type": "vector"
+        },
+        {
+          "flags": 16384,
+          "level": 3,
+          "name": "Array",
+          "type": "Array"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "data",
+          "type": "managedReference"
+        },
+        {
+          "flags": 0,
+          "level": 5,
+          "name": "rid",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "mOwner",
+          "type": "PPtr<$GameObject>"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mLevelText",
+          "type": "PPtr<$MultiLanguageText>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mLevelTextView",
+          "type": "BlessLevelTextViewChanger"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "mBlessTxt",
+          "type": "vector"
+        },
+        {
+          "flags": 16384,
+          "level": 3,
+          "name": "Array",
+          "type": "Array"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "data",
+          "type": "PPtr<$MultiLanguageText>"
+        },
+        {
+          "flags": 0,
+          "level": 5,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 5,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "mIsBlessStateSwitcher",
+          "type": "StateSwitcher`1"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "mStateConfigs",
+          "type": "vector"
+        },
+        {
+          "flags": 16384,
+          "level": 4,
+          "name": "Array",
+          "type": "Array"
+        },
+        {
+          "flags": 0,
+          "level": 5,
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 5,
+          "name": "data",
+          "type": "managedReference"
+        },
+        {
+          "flags": 0,
+          "level": 6,
+          "name": "rid",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "mOwner",
+          "type": "PPtr<$GameObject>"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mBlessLevelRuleBtn",
+          "type": "PPtr<$IntroductionPopBtn>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "ShareItemBtn",
+          "type": "PPtr<$ShareItemBtn>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "references",
+          "type": "ManagedReferencesRegistry"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "version",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "RefIds",
+          "type": "vector"
+        },
+        {
+          "flags": 16384,
+          "level": 3,
+          "name": "Array",
+          "type": "Array"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "data",
+          "type": "ReferencedObject"
+        },
+        {
+          "flags": 0,
+          "level": 5,
+          "name": "rid",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 5,
+          "name": "type",
+          "type": "ReferencedManagedType"
+        },
+        {
+          "flags": 0,
+          "level": 6,
+          "name": "class",
+          "type": "string"
+        },
+        {
+          "flags": 16384,
+          "level": 7,
+          "name": "Array",
+          "type": "Array"
+        },
+        {
+          "flags": 0,
+          "level": 8,
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 8,
+          "name": "data",
+          "type": "char"
+        },
+        {
+          "flags": 0,
+          "level": 6,
+          "name": "ns",
+          "type": "string"
+        },
+        {
+          "flags": 16384,
+          "level": 7,
+          "name": "Array",
+          "type": "Array"
+        },
+        {
+          "flags": 0,
+          "level": 8,
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 8,
+          "name": "data",
+          "type": "char"
+        },
+        {
+          "flags": 0,
+          "level": 6,
+          "name": "asm",
+          "type": "string"
+        },
+        {
+          "flags": 16384,
+          "level": 7,
+          "name": "Array",
+          "type": "Array"
+        },
+        {
+          "flags": 0,
+          "level": 8,
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 8,
+          "name": "data",
+          "type": "char"
+        },
+        {
+          "flags": 0,
+          "level": 5,
+          "name": "data",
+          "type": "ReferencedObjectData"
+        }
+      ],
       "Assembly-CSharp:TreasureRedDotItem": [
         {
           "flags": 0,
@@ -51882,6 +52845,110 @@
         {
           "flags": 0,
           "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        }
+      ],
+      "Assembly-CSharp:WorldStageOperationWindowClickUi": [
+        {
+          "flags": 0,
+          "level": 0,
+          "name": "Base",
+          "type": "WorldStageOperationWindowClickUi"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_GameObject",
+          "type": "PPtr<GameObject>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_Enabled",
+          "type": "UInt8"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_Script",
+          "type": "PPtr<MonoScript>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_Name",
+          "type": "string"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mDatas",
+          "type": "vector"
+        },
+        {
+          "flags": 16384,
+          "level": 2,
+          "name": "Array",
+          "type": "Array"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "data",
+          "type": "WorldStageUiClickData"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "ClickType",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "Button",
+          "type": "PPtr<$Button>"
+        },
+        {
+          "flags": 0,
+          "level": 5,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 5,
           "name": "m_PathID",
           "type": "SInt64"
         }
@@ -56789,7 +57856,7 @@
         }
       ]
     },
-    "sha256": "422357b31de80169e9367312f1a2abfc1e082823d4f6834db68ce3954f4304af",
+    "sha256": "1c70c6a7f62faa766e6e19d963e247fc82ddef1de85d03b61a9daa3a82907497",
     "sprites": {
       "res://assets/official/sprites/6011_14-6dcb61bf0f.png": {
         "bundle": "defaultpackage_assets_image_mapentity_entity14_others.bundle",
@@ -56852,6 +57919,30 @@
         "path_id": "797583748336412841",
         "sha256": "42d0939d6224984fda0d55e980facd6fc2bfd98c6d2dc0e9ee7b46cd33bbb8a6"
       },
+      "res://assets/official/sprites/BtnCheck_Nor-3b5c5a72eb.png": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "object": "BtnCheck_Nor",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "-1985464818016463037",
+        "sha256": "2bb9ad0ab5fa6fb827cf6481e5aefec71bf79d692ba6fe4c34fce221e2f5c66e"
+      },
+      "res://assets/official/sprites/BtnCheck_Sel-cbe9e7c698.png": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "object": "BtnCheck_Sel",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "5262215441426734615",
+        "sha256": "4f63d0933791a38a6037d7dc6ec2647f5fc29cf21cddd6f7d5c19319c3e874d0"
+      },
+      "res://assets/official/sprites/BtnExclamation_Bless-ab4c1fa1b7.png": {
+        "bundle": "defaultpackage_assets_image_ui_equip.bundle",
+        "bundle_hash": "07780fddcd9c8929fb8143beef8df6c5",
+        "object": "BtnExclamation_Bless",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "5727117884719745218",
+        "sha256": "d714b1165f55c1d89a4b52c8311f6aa00a246fe623a6de8d9ebb6e4b68afb3dd"
+      },
       "res://assets/official/sprites/BtnExplore_Bg-458fb2180a.png": {
         "bundle": "defaultpackage_assets_image_ui_common.bundle",
         "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
@@ -56883,6 +57974,14 @@
         "operation": "Unity Sprite decode, atlas crop and unpack rotation",
         "path_id": "-4339526682437295492",
         "sha256": "a5d744a5fa0e641d85000826c7dac7fe8abb826c0518394bda61ee45a481e34c"
+      },
+      "res://assets/official/sprites/BtnNo-aa425a44c4.png": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "object": "BtnNo",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "-6659397028781360860",
+        "sha256": "fef0ddc59129e7a5136f6bac11369284e494e1964add4d2aea8901671756802a"
       },
       "res://assets/official/sprites/BtnOk-623eab01b4.png": {
         "bundle": "defaultpackage_assets_image_ui_common.bundle",
@@ -56980,6 +58079,14 @@
         "path_id": "7436170079272917197",
         "sha256": "072d0454e362567914801c08c8fc0be7ab270eb36ebb8f66b8a9f64be6f0fc1b"
       },
+      "res://assets/official/sprites/ImgBgTitle-39d2ed304a.png": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "object": "ImgBgTitle",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "6955965337288539060",
+        "sha256": "cdb9d06b0842e0a4765ce609f8019cb9a3caa257323187565461bde79887db36"
+      },
       "res://assets/official/sprites/ImgBgYuan-e7bee2d0bf.png": {
         "bundle": "defaultpackage_assets_image_ui_common.bundle",
         "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
@@ -56996,6 +58103,22 @@
         "path_id": "-4098904705157139906",
         "sha256": "31498f0e8895dce861cf88210bb81c26ac96ed09df5556edc6614418fc574f71"
       },
+      "res://assets/official/sprites/ImgBg_Hourglass-413b857a69.png": {
+        "bundle": "defaultpackage_assets_image_ui_task.bundle",
+        "bundle_hash": "63d5ce3b03de9c5fbfbdb324aa41c059",
+        "object": "ImgBg_Hourglass",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "-5007364391155374217",
+        "sha256": "6c9455ad29a6eb42f74c99f1a3b68191f5291453cc6670f207da106dc67ce35d"
+      },
+      "res://assets/official/sprites/ImgBg_List-dbd0e6cb96.png": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "object": "ImgBg_List",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "-2699699831021514781",
+        "sha256": "d73b106df0a68000d94bbfe5ee13dd658202b42957ea9f74087f153b3089a785"
+      },
       "res://assets/official/sprites/ImgBg_MainHp-f94416632b.png": {
         "bundle": "defaultpackage_assets_image_ui_main.bundle",
         "bundle_hash": "2cbb9df9bbd1d672bc2dfe537b21ed6d",
@@ -57011,6 +58134,38 @@
         "operation": "Unity Sprite decode, atlas crop and unpack rotation",
         "path_id": "3706647826791937533",
         "sha256": "486d25e97e0790800732f993befd9d669b599509c876f78b4ed4e801e46704a2"
+      },
+      "res://assets/official/sprites/ImgBg_PopUps-50a1e65068.png": {
+        "bundle": "defaultpackage_assets_image_ui_bg.bundle",
+        "bundle_hash": "3d76017b4b89f53e04c41a5e9f0369b2",
+        "object": "ImgBg_PopUps",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "-3640136760535718006",
+        "sha256": "20ee64ac9f8b6824c26ca389c68ecd05b2862d66305dc2bfb6fcec4b6b113920"
+      },
+      "res://assets/official/sprites/ImgBg_PopUpsHorn-dc246cac5b.png": {
+        "bundle": "defaultpackage_assets_image_ui_bg.bundle",
+        "bundle_hash": "3d76017b4b89f53e04c41a5e9f0369b2",
+        "object": "ImgBg_PopUpsHorn",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "410666870733448530",
+        "sha256": "7451ffe917ecf82907565ef1667456b1c6e565ab69f86a32fb1e39694240550d"
+      },
+      "res://assets/official/sprites/ImgBg_PopUpsTitle-e69fb4d9d0.png": {
+        "bundle": "defaultpackage_assets_image_ui_bg.bundle",
+        "bundle_hash": "3d76017b4b89f53e04c41a5e9f0369b2",
+        "object": "ImgBg_PopUpsTitle",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "2517012644294285091",
+        "sha256": "4b683e8fe6816c3ff7f4e127beb8e577cfb5e9331626e5b31fa81595a3064599"
+      },
+      "res://assets/official/sprites/ImgBg_PopUpsWenLi-2cf247fc12.png": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "object": "ImgBg_PopUpsWenLi",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "5695007633822459178",
+        "sha256": "68058e4df2fc9aa171d0e654156dedd97995be2187490d9e0a0c798b4d3a5339"
       },
       "res://assets/official/sprites/ImgBg_RoundLoad-42b5051b1d.png": {
         "bundle": "defaultpackage_assets_image_ui_world.bundle",
@@ -57132,6 +58287,14 @@
         "path_id": "3183568040048334505",
         "sha256": "e1305d190a5df7b6317e6dfbcedb1c14e63328ab9832cfa2f2d7d98cab27ff1c"
       },
+      "res://assets/official/sprites/ImgCostMoneyBtn_Bg-53e016a80d.png": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "object": "ImgCostMoneyBtn_Bg",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "-5948175385237693499",
+        "sha256": "d3ed60b8e3a8b4a013f36655274e7f95928bf5b818bb30a5c26df6d94a8812ae"
+      },
       "res://assets/official/sprites/ImgEmoji_1-9385a05773.png": {
         "bundle": "defaultpackage_assets_image_ui_common.bundle",
         "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
@@ -57228,6 +58391,22 @@
         "path_id": "-1959064615096543472",
         "sha256": "3edff3f430b5e35d4bfbd14fe10e27ca6f8043c5455c534a253a08c85f823591"
       },
+      "res://assets/official/sprites/ImgLightElement-0a6acd7d50.png": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "object": "ImgLightElement",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "-810242666989020195",
+        "sha256": "85cc742aec8a528c93b57af87a430860dc5e637ff6614cef0db5b1f4e53f8e1a"
+      },
+      "res://assets/official/sprites/ImgLine-3dc3678e90.png": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "object": "ImgLine",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "-275994116814867042",
+        "sha256": "273bb8cd8ce1cb9a6a292b842bc7b2383bb185a08ac8c0dd88c08a3e90cb46f4"
+      },
       "res://assets/official/sprites/ImgLoadTrack_Bg-d4d195d177.png": {
         "bundle": "defaultpackage_assets_image_ui_task.bundle",
         "bundle_hash": "63d5ce3b03de9c5fbfbdb324aa41c059",
@@ -57259,6 +58438,14 @@
         "operation": "Unity Sprite decode, atlas crop and unpack rotation",
         "path_id": "-1133403998839597084",
         "sha256": "10c5cd4dcc5ef5ce85db9f685ec5be2d4865a83f3d8385224385b9b14afd2533"
+      },
+      "res://assets/official/sprites/ImgLvBg-a924c99ce5.png": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "object": "ImgLvBg",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "4872141105732005410",
+        "sha256": "0868b85fea261248b0c50618e4e19ffa52bfd8946281b2cb5b7ceb836a6a2f19"
       },
       "res://assets/official/sprites/ImgMapBg_Avatar-e4cce4355f.png": {
         "bundle": "defaultpackage_assets_image_ui_world.bundle",
@@ -57340,6 +58527,22 @@
         "path_id": "-6834955337875253302",
         "sha256": "0aba5e608dcdd38d8f5cc9bc3af9583b290cbf6134606d43ed18b506bff7a86a"
       },
+      "res://assets/official/sprites/ImgPurple_PopUps-38b5295192.png": {
+        "bundle": "defaultpackage_assets_image_ui_itemdetaildialog.bundle",
+        "bundle_hash": "63229d39fc72151ecb15861ba00dc53e",
+        "object": "ImgPurple_PopUps",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "-9082091103506376549",
+        "sha256": "5e4e1cf08aa6a2be15253e40ef6dfdac56a0094a0822bdab60bdaeae53087267"
+      },
+      "res://assets/official/sprites/ImgQuality_StarMul-52e254b95d.png": {
+        "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+        "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+        "object": "ImgQuality_StarMul",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "-2079043899933260223",
+        "sha256": "c42852d5f74771c8d9c063870ddc1eb529a54de62aaa4fa53ac61f783659f5a4"
+      },
       "res://assets/official/sprites/ImgRed-f3845f3f04.png": {
         "bundle": "defaultpackage_assets_image_ui_common.bundle",
         "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
@@ -57355,6 +58558,38 @@
         "operation": "Unity Sprite decode, atlas crop and unpack rotation",
         "path_id": "4383800175575554389",
         "sha256": "02ebb92c906b1b9fe1166b9882dbdd92e545769b61dfc7462f2b410965c8a81c"
+      },
+      "res://assets/official/sprites/ImgRelic_Bg-387970d219.png": {
+        "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+        "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+        "object": "ImgRelic_Bg",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "7787974574894705590",
+        "sha256": "c536fb71d8db2d94b28da360125777bbbe30310b898b9f3155f39210ea80b50b"
+      },
+      "res://assets/official/sprites/ImgRelic_Star-866c773b5c.png": {
+        "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+        "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+        "object": "ImgRelic_Star",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "9033708274931337430",
+        "sha256": "80f57cb5ca2ab41621c816470f959d7ec897a733f49b1fd74996bc57524d6fec"
+      },
+      "res://assets/official/sprites/ImgRelic_StarMul-63f9010ddf.png": {
+        "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+        "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+        "object": "ImgRelic_StarMul",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "6279890808796536236",
+        "sha256": "1946916ff0fae16fb0e883102c14fa7058805c4a52a664ac8a05a55c2afccf0b"
+      },
+      "res://assets/official/sprites/ImgRemindAsh1-d513b4f5a4.png": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "object": "ImgRemindAsh1",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "-5660763313786792025",
+        "sha256": "db61cf118ac337b1a79029d18e4dd082c18e282d34ea7e62d3c4b2341e088764"
       },
       "res://assets/official/sprites/ImgReturn-48efaa6e6b.png": {
         "bundle": "defaultpackage_assets_image_ui_common.bundle",
@@ -57380,6 +58615,14 @@
         "path_id": "-4347205377665745507",
         "sha256": "8215c32ea9c1e991519fb23129cc3a9f88da404030e9b9c0095665e1f37a8e8b"
       },
+      "res://assets/official/sprites/ImgShare-376b21345a.png": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "object": "ImgShare",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "3981650082839341215",
+        "sha256": "3b93ff38fbb5fed3d865c215c6776da51556caabc1e73651207dc459beda9d64"
+      },
       "res://assets/official/sprites/ImgSpeed_Nor-d28a44b45a.png": {
         "bundle": "defaultpackage_assets_image_ui_game.bundle",
         "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
@@ -57395,6 +58638,14 @@
         "operation": "Unity Sprite decode, atlas crop and unpack rotation",
         "path_id": "-905624160051730246",
         "sha256": "6fb2e09d631431ab416b375caab8837c185ac123a9672b98c18dac45c622a964"
+      },
+      "res://assets/official/sprites/ImgStar_Bg-156d4887df.png": {
+        "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+        "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+        "object": "ImgStar_Bg",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "-2867124217851266859",
+        "sha256": "f6d3706106ca9fb614895fb7ffd840e60db09db68b051d133c6c0bfee08c3c81"
       },
       "res://assets/official/sprites/ImgSwitchItem-e03deb88b4.png": {
         "bundle": "defaultpackage_assets_image_ui_common.bundle",
@@ -57419,6 +58670,14 @@
         "operation": "Unity Sprite decode, atlas crop and unpack rotation",
         "path_id": "1492298044479045068",
         "sha256": "2c094d9ca185cab1bbc51f8df847d4b1169be2a9c9feabaa016f4f584d394a5b"
+      },
+      "res://assets/official/sprites/ImgTimeLimitBg2-d3e255c7ba.png": {
+        "bundle": "defaultpackage_assets_image_ui_itemdetaildialog.bundle",
+        "bundle_hash": "63229d39fc72151ecb15861ba00dc53e",
+        "object": "ImgTimeLimitBg2",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "-436693431453346651",
+        "sha256": "4114e8c492147e93d1b53713000cec3ec56e934ad7556cfb1349ff3f320cf3b1"
       },
       "res://assets/official/sprites/ImgTimeLine_Mask-02cc606a6b.png": {
         "bundle": "defaultpackage_assets_image_ui_common.bundle",
@@ -57476,6 +58735,46 @@
         "path_id": "-103143457088040901",
         "sha256": "50fcf4ce58fa67166cc31a4724eba4e722c74d387d86ddd7027aa0aeaee9387f"
       },
+      "res://assets/official/sprites/Img_OutputAddition_Frame01_Split01-b2322e7dbb.png": {
+        "bundle": "defaultpackage_assets_image_ui_outputaddition.bundle",
+        "bundle_hash": "99de3da5cccb27be927ccfb5c87bbc66",
+        "object": "Img_OutputAddition_Frame01_Split01",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "-3190521869304306280",
+        "sha256": "8414bb46ef7c81ee46b91bf4d0079eb494e8dbc31e8c307d31fd2b7312318468"
+      },
+      "res://assets/official/sprites/Img_OutputAddition_Frame01_Split02_Single-8be6d92c8d.png": {
+        "bundle": "defaultpackage_assets_image_ui_outputaddition.bundle",
+        "bundle_hash": "99de3da5cccb27be927ccfb5c87bbc66",
+        "object": "Img_OutputAddition_Frame01_Split02_Single",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "301958559000807321",
+        "sha256": "909d4cfa6d2c1b13a8538407c539f5416660d313d7bfcb56bc6785d91ae47e9e"
+      },
+      "res://assets/official/sprites/Img_OutputAddition_Frame01_Split03-135dfe9411.png": {
+        "bundle": "defaultpackage_assets_image_ui_outputaddition.bundle",
+        "bundle_hash": "99de3da5cccb27be927ccfb5c87bbc66",
+        "object": "Img_OutputAddition_Frame01_Split03",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "6450878554643928305",
+        "sha256": "5a7a53fccb59442c8ebdaf5b192444317373ad3953742e4b8558c823836c5ebf"
+      },
+      "res://assets/official/sprites/Img_OutputAddition_Frame01_Split04-31e3cbce0a.png": {
+        "bundle": "defaultpackage_assets_image_ui_outputaddition.bundle",
+        "bundle_hash": "99de3da5cccb27be927ccfb5c87bbc66",
+        "object": "Img_OutputAddition_Frame01_Split04",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "-7130338586369651833",
+        "sha256": "ea682f75ec28bb35cafc05158b78991ce81c285b6cade693101225e625c8f786"
+      },
+      "res://assets/official/sprites/Img_OutputAddition_Frame01_Split05-0d96701ae8.png": {
+        "bundle": "defaultpackage_assets_image_ui_outputaddition.bundle",
+        "bundle_hash": "99de3da5cccb27be927ccfb5c87bbc66",
+        "object": "Img_OutputAddition_Frame01_Split05",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "1913471524573798428",
+        "sha256": "c9108e6132001e15987e66971ea07aa7c7aa2b5fca9c5d2ecd2a1498a2cb4150"
+      },
       "res://assets/official/sprites/Img_RoundLoad-be07d10645.png": {
         "bundle": "defaultpackage_assets_image_ui_world.bundle",
         "bundle_hash": "8cfa5c3090966b11ed9f6feaa2f94a69",
@@ -57483,6 +58782,30 @@
         "operation": "Unity Sprite decode, atlas crop and unpack rotation",
         "path_id": "1266192127784124152",
         "sha256": "2a1544767fdac1d478b93279ab0a79669f43b76e68db958624680c8445d14d73"
+      },
+      "res://assets/official/sprites/InputFieldBackground-699701cff6.png": {
+        "bundle": "defaultpackage_unityshaders.bundle",
+        "bundle_hash": "cac97355bb4799c415e3cb1ef38b6dc5",
+        "object": "InputFieldBackground",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "8385535716932718412",
+        "sha256": "37a101d10d7e8196d7c03cfbb3e0d04f93a06d9afd843ad695b73dbda17a24d3"
+      },
+      "res://assets/official/sprites/ItemLight-ebfb451098.png": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "object": "ItemLight",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "-6660560967269150679",
+        "sha256": "915d0b8f1a718fecd216e0292d8100de9054fcb171bb7f573ac8962139d4bbe8"
+      },
+      "res://assets/official/sprites/Money_1-4c2df976d1.png": {
+        "bundle": "defaultpackage_assets_image_itemicon_money.bundle",
+        "bundle_hash": "348a851cea75e759e4eca75d7d5e065c",
+        "object": "Money_1",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "5761828038581910475",
+        "sha256": "0c230ee50ead8bbd95d3f2dcf3397ef3820d5b677b169ff7464cc28edc7ab943"
       },
       "res://assets/official/sprites/Money_57_Tili-56c548f327.png": {
         "bundle": "defaultpackage_assets_image_itemicon_money.bundle",
@@ -57499,6 +58822,14 @@
         "operation": "Unity Sprite decode, atlas crop and unpack rotation",
         "path_id": "-426171492875694260",
         "sha256": "6b9a19efbdf70c33d05c0e1d927377a4bb032a87b2acd94aa9abaf4edb909969"
+      },
+      "res://assets/official/sprites/UISprite-3eb5b5a559.png": {
+        "bundle": "defaultpackage_unityshaders.bundle",
+        "bundle_hash": "cac97355bb4799c415e3cb1ef38b6dc5",
+        "object": "UISprite",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "5837791642106728268",
+        "sha256": "9e2b539b7c88fe4464525abc282c724b964852950a0b8aa1df13414014b5f33c"
       },
       "res://assets/official/sprites/building_goddess1_OFF-34370efbf3.png": {
         "bundle": "defaultpackage_assets_image_mapentity_entity11_building_goddess_building_goddess.bundle",
@@ -57551,6 +58882,14 @@
         "path_id": "-7551425377104365523",
         "sha256": "c692a7d11bd4af5f6cb8c5dd73ea14683547303b3457915ec340a08fb5c8d7ef",
         "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f11fbda75ad3d3ee4e65899c51d3b630.bundle"
+      },
+      "res://assets/official/sprites/equip_20016-6ee1d8f847.png": {
+        "bundle": "defaultpackage_assets_image_itemicon_equip_map12_wild_noatlas.bundle",
+        "bundle_hash": "44ca9a3bd4ee7e935c1fb05fe96858c6",
+        "object": "equip_20016",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "1458982361000444192",
+        "sha256": "a0a6336c253e723c6505127c83d579d37c4059f333df9041025ca4ced28b25ef"
       },
       "res://assets/official/sprites/item_115-6624d2a9df.png": {
         "bundle": "defaultpackage_assets_image_itemicon_other_common_noatlas.bundle",

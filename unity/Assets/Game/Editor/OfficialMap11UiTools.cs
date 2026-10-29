@@ -97,7 +97,7 @@ namespace Zjcs.Editor
             string path = SourceRoot + "/map" + activeMapId + "-ui.json";
             OfficialMap11UiData data = JsonUtility.FromJson<OfficialMap11UiData>(File.ReadAllText(path));
             if (data.manifest != (activeMapId == 11 ? "854_156383" : "871_156598")
-                || data.mapClassId != activeMapId || data.panels.Length != (activeMapId == 11 ? 65 : activeMapId == 12 ? 72 : 68))
+                || data.mapClassId != activeMapId || data.panels.Length != (activeMapId == 11 ? 66 : activeMapId == 12 ? 72 : 68))
                 throw new InvalidDataException("Official map UI data is incomplete: " + activeMapId);
             Directory.CreateDirectory(ResourceRoot);
             string catalogPath = ResourceRoot + "/catalog.json";
@@ -324,7 +324,7 @@ namespace Zjcs.Editor
                         UnityEngine.Object.DestroyImmediate(root);
                         continue;
                     }
-                    if (panel.key == "ConfirmDialog" || panel.key == "CostItemConfirmDialog" || panel.key == "ItemIconDefault"
+                    if (panel.key == "ConfirmDialog" || panel.key == "CostItemConfirmDialog" || panel.key == "TreasureDetailDialog" || panel.key == "ItemIconDefault"
                         || panel.key == "ItemIconEquip" || panel.key == "ItemIconTreasure" || panel.key == "ItemIconSkill" || panel.key == "PayMoneyChangeDialog")
                     {
                         BindSupportPrefab(root, panel.key, data, Require, sprites);
