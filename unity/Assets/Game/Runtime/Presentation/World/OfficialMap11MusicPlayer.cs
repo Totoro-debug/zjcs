@@ -19,6 +19,7 @@ namespace Zjcs.Presentation.World
         {
             public string manifest, clip;
             public int mapClassId, bgmId;
+            public float gainDb;
             public bool loop;
             public Event play, stop, pause, resume;
         }
@@ -28,23 +29,28 @@ namespace Zjcs.Presentation.World
         private Func<float> musicVolume;
         private Coroutine transition;
         private float envelope;
+        private float configGain;
         private bool paused, released;
         private int audioMapClassId;
 
         public void Initialize(Func<float> volume, int mapClassId = 11)
         {
             if (source != null) throw new InvalidOperationException("Map11 music is already initialized.");
-            if (mapClassId != 11 && mapClassId != 12) throw new ArgumentOutOfRangeException(nameof(mapClassId));
+            if (mapClassId != 11 && mapClassId != 12 && mapClassId != 14) throw new ArgumentOutOfRangeException(nameof(mapClassId));
             audioMapClassId = mapClassId;
             string map = "Map" + mapClassId;
             TextAsset mapping = Resources.Load<TextAsset>(map + "/Audio/bgm");
             config = mapping == null ? null : JsonUtility.FromJson<Config>(mapping.text);
-            if (config == null || config.manifest != (mapClassId == 12 ? "871_156598" : "854_156383") || config.mapClassId != mapClassId
-                || config.bgmId != mapClassId || !config.loop || config.clip != map + "/Audio/" + map + "Bgm"
+            string expectedManifest = mapClassId == 11 ? "854_156383" : "871_156598";
+            string expectedClip = mapClassId == 14 ? map + "/Audio/Map14BgmPcm" : map + "/Audio/" + map + "Bgm";
+            if (config == null || config.manifest != expectedManifest || config.mapClassId != mapClassId
+                || config.bgmId != mapClassId || !config.loop || config.clip != expectedClip
+                || float.IsNaN(config.gainDb) || float.IsInfinity(config.gainDb)
                 || !Valid(config.play, "Play", 1027) || !Valid(config.stop, "Stop", 258)
                 || !Valid(config.pause, "Pause", 514) || !Valid(config.resume, "Resume", 770))
                 throw new InvalidDataException("Map11 original music event mapping is invalid.");
             musicVolume = volume ?? (() => 1f);
+            configGain = Mathf.Pow(10f, config.gainDb / 20f);
             source = gameObject.AddComponent<AudioSource>();
             source.playOnAwake = false;
             source.spatialBlend = 0f;
@@ -140,7 +146,7 @@ namespace Zjcs.Presentation.World
 
         private void LateUpdate()
         {
-            if (source != null) source.volume = Mathf.Clamp01(musicVolume()) * envelope;
+            if (source != null) source.volume = Mathf.Clamp01(musicVolume()) * configGain * envelope;
         }
 
         private void OnDestroy()

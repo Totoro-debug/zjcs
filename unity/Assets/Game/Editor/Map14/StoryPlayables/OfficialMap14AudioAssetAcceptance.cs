@@ -17,7 +17,7 @@ namespace Zjcs.Editor.Map14
         [Serializable] private sealed class Entry { public string eventKey, clip, timeline; public Pcm pcm; public int actionType; public Entry[] actions, events; }
         [Serializable] private sealed class Mapping
         {
-            public string manifest, clip; public int mapClassId; public Pcm pcm;
+            public string manifest, clip; public int mapClassId; public float gainDb; public Pcm pcm;
             public Entry[] events, timelineRoutedEvents;
         }
         private const string Key = "Zjcs.Map14.AudioAssetAcceptance";
@@ -148,7 +148,39 @@ namespace Zjcs.Editor.Map14
                 output.Stop(); output.clip = null; clip.UnloadAudioData(); Resources.UnloadAsset(clip);
                 Debug.Log("Map14 exact PCM and actual listener output passed: " + entry.eventKey + " -> " + entry.clip);
             }
+            yield return VerifyMap14Music(bgm);
             UnityEngine.Object.Destroy(emitter);
+        }
+        private static IEnumerator VerifyMap14Music(Mapping bgm)
+        {
+            Type playerType = AppDomain.CurrentDomain.GetAssemblies()
+                .Select(assembly => assembly.GetType("Zjcs.Presentation.World.OfficialMap11MusicPlayer", false))
+                .FirstOrDefault(type => type != null);
+            Require(playerType != null, "original map music player is loaded");
+            var host = new GameObject("Map14 original BGM player verification");
+            var player = host.AddComponent(playerType);
+            playerType.GetMethod("Initialize").Invoke(player, new object[] { new Func<float>(() => 1f), 14 });
+            var source = (AudioSource)playerType.GetField("source", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(player);
+            float expectedGain = Mathf.Pow(10f, bgm.gainDb / 20f);
+            float deadline = Time.realtimeSinceStartup + 15;
+            while ((!source || source.clip == null || !source.isPlaying || Math.Abs(source.volume - expectedGain) > .01f)
+                   && Time.realtimeSinceStartup < deadline) yield return null;
+            Require(source && source.clip != null && source.clip.channels == 2 && source.clip.frequency == 48000
+                && source.clip.samples == bgm.pcm.frames && source.isPlaying
+                && Math.Abs(source.volume - expectedGain) < .01f, "original Map14 BGM loads, loops and applies its configured route gain");
+            playerType.GetMethod("Pause").Invoke(player, null);
+            deadline = Time.realtimeSinceStartup + 3;
+            while (source.isPlaying && Time.realtimeSinceStartup < deadline) yield return null;
+            Require(!source.isPlaying, "original Map14 pause event fades then pauses the looping source");
+            playerType.GetMethod("Resume").Invoke(player, null);
+            deadline = Time.realtimeSinceStartup + 3;
+            while ((!source.isPlaying || Math.Abs(source.volume - expectedGain) > .01f) && Time.realtimeSinceStartup < deadline) yield return null;
+            Require(source.isPlaying && Math.Abs(source.volume - expectedGain) < .01f, "original Map14 resume event restarts at the configured gain");
+            playerType.GetMethod("StopAndRelease").Invoke(player, null);
+            deadline = Time.realtimeSinceStartup + 3;
+            while (host != null && Time.realtimeSinceStartup < deadline) yield return null;
+            Require(host == null, "original Map14 stop transition releases the audio source");
+            Debug.Log("Map14 original BGM Play Mode passed: source PCM, loop, 1 s play fade, -1 dB gain, pause/resume and 250 ms release transitions.");
         }
         private sealed class Runner : MonoBehaviour { }
     }
