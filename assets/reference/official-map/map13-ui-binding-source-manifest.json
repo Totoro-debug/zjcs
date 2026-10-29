@@ -4,11 +4,11 @@
   "inputs": [
     {
       "path": "unity/Assets/Official/World/Map/13/UI/map13-ui.json",
-      "sha256": "1b61e4a1c66e41a89c74d0260eb4315c987a2119b4444e662dac0f838ad6a07a"
+      "sha256": "d67c21877eb5808df5de8f5edd88af777cc5eaba7a7c0dfd460f0f4487bd3e10"
     },
     {
       "path": "unity/Assets/Official/World/Map/13/UI/source-manifest.json",
-      "sha256": "ef7a876391c60db5facc6f9d0f3ebc33dee2ea7b2166566916b5b4337c5da1d5"
+      "sha256": "815263269bffe247cf0919c50e806725fc08963d4a2b16eb441bbb5963135699"
     },
     {
       "path": "assets/reference/official-map/map13-native-ui-particle-assets-source-manifest.json",
@@ -22,7 +22,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/OfficialMap11UiTools.cs",
-      "sha256": "bc7f9cf4628dae79c024f4fca16d7d27b43b02f4905978c56eddade0a37f0245"
+      "sha256": "d2cbfd8b3647038e092b627e20fb84fe492758b4f6e9eb21c2e4b236103a6181"
     },
     {
       "path": "unity/Assets/Game/Editor/OfficialMap11UiTools.Support.cs",
@@ -99,7 +99,7 @@
     },
     {
       "path": "unity/Assets/Game/Resources/Map13/UI/catalog.json",
-      "sha256": "1b61e4a1c66e41a89c74d0260eb4315c987a2119b4444e662dac0f838ad6a07a",
+      "sha256": "d67c21877eb5808df5de8f5edd88af777cc5eaba7a7c0dfd460f0f4487bd3e10",
       "meta_sha256": "31b792f5662218aedc26a7ab7236049536e0c999e125b19c88b98bc4f46680de"
     },
     {
@@ -281,6 +281,11 @@
       "path": "unity/Assets/Game/Resources/Map13/UI/LostGoddessTouchDialog.prefab",
       "sha256": "4e14883b61d386cfcdba6bf3b8b35afa055253f5e98d5fd9a12660414541dec4",
       "meta_sha256": "5e4c021707de665bbd1d56a775d634e9ee61322e3c0e0099f67c758e6dc4d21b"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MapNationShopPanel.prefab",
+      "sha256": "708ac4170c6daa0a96145e2eef29cfd256265b302164e29ca4241cb51f5a83ae",
+      "meta_sha256": "99302e4e660828f0a4ae38aeb6e6e32ebcde7463b2be5ba8e225f91d954ec28a"
     },
     {
       "path": "unity/Assets/Game/Resources/Map13/UI/MarkUIFilterEntryItem.prefab",
@@ -783,6 +788,36 @@
       "meta_sha256": "81ca3b55af1c74cbd20603a5d83ddc73c2c040bba2f1a89d5068db0836a03e42"
     },
     {
+      "path": "unity/Assets/Game/Resources/Map13/UI/ShopGoodsItem.prefab",
+      "sha256": "01281839d4c48109eff852ee6d2e9fba82f78ecde3c927ee3eb20af72118469f",
+      "meta_sha256": "8a1d5ccd98213d7162d53c3d76db838319c9ca95673d8ed262be895f13ee3ee1"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/ShopGoodsItemInfoCommon.prefab",
+      "sha256": "133c4908c79a0fdaaf8b3c787c7d3e76fd1b8c395e7b4c473aa496fe3f8a58c2",
+      "meta_sha256": "a70001955da4609b634f710a3aa62870a09841e958d216c5311166dd46090d7b"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/ShopLevelTab.prefab",
+      "sha256": "903dacd226a1b3a5ef29b952000d9d207ee1a42bf2c269aa68b26ad4814b1483",
+      "meta_sha256": "66526ac3f53675679f269eaaca0233937430a7d28e841a5652d750de53a7aa31"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/ShopLevelTabItem.prefab",
+      "sha256": "50d3c964c4495bd2ded6c6a1a979fe32bba5573ce13d988d59f4d7a412ec5405",
+      "meta_sha256": "61d8ab175d520237ef845c76b7d12def42d8eda038ddcf346c76c4660cadcb66"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/ShopPanelBase.prefab",
+      "sha256": "0cd4f4efedbb18ae58724009ba18aada2072056410dff3f1c80d133b60d0b722",
+      "meta_sha256": "5bd0ceef586576ffa7144f578dcb8bc446885a27a5887af4d666b8cfac4e6990"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/ShopQuickBuyBatchDialog.prefab",
+      "sha256": "01ded40b42a02ef8ab00179e84e227d7edbca7cd4139b11511b1ac9441752a21",
+      "meta_sha256": "dc72a8cde488c20658d17ea073018698cee63e5c620215e30aeaa4854a1cfe42"
+    },
+    {
       "path": "unity/Assets/Game/Resources/Map13/UI/StoryBookDialog.prefab",
       "sha256": "e27c35dc49fb0806281eb23e8849df4059ed3b3565b73b95eb781848002fe02f",
       "meta_sha256": "ba3f7baf045f764d4d868114b9b7efe7cd8b26f84b2763aef27a8482980b050b"
@@ -846,6 +881,16 @@
       "path": "unity/Assets/Game/Resources/Map13/UI/UIImgAdd.mat",
       "sha256": "f3a5ba3cb9e357428358ffe2ed2e9bcd853b5927a53c719d7c38e9e1981880d2",
       "meta_sha256": "8928fccfb4669b2ed8c7947e58bd1e8c1bfc5dff174bffc62cc9585b29e40b43"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/UIPanelFade_Hide.anim",
+      "sha256": "059a9455864d3605ef0302a94d1bdaed97827836fc3dcf897317108ebfdafa6e",
+      "meta_sha256": "81b5d1277d3ced1fd528614ea0d7464d9af3cecc36b5d8da30bc339f5206c034"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/UIPanelFade_Show.anim",
+      "sha256": "95087fb528a5f66026ff0f1975c8763e919834a27de8536ae068a68e107142f6",
+      "meta_sha256": "a5ec6286321f5d95e66e4ed657e08ac2a018b3906178c2ee0de45b0d5df72fbc"
     },
     {
       "path": "unity/Assets/Game/Resources/Map13/UI/WitchStoryCollectContent.prefab",

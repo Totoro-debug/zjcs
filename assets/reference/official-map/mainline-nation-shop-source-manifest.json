@@ -1,0 +1,43 @@
+{
+  "manifest": "871_156598",
+  "apkManifest": "854_156383",
+  "conversion": "official tables to local nation-shop catalog",
+  "sources": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-data/tables.json",
+      "sha256": "55ec788b259e5da48c515290ddd2a499388c40b39f739ea457625d724e4835bb",
+      "size": 53979253
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-data/map_nation_shop.g.bytes",
+      "sha256": "5386b7e67e75edbddbee4eea4e77df754772c5f1acb9e35ae519b53051a6f266",
+      "size": 362
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-data/shop_level_group.g.bytes",
+      "sha256": "fdc1d5a971c2292d53c47d68aacb72ed9cdff9fa0060013d4eaf5e210809fb6a",
+      "size": 4962
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-data/shop.g.bytes",
+      "sha256": "784ca23dac58f9e9f1eb9db07e9850662dcde60a5e8e565b7dccc8047861f852",
+      "size": 20023
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-data/shop_goods.g.bytes",
+      "sha256": "0d0d0cde25046f8aa265981cb0142f18d9d2bf2810d6105bd26959258ebdd694",
+      "size": 153144
+    }
+  ],
+  "output": {
+    "path": "unity/Assets/Game/Resources/Commerce/nation-shops.json",
+    "sha256": "882bf7c0a1b778eb9e49dc66cd9c1713122c25415fe89f3f67178481b514ae09",
+    "size": 60962
+  },
+  "counts": {
+    "groups": 8,
+    "levels": 32,
+    "shops": 32,
+    "goods": 329
+  }
+}

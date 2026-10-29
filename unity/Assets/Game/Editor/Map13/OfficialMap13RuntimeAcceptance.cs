@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -9,6 +10,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.State;
+using Zjcs.Offline.Commerce;
+using Zjcs.Official.WorldUI;
 using Zjcs.Presentation.CharacterCreation;
 using Zjcs.Presentation.World;
 
@@ -80,6 +83,9 @@ namespace Zjcs.Editor.Map13
 
         private static IEnumerator VerifySteps()
         {
+            string validation = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+            if (string.IsNullOrWhiteSpace(validation) || !Directory.Exists(validation))
+                throw new InvalidDataException("Set ZJCS_VALIDATION_DIR to this validation session directory.");
             foreach (MonoBehaviour startup in UnityEngine.Object.FindObjectsOfType<MonoBehaviour>()
                 .Where(value => value.GetType().FullName == "Zjcs.Offline.Startup.OfflineStartupFlow"))
             {
@@ -90,7 +96,7 @@ namespace Zjcs.Editor.Map13
             var canvas = new GameObject("Map13RuntimeCanvas", typeof(RectTransform), typeof(Canvas),
                 typeof(CanvasScaler), typeof(GraphicRaycaster));
             canvas.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
-            string root = Path.GetFullPath("../.tools/map13-runtime-acceptance-" + Guid.NewGuid().ToString("N"));
+            string root = Path.Combine(validation, "map13-runtime-acceptance-" + Guid.NewGuid().ToString("N"));
             var slots = new ProfileSlotCatalog(root);
             string slot = slots.CreateSlot();
             var save = new OfflineMainlineSave { CreatedAtUnixSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds() };
@@ -103,6 +109,7 @@ namespace Zjcs.Editor.Map13
             save.Player.SubRank = 12;
             save.Player.SeasonRank = 1;
             save.Player.Wardrobe.Profession = 1;
+            save.Player.Inventory.Add(new OfflineItemStack { ItemId = 13, Count = 10000 });
             save.Player.UnlockedMapClassIds.AddRange(new[] { 11, 12, 13 });
             File.WriteAllText(slots.GetProgressPath(slot), JsonUtility.ToJson(save, true));
             var progression = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
@@ -119,13 +126,139 @@ namespace Zjcs.Editor.Map13
                 throw new InvalidDataException("Map13 runtime did not create the official 2690-entity view.");
             if (runtime.transform.GetComponentsInChildren<Camera>(true).Length == 0)
                 throw new InvalidDataException("Map13 runtime did not create a world camera.");
-            string output = Path.GetFullPath("../.tools/map13-runtime-acceptance-render");
+            string output = Path.Combine(validation, "map13-runtime-acceptance-render");
             Directory.CreateDirectory(output);
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "entry.png"));
             Debug.Log("Map13 runtime fixture entity count: " + view.EntityCount + ".");
+            bool shopClosed = false;
+            MethodInfo openShop = typeof(OfficialMainlineMapRuntime).GetMethod("OpenMap13NationShop",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            if (openShop == null) throw new MissingMethodException("Map13 nation-shop runtime entry is missing.");
+            openShop.Invoke(runtime, new object[] { (Action)(() => shopClosed = true) });
+            GameObject shop = GameObject.Find("MapNationShopPanel");
+            if (shop == null) throw new InvalidDataException("The official Map13 nation-shop panel did not open.");
+            yield return null;
+            ScreenCapture.CaptureScreenshot(Path.Combine(output, "nation-shop.png"));
+            string[] scrollState = shop.GetComponentsInChildren<LoopVerticalScrollRect>(true)
+                .Select(value => value.name + ":active=" + value.isActiveAndEnabled + ",total=" + value.totalCount
+                    + ",cells=" + (value.content == null ? -1 : value.content.childCount)
+                    + ",view=" + (value.viewport == null ? "none" : value.viewport.rect.ToString())
+                    + ",contentRect=" + (value.content == null ? "none" : value.content.rect.ToString())
+                    + ",children=" + (value.content == null ? string.Empty : string.Join("|", Enumerable.Range(0, value.content.childCount)
+                        .Select(index =>
+                        {
+                            RectTransform cell = value.content.GetChild(index) as RectTransform;
+                            Vector2 screen = cell == null ? Vector2.zero : RectTransformUtility.WorldToScreenPoint(null, cell.TransformPoint(cell.rect.center));
+                            return value.content.GetChild(index).name + "/" + value.content.GetChild(index).gameObject.activeInHierarchy
+                                + "/pos=" + (cell == null ? "none" : cell.anchoredPosition.ToString())
+                                + "/size=" + (cell == null ? "none" : cell.rect.size.ToString()) + "/screen=" + screen;
+                        }))))
+                .ToArray();
+            Debug.Log("Map13 nation-shop list state: " + string.Join(";", scrollState));
+            if (shop.GetComponentsInChildren<CanvasRenderer>(true).Length == 0
+                || GameObject.Find("ShopGoodsItem_32101") == null)
+                throw new InvalidDataException("The official Map13 shop goods were not rendered. Lists=" + string.Join(";", scrollState));
+            WorldItemIcon firstItem = GameObject.Find("ShopGoodsItem_32101").GetComponentInChildren<WorldItemIcon>(true);
+            if (firstItem == null || firstItem.Icon == null || firstItem.QualityImg == null)
+                throw new InvalidDataException("The official Map13 shop item icon binding is missing.");
+            Debug.Log("Map13 shop item icon state: " + firstItem.Icon.sprite?.name + "/" + firstItem.Icon.enabled
+                + "/" + firstItem.Icon.gameObject.activeInHierarchy + "/" + firstItem.Icon.rectTransform.rect
+                + "; quality=" + firstItem.QualityImg.sprite?.name + "/" + firstItem.QualityImg.enabled
+                + "/" + firstItem.QualityImg.gameObject.activeInHierarchy + "; count=" + firstItem.myText?.text);
+            RectTransform iconRect = firstItem.Icon.rectTransform;
+            Vector3[] iconCorners = new Vector3[4];
+            iconRect.GetWorldCorners(iconCorners);
+            Debug.Log("Map13 shop icon render bounds: " + GetPath(firstItem.Icon.transform) + "; screen="
+                + string.Join("|", iconCorners.Select(value => RectTransformUtility.WorldToScreenPoint(null, value)))
+                + "; cull=" + firstItem.Icon.canvasRenderer.cull + "; material=" + firstItem.Icon.material?.name
+                + "; texture=" + firstItem.Icon.sprite.texture.name + "; slot="
+                + GameObject.Find("ShopGoodsItem_32101/Content/ImgBg/ItemInfoSlot").GetComponent<RectTransform>().rect);
+            foreach (int goodId in new[] { 32101, 32102, 32103, 32104 })
+            {
+                GameObject good = GameObject.Find("ShopGoodsItem_" + goodId);
+                Button buy = good == null ? null : good.transform.Find("Content/ImgBg/BuyBtn")?.GetComponent<Button>();
+                if (buy == null || !buy.interactable) throw new InvalidDataException("Map13 shop purchase button is unavailable: " + goodId);
+                ClickOfficialButton(buy);
+                yield return null;
+            }
+            OfflineMainlineProgressSession coldProfile = OfflineMainlineProgressSession.OpenForCommerce(slots, slot);
+            OfflineCommerceSession coldCommerce = OfflineCommerceSession.Open(slots, slot, DateTime.Now, coldProfile);
+            var coldShop = new OfflineNationShopService(OfficialNationShopCatalog.LoadDefault(), coldCommerce);
+            if (coldProfile.InventoryCount(13) != 6000 || coldProfile.InventoryCount(110) != 2
+                || coldShop.Experience(13) != 4000 || coldShop.Level(13) != 2 || coldShop.PurchasedCount(32101) != 1)
+                throw new InvalidDataException("Map13 nation-shop purchase, level-up or cold-save state did not persist.");
+            WorldTabItem levelTwo = shop.GetComponentsInChildren<WorldTabItem>(true)
+                .FirstOrDefault(tab => tab.name.Contains("ShopLevelTabItem_2", StringComparison.Ordinal));
+            if (levelTwo == null) throw new InvalidDataException("The official Map13 shop level-2 tab was not rendered.");
+            ClickOfficialTab(levelTwo);
+            yield return null;
+            if (!levelTwo.isOn || GameObject.Find("ShopGoodsItem_32201") == null)
+                throw new InvalidDataException("Selecting the official Map13 level-2 tab did not refresh its goods.");
+            Button close = shop.transform.Find("BgPanel1/Content/BottomGo/CloseBtn_dark")?.GetComponent<Button>();
+            if (close == null) throw new InvalidDataException("The official Map13 nation-shop close button is missing.");
+            ClickOfficialButton(close);
+            yield return null;
+            if (!shopClosed || GameObject.Find("MapNationShopPanel") != null)
+                throw new InvalidDataException("Closing the Map13 nation shop did not resume the story node.");
+            Debug.Log("Map13 nation-shop Play Mode passed: official panel and level tabs loaded, simulated item purchases crossed level 2, and inventory/currency/stock/experience survived cold reopen.");
+            yield return new WaitForSecondsRealtime(0.5f);
             yield return null;
             UnityEngine.Object.Destroy(runtime.gameObject);
             UnityEngine.Object.Destroy(canvas);
+        }
+
+        private static void ClickOfficialButton(Button button)
+        {
+            Canvas canvas = button.GetComponentInParent<Canvas>();
+            if (canvas == null || EventSystem.current == null)
+                throw new InvalidOperationException("The official shop button has no active canvas or EventSystem.");
+            var pointer = new PointerEventData(EventSystem.current)
+            {
+                button = PointerEventData.InputButton.Left,
+                position = RectTransformUtility.WorldToScreenPoint(canvas.worldCamera,
+                    ((RectTransform)button.transform).TransformPoint(((RectTransform)button.transform).rect.center))
+            };
+            var hits = new System.Collections.Generic.List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointer, hits);
+            RaycastResult hit = hits.FirstOrDefault(value => value.gameObject.transform == button.transform
+                || value.gameObject.transform.IsChildOf(button.transform));
+            if (hit.gameObject == null)
+                throw new InvalidOperationException("The simulated mouse position did not hit official button " + button.name
+                    + "; mode=" + canvas.renderMode + ",screen=" + Screen.width + "x" + Screen.height
+                    + ",pointer=" + pointer.position + ",buttonRect=" + ((RectTransform)button.transform).rect
+                    + ",buttonWorld=" + ((RectTransform)button.transform).TransformPoint(((RectTransform)button.transform).rect.center)
+                    + ",raycasts=" + string.Join(",", hits.Select(value => GetPath(value.gameObject.transform))));
+            ExecuteEvents.ExecuteHierarchy(hit.gameObject, pointer, ExecuteEvents.pointerClickHandler);
+        }
+
+        private static string GetPath(Transform value)
+        {
+            string path = value.name;
+            while (value.parent != null)
+            {
+                value = value.parent;
+                path = value.name + "/" + path;
+            }
+            return path;
+        }
+
+        private static void ClickOfficialTab(WorldTabItem tab)
+        {
+            Canvas canvas = tab.GetComponentInParent<Canvas>();
+            if (canvas == null || EventSystem.current == null)
+                throw new InvalidOperationException("The official shop tab has no active canvas or EventSystem.");
+            var pointer = new PointerEventData(EventSystem.current)
+            {
+                button = PointerEventData.InputButton.Left,
+                position = RectTransformUtility.WorldToScreenPoint(canvas.worldCamera,
+                    ((RectTransform)tab.transform).TransformPoint(((RectTransform)tab.transform).rect.center))
+            };
+            var hits = new System.Collections.Generic.List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointer, hits);
+            RaycastResult hit = hits.FirstOrDefault(value => value.gameObject.transform.IsChildOf(tab.transform));
+            if (hit.gameObject == null)
+                throw new InvalidOperationException("The simulated mouse position did not hit official level tab " + tab.name + ".");
+            ExecuteEvents.ExecuteHierarchy(hit.gameObject, pointer, ExecuteEvents.pointerClickHandler);
         }
 
         private sealed class Runner : MonoBehaviour { }

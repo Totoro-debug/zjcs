@@ -1,4 +1,5 @@
 {
+  "additionalSourceInputs": [],
   "bindings": [
     {
       "blessingText": "/GoddessTouchDialog/BgDialog3WorldMap/Content/DialogContent (1)/LockGo/BonusGo/Level/Bg/LevelText",
@@ -52,6 +53,7 @@
       "title": "/GoddessTouchDialog/BgDialog3WorldMap/Content/DialogContent (1)/TitleGo/TitleGo/TitleTxt",
       "touchButton": "/GoddessTouchDialog/BgDialog3WorldMap/Content/DialogContent (1)/LockGo/BtnContent/UnlockBtn",
       "transferButton": "/GoddessTouchDialog/BgDialog3WorldMap/Content/DialogContent (1)/BottomContent/CommonBtn_12",
+      "treasureContent": "/GoddessTouchDialog/BgDialog3WorldMap/Content/DialogContent (1)/BonusGo",
       "treasureParent": "/GoddessTouchDialog/BgDialog3WorldMap/Content/DialogContent (1)/BonusGo/ScrollRect/ViewPort/AwardGrid"
     },
     {
@@ -105,6 +107,7 @@
       "title": "/LostGoddessTouchDialog/BgDialog3WorldMap/Content/DialogContent (1)/TitleGo/TitleGo/TitleTxt",
       "touchButton": "/LostGoddessTouchDialog/BgDialog3WorldMap/Content/DialogContent (1)/LockGo/BtnContent/UnlockBtn",
       "transferButton": "/LostGoddessTouchDialog/BgDialog3WorldMap/Content/DialogContent (1)/BottomContent/CommonBtn_12",
+      "treasureContent": null,
       "treasureParent": null
     }
   ],
@@ -660697,6 +660700,10 @@
       "value": "暗淡的神像，激活后能驱散大地的阴霾，变为<link=999><color=#E5A23D><u>赐福之地</u></color></link>，并提升家园中家具的产出效率。"
     },
     {
+      "key": "ui_MapNationShopPanel_Level_Title",
+      "value": "商店等级"
+    },
+    {
       "key": "ui_WorldCanvas_Text10",
       "value": "完成"
     },
@@ -660715,6 +660722,10 @@
     {
       "key": "ui_achievement_btn_title",
       "value": "馈赠"
+    },
+    {
+      "key": "ui_active_pay_panel_shop_level_text",
+      "value": "{0}/{1}"
     },
     {
       "key": "ui_active_text",

@@ -865,6 +865,8 @@ def build(map_id=11):
                  "common_format_args1", "ui_common_item_not_enough", "item_325_name", "item_2_name", "item_3_name",
                  "UI_Pay_ChangeTitle", "UI_Pay_Exchange_Diamond_Confirm", "item_57_name", "item_41300_name",
                  "item_41400_name", "item_42200_name"))
+    if map_id == 13:
+        keys.extend(("ui_active_pay_panel_shop_level_text", "ui_MapNationShopPanel_Level_Title"))
     wanted = {xxhash.xxh64_intdigest(key.encode()): key for key in keys}
     texts = {}
     for record in language_inputs.values():
@@ -886,6 +888,8 @@ def build(map_id=11):
     required.update('lostGoddess_' + name + '_title' for name in ('SkillRank', 'CharacterLevel', 'PlayerProp'))
     required.update('item_' + str(row['itemId']) + '_name' for row in item_icons)
     required.update(node["localization_key"] for panel in panels for node in panel["nodes"] if node["localization_key"])
+    if map_id == 13:
+        required.update(("ui_active_pay_panel_shop_level_text", "ui_MapNationShopPanel_Level_Title"))
     # MultiLanguageText also accepts these literal format strings in the pinned prefabs.
     # Numeric prefab samples are literal MultiLanguageText keys. The detail
     # dialog's unused sample title is replaced by map_entity_group_explore_name

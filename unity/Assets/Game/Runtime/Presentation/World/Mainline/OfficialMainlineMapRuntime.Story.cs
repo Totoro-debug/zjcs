@@ -198,6 +198,11 @@ namespace Zjcs.Presentation.World
                         case "HandInItemNode":
                             RunHandInItemNode(node);
                             return;
+                        case "OpenMapNationShopPanelNode":
+                            if (mapClassId != 13 || storyContextEntity == null || storyContextEntity.EntityClassId != 8438)
+                                throw new InvalidDataException("Unsupported official nation-shop panel in Map" + mapClassId + ".");
+                            OpenMap13NationShop(() => RunStoryGraph(StoryNext(node, "Exit")));
+                            return;
                         case "PlayerActiveMapNode":
                             int activeMapClassId = JsonUtility.FromJson<StoryMapActivationFields>(node.sourceJson)?.MapClassId ?? 0;
                             if (activeMapClassId <= 0)
