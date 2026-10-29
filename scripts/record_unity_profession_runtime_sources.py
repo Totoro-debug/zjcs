@@ -9,7 +9,7 @@ PORTS = {
     "ProfessionOverviewPanel": ("ProfessionOverviewPanel", "Original tab state order, source image selection, property row pool and alternating backgrounds; offline data/resource/window services are injected."),
     "ProfessionPropRadar": ("ProfessionPropRadar", "Original radar slot order, nonlinear function, property row cache and settings color."),
     "ProfessionPropRadarDrawer": ("ProfessionPropRadarDrawer", "Original Graphic mesh vertices, colors and triangles."),
-    "PlayerPropItem": ("ProfessionPlayerPropItem", "String value presentation lifecycle, preview visibility, delayed text effect and background/line visibility. General typed/colorful values and blessing paths remain required."),
+    "PlayerPropItem": ("ProfessionPlayerPropItem", "All original methods, typed/compound/string values, signed/colored/formatted preview, source icon/resource lifecycle, entry/blessing dispatch, delayed text effect and background/line visibility. Production popup host remains required."),
     "ProfessionTreePanel": ("ProfessionTreePanel", "Original item initialization, total profession level and highest-rank state; player events are supplied by the local adapter."),
     "ProfessionTreePanelItem": ("ProfessionTreePanelItem", "Original five statuses, update order, native condition-prefab creation, grouping and tutor routing; appearance, map, tip and detail services are injected."),
     "RuleDialog": ("RuleDialog", "All original overloads, ordered row reuse/activation, source UIUtils transform reset; original RuleTipInfoParser data is injected."),
@@ -81,6 +81,8 @@ def build():
         detail_controllers=file_record(ROOT / "assets/reference/profession-ui/detail-controllers-source-manifest.json"),
         upgrade_panel=file_record(ROOT / "assets/reference/profession-ui/upgrade-panel-source-manifest.json"),
         detail_resources=file_record(ROOT / "assets/reference/profession-ui/detail-resources-source-manifest.json"),
+        property_rows=file_record(ROOT / "assets/reference/profession-ui/property-rows-source-manifest.json"),
+        property_resources=file_record(ROOT / "assets/reference/profession-ui/property-resources-source-manifest.json"),
         info_panels=file_record(ROOT / "assets/reference/profession-ui/info-panels-source-manifest.json"),
         skill_resources=file_record(ROOT / "assets/reference/profession-ui/skill-resources-source-manifest.json"),
         skill_icons=file_record(ROOT / "assets/reference/profession-ui/skill-icons-source-manifest.json"),
@@ -134,7 +136,7 @@ def build():
         recorder=file_record(Path(__file__)),
         limitations=["Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",
             "Data/resource/window/appearance/map/tip services must be connected to the original native prefabs before runtime completion.",
-            "PlayerPropItem remains scoped to overview/radar string values; full typed preview and blessing interactions remain required where used.",
+            "Typed property and blessing dispatch methods are migrated; full popup presentation and production profession callers remain required.",
             "No full asset snapshot or Windows Player release is produced by this source restoration."])
     target = ROOT / "assets/reference/profession-ui/runtime-source-manifest.json"
     target.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

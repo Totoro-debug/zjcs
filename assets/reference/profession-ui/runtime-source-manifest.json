@@ -39,9 +39,9 @@
       "official": "client-source/PlayerPropItem.cs",
       "official_sha256": "04564d758ff3e8115b7083d9f86a00d32cd5389a4202653987bce5da02298544",
       "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerPropItem.cs",
-      "runtime_sha256": "5bdbf3a29fc7a1769c1e9a1f1e46cc4f0d6750cf15432fee2d88dd37b87b7cd1",
+      "runtime_sha256": "14f5c8eebfd5c4f7e873a388b560849f6ea3b3199232d6b117332ebe468da9bc",
       "meta_sha256": "58c5e748982303567a619487116d4c0698fa483761112b6cadd3a93a13185568",
-      "scope": "String value presentation lifecycle, preview visibility, delayed text effect and background/line visibility. General typed/colorful values and blessing paths remain required."
+      "scope": "All original methods, typed/compound/string values, signed/colored/formatted preview, source icon/resource lifecycle, entry/blessing dispatch, delayed text effect and background/line visibility. Production popup host remains required."
     },
     {
       "official": "client-source/ProfessionTreePanel.cs",
@@ -206,7 +206,7 @@
   "local_service": {
     "runtime": {
       "path": "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.cs",
-      "sha256": "8bfbd0ddcd897555f1e5a9357cb5fa5c3ae8e3128cd2524a5316aac0b246c7a4"
+      "sha256": "46cef99983dcb62d8dff6aee3adaa4ffbc15756bd12cbfcf4cdc22904fc0b91d"
     },
     "scope": "Profession level reads, group-10 reward transaction and source-based non-mutating profession appearance preview only.",
     "appearance_sources": {
@@ -280,7 +280,7 @@
   },
   "weapon_resources": {
     "path": "assets/reference/profession-ui/weapon-resources-source-manifest.json",
-    "sha256": "9a2d177ef72a167f8e41ce0a8f7dc0ca3467754458c466bd65e39d39b3f1542d"
+    "sha256": "5bde0532eca345d750dfffab9d07ba740f380ea3ac4cf50879f2f47a76ac43a2"
   },
   "appearance_ui_lite": {
     "path": "assets/reference/profession-ui/appearance-ui-lite-source-manifest.json",
@@ -296,11 +296,19 @@
   },
   "upgrade_panel": {
     "path": "assets/reference/profession-ui/upgrade-panel-source-manifest.json",
-    "sha256": "3ac4b7c37ac4cda7eedc4679a0cdad070f2a009a5050fa6ebbf5538939d7f7f0"
+    "sha256": "729da9607ecd80943241f16d84b1bf1b3e3d1455a31629f7809930e31346020e"
   },
   "detail_resources": {
     "path": "assets/reference/profession-ui/detail-resources-source-manifest.json",
-    "sha256": "0c39ca26f3e074704bbd9fa8a0bab054890aa12ad94d3414b933ce74ab5c27a9"
+    "sha256": "bca135ff4baf8e451d26c0e0f5b5c879fd28754f0d9080f81d0a3bd31c1861c8"
+  },
+  "property_rows": {
+    "path": "assets/reference/profession-ui/property-rows-source-manifest.json",
+    "sha256": "f9e40f26c4963b94e16b875019594c196132b3e0a256485b071a32404010b08e"
+  },
+  "property_resources": {
+    "path": "assets/reference/profession-ui/property-resources-source-manifest.json",
+    "sha256": "c570c6761891880870b8d668adff5e0d702ffc9d6719771f25ef11df4b039cde"
   },
   "info_panels": {
     "path": "assets/reference/profession-ui/info-panels-source-manifest.json",
@@ -504,12 +512,12 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "ceabcd753514c484bf2b90096d6b0e7d37d1fef6f0596cc1517ac2a050625d1f"
+    "sha256": "5c53948254c37fcbab48db8b552d995bcfdc0dbf54e5ad8bc8d3de85e510bcbc"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",
     "Data/resource/window/appearance/map/tip services must be connected to the original native prefabs before runtime completion.",
-    "PlayerPropItem remains scoped to overview/radar string values; full typed preview and blessing interactions remain required where used.",
+    "Typed property and blessing dispatch methods are migrated; full popup presentation and production profession callers remain required.",
     "No full asset snapshot or Windows Player release is produced by this source restoration."
   ]
 }

@@ -69,6 +69,7 @@ APK 与热更新版本分别记录。原输入、转换产物及其前后哈希�
 | 职业原详情窗口控制器 | 当前 `871_156598` 官方应用反编译代码 `ProfessionPanel`、`ProfessionSkillBadgeRewarder`、`ProfessionChangeJumpBtn` | `assets/reference/profession-ui/detail-controllers-source-manifest.json`；保留原初始化／页签／状态、技能阶位差额与排序、导师后继／回溯及失败分支，仅通过显式接口接入本地服务；完整 prefab 与子面板仍待绑定 |
 | 职业原信息与技能图标 | 当前 `871_156598` 官方应用反编译代码、五张原 Luban 表、六个原 prefab 闭包与原 Sprite／完整纹理；APK 优先，所选云端输入逐项核验 | `assets/reference/profession-ui/info-panels-source-manifest.json`、`skill-resources-source-manifest.json`、`skill-icons-source-manifest.json`；原方法／阶位排序／托管引用、400 个 Sprite 网格与 77 张纹理 GPU mip 核对；完整信息页与正式玩家／弹窗服务仍待绑定 |
 | 职业原升级与详情资源 | 当前 `871_156598` 官方应用／框架反编译代码、原详情／升级 prefab、原 CN 字体配置及完整中文二进制；APK 优先，所选缓存云端资源逐项核验 | `assets/reference/profession-ui/upgrade-panel-source-manifest.json`、`detail-resources-source-manifest.json`；七类全部方法、89 资产闭包、原托管引用与三类 shader 显式绑定；原升级子面板模拟输入／效果／红点／回收检查通过，完整详情与本地状态仍待绑定 |
+| 职业原类型化属性行 | 当前 `871_156598` 官方属性行／复合值／祝福按钮及数值格式源码、完整原属性与词条表；APK 优先、所选云端缓存哈希核验 | `assets/reference/profession-ui/property-rows-source-manifest.json`、`property-resources-source-manifest.json`；352 条属性、891 条词条，40 个原 Sprite 与两张完整纹理；原中文格式、全部 GPU mip、资源生命周期和模拟原按钮派发通过，完整弹窗与页面调用仍待接通 |
 | 历史输入与非运行参考 | [LEGACY_SOURCES.md](LEGACY_SOURCES.md)；历史版本证据保留原身份 |
 | 转换素材备份 | `asset-pack/layout.json`、`asset-pack/lock.json`；实际覆盖以已生成并校验的归档为准 |
 

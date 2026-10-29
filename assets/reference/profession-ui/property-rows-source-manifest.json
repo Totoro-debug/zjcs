@@ -1,0 +1,183 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "application_assembly": {
+    "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+  },
+  "code_manifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_profession_property_rows.py",
+    "sha256": "ea4796f44520177734d8fae693e2e9b8e15e23ea59bf701ac35c541216a05c65"
+  },
+  "sources": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/PropType.cs",
+      "sha256": "265a81dbeab87b90e3a1c1423884610ed43ea9b535e488e20de0e0c41f9831b0"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/LanguageUtils.cs",
+      "sha256": "1b6de15f2b3a90a5a6ba1920c8475af10bc783141fa7bccd8a14492ac935f6b7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/Formula.cs",
+      "sha256": "ab9fbc796367c78a25d18941bb58fab29e654ccc08228cc248b3422f21436b76"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FormulaHandler.cs",
+      "sha256": "1c9d25ef741f342b419a85f53ed3287a7c86a7397847a6170176a62276fbce98"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/PropConfigUtils.cs",
+      "sha256": "2617d6c727c1169f6eecc181459556b5d766107e98218e370870529a3b689415"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/PropConfigUtils.cs",
+      "sha256": "0a87d161b842fb1fd1a604776de7234fbc0ccd69f56d68547a91c1274f513ead"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayerComplexProp.cs",
+      "sha256": "e4664fd25177f1c0e6fde3d4a2fb1c32db6f7ebda71213687271d3ef194f9bb5"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayerPropItem.cs",
+      "sha256": "04564d758ff3e8115b7083d9f86a00d32cd5389a4202653987bce5da02298544"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/BlessPropBtn.cs",
+      "sha256": "276eea10818b890aa128dd67fa465b660a758849bfc0aa0c498fd50fc72188a4"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PopTipBlessProp.cs",
+      "sha256": "1e6b05b29864b295ae86ae8099fd6da2455b4d64f636f28b452726efcfca527f"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPropertyType.cs",
+      "sha256": "9f8ee28264c3fff2b420a5a0b4b6075940736ee7cd5f205ba344497681b8ea9d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPropertyType.cs.meta",
+      "sha256": "324c335a4eb9b34a3652753006398f82720c24542da139aeb10f1c34cb7cdee8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPropertyLanguage.cs",
+      "sha256": "3d8a38b623677799b573dfc548242fa9472a98d06bdb202bd05d07224d4a064d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPropertyLanguage.cs.meta",
+      "sha256": "73ccae20f8e4d62e0d9fe8d3c2dd9f00a0e9d25b206dc1e37d55054269f37d46"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPropertyFormula.cs",
+      "sha256": "5801a18f8cd00ce8b741d69c205180b65a0e4840cf42723cb472df6585c4bcd6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPropertyFormula.cs.meta",
+      "sha256": "975730a2fb9c7e93d268af8fe6defaa1c937bef56ad1c1cc7aa123274e78e90d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPropertyConfig.cs",
+      "sha256": "83f8cd1107906eb3b700d7e89f3b606787d237434b28d583ca30a066aec45cae"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPropertyConfig.cs.meta",
+      "sha256": "f80ed46e4cfb9303d265f922f3e4ee27a86e2740b7735d1bbfceee843e4e28ea"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionComplexProp.cs",
+      "sha256": "96792eafad321b2d1665f39f6b4c0d03967a5507a9619c62675e28154689eec5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionComplexProp.cs.meta",
+      "sha256": "6f6ea14372e08fe2a705d8258e7d8d00590dd74937642963a9c683799301026a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerPropItem.cs",
+      "sha256": "14f5c8eebfd5c4f7e873a388b560849f6ea3b3199232d6b117332ebe468da9bc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerPropItem.cs.meta",
+      "sha256": "58c5e748982303567a619487116d4c0698fa483761112b6cadd3a93a13185568"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionBlessPropBtn.cs",
+      "sha256": "4849d92095edf6a6fb01caf791d97d36ee449ba42d4f9cd26d4a7a7a7bf34f8e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionBlessPropBtn.cs.meta",
+      "sha256": "3cf62457a6677dfc3ced70e4d87318103328f89b3ee0646c83df422da9719d1d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionBlessDescription.cs",
+      "sha256": "241e5efe78893d3bbd0ee803620d7a4577ef88458143e2994b2cdbe45156314a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionBlessDescription.cs.meta",
+      "sha256": "39e68815781ec0ad5b786f68c3f70109eeed1c6930b7482b18a5c81329bbf576"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPropertyBindings.cs",
+      "sha256": "1d1d5248952f7f79cfd5e25a335c2d5a4105d907bbbb670ba1cbf00b38ff5986"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPropertyBindings.cs.meta",
+      "sha256": "d80b5654e6731f9f2d0cbee2a998d202d7714c00ccb366f67f92ad68e1677928"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionPropertyBindings.cs",
+      "sha256": "9ff5b649ab352009f2b9652acf65ce15325198ba96288330d2bbedb92ec521f2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionPropertyBindings.cs.meta",
+      "sha256": "b2c0e60d15f3066e409119d40207afd443d377feae49c799051b68e1e7d0b552"
+    }
+  ],
+  "reused_language_sources": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/LanguageType.cs",
+      "sha256": "b210affe39919e8910223f8d8e28643d4a5af472578da494715677848021c121"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/CultureNumberArg.cs",
+      "sha256": "8043c8111ef9f31811c0a45e8df73b7dad1fe8b50ef035c6e7a35bd27f222029"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/LanguageCultureResolver.cs",
+      "sha256": "e8e23818f739daeeeaea31720704f38b562708aa1328eb52fa981fb425d41c8b"
+    }
+  ],
+  "sprite_load_source": {
+    "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/ResourceLoaderExtensions.cs",
+    "sha256": "5b48448dcee0bdb0e9c3c21366c394de986ad4901683abdd6c0c48c9493d386b"
+  },
+  "operation": "Copy every method of original PlayerPropItem, PlayerComplexProp and BlessPropBtn; complete PropType enum; complete consumed IColorfulPropStr, PropValue, PropValueOrig and PropItemValue nested types; original property-format and entry-key methods, six consumed Formula/FormulaHandler number methods, and PopTipBlessProp.GetBlessDesc only. Keep separate main/extra comparison (including original main-vs-extra comparison), formatted-string preview equality, absolute-value and sentinel paths, resource handles until destruction, effects, popup arguments and blessing conditions. Reuse already migrated original culture number formatters; expose parser/localization/resource/popup boundaries explicitly. Retain original row GUID and namespaced enum localization prefix. Keep the previous explicit Sprite/string overload as a caller adapter to original complex values.",
+  "validated_scope": "Unity 2022.3.57f1c2 isolated Direct3D Play Mode passed: full original 352 property and 891 entry tables, actual original Chinese binary localization/culture services, compact/percent/float/sign/one-text/preview/compound colors, zero/sentinel/overflow and original main-versus-extra comparison; 352 source image requests retained over repeated Init/disable and released exactly once on destruction. Simulated native-button input checks entry payload/order, None exclusion, blessing rank/lock/absence/compound-subvalue behavior and disable/re-enable listener cleanup. Original upgrade-property row screenshot actually viewed. Additional preview/icon/button references are explicit fixtures; complete popup contents and profession/player/save/Windows flows remain incomplete.",
+  "limitations": [
+    "Production property/entry/localization and popup host binding remains incomplete.",
+    "Only the consumed static blessing description method is migrated here; full blessing popup content/position/rank presentation is still required.",
+    "Full profession page, save and Windows publication are not claimed."
+  ],
+  "validation_entry": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionPropertyRowValidation.cs",
+    "sha256": "da8e05886fafac801559a08b0c4f9fa1f25718b1316cbeaf47ccc8f366bcf1eb"
+  },
+  "assembly_bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/Zjcs.Official.ProfessionUI.asmdef",
+      "sha256": "92f7b5893e2a5a9b6e5c940d3bf1658fd5fb9eb33e8673b5a751906bd85ef2e0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/Zjcs.Offline.ProfessionUI.asmdef",
+      "sha256": "72b06bbe416a9f5057d70cbbcbd3915f9a76f4280a8b507b3b0f0bb83c9a0805"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/Zjcs.Editor.ProfessionUI.asmdef",
+      "sha256": "175fffa5511a190501e6729e4c8dbf38e2c36410531b55d8327a4855dd9b7e4c"
+    }
+  ]
+}
