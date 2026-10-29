@@ -25,7 +25,7 @@ def build():
     proof=json.loads((cache/'export-source-manifest.json').read_bytes())
     input_receipt=ROOT/'assets/reference/official-map/map14-native-root-input-source-manifest.json'
     if sha(input_receipt.read_bytes())!=proof['input_receipt']['sha256']:raise ValueError('Reverify the original root export first')
-    inputs=[CODE/'client-source/CloudController2.cs',CODE/'common-source/Common/GridGroundComponent.cs',CODE/'common-source/Common/GridGroundComponentInfo.cs',CODE/'common-source/Common/GridVisibilityAgentComponent.cs',input_receipt,cache/'export-source-manifest.json']
+    inputs=[CODE/'client-source/CloudController2.cs',CODE/'common-source/Common/GridGroundComponent.cs',CODE/'common-source/Common/GridGroundComponentInfo.cs',CODE/'common-source/Common/GridVisibilityAgentComponent.cs',input_receipt]
     outputs=[]
     text=inputs[0].read_text(encoding='utf-8-sig')
     text=re.sub(r'(?m)^\s*//IL_[^\n]*\n','',text)
@@ -136,14 +136,14 @@ namespace Zjcs.Offline.World.NativeMap14RootFog
     mapping['c73f6104834143e48d2d08b9792af530']=script_guid
     def remap(text):return re.sub(r'(?<=guid: )[0-9a-f]{32}',lambda m:mapping.get(m[0],m[0]),text)
     for relative in selected:
-        p=export/relative;target=ASSETS/relative;inputs.extend((p,Path(str(p)+'.meta')))
+        p=export/relative;target=ASSETS/relative
         if p.suffix=='.png':
             write(target,p.read_bytes());meta=Path(str(p)+'.meta').read_text(encoding='utf-8');meta=re.sub(r'(?m)^timeCreated:.*\n','',meta);meta=re.sub(r'(?m)^  assetBundleName:.*','  assetBundleName:',meta)
             write(Path(str(target)+'.meta'),remap(meta).encode())
         else:
             write(target,remap(p.read_text(encoding='utf-8')).encode());asset_meta(target,'NativeFormatImporter')
         outputs.extend((target,Path(str(target)+'.meta')))
-    original=export/'Prefabs/EcEntity/Map/MapRoot/MapRoot_14/14.prefab';inputs.append(original)
+    original=export/'Prefabs/EcEntity/Map/MapRoot/MapRoot_14/14.prefab'
     source=original.read_text(encoding='utf-8');blocks=re.split(r'(?m)(?=^--- !u!)',source)[1:]
     gos={'1618682377417806','1703437598541787','1884547391421755'}
     chosen=[block for block in blocks if (re.search(r'^--- !u!1 &(\d+)',block) and re.search(r'^--- !u!1 &(\d+)',block)[1] in gos) or any('m_GameObject: {fileID: '+go+'}' in block for go in gos)]

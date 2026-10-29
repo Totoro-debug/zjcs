@@ -176,7 +176,7 @@ def build():
     for identity,row in default_materials.items():
         cab,pid=identity.split(':');materials[cab,pid]=sprite_outputs[row['output']]
     sprites=[];parts=HEADER.split(text)
-    outputs=list(font_outputs);inputs=[record(source)];assets=[]
+    outputs=list(font_outputs);inputs=[];assets=[]
     for i in range(1,len(parts),3):
         fid=int(parts[i+1]);kind,body=docs[fid];o=objects[by_fid[fid]] if fid in by_fid else None
         if kind=='SpriteRenderer':
@@ -209,7 +209,7 @@ def build():
             if clip_ref[2] not in redirects:raise ValueError('Bind original radar animation script first: '+clip_ref[2])
         clip_text=PTR.sub(lambda m:'{fileID: '+m[1]+', guid: '+redirects[m[2]]+', type: '+m[3]+'}',clip_text)
         write(target,clip_text.encode());meta(target,'NativeFormatImporter')
-        outputs.extend((target,Path(str(target)+'.meta')));inputs.append(record(p));redirect(p,target);assets.append(dict(input=record(p),output=record(target)))
+        outputs.extend((target,Path(str(target)+'.meta')));redirect(p,target);assets.append(dict(output=record(target)))
     text=parts[0]+''.join('--- !u!'+parts[i]+' &'+parts[i+1]+'\n'+parts[i+2] for i in range(1,len(parts),3))
     text=PTR.sub(lambda m:'{fileID: '+m[1]+', guid: '+redirects.get(m[2],m[2])+', type: '+m[3]+'}',text)
     root_go=native_go['StageCostTip'];binder_id=max(docs)+1
@@ -234,7 +234,7 @@ def build():
     script_guid=GUID.search(Path(str(runtime/'NativeMap14RadarTipCatalog.cs')+'.meta').read_text(encoding='utf-8-sig'))[1]
     prefab_guid=meta(target,'PrefabImporter')
     write(catalog,('%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n--- !u!114 &11400000\nMonoBehaviour:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 0}\n  m_Enabled: 1\n  m_EditorHideFlags: 0\n  m_Script: {fileID: 11500000, guid: '+script_guid+', type: 3}\n  m_Name: Map14 original radar tips\n  m_EditorClassIdentifier:\n  Manifest: 871_156598\n  StageCostTip: {fileID: '+str(root_go)+', guid: '+prefab_guid+', type: 3}\n').encode());meta(catalog,'NativeFormatImporter');outputs.extend((catalog,Path(str(catalog)+'.meta')))
-    write(RECEIPT,encode(dict(manifest=graph['manifest'],mapClassId=14,source_graph=record(graph_path),converter_input=record(cache/'input-source-manifest.json'),component_records=record(cache/'components.json'),inputs=inputs,dependencies=list({r['path']:r for r in dependencies}.values()),font_source=record(font_receipt),tools=[record(Path(__file__))],outputs=[record(p) for p in sorted(set(outputs))],
+    write(RECEIPT,encode(dict(manifest=graph['manifest'],mapClassId=14,source_graph=record(graph_path),inputs=inputs,dependencies=list({r['path']:r for r in dependencies}.values()),font_source=record(font_receipt),tools=[record(Path(__file__))],outputs=[record(p) for p in sorted(set(outputs))],
         prefab=dict(path=source_path(target),guid=meta(target,'PrefabImporter'),originalRoot=root),field_checks=checks,sprite_bindings=sprites,assets=assets,
         operation='Preserve original StageCostTip GameObject/component hierarchy and exported scalar YAML text. Compare complete consumed original MonoBehaviour fields including TMP/font/effect data and original pointer identities, float32 bits, transform/renderer/animation properties. Bind exact current original font and migrated scripts/materials, original animation clips and packed Sprite library before activation. Add only explicit sprite-loading metadata.',
         validation_entry='Zjcs.Editor.Map14.OfficialMap14RadarNativeAcceptance.Run',

@@ -5,28 +5,7 @@
     "path": "unity/Assets/Official/World/Map/14/Source/native-entity-object-graph.json",
     "sha256": "95b94110032812200cf8f237e72f911ff5db9a5456947dda98f996d7d92478b4"
   },
-  "converter_input": {
-    "path": "output/validation/map14-shared-core-dc0a4c10515c48d0b07697df7a3cc697/hero-statue-native/input-source-manifest.json",
-    "sha256": "3ae801122f244e0164c241d7a29e05363306bd1eb9fe12da30c0c768402f189d"
-  },
-  "component_records": {
-    "path": "output/validation/map14-shared-core-dc0a4c10515c48d0b07697df7a3cc697/hero-statue-native/components.json",
-    "sha256": "beb17a4ca47aba0266dd4d021e3c0c17918a91489ad9b9e477fc45b24775a9eb"
-  },
-  "inputs": [
-    {
-      "path": "output/validation/map14-shared-core-dc0a4c10515c48d0b07697df7a3cc697/hero-statue-native/export/ExportedProject/Assets/Prefabs/Map/Common/EntityUI/RadarTip/StageCostTip.prefab",
-      "sha256": "bdfa0e799843d904cb2fd847a00dbcfb5ec8f450e59d9dd8547929d6f5543e02"
-    },
-    {
-      "path": "output/validation/map14-shared-core-dc0a4c10515c48d0b07697df7a3cc697/hero-statue-native/export/ExportedProject/Assets/Animation/UI/MapRadarTipFade/StageCostTipFadeIn.anim",
-      "sha256": "87e27dd4a6f4921d1da61f0438887208049905da31b502b2e9aef771bc7e5c3a"
-    },
-    {
-      "path": "output/validation/map14-shared-core-dc0a4c10515c48d0b07697df7a3cc697/hero-statue-native/export/ExportedProject/Assets/Animation/UI/MapRadarTipFade/StageCostTipFadeOut.anim",
-      "sha256": "f5f4a543d12ee56ca274095816eaff94449dec100a61ed8391d3dc787bd11e10"
-    }
-  ],
+  "inputs": [],
   "dependencies": [
     {
       "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/MultiLanguageText.cs",
@@ -145,7 +124,7 @@
   "tools": [
     {
       "path": "scripts/prepare_unity_map14_radar_native.py",
-      "sha256": "e802b3b48cab110bf35d0af18767fbb5c14835d6e6079dd21142f7591f92d0c5"
+      "sha256": "cc95318dc4da09f542de034fa56801d65dfc5fe88a1245134e9027df8caf3a81"
     }
   ],
   "outputs": [
@@ -553,20 +532,12 @@
   ],
   "assets": [
     {
-      "input": {
-        "path": "output/validation/map14-shared-core-dc0a4c10515c48d0b07697df7a3cc697/hero-statue-native/export/ExportedProject/Assets/Animation/UI/MapRadarTipFade/StageCostTipFadeIn.anim",
-        "sha256": "87e27dd4a6f4921d1da61f0438887208049905da31b502b2e9aef771bc7e5c3a"
-      },
       "output": {
         "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Animation/UI/MapRadarTipFade/StageCostTipFadeIn.anim",
         "sha256": "668a328a2af4a176fc8332c354b901fe582e7f7386462df7a398fdfaeb339ad6"
       }
     },
     {
-      "input": {
-        "path": "output/validation/map14-shared-core-dc0a4c10515c48d0b07697df7a3cc697/hero-statue-native/export/ExportedProject/Assets/Animation/UI/MapRadarTipFade/StageCostTipFadeOut.anim",
-        "sha256": "f5f4a543d12ee56ca274095816eaff94449dec100a61ed8391d3dc787bd11e10"
-      },
       "output": {
         "path": "unity/Assets/Official/World/Map/14/NativeRadarTips/Animation/UI/MapRadarTipFade/StageCostTipFadeOut.anim",
         "sha256": "6af8be5e4e3483417efd40438138a0053bf8c80ecf93c58d3bfaed63943a7360"

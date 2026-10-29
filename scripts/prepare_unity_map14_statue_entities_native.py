@@ -76,11 +76,11 @@ def build():
     tip_receipt=json.loads(tip_proof.read_bytes());tip_path=ROOT/tip_receipt['prefab']['path'];dependency(tip_path)
     if sha(tip_path.read_bytes())!=next(r['sha256'] for r in tip_receipt['outputs'] if r['path']==source_path(tip_path)):raise ValueError('Original native cost tip binding changed')
     native_tip_id,=[fid for fid,(kind,b) in documents(tip_path.read_text(encoding='utf-8-sig')).items() if kind=='MonoBehaviour' and b['m_Script']['guid']==guid(ROOT/'unity/Assets/Game/Runtime/Official/EntityRadarCost/MapControllerEntityRadarTipStageCost.cs')]
-    inputs=[record(proof_path),record(tip_proof)]
+    inputs=[record(tip_proof)]
     for cid in range(6570,6574):
         row=exports[str(cid)];p=ROOT/row['path'];raw=p.read_bytes()
         if sha(raw)!=row['sha256']:raise ValueError('Verified original entity export changed: '+str(cid))
-        inputs.append(record(p));text=raw.decode('utf-8-sig');docs=documents(text)
+        text=raw.decode('utf-8-sig');docs=documents(text)
         goid,=[fid for fid,(kind,b) in docs.items() if kind=='GameObject'];go=docs[goid][1]
         if len(go['m_Component'])!=18 or str(go['m_Name'])!=str(cid):raise ValueError('Original statue root component count/name differs')
         by_name={metadata[b['m_Script']['guid']].stem:fid for fid,(kind,b) in docs.items() if kind=='MonoBehaviour'}
