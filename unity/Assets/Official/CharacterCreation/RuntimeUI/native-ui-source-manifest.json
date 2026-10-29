@@ -1,0 +1,420 @@
+{
+    "manifest": "854_156383",
+    "operation": "Rebuild original serialized UGUI/TMP fields, layout and sprite imports; bind the original FZY4K TTF through its dynamic TMP asset.",
+    "inputs": [
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/runtime-ui.json",
+            "sha256": "24c97bbf59d3e7b4349950dc06782b52460a4e51675d02cfb2e729b93b7d352f"
+        },
+        {
+            "path": "unity/Assets/Official/Commerce/Art/fonts/FZY4K.ttf",
+            "sha256": "90023872dffe6a58503de655bd0631bf3334ce3b6b72cc75a6625b685c94c386"
+        },
+        {
+            "path": "unity/Assets/Game/Editor/CharacterCreation/CharacterCreationUiTools.cs",
+            "sha256": "c5cf543bb53318ea7c715f94172c50b016320d295f7eee576f43ae2bb3ef7a1d"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/BtnExclamation-e046a83a12.png",
+            "sha256": "d4394fc93798db8d2d7f25d847932cdc88a21572a7b9a57a58ce6331f49242c3"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/BtnNo-aa425a44c4.png",
+            "sha256": "fef0ddc59129e7a5136f6bac11369284e494e1964add4d2aea8901671756802a"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/BtnOk-623eab01b4.png",
+            "sha256": "27952bd12b6b60e0cfcc870ea8e3278f0aa47cd48c7048a1a7868b745648d599"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/BtnRandom-c4385d711d.png",
+            "sha256": "afb7c951a91d2deedaebc9cb7de68228bd1b56feb124b743c351c075b2cb0e07"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/BtnRandom-ff071085b0.png",
+            "sha256": "8201556b639c8795d5899808dd753d395b6ba29fa5c593ca5ec15567da620f4e"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/BtnReset-23022cdc9d.png",
+            "sha256": "e04f0ba8d9b71a0afbecd69284076c46e7845f499120e997000036b927397305"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/BtnStorage-b885065631.png",
+            "sha256": "be65c0eef5649c23b4a0d1805c1363a8f86ecf2d2ae79d8ab34e111490c0612d"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/C_none-fa3e084e40.png",
+            "sha256": "d73d644cfd6ed4f7f4f28801217e9712825adf277bf39eb37543dc5d932423b4"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/G_1_None-3849b09bfd.png",
+            "sha256": "96ea2e7ec0f36ab40d4cd1ea206b260f4edbbf299000c70128299041a4853f99"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/G_2_None-7bd840c5a2.png",
+            "sha256": "675c36266ca025f1712d65d9eb324d531ddd06c6f47399909bdec27ce98c991f"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBgTexture_Cai-176665b9c3.png",
+            "sha256": "fc4a37b0930f2fd15623e452bc602b635015e16672d5228ae7e9602fd8ec2173"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_Banner-e2bb932c72.png",
+            "sha256": "6be5a8457196a7664194bb9abb3b50b94d1543d752accb711f73e755336b69bd"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_CountText-43bcc7f5cb.png",
+            "sha256": "31498f0e8895dce861cf88210bb81c26ac96ed09df5556edc6614418fc574f71"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_CreatePlayer-22529459e8.png",
+            "sha256": "0cba773e41e121d0cdb400acca4c82dd297d3dfcc5ec1da88171183f25a3ecac"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_PopUps-50a1e65068.png",
+            "sha256": "20ee64ac9f8b6824c26ca389c68ecd05b2862d66305dc2bfb6fcec4b6b113920"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_PopUpsTitle-e69fb4d9d0.png",
+            "sha256": "4b683e8fe6816c3ff7f4e127beb8e577cfb5e9331626e5b31fa81595a3064599"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_PopUpsWenLi-2cf247fc12.png",
+            "sha256": "68058e4df2fc9aa171d0e654156dedd97995be2187490d9e0a0c798b4d3a5339"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_SelSex-181c6dd282.png",
+            "sha256": "712adc31689e4746bd7b7b7338ad7b485a0d26230104c2336ed80752f0a9a53b"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_Star1-3b6593e074.png",
+            "sha256": "1fd7ac09a78e11832955e73babbefb6f707ce9d4580fe606444d5d99c16c683f"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBlue-797552ab98.png",
+            "sha256": "852756b23165ca4c2a377acee93125060d2948f3157b9b29094debbd5aa8d913"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBlueDot-a28b58f9f6.png",
+            "sha256": "d245e092178e3753282c32c895dc1f8c050c9013f4dbfb50c59be696074a3261"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBlue_Upgrade-12b45e0972.png",
+            "sha256": "f77095c4c9da7a0b4544f2117b6e048084f17d724229e0992de796fe7add22f1"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgColorSliderBg-6e7eade017.png",
+            "sha256": "9613fafd4f86521f625ae4174eb7bb67b8574d15c92cee534f9c2b7f3f0d4e6f"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgDot-4ed3349f24.png",
+            "sha256": "8b8bd913abe31a5738fdf0097288a9733704434a36c7ccc934b20c028216ecdb"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgFitBg-99dba7ef23.png",
+            "sha256": "0571a6bb9003ec698b0936e8ee1b291fd8647bac675d8a95d66b0568d210847f"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgGlow_Female-d81887d632.png",
+            "sha256": "fc1a896d36ca0c6fddbc01b47170daf05b7ec812115b6f267bdc4c8a515f7473"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgGlow_Male-bb637dad29.png",
+            "sha256": "f7a4364c00a89c247fc9d3e1aac93d0ea24744fc8292292f771dfe1ab191bd56"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgHandle-6d92bd0b6b.png",
+            "sha256": "7f5a59d05e42a5a58e613ea29e923480005b6ce5aa2a7536358c2f6d41f4ed1e"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgIcon_Pen-300a74c7db.png",
+            "sha256": "7e3f46b3ba75637d35644e1e5dc9b4b42253bcb045b0ed555e1a6889b0c503f2"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgItemSelect-17c983d02d.png",
+            "sha256": "de48b6abe9e4805b08cc1e54bbc6425b793a4c4239ab73340f0d78af203d68c3"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgLine-3dc3678e90.png",
+            "sha256": "273bb8cd8ce1cb9a6a292b842bc7b2383bb185a08ac8c0dd88c08a3e90cb46f4"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgMask-24a3320123.png",
+            "sha256": "4b8fcf1e081b5f29b8e698c0dd9d297a11e0ac8a992e25d43d0d175ef805dfea"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgNew-9b7c346dac.png",
+            "sha256": "f37ed6720455fd649b8458d715dccfc2771655cdf4b8cb8d2f5598e5056a1021"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgRedDot-8154d7a8c2.png",
+            "sha256": "02ebb92c906b1b9fe1166b9882dbdd92e545769b61dfc7462f2b410965c8a81c"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgReturn-48efaa6e6b.png",
+            "sha256": "4f188679e2a79cd780468ab3dc4793943b74b817591d91ed2a8f163c9e565e0b"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgReturnBg-25d824248c.png",
+            "sha256": "ba36c48f4a2df794e7e9fc0db3530fa327876daed73a2557825ce487449c9d49"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgRole_Female-49e8988709.png",
+            "sha256": "804d6e87c6288aad3024de23122da112363263baf01405f82cd88dd8d7549900"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgRole_Male-f13908db32.png",
+            "sha256": "195cbe178efba8315b849bc5944df84089cab9632b2c65af1c2104ca53f4f823"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgTabBg-686e37346e.png",
+            "sha256": "481a6b2977d90b938a44e49db5659113d92f43d70259860589c4016b5d713968"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgTabBg_Small-4c04ad1808.png",
+            "sha256": "6db70171532ff0ee5a56456b982a2ae4163ebec9454c3ce96e6568f19dc3565d"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ItemFixedColor-b37938e7d2.png",
+            "sha256": "97a8c0f082160a4ffb8d5bb69a18664d9882f106f17d6e332cfa11ff76f7f6ff"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ItemFixedColor_Sel-6a7a1ff5e6.png",
+            "sha256": "d7c924cd478e7542818d681a2a9f7bae280559b2b808d0ca8b2972d77636e129"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ItemFixedColor_Sel_02-f33b212ca7.png",
+            "sha256": "0ec327072164d1e80475cc9160e3f50fa2998017842528cb43fc935b9b6237c1"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ItemFixedColor_Sel_03-ec447a23a0.png",
+            "sha256": "525398a9b8c7c31e966ca229d4cfa29313a3f278e0e3d9c5fb15263490947855"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/eye_F_01-db2d1d3ef4.png",
+            "sha256": "aa796bae161255389f98a2ae002000148ec6f64b062e22b8932efebf3c8df481"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/hair_M_01-57a25a6281.png",
+            "sha256": "b952deccec721bff5f60642d7baf3c84cc68dc14fbf15118498b9b1953c13022"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/shadow-057cf0758b.png",
+            "sha256": "74b72d1b6fdc906a8a4a1d953116b8f7e65e20f6d71fc74a1b653d6357d6a4e5"
+        }
+    ],
+    "outputs": [
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/CreatePlayerPanel.prefab",
+            "sha256": "9180870cb873d1f4ad7dd43b8ea29e7bfaae16f11b352314defdec06b2234d77"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/CreatePlayerPanel.prefab.meta",
+            "sha256": "9dbe00c992875372c0d8b6165e3b37d08ad1cfbc44d9282e00d9e3a501cfe27c"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/CreatePlayerPanelDIYContent.prefab",
+            "sha256": "d00a3510bb96a95630cdec7df467b57223e5adb81daf6298aee751ebb52afdfb"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/CreatePlayerPanelDIYContent.prefab.meta",
+            "sha256": "aa3545686081906f4183dd04e33bdc92b15ce7f5b2b0abbe9740fb2c3c9eb5f4"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/ConfirmDialog.prefab",
+            "sha256": "de006d02fc220c9e9bf648faa26c3d44a36018e9056aaf67625ccc356ea3e7e5"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/ConfirmDialog.prefab.meta",
+            "sha256": "c792c1532bf182393078348c9967e6006bb56d40cbbe91b3235cf218663c30ae"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/BtnExclamation-e046a83a12.png.meta",
+            "sha256": "89cb66a99e8903838e747c137ee286abdd2c506390236282b85d7452b2b5ee52"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/BtnNo-aa425a44c4.png.meta",
+            "sha256": "130f666ccdb1f59612d535d3bfa240aac267328acd456cec2e011b90502ee2f0"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/BtnOk-623eab01b4.png.meta",
+            "sha256": "47f472ff0f1cd8ed773779257da193e331d2c8ad66a331c363d2720bd608a8c6"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/BtnRandom-c4385d711d.png.meta",
+            "sha256": "7fcae2f6b8333718b00c1350cbcf69de15ff17f4ccb2a3d8f57e59439544a30c"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/BtnRandom-ff071085b0.png.meta",
+            "sha256": "abe4073655359120ab4e7c167fd5d3e895b3fd89b0ad8dd2713ba7268b39c83e"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/BtnReset-23022cdc9d.png.meta",
+            "sha256": "1efcd6409ec4d5fc34ccc1a9c9ebb20f7a5a94fc7810c95cbfb93ad4a3e4a15b"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/BtnStorage-b885065631.png.meta",
+            "sha256": "b41c0ec6c1419a0f2887b190f5efce563018f3a2ebeeb22d51867870083d9009"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/C_none-fa3e084e40.png.meta",
+            "sha256": "4125b878b266f6cbc1fc5e93649f9148db5dfc80574425e1bee68590e57c1643"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/G_1_None-3849b09bfd.png.meta",
+            "sha256": "1b33abd4d9a32526dbda5396d7c6ea144b296cca8b09960030e803a14bedd257"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/G_2_None-7bd840c5a2.png.meta",
+            "sha256": "df9f6421bd28990100d664bebb7fccc14348d3d83981536cf42d455a27b34861"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBgTexture_Cai-176665b9c3.png.meta",
+            "sha256": "b56ed24aded5dae7718f1a022079e3ba61c5de390a9ef914980bed845de176e1"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_Banner-e2bb932c72.png.meta",
+            "sha256": "11d1d46ddd0fd6da64f30b29f3c2a3588d166e290095a209c462225e138022b7"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_CountText-43bcc7f5cb.png.meta",
+            "sha256": "1f17e3de4e99dec23dbe033f8fd989dac92e1b38d6d9c2aed7fea6a7d667476f"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_CreatePlayer-22529459e8.png.meta",
+            "sha256": "0db0f419f41e39d4cf2afc89c925e9b56d1f9511d381db2bd9ed167b2661edff"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_PopUps-50a1e65068.png.meta",
+            "sha256": "910787f4b1eea65ca61c285dd2b1b64a1d8ba588ff6e1ec2cad85c1d6241f251"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_PopUpsTitle-e69fb4d9d0.png.meta",
+            "sha256": "804f706261844afbc80d3044ebfc4d8b978ce49bd329bd916e826f0586f7831f"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_PopUpsWenLi-2cf247fc12.png.meta",
+            "sha256": "f95e6b20dc5fa0c09dba0f0391c514486b25e2d9b1095a7512cad43574253502"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_SelSex-181c6dd282.png.meta",
+            "sha256": "b715d08a67f377ccf1c80429101e6f6692874c5fb5e7e64265082441ddf9f4e3"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_Star1-3b6593e074.png.meta",
+            "sha256": "fd8493dd94b964e06012448215025fe707afdc519e31be88f2c736f285607634"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBlue-797552ab98.png.meta",
+            "sha256": "a0957929d9b2c4154663177bf4cf87f5f7bacb3d89692a2b53fc186f98d470fb"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBlueDot-a28b58f9f6.png.meta",
+            "sha256": "126d8da5dccc82d420c00edeec2b03e58cd1dc7e6ac9cc9784f398bd16b214b7"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBlue_Upgrade-12b45e0972.png.meta",
+            "sha256": "6a927a7163662210e74abd00cceb7fdd9c5aafae8248777090ff34c6e160a5f4"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgColorSliderBg-6e7eade017.png.meta",
+            "sha256": "d7420b1bd7671f102d5816ee37d08bff9f6e573724166c70e6374691cba0887f"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgDot-4ed3349f24.png.meta",
+            "sha256": "0238b5f6a7f5dc90481c192e7de91d3f08de8f42926b896ba974198b8d11a53a"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgFitBg-99dba7ef23.png.meta",
+            "sha256": "a16865d5518959f8b7b61b723feffe7621c02613d25d61a9cf4cfabe13a8b78c"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgGlow_Female-d81887d632.png.meta",
+            "sha256": "2397ee3a3cb77202c629de97cd9a9f36ac330ede0153ba66339184be94f8dcfa"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgGlow_Male-bb637dad29.png.meta",
+            "sha256": "00cca49a4f6221ab4dbf68930fa55e79a0fd7de013575e7d4a237a34681261b0"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgHandle-6d92bd0b6b.png.meta",
+            "sha256": "8c2482a66755cfa6077b51c7f837532b14ac4f79d843df6b24facc4d131e46ed"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgIcon_Pen-300a74c7db.png.meta",
+            "sha256": "b6878bb81d902e3cf95ed36f69fe6b7af7d092ebaba01bf1c3d8095fd1b49065"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgItemSelect-17c983d02d.png.meta",
+            "sha256": "c19fdc62020830c9dd5afb3474f94ae1072059f1d0ec8cd5d23039b19bfb1639"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgLine-3dc3678e90.png.meta",
+            "sha256": "4ac12bdc0bf250870e9a9b94d2e96b4ad034eeed96c0b127dce61b193d34c947"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgMask-24a3320123.png.meta",
+            "sha256": "41b581cc3ffcfcdbfecf11ca34acbeddefbae8b4a5275ec524c5f6672f2e3c4f"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgNew-9b7c346dac.png.meta",
+            "sha256": "ec110dd798d8993e3769e6149f2544c10a096e960ae2abad61e7d0e4cb3a0556"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgRedDot-8154d7a8c2.png.meta",
+            "sha256": "c0224b346e98143101b5ecfd16ba29b5930552698c39505b0309c5093f68259f"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgReturn-48efaa6e6b.png.meta",
+            "sha256": "afdc3e8010828d6085bdc0a5d86f8eb5f56356caa3ea9837cfd42eae22aa7351"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgReturnBg-25d824248c.png.meta",
+            "sha256": "93fe9c4e1b8dcfe702ba762759e38f970dd0e39fdd5f00ab9775ca1006089024"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgRole_Female-49e8988709.png.meta",
+            "sha256": "78ccf99a093ea41b2e9a670738ddcbf47924135d4db65776febe5dad1fe87494"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgRole_Male-f13908db32.png.meta",
+            "sha256": "58366b139ffe78d5bc2ca369231213449b31baeb90139624764cdc3f338a4dd4"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgTabBg-686e37346e.png.meta",
+            "sha256": "0ea689de89f9e03744f95ec1dcd37ed2bf627117c9ca06bec4a6ac83e7cad1b8"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgTabBg_Small-4c04ad1808.png.meta",
+            "sha256": "8375a6f10571f76195ae0b725b87329156ecdebe8dfa7d68f74eb747e3bdca75"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ItemFixedColor-b37938e7d2.png.meta",
+            "sha256": "fb880b7e51d572c0b9a3d339de0cebc6a5c9f69f8675d42b6866f059a07a9c5d"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ItemFixedColor_Sel-6a7a1ff5e6.png.meta",
+            "sha256": "7f11cc05f41104bccb1adf1c4c735beff25a4ebc6ead46affaadf1c720983b8a"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ItemFixedColor_Sel_02-f33b212ca7.png.meta",
+            "sha256": "5319b488cbec1e64667b74cc16953ee6014a7e5a04181918799e2af23d74ec47"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ItemFixedColor_Sel_03-ec447a23a0.png.meta",
+            "sha256": "3f88f21ae3a741fcc7a9b4fc9e4ff70ad6b3b7b9917974d07782603eb88e8a2f"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/eye_F_01-db2d1d3ef4.png.meta",
+            "sha256": "822db6c96b7f33cea98ba6d3d0dc4c3557e758d3b7cfe8da3e4a677cacc75265"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/hair_M_01-57a25a6281.png.meta",
+            "sha256": "ae80719b5cd2c5976ffd76bbb4ea3811014d1fe46d9eed3684af0f1223a7eada"
+        },
+        {
+            "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/shadow-057cf0758b.png.meta",
+            "sha256": "3de401930ac1a2587bd6bdf5624cb811d7f65b617bcd57008dee262356689aa0"
+        }
+    ]
+}

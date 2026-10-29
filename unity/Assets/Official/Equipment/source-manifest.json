@@ -1,0 +1,82 @@
+{
+  "inputs": [
+    {
+      "path": "assets/official/rules.json",
+      "sha256": "0b8f06e99f4b488decd07f534cd9a2b2fd7765c680a90c6692cbf12b3daf9430",
+      "source_field": "data_sha256.rules.json",
+      "source_manifest": "assets/reference/official-city/source-manifest.json",
+      "source_manifest_sha256": "7553bcfe66fd4dc09a5f8e43d5f196bdcf863ea491bc648b56b99ea556d41c81"
+    },
+    {
+      "path": "assets/official/equipment-rules.json",
+      "sha256": "351f7601f5cd91d1dd5d12288f804aa936e897f9857609193f0da7cccf11cfdc",
+      "source_field": "outputs.equipment-rules.json",
+      "source_manifest": "assets/reference/equipment-fidelity/source-manifest.json",
+      "source_manifest_sha256": "ab3ec3860f02d8bef3884306dbb921cf189b90886df210b7c22d2bfe96530a18"
+    },
+    {
+      "path": "assets/official/fidelity-rules.json",
+      "sha256": "5cb76d59413b0fc1a890aa6216ef6cf224a875dabdf692745d014975db31258b",
+      "source_field": "output_sha256.fidelity-rules.json",
+      "source_manifest": "assets/reference/equipment-completion/source-manifest.json",
+      "source_manifest_sha256": "9de8fc5d96f16f69ff0a0f7dfd51c78df4f30810d654f38c8ca93018460bdfd0"
+    }
+  ],
+  "manifest": "854_156383",
+  "runtime_rules": {
+    "path": "Assets/Official/Equipment/Runtime/equipment-runtime-rules.json",
+    "sha256": "6217579aef537d1bebdf600ee0ebb3dfb449ec8596ef27af65e88e65bbaadb9a"
+  },
+  "source_manifests": [
+    {
+      "path": "assets/reference/official-city/source-manifest.json",
+      "sha256": "7553bcfe66fd4dc09a5f8e43d5f196bdcf863ea491bc648b56b99ea556d41c81"
+    },
+    {
+      "path": "assets/reference/equipment-fidelity/source-manifest.json",
+      "sha256": "ab3ec3860f02d8bef3884306dbb921cf189b90886df210b7c22d2bfe96530a18"
+    },
+    {
+      "path": "assets/reference/equipment-completion/source-manifest.json",
+      "sha256": "9de8fc5d96f16f69ff0a0f7dfd51c78df4f30810d654f38c8ca93018460bdfd0"
+    }
+  ],
+  "current_table_conversion": {
+    "manifest": "871_156598",
+    "source": "assets/reference/official-map/current-table-source-manifest.json",
+    "staged_sha256": "3f1282f0f5602bfbbfac9d042474c9a6d3d0bc6c4127b7f6e4d699d5f0ac92ee"
+  },
+  "current_output_conversion": {
+    "manifest": "871_156598",
+    "sources": [
+      {
+        "path": "assets/reference/official-map/current-table-source-manifest.json",
+        "sha256": "21f1e41a77d6e003ff243cdfeaef505dc01a35c15cb6cc3d2d016ff36873c006"
+      },
+      {
+        "path": "assets/reference/official-map/current-combat-source-manifest.json",
+        "sha256": "2dfc8bfc863a934456e46b9b7bd4dedf0993020b7e0f696128bd7cd3424c37a9"
+      },
+      {
+        "path": "assets/reference/official-map/current-material-source-manifest.json",
+        "sha256": "d30fc27907ed1281f4d59b05ad79328e9d563ed136fd1ec83106bfa23a22a005"
+      },
+      {
+        "path": "assets/reference/official-map/current-home-layers-source-manifest.json",
+        "sha256": "c4e2d68efabab0bc06e26966fdc51af0cd3591088c22521a785cd60304b0780f"
+      },
+      {
+        "path": "assets/reference/official-map/current-language-source-manifest.json",
+        "sha256": "dfea82d02831a50c4baa4556a1d591fe1a2d78ee398a84c77a897efce7b6586e"
+      },
+      {
+        "path": "assets/reference/character-creation/current-mesh-source-manifest.json",
+        "sha256": "54f85913886dcd62a4e5ccee9823ae295496a0dc06371c506bd9dbae44d62a52"
+      },
+      {
+        "path": "assets/reference/character-creation/current-native-prefabs-source-manifest.json",
+        "sha256": "d067eeb637f4f5274e38fbfecdf0897820e31ada1a884315bfdb9bfba69b36a8"
+      }
+    ]
+  }
+}

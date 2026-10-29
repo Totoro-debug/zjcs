@@ -1,0 +1,2832 @@
+{
+  "aggregate_manifest_sha256": "3a7c16e4487f23061978f703cee16e3c6e3580b89d56ff605e083da53db286cc",
+  "feedback_manifest_sha256": "eb0e4f06e93d07a6b6177a0e8e17bcfbb26601fa581cb6c0c95a607ced503707",
+  "manifest": "854_156383",
+  "output": {
+    "bytes": 3118034,
+    "path": "Assets/Official/Equipment/UI/equipment-ui.json",
+    "sha256": "3d333d7a0c83b59f587b8d259bb0fdcdc91935e3030012ed4960d2a8367f699c"
+  },
+  "panels": [
+    "equipment",
+    "equip_detail",
+    "equip_compare",
+    "item_equip",
+    "item_gem",
+    "equip_row",
+    "gem_merge_row",
+    "equip_promote",
+    "equip_promote_cell",
+    "equip_promote_bar",
+    "equip_promote_bar_row",
+    "equip_promote_prop",
+    "equip_gem_row",
+    "equip_inherit",
+    "equip_inherit_content",
+    "equip_inherit_rule",
+    "equip_select",
+    "equip_select_row",
+    "equip_resonance",
+    "equip_resonance_content",
+    "equip_resonance_row",
+    "equip_gem_slot",
+    "equip_select_detail",
+    "equip_inherit_prop",
+    "equip_inherit_select_prop",
+    "gem_detail",
+    "equip_term",
+    "equip_piece_detail",
+    "equip_choose",
+    "equip_choose_row",
+    "equip_bless_tip",
+    "equip_suit_tip",
+    "equip_piece_confirm",
+    "equip_term_skill_detail",
+    "equip_choose_icon",
+    "equip_level_tip",
+    "equip_piece_owned_hint",
+    "equip_level_tip_row",
+    "equip_detail_gem"
+  ],
+  "prefab_manifest_sha256": "ab3ec3860f02d8bef3884306dbb921cf189b90886df210b7c22d2bfe96530a18",
+  "resource_manifest": "assets/reference/official-city/source-manifest.json",
+  "resource_manifest_sha256": "7553bcfe66fd4dc09a5f8e43d5f196bdcf863ea491bc648b56b99ea556d41c81",
+  "source": "assets/official/ui.json",
+  "source_manifest": "assets/reference/equipment-completion/source-manifest.json",
+  "source_manifest_sha256": "9de8fc5d96f16f69ff0a0f7dfd51c78df4f30810d654f38c8ca93018460bdfd0",
+  "source_sha256": "bc3ab2cfd88032913957f35506a35d233664ccc6be5d843ebd9e6cb1937b1859",
+  "sprites": [
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/350-dc6c9c2703.png",
+      "sha256": "97c46f6b11b3e58c326eab583f0252316a1876815687d50e2ef51f372f89c50d",
+      "source": "assets/official/sprites/350-dc6c9c2703.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 128,
+        "name": "350",
+        "pivot": [
+          63.923879504203796,
+          63.923879504203796
+        ],
+        "ppu": 100.0,
+        "width": 128
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/351-99445eed31.png",
+      "sha256": "3474ca9741c17d1a330f351ff87d7a655c3e2686abead760c57a3f88baf0895e",
+      "source": "assets/official/sprites/351-99445eed31.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 128,
+        "name": "351",
+        "pivot": [
+          63.923879504203796,
+          63.923879504203796
+        ],
+        "ppu": 100.0,
+        "width": 128
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/BtnCheck_Nor-3b5c5a72eb.png",
+      "sha256": "2bb9ad0ab5fa6fb827cf6481e5aefec71bf79d692ba6fe4c34fce221e2f5c66e",
+      "source": "assets/official/sprites/BtnCheck_Nor-3b5c5a72eb.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 48,
+        "name": "BtnCheck_Nor",
+        "pivot": [
+          24.0,
+          24.0
+        ],
+        "ppu": 100.0,
+        "width": 48
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/BtnCheck_Sel-cbe9e7c698.png",
+      "sha256": "4f63d0933791a38a6037d7dc6ec2647f5fc29cf21cddd6f7d5c19319c3e874d0",
+      "source": "assets/official/sprites/BtnCheck_Sel-cbe9e7c698.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 48,
+        "name": "BtnCheck_Sel",
+        "pivot": [
+          24.0,
+          24.0
+        ],
+        "ppu": 100.0,
+        "width": 48
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/BtnConvert-5544f0d02e.png",
+      "sha256": "41f34609849432acbed2d61e1075c3a0590e06d8d5bdc85faa194218f852e60d",
+      "source": "assets/official/sprites/BtnConvert-5544f0d02e.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 80,
+        "name": "BtnConvert",
+        "pivot": [
+          40.0,
+          40.0
+        ],
+        "ppu": 100.0,
+        "width": 80
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/BtnExclamation-e046a83a12.png",
+      "sha256": "d4394fc93798db8d2d7f25d847932cdc88a21572a7b9a57a58ce6331f49242c3",
+      "source": "assets/official/sprites/BtnExclamation-e046a83a12.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 48,
+        "name": "BtnExclamation",
+        "pivot": [
+          24.0,
+          24.0
+        ],
+        "ppu": 100.0,
+        "width": 48
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/BtnExclamation_Bless-ab4c1fa1b7.png",
+      "sha256": "d714b1165f55c1d89a4b52c8311f6aa00a246fe623a6de8d9ebb6e4b68afb3dd",
+      "source": "assets/official/sprites/BtnExclamation_Bless-ab4c1fa1b7.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 48,
+        "name": "BtnExclamation_Bless",
+        "pivot": [
+          24.0,
+          24.0
+        ],
+        "ppu": 100.0,
+        "width": 48
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/BtnGo-ec076ecdd8.png",
+      "sha256": "8782e881707d3b47a8b5b09e6257a21c94eaf9e5fa6a0189fef5f032b4e67dee",
+      "source": "assets/official/sprites/BtnGo-ec076ecdd8.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 48,
+        "name": "BtnGo",
+        "pivot": [
+          24.0,
+          24.0
+        ],
+        "ppu": 100.0,
+        "width": 48
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/BtnHoldingItems_Off-60c5f72050.png",
+      "sha256": "371f4d515f9dd9c13fbb65e9983ccf21aa0ac1fea0263b4661a7a08bee29ffc4",
+      "source": "assets/official/sprites/BtnHoldingItems_Off-60c5f72050.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 59,
+        "name": "BtnHoldingItems_Off",
+        "pivot": [
+          29.5,
+          29.5
+        ],
+        "ppu": 100.0,
+        "width": 59
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/BtnHoldingItems_On-143c4447e2.png",
+      "sha256": "f539d4a3864733165ec06889e70ef7515efd700dc75996252e9472a9ed1a0243",
+      "source": "assets/official/sprites/BtnHoldingItems_On-143c4447e2.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 59,
+        "name": "BtnHoldingItems_On",
+        "pivot": [
+          29.5,
+          29.5
+        ],
+        "ppu": 100.0,
+        "width": 59
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/BtnNo-aa425a44c4.png",
+      "sha256": "fef0ddc59129e7a5136f6bac11369284e494e1964add4d2aea8901671756802a",
+      "source": "assets/official/sprites/BtnNo-aa425a44c4.png",
+      "sprite": {
+        "border": [
+          149.0,
+          0.0,
+          152.0,
+          0.0
+        ],
+        "height": 105,
+        "name": "BtnNo",
+        "pivot": [
+          104.5,
+          52.5
+        ],
+        "ppu": 100.0,
+        "width": 209
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/BtnNo_Notice-83b8d58f37.png",
+      "sha256": "8fbc6d7da3c8a0033d47aeb4263108acce75dbcc906256f369bca7d0c30572b8",
+      "source": "assets/official/sprites/BtnNo_Notice-83b8d58f37.png",
+      "sprite": {
+        "border": [
+          39.0,
+          0.0,
+          39.0,
+          0.0
+        ],
+        "height": 80,
+        "name": "BtnNo_Notice",
+        "pivot": [
+          40.5,
+          40.0
+        ],
+        "ppu": 100.0,
+        "width": 81
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/BtnOk-623eab01b4.png",
+      "sha256": "27952bd12b6b60e0cfcc870ea8e3278f0aa47cd48c7048a1a7868b745648d599",
+      "source": "assets/official/sprites/BtnOk-623eab01b4.png",
+      "sprite": {
+        "border": [
+          104.0,
+          0.0,
+          105.0,
+          0.0
+        ],
+        "height": 105,
+        "name": "BtnOk",
+        "pivot": [
+          104.5,
+          52.5
+        ],
+        "ppu": 100.0,
+        "width": 209
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/BtnSet-89dc585752.png",
+      "sha256": "c5b23335131c112660715a8dca742fc91a2992fc9718b1c4240b1b1202324763",
+      "source": "assets/official/sprites/BtnSet-89dc585752.png",
+      "sprite": {
+        "border": [
+          42.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 68,
+        "name": "BtnSet",
+        "pivot": [
+          24.0,
+          34.0
+        ],
+        "ppu": 100.0,
+        "width": 48
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ButButton-679524439f.png",
+      "sha256": "566b3ad36ae52425453e4a85ea30e2fd20730c3238ef7e688d36b35efcea710d",
+      "source": "assets/official/sprites/ButButton-679524439f.png",
+      "sprite": {
+        "border": [
+          78.0,
+          0.0,
+          77.0,
+          0.0
+        ],
+        "height": 76,
+        "name": "ButButton",
+        "pivot": [
+          80.0,
+          38.0
+        ],
+        "ppu": 100.0,
+        "width": 160
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/C_none-fa3e084e40.png",
+      "sha256": "d73d644cfd6ed4f7f4f28801217e9712825adf277bf39eb37543dc5d932423b4",
+      "source": "assets/official/sprites/C_none-fa3e084e40.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 16,
+        "name": "C_none",
+        "pivot": [
+          8.0,
+          8.0
+        ],
+        "ppu": 100.0,
+        "width": 16
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/EquipQualityBg_Blue-811e3b363e.png",
+      "sha256": "94812ab6037af8476f10727fc012dac01af65d8c4521b95f6dc835b06d2c00bf",
+      "source": "assets/official/sprites/EquipQualityBg_Blue-811e3b363e.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 110,
+        "name": "EquipQualityBg_Blue",
+        "pivot": [
+          111.0,
+          55.0
+        ],
+        "ppu": 100.0,
+        "width": 222
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/IconRemind-e81e057cb3.png",
+      "sha256": "c47ec3c1b7edf49d55530494962aa4fd9fda0b8570f0cc311d2e2a0d86237321",
+      "source": "assets/official/sprites/IconRemind-e81e057cb3.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 194,
+        "name": "IconRemind",
+        "pivot": [
+          120.0,
+          97.0
+        ],
+        "ppu": 100.0,
+        "width": 240
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/IconRemind3-b56ecd66a6.png",
+      "sha256": "d9622f51749e04867a92bc78c08b46d20704193ee1f78e6023f0cd52ac6be88e",
+      "source": "assets/official/sprites/IconRemind3-b56ecd66a6.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 196,
+        "name": "IconRemind3",
+        "pivot": [
+          120.0,
+          98.0
+        ],
+        "ppu": 100.0,
+        "width": 240
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgArrow-a9dc698e46.png",
+      "sha256": "46916e3d2516272616baf7b2087e966319d51c1b877635700cc673d7a32ae2af",
+      "source": "assets/official/sprites/ImgArrow-a9dc698e46.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 57,
+        "name": "ImgArrow",
+        "pivot": [
+          44.5,
+          28.5
+        ],
+        "ppu": 100.0,
+        "width": 89
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgArrow_2-759294d034.png",
+      "sha256": "223d0782c63e020c001b402fd6b8a3da73d1076c857d7dca8fbc2dbf466c07d6",
+      "source": "assets/official/sprites/ImgArrow_2-759294d034.png",
+      "sprite": {
+        "border": [
+          0.0,
+          29.0,
+          0.0,
+          29.0
+        ],
+        "height": 59,
+        "name": "ImgArrow_2",
+        "pivot": [
+          20.0,
+          29.5
+        ],
+        "ppu": 100.0,
+        "width": 40
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBgAtt-9ad59b702c.png",
+      "sha256": "9804af57556ce5feac47c50457f2e00d2929ab2902fac9bfe8311c52f9801e6c",
+      "source": "assets/official/sprites/ImgBgAtt-9ad59b702c.png",
+      "sprite": {
+        "border": [
+          37.0,
+          0.0,
+          37.0,
+          0.0
+        ],
+        "height": 60,
+        "name": "ImgBgAtt",
+        "pivot": [
+          38.0,
+          30.0
+        ],
+        "ppu": 100.0,
+        "width": 76
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBgTitle-39d2ed304a.png",
+      "sha256": "cdb9d06b0842e0a4765ce609f8019cb9a3caa257323187565461bde79887db36",
+      "source": "assets/official/sprites/ImgBgTitle-39d2ed304a.png",
+      "sprite": {
+        "border": [
+          9.0,
+          9.0,
+          9.0,
+          9.0
+        ],
+        "height": 40,
+        "name": "ImgBgTitle",
+        "pivot": [
+          20.0,
+          20.0
+        ],
+        "ppu": 100.0,
+        "width": 40
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBgWenLi_Passive-006c03ee2a.png",
+      "sha256": "4fe7b51fea3351cf2b48f620b48c1e1b68f81b91764f467128420eb4a052336a",
+      "source": "assets/official/sprites/ImgBgWenLi_Passive-006c03ee2a.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 256,
+        "name": "ImgBgWenLi_Passive",
+        "pivot": [
+          126.9238795042038,
+          128.0
+        ],
+        "ppu": 100.0,
+        "width": 254
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBgWenLi_Skill-76793ed0da.png",
+      "sha256": "dbfd0940d6fa1d144e0e85518c41b892e67be0625459b7ead45b7c87051d2d34",
+      "source": "assets/official/sprites/ImgBgWenLi_Skill-76793ed0da.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 252,
+        "name": "ImgBgWenLi_Skill",
+        "pivot": [
+          125.92387962341309,
+          125.92387962341309
+        ],
+        "ppu": 100.0,
+        "width": 248
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBg_CountText-43bcc7f5cb.png",
+      "sha256": "31498f0e8895dce861cf88210bb81c26ac96ed09df5556edc6614418fc574f71",
+      "source": "assets/official/sprites/ImgBg_CountText-43bcc7f5cb.png",
+      "sprite": {
+        "border": [
+          26.0,
+          18.0,
+          26.0,
+          18.0
+        ],
+        "height": 39,
+        "name": "ImgBg_CountText",
+        "pivot": [
+          27.5,
+          19.5
+        ],
+        "ppu": 100.0,
+        "width": 55
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBg_Hourglass-413b857a69.png",
+      "sha256": "6c9455ad29a6eb42f74c99f1a3b68191f5291453cc6670f207da106dc67ce35d",
+      "source": "assets/official/sprites/ImgBg_Hourglass-413b857a69.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 72,
+        "name": "ImgBg_Hourglass",
+        "pivot": [
+          35.923879504203796,
+          36.0
+        ],
+        "ppu": 100.0,
+        "width": 72
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBg_JianBian-1b7a36041b.png",
+      "sha256": "d6a03a2097e9e503df63184a4c4a0b273a713ba72b32ac84786365d61c597f44",
+      "source": "assets/official/sprites/ImgBg_JianBian-1b7a36041b.png",
+      "sprite": {
+        "border": [
+          1.0,
+          1.0,
+          1.0,
+          524.0
+        ],
+        "height": 525,
+        "name": "ImgBg_JianBian",
+        "pivot": [
+          1.5,
+          262.5
+        ],
+        "ppu": 100.0,
+        "width": 3
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBg_List-dbd0e6cb96.png",
+      "sha256": "d73b106df0a68000d94bbfe5ee13dd658202b42957ea9f74087f153b3089a785",
+      "source": "assets/official/sprites/ImgBg_List-dbd0e6cb96.png",
+      "sprite": {
+        "border": [
+          27.0,
+          27.0,
+          27.0,
+          27.0
+        ],
+        "height": 55,
+        "name": "ImgBg_List",
+        "pivot": [
+          27.5,
+          27.5
+        ],
+        "ppu": 100.0,
+        "width": 55
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBg_MainListItem-8fd36c6945.png",
+      "sha256": "c2af045dc407ed816ead0815d64982448e6cb662c8feb20e1b78c8551147b316",
+      "source": "assets/official/sprites/ImgBg_MainListItem-8fd36c6945.png",
+      "sprite": {
+        "border": [
+          49.0,
+          45.0,
+          49.0,
+          45.0
+        ],
+        "height": 94,
+        "name": "ImgBg_MainListItem",
+        "pivot": [
+          53.0,
+          47.0
+        ],
+        "ppu": 100.0,
+        "width": 106
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBg_PopUps-50a1e65068.png",
+      "sha256": "20ee64ac9f8b6824c26ca389c68ecd05b2862d66305dc2bfb6fcec4b6b113920",
+      "source": "assets/official/sprites/ImgBg_PopUps-50a1e65068.png",
+      "sprite": {
+        "border": [
+          106.0,
+          87.0,
+          111.0,
+          132.0
+        ],
+        "height": 222,
+        "name": "ImgBg_PopUps",
+        "pivot": [
+          111.5,
+          111.0
+        ],
+        "ppu": 100.0,
+        "width": 223
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBg_PopUps3-07e7c23042.png",
+      "sha256": "b7323efa0c9cd373d5329f8797cdec853c37df6abcfcb3ee960446876489143b",
+      "source": "assets/official/sprites/ImgBg_PopUps3-07e7c23042.png",
+      "sprite": {
+        "border": [
+          68.0,
+          68.0,
+          68.0,
+          135.0
+        ],
+        "height": 208,
+        "name": "ImgBg_PopUps3",
+        "pivot": [
+          74.0,
+          104.0
+        ],
+        "ppu": 100.0,
+        "width": 148
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBg_PopUpsHorn-dc246cac5b.png",
+      "sha256": "7451ffe917ecf82907565ef1667456b1c6e565ab69f86a32fb1e39694240550d",
+      "source": "assets/official/sprites/ImgBg_PopUpsHorn-dc246cac5b.png",
+      "sprite": {
+        "border": [
+          53.0,
+          53.0,
+          53.0,
+          53.0
+        ],
+        "height": 107,
+        "name": "ImgBg_PopUpsHorn",
+        "pivot": [
+          53.5,
+          53.5
+        ],
+        "ppu": 100.0,
+        "width": 107
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBg_PopUpsTitle-e69fb4d9d0.png",
+      "sha256": "4b683e8fe6816c3ff7f4e127beb8e577cfb5e9331626e5b31fa81595a3064599",
+      "source": "assets/official/sprites/ImgBg_PopUpsTitle-e69fb4d9d0.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 86,
+        "name": "ImgBg_PopUpsTitle",
+        "pivot": [
+          127.0,
+          43.0
+        ],
+        "ppu": 100.0,
+        "width": 254
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBg_PopUpsWenLi-2cf247fc12.png",
+      "sha256": "68058e4df2fc9aa171d0e654156dedd97995be2187490d9e0a0c798b4d3a5339",
+      "source": "assets/official/sprites/ImgBg_PopUpsWenLi-2cf247fc12.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 173,
+        "name": "ImgBg_PopUpsWenLi",
+        "pivot": [
+          32.0,
+          86.5
+        ],
+        "ppu": 100.0,
+        "width": 64
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBg_Round-95f905868e.png",
+      "sha256": "6da0b8ad6b45f68682e2e0dceff7e5044f9bd14e2878e66b4b475b6796c1326e",
+      "source": "assets/official/sprites/ImgBg_Round-95f905868e.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 52,
+        "name": "ImgBg_Round",
+        "pivot": [
+          26.0,
+          26.0
+        ],
+        "ppu": 100.0,
+        "width": 52
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBg_Title-497505d3a3.png",
+      "sha256": "3ea5bdd779e6c659d7721f82ea51d654e651838d6eff5de1e6291db57ce95b5b",
+      "source": "assets/official/sprites/ImgBg_Title-497505d3a3.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 235,
+        "name": "ImgBg_Title",
+        "pivot": [
+          116.92387962341309,
+          117.9238795042038
+        ],
+        "ppu": 100.0,
+        "width": 234
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBg_TransferNPC8-24489bb64e.png",
+      "sha256": "fee739ef9744cfb810a85f5d6710bc43b6dd78e4800b2c073d54690a5f1a2c01",
+      "source": "assets/official/sprites/ImgBg_TransferNPC8-24489bb64e.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 117,
+        "name": "ImgBg_TransferNPC8",
+        "pivot": [
+          38.923879623413086,
+          78.0
+        ],
+        "ppu": 100.0,
+        "width": 88
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBg_cicle-c3874b1ef2.png",
+      "sha256": "11fdbfbbf358e7621a3780ab4f586cf91f8f88d9a0ed6066030c9ebf0c2c2820",
+      "source": "assets/official/sprites/ImgBg_cicle-c3874b1ef2.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 360,
+        "name": "ImgBg_cicle",
+        "pivot": [
+          154.0,
+          179.9238795042038
+        ],
+        "ppu": 100.0,
+        "width": 308
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBg_collect-0d92844dc4.png",
+      "sha256": "65f7481f314e42d16843b452d1e7dd1e9ead7c8e14aa73b0c72474c91c59471f",
+      "source": "assets/official/sprites/ImgBg_collect-0d92844dc4.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 32,
+        "name": "ImgBg_collect",
+        "pivot": [
+          16.0,
+          16.0
+        ],
+        "ppu": 100.0,
+        "width": 32
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBg_empty-0c1938c668.png",
+      "sha256": "5c7754ddf3ae2f39b6593762a6a939466a4b7bc7a3b114563686f7fa6ee6b009",
+      "source": "assets/official/sprites/ImgBg_empty-0c1938c668.png",
+      "sprite": {
+        "border": [
+          32.0,
+          193.0,
+          86.0,
+          48.0
+        ],
+        "height": 244,
+        "name": "ImgBg_empty",
+        "pivot": [
+          62.0,
+          122.0
+        ],
+        "ppu": 100.0,
+        "width": 124
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBg_equip-2caa04e0a1.png",
+      "sha256": "0e575ff13f1a390c954c8d8f93b842389f1b8d9e7720d9a3418ac1a8f5de3c42",
+      "source": "assets/official/sprites/ImgBg_equip-2caa04e0a1.png",
+      "sprite": {
+        "border": [
+          29.0,
+          194.0,
+          90.0,
+          47.0
+        ],
+        "height": 244,
+        "name": "ImgBg_equip",
+        "pivot": [
+          62.0,
+          122.0
+        ],
+        "ppu": 100.0,
+        "width": 124
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBg_lv-fe351b832e.png",
+      "sha256": "4d3ff41951f576546b4a354bb4afc3b96223831a98efb683f591214a22fb97b9",
+      "source": "assets/official/sprites/ImgBg_lv-fe351b832e.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 48,
+        "name": "ImgBg_lv",
+        "pivot": [
+          76.9238795042038,
+          24.0
+        ],
+        "ppu": 100.0,
+        "width": 155
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBg_uncollect-1632ad87b3.png",
+      "sha256": "b9fa238e76e5b43a516b4ea1a57efa30fe6567f3fc9d11e510b4ce66da0e5892",
+      "source": "assets/official/sprites/ImgBg_uncollect-1632ad87b3.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 32,
+        "name": "ImgBg_uncollect",
+        "pivot": [
+          16.0,
+          16.0
+        ],
+        "ppu": 100.0,
+        "width": 32
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBlue-797552ab98.png",
+      "sha256": "852756b23165ca4c2a377acee93125060d2948f3157b9b29094debbd5aa8d913",
+      "source": "assets/official/sprites/ImgBlue-797552ab98.png",
+      "sprite": {
+        "border": [
+          19.0,
+          0.0,
+          19.0,
+          0.0
+        ],
+        "height": 40,
+        "name": "ImgBlue",
+        "pivot": [
+          20.0,
+          20.0
+        ],
+        "ppu": 100.0,
+        "width": 40
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBlueDot-a28b58f9f6.png",
+      "sha256": "d245e092178e3753282c32c895dc1f8c050c9013f4dbfb50c59be696074a3261",
+      "source": "assets/official/sprites/ImgBlueDot-a28b58f9f6.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 40,
+        "name": "ImgBlueDot",
+        "pivot": [
+          20.0,
+          20.0
+        ],
+        "ppu": 100.0,
+        "width": 40
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgBlue_Upgrade-12b45e0972.png",
+      "sha256": "f77095c4c9da7a0b4544f2117b6e048084f17d724229e0992de796fe7add22f1",
+      "source": "assets/official/sprites/ImgBlue_Upgrade-12b45e0972.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 40,
+        "name": "ImgBlue_Upgrade",
+        "pivot": [
+          20.0,
+          20.0
+        ],
+        "ppu": 100.0,
+        "width": 40
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgCompleted-7226b33298.png",
+      "sha256": "1f7f338f7c1cf1a718fb87d1a2085f6afc97bacda5acee207e33951cc6baafcd",
+      "source": "assets/official/sprites/ImgCompleted-7226b33298.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 172,
+        "name": "ImgCompleted",
+        "pivot": [
+          86.0,
+          85.98532783985138
+        ],
+        "ppu": 100.0,
+        "width": 172
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgCostMoneyBtn_Bg-53e016a80d.png",
+      "sha256": "d3ed60b8e3a8b4a013f36655274e7f95928bf5b818bb30a5c26df6d94a8812ae",
+      "source": "assets/official/sprites/ImgCostMoneyBtn_Bg-53e016a80d.png",
+      "sprite": {
+        "border": [
+          20.0,
+          19.0,
+          20.0,
+          20.0
+        ],
+        "height": 39,
+        "name": "ImgCostMoneyBtn_Bg",
+        "pivot": [
+          20.0,
+          19.5
+        ],
+        "ppu": 100.0,
+        "width": 40
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgDot-4ed3349f24.png",
+      "sha256": "8b8bd913abe31a5738fdf0097288a9733704434a36c7ccc934b20c028216ecdb",
+      "source": "assets/official/sprites/ImgDot-4ed3349f24.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 180,
+        "name": "ImgDot",
+        "pivot": [
+          10.0,
+          90.0
+        ],
+        "ppu": 100.0,
+        "width": 20
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgDrop_Title2-e8c9abf761.png",
+      "sha256": "191c10068375be824230411adcb57b468a17c7d78ca7ef9f7d6a1322c9cb10ab",
+      "source": "assets/official/sprites/ImgDrop_Title2-e8c9abf761.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 6,
+        "name": "ImgDrop_Title2",
+        "pivot": [
+          4.0,
+          3.0
+        ],
+        "ppu": 100.0,
+        "width": 8
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgEquipListBg-dbadf2aec2.png",
+      "sha256": "f894e3a3e5d10f8028df4de2002e181695601427b3a6e33a51c279b1c9c96757",
+      "source": "assets/official/sprites/ImgEquipListBg-dbadf2aec2.png",
+      "sprite": {
+        "border": [
+          26.0,
+          24.0,
+          26.0,
+          26.0
+        ],
+        "height": 50,
+        "name": "ImgEquipListBg",
+        "pivot": [
+          26.0,
+          25.0
+        ],
+        "ppu": 100.0,
+        "width": 52
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgEquipListBg_Nor-0149e24621.png",
+      "sha256": "bd50ad8f5ff918b323b411c879c15a06c6918362c9663c1e46b9e92750a94bb4",
+      "source": "assets/official/sprites/ImgEquipListBg_Nor-0149e24621.png",
+      "sprite": {
+        "border": [
+          62.0,
+          58.0,
+          62.0,
+          58.0
+        ],
+        "height": 117,
+        "name": "ImgEquipListBg_Nor",
+        "pivot": [
+          62.5,
+          58.5
+        ],
+        "ppu": 100.0,
+        "width": 125
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgEquipListBg_Pre-1d1e37cae6.png",
+      "sha256": "f6eab5fe07ad5198210db8b354c61c0a037468c385d56babf5212df86b3bf0b5",
+      "source": "assets/official/sprites/ImgEquipListBg_Pre-1d1e37cae6.png",
+      "sprite": {
+        "border": [
+          62.0,
+          58.0,
+          62.0,
+          58.0
+        ],
+        "height": 119,
+        "name": "ImgEquipListBg_Pre",
+        "pivot": [
+          63.5,
+          59.5
+        ],
+        "ppu": 100.0,
+        "width": 127
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgEquipNameBg-59d55260ec.png",
+      "sha256": "a2a58af260c96ad55e40a666d742c88ff1e179f2f98b0f92b617c6f3b7208186",
+      "source": "assets/official/sprites/ImgEquipNameBg-59d55260ec.png",
+      "sprite": {
+        "border": [
+          40.0,
+          0.0,
+          40.0,
+          0.0
+        ],
+        "height": 71,
+        "name": "ImgEquipNameBg",
+        "pivot": [
+          41.0,
+          35.5
+        ],
+        "ppu": 100.0,
+        "width": 82
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgEquipped01-f85f91d6ff.png",
+      "sha256": "f9ca67498b661f4e7c67cc0c9a292f0a5af126ac48e50f31b692a6f1a5123e95",
+      "source": "assets/official/sprites/ImgEquipped01-f85f91d6ff.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 78,
+        "name": "ImgEquipped01",
+        "pivot": [
+          35.98708748817444,
+          38.923879504203796
+        ],
+        "ppu": 100.0,
+        "width": 72
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgEquipped02-54bb63a835.png",
+      "sha256": "394d806c4432d2c0c6d32f21e6bf1920fca0fedf9b53941e77ddc928fba14b46",
+      "source": "assets/official/sprites/ImgEquipped02-54bb63a835.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 58,
+        "name": "ImgEquipped02",
+        "pivot": [
+          24.923879623413086,
+          28.923879504203796
+        ],
+        "ppu": 100.0,
+        "width": 49
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgGemBg-51892a3268.png",
+      "sha256": "422375d1329ecee10b85e2f20f38df632434895bf1fceacecabaee7d7197de3f",
+      "source": "assets/official/sprites/ImgGemBg-51892a3268.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 120,
+        "name": "ImgGemBg",
+        "pivot": [
+          60.0,
+          60.0
+        ],
+        "ppu": 100.0,
+        "width": 120
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgGlowTxt_Bless-ffd4635bdb.png",
+      "sha256": "4a5d7a60e491e85d1903ea9b4c6b5593ffe06dfb22d6bd7e779dc6af8c5e49bf",
+      "source": "assets/official/sprites/ImgGlowTxt_Bless-ffd4635bdb.png",
+      "sprite": {
+        "border": [
+          129.0,
+          19.0,
+          127.0,
+          18.0
+        ],
+        "height": 54,
+        "name": "ImgGlowTxt_Bless",
+        "pivot": [
+          27.0,
+          27.0
+        ],
+        "ppu": 100.0,
+        "width": 54
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgGlowTxt_Bless_02-8476ec15aa.png",
+      "sha256": "a225b30f9f017a848818ad3b97d0db5e8830e99cad80ec0e6b855e34c09b4cfa",
+      "source": "assets/official/sprites/ImgGlowTxt_Bless_02-8476ec15aa.png",
+      "sprite": {
+        "border": [
+          152.0,
+          0.0,
+          153.0,
+          0.0
+        ],
+        "height": 46,
+        "name": "ImgGlowTxt_Bless_02",
+        "pivot": [
+          156.0,
+          23.0
+        ],
+        "ppu": 100.0,
+        "width": 312
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgGlowTxt_Bless_03-da8a58f4b3.png",
+      "sha256": "f2bf98d585f8c096015a9aec0d9fa1ab7abb41300679c49f75f7d402e29c748a",
+      "source": "assets/official/sprites/ImgGlowTxt_Bless_03-da8a58f4b3.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 54,
+        "name": "ImgGlowTxt_Bless_03",
+        "pivot": [
+          27.0,
+          27.0
+        ],
+        "ppu": 100.0,
+        "width": 54
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgGlowTxt_Bless_04-78e9b6c409.png",
+      "sha256": "a302e962365aef2d4f09d4420f5c91d2812bb6f37e6cd23a619e169d11101e86",
+      "source": "assets/official/sprites/ImgGlowTxt_Bless_04-78e9b6c409.png",
+      "sprite": {
+        "border": [
+          152.0,
+          0.0,
+          153.0,
+          0.0
+        ],
+        "height": 46,
+        "name": "ImgGlowTxt_Bless_04",
+        "pivot": [
+          156.0,
+          23.0
+        ],
+        "ppu": 100.0,
+        "width": 312
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgInfoBG_Bless-dd1ae407b4.png",
+      "sha256": "c8ec25fba16cb8e237784da66e5ec2305f5c405f0fe34ee9d7e1e6c5d89acc8e",
+      "source": "assets/official/sprites/ImgInfoBG_Bless-dd1ae407b4.png",
+      "sprite": {
+        "border": [
+          22.0,
+          22.0,
+          22.0,
+          22.0
+        ],
+        "height": 81,
+        "name": "ImgInfoBG_Bless",
+        "pivot": [
+          40.5,
+          40.5
+        ],
+        "ppu": 100.0,
+        "width": 81
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgInfoBg_SuitWear-45170d07ad.png",
+      "sha256": "697ee6e57b973b1dcc381d52a424be4a792ace8feb9f8808b7952ab5b3881d82",
+      "source": "assets/official/sprites/ImgInfoBg_SuitWear-45170d07ad.png",
+      "sprite": {
+        "border": [
+          38.0,
+          0.0,
+          38.0,
+          0.0
+        ],
+        "height": 43,
+        "name": "ImgInfoBg_SuitWear",
+        "pivot": [
+          38.0,
+          21.5
+        ],
+        "ppu": 100.0,
+        "width": 76
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgInfoBg_SuitWear_QiJi-0bf72f730f.png",
+      "sha256": "f9242d1f8832544cb5e1ab02f268998c2518e13ea07457d6b811f33bd4ced4cc",
+      "source": "assets/official/sprites/ImgInfoBg_SuitWear_QiJi-0bf72f730f.png",
+      "sprite": {
+        "border": [
+          38.0,
+          0.0,
+          38.0,
+          0.0
+        ],
+        "height": 43,
+        "name": "ImgInfoBg_SuitWear_QiJi",
+        "pivot": [
+          38.0,
+          21.5
+        ],
+        "ppu": 100.0,
+        "width": 76
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgInfoBg_SuitWear_Unuse-e33300cb40.png",
+      "sha256": "344476349d57265fea5a6d32a747aab392a9990e99b20693b7d1027b567c0c85",
+      "source": "assets/official/sprites/ImgInfoBg_SuitWear_Unuse-e33300cb40.png",
+      "sprite": {
+        "border": [
+          38.0,
+          0.0,
+          38.0,
+          0.0
+        ],
+        "height": 43,
+        "name": "ImgInfoBg_SuitWear_Unuse",
+        "pivot": [
+          38.0,
+          21.5
+        ],
+        "ppu": 100.0,
+        "width": 76
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgItemEmpty-725d8512ac.png",
+      "sha256": "7b3c0f610eff0813145ac3d180f5adca4afc5596ded8fa4fbdb5743b81d6ae76",
+      "source": "assets/official/sprites/ImgItemEmpty-725d8512ac.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 181,
+        "name": "ImgItemEmpty",
+        "pivot": [
+          90.0,
+          90.5
+        ],
+        "ppu": 100.0,
+        "width": 180
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgItemIcon_NumBg-8659cef746.png",
+      "sha256": "3e82a7afe162f64fa8331da266940cd9a5d00a83e631ea7495fcb520a956cae4",
+      "source": "assets/official/sprites/ImgItemIcon_NumBg-8659cef746.png",
+      "sprite": {
+        "border": [
+          14.0,
+          17.0,
+          10.0,
+          18.0
+        ],
+        "height": 35,
+        "name": "ImgItemIcon_NumBg",
+        "pivot": [
+          12.0,
+          17.5
+        ],
+        "ppu": 100.0,
+        "width": 24
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgItemSelect-17c983d02d.png",
+      "sha256": "de48b6abe9e4805b08cc1e54bbc6425b793a4c4239ab73340f0d78af203d68c3",
+      "source": "assets/official/sprites/ImgItemSelect-17c983d02d.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 200,
+        "name": "ImgItemSelect",
+        "pivot": [
+          100.0,
+          100.0
+        ],
+        "ppu": 100.0,
+        "width": 200
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgItemTipBg-219b4fb11a.png",
+      "sha256": "ac615f7615e8b878c4866c6f4999f1f77f578d87bc9551ad484b8950b36e3dce",
+      "source": "assets/official/sprites/ImgItemTipBg-219b4fb11a.png",
+      "sprite": {
+        "border": [
+          7.0,
+          0.0,
+          7.0,
+          0.0
+        ],
+        "height": 44,
+        "name": "ImgItemTipBg",
+        "pivot": [
+          8.0,
+          22.0
+        ],
+        "ppu": 100.0,
+        "width": 16
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgItem_CombatRating_02-3fe502f05d.png",
+      "sha256": "50f22256397a162c59662befdb168cc04f731ac2f58553efd1c85319177ceed2",
+      "source": "assets/official/sprites/ImgItem_CombatRating_02-3fe502f05d.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 115,
+        "name": "ImgItem_CombatRating_02",
+        "pivot": [
+          62.923879623413086,
+          56.923879623413086
+        ],
+        "ppu": 100.0,
+        "width": 127
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgItem_Lock-9921207e8c.png",
+      "sha256": "b0ae7d99caf0c84af229f6907a9be57fb382394e07041c9d34b58b68f53090bf",
+      "source": "assets/official/sprites/ImgItem_Lock-9921207e8c.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 37,
+        "name": "ImgItem_Lock",
+        "pivot": [
+          16.5,
+          18.5
+        ],
+        "ppu": 100.0,
+        "width": 33
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgItem_Lock2-148ba0ff6e.png",
+      "sha256": "ad367ebab347bd4b6fa24c7799628789c64e20864966f73d886d1474989ba217",
+      "source": "assets/official/sprites/ImgItem_Lock2-148ba0ff6e.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 70,
+        "name": "ImgItem_Lock2",
+        "pivot": [
+          29.973249435424805,
+          33.97324895858765
+        ],
+        "ppu": 100.0,
+        "width": 61
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgItem_UnLock-52519ed47d.png",
+      "sha256": "7a041ba347f2ce70c46e1c7fe43a82d57c477b1bf08b6c55a7d9305be3015804",
+      "source": "assets/official/sprites/ImgItem_UnLock-52519ed47d.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 31,
+        "name": "ImgItem_UnLock",
+        "pivot": [
+          12.5,
+          15.5
+        ],
+        "ppu": 100.0,
+        "width": 25
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgLightElement-0a6acd7d50.png",
+      "sha256": "85cc742aec8a528c93b57af87a430860dc5e637ff6614cef0db5b1f4e53f8e1a",
+      "source": "assets/official/sprites/ImgLightElement-0a6acd7d50.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 148,
+        "name": "ImgLightElement",
+        "pivot": [
+          74.0,
+          73.9238795042038
+        ],
+        "ppu": 100.0,
+        "width": 148
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgLine-3dc3678e90.png",
+      "sha256": "273bb8cd8ce1cb9a6a292b842bc7b2383bb185a08ac8c0dd88c08a3e90cb46f4",
+      "source": "assets/official/sprites/ImgLine-3dc3678e90.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 43,
+        "name": "ImgLine",
+        "pivot": [
+          207.5,
+          21.5
+        ],
+        "ppu": 100.0,
+        "width": 415
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgLine_MapSmall-d47df27e8b.png",
+      "sha256": "2eca51f2e57289d485f4a2faf603ec1c57f8ad57831b88d24a3adf10de161e6d",
+      "source": "assets/official/sprites/ImgLine_MapSmall-d47df27e8b.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 3,
+        "name": "ImgLine_MapSmall",
+        "pivot": [
+          88.5,
+          1.5
+        ],
+        "ppu": 100.0,
+        "width": 177
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgLine_Title2-e62cc03282.png",
+      "sha256": "0ab0532bd61059221f243ce61024f8467d8e3ec23986e61abf0c4b94f56cefe2",
+      "source": "assets/official/sprites/ImgLine_Title2-e62cc03282.png",
+      "sprite": {
+        "border": [
+          5.0,
+          0.0,
+          16.0,
+          0.0
+        ],
+        "height": 5,
+        "name": "ImgLine_Title2",
+        "pivot": [
+          11.0,
+          2.5
+        ],
+        "ppu": 100.0,
+        "width": 22
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgListBg_Gem-7416eaf766.png",
+      "sha256": "15986fd1c609e397b3ba0a8269f5530e0a6f7769cd367764a7989a811d650b76",
+      "source": "assets/official/sprites/ImgListBg_Gem-7416eaf766.png",
+      "sprite": {
+        "border": [
+          53.0,
+          52.0,
+          53.0,
+          52.0
+        ],
+        "height": 107,
+        "name": "ImgListBg_Gem",
+        "pivot": [
+          55.0,
+          53.5
+        ],
+        "ppu": 100.0,
+        "width": 110
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgListBg_Promote-a9fcdf4808.png",
+      "sha256": "23cdea7912c80335f9ae7f84943b5fe949e55ccdfb01bdf95095bd855d24e20e",
+      "source": "assets/official/sprites/ImgListBg_Promote-a9fcdf4808.png",
+      "sprite": {
+        "border": [
+          5.0,
+          0.0,
+          5.0,
+          0.0
+        ],
+        "height": 102,
+        "name": "ImgListBg_Promote",
+        "pivot": [
+          5.0,
+          51.0
+        ],
+        "ppu": 100.0,
+        "width": 10
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgLoad2_Load-0254e226e1.png",
+      "sha256": "095dd3e30679e574fd4b2d01fc6b46d8cc925215b7ed5554e57037cb28dcf2e3",
+      "source": "assets/official/sprites/ImgLoad2_Load-0254e226e1.png",
+      "sprite": {
+        "border": [
+          19.0,
+          0.0,
+          20.0,
+          0.0
+        ],
+        "height": 29,
+        "name": "ImgLoad2_Load",
+        "pivot": [
+          20.5,
+          14.5
+        ],
+        "ppu": 100.0,
+        "width": 41
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgLvBg-a924c99ce5.png",
+      "sha256": "0868b85fea261248b0c50618e4e19ffa52bfd8946281b2cb5b7ceb836a6a2f19",
+      "source": "assets/official/sprites/ImgLvBg-a924c99ce5.png",
+      "sprite": {
+        "border": [
+          150.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        "height": 58,
+        "name": "ImgLvBg",
+        "pivot": [
+          75.5,
+          29.0
+        ],
+        "ppu": 100.0,
+        "width": 151
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgMask-24a3320123.png",
+      "sha256": "4b8fcf1e081b5f29b8e698c0dd9d297a11e0ac8a992e25d43d0d175ef805dfea",
+      "source": "assets/official/sprites/ImgMask-24a3320123.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 143,
+        "name": "ImgMask",
+        "pivot": [
+          71.5,
+          71.5
+        ],
+        "ppu": 100.0,
+        "width": 143
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgNew-9b7c346dac.png",
+      "sha256": "f37ed6720455fd649b8458d715dccfc2771655cdf4b8cb8d2f5598e5056a1021",
+      "source": "assets/official/sprites/ImgNew-9b7c346dac.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 80,
+        "name": "ImgNew",
+        "pivot": [
+          40.0,
+          40.0
+        ],
+        "ppu": 100.0,
+        "width": 80
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgPageBig_Bg-bf19db1c71.png",
+      "sha256": "07e9a6d9d969f08440efa4fcfaec2810ec3c9d14012f957359b8a2d1b67e0784",
+      "source": "assets/official/sprites/ImgPageBig_Bg-bf19db1c71.png",
+      "sprite": {
+        "border": [
+          51.0,
+          0.0,
+          51.0,
+          0.0
+        ],
+        "height": 91,
+        "name": "ImgPageBig_Bg",
+        "pivot": [
+          52.0,
+          45.5
+        ],
+        "ppu": 100.0,
+        "width": 104
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgPresent-b98847ead9.png",
+      "sha256": "7219a7c83e3717def8d3a6c4d35ed1616be716130eae0aeb446345f243a04686",
+      "source": "assets/official/sprites/ImgPresent-b98847ead9.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 220,
+        "name": "ImgPresent",
+        "pivot": [
+          92.0,
+          110.0
+        ],
+        "ppu": 100.0,
+        "width": 184
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgPurple_PopUps-38b5295192.png",
+      "sha256": "5e4e1cf08aa6a2be15253e40ef6dfdac56a0094a0822bdab60bdaeae53087267",
+      "source": "assets/official/sprites/ImgPurple_PopUps-38b5295192.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 392,
+        "name": "ImgPurple_PopUps",
+        "pivot": [
+          412.0,
+          196.0
+        ],
+        "ppu": 100.0,
+        "width": 824
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgPurple_PopUps_Small-cf13b89b07.png",
+      "sha256": "3d6edd56d8f0b651f255c6cbc08359aaf29f4d4891d8a7df1087b3bfd78127cf",
+      "source": "assets/official/sprites/ImgPurple_PopUps_Small-cf13b89b07.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 392,
+        "name": "ImgPurple_PopUps_Small",
+        "pivot": [
+          260.0,
+          196.0
+        ],
+        "ppu": 100.0,
+        "width": 520
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgQualityBg1-9bb93aa2f7.png",
+      "sha256": "62fb186f77a3714825ad7a065a264ac11903e959419506ffa38166073732fa6d",
+      "source": "assets/official/sprites/ImgQualityBg1-9bb93aa2f7.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 128,
+        "name": "ImgQualityBg1",
+        "pivot": [
+          240.0,
+          64.0
+        ],
+        "ppu": 100.0,
+        "width": 480
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgQuality_Blue-42b8cb9630.png",
+      "sha256": "d7af3c8915139d2d876cb2f85ca24e63135c48c028cd83474a8248802ab5a93f",
+      "source": "assets/official/sprites/ImgQuality_Blue-42b8cb9630.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 184,
+        "name": "ImgQuality_Blue",
+        "pivot": [
+          89.92387962341309,
+          91.9238795042038
+        ],
+        "ppu": 100.0,
+        "width": 181
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgQuality_Mask-49ff34b468.png",
+      "sha256": "95a3f1f08a4a1b880657d629d031274f9a3725d75e46073c887115c20051768f",
+      "source": "assets/official/sprites/ImgQuality_Mask-49ff34b468.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 160,
+        "name": "ImgQuality_Mask",
+        "pivot": [
+          80.0,
+          80.0
+        ],
+        "ppu": 100.0,
+        "width": 160
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgQuality_Shadow-00e2100625.png",
+      "sha256": "2db8da22ebd8ce09ddc89bd7a975e1763d49c5085b1f5919a5b68789dfba1e1f",
+      "source": "assets/official/sprites/ImgQuality_Shadow-00e2100625.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 158,
+        "name": "ImgQuality_Shadow",
+        "pivot": [
+          79.0,
+          79.0
+        ],
+        "ppu": 100.0,
+        "width": 158
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgQuality_StarMul-52e254b95d.png",
+      "sha256": "c42852d5f74771c8d9c063870ddc1eb529a54de62aaa4fa53ac61f783659f5a4",
+      "source": "assets/official/sprites/ImgQuality_StarMul-52e254b95d.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 55,
+        "name": "ImgQuality_StarMul",
+        "pivot": [
+          29.0,
+          27.5
+        ],
+        "ppu": 100.0,
+        "width": 58
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgRainbow_PopUps-2bf69543d5.png",
+      "sha256": "ef98c15a8316dd9fd5df299cdbb357ed4832de7c210a2bacca5d65f5628ad9e5",
+      "source": "assets/official/sprites/ImgRainbow_PopUps-2bf69543d5.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 392,
+        "name": "ImgRainbow_PopUps",
+        "pivot": [
+          412.0,
+          196.0
+        ],
+        "ppu": 100.0,
+        "width": 824
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgRed-f3845f3f04.png",
+      "sha256": "edf75f36b0ae638f2b6a90585ffb4f232105b01cd631b8830d21fe21eb28cfed",
+      "source": "assets/official/sprites/ImgRed-f3845f3f04.png",
+      "sprite": {
+        "border": [
+          19.0,
+          0.0,
+          19.0,
+          0.0
+        ],
+        "height": 40,
+        "name": "ImgRed",
+        "pivot": [
+          20.0,
+          20.0
+        ],
+        "ppu": 100.0,
+        "width": 40
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgRedDot-8154d7a8c2.png",
+      "sha256": "02ebb92c906b1b9fe1166b9882dbdd92e545769b61dfc7462f2b410965c8a81c",
+      "source": "assets/official/sprites/ImgRedDot-8154d7a8c2.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 40,
+        "name": "ImgRedDot",
+        "pivot": [
+          20.0,
+          20.0
+        ],
+        "ppu": 100.0,
+        "width": 40
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgRemindAsh1-d513b4f5a4.png",
+      "sha256": "db61cf118ac337b1a79029d18e4dd082c18e282d34ea7e62d3c4b2341e088764",
+      "source": "assets/official/sprites/ImgRemindAsh1-d513b4f5a4.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 36,
+        "name": "ImgRemindAsh1",
+        "pivot": [
+          17.97324901819229,
+          17.97324901819229
+        ],
+        "ppu": 100.0,
+        "width": 36
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgResonance_icon-e3c208d0a1.png",
+      "sha256": "d6acd9e5a59f0a7175eab1c5333d199511c4003c40eef0c57a21f06982a75403",
+      "source": "assets/official/sprites/ImgResonance_icon-e3c208d0a1.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 60,
+        "name": "ImgResonance_icon",
+        "pivot": [
+          27.0,
+          30.0
+        ],
+        "ppu": 100.0,
+        "width": 54
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgReturn-48efaa6e6b.png",
+      "sha256": "4f188679e2a79cd780468ab3dc4793943b74b817591d91ed2a8f163c9e565e0b",
+      "source": "assets/official/sprites/ImgReturn-48efaa6e6b.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 61,
+        "name": "ImgReturn",
+        "pivot": [
+          20.5,
+          30.5
+        ],
+        "ppu": 100.0,
+        "width": 41
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgReturnBg-25d824248c.png",
+      "sha256": "ba36c48f4a2df794e7e9fc0db3530fa327876daed73a2557825ce487449c9d49",
+      "source": "assets/official/sprites/ImgReturnBg-25d824248c.png",
+      "sprite": {
+        "border": [
+          68.0,
+          0.0,
+          68.0,
+          0.0
+        ],
+        "height": 114,
+        "name": "ImgReturnBg",
+        "pivot": [
+          71.0,
+          57.0
+        ],
+        "ppu": 100.0,
+        "width": 142
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgRule_TitleLine-e59c18047c.png",
+      "sha256": "6872b4eb22c254ae833b1355807aba86d6820fe82c8167c8e57fffb4bb23bd8b",
+      "source": "assets/official/sprites/ImgRule_TitleLine-e59c18047c.png",
+      "sprite": {
+        "border": [
+          4.0,
+          4.0,
+          4.0,
+          4.0
+        ],
+        "height": 9,
+        "name": "ImgRule_TitleLine",
+        "pivot": [
+          4.5,
+          4.5
+        ],
+        "ppu": 100.0,
+        "width": 9
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgScore-5da30b567e.png",
+      "sha256": "555c95b119adffc05411f823689ac080066784e9129401e88d7cf46c734044df",
+      "source": "assets/official/sprites/ImgScore-5da30b567e.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 44,
+        "name": "ImgScore",
+        "pivot": [
+          24.0,
+          22.0
+        ],
+        "ppu": 100.0,
+        "width": 48
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgSelected_bg-ab2290a60f.png",
+      "sha256": "e8a4277055918905a04671cb8baa40cc8c62e61c6cbe06f52d8694758adf5f03",
+      "source": "assets/official/sprites/ImgSelected_bg-ab2290a60f.png",
+      "sprite": {
+        "border": [
+          67.0,
+          0.0,
+          67.0,
+          0.0
+        ],
+        "height": 114,
+        "name": "ImgSelected_bg",
+        "pivot": [
+          71.0,
+          57.0
+        ],
+        "ppu": 100.0,
+        "width": 142
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgSet_Arrow-aec08af9df.png",
+      "sha256": "081a5fbc37e6b8dc1696904be6d1a367b8d5109704261f21718fa536c28b189b",
+      "source": "assets/official/sprites/ImgSet_Arrow-aec08af9df.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 15,
+        "name": "ImgSet_Arrow",
+        "pivot": [
+          10.0,
+          7.5
+        ],
+        "ppu": 100.0,
+        "width": 20
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgShare-376b21345a.png",
+      "sha256": "3b93ff38fbb5fed3d865c215c6776da51556caabc1e73651207dc459beda9d64",
+      "source": "assets/official/sprites/ImgShare-376b21345a.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 42,
+        "name": "ImgShare",
+        "pivot": [
+          20.0,
+          21.0
+        ],
+        "ppu": 100.0,
+        "width": 40
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgSlider_Handler-b4f56d8281.png",
+      "sha256": "db18aab09911d75b21435c419cc3a13993989e85fda8e9d3246aa56dfdc253df",
+      "source": "assets/official/sprites/ImgSlider_Handler-b4f56d8281.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 46,
+        "name": "ImgSlider_Handler",
+        "pivot": [
+          23.0,
+          23.0
+        ],
+        "ppu": 100.0,
+        "width": 46
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgStar_Bg-156d4887df.png",
+      "sha256": "f6d3706106ca9fb614895fb7ffd840e60db09db68b051d133c6c0bfee08c3c81",
+      "source": "assets/official/sprites/ImgStar_Bg-156d4887df.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 55,
+        "name": "ImgStar_Bg",
+        "pivot": [
+          29.0,
+          27.5
+        ],
+        "ppu": 100.0,
+        "width": 58
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgTimeLimitBg2-d3e255c7ba.png",
+      "sha256": "4114e8c492147e93d1b53713000cec3ec56e934ad7556cfb1349ff3f320cf3b1",
+      "source": "assets/official/sprites/ImgTimeLimitBg2-d3e255c7ba.png",
+      "sprite": {
+        "border": [
+          29.0,
+          0.0,
+          29.0,
+          0.0
+        ],
+        "height": 46,
+        "name": "ImgTimeLimitBg2",
+        "pivot": [
+          29.5,
+          23.0
+        ],
+        "ppu": 100.0,
+        "width": 59
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgTipsBg_Equit-7aad03e6c1.png",
+      "sha256": "da9b7d370e61228c49950f3527bbd8cc562d63487a07e48fcf46c2f9742a84c3",
+      "source": "assets/official/sprites/ImgTipsBg_Equit-7aad03e6c1.png",
+      "sprite": {
+        "border": [
+          72.0,
+          21.0,
+          2.0,
+          72.0
+        ],
+        "height": 95,
+        "name": "ImgTipsBg_Equit",
+        "pivot": [
+          38.0,
+          47.5
+        ],
+        "ppu": 100.0,
+        "width": 76
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgTitle_Bless-483ac6a3da.png",
+      "sha256": "74cae86e86602425ebc27190755963e7cf36d780c63d953aa69b7f11c67eabdd",
+      "source": "assets/official/sprites/ImgTitle_Bless-483ac6a3da.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 146,
+        "name": "ImgTitle_Bless",
+        "pivot": [
+          82.0,
+          73.0
+        ],
+        "ppu": 100.0,
+        "width": 164
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgTop_Zs2-adacf53152.png",
+      "sha256": "84ab8f64d42dd38b61a0135e148b9b55700cd0cd2c1c2a4a18644e351e3f7bca",
+      "source": "assets/official/sprites/ImgTop_Zs2-adacf53152.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 21,
+        "name": "ImgTop_Zs2",
+        "pivot": [
+          11.0,
+          10.5
+        ],
+        "ppu": 100.0,
+        "width": 22
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgTxtBg-f111866054.png",
+      "sha256": "abf6f20cd43e92300e0e68e88622f4c824d016c06c7d3bffc0929ad0b5d12942",
+      "source": "assets/official/sprites/ImgTxtBg-f111866054.png",
+      "sprite": {
+        "border": [
+          34.0,
+          0.0,
+          34.0,
+          0.0
+        ],
+        "height": 51,
+        "name": "ImgTxtBg",
+        "pivot": [
+          34.0,
+          25.5
+        ],
+        "ppu": 100.0,
+        "width": 68
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgUpgrade_Arrow-d2a07b530a.png",
+      "sha256": "488ef3fe8acc390565a828fbdea42d83f3814a8a1c90d90b67d3553d2330b788",
+      "source": "assets/official/sprites/ImgUpgrade_Arrow-d2a07b530a.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 64,
+        "name": "ImgUpgrade_Arrow",
+        "pivot": [
+          24.0,
+          32.0
+        ],
+        "ppu": 100.0,
+        "width": 48
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgZs1-e94c381dde.png",
+      "sha256": "c7862ba0bb3787bb1d79c151528e6b3824b3d70ad47a1a8755c22cf10f24eae0",
+      "source": "assets/official/sprites/ImgZs1-e94c381dde.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 39,
+        "name": "ImgZs1",
+        "pivot": [
+          20.0,
+          19.5
+        ],
+        "ppu": 100.0,
+        "width": 40
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgZs2-d558118bbf.png",
+      "sha256": "42f5f3e9dbefdc00d803b2e7186396c3e10597e95839ab3df9896b9ae05ec8b6",
+      "source": "assets/official/sprites/ImgZs2-d558118bbf.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 20,
+        "name": "ImgZs2",
+        "pivot": [
+          10.0,
+          10.0
+        ],
+        "ppu": 100.0,
+        "width": 20
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ImgZsBg-d9e0c6783f.png",
+      "sha256": "8f07d79ddb6c2d97fdb0ce4ecf4a9eb35b7fc648e8d3dde99de5a4b26c42ec71",
+      "source": "assets/official/sprites/ImgZsBg-d9e0c6783f.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 221,
+        "name": "ImgZsBg",
+        "pivot": [
+          151.0,
+          110.5
+        ],
+        "ppu": 100.0,
+        "width": 302
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/Img_Equiptype_Boot-f116614a2b.png",
+      "sha256": "d881382c1ab59069a14f886e8217d11089ebc7f54ebd166ea93289ab4c7a444d",
+      "source": "assets/official/sprites/Img_Equiptype_Boot-f116614a2b.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 56,
+        "name": "Img_Equiptype_Boot",
+        "pivot": [
+          27.923879504203796,
+          27.97324901819229
+        ],
+        "ppu": 100.0,
+        "width": 56
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/Img_Equiptype_Weapon-5749d76550.png",
+      "sha256": "2a0018351d5255d4651a2932fe95867507d6bdf47a14e6a6e6256dae8e421f81",
+      "source": "assets/official/sprites/Img_Equiptype_Weapon-5749d76550.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 56,
+        "name": "Img_Equiptype_Weapon",
+        "pivot": [
+          27.923879504203796,
+          27.97324901819229
+        ],
+        "ppu": 100.0,
+        "width": 56
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/Img_OutputAddition_Frame01_Split01-b2322e7dbb.png",
+      "sha256": "8414bb46ef7c81ee46b91bf4d0079eb494e8dbc31e8c307d31fd2b7312318468",
+      "source": "assets/official/sprites/Img_OutputAddition_Frame01_Split01-b2322e7dbb.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 37,
+        "name": "Img_OutputAddition_Frame01_Split01",
+        "pivot": [
+          16.0,
+          18.5
+        ],
+        "ppu": 100.0,
+        "width": 32
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/Img_OutputAddition_Frame01_Split02_Single-8be6d92c8d.png",
+      "sha256": "909d4cfa6d2c1b13a8538407c539f5416660d313d7bfcb56bc6785d91ae47e9e",
+      "source": "assets/official/sprites/Img_OutputAddition_Frame01_Split02_Single-8be6d92c8d.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 11,
+        "name": "Img_OutputAddition_Frame01_Split02_Single",
+        "pivot": [
+          10.0,
+          5.5
+        ],
+        "ppu": 100.0,
+        "width": 20
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/Img_OutputAddition_Frame01_Split03-135dfe9411.png",
+      "sha256": "5a7a53fccb59442c8ebdaf5b192444317373ad3953742e4b8558c823836c5ebf",
+      "source": "assets/official/sprites/Img_OutputAddition_Frame01_Split03-135dfe9411.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 17,
+        "name": "Img_OutputAddition_Frame01_Split03",
+        "pivot": [
+          8.5,
+          8.5
+        ],
+        "ppu": 100.0,
+        "width": 17
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/Img_OutputAddition_Frame01_Split04-31e3cbce0a.png",
+      "sha256": "ea682f75ec28bb35cafc05158b78991ce81c285b6cade693101225e625c8f786",
+      "source": "assets/official/sprites/Img_OutputAddition_Frame01_Split04-31e3cbce0a.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 19,
+        "name": "Img_OutputAddition_Frame01_Split04",
+        "pivot": [
+          14.5,
+          9.5
+        ],
+        "ppu": 100.0,
+        "width": 29
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/Img_OutputAddition_Frame01_Split05-0d96701ae8.png",
+      "sha256": "c9108e6132001e15987e66971ea07aa7c7aa2b5fca9c5d2ecd2a1498a2cb4150",
+      "source": "assets/official/sprites/Img_OutputAddition_Frame01_Split05-0d96701ae8.png",
+      "sprite": {
+        "border": [
+          114.0,
+          0.0,
+          20.0,
+          0.0
+        ],
+        "height": 54,
+        "name": "Img_OutputAddition_Frame01_Split05",
+        "pivot": [
+          67.0,
+          27.0
+        ],
+        "ppu": 100.0,
+        "width": 134
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/InputFieldBackground-699701cff6.png",
+      "sha256": "37a101d10d7e8196d7c03cfbb3e0d04f93a06d9afd843ad695b73dbda17a24d3",
+      "source": "assets/official/sprites/InputFieldBackground-699701cff6.png",
+      "sprite": {
+        "border": [
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "height": 32,
+        "name": "InputFieldBackground",
+        "pivot": [
+          15.973249018192291,
+          15.948683321475983
+        ],
+        "ppu": 200.0,
+        "width": 32
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ItemEquipResonance-5f0eecb5e8.png",
+      "sha256": "35690fc380dc2338cb745da4e3a6cb436283e210c8f5c6783405df05fb3dab18",
+      "source": "assets/official/sprites/ItemEquipResonance-5f0eecb5e8.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 167,
+        "name": "ItemEquipResonance",
+        "pivot": [
+          115.5,
+          83.5
+        ],
+        "ppu": 100.0,
+        "width": 231
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/ItemPiece2-a7d67a73d7.png",
+      "sha256": "94d2a86906483a6c2f42be2ff088145ba618ba1a1e7206e75448470b5d6c4710",
+      "source": "assets/official/sprites/ItemPiece2-a7d67a73d7.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 25,
+        "name": "ItemPiece2",
+        "pivot": [
+          12.5,
+          12.5
+        ],
+        "ppu": 100.0,
+        "width": 25
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/UISprite-3eb5b5a559.png",
+      "sha256": "9e2b539b7c88fe4464525abc282c724b964852950a0b8aa1df13414014b5f33c",
+      "source": "assets/official/sprites/UISprite-3eb5b5a559.png",
+      "sprite": {
+        "border": [
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "height": 32,
+        "name": "UISprite",
+        "pivot": [
+          15.973249018192291,
+          15.948683321475983
+        ],
+        "ppu": 200.0,
+        "width": 32
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/equip_20016-6ee1d8f847.png",
+      "sha256": "a0a6336c253e723c6505127c83d579d37c4059f333df9041025ca4ced28b25ef",
+      "source": "assets/official/sprites/equip_20016-6ee1d8f847.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 250,
+        "name": "equip_20016",
+        "pivot": [
+          115.85065078735352,
+          128.0
+        ],
+        "ppu": 100.0,
+        "width": 217
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/equip_20020-ac1dec0b2b.png",
+      "sha256": "5f2cf2a706d7ee631ffbd110a656ee724767427b369bd493d1778b7b67b07a39",
+      "source": "assets/official/sprites/equip_20020-ac1dec0b2b.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 256,
+        "name": "equip_20020",
+        "pivot": [
+          119.9732494354248,
+          128.0
+        ],
+        "ppu": 100.0,
+        "width": 214
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/item_505-bdf3f92f7a.png",
+      "sha256": "8333dd40a29f0103e309f476f1e24054bb896a8e6f44a077e7c8cb4648f89187",
+      "source": "assets/official/sprites/item_505-bdf3f92f7a.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 180,
+        "name": "item_505",
+        "pivot": [
+          84.97324752807617,
+          86.97324752807617
+        ],
+        "ppu": 100.0,
+        "width": 172
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/item_527-7195f49228.png",
+      "sha256": "1b2787f5427c46943a017b6837c28e232c89efca5ff01ab83830ad53eaaf6c69",
+      "source": "assets/official/sprites/item_527-7195f49228.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 180,
+        "name": "item_527",
+        "pivot": [
+          77.92387771606445,
+          91.99748229980469
+        ],
+        "ppu": 100.0,
+        "width": 163
+      }
+    },
+    {
+      "path": "Assets/Official/Equipment/UI/Sprites/item_566-3f7993e892.png",
+      "sha256": "f93bb4accec4f8e26b6a5a2f71032849072a71d24a7f45f8a5c4d89e675a0ecb",
+      "source": "assets/official/sprites/item_566-3f7993e892.png",
+      "sprite": {
+        "border": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "height": 179,
+        "name": "item_566",
+        "pivot": [
+          77.92387771606445,
+          90.97324752807617
+        ],
+        "ppu": 100.0,
+        "width": 163
+      }
+    }
+  ]
+}

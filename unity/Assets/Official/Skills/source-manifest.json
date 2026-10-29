@@ -1,0 +1,1703 @@
+{
+  "art_files": 297,
+  "current_output_conversion": {
+    "manifest": "871_156598",
+    "sources": [
+      {
+        "path": "assets/reference/official-map/current-table-source-manifest.json",
+        "sha256": "21f1e41a77d6e003ff243cdfeaef505dc01a35c15cb6cc3d2d016ff36873c006"
+      },
+      {
+        "path": "assets/reference/official-map/current-combat-source-manifest.json",
+        "sha256": "2dfc8bfc863a934456e46b9b7bd4dedf0993020b7e0f696128bd7cd3424c37a9"
+      },
+      {
+        "path": "assets/reference/official-map/current-material-source-manifest.json",
+        "sha256": "d30fc27907ed1281f4d59b05ad79328e9d563ed136fd1ec83106bfa23a22a005"
+      },
+      {
+        "path": "assets/reference/official-map/current-home-layers-source-manifest.json",
+        "sha256": "c4e2d68efabab0bc06e26966fdc51af0cd3591088c22521a785cd60304b0780f"
+      },
+      {
+        "path": "assets/reference/official-map/current-language-source-manifest.json",
+        "sha256": "dfea82d02831a50c4baa4556a1d591fe1a2d78ee398a84c77a897efce7b6586e"
+      },
+      {
+        "path": "assets/reference/character-creation/current-mesh-source-manifest.json",
+        "sha256": "54f85913886dcd62a4e5ccee9823ae295496a0dc06371c506bd9dbae44d62a52"
+      },
+      {
+        "path": "assets/reference/character-creation/current-native-prefabs-source-manifest.json",
+        "sha256": "d067eeb637f4f5274e38fbfecdf0897820e31ada1a884315bfdb9bfba69b36a8"
+      }
+    ]
+  },
+  "empty_skill_icon_source": {
+    "input": "assets/official/ui.json",
+    "input_sha256": "df47707fa51ce3400e9f1f63f87a9b24c2e4f5fe1a1e71d82445173e5780cbb5",
+    "resources": {
+      "res://assets/official/sprites/ImgBg_CountText-43bcc7f5cb.png": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "object": "ImgBg_CountText",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "-4098904705157139906",
+        "sha256": "31498f0e8895dce861cf88210bb81c26ac96ed09df5556edc6614418fc574f71"
+      },
+      "res://assets/official/sprites/ImgItemEmpty-725d8512ac.png": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "object": "ImgItemEmpty",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "3962076604742640507",
+        "sha256": "7b3c0f610eff0813145ac3d180f5adca4afc5596ded8fa4fbdb5743b81d6ae76"
+      },
+      "res://assets/official/sprites/ImgItemIcon_NumBg-8659cef746.png": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "object": "ImgItemIcon_NumBg",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "6381064553429097215",
+        "sha256": "3e82a7afe162f64fa8331da266940cd9a5d00a83e631ea7495fcb520a956cae4"
+      },
+      "res://assets/official/sprites/ImgMask-24a3320123.png": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "object": "ImgMask",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "-3435489076392197362",
+        "sha256": "4b8fcf1e081b5f29b8e698c0dd9d297a11e0ac8a992e25d43d0d175ef805dfea"
+      },
+      "res://assets/official/sprites/ImgQuality_Shadow-00e2100625.png": {
+        "bundle": "defaultpackage_assets_image_ui_itemquality.bundle",
+        "bundle_hash": "74e6afc6b39b88d0e8977d8f12267b52",
+        "object": "ImgQuality_Shadow",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "2405840242199144779",
+        "sha256": "2db8da22ebd8ce09ddc89bd7a975e1763d49c5085b1f5919a5b68789dfba1e1f"
+      },
+      "res://assets/official/sprites/ItemPiece2-a7d67a73d7.png": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "object": "ItemPiece2",
+        "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+        "path_id": "1747420131029203034",
+        "sha256": "94d2a86906483a6c2f42be2ff088145ba618ba1a1e7206e75448470b5d6c4710"
+      }
+    },
+    "source": {
+      "bundle": "defaultpackage_assets_prefabs_ui_item.bundle",
+      "bundle_hash": "414cf104c6bdea9eddf3a365b4d345e2",
+      "path_id": "5867811589232524487",
+      "prefab": "/ItemIconEmpty.prefab"
+    }
+  },
+  "files": [
+    {
+      "path": "Assets/Official/Skills/Art/sprites/349-921a3edeb1.png",
+      "bytes": 7210,
+      "sha256": "037ce4b6039447a4753a8e92bd674af6c7d3092173cd4412f00482ca74b01b4e"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/350-dc6c9c2703.png",
+      "bytes": 4706,
+      "sha256": "97c46f6b11b3e58c326eab583f0252316a1876815687d50e2ef51f372f89c50d"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/351-99445eed31.png",
+      "bytes": 5113,
+      "sha256": "3474ca9741c17d1a330f351ff87d7a655c3e2686abead760c57a3f88baf0895e"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/352-753c44a37b.png",
+      "bytes": 6078,
+      "sha256": "997d21a44d9dc6a3b34bda41b9d050cbb2544505ef9bc971854bb45abb03b01c"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/353-6fd49f41d7.png",
+      "bytes": 7119,
+      "sha256": "79287358972cf50e0094c632b58ab0c410dba8dca386a0b4a4f3cf2ccb967bd2"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/354-33b08818d2.png",
+      "bytes": 7197,
+      "sha256": "bea9eb3bd1def6d0aaf2fde8efe7aa121be52047627762da11d42b5a2d583a9e"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/355-d10eb4f6e9.png",
+      "bytes": 5753,
+      "sha256": "8c244b3c9161787007ffbe2351f9ef6c175a602c04090968c2931b4b40fae157"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/356-f69428a9f9.png",
+      "bytes": 7060,
+      "sha256": "35a6e6c5f698894d47c9869bfad2d2fd4a16cd48941b82d333cb13ee182cbb15"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/357-cbd2f1ec04.png",
+      "bytes": 7742,
+      "sha256": "a6a67583132f9f5bfdf21723b4bb14211138769a3ad7c0b9508c475879bb4804"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/358-cb52aeda1c.png",
+      "bytes": 7688,
+      "sha256": "d479636884a47d65bda470ab8a46034a7cb3dacdc39824cb5ff2da35c267a814"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/359-367366feee.png",
+      "bytes": 8623,
+      "sha256": "13386b9aaf5a5fd12a2427be95662b63a90070a769b95bab45aafe52b965ad9c"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/360-803b407bdb.png",
+      "bytes": 7711,
+      "sha256": "54fc1e22a5b21d2254c89ecb2fa1303020d5387b100dcb2f5d9f715cd191c020"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/361-1b3505b41c.png",
+      "bytes": 8145,
+      "sha256": "d9856b571d5022ac5795d2f6babfb7c9a1974af61cffb7da239d13f1bcc62007"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/362-78810b37d2.png",
+      "bytes": 8270,
+      "sha256": "bb34315d8890cfe361530db950b460f534c8a6f58b4ddb37f8b2a0d425306fc6"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/363-1d800f25e3.png",
+      "bytes": 9118,
+      "sha256": "2e235033107f5c02f00e746c9116246c11f9b60b2e5e4c894fcf22e23b7c108f"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/364-c399736631.png",
+      "bytes": 12890,
+      "sha256": "9d9c50aeec0b2374008412a9ce081da7b7ddd3537ef98b682d6a61b3783ea188"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/365-5751480c55.png",
+      "bytes": 12753,
+      "sha256": "ffb88400803ae5e51db979bb68946327834132a1fa91c44d54d5c3d4323485ca"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/366-02de5970b9.png",
+      "bytes": 13470,
+      "sha256": "7d99f88bb0d59b67536135c4a960aded02dff5ae2f2501667c7835103c494793"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/367-7f06f65dd8.png",
+      "bytes": 15716,
+      "sha256": "9daa24f4152bc4324ba55bcc40fe012e6199d55e50e0fd03ffca815370ce5d1a"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/368-9a9e686017.png",
+      "bytes": 11124,
+      "sha256": "da1c61065eb5da8ecc2d7310ecbf7e3426a6908c64047a6e922fb006029cef03"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/369-95468cc146.png",
+      "bytes": 12128,
+      "sha256": "a934178271ba940d22faea6c2662efe5b873b56c570867b6b69fbbeba553d282"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/370-177b41d150.png",
+      "bytes": 13357,
+      "sha256": "52ecf6e14fa4c9db0fb8a7986402aadcd809ef78f1fba0a60aedcd09bceca23a"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/371-36d8b6b6e1.png",
+      "bytes": 17073,
+      "sha256": "b23832fba4f9ca2770bff19790d5bf1fc46346a4a502339f104597937d46e9eb"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/372-a64dc2e7c4.png",
+      "bytes": 12249,
+      "sha256": "d7dbeb486e3008781f243e7b51e2e5ed8ca3991dbd73f75c78c234635281852d"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/373-42b8c7b352.png",
+      "bytes": 12322,
+      "sha256": "e8245a1e41a32c8b577c670bac36c6aaad208eda85be7a25bdd89c52bd35ff50"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/374-a272274326.png",
+      "bytes": 16474,
+      "sha256": "3ea5add8eb784290e7aaf72716a08b58fcc513a38e780dce0d7644cb486e1ede"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/375-e241e87f35.png",
+      "bytes": 14757,
+      "sha256": "0ff97e354b1c8586fd92e7690ead06d423a787fcb835543d3292b0846f672c02"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/376-1ece894da7.png",
+      "bytes": 11872,
+      "sha256": "200f15e560bd7066d29e3f72e1dde3403315027fed91c69629fa19d01f8b2750"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/377-985ef9fbeb.png",
+      "bytes": 10634,
+      "sha256": "a26b62af7ca11fa53ca8a9bd3ccd21d3f62804f996213ff89e1c17f001d45e99"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/378-d7afe4fc5d.png",
+      "bytes": 14637,
+      "sha256": "4490e3fa02bda4da22286598add37f1928708cb08a418b5449284d509cac5941"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/379-f410b5a5d1.png",
+      "bytes": 14861,
+      "sha256": "bec0697666086d9837fd2d135eda404f0da360f803b2ad8074ef9a359b68e680"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/BgMiddleVs-acb34536bb.png",
+      "bytes": 12395,
+      "sha256": "70f0b702bbac0bbcb5e79759e295cb190577bdb23529b07460bad09634db7978"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/BtnCheck_Nor-3b5c5a72eb.png",
+      "bytes": 2350,
+      "sha256": "2bb9ad0ab5fa6fb827cf6481e5aefec71bf79d692ba6fe4c34fce221e2f5c66e"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/BtnCheck_Sel-cbe9e7c698.png",
+      "bytes": 2541,
+      "sha256": "4f63d0933791a38a6037d7dc6ec2647f5fc29cf21cddd6f7d5c19319c3e874d0"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/BtnExclamation-e046a83a12.png",
+      "bytes": 3234,
+      "sha256": "d4394fc93798db8d2d7f25d847932cdc88a21572a7b9a57a58ce6331f49242c3"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/BtnExclamation_Bless-ab4c1fa1b7.png",
+      "bytes": 3160,
+      "sha256": "d714b1165f55c1d89a4b52c8311f6aa00a246fe623a6de8d9ebb6e4b68afb3dd"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/BtnLook-0efdbcfe10.png",
+      "bytes": 1381,
+      "sha256": "a5d744a5fa0e641d85000826c7dac7fe8abb826c0518394bda61ee45a481e34c"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/BtnNo-aa425a44c4.png",
+      "bytes": 9868,
+      "sha256": "fef0ddc59129e7a5136f6bac11369284e494e1964add4d2aea8901671756802a"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/BtnOk-623eab01b4.png",
+      "bytes": 15689,
+      "sha256": "27952bd12b6b60e0cfcc870ea8e3278f0aa47cd48c7048a1a7868b745648d599"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/BtnOk_Notice-2f696d05cf.png",
+      "bytes": 3944,
+      "sha256": "6cec1909285661de94ebb522a6cf94e7b63b5928bb0a3ba7409f63d126041002"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/BtnScreen_Sel-b309ae607e.png",
+      "bytes": 1391,
+      "sha256": "147168ba96307fe14e0cf511dce1ae1c9dc46cd2af1261cde882ffb39cd519c3"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/BtnTest-6cb4f63ec5.png",
+      "bytes": 2776,
+      "sha256": "f0a08c6cf5bd93da7fc1703501a6b09531af634122c649345a3d3fb4d6d76c6c"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/BtnTuiJian-1d639be514.png",
+      "bytes": 2928,
+      "sha256": "a6d665f1ba2bfc1e92e409847e58b930ecea099f7a7763837d68544fd3d5f1b3"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/Btn_FastLevelUp-003f1ef56b.png",
+      "bytes": 5761,
+      "sha256": "ca5ede329367726e12a91df2346760ac24411a789f19d230ab557bcb9c383764"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/Btn_FastSublimation-6b24f015bd.png",
+      "bytes": 4571,
+      "sha256": "98ec66605c6c441a1ba7461998bdec78601808d5faedb8a0393aa22e146ed14d"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/C_none-fa3e084e40.png",
+      "bytes": 103,
+      "sha256": "d73d644cfd6ed4f7f4f28801217e9712825adf277bf39eb37543dc5d932423b4"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/IconAppearance-c1887b401d.png",
+      "bytes": 963,
+      "sha256": "1bdb7209526b7ed66af0abcf0a6a1eb06ae47e37470aef1c8adbfe3829baaaff"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/IconBattle_Buff-1c9b790cf8.png",
+      "bytes": 1626,
+      "sha256": "9a369b9f63415b25897375b65b08b069e5036114125f7accb6f2b082b0e44e4b"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/IconBattle_Dot-271d56ea3c.png",
+      "bytes": 1766,
+      "sha256": "c619febe96f9762c9bd320c56e264e7b3a55e66de4fe6b191a05523ad95940d1"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/IconBattle_Hps-ee94769260.png",
+      "bytes": 921,
+      "sha256": "7f85594f26312837764d5d78c75c362153ff1b6ca4537a12e1e0de44f8f5dda9"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/IconHuawen-33ef251b14.png",
+      "bytes": 305,
+      "sha256": "a3eaa5c93ae04a912848ed13dd44e78fd3fa19dcd657ed46ede4cadca4417a0b"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/IconRemind-e81e057cb3.png",
+      "bytes": 46311,
+      "sha256": "c47ec3c1b7edf49d55530494962aa4fd9fda0b8570f0cc311d2e2a0d86237321"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/IconRemind3-b56ecd66a6.png",
+      "bytes": 47220,
+      "sha256": "d9622f51749e04867a92bc78c08b46d20704193ee1f78e6023f0cd52ac6be88e"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImGarrow_Light-87da34d71f.png",
+      "bytes": 3088,
+      "sha256": "15b4234245f6089265b4f6c46feaf1322cfd2f06856394d6fb5028292e0a3fec"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgArrow-847886637d.png",
+      "bytes": 522,
+      "sha256": "bfc886cefd852d4dafbf2c7fb791c387ac77bc080723cec46d53b3be91d4d3ed"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgArrow-a9dc698e46.png",
+      "bytes": 1159,
+      "sha256": "46916e3d2516272616baf7b2087e966319d51c1b877635700cc673d7a32ae2af"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgArrow-c6743d23bd.png",
+      "bytes": 546,
+      "sha256": "69cefe65a80e156f0a34bdf3bce5f1fb168a3aabf54534242063c84aeba6e264"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgArrow_2-759294d034.png",
+      "bytes": 3224,
+      "sha256": "223d0782c63e020c001b402fd6b8a3da73d1076c857d7dca8fbc2dbf466c07d6"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgArrow_Page-1a3c6652ff.png",
+      "bytes": 705,
+      "sha256": "451c28e50cd39b31e92acd435bf0272f47db7c68f0d07a06031bd11ad42e640c"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBgAtt-9ad59b702c.png",
+      "bytes": 1075,
+      "sha256": "9804af57556ce5feac47c50457f2e00d2929ab2902fac9bfe8311c52f9801e6c"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBgScreen-c6d4114ea4.png",
+      "bytes": 2926,
+      "sha256": "0b6c404473a68f707e4052049cd89b56d41ba0f57d3a1567d0b0f4c6165b1cb9"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBgScreen_Fillet-d5a44e3ca4.png",
+      "bytes": 2137,
+      "sha256": "21f3383754d2f682960c0fd5e7a231fad4f67fd02aaaf85a3d7928cfd3b11b8e"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBgTitle-39d2ed304a.png",
+      "bytes": 410,
+      "sha256": "cdb9d06b0842e0a4765ce609f8019cb9a3caa257323187565461bde79887db36"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBgWenLi_Passive-006c03ee2a.png",
+      "bytes": 27315,
+      "sha256": "4fe7b51fea3351cf2b48f620b48c1e1b68f81b91764f467128420eb4a052336a"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBgWenLi_Skill-76793ed0da.png",
+      "bytes": 30714,
+      "sha256": "dbfd0940d6fa1d144e0e85518c41b892e67be0625459b7ead45b7c87051d2d34"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBgYuan-e7bee2d0bf.png",
+      "bytes": 52773,
+      "sha256": "83de70d11eb3aabbf04408f3e2c5e1fb1866a98bee39381edf546d606fc32209"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_Arrow-e3cdda5297.png",
+      "bytes": 10859,
+      "sha256": "282c5c03edddadd55e8ce42bbeb85a0a2e9d52a2ea562541a652630b1a08408f"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_Banner-44b6f5e1ff.png",
+      "bytes": 441,
+      "sha256": "cc82fd89fa7d0111299baf59c6aa70208030ccf2390f87e82e57c09b3c0a02b5"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_Banner-e2bb932c72.png",
+      "bytes": 18883,
+      "sha256": "6be5a8457196a7664194bb9abb3b50b94d1543d752accb711f73e755336b69bd"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_BannerWenLi-7a9e224932.png",
+      "bytes": 26616,
+      "sha256": "5401ff0f3f9514d9c95e1a0c84205a483df453c075750ad257c43d215e348525"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_Battle-671b684600.png",
+      "bytes": 629,
+      "sha256": "aa87bcff32faf0172fd76c5ae0f681c3cf0e59d354a78ee54917255c877c9b7d"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_CombatValue-e6daa5f604.png",
+      "bytes": 2585,
+      "sha256": "ec2d94dd1082fade29e0f844651027e3daf35b411e123ba6aaddd59b0178a972"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_CountText-43bcc7f5cb.png",
+      "bytes": 629,
+      "sha256": "31498f0e8895dce861cf88210bb81c26ac96ed09df5556edc6614418fc574f71"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_Countdown-d742e5732b.png",
+      "bytes": 442,
+      "sha256": "9240d64b8fd1a17b7d8205023a867817e2c167f7aebde761f959526b197d9848"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_Fail-0abe0bbc86.png",
+      "bytes": 8806,
+      "sha256": "380d3722eb7b78f3956d16bdfdbe066135a2bf3751c993f5856868ac6227f178"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_Figure-2ebfbfa458.png",
+      "bytes": 87045,
+      "sha256": "a47277da9cd4809915ff3e666abe1fe37ccd1416ad0fdd1b68e0ee3ff6bbca58"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_Hourglass-413b857a69.png",
+      "bytes": 1625,
+      "sha256": "6c9455ad29a6eb42f74c99f1a3b68191f5291453cc6670f207da106dc67ce35d"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_List-dbd0e6cb96.png",
+      "bytes": 873,
+      "sha256": "d73b106df0a68000d94bbfe5ee13dd658202b42957ea9f74087f153b3089a785"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_MainHp-f94416632b.png",
+      "bytes": 5564,
+      "sha256": "db80f2efb1e44550891315f662ca064825f92889502bf63a37a402190b014d7d"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_MainListItem-8fd36c6945.png",
+      "bytes": 1224,
+      "sha256": "c2af045dc407ed816ead0815d64982448e6cb662c8feb20e1b78c8551147b316"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_NameSel-688e495eb9.png",
+      "bytes": 678,
+      "sha256": "486d25e97e0790800732f993befd9d669b599509c876f78b4ed4e801e46704a2"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_PopUps-50a1e65068.png",
+      "bytes": 12783,
+      "sha256": "20ee64ac9f8b6824c26ca389c68ecd05b2862d66305dc2bfb6fcec4b6b113920"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_PopUpsHorn-dc246cac5b.png",
+      "bytes": 8806,
+      "sha256": "7451ffe917ecf82907565ef1667456b1c6e565ab69f86a32fb1e39694240550d"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_PopUpsTitle-e69fb4d9d0.png",
+      "bytes": 9877,
+      "sha256": "4b683e8fe6816c3ff7f4e127beb8e577cfb5e9331626e5b31fa81595a3064599"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_PopUpsWenLi-2cf247fc12.png",
+      "bytes": 8227,
+      "sha256": "68058e4df2fc9aa171d0e654156dedd97995be2187490d9e0a0c798b4d3a5339"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_Recommend-d4122804d3.png",
+      "bytes": 1615,
+      "sha256": "1ac9c211e4a2b06fd3b8c7bd336f316c9cf8fded54c76874c551a6eebcc501c9"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_TipInfo-00747eeea6.png",
+      "bytes": 4372,
+      "sha256": "e26851fa21de312e3d6176d0ba3495ed23282d5c988a679826ea08573334d55f"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_Title-497505d3a3.png",
+      "bytes": 8724,
+      "sha256": "3ea5bdd779e6c659d7721f82ea51d654e651838d6eff5de1e6291db57ce95b5b"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_WenLi-b1e908f8fa.png",
+      "bytes": 52105,
+      "sha256": "e151c79fcff716ce3ee7fae9f1e10aa1de441af7407aa987b71dce0b8dcf3736"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_WenLi2-2204507c17.png",
+      "bytes": 49659,
+      "sha256": "faaf01afca075f287d1f59ee8c9cc951d626885a33ebbf53c8d5fba7de712139"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_WenLi3-50f55ef955.png",
+      "bytes": 10970,
+      "sha256": "e51b84f80349982800d91538d3cfd992263290bd82778679e811289f3479b4d4"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_WenLi4-9e1ad332f5.png",
+      "bytes": 13813,
+      "sha256": "f77f1d8abed80fe6a6eda1922b8c0917dce76274af7770dec60457f90f9eac25"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBg_swap-e3a307d70b.png",
+      "bytes": 774,
+      "sha256": "14bf8b4bb901950322633b1f99b05eecd209bed32f4158c4c00117cdcfa18cae"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBlue-797552ab98.png",
+      "bytes": 1580,
+      "sha256": "852756b23165ca4c2a377acee93125060d2948f3157b9b29094debbd5aa8d913"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBlueDot-a28b58f9f6.png",
+      "bytes": 2066,
+      "sha256": "d245e092178e3753282c32c895dc1f8c050c9013f4dbfb50c59be696074a3261"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBlue_PopUps-79efb011c5.png",
+      "bytes": 240664,
+      "sha256": "c97ba1cb0a86c7b1085a0f17baf986b107a34936a987469bc1849be2cf3cf2c4"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgBlue_Upgrade-12b45e0972.png",
+      "bytes": 1790,
+      "sha256": "f77095c4c9da7a0b4544f2117b6e048084f17d724229e0992de796fe7add22f1"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgCirculate-0fb72a208a.png",
+      "bytes": 67830,
+      "sha256": "5953244851a59ea1ffc366fa40bf5535bc3ea7a700f7ce8c067d1c88f13b088c"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgCirculate1-5707d8d467.png",
+      "bytes": 51940,
+      "sha256": "cbf3afe564b72c2dc0fc9d631cea0ad9be657584eda1bd27de93b5b23ae19b1d"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgCombatRating-256265cbf9.png",
+      "bytes": 469,
+      "sha256": "e1305d190a5df7b6317e6dfbcedb1c14e63328ab9832cfa2f2d7d98cab27ff1c"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgCommon_JianBian-b1528728af.png",
+      "bytes": 4049,
+      "sha256": "664ab38ad08c356bf221bbb33618ae9ce79a2e56a0403eb389d3721c7a89f9e4"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgCompleted-7226b33298.png",
+      "bytes": 20050,
+      "sha256": "1f7f338f7c1cf1a718fb87d1a2085f6afc97bacda5acee207e33951cc6baafcd"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgCostMoneyBtn_Bg-53e016a80d.png",
+      "bytes": 464,
+      "sha256": "d3ed60b8e3a8b4a013f36655274e7f95928bf5b818bb30a5c26df6d94a8812ae"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgDashedLine-0a992f9dca.png",
+      "bytes": 84,
+      "sha256": "8dcf144fa730686fae62489871de0d47bbf4fa969887cf1dc599115756287e5b"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgDivider-5b99d32b07.png",
+      "bytes": 85,
+      "sha256": "e6b2c7a5a95c29df6b8a1ac7a6d4e1effdeb7f1cea57f74d59932e1c204d89d8"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgDot-4ed3349f24.png",
+      "bytes": 1984,
+      "sha256": "8b8bd913abe31a5738fdf0097288a9733704434a36c7ccc934b20c028216ecdb"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgDrop_Title2-e8c9abf761.png",
+      "bytes": 122,
+      "sha256": "191c10068375be824230411adcb57b468a17c7d78ca7ef9f7d6a1322c9cb10ab"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgEdit-815fe8d8cb.png",
+      "bytes": 524,
+      "sha256": "93cfb5e18c43328364565e0c363b3dca7da6ba84f843a845f12e468c60a757c8"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgEquipListBg_Nor-0149e24621.png",
+      "bytes": 5142,
+      "sha256": "bd50ad8f5ff918b323b411c879c15a06c6918362c9663c1e46b9e92750a94bb4"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgExp-ca3e2b4e08.png",
+      "bytes": 326,
+      "sha256": "a61cd0588f239356edd73a72320cb8ce674d5ac9aa2fe4d8bcd0252419cc6637"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgExp_Green-fd82428fb1.png",
+      "bytes": 463,
+      "sha256": "a80638325bf6dfc66396de2bb719648c852d294c1f696015e3943b57e3586f18"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgFast_Frame_01-d980456dc2.png",
+      "bytes": 10322,
+      "sha256": "ed41a05014d8c01fc896f4ee06e5cbf53fc74cd7969eeea3d689e3e6d0fe7b6c"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgFunction_Bg2-59e2c36e6c.png",
+      "bytes": 4083,
+      "sha256": "2071a0b181a2b7b886af64cb4a528ff6042f1bf7cc027fcb8ed3610c99c1c055"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgGold_PopUps-15d8ddf955.png",
+      "bytes": 245169,
+      "sha256": "bbee15d8c0dbc1cac87fe8f40d3da0a78b8b0a58e5c12ac0f0e0ef02ca696d9e"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgGradient-42a795b441.png",
+      "bytes": 3602,
+      "sha256": "3f9838048439a0edd58500b3fdca9d79ab923611e414a9dbb50822d745895228"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgGradient-92cc441952.png",
+      "bytes": 1306,
+      "sha256": "9ec0812eb73637e9b450c1dd68808920016fc9f35fb40467282a02ec61f9c4e7"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgHp_Bg-bc8eefd3fb.png",
+      "bytes": 447,
+      "sha256": "03e7154e71aab3e5ca122426f3d6423e05f3beb098846ae74bbe71027aaf58a0"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgIcon_DamageTest_03-363099f6eb.png",
+      "bytes": 748,
+      "sha256": "98317ce4b9e5b7d6db6a8fb78c4e7868d299ab48bed5cfcb0ea9f4fc6ede4c6b"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgInfoBG_Bless-dd1ae407b4.png",
+      "bytes": 803,
+      "sha256": "c8ec25fba16cb8e237784da66e5ec2305f5c405f0fe34ee9d7e1e6c5d89acc8e"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgItemEmpty-725d8512ac.png",
+      "bytes": 13865,
+      "sha256": "7b3c0f610eff0813145ac3d180f5adca4afc5596ded8fa4fbdb5743b81d6ae76"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgItemIcon_NumBg-8659cef746.png",
+      "bytes": 323,
+      "sha256": "3e82a7afe162f64fa8331da266940cd9a5d00a83e631ea7495fcb520a956cae4"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgItemSelect-17c983d02d.png",
+      "bytes": 20736,
+      "sha256": "de48b6abe9e4805b08cc1e54bbc6425b793a4c4239ab73340f0d78af203d68c3"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgItemTipBg-219b4fb11a.png",
+      "bytes": 429,
+      "sha256": "ac615f7615e8b878c4866c6f4999f1f77f578d87bc9551ad484b8950b36e3dce"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgItem_CombatRating-e67301a9fd.png",
+      "bytes": 3336,
+      "sha256": "fd0cb4f61ad968ae8ca183381308e863d317840b6737e17bbc5cb2bce0eccd86"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgItem_Lock2-148ba0ff6e.png",
+      "bytes": 990,
+      "sha256": "ad367ebab347bd4b6fa24c7799628789c64e20864966f73d886d1474989ba217"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgLIne-dd77af014e.png",
+      "bytes": 548,
+      "sha256": "1a3e4990d5d0c8d68adf23bd77cecfa8cf4b3a87222342a71d17fab15afc29cd"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgLIne_Star-3957c8478e.png",
+      "bytes": 319,
+      "sha256": "e2b7dacf322e1bd7698a36831fe3f29371ea98d0a8457058725fc6626e92350d"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgLightElement-0a6acd7d50.png",
+      "bytes": 10075,
+      "sha256": "85cc742aec8a528c93b57af87a430860dc5e637ff6614cef0db5b1f4e53f8e1a"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgLight_Color-692bd4b948.png",
+      "bytes": 133314,
+      "sha256": "9df49bbf03599a225ef065071076a3fd84b1a9931bc881f32b8fa1ac5ca59a22"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgLight_Grey-7b68b2ae66.png",
+      "bytes": 57838,
+      "sha256": "e52f15e467718bab93d2b46be5510e3e359eb5f04d845a0cf4b53b8d0d471187"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgLight_UpgradeBanner-33389bb637.png",
+      "bytes": 12515,
+      "sha256": "cb920dc1b129a24fce725eec7f793f370d69bcb50b41f6a4c1d6e14cdeb7abc7"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgLine-3dc3678e90.png",
+      "bytes": 3848,
+      "sha256": "273bb8cd8ce1cb9a6a292b842bc7b2383bb185a08ac8c0dd88c08a3e90cb46f4"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgLine3-daedb653da.png",
+      "bytes": 545,
+      "sha256": "2abe1032eb9df4f56b233e85f86077e5374cb52784f19db4bb9cf04574beaf31"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgLine_Title2-e62cc03282.png",
+      "bytes": 143,
+      "sha256": "0ab0532bd61059221f243ce61024f8467d8e3ec23986e61abf0c4b94f56cefe2"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgLoad3_Bg-c36ccdfb75.png",
+      "bytes": 544,
+      "sha256": "fb7f7bc92c63c286df37de90aa172e68c66c75f50f60297e67bc174da5d05b7f"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgLoad_Bg-b19835449f.png",
+      "bytes": 1381,
+      "sha256": "f6ba47c70a246e7c736a191482a0801700194d080f356db6b5eb922afe8478fc"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgLoad_Load-0b86ddaaee.png",
+      "bytes": 537,
+      "sha256": "0420a8808a49f51cdee3fb24e03c806304932f468ab5a9a1a8fb91336576dab1"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgLoad_MainHp-2ad8346368.png",
+      "bytes": 12350,
+      "sha256": "10c5cd4dcc5ef5ce85db9f685ec5be2d4865a83f3d8385224385b9b14afd2533"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgLvBg-a924c99ce5.png",
+      "bytes": 3716,
+      "sha256": "0868b85fea261248b0c50618e4e19ffa52bfd8946281b2cb5b7ceb836a6a2f19"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgMask-24a3320123.png",
+      "bytes": 2524,
+      "sha256": "4b8fcf1e081b5f29b8e698c0dd9d297a11e0ac8a992e25d43d0d175ef805dfea"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgMask_BgDialog3-90add1fe9f.png",
+      "bytes": 1157,
+      "sha256": "89be95b6ea6e00fa690a1ec710527e0420493ddd8a2d343e683f7c969385d8a8"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgMask_Piece-71644e05c0.png",
+      "bytes": 2399,
+      "sha256": "1f2a1e3949b26e270079ce9fa2e44a1f5310863253ade22de9611df514d74e22"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgMask_PieceTop-65094aa4b0.png",
+      "bytes": 9260,
+      "sha256": "9bb802295ce59947541d2efbac6b35e14276c106e84422ce95059c9c0299994b"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgNew-9b7c346dac.png",
+      "bytes": 5136,
+      "sha256": "f37ed6720455fd649b8458d715dccfc2771655cdf4b8cb8d2f5598e5056a1021"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgNpcDetailPanel-_Unpin-1c75cd0166.png",
+      "bytes": 621,
+      "sha256": "1902ab3db5f68240656f7e7b2ecd1d4dda505a7a030dc12efd8c2bb5c8df440e"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgOrange_PopUps-9402a4dd1e.png",
+      "bytes": 239510,
+      "sha256": "99d6cf4dbe52d4725d65fd04a8e3af6d82d625388d6d98411ecb249edf56ee33"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgPageBig_Bg-bf19db1c71.png",
+      "bytes": 1720,
+      "sha256": "07e9a6d9d969f08440efa4fcfaec2810ec3c9d14012f957359b8a2d1b67e0784"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgPageS_Bg-488bbcab45.png",
+      "bytes": 3318,
+      "sha256": "24adf52ba75ae7306751d32c7094148527b1efe1f4881aa1399e46bb3063d841"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgPageS_Sel-e82cd8fc4f.png",
+      "bytes": 1626,
+      "sha256": "13091b992d4654a7a518a020024df104ba9e7e44afca1bfb13ccb9a3a0901e87"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgPlayerList4-5730dbdb99.png",
+      "bytes": 4098,
+      "sha256": "fc8198a86171f103386a4d94149f21610dde4194f5012fafd4949613ab4095fd"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgPresent-b98847ead9.png",
+      "bytes": 38707,
+      "sha256": "7219a7c83e3717def8d3a6c4d35ed1616be716130eae0aeb446345f243a04686"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgPurple_PopUps-38b5295192.png",
+      "bytes": 241929,
+      "sha256": "5e4e1cf08aa6a2be15253e40ef6dfdac56a0094a0822bdab60bdaeae53087267"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgQuality_Blue-42b8cb9630.png",
+      "bytes": 24295,
+      "sha256": "d7af3c8915139d2d876cb2f85ca24e63135c48c028cd83474a8248802ab5a93f"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgQuality_Mask-49ff34b468.png",
+      "bytes": 2957,
+      "sha256": "95a3f1f08a4a1b880657d629d031274f9a3725d75e46073c887115c20051768f"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgQuality_Shadow-00e2100625.png",
+      "bytes": 4989,
+      "sha256": "2db8da22ebd8ce09ddc89bd7a975e1763d49c5085b1f5919a5b68789dfba1e1f"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgQuality_Star-f70d6f29e8.png",
+      "bytes": 2709,
+      "sha256": "44cb89e6b4bd7b9349bad27ee750086d1f33a0bdc22f130ca382522240256cae"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgQuality_Star2-6b03b21215.png",
+      "bytes": 2740,
+      "sha256": "69709be531bdbd9185a80bda6842c875a5154e8eb0c9c1306f770932f9887620"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgQuality_Star3-44507db309.png",
+      "bytes": 2919,
+      "sha256": "50a505f02d80ba6ade19bd13f3835ef6e0e727602de1d0a1f32e179fc718374e"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgQuality_Star4-0176b74a5a.png",
+      "bytes": 2776,
+      "sha256": "9c5136e05b8c171cb1fcc81b5a21f1aa9a98a2ef2203dda2678e5fc66dbdace1"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgQuality_Star5-89318b8a9d.png",
+      "bytes": 2673,
+      "sha256": "b026bcad3ea65e814b11713eab562f71597bfd5194589844be9bcfa764cc3809"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgQuality_Star6-ad64457e45.png",
+      "bytes": 2640,
+      "sha256": "ad24b4676b239c53cf04d731e66c353e4a9f252fd0124052b173be36fe5435db"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgQuality_StarMul-52e254b95d.png",
+      "bytes": 3190,
+      "sha256": "c42852d5f74771c8d9c063870ddc1eb529a54de62aaa4fa53ac61f783659f5a4"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgRainbow_PopUps-2bf69543d5.png",
+      "bytes": 269755,
+      "sha256": "ef98c15a8316dd9fd5df299cdbb357ed4832de7c210a2bacca5d65f5628ad9e5"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgReceipt_Tips-e76919d19d.png",
+      "bytes": 1727,
+      "sha256": "7c1362ca754accfee7a14ff42c99a9d10fc60ac69050db643fbed55c587303de"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgRed-f3845f3f04.png",
+      "bytes": 1531,
+      "sha256": "edf75f36b0ae638f2b6a90585ffb4f232105b01cd631b8830d21fe21eb28cfed"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgRedDot-8154d7a8c2.png",
+      "bytes": 1977,
+      "sha256": "02ebb92c906b1b9fe1166b9882dbdd92e545769b61dfc7462f2b410965c8a81c"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgRed_PopUps-8f95753def.png",
+      "bytes": 224824,
+      "sha256": "7ac500143b08d06ba41b406bf7c1c8122b1603654bafb1492e81f3c725677ca8"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgRemindAsh1-d513b4f5a4.png",
+      "bytes": 718,
+      "sha256": "db61cf118ac337b1a79029d18e4dd082c18e282d34ea7e62d3c4b2341e088764"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgReturn-48efaa6e6b.png",
+      "bytes": 712,
+      "sha256": "4f188679e2a79cd780468ab3dc4793943b74b817591d91ed2a8f163c9e565e0b"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgReturnBg-25d824248c.png",
+      "bytes": 2280,
+      "sha256": "ba36c48f4a2df794e7e9fc0db3530fa327876daed73a2557825ce487449c9d49"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgRound-f7cf02c86e.png",
+      "bytes": 1824,
+      "sha256": "8215c32ea9c1e991519fb23129cc3a9f88da404030e9b9c0095665e1f37a8e8b"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgRoundTitle_IconBg-708e0f9847.png",
+      "bytes": 6614,
+      "sha256": "2fffd502718773812a0e066027f85df851ce93b5124625211c00a57b92552870"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgSelected_bg-ab2290a60f.png",
+      "bytes": 2303,
+      "sha256": "e8a4277055918905a04671cb8baa40cc8c62e61c6cbe06f52d8694758adf5f03"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgShare-376b21345a.png",
+      "bytes": 701,
+      "sha256": "3b93ff38fbb5fed3d865c215c6776da51556caabc1e73651207dc459beda9d64"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgSkillBg_Equit-8d8b153fec.png",
+      "bytes": 2115,
+      "sha256": "ac5b89c8f1abf4a0c51320d0c142cfabb807fb9bb979948d4199e6fe1ec09e1e"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgSkillBg_EquitArrow-9ffb0d396a.png",
+      "bytes": 13533,
+      "sha256": "527755a60d02b0988abcc71b1f6956161c1e2f2b241b52d35d7502acdab7bbf3"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgSkillItemZs_1-1e8447f731.png",
+      "bytes": 18699,
+      "sha256": "284e35e39810682400dfd968824eeea1dc98011dafe21d06af1b67b76eae8804"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgSkillItemZs_2-a99153c263.png",
+      "bytes": 14539,
+      "sha256": "5c38a5834bd369f96ccc7528a0c4664e6a5e9d6c19ada8ecf8a2ce9fd6f82c29"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgSkillItemZs_3-26fae55e2b.png",
+      "bytes": 11970,
+      "sha256": "c9dae0eb844e903b68d694b2f34b02f66a468a1947c717b67f7119d5e7ce1a78"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgSkillListBg-34adfc79ad.png",
+      "bytes": 1992,
+      "sha256": "d5c6db980510be598bcdd69bfca2e3ef4ab681c614da03df65ccb52b2b6f2618"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgSmallsFunctionBg-cb58655255.png",
+      "bytes": 4429,
+      "sha256": "66698fdfb9850946c9b35d98aab7b8c5f8f5f466a3b0a60cfb492626c0a9b8c7"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgStar_Bg-156d4887df.png",
+      "bytes": 1826,
+      "sha256": "f6d3706106ca9fb614895fb7ffd840e60db09db68b051d133c6c0bfee08c3c81"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgTab-a8859eeafb.png",
+      "bytes": 5192,
+      "sha256": "292d3fa8bbbba7fe1f2f31b9494f18e28f1346831f1f43bc19d9b3472b9204c3"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgTabSel-919700ec02.png",
+      "bytes": 724,
+      "sha256": "bab81e49aab8342d37bdbf79929537b32d389b2cc2275a526a981947d5063f8e"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgTimeLimitBg2-d3e255c7ba.png",
+      "bytes": 1622,
+      "sha256": "4114e8c492147e93d1b53713000cec3ec56e934ad7556cfb1349ff3f320cf3b1"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgTitle_Iron_1-5586169bd8.png",
+      "bytes": 12478,
+      "sha256": "372976ef072b046f8e11e013e7ea4298e51b01fc530a0919d21567a19141b8a5"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgToggle_Nor-29efc97423.png",
+      "bytes": 694,
+      "sha256": "3bdcd84c1cb858f302a76553cf5c27374a6bd9f3b21bfa89d0cec2d4489e0af8"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgToggle_Sel-a73a3cc285.png",
+      "bytes": 793,
+      "sha256": "ae5e0dea87a7c419301f340c3986857cfe5b3528d33137af620d80d0f042e82e"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgTop_Zs2-adacf53152.png",
+      "bytes": 362,
+      "sha256": "84ab8f64d42dd38b61a0135e148b9b55700cd0cd2c1c2a4a18644e351e3f7bca"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgTxtSwitch-f322e0fb0e.png",
+      "bytes": 162,
+      "sha256": "adbd76cd2550a4b5f16a1a34123db7418154de036d45135683c122518e311d9c"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgUnuse-3ea76fae9b.png",
+      "bytes": 1455,
+      "sha256": "b2d54379045ced9cd9cb793cd0005c1f894b29cf13c7e271e719d16fdbedac37"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgWhite_PopUps-4c1a801f8c.png",
+      "bytes": 224676,
+      "sha256": "3890a322332169d9a53898394dc5881bf9109d2d2dc9dd859fcaa5c674c7a4fb"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ImgZs1-e94c381dde.png",
+      "bytes": 633,
+      "sha256": "c7862ba0bb3787bb1d79c151528e6b3824b3d70ad47a1a8755c22cf10f24eae0"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/Img_OutputAddition_Frame01_Split01-b2322e7dbb.png",
+      "bytes": 1441,
+      "sha256": "8414bb46ef7c81ee46b91bf4d0079eb494e8dbc31e8c307d31fd2b7312318468"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/Img_OutputAddition_Frame01_Split02_Single-8be6d92c8d.png",
+      "bytes": 398,
+      "sha256": "909d4cfa6d2c1b13a8538407c539f5416660d313d7bfcb56bc6785d91ae47e9e"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/Img_OutputAddition_Frame01_Split03-135dfe9411.png",
+      "bytes": 492,
+      "sha256": "5a7a53fccb59442c8ebdaf5b192444317373ad3953742e4b8558c823836c5ebf"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/Img_OutputAddition_Frame01_Split04-31e3cbce0a.png",
+      "bytes": 809,
+      "sha256": "ea682f75ec28bb35cafc05158b78991ce81c285b6cade693101225e625c8f786"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/Img_OutputAddition_Frame01_Split05-0d96701ae8.png",
+      "bytes": 5869,
+      "sha256": "c9108e6132001e15987e66971ea07aa7c7aa2b5fca9c5d2ecd2a1498a2cb4150"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/InputFieldBackground-699701cff6.png",
+      "bytes": 779,
+      "sha256": "37a101d10d7e8196d7c03cfbb3e0d04f93a06d9afd843ad695b73dbda17a24d3"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ItemBattleData-21e0f5558d.png",
+      "bytes": 376,
+      "sha256": "1e8ffc43eb921dd6b5b491cda09b6dd74cc68195d11b4d970cafbff3e28007d5"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ItemFromArrow-7c865053ca.png",
+      "bytes": 662,
+      "sha256": "56a00278c5c2cf2cc6987089ca1e1a1112ebb62d4496d4d16453b620b98edcd6"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/ItemPiece2-a7d67a73d7.png",
+      "bytes": 502,
+      "sha256": "94d2a86906483a6c2f42be2ff088145ba618ba1a1e7206e75448470b5d6c4710"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/UISprite-3eb5b5a559.png",
+      "bytes": 713,
+      "sha256": "9e2b539b7c88fe4464525abc282c724b964852950a0b8aa1df13414014b5f33c"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/die_shadow-5a836fa939.png",
+      "bytes": 9667,
+      "sha256": "0e789a5908b3d8587af7d69e1cf1e3d4b7d9871b26786246a73c172354bf30fe"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/equip_20016-6ee1d8f847.png",
+      "bytes": 42745,
+      "sha256": "a0a6336c253e723c6505127c83d579d37c4059f333df9041025ca4ced28b25ef"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/item_100-d078fbaf3a.png",
+      "bytes": 38839,
+      "sha256": "1b7569829d7f8b9a485ad1db24674f0598836e676e88b9928b15254f2ef0d2a5"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/item_1530-14ba98a95c.png",
+      "bytes": 21439,
+      "sha256": "d7770f58fbf06d07f9d94921996e5b616da74b8519455c3c86194ae2209e693e"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/item_1540-48f5e1c0eb.png",
+      "bytes": 24026,
+      "sha256": "cb6be0eb0916cbb6ed13442e6d949a30dd15d908f1a66c9febe319cac6ffae54"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/item_1550-11c2fb7944.png",
+      "bytes": 17015,
+      "sha256": "8e7ef9922f65646baa173532bae7caf759d30887bd440d361f148ded87ca97d9"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/item_301-139d6bf42b.png",
+      "bytes": 54793,
+      "sha256": "33e186a53a1b03994e5865f4f91f997ee03eac88d916400ede29f33b9953686a"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/item_302-c141a3b06e.png",
+      "bytes": 54609,
+      "sha256": "367e20be1fb97b74f59afb29a1fbcdd9e0ab6399e5304693e2c1a8b9b19ae34a"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/item_303-10931e9b44.png",
+      "bytes": 56430,
+      "sha256": "5b98ebae29ac02e2eaef89edd64781c19389d10ddab3d3ab397aafcaf5ed8d5f"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/item_304-53744d7385.png",
+      "bytes": 57700,
+      "sha256": "e738f150abeb1f0f22ad4712a8a8135d063e4af2dff0c6146ef5470d711fc39f"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/item_41300-fe8a7d1cb2.png",
+      "bytes": 39457,
+      "sha256": "087491f5d782ffef5c8d0a1adec724efcf2c768fca9b460995546f1ed4f583df"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/item_41301-619018c79c.png",
+      "bytes": 47694,
+      "sha256": "06f94e0f6d45f3843586b7064016a6c03f3e2e942f9e8dcb50fc93ca605b9116"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/item_42200-617dec24f0.png",
+      "bytes": 47978,
+      "sha256": "b393e52c4b122c5743d99d211bee1e8e0b552b98ef4461a5a15b0489b8be646c"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/map_14_bronze_stage_bg-c8529ef2a9.png",
+      "bytes": 242840,
+      "sha256": "03c2a352c9eed2428ee231955823d5e24029765a3bca00033b7fe1c9abd553b3"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_01f8824b94085095936f6172d38d8fd4a845bce49fa984109547c9b07a7d319d.png",
+      "bytes": 459,
+      "sha256": "01f8824b94085095936f6172d38d8fd4a845bce49fa984109547c9b07a7d319d"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_0203cc71aa52bc9f3719f30dd0f7c5a30a66bff0812fb56d72a5961910f521fe.png",
+      "bytes": 70243,
+      "sha256": "0203cc71aa52bc9f3719f30dd0f7c5a30a66bff0812fb56d72a5961910f521fe"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_026ac3aea939a2691d23971d9778008c15747c4365120b1686b699724562b183.png",
+      "bytes": 2065,
+      "sha256": "026ac3aea939a2691d23971d9778008c15747c4365120b1686b699724562b183"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_03dcd60401fbd1168a2e38f0243a1c8c4e3091465f11873124ced73f856a6c20.png",
+      "bytes": 1009,
+      "sha256": "03dcd60401fbd1168a2e38f0243a1c8c4e3091465f11873124ced73f856a6c20"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_042efa2873a8044ababa2a5dd4ddd6d16a91c4de174ab36944f3da4c731bd331.png",
+      "bytes": 1168,
+      "sha256": "042efa2873a8044ababa2a5dd4ddd6d16a91c4de174ab36944f3da4c731bd331"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_08119e431f56c72ee289e800fe35ea77e37582965419a89b9f439542c9d10f97.png",
+      "bytes": 1148,
+      "sha256": "08119e431f56c72ee289e800fe35ea77e37582965419a89b9f439542c9d10f97"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_08b6c84f80332f345f98d9f8eaa04cbccf260cb6709ead20b4172997dd7a4b94.png",
+      "bytes": 2333,
+      "sha256": "08b6c84f80332f345f98d9f8eaa04cbccf260cb6709ead20b4172997dd7a4b94"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_0acf47c6f8871a36ec237db3dfbfa88f933f82a31a4811ca0a474f53cc62ff09.png",
+      "bytes": 82716,
+      "sha256": "0acf47c6f8871a36ec237db3dfbfa88f933f82a31a4811ca0a474f53cc62ff09"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_0ccb64bfc4012500c24dbc13e7719a08409242deca7d508af160ae5788f7718d.png",
+      "bytes": 68110,
+      "sha256": "0ccb64bfc4012500c24dbc13e7719a08409242deca7d508af160ae5788f7718d"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_10ac7e84d7e729f9e7998f0f78f8b589839fc88476b9a02c7d4c394e696ed49f.png",
+      "bytes": 5706,
+      "sha256": "10ac7e84d7e729f9e7998f0f78f8b589839fc88476b9a02c7d4c394e696ed49f"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_13ecb08ecfe7c6b87de06207f6a62dea4948d35e3bed0ed13de49e14ac579b7f.png",
+      "bytes": 686347,
+      "sha256": "13ecb08ecfe7c6b87de06207f6a62dea4948d35e3bed0ed13de49e14ac579b7f"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_1480e8df6c6d7f220065f2467eba65ddb670bfdd9e6607b103671833538f9243.png",
+      "bytes": 1655,
+      "sha256": "1480e8df6c6d7f220065f2467eba65ddb670bfdd9e6607b103671833538f9243"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_148750bd8a2d16f055c50ecad036532022b7b55d730248aa5d81349acb09452f.png",
+      "bytes": 63377,
+      "sha256": "148750bd8a2d16f055c50ecad036532022b7b55d730248aa5d81349acb09452f"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_17ffff62ae9c7b06369affbab7655ff11088b3df5c0eaaa7e7f4be5394aac3e3.png",
+      "bytes": 245,
+      "sha256": "17ffff62ae9c7b06369affbab7655ff11088b3df5c0eaaa7e7f4be5394aac3e3"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_18aaddd7a3ba7b5e3f3b1d478b6ec347a6082ed7f467cbd90d3077f4ae911135.png",
+      "bytes": 1135,
+      "sha256": "18aaddd7a3ba7b5e3f3b1d478b6ec347a6082ed7f467cbd90d3077f4ae911135"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_23065d4aef19b0a233ba8e5799999984722e2a0cb170105138fa7c67801cb6b8.png",
+      "bytes": 731,
+      "sha256": "23065d4aef19b0a233ba8e5799999984722e2a0cb170105138fa7c67801cb6b8"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_244a63fd756afa98e5d74b1b24b47e6e512cfe7d5ca21bbb1671bba120ccc685.png",
+      "bytes": 743,
+      "sha256": "244a63fd756afa98e5d74b1b24b47e6e512cfe7d5ca21bbb1671bba120ccc685"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_2887335e56914974d476203f0447ef4158df6848c0046d3f25f42f5fe19b581e.png",
+      "bytes": 2059,
+      "sha256": "2887335e56914974d476203f0447ef4158df6848c0046d3f25f42f5fe19b581e"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_2b0a5abbe8b891caba25b53c9dacacb70c208d9ef1523d43909a45770851a201.png",
+      "bytes": 59706,
+      "sha256": "2b0a5abbe8b891caba25b53c9dacacb70c208d9ef1523d43909a45770851a201"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_2c9b0b56808fe94d91319316211c27c3e279bc34d4c3fdda52262abdb1ca0901.png",
+      "bytes": 2059,
+      "sha256": "2c9b0b56808fe94d91319316211c27c3e279bc34d4c3fdda52262abdb1ca0901"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_324ac20061d5832efb122a7ab0f43efba7ab59f5ca5025c68b7146f108d50a6f.png",
+      "bytes": 78269,
+      "sha256": "324ac20061d5832efb122a7ab0f43efba7ab59f5ca5025c68b7146f108d50a6f"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_3375d32e6cad821b3c514d5cb2d2ce353df4357733a0ecca410beb7bf83e6e76.png",
+      "bytes": 69437,
+      "sha256": "3375d32e6cad821b3c514d5cb2d2ce353df4357733a0ecca410beb7bf83e6e76"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_378cfab80178442ed44f0d12aedf199362ccad7da600e7fec7775d06c5bd766f.png",
+      "bytes": 85301,
+      "sha256": "378cfab80178442ed44f0d12aedf199362ccad7da600e7fec7775d06c5bd766f"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_38e9263b09f04fff1f4e8b43fa3600acf89bfc459b87ae39dffe25839a56e398.png",
+      "bytes": 735163,
+      "sha256": "38e9263b09f04fff1f4e8b43fa3600acf89bfc459b87ae39dffe25839a56e398"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_3c499f4225c0ba4e2792daa44c27a5abd8c1e7229e9bf3f3b299291a49f0aa29.png",
+      "bytes": 882,
+      "sha256": "3c499f4225c0ba4e2792daa44c27a5abd8c1e7229e9bf3f3b299291a49f0aa29"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_3ff50a6d6ffd64110e649943923d79ba2ad5aa16b15558878e56981a984da96b.png",
+      "bytes": 2977,
+      "sha256": "3ff50a6d6ffd64110e649943923d79ba2ad5aa16b15558878e56981a984da96b"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_40e2eb3be48f3c46645b80e0ead88a0445801fb4fb747b6ce7ab4cee4f5d6497.png",
+      "bytes": 1170,
+      "sha256": "40e2eb3be48f3c46645b80e0ead88a0445801fb4fb747b6ce7ab4cee4f5d6497"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_41c2f8f5d851e16a9b60ba2fbeedf89a48eddd6a88099740f3b62e7ef5d07d0c.png",
+      "bytes": 632014,
+      "sha256": "41c2f8f5d851e16a9b60ba2fbeedf89a48eddd6a88099740f3b62e7ef5d07d0c"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_42f47ba512d889e9be897d6a6cee2e94ab2b1aefa0983d5a17f4e95ba9298d1e.png",
+      "bytes": 1038,
+      "sha256": "42f47ba512d889e9be897d6a6cee2e94ab2b1aefa0983d5a17f4e95ba9298d1e"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_440bd227410e14cf68f36588ef42f31c79cea401593063eadce71a0bad854270.png",
+      "bytes": 77669,
+      "sha256": "440bd227410e14cf68f36588ef42f31c79cea401593063eadce71a0bad854270"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_46193c9f3a976fe22c67182995dcb8145c026e0b9c521895237d99d85918875e.png",
+      "bytes": 276035,
+      "sha256": "46193c9f3a976fe22c67182995dcb8145c026e0b9c521895237d99d85918875e"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_5077b7ddb657dbf27af0a42ed51473ca42ce260d5ef92c866abc01e5d3760ff1.png",
+      "bytes": 1032,
+      "sha256": "5077b7ddb657dbf27af0a42ed51473ca42ce260d5ef92c866abc01e5d3760ff1"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_5977448c96992028dbcd7ad041373f26d653289e8baabbc8eb92298cbba587fa.png",
+      "bytes": 65988,
+      "sha256": "5977448c96992028dbcd7ad041373f26d653289e8baabbc8eb92298cbba587fa"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_5bbe74fa874bdbf2699be4f0bf96179136c837e07645464a5929e251c6e95704.png",
+      "bytes": 1122,
+      "sha256": "5bbe74fa874bdbf2699be4f0bf96179136c837e07645464a5929e251c6e95704"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_5fda0fde2246137c6917ac43559d63c9db776c8e7109f4e4222c110c481a20b7.png",
+      "bytes": 1898,
+      "sha256": "5fda0fde2246137c6917ac43559d63c9db776c8e7109f4e4222c110c481a20b7"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_5fe7674256f2a5bec2b9dc37f5b30a2151d632069f470dec65b7688faaeb389b.png",
+      "bytes": 800,
+      "sha256": "5fe7674256f2a5bec2b9dc37f5b30a2151d632069f470dec65b7688faaeb389b"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_604a66ca9589bf4e9386e6ceddacf834244ab33a81e24075f23fbd4a4580d453.png",
+      "bytes": 72863,
+      "sha256": "604a66ca9589bf4e9386e6ceddacf834244ab33a81e24075f23fbd4a4580d453"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_60961d06bb81ccaaeaa570fbf3ebdf9a1e3c119d544889406d1c980e458a4d6b.png",
+      "bytes": 684510,
+      "sha256": "60961d06bb81ccaaeaa570fbf3ebdf9a1e3c119d544889406d1c980e458a4d6b"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_61ce7c6c2329c5e6d7c1f3d203725e4bba463ab6ee232a2970e759ece959c549.png",
+      "bytes": 1286586,
+      "sha256": "61ce7c6c2329c5e6d7c1f3d203725e4bba463ab6ee232a2970e759ece959c549"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_66b2d289495dfb9c8998007ef5e20276952122a59192505c77e832e3387cf06e.png",
+      "bytes": 1043,
+      "sha256": "66b2d289495dfb9c8998007ef5e20276952122a59192505c77e832e3387cf06e"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_68042fad222317c36dbd570281516a3912bfd4d705b31294e2edb6ec42196caf.png",
+      "bytes": 88600,
+      "sha256": "68042fad222317c36dbd570281516a3912bfd4d705b31294e2edb6ec42196caf"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_69ed94ee8bc7dc6b042d491a1c81ed5d183a1d54c572bdbdfc559b38ea8eff52.png",
+      "bytes": 748,
+      "sha256": "69ed94ee8bc7dc6b042d491a1c81ed5d183a1d54c572bdbdfc559b38ea8eff52"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_6b29cf1430bcf5c3fed98d14e5085bf4d8e63d79f21ea9840f3dab89a340469b.png",
+      "bytes": 1681,
+      "sha256": "6b29cf1430bcf5c3fed98d14e5085bf4d8e63d79f21ea9840f3dab89a340469b"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_6fb0c37cb93d26cfd23681bbfc3ab7417bed12f7dc292443aa1e339f7e949cd1.png",
+      "bytes": 44781,
+      "sha256": "6fb0c37cb93d26cfd23681bbfc3ab7417bed12f7dc292443aa1e339f7e949cd1"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_80051a35c37779144aaa8f634cfe12db884d946ca934170423827c1746010e47.png",
+      "bytes": 64830,
+      "sha256": "80051a35c37779144aaa8f634cfe12db884d946ca934170423827c1746010e47"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_86996c44cbd7b920548434365babb572ddda648c62cc378ef98f0fb4b1a78a35.png",
+      "bytes": 1763,
+      "sha256": "86996c44cbd7b920548434365babb572ddda648c62cc378ef98f0fb4b1a78a35"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_895092fe27e85f08590d9fb4298a47b83441636dc3f7d2bf35dad82ec675a6fb.png",
+      "bytes": 1045,
+      "sha256": "895092fe27e85f08590d9fb4298a47b83441636dc3f7d2bf35dad82ec675a6fb"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_8ca75078b5bc01de18ca976a027b80a28f86570b40e6a4e9a5aa45113c842254.png",
+      "bytes": 14451,
+      "sha256": "8ca75078b5bc01de18ca976a027b80a28f86570b40e6a4e9a5aa45113c842254"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_921332ccb19d837d63047ff4e527ebede35889c849aea2bef67c0a49dd7ddd08.png",
+      "bytes": 959,
+      "sha256": "921332ccb19d837d63047ff4e527ebede35889c849aea2bef67c0a49dd7ddd08"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_9a3203117ae57af62d4c46ace7b4240b38c047f642a5c169ab3d7770379c2937.png",
+      "bytes": 735,
+      "sha256": "9a3203117ae57af62d4c46ace7b4240b38c047f642a5c169ab3d7770379c2937"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_a02cff5906916d937f4cb0f9636efabf6444b91b1ff567f9c89edea0f151c2a4.png",
+      "bytes": 2192,
+      "sha256": "a02cff5906916d937f4cb0f9636efabf6444b91b1ff567f9c89edea0f151c2a4"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_a4700c6638bf210911a4ea1d59e8725b809137732db16626a402d173b2f1afb0.png",
+      "bytes": 1389,
+      "sha256": "a4700c6638bf210911a4ea1d59e8725b809137732db16626a402d173b2f1afb0"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_a77345ef6505642b894579c89b2f772c7e22b0943a58e7ff9aa8f6b349fe61a9.png",
+      "bytes": 435,
+      "sha256": "a77345ef6505642b894579c89b2f772c7e22b0943a58e7ff9aa8f6b349fe61a9"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_a7aa2cc05f3f9bed8edf74c406abf488b266f1f4147c97b3048c8cfae0bf1684.png",
+      "bytes": 1232,
+      "sha256": "a7aa2cc05f3f9bed8edf74c406abf488b266f1f4147c97b3048c8cfae0bf1684"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_a7e6c6c8e28c5d17a64db451aa11b6f89261db53a5e9cb862ef28953175d4b76.png",
+      "bytes": 762,
+      "sha256": "a7e6c6c8e28c5d17a64db451aa11b6f89261db53a5e9cb862ef28953175d4b76"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_a8777205712767b43b8f9dcea2dff7ca9636e06d9e6fc9e9bd2d217f45c496c9.png",
+      "bytes": 2770,
+      "sha256": "a8777205712767b43b8f9dcea2dff7ca9636e06d9e6fc9e9bd2d217f45c496c9"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_a8b6ceb0957ef0036e6a9c5a97b4c531caca6f09f92dfbb38651b3101edc9551.png",
+      "bytes": 770,
+      "sha256": "a8b6ceb0957ef0036e6a9c5a97b4c531caca6f09f92dfbb38651b3101edc9551"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_a8bc105036e28e5a9a61f44d96d6a7839bc771464f12d2aa819d74c531054564.png",
+      "bytes": 1470,
+      "sha256": "a8bc105036e28e5a9a61f44d96d6a7839bc771464f12d2aa819d74c531054564"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_ae22cf4a6b01dbb0c05d8b3cde711ec451824990b05a9085df7aa28114d6c3c7.png",
+      "bytes": 1579,
+      "sha256": "ae22cf4a6b01dbb0c05d8b3cde711ec451824990b05a9085df7aa28114d6c3c7"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_ae526888cd952226e5cd2024af51f1a9453d60afd12cb1020e36ede112fc0e75.png",
+      "bytes": 11468,
+      "sha256": "ae526888cd952226e5cd2024af51f1a9453d60afd12cb1020e36ede112fc0e75"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_b4e84c75543c43e6773c83cb10c63b7de7b46d18fe4a19b41a7ba3089cc24e35.png",
+      "bytes": 1759,
+      "sha256": "b4e84c75543c43e6773c83cb10c63b7de7b46d18fe4a19b41a7ba3089cc24e35"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_b6b8d0ecb649edb86448bd18e0d239c2770593ea3d92f5179022fa5e990d4559.png",
+      "bytes": 644,
+      "sha256": "b6b8d0ecb649edb86448bd18e0d239c2770593ea3d92f5179022fa5e990d4559"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_bab85fd1b78ddd13aeb730853117ebfa0a2c6507737084ffd564826be9272ba8.png",
+      "bytes": 871,
+      "sha256": "bab85fd1b78ddd13aeb730853117ebfa0a2c6507737084ffd564826be9272ba8"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_bcbe5bf5835c1cea87c2798f8498612b907b09a93e70a7169526e1f795f6fd62.png",
+      "bytes": 757,
+      "sha256": "bcbe5bf5835c1cea87c2798f8498612b907b09a93e70a7169526e1f795f6fd62"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_c6dab4e9d940e878eef55f05437daa1c08981eb304f43f2bf63854337e84b6aa.png",
+      "bytes": 67631,
+      "sha256": "c6dab4e9d940e878eef55f05437daa1c08981eb304f43f2bf63854337e84b6aa"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_c7d47ac64c3a738a2c631fe9aa5a89c78b5c7379b769235a657d9fe6915e06e9.png",
+      "bytes": 1522,
+      "sha256": "c7d47ac64c3a738a2c631fe9aa5a89c78b5c7379b769235a657d9fe6915e06e9"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_cd0c59ad73e5887df4f34626a85756e1c48f4b57abd7fc30f265c064bb32ca79.png",
+      "bytes": 63251,
+      "sha256": "cd0c59ad73e5887df4f34626a85756e1c48f4b57abd7fc30f265c064bb32ca79"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_cfdb576d740f67b192d3ade152467af9431fcf359cae4874bdb4c221e62ed05d.png",
+      "bytes": 1364,
+      "sha256": "cfdb576d740f67b192d3ade152467af9431fcf359cae4874bdb4c221e62ed05d"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_d501139424a0ca8b4b329a439e446b65837a11726c9489ea14776a9eeb7a7cc2.png",
+      "bytes": 1032,
+      "sha256": "d501139424a0ca8b4b329a439e446b65837a11726c9489ea14776a9eeb7a7cc2"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_d6e8f95d532c786a598dbc850e8a0a74a33604d3b3b42a01c97affd8bb6557e8.png",
+      "bytes": 849,
+      "sha256": "d6e8f95d532c786a598dbc850e8a0a74a33604d3b3b42a01c97affd8bb6557e8"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_d8ff3c45cd8d5f4cff48cbacbb5fecd12dca93786468d83c9c2c510539f7ca87.png",
+      "bytes": 974,
+      "sha256": "d8ff3c45cd8d5f4cff48cbacbb5fecd12dca93786468d83c9c2c510539f7ca87"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_e81d5cb2ac8ed7229587e3572d4802ddb561b72b6b7ea29762a0961335f53d39.png",
+      "bytes": 970,
+      "sha256": "e81d5cb2ac8ed7229587e3572d4802ddb561b72b6b7ea29762a0961335f53d39"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_e956e74d5223b89b5b8d685b25e99da549933debf789eb85722f8013093937ef.png",
+      "bytes": 64835,
+      "sha256": "e956e74d5223b89b5b8d685b25e99da549933debf789eb85722f8013093937ef"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_ea8b8705f01d8cde2bcc86ebe1ffeea00be2ceb6d4e61f9350606366788a4180.png",
+      "bytes": 694110,
+      "sha256": "ea8b8705f01d8cde2bcc86ebe1ffeea00be2ceb6d4e61f9350606366788a4180"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_eaf587134b55ad47b0dad1e77ba09d187f3c0df9bb694b244a875ee1bf0bdcc2.png",
+      "bytes": 85631,
+      "sha256": "eaf587134b55ad47b0dad1e77ba09d187f3c0df9bb694b244a875ee1bf0bdcc2"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_f22362a521e0517794ad6b6e0e005b7e1010869268a461da728420eca5b1a5c1.png",
+      "bytes": 84650,
+      "sha256": "f22362a521e0517794ad6b6e0e005b7e1010869268a461da728420eca5b1a5c1"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_f3be79d65e9af67f70810395cdbb31e19412261f560c092b3274e36cb89fd41e.png",
+      "bytes": 1320,
+      "sha256": "f3be79d65e9af67f70810395cdbb31e19412261f560c092b3274e36cb89fd41e"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_f56dd3f9d597e3cf737e87f797e42f49e76a45fc5eb3a2b657bfee4dc881858d.png",
+      "bytes": 1085,
+      "sha256": "f56dd3f9d597e3cf737e87f797e42f49e76a45fc5eb3a2b657bfee4dc881858d"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/skill_aux_fa6f4e2e6afa5618a123a95408d2a9c168515e8c1d62da81c49b122ac479ee8b.png",
+      "bytes": 1248,
+      "sha256": "fa6f4e2e6afa5618a123a95408d2a9c168515e8c1d62da81c49b122ac479ee8b"
+    },
+    {
+      "path": "Assets/Official/Skills/Art/sprites/treasure_61001-90446d948d.png",
+      "bytes": 48674,
+      "sha256": "839f9045f15b009ec7a80c43128e6671cae7b250014a50000a273f72e767ecef"
+    },
+    {
+      "path": "Assets/Official/Skills/NativeText/FZY4K-Dynamic-Atlas.texture.asset",
+      "bytes": 8389713,
+      "sha256": "1e74c3dad775fc85fc5c27f7c75efd31d6ed113475af63fd0eecd644f77b21a5"
+    },
+    {
+      "path": "Assets/Official/Skills/NativeText/FZY4K-Dynamic.asset",
+      "bytes": 4645,
+      "sha256": "65fbb01a5652111c8b19c5ede92a70c10b7b16851926e14846830d22f294d123"
+    },
+    {
+      "path": "Assets/Official/Skills/NativeText/FZY4K-Dynamic.mat",
+      "bytes": 2668,
+      "sha256": "49bb0b9c320ca0a1ccc4a0301eda2fae212d79569a2e4ec2c06e31daac78be0e"
+    },
+    {
+      "path": "Assets/Official/Skills/NativeText/FZY4K.ttf",
+      "bytes": 10017464,
+      "sha256": "90023872dffe6a58503de655bd0631bf3334ce3b6b72cc75a6625b685c94c386"
+    },
+    {
+      "bytes": 1162618,
+      "path": "Assets/Official/Skills/fidelity-texts.json",
+      "sha256": "f006cdfcfc765c3c9c1f8c746b01ab8ce8dedc888615b2338710bd2955fbd534"
+    },
+    {
+      "bytes": 564906,
+      "path": "Assets/Official/Skills/skill-cultivation.json",
+      "sha256": "20b0ccea1f2eb67543f781e8571769d20c7687718967ee0af14c3160a58a469c"
+    },
+    {
+      "bytes": 2813,
+      "path": "Assets/Official/Skills/skill-quality-gradient.json",
+      "sha256": "a735d8107a91afa88c592a5077b7955c489fafd1d084123ae728470697cb632e"
+    },
+    {
+      "bytes": 22729433,
+      "path": "Assets/Official/Skills/skill-rules.json",
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
+    },
+    {
+      "bytes": 1065888,
+      "path": "Assets/Official/Skills/skill-runtime-rules.json",
+      "sha256": "1ece75e11e618c4a3fef61bb490ed2a3f101f3560649c3384f37eafac8183aba"
+    },
+    {
+      "path": "Assets/Official/Skills/skill-ui.json",
+      "bytes": 7497035,
+      "sha256": "2a7a4c46114cde3768ddbc183e0bc1f4f2246f96469cf3e3291c34c9dbd09c18"
+    },
+    {
+      "bytes": 36369,
+      "path": "Assets/Official/Skills/skills.json",
+      "sha256": "72959bd4280b171c3119676a4f23d913cdfbe53309642e675009e64a1c6e3cb0"
+    }
+  ],
+  "icon_bindings_source": {
+    "path": "assets/reference/skill-ui/unity-icon-source-manifest.json",
+    "sha256": "657bf88eeee3538fbb4ec9f809475612ddae44285f054823dbf5764d23b1ed94"
+  },
+  "manifest": "854_156383",
+  "operation": "Restore pinned official skill UI, rules, cultivation, text and referenced art for Unity.",
+  "prefabs": [
+    "character_skills",
+    "item_empty",
+    "item_skill",
+    "item_skill_piece",
+    "skill_batch_item",
+    "skill_batch_notify",
+    "skill_detail",
+    "skill_list_item",
+    "skill_list_row",
+    "skill_list_separator",
+    "skill_merge_confirm",
+    "skill_panel_detail",
+    "skill_piece_detail",
+    "skill_piece_list_item",
+    "skill_plain_detail",
+    "skill_promote",
+    "skill_promote_item",
+    "skill_promote_level_tab",
+    "skill_promote_prop",
+    "skill_promote_rank_tab",
+    "skill_range_item",
+    "skill_rank_notify",
+    "skill_rank_notify_prop",
+    "skill_recommend",
+    "skill_recommend_item",
+    "skill_tab",
+    "skills"
+  ],
+  "runtime_rules_sources": {
+    "cultivation": {
+      "field": "outputs.skill-cultivation.json",
+      "manifest": "assets/reference/skill-cultivation/source-manifest.json",
+      "manifest_sha256": "00ce0d2c5659596e6b1f54c53da739c3bd45fa557db91d491459cfd9ad37d110",
+      "payload": "assets/official/skill-cultivation.json",
+      "sha256": "20b0ccea1f2eb67543f781e8571769d20c7687718967ee0af14c3160a58a469c"
+    },
+    "fidelity": {
+      "field": "output_sha256.fidelity-rules.json",
+      "manifest": "assets/reference/equipment-completion/source-manifest.json",
+      "manifest_sha256": "9de8fc5d96f16f69ff0a0f7dfd51c78df4f30810d654f38c8ca93018460bdfd0",
+      "payload": "assets/official/fidelity-rules.json",
+      "sha256": "5cb76d59413b0fc1a890aa6216ef6cf224a875dabdf692745d014975db31258b"
+    },
+    "rules": {
+      "field": "data_sha256.rules.json",
+      "manifest": "assets/reference/official-city/source-manifest.json",
+      "manifest_sha256": "e80fab8a7c9754fe6429b186f55976e02c9c0f660ca0aba28e4b9490f48eb5bf",
+      "payload": "assets/official/rules.json",
+      "sha256": "f8c0f515d2f44c5d0847d5422b49d8823578d55de69f59f2d10ec5db83091256"
+    }
+  },
+  "sources": {
+    "assets/reference/equipment-completion/source-manifest.json": "9de8fc5d96f16f69ff0a0f7dfd51c78df4f30810d654f38c8ca93018460bdfd0",
+    "assets/reference/official-city/source-manifest.json": "7553bcfe66fd4dc09a5f8e43d5f196bdcf863ea491bc648b56b99ea556d41c81",
+    "assets/reference/skill-cultivation/source-manifest.json": "00ce0d2c5659596e6b1f54c53da739c3bd45fa557db91d491459cfd9ad37d110",
+    "assets/reference/skill-rules/source-manifest.json": "c11a4ef25e6b20c5561091faa7ba5e0692bb47a64d2f57f9bf2445220593d571",
+    "assets/reference/skill-ui/source-manifest.json": "0ae0ce9575cf214bfb66123fa4ba3cf7e1dddb4ff218f263434df76be1823968"
+  }
+}

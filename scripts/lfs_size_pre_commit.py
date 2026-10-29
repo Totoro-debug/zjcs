@@ -38,8 +38,27 @@ def staged_index() -> tuple[dict[bytes, bytes], set[bytes]]:
     return entries, changed
 
 
-def staged_object_size(object_id: bytes) -> int:
-    return int(git("cat-file", "-s", object_id.decode("ascii")).strip())
+def staged_object_sizes(object_ids: set[bytes]) -> dict[bytes, int]:
+    if not object_ids:
+        return {}
+
+    requested = sorted(object_ids)
+    result = git(
+        "cat-file",
+        "--batch-check=%(objectname) %(objectsize)",
+        input_bytes=b"\n".join(requested) + b"\n",
+    )
+    sizes: dict[bytes, int] = {}
+    for object_id, line in zip(requested, result.splitlines()):
+        fields = line.split()
+        if len(fields) != 2 or fields[0] != object_id:
+            raise RuntimeError(
+                f"git cat-file could not read staged object {object_id.decode('ascii')}"
+            )
+        sizes[object_id] = int(fields[1])
+    if len(sizes) != len(requested):
+        raise RuntimeError("git cat-file returned an incomplete staged object list")
+    return sizes
 
 def merge_generated_rules(
     original: bytes, staged: bytes, generated: bytes
@@ -125,8 +144,9 @@ def main() -> int:
         root = Path(git("rev-parse", "--show-toplevel").decode().strip())
         entries, _ = staged_index()
         candidates: list[bytes] = []
+        sizes = staged_object_sizes(set(entries.values()))
         for path, object_id in entries.items():
-            if staged_object_size(object_id) <= THRESHOLD_BYTES:
+            if sizes[object_id] <= THRESHOLD_BYTES:
                 continue
             assert_worktree_matches_index(root, path)
             candidates.append(path)

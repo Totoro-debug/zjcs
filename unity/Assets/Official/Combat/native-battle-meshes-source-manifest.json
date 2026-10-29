@@ -1,0 +1,569 @@
+{
+  "animation_count": 4609,
+  "generated_by": "prepare_battle_native_mesh_pack.py",
+  "inputs": {
+    "identities": "a5d52f89136883e5674965e54ff1682c4f6aeb53d925ae23a3ad7a107bc28ded",
+    "models": "815fa359dc54fe51b52158dc4bc5f398578936d644f6e500235b433b509ff5ec",
+    "page_manifest": "6af07efff23a3e66f569cd791387c9a1e5c2c005a93c1259f0711f318b97c054",
+    "presentation_manifest": "8c963b1c0969063be38b0445cc0998b555a25923802ca307c7e06068aa37c13f",
+    "spine_catalog": "00bce89ea51e6f7cb960b2ddee7ea6b5bff44551649566c9b2074ea7c434b061"
+  },
+  "manifest": "854_156383",
+  "model_binding_failures": {
+    "CAB-ab3d3c909fcb15167d8f81dcdf082f92:5517491646269376500:": "model_key_not_bound_to_battle_spine",
+    "CAB-caf28f5e8f875901ace6a37e402ff8b2:2898321880054972216:": "model_key_not_bound_to_battle_spine"
+  },
+  "model_count": 403,
+  "models_without_idle": [
+    "CAB-00078db8d381900fa79bf83367ac717b:5191010718917837018:default",
+    "CAB-0e623aba25420576daaa4277ce1c839b:6882956576369972032:",
+    "CAB-3192d3ad1f80f4352c724de7379fccd4:295714124283280877:default",
+    "CAB-3c9e34811abf05516875575527fb41bd:-8347698816152477675:default",
+    "CAB-46a1027a063cb7a3d20cecf06a42311b:-3194083241583474388:default",
+    "CAB-5bbcd8261be9711275a3ad616923d73e:-5945874393486223558:",
+    "CAB-5bc63b64270aefac9e22bd29b57d76c1:1413854852511731377:default",
+    "CAB-5ce6961b072358fce26f89eb9edf045b:885727962740115781:",
+    "CAB-623981df7ec4ef213e9aba6d635357a7:-204768786488086561:",
+    "CAB-6b743b652e3711ece7f8461cb624a700:5715792405730295373:",
+    "CAB-6e11c87006edf79d55be403c49e62bb7:2773375640477686524:",
+    "CAB-71788ebf03f6eaf81dab4d748f96d344:5225674442578439671:default",
+    "CAB-75c450b6220493a92f261dc0549967eb:630945849786323361:default",
+    "CAB-824a0fc5aaacb8e9c7ddfe1347073bed:-8592640083690236167:",
+    "CAB-9bbfc8004303f5c4d1a3ea9f4921cf37:-4482288270052889308:default",
+    "CAB-9c12eb249377747800189f358668d6a6:-2051796691147980186:",
+    "CAB-9ed6a1680ad019d27265c1b73f787a00:-2554939147901286237:",
+    "CAB-a58a46ee69375ad83373b5deb6513380:1996458753416818684:",
+    "CAB-aae0af0a0dcbdb7a22b59fab45100565:6896282106228886717:default",
+    "CAB-ab3d3c909fcb15167d8f81dcdf082f92:5517491646269376500:body_10701",
+    "CAB-ab3d3c909fcb15167d8f81dcdf082f92:5517491646269376500:body_10702",
+    "CAB-ab3d3c909fcb15167d8f81dcdf082f92:5517491646269376500:body_10704",
+    "CAB-ab3d3c909fcb15167d8f81dcdf082f92:5517491646269376500:body_10705",
+    "CAB-ab3d3c909fcb15167d8f81dcdf082f92:5517491646269376500:body_10706",
+    "CAB-ab3d3c909fcb15167d8f81dcdf082f92:5517491646269376500:body_10707",
+    "CAB-ab3d3c909fcb15167d8f81dcdf082f92:5517491646269376500:body_8402",
+    "CAB-ab3d3c909fcb15167d8f81dcdf082f92:5517491646269376500:body_8422",
+    "CAB-ab3d3c909fcb15167d8f81dcdf082f92:5517491646269376500:body_8423",
+    "CAB-ab3d3c909fcb15167d8f81dcdf082f92:5517491646269376500:body_8424",
+    "CAB-af02bc19824c4bf50b57455d0a8a0050:-3159402296118859184:",
+    "CAB-b5614df78159e130c25752cc8d88f91e:630717077489723520:",
+    "CAB-b587226fe245ff94e59db8c0f2140305:8179666914794660265:default",
+    "CAB-bdf224eef95b76f24eb5d89b02ae5b5c:4734277222377658837:",
+    "CAB-be8a447bb1a574a2c1bfe40dcdab3945:-4105886257484800275:default",
+    "CAB-caf28f5e8f875901ace6a37e402ff8b2:2898321880054972216:body_10703",
+    "CAB-caf28f5e8f875901ace6a37e402ff8b2:2898321880054972216:body_8421",
+    "CAB-caf28f5e8f875901ace6a37e402ff8b2:2898321880054972216:body_8427",
+    "CAB-caf28f5e8f875901ace6a37e402ff8b2:2898321880054972216:body_8440",
+    "CAB-f580cf8cb74221e7e711c6c87b6c53ff:-5923165582657390412:",
+    "CAB-f7a8e35f3db4e6b0ef58603174e2af90:-2168715834160511071:default",
+    "CAB-facdf19d9402a197b3424308c9b3e5a4:5896616514612335326:",
+    "CAB-ff0a3b173f0f053fcf913a5a2003eae7:3807387346249485166:default"
+  ],
+  "operation": "Official sampled battle meshes normalized to Unity JsonUtility frame objects and packed with verified atlas pages",
+  "output": "unity/Assets/StreamingAssets/Combat/native-battle-meshes.zip",
+  "output_sha256": "9af18fb0d8c5b2b3c686a0ee65fb550055d89727ed3600e223175a8fa96265c9",
+  "page_failures": {
+    "page:npc_11019-7a8295d245": "No pinned atlas page matches npc_11019-7a8295d245: defaultpackage_assets_appearanceassets_npc_npc_11019.bundle:npc_11019 is 24x24, atlas requires 2048x776; defaultpackage_assets_appearanceassets_npc_npc_11019.bundle:npc_11019 is 24x24, atlas requires 2048x776",
+    "page:npc_11020-eb9d4e002d": "No pinned atlas page matches npc_11020-eb9d4e002d: defaultpackage_assets_appearanceassets_npc_npc_11020.bundle:npc_11020 is 24x24, atlas requires 2048x1012; defaultpackage_assets_appearanceassets_npc_npc_11020.bundle:npc_11020 is 24x24, atlas requires 2048x1012",
+    "page:npc_11021-b319c2009a": "No pinned atlas page matches npc_11021-b319c2009a: defaultpackage_assets_appearanceassets_npc_npc_11021.bundle:npc_11021 is 24x24, atlas requires 2048x624; defaultpackage_assets_appearanceassets_npc_npc_11021.bundle:npc_11021 is 24x24, atlas requires 2048x624",
+    "page:npc_11022-25b84fb904": "No pinned atlas page matches npc_11022-25b84fb904: defaultpackage_assets_appearanceassets_npc_npc_11022.bundle:npc_11022 is 24x24, atlas requires 2048x628; defaultpackage_assets_appearanceassets_npc_npc_11022.bundle:npc_11022 is 24x24, atlas requires 2048x628"
+  },
+  "skipped": [
+    {
+      "animation": "200/block_01",
+      "model": "CAB-02cd6cd27798469c49dcedae2745dbdf:3806241272354545995:",
+      "pages": [
+        "npc_11019.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/die_01",
+      "model": "CAB-02cd6cd27798469c49dcedae2745dbdf:3806241272354545995:",
+      "pages": [
+        "npc_11019.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/die_02",
+      "model": "CAB-02cd6cd27798469c49dcedae2745dbdf:3806241272354545995:",
+      "pages": [
+        "npc_11019.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/hit_01",
+      "model": "CAB-02cd6cd27798469c49dcedae2745dbdf:3806241272354545995:",
+      "pages": [
+        "npc_11019.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/hit_02",
+      "model": "CAB-02cd6cd27798469c49dcedae2745dbdf:3806241272354545995:",
+      "pages": [
+        "npc_11019.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/idle_01",
+      "model": "CAB-02cd6cd27798469c49dcedae2745dbdf:3806241272354545995:",
+      "pages": [
+        "npc_11019.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/run_01",
+      "model": "CAB-02cd6cd27798469c49dcedae2745dbdf:3806241272354545995:",
+      "pages": [
+        "npc_11019.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/run_02",
+      "model": "CAB-02cd6cd27798469c49dcedae2745dbdf:3806241272354545995:",
+      "pages": [
+        "npc_11019.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/run_03",
+      "model": "CAB-02cd6cd27798469c49dcedae2745dbdf:3806241272354545995:",
+      "pages": [
+        "npc_11019.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/skill_01",
+      "model": "CAB-02cd6cd27798469c49dcedae2745dbdf:3806241272354545995:",
+      "pages": [
+        "npc_11019.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/skill_02",
+      "model": "CAB-02cd6cd27798469c49dcedae2745dbdf:3806241272354545995:",
+      "pages": [
+        "npc_11019.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/skill_03",
+      "model": "CAB-02cd6cd27798469c49dcedae2745dbdf:3806241272354545995:",
+      "pages": [
+        "npc_11019.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/stun_01",
+      "model": "CAB-02cd6cd27798469c49dcedae2745dbdf:3806241272354545995:",
+      "pages": [
+        "npc_11019.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "map_01/idle_01",
+      "model": "CAB-02cd6cd27798469c49dcedae2745dbdf:3806241272354545995:",
+      "pages": [
+        "npc_11019.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "map_01/run_01",
+      "model": "CAB-02cd6cd27798469c49dcedae2745dbdf:3806241272354545995:",
+      "pages": [
+        "npc_11019.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "map_01/walk_01",
+      "model": "CAB-02cd6cd27798469c49dcedae2745dbdf:3806241272354545995:",
+      "pages": [
+        "npc_11019.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/block_01",
+      "model": "CAB-21f3aa9d62483c7b1f5e7356e69d05d7:-948461072844972093:",
+      "pages": [
+        "npc_11020.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/die_01",
+      "model": "CAB-21f3aa9d62483c7b1f5e7356e69d05d7:-948461072844972093:",
+      "pages": [
+        "npc_11020.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/die_02",
+      "model": "CAB-21f3aa9d62483c7b1f5e7356e69d05d7:-948461072844972093:",
+      "pages": [
+        "npc_11020.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/hit_01",
+      "model": "CAB-21f3aa9d62483c7b1f5e7356e69d05d7:-948461072844972093:",
+      "pages": [
+        "npc_11020.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/hit_02",
+      "model": "CAB-21f3aa9d62483c7b1f5e7356e69d05d7:-948461072844972093:",
+      "pages": [
+        "npc_11020.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/idle_01",
+      "model": "CAB-21f3aa9d62483c7b1f5e7356e69d05d7:-948461072844972093:",
+      "pages": [
+        "npc_11020.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/skill_01",
+      "model": "CAB-21f3aa9d62483c7b1f5e7356e69d05d7:-948461072844972093:",
+      "pages": [
+        "npc_11020.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/skill_02",
+      "model": "CAB-21f3aa9d62483c7b1f5e7356e69d05d7:-948461072844972093:",
+      "pages": [
+        "npc_11020.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/skill_03",
+      "model": "CAB-21f3aa9d62483c7b1f5e7356e69d05d7:-948461072844972093:",
+      "pages": [
+        "npc_11020.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/stun_01",
+      "model": "CAB-21f3aa9d62483c7b1f5e7356e69d05d7:-948461072844972093:",
+      "pages": [
+        "npc_11020.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "map/idle_01",
+      "model": "CAB-21f3aa9d62483c7b1f5e7356e69d05d7:-948461072844972093:",
+      "pages": [
+        "npc_11020.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "map/run_01",
+      "model": "CAB-21f3aa9d62483c7b1f5e7356e69d05d7:-948461072844972093:",
+      "pages": [
+        "npc_11020.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "map/walk_01",
+      "model": "CAB-21f3aa9d62483c7b1f5e7356e69d05d7:-948461072844972093:",
+      "pages": [
+        "npc_11020.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/block_01",
+      "model": "CAB-221f414b3c60076181a2de429593e03c:8908209552549098805:",
+      "pages": [
+        "npc_11021.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/die_01",
+      "model": "CAB-221f414b3c60076181a2de429593e03c:8908209552549098805:",
+      "pages": [
+        "npc_11021.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/die_02",
+      "model": "CAB-221f414b3c60076181a2de429593e03c:8908209552549098805:",
+      "pages": [
+        "npc_11021.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/hit_01",
+      "model": "CAB-221f414b3c60076181a2de429593e03c:8908209552549098805:",
+      "pages": [
+        "npc_11021.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/hit_02",
+      "model": "CAB-221f414b3c60076181a2de429593e03c:8908209552549098805:",
+      "pages": [
+        "npc_11021.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/idle_01",
+      "model": "CAB-221f414b3c60076181a2de429593e03c:8908209552549098805:",
+      "pages": [
+        "npc_11021.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/run_01",
+      "model": "CAB-221f414b3c60076181a2de429593e03c:8908209552549098805:",
+      "pages": [
+        "npc_11021.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/run_02",
+      "model": "CAB-221f414b3c60076181a2de429593e03c:8908209552549098805:",
+      "pages": [
+        "npc_11021.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/run_03",
+      "model": "CAB-221f414b3c60076181a2de429593e03c:8908209552549098805:",
+      "pages": [
+        "npc_11021.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/skill_01",
+      "model": "CAB-221f414b3c60076181a2de429593e03c:8908209552549098805:",
+      "pages": [
+        "npc_11021.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/skill_02",
+      "model": "CAB-221f414b3c60076181a2de429593e03c:8908209552549098805:",
+      "pages": [
+        "npc_11021.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/skill_03",
+      "model": "CAB-221f414b3c60076181a2de429593e03c:8908209552549098805:",
+      "pages": [
+        "npc_11021.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/stun_01",
+      "model": "CAB-221f414b3c60076181a2de429593e03c:8908209552549098805:",
+      "pages": [
+        "npc_11021.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "map/idle_01",
+      "model": "CAB-221f414b3c60076181a2de429593e03c:8908209552549098805:",
+      "pages": [
+        "npc_11021.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "map/run_01",
+      "model": "CAB-221f414b3c60076181a2de429593e03c:8908209552549098805:",
+      "pages": [
+        "npc_11021.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "map/walk_01",
+      "model": "CAB-221f414b3c60076181a2de429593e03c:8908209552549098805:",
+      "pages": [
+        "npc_11021.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/block_01",
+      "model": "CAB-a2bf0703599eabe80a291c0a527eebe4:404831977814028361:",
+      "pages": [
+        "npc_11022.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/die_01",
+      "model": "CAB-a2bf0703599eabe80a291c0a527eebe4:404831977814028361:",
+      "pages": [
+        "npc_11022.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/die_02",
+      "model": "CAB-a2bf0703599eabe80a291c0a527eebe4:404831977814028361:",
+      "pages": [
+        "npc_11022.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/hit_01",
+      "model": "CAB-a2bf0703599eabe80a291c0a527eebe4:404831977814028361:",
+      "pages": [
+        "npc_11022.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/hit_02",
+      "model": "CAB-a2bf0703599eabe80a291c0a527eebe4:404831977814028361:",
+      "pages": [
+        "npc_11022.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/idle_01",
+      "model": "CAB-a2bf0703599eabe80a291c0a527eebe4:404831977814028361:",
+      "pages": [
+        "npc_11022.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/run_01",
+      "model": "CAB-a2bf0703599eabe80a291c0a527eebe4:404831977814028361:",
+      "pages": [
+        "npc_11022.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/run_02",
+      "model": "CAB-a2bf0703599eabe80a291c0a527eebe4:404831977814028361:",
+      "pages": [
+        "npc_11022.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/run_03",
+      "model": "CAB-a2bf0703599eabe80a291c0a527eebe4:404831977814028361:",
+      "pages": [
+        "npc_11022.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/skill_01",
+      "model": "CAB-a2bf0703599eabe80a291c0a527eebe4:404831977814028361:",
+      "pages": [
+        "npc_11022.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/skill_02",
+      "model": "CAB-a2bf0703599eabe80a291c0a527eebe4:404831977814028361:",
+      "pages": [
+        "npc_11022.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/skill_03",
+      "model": "CAB-a2bf0703599eabe80a291c0a527eebe4:404831977814028361:",
+      "pages": [
+        "npc_11022.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "200/stun_01",
+      "model": "CAB-a2bf0703599eabe80a291c0a527eebe4:404831977814028361:",
+      "pages": [
+        "npc_11022.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "map/idle_01",
+      "model": "CAB-a2bf0703599eabe80a291c0a527eebe4:404831977814028361:",
+      "pages": [
+        "npc_11022.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "map/run_01",
+      "model": "CAB-a2bf0703599eabe80a291c0a527eebe4:404831977814028361:",
+      "pages": [
+        "npc_11022.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "animation": "map/walk_01",
+      "model": "CAB-a2bf0703599eabe80a291c0a527eebe4:404831977814028361:",
+      "pages": [
+        "npc_11022.png"
+      ],
+      "reason": "official_texture_page_unavailable"
+    },
+    {
+      "model": "CAB-ab3d3c909fcb15167d8f81dcdf082f92:5517491646269376500:",
+      "reason": "no_battle_skeleton_binding"
+    },
+    {
+      "model": "CAB-caf28f5e8f875901ace6a37e402ff8b2:2898321880054972216:",
+      "reason": "no_battle_skeleton_binding"
+    }
+  ],
+  "texture_page_count": 411
+}

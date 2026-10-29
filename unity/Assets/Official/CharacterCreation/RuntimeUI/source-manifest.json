@@ -1,0 +1,645 @@
+{
+  "manifest": "854_156383",
+  "operation": "Restore original decoded creation UI fields as native Unity UGUI/TMP components; preserve hierarchy, coordinates, sprites and text.",
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/CharacterCreation/creation-performance.json",
+      "sha256": "46b3835429fd850cf8d145cb67d9f17f160b23991f04b5ebcfdeaa2e883fd5c6"
+    },
+    {
+      "path": "assets/official/ui.json",
+      "sha256": "bc3ab2cfd88032913957f35506a35d233664ccc6be5d843ebd9e6cb1937b1859"
+    }
+  ],
+  "outputs": [
+    {
+      "source": "assets/official/sprites/ImgBg_CreatePlayer-22529459e8.png",
+      "source_sha256": "0cba773e41e121d0cdb400acca4c82dd297d3dfcc5ec1da88171183f25a3ecac",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_CreatePlayer-22529459e8.png",
+      "sha256": "0cba773e41e121d0cdb400acca4c82dd297d3dfcc5ec1da88171183f25a3ecac",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/shadow-057cf0758b.png",
+      "source_sha256": "74b72d1b6fdc906a8a4a1d953116b8f7e65e20f6d71fc74a1b653d6357d6a4e5",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/shadow-057cf0758b.png",
+      "sha256": "74b72d1b6fdc906a8a4a1d953116b8f7e65e20f6d71fc74a1b653d6357d6a4e5",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgBgTexture_Cai-176665b9c3.png",
+      "source_sha256": "fc4a37b0930f2fd15623e452bc602b635015e16672d5228ae7e9602fd8ec2173",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBgTexture_Cai-176665b9c3.png",
+      "sha256": "fc4a37b0930f2fd15623e452bc602b635015e16672d5228ae7e9602fd8ec2173",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgRole_Female-49e8988709.png",
+      "source_sha256": "804d6e87c6288aad3024de23122da112363263baf01405f82cd88dd8d7549900",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgRole_Female-49e8988709.png",
+      "sha256": "804d6e87c6288aad3024de23122da112363263baf01405f82cd88dd8d7549900",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgGlow_Female-d81887d632.png",
+      "source_sha256": "fc1a896d36ca0c6fddbc01b47170daf05b7ec812115b6f267bdc4c8a515f7473",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgGlow_Female-d81887d632.png",
+      "sha256": "fc1a896d36ca0c6fddbc01b47170daf05b7ec812115b6f267bdc4c8a515f7473",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgRole_Male-f13908db32.png",
+      "source_sha256": "195cbe178efba8315b849bc5944df84089cab9632b2c65af1c2104ca53f4f823",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgRole_Male-f13908db32.png",
+      "sha256": "195cbe178efba8315b849bc5944df84089cab9632b2c65af1c2104ca53f4f823",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgGlow_Male-bb637dad29.png",
+      "source_sha256": "f7a4364c00a89c247fc9d3e1aac93d0ea24744fc8292292f771dfe1ab191bd56",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgGlow_Male-bb637dad29.png",
+      "sha256": "f7a4364c00a89c247fc9d3e1aac93d0ea24744fc8292292f771dfe1ab191bd56",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgBg_Star1-3b6593e074.png",
+      "source_sha256": "1fd7ac09a78e11832955e73babbefb6f707ce9d4580fe606444d5d99c16c683f",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_Star1-3b6593e074.png",
+      "sha256": "1fd7ac09a78e11832955e73babbefb6f707ce9d4580fe606444d5d99c16c683f",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/C_none-fa3e084e40.png",
+      "source_sha256": "d73d644cfd6ed4f7f4f28801217e9712825adf277bf39eb37543dc5d932423b4",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/C_none-fa3e084e40.png",
+      "sha256": "d73d644cfd6ed4f7f4f28801217e9712825adf277bf39eb37543dc5d932423b4",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgBg_SelSex-181c6dd282.png",
+      "source_sha256": "712adc31689e4746bd7b7b7338ad7b485a0d26230104c2336ed80752f0a9a53b",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_SelSex-181c6dd282.png",
+      "sha256": "712adc31689e4746bd7b7b7338ad7b485a0d26230104c2336ed80752f0a9a53b",
+      "border": [
+        32.0,
+        1.0,
+        33.0,
+        34.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgDot-4ed3349f24.png",
+      "source_sha256": "8b8bd913abe31a5738fdf0097288a9733704434a36c7ccc934b20c028216ecdb",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgDot-4ed3349f24.png",
+      "sha256": "8b8bd913abe31a5738fdf0097288a9733704434a36c7ccc934b20c028216ecdb",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgLine-3dc3678e90.png",
+      "source_sha256": "273bb8cd8ce1cb9a6a292b842bc7b2383bb185a08ac8c0dd88c08a3e90cb46f4",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgLine-3dc3678e90.png",
+      "sha256": "273bb8cd8ce1cb9a6a292b842bc7b2383bb185a08ac8c0dd88c08a3e90cb46f4",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/BtnOk-623eab01b4.png",
+      "source_sha256": "27952bd12b6b60e0cfcc870ea8e3278f0aa47cd48c7048a1a7868b745648d599",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/BtnOk-623eab01b4.png",
+      "sha256": "27952bd12b6b60e0cfcc870ea8e3278f0aa47cd48c7048a1a7868b745648d599",
+      "border": [
+        104.0,
+        0.0,
+        105.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgBlue_Upgrade-12b45e0972.png",
+      "source_sha256": "f77095c4c9da7a0b4544f2117b6e048084f17d724229e0992de796fe7add22f1",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBlue_Upgrade-12b45e0972.png",
+      "sha256": "f77095c4c9da7a0b4544f2117b6e048084f17d724229e0992de796fe7add22f1",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgBlueDot-a28b58f9f6.png",
+      "source_sha256": "d245e092178e3753282c32c895dc1f8c050c9013f4dbfb50c59be696074a3261",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBlueDot-a28b58f9f6.png",
+      "sha256": "d245e092178e3753282c32c895dc1f8c050c9013f4dbfb50c59be696074a3261",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgRedDot-8154d7a8c2.png",
+      "source_sha256": "02ebb92c906b1b9fe1166b9882dbdd92e545769b61dfc7462f2b410965c8a81c",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgRedDot-8154d7a8c2.png",
+      "sha256": "02ebb92c906b1b9fe1166b9882dbdd92e545769b61dfc7462f2b410965c8a81c",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgNew-9b7c346dac.png",
+      "source_sha256": "f37ed6720455fd649b8458d715dccfc2771655cdf4b8cb8d2f5598e5056a1021",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgNew-9b7c346dac.png",
+      "sha256": "f37ed6720455fd649b8458d715dccfc2771655cdf4b8cb8d2f5598e5056a1021",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgBlue-797552ab98.png",
+      "source_sha256": "852756b23165ca4c2a377acee93125060d2948f3157b9b29094debbd5aa8d913",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBlue-797552ab98.png",
+      "sha256": "852756b23165ca4c2a377acee93125060d2948f3157b9b29094debbd5aa8d913",
+      "border": [
+        19.0,
+        0.0,
+        19.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgBg_CountText-43bcc7f5cb.png",
+      "source_sha256": "31498f0e8895dce861cf88210bb81c26ac96ed09df5556edc6614418fc574f71",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_CountText-43bcc7f5cb.png",
+      "sha256": "31498f0e8895dce861cf88210bb81c26ac96ed09df5556edc6614418fc574f71",
+      "border": [
+        26.0,
+        18.0,
+        26.0,
+        18.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgIcon_Pen-300a74c7db.png",
+      "source_sha256": "7e3f46b3ba75637d35644e1e5dc9b4b42253bcb045b0ed555e1a6889b0c503f2",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgIcon_Pen-300a74c7db.png",
+      "sha256": "7e3f46b3ba75637d35644e1e5dc9b4b42253bcb045b0ed555e1a6889b0c503f2",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/BtnRandom-c4385d711d.png",
+      "source_sha256": "afb7c951a91d2deedaebc9cb7de68228bd1b56feb124b743c351c075b2cb0e07",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/BtnRandom-c4385d711d.png",
+      "sha256": "afb7c951a91d2deedaebc9cb7de68228bd1b56feb124b743c351c075b2cb0e07",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/BtnExclamation-e046a83a12.png",
+      "source_sha256": "d4394fc93798db8d2d7f25d847932cdc88a21572a7b9a57a58ce6331f49242c3",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/BtnExclamation-e046a83a12.png",
+      "sha256": "d4394fc93798db8d2d7f25d847932cdc88a21572a7b9a57a58ce6331f49242c3",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/G_1_None-3849b09bfd.png",
+      "source_sha256": "96ea2e7ec0f36ab40d4cd1ea206b260f4edbbf299000c70128299041a4853f99",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/G_1_None-3849b09bfd.png",
+      "sha256": "96ea2e7ec0f36ab40d4cd1ea206b260f4edbbf299000c70128299041a4853f99",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/G_2_None-7bd840c5a2.png",
+      "source_sha256": "675c36266ca025f1712d65d9eb324d531ddd06c6f47399909bdec27ce98c991f",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/G_2_None-7bd840c5a2.png",
+      "sha256": "675c36266ca025f1712d65d9eb324d531ddd06c6f47399909bdec27ce98c991f",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgReturnBg-25d824248c.png",
+      "source_sha256": "ba36c48f4a2df794e7e9fc0db3530fa327876daed73a2557825ce487449c9d49",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgReturnBg-25d824248c.png",
+      "sha256": "ba36c48f4a2df794e7e9fc0db3530fa327876daed73a2557825ce487449c9d49",
+      "border": [
+        68.0,
+        0.0,
+        68.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgReturn-48efaa6e6b.png",
+      "source_sha256": "4f188679e2a79cd780468ab3dc4793943b74b817591d91ed2a8f163c9e565e0b",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgReturn-48efaa6e6b.png",
+      "sha256": "4f188679e2a79cd780468ab3dc4793943b74b817591d91ed2a8f163c9e565e0b",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/BtnRandom-ff071085b0.png",
+      "source_sha256": "8201556b639c8795d5899808dd753d395b6ba29fa5c593ca5ec15567da620f4e",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/BtnRandom-ff071085b0.png",
+      "sha256": "8201556b639c8795d5899808dd753d395b6ba29fa5c593ca5ec15567da620f4e",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/BtnReset-23022cdc9d.png",
+      "source_sha256": "e04f0ba8d9b71a0afbecd69284076c46e7845f499120e997000036b927397305",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/BtnReset-23022cdc9d.png",
+      "sha256": "e04f0ba8d9b71a0afbecd69284076c46e7845f499120e997000036b927397305",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgTabBg-686e37346e.png",
+      "source_sha256": "481a6b2977d90b938a44e49db5659113d92f43d70259860589c4016b5d713968",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgTabBg-686e37346e.png",
+      "sha256": "481a6b2977d90b938a44e49db5659113d92f43d70259860589c4016b5d713968",
+      "border": [
+        46.0,
+        0.0,
+        46.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ItemFixedColor-b37938e7d2.png",
+      "source_sha256": "97a8c0f082160a4ffb8d5bb69a18664d9882f106f17d6e332cfa11ff76f7f6ff",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ItemFixedColor-b37938e7d2.png",
+      "sha256": "97a8c0f082160a4ffb8d5bb69a18664d9882f106f17d6e332cfa11ff76f7f6ff",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ItemFixedColor_Sel-6a7a1ff5e6.png",
+      "source_sha256": "d7c924cd478e7542818d681a2a9f7bae280559b2b808d0ca8b2972d77636e129",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ItemFixedColor_Sel-6a7a1ff5e6.png",
+      "sha256": "d7c924cd478e7542818d681a2a9f7bae280559b2b808d0ca8b2972d77636e129",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgItemSelect-17c983d02d.png",
+      "source_sha256": "de48b6abe9e4805b08cc1e54bbc6425b793a4c4239ab73340f0d78af203d68c3",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgItemSelect-17c983d02d.png",
+      "sha256": "de48b6abe9e4805b08cc1e54bbc6425b793a4c4239ab73340f0d78af203d68c3",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgMask-24a3320123.png",
+      "source_sha256": "4b8fcf1e081b5f29b8e698c0dd9d297a11e0ac8a992e25d43d0d175ef805dfea",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgMask-24a3320123.png",
+      "sha256": "4b8fcf1e081b5f29b8e698c0dd9d297a11e0ac8a992e25d43d0d175ef805dfea",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgColorSliderBg-6e7eade017.png",
+      "source_sha256": "9613fafd4f86521f625ae4174eb7bb67b8574d15c92cee534f9c2b7f3f0d4e6f",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgColorSliderBg-6e7eade017.png",
+      "sha256": "9613fafd4f86521f625ae4174eb7bb67b8574d15c92cee534f9c2b7f3f0d4e6f",
+      "border": [
+        21.0,
+        0.0,
+        21.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgHandle-6d92bd0b6b.png",
+      "source_sha256": "7f5a59d05e42a5a58e613ea29e923480005b6ce5aa2a7536358c2f6d41f4ed1e",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgHandle-6d92bd0b6b.png",
+      "sha256": "7f5a59d05e42a5a58e613ea29e923480005b6ce5aa2a7536358c2f6d41f4ed1e",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ItemFixedColor_Sel_02-f33b212ca7.png",
+      "source_sha256": "0ec327072164d1e80475cc9160e3f50fa2998017842528cb43fc935b9b6237c1",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ItemFixedColor_Sel_02-f33b212ca7.png",
+      "sha256": "0ec327072164d1e80475cc9160e3f50fa2998017842528cb43fc935b9b6237c1",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/eye_F_01-db2d1d3ef4.png",
+      "source_sha256": "aa796bae161255389f98a2ae002000148ec6f64b062e22b8932efebf3c8df481",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/eye_F_01-db2d1d3ef4.png",
+      "sha256": "aa796bae161255389f98a2ae002000148ec6f64b062e22b8932efebf3c8df481",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ItemFixedColor_Sel_03-ec447a23a0.png",
+      "source_sha256": "525398a9b8c7c31e966ca229d4cfa29313a3f278e0e3d9c5fb15263490947855",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ItemFixedColor_Sel_03-ec447a23a0.png",
+      "sha256": "525398a9b8c7c31e966ca229d4cfa29313a3f278e0e3d9c5fb15263490947855",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/hair_M_01-57a25a6281.png",
+      "source_sha256": "b952deccec721bff5f60642d7baf3c84cc68dc14fbf15118498b9b1953c13022",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/hair_M_01-57a25a6281.png",
+      "sha256": "b952deccec721bff5f60642d7baf3c84cc68dc14fbf15118498b9b1953c13022",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgTabBg_Small-4c04ad1808.png",
+      "source_sha256": "6db70171532ff0ee5a56456b982a2ae4163ebec9454c3ce96e6568f19dc3565d",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgTabBg_Small-4c04ad1808.png",
+      "sha256": "6db70171532ff0ee5a56456b982a2ae4163ebec9454c3ce96e6568f19dc3565d",
+      "border": [
+        7.0,
+        0.0,
+        7.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgBg_Banner-e2bb932c72.png",
+      "source_sha256": "6be5a8457196a7664194bb9abb3b50b94d1543d752accb711f73e755336b69bd",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_Banner-e2bb932c72.png",
+      "sha256": "6be5a8457196a7664194bb9abb3b50b94d1543d752accb711f73e755336b69bd",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgFitBg-99dba7ef23.png",
+      "source_sha256": "0571a6bb9003ec698b0936e8ee1b291fd8647bac675d8a95d66b0568d210847f",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgFitBg-99dba7ef23.png",
+      "sha256": "0571a6bb9003ec698b0936e8ee1b291fd8647bac675d8a95d66b0568d210847f",
+      "border": [
+        178.0,
+        0.0,
+        72.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/BtnStorage-b885065631.png",
+      "source_sha256": "be65c0eef5649c23b4a0d1805c1363a8f86ecf2d2ae79d8ab34e111490c0612d",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/BtnStorage-b885065631.png",
+      "sha256": "be65c0eef5649c23b4a0d1805c1363a8f86ecf2d2ae79d8ab34e111490c0612d",
+      "border": [
+        34.0,
+        31.0,
+        35.0,
+        31.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgBg_PopUps-50a1e65068.png",
+      "source_sha256": "20ee64ac9f8b6824c26ca389c68ecd05b2862d66305dc2bfb6fcec4b6b113920",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_PopUps-50a1e65068.png",
+      "sha256": "20ee64ac9f8b6824c26ca389c68ecd05b2862d66305dc2bfb6fcec4b6b113920",
+      "border": [
+        106.0,
+        87.0,
+        111.0,
+        132.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgBg_PopUpsWenLi-2cf247fc12.png",
+      "source_sha256": "68058e4df2fc9aa171d0e654156dedd97995be2187490d9e0a0c798b4d3a5339",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_PopUpsWenLi-2cf247fc12.png",
+      "sha256": "68058e4df2fc9aa171d0e654156dedd97995be2187490d9e0a0c798b4d3a5339",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/ImgBg_PopUpsTitle-e69fb4d9d0.png",
+      "source_sha256": "4b683e8fe6816c3ff7f4e127beb8e577cfb5e9331626e5b31fa81595a3064599",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/ImgBg_PopUpsTitle-e69fb4d9d0.png",
+      "sha256": "4b683e8fe6816c3ff7f4e127beb8e577cfb5e9331626e5b31fa81595a3064599",
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "source": "assets/official/sprites/BtnNo-aa425a44c4.png",
+      "source_sha256": "fef0ddc59129e7a5136f6bac11369284e494e1964add4d2aea8901671756802a",
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/Sprites/BtnNo-aa425a44c4.png",
+      "sha256": "fef0ddc59129e7a5136f6bac11369284e494e1964add4d2aea8901671756802a",
+      "border": [
+        149.0,
+        0.0,
+        152.0,
+        0.0
+      ],
+      "ppu": 100.0
+    },
+    {
+      "path": "unity/Assets/Official/CharacterCreation/RuntimeUI/runtime-ui.json",
+      "sha256": "24c97bbf59d3e7b4349950dc06782b52460a4e51675d02cfb2e729b93b7d352f"
+    }
+  ],
+  "title_source": {
+    "bundle": "defaultpackage_assets_prefabs_ui_createplayer.bundle",
+    "bundle_md5": "42ec8585d10dc956924e2d740c36415b",
+    "component_path_id": "-3964310077427183409",
+    "keys": [
+      "ui_common_select_body",
+      "ui_common_select_appearance",
+      "ui_common_input_name"
+    ],
+    "language_sources": {
+      ".tools/source-packages/WwiseBnk/wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile": "a068ee47db184c96c8923172a104ed90b37f72e2b4adb5d73211d894d7ec9001",
+      ".tools/source-packages/WwiseBnk/wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile": "738069eafacd7fe33aae970aa5edacd76f48ed02acdd07ededad1c4a499b93b8"
+    }
+  }
+}

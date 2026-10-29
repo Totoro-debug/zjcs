@@ -1,0 +1,62 @@
+{
+  "version": "854_156383",
+  "components": [
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+      "bundle_hash": "ed61998dccf8c8b2451eb16f49b433cb",
+      "path_id": "-4212028556228202877",
+      "script": "ItemSourceItem",
+      "sha256": "4c8789124030c48ef3561df6afda65271db22b1159c2adf361f5adc9fe37d8d7"
+    }
+  ],
+  "language_sources": {
+    ".tools/source-packages/WwiseBnk/wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile": "a068ee47db184c96c8923172a104ed90b37f72e2b4adb5d73211d894d7ec9001",
+    ".tools/source-packages/WwiseBnk/wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile": "738069eafacd7fe33aae970aa5edacd76f48ed02acdd07ededad1c4a499b93b8"
+  },
+  "container": {
+    "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+    "bundle_hash": "ed61998dccf8c8b2451eb16f49b433cb",
+    "path_id": "8018928620979440723",
+    "sha256": "a213df137c8f64b5cc8c94321a44876aca77db35c76fda8c8021f51d6a1eed29"
+  },
+  "resources": {
+    "res://assets/official/gacha-item-sources/sprites/ImgBgFrom-ce8623a2cd.png": {
+      "bundle": "defaultpackage_assets_image_ui_common.bundle",
+      "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+      "path_id": "6335968263887170011",
+      "object": "ImgBgFrom",
+      "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+      "sha256": "5077b7ddb657dbf27af0a42ed51473ca42ce260d5ef92c866abc01e5d3760ff1"
+    },
+    "res://assets/official/gacha-item-sources/sprites/ImgItem_Lock2-148ba0ff6e.png": {
+      "bundle": "defaultpackage_assets_image_ui_common.bundle",
+      "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+      "path_id": "7217511174666162713",
+      "object": "ImgItem_Lock2",
+      "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+      "sha256": "ad367ebab347bd4b6fa24c7799628789c64e20864966f73d886d1474989ba217"
+    },
+    "res://assets/official/gacha-item-sources/sprites/ItemFromArrow-7c865053ca.png": {
+      "bundle": "defaultpackage_assets_image_ui_common.bundle",
+      "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+      "path_id": "-6332433425012697191",
+      "object": "ItemFromArrow",
+      "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+      "sha256": "56a00278c5c2cf2cc6987089ca1e1a1112ebb62d4496d4d16453b620b98edcd6"
+    }
+  },
+  "outputs": {
+    "res://assets/official/gacha-item-sources/catalog.json": "4646a2b1c8b380664fc5439cb1c3b9b557a8ceaa0c7d849792a4391fb7744e1c"
+  },
+  "code": {
+    "client-source/ItemSourceGo.cs": "6cb8699cdbbf85206b1be2b629f1948a5bf2473dc1129c7f0a875432820881b3",
+    "client-source/ItemSourceItem.cs": "13b11ac280fe31c4355c30396fd14806f613171097268b89dde05d60a440cea4",
+    "client-source/ClientItemSourceQuickBuyHandler.cs": "d679401e80ca1e1ce5d531eb81e063501e19d7b47399dd6abd56a5da65383079",
+    "client-source/QuickBuyDialog.cs": "5ecb1dacec0c0a7bba0cbc75f5c73bd389f8445d021e95959d512d0683e582b5",
+    "common-source/ItemSourceQuickBuyAgent.cs": "17c2b20cdba7133adc60933611d6556737e4692ad4b92907472d1c1bf926a31d",
+    "client-source/ClientItemSourceElementChestGachaHandler.cs": "eebe2f83b0baf568b58af72ae23f84914ed0939941f80d73f7b98fcccb8ea7d5",
+    "client-source/ClientItemSourcePreciousChestGachaHandler.cs": "4c757c95d3912db4679656cfb90310515a59956e8979c69efd98951badd48742",
+    "common-source/Common/ItemSourceChestGachaAgent.cs": "08c41317249a16bd6aefc0d42cac30af2af1b524435017f3b6b30bc915070183",
+    "common-source/Common/ItemSourceType.cs": "73d86073429ab79f08289e42f51f71a2e9127f18ebdb32214d457b5fed8b41c1"
+  }
+}

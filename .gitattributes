@@ -85,7 +85,6 @@ unity/Assets/Game/Editor/Combat/OfficialBattleHudMaterialTools.cs text eol=lf
 unity/Assets/Official/Combat/HudMaterials/** -text
 unity/Assets/Game/Resources/Combat/OfficialBattleMonsterPortraitCatalog.asset text eol=lf
 unity/Assets/Official/Combat/MonsterPortraits/*.png.meta -text
-
 # Skill-slot and quality receipts hash these generated/adapted LF bytes.
 scripts/prepare_battle_skill_slots.py text eol=lf
 scripts/prepare_battle_skill_quality.py text eol=lf
@@ -554,12 +553,10 @@ unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity
 unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/** -text
 unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders.meta -text
 unity/Assets/StreamingAssets/Combat/native-battle-meshes.zip filter=lfs diff=lfs merge=lfs -text
-
 # Map13 story conversion tools are hashed by their source receipts.
 scripts/prepare_unity_map13_story_play*.py text eol=lf
 scripts/prepare_unity_map13_story_runtime.py text eol=lf
 scripts/test_prepare_unity_map13_story_runtime.py text eol=lf
-
 # Map14 hand-in native bindings retain the bytes recorded in source manifests.
 scripts/map14_handin_ui_source.py text eol=lf
 scripts/prepare_unity_map14_handin_ui.py text eol=lf
@@ -568,7 +565,6 @@ unity/Assets/Game/Runtime/Official/UI/Map14HandInGray.shader text eol=lf
 unity/Assets/Game/Resources/Map14/UI/HandIn/** -text
 unity/Assets/Official/World/Map/14/UI/HandIn/** -text
 assets/reference/official-map/map14-handin-ui*-source-manifest.json text eol=lf
-
 # Map13 UI source receipts hash these exact converter and native asset bytes.
 scripts/prepare_unity_map13_ui*.py text eol=lf
 scripts/map13_ui_native_schemas.py text eol=lf
@@ -578,7 +574,6 @@ scripts/map11_minimap_ui.py text eol=lf
 unity/Assets/Game/Resources/Map13/UI/** -text
 unity/Assets/Official/World/Map/13/UI/** -text
 scripts/record_unity_map13_ui.py text eol=lf
-
 # Map14 current battle extraction and runtime receipt bytes.
 scripts/prepare_unity_map14_battle_*.py text eol=lf
 assets/reference/official-map/map14-battle*-source-manifest.json text eol=lf
@@ -587,13 +582,11 @@ unity/Assets/Game/Resources/Map14/battle-runtime.json* text eol=lf
 unity/Assets/Game/Editor/OfficialMap11UiTools.cs text eol=lf
 unity/Assets/Game/Editor/OfficialMap11UiTools.Support.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudRenderer.cs text eol=lf
-
 # Preserve exact Map14 NPC decoding tool and source receipt bytes.
 scripts/convert_official_skeletons.py text eol=lf
 scripts/test_convert_official_skeletons.py text eol=lf
 scripts/prepare_unity_map14_fightother_sources.py text eol=lf
 assets/reference/official-map/map14-fightother-source-manifest.json text eol=lf
-
 # Map14 production native world host and verification bindings.
 scripts/record_unity_map14_native_host.py text eol=lf
 assets/reference/official-map/map14-native-host-source-manifest.json text eol=lf
@@ -601,10 +594,8 @@ unity/Assets/Game/Runtime/Presentation/World/NativeMap14/** text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/NativeMap14.meta text eol=lf
 unity/Assets/Game/Editor/Map14/WorldHost/** text eol=lf
 unity/Assets/Game/Editor/Map14/WorldHost.meta text eol=lf
-
 # Preserve verified Map13 UI particle editor tool hashes.
 unity/Assets/Game/Editor/Map13UiParticles/** text eol=lf
-
 # Map14 original common UI conversion and native binding receipt bytes.
 scripts/prepare_unity_map14_ui.py text eol=lf
 scripts/record_unity_map14_ui.py text eol=lf
@@ -612,7 +603,6 @@ assets/reference/official-map/map14-ui-binding-source-manifest.json text eol=lf
 unity/Assets/Game/Resources/Map14/UI/** -text
 unity/Assets/Official/World/Map/14/UI/** -text
 unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Map14Ui.cs* text eol=lf
-
 # Current Map14 statue/template source and explicit runtime binding bytes.
 scripts/prepare_unity_map11_runtime_data.py text eol=lf
 scripts/prepare_unity_map14_interactions.py text eol=lf
@@ -623,7 +613,6 @@ assets/reference/official-map/map14-story-runtime-source-manifest.json text eol=
 unity/Assets/Game/Resources/Map14/interactions.json* text eol=lf
 unity/Assets/Game/Resources/Map14/stories.json* text eol=lf
 unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Map14Statues.cs* text eol=lf
-
 # Map13 shared story dependencies and runtime payload source bytes.
 scripts/prepare_unity_map13_story_dependencies.py text eol=lf
 scripts/test_prepare_unity_map13_story_runtime.py text eol=lf
@@ -632,7 +621,6 @@ assets/reference/official-map/map13-story-dependencies-source-manifest.json text
 # Preserve verified Map12 popup audio payload and importer hashes.
 unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/** -text
 unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound.meta -text
-
 # Original Unity camera/timeline embedded package byte identity.
 unity/Packages/com.unity.cinemachine/** -text
 unity/Packages/com.unity.timeline/** -text
@@ -641,7 +629,6 @@ scripts/prepare_unity_map13_camera_timeline_packages.py text eol=lf
 unity/Assets/Game/Editor/Map13CameraPackages/** text eol=lf
 assets/reference/official-map/map13-world-camera-source-manifest.json text eol=lf
 assets/reference/official-map/map13-camera-timeline-packages-source-manifest.json text eol=lf
-
 # Map13 original camera controller ports and runtime source hashes.
 scripts/prepare_unity_map13_camera_controllers.py text eol=lf
 scripts/test_prepare_unity_map13_camera.py text eol=lf
@@ -659,7 +646,6 @@ unity/Assets/Game/Runtime/Offline/ProfessionUI/** text eol=lf
 unity/Assets/Game/Runtime/Offline/ProfessionUI.meta text eol=lf
 unity/Assets/Game/Editor/ProfessionUI/ProfessionAudioPlaybackValidation.cs* text eol=lf
 scripts/prepare_unity_profession_windows_audio.py text eol=lf
-
 # Map13 camera Volume native fields and explicit source/catalog bindings.
 scripts/prepare_unity_map13_camera_volume.py text eol=lf
 assets/reference/official-map/map13-camera-volume-source-manifest.json text eol=lf
@@ -669,7 +655,6 @@ unity/Assets/Official/World/Map/13/Source/native-camera-volume.json* text eol=lf
 unity/Assets/Game/Resources/Map13/Native/native-camera-catalog.asset* text eol=lf
 unity/Assets/Official/World/Map/12/Resources/Map12/Matching/** -text
 unity/Assets/Official/World/Map/12/Resources/Map12/Matching.meta -text
-
 # Map13 original entity textures, full native mip payloads and provenance.
 scripts/prepare_unity_map13_entity_textures.py text eol=lf
 scripts/prepare_unity_map13_entity_inputs.py text eol=lf
@@ -681,7 +666,6 @@ unity/Assets/Game/Resources/Map13/Native/native-entity-textures-catalog.asset* t
 assets/reference/official-map/map13-native-entity-textures*-source-manifest.json text eol=lf
 unity/Assets/Official/ProfessionUI/** -text whitespace=cr-at-eol
 unity/Assets/Official/ProfessionUI.meta -text
-
 # Map13 exact native material fields, shader platform proof and bindings.
 scripts/prepare_unity_map13_entity_material_shaders.py text eol=lf
 scripts/prepare_unity_map13_entity_materials_native.py text eol=lf
@@ -696,7 +680,6 @@ unity/Assets/Game/Resources/Map13/Native/native-entity-materials-catalog.asset* 
 assets/reference/official-map/map13-entity-material-shaders-source-manifest.json text eol=lf
 assets/reference/official-map/map13-native-entity-materials-native-source-manifest.json text eol=lf
 assets/reference/official-map/map13-native-entity-materials-binding-source-manifest.json text eol=lf
-
 # Map13 complete entity graph, lossless skeleton sources and lazy animation bytes.
 scripts/prepare_unity_map13_entity_graph.py text eol=lf
 scripts/prepare_unity_map13_entity_skeletons.py text eol=lf
@@ -704,7 +687,6 @@ unity/Assets/Official/World/Map/13/Source/EntitySkeletons* -text
 unity/Assets/Official/World/Map/13/Source/EntitySkeletons/** -text whitespace=cr-at-eol
 unity/Assets/Official/World/Map/13/Source/native-entity-skeletons.json* text eol=lf
 assets/reference/official-map/map13-entity-skeletons-source-manifest.json text eol=lf
-
 # Map13 native prop skeleton geometry and original renderer profiles.
 scripts/map13_native_skeleton_geometry.py text eol=lf
 scripts/prepare_unity_map13_native_skeleton_models.py text eol=lf
@@ -717,12 +699,10 @@ unity/Assets/Official/World/Map/13/NativeSkeletonModels/** text eol=lf
 unity/Assets/Game/Resources/Map13/Native/Skeletons* -text whitespace=cr-at-eol,-blank-at-eol
 unity/Assets/Game/Resources/Map13/Native/Skeletons/** -text whitespace=cr-at-eol,-blank-at-eol
 assets/reference/official-map/map13-native-skeleton-model*-source-manifest.json text eol=lf
-
 # Skill native preview and source receipts retain their recorded output bytes.
 unity/Assets/Game/Runtime/Official/Character/NativeSkillPreviewDye.shader -text whitespace=cr-at-eol
 assets/reference/skill-ui/unity-icon-source-manifest.json -text whitespace=cr-at-eol
 assets/reference/skill-quality-text/source-manifest.json -text whitespace=cr-at-eol
-
 # Map12 private difficulty native fields and provenance retain LF bytes.
 scripts/prepare_unity_map12_private_difficulty.py text eol=lf
 unity/Assets/Game/Resources/Dungeons/UI/DailyDungeonDialogPrivateMap.prefab text eol=lf
@@ -732,7 +712,6 @@ assets/reference/official-map/map12-private-difficulty-source-manifest.json text
 unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.PrivateDifficulty.cs* text eol=lf
 unity/Assets/StreamingAssets/Dungeons/UI/official-bindings.json text eol=lf
 assets/reference/dungeon-ui/prefab-binding-source-manifest.json text eol=lf
-
 # Map13 original native prop animator assets and hash-pinned validation.
 scripts/prepare_unity_map13_prop_animators.py text eol=lf
 scripts/verify_map13_prop_animators.py text eol=lf
@@ -753,14 +732,12 @@ unity/Assets/Game/Runtime/Official/WorldUI/WorldStateMultiLanguagesConfig.cs* te
 unity/Assets/Game/Editor/OfficialMap11UiTools.Steles.cs* text eol=lf
 unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.SteleUi.cs* text eol=lf
 assets/reference/official-map/map12-stele-ui-source-manifest.json text eol=lf
-
 # Profession source fingerprints retain exact bytes across checkout.
 unity/Assets/Game/Runtime/Official/ProfessionUI/** -text -eol
 unity/Assets/Game/Runtime/Offline/ProfessionUI/** -text -eol
 unity/Assets/Game/Editor/ProfessionUI/** -text -eol
 assets/reference/profession-ui/** -text -eol
 scripts/*profession*.py -text -eol
-
 # Mountain stele confirmation code retains source receipt bytes.
 unity/Assets/Game/Runtime/Official/WorldUI/WorldInitializedUI.cs* text eol=lf
 unity/Assets/Game/Runtime/Official/WorldUI/WorldAutoAlignForSingleMultiLineText.cs* text eol=lf
@@ -770,7 +747,6 @@ unity/Assets/Game/Runtime/Official/WorldUI/WorldShowRemainTimeInfo.cs* text eol=
 unity/Assets/Game/Runtime/Official/WorldUI/WorldCultureTimeSpanArg.cs* text eol=lf
 unity/Assets/Game/Editor/OfficialMap11UiTools.Confirm.cs* text eol=lf
 unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.ConfirmUi.cs* text eol=lf
-
 # Map13 original prop hierarchy and renderer sub-prefab byte provenance.
 scripts/prepare_unity_map13_prop_hierarchies.py text eol=lf
 scripts/prepare_unity_map13_prop_parts.py text eol=lf
@@ -786,7 +762,6 @@ unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons/NativeMap13PropMeca
 unity/Assets/Game/Editor/Map13Skeletons/OfficialMap13PropPartsAcceptance.cs* text eol=lf
 assets/reference/official-map/map13-native-prop-hierarchies-source-manifest.json text eol=lf
 assets/reference/official-map/map13-native-prop-parts*-source-manifest.json text eol=lf
-
 # Map13 original application attachment follower and native pose boundary.
 scripts/prepare_unity_map13_attachment_follower.py text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13Attachment* text eol=lf
@@ -795,7 +770,6 @@ unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons/NativeMap13Applicat
 unity/Assets/Game/Editor/Map13Skeletons/OfficialMap13AttachmentFollowerAcceptance.cs* text eol=lf
 unity/Assets/Official/World/Map/13/Source/native-attachment-followers.json* text eol=lf
 assets/reference/official-map/map13-native-attachment-follower*-source-manifest.json text eol=lf
-
 # Map12 original stele performances, source ports and explicit native bindings.
 scripts/prepare_unity_map12_stele_playable*.py text eol=lf
 unity/Assets/Game/Runtime/Official/StelePlayables* text eol=lf
@@ -808,7 +782,6 @@ unity/Assets/Official/World/Map/12/NativeStelePlayables/** -text whitespace=cr-a
 unity/Assets/Official/World/Map/12/Source/native-stele-playable-components.json* text eol=lf
 assets/reference/official-map/map12-stele-playable-input-source-manifest.json text eol=lf
 assets/reference/official-map/map12-native-stele-playables-source-manifest.json text eol=lf
-
 # Map13 original native image bundles and exact source component bindings.
 scripts/prepare_unity_map13_entity_sprites.py text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap13EntityAssets/NativeMap13EntitySprite*.cs* text eol=lf
@@ -818,7 +791,6 @@ unity/Assets/Game/Resources/Map13/Native/entity-sprite-catalog.asset* text eol=l
 unity/Assets/Official/World/Map/13/NativeEntitySprites* -text
 unity/Assets/Official/World/Map/13/NativeEntitySprites/** -text whitespace=cr-at-eol,-blank-at-eol
 assets/reference/official-map/map13-native-entity-sprites*-source-manifest.json text eol=lf
-
 # Map12 original stele entity conversion and exact native Sprite bindings.
 scripts/prepare_unity_map12_stele_entit*.py text eol=lf
 scripts/prepare_unity_map12_stele_sprites.py text eol=lf
@@ -826,7 +798,6 @@ unity/Assets/Official/World/Map/12/Source/native-stele-entity-components.json* t
 unity/Assets/Game/Resources/Map12/Native/stele-sprite-catalog.asset* text eol=lf
 assets/reference/official-map/map12-stele-entity-*-source-manifest.json text eol=lf
 assets/reference/official-map/map12-native-stele-sprites-source-manifest.json text eol=lf
-
 # Map13 original world sliced renderer and source bindings.
 scripts/prepare_unity_map13_entity_rendering.py text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13EntityRendering* text eol=lf
@@ -835,7 +806,6 @@ unity/Assets/Game/Editor/Map13EntityRendering* text eol=lf
 unity/Assets/Game/Editor/Map13EntityRendering/** text eol=lf
 unity/Assets/Official/World/Map/13/Source/native-entity-sliced-renderers.json* text eol=lf
 assets/reference/official-map/map13-entity-rendering*-source-manifest.json text eol=lf
-
 # Map13 original tree Model subtrees and native dissolve clock.
 scripts/prepare_unity_map13_tree_model*.py text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap13EntityViews* text eol=lf
@@ -847,7 +817,6 @@ unity/Assets/Game/Resources/Map13/Native/TreeModels/** text eol=lf
 unity/Assets/Official/World/Map/13/NativeTreeModelAnimator* -text
 unity/Assets/Official/World/Map/13/NativeTreeModelAnimator/** -text
 assets/reference/official-map/map13-native-tree-model*-source-manifest.json text eol=lf
-
 # Map12 native stele entities, original selected views and explicit local services.
 unity/Assets/Game/Runtime/Official/SteleEntities.meta text eol=lf
 unity/Assets/Game/Runtime/Official/SteleEntities/** text eol=lf
@@ -859,7 +828,6 @@ unity/Assets/Game/Resources/Map12/Native/stele-entities-catalog.asset* text eol=
 unity/Assets/Official/World/Map/12/NativeSteleEntities.meta text eol=lf
 unity/Assets/Official/World/Map/12/NativeSteleEntities/** text eol=lf
 assets/reference/official-map/map12-native-stele-entities-source-manifest.json text eol=lf
-
 # Map13 original attachment, animator and award-count state views.
 scripts/prepare_unity_map13_entity_state_views.py text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews* text eol=lf
@@ -867,7 +835,6 @@ unity/Assets/Game/Runtime/Official/World/Map13EntityStateViews/** text eol=lf
 unity/Assets/Game/Editor/Map13EntityStateViews* text eol=lf
 unity/Assets/Game/Editor/Map13EntityStateViews/** text eol=lf
 assets/reference/official-map/map13-entity-state-views*-source-manifest.json text eol=lf
-
 # Map13 original entity visibility, interaction and grid presentation.
 scripts/prepare_unity_map13_entity_visibility_views.py text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews* text eol=lf
@@ -881,7 +848,6 @@ unity/Assets/Game/Runtime/Official/World/Map13EntityGridViews/** text eol=lf
 unity/Assets/Game/Editor/Map13EntityGridViews* text eol=lf
 unity/Assets/Game/Editor/Map13EntityGridViews/** text eol=lf
 assets/reference/official-map/map13-entity-grid-views*-source-manifest.json text eol=lf
-
 # Map13 original tree performances and destruction handlers.
 scripts/prepare_unity_map13_entity_fade_handlers.py text eol=lf
 scripts/prepare_unity_map13_tree_playable_runtime.py text eol=lf
@@ -903,7 +869,6 @@ assets/reference/official-map/map13-tree-playable-runtime-source-manifest.json t
 assets/reference/official-map/map13-native-tree-playables-source-manifest.json text eol=lf
 assets/reference/official-map/map13-native-tree-playable-prefabs-source-manifest.json text eol=lf
 assets/reference/official-map/map13-native-tree-playables-playmode-source-manifest.json text eol=lf
-
 # Map13 complete original tree entities
 assets/reference/official-map/map13-native-tree-entities-playmode-source-manifest.json text eol=lf
 assets/reference/official-map/map13-native-tree-entities-source-manifest.json text eol=lf
@@ -925,7 +890,6 @@ unity/Assets/Game/Runtime/Offline/World/NativeMap13TreeEntities/NativeMap13TreeE
 unity/Assets/Game/Runtime/Offline/World/NativeMap13TreeEntities/NativeMap13TreeEntityBinding.cs.meta text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap13TreeEntities/Zjcs.Offline.World.NativeMap13TreeEntities.asmdef text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap13TreeEntities/Zjcs.Offline.World.NativeMap13TreeEntities.asmdef.meta text eol=lf
-
 # Map13 original grid visibility
 assets/reference/official-map/map13-grid-visibility-rules-source-manifest.json text eol=lf
 assets/reference/official-map/map13-grid-visibility-source-manifest.json text eol=lf
@@ -969,7 +933,6 @@ unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/Zjcs.Official.World
 unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/Zjcs.Official.World.Map13GridVisibility.asmdef.meta text eol=lf
 unity/Assets/Official/World/Map/13/Resources/Map13/grid-visibility.json text eol=lf
 unity/Assets/Official/World/Map/13/Resources/Map13/grid-visibility.json.meta text eol=lf
-
 # Map13 formal entity rules, body geometry and local visibility integration.
 scripts/map13_puzzle_rules.py text eol=lf
 scripts/prepare_unity_map13_entity_catalog.py text eol=lf
@@ -980,7 +943,6 @@ unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/** text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.NativeMap13.cs* text eol=lf
 # Keep the migrated skill component bytes identical to their source receipts.
 unity/Assets/Game/Runtime/Official/SkillsUI/** -text
-
 # Map13 formal entity rules and verification.
 scripts/map13_puzzle_rules.py text eol=lf
 scripts/prepare_unity_map13_entity_catalog.py text eol=lf
@@ -991,7 +953,6 @@ unity/Assets/Game/Editor/Map13Mainline/OfficialMap13MainlinePlayAcceptance.cs te
 unity/Assets/Game/Editor/Map13Mainline/OfficialMap13MainlinePlayAcceptance.cs.meta text eol=lf
 unity/Assets/Game/Editor/Map13Mainline/Zjcs.Editor.Map13Mainline.asmdef text eol=lf
 unity/Assets/Game/Editor/Map13Mainline/Zjcs.Editor.Map13Mainline.asmdef.meta text eol=lf
-
 # Map13 native story prefab conversion and original NPC sequence bindings.
 scripts/prepare_unity_map13_npc_story_playables.py text eol=lf
 scripts/verify_unity_map13_story_playable_hierarchy.py text eol=lf
@@ -1000,7 +961,6 @@ unity/Assets/Game/Editor/Map13NpcStoryPlayables/** text eol=lf
 unity/Assets/Game/Resources/Map13/Native/native-npc-story-playables-catalog.asset* text eol=lf
 unity/Assets/Game/Resources/Map13/Entities* text eol=lf
 unity/Assets/Game/Resources/Map13/Entities/** text eol=lf
-
 # Map13 shared original NPC appearance bindings and reproducible converter bytes.
 scripts/prepare_unity_map13_npc_appearance_bindings.py text eol=lf
 scripts/verify_unity_map13_npc_appearance_native.py text eol=lf
@@ -1011,18 +971,14 @@ scripts/prepare_unity_map13_water_entity_export.py text eol=lf
 unity/Assets/Game/Editor/Map13NpcAppearancePlayables.meta text eol=lf
 unity/Assets/Game/Editor/Map13NpcAppearancePlayables/** text eol=lf
 unity/Assets/Game/Resources/Map13/Native/native-npc-appearance-playables-catalog.asset* text eol=lf
-
 # Map13 original request resource and native pool boundaries.
 scripts/prepare_unity_map13_story_playable_requests.py text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap13StoryPlayables.meta text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap13StoryPlayables/** text eol=lf
 unity/Assets/Game/Editor/Map13StoryPlayableRequests.meta text eol=lf
 unity/Assets/Game/Editor/Map13StoryPlayableRequests/** text eol=lf
-
 unity/Assets/Official/World/Map/13/Resources/Map13/grid-entities.json* text eol=lf
-
 unity/Assets/Game/Editor/Map13GridVisibility/OfficialMap13LocalVisibilityAcceptance.cs* text eol=lf
-
 # Map13 formal native entry, original tree entities and local state adapters.
 scripts/prepare_unity_map13_tree_world.py text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap13TreeWorld.meta text eol=lf
@@ -1032,7 +988,6 @@ unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime
 unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Map13StoryPlayables.cs* text eol=lf
 unity/Assets/Game/Editor/Map13Mainline/OfficialMap13TreeWorldAssetTools.cs* text eol=lf
 unity/Assets/Game/Resources/Map13/Native/tree-world-assets.asset* text eol=lf
-
 # Map13 original minimap source and mask migration.
 scripts/prepare_unity_map13_minimap_*.py text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMap.meta text eol=lf
@@ -1053,11 +1008,9 @@ unity/Assets/Game/Editor/Map14/EntityIndex/** -text
 unity/Assets/Game/Editor/Map14/EntityIndex.meta -text
 unity/Assets/Official/World/Map/14/Resources/Map14/EntityLoading/** -text
 unity/Assets/Official/World/Map/14/Resources/Map14/EntityLoading.meta -text
-
 # Map13 original minimap visible range.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapView.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapView/** text eol=lf
-
 # Map13 original regional minimap native assets.
 unity/Assets/Official/World/Map/13/NativeMiniMapRegions.meta text eol=lf
 unity/Assets/Official/World/Map/13/NativeMiniMapRegions/** text eol=lf
@@ -1076,17 +1029,14 @@ unity/Assets/Game/Editor/Map14/ClientComponents/** -text
 unity/Assets/Game/Editor/Map14/ClientComponents.meta -text
 unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedViews/NativeMap14SharedViewEntity.cs text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientEntities/NativeMap14ClientEntityState.cs text eol=lf
-
 # Map13 original minimap region manager.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapRegions.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapRegions/** text eol=lf
-
 # Map13 original minimap camera and complete settings.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapCamera.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapCamera/** text eol=lf
 unity/Assets/Official/World/Map/13/NativeMiniMapSettings.meta text eol=lf
 unity/Assets/Official/World/Map/13/NativeMiniMapSettings/** text eol=lf
-
 # Map14 original world entity touch input.
 unity/Assets/Game/Runtime/Official/EntityWorldInput.meta text eol=lf
 unity/Assets/Game/Runtime/Official/EntityWorldInput/** text eol=lf
@@ -1094,7 +1044,6 @@ unity/Assets/Game/Runtime/Offline/World/NativeMap14WorldInput.meta text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap14WorldInput/** text eol=lf
 unity/Assets/Game/Editor/Map14/WorldInput.meta text eol=lf
 unity/Assets/Game/Editor/Map14/WorldInput/** text eol=lf
-
 # Map14 original entity award hook.
 unity/Assets/Game/Runtime/Official/EntityAwardHook.meta text eol=lf
 unity/Assets/Game/Runtime/Official/EntityAwardHook/** text eol=lf
@@ -1102,13 +1051,11 @@ unity/Assets/Game/Runtime/Offline/World/NativeMap14EntityAwardHook.meta text eol
 unity/Assets/Game/Runtime/Offline/World/NativeMap14EntityAwardHook/** text eol=lf
 unity/Assets/Game/Editor/Map14/EntityAwardHook.meta text eol=lf
 unity/Assets/Game/Editor/Map14/EntityAwardHook/** text eol=lf
-
 # Map13 original minimap non-maskable layer.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapNonMaskable.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapNonMaskable/** text eol=lf
 unity/Assets/Official/World/Map/13/NativeMiniMapNonMaskable.meta text eol=lf
 unity/Assets/Official/World/Map/13/NativeMiniMapNonMaskable/** text eol=lf
-
 # Map12 original team panel, complete atlases and source receipts retain LF bytes.
 unity/Assets/Game/Runtime/Official/TeamUI/** text eol=lf
 unity/Assets/Game/Runtime/Official/PlayerPlay/PlayerPlayConfirmEnv.cs* text eol=lf
@@ -1123,7 +1070,6 @@ unity/Assets/Official/World/Map/12/UI/Team/Animations/** text eol=lf
 unity/Assets/Official/World/Map/12/UI/Team/Sprites/DefaultPortrait-679de31627.png.meta text eol=lf
 unity/Assets/Official/World/Map/12/Source/team-panel-*.json* text eol=lf
 scripts/prepare_unity_map12_team_panel*.py text eol=lf
-
 # Map14 original entity radar.
 unity/Assets/Game/Runtime/Official/EntityRadar.meta text eol=lf
 unity/Assets/Game/Runtime/Official/EntityRadar/** text eol=lf
@@ -1131,7 +1077,6 @@ unity/Assets/Game/Runtime/Offline/World/NativeMap14EntityRadar.meta text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap14EntityRadar/** text eol=lf
 unity/Assets/Game/Editor/Map14/EntityRadar.meta text eol=lf
 unity/Assets/Game/Editor/Map14/EntityRadar/** text eol=lf
-
 # Map13 original minimap resource-point code, native boards and icons.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapResourcePoints.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapResourcePoints/** text eol=lf
@@ -1139,24 +1084,20 @@ unity/Assets/Game/Runtime/Offline/World/NativeMap13MiniMapResources.meta text eo
 unity/Assets/Game/Runtime/Offline/World/NativeMap13MiniMapResources/** text eol=lf
 unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints.meta text eol=lf
 unity/Assets/Official/World/Map/13/NativeMiniMapResourcePoints/** text eol=lf
-
 # Map14 original combined radar tip.
 unity/Assets/Game/Runtime/Official/EntityRadarCombined.meta text eol=lf
 unity/Assets/Game/Runtime/Official/EntityRadarCombined/** text eol=lf
 unity/Assets/Game/Editor/Map14/RadarCombined.meta text eol=lf
 unity/Assets/Game/Editor/Map14/RadarCombined/** text eol=lf
-
 # Map13 original minimap zoom-dependent size code.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapSizing.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapSizing/** text eol=lf
-
 # Map12 original invitation rule/widget ports and reproducible checks
 scripts/prepare_unity_map12_team_invite_rules.py text eol=lf
 scripts/prepare_unity_map12_team_invite_widgets.py text eol=lf
 scripts/test_map12_team_invite_rules.py text eol=lf
 scripts/test_map12_team_invite_rules.ps1 text eol=lf
 scripts/fixtures/map12_team_invite_rules_harness.cs text eol=lf
-
 # Map14 original cost radar tip.
 unity/Assets/Game/Runtime/Official/EntityRadarCost.meta text eol=lf
 unity/Assets/Game/Runtime/Official/EntityRadarCost/** text eol=lf
@@ -1164,11 +1105,9 @@ unity/Assets/Game/Runtime/Offline/World/NativeMap14RadarCost.meta text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap14RadarCost/** text eol=lf
 unity/Assets/Game/Editor/Map14/RadarCost.meta text eol=lf
 unity/Assets/Game/Editor/Map14/RadarCost/** text eol=lf
-
 # Map13 original minimap region border geometry.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapBorders.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapBorders/** text eol=lf
-
 # Map14 original fast-game radar tip.
 unity/Assets/Game/Runtime/Official/EntityRadarFastKill.meta text eol=lf
 unity/Assets/Game/Runtime/Official/EntityRadarFastKill/** text eol=lf
@@ -1176,13 +1115,11 @@ unity/Assets/Game/Runtime/Offline/World/NativeMap14RadarFastKill.meta text eol=l
 unity/Assets/Game/Runtime/Offline/World/NativeMap14RadarFastKill/** text eol=lf
 unity/Assets/Game/Editor/Map14/RadarFastKill.meta text eol=lf
 unity/Assets/Game/Editor/Map14/RadarFastKill/** text eol=lf
-
 # Map13 original minimap descriptions, pooled borders and native village display.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapDescriptions.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapDescriptions/** text eol=lf
 unity/Assets/Official/World/Map/13/NativeMiniMapDescriptions.meta text eol=lf
 unity/Assets/Official/World/Map/13/NativeMiniMapDescriptions/** text eol=lf
-
 # Map14 original statue cost radar prefab.
 unity/Assets/Official/World/Map/14/NativeRadarTips.meta text eol=lf
 unity/Assets/Official/World/Map/14/NativeRadarTips/** text eol=lf
@@ -1192,13 +1129,11 @@ unity/Assets/Game/Editor/Map14/RadarNative.meta text eol=lf
 unity/Assets/Game/Editor/Map14/RadarNative/** text eol=lf
 unity/Assets/Game/Resources/Map14/Native/radar-tips-catalog.asset text eol=lf
 unity/Assets/Game/Resources/Map14/Native/radar-tips-catalog.asset.meta text eol=lf
-
 # Map12 original invitation panel and shared widget lifecycle
 scripts/prepare_unity_map12_team_invite_panels.py text eol=lf
 unity/Assets/Game/Runtime/Official/WorldUI/WorldGAction.cs text eol=lf
 unity/Assets/Game/Runtime/Official/WorldUI/WorldGAction.cs.meta text eol=lf
 unity/Assets/Game/Runtime/Official/WorldUI/WorldPopupWindow.cs text eol=lf
-
 # Map14 original statue entity roots.
 unity/Assets/Official/World/Map/14/NativeStatueEntities.meta text eol=lf
 unity/Assets/Official/World/Map/14/NativeStatueEntities/** text eol=lf
@@ -1208,35 +1143,27 @@ unity/Assets/Game/Editor/Map14/StatueEntities.meta text eol=lf
 unity/Assets/Game/Editor/Map14/StatueEntities/** text eol=lf
 unity/Assets/Game/Resources/Map14/Native/statue-entity-catalog.asset text eol=lf
 unity/Assets/Game/Resources/Map14/Native/statue-entity-catalog.asset.meta text eol=lf
-
-
 # Map13 original active/offline minimap mask managers and native fog assets.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMasks.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMasks/** text eol=lf
 unity/Assets/Official/World/Map/13/NativeMiniMapMasks.meta text eol=lf
 unity/Assets/Official/World/Map/13/NativeMiniMapMasks/** text eol=lf
-
-
 # Map12 original invitation dependency source bytes.
 scripts/prepare_unity_map12_team_invite_extra_sources.py text eol=lf
 scripts/prepare_unity_map12_team_invite_extra_native.py text eol=lf
 unity/Assets/Official/World/Map/12/Source/team-invite-extra-prefabs.json* text eol=lf
 unity/Assets/Official/World/Map/12/Source/native-team-invite-extra-prefabs.json* text eol=lf
-
-
 # Map13 original minimap player marker, animation and native UI camera.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapCharacter.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapCharacter/** text eol=lf
 unity/Assets/Official/World/Map/13/NativeMiniMapCharacter.meta text eol=lf
 unity/Assets/Official/World/Map/13/NativeMiniMapCharacter/** text eol=lf
-
 # Map14 original shared visibility projection.
 unity/Assets/Game/Runtime/Offline/World/NativeMap14Visibility.meta text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap14Visibility/** text eol=lf
 unity/Assets/Game/Editor/Map14/NativeVisibility.meta text eol=lf
 unity/Assets/Game/Editor/Map14/NativeVisibility/** text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedEventSubscription.cs text eol=lf
-
 # Map12 original retained invitation components and complete animation closure.
 scripts/prepare_unity_map12_context_inviters.py text eol=lf
 scripts/prepare_unity_map12_team_invite_animation.py text eol=lf
@@ -1249,7 +1176,6 @@ unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.InviteAnimations.cs* te
 unity/Assets/Official/World/Map/12/Source/team-invite-animation-native.json* text eol=lf
 unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations.meta text eol=lf
 unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/** text eol=lf
-
 # Map14 original display tables and tag query.
 unity/Assets/Official/World/Map/14/NativeDisplayData.meta text eol=lf
 unity/Assets/Official/World/Map/14/NativeDisplayData/** text eol=lf
@@ -1265,7 +1191,6 @@ unity/Assets/Game/Runtime/Offline/World/NativeMap12InviteAnimations.cs* text eol
 unity/Assets/Official/World/Map/12/NativeTeamAnimations.meta text eol=lf
 unity/Assets/Official/World/Map/12/NativeTeamAnimations/** text eol=lf
 unity/Assets/Official/World/Map/12/NativeTeamAnimations/**/*.bytes -text
-
 # Map13 original minimap markers, complete popup windows and native dialogs.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarks.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarks/** text eol=lf
@@ -1273,12 +1198,10 @@ unity/Assets/Game/Runtime/Official/World/Map13MiniMapWindows.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapWindows/** text eol=lf
 unity/Assets/Official/World/Map/13/NativeMiniMapMarkDialogs.meta text eol=lf
 unity/Assets/Official/World/Map/13/NativeMiniMapMarkDialogs/** text eol=lf
-
 # Map12 original NPC invitation model source and native conversion proof.
 scripts/prepare_unity_map12_team_npc_*.py text eol=lf
 unity/Assets/Official/World/Map/12/Source/team-npc-prefabs.json* text eol=lf
 unity/Assets/Official/World/Map/12/Source/native-team-npc-prefabs.json* text eol=lf
-
 # Map13 complete original live and offline minimap marker data.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkData.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkData/** text eol=lf
@@ -1291,7 +1214,6 @@ unity/Assets/Game/Runtime/Offline/World/NativeMap14VisibilityHandlers/** text eo
 unity/Assets/Game/Runtime/Offline/World/NativeMap14VisibilityHandlers.meta text eol=lf
 unity/Assets/Game/Editor/Map14/VisibilityHandlers/** text eol=lf
 unity/Assets/Game/Editor/Map14/VisibilityHandlers.meta text eol=lf
-
 # Map13 original minimap marker spawning and full pool lifetime.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkSpawn.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkSpawn/** text eol=lf
@@ -1300,7 +1222,6 @@ unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientViewBindings/** text eo
 unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientViewBindings.meta text eol=lf
 unity/Assets/Game/Editor/Map14/ClientViewBindings/** text eol=lf
 unity/Assets/Game/Editor/Map14/ClientViewBindings.meta text eol=lf
-
 # Map12 lossless NPC skeleton data and independent native graph adapter.
 scripts/prepare_unity_map12_team_npc_skeletons.py text eol=lf
 scripts/prepare_unity_map12_team_npc_data.py text eol=lf
@@ -1313,7 +1234,6 @@ unity/Assets/Official/World/Map/12/NativeTeamNpcData/**/*.bytes -text
 unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkeletonData.Npc.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePathAttachment.cs* text eol=lf
 unity/Assets/Game/Editor/ProfessionUI/Map12NpcDataValidation.cs* text eol=lf
-
 # Map13 original live/region/offline minimap marker managers.
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkManagers.meta text eol=lf
 unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkManagers/** text eol=lf
@@ -1327,7 +1247,6 @@ unity/Assets/Game/Editor/Map14/BufferedEvents.meta text eol=lf
 unity/Assets/Game/Runtime/Official/SharedLaunch/ConfigConst.cs text eol=lf
 unity/Assets/Game/Runtime/Official/SharedLaunch/ConfigConst.cs.meta text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedData.cs text eol=lf
-
 # Map13 original minimap marker native assets and state supporters.
 unity/Assets/Official/World/Map/13/NativeMiniMapMarks.meta text eol=lf
 unity/Assets/Official/World/Map/13/NativeMiniMapMarks/** text eol=lf
@@ -1340,7 +1259,6 @@ unity/Assets/Game/Runtime/Offline/World/NativeMap14RootComponents/** text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap14RootComponents.meta text eol=lf
 unity/Assets/Game/Editor/Map14/RootComponents/** text eol=lf
 unity/Assets/Game/Editor/Map14/RootComponents.meta text eol=lf
-
 # Map13 original minimap click and sliced camera frame.
 unity/Assets/Official/World/Map/13/NativeMiniMapClickFrame.meta text eol=lf
 unity/Assets/Official/World/Map/13/NativeMiniMapClickFrame/** text eol=lf
@@ -1353,9 +1271,10 @@ unity/Assets/Game/Runtime/Official/MapRootFog/** text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap14RootFog/** text eol=lf
 unity/Assets/Game/Editor/Map14/RootFog/** text eol=lf
 unity/Assets/Official/World/Map/14/RootFog/**/*.shader text eol=lf
-
 # Map12 independent original NPC local animation channels.
 scripts/prepare_unity_map12_team_npc_channels.py text eol=lf
 assets/reference/official-map/map12-team-npc-channels-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimationChannels.cs* text eol=lf
 unity/Assets/Game/Editor/ProfessionUI/Map12NpcAnimationValidation.cs* text eol=lf
+unity/Assets/Official/CharacterCreation/Recovered/NativeCharacterData/Baked/Variants/Female/character_Female_1.skel[[:space:]]Controller.controller filter=lfs diff=lfs merge=lfs -text
+unity/Assets/Official/CharacterCreation/Recovered/NativeCharacterData/Baked/Variants/Male/character_Male_1.skel[[:space:]]Controller.controller filter=lfs diff=lfs merge=lfs -text

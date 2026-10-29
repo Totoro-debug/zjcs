@@ -1,0 +1,173 @@
+{
+  "folder_meta_sha256": "a4608553d4c15a3193cc46aaaf667c5949ca41566624af02783ed5f520d0582f",
+  "manifest": "854_156383",
+  "operation": "Restore source-verified creation, appearance, and wardrobe JSON for Unity TextAsset import.",
+  "outputs": [
+    {
+      "bytes": 647262,
+      "meta_sha256": "78cf4960f256f07648d6c1d682ff07ef25b5431399abd267b49811c05f6cf332",
+      "name": "appearance-options.json",
+      "sha256": "e5474e59b8644d35b816b9bd1161b2368b30634975e196d0981f8377e0064373"
+    },
+    {
+      "bytes": 266981,
+      "meta_sha256": "10d3786c20c06e33b380f6a7d4d412842e972a810d98b38828dd3f7b9344501d",
+      "name": "appearance-ui.json",
+      "sha256": "738118883ce7b1c44cce9e6cf0df67b4f304e64cdc4102f2b266d605057c9c06"
+    },
+    {
+      "bytes": 362309,
+      "meta_sha256": "1b9399873704fa39a9baf009836a9514e22b05b5f4550242067694139dc1f078",
+      "name": "creation-performance.json",
+      "sha256": "46b3835429fd850cf8d145cb67d9f17f160b23991f04b5ebcfdeaa2e883fd5c6"
+    },
+    {
+      "bytes": 1302226,
+      "meta_sha256": "a7dfc1204d71506f4d4394d0d4e391ade5f56a0faeeb01476f47436b2cc00d99",
+      "name": "wardrobe-rules.json",
+      "sha256": "d9ab0c98ebdd84038b96ed1144c8385ef3cc0afffec2035fc40db638799338fb"
+    },
+    {
+      "bytes": 4944179,
+      "meta_sha256": "00de4280945bdc62b38391889db02f8b422ec47bb97cd97f7129edff79096c17",
+      "name": "wardrobe-ui.json",
+      "sha256": "7ca270d1742adcc0530e04e7ce24f4baab84df3827654e6c55375dd925208dfd"
+    },
+    {
+      "bytes": 1947398,
+      "meta_sha256": "05ded92321f12e92bbd6bc5ff78ef02a10101037b3eddabfe27fb52428af90f0",
+      "name": "wardrobe.json",
+      "sha256": "34cab603a818329f5657cf2bd39461e27938d12d07b85b3b33a0ad1477d10f2d"
+    },
+    {
+      "bytes": 1648,
+      "name": "appearance-config-rules.json",
+      "sha256": "5322e0ca4a0a45e173c8eca973165d1af68c3c5c9cc0c8c9cb6597282f513591"
+    }
+  ],
+  "sources": {
+    "appearance-config-rules.json": {
+      "generator": "scripts/prepare_character_creation_appearance_rules.py",
+      "input_manifest": "assets/reference/character-creation/appearance-config-rules-source-manifest.json",
+      "input_manifest_sha256": "98544b41ee80ceabd26f54e5c69d02651386c10db47d073efbe3f53003be8918",
+      "output_sha256": "5322e0ca4a0a45e173c8eca973165d1af68c3c5c9cc0c8c9cb6597282f513591"
+    },
+    "appearance-options.json": {
+      "generator": "scripts/official_appearance_catalog.py",
+      "generator_sha256": "ebf94af36f77fd3ea9692575f3847d34af221659cb54289e608776b123f04dcd",
+      "output_sha256": "e5474e59b8644d35b816b9bd1161b2368b30634975e196d0981f8377e0064373",
+      "source": "assets/characters/appearance/catalog.json",
+      "table_inputs": {
+        "character_skin": "6c1c38d013a61d686ab81cbc252bdbb7b425dc9a841c135a06b859a8762986f6",
+        "character_skin_dye": "567f02eece36aaa8c02ff71971d90bf21123f95518dce3a867154507099114ac",
+        "character_skin_id_group": "35c8ee0fabf139470c00449b555626047d378d1dcca5c57f6958e81bbb6f8c5d",
+        "spine_skin": "a375c108091296975a90455879d13e727f79177551bb549d2738118505505121"
+      }
+    },
+    "appearance-ui.json": {
+      "manifest": "assets/reference/character-genders/appearance-source-manifest.json",
+      "manifest_sha256": "8f497fe92153165b94e7c724b2b3fcb828c2cf04cc84984fbd3bf7f69f243058",
+      "output_sha256": "8dd5f9a9502231cb1bf586356c013a7b664d229393020268d0ef39e3c21e9b4f",
+      "source": "assets/official/appearance-ui.json",
+      "source_output": "assets/official/appearance-ui.json"
+    },
+    "creation-performance.json": {
+      "manifest": "assets/reference/creation-performance/source-manifest.json",
+      "manifest_sha256": "246ff1bec441669eb1766028f4c855ed056d07b972d4a4d443f5e961acc0c4a6",
+      "output_sha256": "46b3835429fd850cf8d145cb67d9f17f160b23991f04b5ebcfdeaa2e883fd5c6",
+      "source": "assets/official/creation-performance/catalog.json",
+      "source_output": "res://assets/official/creation-performance/catalog.json"
+    },
+    "wardrobe-rules.json": {
+      "manifest": "assets/reference/character-appearance/rules-source-manifest.json",
+      "manifest_sha256": "e4e755b7b9c40f3513e9400c65f02ed84c9c8b4e1c87183410b04d4f64155049",
+      "output_sha256": "d9ab0c98ebdd84038b96ed1144c8385ef3cc0afffec2035fc40db638799338fb",
+      "source": "assets/characters/wardrobe/rules.json",
+      "source_output": "res://assets/characters/wardrobe/rules.json"
+    },
+    "wardrobe-ui.json": {
+      "manifest": "assets/reference/character-appearance/ui-source-manifest.json",
+      "manifest_sha256": "db6bae95a23d3e94b1fc4a84401f5511f5f504802ee3a3cbab34b68f1798d191",
+      "output_sha256": "dac60888c8682be9f097361993633e1c95d71d24b15789c0f146d0611249ca3d",
+      "source": "assets/characters/wardrobe/ui.json",
+      "source_output": "res://assets/characters/wardrobe/ui.json"
+    },
+    "wardrobe.json": {
+      "manifest": "assets/reference/wardrobe/source-manifest.json",
+      "manifest_sha256": "e3d6c5e19fbc6b9dc45c44637b3a4082f1e20e8bceb9ffcadb9e3433f9d8bbc0",
+      "output_sha256": "d58c3e67746a841b0d462152b587b1e978410474fbccadc868da46a2fe185917",
+      "source": "assets/official/wardrobe.json",
+      "source_output": "res://assets/official/wardrobe.json"
+    }
+  },
+  "current_table_conversion": {
+    "manifest": "871_156598",
+    "source": "assets/reference/official-map/current-table-source-manifest.json",
+    "staged_sha256": "3f1282f0f5602bfbbfac9d042474c9a6d3d0bc6c4127b7f6e4d699d5f0ac92ee"
+  },
+  "current_output_conversion": {
+    "manifest": "871_156598",
+    "sources": [
+      {
+        "path": "assets/reference/official-map/current-table-source-manifest.json",
+        "sha256": "21f1e41a77d6e003ff243cdfeaef505dc01a35c15cb6cc3d2d016ff36873c006"
+      },
+      {
+        "path": "assets/reference/official-map/current-combat-source-manifest.json",
+        "sha256": "2dfc8bfc863a934456e46b9b7bd4dedf0993020b7e0f696128bd7cd3424c37a9"
+      },
+      {
+        "path": "assets/reference/official-map/current-material-source-manifest.json",
+        "sha256": "d30fc27907ed1281f4d59b05ad79328e9d563ed136fd1ec83106bfa23a22a005"
+      },
+      {
+        "path": "assets/reference/official-map/current-home-layers-source-manifest.json",
+        "sha256": "c4e2d68efabab0bc06e26966fdc51af0cd3591088c22521a785cd60304b0780f"
+      },
+      {
+        "path": "assets/reference/official-map/current-language-source-manifest.json",
+        "sha256": "dfea82d02831a50c4baa4556a1d591fe1a2d78ee398a84c77a897efce7b6586e"
+      },
+      {
+        "path": "assets/reference/official-map/current-sprites-source-manifest.json",
+        "sha256": "5860bb0ba34787762bb1c59b6b42e215692b01304ab726b1e651dfced35cfcbc"
+      },
+      {
+        "path": "assets/reference/official-map/current-animators-source-manifest.json",
+        "sha256": "86882221fa8b75c7cad7eab897e7694a95bb95be37fb7c464c9366124a33efa4"
+      },
+      {
+        "path": "assets/reference/official-map/current-shared-table-bindings-source-manifest.json",
+        "sha256": "bfef48f900067d2036c11684a66ad56af27594ca16c9e7156365df0c78d847e9"
+      },
+      {
+        "path": "assets/reference/official-map/current-ui-masks-source-manifest.json",
+        "sha256": "5d3f9fb343f0a0f68de1d5592691fa2e48fffa26c6e3293793c2db11276f1cb9"
+      },
+      {
+        "path": "assets/reference/official-map/current-ui-particle-materials-source-manifest.json",
+        "sha256": "c3edb5124c4907f2cad8f7eab93ca9804ed42367ceae6972da81a8d1bb17682f"
+      },
+      {
+        "path": "assets/reference/official-map/current-ui-graphics-source-manifest.json",
+        "sha256": "a064096dee9bae3e6bf07ea036cdc9a861c93fdcbe8720ad1d2c2b8aace9a00b"
+      },
+      {
+        "path": "assets/reference/official-map/current-ui-text-bindings-source-manifest.json",
+        "sha256": "9937746c37b6304712630145d6e1f1f50deddb756ac13907cfe62b10f3016fe4"
+      },
+      {
+        "path": "assets/reference/character-creation/current-mesh-source-manifest.json",
+        "sha256": "54f85913886dcd62a4e5ccee9823ae295496a0dc06371c506bd9dbae44d62a52"
+      },
+      {
+        "path": "assets/reference/character-creation/current-native-prefabs-source-manifest.json",
+        "sha256": "d067eeb637f4f5274e38fbfecdf0897820e31ada1a884315bfdb9bfba69b36a8"
+      },
+      {
+        "path": "assets/reference/character-creation/current-native-concurrent-bindings-source-manifest.json",
+        "sha256": "28f728c2fc51b607288c02c935a241faf9987a94e0bf3cb13f8005949513813b"
+      }
+    ]
+  }
+}
