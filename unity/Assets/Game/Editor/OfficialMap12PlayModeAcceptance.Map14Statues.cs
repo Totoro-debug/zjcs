@@ -209,6 +209,22 @@ namespace Zjcs.Editor
                 throw new InvalidDataException("Official vector-to-grid conversion truncation differs.");
             Debug.Log("Map14 original FengMoXiaFinish spawn position binding passed: StoryTalk logic entity vector -> official truncating grid conversion -> spawned entity position.");
 
+            var navigation = new Zjcs.Official.World.OfficialMapNavigation
+            {
+                Origin = new Zjcs.Official.World.OfficialMapVector3 { X = -134.5f, Y = -134.5f }
+            };
+            MethodInfo cameraConversion = typeof(OfficialMainlineMapRuntime).GetMethod("ConvertStoryCameraPosition",
+                BindingFlags.Static | BindingFlags.NonPublic);
+            Vector2 cameraGrid = (Vector2)cameraConversion.Invoke(null, new object[] { navigation,
+                new Vector3(112.5f, -19.5f, -20f), new Vector2(0.02f, 0.04f) });
+            if ((cameraGrid - new Vector2(247.02f, 115.04f)).sqrMagnitude > 0.0001f)
+                throw new InvalidDataException("Original world-camera position conversion or fractional offset differs.");
+            int cameraPositionNodes = data.stories.Concat(data.subgraphs ?? Array.Empty<Map10RuntimeStory>())
+                .SelectMany(value => value.nodes).Count(value => value.type == "GetPosAroundWorldCamera");
+            if (cameraPositionNodes != 3)
+                throw new InvalidDataException("Map14 original camera-position query closure differs.");
+            Debug.Log("Map14 original camera-position query passed: current camera world position -> official grid rounding -> fractional node offset; all three source nodes are present.");
+
             Map10RuntimeStory transferStory = data.stories.Single(value => value.key == "SuoYaoTowerAfterBattle");
             Map10RuntimeStoryNode characterTransferNode = transferStory.nodes.Single(value => value.type == "MapMeCharacterTransferNode");
             Map14StoryTransferFields transferFields = JsonUtility.FromJson<Map14StoryTransferFields>(characterTransferNode.sourceJson);
