@@ -2,7 +2,7 @@
 
 [总索引](../README.md)
 
-状态：未完成。当前官方配置、原生地形、全部 486 个环境／地区标签 prefab、两类蝴蝶动画、机关规则及主线剧情数据载荷已恢复并分项验证；实体、剧情运行时、正式玩法、HUD、存档与 Windows 发布尚未完成。
+状态：未完成。当前官方配置、原生地形与环境、全部 486 个环境／地区标签 prefab、两类蝴蝶动画、机关规则及主线剧情数据载荷已恢复并分项验证；原生地形／环境／区域标签视图已接入主线地图宿主，但正式地图入口仍关闭。实体、剧情运行时、正式玩法、HUD、存档与 Windows 发布尚未完成。
 
 ## 地图简介
 
@@ -377,7 +377,7 @@ Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式
 
 - [配置生成器](../../scripts/prepare_unity_map14_sources.py)、[配置来源](../../assets/reference/official-map/map14-source-manifest.json)；载荷为 `Assets/Official/World/Map/14/Source/`。
 - [统一地图定义生成器](../../scripts/prepare_unity_map14_definition.py)；输出 `Assets/Official/World/Map/14/map14.json` 并对照本图来源收据核验导航、区域、位置及默认入口。
-- 主线地图 profile 与回城路由位于 `Runtime/Presentation/World/Mainline/OfficialMainlineMapProfile.cs`、`OfficialMainlineMapRuntime.cs`；共享主线数据加载器按 `871_156598` 校验并装入Map14的217阶段、20场景、909实体关卡绑定、94张剧情图和171个模板，保留原始 Playable 节点与等待参数；当前原 Playable 资源绑定尚未就绪，`IsRuntimeEntryReady` 保持关闭。Unity内置屏 Play Mode 通过生产加载器并构造核对1,649个原编队怪物，未覆盖地图宿主、剧情执行或Player发布。
+- 主线地图 profile 与回城路由位于 `Runtime/Presentation/World/Mainline/OfficialMainlineMapProfile.cs`、`OfficialMainlineMapRuntime.cs`；共享主线数据加载器按 `871_156598` 校验并装入 Map14 的217阶段、20场景、909实体关卡绑定、94张剧情图和171个模板，保留原始 Playable 节点与等待参数；当前原 Playable 资源绑定尚未就绪，`IsRuntimeEntryReady` 保持关闭。主线宿主在地图实体和区域状态载入后创建原生 Map14 地形、环境及标签视图，并按本地玩家位置、等级／战力、开放地区和地区进度刷新显示；未复用通用平面地面。Unity内置屏 Play Mode 通过生产加载器并构造核对1,649个原编队怪物，但尚未覆盖此正式宿主链路、剧情执行或 Player 发布。
 - [原生输入恢复](../../scripts/prepare_unity_map14_native.py)、[输入及组件来源](../../assets/reference/official-map/map14-native-input-source-manifest.json)。
 - [实体输入恢复](../../scripts/prepare_unity_map14_entity_inputs.py)、[原组件序列化描述](../../scripts/map14_entity_native_schemas.py)及[实体／显示／动态贴图来源](../../assets/reference/official-map/map14-native-entity-input-source-manifest.json)；完整原字段载荷为 `Source/native-entity-components.json`，临时转换输入保存在 `.tools/map14-entity-native-cache-871_156598/`，不进入运行时。
 - [实体原生导出](../../scripts/prepare_unity_map14_entity_export.py)与[逐字段／指针核对来源](../../assets/reference/official-map/map14-native-entity-export-source-manifest.json)；使用 `--convert` 执行私有转换器，原顺序恢复结果在同一缓存的 `restored/` 中。
@@ -393,6 +393,6 @@ Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式
 
 - [蝴蝶原生动画与 shader 转换](../../scripts/prepare_unity_map14_butterflies.py)、[来源](../../assets/reference/official-map/map14-native-butterflies-source-manifest.json)、[显式绑定](../../assets/reference/official-map/map14-native-butterflies-binding-source-manifest.json)及[独立原始数据参考](../../scripts/map14_butterfly_reference.py)；运行边界为 `Runtime/Offline/World/NativeMap14/`。
 - [环境分区恢复](../../scripts/prepare_unity_map14_environment_scene.py)、[原生来源](../../assets/reference/official-map/map14-native-environment-scene-source-manifest.json)、[绑定](../../assets/reference/official-map/map14-native-environment-scene-binding-source-manifest.json)、[共享环境来源核对](../../assets/reference/official-map/map14-shared-environment-source-manifest.json)及[实际运行检查](../../unity/Assets/Game/Editor/Map14/OfficialMap14EnvironmentSceneAcceptance.cs)。
-- [地区标签代码投影](../../scripts/prepare_unity_map14_label_components.py)、[代码／语言／配置来源](../../assets/reference/official-map/map14-label-components-code-source-manifest.json)、[原生转换](../../scripts/prepare_unity_map14_region_labels.py)、[素材来源](../../assets/reference/official-map/map14-native-region-labels-source-manifest.json)、[显式绑定](../../assets/reference/official-map/map14-native-region-labels-binding-source-manifest.json)及[完整分区运行检查](../../unity/Assets/Game/Editor/Map14/Labels/OfficialMap14LabelAcceptance.cs)。运行边界位于 `Runtime/Official/World/NativeMap14Labels/` 与 `Runtime/Offline/World/NativeMap14Labels/`；显式目录为 `Map14/Native/native-region-labels-catalog`。主线地图宿主适配器位于 `Runtime/Presentation/World/NativeMap14/OfficialMap14NativeWorldView.cs`，Unity 导入及隔离运行验证已通过，正式宿主接线待完成。
+- [地区标签代码投影](../../scripts/prepare_unity_map14_label_components.py)、[代码／语言／配置来源](../../assets/reference/official-map/map14-label-components-code-source-manifest.json)、[原生转换](../../scripts/prepare_unity_map14_region_labels.py)、[素材来源](../../assets/reference/official-map/map14-native-region-labels-source-manifest.json)、[显式绑定](../../assets/reference/official-map/map14-native-region-labels-binding-source-manifest.json)及[完整分区运行检查](../../unity/Assets/Game/Editor/Map14/Labels/OfficialMap14LabelAcceptance.cs)。运行边界位于 `Runtime/Official/World/NativeMap14Labels/` 与 `Runtime/Offline/World/NativeMap14Labels/`；显式目录为 `Map14/Native/native-region-labels-catalog`。正式宿主适配器位于 `Runtime/Presentation/World/NativeMap14/OfficialMap14NativeWorldView.cs`，由 `OfficialMainlineMapRuntime.NativeMap14.cs` 创建并刷新；Unity 导入及隔离运行验证已通过，本次主线接线尚待 Unity 编译及正式运行验证。
 
 新增原生素材独立保存在 `Assets/Official/World/Map/14/`，尚未生成完整素材快照，不能声称已进入 `asset-pack` 备份。

@@ -210,6 +210,7 @@ namespace Zjcs.Presentation.World
             UpdateMap13FollowerObjects();
             FlushPuzzleRegionProgress();
             FlushMap12ChestProgress();
+            RefreshNativeMap14State();
             stamina.RefreshStaminaPoints();
             exploration.RefreshExploration();
             dialoguePortraits?.Tick(Time.unscaledDeltaTime);
@@ -351,7 +352,7 @@ namespace Zjcs.Presentation.World
             mapRoot.SetParent(transform, false);
             WorldMapAssets assets = session.Assets;
             GameObject terrain = null;
-            if (mapClassId != 12 && mapClassId != 13)
+            if (mapClassId != 12 && mapClassId != 13 && mapClassId != 14)
             {
                 terrain = Instantiate(assets.GroundPrefab, mapRoot, false);
                 terrain.name = "Map" + mapClassId + "Terrain";
@@ -436,6 +437,7 @@ namespace Zjcs.Presentation.World
             RefreshEntityActivity();
             if (mapClassId == 12) InitializeNativeMap12();
             else if (mapClassId == 13) InitializeNativeMap13();
+            else if (mapClassId == 14) InitializeNativeMap14();
             else regions.InitializeFog(terrain.transform);
         }
 
@@ -557,6 +559,7 @@ namespace Zjcs.Presentation.World
             map12SteleEntities?.Dispose();
             map12SteleEntities = null;
             nativeMap12World?.Dispose();
+            DisposeNativeMap14();
             DisposeNativeMap13();
             miniMap.CloseNativeFullMiniMap();
             hud.CloseNativeWorldFunctions();
