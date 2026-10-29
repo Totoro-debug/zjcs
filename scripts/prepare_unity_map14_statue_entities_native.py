@@ -25,7 +25,11 @@ MODULES={
        'MyStageResultAwardStatusEffect','MyStageResultModifyHpPercent',
        'MyStageConPlayerPeriodicityInteraction','MyStageResultPeriodicityRandomAward','MyEntitySource'),'EntityClientComponents')}
 
-def record(p):return dict(path=source_path(p),sha256=sha(p.read_bytes()))
+def record(p):
+    raw=p.read_bytes();entry=dict(path=source_path(p))
+    if p.suffix=='.cs' and p.is_relative_to(ROOT/'unity'):
+        raw=raw.replace(b'\r\n',b'\n');entry['hashLineEndings']='LF'
+    return dict(entry,sha256=sha(raw))
 def guid(p):return GUID.search(Path(str(p)+'.meta').read_text(encoding='utf-8-sig'))[1]
 
 def build():

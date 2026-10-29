@@ -62,7 +62,11 @@ namespace Zjcs.Offline.World.NativeMap14SharedViews
             }
             componentViews.Add(typeof(T), component);
         }
-        public void Dispose() { Grid?.Dispose(); componentViews.Clear(); }
+        public void Dispose()
+        {
+            try { foreach (var component in componentViews.Values) (component as IDisposable)?.Dispose(); }
+            finally { Grid?.Dispose(); componentViews.Clear(); }
+        }
         private object Component(string type) => Invoke(Original, "GetComponent", new[] { typeof(Type) }, assemblies.CommonType(type));
         private object Position(Pos2d pos) => Activator.CreateInstance(assemblies.CommonType("Pos2d"), pos.X, pos.Y);
         private static Pos2d Position(object pos) => new Pos2d((int)Get(pos, "X"), (int)Get(pos, "Y"));

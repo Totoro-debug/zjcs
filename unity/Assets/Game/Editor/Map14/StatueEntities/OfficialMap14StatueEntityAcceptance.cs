@@ -44,6 +44,7 @@ namespace Zjcs.Editor.Map14
     {
         private const string Key="Map14.StatueEntities";
         private static bool started; private static int errors;
+        public static Func<NativeMap14SharedAssemblies,NativeMap14SharedViewEntity,Visibility.Map13VisibilityData> VisibilityDataFactory { get; set; }
         private static string Output=>Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
         [InitializeOnLoadMethod] private static void Hook(){if(!SessionState.GetBool(Key,false))return;started=false;errors=0;EditorApplication.update-=Tick;EditorApplication.update+=Tick;EditorApplication.playModeStateChanged-=Mode;EditorApplication.playModeStateChanged+=Mode;}
         public static void Run()
@@ -171,10 +172,10 @@ namespace Zjcs.Editor.Map14
         private sealed class DataInput:ECViewEntityData,IMapDisplayEntityState
         {
             public readonly NativeMap14SharedViewEntity Shared;
-            public readonly Visibility.Map13VisibilityData VisibilityData=new Visibility.Map13VisibilityData{ClientVisibilityType=Visibility.ClientVisibilityType.NPCVisibility};
+            public readonly Visibility.Map13VisibilityData VisibilityData;
             public NativeMap14SharedViewEntity.StageData Stage=>Shared.Stage;public NativeMap14SharedViewEntity.GridData Grid=>Shared.Grid;
             public readonly TipSource Tip;
-            public DataInput(object original,NativeMap14SharedAssemblies assemblies){Shared=new NativeMap14SharedViewEntity(assemblies,original);new NativeMap14ClientComponentBindings(assemblies).Bind(Shared);Tip=new TipSource{Owner=this};}
+            public DataInput(object original,NativeMap14SharedAssemblies assemblies){Shared=new NativeMap14SharedViewEntity(assemblies,original);new NativeMap14ClientComponentBindings(assemblies).Bind(Shared);VisibilityData=VisibilityDataFactory?.Invoke(assemblies,Shared)??new Visibility.Map13VisibilityData{ClientVisibilityType=Visibility.ClientVisibilityType.NPCVisibility};Tip=new TipSource{Owner=this};}
             public bool Removing=>(bool)NativeMap14SharedPrefabs.Get(Shared.Original,"Removing");public Pos2d GridPosition=>Grid.Pos;public string EntityTag=>"";
             public override int ClassId=>Shared.ClassId;public override EcEntityIdentifier Id=>Shared.Id;
             public override T GetComponent<T>(){object value=typeof(T)==typeof(ECEntityTipDotSourceData)?Tip:typeof(T)==typeof(Visibility.Map13VisibilityData)?VisibilityData:null;return value!=null?(T)value:Shared.GetComponent<T>();}

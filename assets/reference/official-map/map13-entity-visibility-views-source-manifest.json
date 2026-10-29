@@ -566,7 +566,8 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews/Map13VisibilityData.cs",
-      "sha256": "4653852cea2eca07b8b74e5ea70a8022370793a7e6126509fd38560538860291"
+      "sha256": "9eb28725fab49ed6608ad606c1b30a7d1f5552171987db67e0102a909904f2e4",
+      "hashLineEndings": "LF"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews/Map13VisibilityData.cs.meta",
@@ -604,7 +605,7 @@
   "tools": [
     {
       "path": "scripts/prepare_unity_map13_entity_visibility_views.py",
-      "sha256": "c9646b66d4a7649b26722c0b8b3b368910684796d94945ff6a21b0f8b1c3d3c9"
+      "sha256": "e09bb02b82195b0e1c8d7064cf3ddffbf349764cd18f14b749dc25b972f83291"
     }
   ],
   "reused_application_ports": [
@@ -624,5 +625,6 @@
       "path": "assets/reference/official-map/map13-entity-events-source-manifest.json",
       "sha256": "6652f835ce05bdbc40b95bb8975b232730c5f80e243806d715c20017f7c943ae"
     }
-  ]
+  ],
+  "native_visibility_boundary": "Map13VisibilityData is an extensible consumed-data projection: virtual accessors/mutations retain the original default flag/event bodies and allow Map14 to delegate to the unchanged original VisibilityComponent and original receiver ABI."
 }

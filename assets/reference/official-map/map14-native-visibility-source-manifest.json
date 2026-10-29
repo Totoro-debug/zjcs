@@ -1,0 +1,162 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/VisibilityComponent.cs",
+      "sha256": "96fb44ebef8205f0ad84d160877d4e23b2a8a1acc672d77bd639ebee1468bd41"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/VisibilityGridComponent.cs",
+      "sha256": "cbae92737f49b4c356e9faa96829aca1b6d3e5764cca7a62cedf4ac27c000a2a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/ClientVisibilityType.cs",
+      "sha256": "7c89aec5f7900c003be4519d884b0ee2c12b2b1c672b06897c3cca10c148aa7d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IEcEntityClientVisibilityUpdatedEventReceiver.cs",
+      "sha256": "05735953ac8baa681ffbd12476aee6aeed05127124d26abbd70fdab1ee01dbe1"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcEntityClientVisibilityUpdatedEventDelegate.cs",
+      "sha256": "4ad75b1735592bd42b27c9de8906a0bfcbc200afbb1b464929b8895f4d480043"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EventDelegateBasicBase.cs",
+      "sha256": "f8d7e8a53676d173e388610b01808138196ad3a8e6eca3ea6b94b3dae278a4c8"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyVisibility.cs",
+      "sha256": "3dec179e45442314a76f598244a56bab2867175c820ebb153e2cf001491b398e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECClientVisibilityView.cs",
+      "sha256": "2df15e71311000833ee5dbe39a9231789bdea5ef5164fa69f544fb20c9445962"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Editor/Map14/StatueEntities/Zjcs.Editor.Map14.StatueEntities.asmdef",
+      "sha256": "6e0ed2b795ae2c67600cd1018f84095ccff9a52cef9f47cf8a80feb42906cd2d"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map14_native_visibility.py",
+      "sha256": "ff4fbf263e493563491e44cc63a94e2ad1903c92b399b0ca66aedfe42cbc9a2c"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "assets/reference/official-map/map13-entity-visibility-views-source-manifest.json",
+      "sha256": "b8edc075075a8e10c3afc911a3d8d1e8f8e1d13a206a1f06dd4fcdcc85044a8f"
+    },
+    {
+      "path": "assets/reference/official-map/map14-native-radar-tips-source-manifest.json",
+      "sha256": "1fd7e234805459c261c315f6c9496bc6ae83f0e00d24e983d4350b9cdc9d833b"
+    },
+    {
+      "path": "assets/reference/official-map/map14-native-statue-entities-source-manifest.json",
+      "sha256": "50cb12fcee6ae518b609ffc9f8ff6c1107af20a6adaf6eaca879e53b1ce37f5e"
+    },
+    {
+      "path": "assets/reference/official-map/map14-shared-view-source-manifest.json",
+      "sha256": "b231117c784200fae3302acff9be49c42752f2ba0ad9b19801c82198193aa93c"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_entity_visibility_views.py",
+      "sha256": "e09bb02b82195b0e1c8d7064cf3ddffbf349764cd18f14b749dc25b972f83291"
+    },
+    {
+      "path": "scripts/prepare_unity_map14_radar_native.py",
+      "sha256": "e802b3b48cab110bf35d0af18767fbb5c14835d6e6079dd21142f7591f92d0c5"
+    },
+    {
+      "path": "scripts/prepare_unity_map14_shared_views.py",
+      "sha256": "d7929f5771a422e499a0ee1c5a24c8297f8b2d0ab560eddf79be4a356ffcad03"
+    },
+    {
+      "path": "scripts/prepare_unity_map14_statue_entities_native.py",
+      "sha256": "cb41ef1d8d26a1f0191c52dae3aec4d5359537704893d32dc70be05821d9ee76"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/NativeVisibility/OfficialMap14NativeVisibilityAcceptance.cs",
+      "hashLineEndings": "LF",
+      "sha256": "840922ec8c89850020120eb209a088cb3d84f3ae231c074eea646840d3270586"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/NativeVisibility/OfficialMap14NativeVisibilityAcceptance.cs.meta",
+      "sha256": "71b27a9dc91475e5dedaa746d295486e8ddc6b4edae8495fe3e0f9b02da16b04"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/NativeVisibility/Zjcs.Editor.Map14.NativeVisibility.asmdef",
+      "sha256": "d6fffa7325c2ad4266be5007e0f4024389355cf5fcea2fafc4013f217f74798b"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/NativeVisibility/Zjcs.Editor.Map14.NativeVisibility.asmdef.meta",
+      "sha256": "44202c4754e9c69b8f77524768b85478b1c216608e3ba787f892745f106f2ade"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/NativeVisibility.meta",
+      "sha256": "d8693d6ba881050de7f52f41dc78665ca01b28e5561000cd2be12aef8ad16744"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/StatueEntities/OfficialMap14StatueEntityAcceptance.cs",
+      "hashLineEndings": "LF",
+      "sha256": "d5e916be563b7dc14b3e874560acb3e37790f5bbb516e16273cbcddda684a0d8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews/Map13VisibilityData.cs",
+      "hashLineEndings": "LF",
+      "sha256": "9eb28725fab49ed6608ad606c1b30a7d1f5552171987db67e0102a909904f2e4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedEventSubscription.cs",
+      "hashLineEndings": "LF",
+      "sha256": "b5aed5c806e4ad0240767258b8bf0cfc958507fa95e8d3b7a1de76170c60ae00"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedViews/NativeMap14SharedViewEntity.cs",
+      "hashLineEndings": "LF",
+      "sha256": "d1f61fa4c43fe3a622a4bc7b6672c616a2b77b09e9ad460e493d14a45f72026d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14Visibility/NativeMap14VisibilityData.cs",
+      "hashLineEndings": "LF",
+      "sha256": "17cac68f0a11b327e2231bdc75f6f0865983d04a8cd4c0317d416d8867e37fda"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14Visibility/NativeMap14VisibilityData.cs.meta",
+      "sha256": "fba8a951637cc73e38c2525f61f2ca48e675408db9ce44a6e4593a323e14c51c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14Visibility/Zjcs.Offline.World.NativeMap14Visibility.asmdef",
+      "sha256": "fff3a948f8c9ed6563fee2a84961ff1b136ac25bfa07d8adeb4033f04f8b11bb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14Visibility/Zjcs.Offline.World.NativeMap14Visibility.asmdef.meta",
+      "sha256": "54c8fb1f144dd1f97347d72368ab8a224487c821fd66c11bf6dd2b5a247b9977"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14Visibility.meta",
+      "sha256": "8bded43f87cea6844a290df551278de67fbb4b905a30fd32b15b43de9812e5ad"
+    }
+  ],
+  "operation": "Bind the existing original VisibilityComponent to the same stable native view. Forward flag/fade reads and writes directly; invoke unchanged Console Add/Remove and forward its original event argument identity through the migrated visibility delegate. Keep original default visibility consumption methods; expose only virtual platform data access. The native view owns disposal of its additional component projections and original receiver subscription.",
+  "validation_entry": "Zjcs.Editor.Map14.OfficialMap14NativeVisibilityAcceptance.Run",
+  "validation": "Unity 2022.3.57f1c2 internal-display D3D11 isolated import/compile and Play Mode passed: direct original flags/fade reads and writes, unchanged Console Add/Remove including an unchanged-mask event, same projected event owner, duplicate binding identity, absent component, view-owned subscription disposal and repeated disposal. Four assembled statue roots use these original visibility components through actual visibility requests/handlers and real rendered frames; native cost/radar/input/container/loading regressions passed. Current loop/disappear/hidden and regression frames viewed; root static metadata check required separately.",
+  "limitations": [
+    "Visibility flags are explicitly seeded by the integration fixture; actual map visibility handler services and player state remain required. Formal display/tag state, map/player/UI/simulated pointer/save, complete ProjectTools.Validate and Windows Player remain required."
+  ]
+}

@@ -4,7 +4,16 @@ from pathlib import Path
 
 from official_apk import ROOT
 from prepare_unity_map13_sources import encode, write
-from prepare_unity_story_sound_runtime import CODE, record, runtime_meta
+from prepare_unity_story_sound_runtime import CODE, record as original_record, runtime_meta
+
+
+def record(path):
+    entry=original_record(path)
+    if path.suffix=='.cs' and path.is_relative_to(ROOT/'unity'):
+        import hashlib
+        entry['sha256']=hashlib.sha256(path.read_bytes().replace(b'\r\n',b'\n')).hexdigest()
+        entry['hashLineEndings']='LF'
+    return entry
 
 
 def build():
@@ -18,6 +27,7 @@ def build():
         'EcEntity.cs', 'EcEntityIdentifier.cs', 'GridTransformComponent.cs', 'GridTransformComponentInfo.cs',
         'WorldStageComponent.cs', 'EntityUtils.cs', 'EntityHandler.cs', 'IEntityHandler.cs', 'EventDelegateBasicBase.cs', 'EventDelegateBase.cs', 'IEventReceiver.cs',
         'IGridTransformPosUpdatedEventReceiver.cs', 'GridTransformPosUpdatedEventDelegate.cs',
+        'VisibilityComponent.cs', 'IEcEntityClientVisibilityUpdatedEventReceiver.cs', 'EcEntityClientVisibilityUpdatedEventDelegate.cs',
         'IEcEntityWorldStageComponentStateUpdateEventReceiver.cs', 'EcEntityWorldStageComponentStateUpdateEventDelegate.cs',
         'IEcContainerStartEventReceiver.cs', 'IEcContainerStartEntityEventReceiver.cs',
         'IEcContainerRemoveEntityEventReceiver.cs', 'IEcContainerDestroyEntityEventReceiver.cs',
@@ -37,7 +47,7 @@ def build():
     write(ROOT/'assets/reference/official-map/map14-shared-view-source-manifest.json', encode(dict(
         manifest='871_156598', mapClassId=14, assemblies=[record(p) for p in assemblies], inputs=[record(p) for p in sources],
         outputs=[record(p) for p in outputs], tools=[record(Path(__file__).resolve())], validation=record(acceptance),
-        operation='Bind original EntityUtils to original EntityHandler without replacing an existing handler and release only the owned binding. Read original EcEntity identity, grid/info, original coordinate conversions, stage state/config/index/activity through unchanged Console IL. Implement eight selected original void receiver interfaces at runtime (grid, stage and six container lifecycle receivers) and register/unregister with original delegate operators; forward original argument identities and previous values to migrated display consumers. No shared rule/dispatch iteration is reimplemented.',
+        operation='Bind original EntityUtils to original EntityHandler without replacing an existing handler and release only the owned binding. Read original EcEntity identity, grid/info, original coordinate conversions, stage state/config/index/activity through unchanged Console IL. Implement nine selected original void receiver interfaces at runtime (grid, visibility, stage and six container lifecycle receivers) and register/unregister with original delegate operators; forward original argument identities and previous values to migrated display consumers. Dispose owned additional component projections with the view. No shared rule/dispatch iteration is reimplemented.',
         limitations=['Stage Select remains null in original shared client data; the legacy display DTO int slot is not a shared selector rule.',
             'Entity creation/state restoration, global parser/container host, redirects to another entity, visibility handlers, tip graph, actual UI, saves and Player require further integration.'])))
     print('Original shared grid/stage view binding recorded.')

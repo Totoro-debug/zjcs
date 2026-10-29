@@ -277,6 +277,8 @@ Map13 正式实体／谜题／剧情空间输入：`prepare_unity_map13_entity_c
 
 依据：[map13-native-input-source-manifest.json](../../assets/reference/official-map/map13-native-input-source-manifest.json)。
 
+- 共享可见性消费数据 Map13VisibilityData 已开放虚拟访问器与变更方法，以便龙之国投影直接消费原 VisibilityComponent；默认的增删标志运算和事件派发顺序保持原官方实现。龙之国四类整根雕像的隔离 Play Mode 已覆盖原字段、原增删事件及投影释放；这不代表泽之国正式地图／玩家／交互已接通。生成器 scripts/prepare_unity_map13_entity_visibility_views.py，来源见[共享可见性消费来源](../../assets/reference/official-map/map13-entity-visibility-views-source-manifest.json)及[龙之国原共享绑定](map-14.md)。
+
 ## 自定义实现
 
 已确认的跟随者单机方案：`AddNpcFollowerNode` 按节点配置将 8402／8440／8441／8442 去重写入持久化跟随者列表，`RemovePlayerNpcFollowerAllNode` 清空。对应官方实体、原跟随队列的显示绑定及正式地图存档验证尚未完成。

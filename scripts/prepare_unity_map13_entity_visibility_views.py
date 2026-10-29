@@ -106,12 +106,12 @@ public abstract class Map13PresentationServices
 
     text = source('VisibilityComponent', True)
     emit('Map13VisibilityData', '''using System;
-public sealed class Map13VisibilityData
+public class Map13VisibilityData
 {
     public EcEntityClientVisibilityUpdatedEventDelegate OnClientVisibilityUpdate = new EcEntityClientVisibilityUpdatedEventDelegate();
-    public ClientVisibilityType ClientVisibilityType;
-    public bool IsShowNeedFadeIn;
-''' + '\n'.join(method(text, sig) for sig in ['public void AddClientVisibilityRequest(', 'public void RemoveClientVisibilityType(']) + '\n}\n')
+    public virtual ClientVisibilityType ClientVisibilityType { get; set; }
+    public virtual bool IsShowNeedFadeIn { get; set; }
+''' + '\n'.join(method(text, sig).replace('public void ', 'public virtual void ', 1) for sig in ['public void AddClientVisibilityRequest(', 'public void RemoveClientVisibilityType(']) + '\n}\n')
 
     text = source('EntitySourceComponent', True)
     queries = '\n'.join(method(text, sig) for sig in ['public bool IsMine(', 'public float GetDuration(',

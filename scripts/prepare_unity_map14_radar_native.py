@@ -12,7 +12,11 @@ RECEIPT=ROOT/'assets/reference/official-map/map14-native-radar-tips-source-manif
 HEADER=re.compile(r'(?m)^--- !u!(\d+) &(-?\d+)\n')
 GUID=re.compile(r'(?m)^guid: ([0-9a-f]{32})$')
 PTR=re.compile(r'\{fileID: (-?\d+), guid: ([0-9a-f]{32}), type: (\d+)\}')
-def record(p):return dict(path=source_path(p),sha256=sha(p.read_bytes()))
+def record(p):
+    raw=p.read_bytes();entry=dict(path=source_path(p))
+    if p.suffix=='.cs' and p.is_relative_to(ROOT/'unity'):
+        raw=raw.replace(b'\r\n',b'\n');entry['hashLineEndings']='LF'
+    return dict(entry,sha256=sha(raw))
 def io(p):return Path('\\\\?\\'+str(p))
 def build():
     cache=workspace();export=cache/'export/ExportedProject/Assets'

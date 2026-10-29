@@ -27,6 +27,7 @@ APK 与热更新版本分别记录。原输入、转换产物及其前后哈希�
 | 当前来源切换与转换链 | `assets/reference/official-map/current-*-source-manifest.json`、`assets/reference/character-creation/current-*-source-manifest.json` |
 | 客户端／共享代码来源 | [官方程序集与反编译目录](../../.tools/source-packages/official-code/) 与各模块源码来源清单 |
 | 模块资源来源 | 本目录各模块的 `source-manifest.json`、`*-source-manifest.json` 及所属功能／地图页中的入口 |
+| 龙之国原共享可见性绑定 | [共享可见性来源清单](official-map/map14-native-visibility-source-manifest.json)：原组件／原接收器接口、稳定消费投影、字段与事件顺序、视图订阅释放及输入输出哈希；实际验证范围见[龙之国](../../docs/maps/map-14.md) |
 | 龙之国四类雕像原实体根 | [雕像实体根来源清单](official-map/map14-native-statue-entities-source-manifest.json)：原实体 prefab／17 脚本组件、官方代码来源哈希、状态类型与费用雷达绑定及输入输出哈希；实际验证范围见[龙之国](../../docs/maps/map-14.md) |
 | 龙之国原雕像费用雷达 prefab | [费用雷达 prefab 来源清单](official-map/map14-native-radar-tips-source-manifest.json)：完整原层级／组件字段与字体、精灵、材质、动画绑定及输入输出哈希；实际验证范围见[龙之国](../../docs/maps/map-14.md) |
 | 龙之国原快速战斗雷达提示 | [快速战斗提示来源清单](official-map/map14-radar-fast-kill-tip-source-manifest.json)：完整原提示、原营地查询与快速战斗规则 IL 调用及输入输出哈希；实际验证范围见[龙之国](../../docs/maps/map-14.md) |
