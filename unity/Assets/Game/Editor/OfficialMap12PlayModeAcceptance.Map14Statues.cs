@@ -69,17 +69,32 @@ namespace Zjcs.Editor
             Map14RegionConfig[] regions = definition.Configs.Where(row => row.TableName == "TbMapRegionInfo")
                 .Select(row => JsonUtility.FromJson<Map14RegionConfig>(row.Json)).ToArray();
             var gates = regions.Where(region => region.AccessibleConditionId > 0).ToArray();
+            var conditions = definition.Configs.Where(row => row.TableName == "TbConditionInfo")
+                .Select(row => JsonUtility.FromJson<Map14RegionConditionRecord>(row.Json)).ToDictionary(row => row.ClassId);
+            var conditionClosure = new HashSet<int>();
+            var pending = new Stack<int>(gates.Select(region => region.AccessibleConditionId));
+            while (pending.Count != 0)
+            {
+                int id = pending.Pop();
+                if (!conditionClosure.Add(id)) continue;
+                if (!conditions.TryGetValue(id, out Map14RegionConditionRecord row))
+                    throw new InvalidDataException("Map14 region gate references a missing condition: " + id);
+                if (row.Condition._type == "CompositeAndCondition")
+                {
+                    if (row.Condition.Ids == null || row.Condition.Ids.Length == 0)
+                        throw new InvalidDataException("Map14 region source contains an empty composite condition.");
+                    foreach (int child in row.Condition.Ids) pending.Push(child);
+                }
+            }
             if (definition.ClassId != 14 || profile.RegionCount != 111 || gates.Length != 16
-                || !profile.RequiredAccessConditions.OrderBy(id => id).SequenceEqual(gates.Select(region => region.AccessibleConditionId).Distinct().OrderBy(id => id)))
+                || !profile.RequiredAccessConditions.OrderBy(id => id).SequenceEqual(conditionClosure.OrderBy(id => id)))
                 throw new InvalidDataException("Map14 region gate closure differs from its pinned profile.");
 
             var progressLimits = definition.MaxRegionProgress.ToDictionary(row => row.Region, row => row.Value);
             var completedRegions = new Dictionary<int, int>(progressLimits);
             foreach (var region in gates)
             {
-                OfficialWorldConfigRecord record = definition.Configs.Single(row => row.TableName == "TbConditionInfo"
-                    && row.RecordId == region.AccessibleConditionId.ToString());
-                Map14RegionCondition condition = JsonUtility.FromJson<Map14RegionConditionRecord>(record.Json).Condition;
+                Map14RegionCondition condition = conditions[region.AccessibleConditionId].Condition;
                 Func<string, int> noStories = _ => 0;
                 Func<string, bool> noTags = _ => false;
                 if (condition._type == "WorldMapProgressCondition")
@@ -103,8 +118,7 @@ namespace Zjcs.Editor
                 {
                     if (condition.Ids == null || condition.Ids.Length != 2)
                         throw new InvalidDataException("Map14 source composite changed its expected child shape.");
-                    Map14RegionCondition firstChild = JsonUtility.FromJson<Map14RegionConditionRecord>(definition.Configs.Single(row =>
-                        row.TableName == "TbConditionInfo" && row.RecordId == condition.Ids[0].ToString()).Json).Condition;
+                    Map14RegionCondition firstChild = conditions[condition.Ids[0]].Condition;
                     if (firstChild._type != "StoryCountCondition")
                         throw new InvalidDataException("Map14 source composite changed its expected child shape.");
                     Func<string, int> firstOnly = key => key == firstChild.StoryKey ? firstChild.Count : 0;

@@ -69,8 +69,13 @@ namespace Zjcs.Editor
                 entityRoot.AddComponent<OfficialMap10EntityView>().Initialize(entityRoot.transform,
                     new Vector2(origin.X, origin.Y), camera, 12, "Map12/Entities/native-catalog");
             }
-            string output = Path.GetFullPath("../.tools/map" + uiMap + "-ui-render-session");
-            Directory.CreateDirectory(output);
+            string output = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+            string repository = Environment.GetEnvironmentVariable("ZJCS_REPOSITORY_ROOT");
+            if (string.IsNullOrWhiteSpace(output) || string.IsNullOrWhiteSpace(repository)
+                || !Path.GetFullPath(output).StartsWith(Path.GetFullPath(Path.Combine(repository, "output/validation"))
+                    .TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+                || !Directory.Exists(output))
+                throw new InvalidDataException("Set the isolated validation workspace before map UI checks.");
             foreach (int width in new[] { 450, 720 })
             {
                 int height = width == 450 ? 800 : 1280;
