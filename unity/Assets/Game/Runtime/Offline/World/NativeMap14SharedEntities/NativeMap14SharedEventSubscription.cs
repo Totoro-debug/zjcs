@@ -22,6 +22,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             if (callback == null) throw new ArgumentNullException(nameof(callback));
             if (receiverType.FullName != "Common.IGridTransformPosUpdatedEventReceiver" &&
                 receiverType.FullName != "Common.IEcEntityClientVisibilityUpdatedEventReceiver" &&
+                receiverType.FullName != "Common.IEcEntityStageResultItemUpdatedEventReceiver" &&
                 receiverType.FullName != "Common.IEcEntityWorldStageComponentStateUpdateEventReceiver" &&
                 receiverType.FullName != "Common.IEcContainerStartEventReceiver" &&
                 receiverType.FullName != "Common.IEcContainerStartEntityEventReceiver" &&

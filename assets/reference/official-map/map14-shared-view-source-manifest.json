@@ -77,6 +77,18 @@
       "sha256": "4ad75b1735592bd42b27c9de8906a0bfcbc200afbb1b464929b8895f4d480043"
     },
     {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StageResultAwardItemComponent.cs",
+      "sha256": "572183fb24fd46d78999f76df0837dd2d8277ba5983e45a2c48b840060779cae"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IEcEntityStageResultItemUpdatedEventReceiver.cs",
+      "sha256": "8d53c13bc4b9424c4efb09e1de74f566ee004e5a11982a801848cca4f205f245"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcEntityStageResultItemUpdatedEventDelegate.cs",
+      "sha256": "1685794d655182144f45cb4a3ca2b0197279def2043e9f574ed731b85bf9d5d7"
+    },
+    {
       "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IEcEntityWorldStageComponentStateUpdateEventReceiver.cs",
       "sha256": "57b82849b344316ce70e2a66e057f28841627e8eff1d073594c089d6f82b1272"
     },
@@ -140,7 +152,7 @@
   "outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedEventSubscription.cs",
-      "sha256": "b5aed5c806e4ad0240767258b8bf0cfc958507fa95e8d3b7a1de76170c60ae00",
+      "sha256": "72df153ea2cbd3877c2e3e1a85be7f82c528dc08df2514c4528c7cb2b08f63ad",
       "hashLineEndings": "LF"
     },
     {
@@ -182,7 +194,7 @@
   "tools": [
     {
       "path": "scripts/prepare_unity_map14_shared_views.py",
-      "sha256": "c4469e81a65f8b4180a8b8797bb19c89e4ea279d6e8545fa6df052ed941da017"
+      "sha256": "7d903df246d9bf26d3e93762ad93ca2c786e52a2e0b4abdd8fd39409a20f9622"
     }
   ],
   "validation": {
@@ -190,7 +202,7 @@
     "sha256": "588748659592814449f554931a76ff7cbe573b9f1f7fb52b23e27f2a406669bc",
     "hashLineEndings": "LF"
   },
-  "operation": "Bind original EntityUtils to original EntityHandler without replacing an existing handler and release only the owned binding. Read original EcEntity identity, grid/info, original coordinate conversions, stage state/config/index/activity through unchanged Console IL. Implement nine selected original void receiver interfaces at runtime (grid, visibility, stage and six container lifecycle receivers) and register/unregister with original delegate operators; forward original argument identities and previous values to migrated display consumers. Dispose owned additional component projections with the view. No shared rule/dispatch iteration is reimplemented.",
+  "operation": "Bind original EntityUtils to original EntityHandler without replacing an existing handler and release only the owned binding. Read original EcEntity identity, grid/info, original coordinate conversions, stage state/config/index/activity through unchanged Console IL. Implement ten selected original void receiver interfaces at runtime (grid, visibility, stage, award-item update and six container lifecycle receivers) and register/unregister with original delegate operators; forward original argument identities and previous values to migrated display consumers. Dispose owned additional component projections with the view. No shared rule/dispatch iteration is reimplemented.",
   "limitations": [
     "Stage Select remains null in original shared client data; the legacy display DTO int slot is not a shared selector rule.",
     "Entity creation/state restoration, global parser/container host, redirects to another entity, visibility handlers, tip graph, actual UI, saves and Player require further integration."
