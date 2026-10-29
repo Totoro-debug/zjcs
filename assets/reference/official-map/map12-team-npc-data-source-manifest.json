@@ -2,11 +2,13 @@
   "counts": {
     "attachments": 19092,
     "paths": 7,
+    "prefabs": 91,
+    "renderers": 92,
     "skeletons": 34
   },
   "fixture": {
     "path": "unity/Assets/Game/Editor/ProfessionUI/Map12NpcDataValidation.cs",
-    "sha256": "07f9daae704f12845c4d08b7eaa82bd9e97fd852499847fbc0d8b9a5c7f40baf"
+    "sha256": "77cb4d216f6765a6ca4a95b57a592f410fbb6221d73acf3ddd7e49b1e25e6528"
   },
   "format": 1,
   "limitations": [
@@ -19,6 +21,10 @@
     {
       "path": "unity/Assets/Game/Editor/ProfessionUI/Map12NpcDataValidation.cs.meta",
       "sha256": "a6fd09b6d423aa4c0d03838fc0c85602f3ad846a11ebb1824598cf9497037c7b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeNpcSkins.cs.meta",
+      "sha256": "efa693bf5b4fdd531c8aeb8409d89145538f586a984527f46c363ea94487aa7d"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePathAttachment.cs.meta",
@@ -222,7 +228,7 @@
     },
     {
       "path": "unity/Assets/Official/World/Map/12/NativeTeamNpcData/Resources/Map12/TeamNpcSkeletons/catalog.json",
-      "sha256": "2656cd8fcb1ed971748189bc40f7b60af2c4ad0ead72009c0f412acb195b8533"
+      "sha256": "8804e77033e23344005d7778d2c19dd7d18c605935b02a4623ae613228a17395"
     },
     {
       "path": "unity/Assets/Official/World/Map/12/NativeTeamNpcData/Resources/Map12/TeamNpcSkeletons/catalog.json.meta",
@@ -325,6 +331,14 @@
       "sha256": "5b44ca79b11be96e351a97347746d37a7c6ea373d96bc98340722d603056707d"
     }
   ],
+  "prefabSource": {
+    "path": "unity/Assets/Official/World/Map/12/Source/team-npc-prefabs.json",
+    "sha256": "3b828a4d5a3de80ab643974e0c9fca7deb793b9095f241c519367504d8640c7a"
+  },
+  "prefabSourceReceipt": {
+    "path": "assets/reference/official-map/map12-team-npc-prefabs-source-manifest.json",
+    "sha256": "5fa0af1d8b1c21a4d9716cdc3f639599048bd2595554ef07940ac4bcecdd2b4c"
+  },
   "runtime": [
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkeletonData.cs",
@@ -337,6 +351,10 @@
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePathAttachment.cs",
       "sha256": "06f430786fc8085b491ddace268c6d832665b11e9733b47ba7f511758e048d2f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeNpcSkins.cs",
+      "sha256": "e5b0cad5e087c6a71f6c0dff1105e06f8b9ed5835c563dabea4bf0c57aed67c4"
     }
   ],
   "source": {
@@ -350,12 +368,12 @@
   "tools": [
     {
       "path": "scripts/prepare_unity_map12_team_npc_data.py",
-      "sha256": "a48d3d63565ca48c2241ba15548ff6381e31cabc9707b66c06c1bcf5bbb3efdf"
+      "sha256": "0dad6889222d6478e4edb86390b974bdce1059f46d01dd00ad0af4ce550c9202"
     },
     {
       "path": "scripts/prepare_native_character_geometry.py",
       "sha256": "495ca231d89cfc0f04d3244fd554c018a6b35f7c25694a455c0e085e8ce427f6"
     }
   ],
-  "validatedScope": "DX12 Unity Play Mode loaded all 34 actual Resources packages and verified their byte hashes, bone/slot/skin/attachment/constraint counts, seven path layouts and 92 initial animation bindings. Existing male/female packages loaded through the unchanged original player format."
+  "validatedScope": "DX12 Unity Play Mode loaded all 34 actual Resources packages and verified their byte hashes, bone/slot/skin/attachment/constraint counts, seven path layouts and all 92 original renderer, starting-animation and ordered CombineSkins bindings from 91 NPC prefabs. Existing male/female packages loaded through the unchanged original player format."
 }

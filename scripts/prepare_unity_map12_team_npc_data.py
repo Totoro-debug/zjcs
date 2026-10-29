@@ -14,6 +14,8 @@ from prepare_unity_map12_team_npc_skeletons import CATALOG, RECEIPT as SOURCE_RE
 DEST = ROOT / 'unity/Assets/Official/World/Map/12/NativeTeamNpcData'
 FOLDER = DEST / 'Resources/Map12/TeamNpcSkeletons'
 RECEIPT = ROOT / 'assets/reference/official-map/map12-team-npc-data-source-manifest.json'
+PREFABS = ROOT / 'unity/Assets/Official/World/Map/12/Source/team-npc-prefabs.json'
+PREFAB_RECEIPT = ROOT / 'assets/reference/official-map/map12-team-npc-prefabs-source-manifest.json'
 
 
 def build(write=False):
@@ -24,6 +26,33 @@ def build(write=False):
     source = json.loads(CATALOG.read_bytes())
     if source['manifest'] != '871_156598' or len(source['skeletons']) != 34:
         raise ValueError('Original NPC skeleton scope differs')
+    prefab_receipt = json.loads(PREFAB_RECEIPT.read_bytes())
+    prefab_record, = [row for row in prefab_receipt['outputs'] if row['path'] == source_path(PREFABS)]
+    if sha(PREFABS.read_bytes()) != prefab_record['sha256']:
+        raise ValueError('Original NPC prefab source changed')
+    prefabs = json.loads(PREFABS.read_bytes())
+    prefab_objects = {row['identity']: row for row in prefabs['objects']}
+    skeleton_indices = {row['identity']: index for index, row in enumerate(source['skeletons'])}
+    source_renderers = {row['identity']: row for row in source['renderers']}
+    renderers = []
+    for model in prefabs['models']:
+        for node in model['nodes']:
+            components = [prefab_objects[identity] for identity in node['components']]
+            graphics = [source_renderers[row['identity']] for row in components
+                        if row['identity'] in source_renderers]
+            if not graphics:
+                continue
+            combine = [row['fields']['CombineSkins'] for row in components
+                       if 'CombineSkins' in row['fields']]
+            if len(graphics) != 1 or len(combine) > 1:
+                raise ValueError('Original NPC prefab has ambiguous skeleton or combined-skin components')
+            graphic = graphics[0]
+            renderers.append(dict(npcClassId=model['npcClassId'],
+                skeletonIndex=skeleton_indices[graphic['skeleton']],
+                startingAnimation=graphic['fields']['startingAnimation'],
+                combineSkins=combine[0] if combine else []))
+    if len(renderers) != 92 or len(prefabs['models']) != 91:
+        raise ValueError('Original NPC prefab renderer inventory differs')
     outputs, models = {}, []
 
     def read(row):
@@ -82,14 +111,15 @@ def build(write=False):
             attachmentTypes=attachments, paths=paths,
             startingAnimations=sorted({row['fields']['startingAnimation'] for row in source['renderers']
                                        if row['skeleton'] == item['identity'] and row['fields']['startingAnimation']})))
-    save(FOLDER / 'catalog.json', encode(dict(manifest=source['manifest'], models=models)))
+    save(FOLDER / 'catalog.json', encode(dict(manifest=source['manifest'], models=models, renderers=renderers,
+        prefabSourceSha256=sha(PREFABS.read_bytes()))))
     parent = FOLDER
     while parent != DEST.parent:
         save(parent, b'', True)
         parent = parent.parent
     runtime = ROOT / 'unity/Assets/Game/Runtime/Offline/ProfessionUI'
     code_paths = [runtime / name for name in ('ProfessionNativeSkeletonData.cs', 'ProfessionNativeSkeletonData.Npc.cs',
-        'ProfessionNativePathAttachment.cs')]
+        'ProfessionNativePathAttachment.cs', 'ProfessionNativeNpcSkins.cs')]
     fixture = ROOT / 'unity/Assets/Game/Editor/ProfessionUI/Map12NpcDataValidation.cs'
     for path in (*code_paths[1:], fixture):
         outputs[path.with_name(path.name + '.meta')] = ('fileFormatVersion: 2\nguid: ' +
@@ -100,13 +130,16 @@ def build(write=False):
         return dict(path=source_path(path), sha256=sha(path.read_bytes()))
     receipt = encode(dict(format=1, manifest=source['manifest'], mapClassId=12,
         source=record(CATALOG), sourceReceipt=record(SOURCE_RECEIPT),
+        prefabSource=record(PREFABS), prefabSourceReceipt=record(PREFAB_RECEIPT),
         tools=[record(Path(__file__)), record(ROOT / 'scripts/prepare_native_character_geometry.py')],
         runtime=[record(path) for path in code_paths], fixture=record(fixture),
         outputs=[dict(path=source_path(path), sha256=sha(raw)) for path, raw in sorted(outputs.items())],
         counts=dict(skeletons=len(models), attachments=sum(row['attachments'] for row in models),
-                    paths=sum(len(row['paths']) for row in models)),
+                    paths=sum(len(row['paths']) for row in models), prefabs=len(prefabs['models']),
+                    renderers=len(renderers)),
         validatedScope='DX12 Unity Play Mode loaded all 34 actual Resources packages and verified their byte hashes, '
-                       'bone/slot/skin/attachment/constraint counts, seven path layouts and 92 initial animation bindings. '
+                       'bone/slot/skin/attachment/constraint counts, seven path layouts and all 92 original renderer, '
+                       'starting-animation and ordered CombineSkins bindings from 91 NPC prefabs. '
                        'Existing male/female packages loaded through the unchanged original player format.',
         operation='Package the exact decoded source JSON and original atlas-region projection in a separate '
                   'hash-verified NPC format. Reuse the independent native bone/slot/skin/attachment graph, '
