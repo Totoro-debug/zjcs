@@ -303,7 +303,7 @@ Map13 原剧情 prefab Windows 转换与 NPC 序列：固定 871_156598 的 278 
 
 ## 自定义实现
 
-已确认的跟随者单机方案：`AddNpcFollowerNode` 按节点配置将 8402／8440／8441／8442 去重写入持久化跟随者列表，`RemovePlayerNpcFollowerAllNode` 清空。对应官方实体、原跟随队列的显示绑定及正式地图存档验证尚未完成。
+已确认的跟随者单机方案：`AddNpcFollowerNode` 按节点配置将 8402／8440／8441／8442 去重写入持久化跟随者列表，`RemovePlayerNpcFollowerAllNode` 清空。四名 NPC 的官方骨骼包、原 Atlas 高精度页已可从本地资源加载；原动画、材质、跟随队列与正式地图显示尚未接入，正式地图存档流程验证也未完成。
 
 官方 `WorldConveyanceComponent.FireTrigger()` 没有服务器移动实现，水位执行也缺少服务端逻辑；已核对客户端载人实现、`LoWorldConveyanceComponent.OffsetPath`、`StageResultElevatorStateUpdateComponent` 和 `StageDatas`。用户已允许并在独立规则模块实现：每次沿原配置顺序前进一段，末端后沿原路径逐段反向返回；载人保留原偏移，路径被阻挡则不移动；水位按原 `StageDatas` 顺序执行，不发奖励。
 
@@ -314,6 +314,8 @@ Map13 原剧情 prefab Windows 转换与 NPC 序列：固定 871_156598 的 278 
 ### 已确认的本地接线与边界
 
 泽之国实体材质纹理：依据当前 338 个原实体／显示 prefab（含已确认的四名剧情跟随 NPC）及 1,373 个原 bundle 输入，严格解码 1,843 份原材质、5,156 处非空引用及 1,491 个原纹理对象。1,485 张有像素纹理已转为原生 Texture2D，保留全部 6,746 级 mip、原 ASTC 解码 profile、行序、色彩空间和采样参数；6 个原零尺寸动态字体图集仅保留原描述。
+
+四名剧情跟随者另按原 `YooAssetTextureLoader` 的 GUID、当前 AssetTable 和精确 bundle／对象 ID，恢复四张 NPC 原 Atlas 高精度页及 8440 骨骼引用的原武器页 `pWeapon_100_8440.png`，保留源 ASTC profile、尺寸、行序、采样设置和 mip，写入显式本地 Resources 目录。该资源迁移不代表约束求值或地图内跟随视图已完成。
 
 依据：[纹理来源](../../assets/reference/official-map/map13-native-entity-textures-source-manifest.json)、[原生绑定](../../assets/reference/official-map/map13-native-entity-textures-binding-source-manifest.json)。
 
@@ -343,6 +345,7 @@ Map13 原剧情 prefab Windows 转换与 NPC 序列：固定 871_156598 的 278 
 - [官方 Map13 战斗转换器](../../scripts/prepare_unity_map10_battle_data.py)、[战斗运行载荷生成器](../../scripts/prepare_unity_map13_battle_runtime.py)、[阶段／阵容输入](../../unity/Assets/Official/World/Map/13/map13-battles.json)、[战斗输入来源](../../unity/Assets/Official/World/Map/13/battle-source-manifest.json)、[Resources 载荷](../../unity/Assets/Game/Resources/Map13/battle-runtime.json)及[运行来源清单](../../assets/reference/official-map/map13-battle-runtime-source-manifest.json)。当前数据已生成并通过结构校验，已登记到 Map13 profile，尚未在正式入口 Play Mode 或 Player 中验证。
 - [Map13 地图实体索引生成器](../../scripts/prepare_unity_map13_entity_catalog.py)、[实体索引](../../unity/Assets/Game/Resources/Map13/Entities/catalog.json)及[来源清单](../../assets/reference/official-map/map13-entity-catalog-source-manifest.json)。索引保留官方 2,690 个 placement 的网格、区域、状态与关卡字段；原生 prefab 画面绑定仍待完成。
 - [338 份实体根 prefab 输入（含故事跟随者）](../../scripts/prepare_unity_map13_entity_inputs.py)、[APK 字段／属性恢复](../../scripts/map13_entity_native_schemas.py)、[动态贴图 GUID 绑定](../../scripts/map13_entity_dynamic_textures.py)、[完整输入来源](../../assets/reference/official-map/map13-native-entity-input-source-manifest.json)、[原生转换](../../scripts/prepare_unity_map13_entity_export.py)、[原字段类型核对](../../scripts/official_native_yaml_verification.py)及[转换来源](../../assets/reference/official-map/map13-native-entity-export-source-manifest.json)。原字段为 Source/native-entity-components.json，转换缓存为 `.tools/map13-entity-native-cache-871_156598/`；冷读转换已覆盖当前根选择，尚未绑定为正式运行资源。
+- [剧情跟随者 Atlas 纹理迁移](../../scripts/prepare_unity_map13_npc_follower_textures.py)、[Play Mode 验收](../../unity/Assets/Game/Editor/Map13/OfficialMap13FollowerTextureAcceptance.cs)及[来源清单](../../assets/reference/official-map/map13-npc-follower-textures-source-manifest.json)。本地显式绑定位于 `Resources/Map13/Native/npc-follower-texture-catalog`；仅完成原骨骼数据与高精度 Atlas 纹理加载核对，运行时动画求值、材质渲染与正式跟随视图仍待接入。
 - [原事件迁移](../../scripts/prepare_unity_map13_entity_events.py)、[事件代码来源](../../assets/reference/official-map/map13-entity-events-source-manifest.json)及[事件 Play Mode 检查](../../unity/Assets/Game/Editor/Map13EntityEvents/OfficialMap13EntityEventAcceptance.cs)。原执行代码位于 Runtime/Official/World/Map13EntityEvents/；实体／容器生命周期及正式视图绑定仍待接入。
 - [实体匹配代码与目录迁移](../../scripts/prepare_unity_map13_entity_presentation.py)、[来源与 AOT 证明](../../assets/reference/official-map/map13-entity-presentation-source-manifest.json)、[本地上下文适配](../../unity/Assets/Game/Runtime/Offline/World/Map13Entities/OfflineMap13EntityPresentation.cs)及[实体匹配 Play Mode](../../unity/Assets/Game/Editor/Map13Entities/OfficialMap13EntityPresentationAcceptance.cs)。原匹配代码入口为 Runtime/Official/World/Map13Entities/，资源为 Resources/Map13/entity-presentation.json 及对应来源／参照数据。
 - [水路实体原生输入](../../scripts/prepare_unity_map13_water_entity_inputs.py)、[可逆引用转换](../../scripts/official_managed_reference_conversion.py)、[输入来源](../../assets/reference/official-map/map13-native-water-entity-input-source-manifest.json)、[导出／恢复检查](../../scripts/prepare_unity_map13_water_entity_export.py)及[转换来源](../../assets/reference/official-map/map13-native-water-entity-export-source-manifest.json)。原组件字段为 `Source/native-water-entity-components.json`；恢复的 11 份 prefab 暂存在 `.tools/map13-water-entity-native-cache-871_156598/restored/`，未作为运行资源绑定。
