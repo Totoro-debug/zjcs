@@ -83,6 +83,9 @@ namespace Zjcs.Presentation.World
                 return Compare(GetStoryPlayCount(condition.StoryKey), condition.Op, condition.Count);
             if (condition._type == "StoryStatusCondition")
                 return progressionSave != null && progressionSave.StoryStatus(condition.StoryKey) == condition.Status;
+            if (condition._type == "MapWorldAloneStatusCondition")
+                return progressionSave != null && Compare(
+                    progressionSave.WorldAloneStatus(condition.MapClassId), condition.Op, condition.Status);
             if (condition._type == "StagePassCondition")
                 return progressionSave.StageWinCount(condition.StageId) > 0
                     || localSave.completedStages.Contains(condition.StageId);

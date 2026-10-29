@@ -1,0 +1,72 @@
+{
+  "manifest": "871_156598",
+  "operation": "Decode the exact MapWorldAloneInfo, TaskInfo and condition 115 rows using the original-version Luban constructors.",
+  "bundle": {
+    "name": "defaultpackage_assets_config_luban_map.bundle",
+    "hash": "0adc7b59aab14fde2bc4704a10fbb498",
+    "path_id": "-2368084752692534464",
+    "payload_sha256": "b110093890b7ebe306c1455602426a72f79a23a89de43b75a3f822c408fdbac7"
+  },
+  "inputs": [
+    {
+      "path": "assets/reference/official-map/map14-source-manifest.json",
+      "sha256": "04a160772dd26a9d367858ab8e9eac6a82f1886d02248d27a0d403804d5c8a2e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/table-proof-source-manifest.json",
+      "sha256": "801a66eff692373d912b56afcda3566076fe9baffa2197da3d2dd3b925dc820f"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-data/task.g.bytes",
+      "sha256": "7cbf0363551195f2a50f134a032cccad0d3919acd18fcdc284cffc71df92b2a8",
+      "bundle": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "e04fddc7c66a3ec739276f0e0a270715",
+        "path_id": "-5707888035528747965",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/e04fddc7c66a3ec739276f0e0a270715.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 2143410,
+        "bundle_sha256": "c48baf0dc6d594a11444db97ad55918727c2cd3f3b91a3e8ce5e9e503f448619"
+      }
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-data/conditions.g.bytes",
+      "sha256": "ba16821ff09f857011b1969ca37b8f3a441d4e47135b7fdb774d21c6f9506dac",
+      "bundle": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "e04fddc7c66a3ec739276f0e0a270715",
+        "path_id": "2135504609496173008",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/e04fddc7c66a3ec739276f0e0a270715.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 2143410,
+        "bundle_sha256": "c48baf0dc6d594a11444db97ad55918727c2cd3f3b91a3e8ce5e9e503f448619"
+      }
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapWorldAloneInfo.cs",
+      "sha256": "a5d99969d8d013f89214a1c31ae9dc301c28d29db4fd03ce9044ddcf29ad3681"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapWorldActivedCondition.cs",
+      "sha256": "44b6780760161608245e96fe0b0e304d21f243c9ce4221ee4055df1c6154c24c"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map14_world_alone_config.py",
+      "sha256": "736f2857a31daae18b2dc6092ba03e0b4691fa3522a1cacc66f2e5759b21a56f"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Map14/world-alone-preparation.json",
+      "sha256": "e3f4489bb4bd2541c98eff6c30b48b5ba61e0c8ba55265f240cbe8eaab983903"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/world-alone-preparation.json.meta",
+      "sha256": "85df30a042f219fdd738b64ae661015594c0f8c9737442e1654d8e71e95aa184"
+    }
+  ]
+}

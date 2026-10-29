@@ -321,6 +321,9 @@ namespace Zjcs.Presentation.World
             progressionSave = MapProfile.HasNativeUi
                 ? OfflineMainlineProgressSession.Open(slots, slotId, OfficialMainlineTaskCatalog.LoadDefault())
                 : OfflineMainlineProgressSession.OpenCharacter(slots, slotId);
+            ProgressionResult preparation = progressionSave.RefreshMap15Preparation();
+            if (preparation.Status == ProgressionResultStatus.InvalidState)
+                throw new InvalidOperationException(preparation.Message);
             if (mapClassId == 11 && !HasClaimedMap11Unlock(progressionSave.Save))
                 throw new InvalidOperationException("完成并领取 Map10 主线任务 1040 后才能进入森之国。");
             if (mapClassId == 12 && progressionSave.Save.Player.UnlockedMapClassIds?.Contains(12) != true)

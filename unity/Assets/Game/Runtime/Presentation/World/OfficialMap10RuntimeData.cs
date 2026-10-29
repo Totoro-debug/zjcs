@@ -295,6 +295,7 @@ namespace Zjcs.Presentation.World
         public string Tag;
         public int Count;
         public int Status;
+        public int MapClassId;
         public int Rank;
         public int Profession;
         public int WeaponType;

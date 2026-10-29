@@ -196,6 +196,7 @@ namespace Zjcs.Offline.Progression
     public sealed class OfflineWorldProgress
     {
         public List<OfflineMapProgress> Maps = new List<OfflineMapProgress>();
+        public List<OfflineWorldAloneStatus> AloneWorldStatuses = new List<OfflineWorldAloneStatus>();
         public List<OfflineMapBattleCount> BattleCounts = new List<OfflineMapBattleCount>();
         public List<OfflineStageWinCount> StageWinCounts = new List<OfflineStageWinCount>();
         public List<string> CompletedEntityTags = new List<string>();
@@ -205,6 +206,29 @@ namespace Zjcs.Offline.Progression
         public List<string> AppliedEventIds = new List<string>();
         public List<OfflineMapInteractionState> MapInteractions = new List<OfflineMapInteractionState>();
         public OfflineWorldExplorationProgress Exploration = new OfflineWorldExplorationProgress();
+    }
+
+    [Serializable]
+    public sealed class OfflineWorldAloneStatus
+    {
+        public int MapClassId;
+        public int Status;
+        public long AppearTimeUnixSeconds;
+    }
+
+    [Serializable]
+    public sealed class OfflineWorldAlonePreparationRule
+    {
+        public int rank;
+        public int dayOffset;
+        public int minDurationS;
+    }
+
+    [Serializable]
+    public sealed class OfflineWorldAlonePreparationConfig
+    {
+        public int mapClassId;
+        public OfflineWorldAlonePreparationRule preparationRule;
     }
 
     [Serializable]
@@ -298,6 +322,9 @@ namespace Zjcs.Offline.Progression
             OfflineStoryProgress story = FindStory(Save.Player, key);
             return story == null ? 0 : story.Status;
         }
+
+        public int WorldAloneStatus(int mapClassId) => mapClassId <= 0
+            ? 0 : Save.World.AloneWorldStatuses?.FirstOrDefault(value => value.MapClassId == mapClassId)?.Status ?? 0;
 
         public int HandInItemCount(int id) => Save.Player.HandInItems?
             .FirstOrDefault(value => value != null && value.Id == id)?.Count ?? 0;
@@ -617,6 +644,7 @@ namespace Zjcs.Offline.Progression
                     UnixSeconds = acquiredAt
                 });
             }
+            RefreshMap15Preparation(next, acquiredAt);
             next.Player.UnlockedMapClassIds = new List<int>();
             if (unlockedMapClassIds != null)
                 foreach (int id in unlockedMapClassIds)
@@ -624,7 +652,56 @@ namespace Zjcs.Offline.Progression
                     if (id <= 0) return Result(ProgressionResultStatus.InvalidState, message: "Unlocked map IDs must be positive.");
                     if (!next.Player.UnlockedMapClassIds.Contains(id)) next.Player.UnlockedMapClassIds.Add(id);
                 }
-            return Commit(next, Result(ProgressionResultStatus.Applied));
+            return Commit(next, Result(ProgressionResultStatus.Applied), acquiredAt);
+        }
+
+        public ProgressionResult RefreshMap15Preparation(long nowUnixSeconds = 0)
+        {
+            Reload();
+            OfflineMainlineSave next = Clone(Save);
+            long now = nowUnixSeconds > 0 ? nowUnixSeconds : DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            bool changed = RefreshMap15Preparation(next, now);
+            return changed ? Commit(next, Result(ProgressionResultStatus.Applied), now)
+                : Result(ProgressionResultStatus.Unchanged);
+        }
+
+        private static bool RefreshMap15Preparation(OfflineMainlineSave save, long nowUnixSeconds)
+        {
+            TextAsset source = Resources.Load<TextAsset>("Map14/world-alone-preparation");
+            OfflineWorldAlonePreparationConfig config = source == null ? null
+                : JsonUtility.FromJson<OfflineWorldAlonePreparationConfig>(source.text);
+            if (config == null || config.mapClassId != 15 || config.preparationRule == null
+                || config.preparationRule.rank != 5 || config.preparationRule.dayOffset < 0
+                || config.preparationRule.minDurationS < 0)
+                throw new InvalidDataException("Official Map15 preparation configuration is missing or invalid.");
+            int mapClassId = config.mapClassId;
+            if (save.Player.Rank < config.preparationRule.rank) return false;
+            OfflineRankUnlockTime goldUnlock = save.Player.RankUnlockTimes?
+                .FirstOrDefault(value => value.Rank == config.preparationRule.rank && value.UnixSeconds > 0);
+            if (goldUnlock == null) return false;
+            if (save.World.AloneWorldStatuses == null)
+                save.World.AloneWorldStatuses = new List<OfflineWorldAloneStatus>();
+            OfflineWorldAloneStatus status = save.World.AloneWorldStatuses
+                .FirstOrDefault(value => value.MapClassId == mapClassId);
+            bool created = status == null;
+            if (status == null)
+            {
+                status = new OfflineWorldAloneStatus
+                {
+                    MapClassId = mapClassId,
+                    Status = 0,
+                    AppearTimeUnixSeconds = goldUnlock.UnixSeconds
+                };
+                save.World.AloneWorldStatuses.Add(status);
+            }
+            if (status.Status != 0 || status.AppearTimeUnixSeconds <= 0) return created;
+            long minimumDurationAt = checked(status.AppearTimeUnixSeconds + config.preparationRule.minDurationS);
+            long rankOffsetAt = checked(goldUnlock.UnixSeconds
+                + (long)config.preparationRule.dayOffset * 24 * 60 * 60);
+            long unlockAt = Math.Max(minimumDurationAt, rankOffsetAt);
+            if (nowUnixSeconds < unlockAt) return created;
+            status.Status = 1;
+            return true;
         }
 
         public ProgressionResult ApplyCharacterMutation(Action<OfflinePlayerProgress> mutation, string eventId = null)
@@ -752,6 +829,11 @@ namespace Zjcs.Offline.Progression
                     target = 1;
                     current = Save.World.ActivatedGoddessRegions.Any(value =>
                         value.MapClassId == condition.mapClassId && value.Region == condition.region) ? 1 : 0;
+                    break;
+                case "MapWorldActivedCondition":
+                    target = 1;
+                    current = Save.World.AloneWorldStatuses.Any(value =>
+                        value.MapClassId == condition.mapClassId && value.Status == 1) ? 1 : 0;
                     break;
                 case "MaxProfessionRankCondition":
                     if (Save.Player.MaxProfessionRank <= 0)
@@ -966,6 +1048,12 @@ namespace Zjcs.Offline.Progression
 
         private ProgressionResult Commit(OfflineMainlineSave next, ProgressionResult result)
         {
+            return Commit(next, result, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+        }
+
+        private ProgressionResult Commit(OfflineMainlineSave next, ProgressionResult result, long nowUnixSeconds)
+        {
+            RefreshMap15Preparation(next, nowUnixSeconds);
             string json = JsonUtility.ToJson(next, true);
             LocalJsonSaveFile.Write(savePath, json, IsValidSaveJson);
             UpdateSessionItemMarks(Save.Player, next.Player);
@@ -1005,6 +1093,9 @@ namespace Zjcs.Offline.Progression
                 case "MapRegionGoddessCondition":
                     return ConditionEvaluation.Met(save.World.ActivatedGoddessRegions.Any(value =>
                         value.MapClassId == condition.mapClassId && value.Region == condition.region));
+                case "MapWorldActivedCondition":
+                    return ConditionEvaluation.Met(save.World.AloneWorldStatuses.Any(value =>
+                        value.MapClassId == condition.mapClassId && value.Status == 1));
                 case "MaxProfessionRankCondition":
                     if (save.Player.MaxProfessionRank <= 0)
                         return ConditionEvaluation.Unsupported("MaxProfessionRankCondition:ProfessionProgressNotInitialized");
@@ -1103,6 +1194,7 @@ namespace Zjcs.Offline.Progression
                 || save.Player.NpcFollowerClassIds.Distinct().Count() != save.Player.NpcFollowerClassIds.Count
                 || save.Player.RankUnlockTimes == null || save.Player.RankUnlockTimes.Count > 100
                 || save.World.Maps.Count > 1000 || save.World.BattleCounts.Count > 100000
+                || save.World.AloneWorldStatuses.Count > 1000
                 || save.World.StageWinCounts.Count > 100000
                 || save.World.CompletedEntityTags.Count > 100000 || save.World.ActivatedGoddessRegions.Count > 100000
                 || save.World.ActivatedWitches.Count > 100000
@@ -1156,6 +1248,10 @@ namespace Zjcs.Offline.Progression
                     if (region == null || region.Region < 0 || region.Progress < 0 || region.Progress > 10000
                         || !regions.Add(region.Region)) return false;
             }
+            var aloneMapIds = new HashSet<int>();
+            foreach (OfflineWorldAloneStatus status in save.World.AloneWorldStatuses)
+                if (status == null || status.MapClassId <= 0 || status.Status < 0 || status.Status > 1
+                    || status.AppearTimeUnixSeconds <= 0 || !aloneMapIds.Add(status.MapClassId)) return false;
             foreach (OfflineMapBattleCount battle in save.World.BattleCounts)
                 if (battle == null || battle.MapClassId <= 0 || battle.Region < 0 || battle.Result < 0
                     || battle.Count < 0 || !HasMapRegion(save, battle.MapClassId, battle.Region)) return false;
@@ -1252,6 +1348,8 @@ namespace Zjcs.Offline.Progression
             if (save.Player.Wardrobe.LimitedTitleCollection == null) save.Player.Wardrobe.LimitedTitleCollection = new List<int>();
             if (save.Player.Wardrobe.SeenItems == null) save.Player.Wardrobe.SeenItems = new List<int>();
             if (save.World.Maps == null) save.World.Maps = new List<OfflineMapProgress>();
+            if (save.World.AloneWorldStatuses == null)
+                save.World.AloneWorldStatuses = new List<OfflineWorldAloneStatus>();
             if (save.World.BattleCounts == null) save.World.BattleCounts = new List<OfflineMapBattleCount>();
             if (save.World.StageWinCounts == null) save.World.StageWinCounts = new List<OfflineStageWinCount>();
             if (save.World.CompletedEntityTags == null) save.World.CompletedEntityTags = new List<string>();

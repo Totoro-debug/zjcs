@@ -16,7 +16,10 @@ namespace Zjcs.Editor.Progression
         public static void Run()
         {
             OfficialMainlineTaskCatalog catalog = OfficialMainlineTaskCatalog.LoadDefault();
-            string root = Path.Combine(Path.GetTempPath(), "zjcs-mainline-validation-" + Guid.NewGuid().ToString("N"));
+            string validationRoot = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+            if (string.IsNullOrWhiteSpace(validationRoot) || !Directory.Exists(validationRoot))
+                throw new InvalidOperationException("ZJCS_VALIDATION_DIR must name this validation session.");
+            string root = Path.Combine(validationRoot, "mainline-" + Guid.NewGuid().ToString("N"));
             try
             {
                 var slots = new ProfileSlotCatalog(root);
@@ -65,6 +68,29 @@ namespace Zjcs.Editor.Progression
                     slots, activationSlot, catalog, readDemonBattleLayer);
                 Require(activationRestored.Save.Player.UnlockedMapClassIds.Contains(13),
                     "Restore Map13 activation from the local profile save");
+                long goldReachedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                Require(activation.ApplyCharacterMutation(player =>
+                {
+                    player.Rank = 5;
+                    player.RankUnlockTimes.Add(new OfflineRankUnlockTime { Rank = 5, UnixSeconds = goldReachedAt });
+                }, "rank-up-to-gold").IsApplied,
+                    "Begin the offline Map15 preparation clock in the character rank-up save transaction");
+                var prepareCondition = new OfficialTaskCondition { type = "MapWorldActivedCondition", mapClassId = 15 };
+                Require(activation.WorldAloneStatus(15) == 0
+                    && activation.GetTaskProgress(prepareCondition, out long prepareCurrent, out long prepareTarget).Status
+                        == ProgressionResultStatus.Ready && prepareCurrent == 0 && prepareTarget == 1
+                    && activation.RefreshMap15Preparation(goldReachedAt + 14L * 24 * 60 * 60 - 1).Status
+                        == ProgressionResultStatus.Unchanged,
+                    "Keep Map15 preparing until the configured 14-day boundary");
+                Require(activation.RefreshMap15Preparation(goldReachedAt + 14L * 24 * 60 * 60).IsApplied
+                    && activation.WorldAloneStatus(15) == 1
+                    && activation.GetTaskProgress(prepareCondition, out prepareCurrent, out prepareTarget).Status
+                        == ProgressionResultStatus.Ready && prepareCurrent == 1 && prepareTarget == 1,
+                    "Persist PrepareEnd exactly at the inferred offline unlock boundary and satisfy condition 115");
+                OfflineMainlineProgressSession preparationRestored = OfflineMainlineProgressSession.Open(
+                    slots, activationSlot, catalog, readDemonBattleLayer);
+                Require(preparationRestored.WorldAloneStatus(15) == 1,
+                    "Restore Map15 preparation state after reopening the profile");
                 Require(OfficialMainlineMapRuntime.ResolveHomeReturnMap(session.Save) == 10,
                     "Keep Map11 closed until Map10 task 1040 is claimed");
                 session.Save.Tasks.ClaimedMainlineTaskIds.Add(1040);

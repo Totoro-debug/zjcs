@@ -359,6 +359,7 @@ Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式
 
 ## 尚未实现
 
+- MapClassId 15 的准备配置已按当前 `871_156598` 还原至 `Resources/Map14/world-alone-preparation.json`：Gold 段后 14 日、准备组 7101、PrepareEnd 条件 115。原 `MapWorldActivedCondition` 判断 `WorldMapRegionProgressDict` 是否含 MapClassId 15；四项 7101 任务为可重复接取的 `Map15GroupDaily`，分别提交 43046／43049／43052／43055 各2件，不作为永久开放触发器。客户端 `PlayerMapWorldAlonePrepareDataRankLockTime` 的时间公式为 `max(AppearTime + MinDurationS, Gold段位解锁时间 + 14日)`，但服务端设置 `AppearTime` 与状态转换没有客户端实现。离线推测将首次达到 Gold 的段位解锁时间作为 `AppearTime`，在配置时限后把独立存档状态由 Preparing(0) 推进到 PrepareEnd(1)；此起始时间是本地决策，不代表官方服务器规则。实现读取提取出的规则，位于 `OfflineMainlineProgressSession.RefreshMap15Preparation`，并由角色升段存档事务、其他进度提交及地图会话打开时刷新；条件115进度查询与 Map14 条件4281的 `MapWorldAloneStatusCondition(MapClassId=15, Status=1)` 均消费该本地状态。Map15 正式世界进度入口、地区／实体／界面及完整跨地图流程仍未接通或验证。来源／哈希见[准备配置来源清单](../../assets/reference/official-map/map14-world-alone-preparation-source-manifest.json)，生成器为 [`prepare_unity_map14_world_alone_config.py`](../../scripts/prepare_unity_map14_world_alone_config.py)。
 - 恢复实体 prefab、角色／实体骨骼、粒子、动画、MiniMap_14 迷雾／标记、BGM 与剧情音频，并接入官方 HUD、对话和交互界面；将已恢复的地区标签绑定正式本地地图状态。
 - 接通 111 区开放条件、2,961 个放置实体、四类雕像、怪物、94 张主线及公共剧情图、命运探寻、8 块战斗碑、3 处遗迹、7 组火炮、5 组走格子及地图 15 原出口的正式入口、原条件、剧情、交互、战斗与奖励。不得以配置提取或地形夹具代替完整玩法。
 - 接通正式地图背包交易、本地状态和存档，完成正常游玩、失败回滚、退出与冷读恢复。提交窗口的隔离夹具已覆盖模拟鼠标与存档事务；其他资源夹具不代表正式地图流程。
