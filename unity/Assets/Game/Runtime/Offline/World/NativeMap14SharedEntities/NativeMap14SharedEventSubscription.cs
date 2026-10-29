@@ -23,7 +23,9 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             if (receiverType.FullName != "Common.IGridTransformPosUpdatedEventReceiver" &&
                 receiverType.FullName != "Common.IEcEntityClientVisibilityUpdatedEventReceiver" &&
                 receiverType.FullName != "Common.IEcEntityStageResultItemUpdatedEventReceiver" &&
+                receiverType.FullName != "Common.IEcEntityPlayerInteractionRemoveEventReceiver" &&
                 receiverType.FullName != "Common.IEcEntityWorldStageComponentStateUpdateEventReceiver" &&
+                receiverType.FullName != "Common.IEcContainerAddEntityEventReceiver" &&
                 receiverType.FullName != "Common.IEcContainerStartEventReceiver" &&
                 receiverType.FullName != "Common.IEcContainerStartEntityEventReceiver" &&
                 receiverType.FullName != "Common.IEcContainerRemoveEntityEventReceiver" &&

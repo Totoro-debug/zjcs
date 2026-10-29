@@ -29,6 +29,8 @@ def build():
         'IGridTransformPosUpdatedEventReceiver.cs', 'GridTransformPosUpdatedEventDelegate.cs',
         'VisibilityComponent.cs', 'IEcEntityClientVisibilityUpdatedEventReceiver.cs', 'EcEntityClientVisibilityUpdatedEventDelegate.cs',
         'StageResultAwardItemComponent.cs', 'IEcEntityStageResultItemUpdatedEventReceiver.cs', 'EcEntityStageResultItemUpdatedEventDelegate.cs',
+        'EntityPlayerInteractionComponent.cs', 'IEcEntityPlayerInteractionRemoveEventReceiver.cs', 'EcEntityPlayerInteractionRemoveEventDelegate.cs',
+        'IEcContainerAddEntityEventReceiver.cs', 'EcContainerAddEntityEventDelegate.cs',
         'IEcEntityWorldStageComponentStateUpdateEventReceiver.cs', 'EcEntityWorldStageComponentStateUpdateEventDelegate.cs',
         'IEcContainerStartEventReceiver.cs', 'IEcContainerStartEntityEventReceiver.cs',
         'IEcContainerRemoveEntityEventReceiver.cs', 'IEcContainerDestroyEntityEventReceiver.cs',
@@ -48,7 +50,7 @@ def build():
     write(ROOT/'assets/reference/official-map/map14-shared-view-source-manifest.json', encode(dict(
         manifest='871_156598', mapClassId=14, assemblies=[record(p) for p in assemblies], inputs=[record(p) for p in sources],
         outputs=[record(p) for p in outputs], tools=[record(Path(__file__).resolve())], validation=record(acceptance),
-        operation='Bind original EntityUtils to original EntityHandler without replacing an existing handler and release only the owned binding. Read original EcEntity identity, grid/info, original coordinate conversions, stage state/config/index/activity through unchanged Console IL. Implement ten selected original void receiver interfaces at runtime (grid, visibility, stage, award-item update and six container lifecycle receivers) and register/unregister with original delegate operators; forward original argument identities and previous values to migrated display consumers. Dispose owned additional component projections with the view. No shared rule/dispatch iteration is reimplemented.',
+        operation='Bind original EntityUtils to original EntityHandler without replacing an existing handler and release only the owned binding. Read original EcEntity identity, grid/info, original coordinate conversions, stage state/config/index/activity through unchanged Console IL. Implement twelve selected original void receiver interfaces at runtime (grid, visibility, stage, award-item update, player interaction removal and seven container lifecycle receivers) and register/unregister with original delegate operators; forward original argument identities and previous values to migrated display consumers. Dispose owned additional component projections with the view. No shared rule/dispatch iteration is reimplemented.',
         limitations=['Stage Select remains null in original shared client data; the legacy display DTO int slot is not a shared selector rule.',
             'Entity creation/state restoration, global parser/container host, redirects to another entity, visibility handlers, tip graph, actual UI, saves and Player require further integration.'])))
     print('Original shared grid/stage view binding recorded.')

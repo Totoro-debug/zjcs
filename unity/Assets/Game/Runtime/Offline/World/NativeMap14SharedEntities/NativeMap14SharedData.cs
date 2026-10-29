@@ -32,10 +32,11 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             private readonly DefaultFileLoader original = new DefaultFileLoader();
             public LocalLoader(Dictionary<string, Entry> entries) { this.entries = entries; }
             public void Initialize(ConfigManager manager) { original.Initialize(manager); }
-            public bool Exists(string file) => entries.ContainsKey(file);
+            private static string CatalogPath(string file) => file.StartsWith("Assets/", StringComparison.Ordinal) ? file.Substring(7) : file;
+            public bool Exists(string file) => entries.ContainsKey(CatalogPath(file));
             public void LoadFile(string file, bool isBinary, bool loadAsync, ConfigRequestBase request)
             {
-                if (!entries.TryGetValue(file, out var entry))
+                if (!entries.TryGetValue(CatalogPath(file), out var entry))
                     throw new InvalidOperationException("Original shared map path is not bound: " + file);
                 LoadAsset(entry);
                 original.LoadFile(entry.Resource + ".bytes", isBinary, loadAsync, request);
@@ -95,7 +96,7 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
                 GConfig.FileLoader.SetupFileLoader(loader);
                 manager.Initialize("", false, 0);
                 manager.PathTransformFunc = null;
-                var parsers = new[] { "EcDataCenterParser", "EcMessagePackParser", "MapRootEntityLiteInfoParser", "MapInfoWrapMessagePackParser" };
+                var parsers = new[] { "EcDataCenterParser", "EcMessagePackParser", "MapRootEntityLiteInfoParser", "MapRootEntityLiteInfoPackParser", "MapInfoWrapMessagePackParser" };
                 foreach (var name in parsers)
                 {
                     Type type = shared.CommonType(name);
@@ -131,6 +132,13 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
                 if (parserName == "MapRootEntityLiteInfoParser") Navigation = request.Result;
                 if (parserName == "MapInfoWrapMessagePackParser") Placement = request.Result;
             }
+            // Original dynamic entity starts query the pack parser for the map
+            // character prefab/view range. Let its original local loading path
+            // populate the cache from the same verified lite payload.
+            var pack=manager.GetParser(shared.CommonType("MapRootEntityLiteInfoPackParser"));
+            var arguments=new object[]{14,null};
+            if(!(bool)pack.GetType().GetMethod("TryGetMapLiteData").Invoke(pack,arguments))
+                throw new InvalidOperationException("Original map lite pack lookup failed.");
             Loaded = true;
         }
 
