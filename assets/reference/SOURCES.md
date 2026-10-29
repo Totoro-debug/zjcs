@@ -27,6 +27,7 @@ APK 与热更新版本分别记录。原输入、转换产物及其前后哈希�
 | 当前来源切换与转换链 | `assets/reference/official-map/current-*-source-manifest.json`、`assets/reference/character-creation/current-*-source-manifest.json` |
 | 客户端／共享代码来源 | [官方程序集与反编译目录](../../.tools/source-packages/official-code/) 与各模块源码来源清单 |
 | 模块资源来源 | 本目录各模块的 `source-manifest.json`、`*-source-manifest.json` 及所属功能／地图页中的入口 |
+| 龙之国稳定客户端视图接线 | [接线来源清单](official-map/map14-client-view-bindings-source-manifest.json)：同一原生实体上的普通组件、可见性、动作、奖励、显示状态与原绑定前／移除消费；实际验证范围见[龙之国](../../docs/maps/map-14.md) |
 | 龙之国原可见性处理器 | [处理器来源清单](official-map/map14-visibility-handlers-source-manifest.json)：原 FIFO 工厂、等待动作／奖励／隐藏处理器、原 MyAction 应用层实现及原生组件／事件绑定；实际验证范围见[龙之国](../../docs/maps/map-14.md) |
 | 龙之国原地图显示数据 | [地图显示数据来源清单](official-map/map14-native-display-data-source-manifest.json)：三张原表、原解析器／标签函数、原逻辑 ID 映射、区域／地表组件及本地显示状态绑定；实际验证范围见[龙之国](../../docs/maps/map-14.md) |
 | 龙之国原共享可见性绑定 | [共享可见性来源清单](official-map/map14-native-visibility-source-manifest.json)：原组件／原接收器接口、稳定消费投影、字段与事件顺序、视图订阅释放及输入输出哈希；实际验证范围见[龙之国](../../docs/maps/map-14.md) |

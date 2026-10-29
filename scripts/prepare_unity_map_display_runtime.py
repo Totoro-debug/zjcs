@@ -65,7 +65,7 @@ namespace Zjcs.Official.MapDisplays
     {
         public static GameObject Instantiate(IServiceProvider provider, GameObject prefab) =>
             (provider as IMapDisplayInstantiation ?? throw new InvalidOperationException("Original map-display injection/instantiation is not bound.")).Instantiate(prefab);
-        public static IMapDisplayEntityState State(ECViewEntityData data) => data as IMapDisplayEntityState ??
+        public static IMapDisplayEntityState State(ECViewEntityData data) => data as IMapDisplayEntityState ?? data?.GetComponent<IMapDisplayEntityState>() ??
             throw new InvalidOperationException("Original map-display shared entity state is not bound.");
     }
 }

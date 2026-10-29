@@ -1,0 +1,119 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyMapDisplay.cs",
+      "hashLineEndings": "LF",
+      "sha256": "710cc288dbb23c651c86d70d840a3593176bbb6e45163ca345eb4962edd9887f"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyEntity.cs",
+      "hashLineEndings": "LF",
+      "sha256": "70fb477ac948667c1445256b403d51b158454f864c8e0e846e035f7f513415d2"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyComponent.cs",
+      "hashLineEndings": "LF",
+      "sha256": "428728b68c86a29d6a7de1d580e5671dd1c0bed2c2c95cc9504c038dac8c15f7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyAction.cs",
+      "hashLineEndings": "LF",
+      "sha256": "52e6081ec9ea8756019ab1891ab45d9a3c7828a1687015b6c8ba0ec78e09cf89"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "assets/reference/official-map/map14-map-display-runtime-source-manifest.json",
+      "sha256": "8cb14cacfbc022bcecc120314751571dd0d5ddc5eb5f4731669594d6ff494c98"
+    },
+    {
+      "path": "assets/reference/official-map/map14-native-display-data-source-manifest.json",
+      "sha256": "501a4204a4af554df72db6edc07ad041c5584c38354196bb136f3a5b8d3f41b3"
+    },
+    {
+      "path": "scripts/prepare_unity_map_display_runtime.py",
+      "hashLineEndings": "LF",
+      "sha256": "bba4d59c91ab919173d5b3620560a9d6e767acf20bc570bde0ff23b586bfab12"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/ClientViewBindings/OfficialMap14ClientViewBindingsAcceptance.cs",
+      "hashLineEndings": "LF",
+      "sha256": "7c46d54472875593635860e607278eb3604558d1176017d52ac9d863de3c3716"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/ClientViewBindings/OfficialMap14ClientViewBindingsAcceptance.cs.meta",
+      "sha256": "64230a4529e7f8c272c0fb91a2d171c805f95dc6d0dfffced9b7264f3d2fdb44"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/ClientViewBindings/Zjcs.Editor.Map14.ClientViewBindings.asmdef",
+      "hashLineEndings": "LF",
+      "sha256": "26aa5ffc0b59fd5faddfd5bed19fcddf95cae953f3d8098735056256e2cc9448"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/ClientViewBindings/Zjcs.Editor.Map14.ClientViewBindings.asmdef.meta",
+      "sha256": "ea9e8603075bc7ec4c58a9ad789b389a0a08185b899a107b37c61283c619cffa"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/ClientViewBindings.meta",
+      "sha256": "a715dd405a066c85d966866afb28590730dac2fd48f7548a4d3974a5462f5a13"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/MapDisplays/MapDisplayBindings.cs",
+      "hashLineEndings": "LF",
+      "sha256": "02c1edd5a31f80bb796dcc1edd3b79b91bb3faa78d13cd8c308a7a55b170a3b1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientViewBindings/NativeMap14ClientViewBindings.cs",
+      "hashLineEndings": "LF",
+      "sha256": "1d4bd6f4f0421169f08b15bc9aea2e521a64adbddc4f1796b36a5812b1c6947c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientViewBindings/NativeMap14ClientViewBindings.cs.meta",
+      "sha256": "461cdb1c27272f36188092f96d89571e3e08b2094d96b7d330294fd61ed9938a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientViewBindings/Zjcs.Offline.World.NativeMap14ClientViewBindings.asmdef",
+      "hashLineEndings": "LF",
+      "sha256": "e88b9ff645c0101917dda76bba642cdd311e18a225c3985c8b756f53e275f6d6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientViewBindings/Zjcs.Offline.World.NativeMap14ClientViewBindings.asmdef.meta",
+      "sha256": "194e53bc8a9d66912a4dcb2876068f522cfa8a68b60794e2963702fc88b8b4e6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientViewBindings.meta",
+      "sha256": "c259d00056d3cefcc5f839e6d03d36b8ffa0a940b698e43e07779b92f579dcb5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14DisplayData/NativeMap14DisplayEntityState.cs",
+      "hashLineEndings": "LF",
+      "sha256": "bb21ba0f9f16493ac52516ea938bf345cc94c605fdae3524f0d19fd4e52448a9"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map14_client_view_bindings.py",
+      "hashLineEndings": "LF",
+      "sha256": "9732507ac18c47ac1a2f214b4266cff7bf8b90c8edc0062b483d6acbcf0df44c"
+    }
+  ],
+  "operation": "Install previously migrated ordinary component, native visibility, action, award and map display state projections on the one original stable client view before consumer binding. Resolve consumed display state directly or through that same view component query. Keep original MyMapDisplay/MyEntity code, BindPre/remove order and source lookup unchanged; no new shared rules, identities or default state.",
+  "validation_entry": "Zjcs.Editor.Map14.OfficialMap14ClientViewBindingsAcceptance.Run",
+  "validation": "Unity 2022.3.57f1c2 internal-display D3D11 isolated import/compile/Play Mode passed: actual original placement 201 LoGridTransform into original 6106 template, registration/Awake/container Start, original logical tag/area/ground/position through one stable view and MyEntity BindPre to unchanged MyMapDisplay; repeated identity and foreign-scope rejection, ordinary/visibility/action/award prebinding, cached recycle arguments and removing/destroying branches. Original visibility handler/action/display/statue/radar/input/container regressions passed; current rendered frames viewed and root static metadata check passed. Complete ProjectTools.Validate and Windows Player remain pending.",
+  "limitations": [
+    "The display manager is a call recorder in this input-boundary check, not a formal rendered map or dungeon gameplay.",
+    "Formal map host, original action/effect prefabs, player/UI/simulated pointer/save, complete ProjectTools.Validate and Windows Player remain required."
+  ]
+}
