@@ -29,6 +29,19 @@ namespace Zjcs.Offline.Progression
             return result;
         }
 
+        public IReadOnlyDictionary<int, long> CalculatePetEntityBaseProps(int petClassId, int level,
+            IReadOnlyDictionary<int, long> inheritFixedProps)
+        {
+            Dictionary<string, object> definition = catalog.Find("pet", petClassId)
+                ?? throw new InvalidOperationException("Original pet definition is absent: " + petClassId);
+            var result = new Dictionary<int, long>();
+            CharacterPropFormula.Merge(result, inheritFixedProps);
+            CharacterPropFormula.Merge(result, catalog.GetLevelProps(
+                Integer(definition, "EntityExtraPropId"), Math.Max(1, level)));
+            CharacterPropFormula.TurnBaseProps(result, catalog.Props);
+            return result;
+        }
+
         public IReadOnlyDictionary<int, long> CalculateProps(OfflinePlayerProgress player)
         {
             var result = new Dictionary<int, long>();
