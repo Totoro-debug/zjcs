@@ -29,6 +29,7 @@ namespace Zjcs.Official.TeamUI
         ITeamPlayerHpServices Hp { get; }
         ICharacterPortraitManager Portraits { get; }
         IWorldTeamInviteServices InviteServices { get; }
+        IWorldContextInviteServices ContextInviteServices { get; }
         event Action<long> RelationRemoved;
         event Action<TeamPanelPlayer> TeamPlayerAdded;
         event Action<TeamPanelPlayer> TeamPlayerRemoved;

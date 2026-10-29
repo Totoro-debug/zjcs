@@ -194,6 +194,8 @@ Map12主线任务1165～1270沿用官方顺序、前置和奖励；其中1215要
 
 原邀请窗口的五份外部列表模板 `TeamInvitePanelChallengePlayerItem`、`DropdownItem`、`ActivityCompanionPanelPlayerItem`、`RoomInvitePanelPlayerItem`、`TeamInvitePanelRobotItem` 已从同一871来源完整提取，保留377个节点、598份脚本载荷及原组件顺序。原生 YAML 已逐项核对19,829个字段值、5,464个指针和24组压缩数组，并恢复1298项托管引用的完整导出依赖证明；一张导出纹理的解码差异保留原像素覆盖层。隔离工程静态检查（74321个 GUID）、Windows Unity 导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 通过。此处完成的是原始层级与原生转换源核对；最终运行时组件、模型、资源绑定和实际交互仍待完成。来源见[原依赖提取](../../assets/reference/official-map/map12-team-invite-extra-source-manifest.json)与[原生字段核对](../../assets/reference/official-map/map12-team-invite-extra-native-source-manifest.json)。
 
+原 Room／Challenge／Companion 邀请组件及 RoomAction 已沿原异步状态机迁入，保留 NPC 提前返回、容量错误码、错误载荷、挑战响应先追加后广播、姓名缓存等待、确认窗等待与取消码112；原在线模式仍遵循已确认的单机开放范围。八份邀请模板引用的14段动画、3个控制器及1个覆盖控制器已恢复完整原生转换源，逐项核对压缩曲线、状态／条件／动作引用及 Legacy 有符号零。Windows 资源使用真实 Unity 构建的容器、类型元数据与 MonoScript，再恢复原18份动画载荷，仅重定位明确的对象指针，以保留重新编译会改变的原控制器循环标志；运行时校验哈希并显式绑定。DX12 Play Mode 已加载该资源，14段动画320个真实 Animator 采样值通过，既有 TeamPanel 两种尺寸的模拟点击与生命周期回归通过，八张实际画面已查看。根工程静态检查（76870个 GUID）、隔离 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。这里仍使用隔离队伍数据及原加载头像；正式邀请 prefab、NPC 模型、本地入队／站位存档及战斗整合尚未完成。来源见[上下文邀请组件](../../assets/reference/official-map/map12-context-inviters-source-manifest.json)、[完整动画转换源](../../assets/reference/official-map/map12-team-invite-animation-source-manifest.json)与[Windows 原动画载荷](../../assets/reference/official-map/map12-team-invite-windows-animation-source-manifest.json)。
+
 ### 已迁移代码与局部资源
 
 以下为局部代码／资源接入，完整流程仍受本页缺项限制。

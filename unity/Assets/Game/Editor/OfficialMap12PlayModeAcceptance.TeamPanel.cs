@@ -181,6 +181,8 @@ namespace Zjcs.Editor
         }
         private static IEnumerator VerifyFullTeamSteps()
         {
+            VerifyInviteAnimationRuntimeSamples();
+            using var nativeInviteAnimations = new Zjcs.Offline.World.NativeMap12InviteAnimations();
             string output = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
             string repository = Environment.GetEnvironmentVariable("ZJCS_REPOSITORY_ROOT");
             SteleRequire(!string.IsNullOrEmpty(output) && !string.IsNullOrEmpty(repository)
@@ -217,6 +219,7 @@ namespace Zjcs.Editor
                     ProfessionGameObjectPoolBridge.Provider = (_, prefab, parent, stays) =>
                     {
                         var clone = UnityEngine.Object.Instantiate(prefab, parent, stays);
+                        nativeInviteAnimations.Bind(clone);
                         foreach (var text in clone.GetComponentsInChildren<WorldMultiLanguageText>(true)) text.Localizer = s.Localize;
                         return clone;
                     };
@@ -224,6 +227,7 @@ namespace Zjcs.Editor
                     ConfigureCanvas(canvas, camera, data);
                     var root = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Map12/Team/TeamPanel"), canvas.transform, false);
                     root.SetActive(false);
+                    nativeInviteAnimations.Bind(root);
                     foreach (var text in root.GetComponentsInChildren<WorldMultiLanguageText>(true)) text.Localizer = s.Localize;
                     var panel = root.GetComponentInChildren<TeamPanel>(true);
                     panel.Configure(s);

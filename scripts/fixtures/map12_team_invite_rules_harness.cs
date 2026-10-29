@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Zjcs.Official.TeamUI;
 using Zjcs.Official.ProfessionUI;
+using Zjcs.Official.WorldUI;
 
 public static class Map12TeamInviteRulesHarness
 {
@@ -57,8 +58,84 @@ public static class Map12TeamInviteRulesHarness
             PropTypes = new Dictionary<PropType, long>()
         };
 
+    private sealed class ContextServices : IWorldContextInviteServices, IWorldTeamInviteServices, IWorldTeamInviteTarget
+    {
+        public int? RoomPlayerCount { get; set; }
+        public int? TeamPlayerCount { get; set; }
+        public bool IsLeader => true;
+        public bool AllowMemberInvite => false;
+        public IWorldTeamInviteServices Team => this;
+        public readonly List<string> Trace = new List<string>();
+        public object ErrorData, Appended;
+        public WorldContextInviteResult Response;
+        public TaskCompletionSource<string> Name;
+        public TaskCompletionSource<bool> Popup;
+        public Action Confirm, Cancel;
+        public bool Cached;
+        public string CachedName;
+        public int SendResult;
+        public int GetTeamMaxPlayer() => 3;
+        public bool TryGetLimitErrorTip(bool self, int code, out string tip) { tip = null; return false; }
+        public Task<WorldContextInviteResult> OperPlayerRoomInvite(WorldTeamInviteActor actor, IWorldTeamInviteTarget target)
+        { Trace.Add("room:" + actor.TargetId); return Task.FromResult(Response); }
+        public Task<WorldContextInviteResult> OperPlayerTeamChallengeInviteJoin(long id)
+        { Trace.Add("challenge:" + id); return Task.FromResult(Response); }
+        public void AppendChallengeInvitation(object data) { Trace.Add("append"); Appended = data; }
+        public bool TryGetLiteInfoNameFromCache(WorldTeamInviteActor actor, out string name)
+        { Trace.Add("cache"); name = CachedName; return Cached; }
+        public Task<string> GetLiteInfoName(WorldTeamInviteActor actor) { Trace.Add("name"); return Name.Task; }
+        public Task ShowCompanionInviteConfirmation(string name, Action confirm, Action cancel)
+        { Trace.Add("popup:" + name); Confirm = confirm; Cancel = cancel; return Popup.Task; }
+        public Task<int> SendCompanionInvite(long id) { Trace.Add("send:" + id); return Task.FromResult(SendResult); }
+        public void ShowError(int code, object data, bool defaultTip) { Trace.Add("error:" + code); ErrorData = data; }
+        public void ShowError(int code, bool defaultTip) { ShowError(code, null, defaultTip); }
+        public string Format(string key, params object[] args) => key;
+        public string NpcName(int id) => id.ToString();
+        public void SystemMessage(string text) { Trace.Add("message:" + text); }
+        public Task<WorldTeamInviteResult> OperPlayerTeamInvite(WorldTeamInviteActor actor, IWorldTeamInviteTarget target)
+            => throw new Exception("Unexpected normal-team RPC in a context inviter.");
+    }
+
+    private static async Task CheckContextInviters()
+    {
+        var npc = new WorldTeamInviteActor { IsNpc = true };
+        Require(await WorldRoomInviter.Execute(null, npc, null) == 0 &&
+            await WorldChallengeInviter.Execute(null, npc, null) == 0 &&
+            await WorldCompanionInviter.Execute(null, npc) == 0, "Non-player exits must precede service access.");
+        var s = new ContextServices();
+        var player = new WorldTeamInviteActor { TargetId = 9007199254740993L };
+        Require(await WorldRoomInviter.Execute(s, player, s) == 24603 &&
+            s.Trace.SequenceEqual(new[] { "error:24603" }), "Missing room must reject before RPC.");
+        s.Trace.Clear(); s.RoomPlayerCount = 3;
+        Require(await WorldRoomInviter.Execute(s, player, s) == 24604 &&
+            s.Trace.SequenceEqual(new[] { "error:24604" }), "Full room must reject before RPC.");
+        s.Trace.Clear(); s.RoomPlayerCount = 2; var payload = new object();
+        s.Response = new WorldContextInviteResult(77, payload);
+        Require(await WorldRoomInviter.Execute(s, player, s) == 77 && ReferenceEquals(s.ErrorData, payload) &&
+            s.Trace.SequenceEqual(new[] { "room:9007199254740993", "error:77" }), "Room errors retain response payload and signed 64-bit identity.");
+        s.Trace.Clear(); s.TeamPlayerCount = 3;
+        Require(await WorldChallengeInviter.Execute(s, player, s) == 6102 &&
+            s.Trace.SequenceEqual(new[] { "error:6102" }), "Challenge capacity check must precede RPC.");
+        s.Trace.Clear(); s.TeamPlayerCount = 2; s.Response = new WorldContextInviteResult(0, payload);
+        Require(await WorldChallengeInviter.Execute(s, player, s) == 0 && ReferenceEquals(s.Appended, payload) &&
+            s.Trace.SequenceEqual(new[] { "challenge:9007199254740993", "append", "message:TeamInviteSelectPlayerPanel.InviteMsg" }),
+            "Challenge response must append before broadcasting.");
+        s.Trace.Clear(); s.Cached = true; s.CachedName = "";
+        s.Name = new TaskCompletionSource<string>(); s.Popup = new TaskCompletionSource<bool>();
+        var pending = WorldCompanionInviter.Execute(s, player);
+        Require(!pending.IsCompleted && s.Trace.SequenceEqual(new[] { "cache", "name" }), "Empty cached names require awaited lookup.");
+        s.Name.SetResult("original-name"); s.Confirm();
+        Require(!pending.IsCompleted && !s.Trace.Any(x => x.StartsWith("send:")), "Confirmation must also await original popup completion.");
+        s.Popup.SetResult(true);
+        Require(await pending == 0 && s.Trace.Last() == "message:ActivityCompanion.InviteSent", "Confirmed companion invitation completes before message.");
+        s.Trace.Clear(); s.CachedName = "cached-name"; s.Popup = new TaskCompletionSource<bool>();
+        pending = WorldCompanionInviter.Execute(s, player); s.Cancel(); s.Popup.SetResult(true);
+        Require(await pending == 112 && s.Trace.SequenceEqual(new[] { "cache", "popup:cached-name" }), "Original cancel code must not send an invitation.");
+    }
+
     private static async Task Run()
     {
+        await CheckContextInviters();
         var services = new Services();
         var provider = new TeamInviteNpc(services);
         Require(await provider.LoadPlayers(null, default) == null && !services.Trace.Contains("request"),

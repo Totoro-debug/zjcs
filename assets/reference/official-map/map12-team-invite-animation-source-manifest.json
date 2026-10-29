@@ -1,0 +1,803 @@
+{
+  "adapters": [
+    {
+      "path": "scripts/prepare_unity_map12_team_invite_animation.py",
+      "sha256": "c71971ed74b35f4a7c8c5babf4927e7416b404058b47ba60db45649dc23735ce"
+    },
+    {
+      "path": "scripts/official_animation.py",
+      "sha256": "25c28b9ab4685b2f231d398bee68ba3fbe602a15fcf241d51a348a45943b13f3"
+    },
+    {
+      "path": "scripts/prepare_unity_map12_matching_animation.py",
+      "sha256": "e125ff4fbafa0c4eed17e0808d15634a6915c94c366f7e79e997202c3b2b75ea"
+    },
+    {
+      "path": "scripts/official_native_yaml_verification.py",
+      "sha256": "d7027e10c3fc96f910f169eb0cb4b45942d0cf6ef532fa8ba96efa9dedfbba7b"
+    },
+    {
+      "path": "scripts/verify_map12_invite_controllers.py",
+      "sha256": "28eb8f81684ea22b24841ddc47e20241f412ada34659c3e65c9fcf899317ad5b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap12InviteAnimations.cs",
+      "sha256": "a5158ece60c3642066f7b0541b0ab32e5af215a2c014f9c91d383a4c5e855891"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.InviteAnimations.cs",
+      "sha256": "458eee0a864e2e6d7f50122ea1f5235297460f81cbaab949838e70590595707c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.TeamPanel.cs",
+      "sha256": "41d1996860bb65489f3606568e86d487afdc7686082871cfb14cdfff448354a7"
+    }
+  ],
+  "dependencies": [
+    {
+      "conversion_sha256": "49138d23b96a178d50ea4dafa33d623540db6c05daeb8be5ef90df26d22ff898",
+      "identity": "CAB-0170758528fdc48420d4ae42427b44d7:-1553133123068916769",
+      "inputPath": "Prefabs/UI/Character/CharacterPanel_BgLoop.anim",
+      "nativeGuid": "8f552321cf1d29a96c8757c83be30713",
+      "object_sha256": "baebfff1c471a148a32b244842ae7d3a874d80d7468854ce6a37897eff7dba6a",
+      "original": {
+        "apk_entry": "assets/yoo/DefaultPackage/801c9ed3e0b0b019bbaf77233e7ec09a.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_share_a4b039d159484dc5064ae0890a0174a0.bundle",
+        "bundle_hash": "801c9ed3e0b0b019bbaf77233e7ec09a",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-1553133123068916769",
+        "raw_sha256": "cffcb4c57452b6b0e5473cf43a5d453a8add2259ef681a4926b3bcb2a89dc076",
+        "raw_size": 1006
+      },
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/CharacterPanel_BgLoop-29a8bc2a37.anim",
+      "restoredSignedZeroFields": [
+        {
+          "field": "inSlope",
+          "key": 1,
+          "path": "Group/Image (4)",
+          "property": "m_AnchoredPosition.x"
+        },
+        {
+          "field": "inSlope",
+          "key": 1,
+          "path": "Group (1)/Image (4)",
+          "property": "m_AnchoredPosition.x"
+        },
+        {
+          "field": "inSlope",
+          "key": 1,
+          "path": "Group/Image (6)",
+          "property": "m_AnchoredPosition.x"
+        },
+        {
+          "field": "inSlope",
+          "key": 1,
+          "path": "Group (1)/Image (8)",
+          "property": "m_AnchoredPosition.x"
+        },
+        {
+          "field": "inSlope",
+          "key": 1,
+          "path": "Group (1)/Image (6)",
+          "property": "m_AnchoredPosition.x"
+        },
+        {
+          "field": "inSlope",
+          "key": 1,
+          "path": "Group/Image (3)",
+          "property": "m_AnchoredPosition.x"
+        },
+        {
+          "field": "inSlope",
+          "key": 1,
+          "path": "Group (1)/Image (3)",
+          "property": "m_AnchoredPosition.x"
+        },
+        {
+          "field": "inSlope",
+          "key": 1,
+          "path": "Group/Image (5)",
+          "property": "m_AnchoredPosition.x"
+        },
+        {
+          "field": "inSlope",
+          "key": 1,
+          "path": "Group (1)/Image (5)",
+          "property": "m_AnchoredPosition.x"
+        },
+        {
+          "field": "inSlope",
+          "key": 1,
+          "path": "Group (1)/Image (7)",
+          "property": "m_AnchoredPosition.x"
+        },
+        {
+          "field": "inSlope",
+          "key": 1,
+          "path": "Group/Image (7)",
+          "property": "m_AnchoredPosition.x"
+        }
+      ],
+      "sha256": "f9476b987387aca76a3ac05c82b9e82748ea6d50dbc591a57bca871196912539"
+    },
+    {
+      "conversion_sha256": "cd9374ca4455230e9e7e37f4c01c85788ee0ac1f72302b968410c8913465ec76",
+      "identity": "CAB-154d0356819b205c30c820e691ce28d4:4115514743812544491",
+      "inputPath": "Animation/UI/Cooking/HpSlider.anim",
+      "nativeGuid": "91bb4fa1399901518512b93dad14a86c",
+      "object_sha256": "413df69e2bef00884b3e984ccbe11ae39431292e72ac51ace353936953a61ebe",
+      "original": {
+        "apk_entry": "assets/yoo/DefaultPackage/03b323b61d795e3158347601f0306ead.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_animation_ui_cooking.bundle",
+        "bundle_hash": "03b323b61d795e3158347601f0306ead",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "4115514743812544491",
+        "raw_sha256": "cd0f1dd8d4c8d9e7153e3f1dc5a2385ca18339f872a48c1171e7ae3ef594e887",
+        "raw_size": 2367
+      },
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/HpSlider-910c2277ed.anim",
+      "sha256": "56b33e66394c0546110590d93318dc3f0a5bfead3ee6ce122dfd40dc32affd9f"
+    },
+    {
+      "compiledStateGraphProof": {
+        "conditions": 2,
+        "entryTransitions": 0,
+        "layers": 1,
+        "originalCompiledLoopFlags": {
+          "Hide": false,
+          "Idle": false,
+          "Show": false
+        },
+        "parameters": 1,
+        "states": 4,
+        "transitions": 3
+      },
+      "conversion_sha256": "8fa994e527090e49f526b03dc55c471d364df64566386305251516dd1caac118",
+      "identity": "CAB-acb89e46c0e3f584025132259703b7fd:-8389467541782740115",
+      "inputPath": "Animation/UI/UIDropDownController.controller",
+      "nativeGuid": "00759ebb7b21b31bba41a036bcad5f20",
+      "object_sha256": "b3215a43b2336f14a6f01ffad1fae83379818f26d4b64d75d0b9e6f333c52f9f",
+      "original": {
+        "apk_entry": "assets/yoo/DefaultPackage/e64ddd2905926d89597e6ebd4f0178fd.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_animation_ui.bundle",
+        "bundle_hash": "e64ddd2905926d89597e6ebd4f0178fd",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-8389467541782740115",
+        "raw_sha256": "1c77e30ceb3f2e0120d428888f2a51f0b7dcc6edfcdc034615a2588061ce48ff",
+        "raw_size": 7330
+      },
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/UIDropDownController-f8bd595a1b.controller",
+      "sha256": "7a5f0dc657cdd514a6be13a7610e0ac8fc3dec35c2508294230f79beb2fae5a2"
+    },
+    {
+      "conversion_sha256": "033f50e05d22cc776be97b3dc54313d80c6422ba51de79d38f93f46608cb9ac0",
+      "identity": "CAB-acb89e46c0e3f584025132259703b7fd:-8560240761830219616",
+      "inputPath": "Animation/UI/UIDropDown_Hide.anim",
+      "nativeGuid": "ba4f22f3b4e9912aeb8f12cda1e03033",
+      "object_sha256": "6528fc27167aafc0a618a811eaa402d7294de094bdad4244896651a48a5564df",
+      "original": {
+        "apk_entry": "assets/yoo/DefaultPackage/e64ddd2905926d89597e6ebd4f0178fd.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_animation_ui.bundle",
+        "bundle_hash": "e64ddd2905926d89597e6ebd4f0178fd",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-8560240761830219616",
+        "raw_sha256": "1c77e30ceb3f2e0120d428888f2a51f0b7dcc6edfcdc034615a2588061ce48ff",
+        "raw_size": 7330
+      },
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/UIDropDown_Hide-b009d9e34d.anim",
+      "sha256": "49b68ef6f79918b31f18735749642ff0e982a8cc80eda32e1b1ebf5f51d195b5"
+    },
+    {
+      "conversion_sha256": "7a6765b81e76195a20bc3d30de8431e2980e8fc40583a85cb25b60ece31719de",
+      "identity": "CAB-acb89e46c0e3f584025132259703b7fd:-8893950686705692815",
+      "inputPath": "Animation/UI/ToggleOn.anim",
+      "nativeGuid": "77238bc7e6e6c75a3407e9273dba26cb",
+      "object_sha256": "e899f33df9842f70c52470845e66a119f568b1d08493a44be0928df470a63a47",
+      "original": {
+        "apk_entry": "assets/yoo/DefaultPackage/e64ddd2905926d89597e6ebd4f0178fd.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_animation_ui.bundle",
+        "bundle_hash": "e64ddd2905926d89597e6ebd4f0178fd",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-8893950686705692815",
+        "raw_sha256": "1c77e30ceb3f2e0120d428888f2a51f0b7dcc6edfcdc034615a2588061ce48ff",
+        "raw_size": 7330
+      },
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/ToggleOn-20a13e25d4.anim",
+      "sha256": "7a6765b81e76195a20bc3d30de8431e2980e8fc40583a85cb25b60ece31719de"
+    },
+    {
+      "conversion_sha256": "60a1d4ae51219b3b49588fdf37db0b09e0ba88fd2591749557f61ba2d7996651",
+      "identity": "CAB-acb89e46c0e3f584025132259703b7fd:2088333010137370481",
+      "inputPath": "Animation/UI/ToggleOff.anim",
+      "nativeGuid": "76c80ea9d71404ff31734cf7f1028d6a",
+      "object_sha256": "86db43cb9db9e8500e773066c23e3d7abf1ff148f848c8441880363cf8be147e",
+      "original": {
+        "apk_entry": "assets/yoo/DefaultPackage/e64ddd2905926d89597e6ebd4f0178fd.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_animation_ui.bundle",
+        "bundle_hash": "e64ddd2905926d89597e6ebd4f0178fd",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "2088333010137370481",
+        "raw_sha256": "1c77e30ceb3f2e0120d428888f2a51f0b7dcc6edfcdc034615a2588061ce48ff",
+        "raw_size": 7330
+      },
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/ToggleOff-8169f02949.anim",
+      "sha256": "60a1d4ae51219b3b49588fdf37db0b09e0ba88fd2591749557f61ba2d7996651"
+    },
+    {
+      "conversion_sha256": "d736dfa7e565216a59e97d96081083b8e739725bb8a5a9fc5eed99370034c8c3",
+      "identity": "CAB-acb89e46c0e3f584025132259703b7fd:4383028793889189903",
+      "inputPath": "Animation/UI/UIDropDown_Show.anim",
+      "nativeGuid": "1aef7bdf7b3be784462d3afa92e7378f",
+      "object_sha256": "7ea3350da750c095e2739dd2f1f5cffdc7816992efedd000c7c4d6d396ea4ec8",
+      "original": {
+        "apk_entry": "assets/yoo/DefaultPackage/e64ddd2905926d89597e6ebd4f0178fd.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_animation_ui.bundle",
+        "bundle_hash": "e64ddd2905926d89597e6ebd4f0178fd",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "4383028793889189903",
+        "raw_sha256": "1c77e30ceb3f2e0120d428888f2a51f0b7dcc6edfcdc034615a2588061ce48ff",
+        "raw_size": 7330
+      },
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/UIDropDown_Show-800543c626.anim",
+      "sha256": "5b706239396e2fa8464930dca18d264425b1e7274d2aecbcf58185a85a5cc31b"
+    },
+    {
+      "conversion_sha256": "6f2348678d349fcdeb0a73cb96e35b7f776c4e0b80ec530161a96e67707dbe70",
+      "identity": "CAB-acb89e46c0e3f584025132259703b7fd:4413146016443390695",
+      "inputPath": "Animation/UI/UIDropDown_Idle.anim",
+      "nativeGuid": "438186fafcc40152a7b24cc4ce3bf918",
+      "object_sha256": "8273d9ed49f65c3d3bec50dcf38221d55bf355bab32360e8f7c72a5189c94336",
+      "original": {
+        "apk_entry": "assets/yoo/DefaultPackage/e64ddd2905926d89597e6ebd4f0178fd.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_animation_ui.bundle",
+        "bundle_hash": "e64ddd2905926d89597e6ebd4f0178fd",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "4413146016443390695",
+        "raw_sha256": "1c77e30ceb3f2e0120d428888f2a51f0b7dcc6edfcdc034615a2588061ce48ff",
+        "raw_size": 7330
+      },
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/UIDropDown_Idle-4bdf0eb647.anim",
+      "sha256": "6f2348678d349fcdeb0a73cb96e35b7f776c4e0b80ec530161a96e67707dbe70"
+    },
+    {
+      "compiledStateGraphProof": {
+        "conditions": 4,
+        "entryTransitions": 1,
+        "layers": 1,
+        "originalCompiledLoopFlags": {
+          "ToggleOff": false,
+          "ToggleOn": false
+        },
+        "parameters": 3,
+        "states": 3,
+        "transitions": 4
+      },
+      "conversion_sha256": "ca1b96fe40f3d9d887198a8cd1a0b896e2b65cead36d7ce7c3a31586f503b815",
+      "identity": "CAB-acb89e46c0e3f584025132259703b7fd:9024401823200431985",
+      "inputPath": "Animation/UI/ToggleAnimatorController.controller",
+      "nativeGuid": "1ea0855b43d128f877d9839827512a17",
+      "object_sha256": "3bd65aabebe6bec190bb0ff71ca049f6e397a1c9c6f7b85a5811b9b02f75d4be",
+      "original": {
+        "apk_entry": "assets/yoo/DefaultPackage/e64ddd2905926d89597e6ebd4f0178fd.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_animation_ui.bundle",
+        "bundle_hash": "e64ddd2905926d89597e6ebd4f0178fd",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "9024401823200431985",
+        "raw_sha256": "1c77e30ceb3f2e0120d428888f2a51f0b7dcc6edfcdc034615a2588061ce48ff",
+        "raw_size": 7330
+      },
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/ToggleAnimatorController-33009d8279.controller",
+      "sha256": "27ed41c8ef57828bb6afecc8e88cfa4fc6e008accb378ddc01e1a2dd215c7f8f"
+    },
+    {
+      "conversion_sha256": "fd758250c96b133b3195660a6c88a0591f91af5f7f5df43e83c9f19eaa013e51",
+      "identity": "CAB-c7fb6f6fa5e12c6915469bf220c6cfff:-3058570119357427593",
+      "inputPath": "Animation/UI/Common/Disabled.anim",
+      "nativeGuid": "cc1e35a7632c56730ae91db409f8b6bc",
+      "object_sha256": "e1b41eacc86057fde63ae1b32f4e70ee1ad91217452325727afa6466edd2a64f",
+      "original": {
+        "apk_entry": "assets/yoo/DefaultPackage/7c31564a61be1cb16bf2df7a7344bd2b.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_animation_ui_common.bundle",
+        "bundle_hash": "7c31564a61be1cb16bf2df7a7344bd2b",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-3058570119357427593",
+        "raw_sha256": "8ea02cdf6a840568357a00744070e16d1d05014caa9549b448a4169bf503bcf5",
+        "raw_size": 4061
+      },
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/Disabled-de060053fa.anim",
+      "sha256": "fd758250c96b133b3195660a6c88a0591f91af5f7f5df43e83c9f19eaa013e51"
+    },
+    {
+      "conversion_sha256": "6115af211859758598fa85d9e665897bdd12ac92d35237f82aeb4c2d7dfe3a49",
+      "identity": "CAB-c7fb6f6fa5e12c6915469bf220c6cfff:-4299415247689576329",
+      "inputPath": "Animation/UI/Common/Pressed.anim",
+      "nativeGuid": "782cb9e961fba86a05ab985b35620b62",
+      "object_sha256": "b06163d231d9946d298f04fa95014bd722ea8967fb752d4a611f2b6fea9f5da4",
+      "original": {
+        "apk_entry": "assets/yoo/DefaultPackage/7c31564a61be1cb16bf2df7a7344bd2b.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_animation_ui_common.bundle",
+        "bundle_hash": "7c31564a61be1cb16bf2df7a7344bd2b",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-4299415247689576329",
+        "raw_sha256": "8ea02cdf6a840568357a00744070e16d1d05014caa9549b448a4169bf503bcf5",
+        "raw_size": 4061
+      },
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/Pressed-60fc043ed1.anim",
+      "sha256": "6115af211859758598fa85d9e665897bdd12ac92d35237f82aeb4c2d7dfe3a49"
+    },
+    {
+      "conversion_sha256": "cc4c01706fbbd7a9bed9fa6f7f01ffc2c050c0909916d85ee553149d6d14a1b3",
+      "identity": "CAB-c7fb6f6fa5e12c6915469bf220c6cfff:-510987642694758281",
+      "inputPath": "Animation/UI/Common/Selected.anim",
+      "nativeGuid": "9c688c2e3fbc0702cdb168112cde7b44",
+      "object_sha256": "29a913ba2061a3fbcafbf0de7f7ecd48dc0f055b7b83688b78188d0f1d42eaae",
+      "original": {
+        "apk_entry": "assets/yoo/DefaultPackage/7c31564a61be1cb16bf2df7a7344bd2b.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_animation_ui_common.bundle",
+        "bundle_hash": "7c31564a61be1cb16bf2df7a7344bd2b",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-510987642694758281",
+        "raw_sha256": "8ea02cdf6a840568357a00744070e16d1d05014caa9549b448a4169bf503bcf5",
+        "raw_size": 4061
+      },
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/Selected-b5b376ab29.anim",
+      "sha256": "cc4c01706fbbd7a9bed9fa6f7f01ffc2c050c0909916d85ee553149d6d14a1b3"
+    },
+    {
+      "compiledStateGraphProof": {
+        "conditions": 4,
+        "entryTransitions": 0,
+        "layers": 1,
+        "originalCompiledLoopFlags": {
+          "Disabled": true,
+          "Highlighted": true,
+          "Normal": true,
+          "Pressed": true,
+          "Selected": true
+        },
+        "parameters": 5,
+        "states": 5,
+        "transitions": 4
+      },
+      "conversion_sha256": "69757f269e10b0260aef64a948f58cded8c46fe1c2288af331b87009e5da40e4",
+      "identity": "CAB-c7fb6f6fa5e12c6915469bf220c6cfff:-6001556034672029577",
+      "inputPath": "Animation/UI/Common/Btn_Base_Click.controller",
+      "nativeGuid": "c79e076818b2eea0f768a4b48f7a2cbb",
+      "object_sha256": "11147b9d40965317d03fb30843d21eac828243a75e56f24f618349dd7d5be6e0",
+      "original": {
+        "apk_entry": "assets/yoo/DefaultPackage/7c31564a61be1cb16bf2df7a7344bd2b.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_animation_ui_common.bundle",
+        "bundle_hash": "7c31564a61be1cb16bf2df7a7344bd2b",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-6001556034672029577",
+        "raw_sha256": "8ea02cdf6a840568357a00744070e16d1d05014caa9549b448a4169bf503bcf5",
+        "raw_size": 4061
+      },
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/Btn_Base_Click-93d34733b2.controller",
+      "sha256": "6c207940c5f36687d4bd742ff47352770c13acb9662e2c331412dac16688e384"
+    },
+    {
+      "conversion_sha256": "11c0bfc0348200c8a9d70e2ab44c681a447bb73e5ecfd20e0ac930e35e80ee07",
+      "identity": "CAB-c7fb6f6fa5e12c6915469bf220c6cfff:-7480438013181063049",
+      "inputPath": "Animation/UI/Common/Highlighted.anim",
+      "nativeGuid": "f47e092ceff0e0dafd6e73d1d564d22a",
+      "object_sha256": "bd2cfada6cc3b52aae6074059fb93f3d07bbb2484fca5a7abe5863247d61597c",
+      "original": {
+        "apk_entry": "assets/yoo/DefaultPackage/7c31564a61be1cb16bf2df7a7344bd2b.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_animation_ui_common.bundle",
+        "bundle_hash": "7c31564a61be1cb16bf2df7a7344bd2b",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-7480438013181063049",
+        "raw_sha256": "8ea02cdf6a840568357a00744070e16d1d05014caa9549b448a4169bf503bcf5",
+        "raw_size": 4061
+      },
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/Highlighted-49bbd655ed.anim",
+      "sha256": "11c0bfc0348200c8a9d70e2ab44c681a447bb73e5ecfd20e0ac930e35e80ee07"
+    },
+    {
+      "conversion_sha256": "4dd795bea32dfbcfc1e82ead0098f004f2d9ba93010e9022fb2ce328e2187952",
+      "identity": "CAB-c7fb6f6fa5e12c6915469bf220c6cfff:4450864898414448759",
+      "inputPath": "Animation/UI/Common/Normal.anim",
+      "nativeGuid": "ff54267ee4feb67f35659368991ccb7a",
+      "object_sha256": "ba857058e3722d722cf1daa0074dd40992385f6dd09926ca7f78e88a00cb48ff",
+      "original": {
+        "apk_entry": "assets/yoo/DefaultPackage/7c31564a61be1cb16bf2df7a7344bd2b.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_animation_ui_common.bundle",
+        "bundle_hash": "7c31564a61be1cb16bf2df7a7344bd2b",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "4450864898414448759",
+        "raw_sha256": "8ea02cdf6a840568357a00744070e16d1d05014caa9549b448a4169bf503bcf5",
+        "raw_size": 4061
+      },
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/Normal-3abc616404.anim",
+      "sha256": "4dd795bea32dfbcfc1e82ead0098f004f2d9ba93010e9022fb2ce328e2187952"
+    },
+    {
+      "conversion_sha256": "13be6b7659a6746a6f1745a8ab55ca012050c5cd0340edf75e5f865fbd611d0c",
+      "identity": "CAB-fae735c2ceb3404cfd774705eaa8361e:-2849171038072524916",
+      "inputPath": "Animation/UI/Public/TabBottomBarCell_Off.anim",
+      "nativeGuid": "05a031aa32484346869b0349fff91e93",
+      "nativeKeyNormalizations": [
+        {
+          "path": "Content/text",
+          "property": "m_fontColor.r",
+          "redundantLeadingConstantKey": [
+            0,
+            0.13333334028720856,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "path": "Content/text",
+          "property": "m_fontColor.g",
+          "redundantLeadingConstantKey": [
+            0,
+            0.13333334028720856,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "path": "Content/text",
+          "property": "m_fontColor.b",
+          "redundantLeadingConstantKey": [
+            0,
+            0.13333334028720856,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "path": "Selected",
+          "property": "m_SizeDelta.x",
+          "redundantLeadingConstantKey": [
+            0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "path": "Selected",
+          "property": "m_Color.a",
+          "redundantLeadingConstantKey": [
+            0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "path": "Content/IconImg",
+          "property": "m_Color.r",
+          "redundantLeadingConstantKey": [
+            0,
+            0.13333334028720856,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "path": "Content/IconImg",
+          "property": "m_Color.g",
+          "redundantLeadingConstantKey": [
+            0,
+            0.13333334028720856,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "path": "Content/IconImg",
+          "property": "m_Color.b",
+          "redundantLeadingConstantKey": [
+            0,
+            0.13333334028720856,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "object_sha256": "79c62b90e247b560b3c801b843052f6eea9fc1732347a35f6c5d614d44bbeddc",
+      "original": {
+        "apk_entry": "assets/yoo/DefaultPackage/86a8b3049ff5f564e28126d62af4141f.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_animation_ui_public.bundle",
+        "bundle_hash": "86a8b3049ff5f564e28126d62af4141f",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-2849171038072524916",
+        "raw_sha256": "8f50ce82b2098fdbc053b2c1ad855130ae0fc4feb956a0393d010d6667dfa343",
+        "raw_size": 5937
+      },
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/TabBottomBarCell_Off-94b9e4e5d8.anim",
+      "sha256": "b035b69c67d41abce0046a1aee012adbd073027acb9b3113ace4b0565a4e0899"
+    },
+    {
+      "conversion_sha256": "6dd19397a2819ea43fea54ef01fca60f63b9a8afc2f75bb954a069c953bdfa8d",
+      "identity": "CAB-fae735c2ceb3404cfd774705eaa8361e:-4629522505758015844",
+      "inputPath": "Animation/UI/Public/TabBottomBarCellController.overrideController",
+      "nativeGuid": "6e76e4a08dfb1f9f9cf7a4b75bfc64da",
+      "object_sha256": "1c4c7ce11510a2e9de1e4955564c41a9a872682fce7091d88a1eca16730aa32e",
+      "original": {
+        "apk_entry": "assets/yoo/DefaultPackage/86a8b3049ff5f564e28126d62af4141f.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_animation_ui_public.bundle",
+        "bundle_hash": "86a8b3049ff5f564e28126d62af4141f",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-4629522505758015844",
+        "raw_sha256": "8f50ce82b2098fdbc053b2c1ad855130ae0fc4feb956a0393d010d6667dfa343",
+        "raw_size": 5937
+      },
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/TabBottomBarCellController-644bde8bb4.overrideController",
+      "sha256": "d4963378bceeeae39cb97eb27b42a5c3715074bfa57685aa968cee42235f187e"
+    },
+    {
+      "conversion_sha256": "d011f5424ac1475dfabd228290b08cfb672dcbe9461abcb6ad95d1aadb45fdaa",
+      "identity": "CAB-fae735c2ceb3404cfd774705eaa8361e:1218550075129455500",
+      "inputPath": "Animation/UI/Public/TabBottomBarCell_On.anim",
+      "nativeGuid": "1340d752f996ee19143096d8c0088134",
+      "nativeKeyNormalizations": [
+        {
+          "path": "Selected/Arrow",
+          "property": "m_AnchoredPosition.y",
+          "redundantLeadingConstantKey": [
+            0,
+            -14.199999809265137,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "path": "Selected/Arrow",
+          "property": "m_Alpha",
+          "redundantLeadingConstantKey": [
+            0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "object_sha256": "159d5bbb71910a9a38879e63ab5904f7b2cc83cea6709ef995d4202348cc310c",
+      "original": {
+        "apk_entry": "assets/yoo/DefaultPackage/86a8b3049ff5f564e28126d62af4141f.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_animation_ui_public.bundle",
+        "bundle_hash": "86a8b3049ff5f564e28126d62af4141f",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "1218550075129455500",
+        "raw_sha256": "8f50ce82b2098fdbc053b2c1ad855130ae0fc4feb956a0393d010d6667dfa343",
+        "raw_size": 5937
+      },
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/TabBottomBarCell_On-2e3d6c3a44.anim",
+      "sha256": "c43627cbcef1e3da85f98c29cd614b1c56c147186888b1a67b6ae41692b4c3cf"
+    }
+  ],
+  "format": 1,
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/team-invite-animation-native.json",
+      "sha256": "e0a8f62c7b71548ab4436173c78558364d875f575cd786b46cf64348589ecdb2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/native-team-ui-prefabs.json",
+      "sha256": "ef54582f790fcfe364e1105da388dbd6707bfac0a2c9a7954efd681662090aaa"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/native-team-invite-extra-prefabs.json",
+      "sha256": "bd278501a920b08d34ab65825d64b1f87eedbcaf3f8e215340aaefca22778d3d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/team-invite-extra-prefabs.json",
+      "sha256": "5b0475ddd276abd9459270c1ad8d95f7f56f1cfa8a32229dba3165a3991afd8f"
+    }
+  ],
+  "limitations": [
+    "Complete invitation window/player/NPC service integration remains pending."
+  ],
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "operation": "Retain all original controller, override-controller and Legacy/Mecanim clips referenced by the eight complete invitation prefabs. Verify original CAB identity and payload, all animation channels, times, values, controller motion closure and override pointers. Restore original Legacy signed-zero tangent fields. Decode compressed cubic coefficients independently, checking constant/step segments and documenting only redundant leading constant-key normalization and at most one float32 ULP of derived incoming-tangent rounding. Bind original Image/TMP animated properties.",
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/CharacterPanel_BgLoop-29a8bc2a37.anim",
+      "sha256": "f9476b987387aca76a3ac05c82b9e82748ea6d50dbc591a57bca871196912539"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/CharacterPanel_BgLoop-29a8bc2a37.anim.meta",
+      "sha256": "49fa8ff5d695acc80e8f2f7f68218faeab4aec53fe52b819bb0a33ad329c10ba"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/HpSlider-910c2277ed.anim",
+      "sha256": "56b33e66394c0546110590d93318dc3f0a5bfead3ee6ce122dfd40dc32affd9f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/HpSlider-910c2277ed.anim.meta",
+      "sha256": "f9ee4da0799115332f79b675ebeb964403c9ebd88836a9900b8f35336be45a18"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/UIDropDownController-f8bd595a1b.controller",
+      "sha256": "7a5f0dc657cdd514a6be13a7610e0ac8fc3dec35c2508294230f79beb2fae5a2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/UIDropDownController-f8bd595a1b.controller.meta",
+      "sha256": "87dbde5c055602d74a8b6ecbcc4f6c8e210b408cc2253520b500a24c74d59f31"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/UIDropDown_Hide-b009d9e34d.anim",
+      "sha256": "49b68ef6f79918b31f18735749642ff0e982a8cc80eda32e1b1ebf5f51d195b5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/UIDropDown_Hide-b009d9e34d.anim.meta",
+      "sha256": "3f769035ebc8fccc27490cca80213ef9dcf357af994e98ba55214b16e8d2bab2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/ToggleOn-20a13e25d4.anim",
+      "sha256": "7a6765b81e76195a20bc3d30de8431e2980e8fc40583a85cb25b60ece31719de"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/ToggleOn-20a13e25d4.anim.meta",
+      "sha256": "0529ac18c9218642314ba023ba807834f06fd02f779ad5a7dce217aa3a739e8c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/ToggleOff-8169f02949.anim",
+      "sha256": "60a1d4ae51219b3b49588fdf37db0b09e0ba88fd2591749557f61ba2d7996651"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/ToggleOff-8169f02949.anim.meta",
+      "sha256": "4f542409e923c1dc106093445bd8a410fda3d7067fc5d229a8a0da512adfcb8e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/UIDropDown_Show-800543c626.anim",
+      "sha256": "5b706239396e2fa8464930dca18d264425b1e7274d2aecbcf58185a85a5cc31b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/UIDropDown_Show-800543c626.anim.meta",
+      "sha256": "ef6f3ee9f3daaefd227e3e024281191fde49a7eff26ae670a9683e201dbfc7f5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/UIDropDown_Idle-4bdf0eb647.anim",
+      "sha256": "6f2348678d349fcdeb0a73cb96e35b7f776c4e0b80ec530161a96e67707dbe70"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/UIDropDown_Idle-4bdf0eb647.anim.meta",
+      "sha256": "6fabeb6db8af435281dd6e51fc5b4636c00cfd159ff64aa0efcd4cfd4585b947"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/ToggleAnimatorController-33009d8279.controller",
+      "sha256": "27ed41c8ef57828bb6afecc8e88cfa4fc6e008accb378ddc01e1a2dd215c7f8f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/ToggleAnimatorController-33009d8279.controller.meta",
+      "sha256": "2baad761839b387497662fcc633ffebd9c7b63421549db79bcdc5cb52c12ebcd"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/Disabled-de060053fa.anim",
+      "sha256": "fd758250c96b133b3195660a6c88a0591f91af5f7f5df43e83c9f19eaa013e51"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/Disabled-de060053fa.anim.meta",
+      "sha256": "afe5b8e0d5a540dbc2e1fa461ee03166d706e73c2014927d9ad4476a64fa32c7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/Pressed-60fc043ed1.anim",
+      "sha256": "6115af211859758598fa85d9e665897bdd12ac92d35237f82aeb4c2d7dfe3a49"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/Pressed-60fc043ed1.anim.meta",
+      "sha256": "08faeb1bfc9605488edb0b9fb55f495b058c04e22de2f8dbcf9514ed742d3bd2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/Selected-b5b376ab29.anim",
+      "sha256": "cc4c01706fbbd7a9bed9fa6f7f01ffc2c050c0909916d85ee553149d6d14a1b3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/Selected-b5b376ab29.anim.meta",
+      "sha256": "a148bef64e49daeea8963903d444f95d842f0a87e05c1773e734d908a7b4c304"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/Btn_Base_Click-93d34733b2.controller",
+      "sha256": "6c207940c5f36687d4bd742ff47352770c13acb9662e2c331412dac16688e384"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/Btn_Base_Click-93d34733b2.controller.meta",
+      "sha256": "54af48397f0b4ddc8cb7b61b32b77589705e65c80762b6ab0c13f8333c82aca4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/Highlighted-49bbd655ed.anim",
+      "sha256": "11c0bfc0348200c8a9d70e2ab44c681a447bb73e5ecfd20e0ac930e35e80ee07"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/Highlighted-49bbd655ed.anim.meta",
+      "sha256": "b958860e3f1ef8971369147adda895cd54217edd274a357d0666de3975b21ac4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/Normal-3abc616404.anim",
+      "sha256": "4dd795bea32dfbcfc1e82ead0098f004f2d9ba93010e9022fb2ce328e2187952"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/Normal-3abc616404.anim.meta",
+      "sha256": "b1186477a25a92bb80152aa1b296a5aa754cf8e421d841527c51ba17baa35700"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/TabBottomBarCell_Off-94b9e4e5d8.anim",
+      "sha256": "b035b69c67d41abce0046a1aee012adbd073027acb9b3113ace4b0565a4e0899"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/TabBottomBarCell_Off-94b9e4e5d8.anim.meta",
+      "sha256": "ae0d73ccab5e446c515b9c24ab7f244dfea7105a5032dff8537e0de002026c36"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/TabBottomBarCellController-644bde8bb4.overrideController",
+      "sha256": "d4963378bceeeae39cb97eb27b42a5c3715074bfa57685aa968cee42235f187e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/TabBottomBarCellController-644bde8bb4.overrideController.meta",
+      "sha256": "e53049a122556eec6ddc36d0d194e2cb248f31c6af979535c4d6a8944c3fcfc1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/TabBottomBarCell_On-2e3d6c3a44.anim",
+      "sha256": "c43627cbcef1e3da85f98c29cd614b1c56c147186888b1a67b6ae41692b4c3cf"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/TabBottomBarCell_On-2e3d6c3a44.anim.meta",
+      "sha256": "def50be936d68ce79ee1bce2daec6c6a29b62f5f9f74d80ec5cdf86424aa9446"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations.meta",
+      "sha256": "33f264f29aa4ad79556aeb85525987a42e8628ee9191f176adf0226f10ff90ec"
+    }
+  ]
+}

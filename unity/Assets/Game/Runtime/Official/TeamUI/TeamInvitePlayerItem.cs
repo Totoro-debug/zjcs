@@ -28,6 +28,9 @@ namespace Zjcs.Official.TeamUI
         {
             base.Configure(value);
             if (mInviter is WorldTeamInviter team) team.Initialize(value.InviteServices);
+            if (mInviter is WorldRoomInviter room) room.Initialize(value.ContextInviteServices);
+            if (mInviter is WorldChallengeInviter challenge) challenge.Initialize(value.ContextInviteServices);
+            if (mInviter is WorldCompanionInviter companion) companion.Initialize(value.ContextInviteServices);
             mNpcFriendshipLevelShow?.Configure(value);
             foreach (var hp in GetComponentsInChildren<TeamPlayerUIBase>(true)) hp.Configure(value.Hp);
             foreach (var head in GetComponentsInChildren<TeamHeadCharacterPortrait>(true)) head.Bind(value.Portraits);

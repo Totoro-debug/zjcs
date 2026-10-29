@@ -1,0 +1,112 @@
+{
+  "adapters": [
+    {
+      "path": "scripts/prepare_unity_map12_context_inviters.py",
+      "sha256": "eeb3f05a0cd78e05f0990cf82e5df235439378739a6f5cbc2156ec038e832ab0"
+    },
+    {
+      "path": "scripts/prepare_unity_player_play.py",
+      "sha256": "aec6959b628c45a26e1c48c6a88e73bdf5abb6d183fff842e829e90f9c2f68e5"
+    },
+    {
+      "path": "scripts/test_map12_team_invite_rules.py",
+      "sha256": "984bf21e1adc6ef020aac2b480c92b2151f60d996df3b7a49c4fb425d84bf84d"
+    },
+    {
+      "path": "scripts/fixtures/map12_team_invite_rules_harness.cs",
+      "sha256": "9ae2a367a480dcddfe4897b8b97f3cab423741ae415404eeb63858c03b4377c9"
+    }
+  ],
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "codeManifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "consumerBindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamInvitePlayerItem.cs",
+      "sha256": "faa3b89c59b54163e2f31a733415e04b0cf26711914f187cb5a9f860db7455a7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamInviteUiServices.cs",
+      "sha256": "3c7c53cb3f8e3dde517326061dcb495f7de8ba53ef73d3efb9b820bb10a943d2"
+    }
+  ],
+  "format": 1,
+  "limitations": [
+    "These components retain the complete original inactive invitation prefab hierarchy. Their original online modes remain subject to the confirmed offline availability rules.",
+    "Formal local NPC invitation and full window integration remain pending."
+  ],
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "operation": "Recover all awaits and branches from the original RoomInviter, ChallengeInviter and CompanionInviter async state machines. Preserve NPC early-return, room/team capacity error codes, response payload forwarding, challenge append-before-message, name-cache lookup, confirmation completion and cancellation code 112. The local service boundary replaces RPC, lite-info and popup service access.",
+  "originalCode": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/RoomInviter.cs",
+      "sha256": "615586a1072a14841b5ad1fa5671ddb7c0ebd7735627512dd39aa67ca6fb84d1"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ChallengeInviter.cs",
+      "sha256": "0aca6df30babaf620202f8e3dcbb42a182e532f689fb5206a29e869a38925b47"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/CompanionInviter.cs",
+      "sha256": "96f656cd68ebd9cb6b996c9b7690ff83319b25371507a06d21f101fdf60b1025"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/PlayerPlayRoomAction.cs",
+      "sha256": "7c81a9b7a5d4854519cfcb544350cc365d98873692b3f566ec60521187f773d3"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldRoomInviter.cs",
+      "sha256": "38603e27ebed7f6eba0e3c20e4fd58a64a7e8ccac57486666c2e2f1faa274a93"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldRoomInviter.cs.meta",
+      "sha256": "9c224b89c9c4827683b34485c489c5456b6cc8ad9180bc778d30ab572d92cc56"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldChallengeInviter.cs",
+      "sha256": "81d7b55ca4aea618438dd5707a2b32ba0f880720e08243bb987f3054ebfe5a1a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldChallengeInviter.cs.meta",
+      "sha256": "f97517d33f5654d752de8af33c922ea7086c23108b3f76b7c514cef919bf4c03"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldCompanionInviter.cs",
+      "sha256": "5eaa7f6e2b739da55d4274c64da5e8354e4e6cb567d4ad8ad297b6883cb4d55f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldCompanionInviter.cs.meta",
+      "sha256": "c92ad1676c9b3ca4f3e69f5a6ebba3ac1f1019c60a6e962714e1ac2e5795c51a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldContextInviteServices.cs",
+      "sha256": "1ac1d282d1065b7d3a11bd0b3f79ee6747cc95cd5f1eb6a1fc579196a30a1fec"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldContextInviteServices.cs.meta",
+      "sha256": "c63fe952dfeb6403b2936df3e8a87b11b472835db6640736b8752e158682dc6c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/PlayerPlay/PlayerPlayRoomAction.cs",
+      "sha256": "94ebf65a6d8dbd9d296958732b491ac414d03d685560910a1483e99579b92e95"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/PlayerPlay/PlayerPlayRoomAction.cs.meta",
+      "sha256": "b325464397b1132641c5704da0d6946b1c6b535e8096601c3e07bc105c5f83f3"
+    }
+  ]
+}

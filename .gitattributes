@@ -1223,3 +1223,21 @@ unity/Assets/Game/Runtime/Offline/World/NativeMap14DisplayData/** text eol=lf
 unity/Assets/Game/Editor/Map14/DisplayData.meta text eol=lf
 unity/Assets/Game/Editor/Map14/DisplayData/** text eol=lf
 unity/Assets/Official/World/Map/14/NativeDisplayData/**/*.bytes -text
+
+# Map12 original retained invitation components and complete animation closure.
+scripts/prepare_unity_map12_context_inviters.py text eol=lf
+scripts/prepare_unity_map12_team_invite_animation.py text eol=lf
+unity/Assets/Game/Runtime/Official/WorldUI/WorldContextInviteServices.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/WorldUI/WorldRoomInviter.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/WorldUI/WorldChallengeInviter.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/WorldUI/WorldCompanionInviter.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/PlayerPlay/PlayerPlayRoomAction.cs* text eol=lf
+unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.InviteAnimations.cs* text eol=lf
+unity/Assets/Official/World/Map/12/Source/team-invite-animation-native.json* text eol=lf
+unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations.meta text eol=lf
+unity/Assets/Official/World/Map/12/UI/Team/InviteAnimations/** text eol=lf
+scripts/verify_map12_invite_controllers.py text eol=lf
+unity/Assets/Game/Runtime/Offline/World/NativeMap12InviteAnimations.cs* text eol=lf
+unity/Assets/Official/World/Map/12/NativeTeamAnimations.meta text eol=lf
+unity/Assets/Official/World/Map/12/NativeTeamAnimations/** text eol=lf
+unity/Assets/Official/World/Map/12/NativeTeamAnimations/**/*.bytes -text

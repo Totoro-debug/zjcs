@@ -1,0 +1,393 @@
+{
+  "format": 1,
+  "generator": {
+    "path": "scripts/verify_map12_invite_controllers.py",
+    "sha256": "28eb8f81684ea22b24841ddc47e20241f412ada34659c3e65c9fcf899317ad5b"
+  },
+  "limitations": [
+    "Native Windows load and 14-clip/320-value Animator binding verification passed in DX12 Play Mode; existing TeamPanel two-size simulated-click regression passed. Formal invitation prefab, NPC appearance and local party integration remain pending."
+  ],
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "operation": "Use the real Unity StandaloneWindows64 container, native type metadata and MonoScripts. Restore every original AnimationClip/controller/override payload with only explicit local AnimationClip, AnimatorController and Unity Image/TMP MonoScript pointer relocation. Preserve original compressed channels and compiled state-loop flags instead of accepting Unity authoring recompile changes. Verify original byte serialization, output hashes and complete consumption with the actual Windows type metadata.",
+  "originalObjects": [
+    {
+      "identity": "CAB-0170758528fdc48420d4ae42427b44d7:-1553133123068916769",
+      "name": "CharacterPanel_BgLoop",
+      "originalExportPath": "Prefabs/UI/Character/CharacterPanel_BgLoop.anim",
+      "originalPayloadSha256": "baebfff1c471a148a32b244842ae7d3a874d80d7468854ce6a37897eff7dba6a",
+      "type": "AnimationClip",
+      "windowsPathId": "2884850929991010691",
+      "windowsPayloadSha256": "baebfff1c471a148a32b244842ae7d3a874d80d7468854ce6a37897eff7dba6a"
+    },
+    {
+      "identity": "CAB-154d0356819b205c30c820e691ce28d4:4115514743812544491",
+      "name": "HpSlider",
+      "originalExportPath": "Animation/UI/Cooking/HpSlider.anim",
+      "originalPayloadSha256": "413df69e2bef00884b3e984ccbe11ae39431292e72ac51ace353936953a61ebe",
+      "type": "AnimationClip",
+      "windowsPathId": "2638970713985360385",
+      "windowsPayloadSha256": "3ff8896801c778298246136c2b6cf948ebb80cbfd1cba4af8e012c8aa5d1035e"
+    },
+    {
+      "identity": "CAB-acb89e46c0e3f584025132259703b7fd:-8389467541782740115",
+      "name": "UIDropDownController",
+      "originalExportPath": "Animation/UI/UIDropDownController.controller",
+      "originalPayloadSha256": "b3215a43b2336f14a6f01ffad1fae83379818f26d4b64d75d0b9e6f333c52f9f",
+      "type": "AnimatorController",
+      "windowsPathId": "-9141403621219380429",
+      "windowsPayloadSha256": "41725757942a59a57272c46cec598d5a47bc1e2ea49d5af4cf4e1dcac7ea2415"
+    },
+    {
+      "identity": "CAB-acb89e46c0e3f584025132259703b7fd:-8560240761830219616",
+      "name": "UIDropDown_Hide",
+      "originalExportPath": "Animation/UI/UIDropDown_Hide.anim",
+      "originalPayloadSha256": "6528fc27167aafc0a618a811eaa402d7294de094bdad4244896651a48a5564df",
+      "type": "AnimationClip",
+      "windowsPathId": "6529530532830587220",
+      "windowsPayloadSha256": "23c36c91e6e096e10f8ee5866f8f5e60147d17b8c9321467fbe719a0512add53"
+    },
+    {
+      "identity": "CAB-acb89e46c0e3f584025132259703b7fd:-8893950686705692815",
+      "name": "ToggleOn",
+      "originalExportPath": "Animation/UI/ToggleOn.anim",
+      "originalPayloadSha256": "e899f33df9842f70c52470845e66a119f568b1d08493a44be0928df470a63a47",
+      "type": "AnimationClip",
+      "windowsPathId": "5229349237583628329",
+      "windowsPayloadSha256": "e899f33df9842f70c52470845e66a119f568b1d08493a44be0928df470a63a47"
+    },
+    {
+      "identity": "CAB-acb89e46c0e3f584025132259703b7fd:2088333010137370481",
+      "name": "ToggleOff",
+      "originalExportPath": "Animation/UI/ToggleOff.anim",
+      "originalPayloadSha256": "86db43cb9db9e8500e773066c23e3d7abf1ff148f848c8441880363cf8be147e",
+      "type": "AnimationClip",
+      "windowsPathId": "8750384407290754081",
+      "windowsPayloadSha256": "86db43cb9db9e8500e773066c23e3d7abf1ff148f848c8441880363cf8be147e"
+    },
+    {
+      "identity": "CAB-acb89e46c0e3f584025132259703b7fd:4383028793889189903",
+      "name": "UIDropDown_Show",
+      "originalExportPath": "Animation/UI/UIDropDown_Show.anim",
+      "originalPayloadSha256": "7ea3350da750c095e2739dd2f1f5cffdc7816992efedd000c7c4d6d396ea4ec8",
+      "type": "AnimationClip",
+      "windowsPathId": "2632153293071486766",
+      "windowsPayloadSha256": "5aaa3c63476f04160cc4fd9631f0d46918b2d8ab3d059537b32f0c856217c8b4"
+    },
+    {
+      "identity": "CAB-acb89e46c0e3f584025132259703b7fd:4413146016443390695",
+      "name": "UIDropDown_Idle",
+      "originalExportPath": "Animation/UI/UIDropDown_Idle.anim",
+      "originalPayloadSha256": "8273d9ed49f65c3d3bec50dcf38221d55bf355bab32360e8f7c72a5189c94336",
+      "type": "AnimationClip",
+      "windowsPathId": "617425421866836498",
+      "windowsPayloadSha256": "8273d9ed49f65c3d3bec50dcf38221d55bf355bab32360e8f7c72a5189c94336"
+    },
+    {
+      "identity": "CAB-acb89e46c0e3f584025132259703b7fd:9024401823200431985",
+      "name": "ToggleAnimatorController",
+      "originalExportPath": "Animation/UI/ToggleAnimatorController.controller",
+      "originalPayloadSha256": "3bd65aabebe6bec190bb0ff71ca049f6e397a1c9c6f7b85a5811b9b02f75d4be",
+      "type": "AnimatorController",
+      "windowsPathId": "-3787061822279282335",
+      "windowsPayloadSha256": "484ea005ccb0dd926ff7d0cf5179c42439db063cb04ff9d2913ec2350c053f0a"
+    },
+    {
+      "identity": "CAB-c7fb6f6fa5e12c6915469bf220c6cfff:-3058570119357427593",
+      "name": "Disabled",
+      "originalExportPath": "Animation/UI/Common/Disabled.anim",
+      "originalPayloadSha256": "e1b41eacc86057fde63ae1b32f4e70ee1ad91217452325727afa6466edd2a64f",
+      "type": "AnimationClip",
+      "windowsPathId": "1050234218944355133",
+      "windowsPayloadSha256": "e1b41eacc86057fde63ae1b32f4e70ee1ad91217452325727afa6466edd2a64f"
+    },
+    {
+      "identity": "CAB-c7fb6f6fa5e12c6915469bf220c6cfff:-4299415247689576329",
+      "name": "Pressed",
+      "originalExportPath": "Animation/UI/Common/Pressed.anim",
+      "originalPayloadSha256": "b06163d231d9946d298f04fa95014bd722ea8967fb752d4a611f2b6fea9f5da4",
+      "type": "AnimationClip",
+      "windowsPathId": "2368133848413767145",
+      "windowsPayloadSha256": "b06163d231d9946d298f04fa95014bd722ea8967fb752d4a611f2b6fea9f5da4"
+    },
+    {
+      "identity": "CAB-c7fb6f6fa5e12c6915469bf220c6cfff:-510987642694758281",
+      "name": "Selected",
+      "originalExportPath": "Animation/UI/Common/Selected.anim",
+      "originalPayloadSha256": "29a913ba2061a3fbcafbf0de7f7ecd48dc0f055b7b83688b78188d0f1d42eaae",
+      "type": "AnimationClip",
+      "windowsPathId": "-8753689410677190390",
+      "windowsPayloadSha256": "29a913ba2061a3fbcafbf0de7f7ecd48dc0f055b7b83688b78188d0f1d42eaae"
+    },
+    {
+      "identity": "CAB-c7fb6f6fa5e12c6915469bf220c6cfff:-6001556034672029577",
+      "name": "Btn_Base_Click",
+      "originalExportPath": "Animation/UI/Common/Btn_Base_Click.controller",
+      "originalPayloadSha256": "11147b9d40965317d03fb30843d21eac828243a75e56f24f618349dd7d5be6e0",
+      "type": "AnimatorController",
+      "windowsPathId": "3177820528946040387",
+      "windowsPayloadSha256": "c8e939c1caf254dfe8772caff3831b903d4b29b4b6f0da585edf4625e7c195fa"
+    },
+    {
+      "identity": "CAB-c7fb6f6fa5e12c6915469bf220c6cfff:-7480438013181063049",
+      "name": "Highlighted",
+      "originalExportPath": "Animation/UI/Common/Highlighted.anim",
+      "originalPayloadSha256": "bd2cfada6cc3b52aae6074059fb93f3d07bbb2484fca5a7abe5863247d61597c",
+      "type": "AnimationClip",
+      "windowsPathId": "8754649972061150570",
+      "windowsPayloadSha256": "bd2cfada6cc3b52aae6074059fb93f3d07bbb2484fca5a7abe5863247d61597c"
+    },
+    {
+      "identity": "CAB-c7fb6f6fa5e12c6915469bf220c6cfff:4450864898414448759",
+      "name": "Normal",
+      "originalExportPath": "Animation/UI/Common/Normal.anim",
+      "originalPayloadSha256": "ba857058e3722d722cf1daa0074dd40992385f6dd09926ca7f78e88a00cb48ff",
+      "type": "AnimationClip",
+      "windowsPathId": "-5112227150818958983",
+      "windowsPayloadSha256": "ba857058e3722d722cf1daa0074dd40992385f6dd09926ca7f78e88a00cb48ff"
+    },
+    {
+      "identity": "CAB-fae735c2ceb3404cfd774705eaa8361e:-2849171038072524916",
+      "name": "TabBottomBarCell_Off",
+      "originalExportPath": "Animation/UI/Public/TabBottomBarCell_Off.anim",
+      "originalPayloadSha256": "79c62b90e247b560b3c801b843052f6eea9fc1732347a35f6c5d614d44bbeddc",
+      "type": "AnimationClip",
+      "windowsPathId": "-5229511608346444644",
+      "windowsPayloadSha256": "df7dd8c3d11e54d40dd129ee63abac1d9dfeaae0dc2cd1a02007e88b06d8e995"
+    },
+    {
+      "identity": "CAB-fae735c2ceb3404cfd774705eaa8361e:-4629522505758015844",
+      "name": "TabBottomBarCellController",
+      "originalExportPath": "Animation/UI/Public/TabBottomBarCellController.overrideController",
+      "originalPayloadSha256": "1c4c7ce11510a2e9de1e4955564c41a9a872682fce7091d88a1eca16730aa32e",
+      "type": "AnimatorOverrideController",
+      "windowsPathId": "-6323555878545074039",
+      "windowsPayloadSha256": "10da505d9c940b17446b3c69a08e8fdf5d2e8e952bb57ff2aa5e9748c278ad71"
+    },
+    {
+      "identity": "CAB-fae735c2ceb3404cfd774705eaa8361e:1218550075129455500",
+      "name": "TabBottomBarCell_On",
+      "originalExportPath": "Animation/UI/Public/TabBottomBarCell_On.anim",
+      "originalPayloadSha256": "159d5bbb71910a9a38879e63ab5904f7b2cc83cea6709ef995d4202348cc310c",
+      "type": "AnimationClip",
+      "windowsPathId": "-8569461356758634656",
+      "windowsPayloadSha256": "f1d31a046d593ffcdf6c0a49934fa4d8a58da50e8dc5cc80a8279bd220a9492e"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/12/NativeTeamAnimations/Resources/Map12/TeamAnimations/native-windows.bytes",
+      "sha256": "8174f22ad9589ab9e81a5d59f24d9d71ba9d0c39a0be79f4e1327531854be00f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/NativeTeamAnimations/Resources/Map12/TeamAnimations/native-windows.bytes.meta",
+      "sha256": "fc2c5c8c2d20f2a1a84777b3c59287f0428ce29629d5f26ae0f60f837b277674"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/NativeTeamAnimations/Resources/Map12/TeamAnimations.meta",
+      "sha256": "8932fd1bf42b1003f3434df9695ccb3596465a42649068828149916a2405d44e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/NativeTeamAnimations/Resources/Map12.meta",
+      "sha256": "c93b6e22bbe918e3b1ceedcb6802d2bfd42acbc7f1e0a8485bfa1b932f1b0949"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/NativeTeamAnimations/Resources.meta",
+      "sha256": "89eee81ff4ae8b06b19b81b9cb54c64a5578e31a5b41d7458f6145938a92b749"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/NativeTeamAnimations.meta",
+      "sha256": "71b941095d25a52cf6e5dbd8310c1a290a71852c54e375e9feffc42706790c0b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/NativeTeamAnimations/Resources/Map12/TeamAnimations/catalog.json",
+      "sha256": "941055a48e28d010d4fd9cfb1353efacf502b072d1536e681ab2acfaac9d8493"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/NativeTeamAnimations/Resources/Map12/TeamAnimations/catalog.json.meta",
+      "sha256": "7f35ea5ba11d012cab6347897de04eb1c7f4d41d12c924e92dbdf383281b00d2"
+    }
+  ],
+  "platform": 19,
+  "relocatedPointers": [
+    {
+      "kind": "MonoScript",
+      "original": "CAB-154d0356819b205c30c820e691ce28d4:350208831926335389",
+      "windowsPathId": "-7030229213176759517"
+    },
+    {
+      "kind": "AnimationClip",
+      "original": "CAB-acb89e46c0e3f584025132259703b7fd:4413146016443390695",
+      "windowsPathId": "617425421866836498"
+    },
+    {
+      "kind": "AnimationClip",
+      "original": "CAB-acb89e46c0e3f584025132259703b7fd:4383028793889189903",
+      "windowsPathId": "2632153293071486766"
+    },
+    {
+      "kind": "AnimationClip",
+      "original": "CAB-acb89e46c0e3f584025132259703b7fd:-8560240761830219616",
+      "windowsPathId": "6529530532830587220"
+    },
+    {
+      "kind": "MonoScript",
+      "original": "CAB-acb89e46c0e3f584025132259703b7fd:350208831926335389",
+      "windowsPathId": "-7030229213176759517"
+    },
+    {
+      "kind": "MonoScript",
+      "original": "CAB-acb89e46c0e3f584025132259703b7fd:350208831926335389",
+      "windowsPathId": "-7030229213176759517"
+    },
+    {
+      "kind": "AnimationClip",
+      "original": "CAB-acb89e46c0e3f584025132259703b7fd:-8893950686705692815",
+      "windowsPathId": "5229349237583628329"
+    },
+    {
+      "kind": "AnimationClip",
+      "original": "CAB-acb89e46c0e3f584025132259703b7fd:2088333010137370481",
+      "windowsPathId": "8750384407290754081"
+    },
+    {
+      "kind": "AnimationClip",
+      "original": "CAB-c7fb6f6fa5e12c6915469bf220c6cfff:4450864898414448759",
+      "windowsPathId": "-5112227150818958983"
+    },
+    {
+      "kind": "AnimationClip",
+      "original": "CAB-c7fb6f6fa5e12c6915469bf220c6cfff:-7480438013181063049",
+      "windowsPathId": "8754649972061150570"
+    },
+    {
+      "kind": "AnimationClip",
+      "original": "CAB-c7fb6f6fa5e12c6915469bf220c6cfff:-4299415247689576329",
+      "windowsPathId": "2368133848413767145"
+    },
+    {
+      "kind": "AnimationClip",
+      "original": "CAB-c7fb6f6fa5e12c6915469bf220c6cfff:-510987642694758281",
+      "windowsPathId": "-8753689410677190390"
+    },
+    {
+      "kind": "AnimationClip",
+      "original": "CAB-c7fb6f6fa5e12c6915469bf220c6cfff:-3058570119357427593",
+      "windowsPathId": "1050234218944355133"
+    },
+    {
+      "kind": "MonoScript",
+      "original": "CAB-fae735c2ceb3404cfd774705eaa8361e:7477354737935883349",
+      "windowsPathId": "-5755350681981302373"
+    },
+    {
+      "kind": "MonoScript",
+      "original": "CAB-fae735c2ceb3404cfd774705eaa8361e:7477354737935883349",
+      "windowsPathId": "-5755350681981302373"
+    },
+    {
+      "kind": "MonoScript",
+      "original": "CAB-fae735c2ceb3404cfd774705eaa8361e:7477354737935883349",
+      "windowsPathId": "-5755350681981302373"
+    },
+    {
+      "kind": "MonoScript",
+      "original": "CAB-fae735c2ceb3404cfd774705eaa8361e:350208831926335389",
+      "windowsPathId": "-7030229213176759517"
+    },
+    {
+      "kind": "MonoScript",
+      "original": "CAB-fae735c2ceb3404cfd774705eaa8361e:350208831926335389",
+      "windowsPathId": "-7030229213176759517"
+    },
+    {
+      "kind": "MonoScript",
+      "original": "CAB-fae735c2ceb3404cfd774705eaa8361e:350208831926335389",
+      "windowsPathId": "-7030229213176759517"
+    },
+    {
+      "kind": "MonoScript",
+      "original": "CAB-fae735c2ceb3404cfd774705eaa8361e:350208831926335389",
+      "windowsPathId": "-7030229213176759517"
+    },
+    {
+      "kind": "MonoScript",
+      "original": "CAB-fae735c2ceb3404cfd774705eaa8361e:350208831926335389",
+      "windowsPathId": "-7030229213176759517"
+    },
+    {
+      "kind": "AnimatorController",
+      "original": "CAB-acb89e46c0e3f584025132259703b7fd:9024401823200431985",
+      "windowsPathId": "-3787061822279282335"
+    },
+    {
+      "kind": "AnimationClip",
+      "original": "CAB-acb89e46c0e3f584025132259703b7fd:2088333010137370481",
+      "windowsPathId": "8750384407290754081"
+    },
+    {
+      "kind": "AnimationClip",
+      "original": "CAB-fae735c2ceb3404cfd774705eaa8361e:-2849171038072524916",
+      "windowsPathId": "-5229511608346444644"
+    },
+    {
+      "kind": "AnimationClip",
+      "original": "CAB-acb89e46c0e3f584025132259703b7fd:-8893950686705692815",
+      "windowsPathId": "5229349237583628329"
+    },
+    {
+      "kind": "AnimationClip",
+      "original": "CAB-fae735c2ceb3404cfd774705eaa8361e:1218550075129455500",
+      "windowsPathId": "-8569461356758634656"
+    },
+    {
+      "kind": "MonoScript",
+      "original": "CAB-fae735c2ceb3404cfd774705eaa8361e:7477354737935883349",
+      "windowsPathId": "-5755350681981302373"
+    },
+    {
+      "kind": "MonoScript",
+      "original": "CAB-fae735c2ceb3404cfd774705eaa8361e:7477354737935883349",
+      "windowsPathId": "-5755350681981302373"
+    },
+    {
+      "kind": "MonoScript",
+      "original": "CAB-fae735c2ceb3404cfd774705eaa8361e:7477354737935883349",
+      "windowsPathId": "-5755350681981302373"
+    },
+    {
+      "kind": "MonoScript",
+      "original": "CAB-fae735c2ceb3404cfd774705eaa8361e:350208831926335389",
+      "windowsPathId": "-7030229213176759517"
+    },
+    {
+      "kind": "MonoScript",
+      "original": "CAB-fae735c2ceb3404cfd774705eaa8361e:350208831926335389",
+      "windowsPathId": "-7030229213176759517"
+    },
+    {
+      "kind": "MonoScript",
+      "original": "CAB-fae735c2ceb3404cfd774705eaa8361e:350208831926335389",
+      "windowsPathId": "-7030229213176759517"
+    },
+    {
+      "kind": "MonoScript",
+      "original": "CAB-fae735c2ceb3404cfd774705eaa8361e:350208831926335389",
+      "windowsPathId": "-7030229213176759517"
+    },
+    {
+      "kind": "MonoScript",
+      "original": "CAB-fae735c2ceb3404cfd774705eaa8361e:350208831926335389",
+      "windowsPathId": "-7030229213176759517"
+    }
+  ],
+  "source": {
+    "path": "unity/Assets/Official/World/Map/12/Source/team-invite-animation-native.json",
+    "sha256": "e0a8f62c7b71548ab4436173c78558364d875f575cd786b46cf64348589ecdb2"
+  },
+  "unityBuildEntry": {
+    "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.InviteAnimations.cs",
+    "sha256": "458eee0a864e2e6d7f50122ea1f5235297460f81cbaab949838e70590595707c"
+  },
+  "unityWindowsBuildSha256": "4571dcee29bd6e027b8d01c855efa32a4820f897deb6cc0f641fb7af11f60b0f"
+}
