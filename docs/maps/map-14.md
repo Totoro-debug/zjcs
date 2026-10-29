@@ -309,6 +309,8 @@ Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式
 
 - 共享视图来源清单的文本哈希统一按 LF 计算，覆盖 C# 和程序集配置；可见性来源清单同步记录相应生成器与输出，保证原始输入哈希与可提交的输出哈希分别可复核。
 
+- 地图显示查询已接入三张原始 Luban 表：Map/map、Map/map_area、Map/map_logic_entity_tag 的实际原字节分别核对 APK／所选云端来源及既有对象哈希，通过未改写的原 GConfig 解析器加载并执行 PostParse；所需 GameSettings 在独立解析器作用域加载，不替换全局 Parsers 或文件加载工厂。实体标签函数直接提取原 MapEntityExtra.GetEntityTag，仅将 PlayerMap／Parsers 入口绑定到本地服务；逻辑 ID 映射调用原 MapLoEntityIdManager，保留缺映射、跨容器和空标签分支。显示实体的位置／Removing 标志读取原字段，地图分组／区域标签读取原解析器，区域与地表查询调用原根组件；销毁与低内存禁用状态须由宿主显式提供。内置屏 Unity 2022.3.57f1c2／D3D11 隔离导入、编译与 Play Mode 已验证原表解析／后处理、原标签“封魔峡”、缺行／空标签／容器隔离、字段实时读取、宿主状态转发和作用域恢复；原共享可见性、四类整根雕像及费用／雷达／输入／容器模块回归通过，实际画面已查看，根工程静态检查通过。来源见[地图显示数据来源清单](../../assets/reference/official-map/map14-native-display-data-source-manifest.json)，生成器 scripts/prepare_unity_map14_display_data.py，原函数位于 Runtime/Official/World/Map14DisplayTags，本地接线位于 Runtime/Offline/World/NativeMap14DisplayData，检查入口 OfficialMap14DisplayDataAcceptance.Run。标签读取夹具将放置实体 201 的原 LoGridTransform 位置／方向／翻转恢复到原 6106 模板后，按原注册、Awake、容器 Start 顺序验证；未据此宣称其地城玩法已接通。正式放置实体映射、四雕像宿主接线、地图／玩家／原 UI／模拟鼠标／存档、完整 ProjectTools.Validate 与 Windows Player 仍待完成。
+
 ## 自定义实现
 
 共享序列化的 Windows 依赖适配：使用固定 MIT MessagePack `1.9.11` 发布包及其仓库提交 `6cbd8196e7dbe9b8810d7620f4542c3db9388753` 的 Unity 类型支持；该版本仅为平台依赖，不声称是官方原版本。依官方固定 AOT 方法修正原始单精度浮点编码，并迁入原 Vector3／Quaternion 方法，通过 GFrameCore 类型转发维持原 Console ABI；原生成格式器 IL 与地图载荷不改写。完整发布许可随本地资源交付，加载器及反射注册表作用域结束后恢复原绑定。
