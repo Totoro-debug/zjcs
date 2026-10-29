@@ -629,6 +629,7 @@ namespace Zjcs.Editor.Skills
             });
             OfflineSkillDefinition promotionDefinition = progression.SkillDefinition(promotionSkillId);
             int rankBeforePromotion = OfflineSkillProgression.OwnedRank(progression.Player.Skills, promotionSkillId);
+            int qualityBeforePromotion = progression.SkillRules.RankDisplays.First(value => value.Rank == rankBeforePromotion).Quality;
             OfflineSkillRankCost rankCost = promotionDefinition?.RankCosts?.FirstOrDefault(value => value.CurrentRank == rankBeforePromotion);
             Require(promotionSkillId > 0 && rankCost != null, "The official profession chain has no un-equipped skill eligible for rank promotion.");
             foreach (OfflineSkillItemCount cost in rankCost.Items)
@@ -663,8 +664,19 @@ namespace Zjcs.Editor.Skills
             yield return new WaitForSecondsRealtime(.6f);
             SimulatePointerClick(rankUpgradeButton);
             Require(OfflineSkillProgression.OwnedRank(progression.Player.Skills, promotionSkillId) == rankBeforePromotion + 1, "A simulated pointer click did not apply the official skill rank promotion: " + panel.LastMessage);
-            Require(UnityEngine.Object.FindObjectsOfType<TMPro.TMP_Text>(true).Any(value => value.name == "SkillNameText" && value.isActiveAndEnabled), "The official rank promotion result dialog did not render.");
-            Require(panel.HandleEscape(), "The rank promotion result did not handle Escape.");
+            int qualityAfterPromotion = progression.SkillRules.RankDisplays.First(value => value.Rank == rankBeforePromotion + 1).Quality;
+            if (qualityBeforePromotion != qualityAfterPromotion)
+            {
+                Require(UnityEngine.Object.FindObjectsOfType<TMPro.TMP_Text>(true).Any(value => value.name == "SkillNameText" && value.isActiveAndEnabled), "The official quality-change rank promotion dialog did not render.");
+                Require(panel.HandleEscape(), "The rank promotion result did not handle Escape.");
+            }
+            else
+            {
+                Require(UnityEngine.Object.FindObjectsOfType<Transform>(true).Any(value => value.name == "skill_promote" && value.gameObject.activeInHierarchy), "Same-quality promotion did not remain in the official cultivation panel.");
+                Require(!UnityEngine.Object.FindObjectsOfType<Transform>(true).Any(value => value.name == "skill_rank_notify" && value.gameObject.activeInHierarchy), "Same-quality promotion incorrectly opened the quality-change notification.");
+            }
+            Require(panel.HandleEscape(), "The official cultivation panel did not close after rank promotion.");
+            Require(!UnityEngine.Object.FindObjectsOfType<Transform>(true).Any(value => value.name == "skill_promote" && value.gameObject.activeInHierarchy), "The official cultivation panel remained over the skill plan controls.");
             OfflineSkillProfile beforeInsufficientPromotion = progression.Player.Skills.Clone();
             OfflineOwnedSkill rollbackCandidate = progression.Player.Skills.Skills.FirstOrDefault(value => value != null && value.ClassId != promotionSkillId && progression.SkillDefinition(value.ClassId)?.RankCosts?.Any(cost => cost.CurrentRank == value.Rank) == true);
             if (rollbackCandidate != null)

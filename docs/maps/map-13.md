@@ -2,7 +2,7 @@
 
 [总索引](../README.md)
 
-状态：未完成。官方配置、水路规则、战斗／剧情数据和原分区场景／地区标签已迁移；共享 Map13 入口数据闭包、角色级进度与跟随者状态已接入。正式主线宿主已在内置屏 Play Mode 实际加载原分区与 HUD，并验证模拟移动及位置／迷雾存档冷重开；完整剧情、实体 prefab、交互和 Windows Player 仍在进行。单机地图顺序已确认：Map12 完成后开放 Map13。Map12 方尖碑 8101 胜利结果按本地图配置的目标 13 写入带回执的本地解锁。
+状态：未完成。官方配置、水路规则、战斗／剧情数据和原分区场景／地区标签已迁移；共享 Map13 入口数据闭包、角色级进度与跟随者状态已接入，原生环境、实体 prefab、完整交互和 Windows 发布仍在进行。单机地图顺序已确认：Map12 完成后开放 Map13。Map12 方尖碑 8101 胜利结果按本地图配置的目标 13 写入带回执的本地解锁。
 
 ## 地图简介
 
@@ -303,7 +303,7 @@ Map13 原剧情 prefab Windows 转换与 NPC 序列：固定 871_156598 的 278 
 
 ## 自定义实现
 
-已确认的跟随者单机方案：`AddNpcFollowerNode` 按节点配置将 8402／8440／8441／8442 去重写入持久化跟随者列表，`RemovePlayerNpcFollowerAllNode` 清空。四名 NPC 的官方骨骼包、原 Atlas 高精度页已可从本地资源加载；原动画、材质、跟随队列与正式地图显示尚未接入，正式地图存档流程验证也未完成。
+已确认的跟随者单机方案：`AddNpcFollowerNode` 按节点配置将 8402／8440／8441／8442 去重写入持久化跟随者列表，`RemovePlayerNpcFollowerAllNode` 清空。对应官方实体、原跟随队列的显示绑定及正式地图存档验证尚未完成。
 
 官方 `WorldConveyanceComponent.FireTrigger()` 没有服务器移动实现，水位执行也缺少服务端逻辑；已核对客户端载人实现、`LoWorldConveyanceComponent.OffsetPath`、`StageResultElevatorStateUpdateComponent` 和 `StageDatas`。用户已允许并在独立规则模块实现：每次沿原配置顺序前进一段，末端后沿原路径逐段反向返回；载人保留原偏移，路径被阻挡则不移动；水位按原 `StageDatas` 顺序执行，不发奖励。
 
@@ -315,19 +315,17 @@ Map13 原剧情 prefab Windows 转换与 NPC 序列：固定 871_156598 的 278 
 
 泽之国实体材质纹理：依据当前 338 个原实体／显示 prefab（含已确认的四名剧情跟随 NPC）及 1,373 个原 bundle 输入，严格解码 1,843 份原材质、5,156 处非空引用及 1,491 个原纹理对象。1,485 张有像素纹理已转为原生 Texture2D，保留全部 6,746 级 mip、原 ASTC 解码 profile、行序、色彩空间和采样参数；6 个原零尺寸动态字体图集仅保留原描述。
 
-四名剧情跟随者另按原 `YooAssetTextureLoader` 的 GUID、当前 AssetTable 和精确 bundle／对象 ID，恢复四张 NPC 原 Atlas 高精度页及 8440 骨骼引用的原武器页 `pWeapon_100_8440.png`，保留源 ASTC profile、尺寸、行序、采样设置和 mip，写入显式本地 Resources 目录。该资源迁移不代表约束求值或地图内跟随视图已完成。
-
 依据：[纹理来源](../../assets/reference/official-map/map13-native-entity-textures-source-manifest.json)、[原生绑定](../../assets/reference/official-map/map13-native-entity-textures-binding-source-manifest.json)。
 
 ## 尚未实现
 
-- 正式主线入口 Play Mode 已实际加载原分区、环境、HUD 和角色；模拟鼠标命中移动玩家，并验证 `(113,233)` 到 `(114,233)` 的位置、原压缩网格可见度存档及冷重开。内置屏 D3D12 截图已查看。完整场景管线、全部实体／特效／导演、BGM／配音、官方功能界面及正式交互仍未接齐；此验收不代表整图可玩。
+- 正式入口激活原管线与完整场景，接通玩家／世界状态、角色与实体、其他特效／导演、BGM／配音及全部官方 HUD／功能界面；场景／组件夹具不作为正式地图入口。
 - 官方剧情节点目前不能全量按离线规则执行。客户端的 `ServerRunNode` 通用请求为 `StoryRunNodeRequest`（OpCode 4263，字段 `GraphName`／`NodeId`／`Paths`／`Inputs`／`Param`），消费 `StoryRunNodeResponse`（OpCode 31628，含 `Outputs`／`Param`）；APK 未包含对应服务器执行逻辑。当前 88 张客户端图及 `Source/server-story-records.json` 的导出记录都不能证明服务器返回值或状态变更。
 - 已确认的服务端节点离线行为：`CameraMoveAndUnlockAreaNode` 的 9 个节点实例按原地图几何和节点范围本地解锁；`WorldStopMoveNode` 在剧情运行期间锁定地图移动，正常结束或中断时恢复；`AddNpcFollowerNode` 按节点配置将 8402／8440／8441／8442 去重写入持久化跟随者列表，`RemovePlayerNpcFollowerAllNode` 清空；跟随显示须绑定对应官方实体和原跟随队列，当前玩家克隆显示仍待替换。以上实现仍待接入共享剧情执行器。共享解释器已有 `SetMapLogicEntitySetStateNode` 执行分支，可按载荷写本地逻辑标签状态、刷新实体并保存；泽之国正式宿主及 Play Mode 流程未接入验证。用户确认的本地推导已接入：`PlayerActiveMapNode` 以目标地图 ID 写入幂等解锁事务；`PlayerWorldAloneAppearNode` 将目标 ID 去重持久化于地图存档的独立世界列表。此两节点仍待泽之国正式剧情流程运行验证。用户已确认 `HandInItemNode` 按配置数量在确认时原子扣除，取消／中断不扣，固定奖励按配置次数和本地领取凭据发放；官方原交付窗口尚未转换接入。
 - 入口状态也依赖服务器地图状态：客户端 `HomeToMapNode.TryGetLastPublicActivedEntryId` 检查按地图降序的公开地区、女神激活和活动入口实体；本地存档目前没有完整的地区公开状态／活动入口实体记录。Map13 `MapWorldActivedCondition` 只证明 `WorldMapRegionProgressDict` 中存在 MapClassId 13 时条件成立，不证明首次激活准入规则。首次开放按已确认的顺序进度处理；活跃入口实体选择仍待接入原生 MapSelect UI 和本地地区状态。
 - 泽之国入口、正常移动、海之宫剧情、探索／任务、战斗、交互、条件、奖励、小地图、出口，以及五组手动水路和终端原界面。
 - 水路位置、方向、水位、终端扣费意图、奖励凭据及完整地图状态的正式本地存档；验证取消、条件不足、重复操作、中断与重新启动。
-- 完整地图的实际流程及模拟鼠标交互、剧情／战斗／探索／奖励／水路存档恢复，以及 Windows 构建／Player 启动仍未完成；通过后发布 `D:/Desktop/杖剑传说/杖剑传说.exe`。目前没有包含本图完整成果的发布版本。
+- 内置屏  的实际流程和模拟鼠标命中验证、正式运行画面、Windows 构建／Player 启动与存档恢复；通过后发布 `D:/Desktop/杖剑传说/杖剑传说.exe`。目前没有包含本图完整成果的发布版本。
 
 官方来源、代码／资源入口与实际验证：
 
@@ -345,7 +343,6 @@ Map13 原剧情 prefab Windows 转换与 NPC 序列：固定 871_156598 的 278 
 - [官方 Map13 战斗转换器](../../scripts/prepare_unity_map10_battle_data.py)、[战斗运行载荷生成器](../../scripts/prepare_unity_map13_battle_runtime.py)、[阶段／阵容输入](../../unity/Assets/Official/World/Map/13/map13-battles.json)、[战斗输入来源](../../unity/Assets/Official/World/Map/13/battle-source-manifest.json)、[Resources 载荷](../../unity/Assets/Game/Resources/Map13/battle-runtime.json)及[运行来源清单](../../assets/reference/official-map/map13-battle-runtime-source-manifest.json)。当前数据已生成并通过结构校验，已登记到 Map13 profile，尚未在正式入口 Play Mode 或 Player 中验证。
 - [Map13 地图实体索引生成器](../../scripts/prepare_unity_map13_entity_catalog.py)、[实体索引](../../unity/Assets/Game/Resources/Map13/Entities/catalog.json)及[来源清单](../../assets/reference/official-map/map13-entity-catalog-source-manifest.json)。索引保留官方 2,690 个 placement 的网格、区域、状态与关卡字段；原生 prefab 画面绑定仍待完成。
 - [338 份实体根 prefab 输入（含故事跟随者）](../../scripts/prepare_unity_map13_entity_inputs.py)、[APK 字段／属性恢复](../../scripts/map13_entity_native_schemas.py)、[动态贴图 GUID 绑定](../../scripts/map13_entity_dynamic_textures.py)、[完整输入来源](../../assets/reference/official-map/map13-native-entity-input-source-manifest.json)、[原生转换](../../scripts/prepare_unity_map13_entity_export.py)、[原字段类型核对](../../scripts/official_native_yaml_verification.py)及[转换来源](../../assets/reference/official-map/map13-native-entity-export-source-manifest.json)。原字段为 Source/native-entity-components.json，转换缓存为 `.tools/map13-entity-native-cache-871_156598/`；冷读转换已覆盖当前根选择，尚未绑定为正式运行资源。
-- [剧情跟随者 Atlas 纹理迁移](../../scripts/prepare_unity_map13_npc_follower_textures.py)、[Play Mode 验收](../../unity/Assets/Game/Editor/Map13/OfficialMap13FollowerTextureAcceptance.cs)及[来源清单](../../assets/reference/official-map/map13-npc-follower-textures-source-manifest.json)。本地显式绑定位于 `Resources/Map13/Native/npc-follower-texture-catalog`；仅完成原骨骼数据与高精度 Atlas 纹理加载核对，运行时动画求值、材质渲染与正式跟随视图仍待接入。
 - [原事件迁移](../../scripts/prepare_unity_map13_entity_events.py)、[事件代码来源](../../assets/reference/official-map/map13-entity-events-source-manifest.json)及[事件 Play Mode 检查](../../unity/Assets/Game/Editor/Map13EntityEvents/OfficialMap13EntityEventAcceptance.cs)。原执行代码位于 Runtime/Official/World/Map13EntityEvents/；实体／容器生命周期及正式视图绑定仍待接入。
 - [实体匹配代码与目录迁移](../../scripts/prepare_unity_map13_entity_presentation.py)、[来源与 AOT 证明](../../assets/reference/official-map/map13-entity-presentation-source-manifest.json)、[本地上下文适配](../../unity/Assets/Game/Runtime/Offline/World/Map13Entities/OfflineMap13EntityPresentation.cs)及[实体匹配 Play Mode](../../unity/Assets/Game/Editor/Map13Entities/OfficialMap13EntityPresentationAcceptance.cs)。原匹配代码入口为 Runtime/Official/World/Map13Entities/，资源为 Resources/Map13/entity-presentation.json 及对应来源／参照数据。
 - [水路实体原生输入](../../scripts/prepare_unity_map13_water_entity_inputs.py)、[可逆引用转换](../../scripts/official_managed_reference_conversion.py)、[输入来源](../../assets/reference/official-map/map13-native-water-entity-input-source-manifest.json)、[导出／恢复检查](../../scripts/prepare_unity_map13_water_entity_export.py)及[转换来源](../../assets/reference/official-map/map13-native-water-entity-export-source-manifest.json)。原组件字段为 `Source/native-water-entity-components.json`；恢复的 11 份 prefab 暂存在 `.tools/map13-water-entity-native-cache-871_156598/restored/`，未作为运行资源绑定。

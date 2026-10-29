@@ -106,7 +106,7 @@ Windows 竖屏显示适配按用户参考画面保留顶部安全留白：1080 U
 
 `PlayerSkillDataExt.CanSkillRankUp`／`TryGetAllSkillPromoteRank` 不限制已拥有技能的职业，单次与批量进阶已修正，装配仍保留职业限制；规则验证同时检查费用扣除。祝福升级按 `PlayerSkillDataExt.CheckSkillBlessLevelCanUpgrade`、`PlayerSkllSlotDataExt.IsBlessUpgradeLimitOtherSkillMax` 与 `SystemLevelGapLimitInfoParser` 恢复全八槽基础等级必须达到精确上限、当前赛季实际最低槽级及阈值的开闭边界；前一赛季祝福不计入当前赛季。原 `system_level_gap_limit` 的技能行按原顺序纳入本地规则，边界与跨赛季规则验证已通过。横向培养列表直接适配官方 `LoopHorizontalScrollRect`，保留原虚拟化和 `ScrollToCellWithinTime`，没有另写近似滚动公式；已通过原定位提示的射线命中与模拟点击、实际横向拖拽，截图可见原列表及选中状态；角色等级上限原提示已通过 Play Mode 与独立 Windows Player 的模拟点击和实际截图检查；祝福／赛季提示仍需专门画面验证。下一赛季限制先于角色等级和祝福差额判断，使用原赛季映射及当前赛季技能基础／祝福上限，边界规则验证已通过。
 
-技能运行时使用本地事务保存七套方案、装配槽位和共享培养数据；方案切换不复制槽位投资，装备和费用校验按固定客户端规则执行。技能详情、碎片详情、合成确认、培养页、单次升阶成功及批量升阶结果由 [CharacterSkillPanel.cs](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterSkillPanel.cs) 构建。结果列表支持逐项展示、跳过和滚动；批量展示在原 `ShowItems` 动画事件（0.76666665 秒）后启动，并读取原 `ListItemShowSequence` 的 0.1 秒间隔与首次延迟，遮罩准备期间不提前播放结果；培养播放官方槽位升级动画及 `Skill_Upgrade.ogg`。批量升阶按已确认的离线开放规则处理。
+技能运行时使用本地事务保存七套方案、装配槽位和共享培养数据；方案切换不复制槽位投资，装备和费用校验按固定客户端规则执行。技能详情、碎片详情、合成确认、培养页、单次升阶成功及批量升阶结果由 [CharacterSkillPanel.cs](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterSkillPanel.cs) 构建。单技能升阶同品质时按官方 `SkillPromotePanelRankUpContent` 刷新星级与属性；跨品质时按原 `SkillRankUpNotifyDialog` 显示升阶结果。结果列表支持逐项展示、跳过和滚动；批量展示在原 `ShowItems` 动画事件（0.76666665 秒）后启动，并读取原 `ListItemShowSequence` 的 0.1 秒间隔与首次延迟，遮罩准备期间不提前播放结果；培养播放官方槽位升级动画及 `Skill_Upgrade.ogg`。批量升阶按已确认的离线开放规则处理。
 
 固定版本缺少的 18 个技能碎片 `item` 行，按官方 `Formula.GetPieceIdBySkillId` 与其余 190 组稳定字段关系派生显示元数据；相关字段和图标对应由 `OfficialSkillAssetTools.Validate` 检查，不声称这些行来自服务器原始表。
 
