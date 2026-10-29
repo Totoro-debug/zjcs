@@ -15,6 +15,7 @@ def build():
     outputs=[]
     runtime=ROOT/'unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientViewBindings'
     refs=['Zjcs.Official.MapDisplays','Zjcs.Official.EntityActions','Zjcs.Official.EntityVisibilityHandlers','Zjcs.Official.World.Map13EntityVisibilityViews','Zjcs.Official.EntityViews','Zjcs.Offline.World.NativeMap14ClientComponents','Zjcs.Offline.World.NativeMap14DisplayData','Zjcs.Offline.World.NativeMap14SharedEntities','Zjcs.Offline.World.NativeMap14SharedViews','Zjcs.Offline.World.NativeMap14Visibility','Zjcs.Offline.World.NativeMap14VisibilityHandlers']
+    refs.append('Zjcs.Offline.World.NativeMap14RootComponents')
     write(runtime/'Zjcs.Offline.World.NativeMap14ClientViewBindings.asmdef',encode(dict(name='Zjcs.Offline.World.NativeMap14ClientViewBindings',autoReferenced=False,references=refs)))
     editor=ROOT/'unity/Assets/Game/Editor/Map14/ClientViewBindings'
     refs=json.loads((editor.parent/'VisibilityHandlers/Zjcs.Editor.Map14.VisibilityHandlers.asmdef').read_bytes())['references']

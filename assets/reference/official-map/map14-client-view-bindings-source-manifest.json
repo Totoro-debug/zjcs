@@ -77,7 +77,7 @@
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientViewBindings/NativeMap14ClientViewBindings.cs",
       "hashLineEndings": "LF",
-      "sha256": "1d4bd6f4f0421169f08b15bc9aea2e521a64adbddc4f1796b36a5812b1c6947c"
+      "sha256": "16f1317a652c5ae8bdbfa38761a5d254f0f228c78777300df847a136cccb642e"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientViewBindings/NativeMap14ClientViewBindings.cs.meta",
@@ -86,7 +86,7 @@
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientViewBindings/Zjcs.Offline.World.NativeMap14ClientViewBindings.asmdef",
       "hashLineEndings": "LF",
-      "sha256": "e88b9ff645c0101917dda76bba642cdd311e18a225c3985c8b756f53e275f6d6"
+      "sha256": "96609c98ccd365b11afdb6f17fcca6818a134ab6ab522ae99396fd712a2ceb38"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientViewBindings/Zjcs.Offline.World.NativeMap14ClientViewBindings.asmdef.meta",
@@ -106,7 +106,7 @@
     {
       "path": "scripts/prepare_unity_map14_client_view_bindings.py",
       "hashLineEndings": "LF",
-      "sha256": "9732507ac18c47ac1a2f214b4266cff7bf8b90c8edc0062b483d6acbcf0df44c"
+      "sha256": "3aaa3b90c9e1d13cd30795b122cb75fead489fec2e475eb04224368163bb1c79"
     }
   ],
   "operation": "Install previously migrated ordinary component, native visibility, action, award and map display state projections on the one original stable client view before consumer binding. Resolve consumed display state directly or through that same view component query. Keep original MyMapDisplay/MyEntity code, BindPre/remove order and source lookup unchanged; no new shared rules, identities or default state.",
