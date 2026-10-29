@@ -30,9 +30,11 @@ def check():
             continue
         relative = path.relative_to(PROJECT).as_posix()
         if path.suffix == '.meta':
-            if not path.with_suffix('').exists():
+            metadata = path.read_text('utf8')
+            is_folder = re.search(r'^folderAsset: yes$', metadata, re.M)
+            if not path.with_suffix('').exists() and not is_folder:
                 errors.append('Orphan metadata: ' + relative)
-            matches = re.findall(r'^guid: ([0-9a-f]{32})$', path.read_text('utf8'), re.M)
+            matches = re.findall(r'^guid: ([0-9a-f]{32})$', metadata, re.M)
             if len(matches) != 1:
                 errors.append('Invalid asset GUID: ' + relative)
                 continue
