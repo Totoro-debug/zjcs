@@ -70,7 +70,7 @@ Map14 统一原生宿主：`OfficialMap14NativeWorldView` 将原生地形／场�
 
 龙之国公共剧情恢复入口为 `scripts/prepare_unity_map14_story_dependencies.py`；复用保持默认 Map13 数据不变的恢复器。`official-map/map14-story-dependencies-source-manifest.json` 记录所选 `871_156598` 的 9 张原公共图／155 节点、25 条对白、5 类跟随实体、2 份补入 EC、1 份快捷购买及实际路径／GUID；保留 `EntityVineLock` 配置路径差异。统一剧情载荷为 94 图／1,488 节点／171 模板，正式执行和演出待接入。
 
-龙之国音频：`scripts/map14_audio_source.py` 依据当前 `871_156598` 实际 EventBankMapping、APK 优先／所选云端包及完整 HIRC 字节恢复引用，保留嵌入媒体和流式预取片段的各自偏移／哈希。BGM、400 个直接对白及剧情／实体 Timeline 共 418 个独立素材由原 WEM 直接解码为 PCM WAV，不使用旧 Ogg 缓存再次编码；17 项演出引用的 24 个动作保留顺序、延迟和静音目标。`prepare_unity_map14_entity_timelines.py` 恢复 5 个原实体 Timeline 和 4 条气泡配置／中文，确认咒文 `_36_17` 在原实体 Timeline 中以 `_17_1`／`_17_2` 分段播放。内置屏 Unity Play Mode 已对全部 418 个素材核对原采样并实际输出；共享故事语音播放器现已支持 Map14 的 400 条直接对白及 `Voice_StopAll`，并验证一个原语音事件经 Map14 播放器加载、播放和停止。实体 Timeline 音频事件、音频总线 DSP／RTPC、完整地图剧情入口／存档与 Windows 发布仍待接入。独立素材尚未生成完整备份快照。
+龙之国音频：`scripts/map14_audio_source.py` 依据当前 `871_156598` 实际 EventBankMapping、APK 优先／所选云端包及完整 HIRC 字节恢复引用，保留嵌入媒体和流式预取片段的各自偏移／哈希。BGM、400 个直接对白及剧情／实体 Timeline 共 418 个独立素材由原 WEM 直接解码为 PCM WAV，不使用旧 Ogg 缓存再次编码；17 项演出引用的 24 个动作保留顺序、延迟和静音目标。复核 `chapter_5_main_36_17` 时确认它是 Timeline 轨道名，不是 Wwise 事件；轨道实际派发 `_1`（事件 ID `3438568527`）及 `_2`（`3438568524`），引用 4 个原媒体 `384061196`、`518199332`、`1050162953`、`601713045`。对应 `voice_chapter_05` APK 条目不存在，按当前索引从 871 云端缓存取得 SHA256 `35c7e8510cee205fb914f45ffd784c46f6a0a4d9fc55d2591150f803d5d01485` 的原包，并在已迁移 Timeline 音频 Play Mode 中纳入 418 项原始 PCM 逐样本及实际输出验证；先前将父轨道键列为缺失事件是误判。`prepare_unity_map14_entity_timelines.py` 恢复 5 个原实体 Timeline 和 4 条气泡配置／中文，确认咒文 `_36_17` 在原实体 Timeline 中以 `_17_1`／`_17_2` 分段播放。共享故事语音播放器现已支持 Map14 的 400 条直接对白及 `Voice_StopAll`，并验证一个原语音事件经 Map14 播放器加载、播放和停止。正式剧情宿主的 Timeline 音频事件接线、音频总线 DSP／RTPC、剧情流程／存档与 Windows 发布仍待完成。独立素材尚未生成完整备份快照。
 
 依据：`official-map/map14-audio-source-manifest.json`、`map14-dialogue-audio-source-manifest.json`、`map14-playable-audio-source-manifest.json`、`map14-entity-timelines-source-manifest.json`。
 
@@ -360,7 +360,7 @@ Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式
 ## 尚未实现
 
 - MapClassId 15 的准备配置已按当前 `871_156598` 还原至 `Resources/Map14/world-alone-preparation.json`：Gold 段后 14 日、准备组 7101、PrepareEnd 条件 115。原 `MapWorldActivedCondition` 判断 `WorldMapRegionProgressDict` 是否含 MapClassId 15；四项 7101 任务为可重复接取的 `Map15GroupDaily`，分别提交 43046／43049／43052／43055 各2件，不作为永久开放触发器。客户端 `PlayerMapWorldAlonePrepareDataRankLockTime` 的时间公式为 `max(AppearTime + MinDurationS, Gold段位解锁时间 + 14日)`，但服务端设置 `AppearTime` 与状态转换没有客户端实现。离线推测将首次达到 Gold 的段位解锁时间作为 `AppearTime`，在配置时限后把独立存档状态由 Preparing(0) 推进到 PrepareEnd(1)；此起始时间是本地决策，不代表官方服务器规则。实现读取提取出的规则，位于 `OfflineMainlineProgressSession.RefreshMap15Preparation`，并由角色升段存档事务、其他进度提交及地图会话打开时刷新；条件115进度查询与 Map14 条件4281的 `MapWorldAloneStatusCondition(MapClassId=15, Status=1)` 均消费该本地状态。Map15 正式世界进度入口、地区／实体／界面及完整跨地图流程仍未接通或验证。来源／哈希见[准备配置来源清单](../../assets/reference/official-map/map14-world-alone-preparation-source-manifest.json)，生成器为 [`prepare_unity_map14_world_alone_config.py`](../../scripts/prepare_unity_map14_world_alone_config.py)。
-- 恢复实体 prefab、角色／实体骨骼、粒子、动画、MiniMap_14 迷雾／标记、BGM 与剧情音频，并接入官方 HUD、对话和交互界面；将已恢复的地区标签绑定正式本地地图状态。
+- 恢复实体 prefab、角色／实体骨骼、粒子、动画、MiniMap_14 迷雾／标记，并把已恢复的 BGM／剧情音频、官方 HUD、对话和交互界面接入正式主线宿主；将已恢复的地区标签绑定正式本地地图状态。
 - 接通 111 区开放条件、2,961 个放置实体、四类雕像、怪物、94 张主线及公共剧情图、命运探寻、8 块战斗碑、3 处遗迹、7 组火炮、5 组走格子及地图 15 原出口的正式入口、原条件、剧情、交互、战斗与奖励。不得以配置提取或地形夹具代替完整玩法。
 - 接通正式地图背包交易、本地状态和存档，完成正常游玩、失败回滚、退出与冷读恢复。提交窗口的隔离夹具已覆盖模拟鼠标与存档事务；其他资源夹具不代表正式地图流程。
 - 完成编辑器与 Windows Player 的受影响流程、模拟输入、完整画面及存档验证，提交并发布包含本图成果的 Windows 可执行版本。当前没有本图可游玩版本交付结论。
