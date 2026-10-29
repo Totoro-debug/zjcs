@@ -33,12 +33,6 @@ namespace Zjcs.Presentation.World
         [Serializable]
         private sealed class StoryFollowerFields { public int[] NpcClassIds, FollowerClassId; }
 
-        [Serializable]
-        private sealed class StoryMapPositionFields { public StoryGridPoint mTargetPos; public int mDistance; }
-
-        [Serializable]
-        private sealed class StoryGridPoint { public int X, Y; }
-
         private Map10RuntimeMapTalkEntry ResolveMapTalk(Map10RuntimeEntity entity, int scenario)
         {
             string entityId = "entity_" + entity.EntityClassId + "_name";
@@ -288,32 +282,6 @@ namespace Zjcs.Presentation.World
                             StartCoroutine(MoveStoryEntity(movingEntity, node.destinationX, node.destinationY,
                                 Mathf.Max(0.1f, node.moveSpeed), StoryNext(node, "Exit")));
                             return;
-                        case "ClickMapPosInLogicNode":
-                            MapGridPoint? clickGrid = ResolveStoryMapPosition(activeStory, node);
-                            if (clickGrid.HasValue)
-                            {
-                                Map10RuntimeEntity[] targetEntities = mapEntities.Values.Where(value =>
-                                    value.Grid.Equals(clickGrid.Value)).ToArray();
-                                if (!targetEntities.Any(value => !value.StageIds.Any(stageId => stageId > 0)))
-                                {
-                                    Map10RuntimeEntity targetEntity = targetEntities.FirstOrDefault(value =>
-                                        value.StageIds.Any(stageId => stageId > 0));
-                                    navigation.StartMovement(clickGrid.Value, targetEntity);
-                                }
-                            }
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
-                        case "WaitPlayerArriveMapPosAroundNode":
-                            MapGridPoint? arrivalGrid = ResolveStoryMapPosition(activeStory, node);
-                            int distance = Math.Max(JsonUtility.FromJson<StoryMapPositionFields>(node.sourceJson).mDistance, 1);
-                            if (!arrivalGrid.HasValue || IsPlayerNearStoryGrid(arrivalGrid.Value, distance))
-                            {
-                                nodeId = StoryNext(node, "Exit");
-                                continue;
-                            }
-                            StartCoroutine(ContinueStoryAfterMapArrival(arrivalGrid.Value, distance,
-                                StoryNext(node, "Exit")));
-                            return;
                         case "MapMeCharacterTransferNode":
                             StoryTransferFields transfer = JsonUtility.FromJson<StoryTransferFields>(node.sourceJson);
                             Map10RuntimeEntity transferTarget = null;
@@ -469,41 +437,6 @@ namespace Zjcs.Presentation.World
             if (position is Zjcs.Offline.World.MapGridPoint grid) return new Vector2(grid.X, grid.Y);
             throw new InvalidDataException("Official story NPC position is not a converted map grid: " + node.id);
         }
-
-        private MapGridPoint? ResolveStoryMapPosition(Map10RuntimeStory story, Map10RuntimeStoryNode node)
-        {
-            int source = StoryNext(node, "mTargetPos");
-            Vector2 point;
-            if (source > 0)
-            {
-                Map10RuntimeStoryNode inputNode = FindStoryNode(story, source);
-                object value = inputNode.type == "ClickMapPosInLogicNode"
-                    ? ResolveStoryMapPosition(story, inputNode) : EvaluateStoryValue(story, inputNode);
-                if (!(value is MapGridPoint grid))
-                    throw new InvalidDataException("Official story map position input is not a grid point: " + node.id);
-                point = new Vector2(grid.X, grid.Y);
-            }
-            else point = StoryGridPosition(JsonUtility.FromJson<StoryMapPositionFields>(node.sourceJson).mTargetPos);
-            var target = new MapGridPoint((int)point.x, (int)point.y);
-            return target.Equals(new MapGridPoint(0, 0)) ? (MapGridPoint?)null : target;
-        }
-
-        private bool IsPlayerNearStoryGrid(MapGridPoint target, int distance) =>
-            Math.Abs(navigation.currentGrid.X - target.X) + Math.Abs(navigation.currentGrid.Y - target.Y) <= distance;
-
-        private IEnumerator ContinueStoryAfterMapArrival(MapGridPoint target, int distance, int nextNodeId)
-        {
-            navigation.storyMapMovementInput = true;
-            try
-            {
-                while (storyRunning && !IsPlayerNearStoryGrid(target, distance)) yield return null;
-            }
-            finally { navigation.storyMapMovementInput = false; }
-            if (storyRunning) RunStoryGraph(nextNodeId);
-        }
-
-        private static Vector2 StoryGridPosition(StoryGridPoint value) => value == null
-            ? Vector2.zero : new Vector2(value.X, value.Y);
 
         private IEnumerable<int> localSaveFollowerClassIds => progressionSave.Save.Player.NpcFollowerClassIds;
 

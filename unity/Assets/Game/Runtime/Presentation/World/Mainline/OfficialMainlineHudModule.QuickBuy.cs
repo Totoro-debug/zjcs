@@ -48,12 +48,12 @@ namespace Zjcs.Presentation.World
                     host.RunStoryGraph(StoryNext(node, "Failure"));
                     return;
                 }
-                // These pinned map quotes are one item per fixed price with no refresh tiers.
-                if (row.ItemId != fields.ItemId || row.CurrencyId <= 0 || row.BaseCount != 1 || row.RefreshType != 0
+                // Pinned Map11 has only this constant, unlimited quote. Guard the
+                // complete configuration rather than silently treating new tiers as flat.
+                if (row.ItemId != 325 || row.BaseCount != 1 || row.RefreshType != 0
                     || row.SubRankScaleId != 0 || row.LevelScaleId != 0
-                    || row.PriceList == null || row.PriceList.Length != 1 || row.PriceList[0] <= 0
-                    || row.PriceBuyCount == null || row.PriceBuyCount.Length != 1 || row.PriceBuyCount[0] != -1)
-                    throw new InvalidDataException("Map" + host.mapClassId + " quick-buy configuration requires an unsupported quote rule.");
+                    || row.PriceList.Length != 1 || row.PriceBuyCount.Length != 1 || row.PriceBuyCount[0] != -1)
+                    throw new InvalidDataException("Map11 quick-buy configuration requires an unsupported quote rule.");
                 long buyCount = Math.DivRem(fields.RequireCount, row.BaseCount, out long remainder);
                 if (remainder > 0) buyCount++;
                 long award = checked(buyCount * row.BaseCount);
@@ -83,11 +83,6 @@ namespace Zjcs.Presentation.World
                         host.progressionSave.Reload();
                         if (host.StoryItemCount(row.CurrencyId) < price)
                         {
-                            if (host.mapClassId == 13)
-                            {
-                                next = StoryNext(node, "Failure");
-                                return;
-                            }
                             OpenQuickBuyCurrencyExchange(price - host.StoryItemCount(row.CurrencyId),
                                 () => host.RunStoryGraph(StoryNext(node, "Failure")));
                             return;

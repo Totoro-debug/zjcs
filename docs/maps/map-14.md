@@ -376,7 +376,7 @@ Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式
 
 - [配置生成器](../../scripts/prepare_unity_map14_sources.py)、[配置来源](../../assets/reference/official-map/map14-source-manifest.json)；载荷为 `Assets/Official/World/Map/14/Source/`。
 - [统一地图定义生成器](../../scripts/prepare_unity_map14_definition.py)；输出 `Assets/Official/World/Map/14/map14.json` 并对照本图来源收据核验导航、区域、位置及默认入口。
-- 主线地图 profile 与回城路由位于 `Runtime/Presentation/World/Mainline/OfficialMainlineMapProfile.cs`、`OfficialMainlineMapRuntime.cs`；Map14 已登记原入口和地区门槛，`IsRuntimeEntryReady` 保持关闭，直到地图宿主和运行资源接通。
+- 主线地图 profile 与回城路由位于 `Runtime/Presentation/World/Mainline/OfficialMainlineMapProfile.cs`、`OfficialMainlineMapRuntime.cs`；共享主线数据加载器按 `871_156598` 校验并装入Map14的217阶段、20场景、909实体关卡绑定、94张剧情图和171个模板，保留原始 Playable 节点与等待参数；当前原 Playable 资源绑定尚未就绪，`IsRuntimeEntryReady` 保持关闭。Unity内置屏 Play Mode 通过生产加载器并构造核对1,649个原编队怪物，未覆盖地图宿主、剧情执行或Player发布。
 - [原生输入恢复](../../scripts/prepare_unity_map14_native.py)、[输入及组件来源](../../assets/reference/official-map/map14-native-input-source-manifest.json)。
 - [实体输入恢复](../../scripts/prepare_unity_map14_entity_inputs.py)、[原组件序列化描述](../../scripts/map14_entity_native_schemas.py)及[实体／显示／动态贴图来源](../../assets/reference/official-map/map14-native-entity-input-source-manifest.json)；完整原字段载荷为 `Source/native-entity-components.json`，临时转换输入保存在 `.tools/map14-entity-native-cache-871_156598/`，不进入运行时。
 - [实体原生导出](../../scripts/prepare_unity_map14_entity_export.py)与[逐字段／指针核对来源](../../assets/reference/official-map/map14-native-entity-export-source-manifest.json)；使用 `--convert` 执行私有转换器，原顺序恢复结果在同一缓存的 `restored/` 中。

@@ -74,6 +74,8 @@ namespace Zjcs.Editor
         }
         private static IEnumerator Steps()
         {
+            VerifyMainlineMap14DataLoad();
+            yield return null;
             var asset = Resources.Load<TextAsset>("Map14/battle-runtime");
             Require(asset, "Map14 battle Resources payload missing");
             var data = JsonUtility.FromJson<Map10RuntimeBattleData>(asset.text);
@@ -126,6 +128,46 @@ namespace Zjcs.Editor
             }
             Debug.Log("Map14 battle data consumed monster placements=" + count + "; player-level placements=" + dynamic + ".");
         }
+
+        private static void VerifyMainlineMap14DataLoad()
+        {
+            OfficialMainlineMapProfile profile = OfficialMainlineMapProfile.Get(14);
+            Require(profile.StageCount == 217 && !profile.IsRuntimeEntryReady,
+                "Map14 profile stage count or entry gate differs");
+            GameObject fixture = new GameObject("Map14 mainline data loader fixture");
+            try
+            {
+                OfficialMainlineMapRuntime runtime = fixture.AddComponent<OfficialMainlineMapRuntime>();
+                BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
+                typeof(OfficialMainlineMapRuntime).GetField("mapClassId", flags).SetValue(runtime, 14);
+                typeof(OfficialMainlineMapRuntime).GetMethod("LoadOfficialData", flags).Invoke(runtime, null);
+                Require(DictionaryCount(runtime, "stages") == 217
+                    && DictionaryCount(runtime, "rosters") == 217
+                    && DictionaryCount(runtime, "battleScenes") == 20
+                    && DictionaryCount(runtime, "battleEntityStageBindings") == 909,
+                    "Map14 mainline battle payload did not load through the production runtime");
+                Require(DictionaryCount(runtime, "stories") == 73
+                    && DictionaryCount(runtime, "storySubgraphs") == 21
+                    && DictionaryCount(runtime, "entityTemplates") == 171
+                    && DictionaryCount(runtime, "mapLogicTags") == 60
+                    && DictionaryCount(runtime, "mapTalkConditions") == 18
+                    && ((Array)typeof(OfficialMainlineMapRuntime).GetField("mapTalkEntries", flags).GetValue(runtime)).Length == 79
+                    && DictionaryCount(runtime, "fixedRewards") == 9
+                    && DictionaryCount(runtime, "handInItems") == 1,
+                    "Map14 mainline story payload did not load through the production runtime");
+                Require(DictionaryCount(runtime, "officialPlayables") == 0,
+                    "Unmigrated Map14 Playables must remain unavailable until their original bindings are restored");
+            }
+            finally { UnityEngine.Object.Destroy(fixture); }
+        }
+
+        private static int DictionaryCount(OfficialMainlineMapRuntime runtime, string name)
+        {
+            var field = typeof(OfficialMainlineMapRuntime).GetField(name,
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            return ((System.Collections.IDictionary)field.GetValue(runtime)).Count;
+        }
+
         private static void Require(bool valid, string message) { if (!valid) throw new InvalidDataException(message); }
         private sealed class Runner : MonoBehaviour { }
     }

@@ -94,7 +94,7 @@ Windows 竖屏显示适配按用户参考画面保留顶部安全留白：1080 U
 - 伤害测试参数、真实战斗、胜负结算、仅内存战报、主动与被动技能详情和原技能图标均已通过带画面 Play Mode 与 675×1463 Windows Player 验证；被动触发技能保留 `FightSourceInfo` 对应的物品、品阶和祝福槽级，状态消失后仍能查看本场快照。结算动作、附加表情和失败返回已通过实际运行验证；全队幻兽参战仍需接入。
 - 通用弹窗的原遮罩／点击外部关闭和系统消息已通过 Play Mode 与 Windows Player 验证；详情规则说明、技能皮肤替换／视频预览、词条窗口已迁移并通过 Play Mode；怪物／召唤物／幻兽详情链接与馈赠来源跳转仍需补齐。
 
-已从固定 APK 恢复 `MonsterBriefInfoPanel`、`MonsterDetailPropsDialog` prefab 与原模型绑定。怪物链接已接入原弹窗和战斗模型库；宠物实体链接按本地宠物阶段／等级、主人属性及官方 `CalculatePetEntityBaseProps`／`CalcSummonMonsterInheritProp` 组合属性。技能等级优先读取已保存等级；无保存值时按官方 `PetUtils.GetSkillRank`／`SkillRankInfoParser.GetOrigRank`，从技能品质选择原始最低 rank。已核实 `NonPlayerBriefInfoPanel` prefab 位于固定 APK 的 `defaultpackage_assets_prefabs_ui_briefinfo.bundle`（hash `0b2c9e59e6fce00f612f9070d73609c2`），`ItemIconPetSkill` 位于 `defaultpackage_assets_prefabs_ui_item.bundle`（hash `414cf104c6bdea9eddf3a365b4d345e2`），`PetSkillDetailDialog` 位于 `defaultpackage_assets_prefabs_ui_itemdetail.bundle`（hash `ed61998dccf8c8b2451eb16f49b433cb`）；所选 cloud 版本 `202610211330871` 另有实际宠物技能图集与战斗技能图标 bundle 缓存。上述对象尚未转换并绑定到 Unity 窗口；详情尚未实例化 `ItemIconPetSkill`、`SkillWithOuterTagItem`，因此主动／被动技能项、技能详情点击与实际画面交互仍未完成；馈赠来源跳转也未接入。本轮完整技能 Play Mode（升阶、换肤视频、伤害测试战斗／结算／返回）通过；`ProjectTools.Validate` 通过；隔离 Windows Player 构建成功并实际启动到离线存档选择画面，未进入技能流程。宠物链接交互尚无本次运行验证。
+已从固定 APK 恢复 `MonsterBriefInfoPanel`、`MonsterDetailPropsDialog` prefab 与原模型绑定。怪物链接已接入原弹窗和战斗模型库；宠物实体链接按本地宠物阶段／等级、主人属性及官方 `CalculatePetEntityBaseProps`／`CalcSummonMonsterInheritProp` 组合属性。技能等级优先读取已保存等级；无保存值时按官方 `PetUtils.GetSkillRank`／`SkillRankInfoParser.GetOrigRank`，从技能品质选择原始最低 rank。详情尚未实例化 `ItemIconPetSkill`、`SkillWithOuterTagItem`，因此主动／被动技能项、技能详情点击与实际画面交互仍未完成；馈赠来源跳转也未接入。隔离工程此前通过 C# 编译、`ProjectTools.Validate` 和技能资源哈希校验，但未验证本次改动后的链接交互。
 
 ### 实现范围
 

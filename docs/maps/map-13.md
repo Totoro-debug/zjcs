@@ -320,8 +320,6 @@ Map13 原剧情 prefab Windows 转换与 NPC 序列：固定 871_156598 的 278 
 ## 尚未实现
 
 - 正式入口激活原管线与完整场景，接通玩家／世界状态、角色与实体、其他特效／导演、BGM／配音及全部官方 HUD／功能界面；场景／组件夹具不作为正式地图入口。
-- Map13 三个 `ItemQuikBuyNode` 均以 325 ×1 购买：沿用所选官方报价 50 个 2 号货币、无限购买及持有 1 个 4013 的条件；Map13 使用原确认界面和本地原子交易，余额不足／取消／条件未满足进入原 Failure 端口。静态规则回归已补，正式地图中的确认、取消、条件不足和存档冷重开仍待 Play Mode 验收。
-- 正式地图原树实体交互已在隔离 Play Mode 验收：2701／4105／7302 三个 placement 的原骨骼几何、原配置果实状态、模拟鼠标点击、奖励发放、消失演出及冷重开防重复发奖均通过；12 张 D3D12 截图已查看。验收覆盖三处树实体，不代表其他 2,687 个实体或底部任务 HUD 已接齐。
 - 官方剧情节点目前不能全量按离线规则执行。客户端的 `ServerRunNode` 通用请求为 `StoryRunNodeRequest`（OpCode 4263，字段 `GraphName`／`NodeId`／`Paths`／`Inputs`／`Param`），消费 `StoryRunNodeResponse`（OpCode 31628，含 `Outputs`／`Param`）；APK 未包含对应服务器执行逻辑。当前 88 张客户端图及 `Source/server-story-records.json` 的导出记录都不能证明服务器返回值或状态变更。
 - 已确认的服务端节点离线行为：`CameraMoveAndUnlockAreaNode` 的 9 个节点实例按原地图几何和节点范围本地解锁；`WorldStopMoveNode` 在剧情运行期间锁定地图移动，正常结束或中断时恢复；`AddNpcFollowerNode` 按节点配置将 8402／8440／8441／8442 去重写入持久化跟随者列表，`RemovePlayerNpcFollowerAllNode` 清空；跟随显示须绑定对应官方实体和原跟随队列，当前玩家克隆显示仍待替换。以上实现仍待接入共享剧情执行器。共享解释器已有 `SetMapLogicEntitySetStateNode` 执行分支，可按载荷写本地逻辑标签状态、刷新实体并保存；泽之国正式宿主及 Play Mode 流程未接入验证。用户确认的本地推导已接入：`PlayerActiveMapNode` 以目标地图 ID 写入幂等解锁事务；`PlayerWorldAloneAppearNode` 将目标 ID 去重持久化于地图存档的独立世界列表。此两节点仍待泽之国正式剧情流程运行验证。用户已确认 `HandInItemNode` 按配置数量在确认时原子扣除，取消／中断不扣，固定奖励按配置次数和本地领取凭据发放；官方原交付窗口尚未转换接入。
 - 入口状态也依赖服务器地图状态：客户端 `HomeToMapNode.TryGetLastPublicActivedEntryId` 检查按地图降序的公开地区、女神激活和活动入口实体；本地存档目前没有完整的地区公开状态／活动入口实体记录。Map13 `MapWorldActivedCondition` 只证明 `WorldMapRegionProgressDict` 中存在 MapClassId 13 时条件成立，不证明首次激活准入规则。首次开放按已确认的顺序进度处理；活跃入口实体选择仍待接入原生 MapSelect UI 和本地地区状态。

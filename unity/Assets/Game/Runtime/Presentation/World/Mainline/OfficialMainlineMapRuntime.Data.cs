@@ -33,8 +33,8 @@ namespace Zjcs.Presentation.World
 
             Map10RuntimeBattleData battles = JsonUtility.FromJson<Map10RuntimeBattleData>(battleData.text);
             Map10RuntimeStoryData storyDataValue = JsonUtility.FromJson<Map10RuntimeStoryData>(storyData.text);
-            string expectedBattleManifest = "854_156383";
-            string expectedStoryManifest = mapClassId == 13 ? "871_156598" : "854_156383";
+            string expectedBattleManifest = mapClassId == 14 ? "871_156598" : "854_156383";
+            string expectedStoryManifest = mapClassId >= 13 ? "871_156598" : "854_156383";
             puzzleRules = storyDataValue?.puzzleRules;
             statues.witchInfos = storyDataValue?.witchInfos ?? Array.Empty<Map11RuntimeWitchInfo>();
             statues.witchResults = storyDataValue?.witchResultEffects ?? Array.Empty<Map11RuntimeWitchResult>();
@@ -58,6 +58,8 @@ namespace Zjcs.Presentation.World
                 || battles.stages.Length != expectedStages || battles.monsterRosters.Length != expectedStages
                 || (mapClassId == 11 && (battles.entityStageBindings == null || battles.entityStageBindings.Length != 591))
                 || (mapClassId == 12 && (battles.entityStageBindings == null || battles.entityStageBindings.Length != 858))
+                || (mapClassId == 14 && (battles.entityStageBindings == null || battles.entityStageBindings.Length != 909
+                    || battles.battleScenes.Length != 20))
                 || storyDataValue == null || storyDataValue.manifest != expectedStoryManifest
                 || storyDataValue.mapClassId != mapClassId || storyDataValue.stories == null
                 || storyDataValue.dialogRoles == null || storyDataValue.mapLogicTags == null
@@ -106,7 +108,7 @@ namespace Zjcs.Presentation.World
             }
             Map10RuntimeStory[] subgraphs = storyDataValue.subgraphs ?? Array.Empty<Map10RuntimeStory>();
             if ((mapClassId == 10 && subgraphs.Length != 0) || (mapClassId == 11 && subgraphs.Length != 4)
-                || (mapClassId == 12 && subgraphs.Length != 17))
+                || (mapClassId == 12 && subgraphs.Length != 17) || (mapClassId == 14 && subgraphs.Length != 21))
                 throw new InvalidDataException("Official Map" + mapClassId + " story subgraph closure is incomplete.");
             foreach (Map10RuntimeStory value in subgraphs)
             {
@@ -157,7 +159,8 @@ namespace Zjcs.Presentation.World
                 if (value == null || value.RoleId <= 0 || value.EntityClassId < 0
                     || string.IsNullOrWhiteSpace(value.RoleName)
                     || (mapClassId != 13 && value.EntityClassId > 0 && string.IsNullOrWhiteSpace(value.PortraitPath))
-                    || (value.EntityClassId == 0 && value.RoleId != 100000))
+                    || (value.EntityClassId == 0 && value.RoleId != 100000
+                        && !(mapClassId == 14 && value.RoleId == 100004)))
                     throw new InvalidDataException("Official Map" + mapClassId + " dialogue role is malformed.");
                 dialogRoles.Add(value.RoleId, value);
             }
@@ -199,7 +202,7 @@ namespace Zjcs.Presentation.World
                 || !officialPlayables.ContainsKey("9b248cde91299ee4287533b25b7dd468")))
                 throw new InvalidDataException("Official Map10 story playable bindings are incomplete.");
             if (mapClassId == 13) ValidateMap13StoryPlayables();
-            foreach (Map10RuntimeStory story in stories.Values.Where(_ => mapClassId != 13))
+            foreach (Map10RuntimeStory story in stories.Values.Where(_ => mapClassId != 13 && mapClassId != 14))
                 foreach (Map10RuntimeStoryNode node in story.nodes.Where(value => value != null
                              && value.type == "PlayPlayableNode"))
                     if ((node.playableDuration <= 0f && node.waitPlayableStop)
@@ -251,7 +254,12 @@ namespace Zjcs.Presentation.World
                 || !storySubgraphs.ContainsKey("FangjianbeiActive") || !storySubgraphs.ContainsKey("ChaosAfterBattle")
                 || fixedRewards.Count != 12))
                 throw new InvalidDataException("Official Map12 story support data is incomplete.");
-            else if (mapClassId == 14 && (stories.Count + storySubgraphs.Count != expectedStories || storySubgraphs.Count != 21
+            else if (mapClassId == 14 && (expectedStories != 85 || stories.Count != 73
+                || stories.Count + storySubgraphs.Count != 94 || storySubgraphs.Count != 21
+                || storyDataValue.entityTemplates == null || storyDataValue.entityTemplates.Length != 171
+                || storyDataValue.dialogRoles.Length != 16 || storyDataValue.mapLogicTags.Length != 60
+                || storyDataValue.mapTalkEntries.Length != 79 || storyDataValue.mapTalkConditions.Length != 18
+                || fixedRewards.Count != 9 || statues.witchInfos.Length != 14
                 || handInItems.Count != 1 || !handInItems.ContainsKey(4)))
                 throw new InvalidDataException("Official Map14 story support data is incomplete.");
             if (mapClassId == 11 && (!storySubgraphs.ContainsKey("FangjianbeiActive")
