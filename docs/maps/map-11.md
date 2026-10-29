@@ -166,11 +166,13 @@ Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD�
 
 正式入口已按 Map10 主线任务 1040 加入运行时门槛；普通祈愿成功开启 6000 宝箱现已原子更新任务计数，但前序任务条件、新档累计 10 次祈愿的实际操作及领奖后进入森之国仍未完成 Play Mode 验收。仍须接通区域、放置实体、条件、交互、战斗、奖励和出口前置状态。共享运行时已支持按地图 ID 加载资源、区域开放条件、位置与状态存档，但 Map10 的正常出口与家园返回入口尚未接通本图。原地图 NPC、建筑、世界奖励、交互物、怪物及小地图 bundle 已提取校验；`map11-lighting.json`、`map11-stone-animations.json`、`map11-logic-views.json`、`map11-dialogs.json` 的完整动态行为、特效和音频仍待绑定。地形与小地图原生 prefab 已生成；本次 Player 截图仍见局部地形／排序缺陷，完整流程及真实输入尚待验证。
 
-普通女神像与失落女神像是不同机制。共享运行时的 Map11 女神处理器已按基础阶段先检查地区 100%，再依次执行结果 204（激活并持久化回执）与 209（自身状态变为 1）；已激活神像按官方输入分支直接打开弹窗。两种基础模板均没有 `StageResultAwardComponent`，地区 `DropItems` 在 `GoddessTouchDialog.RefreshAward` 中仅生成珍宝预览，不在激活时自动发放。弹窗现按官方 `DynamicItems` 模板、图标及品质框，在原 `TreasureAwardSlot` 显示当前地区的 `DropItems`；此批改动的 Unity 编辑器编译、Play Mode 与 Player 验证尚未完成。详情弹窗及 `SetCanOperation(false)` 限制、普通女神祝福等级派生和提示、失落女神奖励提示动画尚待接通。`WorldTouchDialogLostGoddness` 的 `PlayerGetLostGoddessAwardRequest` 是独立的“找回遗失女神奖励”流程，不能作为像的激活奖励。探索里程碑仍须按 `MapGoddessExpProcessItem` 手动领取；命运果实独立核对日常领取与探索事件。
+普通女神像与失落女神像是不同机制。共享运行时的 Map11 女神处理器已按基础阶段先检查地区 100%，再依次执行结果 204（激活并持久化回执）与 209（自身状态变为 1）；已激活神像按官方输入分支直接打开弹窗。两种基础模板均没有 `StageResultAwardComponent`，地区 `DropItems` 在 `GoddessTouchDialog.RefreshAward` 中仅生成珍宝预览，不在激活时自动发放。弹窗现按官方 `DynamicItems` 模板、图标及品质框，在原 `TreasureAwardSlot` 显示当前地区的 `DropItems`；此批改动的 Unity 编辑器编译、Play Mode 与 Player 验证尚未完成。详情弹窗及 `SetCanOperation(false)` 限制、普通女神祝福等级派生和提示、失落女神奖励提示动画尚待接通。`WorldTouchDialogLostGoddness` 的 `PlayerGetLostGoddessAwardRequest` 是独立的“找回遗失女神奖励”流程，不能作为像的激活奖励。
+
+地图探索里程碑是地图页总探索度滑条上的奖励节点：进度达到节点标示的百分比后，玩家点击节点手动领取；世界地图中的地图选择项会对可领取节点显示红点。它不是命运果实探寻，也不是女神像激活奖励。`MapGoddessExpAdditionUI` 是另一处逐地区列表，用于查看各区女神激活状态和地区探索进度。官方 `MapGoddessExpProcessItem`、`AchievementTaskMapProgress` 与 `FormulaHandler.CalcWorldMapProgress` 已核实点击、资格和进度公式；但所需阈值及奖励由 `achievement` 表的 `MapProgress`／`MapProgressInAdventure`（类型 9／53）记录提供。固定 APK `854_156383` 的 `achievement.g.bytes`（PathID `2512796603372558678`，SHA256 `319e4e07413ae5ccbebf724eb7e2454b841b072e48fe2ef71da8512cbd4978a8`，8,556 行）及已下载官方表 `871_156598`（SHA256 `50c66bef98508617c93ccd17c9fc0e5a8d355adef49f1c71bd4551649d69fb3a`，8,556 行）均没有这两种类型记录；Map11 官方 UI 提取清单也没有 `MapGoddessExpProcessItem` 面板。必须先取得该节点实际使用的阈值、奖励和原 UI 对象来源，再接入手动领取与持久化，不能推定一个奖励表。命运果实独立核对日常领取与探索事件。
 
 ### 完成方案
 
-以下为拟实施方案，不代表已接入或验证。主要缺口是 Map 11 的实际游玩运行时；当前没有经核实必须由用户补充资料才能继续的外部阻塞。
+以下为拟实施方案，不代表已接入或验证。主要缺口是 Map 11 的实际游玩运行时；探索里程碑还缺可取得版本中的阈值／奖励配置和对应原 UI 对象来源，该项须等待官方输入或用户确认，其他独立迁移工作继续推进。
 
 地图加载、HUD、区域策略、移动、点击、交互、战斗调用与存档已提取为[公共模块](../features/mainline-map-modules.md)，并保持 Map10／Map11 的资源和存档隔离。森之国踏板、战斗碑、剧情与出口仍须按本页缺项继续完成；公共抽取不代表本图完整迁移完成。
 
