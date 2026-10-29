@@ -1,0 +1,134 @@
+{
+  "counts": {
+    "CanvasRenderer": 170,
+    "GameObject": 261,
+    "MonoBehaviour": 605,
+    "RectTransform": 261,
+    "pointers": 4272,
+    "runtime_tag_to_editor_name": 261,
+    "string_scalars": 1135,
+    "values": 12103
+  },
+  "format": 1,
+  "limitations": [
+    "Native source only: Unity prefab installation, exact final image/material/shader/font bindings and runtime scripts/services remain pending.",
+    "External resource source IDs and converted hashes are retained; final Windows bindings must verify the same original objects/pixels, not names alone.",
+    "No replacement UI, Spine runtime, actual input/render/save verification or Windows publication is provided by this source step."
+  ],
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "nativeExport": {
+    "counts": {},
+    "entry": {
+      "path": "scripts/prepare_unity_map12_team_npc_native_export.py",
+      "sha256": "035fe5444280ffe43709059d5cfa228d5c5c74517f68f16899fdc9ed3d79da04"
+    },
+    "format": 1,
+    "generator": {
+      "path": "scripts/prepare_unity_map13_water_entity_export.py",
+      "sha256": "f289fee6b3dec9b180715ca5d424cad7e82c96b96cf048124102c375fd748872"
+    },
+    "input_receipt": {
+      "path": "output/validation/map12-team-components-dx12-386288aaae2c4e51b5250f720fb80a0b/npc-native/native-export-input.json",
+      "sha256": "50f1a3e816484322fa5ad2043d52fb78196091b861e8e5e3adf7e55becc321d2"
+    },
+    "limitations": [
+      "Cache conversion only. Original runtime migration, explicit assembly/script binding, Windows shaders/import, Play Mode interaction and saves are not implemented by this step."
+    ],
+    "manifest": "871_156598",
+    "mapClassId": 12,
+    "operation": "AssetRipper 1.3.14 UnityProject export of the verified input closure; restore typed registry vectors to original ordered RefIds while retaining exported YAML record text, including empty registries. Strip and verify temporary source CAB/path IDs. Compare every original reference field/list/scalar, original float32/float64 bits, descriptor and RID; decode packed primitive arrays with their original type and width. Resolve every non-null pointer on both sides and compare native component type and complete original GameObject hierarchy (or named asset identity), with source IDs for registry components.",
+    "outputs": [],
+    "tool": {
+      "path": "output/validation/map12-team-components-dx12-386288aaae2c4e51b5250f720fb80a0b/npc-native/runner/AssetRipper.GUI.Free.exe",
+      "sha256": "11ec892dcd70b1b86f2e52db631e83e007f6103daa20a9616ecaa7a95baa9f21",
+      "version": "1.3.14.0"
+    },
+    "verification_library": {
+      "path": "scripts/official_native_yaml_verification.py",
+      "sha256": "d7027e10c3fc96f910f169eb0cb4b45942d0cf6ef532fa8ba96efa9dedfbba7b"
+    }
+  },
+  "nativePreparation": {
+    "path": "assets/reference/official-map/map12-team-npc-native-input-source-manifest.json",
+    "sha256": "ccc1fd67ca5a434e11e69e9909ecc38f545e9ec19736e20778d333187b9e2281"
+  },
+  "operation": "Retain exact restored native YAML for 91 original NPC prefabs. Compare every original hierarchy node, component/child order, field, scalar, float bit, local object pointer and script assembly/type against the decoded APK source.",
+  "original": {
+    "path": "unity/Assets/Official/World/Map/12/Source/team-npc-prefabs.json",
+    "sha256": "3b828a4d5a3de80ab643974e0c9fca7deb793b9095f241c519367504d8640c7a"
+  },
+  "outputs": [
+    {
+      "bytes": 1114108,
+      "path": "unity/Assets/Official/World/Map/12/Source/native-team-npc-prefabs.json",
+      "sha256": "4b17869cc957ccdc93359fc7515e2903dfcb3efc0e0dd4be3d70c5101d642c6a"
+    },
+    {
+      "bytes": 155,
+      "path": "unity/Assets/Official/World/Map/12/Source/native-team-npc-prefabs.json.meta",
+      "sha256": "1dca20478f8b789ba4cbbf4308a768c581a52146544d788f7f311dcf842bb1e7"
+    }
+  ],
+  "textureDecodingInputs": [
+    {
+      "path": "D:\\Desktop\\zjcs\\.tools\\python-packages\\texture2ddecoder\\__init__.py",
+      "sha256": "622a376256e52aae4e2dddb8800e1c3c417d17048c5dcc4af1957e1be1ef50f9"
+    },
+    {
+      "path": "D:\\Desktop\\zjcs\\.tools\\python-packages\\texture2ddecoder\\_texture2ddecoder.pyd",
+      "sha256": "20ce237967b48cb9e7a57eb774e147fa67730189010b4ea0aa3b0c6d954d4d45"
+    },
+    {
+      "path": "D:\\Desktop\\zjcs\\.tools\\python-packages\\UnityPy\\export\\Texture2DConverter.py",
+      "sha256": "115ff9173466e401296312427cd3bb60ca03fd22e5c5c4ca25ffc7839aa30034"
+    },
+    {
+      "path": "D:\\miniconda3\\envs\\comm\\Lib\\site-packages\\PIL\\_imaging.cp312-win_amd64.pyd",
+      "sha256": "6dfd10a98bc81a1999e2b5ddb8be8c1cfb9a2c8e10258c56a52ee0d8930d3d7f"
+    },
+    {
+      "path": "D:\\miniconda3\\envs\\comm\\Lib\\site-packages\\PIL\\_imagingcms.cp312-win_amd64.pyd",
+      "sha256": "46c59cf197b74954dfa01036d97938291573fa9ec339cd34f90fc7c870001cac"
+    },
+    {
+      "path": "D:\\miniconda3\\envs\\comm\\Lib\\site-packages\\PIL\\_imagingft.cp312-win_amd64.pyd",
+      "sha256": "fe615fedf586c7206a74bedecddbf58623ffdf57e90ca2f8bca062aebae138c0"
+    },
+    {
+      "path": "D:\\miniconda3\\envs\\comm\\Lib\\site-packages\\PIL\\_imagingmath.cp312-win_amd64.pyd",
+      "sha256": "e1b3e6bc361fd8735df2c920c9878238dabaf797fbc13041ffaa26f635888d3a"
+    },
+    {
+      "path": "D:\\miniconda3\\envs\\comm\\Lib\\site-packages\\PIL\\_imagingmorph.cp312-win_amd64.pyd",
+      "sha256": "4b4c11011504a690bc1f55c50adf048fd7fee4d3d0e2ff606bdb891feb3f2db1"
+    },
+    {
+      "path": "D:\\miniconda3\\envs\\comm\\Lib\\site-packages\\PIL\\_imagingtk.cp312-win_amd64.pyd",
+      "sha256": "b7de0c367e22ada46a61a156023cc0d30187b45946f4154e077d630f161e2f0e"
+    },
+    {
+      "path": "D:\\miniconda3\\envs\\comm\\Lib\\site-packages\\PIL\\Image.py",
+      "sha256": "218c0bc17cb7ce1e8223dfb32c11e4818ccca141fd57b84ce65d149308dd425a"
+    }
+  ],
+  "textureDecodingOverrides": [],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map12_team_npc_native_sources.py",
+      "sha256": "90be8be257aa2f68f7236db8561fc380ee1f9fb8519799dd1191001e288a7cee"
+    },
+    {
+      "path": "scripts/prepare_unity_map12_team_npc_native_export.py",
+      "sha256": "035fe5444280ffe43709059d5cfa228d5c5c74517f68f16899fdc9ed3d79da04"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_water_entity_export.py",
+      "sha256": "f289fee6b3dec9b180715ca5d424cad7e82c96b96cf048124102c375fd748872"
+    },
+    {
+      "path": "scripts/official_native_yaml_verification.py",
+      "sha256": "d7027e10c3fc96f910f169eb0cb4b45942d0cf6ef532fa8ba96efa9dedfbba7b"
+    }
+  ]
+}

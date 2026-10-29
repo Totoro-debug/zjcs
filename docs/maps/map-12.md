@@ -196,6 +196,8 @@ Map12主线任务1165～1270沿用官方顺序、前置和奖励；其中1215要
 
 原 Room／Challenge／Companion 邀请组件及 RoomAction 已沿原异步状态机迁入，保留 NPC 提前返回、容量错误码、错误载荷、挑战响应先追加后广播、姓名缓存等待、确认窗等待与取消码112；原在线模式仍遵循已确认的单机开放范围。八份邀请模板引用的14段动画、3个控制器及1个覆盖控制器已恢复完整原生转换源，逐项核对压缩曲线、状态／条件／动作引用及 Legacy 有符号零。Windows 资源使用真实 Unity 构建的容器、类型元数据与 MonoScript，再恢复原18份动画载荷，仅重定位明确的对象指针，以保留重新编译会改变的原控制器循环标志；运行时校验哈希并显式绑定。DX12 Play Mode 已加载该资源，14段动画320个真实 Animator 采样值通过，既有 TeamPanel 两种尺寸的模拟点击与生命周期回归通过，八张实际画面已查看。根工程静态检查（76870个 GUID）、隔离 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。这里仍使用隔离队伍数据及原加载头像；正式邀请 prefab、NPC 模型、本地入队／站位存档及战斗整合尚未完成。来源见[上下文邀请组件](../../assets/reference/official-map/map12-context-inviters-source-manifest.json)、[完整动画转换源](../../assets/reference/official-map/map12-team-invite-animation-source-manifest.json)与[Windows 原动画载荷](../../assets/reference/official-map/map12-team-invite-windows-animation-source-manifest.json)。
 
+原 NPC 邀请模型已按95名候选的 `FigureModelUI` 逐项解析：所选版本中91份实际 prefab 完整保留261个节点、1297个序列化对象及605份脚本载荷；11015～11018的模板包不在所选官方清单中，已记录原路径，11019～11022现存模板也完整保留作来源，正式邀请消费者仍须落实此前确认的11015～11022排除范围。160份实际 APK／云端 CAB 经可逆准备核对14202个对象和2735份组件；全部91份原生 YAML 核对12103项字段值、4272个指针、组件／子节点顺序及原标签，未移除非活动节点。无托管引用载荷需要改写。只读复现、根工程静态检查（76883个 GUID）、隔离 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。这里完成原模型层级和原生转换源，34份被引用骨骼的图形／动画／贴图加载、最终 prefab 安装、真实 NPC 入队、存档及战斗仍待接通。来源见[原 NPC 模板](../../assets/reference/official-map/map12-team-npc-prefabs-source-manifest.json)、[可逆转换输入](../../assets/reference/official-map/map12-team-npc-native-input-source-manifest.json)与[原生字段核对](../../assets/reference/official-map/map12-team-npc-native-source-manifest.json)。
+
 ### 已迁移代码与局部资源
 
 以下为局部代码／资源接入，完整流程仍受本页缺项限制。
