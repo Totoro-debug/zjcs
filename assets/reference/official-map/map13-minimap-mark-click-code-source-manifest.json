@@ -1,0 +1,107 @@
+{
+  "format": 1,
+  "mapClassId": 13,
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MiniMapMarkClick.cs",
+      "sha256": "b5c80f202446fdbced74020a6f7f2b23caca13f15834e8350140bdb345057f14"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapRootEntityLiteInfoPackParser.cs",
+      "sha256": "57e5ce5f81d4ab18bf8f4c927c9592dab39b3814637762e88804aa2519a09bad"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkManagers/Zjcs.Official.World.Map13MiniMapMarkManagers.asmdef",
+      "sha256": "93b57758f7328ccf10df0e4eae2c48b3f2c7694bfbfec6ec36195a2068aef0db"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkClick/MiniMapMarkClick.cs",
+      "sha256": "fe241669344b4e09cf28b4de5f8d4473344c144121145344177b208fb0cf86a4",
+      "meta_sha256": "295171f7b462319ee75f9e8b0dda6a274209f00185cd92c14be2f6ebc32ef7e4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkClick/MiniMapClickPorts.cs",
+      "sha256": "fa5482452da8dfffd7de24048855513fa17b041988e535e000170c93b68182bc",
+      "meta_sha256": "740411685d4e9d3b5a8f224697dbd544c01255e332fbecfcbad5c463082c8b1d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkClick/Zjcs.Official.World.Map13MiniMapMarkClick.asmdef",
+      "sha256": "605ce765450eeca7af449e9e1a416a1e1d62a0d92b89190710c6c26366488cd3",
+      "meta_sha256": "10cac51d55268ec6efab4d010ddc1061b08ae7192b93957d1f794dcf6be17e23"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Labels/MapUIBase.cs",
+      "sha256": "46031a28a73256a97a7e79bd08bd9e1a4912b150c62cc6c484f8a975b7b35485"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapCamera/UITouchInput.cs",
+      "sha256": "9b1c2c9a5d1fe635bc67b7afa6ae805331a1d9027627c93cfcdfd7aa31371ea1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapCamera/MiniMapCameraController.cs",
+      "sha256": "965bc48ca28273b4c986742450e86eb9590f828244a90220dab00964747ed30b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkManagers/MiniMapMarkManager.cs",
+      "sha256": "2f45019f40834ce049364a6e362f67148d8a23258608e37c83eb5521e3a54697"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_map13_minimap_mark_click.py",
+    "sha256": "07ca8c8cf60775cf5b1bf2e317fa684cc46f16d1927c108d94f62814a4109f43",
+    "worktree_sha256": "07ca8c8cf60775cf5b1bf2e317fa684cc46f16d1927c108d94f62814a4109f43",
+    "normalization": "Repository LF text; original executed worktree bytes recorded separately"
+  },
+  "operation": "Copy the complete original minimap click component, including all mark manager lookup order, click publication before query, interactive/team error branches, actual 3D raycast collider-transform position, main-camera viewport fallback, minimap transform subtraction, original frame size and XY/Z preservation, visibility-agent guard and full-screen input subscription. Copy the complete original map-position parser method; replace injected services with explicit local ports, adapt record struct generated members for Unity C# and repair decompiled Raycast out syntax.",
+  "limitations": [
+    "Original frame subtree/root prefab binding, actual input/camera/session ports, native Play Mode mouse/render checks and formal map/save/Windows Player remain required."
+  ],
+  "local_validation": {
+    "proof": {
+      "editor": "2022.3.57f1c2",
+      "simulated_clicks": 8,
+      "publications": 7,
+      "input_checks": 2,
+      "dialog_opens": 1,
+      "brain_moves": 4,
+      "rendered_pixels": 5315,
+      "native_frame": true,
+      "original_frame_size": true,
+      "collider_transform_position": true,
+      "main_viewport_fallback": true,
+      "transform_subtraction": true,
+      "publish_before_query": true,
+      "first_manager_wins": true,
+      "error_branch": true,
+      "visibility_guard": true,
+      "z_preserved": true,
+      "hide_unsubscribe": true,
+      "reentry": true,
+      "record_members": true,
+      "play_mode": true
+    },
+    "entry": {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapMarkClickAcceptance.cs",
+      "sha256": "32fec031ca948f82fd87fd9a4d20090b9a38336d6fcc6763e95e08fb2a115622"
+    },
+    "assembly": {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/Zjcs.Editor.Map13.MiniMap.asmdef",
+      "sha256": "c7d1016ccc5e9289b1836c6f22af4d25e2f40ddc52ed2fe2fc82a2acd265087b"
+    },
+    "unity_play_exit_code": 0,
+    "unity_validate_exit_code": 0,
+    "root_static_guids": 77375,
+    "isolated_static_guids": 35974,
+    "shared_fixture_baseline": "0ae7dc88fc3530f9946ab08cc5066bb1183ad2f0",
+    "internal_display": "BOE0CD1",
+    "actual_render_viewed": true,
+    "simulated_pointer_raycast": true,
+    "fixture_lookup_and_dialog": true,
+    "formal_map_flow": false,
+    "windows_player": false
+  }
+}
