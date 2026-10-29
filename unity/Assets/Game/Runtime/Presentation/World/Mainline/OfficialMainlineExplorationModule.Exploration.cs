@@ -109,6 +109,13 @@ namespace Zjcs.Presentation.World
             public bool InteractExploreEntity(Map10RuntimeEntity entity)
             {
                 if (entity.PlacementId < 1000000000) return false;
+                // The original result component is attached to generated 8364,
+                // not to the static 6011 goddess.
+                if (entity.EntityClassId == 8364)
+                {
+                    host.statues.CollectLostGoddess(entity);
+                    return true;
+                }
                 var result = ExploreService.CollectEntity(entity.PlacementId - 1000000000, ExploreContext(), ExploreNow, out var awards);
                 if (result.Status == ProgressionResultStatus.InvalidState) throw new InvalidOperationException(result.Message);
                 if (result.IsApplied) { SynchronizeExploreEntities(); host.RefreshEntityActivity(); host.hud.RefreshWorldTopBar(); host.stamina.ShowStaminaAward(awards); }

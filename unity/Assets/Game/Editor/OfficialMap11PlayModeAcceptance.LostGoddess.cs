@@ -1,0 +1,114 @@
+#if UNITY_EDITOR || DEVELOPMENT_BUILD || ZJCS_MAINLINE_MODULE_VALIDATION
+using System;
+using System.Collections;
+using System.IO;
+using System.Linq;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using Zjcs.Offline.Progression;
+using Zjcs.Offline.World;
+using Zjcs.Official.World;
+using Zjcs.Official.WorldUI;
+using Zjcs.Presentation.World;
+
+namespace Zjcs.Editor
+{
+    public static partial class OfficialMap11PlayModeAcceptance
+    {
+        [UnityEditor.MenuItem("Zjcs/Validate/Map11 Lost Goddess Result")]
+        public static void RunLostGoddess()
+        {
+            SessionState.SetBool(Key + ".ui", false);
+            SessionState.SetBool(Key + ".background", false);
+            SessionState.SetBool(Key + ".lost", true);
+            try { RunCore(); }
+            catch (Exception error) { Debug.LogException(error); UnityEditor.EditorApplication.Exit(1); }
+        }
+
+        private static IEnumerator VerifyLostGoddess(Transform canvas)
+        {
+            yield return new WaitForSecondsRealtime(2);
+            Require(runtime.GetComponentInChildren<OfficialMap10EntityView>().EntityCount == 1803, "Map11 entity count");
+            OfflineMainlineProgressSession save = Field<OfflineMainlineProgressSession>("progressionSave");
+            OfflineWorldExplorationService service = new OfflineWorldExplorationService(save);
+            var group = service.Catalog.Data.entityGroups.First(value => value.Entitys.Contains(8364));
+            var map = Field<OfficialWorldMapSession>("session");
+            MapGridPoint current = Field<MapGridPoint>("currentGrid");
+            OfficialMapNavigationView.TryGetCell(map.Definition.Navigation, current.X, current.Y, out int area, out _);
+            int region = 0;
+            MapGridPoint spawn = new[] { new MapGridPoint(current.X + 1, current.Y), new MapGridPoint(current.X - 1, current.Y),
+                new MapGridPoint(current.X, current.Y + 1), new MapGridPoint(current.X, current.Y - 1) }.First(map.Movement.IsFit);
+            int serial = save.Save.World.Exploration.NextSerial;
+            long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            Require(save.ApplyInventoryTransaction("map11-lost-goddess-ui-fixture", state =>
+            {
+                state.World.Exploration.Entities.Add(new OfflineExploreEntity
+                {
+                    Serial = state.World.Exploration.NextSerial++, MapClassId = 11, Area = area, Region = region,
+                    X = spawn.X, Y = spawn.Y, Group = group.Group, Variant = group.Id, EntityClassId = 8364,
+                    State = service.Catalog.Parameters(8364).PublicDefaultState, CreatedAt = now, ExpiresAt = now + 600
+                });
+            }).IsApplied, "Lost goddess fixture transaction");
+            Invoke("SynchronizeExploreEntities");
+            Invoke("RefreshEntityActivity");
+            var generated = runtime.GetComponentInChildren<OfficialMap10EntityView>().FindEntityObject(1000000000 + serial);
+            Require(generated != null && generated.activeInHierarchy, "Generated lost goddess entity presentation");
+            yield return SimulateEntityClick(1000000000 + serial);
+            OfficialLostGoddessResultPopup popup = UnityEngine.Object.FindObjectOfType<OfficialLostGoddessResultPopup>();
+            float popupDeadline = Time.realtimeSinceStartup + 10;
+            while ((popup == null || !popup.IsShown) && Time.realtimeSinceStartup < popupDeadline)
+            {
+                yield return null;
+                popup = UnityEngine.Object.FindObjectOfType<OfficialLostGoddessResultPopup>();
+            }
+            Require(popup != null && popup.IsShown, "Official lost goddess result window shown");
+            Require(save.Save.World.Exploration.Entities.Single(value => value.Serial == serial).Completed,
+                "Lost goddess completion persisted before result close");
+            Capture("lost-goddess-result");
+            Button close = popup.GetComponentsInChildren<Button>(true).FirstOrDefault(button => button.gameObject.name.StartsWith("CloseObj", StringComparison.Ordinal));
+            Require(close != null, "Official lost goddess result close button");
+            yield return SimulatePointerClick(close);
+            yield return new WaitForSecondsRealtime(.8f);
+            Require(UnityEngine.Object.FindObjectOfType<OfficialLostGoddessResultPopup>() == null,
+                "Lost goddess result closes through the official button");
+            Debug.Log("Map11 lost goddess result passed: generated 8364 used the local atomic award transaction and the original result prefab closed through a simulated UGUI click.");
+            Finish();
+        }
+
+        private static IEnumerator SimulateEntityClick(int placement)
+        {
+            float deadline = Time.realtimeSinceStartup + 15;
+            Camera camera = Field<Camera>("worldCamera");
+            GameObject actor = Field<GameObject>("avatar");
+            while (Field<object>("movementPath") != null || Vector2.Distance(camera.transform.position, actor.transform.position) > 0.005f)
+            {
+                Require(Time.realtimeSinceStartup < deadline, "Map input camera settled");
+                yield return null;
+            }
+            Collider2D collider = runtime.GetComponentInChildren<OfficialMap10EntityView>()
+                .FindEntityObject(placement).GetComponentInChildren<Collider2D>();
+            Vector2 point = camera.WorldToScreenPoint(collider.bounds.center);
+            bool consumed = false;
+            runtime.PointerPressProvider = () =>
+            {
+                if (consumed) return null;
+                consumed = true;
+                return point;
+            };
+            float clickDeadline = Time.realtimeSinceStartup + 2;
+            while (!consumed && Time.realtimeSinceStartup < clickDeadline) yield return null;
+            Require(consumed, "Map entity simulated pointer press");
+            runtime.PointerPressProvider = null;
+            yield return new WaitForSecondsRealtime(.5f);
+        }
+
+        private static void Finish()
+        {
+            SessionState.SetInt(Key + ".result", 0);
+            UnityEditor.EditorApplication.isPlaying = false;
+        }
+    }
+}
+#endif

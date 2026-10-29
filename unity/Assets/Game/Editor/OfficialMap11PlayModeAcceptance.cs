@@ -36,6 +36,7 @@ namespace Zjcs.Editor
         public static void Run()
         {
             SessionState.SetBool(Key + ".ui", false);
+            SessionState.SetBool(Key + ".lost", false);
             try { SessionState.SetBool(Key + ".background", false); RunCore(); }
             catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
         }
@@ -161,6 +162,7 @@ namespace Zjcs.Editor
                 canvas.GetComponent<CanvasScaler>().matchWidthOrHeight = 0.5f;
                 OpenMap(canvas.transform);
                 new GameObject("Map11AcceptanceRunner").AddComponent<Runner>().StartCoroutine(
+                    SessionState.GetBool(Key + ".lost", false) ? VerifyLostGoddess(canvas.transform) :
                     SessionState.GetBool(Key + ".ui", false) ? VerifyUiPresentation() :
                     SessionState.GetBool(Key + ".background", false) ? VerifyBackground(canvas.transform) : Verify(canvas.transform));
             }

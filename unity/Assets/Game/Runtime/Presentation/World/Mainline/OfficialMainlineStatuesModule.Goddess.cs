@@ -82,9 +82,28 @@ namespace Zjcs.Presentation.World
                 }).ToArray();
                 goddessDialog.DoInit(IsGoddessActivated(entity), full, host.NativeUi.Text("entity_" + entity.EntityClassId + "_name"),
                     condition, blessing, props, treasurePreviews,
-                    () => ActivateGoddess(entity), () => TransferToGoddess(entity),
+                    () => ActivateGoddess(entity),
+                    () => TransferToGoddess(entity),
                     () => host.hud.ShowOfficialNotice(host.NativeUi.Text("STAGE_CONDITION_REGION_PROGRESS_NOT_FULL")), CloseGoddessDialog,
                     ShowTreasureDetail);
+            }
+
+            public void CollectLostGoddess(Map10RuntimeEntity entity)
+            {
+                if (host.progression.SkillRules == null)
+                    throw new InvalidOperationException("Official skill rules are not attached for lost goddess rewards.");
+                int serial = entity.PlacementId >= 1000000000 ? entity.PlacementId - 1000000000 : entity.PlacementId;
+                ProgressionResult result = host.exploration.ExploreService.AwardLostGoddess(serial, host.mapClassId,
+                    OfficialMainlineExplorationModule.ExploreNow, host.progression.Catalog, host.progression.SkillRules, out var award);
+                if (result.Status == ProgressionResultStatus.InvalidState || result.Status == ProgressionResultStatus.Unsupported)
+                    throw new InvalidOperationException(result.Message);
+                if (!result.IsApplied || award == null) return;
+                host.exploration.SynchronizeExploreEntities();
+                host.RefreshEntityActivity();
+                host.hud.RefreshWorldTopBar();
+                host.SaveLocalProgress();
+                CloseGoddessDialog();
+                OfficialLostGoddessResultPopup.Open(host.uiParent, award, host.progression, host.NativeUi.Text, null);
             }
 
             private void ShowTreasureDetail(int itemId)

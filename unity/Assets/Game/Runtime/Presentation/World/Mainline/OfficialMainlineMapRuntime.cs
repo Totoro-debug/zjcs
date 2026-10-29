@@ -340,6 +340,7 @@ namespace Zjcs.Presentation.World
                 throw new InvalidOperationException("Finish character creation and weapon selection before entering Map" + mapClassId + ".");
             OfficialCharacterAssetCatalog characterAssets = OfficialCharacterAssetCatalog.LoadDefault();
             progression = new OfflineCharacterProgressionService(progressionSave, characterAssets.Load());
+            progression.AttachSkillRules(characterAssets.LoadSkillRules());
             progression.AttachEquipmentCatalog(OfficialEquipmentAssetCatalog.LoadDefault().Load());
             session = OfficialWorldMapSession.Load(OfficialWorldMapAssetCatalog.LoadDefault(), mapClassId);
             if (session.Definition.MaxRegionProgress == null || session.Definition.MaxRegionProgress.Length == 0)
