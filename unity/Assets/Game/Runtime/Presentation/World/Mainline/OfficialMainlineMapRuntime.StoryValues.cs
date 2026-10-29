@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-using Zjcs.Official.World;
 
 namespace Zjcs.Presentation.World
 {
@@ -78,14 +77,6 @@ namespace Zjcs.Presentation.World
 
         internal static Zjcs.Offline.World.MapGridPoint ConvertStoryVectorPositionToGrid(Vector2 position) =>
             new Zjcs.Offline.World.MapGridPoint((int)position.x, (int)position.y);
-
-        internal static Vector2 ConvertStoryCameraPosition(OfficialMapNavigation navigation, Vector3 position, Vector2 offset)
-        {
-            if (navigation == null) throw new ArgumentNullException(nameof(navigation));
-            Zjcs.Offline.World.OfficialMapNavigationView.WorldToGrid(navigation,
-                new OfficialMapVector3 { X = position.x, Y = position.y, Z = position.z }, out int x, out int y);
-            return new Vector2(x, y) + offset;
-        }
 
         private long StoryItemCount(int itemId) => progressionSave.Save.Player.Inventory
             .FirstOrDefault(value => value.ItemId == itemId)?.Count ?? 0;
@@ -187,10 +178,6 @@ namespace Zjcs.Presentation.World
                 case "QueryPlayerLevelNode": return progressionSave.Save.Player.Level;
                 case "GetEntityPosNode":
                 case "GetPosAroundStoryObjectNode": return ResolveStoryPositionNode(node);
-                case "GetPosAroundWorldCamera":
-                    if (worldCamera == null) throw new InvalidDataException("Official story world camera is not bound.");
-                    return ConvertStoryCameraPosition(session.Definition.Navigation, worldCamera.transform.position,
-                        StorySpatialFields(node).Offset);
                 case "MapPositionChangeTypeNode":
                     StoryValueFields transfer = StoryFields(node);
                     if (transfer.TransferType != 1)

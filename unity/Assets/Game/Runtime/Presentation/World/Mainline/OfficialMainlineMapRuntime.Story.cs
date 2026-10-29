@@ -502,13 +502,8 @@ namespace Zjcs.Presentation.World
             Map10RuntimeStoryNode targetNode = link == null ? null : FindStoryNode(story, link.nodeId);
             if (targetNode == null)
                 return new Vector2(cameraNode.moveTargetX, cameraNode.moveTargetY);
-            if (targetNode.type == "GetPosAroundStoryObjectNode" || targetNode.type == "GetEntityPosNode"
-                || targetNode.type == "GetPosAroundWorldCamera")
-            {
-                if (targetNode.type == "GetPosAroundWorldCamera")
-                    return (Vector2)EvaluateStoryValue(story, targetNode);
+            if (targetNode.type == "GetPosAroundStoryObjectNode" || targetNode.type == "GetEntityPosNode")
                 return ResolveStoryPositionNode(targetNode);
-            }
             return new Vector2(cameraNode.moveTargetX, cameraNode.moveTargetY);
         }
 
