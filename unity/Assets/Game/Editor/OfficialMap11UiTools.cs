@@ -347,6 +347,7 @@ namespace Zjcs.Editor
                     dialog.mBlessingLevelTxt = Component<TMP_Text>(binding.blessingText);
                     dialog.mPropPrefab = string.IsNullOrEmpty(binding.propTemplate) ? null : Require(binding.propTemplate);
                     dialog.mPropPrefabSlot = string.IsNullOrEmpty(binding.propParent) ? null : Require(binding.propParent);
+                    dialog.TreasureContent = string.IsNullOrEmpty(binding.treasureContent) ? null : Require(binding.treasureContent).gameObject;
                     dialog.TreasureAwardSlot = string.IsNullOrEmpty(binding.treasureParent) ? null : Require(binding.treasureParent);
                     dialog.DialogIconSlot = Require(binding.iconSlot);
                     dialog.DialogIconPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(ResourceRoot + "/" + binding.iconKey + ".prefab");

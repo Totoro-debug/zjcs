@@ -37,6 +37,7 @@ namespace Zjcs.Official.WorldUI
         public Transform mPropPrefab;
         public Transform mPropPrefabSlot;
         public Transform TreasureAwardSlot;
+        public GameObject TreasureContent;
         public Transform DialogIconSlot;
         public GameObject DialogIconPrefab;
         public ObjectState[] ActivedStateSwitcher;
@@ -100,12 +101,12 @@ namespace Zjcs.Official.WorldUI
             }
             foreach (GameObject item in treasureItems) Destroy(item);
             treasureItems.Clear();
-            if (TreasureAwardSlot != null && TreasureAwardSlot.parent != null)
-                TreasureAwardSlot.parent.gameObject.SetActive(treasurePreviews != null && treasurePreviews.Length > 0);
+            bool hasTreasurePreviews = treasurePreviews != null && treasurePreviews.Length > 0;
+            if (hasTreasurePreviews && (TreasureContent == null || TreasureAwardSlot == null))
+                throw new InvalidOperationException("Official goddess treasure preview bindings are missing.");
+            if (TreasureContent != null) TreasureContent.SetActive(hasTreasurePreviews);
             if (treasurePreviews != null && treasurePreviews.Length > 0)
             {
-                if (TreasureAwardSlot == null)
-                    throw new InvalidOperationException("Official goddess treasure preview bindings are missing.");
                 foreach (TreasurePreview preview in treasurePreviews)
                 {
                     if (preview?.prefab == null || preview.icon == null || preview.quality == null)

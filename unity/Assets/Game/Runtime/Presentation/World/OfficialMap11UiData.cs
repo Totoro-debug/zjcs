@@ -388,7 +388,7 @@ namespace Zjcs.Presentation.World
     public sealed class OfficialMap11UiBindings
     {
         public string key, touchButton, cannotButton, transferButton, title, conditionText;
-        public string propTemplate, propParent, blessingText, treasureParent, iconSlot, iconKey;
+        public string propTemplate, propParent, blessingText, treasureContent, treasureParent, iconSlot, iconKey;
         public OfficialMap11UiState[] states, conditionStates;
     }
 

@@ -84,9 +84,12 @@ namespace Zjcs.Editor
             Invoke("Interact", goddess);
             GoddessTouchDialog goddessDialog = GameObject.Find("Map11GoddessUI")
                 .GetComponentInChildren<GoddessTouchDialog>(true);
-            WorldItemIcon[] previewIcons = goddessDialog.GetComponentsInChildren<WorldItemIcon>(true);
-            Require(previewIcons.Length == goddessRegion.DropItems.Length && previewIcons.All(value => value.Icon.sprite != null),
-                "Ordinary goddess renders each official region DropItems entry with its bound icon");
+            WorldItemIcon[] previewIcons = goddessDialog.TreasureAwardSlot.GetComponentsInChildren<WorldItemIcon>(true);
+            Rect slotRect = ScreenRect(goddessDialog.TreasureAwardSlot.gameObject);
+            Require(goddessDialog.TreasureContent.activeInHierarchy && previewIcons.Length == goddessRegion.DropItems.Length
+                && previewIcons.All(value => value.gameObject.activeInHierarchy && value.Icon.sprite != null
+                    && ScreenRect(value.gameObject).Overlaps(slotRect)),
+                "Ordinary goddess displays each official region DropItems icon inside the visible treasure slot");
             Require(save.Save.World.ActivatedGoddessRegions.Count == 0
                 && save.InventoryCount(goddessRegion.DropItems.First()) == itemCountBeforePreview,
                 "Opening the goddess treasure preview does not activate the goddess or grant its preview items");

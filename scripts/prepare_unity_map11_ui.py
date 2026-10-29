@@ -661,6 +661,7 @@ def build(map_id=11):
                          "conditionText": condition["fields"]["mDesc"], "states": states(component),
                          "conditionStates": states(condition), "propTemplate": f.get("mPropPrefab"),
                          "propParent": f.get("mPropPrefabSlot"), "blessingText": f.get("mBlessingLevelTxt"),
+                         "treasureContent": f.get("TreasureContent"),
                          "treasureParent": f.get("TreasureAwardSlot"),
                          "iconSlot": content["fields"]["mIconSlot"]["mPreviewSlot"],
                          "iconKey": ICONS[0 if key == PANELS[0] else 1]})
