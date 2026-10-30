@@ -104,8 +104,10 @@ namespace Zjcs.Presentation.World
             }
             if (!battleScenes.TryGetValue(stage.GameId, out Map10RuntimeBattleScene scene))
                 throw new InvalidDataException("Official Map10 battle scene is missing for GameId " + stage.GameId);
-            bool periodicGroupAlreadyUsed = entity.PeriodicityGroupIds.Any(localSave.completedPeriodicityGroups.Contains);
-            if (!OfficialMainlineStaminaModule.IsStaminaPoint(entity) && ((stage.Repeat >= 0 && localSave.completedStages.Contains(stageId)) || periodicGroupAlreadyUsed))
+            bool periodicGroupAlreadyUsed = entity != null && entity.PeriodicityGroupIds != null
+                && entity.PeriodicityGroupIds.Any(localSave.completedPeriodicityGroups.Contains);
+            if (entity != null && !OfficialMainlineStaminaModule.IsStaminaPoint(entity)
+                && ((stage.Repeat >= 0 && localSave.completedStages.Contains(stageId)) || periodicGroupAlreadyUsed))
             {
                 CompleteEntity(entity);
                 completed?.Invoke();
@@ -121,7 +123,7 @@ namespace Zjcs.Presentation.World
             FightBattleCheckpoint resume = null)
         {
             FightBattleCheckpoint checkpoint = resume ?? BuildCheckpoint(entity, stage, roster, scene);
-            if (OfficialMainlineStaminaModule.IsStaminaPoint(entity))
+            if (entity != null && OfficialMainlineStaminaModule.IsStaminaPoint(entity))
             {
                 long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 ProgressionResult cost = stamina.Stamina.StartBattle(mapClassId, entity.PlacementId, stamina.StaminaCosts(entity), now);
@@ -581,12 +583,14 @@ namespace Zjcs.Presentation.World
                 // Invalid duels have no settlement: never run loss, resource, attempt or reward
                 // consumers. Mode-specific reservations must likewise use Outcome.CanSettle.
                 ClearActiveBattle();
+                if (map14StoryStageBattle) map14StoryStageWon = false;
                 Action invalidCompleted = DestroyBattleSession();
                 SaveLocalProgress();
                 invalidCompleted?.Invoke();
                 return;
             }
             bool won = outcome != null && outcome.Won;
+            if (map14StoryStageBattle) map14StoryStageWon = won;
             if (!SettleMap12MountLiftBattle(entity, checkpoint.StageId, won)) return;
             if (!SettleMap12SteleBattle(entity, checkpoint.StageId, won)) return;
             stamina.FinishStaminaBattle(entity, won);
@@ -608,8 +612,8 @@ namespace Zjcs.Presentation.World
                 }).ToArray();
             }
 
-            bool cleared = won || (mapClassId == 10 && storyBattle);
-            if (cleared && entity != null)
+            bool cleared = map14StoryStageBattle ? won : won || (mapClassId == 10 && storyBattle);
+            if (cleared && entity != null && !map14StoryStageBattle)
             {
                 string receipt = MapReceiptPrefix + slotId + ":battle:" + entity.PlacementId + ":" + checkpoint.StageId
                     + ":" + (localSave.battleResults == null ? 0 : localSave.battleResults.Length);

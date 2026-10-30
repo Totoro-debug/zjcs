@@ -334,6 +334,9 @@ namespace Zjcs.Presentation.World
                         case "HandInItemNode":
                             RunHandInItemNode(node);
                             return;
+                        case "StoryStartStageNode":
+                            StartMap14StoryStage(node);
+                            return;
                         case "OpenMapNationShopPanelNode":
                             if (mapClassId != 13 || storyContextEntity == null || storyContextEntity.EntityClassId != 8438)
                                 throw new InvalidDataException("Unsupported official nation-shop panel in Map" + mapClassId + ".");
@@ -836,6 +839,12 @@ namespace Zjcs.Presentation.World
             Map10RuntimeStoryNode targetNode = link == null ? null : FindStoryNode(story, link.nodeId);
             if (targetNode == null)
                 return new Vector2(cameraNode.moveTargetX, cameraNode.moveTargetY);
+            if (targetNode.type == "GetPosAroundWorldCamera")
+            {
+                StorySpatialNodeFields cameraFields = StorySpatialFields(targetNode);
+                Vector3 viewPosition = storyCameraActive ? storyCameraTarget : avatar.transform.position;
+                return StoryGridPosition(viewPosition) + cameraFields.Offset;
+            }
             if (targetNode.type == "GetPosAroundStoryObjectNode" || targetNode.type == "GetEntityPosNode")
                 return ResolveStoryPositionNode(targetNode);
             return new Vector2(cameraNode.moveTargetX, cameraNode.moveTargetY);

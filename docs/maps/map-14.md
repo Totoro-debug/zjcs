@@ -50,7 +50,7 @@
 
 龙之国主线剧情数据载荷：以当前871来源收据校验原85张 Map14 剧情图、93张关联表和64组对白，校验图／子图闭包、72个 MapTalk 入口及17项条件闭包、原角色和奖励引用后生成 Unity 载荷；包含64张主线图、21张子图、1,333节点、417句对白、15个角色、60个逻辑标签、8项固定奖励和1项交付配置。共享执行器现已迁移原 `MapPositionChangeTypeNode` 的 Vector2→格子截断转换，并由 `FengMoXiaFinish` 的 `8456` 生成节点消费官方 `惠_遗迹` 实体位置连线；原图连接及负坐标截断已通过编辑器回归。`SuoYaoTowerAfterBattle` 的 `MapMeCharacterTransferNode` 已读取官方 Map14 逻辑标签、非快速标志和方向，离线实现复用共享寻路逐格移动／本地存档后继续 Exit，代替原 RPC；源参数回归已通过，完整地图内路径移动、朝向画面及存档恢复仍待验证。转换脚本、输入／输出SHA-256及待接入项见[剧情运行时来源清单](../../assets/reference/official-map/map14-story-runtime-source-manifest.json)。其余35种节点类型尚未接入，载荷仍未绑定原生剧情UI、完整Playables、全部实体模板或主线地图宿主，不代表可运行剧情。
 
-主线执行器已接入原 `ClickMapPosInLogicNode` 和 `WaitPlayerArriveMapPosAroundNode`：零点与混合非交互实体格遵循官方不点击分支；逻辑点击复用官方相机投影、实体拾取和寻路交互流程，未命中实体时移动至目标格；等待使用 `Pos2d.Magnitude()` 的曼哈顿距离且最小 1 格，并在等待期间开放地图点击和寻路，到达、取消或异常后关闭。对应的两处原剧情图输入和距离边界已加入编辑器回归；Map14 正式实体宿主尚未接通，因此点击与移动尚未在完整剧情流程中运行验证。
+主线执行器已接入原 `ClickMapPosInLogicNode`、`WaitPlayerArriveMapPosAroundNode` 和 `GetPosAroundWorldCamera`：零点与混合非交互实体格遵循官方不点击分支；逻辑点击复用官方相机投影、实体拾取和寻路交互流程，未命中实体时移动至目标格；等待使用 `Pos2d.Magnitude()` 的曼哈顿距离且最小 1 格，并在等待期间开放地图点击和寻路，到达、取消或异常后关闭。摄像机位置查询按官方摄像机目标位置转为地图格点后应用原偏移，覆盖当前3个剧情调用。对应的两处原剧情图输入和距离边界已加入编辑器回归；Map14 正式实体宿主尚未接通，因此点击、移动及摄像机剧情演出尚未在完整流程中运行验证。
 
 龙之国剧情空间：按当前871云端索引核对共享StorySettings bundle哈希，从当前官方Map14实体配置及158个实际EC prefab根对象读取StoryTalk标签和StoryNodeRegister键，生成15个StoryTalk prefab、4个本地图注册键及剧情空间范围／偏移配置；外地图子图引用逐个记录，未从剧情节点推测实体标签。[生成器](../../scripts/prepare_unity_map11_story_spatial.py)、[输入对象、官方代码、bundle来源和输出哈希](../../assets/reference/official-map/map14-story-spatial-source-manifest.json)，运行时数据为 `unity/Assets/Game/Resources/Map14/story-spatial.json`。Unity Editor 导入和 Play Mode 仍待验证。
 
@@ -177,7 +177,7 @@ Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式
 
 - 辉／残影战斗实体 4651／4652 已追溯到 APK 内 `npc_middle_model`，源骨骼 2,315 根、171 个皮肤、834 段动画已完整解码；修复 MIT 二进制读取器遗漏的皮肤骨骼／约束成员引用，保留辉 54 条、残影 58 条物理约束。原 `SkeletonMecanim`、组合皮肤、HSV、Animator／Controller 字段已写入可复建源缓存，来源见 `map14-fightother-source-manifest.json`。6 项读取器测试及全部原二进制消费检查通过；尚未接入原生模型播放、战斗画面或 Windows Player，未烘焙或忽略这些约束。
 
-- 龙之国的当前版战斗数据闭包已恢复为 217 个关卡、217 份波次名单、20 个战斗场景、90 套阵型和 909 组实体关卡绑定；包括魔女召唤关卡 `20004` 和剧情图中的三处 `StoryStartStageNode`（关卡 `52`／`53`）。关卡、怪物组、技能物品、阵型、场景和属性二进制均读取 `871_156598` 所选官方来源，九份共享公式源码与当前程序集反编译结果逐字节相同。运行载荷为 `Resources/Map14/battle-runtime`，尚未接通正式地图战斗入口。
+- 龙之国的当前版战斗数据闭包已恢复为 217 个关卡、217 份波次名单、20 个战斗场景、90 套阵型和 909 组实体关卡绑定；包括魔女召唤关卡 `20004` 和剧情图中的三处 `StoryStartStageNode`（关卡 `52`／`53`）。关卡、怪物组、技能物品、阵型、场景和属性二进制均读取 `871_156598` 所选官方来源，九份共享公式源码与当前程序集反编译结果逐字节相同。运行载荷为 `Resources/Map14/battle-runtime`；剧情战斗节点已在共享本地战斗执行器启动官方关卡，胜利走 `SuccessExit`，失败或离开回到当前节点重试。此接线尚未通过 Map14 Play Mode 完整战斗流程验证。
 - Unity Editor 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和战斗数据 Play Mode 夹具通过；实际消费 1,649 个怪物实例，其中 87 个按测试玩家等级动态计算，逐项比较 C# 官方属性公式与提取名单，并执行实际被动属性、单位建立和主动／被动技能组装。共享单位构造已保留计算后的等级，避免动态关卡技能误用占位等级 1。此夹具不覆盖完整战斗画面、鼠标输入、胜负奖励与存档；剧情对手 `4651`／`4652` 的原 `FightOther` prefab、`npc_middle_model` 骨骼及辉／残影皮肤已定位，原生模型、武器、动画和表现绑定仍待恢复。
 
 - 当前官方程序集及客户端／共享反编译代码已经核验，按原 formatter、构造器与 schema 解码本图导航、放置、169 个模板／动作、93 张关联表、85 份客户端剧情图及对应服务端配置记录。对白为当前 Luban 表的 64 组，保留原顺序、中文键、角色、表情与配音键。配置记录不视为服务端执行器。原脚本中误指向地图 13 的输入已纠正；本图区域和实体分别读取 `mapinfowrap_14.g.bytes` 与 `map_14.g.bytes`。
@@ -362,6 +362,7 @@ Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式
 ## 尚未实现
 
 - MapClassId 15 的准备配置已按当前 `871_156598` 还原至 `Resources/Map14/world-alone-preparation.json`：Gold 段后 14 日、准备组 7101、PrepareEnd 条件 115。原 `MapWorldActivedCondition` 判断 `WorldMapRegionProgressDict` 是否含 MapClassId 15；四项 7101 任务为可重复接取的 `Map15GroupDaily`，分别提交 43046／43049／43052／43055 各2件，不作为永久开放触发器。客户端 `PlayerMapWorldAlonePrepareDataRankLockTime` 的时间公式为 `max(AppearTime + MinDurationS, Gold段位解锁时间 + 14日)`，但服务端设置 `AppearTime` 与状态转换没有客户端实现。离线推测将首次达到 Gold 的段位解锁时间作为 `AppearTime`，在配置时限后把独立存档状态由 Preparing(0) 推进到 PrepareEnd(1)；此起始时间是本地决策，不代表官方服务器规则。实现读取提取出的规则，位于 `OfflineMainlineProgressSession.RefreshMap15Preparation`，并由角色升段存档事务、其他进度提交及地图会话打开时刷新；条件115进度查询与 Map14 条件4281的 `MapWorldAloneStatusCondition(MapClassId=15, Status=1)` 均消费该本地状态。Map15 正式世界进度入口、地区／实体／界面及完整跨地图流程仍未接通或验证。来源／哈希见[准备配置来源清单](../../assets/reference/official-map/map14-world-alone-preparation-source-manifest.json)，生成器为 [`prepare_unity_map14_world_alone_config.py`](../../scripts/prepare_unity_map14_world_alone_config.py)。
+- Map14 的 `StoryStartStageNode` 读取原节点 `StageId`／玩家等级标志，当前三处调用仅允许官方本地图关卡52／53；使用本地战斗配置和共享战斗运行时，不记实体通关或奖励。胜利推进 `SuccessExit`，失败、离开或无效结果回到同一故事节点重试；战斗配置、胜负结算和退出流程尚未在完整地图 Play Mode 验证。
 - 恢复实体 prefab、角色／实体骨骼、粒子、动画、MiniMap_14 迷雾／标记，并把已恢复的 BGM／剧情音频、官方 HUD、对话和交互界面接入正式主线宿主；将已恢复的地区标签绑定正式本地地图状态。
 - 接通 111 区开放条件、2,961 个放置实体、四类雕像、怪物、94 张主线及公共剧情图、命运探寻、8 块战斗碑、3 处遗迹、7 组火炮、5 组走格子及地图 15 原出口的正式入口、原条件、剧情、交互、战斗与奖励。不得以配置提取或地形夹具代替完整玩法。
 - 接通正式地图背包交易、本地状态和存档，完成正常游玩、失败回滚、退出与冷读恢复。提交窗口的隔离夹具已覆盖模拟鼠标与存档事务；其他资源夹具不代表正式地图流程。
