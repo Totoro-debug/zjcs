@@ -1,0 +1,92 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfcdc0a99cbb52095455e4861ac4efe0, type: 3}
+  m_Name: '[3][State]拼图游戏关卡可挑战'
+  m_EditorClassIdentifier:
+  graph: {fileID: 11400000, guid: ea80a50df2f611048af8fc5d144d9664, type: 2}
+  position:
+    x: -88
+    y: -232
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: 998537d0b8df7654da5f8884e28d0dff, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+  NodeId: -1
+  Mono:
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: 拼图游戏关卡可挑战
+  SelectedType:
+  NodeName:
+  TipDotNodeId: 3
+  TipDotNode:
+    rid: 4471495332498505957
+  RuntimeTipDotNode:
+    rid: -2
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 0
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels:
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type:
+        class:
+        ns:
+        asm:
+    - rid: 4471495332498505957
+      type:
+        class: TipDotLinkJigsawLevelNode
+        ns:
+        asm: Assembly-CSharp
+      data:
+        Parents: []
+        Childs: []
+        NodeKey:
+          GraphName: FestivalMinigameJigsawLevelChallengable
+          NodeName:
+        TipDotInfo:
+          TipLevel: 0
+          Data:
+        IsShowTip: 0
+        mNodeSelector:
+          GraphNode: {fileID: 11400000, guid: 7f899a66e9348d045b10c0eed94ff73e, type: 2}
+        ActivityId: 0
+        Level: 0

@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e0e95d7a4fdd6eadd08db7dcf5554c3, type: 3}
+  m_Name: '[26][Cnd]馈赠任务是否可以领奖'
+  m_EditorClassIdentifier:
+  graph: {fileID: 11400000, guid: f0d5c1f30faae454a96e44ec8495f714, type: 2}
+  position:
+    x: 4424
+    y: 8
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: 13593eefd80f1f5478d99fa3f817a245, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+  NodeId: -1
+  Mono:
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc:
+  SelectedType:
+  NodeName:
+  TipDotNodeId: 26
+  TipDotNode:
+    rid: 4800079964069691423
+  RuntimeTipDotNode:
+    rid: -2
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 4
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels:
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type:
+        class:
+        ns:
+        asm:
+    - rid: 4800079964069691423
+      type:
+        class: TipDotAchievementConditionNode
+        ns:
+        asm: Assembly-CSharp
+      data:
+        Parents: []
+        Childs: []
+        NodeKey:
+          GraphName: SkillGacha
+          NodeName: b3ec0501-f39b-4633-b914-e5de82f06b2a
+        TipDotInfo:
+          TipLevel: 0
+          Data:
+        IsShowTip: 0
+        AchievementTypeAndParamList:
+        - AchievementType: 60
+          JsonParam:

@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e0e95d7a4fdd6eadd08db7dcf5554c3, type: 3}
+  m_Name: '[9][Cnd]背包是否有可以使用的道具'
+  m_EditorClassIdentifier:
+  graph: {fileID: 11400000, guid: 19dccad2e657e5746aef8ee7285a5247, type: 2}
+  position:
+    x: 3320
+    y: -104
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: 41df1a037a9b1ac469d5f7212777d1c5, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+  NodeId: -1
+  Mono:
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc:
+  SelectedType:
+  NodeName:
+  TipDotNodeId: 9
+  TipDotNode:
+    rid: 4800079984713531993
+  RuntimeTipDotNode:
+    rid: -2
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 4
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels:
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type:
+        class:
+        ns:
+        asm:
+    - rid: 4800079984713531993
+      type:
+        class: TipDotBagCanUseItemConditionNode
+        ns:
+        asm: Assembly-CSharp
+      data:
+        Parents: []
+        Childs: []
+        NodeKey:
+          GraphName: Bag
+          NodeName: 3ce9ae26-2307-4503-adb6-f0302d441da3
+        TipDotInfo:
+          TipLevel: 0
+          Data:
+        IsShowTip: 0
+        Type: 2
+        CheckTypes: 9f010000a0010000a1010000a2010000a3010000a4010000a50100002e0100003b0100004e010000920100009c0100009d0100009a010000f40100009b01000001000000450100006d00000040010000690000002c010000410100009101000093010000480100006c000000730000003c01000050010000b2010000
+        ShowNum: 0

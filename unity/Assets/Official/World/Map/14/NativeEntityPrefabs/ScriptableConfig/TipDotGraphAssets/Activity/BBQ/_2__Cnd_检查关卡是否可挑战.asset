@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e0e95d7a4fdd6eadd08db7dcf5554c3, type: 3}
+  m_Name: '[2][Cnd]检查关卡是否可挑战'
+  m_EditorClassIdentifier:
+  graph: {fileID: 11400000, guid: dec40eb2fe5fe3d4d830dad8320682a2, type: 2}
+  position:
+    x: 504
+    y: -56
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: 7e100e09d3eeb06448ac158c3e096d84, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 1
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 1
+      _dynamic: 0
+  NodeId: -1
+  Mono:
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc:
+  SelectedType:
+  NodeName:
+  TipDotNodeId: 2
+  TipDotNode:
+    rid: 4667128179490029577
+  RuntimeTipDotNode:
+    rid: -2
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 4
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels:
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type:
+        class:
+        ns:
+        asm:
+    - rid: 4667128179490029577
+      type:
+        class: TipDotActiveBBQGameOrderConditionNode
+        ns:
+        asm: Assembly-CSharp
+      data:
+        Parents: []
+        Childs: []
+        NodeKey:
+          GraphName:
+          NodeName:
+        TipDotInfo:
+          TipLevel: 0
+          Data:
+        IsShowTip: 0
+        ActivityId: 0
+        Order: 0

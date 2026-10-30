@@ -1,0 +1,92 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e0e95d7a4fdd6eadd08db7dcf5554c3, type: 3}
+  m_Name: '[47][State]高阶技能自选是否已完成'
+  m_EditorClassIdentifier:
+  graph: {fileID: 11400000, guid: f0d5c1f30faae454a96e44ec8495f714, type: 2}
+  position:
+    x: 4424
+    y: 632
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: bdb6a38eb65d2d94a9e809c71e886b8a, type: 2}
+        reroutePoints: []
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: a640c3e11b964d34086d561c579faf0c, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 1
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 1
+      _dynamic: 0
+  NodeId: -1
+  Mono:
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: 高阶技能自选是否已完成
+  SelectedType:
+  NodeName:
+  TipDotNodeId: 47
+  TipDotNode:
+    rid: 1028522034175411050
+  RuntimeTipDotNode:
+    rid: -2
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 4
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels:
+    IsReverse: 1
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type:
+        class:
+        ns:
+        asm:
+    - rid: 1028522034175411050
+      type:
+        class: TipDotSkillGachaCustomSelectionConditionNode
+        ns:
+        asm: Assembly-CSharp
+      data:
+        Parents: []
+        Childs: []
+        NodeKey:
+          GraphName:
+          NodeName:
+        TipDotInfo:
+          TipLevel: 0
+          Data:
+        IsShowTip: 0
+        UsePlayerProfession: 1

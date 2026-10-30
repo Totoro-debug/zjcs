@@ -2,7 +2,7 @@
 
 [总索引](../README.md)
 
-状态：未完成。当前官方配置、原生地形与环境、全部 486 个环境／地区标签 prefab、两类蝴蝶动画、机关规则及主线剧情数据载荷已恢复并分项验证；原生地形／环境／区域标签视图已接入主线地图宿主，但正式地图入口仍关闭。实体、剧情运行时、正式玩法、HUD、存档与 Windows 发布尚未完成。
+状态：未完成。当前官方配置、原生地形与环境、全部 486 个环境／地区标签 prefab、两类蝴蝶动画、机关规则及主线剧情数据载荷已恢复并分项验证；原生地形／环境／区域标签视图与 2,961 个放置实体已接入主线地图宿主，并通过实际 Map14 Play Mode 入口验证 416 个官方实体 prefab 根的实例化。工程静态检查、`ProjectTools.Validate`、Map14 Play Mode prefab 入口及隔离 Windows Player 构建／BootSplash 启动均通过；Player 检查未创建角色存档。剧情运行时、正式玩法、HUD、存档与正式 Windows 发布尚未完成。
 
 ## 地图简介
 
@@ -30,7 +30,7 @@
 
 依据：[实体来源](../../assets/reference/official-map/map14-native-entity-input-source-manifest.json)。
 
-龙之国实体原生导出：私有 AssetRipper 1.3.14 完成1544份已核验输入的 UnityProject 转换；1822份原生缓存载荷恢复2643个注册表及10376条原引用记录，保留43个空注册表。独立核对193131个值、16576个实际非空指针、1001个按原类型解包的数组及原RID／顺序／浮点位表示，剥离并核验2643组临时来源标记。此成果仅为原生缓存，游戏脚本、shader、动画、正式实体宿主及运行验证仍待接入，范围见[龙之国](map-14.md)。
+龙之国实体原生导出：私有 AssetRipper 1.3.14 完成1544份已核验输入的 UnityProject 转换；1822份原生缓存载荷恢复2643个注册表及10376条原引用记录，保留43个空注册表。独立核对193131个值、16576个实际非空指针、1001个按原类型解包的数组及原RID／顺序／浮点位表示，剥离并核验2643组临时来源标记。416 个选定 prefab 根及其闭包已写入 `Assets/Official/World/Map/14/NativeEntityPrefabs/`，并由 `Map14/Native/entity-prefab-catalog` 显式绑定原路径与 EntityClassId；回归按导出回执逐根核对恢复文件及 Unity 包内文件 SHA256。实际入口验证了 2,961 个放置和 placement 101 的原 prefab 实例。共享实体事件生命周期、完整交互状态、剧情宿主及存档仍待接入，范围见[龙之国](map-14.md)。
 
 依据：[实体导出来源](../../assets/reference/official-map/map14-native-entity-export-source-manifest.json)。
 
@@ -50,11 +50,11 @@
 
 龙之国主线剧情数据载荷：以当前871来源收据校验原85张 Map14 剧情图、93张关联表和64组对白，校验图／子图闭包、72个 MapTalk 入口及17项条件闭包、原角色和奖励引用后生成 Unity 载荷；包含64张主线图、21张子图、1,333节点、417句对白、15个角色、60个逻辑标签、8项固定奖励和1项交付配置。共享执行器现已迁移原 `MapPositionChangeTypeNode` 的 Vector2→格子截断转换，并由 `FengMoXiaFinish` 的 `8456` 生成节点消费官方 `惠_遗迹` 实体位置连线；原图连接及负坐标截断已通过编辑器回归。`SuoYaoTowerAfterBattle` 的 `MapMeCharacterTransferNode` 已读取官方 Map14 逻辑标签、非快速标志和方向，离线实现复用共享寻路逐格移动／本地存档后继续 Exit，代替原 RPC；源参数回归已通过，完整地图内路径移动、朝向画面及存档恢复仍待验证。转换脚本、输入／输出SHA-256及待接入项见[剧情运行时来源清单](../../assets/reference/official-map/map14-story-runtime-source-manifest.json)。其余35种节点类型尚未接入，载荷仍未绑定原生剧情UI、完整Playables、全部实体模板或主线地图宿主，不代表可运行剧情。
 
-主线执行器另已接入原 `ClickMapPosInLogicNode` 和 `WaitPlayerArriveMapPosAroundNode`：零点与混合非交互实体格遵循官方不点击分支，等待使用曼哈顿距离且最小 1 格；等待态仅接受地图移动输入并在到达后续接 Exit。Map14 正式宿主尚未接通，该流程尚未做整图验证。
+主线执行器已接入原 `ClickMapPosInLogicNode` 和 `WaitPlayerArriveMapPosAroundNode`：零点与混合非交互实体格遵循官方不点击分支；逻辑点击复用官方相机投影、实体拾取和寻路交互流程，未命中实体时移动至目标格；等待使用 `Pos2d.Magnitude()` 的曼哈顿距离且最小 1 格，并在等待期间开放地图点击和寻路，到达、取消或异常后关闭。对应的两处原剧情图输入和距离边界已加入编辑器回归；Map14 正式实体宿主尚未接通，因此点击与移动尚未在完整剧情流程中运行验证。
 
 龙之国剧情空间：按当前871云端索引核对共享StorySettings bundle哈希，从当前官方Map14实体配置及158个实际EC prefab根对象读取StoryTalk标签和StoryNodeRegister键，生成15个StoryTalk prefab、4个本地图注册键及剧情空间范围／偏移配置；外地图子图引用逐个记录，未从剧情节点推测实体标签。[生成器](../../scripts/prepare_unity_map11_story_spatial.py)、[输入对象、官方代码、bundle来源和输出哈希](../../assets/reference/official-map/map14-story-spatial-source-manifest.json)，运行时数据为 `unity/Assets/Game/Resources/Map14/story-spatial.json`。Unity Editor 导入和 Play Mode 仍待验证。
 
-龙之国统一地图定义 `map14.json`：生成器核对 `map14-source-manifest.json` 的当前输入与全部输出哈希，再映射原导航、111个地区、2,961个放置实体及 `map_world.DefEntryId=101`；定义包含16项地区访问条件及其递归条件闭包。Unity 定义输出 SHA-256 为 `7acb3d00fbfa754569138253b08c86d0a43f8c1f9667c8bb1e1511ac46ed1897`。定义尚未绑定主线资源目录、实体渲染或战斗载荷，不代表入口可玩。
+龙之国统一地图定义 `map14.json`：生成器核对 `map14-source-manifest.json` 的当前输入与全部输出哈希，再映射原导航、111个地区、2,961个放置实体及 `map_world.DefEntryId=101`；定义包含16项地区访问条件及其递归条件闭包。Unity 定义输出 SHA-256 为 `7acb3d00fbfa754569138253b08c86d0a43f8c1f9667c8bb1e1511ac46ed1897`，已直接绑定正式地图资源目录的 ClassId 14 条目和官方 source manifest。Map14 原生地形宿主、放置目录和实体 prefab 已能从主线入口启动；剧情、玩法、完整 HUD 与存档仍不代表已完成。
 
 龙之国提交窗口的 Windows 原生绑定另见 [map14-handin-ui-bindings-source-manifest.json](../../assets/reference/official-map/map14-handin-ui-bindings-source-manifest.json)：原窗口／图标共 58 节点、94 份组件字段、18 张切片、3 个 Animator 配置、两段 60 Hz 弹窗动画与五态按钮 controller；原 `UI/Gray` shader 四变体由当前 GLES 程序机械转换，`UIGray` 材质来自 `GlobalUIConfig.GrayMat`。原 `Main_Cursor_Normal`／`Main_Cursor_Back` 事件由当前 WwiseEventReference 解析，复用音频前逐字节核对当前五份 Wwise 包与原转换输入相同，并核对 APK 实际包内输入及转换输出哈希。正式地图主线宿主、图标详情和全局遮罩仍未完成，范围见[地图页](map-14.md)。
 
@@ -381,8 +381,9 @@ Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式
 - [原生输入恢复](../../scripts/prepare_unity_map14_native.py)、[输入及组件来源](../../assets/reference/official-map/map14-native-input-source-manifest.json)。
 - [实体输入恢复](../../scripts/prepare_unity_map14_entity_inputs.py)、[原组件序列化描述](../../scripts/map14_entity_native_schemas.py)及[实体／显示／动态贴图来源](../../assets/reference/official-map/map14-native-entity-input-source-manifest.json)；完整原字段载荷为 `Source/native-entity-components.json`，临时转换输入保存在 `.tools/map14-entity-native-cache-871_156598/`，不进入运行时。
 - [实体原生导出](../../scripts/prepare_unity_map14_entity_export.py)与[逐字段／指针核对来源](../../assets/reference/official-map/map14-native-entity-export-source-manifest.json)；使用 `--convert` 执行私有转换器，原顺序恢复结果在同一缓存的 `restored/` 中。
+- [实体 prefab 目录生成器](../../unity/Assets/Game/Editor/Map14/EntityAssets/OfficialMap14EntityPrefabCatalogBuilder.cs)按 [871_156598 输入清单](../../assets/reference/official-map/map14-native-entity-input-source-manifest.json)显式绑定 416 个原路径、EntityClassId 与 Unity prefab；[导出回归](../../scripts/test_map14_entity_prefab_export.py)逐根比较缓存与打包文件 SHA256。
 - [主线剧情数据生成器](../../scripts/prepare_unity_map14_story_runtime.py)、[剧情来源与输出哈希](../../assets/reference/official-map/map14-story-runtime-source-manifest.json)及本地载荷 `Resources/Map14/stories`；数据共 94 张图（73 张主图、21 张子图），入口和演出绑定仍未完成。
-- [剧情空间恢复生成器](../../scripts/prepare_unity_map11_story_spatial.py)支持 `--map 14`、[Map14 来源清单](../../assets/reference/official-map/map14-story-spatial-source-manifest.json)及本地运行时载荷 `Resources/Map14/story-spatial.json`；原始 prefab 标签与注册键已恢复，主线执行接线尚未通过 Unity 编译／运行验证。
+- [剧情空间恢复生成器](../../scripts/prepare_unity_map11_story_spatial.py)支持 `--map 14`、[Map14 来源清单](../../assets/reference/official-map/map14-story-spatial-source-manifest.json)及本地运行时载荷 `Resources/Map14/story-spatial.json`；原始 prefab 标签与注册键已恢复。主线执行器的原地图点击／到达等待节点和已接入节点已通过全工程 Unity 编译及 `ProjectTools.Validate`；完整剧情、模拟输入和存档仍因正式实体宿主未接通而未运行验证。
 - [实体材质来源恢复](../../scripts/prepare_unity_map14_entity_materials.py)及[逐字节／指针来源](../../assets/reference/official-map/map14-native-entity-materials-source-manifest.json)；原字段载荷为 `Source/native-entity-materials.json`。
 - [材质原生绑定生成器](../../scripts/prepare_unity_map14_entity_materials_native.py)、[材质／shader／原纹理指针来源](../../assets/reference/official-map/map14-native-entity-materials-native-source-manifest.json)、[材质 Unity 绑定收据](../../assets/reference/official-map/map14-native-entity-materials-binding-source-manifest.json)及[Unity 材质导入与显式目录](../../unity/Assets/Game/Editor/Map14/EntityTextures/OfficialMap14EntityMaterialTools.cs)；资源目录为 `Map14/Native/native-entity-materials-catalog`，按 `CAB:Material:PathID` 查找。
 - [实体原纹理恢复](../../scripts/prepare_unity_map14_entity_textures.py)、[纹理来源](../../assets/reference/official-map/map14-native-entity-textures-source-manifest.json)、[纹理 Unity 绑定收据](../../assets/reference/official-map/map14-native-entity-textures-binding-source-manifest.json)、[ mip 回读](../../unity/Assets/Game/Editor/Map14/EntityTextures/OfficialMap14EntityTextureAcceptance.cs)与[shader 原生转换](../../scripts/prepare_unity_map14_entity_shaders.py)、[shader 来源](../../assets/reference/official-map/map14-entity-shaders-source-manifest.json)、[shader Unity 绑定收据](../../assets/reference/official-map/map14-entity-shaders-binding-source-manifest.json)、[绑定及变体验收](../../unity/Assets/Game/Editor/Map14/EntityShaders/OfficialMap14EntityShaderTools.cs)。
@@ -393,6 +394,6 @@ Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式
 
 - [蝴蝶原生动画与 shader 转换](../../scripts/prepare_unity_map14_butterflies.py)、[来源](../../assets/reference/official-map/map14-native-butterflies-source-manifest.json)、[显式绑定](../../assets/reference/official-map/map14-native-butterflies-binding-source-manifest.json)及[独立原始数据参考](../../scripts/map14_butterfly_reference.py)；运行边界为 `Runtime/Offline/World/NativeMap14/`。
 - [环境分区恢复](../../scripts/prepare_unity_map14_environment_scene.py)、[原生来源](../../assets/reference/official-map/map14-native-environment-scene-source-manifest.json)、[绑定](../../assets/reference/official-map/map14-native-environment-scene-binding-source-manifest.json)、[共享环境来源核对](../../assets/reference/official-map/map14-shared-environment-source-manifest.json)及[实际运行检查](../../unity/Assets/Game/Editor/Map14/OfficialMap14EnvironmentSceneAcceptance.cs)。
-- [地区标签代码投影](../../scripts/prepare_unity_map14_label_components.py)、[代码／语言／配置来源](../../assets/reference/official-map/map14-label-components-code-source-manifest.json)、[原生转换](../../scripts/prepare_unity_map14_region_labels.py)、[素材来源](../../assets/reference/official-map/map14-native-region-labels-source-manifest.json)、[显式绑定](../../assets/reference/official-map/map14-native-region-labels-binding-source-manifest.json)及[完整分区运行检查](../../unity/Assets/Game/Editor/Map14/Labels/OfficialMap14LabelAcceptance.cs)。运行边界位于 `Runtime/Official/World/NativeMap14Labels/` 与 `Runtime/Offline/World/NativeMap14Labels/`；显式目录为 `Map14/Native/native-region-labels-catalog`。正式宿主适配器位于 `Runtime/Presentation/World/NativeMap14/OfficialMap14NativeWorldView.cs`，由 `OfficialMainlineMapRuntime.NativeMap14.cs` 创建并刷新；Unity 导入及隔离运行验证已通过，本次主线接线尚待 Unity 编译及正式运行验证。
+- [地区标签代码投影](../../scripts/prepare_unity_map14_label_components.py)、[代码／语言／配置来源](../../assets/reference/official-map/map14-label-components-code-source-manifest.json)、[原生转换](../../scripts/prepare_unity_map14_region_labels.py)、[素材来源](../../assets/reference/official-map/map14-native-region-labels-source-manifest.json)、[显式绑定](../../assets/reference/official-map/map14-native-region-labels-binding-source-manifest.json)及[完整分区运行检查](../../unity/Assets/Game/Editor/Map14/Labels/OfficialMap14LabelAcceptance.cs)。运行边界位于 `Runtime/Official/World/NativeMap14Labels/` 与 `Runtime/Offline/World/NativeMap14Labels/`；显式目录为 `Map14/Native/native-region-labels-catalog`。正式宿主适配器位于 `Runtime/Presentation/World/NativeMap14/OfficialMap14NativeWorldView.cs`，由 `OfficialMainlineMapRuntime.NativeMap14.cs` 创建并刷新；共享主线宿主已装入原生地形、环境、地区标签与全部 2,961 个实体放置记录。实际 Play Mode 入口已验证 prefab 加载器实例化 416 个原实体 prefab 根；此项不证明全部实体交互、剧情演出、HUD／存档流程或完整地图游玩已完成。
 
 新增原生素材独立保存在 `Assets/Official/World/Map/14/`，尚未生成完整素材快照，不能声称已进入 `asset-pack` 备份。

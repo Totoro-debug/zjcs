@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfcdc0a99cbb52095455e4861ac4efe0, type: 3}
+  m_Name: '[2][State]庆典活动任务可做/可领奖面板'
+  m_EditorClassIdentifier:
+  graph: {fileID: 11400000, guid: fc1360b7f6380084e8875652585a748f, type: 2}
+  position:
+    x: -72
+    y: -40
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: 7692fb7c11e687a4dad160b9e9296ae3, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+  NodeId: -1
+  Mono:
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: 庆典活动任务可做/可领奖面板
+  SelectedType:
+  NodeName: NpcProfileTabHasTip
+  TipDotNodeId: 2
+  TipDotNode:
+    rid: 2625798027589714173
+  RuntimeTipDotNode:
+    rid: -2
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 0
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels:
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type:
+        class:
+        ns:
+        asm:
+    - rid: 2625798027589714173
+      type:
+        class: TipDotLinkCelebrationPhotoAlbumTaskGroupNode
+        ns:
+        asm: Assembly-CSharp
+      data:
+        Parents: []
+        Childs: []
+        NodeKey:
+          GraphName:
+          NodeName:
+        TipDotInfo:
+          TipLevel: 0
+          Data:
+        IsShowTip: 0
+        mNodeSelector:
+          GraphNode: {fileID: 11400000, guid: 0fbddef98dfc1e54ead12626c6f68ad8, type: 2}

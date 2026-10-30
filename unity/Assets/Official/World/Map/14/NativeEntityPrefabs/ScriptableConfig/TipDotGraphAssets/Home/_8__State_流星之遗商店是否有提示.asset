@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdd568678881e338acf790c62e1ca50d, type: 3}
+  m_Name: '[8][State]流星之遗商店是否有提示'
+  m_EditorClassIdentifier:
+  graph: {fileID: 11400000, guid: f0d5c1f30faae454a96e44ec8495f714, type: 2}
+  position:
+    x: 2968
+    y: -1416
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: 471fa5f4b7d9fc744a48e4c2fd851781, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: c189a26aad02f9247b85236444770344, type: 2}
+        reroutePoints: []
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: 5e0c82f979de83946bf73cd400d8a18d, type: 2}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 1
+      _dynamic: 0
+  NodeId: -1
+  Mono:
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: 流星之遗商店是否有提示
+  SelectedType:
+  NodeName: MeteorShopHasTip
+  TipDotNodeId: 8
+  TipDotNode:
+    rid: 4800079964069691402
+  RuntimeTipDotNode:
+    rid: -2
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 0
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels:
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type:
+        class:
+        ns:
+        asm:
+    - rid: 4800079964069691402
+      type:
+        class: TipDotCommonNode
+        ns:
+        asm: Assembly-CSharp
+      data:
+        Parents: []
+        Childs: []
+        NodeKey:
+          GraphName: SkillGacha
+          NodeName: MeteorShopHasTip
+        TipDotInfo:
+          TipLevel: 0
+          Data:
+        IsShowTip: 0

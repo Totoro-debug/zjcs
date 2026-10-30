@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfcdc0a99cbb52095455e4861ac4efe0, type: 3}
+  m_Name: '[4][State]链接幻装礼包节点'
+  m_EditorClassIdentifier:
+  graph: {fileID: 11400000, guid: f11b7b0fe47d13243951a41613593e07, type: 2}
+  position:
+    x: 1160
+    y: -8
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: c9179e84638eb324fa9d74f90bf57db3, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+  NodeId: -1
+  Mono:
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: 链接幻装礼包节点
+  SelectedType:
+  NodeName:
+  TipDotNodeId: 4
+  TipDotNode:
+    rid: 6661114376234991667
+  RuntimeTipDotNode:
+    rid: -2
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 0
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels:
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type:
+        class:
+        ns:
+        asm:
+    - rid: 6661114376234991667
+      type:
+        class: TipDotLinkStaticActivityNode
+        ns:
+        asm: Assembly-CSharp
+      data:
+        Parents: []
+        Childs: []
+        NodeKey:
+          GraphName:
+          NodeName:
+        TipDotInfo:
+          TipLevel: 0
+          Data:
+        IsShowTip: 0
+        mNodeSelector:
+          GraphNode: {fileID: 0}
+        NodeBinder: {fileID: 11400000, guid: 27675976dfb1e434eae51fe018062d6d, type: 2}
+        SubActivities:
+          mSerializeBuffer:
+          - Key: 6
+            Value: 290000002a000000

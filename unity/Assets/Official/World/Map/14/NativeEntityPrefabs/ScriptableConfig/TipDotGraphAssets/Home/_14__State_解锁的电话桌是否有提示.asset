@@ -1,0 +1,97 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdd568678881e338acf790c62e1ca50d, type: 3}
+  m_Name: '[14][State]解锁的电话桌是否有提示'
+  m_EditorClassIdentifier:
+  graph: {fileID: 11400000, guid: 02065a3ce307e6b4c8ed7a528c736ed0, type: 2}
+  position:
+    x: 1064
+    y: 824
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: 2f297403a22332948934399ba4eacadf, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: caa3928f1113edb4fb85fd61714f43dd, type: 2}
+        reroutePoints: []
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: dab0ba0e8ce69074ca476c00fa193c3b, type: 2}
+        reroutePoints: []
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: 1905f569161494141bcad44d9fb232e8, type: 2}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+  NodeId: -1
+  Mono:
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: 解锁的电话桌是否有提示
+  SelectedType:
+  NodeName: UnlockedDiningTableHasTip2
+  TipDotNodeId: 14
+  TipDotNode:
+    rid: 2750172587488445058
+  RuntimeTipDotNode:
+    rid: -2
+  PresetData:
+    Priority: 2
+    PresetTipLevel: 0
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels:
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type:
+        class:
+        ns:
+        asm:
+    - rid: 2750172587488445058
+      type:
+        class: TipDotCommonNode
+        ns:
+        asm: Assembly-CSharp
+      data:
+        Parents: []
+        Childs: []
+        NodeKey:
+          GraphName: DiningTable
+          NodeName: UnlockedDiningTableHasTip2
+        TipDotInfo:
+          TipLevel: 0
+          Data:
+        IsShowTip: 0

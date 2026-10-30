@@ -13,6 +13,7 @@ using Zjcs.Offline.Progression;
 using Zjcs.Offline.Skills;
 using Zjcs.Offline.State;
 using Zjcs.Offline.World;
+using Zjcs.Offline.World.NativeMap14EntityAssets;
 using Zjcs.Presentation.Combat;
 using Zjcs.Presentation.Character;
 using Zjcs.Presentation.Commerce;
@@ -74,6 +75,7 @@ namespace Zjcs.Presentation.World
         private GameObject avatar;
         private Camera worldCamera;
         private OfficialMap10EntityView entityView;
+        private NativeMap14EntityPrefabVisualFactory nativeMap14EntityFactory;
         private OfficialMap10EnvironmentView environmentView;
         private OfficialMap10DialoguePortraitView dialoguePortraits;
         private OfficialMap10DialoguePortraitView optionDialoguePortraits;
@@ -379,6 +381,18 @@ namespace Zjcs.Presentation.World
                 session.Definition.Navigation.Origin.Y);
             if (mapClassId == 12) InitializeMap12SteleEntities(mapOrigin);
             if (mapClassId == 13) InitializeMap13TreeEntities(mapOrigin);
+            if (mapClassId == 14)
+            {
+                var prefabCatalog = Resources.Load<NativeMap14EntityPrefabCatalog>("Map14/Native/entity-prefab-catalog");
+                if (!prefabCatalog || prefabCatalog.Manifest != "871_156598")
+                    throw new InvalidDataException("Original Map14 entity prefab catalog is missing or stale.");
+                nativeMap14EntityFactory = new NativeMap14EntityPrefabVisualFactory(prefabCatalog);
+                entityView.NativeVisualFactory = (info, host) =>
+                {
+                    nativeMap14EntityFactory.TryCreate(info.EntityClassId, host.transform, out _);
+                    return true;
+                };
+            }
             entityView.Initialize(entityData, entityRoot, mapOrigin, worldCamera, mapClassId);
             entityView.EntitySelected += navigation.OnEntitySelected;
             mapEntities.Clear();
@@ -562,6 +576,8 @@ namespace Zjcs.Presentation.World
             DisposeNativeMap14();
             DisposeNativeMap13();
             miniMap.CloseNativeFullMiniMap();
+            nativeMap14EntityFactory?.Dispose();
+            nativeMap14EntityFactory = null;
             hud.CloseNativeWorldFunctions();
             hud.DisposePortrait();
             DisposeMapAudio();

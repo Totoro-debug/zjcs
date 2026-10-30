@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdd568678881e338acf790c62e1ca50d, type: 3}
+  m_Name: '[25][State]已解锁的扭蛋机是否有提示'
+  m_EditorClassIdentifier:
+  graph: {fileID: 11400000, guid: de515082ec0ee3440b62b76fd0e2f469, type: 2}
+  position:
+    x: 488
+    y: 168
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: eb124340604e22b4f9a37510a8f71ae1, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: 6323ce429750f73499a4e728fe3d836f, type: 2}
+        reroutePoints: []
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: ed97ccca5788c5f4faa572aa1002e1d8, type: 2}
+        reroutePoints: []
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: d7ce5c942c6d5d54a835563b0855e502, type: 2}
+        reroutePoints: []
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: 7fbbf7e258e44e34f8b805a597a8c80b, type: 2}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+  NodeId: -1
+  Mono:
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: 已解锁的扭蛋机是否有提示
+  SelectedType:
+  NodeName: UnlockedChestGachaHasTip
+  TipDotNodeId: 25
+  TipDotNode:
+    rid: 2750172587488445054
+  RuntimeTipDotNode:
+    rid: -2
+  PresetData:
+    Priority: 2
+    PresetTipLevel: 0
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels:
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type:
+        class:
+        ns:
+        asm:
+    - rid: 2750172587488445054
+      type:
+        class: TipDotCommonNode
+        ns:
+        asm: Assembly-CSharp
+      data:
+        Parents: []
+        Childs: []
+        NodeKey:
+          GraphName: ChestGacha
+          NodeName: UnlockedChestGachaHasTip
+        TipDotInfo:
+          TipLevel: 0
+          Data:
+        IsShowTip: 0

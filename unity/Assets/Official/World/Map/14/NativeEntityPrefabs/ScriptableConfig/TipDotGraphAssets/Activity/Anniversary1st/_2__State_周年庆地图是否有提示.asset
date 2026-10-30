@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdd568678881e338acf790c62e1ca50d, type: 3}
+  m_Name: '[2][State]周年庆地图是否有提示'
+  m_EditorClassIdentifier:
+  graph: {fileID: 11400000, guid: 9f96290372c3bba4781dac807ba9901d, type: 2}
+  position:
+    x: -184
+    y: -104
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 1
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: 1be6f172d4e4b5a48b622cf30c8fbb9a, type: 2}
+        reroutePoints: []
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: aec225f313d59394585b596f67a1955b, type: 2}
+        reroutePoints: []
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: e92bfd0ed5fb024469840e16a0b6573e, type: 2}
+        reroutePoints: []
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: ac83faca5366a824286bb80b98e19eed, type: 2}
+        reroutePoints: []
+      - fieldName: Parents
+        node: {fileID: 11400000, guid: 99bb2f4b0dbfb5346a141257ca9d47a4, type: 2}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 1
+      _dynamic: 0
+  NodeId: -1
+  Mono:
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: 周年庆地图是否有提示
+  SelectedType:
+  NodeName:
+  TipDotNodeId: 2
+  TipDotNode:
+    rid: 6528121899012325377
+  RuntimeTipDotNode:
+    rid: -2
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 0
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels:
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type:
+        class:
+        ns:
+        asm:
+    - rid: 6528121899012325377
+      type:
+        class: TipDotCommonNode
+        ns:
+        asm: Assembly-CSharp
+      data:
+        Parents: []
+        Childs: []
+        NodeKey:
+          GraphName:
+          NodeName:
+        TipDotInfo:
+          TipLevel: 0
+          Data:
+        IsShowTip: 0

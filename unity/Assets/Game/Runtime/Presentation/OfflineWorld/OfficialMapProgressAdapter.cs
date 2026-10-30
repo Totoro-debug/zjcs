@@ -28,8 +28,15 @@ namespace Zjcs.Presentation.OfflineWorld
                     continue;
 
                 EntityProgressConfig config = JsonUtility.FromJson<EntityProgressConfig>(record.Json);
-                if (config == null || config.EntityClassId <= 0
-                    || !int.TryParse(record.RecordId, out int recordId) || recordId != config.EntityClassId)
+                // The exported Map14 Luban table omits RecordId on this
+                // shared entity-parameter table. Its EntityClassId is the
+                // stable primary key used by the official rows and is
+                // therefore the lossless fallback for that one source form.
+                int recordId = config?.EntityClassId ?? 0;
+                if (config != null && !string.IsNullOrWhiteSpace(record.RecordId)
+                    && (!int.TryParse(record.RecordId, out recordId) || recordId != config.EntityClassId))
+                    recordId = 0;
+                if (config == null || config.EntityClassId <= 0 || recordId != config.EntityClassId)
                     throw new InvalidOperationException("Invalid official entity progress config record " + record.RecordId);
 
                 if (rules.ContainsKey(config.EntityClassId))

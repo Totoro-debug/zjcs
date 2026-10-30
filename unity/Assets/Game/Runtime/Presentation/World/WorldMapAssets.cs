@@ -20,8 +20,8 @@ namespace Zjcs.Presentation.World
             GameObject entityPrefab = null)
         {
             Definition = definition ?? throw new ArgumentNullException(nameof(definition));
-            GroundPrefab = groundPrefab ?? throw new ArgumentNullException(nameof(groundPrefab));
-            MiniMapPrefab = miniMapPrefab ?? throw new ArgumentNullException(nameof(miniMapPrefab));
+            GroundPrefab = groundPrefab;
+            MiniMapPrefab = miniMapPrefab;
             EntityPrefab = entityPrefab;
         }
     }
