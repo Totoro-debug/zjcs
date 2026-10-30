@@ -4,6 +4,8 @@
 
 状态：未完成。官方配置、水路规则、战斗／剧情数据和原分区场景／地区标签已迁移；共享 Map13 入口数据闭包、角色级进度、国度商店及四种故事跟随者模型已接入。原生环境、其余实体 prefab、完整交互和正式剧情流程仍在进行；当前迁移成果已构建并发布到 `D:/Desktop/杖剑传说/杖剑传说.exe`。单机地图顺序已确认：Map12 完成后开放 Map13。Map12 方尖碑 8101 胜利结果按本地图配置的目标 13 写入带回执的本地解锁。
 
+本次迁移补齐了 `GetEntityNode`、`ClickMapEntityNode`、`ClickMapEntityInLogicNode` 和 `MapEntityMoveInteractionNode` 的官方端口解析、导航等待、实体移动和剧情继续边界；已完成 Unity 编译、Release Player 构建及启动流程实机验证。正式剧情全路径、`WorldStopMoveNode` 的服务器语义、其余实体 prefab 与地图内完整交互仍未完成，不能据此宣称整图完成。
+
 ## 地图简介
 
 13 泽之国，范围按下列原配置与本地决策维护。

@@ -219,6 +219,10 @@ namespace Zjcs.Presentation.World
                                 throw new InvalidOperationException("Official story started before map initialization.");
                             nodeId = StoryNext(node, "Exit");
                             continue;
+                        case "WorldStopMoveNode":
+                            navigation.StopMovement();
+                            nodeId = StoryNext(node, "Exit");
+                            continue;
                         case "FinishStoryNode":
                             if (FinishStoryFrame(out nodeId)) return;
                             continue;
@@ -305,6 +309,28 @@ namespace Zjcs.Presentation.World
                             StartCoroutine(ContinueStoryWhenNearEntity(nearEntity,
                                 StoryNext(node, "Output")));
                             return;
+                        case "ClickMapEntityNode":
+                            Map10RuntimeEntity clickedEntity = ResolveStoryEntityPort(activeStory, node, "Entity");
+                            navigation.StartMovement(clickedEntity.Grid, clickedEntity);
+                            StartCoroutine(ContinueStoryAfterNavigation(StoryNext(node, "Exit")));
+                            return;
+                        case "ClickMapEntityInLogicNode":
+                            Map10RuntimeEntity logicEntity = ResolveStoryEntityPort(activeStory, node, "mMyEntity");
+                            navigation.StartMovement(logicEntity.Grid, logicEntity);
+                            StoryValueFields clickFields = StoryFields(node);
+                            if (clickFields.mNeedWaitLogicComplete != 0)
+                            {
+                                StartCoroutine(ContinueStoryAfterNavigation(StoryNext(node, "Exit")));
+                                return;
+                            }
+                            nodeId = StoryNext(node, "Exit");
+                            continue;
+                        case "MapEntityMoveInteractionNode":
+                            Map10RuntimeEntity operateEntity = ResolveStoryEntityPort(activeStory, node, "OperateEntity");
+                            Map10RuntimeEntity interactEntity = ResolveStoryEntityPort(activeStory, node, "InteractEntity");
+                            StartCoroutine(MoveStoryMapEntity(operateEntity, interactEntity, node.moveSpeed,
+                                StoryNext(node, "Exit")));
+                            return;
                         case "HandInItemNode":
                             RunHandInItemNode(node);
                             return;
@@ -327,6 +353,11 @@ namespace Zjcs.Presentation.World
                             int aloneWorldClassId = JsonUtility.FromJson<StoryAloneWorldFields>(node.sourceJson)?.MapAloneWorldClassId ?? 0;
                             if (aloneWorldClassId <= 0)
                                 throw new InvalidDataException("Official story alone-world target is invalid: " + activeStory.key);
+                            ProgressionResult aloneWorld = progressionSave.MarkWorldAloneAppeared(aloneWorldClassId,
+                                DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                                "story:" + activeStoryRootKey + ":node:" + node.id + ":alone-world:" + aloneWorldClassId);
+                            if (aloneWorld.Status == ProgressionResultStatus.InvalidState)
+                                throw new InvalidOperationException(aloneWorld.Message);
                             if (!localSave.aloneWorldClassIds.Contains(aloneWorldClassId))
                             {
                                 localSave.aloneWorldClassIds = localSave.aloneWorldClassIds.Concat(new[] { aloneWorldClassId })
@@ -353,11 +384,6 @@ namespace Zjcs.Presentation.World
                                 || storyContextEntity.EntityClassId != 6620)
                                 throw new InvalidDataException("Unsupported official window-open wait in Map" + mapClassId + ".");
                             statues.WaitForWitchPreviewOpen(() => RunStoryGraph(StoryNext(node, "Exit")));
-                            ProgressionResult aloneWorld = progressionSave.MarkWorldAloneAppeared(aloneWorldClassId,
-                                DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                                "story:" + activeStoryRootKey + ":node:" + node.id + ":alone-world:" + aloneWorldClassId);
-                            if (aloneWorld.Status == ProgressionResultStatus.InvalidState)
-                                throw new InvalidOperationException(aloneWorld.Message);
                             return;
                         case "WaitWindowClosedNode":
                             if (activeStory.key != "WitchStory2" || storyContextEntity == null
@@ -542,6 +568,12 @@ namespace Zjcs.Presentation.World
             if (storyRunning) RunStoryGraph(nextNodeId);
         }
 
+        private IEnumerator ContinueStoryAfterNavigation(int nextNodeId)
+        {
+            while (navigation.IsMoving && storyRunning) yield return null;
+            if (storyRunning) RunStoryGraph(nextNodeId);
+        }
+
         private IEnumerator ContinueStoryWhenPlayerArrives(MapGridPoint target, int distance, int nextNodeId)
         {
             storyWaitingForArrival = true;
@@ -673,6 +705,42 @@ namespace Zjcs.Presentation.World
                     yield return null;
                 }
             }
+            if (storyRunning) RunStoryGraph(nextNodeId);
+        }
+
+        private IEnumerator MoveStoryMapEntity(Map10RuntimeEntity operate, Map10RuntimeEntity interact,
+            float speed, int nextNodeId)
+        {
+            GameObject actor = entityView.FindEntityObject(operate.PlacementId);
+            if (actor == null || session == null)
+                throw new InvalidDataException("Official story map entity move target is not loaded.");
+            List<MapGridPoint> path = session.FindPath(new OfficialMapPathRequest
+            {
+                Start = operate.Grid,
+                End = interact.Grid,
+                PreferDistance = 1,
+                PreciseTarget = true,
+                BodyOffsets = new[] { new MapGridPoint(0, 0) }
+            });
+            if (path == null || path.Count == 0)
+            {
+                if (storyRunning) RunStoryGraph(nextNodeId);
+                yield break;
+            }
+            float movementSpeed = Mathf.Max(0.1f, speed);
+            foreach (MapGridPoint point in path.Skip(1))
+            {
+                if (!storyRunning) yield break;
+                Vector3 target = navigation.GridToWorld(point);
+                while (Vector2.Distance(actor.transform.position, target) > 0.025f && storyRunning)
+                {
+                    actor.transform.position = Vector3.MoveTowards(actor.transform.position, target,
+                        movementSpeed * Time.deltaTime);
+                    yield return null;
+                }
+            }
+            operate.Grid = interact.Grid;
+            Interact(interact);
             if (storyRunning) RunStoryGraph(nextNodeId);
         }
 

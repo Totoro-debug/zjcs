@@ -107,6 +107,7 @@ namespace Zjcs.Presentation.World
         private Map10RuntimeEntity storyContextEntity;
         private Action storyFinished;
         private bool storyRunning;
+        private bool storyWaitingForArrival;
         private bool storyOptionsWaiting;
         private bool storyWorldUiHidden;
         private int storyOptionCount;
@@ -190,6 +191,7 @@ namespace Zjcs.Presentation.World
                 InitializeMapAudio();
                 navigation.currentGrid = new MapGridPoint(localSave.gridX, localSave.gridY);
                 navigation.SetAvatarPosition(navigation.currentGrid);
+                if (mapClassId == 13) RefreshMap13FollowerObjects();
                 hud.UpdateWorldLabels();
                 if (mapClassId == 10 && !HasStory("FirstEnterMap")) PlayStory("FirstEnterMap", 0, () =>
                 {
@@ -249,7 +251,8 @@ namespace Zjcs.Presentation.World
             }
 
             if (hud.worldFunctions != null || miniMap.fullMiniMapPanel != null
-                || (storyRunning && battleController == null && !navigation.storyTransferActive)
+                || (storyRunning && battleController == null && !navigation.storyTransferActive && !storyWaitingForArrival
+                    && !navigation.IsMoving)
                 || statues.goddessDialog != null || statues.witchDialog != null) return;
 
             if (battleController != null)
@@ -379,8 +382,6 @@ namespace Zjcs.Presentation.World
             if (entityData == null) throw new InvalidOperationException("Official Map" + mapClassId + " entity data is missing.");
             Vector2 mapOrigin = new Vector2(session.Definition.Navigation.Origin.X,
                 session.Definition.Navigation.Origin.Y);
-            if (mapClassId == 12) InitializeMap12SteleEntities(mapOrigin);
-            if (mapClassId == 13) InitializeMap13TreeEntities(mapOrigin);
             if (mapClassId == 14)
             {
                 var prefabCatalog = Resources.Load<NativeMap14EntityPrefabCatalog>("Map14/Native/entity-prefab-catalog");
@@ -393,6 +394,8 @@ namespace Zjcs.Presentation.World
                     return true;
                 };
             }
+            if (mapClassId == 12) InitializeMap12SteleEntities(mapOrigin);
+            if (mapClassId == 13) InitializeMap13TreeEntities(mapOrigin);
             entityView.Initialize(entityData, entityRoot, mapOrigin, worldCamera, mapClassId);
             entityView.EntitySelected += navigation.OnEntitySelected;
             mapEntities.Clear();
@@ -574,10 +577,10 @@ namespace Zjcs.Presentation.World
             map12SteleEntities = null;
             nativeMap12World?.Dispose();
             DisposeNativeMap14();
-            DisposeNativeMap13();
-            miniMap.CloseNativeFullMiniMap();
             nativeMap14EntityFactory?.Dispose();
             nativeMap14EntityFactory = null;
+            DisposeNativeMap13();
+            miniMap.CloseNativeFullMiniMap();
             hud.CloseNativeWorldFunctions();
             hud.DisposePortrait();
             DisposeMapAudio();

@@ -138,6 +138,15 @@ namespace Zjcs.Presentation.World
                 if (movementIndex >= movementPath.Count) FinishMovement();
             }
 
+            public void StopMovement()
+            {
+                movementPath = null;
+                movementIndex = 0;
+                pendingInteraction = null;
+                movementCompletion = null;
+                storyTransferActive = false;
+            }
+
             public void StartStoryTransfer(Map10RuntimeEntity target, int direction, Action complete)
             {
                 if (target == null || movementPath != null || host.battleController != null)

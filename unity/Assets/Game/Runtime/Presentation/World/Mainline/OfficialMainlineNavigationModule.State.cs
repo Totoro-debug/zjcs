@@ -30,6 +30,7 @@ namespace Zjcs.Presentation.World
             public Map10RuntimeEntity pendingInteraction;
             public List<MapGridPoint> movementPath;
             private int movementIndex;
+            public bool IsMoving => movementPath != null;
             public Action movementCompletion;
             public MapGridPoint currentGrid;
             public bool storyTransferActive;

@@ -17,7 +17,7 @@ namespace Zjcs.Presentation.World
         [Serializable] private sealed class StoryValueFields
         {
             public int ItemId, HandInItemId, RequireCount, ActionType, GoByNodeId, GotoId, DialogId, Order, ShowOptionsAtBegin;
-            public int LoEntityId, State, TransferType;
+            public int LoEntityId, State, TransferType, mNeedWaitLogicComplete, IsSkipStageOperation;
             public string GoTo;
             public string Tag;
             public StoryItemRequirement[] ItemConfigs;
@@ -85,6 +85,29 @@ namespace Zjcs.Presentation.World
             if (fields?.mTargetPos == null)
                 throw new InvalidDataException("Official story map position is missing: " + node.type);
             return new MapGridPoint(fields.mTargetPos.X, fields.mTargetPos.Y);
+        }
+
+        private Map10RuntimeEntity ResolveStoryEntityReference(Map10RuntimeStory story, Map10RuntimeStoryNode source)
+        {
+            if (source == null || source.type != "GetEntityNode")
+                throw new InvalidDataException("Official story entity reference is not a GetEntityNode.");
+            StorySpatialNodeFields fields = StorySpatialFields(source);
+            int placementId = fields.SelectGetType == 4 ? fields.LoEntityId : 0;
+            if (fields.SelectGetType == 5)
+                placementId = mapLogicTags.Values.FirstOrDefault(value => value.MapClass == mapClassId
+                    && value.Tag == fields.Tag)?.LogicId ?? 0;
+            if (placementId <= 0 || !mapEntities.TryGetValue(placementId, out Map10RuntimeEntity entity))
+                throw new InvalidDataException("Official story entity is not present in Map" + mapClassId + ": "
+                    + (string.IsNullOrEmpty(fields.Tag) ? fields.LoEntityId.ToString(CultureInfo.InvariantCulture) : fields.Tag));
+            return entity;
+        }
+
+        private Map10RuntimeEntity ResolveStoryEntityPort(Map10RuntimeStory story, Map10RuntimeStoryNode node,
+            string portName)
+        {
+            int sourceId = StoryNext(node, portName);
+            if (sourceId <= 0) throw new InvalidDataException("Official story entity input is not connected: " + node.type);
+            return ResolveStoryEntityReference(story, FindStoryNode(story, sourceId));
         }
 
         internal static int OfficialStoryManhattanDistance(MapGridPoint left, MapGridPoint right) =>
@@ -263,6 +286,7 @@ namespace Zjcs.Presentation.World
                     return null;
                 case "GetEntityPosNode":
                 case "GetPosAroundStoryObjectNode": return ResolveStoryPositionNode(node);
+                case "GetEntityNode": return ResolveStoryEntityReference(story, node);
                 case "MapPositionChangeTypeNode":
                     StoryValueFields transfer = StoryFields(node);
                     if (transfer.TransferType != 1)
