@@ -1,9 +1,4 @@
-"""Cache the live client's five package manifests and every required remote file.
-
-The bootstrap endpoint was recovered from the official APK running through ADB.
-This cache follows the selected live resource version, independently of the
-pinned 854_156383 extraction cache. Equal hashes can reuse verified old files.
-"""
+"""Cache the live client's five package manifests and every required remote file."""
 import argparse
 import concurrent.futures
 from datetime import datetime, timezone
@@ -12,13 +7,13 @@ import json
 import os
 from pathlib import Path
 import re
-import shutil
 import urllib.parse
 import urllib.request
 import zipfile
 
 import fetch_official_cloud_assets as cloud
 from fetch_official_assets import APK, CACHE, SHA256, SIZE, download
+from official_source import OfficialSource
 from official_manifest import read_manifest
 
 PACKAGES = ('Boot', 'Launch', 'HybridCLR', 'DefaultPackage', 'WwiseBnk')
@@ -51,27 +46,23 @@ def receipts(path):
 
 
 def configuration(expected):
-    raw = read_url(cloud.CONFIG_URL, 2 * 1024 * 1024)
-    parsed = json.loads(raw)
-    selected = parsed.get('156383', parsed.get('default'))
-    if not isinstance(selected, dict):
-        raise ValueError('No server configuration for the pinned APK build')
-    version = str(selected['ResVersion'])
+    source = OfficialSource()
+    version = source.profile['resource_version']
     if not re.fullmatch(r'[0-9]+', version) or (expected and version != expected):
-        raise ValueError('Selected resource version differs from expected version: ' + version)
-    roots = []
-    for field in ('CdnUrl', 'CdnFallbackUrl'):
-        if not selected.get(field):
-            continue
-        base = selected[field].rstrip('/')
-        parts = urllib.parse.urlsplit(base)
+        raise ValueError('Selected resource version differs from the pinned source: ' + version)
+    cache = source.cloud_path
+    inventory = json.loads((cache / 'inventory.json').read_text(encoding='utf-8'))
+    raw = (cache / 'server-config.json').read_bytes()
+    if (inventory.get('resource_version') != version or
+            hashlib.sha256(raw).hexdigest() != inventory.get('configuration_sha256')):
+        raise ValueError('Pinned official resource inventory/configuration mismatch')
+    roots = inventory['roots']
+    for root in roots:
+        parts = urllib.parse.urlsplit(root)
         if (parts.scheme != 'https' or parts.hostname not in
                 {'zhangjcsdl.leiting.com', 'zhangjcsdl.roguelike.com'} or
-                parts.path != '/patch' or parts.query or parts.fragment):
-            raise ValueError('Inspect changed official CDN configuration before use')
-        roots.append(base + '/' + version + '/Android')
-    if not roots:
-        raise ValueError('No official CDN roots')
+                parts.path != f'/patch/{version}/Android' or parts.query or parts.fragment):
+            raise ValueError('Pinned official CDN root does not match the selected resource version')
     return raw, version, roots
 
 
@@ -181,8 +172,6 @@ def main():
     required = {(b['package'], b['file']): b for b in bundles if not b['packaged']}
     receipt_path = destination / 'receipts.jsonl'
     existing = receipts(receipt_path)
-    old_root = CACHE / 'cloud/854_156383'
-    old_receipts = receipts(old_root / 'receipts.jsonl')
     cloud.DESTINATION = destination
 
     def acquire(bundle):
@@ -195,24 +184,11 @@ def main():
                     record.get('md5') != md5 or record.get('sha256') != sha256 or
                     record.get('size') != bundle['size'] or not record.get('url')):
                 return {'status': 'failed', 'file': key, 'error': 'Existing runtime cache failed integrity verification; preserved'}
-            return dict(record, status='cached')
+            if any(record['url'].startswith(root + '/') for root in roots):
+                return dict(record, status='cached')
         if args.verify_cache:
-            return {'status': 'failed', 'file': key, 'error': 'Runtime cache file or provenance receipt is missing'}
-        old = old_root / key
-        old_receipt = old_receipts.get(key)
-        if not target.exists() and old.exists() and old_receipt and old_receipt.get('url'):
-            md5, sha256 = fingerprints(old)
-            if (old.stat().st_size == bundle['size'] and md5 == bundle['hash'] and
-                    old_receipt.get('md5') == md5 and old_receipt.get('sha256') == sha256 and
-                    old_receipt.get('size') == bundle['size']):
-                target.parent.mkdir(parents=True, exist_ok=True)
-                try:
-                    os.link(old, target)
-                except OSError:
-                    shutil.copyfile(old, target)
-                return dict(old_receipt, status='reused', name=bundle['name'], manifest=bundle['manifest'],
-                            reused_from=str(old.relative_to(CACHE)), source_manifest='854_156383')
-        result = cloud.fetch_bundle(bundle, roots, existing)
+            return {'status': 'failed', 'file': key, 'error': 'Runtime cache source is not the selected resource version'}
+        result = cloud.fetch_bundle(bundle, roots, existing, force_download=target.exists())
         return dict(result, manifest=bundle['manifest'])
 
     print(f'Resource version {resource_version}; packages: ' + ', '.join(p['package'] + '=' + p['version'] for p in provenance), flush=True)

@@ -81,11 +81,11 @@ def discard_connection(host):
         conn.close()
 
 
-def fetch_bundle(bundle, roots, receipts):
+def fetch_bundle(bundle, roots, receipts, *, force_download=False):
     package, filename = bundle['package'], bundle['file']
     destination = DESTINATION / package / filename
     key = package + '/' + filename
-    if destination.exists():
+    if destination.exists() and not force_download:
         with destination.open('rb') as stream:
             digest = hashlib.file_digest(stream, 'md5').hexdigest()
         if destination.stat().st_size != bundle['size'] or digest != bundle['hash']:

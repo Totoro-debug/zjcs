@@ -30,9 +30,7 @@ def canonical_bundle_name(record, index):
 
 
 class Apk:
-    # Existing module rebuilders reproduce their recorded historical inputs.
-    # Current source commands pass manifest=None or use Apk.current().
-    def __init__(self, manifest='854_156383', *, reuse_current_cache=False):
+    def __init__(self, manifest=None, *, reuse_current_cache=False):
         from official_source import OfficialSource
         self.source = OfficialSource(manifest)
         self.version = self.source.version

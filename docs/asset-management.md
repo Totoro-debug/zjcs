@@ -45,7 +45,7 @@ try {
 
 按 `official-source.json` 选择输入，先查 APK 的清单、实际对象、prefab 绑定和 CAB，再查所选版本已下载的官方云端缓存。未提取、未解码、未转换、加载失败或 `Not packaged or cached` 均不等于资源缺失。两处均核实找不到时，列出资源／bundle、查找范围、方法与影响交由用户决定，不自行替代。
 
-保留真实版本、URL、原对象／CAB／PathID、输入输出哈希、工具与处理方式、`.meta` 和显式加载绑定；当前 `Apk.current()`／`Apk(manifest=None)` 与旧 `Apk()` 的历史语义分开。来源清单保留后续转换哈希链，不按旧基线覆盖其他会话新内容，不修改预期哈希绕过失败。
+保留真实版本、URL、原对象／CAB／PathID、输入输出哈希、工具与处理方式、`.meta` 和显式加载绑定。`Apk.current()`、`Apk()` 与 `Apk(manifest=None)` 均读取 `official-source.json` 选定的当前输入；需要复核非当前来源时必须显式指定其 manifest，不能把旧对象冒充当前版本。来源清单保留后续转换哈希链，不按旧基线覆盖其他会话新内容，不修改预期哈希绕过失败。
 
 ## Spine 角色动画迁移决策
 
