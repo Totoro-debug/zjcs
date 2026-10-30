@@ -2,10 +2,27 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from prepare_unity_map15_native_assets import build_index, close
+from prepare_unity_map15_native_assets import build_index, close, interaction_roots
 
 
 class Map15NativeAssetClosureTests(unittest.TestCase):
+    def test_collects_map15_world_map_and_interaction_roots(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            assets = Path(temporary) / "Assets"
+            relative = (
+                "Prefabs/UI/WorldMap/WorldRuinDialog.prefab",
+                "Prefabs/UI/ConfirmDialog/ConfirmDialog.prefab",
+                "Prefabs/UI/MiniGame/MiniGamePanel.prefab",
+                "Prefabs/Playables/EC/ActionWorld/puzzle.prefab",
+                "Scenes/map_world.unity",
+            )
+            for name in relative:
+                path = assets / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("%YAML 1.1\n", encoding="utf-8")
+
+            self.assertEqual({assets / name for name in relative}, set(interaction_roots(assets)))
+
     def test_follows_exported_guid_references_and_reports_missing_scripts(self):
         with tempfile.TemporaryDirectory() as temporary:
             assets = Path(temporary) / "Assets"

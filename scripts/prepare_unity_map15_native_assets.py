@@ -50,9 +50,26 @@ def roots_for(assets: Path) -> list[Path]:
             if not io_path(path).is_file():
                 raise FileNotFoundError("Official Map15 ground prefab is absent from export: " + source)
             roots.add(path)
+    roots.update(interaction_roots(assets))
     if not roots:
         raise ValueError("No official Map15 prefab roots were found")
     return sorted(roots)
+
+
+def interaction_roots(assets: Path) -> list[Path]:
+    roots = []
+    for folder in (
+        "Prefabs/UI/WorldMap",
+        "Prefabs/UI/ConfirmDialog",
+        "Prefabs/UI/MiniGame",
+        "Prefabs/Playables/EC/ActionWorld",
+    ):
+        roots.extend((assets / folder).rglob("*.prefab"))
+    scene = assets / "Scenes/map_world.unity"
+    if not io_path(scene).is_file():
+        raise FileNotFoundError("Official world-map scene is absent from export: " + scene.as_posix())
+    roots.append(scene)
+    return roots
 
 
 def build_index(assets: Path) -> dict[str, Path]:
