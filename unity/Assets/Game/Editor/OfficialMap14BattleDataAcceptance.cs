@@ -132,8 +132,8 @@ namespace Zjcs.Editor
         private static void VerifyMainlineMap14DataLoad()
         {
             OfficialMainlineMapProfile profile = OfficialMainlineMapProfile.Get(14);
-            Require(profile.StageCount == 217 && !profile.IsRuntimeEntryReady,
-                "Map14 profile stage count or entry gate differs");
+            Require(profile.StageCount == 217 && profile.IsRuntimeEntryReady,
+                "Map14 profile stage count or native-world entry differs");
             GameObject fixture = new GameObject("Map14 mainline data loader fixture");
             try
             {

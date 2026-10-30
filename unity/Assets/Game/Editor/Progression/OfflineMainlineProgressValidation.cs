@@ -35,13 +35,15 @@ namespace Zjcs.Editor.Progression
                     "Copy the profile creation time into its progress save");
                 OfficialMainlineMapProfile dragonProfile = OfficialMainlineMapProfile.Get(14);
                 Require(dragonProfile.RegionCount == 111 && dragonProfile.DefaultEntryPlacementId == 101
-                    && dragonProfile.RequiredAccessConditions.Count == 16 && !dragonProfile.IsRuntimeEntryReady,
-                    "Register Dragon Country source metadata while keeping its incomplete runtime entry gated");
+                    && dragonProfile.RequiredAccessConditions.Count == 16 && dragonProfile.IsRuntimeEntryReady,
+                    "Register Dragon Country source metadata and the connected native-world entry");
                 session.Save.Player.UnlockedMapClassIds.Add(14);
                 session.Save.Player.UnlockedMapClassIds.Add(13);
-                int expectedReturnMap = OfficialMainlineMapProfile.Get(13).IsRuntimeEntryReady ? 13 : 10;
-                Require(OfficialMainlineMapRuntime.ResolveHomeReturnMap(session.Save) == expectedReturnMap,
-                    "Route home to an unlocked map only when its runtime entry is ready");
+                Require(OfficialMainlineMapRuntime.ResolveHomeReturnMap(session.Save) == 14,
+                    "Route home to the unlocked Map14 native-world entry");
+                session.Save.Player.UnlockedMapClassIds.Remove(14);
+                Require(OfficialMainlineMapRuntime.ResolveHomeReturnMap(session.Save) == 13,
+                    "Fall back to the next unlocked map when Map14 is not unlocked");
                 session.Save.Player.UnlockedMapClassIds.Remove(13);
                 session.Save.Player.UnlockedMapClassIds.Add(12);
                 Require(OfficialMainlineMapRuntime.ResolveHomeReturnMap(session.Save) == 12,
