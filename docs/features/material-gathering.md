@@ -22,13 +22,13 @@
 
 prepare_gathering_actions.py 从三类材料原 SkeletonAnimReferenceAsset 取得 21 个角色动作，沿男女原 SkeletonData 的拆分动画引用取回，复用官方职业武器的跟随网格转换器按 24 fps 转换。assets/official/gathering/ 保存男女动作及工具贴图；assets/reference/dungeon-ui/gathering-actions-source-manifest.json 登记原 CDN URL、bundle／对象、脚本与输入／输出 SHA256。原皮肤、外观部件、UV、颜色、网格和附件显示条件保持。运行时先接入各材料真实待机与工具；攻击／开箱动作的队列和转场接线另行完成，不把已转换动作等同于全部表现接通。
 
-`prepare_gathering_motion.py` 从固定854_156383的 `prefabs_ui_mopup` 读取五个MopUpPanel动画的原事件，跟随49个实际使用的 `MopUpSkeletonGraphicMaterial.mSkeleton` 转换原待机、受击及消失动画。角色动作沿既有 `gathering-actions-source-manifest.json`，材质、工具及PlayerPos沿原绑定迁移；新增本地网格位于 `assets/official/gathering/targets/`。输入包、对象、原代码及输出哈希见 [gathering-motion-source-manifest.json](../../assets/reference/dungeon-ui/gathering-motion-source-manifest.json)，未使用自绘或近似动作。
+`prepare_gathering_motion.py` 从固定871_156598的 `prefabs_ui_mopup` 读取五个MopUpPanel动画的原事件，跟随49个实际使用的 `MopUpSkeletonGraphicMaterial.mSkeleton` 转换原待机、受击及消失动画。角色动作沿既有 `gathering-actions-source-manifest.json`，材质、工具及PlayerPos沿原绑定迁移；新增本地网格位于 `assets/official/gathering/targets/`。输入包、对象、原代码及输出哈希见 [gathering-motion-source-manifest.json](../../assets/reference/dungeon-ui/gathering-motion-source-manifest.json)，未使用自绘或近似动作。
 
 `prepare_gathering_feedback.py` 接入同包的 `MopUpFloatingIconItem`、`MopUpFloatingIconItemCrit`、`MopUpFloatingIconItemQuick` 三套原奖励飘字预制体及原完成事件。普通／暴击数字复用已转换的 DamageNumber、CritDamageNumber 原位图字形和图集，另四张装饰贴图逐字节核验后复用现有资源；没有新增或自绘图片。原版本、URL、prefab、组件、曲线、字体对象、图集输出和原C#代码哈希在 的 `data.source` 中随生成绑定保存；对应位图字体的原提取来源继续见 `battle-hud/source-manifest.json`。
 
 同一配置还包含官方 `stage_map_location` 中可用的秘境解锁关卡位置。客户端按 `Player.GetStageCount` 检查逐关通关，但离线档案尚无逐关记录；53个解锁关卡中仅23个有非空区域映射，另30个为无表行或空 `RegionInfos`。Home 当前区域满进度判断是临时代理，需依功能页待确认项处理。
 
-`scripts/prepare_material_gathering_ui_assets.py` 从当前版本 `871_156598` 的 `defaultpackage_assets_image_ui_notes_mopup.bundle` 提取68个原始 UI Sprite，输入来自 APK ZIP 中与 `854_156383` 一致的官方同名包，bundle SHA256 为 `12080a2c5a32c5e2741b792a6cd20c1b469a765a1c4afd83175f349bfa6cf7ae`。Unity 图像载荷在 `unity/Assets/Official/Gathering/UI/`，对象路径、逐图 SHA256 和来源 URL 记于 `assets/reference/dungeon-ui/gathering-ui-source-manifest.json`。
+`scripts/prepare_material_gathering_ui_assets.py` 从当前版本 `871_156598` 的 `defaultpackage_assets_image_ui_notes_mopup.bundle` 提取68个原始 UI Sprite，输入来自 APK ZIP 中与 `871_156598` 一致的官方同名包，bundle SHA256 为 `12080a2c5a32c5e2741b792a6cd20c1b469a765a1c4afd83175f349bfa6cf7ae`。Unity 图像载荷在 `unity/Assets/Official/Gathering/UI/`，对象路径、逐图 SHA256 和来源 URL 记于 `assets/reference/dungeon-ui/gathering-ui-source-manifest.json`。
 
 ## 完整还原部分
 

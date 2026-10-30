@@ -10,7 +10,7 @@
 
 ### 官方原始功能与配置
 
-固定 manifest `854_156383` 的 [rules.json](../../assets/official/rules.json) 中 `periodic_card_pay` 表、[commerce-ui.json](../../unity/Assets/Official/Commerce/commerce-ui.json) 中 `accumulated_pay_award` 表及 [settings.json](../../.tools/source-packages/official-data/settings.json) 是数值依据；下表是原版恢复目标，并非当前 Unity 已完成状态。
+固定 manifest `871_156598` 的 [rules.json](../../assets/official/rules.json) 中 `periodic_card_pay` 表、[commerce-ui.json](../../unity/Assets/Official/Commerce/commerce-ui.json) 中 `accumulated_pay_award` 表及 [settings.json](../../.tools/source-packages/official-data/settings.json) 是数值依据；下表是原版恢复目标，并非当前 Unity 已完成状态。
 
 | 范围 | 原始官方功能与规则 | 官方定位 |
 | --- | --- | --- |
@@ -32,7 +32,7 @@
 
 ## 完整还原部分
 
-`scripts/prepare_unity_commerce_catalog.py` 从固定 manifest `854_156383` 的 `rules.json`、官方商城 UI 及 SHA-256 已核对的简中本地化 rawfile 生成 [commerce-runtime.json](../../unity/Assets/Game/Resources/Commerce/commerce-runtime.json)，保留周期属性名称、累计档位描述／进度格式、主副奖励和多主奖励原动画事件。
+`scripts/prepare_unity_commerce_catalog.py` 从固定 manifest `871_156598` 的 `rules.json`、官方商城 UI 及 SHA-256 已核对的简中本地化 rawfile 生成 [commerce-runtime.json](../../unity/Assets/Game/Resources/Commerce/commerce-runtime.json)，保留周期属性名称、累计档位描述／进度格式、主副奖励和多主奖励原动画事件。
 
 [`CommerceScreenController`](../../unity/Assets/Game/Runtime/Presentation/Commerce/CommerceScreenController.cs) 在官方周期卡树上绑定即时／每日奖励、官方属性说明、有效期倒计时、临期提醒、领取红点、新标记和购买／领取／续期状态。`OfflineCommerceOffers` 以档案事务保存周期卡时长和每日领取；`OfflineCommerceSession.ActivePeriodicProperties()` 将有效 `ExtraProps` 投影到角色属性，主页挂机收益读取 6004（挂机领取经验）和 1034（小推车产出）加成。离开商城后主页运行时尚无明确的属性重载通知，实时刷新待补。
 

@@ -28,7 +28,7 @@
 
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
-`prepare_activity_ui.py` 从固定 `854_156383` APK / 匹配版本官方 CDN 缓存解码 `ActivityEntryPanel` 所引用的图片卡片与签到、SevenDayTask、BingoActivity、ScratchCardActivity 界面。此次登记 109 个原始 prefab、757 项运行资源、13 张完整消费的活动配置表，以及同版本中文语言表；运行目录为 `assets/official/activities.json`，动态贴图进入显式加载清单。各项原始包名、哈希、对象路径及输出 SHA256 见 [活动来源清单](../../assets/reference/activity-ui/source-manifest.json)。没有生成、截图裁切或重绘素材。
+`prepare_activity_ui.py` 从固定 `871_156598` APK / 匹配版本官方 CDN 缓存解码 `ActivityEntryPanel` 所引用的图片卡片与签到、SevenDayTask、BingoActivity、ScratchCardActivity 界面。此次登记 109 个原始 prefab、757 项运行资源、13 张完整消费的活动配置表，以及同版本中文语言表；运行目录为 `assets/official/activities.json`，动态贴图进入显式加载清单。各项原始包名、哈希、对象路径及输出 SHA256 见 [活动来源清单](../../assets/reference/activity-ui/source-manifest.json)。没有生成、截图裁切或重绘素材。
 
 当次转换有 32 个入口（29 个主题签到 + 成长试炼 / 宾果 / 刮刮乐）；主题活动只开放已接入的签到模块，其余节日小游戏仍待迁移。取消活动开始 / 结束排期、倒计时及开服等待；签到每日一次，宾果 / 刮刮乐原始 30 套配置分别保存进度。刮卡的本地预抽结果和三个匹配图案结算属于离线规则适配，不声称已取得服务器实现。
 
@@ -42,7 +42,7 @@
 
 1478、1487、35968、35986、35987 的精确图像路径不在固定版完整资源清单，已解析礼物／外观 Sprite 容器中也无相符对象；现存 185 个新版同名缺包记录不提供这些图标。保留原品质框、数量和真实名称，不画或借用其他物品图片。7 处玩家奖励换装预览仍未完成迁移，与这五项图像缺失分开记录；未将“尚未接入”登记为官方资源不存在。
 
-`prepare_activity_sign.py` 从固定854_156383签到 prefab 提取 `PopupWindow`、签到物品、状态切换、`ListItemShowSequence`、`PlayerAnimationAppearance` 和提示文字组件；复用既有原图片，另转换两张原品质框至 `assets/official/activity-sign/`。原开窗／循环／关窗曲线、`StartShow` 动画事件和职业皮肤组的输入哈希见 [activity-sign/source-manifest.json](../../assets/reference/activity-sign/source-manifest.json)。
+`prepare_activity_sign.py` 从固定871_156598签到 prefab 提取 `PopupWindow`、签到物品、状态切换、`ListItemShowSequence`、`PlayerAnimationAppearance` 和提示文字组件；复用既有原图片，另转换两张原品质框至 `assets/official/activity-sign/`。原开窗／循环／关窗曲线、`StartShow` 动画事件和职业皮肤组的输入哈希见 [activity-sign/source-manifest.json](../../assets/reference/activity-sign/source-manifest.json)。
 
 `prepare_sign_appearance.py` 转换27种签到外观及绑定皮肤，7个原角色预览窗口使用男女原骨骼、完整分辨率图集、染色遮罩和24帧原待机动作，武器沿原 prefab 的骨骼／插槽／附件跟随。运行资源位于 `assets/characters/sign-preview/`；原脚本、组件、模型来源、复用输入及输出哈希见 [sign-preview/source-manifest.json](../../assets/reference/sign-preview/source-manifest.json)。未使用新版替代包或自绘素材。
 

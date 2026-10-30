@@ -30,13 +30,13 @@ Bloom 的0／25／50／100四档、反射及其他质量效果须恢复原 URP V
 
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
-设置功能补齐：`prepare_settings_assets.py` 从固定 `854_156383` 的 `SettingsDialog.prefab` 重建五个分页、原始控件和选中标记，并读取固定版本中文语言分包替换俄文 / 数字预览文本。分辨率、帧率和长数字选项按原组件的序列化枚举绑定核对。点击音效取自 APK 内 `Minimum.pck`：由原 `UIClickSound` 引用定位 `Main_Tag` 事件（680474747），经 HIRC 解析到 media 69663821，再用 vgmstream 解码为 `assets/official/settings/click.wav`。无自绘或合成音频；图片复用官方 Sprite，独立 UI 数据位于 `assets/official/settings/ui.json`。输入来源、bundle / 对象 ID、语言文件哈希及输出哈希见 [设置来源清单](../../assets/reference/settings/source-manifest.json)。主城运行载荷由 `scripts/prepare_unity_home_settings.py` 从该官方树生成，复制30张原 Sprite 与点击音效并将输出哈希登记在同一清单。运行边界见 [设置功能](settings-and-save.md)；URP画质、反射和录像尚未移植，不能因官方资源已取得而声明完成。
+设置功能补齐：`prepare_settings_assets.py` 从固定 `871_156598` 的 `SettingsDialog.prefab` 重建五个分页、原始控件和选中标记，并读取固定版本中文语言分包替换俄文 / 数字预览文本。分辨率、帧率和长数字选项按原组件的序列化枚举绑定核对。点击音效取自 APK 内 `Minimum.pck`：由原 `UIClickSound` 引用定位 `Main_Tag` 事件（680474747），经 HIRC 解析到 media 69663821，再用 vgmstream 解码为 `assets/official/settings/click.wav`。无自绘或合成音频；图片复用官方 Sprite，独立 UI 数据位于 `assets/official/settings/ui.json`。输入来源、bundle / 对象 ID、语言文件哈希及输出哈希见 [设置来源清单](../../assets/reference/settings/source-manifest.json)。主城运行载荷由 `scripts/prepare_unity_home_settings.py` 从该官方树生成，复制30张原 Sprite 与点击音效并将输出哈希登记在同一清单。运行边界见 [设置功能](settings-and-save.md)；URP画质、反射和录像尚未移植，不能因官方资源已取得而声明完成。
 
 ## 完整还原部分
 
 ### 启动存档选择界面
 
-直接提取固定 `854_156383` 官方 APK 的 `defaultpackage_assets_prefabs_ui_login.bundle`，恢复 `PlanesListPanel` 和其滚动列表内嵌的 `PlanesRoleItem`，并复用同包版本启动页的模糊遮罩；共131个原始对象、37张 Sprite、16个动画片段。原黑色标题、双页签、白色列表、绿色选中卡片、头像边框、战力图标、“最近”标签、底部状态图例与原锚点／九宫格／字体／材质保持原绑定。页签沿用原 Animator 状态与转换，显示沿用 `PopupWindow` 的原 `UIDialog_Show` 曲线；背景按 `WindowBlurMask` 的四层模糊流程捕获实际启动主题。未用截图充当交互界面。
+直接提取固定 `871_156598` 官方 APK 的 `defaultpackage_assets_prefabs_ui_login.bundle`，恢复 `PlanesListPanel` 和其滚动列表内嵌的 `PlanesRoleItem`，并复用同包版本启动页的模糊遮罩；共131个原始对象、37张 Sprite、16个动画片段。原黑色标题、双页签、白色列表、绿色选中卡片、头像边框、战力图标、“最近”标签、底部状态图例与原锚点／九宫格／字体／材质保持原绑定。页签沿用原 Animator 状态与转换，显示沿用 `PopupWindow` 的原 `UIDialog_Show` 曲线；背景按 `WindowBlurMask` 的四层模糊流程捕获实际启动主题。未用截图充当交互界面。
 
 迁移官方 `PlanesListPanel.InitShow / OnTabItemChange`、`PlanesInfoItemBase.Init`、`PlanesInfoItemWithRoleInfo.InitRoleInfo` 的视图分支，由本地槽位替代联网角色列表。已创建角色显示真实姓名、等级与当前属性计算的战力；头像复用原模型外观、染色、骨骼网格及 `PlayerPortraitSettings` 的100×120头照摄影、排除部位和 `home/idle_01` 姿势。未创建的槽位使用原默认头像，标注“继续创建”。损坏的主档使用原灰色状态标记；点击显示中文错误并保留文件。空列表和新建页复用原 `EmptyTip` 与原按钮。
 

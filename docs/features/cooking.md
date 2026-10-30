@@ -6,7 +6,7 @@
 
 ## 功能简介
 
-家园炼金炉中的料理页支持查看已解锁料理、查看配方纸、学习配方、选择制作数量并制作料理。范围固定为官方版本 `854_156383` 的110种料理及其305种相关产出、材料和配方物品。合成、分解、宝石和馈赠页不属于当前 Cooking 模块实现。
+家园炼金炉中的料理页支持查看已解锁料理、查看配方纸、学习配方、选择制作数量并制作料理。范围固定为官方版本 `871_156598` 的110种料理及其305种相关产出、材料和配方物品。合成、分解、宝石和馈赠页不属于当前 Cooking 模块实现。
 
 主城家具类型 3 已在 `HomeFeatureRuntime.OpenCooking` 调用 `CookingFeatureRuntime.Open(profile, canvasParent, maxHpProvider, onClosed)`；家具解锁、摆放和交互由主城功能维护。
 
@@ -18,13 +18,13 @@
 
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
-核对原始 `BagualuFurniture.OnClick → BagualuPanel`，锅应打开料理、合成、装备分解、宝石合成及馈赠，原本本地“石块 50 + 罗拉 500”的固定兑换不属于此原始逻辑，已移除。`prepare_kitchen_ui.py` 从固定 APK 及同版本 `854_156383`、具下载哈希凭据的官方缓存转换八个原始 prefab，保留完整背景、底部页签、料理五列网格、材料状态位置、数量控件及配方学习 / 合成目标弹窗。
+核对原始 `BagualuFurniture.OnClick → BagualuPanel`，锅应打开料理、合成、装备分解、宝石合成及馈赠，原本本地“石块 50 + 罗拉 500”的固定兑换不属于此原始逻辑，已移除。`prepare_kitchen_ui.py` 从固定 APK 及同版本 `871_156598`、具下载哈希凭据的官方缓存转换八个原始 prefab，保留完整背景、底部页签、料理五列网格、材料状态位置、数量控件及配方学习 / 合成目标弹窗。
 
 追加完整消费的 `item_merge`（38 行）、`gem`（360 行）、`gem_merge`（14 行）三张表。料理使用原 `Materials / Count / Condition`，学习原配方物品后记录 `UsedItemCondition`；各页签读取原功能解锁条件，馈赠使用原内嵌成就卡片及分解 / 宝石 / 料理三个分类。466 项图像 / prefab 资源全部有输出哈希与显式加载记录，所需图标缺失 0 项；原对象身份、bundle、处理方式见 [kitchen-ui/source-manifest.json](../../assets/reference/kitchen-ui/source-manifest.json)。没有重绘或生成图片。
 
 原炉的 RenderTexture / UIMesh 及完整制作特效尚未转换，在同一原始图像槽使用原 `UI/Cooking/ImgStove` 静态图片。本地宝石按同 ID 堆叠、自动选择同类材料；独立宝石实例、混合材料、镶嵌、高阶 NPC 熔炉和赛季赐福进度未接入，一键合成维持原赛季条件锁定。装备分解保留既有本地强化材料返还；原作不同料理的食用效果仍待补齐。上述范围不记作完整战斗 / 赛季逻辑已经实现。
 
-运行数据 `assets/official/cooking-effects.json` 来自固定 APK manifest `854_156383`，转换工具为 `scripts/prepare_cooking_effects.py`。从原 `CookingUseDetailDialog.mEffectContentUI.mEffectItemConfig` 的引用提取 Recovery／Buff／Prop 三种真实模板、各自属性行及适用范围行，同时提取 `CookingBuffReplaceConfirmDialog`、`CookingPropEffectFullDialog`、盈满行、原规则提示行、确认窗专用窄列属性行及 `PopTipEntry`／`EntryDetailItem`，共14个窗口／引用模板；保留 RectTransform、原布局、字段引用、颜色及状态配置。嵌入模板的字段路径仅按原父级重定位，不自行重画或重排。适用范围说明读取同版本 `entry` 表及语言，原条目均无图标；位置与最大高度按 `UIUtils.SetRectPopPosInScreen`、`LoopVerticalScrollWithMaxHeight`，标题编号按 `RuleTipNumer` 的序列化数字。
+运行数据 `assets/official/cooking-effects.json` 来自固定 APK manifest `871_156598`，转换工具为 `scripts/prepare_cooking_effects.py`。从原 `CookingUseDetailDialog.mEffectContentUI.mEffectItemConfig` 的引用提取 Recovery／Buff／Prop 三种真实模板、各自属性行及适用范围行，同时提取 `CookingBuffReplaceConfirmDialog`、`CookingPropEffectFullDialog`、盈满行、原规则提示行、确认窗专用窄列属性行及 `PopTipEntry`／`EntryDetailItem`，共14个窗口／引用模板；保留 RectTransform、原布局、字段引用、颜色及状态配置。嵌入模板的字段路径仅按原父级重定位，不自行重画或重排。适用范围说明读取同版本 `entry` 表及语言，原条目均无图标；位置与最大高度按 `UIUtils.SetRectPopPosInScreen`、`LoopVerticalScrollWithMaxHeight`，标题编号按 `RuleTipNumer` 的序列化数字。
 
 依据：[料理效果来源](../../assets/reference/cooking-effects/source-manifest.json)。
 
@@ -38,11 +38,11 @@
 
 四项原粒子依赖使用已登记的新版同名包中匹配 CAB 的官方对象，经 `CounterpartAssets` 独立读取，版本、对象、实际 URL 和输入输出哈希均保留于该清单；原版本 185 个 404 缺项仍保留，不混入或改名覆盖原缓存。Spine Timeline 混合遵循 EsotericSoftware `spine-runtimes` 4.2 的官方 `SpineAnimationStateMixerBehaviour.cs`，来源 URL 与取得文件 SHA256 同样登记；
 
-家园提示来源清单 assets/reference/home-tips/source-manifest.json 追加固定854_156383 FunctionEntryDialog 的原 HomeSkinBtn／TipDotNodeLinker 绑定，以及 HomeSkinNewMark 的2个原图节点。graphs.json合计232节点，保留原对象路径、状态配置、托管条件、有序连接、PresetTipLevel及HomeSkinBtn／HomeSkinUtils源码SHA256；没有新增或自制图片。来源转换脚本prepare_home_tips.py。
+家园提示来源清单 assets/reference/home-tips/source-manifest.json 追加固定871_156598 FunctionEntryDialog 的原 HomeSkinBtn／TipDotNodeLinker 绑定，以及 HomeSkinNewMark 的2个原图节点。graphs.json合计232节点，保留原对象路径、状态配置、托管条件、有序连接、PresetTipLevel及HomeSkinBtn／HomeSkinUtils源码SHA256；没有新增或自制图片。来源转换脚本prepare_home_tips.py。
 
-prepare_kitchen_completion.py --story-only 从固定 manifest 854_156383 的 prefabs_ui_story 和 prefabs_ui_portrait 迁移 TalkDialog、OptionTalkDialog、Npc_Portrait_8422 的原 RectTransform、PopupWindow／角色动画和托管字段。PortraitFace.LoadMain 的真实 GUID a0a47b1eef578c948abe2f44204ceee4 对应 npc_portrait_8422，按原 SetNativeSize 及 Main 偏移显示；三个表情保持独立原图，剧情空表情时隐藏 Face 层，不使用 NPC 列表半身图替代。chapter_3_side_5_01–12 从原中文 chapter_03 Wwise 分包的 Event→Play→Sound→media 调用提取；原包 MD5、实际来源、媒体偏移、输入与 Vorbis 输出 SHA256 均登记于 kitchen-completion/source-manifest.json。当前资源记录204项、数据输出25项。运行时按原设置的 StoryList 播放前三次补偿剧情，原20003仍保留为配置内容；本地退款范围的用户补证与原子保存适配见对应功能／地图文档。
+prepare_kitchen_completion.py --story-only 从固定 manifest 871_156598 的 prefabs_ui_story 和 prefabs_ui_portrait 迁移 TalkDialog、OptionTalkDialog、Npc_Portrait_8422 的原 RectTransform、PopupWindow／角色动画和托管字段。PortraitFace.LoadMain 的真实 GUID a0a47b1eef578c948abe2f44204ceee4 对应 npc_portrait_8422，按原 SetNativeSize 及 Main 偏移显示；三个表情保持独立原图，剧情空表情时隐藏 Face 层，不使用 NPC 列表半身图替代。chapter_3_side_5_01–12 从原中文 chapter_03 Wwise 分包的 Event→Play→Sound→media 调用提取；原包 MD5、实际来源、媒体偏移、输入与 Vorbis 输出 SHA256 均登记于 kitchen-completion/source-manifest.json。当前资源记录204项、数据输出25项。运行时按原设置的 StoryList 播放前三次补偿剧情，原20003仍保留为配置内容；本地退款范围的用户补证与原子保存适配见对应功能／地图文档。
 
-新增 home-fast/source-manifest.json，prepare_home_fast.py 将固定854_156383的 FastHangUpProgressBarDialog、ConfirmDialog、男女home/sleep_02分离动作、Sleep_Bubble、AppearanceConfig覆盖0（男10206／女20206、33201、34000）及对应原图集和原染色遮罩转换到 assets/official/home-fast/。14个运行输出、真实bundle／对象、原CanvasScaler像素比例、HomeEnvironmentConfig的FastCycleCurve和两个动画事件、原客户端调用代码及spine_skin表均保留来源与SHA256；没有自绘素材或自定演出时长。原动作转换器复用 prepare_pet_gacha_performance.py 的player_actions，额外皮肤页从原角色图集包解析，不借用不匹配图集。
+新增 home-fast/source-manifest.json，prepare_home_fast.py 将固定871_156598的 FastHangUpProgressBarDialog、ConfirmDialog、男女home/sleep_02分离动作、Sleep_Bubble、AppearanceConfig覆盖0（男10206／女20206、33201、34000）及对应原图集和原染色遮罩转换到 assets/official/home-fast/。14个运行输出、真实bundle／对象、原CanvasScaler像素比例、HomeEnvironmentConfig的FastCycleCurve和两个动画事件、原客户端调用代码及spine_skin表均保留来源与SHA256；没有自绘素材或自定演出时长。原动作转换器复用 prepare_pet_gacha_performance.py 的player_actions，额外皮肤页从原角色图集包解析，不借用不匹配图集。
 
 ## 完整还原部分
 
@@ -76,7 +76,7 @@ prepare_kitchen_completion.py --story-only 从固定 manifest 854_156383 的 pre
 ### 官方依据与验证
 
 - 固定 APK：`.tools/source-packages/zjcs_M509085.apk`，SHA-256 `ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9`。
-- Cooking Prefab 包：`defaultpackage_assets_prefabs_ui_cooking.bundle`，manifest `854_156383`，MD5 `5b2b455726b8c4f6c699ce328f9bdfc1`，SHA-256 `3a4b0c6790370ad29f026b954172b32f6cbe3ba894b555a5b434e04c8faf7802`；面板和行 prefab path ID 分别为 `6989734908194755216` 与 `7013167902997705936`。
+- Cooking Prefab 包：`defaultpackage_assets_prefabs_ui_cooking.bundle`，manifest `871_156598`，MD5 `5b2b455726b8c4f6c699ce328f9bdfc1`，SHA-256 `3a4b0c6790370ad29f026b954172b32f6cbe3ba894b555a5b434e04c8faf7802`；面板和行 prefab path ID 分别为 `6989734908194755216` 与 `7013167902997705936`。
 - 规则来源见 `assets/reference/cooking-module/source-manifest.json`：`cooking.g.bytes` SHA-256 `99cfe4b96d2b46897f0ceb3125029732e14b16a5d97b0c164540616f8e64275f`，`item.g.bytes` SHA-256 `a317a104405d25b63d1ec8c6f63397001f8cc6f2329a04034c2a49be4a18934d`，`game_settings.g.bytes` SHA-256 `8832aa02061ada1c2dad9cc190fbe6fe54a25be1e30596513b9f8c1a1ef22b27`。
 - 相关实现：`.tools/source-packages/official-code/client-source/CookingPanel.cs`、`CookingPanelItem.cs`、`ItemUseEffectCookingFormula.cs`；`.tools/source-packages/official-code/common-source/Common/CookingInfo.cs`、`CookingInfoParser.cs`、`CookingExtraInfoRecovery.cs`、`UsedItemCondition.cs`、`MapUnlockCondition.cs`、`CookingMakeItemComparer.cs`。
-- 转换器直接校验固定版 APK 原始 `cooking`、`item`、`game_settings` 表级哈希与 854 CDN Bundle／图片回执，不依赖可变的汇总 `assets/official/rules.json`。固定表／载荷 parity 与输出哈希检查：`python -B scripts/test_cooking_module.py`。工程静态检查：`python -B scripts/check_unity_project.py`。Unity Editor 导入、编译与 Play Mode 尚未由本模块单独执行。
+- 转换器直接校验固定版 APK 原始 `cooking`、`item`、`game_settings` 表级哈希与 871 CDN Bundle／图片回执，不依赖可变的汇总 `assets/official/rules.json`。固定表／载荷 parity 与输出哈希检查：`python -B scripts/test_cooking_module.py`。工程静态检查：`python -B scripts/check_unity_project.py`。Unity Editor 导入、编译与 Play Mode 尚未由本模块单独执行。

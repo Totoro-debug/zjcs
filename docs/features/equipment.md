@@ -28,15 +28,15 @@ Unity 已接入角色五槽及行囊装备操作、实例存档事务、装备�
 
 依据原 `GemPartInfoParser`、`GemPropChunck`、`PlayerEquipDataExt`、`EquipLevelCondition`、候选比较器与镶嵌界面实现；360 个固定版本星石均使用特殊属性组首组。 接入原槽位／列表、短按镶嵌、一秒长按专用详情、移动取消和外点击。卸下时返还一枚原星石是服务端 `AwardData` 缺失时的离线所有权适配，不标为已取得原服务端返还实现；未补造手续费、额外奖励或材料返还。
 
-地图 94 活动首领使用固定版本 `854_156383` 的原 Luban 配置、既有官方怪物及面板。`scripts/prepare_map_activity_boss.py` 解码原七张表，运行数据按已提交地图筛选；各原始表完整消费字节数、bundle 及输入哈希、筛选范围和输出哈希见 `assets/reference/official-map/activity-boss-source-manifest.json`。
+地图 94 活动首领使用固定版本 `871_156598` 的原 Luban 配置、既有官方怪物及面板。`scripts/prepare_map_activity_boss.py` 解码原七张表，运行数据按已提交地图筛选；各原始表完整消费字节数、bundle 及输入哈希、筛选范围和输出哈希见 `assets/reference/official-map/activity-boss-source-manifest.json`。
 
-地图 96 活动首领使用固定版本 `854_156383` 的原 Luban 配置、既有官方怪物及面板。
+地图 96 活动首领使用固定版本 `871_156598` 的原 Luban 配置、既有官方怪物及面板。
 
-地图 98 活动首领使用固定版本 `854_156383` 的原 Luban 配置、既有官方怪物及面板。
+地图 98 活动首领使用固定版本 `871_156598` 的原 Luban 配置、既有官方怪物及面板。
 
-地图 95 活动首领使用固定版本 `854_156383` 的原 Luban 配置、既有官方怪物及面板。
+地图 95 活动首领使用固定版本 `871_156598` 的原 Luban 配置、既有官方怪物及面板。
 
-地图 92 音乐节使用固定版本 `854_156383` 的活动配置、原面板、人物与武器 Spine 数据。原始绑定及输入/输出哈希见 `official-map/activity-hud-source-manifest.json`、`player-actions-source-manifest.json` 和 `music-weapons-source-manifest.json`；荧光棒按原共享武器预制体比例接到当前男角色的原持械骨骼。服务端处理器缺失，离线报名免费发放一根所选荧光棒，应援每原配置 29.9 秒使用音符奖池 73005，奖励使用原首日分组上限并持续保存、不随重进刷新；离场回到原默认入口。这些是本地执行策略。 固定表已退休地图 92 的迎宾绑定，本地仅对原 TrackTag 重接仍保留的 MusicPartyWelcome1/2 原图。
+地图 92 音乐节使用固定版本 `871_156598` 的活动配置、原面板、人物与武器 Spine 数据。原始绑定及输入/输出哈希见 `official-map/activity-hud-source-manifest.json`、`player-actions-source-manifest.json` 和 `music-weapons-source-manifest.json`；荧光棒按原共享武器预制体比例接到当前男角色的原持械骨骼。服务端处理器缺失，离线报名免费发放一根所选荧光棒，应援每原配置 29.9 秒使用音符奖池 73005，奖励使用原首日分组上限并持续保存、不随重进刷新；离场回到原默认入口。这些是本地执行策略。 固定表已退休地图 92 的迎宾绑定，本地仅对原 TrackTag 重接仍保留的 MusicPartyWelcome1/2 原图。
 
 本会话剧情挂点使用固定版原 StoryNodeRegister / StoryNodeDelayRegister，来源、原坐标、父级变换及输出指纹见 official-map/story-bindings-source-manifest.json。剧情演出的既有官方 Timeline、MyPlayable、角色与插图转换依赖随地图 12 提交，来源分别见 timelines、playables、story-actors、story-media、ui-spines 来源清单；未补造挂点或插图。
 
@@ -48,9 +48,9 @@ Unity 已接入角色五槽及行囊装备操作、实例存档事务、装备�
 
 `prepare_fidelity_equipment.py` 从固定版 `defaultpackage_assets_prefabs_ui_itemdetail.bundle`（MD5 `ed61998dccf8c8b2451eb16f49b433cb`）补充原 `Assets/Prefabs/UI/ItemDetail/EquipMutillPropItem.prefab`，GameObject path_id `-120004648565983737`。沿用 `EquipPropPanel.MainPropItem`、`SecPropItem`，以 `OtherPropGroup` 中逐条实例化的原模板显示附加属性，保留原状态切换、文字边距、加号设置、行距与交替底色；没有新增自绘。当前来源清单共 23 个 prefab／引用模板、231 组路径／脚本绑定、61 份 TMP 文字记录及 655 项资源记录。`EquipPropPanel`、`EquipMutillPropItem` 与装备候选／详情源码和完整输入输出哈希见 [equipment-fidelity/source-manifest.json](../../assets/reference/equipment-fidelity/source-manifest.json)。主、副属性和附加值分别依照原 `BattleFormulaHandler` 计算，不再将同类型附加值并入主词条显示。
 
-`prepare_equipment_completion.py` 从固定 APK／匹配 `854_156383` 的 Character、ItemDetail、PromotePanel、Equip、Tips、ConfirmDialog 与 ItemIconAttachmentConfig 提取 16 个真实窗口／引用模板，沿原 PPtr 取得星石行、等级说明行及类型 13 的已拥有附件。保留原同名兄弟节点的对象引用、RectTransform、网格、布局、自适应高度、PopupWindow 遮罩、状态、TMP 字段与 TMPEffect 描边；没有绘制替代素材。真实 bundle、对象、语言、原 C#、输入输出 SHA256 与完整 276 行等级差表来源见 `assets/reference/equipment-completion/source-manifest.json`。脚本严格校验 TMP 字段、64 字节 AutoAlign 序列化范围和原始表输入，不把 SafeAction 当作 Unity 序列化字段。此清单由转换脚本生成；先提交不冲突代码，共用素材登记待锁交接。
+`prepare_equipment_completion.py` 从固定 APK／匹配 `871_156598` 的 Character、ItemDetail、PromotePanel、Equip、Tips、ConfirmDialog 与 ItemIconAttachmentConfig 提取 16 个真实窗口／引用模板，沿原 PPtr 取得星石行、等级说明行及类型 13 的已拥有附件。保留原同名兄弟节点的对象引用、RectTransform、网格、布局、自适应高度、PopupWindow 遮罩、状态、TMP 字段与 TMPEffect 描边；没有绘制替代素材。真实 bundle、对象、语言、原 C#、输入输出 SHA256 与完整 276 行等级差表来源见 `assets/reference/equipment-completion/source-manifest.json`。脚本严格校验 TMP 字段、64 字节 AutoAlign 序列化范围和原始表输入，不把 SafeAction 当作 Unity 序列化字段。此清单由转换脚本生成；先提交不冲突代码，共用素材登记待锁交接。
 
-`prepare_equipment_completion.py` 按固定 `854_156383` APK／匹配清单的 CDN 资源，转换装备详情与比较、碎片详情及候选、祝福／套装提示、确认框、技能词条详情、装备星石属性行、等级提示及说明行。16 个原 prefab／模板、转换图像、组件字段、Prefab 来源、表格及调用源码哈希登记于 [equipment-completion/source-manifest.json](../../assets/reference/equipment-completion/source-manifest.json)；运行数据写入 `assets/official/ui.json`、`fidelity-rules.json` 和 `fidelity-texts.json`。转换没有绘制替代界面或图片。
+`prepare_equipment_completion.py` 按固定 `871_156598` APK／匹配清单的 CDN 资源，转换装备详情与比较、碎片详情及候选、祝福／套装提示、确认框、技能词条详情、装备星石属性行、等级提示及说明行。16 个原 prefab／模板、转换图像、组件字段、Prefab 来源、表格及调用源码哈希登记于 [equipment-completion/source-manifest.json](../../assets/reference/equipment-completion/source-manifest.json)；运行数据写入 `assets/official/ui.json`、`fidelity-rules.json` 和 `fidelity-texts.json`。转换没有绘制替代界面或图片。
 
 `prepare_equipment_inherit_feedback.py` 按同一固定版本读取 `EquipInheritPropItem`、其原粒子系统与 `UIParticle` 配置，以及 `ItemIconAttachmentConfig` 引用的六种原挂件 prefab；将六个粒子发射器、六种奖励挂件和关联的原纹理写入 `assets/official/equipment-feedback/catalog.json` 及正式素材目录。[equipment-feedback/source-manifest.json](../../assets/reference/equipment-feedback/source-manifest.json) 保存原 bundle／对象来源、输入输出哈希、附件配置和客户端调用源码哈希。Godot 在继承属性行和奖励图标上复用这些原资源，不生成替代特效或挂件。
 
@@ -60,7 +60,7 @@ Unity 规则载荷由 `scripts/prepare_unity_equipment_catalog.py` 从上述固�
 
 ## 完整还原部分
 
-`scripts/prepare_unity_equipment_catalog.py` 校验固定 `854_156383` 规则来源并恢复运行所需表。`OfficialEquipmentCatalog` / `OfficialEquipmentAssetCatalog.Load` 校验版本、输出长度、SHA256 与关键表；编辑器入口为 `Zjcs.Editor.Equipment.OfficialEquipmentValidation.Validate`。
+`scripts/prepare_unity_equipment_catalog.py` 校验固定 `871_156598` 规则来源并恢复运行所需表。`OfficialEquipmentCatalog` / `OfficialEquipmentAssetCatalog.Load` 校验版本、输出长度、SHA256 与关键表；编辑器入口为 `Zjcs.Editor.Equipment.OfficialEquipmentValidation.Validate`。
 
 `OfflineEquipmentProfile` 为五部位保留独立实例 ID、实例词条、星石、锁定状态、穿戴关系和各部位基础/赛季祝福强化状态。`OfflineMainlineProgressSession.ApplyCharacterMutation` 对装备数据与玩家背包使用同一存档副本及原子写盘，旧存档缺少装备字段时初始化为空装备档案。
 

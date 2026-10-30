@@ -10,7 +10,7 @@
 
 女神像或技能页进入常驻／高阶祈愿，范围包含职业选择与自选、技能池、概率与保底、积分、馈赠、兑换、材料购买、详情、历史，以及对应 UI、动画、特效和音频。幻兽及古遗物奖池分别见[幻兽召唤](pet-gacha.md)和[古遗物寻宝](treasure-gacha.md)。
 
-本页同时记录固定 manifest `854_156383` 的官方依据与 Unity / C# 还原结果；对应离线实现见“完整还原部分”，当前运行验收范围见“尚未实现”。友情祈愿保留消费入口，离线获取限制见“自定义实现”。
+本页同时记录固定 manifest `871_156598` 的官方依据与 Unity / C# 还原结果；对应离线实现见“完整还原部分”，当前运行验收范围见“尚未实现”。友情祈愿保留消费入口，离线获取限制见“自定义实现”。
 
 客户端源码根目录为 `.tools/source-packages/official-code/client-source/`，共享源码根目录为 `.tools/source-packages/official-code/common-source/Common/`；下文类名均相对此入口。表数据见[原规则配置](../../assets/official/rules.json)，页面布局见[原 UI 转换数据](../../assets/official/ui.json)。
 
@@ -136,7 +136,7 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 底部导航再次从固定 APK 的 `PublicBottomBar.prefab` 核对：`FunctionTextBgImg` 使用原始 `ImgBg_NameSel`，黑色圆角底图只在选中项显示，`PublicBottomBarCell_On` 的最终尺寸为 163 × 42，`Off` 隐藏文字与底图。五个文字底图上的 `VerticalLayoutGroup` 和 `ContentSizeFitter` 原始 `m_Enabled` 均为 0；提取器现保留其禁用行为；重新提取底栏，仅移除对应十个误启用的布局字段。图片、原始边距数据和动画曲线均未替换。主导航在五个主界面中保持可用，输入顺序与显示层级一致。
 
-使用固定 manifest `854_156383`，`prepare_wish_assets.py` 重新解码并逐项比对 13 张 Luban 配置表，记录原始字节 SHA256；同时核对 `SkillGachaPanel`、`SkillSeniorGachaPanel`、`GachaPanelBase`、职业过滤、路线回溯、循环成就和记录客户端逻辑。证据见 `official-city/wish-source-audit.json`，玩法与离线边界见 `docs/features/wishes.md`。
+使用固定 manifest `871_156598`，`prepare_wish_assets.py` 重新解码并逐项比对 13 张 Luban 配置表，记录原始字节 SHA256；同时核对 `SkillGachaPanel`、`SkillSeniorGachaPanel`、`GachaPanelBase`、职业过滤、路线回溯、循环成就和记录客户端逻辑。证据见 `official-city/wish-source-audit.json`，玩法与离线边界见 `docs/features/wishes.md`。
 
 常驻选中图 `ImgSel1` 的 500×328 原画布仅有约 500×174.85 的 atlas 裁切片，纵向偏移约 67.08；此前裁切片被拉伸为整幅高度。已恢复 `rect_size`、`trim_offset`、`trim_size`。高阶 `ImgSel` 保留原九宫格。两尊雕像 prefab 均使用 808×988 原画布，已在各自不同宽度的 Slot 中按同一尺寸居中，并恢复常驻雕像裁切参数。积分弹窗保留来源祈愿背景，馈赠释放重复的内嵌顶栏 / 底栏预留，技能商品库存文字与图标分开。未新增自绘图片。
 
@@ -144,7 +144,7 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 前文的 `Not packaged` 和 `wish_first_score_reward_icon` 是当时仅核对基础 APK 的历史结果，现以其 `resolution` 及清单记录实际替换状态；没有混入新版文件或改变原预期哈希。原客户端完整服务端动态概率公式未取得，`WeightScaleFactor=2` 不据此猜造概率；本地实现明确的基础权重、品质保底和当前阶段保证，并标注这一限制。
 
-对照原版本新增官方下载缓存和固定 APK，补迁此前未转换的祈愿视觉资源。实际使用的 29 项图像依赖均来自固定 APK `854_156383`，没有将已缓存新版特效包当作原版补齐。前一节从同版本 CDN 恢复的技能箱 `6800` 继续使用；其来源与历史缺图记录保留。
+对照原版本新增官方下载缓存和固定 APK，补迁此前未转换的祈愿视觉资源。实际使用的 29 项图像依赖均来自固定 APK `871_156598`，没有将已缓存新版特效包当作原版补齐。前一节从同版本 CDN 恢复的技能箱 `6800` 继续使用；其来源与历史缺图记录保留。
 
 `python scripts/prepare_wish_visuals.py` 从原 `SkillGachaPanel / SkilSeniorlGachaPanel / PetGachaSubPanel` 读取常驻、高阶与幻兽结缘环境粒子，从 `GachaTenRewardGo` 读取四组奖励粒子，恢复八个白／蓝／紫／橙品质光效 prefab 和 `GachaLightConfig` 的五种品质 Sprite。输出 20 张原始 Texture2D 解码 PNG 到 `assets/official/wish/`，相关 Sprite 继续使用 `assets/official/sprites/`，参数写入 `assets/official/wish_visuals.json`；所有动态图像均纳入显式本地加载清单。原 bundle、MD5、对象 path ID、操作、输出 SHA256、客户端代码哈希与字段绑定见 [wish-visuals/source-manifest.json](../../assets/reference/wish-visuals/source-manifest.json)。没有新增自绘位图。
 
@@ -152,23 +152,23 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 使用原始发射曲线、爆发、颜色、尺寸、寿命、数量上限、纹理滚动、扰动与淡出；Unity 3D 湍流、Bloom 后处理、完整星轨和结缘角色演出仍未逐项还原。
 
-`python scripts/prepare_gacha_purchase.py` 从固定 APK 与已校验的 `854_156383` CDN 缓存读取原 `quick_buy.g.bytes`、`furniture.g.bytes`，转换 `CostItemConfirmDialog` 和 `ShopQuickBuyDialog` 两套购买 prefab。运行数据为 `assets/official/gacha-purchase.json`，图像继续使用原 Sprite 解码文件，30 项依赖均登记并纳入显式本地资源清单。完整 26 条快捷购买原表、3 条本模块使用的材料购买记录、免费自动修复家具条件、bundle 来源与对象、图像处理方式及输入／输出哈希，见 [gacha-purchase/source-manifest.json](../../assets/reference/gacha-purchase/source-manifest.json)。没有使用新版替代包或自绘图片。
+`python scripts/prepare_gacha_purchase.py` 从固定 APK 与已校验的 `871_156598` CDN 缓存读取原 `quick_buy.g.bytes`、`furniture.g.bytes`，转换 `CostItemConfirmDialog` 和 `ShopQuickBuyDialog` 两套购买 prefab。运行数据为 `assets/official/gacha-purchase.json`，图像继续使用原 Sprite 解码文件，30 项依赖均登记并纳入显式本地资源清单。完整 26 条快捷购买原表、3 条本模块使用的材料购买记录、免费自动修复家具条件、bundle 来源与对象、图像处理方式及输入／输出哈希，见 [gacha-purchase/source-manifest.json](../../assets/reference/gacha-purchase/source-manifest.json)。没有使用新版替代包或自绘图片。
 
 原价为星之愿 `110` 每个晨星 ×100、稀有女神牌 `301` 每张晨星 ×8、结缘材料 `107` 每个晨星 ×160。高阶材料 `118`、女神牌 `302–304`、元素牌 `311` 没有快捷购买记录。材料不足时使用原确认弹窗购买差额；数量购买使用原数量滑条、加减与最大按钮。购买后先补入材料，另行点击抽取，保留原流程；顶部余额加号与物品详情为购买入口，祈愿页的“购买材料”为本地便捷入口。
 
 核验命令为 `python scripts/verify_gacha_purchase.py`；此前“在线购买材料不属于离线实现”的范围说明已由本地晨星购买替代，真实支付仍不接入。
 
-固定 `854_156383` APK 的常驻抽取及兑换刷新 prefab 确实默认显示 `ImgCostMoneyBtn_Bg`，`PlayerCostMoneyContent` 在正数成本下显示整个成本区域，核对的余额状态切换配置为空。原资源中存在黑色价格底板，不能声称原版会在材料足够时隐藏它。这属于本地展示调整，既有官方图片像素与来源未改动，没有新增自绘或重新转换图片。
+固定 `871_156598` APK 的常驻抽取及兑换刷新 prefab 确实默认显示 `ImgCostMoneyBtn_Bg`，`PlayerCostMoneyContent` 在正数成本下显示整个成本区域，核对的余额状态切换配置为空。原资源中存在黑色价格底板，不能声称原版会在材料足够时隐藏它。这属于本地展示调整，既有官方图片像素与来源未改动，没有新增自绘或重新转换图片。
 
 原 `ShopPanel.SetRefreshUI` 显示 `RefreshCountsLimit - RefreshedCount`，原商店 5 为每天十次付费刷新；现显示完整剩余整数 `10→0`，并为徽标、文字、晨星和价格分配独立边界。四项原始成本组件字段、21 项 prefab 图片绑定、6 项复用 Sprite 哈希、客户端代码哈希及原刷新价格数组见 [wish-button-costs/source-audit.json](../../assets/reference/wish-button-costs/source-audit.json)。
 
-固定APK及匹配854_156383 CDN中的prefabs_ui_gachapanel、prefabs_ui_item、prefabs_ui_pet与原AnimationClip、ParticleSystem、Sprite、TMP字段和Wwise事件链由scripts/prepare_wish_performance.py转换，输出assets/official/wish-performance/。完整对象来源、客户端类SHA256、布局输入、图片／音频处理及输出哈希保存在[来源清单](../../assets/reference/wish-performance/source-manifest.json)。界面图片直接解码，动画保留原曲线与AnimationEvent，音频按原Event→Action→Sound→媒体解码为Vorbis；原停止事件登记为stop，无替代音效。LoopScrollRectBase来源于已解码的原LoopScrollRect.Runtime.dll，作为原百抽滚动方向和首屏行数计算依据。pet相关prefab绑定为继续迁移结缘所需的原始输入，提取完成本身不代表已接入运行时。
+固定APK及匹配871_156598 CDN中的prefabs_ui_gachapanel、prefabs_ui_item、prefabs_ui_pet与原AnimationClip、ParticleSystem、Sprite、TMP字段和Wwise事件链由scripts/prepare_wish_performance.py转换，输出assets/official/wish-performance/。完整对象来源、客户端类SHA256、布局输入、图片／音频处理及输出哈希保存在[来源清单](../../assets/reference/wish-performance/source-manifest.json)。界面图片直接解码，动画保留原曲线与AnimationEvent，音频按原Event→Action→Sound→媒体解码为Vorbis；原停止事件登记为stop，无替代音效。LoopScrollRectBase来源于已解码的原LoopScrollRect.Runtime.dll，作为原百抽滚动方向和首屏行数计算依据。pet相关prefab绑定为继续迁移结缘所需的原始输入，提取完成本身不代表已接入运行时。
 
-prepare_pet_exchange.py 从固定854_156383 APK／匹配原版本CDN提取PetGachaPanel商店区、ShopGoodsItem、ShopGoodsItemInfoCommon、ShopGoodsItemShowConfig及七档原品质图，保留原RectTransform、LayoutGroup／LayoutElement、StateSwitcher、ListItemShowSequence和中文键。资产写入assets/official/pet-exchange/，288个源对象、70个输出的bundle／对象、输入输出SHA256、原客户端与Common源码及两份语言包哈希统一在pet-exchange/source-manifest.json登记。ShopOpenController实际mShopId=7；当前商品类型使用原默认Common图标模板，名称按原ShowName显示，没有绘制替代图或添加第二套商品坐标。
+prepare_pet_exchange.py 从固定871_156598 APK／匹配原版本CDN提取PetGachaPanel商店区、ShopGoodsItem、ShopGoodsItemInfoCommon、ShopGoodsItemShowConfig及七档原品质图，保留原RectTransform、LayoutGroup／LayoutElement、StateSwitcher、ListItemShowSequence和中文键。资产写入assets/official/pet-exchange/，288个源对象、70个输出的bundle／对象、输入输出SHA256、原客户端与Common源码及两份语言包哈希统一在pet-exchange/source-manifest.json登记。ShopOpenController实际mShopId=7；当前商品类型使用原默认Common图标模板，名称按原ShowName显示，没有绘制替代图或添加第二套商品坐标。
 
 购买成功／失败声音由ShopGoodsItemShowConfig的实际事件引用追到原UI／Minimum Wwise包的Event→Action→Sound／DIDX媒体，转为Vorbis并保留包哈希和原媒体哈希；Main_Cursor_Fail位于Minimum包，未用其他声音替换。购买确认及模糊遮罩复用已有原ConfirmDialog与默认BlurMask资源。源校验：python scripts/prepare_pet_exchange.py --check；运行规则、测试、尚未迁移项与素材包／正式发布状态仅记对应功能／地图文档。
 
-`prepare_gacha_item_sources.py` 从固定854_156383 `ItemDetailDialog` 的 `ItemSourceGo.ItemSourcePrefab` 转换实际引用的 `ItemSourceItem`，保留原布局、可用／不可用状态、箭头与背景贴图；来源枚举文案由同版本简中语言包提供，包括国度扭蛋获取与元素扭蛋获取。资源位于 `assets/official/gacha-item-sources/`，原组件、调用脚本、语言包哈希及输出哈希见 [gacha-item-sources/source-manifest.json](../../assets/reference/gacha-item-sources/source-manifest.json)。Unity 库存导入工具通过 `prepare_unity_inventory_assets.py` 校验并接入该来源行目录与三张图。
+`prepare_gacha_item_sources.py` 从固定871_156598 `ItemDetailDialog` 的 `ItemSourceGo.ItemSourcePrefab` 转换实际引用的 `ItemSourceItem`，保留原布局、可用／不可用状态、箭头与背景贴图；来源枚举文案由同版本简中语言包提供，包括国度扭蛋获取与元素扭蛋获取。资源位于 `assets/official/gacha-item-sources/`，原组件、调用脚本、语言包哈希及输出哈希见 [gacha-item-sources/source-manifest.json](../../assets/reference/gacha-item-sources/source-manifest.json)。Unity 库存导入工具通过 `prepare_unity_inventory_assets.py` 校验并接入该来源行目录与三张图。
 
 ## 完整还原部分
 

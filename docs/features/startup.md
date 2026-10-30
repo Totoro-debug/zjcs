@@ -16,7 +16,7 @@
 
 ## 完整还原部分
 
-固定来源为官方 APK 内 `854_156383` 的 Boot／Launch 资源；本模块没有使用云端其他版本。恢复 `BootSplash`、`ThemeCanvas`、`LaunchRoot/LaunchCanvas`、`AgeTipsDialog` 四个官方 prefab 中的 80 个对象层级、24 张 Sprite、原始锚点／尺寸／颜色、已迁移组件的引用和中文文本。使用原版默认主题背景与中文标志，不以截图充当界面；尚未迁移的弹窗组件见下文。
+固定来源为官方 APK 内 `871_156598` 的 Boot／Launch 资源；本模块没有使用云端其他版本。恢复 `BootSplash`、`ThemeCanvas`、`LaunchRoot/LaunchCanvas`、`AgeTipsDialog` 四个官方 prefab 中的 80 个对象层级、24 张 Sprite、原始锚点／尺寸／颜色、已迁移组件的引用和中文文本。使用原版默认主题背景与中文标志，不以截图充当界面；尚未迁移的弹窗组件见下文。
 
 `LaunchPanel`、`LaunchUIRoot`、`AgeTipGo` 和 `AgeTipsDialog` 迁移原字段、显隐与按钮逻辑。健康提示沿用原 `BootSplashFadeIn` 的 2 秒及 `BootSplashFadeOut` 的约 1.183 秒曲线。适龄按钮打开原弹窗，确认按钮关闭弹窗；按钮的原 Animator 状态、触发器、缩放曲线和过渡也恢复为 Unity 原生资产。
 
@@ -34,13 +34,13 @@
 
 以下为局部代码／资源接入，完整流程仍受本页缺项限制。
 
-`scripts/prepare_official_startup.py` 优先核对官方 APK 的 Boot／Launch 包内清单、实际载荷、CAB 和 PPtr，所需资源均在固定 `854_156383` APK 中，无需混用云端版本。恢复 BootSplash、ThemeCanvas、LaunchRoot/LaunchCanvas 和 AgeTipsDialog 的 80 个对象、24 张 Sprite、原字体／材质、启动曲线及按钮 Animator；字体额外字段、流式字体配置长度／MD5、原顶点／三角形和 TMP 裁剪／描边程序均核实后转换。Windows 使用 Unity 原生 prefab、Sprite、字体、HLSL 和显式 `Startup/OfficialStartupAssets` 引用。输入对象、代码／APK／bundle／字体与输出哈希见[原始来源](../../assets/reference/startup/source-manifest.json)，导入后的资源和运行绑定见[原生来源](../../assets/reference/startup/native-source-manifest.json)，实际流程与发布边界见[功能页](startup.md)。
+`scripts/prepare_official_startup.py` 优先核对官方 APK 的 Boot／Launch 包内清单、实际载荷、CAB 和 PPtr，所需资源均在固定 `871_156598` APK 中，无需混用云端版本。恢复 BootSplash、ThemeCanvas、LaunchRoot/LaunchCanvas 和 AgeTipsDialog 的 80 个对象、24 张 Sprite、原字体／材质、启动曲线及按钮 Animator；字体额外字段、流式字体配置长度／MD5、原顶点／三角形和 TMP 裁剪／描边程序均核实后转换。Windows 使用 Unity 原生 prefab、Sprite、字体、HLSL 和显式 `Startup/OfficialStartupAssets` 引用。输入对象、代码／APK／bundle／字体与输出哈希见[原始来源](../../assets/reference/startup/source-manifest.json)，导入后的资源和运行绑定见[原生来源](../../assets/reference/startup/native-source-manifest.json)，实际流程与发布边界见[功能页](startup.md)。
 
 ## 自定义实现
 
 离线版以 `Resources.LoadAsync` 加载实际本地创角和角色目录，进度条反映加载进度；资源失败时停在启动页显示错误。加载成功后显示原“正在初始化”文本，切换到现有本地存档入口。用户正在阅读适龄弹窗时等待其关闭。没有联网更新、区服选择、客户端修复或登录请求；这些属于本地启动流程适配，不声称服务器登录逻辑已还原。
 
-Windows 使用原 1080×1920 参考尺寸与缩放参数，沿用原 CanvasWidthAdjuster 的 0.45～121/160 比例界限和两像素边框补偿；屏幕安全区域按桌面完整客户区处理。版本文本标明 `854.156383 · 离线版`。季节主题服务器选择不参与本地启动，使用原 `ThemeCanvas` 已配置的默认背景。
+Windows 使用原 1080×1920 参考尺寸与缩放参数，沿用原 CanvasWidthAdjuster 的 0.45～121/160 比例界限和两像素边框补偿；屏幕安全区域按桌面完整客户区处理。版本文本标明 `871.156383 · 离线版`。季节主题服务器选择不参与本地启动，使用原 `ThemeCanvas` 已配置的默认背景。
 
 ## 尚未实现
 

@@ -34,7 +34,7 @@
 
 七座战碑按放置的原StageId选择905／906／907／908／930／931／932，`prepare_map11_dialogs.py` 的地图参数选择原关卡表与19个原中文键，输出 `assets/official/map12-dialogs.json`；表与语言来源哈希见 `official-map/dialogs-12-source-manifest.json`。界面复用原BattleSteleWorldStageDialog及官方模型。`register_map_assets.py --map12` 仅登记这两份原来源收据的实际输出，`verify_official_assets.py --map12` 核对原输入对象、输出和显式绑定；原APK／CDN预期哈希与185个原版缺项保持原记录。
 
-山之国机神山原教学弹窗另由 `scripts/prepare_map12_dialogs.py` 读取854_156383的DailyDungeonSettings（输入对象SHA256 fd285604245dbaf7f6740bf2f4d186ec55d1e4edea18214879cb55c1aa10061e），按原公共显示ID21／私人关卡ID121绑定原GUID。背景DetailBg_Map_12_1与建筑DetailBuilding_Map_12_1复用既有dungeon-ui来源收据及已转换PNG；原中文标题和描述从匹配语言分包解码，加入map12-dialogs.json。原GUID、对应资源、输入／输出哈希在dialogs-12-source-manifest.json登记；不是新绘图或其他地图占位图。
+山之国机神山原教学弹窗另由 `scripts/prepare_map12_dialogs.py` 读取871_156598的DailyDungeonSettings（输入对象SHA256 fd285604245dbaf7f6740bf2f4d186ec55d1e4edea18214879cb55c1aa10061e），按原公共显示ID21／私人关卡ID121绑定原GUID。背景DetailBg_Map_12_1与建筑DetailBuilding_Map_12_1复用既有dungeon-ui来源收据及已转换PNG；原中文标题和描述从匹配语言分包解码，加入map12-dialogs.json。原GUID、对应资源、输入／输出哈希在dialogs-12-source-manifest.json登记；不是新绘图或其他地图占位图。
 
 机神山奖励701熔铸碎片的原Sprite位于 `defaultpackage_assets_image_itemicon_box_equip_map12_noatlas.bundle`（871_156598，MD5 9a2b7c5c790e7766400b2a6f17782542），原路径 `Assets/Image/ItemIcon/Box/Equip_Map12_NoAtlas/item_701.png`。同脚本读取已校验CDN缓存并按原atlas裁切／旋转解码，输出 `assets/official/sprites/item_701-8d9d6962bf.png`，SHA256 3542a8aeb14a68f08e8aa684a1abc1a77c20027b4027dc81a9d4d3e22c852b4a；在icons.json增加701实际绑定。上述独立来源收据保留实际URL、包与对象输入哈希、PNG输出哈希；未用空图或自绘替代。
 
@@ -164,7 +164,7 @@ Map12主线任务1165～1270沿用官方顺序、前置和奖励；其中1215要
 
 `OfficialMap12LabelAcceptance.Run` 在内置屏 、原 Linear／URP 配置下通过公开／私有区域夹具：完整原 PartitionData 未删资源，186个地形 chunk 和267份场景分区按原 PartitionController／Loader 回调加载，99处原区域光照全部注册，含文字 prefab 内的区域34。100组区域文字绑定、等级条件变化、探索度刷新与重启用、境界压制、战力文字线性颜色、昼夜显隐、完整清理与退订通过；87张地形主体／环境／文字分区纹理的604层 mip GPU 回读与原解码 SHA-256 一致。已查看包含区域文字的实际昼夜截图；这里使用配置及玩家状态夹具，尚未接入正式本地玩家／存档、普通角色路线及 Windows Player。
 
-本地音频已接入正式 `OfficialMainlineMapRuntime`：BGM12使用原 Wwise 媒体664663381，播放／停止／暂停／恢复保留原 Sine 曲线与1000／250／250／500ms时间；236个主图／子图语音事件逐一核对当前871包、原媒体区段和已提取 Vorbis 字节，作为本地流式 AudioClip 打包。`chapter_3_main_42_03` 的原 MakeUpGain 为+2dB，其余235条为0；`OfficialWorldVoiceGain` 以原分贝对应的线性幅度处理 PCM，避免正增益被 AudioSource 的音量上限截断。共用播放器保留先 `Voice_StopAll`、文本行停声、异步版本取消、对白关闭停声和当前音量设置，不将音乐或语音请求发到网络。原剧情转换头仍为854，但236事件来自已用当前871逐端口证明一致的山之国剧情闭包；收据同时保留两种来源，不改写版本标识。
+本地音频已接入正式 `OfficialMainlineMapRuntime`：BGM12使用原 Wwise 媒体664663381，播放／停止／暂停／恢复保留原 Sine 曲线与1000／250／250／500ms时间；236个主图／子图语音事件逐一核对当前871包、原媒体区段和已提取 Vorbis 字节，作为本地流式 AudioClip 打包。`chapter_3_main_42_03` 的原 MakeUpGain 为+2dB，其余235条为0；`OfficialWorldVoiceGain` 以原分贝对应的线性幅度处理 PCM，避免正增益被 AudioSource 的音量上限截断。共用播放器保留先 `Voice_StopAll`、文本行停声、异步版本取消、对白关闭停声和当前音量设置，不将音乐或语音请求发到网络。原剧情转换头仍为871，但236事件来自已用当前871逐端口证明一致的山之国剧情闭包；收据同时保留两种来源，不改写版本标识。
 
 `RunRuntimeAudio` 已以  启动实际 map-12／独立测试档，验证 BGM 循环、四种淡入淡出、暂停／恢复采样位置和当前设置，236份语音均可在 Windows 本地流式导入；直接开启原对白组后，通过原“下一句”按钮的模拟指针输入验证换声，文本对白替换取消旧异步加载，并核对+2dB处理的 PCM 数值。已查看入口运行画面。森之国共用播放器的原 BGM 与207份语音回归通过；音源在自动验证中静音，未进行听音检查，直接对白夹具不证明剧情触发或主线连续路线。来源与原事件／媒体区段见 [BGM](../../assets/reference/official-map/map12-audio-source-manifest.json)／[语音](../../assets/reference/official-map/map12-dialogue-audio-source-manifest.json)，237份实际 AudioClip、Resources 路径、导入设置与适配代码哈希见 [音频绑定](../../assets/reference/official-map/map12-audio-binding-source-manifest.json)。Unity 导入／编译、`ProjectTools.Validate` 和静态检查通过。
 

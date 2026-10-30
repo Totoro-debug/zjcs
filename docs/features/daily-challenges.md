@@ -40,7 +40,7 @@
 
 ## 完整还原部分
 
-当前版 `871_156598` 的圣兽活动、难度、阶位属性修正、双影活动、活动期次、阶段奖励、宝箱与奖励规则已转换为 `assets/official/daily-challenges/daily-challenges.json`，运行时副本位于 `unity/Assets/Game/Resources/DailyChallenges/daily-challenges.json`。`scripts/prepare_unity_daily_challenges.py` 负责配置转换。关卡数据来自固定 APK `854_156383`，由 `scripts/prepare_unity_daily_challenge_battles.py` 转换到 `battle-stages.json`。
+当前版 `871_156598` 的圣兽活动、难度、阶位属性修正、双影活动、活动期次、阶段奖励、宝箱与奖励规则已转换为 `assets/official/daily-challenges/daily-challenges.json`，运行时副本位于 `unity/Assets/Game/Resources/DailyChallenges/daily-challenges.json`。`scripts/prepare_unity_daily_challenges.py` 负责配置转换。关卡数据来自固定 APK `871_156598`，由 `scripts/prepare_unity_daily_challenge_battles.py` 转换到 `battle-stages.json`。
 
 官方资源清单 `assets/reference/daily-challenges/source-manifest.json` 记录当前版 12 个来源 bundle、836 项 CAB 依赖、15 个官方 prefab、82 项官方转换输出及 6 个 Resources prefab 映射（共 88 项输出）。资源由 `scripts/prepare_unity_daily_challenges_assets.py` 经 AssetRipper 1.3.14 转换；载荷在 `unity/Assets/Official/DailyChallenges/`，运行时 prefab 映射在 `unity/Assets/Game/Resources/DailyChallenges/`。圣兽／双影结果 prefab 现由 `OpenDailyChallengeResult` 按战斗结算打开。官方脚本通过项目 C# 适配实现必要行为，不以已导入 prefab 代表原脚本已运行。
 

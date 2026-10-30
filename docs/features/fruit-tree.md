@@ -16,13 +16,13 @@
 
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
-`scripts/prepare_fruit_tree_assets.py` 已实际执行，固定 `854_156383` 的原 `FruitTree.prefab`、两个子家具、`HomeNotice`、果实效果模板和四个原维修/图标 prefab 均按原 bundle/CAB 解析。独立运行数据 `fruit-tree.json` 包含原状态切换路径和可见标志、碰撞范围、6 层 Sprite、三段 `loop_1/2/3` 的 12 fps 原生网格及循环时长、23 个场景粒子发射器、十个果实槽位和原果实效果发射器；维修效果时序为原 0.6 / 1.5 秒。原成功通知的 `mPropItemPrefab` 另精确提取为 `FurnitureProductionProp`，原语言、对象、输入和输出 SHA 保存在 `fruit-tree/source-manifest.json`。
+`scripts/prepare_fruit_tree_assets.py` 已实际执行，固定 `871_156598` 的原 `FruitTree.prefab`、两个子家具、`HomeNotice`、果实效果模板和四个原维修/图标 prefab 均按原 bundle/CAB 解析。独立运行数据 `fruit-tree.json` 包含原状态切换路径和可见标志、碰撞范围、6 层 Sprite、三段 `loop_1/2/3` 的 12 fps 原生网格及循环时长、23 个场景粒子发射器、十个果实槽位和原果实效果发射器；维修效果时序为原 0.6 / 1.5 秒。原成功通知的 `mPropItemPrefab` 另精确提取为 `FurnitureProductionProp`，原语言、对象、输入和输出 SHA 保存在 `fruit-tree/source-manifest.json`。
 
 本模块来源共引用 50 张官方 PNG：最初登记 47 项时新增 14 张图像，属性行使引用数增加 3 项，但这 3 项与已有中央登记文件同字节，实际不新增 PNG。此前一次通知将“新增引用”误称“新增图像”，最终差集和修正说明保留于 `fruit-tree/registration-history/registered-v2.json`。该版转换 JSON SHA 为 `ab58e8e997ae5eb0ae68fec1005fc5f8f64cca0164d4b1d195f316dc64cbd5fd`，初版 JSON / 来源指纹和本版完整来源快照保留于该历史目录。
 
 原 RPC 23624 的最终奖算法仍未找到，实际 `fruit_harvest` 原子失败并保留果实、计时和存档；未补造收获礼包。下一素材包仅按实际文件差集纳入该转换结果，功能完成情况单独验收。
 
-已实际执行固定 APK `854_156383` 的转换，前一版 `ab58e8e9…`、元数据版 `c15d78b8…` 和遮罩中间版 `1777289a…` 的原 JSON／来源文件保存在 `fruit-tree/history/`。转换时曾沿 `ProcessGuideHint` 的 MonoBehaviour 指针误用完整组件读取；修正为仅通过原 MonoBehaviour 头定位其 GameObject，原遮罩字节布局仍按完整长度严格校验，未放宽或绕过原来源哈希。
+已实际执行固定 APK `871_156598` 的转换，前一版 `ab58e8e9…`、元数据版 `c15d78b8…` 和遮罩中间版 `1777289a…` 的原 JSON／来源文件保存在 `fruit-tree/history/`。转换时曾沿 `ProcessGuideHint` 的 MonoBehaviour 指针误用完整组件读取；修正为仅通过原 MonoBehaviour 头定位其 GameObject，原遮罩字节布局仍按完整长度严格校验，未放宽或绕过原来源哈希。
 
 最终 `fruit-tree.json` SHA256 为 `60a63410ff717a22486306170620ecaf0d54a5d6cd7fad623d296702dd5681bc`，来源 SHA256 为 `7e465e21973c79180e08d5154d8a159258fe49241b1b3b3b21aa0a5cce176bef`。保留原状态、网格及粒子，补入 22 条 TMP 换行、溢出、边距／自动字号记录、118 个含实际家园槽位平移的对象矩阵及 4 个原 BoxCollider 的世界边界。原成功通知 `CloseObj/Text` 为 overflow 0，接入现有公共 UI 的不裁切显示；未改公共 UI 文件。
 

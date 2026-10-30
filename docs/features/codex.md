@@ -30,7 +30,7 @@ CollectBookPanel 使用原职业／国家分类、书封滚动／吸附、收藏
 
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
-按原版 `CollectBookPanel` 接入技能、古遗物两类图鉴。`python scripts/prepare_codex_assets.py` 使用固定 manifest `854_156383` 的 `prefabs_ui_collectbook`（原版本官方 CDN）、`image_ui_collectbook`、原始 ItemIcon / Map23 图标及其 CAB 依赖，转换 17 个原始 prefab 和裁去非当前页面的 shell 变体。输出 `assets/official/codex-ui.json`、`codex.json`、`codex-props.json` 及对应原始图片，实际载入 376 个玩家技能和 1,382 个古遗物条目的完整图标；未使用新版同名包或自绘补充。
+按原版 `CollectBookPanel` 接入技能、古遗物两类图鉴。`python scripts/prepare_codex_assets.py` 使用固定 manifest `871_156598` 的 `prefabs_ui_collectbook`（原版本官方 CDN）、`image_ui_collectbook`、原始 ItemIcon / Map23 图标及其 CAB 依赖，转换 17 个原始 prefab 和裁去非当前页面的 shell 变体。输出 `assets/official/codex-ui.json`、`codex.json`、`codex-props.json` 及对应原始图片，实际载入 376 个玩家技能和 1,382 个古遗物条目的完整图标；未使用新版同名包或自绘补充。
 
 职业归属来自原始 profession_base 的 Skills 和玩家 SkillUserType，元素来自 `config_ec/SkillLiteInfoPack.g.bytes`，奖池与开放条件来自现有原始规则表，套装另从 `config_luban/treasure_suit.g.bytes` 完整消费解码，收藏基础属性使用原版本 `level_prop.g.bytes`。中文文本使用已校验 WwiseBnk 两份原始中文语言表。每个 prefab 的 APK / CDN 来源、URL、bundle / 对象、图像处理方式、输入 / 输出哈希、语言凭据与原版行为源码哈希见 [图鉴来源清单](../../assets/reference/codex/source-manifest.json)；动态图片同时登记全局来源清单和 。
 

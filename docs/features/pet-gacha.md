@@ -16,13 +16,13 @@
 
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
-prepare_pet_gacha_performance.py 从固定 854_156383 的 APK／匹配清单 CDN 读取 PetGachaSettings、六个 Pet UI prefab、原 MyPlayable 轨迹／粒子／拖尾／Wwise 与男女角色 SplitBinarySO。pet-gacha-performance/source-manifest.json 登记源对象的 bundle、对象、来源及 SHA256、转换输出及客户端源码 SHA256。资源位于 assets/official/pet-gacha-performance/；六段角色动作通过 repack_battle_spine.mjs 保留原二进制动画，不使用插帧或重绘，图集仍引用已有官方原贴图。MainCanvas／UICamera 决定画布单位，原 PolygonCollider2D 决定百抽掉落范围；各 prefab 的 UIBloomGroup、UIBloomPlayerElement、UIBloomGraphicElement 归属路径与原组件来源随性能数据登记。
+prepare_pet_gacha_performance.py 从固定 871_156598 的 APK／匹配清单 CDN 读取 PetGachaSettings、六个 Pet UI prefab、原 MyPlayable 轨迹／粒子／拖尾／Wwise 与男女角色 SplitBinarySO。pet-gacha-performance/source-manifest.json 登记源对象的 bundle、对象、来源及 SHA256、转换输出及客户端源码 SHA256。资源位于 assets/official/pet-gacha-performance/；六段角色动作通过 repack_battle_spine.mjs 保留原二进制动画，不使用插帧或重绘，图集仍引用已有官方原贴图。MainCanvas／UICamera 决定画布单位，原 PolygonCollider2D 决定百抽掉落范围；各 prefab 的 UIBloomGroup、UIBloomPlayerElement、UIBloomGraphicElement 归属路径与原组件来源随性能数据登记。
 
-在原结缘演出转换基础上，补取固定 manifest `854_156383` 的完整 `PetGachaPanel` 外壳、`AwardFloatingSettings`、积分和保底刷新绑定及原语言文字。当前模块使用同一份 `assets/reference/pet-gacha-performance/source-manifest.json`，累计 1,955 个输入对象、128 个输出；记录 APK／原版本 CDN 来源、bundle／对象、客户端与补充反编译代码、两份原语言输入及输出 SHA256。来源顺序未变，未引入自绘或混用新版包。
+在原结缘演出转换基础上，补取固定 manifest `871_156598` 的完整 `PetGachaPanel` 外壳、`AwardFloatingSettings`、积分和保底刷新绑定及原语言文字。当前模块使用同一份 `assets/reference/pet-gacha-performance/source-manifest.json`，累计 1,955 个输入对象、128 个输出；记录 APK／原版本 CDN 来源、bundle／对象、客户端与补充反编译代码、两份原语言输入及输出 SHA256。来源顺序未变，未引入自绘或混用新版包。
 
 `prepare_pet_gacha.py` 从固定版 `rules.json` 读取幼年支援技能的 `HyperLinkTypes`／`HyperLinkDatas`，将官方 EntryId 与技能说明一起写入结缘运行目录。词条名称、说明、图标及 `EntryDetailDialog`／`EntryDetailItem` 原始层级来自 [codex-links载荷](../../assets/official/codex-links/links.json)；该输入的来源对象及输出图标哈希见 [codex-links来源清单](../../assets/reference/codex-links/source-manifest.json)。脚本把实际需要的六个词条及原图标复制进 `PetGacha` 动态资源目录，并在 `pet-gacha/source-manifest.json` 登记输入、输出和SHA256。客户端行为依据固定版 `PetGetNewPanel`、`SkillHyperLinkDataProvider` 与 `HyperLinkClickHandlerEntry`；没有自绘技能说明或词条图片。
 
-prepare_home_decoration.py 从固定 854_156383 的 131 个实际家具／主题／天气 prefab 原 Transform 追加 local_trs（原 m_LocalPosition、m_LocalRotation、m_LocalScale）。--transforms-only 核对既有实体 name 和完整源对象凭据，独立重读原对象，更新 assets/reference/home-decor/source-manifest.json 的输入与实体 SHA256；既有 AnimationClip 原曲线、插槽及创建偏移不变。运行时  迁移原父子局部矩阵，未添加自绘素材或自定关键帧。
+prepare_home_decoration.py 从固定 871_156598 的 131 个实际家具／主题／天气 prefab 原 Transform 追加 local_trs（原 m_LocalPosition、m_LocalRotation、m_LocalScale）。--transforms-only 核对既有实体 name 和完整源对象凭据，独立重读原对象，更新 assets/reference/home-decor/source-manifest.json 的输入与实体 SHA256；既有 AnimationClip 原曲线、插槽及创建偏移不变。运行时  迁移原父子局部矩阵，未添加自绘素材或自定关键帧。
 
 `prepare_pet_gacha_performance.py --panel-clips-only` 重新转换固定 APK 的 `PetGachaSubPanel_Default／Show／Hide`，包括 `CanvasGroup.m_BlocksRaycasts`，同步独立与嵌入主页面两份动画；原完整 Transform 层级核对了共享 Hide 的两条无目标绑定，保留原未绑定行为。原文 `ui_pet_gacha_is_times_hundred`、`ui_no_prompts_today` 来自同版本中文分包；确认窗直接复用原 `MarkableConfirmDialog`，界面来源仍由 commerce-components 清单登记，结缘动画、原文与 `GachaPanelUtils`／`MarkableConfirmDialog` 代码哈希在 `pet-gacha-performance/source-manifest.json`。
 

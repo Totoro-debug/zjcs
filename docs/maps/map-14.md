@@ -12,7 +12,7 @@
 
 地图 ID 为 14，原目录为坎斯汀大陆／龙之国，场景类型为 `map_world`。原配置包含 111 个地区、2,961 个放置实体，导航为 280×280，原点为 `(-134.5, -134.5, 0)`。BGM 配置为 14，后继地图为 15，默认入口为 101，地形入口为 `Assets/Partition/MapGround_14/MapGround_14_bare.prefab`。
 
-使用 `official-source.json` 选择的 `871_156598`；APK 基础清单为 `854_156383`。先核对 APK 清单、实际包及内部对象，再读取所选索引下已校验的云端缓存，来源及哈希分别记录，不使用旧版数据补缺。
+使用 `official-source.json` 选择的 `871_156598`；APK 基础清单为 `871_156598`。先核对 APK 清单、实际包及内部对象，再读取所选索引下已校验的云端缓存，来源及哈希分别记录，不使用旧版数据补缺。
 
 ### 官方代码与资源依据
 
@@ -279,7 +279,7 @@ Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式
 
 以下为局部代码／资源接入，完整流程仍受本页缺项限制。
 
-地图 14 使用固定 APK／原版本 CDN 清单 `854_156383`。原始地形、导航、2,961 个实体放置、31 组地图分层和昼夜状态、地图粒子沿通用地图转换链运行；原 `MiniMap_14` 转换包含 102 条地图标记配置、原资源点板、玩家动画、区域说明、迷雾 TilePattern 和公开解锁格。转换入口为 `python -B scripts/prepare_map13_minimap_ui.py --map-id 14`；原始对象、依赖、客户端代码、中文语言表、贴图输入输出 SHA256 见 [minimap-14-source-manifest.json](../../assets/reference/official-map/minimap-14-source-manifest.json)，运行目录为 `assets/official/map14-minimap.json`、`assets/official/map14-minimap-sprites/`，Unity 显式加载绑定尚待接入。地形、分层和粒子输出分别登记于 `regions-source-manifest.json`、`layers-source-manifest.json` 与 `particles-source-manifest.json`；未使用新版替代包或自绘素材。
+地图 14 使用固定 APK／原版本 CDN 清单 `871_156598`。原始地形、导航、2,961 个实体放置、31 组地图分层和昼夜状态、地图粒子沿通用地图转换链运行；原 `MiniMap_14` 转换包含 102 条地图标记配置、原资源点板、玩家动画、区域说明、迷雾 TilePattern 和公开解锁格。转换入口为 `python -B scripts/prepare_map13_minimap_ui.py --map-id 14`；原始对象、依赖、客户端代码、中文语言表、贴图输入输出 SHA256 见 [minimap-14-source-manifest.json](../../assets/reference/official-map/minimap-14-source-manifest.json)，运行目录为 `assets/official/map14-minimap.json`、`assets/official/map14-minimap-sprites/`，Unity 显式加载绑定尚待接入。地形、分层和粒子输出分别登记于 `regions-source-manifest.json`、`layers-source-manifest.json` 与 `particles-source-manifest.json`；未使用新版替代包或自绘素材。
 
 龙之国原剧情演出恢复使用 `scripts/prepare_unity_map14_story_playables.py`、`prepare_unity_map14_story_playable_inputs.py`、`prepare_unity_map14_story_playable_export.py` 与 `verify_unity_map14_story_playable_hierarchy.py`：`871_156598` 的 16 个原 prefab、4 个预定义键及 260 个 CAB。原始字段及转换输出分别记入 Map14 story-playables／native-story-playable-input／native-story-playable-export／story-playable-hierarchy 来源清单；验证 621 层对象、194 个脚本组件及 2,449 条引用。粒子、Timeline 全闭包、运行时绑定及可视播放继续恢复。`prepare_unity_story_playable_runtime.py` 将原 MyPlayable 核心与依赖 22 份 C# 迁入 `Runtime/Official/StoryPlayables/`，程序集／源码／输出哈希与适配记录见 `official-map/map14-story-playable-runtime-source-manifest.json`；未使用 Spine runtime。
 

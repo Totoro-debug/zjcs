@@ -20,7 +20,7 @@
 
 本节记录后续素材转换及实际替换，保留前文地图总览阶段的来源历史。范围为固定版本全部 373 个地图定义，包含九个大陆地区、副本和活动地图。
 
-来源继续使用固定 APK `854_156383` 和匹配原清单的已校验 CDN 缓存。373 组原始导航 / 放置表输入凭据见 [map-layout-source-manifest.json](../../assets/reference/official-map/map-layout-source-manifest.json)。地形、实体模板、外观、交互包装、界面、昼夜层、水面、剧情媒体及音频分别登记在 `official-map/` 对应 `*-source-manifest.json`；当前地图资源注册包含 18,559 项本地资源，并保存输出数据 SHA256。已缓存新版同名包仍为独立研究来源，没有冒充原版本补齐。没有新增自绘位图。
+来源继续使用固定 APK `871_156598` 和匹配原清单的已校验 CDN 缓存。373 组原始导航 / 放置表输入凭据见 [map-layout-source-manifest.json](../../assets/reference/official-map/map-layout-source-manifest.json)。地形、实体模板、外观、交互包装、界面、昼夜层、水面、剧情媒体及音频分别登记在 `official-map/` 对应 `*-source-manifest.json`；当前地图资源注册包含 18,559 项本地资源，并保存输出数据 SHA256。已缓存新版同名包仍为独立研究来源，没有冒充原版本补齐。没有新增自绘位图。
 
 `prepare_map_minimaps.py` 读取原 `MiniMapPrivateRegionMaskManager` 的动态分区 Tilemap GUID、原 manifest 资源路径、Grid 单元尺寸和世界变换，补转换静态根 prefab 未包含的地图地块。149 个地图配置共用 65 份原始小地图，包含 1,788 条配置分区引用；转换记录 3,148 项输入对象凭据、5 张解码纹理及网格输出哈希，见 [minimaps-source-manifest.json](../../assets/reference/official-map/minimaps-source-manifest.json)。原编辑器玩家占位图不作为地块叠加。全屏地图接入 169 种原 MiniMapMark 外观、筛选、定位、滚轮 / 原滑条缩放、拖动和已激活入口传送。地图交互对话根据原 DialogIconPrefab 或 NPC FigureImage 绑定官方图像。
 

@@ -36,7 +36,7 @@
 
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
-本节记录非主线还原实施的实际替换，保留前文来源历史。使用固定 `854_156383` 的 APK 与已校验同版本 CDN，不混入新版同名包，没有新增自绘位图。
+本节记录非主线还原实施的实际替换，保留前文来源历史。使用固定 `871_156598` 的 APK 与已校验同版本 CDN，不混入新版同名包，没有新增自绘位图。
 
 运行 `python scripts/prepare_fidelity_ui.py` 转换原公共 ConfirmDialog、TaskPanel 与任务行和详情、AchievementGroupPanel 与组内容和行、TreasurePanel、四槽、套装行、TreasureDetailDialog、TreasurePieceDialog、TreasurePromotePanel 和觉醒选材面板。输入 prefab 的真实 bundle、MD5、对象 ID、纹理输出及 SHA256 记录在 [fidelity/source-manifest.json](../../assets/reference/fidelity/source-manifest.json)。已转出的星命入口、容器和详情 prefab 尚未完整接入，不将提取完成当作功能完成。
 
@@ -52,9 +52,9 @@
 
 固定APK与匹配CDN的prefabs_ui_demonbattlefield、prefabs_ui_npcadventure、npcadventuremap_map_11／12／13／14／17及npcadventuregeography原包，使用原RectTransform、LoopVerticalScrollRect、Slider尾字段、StateSwitcher引用、原AnimationClip、PlayerInfoUI／PlayerIcon本人模型绑定。prepare_dungeon_bindings.py记录各对象输入SHA256、实际包URL／MD5与语言文件哈希、素材输入清单并入assets/reference/dungeon-ui/source-manifest.json。复用既有667项原纹理，无自绘／拼图替代。NpcAdventureSettings.ConfigData保留原地形旋转6及快进参数；旋转实现来源为official-code/launch-source/RotateAnimation.cs。地域19未使用另国图替代，原／新版清单检索结果和处置边界见对应功能／地图文档。
 
-`prepare_tower_push.py` 从固定854_156383的 `prefabs_ui_fight_fightmainpanel_extmodel_fightdemonbattlefieldmainpanel`、`prefabs_ui_fight_gameendpaneldemonbattlefield`、`prefabs_ui_demonbattlefield` 和 `prefabs_ui_home` 迁移原自动按钮、胜负结算、后台结果及家园提醒。保留原层级、布局、状态切换、动画曲线、贴图和组件引用，文字从原语言二进制读取；本地运行资源位于 `assets/official/tower-push/`，原家园提醒复用既有主城贴图。包版本、实际URL、对象、语言和输入输出哈希见 [tower-push/source-manifest.json](../../assets/reference/tower-push/source-manifest.json)，未使用新版替代包或自绘素材。
+`prepare_tower_push.py` 从固定871_156598的 `prefabs_ui_fight_fightmainpanel_extmodel_fightdemonbattlefieldmainpanel`、`prefabs_ui_fight_gameendpaneldemonbattlefield`、`prefabs_ui_demonbattlefield` 和 `prefabs_ui_home` 迁移原自动按钮、胜负结算、后台结果及家园提醒。保留原层级、布局、状态切换、动画曲线、贴图和组件引用，文字从原语言二进制读取；本地运行资源位于 `assets/official/tower-push/`，原家园提醒复用既有主城贴图。包版本、实际URL、对象、语言和输入输出哈希见 [tower-push/source-manifest.json](../../assets/reference/tower-push/source-manifest.json)，未使用新版替代包或自绘素材。
 
-幻想阶梯的滚动、楼层 prefab、粒子和状态数据来自固定版本 `854_156383` 的 `defaultpackage_assets_prefabs_ui_demonbattlefield.bundle` 与 `LoopScrollRectBase` 原组件；动作按原玩家 `SplitAnimationSO` 转换，Wwise 入／离场事件按原 prefab 引用补入本地战斗音频。对象及输入输出哈希分别见 `dungeon-ui/source-manifest.json`、`official-map/player-actions-source-manifest.json`、`character-genders/source-manifest.json` 和 `battle-audio/source-manifest.json`；重建入口为 `prepare_dungeon_bindings.py`、`prepare_map_player_actions.py`、`prepare_female_character.py` 与 `prepare_battle_audio.py --reuse-bindings --tower-only`。
+幻想阶梯的滚动、楼层 prefab、粒子和状态数据来自固定版本 `871_156598` 的 `defaultpackage_assets_prefabs_ui_demonbattlefield.bundle` 与 `LoopScrollRectBase` 原组件；动作按原玩家 `SplitAnimationSO` 转换，Wwise 入／离场事件按原 prefab 引用补入本地战斗音频。对象及输入输出哈希分别见 `dungeon-ui/source-manifest.json`、`official-map/player-actions-source-manifest.json`、`character-genders/source-manifest.json` 和 `battle-audio/source-manifest.json`；重建入口为 `prepare_dungeon_bindings.py`、`prepare_map_player_actions.py`、`prepare_female_character.py` 与 `prepare_battle_audio.py --reuse-bindings --tower-only`。
 
 ## 完整还原部分
 
@@ -64,7 +64,7 @@
 
 以下为局部代码／资源接入，完整流程仍受本页缺项限制。
 
-`scripts/prepare_tower_push.py` 从固定 APK manifest `854_156383` 解码 `stage_demon_battlefield.g.bytes`、`stage.g.bytes`、`stage_monster_array.g.bytes`、`skill.g.bytes`，并复用已校验的官方战斗场景与战斗/技能/通用规则，生成四入口共585层的官方战斗数据。编队按 `StageMonsterArrayInfoParser.GenerateMonsters` 的连续 GroupId 顺序展开；小数等级按 `LevelPropParser.GetPropsByFloat` 与 `BattleFormulaHandler.LerpProps` 插值。`scripts/prepare_tower_push_ui.py` 转换 `defaultpackage_assets_prefabs_ui_demonbattlefield.bundle` 中的入口、入口行、逐层页与四种塔层行 prefab，并导出原面板 Sprite、动态入口图及逐项输入／输出哈希；`scripts/prepare_tower_push_audio.py` 按固定 Wwise 来源校验并打包 `Note_FantasyLadder_Flash`、`Note_FantasyLadder_Elevator` 两条 OGG。玩法及奖励已接入本地运行时；塔行状态动画和粒子仍待从官方动画依赖恢复，Unity Play Mode 尚未验收，详见[幻想阶梯](fantasy-tower.md)。
+`scripts/prepare_tower_push.py` 从固定 APK manifest `871_156598` 解码 `stage_demon_battlefield.g.bytes`、`stage.g.bytes`、`stage_monster_array.g.bytes`、`skill.g.bytes`，并复用已校验的官方战斗场景与战斗/技能/通用规则，生成四入口共585层的官方战斗数据。编队按 `StageMonsterArrayInfoParser.GenerateMonsters` 的连续 GroupId 顺序展开；小数等级按 `LevelPropParser.GetPropsByFloat` 与 `BattleFormulaHandler.LerpProps` 插值。`scripts/prepare_tower_push_ui.py` 转换 `defaultpackage_assets_prefabs_ui_demonbattlefield.bundle` 中的入口、入口行、逐层页与四种塔层行 prefab，并导出原面板 Sprite、动态入口图及逐项输入／输出哈希；`scripts/prepare_tower_push_audio.py` 按固定 Wwise 来源校验并打包 `Note_FantasyLadder_Flash`、`Note_FantasyLadder_Elevator` 两条 OGG。玩法及奖励已接入本地运行时；塔行状态动画和粒子仍待从官方动画依赖恢复，Unity Play Mode 尚未验收，详见[幻想阶梯](fantasy-tower.md)。
 
 依据：`tower-push/tower-battle-source-manifest.json`、`tower-push/ui-source-manifest.json`、`battle-audio/source-manifest.json`、`character-creation/native-mesh-source-manifest.json`。
 
@@ -76,7 +76,7 @@
 
 `Zjcs.Offline.World.OfflineFantasyTowerSession` 已由 `HomeFeatureRuntime.Open` 按角色槽位初始化；它保存四个入口进度、前后台战斗检查点和待领取后台结果。`FantasyTowerBattleRunner` 已接入 `OfficialBattleRuntimeController`，从当前层或检查点构造战斗并保存每个行动，胜利后按官方层奖励规则和稳定交易 ID 写入本地库存，失败保留已通关层。官方 `GameEndPanelDemonBattlefield` 已被复用作前台胜负面板，显示当前层与配置奖励；胜利后自动推关按5秒间隔继续，自动按钮使用所选入口的第3层条件。家园中打开任意模态页会把自动推关战斗切至后台检查点并隐藏战场；返回无模态界面时恢复同一战斗。停推、失败、完塔和重开存档都会生成最早优先的待领取结果，结果通知页通过本地库存事务领取一次。
 
-`scripts/prepare_tower_push.py` 按固定来源 `854_156383` 解码原始 `stage_demon_battlefield`、`stage`、`stage_monster_array` 和 `skill` Luban 表，并复用官方 `StageMonsterArrayInfoParser.GenerateMonsters` 分组顺序、`LevelPropParser.GetPropsByFloat` 属性插值与 Map10 怪物公式，导出四入口 Layer 1–585 的战斗网格、编队、怪物属性和技能。同时导出42条层奖励规则及倍率表；`OfficialFantasyTowerCatalog.RollRewards` 按官方百分比、权重、数量和玩家等级/阶位倍率抽取。`scripts/prepare_tower_push_ui.py` 从已核验的 `defaultpackage_assets_prefabs_ui_demonbattlefield.bundle` 转换 `main`、`end`、`result`、`notice`、官方入口、入口项、逐层页和四种塔层行 prefab，写入 `TowerPush/ui.json` 及 UI 来源清单。入口页绑定四塔进度，逐层页按官方层行高度、拖动惯性与回弹设置虚拟化显示，只有当前层可点击开战；正式语言的动态标题与已通关层数由本地进度绑定。
+`scripts/prepare_tower_push.py` 按固定来源 `871_156598` 解码原始 `stage_demon_battlefield`、`stage`、`stage_monster_array` 和 `skill` Luban 表，并复用官方 `StageMonsterArrayInfoParser.GenerateMonsters` 分组顺序、`LevelPropParser.GetPropsByFloat` 属性插值与 Map10 怪物公式，导出四入口 Layer 1–585 的战斗网格、编队、怪物属性和技能。同时导出42条层奖励规则及倍率表；`OfficialFantasyTowerCatalog.RollRewards` 按官方百分比、权重、数量和玩家等级/阶位倍率抽取。`scripts/prepare_tower_push_ui.py` 从已核验的 `defaultpackage_assets_prefabs_ui_demonbattlefield.bundle` 转换 `main`、`end`、`result`、`notice`、官方入口、入口项、逐层页和四种塔层行 prefab，写入 `TowerPush/ui.json` 及 UI 来源清单。入口页绑定四塔进度，逐层页按官方层行高度、拖动惯性与回弹设置虚拟化显示，只有当前层可点击开战；正式语言的动态标题与已通关层数由本地进度绑定。
 
 `OfflineFantasyTowerSession` 在打开存档时关闭遗留自动推关状态并保留检查点；开启自动推关要求当前入口已通关至少3层。前台结算由 runner 调用 `CompleteForegroundBattle`，以 `fantasy-tower:stage:{entry}:{stage}` 稳定交易 ID 写入角色库存。后台战斗逐层调用 `CompleteBackgroundLayer` 累积奖励，切回前台、停推、失败或完塔时封存结果；`ShowFantasyTowerPendingResult` 按最早结果展示，确认领取后以本地库存事务发放一次。打开其他家园模态页时将同一战斗检查点切至后台，关闭模态页后恢复。
 

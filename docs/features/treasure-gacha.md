@@ -124,7 +124,7 @@ ChestGachaPanel 与结果／概率／历史窗口消费原古遗物扭蛋池、�
 
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
-`prepare_relic_draw.py` 从已校验的同版本官方 CDN 缓存（manifest `854_156383`）读取 `prefabs_ui_chestgacha` 及依赖、`chestgachabg_*` 和 `scriptableconfig_modules_treasure`；复用固定 APK 校验及 `Apk` 来源读取器。完整接入 `ChestGachaPanel` 的原始 RectTransform、宝箱 / 元素 / 兑换 / 馈赠四个底部页签、宝箱四种卡片及进度条、元素选择弹层和原始空商店。此前关于扭蛋专用布局尚未取得的记录描述的是当时仅有基础 APK 的状态，此次由匹配清单的 CDN 缓存补齐。
+`prepare_relic_draw.py` 从已校验的同版本官方 CDN 缓存（manifest `871_156598`）读取 `prefabs_ui_chestgacha` 及依赖、`chestgachabg_*` 和 `scriptableconfig_modules_treasure`；复用固定 APK 校验及 `Apk` 来源读取器。完整接入 `ChestGachaPanel` 的原始 RectTransform、宝箱 / 元素 / 兑换 / 馈赠四个底部页签、宝箱四种卡片及进度条、元素选择弹层和原始空商店。此前关于扭蛋专用布局尚未取得的记录描述的是当时仅有基础 APK 的状态，此次由匹配清单的 CDN 缓存补齐。
 
 提取 134 项 Sprite / Texture2D 来源记录，包括图集裁切及原始扭蛋机 / 胶囊 Spine 图集解码；脚本合并来源清单和显式加载清单，原始 bundle / 对象、实际 URL、输入校验与输出 SHA256 见 [relic-draw/source-manifest.json](../../assets/reference/relic-draw/source-manifest.json)。按 `TreasureGachaSetting` 的品质分布、元素皮肤和 `shock_01..10` 末帧组合九种奖池、十个胶囊的静止姿势，不调用抽奖 RNG。原版入场动画独立播放，开蛋粒子及完整演出仍未转换，结果使用既有原始通用结果页。
 
@@ -138,11 +138,11 @@ ChestGachaPanel 与结果／概率／历史窗口消费原古遗物扭蛋池、�
 
 概率页沿用原 `GachaDetailDialog`、品质分组与滚动区域，按说明文字高度布局，显示原表基础概率、当前材料和保底进度；这一修正不表示 Unity 完整开蛋演出或服务端动态概率公式已迁移。
 
-`python scripts/prepare_relic_unlock_text.py` 将固定 `854_156383` 的五个中文键迁移为 Git 内代码绑定 ：`PLAYER_FUNCTION_LIMITED`、`home_notice_Level_tip`、`function_limit_mapUnlock`、`Mainland_11`、`confirm`。输入来自固定 APK `assets/yoo/WwiseBnk/a373f2acc39aeb5c4560f1456879b997.rawfile`（launch language，SHA256 `a068ee47db184c96c8923172a104ed90b37f72e2b4adb5d73211d894d7ec9001`）和 `assets/yoo/WwiseBnk/9a0b6ab8c5136050fd005ead8f567863.rawfile`（language，SHA256 `738069eafacd7fe33aae970aa5edacd76f48ed02acdd07ededad1c4a499b93b8`）；APK SHA256 为 `ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9`。输出按 UTF-8/LF 计算 SHA256 为 `2c791a489f18072bfb71307a6029cb27ca1619faa3ec39bcfbdf92a6940d489b`；转换工具严格检查两份输入哈希，不改写源缓存。
+`python scripts/prepare_relic_unlock_text.py` 将固定 `871_156598` 的五个中文键迁移为 Git 内代码绑定 ：`PLAYER_FUNCTION_LIMITED`、`home_notice_Level_tip`、`function_limit_mapUnlock`、`Mainland_11`、`confirm`。输入来自固定 APK `assets/yoo/WwiseBnk/a373f2acc39aeb5c4560f1456879b997.rawfile`（launch language，SHA256 `a068ee47db184c96c8923172a104ed90b37f72e2b4adb5d73211d894d7ec9001`）和 `assets/yoo/WwiseBnk/9a0b6ab8c5136050fd005ead8f567863.rawfile`（language，SHA256 `738069eafacd7fe33aae970aa5edacd76f48ed02acdd07ededad1c4a499b93b8`）；APK SHA256 为 `ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9`。输出按 UTF-8/LF 计算 SHA256 为 `2c791a489f18072bfb71307a6029cb27ca1619faa3ec39bcfbdf92a6940d489b`；转换工具严格检查两份输入哈希，不改写源缓存。
 
 提示控件复用已转换的 `ConfirmDialog.prefab`：原版本 CDN bundle `e9fb11a95f5ca61a90de42fc3fd90258`，对象 `5569979765835515756`，实际 URL `https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/e9fb11a95f5ca61a90de42fc3fd90258.bundle`，输入 bundle SHA256 `872b72513cc17d918891383990fb4dbe92c0bb5add97a4561840197b468578d3`。控件来自 `ui.json` 中现有的 `common_confirm` 绑定，遮罩颜色沿用原公共 PopupWindow 配置；不产生新的图像、素材目录输出或显式资源清单条目。官方 `FurnitureBase`、`HomeMyPlayerData`、`ChestGachaPanelNavigateHandler`、`ConditionNotice` 与 `LanguageUtils.GetConditionTextWrap` 为条件与文字调用依据。
 
-原版 `854_156383` 的 `ChestGachaPanel`、`ChestGachaResultPanel`、`GachaponAwardGo`、各数量布局与 `ChestGachaTenRewardGo` 经 [古遗物演出转换来源](../../assets/reference/relic-performance/source-manifest.json) 转换。Animator、SimpleAnimation、UIParticle、材质与 Wwise 音频均记录原对象及输出哈希。运行资源在 `assets/official/relic-performance/`，来源见 [relic-performance/source-manifest.json](../../assets/reference/relic-performance/source-manifest.json)。未使用新版同名包或自绘素材。
+原版 `871_156598` 的 `ChestGachaPanel`、`ChestGachaResultPanel`、`GachaponAwardGo`、各数量布局与 `ChestGachaTenRewardGo` 经 [古遗物演出转换来源](../../assets/reference/relic-performance/source-manifest.json) 转换。Animator、SimpleAnimation、UIParticle、材质与 Wwise 音频均记录原对象及输出哈希。运行资源在 `assets/official/relic-performance/`，来源见 [relic-performance/source-manifest.json](../../assets/reference/relic-performance/source-manifest.json)。未使用新版同名包或自绘素材。
 
 ## 完整还原部分
 
@@ -150,7 +150,7 @@ ChestGachaPanel 与结果／概率／历史窗口消费原古遗物扭蛋池、�
 
 ### 已取得的官方依据及当前接入边界
 
-- 固定版 `854_156383` APK 中的 `gacha/chest/treasure_gacha/reward_rule/random_reward/gacha_pity_probability/achievement/game_settings/item/conditions` 已用原 Luban 构造器重新解码，10张表均与 [rules.json](../../assets/official/rules.json) 一致。
+- 固定版 `871_156598` APK 中的 `gacha/chest/treasure_gacha/reward_rule/random_reward/gacha_pity_probability/achievement/game_settings/item/conditions` 已用原 Luban 构造器重新解码，10张表均与 [rules.json](../../assets/official/rules.json) 一致。
 - 已实际读取原 `ChestGachaPanel`、`ChestGachaResultPanel`、`ChestGachaAchievementPanel`、`ChestGachaDetailDialog`、`ChestMapSwitchPanel` 及共享 `GachaDetailDialog/GachaHistoryContent/GachaHistoryItem/ScoreRewardDialog` prefab。元素选择由主页面内的 `ElementChestSelectDialog` 组件控制，不能因未找到同名独立 prefab 就判为源资源缺失。
 - 原扭蛋 UI 包 `defaultpackage_assets_prefabs_ui_chestgacha.bundle`、共享详情包 `defaultpackage_assets_prefabs_ui_gachapanel.bundle` 及配置包 `defaultpackage_assets_scriptableconfig_modules_treasure.bundle` 经 `prepare_unity_bundle_inputs.py` 核对：包头 `2022.3.57f1`、目标 Android，361个递归 bundle／CAB 来源完整。这只证明转换输入可用，未证明 Windows 原生脚本、shader 或运行表现。
 - 官方 `ItemSourceChestGachaAgent.GenerateSourceData` 从可抽取系列生成整件／碎片来源，并从 `CountAchievementType == OpenElementChestCount` 的元素奖池奖励展开生成元素来源；`ClientItemSourceElementChestGachaHandler` 传递奖励物品的 `ElementType`。Unity 来源解析按此配置验证元素奖励并映射元素奖池，无需额外的 `ItemSourceInfo` 表。

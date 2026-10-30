@@ -16,7 +16,7 @@ HomeShopPanel 使用 shop 1／2、商品组、权重、折扣、库存、刷新�
 
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
-`prepare_shop_assets.py` 按商店 1 / 2 的固定商品与全部商品组、家园特卖表限定提取范围，补齐 24 个图标，其中包括胡椒、糖、盐、木果粉、乐园牛奶、奶油、黄玉奶酪七项食材。所有补充资源来自已校验的同版本 `854_156383` 官方 CDN 缓存，家园三类货架的 48 种物品均有原始图标。此前“七项食材未打包”的历史记录对应基础 APK 状态，此次补充来源、实际 URL、bundle 哈希和输出 SHA256 见 [shop-ui/source-manifest.json](../../assets/reference/shop-ui/source-manifest.json)。
+`prepare_shop_assets.py` 按商店 1 / 2 的固定商品与全部商品组、家园特卖表限定提取范围，补齐 24 个图标，其中包括胡椒、糖、盐、木果粉、乐园牛奶、奶油、黄玉奶酪七项食材。所有补充资源来自已校验的同版本 `871_156598` 官方 CDN 缓存，家园三类货架的 48 种物品均有原始图标。此前“七项食材未打包”的历史记录对应基础 APK 状态，此次补充来源、实际 URL、bundle 哈希和输出 SHA256 见 [shop-ui/source-manifest.json](../../assets/reference/shop-ui/source-manifest.json)。
 
 同一脚本读取原始 `ShopGoodsItemShowConfig.asset` 的品质到 Sprite GUID 映射，解码七种原始商品品质背景。商品使用已提取的 `ShopGoodsItemInfoCommon` 布局、图片、数量与阴影；数量文字扩大到原数量容器宽度，避免三位数截掉乘号。没有绘制替代图片。
 

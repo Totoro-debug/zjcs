@@ -22,13 +22,13 @@
 
 删除  的 nav 生成入口及所有额外跨页快捷栏，删除挑战页上方本地新增的技能 / 装备 / 幻兽快捷按钮。核对 TaskPanel.mTabGroupGo / mTabToggleGroup 与已提取 prefab 的 BottomGo/TabGroup_11，原始底部任务分类保留；未将名称相同的原始分类误删为额外导航。
 
-`scripts/prepare_task_bindings.py --convert-art` 从固定 manifest `854_156383` 的 `defaultpackage_assets_image_ui_itemnotes.bundle` 读取原始 Sprite，并复用既有 Unity 解码、裁切规则，补入 12 张地图阶段背景；没有重绘或改变布局。卡片使用 `Map/map_ui_display.MapBgPath` 及当前真实来源地图选择背景；发布者和怪物图片复用既有官方转换，原始 UI 字段和语言文件哈希内嵌于 。
+`scripts/prepare_task_bindings.py --convert-art` 从固定 manifest `871_156598` 的 `defaultpackage_assets_image_ui_itemnotes.bundle` 读取原始 Sprite，并复用既有 Unity 解码、裁切规则，补入 12 张地图阶段背景；没有重绘或改变布局。卡片使用 `Map/map_ui_display.MapBgPath` 及当前真实来源地图选择背景；发布者和怪物图片复用既有官方转换，原始 UI 字段和语言文件哈希内嵌于 。
 
 依据：`assets/reference/task/source-manifest.json`。
 
 ## 完整还原部分
 
-[`OfficialMainlineTaskCatalog`](../../unity/Assets/Game/Runtime/Offline/Progression/OfficialMainlineTaskCatalog.cs) 读取主线目录与来源清单，资源位于 `Resources/Official/Progression/mainline-tasks*.json`。目录由1000～1160的33项扩展到1000～1270的55项，增加山之国1165～1270的22项任务。既有转换保留 `854_156383` 来源；新增任务逐项核对选定 `871_156598` 的山之国原表，条件及奖励全部相同才复用转换。目录生成器为 [`prepare_unity_mainline_tasks.py`](../../scripts/prepare_unity_mainline_tasks.py)，目录、当前原表及比对结果的哈希见 `Resources/Official/Progression/mainline-tasks-source-manifest.json`；主城任务素材来源仍见 `assets/reference/task/source-manifest.json`。目录扩展不代表山之国完整主线路线已经验证。
+[`OfficialMainlineTaskCatalog`](../../unity/Assets/Game/Runtime/Offline/Progression/OfficialMainlineTaskCatalog.cs) 读取主线目录与来源清单，资源位于 `Resources/Official/Progression/mainline-tasks*.json`。目录由1000～1160的33项扩展到1000～1270的55项，增加山之国1165～1270的22项任务。既有转换保留 `871_156598` 来源；新增任务逐项核对选定 `871_156598` 的山之国原表，条件及奖励全部相同才复用转换。目录生成器为 [`prepare_unity_mainline_tasks.py`](../../scripts/prepare_unity_mainline_tasks.py)，目录、当前原表及比对结果的哈希见 `Resources/Official/Progression/mainline-tasks-source-manifest.json`；主城任务素材来源仍见 `assets/reference/task/source-manifest.json`。目录扩展不代表山之国完整主线路线已经验证。
 
 `OfflineMainlineProgressSession` 在本地角色槽中维护玩家成长、物品、地图与区域进度、战斗次数、实体标签、女神区域、宝箱、事件去重和已领取主线任务，并提供条件检查与领奖事务。成功祈愿抽取会将实际开启数量与奖励、消耗写入同一存档事务；重复回执不会重复增加宝箱计数。`OfficialWishAcceptance.Run` 已验证十连抽计数、重复回执／无效请求、任务 1040 条件及存档冷读，不代表完整前序主线已跑通。`TaskSubmitCondition` 依据已领取 ID 判定；`TaskCompleteCondition` 对已领取 ID 计完成，未领取任务仅在接取、展示（若有）和完成条件均由本地状态满足时计完成；不支持的条件会继续返回 `Unsupported`。保存由 `ProfileSlotCatalog` 和 `LocalJsonSaveFile` 提供。
 

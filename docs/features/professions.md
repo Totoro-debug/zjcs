@@ -40,7 +40,7 @@
 
 职业页的官方实现为 `ProfessionOverviewPanel`、`ProfessionTreePanel`、`ProfessionTreePanelItem`、`ProfessionPanel`、`ProfessionUpgradePanel`、`ProfessionChangePanel`、`ProfessionPromotionPanel`；等级属性、消耗与奖励继续核对官方 `profession_base`、`level_prop`、`profession_level_cost` 和 `achievement`。旧 `ui.json` 节点投影和历史本地接线不作为 Unity 原生 prefab 迁移或可玩验证的完成依据，当前状态见[职业功能页](professions.md)。
 
-当前原生转换从 APK 和已校验的 `871_156598` 官方资源取得 357 个 bundle 的依赖闭包；职业 prefab 包 MD5 为 `66728446397356c9e2febcd2ebf9f057`，与 APK 的 `854_156383` 同名包一致。`scripts/prepare_unity_profession_native_inputs.py` 严格恢复职业包 8357 个、规则弹窗包 241 个、奖励图标包 1900 个、说明弹窗包 100 个组件及字体／外观／提示图依赖，共 16035 个组件的序列化字段，写入、重开并逐字段对比；所有未更改对象保持原字节。Spine、Wwise 和布局组件仅恢复用于转换的真实序列化 schema，不构造替代 runtime。程序集、原生 metadata、类型表、工具、原始／转换输入哈希见 [native-input-source-manifest.json](../../assets/reference/profession-ui/native-input-source-manifest.json)。
+当前原生转换从 APK 和已校验的 `871_156598` 官方资源取得 357 个 bundle 的依赖闭包；职业 prefab 包 MD5 为 `66728446397356c9e2febcd2ebf9f057`，与 APK 的 `871_156598` 同名包一致。`scripts/prepare_unity_profession_native_inputs.py` 严格恢复职业包 8357 个、规则弹窗包 241 个、奖励图标包 1900 个、说明弹窗包 100 个组件及字体／外观／提示图依赖，共 16035 个组件的序列化字段，写入、重开并逐字段对比；所有未更改对象保持原字节。Spine、Wwise 和布局组件仅恢复用于转换的真实序列化 schema，不构造替代 runtime。程序集、原生 metadata、类型表、工具、原始／转换输入哈希见 [native-input-source-manifest.json](../../assets/reference/profession-ui/native-input-source-manifest.json)。
 
 `prepare_unity_profession_native_export.py` 复用独立 AssetRipper 1.3.14 导出和反向恢复工具，把临时有类型向量还原为原始托管引用注册表。1525 个导出资产中的 1853 个注册表、3377 条记录、12734 个对象引用、1665 组打包数组和 134878 个值已核对，包含 CAB／对象身份、RID、原始顺序、字段、标量、浮点位值和完整层级身份，其中 26 个为空注册表。凭据见 [native-export-source-manifest.json](../../assets/reference/profession-ui/native-export-source-manifest.json)。这些结果仍是转换缓存；尚未完成所有官方运行时组件、材质引用和原生 prefab 的显式绑定，不能视为可运行界面。
 
@@ -142,13 +142,13 @@
 
 `scripts/prepare_profession_appearance.py` 与 `extract_profession_appearance.mjs` 从固定 APK／匹配原 CDN 的男女 Spine、职业皮肤表、主副武器部件、原 atlas／colormap 生成 `assets/characters/profession/`；来源对象、包版本、输入输出 SHA256 见 `profession-appearance/source-manifest.json`。职业肖像使用原 Profession 摄影尺寸、偏移、正交视野与透明背景，未知剪影着色逻辑来自原 GlobalUIConfig.SpineSolidColorMaterial。原 PointAttachment、部件缩放、正背面动画、UV 与网格变形均保留；没有绘制替代贴图。该目录只登记已经接入的职业 UI 服装及骨骼武器，独立装饰粒子和地图／战斗服装动作不混报为完成。
 
-固定 854_156383 的 pWeapon_100_G_007_UI_Integrated 与 pWeapon_200_G_007_UI_Integrated 中，Spine 子节点的 anchoredPosition 为 (253,0)、旋转 90°、缩放 0.5，序列化 localPosition 则为零。prepare_profession_appearance.py 沿原父节点尺寸、锚点、pivot 和 anchoredPosition 合成部件变换，不能以零 localPosition 替代；六类武器的中间节点及旋转均直接读取原 prefab。更新后的真实输入及输出哈希仍登记在 profession-appearance/source-manifest.json，没有增加手绘素材或经验偏移。
+固定 871_156598 的 pWeapon_100_G_007_UI_Integrated 与 pWeapon_200_G_007_UI_Integrated 中，Spine 子节点的 anchoredPosition 为 (253,0)、旋转 90°、缩放 0.5，序列化 localPosition 则为零。prepare_profession_appearance.py 沿原父节点尺寸、锚点、pivot 和 anchoredPosition 合成部件变换，不能以零 localPosition 替代；六类武器的中间节点及旋转均直接读取原 prefab。更新后的真实输入及输出哈希仍登记在 profession-appearance/source-manifest.json，没有增加手绘素材或经验偏移。
 
-prepare_profession_appearance.py 在既有 UI 预览之外读取固定 854_156383 的六类 _Integrated 世界武器 prefab、SkeletonAnimation、原局部变换和 BaseSkeletonFollower，并转换男女原地图动作与各职业服装；62 套职业配置、27 段 UI／地图动作与 40 张图集的真实输入输出哈希保存在 profession-appearance/source-manifest.json。没有使用 UI 武器 prefab 代替世界武器。
+prepare_profession_appearance.py 在既有 UI 预览之外读取固定 871_156598 的六类 _Integrated 世界武器 prefab、SkeletonAnimation、原局部变换和 BaseSkeletonFollower，并转换男女原地图动作与各职业服装；62 套职业配置、27 段 UI／地图动作与 40 张图集的真实输入输出哈希保存在 profession-appearance/source-manifest.json。没有使用 UI 武器 prefab 代替世界武器。
 
 prepare_profession_playable.py 从 PlayerWorldProfessionUpgradeConfig.asset 的实际 PPtr 取得内嵌 player_UpProfession_playable，转换 10 条 MyPlayable 轨道、25 个原粒子及 3001.prefab AttachAgent 层级。profession_upgrade_audio.py 按原 AKPK／HIRC Event→PlayAction→Sound→DIDX／DATA 路径取得 Bless_1／2／3 的原媒体，使用 vgmstream／libsndfile 转为本地 Vorbis。资源位于 assets/official/profession-upgrade/；原包、组件、公共代码、媒体偏移与输入输出 SHA256 见 official-map/profession-upgrade-source-manifest.json。没有替代素材、手调动作或自制音效。
 
-固定 854_156383 的 PlayerChangeProfessionDataExt、ProfessionBaseInfoParser、PlayerProfessionDataEx、PlayerChangeProfessionData 和 RandomUtils 对应的原代码与配置已核对；继续使用原 profession_base 与 ChangeProfessionSetting 配置。真实源码 SHA256 与配置键见 freedom-profession/source-manifest.json。`prepare_freedom_profession.py` 继续从固定原包及匹配 CDN 转换 13 份原窗口／动态模板、74 份组件绑定和 24 行奖励配置，保留原多边形选区、状态切换、坐标、动画、未获得标记、确认按钮倒计时及男女职业立绘引用；输出 `assets/official/freedom-profession.json`，来源、原始对象和输出哈希同存于该清单。没有自绘补充。
+固定 871_156598 的 PlayerChangeProfessionDataExt、ProfessionBaseInfoParser、PlayerProfessionDataEx、PlayerChangeProfessionData 和 RandomUtils 对应的原代码与配置已核对；继续使用原 profession_base 与 ChangeProfessionSetting 配置。真实源码 SHA256 与配置键见 freedom-profession/source-manifest.json。`prepare_freedom_profession.py` 继续从固定原包及匹配 CDN 转换 13 份原窗口／动态模板、74 份组件绑定和 24 行奖励配置，保留原多边形选区、状态切换、坐标、动画、未获得标记、确认按钮倒计时及男女职业立绘引用；输出 `assets/official/freedom-profession.json`，来源、原始对象和输出哈希同存于该清单。没有自绘补充。
 
 ## 完整还原部分
 

@@ -28,7 +28,7 @@
 
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
-第二轮完整 UI 迁移：`python scripts/prepare_guild_assets.py` 从固定 APK 与同版本 `854_156383`、具 MD5 / SHA256 凭据的官方 CDN 缓存恢复 213 个公会、领地及关联公共 prefab，包括实际运行时池中的列表项、研究节点 / 连线、工具、排行、聊天、确认框和三种公会专用战斗结算面板。第一轮 33 个外壳与通用内容布局属于历史实现，已替换。
+第二轮完整 UI 迁移：`python scripts/prepare_guild_assets.py` 从固定 APK 与同版本 `871_156598`、具 MD5 / SHA256 凭据的官方 CDN 缓存恢复 213 个公会、领地及关联公共 prefab，包括实际运行时池中的列表项、研究节点 / 连线、工具、排行、聊天、确认框和三种公会专用战斗结算面板。第一轮 33 个外壳与通用内容布局属于历史实现，已替换。
 
 `python scripts/prepare_guild_scene.py` 转换原始 `LegionMap` 的 188 个 Sprite 实例、32 个 Mesh 和 16 组 Spine 数据，保留十二座建筑的位置、点击碰撞区域、镜头聚焦 / 拖动参数、24 个建筑名称和等级标签，以及未建造、施工、正常状态。生产使用三个原始世界 Canvas 背景、九个原始生产物件视图和骨骼；另有 10 组 UI Spine 数据。运行数据为 `assets/official/guild-ui.json`、`guild.json`、`guild-ui-spine.json` 和 `guild-scene.json`，全部为原素材解码 / 网格转换，没有自行绘制或生成图片。
 
