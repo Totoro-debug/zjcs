@@ -247,6 +247,7 @@ namespace Zjcs.Presentation.World
                             return;
                         case "WorldStopMoveNode":
                             navigation.StopMovement();
+                            if (mapClassId == 13) navigation.LockPlayerMovementForStory();
                             nodeId = StoryNext(node, "Exit");
                             continue;
                         case "FinishStoryNode":
@@ -1253,6 +1254,7 @@ namespace Zjcs.Presentation.World
 
         private void FinishStoryGraph(bool invokeCompletion)
         {
+            navigation.UnlockPlayerMovementForStory();
             if (mapClassId == 13) CleanMap13StoryPlayables();
             mapVoice?.StopVoice();
             Action completed = invokeCompletion ? storyFinished : null;

@@ -45,9 +45,14 @@ namespace Zjcs.Presentation.World
                         if (hits.Count > 0) return;
                     }
                 }
+                if (storyMovementLocked) return;
                 if (host.entityView == null || !host.entityView.TrySelectScreenPosition(press.Value))
                     TryMoveToPointer(press.Value);
             }
+
+            public void LockPlayerMovementForStory() => storyMovementLocked = true;
+
+            public void UnlockPlayerMovementForStory() => storyMovementLocked = false;
 
             private void TryMoveToPointer(Vector2 pointer)
             {

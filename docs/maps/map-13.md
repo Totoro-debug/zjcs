@@ -4,9 +4,9 @@
 
 状态：未完成。官方配置、水路规则、战斗／剧情数据和原分区场景／地区标签已迁移；共享 Map13 入口数据闭包、角色级进度、国度商店及四种故事跟随者模型已接入。原生环境、其余实体 prefab、完整交互和正式剧情流程仍在进行。正式发布目录保留此前版本；本批变更尚未构建并发布，不能以旧版 Player 作为本批验证。单机地图顺序已确认：Map12 完成后开放 Map13。Map12 方尖碑 8101 胜利结果按本地图配置的目标 13 写入带回执的本地解锁。
 
-本批变更补齐了 `GetEntityNode`、`ClickMapEntityNode`、`ClickMapEntityInLogicNode` 和 `MapEntityMoveInteractionNode` 的官方端口解析、导航等待、实体移动和剧情继续边界；隔离工程程序集编译通过，但后续 Unity 导入／Player 构建未完成，未验证本批 Release Player。正式剧情全路径、`WorldStopMoveNode` 的服务器语义、其余实体 prefab 与地图内完整交互仍未完成，不能据此宣称整图完成。
+本批变更补齐了 `GetEntityNode`、`ClickMapEntityNode`、`ClickMapEntityInLogicNode` 和 `MapEntityMoveInteractionNode` 的官方端口解析、导航等待、实体移动和剧情继续边界；隔离工程程序集编译通过，但后续 Unity 导入／Player 构建未完成，未验证本批 Release Player。正式剧情全路径、确认后的 `WorldStopMoveNode` 单机行为验证、其余实体 prefab 与地图内完整交互仍未完成，不能据此宣称整图完成。
 
-剧情运行器现已覆盖 Map13 图中会实际触发的窗口等待、按钮／列表点击、战斗结果等待、相机移动、遮罩、时间线等待及故事调用节点；`WaitGameResultNode` 按官方阶段绑定启动本地战斗并依据本地结算选择 Win／Lost／Leave 分支。职业窗口节点沿用已加载的本地 ProfessionUI 状态并继续对应成功／退出端口；官方 `GetEntityNode` 的主角实体选择及 `MapEntityMoveInteractionNode` 已接入本地导航和交互回调，支持职业导师与 RankBridgeMeetDaZe 的玩家移动分支。进度验收还覆盖了失败不解锁、胜利解锁 Map13 及独立世界标记的冷存档写入。该批代码已通过 Map13 剧情运行测试；完整职业规则、时间线资源实播、`WorldStopMoveNode` 服务器语义和整图 Play Mode／Windows Player 仍未完成。
+剧情运行器现已覆盖 Map13 图中会实际触发的窗口等待、按钮／列表点击、战斗结果等待、相机移动、遮罩、时间线等待及故事调用节点；`WaitGameResultNode` 按官方阶段绑定启动本地战斗并依据本地结算选择 Win／Lost／Leave 分支。职业窗口节点沿用已加载的本地 ProfessionUI 状态并继续对应成功／退出端口；官方 `GetEntityNode` 的主角实体选择及 `MapEntityMoveInteractionNode` 已接入本地导航和交互回调，支持职业导师与 RankBridgeMeetDaZe 的玩家移动分支。进度验收还覆盖了失败不解锁、胜利解锁 Map13 及独立世界标记的冷存档写入。该批代码已通过 Map13 剧情运行测试；完整职业规则、时间线资源实播、`WorldStopMoveNode` 的实机输入边界和整图 Play Mode／Windows Player 仍未完成。
 
 本批运行时代码在隔离 Unity 工程完成程序集编译和静态资源导入检查，未出现 Map13 C# 编译错误。最新 Windows Player 重建尚未发布：通用入口检测到正式目录已有不同脚本后端，Mono2x 验证入口又被隔离工程的失效 TMP 字体引用阻断；正式目录保留此前已发布版本，不能作为本批代码的 Player 验证证据。
 
@@ -341,7 +341,7 @@ Windows 发布验证：使用当前主工程以 Mono、Windows 64 位构建 Rele
 - 两份职业教学图的 9 路 `OrNode` 与通用 `AndNode` 已按官方 `GetInputValues<bool>` 语义求值；空输入均为 false。剧情验收覆盖多路 OR、AND 与空输入边界。
 - 两份职业教学图的 18 个 `IsProfessionNode` 已按官方目标职业 1–18 对角色存档当前职业求值；职业树晋升、动态 `Rank` 属性及职业选择 UI 仍需完整职业服务器结果与正式窗口流程后才能确认。
 - 两份职业教学图的 `RegisterStoryPropertyNode` 已按官方 `references.RefIds[].data` 注册 `Rank=3`，`GetStoryPropertyNode` 在当前故事图属性表中读取字符串值；属性生命周期随故事启动清空，不写角色存档。
-- `WorldStopMoveNode` 的原客户端实现只发送带 `MapId` 的 `WorldStopMoveNodeInfo_C2S`；APK 未包含服务器如何暂停及恢复移动的逻辑。当前运行时故事锁定与等待靠近时放行移动的行为不能证明该节点的服务端规则，离线版节点映射待用户确认。
+- 用户已确认 `WorldStopMoveNode` 的 Map13 单机行为：节点触发后锁定玩家地图点击移动，故事正常结束或中断时恢复；剧情 UI 点击和故事脚本移动仍可执行。原客户端只发送带 `MapId` 的 `WorldStopMoveNodeInfo_C2S`，APK 未包含服务端语义。运行时已在节点与故事收尾路径接入锁定／解锁，当前尚未完成正式故事输入的 Play Mode 与 Player 验证。
 - 三种 `HandInItemNode` 配置已接入共享官方 `ItemDetail/DialogHandInItemDialog`：原窗口、原物品图标、确认按钮灰态及数量进度按现有官方转换加载。Map13 配置为 2203×1、40502×5、43039×5，各限 1 次；按用户确认，在确认时以单一本地事务扣除配置数量并写入领取回执，取消／关闭中断不扣除，缺少物品时原确认按钮保持禁用。隔离 Play Mode 以模拟指针实际点击原窗口，验证取消不变更存档、三种确认精确扣除并在冷读后保留回执。该测试直接注入官方节点，不代表 NPC 正式故事路径已通过；窗口素材转换输入由 [Map14 全局窗口来源清单](../../assets/reference/official-map/map14-handin-ui-source-manifest.json) 记录。
 - 入口状态也依赖服务器地图状态：客户端 `HomeToMapNode.TryGetLastPublicActivedEntryId` 检查按地图降序的公开地区、女神激活和活动入口实体；本地存档目前没有完整的地区公开状态／活动入口实体记录。Map13 `MapWorldActivedCondition` 只证明 `WorldMapRegionProgressDict` 中存在 MapClassId 13 时条件成立，不证明首次激活准入规则。首次开放按已确认的顺序进度处理；活跃入口实体选择仍待接入原生 MapSelect UI 和本地地区状态。
 - 泽之国入口、正常移动、海之宫剧情、探索／任务、战斗、交互、条件、奖励、小地图、出口，以及五组手动水路和终端原界面。
