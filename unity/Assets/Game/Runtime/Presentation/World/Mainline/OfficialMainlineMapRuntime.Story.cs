@@ -69,6 +69,9 @@ namespace Zjcs.Presentation.World
             public float Duration;
         }
 
+        [Serializable]
+        private sealed class StoryButtonFields { public string StoryUIKey; }
+
         private readonly Dictionary<string, HashSet<string>> storyBlackboards =
             new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
         private readonly Dictionary<string, Dictionary<string, string>> storyProperties =
@@ -445,6 +448,17 @@ namespace Zjcs.Presentation.World
                             return;
                         case "ClickBtnNode":
                         case "ClickLoopListItemNode":
+                            StoryButtonFields buttonFields = JsonUtility.FromJson<StoryButtonFields>(node.sourceJson);
+                            if (node.type == "ClickBtnNode" && buttonFields != null
+                                && string.Equals(buttonFields.StoryUIKey, "DailyDungeonDialogPrivateMap.BattleBtn",
+                                    StringComparison.Ordinal)
+                                && storyContextEntity != null && storyContextEntity.StageIds != null
+                                && storyContextEntity.StageIds.Any(value => value > 0))
+                            {
+                                StartEntityStage(storyContextEntity,
+                                    () => { if (storyRunning) RunStoryGraph(StoryNext(node, "Exit")); });
+                                return;
+                            }
                             // The official node waits for a registered UI Button. Native
                             // offline panels register their controls before this graph tick;
                             // dispatching the click is therefore equivalent to advancing the
