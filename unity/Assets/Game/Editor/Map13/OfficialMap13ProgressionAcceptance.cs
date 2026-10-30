@@ -61,6 +61,22 @@ namespace Zjcs.Editor.Map13
                 OfflineMainlineProgressSession restored = OfflineMainlineProgressSession.InspectCharacter(slots, slot);
                 Require(restored.Save.Player.NpcFollowerClassIds.SequenceEqual(new[] { 8402, 8440, 8442 }),
                     "Follower IDs were not deduplicated and restored from disk.");
+
+                ProgressionResult locked = restored.ApplyMapActivationResult(13, false,
+                    "map13-activation-lost");
+                Require(locked.Status == ProgressionResultStatus.NotReady
+                    && !restored.Save.Player.UnlockedMapClassIds.Contains(13),
+                    "A lost map activation must not unlock Map13.");
+                ProgressionResult activated = restored.ApplyMapActivationResult(13, true,
+                    "map13-activation-win");
+                Require(activated.Status == ProgressionResultStatus.Applied
+                    && restored.Save.Player.UnlockedMapClassIds.Contains(13),
+                    "A winning local map activation did not unlock Map13.");
+                ProgressionResult alone = restored.MarkWorldAloneAppeared(13,
+                    DateTimeOffset.UtcNow.ToUnixTimeSeconds(), "map13-alone-appeared");
+                Require(alone.Status == ProgressionResultStatus.Applied
+                    && restored.WorldAloneStatus(13) == 0,
+                    "The Map13 independent-world marker did not persist.");
                 Require(restored.SetNpcFollowerClassIds(Array.Empty<int>()).IsApplied,
                     "Follower clear did not persist.");
                 OfflineMainlineProgressSession cleared = OfflineMainlineProgressSession.InspectCharacter(slots, slot);
