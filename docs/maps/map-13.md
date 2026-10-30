@@ -4,7 +4,7 @@
 
 状态：未完成。官方配置、水路规则、战斗／剧情数据和原分区场景／地区标签已迁移；共享 Map13 入口数据闭包、角色级进度、国度商店及四种故事跟随者模型已接入。原生环境、其余实体 prefab、完整交互和正式剧情流程仍在进行。正式发布目录保留此前版本；本批变更尚未构建并发布，不能以旧版 Player 作为本批验证。单机地图顺序已确认：Map12 完成后开放 Map13。Map12 方尖碑 8101 胜利结果按本地图配置的目标 13 写入带回执的本地解锁。
 
-本批变更补齐了 `GetEntityNode`、`ClickMapEntityNode`、`ClickMapEntityInLogicNode` 和 `MapEntityMoveInteractionNode` 的官方端口解析、导航等待、实体移动和剧情继续边界，并按用户确认接入 `WorldStopMoveNode` 锁定行为。隔离 GUI Play Mode 已实际加载 Map13 官方入口、2,690 个实体和原生玩家模型；模拟世界点击在故事锁定期间未移动，释放锁定状态通过，国度商店等级页与模拟购买、升阶及冷存档恢复通过。全工程 `ProjectTools.Validate` 与静态 GUID 检查已通过；Windows Release Player 尚未为本批构建、启动和发布。正式剧情全路径、确认后的节点输入边界、其余实体 prefab 与地图内完整交互仍未完成，不能据此宣称整图完成。
+本批变更补齐了 `GetEntityNode`、`ClickMapEntityNode`、`ClickMapEntityInLogicNode` 和 `MapEntityMoveInteractionNode` 的官方端口解析、导航等待、实体移动和剧情继续边界，并按用户确认接入 `WorldStopMoveNode` 锁定行为。Map13 Editor 程序集显式引用 `Zjcs.Offline.World.NativeMap13EntityAssets`，供原实体 prefab 目录构建器解析其目录类型；这只修正编辑器程序集依赖，不代表实体 prefab 已接入正式地图。隔离 GUI Play Mode 已实际加载 Map13 官方入口、2,690 个实体和原生玩家模型；模拟世界点击在故事锁定期间未移动，释放锁定状态通过，国度商店等级页与模拟购买、升阶及冷存档恢复通过。全工程 `ProjectTools.Validate` 与静态 GUID 检查已通过；Windows Release Player 尚未为本批构建、启动和发布。正式剧情全路径、确认后的节点输入边界、其余实体 prefab 与地图内完整交互仍未完成，不能据此宣称整图完成。
 
 剧情运行器现已覆盖 Map13 图中会实际触发的窗口等待、按钮／列表点击、战斗结果等待、相机移动、遮罩、时间线等待及故事调用节点；`WaitGameResultNode` 按官方阶段绑定启动本地战斗并依据本地结算选择 Win／Lost／Leave 分支。职业窗口节点沿用已加载的本地 ProfessionUI 状态并继续对应成功／退出端口；官方 `GetEntityNode` 的主角实体选择及 `MapEntityMoveInteractionNode` 已接入本地导航和交互回调，支持职业导师与 RankBridgeMeetDaZe 的玩家移动分支。进度验收还覆盖了失败不解锁、胜利解锁 Map13 及独立世界标记的冷存档写入。Map13 剧情规则 9 项测试通过；隔离 GUI Play Mode 实测 2,690 个实体、`WorldStopMoveNode` 输入锁定／故事结束解锁，以及商店购买升阶后的库存／货币／经验冷存档恢复。完整职业规则、时间线资源实播、正式剧情全路径及 Windows Player 仍未完成。
 
