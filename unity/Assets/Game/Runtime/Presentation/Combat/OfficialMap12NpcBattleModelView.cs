@@ -5,7 +5,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Zjcs.Offline.ProfessionUI;
-using Zjcs.Offline.World.NativeMap13;
 
 namespace Zjcs.Presentation.Combat
 {
