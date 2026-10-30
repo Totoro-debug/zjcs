@@ -92,12 +92,29 @@ namespace Zjcs.Editor.Map14
                 var runtime = new GameObject("Map14 entity prefab formal runtime").AddComponent<OfficialMainlineMapRuntime>();
                 runtime.MapMusicVolume = () => 0; runtime.MapVoiceVolume = () => 0;
                 runtime.Begin(14, slot, saves, canvas.transform, model, name, null);
+                FieldInfo nativeWorldField = typeof(OfficialMainlineMapRuntime).GetField("nativeMap14World", BindingFlags.Instance | BindingFlags.NonPublic);
+                float readyDeadline = Time.realtimeSinceStartup + 90f;
+                object nativeWorld = null;
+                while (Time.realtimeSinceStartup < readyDeadline)
+                {
+                    nativeWorld = nativeWorldField?.GetValue(runtime);
+                    if (nativeWorld != null && (bool)nativeWorld.GetType().GetProperty("IsReady").GetValue(nativeWorld)) break;
+                    yield return new WaitForSecondsRealtime(1f);
+                }
+                if (nativeWorld == null || !(bool)nativeWorld.GetType().GetProperty("IsReady").GetValue(nativeWorld))
+                    throw new InvalidDataException("Original Map14 partition did not finish loading at the player position.");
                 yield return new WaitForSecondsRealtime(4);
                 var view = runtime.GetComponentInChildren<OfficialMap10EntityView>(true);
                 if (view == null || view.EntityCount != 2961) throw new InvalidDataException("Map14 entity placement count is not 2961.");
                 var sample = view.FindEntityObject(101);
                 if (sample == null || sample.GetComponentsInChildren<Transform>(true).Length < 2)
                     throw new InvalidDataException("Map14 original entity prefab was not instantiated at placement 101.");
+                OfficialMap10EntityInfo entry = view.EntityInfos.Single(value => value.PlacementId == 101);
+                object localSave = typeof(OfficialMainlineMapRuntime).GetField("localSave", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(runtime);
+                int gridX = (int)localSave.GetType().GetField("gridX").GetValue(localSave);
+                int gridY = (int)localSave.GetType().GetField("gridY").GetValue(localSave);
+                if (entry.Grid == null || entry.Grid.Length != 2 || gridX != entry.Grid[0] || gridY != entry.Grid[1])
+                    throw new InvalidDataException("New Map14 save did not spawn at official entry placement 101.");
                 yield return new WaitForEndOfFrame();
                 ScreenCapture.CaptureScreenshot(Path.Combine(output, "map14-entity-prefab-entry.png"));
                 typeof(OfficialMainlineMapRuntime).GetMethod("CloseMap", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(runtime, null);

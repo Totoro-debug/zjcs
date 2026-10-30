@@ -2,7 +2,7 @@
 
 [总索引](../README.md)
 
-状态：未完成。当前官方配置、原生地形与环境、全部 486 个环境／地区标签 prefab、两类蝴蝶动画、机关规则及主线剧情数据载荷已恢复并分项验证；原生地形／环境／区域标签视图与 2,961 个放置实体已接入主线地图宿主，并通过实际 Map14 Play Mode 入口验证 416 个官方实体 prefab 根的实例化。独立地图 Map15 的离线状态已按官方 `PlayerWorldAloneAppearNode` 与 `PlayerMapWorldAlonePrepareDataRankLockTime` 接入：剧情节点原子记录 `Preparing` 和出现时间，刷新按 `max(出现时间 + MinDurationS, 金阶解锁时间 + DayOffset)` 推进到 `PrepareEnd`，重复事件幂等并写入存档。工程静态检查、`ProjectTools.Validate`、Map14 Play Mode prefab 入口及隔离 Windows Player 构建／BootSplash 启动均通过；Player 检查未创建角色存档。剧情运行时、正式玩法、HUD、存档与正式 Windows 发布尚未完成。
+状态：未完成。当前官方配置、原生地形与环境、全部 486 个环境／地区标签 prefab、两类蝴蝶动画、机关规则及主线剧情数据载荷已恢复并分项验证；原生地形／环境／区域标签视图与 2,961 个放置实体已接入主线地图宿主。正式工程 `ProjectTools.Validate`、静态 GUID 检查和图形 Play Mode 已通过：新地图存档按原 `DefEntryId=101` 定位到 `(247,115)`，原生分区就绪，416 个官方实体 prefab 根及 2,961 个放置均加载，实际截图已查看。独立地图 Map15 的离线状态已按官方 `PlayerWorldAloneAppearNode` 与 `PlayerMapWorldAlonePrepareDataRankLockTime` 接入：剧情节点原子记录 `Preparing` 和出现时间，刷新按 `max(出现时间 + MinDurationS, 金阶解锁时间 + DayOffset)` 推进到 `PrepareEnd`，重复事件幂等并写入存档。隔离 Windows Player BootSplash 启动已通过且未创建角色存档；Map14 正常玩家入口、完整剧情／玩法／HUD、完整存档恢复与地图专属 Windows Player 发布尚未完成。
 
 ## 地图简介
 
@@ -380,7 +380,7 @@ Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式
 
 - [配置生成器](../../scripts/prepare_unity_map14_sources.py)、[配置来源](../../assets/reference/official-map/map14-source-manifest.json)；载荷为 `Assets/Official/World/Map/14/Source/`。
 - [统一地图定义生成器](../../scripts/prepare_unity_map14_definition.py)；输出 `Assets/Official/World/Map/14/map14.json` 并对照本图来源收据核验导航、区域、位置及默认入口。
-- 主线地图 profile 与回城路由位于 `Runtime/Presentation/World/Mainline/OfficialMainlineMapProfile.cs`、`OfficialMainlineMapRuntime.cs`；共享主线数据加载器按 `871_156598` 校验并装入 Map14 的217阶段、20场景、909实体关卡绑定、94张剧情图和171个模板，保留原始 Playable 节点与等待参数。`IsRuntimeEntryReady` 已开放，使已解锁角色可进入原生地图宿主；原 Playable 资源绑定和完整剧情流程仍未就绪。主线宿主在地图实体和区域状态载入后创建原生 Map14 地形、环境及标签视图，并按本地玩家位置、等级／战力、开放地区和地区进度刷新显示；未复用通用平面地面。隔离实体入口验收覆盖2,961个放置和416个原 prefab 根，但当前完整宿主、剧情执行与 Player 发布尚未完成验证。
+- 主线地图 profile 与回城路由位于 `Runtime/Presentation/World/Mainline/OfficialMainlineMapProfile.cs`、`OfficialMainlineMapRuntime.cs`；共享主线数据加载器按 `871_156598` 校验并装入 Map14 的217阶段、20场景、909实体关卡绑定、94张剧情图和171个模板，保留原始 Playable 节点与等待参数。`IsRuntimeEntryReady` 已开放，使已解锁角色可进入原生地图宿主；新地图存档使用原 `MapWorldInfo.DefEntryId=101` 对应的官方 `(247,115)` 网格生成位置，避免沿用 Map10 默认坐标。原 Playable 资源绑定和完整剧情流程仍未就绪。主线宿主在地图实体和区域状态载入后创建原生 Map14 地形、环境及标签视图，并按本地玩家位置、等级／战力、开放地区和地区进度刷新显示；未复用通用平面地面。隔离实体入口验收现覆盖官方入口位置、原生分区就绪、2,961个放置和416个原 prefab 根；剧情执行与 Player 发布尚未完成验证。
 - [原生输入恢复](../../scripts/prepare_unity_map14_native.py)、[输入及组件来源](../../assets/reference/official-map/map14-native-input-source-manifest.json)。
 - [实体输入恢复](../../scripts/prepare_unity_map14_entity_inputs.py)、[原组件序列化描述](../../scripts/map14_entity_native_schemas.py)及[实体／显示／动态贴图来源](../../assets/reference/official-map/map14-native-entity-input-source-manifest.json)；完整原字段载荷为 `Source/native-entity-components.json`，临时转换输入保存在 `.tools/map14-entity-native-cache-871_156598/`，不进入运行时。
 - [实体原生导出](../../scripts/prepare_unity_map14_entity_export.py)与[逐字段／指针核对来源](../../assets/reference/official-map/map14-native-entity-export-source-manifest.json)；使用 `--convert` 执行私有转换器，原顺序恢复结果在同一缓存的 `restored/` 中。

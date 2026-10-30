@@ -431,7 +431,7 @@ namespace Zjcs.Presentation.World
             avatar.transform.SetParent(mapRoot, false);
             avatar.name = "Map" + mapClassId + "Player_" + slotId;
             if (mapClassId == 13) RefreshMap13FollowerObjects();
-            if (localSaveCreated && MapProfile.HasNativeUi)
+            if (localSaveCreated && MapProfile.DefaultEntryPlacementId > 0)
             {
                 int entryId = GetDefaultEntryId();
                 if (!mapEntities.TryGetValue(entryId, out Map10RuntimeEntity entry))
