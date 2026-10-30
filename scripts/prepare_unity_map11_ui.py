@@ -111,7 +111,7 @@ def animation_record(apk, animation, tree):
             "tracks": tracks, "unknown": unknown, "events": native["m_Events"], "source": apk.provenance(animation)}
 
 
-def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_schemas, support_exporter, raw, output_root=OUTPUT, preserve_native_transforms=False):
+def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_schemas, support_exporter, raw, output_root=OUTPUT, preserve_native_transforms=False, restore_component_image_colors=False):
     """Restore official panel geometry, serialized component bindings and clips."""
     panels, components, sprites, shader_programs = [], [], {}, {}
     previous_panels = {}
@@ -507,7 +507,9 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
         for component in (c for c in components if c["panel"] == key):
             node, fields = node_by_path[component["path"]], component["fields"]
             if component["type"] in ("Image", "MirrorImage"):
-                if any(abs(a - b) > 0.00001 for a, b in zip(node["image_color"], fields["color"])):
+                if restore_component_image_colors:
+                    node["image_color"] = fields["color"]
+                elif any(abs(a - b) > 0.00001 for a, b in zip(node["image_color"], fields["color"])):
                     raise ValueError("Official Image Graphic color layout differs: " + component["path"])
                 node.update(image_graphic_flags=True, image_raycast_target=fields["raycastTarget"], image_maskable=fields["maskable"])
             elif component["type"] == "Mask":

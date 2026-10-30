@@ -18,6 +18,8 @@
 
 尚无本图完整 Unity 游玩流程的完成结论；共享代码和转换数据不计作整图完成。
 
+地图组静态数据已从固定版 `854_156383` 打包到 `unity/Assets/Game/Resources/Map15/Group/`：60 张地图各自保留原地图行、区域行、导航／放置数据和放置实体组件，另有共享 82 种 EC 模板；合计 118 区、2,899 个放置和 23,291 个原始组件。目录索引保留官方后继地图、地形路径和 BGM，来源及输入／输出哈希见 [`map15-group-data-source-manifest.json`](../../assets/reference/official-map/map15-group-data-source-manifest.json)。该数据尚未接入可切换地图与实体加载的运行时，不能视为地图、区域开放或实体已可游玩。
+
 ## 自定义实现
 
 按用户明确确认，沿用龙之国的单机自动解谜方案。固定版客户端／Common 的 `StageResultAutoPuzzleComponentImplement`、`StageResultResetPuzzleComponentImplement` 及相关请求保留目标、费用和结果标记，缺少服务端执行器；本地适配不标为原服务端逻辑。依据为 [`MyStageResultAutoPuzzle.cs`](../../.tools/source-packages/official-code/client-source/MyStageResultAutoPuzzle.cs)、[`MyStageResultResetPuzzle.cs`](../../.tools/source-packages/official-code/client-source/MyStageResultResetPuzzle.cs) 及对应 Common 标记组件。通天塔 5 处火炮终端只清除原 `NeedRemoveLoEntityIds`，2 处特殊锁及 5 处普通锁终端只解开原 `LockLoEntityIds`，使用原交互费用（道具 325×1），不补发炮、失败演出或奖励。重置仅恢复指定目标，保留其他状态、背包、奖励凭据和角色位置；原配置仅 4 个终端有重置分支，保留其余终端的原菜单，不新增重置按钮。
@@ -32,7 +34,7 @@
 
 ## 尚未实现
 
-按通天塔地图组15恢复60张地图、118区、2899个实体及81条主线；入口与幻想阶梯分开，六处遗迹、各楼层连接、小地图、原地形／灯光／水面逐图绑定与验证。
+将已打包的60张地图、118区和2,899个实体数据接入运行时，迁移81条主线；入口与幻想阶梯分开，六处遗迹、各楼层连接、小地图、原地形／灯光／水面逐图绑定与验证。
 
 按原地图配置恢复场景、区域、导航、放置实体、原条件、交互、战斗、奖励和出口；原 prefab、骨骼、材质、粒子、动画及音频需在 Unity / Windows 逐项恢复并绑定。
 
@@ -41,12 +43,8 @@
 
 ## 代码与资源入口
 
-`scripts/prepare_map15_ruins.py`（来源工具标识）、`scripts/verify_map15_ruins.py`（来源工具标识）、
+[地图组数据生成器](../../scripts/prepare_unity_map15_group_data.py)、[Unity 地图组索引](../../unity/Assets/Game/Resources/Map15/Group/group-catalog.json)、[官方来源清单](../../assets/reference/official-map/map15-group-data-source-manifest.json)
 
-`scripts/prepare_map15_element_link.py`（来源工具标识）、`scripts/verify_map15_element_link.py`（来源工具标识）
+[原机关与场景配置](../../assets/official/map15-cannons.json)、[原元素连线配置](../../assets/official/map15-element-link.json)、[原遗迹配置](../../assets/official/map15-ruins.json)、[原界面配置](../../assets/official/map15-ui.json)
 
-`scripts/prepare_map15_ui.py`（来源工具标识）、[`tower-ui-source-manifest.json`](../../assets/reference/official-map/tower-ui-source-manifest.json)
-
-`scripts/verify_map15_ui.py`（来源工具标识）、
-
-[adventure.json](../../assets/official/adventure.json)、[15.json](../../assets/official/regions/15.json)、[`MyStageResultAutoPuzzle.cs`](../../.tools/source-packages/official-code/client-source/MyStageResultAutoPuzzle.cs)、[`MyStageResultResetPuzzle.cs`](../../.tools/source-packages/official-code/client-source/MyStageResultResetPuzzle.cs)
+[原地形／环境来源清单](../../assets/reference/official-map/tower-environment-source-manifest.json)、[原界面来源清单](../../assets/reference/official-map/tower-ui-source-manifest.json)、[通天塔地图数据](../../assets/official/regions/15.json)、[`MyStageResultAutoPuzzle.cs`](../../.tools/source-packages/official-code/client-source/MyStageResultAutoPuzzle.cs)、[`MyStageResultResetPuzzle.cs`](../../.tools/source-packages/official-code/client-source/MyStageResultResetPuzzle.cs)

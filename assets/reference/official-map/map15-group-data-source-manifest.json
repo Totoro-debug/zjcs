@@ -1,0 +1,943 @@
+{
+  "counts": {
+    "components": 23291,
+    "maps": 60,
+    "placementComponents": 22524,
+    "placements": 2899,
+    "regions": 118,
+    "templateComponents": 767,
+    "templates": 82
+  },
+  "inputs": [
+    {
+      "bytes": 32716708,
+      "path": "assets/official/adventure.json",
+      "sha256": "a6820d65b7498af98f242ab797c24f5dc92646b0638f09da8331c793a0340b4e"
+    },
+    {
+      "bytes": 47940300,
+      "path": "assets/official/map-entities.json",
+      "sha256": "78f1eeac9a8379128049fdd020223f71e73fdd43ba1a8bf5cdc62abe3735a510"
+    },
+    {
+      "bytes": 4108210,
+      "path": "assets/reference/official-map/entities-source-manifest.json",
+      "sha256": "3ff0762ff880aa975e7c9f8c1df0551cab02c76b52b36c59342a2a89aa8a6ea1"
+    },
+    {
+      "bytes": 13116,
+      "path": "assets/official/regions/15.json",
+      "sha256": "d1493189fa6c1d5c876073f4ebeb16bf3797f5dff477f1bbe32209044c5dded2"
+    },
+    {
+      "bytes": 19991,
+      "path": "assets/official/regions/15-entities.json",
+      "sha256": "db3f16064e49db503c164f15566cd29f7f3f54394df89404038eecc5e1777622"
+    },
+    {
+      "bytes": 13931,
+      "path": "assets/official/regions/42001.json",
+      "sha256": "b6f19d5dd8806e034f3b99cd51419484d19639b0203338cfb5a5dbc4d5ec0f60"
+    },
+    {
+      "bytes": 12451,
+      "path": "assets/official/regions/42001-entities.json",
+      "sha256": "c62ce27ab639767831dcfbc88a9ca931276b32e4e334a7677e8dc81741706370"
+    },
+    {
+      "bytes": 12361,
+      "path": "assets/official/regions/42002.json",
+      "sha256": "8c21eed925c9eda1a07dfd3bef72dfae28d55fd896dee2876797ec4e5f2f4da1"
+    },
+    {
+      "bytes": 17318,
+      "path": "assets/official/regions/42002-entities.json",
+      "sha256": "dbcb124fd5a4e189296bb19eb710bdbe66de45d9080ec08b9dd2b98784292e36"
+    },
+    {
+      "bytes": 14788,
+      "path": "assets/official/regions/42003.json",
+      "sha256": "fb4ab460e8fd6ba8bcc53206f6bfe390e53cb447fb3f474d6415c3d8beb57139"
+    },
+    {
+      "bytes": 19403,
+      "path": "assets/official/regions/42003-entities.json",
+      "sha256": "b319dfc2bb95b48cb77f804157005c9ddc59f2e97fab6d57b64f82be88ccafca"
+    },
+    {
+      "bytes": 12754,
+      "path": "assets/official/regions/42004.json",
+      "sha256": "781cb67502d7d83fe448bf708ddae3605ab621102c553253f2256a68f1756c88"
+    },
+    {
+      "bytes": 18729,
+      "path": "assets/official/regions/42004-entities.json",
+      "sha256": "3f06c947e020f39d231f2e9e67dd28092ae13a298a1fbec193e1056687ef5301"
+    },
+    {
+      "bytes": 13531,
+      "path": "assets/official/regions/42005.json",
+      "sha256": "94a5759ce2fa563125986637472774de79602fb95a106b16b283dcdeb91dcceb"
+    },
+    {
+      "bytes": 21939,
+      "path": "assets/official/regions/42005-entities.json",
+      "sha256": "c49010c68420e85bb7a6cb6f6e1b09f45a3c9ef0639b3cbbc1d8404cc4ce0f70"
+    },
+    {
+      "bytes": 12316,
+      "path": "assets/official/regions/42006.json",
+      "sha256": "22e1a92059e55b403593a494ac7a854fd41a745a092a80719c0feacc08761f72"
+    },
+    {
+      "bytes": 17303,
+      "path": "assets/official/regions/42006-entities.json",
+      "sha256": "b3fa5131cbd0a8a5cad175ba133341d135aef70e4315303c8c8235a53f07c4c3"
+    },
+    {
+      "bytes": 13109,
+      "path": "assets/official/regions/42007.json",
+      "sha256": "0b341a3eba2b6eadaefd6c5a4a3cb5622559e8567f2daf47d432a110aac54a9a"
+    },
+    {
+      "bytes": 19882,
+      "path": "assets/official/regions/42007-entities.json",
+      "sha256": "783efb1447e4b00555a6750665975bbed7b5ca200bb4ddba8c20f36661d4c832"
+    },
+    {
+      "bytes": 12171,
+      "path": "assets/official/regions/42008.json",
+      "sha256": "767995a26ac52edc95fd41fb60b2490343c5b5e3a7ed604a5abcf54fa85f2a63"
+    },
+    {
+      "bytes": 16179,
+      "path": "assets/official/regions/42008-entities.json",
+      "sha256": "5380052de06d9a8ce2e4310d351184046eabed63e59902f86d28667965de4c3c"
+    },
+    {
+      "bytes": 13203,
+      "path": "assets/official/regions/42009.json",
+      "sha256": "25037648f1309c47fd6acbd80f5981c07d6fdf65e3fa8099e9a7a9a1c29b3866"
+    },
+    {
+      "bytes": 16170,
+      "path": "assets/official/regions/42009-entities.json",
+      "sha256": "9960e731b6ab46bcc413ebbfb368a161daea0ae1187644e3ef3e9159a37baa62"
+    },
+    {
+      "bytes": 12733,
+      "path": "assets/official/regions/42010.json",
+      "sha256": "270f50c99197d1a3e13dbae564da7e1b57f68e0010eb2a21294049faedcc4ec3"
+    },
+    {
+      "bytes": 18729,
+      "path": "assets/official/regions/42010-entities.json",
+      "sha256": "445ff6c51d0e5e28a2c494c8543dd7732f69addf66d594780c14302b6dbf16ce"
+    },
+    {
+      "bytes": 12335,
+      "path": "assets/official/regions/42011.json",
+      "sha256": "ae86df69366022a228e6c9e0c2a298f5399da38250c2490ea955e2cd8514f8ee"
+    },
+    {
+      "bytes": 17181,
+      "path": "assets/official/regions/42011-entities.json",
+      "sha256": "d8a17eb69431cb855be075837bd3af28cf4ca6cd87ab167e5538824ca5375893"
+    },
+    {
+      "bytes": 14130,
+      "path": "assets/official/regions/42012.json",
+      "sha256": "65db5b96c0f4884d4127ade2dbef42477cd9b4990c318c68486c84e806c6886b"
+    },
+    {
+      "bytes": 12413,
+      "path": "assets/official/regions/42012-entities.json",
+      "sha256": "6bf5bde89b0cedcc94c498264936ec831ea43cd0eb76ade7e489d142b6957e1d"
+    },
+    {
+      "bytes": 12694,
+      "path": "assets/official/regions/42013.json",
+      "sha256": "c060f09b82d4c71dab4a151a9cf2d35fa597d9a315a4062888a688caa3ed090c"
+    },
+    {
+      "bytes": 17444,
+      "path": "assets/official/regions/42013-entities.json",
+      "sha256": "9f04cbbfeb29d11f74424f60d12048f4796370730db029df37af293c553ca797"
+    },
+    {
+      "bytes": 12733,
+      "path": "assets/official/regions/42014.json",
+      "sha256": "783f86b134b4d7ccbc5aa7b3b38d794a5c90868c9b52e4584605be2e3f67e5e5"
+    },
+    {
+      "bytes": 18729,
+      "path": "assets/official/regions/42014-entities.json",
+      "sha256": "445ff6c51d0e5e28a2c494c8543dd7732f69addf66d594780c14302b6dbf16ce"
+    },
+    {
+      "bytes": 13109,
+      "path": "assets/official/regions/42015.json",
+      "sha256": "371ca11521864ba5bf005685ee138a3de33ad0cfd7070567b607a262d09a9754"
+    },
+    {
+      "bytes": 19882,
+      "path": "assets/official/regions/42015-entities.json",
+      "sha256": "783efb1447e4b00555a6750665975bbed7b5ca200bb4ddba8c20f36661d4c832"
+    },
+    {
+      "bytes": 13542,
+      "path": "assets/official/regions/42016.json",
+      "sha256": "b1602b8ad25323daf8048d38e82eb217f4b1e56fd97fb2ecabe6f23a9b22ec30"
+    },
+    {
+      "bytes": 16466,
+      "path": "assets/official/regions/42016-entities.json",
+      "sha256": "cbfcf85088b481abf85e8ff69e054ee4898ffdc3fc74eabc3ff08993bc286ebd"
+    },
+    {
+      "bytes": 12171,
+      "path": "assets/official/regions/42017.json",
+      "sha256": "426d0494117a755df9e963b0ff929bf9ad992f7136f1f4ece1f722ec6a385287"
+    },
+    {
+      "bytes": 16506,
+      "path": "assets/official/regions/42017-entities.json",
+      "sha256": "8df3ba75dd1678d9045bedc938bd966c0c58adacaea3a1d089108b373365125e"
+    },
+    {
+      "bytes": 13109,
+      "path": "assets/official/regions/42018.json",
+      "sha256": "755bf480bb61f2466a4be2551bf74203647794ea1e7ecb54adb3ac4850c4471c"
+    },
+    {
+      "bytes": 19765,
+      "path": "assets/official/regions/42018-entities.json",
+      "sha256": "ac2b3bf365472db67eab8d8c46f483832116263a75e1211709a5ce150214e2fa"
+    },
+    {
+      "bytes": 13484,
+      "path": "assets/official/regions/42019.json",
+      "sha256": "5a257f7bde3ccc3208620c53d43b26ce8dc171aa1576454b3a0a3eb178d1943d"
+    },
+    {
+      "bytes": 9320,
+      "path": "assets/official/regions/42019-entities.json",
+      "sha256": "bb4e5fc3d7be8bbd3b31e2e44656672639c779122724dc0c622ac82fa76a18a3"
+    },
+    {
+      "bytes": 12906,
+      "path": "assets/official/regions/42020.json",
+      "sha256": "232f77aac6f1fea3db5a588ec16e40916d36b97b9319ee409de1bb969965f813"
+    },
+    {
+      "bytes": 19931,
+      "path": "assets/official/regions/42020-entities.json",
+      "sha256": "5a1df9567bb85f884277ca98b58c026fe5e15c9f1fc99feea801741d1e320be1"
+    },
+    {
+      "bytes": 13109,
+      "path": "assets/official/regions/42021.json",
+      "sha256": "73a2d0529d57b722de7aa922b4b6ff2148350b62b0c858d66f7dd432e7d7f7f5"
+    },
+    {
+      "bytes": 19765,
+      "path": "assets/official/regions/42021-entities.json",
+      "sha256": "ac2b3bf365472db67eab8d8c46f483832116263a75e1211709a5ce150214e2fa"
+    },
+    {
+      "bytes": 12875,
+      "path": "assets/official/regions/42022.json",
+      "sha256": "c6288849072f41e862cff78c3e2a748df99eac53220caa02e9f1a163e59c3f9f"
+    },
+    {
+      "bytes": 13799,
+      "path": "assets/official/regions/42022-entities.json",
+      "sha256": "dc1ce5f9c24f92692136eda318173eb075644e3928a44b69c554026dbfc49a85"
+    },
+    {
+      "bytes": 12170,
+      "path": "assets/official/regions/42023.json",
+      "sha256": "2bc06b3ccba645087b50a1230e731257e8d89710f09fcedae515e0b4b23b6fb5"
+    },
+    {
+      "bytes": 16396,
+      "path": "assets/official/regions/42023-entities.json",
+      "sha256": "f6b584619790b80630cd6422c22be67b8c33d4560821d09f61e1fc8599a6d2a5"
+    },
+    {
+      "bytes": 13110,
+      "path": "assets/official/regions/42024.json",
+      "sha256": "39049693c867b5e673bd473e69ca0cbbf056d3edc8444536f6466ddf94f6cf2c"
+    },
+    {
+      "bytes": 19980,
+      "path": "assets/official/regions/42024-entities.json",
+      "sha256": "01efd25f82248ca399a46b264077d1af8b6e8ee9e470c68a6ebc9d289261a3c7"
+    },
+    {
+      "bytes": 12732,
+      "path": "assets/official/regions/42025.json",
+      "sha256": "23cc564a80f43e11d0931d2f61c9b5508199b5fb6210682759e415dd7b5130c0"
+    },
+    {
+      "bytes": 18728,
+      "path": "assets/official/regions/42025-entities.json",
+      "sha256": "f3280aa0ebb78b8247fe3a918bd48e2470797e2181095d50f0cfbdb83a580626"
+    },
+    {
+      "bytes": 13110,
+      "path": "assets/official/regions/42026.json",
+      "sha256": "b3e6d8a8bcd7623fa8b499633d8f11206d4e04f6fb53eacb60fadfe37e8c83d6"
+    },
+    {
+      "bytes": 19980,
+      "path": "assets/official/regions/42026-entities.json",
+      "sha256": "01efd25f82248ca399a46b264077d1af8b6e8ee9e470c68a6ebc9d289261a3c7"
+    },
+    {
+      "bytes": 12712,
+      "path": "assets/official/regions/42027.json",
+      "sha256": "2ab8c73fb48c564a7638fe4d396320a39be10ecd42fc76eca80f3dcff99b4dec"
+    },
+    {
+      "bytes": 19071,
+      "path": "assets/official/regions/42027-entities.json",
+      "sha256": "4012c5787a71d4b744f4da555df24f706ae6594da289e638fb424e8ac6a9fee1"
+    },
+    {
+      "bytes": 14150,
+      "path": "assets/official/regions/42028.json",
+      "sha256": "007c67bfe5be4f2de3b52f79d427a77222893416c71dc2c23ab2d0c702d4b71c"
+    },
+    {
+      "bytes": 12413,
+      "path": "assets/official/regions/42028-entities.json",
+      "sha256": "6bf5bde89b0cedcc94c498264936ec831ea43cd0eb76ade7e489d142b6957e1d"
+    },
+    {
+      "bytes": 12732,
+      "path": "assets/official/regions/42029.json",
+      "sha256": "16c18cb19a5317741d90b5f10542038c4c56061560c7334af21630cb1ed807ab"
+    },
+    {
+      "bytes": 18728,
+      "path": "assets/official/regions/42029-entities.json",
+      "sha256": "f3280aa0ebb78b8247fe3a918bd48e2470797e2181095d50f0cfbdb83a580626"
+    },
+    {
+      "bytes": 13110,
+      "path": "assets/official/regions/42030.json",
+      "sha256": "e494d425ab669b03894d2c13f7af00eb1d8bd4613bdd4d080945100d612efaad"
+    },
+    {
+      "bytes": 19980,
+      "path": "assets/official/regions/42030-entities.json",
+      "sha256": "01efd25f82248ca399a46b264077d1af8b6e8ee9e470c68a6ebc9d289261a3c7"
+    },
+    {
+      "bytes": 12340,
+      "path": "assets/official/regions/42031.json",
+      "sha256": "7a812f4dd81d7d7807a8c9231d6efeb3baebdbcea36ddc7147767e5b041c11e8"
+    },
+    {
+      "bytes": 17318,
+      "path": "assets/official/regions/42031-entities.json",
+      "sha256": "dbcb124fd5a4e189296bb19eb710bdbe66de45d9080ec08b9dd2b98784292e36"
+    },
+    {
+      "bytes": 14073,
+      "path": "assets/official/regions/42032.json",
+      "sha256": "d18d78dbee903ec5e87efe2200051f462422eae2d2de6e751dbfdee53d63471b"
+    },
+    {
+      "bytes": 17181,
+      "path": "assets/official/regions/42032-entities.json",
+      "sha256": "10beacc22b7e1acd59cfd9b822911b9bce7ef7b15b0739a71c3272b204b760ca"
+    },
+    {
+      "bytes": 13110,
+      "path": "assets/official/regions/42033.json",
+      "sha256": "d9a0e1eeb3ec8c6a05a266b47cc05bbedccfb4a4d22619403ca222c31d7565d3"
+    },
+    {
+      "bytes": 19980,
+      "path": "assets/official/regions/42033-entities.json",
+      "sha256": "01efd25f82248ca399a46b264077d1af8b6e8ee9e470c68a6ebc9d289261a3c7"
+    },
+    {
+      "bytes": 13684,
+      "path": "assets/official/regions/42034.json",
+      "sha256": "6e2415f7c0d400d1ce0d2aa7fea727b0c9004767e00fe5ae602152e1e656cf37"
+    },
+    {
+      "bytes": 22816,
+      "path": "assets/official/regions/42034-entities.json",
+      "sha256": "75152b825760703bd87271a07d4ecb885f5962a29a487bb064bd7e3878fe4af1"
+    },
+    {
+      "bytes": 12733,
+      "path": "assets/official/regions/42035.json",
+      "sha256": "850f3722848acc78db7dbfc5361b6c5e6cffaf7620cf8ae997c4e093a6f4527f"
+    },
+    {
+      "bytes": 18626,
+      "path": "assets/official/regions/42035-entities.json",
+      "sha256": "bbc5368582fef40f1f8488aada16ebed7538aa868155e07bbb7e92b81beb1b9b"
+    },
+    {
+      "bytes": 13109,
+      "path": "assets/official/regions/42036.json",
+      "sha256": "7024ee76d18b43557fba9e3a0dc278b073a42a1187c954a5447e75df8dd684a1"
+    },
+    {
+      "bytes": 19991,
+      "path": "assets/official/regions/42036-entities.json",
+      "sha256": "db3f16064e49db503c164f15566cd29f7f3f54394df89404038eecc5e1777622"
+    },
+    {
+      "bytes": 12171,
+      "path": "assets/official/regions/42037.json",
+      "sha256": "e62f071d23c5b1e5e30e538eab3b180ec9c335096aac02458f83bd78b4338e55"
+    },
+    {
+      "bytes": 16179,
+      "path": "assets/official/regions/42037-entities.json",
+      "sha256": "5380052de06d9a8ce2e4310d351184046eabed63e59902f86d28667965de4c3c"
+    },
+    {
+      "bytes": 13881,
+      "path": "assets/official/regions/42038.json",
+      "sha256": "b3c340e01ed7a6136737317a96fa857ab0b1db47f286a87f6e5d7c54874d95f1"
+    },
+    {
+      "bytes": 18589,
+      "path": "assets/official/regions/42038-entities.json",
+      "sha256": "112f2d7418e7c347e32eab12f8f81fa02c7f5f9196a4fbb443d6cc14ee8aef58"
+    },
+    {
+      "bytes": 12336,
+      "path": "assets/official/regions/42039.json",
+      "sha256": "ff58f8bebba82d40191a42d1ee775392bde760b201faa82f0c7ed2fb70c7fe31"
+    },
+    {
+      "bytes": 17303,
+      "path": "assets/official/regions/42039-entities.json",
+      "sha256": "b3fa5131cbd0a8a5cad175ba133341d135aef70e4315303c8c8235a53f07c4c3"
+    },
+    {
+      "bytes": 12733,
+      "path": "assets/official/regions/42040.json",
+      "sha256": "19e8be1b48c387c71f3fc8c1261a75c55cdf3128b2f6617f46e2ccee2540105f"
+    },
+    {
+      "bytes": 18729,
+      "path": "assets/official/regions/42040-entities.json",
+      "sha256": "3f06c947e020f39d231f2e9e67dd28092ae13a298a1fbec193e1056687ef5301"
+    },
+    {
+      "bytes": 13680,
+      "path": "assets/official/regions/42041.json",
+      "sha256": "82ab07e9b6746dcc19fe6690972894fda1c47eca4993a3c36e8ef61828d921e8"
+    },
+    {
+      "bytes": 22787,
+      "path": "assets/official/regions/42041-entities.json",
+      "sha256": "56eb421c51e0373f7c013e7c613b549c93a569968d192d057543159cb135ba12"
+    },
+    {
+      "bytes": 12336,
+      "path": "assets/official/regions/42042.json",
+      "sha256": "ae27beaf028e4f07bff1bd082369478a902d0044ceae9b085888a026918ef848"
+    },
+    {
+      "bytes": 17303,
+      "path": "assets/official/regions/42042-entities.json",
+      "sha256": "b3fa5131cbd0a8a5cad175ba133341d135aef70e4315303c8c8235a53f07c4c3"
+    },
+    {
+      "bytes": 13109,
+      "path": "assets/official/regions/42043.json",
+      "sha256": "ad58d382637e8bf128ca95817439308579c6c9d3f42b8d0b5903fb69bf17db31"
+    },
+    {
+      "bytes": 19882,
+      "path": "assets/official/regions/42043-entities.json",
+      "sha256": "783efb1447e4b00555a6750665975bbed7b5ca200bb4ddba8c20f36661d4c832"
+    },
+    {
+      "bytes": 12171,
+      "path": "assets/official/regions/42044.json",
+      "sha256": "7b8195a27c6dd3717285cef8cb10708f51fb7e8a8dd399cb9abd43fa07ca9607"
+    },
+    {
+      "bytes": 16179,
+      "path": "assets/official/regions/42044-entities.json",
+      "sha256": "5380052de06d9a8ce2e4310d351184046eabed63e59902f86d28667965de4c3c"
+    },
+    {
+      "bytes": 12335,
+      "path": "assets/official/regions/42045.json",
+      "sha256": "8106df1e7f5b6262d80fb4edf0d1102280318e8522640c7ee164d7609bc375ae"
+    },
+    {
+      "bytes": 17181,
+      "path": "assets/official/regions/42045-entities.json",
+      "sha256": "d8a17eb69431cb855be075837bd3af28cf4ca6cd87ab167e5538824ca5375893"
+    },
+    {
+      "bytes": 13109,
+      "path": "assets/official/regions/42046.json",
+      "sha256": "b9de6a6d4c33bffd3a040fe07d83bc80fa47ec4fb447eb5a52c8909b480daf1f"
+    },
+    {
+      "bytes": 19765,
+      "path": "assets/official/regions/42046-entities.json",
+      "sha256": "ac2b3bf365472db67eab8d8c46f483832116263a75e1211709a5ce150214e2fa"
+    },
+    {
+      "bytes": 12171,
+      "path": "assets/official/regions/42047.json",
+      "sha256": "af67c5ce97c6a6bd2c79022a7d4510a3cb74a884de5ecb95f43ee62b3aa44129"
+    },
+    {
+      "bytes": 16506,
+      "path": "assets/official/regions/42047-entities.json",
+      "sha256": "8df3ba75dd1678d9045bedc938bd966c0c58adacaea3a1d089108b373365125e"
+    },
+    {
+      "bytes": 13109,
+      "path": "assets/official/regions/42048.json",
+      "sha256": "185d5e767b3690f2bf1466cdf6a0645e2a77d6b33b55946055282edc95b3928c"
+    },
+    {
+      "bytes": 19765,
+      "path": "assets/official/regions/42048-entities.json",
+      "sha256": "ac2b3bf365472db67eab8d8c46f483832116263a75e1211709a5ce150214e2fa"
+    },
+    {
+      "bytes": 13110,
+      "path": "assets/official/regions/42049.json",
+      "sha256": "6451849e2ede6cf92bc993fe0436ec540abe9deaacd62f561dd09e8f0734ef23"
+    },
+    {
+      "bytes": 19980,
+      "path": "assets/official/regions/42049-entities.json",
+      "sha256": "01efd25f82248ca399a46b264077d1af8b6e8ee9e470c68a6ebc9d289261a3c7"
+    },
+    {
+      "bytes": 12170,
+      "path": "assets/official/regions/42050.json",
+      "sha256": "8b3507bce3408eb79b96ca24d32903bcb1b50e577ec4ca53b88985a1be1f9595"
+    },
+    {
+      "bytes": 16396,
+      "path": "assets/official/regions/42050-entities.json",
+      "sha256": "f6b584619790b80630cd6422c22be67b8c33d4560821d09f61e1fc8599a6d2a5"
+    },
+    {
+      "bytes": 13110,
+      "path": "assets/official/regions/42051.json",
+      "sha256": "acd48a09704593114281d38aa3557938947aae1f8a6a566086c56819a45a7d5c"
+    },
+    {
+      "bytes": 19980,
+      "path": "assets/official/regions/42051-entities.json",
+      "sha256": "01efd25f82248ca399a46b264077d1af8b6e8ee9e470c68a6ebc9d289261a3c7"
+    },
+    {
+      "bytes": 12742,
+      "path": "assets/official/regions/42052.json",
+      "sha256": "a83f4e27eb2ae684465bc9fbf89b566daa7f3b9d246748e1c6988b965911ec0a"
+    },
+    {
+      "bytes": 19216,
+      "path": "assets/official/regions/42052-entities.json",
+      "sha256": "06c61039bc63a8743e0bcb2893cd97ed819f20e40395ee4ba1f9cfa6e937b08d"
+    },
+    {
+      "bytes": 8328,
+      "path": "assets/official/regions/42053.json",
+      "sha256": "0619021a8ecab23b6f96371cd53404ea04a0f8ec6ab8004efb51c1ab6eee95c9"
+    },
+    {
+      "bytes": 3041,
+      "path": "assets/official/regions/42053-entities.json",
+      "sha256": "27e3b8fa24654d2a0caf67a4379a7f2433f136b7059bbdb4b6d82f7209e3dd03"
+    },
+    {
+      "bytes": 214720,
+      "path": "assets/official/regions/42061.json",
+      "sha256": "3dc8f6f60ad71d115e795df643fa2ba998b5b7fc63e3b0efa5e9717683b33e9d"
+    },
+    {
+      "bytes": 404389,
+      "path": "assets/official/regions/42061-entities.json",
+      "sha256": "6a824b91bb6830866e1557dc757dd57c71ea1a869f7029ea89eb14db54fd521b"
+    },
+    {
+      "bytes": 207567,
+      "path": "assets/official/regions/42062.json",
+      "sha256": "f5d4da46799ff8799867a6a659bf03f4ffe4cb87a98deac1d1d959b6a2e77714"
+    },
+    {
+      "bytes": 400289,
+      "path": "assets/official/regions/42062-entities.json",
+      "sha256": "1741035268bc9e4ba868f2c8b0475e5b1f1811da4497151a69cf6ab9d2ab1032"
+    },
+    {
+      "bytes": 214268,
+      "path": "assets/official/regions/42063.json",
+      "sha256": "7bfe44934a7790108fc790e56a0ae6db84c1a5dc13e1dea9f1920d9d7ceebee4"
+    },
+    {
+      "bytes": 383704,
+      "path": "assets/official/regions/42063-entities.json",
+      "sha256": "4f41f3b31b0fed09bed714b24dfe8139a8349d70eb7dfe4dd1c6f5a4c034f460"
+    },
+    {
+      "bytes": 12125,
+      "path": "assets/official/regions/42064.json",
+      "sha256": "604391d6809426380805eca33579a039ea152e0e7829b75ff20d380f842812ae"
+    },
+    {
+      "bytes": 3680,
+      "path": "assets/official/regions/42064-entities.json",
+      "sha256": "a25e2ecd75f48995db3d21d8bda937ce74028ff68a6b9d55d4a2332c79bf9c22"
+    },
+    {
+      "bytes": 12125,
+      "path": "assets/official/regions/42065.json",
+      "sha256": "fcb4cd704bf1c57f06c351abad4d533ca489ff84b5893a146583514db6c87534"
+    },
+    {
+      "bytes": 3680,
+      "path": "assets/official/regions/42065-entities.json",
+      "sha256": "a25e2ecd75f48995db3d21d8bda937ce74028ff68a6b9d55d4a2332c79bf9c22"
+    },
+    {
+      "bytes": 12125,
+      "path": "assets/official/regions/42066.json",
+      "sha256": "f1498204c1aa8c5b79f4af902991012f8f5c546938b75350766cbdf4a9c8a975"
+    },
+    {
+      "bytes": 3680,
+      "path": "assets/official/regions/42066-entities.json",
+      "sha256": "a25e2ecd75f48995db3d21d8bda937ce74028ff68a6b9d55d4a2332c79bf9c22"
+    }
+  ],
+  "manifest": "854_156383",
+  "mapGroupId": 15,
+  "operation": "Package official map rows, regions, placements and decoded EC components; preserve source gates and transitions without applying server-only release behavior.",
+  "outputs": [
+    {
+      "bytes": 95711,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/15.json",
+      "sha256": "b2e5019955f2d785b370e65252947964828dfd885ed7a4c45d011cf55452a05d"
+    },
+    {
+      "bytes": 83814,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42001.json",
+      "sha256": "0d9d1250b8e3b65d3a78ee613951f05d5eb59bbd76b0e2e5c35285402bd64e89"
+    },
+    {
+      "bytes": 88672,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42002.json",
+      "sha256": "224432dfdb25f41aea5fc7262803d7ce6f011773f94a8ed1c0abd6a9d9521a9e"
+    },
+    {
+      "bytes": 98215,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42003.json",
+      "sha256": "b54a34b684891904d1ba6708c8be8cd4ec98bd7719d4bf49813e1dd6ba1e57fd"
+    },
+    {
+      "bytes": 92250,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42004.json",
+      "sha256": "17563296106bf02006c92a3c454fdfc0386ab8ff637f8271d0241d95d459a759"
+    },
+    {
+      "bytes": 99703,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42005.json",
+      "sha256": "1302a0fe35ec9afedcaa7b2d24a9ef58000cb973ee145d17943cbfa9d493e125"
+    },
+    {
+      "bytes": 88587,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42006.json",
+      "sha256": "c207143261151a875007c52d0ae0dbfc0891b2a708bd89b0794a3bed708e0dd4"
+    },
+    {
+      "bytes": 95597,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42007.json",
+      "sha256": "fa83052b9bcfa5744bc9ad87c3028ac04f09da3e52ec4a6b1380b04cc61401da"
+    },
+    {
+      "bytes": 86611,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42008.json",
+      "sha256": "114b49484dc211fc68ccb062347825fe56b54ac6654775ba893249e30073ba0a"
+    },
+    {
+      "bytes": 89271,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42009.json",
+      "sha256": "e5669aff8c9cfbc2e1dc895ab7a077893f1814edcf27a7c521f7acf8d6000a35"
+    },
+    {
+      "bytes": 92228,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42010.json",
+      "sha256": "e13ad3ec28ddb88bc5b0edd3db9ac9acddc27b171e60b276ac6bc641994f89a7"
+    },
+    {
+      "bytes": 88491,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42011.json",
+      "sha256": "c8ae51c858f258a63e69da29ab6e5790f2b477b765a97e10f8e47062fe235633"
+    },
+    {
+      "bytes": 83850,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42012.json",
+      "sha256": "de648301b47a9c7f02224a6ce44abc85acf0ccf24d80f7fd71294f8c88cd1b25"
+    },
+    {
+      "bytes": 90402,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42013.json",
+      "sha256": "b3276e3194c163833984eac10f775bbb7605c167756b20cc89996a4a10430d8b"
+    },
+    {
+      "bytes": 92230,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42014.json",
+      "sha256": "92e0e834ee6cc93f97b24c2b8fed1cc718eefa281c8af21aaf03982f68bde105"
+    },
+    {
+      "bytes": 95600,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42015.json",
+      "sha256": "7eae47c463fc361f6c8779afdfcc12686af9001eabf118fb9e54951806b4508e"
+    },
+    {
+      "bytes": 90136,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42016.json",
+      "sha256": "08d81580c6dcad413594171d8e2609c0501b4c06276507220547345472b0fb0e"
+    },
+    {
+      "bytes": 86941,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42017.json",
+      "sha256": "c23b7b594d2e2f4f4c67c9d9b096db7ff6de1e4ab1a523824a554683f210bd57"
+    },
+    {
+      "bytes": 95484,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42018.json",
+      "sha256": "588f6c7294c8507ef76b8d3601ddfefd60fda5d06ecc8b4d0ef2b76ec98d3f1a"
+    },
+    {
+      "bytes": 77297,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42019.json",
+      "sha256": "c7ae370c2c1486a38e2469e16bb53c5a7a4f0c3b9a295a28d049fca1ccbd5e97"
+    },
+    {
+      "bytes": 94077,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42020.json",
+      "sha256": "a7bfd1f818de9e1c86a53b80147020f645e5a0b54485de00bde873282715ff43"
+    },
+    {
+      "bytes": 95484,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42021.json",
+      "sha256": "8c212161cd6d3c32a67404cde9dc0ca7975eed5d581360b91c7a21f30399c80b"
+    },
+    {
+      "bytes": 84047,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42022.json",
+      "sha256": "290c5cdc3fd5175309cac8d1885f19062c6d234bf2d9ad7ae39c76c4ffce9030"
+    },
+    {
+      "bytes": 86831,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42023.json",
+      "sha256": "2a7f8c8d227d54f5b170f5beeec54a2e73c7a6d874bdf0565cbb22e7b9d6ebad"
+    },
+    {
+      "bytes": 95701,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42024.json",
+      "sha256": "bfd0b4abc90dc98ea252daef53d4624551f7c7363a57c59ebb466c586fd4045c"
+    },
+    {
+      "bytes": 92230,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42025.json",
+      "sha256": "1042666aa5d4732ca4c53e76bf00d26f4f859d054b3c4a3cab75b74b2047bdde"
+    },
+    {
+      "bytes": 95701,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42026.json",
+      "sha256": "0c0280c31df1d3c3a4404cb738b66de3b65cd001141d0ef37fee603f55bb22ed"
+    },
+    {
+      "bytes": 92058,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42027.json",
+      "sha256": "f551d566f8fd1997d92343b55eaa054ea55176439cd9b9a8b71ba149cd4086c2"
+    },
+    {
+      "bytes": 83876,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42028.json",
+      "sha256": "9564b963a440d57b4d71621bfe8cb0d61a93afb4c16d3904e9e6e092ed28294e"
+    },
+    {
+      "bytes": 92231,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42029.json",
+      "sha256": "d8bd16aebb790c6d31cd67a4861e7de5c55e2329f8a6490be0b382895803deef"
+    },
+    {
+      "bytes": 95702,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42030.json",
+      "sha256": "80c76dee3e003c8712ad7ed8d181eb02ec4ed339b8010352080af7a9d7773c37"
+    },
+    {
+      "bytes": 88655,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42031.json",
+      "sha256": "05ef95be20758fb3a3119bdcb258a0962ba1b5b4559736f5a64332af63669723"
+    },
+    {
+      "bytes": 92752,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42032.json",
+      "sha256": "c6bac5329989b849562062c0ea211d86c59be05102b48a517e11e5f0743ee496"
+    },
+    {
+      "bytes": 95702,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42033.json",
+      "sha256": "1b16e20765b2187fc5c942c0e7e0a8383434c659c63c7b08490a168f062effbd"
+    },
+    {
+      "bytes": 101391,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42034.json",
+      "sha256": "51ae372e13ff5573037e06f8f9b2162138b78c3173b20fe8c4475a908f1efb01"
+    },
+    {
+      "bytes": 92130,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42035.json",
+      "sha256": "54eba34b63db47834ff35712fe5948a1095c44f885868fcfb77e2846384bb5f4"
+    },
+    {
+      "bytes": 95712,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42036.json",
+      "sha256": "079cccb32d5fc359b484839c7412305e5443d056200a659ca91dbb99e0882322"
+    },
+    {
+      "bytes": 86617,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42037.json",
+      "sha256": "39d96c39874190ab9d155a7ccf25667b9cd6a85bdc25fe6436265b5adb6e4b7c"
+    },
+    {
+      "bytes": 94972,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42038.json",
+      "sha256": "38aa6cc21a3d56fb5643d80361af7d1971598296f34c35d75a6b9dbffcea1d21"
+    },
+    {
+      "bytes": 88619,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42039.json",
+      "sha256": "b9e945253e3b46b23d8d0864130f8396eb2f65a33dd2347d9a00ed3ce3edb3af"
+    },
+    {
+      "bytes": 92233,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42040.json",
+      "sha256": "f287f48a79321630e5ff9d1d07804b3b399e1a27107406581000f881946eb958"
+    },
+    {
+      "bytes": 101459,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42041.json",
+      "sha256": "f90a8e5aaeb98a47cbcea4fd7fd7eb1f650386951f6780d6822f3f39ef982dca"
+    },
+    {
+      "bytes": 88619,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42042.json",
+      "sha256": "5d7a16887bb0cecbb463162fbc056f5e71daee4aa97d3cb1706a85c8aef34089"
+    },
+    {
+      "bytes": 95603,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42043.json",
+      "sha256": "8dbd8bd07b3580e9a1be4c51166e04e6f7a2a4b03bc5c321c7e16991361d52d2"
+    },
+    {
+      "bytes": 86617,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42044.json",
+      "sha256": "677fc19a8a3fb96f7300c3634794c91691efb3d1540aaaa782342eeb6e24bd91"
+    },
+    {
+      "bytes": 88496,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42045.json",
+      "sha256": "b2000f7df2c9a55eaf607ef75c18012d66d8a01a7d2bd52e9e76dbf88dac128a"
+    },
+    {
+      "bytes": 95486,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42046.json",
+      "sha256": "6f8ca8464565a37370cb7474cfb3ffb8dc067a6159f442049d942e04becd59e6"
+    },
+    {
+      "bytes": 86944,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42047.json",
+      "sha256": "17a0b962a4a79ff54c75a5355b84c75875d3679d7bc463aaf501fb8dd4c50a1b"
+    },
+    {
+      "bytes": 95486,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42048.json",
+      "sha256": "ad973e265539d1f7353485869f059dd15f0771e7e3c2ed1b722c947c08f8158a"
+    },
+    {
+      "bytes": 95702,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42049.json",
+      "sha256": "484346a4c97a46351b9916f1487ee1914f014bc80e08a0d0efd68777093b752d"
+    },
+    {
+      "bytes": 86833,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42050.json",
+      "sha256": "5d1f6b85b445fd6c6be36df3271277a92dea38db088d525371b129267f702402"
+    },
+    {
+      "bytes": 95702,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42051.json",
+      "sha256": "0c57cffb31add06b7f5b38684bbf4922065a67ef6a31fc99e5fb9ed2cbd5bcac"
+    },
+    {
+      "bytes": 92570,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42052.json",
+      "sha256": "b54e2c3802db5cf2df4f3553384bc8f696298bbb7e59ec2a5f1cafd0a8fe6797"
+    },
+    {
+      "bytes": 55611,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42053.json",
+      "sha256": "4723d230b20770184bc84617be145bc8a9b3b7463ad3d832eb1c73821659b983"
+    },
+    {
+      "bytes": 1883674,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42061.json",
+      "sha256": "06c7d98d88250947c0e4cb2e3dda4a71e9e0559ca7c2f45f2bcfa2fd3f2cfdd9"
+    },
+    {
+      "bytes": 1825754,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42062.json",
+      "sha256": "7b8a74193dd6f7b7af0836b489cd9651d00b9606a07ef31d9a9d8612cd554113"
+    },
+    {
+      "bytes": 1871827,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42063.json",
+      "sha256": "60d416052c698676c3011f042e068ccb840585f301cbef3fb072f932e1f2c8ae"
+    },
+    {
+      "bytes": 64454,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42064.json",
+      "sha256": "89ecfc8d771cfa7b6efb3cd0fae405a8b887f4629d10355c3fc2913a3521c4fd"
+    },
+    {
+      "bytes": 64454,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42065.json",
+      "sha256": "dc631f3b90191c19a83ddf72caeec3d5dc5dc1d1d3e28425be57ff2c3ff39b04"
+    },
+    {
+      "bytes": 64454,
+      "path": "unity/Assets/Game/Resources/Map15/Group/maps/42066.json",
+      "sha256": "0ec4670ae498a711decf979b788614b11f5229d4569bc55f578a851ec5619cfd"
+    },
+    {
+      "bytes": 217869,
+      "path": "unity/Assets/Game/Resources/Map15/Group/entity-templates.json",
+      "sha256": "d383e45e9220199dc3a55ef7c2d86de5e3ef26010edec8fb5971fbca3b2b4b69"
+    },
+    {
+      "bytes": 15624,
+      "path": "unity/Assets/Game/Resources/Map15/Group/group-catalog.json",
+      "sha256": "4f4eb1cafd3382e5508ba4b9722b227fae7ca7cc151ed23fd9caf4aa89e78729"
+    }
+  ]
+}

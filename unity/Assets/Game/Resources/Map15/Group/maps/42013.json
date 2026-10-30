@@ -1,0 +1,5215 @@
+{
+  "entityComponents": {
+    "101": {
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "双区域_通用建筑_隐藏传送门-不可交互只入场",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 6022,
+          "Params": "{\"EntityClassId\":6022}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 12,
+          "Y": 6
+        }
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoWorldActiveableEntityComponent": {
+        "Active": true
+      },
+      "LoWorldStageComponent": {
+        "State": 1
+      },
+      "VisibilityHideComponent": {}
+    },
+    "102": {
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "双区域_通用建筑_小女神像",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 6011,
+          "Params": "{\"EntityClassId\":6011}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 9,
+          "Y": 19
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoWorldActiveableEntityComponent": {
+        "Active": false
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "103": {
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "双区域_国度建筑_通天塔",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 6005,
+          "Params": "{\"EntityClassId\":6005}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "Type": 1
+        },
+        "Tag": ""
+      },
+      "LoEntityLockComponent": {
+        "LockType": 2,
+        "Params": "{EntityStateDict:{102:1},ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:true,IsMetEntityIdSet:[]}"
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 12,
+          "Y": 22
+        }
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageConLevelComponent": {
+        "LevelList": []
+      },
+      "LoStageResultActiveWorldMapComponent": {
+        "MapClassId": 0,
+        "UseConfigNextMapClassId": true
+      },
+      "LoStageResultChangeMapComponent": {
+        "MapClassId": 0,
+        "UseConfigNextMapClassId": true
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "104": {
+      "LoEntityCampMonsterComponent": {
+        "CampLoEntityId": 110
+      },
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "山之国_怪物_单体魔王",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 5005,
+          "Params": "{\"EntityClassId\":5005}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": false
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 10,
+          "Y": 11
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageBehStageComponent": {
+        "LevelAdds": [],
+        "StageIds": [
+          1293
+        ]
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "105": {
+      "LoEntityCampMonsterComponent": {
+        "CampLoEntityId": 110
+      },
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "山之国_怪物_单体魔王",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 5005,
+          "Params": "{\"EntityClassId\":5005}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": false
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": true,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 14,
+          "Y": 11
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageBehStageComponent": {
+        "LevelAdds": [],
+        "StageIds": [
+          1291
+        ]
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "106": {
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "通用私人区域_橙物品_星之愿",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 8213,
+          "Params": "{\"EntityClassId\":8213}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": false
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoEntityLockComponent": {
+        "LockType": 0,
+        "Params": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 13,
+          "Y": 13
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageResultAwardItemComponent": {
+        "AwardItemInfos": [
+          {
+            "Count": 1,
+            "ItemId": 110
+          }
+        ]
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "107": {
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "通用私人区域_橙物品_橙银牌",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 8223,
+          "Params": "{\"EntityClassId\":8223}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": false
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoEntityLockComponent": {
+        "LockType": 0,
+        "Params": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 11,
+          "Y": 13
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageResultAwardComponent": {
+        "AwardInfos": []
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "108": {
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "通用私人区域_宝石_大宝石箱",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 8347,
+          "Params": "{\"EntityClassId\":8347}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": false
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoEntityLockComponent": {
+        "LockType": 0,
+        "Params": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 12,
+          "Y": 14
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageResultAwardComponent": {
+        "AwardInfos": []
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "110": {
+      "LoEntityCampComponent": {
+        "CampMonsterEntities": [
+          104,
+          105
+        ]
+      },
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "通天塔_BOSS群落",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 8601,
+          "Params": "{\"EntityClassId\":8601}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": false
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": true,
+        "Pos": {
+          "X": 12,
+          "Y": 12
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageBehStageComponent": {
+        "LevelAdds": [],
+        "StageIds": [
+          2282
+        ]
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "111": {
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "通用私人区域_宝箱_超宝箱",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 8203,
+          "Params": "{\"EntityClassId\":8203}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": false
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoEntityLockComponent": {
+        "LockType": 1,
+        "Params": "{EntityGroup:[110],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}"
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 12,
+          "Y": 13
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageResultAwardComponent": {
+        "AwardInfos": []
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "112": {
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "通用私人区域_宝石_中宝石袋",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 8346,
+          "Params": "{\"EntityClassId\":8346}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": false
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoEntityLockComponent": {
+        "LockType": 0,
+        "Params": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 12,
+          "Y": 15
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageResultAwardComponent": {
+        "AwardInfos": []
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "113": {
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "通用私人区域_宝石_小宝石袋",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 8345,
+          "Params": "{\"EntityClassId\":8345}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": false
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoEntityLockComponent": {
+        "LockType": 0,
+        "Params": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 11,
+          "Y": 14
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageResultAwardComponent": {
+        "AwardInfos": []
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "115": {
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "通用私人区域_宝石_小宝石袋",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 8345,
+          "Params": "{\"EntityClassId\":8345}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": false
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoEntityLockComponent": {
+        "LockType": 0,
+        "Params": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 13,
+          "Y": 14
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageResultAwardComponent": {
+        "AwardInfos": []
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "116": {
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "通用私人区域_蓝物品_精锻石-转公矿",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 8343,
+          "Params": "{\"EntityClassId\":8343}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": false
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoEntityLockComponent": {
+        "LockType": 0,
+        "Params": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 10,
+          "Y": 13
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageResultAwardComponent": {
+        "AwardInfos": []
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "117": {
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "通用私人区域_蓝物品_精锻石-转公矿",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 8343,
+          "Params": "{\"EntityClassId\":8343}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": false
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoEntityLockComponent": {
+        "LockType": 0,
+        "Params": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 14,
+          "Y": 13
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageResultAwardComponent": {
+        "AwardInfos": []
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "118": {
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "通用私人区域_紫物品_紫铜牌",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 8222,
+          "Params": "{\"EntityClassId\":8222}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": false
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoEntityLockComponent": {
+        "LockType": 0,
+        "Params": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 10,
+          "Y": 14
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageResultAwardComponent": {
+        "AwardInfos": []
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "119": {
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "通用私人区域_紫物品_紫铜牌",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 8222,
+          "Params": "{\"EntityClassId\":8222}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": false
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoEntityLockComponent": {
+        "LockType": 0,
+        "Params": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 14,
+          "Y": 14
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageResultAwardComponent": {
+        "AwardInfos": []
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "120": {
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "通用私人区域_蓝物品_中罗拉堆",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 8311,
+          "Params": "{\"EntityClassId\":8311}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": false
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoEntityLockComponent": {
+        "LockType": 0,
+        "Params": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 10,
+          "Y": 15
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageResultAwardComponent": {
+        "AwardInfos": []
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "121": {
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "通用私人区域_蓝物品_中罗拉堆",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 8311,
+          "Params": "{\"EntityClassId\":8311}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": false
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoEntityLockComponent": {
+        "LockType": 0,
+        "Params": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 14,
+          "Y": 15
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageResultAwardComponent": {
+        "AwardInfos": []
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "122": {
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "通用私人区域_白物品_罗拉堆",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 8310,
+          "Params": "{\"EntityClassId\":8310}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": false
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoEntityLockComponent": {
+        "LockType": 0,
+        "Params": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 14,
+          "Y": 18
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageResultAwardComponent": {
+        "AwardInfos": []
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "123": {
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "双区域_通用建筑_英雄雕像",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 6572,
+          "Params": "{\"EntityClassId\":6572}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 15,
+          "Y": 19
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageConPlayerPeriodicityInteractionComponent": {
+        "PeriodicityGroupIds": null
+      },
+      "LoStageResultAwardExtraPropComponent": {
+        "AwardExtraPropInfos": null
+      },
+      "LoStageResultAwardStatusEffectComponent": {
+        "AwardStatusEffectInfos": null
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "124": {
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "通用私人区域_白物品_粗炼石",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 8340,
+          "Params": "{\"EntityClassId\":8340}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": false
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoEntityLockComponent": {
+        "LockType": 0,
+        "Params": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 11,
+          "Y": 15
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageResultAwardComponent": {
+        "AwardInfos": []
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "125": {
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "通用私人区域_白物品_时之砂",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 8350,
+          "Params": "{\"EntityClassId\":8350}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": false
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoEntityLockComponent": {
+        "LockType": 0,
+        "Params": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 12,
+          "Y": 16
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageResultAwardComponent": {
+        "AwardInfos": []
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    },
+    "126": {
+      "LoEntityComponent": {
+        "AutoDestroy": false,
+        "PenPath": "通用私人区域_白物品_白狗粮",
+        "RefreshGroup": 0,
+        "SpanwInfo": {
+          "ClassId": 8240,
+          "Params": "{\"EntityClassId\":8240}",
+          "PrivateMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": true
+          },
+          "PublicMapSupportData": {
+            "BlockDefaultSpawn": false,
+            "SupportSpawnInMap": false
+          },
+          "Type": 1
+        },
+        "Tag": null
+      },
+      "LoEntityLockComponent": {
+        "LockType": 0,
+        "Params": null
+      },
+      "LoGridTransformComponent": {
+        "Dir": 0,
+        "FlipX": false,
+        "IgnoreEntitySize": false,
+        "Pos": {
+          "X": 13,
+          "Y": 15
+        }
+      },
+      "LoLevelComponent": {
+        "Absolute": false,
+        "Level": 0.0,
+        "SubRank": 0
+      },
+      "LoSpawnVisibleComponent": {},
+      "LoStageResultAwardComponent": {
+        "AwardInfos": []
+      },
+      "LoWorldStageComponent": {
+        "State": 0
+      },
+      "VisibilityHideComponent": {}
+    }
+  },
+  "manifest": "854_156383",
+  "map": {
+    "ClassId": 42013,
+    "DialogIconPrefab": "Map/Map_15/Map15_DialogIcon",
+    "Head": "UI/MiniMap/ImgMapSwitch_5",
+    "HidePet": false,
+    "MapBgmId": 15,
+    "MapExitOperType": 1,
+    "MapGoddessHead": "",
+    "MapGroundBarePath": "",
+    "MapGroundPath": "Map_Tower15_Floor3/MapGround_Tower15_Floor3",
+    "MapGroupId": 15,
+    "MapSceneName": "map_world",
+    "MapTagId": 0,
+    "MapType": 0,
+    "Memo": "通天塔/BOSS/通天塔13层",
+    "MiniMapIcon": "",
+    "MiniMapPath": "",
+    "MiniMapSwitchTabGroup": -1,
+    "MinimapConfigId": 0,
+    "NextMapClassId": 42061,
+    "OpenMapChannel": false,
+    "PrivateRootEntityClassId": 0,
+    "PublicRootEntityClassId": 0,
+    "ShowNewOnMapUI": true
+  },
+  "regionData": {
+    "counts": {
+      "layers": 0,
+      "meshes": 0,
+      "skeleton_instances": 10,
+      "tiles": 434
+    },
+    "geometry": {
+      "batches": 202,
+      "bytes": 101789,
+      "vertices": 1736
+    },
+    "id": 42013,
+    "navigation": {
+      "areas": [
+        [
+          [
+            1677,
+            1835
+          ],
+          140
+        ]
+      ],
+      "cells": [
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ],
+        [
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            -1,
+            2
+          ]
+        ]
+      ],
+      "character": 3001,
+      "id": 42013,
+      "max_steps": 20,
+      "member": 3002,
+      "origin": [
+        -12.5,
+        11.5,
+        0.0
+      ],
+      "size": [
+        25,
+        30
+      ]
+    },
+    "placement": {
+      "entities": [
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 6022,
+          "grid": [
+            12,
+            6
+          ],
+          "id": 101,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            true,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {},
+          "type": 201,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 6011,
+          "grid": [
+            9,
+            19
+          ],
+          "id": 102,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            true,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {},
+          "type": 202,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 6005,
+          "grid": [
+            12,
+            22
+          ],
+          "id": 103,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            true,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {},
+          "type": 205,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 5005,
+          "grid": [
+            10,
+            11
+          ],
+          "id": 104,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            false,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {
+            "1": [
+              [
+                1293
+              ],
+              3613,
+              [
+                3613
+              ]
+            ]
+          },
+          "type": 103,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 5005,
+          "grid": [
+            14,
+            11
+          ],
+          "id": 105,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            false,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {
+            "1": [
+              [
+                1291
+              ],
+              3611,
+              [
+                3611
+              ]
+            ]
+          },
+          "type": 103,
+          "unique": true
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 8213,
+          "grid": [
+            13,
+            13
+          ],
+          "id": 106,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            false,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {},
+          "type": 519,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 8223,
+          "grid": [
+            11,
+            13
+          ],
+          "id": 107,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            false,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {},
+          "type": 514,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 8347,
+          "grid": [
+            12,
+            14
+          ],
+          "id": 108,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            false,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {},
+          "type": 512,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 8601,
+          "grid": [
+            12,
+            12
+          ],
+          "id": 110,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            false,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {
+            "1": [
+              [
+                2282
+              ],
+              3611,
+              [
+                3613,
+                3611
+              ]
+            ]
+          },
+          "type": 107,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 8203,
+          "grid": [
+            12,
+            13
+          ],
+          "id": 111,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            false,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {},
+          "type": 521,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 8346,
+          "grid": [
+            12,
+            15
+          ],
+          "id": 112,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            false,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {},
+          "type": 512,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 8345,
+          "grid": [
+            11,
+            14
+          ],
+          "id": 113,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            false,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {},
+          "type": 512,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 8345,
+          "grid": [
+            13,
+            14
+          ],
+          "id": 115,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            false,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {},
+          "type": 512,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 8343,
+          "grid": [
+            10,
+            13
+          ],
+          "id": 116,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            false,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {},
+          "type": 503,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 8343,
+          "grid": [
+            14,
+            13
+          ],
+          "id": 117,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            false,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {},
+          "type": 503,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 8222,
+          "grid": [
+            10,
+            14
+          ],
+          "id": 118,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            false,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {},
+          "type": 514,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 8222,
+          "grid": [
+            14,
+            14
+          ],
+          "id": 119,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            false,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {},
+          "type": 514,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 8311,
+          "grid": [
+            10,
+            15
+          ],
+          "id": 120,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            false,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {},
+          "type": 502,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 8311,
+          "grid": [
+            14,
+            15
+          ],
+          "id": 121,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            false,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {},
+          "type": 502,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 8310,
+          "grid": [
+            14,
+            18
+          ],
+          "id": 122,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            false,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {},
+          "type": 502,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 6572,
+          "grid": [
+            15,
+            19
+          ],
+          "id": 123,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            true,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {},
+          "type": 223,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 8340,
+          "grid": [
+            11,
+            15
+          ],
+          "id": 124,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            false,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {},
+          "type": 503,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 8350,
+          "grid": [
+            12,
+            16
+          ],
+          "id": 125,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            false,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {},
+          "type": 504,
+          "unique": false
+        },
+        {
+          "area": 0,
+          "direction": 0,
+          "entity": 8240,
+          "grid": [
+            13,
+            15
+          ],
+          "id": 126,
+          "private": [
+            true,
+            false
+          ],
+          "public": [
+            false,
+            false
+          ],
+          "refresh": 0,
+          "region": 0,
+          "stages": {},
+          "type": 513,
+          "unique": false
+        }
+      ],
+      "group": 15,
+      "id": 42013,
+      "progress": {
+        "0": 280
+      },
+      "tag": 0
+    },
+    "skeleton_instances": [
+      {
+        "id": "CAB-1ce72dbd98d87e1abce8f11580ab0440:6083043845001470954:",
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -7.3509979248046875
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            28.06399917602539
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            28.06399917602539
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "path": "/MapGround_Tower15_Floor3/Image/Spine/Babel_Brazier_Left",
+        "sorting_layer": 18,
+        "sorting_order": 0
+      },
+      {
+        "id": "CAB-1ce72dbd98d87e1abce8f11580ab0440:6083043845001470954:",
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -7.096000671386719
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            20.277000427246094
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            20.277000427246094
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "path": "/MapGround_Tower15_Floor3/Image/Spine/Babel_Brazier_Left (1)",
+        "sorting_layer": 18,
+        "sorting_order": 0
+      },
+      {
+        "id": "CAB-1ce72dbd98d87e1abce8f11580ab0440:-4158965953218351438:",
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            6.3249969482421875
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            28.06399917602539
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            28.06399917602539
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "path": "/MapGround_Tower15_Floor3/Image/Spine/Babel_Brazier_Right",
+        "sorting_layer": 18,
+        "sorting_order": 0
+      },
+      {
+        "id": "CAB-1ce72dbd98d87e1abce8f11580ab0440:-4158965953218351438:",
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            6.0070037841796875
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            20.277000427246094
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            20.277000427246094
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "path": "/MapGround_Tower15_Floor3/Image/Spine/Babel_Brazier_Right (1)",
+        "sorting_layer": 18,
+        "sorting_order": 0
+      },
+      {
+        "id": "CAB-dfb32887ce0c58e2b2d501b1575988c9:-4440430301683330196:",
+        "matrix": [
+          [
+            0.6000000238418579,
+            0.0,
+            0.0,
+            -2.3109970092773438
+          ],
+          [
+            0.0,
+            0.6000000238418579,
+            0.0,
+            32.0880012512207
+          ],
+          [
+            0.0,
+            0.0,
+            0.6000000238418579,
+            31.450000762939453
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "path": "/MapGround_Tower15_Floor3/Image/Spine/Babel_Flag",
+        "sorting_layer": 18,
+        "sorting_order": 0
+      },
+      {
+        "id": "CAB-dfb32887ce0c58e2b2d501b1575988c9:-4440430301683330196:",
+        "matrix": [
+          [
+            0.6000000238418579,
+            0.0,
+            0.0,
+            1.1660003662109375
+          ],
+          [
+            0.0,
+            0.6000000238418579,
+            0.0,
+            32.0880012512207
+          ],
+          [
+            0.0,
+            0.0,
+            0.6000000238418579,
+            31.450000762939453
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "path": "/MapGround_Tower15_Floor3/Image/Spine/Babel_Flag (1)",
+        "sorting_layer": 18,
+        "sorting_order": 0
+      },
+      {
+        "id": "CAB-dfb32887ce0c58e2b2d501b1575988c9:-4440430301683330196:",
+        "matrix": [
+          [
+            0.6000000238418579,
+            0.0,
+            0.0,
+            2.4520034790039062
+          ],
+          [
+            0.0,
+            0.6000000238418579,
+            0.0,
+            28.80900001525879
+          ],
+          [
+            0.0,
+            0.0,
+            0.6000000238418579,
+            28.5
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "path": "/MapGround_Tower15_Floor3/Image/Spine/Babel_Flag (2)",
+        "sorting_layer": 18,
+        "sorting_order": 0
+      },
+      {
+        "id": "CAB-dfb32887ce0c58e2b2d501b1575988c9:-4440430301683330196:",
+        "matrix": [
+          [
+            0.6000000238418579,
+            0.0,
+            0.0,
+            -3.56500244140625
+          ],
+          [
+            0.0,
+            0.6000000238418579,
+            0.0,
+            28.80900001525879
+          ],
+          [
+            0.0,
+            0.0,
+            0.6000000238418579,
+            28.5
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "path": "/MapGround_Tower15_Floor3/Image/Spine/Babel_Flag (3)",
+        "sorting_layer": 18,
+        "sorting_order": 0
+      },
+      {
+        "id": "CAB-85567ea92ab49e5d3899c9126ebf3cc9:-2219275518889273677:",
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -1.5490036010742188
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            19.007999420166016
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            19.007999420166016
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "path": "/MapGround_Tower15_Floor3/Image/Spine/Babel_Light",
+        "sorting_layer": 18,
+        "sorting_order": 0
+      },
+      {
+        "id": "CAB-85567ea92ab49e5d3899c9126ebf3cc9:-2219275518889273677:",
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.5209993720054626
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            19.007999420166016
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            19.007999420166016
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "path": "/MapGround_Tower15_Floor3/Image/Spine/Babel_Light (1)",
+        "sorting_layer": 18,
+        "sorting_order": 0
+      }
+    ]
+  },
+  "regions": [
+    {
+      "AccessibleConditionId": 0,
+      "AdjacentRegions": [],
+      "Areas": [
+        0
+      ],
+      "ClassId": 42013,
+      "CombatRatingLevelValues": [
+        4846000,
+        5325000,
+        5804500,
+        6675000
+      ],
+      "DropItems": [],
+      "FastStageCombatRating": 6675000,
+      "ForbidExplore": false,
+      "GameFastType": 2,
+      "GoddessActivePropAwardDict": {
+        "1001": 100,
+        "1011": 100
+      },
+      "Level": 137,
+      "LimitLevel": 0,
+      "LimitServerRank": 5,
+      "LimitServerRankUnlockDayOffset": 20,
+      "NotAccessibleMapTalkId": "",
+      "Order": 0,
+      "Region": 0,
+      "RegionTag": 1,
+      "ReleaseTimeId": 0,
+      "ReleaseTimeOffset": 0,
+      "StrengthDisplayType": 2,
+      "SubRank": 13
+    }
+  ]
+}

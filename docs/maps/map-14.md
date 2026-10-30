@@ -66,6 +66,8 @@ Map14 统一原生宿主：`OfficialMap14NativeWorldView` 将原生地形／场�
 
 - 龙之国通用 UI：`scripts/prepare_unity_map14_ui.py` 严格使用当前 `871_156598`、按 APK 优先解析原 prefab 与共享支持界面，恢复 68 个面板／956 张精灵。`scripts/record_unity_map14_ui.py` 记录本地 `Resources/Map14/UI/` 原生输出、源投影、精灵导入参数及转换代码哈希；来源为 `assets/reference/official-map/map14-ui-binding-source-manifest.json`。资源未生成完整素材快照，正式业务、粒子／音频与 Windows Player 仍待完成。
 
+- 独立世界准备 UI 来源已确认存在于当前 APK 的 `defaultpackage_assets_prefabs_ui_aloneworldmap.bundle`：`AloneGroupWorldPrepareTouchDialog`、`AloneGroupWorldTouchDialog`、`AloneWorldTouchDialog`、`AloneWorldMapEntryItemContentMapForGroupMap` 四个原 prefab 及其组件字段和 46 张被引用精灵已解码到 `Assets/Official/World/Map/14/UI/Alone/`。转换入口为 `scripts/prepare_unity_map14_alone_ui.py`，来源及输出哈希见 `map14-alone-ui-source-manifest.json`。目前只是来源层级／组件／精灵载荷，尚未导入 Unity Resources、绑定官方运行脚本和弹窗动画，也未接入 `OpenAloneGroupWorldPrepareTouchDialogNode` 或验证进入 Map15；不能视为准备弹窗已实现。
+
 - 龙之国当前雕像／实体规则投影：`scripts/prepare_unity_map14_interactions.py` 与 `scripts/prepare_unity_map14_story_runtime.py` 验证 `map14-source-manifest.json` 后读取当前 169 个 EC 模板及表，原组件顺序、结果索引、状态、权重、区域和费用逐字段保留。女巫召唤按 Map14 解析至关卡 20004，默认 Map11 转换行为保持兼容；来源 `assets/reference/official-map/map14-interactions-source-manifest.json` 及 `map14-story-runtime-source-manifest.json` 记录输入、输出、原代码和显式 getter／图标绑定。正式进度、资源结果事务及 Windows 发布待完成。
 
 龙之国公共剧情恢复入口为 `scripts/prepare_unity_map14_story_dependencies.py`；复用保持默认 Map13 数据不变的恢复器。`official-map/map14-story-dependencies-source-manifest.json` 记录所选 `871_156598` 的 9 张原公共图／155 节点、25 条对白、5 类跟随实体、2 份补入 EC、1 份快捷购买及实际路径／GUID；保留 `EntityVineLock` 配置路径差异。统一剧情载荷为 94 图／1,488 节点／171 模板，正式执行和演出待接入。
