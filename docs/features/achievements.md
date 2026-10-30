@@ -26,7 +26,7 @@
 
 成长成就、成就分组及抽卡积分奖励数据已从所选 `871_156598` 资源解析并写入本地规则表：`achievement` 8,556 条、`achievement_group` 44 条、`gacha` 13 条、`gacha_additional_awards` 为空表。来源、解码器与输入／输出哈希见[成就资源来源清单](../../assets/reference/achievements/achievement-data-source-manifest.json)；可重复转换入口为 `scripts/prepare_achievement_871_rules.py`。
 
-871 的成就面板、分组、行项目及积分奖励 prefab 已按对象路径核对并记录来源哈希；目前仍未转换为 Windows 可用的 Unity 原生资源，也未接入实际界面流程。
+871 的成就面板、分组、行项目及积分奖励 prefab 已转换为独立 UI 层级数据，含 788 个节点、36 张 Sprite、183 个动画剪辑和 148 条已解析轨道；1,423 个输入对象均记录 871 来源，未解析动画绑定为 0。转换输出、输入／输出哈希与重复执行入口见[成就界面资源来源清单](../../assets/reference/achievements/achievement-ui-source-manifest.json)及 `scripts/prepare_achievement_871_ui.py`。这些数据尚未生成 Unity 原生 prefab，也未接入实际界面流程。
 
 ## 自定义实现
 
@@ -36,7 +36,7 @@
 
 ## 尚未实现
 
-- 导入并绑定 871 的成就与积分奖励原生 prefab、图集、动画及交互。
+- 将已转换的 871 UI 层级、Sprite 与动画恢复为 Unity 原生 prefab、图集和组件绑定，并接入交互。
 - 独立成就组、馈赠积分档、真实玩法事件、永久与活动计数及领取去重。
 
 - 完成 Unity 实际入口、交互／表现、存档与失败恢复验证，并发布对应 Windows 可执行版本。
@@ -44,7 +44,8 @@
 
 ## 代码与资源入口
 
-- 规则数据：`assets/official/rules.json`；871 转换：`scripts/prepare_achievement_871_rules.py`。
+- 规则数据：`assets/official/rules.json`；871 规则与 UI 转换：`scripts/prepare_achievement_871_rules.py`、`scripts/prepare_achievement_871_ui.py`。
 - 规则来源与哈希：`assets/reference/achievements/achievement-data-source-manifest.json`。
+- UI 输入、Sprite 与输出哈希：`assets/reference/achievements/achievement-ui-source-manifest.json`；转换数据：`assets/official/achievements/ui.json`。
 - 成就逻辑：`unity/Assets/Game/Runtime/Offline/Progression/OfficialProfessionAchievementRules.cs`、`unity/Assets/Game/Runtime/Offline/Skills/OfficialSkillAchievementRules.cs`。
 - 原界面逻辑：`unity/Assets/Game/Runtime/Official/ProfessionUI/`；Unity 界面资源尚未接入。

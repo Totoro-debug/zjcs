@@ -35,8 +35,8 @@ def unique_sibling_paths(node):
 class PanelExporter(Exporter):
     def guid_sprite(self, guid):
         if not hasattr(self, 'guid_paths'):
-            entry=next(n for n in self.apk.archive.namelist() if 'PackageManifest_DefaultPackage_' in n and n.endswith('.bytes'))
-            self.guid_paths={m[2].decode():m[1].decode() for m in re.finditer(rb'(Assets/[^\x00-\x1f]+?)\x20\x00([a-f0-9]{32})',self.apk.archive.read(entry))}
+            manifest=self.apk.source.manifest_bytes('DefaultPackage')
+            self.guid_paths={m[2].decode():m[1].decode() for m in re.finditer(rb'(Assets/[^\x00-\x1f]+?)\x20\x00([a-f0-9]{32})',manifest)}
             self.guid_sprites={}
         if guid in self.guid_sprites:return self.guid_sprites[guid]
         if guid not in self.guid_paths:
