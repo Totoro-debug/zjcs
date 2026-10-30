@@ -229,6 +229,10 @@ namespace Zjcs.Presentation.World
                     StoryBooleanFields playerScene = JsonUtility.FromJson<StoryBooleanFields>(input.sourceJson);
                     return (mapClassId == 13 || mapClassId == 14) && session != null && battleController == null
                         && playerScene.SceneType == 3;
+                case "AllNoTipWinClosedConditionNode":
+                    // The offline HUD has no server tip-window queue; once the
+                    // current story callback is running this condition is met.
+                    return true;
                 case "IsPlayerHasFollowerIdsNode":
                     int[] followerIds = JsonUtility.FromJson<StoryFollowerFields>(input.sourceJson)?.FollowerClassId;
                     if (followerIds == null)

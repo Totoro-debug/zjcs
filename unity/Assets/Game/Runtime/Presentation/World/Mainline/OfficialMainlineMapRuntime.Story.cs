@@ -219,6 +219,14 @@ namespace Zjcs.Presentation.World
                                 throw new InvalidOperationException("Official story started before map initialization.");
                             nodeId = StoryNext(node, "Exit");
                             continue;
+                        case "PlayerConditionNode":
+                        case "PlayerOnMapConditionNode":
+                        case "PlayerOnSceneConditionNode":
+                        case "WaitMapEntityInStateConditionNode":
+                        case "AllNoTipWinClosedConditionNode":
+                            StartCoroutine(ContinueStoryWhenBooleanCondition(activeStory, node,
+                                StoryNext(node, "Output") != 0 ? StoryNext(node, "Output") : StoryNext(node, "Exit")));
+                            return;
                         case "WorldStopMoveNode":
                             navigation.StopMovement();
                             nodeId = StoryNext(node, "Exit");
@@ -574,6 +582,13 @@ namespace Zjcs.Presentation.World
         private IEnumerator ContinueStoryAfterNavigation(int nextNodeId)
         {
             while (navigation.IsMoving && storyRunning) yield return null;
+            if (storyRunning) RunStoryGraph(nextNodeId);
+        }
+
+        private IEnumerator ContinueStoryWhenBooleanCondition(Map10RuntimeStory story,
+            Map10RuntimeStoryNode node, int nextNodeId)
+        {
+            while (storyRunning && !EvaluateStoryBoolean(story, node)) yield return null;
             if (storyRunning) RunStoryGraph(nextNodeId);
         }
 
