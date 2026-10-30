@@ -76,7 +76,9 @@ def build(write=False):
             if path.suffix == '.json':
                 runtime_raw = raw.replace(b'"Map12/TeamNpcSkeletons/', b'"Map12/Native/TeamNpcBattle/TeamNpcSkeletons/')
             outputs[runtime_path] = runtime_raw
-            outputs[Path(str(runtime_path) + '.meta')] = outputs[Path(str(path) + '.meta')]
+            runtime_guid = hashlib.md5(('zjcs:map12:npc-native-runtime:' + source_path(runtime_path)).encode()).hexdigest()
+            outputs[Path(str(runtime_path) + '.meta')] = ('fileFormatVersion: 2\nguid: ' + runtime_guid +
+                '\nTextScriptImporter:\n  externalObjects: {}\n').encode()
 
     def string(value):
         raw = value.encode()
