@@ -2,7 +2,7 @@
 
 [总索引](../README.md)
 
-状态：未完成。官方配置、水路规则、战斗／剧情数据和原分区场景／地区标签已迁移；共享 Map13 入口数据闭包、角色级进度与跟随者状态已接入，原生环境、实体 prefab、完整交互和 Windows 发布仍在进行。单机地图顺序已确认：Map12 完成后开放 Map13。Map12 方尖碑 8101 胜利结果按本地图配置的目标 13 写入带回执的本地解锁。
+状态：未完成。官方配置、水路规则、战斗／剧情数据和原分区场景／地区标签已迁移；共享 Map13 入口数据闭包、角色级进度、国度商店及四种故事跟随者模型已接入。原生环境、其余实体 prefab、完整交互和正式剧情流程仍在进行；当前迁移成果已构建并发布到 `D:/Desktop/杖剑传说/杖剑传说.exe`。单机地图顺序已确认：Map12 完成后开放 Map13。Map12 方尖碑 8101 胜利结果按本地图配置的目标 13 写入带回执的本地解锁。
 
 ## 地图简介
 
@@ -114,7 +114,7 @@ Map13 战斗运行载荷：`prepare_unity_map10_battle_data.py --map-id 13` 按�
 
 `prepare_map13_lighting.py` 从固定 APK／校验 CDN 转换原 173 个 `Light2D`、106 个区域昼夜灯及 46 个 `MapLight`，按原 `MapEnvEffect` 状态和 `MapEnvData.FadeTime` 控制运行时；Water2 接收原排序层的场景灯光。运行数据为 `assets/official/map13-lighting.json` 及其原型衰减／Cookie 纹理，输入对象、原排序层、配置、输出哈希与阴影状态见 `official-map/lighting-13-source-manifest.json`。全图所有 `Light2D.shadow_enabled` 均为关闭，且没有 `ShadowCaster2D`；没有为原图增加投影阴影。
 
-`prepare_map13_dialogs.py --task-bindings-only` 另从相同已校验中文语言包生成76项主线任务标题、描述、进度和目标区域文案； 保存语言输入及原 `TaskInfoParser`、`LanguageUtils`、`TaskListItem`、`PinnedTaskPanel`、`TaskDetailDialog`、`ClientWorldMapProgressCondition` 的SHA256，运行时由 按原任务条件格式化与绑定。
+`prepare_map13_dialogs.py --task-bindings-only` 另从相同已校验中文语言包生成76项主线任务标题、描述、进度和目标区域文案；保存语言输入及原 `TaskInfoParser`、`LanguageUtils`、`TaskListItem`、`PinnedTaskPanel`、`TaskDetailDialog`、`ClientWorldMapProgressCondition` 的 SHA256，运行时按原任务条件格式化与绑定，并为不同占位符数量传入区域／目标／当前进度，避免正式 HUD 初始化格式化异常。
 
 泽之国实体原生材质：全部 1,843 份原材质直接按精确 CAB／PathID 写入实际 Unity 原生序列化，绑定 38 个原 shader 与 3,307 处非空有像素纹理引用；保留全部原数值、属性顺序及 4 个无穷颜色分量，6 个零尺寸字体图集保留待初始化槽位。一处未参与全部 18 个原 GLES 程序的关键词重分类独立记录。两份引擎 shader 的全部 13 个 profile、原状态和 Windows builtin GUID／fileID 已证明，仅允许 5 个精确采样临时量的桌面精度提升与一处纹理索引元数据差异。字体初始化、实体几何／动画、完整地图与 Windows 发布尚未完成，范围见[泽之国](map-13.md)；未进入完整素材快照。
 
@@ -303,13 +303,17 @@ Map13 原剧情 prefab Windows 转换与 NPC 序列：固定 871_156598 的 278 
 
 ## 自定义实现
 
-已确认的跟随者单机方案：`AddNpcFollowerNode` 按节点配置将 8402／8440／8441／8442 去重写入持久化跟随者列表，`RemovePlayerNpcFollowerAllNode` 清空。对应官方实体、原跟随队列的显示绑定及正式地图存档验证尚未完成。
+已确认的跟随者单机方案：`AddNpcFollowerNode` 按节点配置将 8402／8440／8441／8442 去重写入持久化跟随者列表，`RemovePlayerNpcFollowerAllNode` 清空。正式 Map13 入口从角色存档创建四名跟随者，复用官方 Spine 骨骼、原 idle 动画、组合皮肤、原材质与本地原图集，跟随玩家位置并由角色存档冷读恢复。隔离内置屏 Play Mode 已检查四名实例具有非空网格、原材质／纹理及相机可见边界，并保存入口画面；原资源目录另行验证四种骨骼、动画、皮肤和图集绑定。完整故事节点鼠标触发、跟随者运行画面逐帧核查及正式 Player 流程仍未完成。
 
-已确认的国度商店离线方案：所有主线地图国度商店的经验按该店实际消耗的专属货币 1:1 增加。泽之国使用官方等级阈值 0／3500／8000／13000 和商店 131–134 固定商品表；商品原价、货币、库存、限购及刷新类型均取 `871_156598` 官方配置。该地图商店周期为 `ShopRefreshCycleType.None`，固定商品周期为 `ShopGoodsRefreshCycleType.Default`，按官方固定库存保存，不每日重置。购买在一个本地交易中扣货币、发放道具、累计购买数和商店经验，保存失败时不保留交易。主线国度商店规则表转换见 `scripts/prepare_unity_nation_shop_catalog.py`，交易服务为 `OfflineNationShopService`，原 UI prefab 与精灵位于 `Resources/Map13/UI/` 和 `Assets/Official/World/Map/13/UI/`，来源清单为 [国度商店来源](../../assets/reference/official-map/mainline-nation-shop-source-manifest.json)。内置屏 PlayMode 已实际打开原商店、检查商品图标／价格／库存／等级页签，模拟指针购买四件商品并跨过 3500 阈值；冷读确认货币、物品、购买数、经验、等级和固定库存已持久化。商品图标需将原 `ItemInfoSlot` 提到同一官方卡片的前景层。正式地图剧情节点点击入口、余额不足提示、Windows Player 尚待验证；商品列表为适配 Unity 滚动组件在运行时补充网格排布，不宣称原 prefab 序列化了网格组件。
+已确认的国度商店离线方案：所有主线地图国度商店的经验按该店实际消耗的专属货币 1:1 增加。泽之国使用官方等级阈值 0／3500／8000／13000 和商店 131–134 固定商品表；商品原价、货币、库存、限购及刷新类型均取 `871_156598` 官方配置。该地图商店周期为 `ShopRefreshCycleType.None`，固定商品周期为 `ShopGoodsRefreshCycleType.Default`，按官方固定库存保存，不每日重置。购买在一个本地交易中扣货币、发放道具、累计购买数和商店经验，保存失败时不保留交易；服务器提供的 `PriceOff` 无本地来源，故按原价显示并隐藏 prefab 默认折扣标记。主线国度商店规则表转换见 `scripts/prepare_unity_nation_shop_catalog.py`，交易服务为 `OfflineNationShopService`，原 UI prefab 与精灵位于 `Resources/Map13/UI/` 和 `Assets/Official/World/Map/13/UI/`，来源清单为 [国度商店来源](../../assets/reference/official-map/mainline-nation-shop-source-manifest.json)。内置屏 PlayMode 已实际打开原商店、检查商品图标／价格／库存／等级页签，模拟指针购买四件商品并跨过 3500 阈值；冷读确认货币、物品、购买数、经验、等级和固定库存已持久化。商品图标需将原 `ItemInfoSlot` 提到同一官方卡片的前景层。正式地图剧情节点点击入口、余额不足提示和正式 Player 流程尚待验证；商品列表为适配 Unity 滚动组件在运行时补充网格排布，不宣称原 prefab 序列化了网格组件。
+
+Windows 发布验证：使用当前主工程以 Mono、Windows 64 位构建 Release Player，输出已发布到 `D:/Desktop/杖剑传说/杖剑传说.exe`。通过仓库的内置屏启动工具实际启动发布文件，窗口定位到内置屏并显示官方健康游戏公告／启动画面；启动日志未出现异常。该验证覆盖 Player 构建、入口加载和窗口显示，不代表完整剧情节点、正式商店入口或存档恢复已经在 Player 中跑通。
 
 官方 `WorldConveyanceComponent.FireTrigger()` 没有服务器移动实现，水位执行也缺少服务端逻辑；已核对客户端载人实现、`LoWorldConveyanceComponent.OffsetPath`、`StageResultElevatorStateUpdateComponent` 和 `StageDatas`。用户已允许并在独立规则模块实现：每次沿原配置顺序前进一段，末端后沿原路径逐段反向返回；载人保留原偏移，路径被阻挡则不移动；水位按原 `StageDatas` 顺序执行，不发奖励。
 
 五终端为 2634／3337／5334／7439／9338。用户已确认：重置只恢复 `NeedResetLoEntityIds` 的初始状态与位置；自动解谜消耗原道具并开放 `ExtendRoadLoEntityIds`；奖励须实际领取且不重复发放。规则模块执行道路与重置；原扣费交易、终端状态、独立领奖和中断恢复尚待正式接入。字体实例隔离动态字形写入，不改变原字体数据或布局。
+
+`SetMapLogicEntityInteractionRangeOverrideByCharacterNode` 的 4 个 Map13 实例已按官方 tooltip 接入：非 Revert 将当前玩家格点幂等加入指定逻辑物件的可点击覆写，Revert 按物件清除覆写；覆盖点写入地图本地存档并由导航交互范围查询消费。
 
 实体事件的诊断输出改接 Unity 日志；原接收者、委托字典、分发和缓存行为保持不变。
 
@@ -323,12 +327,20 @@ Map13 原剧情 prefab Windows 转换与 NPC 序列：固定 871_156598 的 278 
 
 - 正式入口激活原管线与完整场景，接通玩家／世界状态、角色与实体、其他特效／导演、BGM／配音及全部官方 HUD／功能界面；场景／组件夹具不作为正式地图入口。
 - 官方剧情节点目前不能全量按离线规则执行。客户端的 `ServerRunNode` 通用请求为 `StoryRunNodeRequest`（OpCode 4263，字段 `GraphName`／`NodeId`／`Paths`／`Inputs`／`Param`），消费 `StoryRunNodeResponse`（OpCode 31628，含 `Outputs`／`Param`）；APK 未包含对应服务器执行逻辑。当前 88 张客户端图及 `Source/server-story-records.json` 的导出记录都不能证明服务器返回值或状态变更。
-- 已确认的服务端节点离线行为：`CameraMoveAndUnlockAreaNode` 的 9 个节点实例按原地图几何和节点范围本地解锁；`WorldStopMoveNode` 在剧情运行期间锁定地图移动，正常结束或中断时恢复；`AddNpcFollowerNode` 按节点配置将 8402／8440／8441／8442 去重写入持久化跟随者列表，`RemovePlayerNpcFollowerAllNode` 清空；跟随显示须绑定对应官方实体和原跟随队列，当前玩家克隆显示仍待替换。以上实现仍待接入共享剧情执行器。共享解释器已有 `SetMapLogicEntitySetStateNode` 执行分支，可按载荷写本地逻辑标签状态、刷新实体并保存；泽之国正式宿主及 Play Mode 流程未接入验证。用户确认的本地推导已接入：`PlayerActiveMapNode` 以目标地图 ID 写入幂等解锁事务；`PlayerWorldAloneAppearNode` 将目标 ID 去重持久化于地图存档的独立世界列表。此两节点仍待泽之国正式剧情流程运行验证。用户已确认 `HandInItemNode` 按配置数量在确认时原子扣除，取消／中断不扣，固定奖励按配置次数和本地领取凭据发放；官方原交付窗口尚未转换接入。
+- 已确认的服务端节点离线行为：`CameraMoveAndUnlockAreaNode` 的 9 个节点实例按原地图几何和节点范围本地解锁；`AddNpcFollowerNode` 按节点配置将 8402／8440／8441／8442 去重写入角色持久化跟随者列表，`RemovePlayerNpcFollowerAllNode` 清空。四类跟随外观使用原 NPC Spine 骨骼、官方合并皮肤、Map13 原 Atlas、原材质／shader 和地图 NPC Prefab 的 0.3 缩放；进入地图及重新加载存档后生成独立动画模型对象，沿玩家位置持续更新。Play Mode 使用含四类跟随 ID 的隔离存档实际渲染全部跟随者、检查相机视锥／原贴图与大小并查看地图画面，国度商店与 2,690 实体入口回归同时通过；正式剧情节点入口逐剧情逐节点实走与 Windows Player 仍待验证。Map13 的唯一 `EnterMapRegionConditionNode` 已接入：按官方 `OnlyCheckMove`、Map13 区域标签和 `RegionStatus=None` 等待移动进入目标区域；节点条件断言及 Map13 Play Mode 入口回归通过，但正式 NPC 剧情路径尚未实走。共享解释器已有 `SetMapLogicEntitySetStateNode` 执行分支，可按载荷写本地逻辑标签状态、刷新实体并保存；泽之国正式宿主及 Play Mode 流程未接入验证。用户确认的本地推导已接入：`PlayerActiveMapNode` 以目标地图 ID 写入幂等解锁事务；`PlayerWorldAloneAppearNode` 将目标 ID 去重持久化于地图存档的独立世界列表。此两节点仍待泽之国正式剧情流程运行验证。用户已确认 `HandInItemNode` 按配置数量在确认时原子扣除，取消／中断不扣，固定奖励按配置次数和本地领取凭据发放；官方原交付窗口尚未转换接入。
+- 已接入三处 `MapRegionLeaveConditionNode`：按原 `MapClassId`／`RegionId` 与玩家移动前后 Map13 区域标签判断离开 36／45／47 区；等待期间仍允许本地移动。`RescuedByWeiYang` 的唯一 `WaitNearEntConditionNode` 按官方 6674 类实体和 Manhattan 距离 8 查询。入口 Play Mode 对区域转换与距离边界有断言，正式 NPC 剧情路径尚未逐节点实走。
+- Map13 的 `SetTriggerNode`／`IsTriggeredNode` 已按官方 `IBlackboardData` 语义接入当前剧情图黑板，支持固定 `Talk1`–`Talk4` 键并在新故事启动时清空，不写角色存档；地图剧情验收覆盖未设置、设置、重复设置状态。动态键在 Map13 没有官方实例，遇到时明确报不支持。
+- 两份职业教学图的 9 路 `OrNode` 与通用 `AndNode` 已按官方 `GetInputValues<bool>` 语义求值；空输入均为 false。剧情验收覆盖多路 OR、AND 与空输入边界。
+- 两份职业教学图的 18 个 `IsProfessionNode` 已按官方目标职业 1–18 对角色存档当前职业求值；职业树晋升、动态 `Rank` 属性及职业选择 UI 仍需完整职业服务器结果与正式窗口流程后才能确认。
+- 两份职业教学图的 `RegisterStoryPropertyNode` 已按官方 `references.RefIds[].data` 注册 `Rank=3`，`GetStoryPropertyNode` 在当前故事图属性表中读取字符串值；属性生命周期随故事启动清空，不写角色存档。
+- `WorldStopMoveNode` 的原客户端实现只发送带 `MapId` 的 `WorldStopMoveNodeInfo_C2S`；APK 未包含服务器如何暂停及恢复移动的逻辑。当前运行时故事锁定与等待靠近时放行移动的行为不能证明该节点的服务端规则，离线版节点映射待用户确认。
+- 三种 `HandInItemNode` 配置已接入共享官方 `ItemDetail/DialogHandInItemDialog`：原窗口、原物品图标、确认按钮灰态及数量进度按现有官方转换加载。Map13 配置为 2203×1、40502×5、43039×5，各限 1 次；按用户确认，在确认时以单一本地事务扣除配置数量并写入领取回执，取消／关闭中断不扣除，缺少物品时原确认按钮保持禁用。隔离 Play Mode 以模拟指针实际点击原窗口，验证取消不变更存档、三种确认精确扣除并在冷读后保留回执。该测试直接注入官方节点，不代表 NPC 正式故事路径已通过；窗口素材转换输入由 [Map14 全局窗口来源清单](../../assets/reference/official-map/map14-handin-ui-source-manifest.json) 记录。
 - 入口状态也依赖服务器地图状态：客户端 `HomeToMapNode.TryGetLastPublicActivedEntryId` 检查按地图降序的公开地区、女神激活和活动入口实体；本地存档目前没有完整的地区公开状态／活动入口实体记录。Map13 `MapWorldActivedCondition` 只证明 `WorldMapRegionProgressDict` 中存在 MapClassId 13 时条件成立，不证明首次激活准入规则。首次开放按已确认的顺序进度处理；活跃入口实体选择仍待接入原生 MapSelect UI 和本地地区状态。
 - 泽之国入口、正常移动、海之宫剧情、探索／任务、战斗、交互、条件、奖励、小地图、出口，以及五组手动水路和终端原界面。
 - 国度商店商品、等级 UI 的实际内屏竖屏画面、购买升阶、固定库存和冷存档读取已验证；仍需通过正式地图剧情节点进入商店，验证余额不足失败提示，并在 Windows Player 中复验。本次 PlayMode 使用地图运行宿主和模拟指针，但通过验收入口打开商店，不证明玩家走到 NPC 后的剧情入口流程。
+- Map13 跟随者官方骨骼／地图 NPC 缩放来源记录于 `map13-follower-skeleton-resources-source-manifest.json`，官方图集纹理记录于 `map13-npc-follower-textures-source-manifest.json`；四名角色的地图相机可见 Play Mode 与画面检查位于 `OfficialMap13RuntimeAcceptance`。跟随者运行组件为 `OfficialMap13NpcFollowerView`，逐帧使用官方 idle 动画和原约束／网格数据。此项不代表 6 个剧情节点均已逐一跑通，亦未进入完整素材快照。
 - 水路位置、方向、水位、终端扣费意图、奖励凭据及完整地图状态的正式本地存档；验证取消、条件不足、重复操作、中断与重新启动。
-- 内置屏  的实际流程和模拟鼠标命中验证、正式运行画面、Windows 构建／Player 启动与存档恢复；通过后发布 `D:/Desktop/杖剑传说/杖剑传说.exe`。目前没有包含本图完整成果的发布版本。
+- 内置屏的完整流程和模拟鼠标命中验证、正式运行画面、完整剧情／商店入口与存档恢复；当前 Windows Player 已构建、发布并完成启动画面验证，但尚未证明上述完整流程。
 
 官方来源、代码／资源入口与实际验证：
 

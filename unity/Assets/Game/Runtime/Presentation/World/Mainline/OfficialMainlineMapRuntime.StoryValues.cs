@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using Zjcs.Offline.World;
 
 namespace Zjcs.Presentation.World
 {
@@ -22,9 +23,15 @@ namespace Zjcs.Presentation.World
             public StoryItemRequirement[] ItemConfigs;
             public StorySerializableValue[] Params;
         }
+        [Serializable] private sealed class StoryMapPosition { public int X, Y; }
+        [Serializable] private sealed class StoryMapPositionFields
+        {
+            public StoryMapPosition mTargetPos;
+            public int mDistance;
+        }
         [Serializable] private sealed class StoryItemRequirement { public int ItemId; public long ItemCount; }
         [Serializable] private sealed class StoryDialogFields { public int DialogId, Order; }
-        [Serializable] private sealed class StoryBooleanFields { public int Input, MapClassId, RegionId, State, LoEntityId, SceneType; public string Tag; }
+        [Serializable] private sealed class StoryBooleanFields { public int Input, MapClassId, RegionId, State, LoEntityId, SceneType, Target; public string Tag; }
         [Serializable] private sealed class StoryTransferFields
         {
             public string LoEntityTag;
@@ -55,9 +62,48 @@ namespace Zjcs.Presentation.World
             public int mBool;
             public string mString;
         }
+        [Serializable] private sealed class StoryPropertyFields { public StoryPropertyReferences references; }
+        [Serializable] private sealed class StoryPropertyReferences { public StoryPropertyReference[] RefIds; }
+        [Serializable] private sealed class StoryPropertyReference { public StoryPropertyData data; }
+        [Serializable] private sealed class StoryPropertyData { public string Name, Value; }
 
         private static StoryValueFields StoryFields(Map10RuntimeStoryNode node) =>
             JsonUtility.FromJson<StoryValueFields>(node.sourceJson);
+
+        private MapGridPoint ResolveStoryMapPosition(Map10RuntimeStory story, Map10RuntimeStoryNode node,
+            string inputPort)
+        {
+            int sourceId = StoryNext(node, inputPort);
+            if (sourceId > 0)
+            {
+                object value = EvaluateStoryValue(story, FindStoryNode(story, sourceId));
+                if (value is MapGridPoint grid) return grid;
+                if (value is Vector2 vector) return ConvertStoryVectorPositionToGrid(vector);
+                throw new InvalidDataException("Official story map position has an unsupported value: " + node.type);
+            }
+            StoryMapPositionFields fields = JsonUtility.FromJson<StoryMapPositionFields>(node.sourceJson);
+            if (fields?.mTargetPos == null)
+                throw new InvalidDataException("Official story map position is missing: " + node.type);
+            return new MapGridPoint(fields.mTargetPos.X, fields.mTargetPos.Y);
+        }
+
+        internal static int OfficialStoryManhattanDistance(MapGridPoint left, MapGridPoint right) =>
+            Math.Abs(left.X - right.X) + Math.Abs(left.Y - right.Y);
+
+        internal static int OfficialStoryArrivalDistance(int configuredDistance) => Math.Max(configuredDistance, 1);
+
+        private bool CanStoryClickGrid(MapGridPoint target)
+        {
+            if (target.X == 0 && target.Y == 0) return false;
+            foreach (Map10RuntimeEntity entity in mapEntities.Values.Where(value => value.Grid.Equals(target)))
+            {
+                if (!entityTemplates.TryGetValue(entity.EntityClassId, out Map10RuntimeEntityTemplate template))
+                    return false;
+                if (!template.Components.Any(component => component.Type == "WorldStageComponent"))
+                    return false;
+            }
+            return true;
+        }
 
         private StoryMap14RegionLabels Map14StoryRegionLabels()
         {
@@ -93,15 +139,31 @@ namespace Zjcs.Presentation.World
                         input.playerConditionParam, input.playerConditionIds, input.playerConditionNot);
                 case "AndNode":
                     Map10RuntimeStoryConnection[] connections = input.ports?.FirstOrDefault(value => value.name == "Input")?.connections;
-                    return connections == null || connections.Length == 0
-                        ? JsonUtility.FromJson<StoryBooleanFields>(input.sourceJson).Input != 0
-                        : connections.All(value => EvaluateStoryBoolean(story, FindStoryNode(story, value.nodeId), depth + 1));
+                    return OfficialStoryAll(connections?.Select(value => EvaluateStoryBoolean(story,
+                        FindStoryNode(story, value.nodeId), depth + 1)));
+                case "OrNode":
+                    Map10RuntimeStoryConnection[] alternatives = input.ports?.FirstOrDefault(value => value.name == "Input")?.connections;
+                    return OfficialStoryAny(alternatives?.Select(value => EvaluateStoryBoolean(story,
+                        FindStoryNode(story, value.nodeId), depth + 1)));
                 case "NotNode":
                     int argument = StoryNext(input, "Input");
                     return !(argument > 0 ? EvaluateStoryBoolean(story, FindStoryNode(story, argument), depth + 1)
                         : JsonUtility.FromJson<StoryBooleanFields>(input.sourceJson).Input != 0);
                 case "IsStoryStateNode":
                     return progressionSave != null && progressionSave.StoryStatus(input.storyName) == input.storyStatus;
+                case "IsProfessionNode":
+                    if (mapClassId != 13 || progressionSave == null)
+                        throw new InvalidDataException("Official profession conditions are not loaded for Map" + mapClassId + ".");
+                    return progressionSave.Save.Player.Wardrobe != null
+                        && OfficialStoryProfessionMatches(progressionSave.Save.Player.Wardrobe.Profession,
+                            JsonUtility.FromJson<StoryBooleanFields>(input.sourceJson).Target);
+                case "IsTriggeredNode":
+                    StoryTriggerFields trigger = JsonUtility.FromJson<StoryTriggerFields>(input.sourceJson);
+                    if (mapClassId != 13 || trigger == null
+                        || input.ports?.Any(port => port.name == "Key" && port.connections?.Length > 0) == true)
+                        throw new InvalidDataException("Unsupported official story trigger query in Map" + mapClassId + ".");
+                    return storyBlackboards.TryGetValue(story.key, out HashSet<string> activeTriggers)
+                        && OfficialStoryTriggerIsSet(activeTriggers, trigger.Key);
                 case "IsInTargetMapNode":
                     StoryBooleanFields targetMap = JsonUtility.FromJson<StoryBooleanFields>(input.sourceJson);
                     if (session == null || avatar == null || mapClassId != targetMap.MapClassId) return false;
@@ -167,6 +229,23 @@ namespace Zjcs.Presentation.World
             }
         }
 
+        public static bool OfficialStoryAll(IEnumerable<bool> values)
+        {
+            if (values == null) return false;
+            bool found = false;
+            foreach (bool value in values)
+            {
+                found = true;
+                if (!value) return false;
+            }
+            return found;
+        }
+
+        public static bool OfficialStoryAny(IEnumerable<bool> values) => values != null && values.Any(value => value);
+
+        public static bool OfficialStoryProfessionMatches(int currentProfession, int targetProfession) =>
+            currentProfession > 0 && targetProfession > 0 && currentProfession == targetProfession;
+
         private object EvaluateStoryValue(Map10RuntimeStory story, Map10RuntimeStoryNode node, int depth = 0)
         {
             if (node == null || depth > 64) throw new InvalidDataException("Invalid official story value graph.");
@@ -176,6 +255,12 @@ namespace Zjcs.Presentation.World
                 case "QueryStoryCountNode": return GetStoryPlayCount(node.storyName);
                 case "GetMapWitchExploreInfoNode": return progressionSave.ActiveWitchCount;
                 case "QueryPlayerLevelNode": return progressionSave.Save.Player.Level;
+                case "GetStoryPropertyNode":
+                    string propertyName = JsonUtility.FromJson<StoryPropertyNameFields>(node.sourceJson)?.mName;
+                    if (storyProperties.TryGetValue(story.key, out Dictionary<string, string> properties)
+                        && properties.TryGetValue(propertyName ?? string.Empty, out string propertyValue))
+                        return propertyValue;
+                    return null;
                 case "GetEntityPosNode":
                 case "GetPosAroundStoryObjectNode": return ResolveStoryPositionNode(node);
                 case "MapPositionChangeTypeNode":
@@ -186,6 +271,8 @@ namespace Zjcs.Presentation.World
                     if (vectorInput == null) throw new InvalidDataException("Official story grid conversion has no vector input.");
                     Vector2 vector = (Vector2)EvaluateStoryValue(story, vectorInput, depth + 1);
                     return ConvertStoryVectorPositionToGrid(vector);
+                case "ClickMapPosInLogicNode":
+                    return ResolveStoryMapPosition(story, node, "mTargetPos");
                 case "StringFormatNode":
                     StorySerializableValue[] parameters = StoryFields(node).Params ?? Array.Empty<StorySerializableValue>();
                     return parameters.Select((value, index) =>
@@ -197,6 +284,8 @@ namespace Zjcs.Presentation.World
                 default: throw new InvalidDataException("Unsupported official story value: " + node.type);
             }
         }
+
+        [Serializable] private sealed class StoryPropertyNameFields { public string mName; }
 
         private static object StoryConstant(StorySerializableValue value)
         {

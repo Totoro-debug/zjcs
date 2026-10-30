@@ -78,6 +78,22 @@ namespace Zjcs.Presentation.World
                 StartMovement(record.Grid, record);
             }
 
+            public void ClickLogicalGrid(MapGridPoint target)
+            {
+                bool previousStoryTransfer = storyTransferActive;
+                storyTransferActive = true;
+                try
+                {
+                    Vector3 screen = host.worldCamera.WorldToScreenPoint(GridToWorld(target));
+                    if (host.entityView == null || !host.entityView.TrySelectScreenPosition(new Vector2(screen.x, screen.y)))
+                        StartMovement(target, null);
+                }
+                finally
+                {
+                    if (movementPath == null) storyTransferActive = previousStoryTransfer;
+                }
+            }
+
             public void StartMovement(MapGridPoint target, Map10RuntimeEntity interact)
             {
                 if (movementPath != null || host.battleController != null) return;
@@ -234,6 +250,7 @@ namespace Zjcs.Presentation.World
 
             private bool InOriginalInteractionRange(Map10RuntimeEntity entity, MapGridPoint point)
             {
+                if (host.mapClassId == 13 && host.HasStoryInteractionRangeOverride(entity, point)) return true;
                 // WorldStageComponent.InInteractiveRange uses the configured offsets from GridTransform.Pos.
                 IReadOnlyList<OfficialStageInteractionOffset> range = host.puzzles != null && host.puzzles.Contains(entity.PlacementId)
                     ? host.puzzles.InteractionRange(entity.PlacementId)

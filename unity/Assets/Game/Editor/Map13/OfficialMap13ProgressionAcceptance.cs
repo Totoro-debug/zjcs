@@ -26,6 +26,27 @@ namespace Zjcs.Editor.Map13
                     "Map13 mainline task chain omitted the intervening profession task.");
                 Require(OfficialMainlineMapProfile.Get(13).RequiredAccessConditions.Count == 13,
                     "Map13 region access conditions were not registered.");
+                Require(OfficialMainlineMapRuntime.OfficialStoryEnteredMapRegion(35, 36, 36, true)
+                    && !OfficialMainlineMapRuntime.OfficialStoryEnteredMapRegion(36, 36, 36, true)
+                    && OfficialMainlineMapRuntime.OfficialStoryEnteredMapRegion(36, 36, 36, false)
+                    && OfficialMainlineMapRuntime.OfficialStoryEnteredMapRegion(35, 36, -1, true),
+                    "Map13 official movement-based region-entry condition differs from its node flags.");
+
+                var triggers = new System.Collections.Generic.HashSet<string>(System.StringComparer.Ordinal);
+                Require(!OfficialMainlineMapRuntime.OfficialStoryTriggerIsSet(triggers, "Talk1")
+                    && OfficialMainlineMapRuntime.OfficialStoryTriggerSet(triggers, "Talk1")
+                    && OfficialMainlineMapRuntime.OfficialStoryTriggerIsSet(triggers, "Talk1")
+                    && !OfficialMainlineMapRuntime.OfficialStoryTriggerSet(triggers, "Talk1"),
+                    "Map13 story graph blackboard triggers did not retain true values during one graph run.");
+                Require(OfficialMainlineMapRuntime.OfficialStoryAny(new[] { false, true, false })
+                    && !OfficialMainlineMapRuntime.OfficialStoryAny(Array.Empty<bool>())
+                    && OfficialMainlineMapRuntime.OfficialStoryAll(new[] { true, true })
+                    && !OfficialMainlineMapRuntime.OfficialStoryAll(Array.Empty<bool>()),
+                    "Map13 official AND/OR semantics differ from the client nodes.");
+                Require(OfficialMainlineMapRuntime.OfficialStoryProfessionMatches(10, 10)
+                    && !OfficialMainlineMapRuntime.OfficialStoryProfessionMatches(10, 11)
+                    && !OfficialMainlineMapRuntime.OfficialStoryProfessionMatches(0, 10),
+                    "Map13 official profession condition semantics differ from the client node.");
 
                 foreach (Map10RuntimeMapTalkEntry talk in stories.Data.mapTalkEntries)
                     if (!string.IsNullOrEmpty(talk.TalkId))

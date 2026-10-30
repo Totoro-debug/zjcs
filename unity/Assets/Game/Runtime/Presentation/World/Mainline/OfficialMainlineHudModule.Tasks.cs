@@ -57,9 +57,9 @@ namespace Zjcs.Presentation.World
                 var item = taskUiData.components.Single(value => value.panel == "TaskListItem" && value.type == "TaskConditionItem").fields;
                 TaskObject(pinnedTaskFields.myTaskTitle).GetComponent<TMP_Text>().text = TaskText("task_" + task.classId + "_title");
                 string region = condition.type == "WorldMapProgressCondition" ? TaskText("region_" + condition.mapClassId + "_" + condition.region) : string.Empty;
-                TaskObject(item.mText).GetComponent<TMP_Text>().text = string.Format(CultureInfo.CurrentCulture,
-                    TaskText("task_" + task.classId + "_progress"), region);
                 host.progressionSave.GetTaskProgress(condition, out long current, out long target);
+                TaskObject(item.mText).GetComponent<TMP_Text>().text = string.Format(CultureInfo.CurrentCulture,
+                    TaskText("task_" + task.classId + "_progress"), region, target, current);
                 TMP_Text progress = TaskObject(goal.ProgressText).GetComponent<TMP_Text>();
                 bool showProgress = condition.type == "WorldMapProgressCondition";
                 if (showProgress) { current /= 100; target /= 100; }

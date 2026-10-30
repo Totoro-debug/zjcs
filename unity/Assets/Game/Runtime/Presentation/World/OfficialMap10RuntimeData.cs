@@ -654,7 +654,17 @@ namespace Zjcs.Presentation.World
         public int activeBattlePlacementId;
         public long activeBattleSavedAt;
         public int[] aloneWorldClassIds = Array.Empty<int>();
+        public Map10RuntimeInteractionRangeOverride[] interactionRangeOverrides = Array.Empty<Map10RuntimeInteractionRangeOverride>();
         public string map13GridVisibility;
+    }
+
+    [Serializable]
+    public sealed class Map10RuntimeInteractionRangeOverride
+    {
+        public int mapClassId;
+        public int logicId;
+        public int x;
+        public int y;
     }
 
     [Serializable]

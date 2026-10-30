@@ -33,6 +33,54 @@ namespace Zjcs.Presentation.World
         [Serializable]
         private sealed class StoryFollowerFields { public int[] NpcClassIds, FollowerClassId; }
 
+        [Serializable]
+        private sealed class StoryEnterRegionFields { public int MapClassId, RegionId, RegionStatus, OnlyCheckMove; }
+
+        [Serializable]
+        private sealed class StoryLeaveRegionFields { public int MapClassId, RegionId; }
+
+        [Serializable]
+        private sealed class StoryNearEntityFields
+        {
+            public int MapClassId, RegionId, Dist, IsUseClassId, EntClassId, EntStageType;
+        }
+
+        [Serializable]
+        private sealed class StoryInteractionRangeFields
+        {
+            public string LoEntityTag;
+            public int MapClassId, LoEntityId, IsRevert;
+        }
+
+        [Serializable]
+        private sealed class StoryTriggerFields { public string Key; }
+
+        private readonly Dictionary<string, HashSet<string>> storyBlackboards =
+            new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
+        private readonly Dictionary<string, Dictionary<string, string>> storyProperties =
+            new Dictionary<string, Dictionary<string, string>>(StringComparer.Ordinal);
+
+        public static bool OfficialStoryEnteredMapRegion(int previousRegion, int currentRegion,
+            int targetRegion, bool onlyCheckMove) => (targetRegion == -1 || currentRegion == targetRegion)
+                && (!onlyCheckMove || previousRegion != targetRegion);
+
+        public static bool OfficialStoryLeftMapRegion(int previousRegion, int currentRegion,
+            int targetRegion) => (targetRegion == -1 || previousRegion == targetRegion)
+                && currentRegion != previousRegion;
+
+        public static bool OfficialStoryNearEntity(int playerX, int playerY, int entityX, int entityY,
+            int distance) => distance > 0 && Math.Abs(playerX - entityX) + Math.Abs(playerY - entityY) <= distance;
+
+        public static bool OfficialStoryTriggerSet(ISet<string> triggerKeys, string key)
+        {
+            if (triggerKeys == null || string.IsNullOrWhiteSpace(key))
+                throw new ArgumentException("Official story triggers require a key set and key.");
+            return triggerKeys.Add(key);
+        }
+
+        public static bool OfficialStoryTriggerIsSet(IEnumerable<string> triggerKeys, string key) =>
+            !string.IsNullOrWhiteSpace(key) && triggerKeys != null && triggerKeys.Contains(key);
+
         private Map10RuntimeMapTalkEntry ResolveMapTalk(Map10RuntimeEntity entity, int scenario)
         {
             string entityId = "entity_" + entity.EntityClassId + "_name";
@@ -109,6 +157,8 @@ namespace Zjcs.Presentation.World
             if (!stories.TryGetValue(key, out activeStory))
                 throw new InvalidDataException("Official Map10 story is missing: " + key);
             storyFrames.Clear();
+            storyBlackboards.Clear();
+            storyProperties.Clear();
             activeStoryRootKey = key;
             storyRunning = true;
             storyContextEntity = context;
@@ -116,12 +166,27 @@ namespace Zjcs.Presentation.World
             SetStoryStatus(key, 1);
             storyEntities.Clear();
             storyEntityClasses.Clear();
+            RegisterStoryProperties(activeStory);
             if (key == "SavingChick" && context != null && context.EntityClassId == 8417)
             {
                 storyHiddenContextEntity = mapEntityObject(context.PlacementId);
                 if (storyHiddenContextEntity != null) storyHiddenContextEntity.SetActive(false);
             }
             RunStoryGraph(activeStory.entryNodeId);
+        }
+
+        private void RegisterStoryProperties(Map10RuntimeStory story)
+        {
+            var values = new Dictionary<string, string>(StringComparer.Ordinal);
+            foreach (Map10RuntimeStoryNode node in story.nodes ?? Array.Empty<Map10RuntimeStoryNode>())
+            {
+                if (node == null || node.type != "RegisterStoryPropertyNode") continue;
+                StoryPropertyFields fields = JsonUtility.FromJson<StoryPropertyFields>(node.sourceJson);
+                foreach (StoryPropertyReference reference in fields?.references?.RefIds ?? Array.Empty<StoryPropertyReference>())
+                    if (reference?.data != null && !string.IsNullOrEmpty(reference.data.Name))
+                        values[reference.data.Name] = reference.data.Value ?? string.Empty;
+            }
+            storyProperties[story.key] = values;
         }
 
         private void RunStoryGraph(int nodeId)
@@ -161,6 +226,16 @@ namespace Zjcs.Presentation.World
                             SetStoryStatus(node.storyName, node.storyStatus);
                             nodeId = StoryNext(node, "Exit");
                             continue;
+                        case "SetTriggerNode":
+                            StoryTriggerFields setTrigger = JsonUtility.FromJson<StoryTriggerFields>(node.sourceJson);
+                            if (mapClassId != 13 || setTrigger == null || string.IsNullOrWhiteSpace(setTrigger.Key)
+                                || node.ports?.Any(port => port.name == "Key" && port.connections?.Length > 0) == true)
+                                throw new InvalidDataException("Unsupported official story trigger input in Map" + mapClassId + ".");
+                            if (!storyBlackboards.TryGetValue(activeStory.key, out HashSet<string> triggerKeys))
+                                storyBlackboards.Add(activeStory.key, triggerKeys = new HashSet<string>(StringComparer.Ordinal));
+                            OfficialStoryTriggerSet(triggerKeys, setTrigger.Key);
+                            nodeId = StoryNext(node, "Exit");
+                            continue;
                         case "GetFixAwardNode":
                             if (TryGrantFixedStoryReward(node.awardId, out string rewardNotice))
                             {
@@ -195,6 +270,41 @@ namespace Zjcs.Presentation.World
                             // used by EvaluateStoryValue for this node's ActiveCount output.
                             nodeId = StoryNext(node, "Exit");
                             continue;
+                        case "ClickMapPosInLogicNode":
+                            MapGridPoint clickTarget = ResolveStoryMapPosition(activeStory, node, "mTargetPos");
+                            if (CanStoryClickGrid(clickTarget)) navigation.ClickLogicalGrid(clickTarget);
+                            nodeId = StoryNext(node, "Exit");
+                            continue;
+                        case "WaitPlayerArriveMapPosAroundNode":
+                            MapGridPoint waitTarget = ResolveStoryMapPosition(activeStory, node, "mTargetPos");
+                            int waitDistance = OfficialStoryArrivalDistance(
+                                JsonUtility.FromJson<StoryMapPositionFields>(node.sourceJson).mDistance);
+                            StartCoroutine(ContinueStoryWhenPlayerArrives(waitTarget, waitDistance, StoryNext(node, "Exit")));
+                            return;
+                        case "EnterMapRegionConditionNode":
+                            StoryEnterRegionFields enterRegion = JsonUtility.FromJson<StoryEnterRegionFields>(node.sourceJson);
+                            if (enterRegion == null || enterRegion.MapClassId != mapClassId
+                                || enterRegion.RegionStatus != 0 || enterRegion.RegionId < -1)
+                                throw new InvalidDataException("Unsupported official story region-entry condition in Map" + mapClassId + ".");
+                            StartCoroutine(ContinueStoryWhenEnteringRegion(enterRegion,
+                                StoryNext(node, "Exit")));
+                            return;
+                        case "MapRegionLeaveConditionNode":
+                            StoryLeaveRegionFields leaveRegion = JsonUtility.FromJson<StoryLeaveRegionFields>(node.sourceJson);
+                            if (leaveRegion == null || leaveRegion.MapClassId != mapClassId
+                                || leaveRegion.RegionId < -1)
+                                throw new InvalidDataException("Unsupported official story region-leave condition in Map" + mapClassId + ".");
+                            StartCoroutine(ContinueStoryWhenLeavingRegion(leaveRegion,
+                                StoryNext(node, "Output")));
+                            return;
+                        case "WaitNearEntConditionNode":
+                            StoryNearEntityFields nearEntity = JsonUtility.FromJson<StoryNearEntityFields>(node.sourceJson);
+                            if (nearEntity == null || nearEntity.MapClassId != mapClassId
+                                || nearEntity.IsUseClassId != 1 || nearEntity.EntClassId <= 0)
+                                throw new InvalidDataException("Unsupported official story entity proximity condition in Map" + mapClassId + ".");
+                            StartCoroutine(ContinueStoryWhenNearEntity(nearEntity,
+                                StoryNext(node, "Output")));
+                            return;
                         case "HandInItemNode":
                             RunHandInItemNode(node);
                             return;
@@ -223,6 +333,10 @@ namespace Zjcs.Presentation.World
                                     .Distinct().OrderBy(value => value).ToArray();
                                 SaveLocalProgress();
                             }
+                            nodeId = StoryNext(node, "Exit");
+                            continue;
+                        case "SetMapLogicEntityInteractionRangeOverrideByCharacterNode":
+                            ApplyStoryInteractionRangeOverride(node);
                             nodeId = StoryNext(node, "Exit");
                             continue;
                         case "AddNpcFollowerNode":
@@ -382,10 +496,142 @@ namespace Zjcs.Presentation.World
             }
         }
 
+        private bool HasStoryInteractionRangeOverride(Map10RuntimeEntity entity, MapGridPoint point)
+        {
+            return entity != null && localSave?.interactionRangeOverrides != null
+                && localSave.interactionRangeOverrides.Any(value => value != null
+                    && value.mapClassId == mapClassId && value.logicId == entity.PlacementId
+                    && value.x == point.X && value.y == point.Y);
+        }
+
+        private void ApplyStoryInteractionRangeOverride(Map10RuntimeStoryNode node)
+        {
+            StoryInteractionRangeFields fields = JsonUtility.FromJson<StoryInteractionRangeFields>(node.sourceJson);
+            if (mapClassId != 13 || fields == null || fields.MapClassId != mapClassId
+                || fields.LoEntityId <= 0 || string.IsNullOrWhiteSpace(fields.LoEntityTag))
+                throw new InvalidDataException("Unsupported official interaction-range override in Map" + mapClassId + ".");
+            int logicId = mapLogicTags.Values.FirstOrDefault(value => value.MapClass == mapClassId
+                && value.Tag == fields.LoEntityTag)?.LogicId ?? fields.LoEntityId;
+            if (logicId <= 0) throw new InvalidDataException("Official interaction-range override target is missing.");
+            localSave.interactionRangeOverrides ??= Array.Empty<Map10RuntimeInteractionRangeOverride>();
+            if (fields.IsRevert != 0)
+            {
+                localSave.interactionRangeOverrides = localSave.interactionRangeOverrides
+                    .Where(value => value == null || value.logicId != logicId).ToArray();
+            }
+            else
+            {
+                MapGridPoint point = navigation.currentGrid;
+                if (!localSave.interactionRangeOverrides.Any(value => value != null && value.logicId == logicId
+                    && value.x == point.X && value.y == point.Y))
+                    localSave.interactionRangeOverrides = localSave.interactionRangeOverrides
+                        .Concat(new[] { new Map10RuntimeInteractionRangeOverride
+                        { mapClassId = mapClassId, logicId = logicId, x = point.X, y = point.Y } }).ToArray();
+            }
+            SaveLocalProgress();
+        }
+
         private IEnumerator ContinueStoryAfterDelay(float seconds, int nextNodeId)
         {
             if (seconds > 0f) yield return new WaitForSecondsRealtime(seconds);
             if (storyRunning) RunStoryGraph(nextNodeId);
+        }
+
+        private IEnumerator ContinueStoryWhenPlayerArrives(MapGridPoint target, int distance, int nextNodeId)
+        {
+            storyWaitingForArrival = true;
+            try
+            {
+                while (storyRunning && OfficialStoryManhattanDistance(navigation.currentGrid, target) > distance)
+                    yield return null;
+                storyWaitingForArrival = false;
+                if (storyRunning) RunStoryGraph(nextNodeId);
+            }
+            finally { storyWaitingForArrival = false; }
+        }
+
+        private IEnumerator ContinueStoryWhenEnteringRegion(StoryEnterRegionFields condition, int nextNodeId)
+        {
+            storyWaitingForArrival = true;
+            try
+            {
+                MapGridPoint previous = navigation.currentGrid;
+                int previousRegion = QueryMap13StoryRegion(previous);
+                if (condition.OnlyCheckMove == 0 && (condition.RegionId == -1 || previousRegion == condition.RegionId))
+                {
+                    if (storyRunning) RunStoryGraph(nextNodeId);
+                    yield break;
+                }
+
+                while (storyRunning)
+                {
+                    MapGridPoint current = navigation.currentGrid;
+                    if (!current.Equals(previous))
+                    {
+                        int currentRegion = QueryMap13StoryRegion(current);
+                        if (OfficialStoryEnteredMapRegion(previousRegion, currentRegion, condition.RegionId,
+                                condition.OnlyCheckMove != 0)) break;
+                        previous = current;
+                        previousRegion = currentRegion;
+                    }
+                    yield return null;
+                }
+                storyWaitingForArrival = false;
+                if (storyRunning) RunStoryGraph(nextNodeId);
+            }
+            finally { storyWaitingForArrival = false; }
+        }
+
+        private IEnumerator ContinueStoryWhenLeavingRegion(StoryLeaveRegionFields condition, int nextNodeId)
+        {
+            storyWaitingForArrival = true;
+            try
+            {
+                MapGridPoint previous = navigation.currentGrid;
+                int previousRegion = QueryMap13StoryRegion(previous);
+                while (storyRunning)
+                {
+                    MapGridPoint current = navigation.currentGrid;
+                    if (!current.Equals(previous))
+                    {
+                        int currentRegion = QueryMap13StoryRegion(current);
+                        if (OfficialStoryLeftMapRegion(previousRegion, currentRegion, condition.RegionId)) break;
+                        previous = current;
+                        previousRegion = currentRegion;
+                    }
+                    yield return null;
+                }
+                storyWaitingForArrival = false;
+                if (storyRunning) RunStoryGraph(nextNodeId);
+            }
+            finally { storyWaitingForArrival = false; }
+        }
+
+        private IEnumerator ContinueStoryWhenNearEntity(StoryNearEntityFields condition, int nextNodeId)
+        {
+            storyWaitingForArrival = true;
+            try
+            {
+                while (storyRunning && !mapEntities.Values.Any(entity => entity.Active
+                    && entity.EntityClassId == condition.EntClassId
+                    && !localSave.completedEntityPlacements.Contains(entity.PlacementId)
+                    && !IsMapLogicEntityDestroyed(entity.PlacementId)
+                    && OfficialStoryNearEntity(navigation.currentGrid.X, navigation.currentGrid.Y,
+                        entity.Grid.X, entity.Grid.Y, condition.Dist)))
+                    yield return null;
+                storyWaitingForArrival = false;
+                if (storyRunning) RunStoryGraph(nextNodeId);
+            }
+            finally { storyWaitingForArrival = false; }
+        }
+
+        private int QueryMap13StoryRegion(MapGridPoint position)
+        {
+            if (session == null || !OfficialMapNavigationView.TryGetCell(session.Definition.Navigation,
+                    position.X, position.Y, out int area, out int ground)) return -1;
+            foreach (KeyValuePair<int, OfficialMainlineRegionConfig> region in regions.regionConfigs)
+                if (region.Value.Areas.Contains(area)) return region.Key;
+            return -1;
         }
 
         private IEnumerator MoveStoryEntity(GameObject entity, int destinationX, int destinationY,
@@ -463,12 +709,18 @@ namespace Zjcs.Presentation.World
             map13FollowerObjects.Clear();
             if (avatar == null || entityRoot == null || progressionSave?.Save?.Player?.NpcFollowerClassIds == null) return;
             int index = 0;
+            var playerSorting = avatar.GetComponent<UnityEngine.Rendering.SortingGroup>();
             foreach (int classId in progressionSave.Save.Player.NpcFollowerClassIds)
             {
-                GameObject follower = Instantiate(avatar, entityRoot, false);
-                follower.name = "Map13Follower_" + classId;
-                follower.transform.position = avatar.transform.position + new Vector3(-0.8f - index * 0.45f, -0.55f, 0.01f + index * 0.001f);
-                follower.SetActive(true);
+                var follower = new GameObject("Map13Follower_" + classId);
+                follower.transform.SetParent(entityRoot, false);
+                var sorting = follower.AddComponent<UnityEngine.Rendering.SortingGroup>();
+                sorting.sortingLayerID = playerSorting == null ? SortingLayer.NameToID("Object") : playerSorting.sortingLayerID;
+                sorting.sortingOrder = (playerSorting == null ? 0 : playerSorting.sortingOrder) + index + 1;
+                follower.AddComponent<OfficialMap13NpcFollowerView>().Initialize(classId,
+                    sorting.sortingLayerID, 0);
+                follower.transform.position = avatar.transform.position + follower.GetComponent<OfficialMap13NpcFollowerView>().ModelOffset
+                    + new Vector3(-0.8f - index * 0.45f, 0f, 0.01f + index * 0.001f);
                 map13FollowerObjects[classId] = follower;
                 index++;
             }
@@ -481,7 +733,8 @@ namespace Zjcs.Presentation.World
             foreach (int classId in progressionSave?.Save?.Player?.NpcFollowerClassIds ?? new System.Collections.Generic.List<int>())
             {
                 if (!map13FollowerObjects.TryGetValue(classId, out GameObject follower) || follower == null) continue;
-                Vector3 target = avatar.transform.position + new Vector3(-0.8f - index * 0.45f, -0.55f, 0.01f + index * 0.001f);
+                Vector3 target = avatar.transform.position + follower.GetComponent<OfficialMap13NpcFollowerView>().ModelOffset
+                    + new Vector3(-0.8f - index * 0.45f, 0f, 0.01f + index * 0.001f);
                 follower.transform.position = Vector3.MoveTowards(follower.transform.position, target, 5f * Time.deltaTime);
                 index++;
             }

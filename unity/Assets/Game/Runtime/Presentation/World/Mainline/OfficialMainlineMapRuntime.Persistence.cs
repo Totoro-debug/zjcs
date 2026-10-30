@@ -46,6 +46,7 @@ namespace Zjcs.Presentation.World
             localSave.nativeDialogAwardReceipts ??= Array.Empty<string>();
             localSave.battleResults ??= Array.Empty<Map10RuntimeBattleResult>();
             localSave.aloneWorldClassIds ??= Array.Empty<int>();
+            localSave.interactionRangeOverrides ??= Array.Empty<Map10RuntimeInteractionRangeOverride>();
             RecoverMap12ChestCompletions();
             RecoverMap12SteleCompletions();
         }
