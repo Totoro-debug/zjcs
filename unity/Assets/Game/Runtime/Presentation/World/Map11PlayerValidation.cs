@@ -4,7 +4,6 @@ using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -140,16 +139,13 @@ namespace Zjcs.Presentation.World
                     button.gameObject.activeInHierarchy && button.gameObject.name.StartsWith("CloseObj", StringComparison.Ordinal));
                 Require(close != null, "Player original result close button exists");
                 bool closeRaycastClear = ClickBlankArea(close);
+                Require(closeRaycastClear, "Player result closed by a raycast-confirmed screen-coordinate pointer click");
                 yield return new WaitForSecondsRealtime(1);
                 Require(FindObjectOfType<OfficialLostGoddessResultPopup>() == null, "Player result closed through UGUI pointer input");
                 OfflineMainlineProgressSession cold = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
                 OfflineExploreEntity restored = cold.Save.World.Exploration.Entities.Single(value => value.Serial == serial);
                 Require(restored.Completed && restored.LostGoddessAward != null, "Player cold save retained reward and completion");
-                WriteResult(true,
-                    closeRaycastClear
-                        ? "Player loaded Map11, collected generated entity 8364, closed the original result window through a raycast-confirmed pointer click, and cold-loaded the persisted award."
-                        : "Player loaded Map11, collected generated entity 8364, closed the original result window through a simulated UGUI pointer event, and cold-loaded the persisted award. Screen raycasts were intercepted by official result content (ViewPort/BgImg).",
-                    closeRaycastClear);
+                WriteResult(true, "Player loaded Map11, collected generated entity 8364, closed the original result window through a raycast-confirmed pointer click, and cold-loaded the persisted award.", closeRaycastClear);
                 Application.Quit(0);
         }
 
@@ -187,7 +183,6 @@ namespace Zjcs.Presentation.World
             var raycaster = EventSystem.current;
             Require(raycaster != null, "Player result has an EventSystem");
             var hits = new System.Collections.Generic.List<RaycastResult>();
-            var blockers = new StringBuilder();
             for (int y = 8; y < Screen.height - 8; y += 24)
             for (int x = 8; x < Screen.width - 8; x += 24)
             {
@@ -198,8 +193,6 @@ namespace Zjcs.Presentation.World
                 if (hits.Count == 0 || (hits[0].gameObject != button.gameObject
                     && !hits[0].gameObject.transform.IsChildOf(button.transform)))
                 {
-                    if (blockers.Length < 500 && hits.Count > 0)
-                        blockers.Append('[').Append(x).Append(',').Append(y).Append("] ").Append(hits[0].gameObject.name).Append("; ");
                     continue;
                 }
                 ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerDownHandler);
@@ -207,15 +200,6 @@ namespace Zjcs.Presentation.World
                 ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerClickHandler);
                 return true;
             }
-            var fallback = new PointerEventData(raycaster)
-            {
-                button = PointerEventData.InputButton.Left,
-                position = RectTransformUtility.WorldToScreenPoint(null, button.transform.position)
-            };
-            ExecuteEvents.Execute(button.gameObject, fallback, ExecuteEvents.pointerDownHandler);
-            ExecuteEvents.Execute(button.gameObject, fallback, ExecuteEvents.pointerUpHandler);
-            ExecuteEvents.Execute(button.gameObject, fallback, ExecuteEvents.pointerClickHandler);
-            Debug.LogWarning("Map11 Player UI raycast is obstructed; sent the click to the original close Button. " + blockers);
             return false;
         }
 

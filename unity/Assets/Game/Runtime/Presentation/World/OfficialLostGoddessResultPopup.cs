@@ -45,6 +45,10 @@ namespace Zjcs.Presentation.World
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1080, 1920);
             scaler.matchWidthOrHeight = .5f;
+            RectTransform canvasRect = canvas.GetComponent<RectTransform>();
+            canvasRect.anchorMin = Vector2.zero;
+            canvasRect.anchorMax = Vector2.one;
+            canvasRect.offsetMin = canvasRect.offsetMax = Vector2.zero;
 
             GameObject root = Instantiate(prefab, canvas.transform, false);
             root.name = key;
