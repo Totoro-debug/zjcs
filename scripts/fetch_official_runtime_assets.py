@@ -128,7 +128,11 @@ def main():
         resource_version = args.verify_cache
         if not re.fullmatch(r'[0-9]+', resource_version):
             raise ValueError('Invalid cached resource version')
-        destination = CACHE / 'cloud/runtime' / resource_version
+        source = OfficialSource()
+        if resource_version != source.profile['resource_version']:
+            raise ValueError('Only the selected official resource version may be verified: ' +
+                             source.profile['resource_version'])
+        destination = source.cloud_path
         recorded = json.loads((destination / 'inventory.json').read_text(encoding='utf-8'))
         raw = (destination / 'server-config.json').read_bytes()
         if (recorded['resource_version'] != resource_version or recorded['apk_sha256'] != SHA256 or
