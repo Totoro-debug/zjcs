@@ -165,51 +165,55 @@ namespace Zjcs.Presentation.World
                 Destroy(canvas);
                 yield break;
             }
-            File.WriteAllText(Path.Combine(slots.GetSlotDirectory(slot), "map-10-save.json"),
-                JsonUtility.ToJson(new Map10LocalSave { slotId = slot, completedStories = new[] { "FirstEnterMap", "FirstBattle" } }));
-
-            foreach (int id in new[] { 10, 11 })
+            bool map15Only = Environment.GetCommandLineArgs().Contains("-verify-map15-only");
+            if (!map15Only)
             {
-                Open(id, canvas.transform);
-                yield return new WaitForSecondsRealtime(1);
-                var session = Field<OfficialWorldMapSession>("session");
-                var policy = new OfficialMainlineRegionPolicy(session.Definition, OfficialMainlineMapProfile.Get(id));
-                var points = new Dictionary<int, int>();
-                var gate = policy.regionConfigs.Values.First(value => value.AccessibleConditionId == (id == 10 ? 1201 : 1205));
-                Require(!policy.IsAccessible(gate.Region, points, _ => 0), "Incomplete source region remains locked");
-                points[0] = policy.regionPointLimits[0];
-                Require(policy.IsAccessible(gate.Region, points, _ => 0), "Source region at 100% opens its dependent region");
-                if (id == 11)
+                File.WriteAllText(Path.Combine(slots.GetSlotDirectory(slot), "map-10-save.json"),
+                    JsonUtility.ToJson(new Map10LocalSave { slotId = slot, completedStories = new[] { "FirstEnterMap", "FirstBattle" } }));
+
+                foreach (int id in new[] { 10, 11 })
                 {
-                    var storyGate = policy.regionConfigs.Values.First(value => value.AccessibleConditionId == 4003);
-                    Require(!policy.IsAccessible(storyGate.Region, points, _ => 0)
-                        && policy.IsAccessible(storyGate.Region, points, key => key == "SenSenThanks" ? 1 : 0), "Story gate follows the pinned story count");
+                    Open(id, canvas.transform);
+                    yield return new WaitForSecondsRealtime(1);
+                    var session = Field<OfficialWorldMapSession>("session");
+                    var policy = new OfficialMainlineRegionPolicy(session.Definition, OfficialMainlineMapProfile.Get(id));
+                    var points = new Dictionary<int, int>();
+                    var gate = policy.regionConfigs.Values.First(value => value.AccessibleConditionId == (id == 10 ? 1201 : 1205));
+                    Require(!policy.IsAccessible(gate.Region, points, _ => 0), "Incomplete source region remains locked");
+                    points[0] = policy.regionPointLimits[0];
+                    Require(policy.IsAccessible(gate.Region, points, _ => 0), "Source region at 100% opens its dependent region");
+                    if (id == 11)
+                    {
+                        var storyGate = policy.regionConfigs.Values.First(value => value.AccessibleConditionId == 4003);
+                        Require(!policy.IsAccessible(storyGate.Region, points, _ => 0)
+                            && policy.IsAccessible(storyGate.Region, points, key => key == "SenSenThanks" ? 1 : 0), "Story gate follows the pinned story count");
+                    }
+                    Require(Field<OfficialWorldUiRenderer>("ui").Find("WorldCanvas", "/WorldCanvas").activeInHierarchy, "Map HUD mounted");
+                    yield return VerifyPointerMovement(session);
+                    yield return Capture("map-" + id + "-hud");
+                    if (id == 11)
+                    {
+                        yield return VerifyNativeUi();
+                        yield return VerifyHeroStatues();
+                        yield return VerifyStaminaGathering();
+                        yield return VerifyExploration();
+                    }
+                    MapGridPoint position = Field<MapGridPoint>("currentGrid");
+                    Invoke("SaveLocalProgress");
+                    Destroy(runtime.gameObject);
+                    yield return null;
+                    Open(id, canvas.transform);
+                    Require(Field<MapGridPoint>("currentGrid").Equals(position), "Map position survives a cold runtime reload");
+                    if (id == 11)
+                    {
+                        Require(Field<OfflineMainlineProgressSession>("progressionSave").Save.World.ActivatedGoddessRegions.Count == 3,
+                            "Goddess activation survives a cold reload");
+                        Require(Field<OfficialMainlineRegionFog>("regionFog").VisibleShadowCount == 70,
+                            "Cold map entry keeps all three public region shadows cleared");
+                    }
+                    Destroy(runtime.gameObject);
+                    yield return null;
                 }
-                Require(Field<OfficialWorldUiRenderer>("ui").Find("WorldCanvas", "/WorldCanvas").activeInHierarchy, "Map HUD mounted");
-                yield return VerifyPointerMovement(session);
-                yield return Capture("map-" + id + "-hud");
-                if (id == 11)
-                {
-                    yield return VerifyNativeUi();
-                    yield return VerifyHeroStatues();
-                    yield return VerifyStaminaGathering();
-                    yield return VerifyExploration();
-                }
-                MapGridPoint position = Field<MapGridPoint>("currentGrid");
-                Invoke("SaveLocalProgress");
-                Destroy(runtime.gameObject);
-                yield return null;
-                Open(id, canvas.transform);
-                Require(Field<MapGridPoint>("currentGrid").Equals(position), "Map position survives a cold runtime reload");
-                if (id == 11)
-                {
-                    Require(Field<OfflineMainlineProgressSession>("progressionSave").Save.World.ActivatedGoddessRegions.Count == 3,
-                        "Goddess activation survives a cold reload");
-                    Require(Field<OfficialMainlineRegionFog>("regionFog").VisibleShadowCount == 70,
-                        "Cold map entry keeps all three public region shadows cleared");
-                }
-                Destroy(runtime.gameObject);
-                yield return null;
             }
             progress = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
             Require(progress.SetPlayerProgress(save.Player.Level, 5, save.Player.SubRank,
