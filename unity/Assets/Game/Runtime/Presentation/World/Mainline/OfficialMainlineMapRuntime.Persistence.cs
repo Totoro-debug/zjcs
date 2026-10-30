@@ -47,6 +47,7 @@ namespace Zjcs.Presentation.World
             localSave.battleResults ??= Array.Empty<Map10RuntimeBattleResult>();
             localSave.aloneWorldClassIds ??= Array.Empty<int>();
             localSave.interactionRangeOverrides ??= Array.Empty<Map10RuntimeInteractionRangeOverride>();
+            localSave.map13WaterStates ??= Array.Empty<Map13WaterState>();
             RecoverMap12ChestCompletions();
             RecoverMap12SteleCompletions();
         }
@@ -58,6 +59,7 @@ namespace Zjcs.Presentation.World
             localSave.gridY = navigation.currentGrid.Y;
             if (puzzles != null) localSave.puzzleStates = puzzles.Save();
             SnapshotMap13Visibility();
+            if (map13NavigationSession != null) localSave.map13WaterStates = map13NavigationSession.Water.Save();
             LocalJsonSaveFile.Write(mapSavePath, JsonUtility.ToJson(localSave, true), ValidLocalSave);
         }
 
@@ -73,6 +75,12 @@ namespace Zjcs.Presentation.World
                 return parsed != null && parsed.schema == 1 && parsed.slotId == slotId
                     && parsed.gridX >= 0 && parsed.gridX < width && parsed.gridY >= 0 && parsed.gridY < height
                     && (mapClassId != 13 || ValidMap13Visibility(parsed.map13GridVisibility))
+                    && (mapClassId != 13 || parsed.map13WaterStates == null
+                        || parsed.map13WaterStates.All(value => value != null && value.PlacementId > 0
+                            && value.Grid.X >= 0 && value.Grid.X < 240 && value.Grid.Y >= 0 && value.Grid.Y < 240
+                            && value.State >= 0 && value.NextSegment >= 0 && value.GroundOperation >= -1)
+                        && parsed.map13WaterStates.Select(value => value.PlacementId).Distinct().Count()
+                            == parsed.map13WaterStates.Length)
                     && (parsed.completedStories == null || parsed.completedStories.All(value => value != null))
                     && (parsed.storyPlayCounts == null || parsed.storyPlayCounts.All(value => value != null
                         && !string.IsNullOrEmpty(value.key) && value.count >= 0))

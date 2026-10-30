@@ -656,6 +656,7 @@ namespace Zjcs.Presentation.World
         public int[] aloneWorldClassIds = Array.Empty<int>();
         public Map10RuntimeInteractionRangeOverride[] interactionRangeOverrides = Array.Empty<Map10RuntimeInteractionRangeOverride>();
         public string map13GridVisibility;
+        public Zjcs.Offline.World.Map13WaterState[] map13WaterStates = Array.Empty<Zjcs.Offline.World.Map13WaterState>();
     }
 
     [Serializable]

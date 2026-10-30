@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -10,6 +11,7 @@ using Zjcs.Official.World.Map13Navigation;
 using Zjcs.Official.World.NativeTerrain.Common;
 using Zjcs.Offline.World;
 using Zjcs.Offline.World.Map13Navigation;
+using Zjcs.Presentation.World;
 
 namespace Zjcs.Editor.Map13Navigation
 {
@@ -22,6 +24,14 @@ namespace Zjcs.Editor.Map13Navigation
         public static void Run()
         {
             OfficialMap13NavigationTools.RestoreAndValidate();
+            StartRuntimeAcceptance();
+        }
+        public static void RunRuntimeOnly()
+        {
+            StartRuntimeAcceptance();
+        }
+        private static void StartRuntimeAcceptance()
+        {
             SessionState.SetBool(Key, true);
             SessionState.SetInt(Key + ".result", 1);
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 180);
@@ -63,7 +73,7 @@ namespace Zjcs.Editor.Map13Navigation
                 VerifyOriginalAStar();
                 VerifyPackagedMap();
                 SessionState.SetInt(Key + ".result", 0);
-                Debug.Log("Map13 navigation Play Mode passed: original AStar branches, actual navigation and water masks, platform ground checks/rollback, carried paths and cold state reconstruction. Input/UI/mainline save integration remains pending.");
+                Debug.Log("Map13 navigation Play Mode passed: original AStar branches, actual navigation and water masks, platform ground checks/rollback, carried paths, map-save JSON roundtrip and cold state reconstruction. Input/UI interaction remains pending.");
             }
             catch (Exception error) { Debug.LogException(error); }
             EditorApplication.isPlaying = false;
@@ -105,6 +115,7 @@ namespace Zjcs.Editor.Map13Navigation
         {
             var assets = Map13NavigationAssets.LoadDefault();
             var session = assets.Open();
+            VerifyMapSaveRoundTrip(assets, session);
             var definition = session.Definition;
             Require(definition.Entities.Select(p => p.Id).Distinct().Count() == 2690
                 && definition.EntityComponents.Length == 2690 && definition.Configs.Length == 889
@@ -218,6 +229,28 @@ namespace Zjcs.Editor.Map13Navigation
             bool rejected = false; try { bad.Open(); } catch (System.IO.InvalidDataException) { rejected = true; }
             UnityEngine.Object.Destroy(bad);
             Require(rejected, "Changed navigation payload hash was silently accepted.");
+        }
+        private static void VerifyMapSaveRoundTrip(Map13NavigationAssets assets, OfflineMap13NavigationSession session)
+        {
+            Type saveType = typeof(OfficialMainlineMapRuntime).Assembly.GetType(
+                "Zjcs.Presentation.World.Map10LocalSave", true);
+            FieldInfo waterField = saveType.GetField("map13WaterStates");
+            Require(waterField != null, "Map13 water state is missing from the formal map save.");
+            object save = Activator.CreateInstance(saveType);
+            Map13WaterState[] source = session.Water.Save();
+            waterField.SetValue(save, source);
+            object coldSave = JsonUtility.FromJson(JsonUtility.ToJson(save), saveType);
+            Map13WaterState[] restored = (Map13WaterState[])waterField.GetValue(coldSave);
+            Require(restored != null && restored.Length == source.Length
+                && restored.Zip(source, (left, right) => left.PlacementId == right.PlacementId
+                    && left.State == right.State && left.Grid.Equals(right.Grid)
+                    && left.Spawned == right.Spawned && left.NextSegment == right.NextSegment
+                    && left.Returning == right.Returning && left.GroundOperation == right.GroundOperation).All(value => value),
+                "Map13 water state changed during formal map-save JSON serialization.");
+            OfflineMap13NavigationSession coldSession = assets.Open(restored);
+            Require(JsonUtility.ToJson(new Saved { States = coldSession.Water.Save() })
+                == JsonUtility.ToJson(new Saved { States = source }),
+                "Map13 cold navigation session changed persisted water state.");
         }
         private static void Require(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
     }

@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using Zjcs.Offline.Progression;
+using Zjcs.Offline.World.Map13Navigation;
 using Zjcs.Offline.World.NativeMap13GridVisibility;
 using Zjcs.Official.World.NativeMap13Labels;
 using Zjcs.Official.World.NativeTerrain.Common;
@@ -14,6 +15,7 @@ namespace Zjcs.Presentation.World
     {
         private OfficialMap13NativeWorldView nativeMap13World;
         private OfflineMap13GridVisibility map13GridVisibility;
+        private OfflineMap13NavigationSession map13NavigationSession;
         private OfflineMainlineSave nativeMap13ObservedSave;
         private sealed class Map13NativeState:IMap13NativeWorldState
         {
@@ -36,6 +38,7 @@ namespace Zjcs.Presentation.World
         {
             byte[] saved=string.IsNullOrEmpty(localSave.map13GridVisibility)?null:Convert.FromBase64String(localSave.map13GridVisibility);
             RestoreMap13Visibility(saved);
+            map13NavigationSession=Map13NavigationAssets.LoadDefault().Open(localSave.map13WaterStates);
             worldCamera.transform.position=new Vector3(avatar.transform.position.x,avatar.transform.position.y,map11WorldViewSource.cameraZ);
             foreach(Renderer renderer in avatar.GetComponentsInChildren<Renderer>(true))renderer.sortingLayerName="Object";
             nativeMap13World=OfficialMap13NativeWorldView.Create(mapRoot,worldCamera,new Map13NativeState(this));
@@ -87,6 +90,7 @@ namespace Zjcs.Presentation.World
             map13StoryPlayableScope?.Dispose();map13StoryPlayableScope=null;
             nativeMap13World?.Dispose();nativeMap13World=null;
             map13GridVisibility?.Dispose();map13GridVisibility=null;
+            map13NavigationSession=null;
         }
     }
 }
