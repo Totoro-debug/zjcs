@@ -116,6 +116,7 @@ namespace Zjcs.Editor.Map13Navigation
             var assets = Map13NavigationAssets.LoadDefault();
             var session = assets.Open();
             VerifyMapSaveRoundTrip(assets, session);
+            VerifyTerminalRoadOperations(session, JsonUtility.FromJson<Map13WaterDefinition>(assets.WaterJson.text));
             var definition = session.Definition;
             Require(definition.Entities.Select(p => p.Id).Distinct().Count() == 2690
                 && definition.EntityComponents.Length == 2690 && definition.Configs.Length == 889
@@ -251,6 +252,31 @@ namespace Zjcs.Editor.Map13Navigation
             Require(JsonUtility.ToJson(new Saved { States = coldSession.Water.Save() })
                 == JsonUtility.ToJson(new Saved { States = source }),
                 "Map13 cold navigation session changed persisted water state.");
+        }
+        private static void VerifyTerminalRoadOperations(OfflineMap13NavigationSession session, Map13WaterDefinition definition)
+        {
+            foreach (Map13WaterTerminal terminal in definition.Terminals)
+            {
+                session = new OfflineMap13NavigationSession(session.Definition, definition,
+                    JsonUtility.FromJson<Map13NavigationAssets.MoverData>(Map13NavigationAssets.LoadDefault().MoversJson.text));
+                Dictionary<int, Map13WaterState> before = session.Water.Save().ToDictionary(value => value.PlacementId);
+                session.Water.OpenPaidTerminalRoads(terminal.PlacementId);
+                foreach (int id in terminal.ExtendRoadLoEntityIds)
+                    Require(session.Water.State(id).Spawned, "Paid terminal did not open its configured road entity: " + terminal.PlacementId + "/" + id);
+                session.Water.ResetTerminal(terminal.PlacementId);
+                foreach (int id in terminal.NeedResetLoEntityIds)
+                {
+                    Map13WaterState reset = session.Water.State(id);
+                    Map13WaterRule rule = definition.Rules.Single(value => value.PlacementId == id);
+                    Require(reset.Grid.Equals(rule.OriginalGrid) && reset.Spawned == rule.InitiallySpawned
+                        && reset.State == rule.InitialState && reset.NextSegment == 0 && !reset.Returning
+                        && reset.GroundOperation == before[id].GroundOperation,
+                        "Terminal reset did not restore configured initial water state: " + terminal.PlacementId + "/" + id);
+                }
+                foreach (int id in terminal.ExtendRoadLoEntityIds.Except(terminal.NeedResetLoEntityIds))
+                    Require(session.Water.State(id).Spawned, "Terminal reset closed a road outside its reset list: " + terminal.PlacementId + "/" + id);
+                Require(before.Count == session.Water.Save().Length, "Terminal operation changed the water state set.");
+            }
         }
         private static void Require(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
     }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using Zjcs.Offline.World;
+using Zjcs.Offline.World.Map13Navigation;
 using Zjcs.Official.World;
 using Zjcs.Offline.Progression;
 
@@ -78,6 +79,7 @@ namespace Zjcs.Presentation.World
                 return SavePuzzleMutation(() =>
                 {
                     puzzles.RunStage(id, 1);
+                    if (mapClassId == 13) map13NavigationSession.Water.ResetTerminal(id);
                     SynchronizePuzzleEntities();
                     if (mapClassId == 12) MoveBesidePuzzleTerminal(id);
                 });
@@ -136,7 +138,10 @@ namespace Zjcs.Presentation.World
                 || string.IsNullOrWhiteSpace(operation.inventoryReceipt))
                 throw new InvalidDataException("The saved puzzle operation is invalid.");
             if (progressionSave.Save.Player.AppliedInventoryEventIds.Contains(operation.inventoryReceipt))
+            {
                 puzzles.RunStage(operation.placementId, operation.subStateIndex);
+                if (mapClassId == 13) map13NavigationSession.Water.OpenPaidTerminalRoads(operation.placementId);
+            }
             localSave.pendingPuzzleOperation = null;
             localSave.hasPendingPuzzleOperation = false;
             SynchronizePuzzleEntities();
@@ -181,6 +186,7 @@ namespace Zjcs.Presentation.World
         {
             string before = JsonUtility.ToJson(localSave);
             MapPuzzleEntityState[] states = puzzles.Save();
+            Map13WaterState[] waterStates = map13NavigationSession?.Water.Save();
             MapGridPoint player = navigation.currentGrid;
             byte[] map13VisibilityBefore = map13GridVisibility?.Snapshot();
             bool progressPendingBefore = puzzleRegionProgressPending;
@@ -190,6 +196,8 @@ namespace Zjcs.Presentation.World
             {
                 localSave = JsonUtility.FromJson<Map10LocalSave>(before);
                 CreatePuzzleSession(states);
+                if (waterStates != null)
+                    map13NavigationSession = Map13NavigationAssets.LoadDefault().Open(waterStates);
                 navigation.SetAvatarPosition(player);
                 if (map13VisibilityBefore != null) RestoreMap13Visibility(map13VisibilityBefore);
                 SynchronizePuzzleEntities();

@@ -18,6 +18,7 @@ namespace Zjcs.Offline.World
         private Dictionary<int, Map13WaterState> states;
         private readonly List<Map13WaterMovement> movements = new List<Map13WaterMovement>();
         public IReadOnlyList<Map13WaterMovement> Movements => movements;
+        public IEnumerable<int> PlacementIds => rules.Keys;
 
         public OfflineMap13WaterSession(Map13WaterDefinition definition, Map13WaterState[] saved = null)
         {
@@ -138,17 +139,22 @@ namespace Zjcs.Offline.World
         // Neither terminal operation claims or clears any reward record.
         public void OpenPaidTerminalRoads(int terminalId)
         {
-            foreach (int id in terminals[terminalId].ExtendRoadLoEntityIds) states[id].Spawned = true;
+            if (!terminals.TryGetValue(terminalId, out Map13WaterTerminal terminal))
+                throw new ArgumentOutOfRangeException(nameof(terminalId));
+            foreach (int id in terminal.ExtendRoadLoEntityIds) states[id].Spawned = true;
         }
 
         public void ResetTerminal(int terminalId)
         {
+            if (!terminals.TryGetValue(terminalId, out Map13WaterTerminal terminal))
+                throw new ArgumentOutOfRangeException(nameof(terminalId));
             movements.Clear();
-            foreach (int id in terminals[terminalId].NeedResetLoEntityIds)
+            foreach (int id in terminal.NeedResetLoEntityIds)
             {
                 Map13WaterRule rule = rules[id];
                 Map13WaterState value = states[id];
                 value.Grid = rule.OriginalGrid;
+                value.Spawned = rule.InitiallySpawned;
                 value.NextSegment = 0;
                 value.Returning = false;
                 value.State = rule.InitialState;

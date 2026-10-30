@@ -68,12 +68,14 @@ foreach ($terminal in $definition.Terminals) {
     foreach ($id in $terminal.NeedResetLoEntityIds) {
         $rule = $definition.Rules | Where-Object PlacementId -eq $id
         $value = $session.State($id)
-        Assert-Water ($value.State -eq $rule.InitialState -and $value.Grid.Equals($rule.OriginalGrid)) 'A reset did not restore the configured original entity state/position.'
+        Assert-Water ($value.State -eq $rule.InitialState -and $value.Grid.Equals($rule.OriginalGrid) -and $value.Spawned -eq $rule.InitiallySpawned) 'A reset did not restore the configured original entity state/position/spawn state.'
         $fresh = [Zjcs.Offline.World.OfflineMap13WaterSession]::new($definition)
         Assert-Water ($value.GroundOperation -eq $fresh.State($id).GroundOperation) 'A reset left a ground override from the previous water state.'
     }
     $session = Cold-Load $session
-    foreach ($id in $terminal.ExtendRoadLoEntityIds) { Assert-Water ($session.State($id).Spawned) 'Reset or cold load removed a previously paid extension road.' }
+    foreach ($id in $terminal.ExtendRoadLoEntityIds | Where-Object { $_ -notin $terminal.NeedResetLoEntityIds }) {
+        Assert-Water ($session.State($id).Spawned) 'Reset or cold load removed a previously paid extension road outside the reset list.'
+    }
 }
 
 # 5328's original DataList intentionally contains 5324 twice. Preserve its bytes

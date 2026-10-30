@@ -220,12 +220,23 @@ namespace Zjcs.Presentation.World
                     && progressionSave.Save.World.ActivatedGoddessRegions.Any(value =>
                     value.MapClassId == mapClassId && value.Region == entity.Region);
                 int state = entity.State;
+                Map13WaterState waterState = mapClassId == 13 && map13NavigationSession != null
+                    && map13NavigationSession.Water.PlacementIds.Contains(entity.PlacementId)
+                    ? map13NavigationSession.Water.State(entity.PlacementId) : null;
+                if (waterState != null)
+                {
+                    entity.Grid = waterState.Grid;
+                    state = waterState.State;
+                    entity.Active = waterState.Spawned;
+                    entityView.SetEntityGrid(entity.PlacementId, waterState.Grid);
+                }
                 if (mapLogicTags.TryGetValue(entity.PlacementId, out Map10RuntimeLogicTag tag))
                     state = localSave.mapLogicStates.FirstOrDefault(value => value != null && value.Tag == tag.Tag)?.State ?? state;
                 if (goddessActivated) state = 1;
                 if (entity.TypeId == 223) state = regions.IsPublicRegion(entity.Region) ? 2 : statues.HeroActivated(entity) ? 1 : 0;
                 entityView.SetEntityState(entity.PlacementId, state);
-                bool spawned = IsPuzzleEntity(entity.PlacementId) ? puzzles.IsSpawned(entity.PlacementId) : entity.Active;
+                bool spawned = waterState != null ? waterState.Spawned
+                    : IsPuzzleEntity(entity.PlacementId) ? puzzles.IsSpawned(entity.PlacementId) : entity.Active;
                 if (OfficialMainlineStaminaModule.IsStaminaPoint(entity))
                 {
                     var placement = stamina.StaminaPlacement(entity);
