@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zjcs.Offline.Progression;
+using Zjcs.Offline.Skills;
 using Zjcs.Official.WorldUI;
 
 namespace Zjcs.Presentation.World
@@ -78,12 +80,12 @@ namespace Zjcs.Presentation.World
                     text("lostGoddess_SkillRank_title"));
                 SetText(transformRoot, "Content/MiddleGo/Props/AniSkill/UpgradeResult/UpgradeRank/SkillStarInfo/StarNum/Star/Count",
                     award.TargetRank.ToString(CultureInfo.InvariantCulture));
-                SetText(transformRoot, "Content/MiddleGo/Props/AniSkill/UpgradeResult/SkillSlot/SkillName",
-                    SkillName(progression, award.SkillId));
-                Sprite icon = null;
-                try { icon = OfficialCharacterAssetCatalog.LoadDefault().FindSkillSkinSprite(progression.Catalog, award.SkillId); }
-                catch (Exception) { }
-                SetFirstImage(transformRoot, "Content/MiddleGo/Props/AniSkill/UpgradeResult/SkillSlot", icon);
+                OfficialCharacterAssetCatalog assets = OfficialCharacterAssetCatalog.LoadDefault();
+                OfflineSkillRules skillRules = assets.LoadSkillRules();
+                BindSkillIcon(transformRoot, "Content/MiddleGo/Props/AniSkill/UpgradeResultOld/SkillSlot",
+                    award, award.SourceRank, assets, skillRules);
+                BindSkillIcon(transformRoot, "Content/MiddleGo/Props/AniSkill/UpgradeResult/SkillSlot",
+                    award, award.TargetRank, assets, skillRules);
                 SetActive(transformRoot, "Content/MiddleGo/Props/AniSkill/UpgradeResultOld", false);
                 SetActive(transformRoot, "Content/MiddleGo/Props/AniSkill/UpgradeResult", true);
             }
@@ -143,11 +145,37 @@ namespace Zjcs.Presentation.World
             if (canvasObject != null) Destroy(canvasObject);
         }
 
-        private static string SkillName(OfflineCharacterProgressionService progression, int skillId)
+        private static void BindSkillIcon(Transform root, string path, OfflineExploreLostGoddessAward award,
+            int rank, OfficialCharacterAssetCatalog assets, OfflineSkillRules skillRules)
         {
-            Dictionary<string, object> item = progression.Catalog.FindItem(skillId);
-            return item != null && item.TryGetValue("Name", out object value)
-                ? Convert.ToString(value, CultureInfo.InvariantCulture) : skillId.ToString(CultureInfo.InvariantCulture);
+            Transform slot = Find(root, path);
+            GameObject prefab = Resources.Load<GameObject>("Map11/UI/ItemIconSkill");
+            if (slot == null || prefab == null)
+                throw new InvalidOperationException("Official lost goddess skill icon slot binding is missing: " + path);
+
+            GameObject iconRoot = Instantiate(prefab, slot, false);
+            iconRoot.name = "ItemIconSkill";
+            Image icon = iconRoot.transform.Find("Content/mask/icon")?.GetComponent<Image>();
+            Image quality = iconRoot.transform.Find("Content/QualityImg")?.GetComponent<Image>();
+            MonoBehaviour stars = iconRoot.GetComponentsInChildren<MonoBehaviour>(true)
+                .FirstOrDefault(value => value.GetType().Name == "StarMiniInfo");
+            Sprite skillSprite = assets.FindSkillSkinSprite(assets.Load(), award.SkillId);
+            OfflineSkillRankDisplay display = skillRules.RankDisplays.FirstOrDefault(value => value.Rank == rank);
+            if (icon == null || quality == null || stars == null || skillSprite == null || display == null)
+                throw new InvalidOperationException("Official lost goddess skill rank icon data is incomplete for rank "
+                    + rank.ToString(CultureInfo.InvariantCulture) + ".");
+
+            icon.sprite = skillSprite;
+            quality.sprite = assets.FindQualityBackgroundSprite(display.Quality);
+            MethodInfo show = stars.GetType().GetMethod("Show", BindingFlags.Instance | BindingFlags.Public);
+            ParameterInfo[] parameters = show?.GetParameters();
+            OfflineSkillRankDisplay[] sameQuality = skillRules.RankDisplays
+                .Where(value => value.Quality == display.Quality).ToArray();
+            if (parameters == null || parameters.Length != 4 || sameQuality.Length == 0)
+                throw new InvalidOperationException("Official skill star display binding is incomplete.");
+            object qualityValue = Enum.ToObject(parameters[2].ParameterType, display.Quality);
+            show.Invoke(stars, new object[] { display.RankAddition,
+                sameQuality.Max(value => value.RankAddition), qualityValue, true });
         }
 
         private static Transform Find(Transform root, string path) => root.Find(path);
@@ -166,11 +194,5 @@ namespace Zjcs.Presentation.World
             if (node != null) node.gameObject.SetActive(active);
         }
 
-        private static void SetFirstImage(Transform root, string path, Sprite sprite)
-        {
-            if (sprite == null) return;
-            Image image = Find(root, path)?.GetComponentsInChildren<Image>(true).FirstOrDefault();
-            if (image != null) image.sprite = sprite;
-        }
     }
 }

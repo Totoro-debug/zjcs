@@ -62,9 +62,9 @@ Map_Action_PeachExplore_1／2／3沿原map_sfx_01的Wwise Event→Action→Sound
 
 ## 尚未实现
 
-- 补齐所有原图标附件、奖励粒子与道具详情交互；遗失女神三类结果窗已接入，剩余粒子、泛光、音效及完整道具详情仍待补齐。
+- 补齐所有原图标附件、奖励粒子与道具详情交互；遗失女神三类结果窗已接入，剩余粒子、泛光、音效及完整道具详情仍待补齐。技能升阶结果现绑定官方 `ItemIconSkill` prefab 的来源／目标技能图标、品质底框及星级；该新增显示尚待实际 Player 画面复验。
 - 完成生成实体的地图显示、碰撞／寻路与小地图绑定，以及宝箱、战斗、副本、商店和活动实体的完整交互。部分模型仍出现白片、黑块，原材质／UV绑定须修复；动态物体的剧情标签闭包仍待补齐，现有静态剧情登记校验不再误拒绝冷启动后的探寻实体。
-- 恢复原动作、MyPlayable、粒子及音效，完成其他奖励类型的正常交互、画面与存档恢复，并构建、运行和发布正式 Windows Player。
+- 恢复原动作、MyPlayable、粒子及音效；复验技能升阶结果的来源／目标图标和三种奖励类型的画面、交互及存档恢复；再构建、运行和发布正式 Windows Player。
 
 ## 代码与资源入口
 
@@ -72,9 +72,9 @@ Map_Action_PeachExplore_1／2／3沿原map_sfx_01的Wwise Event→Action→Sound
 
 界面来源见 Map11 `UI/source-manifest.json`、`loop-scroll-source-manifest.json`、`popup-effects-source-manifest.json`；既有指针验证覆盖59份原面板、535张Sprite所绑定的探寻流程。地图入口为公共 `OfficialMainlineExplorationModule`，由 `Exploration`、`ExploreUi`、`ExploreDetail`、`ExploreMask` 四份实现分别管理实体、窗口、详情和遮罩；公共 UI 目录由 `OfficialMainlineUiCatalog` 提供。动态实体复用 `OfficialMap10EntityView` 与本地 Map11 Entities 资源；当前恢复116种模型，完整支持范围仍以下述未完成项为准。8364 遗失女神在 `OfficialMainlineExplorationModule.Exploration` 转入 `OfficialMainlineStatuesModule.CollectLostGoddess`，结果显示由 `OfficialLostGoddessResultPopup` 绑定三类官方 prefab。十连指针检查使用隔离档案及可容纳原生成序列的地图位置／随机夹具，实际费用、生成和保存仍由原 HUD 点击触发。
 
-遗失女神的来源准备另已提取原触碰窗、技能升阶／人物升级／永久属性结果窗、属性行和 `ItemIconSkill`，共享 UI 数据扩为65份原面板、945张Sprite及1,055条道具图标记录，其中新增394条原主动／被动技能。保留原35条技能阶位、`MapLostGoddessAwardDialogConfig`、星级品质图、属性行动画、组件引用和三类标题，并补录相关反编译代码哈希。Unity 导入器接受这批层级及图标基础绑定；`OfficialLostGoddessResultPopup` 依据本地事务结果绑定三类官方 prefab、技能名／图标、等级和属性行，并绑定原关闭按钮；原粒子／泛光／音效和完整技能结果细节仍待补齐。
+遗失女神的来源准备另已提取原触碰窗、技能升阶／人物升级／永久属性结果窗、属性行和 `ItemIconSkill`，共享 UI 数据扩为65份原面板、945张Sprite及1,055条道具图标记录，其中新增394条原主动／被动技能。保留原35条技能阶位、`MapLostGoddessAwardDialogConfig`、星级品质图、属性行动画、组件引用和三类标题，并补录相关反编译代码哈希。Unity 导入器接受这批层级及图标基础绑定；`OfficialLostGoddessResultPopup` 依据本地事务结果绑定三类官方 prefab、来源／目标技能图标、品质底框与星级、等级和属性行，并绑定原关闭按钮；原粒子／泛光／音效和完整技能结果细节仍待补齐。
 
-该批载荷已通过 Unity 2022.3.57f1c2 导入／编译和 `ProjectTools.Validate`；原三类结果窗的 Button 绑定与离散启用时刻3.183333／2.8／2.416667秒均与原曲线核对，共用原动画按各窗实际目标子集分别保存，避免转换结果互相覆盖。新增六份 prefab、十份被引用动画及技能图标基础资产已入工程，既有运行 prefab 未在批量覆盖。图形 Play Mode 已通过 `OfficialMap11PlayModeAcceptance.RunLostGoddess`：地图屏幕输入选中生成的8364实体，本地事务先保存类型4属性奖励及完成状态，再显示官方结果 prefab；实际截图确认标题、角色图、属性前后值和森之国 HUD，关闭按钮通过模拟 UGUI 点击关闭。随后在隔离 Windows x64 Player 实际运行同一实体、属性奖励和冷读存档流程；首次验证发现嵌套 Canvas 的关闭按钮只有100×100坐标范围，现将 Canvas 锚点拉伸到父画布。修复后 Player 通过射线命中的屏幕坐标 UGUI 点击关闭，并冷读隔离存档确认奖励和完成状态持久化。该 Player 是验证构建，未发布到正式目录；完整玩法、其他结果类型及画面缺陷仍待完成。
+该批载荷已通过 Unity 2022.3.57f1c2 导入／编译和 `ProjectTools.Validate`；原三类结果窗的 Button 绑定与离散启用时刻3.183333／2.8／2.416667秒均与原曲线核对，共用原动画按各窗实际目标子集分别保存，避免转换结果互相覆盖。新增六份 prefab、十份被引用动画及技能图标基础资产已入工程，既有运行 prefab 未在批量覆盖。图形 Play Mode 已通过 `OfficialMap11PlayModeAcceptance.RunLostGoddess`：地图屏幕输入选中生成的8364实体，本地事务先保存类型4属性奖励及完成状态，再显示官方结果 prefab；实际截图确认标题、角色图、属性前后值和森之国 HUD，关闭按钮通过模拟 UGUI 点击关闭。隔离 Windows x64 Player 随后通过类型2技能升阶、类型3人物升级和类型4属性奖励三条流程：均由地图屏幕输入触发、以射线命中的屏幕坐标 UGUI 点击关闭，并冷读隔离档案确认对应奖励和完成状态持久化。截图复核发现类型2结果窗未显示技能图标；现已按官方 `LostGoddessResultTipsSkillRankItem` 绑定来源／目标图标、官方品质底框和星级显示，并通过 Unity 编译及 `ProjectTools.Validate`。该代码变更后的 Player 画面尚未复验：构建时 `D:` 卷剩余空间为0，Unity 在写入 Player 资源时断言失败。验证构建未发布到正式目录；完整玩法、剩余演出及画面缺陷仍待完成。
 
 原始 APK 保留，旧版云端目录按用户要求清理；如需重建，显式启用 `Apk(reuse_current_cache=True)`，直接读取当前871缓存中大小／MD5符合旧清单且SHA256符合真实下载凭据的同哈希文件，保留真实来源版本和URL。此选项不会恢复旧缓存，也不会以新版同名变化资源填充旧输入。
 

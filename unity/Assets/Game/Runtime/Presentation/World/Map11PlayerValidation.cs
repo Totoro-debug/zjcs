@@ -9,6 +9,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zjcs.Presentation.CharacterCreation;
 using Zjcs.Offline.Progression;
+using Zjcs.Offline.Skills;
 using Zjcs.Offline.State;
 using Zjcs.Offline.World;
 
@@ -20,6 +21,7 @@ namespace Zjcs.Presentation.World
         private const BindingFlags InstanceMethods = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
         private string root, slot, resultPath;
         private OfficialMainlineMapRuntime runtime;
+        private int awardType = 4;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Initialize()
@@ -32,6 +34,11 @@ namespace Zjcs.Presentation.World
             DontDestroyOnLoad(runner.gameObject);
             runner.root = Path.GetFullPath(args[index + 1]);
             runner.resultPath = Path.Combine(runner.root, "map11-player-result.json");
+            int awardTypeIndex = Array.IndexOf(args, "--zjcs-map11-award-type");
+            if (awardTypeIndex >= 0 && awardTypeIndex + 1 < args.Length
+                && int.TryParse(args[awardTypeIndex + 1], out int requestedType)
+                && requestedType >= 2 && requestedType <= 4)
+                runner.awardType = requestedType;
             Directory.CreateDirectory(runner.root);
             runner.StartCoroutine(runner.Run());
         }
@@ -64,13 +71,21 @@ namespace Zjcs.Presentation.World
                 var slots = new ProfileSlotCatalog(root);
                 slot = slots.CreateSlot();
                 var save = new OfflineMainlineSave { CreatedAtUnixSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds() };
+                OfficialCharacterAssetCatalog characterAssets = OfficialCharacterAssetCatalog.LoadDefault();
+                OfficialCharacterCatalog character = characterAssets.Load();
+                OfflineSkillRules skillRules = characterAssets.LoadSkillRules();
+                int validationSkillId = skillRules.Skills.First(value => value.MaximumRank > 1).ClassId;
+                int validationSubRank = character.LevelLimits.Where(value => value.PlayerBlessLevel == 0 && value.PlayerLevel > 20)
+                    .Min(value => value.SubRank);
                 save.Player.CharacterCreated = true;
                 save.Player.CharacterName = "森之国 Player 验证";
                 save.Player.InitialWeaponType = 200;
                 save.Player.Level = 20;
-                save.Player.Experience = OfficialCharacterAssetCatalog.LoadDefault().Load().CumulativeLevelExperience[20];
-                save.Player.Rank = save.Player.SubRank = save.Player.SeasonRank = 1;
+                save.Player.Experience = character.CumulativeLevelExperience[20];
+                save.Player.SubRank = validationSubRank;
+                save.Player.Rank = save.Player.SeasonRank = character.RankOfSubRank(validationSubRank);
                 save.Player.Wardrobe.Profession = 1;
+                save.Player.Skills.Skills.Add(new Zjcs.Offline.Skills.OfflineOwnedSkill { ClassId = validationSkillId, Rank = 1 });
                 save.Player.UnlockedMapClassIds.Add(11);
                 save.Tasks.ClaimedMainlineTaskIds.AddRange(OfficialMainlineTaskCatalog.LoadDefault().OrderedTasks
                     .Where(value => value.classId <= 1040).Select(value => value.classId));
@@ -96,6 +111,11 @@ namespace Zjcs.Presentation.World
 
                 profile = GetField<OfflineMainlineProgressSession>(runtime, "progressionSave");
                 var service = new OfflineWorldExplorationService(profile);
+                OfflineCharacterProgressionService progression = GetField<OfflineCharacterProgressionService>(runtime, "progression");
+                var lostGoddessWeights = (System.Collections.Generic.Dictionary<string, object>)progression.Catalog
+                    .Rows("game_settings").Single()["LostGoddnessAwardWeights"];
+                foreach (string key in lostGoddessWeights.Keys.ToArray())
+                    lostGoddessWeights[key] = key == awardType.ToString(System.Globalization.CultureInfo.InvariantCulture) ? 100 : 0;
                 var group = service.Catalog.Data.entityGroups.First(value => value.Entitys.Contains(8364));
                 OfficialWorldMapSession map = GetField<OfficialWorldMapSession>(runtime, "session");
                 MapGridPoint current = GetField<MapGridPoint>(runtime, "currentGrid");
@@ -133,7 +153,9 @@ namespace Zjcs.Presentation.World
                 Require(popup != null && popup.IsShown, "Player official lost goddess result displayed");
                 Require(profile.Save.World.Exploration.Entities.Single(value => value.Serial == serial).Completed,
                     "Player reward persisted before closing result");
-                Capture("map11-player-lost-goddess.png");
+                Require(profile.Save.World.Exploration.Entities.Single(value => value.Serial == serial).LostGoddessAward.Type == awardType,
+                    "Player official result branch matches the isolated reward fixture");
+                Capture("map11-player-lost-goddess-" + awardType.ToString(System.Globalization.CultureInfo.InvariantCulture) + ".png");
                 yield return new WaitForEndOfFrame();
                 Button close = popup.GetComponentsInChildren<Button>(true).FirstOrDefault(button =>
                     button.gameObject.activeInHierarchy && button.gameObject.name.StartsWith("CloseObj", StringComparison.Ordinal));
@@ -144,8 +166,11 @@ namespace Zjcs.Presentation.World
                 Require(FindObjectOfType<OfficialLostGoddessResultPopup>() == null, "Player result closed through UGUI pointer input");
                 OfflineMainlineProgressSession cold = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
                 OfflineExploreEntity restored = cold.Save.World.Exploration.Entities.Single(value => value.Serial == serial);
-                Require(restored.Completed && restored.LostGoddessAward != null, "Player cold save retained reward and completion");
-                WriteResult(true, "Player loaded Map11, collected generated entity 8364, closed the original result window through a raycast-confirmed pointer click, and cold-loaded the persisted award.", closeRaycastClear);
+                Require(restored.Completed && restored.LostGoddessAward != null && restored.LostGoddessAward.Type == awardType,
+                    "Player cold save retained reward type and completion");
+                WriteResult(true, "Player loaded Map11, collected generated entity 8364, displayed reward type "
+                    + awardType.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                    + ", closed the original result window through a raycast-confirmed pointer click, and cold-loaded the persisted award.", closeRaycastClear);
                 Application.Quit(0);
         }
 
