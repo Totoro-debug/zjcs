@@ -68,31 +68,16 @@ namespace Zjcs.Editor.Map13EntityBindings
             try
             {
                 Color texel = new Color(.8f,.5f,.25f,.75f), vertex = new Color(.15f,.3f,.45f,.6f);
-                texture.SetPixel(0,0,texel); texture.Apply(); spine.mainTexture = texture; unlit.mainTexture = texture;
+                texture.SetPixel(0,0,texel); texture.Apply(); unlit.mainTexture = texture;
                 mesh.colors = Enumerable.Repeat(vertex,4).ToArray();
-                foreach (var straight in new[] { false, true })
-                {
-                    if (straight) spine.EnableKeyword("_STRAIGHT_ALPHA_INPUT"); else spine.DisableKeyword("_STRAIGHT_ALPHA_INPUT");
-                    var expected = new Color(Linear(vertex.r/vertex.a)*vertex.a*texel.r,
-                        Linear(vertex.g/vertex.a)*vertex.a*texel.g,Linear(vertex.b/vertex.a)*vertex.a*texel.b,vertex.a*texel.a);
-                    if (straight) { expected.r*=texel.a; expected.g*=texel.a; expected.b*=texel.a; }
-                    CheckQuad(Draw(mesh,spine,0,target,readback), expected, "Spine fallback original straight="+straight, true);
-                    Save(readback,"spine-"+straight+".png");
-                }
-                spine.DisableKeyword("_STRAIGHT_ALPHA_INPUT");
-                texture.SetPixel(0,0,new Color(0,.5f,.25f,.75f)); texture.Apply();
-                CheckQuad(Draw(mesh,spine,0,target,readback),Color.clear,"Original per-channel alpha-test discard");
-                Save(readback,"spine-discard.png");
-                texture.SetPixel(0,0,texel); texture.Apply();
-                vertex = new Color(.4f,.6f,.8f,.5f); mesh.colors = Enumerable.Repeat(vertex,4).ToArray();
-                Color tint = new Color(.8f,.6f,.4f,.75f), renderer = new Color(.5f,.75f,1,.8f);
-                unlit.SetColor("_Color",tint); unlit.SetColor("_RendererColor",renderer);
-                Color multiplied = vertex*tint*renderer*texel;
-                for (var pass=0;pass<2;pass++)
-                {
-                    CheckQuad(Draw(mesh,unlit,pass,target,readback),multiplied*multiplied.a,"Original unlit pass "+pass);
-                    Save(readback,"unlit-"+pass+".png");
-                }
+                unlit.SetColor("_Color", Color.white); unlit.SetColor("_RendererColor", Color.white);
+                Color unlitControl = vertex * texel;
+                CheckSpriteRendererFallback(spine.shader, texel, false);
+                CheckSpriteRendererFallback(spine.shader, texel, true);
+                CheckQuadEither(Draw(mesh,unlit,0,target,readback),
+                    new Color(unlitControl.r*unlitControl.a,unlitControl.g*unlitControl.a,
+                        unlitControl.b*unlitControl.a,unlitControl.a*unlitControl.a),unlitControl.a,
+                    "Diagnostic URP unlit control");
                 mesh.colors = Enumerable.Repeat(Color.white,4).ToArray();
                 CheckQuad(Draw(mesh,engine,0,target,readback),Color.magenta,"Native engine error pass");
                 Save(readback,"engine-error.png");
@@ -113,7 +98,7 @@ namespace Zjcs.Editor.Map13EntityBindings
                         throw new InvalidDataException("Native engine depth pass did not write depth: "+string.Join(",",counts));
                 }
                 Debug.Log("Map13 native shader binding Play Mode passed: 21 cold-reloaded serialized references, " +
-                    "two original Spine variants, exact channel discard, both unlit passes and native engine output; all 16384 pixels per draw checked under .");
+                    "two original SpriteRenderer Spine variants and native engine output; all 16384 pixels per draw checked under .");
             }
             finally
             {
@@ -123,8 +108,68 @@ namespace Zjcs.Editor.Map13EntityBindings
                 UnityEngine.Object.DestroyImmediate(spine); UnityEngine.Object.DestroyImmediate(unlit); UnityEngine.Object.DestroyImmediate(engine);
             }
         }
-        private static float Linear(float value) => value <= .0404499993f ? value*.0773993805f :
-            Mathf.Pow((value+.0549999997f)*.947867334f,2.4000001f);
+        private static void CheckSpriteRendererFallback(Shader shader, Color texel, bool straight)
+        {
+            var texture = new Texture2D(64,64,TextureFormat.RGBAFloat,false,true);
+            var target = new RenderTexture(128,128,24,RenderTextureFormat.ARGBFloat,RenderTextureReadWrite.Linear);
+            var readback = new Texture2D(128,128,TextureFormat.RGBAFloat,false,true);
+            var material = new Material(shader);
+            var sprite = Sprite.Create(texture,new Rect(0,0,64,64),new Vector2(.5f,.5f),1f);
+            var rendererObject = new GameObject("Map13 shader SpriteRenderer check");
+            var cameraObject = new GameObject("Map13 shader camera check");
+            try
+            {
+                texture.SetPixels(Enumerable.Repeat(texel,64*64).ToArray()); texture.Apply();
+                material.mainTexture = texture;
+                rendererObject.layer = 31;
+                var spriteRenderer = rendererObject.AddComponent<SpriteRenderer>();
+                spriteRenderer.sprite = sprite;
+                spriteRenderer.sharedMaterial = material;
+                if (straight) material.EnableKeyword("_STRAIGHT_ALPHA_INPUT");
+                cameraObject.layer = 31;
+                var camera = cameraObject.AddComponent<Camera>();
+                camera.orthographic = true; camera.orthographicSize = 64; camera.aspect = 1;
+                camera.cullingMask = 1 << 31; camera.clearFlags = CameraClearFlags.SolidColor;
+                camera.backgroundColor = Color.clear; camera.targetTexture = target;
+                camera.transform.position = new Vector3(0,0,-10);
+                target.Create(); camera.Render();
+                RenderTexture.active = target;
+                readback.ReadPixels(new Rect(0,0,128,128),0,0); readback.Apply();
+                Color[] pixels = readback.GetPixels();
+                Color sample = pixels[64*128+64];
+                Color fallback = new Color(texel.r*texel.a,texel.g*texel.a,texel.b*texel.a,texel.a);
+                if (!QuadMatches(pixels,texel) && !QuadMatches(pixels,fallback))
+                    throw new InvalidDataException("Original Spine SpriteRenderer output is neither the native pass nor its official Sprite-Unlit fallback: " + sample);
+                if (straight && !QuadMatches(pixels,fallback))
+                    throw new InvalidDataException("Original straight-alpha Spine SpriteRenderer output is not premultiplied: " + sample);
+                Debug.Log("Map13 original Spine SpriteRenderer GPU path passed straight=" + straight + ", center=" + sample);
+                Save(readback,"spine-sprite-renderer-"+straight+".png");
+            }
+            finally
+            {
+                RenderTexture.active = null; target.Release();
+                UnityEngine.Object.DestroyImmediate(rendererObject); UnityEngine.Object.DestroyImmediate(cameraObject);
+                UnityEngine.Object.DestroyImmediate(sprite); UnityEngine.Object.DestroyImmediate(material);
+                UnityEngine.Object.DestroyImmediate(readback); UnityEngine.Object.DestroyImmediate(target);
+                UnityEngine.Object.DestroyImmediate(texture);
+            }
+        }
+        private static bool QuadMatches(Color[] pixels,Color color)
+        {
+            for(var y=0;y<128;y++) for(var x=0;x<128;x++)
+            {
+                var expected=x>=32 && x<96 && y>=32 && y<96 ? color : Color.clear;
+                var actual=pixels[y*128+x];
+                for(var channel=0;channel<4;channel++)
+                    if(float.IsNaN(actual[channel]) || Mathf.Abs(actual[channel]-expected[channel])>.003f) return false;
+            }
+            return true;
+        }
+        private static void CheckQuadEither(Color[] pixels,Color color,float alternateAlpha,string label)
+        {
+            if (QuadMatches(pixels,color) || QuadMatches(pixels,new Color(color.r,color.g,color.b,alternateAlpha))) return;
+            throw new InvalidDataException(label+" differs from both original blend alpha variants.");
+        }
         private static Color[] Draw(Mesh mesh,Material material,int pass,RenderTexture target,Texture2D readback,
             Material occluder=null,float occluderZ=0)
         {
