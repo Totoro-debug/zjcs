@@ -8,6 +8,8 @@
 
 剧情运行器现已覆盖 Map13 图中会实际触发的窗口等待、按钮／列表点击、战斗结果等待、相机移动、遮罩、时间线等待及故事调用节点；`WaitGameResultNode` 按官方阶段绑定启动本地战斗并依据本地结算选择 Win／Lost／Leave 分支。职业窗口节点沿用已加载的本地 ProfessionUI 状态并继续对应成功／退出端口；官方 `GetEntityNode` 的主角实体选择及 `MapEntityMoveInteractionNode` 已接入本地导航和交互回调，支持职业导师与 RankBridgeMeetDaZe 的玩家移动分支。进度验收还覆盖了失败不解锁、胜利解锁 Map13 及独立世界标记的冷存档写入。该批代码已通过 Map13 剧情运行测试；完整职业规则、时间线资源实播、`WorldStopMoveNode` 服务器语义和整图 Play Mode／Windows Player 仍未完成。
 
+本批运行时代码在隔离 Unity 工程完成程序集编译和静态资源导入检查，未出现 Map13 C# 编译错误。最新 Windows Player 重建尚未发布：通用入口检测到正式目录已有不同脚本后端，Mono2x 验证入口又被隔离工程的失效 TMP 字体引用阻断；正式目录保留此前已发布版本，不能作为本批代码的 Player 验证证据。
+
 Map13 的三处 `ItemQuikBuyNode` 已按官方配置以 Item325 的原价执行本地原子扣款／发放；余额不足直接走 `Failure` 端口，不进入其他地图使用的货币兑换窗口。
 
 ## 地图简介
