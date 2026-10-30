@@ -493,6 +493,10 @@ namespace Zjcs.Presentation.World
                         case "TalkOptionNode":
                         case "ProfessionRoutineOption":
                         case "ShowProfessionPromotionOption":
+                            nodeId = StoryNext(node, "StaticSelect 0");
+                            if (nodeId == 0) nodeId = StoryNext(node, "DynamicExit");
+                            if (nodeId == 0) nodeId = StoryNext(node, "Exit");
+                            continue;
                         case "OpenProfessionChangeWinNode":
                         case "OpenProfessionPromotionWinNode":
                         case "OpenFreeProfessionChangeNode":
