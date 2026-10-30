@@ -1,1405 +1,1075 @@
 {
-  "entityComponents": {
-    "101": {
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "双区域_通用建筑_隐藏传送门-不可交互只入场",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 6022,
-          "Params": "{\"EntityClassId\":6022}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "Type": 1
+  "entityComponents": [
+    {
+      "components": [
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"双区域_通用建筑_隐藏传送门-不可交互只入场\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":6022,\"Params\":\"{\\\"EntityClassId\\\":6022}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
         },
-        "Tag": null
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 12,
-          "Y": 6
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":12,\"Y\":6}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"Active\":true}",
+          "name": "LoWorldActiveableEntityComponent"
+        },
+        {
+          "json": "{\"State\":1}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoWorldActiveableEntityComponent": {
-        "Active": true
-      },
-      "LoWorldStageComponent": {
-        "State": 1
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 101
     },
-    "102": {
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "双区域_通用建筑_小女神像",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 6011,
-          "Params": "{\"EntityClassId\":6011}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"双区域_通用建筑_小女神像\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":6011,\"Params\":\"{\\\"EntityClassId\\\":6011}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
         },
-        "Tag": null
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 9,
-          "Y": 19
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":9,\"Y\":19}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"Active\":false}",
+          "name": "LoWorldActiveableEntityComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoWorldActiveableEntityComponent": {
-        "Active": false
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 102
     },
-    "103": {
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "双区域_国度建筑_通天塔",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 6005,
-          "Params": "{\"EntityClassId\":6005}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"双区域_国度建筑_通天塔\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":6005,\"Params\":\"{\\\"EntityClassId\\\":6005}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"Type\":1},\"Tag\":\"\"}",
+          "name": "LoEntityComponent"
         },
-        "Tag": ""
-      },
-      "LoEntityLockComponent": {
-        "LockType": 2,
-        "Params": "{EntityStateDict:{102:1},ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:true,IsMetEntityIdSet:[]}"
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 12,
-          "Y": 22
+        {
+          "json": "{\"LockType\":2,\"Params\":\"{EntityStateDict:{102:1},ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:true,IsMetEntityIdSet:[]}\"}",
+          "name": "LoEntityLockComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":12,\"Y\":22}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"LevelList\":[]}",
+          "name": "LoStageConLevelComponent"
+        },
+        {
+          "json": "{\"MapClassId\":0,\"UseConfigNextMapClassId\":true}",
+          "name": "LoStageResultActiveWorldMapComponent"
+        },
+        {
+          "json": "{\"MapClassId\":0,\"UseConfigNextMapClassId\":true}",
+          "name": "LoStageResultChangeMapComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageConLevelComponent": {
-        "LevelList": []
-      },
-      "LoStageResultActiveWorldMapComponent": {
-        "MapClassId": 0,
-        "UseConfigNextMapClassId": true
-      },
-      "LoStageResultChangeMapComponent": {
-        "MapClassId": 0,
-        "UseConfigNextMapClassId": true
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 103
     },
-    "104": {
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "双区域_通用建筑_英雄雕像",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 6571,
-          "Params": "{\"EntityClassId\":6571}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"双区域_通用建筑_英雄雕像\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":6571,\"Params\":\"{\\\"EntityClassId\\\":6571}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
         },
-        "Tag": null
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 15,
-          "Y": 19
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":15,\"Y\":19}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"PeriodicityGroupIds\":null}",
+          "name": "LoStageConPlayerPeriodicityInteractionComponent"
+        },
+        {
+          "json": "{\"AwardExtraPropInfos\":null}",
+          "name": "LoStageResultAwardExtraPropComponent"
+        },
+        {
+          "json": "{\"AwardStatusEffectInfos\":null}",
+          "name": "LoStageResultAwardStatusEffectComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageConPlayerPeriodicityInteractionComponent": {
-        "PeriodicityGroupIds": null
-      },
-      "LoStageResultAwardExtraPropComponent": {
-        "AwardExtraPropInfos": null
-      },
-      "LoStageResultAwardStatusEffectComponent": {
-        "AwardStatusEffectInfos": null
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 104
     },
-    "105": {
-      "LoEntityCampMonsterComponent": {
-        "CampLoEntityId": 131
-      },
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "森之国_怪物_单体魔王",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 5005,
-          "Params": "{\"EntityClassId\":5005}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"CampLoEntityId\":131}",
+          "name": "LoEntityCampMonsterComponent"
         },
-        "Tag": null
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 12,
-          "Y": 11
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"森之国_怪物_单体魔王\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":5005,\"Params\":\"{\\\"EntityClassId\\\":5005}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":12,\"Y\":11}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"LevelAdds\":[],\"StageIds\":[1093]}",
+          "name": "LoStageBehStageComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageBehStageComponent": {
-        "LevelAdds": [],
-        "StageIds": [
-          1093
-        ]
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 105
     },
-    "106": {
-      "LoEntityCampMonsterComponent": {
-        "CampLoEntityId": 131
-      },
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "森之国_怪物_小怪纯种",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 5001,
-          "Params": "{\"EntityClassId\":5001}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"CampLoEntityId\":131}",
+          "name": "LoEntityCampMonsterComponent"
         },
-        "Tag": null
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 10,
-          "Y": 11
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"森之国_怪物_小怪纯种\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":5001,\"Params\":\"{\\\"EntityClassId\\\":5001}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":10,\"Y\":11}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"LevelAdds\":[],\"StageIds\":[1025]}",
+          "name": "LoStageBehStageComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageBehStageComponent": {
-        "LevelAdds": [],
-        "StageIds": [
-          1025
-        ]
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 106
     },
-    "107": {
-      "LoEntityCampMonsterComponent": {
-        "CampLoEntityId": 131
-      },
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "森之国_怪物_小怪纯种",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 5001,
-          "Params": "{\"EntityClassId\":5001}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"CampLoEntityId\":131}",
+          "name": "LoEntityCampMonsterComponent"
         },
-        "Tag": null
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 9,
-          "Y": 12
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"森之国_怪物_小怪纯种\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":5001,\"Params\":\"{\\\"EntityClassId\\\":5001}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":9,\"Y\":12}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"LevelAdds\":[],\"StageIds\":[1025]}",
+          "name": "LoStageBehStageComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageBehStageComponent": {
-        "LevelAdds": [],
-        "StageIds": [
-          1025
-        ]
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 107
     },
-    "108": {
-      "LoEntityCampMonsterComponent": {
-        "CampLoEntityId": 131
-      },
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "森之国_怪物_小怪纯种",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 5001,
-          "Params": "{\"EntityClassId\":5001}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"CampLoEntityId\":131}",
+          "name": "LoEntityCampMonsterComponent"
         },
-        "Tag": null
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 9,
-          "Y": 10
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"森之国_怪物_小怪纯种\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":5001,\"Params\":\"{\\\"EntityClassId\\\":5001}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":9,\"Y\":10}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"LevelAdds\":[],\"StageIds\":[1025]}",
+          "name": "LoStageBehStageComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageBehStageComponent": {
-        "LevelAdds": [],
-        "StageIds": [
-          1025
-        ]
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 108
     },
-    "109": {
-      "LoEntityCampMonsterComponent": {
-        "CampLoEntityId": 131
-      },
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "森之国_怪物_小怪纯种",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 5001,
-          "Params": "{\"EntityClassId\":5001}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"CampLoEntityId\":131}",
+          "name": "LoEntityCampMonsterComponent"
         },
-        "Tag": null
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": true,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 15,
-          "Y": 10
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"森之国_怪物_小怪纯种\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":5001,\"Params\":\"{\\\"EntityClassId\\\":5001}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":true,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":15,\"Y\":10}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"LevelAdds\":[],\"StageIds\":[1025]}",
+          "name": "LoStageBehStageComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageBehStageComponent": {
-        "LevelAdds": [],
-        "StageIds": [
-          1025
-        ]
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 109
     },
-    "110": {
-      "LoEntityCampMonsterComponent": {
-        "CampLoEntityId": 131
-      },
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "森之国_怪物_小怪纯种",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 5001,
-          "Params": "{\"EntityClassId\":5001}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"CampLoEntityId\":131}",
+          "name": "LoEntityCampMonsterComponent"
         },
-        "Tag": null
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": true,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 14,
-          "Y": 11
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"森之国_怪物_小怪纯种\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":5001,\"Params\":\"{\\\"EntityClassId\\\":5001}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":true,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":14,\"Y\":11}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"LevelAdds\":[],\"StageIds\":[1025]}",
+          "name": "LoStageBehStageComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageBehStageComponent": {
-        "LevelAdds": [],
-        "StageIds": [
-          1025
-        ]
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 110
     },
-    "111": {
-      "LoEntityCampMonsterComponent": {
-        "CampLoEntityId": 131
-      },
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "森之国_怪物_小怪纯种",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 5001,
-          "Params": "{\"EntityClassId\":5001}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"CampLoEntityId\":131}",
+          "name": "LoEntityCampMonsterComponent"
         },
-        "Tag": null
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": true,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 15,
-          "Y": 12
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"森之国_怪物_小怪纯种\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":5001,\"Params\":\"{\\\"EntityClassId\\\":5001}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":true,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":15,\"Y\":12}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"LevelAdds\":[],\"StageIds\":[1025]}",
+          "name": "LoStageBehStageComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageBehStageComponent": {
-        "LevelAdds": [],
-        "StageIds": [
-          1025
-        ]
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 111
     },
-    "112": {
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "通用私人区域_宝箱_大宝箱",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 8202,
-          "Params": "{\"EntityClassId\":8202}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"通用私人区域_宝箱_大宝箱\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":8202,\"Params\":\"{\\\"EntityClassId\\\":8202}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
         },
-        "Tag": null
-      },
-      "LoEntityLockComponent": {
-        "LockType": 1,
-        "Params": "{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}"
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 12,
-          "Y": 13
+        {
+          "json": "{\"LockType\":1,\"Params\":\"{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}\"}",
+          "name": "LoEntityLockComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":12,\"Y\":13}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"AwardInfos\":[]}",
+          "name": "LoStageResultAwardComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageResultAwardComponent": {
-        "AwardInfos": []
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 112
     },
-    "113": {
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "通用私人区域_橙物品_结缘绳",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 8213,
-          "Params": "{\"EntityClassId\":8213}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"通用私人区域_橙物品_结缘绳\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":8213,\"Params\":\"{\\\"EntityClassId\\\":8213}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
         },
-        "Tag": null
-      },
-      "LoEntityLockComponent": {
-        "LockType": 1,
-        "Params": "{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}"
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 11,
-          "Y": 13
+        {
+          "json": "{\"LockType\":1,\"Params\":\"{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}\"}",
+          "name": "LoEntityLockComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":11,\"Y\":13}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"AwardItemInfos\":[{\"Count\":1,\"ItemId\":107}]}",
+          "name": "LoStageResultAwardItemComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageResultAwardItemComponent": {
-        "AwardItemInfos": [
-          {
-            "Count": 1,
-            "ItemId": 107
-          }
-        ]
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 113
     },
-    "114": {
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "通用私人区域_橙物品_星之愿",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 8213,
-          "Params": "{\"EntityClassId\":8213}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"通用私人区域_橙物品_星之愿\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":8213,\"Params\":\"{\\\"EntityClassId\\\":8213}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
         },
-        "Tag": null
-      },
-      "LoEntityLockComponent": {
-        "LockType": 1,
-        "Params": "{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}"
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 13,
-          "Y": 13
+        {
+          "json": "{\"LockType\":1,\"Params\":\"{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}\"}",
+          "name": "LoEntityLockComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":13,\"Y\":13}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"AwardItemInfos\":[{\"Count\":1,\"ItemId\":110}]}",
+          "name": "LoStageResultAwardItemComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageResultAwardItemComponent": {
-        "AwardItemInfos": [
-          {
-            "Count": 1,
-            "ItemId": 110
-          }
-        ]
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 114
     },
-    "115": {
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "通用私人区域_宝石_大宝石箱",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 8347,
-          "Params": "{\"EntityClassId\":8347}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"通用私人区域_宝石_大宝石箱\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":8347,\"Params\":\"{\\\"EntityClassId\\\":8347}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
         },
-        "Tag": null
-      },
-      "LoEntityLockComponent": {
-        "LockType": 1,
-        "Params": "{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}"
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 12,
-          "Y": 14
+        {
+          "json": "{\"LockType\":1,\"Params\":\"{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}\"}",
+          "name": "LoEntityLockComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":12,\"Y\":14}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"AwardInfos\":[]}",
+          "name": "LoStageResultAwardComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageResultAwardComponent": {
-        "AwardInfos": []
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 115
     },
-    "117": {
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "通用私人区域_宝石_中宝石袋",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 8346,
-          "Params": "{\"EntityClassId\":8346}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"通用私人区域_宝石_中宝石袋\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":8346,\"Params\":\"{\\\"EntityClassId\\\":8346}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
         },
-        "Tag": null
-      },
-      "LoEntityLockComponent": {
-        "LockType": 1,
-        "Params": "{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}"
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 12,
-          "Y": 15
+        {
+          "json": "{\"LockType\":1,\"Params\":\"{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}\"}",
+          "name": "LoEntityLockComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":12,\"Y\":15}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"AwardInfos\":[]}",
+          "name": "LoStageResultAwardComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageResultAwardComponent": {
-        "AwardInfos": []
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 117
     },
-    "119": {
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "通用私人区域_宝石_小宝石袋",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 8345,
-          "Params": "{\"EntityClassId\":8345}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"通用私人区域_宝石_小宝石袋\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":8345,\"Params\":\"{\\\"EntityClassId\\\":8345}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
         },
-        "Tag": null
-      },
-      "LoEntityLockComponent": {
-        "LockType": 1,
-        "Params": "{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}"
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 11,
-          "Y": 14
+        {
+          "json": "{\"LockType\":1,\"Params\":\"{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}\"}",
+          "name": "LoEntityLockComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":11,\"Y\":14}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"AwardInfos\":[]}",
+          "name": "LoStageResultAwardComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageResultAwardComponent": {
-        "AwardInfos": []
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 119
     },
-    "120": {
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "通用私人区域_宝石_小宝石袋",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 8345,
-          "Params": "{\"EntityClassId\":8345}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"通用私人区域_宝石_小宝石袋\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":8345,\"Params\":\"{\\\"EntityClassId\\\":8345}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
         },
-        "Tag": null
-      },
-      "LoEntityLockComponent": {
-        "LockType": 1,
-        "Params": "{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}"
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 13,
-          "Y": 14
+        {
+          "json": "{\"LockType\":1,\"Params\":\"{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}\"}",
+          "name": "LoEntityLockComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":13,\"Y\":14}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"AwardInfos\":[]}",
+          "name": "LoStageResultAwardComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageResultAwardComponent": {
-        "AwardInfos": []
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 120
     },
-    "121": {
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "通用私人区域_紫物品_命运果实",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 8212,
-          "Params": "{\"EntityClassId\":8212}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"通用私人区域_紫物品_命运果实\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":8212,\"Params\":\"{\\\"EntityClassId\\\":8212}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
         },
-        "Tag": null
-      },
-      "LoEntityLockComponent": {
-        "LockType": 1,
-        "Params": "{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}"
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 10,
-          "Y": 14
+        {
+          "json": "{\"LockType\":1,\"Params\":\"{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}\"}",
+          "name": "LoEntityLockComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":10,\"Y\":14}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"AwardItemInfos\":[{\"Count\":1,\"ItemId\":115}]}",
+          "name": "LoStageResultAwardItemComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageResultAwardItemComponent": {
-        "AwardItemInfos": [
-          {
-            "Count": 1,
-            "ItemId": 115
-          }
-        ]
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 121
     },
-    "122": {
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "通用私人区域_紫物品_命运果实",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 8212,
-          "Params": "{\"EntityClassId\":8212}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"通用私人区域_紫物品_命运果实\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":8212,\"Params\":\"{\\\"EntityClassId\\\":8212}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
         },
-        "Tag": null
-      },
-      "LoEntityLockComponent": {
-        "LockType": 1,
-        "Params": "{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}"
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 14,
-          "Y": 14
+        {
+          "json": "{\"LockType\":1,\"Params\":\"{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}\"}",
+          "name": "LoEntityLockComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":14,\"Y\":14}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"AwardItemInfos\":[{\"Count\":1,\"ItemId\":115}]}",
+          "name": "LoStageResultAwardItemComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageResultAwardItemComponent": {
-        "AwardItemInfos": [
-          {
-            "Count": 1,
-            "ItemId": 115
-          }
-        ]
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 122
     },
-    "123": {
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "通用私人区域_蓝物品_精锻石-转公矿",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 8343,
-          "Params": "{\"EntityClassId\":8343}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"通用私人区域_蓝物品_精锻石-转公矿\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":8343,\"Params\":\"{\\\"EntityClassId\\\":8343}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
         },
-        "Tag": null
-      },
-      "LoEntityLockComponent": {
-        "LockType": 1,
-        "Params": "{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}"
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 10,
-          "Y": 13
+        {
+          "json": "{\"LockType\":1,\"Params\":\"{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}\"}",
+          "name": "LoEntityLockComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":10,\"Y\":13}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"AwardInfos\":[]}",
+          "name": "LoStageResultAwardComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageResultAwardComponent": {
-        "AwardInfos": []
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 123
     },
-    "124": {
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "通用私人区域_蓝物品_精锻石-转公矿",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 8343,
-          "Params": "{\"EntityClassId\":8343}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"通用私人区域_蓝物品_精锻石-转公矿\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":8343,\"Params\":\"{\\\"EntityClassId\\\":8343}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
         },
-        "Tag": null
-      },
-      "LoEntityLockComponent": {
-        "LockType": 1,
-        "Params": "{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}"
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 14,
-          "Y": 13
+        {
+          "json": "{\"LockType\":1,\"Params\":\"{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}\"}",
+          "name": "LoEntityLockComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":14,\"Y\":13}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"AwardInfos\":[]}",
+          "name": "LoStageResultAwardComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageResultAwardComponent": {
-        "AwardInfos": []
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 124
     },
-    "125": {
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "通用私人区域_蓝物品_中罗拉堆",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 8311,
-          "Params": "{\"EntityClassId\":8311}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"通用私人区域_蓝物品_中罗拉堆\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":8311,\"Params\":\"{\\\"EntityClassId\\\":8311}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
         },
-        "Tag": null
-      },
-      "LoEntityLockComponent": {
-        "LockType": 1,
-        "Params": "{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}"
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 10,
-          "Y": 15
+        {
+          "json": "{\"LockType\":1,\"Params\":\"{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}\"}",
+          "name": "LoEntityLockComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":10,\"Y\":15}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"AwardInfos\":[]}",
+          "name": "LoStageResultAwardComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageResultAwardComponent": {
-        "AwardInfos": []
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 125
     },
-    "126": {
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "通用私人区域_蓝物品_中罗拉堆",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 8311,
-          "Params": "{\"EntityClassId\":8311}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"通用私人区域_蓝物品_中罗拉堆\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":8311,\"Params\":\"{\\\"EntityClassId\\\":8311}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
         },
-        "Tag": null
-      },
-      "LoEntityLockComponent": {
-        "LockType": 1,
-        "Params": "{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}"
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 14,
-          "Y": 15
+        {
+          "json": "{\"LockType\":1,\"Params\":\"{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}\"}",
+          "name": "LoEntityLockComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":14,\"Y\":15}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"AwardInfos\":[]}",
+          "name": "LoStageResultAwardComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageResultAwardComponent": {
-        "AwardInfos": []
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 126
     },
-    "127": {
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "通用私人区域_白物品_白狗粮",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 8240,
-          "Params": "{\"EntityClassId\":8240}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"通用私人区域_白物品_白狗粮\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":8240,\"Params\":\"{\\\"EntityClassId\\\":8240}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
         },
-        "Tag": null
-      },
-      "LoEntityLockComponent": {
-        "LockType": 1,
-        "Params": "{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}"
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 11,
-          "Y": 15
+        {
+          "json": "{\"LockType\":1,\"Params\":\"{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}\"}",
+          "name": "LoEntityLockComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":11,\"Y\":15}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"AwardInfos\":[]}",
+          "name": "LoStageResultAwardComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageResultAwardComponent": {
-        "AwardInfos": []
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 127
     },
-    "128": {
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "通用私人区域_白物品_罗拉堆",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 8310,
-          "Params": "{\"EntityClassId\":8310}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"通用私人区域_白物品_罗拉堆\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":8310,\"Params\":\"{\\\"EntityClassId\\\":8310}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
         },
-        "Tag": null
-      },
-      "LoEntityLockComponent": {
-        "LockType": 1,
-        "Params": "{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}"
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 12,
-          "Y": 16
+        {
+          "json": "{\"LockType\":1,\"Params\":\"{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}\"}",
+          "name": "LoEntityLockComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":12,\"Y\":16}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"AwardInfos\":[]}",
+          "name": "LoStageResultAwardComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageResultAwardComponent": {
-        "AwardInfos": []
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 128
     },
-    "129": {
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "通用私人区域_白物品_粗炼石",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 8340,
-          "Params": "{\"EntityClassId\":8340}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"通用私人区域_白物品_粗炼石\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":8340,\"Params\":\"{\\\"EntityClassId\\\":8340}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
         },
-        "Tag": null
-      },
-      "LoEntityLockComponent": {
-        "LockType": 1,
-        "Params": "{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}"
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 13,
-          "Y": 15
+        {
+          "json": "{\"LockType\":1,\"Params\":\"{EntityGroup:[131],ConditionEntityNeverDestroy:false,ConditionEntityInactiveInUnlock:false,IsMetEntityIdSet:[]}\"}",
+          "name": "LoEntityLockComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":13,\"Y\":15}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"AwardInfos\":[]}",
+          "name": "LoStageResultAwardComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageResultAwardComponent": {
-        "AwardInfos": []
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 129
     },
-    "130": {
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "通用私人区域_白物品_时之砂",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 8350,
-          "Params": "{\"EntityClassId\":8350}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"通用私人区域_白物品_时之砂\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":8350,\"Params\":\"{\\\"EntityClassId\\\":8350}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
         },
-        "Tag": null
-      },
-      "LoEntityLockComponent": {
-        "LockType": 0,
-        "Params": null
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": false,
-        "Pos": {
-          "X": 10,
-          "Y": 18
+        {
+          "json": "{\"LockType\":0,\"Params\":null}",
+          "name": "LoEntityLockComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":false,\"Pos\":{\"X\":10,\"Y\":18}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"AwardInfos\":[]}",
+          "name": "LoStageResultAwardComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageResultAwardComponent": {
-        "AwardInfos": []
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 130
     },
-    "131": {
-      "LoEntityCampComponent": {
-        "CampMonsterEntities": [
-          108,
-          107,
-          106,
-          105,
-          110,
-          109,
-          111
-        ]
-      },
-      "LoEntityComponent": {
-        "AutoDestroy": false,
-        "PenPath": "通天塔_BOSS群落",
-        "RefreshGroup": 0,
-        "SpanwInfo": {
-          "ClassId": 8601,
-          "Params": "{\"EntityClassId\":8601}",
-          "PrivateMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": true
-          },
-          "PublicMapSupportData": {
-            "BlockDefaultSpawn": false,
-            "SupportSpawnInMap": false
-          },
-          "Type": 1
+    {
+      "components": [
+        {
+          "json": "{\"CampMonsterEntities\":[108,107,106,105,110,109,111]}",
+          "name": "LoEntityCampComponent"
         },
-        "Tag": null
-      },
-      "LoGridTransformComponent": {
-        "Dir": 0,
-        "FlipX": false,
-        "IgnoreEntitySize": true,
-        "Pos": {
-          "X": 12,
-          "Y": 12
+        {
+          "json": "{\"AutoDestroy\":false,\"PenPath\":\"通天塔_BOSS群落\",\"RefreshGroup\":0,\"SpanwInfo\":{\"ClassId\":8601,\"Params\":\"{\\\"EntityClassId\\\":8601}\",\"PrivateMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":true},\"PublicMapSupportData\":{\"BlockDefaultSpawn\":false,\"SupportSpawnInMap\":false},\"Type\":1},\"Tag\":null}",
+          "name": "LoEntityComponent"
+        },
+        {
+          "json": "{\"Dir\":0,\"FlipX\":false,\"IgnoreEntitySize\":true,\"Pos\":{\"X\":12,\"Y\":12}}",
+          "name": "LoGridTransformComponent"
+        },
+        {
+          "json": "{\"Absolute\":false,\"Level\":0.0,\"SubRank\":0}",
+          "name": "LoLevelComponent"
+        },
+        {
+          "json": "{}",
+          "name": "LoSpawnVisibleComponent"
+        },
+        {
+          "json": "{\"LevelAdds\":[],\"StageIds\":[2276]}",
+          "name": "LoStageBehStageComponent"
+        },
+        {
+          "json": "{\"State\":0}",
+          "name": "LoWorldStageComponent"
+        },
+        {
+          "json": "{}",
+          "name": "VisibilityHideComponent"
         }
-      },
-      "LoLevelComponent": {
-        "Absolute": false,
-        "Level": 0.0,
-        "SubRank": 0
-      },
-      "LoSpawnVisibleComponent": {},
-      "LoStageBehStageComponent": {
-        "LevelAdds": [],
-        "StageIds": [
-          2276
-        ]
-      },
-      "LoWorldStageComponent": {
-        "State": 0
-      },
-      "VisibilityHideComponent": {}
+      ],
+      "id": 131
     }
-  },
+  ],
   "manifest": "854_156383",
   "map": {
     "ClassId": 42041,

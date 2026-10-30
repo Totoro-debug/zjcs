@@ -30,14 +30,20 @@ class Map15GroupDataTests(unittest.TestCase):
             self.assertEqual(len(payload["regions"]), row["RegionCount"])
             placed = payload["regionData"]["placement"]["entities"]
             self.assertEqual(len(placed), row["PlacementCount"])
-            self.assertEqual({str(item["id"]) for item in placed}, set(payload["entityComponents"]))
+            components = payload["entityComponents"]
+            self.assertEqual({str(item["id"]) for item in placed}, {str(item["id"]) for item in components})
+            self.assertTrue(all(component["name"] and component["json"]
+                                for entity in components for component in entity["components"]))
             placements += len(placed)
 
         self.assertEqual(placements, 2899)
         entrance = json.loads((OUT / "maps/15.json").read_bytes())
         self.assertEqual(entrance["map"]["NextMapClassId"], 42001)
         self.assertEqual(entrance["regions"][0]["LimitServerRank"], 5)
-        self.assertEqual(len(json.loads((OUT / "entity-templates.json").read_bytes())["templates"]), 82)
+        templates = json.loads((OUT / "entity-templates.json").read_bytes())["templates"]
+        self.assertEqual(len(templates), 82)
+        self.assertTrue(all(template["entityClassId"] > 0 and template["components"]
+                            for template in templates))
 
 
 if __name__ == "__main__":

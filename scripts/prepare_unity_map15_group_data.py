@@ -32,6 +32,12 @@ def write_json(path, value):
     return digest(raw)
 
 
+def components_as_array(values):
+    return [{"name": name, "json": json.dumps(value, ensure_ascii=False, sort_keys=True,
+                                               separators=(",", ":"))}
+            for name, value in sorted(values.items())]
+
+
 def write_meta(path, identity):
     guid = hashlib.md5(("zjcs-map15-group:" + identity).encode()).hexdigest()
     raw = (f"fileFormatVersion: 2\nguid: {guid}\nTextScriptImporter:\n"
@@ -99,8 +105,10 @@ def build(output=OUT, receipt=RECEIPT):
             raise ValueError("Missing official entity template on Map15 map " + str(map_id))
         used_classes.update(classes)
         map_regions = sorted((r for r in regions if r["ClassId"] == map_id), key=lambda r: r["Region"])
+        entity_components = [{"id": int(entity_id), "components": components_as_array(values)}
+                             for entity_id, values in sorted(components.items(), key=lambda item: int(item[0]))]
         payload = {"manifest": VERSION, "map": row, "regions": map_regions,
-                   "regionData": data, "entityComponents": components}
+                   "regionData": data, "entityComponents": entity_components}
         rel = f"maps/{map_id}.json"
         target = output / rel
         output_hash = write_json(target, payload)
@@ -118,9 +126,10 @@ def build(output=OUT, receipt=RECEIPT):
                         "RegionCount": len(map_regions), "PlacementCount": len(placements),
                         "Resource": "Map15/Group/maps/" + str(map_id)})
 
-    template_catalog = {key: templates[key] for key in sorted(used_classes, key=int)}
+    template_catalog = [{"entityClassId": int(key), "components": components_as_array(templates[key])}
+                        for key in sorted(used_classes, key=int)]
     totals["templates"] = len(template_catalog)
-    totals["templateComponents"] = sum(len(value) for value in template_catalog.values())
+    totals["templateComponents"] = sum(len(value["components"]) for value in template_catalog)
     totals["components"] = totals["placementComponents"] + totals["templateComponents"]
     if totals["placements"] != 2899 or totals["templates"] != 82 or totals["components"] != 23291:
         raise ValueError("Pinned Map15 EC closure differs from 2,899 placements, 82 templates and 23,291 components")
@@ -136,7 +145,7 @@ def build(output=OUT, receipt=RECEIPT):
     outputs.append({"path": templates_name, "bytes": templates_path.stat().st_size, "sha256": templates_hash})
     catalog_path = output / "group-catalog.json"
     catalog_hash = write_json(catalog_path, {"manifest": VERSION, "mapGroupId": 15,
-        "maps": catalog, "counts": totals, "EntityTemplatesResource": "Map15/Group/entity-templates"})
+        "maps": catalog, "counts": totals, "entityTemplatesResource": "Map15/Group/entity-templates"})
     write_meta(catalog_path, "Map15/Group/group-catalog.json")
     try:
         catalog_name = catalog_path.relative_to(ROOT).as_posix()
