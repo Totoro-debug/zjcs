@@ -180,6 +180,15 @@ namespace Zjcs.Presentation.World
                     return progressionSave.Save.Player.Wardrobe != null
                         && OfficialStoryProfessionMatches(progressionSave.Save.Player.Wardrobe.Profession,
                             JsonUtility.FromJson<StoryBooleanFields>(input.sourceJson).Target);
+                case "ProfessionCanPromoteNode":
+                    if (mapClassId != 13 || progressionSave == null) return false;
+                    StoryProfessionRankFields promoteFields = JsonUtility.FromJson<StoryProfessionRankFields>(input.sourceJson);
+                    string rankName = promoteFields?.RankProperty?.mName ?? "Rank";
+                    if (!storyProperties.TryGetValue(story.key, out Dictionary<string, string> rankProperties)
+                        || !rankProperties.TryGetValue(rankName, out string rankText)
+                        || !int.TryParse(rankText, NumberStyles.Integer, CultureInfo.InvariantCulture, out int targetRank))
+                        return false;
+                    return progressionSave.Save.Player.MaxProfessionRank >= targetRank;
                 case "IsTriggeredNode":
                     StoryTriggerFields trigger = JsonUtility.FromJson<StoryTriggerFields>(input.sourceJson);
                     if (mapClassId != 13 || trigger == null
@@ -314,6 +323,12 @@ namespace Zjcs.Presentation.World
         }
 
         [Serializable] private sealed class StoryPropertyNameFields { public string mName; }
+
+        [Serializable]
+        private sealed class StoryProfessionRankFields
+        {
+            public StoryPropertyNameFields RankProperty;
+        }
 
         private static object StoryConstant(StorySerializableValue value)
         {
