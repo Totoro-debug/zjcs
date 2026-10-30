@@ -83,6 +83,14 @@ namespace Zjcs.Presentation.World
                         host.progressionSave.Reload();
                         if (host.StoryItemCount(row.CurrencyId) < price)
                         {
+                            if (host.mapClassId == 13)
+                            {
+                                // Map13's confirmed offline rule has no server-side
+                                // exchange result: insufficient currency follows the
+                                // original quick-buy failure port directly.
+                                next = StoryNext(node, "Failure");
+                                return;
+                            }
                             OpenQuickBuyCurrencyExchange(price - host.StoryItemCount(row.CurrencyId),
                                 () => host.RunStoryGraph(StoryNext(node, "Failure")));
                             return;
