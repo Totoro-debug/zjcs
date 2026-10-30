@@ -62,6 +62,13 @@ namespace Zjcs.Presentation.World
             public int LeaveOnOutsideBattle;
         }
 
+        [Serializable]
+        private sealed class StoryCameraMoveFields
+        {
+            public Vector2 TargetPosition;
+            public float Duration;
+        }
+
         private readonly Dictionary<string, HashSet<string>> storyBlackboards =
             new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
         private readonly Dictionary<string, Dictionary<string, string>> storyProperties =
@@ -460,10 +467,14 @@ namespace Zjcs.Presentation.World
                             nodeId = StoryNext(node, "Exit");
                             continue;
                         case "CameraMoveNode":
-                            storyCameraTarget = StoryWorldPoint(node.moveTargetX, node.moveTargetY);
+                            StoryCameraMoveFields cameraMove = JsonUtility.FromJson<StoryCameraMoveFields>(node.sourceJson);
+                            Vector2 cameraMoveTarget = cameraMove == null
+                                ? new Vector2(node.moveTargetX, node.moveTargetY) : cameraMove.TargetPosition;
+                            storyCameraTarget = StoryWorldPoint(cameraMoveTarget.x, cameraMoveTarget.y);
                             storyCameraSizeTarget = DefaultWorldCameraSize();
                             storyCameraActive = true;
-                            StartCoroutine(ContinueStoryAfterDelay(node.duration, StoryNext(node, "Exit")));
+                            StartCoroutine(ContinueStoryAfterDelay(cameraMove == null ? node.duration : cameraMove.Duration,
+                                StoryNext(node, "Exit")));
                             return;
                         case "PlayStoryTimelineNode":
                             // Timeline assets are optional in the APK. The map-specific
