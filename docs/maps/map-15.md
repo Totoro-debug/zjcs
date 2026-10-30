@@ -22,7 +22,7 @@
 
 `OfficialMap15GroupDataCatalog` 从 Unity `Resources` 读取目录、地图放置和 EC 模板数组，校验版本、入口后继、区域数、放置／组件闭合及模板引用。原 EC 组件内容保存在逐组件 JSON 字符串中供后续官方逻辑绑定；该数据访问层尚未创建场景对象，也未接入交互、战斗或存档。
 
-当前已执行地图组生成器回归测试、官方 EC 闭合校验和 `check_unity_project.py` 静态元数据检查。Unity Play Mode 验收入口已添加，但尚未运行；Unity 导入／编译、实际场景交互和 Windows Player 验证均未执行。
+当前已执行地图组生成器回归测试、官方 EC 闭合校验和 `check_unity_project.py` 静态元数据检查。Unity 隔离工程已完成 C# 编译；编译期间还发现并修复 `Region` 嵌套类型与官方字段同名导致的 CS0542。随后首次验收因稀疏 worktree 缺少仓库级战斗 HUD 来源清单而未进入验证；补入该清单后，Unity 在 Burst 程序集重载时报告 `OutOfMemoryException` 并退出，`ProjectTools.Validate` 与 Map15 Play Mode 断言均未完成。实际场景交互、运行画面和 Windows Player 验证尚未执行。
 
 ## 自定义实现
 

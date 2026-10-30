@@ -36,12 +36,12 @@ namespace Zjcs.Presentation.World
         {
             public string manifest;
             public MapReference map;
-            public Region[] regions;
+            public RegionRecord[] regions;
             public RegionData regionData;
             public EntityComponents[] entityComponents;
         }
 
-        [Serializable] public sealed class Region
+        [Serializable] public sealed class RegionRecord
         {
             public int ClassId, Region, LimitServerRank, LimitServerRankUnlockDayOffset;
         }
