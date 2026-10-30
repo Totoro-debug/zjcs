@@ -275,7 +275,7 @@ namespace Zjcs.Presentation.World
                 if (!session.Movement.IsFit(target) || !session.Movement.CanMoveToNext(start, target)) continue;
                 Vector3 world = (Vector3)OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, "GridToWorld", new object[] { target });
                 Vector2 screen = camera.WorldToScreenPoint(world);
-                if (Hits(screen).Count != 0 || Physics2D.OverlapPoint(world) != null || entities.EntityInfos.Any(value => value.Active
+                if (Hits(screen).Count != 0 || entities.EntityInfos.Any(value => value.Active
                     && value.Grid[0] == target.X && value.Grid[1] == target.Y)) continue;
                 worldPress = world;
                 float deadline = Time.realtimeSinceStartup + 5;
