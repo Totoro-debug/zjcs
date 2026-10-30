@@ -22,6 +22,8 @@
 
 `OfficialMap15GroupDataCatalog` 从 Unity `Resources` 读取目录、地图放置和 EC 模板数组，校验版本、入口后继、区域数、放置／组件闭合及模板引用。原 EC 组件内容保存在逐组件 JSON 字符串中供后续官方逻辑绑定；该数据访问层尚未创建场景对象，也未接入交互、战斗或存档。
 
+官方美术源已切换到用户指定的最新版 `871_156598`。其官方 YooAsset 清单及缓存包含全部 29 个通天塔 prefab／Map15 地形根 bundle；CAB 依赖检查解析 378 个序列化文件，未发现缺失引用。AssetRipper 1.3.14 已将选定闭包导出为 20,446 个原生 Unity 文件（约 263 MB），包括通天塔楼层 prefab、Bronze／Snow／Utopia 三类地形根 prefab 和 `game_tongTianTa_D_*` Spine 角色资源。GUID 分析从 494 个动态 prefab 根闭合到 1,742 个源文件（约 112.6 MB），未发现未解析资源 GUID；导出涉及 37 个 MonoScript，须逐项绑定到 Unity 工程内对应的官方代码或已安装 package。导出目前仅位于隔离验证目录，尚未筛选、转换和接入受 Git 管理的 Unity 资产；AssetRipper 输出也未核验组件脚本恢复、shader／平台兼容及运行表现，因此不代表原 UI 或场景已还原。
+
 当前已执行地图组生成器回归测试、官方 EC 闭合校验和 `check_unity_project.py` 静态元数据检查。Unity 隔离工程已完成 C# 编译；编译期间还发现并修复 `Region` 嵌套类型与官方字段同名导致的 CS0542。随后首次验收因稀疏 worktree 缺少仓库级战斗 HUD 来源清单而未进入验证；补入该清单后，Unity 在 Burst 程序集重载时报告 `OutOfMemoryException` 并退出，`ProjectTools.Validate` 与 Map15 Play Mode 断言均未完成。实际场景交互、运行画面和 Windows Player 验证尚未执行。
 
 ## 自定义实现
@@ -47,7 +49,7 @@
 
 ## 代码与资源入口
 
-[地图组数据生成器](../../scripts/prepare_unity_map15_group_data.py)、[Unity 地图组运行时目录](../../unity/Assets/Game/Runtime/Presentation/World/OfficialMap15GroupDataCatalog.cs)、[Play Mode 数据验收入口](../../unity/Assets/Game/Editor/Map15/OfficialMap15GroupDataAcceptance.cs)、[Unity 地图组索引](../../unity/Assets/Game/Resources/Map15/Group/group-catalog.json)、[官方来源清单](../../assets/reference/official-map/map15-group-data-source-manifest.json)
+[地图组数据生成器](../../scripts/prepare_unity_map15_group_data.py)、[固定来源实体闭合审计](../../scripts/verify_map15_entities.py)、[Unity 地图组运行时目录](../../unity/Assets/Game/Runtime/Presentation/World/OfficialMap15GroupDataCatalog.cs)、[官方原生资产 GUID 闭合分析器](../../scripts/prepare_unity_map15_native_assets.py)、[闭合分析回归测试](../../scripts/test_prepare_unity_map15_native_assets.py)、[Play Mode 数据验收入口](../../unity/Assets/Game/Editor/Map15/OfficialMap15GroupDataAcceptance.cs)、[Unity 地图组索引](../../unity/Assets/Game/Resources/Map15/Group/group-catalog.json)、[官方来源清单](../../assets/reference/official-map/map15-group-data-source-manifest.json)
 
 [原机关与场景配置](../../assets/official/map15-cannons.json)、[原元素连线配置](../../assets/official/map15-element-link.json)、[原遗迹配置](../../assets/official/map15-ruins.json)、[原界面配置](../../assets/official/map15-ui.json)
 

@@ -23,7 +23,7 @@ def verify():
     for identity in classes:wanted[f'0/{identity}']=templates[str(identity)]
     grouped={}
     for key in wanted:grouped.setdefault(receipt['selected'][key]['path'],set()).add(key)
-    apk=Apk();formats=Formats();components=0;seen=set()
+    apk=Apk(manifest=receipt['manifest']);formats=Formats();components=0;seen=set()
     for path,keys in grouped.items():
         obj=apk.asset('config_ec','/'+path.rsplit('/',1)[-1]);raw=obj.read().m_Script.encode('utf8','surrogateescape')
         source=receipt['inputs'][path]
