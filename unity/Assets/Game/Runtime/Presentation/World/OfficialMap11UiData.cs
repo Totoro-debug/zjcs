@@ -216,6 +216,7 @@ namespace Zjcs.Presentation.World
         public int mirrorType;
         public bool reversed;
         public OfficialMap11IconProxy mIconProxy;
+        public OfficialMap11QualitySprite[] qualitySprites;
         public UnityEngine.Color EnoughColor, LackColor;
         public int m_Enabled;
         public int m_RenderMode, m_SortingOrder, m_SortingLayerID, m_AdditionalShaderChannelsFlag;
@@ -288,6 +289,7 @@ namespace Zjcs.Presentation.World
     }
     [Serializable] public sealed class OfficialMap11MaterialFloat { public string name; public float value; }
     [Serializable] public sealed class OfficialMap11MaterialColor { public string name; public float[] value; }
+    [Serializable] public sealed class OfficialMap11QualitySprite { public int quality; public string sprite; }
     [Serializable] public sealed class OfficialMap11UiClip
     {
         public string field, name;

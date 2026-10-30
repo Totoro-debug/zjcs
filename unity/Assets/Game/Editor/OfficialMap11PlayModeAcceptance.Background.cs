@@ -54,6 +54,16 @@ namespace Zjcs.Editor
             catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
         }
 
+        public static void RunGoddessBlessing()
+        {
+            SessionState.SetBool(Key + ".audioOnly", false);
+            SessionState.SetBool(Key + ".treasureOnly", false);
+            SessionState.SetBool(Key + ".goddessBlessingOnly", true);
+            SessionState.SetBool(Key + ".ui", false);
+            try { SessionState.SetBool(Key + ".background", true); RunCore(); }
+            catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
+        }
+
         private static IEnumerator VerifyBackground(Transform canvas)
         {
             yield return new WaitForSecondsRealtime(1);
@@ -75,6 +85,34 @@ namespace Zjcs.Editor
             var save = Field<OfflineMainlineProgressSession>("progressionSave");
             foreach (var region in save.Save.World.Maps.Single(value => value.MapClassId == 11).Regions.ToArray())
                 save.SetMapRegionProgress(11, region.Region, 10000);
+            if (SessionState.GetBool(Key + ".goddessBlessingOnly", false))
+            {
+                IDictionary goddessEntities = Field<IDictionary>("mapEntities");
+                object goddessEntity = goddessEntities.Values.Cast<object>().First(value =>
+                    (int)value.GetType().GetField("EntityClassId").GetValue(value) == 6010);
+                Invoke("Interact", goddessEntity);
+                GoddessTouchDialog dialog = GameObject.Find("Map11GoddessUI")
+                    .GetComponentInChildren<GoddessTouchDialog>(true);
+                OfficialCharacterCatalog characterCatalog = OfficialCharacterAssetCatalog.LoadDefault().Load();
+                int blessingIncrement = Convert.ToInt32(characterCatalog.Rows("game_settings").First()["GoddessToBlessingLevel"],
+                    System.Globalization.CultureInfo.InvariantCulture);
+                OfficialMap11UiData goddessUiData = JsonUtility.FromJson<OfficialMap11UiData>(
+                    Resources.Load<TextAsset>("Map11/UI/catalog").text);
+                string blessingTemplate = goddessUiData.texts.Single(value => value.key == "ui_GoddessTouchDialog_level_text").value;
+                Require(dialog != null && dialog.mBlessingLevelTxt != null
+                    && dialog.mBlessingLevelTxt.gameObject.activeInHierarchy
+                    && dialog.mBlessingLevelTxt.text == string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                        blessingTemplate, blessingIncrement),
+                    "Original goddess modal shows the configured blessing increment");
+                yield return new WaitForSecondsRealtime(0.5f);
+                yield return new WaitForEndOfFrame();
+                Capture("background-goddess-blessing");
+                Invoke("CloseGoddessDialog");
+                SessionState.SetInt(Key + ".result", 0);
+                Debug.Log("Map11 goddess blessing display passed: original modal shows the configured and localized increment.");
+                EditorApplication.isPlaying = false;
+                yield break;
+            }
             save.ApplyInventoryTransaction("background-quickbuy-fixture", progress =>
             {
                 long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();

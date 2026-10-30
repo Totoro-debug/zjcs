@@ -21,10 +21,20 @@ namespace Zjcs.Presentation.World
         public int[] exploreQualityIds;
         public Sprite[] exploreQualities, exploreDetailQualities;
         public Sprite[] exploreAwardLights;
+        public int[] starQualityIds;
+        public Sprite[] starQualitySprites;
         public Sprite AwardLight(int qualityId) => exploreAwardLights[Array.IndexOf(exploreQualityIds, qualityId)];
         public Sprite ExploreIcon(string name) => exploreIcons[Array.IndexOf(exploreIconNames, name)];
         public Sprite ExploreQuality(int qualityId, bool detail = false) =>
             (detail ? exploreDetailQualities : exploreQualities)[Array.IndexOf(exploreQualityIds, qualityId)];
+        public Sprite StarQuality(int qualityId)
+        {
+            int index = Array.IndexOf(starQualityIds, qualityId);
+            if (index < 0) index = Array.IndexOf(starQualityIds, 0);
+            if (index < 0 || starQualitySprites == null || index >= starQualitySprites.Length || starQualitySprites[index] == null)
+                throw new InvalidOperationException("Unbound official skill star quality: " + qualityId);
+            return starQualitySprites[index];
+        }
         public Sprite MiniMapTab(int mapClassId)
         {
             int index = Array.IndexOf(miniMapTabIds, mapClassId);

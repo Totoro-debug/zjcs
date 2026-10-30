@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -226,6 +227,16 @@ namespace Zjcs.Editor
             yield return ClickEntity(202);
             GoddessTouchDialog dialog = Field<GoddessTouchDialog>("goddessDialog");
             Require(dialog != null && dialog.CannotActiveBtn.gameObject.activeInHierarchy, "Incomplete goddess condition UI");
+            OfficialCharacterCatalog characterCatalog = OfficialCharacterAssetCatalog.LoadDefault().Load();
+            int blessingIncrement = Convert.ToInt32(characterCatalog.Rows("game_settings").First()["GoddessToBlessingLevel"],
+                CultureInfo.InvariantCulture);
+            OfficialMap11UiData goddessUiData = JsonUtility.FromJson<OfficialMap11UiData>(
+                Resources.Load<TextAsset>("Map11/UI/catalog").text);
+            string blessingTemplate = goddessUiData.texts.Single(value => value.key == "ui_GoddessTouchDialog_level_text").value;
+            Require(dialog.mBlessingLevelTxt != null && dialog.mBlessingLevelTxt.gameObject.activeInHierarchy
+                && dialog.mBlessingLevelTxt.text == string.Format(CultureInfo.InvariantCulture,
+                    blessingTemplate, blessingIncrement),
+                "Original locked goddess panel displays its configured blessing-level increment");
             Capture("lost-locked");
             yield return KeyPress(0x1B);
             Require(Field<GoddessTouchDialog>("goddessDialog") == null, "Escape closes goddess modal");
