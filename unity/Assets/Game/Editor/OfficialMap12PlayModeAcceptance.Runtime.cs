@@ -10,6 +10,7 @@ using Zjcs.Offline.Progression;
 using Zjcs.Offline.State;
 using Zjcs.Offline.World;
 using Zjcs.Presentation.CharacterCreation;
+using Zjcs.Presentation.Combat;
 using Zjcs.Presentation.World;
 
 namespace Zjcs.Editor
@@ -36,7 +37,14 @@ namespace Zjcs.Editor
             var canvas = new GameObject("Map12RuntimeFixture", typeof(RectTransform), typeof(Canvas),
                 typeof(CanvasScaler), typeof(GraphicRaycaster));
             canvas.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
-            string root = Path.GetFullPath("../.tools/map12-runtime-profile-session-" + Guid.NewGuid().ToString("N"));
+            string validation = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+            string repository = Environment.GetEnvironmentVariable("ZJCS_REPOSITORY_ROOT");
+            if (string.IsNullOrWhiteSpace(validation) || string.IsNullOrWhiteSpace(repository)
+                || !Path.GetFullPath(validation).StartsWith(Path.GetFullPath(Path.Combine(repository, "output/validation"))
+                    .TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+                || !Directory.Exists(validation))
+                throw new InvalidDataException("Set the isolated validation workspace before Map12 runtime checks.");
+            string root = Path.Combine(validation, "profile-" + Guid.NewGuid().ToString("N"));
             if (Directory.Exists(root)) throw new IOException("Runtime fixture profile must be new: " + root);
             var slots = new ProfileSlotCatalog(root);
             string slot = slots.CreateSlot();
@@ -47,7 +55,14 @@ namespace Zjcs.Editor
             save.Player.Level = 20;
             save.Player.Experience = OfficialCharacterAssetCatalog.LoadDefault().Load().CumulativeLevelExperience[20];
             save.Player.Rank = save.Player.SubRank = save.Player.SeasonRank = 1;
-            if (UnityEditor.SessionState.GetBool(Key + ".buildingBattle", false))
+            if (UnityEditor.SessionState.GetBool(Key + ".runtimeStele", false))
+            {
+                var npcCatalog = OfficialCombatAssetCatalog.LoadDefault().LoadNpcAssistance();
+                save.Player.CharacterProperties.NpcFriendships = npcCatalog.FightAssistNpcClassIds()
+                    .Select(id => new OfflineNpcFriendship { NpcClassId = id, Level = 1000 }).ToList();
+            }
+            if (UnityEditor.SessionState.GetBool(Key + ".buildingBattle", false)
+                || UnityEditor.SessionState.GetBool(Key + ".runtimeStele", false))
             {
                 // A qualified isolated character; combat still uses the original
                 // property pipeline, skills, AI, damage and outcome rules.
@@ -82,7 +97,7 @@ namespace Zjcs.Editor
             VerifyNativeWorldGraphics(canvas.transform);
             if (!RuntimeField<MapGridPoint>("currentGrid").Equals(new MapGridPoint(248, 32)))
                 throw new InvalidDataException("Original Map12 entry 101 is not used.");
-            string output = Path.GetFullPath("../.tools/map12-runtime-render-session");
+            string output = Path.Combine(validation, "runtime");
             Directory.CreateDirectory(output);
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "entry.png"));
             yield return new WaitForSecondsRealtime(.5f);
@@ -147,6 +162,14 @@ namespace Zjcs.Editor
             {
                 IEnumerator terminals = VerifyTerminalSteps(root, slot, canvas.transform, output);
                 while (terminals.MoveNext()) yield return terminals.Current;
+                RuntimeCall("CloseMap");
+                yield break;
+            }
+
+            if (UnityEditor.SessionState.GetBool(Key + ".runtimeStele", false))
+            {
+                IEnumerator stele = VerifyRuntimeSteleSteps(root, slot, canvas.transform, output);
+                while (stele.MoveNext()) yield return stele.Current;
                 RuntimeCall("CloseMap");
                 yield break;
             }

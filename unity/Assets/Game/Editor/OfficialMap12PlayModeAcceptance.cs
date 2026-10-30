@@ -28,6 +28,7 @@ namespace Zjcs.Editor
         }
         public static void RunRuntime()
         {
+            SessionState.SetBool(Key + ".runtimeStele", false);
             SessionState.SetBool(Key + ".runtimeTerminals", false);
             SessionState.SetBool(Key + ".runtimeSpatial", false);
             SessionState.SetBool(Key + ".runtimeDialogue", false);
@@ -42,6 +43,7 @@ namespace Zjcs.Editor
         }
         public static void RunPrivateDungeonEntry()
         {
+            SessionState.SetBool(Key + ".runtimeStele", false);
             SessionState.SetBool(Key + ".runtime", false);
             SessionState.SetBool(Key + ".runtimeTerminals", false);
             SessionState.SetBool(Key + ".runtimeSpatial", false);
@@ -61,6 +63,7 @@ namespace Zjcs.Editor
         {
             try
             {
+                SessionState.SetBool(Key + ".runtimeStele", false);
                 OfficialMap12PuzzleValidation.Validate();
                 SessionState.SetBool(Key + ".runtimeTerminals", true);
                 SessionState.SetBool(Key + ".runtimeSpatial", false);
@@ -68,8 +71,16 @@ namespace Zjcs.Editor
             }
             catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
         }
+        public static void RunSteleRuntime()
+        {
+            SessionState.SetBool(Key + ".runtimeStele", true);
+            SessionState.SetBool(Key + ".runtimeTerminals", false);
+            SessionState.SetBool(Key + ".runtimeSpatial", false);
+            RunCore(false, false, 12, true);
+        }
         public static void RunRuntimeSpatial()
         {
+            SessionState.SetBool(Key + ".runtimeStele", false);
             SessionState.SetBool(Key + ".runtimeTerminals", false);
             SessionState.SetBool(Key + ".runtimeSpatial", true);
             RunCore(false, false, 12, true);

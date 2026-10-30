@@ -1,0 +1,1530 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b6c713a18f7f2c70f7f3de003721388, type: 3}
+  m_Name: character_model_SkinAsset
+  m_EditorClassIdentifier:
+  mSkeletonDataAssets:
+  - mAssetGuid: 68769d51e72ba0248abc1be66b4fb8ce
+  - mAssetGuid: 8a85ca201ae555644821f86eb3f4ae3d
+  mSkinTextureConfigList:
+  - SkinName: backDecoration_01
+    PlaceHolderTexture: {fileID: 2800000, guid: 62f07b318e3a0766f7a0f6e380d2b949, type: 3}
+  - SkinName: body_0_F_01
+    PlaceHolderTexture: {fileID: 2800000, guid: dc3912e86f881f8aa2e09836772328af, type: 3}
+  - SkinName: body_0_F_002
+    PlaceHolderTexture: {fileID: 2800000, guid: a3caeeadda5bfebce78a7612e4a4e51b, type: 3}
+  - SkinName: body_0_F_003
+    PlaceHolderTexture: {fileID: 2800000, guid: a6946e16101b928eae7807d4fd7b7a41, type: 3}
+  - SkinName: body_0_F_004
+    PlaceHolderTexture: {fileID: 2800000, guid: 5a75cac817443489da5c900da6858928, type: 3}
+  - SkinName: body_0_F_005
+    PlaceHolderTexture: {fileID: 2800000, guid: 258ef9da5f9e360821f23fdc2d4b4200, type: 3}
+  - SkinName: body_0_F_006
+    PlaceHolderTexture: {fileID: 2800000, guid: 5e4978e3bc058c3b4956e17c29c8710c, type: 3}
+  - SkinName: body_0_F_007
+    PlaceHolderTexture: {fileID: 2800000, guid: f7faee27843f7f68a897e58a4eee0d7d, type: 3}
+  - SkinName: body_0_F_008
+    PlaceHolderTexture: {fileID: 2800000, guid: 6ed04df55321c28e656cb7f875a4e513, type: 3}
+  - SkinName: body_0_F_009
+    PlaceHolderTexture: {fileID: 2800000, guid: 46a36433149e241ccc34e4ef3a23a1bf, type: 3}
+  - SkinName: body_0_F_010
+    PlaceHolderTexture: {fileID: 2800000, guid: 3e4a276ded31f4c2f34a2629da2ccc4b, type: 3}
+  - SkinName: body_0_F_011
+    PlaceHolderTexture: {fileID: 2800000, guid: c1c40ed3dbb47d09b2388c051f6556c2, type: 3}
+  - SkinName: body_0_F_012
+    PlaceHolderTexture: {fileID: 2800000, guid: 1f5efdd9220a4576d085e4ff8a42ec8f, type: 3}
+  - SkinName: body_0_F_013
+    PlaceHolderTexture: {fileID: 2800000, guid: ee4eabf66a9c0a5a07d3770572ea2554, type: 3}
+  - SkinName: body_0_F_014
+    PlaceHolderTexture: {fileID: 2800000, guid: 4d152e0cd1dab2caaadf27430976c9a0, type: 3}
+  - SkinName: body_0_F_015
+    PlaceHolderTexture: {fileID: 2800000, guid: 39241ce93d6b8b09cc41a2a179e06377, type: 3}
+  - SkinName: body_0_F_016
+    PlaceHolderTexture: {fileID: 2800000, guid: 74b06fa5d6e316bc2904baaae162a6ab, type: 3}
+  - SkinName: body_0_F_017
+    PlaceHolderTexture: {fileID: 2800000, guid: 374a5cbdd19c4fb3f8de782f8352cbcf, type: 3}
+  - SkinName: body_0_F_018
+    PlaceHolderTexture: {fileID: 2800000, guid: c3dc33648e212aa249aa74933f0fd284, type: 3}
+  - SkinName: body_0_F_019
+    PlaceHolderTexture: {fileID: 2800000, guid: 46bfacd9c27ae035cb1845694c4f4185, type: 3}
+  - SkinName: body_0_F_020
+    PlaceHolderTexture: {fileID: 2800000, guid: 5a37d2d2b0e0ae4a902e3409f4bd1c5f, type: 3}
+  - SkinName: body_0_F_021
+    PlaceHolderTexture: {fileID: 2800000, guid: 629453d863acabeb11572b20ff8552aa, type: 3}
+  - SkinName: body_0_F_022
+    PlaceHolderTexture: {fileID: 2800000, guid: 54de3e67654880839f59e731fccf1f67, type: 3}
+  - SkinName: body_0_F_023
+    PlaceHolderTexture: {fileID: 2800000, guid: 59210207c1b33e08a2a9864c260b46ed, type: 3}
+  - SkinName: body_0_F_024
+    PlaceHolderTexture: {fileID: 2800000, guid: 638054afd17856de7e76e646d2c8ec9d, type: 3}
+  - SkinName: body_0_F_025
+    PlaceHolderTexture: {fileID: 2800000, guid: c239367ae5e569ae5b095b40d72f1fb5, type: 3}
+  - SkinName: body_0_F_026
+    PlaceHolderTexture: {fileID: 2800000, guid: ba16608361af8f9089ebd4a4329ae247, type: 3}
+  - SkinName: body_0_F_027
+    PlaceHolderTexture: {fileID: 2800000, guid: 64a5bcf3be0d9568551756aee7d00096, type: 3}
+  - SkinName: body_0_F_028
+    PlaceHolderTexture: {fileID: 2800000, guid: 4e0eadc58c7fc28424494b41be0e8cbf, type: 3}
+  - SkinName: body_0_F_029
+    PlaceHolderTexture: {fileID: 2800000, guid: c588a2774f9d3d6dbcc52ff65b7b71da, type: 3}
+  - SkinName: body_0_F_030
+    PlaceHolderTexture: {fileID: 2800000, guid: ce78873537b364d0665b4b5408655dc2, type: 3}
+  - SkinName: body_0_F_031
+    PlaceHolderTexture: {fileID: 2800000, guid: ae2792ba923bba75dd1bbc76604e7767, type: 3}
+  - SkinName: body_0_F_032
+    PlaceHolderTexture: {fileID: 2800000, guid: 7de283a29c9f944530351aa6ab330b00, type: 3}
+  - SkinName: body_0_F_033
+    PlaceHolderTexture: {fileID: 2800000, guid: 6f7e2fe99d2f68db94cd94739ff6677f, type: 3}
+  - SkinName: body_0_F_034
+    PlaceHolderTexture: {fileID: 2800000, guid: c6bfb81b0ab19533fcec3d00e042a922, type: 3}
+  - SkinName: body_0_F_035
+    PlaceHolderTexture: {fileID: 2800000, guid: a813ce9d1a4b02527cb0475dc68dafc9, type: 3}
+  - SkinName: body_0_F_036
+    PlaceHolderTexture: {fileID: 2800000, guid: 79d67d6d72548a38964aa19428791be7, type: 3}
+  - SkinName: body_0_F_037
+    PlaceHolderTexture: {fileID: 2800000, guid: 684b940d1e291b58775b9a69b4bd1fe9, type: 3}
+  - SkinName: body_0_F_038
+    PlaceHolderTexture: {fileID: 2800000, guid: 0f3d17123faa6b3e2ac1fe735281a430, type: 3}
+  - SkinName: body_0_F_039
+    PlaceHolderTexture: {fileID: 2800000, guid: 3417c0390b6a81c2672ebea2e4edaab0, type: 3}
+  - SkinName: body_0_F_040
+    PlaceHolderTexture: {fileID: 2800000, guid: a98fffc83870a8ee8335e8249c86b2c9, type: 3}
+  - SkinName: body_0_F_041
+    PlaceHolderTexture: {fileID: 2800000, guid: c8f1f01669f7fa17d0f9fbc5139d069b, type: 3}
+  - SkinName: body_0_F_042
+    PlaceHolderTexture: {fileID: 2800000, guid: 2a12f1785d5307dca4093957b9a14731, type: 3}
+  - SkinName: body_0_F_043
+    PlaceHolderTexture: {fileID: 2800000, guid: 12c605f023fb3b121b82bfd684053bc8, type: 3}
+  - SkinName: body_0_F_044
+    PlaceHolderTexture: {fileID: 2800000, guid: 232d6833c5e16db40615e0df48c59547, type: 3}
+  - SkinName: body_0_F_045
+    PlaceHolderTexture: {fileID: 2800000, guid: c112546952cf3fe5f60a8fc84681a610, type: 3}
+  - SkinName: body_0_F_046
+    PlaceHolderTexture: {fileID: 2800000, guid: 9276c0cb4cd7aa84cdd26f4748c2bc14, type: 3}
+  - SkinName: body_0_F_047
+    PlaceHolderTexture: {fileID: 2800000, guid: ad9ae3734ffc7466a924ae46e5c4a581, type: 3}
+  - SkinName: body_0_F_048
+    PlaceHolderTexture: {fileID: 2800000, guid: da3f2cf4d9fcd1b85998fe6c30b9b840, type: 3}
+  - SkinName: body_0_F_049
+    PlaceHolderTexture: {fileID: 2800000, guid: 6cb3a2497893afd90640654c53bafeaf, type: 3}
+  - SkinName: body_0_F_050
+    PlaceHolderTexture: {fileID: 2800000, guid: a233cda67abcc6fe0cf2cf1ad16599a3, type: 3}
+  - SkinName: body_0_F_051
+    PlaceHolderTexture: {fileID: 2800000, guid: aefe77e6cdb753e71286425519ea4e1e, type: 3}
+  - SkinName: body_0_F_052
+    PlaceHolderTexture: {fileID: 2800000, guid: 496fbedc80b45b2574d468efec501126, type: 3}
+  - SkinName: body_0_F_053
+    PlaceHolderTexture: {fileID: 2800000, guid: 8bed0204f3703868a394ac24e9bbb42f, type: 3}
+  - SkinName: body_0_F_054
+    PlaceHolderTexture: {fileID: 2800000, guid: 6bb3d0423091b37d8fc17080e594a229, type: 3}
+  - SkinName: body_0_F_055
+    PlaceHolderTexture: {fileID: 2800000, guid: c9bd7a10d3f74b7ddda2f3bb30e5692c, type: 3}
+  - SkinName: body_0_F_056
+    PlaceHolderTexture: {fileID: 2800000, guid: a648ba436b3df4fdd661214780a7fff9, type: 3}
+  - SkinName: body_0_F_057
+    PlaceHolderTexture: {fileID: 2800000, guid: e958dae142955f96a36dfc8b7a6298c9, type: 3}
+  - SkinName: body_0_F_058
+    PlaceHolderTexture: {fileID: 2800000, guid: ce8082bc2fb29acc38eb23b3442bdbf8, type: 3}
+  - SkinName: body_0_F_059
+    PlaceHolderTexture: {fileID: 2800000, guid: c4fa8046886f560d9b39b6e006d9d6ea, type: 3}
+  - SkinName: body_0_F_060
+    PlaceHolderTexture: {fileID: 2800000, guid: 50eb1466d4d306dd2ffb93543d93b2a9, type: 3}
+  - SkinName: body_0_F_061
+    PlaceHolderTexture: {fileID: 2800000, guid: ad0ff77a51c646f345b6b0c3c7851f72, type: 3}
+  - SkinName: body_0_F_062
+    PlaceHolderTexture: {fileID: 2800000, guid: 2c6e5bcd4e3f8601f3e6c55cbf2f170c, type: 3}
+  - SkinName: body_0_F_063
+    PlaceHolderTexture: {fileID: 2800000, guid: c3b2e2beadcc85553e535deffcf443f0, type: 3}
+  - SkinName: body_0_F_064
+    PlaceHolderTexture: {fileID: 2800000, guid: c75708b19dcfc98006f0f21dc7c08eda, type: 3}
+  - SkinName: body_0_F_065
+    PlaceHolderTexture: {fileID: 2800000, guid: 40fc32b5ab51965f37d43baad47b10a8, type: 3}
+  - SkinName: body_0_F_066
+    PlaceHolderTexture: {fileID: 2800000, guid: 7d9b3e847f0d9f94839c9e2364141aba, type: 3}
+  - SkinName: body_0_F_067
+    PlaceHolderTexture: {fileID: 2800000, guid: a6cd21a5c73be28177a783455a97a64b, type: 3}
+  - SkinName: body_0_F_068
+    PlaceHolderTexture: {fileID: 2800000, guid: 435951484a837f4816563f2b855049c4, type: 3}
+  - SkinName: body_0_F_069
+    PlaceHolderTexture: {fileID: 2800000, guid: be40e3594345cbc9e1483cfdd64303e3, type: 3}
+  - SkinName: body_0_F_070
+    PlaceHolderTexture: {fileID: 2800000, guid: deffa5898221f6c08641a98cd88b4bae, type: 3}
+  - SkinName: body_0_F_071
+    PlaceHolderTexture: {fileID: 2800000, guid: 02145c933a42b531bfece0d40b4b2cc6, type: 3}
+  - SkinName: body_0_F_072
+    PlaceHolderTexture: {fileID: 2800000, guid: 2a7e830c07134e29e4048d22cbd31c1f, type: 3}
+  - SkinName: body_0_F_073
+    PlaceHolderTexture: {fileID: 2800000, guid: 045ae1643ba8744c3375e87252540f02, type: 3}
+  - SkinName: body_0_F_074
+    PlaceHolderTexture: {fileID: 2800000, guid: 01c7808f3abb6826e8fb9998056d3b84, type: 3}
+  - SkinName: body_0_F_075
+    PlaceHolderTexture: {fileID: 2800000, guid: 48349f52d7c365c563fdbba513b5792a, type: 3}
+  - SkinName: body_0_F_076
+    PlaceHolderTexture: {fileID: 2800000, guid: 2b30fc35a02c8b3f0d347005f5ee1c3a, type: 3}
+  - SkinName: body_0_F_077
+    PlaceHolderTexture: {fileID: 2800000, guid: 6c2bab057e5fd352fc9591065e1f0472, type: 3}
+  - SkinName: body_0_F_078
+    PlaceHolderTexture: {fileID: 2800000, guid: 1d0a4b87f0c475e747ad1610f31916b1, type: 3}
+  - SkinName: body_0_F_079
+    PlaceHolderTexture: {fileID: 2800000, guid: b9657efd6a1656a1bee2df81c75c6a0f, type: 3}
+  - SkinName: body_0_F_080
+    PlaceHolderTexture: {fileID: 2800000, guid: 2c44c756a50cc0a89fee9c3bf8942c6a, type: 3}
+  - SkinName: body_0_F_081
+    PlaceHolderTexture: {fileID: 2800000, guid: a8603e95d5d95daf3f028da28617dcc6, type: 3}
+  - SkinName: body_0_F_082
+    PlaceHolderTexture: {fileID: 2800000, guid: 3aaf4fea74e1b9d5a23720202eca9109, type: 3}
+  - SkinName: body_0_F_083
+    PlaceHolderTexture: {fileID: 2800000, guid: 911b6052449ba3742556e208eb25bef1, type: 3}
+  - SkinName: body_0_F_084
+    PlaceHolderTexture: {fileID: 2800000, guid: ce9a6eddb9a390c90d3fe3a607e87674, type: 3}
+  - SkinName: body_0_F_shou
+    PlaceHolderTexture: {fileID: 2800000, guid: 47641973fb2c8e9d8797ba66b60393e9, type: 3}
+  - SkinName: body_0_G_001
+    PlaceHolderTexture: {fileID: 2800000, guid: ce95de472c6b52c1c7b1d69dde3d42fa, type: 3}
+  - SkinName: body_0_G_002
+    PlaceHolderTexture: {fileID: 2800000, guid: 32573bee39864d4a96276c69d5f6e92a, type: 3}
+  - SkinName: body_0_G_003
+    PlaceHolderTexture: {fileID: 2800000, guid: ce06120437a6aafc14b8cab2bfb23d8b, type: 3}
+  - SkinName: body_0_G_004
+    PlaceHolderTexture: {fileID: 2800000, guid: 483f73fa904e3df540ec9897e3768b91, type: 3}
+  - SkinName: body_0_G_005
+    PlaceHolderTexture: {fileID: 2800000, guid: 78578c8fa076c1bdda1f85f1fe1025fb, type: 3}
+  - SkinName: body_0_G_006
+    PlaceHolderTexture: {fileID: 2800000, guid: 2a5012a7739c014985677e87f0fd9605, type: 3}
+  - SkinName: body_0_G_007
+    PlaceHolderTexture: {fileID: 2800000, guid: f6b7a64d1e41fd6f81c2752333f9583c, type: 3}
+  - SkinName: body_0_G_008
+    PlaceHolderTexture: {fileID: 2800000, guid: 3a9f3a70066a328415b1e11268e9ddce, type: 3}
+  - SkinName: body_0_G_009
+    PlaceHolderTexture: {fileID: 2800000, guid: 35d15a5e15e9ce13267fd3b2a43b0bdc, type: 3}
+  - SkinName: body_0_G_010
+    PlaceHolderTexture: {fileID: 2800000, guid: 37cb98f1b0e3efbb1da00b2b6f7cab63, type: 3}
+  - SkinName: body_0_G_011
+    PlaceHolderTexture: {fileID: 2800000, guid: 6dd452092fee12278744686f9b5564a4, type: 3}
+  - SkinName: body_0_G_012
+    PlaceHolderTexture: {fileID: 2800000, guid: 4f5494cee0dd9361c9d7e6e2a42fed2c, type: 3}
+  - SkinName: body_0_G_013
+    PlaceHolderTexture: {fileID: 2800000, guid: 8161101fa9fb7076f0859f9522f4c950, type: 3}
+  - SkinName: body_0_G_014
+    PlaceHolderTexture: {fileID: 2800000, guid: cae406287e3c2736e0548241e1153cc2, type: 3}
+  - SkinName: body_0_G_015
+    PlaceHolderTexture: {fileID: 2800000, guid: 1d4044bb624039225625a739a180f32a, type: 3}
+  - SkinName: body_0_G_016
+    PlaceHolderTexture: {fileID: 2800000, guid: 403d09038dfc3a021c617769c0e182bd, type: 3}
+  - SkinName: body_0_G_017
+    PlaceHolderTexture: {fileID: 2800000, guid: edb90e03403c23b7bb6cd983835254f3, type: 3}
+  - SkinName: body_0_G_018
+    PlaceHolderTexture: {fileID: 2800000, guid: 0a4ac52e9b5c62d0ad057368e48ab6c0, type: 3}
+  - SkinName: body_100_F_01
+    PlaceHolderTexture: {fileID: 2800000, guid: 92e6ef4315e70ee5585a75331ed030b8, type: 3}
+  - SkinName: body_100_F_02
+    PlaceHolderTexture: {fileID: 2800000, guid: 6f68c684bf9411a30fcee10ba8c4d0cc, type: 3}
+  - SkinName: body_100_F_03
+    PlaceHolderTexture: {fileID: 2800000, guid: 35df47d846006c24a88c07724e0f2700, type: 3}
+  - SkinName: body_200_F_01
+    PlaceHolderTexture: {fileID: 2800000, guid: 71c13bd09b3204cf7c9c071d20a18a32, type: 3}
+  - SkinName: body_200_F_02
+    PlaceHolderTexture: {fileID: 2800000, guid: 13c94b1ee6711063027371d1b1340fb7, type: 3}
+  - SkinName: body_200_F_03
+    PlaceHolderTexture: {fileID: 2800000, guid: d72588e93176575f1f3a8c655dcf3b63, type: 3}
+  - SkinName: brow_F_01
+    PlaceHolderTexture: {fileID: 2800000, guid: 55f51e8087feefbcd0cce5af6ceb5fd6, type: 3}
+  - SkinName: brow_F_02
+    PlaceHolderTexture: {fileID: 2800000, guid: 55f51e8087feefbcd0cce5af6ceb5fd6, type: 3}
+  - SkinName: brow_F_03
+    PlaceHolderTexture: {fileID: 2800000, guid: 55f51e8087feefbcd0cce5af6ceb5fd6, type: 3}
+  - SkinName: brow_F_04
+    PlaceHolderTexture: {fileID: 2800000, guid: 55f51e8087feefbcd0cce5af6ceb5fd6, type: 3}
+  - SkinName: brow_F_05
+    PlaceHolderTexture: {fileID: 2800000, guid: 55f51e8087feefbcd0cce5af6ceb5fd6, type: 3}
+  - SkinName: brow_F_06
+    PlaceHolderTexture: {fileID: 2800000, guid: 55f51e8087feefbcd0cce5af6ceb5fd6, type: 3}
+  - SkinName: brow_F_07
+    PlaceHolderTexture: {fileID: 2800000, guid: 55f51e8087feefbcd0cce5af6ceb5fd6, type: 3}
+  - SkinName: emptySkin
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: ethnicity_G_01
+    PlaceHolderTexture: {fileID: 2800000, guid: 9e434f9e4ea9da4eb72b26631323455a, type: 3}
+  - SkinName: ethnicity_G_02
+    PlaceHolderTexture: {fileID: 2800000, guid: 62ea41ba2b8dcd7e998404888d1d18b2, type: 3}
+  - SkinName: ethnicity_G_03
+    PlaceHolderTexture: {fileID: 2800000, guid: cb23748a99abcc55696aac5b32a3f659, type: 3}
+  - SkinName: ethnicity_G_04
+    PlaceHolderTexture: {fileID: 2800000, guid: f23bd4ba3546e86e3f871d66b9d8705f, type: 3}
+  - SkinName: ethnicity_G_05
+    PlaceHolderTexture: {fileID: 2800000, guid: 279588306aecd1e550f533b340bf8034, type: 3}
+  - SkinName: ethnicity_G_06
+    PlaceHolderTexture: {fileID: 2800000, guid: 2a0e74cd3baa3e6f7fad7a3439c2a6da, type: 3}
+  - SkinName: ethnicity_G_07
+    PlaceHolderTexture: {fileID: 2800000, guid: 3340836119de7c96af05b94ed61cc31f, type: 3}
+  - SkinName: ethnicity_G_08
+    PlaceHolderTexture: {fileID: 2800000, guid: e01a57f52112fd4be75481d4b2ba0b4d, type: 3}
+  - SkinName: ethnicity_G_09
+    PlaceHolderTexture: {fileID: 2800000, guid: d6b47d9578c112b0d5a6077845b41387, type: 3}
+  - SkinName: ethnicity_G_10
+    PlaceHolderTexture: {fileID: 2800000, guid: 0d22e243df487816ba938f7d1d17ee8c, type: 3}
+  - SkinName: ethnicity_G_11
+    PlaceHolderTexture: {fileID: 2800000, guid: 5eef09a715f9b40ccc179fa9029cdd58, type: 3}
+  - SkinName: ethnicity_G_12
+    PlaceHolderTexture: {fileID: 2800000, guid: 141397348f3cda98b033ceda4ccf8ac7, type: 3}
+  - SkinName: ethnicity_G_13
+    PlaceHolderTexture: {fileID: 2800000, guid: 104ef984ea9e0f7491ef81dc8326b920, type: 3}
+  - SkinName: ethnicity_G_14
+    PlaceHolderTexture: {fileID: 2800000, guid: 16750461122aa479dbc51b9d3260d88c, type: 3}
+  - SkinName: ethnicity_G_15
+    PlaceHolderTexture: {fileID: 2800000, guid: d10ffff3c65c5b168d4320177b26b899, type: 3}
+  - SkinName: ethnicity_G_16
+    PlaceHolderTexture: {fileID: 2800000, guid: 80273103a6530d59522f24fec5900424, type: 3}
+  - SkinName: ethnicity_G_17
+    PlaceHolderTexture: {fileID: 2800000, guid: 0ed18f97ee705a28e9a8ceb095b9b961, type: 3}
+  - SkinName: ethnicity_G_18
+    PlaceHolderTexture: {fileID: 2800000, guid: 060252cd501f996485557dee667d3e6c, type: 3}
+  - SkinName: ethnicity_G_19
+    PlaceHolderTexture: {fileID: 2800000, guid: fe1610df5b0ec70dcab4a0e7ef91d37f, type: 3}
+  - SkinName: ethnicity_G_20
+    PlaceHolderTexture: {fileID: 2800000, guid: cc60323d68cfab66145e757a7d871407, type: 3}
+  - SkinName: ethnicity_G_21
+    PlaceHolderTexture: {fileID: 2800000, guid: 9306970b35ffe427cae9ee58de2e9770, type: 3}
+  - SkinName: ethnicity_G_22
+    PlaceHolderTexture: {fileID: 2800000, guid: 1280a65712a75327dfb0f37f585403ca, type: 3}
+  - SkinName: ethnicity_G_23
+    PlaceHolderTexture: {fileID: 2800000, guid: 51c81f3028f18b70987a2cc22b6d48c4, type: 3}
+  - SkinName: ethnicity_G_24
+    PlaceHolderTexture: {fileID: 2800000, guid: 5bcff47b804f51b4c323819156f83b49, type: 3}
+  - SkinName: ethnicity_G_25
+    PlaceHolderTexture: {fileID: 2800000, guid: 6d1ff43b94b87f7abd6f225f23c2d041, type: 3}
+  - SkinName: ethnicity_G_26
+    PlaceHolderTexture: {fileID: 2800000, guid: 0673dee3540e377101c6f946ab7f21bc, type: 3}
+  - SkinName: ethnicity_G_27
+    PlaceHolderTexture: {fileID: 2800000, guid: 50a97355772301b12737c73749cf5f91, type: 3}
+  - SkinName: ethnicity_G_28
+    PlaceHolderTexture: {fileID: 2800000, guid: 94caaec69975ad65902796830a9a9400, type: 3}
+  - SkinName: ethnicity_G_29
+    PlaceHolderTexture: {fileID: 2800000, guid: 13216d1bc20f43ec9ccb73fcad3cfcd4, type: 3}
+  - SkinName: ethnicity_G_30
+    PlaceHolderTexture: {fileID: 2800000, guid: 8aff916f835e236415df854365ece9f8, type: 3}
+  - SkinName: ethnicity_G_31
+    PlaceHolderTexture: {fileID: 2800000, guid: e98e391cebdf96d569e6827afde177cf, type: 3}
+  - SkinName: ethnicity_G_32
+    PlaceHolderTexture: {fileID: 2800000, guid: 56f17f6fcdea3306e8e928a8af9e66be, type: 3}
+  - SkinName: ethnicity_G_33
+    PlaceHolderTexture: {fileID: 2800000, guid: fefed1c47e9d2e1601d2d2c314971932, type: 3}
+  - SkinName: ethnicity_G_34
+    PlaceHolderTexture: {fileID: 2800000, guid: e158ca62e9c648013169d567d3f5d460, type: 3}
+  - SkinName: eye_F_01
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: eye_F_02
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: eye_F_03
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: eye_F_04
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: eye_F_05
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: eye_F_06
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: eye_F_07
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: eye_F_08
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: eye_F_09
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: eye_F_10
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: eye_F_11
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: eye_F_12
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: faceDecoration_1_F_001
+    PlaceHolderTexture: {fileID: 2800000, guid: f9d84e5533c7faa3e9b8b2d09461574a, type: 3}
+  - SkinName: faceDecoration_1_G_001
+    PlaceHolderTexture: {fileID: 2800000, guid: 98f77b3af66a2f00ca04e52c3272f500, type: 3}
+  - SkinName: faceDecoration_1_G_004
+    PlaceHolderTexture: {fileID: 2800000, guid: 530cd7f266d003fec272235d1f94cc28, type: 3}
+  - SkinName: faceDecoration_1_G_005
+    PlaceHolderTexture: {fileID: 2800000, guid: 5eabe55ca74a849b93da9440dcd1ba9f, type: 3}
+  - SkinName: faceDecoration_1_G_006
+    PlaceHolderTexture: {fileID: 2800000, guid: 9a6d8a99d07dd69009b6a2321c4137ba, type: 3}
+  - SkinName: faceDecoration_1_G_007
+    PlaceHolderTexture: {fileID: 2800000, guid: 63d87d9d99df8adffe152ee7c8941f27, type: 3}
+  - SkinName: faceDecoration_1_G_008
+    PlaceHolderTexture: {fileID: 2800000, guid: 195fed689e7439f9be998b9657da988c, type: 3}
+  - SkinName: faceDecoration_1_G_009
+    PlaceHolderTexture: {fileID: 2800000, guid: 5412ec52e8c607491bea70f7e522208c, type: 3}
+  - SkinName: faceDecoration_1_G_010
+    PlaceHolderTexture: {fileID: 2800000, guid: f9c8768463e9797301ad92e3a10218f4, type: 3}
+  - SkinName: faceDecoration_1_G_011
+    PlaceHolderTexture: {fileID: 2800000, guid: 9c7c9e2a33c0f2b0eb265a1b4244b275, type: 3}
+  - SkinName: faceDecoration_1_G_012
+    PlaceHolderTexture: {fileID: 2800000, guid: 702860e9e690c43f57c987493ed52909, type: 3}
+  - SkinName: faceDecoration_1_G_013
+    PlaceHolderTexture: {fileID: 2800000, guid: d0b7523ef19d3bdcc2fe006f741c8d5a, type: 3}
+  - SkinName: faceDecoration_1_G_014
+    PlaceHolderTexture: {fileID: 2800000, guid: 94f05f931cbea565add5595e6f3eea9e, type: 3}
+  - SkinName: faceDecoration_1_G_015
+    PlaceHolderTexture: {fileID: 2800000, guid: 989df8a76538561bfe3f9c5cd8d58a27, type: 3}
+  - SkinName: faceDecoration_1_G_016
+    PlaceHolderTexture: {fileID: 2800000, guid: 3335abb3651ae80024a1c094708f5726, type: 3}
+  - SkinName: faceDecoration_1_G_018
+    PlaceHolderTexture: {fileID: 2800000, guid: 2729844b81cab831e2bef0b7948a9713, type: 3}
+  - SkinName: faceDecoration_1_G_019
+    PlaceHolderTexture: {fileID: 2800000, guid: ce5b40b45c78c42db81b3e626361cf7f, type: 3}
+  - SkinName: faceDecoration_1_G_020
+    PlaceHolderTexture: {fileID: 2800000, guid: 4b5305df4ab65dfa692505e6d0807bfa, type: 3}
+  - SkinName: faceDecoration_1_G_021
+    PlaceHolderTexture: {fileID: 2800000, guid: 0f8e638eb712356eec53b2b6de3663e6, type: 3}
+  - SkinName: faceDecoration_2_F_001
+    PlaceHolderTexture: {fileID: 2800000, guid: c5ddc45627fd5c7035c8b27b8e9190e0, type: 3}
+  - SkinName: faceDecoration_2_G_001
+    PlaceHolderTexture: {fileID: 2800000, guid: e5cc9e0ff522c5e9f6a129a60ec93d92, type: 3}
+  - SkinName: faceDecoration_2_G_002
+    PlaceHolderTexture: {fileID: 2800000, guid: 1be81af433ff07f32b9a6c7d36d3f01b, type: 3}
+  - SkinName: faceDecoration_2_G_003
+    PlaceHolderTexture: {fileID: 2800000, guid: 2fb53e6968e40351b62370186328b325, type: 3}
+  - SkinName: faceDecoration_2_G_004
+    PlaceHolderTexture: {fileID: 2800000, guid: a1dfd74b66d2be949cba56d51c59a449, type: 3}
+  - SkinName: faceDecoration_2_G_005
+    PlaceHolderTexture: {fileID: 2800000, guid: ea9bcd1e1bcc0c8c1f87870f3affb908, type: 3}
+  - SkinName: faceDecoration_2_G_006
+    PlaceHolderTexture: {fileID: 2800000, guid: ad17061c397c633f810d379ff9961ef9, type: 3}
+  - SkinName: faceDecoration_2_G_007
+    PlaceHolderTexture: {fileID: 2800000, guid: cd12c4bb50765e3349caea38d2f70215, type: 3}
+  - SkinName: faceDecoration_2_G_008
+    PlaceHolderTexture: {fileID: 2800000, guid: bb46d6d3fa8f0deebe490645871045c0, type: 3}
+  - SkinName: faceDecoration_2_G_009
+    PlaceHolderTexture: {fileID: 2800000, guid: f9e26b15d510e2ed60b74fbc7321e0f0, type: 3}
+  - SkinName: faceDecoration_2_G_010
+    PlaceHolderTexture: {fileID: 2800000, guid: d83e5af6932f6f1d26eb6aeb3bd3728f, type: 3}
+  - SkinName: faceDecoration_2_G_011
+    PlaceHolderTexture: {fileID: 2800000, guid: b8ccb97b56b02d891996724f9b96d5e8, type: 3}
+  - SkinName: faceDecoration_2_G_012
+    PlaceHolderTexture: {fileID: 2800000, guid: ec46825e41fe993d316577b67513e172, type: 3}
+  - SkinName: faceDecoration_2_G_013
+    PlaceHolderTexture: {fileID: 2800000, guid: 9142e440f8a8aecac68161c3757bac3c, type: 3}
+  - SkinName: faceDecoration_2_G_014
+    PlaceHolderTexture: {fileID: 2800000, guid: 88981c4087d03b2fce57089d6a8326b6, type: 3}
+  - SkinName: faceDecoration_2_G_015
+    PlaceHolderTexture: {fileID: 2800000, guid: 0df43687874a22454824bfb81be6357e, type: 3}
+  - SkinName: faceDecoration_2_G_016
+    PlaceHolderTexture: {fileID: 2800000, guid: 31fec1aad2a4399d6fea3cac2d78e4c5, type: 3}
+  - SkinName: faceDecoration_2_G_017
+    PlaceHolderTexture: {fileID: 2800000, guid: 1dc44a9a412524e2dd6389c52cdceea1, type: 3}
+  - SkinName: faceDecoration_2_G_018
+    PlaceHolderTexture: {fileID: 2800000, guid: 58bfac8eeac7e3e444fd1029f6f0feb4, type: 3}
+  - SkinName: faceDecoration_2_G_019
+    PlaceHolderTexture: {fileID: 2800000, guid: 349668908e80c5deba7b22ff188d0e6f, type: 3}
+  - SkinName: faceDecoration_2_G_020
+    PlaceHolderTexture: {fileID: 2800000, guid: 7ab50407c70dd030ae0af37d28e2b26f, type: 3}
+  - SkinName: faceDecoration_2_G_021
+    PlaceHolderTexture: {fileID: 2800000, guid: 0fb634381822575455b0fbf447be9ccd, type: 3}
+  - SkinName: faceDecoration_2_G_022
+    PlaceHolderTexture: {fileID: 2800000, guid: ad5b88179cfbe0368ba9c85d1e9ac7b3, type: 3}
+  - SkinName: faceDecoration_2_G_023
+    PlaceHolderTexture: {fileID: 2800000, guid: e7b472323eeafd533d12c4ef78c56b27, type: 3}
+  - SkinName: faceDecoration_2_G_024
+    PlaceHolderTexture: {fileID: 2800000, guid: 75edeaffe25fb2087400fd0014555edc, type: 3}
+  - SkinName: faceDecoration_2_G_025
+    PlaceHolderTexture: {fileID: 2800000, guid: 0c1ac2b9525e6ef08e8a0817546a0bea, type: 3}
+  - SkinName: faceDecoration_2_G_026
+    PlaceHolderTexture: {fileID: 2800000, guid: ff2b04d2e0d795afc12c9e39a4a62409, type: 3}
+  - SkinName: faceDecoration_2_G_027
+    PlaceHolderTexture: {fileID: 2800000, guid: 1950165b8598a35ebc2fd713cc23bb67, type: 3}
+  - SkinName: faceDecoration_3_F_001
+    PlaceHolderTexture: {fileID: 2800000, guid: 7f9d1f5931db141ddb53e059c2f17f29, type: 3}
+  - SkinName: faceDecoration_3_G_001
+    PlaceHolderTexture: {fileID: 2800000, guid: 7bd10863504dc1277c0356ec11d9d8d5, type: 3}
+  - SkinName: faceDecoration_3_G_002
+    PlaceHolderTexture: {fileID: 2800000, guid: 43c21f7d474f718cfd2c48c821712b1c, type: 3}
+  - SkinName: faceDecoration_3_G_003
+    PlaceHolderTexture: {fileID: 2800000, guid: 75cb0716876c1a2d03f6ae54c7cf0e15, type: 3}
+  - SkinName: faceDecoration_3_G_004
+    PlaceHolderTexture: {fileID: 2800000, guid: a15899480e0ab67308c55ad29a1bccbc, type: 3}
+  - SkinName: faceDecoration_3_G_005
+    PlaceHolderTexture: {fileID: 2800000, guid: 89af0558437d74cfa45563f2d4d1736a, type: 3}
+  - SkinName: facePaint_F_001
+    PlaceHolderTexture: {fileID: 2800000, guid: 8721fb5c4e60901d4230f3a615675ac7, type: 3}
+  - SkinName: facePaint_G_002
+    PlaceHolderTexture: {fileID: 2800000, guid: 1d257b1da71f562284fee44f3fad056e, type: 3}
+  - SkinName: facePaint_G_003
+    PlaceHolderTexture: {fileID: 2800000, guid: 1d257b1da71f562284fee44f3fad056e, type: 3}
+  - SkinName: facePaint_G_004
+    PlaceHolderTexture: {fileID: 2800000, guid: 1d257b1da71f562284fee44f3fad056e, type: 3}
+  - SkinName: facePaint_G_005
+    PlaceHolderTexture: {fileID: 2800000, guid: 1d257b1da71f562284fee44f3fad056e, type: 3}
+  - SkinName: facePaint_G_006
+    PlaceHolderTexture: {fileID: 2800000, guid: 1d257b1da71f562284fee44f3fad056e, type: 3}
+  - SkinName: facePaint_G_007
+    PlaceHolderTexture: {fileID: 2800000, guid: 1d257b1da71f562284fee44f3fad056e, type: 3}
+  - SkinName: facePaint_G_008
+    PlaceHolderTexture: {fileID: 2800000, guid: 1d257b1da71f562284fee44f3fad056e, type: 3}
+  - SkinName: facePaint_G_009
+    PlaceHolderTexture: {fileID: 2800000, guid: 1d257b1da71f562284fee44f3fad056e, type: 3}
+  - SkinName: facePaint_G_010
+    PlaceHolderTexture: {fileID: 2800000, guid: 1d257b1da71f562284fee44f3fad056e, type: 3}
+  - SkinName: facePaint_G_011
+    PlaceHolderTexture: {fileID: 2800000, guid: 1d257b1da71f562284fee44f3fad056e, type: 3}
+  - SkinName: faceShape_F_01
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: hair_F_01
+    PlaceHolderTexture: {fileID: 2800000, guid: cf8a4e54fa0115e8b9fc92dc8a1ae3e4, type: 3}
+  - SkinName: hair_F_02
+    PlaceHolderTexture: {fileID: 2800000, guid: 23de973c5c1efc261f0700661365c822, type: 3}
+  - SkinName: hair_F_03
+    PlaceHolderTexture: {fileID: 2800000, guid: e52897765c837d302890e5736cefca63, type: 3}
+  - SkinName: hair_F_04
+    PlaceHolderTexture: {fileID: 2800000, guid: 6e18a37a0483c342fd5d112553192b39, type: 3}
+  - SkinName: hair_F_05
+    PlaceHolderTexture: {fileID: 2800000, guid: b66afc883ae57d24aa8a1a57be4e86a9, type: 3}
+  - SkinName: hair_F_06
+    PlaceHolderTexture: {fileID: 2800000, guid: ae49e86fb177ca747f8206d17bb477e0, type: 3}
+  - SkinName: hair_F_07
+    PlaceHolderTexture: {fileID: 2800000, guid: 60f8a44b3ada9b7a1070b2c1a71b5d28, type: 3}
+  - SkinName: hair_F_08
+    PlaceHolderTexture: {fileID: 2800000, guid: 55fb05d47b63132f0df94b3916a153d8, type: 3}
+  - SkinName: hair_F_09
+    PlaceHolderTexture: {fileID: 2800000, guid: ea3ace4cafdee29d02492f7984641fcb, type: 3}
+  - SkinName: hair_F_10
+    PlaceHolderTexture: {fileID: 2800000, guid: 7f4732666ec973f6b81d98a4a344a42b, type: 3}
+  - SkinName: hair_F_11
+    PlaceHolderTexture: {fileID: 2800000, guid: 45199f9cf0941de0eb3d61163fbdd978, type: 3}
+  - SkinName: hair_F_12
+    PlaceHolderTexture: {fileID: 2800000, guid: e9d4254470acc8cff19a3d82436b5293, type: 3}
+  - SkinName: hair_F_13
+    PlaceHolderTexture: {fileID: 2800000, guid: 86ac5442d4a8f0be3600a64eb13d17c9, type: 3}
+  - SkinName: hair_F_14
+    PlaceHolderTexture: {fileID: 2800000, guid: 2e82e5c27444e401d9eaffe4eb91c101, type: 3}
+  - SkinName: hair_F_15
+    PlaceHolderTexture: {fileID: 2800000, guid: 0a4a8f4062658b1c145e4ae05d25cd2b, type: 3}
+  - SkinName: hair_F_16
+    PlaceHolderTexture: {fileID: 2800000, guid: d147cbd0ec437514e80de47e6bab10f7, type: 3}
+  - SkinName: hair_F_17
+    PlaceHolderTexture: {fileID: 2800000, guid: 74938cbe162baca5903c4a8b8aa2c701, type: 3}
+  - SkinName: hair_F_18
+    PlaceHolderTexture: {fileID: 2800000, guid: 9673d1d628e51f5d73a96e5f81b7b9ec, type: 3}
+  - SkinName: hair_F_19
+    PlaceHolderTexture: {fileID: 2800000, guid: 7005b601226d47e684573ece579feec7, type: 3}
+  - SkinName: hair_F_20
+    PlaceHolderTexture: {fileID: 2800000, guid: cc41004c66fdcba63960ee7ff1c8e06c, type: 3}
+  - SkinName: hair_F_21
+    PlaceHolderTexture: {fileID: 2800000, guid: 59045f566faa9f90839735ca0c5a11c0, type: 3}
+  - SkinName: hair_F_22
+    PlaceHolderTexture: {fileID: 2800000, guid: efa2233a2e98e420883875c310a79efa, type: 3}
+  - SkinName: hair_F_23
+    PlaceHolderTexture: {fileID: 2800000, guid: f81944df11bed1d7bfffec7d9e4c21f6, type: 3}
+  - SkinName: hair_F_24
+    PlaceHolderTexture: {fileID: 2800000, guid: 5b0e96db6fc0d991a741eba9f66c5ed9, type: 3}
+  - SkinName: hair_F_25
+    PlaceHolderTexture: {fileID: 2800000, guid: c9bea564e0d238414bb6bd8140d9a400, type: 3}
+  - SkinName: hair_F_26
+    PlaceHolderTexture: {fileID: 2800000, guid: b659525c800d921df11c7f0eb667be58, type: 3}
+  - SkinName: hair_F_27
+    PlaceHolderTexture: {fileID: 2800000, guid: 82b7f2973e06dc442e99a5100856516c, type: 3}
+  - SkinName: hair_F_28
+    PlaceHolderTexture: {fileID: 2800000, guid: cb5e0e7881f2e020f0456ac4c174a77a, type: 3}
+  - SkinName: hair_F_29
+    PlaceHolderTexture: {fileID: 2800000, guid: c4b4febfc94d2491244f29a3f16fbc30, type: 3}
+  - SkinName: hair_F_30
+    PlaceHolderTexture: {fileID: 2800000, guid: 547d3aece3b0d96c35c834cbb264088d, type: 3}
+  - SkinName: hair_F_31
+    PlaceHolderTexture: {fileID: 2800000, guid: cbdf71a9aab3182f72ef9a2abe120c2a, type: 3}
+  - SkinName: hair_F_32
+    PlaceHolderTexture: {fileID: 2800000, guid: 6479279d8a52043e1bc6078903af66b3, type: 3}
+  - SkinName: hair_F_33
+    PlaceHolderTexture: {fileID: 2800000, guid: 0d4c823b6bd49ec8c715f91b8b3eb9d4, type: 3}
+  - SkinName: hair_F_34
+    PlaceHolderTexture: {fileID: 2800000, guid: dc41b71a4a3bd7f6221fae4291861873, type: 3}
+  - SkinName: hair_F_35
+    PlaceHolderTexture: {fileID: 2800000, guid: 794205bcd07abdb006ac6f6501de1dab, type: 3}
+  - SkinName: hair_F_36
+    PlaceHolderTexture: {fileID: 2800000, guid: e5586b0b60dd8837bab1309b56be6736, type: 3}
+  - SkinName: hair_F_37
+    PlaceHolderTexture: {fileID: 2800000, guid: b20a61de27bcdb91f8663a07557e71ca, type: 3}
+  - SkinName: hair_F_38
+    PlaceHolderTexture: {fileID: 2800000, guid: 747fe1b47aec496ad0793be4edb48e3d, type: 3}
+  - SkinName: hair_F_39
+    PlaceHolderTexture: {fileID: 2800000, guid: 88c810db6f303b95bb18de0b8f0c3ef9, type: 3}
+  - SkinName: hair_F_40
+    PlaceHolderTexture: {fileID: 2800000, guid: c209047d51effddc29fad03595f11597, type: 3}
+  - SkinName: hair_F_41
+    PlaceHolderTexture: {fileID: 2800000, guid: 46cd9ac10a1e994a1572ff52a4fb260d, type: 3}
+  - SkinName: hair_F_42
+    PlaceHolderTexture: {fileID: 2800000, guid: 218839ae6e6015bdc4733536409a07dd, type: 3}
+  - SkinName: hair_F_43
+    PlaceHolderTexture: {fileID: 2800000, guid: d564964d835a4026fd3259eba997082f, type: 3}
+  - SkinName: hair_F_44
+    PlaceHolderTexture: {fileID: 2800000, guid: e1302ceebc1d4ecf3ee00ab36df44669, type: 3}
+  - SkinName: hair_F_45
+    PlaceHolderTexture: {fileID: 2800000, guid: 5ecf756a746111c5a69c2c64ac5d9d6f, type: 3}
+  - SkinName: hair_F_46
+    PlaceHolderTexture: {fileID: 2800000, guid: 665a6dccd7bc7e1dba2508319d08eef8, type: 3}
+  - SkinName: hair_F_47
+    PlaceHolderTexture: {fileID: 2800000, guid: 9a567666e1007679864a3d32852a8084, type: 3}
+  - SkinName: hair_F_48
+    PlaceHolderTexture: {fileID: 2800000, guid: 2d860c9e513ce6058aff8ac0d6e43ec3, type: 3}
+  - SkinName: hair_F_49
+    PlaceHolderTexture: {fileID: 2800000, guid: 8bdae728856dc80fa60c52533b5bf3fc, type: 3}
+  - SkinName: hair_F_50
+    PlaceHolderTexture: {fileID: 2800000, guid: a2a76284c90858689eeb28f9405da041, type: 3}
+  - SkinName: hair_F_51
+    PlaceHolderTexture: {fileID: 2800000, guid: 85ff82752175c870f08c7ef32391fb2c, type: 3}
+  - SkinName: hair_F_52
+    PlaceHolderTexture: {fileID: 2800000, guid: 93958f6752e8a2d03e1461bbaaaa75ed, type: 3}
+  - SkinName: hair_F_53
+    PlaceHolderTexture: {fileID: 2800000, guid: aa3f02362f4558672bf9ed409357f365, type: 3}
+  - SkinName: hair_F_54
+    PlaceHolderTexture: {fileID: 2800000, guid: 2794d14ba3b49eb50ba3951a9b5b842f, type: 3}
+  - SkinName: hair_F_55
+    PlaceHolderTexture: {fileID: 2800000, guid: b204818771569ef6bddbf5d657d367ee, type: 3}
+  - SkinName: hair_F_56
+    PlaceHolderTexture: {fileID: 2800000, guid: cd964b10b5a0c6620f1ebd11b90e1980, type: 3}
+  - SkinName: hair_F_57
+    PlaceHolderTexture: {fileID: 2800000, guid: 82b4c46bcb23fbbb715e55509e314924, type: 3}
+  - SkinName: hair_F_58
+    PlaceHolderTexture: {fileID: 2800000, guid: 89498bda39d75f7ccae129fae0d43fc3, type: 3}
+  - SkinName: hair_F_59
+    PlaceHolderTexture: {fileID: 2800000, guid: 56256118c2e612a1c91aad26cf848c84, type: 3}
+  - SkinName: hair_F_60
+    PlaceHolderTexture: {fileID: 2800000, guid: 719a4f464730a07666fe7013ba149990, type: 3}
+  - SkinName: hair_F_61
+    PlaceHolderTexture: {fileID: 2800000, guid: 33cf3e0faf70ac6850c4060db98529fc, type: 3}
+  - SkinName: hair_F_62
+    PlaceHolderTexture: {fileID: 2800000, guid: 7e218593df9bc41d5a8d1baae8f3eaf0, type: 3}
+  - SkinName: hair_F_63
+    PlaceHolderTexture: {fileID: 2800000, guid: 2cad51273ae47a7dd48d5a1f977db988, type: 3}
+  - SkinName: hair_F_64
+    PlaceHolderTexture: {fileID: 2800000, guid: a75d93570b5437aa2711f84a57b22dac, type: 3}
+  - SkinName: hair_F_65
+    PlaceHolderTexture: {fileID: 2800000, guid: d7a5a1595e7c38e3d4130f784c83bab7, type: 3}
+  - SkinName: hair_F_66
+    PlaceHolderTexture: {fileID: 2800000, guid: e46deaad485bbc142abc1b7f8a138df7, type: 3}
+  - SkinName: hair_F_67
+    PlaceHolderTexture: {fileID: 2800000, guid: 894cfab53727cd6b69eb773d6c22c521, type: 3}
+  - SkinName: hair_F_68
+    PlaceHolderTexture: {fileID: 2800000, guid: 71c41c071ead9233eb42730351f15f4d, type: 3}
+  - SkinName: hair_F_69
+    PlaceHolderTexture: {fileID: 2800000, guid: 8054d35a3c2843c19de439af6f5401c3, type: 3}
+  - SkinName: hair_F_70
+    PlaceHolderTexture: {fileID: 2800000, guid: a30ae75c5d79e0011d0bc641ccd72b1a, type: 3}
+  - SkinName: hair_F_71
+    PlaceHolderTexture: {fileID: 2800000, guid: b9a010d0dc515fb2075383a97d1e0c88, type: 3}
+  - SkinName: hair_F_72
+    PlaceHolderTexture: {fileID: 2800000, guid: a02171685953fa7cf3b4da9369335157, type: 3}
+  - SkinName: hair_F_73
+    PlaceHolderTexture: {fileID: 2800000, guid: 7e2a146ef9c458c12dd09d31dc2a6c91, type: 3}
+  - SkinName: hair_F_74
+    PlaceHolderTexture: {fileID: 2800000, guid: 0cd156884eac446076a4d36349a78e6b, type: 3}
+  - SkinName: hair_F_75
+    PlaceHolderTexture: {fileID: 2800000, guid: f041dda010f13b1dce852033875ec6e7, type: 3}
+  - SkinName: hair_F_76
+    PlaceHolderTexture: {fileID: 2800000, guid: 58a1d3fe31a234ba89848fd7dbfe56b4, type: 3}
+  - SkinName: hair_F_77
+    PlaceHolderTexture: {fileID: 2800000, guid: 1f46dc04c9a84ace3921dd6d6cabd596, type: 3}
+  - SkinName: hair_F_78
+    PlaceHolderTexture: {fileID: 2800000, guid: 205a24672d5af6b7d38c5f543f26a94a, type: 3}
+  - SkinName: hair_F_79
+    PlaceHolderTexture: {fileID: 2800000, guid: d9a9d6090cd629aed9615c9575f61156, type: 3}
+  - SkinName: hair_F_80
+    PlaceHolderTexture: {fileID: 2800000, guid: bf8e8871d9186d02d3759409389959fb, type: 3}
+  - SkinName: hair_F_81
+    PlaceHolderTexture: {fileID: 2800000, guid: 27183dece1894571f4c24c018dbb6269, type: 3}
+  - SkinName: hair_F_82
+    PlaceHolderTexture: {fileID: 2800000, guid: ed7afffaaf6525b240c91dfc923efee1, type: 3}
+  - SkinName: hair_F_83
+    PlaceHolderTexture: {fileID: 2800000, guid: 2a57cf24d0030cbabc2fcdc5bfa51c2c, type: 3}
+  - SkinName: hair_F_84
+    PlaceHolderTexture: {fileID: 2800000, guid: 4e7d6be78b4200896aba1c6de56af743, type: 3}
+  - SkinName: hair_F_85
+    PlaceHolderTexture: {fileID: 2800000, guid: 8e02cbc1cc70636eea3e7a069d9959ff, type: 3}
+  - SkinName: hair_F_86
+    PlaceHolderTexture: {fileID: 2800000, guid: e7a3cb3d8d3864ad405e99478fad12d4, type: 3}
+  - SkinName: hair_F_87
+    PlaceHolderTexture: {fileID: 2800000, guid: 34ed98a1204e668603891a37d825ee5c, type: 3}
+  - SkinName: hair_F_88
+    PlaceHolderTexture: {fileID: 2800000, guid: 71ceb1d1cd50ca62e8f11c10acd47146, type: 3}
+  - SkinName: hair_F_89
+    PlaceHolderTexture: {fileID: 2800000, guid: bf024dd38a1974cf35d731b8dd64b7ec, type: 3}
+  - SkinName: hair_F_90
+    PlaceHolderTexture: {fileID: 2800000, guid: b400f71103d2cc203bfc3178932bf173, type: 3}
+  - SkinName: hair_F_91
+    PlaceHolderTexture: {fileID: 2800000, guid: 8c3f0851d7d73170796cb5c4deeaa1e2, type: 3}
+  - SkinName: hair_F_92
+    PlaceHolderTexture: {fileID: 2800000, guid: 3da4c038f4e69636722f2179e3b928b1, type: 3}
+  - SkinName: hair_F_93
+    PlaceHolderTexture: {fileID: 2800000, guid: c9a8e7256dc36710b2e66a8b9123f256, type: 3}
+  - SkinName: hair_F_94
+    PlaceHolderTexture: {fileID: 2800000, guid: 8a82cf94885901dd8eee2aec6037e9d5, type: 3}
+  - SkinName: hair_F_95
+    PlaceHolderTexture: {fileID: 2800000, guid: ecdb5f1757a1bbfad2bbba7d74188664, type: 3}
+  - SkinName: hair_F_96
+    PlaceHolderTexture: {fileID: 2800000, guid: 3efc6e1f21f40110ecf56d84391e6ca2, type: 3}
+  - SkinName: hair_G_01
+    PlaceHolderTexture: {fileID: 2800000, guid: 84c7a0720f623b913ad709db90a55100, type: 3}
+  - SkinName: hair_G_02
+    PlaceHolderTexture: {fileID: 2800000, guid: 551d2b8932b7f7db3a003d41af6c1a13, type: 3}
+  - SkinName: hair_G_03
+    PlaceHolderTexture: {fileID: 2800000, guid: 7f898036ff2b0a46f2c25906efa1dda9, type: 3}
+  - SkinName: hair_G_04
+    PlaceHolderTexture: {fileID: 2800000, guid: 7176afe4009b45cf5b234c5df30b9e91, type: 3}
+  - SkinName: hair_G_05
+    PlaceHolderTexture: {fileID: 2800000, guid: 03f098a9ab8376dbe5be850757c27c4a, type: 3}
+  - SkinName: hair_G_06
+    PlaceHolderTexture: {fileID: 2800000, guid: b7c10eb10db48fe3b23f61ff8b6bd2b1, type: 3}
+  - SkinName: hair_G_07
+    PlaceHolderTexture: {fileID: 2800000, guid: 3cfc8c7e0fd3ff6e3ecd7ed0964467b9, type: 3}
+  - SkinName: hair_G_08
+    PlaceHolderTexture: {fileID: 2800000, guid: ed9346eb9903ed97f0029cb79edd3fc6, type: 3}
+  - SkinName: hair_G_09
+    PlaceHolderTexture: {fileID: 2800000, guid: 61d64e7e6b636500be63f5318bfc8e58, type: 3}
+  - SkinName: hair_G_10
+    PlaceHolderTexture: {fileID: 2800000, guid: 65e379902d8ddf311c32af15918aa40c, type: 3}
+  - SkinName: hair_G_11
+    PlaceHolderTexture: {fileID: 2800000, guid: 64b5d8f89f970d1cfe4b92968320b450, type: 3}
+  - SkinName: hair_G_12
+    PlaceHolderTexture: {fileID: 2800000, guid: 7ea122a201b5e451671e55de10f07f37, type: 3}
+  - SkinName: hair_G_13
+    PlaceHolderTexture: {fileID: 2800000, guid: 740d25332a57264ac235e0a6b9e22522, type: 3}
+  - SkinName: hair_G_14
+    PlaceHolderTexture: {fileID: 2800000, guid: 42b49e59d6c855aa3f5265ecf629178e, type: 3}
+  - SkinName: hair_G_15
+    PlaceHolderTexture: {fileID: 2800000, guid: 911e37ebba98ef8e93c161ff12fdd20e, type: 3}
+  - SkinName: hair_G_16
+    PlaceHolderTexture: {fileID: 2800000, guid: 5a5b0178ae684ff0607f6b6b0499a724, type: 3}
+  - SkinName: hair_G_17
+    PlaceHolderTexture: {fileID: 2800000, guid: bc7f97749e0f449b6873fd378be2f05b, type: 3}
+  - SkinName: hair_G_18
+    PlaceHolderTexture: {fileID: 2800000, guid: b2ec471eeab196ded99d4c1af4ed5c3e, type: 3}
+  - SkinName: headOrnament_1_F_001
+    PlaceHolderTexture: {fileID: 2800000, guid: f736db7722dcdda27cd99c26023f772d, type: 3}
+  - SkinName: headOrnament_1_F_002
+    PlaceHolderTexture: {fileID: 2800000, guid: f5671ffef976d36b74b533cd5c400218, type: 3}
+  - SkinName: headOrnament_1_F_003
+    PlaceHolderTexture: {fileID: 2800000, guid: 34285ee4a9494311ab6c9ee66eca4488, type: 3}
+  - SkinName: headOrnament_1_F_004
+    PlaceHolderTexture: {fileID: 2800000, guid: 33d98361063a516e8b78851adf914fd0, type: 3}
+  - SkinName: headOrnament_1_F_005
+    PlaceHolderTexture: {fileID: 2800000, guid: 4a537620c36b9eaba5cd598df6848cd4, type: 3}
+  - SkinName: headOrnament_1_F_006
+    PlaceHolderTexture: {fileID: 2800000, guid: f22b6375caa6521597b8f9e82e84bd3f, type: 3}
+  - SkinName: headOrnament_1_F_007
+    PlaceHolderTexture: {fileID: 2800000, guid: ca27c58c4ccee04a9bf9e1e42dc3a8d6, type: 3}
+  - SkinName: headOrnament_1_F_008
+    PlaceHolderTexture: {fileID: 2800000, guid: 6dda48282cbdac37a7dd6ae786fcca1c, type: 3}
+  - SkinName: headOrnament_1_F_009
+    PlaceHolderTexture: {fileID: 2800000, guid: ae7fb6171cac067e6ce043e1500cfa2f, type: 3}
+  - SkinName: headOrnament_1_F_010
+    PlaceHolderTexture: {fileID: 2800000, guid: b0813c8c841b78f22704387f3ec938e7, type: 3}
+  - SkinName: headOrnament_1_F_011
+    PlaceHolderTexture: {fileID: 2800000, guid: d26fdb5594059bc055da3a909c522657, type: 3}
+  - SkinName: headOrnament_1_F_012
+    PlaceHolderTexture: {fileID: 2800000, guid: 6a4ed732b99ff60ca6ec2d845718d94d, type: 3}
+  - SkinName: headOrnament_1_G_001
+    PlaceHolderTexture: {fileID: 2800000, guid: 94a9fc82654e63badba735838bd7dc93, type: 3}
+  - SkinName: headOrnament_1_G_002
+    PlaceHolderTexture: {fileID: 2800000, guid: 66fc785d9aa4068784772f726f43d36f, type: 3}
+  - SkinName: headOrnament_1_G_003
+    PlaceHolderTexture: {fileID: 2800000, guid: e062b94f199f11bf3bd1a0fe06ffe23b, type: 3}
+  - SkinName: headOrnament_1_G_004
+    PlaceHolderTexture: {fileID: 2800000, guid: a877759a1ea1f88560f06df736b45965, type: 3}
+  - SkinName: headOrnament_1_G_005
+    PlaceHolderTexture: {fileID: 2800000, guid: 98b035c58b0d20356480bfffdb5a5b89, type: 3}
+  - SkinName: headOrnament_1_G_006
+    PlaceHolderTexture: {fileID: 2800000, guid: d3a92604fc46db649987cd9def104a12, type: 3}
+  - SkinName: headOrnament_1_G_007
+    PlaceHolderTexture: {fileID: 2800000, guid: 85efa472c4731fdb7b9f59e6621b09a5, type: 3}
+  - SkinName: headOrnament_1_G_008
+    PlaceHolderTexture: {fileID: 2800000, guid: de85ed0f20de38cca3aadeec78f7f1e3, type: 3}
+  - SkinName: headOrnament_2_F_001
+    PlaceHolderTexture: {fileID: 2800000, guid: 04647973cc9887a21e2ff59814b8fb16, type: 3}
+  - SkinName: headOrnament_2_F_002
+    PlaceHolderTexture: {fileID: 2800000, guid: 97fa5c19229a0f4de1931abddcc78834, type: 3}
+  - SkinName: headOrnament_2_F_003
+    PlaceHolderTexture: {fileID: 2800000, guid: 2ed0ee1d93a93c86cfa47048e9ae7687, type: 3}
+  - SkinName: headOrnament_2_F_004
+    PlaceHolderTexture: {fileID: 2800000, guid: 5b5bda7865789ce39409ecf1ef95af49, type: 3}
+  - SkinName: headOrnament_2_F_005
+    PlaceHolderTexture: {fileID: 2800000, guid: 8b6af6a7970ab943426c72a1758794f6, type: 3}
+  - SkinName: headOrnament_2_F_006
+    PlaceHolderTexture: {fileID: 2800000, guid: 040fc8e32b2f508431fdda3f1ef469e1, type: 3}
+  - SkinName: headOrnament_2_F_007
+    PlaceHolderTexture: {fileID: 2800000, guid: f5c3ed226a998cf46625839413b08880, type: 3}
+  - SkinName: headOrnament_2_F_008
+    PlaceHolderTexture: {fileID: 2800000, guid: a7cb93a6f7098ca163413d36370b90b2, type: 3}
+  - SkinName: headOrnament_2_F_009
+    PlaceHolderTexture: {fileID: 2800000, guid: c969682a8cf94418fd208a5526e11c8f, type: 3}
+  - SkinName: headOrnament_2_F_010
+    PlaceHolderTexture: {fileID: 2800000, guid: 0bff1729299652e69cf64cd886b99b94, type: 3}
+  - SkinName: headOrnament_2_F_011
+    PlaceHolderTexture: {fileID: 2800000, guid: cbdaaa0f64921878b8144e96699239cc, type: 3}
+  - SkinName: headOrnament_2_F_012
+    PlaceHolderTexture: {fileID: 2800000, guid: 08db09a3287df634dcfa1a2f26b9a529, type: 3}
+  - SkinName: headOrnament_2_F_013
+    PlaceHolderTexture: {fileID: 2800000, guid: e3cbec6e90263b262318298d9ad0e6ac, type: 3}
+  - SkinName: headOrnament_2_F_014
+    PlaceHolderTexture: {fileID: 2800000, guid: de37b0c1d98a268f8aecc73099b7a879, type: 3}
+  - SkinName: headOrnament_2_F_015
+    PlaceHolderTexture: {fileID: 2800000, guid: d220f173b69359a0aa36a82db405b17f, type: 3}
+  - SkinName: headOrnament_2_F_016
+    PlaceHolderTexture: {fileID: 2800000, guid: 7b918dfcd2162a545454defa2f0e8e23, type: 3}
+  - SkinName: headOrnament_2_F_017
+    PlaceHolderTexture: {fileID: 2800000, guid: 0e6ba964e31ec867e6d3507c8a0b5b90, type: 3}
+  - SkinName: headOrnament_2_F_018
+    PlaceHolderTexture: {fileID: 2800000, guid: 0de286da0a21c20e2cd6b8fb97efae3c, type: 3}
+  - SkinName: headOrnament_2_F_019
+    PlaceHolderTexture: {fileID: 2800000, guid: 1035ca4d7b3f152b27bf7409338df219, type: 3}
+  - SkinName: headOrnament_2_F_020
+    PlaceHolderTexture: {fileID: 2800000, guid: ad00f438ebdec92d41176d491e3ed7ac, type: 3}
+  - SkinName: headOrnament_2_F_021
+    PlaceHolderTexture: {fileID: 2800000, guid: e6b3f8250688bd38a0dd8aef749c53f4, type: 3}
+  - SkinName: headOrnament_2_F_022
+    PlaceHolderTexture: {fileID: 2800000, guid: 401a07d25773ad893593e6e63f5171a8, type: 3}
+  - SkinName: headOrnament_2_F_023
+    PlaceHolderTexture: {fileID: 2800000, guid: 933da92b16b96cdbb39b6deac107f2ab, type: 3}
+  - SkinName: headOrnament_2_F_024
+    PlaceHolderTexture: {fileID: 2800000, guid: 5f1c6482aef0183b4ca692a445abb94d, type: 3}
+  - SkinName: headOrnament_2_G_001
+    PlaceHolderTexture: {fileID: 2800000, guid: 00d50f6613c7cdaf2eac1a55abfeb27e, type: 3}
+  - SkinName: headOrnament_2_G_002
+    PlaceHolderTexture: {fileID: 2800000, guid: 4c09af27e48a9cbbb6134db7ed198d1c, type: 3}
+  - SkinName: headOrnament_2_G_003
+    PlaceHolderTexture: {fileID: 2800000, guid: 5c7aa3c38f0cf380ca07140f56142a54, type: 3}
+  - SkinName: headOrnament_2_G_004
+    PlaceHolderTexture: {fileID: 2800000, guid: 46df3acc3bf497be0fb1fc5d30da0099, type: 3}
+  - SkinName: headOrnament_2_G_005
+    PlaceHolderTexture: {fileID: 2800000, guid: e2311716742501d54910adb72e8fdda9, type: 3}
+  - SkinName: headOrnament_2_G_006
+    PlaceHolderTexture: {fileID: 2800000, guid: da12c701c49713b4f029fdb8348db340, type: 3}
+  - SkinName: headOrnament_2_G_007
+    PlaceHolderTexture: {fileID: 2800000, guid: f5390c8de86de0e490483b8f0fc49212, type: 3}
+  - SkinName: headOrnament_2_G_008
+    PlaceHolderTexture: {fileID: 2800000, guid: 0a7c6d9846e9b083fa12e43ffde1c924, type: 3}
+  - SkinName: headOrnament_2_G_009
+    PlaceHolderTexture: {fileID: 2800000, guid: 7d23c4ecbba7f6a74869e4ee7ad84bc3, type: 3}
+  - SkinName: headOrnament_2_G_010
+    PlaceHolderTexture: {fileID: 2800000, guid: 9bb0c62537a7c28903e8f97ce2b5de5d, type: 3}
+  - SkinName: headOrnament_2_G_011
+    PlaceHolderTexture: {fileID: 2800000, guid: 3b1a71bafdc2ba559288c33cd3e4d384, type: 3}
+  - SkinName: headOrnament_2_G_012
+    PlaceHolderTexture: {fileID: 2800000, guid: 4154dbd7077f39e7f2f4c721c23746f7, type: 3}
+  - SkinName: headOrnament_2_G_013
+    PlaceHolderTexture: {fileID: 2800000, guid: 199eaaee07b352bb5a4d62031c6b8f59, type: 3}
+  - SkinName: headOrnament_2_G_014
+    PlaceHolderTexture: {fileID: 2800000, guid: a8fd4c11f53a61ad6100cb7bc1655bc0, type: 3}
+  - SkinName: headOrnament_2_G_015
+    PlaceHolderTexture: {fileID: 2800000, guid: 3252ea616aeddb1e89946185507c719f, type: 3}
+  - SkinName: headOrnament_2_G_016
+    PlaceHolderTexture: {fileID: 2800000, guid: e286be38356681e27915d0d69afe1224, type: 3}
+  - SkinName: headOrnament_2_G_017
+    PlaceHolderTexture: {fileID: 2800000, guid: 19e755ca32f94aa7f2aae0517a9766c4, type: 3}
+  - SkinName: headOrnament_2_G_018
+    PlaceHolderTexture: {fileID: 2800000, guid: c6fc1f0553528c8caed8123dca287787, type: 3}
+  - SkinName: headOrnament_2_G_019
+    PlaceHolderTexture: {fileID: 2800000, guid: 040fce7dd05190ad419d910de4754b5f, type: 3}
+  - SkinName: headOrnament_2_G_020
+    PlaceHolderTexture: {fileID: 2800000, guid: ad5003a219149e715f46c770127a8adf, type: 3}
+  - SkinName: headOrnament_2_G_021
+    PlaceHolderTexture: {fileID: 2800000, guid: 43d1ccd31b05cd19596ae5172912d095, type: 3}
+  - SkinName: headOrnament_2_G_022
+    PlaceHolderTexture: {fileID: 2800000, guid: fa43815cd01de937fd6e2e800e794d01, type: 3}
+  - SkinName: headOrnament_2_G_023
+    PlaceHolderTexture: {fileID: 2800000, guid: dc5f823addd7b316601725e348b8726f, type: 3}
+  - SkinName: headOrnament_2_G_024
+    PlaceHolderTexture: {fileID: 2800000, guid: 112448d57cb0325b713eca9db2aafe23, type: 3}
+  - SkinName: headOrnament_2_G_025
+    PlaceHolderTexture: {fileID: 2800000, guid: aab62de56720a4fa16a412f2d4defd5a, type: 3}
+  - SkinName: headOrnament_2_G_026
+    PlaceHolderTexture: {fileID: 2800000, guid: ebd2d1c76f39ea54153a5307b8f258dc, type: 3}
+  - SkinName: headOrnament_2_G_027
+    PlaceHolderTexture: {fileID: 2800000, guid: e20e1d4b20456582be9924187195f574, type: 3}
+  - SkinName: headOrnament_2_G_028
+    PlaceHolderTexture: {fileID: 2800000, guid: 424350592090c7fa1932e1f44778eb31, type: 3}
+  - SkinName: headOrnament_2_G_029
+    PlaceHolderTexture: {fileID: 2800000, guid: 7e3c2c4a8eeb9190310e9cbacec875fd, type: 3}
+  - SkinName: headOrnament_2_G_030
+    PlaceHolderTexture: {fileID: 2800000, guid: 432ac32d75df9d0b6d334e5a03950529, type: 3}
+  - SkinName: headOrnament_2_G_031
+    PlaceHolderTexture: {fileID: 2800000, guid: b4dcf116ab4d6038db65edeb0390ada6, type: 3}
+  - SkinName: headOrnament_2_G_032
+    PlaceHolderTexture: {fileID: 2800000, guid: 465f0bcf8fc42ce513090075f487b5a4, type: 3}
+  - SkinName: headOrnament_2_G_033
+    PlaceHolderTexture: {fileID: 2800000, guid: 17cbd5bc86ce6eacc675ef4747f5dcc3, type: 3}
+  - SkinName: headOrnament_2_G_034
+    PlaceHolderTexture: {fileID: 2800000, guid: 9e92d302d2c94f821c6f01a0d5913eb5, type: 3}
+  - SkinName: headOrnament_2_G_035
+    PlaceHolderTexture: {fileID: 2800000, guid: 6401826fb473b5189b58b9b216f8c1fa, type: 3}
+  - SkinName: headOrnament_2_G_036
+    PlaceHolderTexture: {fileID: 2800000, guid: 5d90daa63beaf223a360b0c292a89fc1, type: 3}
+  - SkinName: headOrnament_2_G_037
+    PlaceHolderTexture: {fileID: 2800000, guid: c3f2eb9f32f193d27ddfe37418da188a, type: 3}
+  - SkinName: headOrnament_2_G_038
+    PlaceHolderTexture: {fileID: 2800000, guid: 32572028ea7a4b631a6d2cfe5f40ae6b, type: 3}
+  - SkinName: headOrnament_2_G_039
+    PlaceHolderTexture: {fileID: 2800000, guid: 12cc63ad696362b6f675c1c014052032, type: 3}
+  - SkinName: headOrnament_2_G_040
+    PlaceHolderTexture: {fileID: 2800000, guid: fd0d144557d5800e470db81f24db2f43, type: 3}
+  - SkinName: headOrnament_2_G_041
+    PlaceHolderTexture: {fileID: 2800000, guid: b2428ba0f022064dae37c7c51be2e135, type: 3}
+  - SkinName: headOrnament_2_G_042
+    PlaceHolderTexture: {fileID: 2800000, guid: 5a097e5074181b8cf6b13868f8c86ce0, type: 3}
+  - SkinName: headOrnament_2_G_043
+    PlaceHolderTexture: {fileID: 2800000, guid: 5a467fe51d6ae0c6965ae2287dc7bba4, type: 3}
+  - SkinName: headOrnament_2_G_044
+    PlaceHolderTexture: {fileID: 2800000, guid: 616e3642920c05790f6c0c871f02ad20, type: 3}
+  - SkinName: headOrnament_2_G_045
+    PlaceHolderTexture: {fileID: 2800000, guid: ad51ca07a50e08b5fb32065a18bbc1b3, type: 3}
+  - SkinName: headOrnament_2_G_046
+    PlaceHolderTexture: {fileID: 2800000, guid: b3ba73339eb1057634c112bbc27f543b, type: 3}
+  - SkinName: headOrnament_2_G_047
+    PlaceHolderTexture: {fileID: 2800000, guid: 9f1fb5502e060a69e9437db634c8900a, type: 3}
+  - SkinName: headOrnament_2_G_048
+    PlaceHolderTexture: {fileID: 2800000, guid: ff85f4d589d487e20f78e9f696ac0321, type: 3}
+  - SkinName: headOrnament_2_G_049
+    PlaceHolderTexture: {fileID: 2800000, guid: a637f619179eeb63075280f4d484d121, type: 3}
+  - SkinName: headOrnament_2_G_050
+    PlaceHolderTexture: {fileID: 2800000, guid: 0e239e58203b309e32ef191ed3ed68d2, type: 3}
+  - SkinName: headOrnament_2_G_051
+    PlaceHolderTexture: {fileID: 2800000, guid: f8e0a813085000c07033b2dbfc1def3a, type: 3}
+  - SkinName: headOrnament_2_G_052
+    PlaceHolderTexture: {fileID: 2800000, guid: 302961ebfccd7952bb6cbfa619798735, type: 3}
+  - SkinName: headOrnament_2_G_053
+    PlaceHolderTexture: {fileID: 2800000, guid: cf17b0ad1190fdca7ee6f2c6d094f8a0, type: 3}
+  - SkinName: headOrnament_2_G_054
+    PlaceHolderTexture: {fileID: 2800000, guid: fcd7c7e452210a5e7f5614f06e247b0c, type: 3}
+  - SkinName: headOrnament_2_G_055
+    PlaceHolderTexture: {fileID: 2800000, guid: c0c0e8e0dcfd9e489417f2017445550f, type: 3}
+  - SkinName: headOrnament_2_G_056
+    PlaceHolderTexture: {fileID: 2800000, guid: 778a6405d5fb94275f0499b3d05b7c05, type: 3}
+  - SkinName: headOrnament_2_G_057
+    PlaceHolderTexture: {fileID: 2800000, guid: b75515183819ca81e9e97dcadd07ac64, type: 3}
+  - SkinName: headOrnament_2_G_058
+    PlaceHolderTexture: {fileID: 2800000, guid: a676be748c9baf2fbcfdeaa7f70bf201, type: 3}
+  - SkinName: headOrnament_2_G_059
+    PlaceHolderTexture: {fileID: 2800000, guid: dd6fc94ce6b51f66f227e36376c9462c, type: 3}
+  - SkinName: headOrnament_2_G_060
+    PlaceHolderTexture: {fileID: 2800000, guid: de85a5ff6d40c3fe5178e0a9854e40dd, type: 3}
+  - SkinName: headOrnament_2_G_061
+    PlaceHolderTexture: {fileID: 2800000, guid: 9da16614352c4d18b768ea06635d77dc, type: 3}
+  - SkinName: headOrnament_2_G_062
+    PlaceHolderTexture: {fileID: 2800000, guid: 4bdd0b8351254e4dde092596bb075ca1, type: 3}
+  - SkinName: headOrnament_2_G_063
+    PlaceHolderTexture: {fileID: 2800000, guid: f85357591ce739e2ff0da11e5d439688, type: 3}
+  - SkinName: headOrnament_2_G_064
+    PlaceHolderTexture: {fileID: 2800000, guid: ea364841eb55cc89e32e073e454c5bd0, type: 3}
+  - SkinName: headOrnament_2_G_065
+    PlaceHolderTexture: {fileID: 2800000, guid: 1ba222f3462881b32380edb10729e40f, type: 3}
+  - SkinName: headOrnament_2_G_066
+    PlaceHolderTexture: {fileID: 2800000, guid: aa48af30711dad761068e2e5c8e513f9, type: 3}
+  - SkinName: headOrnament_2_G_067
+    PlaceHolderTexture: {fileID: 2800000, guid: ec582f56859453ce92406b66d4e3fd88, type: 3}
+  - SkinName: headOrnament_2_G_068
+    PlaceHolderTexture: {fileID: 2800000, guid: 09caa8c73a002c229fa3617f41d8c8bb, type: 3}
+  - SkinName: headOrnament_2_G_069
+    PlaceHolderTexture: {fileID: 2800000, guid: 880f2dc6f63b3a6f60cf51cfce4f11ee, type: 3}
+  - SkinName: headOrnament_2_G_070
+    PlaceHolderTexture: {fileID: 2800000, guid: b494aa8a9fbd0537635c149e7480ff77, type: 3}
+  - SkinName: headOrnament_2_G_071
+    PlaceHolderTexture: {fileID: 2800000, guid: ccc7dadc08530f53b82cdc7183ad7e38, type: 3}
+  - SkinName: headOrnament_2_G_072
+    PlaceHolderTexture: {fileID: 2800000, guid: a63de88e9e48d4e0e93bd71d4e32c52c, type: 3}
+  - SkinName: headOrnament_2_G_073
+    PlaceHolderTexture: {fileID: 2800000, guid: cfca5210f29783ae3a62dcbf42a44d62, type: 3}
+  - SkinName: headOrnament_2_G_074
+    PlaceHolderTexture: {fileID: 2800000, guid: ce03a3e1d6788b476b30abf203a21f0d, type: 3}
+  - SkinName: headOrnament_2_G_075
+    PlaceHolderTexture: {fileID: 2800000, guid: 295122666aefdb0942808cc58225042b, type: 3}
+  - SkinName: headOrnament_2_G_076
+    PlaceHolderTexture: {fileID: 2800000, guid: 82135739f0a752ce398d3a12dc4842b7, type: 3}
+  - SkinName: headOrnament_2_G_077
+    PlaceHolderTexture: {fileID: 2800000, guid: 3ef9afcd723a4b654899360859e242b9, type: 3}
+  - SkinName: headOrnament_2_G_078
+    PlaceHolderTexture: {fileID: 2800000, guid: fa2583e2257dd74221219e20f054c8b2, type: 3}
+  - SkinName: headOrnament_2_G_079
+    PlaceHolderTexture: {fileID: 2800000, guid: 5ec99ec98724ca42be62298410909e60, type: 3}
+  - SkinName: headOrnament_2_G_080
+    PlaceHolderTexture: {fileID: 2800000, guid: 5f20da3dc4699994f84df0d0a7c10303, type: 3}
+  - SkinName: headOrnament_2_G_081
+    PlaceHolderTexture: {fileID: 2800000, guid: 10a9cd9af4c71c35a7731bf47dbf705f, type: 3}
+  - SkinName: headOrnament_2_G_082
+    PlaceHolderTexture: {fileID: 2800000, guid: dd7d7f22e3c390e0146d570a78eaf834, type: 3}
+  - SkinName: headOrnament_2_G_083
+    PlaceHolderTexture: {fileID: 2800000, guid: eedfc73def6026422b6f98c120d8c9cd, type: 3}
+  - SkinName: headOrnament_2_G_084
+    PlaceHolderTexture: {fileID: 2800000, guid: 5a511d09770c1fb53d3126ea903a242d, type: 3}
+  - SkinName: headOrnament_2_G_085
+    PlaceHolderTexture: {fileID: 2800000, guid: 27197af2286bad7493ea38d872441fe4, type: 3}
+  - SkinName: headOrnament_2_G_086
+    PlaceHolderTexture: {fileID: 2800000, guid: c7ec41e4d0b0b0c3db9e02c3940ebaf5, type: 3}
+  - SkinName: headOrnament_2_G_087
+    PlaceHolderTexture: {fileID: 2800000, guid: 3854bee2d74ad04e033fa52d12aace63, type: 3}
+  - SkinName: headOrnament_2_G_088
+    PlaceHolderTexture: {fileID: 2800000, guid: 6ceabbf05ac4aafa6b7feca5e9b1e3e8, type: 3}
+  - SkinName: headOrnament_2_G_089
+    PlaceHolderTexture: {fileID: 2800000, guid: de29aa841477ef1e039cf45bcbb256d7, type: 3}
+  - SkinName: headOrnament_2_G_090
+    PlaceHolderTexture: {fileID: 2800000, guid: cb2d5015856a390e527c388159f22ddc, type: 3}
+  - SkinName: headOrnament_2_G_091
+    PlaceHolderTexture: {fileID: 2800000, guid: 33eecda223011c47dc231a51b79cbb41, type: 3}
+  - SkinName: headOrnament_2_G_092
+    PlaceHolderTexture: {fileID: 2800000, guid: 9aa14e57c73bad6588abf26893888d87, type: 3}
+  - SkinName: headOrnament_2_G_093
+    PlaceHolderTexture: {fileID: 2800000, guid: 70951b5c1e3966b284dc1662278851e9, type: 3}
+  - SkinName: headOrnament_2_G_094
+    PlaceHolderTexture: {fileID: 2800000, guid: 30d50a721f137e80204d50ba9975e183, type: 3}
+  - SkinName: headOrnament_2_G_095
+    PlaceHolderTexture: {fileID: 2800000, guid: 8b6cafe8bd5331cb22a94bec518f62f8, type: 3}
+  - SkinName: headOrnament_2_G_096
+    PlaceHolderTexture: {fileID: 2800000, guid: b9253c1b246e23c145313acb593a61ff, type: 3}
+  - SkinName: headOrnament_2_G_097
+    PlaceHolderTexture: {fileID: 2800000, guid: 414a159b7726bbb0dde9c69f6bbe8674, type: 3}
+  - SkinName: headOrnament_2_G_098
+    PlaceHolderTexture: {fileID: 2800000, guid: ceb17757bf2e17632312c97935b0e879, type: 3}
+  - SkinName: map_01
+    PlaceHolderTexture: {fileID: 2800000, guid: 464fb6ac85d4f60024b2f7d0e4f260c1, type: 3}
+  - SkinName: mouth_F_01
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: mouth_F_02
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: mouth_F_03
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: mouth_F_04
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: mouth_F_05
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: mouth_F_06
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: mouth_F_07
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: mouth_F_08
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: performFace
+    PlaceHolderTexture: {fileID: 2800000, guid: 9868d2e16a6a37ba7c583a4e5ad4c3a5, type: 3}
+  - SkinName: pWeapon_100_G_001
+    PlaceHolderTexture: {fileID: 2800000, guid: 7d1d27a4010959dc3e82b1a9f8e7efea, type: 3}
+  - SkinName: pWeapon_200_G_002
+    PlaceHolderTexture: {fileID: 2800000, guid: 0a4acb3bc55a3a7ae2d554a127f18431, type: 3}
+  - SkinName: sWeapon_11_G_003
+    PlaceHolderTexture: {fileID: 2800000, guid: 02eacd617422e0a7afae21a29a301efe, type: 3}
+  - SkinName: sWeapon_12_G_001
+    PlaceHolderTexture: {fileID: 2800000, guid: 4fb04a0c6adc1e2cab0a8eaea063f5ce, type: 3}
+  - SkinName: sWeapon_21_G_002
+    PlaceHolderTexture: {fileID: 2800000, guid: cd044dd2ba738e5a68a69083ef6b104b, type: 3}
+  - SkinName: sWeapon_22_G_002
+    PlaceHolderTexture: {fileID: 2800000, guid: 1f8e7d20e474beb50ed84c80dc80e361, type: 3}
+  - SkinName: tail_G_01
+    PlaceHolderTexture: {fileID: 2800000, guid: 485bcb36a02969f6cff001d847f67b66, type: 3}
+  - SkinName: body_0_M_01
+    PlaceHolderTexture: {fileID: 2800000, guid: 5ab60ed3ecb5ca66603ed93771527a1a, type: 3}
+  - SkinName: body_0_M_002
+    PlaceHolderTexture: {fileID: 2800000, guid: 6755abf53b19746ccc50a3b23cbbd23b, type: 3}
+  - SkinName: body_0_M_003
+    PlaceHolderTexture: {fileID: 2800000, guid: b915344cbbdf0cd3932f9f954726b57e, type: 3}
+  - SkinName: body_0_M_004
+    PlaceHolderTexture: {fileID: 2800000, guid: 75f72345e4f52f15c4ab2a3de616b4dd, type: 3}
+  - SkinName: body_0_M_005
+    PlaceHolderTexture: {fileID: 2800000, guid: 142943bcbbc50b8ae755c7c921abd90f, type: 3}
+  - SkinName: body_0_M_007
+    PlaceHolderTexture: {fileID: 2800000, guid: f6e89c1d1127540d99185e9df95aa30f, type: 3}
+  - SkinName: body_0_M_008
+    PlaceHolderTexture: {fileID: 2800000, guid: 7d6c21b0d5c7a2fa74123f1080a6227e, type: 3}
+  - SkinName: body_0_M_009
+    PlaceHolderTexture: {fileID: 2800000, guid: b96fdd5f8296e5a7f4a1eda76fbd6fba, type: 3}
+  - SkinName: body_0_M_010
+    PlaceHolderTexture: {fileID: 2800000, guid: e01d288f11b9634adcf127f59842316c, type: 3}
+  - SkinName: body_0_M_011
+    PlaceHolderTexture: {fileID: 2800000, guid: a4ea6d9e017512a2f5d9e5d2077f000c, type: 3}
+  - SkinName: body_0_M_012
+    PlaceHolderTexture: {fileID: 2800000, guid: 2deeb9a2f09b7df5184d7c8ef3e83f4f, type: 3}
+  - SkinName: body_0_M_013
+    PlaceHolderTexture: {fileID: 2800000, guid: ea5ae5a25f593b4f8d91258a1ded208c, type: 3}
+  - SkinName: body_0_M_014
+    PlaceHolderTexture: {fileID: 2800000, guid: 903533f0eee7d0b7ec265309eea32bce, type: 3}
+  - SkinName: body_0_M_015
+    PlaceHolderTexture: {fileID: 2800000, guid: cc520188bd72f5bd919f3f30c068d69f, type: 3}
+  - SkinName: body_0_M_016
+    PlaceHolderTexture: {fileID: 2800000, guid: 0559070a7a1a97a4291b5cb27611869f, type: 3}
+  - SkinName: body_0_M_017
+    PlaceHolderTexture: {fileID: 2800000, guid: dc79156cae96a7c3b336f3dafbd1ad0b, type: 3}
+  - SkinName: body_0_M_018
+    PlaceHolderTexture: {fileID: 2800000, guid: 26a4002fdd9711e4aeb344ede0635595, type: 3}
+  - SkinName: body_0_M_019
+    PlaceHolderTexture: {fileID: 2800000, guid: ea6b7501a568359e74c45d021184220d, type: 3}
+  - SkinName: body_0_M_020
+    PlaceHolderTexture: {fileID: 2800000, guid: afa397c224f5cee6a5a8b3248e2601be, type: 3}
+  - SkinName: body_0_M_021
+    PlaceHolderTexture: {fileID: 2800000, guid: 32582b8a2d3d02e9dc11e624fd33bf3b, type: 3}
+  - SkinName: body_0_M_022
+    PlaceHolderTexture: {fileID: 2800000, guid: 8efe429ce9a8593ff979579316e56fd2, type: 3}
+  - SkinName: body_0_M_023
+    PlaceHolderTexture: {fileID: 2800000, guid: b334e7adbb63f00240bed2c2a8ad0519, type: 3}
+  - SkinName: body_0_M_024
+    PlaceHolderTexture: {fileID: 2800000, guid: ef47d4a4d9996e09343a0a92a2d96845, type: 3}
+  - SkinName: body_0_M_025
+    PlaceHolderTexture: {fileID: 2800000, guid: 8917935186cc3bee1e966642d2740487, type: 3}
+  - SkinName: body_0_M_026
+    PlaceHolderTexture: {fileID: 2800000, guid: a75d35911d3f3fc6f7f5d6e232deaa1e, type: 3}
+  - SkinName: body_0_M_027
+    PlaceHolderTexture: {fileID: 2800000, guid: 1840fb9b4a7b7e12946006858533fabf, type: 3}
+  - SkinName: body_0_M_028
+    PlaceHolderTexture: {fileID: 2800000, guid: ea54b2db9bfa35adb90f9a9a81393cfd, type: 3}
+  - SkinName: body_0_M_029
+    PlaceHolderTexture: {fileID: 2800000, guid: 566435074b2318de729b7513bca82c22, type: 3}
+  - SkinName: body_0_M_030
+    PlaceHolderTexture: {fileID: 2800000, guid: 8c91e4abb1685accbd8dbee44aecfa1e, type: 3}
+  - SkinName: body_0_M_031
+    PlaceHolderTexture: {fileID: 2800000, guid: 2eaa0fcc759c546fd4cdf06e290fa990, type: 3}
+  - SkinName: body_0_M_032
+    PlaceHolderTexture: {fileID: 2800000, guid: 7bdd738e3abf32e48d469a302727a2e8, type: 3}
+  - SkinName: body_0_M_033
+    PlaceHolderTexture: {fileID: 2800000, guid: 55803d03cf2a9b9fc61839913f5b21e1, type: 3}
+  - SkinName: body_0_M_034
+    PlaceHolderTexture: {fileID: 2800000, guid: 5f5a6e84627d56ee70b00b8ba56a0950, type: 3}
+  - SkinName: body_0_M_035
+    PlaceHolderTexture: {fileID: 2800000, guid: 17091fc6e543fd8e59b2c6b64c1dc056, type: 3}
+  - SkinName: body_0_M_036
+    PlaceHolderTexture: {fileID: 2800000, guid: 2c40877fe6b04e156a76afd32a6591f2, type: 3}
+  - SkinName: body_0_M_037
+    PlaceHolderTexture: {fileID: 2800000, guid: e36e93cf04322fc9585c5ac27949b7d8, type: 3}
+  - SkinName: body_0_M_038
+    PlaceHolderTexture: {fileID: 2800000, guid: 9e4c9f5e1db3ec2caa243f78223b3251, type: 3}
+  - SkinName: body_0_M_039
+    PlaceHolderTexture: {fileID: 2800000, guid: 99f9464addba913011d8e1e9ca09329b, type: 3}
+  - SkinName: body_0_M_040
+    PlaceHolderTexture: {fileID: 2800000, guid: 8e7817cb21bb19ef0c2d27cebbc2a293, type: 3}
+  - SkinName: body_0_M_041
+    PlaceHolderTexture: {fileID: 2800000, guid: 9d25e6ba3b544d8f721fd169bc06456c, type: 3}
+  - SkinName: body_0_M_042
+    PlaceHolderTexture: {fileID: 2800000, guid: 6bbc8c85153b0231f4bec4ca988ea2a6, type: 3}
+  - SkinName: body_0_M_043
+    PlaceHolderTexture: {fileID: 2800000, guid: e5e9dbd2c73a316ac7b2bfb242e1b576, type: 3}
+  - SkinName: body_0_M_044
+    PlaceHolderTexture: {fileID: 2800000, guid: c8b1ef6a22dba63d6c36a1cfcb69a508, type: 3}
+  - SkinName: body_0_M_045
+    PlaceHolderTexture: {fileID: 2800000, guid: 0359a368b388bb7aba08a552c6fbf2b9, type: 3}
+  - SkinName: body_0_M_046
+    PlaceHolderTexture: {fileID: 2800000, guid: af4ab38d0804fbedf63d81e1cb73efa4, type: 3}
+  - SkinName: body_0_M_047
+    PlaceHolderTexture: {fileID: 2800000, guid: 33bed959a915e25d1a317640311bbdf4, type: 3}
+  - SkinName: body_0_M_048
+    PlaceHolderTexture: {fileID: 2800000, guid: 9bcd0d70631a4614b8ca7564f02e67b0, type: 3}
+  - SkinName: body_0_M_049
+    PlaceHolderTexture: {fileID: 2800000, guid: df97649f7482486808ff61681f55dd9f, type: 3}
+  - SkinName: body_0_M_050
+    PlaceHolderTexture: {fileID: 2800000, guid: 611d091f76617e95005a0acab863fbf2, type: 3}
+  - SkinName: body_0_M_051
+    PlaceHolderTexture: {fileID: 2800000, guid: 7e0de960cbf408cf43d9aaf04317d4e8, type: 3}
+  - SkinName: body_0_M_052
+    PlaceHolderTexture: {fileID: 2800000, guid: ffdacbc6e023b9e28bca91e2bf2a87b0, type: 3}
+  - SkinName: body_0_M_053
+    PlaceHolderTexture: {fileID: 2800000, guid: 0aa2c446cd0fc410c2f352e0ba1c7c88, type: 3}
+  - SkinName: body_0_M_054
+    PlaceHolderTexture: {fileID: 2800000, guid: eb11600137905d939baac754c90488aa, type: 3}
+  - SkinName: body_0_M_055
+    PlaceHolderTexture: {fileID: 2800000, guid: 3199509491f77f7dbe5e4b4547871b31, type: 3}
+  - SkinName: body_0_M_056
+    PlaceHolderTexture: {fileID: 2800000, guid: fb376fd3c010a8ff6f6723130f9ebee0, type: 3}
+  - SkinName: body_0_M_057
+    PlaceHolderTexture: {fileID: 2800000, guid: 0ca4d6e006c13b521521107d3f1ae796, type: 3}
+  - SkinName: body_0_M_058
+    PlaceHolderTexture: {fileID: 2800000, guid: d9a991d054895e748034e27f3c21a215, type: 3}
+  - SkinName: body_0_M_059
+    PlaceHolderTexture: {fileID: 2800000, guid: 7b35e2ed62f0333db33770b6fc07c997, type: 3}
+  - SkinName: body_0_M_060
+    PlaceHolderTexture: {fileID: 2800000, guid: 569072a0a861dcd27002b9ec135cd181, type: 3}
+  - SkinName: body_0_M_061
+    PlaceHolderTexture: {fileID: 2800000, guid: 8992023a3e38e5eb467a601e6e1a9254, type: 3}
+  - SkinName: body_0_M_062
+    PlaceHolderTexture: {fileID: 2800000, guid: b4e692c67a36a1a1fa6fd6f5745c75d6, type: 3}
+  - SkinName: body_0_M_063
+    PlaceHolderTexture: {fileID: 2800000, guid: 5f2fe48a8d08b56ae68277a0d32a9667, type: 3}
+  - SkinName: body_0_M_064
+    PlaceHolderTexture: {fileID: 2800000, guid: 7e9929eb6328b3aaef925bd6234379f0, type: 3}
+  - SkinName: body_0_M_065
+    PlaceHolderTexture: {fileID: 2800000, guid: 8545b63c4f34081a156049511e9f3575, type: 3}
+  - SkinName: body_0_M_066
+    PlaceHolderTexture: {fileID: 2800000, guid: 9cfe199d0bddd1199be48d1f2da72663, type: 3}
+  - SkinName: body_0_M_067
+    PlaceHolderTexture: {fileID: 2800000, guid: 8f376a2c2013dd348e2cb0c0af55980f, type: 3}
+  - SkinName: body_0_M_068
+    PlaceHolderTexture: {fileID: 2800000, guid: 6ddd7cdb8c279e74be25baa49186e0f7, type: 3}
+  - SkinName: body_0_M_069
+    PlaceHolderTexture: {fileID: 2800000, guid: a2db7ab7e925420667b010971f905af0, type: 3}
+  - SkinName: body_0_M_070
+    PlaceHolderTexture: {fileID: 2800000, guid: 20605f22a872e21589a361fc0b0a114c, type: 3}
+  - SkinName: body_0_M_071
+    PlaceHolderTexture: {fileID: 2800000, guid: 17e0543b4990cca55c6f3f109a77da2e, type: 3}
+  - SkinName: body_0_M_072
+    PlaceHolderTexture: {fileID: 2800000, guid: 34010a15f8a16e55f0a4e7067b4dd63b, type: 3}
+  - SkinName: body_0_M_073
+    PlaceHolderTexture: {fileID: 2800000, guid: 21c6ef21529596d2d4d8814aca172595, type: 3}
+  - SkinName: body_0_M_074
+    PlaceHolderTexture: {fileID: 2800000, guid: a253cf601cb1d534a019a280c9a4776c, type: 3}
+  - SkinName: body_0_M_075
+    PlaceHolderTexture: {fileID: 2800000, guid: 963ad66880031bfd1128a48e63c99990, type: 3}
+  - SkinName: body_0_M_076
+    PlaceHolderTexture: {fileID: 2800000, guid: 08973624434cd86fe6729fc460d9f06d, type: 3}
+  - SkinName: body_0_M_077
+    PlaceHolderTexture: {fileID: 2800000, guid: a07fefa537bfc012c4fcdf061f5fa1de, type: 3}
+  - SkinName: body_0_M_078
+    PlaceHolderTexture: {fileID: 2800000, guid: 09af719da002794e24c8496383dd53b9, type: 3}
+  - SkinName: body_0_M_079
+    PlaceHolderTexture: {fileID: 2800000, guid: ee0165154610040540455df2a0fa04b1, type: 3}
+  - SkinName: body_0_M_080
+    PlaceHolderTexture: {fileID: 2800000, guid: b29c2f178e92b5b7db6333d1e4814b83, type: 3}
+  - SkinName: body_0_M_081
+    PlaceHolderTexture: {fileID: 2800000, guid: 5a6db90af06f83736d8eca5300ce1588, type: 3}
+  - SkinName: body_0_M_082
+    PlaceHolderTexture: {fileID: 2800000, guid: dc9b79fe466d83e5fe86ea3234c1a4c1, type: 3}
+  - SkinName: body_0_M_083
+    PlaceHolderTexture: {fileID: 2800000, guid: e43895fe99f2bd1a439b2388fbeeb33c, type: 3}
+  - SkinName: body_0_M_shou
+    PlaceHolderTexture: {fileID: 2800000, guid: 3d318b7c06dca7158f75218fbe782d75, type: 3}
+  - SkinName: body_100_M_01
+    PlaceHolderTexture: {fileID: 2800000, guid: 636d6b0cc810be3fbd9b4c792957df64, type: 3}
+  - SkinName: body_100_M_02
+    PlaceHolderTexture: {fileID: 2800000, guid: 6925044f98ef945d7f99eba6d160bd2d, type: 3}
+  - SkinName: body_100_M_03
+    PlaceHolderTexture: {fileID: 2800000, guid: f7af99ad0c22b44a9ee37ffaf5513bfd, type: 3}
+  - SkinName: body_200_M_01
+    PlaceHolderTexture: {fileID: 2800000, guid: 71eb05eb1f069206c1f1973b1258b075, type: 3}
+  - SkinName: body_200_M_02
+    PlaceHolderTexture: {fileID: 2800000, guid: 51df69406e1930b5a15587cbea51a43d, type: 3}
+  - SkinName: body_200_M_03
+    PlaceHolderTexture: {fileID: 2800000, guid: 92d8468d1277bab0c1b6b3696e11c4f7, type: 3}
+  - SkinName: brow_M_01
+    PlaceHolderTexture: {fileID: 2800000, guid: dedb818747e9f72b528291a44997c9e3, type: 3}
+  - SkinName: brow_M_02
+    PlaceHolderTexture: {fileID: 2800000, guid: dedb818747e9f72b528291a44997c9e3, type: 3}
+  - SkinName: brow_M_03
+    PlaceHolderTexture: {fileID: 2800000, guid: dedb818747e9f72b528291a44997c9e3, type: 3}
+  - SkinName: brow_M_04
+    PlaceHolderTexture: {fileID: 2800000, guid: dedb818747e9f72b528291a44997c9e3, type: 3}
+  - SkinName: brow_M_05
+    PlaceHolderTexture: {fileID: 2800000, guid: dedb818747e9f72b528291a44997c9e3, type: 3}
+  - SkinName: brow_M_06
+    PlaceHolderTexture: {fileID: 2800000, guid: dedb818747e9f72b528291a44997c9e3, type: 3}
+  - SkinName: brow_M_07
+    PlaceHolderTexture: {fileID: 2800000, guid: dedb818747e9f72b528291a44997c9e3, type: 3}
+  - SkinName: ethnicity_M_01
+    PlaceHolderTexture: {fileID: 2800000, guid: 7b935a939a4ecebbaaf47c5a0546438f, type: 3}
+  - SkinName: eye_M_01
+    PlaceHolderTexture: {fileID: 2800000, guid: 676918baeefb2e4eff513e8b049723c1, type: 3}
+  - SkinName: eye_M_02
+    PlaceHolderTexture: {fileID: 2800000, guid: 676918baeefb2e4eff513e8b049723c1, type: 3}
+  - SkinName: eye_M_03
+    PlaceHolderTexture: {fileID: 2800000, guid: 676918baeefb2e4eff513e8b049723c1, type: 3}
+  - SkinName: eye_M_04
+    PlaceHolderTexture: {fileID: 2800000, guid: 676918baeefb2e4eff513e8b049723c1, type: 3}
+  - SkinName: eye_M_05
+    PlaceHolderTexture: {fileID: 2800000, guid: 676918baeefb2e4eff513e8b049723c1, type: 3}
+  - SkinName: eye_M_06
+    PlaceHolderTexture: {fileID: 2800000, guid: 676918baeefb2e4eff513e8b049723c1, type: 3}
+  - SkinName: eye_M_07
+    PlaceHolderTexture: {fileID: 2800000, guid: 676918baeefb2e4eff513e8b049723c1, type: 3}
+  - SkinName: eye_M_08
+    PlaceHolderTexture: {fileID: 2800000, guid: 676918baeefb2e4eff513e8b049723c1, type: 3}
+  - SkinName: eye_M_09
+    PlaceHolderTexture: {fileID: 2800000, guid: 676918baeefb2e4eff513e8b049723c1, type: 3}
+  - SkinName: eye_M_10
+    PlaceHolderTexture: {fileID: 2800000, guid: 676918baeefb2e4eff513e8b049723c1, type: 3}
+  - SkinName: eye_M_11
+    PlaceHolderTexture: {fileID: 2800000, guid: 676918baeefb2e4eff513e8b049723c1, type: 3}
+  - SkinName: eye_M_12
+    PlaceHolderTexture: {fileID: 2800000, guid: 676918baeefb2e4eff513e8b049723c1, type: 3}
+  - SkinName: faceDecoration_1_M_001
+    PlaceHolderTexture: {fileID: 2800000, guid: 99991776db3bfe2e335fa1e376825644, type: 3}
+  - SkinName: faceDecoration_1_M_002
+    PlaceHolderTexture: {fileID: 2800000, guid: 808bf3a7dc82908bda43fff09fb03e03, type: 3}
+  - SkinName: faceDecoration_1_M_013
+    PlaceHolderTexture: {fileID: 2800000, guid: 95f92368a941da51d2d10ecdf1ab7f1c, type: 3}
+  - SkinName: faceDecoration_2_M_001
+    PlaceHolderTexture: {fileID: 2800000, guid: 300f232ef6188a0958ded09abec0d234, type: 3}
+  - SkinName: faceDecoration_2_M_002
+    PlaceHolderTexture: {fileID: 2800000, guid: ae3df0f2761a3595d6192ba580197f86, type: 3}
+  - SkinName: faceDecoration_2_M_004
+    PlaceHolderTexture: {fileID: 2800000, guid: 9dceefc7a39eadcf27e06d714631b608, type: 3}
+  - SkinName: faceDecoration_3_M_001
+    PlaceHolderTexture: {fileID: 2800000, guid: 789f56392fabf89106f6f119b4bc4590, type: 3}
+  - SkinName: facePaint_M_001
+    PlaceHolderTexture: {fileID: 2800000, guid: b5441bcfed522911b140aef7f5d8d7b5, type: 3}
+  - SkinName: faceShape_M_01
+    PlaceHolderTexture: {fileID: 2800000, guid: 676918baeefb2e4eff513e8b049723c1, type: 3}
+  - SkinName: hair_M_01
+    PlaceHolderTexture: {fileID: 2800000, guid: 711f21652856a9a585edc075605b9ad5, type: 3}
+  - SkinName: hair_M_02
+    PlaceHolderTexture: {fileID: 2800000, guid: f3b32de0c8fa48c6105dace61d957314, type: 3}
+  - SkinName: hair_M_03
+    PlaceHolderTexture: {fileID: 2800000, guid: 809edcbe5d0b513c00cd778e35f39b43, type: 3}
+  - SkinName: hair_M_04
+    PlaceHolderTexture: {fileID: 2800000, guid: f2512012ac18c0d7126c1816a1a17b74, type: 3}
+  - SkinName: hair_M_05
+    PlaceHolderTexture: {fileID: 2800000, guid: 2d74c0034e1712346fdb4c254136d96e, type: 3}
+  - SkinName: hair_M_06
+    PlaceHolderTexture: {fileID: 2800000, guid: eef2d104114364d06bb2bd7b2cc9813c, type: 3}
+  - SkinName: hair_M_07
+    PlaceHolderTexture: {fileID: 2800000, guid: dfb41603d7d934c7d804d830d9686520, type: 3}
+  - SkinName: hair_M_08
+    PlaceHolderTexture: {fileID: 2800000, guid: 3d434cff615f30c23dc0b4a4f92e009d, type: 3}
+  - SkinName: hair_M_09
+    PlaceHolderTexture: {fileID: 2800000, guid: 5967b33cc1cc05b0f2335be84d7751ba, type: 3}
+  - SkinName: hair_M_10
+    PlaceHolderTexture: {fileID: 2800000, guid: a9d6b20eccee211b541dfba044752def, type: 3}
+  - SkinName: hair_M_11
+    PlaceHolderTexture: {fileID: 2800000, guid: 236517258e6a904d0819dd1c765a3b3b, type: 3}
+  - SkinName: hair_M_12
+    PlaceHolderTexture: {fileID: 2800000, guid: 8fa35c7bbce69790adf45c149f0a0f55, type: 3}
+  - SkinName: hair_M_13
+    PlaceHolderTexture: {fileID: 2800000, guid: 442fac2e0d20fdafd5f6d14dd6a62f81, type: 3}
+  - SkinName: hair_M_14
+    PlaceHolderTexture: {fileID: 2800000, guid: 8980878d0f20c0d94553c10d6e459428, type: 3}
+  - SkinName: hair_M_15
+    PlaceHolderTexture: {fileID: 2800000, guid: fd5f03ded96a4b18c5807887afe5fa28, type: 3}
+  - SkinName: hair_M_16
+    PlaceHolderTexture: {fileID: 2800000, guid: 27b6216276a584999ffe15ef69c77bc8, type: 3}
+  - SkinName: hair_M_17
+    PlaceHolderTexture: {fileID: 2800000, guid: 0de7e7ec6ef77c4882c4d901b0be9e12, type: 3}
+  - SkinName: hair_M_18
+    PlaceHolderTexture: {fileID: 2800000, guid: 95c19ce40e7c7c89ed785a37d433807e, type: 3}
+  - SkinName: hair_M_19
+    PlaceHolderTexture: {fileID: 2800000, guid: 5889943b538e7892c20c48233fb0ed23, type: 3}
+  - SkinName: hair_M_20
+    PlaceHolderTexture: {fileID: 2800000, guid: ff429276f3a6a740a1e0163a9e07cf09, type: 3}
+  - SkinName: hair_M_21
+    PlaceHolderTexture: {fileID: 2800000, guid: c5d417525f328f1042b4022b87a3f946, type: 3}
+  - SkinName: hair_M_22
+    PlaceHolderTexture: {fileID: 2800000, guid: dd605b9d080914650a2f7ceac1f40e83, type: 3}
+  - SkinName: hair_M_23
+    PlaceHolderTexture: {fileID: 2800000, guid: 8e0365057d8b8a82a670dee41a4ed665, type: 3}
+  - SkinName: hair_M_24
+    PlaceHolderTexture: {fileID: 2800000, guid: bd32f3bb6c36037f31f2f524ca986e23, type: 3}
+  - SkinName: hair_M_25
+    PlaceHolderTexture: {fileID: 2800000, guid: eb4c12121375afdabb3c416d931b3ec9, type: 3}
+  - SkinName: hair_M_26
+    PlaceHolderTexture: {fileID: 2800000, guid: 35630d6690371c2d03d790a961dfa2b8, type: 3}
+  - SkinName: hair_M_27
+    PlaceHolderTexture: {fileID: 2800000, guid: 540a350d243d95e79d31d50f4ee8a3b7, type: 3}
+  - SkinName: hair_M_28
+    PlaceHolderTexture: {fileID: 2800000, guid: 455ce83c222186153dd97d2265b8d94c, type: 3}
+  - SkinName: hair_M_29
+    PlaceHolderTexture: {fileID: 2800000, guid: d9144b7c933acc263a51db5b6861ed3c, type: 3}
+  - SkinName: hair_M_30
+    PlaceHolderTexture: {fileID: 2800000, guid: a896f194fabe2b85f75442f67a9ecf23, type: 3}
+  - SkinName: hair_M_31
+    PlaceHolderTexture: {fileID: 2800000, guid: c7b5dfdf3642a9bef7b03ff4e5b35609, type: 3}
+  - SkinName: hair_M_32
+    PlaceHolderTexture: {fileID: 2800000, guid: 54596b8655a1eaa0f6c82779c69745b2, type: 3}
+  - SkinName: hair_M_33
+    PlaceHolderTexture: {fileID: 2800000, guid: 59a109f3b02b0fb0169a1951f8f9becd, type: 3}
+  - SkinName: hair_M_34
+    PlaceHolderTexture: {fileID: 2800000, guid: 1c1dbe7cb45df889604ee0454719d192, type: 3}
+  - SkinName: hair_M_35
+    PlaceHolderTexture: {fileID: 2800000, guid: 7f898eaa8609c8b902e1140d11a6f7d5, type: 3}
+  - SkinName: hair_M_36
+    PlaceHolderTexture: {fileID: 2800000, guid: 0928c8802406f330eabc681b0cd268d9, type: 3}
+  - SkinName: hair_M_37
+    PlaceHolderTexture: {fileID: 2800000, guid: 87ce3f5dd853bfb982783c5a01b0254b, type: 3}
+  - SkinName: hair_M_38
+    PlaceHolderTexture: {fileID: 2800000, guid: f57aef588c892a6049209d5759b4b3e7, type: 3}
+  - SkinName: hair_M_39
+    PlaceHolderTexture: {fileID: 2800000, guid: f32e8c62ff4d1407d911ab2531bcb418, type: 3}
+  - SkinName: hair_M_40
+    PlaceHolderTexture: {fileID: 2800000, guid: 2e0c76fcb0333ca069d54830dbd0e890, type: 3}
+  - SkinName: hair_M_41
+    PlaceHolderTexture: {fileID: 2800000, guid: ebd252e52b1a4cca2d544be2db17e9c5, type: 3}
+  - SkinName: hair_M_42
+    PlaceHolderTexture: {fileID: 2800000, guid: 46ab47221238b15f9d059cc0279fa3a6, type: 3}
+  - SkinName: hair_M_43
+    PlaceHolderTexture: {fileID: 2800000, guid: e6847461bcb118d0725d0e6e394277bb, type: 3}
+  - SkinName: hair_M_44
+    PlaceHolderTexture: {fileID: 2800000, guid: 36e3b7121a71092c7b4833c0907921c9, type: 3}
+  - SkinName: hair_M_45
+    PlaceHolderTexture: {fileID: 2800000, guid: 3d01a3bd7213a175af4f99c829b84aed, type: 3}
+  - SkinName: hair_M_46
+    PlaceHolderTexture: {fileID: 2800000, guid: 1a27287a43f44b5838132ca56c06f96b, type: 3}
+  - SkinName: hair_M_47
+    PlaceHolderTexture: {fileID: 2800000, guid: 55f343c915007e928c1428aace1637b3, type: 3}
+  - SkinName: hair_M_48
+    PlaceHolderTexture: {fileID: 2800000, guid: 6d030886e0f81cb833483c97a5711432, type: 3}
+  - SkinName: hair_M_49
+    PlaceHolderTexture: {fileID: 2800000, guid: abcd154d4dfb9e532f4d746761606212, type: 3}
+  - SkinName: hair_M_50
+    PlaceHolderTexture: {fileID: 2800000, guid: 9a17bf770dcbf87044ace3f75e339d94, type: 3}
+  - SkinName: hair_M_51
+    PlaceHolderTexture: {fileID: 2800000, guid: 76321d8ba2077ca14d6e633c0b3faed5, type: 3}
+  - SkinName: hair_M_52
+    PlaceHolderTexture: {fileID: 2800000, guid: 5a820757b5beb228de57ae558d36bcb3, type: 3}
+  - SkinName: hair_M_53
+    PlaceHolderTexture: {fileID: 2800000, guid: aff3684c5265a2bf757d822aaa441b11, type: 3}
+  - SkinName: hair_M_54
+    PlaceHolderTexture: {fileID: 2800000, guid: fe66bbad2be796741098381214f7969a, type: 3}
+  - SkinName: hair_M_55
+    PlaceHolderTexture: {fileID: 2800000, guid: 9a0f162990a1fee6a9100698264e75b2, type: 3}
+  - SkinName: hair_M_56
+    PlaceHolderTexture: {fileID: 2800000, guid: 52a694e93d316b6f26600ec14a07b876, type: 3}
+  - SkinName: hair_M_57
+    PlaceHolderTexture: {fileID: 2800000, guid: b29ac6b2a8f4ccd77054c60c8a22d54d, type: 3}
+  - SkinName: hair_M_58
+    PlaceHolderTexture: {fileID: 2800000, guid: cc3d347f2550302e3e60f7d43d98ff9a, type: 3}
+  - SkinName: hair_M_59
+    PlaceHolderTexture: {fileID: 2800000, guid: 5a34a641d4b12376479660c074294c0c, type: 3}
+  - SkinName: hair_M_60
+    PlaceHolderTexture: {fileID: 2800000, guid: 2fd8f24240852ed02f5d10df02acad60, type: 3}
+  - SkinName: hair_M_61
+    PlaceHolderTexture: {fileID: 2800000, guid: a3e8df3ff913f38863da910c6685ee76, type: 3}
+  - SkinName: hair_M_62
+    PlaceHolderTexture: {fileID: 2800000, guid: 126d81f2e89d9961bcc09f51fd8d56ab, type: 3}
+  - SkinName: hair_M_63
+    PlaceHolderTexture: {fileID: 2800000, guid: dbadf29e44ebd72cfdfbdcff2a5c0cf0, type: 3}
+  - SkinName: hair_M_64
+    PlaceHolderTexture: {fileID: 2800000, guid: f6bcea7fff6ca58b3fae8c745626a3cd, type: 3}
+  - SkinName: hair_M_65
+    PlaceHolderTexture: {fileID: 2800000, guid: 2094755768cd421887f5433d0598c338, type: 3}
+  - SkinName: hair_M_66
+    PlaceHolderTexture: {fileID: 2800000, guid: 7cf4d03daa6b13d37e58ab3e258e2358, type: 3}
+  - SkinName: hair_M_67
+    PlaceHolderTexture: {fileID: 2800000, guid: cf9e769951db5463dfd5c17dac111f22, type: 3}
+  - SkinName: hair_M_68
+    PlaceHolderTexture: {fileID: 2800000, guid: db7f326fa2ca9d194dc5745c383fd615, type: 3}
+  - SkinName: hair_M_69
+    PlaceHolderTexture: {fileID: 2800000, guid: bc9078f8a00a78bcd962ccf059033061, type: 3}
+  - SkinName: hair_M_70
+    PlaceHolderTexture: {fileID: 2800000, guid: 2d94943f216d5870a8a00499ec1c21ff, type: 3}
+  - SkinName: hair_M_71
+    PlaceHolderTexture: {fileID: 2800000, guid: 77e9cd491ea05ee51512cf4503626412, type: 3}
+  - SkinName: hair_M_72
+    PlaceHolderTexture: {fileID: 2800000, guid: d2ed0b44b23780a19d4c3e495fb6a91e, type: 3}
+  - SkinName: hair_M_73
+    PlaceHolderTexture: {fileID: 2800000, guid: df1bc4c6c0101187d4eacc9cc67a3425, type: 3}
+  - SkinName: hair_M_74
+    PlaceHolderTexture: {fileID: 2800000, guid: dbb32f11d27a44eb81fc1889936f63c6, type: 3}
+  - SkinName: hair_M_75
+    PlaceHolderTexture: {fileID: 2800000, guid: 779b24476125a85fb762b192901ac40f, type: 3}
+  - SkinName: hair_M_76
+    PlaceHolderTexture: {fileID: 2800000, guid: 4791bc9834b1a846693e4eed4ea3fcd4, type: 3}
+  - SkinName: hair_M_77
+    PlaceHolderTexture: {fileID: 2800000, guid: 6ddd4608889fb051ad8d1432cce502da, type: 3}
+  - SkinName: hair_M_78
+    PlaceHolderTexture: {fileID: 2800000, guid: 81ba2ef39c46ac93bdedfc270b797489, type: 3}
+  - SkinName: hair_M_79
+    PlaceHolderTexture: {fileID: 2800000, guid: e5f2929da6aa82c49d1096941c74a323, type: 3}
+  - SkinName: hair_M_80
+    PlaceHolderTexture: {fileID: 2800000, guid: 012d900da06eeb833d7a17e829990251, type: 3}
+  - SkinName: hair_M_81
+    PlaceHolderTexture: {fileID: 2800000, guid: 9061af886c1ea37b221b39b78d81caa2, type: 3}
+  - SkinName: hair_M_82
+    PlaceHolderTexture: {fileID: 2800000, guid: 3f4fec1473fbfa4aabb26579a40397e9, type: 3}
+  - SkinName: hair_M_83
+    PlaceHolderTexture: {fileID: 2800000, guid: 20f8e18d8910b534db7791dc4f89d652, type: 3}
+  - SkinName: hair_M_84
+    PlaceHolderTexture: {fileID: 2800000, guid: 24b67b452f2effc1ebf84fbf9a12483a, type: 3}
+  - SkinName: hair_M_85
+    PlaceHolderTexture: {fileID: 2800000, guid: b720b6a4c7c035dd182eaa3e8a256277, type: 3}
+  - SkinName: hair_M_86
+    PlaceHolderTexture: {fileID: 2800000, guid: 0cb86d2c26993d71f5768882f4c83614, type: 3}
+  - SkinName: hair_M_87
+    PlaceHolderTexture: {fileID: 2800000, guid: 684619cc4541bf4ed7e897784b33a46d, type: 3}
+  - SkinName: hair_M_88
+    PlaceHolderTexture: {fileID: 2800000, guid: 0dc80892f7cd9db08c6da62e42e6f634, type: 3}
+  - SkinName: hair_M_89
+    PlaceHolderTexture: {fileID: 2800000, guid: cea4ded999d2409cdee900c8714f3132, type: 3}
+  - SkinName: hair_M_90
+    PlaceHolderTexture: {fileID: 2800000, guid: 84b3336ab4dab1f0a99419a17c860701, type: 3}
+  - SkinName: hair_M_91
+    PlaceHolderTexture: {fileID: 2800000, guid: c8705d3d745c1d60411de02a680f165f, type: 3}
+  - SkinName: hair_M_92
+    PlaceHolderTexture: {fileID: 2800000, guid: 211b09d718464ecfcc7b6f2f30bdab61, type: 3}
+  - SkinName: hair_M_93
+    PlaceHolderTexture: {fileID: 2800000, guid: 4404a176fad48b874614532ccf1b4093, type: 3}
+  - SkinName: hair_M_94
+    PlaceHolderTexture: {fileID: 2800000, guid: 583ef9c5da5d00d1779c1f59ef6ab33c, type: 3}
+  - SkinName: hair_M_95
+    PlaceHolderTexture: {fileID: 2800000, guid: 0c3614cc1d2f5ce8285940b954de1c02, type: 3}
+  - SkinName: hair_M_96
+    PlaceHolderTexture: {fileID: 2800000, guid: b10f99eb00d7e236439476db5c2d8eaf, type: 3}
+  - SkinName: headOrnament_1_M_001
+    PlaceHolderTexture: {fileID: 2800000, guid: ada166319aabee8291ac90a03e18df2e, type: 3}
+  - SkinName: headOrnament_1_M_002
+    PlaceHolderTexture: {fileID: 2800000, guid: 71aff437018d33b2f87dfb95871c2155, type: 3}
+  - SkinName: headOrnament_1_M_003
+    PlaceHolderTexture: {fileID: 2800000, guid: df90021b2e1f9629b9013b5f75e47e64, type: 3}
+  - SkinName: headOrnament_1_M_004
+    PlaceHolderTexture: {fileID: 2800000, guid: 1d1c94a36e4c169f9f50592790f21eaf, type: 3}
+  - SkinName: headOrnament_1_M_005
+    PlaceHolderTexture: {fileID: 2800000, guid: bb92a719f03977f807e825617adf599f, type: 3}
+  - SkinName: headOrnament_1_M_006
+    PlaceHolderTexture: {fileID: 2800000, guid: 5237add7cd805783dedad5898225becc, type: 3}
+  - SkinName: headOrnament_1_M_007
+    PlaceHolderTexture: {fileID: 2800000, guid: e784a918794bc531122d7cbbbfa32284, type: 3}
+  - SkinName: headOrnament_1_M_008
+    PlaceHolderTexture: {fileID: 2800000, guid: 8c01c0ab7ad53aa21362cff6da7c84af, type: 3}
+  - SkinName: headOrnament_1_M_009
+    PlaceHolderTexture: {fileID: 2800000, guid: fd4e49e97b54fcc8743c6e1599018858, type: 3}
+  - SkinName: headOrnament_1_M_010
+    PlaceHolderTexture: {fileID: 2800000, guid: 9b610a5c5f0851ff7d795692d4727093, type: 3}
+  - SkinName: headOrnament_1_M_011
+    PlaceHolderTexture: {fileID: 2800000, guid: 8c3fa427c750545c99dcde52f230b9b4, type: 3}
+  - SkinName: headOrnament_1_M_012
+    PlaceHolderTexture: {fileID: 2800000, guid: 5a8f17c2b73bdb7dc0a4f4b9c7c63be7, type: 3}
+  - SkinName: headOrnament_2_M_001
+    PlaceHolderTexture: {fileID: 2800000, guid: 03cb9d3c4efdf680d69cd08162d450b5, type: 3}
+  - SkinName: headOrnament_2_M_002
+    PlaceHolderTexture: {fileID: 2800000, guid: 210d1370dd0cd0d83f4122c975633759, type: 3}
+  - SkinName: headOrnament_2_M_003
+    PlaceHolderTexture: {fileID: 2800000, guid: 25e9e17c8288707c9753f206668f4a69, type: 3}
+  - SkinName: headOrnament_2_M_004
+    PlaceHolderTexture: {fileID: 2800000, guid: 1d1efa4ddd0f8c16b959ee4bd23bebc3, type: 3}
+  - SkinName: headOrnament_2_M_005
+    PlaceHolderTexture: {fileID: 2800000, guid: f83c41d7e74672e8cb265bf52385bbb4, type: 3}
+  - SkinName: headOrnament_2_M_006
+    PlaceHolderTexture: {fileID: 2800000, guid: 56ad1f7d353737ace7da0c0514a89ec4, type: 3}
+  - SkinName: headOrnament_2_M_007
+    PlaceHolderTexture: {fileID: 2800000, guid: 84e70d0f1000357ca5a68842b8eafac9, type: 3}
+  - SkinName: headOrnament_2_M_008
+    PlaceHolderTexture: {fileID: 2800000, guid: b1580393525a38a203150667bbdb3a72, type: 3}
+  - SkinName: headOrnament_2_M_009
+    PlaceHolderTexture: {fileID: 2800000, guid: 32c3fe4c1873bfd5a0b06ce8a3aa55b4, type: 3}
+  - SkinName: headOrnament_2_M_010
+    PlaceHolderTexture: {fileID: 2800000, guid: e9763c9d6b36601f6469ddf557559441, type: 3}
+  - SkinName: headOrnament_2_M_011
+    PlaceHolderTexture: {fileID: 2800000, guid: e7f79d77a81809d3d9c6b6d939e94f4b, type: 3}
+  - SkinName: headOrnament_2_M_012
+    PlaceHolderTexture: {fileID: 2800000, guid: 97fe5c384c812d8c90d916c5f9334927, type: 3}
+  - SkinName: headOrnament_2_M_013
+    PlaceHolderTexture: {fileID: 2800000, guid: a4387604faed32de072fbb8c07f79a8d, type: 3}
+  - SkinName: headOrnament_2_M_014
+    PlaceHolderTexture: {fileID: 2800000, guid: a9ab1baee86743296ff56a3890a2f144, type: 3}
+  - SkinName: headOrnament_2_M_015
+    PlaceHolderTexture: {fileID: 2800000, guid: 4a99088d701121e1e26e61dd3ae0183d, type: 3}
+  - SkinName: headOrnament_2_M_016
+    PlaceHolderTexture: {fileID: 2800000, guid: 19e641a15bb11653fabcc674a19b9090, type: 3}
+  - SkinName: headOrnament_2_M_017
+    PlaceHolderTexture: {fileID: 2800000, guid: 0488eeae585c7dc33041dc1592d190e9, type: 3}
+  - SkinName: headOrnament_2_M_018
+    PlaceHolderTexture: {fileID: 2800000, guid: f5c2e6f3da4fd87b884f32cdfcc7c9e4, type: 3}
+  - SkinName: headOrnament_2_M_019
+    PlaceHolderTexture: {fileID: 2800000, guid: 9d5d30b6eb37a331bf62c1bfcc93068d, type: 3}
+  - SkinName: headOrnament_2_M_020
+    PlaceHolderTexture: {fileID: 2800000, guid: e713351f53dfad5489255c775593b10e, type: 3}
+  - SkinName: mouth_M_01
+    PlaceHolderTexture: {fileID: 2800000, guid: 676918baeefb2e4eff513e8b049723c1, type: 3}
+  - SkinName: mouth_M_02
+    PlaceHolderTexture: {fileID: 2800000, guid: 676918baeefb2e4eff513e8b049723c1, type: 3}
+  - SkinName: mouth_M_03
+    PlaceHolderTexture: {fileID: 2800000, guid: 676918baeefb2e4eff513e8b049723c1, type: 3}
+  - SkinName: mouth_M_04
+    PlaceHolderTexture: {fileID: 2800000, guid: 676918baeefb2e4eff513e8b049723c1, type: 3}
+  - SkinName: mouth_M_05
+    PlaceHolderTexture: {fileID: 2800000, guid: 676918baeefb2e4eff513e8b049723c1, type: 3}
+  - SkinName: mouth_M_06
+    PlaceHolderTexture: {fileID: 2800000, guid: 676918baeefb2e4eff513e8b049723c1, type: 3}
+  - SkinName: mouth_M_07
+    PlaceHolderTexture: {fileID: 2800000, guid: 676918baeefb2e4eff513e8b049723c1, type: 3}
+  - SkinName: mouth_M_08
+    PlaceHolderTexture: {fileID: 2800000, guid: 676918baeefb2e4eff513e8b049723c1, type: 3}

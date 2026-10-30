@@ -7,6 +7,10 @@ import io
 import json
 import re
 import struct
+import subprocess
+import sys
+import tempfile
+import wave
 from pathlib import Path
 
 from PIL import Image
@@ -22,8 +26,10 @@ from map12_team_native_schemas import install
 from prepare_unity_map12_team_panel_animation import build as animations
 from prepare_unity_map12_team_panel_sprites import NativeTeamSprites
 from prepare_unity_map12_team_invite_animation import build as invite_animations
+from prepare_unity_map12_ui_audio import audio_meta, embedded_media
 from prepare_unity_map12_team_invite_extra_sources import OUTPUT as EXTRA_ORIGINAL, KEYS as EXTRA_NAMES
 from prepare_unity_map12_team_invite_extra_native import OUTPUT as EXTRA_NATIVE
+from validation_workspace import validation_directory
 from UnityPy.classes.PPtr import PPtr
 
 NATIVE = ROOT / 'unity/Assets/Official/World/Map/12/Source/native-team-ui-prefabs.json'
@@ -34,6 +40,80 @@ NAMES = ('TeamInvitePanel', 'TeamInvitePanelPlayerItem', 'TeamInvitePanelTabGrou
 
 def output_guid(name):
     return hashlib.md5(('zjcs:map12:team-invite-prefab:' + name).encode()).hexdigest()
+
+
+def native_asset_meta(native_guid, main_file_id=11400000):
+    return ('fileFormatVersion: 2\nguid: ' + native_guid + '\nNativeFormatImporter:\n'
+        '  externalObjects: {}\n  mainObjectFileID: ' + str(main_file_id) + '\n'
+        '  userData:\n  assetBundleName:\n  assetBundleVariant:\n').encode()
+
+
+def decode_invite_audio(apk):
+    event_id, event_name, bank_id = 4174865448, 'Friend_Heart', 775127471
+    typed = ROOT / '.tools/source-packages/current/871_156598/profession-ui/typed/inputs/source-manifest.json'
+    source = json.loads(typed.read_bytes())
+    if apk.version != '871_156598' or source['manifest'] != apk.version:
+        raise ValueError('Invitation audio source version differs from the selected APK')
+    components = [row for row in source['components'] if row.get('type') == 'WwiseEventReference'
+        and row.get('fields', {}).get('id') == event_id and row.get('fields', {}).get('objectName') == event_name]
+    component, = components
+    windows_audio_path = ROOT / 'assets/reference/profession-ui/windows-audio-source-manifest.json'
+    windows_audio = json.loads(windows_audio_path.read_bytes())
+    bank_records = [row for row in windows_audio['events'] if row.get('bank_id') == bank_id]
+    if not bank_records or len({row['bank_sha256'] for row in bank_records}) != 1:
+        raise ValueError('Original invitation audio bank is not covered by its verified Wwise source')
+    bank_path = ROOT / '.tools/source-packages/current/871_156598/profession-ui/audio' / (str(bank_id) + '.bnk')
+    bank_bytes = bank_path.read_bytes()
+    bank_sha = sha(bank_bytes)
+    if bank_sha != bank_records[0]['bank_sha256']:
+        raise ValueError('Original invitation Wwise bank changed')
+    wwiser = ROOT / '.tools/wwiser/wwiser.py'
+    decoder = ROOT / '.tools/vgmstream/vgmstream-cli.exe'
+    temp_root = validation_directory()
+    with tempfile.TemporaryDirectory(prefix='map12-team-invite-audio-', dir=temp_root) as temporary:
+        stage = Path(temporary)
+        banks, txtps = stage / 'banks', stage / 'txtp'
+        banks.mkdir(); txtps.mkdir()
+        staged_bank = banks / (str(bank_id) + '.bnk')
+        staged_bank.write_bytes(bank_bytes)
+        command = [sys.executable, str(wwiser), str(staged_bank), '-g', '-d', 'none', '-go', str(txtps),
+            '-gw', '../banks/', '-gv', '0dB', '-gf', str(event_id)]
+        subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        matches = []
+        for path in txtps.glob('*.txtp'):
+            text = path.read_text(encoding='utf-8')
+            if re.search(r'CAkEvent\[\d+\] ' + str(event_id) + r'\b', text):
+                matches.append((path, text))
+        txtp, text = matches[0] if len(matches) == 1 else (None, None)
+        if txtp is None:
+            raise ValueError('Resolve the original Friend_Heart Wwise event graph')
+        leaves = [line.strip() for line in text.splitlines() if line.strip() and not line.lstrip().startswith('#')]
+        if len(leaves) != 1 or 'master volume: auto' in text:
+            raise ValueError('Preserve the original Friend_Heart event playback graph')
+        match = re.fullmatch(r'\.\./banks/(\d+)\.bnk #s(\d+) #i(?:  #v (-?[\d.]+)dB)?  ##(\d+)\.wem', leaves[0])
+        if match is None or int(match[1]) != bank_id:
+            raise ValueError('Unexpected original Friend_Heart event leaf: ' + leaves[0])
+        subsong, gain, media_id = int(match[2]), float(match[3] or 0), int(match[4])
+        media = embedded_media(bank_bytes, media_id)
+        if media['subsong'] != subsong:
+            raise ValueError('Original Friend_Heart media/subsong differs')
+        wav = stage / (event_name + '.wav')
+        decoded = subprocess.run([str(decoder), '-i', '-o', str(wav), str(txtp)],
+            check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        payload = wav.read_bytes()
+        with wave.open(str(wav), 'rb') as audio:
+            if audio.getsampwidth() != 2 or audio.getcomptype() != 'NONE':
+                raise ValueError('Expected original Friend_Heart PCM16 decoding')
+            info = dict(channels=audio.getnchannels(), frames=audio.getnframes(),
+                sample_rate=audio.getframerate(), sample_width=audio.getsampwidth())
+        proof = dict(name=event_name, id=event_id, nativeReference=dict(identity=component['cab'] + ':' + component['path_id'],
+                payloadSha256=component['payload_sha256'], source=dict(path=typed.relative_to(ROOT).as_posix(), sha256=sha(typed.read_bytes()))),
+            windowsAudioSource=dict(path=windows_audio_path.relative_to(ROOT).as_posix(), sha256=sha(windows_audio_path.read_bytes())),
+            bank=dict(path=bank_path.relative_to(ROOT).as_posix(), sha256=bank_sha), media=media,
+            gainDb=gain, txtp=text, txtpSha256=sha(txtp.read_bytes()), pcm=info,
+            pcmSha256=sha(payload), tools=[dict(path=path.relative_to(ROOT).as_posix(), sha256=sha(path.read_bytes()))
+                for path in (wwiser, decoder)])
+        return payload, proof
 
 
 def build(write=False):
@@ -100,6 +180,7 @@ def build(write=False):
         'TeamInvitePanel', 'TeamInvitePlayerPanel', 'ChallengeInvitePlayerPanel', 'RoomInvitePlayerPanel',
         'TeamInviteRobotPanel', 'CompanionInvitePlayerPanel', 'TeamInvitePlayerItem', 'TeamInvitePlayerInfoView',
         'FriendshipInfo', 'PropInfo', 'NpcFriendshipLevelShow', 'PlayerCompanionTag', 'HonorTitleItemProvider', 'SortingOrderSetter', 'TeamInviteRobotItem')})
+    scripts['Spine.Unity.SkeletonGraphic'] = ROOT / 'unity/Assets/Spine/Runtime/spine-unity/Components/SkeletonGraphic.cs'
     scripts['TeamInviter'] = world / 'WorldTeamInviter.cs'
     scripts.update({name: world / ('World' + name + '.cs') for name in ('RoomInviter', 'ChallengeInviter', 'CompanionInviter')})
     scripts['UIToggle'] = ROOT / 'unity/Assets/Game/Runtime/Official/SkillsUI/UIToggle.cs'
@@ -129,13 +210,77 @@ def build(write=False):
     target_audio = json.loads(target_audio_path.read_bytes())
     audio_output, = [row for row in target_audio['outputs'] if row['path'].endswith('.wav')]
     audios.append(dict(name=target_audio['name'], id=target_audio['id'], **audio_output))
+    invite_audio_bytes, invite_audio_proof = decode_invite_audio(apk)
+    invite_audio_path = ROOT / 'unity/Assets/Official/World/Map/12/UI/Team/Sounds/Friend_Heart.wav'
+    audios.append(dict(name=invite_audio_proof['name'], id=invite_audio_proof['id'],
+        path=source_path(invite_audio_path), sha256=sha(invite_audio_bytes)))
     schemas = NativeSchemas(ROOT / '.tools/source-packages/current/871_156598/official-code')
     install(schemas, ROOT / '.tools/source-packages/current/871_156598/official-code')
     redirects = {row['nativeGuid']: output_guid(row['name']) for row in native['panels'] if row['name'] in (*NAMES, 'TeamPanelTarget', 'TeamPanelTargetItem', 'TeamPanelTargetSubItem')}
     outputs, dependencies, animation_source_path = animations(apk, objects, references)
+    outputs[invite_audio_path] = invite_audio_bytes
+    outputs[invite_audio_path.with_name(invite_audio_path.name + '.meta')] = audio_meta(invite_audio_proof['name'])
+    dependencies[invite_audio_proof['nativeReference']['identity']] = dict(
+        path=source_path(invite_audio_path), sha256=sha(invite_audio_bytes),
+        originalEvent=invite_audio_proof)
     invite_animation_outputs, invite_animation_dependencies, invite_animation_source = invite_animations(apk, objects, references)
     outputs.update(invite_animation_outputs)
     dependencies.update(invite_animation_dependencies)
+
+    appearance_export = ROOT / '.tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets'
+    appearance_assets = {
+        'Materials/Spine/SkeletonGraphicDye.mat': (
+            appearance_export / 'Materials/Spine/SkeletonGraphicDye.mat',
+            ROOT / 'unity/Assets/Official/World/Map/12/UI/Team/Materials/SkeletonGraphicDye.mat', None),
+        'AppearanceAssets/Character/Model/Common/character_model_SkinAsset.asset': (
+            appearance_export / 'AppearanceAssets/Character/Model/Common/character_model_SkinAsset.asset',
+            ROOT / 'unity/Assets/Official/World/Map/12/UI/Team/Appearance/character_model_SkinAsset.asset',
+            ROOT / 'unity/Assets/Game/Runtime/Official/ProfessionUI/SkinTextureAsset.cs'),
+        'AppearanceAssets/Character/Model/Common/character_model_TextureLoader_High.asset': (
+            appearance_export / 'AppearanceAssets/Character/Model/Common/character_model_TextureLoader_High.asset',
+            ROOT / 'unity/Assets/Official/World/Map/12/UI/Team/Appearance/character_model_TextureLoader_High.asset',
+            ROOT / 'unity/Assets/Game/Runtime/Official/ProfessionUI/YooAssetTextureLoader.cs')}
+    spine_materials = {
+        'Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Materials/SkeletonGraphic-PMATexture/SkeletonGraphicAdditive.mat': ROOT / 'unity/Assets/Spine/Runtime/spine-unity/Materials/UI-PMATexture/SkeletonGraphicAdditive.mat',
+        'Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Materials/SkeletonGraphic-PMATexture/SkeletonGraphicMultiply.mat': ROOT / 'unity/Assets/Spine/Runtime/spine-unity/Materials/UI-PMATexture/SkeletonGraphicMultiply.mat',
+        'Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Materials/SkeletonGraphic-PMATexture/SkeletonGraphicScreen.mat': ROOT / 'unity/Assets/Spine/Runtime/spine-unity/Materials/UI-PMATexture/SkeletonGraphicScreen.mat'}
+
+    def restore_invite_asset(reference):
+        converted = reference['convertedPath']
+        if converted in spine_materials:
+            path = spine_materials[converted]
+            if not path.is_file() or not path.with_name(path.name + '.meta').is_file():
+                raise ValueError('Restore the installed original Spine UI material: ' + converted)
+            target_guid = guid(path.with_name(path.name + '.meta'))
+            dependencies[reference['identity']] = dict(convertedPath=converted,
+                path=source_path(path), sha256=sha(path.read_bytes()), nativeGuid=target_guid,
+                originalPayloadSha256=reference['payload_sha256'])
+            return target_guid
+        entry = appearance_assets.get(converted)
+        if entry is None:
+            raise ValueError('Restore original NPC invite visual asset: ' + converted)
+        source_path_on_disk, target, script_path = entry
+        source_meta = source_path_on_disk.with_name(source_path_on_disk.name + '.meta')
+        if not source_path_on_disk.is_file() or not source_meta.is_file():
+            raise ValueError('Original NPC invite visual source is missing: ' + converted)
+        raw = source_path_on_disk.read_bytes()
+        if script_path is not None:
+            script_meta = script_path.with_name(script_path.name + '.meta')
+            script_guid = guid(script_meta)
+            source_script_guid = re.search(rb'(?m)^  m_Script: \{fileID: 11500000, guid: ([a-f0-9]{32}), type: 3\}$', raw)
+            if source_script_guid is None:
+                raise ValueError('Original appearance asset script reference is missing: ' + converted)
+            raw = raw[:source_script_guid.start(1)] + script_guid.encode('ascii') + raw[source_script_guid.end(1):]
+        target_guid = output_guid('invite-asset:' + reference['identity'])
+        outputs[target] = raw
+        outputs[target.with_name(target.name + '.meta')] = native_asset_meta(target_guid)
+        dependencies[reference['identity']] = dict(convertedPath=converted,
+            source=source_path(source_path_on_disk), sourceSha256=sha(source_path_on_disk.read_bytes()),
+            sourceMeta=source_path(source_meta), sourceMetaSha256=sha(source_meta.read_bytes()),
+            path=source_path(target), sha256=sha(raw), nativeGuid=target_guid,
+            originalPayloadSha256=reference['payload_sha256'])
+        return target_guid
+
     coverage = []
     native_sprites = NativeTeamSprites(apk)
     wanted_texts = {'TeamTargetCatalog.None', 'TeamTargetCatalog.BattleStele'}
@@ -169,6 +314,17 @@ def build(write=False):
                 raise ValueError('Restore original invitation component: ' + source['scriptType'])
             script = scripts[source['scriptType']]
             redirects[fields['m_Script']['guid']] = guid(script.with_name(script.name + '.meta'))
+            if source['scriptType'] == 'Spine.Unity.SkeletonGraphic':
+                for field in ('m_Material', 'additiveMaterial', 'multiplyMaterial', 'screenMaterial'):
+                    pointer = source['fields'][field]
+                    if not pointer['m_PathID']:
+                        continue
+                    _, reference = external(pointer)
+                    redirects[fields[field]['guid']] = restore_invite_asset(reference)
+            elif source['scriptType'] == 'AppearanceSystem.Runtime.AppearanceUI':
+                for field in ('SkinTextureAsset', 'mTextureLoader'):
+                    _, reference = external(source['fields'][field])
+                    redirects[fields[field]['guid']] = restore_invite_asset(reference)
             if source['scriptType'] == 'UnityEngine.UI.LoopVerticalScrollRect':
                 pointer = source['fields']['DefaultPrefabSource']['Prefab']
                 owner = objects[source['identity']]
@@ -251,9 +407,12 @@ def build(write=False):
                         raise ValueError('Locate original panel PCM: ' + str(event))
                     event_row = event_rows[0]
                     path = ROOT / event_row['path']
-                    if sha(path.read_bytes()) != event_row['sha256']:
+                    event_bytes = outputs[path] if path in outputs else path.read_bytes()
+                    if sha(event_bytes) != event_row['sha256']:
                         raise ValueError('Original panel PCM changed')
-                    event_bindings[key][field] = guid(path.with_name(path.name + '.meta'))
+                    meta_path = path.with_name(path.name + '.meta')
+                    meta_bytes = outputs[meta_path] if meta_path in outputs else meta_path.read_bytes()
+                    event_bindings[key][field] = re.search(rb'(?m)^guid: ([a-f0-9]{32})$', meta_bytes)[1].decode('ascii')
                     dependencies[reference['identity']] = dict(path=source_path(path), sha256=event_row['sha256'])
         blocks = re.split(r'(?m)(?=^--- !u!\d+ &-?\d+\n)', panel['yaml'])
         result = [blocks[0]]
@@ -307,9 +466,36 @@ def build(write=False):
     literal_fallbacks = sorted(wanted_texts - set(texts))
     for key in literal_fallbacks:
         texts[key] = key
+    npc_rules_path = ROOT / 'unity/Assets/Game/Resources/DailyChallenges/npc-assistance-rules.json'
+    npc_rules = json.loads(npc_rules_path.read_bytes())
+    npc_level_ids = {int(row['ClassId']) for row in npc_rules['npc_level_detail']}
+    npc_name_keys = {row['NameKey'] for row in npc_rules['npc']
+        if row.get('NpcType') == 4 and row.get('CanDevelop') and row.get('FightEntityId', 0) > 0
+        and row['Id'] in npc_level_ids and row.get('NameKey')}
+    hashes.update({xxhash.xxh64_intdigest(key.encode()): key for key in npc_name_keys})
+    texts = {}
+    for row in language_rows.values():
+        raw = apk.archive.read(row['source']['path'])
+        if sha(raw) != row['sha256']:
+            raise ValueError('Original NPC assistance localization input changed')
+        count, = struct.unpack_from('<i', raw)
+        start = 4 + count * 12
+        for number in range(count):
+            identity, offset = struct.unpack_from('<Qi', raw, 4 + number * 12)
+            key = hashes.get(identity)
+            if key is not None and key not in texts:
+                length, = struct.unpack_from('<H', raw, start + offset)
+                texts[key] = raw[start + offset + 2:start + offset + 2 + length].decode('utf-8')
+    missing_npc_names = sorted(npc_name_keys - set(texts))
+    if missing_npc_names:
+        raise ValueError('Resolve official NPC assistance names from the selected language bundles: ' + str(missing_npc_names))
     text_path = DEST / 'invite-texts.json'
     outputs[text_path] = encode(dict(manifest=apk.version, texts=[dict(key=key, value=texts[key]) for key in sorted(texts)]))
     outputs[text_path.with_name(text_path.name + '.meta')] = ('fileFormatVersion: 2\nguid: ' + output_guid('invite-texts') + '\nTextScriptImporter:\n  externalObjects: {}\n').encode()
+    npc_names_output = DEST / 'npc-assistance-texts.json'
+    outputs[npc_names_output] = encode(dict(manifest=apk.version, texts=[
+        dict(key=key, value=texts[key]) for key in sorted(npc_name_keys)]))
+    outputs[npc_names_output.with_name(npc_names_output.name + '.meta')] = ('fileFormatVersion: 2\nguid: ' + output_guid('npc-assistance-texts') + '\nTextScriptImporter:\n  externalObjects: {}\n').encode()
     geometry_path = ROOT / 'unity/Assets/Official/World/Map/12/Source/team-invite-sprite-geometry.json'
     outputs.update(native_sprites.outputs)
     outputs[geometry_path] = encode(dict(manifest=apk.version, sprites=[row['expected'] for key, row in sorted(native_sprites.sprites.items())],
@@ -318,7 +504,11 @@ def build(write=False):
     def record(path):
         return dict(path=source_path(path), sha256=sha(path.read_bytes()))
     value = dict(format=1, manifest=apk.version, mapClassId=12,
-        inputs=[record(path) for path in (ORIGINAL, NATIVE, EXTRA_ORIGINAL, EXTRA_NATIVE, ui_path, audio_path, target_audio_path, language_path, animation_source_path, invite_animation_source, *font_paths)],
+        inputs=[record(path) for path in (ORIGINAL, NATIVE, EXTRA_ORIGINAL, EXTRA_NATIVE, ui_path, audio_path, target_audio_path,
+            ROOT / 'assets/reference/profession-ui/windows-audio-source-manifest.json',
+            ROOT / '.tools/source-packages/current/871_156598/profession-ui/typed/inputs/source-manifest.json',
+            ROOT / '.tools/source-packages/current/871_156598/profession-ui/audio/775127471.bnk',
+            language_path, npc_rules_path, animation_source_path, invite_animation_source, *font_paths)],
         languageInputs=language_rows,
         unchangedKeyFallbacks=literal_fallbacks,
         localizationImplementation=record(ROOT / '.tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/LocalizationTextService.cs'),

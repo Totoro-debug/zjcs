@@ -6,6 +6,8 @@ namespace Zjcs.Presentation.Combat
     /// <summary>Applies the recovered fight prefab hierarchy to a reused world character.</summary>
     internal sealed class OfficialBattleAttachedModelView : IDisposable
     {
+        private const int PlayerEntityId = 3001;
+        private const float PlayerBattleModelScale = 1.25f;
         private readonly Transform previousParent;
         private readonly Vector3 previousPosition, previousScale;
         private readonly Quaternion previousRotation;
@@ -66,7 +68,9 @@ namespace Zjcs.Presentation.Combat
             // The recovered battle hierarchy owns the model scale. Carrying the map-view
             // scale into it multiplies the official 0.3 model scale a second time. Map
             // wrappers also put that scale and offset on the direct character child.
-            source.localScale = Vector3.one;
+            source.localScale = entityId == PlayerEntityId
+                ? Vector3.one * PlayerBattleModelScale
+                : Vector3.one;
             if (mapModelRoot != null)
             {
                 mapModelRoot.localPosition = Vector3.zero;

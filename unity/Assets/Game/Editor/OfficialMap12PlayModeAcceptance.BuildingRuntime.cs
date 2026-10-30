@@ -268,7 +268,7 @@ namespace Zjcs.Editor
             Transform battleWrapper = battlePlayer == null ? null : battlePlayer.transform.parent;
             Transform officialBattleModel = battleWrapper == null ? null : battleWrapper.parent;
             if (battlePlayer == null || battlePlayer.transform.localScale != Vector3.one
-                || battleWrapper == null || battleWrapper.localScale != Vector3.one
+                || battleWrapper == null || battleWrapper.localScale != Vector3.one * 1.25f
                 || officialBattleModel == null || officialBattleModel.name != "PlayerModel_Game"
                 || !Mathf.Approximately(Mathf.Abs(officialBattleModel.localScale.x), 0.3f))
                 throw new InvalidDataException("The player model did not use the official battle model scale without retaining the map-view scale.");
