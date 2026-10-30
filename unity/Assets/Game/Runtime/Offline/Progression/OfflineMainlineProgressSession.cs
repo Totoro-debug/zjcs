@@ -214,6 +214,17 @@ namespace Zjcs.Offline.Progression
         public int MapClassId;
         public int Status;
         public long AppearTimeUnixSeconds;
+        public long PreparationStartedAtUnixSeconds;
+    }
+
+    public sealed class OfflineMap15PreparationState
+    {
+        public int RequiredRank;
+        public bool RankReached;
+        public bool CountdownStarted;
+        public bool Unlocked;
+        public long UnlockAtUnixSeconds;
+        public long RemainingSeconds;
     }
 
     [Serializable]
@@ -325,6 +336,58 @@ namespace Zjcs.Offline.Progression
 
         public int WorldAloneStatus(int mapClassId) => mapClassId <= 0
             ? 0 : Save.World.AloneWorldStatuses?.FirstOrDefault(value => value.MapClassId == mapClassId)?.Status ?? 0;
+
+        public OfflineMap15PreparationState GetMap15PreparationState(long nowUnixSeconds = 0)
+        {
+            Reload();
+            long now = nowUnixSeconds > 0 ? nowUnixSeconds : DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            RefreshMap15Preparation(now);
+            Reload();
+            OfflineWorldAlonePreparationConfig config = LoadMap15PreparationConfig();
+            OfflineWorldAloneStatus status = Save.World.AloneWorldStatuses?
+                .FirstOrDefault(value => value.MapClassId == config.mapClassId);
+            long duration = (long)config.preparationRule.dayOffset * 24 * 60 * 60;
+            long unlockAt = status?.PreparationStartedAtUnixSeconds > 0
+                ? checked(status.PreparationStartedAtUnixSeconds + Math.Max(duration, config.preparationRule.minDurationS))
+                : 0;
+            return new OfflineMap15PreparationState
+            {
+                RequiredRank = config.preparationRule.rank,
+                RankReached = Save.Player.Rank >= config.preparationRule.rank,
+                CountdownStarted = unlockAt > 0,
+                Unlocked = status?.Status == 1,
+                UnlockAtUnixSeconds = unlockAt,
+                RemainingSeconds = unlockAt > now ? unlockAt - now : 0
+            };
+        }
+
+        public ProgressionResult StartMap15Preparation(long nowUnixSeconds = 0)
+        {
+            Reload();
+            long now = nowUnixSeconds > 0 ? nowUnixSeconds : DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            OfflineWorldAlonePreparationConfig config = LoadMap15PreparationConfig();
+            if (Save.Player.Rank < config.preparationRule.rank)
+                return Result(ProgressionResultStatus.NotReady, message: "Reach rank 5 before starting the Map15 unlock countdown.");
+            OfflineWorldAloneStatus current = Save.World.AloneWorldStatuses?
+                .FirstOrDefault(value => value.MapClassId == config.mapClassId);
+            if (current?.Status == 1 || current?.PreparationStartedAtUnixSeconds > 0)
+                return Result(ProgressionResultStatus.Unchanged);
+
+            OfflineMainlineSave next = Clone(Save);
+            if (next.World.AloneWorldStatuses == null)
+                next.World.AloneWorldStatuses = new List<OfflineWorldAloneStatus>();
+            OfflineWorldAloneStatus status = next.World.AloneWorldStatuses
+                .FirstOrDefault(value => value.MapClassId == config.mapClassId);
+            if (status == null)
+            {
+                status = new OfflineWorldAloneStatus { MapClassId = config.mapClassId };
+                next.World.AloneWorldStatuses.Add(status);
+            }
+            status.Status = 0;
+            if (status.AppearTimeUnixSeconds <= 0) status.AppearTimeUnixSeconds = now;
+            status.PreparationStartedAtUnixSeconds = now;
+            return Commit(next, Result(ProgressionResultStatus.Applied), now);
+        }
 
         public ProgressionResult MarkWorldAloneAppeared(int mapClassId, long appearTimeUnixSeconds, string eventId)
         {
@@ -697,6 +760,23 @@ namespace Zjcs.Offline.Progression
 
         private static bool RefreshMap15Preparation(OfflineMainlineSave save, long nowUnixSeconds)
         {
+            OfflineWorldAlonePreparationConfig config = LoadMap15PreparationConfig();
+            int mapClassId = config.mapClassId;
+            if (save.Player.Rank < config.preparationRule.rank) return false;
+            if (save.World.AloneWorldStatuses == null) return false;
+            OfflineWorldAloneStatus status = save.World.AloneWorldStatuses
+                .FirstOrDefault(value => value.MapClassId == mapClassId);
+            if (status == null || status.Status != 0 || status.PreparationStartedAtUnixSeconds <= 0) return false;
+            long unlockAt = checked(status.PreparationStartedAtUnixSeconds
+                + Math.Max((long)config.preparationRule.dayOffset * 24 * 60 * 60,
+                    config.preparationRule.minDurationS));
+            if (nowUnixSeconds < unlockAt) return false;
+            status.Status = 1;
+            return true;
+        }
+
+        private static OfflineWorldAlonePreparationConfig LoadMap15PreparationConfig()
+        {
             TextAsset source = Resources.Load<TextAsset>("Map14/world-alone-preparation");
             OfflineWorldAlonePreparationConfig config = source == null ? null
                 : JsonUtility.FromJson<OfflineWorldAlonePreparationConfig>(source.text);
@@ -704,22 +784,7 @@ namespace Zjcs.Offline.Progression
                 || config.preparationRule.rank != 5 || config.preparationRule.dayOffset < 0
                 || config.preparationRule.minDurationS < 0)
                 throw new InvalidDataException("Official Map15 preparation configuration is missing or invalid.");
-            int mapClassId = config.mapClassId;
-            if (save.Player.Rank < config.preparationRule.rank) return false;
-            OfflineRankUnlockTime goldUnlock = save.Player.RankUnlockTimes?
-                .FirstOrDefault(value => value.Rank == config.preparationRule.rank && value.UnixSeconds > 0);
-            if (goldUnlock == null) return false;
-            if (save.World.AloneWorldStatuses == null) return false;
-            OfflineWorldAloneStatus status = save.World.AloneWorldStatuses
-                .FirstOrDefault(value => value.MapClassId == mapClassId);
-            if (status == null || status.Status != 0 || status.AppearTimeUnixSeconds <= 0) return false;
-            long minimumDurationAt = checked(status.AppearTimeUnixSeconds + config.preparationRule.minDurationS);
-            long rankOffsetAt = checked(goldUnlock.UnixSeconds
-                + (long)config.preparationRule.dayOffset * 24 * 60 * 60);
-            long unlockAt = Math.Max(minimumDurationAt, rankOffsetAt);
-            if (nowUnixSeconds < unlockAt) return false;
-            status.Status = 1;
-            return true;
+            return config;
         }
 
         public ProgressionResult ApplyCharacterMutation(Action<OfflinePlayerProgress> mutation, string eventId = null)
@@ -1269,7 +1334,9 @@ namespace Zjcs.Offline.Progression
             var aloneMapIds = new HashSet<int>();
             foreach (OfflineWorldAloneStatus status in save.World.AloneWorldStatuses)
                 if (status == null || status.MapClassId <= 0 || status.Status < 0 || status.Status > 1
-                    || status.AppearTimeUnixSeconds <= 0 || !aloneMapIds.Add(status.MapClassId)) return false;
+                    || status.AppearTimeUnixSeconds <= 0 || status.PreparationStartedAtUnixSeconds < 0
+                    || (status.Status == 1 && status.PreparationStartedAtUnixSeconds <= 0)
+                    || !aloneMapIds.Add(status.MapClassId)) return false;
             foreach (OfflineMapBattleCount battle in save.World.BattleCounts)
                 if (battle == null || battle.MapClassId <= 0 || battle.Region < 0 || battle.Result < 0
                     || battle.Count < 0 || !HasMapRegion(save, battle.MapClassId, battle.Region)) return false;
@@ -1368,6 +1435,9 @@ namespace Zjcs.Offline.Progression
             if (save.World.Maps == null) save.World.Maps = new List<OfflineMapProgress>();
             if (save.World.AloneWorldStatuses == null)
                 save.World.AloneWorldStatuses = new List<OfflineWorldAloneStatus>();
+            foreach (OfflineWorldAloneStatus status in save.World.AloneWorldStatuses)
+                if (status != null && status.Status == 1 && status.PreparationStartedAtUnixSeconds <= 0)
+                    status.PreparationStartedAtUnixSeconds = Math.Max(1, status.AppearTimeUnixSeconds);
             if (save.World.BattleCounts == null) save.World.BattleCounts = new List<OfflineMapBattleCount>();
             if (save.World.StageWinCounts == null) save.World.StageWinCounts = new List<OfflineStageWinCount>();
             if (save.World.CompletedEntityTags == null) save.World.CompletedEntityTags = new List<string>();

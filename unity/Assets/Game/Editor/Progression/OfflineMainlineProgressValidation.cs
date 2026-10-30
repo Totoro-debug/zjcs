@@ -37,6 +37,10 @@ namespace Zjcs.Editor.Progression
                 Require(dragonProfile.RegionCount == 111 && dragonProfile.DefaultEntryPlacementId == 101
                     && dragonProfile.RequiredAccessConditions.Count == 16 && dragonProfile.IsRuntimeEntryReady,
                     "Register Dragon Country source metadata and the connected native-world entry");
+                OfficialMainlineMapProfile mountainProfile = OfficialMainlineMapProfile.Get(12);
+                Require(mountainProfile.RegionShadowCount == 98 && mountainProfile.RegionCount == 99
+                    && mountainProfile.DefaultEntryPlacementId == 101 && mountainProfile.IsRuntimeEntryReady,
+                    "Register Mountain Country source regions and the original default entry");
                 session.Save.Player.UnlockedMapClassIds.Add(14);
                 session.Save.Player.UnlockedMapClassIds.Add(13);
                 Require(OfficialMainlineMapRuntime.ResolveHomeReturnMap(session.Save) == 14,
@@ -71,37 +75,49 @@ namespace Zjcs.Editor.Progression
                 Require(activationRestored.Save.Player.UnlockedMapClassIds.Contains(13),
                     "Restore Map13 activation from the local profile save");
                 long goldReachedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                Require(activation.StartMap15Preparation(goldReachedAt).Status == ProgressionResultStatus.NotReady,
+                    "Do not allow the Map15 manual countdown before rank 5");
                 Require(activation.ApplyCharacterMutation(player =>
                 {
                     player.Rank = 5;
                     player.RankUnlockTimes.Add(new OfflineRankUnlockTime { Rank = 5, UnixSeconds = goldReachedAt });
                 }, "rank-up-to-gold").IsApplied,
-                    "Begin the offline Map15 preparation clock in the character rank-up save transaction");
+                    "Persist rank 5 without implicitly starting the Map15 countdown");
                 var prepareCondition = new OfficialTaskCondition { type = "MapWorldActivedCondition", mapClassId = 15 };
                 Require(activation.WorldAloneStatus(15) == 0
                     && activation.GetTaskProgress(prepareCondition, out long prepareCurrent, out long prepareTarget).Status
                         == ProgressionResultStatus.Ready && prepareCurrent == 0 && prepareTarget == 1
                     && activation.RefreshMap15Preparation(goldReachedAt + 14L * 24 * 60 * 60 - 1).Status
                         == ProgressionResultStatus.Unchanged,
-                    "Do not create Map15 before the official appear node");
+                    "Do not create or start Map15 preparation automatically after rank 5");
                 Require(activation.MarkWorldAloneAppeared(15, goldReachedAt,
                         "map14:story:appear-map15").IsApplied
                     && activation.WorldAloneStatus(15) == 0
                     && activation.RefreshMap15Preparation(goldReachedAt + 14L * 24 * 60 * 60 - 1).Status
                         == ProgressionResultStatus.Unchanged,
-                    "Keep Map15 preparing until the configured 14-day boundary");
-                Require(activation.RefreshMap15Preparation(goldReachedAt + 14L * 24 * 60 * 60).IsApplied
+                    "An appearance record alone does not start the manually initiated countdown");
+                long preparationStartedAt = goldReachedAt + 3L * 24 * 60 * 60;
+                Require(activation.StartMap15Preparation(preparationStartedAt).IsApplied
+                    && activation.StartMap15Preparation(preparationStartedAt + 1).Status == ProgressionResultStatus.Unchanged
+                    && activation.GetMap15PreparationState(preparationStartedAt).RemainingSeconds == 14L * 24 * 60 * 60,
+                    "Start one persistent 14-day countdown from the user's manual action");
+                Require(activation.RefreshMap15Preparation(preparationStartedAt + 14L * 24 * 60 * 60 - 1).Status
+                    == ProgressionResultStatus.Unchanged,
+                    "Keep Map15 closed until the manually started 14-day boundary");
+                Require(activation.GetMap15PreparationState(preparationStartedAt + 14L * 24 * 60 * 60).Unlocked
                     && activation.WorldAloneStatus(15) == 1
                     && activation.GetTaskProgress(prepareCondition, out prepareCurrent, out prepareTarget).Status
                         == ProgressionResultStatus.Ready && prepareCurrent == 1 && prepareTarget == 1,
-                    "Persist PrepareEnd exactly at the inferred offline unlock boundary and satisfy condition 115");
+                    "Persist PrepareEnd exactly 14 days after the manual countdown starts");
                 Require(activation.MarkWorldAloneAppeared(15, goldReachedAt,
                         "map14:story:appear-map15").Status == ProgressionResultStatus.Unchanged,
                     "Ignore a replayed independent-world appearance event");
                 OfflineMainlineProgressSession preparationRestored = OfflineMainlineProgressSession.Open(
                     slots, activationSlot, catalog, readDemonBattleLayer);
-                Require(preparationRestored.WorldAloneStatus(15) == 1,
-                    "Restore Map15 preparation state after reopening the profile");
+                Require(preparationRestored.WorldAloneStatus(15) == 1
+                    && preparationRestored.GetMap15PreparationState(preparationStartedAt).CountdownStarted
+                    && preparationRestored.GetMap15PreparationState(preparationStartedAt).Unlocked,
+                    "Restore the Map15 countdown and unlocked state after reopening the profile");
                 Require(OfficialMainlineMapRuntime.ResolveHomeReturnMap(session.Save) == 10,
                     "Keep Map11 closed until Map10 task 1040 is claimed");
                 session.Save.Tasks.ClaimedMainlineTaskIds.Add(1040);
