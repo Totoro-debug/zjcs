@@ -15,8 +15,8 @@ class Map11EntityStateTests(unittest.TestCase):
             self.assertEqual(len(catalog["entities"]), 1803)
             self.assertEqual(sum(bool(model.get("states")) for model in catalog["models"]), 24)
             self.assertEqual(sum(len(model.get("states", [])) for model in catalog["models"]), 64)
-            self.assertEqual(len(catalog["geometryFiles"]), 161)
-            self.assertEqual(len(catalog["textureUris"]), 203)
+            self.assertEqual(len(catalog["geometryFiles"]), 171)
+            self.assertEqual(len(catalog["textureUris"]), 219)
             models = {model["modelPath"]: model for model in catalog["models"]}
             for entity_class_id in (6010, 6011):
                 placement = next(row for row in catalog["entities"] if row["entityClassId"] == entity_class_id)
@@ -33,8 +33,9 @@ class Map11EntityStateTests(unittest.TestCase):
                 self.assertEqual(sha256(copied), record["sha256"])
             additional = manifest["additionalStateTextureSources"]
             self.assertEqual(len(additional), 2)
+            active_source = json.loads((ROOT / "official-source.json").read_text(encoding="utf-8"))["active"]
             for record in additional.values():
-                self.assertEqual(record["source"]["manifest"], "854_156383")
+                self.assertEqual(record["source"]["manifest"], active_source)
                 self.assertEqual(record["source"]["bundle_hash"], "d5637b1b83d26edacbe343c3c1603600")
 
 
