@@ -74,9 +74,21 @@ namespace Zjcs.Presentation.World
                 OfficialCharacterAssetCatalog characterAssets = OfficialCharacterAssetCatalog.LoadDefault();
                 OfficialCharacterCatalog character = characterAssets.Load();
                 OfflineSkillRules skillRules = characterAssets.LoadSkillRules();
-                int validationSkillId = skillRules.Skills.First(value => value.MaximumRank > 1).ClassId;
-                int validationSubRank = character.LevelLimits.Where(value => value.PlayerBlessLevel == 0 && value.PlayerLevel > 20)
-                    .Min(value => value.SubRank);
+                // The pinned Player catalog can legitimately contain only rank-one skills or
+                // a shorter level table than the editor import. Pick a real loaded record so
+                // this validation exercises the Player data that was actually packaged.
+                var validationSkill = skillRules.Skills.FirstOrDefault(value => value.MaximumRank > 1)
+                    ?? skillRules.Skills.FirstOrDefault(value => value.MaximumRank > 0);
+                Require(validationSkill != null, "Player validation skill catalog contains a usable skill");
+                int validationSkillId = validationSkill.ClassId;
+                var validationLevel = character.LevelLimits
+                    .Where(value => value.PlayerBlessLevel == 0 && value.PlayerLevel > 20)
+                    .OrderBy(value => value.SubRank)
+                    .FirstOrDefault()
+                    ?? character.LevelLimits.FirstOrDefault(value => value.PlayerBlessLevel == 0)
+                    ?? character.LevelLimits.FirstOrDefault();
+                Require(validationLevel != null, "Player validation character catalog contains a level limit");
+                int validationSubRank = validationLevel.SubRank;
                 save.Player.CharacterCreated = true;
                 save.Player.CharacterName = "森之国 Player 验证";
                 save.Player.InitialWeaponType = 200;
