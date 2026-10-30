@@ -123,7 +123,8 @@ namespace Zjcs.Presentation.World
             public void ShowOfficialNotice(string message)
             {
                 ui.SetPanelActive("MapNotifyUI", true);
-                ui.SetText("MapNotifyUI", "/MapNotifyUI/Content/Text", message);
+                if (!ui.SetText("MapNotifyUI", "/MapNotifyUI/Content/Layout/text", message))
+                    throw new InvalidOperationException("Original map notice text binding is missing.");
                 if (noticeRoutine != null) host.StopCoroutine(noticeRoutine);
                 noticeRoutine = host.StartCoroutine(HideOfficialNoticeAfterDelay(1.8f));
             }

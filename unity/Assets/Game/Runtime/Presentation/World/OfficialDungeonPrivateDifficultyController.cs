@@ -68,10 +68,21 @@ namespace Zjcs.Presentation.World
             for (int index = 0; index < source.tabs.Length; index++)
             {
                 int tabIndex = index;
+                EnsureLockButtonRaycastTarget(lockButtons[index]);
                 lockHandlers[index] = () => OnClickLockTipBtn(source.tabs[tabIndex]);
                 lockButtons[index].onClick.AddListener(lockHandlers[index]);
             }
             InitContent();
+        }
+
+        private static void EnsureLockButtonRaycastTarget(Button button)
+        {
+            if (button.targetGraphic != null) return;
+            Image surface = button.GetComponent<Image>() ?? button.gameObject.AddComponent<Image>();
+            surface.sprite = null;
+            surface.color = Color.clear;
+            surface.raycastTarget = true;
+            surface.maskable = true;
         }
 
         // DailyDungeonDifficultyContent.InitContent: preserve refresh/selection ordering.
@@ -85,12 +96,14 @@ namespace Zjcs.Presentation.World
 
         private void RefreshTabItem()
         {
+            int visibleCount = 0;
             for (int index = 0; index < source.tabs.Length; index++)
             {
                 TabBinding data = source.tabs[index];
                 int position = Array.FindIndex(info.difficulties, value => value.difficulty == data.difficulty);
                 tabs[index].gameObject.SetActive(position >= 0);
                 if (position < 0) continue;
+                visibleCount++;
                 bool unlocked = position <= 0 || session.IsUnlocked(info.id, info.difficulties[position - 1].difficulty);
                 var states = new WorldStateGameObjectData {
                     GoConfig = data.unlockStates.Select(value => new WorldStateGameObjectData.StateGameObjectKV {
@@ -99,6 +112,7 @@ namespace Zjcs.Presentation.World
                 };
                 WorldStateGameObjectConfig.FromBindings(states).SetState(unlocked ? 1 : 0);
             }
+            if (group.transform.parent != null) group.transform.parent.gameObject.SetActive(visibleCount > 1);
         }
 
         private void OnDifficultyTabGroupValueChanged(WorldTabItem tab, bool value)

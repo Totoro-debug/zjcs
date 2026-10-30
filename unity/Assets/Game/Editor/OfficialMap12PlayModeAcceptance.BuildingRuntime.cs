@@ -22,6 +22,9 @@ namespace Zjcs.Editor
 
         private static IEnumerator VerifyPrivateDungeonEntrySteps(string root, string slot, Transform canvas, string output)
         {
+            IEnumerator npcIcon = VerifyTeamNpcIconSteps();
+            while (npcIcon.MoveNext()) yield return npcIcon.Current;
+
             GameObject mapAvatar = RuntimeField<GameObject>("avatar");
             Animator mapAnimator = mapAvatar.GetComponentInChildren<Animator>(true);
             Transform mapCharacter = mapAnimator == null ? null : mapAnimator.transform;
@@ -106,7 +109,11 @@ namespace Zjcs.Editor
             var maskImage = mask == null ? null : mask.GetComponent<RawImage>();
             var maskButton = mask == null ? null : mask.GetComponent<Button>();
             var maskCanvas = mask == null ? null : mask.GetComponent<Canvas>();
-            var dialogCanvas = dialog.GetComponent<Canvas>();
+            var dialogCanvas = dialog.GetComponentsInChildren<WorldPopupWindow>(true).Single().GetComponent<Canvas>();
+            float sortingDeadline = Time.realtimeSinceStartup + 12f;
+            while (maskCanvas != null && dialogCanvas != null
+                && maskCanvas.sortingOrder != dialogCanvas.sortingOrder - 1
+                && Time.realtimeSinceStartup < sortingDeadline) yield return null;
             if (maskImage == null || maskImage.texture == null || maskButton == null
                 || maskCanvas == null || dialogCanvas == null || maskCanvas.sortingOrder != dialogCanvas.sortingOrder - 1)
                 throw new InvalidDataException("Original private blur image/button/sorting binding is incomplete: "
@@ -219,6 +226,17 @@ namespace Zjcs.Editor
                     + $"soundPosts={battleSoundPosts}, soundEnabled={(battleSound != null && battleSound.enabled)}, "
                     + $"clip={(battleSound == null || battleSound.ClickEvent == null ? "null" : battleSound.ClickEvent.name)}, "
                     + $"dialogOpen={RuntimeField<GameObject>("map12PrivateDungeonDialog") != null}.");
+            TMPro.TMP_FontAsset dungeonFont = Resources.Load<TMPro.TMP_FontAsset>("Combat/FZY4K-Dynamic");
+            TMPro.TMP_Text countdown = route.GetComponentsInChildren<TMPro.TMP_Text>(true)
+                .Single(value => value.name == "NextStageSelectCountDownTxt");
+            if (dungeonFont == null || countdown.font != dungeonFont)
+                throw new InvalidDataException("Original route vote countdown did not use the packaged Chinese font.");
+            countdown.ForceMeshUpdate(true, true);
+            char[] missingCountdownGlyphs = countdown.text.Where(value => !char.IsWhiteSpace(value)
+                && !dungeonFont.HasCharacter(value)).Distinct().ToArray();
+            if (missingCountdownGlyphs.Length > 0)
+                throw new InvalidDataException("Original route vote countdown is missing packaged Chinese glyphs: "
+                    + new string(missingCountdownGlyphs));
             if (battleSoundPosts != 1)
                 throw new InvalidDataException("Original private BattleBtn pointer did not emit exactly one normal sound: "
                     + $"posts={battleSoundPosts}, enabled={battleSound.enabled}, clip={battleSound.ClickEvent.name}, "
@@ -267,11 +285,21 @@ namespace Zjcs.Editor
                 .SingleOrDefault(value => value.name.StartsWith("PlayerCharacter_", StringComparison.Ordinal));
             Transform battleWrapper = battlePlayer == null ? null : battlePlayer.transform.parent;
             Transform officialBattleModel = battleWrapper == null ? null : battleWrapper.parent;
-            if (battlePlayer == null || battlePlayer.transform.localScale != Vector3.one
-                || battleWrapper == null || battleWrapper.localScale != Vector3.one * 1.25f
+            yield return new WaitForEndOfFrame();
+            ScreenCapture.CaptureScreenshot(Path.Combine(output, "iron-mount-private-battle-preparing.png"));
+            string hierarchy = string.Empty;
+            for (Transform node = battlePlayer == null ? null : battlePlayer.transform; node != null; node = node.parent)
+                hierarchy += $" [{node.name} local={node.localScale} world={node.lossyScale}]";
+            Debug.Log("Map12 private battle attached character hierarchy:" + hierarchy);
+            if (battlePlayer == null || battleWrapper == null
+                || !Mathf.Approximately(Mathf.Abs(battleWrapper.localScale.x * battlePlayer.transform.localScale.x), 1.25f)
                 || officialBattleModel == null || officialBattleModel.name != "PlayerModel_Game"
                 || !Mathf.Approximately(Mathf.Abs(officialBattleModel.localScale.x), 0.3f))
-                throw new InvalidDataException("The player model did not use the official battle model scale without retaining the map-view scale.");
+                throw new InvalidDataException("The player model did not retain its 1.25x battle scale within the original 0.3x model hierarchy: "
+                    + $"player={(battlePlayer == null ? "null" : battlePlayer.transform.localScale.ToString())}, "
+                    + $"wrapper={(battleWrapper == null ? "null" : battleWrapper.localScale.ToString())}, "
+                    + $"model={(officialBattleModel == null ? "null" : officialBattleModel.name + ":" + officialBattleModel.localScale)}; "
+                    + "hierarchy=" + hierarchy + ".");
             privateSession = Zjcs.Offline.World.OfflineDailyDungeonSession.OpenPrivateMap(slots, slot);
             run = privateSession.ActiveRun;
             if (run == null || run.currentRoomId != 12102 || !run.clearedRoomIds.Contains(12101)
@@ -279,6 +307,9 @@ namespace Zjcs.Editor
                 || !File.ReadAllBytes(slots.GetProgressPath(slot)).SequenceEqual(profileBefore)
                 || RuntimeField<OfflineMainlineProgressSession>("progressionSave").Save.World.CompletedEntityTags.Contains("map12:building:503"))
                 throw new InvalidDataException("Private battle entry changed settlement or character profile state.");
+            int fastestPrivateSpeed = controller.UnlockedSpeedIndices.Count == 0
+                ? controller.SpeedIndex : controller.UnlockedSpeedIndices.Max();
+            if (fastestPrivateSpeed != controller.SpeedIndex) controller.SetSpeedIndex(fastestPrivateSpeed);
             FightBattleOutcome actualOutcome = null;
             controller.StepCompleted += result =>
             {

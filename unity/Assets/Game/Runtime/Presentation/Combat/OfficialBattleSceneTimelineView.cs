@@ -185,8 +185,14 @@ namespace Zjcs.Presentation.Combat
             world.z = assets.Z;
             transform.position = world;
             var scaler = canvas.GetComponent<CanvasScaler>();
-            float canvasScale = scaler.referenceResolution.y / ((RectTransform)canvas.transform).sizeDelta.y;
-            transform.localScale = Vector3.one * (camera.orthographicSize / assets.SceneSize * canvasScale);
+            RectTransform canvasRect = canvas.transform as RectTransform;
+            float canvasHeight = canvasRect == null ? 0f : canvasRect.rect.height;
+            if (scaler == null || scaler.referenceResolution.y <= 0f || canvasHeight <= Mathf.Epsilon
+                || assets.SceneSize <= Mathf.Epsilon || camera.orthographicSize <= Mathf.Epsilon) return;
+            float canvasScale = scaler.referenceResolution.y / canvasHeight;
+            float scale = camera.orthographicSize / assets.SceneSize * canvasScale;
+            if (float.IsNaN(scale) || float.IsInfinity(scale)) return;
+            transform.localScale = Vector3.one * scale;
         }
     }
 }

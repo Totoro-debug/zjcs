@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zjcs.Official.WorldUI;
 
@@ -152,11 +153,11 @@ namespace Zjcs.Presentation.World
 
         private static void RestorePopup(GameObject root, PopupBinding binding, Action<AudioClip, GameObject> postSound)
         {
-            if (binding == null) return;
+            if (binding == null || !binding.enabled) return;
             Transform target = Find(root.transform, binding.path, binding.objects);
             var popup = target.GetComponent<WorldPopupWindow>() ?? target.gameObject.AddComponent<WorldPopupWindow>();
             popup.mShowClip = popup.mHideClip = popup.mLoopClip = null;
-            foreach (PopupClipBinding source in binding.clips)
+            foreach (PopupClipBinding source in binding.clips ?? Array.Empty<PopupClipBinding>())
             {
                 AnimationClip clip = Resources.Load<AnimationClip>(source.resource);
                 if (clip == null || clip.name != source.name || clip.isLooping != source.loop
@@ -182,7 +183,7 @@ namespace Zjcs.Presentation.World
             driver.Initialize(popup, nativeMask == null ? null : nativeMask.gameObject, material, mask.image, mask.button,
                 instance => RestoreButtons(instance, new Prefab { buttons = mask.buttons }));
             PopupSoundBinding sound = binding.sound;
-            if (sound == null || sound.show != null || sound.hide == null || sound.hide.name != "Main_Cursor_Back"
+            if (sound == null || HasPopupSoundEvent(sound.show) || sound.hide == null || sound.hide.name != "Main_Cursor_Back"
                 || sound.hide.id != 3686182067 || postSound == null)
                 throw new InvalidDataException("Original private popup sound service or event binding is missing.");
             GameObject emitter = Find(root.transform, sound.path, sound.objects).gameObject;
@@ -213,6 +214,11 @@ namespace Zjcs.Presentation.World
                 }
                 else throw new InvalidDataException("Unsupported original private click sound component: " + click.type);
             }
+        }
+
+        private static bool HasPopupSoundEvent(PopupSoundEventBinding value)
+        {
+            return value != null && (!string.IsNullOrEmpty(value.name) || !string.IsNullOrEmpty(value.resource) || value.id != 0);
         }
 
         private static void RestoreMatching(GameObject root, MatchingBinding binding, Action<AudioClip, GameObject> postSound)
@@ -314,6 +320,14 @@ namespace Zjcs.Presentation.World
             if (binding?.transforms == null || binding.images == null || binding.texts == null)
                 throw new InvalidDataException("Official dungeon UI bindings are incomplete: " + prefabName);
 
+            TMP_FontAsset dungeonFont = null;
+            if (prefabName == "DailyDungeonDialogPrivateMap" || prefabName == "DailyDungeonBigMapDialog")
+            {
+                dungeonFont = Resources.Load<TMP_FontAsset>("Combat/FZY4K-Dynamic");
+                if (dungeonFont == null || !dungeonFont.isMultiAtlasTexturesEnabled)
+                    throw new InvalidDataException("Original Chinese font for the dungeon window is missing or invalid.");
+            }
+
             RestorePopup(root, binding.popup, postSound);
             foreach (TransformBinding item in binding.transforms)
             {
@@ -373,6 +387,7 @@ namespace Zjcs.Presentation.World
                 if (item.margin != null && item.margin.Length == 4)
                     text.margin = new Vector4(item.margin[0], item.margin[1], item.margin[2], item.margin[3]);
                 text.color = ReadColor(item.color, text.color);
+                if (dungeonFont != null) text.font = dungeonFont;
             }
             foreach (LocalizationBinding item in binding.localizations ?? Array.Empty<LocalizationBinding>())
             {
@@ -383,7 +398,17 @@ namespace Zjcs.Presentation.World
                 text.enabled = item.enabled;
                 if (item.enabled) text.Refresh();
             }
-            if (binding.popup != null) RestoreMatching(root, binding.popup.matching, postSound);
+            if (prefabName == "DailyDungeonDialogPrivateMap")
+            {
+                Image background = Find(root.transform, "0/0/2",
+                    new[] { "DailyDungeonDialogPrivateMap", "BgDialog3", "Content", "BgImg" }).GetComponent<Image>();
+                if (background == null || background.sprite == null || background.sprite.name != "ImgBg_Dialog")
+                    throw new InvalidDataException("Original private dungeon window background is missing.");
+                (background.GetComponent<OfficialDungeonBackgroundRaycastFilter>()
+                    ?? background.gameObject.AddComponent<OfficialDungeonBackgroundRaycastFilter>()).Initialize(root.transform);
+            }
+            if (binding.popup != null && binding.popup.enabled)
+                RestoreMatching(root, binding.popup.matching, postSound);
         }
 
         private static Document LoadDocument()
@@ -689,9 +714,19 @@ namespace Zjcs.Presentation.World
             }).ToArray();
             GameObject button = Find(root.transform, binding.roomButton, null).gameObject;
             view.ClickBtn = button.GetComponent<Button>() ?? button.AddComponent<Button>();
+            EnsureButtonRaycastTarget(view.ClickBtn);
             foreach (string playerPath in fields.selectedPlayers ?? Array.Empty<string>())
                 Find(root.transform, playerPath, null).gameObject.SetActive(false);
             return view;
+        }
+
+        private static void EnsureButtonRaycastTarget(Button button)
+        {
+            if (button.targetGraphic != null) return;
+            var target = button.GetComponent<Image>() ?? button.gameObject.AddComponent<Image>();
+            target.color = new Color(0f, 0f, 0f, 0f);
+            target.raycastTarget = true;
+            button.targetGraphic = target;
         }
 
         private static Transform Find(Transform root, string path, string[] names)
@@ -719,7 +754,8 @@ namespace Zjcs.Presentation.World
 
         private static Sprite LoadSprite(SpriteBinding binding)
         {
-            if (string.IsNullOrWhiteSpace(binding.file) || binding.file.Contains("..") || Path.IsPathRooted(binding.file))
+            if (binding == null || string.IsNullOrWhiteSpace(binding.file)) return null;
+            if (binding.file.Contains("..") || Path.IsPathRooted(binding.file))
                 throw new InvalidDataException("Official dungeon UI Sprite path is invalid.");
             string key = binding.file + ":" + binding.sha256;
             if (loadedSprites.TryGetValue(key, out var cached) && cached != null) return cached;
@@ -754,5 +790,29 @@ namespace Zjcs.Presentation.World
             ? new Color(value[0], value[1], value[2], value[3]) : fallback;
         private static Quaternion ReadQuaternion(float[] value) => value != null && value.Length >= 4
             ? new Quaternion(value[0], value[1], value[2], value[3]) : Quaternion.identity;
+    }
+
+    internal sealed class OfficialDungeonBackgroundRaycastFilter : MonoBehaviour, ICanvasRaycastFilter
+    {
+        private Selectable[] controls;
+
+        internal void Initialize(Transform root)
+        {
+            controls = root.GetComponentsInChildren<Selectable>(true);
+            if (controls.Length == 0) throw new InvalidDataException("Private dungeon controls were not restored.");
+        }
+
+        public bool IsRaycastLocationValid(Vector2 screenPoint, Camera eventCamera)
+        {
+            if (controls == null) return true;
+            foreach (Selectable control in controls)
+            {
+                RectTransform rect = control && control.isActiveAndEnabled && control.IsInteractable()
+                    ? control.transform as RectTransform : null;
+                if (rect != null && RectTransformUtility.RectangleContainsScreenPoint(rect, screenPoint, eventCamera))
+                    return false;
+            }
+            return true;
+        }
     }
 }

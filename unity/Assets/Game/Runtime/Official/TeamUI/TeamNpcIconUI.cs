@@ -65,7 +65,14 @@ namespace Zjcs.Official.TeamUI
         private void Refresh()
         {
             if (NameText != null) NameText.SetKey(mInfo.NameKey);
-            NpcIcon.sprite = Load(mInfo.Icon);
+            Sprite icon = Load(mInfo.Icon);
+            if (icon == null && npcId >= 11015 && npcId <= 11022)
+                NpcIcon.gameObject.SetActive(false);
+            else
+            {
+                NpcIcon.gameObject.SetActive(true);
+                NpcIcon.sprite = icon;
+            }
             if (CombatRatingText != null)
                 CombatRatingText.Format(services.PlayerInfo.CompactNumber(services.CalcCombatRating(npcId, npcLevel, npcSubRank)));
             ProfessionIconGo.SetActive(mProfession != 0);

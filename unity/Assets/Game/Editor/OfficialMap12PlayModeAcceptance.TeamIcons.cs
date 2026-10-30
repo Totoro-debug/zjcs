@@ -57,7 +57,7 @@ namespace Zjcs.Editor
             public int Profession = 10;
             public readonly List<string> NpcTrace = new List<string>();
             public TeamNpcIconDefinition GetNpc(int id)
-            { NpcTrace.Add("npc:" + id); return new TeamNpcIconDefinition { NameKey = "npc-name", Icon = "npc-icon" }; }
+            { NpcTrace.Add("npc:" + id); return new TeamNpcIconDefinition { NameKey = id == 11015 ? "ui_npc_11015" : "npc-name", Icon = "npc-icon" }; }
             public int GetProfession(int id, int level, int planesRank)
             { NpcTrace.Add("level:" + id + ":" + level + ":" + planesRank); return Profession; }
             public long CalcCombatRating(int id, int level, int subRank)
@@ -188,6 +188,13 @@ namespace Zjcs.Editor
             var profession = new GameObject("Profession image fixture", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
             profession.transform.SetParent(root.transform);
             view.ProfessionIconGo = profession; view.ProfessionIcon = profession.GetComponent<Image>();
+            var name = new GameObject("NPC name fixture", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI), typeof(WorldMultiLanguageText));
+            name.transform.SetParent(root.transform);
+            var nameText = name.GetComponent<WorldMultiLanguageText>();
+            nameText.Localizer = key => key == "ui_npc_11015" ? "利姆鲁" : key;
+            nameText.myKey = "ui_npc_11015";
+            name.GetComponent<TextMeshProUGUI>().font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/Official/World/Map/12/UI/Team/FZY4K-Dynamic.asset");
+            view.NameText = nameText;
             var text = new GameObject("NPC rating fixture", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI), typeof(WorldMultiLanguageText));
             text.transform.SetParent(root.transform);
             text.GetComponent<TextMeshProUGUI>().font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/Official/World/Map/12/UI/Team/FZY4K-Dynamic.asset");
@@ -195,14 +202,15 @@ namespace Zjcs.Editor
             view.CombatRatingText.myKey = "{0}"; view.CombatRatingText.Localizer = key => key;
             try
             {
-                view.Init(123, 55, 6);
-                SteleRequire(string.Join("|", s.NpcTrace) == "npc:123|level:123:55:2" && s.Info.Operations.Count == 0,
+                view.Init(11015, 55, 6);
+                SteleRequire(string.Join("|", s.NpcTrace) == "npc:11015|level:11015:55:2" && s.Info.Operations.Count == 0,
                     "Original NPC icon must load config/level detail before active refresh.");
                 root.SetActive(true); yield return null;
-                SteleRequire(string.Join("|", s.NpcTrace) == "npc:123|level:123:55:2|rating:123:55:6"
+                SteleRequire(string.Join("|", s.NpcTrace) == "npc:11015|level:11015:55:2|rating:11015:55:6"
                     && view.CombatRatingText.Text == "compact-321" && profession.activeSelf
+                    && !icon.activeSelf && view.NameText.Text == "利姆鲁"
                     && s.Info.Operations.Select(op => op.Path).SequenceEqual(new[] { "npc-icon", "first-10" }),
-                    "Original NPC image, rating, profession and synchronous operation order changed.");
+                    "Missing Map12 assist portraits must fall back to the original text name without changing NPC icon lifecycle.");
                 root.SetActive(false);
                 SteleRequire(s.Info.Operations.All(op => op.Disposals == 1), "NPC icon disable leaked an original resource operation.");
                 root.SetActive(true); yield return null;
@@ -210,6 +218,7 @@ namespace Zjcs.Editor
                     "NPC icon re-enable must use a fresh disposable bag.");
                 s.Profession = 0; view.Init(123, 56, 7);
                 SteleRequire(!profession.activeSelf && s.Info.Operations.Count == 5
+                    && icon.activeSelf
                     && s.Info.Operations.Take(4).All(op => op.Disposals == 1)
                     && s.NpcTrace.Last() == "rating:123:56:7",
                     "NPC reinitialization must release prior images and preserve the no-profession branch.");

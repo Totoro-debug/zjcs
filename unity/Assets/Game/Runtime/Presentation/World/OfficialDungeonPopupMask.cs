@@ -28,6 +28,8 @@ namespace Zjcs.Presentation.World
             if (window == null || nativeMask == null || blur == null || blur.shader.name != "Zjcs/Official/UI/ScreenBlur")
                 throw new InvalidOperationException("Original private dungeon blur mask resources are missing.");
             popup = window;
+            popup.OnShow -= KeepWindowAboveMask;
+            popup.OnShow += KeepWindowAboveMask;
             maskPrefab = nativeMask;
             sourceMaterial = blur;
             imagePath = image;
@@ -123,6 +125,13 @@ namespace Zjcs.Presentation.World
             }
         }
 
+        private void KeepWindowAboveMask(WorldPopupWindow shown)
+        {
+            if (shown != popup || mask == null) return;
+            Canvas maskCanvas = mask.GetComponent<Canvas>();
+            if (maskCanvas != null) popup.SetCanvasSortingOrder(maskCanvas.sortingOrder + 1);
+        }
+
         public void Close()
         {
             if (closing) return;
@@ -212,6 +221,11 @@ namespace Zjcs.Presentation.World
             if (closing) CompleteClose();
         }
 
-        private void OnDestroy() { ReleaseMask(); closed = null; }
+        private void OnDestroy()
+        {
+            if (popup != null) popup.OnShow -= KeepWindowAboveMask;
+            ReleaseMask();
+            closed = null;
+        }
     }
 }

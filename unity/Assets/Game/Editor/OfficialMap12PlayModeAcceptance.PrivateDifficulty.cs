@@ -34,6 +34,16 @@ namespace Zjcs.Editor
             // Resolve by its original language key, without assuming a duplicate object name.
             WorldMultiLanguageText description = dialog.GetComponentsInChildren<WorldMultiLanguageText>(true)
                 .Single(value => value.myKey == "ui_daily_dungeon_dialog_desc_content_21_Normal");
+            TMPro.TMP_FontAsset officialFont = Resources.Load<TMPro.TMP_FontAsset>("Combat/FZY4K-Dynamic");
+            if (officialFont == null || description.GetComponent<TMPro.TMP_Text>().font != officialFont)
+                throw new InvalidDataException("Original private dungeon dialog did not bind its packaged Chinese font.");
+            TMPro.TMP_Text descriptionText = description.GetComponent<TMPro.TMP_Text>();
+            descriptionText.ForceMeshUpdate(true, true);
+            char[] missingCharacters = descriptionText.text.Where(value => !char.IsWhiteSpace(value) && !officialFont.HasCharacter(value))
+                .Distinct().ToArray();
+            if (missingCharacters.Length > 0)
+                throw new InvalidDataException("Original private dungeon description contains characters missing from its packaged font: "
+                    + new string(missingCharacters));
             Button locked = tabs[1].transform.GetChild(3).GetComponent<Button>();
             if (locked == null || !locked.gameObject.activeInHierarchy)
                 throw new InvalidDataException("Original next-difficulty lock-tip overlay is missing.");

@@ -6,7 +6,7 @@ namespace Zjcs.Presentation.Combat
     /// <summary>Applies the recovered fight prefab hierarchy to a reused world character.</summary>
     internal sealed class OfficialBattleAttachedModelView : IDisposable
     {
-        private const int PlayerEntityId = 3001;
+        private const int PlayerEntityId = 3100;
         private const float PlayerBattleModelScale = 1.25f;
         private readonly Transform previousParent;
         private readonly Vector3 previousPosition, previousScale;

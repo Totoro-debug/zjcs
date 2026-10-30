@@ -117,7 +117,10 @@ namespace Zjcs.Presentation.World
             if (map12PrivateDungeonDialog != null || map12PrivateDungeonBattleActive) return;
             GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonDialogPrivateMap");
             if (prefab == null) throw new InvalidDataException("Original private daily dungeon window is missing.");
-            map12PrivateDungeonDialog = Instantiate(prefab, hud.ui.OverlayRoot, false);
+            var staging = new GameObject("Map12PrivateDungeonStaging", typeof(RectTransform));
+            staging.SetActive(false);
+            staging.transform.SetParent(hud.ui.OverlayRoot, false);
+            map12PrivateDungeonDialog = Instantiate(prefab, staging.transform, false);
             try
             {
                 OfficialDungeonUiBindingRuntime.Apply(map12PrivateDungeonDialog, "DailyDungeonDialogPrivateMap", PostMap12PopupSound);
@@ -142,11 +145,17 @@ namespace Zjcs.Presentation.World
                 if (battle == null) throw new InvalidDataException("Original private daily dungeon battle button is missing.");
                 battle.onClick.RemoveAllListeners();
                 battle.onClick.AddListener(() => StartMap12PrivateDungeonBattle(entity));
+                Transform matching = FindNamedTransform(map12PrivateDungeonDialog.transform, "GameMatch");
+                if (matching == null) throw new InvalidDataException("Original private matching presentation is missing.");
+                matching.gameObject.SetActive(false);
+                map12PrivateDungeonDialog.transform.SetParent(hud.ui.OverlayRoot, false);
+                Destroy(staging);
                 ShowMap12PrivateDungeonDialog();
             }
             catch
             {
                 Destroy(map12PrivateDungeonDialog);
+                Destroy(staging);
                 map12PrivateDungeonDialog = null;
                 throw;
             }
