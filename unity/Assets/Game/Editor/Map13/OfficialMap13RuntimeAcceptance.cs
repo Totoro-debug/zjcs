@@ -11,6 +11,7 @@ using UnityEngine.UI;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.State;
 using Zjcs.Offline.Commerce;
+using Zjcs.Offline.World;
 using Zjcs.Official.WorldUI;
 using Zjcs.Presentation.CharacterCreation;
 using Zjcs.Presentation.World;
@@ -130,6 +131,7 @@ namespace Zjcs.Editor.Map13
             Directory.CreateDirectory(output);
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "entry.png"));
             Debug.Log("Map13 runtime fixture entity count: " + view.EntityCount + ".");
+            yield return VerifyStoryMovementLock(runtime, view);
             bool shopClosed = false;
             MethodInfo openShop = typeof(OfficialMainlineMapRuntime).GetMethod("OpenMap13NationShop",
                 BindingFlags.Instance | BindingFlags.NonPublic);
@@ -205,6 +207,73 @@ namespace Zjcs.Editor.Map13
             yield return null;
             UnityEngine.Object.Destroy(runtime.gameObject);
             UnityEngine.Object.Destroy(canvas);
+        }
+
+        private static IEnumerator VerifyStoryMovementLock(OfficialMainlineMapRuntime runtime,
+            OfficialMap10EntityView entities)
+        {
+            object navigation = typeof(OfficialMainlineMapRuntime)
+                .GetField("navigation", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(runtime);
+            if (navigation == null) throw new MissingFieldException("The Map13 navigation module is missing.");
+            Type navigationType = navigation.GetType();
+            FieldInfo gridField = navigationType.GetField("currentGrid", BindingFlags.Instance | BindingFlags.Public);
+            FieldInfo sessionField = typeof(OfficialMainlineMapRuntime)
+                .GetField("session", BindingFlags.Instance | BindingFlags.NonPublic);
+            var session = (OfficialWorldMapSession)sessionField?.GetValue(runtime);
+            MethodInfo gridToWorld = typeof(OfficialMainlineMapRuntime).GetMethod("GridToWorld",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            MethodInfo processPress = navigationType.GetMethod("ProcessMapPointerPress",
+                BindingFlags.Instance | BindingFlags.Public);
+            MethodInfo lockMovement = navigationType.GetMethod("LockPlayerMovementForStory",
+                BindingFlags.Instance | BindingFlags.Public);
+            MethodInfo unlockMovement = navigationType.GetMethod("UnlockPlayerMovementForStory",
+                BindingFlags.Instance | BindingFlags.Public);
+            if (gridField == null || session == null || gridToWorld == null || processPress == null
+                || lockMovement == null || unlockMovement == null)
+                throw new MissingMethodException("Map13 story movement lock bindings are incomplete.");
+
+            MapGridPoint start = (MapGridPoint)gridField.GetValue(navigation);
+            MapGridPoint target = default;
+            Vector2 screen = Vector2.zero;
+            bool found = false;
+            foreach (MapGridPoint offset in new[]
+                { new MapGridPoint(1, 0), new MapGridPoint(-1, 0), new MapGridPoint(0, 1), new MapGridPoint(0, -1) })
+            {
+                MapGridPoint candidate = start + offset;
+                if (!session.Movement.IsFit(candidate) || !session.Movement.CanMoveToNext(start, candidate)) continue;
+                Vector3 world = (Vector3)gridToWorld.Invoke(runtime, new object[] { candidate });
+                Vector3 screenPosition = runtime.GetComponentInChildren<Camera>().WorldToScreenPoint(world);
+                screen = new Vector2(screenPosition.x, screenPosition.y);
+                var hits = new System.Collections.Generic.List<RaycastResult>();
+                EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current) { position = screen }, hits);
+                if (hits.Count != 0 || Physics2D.OverlapPoint(world) != null || entities.EntityInfos.Any(value => value.Active
+                    && value.Grid[0] == candidate.X && value.Grid[1] == candidate.Y)) continue;
+                target = candidate;
+                found = true;
+                break;
+            }
+            if (!found) throw new InvalidOperationException("No free adjacent Map13 tile is available for the movement-lock check.");
+
+            lockMovement.Invoke(navigation, null);
+            runtime.PointerPressProvider = () => screen;
+            processPress.Invoke(navigation, null);
+            runtime.PointerPressProvider = () => null;
+            if (!((MapGridPoint)gridField.GetValue(navigation)).Equals(start))
+            {
+                unlockMovement.Invoke(navigation, null);
+                throw new InvalidDataException("WorldStopMove allowed a simulated world press to move the player.");
+            }
+
+            unlockMovement.Invoke(navigation, null);
+            runtime.PointerPressProvider = () => screen;
+            processPress.Invoke(navigation, null);
+            runtime.PointerPressProvider = () => null;
+            float deadline = Time.realtimeSinceStartup + 5f;
+            while (!((MapGridPoint)gridField.GetValue(navigation)).Equals(target)
+                && Time.realtimeSinceStartup < deadline) yield return null;
+            if (!((MapGridPoint)gridField.GetValue(navigation)).Equals(target))
+                throw new InvalidDataException("Unlocking story movement did not restore normal map navigation.");
+            Debug.Log("Map13 WorldStopMove passed: locked world press was ignored and navigation resumed after unlock.");
         }
 
         private static void ClickOfficialButton(Button button)
