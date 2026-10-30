@@ -14,6 +14,8 @@
 
 原地形：`Map_Tower15_SnowFloor1/MapGround_Tower15_SnowFloor1`。 后继地图：`42001`。
 
+871 客户端／Common 的 `MapRegionInfo.IsUnlockTimeReached` 按对应位阶实际解锁时间加 `LimitServerRankUnlockDayOffset` 计算开放时刻；当前位阶还会应用原合服加速。入口区域原配置为服务端位阶 5、偏移 14 天。来源：[`MapRegionInfo.cs`](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/MapRegionInfo.cs)、[`MapUtils.cs`](../../.tools/source-packages/current/871_156598/official-code/common-source/MapUtils.cs)。当前本地角色存档没有上述服务端位阶时间和合服记录，离线入口开放规则尚待确认；不把“存档创建后 14 天”记录为官方规则。
+
 ## 完整还原部分
 
 尚无本图完整 Unity 游玩流程的完成结论；共享代码和转换数据不计作整图完成。
