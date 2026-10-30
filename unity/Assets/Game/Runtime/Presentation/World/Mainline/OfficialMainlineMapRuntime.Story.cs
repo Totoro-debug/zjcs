@@ -851,11 +851,12 @@ namespace Zjcs.Presentation.World
             OfficialMapNavigationView.WorldToGrid(session.Definition.Navigation,
                 new OfficialMapVector3 { X = entity.transform.position.x, Y = entity.transform.position.y },
                 out int startX, out int startY);
-            List<MapGridPoint> path = session.FindPath(new OfficialMapPathRequest
+            List<MapGridPoint> path = FindMainlinePath(new OfficialMapPathRequest
             {
                 Start = new MapGridPoint(startX, startY),
                 End = new MapGridPoint(destinationX, destinationY),
-                PreciseTarget = true
+                PreciseTarget = true,
+                BodyOffsets = new[] { new MapGridPoint(0, 0) }
             });
             if (path == null || path.Count == 0)
             {
@@ -883,7 +884,7 @@ namespace Zjcs.Presentation.World
             GameObject actor = entityView.FindEntityObject(operate.PlacementId);
             if (actor == null || session == null)
                 throw new InvalidDataException("Official story map entity move target is not loaded.");
-            List<MapGridPoint> path = session.FindPath(new OfficialMapPathRequest
+            List<MapGridPoint> path = FindMainlinePath(new OfficialMapPathRequest
             {
                 Start = operate.Grid,
                 End = interact.Grid,

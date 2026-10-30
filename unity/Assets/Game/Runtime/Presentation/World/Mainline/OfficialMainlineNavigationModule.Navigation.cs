@@ -111,7 +111,7 @@ namespace Zjcs.Presentation.World
                     host.Interact(interact);
                     return;
                 }
-                List<MapGridPoint> path = host.session.FindPath(new OfficialMapPathRequest
+                List<MapGridPoint> path = host.FindMainlinePath(new OfficialMapPathRequest
                 {
                     Start = currentGrid,
                     End = target,
@@ -195,7 +195,7 @@ namespace Zjcs.Presentation.World
                         new MapGridPoint(0, 1), new MapGridPoint(1, 0)
                     };
                     MapGridPoint? adjacent = directions.Select(offset => destination + offset)
-                        .Where(host.session.Movement.IsFit).Select(point => (MapGridPoint?)point).FirstOrDefault();
+                        .Where(host.IsMainlineGridFit).Select(point => (MapGridPoint?)point).FirstOrDefault();
                     if (!adjacent.HasValue)
                     {
                         complete?.Invoke();
@@ -203,7 +203,7 @@ namespace Zjcs.Presentation.World
                     }
                     path = new List<MapGridPoint> { currentGrid, adjacent.Value };
                 }
-                else path = host.session.FindPath(new OfficialMapPathRequest
+                else path = host.FindMainlinePath(new OfficialMapPathRequest
                 {
                     Start = currentGrid,
                     End = destination,

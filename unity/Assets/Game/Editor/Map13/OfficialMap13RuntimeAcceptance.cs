@@ -13,6 +13,7 @@ using Zjcs.Offline.State;
 using Zjcs.Offline.Commerce;
 using Zjcs.Offline.World;
 using Zjcs.Official.WorldUI;
+using Zjcs.Official.World;
 using Zjcs.Presentation.CharacterCreation;
 using Zjcs.Presentation.World;
 
@@ -127,6 +128,7 @@ namespace Zjcs.Editor.Map13
                 throw new InvalidDataException("Map13 runtime did not create the official 2690-entity view.");
             if (runtime.transform.GetComponentsInChildren<Camera>(true).Length == 0)
                 throw new InvalidDataException("Map13 runtime did not create a world camera.");
+            VerifyWaterAwareMovement(runtime);
             string output = Path.Combine(validation, "map13-runtime-acceptance-render");
             Directory.CreateDirectory(output);
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "entry.png"));
@@ -207,6 +209,67 @@ namespace Zjcs.Editor.Map13
             yield return null;
             UnityEngine.Object.Destroy(runtime.gameObject);
             UnityEngine.Object.Destroy(canvas);
+        }
+
+        private static void VerifyWaterAwareMovement(OfficialMainlineMapRuntime runtime)
+        {
+            object navigation = typeof(OfficialMainlineMapRuntime)
+                .GetField("navigation", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(runtime);
+            if (navigation == null) throw new MissingFieldException("The Map13 navigation module is missing.");
+            Type navigationType = navigation.GetType();
+            FieldInfo gridField = navigationType.GetField("currentGrid", BindingFlags.Instance | BindingFlags.Public);
+            FieldInfo pathField = navigationType.GetField("movementPath", BindingFlags.Instance | BindingFlags.Public);
+            MethodInfo startMovement = navigationType.GetMethod("StartMovement", BindingFlags.Instance | BindingFlags.Public);
+            MethodInfo findPath = typeof(OfficialMainlineMapRuntime).GetMethod("FindMainlinePath",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            object navigationSession = typeof(OfficialMainlineMapRuntime)
+                .GetField("map13NavigationSession", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(runtime);
+            if (gridField == null || pathField == null || startMovement == null || findPath == null || navigationSession == null)
+                throw new MissingMethodException("Map13 water-aware navigation bindings are incomplete.");
+
+            MapGridPoint start = (MapGridPoint)gridField.GetValue(navigation);
+            OfficialWorldMapSession hostSession = (OfficialWorldMapSession)typeof(OfficialMainlineMapRuntime)
+                .GetField("session", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(runtime);
+            MethodInfo createGroundProbe = navigationSession.GetType().GetMethod("CreateGround");
+            object waterGroundProbe = createGroundProbe.Invoke(navigationSession, new object[] { 65, null, 0 });
+            MethodInfo isFitProbe = waterGroundProbe.GetType().GetMethod("IsFit", new[] { typeof(MapGridPoint) });
+            int entryId = (int)typeof(OfficialMainlineMapRuntime).GetMethod("GetDefaultEntryId",
+                BindingFlags.Instance | BindingFlags.NonPublic).Invoke(runtime, null);
+            OfficialMap10EntityInfo entry = runtime.GetComponentInChildren<OfficialMap10EntityView>()
+                .EntityInfos.Single(value => value.PlacementId == entryId);
+            if (entry.Grid[0] != start.X || entry.Grid[1] != start.Y || !hostSession.Movement.IsFit(start)
+                || !(bool)isFitProbe.Invoke(waterGroundProbe, new object[] { start }))
+                throw new InvalidDataException("A new Map13 profile must start at its original passable world entry.");
+            System.Collections.Generic.List<MapGridPoint> expected = null;
+            MapGridPoint target = default;
+            for (int radius = 1; radius <= 20 && expected == null; radius++)
+                for (int y = -radius; y <= radius && expected == null; y++)
+                    for (int x = -radius; x <= radius && expected == null; x++)
+                    {
+                        if (Math.Abs(x) != radius && Math.Abs(y) != radius) continue;
+                        target = new MapGridPoint(start.X + x, start.Y + y);
+                        if (target.X < 0 || target.Y < 0 || target.X >= 240 || target.Y >= 240) continue;
+                        var request = new OfficialMapPathRequest
+                        {
+                            Start = start, End = target, PreciseTarget = true,
+                            BodyOffsets = new[] { new MapGridPoint(0, 0) }
+                        };
+                        expected = (System.Collections.Generic.List<MapGridPoint>)findPath.Invoke(runtime, new object[] { request });
+                        if (expected == null || expected.Count < 2) expected = null;
+                    }
+            if (expected == null) throw new InvalidDataException("No nearby reachable Map13 grid exists for movement verification.");
+
+            startMovement.Invoke(navigation, new object[] { target, null });
+            var actual = pathField.GetValue(navigation) as System.Collections.Generic.List<MapGridPoint>;
+            if (actual == null || !actual.SequenceEqual(expected))
+                throw new InvalidDataException("Map13 player movement did not use the water-aware official AStar route.");
+            MethodInfo createGround = navigationSession.GetType().GetMethod("CreateGround");
+            object waterGround = createGround.Invoke(navigationSession, new object[] { 65, null, 0 });
+            MethodInfo isFit = waterGround.GetType().GetMethod("IsFit", new[] { typeof(MapGridPoint) });
+            if (actual.Skip(1).Any(point => !(bool)isFit.Invoke(waterGround, new object[] { point })))
+                throw new InvalidDataException("Map13 player path crossed a blocked water body.");
+            navigationType.GetMethod("StopMovement", BindingFlags.Instance | BindingFlags.Public).Invoke(navigation, null);
+            Debug.Log("Map13 runtime movement passed: the shared player movement command used the original AStar path with saved water overlays.");
         }
 
         private static IEnumerator VerifyStoryMovementLock(OfficialMainlineMapRuntime runtime)

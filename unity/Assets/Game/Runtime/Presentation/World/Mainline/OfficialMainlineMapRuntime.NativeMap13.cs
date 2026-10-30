@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
 using Zjcs.Offline.Progression;
+using Zjcs.Offline.World;
 using Zjcs.Offline.World.Map13Navigation;
 using Zjcs.Offline.World.NativeMap13GridVisibility;
 using Zjcs.Official.World.NativeMap13Labels;
@@ -45,6 +47,16 @@ namespace Zjcs.Presentation.World
             nativeMap13ObservedSave=progressionSave.Save;
             SaveLocalProgress();
         }
+        private List<MapGridPoint> FindMainlinePath(OfficialMapPathRequest request) =>
+            mapClassId == 13 && map13NavigationSession != null
+                ? map13NavigationSession.FindPlayerPath(request)
+                : session.FindPath(request);
+
+        private bool IsMainlineGridFit(MapGridPoint point) =>
+            mapClassId == 13 && map13NavigationSession != null
+                ? map13NavigationSession.CreateGround(session.Definition.CharacterMover.MoveMask).IsFit(point)
+                : session.Movement.IsFit(point);
+
         private void RestoreMap13Visibility(byte[] saved)
         {
             var labels=JsonUtility.FromJson<Map13LabelData>(Resources.Load<TextAsset>("Map13/Native/region-label-data").text);
