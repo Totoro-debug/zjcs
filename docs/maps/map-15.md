@@ -40,7 +40,7 @@
 
 按用户明确确认，沿用龙之国的单机自动解谜方案。固定版客户端／Common 的 `StageResultAutoPuzzleComponentImplement`、`StageResultResetPuzzleComponentImplement` 及相关请求保留目标、费用和结果标记，缺少服务端执行器；本地适配不标为原服务端逻辑。依据为 [`MyStageResultAutoPuzzle.cs`](../../.tools/source-packages/official-code/client-source/MyStageResultAutoPuzzle.cs)、[`MyStageResultResetPuzzle.cs`](../../.tools/source-packages/official-code/client-source/MyStageResultResetPuzzle.cs) 及对应 Common 标记组件。通天塔 5 处火炮终端只清除原 `NeedRemoveLoEntityIds`，2 处特殊锁及 5 处普通锁终端只解开原 `LockLoEntityIds`，使用原交互费用（道具 325×1），不补发炮、失败演出或奖励。重置仅恢复指定目标，保留其他状态、背包、奖励凭据和角色位置；原配置仅 4 个终端有重置分支，保留其余终端的原菜单，不新增重置按钮。
 
-离线入口规则按用户确认自定义为“达到位阶 5 后可手动发起；发起时写入本地倒计时起点，经过 14 天开放”。计时起点与开放状态进入现有主线 JSON 存档；位阶升级、入口出现记录和读取入口状态都不会自动开始倒计时。暂不应用服务端合服加速。`OfflineMainlineProgressSession.StartMap15Preparation`、`GetMap15PreparationState` 与 `RefreshMap15Preparation` 承载该规则；旧存档中已开放的状态保留为已开放。Map14 入口实体 103 已接入官方 `Map14/UI/CostItemConfirmDialog`：访问入口会显示位阶要求或剩余天数，达到位阶 5 且未开始时可手动开始本地 14 天倒计时；已开放状态当前提示重新进入地图，Map14 到 Map15 的直接场景切换仍未完成。
+离线入口规则按用户确认自定义为“达到位阶 5 后可手动发起；发起时写入本地倒计时起点，经过 14 天开放”。计时起点与开放状态进入现有主线 JSON 存档；位阶升级、入口出现记录和读取入口状态都不会自动开始倒计时。暂不应用服务端合服加速。`OfflineMainlineProgressSession.StartMap15Preparation`、`GetMap15PreparationState` 与 `RefreshMap15Preparation` 承载该规则；旧存档中已开放的状态保留为已开放。Map14 入口实体 103 已接入官方 `Map14/UI/CostItemConfirmDialog`：访问入口会显示位阶要求或剩余天数，达到位阶 5 且未开始时可手动开始本地 14 天倒计时；倒计时完成后确认框提供“进入通天塔”，由主线入口控制器重新打开 Map15。
 
 六处遗迹沿固定客户端／Common `WorldRuinDialog`、`GameRuinEnterNextStageDialog`、`GameNextStageUIHandler`、`FightRuinConfigComponentImplement`、`StageBehStageRuinComponent` 与 RPC 10160 核对原 20 层配置、战斗与奖励数据；服务端推进／结算执行器未取得。按用户明确确认的离线方案，进入后立即执行当前未探索层，沿原 `StageId`／层序推进；战斗事务挂起并回放，战败保留当前层供重试。胜利后按原 `GameNextStageUIShowDelayTime=0.8` 秒返回层推进或奖励阶段。奖励只按原追加物配置领取本层奖励；最后一层原奖励结算后标记已探索，退出保留已领取奖励及进度，不增加额外奖励或随机规则。遗迹 17–19 的层配置原 `MapClassId=42062` 而放置于 42063，配置不改写。经用户明确确认的背景修正只把两条 `EnterNextStageUIBgImg` 的加载映射到固定版同名 `BigMapStageBg` 原图，原始配置仍保留 `MapStageBg` 路径。
 
@@ -56,7 +56,7 @@
 
 按原地图配置恢复场景、区域、导航、放置实体、原条件、交互、战斗、奖励和出口；原 prefab、骨骼、材质、粒子、动画及音频需在 Unity / Windows 逐项恢复并绑定。
 
-- 完成本图独立的本地资源绑定、直接地图切换、正常游玩、战斗／交互结算、失败回滚和完整楼层退出流程。
+- 完成本图独立的本地资源绑定、正常游玩、战斗／交互结算、失败回滚和完整楼层退出流程。
 - 在 Unity 编辑器实际运行，并验证 Windows 目标表现；
 
 ## 代码与资源入口

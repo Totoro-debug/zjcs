@@ -10,13 +10,22 @@ namespace Zjcs.Presentation.World
         private GameObject map15PreparationDialogRoot;
         private WorldCostItemConfirmDialog map15PreparationDialog;
 
+        public int RequestedMapClassId { get; private set; }
+
         private void ShowMap15PreparationDialog()
         {
             if (map15PreparationDialog != null) return;
             OfflineMap15PreparationState state = progressionSave.GetMap15PreparationState();
             if (state.Unlocked)
             {
-                hud.ShowOfficialNotice("通天塔已解锁，请重新进入地图。");
+                GameObject unlockedPrefab = Resources.Load<GameObject>("Map14/UI/CostItemConfirmDialog");
+                if (unlockedPrefab == null) throw new InvalidOperationException("Official Map15 preparation dialog prefab is missing.");
+                map15PreparationDialogRoot = Instantiate(unlockedPrefab, uiParent, false);
+                map15PreparationDialog = map15PreparationDialogRoot.GetComponent<WorldCostItemConfirmDialog>();
+                if (map15PreparationDialog == null)
+                    throw new InvalidOperationException("Official Map15 preparation dialog component is missing.");
+                map15PreparationDialog.Init("通天塔入口", "通天塔入口已开放，是否现在进入？", "进入通天塔", "暂不", "",
+                    null, true, EnterMap15, null, CloseMap15PreparationDialog);
                 return;
             }
             GameObject prefab = Resources.Load<GameObject>("Map14/UI/CostItemConfirmDialog");
@@ -49,6 +58,12 @@ namespace Zjcs.Presentation.World
                 return;
             }
             hud.ShowOfficialNotice("已开始通天塔入口准备，14 天后开放");
+        }
+
+        private void EnterMap15()
+        {
+            RequestedMapClassId = 15;
+            CloseMap();
         }
 
         private void CloseMap15PreparationDialog()

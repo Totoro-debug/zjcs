@@ -1358,7 +1358,8 @@ namespace Zjcs.Presentation.CharacterCreation
                 runtime.Begin(mapClassId, slotId, SaveSelectionProbe.ProfileRoot, canvas.transform, model, name,
                     () =>
                     {
-                        if (mapClassId == 11) EnterHome();
+                        if (runtime.RequestedMapClassId == 15) EnterInitialIsland();
+                        else if (mapClassId == 11) EnterHome();
                         else if (screen != null) screen.SetActive(true);
                     });
                 if (screen != null) screen.SetActive(false);
