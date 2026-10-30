@@ -6,6 +6,8 @@
 
 本次迁移补齐了 `GetEntityNode`、`ClickMapEntityNode`、`ClickMapEntityInLogicNode` 和 `MapEntityMoveInteractionNode` 的官方端口解析、导航等待、实体移动和剧情继续边界；已完成 Unity 编译、Release Player 构建及启动流程实机验证。正式剧情全路径、`WorldStopMoveNode` 的服务器语义、其余实体 prefab 与地图内完整交互仍未完成，不能据此宣称整图完成。
 
+剧情运行器现已覆盖 Map13 图中会实际触发的窗口等待、按钮／列表点击、战斗结果等待、相机移动、遮罩、时间线等待及故事调用节点；`WaitGameResultNode` 按官方阶段绑定启动本地战斗并依据本地结算选择 Win／Lost／Leave 分支。职业窗口节点沿用已加载的本地 ProfessionUI 状态并继续对应成功／退出端口。该批代码已通过 Map13 剧情运行测试；完整职业规则、时间线资源实播、`WorldStopMoveNode` 服务器语义和整图 Play Mode／Windows Player 仍未完成。
+
 ## 地图简介
 
 13 泽之国，范围按下列原配置与本地决策维护。

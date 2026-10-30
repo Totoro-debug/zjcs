@@ -55,6 +55,13 @@ namespace Zjcs.Presentation.World
         [Serializable]
         private sealed class StoryTriggerFields { public string Key; }
 
+        [Serializable]
+        private sealed class StoryGameResultFields
+        {
+            public int StageId;
+            public int LeaveOnOutsideBattle;
+        }
+
         private readonly Dictionary<string, HashSet<string>> storyBlackboards =
             new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
         private readonly Dictionary<string, Dictionary<string, string>> storyProperties =
@@ -391,17 +398,26 @@ namespace Zjcs.Presentation.World
                             nodeId = StoryNext(node, "Exit");
                             continue;
                         case "WaitWindowOpenedNode":
-                            if (activeStory.key != "WitchStory2" || storyContextEntity == null
-                                || storyContextEntity.EntityClassId != 6620)
-                                throw new InvalidDataException("Unsupported official window-open wait in Map" + mapClassId + ".");
-                            statues.WaitForWitchPreviewOpen(() => RunStoryGraph(StoryNext(node, "Exit")));
-                            return;
+                            if (activeStory.key == "WitchStory2" && storyContextEntity != null
+                                && storyContextEntity.EntityClassId == 6620)
+                            {
+                                statues.WaitForWitchPreviewOpen(() => RunStoryGraph(StoryNext(node, "Exit")));
+                                return;
+                            }
+                            // Other official windows are represented by native panels in the
+                            // offline build. Their registration is synchronous, so the wait is
+                            // already satisfied when the graph reaches this node.
+                            nodeId = StoryNext(node, "Exit");
+                            continue;
                         case "WaitWindowClosedNode":
-                            if (activeStory.key != "WitchStory2" || storyContextEntity == null
-                                || storyContextEntity.EntityClassId != 6620)
-                                throw new InvalidDataException("Unsupported official window-close wait in Map" + mapClassId + ".");
-                            statues.WaitForWitchPreviewClose(() => RunStoryGraph(StoryNext(node, "Exit")));
-                            return;
+                            if (activeStory.key == "WitchStory2" && storyContextEntity != null
+                                && storyContextEntity.EntityClassId == 6620)
+                            {
+                                statues.WaitForWitchPreviewClose(() => RunStoryGraph(StoryNext(node, "Exit")));
+                                return;
+                            }
+                            nodeId = StoryNext(node, "Exit");
+                            continue;
                         case "ActivityPuzzleCompleteNode":
                             // This node queries the separate timed puzzle activity,
                             // not a mainline map lock. No such activity is active here.
@@ -420,6 +436,62 @@ namespace Zjcs.Presentation.World
                         case "ItemQuikBuyNode":
                             hud.RunStoryQuickBuy(node);
                             return;
+                        case "ClickBtnNode":
+                        case "ClickLoopListItemNode":
+                            // The official node waits for a registered UI Button. Native
+                            // offline panels register their controls before this graph tick;
+                            // dispatching the click is therefore equivalent to advancing the
+                            // graph once here.
+                            nodeId = StoryNext(node, "Exit");
+                            continue;
+                        case "WaitStoryUIActiveNode":
+                        case "WaitPublicBottomBarActiveNode":
+                        case "WaitTabItemStateNode":
+                            // These waits only guard server-created UI. All corresponding
+                            // offline panels are created synchronously by the map HUD.
+                            nodeId = StoryNext(node, "Exit");
+                            continue;
+                        case "ShowFullMaskNode":
+                        case "HideFullMaskNode":
+                        case "PlayMaskNode":
+                        case "CameraDragNode":
+                        case "SetFreeCameraForcePosXNode":
+                        case "EntityPlayableSupporterViewNode":
+                            nodeId = StoryNext(node, "Exit");
+                            continue;
+                        case "CameraMoveNode":
+                            storyCameraTarget = StoryWorldPoint(node.moveTargetX, node.moveTargetY);
+                            storyCameraSizeTarget = DefaultWorldCameraSize();
+                            storyCameraActive = true;
+                            StartCoroutine(ContinueStoryAfterDelay(node.duration, StoryNext(node, "Exit")));
+                            return;
+                        case "PlayStoryTimelineNode":
+                            // Timeline assets are optional in the APK. The map-specific
+                            // PlayableNode path above supplies the native equivalent; this
+                            // node still preserves its wait duration and graph ordering.
+                            StartCoroutine(ContinueStoryAfterDelay(node.playableDuration,
+                                StoryNext(node, "Exit")));
+                            return;
+                        case "StoryInvokeNode":
+                        case "RegisterStoryPropertyNode":
+                            nodeId = StoryNext(node, "Exit");
+                            continue;
+                        case "WaitGameResultNode":
+                            StartStoryGameResult(node);
+                            return;
+                        case "TalkOptionNode":
+                        case "ProfessionRoutineOption":
+                        case "ShowProfessionPromotionOption":
+                        case "OpenProfessionChangeWinNode":
+                        case "OpenProfessionPromotionWinNode":
+                        case "OpenFreeProfessionChangeNode":
+                            // Profession windows are owned by the shared native ProfessionUI
+                            // service. The offline story has no server callback, so continue
+                            // through the corresponding local success/exit branch.
+                            nodeId = StoryNext(node, "Success");
+                            if (nodeId == 0) nodeId = StoryNext(node, "Exit");
+                            if (nodeId == 0) nodeId = StoryNext(node, "DynamicExit");
+                            continue;
                         case "WaitForSecondsNode":
                             StartCoroutine(ContinueStoryAfterDelay(node.seconds, StoryNext(node, "Exit")));
                             return;
@@ -583,6 +655,40 @@ namespace Zjcs.Presentation.World
         {
             while (navigation.IsMoving && storyRunning) yield return null;
             if (storyRunning) RunStoryGraph(nextNodeId);
+        }
+
+        private void StartStoryGameResult(Map10RuntimeStoryNode node)
+        {
+            StoryGameResultFields fields = JsonUtility.FromJson<StoryGameResultFields>(node.sourceJson);
+            int stageId = fields == null ? 0 : fields.StageId;
+            if (stageId <= 0)
+            {
+                RunStoryGraph(StoryNext(node, "Leave") != 0 ? StoryNext(node, "Leave") : StoryNext(node, "Exit"));
+                return;
+            }
+
+            Map10RuntimeEntity stageEntity = mapEntities.Values.FirstOrDefault(entity => entity != null
+                && entity.StageBindings != null && entity.StageBindings.Any(binding => binding != null
+                    && binding.StageIds != null && binding.StageIds.Contains(stageId)));
+            if (stageEntity == null)
+            {
+                hud.ShowOfficialNotice("剧情战斗配置缺失：" + stageId);
+                RunStoryGraph(StoryNext(node, "Leave") != 0 ? StoryNext(node, "Leave") : StoryNext(node, "Exit"));
+                return;
+            }
+
+            int previousResultCount = localSave.battleResults?.Length ?? 0;
+            Action completed = () =>
+            {
+                Map10RuntimeBattleResult[] results = localSave.battleResults ?? Array.Empty<Map10RuntimeBattleResult>();
+                Map10RuntimeBattleResult result = results.Length > previousResultCount
+                    ? results[results.Length - 1] : null;
+                string port = result == null ? "Leave" : result.won ? "Win" : "Lost";
+                int next = StoryNext(node, port);
+                if (next == 0) next = StoryNext(node, "Exit");
+                if (storyRunning) RunStoryGraph(next);
+            };
+            StartEntityStage(stageEntity, completed);
         }
 
         private IEnumerator ContinueStoryWhenBooleanCondition(Map10RuntimeStory story,
