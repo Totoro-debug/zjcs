@@ -96,9 +96,11 @@ if ($LASTEXITCODE -ne 0) { throw '先修复输入或依赖错误' }
 
 先保留原异常与路径，依次查来源哈希、版本／BuildTarget、CAB、对象引用、脚本／插件、shader／平台格式和显式加载。序列化头错误属于导入问题，不据此反复安装 Hub／编辑器。编译失败时先修复 C#／程序集依赖，再检查 executeMethod 入口；静态或隔离检查通过不能替代完整启动链。
 
-## Unity 素材快照
+## 可选 Unity 素材快照
 
-`asset-pack/layout.json`／`lock.json` 记录转换素材归档、逐文件 SHA256、代码／工具／绑定哈希。原 APK／CDN／设备缓存另存，不在转换 ZIP 内；Library、IDE 输出、临时报告不打包。
+快照只是本机转换素材的恢复副本，不是 Unity 构建、游戏运行或常规验证的输入。项目当前资源已保存在 `asset-pack/layout.json` 所列载荷目录中；`asset-pack/lock.json` 记录可选归档的文件名、逐文件 SHA256、代码／工具／绑定哈希。原 APK／CDN／设备缓存另存，不在转换 ZIP 内；Library、IDE 输出、临时报告不打包。
+
+`.tools/asset-packs/` 是可清理的本地快照目录。删除其中的 ZIP 和清单不会删除项目资源或原始来源；之后 `verify`／`restore` 需等重新运行 `create` 生成快照才可使用。保留 `asset-pack/lock.json` 作为快照登记；重新创建会更新登记。
 
 ```powershell
 python -B scripts/current_asset_snapshot.py create

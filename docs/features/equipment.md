@@ -56,7 +56,7 @@ Unity 已接入角色五槽及行囊装备操作、实例存档事务、装备�
 
 Unity 规则载荷由 `scripts/prepare_unity_equipment_catalog.py` 从上述固定版规则投影生成，仅保留装备运行所需表，不重复携带全局规则文件。`unity/Assets/Official/Equipment/source-manifest.json` 记录三份来源清单哈希及输出路径；`Runtime/source-manifest.json` 记录精简规则表 SHA256、输入 SHA256 和保留的表名。
 
-同一工具还恢复装备、强化、继承、星石、详情及碎片选择的 39 个原 prefab 层级投影和 132 张来源图片到 `unity/Assets/Official/Equipment/UI/`。`UI/source-manifest.json` 记录原 prefab 来源身份、逐图哈希、实际使用的 UI 汇总 SHA256 及既有 `equipment-completion/source-manifest.json` 中的历史汇总预期值。当前 `assets/official/ui.json` 汇总 SHA256 与该历史预期不一致；不改写历史哈希，当前迁移范围通过固定版逐 prefab 身份与原图输入哈希检查。独立 UI 输出和 Unity `.meta` 可由 `prepare_unity_equipment_catalog.py` 复现，并由 `Zjcs.Editor.Equipment.OfficialEquipmentValidation.Validate` 核验。该载荷尚未恢复成可操作的 Unity prefab/窗口，也未完成 Unity 编辑器运行验收；完整范围见[装备、强化、继承与星石](equipment.md)。Unity 官方载荷通过 [unity_asset_pack.py](../../scripts/unity_asset_pack.py) 纳入独立载荷快照。
+同一工具还恢复装备、强化、继承、星石、详情及碎片选择的 39 个原 prefab 层级投影和 132 张来源图片到 `unity/Assets/Official/Equipment/UI/`。`UI/source-manifest.json` 记录原 prefab 来源身份、逐图哈希、实际使用的 UI 汇总 SHA256 及既有 `equipment-completion/source-manifest.json` 中的历史汇总预期值。当前 `assets/official/ui.json` 汇总 SHA256 与该历史预期不一致；不改写历史哈希，当前迁移范围通过固定版逐 prefab 身份与原图输入哈希检查。独立 UI 输出和 Unity `.meta` 可由 `prepare_unity_equipment_catalog.py` 复现，并由 `Zjcs.Editor.Equipment.OfficialEquipmentValidation.Validate` 核验。该载荷尚未恢复成可操作的 Unity prefab/窗口，也未完成 Unity 编辑器运行验收；完整范围见[装备、强化、继承与星石](equipment.md)。Unity 官方载荷可按需通过 [unity_asset_pack.py](../../scripts/unity_asset_pack.py) 打入本机恢复快照；该快照不参与构建或运行。
 
 ## 完整还原部分
 
