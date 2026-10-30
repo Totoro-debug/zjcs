@@ -26,6 +26,11 @@ namespace Zjcs.Presentation.World
     {
         private void Interact(Map10RuntimeEntity entity)
         {
+            if (mapClassId == 14 && entity.PlacementId == 103)
+            {
+                ShowMap15PreparationDialog();
+                return;
+            }
             if (TryPushPuzzleEntity(entity)) return;
             if (exploration.InteractExploreEntity(entity)) return;
             if (OfficialMainlineStaminaModule.IsStaminaPoint(entity))

@@ -26,6 +26,19 @@ namespace Zjcs.Presentation.World
     {
         private void LoadOfficialData()
         {
+            if (mapClassId == 15)
+            {
+                // Map15 currently uses the verified official group/entity closure and the
+                // shared navigation host. Its battle/story payloads are not yet wired to
+                // this host, so keep all optional runtime collections empty explicitly.
+                puzzleRules = Array.Empty<MapPuzzleRule>();
+                statues.witchInfos = Array.Empty<Map11RuntimeWitchInfo>();
+                statues.witchResults = Array.Empty<Map11RuntimeWitchResult>();
+                statues.witchPeriodicAwards = Array.Empty<Map11RuntimePeriodicityAward>();
+                hud.quickBuys = Array.Empty<Map11RuntimeQuickBuy>();
+                mapTalkEntries = Array.Empty<Map10RuntimeMapTalkEntry>();
+                return;
+            }
             TextAsset battleData = Resources.Load<TextAsset>(MapResource("battle-runtime"));
             TextAsset storyData = Resources.Load<TextAsset>(MapResource("stories"));
             if (battleData == null || storyData == null)

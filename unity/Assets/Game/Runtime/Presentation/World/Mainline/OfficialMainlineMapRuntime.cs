@@ -131,7 +131,7 @@ namespace Zjcs.Presentation.World
         public static int ResolveHomeReturnMap(OfflineMainlineSave save)
         {
             if (save == null) throw new ArgumentNullException(nameof(save));
-            for (int mapClassId = 14; mapClassId >= 11; mapClassId--)
+            for (int mapClassId = 15; mapClassId >= 11; mapClassId--)
             {
                 OfficialMainlineMapProfile profile = OfficialMainlineMapProfile.Get(mapClassId);
                 if (!profile.IsRuntimeEntryReady) continue;
@@ -336,6 +336,8 @@ namespace Zjcs.Presentation.World
                 throw new InvalidOperationException("激活森之国方尖碑后才能进入山之国。");
             if (mapClassId == 13 && progressionSave.Save.Player.UnlockedMapClassIds?.Contains(13) != true)
                 throw new InvalidOperationException("完成山之国方尖碑后才能进入泽之国。");
+            if (mapClassId == 15 && progressionSave.Save.Player.UnlockedMapClassIds?.Contains(15) != true)
+                throw new InvalidOperationException("通天塔入口尚未解锁，请先在入口处发起 14 天准备倒计时。");
             if (!progressionSave.Save.Player.CharacterCreated || progressionSave.Save.Player.InitialWeaponType == 0)
                 throw new InvalidOperationException("Finish character creation and weapon selection before entering Map" + mapClassId + ".");
             OfficialCharacterAssetCatalog characterAssets = OfficialCharacterAssetCatalog.LoadDefault();
@@ -566,6 +568,7 @@ namespace Zjcs.Presentation.World
 
         private void DisposeRuntime()
         {
+            CloseMap15PreparationDialog();
             CloseHandInView();
             if (map12BuildingDialog != null) Destroy(map12BuildingDialog);
             map12BuildingDialog = null;

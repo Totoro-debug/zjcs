@@ -212,6 +212,33 @@ namespace Zjcs.Presentation.World
                 yield return null;
             }
             progress = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
+            Require(progress.SetPlayerProgress(save.Player.Level, 5, save.Player.SubRank,
+                save.Player.MaxProfessionRank, save.Player.GuildName ?? string.Empty,
+                progress.Save.Player.UnlockedMapClassIds.Concat(new[] { 15 })).IsApplied,
+                "Map15 offline gate fixture");
+            Open(15, canvas.transform);
+            yield return new WaitForSecondsRealtime(2);
+            var map15Session = Field<OfficialWorldMapSession>("session");
+            Require(map15Session.Definition.ClassId == 15
+                && map15Session.Definition.Navigation.Width == 25
+                && map15Session.Definition.Navigation.Height == 30,
+                "Map15 official definition and navigation are loaded");
+            var map15Entities = runtime.GetComponentInChildren<OfficialMap10EntityView>();
+            Require(map15Entities != null && map15Entities.EntityInfos.Count == 26,
+                "Map15 official entity catalog is mounted");
+            yield return VerifyPointerMovement(map15Session);
+            yield return Capture("map-15-entry");
+            MapGridPoint map15Position = Field<MapGridPoint>("currentGrid");
+            Invoke("SaveLocalProgress");
+            Destroy(runtime.gameObject);
+            yield return null;
+            Open(15, canvas.transform);
+            Require(Field<MapGridPoint>("currentGrid").Equals(map15Position),
+                "Map15 position survives a cold runtime reload");
+            yield return Capture("map-15-entry-cold");
+            Destroy(runtime.gameObject);
+            yield return null;
+            progress = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
             Require(progress.ApplyStatueVisit("20261025", "witch", 11, 2801, "probe-witch", -1f, new[] { 28500 },
                 Array.Empty<OfflineItemStack>(), 1).IsApplied, "Witch visit transaction");
             Require(progress.ApplyStatueVisit("20261025", "hero", 10, 9002, "probe-hero", 0f, Array.Empty<int>(),
