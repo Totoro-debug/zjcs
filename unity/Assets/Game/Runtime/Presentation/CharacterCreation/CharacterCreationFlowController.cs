@@ -1356,7 +1356,11 @@ namespace Zjcs.Presentation.CharacterCreation
                     else Zjcs.Presentation.Home.HomeAudioSettings.Unregister(source);
                 };
                 runtime.Begin(mapClassId, slotId, SaveSelectionProbe.ProfileRoot, canvas.transform, model, name,
-                    () => { if (screen != null) screen.SetActive(true); });
+                    () =>
+                    {
+                        if (mapClassId == 11) EnterHome();
+                        else if (screen != null) screen.SetActive(true);
+                    });
                 if (screen != null) screen.SetActive(false);
             }
             catch (Exception error)

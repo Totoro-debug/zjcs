@@ -35,6 +35,15 @@ namespace Zjcs.Presentation.CharacterCreation
             int index = Array.IndexOf(args, "--zjcs-validate-saves");
             if (index >= 0 && index + 1 < args.Length) output = Path.GetFullPath(args[index + 1]);
 #if UNITY_EDITOR
+            if (Environment.GetEnvironmentVariable("ZJCS_CREATION_AUTOMATION") == "1")
+            {
+                string validationRoot = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+                if (!string.IsNullOrWhiteSpace(validationRoot))
+                {
+                    output = Path.GetFullPath(Path.Combine(validationRoot, "character-creation-smoke"));
+                    return;
+                }
+            }
             output = Environment.GetEnvironmentVariable("ZJCS_SAVE_SELECTION_PROBE_OUTPUT") ?? output;
 #endif
             if (output == null) return;

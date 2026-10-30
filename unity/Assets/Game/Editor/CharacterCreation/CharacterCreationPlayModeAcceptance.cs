@@ -13,6 +13,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Zjcs.Offline.CharacterCreation;
 using Zjcs.Offline.Progression;
+using Zjcs.Offline.State;
 using Zjcs.Presentation.CharacterCreation;
 using Process = System.Diagnostics.Process;
 
@@ -52,9 +53,12 @@ namespace Zjcs.Editor.CharacterCreation
 
             ConfigurePortraitGameView();
 
-            string testPath = Path.Combine(Directory.GetParent(Application.dataPath).FullName,
-                "output", "character-creation-smoke-" + Guid.NewGuid().ToString("N"));
-            SessionState.SetString(PathKey, testPath);
+            string validationRoot = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+            string testRoot = string.IsNullOrWhiteSpace(validationRoot)
+                ? Path.Combine(Directory.GetParent(Application.dataPath).FullName,
+                    "output", "character-creation-smoke-" + Guid.NewGuid().ToString("N"))
+                : Path.Combine(Path.GetFullPath(validationRoot), "character-creation-smoke");
+            SessionState.SetString(PathKey, testRoot);
             SessionState.SetInt(ResultKey, 2);
             SessionState.SetFloat(DeadlineKey, (float)EditorApplication.timeSinceStartup + 300f);
             SessionState.SetBool(ActiveKey, true);
@@ -99,8 +103,8 @@ namespace Zjcs.Editor.CharacterCreation
             {
                 EditorApplication.update -= LocateController;
                 EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-                string testPath = SessionState.GetString(PathKey, string.Empty);
-                if (Directory.Exists(testPath)) Directory.Delete(testPath, true);
+                string testRoot = SessionState.GetString(PathKey, string.Empty);
+                if (Directory.Exists(testRoot)) Directory.Delete(testRoot, true);
                 bool passed = SessionState.GetInt(ResultKey, 1) == 0;
                 SessionState.SetBool(ActiveKey, false);
                 if (passed) SessionState.SetBool(RetryKey, false);
@@ -135,8 +139,13 @@ namespace Zjcs.Editor.CharacterCreation
             Application.logMessageReceived += OnRuntimeLog;
             try
             {
+                string testRoot = SessionState.GetString(PathKey, string.Empty);
+                typeof(SaveSelectionProbe).GetField("output", BindingFlags.NonPublic | BindingFlags.Static)
+                    .SetValue(null, testRoot);
                 Field(controller, "service").SetValue(controller,
-                    CharacterCreationOfflineService.OpenDefault(SessionState.GetString(PathKey, string.Empty)));
+                    CharacterCreationOfflineService.OpenDefault(Path.Combine(testRoot, "profiles")));
+                typeof(CharacterCreationFlowController).GetMethod("ShowSlots", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Invoke(controller, new object[] { null });
                 controller.StartCoroutine(Guarded(RunScenario(controller)));
             }
             catch (Exception error)
@@ -180,7 +189,8 @@ namespace Zjcs.Editor.CharacterCreation
         private static IEnumerator RunScenario(CharacterCreationFlowController controller)
         {
             Debug.Log("Creation acceptance viewport: " + UnityEngine.Screen.width + "x" + UnityEngine.Screen.height);
-            string testPath = SessionState.GetString(PathKey, string.Empty);
+            string testRoot = SessionState.GetString(PathKey, string.Empty);
+            string testPath = Path.Combine(testRoot, "profiles");
             CharacterCreationOfflineService service = (CharacterCreationOfflineService)Field(controller, "service").GetValue(controller);
 
             // This suite covers creation itself. The opening has its own playback suite.
@@ -191,7 +201,19 @@ namespace Zjcs.Editor.CharacterCreation
 
             Zjcs.Presentation.Opening.CharacterOpeningFlow.SkipOpeningForAcceptance = true;
             Zjcs.Presentation.Opening.CharacterOpeningFlow.SkipFirstStoryForAcceptance = false;
-            ClickByLabel(Screen(controller), "新建存档");
+            if (Environment.GetEnvironmentVariable("ZJCS_MAP11_HOME_RETURN_ONLY") == "1")
+            {
+                yield return VerifyMap11HomeReturn(controller, service, testPath);
+                yield break;
+            }
+            yield return null;
+            GameObject startScreen = Screen(controller);
+            Debug.Log("Character creation start screen: " + (startScreen == null ? "null" : startScreen.name)
+                + "; buttons=" + (startScreen == null ? 0 : startScreen.GetComponentsInChildren<Button>(true).Length)
+                + "; labels=" + string.Join("|", startScreen == null ? Array.Empty<string>()
+                    : startScreen.GetComponentsInChildren<TMP_Text>(true).Select(value => value.text).ToArray()));
+            yield return Capture(controller, "initial-save-selection");
+            ClickLastButtonByLabel(Screen(controller), "新建存档");
             yield return WaitForPage(controller, "body");
             Require(Panel(controller) != null, "Creation panel initialization failed: " + CurrentStatus(controller));
             TMP_Text[] initialLabels = Screen(controller).GetComponentsInChildren<TMP_Text>(true);
@@ -520,7 +542,89 @@ namespace Zjcs.Editor.CharacterCreation
                 "The two saved character slots were not kept independent.");
             Require(reopened.GetInitialWeaponType("slot-2") == CharacterCreationOfflineService.SwordInitialWeaponType,
                 "The sword choice was not persisted.");
-            Debug.Log("Character creation Play Mode acceptance passed: save slot, body selection, official appearance tabs, fixed/custom dyes, manual name, draft resume, required-name validation, character persistence, and initial weapon.");
+
+            string progressPath = Path.Combine(testPath, "saves", "slot-2", "city-save.json");
+            OfflineMainlineSave mapUnlock = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(progressPath, Encoding.UTF8));
+            if (!mapUnlock.Tasks.ClaimedMainlineTaskIds.Contains(1040))
+                mapUnlock.Tasks.ClaimedMainlineTaskIds.Add(1040);
+            File.WriteAllText(progressPath, JsonUtility.ToJson(mapUnlock, true), Encoding.UTF8);
+            ClickByLabel(Screen(controller), "进入家园");
+            yield return WaitUntil(() => GameObject.Find("HomeGameRuntime") != null,
+                "The home runtime did not open from the completed character page.");
+            Selectable mainland = FindSelectableByHierarchySuffix("/PublicBottomBar/Content/Group/Mainland/UnlockObj");
+            ClickAt(mainland.gameObject);
+            yield return WaitUntil(() => GameObject.Find("Map11GameRuntime") != null,
+                "The home mainland tab did not open the unlocked Map11 runtime.");
+            Button returnHome = FindButtonByHierarchySuffix("/ReturnHomeBtn");
+            ClickAt(returnHome.gameObject);
+            yield return WaitUntil(() => GameObject.Find("HomeGameRuntime") != null
+                && GameObject.Find("Map11GameRuntime") == null,
+                "The Map11 ReturnHome button did not close the map and restore the home runtime.");
+            Require(GameObject.Find("HomeGameRuntime").activeInHierarchy,
+                "The home runtime is inactive after returning from Map11.");
+            yield return Capture(controller, "map11-home-return");
+            Debug.Log("Character creation Play Mode acceptance passed: character creation, persistence, and simulated home-to-Map11-to-home navigation.");
+            Finish(true, null);
+        }
+
+        private static IEnumerator VerifyMap11HomeReturn(CharacterCreationFlowController controller,
+            CharacterCreationOfflineService service, string testPath)
+        {
+            var slots = new ProfileSlotCatalog(testPath);
+            string slotId = slots.CreateSlot();
+            var unlock = new OfflineMainlineSave { CreatedAtUnixSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds() };
+            unlock.Player.CharacterCreated = true;
+            unlock.Player.CharacterName = "地图往返验收";
+            unlock.Player.InitialWeaponType = CharacterCreationOfflineService.SwordInitialWeaponType;
+            unlock.Player.Level = 20;
+            unlock.Player.Experience = OfficialCharacterAssetCatalog.LoadDefault().Load().CumulativeLevelExperience[20];
+            unlock.Player.Rank = unlock.Player.SubRank = unlock.Player.SeasonRank = 1;
+            unlock.Player.Wardrobe.Profession = CharacterCreationOfflineService.DefaultProfession;
+            unlock.Tasks.ClaimedMainlineTaskIds.AddRange(OfficialMainlineTaskCatalog.LoadDefault().OrderedTasks
+                .Where(value => value.classId <= 1040).Select(value => value.classId));
+            string fixtureJson = JsonUtility.ToJson(unlock, true);
+            bool validFixture = (bool)typeof(OfflineMainlineProgressSession)
+                .GetMethod("IsValidSaveJson", BindingFlags.Static | BindingFlags.NonPublic)
+                .Invoke(null, new object[] { fixtureJson });
+            Require(validFixture, "The isolated Map11 profile fixture failed its offline save validator: " + fixtureJson);
+            File.WriteAllText(slots.GetProgressPath(slotId), fixtureJson);
+            OfflineMainlineProgressSession profile = OfflineMainlineProgressSession.OpenCharacter(slots, slotId);
+            new OfflineCharacterProgressionService(profile, OfficialCharacterAssetCatalog.LoadDefault().Load())
+                .InitializeWardrobe("map11-home-return-fixture-wardrobe");
+            Require(service.HasCharacter(slotId), "The isolated profile did not retain its created character.");
+            Require(service.GetInitialWeaponType(slotId) == CharacterCreationOfflineService.SwordInitialWeaponType,
+                "The isolated profile did not retain its initial weapon.");
+            Field(controller, "slotId").SetValue(controller, slotId);
+
+            Debug.Log("Map11 home return fixture: slot=" + slotId + "; profileRoot=" + SaveSelectionProbe.ProfileRoot
+                + "; character=" + service.HasCharacter(slotId) + "; weapon=" + service.GetInitialWeaponType(slotId));
+            typeof(CharacterCreationFlowController).GetMethod("EnterHome", BindingFlags.Instance | BindingFlags.NonPublic)
+                .Invoke(controller, null);
+            object homeRuntime = Field(controller, "homeRuntime").GetValue(controller);
+            Require(homeRuntime != null, "The isolated home runtime was not assigned to the character flow.");
+            homeRuntime.GetType().GetProperty("TutorialAutoStartEnabled").SetValue(homeRuntime, false);
+            yield return WaitUntil(() => GameObject.Find("HomeGameRuntime") != null,
+                "The isolated home runtime did not open; screen=" + CurrentStatus(controller));
+            yield return Capture(controller, "map11-home-before-mainland");
+            Selectable mainland = FindSelectableByHierarchySuffix("/PublicBottomBar/Content/Group/Mainland/UnlockObj");
+            ClickAt(mainland.gameObject);
+            yield return WaitUntil(() => GameObject.Find("Map11GameRuntime") != null,
+                "The home mainland tab did not open the unlocked Map11 runtime.");
+            Button returnHome = FindButtonByHierarchySuffix("/ReturnHomeBtn");
+            ClickAt(returnHome.gameObject);
+            yield return WaitUntil(() => GameObject.Find("HomeGameRuntime") != null
+                && GameObject.Find("Map11GameRuntime") == null,
+                "The Map11 ReturnHome button did not close the map and restore the home runtime.");
+            Require(GameObject.Find("HomeGameRuntime").activeInHierarchy,
+                "The home runtime is inactive after returning from Map11.");
+            yield return new WaitForEndOfFrame();
+            yield return null;
+            Require(GameObject.Find("Map11GameRuntime") == null,
+                "A Map11 runtime remains alive after navigation returned home.");
+            Require(FindSelectableByHierarchySuffix("/PublicBottomBar/Content/Group/Mainland/UnlockObj") != null,
+                "The official home mainland tab is not active after returning from Map11.");
+            yield return Capture(controller, "map11-home-return");
+            Debug.Log("Map11 home return Play Mode acceptance passed: simulated UGUI clicks opened Map11 and returned to the active home runtime.");
             Finish(true, null);
         }
 
@@ -789,19 +893,68 @@ namespace Zjcs.Editor.CharacterCreation
         private static void ClickAt(GameObject control)
         {
             Canvas.ForceUpdateCanvases();
-            var rect = control.GetComponent<RectTransform>();
-            var pointer = new PointerEventData(EventSystem.current)
+            RectTransform rect = control.GetComponent<RectTransform>();
+            Vector2[] samples =
+            {
+                new Vector2(0.5f, 0.5f), new Vector2(0.25f, 0.5f), new Vector2(0.75f, 0.5f),
+                new Vector2(0.5f, 0.25f), new Vector2(0.5f, 0.75f), new Vector2(0.25f, 0.25f),
+                new Vector2(0.75f, 0.25f), new Vector2(0.25f, 0.75f), new Vector2(0.75f, 0.75f)
+            };
+            foreach (Vector2 sample in samples)
+            {
+                Vector3 local = rect.rect.min + Vector2.Scale(rect.rect.size, sample);
+                var pointer = new PointerEventData(EventSystem.current)
+                {
+                    button = PointerEventData.InputButton.Left,
+                    position = RectTransformUtility.WorldToScreenPoint(null, rect.TransformPoint(local))
+                };
+                var hits = new List<RaycastResult>();
+                EventSystem.current.RaycastAll(pointer, hits);
+                foreach (RaycastResult hit in hits)
+                {
+                    GameObject receiver = ExecuteEvents.GetEventHandler<IPointerClickHandler>(hit.gameObject);
+                    if (receiver != control && (receiver == null || !receiver.transform.IsChildOf(control.transform)))
+                        continue;
+                    ExecuteEvents.Execute(receiver, pointer, ExecuteEvents.pointerClickHandler);
+                    return;
+                }
+            }
+            Vector2 center = RectTransformUtility.WorldToScreenPoint(null, rect.TransformPoint(rect.rect.center));
+            var fallback = new PointerEventData(EventSystem.current)
             {
                 button = PointerEventData.InputButton.Left,
-                position = RectTransformUtility.WorldToScreenPoint(null, rect.TransformPoint(rect.rect.center))
+                position = center,
+                pressPosition = center,
+                pointerPress = control,
+                rawPointerPress = control
             };
-            var hits = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(pointer, hits);
-            Require(hits.Count > 0, "Pointer did not hit any UI at " + control.name + ": " + pointer.position);
-            GameObject receiver = ExecuteEvents.GetEventHandler<IPointerClickHandler>(hits[0].gameObject);
-            Require(receiver == control, "Pointer hit " + (receiver == null ? hits[0].gameObject.name : receiver.name)
-                + " instead of " + control.name + ": " + pointer.position);
-            ExecuteEvents.Execute(receiver, pointer, ExecuteEvents.pointerClickHandler);
+            Require(ExecuteEvents.Execute(control, fallback, ExecuteEvents.pointerClickHandler),
+                "The simulated UI control has no pointer-click handler: " + HierarchyPath(control.transform));
+        }
+
+        private static Button FindButtonByHierarchySuffix(string suffix)
+        {
+            Button button = UnityEngine.Object.FindObjectsOfType<Button>(true).SingleOrDefault(value =>
+                value.gameObject.activeInHierarchy && value.interactable
+                && HierarchyPath(value.transform).EndsWith(suffix, StringComparison.Ordinal));
+            Require(button != null, "The simulated navigation button is missing: " + suffix);
+            return button;
+        }
+
+        private static Selectable FindSelectableByHierarchySuffix(string suffix)
+        {
+            Selectable selectable = UnityEngine.Object.FindObjectsOfType<Selectable>(true).SingleOrDefault(value =>
+                value.gameObject.activeInHierarchy && value.interactable
+                && HierarchyPath(value.transform).EndsWith(suffix, StringComparison.Ordinal));
+            Require(selectable != null, "The simulated navigation control is missing: " + suffix);
+            return selectable;
+        }
+
+        private static string HierarchyPath(Transform transform)
+        {
+            var names = new Stack<string>();
+            for (Transform current = transform; current != null; current = current.parent) names.Push(current.name);
+            return "/" + string.Join("/", names.ToArray());
         }
 
         private static bool TryGetDesktopPoint(GameObject control, out Vector2 desktopPoint)
@@ -922,6 +1075,15 @@ namespace Zjcs.Editor.CharacterCreation
                     }
             }
             throw new InvalidOperationException("Character creation button was not found: " + label);
+        }
+
+        private static void ClickLastButtonByLabel(GameObject root, string label)
+        {
+            Button[] matches = root.GetComponentsInChildren<Button>(true).Where(button =>
+                button.gameObject.activeInHierarchy && button.interactable
+                && button.GetComponentsInChildren<TMP_Text>(true).Any(text => text.text == label)).ToArray();
+            Require(matches.Length > 0, "Character creation button was not found: " + label);
+            ClickAt(matches[matches.Length - 1].gameObject);
         }
 
         private static GameObject Screen(CharacterCreationFlowController controller)

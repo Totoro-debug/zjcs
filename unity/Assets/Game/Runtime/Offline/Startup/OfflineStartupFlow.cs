@@ -91,6 +91,8 @@ namespace Zjcs.Offline.Startup
             yield return new WaitForEndOfFrame();
             while (age != null) yield return null;
             yield return new WaitForEndOfFrame();
+            if (launch != null) launch.SetActive(false);
+            if (theme != null) theme.SetActive(false);
             try { enterGame(); }
             catch (Exception error)
             {
