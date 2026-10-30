@@ -299,7 +299,26 @@ namespace Zjcs.Presentation.World
                     return null;
                 case "GetEntityPosNode":
                 case "GetPosAroundStoryObjectNode": return ResolveStoryPositionNode(node);
+                case "GetPosAroundWorldCamera":
+                    StorySpatialNodeFields cameraFields = StorySpatialFields(node);
+                    Vector3 cameraPosition = storyCameraActive ? storyCameraTarget : avatar.transform.position;
+                    return StoryGridPosition(cameraPosition) + cameraFields.Offset;
                 case "GetEntityNode": return ResolveStoryEntityReference(story, node);
+                case "GetChangeProfessionNode":
+                    return new[] { progressionSave.Save.Player.Wardrobe == null
+                        ? 0 : progressionSave.Save.Player.Wardrobe.Profession };
+                case "GetListItemNode":
+                    int listInput = StoryNext(node, "ValueIn");
+                    object listValue = listInput > 0
+                        ? EvaluateStoryValue(story, FindStoryNode(story, listInput), depth + 1) : null;
+                    int listIndex = JsonUtility.FromJson<StoryListValueFields>(node.sourceJson)?.Index ?? 0;
+                    if (listValue is int[] intList && listIndex >= 0 && listIndex < intList.Length)
+                        return intList[listIndex];
+                    return 0;
+                case "ProfessionToOptionNode":
+                case "FreeProfessionToOptionNode":
+                    return JsonUtility.FromJson<StoryListValueFields>(node.sourceJson)?.Options
+                        ?? Array.Empty<int>();
                 case "MapPositionChangeTypeNode":
                     StoryValueFields transfer = StoryFields(node);
                     if (transfer.TransferType != 1)
@@ -328,6 +347,13 @@ namespace Zjcs.Presentation.World
         private sealed class StoryProfessionRankFields
         {
             public StoryPropertyNameFields RankProperty;
+        }
+
+        [Serializable]
+        private sealed class StoryListValueFields
+        {
+            public int Index;
+            public int[] Options;
         }
 
         private static object StoryConstant(StorySerializableValue value)
