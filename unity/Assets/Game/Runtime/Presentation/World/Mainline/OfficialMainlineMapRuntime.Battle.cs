@@ -393,6 +393,9 @@ namespace Zjcs.Presentation.World
                 }
                 checkpoint.Waves.Add(wave);
             }
+            if (stele != null)
+                AddMap12SteleNpcUnits(checkpoint, scene,
+                    scene.FightComponent.FactionInfoList.First(value => value.Faction == 0), moveMask, stele);
             return checkpoint;
         }
 

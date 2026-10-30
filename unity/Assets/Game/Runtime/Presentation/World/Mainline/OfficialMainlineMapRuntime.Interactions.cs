@@ -58,6 +58,11 @@ namespace Zjcs.Presentation.World
                 hud.ShowOfficialNotice("前方有魔物阻挡");
                 return;
             }
+            if (IsMap12StelePresentation(entity))
+            {
+                ShowMap12SteleDialog(entity);
+                return;
+            }
             if (TryCollectMap12Chest(entity)) return;
             if (TryMap12BuildingInteraction(entity)) return;
             if (puzzles != null && entity.EntityClassId == 6503)
