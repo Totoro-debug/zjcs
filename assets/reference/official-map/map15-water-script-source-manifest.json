@@ -1,0 +1,43 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "assets": [
+    {
+      "name": "Pond.cs",
+      "source": "customwater-source/Pond.cs",
+      "source_sha256": "efa12caf542d835e937d1b9e4d87b4cdbed600998b55cfc6fdfde6627a046b12",
+      "output_sha256": "ec36efcd4f95d6a007eafc5da590b969961c3092ab1d0df7c44ca3bebd426ca7",
+      "original_script_guid": "b57cc1d0897e99ce6b0d11567db9faa3",
+      "output_path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Pond.cs",
+      "script_guid": "cc76a42215175aeb9d6b39eac0e0d76c"
+    },
+    {
+      "name": "WaterMaskGenerator.cs",
+      "source": "customwater-source/WaterMaskGenerator.cs",
+      "source_sha256": "71f8dbc4ab1c56ee7f87da068862d737fe616b30fc841c275d22818f146a404f",
+      "output_sha256": "eb8ab5bb062f29cc796ed238ea49deae220bf26340a478b8153bd1c0ddb93ec7",
+      "original_script_guid": "c5d55a7e5bde9e4ce182efab6fa4cb3d",
+      "output_path": "unity/Assets/Game/Runtime/Official/World/NativeWater/WaterMaskGenerator.cs",
+      "script_guid": "316c78387f935698b4e4af34d0b92c05"
+    },
+    {
+      "name": "WaterConfig.cs",
+      "source": "customwater-source/WaterConfig.cs",
+      "source_sha256": "3c87a7e4daa6a1b50ed5f8b0daddc791a399980c48e1166a8d1f1796315b85e1",
+      "output_sha256": "2ea10375512dd5eb3c2ea08ebad386718b3e70afd2b122d1df6fa684a3cb129d",
+      "original_script_guid": null,
+      "output_path": "unity/Assets/Game/Runtime/Official/World/NativeWater/WaterConfig.cs",
+      "script_guid": "9e364722364b5c6eac748205ab1d2cb7"
+    },
+    {
+      "name": "TransparentMask.cs",
+      "source": "client-source/TransparentMask.cs",
+      "source_sha256": "006db31fc491dbd390843ca33e77ab9004054c428b1f961f4ecee83f400ac2b9",
+      "output_sha256": "833ad6af6befccf49038bd8e71bc055529ae87ec2a73ba63581c0b2cd7579fb1",
+      "original_script_guid": "4f0384e5dca07e4017a7b5e40d37882b",
+      "output_path": "unity/Assets/Game/Runtime/Official/World/NativeWater/TransparentMask.cs",
+      "script_guid": "d188782d4d9b53cc8e1f73c387ac713e"
+    }
+  ],
+  "operation": "Copy exact selected official sources after SHA256 verification. Add only NativeWater namespace imports to Pond and WaterMaskGenerator so they bind the existing migrated WaterMaskRenderer. Preserve original class fields and method bodies."
+}
