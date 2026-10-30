@@ -81,12 +81,21 @@ namespace Zjcs.Editor.Progression
                         == ProgressionResultStatus.Ready && prepareCurrent == 0 && prepareTarget == 1
                     && activation.RefreshMap15Preparation(goldReachedAt + 14L * 24 * 60 * 60 - 1).Status
                         == ProgressionResultStatus.Unchanged,
+                    "Do not create Map15 before the official appear node");
+                Require(activation.MarkWorldAloneAppeared(15, goldReachedAt,
+                        "map14:story:appear-map15").IsApplied
+                    && activation.WorldAloneStatus(15) == 0
+                    && activation.RefreshMap15Preparation(goldReachedAt + 14L * 24 * 60 * 60 - 1).Status
+                        == ProgressionResultStatus.Unchanged,
                     "Keep Map15 preparing until the configured 14-day boundary");
                 Require(activation.RefreshMap15Preparation(goldReachedAt + 14L * 24 * 60 * 60).IsApplied
                     && activation.WorldAloneStatus(15) == 1
                     && activation.GetTaskProgress(prepareCondition, out prepareCurrent, out prepareTarget).Status
                         == ProgressionResultStatus.Ready && prepareCurrent == 1 && prepareTarget == 1,
                     "Persist PrepareEnd exactly at the inferred offline unlock boundary and satisfy condition 115");
+                Require(activation.MarkWorldAloneAppeared(15, goldReachedAt,
+                        "map14:story:appear-map15").Status == ProgressionResultStatus.Unchanged,
+                    "Ignore a replayed independent-world appearance event");
                 OfflineMainlineProgressSession preparationRestored = OfflineMainlineProgressSession.Open(
                     slots, activationSlot, catalog, readDemonBattleLayer);
                 Require(preparationRestored.WorldAloneStatus(15) == 1,

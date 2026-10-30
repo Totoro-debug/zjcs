@@ -326,6 +326,36 @@ namespace Zjcs.Offline.Progression
         public int WorldAloneStatus(int mapClassId) => mapClassId <= 0
             ? 0 : Save.World.AloneWorldStatuses?.FirstOrDefault(value => value.MapClassId == mapClassId)?.Status ?? 0;
 
+        public ProgressionResult MarkWorldAloneAppeared(int mapClassId, long appearTimeUnixSeconds, string eventId)
+        {
+            if (mapClassId <= 0 || appearTimeUnixSeconds <= 0 || string.IsNullOrWhiteSpace(eventId))
+                return Result(ProgressionResultStatus.InvalidState, message: "An independent-world appearance requires a map, time and event id.");
+            Reload();
+            if (Save.World.AppliedEventIds.Contains(eventId)) return Result(ProgressionResultStatus.Unchanged);
+            OfflineMainlineSave next = Clone(Save);
+            if (next.World.AloneWorldStatuses == null)
+                next.World.AloneWorldStatuses = new List<OfflineWorldAloneStatus>();
+            OfflineWorldAloneStatus status = next.World.AloneWorldStatuses
+                .FirstOrDefault(value => value.MapClassId == mapClassId);
+            if (status == null)
+            {
+                status = new OfflineWorldAloneStatus
+                {
+                    MapClassId = mapClassId,
+                    Status = 0,
+                    AppearTimeUnixSeconds = appearTimeUnixSeconds
+                };
+                next.World.AloneWorldStatuses.Add(status);
+            }
+            else if (status.AppearTimeUnixSeconds <= 0)
+            {
+                status.AppearTimeUnixSeconds = appearTimeUnixSeconds;
+            }
+            RefreshMap15Preparation(next, appearTimeUnixSeconds);
+            next.World.AppliedEventIds.Add(eventId);
+            return Commit(next, Result(ProgressionResultStatus.Applied), appearTimeUnixSeconds);
+        }
+
         public int HandInItemCount(int id) => Save.Player.HandInItems?
             .FirstOrDefault(value => value != null && value.Id == id)?.Count ?? 0;
 
@@ -679,27 +709,15 @@ namespace Zjcs.Offline.Progression
             OfflineRankUnlockTime goldUnlock = save.Player.RankUnlockTimes?
                 .FirstOrDefault(value => value.Rank == config.preparationRule.rank && value.UnixSeconds > 0);
             if (goldUnlock == null) return false;
-            if (save.World.AloneWorldStatuses == null)
-                save.World.AloneWorldStatuses = new List<OfflineWorldAloneStatus>();
+            if (save.World.AloneWorldStatuses == null) return false;
             OfflineWorldAloneStatus status = save.World.AloneWorldStatuses
                 .FirstOrDefault(value => value.MapClassId == mapClassId);
-            bool created = status == null;
-            if (status == null)
-            {
-                status = new OfflineWorldAloneStatus
-                {
-                    MapClassId = mapClassId,
-                    Status = 0,
-                    AppearTimeUnixSeconds = goldUnlock.UnixSeconds
-                };
-                save.World.AloneWorldStatuses.Add(status);
-            }
-            if (status.Status != 0 || status.AppearTimeUnixSeconds <= 0) return created;
+            if (status == null || status.Status != 0 || status.AppearTimeUnixSeconds <= 0) return false;
             long minimumDurationAt = checked(status.AppearTimeUnixSeconds + config.preparationRule.minDurationS);
             long rankOffsetAt = checked(goldUnlock.UnixSeconds
                 + (long)config.preparationRule.dayOffset * 24 * 60 * 60);
             long unlockAt = Math.Max(minimumDurationAt, rankOffsetAt);
-            if (nowUnixSeconds < unlockAt) return created;
+            if (nowUnixSeconds < unlockAt) return false;
             status.Status = 1;
             return true;
         }

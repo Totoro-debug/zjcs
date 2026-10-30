@@ -353,6 +353,11 @@ namespace Zjcs.Presentation.World
                                 || storyContextEntity.EntityClassId != 6620)
                                 throw new InvalidDataException("Unsupported official window-open wait in Map" + mapClassId + ".");
                             statues.WaitForWitchPreviewOpen(() => RunStoryGraph(StoryNext(node, "Exit")));
+                            ProgressionResult aloneWorld = progressionSave.MarkWorldAloneAppeared(aloneWorldClassId,
+                                DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                                "story:" + activeStoryRootKey + ":node:" + node.id + ":alone-world:" + aloneWorldClassId);
+                            if (aloneWorld.Status == ProgressionResultStatus.InvalidState)
+                                throw new InvalidOperationException(aloneWorld.Message);
                             return;
                         case "WaitWindowClosedNode":
                             if (activeStory.key != "WitchStory2" || storyContextEntity == null

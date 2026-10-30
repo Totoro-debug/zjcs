@@ -2,7 +2,7 @@
 
 [总索引](../README.md)
 
-状态：未完成。当前官方配置、原生地形与环境、全部 486 个环境／地区标签 prefab、两类蝴蝶动画、机关规则及主线剧情数据载荷已恢复并分项验证；原生地形／环境／区域标签视图与 2,961 个放置实体已接入主线地图宿主，并通过实际 Map14 Play Mode 入口验证 416 个官方实体 prefab 根的实例化。工程静态检查、`ProjectTools.Validate`、Map14 Play Mode prefab 入口及隔离 Windows Player 构建／BootSplash 启动均通过；Player 检查未创建角色存档。剧情运行时、正式玩法、HUD、存档与正式 Windows 发布尚未完成。
+状态：未完成。当前官方配置、原生地形与环境、全部 486 个环境／地区标签 prefab、两类蝴蝶动画、机关规则及主线剧情数据载荷已恢复并分项验证；原生地形／环境／区域标签视图与 2,961 个放置实体已接入主线地图宿主，并通过实际 Map14 Play Mode 入口验证 416 个官方实体 prefab 根的实例化。独立地图 Map15 的离线状态已按官方 `PlayerWorldAloneAppearNode` 与 `PlayerMapWorldAlonePrepareDataRankLockTime` 接入：剧情节点原子记录 `Preparing` 和出现时间，刷新按 `max(出现时间 + MinDurationS, 金阶解锁时间 + DayOffset)` 推进到 `PrepareEnd`，重复事件幂等并写入存档。工程静态检查、`ProjectTools.Validate`、Map14 Play Mode prefab 入口及隔离 Windows Player 构建／BootSplash 启动均通过；Player 检查未创建角色存档。剧情运行时、正式玩法、HUD、存档与正式 Windows 发布尚未完成。
 
 ## 地图简介
 
