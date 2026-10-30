@@ -92,6 +92,8 @@ namespace Zjcs.Presentation.World
             if (source == null || source.type != "GetEntityNode")
                 throw new InvalidDataException("Official story entity reference is not a GetEntityNode.");
             StorySpatialNodeFields fields = StorySpatialFields(source);
+            if (fields.SelectGetType == 0)
+                return new Map10RuntimeEntity(StoryPlayerPlacementId, navigation.currentGrid);
             int placementId = fields.SelectGetType == 4 ? fields.LoEntityId : 0;
             if (fields.SelectGetType == 5)
                 placementId = mapLogicTags.Values.FirstOrDefault(value => value.MapClass == mapClassId

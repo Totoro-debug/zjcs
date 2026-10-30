@@ -320,6 +320,21 @@ namespace Zjcs.Presentation.World
                 AwardItems = info.AwardItems ?? Array.Empty<Map10RuntimeAwardItem>();
                 ChangeMapClassId = info.ChangeMapClassId;
             }
+
+            internal Map10RuntimeEntity(int placementId, MapGridPoint grid)
+            {
+                PlacementId = placementId;
+                EntityClassId = 3001;
+                Grid = grid;
+                Active = true;
+                StageIds = Array.Empty<int>();
+                StageBindings = Array.Empty<Map10RuntimeEntityStageBinding>();
+                PeriodicityGroupIds = Array.Empty<int>();
+                PlayerPeriodicityGroupIds = Array.Empty<int>();
+                LockedByEntityGroups = Array.Empty<int>();
+                LockConditionEntityIds = Array.Empty<int>();
+                AwardItems = Array.Empty<Map10RuntimeAwardItem>();
+            }
         }
     }
 }

@@ -24,6 +24,7 @@ namespace Zjcs.Presentation.World
 {
     public sealed partial class OfficialMainlineMapRuntime
     {
+        private const int StoryPlayerPlacementId = -1;
         [Serializable]
         private sealed class StoryMapActivationFields { public int MapClassId; }
 
@@ -353,6 +354,20 @@ namespace Zjcs.Presentation.World
                         case "MapEntityMoveInteractionNode":
                             Map10RuntimeEntity operateEntity = ResolveStoryEntityPort(activeStory, node, "OperateEntity");
                             Map10RuntimeEntity interactEntity = ResolveStoryEntityPort(activeStory, node, "InteractEntity");
+                            if (operateEntity.PlacementId == StoryPlayerPlacementId)
+                            {
+                                string parentStory = activeStoryRootKey;
+                                navigation.StartStoryInteraction(interactEntity, () =>
+                                {
+                                    // An interaction can open a nested official story. In that
+                                    // case the nested graph owns continuation; otherwise the
+                                    // current graph advances after the local interaction.
+                                    if (storyRunning && string.Equals(activeStoryRootKey, parentStory,
+                                        StringComparison.Ordinal))
+                                        RunStoryGraph(StoryNext(node, "Exit"));
+                                });
+                                return;
+                            }
                             StartCoroutine(MoveStoryMapEntity(operateEntity, interactEntity, node.moveSpeed,
                                 StoryNext(node, "Exit")));
                             return;

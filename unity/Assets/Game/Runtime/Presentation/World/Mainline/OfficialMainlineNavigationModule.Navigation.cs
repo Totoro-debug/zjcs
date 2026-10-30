@@ -138,6 +138,32 @@ namespace Zjcs.Presentation.World
                 if (movementIndex >= movementPath.Count) FinishMovement();
             }
 
+            public void StartStoryInteraction(Map10RuntimeEntity interact, System.Action complete)
+            {
+                if (interact == null)
+                {
+                    complete?.Invoke();
+                    return;
+                }
+                bool completed = false;
+                System.Action wrapped = () =>
+                {
+                    completed = true;
+                    complete?.Invoke();
+                };
+                movementCompletion = wrapped;
+                StartMovement(interact.Grid, interact);
+                // StartMovement invokes Interact synchronously when the player is already
+                // in the original range, and leaves no path for FinishMovement to call.
+                if (!completed && movementPath == null)
+                {
+                    movementCompletion = null;
+                    // A missing local path is the same terminal boundary as the
+                    // server's failed movement request; the story must not remain hung.
+                    wrapped();
+                }
+            }
+
             public void StopMovement()
             {
                 movementPath = null;
