@@ -18,9 +18,11 @@
 
 ## 完整还原部分
 
-尚无本图完整 Unity 游玩流程的完成结论；共享代码和转换数据不计作整图完成。
+本图仍未完成全部楼层与机关迁移；本次已完成入口地图的 Unity 运行时数据接入、原生第一层地形绑定、26 个入口实体目录、区域进度、导航和本地位置存档。
 
-地图组静态数据已打包到 `unity/Assets/Game/Resources/Map15/Group/`：60 张地图各自保留原地图行、区域行、导航／放置数据和放置实体组件，另有共享 82 种 EC 模板；合计 118 区、2,899 个放置和 23,291 个原始组件。其 adventure 表格输入取自 `871_156598`，该版本以 `854_156383` 为基线，更新记录未包含 map／map_region 表；实体模板仍来自 APK `854_156383`。目录索引保留官方后继地图、地形路径和 BGM，来源及输入／输出哈希见 [`map15-group-data-source-manifest.json`](../../assets/reference/official-map/map15-group-data-source-manifest.json)。该数据尚未接入可切换地图与实体加载的运行时，不能视为地图、区域开放或实体已可游玩。
+`OfficialMainlineMapRuntime` 现在注册 Map15，并从 `OfficialMapDefinition` 读取 25×30 官方导航网格、入口 101 和 26 个放置实体；地图在存档已解锁时可通过共享宿主进入，地图对象、实体点击、路径移动和冷读位置恢复沿用同一套主线运行时。
+
+地图组静态数据已打包到 `unity/Assets/Game/Resources/Map15/Group/`：60 张地图各自保留原地图行、区域行、导航／放置数据和放置实体组件，另有共享 82 种 EC 模板；合计 118 区、2,899 个放置和 23,291 个原始组件。其 adventure 表格输入取自 `871_156598`，该版本以 `871_156598` 为基线，更新记录未包含 map／map_region 表；实体模板仍来自 APK `871_156598`。目录索引保留官方后继地图、地形路径和 BGM，来源及输入／输出哈希见 [`map15-group-data-source-manifest.json`](../../assets/reference/official-map/map15-group-data-source-manifest.json)。入口组数据已由 `prepare_unity_map15_runtime_data.py` 转换为共享地图定义和实体目录；完整 60 张后继地图仍只保留静态目录，尚未逐图接入可切换运行时。
 
 `OfficialMap15GroupDataCatalog` 从 Unity `Resources` 读取目录、地图放置和 EC 模板数组，校验版本、入口后继、区域数、放置／组件闭合及模板引用。原 EC 组件内容保存在逐组件 JSON 字符串中供后续官方逻辑绑定；该数据访问层尚未创建场景对象，也未接入交互、战斗或存档。
 
@@ -38,7 +40,7 @@
 
 按用户明确确认，沿用龙之国的单机自动解谜方案。固定版客户端／Common 的 `StageResultAutoPuzzleComponentImplement`、`StageResultResetPuzzleComponentImplement` 及相关请求保留目标、费用和结果标记，缺少服务端执行器；本地适配不标为原服务端逻辑。依据为 [`MyStageResultAutoPuzzle.cs`](../../.tools/source-packages/official-code/client-source/MyStageResultAutoPuzzle.cs)、[`MyStageResultResetPuzzle.cs`](../../.tools/source-packages/official-code/client-source/MyStageResultResetPuzzle.cs) 及对应 Common 标记组件。通天塔 5 处火炮终端只清除原 `NeedRemoveLoEntityIds`，2 处特殊锁及 5 处普通锁终端只解开原 `LockLoEntityIds`，使用原交互费用（道具 325×1），不补发炮、失败演出或奖励。重置仅恢复指定目标，保留其他状态、背包、奖励凭据和角色位置；原配置仅 4 个终端有重置分支，保留其余终端的原菜单，不新增重置按钮。
 
-离线入口规则按用户确认自定义为“达到位阶 5 后可手动发起；发起时写入本地倒计时起点，经过 14 天开放”。计时起点与开放状态进入现有主线 JSON 存档；位阶升级、入口出现记录和读取入口状态都不会自动开始倒计时。暂不应用服务端合服加速。`OfflineMainlineProgressSession.StartMap15Preparation`、`GetMap15PreparationState` 与 `RefreshMap15Preparation` 承载该规则；旧存档中已开放的状态保留为已开放。入口提示、剩余天数文本和手动按钮仍未接入官方入口 UI，因此此规则服务尚不能单独证明入口交互已完成。
+离线入口规则按用户确认自定义为“达到位阶 5 后可手动发起；发起时写入本地倒计时起点，经过 14 天开放”。计时起点与开放状态进入现有主线 JSON 存档；位阶升级、入口出现记录和读取入口状态都不会自动开始倒计时。暂不应用服务端合服加速。`OfflineMainlineProgressSession.StartMap15Preparation`、`GetMap15PreparationState` 与 `RefreshMap15Preparation` 承载该规则；旧存档中已开放的状态保留为已开放。Map14 入口实体 103 已接入官方 `Map14/UI/CostItemConfirmDialog`：访问入口会显示位阶要求或剩余天数，达到位阶 5 且未开始时可手动开始本地 14 天倒计时；已开放状态当前提示重新进入地图，Map14 到 Map15 的直接场景切换仍未完成。
 
 六处遗迹沿固定客户端／Common `WorldRuinDialog`、`GameRuinEnterNextStageDialog`、`GameNextStageUIHandler`、`FightRuinConfigComponentImplement`、`StageBehStageRuinComponent` 与 RPC 10160 核对原 20 层配置、战斗与奖励数据；服务端推进／结算执行器未取得。按用户明确确认的离线方案，进入后立即执行当前未探索层，沿原 `StageId`／层序推进；战斗事务挂起并回放，战败保留当前层供重试。胜利后按原 `GameNextStageUIShowDelayTime=0.8` 秒返回层推进或奖励阶段。奖励只按原追加物配置领取本层奖励；最后一层原奖励结算后标记已探索，退出保留已领取奖励及进度，不增加额外奖励或随机规则。遗迹 17–19 的层配置原 `MapClassId=42062` 而放置于 42063，配置不改写。经用户明确确认的背景修正只把两条 `EnterNextStageUIBgImg` 的加载映射到固定版同名 `BigMapStageBg` 原图，原始配置仍保留 `MapStageBg` 路径。
 
@@ -50,16 +52,16 @@
 
 ## 尚未实现
 
-将运行时数据访问层接入逐图场景、区域开放、实体和交互，迁移81条主线；入口与幻想阶梯分开，六处遗迹、各楼层连接、小地图、原地形／灯光／水面逐图绑定与验证。
+将运行时数据访问层接入其余逐图场景、区域开放、实体和交互，迁移 81 条主线；入口与幻想阶梯分开，六处遗迹、各楼层连接、小地图、原地形／灯光／水面逐图绑定与验证。
 
 按原地图配置恢复场景、区域、导航、放置实体、原条件、交互、战斗、奖励和出口；原 prefab、骨骼、材质、粒子、动画及音频需在 Unity / Windows 逐项恢复并绑定。
 
-- 完成本图独立的本地资源绑定、玩家入口、正常游玩、战斗／交互结算、失败回滚、退出与冷读恢复。
+- 完成本图独立的本地资源绑定、直接地图切换、正常游玩、战斗／交互结算、失败回滚和完整楼层退出流程。
 - 在 Unity 编辑器实际运行，并验证 Windows 目标表现；
 
 ## 代码与资源入口
 
-[地图组数据生成器](../../scripts/prepare_unity_map15_group_data.py)、[固定来源实体闭合审计](../../scripts/verify_map15_entities.py)、[Unity 地图组运行时目录](../../unity/Assets/Game/Runtime/Presentation/World/OfficialMap15GroupDataCatalog.cs)、[官方原生资产 GUID 闭合分析器](../../scripts/prepare_unity_map15_native_assets.py)、[地形原生迁移生成器](../../scripts/prepare_unity_map15_native_terrain.py)、[地形来源清单](../../assets/reference/official-map/map15-native-terrain-source-manifest.json)、[地形输出哈希回归测试](../../scripts/test_prepare_unity_map15_native_terrain.py)、[闭合分析回归测试](../../scripts/test_prepare_unity_map15_native_assets.py)、[Play Mode 数据验收入口](../../unity/Assets/Game/Editor/Map15/OfficialMap15GroupDataAcceptance.cs)、[Unity 地图组索引](../../unity/Assets/Game/Resources/Map15/Group/group-catalog.json)、[官方来源清单](../../assets/reference/official-map/map15-group-data-source-manifest.json)
+[地图组数据生成器](../../scripts/prepare_unity_map15_group_data.py)、[入口运行时数据生成器](../../scripts/prepare_unity_map15_runtime_data.py)、[固定来源实体闭合审计](../../scripts/verify_map15_entities.py)、[Unity 地图组运行时目录](../../unity/Assets/Game/Runtime/Presentation/World/OfficialMap15GroupDataCatalog.cs)、[主线地图运行时](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs)、[地形原生迁移生成器](../../scripts/prepare_unity_map15_native_terrain.py)、[地形来源清单](../../assets/reference/official-map/map15-native-terrain-source-manifest.json)、[地形输出哈希回归测试](../../scripts/test_prepare_unity_map15_native_terrain.py)、[闭合分析回归测试](../../scripts/test_prepare_unity_map15_native_assets.py)、[Play Mode 数据验收入口](../../unity/Assets/Game/Editor/Map15/OfficialMap15GroupDataAcceptance.cs)、[Unity 地图组索引](../../unity/Assets/Game/Resources/Map15/Group/group-catalog.json)、[官方来源清单](../../assets/reference/official-map/map15-group-data-source-manifest.json)
 
 [原机关与场景配置](../../assets/official/map15-cannons.json)、[原元素连线配置](../../assets/official/map15-element-link.json)、[原遗迹配置](../../assets/official/map15-ruins.json)、[原界面配置](../../assets/official/map15-ui.json)
 
