@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Object = UnityEngine.Object;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering;
@@ -221,14 +222,14 @@ public class TransparentMask : MonoBehaviour
 		try
 		{
 			ScriptableCullingParameters val5 = default;
-			camera.TryGetCullingParameters(ref val5);
+			camera.TryGetCullingParameters(out val5);
 			Matrix4x4 worldToCameraMatrix = camera.worldToCameraMatrix;
 			Matrix4x4 projectionMatrix = camera.projectionMatrix;
 			CullingResults val6 = context.Cull(ref val5);
-			val3.SetRenderTarget(RenderTargetIdentifier.op_Implicit((Texture)(object)val), (RenderBufferLoadAction)2, (RenderBufferStoreAction)0, (RenderBufferLoadAction)2, (RenderBufferStoreAction)3);
+			val3.SetRenderTarget(new RenderTargetIdentifier(val), (RenderBufferLoadAction)2, (RenderBufferStoreAction)0, (RenderBufferLoadAction)2, (RenderBufferStoreAction)3);
 			val3.ClearRenderTarget(false, true, new Color(1f, 1f, 1f, 1f));
 			val3.SetViewProjectionMatrices(worldToCameraMatrix, projectionMatrix);
-			val3.SetGlobalTexture(sMaskTexId, RenderTargetIdentifier.op_Implicit((Texture)(object)val));
+			val3.SetGlobalTexture(sMaskTexId, new RenderTargetIdentifier(val));
 			context.ExecuteCommandBuffer(val3);
 			val3.Clear();
 			FilteringSettings val7 = default;

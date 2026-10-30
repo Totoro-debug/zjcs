@@ -33,11 +33,11 @@
       "name": "TransparentMask.cs",
       "source": "client-source/TransparentMask.cs",
       "source_sha256": "006db31fc491dbd390843ca33e77ab9004054c428b1f961f4ecee83f400ac2b9",
-      "output_sha256": "833ad6af6befccf49038bd8e71bc055529ae87ec2a73ba63581c0b2cd7579fb1",
+      "output_sha256": "95c2bde9f2b3ee2497ecc48fc17d66bca83d9f4bdf8e4a0f281d75d4266c5ea3",
       "original_script_guid": "4f0384e5dca07e4017a7b5e40d37882b",
       "output_path": "unity/Assets/Game/Runtime/Official/World/NativeWater/TransparentMask.cs",
       "script_guid": "d188782d4d9b53cc8e1f73c387ac713e"
     }
   ],
-  "operation": "Copy exact selected official sources after SHA256 verification. Add only NativeWater namespace imports to Pond and WaterMaskGenerator so they bind the existing migrated WaterMaskRenderer. Preserve original class fields and method bodies."
+  "operation": "Copy exact selected official sources after SHA256 verification. Add NativeWater namespace imports to Pond and WaterMaskGenerator so they bind the existing migrated WaterMaskRenderer. For TransparentMask, preserve original behavior while adapting UnityEngine.Object qualification and Unity 2022 TryGetCullingParameters/RenderTargetIdentifier API signatures."
 }

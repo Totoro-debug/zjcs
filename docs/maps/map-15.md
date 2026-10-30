@@ -26,7 +26,7 @@
 
 用户更正的 14 个资源名已按 `871_156598` 的 DefaultPackage 清单及本地 CDN 收据核验：通天塔解谜 action prefab、`confirmdialog`／`minigame`／`worldmap` UI prefab、`map_world` 场景、8 个共享 bundle，以及 `map_14_play` 实体 prefab 均在清单且缓存字节校验通过；43 个 Map15／交互根 bundle 的 CAB 输入另存于隔离验证目录的版本收据。Map14 实体 prefab 保留为跨地图参考，不纳入 Map15 运行根。官方 UI 与场景已经完成原生 AssetRipper 导出和 GUID 资源闭合分析，但尚未绑定工程脚本、恢复 Windows 平台资源或接入运行时。
 
-已按 `871_156598` 的固定源码哈希迁移 `Pond`、`WaterMaskGenerator`、`WaterConfig` 与 `TransparentMask` 到官方 `NativeWater` 代码目录；仅对前两者加命名空间引用以调用现有官方 `WaterMaskRenderer`。`Pond`、`WaterMaskGenerator`、`TransparentMask` 的原始 MonoScript GUID 已映射到迁移脚本 meta；输入／输出哈希及绑定见 [`map15-water-script-source-manifest.json`](../../assets/reference/official-map/map15-water-script-source-manifest.json)。这些代码尚未在新 Map15 prefab 中重绑 MonoScript，水面／池塘材质、mask 贴图、排序层和窗口尺寸行为也尚未实际验证。
+已按 `871_156598` 的固定源码哈希迁移 `Pond`、`WaterMaskGenerator`、`WaterConfig` 与 `TransparentMask` 到官方 `NativeWater` 代码目录；`Pond`、`WaterMaskGenerator` 加命名空间引用以调用现有官方 `WaterMaskRenderer`。`TransparentMask` 保留原逻辑，并适配 Unity 2022 的 `UnityEngine.Object`、剔除参数输出和 `RenderTargetIdentifier` 构造 API。`Pond`、`WaterMaskGenerator`、`TransparentMask` 的原始 MonoScript GUID 已映射到迁移脚本 meta；输入／输出哈希及绑定见 [`map15-water-script-source-manifest.json`](../../assets/reference/official-map/map15-water-script-source-manifest.json)。这些代码尚未在新 Map15 prefab 中重绑 MonoScript，水面／池塘材质、mask 贴图、排序层和窗口尺寸行为也尚未实际验证。
 
 当前已执行地图组生成器回归测试、官方 EC 闭合校验和 `check_unity_project.py` 静态元数据检查。Unity 隔离工程已完成 C# 编译；编译期间还发现并修复 `Region` 嵌套类型与官方字段同名导致的 CS0542。随后首次验收因稀疏 worktree 缺少仓库级战斗 HUD 来源清单而未进入验证；补入该清单后，Unity 在 Burst 程序集重载时报告 `OutOfMemoryException` 并退出，`ProjectTools.Validate` 与 Map15 Play Mode 断言均未完成。实际场景交互、运行画面和 Windows Player 验证尚未执行。
 

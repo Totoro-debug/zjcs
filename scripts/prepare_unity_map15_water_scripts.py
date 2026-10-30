@@ -31,6 +31,16 @@ def migrate(name: str, source: Path) -> bytes:
         if marker not in text:
             raise ValueError("Official water source import block changed: " + name)
         text = text.replace(marker, marker + "using Zjcs.Official.World.NativeWater;\n", 1)
+    elif name == "TransparentMask.cs":
+        replacements = (
+            ("using System.Collections.Generic;\n", "using System.Collections.Generic;\nusing Object = UnityEngine.Object;\n", 1),
+            ("camera.TryGetCullingParameters(ref val5);", "camera.TryGetCullingParameters(out val5);", 1),
+            ("RenderTargetIdentifier.op_Implicit((Texture)(object)val)", "new RenderTargetIdentifier(val)", 2),
+        )
+        for original, adapted, count in replacements:
+            if text.count(original) != count:
+                raise ValueError("Official TransparentMask Unity API adapter pattern changed: " + original)
+            text = text.replace(original, adapted)
     return text.encode("utf-8")
 
 
@@ -68,7 +78,7 @@ def build() -> None:
                               output_path=target.relative_to(ROOT).as_posix(),
                               script_guid=script_guid(name)))
     receipt = dict(format=1, manifest="871_156598", assets=generated,
-                   operation="Copy exact selected official sources after SHA256 verification. Add only NativeWater namespace imports to Pond and WaterMaskGenerator so they bind the existing migrated WaterMaskRenderer. Preserve original class fields and method bodies.")
+                   operation="Copy exact selected official sources after SHA256 verification. Add NativeWater namespace imports to Pond and WaterMaskGenerator so they bind the existing migrated WaterMaskRenderer. For TransparentMask, preserve original behavior while adapting UnityEngine.Object qualification and Unity 2022 TryGetCullingParameters/RenderTargetIdentifier API signatures.")
     RECEIPT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     for record in generated:
         print(record["name"], record["source_sha256"], record["output_sha256"], record["script_guid"])

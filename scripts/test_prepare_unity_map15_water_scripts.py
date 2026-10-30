@@ -30,6 +30,11 @@ class Map15WaterScriptTests(unittest.TestCase):
                 self.assertIn("guid: " + script_guid(name), Path(str(target) + ".meta").read_text())
         self.assertIn(b"using Zjcs.Official.World.NativeWater;", migrate("Pond.cs", SOURCE / ASSETS["Pond.cs"][0]))
         self.assertIn(b"using Zjcs.Official.World.NativeWater;", migrate("WaterMaskGenerator.cs", SOURCE / ASSETS["WaterMaskGenerator.cs"][0]))
+        transparent_mask = migrate("TransparentMask.cs", SOURCE / ASSETS["TransparentMask.cs"][0])
+        self.assertIn(b"using Object = UnityEngine.Object;", transparent_mask)
+        self.assertIn(b"camera.TryGetCullingParameters(out val5);", transparent_mask)
+        self.assertEqual(2, transparent_mask.count(b"new RenderTargetIdentifier(val)"))
+        self.assertNotIn(b"RenderTargetIdentifier.op_Implicit", transparent_mask)
 
 
 if __name__ == "__main__":
