@@ -170,7 +170,7 @@ Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD�
 
 地图探索里程碑是地图页总探索度滑条上的奖励节点：进度达到节点标示的百分比后，玩家点击节点手动领取；世界地图中的地图选择项会对可领取节点显示红点。这里的“总探索度”是整张森之国（地图 11）的汇总，不是某个区域的进度；`WorldMapProgressCondition` 带区域编号时检查单区，不带区域编号时检查整图。官方整图公式汇总该地图各区域进度，以 `MapRegionProgressManager.GetMapMaxProgress` 的整图最大值归一化；全图各区域均开放（状态 `Public`）时还会加 100 点完成值，最后换算为百分比。它不是命运果实探寻，也不是女神像激活奖励。`MapGoddessExpAdditionUI` 是另一处逐地区列表，用于查看各区女神激活状态和地区探索进度。官方 `MapGoddessExpProcessItem`、`AchievementTaskMapProgress` 与 `FormulaHandler.CalcWorldMapProgress` 已核实点击、资格和进度公式；但所需阈值及奖励由 `achievement` 表的 `MapProgress`／`MapProgressInAdventure`（类型 9／53）记录提供。固定 APK `854_156383` 的 `achievement.g.bytes`（PathID `2512796603372558678`，SHA256 `319e4e07413ae5ccbebf724eb7e2454b841b072e48fe2ef71da8512cbd4978a8`，8,556 行）及已下载官方表 `871_156598`（SHA256 `50c66bef98508617c93ccd17c9fc0e5a8d355adef49f1c71bd4551649d69fb3a`，8,556 行）均没有这两种类型记录；Map11 官方 UI 提取清单也没有 `MapGoddessExpProcessItem` 面板。必须先取得该节点实际使用的阈值、奖励和原 UI 对象来源，再接入手动领取与持久化，不能推定一个奖励表。命运果实独立核对日常领取与探索事件。
 
-失落女神技能升阶结果现沿官方 `LostGoddessResultTipsSkillRankItem`，在原 `UpgradeResultOld`／`UpgradeResult` 两个 `SkillSlot` 中实例化 `ItemIconSkill`，并按本地官方 rank-display 表绑定来源／目标技能图标、品质框及星级。修复后的代码已通过 Unity 编译与 `Zjcs.Editor.ProjectTools.Validate`；改动后的 Player 画面尚未复验，首次重建因 `D:` 卷空间耗尽失败。此前 Player 的三类结算、屏幕坐标 UGUI 关闭与隔离存档冷读均通过，但技能结果截图仍缺图标，不能把该次画面记作本修复的验证。
+失落女神技能升阶结果沿官方 `LostGoddessResultTipsSkillRankItem`，在原 `UpgradeResultOld`／`UpgradeResult` 两个 `SkillSlot` 中实例化 `ItemIconSkill`，按本地 rank-display 数据绑定来源／目标技能图标、品质框及星级，并由恢复工具绑定官方 `StarMiniInfo` 品质星级贴图。带图形 Editor Play Mode 已验证官方图标、品质框、星级组件、窗口显示动画、模拟 UGUI 关闭和冷读存档；Windows Mono Player 也已实际验证类型 2 技能升阶结果与类型 4 属性结果，技能画面显示实际火焰技能图标及本地化说明，两个结果窗均经射线确认的模拟指针点击关闭，冷启动后保留 8364 的结算记录。验证画面与存档均位于隔离 `output/validation`，不覆盖用户存档。该验收覆盖结算窗口路径，不等同于完整地图流程。
 
 ### 完成方案
 

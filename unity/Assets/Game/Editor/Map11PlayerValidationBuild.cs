@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
+using UnityEngine;
 
 namespace Zjcs.Editor
 {
@@ -17,7 +18,10 @@ namespace Zjcs.Editor
                 throw new BuildFailedException("Set ZJCS_VALIDATION_DIR to the active validation workspace.");
 
             output = Path.GetFullPath(output);
-            string repository = Path.GetFullPath(Path.Combine(UnityEngine.Application.dataPath, "..", ".."));
+            string repository = Environment.GetEnvironmentVariable("ZJCS_REPOSITORY_ROOT");
+            if (string.IsNullOrWhiteSpace(repository))
+                repository = Path.Combine(UnityEngine.Application.dataPath, "..", "..");
+            repository = Path.GetFullPath(repository);
             string validationRoot = Path.Combine(repository, "output", "validation");
             if (!output.StartsWith(validationRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
                 throw new BuildFailedException("Map11 validation Player must be built under output/validation.");
@@ -29,16 +33,25 @@ namespace Zjcs.Editor
                 throw new BuildFailedException("The Map11 validation Player requires the runtime Bootstrap scene.");
 
             Directory.CreateDirectory(output);
-            BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+            NamedBuildTarget standalone = NamedBuildTarget.Standalone;
+            ScriptingImplementation previousBackend = PlayerSettings.GetScriptingBackend(standalone);
+            BuildReport report;
+            try
             {
-                scenes = scenes,
-                locationPathName = Path.Combine(output, "Map11Validation.exe"),
-                target = BuildTarget.StandaloneWindows64,
-                options = BuildOptions.Development
-            });
+                PlayerSettings.SetScriptingBackend(standalone, ScriptingImplementation.Mono2x);
+                report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+                {
+                    scenes = scenes,
+                    locationPathName = Path.Combine(output, "Map11Validation.exe"),
+                    target = BuildTarget.StandaloneWindows64,
+                    options = BuildOptions.None,
+                    extraScriptingDefines = new[] { "ZJCS_MAINLINE_MODULE_VALIDATION" }
+                });
+            }
+            finally { PlayerSettings.SetScriptingBackend(standalone, previousBackend); }
             if (report == null || report.summary.result != BuildResult.Succeeded)
                 throw new BuildFailedException("Map11 validation Windows Player build failed.");
-            UnityEngine.Debug.Log("Map11 validation Player built to " + report.summary.outputPath);
+            Debug.Log("Map11 validation Player built to " + report.summary.outputPath);
         }
     }
 }

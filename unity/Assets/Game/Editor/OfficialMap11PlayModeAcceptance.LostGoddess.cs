@@ -3,11 +3,14 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zjcs.Offline.Progression;
+using Zjcs.Offline.Skills;
+using Zjcs.Offline.State;
 using Zjcs.Offline.World;
 using Zjcs.Official.World;
 using Zjcs.Official.WorldUI;
@@ -73,8 +76,66 @@ namespace Zjcs.Editor
             yield return new WaitForSecondsRealtime(.8f);
             Require(UnityEngine.Object.FindObjectOfType<OfficialLostGoddessResultPopup>() == null,
                 "Lost goddess result closes through the official button");
-            Debug.Log("Map11 lost goddess result passed: generated 8364 used the local atomic award transaction and the original result prefab closed through a simulated UGUI click.");
+
+            OfflineSkillRules skillRules = OfficialCharacterAssetCatalog.LoadDefault().LoadSkillRules();
+            var rankSkill = skillRules.Skills.First(value => value.MaximumRank > 1);
+            var skillAward = new OfflineExploreLostGoddessAward
+            {
+                Type = 2, SkillId = rankSkill.ClassId, SourceRank = 1, TargetRank = 2
+            };
+            OfficialMap11UiData uiData = UnityEngine.JsonUtility.FromJson<OfficialMap11UiData>(
+                Resources.Load<TextAsset>("Map11/UI/catalog").text);
+            OfficialLostGoddessResultPopup skillPopup = OfficialLostGoddessResultPopup.Open(canvas,
+                skillAward, Field<OfflineCharacterProgressionService>("progression"),
+                key => WorldMultiLanguageText.Localize == null
+                    ? uiData.texts.FirstOrDefault(value => value.key == key)?.value ?? key
+                    : WorldMultiLanguageText.Localize(key), null);
+            float skillPopupDeadline = Time.realtimeSinceStartup + 10;
+            while ((skillPopup == null || !skillPopup.IsShown) && Time.realtimeSinceStartup < skillPopupDeadline)
+            {
+                yield return null;
+            }
+            Require(skillPopup != null && skillPopup.IsShown,
+                "Original skill-rank result window completed its official show transition");
+            Transform skillResult = skillPopup.transform.Find("LostGoddessResultSkillRankDialog");
+            Require(skillResult != null, "Original skill-rank result prefab root");
+            RequireSkillRankIcon(skillResult, "Content/MiddleGo/Props/AniSkill/UpgradeResultOld/SkillSlot/ItemIconSkill");
+            RequireSkillRankIcon(skillResult, "Content/MiddleGo/Props/AniSkill/UpgradeResult/SkillSlot/ItemIconSkill");
+            yield return new WaitForSecondsRealtime(.5f);
+            yield return new WaitForEndOfFrame();
+            Capture("lost-goddess-skill-rank-result");
+            Button skillClose = skillPopup.GetComponentsInChildren<Button>(true)
+                .FirstOrDefault(button => button.isActiveAndEnabled && button.interactable
+                    && button.gameObject.name.StartsWith("CloseObj", StringComparison.Ordinal));
+            Require(skillClose != null, "Official skill-rank result close button");
+            yield return SimulatePointerClick(skillClose);
+            yield return new WaitForSecondsRealtime(.8f);
+            Require(UnityEngine.Object.FindObjectOfType<OfficialLostGoddessResultPopup>() == null,
+                "Skill-rank result closes through the official button");
+
+            OfflineMainlineProgressSession cold = OfflineMainlineProgressSession.OpenCharacter(
+                new ProfileSlotCatalog(Root), Slot);
+            var persistedAward = cold.Save.World.Exploration.Entities.Single(value => value.Serial == serial).LostGoddessAward;
+            Require(persistedAward != null, "Lost goddess reward persisted to the cold save");
+            Debug.Log("Map11 skill-rank result passed: original ItemIconSkill instances show official icon, quality, and stars; actual 8364 interaction, UGUI close, and cold-save recovery passed.");
             Finish();
+        }
+
+        private static void RequireSkillRankIcon(Transform root, string path)
+        {
+            Transform iconRoot = root.Find(path);
+            Require(iconRoot != null, "Original skill icon prefab at " + path);
+            Image skill = iconRoot.Find("Content/mask/icon")?.GetComponent<Image>();
+            Image quality = iconRoot.Find("Content/QualityImg")?.GetComponent<Image>();
+            Transform starRoot = iconRoot.Find("Content/SkillStarInfo");
+            Component stars = starRoot == null ? null : starRoot.GetComponents<MonoBehaviour>()
+                .FirstOrDefault(value => value != null && value.GetType().Name == "StarMiniInfo");
+            Transform starList = starRoot?.Find("StarList");
+            Require(skill != null && skill.sprite != null, "Official skill icon sprite at " + path);
+            Require(quality != null && quality.sprite != null, "Official skill quality sprite at " + path);
+            Require(stars != null && starList != null && starList.childCount > 0
+                && Enumerable.Range(0, starList.childCount).Any(index => starList.GetChild(index).gameObject.activeSelf),
+                "Official skill star component and visible star at " + path);
         }
 
         private static IEnumerator SimulateEntityClick(int placement)

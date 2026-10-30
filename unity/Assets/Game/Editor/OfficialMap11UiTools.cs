@@ -153,6 +153,13 @@ namespace Zjcs.Editor
             items.exploreQualities = data.explorationUi.qualities.Select(value => sprites[value.sprite]).ToArray();
             items.exploreDetailQualities = data.explorationUi.qualities.Select(value => sprites[value.detailSprite]).ToArray();
             items.exploreAwardLights = data.explorationUi.qualities.Select(value => string.IsNullOrEmpty(value.awardLight) ? null : sprites[value.awardLight]).ToArray();
+            OfficialMap11UiComponent starInfo = data.components.FirstOrDefault(value => value.panel == "ItemIconSkill"
+                && value.path == "/ItemIconSkill/Content/SkillStarInfo" && value.type == "StarMiniInfo");
+            OfficialMap11QualitySprite[] starQualityData = starInfo?.fields?.qualitySprites;
+            if (activeMapId == 11 && (starQualityData == null || starQualityData.Length == 0))
+                throw new InvalidDataException("Official Map11 skill star quality sprites are missing.");
+            items.starQualityIds = starQualityData?.Select(value => value.quality).ToArray() ?? Array.Empty<int>();
+            items.starQualitySprites = starQualityData?.Select(value => sprites[value.sprite]).ToArray() ?? Array.Empty<Sprite>();
             EditorUtility.SetDirty(items);
             GameObject host = new GameObject("Map11PrefabRestoration", typeof(RectTransform));
             try
