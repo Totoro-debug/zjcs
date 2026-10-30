@@ -158,7 +158,7 @@ namespace Zjcs.Presentation.World
             scroll.scrollSensitivity = 35f;
             var listRect = content as RectTransform;
 
-            IReadOnlyList<int> candidates = map12NpcCatalog.FightAssistNpcClassIds();
+            IReadOnlyList<int> candidates = map12NpcCatalog.TeamInviteNpcClassIds();
             var friendships = (progressionSave.Save.Player.CharacterProperties.NpcFriendships
                     ?? new List<OfflineNpcFriendship>())
                 .Where(value => value != null && value.NpcClassId > 0)
@@ -175,8 +175,8 @@ namespace Zjcs.Presentation.World
                 bool met = map12NpcCatalog.AssistConditionMet(npcId, progression.Player.Level,
                     friendships, progressionSave.StoryCount);
                 bool encountered = friendships.ContainsKey(npcId);
-                bool hasModel = models.HasNpcBattleAnimations(npcId);
-                bool available = hasModel && map12NpcCatalog.CanInviteNpc(npcId, encountered, met);
+                bool hasModel = OfficialMap12NpcBattleModelView.HasBinding(npcId);
+                bool available = hasModel && map12NpcCatalog.CanInviteTeamNpc(npcId, encountered, met);
                 bool isSelected = selected.Contains(npcId) && available && selectedCount < maxNpcs;
                 if (isSelected) { selectedCount++; retained.Add(npcId); }
                 rows.Add(new Map12SteleNpcEntry(npcId, available, isSelected, encountered, met, hasModel));
@@ -241,7 +241,7 @@ namespace Zjcs.Presentation.World
                 .FirstOrDefault(value => value.gameObject.name == "HeadImg");
             string nameKey = map12NpcCatalog.NpcNameKey(npcId);
             if (!map12NpcAssistanceNames.TryGetValue(nameKey, out string npcName))
-                throw new InvalidOperationException("Original NPC assistance name is missing: " + nameKey);
+                npcName = nameKey;
             if (portrait == null)
             {
                 Debug.LogWarning("Original NPC assistance portrait is absent from the selected APK and cloud resources: "
@@ -558,14 +558,13 @@ namespace Zjcs.Presentation.World
                     ?? new List<OfflineNpcFriendship>())
                 .Where(value => value != null && value.NpcClassId > 0)
                 .ToDictionary(value => value.NpcClassId, value => value.Level);
-            IReadOnlyList<int> candidates = map12NpcCatalog.FightAssistNpcClassIds();
-            OfficialBattleModelCatalog models = OfficialBattleModelCatalog.LoadDefault();
+            IReadOnlyList<int> candidates = map12NpcCatalog.TeamInviteNpcClassIds();
             foreach (int npcId in selected)
             {
                 bool met = map12NpcCatalog.AssistConditionMet(npcId, progression.Player.Level,
                     friendships, progressionSave.StoryCount);
-                if (!candidates.Contains(npcId) || !models.HasNpcBattleAnimations(npcId)
-                    || !map12NpcCatalog.CanInviteNpc(npcId, friendships.ContainsKey(npcId), met))
+                if (!candidates.Contains(npcId) || !OfficialMap12NpcBattleModelView.HasBinding(npcId)
+                    || !map12NpcCatalog.CanInviteTeamNpc(npcId, friendships.ContainsKey(npcId), met))
                     throw new InvalidOperationException("Selected Map12 stele NPC no longer meets the original assistance conditions: " + npcId);
             }
             if (playerFaction.EntryPosList == null || playerFaction.EntryPosList.Length == 0)
@@ -585,7 +584,7 @@ namespace Zjcs.Presentation.World
             for (int index = 0; index < selected.Count; index++)
             {
                 FightGridPoint position = positions[index];
-                FightBattleUnitState npc = map12NpcCatalog.CreateUnit(checkpoint.Units.Count + 1, 1,
+                FightBattleUnitState npc = map12NpcCatalog.CreateTeamInviteUnit(checkpoint.Units.Count + 1, 1,
                     Math.Max(1, progression.Player.Level), Math.Max(0, progression.Player.Rank),
                     Math.Max(0, progression.Player.SubRank), position.X, position.Y, moveMask, selected[index]);
                 checkpoint.Units.Add(npc);

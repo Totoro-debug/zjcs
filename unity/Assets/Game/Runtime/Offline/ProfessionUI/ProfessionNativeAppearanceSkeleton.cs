@@ -44,6 +44,7 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly IProfessionFollowerSlot[] followerOrder;
         private readonly Bone[] bones;
         private readonly Func<int, float> customZOrder;
+        private readonly Color[] animationColors;
         private readonly Dictionary<string, ProfessionNativeBonePose.Track[]> boneClips = new Dictionary<string, ProfessionNativeBonePose.Track[]>(StringComparer.Ordinal);
         private readonly Dictionary<string, ProfessionNativeSlotPose.Clip> slotClips = new Dictionary<string, ProfessionNativeSlotPose.Clip>(StringComparer.Ordinal);
         public ProfessionNativeSkeletonData Source { get; }
@@ -90,6 +91,7 @@ namespace Zjcs.Offline.ProfessionUI
             slots = Enumerable.Range(0, data.SlotCount).Select(i => new Slot(this, i)).ToArray();
             drawOrder = new IProfessionSkinClipSlot[slots.Length];
             followerOrder = new IProfessionFollowerSlot[slots.Length];
+            animationColors = Enumerable.Repeat(Color.white, slots.Length).ToArray();
         }
         public ProfessionNativeSkin CreateSkin(string name) => new ProfessionNativeSkin(name, Source.SlotCount, Source.BoneCount,
             Source.Constraints.Count, Array.Empty<ProfessionNativeSkin.Entry>(), Array.Empty<int>(), Array.Empty<int>());
@@ -128,6 +130,17 @@ namespace Zjcs.Offline.ProfessionUI
                 attachments.SetAttachment(i, attachments.Resolve(i, SlotPose.Attachment(i)));
             ProfessionNativeIdleIk.Apply(Pose, Source.CreateIdleIk(animation, time));
             ProfessionNativeIdleTransform.Apply(Pose, ProfessionNativeIdleTransform.Bind(Source, animation, time, SkinConstraints));
+        }
+
+        // Battle NPCs use the same source channels, but their animation names are
+        // character-prefixed (for example npc_8402/idle_01). Keep the generic
+        // channel application here so battle does not invent a second pose graph.
+        public void EvaluateNativeAnimation(ProfessionNativeAnimationChannels channels, float time)
+        {
+            if (channels == null) throw new ArgumentNullException(nameof(channels));
+            channels.ApplyLocalPose(Pose, SlotPose, animationColors, Mathf.Max(0f, time), true);
+            for (int i = 0; i < slots.Length; i++)
+                attachments.SetAttachment(i, attachments.Resolve(i, SlotPose.Attachment(i)));
         }
 
         // The two original default weapon skins have no active constraints.

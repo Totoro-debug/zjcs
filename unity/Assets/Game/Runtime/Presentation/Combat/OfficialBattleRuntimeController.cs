@@ -98,7 +98,8 @@ namespace Zjcs.Presentation.Combat
             bool? environmentIsDay = null,
             Func<FightBattleUnitState, string> animationGroupResolver = null,
             OfflineMainlineProgressSession statueProgress = null,
-            OfficialBattleSessionOptions options = null)
+            OfficialBattleSessionOptions options = null,
+            Func<FightBattleUnitState, IOfficialBattleNativeModel> nativeNpcFactory = null)
         {
             if (executor != null) throw new InvalidOperationException("A battle session is already active.");
             if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
@@ -150,7 +151,7 @@ namespace Zjcs.Presentation.Combat
                         isDay: environmentIsDay);
                 nextScene = new OfficialBattleSceneView(resolvedModelCatalog, worldRoot,
                     modelKey, gridMapper, animationForEvent, orientUnit, resolvedHudCatalog, hudParent,
-                    nextNativeModels, animationGroupResolver);
+                    nextNativeModels, animationGroupResolver, nativeNpcFactory);
                 nextHud.ControlClicked += OnHudControlClicked;
                 nextHud.SpeedCycled += OnSpeedCycled;
                 if (sessionOptions.ShowMainPanelDelay <= 0)

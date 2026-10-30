@@ -19,6 +19,7 @@ namespace Zjcs.Presentation.Combat
         private readonly Func<FightBattleUnitState, FightBattleStepEvent, string> animationForEvent;
         private readonly bool usesOfficialAnimationFallback;
         private readonly Func<FightBattleUnitState, string> animationGroupResolver;
+        private readonly Func<FightBattleUnitState, IOfficialBattleNativeModel> nativeNpcFactory;
         private readonly Action<Transform, FightBattleUnitState> orientUnit;
         private readonly OfficialBattleHudCatalog hudCatalog;
         private readonly OfficialBattleSkillPlayableCatalog skillPlayableCatalog;
@@ -118,7 +119,8 @@ namespace Zjcs.Presentation.Combat
             Action<Transform, FightBattleUnitState> orientUnit,
             OfficialBattleHudCatalog hudCatalog = null, Transform hudParent = null,
             OfficialBattleNativeAnimationLibrary nativeModelLibrary = null,
-            Func<FightBattleUnitState, string> animationGroupResolver = null)
+            Func<FightBattleUnitState, string> animationGroupResolver = null,
+            Func<FightBattleUnitState, IOfficialBattleNativeModel> nativeNpcFactory = null)
         {
             this.catalog = catalog != null ? catalog : OfficialBattleModelCatalog.LoadDefault();
             this.nativeModelLibrary = nativeModelLibrary;
@@ -131,6 +133,7 @@ namespace Zjcs.Presentation.Combat
             skillPlayableCatalog = usesOfficialAnimationFallback
                 ? OfficialBattleSkillPlayableCatalog.LoadDefault() : null;
             this.animationGroupResolver = animationGroupResolver;
+            this.nativeNpcFactory = nativeNpcFactory;
             this.orientUnit = orientUnit ?? ((_, __) => { });
             this.hudCatalog = hudCatalog;
             damageVisibility = OfficialBattleDamageVisibilityCatalog.Load();
@@ -1346,6 +1349,18 @@ namespace Zjcs.Presentation.Combat
                 summonView.Hud = OfficialBattleUnitWorldHudView.Create(hudCatalog, state, model.Transform);
                 units.Add(state.Id, summonView);
                 return summonView;
+            }
+            if (nativeNpcFactory != null)
+            {
+                IOfficialBattleNativeModel npcModel = nativeNpcFactory(state);
+                if (npcModel != null)
+                {
+                    var npcView = new UnitView { State = state, NativeModel = npcModel };
+                    PlayAnimation(npcView, "idle_01", true);
+                    npcView.Hud = OfficialBattleUnitWorldHudView.Create(hudCatalog, state, npcModel.Transform);
+                    units.Add(state.Id, npcView);
+                    return npcView;
+                }
             }
             if (nativeModelLibrary != null)
             {

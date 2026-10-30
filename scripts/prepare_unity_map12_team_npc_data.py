@@ -13,6 +13,8 @@ from prepare_unity_map12_team_npc_skeletons import CATALOG, RECEIPT as SOURCE_RE
 
 DEST = ROOT / 'unity/Assets/Official/World/Map/12/NativeTeamNpcData'
 FOLDER = DEST / 'Resources/Map12/TeamNpcSkeletons'
+RUNTIME_DEST = ROOT / 'unity/Assets/Game/Resources/Map12/Native/TeamNpcBattle'
+RUNTIME_FOLDER = RUNTIME_DEST / 'TeamNpcSkeletons'
 RECEIPT = ROOT / 'assets/reference/official-map/map12-team-npc-data-source-manifest.json'
 PREFABS = ROOT / 'unity/Assets/Official/World/Map/12/Source/team-npc-prefabs.json'
 PREFAB_RECEIPT = ROOT / 'assets/reference/official-map/map12-team-npc-prefabs-source-manifest.json'
@@ -68,6 +70,13 @@ def build(write=False):
             hashlib.md5(('zjcs:map12:npc-native-data:' + source_path(path)).encode()).hexdigest() +
             ('\nfolderAsset: yes\nDefaultImporter:\n' if folder else '\nTextScriptImporter:\n') +
             '  externalObjects: {}\n').encode()
+        if path == FOLDER / 'catalog.json' or (path.parent == FOLDER and path.suffix == '.bytes'):
+            runtime_path = RUNTIME_DEST / ('catalog.json' if path.suffix == '.json' else 'TeamNpcSkeletons/' + path.name)
+            runtime_raw = raw
+            if path.suffix == '.json':
+                runtime_raw = raw.replace(b'"Map12/TeamNpcSkeletons/', b'"Map12/Native/TeamNpcBattle/TeamNpcSkeletons/')
+            outputs[runtime_path] = runtime_raw
+            outputs[Path(str(runtime_path) + '.meta')] = outputs[Path(str(path) + '.meta')]
 
     def string(value):
         raw = value.encode()
@@ -117,6 +126,10 @@ def build(write=False):
     while parent != DEST.parent:
         save(parent, b'', True)
         parent = parent.parent
+    for folder in (RUNTIME_DEST, RUNTIME_FOLDER):
+        outputs[Path(str(folder) + '.meta')] = ('fileFormatVersion: 2\nguid: ' +
+            hashlib.md5(('zjcs:map12:npc-native-runtime:' + source_path(folder)).encode()).hexdigest() +
+            '\nfolderAsset: yes\nDefaultImporter:\n  externalObjects: {}\n').encode()
     runtime = ROOT / 'unity/Assets/Game/Runtime/Offline/ProfessionUI'
     code_paths = [runtime / name for name in ('ProfessionNativeSkeletonData.cs', 'ProfessionNativeSkeletonData.Npc.cs',
         'ProfessionNativePathAttachment.cs', 'ProfessionNativeNpcSkins.cs')]

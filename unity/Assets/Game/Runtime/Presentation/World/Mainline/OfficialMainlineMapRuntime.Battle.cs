@@ -196,7 +196,12 @@ namespace Zjcs.Presentation.World
                     CanChangePosition = !stage.JoinInMiddle,
                     ChangePositionCenterX = playerEntry.X,
                     ChangePositionCenterY = playerEntry.Y
-                });
+                },
+                nativeNpcFactory: unit => mapClassId == 12 && unit != null && unit.Id != 1
+                    && OfficialMap12NpcBattleModelView.HasBinding(unit.MonsterId)
+                    ? new OfficialMap12NpcBattleModelView(unit.MonsterId, battleRoot,
+                        "Map12BattleNpc_" + unit.Id)
+                    : null);
             battleController.AttachUnitTransform(1, avatar.transform);
             battleController.ConfigureSpeeds(
                 OfficialCombatAssetCatalog.LoadDefault().Load().SpeedSettings, 0,
