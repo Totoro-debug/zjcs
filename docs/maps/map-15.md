@@ -24,6 +24,8 @@
 
 官方美术源已切换到用户指定的最新版 `871_156598`。其官方 YooAsset 清单及缓存包含全部 29 个通天塔 prefab／Map15 地形根 bundle；CAB 依赖检查解析 378 个序列化文件，未发现缺失引用。AssetRipper 1.3.14 已将选定闭包导出为 20,446 个原生 Unity 文件（约 263 MB），包括通天塔楼层 prefab、Bronze／Snow／Utopia 三类地形根 prefab 和 `game_tongTianTa_D_*` Spine 角色资源。GUID 分析从 494 个动态 prefab 根闭合到 1,742 个源文件（约 112.6 MB），未发现未解析资源 GUID；导出涉及 37 个 MonoScript，须逐项绑定到 Unity 工程内对应的官方代码或已安装 package。导出目前仅位于隔离验证目录，尚未筛选、转换和接入受 Git 管理的 Unity 资产；AssetRipper 输出也未核验组件脚本恢复、shader／平台兼容及运行表现，因此不代表原 UI 或场景已还原。
 
+用户更正的 14 个资源名已按 `871_156598` 的 DefaultPackage 清单及本地 CDN 收据核验：通天塔解谜 action prefab、`confirmdialog`／`minigame`／`worldmap` UI prefab、`map_world` 场景、8 个共享 bundle，以及 `map_14_play` 实体 prefab 均在清单且缓存字节校验通过。它们不在上述 29 个根 bundle 的 AssetRipper 导出输入中；当前仍需将官方 UI／场景资源导出、闭合并接入 Unity，不能据此认定界面或机关已经还原。
+
 当前已执行地图组生成器回归测试、官方 EC 闭合校验和 `check_unity_project.py` 静态元数据检查。Unity 隔离工程已完成 C# 编译；编译期间还发现并修复 `Region` 嵌套类型与官方字段同名导致的 CS0542。随后首次验收因稀疏 worktree 缺少仓库级战斗 HUD 来源清单而未进入验证；补入该清单后，Unity 在 Burst 程序集重载时报告 `OutOfMemoryException` 并退出，`ProjectTools.Validate` 与 Map15 Play Mode 断言均未完成。实际场景交互、运行画面和 Windows Player 验证尚未执行。
 
 ## 自定义实现
