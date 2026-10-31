@@ -75,15 +75,136 @@
     },
     {
       "path": "scripts/prepare_current_windows_result.py",
-      "bytes": 3127,
-      "sha256": "a0360d636ea02e1944ee9613b0774be033458a4eedc53ee73a26edecb95828ca"
+      "bytes": 8360,
+      "sha256": "c8a1872e0396d001404dc9de587eb55d0b3157355447612544cf3cf889dc4a3b"
+    },
+    {
+      "path": "scripts/convert_current_windows_shaders.py",
+      "bytes": 34103,
+      "sha256": "41f58ab1e79513ebf1da0544e32a36e13883799e0086c01ce1d1cda84dc8c151"
+    },
+    {
+      "path": "scripts/current_shader_programs.py",
+      "bytes": 2344,
+      "sha256": "4264643d82e44c9bac6ca8f7269db3c3e86b3e9ae15448ffd9ff9265ce3f85f4"
+    },
+    {
+      "path": "scripts/prepare_current_windows_engine.py",
+      "bytes": 5686,
+      "sha256": "ae827cedc367b2bb32c9446d09ad30e4897074ce1ac96033e6c759717f27ad1f"
+    },
+    {
+      "path": "scripts/current_vulkan_shader.py",
+      "bytes": 9363,
+      "sha256": "bab80aaf9124df0d393af50e6d578b8522c7ea6617cbd5e477cbb4caf8c04034"
+    },
+    {
+      "path": "scripts/prepare_current_windows_validation.py",
+      "bytes": 8720,
+      "sha256": "7e340f8d2c89174973525978c8bd5014072c00a442e89af5f10d9091180758a3"
+    },
+    {
+      "path": "scripts/current_resource_windows_validation.cs",
+      "bytes": 4782,
+      "sha256": "9d1fdb3f8911255f10d713dd3d32570675ed1f6ba89652e6bb121e603fbb7a49"
+    },
+    {
+      "path": "scripts/current_resource_texture_validation.cs",
+      "bytes": 4630,
+      "sha256": "7f0e63760bce3df656bfe2fd6542c7b3b87b060ae6c4c4638eeb7cb27c84b838"
+    },
+    {
+      "path": "scripts/current_resource_engine_probe.cs",
+      "bytes": 3244,
+      "sha256": "b4758686ec0b18b5abcc3ac6dca7d86f03496f14fdf161a69cfe0a98bc583550"
+    },
+    {
+      "path": "scripts/current_resource_shader_render_validation.cs",
+      "bytes": 2697,
+      "sha256": "723d065b17dcd7f123a699e7766edc8b98dbbe5ddc3eaf7e2c42f691105c26ba"
+    },
+    {
+      "path": "scripts/current_resource_particle_render_validation.cs",
+      "bytes": 3138,
+      "sha256": "b493b47f6195c1d6d30f9e1f7e62f87057c11271f8742fa09ff518182be0c7fb"
     }
   ],
-  "preservation": "Existing native exports, original raw objects, source CAB/PathID identities, unmatched historical inputs and previous converted payloads remain on disk.",
+  "preservation": "Existing native exports, original current raw objects, source CAB/PathID identities, existing unmatched legacy files and previous converted payloads remain on disk.",
   "limitations": [
     "Conversion cache assets have not replaced existing game runtime assets.",
     "Component fields include exact source PPtrs; native object rebinding remains a module integration task.",
     "Native texture GUIDs and original CAB/PathID pairs are explicit in the texture receipt.",
     "This receipt does not declare an external backup or a completed game feature."
-  ]
+  ],
+  "shaders": {
+    "receipt": {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders/source-manifest.json",
+      "bytes": 2172040,
+      "sha256": "09b81e5260175a1524a2178d37bea2b78752bdc85f130751e2d95398171fbe0b"
+    },
+    "source_files": 272,
+    "retained_program_cases": 3715,
+    "stripped_program_objects": 4,
+    "native_engine_bindings": 10,
+    "unresolved": 0,
+    "completed": true,
+    "engine_receipt": {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/windows-engine/source-manifest.json",
+      "bytes": 34999,
+      "sha256": "1644cddf84af2772585e10e660ff157b465781151e287c8b65608634abfd135b"
+    },
+    "vulkan_only_cases": 1,
+    "cross_compiler_tools": {
+      "path": ".tools/spirv-cross/source-manifest.json",
+      "bytes": 1372,
+      "sha256": "0fa175e49533d9a8639c26130bf6bd7aec4048dfffb286fc194a2fc9eef39142"
+    },
+    "program_coverage": {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/all-assets/vulkan-program-coverage.json",
+      "bytes": 178,
+      "sha256": "ef8cf9aa12ceceac493c4c84fa078ce2969125a4686a9bfdabb6bc241273e89f"
+    }
+  },
+  "validation_result": {
+    "graphics_device": "Direct3D 11.0 [level 11.1]",
+    "shader_objects": 268,
+    "compiled_stages": 7431,
+    "texture_sample_objects": 59,
+    "texture_mip_faces": 424,
+    "native_engine": {
+      "shaders": 4,
+      "computes": 6,
+      "kernel_groups": 5,
+      "supported": [
+        false,
+        true,
+        true,
+        true
+      ],
+      "graphics_device": "Direct3D 11.0 [level 11.1]"
+    },
+    "rendered_shader": {
+      "path": "Assets/Shaders/15fcb399b1d18df1d497dc66ef910bf39e0efc7ad70ca8065b106d2a037132cd.shader",
+      "sha256": "073664a3b20347035c94e315b21deaa75ee5f18352d408ad1a8c319c1ab16f4c",
+      "shader": "UI/Default",
+      "sampled_pixels": 4,
+      "success": true
+    },
+    "rendered_vulkan_only_pass": {
+      "sha256": "9a4148e2f799cdac54c9de7bd18da939bb42ad18f7f181251f15df03846b3720",
+      "success": true,
+      "expected": {
+        "x": -0.026456652209162712,
+        "y": 0.6198709011077881,
+        "z": 0.784257709980011
+      },
+      "actual": {
+        "x": -0.02645665779709816,
+        "y": 0.6198709011077881,
+        "z": 0.784257709980011
+      },
+      "error": 5.587935447692871e-09
+    },
+    "scope": "D3D compilation covers every retained ported program case. Native texture GPU samples cover original formats, mip counts, color spaces and texture types. Engine checks cover builtin identities and available D3D kernel metadata; game integration and compute dispatch are outside this result."
+  }
 }

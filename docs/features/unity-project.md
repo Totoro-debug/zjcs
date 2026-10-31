@@ -34,6 +34,8 @@
 
 全量结果为 `native-conversion/native-export-all/`，覆盖当前全部 20,883 个 Unity 输入，共 467,037 个文件，较早转换目录仍实际保留。`component-fields-all/` 包含 1,315 种导出器报缺类型的 44,139 个组件字段和 86,366 条托管引用，解析未解决项为 0；原始对象字节及源 PPtr 同时保留，尚未回填为游戏工程中的原生对象引用。`all-assets/windows-textures/` 包含全部 33,264 个纹理对象、95,412 层原始 mip／立方体面层和 31,320,799,878 字节 Windows 原生像素，未解决项为 0；纹理保持原尺寸、色彩空间、采样参数及空动态纹理状态。新纹理以 CAB／PathID 明确对应稳定 GUID；旧工程素材与未对应旧输出保持实际文件。结果凭据见[全量 Windows 资源清单](../../assets/reference/official-map/current-resource-windows-source-manifest.json)。
 
+`all-assets/windows-shaders/` 保存 272 份 Shader 源文件，其中 268 份含可执行程序，覆盖全部 3,715 个保留程序组合及 7,431 个 D3D 编译阶段；另 4 个对象保持原包实际空程序状态。GLES 3／3.1、几何阶段及唯一的 Vulkan 独有粒子 Pass 均有对应输出，原始 GPU 程序同时保留。`windows-engine/` 保存当前 Unity Windows 引擎原始资源及 4 个内置 Shader、6 个 ComputeShader 的原生对应关系，合计覆盖全部 282 个 shader 对象，未解决项为 0。原引擎的可变速率着色纹理数组内核保持 Vulkan 能力范围；`InternalErrorShader` 保持引擎原生状态。纹理原始 mip 的代表样本 GPU 像素一致，UI 与 Vulkan 独有粒子法线 Pass 的实际渲染结果符合预期。上述转换缓存尚未逐对象替换现有游戏资源、回填组件引用或接入各模块运行流程。
+
 当前检查覆盖工程静态元数据、Editor／Player 编译、ProjectTools 校验、Windows D3D11 测试构建和启动窗口定位。校验仍有递归 DTO 序列化深度及 Edit Mode 清理提示；这些检查不证明完整游戏完成。启动画面见[启动](startup.md)，原位面列表的本地存档适配见[设置与存档](settings-and-save.md)，开场见[创角](character-creation.md)，地图战斗输入见[初始岛](../maps/map-10.md)。
 
 ## 自定义实现
@@ -48,7 +50,7 @@ Windows 使用可缩放竖屏与本地启动链；资源、规则和存档随游
 
 - 完整已提交工程从创角到家园、地图、战斗、退出及冷启动恢复的端到端运行与输入验证。
 - 各模块尚缺的官方 UI、模型、动画、音频、渲染及第三方依赖恢复，具体缺口见所属页。
-- 新版批量转换结果与旧工程资产的逐对象接入、补充字段及托管引用的原生对象回填、脚本绑定、Windows shader 编译及游戏实际运行接入。
+- 新版批量转换结果与旧工程资产的逐对象接入、补充字段及托管引用的原生对象回填、脚本绑定及游戏实际运行接入。
 - 清除校验中的序列化深度和 Edit Mode 清理提示，并验证受影响运行路径。
 - 与已提交源码、素材和文档一致的逐功能／地图 Windows 发布。
 
