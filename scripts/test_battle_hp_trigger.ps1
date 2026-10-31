@@ -7,17 +7,17 @@ Add-Type -Path $sources
 
 function Assert-Trigger($condition, $message) { if (-not $condition) { throw $message } }
 function Read-Text($path) { return [System.IO.File]::ReadAllText((Join-Path $root $path)) }
-function Get-Sha($path) {
-    $bytes = [System.IO.File]::ReadAllBytes((Join-Path $root $path))
-    $hash = [System.Security.Cryptography.SHA256]::Create().ComputeHash($bytes)
-    return ([System.BitConverter]::ToString($hash) -replace '-', '').ToLowerInvariant()
-}
-
+$skillSource = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::ReadSourceManifest(
+    (Read-Text 'unity/Assets/Official/Combat/skill-rules-source-manifest.json'))
+$battleSource = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::ReadSourceManifest(
+    (Read-Text 'unity/Assets/Official/Combat/battle-rules-source-manifest.json'))
+$formulaSource = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::ReadSourceManifest(
+    (Read-Text 'unity/Assets/Official/Combat/rules-source-manifest.json'))
 $catalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load(
     (Read-Text 'unity/Assets/Official/Combat/skill-rules.json'),
-    (Get-Sha 'unity/Assets/Official/Combat/skill-rules.json'), '854_156383',
+    $skillSource.OutputSha256, $skillSource.Manifest,
     (Read-Text 'unity/Assets/Official/Combat/battle-rules.json'),
-    (Get-Sha 'unity/Assets/Official/Combat/battle-rules.json'), '854_156383')
+    $battleSource.OutputSha256, $battleSource.Manifest)
 
 # Official mapping: status 60680 triggers 60681 when the owner falls below 15% HP.
 $official = $catalog.CreateStatus(60680, 1, 1)
@@ -79,7 +79,7 @@ $formula = [Zjcs.Combat.Official.FightDamageFormula]::new([Zjcs.Combat.Official.
 [void][Zjcs.Combat.Official.FightBattleExecutor]::Begin($cp, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new(), $catalog)
 Assert-Trigger (($start.Statuses | Where-Object { $_.ClassId -eq 26005 }).Count -eq 1) 'Executor did not run the HP trigger opening pass'
 
-# Official status 60680 applies 60681 and requests skill 70140 when the owner drops below 15%.
+# Official status 60680 applies 60681; 25070 requests skill 50010 below 15%.
 $officialUnit = New-Unit 100 1000
 $officialStatus = $catalog.CreateStatus(60680, 1, 1)
 $officialUnit.Statuses.Add($officialStatus)
@@ -88,46 +88,87 @@ Assert-Trigger ($officialApplied -eq 1) 'Official HP trigger did not fire'
 Assert-Trigger (($officialUnit.Statuses | Where-Object { $_.ClassId -eq 60681 }).Count -eq 1) 'Official HP trigger did not apply 60681'
 $skillUnit = New-Unit 100 1000
 $skillUnit.Statuses.Add($officialSkillStatus)
-$triggerSkills = [System.Collections.Generic.List[int]]::new()
+$triggerSkills = [System.Collections.Generic.List[Zjcs.Combat.Official.FightBattleStatusStateTrigger]]::new()
 $skillApplied = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::Apply($skillUnit, $catalog, $false, $triggerSkills)
-Assert-Trigger ($skillApplied -eq 1 -and $triggerSkills.Count -eq 1 -and $triggerSkills[0] -eq 50010) 'Official HP trigger did not request skill 50010'
+Assert-Trigger ($skillApplied -eq 1 -and $triggerSkills.Count -eq 1 -and $triggerSkills[0].EntityId -eq 50010) 'Official HP trigger did not request skill 50010'
+Assert-Trigger ($triggerSkills[0].SourceSubRank -eq 0) 'HP trigger collection replaced a stored zero sub-rank'
 
 # Executor: an enemy hit drops the player below the threshold and the trigger skill is cast.
-$triggerPlayer = New-Unit 100 1000
-$triggerPlayer.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
-$triggerStatus = New-TriggerStatus 0.5 26004 -1 $false
-$triggerStatus.HpTriggerStatuses.Clear()
-$triggerStatus.HpTriggerSkills.Add(10640)
-$triggerPlayer.Statuses.Add($triggerStatus)
-$attacker = New-Unit 1000 1000
-$attacker.Id = 2; $attacker.Side = 2; $attacker.X = 1; $attacker.Y = 0
-$attacker.Turn.Id = 2; $attacker.Turn.Hp = 1000; $attacker.Turn.Speed = 1
-$attacker.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
-$attacker.SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{ Slot = 0; LimitedTimes = -1 })
-$attackSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
-$attackSkill.Slot = 0; $attackSkill.EntityId = 910; $attackSkill.ItemId = 911; $attackSkill.TargetType = 1
-$attackSkill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new(-1, 0))
-$attackHit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
-$attackHit.EntityId = 912; $attackHit.DamageId = 913; $attackHit.DamageType = 8
-$attackHit.HasCustomDamage = $true; $attackHit.CustomDamage = 50; $attackHit.TargetMode = 0
-$attackSkill.Hits.Add($attackHit)
-$attacker.Skills.Add($attackSkill)
-$triggerCp = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
-$triggerCp.StageId = 1; $triggerCp.MaxRound = 10; $triggerCp.RandomSeed = 11
-$triggerCp.Grid = [Zjcs.Combat.Official.FightBattleGrid]::new(); $triggerCp.Grid.Width = 8; $triggerCp.Grid.Height = 8; $triggerCp.Grid.DefaultGroundType = 2
-$triggerCp.Units.Add($triggerPlayer); $triggerCp.Units.Add($attacker)
-$triggerWave = [Zjcs.Combat.Official.FightBattleWaveState]::new(); $triggerWave.Index = 0; $triggerWave.UnitIds.Add(2); $triggerCp.Waves.Add($triggerWave)
-$triggerExecutor = [Zjcs.Combat.Official.FightBattleExecutor]::Begin($triggerCp, $formula,
-    [Zjcs.Combat.Official.FightDamageSettlement]::new(), $catalog)
-$triggerStep = $null
-for ($index = 1; $index -le 40; $index++) {
-    $step = $triggerExecutor.Step(0, $index)
-    if ($triggerPlayer.Hp -ne 100) { $triggerStep = $step; break }
+function Invoke-HpTriggerBattle($skillId, $rank = 1, $level = 1, $subRank = 0,
+    $useOfficialFormula = $false, $restoreBeforeHit = $false) {
+    $triggerPlayer = New-Unit 100 1000
+    $triggerPlayer.Level = 83; $triggerPlayer.SubRank = 23
+    $triggerPlayer.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
+    $triggerStatus = New-TriggerStatus 0.5 26004 1 $false
+    $triggerStatus.HpTriggerStatuses.Clear()
+    $triggerStatus.HpTriggerSkills.Add($skillId)
+    $triggerStatus.SourceSkillRank = $rank; $triggerStatus.SourceSkillLevel = $level
+    $triggerStatus.SourceSubRank = $subRank
+    $triggerPlayer.Statuses.Add($triggerStatus)
+    $attacker = New-Unit 1000 1000
+    $attacker.Id = 2; $attacker.Side = 2; $attacker.X = 1; $attacker.Y = 0
+    $attacker.Turn.Id = 2; $attacker.Turn.Hp = 1000; $attacker.Turn.Speed = 1
+    $attacker.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
+    $attacker.SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{ Slot = 0; LimitedTimes = -1 })
+    $attackSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
+    $attackSkill.Slot = 0; $attackSkill.EntityId = 910; $attackSkill.ItemId = 911; $attackSkill.TargetType = 1
+    $attackSkill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new(-1, 0))
+    $attackHit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
+    $attackHit.EntityId = 912; $attackHit.DamageId = 913; $attackHit.DamageType = 8
+    $attackHit.HasCustomDamage = $true; $attackHit.CustomDamage = 50; $attackHit.TargetMode = 0
+    $attackSkill.Hits.Add($attackHit)
+    $attacker.Skills.Add($attackSkill)
+    $triggerCp = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
+    $triggerCp.StageId = 1; $triggerCp.MaxRound = 10; $triggerCp.RandomSeed = 29
+    $triggerCp.Grid = [Zjcs.Combat.Official.FightBattleGrid]::new(); $triggerCp.Grid.Width = 8; $triggerCp.Grid.Height = 8; $triggerCp.Grid.DefaultGroundType = 2
+    $triggerCp.Units.Add($triggerPlayer); $triggerCp.Units.Add($attacker)
+    $triggerWave = [Zjcs.Combat.Official.FightBattleWaveState]::new(); $triggerWave.Index = 0; $triggerWave.UnitIds.Add(2); $triggerCp.Waves.Add($triggerWave)
+    $battleFormula = $formula
+    if ($useOfficialFormula) {
+        $triggerPlayer.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $catalog.PropertyType('Attack'); Value = 100 })
+        $triggerPlayer.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $catalog.PropertyType('MaxHp'); Value = 1000 })
+        $battleFormula = $catalog.CreateDamageFormula((Read-Text 'unity/Assets/Official/Combat/rules.json'),
+            $formulaSource.OutputSha256, $formulaSource.Manifest)
+    }
+    $triggerExecutor = [Zjcs.Combat.Official.FightBattleExecutor]::Begin($triggerCp, $battleFormula,
+        [Zjcs.Combat.Official.FightDamageSettlement]::new(), $catalog)
+    if ($restoreBeforeHit) {
+        $triggerCp = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(
+            [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($triggerCp))
+        $triggerExecutor = [Zjcs.Combat.Official.FightBattleExecutor]::Restore($triggerCp, $battleFormula,
+            [Zjcs.Combat.Official.FightDamageSettlement]::new(), $catalog)
+        $triggerPlayer = $triggerCp.Units[0]; $triggerStatus = $triggerPlayer.Statuses[0]
+    }
+    $triggerStep = $null
+    for ($index = 1; $index -le 40; $index++) {
+        $step = $triggerExecutor.Step(0, $index)
+        if ($triggerPlayer.Hp -ne 100) { $triggerStep = $step; break }
+    }
+    Assert-Trigger ($null -ne $triggerStep) 'Trigger test enemy never damaged the player'
+    Assert-Trigger ($triggerPlayer.Hp -eq 50) "Trigger test player HP is $($triggerPlayer.Hp) instead of 50"
+    $triggerCast = @($triggerStep.Event.SkillCasts | Where-Object { $_.SkillEntityId -eq $skillId -and $_.Slot -eq -1 -and $_.ActorId -eq 1 })
+    Assert-Trigger ($triggerCast.Count -eq 1) 'Executor did not record the trigger skill cast'
+    Assert-Trigger ($triggerStatus.HpTriggeredCount -eq 1) "Executor did not count HP trigger $skillId exactly once"
+    return $triggerStep
 }
-Assert-Trigger ($null -ne $triggerStep) 'Trigger test enemy never damaged the player'
-Assert-Trigger ($triggerPlayer.Hp -eq 50) "Trigger test player HP is $($triggerPlayer.Hp) instead of 50"
-$triggerCast = @($triggerStep.Event.SkillCasts | Where-Object { $_.SkillEntityId -eq 10640 -and $_.Slot -eq -1 -and $_.ActorId -eq 1 })
-Assert-Trigger ($triggerCast.Count -eq 1) 'Executor did not record the trigger skill cast'
-Assert-Trigger ($triggerStatus.HpTriggeredCount -eq 1) 'Executor did not count the HP trigger'
 
-Write-Output 'Battle HP trigger checks passed: official mapping, threshold, trigger status application, MaxCount and executor opening pass.'
+[void](Invoke-HpTriggerBattle 10640)
+
+# A derived self-buff keeps the originating skill's cultivation rather than the character's.
+$sourceSubRank = 10
+$cultivated = Invoke-HpTriggerBattle 63434 6 17 $sourceSubRank $false $true
+$buff = @($cultivated.Checkpoint.Units[0].Statuses | Where-Object { $_.ClassId -eq 24658 })
+Assert-Trigger ($buff.Count -eq 1 -and $buff[0].CreatorId -eq 1) 'HP-triggered skill did not apply its self-buff'
+Assert-Trigger ($buff[0].SourceSkillRank -eq 6 -and $buff[0].SourceSkillLevel -eq 17 -and $buff[0].SourceSubRank -eq $sourceSubRank) 'HP-triggered skill lost parent cultivation or used character level/sub-rank'
+$restored = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(
+    [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($cultivated.Checkpoint))
+$savedBuff = @($restored.Units[0].Statuses | Where-Object { $_.ClassId -eq 24658 })
+Assert-Trigger ($savedBuff[0].SourceSkillRank -eq 6 -and $savedBuff[0].SourceSkillLevel -eq 17 -and $savedBuff[0].SourceSubRank -eq $sourceSubRank) 'HP-triggered skill cultivation did not survive checkpoint restore'
+
+$low = Invoke-HpTriggerBattle 11050 1 1 1 $true
+$high = Invoke-HpTriggerBattle 11050 6 17 10 $true $true
+$lowDamage = @($low.Event.DamageEvents | Where-Object { $_.SkillEntityId -eq 11050 -and $_.SourceId -eq 1 -and $_.TargetId -eq 2 })
+$highDamage = @($high.Event.DamageEvents | Where-Object { $_.SkillEntityId -eq 11050 -and $_.SourceId -eq 1 -and $_.TargetId -eq 2 })
+Assert-Trigger ($lowDamage.Count -gt 0 -and $highDamage.Count -gt 0 -and [Math]::Abs($highDamage[0].Damage) -gt [Math]::Abs($lowDamage[0].Damage)) 'HP-triggered skill cultivation did not affect official damage calculation'
+
+Write-Output 'Battle HP trigger checks passed: official mapping, threshold, trigger status application, MaxCount, opening pass, inherited cultivation, official damage and checkpoint restore.'

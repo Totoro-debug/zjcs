@@ -586,7 +586,7 @@ namespace Zjcs.Combat.Official
                     TransmitVoodooDamage(target, damage, damageEvents, casts);
                     var triggerSkills = new List<int>();
                     var configuredTriggerSkills = new List<FightBattleStatusStateTrigger>();
-                    var hpTriggerSkills = new List<int>();
+                    var hpTriggerSkills = new List<FightBattleStatusStateTrigger>();
                     triggerSkills.AddRange(resolved.TriggeredStatusSkills);
                     long actualHpLoss = Math.Max(0L, beforeHp - target.Hp);
                     CollectUnflinchingActions(target, actualHpLoss);
@@ -1260,19 +1260,39 @@ namespace Zjcs.Combat.Official
             List<FightBattleMovementEvent> movements, ref float lastDelay)
         {
             if (statusCatalog == null || skillIds == null || skillIds.Count == 0 || triggerDepth > 0) return;
+            var triggers = new List<FightBattleStatusStateTrigger>();
+            foreach (int skillId in skillIds)
+                triggers.Add(new FightBattleStatusStateTrigger
+                {
+                    EntityId = skillId,
+                    SourceSkillRank = 1,
+                    SourceSkillLevel = Math.Max(1, owner.Level),
+                    SourceSubRank = Math.Max(1, owner.SubRank)
+                });
+            ExecuteTriggerSkills(owner, triggers, casts, damageEvents, movements, ref lastDelay);
+        }
+
+        private void ExecuteTriggerSkills(FightBattleUnitState owner,
+            List<FightBattleStatusStateTrigger> triggers,
+            List<FightBattleSkillCastEvent> casts, List<FightBattleDamageEvent> damageEvents,
+            List<FightBattleMovementEvent> movements, ref float lastDelay)
+        {
+            if (statusCatalog == null || triggers == null || triggers.Count == 0 || triggerDepth > 0) return;
             triggerDepth++;
             try
             {
-                int level = Math.Max(1, owner.Level);
-                int subRank = Math.Max(1, owner.SubRank);
-                foreach (int skillId in skillIds)
+                foreach (FightBattleStatusStateTrigger trigger in triggers)
                 {
-                    if (skillId <= 0) continue;
+                    if (trigger == null || trigger.EntityId <= 0) continue;
                     FightBattleSkillDefinition skill;
                     try
                     {
-                        skill = statusCatalog.CreateSkill(skillId, -1, 0, 1, level, subRank,
-                            ToPropertyList(statusCatalog.CalculateSkillProps(skillId, 1, level, subRank)));
+                        int rank = Math.Max(1, trigger.SourceSkillRank);
+                        int level = Math.Max(1, trigger.SourceSkillLevel);
+                        int subRank = Math.Max(0, trigger.SourceSubRank);
+                        skill = statusCatalog.CreateSkill(trigger.EntityId, -1, 0, rank, level, subRank,
+                            ToPropertyList(statusCatalog.CalculateSkillProps(trigger.EntityId,
+                                rank, level, subRank)));
                     }
                     catch (InvalidOperationException)
                     {

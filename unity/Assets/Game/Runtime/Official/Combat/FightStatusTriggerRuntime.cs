@@ -231,7 +231,8 @@ namespace Zjcs.Combat.Official
         }
 
         public static int Apply(FightBattleUnitState unit, FightOfficialCombatCatalog catalog,
-            bool atStart, List<int> triggerSkills = null, FightRandomStream random = null)
+            bool atStart, List<FightBattleStatusStateTrigger> triggerSkills = null,
+            FightRandomStream random = null)
         {
             if (unit == null || catalog == null || unit.Statuses == null || unit.MaxHp <= 0) return 0;
             int applied = 0;
@@ -260,7 +261,14 @@ namespace Zjcs.Combat.Official
                 }
                 if (triggerSkills != null && status.HpTriggerSkills != null)
                     foreach (int skillId in status.HpTriggerSkills)
-                        if (skillId > 0) triggerSkills.Add(skillId);
+                        if (skillId > 0)
+                            triggerSkills.Add(new FightBattleStatusStateTrigger
+                            {
+                                EntityId = skillId,
+                                SourceSkillRank = Math.Max(1, status.SourceSkillRank),
+                                SourceSkillLevel = Math.Max(1, status.SourceSkillLevel),
+                                SourceSubRank = Math.Max(0, status.SourceSubRank)
+                            });
                 status.HpTriggeredCount++;
                 applied++;
             }
