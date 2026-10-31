@@ -1,0 +1,77 @@
+{
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/ProfessionUI/NativeSkeletonData/Resources/ProfessionUI/NativeSkeletons/male.bytes",
+      "sha256": "7209fd0c72cbc5b32f44374d0c8921b9fe53d60b1dd404da3fc068359415f41f"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/NativeSkeletonData/Resources/ProfessionUI/NativeSkeletons/female.bytes",
+      "sha256": "6f12515b949321a7697392b81b99e4a3c293b729bf832cf324979cdc12ec2bef"
+    }
+  ],
+  "source_receipt": {
+    "path": "assets/reference/profession-ui/skeleton-data-source-manifest.json",
+    "sha256": "5e97038f987d2760cfa49ceaab182d52fac67ae29b43681a4b6ad612e2fdcd34"
+  },
+  "format_reader": {
+    "path": ".tools/skeltojson-1.0.1/skeltojson-1.0.1-py3-none-any.whl",
+    "sha256": "e6a0c0c5a38c811c7b23074fb22381615edbbc0be42db2cd12468764228e8897",
+    "module": "SkelToJson/converter.py",
+    "license": "MIT",
+    "operation": "Inspect only binary format projection defaults for physics setup and scalar timelines; no animation SDK implementation."
+  },
+  "generator_sha256": "9dfea501fdd1c06ca420bfd059c195cbfd7fad7e0defd95d0e59d122c5c76df6",
+  "reference_helper": {
+    "path": "scripts/prepare_battle_constraint_channel_fixtures.py",
+    "sha256": "50546b0fcafe264ffb0bf74ca0423ee8e94db4a5f6a65f1e6559c627449973bb"
+  },
+  "bodies": [
+    {
+      "sex": "male",
+      "animations": 445,
+      "constraints": 1534,
+      "setupAnimation": "home/idle_01",
+      "tracks": 321
+    },
+    {
+      "sex": "female",
+      "animations": 451,
+      "constraints": 1767,
+      "setupAnimation": "home/idle_01",
+      "tracks": 453
+    }
+  ],
+  "setup_cases": 3301,
+  "skin_cases": 513,
+  "key_cases": 1318,
+  "interpolation": {
+    "linear": 1075,
+    "stepped": 243
+  },
+  "sample_cases": 3724,
+  "fixture_sha256": "066c110136276f8308196ab5b23ce920219be5de02492b286fe9d7a7da64de12",
+  "native_runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePhysicsAnimation.cs",
+      "sha256": "031b9eba5f018b425efda0cdd4ca451ebb2dcb3c4523aa9928a10f4b8da8e1a4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePhysicsAnimation.cs.meta",
+      "sha256": "f93ffc9286016f15ee484c3ea18dd664394134279e12bd3b05e8234c429c20d8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimationChannels.cs",
+      "sha256": "e602b2174d832c83f56629d27d394c630ffef131351eb580ea6edb3bfa6d6617"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeCurve.cs",
+      "sha256": "6f9af85aaf275a98178e28030b3c60e4a8d943a0a1f3d59281ccbf85e5394679"
+    }
+  ],
+  "operation": "Read byte-verified historical lossless skeleton payloads; project all physics setup parameters, global flags, original global indices/order/bones and skin memberships. Independently derive every mix key, three interior interval samples, delayed-first setup and held-last values. Retain setup mix default one and omitted timeline value zero. No source version substitution, animation SDK execution or generated art.",
+  "limitations": [
+    "Unmixed physics parameter sampling only; physical integration, world-pose modification, animation mixing, complete player appearance binding and Windows Player release remain required.",
+    "Only mix timelines occur in these source data. Other physics timeline kinds and global timeline targets are explicitly rejected until bound."
+  ]
+}

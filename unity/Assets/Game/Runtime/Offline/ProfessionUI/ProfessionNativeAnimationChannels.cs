@@ -22,6 +22,7 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly Color[] setupColors;
         private ProfessionNativeConstraintAnimation constraints;
         private ProfessionNativeDeformAnimation deforms;
+        private ProfessionNativePhysicsAnimation physics;
         public string Name { get; }
         public float Duration { get; }
         public IReadOnlyList<ProfessionNativeBonePose.Track> BoneTracks => bones;
@@ -30,6 +31,7 @@ namespace Zjcs.Offline.ProfessionUI
         public IReadOnlyDictionary<string, object> OriginalFields { get; }
         public ProfessionNativeConstraintAnimation Constraints => constraints ?? (constraints = new ProfessionNativeConstraintAnimation(data, Name));
         public ProfessionNativeDeformAnimation Deforms => deforms ?? (deforms = new ProfessionNativeDeformAnimation(data, Name));
+        public ProfessionNativePhysicsAnimation Physics => physics ?? (physics = new ProfessionNativePhysicsAnimation(data, Name));
 
         public ProfessionNativeAnimationChannels(ProfessionNativeSkeletonData data, string name)
         {

@@ -55,6 +55,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".deforms", false);
             SessionState.SetBool(Key + ".constraintPose", false);
             SessionState.SetBool(Key + ".localTransforms", false);
+            SessionState.SetBool(Key + ".physicsChannels", false);
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 180);
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             Hook();
@@ -108,7 +109,8 @@ namespace Zjcs.Editor.Combat
 
         private static IEnumerator Verify()
         {
-            var steps = SessionState.GetBool(Key + ".localTransforms", false) ? LocalTransformSteps()
+            var steps = SessionState.GetBool(Key + ".physicsChannels", false) ? PhysicsChannelSteps()
+                : SessionState.GetBool(Key + ".localTransforms", false) ? LocalTransformSteps()
                 : SessionState.GetBool(Key + ".constraintPose", false) ? ConstraintPoseSteps()
                 : SessionState.GetBool(Key + ".deforms", false) ? DeformSteps()
                 : SessionState.GetBool(Key + ".constraints", false) ? ConstraintChannelSteps()
@@ -123,7 +125,9 @@ namespace Zjcs.Editor.Combat
             if (errors == 0)
             {
                 SessionState.SetInt(Key + ".result", 0);
-                Debug.Log(SessionState.GetBool(Key + ".localTransforms", false)
+                Debug.Log(SessionState.GetBool(Key + ".physicsChannels", false)
+                    ? "Original physics parameter Play Mode passed; physical simulation, world solving, animation mixing and formal player binding remain required."
+                    : SessionState.GetBool(Key + ".localTransforms", false)
                     ? "Original local transform Play Mode passed before physics; full physical motion, mixing and player appearance binding remain required."
                     : SessionState.GetBool(Key + ".constraintPose", false)
                     ? "Original unmixed constraint pose Play Mode passed before physics; complete physical motion, mixing and formal player binding remain required."
