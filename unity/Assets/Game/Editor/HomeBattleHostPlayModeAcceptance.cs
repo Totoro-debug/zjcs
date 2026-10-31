@@ -68,6 +68,11 @@ namespace Zjcs.Editor
                         || result.Status == ProgressionResultStatus.Unchanged, "Could not publish fixture region.");
                 }
                 yield return new WaitForSecondsRealtime(1);
+                if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_RESTORE") == "arena")
+                {
+                    yield return RunColdArenaRestore(home, slot, root, output, click, value => home = value);
+                    yield break;
+                }
                 if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_DIRECT") == "1")
                 {
                     yield return Capture(output, "home-entry");
@@ -208,6 +213,79 @@ namespace Zjcs.Editor
             verifyHome();
             Require(layerCompleted, "Tower did not report its actual layer result.");
             Debug.Log("[Battle hosts] public runner integration passed; entrance-window input is a separate pending check.");
+        }
+
+        private static IEnumerator RunColdArenaRestore(HomeFeatureRuntime home, string slot, string root,
+            string output, Action<Selectable> click, Action<HomeFeatureRuntime> adoptHome)
+        {
+            int tickets = home.Arena.Tickets, results = home.Arena.Wins + home.Arena.Losses;
+            Require(home.Arena.TryBeginChallenge(0, out string error), "Arena fixture entry failed: " + error);
+            int callbacks = 0;
+            var first = new GameObject("ArenaBattleRunnerBeforeReload");
+            first.transform.SetParent(home.transform, false);
+            first.AddComponent<ArenaBattleRunner>().Begin(home, _ => callbacks++);
+            var controller = first.GetComponent<OfficialBattleRuntimeController>();
+            float deadline = Time.realtimeSinceStartup + 45;
+            while (controller.Phase == FightBattlePhase.Preparing)
+            {
+                Require(Time.realtimeSinceStartup < deadline, "Arena preparation did not become interactive.");
+                var ready = Active<Button>().FirstOrDefault(value => value.name == OfficialBattleHudView.StartButtonPath.Split('/').Last()
+                    && value.transform.parent.name == "StartBtn" && value.interactable);
+                if (ready != null) click(ready);
+                yield return null;
+            }
+            while (controller.Checkpoint.Counter < 3)
+            {
+                Require(Time.realtimeSinceStartup < deadline && !controller.CanCompleteBattle,
+                    "Arena did not reach a resumable battle step.");
+                yield return null;
+            }
+            controller.SetPaused(true);
+            string persisted = home.Arena.ActiveBattleCheckpoint;
+            Require(!string.IsNullOrEmpty(persisted) && persisted == FightBattleCheckpointSerializer.Save(controller.Checkpoint),
+                "Arena did not persist the actual common-module checkpoint.");
+            var expected = FightBattleCheckpointSerializer.Load(persisted);
+            Require(expected.Counter >= 3 && !expected.Finished, "Arena checkpoint is not an unfinished battle.");
+            yield return Capture(output, "arena-before-reload");
+            UnityEngine.Object.Destroy(first);
+            yield return null;
+            Require(callbacks == 0, "Disposing an unfinished battle committed a result.");
+            home.CloseForNavigation();
+            yield return null;
+            yield return null;
+
+            home = HomeFeatureRuntime.Begin(slot, root, null);
+            adoptHome(home);
+            home.TutorialAutoStartEnabled = false;
+            Require(home.Arena.HasActiveChallenge && home.Arena.ActiveBattleCheckpoint == persisted,
+                "Reopening the profile did not load the saved arena challenge/checkpoint.");
+            int ticketsAfterReload = home.Arena.Tickets;
+            Action verifyHome = CaptureHomeRestoration(home);
+            var resumed = new GameObject("ArenaBattleRunnerAfterReload");
+            resumed.transform.SetParent(home.transform, false);
+            resumed.AddComponent<ArenaBattleRunner>().Begin(home, _ => callbacks++);
+            var restored = resumed.GetComponent<OfficialBattleRuntimeController>();
+            Require(FightBattleCheckpointSerializer.Save(restored.Checkpoint) == persisted,
+                "Restoring through the runner changed the persisted turns, units, cooldowns, random state or statistics.");
+            Require(!restored.IsPaused && restored.Phase == FightBattlePhase.Play,
+                "The restored battle retained a transient pause or restarted preparation.");
+            deadline = Time.realtimeSinceStartup + 15;
+            while (!Active<Button>().Any(value => value.name == "Btn"
+                && value.transform.parent.name == "FightMainPanelSpeedUI" && value.interactable))
+            {
+                Require(Time.realtimeSinceStartup < deadline, "The restored battle HUD did not become interactive.");
+                yield return null;
+            }
+            yield return SettleUi();
+            yield return Capture(output, "arena-after-reload");
+            yield return RunBattle<ArenaBattleRunner>("arena", output, click);
+            verifyHome();
+            Require(callbacks == 1 && !home.Arena.HasActiveChallenge && home.Arena.Tickets == tickets - 1
+                && home.Arena.Tickets == ticketsAfterReload && home.Arena.Wins + home.Arena.Losses == results + 1,
+                "The resumed arena battle charged twice or did not settle exactly once.");
+            File.WriteAllText(Path.Combine(output, "arena-cold-restore-passed.txt"),
+                "Profile reopened from disk; complete checkpoint preserved; actual battle resumed and settled once.\n");
+            Debug.Log("[Battle hosts] arena disk restore passed at step=" + expected.Counter);
         }
 
         private static IEnumerator RunArenaHost(HomeFeatureRuntime home, string output, Action<Selectable> click)
