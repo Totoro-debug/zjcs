@@ -173,6 +173,7 @@ namespace Zjcs.Presentation.World
                 Checkpoint = checkpoint,
                 WorldRoot = battleRoot,
                 HudParent = uiParent,
+                HostPresentation = new OfficialBattleHostPresentation(worldCamera, null, null),
                 SkillIcon = skillIconResolver,
                 TimelinePortrait = unit => unit.MonsterId > 0
                     ? (monsterPortraits == null ? null : monsterPortraits.Find(combatCatalog.MonsterIconId(unit.MonsterId)))

@@ -96,7 +96,9 @@ namespace Zjcs.Presentation.Combat
             if (state == null) return 0;
             if (state.MonsterTemplateId > 0 && Find(state.MonsterTemplateId) != null)
                 return state.MonsterTemplateId;
-            return state.MonsterId > 0 ? state.MonsterId : state.CharacterType == 1 ? 3100 : 0;
+            // Arena guards retain a stat-source MonsterId but are spawned as role players.
+            // FightRolePlayerSpawnerComponentInfo.CharacterClassId defaults to 3100.
+            return state.CharacterType == 1 ? 3100 : state.MonsterId > 0 ? state.MonsterId : 0;
         }
 
         public static OfficialBattleUnitSorting BindModel(Transform body, int entityId)

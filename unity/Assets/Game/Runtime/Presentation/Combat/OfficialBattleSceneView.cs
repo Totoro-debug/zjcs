@@ -838,7 +838,7 @@ namespace Zjcs.Presentation.Combat
             if (body != null) body.position = world;
         }
 
-        private Transform Body(int unitId)
+        internal Transform Body(int unitId)
         {
             if (attachedTransforms.TryGetValue(unitId, out Transform attached) && attached != null)
                 return attached;

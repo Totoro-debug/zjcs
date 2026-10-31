@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
 using UnityEngine;
 using Zjcs.Offline.State;
 
@@ -232,7 +233,8 @@ namespace Zjcs.Offline.World
         {
             TextAsset asset = Resources.Load<TextAsset>("Dungeons/arena-rules");
             if (asset == null) throw new InvalidDataException("Pinned official arena runtime catalog is missing.");
-            ArenaRuntimeData data = JsonUtility.FromJson<ArenaRuntimeData>(asset.text);
+            // Original faction entry positions are jagged arrays, which JsonUtility drops.
+            ArenaRuntimeData data = JsonConvert.DeserializeObject<ArenaRuntimeData>(asset.text);
             ValidateCatalog(data);
             return data;
         }

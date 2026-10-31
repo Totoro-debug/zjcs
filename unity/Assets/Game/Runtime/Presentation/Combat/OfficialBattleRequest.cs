@@ -16,6 +16,7 @@ namespace Zjcs.Presentation.Combat
         public FightBattleCheckpoint Checkpoint;
         public Transform WorldRoot;
         public Transform HudParent;
+        public OfficialBattleHostPresentation HostPresentation;
         // Optional presentation adapters. Omitted resolvers use the shared official catalogs;
         // maps with a captured player portrait or a version-specific NPC catalog override them.
         public Func<int, Sprite> SkillIcon;

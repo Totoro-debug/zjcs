@@ -1,0 +1,30 @@
+{
+  "manifest": "871_156598",
+  "operation": "Extend world character geometry from the preserved, verified native skeleton packages.",
+  "base_geometry_source": {
+    "path": "assets/reference/character-creation/native-geometry-source-manifest.json",
+    "sha256": "add23daf878fd194ce7c80a4ef1785db9d61d608164ca45b82fd8df7db08b5a6"
+  },
+  "prerequisite": {
+    "path": "assets/reference/profession-ui/skeleton-data-source-manifest.json",
+    "sha256": "5e97038f987d2760cfa49ceaab182d52fac67ae29b43681a4b6ad612e2fdcd34"
+  },
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/ProfessionUI/NativeSkeletonData/Resources/ProfessionUI/NativeSkeletons/male.bytes",
+      "sha256": "7209fd0c72cbc5b32f44374d0c8921b9fe53d60b1dd404da3fc068359415f41f"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/NativeSkeletonData/Resources/ProfessionUI/NativeSkeletons/female.bytes",
+      "sha256": "6f12515b949321a7697392b81b99e4a3c293b729bf832cf324979cdc12ec2bef"
+    }
+  ],
+  "output": "unity/Assets/Game/Resources/CharacterCreation/native-character-geometry.json",
+  "output_sha256": "708e29e7893a2114f5ea428cc4950f2ffede059e885e8b016e7442f9c2556a5d",
+  "generator_sha256": "0d804718be8a3e0ebc2fd1eab4b4b5d2e27c27eb7b14fe561bde0702d2c447b8",
+  "counts": {
+    "male": 16588,
+    "female": 17358
+  },
+  "scope": "All original region/mesh skin attachments. Existing coordinates are checked unchanged. Point, bounding box, clipping and path records do not create renderers; animation/constraint evaluation is unchanged."
+}

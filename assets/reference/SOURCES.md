@@ -4,7 +4,13 @@
 
 本页只记录官方输入与来源凭据。各模块的原始实现、转换／绑定细节、当前实现和验证边界见所属功能／地图页；逐文件记录以模块来源清单为准。
 
+游记布局补充输入：`prepare_travel_entry_layout.py` 读取当前 APK 中 `defaultpackage_assets_prefabs_ui_home.bundle`，严格核对其与历史 `871_156598` 清单的字节身份相同（353,152 字节，SHA256 `78b8a1151fcd575ce7dd6d98511b788853ba71730dbd620bf8e5917eabebd9c2`），再解码原组件字段。原 prefab PathID、逐组件原字节哈希、解码程序集、原脚本和输出哈希集中记录于 [游记布局凭据](dungeon-ui/prefab-binding-source-manifest.json) 的 `travel_entry_layout`；历史输入凭据保持原值，当前 APK 仅记录为相同包的新位置。
+
 ## 输入身份与版本
+
+世界人物附件补充输入：复用已保存且逐文件哈希匹配的 `ProfessionUI/NativeSkeletons/{male,female}.bytes`（871_156598），验证内部骨骼、图集与创角几何相同，补出全部原 region／mesh 皮肤附件；未重新使用当前不同版本 APK。原包和压缩块哈希、基础几何来源及派生输出见[世界人物附件凭据](character-creation/world-append-geometry-source-manifest.json)。
+
+战斗相机输入：`prepare_battle_camera_bindings.py` 沿既有场景布局清单的固定 bundle 身份提取229个场景、256个 GameId 的原 `GameCameraIniter`、虚拟相机、群组及 FramingTransposer。当前 APK 中 FightSettings 对象的原始 SHA256 为 `0a5fb09f4a312602cd0c6e4d798c15f9017923b8393b164f2bfb39361b7c45ec`，与既有历史对象相同；各 bundle、对象、程序集及输出哈希见 [相机来源清单](battle-scenes/camera-source-manifest.json)。
 
 | 输入 | 固定身份／位置 |
 | --- | --- |

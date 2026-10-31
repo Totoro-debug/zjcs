@@ -146,6 +146,8 @@ namespace Zjcs.Presentation.Home
                 WorldRoot = battleRoot,
                 EnvironmentGameId = scene.gameId,
                 HudParent = host.Hud.CanvasTransform,
+                HostPresentation = new OfficialBattleHostPresentation(host.Scene.Camera,
+                    host.Scene.Root.transform, host.Hud.CanvasTransform, host.SetBattlePresentationActive),
                 AnimationGroupResolver = unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
                 RestoreCheckpoint = restore,
                 StatueProgress = host.Profile
@@ -286,6 +288,8 @@ namespace Zjcs.Presentation.Home
             opponent.Direction = guardFaction.entryDirections != null && guardFaction.entryDirections.Length > 0
                 ? guardFaction.entryDirections[0] : 1;
             opponent.MonsterId = guard.monsterId;
+            // Guard combat properties use MonsterId; presentation uses the original role player.
+            opponent.MonsterTemplateId = 3100;
             opponent.MonsterGroupNo = guard.monsterGroupId;
             opponent.MaxHpPlies = combat.MonsterHpPliesFor(guard.monsterId,
                 guard.monsterGroupId, guard.level);

@@ -12,6 +12,8 @@ namespace Zjcs.Presentation.Combat
     {
         private FightBattleExecutor executor;
         private IDisposable renderPipelineScope;
+        private OfficialBattleHostPresentation.Scope hostPresentation;
+        private OfficialBattleCameraView cameraView;
         private OfficialBattleSceneView sceneView;
         private OfficialBattleHudView hudView;
         private GameObject hudRoot;
@@ -68,9 +70,13 @@ namespace Zjcs.Presentation.Combat
         public void SetHudVisible(bool visible)
         {
             hudVisible = visible;
+            if (!visible) cameraView?.SetVisible(false);
+            hostPresentation?.SetVisible(visible);
+            if (visible) cameraView?.SetVisible(true);
             if (hudRoot != null) hudRoot.SetActive(visible);
         }
         public bool HasBattleEnvironment => environmentView != null;
+        public bool OwnsPresentationCamera => cameraView != null;
 
         public bool TryGetSceneCamera(out Vector3 position, out float orthographicSize)
         {
@@ -157,6 +163,7 @@ namespace Zjcs.Presentation.Combat
             GameObject nextHudRoot = null;
             try
             {
+                hostPresentation = request.HostPresentation?.Capture(worldRoot);
                 var pipelineAssets=Resources.Load<OfficialBattleRenderPipelineAssets>("Combat/OfficialBattleRenderPipelineAssets");
                 if(pipelineAssets!=null)renderPipelineScope=pipelineAssets.Enter();
                 nextNativeModels = OfficialBattleNativeAnimationLibrary.LoadDefault();
@@ -184,6 +191,12 @@ namespace Zjcs.Presentation.Combat
                 sceneView = nextScene;
                 nativeModelLibrary = nextNativeModels;
                 environmentView = nextEnvironment;
+                if (hostPresentation != null)
+                {
+                    if (TryGetSceneCamera(out Vector3 cameraPosition, out float cameraSize))
+                        hostPresentation.SetCamera(cameraPosition, cameraSize);
+                    hostPresentation.SetVisible(hudVisible);
+                }
                 hudRoot = nextHudRoot;
                 skillIconResolver = skillIcon;
                 timelinePortraitResolver = timelinePortrait;
@@ -208,6 +221,13 @@ namespace Zjcs.Presentation.Combat
                 if (phases.Phase == FightBattlePhase.PlayStart) phases.StartPlay();
                 hudView.RefreshPhase(phases.Phase, sessionOptions);
                 hudView.RefreshPrepareCountdown(phases.CountdownRemaining);
+                if (hostPresentation?.Camera != null && TryGetSceneCamera(out Vector3 initialCamera, out float _))
+                {
+                    cameraView = new OfficialBattleCameraView(hostPresentation.Camera, worldRoot,
+                        environmentGameId, initialCamera, sceneView.Body);
+                    cameraView.Refresh(checkpoint, Phase);
+                    cameraView.SetVisible(hudVisible);
+                }
                 if (hudRoot != null) hudRoot.SetActive(hudVisible);
             }
             catch
@@ -221,6 +241,8 @@ namespace Zjcs.Presentation.Combat
                     if (nextHudRoot != null) Destroy(nextHudRoot);
                     renderPipelineScope?.Dispose();
                     renderPipelineScope=null;
+                    hostPresentation?.Dispose();
+                    hostPresentation = null;
                 }
                 throw;
             }
@@ -417,6 +439,7 @@ namespace Zjcs.Presentation.Combat
             }
             hudView?.Tick(Time.unscaledDeltaTime);
             sceneView?.Tick(Time.deltaTime);
+            if (executor != null) cameraView?.Refresh(Checkpoint, Phase);
             if (!paused) stepPlayback?.Tick(Time.deltaTime);
         }
 
@@ -439,6 +462,10 @@ namespace Zjcs.Presentation.Combat
 
         public void DisposeSession()
         {
+            cameraView?.Dispose();
+            cameraView = null;
+            hostPresentation?.Dispose();
+            hostPresentation = null;
             stepPlayback?.Cancel();
             stepPlayback = null;
             remainingStepDelay = 0f;

@@ -19,12 +19,9 @@ namespace Zjcs.Presentation.Home
         private OfficialSkillDamageTestRequest request;
         private OfficialBattleRuntimeController controller;
         private Transform battleRoot, playerTransform, previousPlayerParent;
-        private Vector3 previousPlayerPosition, previousPlayerScale, previousCameraPosition;
-        private Quaternion previousPlayerRotation, previousCameraRotation;
-        private Camera battleCamera;
-        private float previousCameraSize;
+        private Vector3 previousPlayerPosition, previousPlayerScale;
+        private Quaternion previousPlayerRotation;
         private bool complete;
-        private readonly List<GameObject> hiddenHomeObjects = new List<GameObject>();
         public event Action<FightBattleCheckpoint> Completed;
         public event Action Left;
         public OfficialBattleRuntimeController Controller => controller;
@@ -66,6 +63,8 @@ namespace Zjcs.Presentation.Home
                 Checkpoint = checkpoint,
                 WorldRoot = battleRoot,
                 HudParent = host.Hud.CanvasTransform,
+                HostPresentation = new OfficialBattleHostPresentation(host.Scene.Camera,
+                    host.Scene.Root.transform, host.Hud.CanvasTransform, host.SetBattlePresentationActive),
                 AnimationGroupResolver = unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
                 CombatAssets = assets,
                 EnvironmentGameId = stage.GameId,
@@ -84,17 +83,6 @@ namespace Zjcs.Presentation.Home
                 foreach (int map in host.Profile.Save.Player.UnlockedMapClassIds ?? new List<int>()) context.UnlockedMapClassIds.Add(map);
                 return host.DailyDungeonProgression.Catalog.EvaluateCondition(conditionId, context);
             });
-            if (controller.TryGetSceneCamera(out var position, out float size) && host.Scene.Camera != null) {
-                battleCamera = host.Scene.Camera;
-                previousCameraPosition = battleCamera.transform.position; previousCameraRotation = battleCamera.transform.rotation;
-                previousCameraSize = battleCamera.orthographicSize;
-                battleCamera.transform.position = position; battleCamera.orthographicSize = size;
-            }
-            foreach (Transform child in host.Scene.Root.transform)
-                if (child.gameObject.activeSelf && child.gameObject != host.Scene.Camera.gameObject) {
-                    hiddenHomeObjects.Add(child.gameObject);
-                    child.gameObject.SetActive(false);
-                }
         }
 
         private void Update()
@@ -121,18 +109,12 @@ namespace Zjcs.Presentation.Home
         private void OnDestroy() => DisposeBattle();
         private void DisposeBattle()
         {
-            foreach (GameObject homeObject in hiddenHomeObjects) if (homeObject != null) homeObject.SetActive(true);
-            hiddenHomeObjects.Clear();
             if (controller != null) {
                 controller.HudControlClicked -= OnControl; controller.DisposeSession(); Destroy(controller); controller = null;
             }
             if (playerTransform != null) {
                 playerTransform.SetParent(previousPlayerParent, false); playerTransform.localPosition = previousPlayerPosition;
                 playerTransform.localRotation = previousPlayerRotation; playerTransform.localScale = previousPlayerScale; playerTransform = null;
-            }
-            if (battleCamera != null) {
-                battleCamera.transform.position = previousCameraPosition; battleCamera.transform.rotation = previousCameraRotation;
-                battleCamera.orthographicSize = previousCameraSize; battleCamera = null;
             }
             if (battleRoot != null) { Destroy(battleRoot.gameObject); battleRoot = null; }
         }

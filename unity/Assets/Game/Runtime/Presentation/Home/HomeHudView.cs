@@ -96,8 +96,8 @@ namespace Zjcs.Presentation.Home
             CanvasScaler scaler = go.GetComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1080, 1920);
-            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-            scaler.matchWidthOrHeight = 0.5f;
+            // UIUtils.GetCanvasScaleFactor uses the smaller width/height ratio.
+            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
         }
 
         private static void EnsureEventSystem()

@@ -269,6 +269,8 @@ namespace Zjcs.Presentation.Home
                 WorldRoot = battleRoot,
                 EnvironmentGameId = scene.gameId,
                 HudParent = battleCanvas,
+                HostPresentation = host == null ? null : new OfficialBattleHostPresentation(
+                    host.Scene.Camera, host.Scene.Root.transform, battleCanvas, host.SetBattlePresentationActive),
                 SkillIcon = itemId => skillIcons == null ? fallback : skillIcons.Find(itemId) ?? fallback,
                 TimelinePortrait = unit => unit.MonsterId > 0 && portraits != null
                     ? portraits.Find(combat.MonsterIconId(unit.MonsterId)) ?? fallback : fallback,

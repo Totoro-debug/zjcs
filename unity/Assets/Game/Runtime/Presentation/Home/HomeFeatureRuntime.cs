@@ -973,12 +973,9 @@ namespace Zjcs.Presentation.Home
         private void BuildHomePlayer()
         {
             EnsureProgression();
-            CharacterCreationAssetCatalog creationAssets = CharacterCreationAssetCatalog.LoadDefault();
-            var creationService = new CharacterCreationOfflineService(slots, creationAssets,
-                OfficialCharacterAssetCatalog.LoadDefault());
             homePlayer = new HomePlayerActorView(scene,
                 Path.Combine(Application.streamingAssetsPath, HomeAssetCatalog.FolderName, "player-runtime.json"),
-                profile.Save.Player.Wardrobe, progression, creationAssets, creationService);
+                slotId, savesRoot);
         }
 
         public void RefreshIncomeCatalog()
@@ -1782,11 +1779,18 @@ namespace Zjcs.Presentation.Home
             Destroy(gameObject);
         }
 
+        private int activeBattlePresentations;
+
+        internal void SetBattlePresentationActive(bool active)
+        {
+            activeBattlePresentations = Math.Max(0, activeBattlePresentations + (active ? 1 : -1));
+        }
+
         private void Update()
         {
             // The damage-test scene owns input and presentation until its battle ends.
             // Home income catches up from its existing timestamp on return.
-            if (hud != null && hud.SkillDamageTestRunning) return;
+            if (activeBattlePresentations > 0 || hud != null && hud.SkillDamageTestRunning) return;
             input?.Update();
             TickAstrologicalCharge();
             environment?.Tick(Time.unscaledDeltaTime);

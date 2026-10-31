@@ -2,7 +2,7 @@
   "bindings": {
     "meta_sha256": "edd247e4d1a84032754c9e7611ac3a39bce64403851cd87a5403a44e186d721c",
     "path": "unity/Assets/StreamingAssets/Dungeons/UI/official-bindings.json",
-    "sha256": "1e76b98d75fdbce52ff65a8f74f6cd207dbccd3d69f2755a7537735ae3ed8b2b"
+    "sha256": "9109e4c4d1ca5b31e1be104d51c2dd60748b8539128e47a9a3994eddbe96638e"
   },
   "code_sources": [
     {
@@ -1355,5 +1355,331 @@
       "path": "unity/Assets/StreamingAssets/Dungeons/UI/Sprites/defaultpackage_assets_image_ui_task/ImgCompleted-73eff6add641.png",
       "sha256": "baacd2269c2721dc9706bac4d7dac2399c0f440989acceb603eb818a11527bc1"
     }
-  ]
+  ],
+  "travel_entry_layout": {
+    "extractor": {
+      "bytes": 7956,
+      "path": "scripts/prepare_travel_entry_layout.py",
+      "sha256": "e5db6d95ba7b9b49067b419f44f7c2611e9f2df7fd80d236bf2bf7f393e77891"
+    },
+    "identical_input_location": {
+      "apk_entry": "assets/yoo/DefaultPackage/66767d90c4dd409e17ade6a2e0b8e224.bundle",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "bundle": "defaultpackage_assets_prefabs_ui_home.bundle",
+      "bundle_hash": "66767d90c4dd409e17ade6a2e0b8e224",
+      "manifest": "884_156692",
+      "origin": "apk_zip",
+      "path_id": "7086830388728347849",
+      "raw_sha256": "78b8a1151fcd575ce7dd6d98511b788853ba71730dbd620bf8e5917eabebd9c2",
+      "raw_size": 353152
+    },
+    "objects": [
+      {
+        "bytes": 48,
+        "objects": [
+          "TravelNotesPanel",
+          "BgPanel1",
+          "Content"
+        ],
+        "path_id": "-2599159361792852791",
+        "sha256": "f45da3763bb6325a85fdf3df7f9e1df17580f03bad0b86a3b907faed8419ed27",
+        "type": "SafeArea"
+      },
+      {
+        "bytes": 40,
+        "objects": [
+          "TravelNotesPanel",
+          "BgPanel1",
+          "Content",
+          "MiddleGo",
+          "Content",
+          "FirstPage"
+        ],
+        "path_id": "2810892304105979081",
+        "sha256": "03f51f51e0ea756a4ce18b352ed084bd494d7ceaa9928e1ff4c868540d246cbd",
+        "type": "AspectRatioFitter"
+      },
+      {
+        "bytes": 512,
+        "objects": [
+          "TravelNotesPanel",
+          "BgPanel1",
+          "Content",
+          "MiddleGo",
+          "Content",
+          "FirstPage",
+          "DailyDungeonEntry"
+        ],
+        "path_id": "-915188597947122487",
+        "sha256": "65e5ccf3d00ccc88897c6bf80a5ca6c41877ab8f719e814ff2c5a361a0d5e120",
+        "type": "DailyDungeonEntry"
+      },
+      {
+        "bytes": 80,
+        "objects": [
+          "TravelNotesPanel",
+          "BgPanel1",
+          "Content",
+          "MiddleGo",
+          "Content",
+          "FirstPage",
+          "DailyDungeonEntry",
+          "NoteUnlockContent",
+          "EntryBtn"
+        ],
+        "path_id": "8383933020986064073",
+        "sha256": "65b9e1045031958e4c80ed3ce77704bcfd99aba9ffdaeec9dd58ede3b7f8dc46",
+        "type": "NoDrawingRayCast"
+      },
+      {
+        "bytes": 80,
+        "objects": [
+          "TravelNotesPanel",
+          "BgPanel1",
+          "Content",
+          "MiddleGo",
+          "Content",
+          "FirstPage",
+          "DailyDungeonEntry",
+          "NoteUnlockContent",
+          "CommonBtn_OutputAdditionDetail",
+          "Content",
+          "Raycast"
+        ],
+        "path_id": "-5947840079683928887",
+        "sha256": "1387667f1e19d7d5f07941431669d912f5a1174c4f64d550573cfd67117dcf10",
+        "type": "NoDrawingRayCast"
+      },
+      {
+        "bytes": 768,
+        "objects": [
+          "TravelNotesPanel",
+          "BgPanel1",
+          "Content",
+          "MiddleGo",
+          "Content",
+          "FirstPage",
+          "DemonBattleEntry"
+        ],
+        "path_id": "7571626545629543625",
+        "sha256": "1fe885d6f71391be402fbb6131a8e67ecc5af61637bc418fae29fcd61da986a2",
+        "type": "DemonBattleEntry"
+      },
+      {
+        "bytes": 80,
+        "objects": [
+          "TravelNotesPanel",
+          "BgPanel1",
+          "Content",
+          "MiddleGo",
+          "Content",
+          "FirstPage",
+          "DemonBattleEntry",
+          "NoteUnlockContent",
+          "EntryBtn"
+        ],
+        "path_id": "4708670339563633865",
+        "sha256": "bcb6c99820b50fe13d2afcf741ff0bd2a03a47a0c0bd7845f1352654c351feb6",
+        "type": "NoDrawingRayCast"
+      },
+      {
+        "bytes": 80,
+        "objects": [
+          "TravelNotesPanel",
+          "BgPanel1",
+          "Content",
+          "MiddleGo",
+          "Content",
+          "FirstPage",
+          "NpcAdventureEntry",
+          "NoteUnlockContent",
+          "EntryBtn"
+        ],
+        "path_id": "-2989905645934363447",
+        "sha256": "e718be860e8fe68578f1ff0ee046cf41843064b00a2771dca3a4871bd9553962",
+        "type": "NoDrawingRayCast"
+      },
+      {
+        "bytes": 80,
+        "objects": [
+          "TravelNotesPanel",
+          "BgPanel1",
+          "Content",
+          "MiddleGo",
+          "Content",
+          "FirstPage",
+          "NpcAdventureEntry",
+          "NoteUnlockContent",
+          "CommonBtn_OutputAdditionDetail",
+          "Content",
+          "Raycast"
+        ],
+        "path_id": "401264010020437193",
+        "sha256": "c3cc4e5421206cb0210448ad55e7e979899f096070a3f7f11d7e5a009757d7fa",
+        "type": "NoDrawingRayCast"
+      },
+      {
+        "bytes": 80,
+        "objects": [
+          "TravelNotesPanel",
+          "BgPanel1",
+          "Content",
+          "MiddleGo",
+          "Content",
+          "FirstPage",
+          "MapGamePlayEntry",
+          "NoteUnlockContent",
+          "EntryBtn"
+        ],
+        "path_id": "-5954327129196610359",
+        "sha256": "969770223c24080a1bc2f3632bef5be5a1d50689eff17db766d32df8a5e9bcec",
+        "type": "NoDrawingRayCast"
+      },
+      {
+        "bytes": 80,
+        "objects": [
+          "TravelNotesPanel",
+          "BgPanel1",
+          "Content",
+          "MiddleGo",
+          "Content",
+          "FirstPage",
+          "DailyActivityEntry",
+          "NoteUnlockContent",
+          "EntryBtn"
+        ],
+        "path_id": "5228925310239882441",
+        "sha256": "5cb9c6e1973de8e6736f610b987367efa4f8955bbbc671d8e0efb2911f9ef057",
+        "type": "NoDrawingRayCast"
+      },
+      {
+        "bytes": 472,
+        "objects": [
+          "TravelNotesPanel",
+          "BgPanel1",
+          "Content",
+          "MiddleGo",
+          "Content",
+          "FirstPage",
+          "ArenaAreaEntry"
+        ],
+        "path_id": "4042778651973041353",
+        "sha256": "17d95b4aff6bff693cda3e573e4af007911645dd6834db6fd826a083d6699f4b",
+        "type": "ArenaAreaEntry"
+      },
+      {
+        "bytes": 80,
+        "objects": [
+          "TravelNotesPanel",
+          "BgPanel1",
+          "Content",
+          "MiddleGo",
+          "Content",
+          "FirstPage",
+          "ArenaAreaEntry",
+          "NoteUnlockContent",
+          "EntryBtn"
+        ],
+        "path_id": "6317828696602754249",
+        "sha256": "a1d2c25f1dd26624ab990aaa00d875c672ff97098fd14137e43c5775084b33be",
+        "type": "NoDrawingRayCast"
+      },
+      {
+        "bytes": 80,
+        "objects": [
+          "TravelNotesPanel",
+          "BgPanel1",
+          "Content",
+          "MiddleGo",
+          "Content",
+          "FirstPage",
+          "NormalMaterialEntry",
+          "NoteUnlockContent",
+          "EntryBtn"
+        ],
+        "path_id": "6232526390879370441",
+        "sha256": "5d248b5da7993e056bfd84ae16ac28f880017435aa234b3e65b6f874ba71327a",
+        "type": "NoDrawingRayCast"
+      },
+      {
+        "bytes": 80,
+        "objects": [
+          "TravelNotesPanel",
+          "BgPanel1",
+          "Content",
+          "MiddleGo",
+          "Content",
+          "FirstPage",
+          "WeeklyActivityEntry",
+          "Content",
+          "NoteUnlockContent",
+          "EntryBtn"
+        ],
+        "path_id": "-6039793646983922487",
+        "sha256": "75456edc1e0d15ad886c4a4d62d3f4e7f39d7cdcfe880f518011ecbd0bdce6b4",
+        "type": "NoDrawingRayCast"
+      },
+      {
+        "bytes": 48,
+        "objects": [
+          "TravelNotesPanel",
+          "BgPanel1",
+          "Content",
+          "TopGo",
+          "NewPublicTopBarParent"
+        ],
+        "path_id": "-9162302216371323703",
+        "sha256": "d080d7e1262ce82337caa84ca11c64ea9c3afb8f717574fc4566ac81ab37936d",
+        "type": "SafeArea"
+      },
+      {
+        "bytes": 48,
+        "objects": [
+          "TravelNotesPanel",
+          "BgPanel1",
+          "Content",
+          "BottomGo",
+          "DownBg",
+          "SafaAreaGo"
+        ],
+        "path_id": "5056127896075615433",
+        "sha256": "db9da7922a94b9a92d72d6c9434189fc003c32743515bf1b74c09c966c1543a0",
+        "type": "SafeArea"
+      }
+    ],
+    "operation": "Restore omitted original SafeArea, AspectRatioFitter, NoDrawingRayCast and entry Button references. Selected bundle bytes and SafeArea implementation match the recorded original input. Historical input provenance remains unchanged; current identical bundle location is recorded separately.",
+    "output": {
+      "bytes": 6961411,
+      "path": "unity/Assets/StreamingAssets/Dungeons/UI/official-bindings.json",
+      "sha256": "9109e4c4d1ca5b31e1be104d51c2dd60748b8539128e47a9a3994eddbe96638e"
+    },
+    "previous_output": {
+      "bytes": 6952526,
+      "path": "unity/Assets/StreamingAssets/Dungeons/UI/official-bindings.json",
+      "sha256": "1e76b98d75fdbce52ff65a8f74f6cd207dbccd3d69f2755a7537735ae3ed8b2b"
+    },
+    "raycast_code": {
+      "bytes": 321,
+      "path": ".tools/source-packages/official-code/framework-firstpass-source/NoDrawingRayCast.cs",
+      "sha256": "d9a793a446c6912020aea93b4076ea7e8707f44be424d1391f99a48b4964b2e0"
+    },
+    "safe_area_code": {
+      "bytes": 16088,
+      "path": ".tools/source-packages/official-code/framework-firstpass-source/SafeArea.cs",
+      "sha256": "1aabb4bc2a5745bb3f532a323acad7a13918c439f015dfd751c9341327121509"
+    },
+    "schema_assemblies": [
+      {
+        "bytes": 256512,
+        "path": "unity/Library/ScriptAssemblies/UnityEngine.UI.dll",
+        "sha256": "b8a3f594db46b54c91517e3db9962199222f51050bf121bd3f0260adec350089"
+      },
+      {
+        "bytes": 1556344,
+        "path": "D:/Tool/Unity/Editor/Data/NetStandard/ref/2.1.0/netstandard.dll",
+        "sha256": "79a49049c360a3ff282e747c311fcd567834efde564a96689872564164756e84"
+      }
+    ]
+  }
 }

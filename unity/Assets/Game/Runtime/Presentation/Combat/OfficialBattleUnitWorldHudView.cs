@@ -64,6 +64,7 @@ namespace Zjcs.Presentation.Combat
         public static int ResolveUnitBarEntityId(FightBattleUnitState unit)
         {
             if (unit == null) return 0;
+            if (unit.CharacterType == 1) return 3100;
             if (unit.MonsterId > 0) return unit.MonsterId;
             if (unit.MonsterTemplateId > 0) return unit.MonsterTemplateId;
             return unit.CharacterType == 1 ? 3100 : 0;
@@ -72,6 +73,7 @@ namespace Zjcs.Presentation.Combat
         private static bool TryGetUnitBar(OfficialBattleHudCatalog catalog,
             FightBattleUnitState unit, out BattleUnitBarBinding binding)
         {
+            if (unit.CharacterType == 1 && catalog.TryGetUnitBar(3100, out binding)) return true;
             if (unit.MonsterId > 0 && catalog.TryGetUnitBar(unit.MonsterId, out binding)) return true;
             if (unit.MonsterTemplateId > 0
                 && catalog.TryGetUnitBar(unit.MonsterTemplateId, out binding)) return true;

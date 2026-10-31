@@ -239,7 +239,8 @@ namespace Zjcs.Presentation.CharacterCreation
 
         public void RefreshForCapture() => LateUpdate();
 
-        public void EnsureOriginalAppendSkins(IEnumerable<string> skins, Func<string, Texture2D> texture, Func<string, Color> slotColor)
+        public void EnsureOriginalAppendSkins(IEnumerable<string> skins, Func<string, Texture2D> texture,
+            Func<string, Color> slotColor, Func<string, int> slotOrder = null)
         {
             var wanted = new HashSet<string>(skins, StringComparer.Ordinal);
             var regions = new Dictionary<string, Region>(StringComparer.Ordinal);
@@ -264,6 +265,8 @@ namespace Zjcs.Presentation.CharacterCreation
                 var source = new GameObject("__skin__" + attachment.skin, typeof(MeshRenderer));
                 source.transform.SetParent(transform, false); source.layer = gameObject.layer;
                 var renderer = source.GetComponent<MeshRenderer>(); renderer.sharedMaterial = material;
+                renderer.sortingLayerID = draws[0].Source.sortingLayerID;
+                renderer.sortingOrder = slotOrder == null ? 0 : slotOrder(attachment.slot);
                 renderer.forceRenderingOff = true;
                 Vector2[] uvs = AttachmentUvs(attachment, region);
                 var vertices = attachment.kind == "mesh" ? MeshVertices(attachment, uvs.Length) : RegionVertices(attachment, uvs, region);

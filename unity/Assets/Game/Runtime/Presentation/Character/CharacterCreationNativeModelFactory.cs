@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using UnityEngine;
+using Zjcs.Offline.ProfessionUI;
 using Zjcs.Offline.CharacterCreation;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.State;
@@ -15,6 +17,34 @@ namespace Zjcs.Presentation.CharacterCreation
         private static readonly int DyeHsv1Id = Shader.PropertyToID("_DyeHsv1");
         private static readonly int DyeHsv2Id = Shader.PropertyToID("_DyeHsv2");
         private static readonly int DyeHsv3Id = Shader.PropertyToID("_DyeHsv3");
+
+        private static void EnsureNativeAppearance(CharacterNativeAttachmentGeometry geometry, int sex,
+            IEnumerable<string> activeSkins)
+        {
+            string body = sex == 1 ? "female" : "male";
+            var source = ProfessionNativeSkeletonData.LoadResource(body);
+            var slots = source.CreateSlotPose(source.CreateBonePose());
+            var indices = Enumerable.Range(0, slots.Count).ToDictionary(slots.Name, value => value);
+            var textures = Resources.Load<ProfessionNativeTextureCatalog>("ProfessionUI/character-textures");
+            if (textures == null) throw new InvalidOperationException("Original character append textures are unavailable.");
+            var existingRenderers = new HashSet<Renderer>(geometry.GetComponentsInChildren<Renderer>(true));
+            geometry.EnsureOriginalAppendSkins(activeSkins, page => textures.Find(body, page).Main,
+                slot => slots.Color(indices[slot]), slot => indices[slot]);
+            var assets = CharacterCreationAssetCatalog.LoadDefault();
+            var skins = new Dictionary<string, CharacterCreationSkinInfo>(StringComparer.Ordinal);
+            foreach (var definition in OfficialCharacterAssetCatalog.LoadDefault().Load().Skins.Values)
+                if (assets.TryGetSkinInfo(definition.SkinId, out var info)) skins[info.Name] = info;
+            foreach (Renderer renderer in geometry.GetComponentsInChildren<Renderer>(true))
+            {
+                if (existingRenderers.Contains(renderer)
+                    || !renderer.name.StartsWith(SkinVariantPrefix, StringComparison.Ordinal)
+                    || renderer.GetComponent<CharacterCreationDyeMapBinding>() != null
+                    || !skins.TryGetValue(renderer.name.Substring(SkinVariantPrefix.Length), out var skin)) continue;
+                renderer.gameObject.AddComponent<CharacterCreationDyeMapBinding>()
+                    .Bind(skin.Type, skin.HasDye
+                        ? textures.Find(body, renderer.sharedMaterial.mainTexture.name).Dye : null);
+            }
+        }
 
         public static GameObject CreateWorldModel(string slotId, string persistentDataPath, out string characterName)
         {
@@ -35,25 +65,31 @@ namespace Zjcs.Presentation.CharacterCreation
             GameObject prefab = sex == 1 ? assets.FemaleNativeModelPrefab : assets.MaleNativeModelPrefab;
             if (prefab == null) throw new InvalidOperationException("Official native character model is not installed.");
 
-            var skinByType = new Dictionary<int, int>();
+            OfficialCharacterCatalog characterCatalog = OfficialCharacterAssetCatalog.LoadDefault().Load();
+            var state = new WardrobeAppearanceState { Sex = sex, Profession = profession };
             foreach (CharacterCreationSkinInfo skin in assets.GetDefaultSkinInfos(sex, profession))
-                skinByType[skin.Type] = skin.Id;
+                state.BaseSkinByType[skin.Type] = skin.Id;
             foreach (KeyValuePair<int, int> appearance in appendAppearances ??
                          new Dictionary<int, int>())
             {
-                if (!assets.TryGetSkinInfo(appearance.Value, out CharacterCreationSkinInfo skin)
+                // AppendAppearances contains item ClassIds, resolved by sex via SkinDict.
+                if (!characterCatalog.Appearances.TryGetValue(appearance.Value, out WardrobeItemDefinition item)
+                    || !item.SkinBySex.TryGetValue(sex, out int skinId)
+                    || !assets.TryGetSkinInfo(skinId, out CharacterCreationSkinInfo skin)
                     || skin.Type != appearance.Key)
                     throw new InvalidOperationException("Official arena guard appearance is invalid: "
                         + appearance.Key + "/" + appearance.Value);
-                skinByType[appearance.Key] = appearance.Value;
+                state.AppendedItemByType[appearance.Key] = appearance.Value;
             }
+            WardrobeResolution appearanceResolution = OfflineWardrobeRules.Resolve(state,
+                characterCatalog.Appearances, characterCatalog.Skins, characterCatalog.AllowedSkins);
 
             GameObject model = UnityEngine.Object.Instantiate(prefab);
             model.name = "ArenaGuardCharacter";
             try
             {
                 var activeSkins = new HashSet<string>(StringComparer.Ordinal);
-                foreach (int skinId in skinByType.Values)
+                foreach (int skinId in appearanceResolution.SkinByType.Values)
                 {
                     if (!assets.TryGetSkinInfo(skinId, out CharacterCreationSkinInfo skin))
                         throw new InvalidOperationException("Official arena guard skin is missing: " + skinId);
@@ -71,7 +107,9 @@ namespace Zjcs.Presentation.CharacterCreation
                     throw new InvalidOperationException("Official native character model has no Animator controller.");
                 animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
                 animator.applyRootMotion = false;
-                model.AddComponent<CharacterNativeAttachmentGeometry>().Initialize(sex == 1 ? "female" : "male");
+                var geometry = model.AddComponent<CharacterNativeAttachmentGeometry>();
+                geometry.Initialize(sex == 1 ? "female" : "male");
+                EnsureNativeAppearance(geometry, sex, activeSkins);
                 return model;
             }
             catch
@@ -125,7 +163,6 @@ namespace Zjcs.Presentation.CharacterCreation
                 var channelsByType = new Dictionary<int, Vector4[]>();
                 foreach (int skinType in appearance.SkinByType.Keys)
                     channelsByType[skinType] = creationService.GetDyeHsvChanges(appearanceDraft, skinType);
-                ApplyDyeChannels(model, channelsByType);
 
                 Animator animator = model.GetComponent<Animator>();
                 if (animator == null || animator.runtimeAnimatorController == null)
@@ -133,7 +170,10 @@ namespace Zjcs.Presentation.CharacterCreation
                 animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
                 animator.applyRootMotion = false;
                 characterName = session.Save.Player.CharacterName;
-                model.AddComponent<CharacterNativeAttachmentGeometry>().Initialize(sex == 1 ? "female" : "male");
+                var geometry = model.AddComponent<CharacterNativeAttachmentGeometry>();
+                geometry.Initialize(sex == 1 ? "female" : "male");
+                EnsureNativeAppearance(geometry, sex, activeSkins);
+                ApplyDyeChannels(model, channelsByType);
                 return model;
             }
             catch

@@ -243,6 +243,12 @@ namespace Zjcs.Editor.Skills
             OfficialSkillRecommendationSet recommendations = assets.LoadSkillRecommendations();
             progression.AttachSkillRules(assets.LoadSkillRules(), recommendations.recommendations);
             ValidateOriginalDetailProperties(progression);
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_ACCEPTANCE") == "1")
+            {
+                yield return HomeBattleHostPlayModeAcceptance.Exercise(slot, root, ValidationDirectory, SimulatePointerClick);
+                Finish(true, null);
+                yield break;
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_HOME_ONLY") == "1") {
                 Require(session.ApplyCharacterMutation(player => {
                     player.Level = 40;

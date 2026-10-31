@@ -18,6 +18,8 @@
 
 战斗预览对象在编辑模式校验结束时使用 `DestroyImmediate` 清理创建的模型网格、材质、贴图、HUD、挂载父节点及临时 SortingGroup；运行时仍使用 `Destroy`。已有地图角色在释放临时父节点前恢复原父级、姿态及动画，原有 SortingGroup 仅恢复状态。该处理不删除导入资产，避免 `ProjectTools.Validate` 结束时留下编辑模式销毁错误。
 
+公共表现上下文 `OfficialBattleHostPresentation` 捕获调用方相机及可见根节点，战斗前台显示时暂停主城更新并隐藏原场景／HUD，退出或转入后台时恢复原相机投影、姿态和显隐。`OfficialBattleCameraView` 消费原 `GameCameraIniter.Adaptor` 的宽高比和尺寸，并复用已安装的 Cinemachine 及原群组取景字段；256个 GameId 的绑定由 `prepare_battle_camera_bindings.py` 可复现提取，来源见[相机清单](../../assets/reference/battle-scenes/camera-source-manifest.json)。日常、竞技、阶梯、技能测试及主线入口共用该相机实现。日常副本已实际执行至结算并检查新截图，人物及脚下血条对齐、敌我准备阵列可见；日常、竞技、阶梯的实际结算与主城恢复集成均已通过，竞技守卫职业服装和头发层级也已在实际战斗截图核对；技能测试与主线入口的本轮回归仍待完成。相机手动拖拽／缩放、原镜头偏移混合及全部场景画面尚未验收，不能据此声称完整相机迁移。
+
 ## 原始官方实现
 
 战斗以官方 Fight 共享实现、实体组件、技能／状态配置及客户端表现为依据；公式、执行阶段、目标选择、冷却、护盾、状态与结束链保持原顺序。客户端与共享代码不包含的服务器统计、合并及结算规则按本页已确认的本地裁决接线。
@@ -170,9 +172,12 @@ prepare_home_ui.py 从固定 871_156598 的 FurnitureFastHangUpDialog、其 Item
 - `FightBattleResultRules` 提供标准清场、显式保护目标和显式玩家对决三种可配置结果策略；主角死亡、保护目标死亡、双方全灭和回合上限的优先级属于离线策略，调用方必须明确参与者，不能从地图或同阵营猜测。
 - `FightBattlePreparationPositions` 用调用方提供的控制名单替代服务器站位请求，保留官方格网／身体占格校验，允许合法受控单位交换位置。
 - `FightVoodooDollRules` 按已确认方案实现替身：传导完整结算伤害（包括溢出）为绕盾真实伤害，禁止治疗传导，替身结束时转移减益并保留原状态计时／叠层语义；来源和同步实体 ID 仍使用官方配置。
+- 用户确认子技能不单独培养，原技能变化时子技能随之变化。`DamageChildSkillCfg` 命中子技能与 `FightSkillExtSkillComponent` 动作结束附加技能继承触发技能的品阶、完整技能等级及位阶，再按各自官方 `entity_prop` 的品阶／等级表与 `PropFactors` 计算，概率和血量条件继续读取原配置；不用受创者或施放者的人物等级替代技能槽级。官方包只取得配置类，未取得服务器继承实现，因此此继承接线记录为用户确认的单机方案；当前单层递归限制尚未补齐。
 - 服务器未提供的 AI 评分、随机命中、复杂触发顺序、伤害阶段钩子、位移条件、召唤数量／寿命、战报聚合和部分元素／减伤组合只实现了有明确配置或已确认口径的分支，其余保持未决，不把近似结果写成官方规则。
 
 ### 已确认的本地接线与边界
+
+派生技能培养回归：`test_battle_child_skill.ps1`／`test_battle_extra_skill.ps1` 验证原 63434→24658 的来源品阶 6、等级 17、位阶 10 及状态检查点恢复，另以原 11050 的实际伤害检查培养参数参与数值计算。带画面 Play Mode 使用隔离回归夹具将原 63434／24658 接到测试技能的命中子技能和动作结束附加技能路径，模拟开始／倍速后，后续状态均保留原技能品阶 6、完整槽级 13 和位阶 10，三入口执行至真实胜负并返回主城，已查看实际截图；夹具不修改交付配置，不表示原 10014 配有这些效果。Unity 导入／编译、`ProjectTools.Validate`、状态施加、技能开始／结束及检查点回归通过；未构建或发布本项 Windows Player，不能据此声明完整子技能演出或递归链已完成。
 
 prepare_treasure_tasks.py补充固定871_156598的BattleEventType、原TreasureDataBattleStatus／TreasureDataGameDestroyMonsterKind、BlackboardDataType及MapEntityWorldStageType来源继续保留，75件选择键和配置未改变。本项只有代码输入及运行时接线，没有新增素材。服务端事件写入方法未取得，实际触发按用户确认迁移为本地接线，确认原文与实施核对仅记录于对应功能／地图文档。
 
@@ -214,7 +219,7 @@ prepare_treasure_tasks.py补充固定871_156598的BattleEventType、原TreasureD
 
 已执行并通过：`test_battle_step_timing.ps1`、`test_battle_phase_machine.ps1`、`test_battle_checkpoint_persistence.ps1`、`test_battle_cooldown_status.ps1`、`test_battle_report.ps1`（使用 PowerShell 7）。它们验证已有规则时序、阶段、序列化恢复、CD 与统计，不代表新请求接口或场景接线已通过运行验收。综合 `test_unity_combat.ps1` 因缺少未受 Git 管理的 `assets/reference/battle-rules/damage-reference.json` 停止，未生成替代预期值。
 
-Unity 2022.3.57f1c2 许可证已恢复，内置屏启动的主工程已完成运行时及编辑器程序集编译；用户授权手动补入的 `OfficialMap13NpcFollowerView` 和创角验证程序集的 State 依赖修复了类型编译缺口。`Zjcs.Editor.ProjectTools.Validate` 已通过战斗规则、配置、HUD 与 Map10 资产检查。首次全量导入另出现既有 `TMPEffect.OnValidate` 空引用和 Spine 自动导入原 Atlas 的异常；前者已按字体绑定就绪状态修复，并通过原文字效果完整 Play Mode 验证，后者仍属于原 Atlas 自动导入问题，故不将首次导入称为零异常导入。Map15 档案多余的构造参数已修复并经再次编译确认不再报错。Map10 战斗已通过模拟指针回归并实际查看七张准备／播放／缩放／聊天／返回地图画面；日常副本、竞技场、幻境之塔入口、冷存档恢复及 Windows Player 构建发布仍须验证，不能将接口重构标为完整战斗迁移完成。Map13 手动显示实现及限制维护于[泽之国](../maps/map-13.md)。`python -B scripts/check_unity_project.py` 已通过（80,659 个 GUID），此前发现的六个既有资产目录缺少 `.meta` 已补充稳定目录 GUID，未改动资产载荷。
+Unity 2022.3.57f1c2 许可证已恢复，内置屏启动的主工程已完成运行时及编辑器程序集编译；用户授权手动补入的 `OfficialMap13NpcFollowerView` 和创角验证程序集的 State 依赖修复了类型编译缺口。`Zjcs.Editor.ProjectTools.Validate` 已通过战斗规则、配置、HUD 与 Map10 资产检查。首次全量导入另出现既有 `TMPEffect.OnValidate` 空引用和 Spine 自动导入原 Atlas 的异常；前者已按字体绑定就绪状态修复，并通过原文字效果完整 Play Mode 验证，后者仍属于原 Atlas 自动导入问题，故不将首次导入称为零异常导入。Map15 档案多余的构造参数已修复并经再次编译确认不再报错。Map10 战斗已通过模拟指针回归并实际查看七张准备／播放／缩放／聊天／返回地图画面；日常副本、竞技场和幻境之塔已另通过直接调用公共 runner 的实际战斗与结算回归；完整游记 UI 入口、冷存档恢复及 Windows Player 构建发布仍须验证，不能将接口重构标为完整战斗迁移完成。Map13 手动显示实现及限制维护于[泽之国](../maps/map-13.md)。`python -B scripts/check_unity_project.py` 已通过（80,737 个 GUID），此前发现的六个既有资产目录缺少 `.meta` 已补充稳定目录 GUID，未改动资产载荷。
 
 NPC 外观复用验证：`OfficialMap12NpcBattleModelView` 是现有 Map12 队伍战斗的原生模型适配器。隔离 Unity 2022.3.57f1c2 内置屏 Play Mode 使用当前编译程序集和同版原 NPC 数据，调用其构造、`Play("idle_01")`、`Tick` 并实际渲染8402／8440／8441／8442，分别得到469／483／606／444个网格顶点；四者均绑定 `Texture2D.whiteTexture`，四张运行画面均为白色多边形，原贴图检查4／4失败。因此它尚不能作为已验证可用的公共 NPC 显示实现。本次未将其复制为 Map13 跟随者。代码核对另确认 `BuildMaterials` 使用白纹理并按批次序号取材质，`EvaluateNativeAnimation` 只应用局部动画通道，未执行 NPC 的 IK／transform／path／physics 约束。须先恢复原图集页、原材质及批次页／混合模式绑定和完整约束，再验证实际技能动作、位移、受击、结束与存档流程；数据读取、非空网格和待机名称解析不能作为可用证明。用户授权手动实现的 Map13 显示类另行恢复了原图集、材质和部分待机约束，四类彩色动态网格检查已通过；完整物理约束和正式流程未通过前不替换现有战斗适配器，具体范围见[泽之国](../maps/map-13.md)。
 

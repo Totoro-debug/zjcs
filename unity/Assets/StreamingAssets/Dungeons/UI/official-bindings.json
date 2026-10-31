@@ -2,7 +2,70 @@
   "manifest": "871_156598",
   "prefabs": [
     {
+      "aspectRatioFitters": [
+        {
+          "aspectMode": 3,
+          "aspectRatio": 0.6299999952316284,
+          "enabled": true,
+          "objects": [
+            "TravelNotesPanel",
+            "BgPanel1",
+            "Content",
+            "MiddleGo",
+            "Content",
+            "FirstPage"
+          ],
+          "path": "0/1/0/0/0"
+        }
+      ],
       "buttons": [],
+      "entryButtons": [
+        {
+          "button": "0/1/0/0/0/0/0/3",
+          "enabled": true,
+          "objects": [
+            "TravelNotesPanel",
+            "BgPanel1",
+            "Content",
+            "MiddleGo",
+            "Content",
+            "FirstPage",
+            "DailyDungeonEntry"
+          ],
+          "path": "0/1/0/0/0/0",
+          "type": "DailyDungeonEntry"
+        },
+        {
+          "button": "0/1/0/0/0/1/0/7",
+          "enabled": true,
+          "objects": [
+            "TravelNotesPanel",
+            "BgPanel1",
+            "Content",
+            "MiddleGo",
+            "Content",
+            "FirstPage",
+            "DemonBattleEntry"
+          ],
+          "path": "0/1/0/0/0/1",
+          "type": "DemonBattleEntry"
+        },
+        {
+          "button": "0/1/0/0/0/5/0/2",
+          "enabled": true,
+          "objects": [
+            "TravelNotesPanel",
+            "BgPanel1",
+            "Content",
+            "MiddleGo",
+            "Content",
+            "FirstPage",
+            "ArenaAreaEntry"
+          ],
+          "path": "0/1/0/0/0/5",
+          "type": "ArenaAreaEntry"
+        }
+      ],
       "gradeGrids": [],
       "gradeItem": null,
       "images": [
@@ -8940,10 +9003,342 @@
       "privateDetail": null,
       "privateDialog": null,
       "privateUnlock": null,
+      "raycastGraphics": [
+        {
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "enabled": true,
+          "objects": [
+            "TravelNotesPanel",
+            "BgPanel1",
+            "Content",
+            "MiddleGo",
+            "Content",
+            "FirstPage",
+            "DailyDungeonEntry",
+            "NoteUnlockContent",
+            "EntryBtn"
+          ],
+          "path": "0/1/0/0/0/0/0/3",
+          "raycastPadding": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "raycastTarget": true
+        },
+        {
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "enabled": true,
+          "objects": [
+            "TravelNotesPanel",
+            "BgPanel1",
+            "Content",
+            "MiddleGo",
+            "Content",
+            "FirstPage",
+            "DailyDungeonEntry",
+            "NoteUnlockContent",
+            "CommonBtn_OutputAdditionDetail",
+            "Content",
+            "Raycast"
+          ],
+          "path": "0/1/0/0/0/0/0/4/0/4",
+          "raycastPadding": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "raycastTarget": true
+        },
+        {
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "enabled": true,
+          "objects": [
+            "TravelNotesPanel",
+            "BgPanel1",
+            "Content",
+            "MiddleGo",
+            "Content",
+            "FirstPage",
+            "DemonBattleEntry",
+            "NoteUnlockContent",
+            "EntryBtn"
+          ],
+          "path": "0/1/0/0/0/1/0/7",
+          "raycastPadding": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "raycastTarget": true
+        },
+        {
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "enabled": true,
+          "objects": [
+            "TravelNotesPanel",
+            "BgPanel1",
+            "Content",
+            "MiddleGo",
+            "Content",
+            "FirstPage",
+            "NpcAdventureEntry",
+            "NoteUnlockContent",
+            "EntryBtn"
+          ],
+          "path": "0/1/0/0/0/2/0/2",
+          "raycastPadding": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "raycastTarget": true
+        },
+        {
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "enabled": true,
+          "objects": [
+            "TravelNotesPanel",
+            "BgPanel1",
+            "Content",
+            "MiddleGo",
+            "Content",
+            "FirstPage",
+            "NpcAdventureEntry",
+            "NoteUnlockContent",
+            "CommonBtn_OutputAdditionDetail",
+            "Content",
+            "Raycast"
+          ],
+          "path": "0/1/0/0/0/2/0/4/0/4",
+          "raycastPadding": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "raycastTarget": true
+        },
+        {
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "enabled": true,
+          "objects": [
+            "TravelNotesPanel",
+            "BgPanel1",
+            "Content",
+            "MiddleGo",
+            "Content",
+            "FirstPage",
+            "MapGamePlayEntry",
+            "NoteUnlockContent",
+            "EntryBtn"
+          ],
+          "path": "0/1/0/0/0/3/0/2",
+          "raycastPadding": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "raycastTarget": true
+        },
+        {
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "enabled": true,
+          "objects": [
+            "TravelNotesPanel",
+            "BgPanel1",
+            "Content",
+            "MiddleGo",
+            "Content",
+            "FirstPage",
+            "DailyActivityEntry",
+            "NoteUnlockContent",
+            "EntryBtn"
+          ],
+          "path": "0/1/0/0/0/4/0/1",
+          "raycastPadding": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "raycastTarget": true
+        },
+        {
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "enabled": true,
+          "objects": [
+            "TravelNotesPanel",
+            "BgPanel1",
+            "Content",
+            "MiddleGo",
+            "Content",
+            "FirstPage",
+            "ArenaAreaEntry",
+            "NoteUnlockContent",
+            "EntryBtn"
+          ],
+          "path": "0/1/0/0/0/5/0/2",
+          "raycastPadding": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "raycastTarget": true
+        },
+        {
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "enabled": true,
+          "objects": [
+            "TravelNotesPanel",
+            "BgPanel1",
+            "Content",
+            "MiddleGo",
+            "Content",
+            "FirstPage",
+            "NormalMaterialEntry",
+            "NoteUnlockContent",
+            "EntryBtn"
+          ],
+          "path": "0/1/0/0/0/6/0/3",
+          "raycastPadding": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "raycastTarget": true
+        },
+        {
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "enabled": true,
+          "objects": [
+            "TravelNotesPanel",
+            "BgPanel1",
+            "Content",
+            "MiddleGo",
+            "Content",
+            "FirstPage",
+            "WeeklyActivityEntry",
+            "Content",
+            "NoteUnlockContent",
+            "EntryBtn"
+          ],
+          "path": "0/1/0/0/0/7/0/0/1",
+          "raycastPadding": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "raycastTarget": true
+        }
+      ],
       "roomButton": null,
       "roomView": null,
       "routeWindow": null,
-      "safeAreas": [],
+      "safeAreas": [
+        {
+          "disableBottomAdapt": false,
+          "disableTopAdapt": false,
+          "enabled": true,
+          "objects": [
+            "TravelNotesPanel",
+            "BgPanel1",
+            "Content"
+          ],
+          "paddingBottom": 0.0,
+          "paddingTop": 0.0,
+          "path": "0/1"
+        },
+        {
+          "disableBottomAdapt": false,
+          "disableTopAdapt": false,
+          "enabled": false,
+          "objects": [
+            "TravelNotesPanel",
+            "BgPanel1",
+            "Content",
+            "TopGo",
+            "NewPublicTopBarParent"
+          ],
+          "paddingBottom": 0.0,
+          "paddingTop": 0.0,
+          "path": "0/1/1/2"
+        },
+        {
+          "disableBottomAdapt": true,
+          "disableTopAdapt": false,
+          "enabled": true,
+          "objects": [
+            "TravelNotesPanel",
+            "BgPanel1",
+            "Content",
+            "BottomGo",
+            "DownBg",
+            "SafaAreaGo"
+          ],
+          "paddingBottom": 0.0,
+          "paddingTop": 0.0,
+          "path": "0/1/2/0/0"
+        }
+      ],
       "scrolls": [],
       "texts": [
         {

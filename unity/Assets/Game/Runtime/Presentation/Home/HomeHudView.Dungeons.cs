@@ -57,13 +57,14 @@ namespace Zjcs.Presentation.Home
             SetOfficialPrefabSprite(travelNotesRoot,
                 "DailyDungeonEntry/NoteUnlockContent/Icon", LoadDungeonUiSprite(
                     "defaultpackage_assets_image_ui_notes_travelnotes.bundle", "note_DailyDungeonEntry"));
-            if (mapPlayEntry != null) BindPrefabButton(mapPlayEntry.gameObject, "EntryBtn", OpenDailyDungeons);
+            Button dungeonButton = OriginalTravelEntryButton("DailyDungeonEntry");
+            dungeonButton.onClick.AddListener(OpenDailyDungeons);
             Transform dailyActivityEntry = Find(travelNotesRoot.transform, "DailyActivityEntry");
             if (dailyActivityEntry != null) BindPrefabButton(dailyActivityEntry.gameObject, "EntryBtn", OpenDailyChallenges);
             BindPrefabButton(travelNotesRoot, "NormalMaterialEntry", OpenMaterialGatheringEntries);
             AddNpcAdventureTravelEntry();
             BindPrefabButton(travelNotesRoot, "CloseBtn2", CloseDungeonPages);
-            Button arenaButton = Find(travelNotesRoot.transform, "ArenaAreaEntry")?.GetComponent<Button>();
+            Button arenaButton = OriginalTravelEntryButton("ArenaAreaEntry");
             if (arenaButton != null)
             {
                 bool preview = IsArenaPreviewAvailable();
@@ -74,7 +75,18 @@ namespace Zjcs.Presentation.Home
                     else Notify("竞技场尚未开放");
                 });
             }
-            BindPrefabButton(travelNotesRoot, "DemonBattleEntry", OpenFantasyTowerEntries);
+            OriginalTravelEntryButton("DemonBattleEntry").onClick.AddListener(OpenFantasyTowerEntries);
+        }
+
+        private Button OriginalTravelEntryButton(string type)
+        {
+            DungeonOfficialEntryButtonBinding binding = LoadDungeonOfficialBindings("TravelNotesPanel")
+                .entryButtons?.FirstOrDefault(value => value.type == type);
+            Transform target = binding == null ? null
+                : FindOfficialBindingNode(travelNotesRoot.transform, binding.button, null);
+            Button button = target == null ? null : target.GetComponent<Button>();
+            if (button == null) throw new InvalidOperationException("Original travel entry Button is missing: " + type);
+            return button;
         }
 
         private void OpenFantasyTowerEntries()
@@ -1086,6 +1098,40 @@ namespace Zjcs.Presentation.Home
                 else node.localPosition = ReadVector3(transformBinding.localPosition, node.localPosition);
             }
 
+            foreach (DungeonOfficialSafeAreaBinding item in binding.safeAreas ?? Array.Empty<DungeonOfficialSafeAreaBinding>())
+            {
+                Transform node = FindOfficialBindingNode(root.transform, item.path, item.objects);
+                if (node == null) throw new InvalidOperationException("Official dungeon SafeArea binding is missing: " + item.path);
+                var safe = node.GetComponent<Zjcs.Official.WorldUI.WorldSafeArea>()
+                    ?? node.gameObject.AddComponent<Zjcs.Official.WorldUI.WorldSafeArea>();
+                safe.PaddingTop = item.paddingTop;
+                safe.PaddingBottom = item.paddingBottom;
+                safe.DisableTopAdapt = item.disableTopAdapt;
+                safe.DisableBottomAdapt = item.disableBottomAdapt;
+                safe.enabled = item.enabled;
+            }
+            foreach (DungeonOfficialAspectRatioBinding item in binding.aspectRatioFitters ?? Array.Empty<DungeonOfficialAspectRatioBinding>())
+            {
+                Transform node = FindOfficialBindingNode(root.transform, item.path, item.objects);
+                if (node == null) throw new InvalidOperationException("Official dungeon aspect-ratio binding is missing: " + item.path);
+                var fitter = node.GetComponent<AspectRatioFitter>() ?? node.gameObject.AddComponent<AspectRatioFitter>();
+                fitter.aspectRatio = item.aspectRatio;
+                fitter.aspectMode = (AspectRatioFitter.AspectMode)item.aspectMode;
+                fitter.enabled = item.enabled;
+            }
+            foreach (DungeonOfficialRaycastBinding item in binding.raycastGraphics ?? Array.Empty<DungeonOfficialRaycastBinding>())
+            {
+                Transform node = FindOfficialBindingNode(root.transform, item.path, item.objects);
+                if (node == null) throw new InvalidOperationException("Original dungeon raycast Graphic is missing: " + item.path);
+                var graphic = node.GetComponent<Zjcs.Official.WorldUI.NoDrawingRayCast>()
+                    ?? node.gameObject.AddComponent<Zjcs.Official.WorldUI.NoDrawingRayCast>();
+                graphic.color = ReadColor(item.color);
+                graphic.raycastTarget = item.raycastTarget;
+                if (item.raycastPadding != null && item.raycastPadding.Length == 4)
+                    graphic.raycastPadding = new Vector4(item.raycastPadding[0], item.raycastPadding[1], item.raycastPadding[2], item.raycastPadding[3]);
+                graphic.enabled = item.enabled;
+            }
+
             int imageCount = 0;
             foreach (DungeonOfficialImageBinding imageBinding in binding.images)
             {
@@ -1261,6 +1307,44 @@ namespace Zjcs.Presentation.Home
             public DungeonOfficialTransformBinding[] transforms;
             public DungeonOfficialImageBinding[] images;
             public DungeonOfficialTextBinding[] texts;
+            public DungeonOfficialSafeAreaBinding[] safeAreas;
+            public DungeonOfficialAspectRatioBinding[] aspectRatioFitters;
+            public DungeonOfficialRaycastBinding[] raycastGraphics;
+            public DungeonOfficialEntryButtonBinding[] entryButtons;
+        }
+
+        [Serializable]
+        private sealed class DungeonOfficialRaycastBinding
+        {
+            public string path;
+            public string[] objects;
+            public bool enabled, raycastTarget;
+            public float[] color, raycastPadding;
+        }
+
+        [Serializable]
+        private sealed class DungeonOfficialEntryButtonBinding
+        {
+            public string type, button;
+        }
+
+        [Serializable]
+        private sealed class DungeonOfficialSafeAreaBinding
+        {
+            public string path;
+            public string[] objects;
+            public bool enabled, disableTopAdapt, disableBottomAdapt;
+            public float paddingTop, paddingBottom;
+        }
+
+        [Serializable]
+        private sealed class DungeonOfficialAspectRatioBinding
+        {
+            public string path;
+            public string[] objects;
+            public bool enabled;
+            public int aspectMode;
+            public float aspectRatio;
         }
 
         [Serializable]

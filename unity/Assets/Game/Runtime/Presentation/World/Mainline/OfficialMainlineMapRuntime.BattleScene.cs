@@ -21,6 +21,7 @@ namespace Zjcs.Presentation.World
                 child.gameObject.SetActive(false);
             }
             preBattleCameraSize = worldCamera.orthographicSize;
+            if (battleController != null && battleController.OwnsPresentationCamera) return;
             Vector3 position = default;
             float size = 0f;
             battleOwnsCamera = battleController != null
@@ -34,6 +35,7 @@ namespace Zjcs.Presentation.World
 
         private bool UpdateBattleSceneCamera()
         {
+            if (battleController != null && battleController.OwnsPresentationCamera) return true;
             if (!battleOwnsCamera || battleController == null
                 || !battleController.TryGetSceneCamera(out Vector3 position, out float size)) return false;
             worldCamera.transform.position = position;

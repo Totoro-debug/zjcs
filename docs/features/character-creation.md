@@ -2,6 +2,8 @@
 
 [总索引](../README.md)
 
+世界人物皮肤几何补充：`prepare_character_world_append_geometry.py` 从已保存并校验的871原生骨骼数据包补出男性16,588／女性17,358个 region／mesh 附件，保留原坐标、权重、图集及骨骼顺序，并逐项核对原创角几何未变。运行载荷仍为 `CharacterCreation/native-character-geometry.json`，当前派生来源及输出哈希见[世界人物附件清单](../../assets/reference/character-creation/world-append-geometry-source-manifest.json)；原[基础几何清单](../../assets/reference/character-creation/native-geometry-source-manifest.json)保留初始转换阶段的凭据。世界模型工厂按当前穿戴显式装入缺少的附件和原纹理，并按原骨骼槽序设置绘制顺序。内置屏 Play Mode 已检查竞技场女守卫 `body_200_F_01` 的完整衣装、头发前后层级及脚下血条，实际27步战斗、结算及退出恢复通过；不代表全部服饰、附件切换、裁切及动画约束均已完成。
+
 状态：未完成
 
 ## 功能简介
@@ -114,7 +116,7 @@ DIY 外观选项缩略图使用固定 APK `871_156598` 的 `defaultpackage_asset
 
 原版创角外观组合数据与男女 12 个组图已按固定版 `append_appearance_group`、`append_appearance` 表及 APK 图标 bundle 恢复；组名从固定 APK 的 `wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile` 以官方 `LocalizationBinaryFileReader`／`XXHash64` 规则解析。图标、组名、条件 ID、组件 appearance/skin ID 及输入输出哈希见 [appearance group icon source manifest](../../assets/reference/character-creation/appearance-group-icons-source-manifest.json)。`CharacterCreationFlowController.RenderAppearanceGroups` 显示无条件组并保存草稿中的 `appearance_group_id`；选择组不会改写普通捏脸字段。切换主外观页签时 `SelectTab` 刷新原生预览，使组内 `SkinType=3` 皮肤在“头发／特征”页按官方互斥规则隐藏，并在“整体／脸部”页恢复。固定版 `CreatePlayerPanel.CacheAppendAppearanceDict` 把组的 `AppearanceIdList` 转成追加外观，和 `SkinIdMap` 捏脸字段分开；本离线实现遵循用户确认的“仅用于试穿”：组只影响创建页预览，不写入最终 `WornItems`，普通部件仍写入 `WornSkins`。`AppearanceGroupId` 是所选组，`IsUseAppearanceFunction` 在首次选中非默认组时置为真；服务端对这两个请求字段的额外处理不在客户端代码中，离线保存不推断其行为。`TryOnConditionId=30110` 经官方条件代码解码为 `DomainTypeCondition(LuoTianYi)`，使组 5／6／15／16 依赖服务器 `DomainType`；离线档案没有该字段，因此当前按官方条件隐藏。
 
-创角展示与家园主角共用 [CharacterCreationMeshFramePlayer](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterCreationMeshFramePlayer.cs)，以 Unity MeshRenderer 播放已校验的官方 24 fps 网格帧；当前转换动作是 `home/idle_01` 和 `map/run_01`，不依赖 Spine runtime。打包脚本 [prepare_character_creation_meshes.py](../../scripts/prepare_character_creation_meshes.py) 复用固定来源的骨骼转换缓存、贴图及染色遮罩，并将两种姿势实际包含的全部官方男女皮肤按单皮肤条目纳入 `StreamingAssets/CharacterCreation/creation-meshes.zip`；运行时仅按选中外观读取并逐条校验哈希，清单见 [native mesh source manifest](../../assets/reference/character-creation/native-mesh-source-manifest.json)。家园通过 [`HomePlayerActorView`](../../unity/Assets/Game/Runtime/Presentation/Home/HomePlayerActorView.cs) 使用该组件显示存档穿戴／染色。官方 `home/wakeUp_01`、`100/training_01` 尚未转换，其他角色 Animator 也未迁移。
+创角展示使用 [CharacterCreationMeshFramePlayer](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterCreationMeshFramePlayer.cs)，以 Unity MeshRenderer 播放已校验的官方 24 fps 网格帧；当前转换动作是 `home/idle_01` 和 `map/run_01`，不依赖 Spine runtime。打包脚本 [prepare_character_creation_meshes.py](../../scripts/prepare_character_creation_meshes.py) 复用固定来源的骨骼转换缓存、贴图及染色遮罩，并将两种姿势实际包含的全部官方男女皮肤按单皮肤条目纳入 `StreamingAssets/CharacterCreation/creation-meshes.zip`；运行时仅按选中外观读取并逐条校验哈希，清单见 [native mesh source manifest](../../assets/reference/character-creation/native-mesh-source-manifest.json)。家园的 `HomePlayerActorView` 已改用原生世界模型工厂，以复用公共战斗挂载及正确的模型原点；状态与验证边界见[主城](city-and-home.md)。官方 `home/wakeUp_01`、`100/training_01` 尚未转换，其他角色 Animator 也未迁移。
 
 创角按钮使用的 `Main_Page`、`Main_Cursor_Normal`、`Main_Tag`、`Main_Cursor_Back` 音效已转为本地 OGG 并由 [audio source manifest](../../assets/reference/creation-performance/audio/source-manifest.json) 校验。DIY 恢复默认外观使用官方 `ui_reset_appearance_tip_text` 确认键及官方弹窗 prefab；固定版本地语言资源未包含该键的文本，Unity 离线界面使用中文提示。
 

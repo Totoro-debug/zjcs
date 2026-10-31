@@ -180,6 +180,8 @@ namespace Zjcs.Presentation.Home
                 WorldRoot = battleRoot,
                 EnvironmentGameId = scene.GameId,
                 HudParent = host.Hud.CanvasTransform,
+                HostPresentation = new OfficialBattleHostPresentation(host.Scene.Camera,
+                    host.Scene.Root.transform, host.Hud.CanvasTransform, host.SetBattlePresentationActive),
                 AnimationGroupResolver = unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
                 CombatAssets = combatAssets,
                 RestoreCheckpoint = restore,
