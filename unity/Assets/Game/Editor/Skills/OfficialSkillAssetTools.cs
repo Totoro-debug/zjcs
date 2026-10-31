@@ -37,9 +37,11 @@ namespace Zjcs.Editor.Skills
                 string destination = Path.Combine(root, "Player", "杖剑传说.exe");
                 Directory.CreateDirectory(Path.GetDirectoryName(destination));
                 OfficialSkillRuntimeShaderBuild.Prepare();
+                BuildOptions buildOptions = Environment.GetEnvironmentVariable("ZJCS_CLEAN_BUILD_CACHE") == "1"
+                    ? BuildOptions.CleanBuildCache : BuildOptions.None;
                 var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
                     scenes = EditorBuildSettings.scenes.Where(value => value.enabled).Select(value => value.path).ToArray(),
-                    locationPathName = destination, target = BuildTarget.StandaloneWindows64, options = BuildOptions.None
+                    locationPathName = destination, target = BuildTarget.StandaloneWindows64, options = buildOptions
                 });
                 // Unity may report Succeeded after logging missing shader kernels.
                 if (report == null || report.summary.result != BuildResult.Succeeded

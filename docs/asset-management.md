@@ -104,6 +104,8 @@ Windows 构建范围保留 `Assets/Official/` 中动态字体的原字形表与�
 
 Windows 构建入口同时检查 `BuildReport` 和构建过程的 Error／Exception／Assert 日志。发现 shader 内核等编译错误时以失败退出，不能仅凭 Unity 返回 `Succeeded` 判断可发布。
 
+更改 shader 构建筛选后，首次验证设置 `ZJCS_CLEAN_BUILD_CACHE=1` 强制重建 Player 数据；仅重建脚本可能沿用旧 shader 产物。正常增量构建不设置此变量，继续复用缓存。
+
 ### 常见失败的处理顺序
 
 先保留原异常与路径，依次查来源哈希、版本／BuildTarget、CAB、对象引用、脚本／插件、shader／平台格式和显式加载。序列化头错误属于导入问题，不据此反复安装 Hub／编辑器。编译失败时先修复 C#／程序集依赖，再检查 executeMethod 入口；静态或隔离检查通过不能替代完整启动链。

@@ -16,8 +16,18 @@ namespace Zjcs.Editor
     // Never compile an absent program, or substitute another program for it.
     public sealed class OfficialSparseShaderVariants : IPreprocessShaders
     {
-        private const string Profession = "Assets/Game/Runtime/Official/ProfessionUI/SpineSkeletonGraphicHeightClip.shader";
-        private const string Environment = "Assets/Game/Runtime/Official/World/NativeWater/Shaders/EnvironmentNoise.shader";
+        private static readonly Dictionary<string, int> originalPrograms = new Dictionary<string, int>
+        {
+            ["Assets/Game/Runtime/Official/ProfessionUI/SpineSkeletonGraphicHeightClip.shader"] = 16,
+            ["Assets/Game/Runtime/Official/World/NativeWater/Shaders/EnvironmentNoise.shader"] = 260,
+            ["Assets/Game/Runtime/Official/Combat/Shaders/OfficialSummonSkeletonEffect2D.shader"] = 768,
+            ["Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/SpineSkeletonGraphicCustom_05649282.shader"] = 16,
+            ["Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipelineSpineSkeletonEffect2D_19e49995.shader"] = 768,
+            ["Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/UniversalRenderPipelineSpineSkeletonEffect2D_19e49995.shader"] = 768,
+            ["Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/EffectNoiseMaskPro_6d8d993d.shader"] = 260,
+            ["Assets/Game/Runtime/Official/World/NativeMap14/Shaders/Butterfly1.shader"] = 260,
+            ["Assets/Game/Runtime/Offline/World/Map12/BuildingPreview.shader"] = 6
+        };
         private static readonly Dictionary<string, Selection> selections = new Dictionary<string, Selection>();
         public int callbackOrder => -100;
 
@@ -37,13 +47,14 @@ namespace Zjcs.Editor
             try
             {
                 ShaderUtil.allowAsyncCompilation = false;
-                foreach (string path in new[] { Profession, Environment })
+                foreach (var original in originalPrograms)
                 {
+                    string path = original.Key;
                     // Clear messages left by a previous build of absent combinations.
                     AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
                     Shader shader = AssetDatabase.LoadAssetAtPath<Shader>(path);
                     if (shader == null) throw new BuildFailedException("Original shader is missing: " + path);
-                    Selection selection = Read(shader, path, path == Profession ? 16 : 260);
+                    Selection selection = Read(shader, path, original.Value);
                     selections[path] = selection;
                     var source = ShaderUtil.GetShaderData(shader).GetSubshader(0);
                     for (int pass = 0; pass < selection.PassCount; pass++)
@@ -64,18 +75,19 @@ namespace Zjcs.Editor
                 }
             }
             finally { ShaderUtil.allowAsyncCompilation = previousAsync; }
-            if (stages != 1072) throw new BuildFailedException("Original shader stage count changed: " + stages);
-            Debug.Log("Original sparse shaders: all 1072 Windows GPU stages compiled.");
+            if (stages != 7804) throw new BuildFailedException("Original shader stage count changed: " + stages);
+            Debug.Log("Original sparse shaders: all " + stages + " Windows GPU stages across "
+                + originalPrograms.Count + " original shader assets compiled.");
             ProjectTools.Validate();
         }
 
         public void OnProcessShader(Shader shader, ShaderSnippetData snippet, IList<ShaderCompilerData> data)
         {
             string path = AssetDatabase.GetAssetPath(shader);
-            if (path != Profession && path != Environment) return;
+            if (!originalPrograms.TryGetValue(path, out int expected)) return;
             if (!selections.TryGetValue(path, out Selection selection))
             {
-                selection = Read(shader, path, path == Profession ? 16 : 260);
+                selection = Read(shader, path, expected);
                 selections.Add(path, selection);
             }
             int before = data.Count;
