@@ -44,20 +44,33 @@ function New-ChildSkill($childId, $rate, $per) {
     return $skill
 }
 
-function Invoke-ChildBattle($skill, $enemyHp, $enemyMaxHp, $useOfficialDamageFormula = $false) {
+function Invoke-ChildBattle($skill, $enemyHp, $enemyMaxHp, $useOfficialDamageFormula = $false, $secondEnemy = $false, $friendlyTarget = $false) {
     $player = New-Unit 1 1 0 0 5000 5000 100
     $player.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
     $player.SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{ Slot = 0; LimitedTimes = -1 })
     $player.Skills.Add($skill)
     $enemy = New-Unit 2 2 1 0 $enemyHp $enemyMaxHp 1
+    if ($friendlyTarget) { $enemy.Side = 1 }
     $cp = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
     $cp.StageId = 1; $cp.MaxRound = 10; $cp.RandomSeed = 29
     $cp.Grid = [Zjcs.Combat.Official.FightBattleGrid]::new(); $cp.Grid.Width = 8; $cp.Grid.Height = 8; $cp.Grid.DefaultGroundType = 2
     $cp.Units.Add($player); $cp.Units.Add($enemy)
     $wave = [Zjcs.Combat.Official.FightBattleWaveState]::new(); $wave.Index = 0; $wave.UnitIds.Add(2); $cp.Waves.Add($wave)
+    if ($secondEnemy) {
+        $cp.Units.Add((New-Unit 3 2 1 1 $enemyHp $enemyMaxHp 1))
+        $wave.UnitIds.Add(3)
+    }
+    if ($friendlyTarget) {
+        $cp.Units.Add((New-Unit 3 2 4 4 5000 5000 1))
+        $wave.UnitIds.Add(3)
+    }
     $formula = [Zjcs.Combat.Official.FightDamageFormula]::new([Zjcs.Combat.Official.FightDamagePropertySchema]::new(), [Zjcs.Combat.Official.FightDamageFormulaConfig]::new())
     if ($useOfficialDamageFormula) {
-        $enemy.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $catalog.PropertyType('Attack'); Value = 100 })
+        $player.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $catalog.PropertyType('Attack'); Value = 100 })
+        $player.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $catalog.PropertyType('MaxHp'); Value = $player.MaxHp })
+        $player.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $catalog.PropertyType('BaseCureAdd'); Value = 100 })
+        $enemy.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $catalog.PropertyType('Attack'); Value = 1000 })
+        $enemy.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $catalog.PropertyType('BaseBeCureAdd'); Value = 100 })
         $formula = $catalog.CreateDamageFormula((Read-Text 'unity/Assets/Official/Combat/rules.json'),
             $formulaSource.OutputSha256, $formulaSource.Manifest)
     }
@@ -66,10 +79,10 @@ function Invoke-ChildBattle($skill, $enemyHp, $enemyMaxHp, $useOfficialDamageFor
     return $executor.Step(0, 1)
 }
 
-# The damaged enemy releases the child skill (10640) at the player.
+# Child casts preserve the original caster and hit target.
 $result = Invoke-ChildBattle (New-ChildSkill 10640 1.0 -1) 5000 5000
-$childCasts = @($result.Event.SkillCasts | Where-Object { $_.Slot -eq -1 -and $_.SkillEntityId -eq 10640 -and $_.ActorId -eq 2 })
-Assert-Child ($childCasts.Count -eq 1) 'Child skill was not released by the damaged target'
+$childCasts = @($result.Event.SkillCasts | Where-Object { $_.Slot -eq -1 -and $_.SkillEntityId -eq 10640 -and $_.ActorId -eq 1 })
+Assert-Child ($childCasts.Count -eq 1 -and $childCasts[0].TargetIds.Count -eq 1 -and $childCasts[0].TargetIds[0] -eq 2) 'Child skill did not preserve the original caster and hit target'
 
 # HP condition: only below 30% of maximum HP.
 $high = Invoke-ChildBattle (New-ChildSkill 10640 1.0 0.3) 4000 5000
@@ -91,6 +104,7 @@ $status = @($inherited.Checkpoint.Units | ForEach-Object { $_.Statuses } |
     Where-Object { $_.ClassId -eq 24658 -and $_.RootSkillId -eq 63434 })
 Assert-Child ($status.Count -gt 0) 'Official child skill did not apply its configured status'
 Assert-Child ($status[0].SourceSkillRank -eq 6 -and $status[0].SourceSkillLevel -eq 17 -and $status[0].SourceSubRank -eq 10) 'Child skill did not inherit its triggering skill cultivation'
+Assert-Child ($status[0].CreatorId -eq 1 -and @($inherited.Checkpoint.Units | Where-Object { $_.Id -eq 1 } | ForEach-Object { $_.Statuses } | Where-Object { $_.ClassId -eq 24658 }).Count -eq 1) 'Self child status was applied to the damaged enemy instead of its caster'
 $restored = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(
     [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($inherited.Checkpoint))
 $savedStatus = @($restored.Units | ForEach-Object { $_.Statuses } | Where-Object { $_.ClassId -eq 24658 })
@@ -106,6 +120,27 @@ $boostedResult = Invoke-ChildBattle $boosted 5000 5000 $true
 $plainDamage = @($plainResult.Event.DamageEvents | Where-Object { $_.SkillEntityId -eq 11050 })
 $boostedDamage = @($boostedResult.Event.DamageEvents | Where-Object { $_.SkillEntityId -eq 11050 })
 Assert-Child ($plainDamage.Count -gt 0 -and $boostedDamage.Count -gt 0) 'Official child damage was not executed'
+Assert-Child (@($boostedDamage | Where-Object { $_.SourceId -ne 1 -or $_.TargetId -ne 2 }).Count -eq 0) 'Child damage reversed its source and target'
 Assert-Child ([Math]::Abs($boostedDamage[0].DamageValue) -gt [Math]::Abs($plainDamage[0].DamageValue)) 'Parent cultivation did not scale actual child damage'
 
-Write-Output 'Battle child skill checks passed: official mapping, damaged-target cast, HP condition, zero rate, single-level cascade, inherited cultivation/status persistence and scaled damage.'
+# Two hits in one parent cast must retain their respective targets, rather than both retargeting one enemy.
+$area = New-ChildSkill 11050 1.0 -1
+$area.Hits[0].TargetMode = 1
+$area.Hits[0].Scope.Add([Zjcs.Combat.Official.FightGridPoint]::new(0, 0))
+$area.Hits[0].Scope.Add([Zjcs.Combat.Official.FightGridPoint]::new(0, 1))
+$multiple = Invoke-ChildBattle $area 5000 5000 $true $true
+$multipleCasts = @($multiple.Event.SkillCasts | Where-Object { $_.SkillEntityId -eq 11050 })
+$multipleDamage = @($multiple.Event.DamageEvents | Where-Object { $_.SkillEntityId -eq 11050 })
+Assert-Child ($multipleCasts.Count -eq 2 -and $multipleDamage.Count -eq 2) 'Area parent did not execute one child per original hit'
+Assert-Child ((($multipleDamage.TargetId | Sort-Object) -join ',') -eq '2,3') 'Child damage did not retain each original hit position'
+Assert-Child (@($multipleDamage | Where-Object { $_.SourceId -ne 1 }).Count -eq 0) 'Area child lost its original caster'
+
+# The original healing child keeps the caster's side and heals the original friendly hit target.
+$healing = New-ChildSkill 12733 1.0 -1
+$healing.TargetType = 3
+$healed = Invoke-ChildBattle $healing 100 5000 $true $false $true
+$cures = @($healed.Event.DamageEvents | Where-Object { $_.SkillEntityId -eq 12733 -and $_.IsCure })
+Assert-Child (@($cures | Where-Object { $_.SourceId -eq 1 -and $_.TargetId -eq 2 -and $_.AfterHp -gt $_.BeforeHp }).Count -eq 1) 'Healing child did not heal its original friendly hit target'
+Assert-Child (@($cures | Where-Object { $_.TargetId -eq 3 -or $_.SourceId -ne 1 }).Count -eq 0) 'Healing child changed faction or caster'
+
+Write-Output 'Battle child skill checks passed: official mapping, original caster/target, HP condition, zero rate, single-level cascade, inherited cultivation/status persistence, self buff, healing and separate area-hit children.'

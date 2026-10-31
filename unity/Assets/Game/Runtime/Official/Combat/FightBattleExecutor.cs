@@ -616,7 +616,7 @@ namespace Zjcs.Combat.Official
                     if (hpTriggerSkills.Count > 0)
                         ExecuteTriggerSkills(target, hpTriggerSkills, casts, damageEvents, movements,
                             ref lastDelay);
-                    ApplyChildSkill(target, skill, hit, casts, damageEvents, movements, ref lastDelay);
+                    ApplyChildSkill(actor, target, skill, hit, casts, damageEvents, movements, ref lastDelay);
                 }
             }
             ApplySourceMoves(actor, skill, targets, movements, ref lastDelay);
@@ -1077,19 +1077,20 @@ namespace Zjcs.Combat.Official
         private int childDepth;
 
         /// <summary>
-        /// Official <c>FightDamageComponent.ChildSkillCfg</c>: after a hit lands, the damaged target may
-        /// release the configured child skill (rate and remaining-HP condition). Child skills run one
-        /// level deep and keep their casts in the current step. Offline cultivation follows the
-        /// triggering skill, as confirmed by the user; each child retains its own official prop factors.
+        /// Official <c>FightDamageComponent.ChildSkillCfg</c> supplies the child, rate and target-HP
+        /// condition. The confirmed offline rule preserves the triggering caster, cultivation and
+        /// hit target as the position anchor; the child still applies its own side, scope and effects.
+        /// Child skills currently run one level deep and keep their casts in the current step.
         /// </summary>
-        private void ApplyChildSkill(FightBattleUnitState target, FightBattleSkillDefinition parentSkill,
+        private void ApplyChildSkill(FightBattleUnitState actor, FightBattleUnitState target,
+            FightBattleSkillDefinition parentSkill,
             FightBattleHitDefinition hit,
             List<FightBattleSkillCastEvent> casts, List<FightBattleDamageEvent> damageEvents,
             List<FightBattleMovementEvent> movements, ref float lastDelay)
         {
             if (statusCatalog == null || parentSkill == null || hit == null
                 || hit.ChildSkillId <= 0 || childDepth > 0) return;
-            if (target == null || target.Hp <= 0) return;
+            if (actor == null || target == null || target.Hp <= 0) return;
             if (hit.ChildSkillRate < 1f && random.Next() > hit.ChildSkillRate) return;
             if (hit.ChildSkillLessThanHpPer >= 0f
                 && target.Hp / (double)Math.Max(1L, target.MaxHp) > hit.ChildSkillLessThanHpPer) return;
@@ -1106,13 +1107,18 @@ namespace Zjcs.Combat.Official
             {
                 return;
             }
-            List<FightBattleUnitState> targets = FightBattleTargeting.Select(target, units,
+            // Do not run AI selection across the roster again: each hit owns its child target.
+            // Self effects select the caster, while scoped hits retain the original hit position.
+            var candidates = new List<FightBattleUnitState>
+            {
+                skill.TargetType == 0 ? actor : target
+            };
+            List<FightBattleUnitState> targets = FightBattleTargeting.Select(actor, candidates,
                 skill.TargetType, 0, false, false, skill, random);
-            if (targets.Count == 0 && !FightBattleTargeting.HasCasterAreaTargets(target, units, skill)) return;
-            checkpoint.Statistics.RecordCast(target.Id, skill.EntityId, skill.ItemId);
+            checkpoint.Statistics.RecordCast(actor.Id, skill.EntityId, skill.ItemId);
             var cast = new FightBattleSkillCastEvent
             {
-                ActorId = target.Id,
+                ActorId = actor.Id,
                 Slot = -1,
                 SkillEntityId = skill.EntityId,
                 SkillItemId = skill.ItemId
@@ -1122,7 +1128,8 @@ namespace Zjcs.Combat.Official
             childDepth++;
             try
             {
-                ExecuteSkill(target, skill, targets, casts, damageEvents, movements, out float delay);
+                ExecuteSkill(actor, skill, targets, casts, damageEvents, movements,
+                    out float delay, target);
                 if (delay > lastDelay) lastDelay = delay;
             }
             finally
