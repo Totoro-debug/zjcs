@@ -1,28 +1,19 @@
 . (Join-Path $PSScriptRoot 'combat_sources.ps1')
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
+function Get-GeneratedTextHash([string]$Path) {
+    # Receipts pin generator LF bytes; Git may check text assets out as CRLF.
+    $text = [IO.File]::ReadAllText($Path).Replace("`r`n", "`n")
+    $bytes = [Text.UTF8Encoding]::new($false).GetBytes($text)
+    [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($bytes)).ToLowerInvariant()
+}
 $combat = Join-Path $root 'unity/Assets/Game/Runtime/Official/Combat'
 $sources = Get-FightCombatSources
 $fallback = Join-Path $root 'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleAnimationFallback.cs'
 $timeline = Join-Path $root 'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleAnimationTimeline.cs'
-$parameterStack = Join-Path $root 'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleAnimatorParameterStack.cs'
-Add-Type -Path (@($sources) + $fallback + $timeline + $parameterStack)
-
-$stack = [Zjcs.Presentation.Combat.OfficialBattleAnimatorParameterStack[bool]]::new($false)
-$stack.Push(10, $true)
-$stack.Push(20, $false)
-if ($stack.Current -ne $false -or -not $stack.Remove(10) -or $stack.Current -ne $false) {
-    throw 'Removing an older Animator Playable changed the newest merged parameter value.'
-}
-if (-not $stack.Remove(20) -or $stack.Current -ne $false -or $stack.Count -ne 0) {
-    throw 'Removing the final Animator Playable did not restore the initial parameter value.'
-}
-$stack.Push(30, $true)
-$stack.Push(40, $false)
-if (-not $stack.Remove(40) -or $stack.Current -ne $true -or
-    -not $stack.Remove(30) -or $stack.Current -ne $false) {
-    throw 'Animator Playable parameters did not resume in stack order.'
-}
+Add-Type -Path (@($sources) + $fallback + $timeline)
+# Native Animator parameter/lifecycle behavior is exercised in Play Mode by
+# OfficialBattleAnimatorPlaybackAcceptance, against the migrated official code.
 
 $unit = [Zjcs.Combat.Official.FightBattleUnitState]::new()
 $unit.Id = 4
@@ -127,7 +118,7 @@ if ($sourceManifest.manifest -ne '854_156383' -or @($sourceManifest.clip_assets.
     $sourceManifest.unavailable_clip_names.Count -ne 0) {
     throw 'Fixed official skill clip source resolution changed unexpectedly.'
 }
-if ((Get-FileHash $runtimeCatalogPath -Algorithm SHA256).Hash.ToLowerInvariant() -ne $sourceManifest.output_sha256) {
+if ((Get-GeneratedTextHash $runtimeCatalogPath) -ne $sourceManifest.output_sha256) {
     throw 'Packaged skill Playable data hash does not match its source manifest.'
 }
 $resolvedSources = @{}
@@ -147,7 +138,7 @@ foreach ($cue in $overrideCues | Where-Object { $_.clip_resource }) {
     $clipPath = Join-Path $root ('unity/Assets/Game/Resources/Combat/SkillAnimations/' + $cue.clip_resource + '.anim')
     if (-not (Test-Path $clipPath)) { throw "Packaged official skill clip is missing: $($cue.clip_resource)" }
     $asset = $clipAssets[$cue.animation]
-    if ($null -eq $asset -or (Get-FileHash $clipPath -Algorithm SHA256).Hash.ToLowerInvariant() -ne $asset.output_sha256) {
+    if ($null -eq $asset -or (Get-GeneratedTextHash $clipPath) -ne $asset.output_sha256) {
         throw "Packaged official skill clip hash does not match its source manifest: $($cue.animation)"
     }
 }

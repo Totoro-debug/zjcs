@@ -1,0 +1,101 @@
+{
+  "manifest": "884_156692",
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyPlayableOverrideAnimator.cs",
+      "sha256": "9d9c4040a9cface2001a60be99a1ac33c72e158d47b69456867cd5594750cad8"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_battle_animator_runtime.py",
+      "sha256": "3dff77e42937ea30dcc9869f68b53a928d78fbb611f25db2f19f2248a88c3044"
+    }
+  ],
+  "dependencyReceipt": {
+    "path": "assets/reference/official-map/map14-story-animator-runtime-source-manifest.json",
+    "sha256": "266c9b548cded6afff05943b44082f44e7d40d081c2dc6ccf4e7b8a7b99711d5"
+  },
+  "identicalDependencySources": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AnimationController.cs",
+      "sha256": "cd59a6e68288133c542c5b7a8f03049be528775a299ddc841f883f1a1fd15a47"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/StateMergeList.cs",
+      "sha256": "8f7dbe190902cb536759bbcc4322c2f1b828c5bba80f0512aa239967242dbe09"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyPlayableAnimator.cs",
+      "sha256": "833f0b99dc83f3db92dc90400d8cea36596dde43a024f1ceb3f326e84d0e17b2"
+    }
+  ],
+  "runtimeDependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/AnimationController.cs",
+      "checkoutSha256": "03c63e3e8815db97ae7a8d77711459b8f2ae9cc8a38be3865971497b4739d088",
+      "generatedLfSha256": "66864b1ce56faa7901cac1f959f7848ccb67f7529789c315d22f04ef86aec1d0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/AnimationController.cs.meta",
+      "checkoutSha256": "825696467f88cfa17cde0f5baa98b1165500f5c657db5474ed0e13595ea47d10",
+      "generatedLfSha256": "0cd40b498a2dc825a004e46075510344b09aaf612d2f50bfd701d87b1cbdbdc0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/StateMergeList.cs",
+      "checkoutSha256": "de06b984c4d84c35d4c3dff6db3881fb9183cd8746778760f5b655d0126b262b",
+      "generatedLfSha256": "ae1af91d73c9b56ee7d546b52a0edd4f6036b94dacf99b3e2ccc21e2197c694e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/StateMergeList.cs.meta",
+      "checkoutSha256": "98da75b2ab5296f41b67bb7e34c29e12cf1d995db2ffac3a9314c8772660e06d",
+      "generatedLfSha256": "0b9e157601591a35a89cdb235262c807ed09ddcb90c35932afd588cb01e02d4d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableAnimator.cs",
+      "checkoutSha256": "556de9b57b5684be1ca88df986687b9c7817a2bf79ea4b7def4ccf0268a19489",
+      "generatedLfSha256": "181799c5ed613f948e546380413f1362015d9e12e619b8f890461a7f544e3333"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableAnimator.cs.meta",
+      "checkoutSha256": "87cfb6242ac3458692cef4e9ebf3803dcc1e8951ced05012bbbe51697ef61532",
+      "generatedLfSha256": "942fca0e8ff73062890f7a349b61a34694d7426b34bd05afe80bcff9c9881324"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/Zjcs.Official.StoryAnimation.asmdef",
+      "checkoutSha256": "0dd589d6b7c2c40ac3a51f9dddfe137722ed80a005f24d90bec393b1793eca8a",
+      "generatedLfSha256": "f49afd4c15ac55f1b98bcc8447728953b9e54730c5bcceb365d5d5240b16199f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/Zjcs.Official.StoryAnimation.asmdef.meta",
+      "checkoutSha256": "057e5edc26309ab576b00cc0ae4559a01c502e50da521ed02d2981d920e74d05",
+      "generatedLfSha256": "d861a2165474a296df82bc4a501d426aae4bf0a7f97b7c161e59464e142a8feb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation.meta",
+      "checkoutSha256": "7a37fea116a90def8974db19febd75f9358927b4ee012d34d9ce05eecd8f8c0c",
+      "generatedLfSha256": "0ed6e566e284a63340ad169e82de9751bb831de70e72df17103e748c830ec615"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableOverrideAnimator.cs",
+      "sha256": "cc4860469b4e2f43e7ab957fd802b6ed2e505d17f94265bbab569418b1d516c7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableOverrideAnimator.cs.meta",
+      "sha256": "94a67a18f79ac6b0718988e3ac0b18238a7a731b136a8b52e662d1d304a8d56b"
+    }
+  ],
+  "diagnosticBlocks": 1,
+  "operation": "Copy MyPlayableOverrideAnimator; adapt only namespaces, Unity Object alias and diagnostic logging. Apply the original clip override before the inherited parameter/state checks. Existing Animator runtime dependencies are byte-identical in the selected source version.",
+  "limitations": [
+    "Existing battle cue/clip payloads keep their recorded source versions; this operation does not update assets or claim full prefab, particle, bone-follow or combat timing migration."
+  ]
+}

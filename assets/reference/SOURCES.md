@@ -4,6 +4,8 @@
 
 本页只记录官方输入与来源凭据。各模块的原始实现、转换／绑定细节、当前实现和验证边界见所属功能／地图页；逐文件记录以模块来源清单为准。
 
+战斗 Animator 补充代码：`prepare_battle_animator_runtime.py` 从当前 `884_156692` 已校验程序集／反编译结果迁入 `MyPlayableOverrideAnimator`；当前 `AnimationController`、`StateMergeList`、`MyPlayableAnimator` 原源码与既有历史迁移凭据逐字节相同。原始输入、程序集、兼容核对及输出 SHA256 见 [Animator 代码凭据](battle-rules/animator-runtime-source-manifest.json)；已有技能 cue 与 clip 的来源身份不变。
+
 游记布局补充输入：`prepare_travel_entry_layout.py` 读取当前 APK 中 `defaultpackage_assets_prefabs_ui_home.bundle`，严格核对其与历史 `871_156598` 清单的字节身份相同（353,152 字节，SHA256 `78b8a1151fcd575ce7dd6d98511b788853ba71730dbd620bf8e5917eabebd9c2`），再解码原组件字段。原 prefab PathID、逐组件原字节哈希、解码程序集、原脚本和输出哈希集中记录于 [游记布局凭据](dungeon-ui/prefab-binding-source-manifest.json) 的 `travel_entry_layout`；历史输入凭据保持原值，当前 APK 仅记录为相同包的新位置。
 
 ## 输入身份与版本
