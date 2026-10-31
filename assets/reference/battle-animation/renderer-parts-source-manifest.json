@@ -1,0 +1,103 @@
+{
+  "manifest": "884_156692",
+  "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+  "code_receipt": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+  },
+  "official_application_sources": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceRendererPartHandler.cs",
+      "sha256": "804544278a0fc4757daed0f1a89c91bf4c20816a883134d6a19c6c1f6f45e97d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceMecanimPartHandler.cs",
+      "sha256": "38e7289a0a72b39b1302a538e9cdb9557537c3c11dc83183264edb54c6ba49a8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceAnimationPartHandler.cs",
+      "sha256": "608d4dbb4a4e8b1be034b792cea1b90113e09541a3ed39b08654066f905e1fdb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSkeletonPart.cs",
+      "sha256": "0c70913261248eedaf7f00d8bdb1c6bc53533b466ae79bc1144fd7fad47f84ce"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/AppearanceSkeletonPartEntry.cs",
+      "sha256": "2ebae9eec43f474ccb4e185254538ccb1f0206bb5c5019524d24c8511fe62f1c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/EffectPartEntry.cs",
+      "sha256": "9058836fca58329b8829a1162d7b054377bbec10c1bed30b7d516b3f08128b2a"
+    }
+  ],
+  "migrated_application_and_ports": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceRendererPartHandler.cs",
+      "sha256": "48da4cff7425c535f82ed794c007a7a78f1b36fd8691b37d4099f83a650b6e23"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceMecanimPartHandler.cs",
+      "sha256": "0a5c48095841b68f3f8255effdc3eef13478e7b5eb5b74ae4c7bb4f74ed1b7a4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceAnimationPartHandler.cs",
+      "sha256": "47d6e9f8c60fff582ff5ce490821cb9557f806d76d577ba5c2c8b3fed05f5545"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceSkeletonPartEntry.cs",
+      "sha256": "e6b68fda283edefe7cd0767249eabb145bafc430a01f682d11aea0c62ee59164"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/EffectPartEntry.cs",
+      "sha256": "867a261fcb509e9e16d71dcb5a95d3de2d488d40654144ca39020e282f7f1fa1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceRendererPartBindings.cs",
+      "sha256": "304c0ed26aa3cb24d3f336fc096595fdebdb24fa69a29b974a0d8cdf37b2a891"
+    }
+  ],
+  "existing_part_dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceSkeletonPart.cs",
+      "sha256": "d73ddb7b7be018985b33dff5123bb4e854acf9cfada920aeb8f5fab761e539da"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearancePartHandler.cs",
+      "sha256": "c5b6c684746b401d18c46bd35950b225d40feef344aa053ffbb67f714bdbdab8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearancePartBindings.cs",
+      "sha256": "8b6016c6a2fb9fb4e0c0a6a40b8bb369729d327844ee22e84630d3c81b18a71a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ICharacterPartEntryProvider.cs",
+      "sha256": "fe98446a7142bb88979e238af365daa9eca18a3021c733256de66a066de8f8f3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/CharacterPartPoolEntry.cs",
+      "sha256": "2ccc2997374f75f26d80900dcc72d0a92edf55b1ada97608b3f822f42586c732"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearancePartPaths.cs",
+      "sha256": "d874e4e911bc387a025ebd03bb6440e131925d5d63525fafa9c00b7b34f72124"
+    }
+  ],
+  "validation": {
+    "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.RendererParts.cs",
+    "sha256": "cb698b933a7745916e1db548468b1c266c580ac1609748a8bdf95934e0210479"
+  },
+  "generator": {
+    "path": "scripts/prepare_battle_renderer_part_sources.py",
+    "sha256": "666d9f6f7c0fccd6858b1a7c184a1eba0e31514f8d3c69ede755e66d4f3d6a46"
+  },
+  "scope": "Official application lifecycle, resource routing, separation requests and animation notification forwarding through explicit ports. No animation SDK implementation is used.",
+  "limits": [
+    "Scene part prefabs and renderer/separator/Mecanim backends are not restored by these ports.",
+    "Play Mode probes verify application call ordering and lifecycle, not actual weapon rendering, motion, gameplay input, saves or Windows Player."
+  ]
+}
