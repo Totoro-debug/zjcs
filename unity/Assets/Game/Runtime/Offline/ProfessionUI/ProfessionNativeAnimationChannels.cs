@@ -20,12 +20,14 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly InheritTrack[] inheritance;
         private readonly ColorTrack[] colors;
         private readonly Color[] setupColors;
+        private ProfessionNativeConstraintAnimation constraints;
         public string Name { get; }
         public float Duration { get; }
         public IReadOnlyList<ProfessionNativeBonePose.Track> BoneTracks => bones;
         public int InheritanceTrackCount => inheritance.Length;
         public int ColorTrackCount => colors.Length;
         public IReadOnlyDictionary<string, object> OriginalFields { get; }
+        public ProfessionNativeConstraintAnimation Constraints => constraints ?? (constraints = new ProfessionNativeConstraintAnimation(data, Name));
 
         public ProfessionNativeAnimationChannels(ProfessionNativeSkeletonData data, string name)
         {

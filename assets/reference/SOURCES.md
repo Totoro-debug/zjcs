@@ -4,6 +4,8 @@
 
 本页只记录官方输入与来源凭据。各模块的原始实现、转换／绑定细节、当前实现和验证边界见所属功能／地图页；逐文件记录以模块来源清单为准。
 
+原生战斗约束通道输入：`prepare_battle_constraint_channel_fixtures.py` 复用逐文件哈希匹配的 `871_156598` 无损人物载荷，记录男女全部896条动画及其原 IK／transform 字段；原载荷／既有凭据、独立实现与夹具 SHA256 见 [约束通道凭据](battle-animation/constraint-channels-source-manifest.json)，使用范围见[战斗执行](../../docs/features/battle-execution.md)。
+
 原版战斗 Game 控制器：`prepare_battle_game_animators.py` 使用所选 `884_156692` 的原生转换凭据、APK／云缓存中的原控制器和依赖对象，保留四份职业／性别控制器及33个片段。原对象／包、转换输入、消费者源码及输出 SHA256 见 [Game 控制器凭据](battle-animation/game-animators-source-manifest.json)；正式人物绑定和验证范围见[战斗执行](../../docs/features/battle-execution.md)。
 
 战斗 Animator 补充代码：`prepare_battle_animator_runtime.py` 从当前 `884_156692` 已校验程序集／反编译结果迁入 `MyPlayableOverrideAnimator`；当前 `AnimationController`、`StateMergeList`、`MyPlayableAnimator` 原源码与既有历史迁移凭据逐字节相同。原始输入、程序集、兼容核对及输出 SHA256 见 [Animator 代码凭据](battle-rules/animator-runtime-source-manifest.json)；已有技能 cue 与 clip 的来源身份不变。

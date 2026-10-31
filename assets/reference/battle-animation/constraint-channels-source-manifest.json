@@ -1,0 +1,47 @@
+{
+  "manifest": "871_156598",
+  "source_receipt": {
+    "path": "assets/reference/profession-ui/skeleton-data-source-manifest.json",
+    "sha256": "5e97038f987d2760cfa49ceaab182d52fac67ae29b43681a4b6ad612e2fdcd34"
+  },
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/ProfessionUI/NativeSkeletonData/Resources/ProfessionUI/NativeSkeletons/male.bytes",
+      "sha256": "7209fd0c72cbc5b32f44374d0c8921b9fe53d60b1dd404da3fc068359415f41f"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/NativeSkeletonData/Resources/ProfessionUI/NativeSkeletons/female.bytes",
+      "sha256": "6f12515b949321a7697392b81b99e4a3c293b729bf832cf324979cdc12ec2bef"
+    }
+  ],
+  "generator_sha256": "50546b0fcafe264ffb0bf74ca0423ee8e94db4a5f6a65f1e6559c627449973bb",
+  "animations": {
+    "male": 445,
+    "female": 451
+  },
+  "key_cases": 6743,
+  "sample_cases": 14868,
+  "fixture_sha256": "54a57a0c7a4556eee3bc233210918ace9bd41d7436e524375dcc685daebcc468",
+  "native_runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeConstraintAnimation.cs",
+      "sha256": "a7fa68ae5a4f3cc2e51b603896a8d391df3161167fe081dbc73b5d8cc710e009"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeConstraintAnimation.cs.meta",
+      "sha256": "a4f95c3dcbb25c676710f4f99f85e08ff6ec64b0e463d34e4b81efdeb6dc1557"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimationChannels.cs",
+      "sha256": "70ccc6f206ff01e13a6b017a710e19cdbab52eb291c90e5a45e1f2f6c47d80d2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeCurve.cs",
+      "sha256": "6f9af85aaf275a98178e28030b3c60e4a8d943a0a1f3d59281ccbf85e5394679"
+    }
+  ],
+  "operation": "Read verified packaged lossless player data; derive IK/transform keys and quarter/mid/three-quarter interval expectations directly from original fields and the existing independent format projection defaults. Independently invert each monotone source cubic time curve by 72 bisections. Check setup values before delayed first keys. Do not read or execute an animation SDK.",
+  "limitations": [
+    "Constraint parameter sampling only. Ordered world constraint solving, physics, animation mixing and rendered player actions remain separate required work."
+  ]
+}

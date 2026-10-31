@@ -11,7 +11,7 @@ using Zjcs.Presentation.Combat;
 
 namespace Zjcs.Editor.Combat
 {
-    public static class OfficialBattleAnimatorPlaybackAcceptance
+    public static partial class OfficialBattleAnimatorPlaybackAcceptance
     {
         private const string Key = "Zjcs.Battle.AnimatorPlaybackAcceptance";
         private static bool started;
@@ -51,6 +51,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key, true);
             SessionState.SetInt(Key + ".result", 1);
             SessionState.SetBool(Key + ".gameControllers", false);
+            SessionState.SetBool(Key + ".constraints", false);
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 180);
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             Hook();
@@ -104,7 +105,8 @@ namespace Zjcs.Editor.Combat
 
         private static IEnumerator Verify()
         {
-            var steps = SessionState.GetBool(Key + ".gameControllers", false) ? GameControllerSteps() : Steps();
+            var steps = SessionState.GetBool(Key + ".constraints", false) ? ConstraintChannelSteps()
+                : SessionState.GetBool(Key + ".gameControllers", false) ? GameControllerSteps() : Steps();
             while (true)
             {
                 object next;
@@ -115,7 +117,9 @@ namespace Zjcs.Editor.Combat
             if (errors == 0)
             {
                 SessionState.SetInt(Key + ".result", 0);
-                Debug.Log(SessionState.GetBool(Key + ".gameControllers", false)
+                Debug.Log(SessionState.GetBool(Key + ".constraints", false)
+                    ? "Original animation constraint channel Play Mode passed; skeleton solving, physics, mixing and rendering remain outside this check."
+                    : SessionState.GetBool(Key + ".gameControllers", false)
                     ? "Official Game controllers Play Mode passed: four original controllers, parameters, idle/skill/damage states, native playable clip overrides and shared-controller restoration. Skeleton motion rendering is not covered."
                     : "Native battle Animator Play Mode passed: official component bindings, infinite/finite/zero duration, speed, ordered parameter restoration, allowed states, original override order and controller isolation/restoration.");
             }
