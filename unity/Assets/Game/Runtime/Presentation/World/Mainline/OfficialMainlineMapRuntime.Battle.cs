@@ -410,8 +410,8 @@ namespace Zjcs.Presentation.World
             {
                 int itemId = passives[slot];
                 if (itemId <= 0) continue;
-                int level = profile.PassiveSlotLevels != null && slot < profile.PassiveSlotLevels.Length
-                    ? profile.PassiveSlotLevels[slot] : 1;
+                int level = progression.SkillProgression.SlotLevel(profile, 101, slot,
+                    progression.SkillContext().CurrentSeasonId);
                 ApplyPassiveSkill(combatCatalog, skillItems, properties, itemId,
                     OfflineSkillProgression.OwnedRank(profile, itemId), level, subRank);
             }
@@ -468,8 +468,8 @@ namespace Zjcs.Presentation.World
                     throw new InvalidDataException("Official active skill item has no fight entity: " + itemId);
                 int rank = OfflineSkillProgression.OwnedRank(profile, itemId);
                 if (rank <= 0) rank = 1;
-                int level = profile != null && profile.ActiveSlotLevels != null
-                    && slot < profile.ActiveSlotLevels.Length ? profile.ActiveSlotLevels[slot] : 1;
+                int level = progression.SkillProgression.SlotLevel(profile, 100, slot,
+                    progression.SkillContext().CurrentSeasonId);
                 if (level <= 0) level = 1;
                 bindings.Add(new FightOfficialSkillBinding
                 {
@@ -498,8 +498,8 @@ namespace Zjcs.Presentation.World
                 int itemId = passiveItems[slot];
                 if (itemId <= 0) continue;
                 int rank = OfflineSkillProgression.OwnedRank(profile, itemId);
-                int level = profile.PassiveSlotLevels != null && slot < profile.PassiveSlotLevels.Length
-                    ? profile.PassiveSlotLevels[slot] : 1;
+                int level = progression.SkillProgression.SlotLevel(profile, 101, slot,
+                    progression.SkillContext().CurrentSeasonId);
                 passives.Add(new FightOfficialPassiveSkillBinding
                 {
                     ItemId = itemId,

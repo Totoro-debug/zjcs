@@ -86,6 +86,26 @@ namespace Zjcs.Editor
                 if (!save.Player.Skills.Skills.Any(value => value.ClassId == 10011))
                     save.Player.Skills.Skills.Add(new Zjcs.Offline.Skills.OfflineOwnedSkill { ClassId = 10011, Rank = 1 });
                 save.Player.Skills.Plans[0].ActiveSkills[0] = 10011;
+                if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_SLOT_BLESSING") == "1")
+                {
+                    save.Player.SubRank = 10;
+                    save.Player.Rank = save.Player.SeasonRank = 4;
+                    save.Player.HasActiveSeasonRecord = true;
+                    save.Player.Skills.ActiveSlotLevels[0] = 10;
+                    save.Player.Skills.PassiveSlotLevels[0] = 12;
+                    save.Player.Skills.Skills.Add(new Zjcs.Offline.Skills.OfflineOwnedSkill { ClassId = 10128, Rank = 6 });
+                    save.Player.Skills.Plans[0].PassiveSkills[0] = 10128;
+                    save.Player.Skills.BlessRecords.Add(new Zjcs.Offline.Skills.OfflineSkillBlessRecord
+                    {
+                        SeasonId = 4, ActiveSlotLevels = new[] { 3, 0, 0, 0 },
+                        PassiveSlotLevels = new[] { 5, 0, 0, 0 }
+                    });
+                    save.Player.Skills.BlessRecords.Add(new Zjcs.Offline.Skills.OfflineSkillBlessRecord
+                    {
+                        SeasonId = 5, ActiveSlotLevels = new[] { 99, 0, 0, 0 },
+                        PassiveSlotLevels = new[] { 99, 0, 0, 0 }
+                    });
+                }
                 File.WriteAllText(slots.GetProgressPath(slot), JsonUtility.ToJson(save, true));
                 File.WriteAllText(Path.Combine(slots.GetSlotDirectory(slot), "map-10-save.json"),
                     "{\"schema\":1,\"slotId\":\"" + slot + "\",\"gridX\":24,\"gridY\":23,"
@@ -255,6 +275,22 @@ namespace Zjcs.Editor
 
             var sceneController = (Zjcs.Presentation.Combat.OfficialBattleRuntimeController)controller;
             VerifyCommonBattleInterface(sceneController);
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_SLOT_BLESSING") == "1")
+            {
+                var player = sceneController.Checkpoint.Units.Single(value => value.Id == 1);
+                Require(player.Skills.Single(value => value.ItemId == 10011).Level == 13,
+                    "Mainline active skill lost its current-season blessing or included another season.");
+                Require(player.ReportSkillSnapshots.Single(value => value.ItemId == 10128).Level == 17,
+                    "Mainline passive snapshot lost its current-season blessing.");
+                Require(player.Statuses.Any(value => value.ApplyingSkillItemId == 10128 && value.SourceSkillLevel == 17),
+                    "Mainline passive status lost its full source skill level.");
+                var restored = Zjcs.Combat.Official.FightBattleCheckpointSerializer.Load(
+                    Zjcs.Combat.Official.FightBattleCheckpointSerializer.Save(sceneController.Checkpoint));
+                Require(restored.Units.Single(value => value.Id == 1).ReportSkillSnapshots
+                    .Single(value => value.ItemId == 10128).Level == 17,
+                    "Checkpoint roundtrip lost the blessed passive skill snapshot.");
+                Debug.Log("Mainline slot blessing passed: active 13, passive/status 17, other season excluded, checkpoint restored.");
+            }
             Combat.OfficialBattleSummonModelAcceptance summonModelTest = null;
             bool finalPresentationHeld = false, finalPresentationCompleted = false;
             sceneController.StepCompleted += result =>
