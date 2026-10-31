@@ -102,6 +102,8 @@ if ($LASTEXITCODE -ne 0) { throw '先修复输入或依赖错误' }
 
 Windows 构建范围保留 `Assets/Official/` 中动态字体的原字形表与图集：构建钩子临时关闭 TMP 自动清空标记，完成或失败后恢复。原载荷中的空动态图集可为0×0；构建清理不应将其当成已实例化纹理读取宽度，也不应清空已有的原字形与图集。该处理维护于 `OfficialSkillRuntimeShaderBuild`，不写回字体资产。
 
+Windows 构建入口同时检查 `BuildReport` 和构建过程的 Error／Exception／Assert 日志。发现 shader 内核等编译错误时以失败退出，不能仅凭 Unity 返回 `Succeeded` 判断可发布。
+
 ### 常见失败的处理顺序
 
 先保留原异常与路径，依次查来源哈希、版本／BuildTarget、CAB、对象引用、脚本／插件、shader／平台格式和显式加载。序列化头错误属于导入问题，不据此反复安装 Hub／编辑器。编译失败时先修复 C#／程序集依赖，再检查 executeMethod 入口；静态或隔离检查通过不能替代完整启动链。

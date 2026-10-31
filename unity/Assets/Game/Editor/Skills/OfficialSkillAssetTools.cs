@@ -24,6 +24,14 @@ namespace Zjcs.Editor.Skills
                 throw new BuildFailedException("A skills Windows validation requires ZJCS_VALIDATION_DIR.");
             Validate();
             ScriptingImplementation previous = PlayerSettings.GetScriptingBackend(NamedBuildTarget.Standalone);
+            int loggedErrors = 0;
+            string firstError = null;
+            Application.LogCallback observe = (message, stack, type) => {
+                if (type != LogType.Error && type != LogType.Exception && type != LogType.Assert) return;
+                loggedErrors++;
+                if (firstError == null) firstError = message;
+            };
+            Application.logMessageReceived += observe;
             try {
                 PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, ScriptingImplementation.Mono2x);
                 string destination = Path.Combine(root, "Player", "杖剑传说.exe");
@@ -33,10 +41,13 @@ namespace Zjcs.Editor.Skills
                     scenes = EditorBuildSettings.scenes.Where(value => value.enabled).Select(value => value.path).ToArray(),
                     locationPathName = destination, target = BuildTarget.StandaloneWindows64, options = BuildOptions.None
                 });
-                if (report == null || report.summary.result != BuildResult.Succeeded)
-                    throw new BuildFailedException("Skills Windows Player build failed.");
+                // Unity may report Succeeded after logging missing shader kernels.
+                if (report == null || report.summary.result != BuildResult.Succeeded
+                    || report.summary.totalErrors != 0 || loggedErrors != 0)
+                    throw new BuildFailedException("Skills Windows Player build failed. " + firstError);
                 Debug.Log("[Skills] Windows Player built: " + destination);
             } finally {
+                Application.logMessageReceived -= observe;
                 OfficialSkillRuntimeShaderBuild.Restore();
                 PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, previous);
             }
