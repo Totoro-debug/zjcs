@@ -32,6 +32,7 @@ namespace Zjcs.Editor
         private const string RealInputKey = "Zjcs.Map10.Battle.Acceptance.RealInput";
         private static bool started;
         private static bool enteredPlayMode;
+        private static Exception pendingRuntimeError;
 
         [MenuItem("Zjcs/Validate/Map10 Battle Play Mode")]
         public static void Run() => Start(false);
@@ -98,6 +99,7 @@ namespace Zjcs.Editor
                 SessionState.SetBool(RealInputKey, realInput);
                 SessionState.SetBool(ActiveKey, true);
                 started = false;
+                pendingRuntimeError = null;
                 HookEditorEvents();
                 EditorApplication.isPlaying = true;
             }
@@ -148,6 +150,13 @@ namespace Zjcs.Editor
         {
             if (!SessionState.GetBool(ActiveKey, false) || !EditorApplication.isPlaying
                 || !enteredPlayMode) return;
+            if (pendingRuntimeError != null)
+            {
+                Exception error = pendingRuntimeError;
+                pendingRuntimeError = null;
+                Finish(false, error);
+                return;
+            }
             if (EditorApplication.timeSinceStartup > SessionState.GetFloat(DeadlineKey, 0f))
             {
                 Finish(false, new TimeoutException("Map10 battle acceptance did not start before its deadline."));
@@ -765,8 +774,10 @@ namespace Zjcs.Editor
 
         private static void OnRuntimeLog(string message, string stackTrace, LogType type)
         {
-            if (type == LogType.Error || type == LogType.Exception)
-                Finish(false, new InvalidOperationException(message + "\n" + stackTrace));
+            // Resource import can invoke this inside native engine loading.
+            // Exit on the next Editor tick after that native stack has unwound.
+            if ((type == LogType.Error || type == LogType.Exception) && pendingRuntimeError == null)
+                pendingRuntimeError = new InvalidOperationException(message + "\n" + stackTrace);
         }
 
         private static void Require(bool condition, string message)
@@ -776,6 +787,7 @@ namespace Zjcs.Editor
 
         private static void Finish(bool passed, Exception error)
         {
+            pendingRuntimeError = null;
             SessionState.SetInt(ResultKey, passed ? 0 : 1);
             Application.logMessageReceived -= OnRuntimeLog;
             if (error != null) Debug.LogException(error);

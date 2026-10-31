@@ -1293,3 +1293,9 @@ unity/Assets/Game/Resources/Official/Progression/mainline-tasks.json text eol=lf
 
 # Preserve the client decompilation generator fingerprint.
 scripts/archive_official_client_sources.py text eol=lf
+# Preserve the generator bytes recorded by the Map13 follower source manifests.
+scripts/prepare_unity_map13_npc_follower_data.py text eol=lf
+scripts/prepare_unity_map13_npc_follower_textures.py text eol=lf
+# Preserve exact LF payload bytes checked by the gem and Map10 UI loaders.
+unity/Assets/Game/Resources/Equipment/gem-forge-rules.json text eol=lf
+unity/Assets/Official/World/Map/10/UI/map10-ui.json text eol=lf

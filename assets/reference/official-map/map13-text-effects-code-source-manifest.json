@@ -231,7 +231,7 @@
   "templates": [
     {
       "path": "scripts/map13_tmp_effect_runtime.cs",
-      "sha256": "dedd18b23f6c5577acf8c20695a5101a35f077f8984286ce4aa0a42046577641"
+      "sha256": "a91bca648f40bde3666d2d3f9bacf31edce18055bee1d35f590f27c510bef9da"
     }
   ],
   "outputs": [
@@ -247,7 +247,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/World/NativeText/TMPEffect.cs",
-      "sha256": "dedd18b23f6c5577acf8c20695a5101a35f077f8984286ce4aa0a42046577641",
+      "sha256": "a91bca648f40bde3666d2d3f9bacf31edce18055bee1d35f590f27c510bef9da",
       "meta_sha256": "af602f224b9bf014dc051480db5d18c7443115793fea4406cb9781abf643fcd3"
     },
     {
@@ -259,7 +259,7 @@
   "converters": [
     {
       "path": "scripts/prepare_unity_map13_text_effects.py",
-      "sha256": "496fcb488fb1411b6c3a6bebe3b4ddffa0be651b155e3eee7716fc0c035182b7"
+      "sha256": "601878c2879fde12014c16376cd601492633e7b76070d5146d02985b703ccca5"
     },
     {
       "path": "scripts/read_official_native.py",
@@ -283,15 +283,18 @@
   "validation": [
     {
       "path": "unity/Assets/Game/Editor/Map13/OfficialMap13TextEffectAcceptance.cs",
-      "sha256": "d91afaa7c9b43476bd84e3db9dff278ae200d4ff6e4b522f2abda4c3afaf4a08"
+      "sha256": "4db5030e2a0eeae611342bf2a956a54d6823b75bbd2d36999d1776d458d8331f"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13/Zjcs.Editor.Map13.asmdef",
-      "sha256": "c49afeda9dcb0486fa9cd7665ddd157ad99b502821dabccbfbcdff6ca1d2e9c6"
+      "sha256": "2091a2950e7070ca61300bbe5fe3a66009d8a2f8bbc2bb7de842184adb4793fb"
     }
   ],
   "operation": "Reconstruct C# from all 30 pinned official TMPEffect/manager/material native methods and original metadata; recover every material property/keyword literal and constructor/angle constant. Preserve original branch/operation/lifecycle order, effect normalization, material CRC pooling, reference counts, color space, autosize callbacks and raw TMP material-dirty field access. The separate native manager calls private/protected effect methods; internal wrappers adapt only managed access visibility. Keep the engine TMP dependency separate and explicitly preserve its reflected field for Player builds.",
   "limitations": [
     "Native code reconstruction and engine compatibility require runtime validation; original world-label prefabs and full map state/UI integration remain separate."
+  ],
+  "adaptations": [
+    "Defer OnValidate editor preview while the original TMP component or font binding is unavailable during prefab import. Runtime setup and valid-font effect calculations retain their original order."
   ]
 }

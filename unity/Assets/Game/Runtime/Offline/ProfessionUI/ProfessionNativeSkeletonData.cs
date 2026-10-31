@@ -222,7 +222,8 @@ namespace Zjcs.Offline.ProfessionUI
 
         public ProfessionNativeIdleIk.Constraint[] CreateIdleIk(string animationName, float time)
         {
-            if (animationName != "home/idle_01" && animationName != "100/idle_01" && animationName != "200/idle_01")
+            if (animationName != "home/idle_01" && animationName != "100/idle_01" && animationName != "200/idle_01"
+                && !(animationName.StartsWith("npc_", StringComparison.Ordinal) && animationName.EndsWith("/idle_01", StringComparison.Ordinal)))
                 throw new NotSupportedException("Verify additional original IK animation: " + animationName);
             if (float.IsNaN(time) || float.IsInfinity(time)) throw new ArgumentException("Original IK time must be finite.");
             var animation = OptionalObject(Object(animations[animationName]), "ik"); var result = new List<ProfessionNativeIdleIk.Constraint>();

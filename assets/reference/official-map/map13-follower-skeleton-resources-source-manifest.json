@@ -1,0 +1,185 @@
+{
+  "format": 1,
+  "mapClassId": 13,
+  "manifest": "871_156598",
+  "generator": {
+    "path": "scripts/prepare_unity_map13_npc_follower_data.py",
+    "sha256": "479498bbb3b01428857380ee567961b3bc9708a8e7e48736d95d57d53d7b9933"
+  },
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-entity-skeletons.json",
+      "sha256": "86aa5bc60557d4cbd64b937d9ef60372e59115b854695d88002caf6b41fad917"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/team-npc-skeletons.json",
+      "sha256": "1137442dfed7176243fedce45fa8d33093ebd59f7bbb0e867cb3c548473e900e"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map12/Native/TeamNpcBattle/catalog.json",
+      "sha256": "de5f453670998165662261c1c456cec2c817d8a8bd98053dd0d87ebfe712a7bf"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/Native/native-entity-materials-catalog.asset",
+      "sha256": "dadfbef8cd3c0739f3d7309551c532c8e5bd7fb1b736589beae87b4f58da6b76"
+    }
+  ],
+  "models": [
+    {
+      "identity": "CAB-ab3d3c909fcb15167d8f81dcdf082f92:5517491646269376500",
+      "name": "npc_middle_model_SkeletonData",
+      "scale": 0.009999999776482582,
+      "resource": "Map12/Native/TeamNpcBattle/TeamNpcSkeletons/de2910e91d7ba1251a373ccd",
+      "decodedSource": {
+        "path": "unity/Assets/Official/World/Map/13/Source/EntitySkeletons/e213859aac02cf67b5079f55/skeleton.json",
+        "sha256": "83cfb251829d58ade4a6d69e22800bbe0762c49d9353b682ce126f9f03700f9e"
+      },
+      "originalAtlas": {
+        "path": "unity/Assets/Official/World/Map/13/Source/EntitySkeletons/e213859aac02cf67b5079f55/atlas-0.txt",
+        "sha256": "de52d9fea7bba17129aadbf6953f0a9cdeb46d14af80367ec91bc5f678308516"
+      },
+      "sharedAtlas": {
+        "path": "unity/Assets/Official/World/Map/12/Source/TeamNpcSkeletons/de2910e91d7ba1251a373ccd/atlas-0.txt",
+        "sha256": "de52d9fea7bba17129aadbf6953f0a9cdeb46d14af80367ec91bc5f678308516"
+      },
+      "package": {
+        "path": "unity/Assets/Game/Resources/Map12/Native/TeamNpcBattle/TeamNpcSkeletons/de2910e91d7ba1251a373ccd.bytes",
+        "sha256": "7b649a8c2f83452d36dab07dc26ccd857a0f90c61d600cfdc6cb48cf7cb53325"
+      },
+      "sourceContentEqual": true,
+      "atlasBytesEqual": true
+    },
+    {
+      "identity": "CAB-caf28f5e8f875901ace6a37e402ff8b2:2898321880054972216",
+      "name": "npc_big_model_SkeletonData",
+      "scale": 0.009999999776482582,
+      "resource": "Map12/Native/TeamNpcBattle/TeamNpcSkeletons/d1eede58a92185556bd9f478",
+      "decodedSource": {
+        "path": "unity/Assets/Official/World/Map/13/Source/EntitySkeletons/8c806e236636990a38ae0fa4/skeleton.json",
+        "sha256": "250e9026ed116eb588bb6f07b960951768643f67490d77ad1db5f0967222f67e"
+      },
+      "originalAtlas": {
+        "path": "unity/Assets/Official/World/Map/13/Source/EntitySkeletons/8c806e236636990a38ae0fa4/atlas-0.txt",
+        "sha256": "a9bd52bcc5ae630c095bf455d4f3e6eda237e1e2316c0bbc655f54201f91acce"
+      },
+      "sharedAtlas": {
+        "path": "unity/Assets/Official/World/Map/12/Source/TeamNpcSkeletons/d1eede58a92185556bd9f478/atlas-0.txt",
+        "sha256": "a9bd52bcc5ae630c095bf455d4f3e6eda237e1e2316c0bbc655f54201f91acce"
+      },
+      "package": {
+        "path": "unity/Assets/Game/Resources/Map12/Native/TeamNpcBattle/TeamNpcSkeletons/d1eede58a92185556bd9f478.bytes",
+        "sha256": "0dd71ddee681cc40a3c42707298e1bdfdd28a63ad40b38c0f8eaf21bfd268db1"
+      },
+      "sourceContentEqual": true,
+      "atlasBytesEqual": true
+    }
+  ],
+  "bindings": [
+    {
+      "combineSkins": [
+        "body_8402"
+      ],
+      "npcClassId": 8402,
+      "skeletonIndex": 23,
+      "startingAnimation": "npc_8402/idle_01",
+      "resource": "Map12/Native/TeamNpcBattle/TeamNpcSkeletons/de2910e91d7ba1251a373ccd",
+      "modelScale": [
+        0.23,
+        0.23,
+        1.0
+      ],
+      "modelOffset": [
+        0.0,
+        -0.5,
+        -0.5
+      ],
+      "originalPrefab": {
+        "path": "unity/Assets/Official/World/Map/14/NativeEntityPrefabs/Prefabs/Map/Common/EntityDisplaysWorldNPC/WorldNPC_Common/8402_view.prefab",
+        "sha256": "571920d3be405f29751c3a0eeeb76b932e923b47a0b6ee85a08a8566237f9a2e"
+      }
+    },
+    {
+      "combineSkins": [
+        "body_8440"
+      ],
+      "npcClassId": 8440,
+      "skeletonIndex": 29,
+      "startingAnimation": "npc_8440/idle_01",
+      "resource": "Map12/Native/TeamNpcBattle/TeamNpcSkeletons/d1eede58a92185556bd9f478",
+      "modelScale": [
+        0.3,
+        0.3,
+        1.0
+      ],
+      "modelOffset": [
+        0.0,
+        -0.5,
+        -0.5
+      ],
+      "originalPrefab": {
+        "path": "unity/Assets/Official/World/Map/14/NativeEntityPrefabs/Prefabs/Map/Common/EntityDisplaysWorldNPC/WorldNPC_13/8440_view.prefab",
+        "sha256": "1a1ccb54a712673a8d7867038430b3285d93b424a5a85ed9043183ecd8e95c29"
+      }
+    },
+    {
+      "combineSkins": [
+        "body_8441"
+      ],
+      "npcClassId": 8441,
+      "skeletonIndex": 23,
+      "startingAnimation": "npc_8441/idle_01",
+      "resource": "Map12/Native/TeamNpcBattle/TeamNpcSkeletons/de2910e91d7ba1251a373ccd",
+      "modelScale": [
+        0.3,
+        0.3,
+        1.0
+      ],
+      "modelOffset": [
+        0.0,
+        -0.5,
+        -0.5
+      ],
+      "originalPrefab": {
+        "path": "unity/Assets/Official/World/Map/14/NativeEntityPrefabs/Prefabs/Map/Common/EntityDisplaysWorldNPC/WorldNPC_13/8441_view.prefab",
+        "sha256": "e5918c40f26fde3c30140a5366cff89c478f87502be3b8d21046413c646d3997"
+      }
+    },
+    {
+      "combineSkins": [
+        "body_8442"
+      ],
+      "npcClassId": 8442,
+      "skeletonIndex": 23,
+      "startingAnimation": "npc_8442/idle_01",
+      "resource": "Map12/Native/TeamNpcBattle/TeamNpcSkeletons/de2910e91d7ba1251a373ccd",
+      "modelScale": [
+        0.3,
+        0.3,
+        1.0
+      ],
+      "modelOffset": [
+        0.0,
+        -0.5,
+        -0.5
+      ],
+      "originalPrefab": {
+        "path": "unity/Assets/Official/World/Map/14/NativeEntityPrefabs/Prefabs/Map/Common/EntityDisplaysWorldNPC/WorldNPC_13/8442_view.prefab",
+        "sha256": "21a073df660f53a88067b511824e414be06284cf108d6aa930ce66edfd2e7ae3"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Map13/Native/npc-follower-material-catalog.asset",
+      "sha256": "b9a1e95761943efc5054e10a83f17a4ac25957f8aa6b17abfc0f816816ecb406"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/Native/npc-follower-material-catalog.asset.meta",
+      "sha256": "9bfc92e76ae9bebc2bc5812da92fbf3e0fa5aa8f73d5570f6129c599409e3088"
+    }
+  ],
+  "operation": "Verify exact original CAB/path IDs, atlas byte equality and parsed skeleton/skin/constraint/animation equality. Reuse existing native NPC packages without pose baking or animation runtime dependencies.",
+  "limitations": [
+    "This receipt proves source/package equality only. Native follower rendering, constraints, story input, persistence and Player acceptance are tracked in docs/maps/map-13.md."
+  ]
+}

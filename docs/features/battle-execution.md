@@ -208,13 +208,13 @@ prepare_treasure_tasks.py补充固定871_156598的BattleEventType、原TreasureD
 
 ### 公共模块重构验证范围
 
-现有 `OfficialMap10BattlePlayModeAcceptance` 已增加公共接口回归：无效时间参数不改变会话、重复启动不替换现有会话，以及准备／暂停／当前步骤演出期间的大时间步禁止越过门控；原有末次命中等待和结束阶段检查继续保留。测试通过调用方同一 `Begin/Tick/Checkpoint` 接口检查结果，不读取执行器或播放计时器内部字段。该组新增回归尚未执行，需在全工程编译恢复后运行。测试存档创建在 `ZJCS_VALIDATION_DIR` 指定的隔离会话内。
+现有 `OfficialMap10BattlePlayModeAcceptance` 已增加公共接口回归：无效时间参数不改变会话、重复启动不替换现有会话，以及准备／暂停／当前步骤演出期间的大时间步禁止越过门控；原有末次命中等待和结束阶段检查继续保留。测试通过调用方同一 `Begin/Tick/Checkpoint` 接口检查结果，不读取执行器或播放计时器内部字段。该组新增回归已在主工程内置屏 Play Mode 模拟输入中通过，进程退出码为 0。测试存档创建在 `ZJCS_VALIDATION_DIR` 指定的隔离会话内。验收入口将运行时错误记录到待处理状态，由下一次编辑器更新结束测试，避免在原生资源加载的日志回调栈内退出引擎；对照失败场景已正常返回退出码 1，未再出现栈溢出。输入工具只通过实际 EventSystem 射线与指针事件分发模拟点击，已移除真实鼠标和抢前台分支；批处理下保留单个 Game View，截图尺寸与输入视口同步。
 
 已执行并通过：`test_battle_step_timing.ps1`、`test_battle_phase_machine.ps1`、`test_battle_checkpoint_persistence.ps1`、`test_battle_cooldown_status.ps1`、`test_battle_report.ps1`（使用 PowerShell 7）。它们验证已有规则时序、阶段、序列化恢复、CD 与统计，不代表新请求接口或场景接线已通过运行验收。综合 `test_unity_combat.ps1` 因缺少未受 Git 管理的 `assets/reference/battle-rules/damage-reference.json` 停止，未生成替代预期值。
 
-Unity 2022.3.57f1c2 许可证已恢复，内置屏启动的导入／编译已产出公共战斗程序集。全工程编译仍被主线 Map13 引用的缺失类型 `OfficialMap13NpcFollowerView` 阻断；Map15 档案多余的构造参数已修复并经再次编译确认不再报错。`Zjcs.Editor.ProjectTools.Validate` 因此尚未执行，正式地图／家园 Play Mode 模拟输入、画面、恢复及 Windows Player 构建发布均未完成，不能将接口重构标为完整战斗迁移完成。Map13 的显示缺口维护于[泽之国](../maps/map-13.md)。`python -B scripts/check_unity_project.py` 已通过（80,647个 GUID），发现的六个既有资产目录缺少 `.meta` 已补充稳定目录 GUID，未改动资产载荷。修改的 C# 文件也通过 Roslyn 语法解析；这不能替代 Unity 类型检查。
+Unity 2022.3.57f1c2 许可证已恢复，内置屏启动的主工程已完成运行时及编辑器程序集编译；用户授权手动补入的 `OfficialMap13NpcFollowerView` 和创角验证程序集的 State 依赖修复了类型编译缺口。`Zjcs.Editor.ProjectTools.Validate` 已通过战斗规则、配置、HUD 与 Map10 资产检查。首次全量导入另出现既有 `TMPEffect.OnValidate` 空引用和 Spine 自动导入原 Atlas 的异常；前者已按字体绑定就绪状态修复，并通过原文字效果完整 Play Mode 验证，后者仍属于原 Atlas 自动导入问题，故不将首次导入称为零异常导入。Map15 档案多余的构造参数已修复并经再次编译确认不再报错。Map10 战斗已通过模拟指针回归并实际查看七张准备／播放／缩放／聊天／返回地图画面；其余调用入口、冷存档恢复及 Windows Player 构建发布仍须验证，不能将接口重构标为完整战斗迁移完成。Map13 手动显示实现及限制维护于[泽之国](../maps/map-13.md)。`python -B scripts/check_unity_project.py` 已通过（80,659 个 GUID），此前发现的六个既有资产目录缺少 `.meta` 已补充稳定目录 GUID，未改动资产载荷。
 
-NPC 外观复用验证：`OfficialMap12NpcBattleModelView` 是现有 Map12 队伍战斗的原生模型适配器。隔离 Unity 2022.3.57f1c2 内置屏 Play Mode 使用当前编译程序集和同版原 NPC 数据，调用其构造、`Play("idle_01")`、`Tick` 并实际渲染8402／8440／8441／8442，分别得到469／483／606／444个网格顶点；四者均绑定 `Texture2D.whiteTexture`，四张运行画面均为白色多边形，原贴图检查4／4失败。因此它尚不能作为已验证可用的公共 NPC 显示实现。本次未将其复制为 Map13 跟随者。代码核对另确认 `BuildMaterials` 使用白纹理并按批次序号取材质，`EvaluateNativeAnimation` 只应用局部动画通道，未执行 NPC 的 IK／transform／path／physics 约束。须先恢复原图集页、原材质及批次页／混合模式绑定和完整约束，再验证实际技能动作、位移、受击、结束与存档流程；数据读取、非空网格和待机名称解析不能作为可用证明。Map13 当前编译缺口见[泽之国](../maps/map-13.md)。
+NPC 外观复用验证：`OfficialMap12NpcBattleModelView` 是现有 Map12 队伍战斗的原生模型适配器。隔离 Unity 2022.3.57f1c2 内置屏 Play Mode 使用当前编译程序集和同版原 NPC 数据，调用其构造、`Play("idle_01")`、`Tick` 并实际渲染8402／8440／8441／8442，分别得到469／483／606／444个网格顶点；四者均绑定 `Texture2D.whiteTexture`，四张运行画面均为白色多边形，原贴图检查4／4失败。因此它尚不能作为已验证可用的公共 NPC 显示实现。本次未将其复制为 Map13 跟随者。代码核对另确认 `BuildMaterials` 使用白纹理并按批次序号取材质，`EvaluateNativeAnimation` 只应用局部动画通道，未执行 NPC 的 IK／transform／path／physics 约束。须先恢复原图集页、原材质及批次页／混合模式绑定和完整约束，再验证实际技能动作、位移、受击、结束与存档流程；数据读取、非空网格和待机名称解析不能作为可用证明。用户授权手动实现的 Map13 显示类另行恢复了原图集、材质和部分待机约束，四类彩色动态网格检查已通过；完整物理约束和正式流程未通过前不替换现有战斗适配器，具体范围见[泽之国](../maps/map-13.md)。
 
 ## 尚未实现
 

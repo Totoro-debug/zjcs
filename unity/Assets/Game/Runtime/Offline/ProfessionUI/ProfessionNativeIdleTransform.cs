@@ -27,7 +27,8 @@ namespace Zjcs.Offline.ProfessionUI
         {
             if (data == null || selectedConstraints == null) throw new ArgumentNullException();
             Finite(time);
-            if (animation != "home/idle_01" && animation != "100/idle_01" && animation != "200/idle_01")
+            if (animation != "home/idle_01" && animation != "100/idle_01" && animation != "200/idle_01"
+                && !(animation.StartsWith("npc_", StringComparison.Ordinal) && animation.EndsWith("/idle_01", StringComparison.Ordinal)))
                 throw new NotSupportedException("Verify additional original transform animation: " + animation);
             var selected = new HashSet<int>(selectedConstraints);
             foreach (int index in selected)

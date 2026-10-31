@@ -103,6 +103,10 @@ python -B scripts/fetch_official_assets.py --extract '<bundle 名称正则>'
 
 Map13 四份 NPC 出现／消失原生演出复用：固定 871_156598，独立使用 Map13 已核验的原 prefab 转换结果，核对 CAB／根对象、完整层级、262 个对象载荷哈希，并核验原生粒子／渲染器／Animator 的 902 个指针、94,949 个值和 176 项 lightmap 默认值；所有引用按 Map13 原 CAB／pathID 重新对应共享载荷，不依赖其他地图未提交的提取文件；共享原材质、shader、贴图和原应用代码的 76 项交付文件全部校验，新增 Map13 原 GUID 目录，零替代美术／Spine runtime。`map13-native-npc-appearance-bindings-source-manifest.json` 记录全部输入、共享载荷、输出及内置屏 Unity 2022.3.57f1c2 D3D11 实播来源：53 层 GPU mip 字节一致，四份演出各两次、粒子／跟随／淡出／显隐／事件顺序及 16 个已查看实际帧。原 NPC 动画与实际音频、完整剧情／地图输入存档及 Windows Player 仍待完成，未进入完整素材快照。原剧情转换器按 LF 保存，引用和完整层级核对重新执行，来源工具哈希与 Git 字节一致。
 
+Map13 剧情跟随者资源：固定 `871_156598`，五张原 NPC Atlas 原生 RGBA32 与 GUID 由历史已核验载荷恢复，输入 bundle／对象、ASTC profile、全部 mip 与输出哈希见[图集来源](official-map/map13-npc-follower-textures-source-manifest.json)。[骨骼共用凭据](official-map/map13-follower-skeleton-resources-source-manifest.json) 逐项核对 Map13 与 Map12 的原 CAB／path ID、原 Atlas 字节和骨骼／皮肤／约束／动画 JSON 内容一致，复用两份现有原生数据包；记录四个原 NPC prefab 的模型变换，并按原 PPtr 生成五项专用材质目录。核对工具仅使用 Python 标准库，不加载动画 runtime 或烘焙姿势；素材未进入完整快照。
+
+Map13 原文字特效 AOT 输入：固定 `871_156598` 的原始映像／metadata 哈希和 30 项方法证据保存在 [文字效果代码来源](official-map/map13-text-effects-code-source-manifest.json)。原 `.tools/source-packages/commerce-native/libil2cpp-restored.bin` 当前缺失，通用 `official-code/global-metadata.dat` 及两项提取工具已由后续准备流程更新；历史输入／工具哈希保留，重提取须恢复匹配版本。当前模板、交付代码和验收配置另按本次实际内容记录；提取工具在写出前检查原输入身份，不能用新版 metadata 重新标记为旧版产物。
+
 Map14 实体 prefab：固定云端选择 `871_156598`，输入选择、官方 bundle 身份、对象路径及原始字段核对见 `official-map/map14-native-entity-input-source-manifest.json` 与 `official-map/map14-native-entity-export-source-manifest.json`。Unity 包含 416 个被放置实体引用的原 prefab 根及其依赖，原路径和 EntityClassId 由 `Map14/Native/entity-prefab-catalog` 显式绑定；`scripts/test_map14_entity_prefab_export.py` 对照导出回执逐根验证恢复与打包文件 SHA256。运行状态及未完成交互范围见[龙之国](../../docs/maps/map-14.md)。
 
 主线国度商店表：`prepare_unity_nation_shop_catalog.py` 从所选 `871_156598` 官方 `map_nation_shop`、`shop_level_group`、`shop`、`shop_goods` 表生成本地运行目录；固定商品、等级阈值、原价、货币、库存、购买限制和刷新周期逐表导出。`mainline-nation-shop-source-manifest.json` 记录官方表输入与 `nation-shops.json` 输出哈希。离线经验按用户确认规则以消耗专属货币 1:1 累计，运行、存档及未完成项见[泽之国](../../docs/maps/map-13.md)。

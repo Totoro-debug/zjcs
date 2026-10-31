@@ -57,7 +57,14 @@ namespace TMPro
         private void OnEnable() { ReleaseAllMats(); DoSetup(true); }
         private void OnDisable() { ReleaseAllMats(); DoSetup(false); }
         private void OnDestroy() { ReleaseAllMats(); }
-        private void OnValidate() { bool value = enabled; ReleaseAllMats(); DoSetup(value); }
+        private void OnValidate()
+        {
+            // Unity imports the prefab before the offline font binding exists.
+            // Preserve runtime setup; defer editor preview until its font is ready.
+            bool value = enabled; ReleaseAllMats();
+            if (text == null || text.font == null) return;
+            DoSetup(value);
+        }
         private void Update() { if (RealtimeUpdate) { bool value = enabled; ReleaseAllMats(); DoSetup(value); } }
         public void SetupEffect(bool enable) { ReleaseAllMats(); DoSetup(enable); }
         public void SetGray(bool value) { gray = value; ReleaseAllMats(); DoSetup(true); }

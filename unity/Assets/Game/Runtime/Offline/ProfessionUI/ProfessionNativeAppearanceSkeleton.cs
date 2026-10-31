@@ -114,11 +114,12 @@ namespace Zjcs.Offline.ProfessionUI
             attachments.SetSkin(native); UpdateCache();
         }
         public void SetToSetupPose()
-        { Pose.Reset(); SlotPose.Reset(); attachments.ResetSlots(); }
+        { Pose.Reset(); SlotPose.Reset(); attachments.ResetSlots(); nativeColors = false; }
         public void UpdateCache() => Pose.SetSkinBones(attachments.Skin?.Bones ?? (IReadOnlyList<int>)Array.Empty<int>());
 
         public void EvaluateUnmixedIdleBeforePhysics(string animation, float time)
         {
+            nativeColors = false;
             if (animation != "home/idle_01" && animation != "100/idle_01" && animation != "200/idle_01")
                 throw new NotSupportedException("Verify additional original native skeleton animation: " + animation);
             if (!boneClips.TryGetValue(animation, out var bones))
@@ -135,10 +136,11 @@ namespace Zjcs.Offline.ProfessionUI
         // Battle NPCs use the same source channels, but their animation names are
         // character-prefixed (for example npc_8402/idle_01). Keep the generic
         // channel application here so battle does not invent a second pose graph.
-        public void EvaluateNativeAnimation(ProfessionNativeAnimationChannels channels, float time)
+        public void EvaluateNativeAnimation(ProfessionNativeAnimationChannels channels, float time, bool loop = true)
         {
             if (channels == null) throw new ArgumentNullException(nameof(channels));
-            channels.ApplyLocalPose(Pose, SlotPose, animationColors, Mathf.Max(0f, time), true);
+            channels.ApplyLocalPose(Pose, SlotPose, animationColors, Mathf.Max(0f, time), loop);
+            nativeColors = true;
             for (int i = 0; i < slots.Length; i++)
                 attachments.SetAttachment(i, attachments.Resolve(i, SlotPose.Attachment(i)));
         }
@@ -159,6 +161,7 @@ namespace Zjcs.Offline.ProfessionUI
             Pose.Apply(tracks, time); SlotPose.Reset(); attachments.ResetSlots();
         }
 
+        private bool nativeColors;
         public ProfessionNativeMeshBatches.Slot[] CreateDrawSlots(IReadOnlyList<int> breaksAfter = null)
         {
             var result = new ProfessionNativeMeshBatches.Slot[slots.Length];
@@ -166,7 +169,7 @@ namespace Zjcs.Offline.ProfessionUI
             {
                 int index = SlotPose.DrawSlot(i);
                 result[i] = new ProfessionNativeMeshBatches.Slot(index, (ProfessionNativeAttachment)attachments.Attachment(index),
-                    SlotPose.Color(index), SlotPose.Blend(index), Pose.IsActive(SlotPose.Bone(index)), breaksAfter != null && breaksAfter.Contains(index));
+                    nativeColors ? (Color32)animationColors[index] : SlotPose.Color(index), SlotPose.Blend(index), Pose.IsActive(SlotPose.Bone(index)), breaksAfter != null && breaksAfter.Contains(index));
             }
             return result;
         }

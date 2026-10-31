@@ -18,11 +18,11 @@
 
 固定 871_156598 的 ItemIconAttachmentManager → ItemIconAttachmentConfig → GUID 对应 GotObj、Mask、RedDotContent 三个原 prefab，由 prepare_kitchen_completion.py --selection-only 按原 RectTransform、Image 色值及 ItemIconAttachmentCell 层级 7／0／20 转换。ImgTick、ImgQuality_Mask、ImgRedDot 复用已有官方贴图；资源清单当前共 181 项、数据输出 25 项，配置、挂件对象、客户端代码及语言输入／输出 SHA256 保留于 kitchen-completion/source-manifest.json。MergePanel.GemMerge_FullLevel 从固定版原语言包提取，未手写替代提示。完整重建亦包含这三项挂件；--language-only 仅重新提取已有界面使用的原文。
 
-`scripts/prepare_unity_gem_forge_rules.py` 从固定 manifest `871_156598` 的 `assets/official/rules.json` 读取 `gem`、`gem_merge` 和 `GemMergeStorySetting.StoryList`，写入 `unity/Assets/Game/Resources/Equipment/gem-forge-rules.json`。输入由 `assets/reference/official-city/source-manifest.json` 校验；Unity 载荷与输出 SHA256 记录在同目录 `gem-forge-source-manifest.json`，运行时由 `OfflineGemForgeService.LoadDefault` 校验。当前提取 360 条宝石类型和 14 条合成规则。规则原值不改写；高阶炉的随机结算状态随本地角色装备存档保存。
+`scripts/prepare_unity_gem_forge_rules.py` 从既有固定 manifest `854_156383` 的 `assets/official/rules.json` 读取 `gem`、`gem_merge` 和 `GemMergeStorySetting.StoryList`，写入 `unity/Assets/Game/Resources/Equipment/gem-forge-rules.json`。输入由 `assets/reference/official-city/source-manifest.json` 校验；Unity 载荷与输出 SHA256 记录在同目录 `gem-forge-source-manifest.json`，运行时由 `OfflineGemForgeService.LoadDefault` 校验。当前提取 360 条宝石类型和 14 条合成规则。规则原值不改写；高阶炉的随机结算状态随本地角色装备存档保存。
 
 ## 完整还原部分
 
-`scripts/prepare_unity_gem_forge_rules.py` 校验固定版 `871_156598` 的 `rules.json` 来源哈希，提取 `gem_merge` 表及 `GemMergeStorySetting.StoryList` 前三项至 `unity/Assets/Game/Resources/Equipment/gem-forge-rules.json`；配套来源哈希记录由 `OfflineGemForgeService.LoadDefault` 校验。
+`scripts/prepare_unity_gem_forge_rules.py` 校验既有固定版 `854_156383` 的 `rules.json` 来源哈希，提取 `gem_merge` 表及 `GemMergeStorySetting.StoryList` 前三项至 `unity/Assets/Game/Resources/Equipment/gem-forge-rules.json`；配套来源哈希记录由 `OfflineGemForgeService.LoadDefault` 校验。该载荷按提交中的原始 LF 字节固定交付，避免 Windows 检出时 CRLF 多出一字节而阻断地图初始化；预期 SHA256 和规则值均未修改。当前规则载荷与下述 `871_156598` UI 输入分别保留来源版本，规则升级尚未完成。
 
 `OfflineGemForgeService` 使用 `OfficialEquipmentCatalog` 的 `gem`、`item` 表读取宝石类型、等级与 ID。普通配方按 `RequireCount + 1` 计总颗数；主石与材料等级相同则主石计入总数，镶嵌主石也适用。玩家可选择背包堆叠数量或其他装备孔位中的同类宝石作为材料；合成事务按所选孔位扣除材料，成功时原主石孔位升级。高阶配方按 `BaseRate + StepRate[min(PercentMininum, missCount)]` 计算成功概率；保底故事播放完后，达到 `PercentMininum` 次失败时必成。失败类型使用官方 `FailedResult`。公式依据官方 `PlayerGemDataExt.GetSuccessRateByGemRank`、`GetGemEnergyStorageValue`、`NeedTriggerStory` 与 `NeedTriggerDownExplodeStory`。
 

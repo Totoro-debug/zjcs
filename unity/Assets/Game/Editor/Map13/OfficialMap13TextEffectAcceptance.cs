@@ -185,7 +185,9 @@ namespace Zjcs.Editor.Map13
             var pixels = request.GetData<Color32>().ToArray(); if (pixels.Count(p => p.r > 10 || p.g > 10 || p.b > 10) < 500)
                 throw new InvalidDataException("Original TMP effects did not render visible glyphs.");
             var image = new Texture2D(1024, 256, TextureFormat.RGBA32, false, true); image.SetPixels32(pixels); image.Apply();
-            File.WriteAllBytes(Path.Combine(OfficialMap13FlagTools.Repository, ".tools/map13-text-effects.png"), image.EncodeToPNG()); UnityEngine.Object.Destroy(image);
+            string output = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR")
+                ?? throw new InvalidOperationException("An explicit validation workspace is required.");
+            File.WriteAllBytes(Path.Combine(output, "map13-text-effects.png"), image.EncodeToPNG()); UnityEngine.Object.Destroy(image);
             UnityEngine.Object.Destroy(first.gameObject); UnityEngine.Object.Destroy(second.gameObject); yield return null; yield return null;
             var pool = (System.Collections.IDictionary)typeof(TMPEffectMaterial).GetField("pool", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
             var references = (System.Collections.IDictionary)typeof(TMPEffectMaterial).GetField("m_refMatDic", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);

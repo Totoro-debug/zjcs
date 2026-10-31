@@ -1,11 +1,10 @@
 """Recover original TMP effect methods, literals and constants from the pinned APK."""
 from pathlib import Path
+import hashlib
+import json
 import struct
 
-from official_apk import ROOT
-from official_metadata import Metadata
-from read_official_native import NativeMethods
-from prepare_unity_map13_sources import encode, sha, source_path, write, meta
+ROOT = Path(__file__).resolve().parents[1]
 
 DEST = ROOT / "unity/Assets/Game/Runtime/Official/World/NativeText"
 
@@ -13,6 +12,17 @@ DEST = ROOT / "unity/Assets/Game/Runtime/Official/World/NativeText"
 def build():
     image = ROOT / ".tools/source-packages/commerce-native/libil2cpp-restored.bin"
     metadata = ROOT / ".tools/source-packages/official-code/global-metadata.dat"
+    receipt = json.loads((ROOT / "assets/reference/official-map/map13-text-effects-code-source-manifest.json").read_bytes())
+    if receipt["manifest"] != "871_156598":
+        raise ValueError("Original TMP effects require the pinned 871_156598 source receipt.")
+    for record in receipt["inputs"]:
+        path = ROOT / record["path"]
+        if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != record["sha256"]:
+            raise ValueError("Original 871_156598 extraction input is missing or changed: " + record["path"])
+    # Verify the original version before loading extraction tools or writing outputs.
+    from official_metadata import Metadata
+    from read_official_native import NativeMethods
+    from prepare_unity_map13_sources import encode, sha, source_path, write, meta
     native = NativeMethods(image, metadata); definitions = Metadata(metadata.read_bytes())
     records = []
     prefixes = ("TMPro.TMPEffect.", "TMPro.TMPEffectManager.", "TMPro.TMPEffectMaterial.")
@@ -82,6 +92,7 @@ def build():
             ROOT / "unity/Assets/Game/Editor/Map13/OfficialMap13TextEffectAcceptance.cs",
             ROOT / "unity/Assets/Game/Editor/Map13/Zjcs.Editor.Map13.asmdef"]],
         operation="Reconstruct C# from all 30 pinned official TMPEffect/manager/material native methods and original metadata; recover every material property/keyword literal and constructor/angle constant. Preserve original branch/operation/lifecycle order, effect normalization, material CRC pooling, reference counts, color space, autosize callbacks and raw TMP material-dirty field access. The separate native manager calls private/protected effect methods; internal wrappers adapt only managed access visibility. Keep the engine TMP dependency separate and explicitly preserve its reflected field for Player builds.",
+        adaptations=["Defer OnValidate editor preview while the original TMP component or font binding is unavailable during prefab import. Runtime setup and valid-font effect calculations retain their original order."],
         limitations=["Native code reconstruction and engine compatibility require runtime validation; original world-label prefabs and full map state/UI integration remain separate."])))
     print("Recovered original TMP effects:", len(records), "native methods,", len(literals), "keyword/property literals")
 
