@@ -255,6 +255,9 @@ namespace Zjcs.Editor
             GameObject worldTerrain = GameObject.Find("Map10Terrain");
             Require(worldTerrain != null, "The map terrain is missing before battle entry.");
             float worldCameraSize = Camera.main.orthographicSize;
+            var worldUi = (OfficialWorldUiRenderer)OfficialMainlineMapInspection.Get(runtime, "ui");
+            var worldHudStates = worldUi.Find("WorldCanvas", "/WorldCanvas").transform.Cast<Transform>()
+                .ToDictionary(value => value.gameObject, value => value.gameObject.activeSelf);
             Animator playerAnimator = UnityEngine.Object.FindObjectsOfType<Animator>()
                 .Single(value => value.name.StartsWith("Map10Player_", StringComparison.Ordinal));
             Transform worldModelParent = playerAnimator.transform.parent;
@@ -274,6 +277,8 @@ namespace Zjcs.Editor
             Require(controller != null, "No Map10 entity started a battle.");
 
             var sceneController = (Zjcs.Presentation.Combat.OfficialBattleRuntimeController)controller;
+            Require(worldHudStates.All(value => !value.Value || !value.Key.activeInHierarchy),
+                "The battle did not suspend the separate native world HUD.");
             VerifyCommonBattleInterface(sceneController);
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_SLOT_BLESSING") == "1")
             {
@@ -659,6 +664,8 @@ namespace Zjcs.Editor
                         (Zjcs.Combat.Official.FightBattleCheckpoint)checkpoint());
                 Require(controllerField.GetValue(runtime) == null && worldTerrain.activeSelf,
                     "The battle did not restore its suspended world roots.");
+                Require(worldHudStates.All(value => value.Key.activeSelf == value.Value),
+                    "The battle did not restore the native world HUD states.");
                 Require(Mathf.Approximately(Camera.main.orthographicSize, worldCameraSize),
                     "The battle did not restore the world camera size.");
                 Require(playerAnimator != null && playerAnimator.transform.parent == worldModelParent

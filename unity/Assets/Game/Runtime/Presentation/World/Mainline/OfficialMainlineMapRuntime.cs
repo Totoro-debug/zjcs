@@ -287,7 +287,7 @@ namespace Zjcs.Presentation.World
 
         private void LateUpdate()
         {
-            if (worldCamera == null || avatar == null || closed) return;
+            if (worldCamera == null || avatar == null || closed || map12PrivateDungeonBattleActive) return;
             RefreshNativeMap12State();
             RefreshNativeMap13State();
             if (UpdateBattleSceneCamera()) return;

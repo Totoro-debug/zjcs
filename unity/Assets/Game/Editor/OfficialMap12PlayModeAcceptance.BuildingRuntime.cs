@@ -265,6 +265,14 @@ namespace Zjcs.Editor
             Button nextRoom = route == null ? null : route.GetComponentsInChildren<Button>(true)
                 .SingleOrDefault(value => value.name == "Room_12102" && value.gameObject.activeInHierarchy);
             if (nextRoom == null) throw new InvalidDataException("Official 12102 battle room button is missing after the bonfire.");
+            Camera mapCamera = RuntimeField<Camera>("worldCamera");
+            float mapCameraSize = mapCamera.orthographicSize;
+            float mapCameraNear = mapCamera.nearClipPlane;
+            float mapCameraFar = mapCamera.farClipPlane;
+            Quaternion mapCameraRotation = mapCamera.transform.rotation;
+            var worldHud = RuntimeField<OfficialWorldUiRenderer>("ui");
+            var worldHudStates = worldHud.Find("WorldCanvas", "/WorldCanvas").transform.Cast<Transform>()
+                .ToDictionary(value => value.gameObject, value => value.gameObject.activeSelf);
             SimulateUiClick(nextRoom, nextRoom.GetComponentInParent<Canvas>().worldCamera);
             deadline = Time.realtimeSinceStartup + 20f;
             OfficialBattleRuntimeController controller = null;
@@ -281,6 +289,10 @@ namespace Zjcs.Editor
             if (controller == null || controller.Checkpoint == null || controller.Checkpoint.StageId != 30152
                 || controller.Checkpoint.StageType != 11 || controller.Checkpoint.Units.All(value => value.Side != 2))
                 throw new InvalidDataException("Original private dungeon route did not enter the official 12102 / 30152 battle.");
+            if (!controller.OwnsPresentationCamera)
+                throw new InvalidDataException("Private dungeon battle did not acquire the common battle camera.");
+            if (worldHudStates.Any(value => value.Value && value.Key.activeInHierarchy))
+                throw new InvalidDataException("Private dungeon battle did not suspend the separate native world HUD.");
             Animator battlePlayer = UnityEngine.Object.FindObjectsOfType<Animator>(true)
                 .SingleOrDefault(value => value.name.StartsWith("PlayerCharacter_", StringComparison.Ordinal));
             Transform battleWrapper = battlePlayer == null ? null : battlePlayer.transform.parent;
@@ -323,6 +335,13 @@ namespace Zjcs.Editor
                 && Time.realtimeSinceStartup < deadline) yield return null;
             if (controller != null || actualOutcome == null || actualOutcome.Invalid)
                 throw new InvalidDataException("Official private battle did not deliver a valid local victory/loss result.");
+            if (!Mathf.Approximately(mapCamera.orthographicSize, mapCameraSize)
+                || !Mathf.Approximately(mapCamera.nearClipPlane, mapCameraNear)
+                || !Mathf.Approximately(mapCamera.farClipPlane, mapCameraFar)
+                || mapCamera.transform.rotation != mapCameraRotation)
+                throw new InvalidDataException("Private dungeon battle did not restore the original Map12 camera projection.");
+            if (worldHudStates.Any(value => value.Key.activeSelf != value.Value))
+                throw new InvalidDataException("Private dungeon battle did not restore the native world HUD states.");
             if (mapCharacter.parent != originalMapCharacterParent
                 || mapCharacter.localPosition != originalMapCharacterPosition
                 || mapCharacter.localRotation != originalMapCharacterRotation

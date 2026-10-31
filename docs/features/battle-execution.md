@@ -20,7 +20,9 @@
 
 公共表现上下文 `OfficialBattleHostPresentation` 捕获调用方相机及可见根节点，战斗前台显示时暂停主城更新并隐藏原场景／HUD，退出或转入后台时恢复原相机投影、姿态和显隐。`OfficialBattleCameraView` 消费原 `GameCameraIniter.Adaptor` 的宽高比和尺寸，并复用已安装的 Cinemachine 及原群组取景字段；256个 GameId 的绑定由 `prepare_battle_camera_bindings.py` 可复现提取，来源见[相机清单](../../assets/reference/battle-scenes/camera-source-manifest.json)。日常、竞技、阶梯、技能测试及主线入口共用该相机实现。日常副本已实际执行至结算并检查新截图，人物及脚下血条对齐、敌我准备阵列可见；日常、竞技、阶梯的实际结算与主城恢复集成均已通过，竞技守卫职业服装和头发层级也已在实际战斗截图核对；Map10 已通过共用镜头下的准备／播放、速度与聊天模拟输入、最终命中等待、结束返回及原相机／角色层级恢复，七张实际运行截图已检查；技能试打也已在共用镜头与原生主角模型下完成十回合、结算、玩家／技能统计、技能快照与返回设置，十张新截图已检查。相机手动拖拽／缩放、原镜头偏移混合及全部场景画面尚未验收，不能据此声称完整相机迁移。
 
-Map12 私有日常副本通过 `BeginPrivateMapRoom` 显式传入同一表现上下文，公共模块接管地图相机与宿主场景／HUD 的隐藏和恢复；私图活动期间暂停地图镜头的 `LateUpdate`，避免地图跟随覆盖战斗取景。该分支的相机接管、退出投影恢复及实际流程回归尚待验证。
+Map12 私有日常副本通过 `BeginPrivateMapRoom` 显式传入同一表现上下文，公共模块接管地图相机与宿主场景／HUD 的隐藏和恢复；私图活动期间暂停地图镜头的 `LateUpdate`，避免地图跟随覆盖战斗取景。表现上下文支持额外的原生 HUD 根节点，主线及私图入口均显式传入独立 `WorldCanvas`，避免地图小地图／任务栏叠加到战斗 HUD。Map10 的独立 HUD 显隐及返回恢复断言也已通过。Map12 已通过模拟地图／路线输入、12102及四个后续房间、相机／角色／HUD 恢复与存档冷读，已查看完整450×800战斗和返回截图；具体范围见[山之国](../maps/map-12.md)。
+
+原生战斗资源的自动导入不再覆盖已转换的显式绑定；实际强制重导入官方图集和人物 prefab 后，图集文本、Atlas、材质和 prefab 四份载荷逐字节保持一致，且无导入错误。转换维护方式见[素材管理](../asset-management.md#android-资源迁移到-windows)。
 
 Windows Player 已通过主城技能入口、试打设置、十回合实际战斗、结算动画、玩家／技能统计、技能快照和返回设置的模拟点击流程；十张完整渲染帧均为 675×1463，已查看人物与脚下血条的位置及画面边界，测试前后的正式存档文件哈希一致。该候选构建尚有地图／职业 shader 的无效关键词组合编译错误，不能发布；构建修复见[Map13](../maps/map-13.md)。主城仍有异常几何与环境显示缺项，技能试打通过不表示主城或全部公共战斗入口完成验收。
 
@@ -242,6 +244,8 @@ NPC 外观复用验证：`OfficialMap12NpcBattleModelView` 是现有 Map12 队�
 当前男女主角仍使用原生预览烘焙控制器，实际参数表为空，只具备26种预览／待机／地图移动片段；没有战斗需要的 `skill` 参数与 `Skill` 原覆盖槽。实战调用曾出现缺失参数警告，现按实际参数类型、层及原覆盖槽检查绑定，缺少时保留未接通状态，不伪造参数或把调用成功计为动作完成。完整序列／淡入淡出字段、技能结束移除通知、骨骼／粒子／音频及各战斗模型仍未迁移齐全。本项未构建或发布 Windows Player，完整技能演出仍未完成。
 
 原版战斗控制器：`AppearanceAddressUtils.GetPlayerAnimatorPath` 按 `PlayerPhase.Game`、性别与基础职业选取 `Male_Zhanshi_Controller.controller`／`Male_Fashi_Controller.controller` 及对应女性 override。`prepare_battle_game_animators.py` 从当前 `884_156692` 原生转换缓存恢复四份控制器及33个片段到 `Assets/Official/Combat/GameAnimators/Resources/Combat/GameAnimators/`，只重绑定外部 GUID；逐文件核验转换凭据，并从 APK 优先／校验云缓存的原对象核对参数顺序、类型和默认值，状态／动作／默认状态，过渡顺序、条件、时间和目标，及女性 override 的原空覆盖项。战士原22参数／21状态／39过渡，法师原19参数／21状态／37过渡，未统一删改。来源对象、包／APK、原生转换和输出哈希见 [Game 控制器来源](../../assets/reference/battle-animation/game-animators-source-manifest.json)。Unity 导入／编译、`ProjectTools.Validate`、静态元数据检查和内置屏 Direct3D 12 Play Mode 通过；四份原控制器实际进入原待机、技能和受击状态，官方 Playable 成功覆盖原 `Skill` 槽并恢复共享控制器，进程正常退出。现有技能片段仍保留历史来源版本；控制器片段的原 Spine Mecanim 名称载荷需要独立原生骨骼消费者，尚未替换正式角色的预览控制器，故此验证不包含人物技能动作画面、正式技能流程或 Windows Player 发布。新增小型载荷随代码提交，未生成素材完整快照，不声称已备份。
+
+原生约束通道：`ProfessionNativeAnimationChannels.Constraints` 按需绑定 `ProfessionNativeConstraintAnimation`，读取原 IK 的 mix／softness／离散弯曲、伸缩标记及 transform 的六轴混合、局部／相对标记和偏移，保留原约束顺序、皮肤筛选与第一帧前的 setup 值；支持线性、阶跃及各轴独立贝塞尔时间曲线。复用原 `871_156598` 已校验、无损打包的人物数据，不从旧 Spine runtime 复制／翻译代码，也不把它改标为新控制器的 `884_156692`。原数据、既有凭据、独立采样实现和夹具生成哈希见 [约束通道来源](../../assets/reference/battle-animation/constraint-channels-source-manifest.json)。内置屏 Direct3D 12 Play Mode 完成男性445／女性451条动画的绑定及14,868个关键帧、区间和延迟首帧前采样检查，其中原关键帧6,743个；贝塞尔期望值由独立数学求根生成，另核对原 `100/skill_06` 的 IK 关闭／恢复、离散标记、皮肤筛选、约束顺序与非法输入。Unity 导入／编译、`ProjectTools.Validate` 和静态元数据检查通过，进程正常退出。本项只恢复约束参数采样；尚未接完整世界约束求解、物理、混合、人物渲染或正式战斗动作，也未构建／发布 Windows Player。
 
 此接线后的内置屏 Play Mode 回归覆盖日常副本、竞技场与幻境之塔公共 Runner：模拟倍速输入，分别运行至计数388／26／62的真实结算，核对场外角色／相机恢复；已查看三场战斗及全部11张准备、返回与入口画面，缺失 Animator 参数警告为0。Direct3D 11 的流程断言通过但编辑器退出挂起；Direct3D 12 重跑相同流程通过且正常退出，不能据此认定前者的退出问题已修复。三处探针均确认主角预览控制器参数为0，故只将流程回归计为通过，不计作技能动作通过；主城黑白几何、游记界面与公共 HUD 的既有缺项仍保留。入口窗口点击与完整界面表现也未纳入本项完成范围。
 

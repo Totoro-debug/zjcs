@@ -11,19 +11,21 @@ namespace Zjcs.Presentation.Combat
         private readonly Camera camera;
         private readonly Transform worldRoot, hudRoot;
         private readonly Action<bool> suspendHost;
+        private readonly Transform[] additionalHudRoots;
 
         public OfficialBattleHostPresentation(Camera camera, Transform worldRoot, Transform hudRoot,
-            Action<bool> suspendHost = null)
+            Action<bool> suspendHost = null, params Transform[] additionalHudRoots)
         {
             this.camera = camera;
             this.worldRoot = worldRoot;
             this.hudRoot = hudRoot;
             this.suspendHost = suspendHost;
+            this.additionalHudRoots = additionalHudRoots;
         }
 
         internal Scope Capture(Transform battleRoot)
         {
-            return new Scope(camera, worldRoot, hudRoot, battleRoot, suspendHost);
+            return new Scope(camera, worldRoot, hudRoot, battleRoot, suspendHost, additionalHudRoots);
         }
 
         internal sealed class Scope : IDisposable
@@ -44,7 +46,7 @@ namespace Zjcs.Presentation.Combat
             internal Camera Camera => camera;
 
             internal Scope(Camera camera, Transform worldRoot, Transform hudRoot, Transform battleRoot,
-                Action<bool> suspendHost)
+                Action<bool> suspendHost, Transform[] additionalHudRoots)
             {
                 this.camera = camera;
                 this.suspendHost = suspendHost;
@@ -64,6 +66,8 @@ namespace Zjcs.Presentation.Combat
                 }
                 CaptureChildren(worldRoot, battleRoot);
                 if (hudRoot != worldRoot) CaptureChildren(hudRoot, battleRoot);
+                foreach (Transform root in additionalHudRoots ?? Array.Empty<Transform>())
+                    if (root != worldRoot && root != hudRoot) CaptureChildren(root, battleRoot);
             }
 
             private void CaptureChildren(Transform root, Transform battleRoot)

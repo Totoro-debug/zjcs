@@ -11,6 +11,7 @@ using Zjcs.Official.WorldUI;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.State;
 using Zjcs.Offline.World;
+using Zjcs.Presentation.Combat;
 
 namespace Zjcs.Presentation.World
 {
@@ -357,14 +358,15 @@ namespace Zjcs.Presentation.World
             try
             {
                 begin.Invoke(runner, new object[] { progressionSave, progression, map12PrivateDungeonSession,
-                    avatar.transform, hud.ui.OverlayRoot, (Action<bool>)FinishMap12PrivateDungeonBattle });
-                SuspendWorldForBattle();
+                    avatar.transform, hud.ui.OverlayRoot,
+                    new OfficialBattleHostPresentation(worldCamera, mapRoot, hud.ui.OverlayRoot,
+                        additionalHudRoots: new[] { hud.ui.Find("WorldCanvas", "/WorldCanvas").transform }),
+                    (Action<bool>)FinishMap12PrivateDungeonBattle });
                 if (map12PrivateDungeonRouteDialog != null) map12PrivateDungeonRouteDialog.SetActive(false);
             }
             catch (TargetInvocationException error)
             {
                 map12PrivateDungeonBattleActive = false;
-                RestoreWorldAfterBattle();
                 Destroy(runnerObject);
                 map12PrivateDungeonRunner = null;
                 throw error.InnerException ?? error;
@@ -372,7 +374,6 @@ namespace Zjcs.Presentation.World
             catch
             {
                 map12PrivateDungeonBattleActive = false;
-                RestoreWorldAfterBattle();
                 Destroy(runnerObject);
                 map12PrivateDungeonRunner = null;
                 throw;
@@ -382,7 +383,6 @@ namespace Zjcs.Presentation.World
         private void FinishMap12PrivateDungeonBattle(bool won)
         {
             map12PrivateDungeonBattleActive = false;
-            RestoreWorldAfterBattle();
             int roomId = map12PrivateDungeonSession?.ActiveRun?.currentRoomId ?? 0;
             if (roomId <= 0 || !map12PrivateDungeonSession.RecordPrivateBattleResult(roomId, won))
                 throw new InvalidOperationException("Private Map12 battle result could not be recorded locally.");

@@ -93,6 +93,9 @@ namespace Spine.Unity.Editor {
 
 		// Auto-import post process entry point for all assets
 		static void OnPostprocessAllAssets (string[] imported, string[] deleted, string[] moved, string[] movedFromAssetPaths) {
+			// Official payloads already have verified native bindings. SDK inference would
+			// rewrite their exported atlas materials and must not run on these assets.
+			imported = System.Array.FindAll(imported, path => !path.StartsWith("Assets/Official/", System.StringComparison.Ordinal));
 			if (imported.Length == 0)
 				return;
 
@@ -106,6 +109,8 @@ namespace Spine.Unity.Editor {
 #if HAS_ON_POSTPROCESS_PREFAB
 		// Post process prefabs for setting the MeshFilter to not cause constant Prefab override changes.
 		void OnPostprocessPrefab (GameObject g) {
+			if (assetPath.StartsWith("Assets/Official/", System.StringComparison.Ordinal))
+				return;
 			if (SpineBuildProcessor.isBuilding)
 				return;
 

@@ -37,6 +37,7 @@ namespace Zjcs.Presentation.Home
         private Transform battlePlayer;
         private bool privateMapEntry;
         private int privateMapRoomId;
+        private OfficialBattleHostPresentation privateMapPresentation;
 
         public void Begin(HomeFeatureRuntime runtime, int selectedRoomId, string assistEntryId,
             Action<bool> onCompleted)
@@ -121,10 +122,11 @@ namespace Zjcs.Presentation.Home
 
         public void BeginPrivateMapRoom(OfflineMainlineProgressSession profile,
             OfflineCharacterProgressionService progression, OfflineDailyDungeonSession dungeons,
-            Transform player, Transform canvas, Action<bool> onCompleted)
+            Transform player, Transform canvas, OfficialBattleHostPresentation presentation, Action<bool> onCompleted)
         {
             if (profile == null || progression == null || dungeons == null || player == null || canvas == null)
                 throw new ArgumentNullException("Private daily dungeon battle dependencies are incomplete.");
+            privateMapPresentation = presentation ?? throw new ArgumentNullException(nameof(presentation));
             battleProfile = profile;
             battleProgression = progression;
             battleCatalog = dungeons.Catalog;
@@ -269,7 +271,7 @@ namespace Zjcs.Presentation.Home
                 WorldRoot = battleRoot,
                 EnvironmentGameId = scene.gameId,
                 HudParent = battleCanvas,
-                HostPresentation = host == null ? null : new OfficialBattleHostPresentation(
+                HostPresentation = privateMapEntry ? privateMapPresentation : new OfficialBattleHostPresentation(
                     host.Scene.Camera, host.Scene.Root.transform, battleCanvas, host.SetBattlePresentationActive),
                 SkillIcon = itemId => skillIcons == null ? fallback : skillIcons.Find(itemId) ?? fallback,
                 TimelinePortrait = unit => unit.MonsterId > 0 && portraits != null
