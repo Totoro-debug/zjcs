@@ -85,6 +85,8 @@
 
 技能附属窗口由固定 APK `871_156598` 的原 prefab、组件字段、字体与动画提取，运行时显式绑定 270 张官方 UI 精灵；窗口、原代码适配、字体／shader、工具及输入输出 SHA256 见 `skill-ui/unity-icon-source-manifest.json`。列表附件恢复原配置的类型 4／8／10／13／14、原 prefab 和脚本类绑定；培养窗口恢复原状态字段、材料计数、星级与跨品质通知，培养配色／原代码与横向虚拟滚动组件的输入输出 SHA256 记录在 auxiliary_inputs.cultivation_code、cultivation_colors、cultivation_scroll，来源、输入及输出哈希同见该清单；结算附加皮肤来自原 `AppearanceConfig`，网格、骨骼与图集见 `character-creation/native-geometry-source-manifest.json`，纹理显式绑定 `ProfessionUI/character-textures`。技能包内缺失的 18 个原技能图标按 `Assets/Image/ItemIcon/Skill/skill_<id>` 解析同版本 Sprite，地址、bundle、对象哈希及转换后字节哈希记录在 `auxiliary_sprites`。七套方案取原 `GameSettings.SkillPlanMaxCount` 与中文键 `skill_plan_default_name_1..7`；原方案 Scrollbar 对象 `-4354697964205878964` 的 SHA256 为 `53972465f66e438fa93ab2217ff461a62d6b579c6ffbcea23b42e78b90e219fc`。状态与运行验证见[技能功能页](../../docs/features/skills.md)，新增载荷未声明进入完整素材快照。技能方案输入框恢复 `TMP_InputField` 的完整 580 字节及 APK 分支字段 `m_EncodingType`；名称规则直接迁移官方 `Common.CJK`，公式、错误码、客户端调用与元数据哈希记录在技能载荷的 `auxiliary_inputs.plan_name_rules`、`plan_input`、`plan_input_schema`。全部技能模板与 SystemMsgPanel 的原 TMP 文字、顶点渐变预设及 TMPEffect 原组件字节哈希纳入 text_style_inputs；安装遮罩、取消按钮、四槽高亮和祝福文字从原组件字段绑定，不另画遮罩或提示。
 
+技能载荷字节校验：四项字体／材质／规则文件恢复清单中既定 LF 字节，并固定 Git 换行策略；输入及预期哈希保持不变。既有提交 `562bf7f62` 在 `skill-ui.json` 仅增加 `auxiliary_inputs.pet_entity_formula` 的历史来源指纹，原模块清单尚未同步；现逐项比较 JSON，证明移除此项来源元数据后与原已校验载荷完全一致，在 `unity/Assets/Official/Skills/source-manifest.json` 保留旧输出哈希、原提交和新增字段并记录当前输出，不改 UI、公式或美术。 NPC 援助规则载荷同样恢复既定 LF 字节并固定换行策略，原871输入和预期哈希不变。既有同步工具补齐28个已交付技能 Sprite 的显式引用，共297项；没有新增图片。目录、meta、同步工具的输出字节与 SHA256 记录于同一清单的 `runtime_binding`。
+
 ## 提取与登记
 
 1. 先核对 APK 的包内清单、实际文件／内部对象、prefab 引用、绑定和 CAB 依赖；确认包内没有时，再查所选版本已下载官方云端资源及哈希。加载或解码失败不等于资源缺失。

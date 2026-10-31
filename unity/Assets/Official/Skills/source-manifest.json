@@ -1626,8 +1626,8 @@
     },
     {
       "path": "Assets/Official/Skills/skill-ui.json",
-      "bytes": 7497035,
-      "sha256": "2a7a4c46114cde3768ddbc183e0bc1f4f2246f96469cf3e3291c34c9dbd09c18"
+      "bytes": 7497287,
+      "sha256": "365560c582ccfc8e68f195a7bb2faa82d6f8566fd5a8dc79d35fa74efb7a767c"
     },
     {
       "bytes": 36369,
@@ -1699,5 +1699,41 @@
     "assets/reference/skill-cultivation/source-manifest.json": "00ce0d2c5659596e6b1f54c53da739c3bd45fa557db91d491459cfd9ad37d110",
     "assets/reference/skill-rules/source-manifest.json": "c11a4ef25e6b20c5561091faa7ba5e0692bb47a64d2f57f9bf2445220593d571",
     "assets/reference/skill-ui/source-manifest.json": "0ae0ce9575cf214bfb66123fa4ba3cf7e1dddb4ff218f263434df76be1823968"
+  },
+  "ui_provenance_binding": {
+    "commit": "562bf7f62b4c46d478472923e8e611ef0236f424",
+    "field": "auxiliary_inputs.pet_entity_formula",
+    "operation": "Record the already committed historical source fingerprint. Parsed UI payloads compare equal after removing only this provenance field; no UI, formula, art or source input changed. Preserve the original input fingerprint as historical evidence.",
+    "previous_output": {
+      "bytes": 7497035,
+      "path": "Assets/Official/Skills/skill-ui.json",
+      "sha256": "2a7a4c46114cde3768ddbc183e0bc1f4f2246f96469cf3e3291c34c9dbd09c18"
+    },
+    "value": {
+      "methods": [
+        "CalculatePetEntityBaseProps",
+        "GetPetSkillRank"
+      ],
+      "sha256": "d464f1f70a436185e946194eb37419685d3fca441f35d829789654281e4e17da",
+      "source": ".tools/source-packages/official-code/common-source/Common/BattleFormulaHandler.cs"
+    }
+  },
+  "runtime_binding": {
+    "operation": "Existing OfficialSkillAssetTools synchronization adds 28 missing Sprite bindings from already delivered official art; preserves all 269 prior bindings, resulting in 297. No image payload added or changed. Catalog uses LF delivery bytes.",
+    "catalog": {
+      "path": "unity/Assets/Game/Resources/Skills/OfficialSkillAssetCatalog.asset",
+      "bytes": 44556,
+      "sha256": "db92e03e87547e9ca9699a61c48ae2af339953b248ae14e240fab18a376d0bff"
+    },
+    "catalog_meta": {
+      "path": "unity/Assets/Game/Resources/Skills/OfficialSkillAssetCatalog.asset.meta",
+      "bytes": 197,
+      "sha256": "922625301bbcedfee7dc160e422c5944e175adaa260bf56b6406a43b5cdd4a56"
+    },
+    "synchronizer": {
+      "path": "unity/Assets/Game/Editor/Skills/OfficialSkillAssetTools.cs",
+      "bytes": 14575,
+      "sha256": "d9d8cada1bdd02b7569bcba9ac75a7310344101db622af85aff95cd4f8958674"
+    }
   }
 }

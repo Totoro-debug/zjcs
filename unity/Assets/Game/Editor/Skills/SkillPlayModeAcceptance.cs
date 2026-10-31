@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections;
 using System.Reflection;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -71,9 +72,27 @@ namespace Zjcs.Editor.Skills
         [MenuItem("Zjcs/Validate/Skills Play Mode")]
         public static void Run()
         {
+            try { BeginValidation(); }
+            catch (Exception error)
+            {
+                EditorApplication.update -= AutoRunTick;
+                Debug.LogException(error);
+                if (Application.isBatchMode || Environment.GetEnvironmentVariable("ZJCS_SKILLS_AUTORUN") == "1")
+                    EditorApplication.delayCall += () => EditorApplication.Exit(1);
+                else throw;
+            }
+        }
+
+        private static void BeginValidation()
+        {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
                 throw new InvalidOperationException("Exit Play Mode before running skill acceptance.");
+            // A previous acceptance may have left an empty, unsaved scene.
+            // Restore its startup scene; isolated battle mode supplies its own profile.
+            EditorSceneManager.OpenScene("Assets/Game/Scenes/Bootstrap.unity", OpenSceneMode.Single);
             OfficialSkillAssetTools.Validate();
+            if (Application.isBatchMode || Environment.GetEnvironmentVariable("ZJCS_SKILLS_AUTORUN") == "1")
+                Combat.BattleGameViewInput.Focus();
             ConfigurePortraitGameView(675, 1463);
             string root = Path.Combine(ValidationDirectory, "save-" + Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(root);
@@ -188,7 +207,15 @@ namespace Zjcs.Editor.Skills
 
         private static IEnumerator Scenario()
         {
-            while (GameObject.Find("OfficialSaveSelectionPanel") == null) yield return null;
+            // The battle-only runner supplies its own profile and suppresses the
+            // application bootstrap. The Home/skill flow below is still exercised.
+            bool isolatedBattle = Environment.GetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION") == "1";
+            float startupDeadline = Time.realtimeSinceStartup + 30f;
+            while (!isolatedBattle && GameObject.Find("OfficialSaveSelectionPanel") == null)
+            {
+                Require(Time.realtimeSinceStartup < startupDeadline, "The skill acceptance bootstrap did not open its save panel.");
+                yield return null;
+            }
             yield return null;
             foreach (Canvas existing in UnityEngine.Object.FindObjectsOfType<Canvas>(true))
                 existing.gameObject.SetActive(false);
