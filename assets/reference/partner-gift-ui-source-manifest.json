@@ -1,0 +1,39 @@
+{
+  "format": 1,
+  "official_source": "884_156692",
+  "source_sha256": {
+    ".tools/source-packages/official-code/client-source/ItemIconNpcGift.cs": "9dd4569b25d41e007b64edb0f4bb0d22f1001a44b3c2456e1d38481de1a14e68",
+    ".tools/source-packages/official-code/client-source/NpcFriendshipPropItem.cs": "51411cafe30dfb740f45fc8289b655da720caa29aded5c36a5eb2ad54899f3f1",
+    ".tools/source-packages/official-code/client-source/NpcFriendshipPreviewPropItem.cs": "0761d3adca977f7f4b396b12412993c22937bd703f1e08a96ca161ea7b78c185",
+    ".tools/source-packages/official-code/client-source/NpcFriendshipPropItemGroup.cs": "4f859bff036357541bffd4a7e268c65f370dbb7aa21a52a44095ba8aa3d3bebd",
+    ".tools/source-packages/official-code/framework-source/Framework/CanvasGroupExtensions.cs": "db36b1937c42ddef4bcf7913e62ad3331668b0717219919e9e9bf1f05eb810b4",
+    ".tools/source-packages/official-code/common-source/Common/NpcInfo.cs": "387c584e748963f1870e9861fee043e68fcc741cf52409fcdeffe294007c6a8d",
+    ".tools/source-packages/official-code/common-source/Common/NpcInfoParser.cs": "2323757139ca2742d3a563e983439feaefd03136d71a0b3094583a7c9d6e7eee",
+    ".tools/source-packages/official-code/common-source/Common/LanguageUtils.cs": "ddc94bb5dd46f8c71b6d58ab0f03e2048cde72911de11e343304ce73e4b9a61c"
+  },
+  "output_sha256": {
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Gifts/ItemIconNpcGift.cs": "e56732eebcd1dc4a21f0ff0ecf7e15639e435ffb7f5598c19cc73f7038204a75",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Gifts/ItemIconNpcGift.cs.meta": "9df0f0a2bd792435375296951d53f818d5a829bd3769dfce07d0f1a8da187cf0",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Gifts/NpcFriendshipPropItem.cs": "38ef14495ae93deb4bc75073585eea8260bffb47369a6c002f4172da3176ef82",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Gifts/NpcFriendshipPropItem.cs.meta": "8a7300b87c2d1493b02b868f48227d271653a13efe9c36fa563dc48a9e90437e",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Gifts/NpcFriendshipPreviewPropItem.cs": "7b9139fada1a84e03928a8fc84deea517597f924fd158f974172c330d9a39ce5",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Gifts/NpcFriendshipPreviewPropItem.cs.meta": "638b8974c8b4d97de15761bce2c9849be4989253601d1ade4d0ceeadc892d011",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Gifts/NpcFriendshipPropItemGroup.cs": "310bd8708559c87c1095cbd95152db1ae50518046ed2f322290b3b1c69a497b5",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Gifts/NpcFriendshipPropItemGroup.cs.meta": "04f825db5f19ac13eeafc514d788f953b667e678e24c186429841f884c92c2c3",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Gifts/PartnerCanvasGroupExtensions.cs": "4463b80910c4c07d55738bef0a289d073288d602f7bc129f88d0afde14de3ba2",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Gifts/PartnerCanvasGroupExtensions.cs.meta": "275e69a5eb2a47bb4804393b13c9c3e3c8c345b40edc5b029c923adad43d4399",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Gifts/Zjcs.Official.PartnerGiftUI.asmdef": "b7a92acec55bf4a986ba1eed624c68bbfe16307aeb2781fa200c35c8db8fcc8a",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Gifts/Zjcs.Official.PartnerGiftUI.asmdef.meta": "4a04bd838ae6f82ea854fc8240e4f2257ba041a8cd821ac7c417b70938eb152e",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Gifts/PartnerFriendshipUiServices.cs": "69051619afc801f5876a344a3245a2f71bc00bda3e5434fb966684a5bd7e535c",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Gifts/PartnerFriendshipUiServices.cs.meta": "f06a5e478ca5ae0c65b43a807873f6a9d7817a92592f1a88ceeb40b222fded5f",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Gifts.meta": "149a379a77f4337815e2fb0a3473fd1aab3cd9d3e16764bb1335dbcf9a18a77c"
+  },
+  "generator_sha256": "55a05ff154746d9f1a7133e826cc13c472dd2a0765fc17b73a69f38f169a1854",
+  "helper_sha256": "eea896a4dd8136716c41adb6e99cc139c7577ddbf95758f9bcd68365ee9600ea",
+  "adaptations": [
+    "Explicit configuration/function service boundary; original property value formatting and shared PlayerPropItem.",
+    "Existing official ItemIcon base; original reduction button subscription, clearing and preference/selection states.",
+    "Unity diagnostics replace decompiler logging handlers; original diagnostic branches and return order remain."
+  ],
+  "scope": "Official gift icon and friendship property widgets; full native gift/detail window and local data provider remain pending."
+}

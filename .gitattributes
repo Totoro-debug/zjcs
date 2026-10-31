@@ -1323,3 +1323,12 @@ assets/reference/partner-native-recovery-source-manifest.json text eol=lf
 unity/Assets/Official/Partners/UI.meta text eol=lf
 unity/Assets/Official/Partners/UI/Card.meta text eol=lf
 unity/Assets/Official/Partners/UI/Card/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Preserve current gift/property controller source receipts.
+scripts/prepare_partner_gift_ui.py text eol=lf
+scripts/prepare_partner_gift_ui_validation.py text eol=lf
+scripts/fixtures/partner_gift_ui_validation.cs text eol=lf
+assets/reference/partner-gift-ui-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Gifts/*.cs text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Gifts/*.asmdef text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Gifts/*.meta text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Gifts.meta text eol=lf

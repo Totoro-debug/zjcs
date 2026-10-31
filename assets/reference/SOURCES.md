@@ -43,6 +43,7 @@
 | 模块资源来源 | 本目录各模块的 `source-manifest.json`、`*-source-manifest.json` 及所属功能／地图页中的入口 |
 | 当前伙伴界面公共组件、名册控制器与原生字段输入 | [公共组件源码](partner-ui-helpers-source-manifest.json)、[名册控制器源码](partner-roster-ui-source-manifest.json)、[原生 prefab 字段](partner-native-recovery-source-manifest.json)：`884_156692` 选定反编译输入、NPC bundle／对象、原字段缓存及转换输入输出哈希；运行接线与验证范围见[伙伴功能页](../../docs/features/partners.md) |
 | 当前伙伴卡片依赖与提示图输入 | [卡片资源凭据](partner-card-binding-source-manifest.json)、[提示节点源码凭据](partner-tipdot-source-manifest.json)：`884_156692` 原 CAB／PathID、SpriteAtlas／原索引字节、动态图片地址、CN 字体配置／TTF、Windows 纹理／shader 转换、Wwise 路由与 PCM、选定反编译源码及元数据输入输出哈希；处理入口为 `prepare_partner_card_native.py`／`prepare_partner_tipdot_nodes.py`，接线与验证范围见[伙伴功能页](../../docs/features/partners.md) |
+| 当前伙伴赠礼与好感属性组件输入 | [赠礼组件源码凭据](partner-gift-ui-source-manifest.json)：`884_156692` 选定客户端／共享／框架源码、生成工具与输出 SHA256；处理入口为 `prepare_partner_gift_ui.py`，接线与验证范围见[伙伴功能页](../../docs/features/partners.md) |
 | 当前伙伴配置输入 | [配置来源](partner-rules-source-manifest.json)：`884_156692` 主 Luban／NpcTalentTree 包、16 张原表、实际使用的同版本反编译构造器／元数据，以及完整配置载荷与 Unity 元数据哈希；提取入口为 `prepare_current_partner_rules.py`，使用范围见[伙伴功能页](../../docs/features/partners.md) |
 | 当前伙伴面板控制器输入 | [代码来源](partner-panel-controller-source-manifest.json)：`884_156692` 的 `NpcPanel`、页签枚举、原映射与功能枚举，以及三项迁移源码／Unity 元数据哈希；处理入口为 `prepare_partner_panel_controller.py`，交互与验证范围见[伙伴功能页](../../docs/features/partners.md) |
 | 森之国女神珍宝详情原 prefab 与 Unity 转换 | [转换清单](official-map/map11-treasure-detail-source-manifest.json)：APK `871_156598` bundle／PathID／输入哈希、转换工具哈希、Unity prefab 输出哈希 |
