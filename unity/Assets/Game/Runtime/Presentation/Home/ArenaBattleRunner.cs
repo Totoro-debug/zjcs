@@ -25,7 +25,6 @@ namespace Zjcs.Presentation.Home
         private Vector3 previousPlayerScale;
         private Transform playerTransform;
         private Transform guardTransform;
-        private float stepTimer;
         private bool resultHandled;
         private bool won;
 
@@ -141,28 +140,16 @@ namespace Zjcs.Presentation.Home
 
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
             controller.StepCompleted += OnStepCompleted;
-            var gridMapper = new OfficialBattleGridMapper(battleRoot, checkpoint.Grid);
-            OfficialBattleHudCatalog hudCatalog = OfficialBattleHudCatalog.LoadDefault();
-            Sprite fallback = hudCatalog.FindSprite("C_none-fa3e084e40.png");
-            if (fallback == null) throw new InvalidOperationException("Official arena fallback portrait is missing.");
-            OfficialCombatSkillIconCatalog skillIcons = OfficialCombatSkillIconCatalog.TryLoadDefault();
-            OfficialBattleMonsterPortraitCatalog portraits = OfficialBattleMonsterPortraitCatalog.TryLoadDefault();
-            OfficialBattleModelCatalog models = OfficialBattleModelCatalog.LoadDefault();
-            controller.Begin(checkpoint, battleRoot, host.Hud.CanvasTransform, gridMapper,
-                itemId => skillIcons == null ? fallback : skillIcons.Find(itemId) ?? fallback,
-                unit => unit.MonsterId > 0 && portraits != null
-                    ? portraits.Find(combat.MonsterIconId(unit.MonsterId)) : fallback,
-                unit => unit.Id == 1 ? null : models.ResolveModelKey(unit),
-                (_, __) => "idle_01",
-                (root, unit) =>
-                {
-                    Vector3 scale = root.localScale;
-                    scale.x = Mathf.Abs(scale.x) * (unit.Direction == 1 ? -1f : 1f);
-                    root.localScale = scale;
-                },
-                null, null, hudCatalog, restore,
-                animationGroupResolver: unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
-                statueProgress: host.Profile);
+            controller.Begin(new OfficialBattleRequest
+            {
+                Checkpoint = checkpoint,
+                WorldRoot = battleRoot,
+                EnvironmentGameId = scene.gameId,
+                HudParent = host.Hud.CanvasTransform,
+                AnimationGroupResolver = unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
+                RestoreCheckpoint = restore,
+                StatueProgress = host.Profile
+            });
             controller.AttachUnitTransform(1, playerTransform);
             ArenaRuntimeAppearanceSet guardAppearance = (guard.appendAppearances
                     ?? Array.Empty<ArenaRuntimeAppearanceSet>())
@@ -191,25 +178,23 @@ namespace Zjcs.Presentation.Home
             controller.ConfigureSpeeds(combatAssets.Load().SpeedSettings, 0,
                 _ => false);
             host.Arena.RecordBattleCheckpoint(FightBattleCheckpointSerializer.Save(checkpoint));
-            stepTimer = 0.8f;
         }
 
         private void Update()
         {
             if (controller == null || controller.Checkpoint == null || resultHandled) return;
-            if (controller.Checkpoint.Finished)
+            if (controller.CanCompleteBattle)
             {
                 FinishBattle(controller.Checkpoint.Outcome.Won);
                 return;
             }
-            OfficialBattleProgressDriver.Tick(controller, ref stepTimer, Time.deltaTime);
+            controller.Tick(Time.deltaTime);
         }
 
         private void OnStepCompleted(FightBattleExecutionResult result)
         {
             if (result?.Checkpoint == null) return;
             host.Arena.RecordBattleCheckpoint(FightBattleCheckpointSerializer.Save(result.Checkpoint));
-            if (result.Checkpoint.Finished) FinishBattle(result.Checkpoint.Outcome.Won);
         }
 
         private void FinishBattle(bool isWon)

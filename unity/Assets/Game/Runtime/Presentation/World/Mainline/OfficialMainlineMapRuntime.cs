@@ -257,35 +257,19 @@ namespace Zjcs.Presentation.World
 
             if (battleController != null)
             {
-                if (battleController.IsPresentingStep)
+                // This delay belongs to map/story transitions; battle pacing lives in the module.
+                battleStepTimer = Mathf.Max(0f, battleStepTimer - Time.deltaTime);
+                if (battleStepTimer > 0f) return;
+                try
                 {
-                    battleStepTimer = Mathf.Max(0f, battleStepTimer - Time.deltaTime);
-                    return;
+                    if (battleController.Tick(Time.deltaTime)) SaveActiveBattle(false);
+                    if (battleController.CanCompleteBattle) FinishBattle();
                 }
-                if (battleController.Checkpoint != null && !battleController.CanAdvance
-                    && !battleController.Checkpoint.Finished) return;
-                battleStepTimer -= Time.deltaTime;
-                if (battleStepTimer <= 0f)
+                catch (Exception error)
                 {
-                    try
-                    {
-                        if (battleController.Checkpoint == null || battleController.Checkpoint.Finished)
-                            FinishBattle();
-                        else
-                        {
-                            battleController.Advance();
-                            battleStepTimer = battleController.LastStepSeconds;
-                            SaveActiveBattle(false);
-                            if (battleController.CanCompleteBattle) FinishBattle();
-                        }
-                    }
-                    catch (Exception error)
-                    {
-                        Debug.LogException(error, this);
-                        battleStepTimer = 0.5f;
-                        AbortBattle();
-                        hud.ShowOfficialNotice("战斗未完成，本次结果未记录");
-                    }
+                    Debug.LogException(error, this);
+                    AbortBattle();
+                    hud.ShowOfficialNotice("战斗未完成，本次结果未记录");
                 }
                 return;
             }

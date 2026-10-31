@@ -83,33 +83,36 @@ namespace Zjcs.Presentation.Combat
         }
 
 
-        public void Begin(FightBattleCheckpoint checkpoint, Transform worldRoot, Transform hudParent,
-            OfficialBattleGridMapper gridMapper, Func<int, Sprite> skillIcon,
-            Func<FightBattleUnitState, Sprite> timelinePortrait,
-            Func<FightBattleUnitState, string> modelKey,
-            Func<FightBattleUnitState, FightBattleStepEvent, string> animationForEvent,
-            Action<Transform, FightBattleUnitState> orientUnit,
-            OfficialCombatAssetCatalog combatAssets = null,
-            OfficialBattleModelCatalog modelCatalog = null,
-            OfficialBattleHudCatalog hudCatalog = null,
-            bool restoreCheckpoint = false,
-            Func<FightBattleUnitState, Sprite> timelineFactionIcon = null,
-            int environmentGameId = 0,
-            bool? environmentIsDay = null,
-            Func<FightBattleUnitState, string> animationGroupResolver = null,
-            OfflineMainlineProgressSession statueProgress = null,
-            OfficialBattleSessionOptions options = null,
-            Func<FightBattleUnitState, IOfficialBattleNativeModel> nativeNpcFactory = null)
+        public void Begin(OfficialBattleRequest request)
         {
             if (executor != null) throw new InvalidOperationException("A battle session is already active.");
-            if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
-            if (worldRoot == null) throw new ArgumentNullException(nameof(worldRoot));
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (request.Checkpoint == null) throw new ArgumentNullException(nameof(request.Checkpoint));
+            if (request.WorldRoot == null) throw new ArgumentNullException(nameof(request.WorldRoot));
+            if (float.IsNaN(request.InitialStepDelay) || float.IsInfinity(request.InitialStepDelay) || request.InitialStepDelay < 0)
+                throw new ArgumentOutOfRangeException(nameof(request.InitialStepDelay));
+            var checkpoint = request.Checkpoint;
+            var worldRoot = request.WorldRoot;
+            var hudParent = request.HudParent;
+            var gridMapper = new OfficialBattleGridMapper(request.WorldRoot, request.Checkpoint.Grid);
+            var skillIcon = request.SkillIcon;
+            var timelinePortrait = request.TimelinePortrait;
+            var modelKey = request.ModelKey;
+            var animationForEvent = request.AnimationForEvent;
+            Action<Transform, FightBattleUnitState> orientUnit = OrientUnit;
+            var combatAssets = request.CombatAssets;
+            var modelCatalog = request.ModelCatalog;
+            var hudCatalog = request.HudCatalog;
+            var restoreCheckpoint = request.RestoreCheckpoint;
+            var timelineFactionIcon = request.TimelineFactionIcon;
+            var environmentGameId = request.EnvironmentGameId;
+            var environmentIsDay = request.EnvironmentIsDay;
+            var animationGroupResolver = request.AnimationGroupResolver;
+            var statueProgress = request.StatueProgress;
+            var options = request.Options;
+            var nativeNpcFactory = request.NativeNpcFactory;
+            remainingStepDelay = request.InitialStepDelay;
             if (hudParent == null) throw new ArgumentNullException(nameof(hudParent));
-            if (gridMapper == null) throw new ArgumentNullException(nameof(gridMapper));
-            if (skillIcon == null) throw new ArgumentNullException(nameof(skillIcon));
-            if (timelinePortrait == null) throw new ArgumentNullException(nameof(timelinePortrait));
-            if (modelKey == null) throw new ArgumentNullException(nameof(modelKey));
-            if (orientUnit == null) throw new ArgumentNullException(nameof(orientUnit));
             sessionOptions = options ?? new OfficialBattleSessionOptions();
             if (double.IsNaN(sessionOptions.PrepareSeconds) || double.IsInfinity(sessionOptions.PrepareSeconds)
                 || sessionOptions.PrepareSeconds < 0 || float.IsNaN(sessionOptions.ShowMainPanelDelay)
@@ -124,6 +127,17 @@ namespace Zjcs.Presentation.Combat
                 ? hudCatalog : OfficialBattleHudCatalog.LoadDefault();
 
             combatCatalog = resolvedCombatAssets.Load();
+            modelKey = modelKey ?? (unit => unit.Id == 1 ? null : resolvedModelCatalog.ResolveModelKey(unit));
+            if (skillIcon == null || timelinePortrait == null)
+            {
+                Sprite fallback = resolvedHudCatalog.FindSprite("C_none-fa3e084e40.png");
+                if (fallback == null) throw new InvalidOperationException("Official battle fallback portrait is missing.");
+                var icons = OfficialCombatSkillIconCatalog.TryLoadDefault();
+                var portraits = OfficialBattleMonsterPortraitCatalog.TryLoadDefault();
+                skillIcon = skillIcon ?? (itemId => icons?.Find(itemId) ?? fallback);
+                timelinePortrait = timelinePortrait ?? (unit => unit.MonsterId > 0
+                    ? portraits?.Find(combatCatalog.MonsterIconId(unit.MonsterId)) ?? fallback : fallback);
+            }
             this.statueProgress = statueProgress;
             statueEffectsEnded = false;
             if (!restoreCheckpoint && statueProgress != null)
@@ -212,7 +226,29 @@ namespace Zjcs.Presentation.Combat
             }
         }
 
-        public FightBattleExecutionResult Advance()
+        private static void OrientUnit(Transform root, FightBattleUnitState unit)
+        {
+            Vector3 scale = root.localScale;
+            scale.x = Mathf.Abs(scale.x) * (unit.Direction == 1 ? -1f : 1f);
+            root.localScale = scale;
+        }
+
+        private float remainingStepDelay;
+
+        /// <summary>Call once per frame from the mode adapter. Preparation, pause and presentation
+        /// gate advancement internally; the mode only decides whether its world is suspended.</summary>
+        public bool Tick(float deltaTime)
+        {
+            if (float.IsNaN(deltaTime) || float.IsInfinity(deltaTime) || deltaTime < 0)
+                throw new ArgumentOutOfRangeException(nameof(deltaTime));
+            if (!CanAdvance) return false;
+            remainingStepDelay = Mathf.Max(0f, remainingStepDelay - deltaTime);
+            if (remainingStepDelay > 0f) return false;
+            Advance();
+            return true;
+        }
+
+        private FightBattleExecutionResult Advance()
         {
             if (executor == null) throw new InvalidOperationException("Begin a battle session before advancing it.");
             if (stepping) throw new InvalidOperationException("A battle step is already being applied.");
@@ -405,6 +441,7 @@ namespace Zjcs.Presentation.Combat
         {
             stepPlayback?.Cancel();
             stepPlayback = null;
+            remainingStepDelay = 0f;
             if (hudView != null)
             {
                 hudView.ControlClicked -= OnHudControlClicked;

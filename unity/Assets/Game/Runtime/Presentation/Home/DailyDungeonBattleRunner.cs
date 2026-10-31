@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Zjcs.Presentation.Character;
 using Zjcs.Combat.Official;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.Skills;
@@ -22,7 +23,6 @@ namespace Zjcs.Presentation.Home
         private Quaternion previousPlayerRotation;
         private Vector3 previousPlayerScale;
         private Transform playerTransform;
-        private float stepTimer;
         private bool resultHandled;
         private int roomId;
         private string dailyAssistEntryId;
@@ -256,7 +256,6 @@ namespace Zjcs.Presentation.Home
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
             controller.HudControlClicked += OnHudControlClicked;
             controller.StepCompleted += OnStepCompleted;
-            var gridMapper = new OfficialBattleGridMapper(battleRoot, checkpoint.Grid);
             OfficialBattleHudCatalog hudCatalog = OfficialBattleHudCatalog.LoadDefault();
             Sprite fallback = hudCatalog.FindSprite("C_none-fa3e084e40.png");
             if (fallback == null) throw new InvalidOperationException("Official battle fallback portrait is missing.");
@@ -264,38 +263,37 @@ namespace Zjcs.Presentation.Home
             OfficialBattleMonsterPortraitCatalog portraits = privateMapEntry
                 ? Resources.Load<OfficialBattleMonsterPortraitCatalog>("Map12/monster-portraits")
                 : OfficialBattleMonsterPortraitCatalog.TryLoadDefault();
-            OfficialBattleModelCatalog models = OfficialBattleModelCatalog.LoadDefault();
-            controller.Begin(checkpoint, battleRoot, battleCanvas, gridMapper,
-                itemId => skillIcons == null ? fallback : skillIcons.Find(itemId) ?? fallback,
-                unit => unit.MonsterId > 0 && portraits != null
+            controller.Begin(new OfficialBattleRequest
+            {
+                Checkpoint = checkpoint,
+                WorldRoot = battleRoot,
+                EnvironmentGameId = scene.gameId,
+                HudParent = battleCanvas,
+                SkillIcon = itemId => skillIcons == null ? fallback : skillIcons.Find(itemId) ?? fallback,
+                TimelinePortrait = unit => unit.MonsterId > 0 && portraits != null
                     ? portraits.Find(combat.MonsterIconId(unit.MonsterId)) ?? fallback : fallback,
-                unit => unit.Id == 1 ? null : models.ResolveModelKey(unit),
-                (_, __) => "idle_01",
-                (root, unit) =>
-                {
-                    Vector3 scale = root.localScale;
-                    scale.x = Mathf.Abs(scale.x) * (unit.Direction == 1 ? -1f : 1f);
-                    root.localScale = scale;
-                },
-                null, null, hudCatalog, restore, statueProgress: battleProfile);
+                AnimationGroupResolver = unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
+                HudCatalog = hudCatalog,
+                RestoreCheckpoint = restore,
+                StatueProgress = battleProfile
+            });
             controller.AttachUnitTransform(1, playerTransform);
             controller.ConfigureSpeeds(combatAssets.Load().SpeedSettings, 0, IsBattleSpeedConditionMet);
             string serialized = FightBattleCheckpointSerializer.Save(checkpoint);
             if (!isChallenge && !privateMapEntry && !host.DailyDungeons.SaveBattleCheckpoint(serialized))
                 throw new InvalidOperationException("Daily dungeon battle checkpoint could not be saved.");
-            stepTimer = 0.8f;
         }
 
         private void Update()
         {
             if (controller == null || controller.Checkpoint == null || resultHandled) return;
             FightBattleCheckpoint checkpoint = controller.Checkpoint;
-            if (checkpoint.Finished)
+            if (controller.CanCompleteBattle)
             {
                 CompleteBattle(checkpoint.Outcome.Won);
                 return;
             }
-            OfficialBattleProgressDriver.Tick(controller, ref stepTimer, Time.deltaTime);
+            controller.Tick(Time.deltaTime);
         }
 
         private void OnStepCompleted(FightBattleExecutionResult result)
@@ -305,7 +303,6 @@ namespace Zjcs.Presentation.Home
             if (challengeMode) host.DailyChallenges.SaveBattleCheckpoint(challengeActivityId, serialized);
             else if (!privateMapEntry && !host.DailyDungeons.SaveBattleCheckpoint(serialized))
                 throw new InvalidOperationException("Daily dungeon battle checkpoint could not be saved.");
-            if (result.Checkpoint.Finished) CompleteBattle(result.Checkpoint.Outcome.Won);
         }
 
         private void CompleteBattle(bool won)

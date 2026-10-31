@@ -22,7 +22,7 @@ namespace Zjcs.Presentation.Home
         private Vector3 previousPlayerPosition, previousPlayerScale, previousCameraPosition;
         private Quaternion previousPlayerRotation, previousCameraRotation;
         private Camera battleCamera;
-        private float previousCameraSize, stepTimer;
+        private float previousCameraSize;
         private bool complete;
         private readonly List<GameObject> hiddenHomeObjects = new List<GameObject>();
         public event Action<FightBattleCheckpoint> Completed;
@@ -59,27 +59,25 @@ namespace Zjcs.Presentation.Home
             playerTransform.SetParent(battleRoot, true);
             OfficialCombatAssetCatalog assets = OfficialCombatAssetCatalog.LoadDefault();
             FightOfficialCombatCatalog combat = assets.Load();
-            OfficialBattleHudCatalog hud = OfficialBattleHudCatalog.LoadDefault();
-            Sprite fallback = hud.FindSprite("C_none-fa3e084e40.png");
-            var icons = OfficialCombatSkillIconCatalog.TryLoadDefault();
-            var portraits = OfficialBattleMonsterPortraitCatalog.TryLoadDefault();
-            var models = OfficialBattleModelCatalog.LoadDefault();
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
             controller.HudControlClicked += OnControl;
-            controller.Begin(checkpoint, battleRoot, host.Hud.CanvasTransform,
-                new OfficialBattleGridMapper(battleRoot, checkpoint.Grid),
-                itemId => icons?.Find(itemId) ?? fallback,
-                unit => unit.MonsterId > 0 ? portraits?.Find(combat.MonsterIconId(unit.MonsterId)) ?? fallback : fallback,
-                unit => unit.Id == 1 ? null : models.ResolveModelKey(unit),
-                (_, __) => "idle_01",
-                (root, unit) => { Vector3 scale = root.localScale; scale.x = Mathf.Abs(scale.x) * (unit.Direction == 1 ? -1f : 1f); root.localScale = scale; },
-                assets, models, hud, environmentGameId: stage.GameId, statueProgress: host.Profile,
-                options: new OfficialBattleSessionOptions {
+            controller.Begin(new OfficialBattleRequest
+            {
+                Checkpoint = checkpoint,
+                WorldRoot = battleRoot,
+                HudParent = host.Hud.CanvasTransform,
+                AnimationGroupResolver = unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
+                CombatAssets = assets,
+                EnvironmentGameId = stage.GameId,
+                StatueProgress = host.Profile,
+                Options = new OfficialBattleSessionOptions {
                     SkipPrepareStatus = stage.SkipPrepareStatus, ShowMainPanelDelay = stage.ShowMainPanelDelay,
                     LeaveInPreparing = stage.LeaveInPreparing, LeaveInPlaying = stage.LeaveInPlaying,
                     ChangeCameraMode = stage.ChangeCameraMode, CanFastforward = stage.CanFastforward,
                     CanChangePosition = true, ChangePositionWidth = 3, ChangePositionHeight = 3,
-                    ChangePositionCenterX = player.X, ChangePositionCenterY = player.Y });
+                    ChangePositionCenterX = player.X, ChangePositionCenterY = player.Y },
+                InitialStepDelay = 0f
+            });
             controller.AttachUnitTransform(1, playerTransform);
             controller.ConfigureSpeeds(combat.SpeedSettings, 0, conditionId => {
                 var context = new OfficialConditionContext { Level = host.Level };
@@ -102,7 +100,7 @@ namespace Zjcs.Presentation.Home
         private void Update()
         {
             if (controller == null || complete) return;
-            OfficialBattleProgressDriver.Tick(controller, ref stepTimer, Time.deltaTime);
+            controller.Tick(Time.deltaTime);
             if (!controller.CanCompleteBattle) return;
             complete = true;
             FightBattleCheckpoint checkpoint = controller.Checkpoint;

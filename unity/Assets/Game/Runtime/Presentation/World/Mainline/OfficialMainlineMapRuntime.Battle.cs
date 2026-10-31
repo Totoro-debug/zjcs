@@ -155,7 +155,6 @@ namespace Zjcs.Presentation.World
 
             battleController.HudControlClicked += OnBattleHudControl;
 
-            OfficialBattleGridMapper mapper = new OfficialBattleGridMapper(battleRoot, grid);
             Sprite fallbackPortrait = hud.uiCatalog.FindSprite("res://assets/official/sprites/C_none-fa3e084e40.png");
             if (fallbackPortrait == null) throw new InvalidOperationException("Official Map10 fallback battle portrait is missing.");
             OfficialCombatSkillIconCatalog skillIcons = OfficialCombatSkillIconCatalog.TryLoadDefault();
@@ -169,23 +168,20 @@ namespace Zjcs.Presentation.World
             };
             FightOfficialCombatCatalog combatCatalog = OfficialCombatAssetCatalog.LoadDefault().Load();
             Sprite playerBattlePortrait = CaptureBattlePlayerHead(battleController.gameObject);
-            battleController.Begin(checkpoint, battleRoot, uiParent, mapper,
-                skillIconResolver,
-                unit => unit.MonsterId > 0
+            battleController.Begin(new OfficialBattleRequest
+            {
+                Checkpoint = checkpoint,
+                WorldRoot = battleRoot,
+                HudParent = uiParent,
+                SkillIcon = skillIconResolver,
+                TimelinePortrait = unit => unit.MonsterId > 0
                     ? (monsterPortraits == null ? null : monsterPortraits.Find(combatCatalog.MonsterIconId(unit.MonsterId)))
                     : playerBattlePortrait,
-                unit => unit.Id == 1 ? null : OfficialBattleModelCatalog.LoadDefault().ResolveModelKey(unit),
-                null,
-                (root, unit) =>
-                {
-                    Vector3 scale = root.localScale;
-                    scale.x = Mathf.Abs(scale.x) * (unit.Direction == 1 ? -1f : 1f);
-                    root.localScale = scale;
-                },
-                null, null, null, resume != null, environmentGameId: scene.GameId,
-                animationGroupResolver: unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
-                statueProgress: progressionSave,
-                options: new OfficialBattleSessionOptions
+                RestoreCheckpoint = resume != null,
+                EnvironmentGameId = scene.GameId,
+                AnimationGroupResolver = unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
+                StatueProgress = progressionSave,
+                Options = new OfficialBattleSessionOptions
                 {
                     SkipPrepareStatus = stage.SkipPrepareStatus,
                     ShowMainPanelDelay = stage.ShowMainPanelDelay,
@@ -197,17 +193,18 @@ namespace Zjcs.Presentation.World
                     ChangePositionCenterX = playerEntry.X,
                     ChangePositionCenterY = playerEntry.Y
                 },
-                nativeNpcFactory: unit => mapClassId == 12 && unit != null && unit.Id != 1
+                NativeNpcFactory = unit => mapClassId == 12 && unit != null && unit.Id != 1
                     && OfficialMap12NpcBattleModelView.HasBinding(unit.MonsterId)
                     ? new OfficialMap12NpcBattleModelView(unit.MonsterId, battleRoot,
                         "Map12BattleNpc_" + unit.Id)
-                    : null);
+                    : null
+            });
             battleController.AttachUnitTransform(1, avatar.transform);
             battleController.ConfigureSpeeds(
                 OfficialCombatAssetCatalog.LoadDefault().Load().SpeedSettings, 0,
                 IsBattleSpeedConditionMet);
             SuspendWorldForBattle();
-            battleStepTimer = 0.8f;
+            battleStepTimer = 0f;
             navigation.pendingInteraction = entity;
             activeBattleStage = stage;
             battleCompletion = completed;

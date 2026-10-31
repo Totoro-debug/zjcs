@@ -62,7 +62,10 @@ namespace Zjcs.Editor
                 Require(AssetDatabase.LoadAssetAtPath<TextAsset>(path) != null, "The official HUD binding did not import: " + path);
             }
 
-            string root = Path.Combine(Path.GetTempPath(), "zjcs-map10-battle-" + Guid.NewGuid().ToString("N"));
+            string validationRoot = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+            if (string.IsNullOrWhiteSpace(validationRoot))
+                throw new InvalidOperationException("Set ZJCS_VALIDATION_DIR to a session created by validation_workspace.ps1.");
+            string root = Path.Combine(validationRoot, "map10-battle-profile-" + Guid.NewGuid().ToString("N"));
             try
             {
                 var slots = new ProfileSlotCatalog(root);
@@ -180,6 +183,27 @@ namespace Zjcs.Editor
             }
         }
 
+        // Exercise the same interface as the mode adapters; no executor or playback internals.
+        private static void VerifyCommonBattleInterface(
+            Zjcs.Presentation.Combat.OfficialBattleRuntimeController controller)
+        {
+            var checkpoint = controller.Checkpoint;
+            int counter = checkpoint.Counter;
+            foreach (float delta in new[] { -1f, float.NaN, float.PositiveInfinity, float.NegativeInfinity })
+            {
+                bool rejected = false;
+                try { controller.Tick(delta); }
+                catch (ArgumentOutOfRangeException) { rejected = true; }
+                Require(rejected && controller.Checkpoint == checkpoint && checkpoint.Counter == counter,
+                    "Invalid frame time altered the active common battle session.");
+            }
+            bool duplicateRejected = false;
+            try { controller.Begin(new Zjcs.Presentation.Combat.OfficialBattleRequest()); }
+            catch (InvalidOperationException) { duplicateRejected = true; }
+            Require(duplicateRejected && controller.Checkpoint == checkpoint && checkpoint.Counter == counter,
+                "A duplicate Begin replaced the active common battle session.");
+        }
+
         private static IEnumerator VerifyBattle(OfficialMainlineMapRuntime runtime)
         {
             yield return null;
@@ -221,10 +245,14 @@ namespace Zjcs.Editor
             Require(controller != null, "No Map10 entity started a battle.");
 
             var sceneController = (Zjcs.Presentation.Combat.OfficialBattleRuntimeController)controller;
+            VerifyCommonBattleInterface(sceneController);
             Combat.OfficialBattleSummonModelAcceptance summonModelTest = null;
             bool finalPresentationHeld = false, finalPresentationCompleted = false;
             sceneController.StepCompleted += result =>
             {
+                int counter = result.Checkpoint.Counter;
+                Require(!sceneController.Tick(float.MaxValue) && result.Checkpoint.Counter == counter,
+                    "The common interface advanced again while a step was still presenting.");
                 if (!result.Checkpoint.Finished) return;
                 Require(sceneController.IsPresentingStep && !sceneController.CanCompleteBattle,
                     "The final settled result bypassed its presentation wait.");
@@ -362,6 +390,8 @@ namespace Zjcs.Editor
             if (phaseProperty.GetValue(controller).ToString() == "Preparing")
             {
                 long counter = checkpointField("Counter");
+                Require(!sceneController.Tick(float.MaxValue) && checkpointField("Counter") == counter,
+                    "The common interface bypassed preparation with a large frame delta.");
                 yield return new WaitForSecondsRealtime(1f);
                 Require(checkpointField("Counter") == counter && !active(),
                     "Preparation advanced the combat executor before readiness.");
@@ -463,6 +493,9 @@ namespace Zjcs.Editor
             setPaused.Invoke(controller, new object[] { true });
             yield return null;
             Require((bool)pausedProperty.GetValue(controller), "Battle did not pause.");
+            int pausedCounter = sceneController.Checkpoint.Counter;
+            Require(!sceneController.Tick(float.MaxValue) && sceneController.Checkpoint.Counter == pausedCounter,
+                "The common interface advanced the executor while paused.");
             setPaused.Invoke(controller, new object[] { false });
             Require(!(bool)pausedProperty.GetValue(controller), "Battle did not resume.");
 

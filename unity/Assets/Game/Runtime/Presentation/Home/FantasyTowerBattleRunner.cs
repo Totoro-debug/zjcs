@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Zjcs.Presentation.Character;
 using Zjcs.Combat.Official;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.Skills;
@@ -23,7 +24,7 @@ namespace Zjcs.Presentation.Home
         private Vector3 previousPlayerPosition, previousPlayerScale;
         private Quaternion previousPlayerRotation;
         private int entryIndex, layer;
-        private float stepTimer, continueTimer;
+        private float continueTimer;
         private bool autoPush, resultHandled, disposed, backgroundExecution;
 
         public event Action<int, int, bool> LayerCompleted;
@@ -173,31 +174,22 @@ namespace Zjcs.Presentation.Home
             FightOfficialCombatCatalog combat = combatAssets.Load();
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
             controller.StepCompleted += OnStepCompleted;
-            OfficialBattleGridMapper mapper = new OfficialBattleGridMapper(battleRoot, checkpoint.Grid);
-            OfficialBattleHudCatalog hudCatalog = OfficialBattleHudCatalog.LoadDefault();
-            Sprite fallback = hudCatalog.FindSprite("C_none-fa3e084e40.png");
-            if (fallback == null) throw new InvalidOperationException("Official battle portrait fallback is missing.");
-            OfficialCombatSkillIconCatalog skillIcons = OfficialCombatSkillIconCatalog.TryLoadDefault();
-            OfficialBattleMonsterPortraitCatalog portraits = OfficialBattleMonsterPortraitCatalog.TryLoadDefault();
-            OfficialBattleModelCatalog models = OfficialBattleModelCatalog.LoadDefault();
-            controller.Begin(checkpoint, battleRoot, host.Hud.CanvasTransform, mapper,
-                itemId => skillIcons == null ? fallback : skillIcons.Find(itemId) ?? fallback,
-                unit => unit.MonsterId > 0 && portraits != null
-                    ? portraits.Find(combat.MonsterIconId(unit.MonsterId)) ?? fallback : fallback,
-                unit => unit.Id == 1 ? null : models.ResolveModelKey(unit),
-                (_, __) => "idle_01",
-                (root, unit) =>
-                {
-                    Vector3 scale = root.localScale;
-                    scale.x = Mathf.Abs(scale.x) * (unit.Direction == 1 ? -1f : 1f);
-                    root.localScale = scale;
-                }, combatAssets, models, hudCatalog, restore, statueProgress: host.Profile);
+            controller.Begin(new OfficialBattleRequest
+            {
+                Checkpoint = checkpoint,
+                WorldRoot = battleRoot,
+                EnvironmentGameId = scene.GameId,
+                HudParent = host.Hud.CanvasTransform,
+                AnimationGroupResolver = unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
+                CombatAssets = combatAssets,
+                RestoreCheckpoint = restore,
+                StatueProgress = host.Profile
+            });
             controller.AttachUnitTransform(1, playerTransform);
             if (!backgroundExecution)
                 playerTransform.GetComponent<CharacterCreationMeshFramePlayer>()?.PlayOnce(
                     "map/portal_01", "home/idle_01");
             controller.ConfigureSpeeds(combat.SpeedSettings, 0, IsBattleSpeedConditionMet);
-            stepTimer = 0.8f;
         }
 
         private FightBattleCheckpoint BuildCheckpoint(Map10RuntimeStage stage,
@@ -313,8 +305,8 @@ namespace Zjcs.Presentation.Home
             if (controller == null) return;
             FightBattleCheckpoint checkpoint = controller.Checkpoint;
             if (checkpoint == null) return;
-            if (checkpoint.Finished) { Complete(checkpoint.Outcome.Won); return; }
-            OfficialBattleProgressDriver.Tick(controller, ref stepTimer, Time.deltaTime);
+            if (controller.CanCompleteBattle) { Complete(checkpoint.Outcome.Won); return; }
+            controller.Tick(Time.deltaTime);
         }
 
         private void OnStepCompleted(FightBattleExecutionResult result)
@@ -323,7 +315,6 @@ namespace Zjcs.Presentation.Home
             if (checkpoint == null) return;
             if (backgroundExecution) progress.SaveBackgroundCheckpoint(entryIndex, checkpoint);
             else progress.SaveForegroundCheckpoint(entryIndex, checkpoint);
-            if (checkpoint.Finished) Complete(checkpoint.Outcome.Won);
         }
 
         private void Complete(bool won)

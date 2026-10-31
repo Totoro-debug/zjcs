@@ -22,7 +22,7 @@ namespace Zjcs.Presentation.World
                     new[] { 1255, 1256, 1257, 1258, 1259, 1260, 1261, 1262, 4209, 4210, 4211, 4212, 4213, 4228, 4229, 4236 },
                     true, 0, 111, 101),
                 [15] = new OfficialMainlineMapProfile(15, 0, 0, null,
-                    new[] { 115 }, true, 0, 1, 101, false)
+                    new[] { 115 }, true, 0, 1, 101)
             });
 
         public int MapClassId { get; }
