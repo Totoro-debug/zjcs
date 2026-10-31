@@ -64,6 +64,20 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 尚无完整 Unity 流程的完成结论；已取得源码和转换素材仅作迁移依据。
 
+### 已迁移的官方界面公共组件（局部）
+
+`Runtime/Official/PartnersUI/` 从当前 `884_156692` 原码迁移伙伴页使用的排序、筛选、选项切换、多文本控制、信物进度和卡片显示队列。`FilterSortPanel` 保留原缓存、默认选择、重置及关闭逻辑；排序切换保留旧选项关闭、新选项开启的通知顺序及反向标记重置。筛选结果仍按原集合增删，缓存恢复保留原有结果后追加，不将传入的 `isOn` 改作另一套规则。显示队列保留首次延迟、重复卡片移至队尾、暂停保留队列及停用清空的原分支。
+
+迁移只隔离命名空间，复用现有 `WorldUI` 的标签页、文本和状态切换器，移除编辑器专用枚举检索属性。筛选项复制保留 `UIUtils.ResetUI(All)` 的位置归零、旋转归一、缩放归一和激活操作；这些筛选组件不依赖原在线注入服务。原枚举数值和语言键生成函数保持不变。源码、处理方式与输出哈希见[界面公共组件来源](../../assets/reference/partner-ui-helpers-source-manifest.json)，重建入口为 `scripts/prepare_partner_ui_helpers.py`。
+
+`prepare_partner_ui_validation.py` 使用实际迁移代码及实际共享 UI 源码建立隔离工程；`PartnerUiHelperValidation.Run` 在 Unity `2022.3.57f1c2` Play Mode 中以指针坐标、UI 射线命中和 pointer down／up／click 验证排序／反向、筛选重复点击、缓存、默认值、重置与开关，并验证队列延迟、去重、停止和清空。组件测试通过，已查看相机实际渲染的测试控件画面；该测试布局仅属于验证工程，不进入游戏，也不代表官方伙伴界面已还原。静态检查、主工程 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 均通过；完整伙伴页的入口、资源绑定、Play Mode 流程及 Windows Player 仍待完成。
+
+### 当前原生 prefab 字段恢复（局部）
+
+`scripts/prepare_current_partner_native.py` 从当前 APK／已校验的配套云端资源读取官方 NPC bundle，对 `NpcPanel`、`NpcPanelNpcItem`、`NpcDetailPanel`、`NpcFriendshipDialog`、`NpcFriendshipPreviewPropItem` 和 `NpcFriendshipPropItemGroup` 逐节点核对原层级、名称、子节点和组件顺序，并以原程序集脚本身份校验转换器的 MonoScript 引用。共核对 7,004 个对象，补回 106 个被转换器省略的组件字段；原字段缓存和对象原始字节分别校验哈希。跨 prefab 引用保留目标 prefab 自身 GUID／根对象，未按相似名称匹配。
+
+这些中间文件保留官方原脚本身份，只在验证目录生成，不作为可玩 prefab 导入。当前仍有两条对话动画、一条相遇 Wwise 音效和八条红点节点引用待显式绑定，不能据此认定资源缺失或取消其行为。来源版本、原 bundle／对象、转换输入与中间输出哈希见[当前原生字段来源](../../assets/reference/partner-native-recovery-source-manifest.json)；使用已设置的独立验证目录运行上述脚本，`--record` 更新来源凭据。
+
 ### 已迁移的名册与相遇状态（局部）
 
 `Runtime/Official/Partners/NpcRosterRules.cs` 与 `OfflineCharacterProgressionService.Partners.cs` 按当前 `884_156692` 的 `NpcHelper`、`NpcPanelNpcList`、`NpcComparer` 恢复五种结识状态、名册显示条件及好感／相遇时间排序。判断依次为已结识、可结识、可显示后的等待／未结识；可结识条件优先于可显示条件。默认显示已结识及可结识伙伴；勾选全部后增加等待结识伙伴，以及拥有首个专属信物的未结识伙伴。名册限定原 `MapExploreBoss` 类别并排除星神和已确认暂停的八位联动伙伴。

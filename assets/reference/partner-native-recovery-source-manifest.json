@@ -1,0 +1,208 @@
+{
+  "manifest": "884_156692",
+  "bundle": "defaultpackage_assets_prefabs_ui_npc.bundle",
+  "stage": "Recovered original hierarchy/fields only; runtime script and resource binding pending",
+  "generator_sha256": "1750c0b10af11cb422844945ae1b3124ce395fce4c36b2ae283cb103ef3c9226",
+  "component_cache": {
+    "path": ".tools/source-packages/current/884_156692/native-conversion/component-fields-all/source-manifest.json",
+    "sha256": "c82db6a6903d36856807688d11573793cdaef98d1da13d0d6108b6f3f04aeec5"
+  },
+  "prefabs": [
+    {
+      "name": "NpcPanel",
+      "originalRoot": "cab-2b0348e1ff451d425e25e4ffbf1b133f:5196666809939467722",
+      "originalSource": {
+        "bundle": "defaultpackage_assets_prefabs_ui_npc.bundle",
+        "bundle_hash": "2212f712f2ca157310ba8577a8c36879",
+        "path_id": "5196666809939467722",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2212f712f2ca157310ba8577a8c36879.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 1079086,
+        "bundle_sha256": "a8847b99610c4b5e86ee8699e912c7cbcba059b065cef6a3ec0f3680861bebcb"
+      },
+      "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Npc/NpcPanel.prefab",
+      "native_sha256": "a279b3532f096dbd5470772f4884045ab3bcc23f1b9fa8457f35931512cc49cb",
+      "mapped_objects": 2962,
+      "recovered_components": 44,
+      "unresolved": 5,
+      "pendingBindings": {
+        "cab-2b0348e1ff451d425e25e4ffbf1b133f:5043122933981093025": {
+          "type": "AnimationClip",
+          "payload_sha256": "41ec61f6a281eb0d0b8d8fa8afc447bcdfa402f9da630fb7d1e271e23a0157e4",
+          "name": "NpcPanelDialogueItem_In"
+        },
+        "cab-2b0348e1ff451d425e25e4ffbf1b133f:-2245767671925989990": {
+          "type": "AnimationClip",
+          "payload_sha256": "0354fbfd29811c7e72ec508880c6fac3c86250a21ef58d4de07800a6644831d8",
+          "name": "NpcPanelDialogueItem_DialogueItem_In"
+        },
+        "cab-a5793799a60a3d47ab715c21c5c50156:-1945510921484628578": {
+          "type": "MonoBehaviour",
+          "payload_sha256": "dc5fd868f58a22538d64a5dd2e8556e9a7c42b54af283509665d3d129ea0a732",
+          "name": "[2][State]伙伴切页是否有提示"
+        },
+        "cab-a5793799a60a3d47ab715c21c5c50156:1650305864680607134": {
+          "type": "MonoBehaviour",
+          "payload_sha256": "475f8e441e4a9c8252e23d6dde30e27b5d59486ae1bba7664970e9a3ca091d6d",
+          "name": "[5][State]星神Npc是否有提示"
+        },
+        "cab-a5793799a60a3d47ab715c21c5c50156:-6707414203850814050": {
+          "type": "MonoBehaviour",
+          "payload_sha256": "4496c4ec4a0e88a4b85670979a8a2c7d2958fd25a35ae62076a5a0913048f588",
+          "name": "[3][State]通话切页是否有提示"
+        }
+      },
+      "output": "NpcPanel.json",
+      "nativeMeta_sha256": "c5174f6d97932eaddce9f733e576f038ac900478edd5787053d84d52d92363f2",
+      "output_sha256": "afa3050b4085a160ebecf61426a5f27d14a5d7115784bd226045af0170a1cc84"
+    },
+    {
+      "name": "NpcPanelNpcItem",
+      "originalRoot": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-2952123314001349233",
+      "originalSource": {
+        "bundle": "defaultpackage_assets_prefabs_ui_npc.bundle",
+        "bundle_hash": "2212f712f2ca157310ba8577a8c36879",
+        "path_id": "-2952123314001349233",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2212f712f2ca157310ba8577a8c36879.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 1079086,
+        "bundle_sha256": "a8847b99610c4b5e86ee8699e912c7cbcba059b065cef6a3ec0f3680861bebcb"
+      },
+      "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Npc/NpcPanelNpcItem.prefab",
+      "native_sha256": "34d40c30f745d6bbb72d72378ea1b51bc199731115f9ac65a2ad2c207c92d875",
+      "mapped_objects": 306,
+      "recovered_components": 6,
+      "unresolved": 2,
+      "pendingBindings": {
+        "cab-8ede2c00df79c3aff9bab2859b047085:2407862946138625182": {
+          "type": "MonoBehaviour",
+          "payload_sha256": "e9906f6627226d42df576c6558761776fff99a540ec2e48bf8b18185eff79ba1",
+          "name": "1DF9BC68-508C-4318-906E-EEFEEB76AEA5"
+        },
+        "cab-a5793799a60a3d47ab715c21c5c50156:-8464011310014223809": {
+          "type": "MonoBehaviour",
+          "payload_sha256": "f41f72c0cec41c769477aefdebb5c095e48291d06bcc05e56eed526740e37221",
+          "name": "[1][State]Npc详情页是否有提示"
+        }
+      },
+      "output": "NpcPanelNpcItem.json",
+      "nativeMeta_sha256": "8e09a971071d1f7239889370fe98bf7722d97fd37ee2374b0e2f741151dd023a",
+      "output_sha256": "a8c62ae6b615b11f2d53d5b46276c357e1717bb484897e9d4ca40116c84821c4"
+    },
+    {
+      "name": "NpcDetailPanel",
+      "originalRoot": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-6268394885566128652",
+      "originalSource": {
+        "bundle": "defaultpackage_assets_prefabs_ui_npc.bundle",
+        "bundle_hash": "2212f712f2ca157310ba8577a8c36879",
+        "path_id": "-6268394885566128652",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2212f712f2ca157310ba8577a8c36879.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 1079086,
+        "bundle_sha256": "a8847b99610c4b5e86ee8699e912c7cbcba059b065cef6a3ec0f3680861bebcb"
+      },
+      "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Npc/NpcDetailPanel.prefab",
+      "native_sha256": "ba3d64c34e6b34f04255d719f0464e82851439099f416634b91d8dac63223a01",
+      "mapped_objects": 3242,
+      "recovered_components": 47,
+      "unresolved": 4,
+      "pendingBindings": {
+        "cab-a5793799a60a3d47ab715c21c5c50156:6199963939152798117": {
+          "type": "MonoBehaviour",
+          "payload_sha256": "8d8dd59e6b62978a0be08351b01f833ca46fb892c4e303fa05709c667953a25f",
+          "name": "[2][State]Npc档案是否可以解锁"
+        },
+        "cab-a5793799a60a3d47ab715c21c5c50156:5577954000841058879": {
+          "type": "MonoBehaviour",
+          "payload_sha256": "793d142b75671592c32c261565413f92c814ea62b4854f54a10696146b045a98",
+          "name": "[2][State]Npc赠礼切页是否有提示"
+        },
+        "cab-a5793799a60a3d47ab715c21c5c50156:-5462357245732476353": {
+          "type": "MonoBehaviour",
+          "payload_sha256": "e477742c113802e49db28cc2218e157249341cdefbc79e9e666cf8c52c494390",
+          "name": "[4][State]Npc档案切页是否有提示"
+        },
+        "cab-a5793799a60a3d47ab715c21c5c50156:-8571086154959574465": {
+          "type": "MonoBehaviour",
+          "payload_sha256": "d9bf52f8f63224c8d910ab9a6c723aa6e52ad856c8c334ece66e9613edbb65b3",
+          "name": "[3][State]Npc馈赠切页是否有提示"
+        }
+      },
+      "output": "NpcDetailPanel.json",
+      "nativeMeta_sha256": "c5e76b8ab2a20211158096f304e7cb1d4a7dec9015e69482985513fbc457d61a",
+      "output_sha256": "fc25bff7359ffced653b220c74d1a086dabb6e9614158873971b91ff39b9eece"
+    },
+    {
+      "name": "NpcFriendshipDialog",
+      "originalRoot": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-7909115090442479469",
+      "originalSource": {
+        "bundle": "defaultpackage_assets_prefabs_ui_npc.bundle",
+        "bundle_hash": "2212f712f2ca157310ba8577a8c36879",
+        "path_id": "-7909115090442479469",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2212f712f2ca157310ba8577a8c36879.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 1079086,
+        "bundle_sha256": "a8847b99610c4b5e86ee8699e912c7cbcba059b065cef6a3ec0f3680861bebcb"
+      },
+      "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Npc/NpcFriendshipDialog.prefab",
+      "native_sha256": "0449c1cba45e5517c57c219916ad2cddff9695498a10e4b5538348e68f3b8540",
+      "mapped_objects": 311,
+      "recovered_components": 3,
+      "unresolved": 0,
+      "pendingBindings": {},
+      "output": "NpcFriendshipDialog.json",
+      "nativeMeta_sha256": "d18e2d106c6fc771331c32caa0710c7164c8ba03c32572214240061ae63884f8",
+      "output_sha256": "87a305ab34e71076259bdb4c2fff2101e66a1ba9eb62c88bd5626ace63a84999"
+    },
+    {
+      "name": "NpcFriendshipPreviewPropItem",
+      "originalRoot": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-1515359287783918838",
+      "originalSource": {
+        "bundle": "defaultpackage_assets_prefabs_ui_npc.bundle",
+        "bundle_hash": "2212f712f2ca157310ba8577a8c36879",
+        "path_id": "-1515359287783918838",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2212f712f2ca157310ba8577a8c36879.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 1079086,
+        "bundle_sha256": "a8847b99610c4b5e86ee8699e912c7cbcba059b065cef6a3ec0f3680861bebcb"
+      },
+      "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Npc/NpcFriendshipPreviewPropItem.prefab",
+      "native_sha256": "c19450d850681b86d984169f76049d0dd4d2a1def3ae808b6dcf1832cabaee77",
+      "mapped_objects": 30,
+      "recovered_components": 2,
+      "unresolved": 0,
+      "pendingBindings": {},
+      "output": "NpcFriendshipPreviewPropItem.json",
+      "nativeMeta_sha256": "b11172bf682a4376ed021ef977d52c42ccd773a31c9ab308bfd1f2454c971b8c",
+      "output_sha256": "d0a21cc4798019258bfb1205653a2e7c5fe7683b55aaf20ccec2160eced422d1"
+    },
+    {
+      "name": "NpcFriendshipPropItemGroup",
+      "originalRoot": "cab-2b0348e1ff451d425e25e4ffbf1b133f:2186296420358558041",
+      "originalSource": {
+        "bundle": "defaultpackage_assets_prefabs_ui_npc.bundle",
+        "bundle_hash": "2212f712f2ca157310ba8577a8c36879",
+        "path_id": "2186296420358558041",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2212f712f2ca157310ba8577a8c36879.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 1079086,
+        "bundle_sha256": "a8847b99610c4b5e86ee8699e912c7cbcba059b065cef6a3ec0f3680861bebcb"
+      },
+      "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Npc/NpcFriendshipPropItemGroup.prefab",
+      "native_sha256": "506f3f687e30a794106a54bba70e9a1f5b56e34a32628e5384a29505c042f97b",
+      "mapped_objects": 153,
+      "recovered_components": 4,
+      "unresolved": 0,
+      "pendingBindings": {},
+      "output": "NpcFriendshipPropItemGroup.json",
+      "nativeMeta_sha256": "7b50f5ece69e64940f6ee0e24a4c892db6e2f2ea7dcf6f9c8be24a229593791a",
+      "output_sha256": "356cdcc4814ddb1cb296e51097c515fa907e0f1a597aca84c9e07f4680f46f62"
+    }
+  ]
+}
