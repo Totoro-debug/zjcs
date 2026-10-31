@@ -1,0 +1,137 @@
+{
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/ProfessionUI/NativeSkeletonData/Resources/ProfessionUI/NativeSkeletons/male.bytes",
+      "sha256": "7209fd0c72cbc5b32f44374d0c8921b9fe53d60b1dd404da3fc068359415f41f"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/NativeSkeletonData/Resources/ProfessionUI/NativeSkeletons/female.bytes",
+      "sha256": "6f12515b949321a7697392b81b99e4a3c293b729bf832cf324979cdc12ec2bef"
+    }
+  ],
+  "source_receipt": {
+    "path": "assets/reference/profession-ui/skeleton-data-source-manifest.json",
+    "sha256": "5e97038f987d2760cfa49ceaab182d52fac67ae29b43681a4b6ad612e2fdcd34"
+  },
+  "dependencies": [
+    {
+      "path": "assets/reference/profession-ui/character-resources-source-manifest.json",
+      "sha256": "0fede6890e318829f3b47057cdb781f643dbe9a54cfacbab77084af24b8c52b8"
+    },
+    {
+      "path": "assets/reference/profession-ui/appearance-spine-source-manifest.json",
+      "sha256": "22f235c51929d914ea280d21ea41b7f9d915c0148ac44c784e51788eb55c2625"
+    },
+    {
+      "path": "assets/reference/profession-ui/skin-defaults-source-manifest.json",
+      "sha256": "5bc0307cb634871e98df41103709bed6eb72dcbca608def841621a7f84d07d70"
+    },
+    {
+      "path": "assets/reference/profession-ui/character-textures-source-manifest.json",
+      "sha256": "a900e2592fe9cc81c09dbbb6397cf8b00a7a7e47ce78202ffaa6c7f23efa755a"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/ProfessionUI/character-resources.asset",
+      "sha256": "21b52762764eef157d69d4ffbc3c6fd3ffd911dc6557d4bb38450e369021cc2a"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/ProfessionUI/character-textures.asset",
+      "sha256": "4ab83f48e7cb51d236ecf669b916379513daf5e09c6d748f8a8c85f983f07469"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/ProfessionUI/appearance-tables.json",
+      "sha256": "de2bbae8ba1d8469473f50123b139fedfc8680b076340afe5753bb84c1a83b69"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/ProfessionUI/skin-defaults.json",
+      "sha256": "22292720f1e05e83e26d412b795636722c014e01b1bbfad87af05fb5a6cec587"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Portrait/AppearanceConfig.asset",
+      "sha256": "4193e5ef5bb51ef4c4211dfdf25fa1a50c1154263c38a8e6e62b76b79e04c8f6"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/Portrait/AppearanceAnimNameCombineRule.asset",
+      "sha256": "594e444f08eb77fbc27b65fbca272ec0928a9902038aa6c5d59a988936e6fbe3"
+    }
+  ],
+  "implementation": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeConstraintPose.cs",
+      "sha256": "abab5c3b03636493aeadd70c2c15873c6702f2190f5e317c3d6d4deeedca5896"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAppearanceSkeleton.cs",
+      "sha256": "081008aceeb1e442138f6e85fef68a6c52f040057e60daa794337a10cdbb53c4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimationChannels.cs",
+      "sha256": "e602b2174d832c83f56629d27d394c630ffef131351eb580ea6edb3bfa6d6617"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBonePose.cs",
+      "sha256": "eace3a78d4a79ad059afe453fe8160269540385d67684c759bcf6ab8bf09148b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeIdleIk.cs",
+      "sha256": "9e2ea2f896a25d6ffe257d137f22a59706ebf133c2c0e820c100b948dfa68578"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeIdleTransform.cs",
+      "sha256": "ea362e7a96293c795a089e70f0f26f6646d5f5017e57dc8fc7a7f72ff870c373"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/SpineSkeletonGraphicDye_a2f0973c.shader",
+      "sha256": "62505f7466a86f078d725832aa0c9adf0b54c87e53abae222f9ee761a3350029"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.CorePoses.cs",
+      "sha256": "d76b47c6e155935dd2b42e5e4ebab5ae2e555eef1df23d2141d56e50f7dbc31c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.CorePoses.cs.meta",
+      "sha256": "f550f0d9ba63daba3fb9733abdc54a1c2ab057045ca2ff4de444ed641e27a194"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/Zjcs.Editor.Combat.AnimatorPlayback.asmdef",
+      "sha256": "8ca4af14f80611b51081bf475d4e63ee7d1d2b1ffe21fbc625e12d985adf278b"
+    }
+  ],
+  "generator_sha256": "37b9cc1ac2dbad9d7f11563e515794254c34763976ba5b25824f0c6dc5f7c107",
+  "fixture_sha256": "8f166d417859f9e3b534870cece966821a6d3748be878d8506a2ae2c82caf18e",
+  "profiles": [
+    {
+      "sex": "male",
+      "prefix": "100",
+      "profession": 1,
+      "animations": 136,
+      "samples": 737
+    },
+    {
+      "sex": "male",
+      "prefix": "200",
+      "profession": 10,
+      "animations": 80,
+      "samples": 422
+    },
+    {
+      "sex": "female",
+      "prefix": "100",
+      "profession": 1,
+      "animations": 138,
+      "samples": 737
+    },
+    {
+      "sex": "female",
+      "prefix": "200",
+      "profession": 10,
+      "animations": 81,
+      "samples": 426
+    }
+  ],
+  "operation": "Choose all original 100/ and 200/ combat actions, original IK/transform/physics key boundaries and three interior/end samples. The Play Mode consumer resolves the original complete core appearance via BuildDefaultAppearanceData, ProfessionAppearancePreview with Game append skins, AppearanceCharacter and AppearanceSpine using packaged character resources; no guessed skin names/colors or animation SDK.",
+  "limitations": [
+    "Pre-physics, unmixed core appearance diagnostics; no physical simulation, separate weapon/part rendering, production actor binding, game input/save flow or Windows Player release."
+  ]
+}

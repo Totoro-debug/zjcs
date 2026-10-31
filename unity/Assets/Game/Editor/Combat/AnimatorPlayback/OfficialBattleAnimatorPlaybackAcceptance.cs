@@ -56,6 +56,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".constraintPose", false);
             SessionState.SetBool(Key + ".localTransforms", false);
             SessionState.SetBool(Key + ".physicsChannels", false);
+            SessionState.SetBool(Key + ".corePoses", false);
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 180);
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             Hook();
@@ -109,7 +110,8 @@ namespace Zjcs.Editor.Combat
 
         private static IEnumerator Verify()
         {
-            var steps = SessionState.GetBool(Key + ".physicsChannels", false) ? PhysicsChannelSteps()
+            var steps = SessionState.GetBool(Key + ".corePoses", false) ? CorePoseSteps()
+                : SessionState.GetBool(Key + ".physicsChannels", false) ? PhysicsChannelSteps()
                 : SessionState.GetBool(Key + ".localTransforms", false) ? LocalTransformSteps()
                 : SessionState.GetBool(Key + ".constraintPose", false) ? ConstraintPoseSteps()
                 : SessionState.GetBool(Key + ".deforms", false) ? DeformSteps()
@@ -125,7 +127,9 @@ namespace Zjcs.Editor.Combat
             if (errors == 0)
             {
                 SessionState.SetInt(Key + ".result", 0);
-                Debug.Log(SessionState.GetBool(Key + ".physicsChannels", false)
+                Debug.Log(SessionState.GetBool(Key + ".corePoses", false)
+                    ? "Original complete core skill pose Play Mode passed before physics; separate weapons/parts, physical motion, mixing and formal battle/Player binding remain required."
+                    : SessionState.GetBool(Key + ".physicsChannels", false)
                     ? "Original physics parameter Play Mode passed; physical simulation, world solving, animation mixing and formal player binding remain required."
                     : SessionState.GetBool(Key + ".localTransforms", false)
                     ? "Original local transform Play Mode passed before physics; full physical motion, mixing and player appearance binding remain required."

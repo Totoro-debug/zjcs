@@ -4,6 +4,8 @@
 
 本页只记录官方输入与来源凭据。各模块的原始实现、转换／绑定细节、当前实现和验证边界见所属功能／地图页；逐文件记录以模块来源清单为准。
 
+原核心人物战斗动作输入：`prepare_battle_core_pose_fixtures.py` 从哈希匹配的 `871_156598` 无损人物载荷提取全部职业战斗动作边界，复用已有原角色资源、外观配置／表、加载与染色链的来源凭据；输入、依赖、实现与夹具 SHA256 见 [核心人物动作凭据](battle-animation/core-pose-source-manifest.json)，使用和验证范围见[战斗执行](../../docs/features/battle-execution.md)。
+
 原生人物物理参数输入：`prepare_battle_physics_channel_fixtures.py` 核对原 `871_156598` 无损人物载荷及固定 MIT 格式读取器的字段投影，保留全部物理约束、皮肤成员和 mix 通道；输入／依赖／运行代码与夹具 SHA256 见 [物理参数凭据](battle-animation/physics-channels-source-manifest.json)，使用和验证范围见[战斗执行](../../docs/features/battle-execution.md)。
 
 原局部服装图集输入：`prepare_battle_local_clothing_textures.py` 复用 `871_156598` 高分辨率加载器及历史整包／对象凭据，核对当前 APK／已下载云缓存中的相同原主图、染色图字节；另取回并严格核对旧占位 bundle，不用已变化的新包替换。四项本地绑定和6张原纹理的输入输出 SHA256 见 [局部服装图集凭据](battle-animation/local-clothing-textures-source-manifest.json)；使用和验证范围见[战斗执行](../../docs/features/battle-execution.md)。
