@@ -40,11 +40,11 @@ MASK = (1 << 64) - 1
 
 
 class NativeRecovery:
-    def __init__(self, source: Path):
+    def __init__(self, source: Path, verified_sha256=None):
         self.source = source
         self.raw = source.read_bytes()
         digest = hashlib.sha256(self.raw).hexdigest()
-        if digest != "0c3cef25cfa9f079da6344825aae5a52e5eb025e0cc9ece737ec79a94cdfa544":
+        if digest != (verified_sha256 or "0c3cef25cfa9f079da6344825aae5a52e5eb025e0cc9ece737ec79a94cdfa544"):
             raise ValueError("Native input does not match the pinned APK arm64-v8a/libil2cpp.so")
         self.elf = ELFFile(io.BytesIO(self.raw))
         self.uc = Uc(UC_ARCH_ARM64, UC_MODE_ARM)
@@ -369,8 +369,10 @@ class NativeRecovery:
         if pc != self.stop and not self.reached_stop:
             raise RuntimeError(f"Instruction budget exhausted at {pc:#x}")
 
-    def save(self, output: Path):
-        if self.uc.reg_read(UC_ARM64_REG_PC) == 0x206F73C8:
+    def save(self, output: Path, restore_loader_relocations=False):
+        if restore_loader_relocations or self.uc.reg_read(UC_ARM64_REG_PC) == 0x206F73C8:
+            if restore_loader_relocations and not self.reached_stop:
+                raise ValueError('Loader relocation restoration requires a reached, inspected boundary')
             from unicorn.arm64_const import UC_ARM64_REG_X19
             context = self.uc.reg_read(UC_ARM64_REG_X19)
             raw_context = bytes(self.uc.mem_read(context, 0x198))
@@ -411,11 +413,24 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", type=Path, default=ROOT / ".tools/source-packages/official-code/libil2cpp.so")
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--selected-source", action="store_true", help="Verify the input against the SHA256-pinned selected APK entry, retaining the legacy default pin")
+    parser.add_argument("--restore-loader-relocations", action="store_true", help="Restore original X19 loader-context relative relocations at an explicitly inspected stop boundary")
     parser.add_argument("--budget", type=int, default=20_000_000_000)
     parser.add_argument("--call", type=lambda x: int(x, 0), action="append")
     parser.add_argument("--stop-at", type=lambda x: int(x, 0), default=0x206F73C8)
     args = parser.parse_args()
-    runtime = NativeRecovery(args.source)
+    verified_sha256 = None
+    if args.selected_source:
+        import zipfile
+        from official_source import OfficialSource
+        selected = OfficialSource()
+        with selected.apk.open('rb') as stream:
+            if hashlib.file_digest(stream, 'sha256').hexdigest() != selected.apk_sha256:
+                raise ValueError('Selected APK SHA256 mismatch')
+        with zipfile.ZipFile(selected.apk) as archive:
+            raw = archive.read('lib/arm64-v8a/libil2cpp.so')
+        verified_sha256 = hashlib.sha256(raw).hexdigest()
+    runtime = NativeRecovery(args.source, verified_sha256)
     if args.stop_at:
         runtime.stop_at(args.stop_at)
     constructors = args.call
@@ -426,7 +441,7 @@ def main():
         if runtime.reached_stop:
             break
     if args.output:
-        runtime.save(args.output)
+        runtime.save(args.output, args.restore_loader_relocations)
 
 
 if __name__ == "__main__":

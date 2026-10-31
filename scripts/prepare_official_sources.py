@@ -9,8 +9,74 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+import zipfile
 
 from official_apk import Apk, ROOT, CACHE, UnityPy
+
+
+def extract_native(destination):
+    """Retain both APK IL2CPP images as native schema/recovery inputs."""
+    from official_source import OfficialSource
+    source = OfficialSource()
+    destination = Path(destination).resolve()
+    path = destination/'code-manifest.json'
+    receipt = json.loads(path.read_bytes())
+    if receipt['manifest'] != source.version or receipt['apk_sha256'] != source.apk_sha256:
+        raise ValueError('Native extraction source differs from the prepared code')
+    with source.apk.open('rb') as stream:
+        if hashlib.file_digest(stream, 'sha256').hexdigest() != source.apk_sha256:
+            raise ValueError('APK SHA256 mismatch')
+    records = []
+    with zipfile.ZipFile(source.apk) as archive:
+        for abi in ('arm64-v8a', 'armeabi-v7a'):
+            entry = 'lib/'+abi+'/libil2cpp.so'
+            raw = archive.read(entry)
+            target = destination/'official-code/native'/abi/'libil2cpp.so'
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if target.exists() and target.read_bytes() != raw:
+                from refresh_current_character_meshes import preserve
+                preserve(target)
+            target.write_bytes(raw)
+            records.append(dict(apk_entry=entry, path=target.relative_to(ROOT).as_posix(),
+                                sha256=hashlib.sha256(raw).hexdigest(), bytes=len(raw)))
+    receipt['native_libraries'] = records
+    path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2)+'\n', 'utf8')
+    return records
+
+
+def activate_prepared(destination):
+    """Merge a verified prepared code/data cache, retaining unmatched old files."""
+    from official_source import OfficialSource
+    from refresh_current_character_meshes import preserve
+    destination = Path(destination).resolve()
+    receipt = json.loads((destination / 'code-manifest.json').read_bytes())
+    if receipt['manifest'] != OfficialSource().version:
+        raise ValueError('Prepared code does not belong to the selected source')
+    for name, row in receipt['assemblies'].items():
+        if hashlib.sha256((destination/'official-code/managed/decoded'/name).read_bytes()).hexdigest() != row['decoded_sha256']:
+            raise ValueError('Prepared assembly changed: ' + name)
+    outputs = []
+    for folder in ('official-code', 'official-data'):
+        for source in sorted((destination / folder).rglob('*')):
+            if not source.is_file():
+                continue
+            target = CACHE / source.relative_to(destination)
+            if target.resolve() == source.resolve():
+                continue
+            raw = source.read_bytes()
+            identical = target.exists() and target.read_bytes() == raw
+            previous = preserve(target) if target.exists() and not identical else None
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if not identical:
+                temporary = target.with_name(target.name + '.prepared.tmp')
+                temporary.write_bytes(raw)
+                temporary.replace(target)
+            outputs.append(dict(path=target.relative_to(ROOT).as_posix(), sha256=hashlib.sha256(raw).hexdigest(),
+                                source=source.relative_to(ROOT).as_posix(), previous=previous))
+    result = dict(manifest=receipt['manifest'], code_manifest_sha256=hashlib.sha256((destination/'code-manifest.json').read_bytes()).hexdigest(),
+                  operation='Merge corresponding current code/data files; preserve prior changed bytes and retain every unmatched old file.', outputs=outputs)
+    (CACHE/'prepared-code-source-manifest.json').write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n', 'utf8')
+    return result
 
 
 def build(dotnet, ilspy, client=False, manifest=None, output_root=None):
@@ -77,6 +143,14 @@ if __name__=='__main__':
     parser.add_argument('--decompile-client',action='store_true')
     parser.add_argument('--manifest',help='Explicit historical version; defaults to active official source')
     parser.add_argument('--output-root', type=Path, help='Stage current code and tables without replacing another source version')
+    parser.add_argument('--activate-prepared', type=Path, help='Merge an already prepared current code/data cache without deleting unmatched files')
+    parser.add_argument('--extract-native-to', type=Path, help='Add original APK IL2CPP images to an already prepared source cache')
     args=parser.parse_args()
+    if args.extract_native_to:
+        print('Extracted native input images:', len(extract_native(args.extract_native_to)))
+        raise SystemExit(0)
+    if args.activate_prepared:
+        print('Activated prepared files:', len(activate_prepared(args.activate_prepared)['outputs']))
+        raise SystemExit(0)
     if not args.ilspy.exists():parser.error('Install ILSpyCmd 11.1.0.9782 into .tools/ilspycmd or supply --ilspy')
     build(args.dotnet,args.ilspy,args.decompile_client,args.manifest,args.output_root)

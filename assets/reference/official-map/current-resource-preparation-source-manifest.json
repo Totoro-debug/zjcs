@@ -1,0 +1,2494 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "apk_manifest": "881_156673",
+  "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+  "resource_version": "202610291150884",
+  "generator": {
+    "path": "scripts/record_current_resource_preparation.py",
+    "bytes": 6362,
+    "sha256": "98d71e73be293ecf0150e72b1339c20620836038e0cc046a68ecd94f77387ea8"
+  },
+  "code_manifest": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "bytes": 6939,
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "decoded_assemblies": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+      "bytes": 17006592,
+      "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Console.dll",
+      "bytes": 16813568,
+      "sha256": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/CustomWater.dll",
+      "bytes": 23040,
+      "sha256": "2079df13caa06ae56758042d7c3f844be32e649c3d035deb20c4c7a94862252f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Framework.FirstPass.Runtime.dll",
+      "bytes": 413184,
+      "sha256": "e4af045ab17cc6cb3a80403913c03ef5f15a736875c57bf67f3e44cff415627e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Framework.dll",
+      "bytes": 97792,
+      "sha256": "19a952a1e686e76db0a34556062e4b928fc0d0ae6d33158912542147638af4fb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/GFrameCore.Extensions.Cloneable.dll",
+      "bytes": 38912,
+      "sha256": "ca192aac91b530e725ecc56d15399cfc0acdbb5a90c86ac8ad23557956704c12"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/GameFramework.Runtime.dll",
+      "bytes": 80896,
+      "sha256": "737c1e6b4313b330530aa84b6d9b59dd01a470c69937d95a6cf69cd13c61e253"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Launch.dll",
+      "bytes": 407552,
+      "sha256": "3a5405399f8932ba7319384183423648811d4ef48c87c17fe367f1995e138b1f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/LoopScrollRect.Runtime.dll",
+      "bytes": 50688,
+      "sha256": "f917dcb08554f98530c581f3ee13a3ad7fa0ede3abd867f95c06b722dcc9b7a3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Luban.dll",
+      "bytes": 21504,
+      "sha256": "de6598af27d573ba225e3d60c57a07034552b2a2b8f399fdead46b0c22b393b2"
+    }
+  ],
+  "merged_cache_manifest": {
+    "path": ".tools/source-packages/prepared-code-source-manifest.json",
+    "bytes": 10975749,
+    "sha256": "3980e0fee6807cb2ac398a7713cb16cf747c5bef108de89e1c301bc77945d7e9"
+  },
+  "table_payload": {
+    "path": ".tools/source-packages/current/884_156692/official-data/tables.json",
+    "bytes": 53962431,
+    "sha256": "8d9e905e55967a46ebf59484ac8faf0356515e1c214faaeebcbc303fc03de333"
+  },
+  "luban_inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/accumulated_pay_award.g.bytes",
+      "bytes": 3018,
+      "sha256": "c23b746704e3e447c9ce3ded8b07723badd4fd75a560457234d5b6044e3c3f5a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/achievement.g.bytes",
+      "bytes": 188330,
+      "sha256": "50c66bef98508617c93ccd17c9fc0e5a8d355adef49f1c71bd4551649d69fb3a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/achievement_group.g.bytes",
+      "bytes": 133,
+      "sha256": "6c70274c319bf2184ab6efaf9f2ad283369886b4e6fa71aaa0d8509f85adbf3f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/active_pay.g.bytes",
+      "bytes": 8989,
+      "sha256": "03879d39583e872cb58e3bfa990477ab4fa4ebcea05da93cf6ce9684b65ac3ab"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/active_pay_gift.g.bytes",
+      "bytes": 7002,
+      "sha256": "2a5f2b47f0190173202d51c82f516f775b2ea654cda499400158e27f66d09f41"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/active_pay_goods.g.bytes",
+      "bytes": 169,
+      "sha256": "dacd2cd38182ada2f455bf38feef43a899cb8f703933f036ee9f16a31a5d57a3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/active_pay_goods_group.g.bytes",
+      "bytes": 549,
+      "sha256": "a9cd2b07281945110389ef606085e44a733ccce5cfdf5beafe9d98a434cb7837"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/active_season_badge.g.bytes",
+      "bytes": 106,
+      "sha256": "d4150533a6a0f8635f6e2ad43e7193a2f5e211182381a9a8c68290873baf5473"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity.g.bytes",
+      "bytes": 25315,
+      "sha256": "b8b52b33e9e9c39727a9d751912c9d986915850605ecaa77de397f5bb016e410"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_advert.g.bytes",
+      "bytes": 1814,
+      "sha256": "91974bf5246b5028786371778035dfba5997837e3d9971408f2cf7627ba103df"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_airship_banner.g.bytes",
+      "bytes": 217,
+      "sha256": "a577cd19713ea1129405bf11183e51bcb12f9965d5fa216ebd8c63d29bf80b1e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_appearance_gift.g.bytes",
+      "bytes": 15275,
+      "sha256": "3c5c14d9b8cd438b7eba4ef04d5dbf5be3f144e78435333c46467cc50e555623"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_appearance_gift_mapper.g.bytes",
+      "bytes": 1002,
+      "sha256": "794e75aca975784280c271bf189890ec83d05ef95bf710c8cd9659e12158edd5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_award_limit.g.bytes",
+      "bytes": 538,
+      "sha256": "011b28f9df09c3358b08dafe45de882a4ab3aeb96bb203194aa9787c65f057fe"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_broadcast_notice.g.bytes",
+      "bytes": 3,
+      "sha256": "75c8fd04ad916aec3e3d5cb76a452b116b3d4d0912a0a485e9fb8e3d240e210c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_companion_output_addition.g.bytes",
+      "bytes": 14,
+      "sha256": "5fc9b4ead3205d162bb82c5cc42d7c47fc8c67b08dbdb281e2f787c9cbb5b753"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_entry.g.bytes",
+      "bytes": 28454,
+      "sha256": "fc0dd1c6454259f1c80c7e6fdf2920dae843527a23b4e6116f3ea3f9fb09767f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_entry_group.g.bytes",
+      "bytes": 17,
+      "sha256": "c773862761f998c2551910728958e1210861e61969380bd1dfe537c83df0d8d1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_festival_boss.g.bytes",
+      "bytes": 107,
+      "sha256": "1bcfd17bce68d295761cee2b4eddc2a39a778ff0ec7bc4640ed6498ee52223fb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_festival_boss_layer.g.bytes",
+      "bytes": 1534,
+      "sha256": "f903397a5c63f7277addf1b74cadd6f87a982cc92481b94c29e9b7f9915c0fe1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_festival_boss_npc.g.bytes",
+      "bytes": 861,
+      "sha256": "fde51095d00de49a58cf30b65380ffa2f01fa16b19ad70e6e3b24c6dd1c9e7eb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_festival_collect.g.bytes",
+      "bytes": 1675,
+      "sha256": "f9d7e15db1c4841f467b42c25924b73fdc52c09e4107ba60bc421173cf9c4b42"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_festival_event_batch.g.bytes",
+      "bytes": 15526,
+      "sha256": "97b48d444438e35457f98784466a17b967b7ad9660f11eb806bb5e158255b771"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_festival_minigame_jigsaw_level.g.bytes",
+      "bytes": 21632,
+      "sha256": "3fd4c38d2a1a7abcd1875740c66bd59ed6945b805dc356ec7a63e5c911ab69da"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_festival_minigame_pick_game.g.bytes",
+      "bytes": 185,
+      "sha256": "7d1ab99df2d13cecff6ec0cee56ce3ad06280ca8f2bfdd0f50f526ac2816d41b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_festival_minigame_puzzle.g.bytes",
+      "bytes": 103,
+      "sha256": "1e4121528ebf2bb4e784790800e482d54ef5962582e303d4e978d8bee8ed9c56"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_festival_shop.g.bytes",
+      "bytes": 259,
+      "sha256": "44f37428ba1e6031ee8c66cfe6e741e05fa29a50bba12c33372451c3e06e870d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_festival_stage.g.bytes",
+      "bytes": 26140,
+      "sha256": "b1340b240a73eb40898e048090db84bccbd90dc810a2ecfd6174afe61676023f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_group.g.bytes",
+      "bytes": 2950,
+      "sha256": "0cc7216202a8aee01ce7ff71ae35292304d7700f0709b895482cb3ae2000f625"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_growth_fund.g.bytes",
+      "bytes": 3176,
+      "sha256": "44ea885097d97865ccfced92931f925f2cd432f146f16ae2d59db19b367241e0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_growth_fund_group.g.bytes",
+      "bytes": 37,
+      "sha256": "c44abeb34170b5090ed3963c2cf5e3c08e0686e00cd56a8fb2df90c2cd1c4025"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_growth_fund_reward.g.bytes",
+      "bytes": 6205,
+      "sha256": "9b5cbef8006e753060e24e2bbfbeeba1b303a623db41513e5f4f47f78c7180d7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_hide_and_seek.g.bytes",
+      "bytes": 33,
+      "sha256": "42369bb29092c95a96203bf37140bd481ded0b5a9caaf235cc26fe686eef75eb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_hot_value.g.bytes",
+      "bytes": 49203,
+      "sha256": "3b92d924b4ca9552b03477b068cedc56e17d388e2fd9f9f68df4d1ceea949a07"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_item_broadcast_notice.g.bytes",
+      "bytes": 5,
+      "sha256": "fce215e0194d7af649facaf36127b267ceeab3fd4fff95abb7fcec5722934983"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_knowledge_quiz_question.g.bytes",
+      "bytes": 2110,
+      "sha256": "ab4209e6d9e9cd653f5781469752cc24dd970372ec6c2f4659f3fd3247fd8b01"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_knowledge_quiz_stage.g.bytes",
+      "bytes": 171,
+      "sha256": "e9240c417f94ab2af4fa40cac080d7c588f464f01592be285f2966132467a806"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_limited_time_gift.g.bytes",
+      "bytes": 463,
+      "sha256": "6b1548d1522dfc3fc985370f41942e6dcd757a5ebf978c48cac7cc6a24c3074b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_limited_time_gift_pay_item.g.bytes",
+      "bytes": 274,
+      "sha256": "e07dc3b0ec5cfe5fe4f4a56665c6de9b4624e0b54c6150b5846d30e97c68489f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_linkage_puzzle_task.g.bytes",
+      "bytes": 381,
+      "sha256": "0334ad9f3a97d482adedf13cfb96afb32afdfb40c7823e4a9af3a09b96ee4f11"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_linkage_puzzle_task_unlock.g.bytes",
+      "bytes": 205,
+      "sha256": "df7d4dc9b3d3421860f06af31a37a6a52e70ec6548f9e8031a0be41af1fc3c60"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_live.g.bytes",
+      "bytes": 99,
+      "sha256": "98bbfb1ef433247e490a9f772d8aa58bede148baac7da6d78f5a604d2af6be2b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_map.g.bytes",
+      "bytes": 17,
+      "sha256": "29fa318971dc9e242da2798a505d58230d14ee0c1e9c6091063079bcb0fc7aa6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_map_consuming.g.bytes",
+      "bytes": 6,
+      "sha256": "2aaa0abef545d8937b8a2cceb6dba084fa0148bd2466eae8bf8d4ff7675d3475"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_music_festival_event_batch.g.bytes",
+      "bytes": 4350,
+      "sha256": "b4a7d63adf2d8ba5daceef979d93ce172148d7ecae4e513843ab6dc9a60ec6bf"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_music_festival_timeline.g.bytes",
+      "bytes": 14618,
+      "sha256": "e3519cc8df466b6b5fbace9a0aa1f02df2e9e1a2ab9337260bda897be38abaa1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_output_addition.g.bytes",
+      "bytes": 162,
+      "sha256": "7bba948bfe60fd2d9c3cf71564efaff02616ad7da997cdccb2e99f97ad548f50"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_pay_gift.g.bytes",
+      "bytes": 17249,
+      "sha256": "dd34621f5df97b54631e859f927b1b2dbe1d1d05a54664bccf9949df2136dde3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_pay_gift_free_award.g.bytes",
+      "bytes": 196,
+      "sha256": "0d919b356d85035a5d60b3fa8251868e3df7c97de33e61b51848d466ea72276c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_pay_gift_group.g.bytes",
+      "bytes": 345,
+      "sha256": "84ea6dd81029431b08be78a7fbd47de4e15d286ad8fa1c98b2d84a2f08129971"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_pre_pay.g.bytes",
+      "bytes": 164,
+      "sha256": "63e1dced640cde584b3a0881c7c1dec3a4d43662b2c1c260114e68158ca1cd13"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_pre_pay_gift.g.bytes",
+      "bytes": 436,
+      "sha256": "5bb1ba4b9e1ed70101f0486844f180f1ccfa267d70a847fe41d126904295e5f0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_puzzle.g.bytes",
+      "bytes": 8294,
+      "sha256": "ce9e6a8663b98c2d9ca63ad30ff1ae0d723d5144194573ec7e095e5b29ccc5b6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_recommend.g.bytes",
+      "bytes": 742,
+      "sha256": "4089f6390dacd770a8f0cc182c9d3cbe9a9ac66de9649d5bbaf7fbe9b2ea0f4c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_sign_days.g.bytes",
+      "bytes": 3015,
+      "sha256": "f4cad489e6ed7b74525cfcf05548370441740ed93ee4b3c09725c0eb8acc37fe"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_special_award.g.bytes",
+      "bytes": 11,
+      "sha256": "64c9cb1b58ae1d0d918b9b2bf02b1570973c1d76ead6224e7a85fcf100a60daa"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_special_gacha.g.bytes",
+      "bytes": 1487,
+      "sha256": "1060d4f29e9ac325e009e94c5118d7f542980e36c5bfee46aae24f38a4e9bb3b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_task.g.bytes",
+      "bytes": 598,
+      "sha256": "685a9ec8ad382da24a423f5cb7c0043169dcd876a40869820be9604105fa3702"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/activity_time_message.g.bytes",
+      "bytes": 125,
+      "sha256": "813e9a61b518daf7cc4c6f0a09bb60aa97cd9cf2768cdf300a48756292cba85e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/ai_priority.g.bytes",
+      "bytes": 350,
+      "sha256": "c56dfd286edd0eabc620df59f13d408eec56f2938d451e965469abeb719d34d2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/anniversary_map_build.g.bytes",
+      "bytes": 35,
+      "sha256": "4dfdc84f0be2630757e205cb525bcca3b173c1c792429d0ac6641b51407b4e2f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/anniversary_map_build_item.g.bytes",
+      "bytes": 626,
+      "sha256": "a722bb23876f236d801512ea007e414621f1d18e284a944d0eac060d06cba430"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/appearance_prop.g.bytes",
+      "bytes": 6075,
+      "sha256": "a7ce64f3d5d9dd45b4449c737d483ac45c1034e629a4b800e27671fb68481e8c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/append_appearance.g.bytes",
+      "bytes": 23003,
+      "sha256": "1e021d0bddf2c64aa537818bd1878f83ac0ab724b06dfb22f7bc181783b876ed"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/append_appearance_group.g.bytes",
+      "bytes": 219,
+      "sha256": "b6aeb535aaa06dc518a25f8a75b29a20085bf11dd1f4d7b26472d09450e5cdf8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/append_appearance_image.g.bytes",
+      "bytes": 1749,
+      "sha256": "18e3f41a1cb1c21e2bde38606a992f6ac1e6ef61abd31435d07e5f74196fb50e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/append_entity_award.g.bytes",
+      "bytes": 528,
+      "sha256": "d87d2e9031a8425c77746d0779a280c5db02af9421eaa626e22e0fd483064cb3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/arena_daily_award.g.bytes",
+      "bytes": 596,
+      "sha256": "50acb9c8a103e6035869544a8d6853c45937e0811d22e83c606dc7f95b62d509"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/arena_guard_template.g.bytes",
+      "bytes": 52202,
+      "sha256": "55be1779c056342ae2e6096ec83c124464b45647e63339ef771f84825edb6e10"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/arena_match_rule.g.bytes",
+      "bytes": 81,
+      "sha256": "7c1bdd94fedb9889e1bcb2446cc47a80352cdd87db6a922edb56b54110dcd00e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/arena_match_strategy.g.bytes",
+      "bytes": 60,
+      "sha256": "883517238d0ce1ffe9ff958d729859569772655104f8a85716b1efba317ec79f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/arena_rank_template.g.bytes",
+      "bytes": 388,
+      "sha256": "5a7b08885ebb97a7bcc4d448b4d0b79e2ea51caa1ea7ca997f2a6aa620102929"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/arena_score_ratio.g.bytes",
+      "bytes": 54,
+      "sha256": "b92a49a8535e758615cc567bfea0c7f19a2aed74e756e89fbc74a0d1d8efd40e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/arrest_monster.g.bytes",
+      "bytes": 2084,
+      "sha256": "167b5a0981b33d8548e3ac797864176d170815b2cb9191a2c529c8c9c2b8cabf"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/auction_goods.g.bytes",
+      "bytes": 4291,
+      "sha256": "83534b0e578e503b556ab9685f7e5041d396315067dc3ec47165c27ec0d23be2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/auction_goods_price_increase.g.bytes",
+      "bytes": 17,
+      "sha256": "46500b8d30f22060acde670bb5d2c80eb44d3041bc3962626b804fe30eedf82b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/auction_permission.g.bytes",
+      "bytes": 16,
+      "sha256": "b29335a4a4169d3fb7ae17bddff42ea601947f54e684d5896799c598f02880d2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/auto_recycle_item.g.bytes",
+      "bytes": 265,
+      "sha256": "74db5e755ebc98dea7f90db9bfaa804f12e8ee9519957baa453b941f7ebee321"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/avg_skill_rank.g.bytes",
+      "bytes": 327,
+      "sha256": "83df2c4e4dcfc341f888740d6e861c5dba4ef7df72b3493281dc2f845c28eba0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/award_retrieve.g.bytes",
+      "bytes": 369,
+      "sha256": "5e4e18d7f6a1a856a91d477c1a3656bf114b86fc899691f6eccaf5326949215b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/balance_value.g.bytes",
+      "bytes": 1445,
+      "sha256": "d8f8c7a4f79b7d78366b3079fbd55e72da288307adcac5478154b63ff1775c1b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/battle_pass.g.bytes",
+      "bytes": 4639,
+      "sha256": "1e29a38973ee8f8ed16d4499f19d52b112e4745a3923261ab0095aad7eabaaf4"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/battle_pass_level.g.bytes",
+      "bytes": 47576,
+      "sha256": "f6bae53f7554ae716e7d491cf7c0196d1240cea338c2134a4caff3d0d202bcfd"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/battle_report_skill_parent_override.g.bytes",
+      "bytes": 138,
+      "sha256": "a198dfd36d1466da4ddcdc3564f39d9ba6fb4b894011a71b0c98237c84b93f5c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/battle_royale_monster_group.g.bytes",
+      "bytes": 9763,
+      "sha256": "1eaf2e3e1677cc0a926f6039d3db15cbd176d334958aecfefe3a2686b1811581"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/battle_royale_stage_monster.g.bytes",
+      "bytes": 67324,
+      "sha256": "f7eb362c3c5f17651cf058853ea856e30352162408208ca1d3792bc99677a68f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/bgm_event_key.g.bytes",
+      "bytes": 7515,
+      "sha256": "763e1f04455c6ec07fe0c22305f940ee1aaf0d38f0ed327a0add98493ad81f91"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/bingo_activity.g.bytes",
+      "bytes": 814,
+      "sha256": "abd07fe991196400af1eb48270d8da015b2ffed0eaa8345a6d5e65bda7809909"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/bingo_activity_grid.g.bytes",
+      "bytes": 6824,
+      "sha256": "c1ab13b9942ae45702729ca06db4736d8caec95ad58f9072b15efe191ae5d6ed"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/bingo_activity_line.g.bytes",
+      "bytes": 8122,
+      "sha256": "10a8a6b16a8242c80ce4b1ded2ae20927989977de9171b757b179682c2be61ee"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/blind_box_gacha_activity_view.g.bytes",
+      "bytes": 558,
+      "sha256": "e66e2b6f8b33929cefe13401277b4cd4c85835f77c8cbf44c429ab95940f3b34"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/bubble_dialog.g.bytes",
+      "bytes": 673,
+      "sha256": "e706ea8f8578aa1321c0a38e9779ede480c7e16a8d8b4576a2c5d125f9a1b962"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/character_head.g.bytes",
+      "bytes": 9,
+      "sha256": "54698c9f0e020e9d42fc6b490cf4aecbfd4b0a965fec0030986f778398ed1134"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/character_skin.g.bytes",
+      "bytes": 1063,
+      "sha256": "6c1c38d013a61d686ab81cbc252bdbb7b425dc9a841c135a06b859a8762986f6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/character_skin_color.g.bytes",
+      "bytes": 108,
+      "sha256": "9dd7793b8051f4c26ecbe93ea9e7a3f94d448faf1da3c9059d2870df68d22a3b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/character_skin_dye.g.bytes",
+      "bytes": 140,
+      "sha256": "567f02eece36aaa8c02ff71971d90bf21123f95518dce3a867154507099114ac"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/character_skin_id_group.g.bytes",
+      "bytes": 1466,
+      "sha256": "9fe40bb1f612b5c4a4ed42ad0f9f4908e99fb03a0e570dd0762174caf05b28bb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/character_weapon.g.bytes",
+      "bytes": 66,
+      "sha256": "1fa9cc1b1e57a8b8faed4a58a83f4ee891a6ca600b69fa447062e6817b34cb56"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/chat_action.g.bytes",
+      "bytes": 1663,
+      "sha256": "8c8c054a283d2136c1a2ddcb1b59b229d7198b13c7f571b66ff033cf0e171b5a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/chat_action_package.g.bytes",
+      "bytes": 11,
+      "sha256": "7d143e0efb9900017ca3e21c6d0d2561037771a33e552d8584493c564ad6460a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/chat_channel.g.bytes",
+      "bytes": 290,
+      "sha256": "370bf926647f088c37f3c9e906ea326ee9a259631917084c678076aed1ad6bed"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/chat_emoji.g.bytes",
+      "bytes": 26490,
+      "sha256": "6e1db5b3ae514c43150ab811c09aedd9df9fd78187484ff2039e6f49c08a4df9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/chat_emoji_package.g.bytes",
+      "bytes": 491,
+      "sha256": "6b07b9f96059478ba8e807cfcc235d0422fd77343c9fc1e57157738eb3c1ad60"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/chat_systemmsg_rule.g.bytes",
+      "bytes": 717,
+      "sha256": "f00dae3fe50b3388581cf29d355f283a7d2a938126db0d4d97fc9e7b8dc48dc2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/chest.g.bytes",
+      "bytes": 21649,
+      "sha256": "1fbe45055a9e0f13a03049c7d7cd6b34f76d8e4744d23eb3e60c4c704892963b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/client_version_update_channel.g.bytes",
+      "bytes": 1129,
+      "sha256": "4f4edd86611d813631e5d6943564f657f6310ac00b6a6398bbd6332a066c87ef"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/community.g.bytes",
+      "bytes": 3759,
+      "sha256": "81020a5353be31da686c708ee837a86c0f2fc49a9dca3ce605c4694ff62d8bf6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/conditions.g.bytes",
+      "bytes": 68061,
+      "sha256": "87610428d6195c06ff55291ae24423cc949df7ac25bfb8953cc3798a1aaa31e5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/cooking.g.bytes",
+      "bytes": 8060,
+      "sha256": "99cfe4b96d2b46897f0ceb3125029732e14b16a5d97b0c164540616f8e64275f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/cooking_prop_effect_full.g.bytes",
+      "bytes": 1422,
+      "sha256": "b79c40a55436666adee88879e9b2643f47f8729f486ceb765f0af5d0d5db75e3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/custom_arg.g.bytes",
+      "bytes": 84,
+      "sha256": "77112e372411818dccf583554582326ed8f5f6a8c7c03386df5e7a46e529a474"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/daily_dungeon_battle.g.bytes",
+      "bytes": 2544,
+      "sha256": "449edb7ee030defb4b70c719c59a4ab64c4810d9f8a17e868ba392f76c57e579"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/daily_dungeon_event.g.bytes",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/daily_dungeon_map_group.g.bytes",
+      "bytes": 15586,
+      "sha256": "2ff5145cce9305d50b1e89e4be4304fbf81f7df93abf814343d8e4f7070f9220"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/daily_dungeon_profession_score_factor.g.bytes",
+      "bytes": 780,
+      "sha256": "b84e42437bf1fd06c12deecea69c4b8ac3a6e4b01cc278d8d1c27c62637b886f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/daily_dungeon_random_event_group.g.bytes",
+      "bytes": 106,
+      "sha256": "c5e5da2de478684eced617e99b33b5a15cbfebd17573e62f0d0dc65f0a2a4303"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/daily_dungeon_room.g.bytes",
+      "bytes": 29386,
+      "sha256": "e7dc03d7f3dd41c43ca4ad1077dd976fbd7aec0e0bbf14f863b26a2b83871eb8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/daily_pay_gift.g.bytes",
+      "bytes": 185,
+      "sha256": "ac72ed5b41fc9d12892767828c0c3e9f61fa68c1ad68b7114a24036381263419"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/daily_pay_gift_group.g.bytes",
+      "bytes": 25,
+      "sha256": "8c0f575f4111ea88166e1a461320d3ec870175b31ae9e79a45b61a0cb5daa878"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/daily_reward.g.bytes",
+      "bytes": 183,
+      "sha256": "df3a58c9c0ad2cab3dc0d4461ca26f9eec833b417df7c2435b24527beac344db"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/damage_test_difficulty_level.g.bytes",
+      "bytes": 156,
+      "sha256": "c4b4ff2d33aa86f896e27eca724af1a9e11087c61e4ed4afcac962466e033652"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/damage_test_stage_monster.g.bytes",
+      "bytes": 239,
+      "sha256": "b2724f1e7e205d7840a1cca89ab2f53bb78c4bb88018d7e972e9a07fcbec6cde"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/def_award_handler.g.bytes",
+      "bytes": 491,
+      "sha256": "101fe3bb3fc7517b6894b023b766c9fbd54682fd63f19de38a6a8c0d98460448"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/demon_battle_view.g.bytes",
+      "bytes": 241,
+      "sha256": "6e66e6f20d3a736f8aed38ee2246e7ece7f4f5a9c4ac8c54e5782f9cf4d5857a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/demon_battlefield_fight_rank_offset_damage.g.bytes",
+      "bytes": 40,
+      "sha256": "0cf52015b56e1e8aa8e763951fd392ae12be051e8c3c0f7991f25b58695ac8e0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/demon_invade_map_activity.g.bytes",
+      "bytes": 150,
+      "sha256": "a90f1e3b48f75bf5e7647c6f7621e1afb17eaa3eaccf34014c4096488dbc0354"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/demon_king_top.g.bytes",
+      "bytes": 158,
+      "sha256": "8236ccf6635b28940a4d6d0a4abb4ef7ee1da08ec064fb1b7f3616031700f598"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/dialog.g.bytes",
+      "bytes": 279860,
+      "sha256": "23ff63a725c5a31da3f23742ef95bd49d7c23a5f861e3ea00a2f2e472c1118cc"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/dig_sand_special_gacha.g.bytes",
+      "bytes": 121,
+      "sha256": "88cb6f4478be0ebcef226453b4ebbb7d0f5f215d00376c92259fc8627bf8a311"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/direct_pay.g.bytes",
+      "bytes": 504,
+      "sha256": "873f21d64cd2a75cadbc4359d34965baf2aee1a9b58662dda9dc27ca94cc82ec"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/domain_team_challenge_award.g.bytes",
+      "bytes": 7503,
+      "sha256": "d0787864fa7b24bf90c8a9a51a8f168a682b34077fc3f94ad3839ca0e0521112"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/domain_team_challenge_planes_award.g.bytes",
+      "bytes": 1899,
+      "sha256": "c78197b5dfcf80a77bf631d3b60b4a77eaf6d6844cad89d0f286be50ed842785"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/douyin_pay.g.bytes",
+      "bytes": 2872,
+      "sha256": "6be753e413a6e9fd856dac8c18de1a6baa36eacaf64b2bf8518143130a71576c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/editor_settings.g.bytes",
+      "bytes": 4180,
+      "sha256": "c46aab76c90684ae3887dbf3d57b2441ce6d6f348433e57591104f130b875baa"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/entity_prop.g.bytes",
+      "bytes": 47922,
+      "sha256": "6e5c349f84bfffa0c0d0ed13beb6abdd747f6ce2ba5eedded6f0debc364043c0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/entity_prop_group_level.g.bytes",
+      "bytes": 3362,
+      "sha256": "edefac87ee6014d53b97cf6235c6d73581b1199a65fb5cfd796d1cd2e5fecd27"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/entry.g.bytes",
+      "bytes": 41822,
+      "sha256": "97550f16026c2e17ed7d41a6a598c2386c1e6db0728cdbd9f7ef426d629b27bb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/equip.g.bytes",
+      "bytes": 65923,
+      "sha256": "96260926595f492ff7b56971a27a229bbb1318b2bbd864a3b4b827e00155bf08"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/equip_attribute_bless_scale.g.bytes",
+      "bytes": 13054,
+      "sha256": "fcde403e6e8dfe355977218ac40990e2a39cb24fefd7ac847864b87fe9da7347"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/equip_attributes.g.bytes",
+      "bytes": 28859,
+      "sha256": "2a6cedc4c03479a3f6a3002673ea7ec866f1d3047f14bb9cf741cd2d44819026"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/equip_attributes_passive_skill.g.bytes",
+      "bytes": 2933,
+      "sha256": "6e6860180f558b42a6bff69ccbf1cc804861b818d2756b731e86da8ffefca025"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/equip_attributes_props.g.bytes",
+      "bytes": 3170,
+      "sha256": "209a104cf2562d48a61fdb1f6d29e39ac82fa0de00aca03793267609c7cb1f53"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/equip_cabinet_evaluate.g.bytes",
+      "bytes": 690,
+      "sha256": "e422e27d19888d407df8e3de1e2fde0ed20e46ec0c05a258f6c0b505afadb9e5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/equip_cabinet_gem_score.g.bytes",
+      "bytes": 226,
+      "sha256": "1aa8bcbdb363d93a0b42b0397ab00edff14ed57f95212fb63bdc50348a82e998"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/equip_cabinet_score.g.bytes",
+      "bytes": 39156,
+      "sha256": "2226e9aba052080060d0fc533e86c2aa2f98285404068bb959bebbf5cf7e3aae"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/equip_drop_bless_level.g.bytes",
+      "bytes": 5083,
+      "sha256": "c88a02addfe1cd4de114bc15f1b671864c6d589b58918f353952611cd46440c8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/equip_inherit_cost.g.bytes",
+      "bytes": 33,
+      "sha256": "75a5ace7ac1ea36102b2411e0c8f99ef307f2fb3fcdd75c6d945c36a74cb896b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/equip_inlay_site.g.bytes",
+      "bytes": 176,
+      "sha256": "21299636ba7f5a84ddf1ed63100063f53cbddaaaf697de78babf5aa274a66815"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/equip_piece_merge.g.bytes",
+      "bytes": 2556,
+      "sha256": "66e07bf19c00ddef557dc70ce24ae0cc3bed489615c2f7a913e65374bbb3f091"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/equip_purify_cost.g.bytes",
+      "bytes": 32,
+      "sha256": "64589acc13c7e61fa6da60a853244ee769cd507fd9db3160737b19757dac67be"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/equip_rank.g.bytes",
+      "bytes": 118,
+      "sha256": "127cd42bf1177f64f126c20b6bc1729d404a7e55e867cc232a84aa8bdedafd7a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/equip_resonance.g.bytes",
+      "bytes": 2250,
+      "sha256": "601078633d632dd995a67368e34800f4278da6d215ae10294b8c100c2ea06664"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/equip_suit.g.bytes",
+      "bytes": 1222,
+      "sha256": "3600e64056215af5b9f0551c332c143924804bd93547645086e6d30f6bb1ab42"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/equip_type.g.bytes",
+      "bytes": 812,
+      "sha256": "8a069dffd08c3d605a73bef47ee83cd4fcf794974d7cf1a0f41344e8227ebc98"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/equip_upgrade_bless.g.bytes",
+      "bytes": 40563,
+      "sha256": "a40cf5cff401d629c46c606bee91833b91e2e939ab68b9b241009637595f82a1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/equip_upgrade_material.g.bytes",
+      "bytes": 5135,
+      "sha256": "4e8595d57186a2948b68b157161e5707c4895197d2e0e5ff19719a9857aa3e9c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/explore_entity_group.g.bytes",
+      "bytes": 196,
+      "sha256": "3eaaa7eeb3053406840ae6c95aa6562506f88567caa7cf07eaa837adc2a58422"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/explore_token_group.g.bytes",
+      "bytes": 219,
+      "sha256": "3ef5ab00293e7b851019b1eadb4c871e4611c8586fe9f177febcf711a1b4466b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/fashion_exp_group.g.bytes",
+      "bytes": 129,
+      "sha256": "83cf57cb6b14a5da0a9ddb8f1756c276d3ad27211b6690a11c4be040cb30d085"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/fast_hang_up.g.bytes",
+      "bytes": 27,
+      "sha256": "59517d092fa90432e7464d423cfd675e6235649e388cebaf2c045a27ada42c4f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/fight_combat_rating_suppression.g.bytes",
+      "bytes": 49947,
+      "sha256": "4d8dce39fcd8beaeff0bf31c74f3eb5d074fc9e0dd82d2ccd997a2e5a21b7421"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/fight_level_offset_damage.g.bytes",
+      "bytes": 63,
+      "sha256": "d0cd61f9b57a8857e36b38e07b249b631ff11b740b6fa5ab5b1e20f3d7f00c4a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/fight_rank_offset_damage.g.bytes",
+      "bytes": 81,
+      "sha256": "a8f67e5c6d4347b6ee5accf507d0644e7f8021e185831dbc2a4699576d6f384c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/fight_scene.g.bytes",
+      "bytes": 11851,
+      "sha256": "3bd325e3402644d757f0dfe698bdf3a8b872d3a0317cfdb114d7e75a35cd3eab"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/fight_stage_status.g.bytes",
+      "bytes": 1161,
+      "sha256": "42f487db8748b2d68017f5ff1d1f59151afda01c17b44b6768d5bfc149f82d9d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/fight_status.g.bytes",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/fight_theme.g.bytes",
+      "bytes": 101,
+      "sha256": "3689105076fb099a915db833697957f97f1807a5302d73df30ae4c69e8469fa4"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/first_pay_award.g.bytes",
+      "bytes": 51,
+      "sha256": "ed993bf7431fbf02d0672835a174ab92d7df9ef183e3f36ef68146177aab01fd"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/fixed_reward.g.bytes",
+      "bytes": 1318,
+      "sha256": "5b4d59aadecc669e6c3a7b8a21752ef90f8aafa4bd70013ecf9f0ee393af5949"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/free_award.g.bytes",
+      "bytes": 410,
+      "sha256": "c9ea08f03c872738543ac723d75de85a387bd35d4163566183835ea9fcea889f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/freedom_profession_award.g.bytes",
+      "bytes": 289,
+      "sha256": "b63418f89fbee7ddadbdddc20fddbed938f0d6f773a3a25f6232ff70d9c53e6d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/function_disabled.g.bytes",
+      "bytes": 3422,
+      "sha256": "2cba23dfd1e1ba2aad2abb641f1186337a67cc498aa69b2e9e505d1939ddd7d2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/function_disabled_groups.g.bytes",
+      "bytes": 325,
+      "sha256": "b3df3bcea52536fb39d7ef6141c9bccf1c36ee82acf7e150eeeb394c2daef567"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/function_limit.g.bytes",
+      "bytes": 4408,
+      "sha256": "bc0d8ff7e1fc4c7919aa6c89d1bb61ff17ca140535fd8fefe7350f50f30915ab"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/furniture.g.bytes",
+      "bytes": 532,
+      "sha256": "95cc6c230cfe30285251bf8193882a7cf930d4bbccc89a4e58c0c74d9bad5889"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/furniture_level_rule.g.bytes",
+      "bytes": 6888,
+      "sha256": "0d1a15395feb85048cf9be02e8a1ec248a5404321c7c839ad8a199aeb2c68e29"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/furniture_skin.g.bytes",
+      "bytes": 1566,
+      "sha256": "f93292766b431b507393be83444c0923e53f8f8802cb01d54141e9a31936a5d1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/furniture_ui_skin.g.bytes",
+      "bytes": 1346,
+      "sha256": "7f19318bfc67d575f8569935c0b7a6a3b845d99e018cb55d51af13184b23f2d2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/gacha.g.bytes",
+      "bytes": 477,
+      "sha256": "f0c5b857340412b0c6e76c684adbe1289c08ec0a3a83b3abf00b75a19acbe708"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/gacha_additional_awards.g.bytes",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/gacha_pity_probability.g.bytes",
+      "bytes": 248,
+      "sha256": "fb287196bcda63fec380127657408a77edfdf251225defb992114b7e398ddf65"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/game_match_config.g.bytes",
+      "bytes": 239,
+      "sha256": "345de0e135a46849ea08b026804cc21bf3a1227306b64ec345192ee601948a3a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/game_match_negative_level.g.bytes",
+      "bytes": 65,
+      "sha256": "4d2980adc9e67e393fcd19e2910d89de41f0556cbea0c0905d0a6bad3897d074"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/game_match_npc.g.bytes",
+      "bytes": 1823,
+      "sha256": "9a309da0bd751e812213c473032c554388cb4fb1f267c46fc006d246f7f984c0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/game_play_mode.g.bytes",
+      "bytes": 581,
+      "sha256": "bcde5ee7fbccd70a7e2dc1cd8bd359f03f6451ac25e91efbe03debe784a1cdc0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/game_settings.g.bytes",
+      "bytes": 7893,
+      "sha256": "fca2ae301cb5d5fc345377fedb2a97634682e286f6bede6a738c1be96d1a890e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/gameplaytag.g.bytes",
+      "bytes": 727,
+      "sha256": "f19a40f4e6f56e42424fb082e574654f0b560d181491e9fca94c6a38f11e5c83"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/gem.g.bytes",
+      "bytes": 4592,
+      "sha256": "fccdcff7e7ebdefb70ce085f73f49126e8572d2535d69a34f9c497b5f1827343"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/gem_merge.g.bytes",
+      "bytes": 723,
+      "sha256": "028f97ad023878babbac0fdea62d664d1534f877de2fbe9e255611e2fd100264"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/general_activity_shop.g.bytes",
+      "bytes": 14111,
+      "sha256": "69026477a7f1a2b22e7ad4d8cfc54b7f58a896da2248e1c9d89612c4494b80b1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/gm_role_privileges.g.bytes",
+      "bytes": 85,
+      "sha256": "d215e023c6ab9f6e0dbb39e9da42237928693983979f7b37d2379dbc1c69bc0b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/google_achievement.g.bytes",
+      "bytes": 77,
+      "sha256": "163e5a41801f87f2ee993a47a68b350b579eeb52aca41ef61b0079b97675d267"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/google_game_stats_event_map.g.bytes",
+      "bytes": 307,
+      "sha256": "a410fa0a5d47ff9d396610fe803a939141e7f064e784ec7762ba1ffd79209a9d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/grid_item.g.bytes",
+      "bytes": 205,
+      "sha256": "7f679958faf49d139fe78d5801e695ed964b0d0dfaff1dde36031641b829688c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/hand_in_item.g.bytes",
+      "bytes": 124,
+      "sha256": "ceb5c9aabf95074d84d1fd0772d02fcaca3027d132bff0b2c20dbea88b7b4289"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/hang_up.g.bytes",
+      "bytes": 758,
+      "sha256": "47db25bbd2689ebfe604f89f48f85753c23a70d2f02bf767684fad0587fd7cae"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/hang_up_reward.g.bytes",
+      "bytes": 144,
+      "sha256": "526b88dbd4622339910f39526a0d356c871ec2049c9d8c00e1726afc12406d0c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/hang_up_upgrade_material.g.bytes",
+      "bytes": 58721,
+      "sha256": "0fa6197c185435d9bfd64d46adf65c01dca2ae10ee516c405593c7f91c5c4671"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/home_decoration.g.bytes",
+      "bytes": 24,
+      "sha256": "50e4782e77a034cafb1e4120c323dbbbc5d3ab11300adbac85712d5a3c2463f6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/home_environment_skin.g.bytes",
+      "bytes": 59,
+      "sha256": "4c2c75c502f8d45742219b385fd337f2c7e9ea8b97c37ef62497c8a4c5a3061d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/home_level.g.bytes",
+      "bytes": 447,
+      "sha256": "32718cac27988b70675e12346e7d4ea8aad6a225c5cbe1b696c53ebb71c65057"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/home_random_reward_group.g.bytes",
+      "bytes": 13,
+      "sha256": "c89ddb8e9717af92c345d98a85ea808b47efc7d957fa80d542669323e4727ed8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/home_random_reward_slot.g.bytes",
+      "bytes": 169,
+      "sha256": "61c21bfdf40e90640fc877c8941ab3480bebdd958857935c72ee91dd8867c022"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/home_random_reward_type.g.bytes",
+      "bytes": 17,
+      "sha256": "1dc03c2bb6e0dd1b8cb208f93892141a6e6770bf08124666e1ab4bf126dcb2ce"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/home_right_entry_ui_activity.g.bytes",
+      "bytes": 1484,
+      "sha256": "babac3cce3c9d7585397acece1240b38bb664dcc9e0b00bb5bdb004bf33e6efd"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/home_skin_weather_override_prefab.g.bytes",
+      "bytes": 1364,
+      "sha256": "53ea1d3e72c084ec36ec98f7e20eb877cefb1ae5b11c0574584a5ed62442f566"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/home_theme_skin.g.bytes",
+      "bytes": 471,
+      "sha256": "9604e1872e0a9406530cb121847b35c601b1c0a466d1d42081b781f137f05a6d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/home_visit_shop.g.bytes",
+      "bytes": 75,
+      "sha256": "0fd4bd631c0d9145058faf68da363413efe95c707ead5ef8b3638e3b3eb82ff9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/home_visit_shop_goods.g.bytes",
+      "bytes": 1347,
+      "sha256": "e7ace3fd65691e8a9f22679e7172ec192f21ccf76e4d47a0204d412f30c3d1b0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/honor_badge.g.bytes",
+      "bytes": 1189,
+      "sha256": "7fda24feecf9849b91b187263dbff2c0f586a15dde6844846ce30d72e3d51621"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/hyper_link.g.bytes",
+      "bytes": 103,
+      "sha256": "e6203ca89d3533b18e708bfb07731106cea36e1b2dede0c27eaa5e204028a3c8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/id_generator.g.bytes",
+      "bytes": 41,
+      "sha256": "5bcd59f8733ac67c5db9009f729e6f33fc9adf1b3d9bc656cfae74da4af998e8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/item.g.bytes",
+      "bytes": 995007,
+      "sha256": "da276129e605494f2392572880d2cbc0354da14c4151bea6d7dcc90a69be7888"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/item_alert.g.bytes",
+      "bytes": 11719,
+      "sha256": "e993a0737b1440cff148da51affeac0e204e044909793f4191c1f601772681c6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/item_count_limit.g.bytes",
+      "bytes": 22,
+      "sha256": "b08217f3f8deb573b952cf9092901870b75ed3f812c25d7f1af8469653e7f222"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/item_merge.g.bytes",
+      "bytes": 623,
+      "sha256": "3c20b5005b3d7879d72f6ba1e61f07aae4b2f7e8748e7c633a3a551a5057457c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/item_piece_merge.g.bytes",
+      "bytes": 28,
+      "sha256": "cf710f2ac33245a0772664c2da9958d652e2d89a22a551f6f6d7ef1b63f1a37d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/item_source.g.bytes",
+      "bytes": 3429,
+      "sha256": "a3481d0756ad405a6762ccfb52e953db450b94012f8a75d2192ec1c5b85177ee"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/item_source_redirect.g.bytes",
+      "bytes": 29,
+      "sha256": "99cbf1c0195631553d77bf85af8761afe645fb24da24f9be012fa5880c8153e1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/item_tag.g.bytes",
+      "bytes": 124,
+      "sha256": "a2c83a400b66f0a25d24d71ceb50a1561c3ab79b452431a67a9c7f7c6b560220"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/item_time_limit.g.bytes",
+      "bytes": 635,
+      "sha256": "4e61a87d995754ae53abc02497c8261dccf61f9eca81301ac342002195315101"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/joint_strike.g.bytes",
+      "bytes": 22029,
+      "sha256": "4dd7269e84bac5f65fa9132322afa7e711430c9f797ba0857cd7973cc8e927f5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/joint_strike_phase.g.bytes",
+      "bytes": 1127,
+      "sha256": "29197f2f35d83f6cc1f5c6c7b8b346ccb0d4a16974c7b4c3c3621155228d7b38"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/joint_strike_style.g.bytes",
+      "bytes": 113,
+      "sha256": "7c00f092b6c0f6ab09537fff3b689f1f0f44bffab54c9b4f73ae22300bfb86af"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_donate.g.bytes",
+      "bytes": 122,
+      "sha256": "318559cb1a5827a3f027583d832e4a5ec1d82133b42ce0016d46aa521030c2f0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_fight_base_score.g.bytes",
+      "bytes": 21,
+      "sha256": "150c2e3584de1a7b3ac41fedb6c1c1557af57451619a6d18deba4a233835ea46"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_fight_contribution_score.g.bytes",
+      "bytes": 33,
+      "sha256": "75fe95e295e7db239abf08e1ac671f802b30cdc8ec3bccb0330dce1685b00bc0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_fight_guard_template.g.bytes",
+      "bytes": 7081,
+      "sha256": "a42f55d45fc54897bf12ce517eb7289ba66ba82ea0a7e751e2bb2f39d8f0b235"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_fight_period.g.bytes",
+      "bytes": 202,
+      "sha256": "58073869c497c941df4f8a90445170313423ca30d4ce50251b2e7a2be5303fa6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_fight_rank_score.g.bytes",
+      "bytes": 1006,
+      "sha256": "25b47d2ce6319e64868eac9f006a375d044e8a0b147587431265e21fb3dada58"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_fight_result_award.g.bytes",
+      "bytes": 270,
+      "sha256": "febc449c465f04abb17c75606569bfe22fe2eba3fa1bf41fda23fcf8454295cc"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_fight_stronghold.g.bytes",
+      "bytes": 29,
+      "sha256": "e4188248aa08e5ea47195e544042cd96cd9759798e7e52fd1e8ea7251a1c907c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_icon.g.bytes",
+      "bytes": 1122,
+      "sha256": "1c30255cf56f8ff311d74b71b351a5256a99930055686aecfde2a08d817f755a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_map_building.g.bytes",
+      "bytes": 411,
+      "sha256": "8a40021c17056eb337e108c7f0f00440fd0d3da79195cc832a822a21971aaff0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_map_building_level.g.bytes",
+      "bytes": 17841,
+      "sha256": "3f9d81e321772a2ceadf39b0dc703bf6ed28ea4a580a4e8c1f31331bf212a5e4"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_map_building_level_hall.g.bytes",
+      "bytes": 226,
+      "sha256": "1f376633a2cad79f7790e3a1cf3f9a664c8b02d4ea9c735ccd2e815a8b3aa513"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_map_gather.g.bytes",
+      "bytes": 13,
+      "sha256": "3099ba6a105290be2514127c18353be627ac22e19ccd4b786daf601765b811c1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_map_hangup.g.bytes",
+      "bytes": 859,
+      "sha256": "76b314be3c72fa09dbcf1c17f2e9017a8c489014d9758dc3f400cc875a197d7f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_map_hangup_life.g.bytes",
+      "bytes": 19,
+      "sha256": "f2d5e47ba507445d3a1accc2de1184b543ff251f02228162b6df36a51835fa36"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_map_hangup_material.g.bytes",
+      "bytes": 643,
+      "sha256": "84f1b1880c370acd5ada6533cc23b8467ac61db2b048be68bcc1e5da85ef60b2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_map_hangup_tool.g.bytes",
+      "bytes": 989,
+      "sha256": "92c10bad7a87dcbc848dad028aaeb652d14834641bf61464a35fdabd76540f26"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_map_skill.g.bytes",
+      "bytes": 16894,
+      "sha256": "a63ab05f71630f84e05945e335051604c1c5d39185c225d9deeee5f11b7e1590"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_map_skill_study_level.g.bytes",
+      "bytes": 13150,
+      "sha256": "e698162c791767107de5fccb6c590df157765c8af086640b232665877d3fa4e9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_oper_mutex.g.bytes",
+      "bytes": 76,
+      "sha256": "31d3cf1ebe8334cf8e64642d659ad127862eb90bc1ec50bec7b929e667475df8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_permissions.g.bytes",
+      "bytes": 129,
+      "sha256": "fe73e7c2ef03ee736ab6409d58c6b85efe7167f8e79221f38663b6b74f0daf19"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_permissions_duty.g.bytes",
+      "bytes": 144,
+      "sha256": "3d233fddd6ddcfb352755a6cc42886b3aa67432b8a769fc4e32df78240c3ddec"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_prop.g.bytes",
+      "bytes": 45,
+      "sha256": "c66fc87b898ced0469661616aee5e4a6704bea78cdd786b57e0e6b768b349050"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/legion_protect_plunder_sequence.g.bytes",
+      "bytes": 7948,
+      "sha256": "5e2c8c31ed54b2e5fd01f7cb414c6a9b701036cf670173e8bf3a08df12c35213"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/level_bless.g.bytes",
+      "bytes": 8826,
+      "sha256": "246e90307f275d9d97e8b881d46552c51ea4cdcc667f7132fc32d912669557a0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/level_exp.g.bytes",
+      "bytes": 4456,
+      "sha256": "ff43b883b8c86835de154c3772d89f69675a8171829cc93c0fb60a196e6b6cc7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/level_number.g.bytes",
+      "bytes": 79208,
+      "sha256": "dcc3a4302e5b2c71049880398a606e801291321e9ecccf72aa391ec99aa6341c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/level_prop_default_value.g.bytes",
+      "bytes": 502,
+      "sha256": "e866fc9ed6f08b9c2debb0639c7626817e45efa7451cc5b88514720d5210ef98"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/limited_time_gift_group.g.bytes",
+      "bytes": 5245,
+      "sha256": "65490dd1b737656028bd5b3f42707a59b3f66e4149a3e2d9390da9175755d7bb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/limited_time_gift_group_collection.g.bytes",
+      "bytes": 1051,
+      "sha256": "f2dff712976f229f3280963740ed5ad8a1c2a8c4499ec915ac6bb7566ae87a69"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/limited_time_gift_pay_item.g.bytes",
+      "bytes": 6763,
+      "sha256": "ddff0840dd3dbb00ff2e2378d26b431d86c8179ae4023dbf093329944934589b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/limited_time_gift_tier.g.bytes",
+      "bytes": 7331,
+      "sha256": "96c90d6b4bec5c15a8ac802c0468ca08a3694e7767bec51794eba4faa7ac2278"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/loading_bg.g.bytes",
+      "bytes": 100,
+      "sha256": "300b9488723b96343e3bbc07708a78d9574b7fef9290dc28fd09386d17e3f697"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/loading_tip.g.bytes",
+      "bytes": 72,
+      "sha256": "4ceeb145a35485ca312c9c216a32e59107863b64e110ce11f40f735577d33b70"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/local_time_offset.g.bytes",
+      "bytes": 7,
+      "sha256": "ef7b029f6bcd09c87c6a798a176ded9060d769871b69932ce2aee154c0d5cbcb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/lucky_special_gacha.g.bytes",
+      "bytes": 341,
+      "sha256": "7195f2508d84c870cbc9b6dd383a79214cdf5724a056d6501ea4de40d9f8b5ca"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/lucky_template.g.bytes",
+      "bytes": 17003,
+      "sha256": "17f78e53c5c48255e47dfb923ba59be1f1912b4b3862ab9500d3b847f1eeb8d2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/mail.g.bytes",
+      "bytes": 27389,
+      "sha256": "9b75a2e33c95ac5140767ceec698ab0c71e855d630a3533d9bc940bb3f810592"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/mail_send_timer.g.bytes",
+      "bytes": 891,
+      "sha256": "1c701b9632c37829b490838a80428dbb520bb2dc414e938acb2940fd36985cd0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/map_entity_condition_show.g.bytes",
+      "bytes": 5919,
+      "sha256": "7f91388e17e604cf58a4db55107de14c1d53062f8bbdfa27836260cf4ad0d384"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/map_explore_limit.g.bytes",
+      "bytes": 3,
+      "sha256": "c7543733084f9322d3e6879117f24dd05a44df88e8fd98316671aebacf0c38af"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/map_nation_shop.g.bytes",
+      "bytes": 362,
+      "sha256": "5386b7e67e75edbddbee4eea4e77df754772c5f1acb9e35ae519b53051a6f266"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/map_pet_info.g.bytes",
+      "bytes": 2477,
+      "sha256": "b0711cd68fcda735b36c336150c92fc77795111c3e5de42569ce01f150d4d50c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/map_scene_status.g.bytes",
+      "bytes": 7,
+      "sha256": "e99ea0766f59df3cf1f81137e2593f5b58016c777951857294de33f28555c688"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/map_stage.g.bytes",
+      "bytes": 253,
+      "sha256": "19f88adb9e7a03234ce67e1752a8ebd7e2a86fbdff98c88b9516507786e11ced"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/match3_game_item.g.bytes",
+      "bytes": 1546,
+      "sha256": "da9c9194e1812a560bbfd2752f33404fe6efb4cfae37461b5bd4462b91a21a94"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/match3_game_stage.g.bytes",
+      "bytes": 3520,
+      "sha256": "4d3898ef1585db4e5bd8b288b3a3c42444c86c9a99287174cc37a7c9dc5c0809"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/message_push_game.g.bytes",
+      "bytes": 2826,
+      "sha256": "4d83275071ea6810ec03198c90ef59cc91c7e62cfe3e04428dc907ccca5edd07"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/message_push_settings.g.bytes",
+      "bytes": 177,
+      "sha256": "de796a75fd3d4647eee40fcc7c5c132f24d109c9aa5e0cdd932b13f7834faf61"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/message_push_system.g.bytes",
+      "bytes": 1428,
+      "sha256": "4ccabeb4fdc9e77c83d334f37638c7396ad572825c5f17b01bbfa2799a4dc238"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/minigame_element_link.g.bytes",
+      "bytes": 16063,
+      "sha256": "f6dc8c5b0ed5b39d3a6fec83a67eb1fdeb7ae1ee5942ecfa705ac74b3a3bb3ec"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/minigame_energy_circuit.g.bytes",
+      "bytes": 5030,
+      "sha256": "a4ea6505515c7cfcd0d969ff78360d34ab9c22e9825046dba8e03e0f8c9068a2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/minimap_marks.g.bytes",
+      "bytes": 16087,
+      "sha256": "4b41cd3726a6992331ffe53aeec607b6296deb327aa0ae925988dcbb094d9f4e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/money_cost.g.bytes",
+      "bytes": 6922,
+      "sha256": "622b1032c149394484635d0ddd6b43d2da3ae8f2c76bc5653db61557b7df9036"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/monster.g.bytes",
+      "bytes": 13134,
+      "sha256": "e90d4b004bb5a6edfee28d4fcd0b91a332d5c6c4d9550b8a049f7216769cad01"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/monster_group.g.bytes",
+      "bytes": 314908,
+      "sha256": "4b85269ea6e5a90133030a715b064d1441971656e88443a06add9d1ab00a481c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/monster_hp_plies.g.bytes",
+      "bytes": 831,
+      "sha256": "66b6496732f115b7370bc4fa3114d76c66f552de1fa73f70c06fa59b485e342e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/monster_reward.g.bytes",
+      "bytes": 3793,
+      "sha256": "d5a42f9a567a4c6347f597cfc00ecd7b9f6a77a5f9fd4d18379347b657f377eb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/monster_segment_reward.g.bytes",
+      "bytes": 1301,
+      "sha256": "9e594197de305fdbb7feaab27334e06088423da85dc101ba774e96738c3fac85"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/monster_skin.g.bytes",
+      "bytes": 64,
+      "sha256": "6816275d4deefd86334f3d4dcb56078e31117452965d799cef3ac484939b81f8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/monster_special_prop_type.g.bytes",
+      "bytes": 17,
+      "sha256": "1251a13bf7dd07583c06556d4a071d9f522719f278dd69c5828036e86b6d0c46"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/mop_up_dungeon.g.bytes",
+      "bytes": 227,
+      "sha256": "4d58ae3c0c6aa2f4d4a91b42f1402ea6f4510411974418da3cedd61ca8402d0c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/mop_up_material.g.bytes",
+      "bytes": 217,
+      "sha256": "4f34a9f33d81780206e437361ee282fdc574737feec0cd048b54cf3c1b2ed049"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/multi_group_rivalry.g.bytes",
+      "bytes": 44,
+      "sha256": "ca44689313e48001350da7794d2f7a5351d1220e65be7bf44743405407973b56"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/multi_group_rivalry_guard_template.g.bytes",
+      "bytes": 6985,
+      "sha256": "95869ac8c29987357ec069258533d874b0c96a042c2b5d9e0c63f9212ea4b677"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/multi_group_rivalry_stage.g.bytes",
+      "bytes": 105,
+      "sha256": "eba8b615e0566e872272811a02d37724ffa5490038a88ae6ada493cf0d6e81f2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/navigate.g.bytes",
+      "bytes": 64970,
+      "sha256": "9fecd91a4b025f9d738cee60c79099cdf458cdc53f737e6a8ef001e5aa9bf57c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/new_player_compensation.g.bytes",
+      "bytes": 7,
+      "sha256": "0eb025e0c57eb809392c807e848e9322d1d6a4044f90d456ce26edde7b75b4e6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/npc.g.bytes",
+      "bytes": 75270,
+      "sha256": "3ae4b5dd63d07b7d80a03ecbc511f04d32839c82b301ef966328be81b71aa76a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/npc_adventure.g.bytes",
+      "bytes": 82576,
+      "sha256": "89c29de1490bef28ae26ae89abbb9feef106d2c8bd21fd6d5c8b52cfe9382c54"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/npc_adventure_travel.g.bytes",
+      "bytes": 40946,
+      "sha256": "c0c5776d9c4ed215c7852ced39eb70aeb6d6d5d90272cfc4daeccd385650107d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/npc_dialogue.g.bytes",
+      "bytes": 121386,
+      "sha256": "ed3c1ac353b2577d67714a8c89930aa7b857e5667e6df9ac97883f3b025f99b1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/npc_friendship_level.g.bytes",
+      "bytes": 87373,
+      "sha256": "4724b8cd107af4d9835bb0a8f63f744eb5b86feb196c51d72eb03bd2ef62c3fb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/npc_friendship_tag.g.bytes",
+      "bytes": 1073,
+      "sha256": "fb209262c31ef12ecebc9ed8f5594cd89d75135e540d424a171196fb02bee5e7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/npc_gift.g.bytes",
+      "bytes": 461,
+      "sha256": "d53ae2834149049669a48ed9f5138c89a5b8e81a7ae076e0ed2365f45d853e42"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/npc_home_position.g.bytes",
+      "bytes": 285,
+      "sha256": "1167873a5b87d6a6318cfb0cd46fed45cde5b4c44d2752a8d4aef2d203d5088d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/npc_level_detail.g.bytes",
+      "bytes": 10117,
+      "sha256": "f618fafc2155a57d5c06aa4e499e4ae81e611998a3d38b65922552bb62017144"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/npc_navigate.g.bytes",
+      "bytes": 436,
+      "sha256": "49d958c2c2dae043e1163d9f508e0e9f6402851c71bb216969f36c9c4504590a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/npc_pet.g.bytes",
+      "bytes": 6,
+      "sha256": "bc49392309d9cd2d9337a39b1b0694f7b48c069c49963e71de550347ac895b80"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/npc_profession_detail.g.bytes",
+      "bytes": 19525,
+      "sha256": "4b4f55355380754cb7a8257d3f7d28f59bc73d5031747e017c69d27eda1fe592"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/npc_profile.g.bytes",
+      "bytes": 6795,
+      "sha256": "f0f7e72c9138531072b25dcc123dc2d85eb5149b52621dc1a11003cc0ad12ebb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/npc_region_image.g.bytes",
+      "bytes": 945,
+      "sha256": "b3803117ad7024114bfe054a74891bc2ea47c619a41b38077194a21a68dc30d9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/npc_star_god.g.bytes",
+      "bytes": 404,
+      "sha256": "4e777572ee4d5ca7dcb8c96d06fb6d9329e38c2af79203137a7d606524189160"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/npc_talk.g.bytes",
+      "bytes": 3404,
+      "sha256": "ac7bd8d94597fdda61c3b7e4bc6a660cf734118193c539ee8c218d420a06d0bb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/npc_template.g.bytes",
+      "bytes": 365,
+      "sha256": "0cdf1cc698064a45962a6312a2e637c52440ff03ccc693ff1a19c6fd83f4bcc1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/npc_unlock_item.g.bytes",
+      "bytes": 301,
+      "sha256": "f795e52b2742a8f7f379b2da8ac4fc7b6535c3193f95864b07bdda6f92f27e4e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/once_reward.g.bytes",
+      "bytes": 116,
+      "sha256": "624d0bcaa8e6fbf5774420b8c1ba2f23a448358bd94be89a94ac946915131ed8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/option_map_periodicity_interaction.g.bytes",
+      "bytes": 71,
+      "sha256": "783bdba314a1ea22f6c604a1d03290a62b5a92800e6c7d0d53eab092e68e055b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/output_addition.g.bytes",
+      "bytes": 1530,
+      "sha256": "e01c1fb5f3160ad4c7bd06d1a9c0aa56b587ca92ca84d4c4fc43273b9dc93d6d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/pay_voucher.g.bytes",
+      "bytes": 232,
+      "sha256": "5c00811907b835ffdc6c3972546a8ada3ce0c31ff70f1e3f901c4e38c4ac8f01"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/performance.g.bytes",
+      "bytes": 560,
+      "sha256": "21f7f6eb203a8daa1b614ad8e2cb746db8b52026a3c62819d979c1802711ae76"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/period_card_item.g.bytes",
+      "bytes": 9,
+      "sha256": "9c844921e9d841547105af863d04428811cf941a9336242aab95cc46221731a2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/periodic_activity.g.bytes",
+      "bytes": 217,
+      "sha256": "f57666749a2f418194e1b3e00835cfc30a06bb836f1b6ad64c22962f8ac05d34"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/periodic_activity_state.g.bytes",
+      "bytes": 681,
+      "sha256": "765e5236fc85c6eca003eaed074be53e8dcd44d19a16e5a9b1f8aaf4129dafb4"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/periodic_card_pay.g.bytes",
+      "bytes": 119,
+      "sha256": "0bd7468bb83d745ca9d533dffdd6533c68eade795cfe0a7ed856c6424d94b3a1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/pet.g.bytes",
+      "bytes": 1198,
+      "sha256": "ce050310edf7892975d232e6de2d0281cb348f1c76a92cfe75a4f8f0284c8de9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/pet_ability.g.bytes",
+      "bytes": 59518,
+      "sha256": "c3d68b0de8b3fa5e87addfcd658cc1af2b985effa0477d03a0612c527488584e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/pet_ability_graph.g.bytes",
+      "bytes": 18065,
+      "sha256": "117b621796636f8e4171767f146a5b109398f5fbac0ee0950f72a96c5f76c480"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/pet_ability_prop.g.bytes",
+      "bytes": 397461,
+      "sha256": "7966a9fb6b38dbf9ce42866fe49bfd6e7e1378cbf17d267145319135c3554d0b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/pet_ability_prop_scale_factor.g.bytes",
+      "bytes": 206,
+      "sha256": "e0e029e9d6fbea94a0baab43a6f9195bb6f15c9b1820386005ce266e38c26559"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/pet_battle.g.bytes",
+      "bytes": 553,
+      "sha256": "851e399d59ba9d4c66d2bb79b72eb539126c15216bece3ad3f16da8eecb16ed2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/pet_evolution.g.bytes",
+      "bytes": 2820,
+      "sha256": "8f4277734c37f34ee81187fef6629332a91b6496997c1e7bce2345097306354e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/pet_food.g.bytes",
+      "bytes": 12,
+      "sha256": "9605ac61355d33eb16d0954ca4a6d2c82658e61f26fbfaf42394a2b1c6b2d6b7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/pet_potential.g.bytes",
+      "bytes": 742,
+      "sha256": "d216240cded7dfd40f81583a6387f3452a5fe840dc715cd5cd1fda17f7935f1f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/pet_upgrade_bless.g.bytes",
+      "bytes": 6308,
+      "sha256": "005fcf9f89b7884cbbf3885ddcb3296aa3cbf899149c886c55789f44e33ef563"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/planes_merge_output_addition.g.bytes",
+      "bytes": 189,
+      "sha256": "13de3e531199b93cb19094d5d2b12c84e3f3329bb36f774ed094ade557f8bef0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/player_behaviour_status.g.bytes",
+      "bytes": 16,
+      "sha256": "fd85f14d0ab7e9ce7a7aa381f39870541a0c9ce183cfa85277d6f94566bea353"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/player_robot_invite.g.bytes",
+      "bytes": 86,
+      "sha256": "3a0297d2e118d9394ba6da37871c3166b756147bd1f2d3b0b963b4fbcf2762ef"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/player_subrank.g.bytes",
+      "bytes": 1610,
+      "sha256": "15bc7b5cec5966dcbef7c204eef833ab8797654f14e5806af5d019ecbfab7129"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/preview_activity.g.bytes",
+      "bytes": 25,
+      "sha256": "155d43139e80f603572e93933406fb573224d339ed1872d30b4fdc8f0c476305"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/profession_base.g.bytes",
+      "bytes": 8545,
+      "sha256": "92eba63835e3300821811c21bb9fc5cbdeb36699e12bbeb9f0c0e1dab79170a5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/profession_level_cost.g.bytes",
+      "bytes": 16858,
+      "sha256": "2777bfa475f6229001799a8bfcfb545139b8a49d5a935acee1b4dd240a448604"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/prop_cfg.g.bytes",
+      "bytes": 15362,
+      "sha256": "849cde72b0a26881cb224119dfd31b6af1d7665ec41a2635c4fad97442da046c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/qagame_blank.g.bytes",
+      "bytes": 51,
+      "sha256": "76dabe96ada18c114e2005b342e878eb2e4b6e161f2a37d46efcc770f9acb7f5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/qagame_reward.g.bytes",
+      "bytes": 12,
+      "sha256": "740b3ffae4ff27d95b2b9f90c56af21c0c7f543c2e8505a03ef64be8fc8d7045"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/questionnaire.g.bytes",
+      "bytes": 864,
+      "sha256": "c6538d9f88c25f872a71e2d38064cc961b9c65fc7e75be498b4e240348e1a33f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/questionnaire_web.g.bytes",
+      "bytes": 1026,
+      "sha256": "d1740431aff66991de705525b8b2bc0f434cdd15d88f1aaf75e26b04e16c78e5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/quick_buy.g.bytes",
+      "bytes": 606,
+      "sha256": "ff181d541883a5a0d111e208d54630506869e30556e0223f248f7029903a0a65"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/random_award_guarantee.g.bytes",
+      "bytes": 1826,
+      "sha256": "9b4bf16c02d0280bea668b31c8ba72f4f2644f43055241a4fdc120198ecf6537"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/random_name.g.bytes",
+      "bytes": 5592,
+      "sha256": "3075a09fadf2c988c1af588b0eaa58f46c953b97d3bb7661f54cef1d78deb636"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/random_reward.g.bytes",
+      "bytes": 63082,
+      "sha256": "2c25816ee2fa3a1490224514e55b6daa3cc19d248e9167fc59024820d502e69a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/random_reward_share.g.bytes",
+      "bytes": 123,
+      "sha256": "fb29e87c8205807779d88c0c1484be6819eeb5aec843899e15b3b0805bf9ca43"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/random_treasure_exchange.g.bytes",
+      "bytes": 49,
+      "sha256": "f455c700c638bda3ae6954cf8bf679ff07a596ee716001b02451af4c0ca72ee7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/rank_keep_time.g.bytes",
+      "bytes": 73,
+      "sha256": "431302eb949b73b60d70dacd01ba3f9003e1568f3a59b70ee367556ecaa135d5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/rank_keep_time_override.g.bytes",
+      "bytes": 1618,
+      "sha256": "1359df5857f317c5e5353ba6f3d4f98d29342a9d8fe56a0954b3a16ca3fa05b9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/redeem_code_gift.g.bytes",
+      "bytes": 127,
+      "sha256": "5113eaec810779c8ad69b78dbeffcd8aa214c1c1baff8ef3fc3a7ea15571c6ff"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/redeem_code_voucher.g.bytes",
+      "bytes": 35,
+      "sha256": "9b8d2bcd5666ced9fdce0d92fd9ebeffea7197ac15d79b8f279cad731bf4ef1a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/region_release_time.g.bytes",
+      "bytes": 31983,
+      "sha256": "93b90f4b3c56589d3538fb1c648c68ba757d8fa311bd1dd9e4f3f351d3eae634"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/reward_config.g.bytes",
+      "bytes": 125,
+      "sha256": "3861692e4ed1cf0b310f715059c191d385ed0c9ea2112448475d92a8d7eae95f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/reward_rule.g.bytes",
+      "bytes": 234251,
+      "sha256": "bb036852e797177f2a845865136dcd30657a2defe8b3899d414b8764ff7eb1ee"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/role_prop_group.g.bytes",
+      "bytes": 1776,
+      "sha256": "b52c3e07f08399423244cc858114098dc3712902524836fab2e8e03f681ddf13"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/role_trade_bag_items.g.bytes",
+      "bytes": 44,
+      "sha256": "420556608693cd8df1540eb69498721c38dd414bf3d2c865b71278f3d1003f9e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/role_trade_limit_operations.g.bytes",
+      "bytes": 34,
+      "sha256": "164bcc6405fbca00609dc1a1d042f6cea150dc31e8009ef457bae2cae5690a3d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/ruin.g.bytes",
+      "bytes": 8402,
+      "sha256": "15973043b4718cc5b18682722af1ba151914294efc166e14563364eace2e3813"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/rule_tip.g.bytes",
+      "bytes": 13121,
+      "sha256": "52c0dedcc85301f014ad69cfb6ebaf0374ee6402d81653380a5eaae617cfcd1a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/score_level_group.g.bytes",
+      "bytes": 161,
+      "sha256": "beba3649421b3ef5f6bcecca40b1396bed911c2f070b40f56a7fce1e5d61174e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/scratch_card_activity.g.bytes",
+      "bytes": 1082,
+      "sha256": "66592d5ac92db37668c5b698aa6fc5033accdf9089b90406384764d0ff769e61"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/scratch_card_activity_reward.g.bytes",
+      "bytes": 888,
+      "sha256": "dd22be6846c1825110c690c355b4aa68349c96f35895c67d00c61c54fd381fb4"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/screen_shot_panel.g.bytes",
+      "bytes": 94,
+      "sha256": "d25f5672089f7fe6fd62496071b260fd342863558f1645c61feb6e0aad0ad372"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/season_badge.g.bytes",
+      "bytes": 1705,
+      "sha256": "e15d05ce5a6baa3d3033f5a128a918a4bfcf3fca201747c9f99728a70f28d49c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/season_loop_activity.g.bytes",
+      "bytes": 7174,
+      "sha256": "485432d37dc7f2be26f2b2d5d5aa28c9117cb7dcebe52cd16c6eb8dbdddf508d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/season_sign_award.g.bytes",
+      "bytes": 393,
+      "sha256": "31d01b14565668cbdbe3ee12998fe52384c713b5510a62de0cc0f797804b3332"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/secret_area_phase.g.bytes",
+      "bytes": 2167,
+      "sha256": "ee029fea471bf91d954fd3845f0e4dbbc4074ed55e084dcf584476582df47cf5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/secret_area_style.g.bytes",
+      "bytes": 586,
+      "sha256": "9fc81d18408653ae2a4d00c548a749fa1f318af8cb59b809ee70afbfe45acd32"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/seven_day_task.g.bytes",
+      "bytes": 4130,
+      "sha256": "e9470c42da840fd697cc221b281fb3a3f6c6471ccc74073ff4b6ba72fa3abea7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/seven_day_task_activity.g.bytes",
+      "bytes": 57,
+      "sha256": "2767450e8a7e23ff50d51cf2a6905b7d632fbe64462b7cf1297e8d224eb49bb0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/seven_day_task_group.g.bytes",
+      "bytes": 3838,
+      "sha256": "0cc798dcee383ea88938bf6fd7da4b625d922a09bcbffbf4bdb491f01a5c85ee"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/seven_day_task_phase.g.bytes",
+      "bytes": 489,
+      "sha256": "c09b3ca7661181824211b0568fd6cf781735ecc726d0e372c317e8539064ea62"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/seven_day_task_score_reward.g.bytes",
+      "bytes": 3521,
+      "sha256": "dd86165865196fa4d5a98e4fff3a5a2a6b5a2040750b5f04f7040323966be71b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/shop.g.bytes",
+      "bytes": 20026,
+      "sha256": "b8bcce9379f3de079a7e7950128a70c87a8d274e61a4f03757a3f4cf24260b8c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/shop_goods.g.bytes",
+      "bytes": 153277,
+      "sha256": "75781d273c44bda3f4ab067f3c189f2f547a34359a63c9408693c15b636e7786"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/shop_goods_group.g.bytes",
+      "bytes": 8199,
+      "sha256": "eddfa255f530ad70ab9f9ba03bf507ee7a4f7e2969f7bb47f06a49ba066dd292"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/shop_goods_price_off.g.bytes",
+      "bytes": 25656,
+      "sha256": "4df46569b425c270767709d5ab938426424ecc21306cc979002d47dc662e9654"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/shop_group.g.bytes",
+      "bytes": 57,
+      "sha256": "9be7dda9c3b30ac9f0c30ecdeb8e51e8d7553c5a5630334ea25d127880d7ae28"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/shop_level_group.g.bytes",
+      "bytes": 4962,
+      "sha256": "fdc1d5a971c2292d53c47d68aacb72ed9cdff9fa0060013d4eaf5e210809fb6a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/skill.g.bytes",
+      "bytes": 96401,
+      "sha256": "5da6dd4982bdb6259e13043da7e2b7b4dc6b655beff1661b5f92f4fd65e0c81f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/skill_plan.g.bytes",
+      "bytes": 117,
+      "sha256": "5afa19fff405bfe66230453e66c406a8f96fc5d93d36b7df98fd1d3555c15739"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/skill_rank.g.bytes",
+      "bytes": 418,
+      "sha256": "c3706031371263173303cabf822b5a3aee7ec4edaffe2811e94c40188093295c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/skill_recommend.g.bytes",
+      "bytes": 3604,
+      "sha256": "911e309ba49e1415f86694b02b681036c75860e1f7367744189d2b09c2630e02"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/skill_skin.g.bytes",
+      "bytes": 289,
+      "sha256": "fe133448efd437667e091badefe3cb227cda02da9db7e3ae67f57c25983b718e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/skill_slot_upgrade_bless.g.bytes",
+      "bytes": 10273,
+      "sha256": "3d3ccf9b34b0417be397b21bcee07ded0391f62cc345e9b15532290e326f955f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/skill_slot_upgrade_material.g.bytes",
+      "bytes": 2207,
+      "sha256": "313db0706af90157538e7ffb425780983c12c0b510d87ba4b560204f45e5b440"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/smart_grid_item.g.bytes",
+      "bytes": 53,
+      "sha256": "732adb469776549182eb756fd411afd8d5f2e2897f906584115c74c66e5f2e2d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/social_planes_merge.g.bytes",
+      "bytes": 169,
+      "sha256": "0b547ed263fb6ac562fd7a5aa6caeffe57f05d605937cb1f494a0b0a8ce458e6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/source_operate_group.g.bytes",
+      "bytes": 18,
+      "sha256": "a04409d5d0a7cf664502cb2a62e4acd0fafb9dc0c15fd0c874a038a1fac52ef9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/special_gacha.g.bytes",
+      "bytes": 3228,
+      "sha256": "af7fa5fae21db453cb5ad6ddd7b7fc2b25e6dfe9543363cecb39928df7485eb5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/special_gacha_award_group.g.bytes",
+      "bytes": 7868,
+      "sha256": "7cde216753c15e4180223f6e804b8b6a0fdb6eaf4267bdb5af6774dca38d64dd"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/spine_skin.g.bytes",
+      "bytes": 143920,
+      "sha256": "4502866752fbcaa355d5f043d093c4f0d85b100b397530c1d8adf162c20853cc"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/stage.g.bytes",
+      "bytes": 884338,
+      "sha256": "24eb6aa8e55d897082067b7907d785a8639c088d658811bf8da6f154970339e3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/stage_append_entity.g.bytes",
+      "bytes": 1364,
+      "sha256": "746c764df7c33da6d484bdf92639afc86aed3f6b8e218c1f213e94844a601f63"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/stage_battle_stele.g.bytes",
+      "bytes": 1257,
+      "sha256": "34aa50255e338873f47935e76713eaf22b8e2a5d11fc0683befaed739858b61d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/stage_demon_battlefield.g.bytes",
+      "bytes": 11560,
+      "sha256": "7458f2eba649e0bc722f3f982e8b0e5e2babca6911370859e3b34bcb597c3004"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/stage_entry.g.bytes",
+      "bytes": 559,
+      "sha256": "c9537e69e0049bb7d50d8fe98274a8b8f6d0c101e106513568e3dd6e77a91ac9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/stage_legionboss.g.bytes",
+      "bytes": 3694,
+      "sha256": "bd7e7333ee61c39ea3953cfc510c67dac70a82c4c8a28e0a1a7c1469088ab57a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/stage_map_explore_boss.g.bytes",
+      "bytes": 673,
+      "sha256": "99968f4d2ef36839e2791400283522d4bd6c7a006e5b4d7c2c0961f53afa9a8a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/stage_map_location.g.bytes",
+      "bytes": 6775,
+      "sha256": "7d80b8efc29050ec58f821ccb38a447ac9b8812127215aacd1026e35c4d4d96c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/stage_monster.g.bytes",
+      "bytes": 46440,
+      "sha256": "ab9754983d12f8f77d22efa9a8561d8c285e90f229ec342b9acfafce4cf35cea"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/stage_monster_array.g.bytes",
+      "bytes": 68916,
+      "sha256": "d55afa7dc69899f769ec78e6050f4b3e575b6591f41cedaffc1068444aea3f96"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/stage_npc.g.bytes",
+      "bytes": 5818,
+      "sha256": "53c7a6ee30d4350bd5dbea398731e08777d2c57c8cb79065f02d7cfcb8fe68da"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/stage_override_bgm.g.bytes",
+      "bytes": 4074,
+      "sha256": "2602692a65285db41cfad7fa783eba1180d3f08d6ecdc0fb5f3ca9919cd4d635"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/stage_start_delay.g.bytes",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/stage_story.g.bytes",
+      "bytes": 1152,
+      "sha256": "bf418370e08346e5c56398358983417a1537c036371384d7223be3f895a869f8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/stage_type.g.bytes",
+      "bytes": 9,
+      "sha256": "8e6f848e3fc9ce61bc3c87509506643753edd515088adf1412e53df5c7b7cb4e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/stage_voidfissure.g.bytes",
+      "bytes": 1762,
+      "sha256": "4fe7d2dffff9ee91ab22746dfcb7e374664fc92b0f9ad11fc2ea674c62996694"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/state_mutex.g.bytes",
+      "bytes": 2705,
+      "sha256": "ccddc799346b99dd9009a78519d8a1f51675d3a64d613bcefc34dd46a40dbdd1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/status_effect.g.bytes",
+      "bytes": 4035,
+      "sha256": "3c00aa7ab4206b6f369438e60d1d106839c08d2b4f3d92a62a02908edaa28bda"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/status_effect_scope.g.bytes",
+      "bytes": 131,
+      "sha256": "700d33abd2144d57343381f1f2f321619a3cbd67ec1e8b964dc3802b68cd59c9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/step_award.g.bytes",
+      "bytes": 2935,
+      "sha256": "7ee85a1290750b69b8ce52d90f0a66d252836b0ee0f1948bb8d167a544741001"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/story.g.bytes",
+      "bytes": 58365,
+      "sha256": "3db490217b4748fa01515ea9c3ef7a2e69aeb0380dbccf013cb42cb572c69c23"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/story_book.g.bytes",
+      "bytes": 6647,
+      "sha256": "545deae4a9387c5134c671097df6c8ce8d548840d87184fd7e0122e5ed033e31"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/story_entity_listen.g.bytes",
+      "bytes": 101,
+      "sha256": "ecec18382609c01a78a5f769de5c14ddbec5642d32988e7c4960ccbcba4f01d6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/story_entity_status.g.bytes",
+      "bytes": 5094,
+      "sha256": "7b58d92b25ccc60b8c4835fc9e2155b611817f64c645a5548fe68d9a03bfb4b9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/story_option_dialog.g.bytes",
+      "bytes": 106496,
+      "sha256": "e467ea7860549f7c8d23ffacbf4bb5d86cd1e1b33dee5898d7dafed4c311f546"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/story_tip.g.bytes",
+      "bytes": 304,
+      "sha256": "c650476b838d3be52a3d9e475492135486e78089452a47f3018f633d980f026a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/summon_monster_add_prop.g.bytes",
+      "bytes": 10503,
+      "sha256": "2c8d2a78a960c9bdd7bb8e33632f6974a22bd3fa97540837399a0e9f59801401"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/summon_monster_fix_prop.g.bytes",
+      "bytes": 1135,
+      "sha256": "674d85d7636709b4aa95dad369c1f8fb470cb2a517d30dcd6522772a27c4e1a7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/summon_rank_additive_factor.g.bytes",
+      "bytes": 34202,
+      "sha256": "769167578d26be17ca5d81cd4fe07571959fa81d39310f13fb477ffb3d4a0052"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/system_level_gap_limit.g.bytes",
+      "bytes": 1750,
+      "sha256": "b627b7714be7481fcaeb12795c394fea3155449650b34cdb01992040f3c7c631"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/system_level_limit.g.bytes",
+      "bytes": 17545,
+      "sha256": "c082fb4985e76ffc5f751c65e7761d62b7974e322b3447fae9c1d3232ffb845b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/task.g.bytes",
+      "bytes": 349176,
+      "sha256": "865509773cd62d57be69374e83fa56d6c3ce2273a7a6d74e43fc7104c7a85243"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/task_limit.g.bytes",
+      "bytes": 1065,
+      "sha256": "08d0add8b6b72797a99d40e50115990a57c51d2add1b81c7b6c7fd2ddd8a0cbb"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/team_challenge_award.g.bytes",
+      "bytes": 4552,
+      "sha256": "02d31b8205caea6df5627211f6b2019e83a38ac08220445fc7339b8b0ab9dba2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/team_target.g.bytes",
+      "bytes": 111,
+      "sha256": "b0a614c4c5518bceb4959c8536d7b18c6a02bb5a56cb7d6d97f13b3a3dfcb9c1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/third_party_pay_popup_activity.g.bytes",
+      "bytes": 88,
+      "sha256": "d41c84da528c6896e6870ab54c17e113d91be257b0a0412157894a20a9d965b1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/tip_dot.g.bytes",
+      "bytes": 17005,
+      "sha256": "adac4b019c293bdc723138254f56b675a93d8738b6fb8f57f774d63fd4f5e9bf"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/trade_ban.g.bytes",
+      "bytes": 16,
+      "sha256": "a750eba7d35c19065b0d7995ae35c6a2e7ec3119128563ee8276cffd324468d2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/trade_ledger.g.bytes",
+      "bytes": 27,
+      "sha256": "93f8becdcf33708a52ee7f085508f6e5e73f938f497c76273e15d84d9ec70876"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/trade_tax_rate.g.bytes",
+      "bytes": 99,
+      "sha256": "191f7025b3864172d47aabfe9bcf5908d3537d57d29ed2bab914b2e89aed3251"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/trading_post_item.g.bytes",
+      "bytes": 9422,
+      "sha256": "dad9f83fe2c7de76f267717edba44052293c59d110e41af7d28f134587f36208"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/trading_post_item_intervene_level.g.bytes",
+      "bytes": 91,
+      "sha256": "efdf4a832a2173d84730191c932da09091fbc3663c1b87d22e757b17a14422da"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/treasure.g.bytes",
+      "bytes": 61225,
+      "sha256": "3a242ff1e7222896b82c68791342e74c0ec9b0f670573fad9ce453e063aeaef2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/treasure_bless.g.bytes",
+      "bytes": 1350,
+      "sha256": "162380fe2d17303dc44de367d11a83bb65087398df022bdcebee83a607602e59"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/treasure_gacha.g.bytes",
+      "bytes": 5949,
+      "sha256": "cd1d8081faa13fa6bfbea464aad16dfd073bc1bbae9ccf6dfe92d81f7ae9ec9a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/treasure_levelup_material.g.bytes",
+      "bytes": 283,
+      "sha256": "c545c8ec26857a2fcecad870c6e59bd51e82067a425a92de8f3bd916fa0970f0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/treasure_suit.g.bytes",
+      "bytes": 6700,
+      "sha256": "3c92dc2d7b8c8aa8478379eac1e46cd2bac3c18e9e0f9e400af12d7f9f86750b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/treasure_upgrade_material.g.bytes",
+      "bytes": 217,
+      "sha256": "d6930b449ae0693fb8d203d2042828bb133802f6c437158f51d4a60acd4148f5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/voidfissure_layer_mininum.g.bytes",
+      "bytes": 9,
+      "sha256": "4ef3f9e2087b0c3c0c6044079f1cf094e13c4694213907bc3321f581b4bd7000"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/web_pay_gift.g.bytes",
+      "bytes": 1745,
+      "sha256": "f1cff36a6295e2f7d2747f0f9a72fe4045e12fb2f0bb52ac4a92fe50ac5b29e8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/web_pay_voucher.g.bytes",
+      "bytes": 1933,
+      "sha256": "6f825871759c7ea0b6bd3590d16493f73ad6a8feed8098c5887e7f3d85c17770"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/weekly_pay_gift.g.bytes",
+      "bytes": 12131,
+      "sha256": "accb2c2085f07f50aa714f4843d8641428d73ca90235de25a52649466e2fc925"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/weekly_pay_gift_group.g.bytes",
+      "bytes": 341,
+      "sha256": "613ce3925a2bfa5c6ec42c30cbc5b2a108c913e7164c03e69ad7b6374c99a893"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/wheel_reward.g.bytes",
+      "bytes": 1887,
+      "sha256": "49f27cef5c2f2c9c7a8c2de21e8529f5378e4bcc1e611be6d1962067e9b79e1d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/wiki.g.bytes",
+      "bytes": 271,
+      "sha256": "336c1ed1cff6cb6409f7ea04c56b6c0874b1f3223251484998a32c19b1da0a48"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/witch.g.bytes",
+      "bytes": 137,
+      "sha256": "84327552cfcf69721d3b5250ab6db78f7c4bea0354146a3423af02a8c547e75a"
+    }
+  ],
+  "fully_decoded_tables": 448,
+  "unresolved_tables": {},
+  "converter_inputs": {
+    "path": ".tools/source-packages/current/884_156692/native-conversion/source-manifest.json",
+    "bytes": 115024275,
+    "sha256": "c444d983cb42aa33bd6b1a3e5d826b8bf5fe24e84871e667589ef6874c9824ae"
+  },
+  "converter_input_files": 21032,
+  "changed_selection": {
+    "path": ".tools/source-packages/current/884_156692/native-conversion/changed-inputs-source-manifest.json",
+    "bytes": 15749820,
+    "sha256": "84fafbc8c10a4e80d042de39a7a4f1e97b0fe7dd656f21918a1f901042433c9c"
+  },
+  "referenced_unchanged_bundles": 6112,
+  "referenced_changed_bundles": 2347,
+  "referenced_without_byte_proof": 114,
+  "selected_bundle_and_builtin_inputs": 11238,
+  "catalog_entries": 88308,
+  "retained_apk_only_asset_paths": 0,
+  "unmatched_retained": [
+    "defaultpackage_share_051bca2a011309bdb872f729a710f5b8.bundle"
+  ],
+  "supporting_scripts": [
+    {
+      "path": "scripts/prepare_official_sources.py",
+      "bytes": 9145,
+      "sha256": "608219c9eed2112800cccf1e458cf4342ab0aef3869c1f1bba090e4ad3534ad2"
+    },
+    {
+      "path": "scripts/recover_official_native.py",
+      "bytes": 21659,
+      "sha256": "f54e9332c5a2d599a547f07a9def4a51aed711bf7160795c9f114efd4b2a7b50"
+    },
+    {
+      "path": "scripts/prepare_current_aot_metadata.py",
+      "bytes": 6083,
+      "sha256": "50f0399512e0e182b06e55115a121ac3ed7402bc8a367032c0b1387693d7379e"
+    },
+    {
+      "path": "scripts/prepare_current_resource_inputs.py",
+      "bytes": 6293,
+      "sha256": "021aca2f9d6b646b09ae8a432caf964a400da8d389ea6dd285795a189bed3ffc"
+    },
+    {
+      "path": "scripts/select_current_resource_changes.py",
+      "bytes": 6574,
+      "sha256": "3324956a1be778f85c1fd2b2939c6b3177e565db2e639746fccf10cbe444292b"
+    },
+    {
+      "path": "scripts/convert_current_resource_project.py",
+      "bytes": 10084,
+      "sha256": "89b01d49a9af9f70e72c21c30ff7b2e1c1fba348b326f6c8958daec6ecf40302"
+    },
+    {
+      "path": "scripts/restore_current_empty_atlases.py",
+      "bytes": 8698,
+      "sha256": "c05d14aaf7d564100bc7c07eef56e4466b2d68dd5127b2cf243422452698c9eb"
+    },
+    {
+      "path": "scripts/convert_current_raw_resources.py",
+      "bytes": 8484,
+      "sha256": "105d9e1a19277ffd2f94c16b5494fbdefdc0a26960db798aa4697bf968cc4068"
+    },
+    {
+      "path": "scripts/recover_current_component_fields.py",
+      "bytes": 8276,
+      "sha256": "f4800442da5012b678af698b030ec1bc5aaa04880647a875553be3fe51259f94"
+    },
+    {
+      "path": "scripts/current_component_schemas.py",
+      "bytes": 2632,
+      "sha256": "ad1689eb66dd2061acbe79fe5602d2d10e5aa23f97ed2fdabd6dbce473d5ae52"
+    },
+    {
+      "path": "scripts/official_unity_schema.py",
+      "bytes": 8847,
+      "sha256": "934af3c56159da97a5c6d97a1412547b3ca847f71303bd961bbd37bee8b3aceb"
+    },
+    {
+      "path": "scripts/official_managed_reference_conversion.py",
+      "bytes": 8721,
+      "sha256": "4b594a50aa74828bc149bb85749f3fd2f0cac7f5a630e04513280cf814590d7b"
+    }
+  ],
+  "type_tree_generator": {
+    "version": "0.0.10",
+    "binaries": [
+      {
+        "path": ".tools/character-art-python/Lib/site-packages/TypeTreeGeneratorAPI/capstone.dll",
+        "bytes": 5596672,
+        "sha256": "f03321188a1615d044314b1183dcd9a7ffda09286c31c369d109165d4892dcbb"
+      },
+      {
+        "path": ".tools/character-art-python/Lib/site-packages/TypeTreeGeneratorAPI/TypeTreeGeneratorAPI.dll",
+        "bytes": 15967744,
+        "sha256": "bbb823d0ecad8dafb26bce014d63cdbfcfe135935a8fbee24a783b6eb8115b27"
+      }
+    ]
+  },
+  "aot_metadata": {
+    "source_manifest": {
+      "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/source-manifest.json",
+      "bytes": 39284,
+      "sha256": "aaff0b5a2c873d332f49efd1a625f129aabaa1cb026dabb2ffe69d976c1fffc0"
+    },
+    "types": 57638,
+    "images": 148
+  },
+  "native_export": {
+    "source_manifest": {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-complete-source-manifest.json",
+      "bytes": 42992268,
+      "sha256": "bbc439328c2b12c0120e7cbbb940f839108021bcff370ff8f8133dbcf650835b"
+    },
+    "completed": true,
+    "files": 186919,
+    "files_by_extension": {
+      ".dll": 589,
+      ".json": 1056,
+      ".controller": 981,
+      ".meta": 93214,
+      ".anim": 13774,
+      ".overrideController": 38,
+      ".png": 13524,
+      ".asset": 27314,
+      ".mat": 18491,
+      ".txt": 619,
+      ".bytes": 3198,
+      ".cs": 2,
+      ".prefab": 14108,
+      ".playable": 5,
+      ".ttf": 1,
+      ".unity": 2,
+      ".lighting": 1,
+      ".shadervariants": 1,
+      ".otf": 1
+    },
+    "limitations": [
+      "Separate native conversion cache; existing game assets retained.",
+      "Script binding, managed-reference registries, Windows shaders, exact texture mips and runtime validation remain module-specific."
+    ]
+  },
+  "raw_resources": {
+    "source_manifest": {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/raw-resources-source-manifest.json",
+      "bytes": 27582425,
+      "sha256": "633bf90d4334e561fc78e5509a4c26c33a21edf7bbc2a2361a1adebe36467dce"
+    },
+    "completed": true,
+    "packages": 149,
+    "files": 25479,
+    "pcm_audio": 12665,
+    "audio_with_loop_metadata": 44,
+    "limitations": [
+      "Media conversion only. Original Wwise banks/event graphs retained; gain, routing, looping and module runtime binding still require their original consumers.",
+      "Existing game media and unmatched older assets retained. No Unity import or Player audio validation for this cache."
+    ]
+  },
+  "component_fields": {
+    "source_manifest": {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/component-fields/source-manifest.json",
+      "bytes": 5727230,
+      "sha256": "59935201b9d1305df894a152d28a142c9c9958e5e7c3b23044f4d0fb5fbec4af"
+    },
+    "completed": true,
+    "scope": "Exporter-unsupported component types",
+    "objects": 8768,
+    "unresolved": 0,
+    "managed_references": 18506,
+    "limitations": [
+      "Field sidecars retain source CAB/PathID PPtrs. Binding them into native Unity objects still requires exact module object mapping."
+    ]
+  }
+}
