@@ -50,10 +50,17 @@ namespace Zjcs.Editor.Combat
             Type.GetType("Zjcs.Editor.ProjectTools, Zjcs.Editor", true).GetMethod("Validate").Invoke(null, null);
             SessionState.SetBool(Key, true);
             SessionState.SetInt(Key + ".result", 1);
+            SessionState.SetBool(Key + ".gameControllers", false);
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 180);
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             Hook();
             EditorApplication.isPlaying = true;
+        }
+
+        public static void RunGameControllers()
+        {
+            Run();
+            SessionState.SetBool(Key + ".gameControllers", true);
         }
 
         [InitializeOnLoadMethod]
@@ -97,7 +104,7 @@ namespace Zjcs.Editor.Combat
 
         private static IEnumerator Verify()
         {
-            var steps = Steps();
+            var steps = SessionState.GetBool(Key + ".gameControllers", false) ? GameControllerSteps() : Steps();
             while (true)
             {
                 object next;
@@ -108,7 +115,9 @@ namespace Zjcs.Editor.Combat
             if (errors == 0)
             {
                 SessionState.SetInt(Key + ".result", 0);
-                Debug.Log("Native battle Animator Play Mode passed: official component bindings, infinite/finite/zero duration, speed, ordered parameter restoration, allowed states, original override order and controller isolation/restoration.");
+                Debug.Log(SessionState.GetBool(Key + ".gameControllers", false)
+                    ? "Official Game controllers Play Mode passed: four original controllers, parameters, idle/skill/damage states, native playable clip overrides and shared-controller restoration. Skeleton motion rendering is not covered."
+                    : "Native battle Animator Play Mode passed: official component bindings, infinite/finite/zero duration, speed, ordered parameter restoration, allowed states, original override order and controller isolation/restoration.");
             }
             EditorApplication.isPlaying = false;
         }
@@ -224,6 +233,52 @@ namespace Zjcs.Editor.Combat
         }
 
         private sealed class Runner : MonoBehaviour { }
+
+        private static IEnumerator GameControllerSteps()
+        {
+            foreach (string body in new[] { "Male", "Female" })
+                foreach (string profession in new[] { "Zhanshi", "Fashi" })
+                {
+                    string name = body + "_" + profession + "_Controller";
+                    var source = Resources.Load<RuntimeAnimatorController>("Combat/GameAnimators/Anim/" + name);
+                    Require(source != null, "original Game controller resource: " + name);
+                    var model = new GameObject("Original Game controller fixture: " + name);
+                    var animator = model.AddComponent<Animator>();
+                    animator.runtimeAnimatorController = source;
+                    animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                    animator.Update(0);
+                    Require(animator.parameters.Length == (profession == "Zhanshi" ? 22 : 19), "original Game parameter count: " + name);
+                    Require(animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"), "original default Idle state: " + name);
+                    string group = profession == "Zhanshi" ? "100" : "200";
+                    var clips = animator.GetCurrentAnimatorClipInfo(0);
+                    Require(clips.Length == 1 && clips[0].clip.name == group + "/idle_01", "original Idle motion: " + name);
+                    var cue = new OfficialBattleSkillPlayableCue
+                    {
+                        kind = 1, origin_clip_name = "Skill", trigger_param = "skill", my_duration = 0,
+                        end_resume_param = false, speed = 1
+                    };
+                    Require(OfficialBattleAnimatorPlayback.Supports(animator, cue), "source skill parameter and override slot: " + name);
+                    var clip = Resources.Load<AnimationClip>("Combat/SkillAnimations/" + group + "_skill_06");
+                    Require(clip != null, "recorded original skill clip: " + group);
+                    var playback = new OfficialBattleAnimatorPlayback(animator, model.transform);
+                    playback.Play(cue, clip);
+                    animator.Update(.02f);
+                    animator.Update(.02f);
+                    Require(animator.GetCurrentAnimatorStateInfo(0).IsName("Skill"), "original Skill transition: " + name);
+                    clips = animator.GetCurrentAnimatorClipInfo(0);
+                    Require(clips.Length == 1 && clips[0].clip == clip, "original Skill override consumption: " + name);
+                    animator.Rebind(); animator.Update(0);
+                    animator.SetTrigger("damage"); animator.Update(.02f); animator.Update(.02f);
+                    Require(animator.GetCurrentAnimatorStateInfo(0).IsName("Damage"), "original Damage transition: " + name);
+                    clips = animator.GetCurrentAnimatorClipInfo(0);
+                    Require(clips.Length == 1 && clips[0].clip.name == group + "/hit_01", "original Damage motion: " + name);
+                    playback.Dispose();
+                    Require(animator.runtimeAnimatorController == source, "original Game controller restored: " + name);
+                    Debug.Log("[Official Game controllers] " + name + ": idle, skill override and damage verified.");
+                    UnityEngine.Object.Destroy(model);
+                    yield return null;
+                }
+        }
 
         private sealed class HostObserver : MonoBehaviour
         {
