@@ -1,0 +1,26 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    ".tools/source-packages/official-code/client-source/NpcPanelTabType.cs": "ac1a56764c6bfba10d23635412e076590f994416e933310d55e93c8fe500a099",
+    ".tools/source-packages/official-code/client-source/NpcPanelUtils.cs": "1c57f7e45889dfcd692e640ac3f8a7abeda071fc081479a31a27071af92de80f",
+    ".tools/source-packages/official-code/common-source/Common/FunctionType.cs": "a4ba46945936bf793e114d9121a59562727dc321f6b274d84f0d13b9e9562b5c",
+    ".tools/source-packages/official-code/client-source/NpcPanel.cs": "dc19ac6ff469e446786560c1264743a46832032c7aecd8b7eb9f49e2bb9d267d"
+  },
+  "outputs": {
+    "NpcPanelTabType.cs": "56cf46a93f830cbeae642cd517c552e3d09c130fea8036c424aa06693cb3e564",
+    "PartnerPanelServices.cs": "8da9fb454044664a97203362e692e513139e0d77b0e8699c23973870677231b9",
+    "NpcPanel.cs": "a64910cb437356e549fb37b7e59f4ddbb5d2277ea13b4c88f2716445a83c0a4a"
+  },
+  "output_root": "unity/Assets/Game/Runtime/Official/PartnersUI/Roster",
+  "metadata": {
+    "NpcPanelTabType.cs.meta": "80dd4a155a83d5407dbfcdcccc962546103067b37292930ebfe6e1a18c2256c8",
+    "PartnerPanelServices.cs.meta": "ac2fdce2fa68b876e3fe4b1300bbea35810f82653f7c51d6ab0a6f311a4f2b4c",
+    "NpcPanel.cs.meta": "02790fdf0d4657af557569be6e28a8a8b48ae2f80994fcbd3cd8837abc8b32c8"
+  },
+  "generator_sha256": "0a952478ec49977265c258a9ff2fe0e28d1fd8355fe0c7f76bef7126b7477192",
+  "adaptations": [
+    "Instance service ports replace global player and dialogue-list lookup.",
+    "Existing official tabs, title, dictionary and state-switcher implementations are reused.",
+    "All original tab gates, callback order, fallback and disable reset branches remain."
+  ]
+}
