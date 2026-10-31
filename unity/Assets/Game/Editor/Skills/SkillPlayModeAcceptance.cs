@@ -101,6 +101,7 @@ namespace Zjcs.Editor.Skills
             var save = new OfflineMainlineSave();
             save.CreatedAtUnixSeconds = DateTimeOffset.Now.ToUnixTimeSeconds();
             save.Player.CharacterCreated = true;
+            save.Player.InitialWeaponType = 200;
             save.Player.CharacterName = "技能验收";
             save.Player.Level = 20;
             save.Player.Rank = 1;
