@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using Zjcs.Offline.Equipment;
 using Zjcs.Offline.Skills;
+using Zjcs.Official.Partners;
 
 namespace Zjcs.Offline.Progression
 {
@@ -1144,24 +1145,61 @@ namespace Zjcs.Offline.Progression
 
         public IReadOnlyList<int> NpcGiftCandidates(int npcClassId)
         {
+            return NpcGiftChoices(npcClassId).Select(value => value.ItemId).ToArray();
+        }
+
+        private List<NpcGiftChoice> NpcGiftChoices(int npcClassId)
+        {
             Dictionary<string, object> npc = catalog.Find("npc", npcClassId, "Id");
-            if (npc == null) return Array.Empty<int>();
+            if (npc == null) return new List<NpcGiftChoice>();
             Dictionary<string, object> preferences = Map(npc, "GiftPreferenceDict");
-            bool starGod = Integer(npc, "NpcRoleType") == 2;
-            return catalog.Rows("npc_gift").Select(row => Integer(row, "ClassId"))
-                .Where(itemId => itemId > 0 && InventoryCount(Player, itemId) > 0
-                    && CanSendNpcGift(itemId)
-                    && (!starGod || preferences != null
-                        && preferences.ContainsKey(itemId.ToString(CultureInfo.InvariantCulture))))
-                .Distinct().OrderBy(itemId => itemId).ToArray();
+            var result = new List<NpcGiftChoice>();
+            foreach (var row in catalog.Rows("npc_gift"))
+            {
+                int id = Integer(row, "ClassId");
+                var item = catalog.FindItem(id);
+                if (item == null || InventoryCount(Player, id) <= 0 || !CanSendNpcGift(id, npc)) continue;
+                string key = id.ToString(CultureInfo.InvariantCulture);
+                bool preferred = preferences != null && preferences.ContainsKey(key);
+                result.Add(new NpcGiftChoice { ItemId = id, Quality = Integer(item, "Quality"),
+                    Friendship = Integer(row, "Friendship"), Count = InventoryCount(Player, id),
+                    Preferred = preferred, PreferenceFactor = preferred
+                        ? Convert.ToDouble(preferences[key], CultureInfo.InvariantCulture)
+                        : Convert.ToDouble(catalog.Rows("game_settings").First()["NpcGiftDefaultPreferenceFactor"], CultureInfo.InvariantCulture) });
+            }
+            result.Sort((x, y) => NpcGiftRules.Compare(x, y, false));
+            return result;
+        }
+
+        public IReadOnlyDictionary<int, long> AutoSelectNpcGifts(int npcClassId,
+            IReadOnlyDictionary<int, long> selected)
+        {
+            var current = Player.CharacterProperties.NpcFriendships.FirstOrDefault(value => value.NpcClassId == npcClassId);
+            if (current == null) return new Dictionary<int, long>();
+            var result = selected == null ? new Dictionary<int, long>() : selected.ToDictionary(value => value.Key, value => value.Value);
+            if (result.Count > 0 && !TryNpcGiftFriendshipExperience(catalog.Find("npc", npcClassId, "Id"), result, out _))
+                return new Dictionary<int, long>();
+            long experience = current.FriendshipExp;
+            if (experience == 0 && current.Level > 0 && session.TryGetFriendshipExperience(npcClassId, current.Level, out long threshold))
+                experience = threshold;
+            experience = checked(experience + NpcGiftFriendshipExperience(npcClassId, result));
+            if (session.FriendshipLevel(npcClassId, experience, Player.SubRank) >= session.MaximumFriendshipLevel(npcClassId, Player.SubRank))
+                return result;
+            var next = catalog.Rows("npc_friendship_level").Where(row => Integer(row, "Id") == npcClassId
+                && Integer(row, "Level") > current.Level && Long(row, "FriendshipExp") > experience)
+                .OrderBy(row => Integer(row, "Level")).FirstOrDefault();
+            return next == null ? result : NpcGiftRules.AutoSelect(NpcGiftChoices(npcClassId), result, Long(next, "FriendshipExp") - experience);
         }
 
         public ProgressionResult GiveNpcGifts(int npcClassId, IReadOnlyDictionary<int, long> gifts,
-            string eventId)
+            string eventId, bool confirmOverflow = false)
         {
             if (npcClassId <= 0 || gifts == null || gifts.Count == 0
                 || string.IsNullOrWhiteSpace(eventId))
                 return Invalid("Select NPC gifts and provide a valid event ID.");
+            session.Reload();
+            if (Player.AppliedCharacterEventIds.Contains(eventId))
+                return new ProgressionResult { Status = ProgressionResultStatus.Unchanged };
             Dictionary<string, object> npc = catalog.Find("npc", npcClassId, "Id");
             if (npc == null || !TryNpcGiftFriendshipExperience(npc, gifts, out int addedExperience))
                 return Invalid("The selected NPC gifts are unavailable or cannot be sent.");
@@ -1187,8 +1225,11 @@ namespace Zjcs.Offline.Progression
             {
                 return Invalid("NPC friendship experience is exhausted.");
             }
-            if (session.FriendshipLevel(npcClassId, nextExperience, Player.SubRank) >= friendshipLimit)
-                return Invalid("The selected gifts would reach the current sub-rank friendship limit.");
+            long maxExperience = catalog.Rows("npc_friendship_level")
+                .Where(row => Integer(row, "Id") == npcClassId).Max(row => Long(row, "FriendshipExp"));
+            if (nextExperience > maxExperience && !confirmOverflow)
+                return new ProgressionResult { Status = ProgressionResultStatus.NotReady,
+                    Message = "Confirm gifting beyond the NPC maximum friendship experience." };
 
             Dictionary<int, long> selected = gifts.ToDictionary(value => value.Key, value => value.Value);
             return session.ApplyCharacterMutation(player =>
@@ -1241,7 +1282,7 @@ namespace Zjcs.Offline.Progression
                 OfflineItemStack stack = Player.Inventory.FirstOrDefault(value => value.ItemId == gift.Key);
                 Dictionary<string, object> giftInfo = catalog.Find("npc_gift", gift.Key);
                 if (stack == null || stack.Count < gift.Value || giftInfo == null
-                    || !CanSendNpcGift(gift.Key)
+                    || !CanSendNpcGift(gift.Key, npc)
                     || starGod && (preferences == null
                         || !preferences.ContainsKey(gift.Key.ToString(CultureInfo.InvariantCulture)))) return false;
                 long friendship = Long(giftInfo, "Friendship");
@@ -1249,21 +1290,28 @@ namespace Zjcs.Offline.Progression
                 double factor = preferences != null
                     && preferences.TryGetValue(gift.Key.ToString(CultureInfo.InvariantCulture), out object rawPreference)
                     ? Convert.ToDouble(rawPreference, CultureInfo.InvariantCulture) : defaultFactor;
-                if (friendship > 0 && gift.Value > long.MaxValue / friendship) return false;
-                double rounded = Math.Round((double)(friendship * gift.Value) * factor);
-                if (double.IsNaN(rounded) || double.IsInfinity(rounded)
-                    || rounded < 0 || rounded > int.MaxValue) return false;
-                total = checked(total + (long)rounded);
+                try { total = checked(total + NpcGiftRules.Experience(checked((int)friendship), gift.Value, factor)); }
+                catch (OverflowException) { return false; }
+                catch (ArgumentOutOfRangeException) { return false; }
                 if (total > int.MaxValue) return false;
             }
             experience = (int)total;
             return experience > 0;
         }
 
-        private bool CanSendNpcGift(int itemId)
+        private bool CanSendNpcGift(int itemId, Dictionary<string, object> npc)
         {
+            var preferences = Map(npc, "GiftPreferenceDict");
+            if (Integer(npc, "NpcRoleType") == 2 && (preferences == null
+                || !preferences.ContainsKey(itemId.ToString(CultureInfo.InvariantCulture)))) return false;
             Dictionary<string, object> unlock = catalog.Find("npc_unlock_item", itemId);
-            return unlock == null || Boolean(unlock, "CanSendGift");
+            if (unlock == null) return true;
+            if (!Boolean(unlock, "CanSendGift")) return false;
+            foreach (var owner in catalog.Rows("npc"))
+                if (owner.TryGetValue("ExclusiveGiftIds", out object raw) && raw is IEnumerable<object> ids
+                    && ids.Any(value => Convert.ToInt32(value, CultureInfo.InvariantCulture) == itemId))
+                    return Integer(owner, "Id") == Integer(npc, "Id");
+            return true;
         }
 
         private void RecordEquipCabinetScore(OfflinePlayerProgress player)

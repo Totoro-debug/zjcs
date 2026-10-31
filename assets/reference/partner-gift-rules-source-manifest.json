@@ -1,0 +1,37 @@
+{
+  "format": 1,
+  "official_source": "884_156692",
+  "apk": {
+    "path": ".tools/source-packages/zjcs_M509085.apk",
+    "url": "https://zhangjcsdlf.leiting.com/full/zjcs_M509085.apk",
+    "size": 1036023846,
+    "md5": "dede2bf63d1542b7fd02da1f2be59363",
+    "sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+    "manifest": "881_156673",
+    "build_version": 156673
+  },
+  "source_sha256": {
+    ".tools/source-packages/official-code/common-source/NpcGiftItemCompare.cs": "637361fed608239bc609b4fea766de23960405790194cad367ec9ead716d41c9",
+    ".tools/source-packages/official-code/common-source/NpcHelper.cs": "37ae9a0c2c0acfdc482bc71682c52608777d749c148deec0729bc1c0ffeca0f8",
+    ".tools/source-packages/official-code/common-source/Common/NpcGiftInfoParser.cs": "c157ef3aff402b70efec1d729ddf25b22291826881b5deee9fd31c53473d6b59",
+    ".tools/source-packages/official-code/common-source/Common/NpcFriendshipLevelInfoParser.cs": "0cea737f2519ddac5edbc847a176bd5d267c9d3cffecabd7a602ae4810d37c04",
+    ".tools/source-packages/official-code/common-source/Common/NpcInfoParser.cs": "2323757139ca2742d3a563e983439feaefd03136d71a0b3094583a7c9d6e7eee",
+    ".tools/source-packages/official-code/client-source/NpcDetailPanelGiftContent.cs": "2555857a851ee7d13b59d674ee9614de7eea9c973e8644b03f81a4fe8b835a6a"
+  },
+  "data_sha256": {
+    ".tools/source-packages/official-data/npc.g.bytes": "3ae4b5dd63d07b7d80a03ecbc511f04d32839c82b301ef966328be81b71aa76a",
+    ".tools/source-packages/official-data/npc_gift.g.bytes": "d53ae2834149049669a48ed9f5138c89a5b8e81a7ae076e0ed2365f45d853e42",
+    ".tools/source-packages/official-data/npc_unlock_item.g.bytes": "f795e52b2742a8f7f379b2da8ac4fc7b6535c3193f95864b07bdda6f92f27e4e",
+    ".tools/source-packages/official-data/npc_friendship_level.g.bytes": "4724b8cd107af4d9835bb0a8f63f744eb5b86feb196c51d72eb03bd2ef62c3fb",
+    ".tools/source-packages/official-data/game_settings.g.bytes": "fca2ae301cb5d5fc345377fedb2a97634682e286f6bede6a738c1be96d1a890e",
+    "unity/Assets/Official/Character/character-progression.json": "d92b18206c2a9ccbfc0a7ab6aa82744207da8efd92c1a7c01d883efed0a1c19c",
+    "unity/Assets/Game/Resources/Official/Progression/mainline-tasks.json": "9b24edf1d45b8b65cb819b4e63f3f6a14a71036036be34101cf29fba00d34d8e"
+  },
+  "migration": {
+    "NpcGiftRules.Compare": "NpcGiftItemCompare.CompareShowGift / CompareSelectGift",
+    "NpcGiftRules.Experience": "NpcGiftInfoParser.GetAllExpByDict / NpcDetailPanelGiftContent.GetGiftFriendship",
+    "NpcGiftRules.AutoSelect": "NpcDetailPanelGiftContent.DoAutoSelectGift",
+    "OfflineCharacterProgressionService.CanSendNpcGift": "NpcHelper.CanSendGiftToNpc",
+    "OfflineCharacterProgressionService.GiveNpcGifts": "NpcDetailPanelGiftContent.OnClickGiveGiftBtn / IsFriendshipLevelLimit / IsFriendshipOverflow"
+  }
+}
