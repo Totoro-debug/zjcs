@@ -84,7 +84,17 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 `scripts/prepare_current_partner_native.py` 从当前 APK／已校验的配套云端资源读取官方 NPC bundle，对 `NpcPanel`、`NpcPanelNpcItem`、`NpcDetailPanel`、`NpcFriendshipDialog`、`NpcFriendshipPreviewPropItem` 和 `NpcFriendshipPropItemGroup` 逐节点核对原层级、名称、子节点和组件顺序，并以原程序集脚本身份校验转换器的 MonoScript 引用。共核对 7,004 个对象，补回 106 个被转换器省略的组件字段；原字段缓存和对象原始字节分别校验哈希。跨 prefab 引用保留目标 prefab 自身 GUID／根对象，未按相似名称匹配。
 
-这些中间文件保留官方原脚本身份，只在验证目录生成，不作为可玩 prefab 导入。当前仍有两条对话动画、一条相遇 Wwise 音效和八条红点节点引用待显式绑定，不能据此认定资源缺失或取消其行为。来源版本、原 bundle／对象、转换输入与中间输出哈希见[当前原生字段来源](../../assets/reference/partner-native-recovery-source-manifest.json)；使用已设置的独立验证目录运行上述脚本，`--record` 更新来源凭据。
+这些字段恢复中间文件保留官方原脚本身份，只在验证目录生成，不作为可玩 prefab 导入；对话动画、相遇 Wwise 音效和红点节点保留原外部对象身份，不将尚未绑定当作资源缺失。卡片本身的依赖闭合见下节，其余窗口仍待显式绑定。来源版本、原 bundle／对象、转换输入与中间输出哈希见[当前原生字段来源](../../assets/reference/partner-native-recovery-source-manifest.json)；使用已设置的独立验证目录运行上述脚本，`--record` 更新来源凭据。
+
+### 当前原生卡片资源与提示图（局部）
+
+`scripts/prepare_partner_card_native.py` 在独立验证目录中闭合当前 `NpcPanelNpcItem` 的资源引用：保留 72 个原层级节点和 306 个对象，绑定实际迁移脚本、原动画、31 个 Image、8 个 TMP 文本、字体图集、粒子材质和精灵网格。精灵贴图按原 SpriteAtlas 的 RenderDataKey 解析，不以文件名建立资源身份；纹理及 shader 按原 CAB／PathID、对象字节哈希复用同版本 Windows 转换结果。89 个输出包含原卡片、86 个依赖和两条音效，元数据另行记录哈希；中间绑定凭据见[卡片资源来源](../../assets/reference/partner-card-binding-source-manifest.json)。这些输出目前只在验证工程中导入，未安装到正式游戏资源目录。
+
+原 `NpcAffinity_Get` 和 `Main_Cursor_Normal` 从卡片字段指向的 Wwise Event 追踪到实际 bank／Action／Sound／媒体，用官方开源工具 wwiser 与 vgmstream 解码。分别保留 0 dB／−6 dB 事件增益和 48 kHz 双声道 PCM；不以名称相近的音频替代。原事件对象、bank、媒体号、路由文本、工具和输出哈希均在同一凭据中记录。
+
+`Runtime/Official/PartnersUI/Roster/TipDots/` 迁移原节点工厂、外接／动态连接、伙伴与档案实例身份，以及赠礼、相遇、档案、馈赠和天赋提示节点。原条件分支、事件订阅、释放和克隆顺序保留，玩家／配置／条件处理由实例服务端口提供；复用已有官方提示聚合与成就核心。节点工厂仍先克隆非禁用节点、设置实例键与预设，再恢复图关系并逐个注入服务。赠礼提示仅统计现有偏好礼物，并要求能在当前个人阶位内提升好感等级。来源、转换方式及代码哈希见[提示节点来源](../../assets/reference/partner-tipdot-source-manifest.json)，重建入口为 `scripts/prepare_partner_tipdot_nodes.py`。服务端口尚未接入完整本地提示管理器，不能据此认定名册红点流程已完成。
+
+`prepare_partner_card_validation.py` 与 `PartnerCardBindingValidation.Run` 在 Unity `2022.3.57f1c2` 验证实际 prefab 和 25 个原提示图资产导入、九种运行节点反序列化／独立克隆、原图名称、端口归属、脚本／托管引用、字体图集、图片贴图、两条音频及 Windows 材质支持；原节点工厂对两张图实际恢复非禁用节点、连接、预设与实例键。指针逐处写入完整引用，避免 YAML 别名使 Unity 丢失端口归属。上述检查、名册控制器原有 Play Mode 存档与模拟点击回归、静态检查、主工程编译及 `Zjcs.Editor.ProjectTools.Validate` 均通过。当前原生卡片尚未进行完整 Play Mode 交互与画面核对，也未发布 Windows Player。
 
 ### 已迁移的名册与相遇状态（局部）
 
