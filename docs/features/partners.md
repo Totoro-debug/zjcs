@@ -64,6 +64,16 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 尚无完整 Unity 流程的完成结论；已取得源码和转换素材仅作迁移依据。
 
+### 已迁移的名册与相遇状态（局部）
+
+`Runtime/Official/Partners/NpcRosterRules.cs` 与 `OfflineCharacterProgressionService.Partners.cs` 按当前 `884_156692` 的 `NpcHelper`、`NpcPanelNpcList`、`NpcComparer` 恢复五种结识状态、名册显示条件及好感／相遇时间排序。判断依次为已结识、可结识、可显示后的等待／未结识；可结识条件优先于可显示条件。默认显示已结识及可结识伙伴；勾选全部后增加等待结识伙伴，以及拥有首个专属信物的未结识伙伴。名册限定原 `MapExploreBoss` 类别并排除星神和已确认暂停的八位联动伙伴。
+
+排序固定优先结识状态、置顶、置顶时间升序及伙伴类型，再比较选中的好感或相遇时间，最后按伙伴号降序；反向只改变选中的排序键。置顶功能按 `function_limit` 判断，其中 `HasManualMeetNpcCondition` 按原码同时检查“已拥有手动结识伙伴”和“当前存在满足结识条件的手动伙伴”，不直接使用历史存档的布尔标记。地图可达读取 `UnlockedMapClassIds`；区域激活读取 `ActivatedGoddessRegions`，探索完成本身不等于区域激活。
+
+相遇事务提交前重新读取存档，信物扣除、初始好感与实际相遇时间共同保存；重复事件不再次相遇或扣除。置顶及其时间单独保存，重复置顶保持原顺序。旧存档未记录的相遇时间保持零，不从注册时间或当前时间反推。来源函数、当前原码及配置哈希见 [名册规则来源](../../assets/reference/partner-roster-rules-source-manifest.json)。
+
+`scripts/test_partner_gifts.ps1` 的隔离 Unity 编译／存档验证同时覆盖地图锁定、区域未激活／探索完成／激活后的状态变化、部分信物显示、信物不足拒绝、可结识优先、真实结识扣除、重复相遇、置顶解锁／顺序、存档恢复及旧日期兼容；排序检查覆盖反向与固定优先级、最终伙伴号比较。当前为接口验证，尚未接通官方名册 prefab、入口或模拟点击流程，未据此认定界面、Play Mode 或 Windows Player 已完成。主工程正在运行其他 Unity 验证实例，本次未启动冲突实例执行 `ProjectTools.Validate`。
+
 ### 已迁移的送礼规则与存档接口（局部）
 
 `Runtime/Official/Partners/NpcGiftRules.cs` 从当前 `884_156692` 官方源码迁移礼物展示／自动选择排序、单件和整批好感取整及自动补量。展示依次按偏好、品质、原始好感降序；自动选择按偏好降序、品质和原始好感升序、物品号降序，保留已有选择并按单件取整值向上补量。批量预览仍按同类总量乘偏好后进行四舍六入五成双取整；两种顺序不能互换。来源函数与源码哈希见 [送礼规则来源](../../assets/reference/partner-gift-rules-source-manifest.json)。

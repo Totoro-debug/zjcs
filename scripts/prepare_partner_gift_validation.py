@@ -23,8 +23,9 @@ def prepare(work):
     destination.parent.mkdir(parents=True)
     shutil.copy2(ROOT / 'unity/Assets/Game/Resources/Map14/world-alone-preparation.json', destination)
     shutil.copy2(ROOT / 'scripts/fixtures/partner_gift_transaction_validation.cs', assets / 'Editor/PartnerGiftTransactionValidation.cs')
+    shutil.copy2(ROOT / 'scripts/fixtures/partner_roster_transaction_validation.cs', assets / 'Editor/PartnerRosterTransactionValidation.cs')
     (assets / 'Editor/Validation.asmdef').write_text(json.dumps(dict(name='PartnerGiftValidation', includePlatforms=['Editor'],
-        references=['Zjcs.Offline.Progression', 'Zjcs.Offline.State'])), encoding='utf8')
+        references=['Zjcs.Offline.Progression', 'Zjcs.Offline.State', 'Zjcs.Official.Partners'])), encoding='utf8')
     (project / 'Packages').mkdir()
     (project / 'Packages/manifest.json').write_text('{"dependencies":{"com.unity.modules.jsonserialize":"1.0.0","com.unity.modules.animation":"1.0.0","com.unity.modules.audio":"1.0.0"}}', encoding='utf8')
     (project / 'ProjectSettings').mkdir()

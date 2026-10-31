@@ -26,10 +26,10 @@ try {
         }
         $result = Get-Content -LiteralPath $log -Raw
         if ($process.ExitCode -ne 0 -or $result -notmatch 'PARTNER_GIFT_TRANSACTIONS_PASSED') {
-            Write-Output $result
+            Write-Output (($result -split "`n" | Select-String -Pattern 'Exception:|error CS|at Partner|Failed' -Context 0,3) -join "`n")
             throw 'Partner gift transaction validation failed.'
         }
-        Write-Output 'Partner gift rules, Unity compilation and isolated save transactions passed.'
+        Write-Output 'Partner gift/roster rules, Unity compilation and isolated save transactions passed.'
     } finally { Pop-Location }
 } finally {
     $env:ZJCS_VALIDATION_DIR = $previousWorkspace

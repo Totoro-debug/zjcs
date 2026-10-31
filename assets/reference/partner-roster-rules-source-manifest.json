@@ -1,0 +1,46 @@
+{
+  "format": 1,
+  "official_source": "884_156692",
+  "apk": {
+    "path": ".tools/source-packages/zjcs_M509085.apk",
+    "url": "https://zhangjcsdlf.leiting.com/full/zjcs_M509085.apk",
+    "size": 1036023846,
+    "md5": "dede2bf63d1542b7fd02da1f2be59363",
+    "sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+    "manifest": "881_156673",
+    "build_version": 156673
+  },
+  "source_sha256": {
+    ".tools/source-packages/official-code/common-source/NpcHelper.cs": "37ae9a0c2c0acfdc482bc71682c52608777d749c148deec0729bc1c0ffeca0f8",
+    ".tools/source-packages/official-code/common-source/NpcComparer.cs": "b9278ca607aba863f11d39d7a5ae81da6bdd0e931a9627c10a3623d81eba46b2",
+    ".tools/source-packages/official-code/common-source/Common/NpcMeetStatus.cs": "cdf9cfb16ad732d7e765dd2122fb34a756643417f36ce61f3956d8c917cace14",
+    ".tools/source-packages/official-code/common-source/Common/NpcInfo.cs": "387c584e748963f1870e9861fee043e68fcc741cf52409fcdeffe294007c6a8d",
+    ".tools/source-packages/official-code/common-source/Common/PlayerNpcData.cs": "d24d32785dac9d9ad617932aeca4ada7ef0c076232a34e10fdef21d467156db6",
+    ".tools/source-packages/official-code/common-source/Common/PlayerNpcDataWrap.cs": "43f73f3d2654dc14f0c8c4e11cdde157dcc7be6dfc2b98ca274ddf61d7fa64c5",
+    ".tools/source-packages/official-code/common-source/Common/Player.cs": "e0b324d6cf965e194cc517c176e8fae80f16dda7019e42d705ed6ae7d44da611",
+    ".tools/source-packages/official-code/common-source/Common/PlayerUtils.cs": "d42ecf412164ea390b19f6437235435261fafe37348cc76ac075e1e2119565ba",
+    ".tools/source-packages/official-code/common-source/Common/FunctionLimitInfoParser.cs": "77f31a1cbb6033a1ce2647523357c11a34b554b87981392222a87d73ba6852de",
+    ".tools/source-packages/official-code/common-source/Common/MapUnlockCondition.cs": "4967a1cb05b4d1029b1590501eb1fb6e0957193c9c7827626eed5368dde779f8",
+    ".tools/source-packages/official-code/common-source/Common/MapRegionActivedCondition.cs": "1152e0d30105cfe5e9962e4bc4b9b64ac428780ec63fd3afa4db0f71c3ac8056",
+    ".tools/source-packages/official-code/common-source/Common/HasManualMeetNpcCondition.cs": "c3465c86bfe691d5808187ee940dc7bbebac2417750254bedafc5970e1fd2ec1",
+    ".tools/source-packages/official-code/client-source/NpcPanelNpcList.cs": "30d9d7bbdf1fd0db0980079ee9e90d01051d98ebf3dbfcb8e1dd598dafa69b67",
+    ".tools/source-packages/official-code/client-source/NpcPanelNpcItem.cs": "fedff86a2fb4997a3ca51049ba88dfcfc534a1ba90c08448fc5b9525b0e0f7d6",
+    ".tools/source-packages/official-code/client-source/NpcDetailPanelPropContent.cs": "7cccce96760390635e55bd72da4fb765bf99ff61e3f254574591445183af6c67"
+  },
+  "data_sha256": {
+    ".tools/source-packages/official-data/npc.g.bytes": "3ae4b5dd63d07b7d80a03ecbc511f04d32839c82b301ef966328be81b71aa76a",
+    ".tools/source-packages/official-data/npc_friendship_level.g.bytes": "4724b8cd107af4d9835bb0a8f63f744eb5b86feb196c51d72eb03bd2ef62c3fb",
+    ".tools/source-packages/official-data/function_limit.g.bytes": "bc0d8ff7e1fc4c7919aa6c89d1bb61ff17ca140535fd8fefe7350f50f30915ab",
+    ".tools/source-packages/official-data/conditions.g.bytes": "87610428d6195c06ff55291ae24423cc949df7ac25bfb8953cc3798a1aaa31e5",
+    "unity/Assets/Official/Character/character-progression.json": "d92b18206c2a9ccbfc0a7ab6aa82744207da8efd92c1a7c01d883efed0a1c19c"
+  },
+  "migration": {
+    "NpcRosterRules.MeetStatus": "NpcHelper.GetNpcMeetStatus",
+    "NpcRosterRules.IsVisible": "NpcPanelNpcList.InitNpcList",
+    "NpcRosterRules.Compare": "NpcComparer priority lists / Comparer / GetScore",
+    "OfflineCharacterProgressionService.NpcRoster": "NpcPanelNpcList.InitNpcList / RefreshLoop / PlayerNpcDataWrap.CreateNpcDataByInfo",
+    "OfficialCharacterCatalog.MapRegionActivedCondition": "MapRegionActivedCondition.GetValue / Player.RegionIsActived",
+    "OfflineCharacterProgressionService.CanPinNpc": "FunctionLimitInfoParser.IsLimit / HasManualMeetNpcCondition.CheckMeet",
+    "OfflineCharacterProgressionService.SetNpcCollected": "NpcDetailPanelPropContent.OnClickCollectionBtn / PlayerNpcData.IsCollected / CollectedTime"
+  }
+}

@@ -181,6 +181,8 @@ namespace Zjcs.Offline.Progression
         public int Level;
         public Dictionary<int, long> ItemCounts = new Dictionary<int, long>();
         public HashSet<int> UnlockedMapClassIds = new HashSet<int>();
+        public HashSet<(int MapClassId, int Region)> ActivatedMapRegions = new HashSet<(int, int)>();
+        public bool HasManualMeetNpc;
         public HashSet<int> RegionCodes = new HashSet<int>();
         public Dictionary<int, int> NpcFriendshipLevels = new Dictionary<int, int>();
         public Dictionary<int, HashSet<int>> NpcTalentTreeActiveNodeIds
@@ -484,6 +486,10 @@ namespace Zjcs.Offline.Progression
                     return false;
                 case "MapUnlockCondition":
                     return context.UnlockedMapClassIds.Contains(Integer(condition, "MapClassId"));
+                case "MapRegionActivedCondition":
+                    return context.ActivatedMapRegions.Contains((Integer(condition, "MapClassId"), Integer(condition, "Region")));
+                case "HasManualMeetNpcCondition":
+                    return context.HasManualMeetNpc;
                 case "RegionCodeCondition":
                     bool contains = false;
                     foreach (int code in Integers(condition, "RegionCodes"))

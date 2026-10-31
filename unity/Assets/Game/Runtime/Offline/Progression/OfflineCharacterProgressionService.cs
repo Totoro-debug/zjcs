@@ -8,7 +8,7 @@ using Zjcs.Official.Partners;
 
 namespace Zjcs.Offline.Progression
 {
-    public sealed class OfflineCharacterProgressionService
+    public sealed partial class OfflineCharacterProgressionService
     {
         private static readonly int[] ConfiguredPropertyHandles =
         {
@@ -25,12 +25,14 @@ namespace Zjcs.Offline.Progression
         private readonly CharacterPropCalculator propertyCalculator;
         private readonly OfflinePetPropSource petPropertySource;
         private OfflinePlayerProgress derivedPlayer;
+        private readonly Func<DateTime> npcClock;
 
         public OfflineCharacterProgressionService(OfflineMainlineProgressSession session,
-            OfficialCharacterCatalog catalog)
+            OfficialCharacterCatalog catalog, Func<DateTime> npcClock = null)
         {
             this.session = session ?? throw new ArgumentNullException(nameof(session));
             this.catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
+            this.npcClock = npcClock ?? (() => DateTime.UtcNow);
             propertyCalculator = new CharacterPropCalculator(catalog);
             foreach (int handleType in ConfiguredPropertyHandles)
                 propertyCalculator.AddSource(new OfflineCharacterConfiguredPropSource(catalog, handleType));
@@ -155,13 +157,12 @@ namespace Zjcs.Offline.Progression
         {
             if (npcClassId <= 0 || string.IsNullOrWhiteSpace(eventId))
                 return Invalid("A valid NPC and meet event ID are required.");
+            session.Reload();
             if (Player.AppliedCharacterEventIds.Contains(eventId))
                 return new ProgressionResult { Status = ProgressionResultStatus.Unchanged };
             Dictionary<string, object> npc = catalog.Find("npc", npcClassId, "Id");
             if (npc == null || !CanMeetNpc(npcClassId))
                 return Invalid("The NPC meet condition is not satisfied or the NPC was already met.");
-            Dictionary<int, long> requiredItems = NpcMeetItemRequirements(npcClassId)
-                .ToDictionary(value => value.Key, value => value.Value);
             int defaultLevel = Integer(catalog.Rows("game_settings").FirstOrDefault(),
                 "NpcDefaultFriendshipLevel");
             Dictionary<string, object> initialFriendship = catalog.Rows("npc_friendship_level")
@@ -192,7 +193,8 @@ namespace Zjcs.Offline.Progression
                 {
                     NpcClassId = npcClassId,
                     Level = defaultLevel,
-                    FriendshipExp = initialExperience
+                    FriendshipExp = initialExperience,
+                    ActivateTimeTicks = npcClock().ToUniversalTime().Ticks
                 });
             }, eventId);
         }
@@ -1063,14 +1065,7 @@ namespace Zjcs.Offline.Progression
             requiredItems = new Dictionary<int, long>();
             Dictionary<string, object> condition = Map(npc, "CanMeetCondition");
             if (condition == null || player == null) return false;
-            var context = new OfficialConditionContext
-            {
-                Level = player.Level,
-                ItemCounts = (player.Inventory ?? new List<OfflineItemStack>())
-                    .Where(value => value != null && value.ItemId > 0)
-                    .GroupBy(value => value.ItemId)
-                    .ToDictionary(group => group.Key, group => group.Sum(value => value.Count))
-            };
+            var context = NpcConditionContext(player);
             if (requireConditionMet && !catalog.EvaluateCondition(condition, context)) return false;
             return CollectNpcMeetItems(condition, context, requiredItems, new HashSet<int>());
         }

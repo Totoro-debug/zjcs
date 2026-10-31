@@ -111,7 +111,9 @@ namespace Zjcs.Offline.Progression
                     || value.PropType <= 0 || value.Count < 0 || value.SourceId == null || value.SourceId.Length > 128))
                 return false;
             if (progress.NpcFriendships.Any(value => value == null || value.NpcClassId <= 0
-                    || value.Level < 0 || value.FriendshipExp < 0)
+                    || value.Level < 0 || value.FriendshipExp < 0
+                    || value.ActivateTimeTicks < 0 || value.ActivateTimeTicks > System.DateTime.MaxValue.Ticks
+                    || value.CollectedTimeTicks < 0 || value.CollectedTimeTicks > System.DateTime.MaxValue.Ticks)
                 || progress.NpcFriendships.Select(value => value.NpcClassId).Distinct().Count()
                     != progress.NpcFriendships.Count) return false;
             if (progress.NpcTalentTrees.Any(value => value == null || value.NpcClassId <= 0
@@ -168,6 +170,10 @@ namespace Zjcs.Offline.Progression
         public int NpcClassId;
         public int Level;
         public long FriendshipExp;
+        // Zero preserves the unknown date in legacy saves; never infer a meeting date.
+        public long ActivateTimeTicks;
+        public bool IsCollected;
+        public long CollectedTimeTicks;
     }
     [System.Serializable] public sealed class OfflineNpcTalentTree
     {

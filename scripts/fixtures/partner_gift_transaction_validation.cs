@@ -92,5 +92,6 @@ public static class PartnerGiftTransactionValidation
         }
         Require(exclusiveCases > 0, "Actual official exclusive gift cases must be exercised");
         Debug.Log("Official exclusive gift cases checked: " + exclusiveCases);
+        PartnerRosterTransactionValidation.Validate(catalog, session);
     }
 }
