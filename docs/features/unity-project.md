@@ -12,6 +12,10 @@
 
 原游戏为 Unity 客户端，AssetBundle 包头为 `2022.3.57f1`。原脚本、资源及 Android 依赖须恢复成 Windows 可用资产，不能以空框架、占位脚本或直接复制 bundle 替代。
 
+托管客户端源码归档覆盖当前选择 `884_156692` 的全部 10 个 HybridCLR 程序集。`scripts/archive_official_client_sources.py` 使用项目 Python 环境 `.tools/character-art-python/Scripts/python.exe -B` 运行，复用官方提取／解密链路，重新生成原始 ILSpy C# 项目；版本独立目录与通用目录均保存源码、项目文件和嵌入资源。来源、工具与逐文件凭据见[客户端代码归档清单](../../assets/reference/official-client-code/source-manifest.json)。APK 包内 `881_156673` 与配套热更新来源分别记录；原生 IL2CPP 方法体未还原为 C#，现有 AOT 描述桩不计作方法实现。此归档仅用于后续查阅与迁移，不代表源码已适配 Unity 或能够独立编译运行。
+
+归档含 29,634 份 C# 文件及 10 份项目文件；两处目录的全部 29,644 个交付文件、metadata 和归档凭据已逐项复验 SHA256。归档工具语法与工程静态检查通过，临时反编译目录已清理；未执行这些原始项目的独立编译、游戏程序集或 Unity 运行。
+
 ## 完整还原部分
 
 - 工程固定 `2022.3.57f1c2`，配置 450×800 可缩放竖屏、文本序列化、可见 `.meta` 和 `Bootstrap.unity` 构建场景。
@@ -20,7 +24,7 @@
 - `unity-tools.json` 记录编辑器／工程路径，本机编辑器为 `D:/Tool/Unity/Editor/Unity.exe`；Hub 可选。`scripts/unity.ps1` 提供 `info`、`open` 和 `initialize`，启动前核对版本。
 - `scripts/unity_internal_display.ps1` 按内置屏硬件身份定位，支持隔离工程，不激活窗口或改变系统主屏。内置屏停用／身份不唯一时停止，不回退外接主屏。本机登录定位守护位于 `%LOCALAPPDATA%/UnityInternalDisplay/`，状态为 `status.json`，只匹配本仓库下工程；保持启用。
 
-当前官方输入位于 `.tools/source-packages/current/884_156692/`：10 个解密程序集、客户端／共享等五组反编译源码、448 张完整配置表，解析失败为 0。通用 `official-code/`／`official-data/` 缓存的对应文件已更新，无对应旧文件及旧字节保留；游戏单机适配源码保持原状。五包输入包含 21,030 个官方文件与两份 APK 内置依赖，具备新旧目录及逐项原始／解码 SHA256。既有游戏素材保持原实际来源。
+当前官方输入位于 `.tools/source-packages/current/884_156692/`：10 个解密程序集及其十组反编译源码、448 张完整配置表，解析失败为 0。通用 `official-code/`／`official-data/` 缓存的对应文件已更新，无对应旧文件及旧字节保留；游戏单机适配源码保持原状。五包输入包含 21,030 个官方文件与两份 APK 内置依赖，具备新旧目录及逐项原始／解码 SHA256。既有游戏素材保持原实际来源。
 
 当前 AOT 类型资料包含全部 57,638 个类型及 148 个程序集身份，原生方法镜像、Wwise／Spine／渲染组件字段描述均已保留；描述 DLL 的方法体为桩，不属于可运行玩法实现。本次资源范围包含 2,347 个变化包、114 个缺少字节凭据的已引用包，含依赖共 11,236 个包。APK 与当前云端的 88,308 条路径／地址对应齐全；较早来源的 1 个未对应 bundle 名称及既有工程成果完整保留。输入与生成物凭据见[准备来源清单](../../assets/reference/official-map/current-resource-preparation-source-manifest.json)。
 
