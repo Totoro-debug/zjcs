@@ -54,6 +54,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".constraints", false);
             SessionState.SetBool(Key + ".deforms", false);
             SessionState.SetBool(Key + ".constraintPose", false);
+            SessionState.SetBool(Key + ".localTransforms", false);
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 180);
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             Hook();
@@ -107,7 +108,8 @@ namespace Zjcs.Editor.Combat
 
         private static IEnumerator Verify()
         {
-            var steps = SessionState.GetBool(Key + ".constraintPose", false) ? ConstraintPoseSteps()
+            var steps = SessionState.GetBool(Key + ".localTransforms", false) ? LocalTransformSteps()
+                : SessionState.GetBool(Key + ".constraintPose", false) ? ConstraintPoseSteps()
                 : SessionState.GetBool(Key + ".deforms", false) ? DeformSteps()
                 : SessionState.GetBool(Key + ".constraints", false) ? ConstraintChannelSteps()
                 : SessionState.GetBool(Key + ".gameControllers", false) ? GameControllerSteps() : Steps();
@@ -121,7 +123,9 @@ namespace Zjcs.Editor.Combat
             if (errors == 0)
             {
                 SessionState.SetInt(Key + ".result", 0);
-                Debug.Log(SessionState.GetBool(Key + ".constraintPose", false)
+                Debug.Log(SessionState.GetBool(Key + ".localTransforms", false)
+                    ? "Original local transform Play Mode passed before physics; full physical motion, mixing and player appearance binding remain required."
+                    : SessionState.GetBool(Key + ".constraintPose", false)
                     ? "Original unmixed constraint pose Play Mode passed before physics; complete physical motion, mixing and formal player binding remain required."
                     : SessionState.GetBool(Key + ".deforms", false)
                     ? "Original attachment deformation Play Mode passed; complete physics/constraint/mixing and player skill rendering remain outside this check."

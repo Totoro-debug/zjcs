@@ -31,6 +31,7 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly Bone[] source;
         private readonly bool[] active;
         private readonly bool[] ready;
+        private readonly bool[] overridden;
         private readonly Matrix4x4[] world;
         private readonly Vector2[] position, scale, shear;
         private readonly int[] inheritance;
@@ -44,6 +45,7 @@ namespace Zjcs.Offline.ProfessionUI
         public Vector2 LocalPosition(int bone) => position[bone];
         public Vector2 LocalScale(int bone) => scale[bone];
         public float LocalRotation(int bone) => rotation[bone];
+        public bool HasWorldOverride(int bone) => overridden[bone];
 
         public ProfessionNativeBonePose(Bone[] bones)
         {
@@ -59,7 +61,7 @@ namespace Zjcs.Offline.ProfessionUI
                 source[i] = new Bone { name = b.name, parent = b.parent, skinRequired = b.skinRequired, inherit = b.inherit,
                     x = b.x, y = b.y, rotation = b.rotation, scaleX = b.scaleX, scaleY = b.scaleY, shearX = b.shearX, shearY = b.shearY };
             }
-            active = new bool[bones.Length]; ready = new bool[bones.Length]; world = new Matrix4x4[bones.Length];
+            active = new bool[bones.Length]; ready = new bool[bones.Length]; overridden = new bool[bones.Length]; world = new Matrix4x4[bones.Length];
             position = new Vector2[bones.Length]; scale = new Vector2[bones.Length]; rotation = new float[bones.Length];
             shear = new Vector2[bones.Length]; inheritance = new int[bones.Length];
             SetSkinBones(Array.Empty<int>());
@@ -69,6 +71,7 @@ namespace Zjcs.Offline.ProfessionUI
         public void SetSkinBones(IReadOnlyList<int> skinBones)
         {
             if (skinBones == null) throw new ArgumentNullException(nameof(skinBones));
+            Array.Clear(overridden, 0, overridden.Length);
             for (int i = 0; i < source.Length; i++) { active[i] = !source[i].skinRequired; ready[i] = false; }
             for (int i = 0; i < skinBones.Count; i++)
             {
@@ -85,7 +88,7 @@ namespace Zjcs.Offline.ProfessionUI
                 Bone b = source[i]; position[i] = new Vector2(b.x, b.y);
                 scale[i] = new Vector2(b.scaleX, b.scaleY); rotation[i] = b.rotation;
                 shear[i] = new Vector2(b.shearX, b.shearY); inheritance[i] = b.inherit;
-                ready[i] = false;
+                ready[i] = false; overridden[i] = false;
             }
         }
 
@@ -124,12 +127,14 @@ namespace Zjcs.Offline.ProfessionUI
             if (bone < 0 || bone >= source.Length || mode < 0 || mode > 4)
                 throw new ArgumentOutOfRangeException(nameof(mode));
             inheritance[bone] = mode; Array.Clear(ready, 0, ready.Length);
+            Array.Clear(overridden, 0, overridden.Length);
         }
 
         public void SetRotation(int bone, float value)
         {
             Finite(value); rotation[bone] = value;
             Array.Clear(ready, 0, ready.Length);
+            Array.Clear(overridden, 0, overridden.Length);
         }
 
         // A world-space constraint runs after its dependencies. Retain unrelated
@@ -147,9 +152,9 @@ namespace Zjcs.Offline.ProfessionUI
             {
                 int parent = source[i].parent;
                 while (parent > bone) parent = source[parent].parent;
-                if (parent == bone) ready[i] = false;
+                if (parent == bone) { ready[i] = false; overridden[i] = false; }
             }
-            world[bone] = matrix; ready[bone] = true;
+            world[bone] = matrix; ready[bone] = true; overridden[bone] = true;
         }
 
         private Matrix4x4 EvaluateWorld(int i)

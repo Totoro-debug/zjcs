@@ -1,0 +1,599 @@
+{
+  "manifest": "871_156598",
+  "historical_receipt": {
+    "path": "assets/reference/official-map/map13-native-entity-input-source-manifest.json",
+    "sha256": "84af81d7ab5e1c37bca41d10e52aae236dd5d981cdb08005a03a11ceb28ee747"
+  },
+  "high_loader_receipt": {
+    "path": "assets/reference/profession-ui/character-textures-source-manifest.json",
+    "sha256": "a900e2592fe9cc81c09dbbb6397cf8b00a7a7e47ce78202ffaa6c7f23efa755a"
+  },
+  "historical_placeholder_bundle": {
+    "origin": "apk_zip",
+    "apk_entry": "assets/yoo/DefaultPackage/8ec639cce96aae500e59bf2bbbcca913.bundle",
+    "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+    "name": "defaultpackage_assets_appearanceassets_character_model_common_atlas_default.bundle",
+    "manifest": "871_156598",
+    "raw_size": 2170258,
+    "raw_md5": "8ec639cce96aae500e59bf2bbbcca913",
+    "raw_sha256": "5ae96270b617af2c58847476f0fbe2dd56dfe4882b7dcd8999cf4473d2a3394e",
+    "decoded_size": 2170258,
+    "decoded_sha256": "5ae96270b617af2c58847476f0fbe2dd56dfe4882b7dcd8999cf4473d2a3394e",
+    "decoding": "none",
+    "output": "defaultpackage_assets_appearanceassets_character_model_common_atlas_default.bundle",
+    "converter_input_sha256": "2de34083596ea83e960a38715aa3ded6352d3d4c76ad27b3ba8037009f39473d",
+    "converter_input_bytes": 2179608,
+    "restored_components": 0,
+    "changed_payloads": 0,
+    "checked_objects": 391,
+    "recovered_url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/8ec639cce96aae500e59bf2bbbcca913.bundle"
+  },
+  "textures": [
+    {
+      "role": "placeholder",
+      "source": {
+        "manifest": "871_156598",
+        "bundle": "defaultpackage_assets_appearanceassets_character_model_common_atlas_default.bundle",
+        "bundle_hash": "8ec639cce96aae500e59bf2bbbcca913",
+        "bundle_sha256": "5ae96270b617af2c58847476f0fbe2dd56dfe4882b7dcd8999cf4473d2a3394e",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/8ec639cce96aae500e59bf2bbbcca913.bundle",
+        "path_id": "1146245772612120139"
+      },
+      "payload_sha256": "af88470bc510e9cc499d628d12886107bfdb58d78e906d72850f775d8d05b38e",
+      "encoded_sha256": "255c195058ed6dc0a9426beedac19ef054f418259dc824fc804ebe76c7ddae8a",
+      "original_fields": {
+        "m_Name": "body_0_G_012_placeholder",
+        "m_ForcedFallbackFormat": 4,
+        "m_DownscaleFallback": false,
+        "m_IsAlphaChannelOptional": true,
+        "m_Width": 3,
+        "m_Height": 1,
+        "m_CompleteImageSize": 16,
+        "m_MipsStripped": 0,
+        "m_TextureFormat": 50,
+        "m_MipCount": 1,
+        "m_IsReadable": false,
+        "m_IsPreProcessed": false,
+        "m_IgnoreMipmapLimit": false,
+        "m_MipmapLimitGroupName": "",
+        "m_StreamingMipmaps": false,
+        "m_StreamingMipmapsPriority": 0,
+        "m_ImageCount": 1,
+        "m_TextureDimension": 2,
+        "m_TextureSettings": {
+          "m_FilterMode": 1,
+          "m_Aniso": 1,
+          "m_MipBias": 0.0,
+          "m_WrapU": 0,
+          "m_WrapV": 0,
+          "m_WrapW": 0
+        },
+        "m_LightmapFormat": 0,
+        "m_ColorSpace": 1,
+        "m_PlatformBlob": [],
+        "m_StreamData": {
+          "offset": 3675920,
+          "size": 16,
+          "path": "archive:/CAB-99cad0dd8188784a832ca5b4c31764d2/CAB-99cad0dd8188784a832ca5b4c31764d2.resS"
+        }
+      },
+      "profile": "LDR_SRGB",
+      "target_format": 4,
+      "mips": [
+        {
+          "level": 0,
+          "width": 3,
+          "height": 1,
+          "astc_offset": 0,
+          "astc_size": 16,
+          "astc_sha256": "255c195058ed6dc0a9426beedac19ef054f418259dc824fc804ebe76c7ddae8a",
+          "rgba_offset": 0,
+          "rgba_size": 12,
+          "rgba_sha256": "d9bd3372f93f499f08c6ca58f42b798011b6cb47d9a18cccd1edd9cadb4bc771"
+        }
+      ],
+      "output": {
+        "path": "unity/Assets/Official/ProfessionUI/CharacterTextures/body_0_G_012_placeholder.placeholder.texture2d.asset",
+        "sha256": "a8914d28b1b3028137ec4b8c460292eaa81f6b25583ebf603a03c840531d3085"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/CharacterTextures/body_0_G_012_placeholder.placeholder.texture2d.asset.meta",
+        "sha256": "3cfd6bedcfdc913c7bc2ca24197606017d57e82eefedb0235c7c6206a52bdecf"
+      },
+      "guid": "eadfe273ea5159beacc5234d70c6540e"
+    },
+    {
+      "role": "main",
+      "source": {
+        "historical": {
+          "bundle": "defaultpackage_assets_appearanceassets_character_model_common_atlas_activity01.bundle",
+          "bundle_hash": "f297da7cf84cd25cbe757889271e0f2b",
+          "path_id": "4052830932157347037",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f297da7cf84cd25cbe757889271e0f2b.bundle",
+          "manifest": "871_156598",
+          "source_manifest": "854_156383",
+          "bundle_size": 909276,
+          "bundle_sha256": "4b485653dbcac33cb875cd0aa8a64fefbb9004b9952cfac35fea61c60ff93540"
+        },
+        "retained": {
+          "bundle": "defaultpackage_assets_appearanceassets_character_model_common_atlas_activity01.bundle",
+          "bundle_hash": "f297da7cf84cd25cbe757889271e0f2b",
+          "path_id": "4052830932157347037",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f297da7cf84cd25cbe757889271e0f2b.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 909276,
+          "bundle_sha256": "4b485653dbcac33cb875cd0aa8a64fefbb9004b9952cfac35fea61c60ff93540"
+        },
+        "asset": {
+          "address": "",
+          "path": "Assets/AppearanceAssets/Character/Model/Common/Atlas/High/body_0_G_012.png",
+          "guid": "41b4bf1aecd35d24ea22c3c0f26001f9",
+          "tags": [],
+          "bundle": "defaultpackage_assets_appearanceassets_character_model_common_atlas_activity01.bundle"
+        }
+      },
+      "payload_sha256": "4a4aa24ad66893f4bd7b34c5cef981a50e0ed88916aea752ee0bc854f10a2ae4",
+      "encoded_sha256": "9be00249d65cfc4cdde008e60b724d1a23dc9fb659ec4b798a344e69c04676ed",
+      "original_fields": {
+        "m_Name": "body_0_G_012",
+        "m_ForcedFallbackFormat": 4,
+        "m_DownscaleFallback": false,
+        "m_IsAlphaChannelOptional": false,
+        "m_Width": 1384,
+        "m_Height": 364,
+        "m_CompleteImageSize": 503776,
+        "m_MipsStripped": 0,
+        "m_TextureFormat": 48,
+        "m_MipCount": 1,
+        "m_IsReadable": false,
+        "m_IsPreProcessed": false,
+        "m_IgnoreMipmapLimit": false,
+        "m_MipmapLimitGroupName": "",
+        "m_StreamingMipmaps": false,
+        "m_StreamingMipmapsPriority": 0,
+        "m_ImageCount": 1,
+        "m_TextureDimension": 2,
+        "m_TextureSettings": {
+          "m_FilterMode": 1,
+          "m_Aniso": 1,
+          "m_MipBias": 0.0,
+          "m_WrapU": 0,
+          "m_WrapV": 0,
+          "m_WrapW": 0
+        },
+        "m_LightmapFormat": 0,
+        "m_ColorSpace": 1,
+        "m_PlatformBlob": [],
+        "m_StreamData": {
+          "offset": 2061712,
+          "size": 503776,
+          "path": "archive:/CAB-c2d71e73f1fa5eb8cf29f073f4aebf23/CAB-c2d71e73f1fa5eb8cf29f073f4aebf23.resS"
+        }
+      },
+      "profile": "LDR_SRGB",
+      "target_format": 4,
+      "mips": [
+        {
+          "level": 0,
+          "width": 1384,
+          "height": 364,
+          "astc_offset": 0,
+          "astc_size": 503776,
+          "astc_sha256": "9be00249d65cfc4cdde008e60b724d1a23dc9fb659ec4b798a344e69c04676ed",
+          "rgba_offset": 0,
+          "rgba_size": 2015104,
+          "rgba_sha256": "eb5287110a38ad1d762207046328b58fe971ce52b340e55495756609ab00d067"
+        }
+      ],
+      "output": {
+        "path": "unity/Assets/Official/ProfessionUI/CharacterTextures/body_0_G_012.main.texture2d.asset",
+        "sha256": "bc9f3f24b60c166ef234a5dbd4bc724e234c6cc3dc6545235e44956c51ac7aa4"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/CharacterTextures/body_0_G_012.main.texture2d.asset.meta",
+        "sha256": "348f4d459ded8d0e3e1d67dbb504752601718925ff84caf8c38afad5f5bd4a1d"
+      },
+      "guid": "d131e753a10157d38f918c863ba364c2"
+    },
+    {
+      "role": "dye",
+      "source": {
+        "historical": {
+          "bundle": "defaultpackage_assets_appearanceassets_character_model_common_colormap_activity01.bundle",
+          "bundle_hash": "081c51a107539648605bd9885cbb6acf",
+          "path_id": "-4470287750053709053",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/081c51a107539648605bd9885cbb6acf.bundle",
+          "manifest": "871_156598",
+          "source_manifest": "854_156383",
+          "bundle_size": 4138,
+          "bundle_sha256": "4fab9b3f196828661f862c3e8a7c740438874c65038e42e068ebdf4142a368ff"
+        },
+        "retained": {
+          "bundle": "defaultpackage_assets_appearanceassets_character_model_common_colormap_activity01.bundle",
+          "bundle_hash": "081c51a107539648605bd9885cbb6acf",
+          "path_id": "-4470287750053709053",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/081c51a107539648605bd9885cbb6acf.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 4138,
+          "bundle_sha256": "4fab9b3f196828661f862c3e8a7c740438874c65038e42e068ebdf4142a368ff"
+        },
+        "asset": {
+          "address": "",
+          "path": "Assets/AppearanceAssets/Character/Model/Common/ColorMap/High/body_0_G_012.png",
+          "guid": "ef0c7c130e7597a40b8350ac38e73346",
+          "tags": [],
+          "bundle": "defaultpackage_assets_appearanceassets_character_model_common_colormap_activity01.bundle"
+        }
+      },
+      "payload_sha256": "85a0965b45465a114ee82e6a94cd9582f099d3f5a93073b15438361f37deb37d",
+      "encoded_sha256": "b6767a0beb7595a4857b3630201c7a3ddc2decaed21e00e177b025be97df3319",
+      "original_fields": {
+        "m_Name": "body_0_G_012",
+        "m_ForcedFallbackFormat": 4,
+        "m_DownscaleFallback": false,
+        "m_IsAlphaChannelOptional": true,
+        "m_Width": 1384,
+        "m_Height": 364,
+        "m_CompleteImageSize": 225456,
+        "m_MipsStripped": 0,
+        "m_TextureFormat": 50,
+        "m_MipCount": 1,
+        "m_IsReadable": false,
+        "m_IsPreProcessed": false,
+        "m_IgnoreMipmapLimit": false,
+        "m_MipmapLimitGroupName": "",
+        "m_StreamingMipmaps": false,
+        "m_StreamingMipmapsPriority": 0,
+        "m_ImageCount": 1,
+        "m_TextureDimension": 2,
+        "m_TextureSettings": {
+          "m_FilterMode": 1,
+          "m_Aniso": 1,
+          "m_MipBias": 0.0,
+          "m_WrapU": 0,
+          "m_WrapV": 0,
+          "m_WrapW": 0
+        },
+        "m_LightmapFormat": 0,
+        "m_ColorSpace": 1,
+        "m_PlatformBlob": [],
+        "m_StreamData": {
+          "offset": 63360,
+          "size": 225456,
+          "path": "archive:/CAB-8870fcc8230f04f81416f93b0461569a/CAB-8870fcc8230f04f81416f93b0461569a.resS"
+        }
+      },
+      "profile": "LDR_SRGB",
+      "target_format": 4,
+      "mips": [
+        {
+          "level": 0,
+          "width": 1384,
+          "height": 364,
+          "astc_offset": 0,
+          "astc_size": 225456,
+          "astc_sha256": "b6767a0beb7595a4857b3630201c7a3ddc2decaed21e00e177b025be97df3319",
+          "rgba_offset": 0,
+          "rgba_size": 2015104,
+          "rgba_sha256": "b1a7b42846235fcf762a251fdc34ef25667642655a0e0b66c9d73f0954878b26"
+        }
+      ],
+      "output": {
+        "path": "unity/Assets/Official/ProfessionUI/CharacterTextures/body_0_G_012.dye.texture2d.asset",
+        "sha256": "c27df664747863430b3165cda16b5f70e9ab717a37159d2dfc41c3d8e2c6441d"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/CharacterTextures/body_0_G_012.dye.texture2d.asset.meta",
+        "sha256": "01978d980104030cf0d98fb129c72f92c19f20e595018fba6caeba1d893c5fc1"
+      },
+      "guid": "85790543574e52e794b41e46bf9aad0e"
+    },
+    {
+      "role": "placeholder",
+      "source": {
+        "manifest": "871_156598",
+        "bundle": "defaultpackage_assets_appearanceassets_character_model_common_atlas_default.bundle",
+        "bundle_hash": "8ec639cce96aae500e59bf2bbbcca913",
+        "bundle_sha256": "5ae96270b617af2c58847476f0fbe2dd56dfe4882b7dcd8999cf4473d2a3394e",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/8ec639cce96aae500e59bf2bbbcca913.bundle",
+        "path_id": "4829393706794428695"
+      },
+      "payload_sha256": "9ab20cc91bb3e05f08b31579193dc2fdfef34f7f55a483e8decb25a33ac3bfff",
+      "encoded_sha256": "db8b5b9279e7cba65c84c0732b7b18dcb03caed6e6b587ba1c7c3648711de698",
+      "original_fields": {
+        "m_Name": "body_0_G_014_placeholder",
+        "m_ForcedFallbackFormat": 4,
+        "m_DownscaleFallback": false,
+        "m_IsAlphaChannelOptional": true,
+        "m_Width": 1,
+        "m_Height": 3,
+        "m_CompleteImageSize": 16,
+        "m_MipsStripped": 0,
+        "m_TextureFormat": 50,
+        "m_MipCount": 1,
+        "m_IsReadable": false,
+        "m_IsPreProcessed": false,
+        "m_IgnoreMipmapLimit": false,
+        "m_MipmapLimitGroupName": "",
+        "m_StreamingMipmaps": false,
+        "m_StreamingMipmapsPriority": 0,
+        "m_ImageCount": 1,
+        "m_TextureDimension": 2,
+        "m_TextureSettings": {
+          "m_FilterMode": 1,
+          "m_Aniso": 1,
+          "m_MipBias": 0.0,
+          "m_WrapU": 0,
+          "m_WrapV": 0,
+          "m_WrapW": 0
+        },
+        "m_LightmapFormat": 0,
+        "m_ColorSpace": 1,
+        "m_PlatformBlob": [],
+        "m_StreamData": {
+          "offset": 4527872,
+          "size": 16,
+          "path": "archive:/CAB-99cad0dd8188784a832ca5b4c31764d2/CAB-99cad0dd8188784a832ca5b4c31764d2.resS"
+        }
+      },
+      "profile": "LDR_SRGB",
+      "target_format": 4,
+      "mips": [
+        {
+          "level": 0,
+          "width": 1,
+          "height": 3,
+          "astc_offset": 0,
+          "astc_size": 16,
+          "astc_sha256": "db8b5b9279e7cba65c84c0732b7b18dcb03caed6e6b587ba1c7c3648711de698",
+          "rgba_offset": 0,
+          "rgba_size": 12,
+          "rgba_sha256": "b08be553d4389df47cebf46d84aa19868987e59160231e2462618dac6747f9e1"
+        }
+      ],
+      "output": {
+        "path": "unity/Assets/Official/ProfessionUI/CharacterTextures/body_0_G_014_placeholder.placeholder.texture2d.asset",
+        "sha256": "eb47f8867493bf94eae868de47f0907d997e741badb1d6f93bed0aabb154b19d"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/CharacterTextures/body_0_G_014_placeholder.placeholder.texture2d.asset.meta",
+        "sha256": "8ea2a5812e5c1a5091c401601dc5dff119d6ff1236f71d341f9bd1a6a56276f9"
+      },
+      "guid": "d171d877d6fc5607bdf70be48bf6995a"
+    },
+    {
+      "role": "main",
+      "source": {
+        "historical": {
+          "bundle": "defaultpackage_assets_appearanceassets_character_model_common_atlas_activity01.bundle",
+          "bundle_hash": "f297da7cf84cd25cbe757889271e0f2b",
+          "path_id": "-8533645333138642808",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f297da7cf84cd25cbe757889271e0f2b.bundle",
+          "manifest": "871_156598",
+          "source_manifest": "854_156383",
+          "bundle_size": 909276,
+          "bundle_sha256": "4b485653dbcac33cb875cd0aa8a64fefbb9004b9952cfac35fea61c60ff93540"
+        },
+        "retained": {
+          "bundle": "defaultpackage_assets_appearanceassets_character_model_common_atlas_activity01.bundle",
+          "bundle_hash": "f297da7cf84cd25cbe757889271e0f2b",
+          "path_id": "-8533645333138642808",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/f297da7cf84cd25cbe757889271e0f2b.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 909276,
+          "bundle_sha256": "4b485653dbcac33cb875cd0aa8a64fefbb9004b9952cfac35fea61c60ff93540"
+        },
+        "asset": {
+          "address": "",
+          "path": "Assets/AppearanceAssets/Character/Model/Common/Atlas/High/body_0_G_014.png",
+          "guid": "fb66a071e8c76f2479efddf152d17325",
+          "tags": [],
+          "bundle": "defaultpackage_assets_appearanceassets_character_model_common_atlas_activity01.bundle"
+        }
+      },
+      "payload_sha256": "44777d3967e4d91108b96d31b7dd6edf1f62573b1a230f9b1bf4a40a0ba48e09",
+      "encoded_sha256": "d111b9a75cf534db5f5e0788a1b55a9a9a40dcdf15c0c3d5cadedcdbd7e6706d",
+      "original_fields": {
+        "m_Name": "body_0_G_014",
+        "m_ForcedFallbackFormat": 4,
+        "m_DownscaleFallback": false,
+        "m_IsAlphaChannelOptional": false,
+        "m_Width": 360,
+        "m_Height": 1576,
+        "m_CompleteImageSize": 567360,
+        "m_MipsStripped": 0,
+        "m_TextureFormat": 48,
+        "m_MipCount": 1,
+        "m_IsReadable": false,
+        "m_IsPreProcessed": false,
+        "m_IgnoreMipmapLimit": false,
+        "m_MipmapLimitGroupName": "",
+        "m_StreamingMipmaps": false,
+        "m_StreamingMipmapsPriority": 0,
+        "m_ImageCount": 1,
+        "m_TextureDimension": 2,
+        "m_TextureSettings": {
+          "m_FilterMode": 1,
+          "m_Aniso": 1,
+          "m_MipBias": 0.0,
+          "m_WrapU": 0,
+          "m_WrapV": 0,
+          "m_WrapW": 0
+        },
+        "m_LightmapFormat": 0,
+        "m_ColorSpace": 1,
+        "m_PlatformBlob": [],
+        "m_StreamData": {
+          "offset": 0,
+          "size": 567360,
+          "path": "archive:/CAB-c2d71e73f1fa5eb8cf29f073f4aebf23/CAB-c2d71e73f1fa5eb8cf29f073f4aebf23.resS"
+        }
+      },
+      "profile": "LDR_SRGB",
+      "target_format": 4,
+      "mips": [
+        {
+          "level": 0,
+          "width": 360,
+          "height": 1576,
+          "astc_offset": 0,
+          "astc_size": 567360,
+          "astc_sha256": "d111b9a75cf534db5f5e0788a1b55a9a9a40dcdf15c0c3d5cadedcdbd7e6706d",
+          "rgba_offset": 0,
+          "rgba_size": 2269440,
+          "rgba_sha256": "f05a3fc3f9fce8e2be22c478d3d97e3b900a0002b6741bb84c5423dd94093c3b"
+        }
+      ],
+      "output": {
+        "path": "unity/Assets/Official/ProfessionUI/CharacterTextures/body_0_G_014.main.texture2d.asset",
+        "sha256": "0ce4fed7b16001bf1bde3e71359e81cc676968937d59196f73235b8001ce8a69"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/CharacterTextures/body_0_G_014.main.texture2d.asset.meta",
+        "sha256": "a13ae39a4048d796fc46b43afb13759ab03aea05fcfb2e25eb60ed759c616a1d"
+      },
+      "guid": "b26c401c228858d9b9ae263609310e54"
+    },
+    {
+      "role": "dye",
+      "source": {
+        "historical": {
+          "bundle": "defaultpackage_assets_appearanceassets_character_model_common_colormap_activity01.bundle",
+          "bundle_hash": "081c51a107539648605bd9885cbb6acf",
+          "path_id": "-2501212639670755211",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/081c51a107539648605bd9885cbb6acf.bundle",
+          "manifest": "871_156598",
+          "source_manifest": "854_156383",
+          "bundle_size": 4138,
+          "bundle_sha256": "4fab9b3f196828661f862c3e8a7c740438874c65038e42e068ebdf4142a368ff"
+        },
+        "retained": {
+          "bundle": "defaultpackage_assets_appearanceassets_character_model_common_colormap_activity01.bundle",
+          "bundle_hash": "081c51a107539648605bd9885cbb6acf",
+          "path_id": "-2501212639670755211",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/081c51a107539648605bd9885cbb6acf.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 4138,
+          "bundle_sha256": "4fab9b3f196828661f862c3e8a7c740438874c65038e42e068ebdf4142a368ff"
+        },
+        "asset": {
+          "address": "",
+          "path": "Assets/AppearanceAssets/Character/Model/Common/ColorMap/High/body_0_G_014.png",
+          "guid": "66721e12fef32e94b8d0ce827140ad84",
+          "tags": [],
+          "bundle": "defaultpackage_assets_appearanceassets_character_model_common_colormap_activity01.bundle"
+        }
+      },
+      "payload_sha256": "501471d4ab0dfdfacd38656da55c1396fcbedc3688abff367d8e43936ad0975f",
+      "encoded_sha256": "5e31f59e6dcea68c06b9680c9c2d2b8a7b4a3beee6b99784d1d8b60d616ccffa",
+      "original_fields": {
+        "m_Name": "body_0_G_014",
+        "m_ForcedFallbackFormat": 4,
+        "m_DownscaleFallback": false,
+        "m_IsAlphaChannelOptional": true,
+        "m_Width": 360,
+        "m_Height": 1576,
+        "m_CompleteImageSize": 252480,
+        "m_MipsStripped": 0,
+        "m_TextureFormat": 50,
+        "m_MipCount": 1,
+        "m_IsReadable": false,
+        "m_IsPreProcessed": false,
+        "m_IgnoreMipmapLimit": false,
+        "m_MipmapLimitGroupName": "",
+        "m_StreamingMipmaps": false,
+        "m_StreamingMipmapsPriority": 0,
+        "m_ImageCount": 1,
+        "m_TextureDimension": 2,
+        "m_TextureSettings": {
+          "m_FilterMode": 1,
+          "m_Aniso": 1,
+          "m_MipBias": 0.0,
+          "m_WrapU": 0,
+          "m_WrapV": 0,
+          "m_WrapW": 0
+        },
+        "m_LightmapFormat": 0,
+        "m_ColorSpace": 1,
+        "m_PlatformBlob": [],
+        "m_StreamData": {
+          "offset": 288816,
+          "size": 252480,
+          "path": "archive:/CAB-8870fcc8230f04f81416f93b0461569a/CAB-8870fcc8230f04f81416f93b0461569a.resS"
+        }
+      },
+      "profile": "LDR_SRGB",
+      "target_format": 4,
+      "mips": [
+        {
+          "level": 0,
+          "width": 360,
+          "height": 1576,
+          "astc_offset": 0,
+          "astc_size": 252480,
+          "astc_sha256": "5e31f59e6dcea68c06b9680c9c2d2b8a7b4a3beee6b99784d1d8b60d616ccffa",
+          "rgba_offset": 0,
+          "rgba_size": 2269440,
+          "rgba_sha256": "d9c7572a2c7df3e765370b41e6ed65a15f3377276a6e947be8b94fa3646c4b44"
+        }
+      ],
+      "output": {
+        "path": "unity/Assets/Official/ProfessionUI/CharacterTextures/body_0_G_014.dye.texture2d.asset",
+        "sha256": "314144c552c0339557e93823633dad6ea461b74aa1c3668b7804ca004bce7632"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/ProfessionUI/CharacterTextures/body_0_G_014.dye.texture2d.asset.meta",
+        "sha256": "ca70c0e843513504506c7699e5bdada887fd0a294b708dd16e81b2731997bee6"
+      },
+      "guid": "dd9bcae0b4b05e6f9ffe2d916c8f62be"
+    }
+  ],
+  "pages": [
+    {
+      "sex": "male",
+      "page": "body_0_G_012",
+      "main_guid": "41b4bf1aecd35d24ea22c3c0f26001f9",
+      "dye_guid": "ef0c7c130e7597a40b8350ac38e73346"
+    },
+    {
+      "sex": "male",
+      "page": "body_0_G_014",
+      "main_guid": "fb66a071e8c76f2479efddf152d17325",
+      "dye_guid": "66721e12fef32e94b8d0ce827140ad84"
+    },
+    {
+      "sex": "female",
+      "page": "body_0_G_012",
+      "main_guid": "41b4bf1aecd35d24ea22c3c0f26001f9",
+      "dye_guid": "ef0c7c130e7597a40b8350ac38e73346"
+    },
+    {
+      "sex": "female",
+      "page": "body_0_G_014",
+      "main_guid": "fb66a071e8c76f2479efddf152d17325",
+      "dye_guid": "66721e12fef32e94b8d0ce827140ad84"
+    }
+  ],
+  "catalog": {
+    "path": "unity/Assets/Game/Resources/ProfessionUI/character-textures.asset",
+    "sha256": "4ab83f48e7cb51d236ecf669b916379513daf5e09c6d748f8a8c85f983f07469"
+  },
+  "generator": {
+    "path": "scripts/prepare_battle_local_clothing_textures.py",
+    "sha256": "3852686d43f25cf60f8b7190a10a7dd537e5edcd9eca6d48fee61574b5be1620"
+  },
+  "decoder": {
+    "path": "scripts/prepare_unity_map13_native_scene.py",
+    "sha256": "64548e5dc5cf77322f20ecf0f6f8627f4ee85aff2d724036e7fead73b90382b1"
+  },
+  "fixture_sha256": "2ad63df6a41bf26c56763b9e6537f2b177ee6b9d0c17e9db93b91d8354ad6559",
+  "operation": "Recover exact original 871_156598 high-resolution main/dye/placeholder pages. Check historical bundle MD5, size, SHA256 and original high-resolution object payloads before reusing identical retained current bytes. Recover the old placeholder bundle by its original pinned SHA256 rather than substituting the changed current bundle. Preserve original mip pixels, sampler fields and high-resolution loader GUIDs; append four explicit local catalog bindings without changing existing entries."
+}

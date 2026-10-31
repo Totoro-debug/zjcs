@@ -28,9 +28,86 @@
       "sha256": "619aa6834aa39ccbae3a597608ef047c4d4a6a44af99218ec7ee56af61efee0f"
     }
   ],
+  "local_constraints": [
+    {
+      "sex": "male",
+      "definitions": [
+        {
+          "name": "body_0_G_014_shenti2_02a",
+          "order": 10,
+          "bones": [
+            "body_0_G_014_shenti2_02a"
+          ],
+          "target": "tou_1",
+          "skin": true,
+          "local": true,
+          "rotation": 8.489999771118164,
+          "x": -23.450000762939453,
+          "y": 31.450000762939453,
+          "mixRotate": 1.0,
+          "mixX": 1.0,
+          "mixY": 1.0
+        },
+        {
+          "name": "tou_1",
+          "order": 18,
+          "bones": [
+            "body_0_G_012_shenti2_03a"
+          ],
+          "target": "tou_1",
+          "skin": true,
+          "local": true,
+          "rotation": 9.069999694824219,
+          "x": -23.09000015258789,
+          "y": 27.81999969482422,
+          "mixRotate": 1.0,
+          "mixX": 1.0,
+          "mixY": 1.0
+        }
+      ]
+    },
+    {
+      "sex": "female",
+      "definitions": [
+        {
+          "name": "body_0_G_014_shenti2_02a",
+          "order": 10,
+          "bones": [
+            "body_0_G_014_shenti2_02a"
+          ],
+          "target": "tou_1",
+          "skin": true,
+          "local": true,
+          "rotation": 8.489999771118164,
+          "x": -23.450000762939453,
+          "y": 31.450000762939453,
+          "mixRotate": 1.0,
+          "mixX": 1.0,
+          "mixY": 1.0
+        },
+        {
+          "name": "tou_1",
+          "order": 14,
+          "bones": [
+            "body_0_G_012_shenti2_03a"
+          ],
+          "target": "tou_1",
+          "skin": true,
+          "local": true,
+          "rotation": 9.069999694824219,
+          "x": -23.09000015258789,
+          "y": 27.81999969482422,
+          "mixRotate": 1.0,
+          "mixX": 1.0,
+          "mixY": 1.0
+        }
+      ]
+    }
+  ],
+  "semantics_reference": "https://en.esotericsoftware.com/spine-transform-constraints",
   "generator": {
     "path": "scripts/prepare_battle_constraint_pose.py",
-    "sha256": "208634c6e174dfbf0e919bf3b2919586592655b9df218f0c9e2d9500170e084e"
+    "sha256": "ad83d8fc392ca6b388a9ed1bafbc8fc8a69b89d46a75f4587d7080f8ab2d5fcb"
   },
   "native_runtime": [
     {
@@ -51,11 +128,11 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeIdleTransform.cs",
-      "sha256": "8fdc85a9d286aa2b994c0f03749a7ac92d97077c04880fefd14387ab48c5e048"
+      "sha256": "ea362e7a96293c795a089e70f0f26f6646d5f5017e57dc8fc7a7f72ff870c373"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBonePose.cs",
-      "sha256": "a32d4ce447d9e28c135830590f7739f9e00f30d4f45609fd3691956650d9fa2b"
+      "sha256": "eace3a78d4a79ad059afe453fe8160269540385d67684c759bcf6ab8bf09148b"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAppearanceSkeleton.cs",
@@ -70,8 +147,8 @@
       "sha256": "6f9af85aaf275a98178e28030b3c60e4a8d943a0a1f3d59281ccbf85e5394679"
     }
   ],
-  "operation": "Reuse exact packaged original player data, native local/slot/deform sampling, and existing independently derived unit-scale IK and world-absolute transform geometry. Sample constraints at the identical normalized animation time, preserve source ordering and skin selection, and reset from original local pose on each evaluation. No animation SDK source or runtime is used.",
+  "operation": "Reuse exact packaged original player data, native local/slot/deform sampling, and independently derived unit-scale IK and world-absolute transform geometry. Restore the two original local-absolute rotation/XY constraints with independent planar matrices in the constrained bone parent's frame. Track world overrides explicitly so already-constrained inputs require applied-pose decomposition. Sample constraints at the identical normalized animation time, preserve source ordering and skin selection, and reset from original local pose on each evaluation. No animation SDK source or runtime is used.",
   "limitations": [
-    "Explicitly pre-physics and unmixed. Existing solver restrictions remain enforced, including nonunit/sheared IK, local/relative transform constraints, and selective inheritance branches. Unknown active world constraint kinds and interleaved IK/transform orders are rejected. Formal player binding remains required."
+    "Explicitly pre-physics and unmixed. Existing solver restrictions remain enforced, including nonunit/sheared IK, relative transform constraints, local scale/shear or applied-pose decomposition, and selective inheritance branches. Unknown active world constraint kinds and interleaved IK/transform orders are rejected. Formal player binding remains required."
   ]
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Zjcs.Offline.ProfessionUI
 {
-    // Independent world-space geometry for the six verified original idle clips.
+    // Independent geometry; Bind retains its verified idle-only input contract.
     // Config defaults and constant timeline defaults come from the pinned MIT
     // binary format reader, not from an animation SDK implementation.
     public static class ProfessionNativeIdleTransform
@@ -82,7 +82,12 @@ namespace Zjcs.Offline.ProfessionUI
                 Finite(state.OffsetPosition.x); Finite(state.OffsetPosition.y); Finite(state.OffsetScale.x); Finite(state.OffsetScale.y);
                 if (state.Rotation == 0 && state.X == 0 && state.Y == 0 && state.ScaleX == 0 && state.ScaleY == 0 && state.Shear == 0) continue;
                 if (!pose.IsActive(state.Target)) continue;
-                if (state.Local || state.Relative) throw new NotSupportedException("Verify original local/relative transform constraint: " + state.Name);
+                if (state.Relative) throw new NotSupportedException("Verify original relative transform constraint: " + state.Name);
+                if (state.Local)
+                {
+                    ApplyLocal(pose, state);
+                    continue;
+                }
                 var target = pose.World(state.Target);
                 // Source idle offsets have no scale or shear; a nonzero rotation
                 // offset on a reflected target needs its own verified contract.
@@ -117,6 +122,37 @@ namespace Zjcs.Offline.ProfessionUI
                     matrix.m00 = x.x; matrix.m10 = x.y; matrix.m01 = y.x; matrix.m11 = y.y;
                     pose.OverrideWorld(bone, matrix);
                 }
+            }
+        }
+
+        private static void ApplyLocal(ProfessionNativeBonePose pose, Constraint state)
+        {
+            // The two original player local constraints copy rotation and XY.
+            // Their target/constrained local transforms have not been replaced
+            // by an earlier world constraint. Do not substitute animated local
+            // values when a future rig instead needs applied-pose decomposition.
+            if (state.ScaleX != 0 || state.ScaleY != 0 || state.Shear != 0 || pose.HasWorldOverride(state.Target)
+                || pose.Inheritance(state.Target) != 0)
+                throw new NotSupportedException("Restore additional original local transform branches: " + state.Name);
+            Vector2 targetPosition = pose.LocalPosition(state.Target) + state.OffsetPosition;
+            float targetRotation = pose.LocalRotation(state.Target) + state.OffsetRotation;
+            foreach (int bone in state.Bones)
+            {
+                if (!pose.IsActive(bone)) continue;
+                if (bone == state.Target) throw new ArgumentException("Original local transform target equals constrained bone.");
+                if (pose.HasWorldOverride(bone) || pose.Inheritance(bone) != 0)
+                    throw new NotSupportedException("Restore original constrained local pose decomposition: " + state.Name);
+                Vector2 position = pose.LocalPosition(bone), scale = pose.LocalScale(bone), shear = pose.Shear(bone);
+                float rotation = pose.LocalRotation(bone);
+                rotation += Mathf.DeltaAngle(rotation, targetRotation) * state.Rotation;
+                float x = (rotation + shear.x) * Mathf.Deg2Rad, y = (rotation + 90 + shear.y) * Mathf.Deg2Rad;
+                var local = Matrix4x4.identity;
+                local.m00 = Mathf.Cos(x) * scale.x; local.m10 = Mathf.Sin(x) * scale.x;
+                local.m01 = Mathf.Cos(y) * scale.y; local.m11 = Mathf.Sin(y) * scale.y;
+                local.m03 = Mathf.LerpUnclamped(position.x, targetPosition.x, state.X);
+                local.m13 = Mathf.LerpUnclamped(position.y, targetPosition.y, state.Y);
+                int parent = pose.Parent(bone);
+                pose.OverrideWorld(bone, parent < 0 ? local : pose.World(parent) * local);
             }
         }
 

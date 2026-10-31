@@ -4,6 +4,8 @@
 
 本页只记录官方输入与来源凭据。各模块的原始实现、转换／绑定细节、当前实现和验证边界见所属功能／地图页；逐文件记录以模块来源清单为准。
 
+原局部服装图集输入：`prepare_battle_local_clothing_textures.py` 复用 `871_156598` 高分辨率加载器及历史整包／对象凭据，核对当前 APK／已下载云缓存中的相同原主图、染色图字节；另取回并严格核对旧占位 bundle，不用已变化的新包替换。四项本地绑定和6张原纹理的输入输出 SHA256 见 [局部服装图集凭据](battle-animation/local-clothing-textures-source-manifest.json)；使用和验证范围见[战斗执行](../../docs/features/battle-execution.md)。
+
 原生约束姿势输入：`prepare_battle_constraint_pose.py` 核对同一份 `871_156598` 无损人物载荷及原 IK／transform 顺序，记录既有独立几何与多帧通道的绑定代码哈希；输入与前置凭据见 [约束姿势来源](battle-animation/constraint-pose-source-manifest.json)，使用和验证范围见[战斗执行](../../docs/features/battle-execution.md)。
 
 原生人物附件变形输入：`prepare_battle_deform_fixtures.py` 复用逐文件哈希匹配的 `871_156598` 无损人物载荷，提取男女8条单关键帧附件变形及原裁剪附件；输入、既有凭据、独立运行代码与夹具 SHA256 见 [附件变形凭据](battle-animation/deform-source-manifest.json)，使用和验证范围见[战斗执行](../../docs/features/battle-execution.md)。
