@@ -170,8 +170,9 @@ namespace Zjcs.Offline.Progression
         public OfficialCharacterCatalog Load()
         {
             ValidateBindings();
+            var partnerAssets = Resources.Load<OfficialPartnerAssetCatalog>("Partners/OfficialPartnerAssetCatalog");
             return OfficialCharacterCatalog.Parse(progressionRules.text, timedAppearanceItems.text,
-                wardrobeItems.text, wardrobeRules.text, characterOverview.text);
+                wardrobeItems.text, wardrobeRules.text, characterOverview.text, partnerAssets != null ? partnerAssets.Load() : null);
         }
     }
 
@@ -218,6 +219,7 @@ namespace Zjcs.Offline.Progression
         private readonly Dictionary<int, string> professionIcons;
         private readonly Dictionary<int, int> skillMergePieces;
         private readonly Dictionary<int, int> npcFriendshipMaxLevels;
+        private readonly OfficialPartnerCatalog partnerProperties;
 
         private OfficialCharacterCatalog(Dictionary<string, List<Dictionary<string, object>>> tables,
             Dictionary<int, Dictionary<string, object>> items, Dictionary<int, WardrobeSkinDefinition> skins,
@@ -236,7 +238,7 @@ namespace Zjcs.Offline.Progression
             Dictionary<int, string> itemIcons,
             Dictionary<int, string> professionNames,
             Dictionary<int, string> professionIcons,
-            Dictionary<int, int> skillMergePieces)
+            Dictionary<int, int> skillMergePieces, OfficialPartnerCatalog partnerProperties)
         {
             this.tables = tables;
             this.items = items;
@@ -259,6 +261,7 @@ namespace Zjcs.Offline.Progression
             this.professionNames = professionNames;
             this.professionIcons = professionIcons;
             this.skillMergePieces = skillMergePieces;
+            this.partnerProperties = partnerProperties;
             npcFriendshipMaxLevels = new Dictionary<int, int>();
             foreach (Dictionary<string, object> row in Rows("npc_friendship_level", tables))
             {
@@ -305,6 +308,8 @@ namespace Zjcs.Offline.Progression
 
         public IReadOnlyDictionary<int, long> GetLevelProps(int propClassId, int level)
         {
+            if (partnerProperties != null && partnerProperties.ContainsPropertyClass(propClassId))
+                return partnerProperties.GetLevelProps(propClassId, level);
             if (!levelProps.TryGetValue(propClassId, out Dictionary<int, Dictionary<int, long>> rows))
                 return OfficialHeroStatueProperties.Get(propClassId, level);
             if (rows.TryGetValue(level, out Dictionary<int, long> props)) return props;
@@ -835,7 +840,7 @@ namespace Zjcs.Offline.Progression
         }
 
         public static OfficialCharacterCatalog Parse(string progressionJson, string timedItemsJson,
-            string wardrobeJson, string wardrobeRulesJson, string overviewJson)
+            string wardrobeJson, string wardrobeRulesJson, string overviewJson, OfficialPartnerCatalog partnerProperties = null)
         {
             Dictionary<string, object> progression = Object(OfficialEquipmentJson.Parse(progressionJson), "character progression");
             if (Text(progression, "manifest") != "854_156383")
@@ -995,7 +1000,7 @@ namespace Zjcs.Offline.Progression
                 levelExperience, limits, bless, timedAppearanceItems, propertyIds, levelProps, wardrobeTables,
                 wardrobeDefinitions, rankBySubRank, Object(appearanceRules, "defaults"), appearanceItemTypes,
                 OfficialPropCatalog.Parse(progressionJson, overviewJson), itemIcons, professionNames,
-                professionIcons, skillMergePieces);
+                professionIcons, skillMergePieces, partnerProperties);
         }
 
         private static List<Dictionary<string, object>> Rows(string table,

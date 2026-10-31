@@ -154,6 +154,14 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 配置交叉检查覆盖 859 个条件引用、好感复合键唯一性、礼物／信物物品和档案 NPC 引用。原好感表含当前名册之外的 `8403`、`8419`；原 NPC 的 `8402→1301`、`8408→1305`、`8409→1306` 专属信物引用在原物品表中没有对应定义。上述原始数据均保留，并在凭据中列明；卡片仍按原 `HasItemDefinition` 分支判断，不生成替代物品或名册条目。提取、数据／哈希校验、Unity 导入、静态检查及主工程 `Zjcs.Editor.ProjectTools.Validate` 已通过；完整交互与 Windows Player 验证仍待页面接通。
 
+### 当前好感属性与本地配置目录（局部）
+
+`scripts/prepare_current_partner_properties.py` 先核对 APK 中的实际文件，再按所选 `884_156692` 的 WwiseBnk 索引读取并校验原 `level_prop.g.bytes`；沿原 `LevelPropBinaryReader` 的区段／类别／偏移和有符号 64 位变长数读取 18 类、1,800 行伙伴好感属性。当前 73 条默认属性和 352 条属性定义从同版本 Luban 构造器解码，全部原数值保留。来源、原始二进制哈希、源码／构造器、NPC 类别映射对照及输出见[当前好感属性来源](../../assets/reference/partner-properties-source-manifest.json)。
+
+`OfficialPartnerAssetCatalog` 在 `Resources/Partners/OfficialPartnerAssetCatalog.asset` 显式绑定当前 `partner-rules.json` 与 `partner-properties.json`；`OfficialPartnerCatalog` 检查两个输入均为 `884_156692`，提供当前表和属性，沿原解析器补默认值、保留等级缺项、最高等级越界取最高行，以及原好感差值枚举顺序。当前 NPC 的 148 项属性类别映射与历史名册逐项一致，角色总表加载时将该目录提供给现有好感属性计算；已结识 8401 的二级好感实际加入生命 174、经验每小时产量 300，按原宝物增益顺序继续计算。
+
+`prepare_partner_property_validation.py` 在隔离 Unity Play Mode 运行实际本地目录与好感属性块，并以仅改变命名空间的官方原 `LevelPropBinaryReader` 和 `PropType` 为独立参照，逐项通过 1,800 行、1,782 个相邻等级差值、低于首级／越过最高级、148 项 NPC 属性身份及实际加成检查。混用版本拒绝检查通过，静态检查（81,548 个 GUID）、主工程导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 通过。等级与库存完整 UI、真实存档恢复和 Windows Player 尚未在这一步验证；伙伴名册／赠礼的正式页面提供者仍待接通。
+
 ### 原面板页签控制器（局部）
 
 `scripts/prepare_partner_panel_controller.py` 迁入当前版 `NpcPanel`、`NpcPanelTabType`，从原 `NpcPanelUtils` 与 `FunctionType` 提取伙伴／通话／星神对应的 `65／57／174` 功能门槛。字段名称、门槛遍历、默认页回退、标题、页签关闭回调及关闭窗口重置均保留；复用已有官方 `PanelTitle`、`MonoDictionary`、`WorldTabGroup`、`WorldTabItem`、`WorldStateSwitcher`。本地宿主通过 `IPartnerPanelServices` 提供功能判断与通话列表初始化，不再访问全局在线玩家。代码入口为 `Runtime/Official/PartnersUI/Roster/NpcPanel.cs`；选定官方源码及迁移输出哈希见[面板控制器来源](../../assets/reference/partner-panel-controller-source-manifest.json)。

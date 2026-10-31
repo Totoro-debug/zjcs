@@ -1,0 +1,165 @@
+{
+  "manifest": "884_156692",
+  "generator_sha256": "93aceefe4ff9b173b9546043eab076f2c240e0efc7219ae0f96469fe7c2a7c66",
+  "source_sha256": {
+    "unity/Assets/Official/Partners/partner-rules.json": "1ab5dd32c4ef68297aea6a847cb0e5ced686634bb4fb7f4c28a1aa7bf70398fd",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/Tables.cs": "0e4882f1ad41958e5ec017543447e17f5196c5453f8168c685926ea2c134c9bc",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbLevelPropDefaultValue.cs": "5f5874b410c7497e5d84a0803496cd33257494f97bc82ead6df8259c971a9e07",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/LevelPropDefaultValue.cs": "1d4df96727239af646022a831472a801d65bbed9c3b3709930a8738df7784484",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbPropCfgInfo.cs": "d15666829afbb043ec9fc96f686cc18e81f950cb0596856239e14e07952434cd",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PropCfgInfo.cs": "a7ee908037a491843e56971235b07dbc42e0e0419afb956644f6e16575a1e7fe",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/LevelPropBinaryReader.cs": "36050a9a6c01fe4d255cf3966831036c22b67fcf4c232ada943fd002c69d752f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/LevelPropParser.cs": "ff101b07975b5f195a9fb88a4e35a89a9ca84a19e0475c4db3416f841530abd8",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcInfoParser.cs": "2323757139ca2742d3a563e983439feaefd03136d71a0b3094583a7c9d6e7eee",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcFriendshipLevelInfoParser.cs": "0cea737f2519ddac5edbc847a176bd5d267c9d3cffecabd7a602ae4810d37c04",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PropType.cs": "265a81dbeab87b90e3a1c1423884610ed43ea9b535e488e20de0e0c41f9831b0",
+    ".tools/source-packages/current/884_156692/official-code/global-metadata.dat": "c0fe5e062fb3ed1814781e54fd1b4859757970632655138adc091820ded88e0e",
+    "scripts/official_tables.py": "77762a9b2aba2d92a6ad3ebd8ce5f7d0bb42a6b4cfc872ae7094c1d10b1e0473",
+    "scripts/official_metadata.py": "4e8066a7300d2512ca6807d7bbbe7798c48fb4178aeaeb33fc8478140f722657",
+    "scripts/prepare_unity_character_catalog.py": "f29eb9688a0bf39e45a1069e84041e852fadd20feb30a27a461414697570a628",
+    "scripts/prepare_current_partner_rules.py": "333066fe4387624c214b698cebded7ba02844372ec43bea787a880e55b1230d7",
+    "scripts/prepare_partner_ui_helpers.py": "eea896a4dd8136716c41adb6e99cc139c7577ddbf95758f9bcd68365ee9600ea"
+  },
+  "binary": {
+    "package": "WwiseBnk",
+    "bundle": {
+      "name": "wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile",
+      "hash": "11e11b3ef06eaece6061f07f8f399542",
+      "size": 9107096,
+      "record_offset": 17449,
+      "unity_crc": 0,
+      "file_crc": 1870833886,
+      "encrypted": false,
+      "dependencies": [],
+      "tags": [
+        "Payd_Base"
+      ],
+      "file": "11e11b3ef06eaece6061f07f8f399542.rawfile"
+    },
+    "source": {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/WwiseBnk/11e11b3ef06eaece6061f07f8f399542.rawfile",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431"
+    },
+    "sha256": "1b8e2cf7029ba8a80750f54aa35658878166d1bfbe2e206317473b43f6af3f1f",
+    "apk_checked_first": {
+      "entry": "assets/yoo/WwiseBnk/11e11b3ef06eaece6061f07f8f399542.rawfile",
+      "packaged": true
+    }
+  },
+  "tables": {
+    "level_prop_default_value": {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "c127151ca016b1013e487423db2b7090",
+        "path_id": "-3955754053971000225",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+        "raw_size": 2142435,
+        "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+      },
+      "object_sha256": "0b8cbff0338a51874da64bfab52685363299bd196f7ba850bbbf071942076252",
+      "payload_sha256": "e866fc9ed6f08b9c2debb0639c7626817e45efa7451cc5b88514720d5210ef98",
+      "constructor": "TbLevelPropDefaultValue",
+      "rows": 73
+    },
+    "prop_cfg": {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "c127151ca016b1013e487423db2b7090",
+        "path_id": "-5504087048174519210",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+        "raw_size": 2142435,
+        "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+      },
+      "object_sha256": "1f3a9ac0b384f4744c28c2de4028fc62a2dffcb049b36bf7e87d432215654948",
+      "payload_sha256": "849cde72b0a26881cb224119dfd31b6af1d7665ec41a2635c4fad97442da046c",
+      "constructor": "TbPropCfgInfo",
+      "rows": 352
+    }
+  },
+  "classes": [
+    5000,
+    5001,
+    5002,
+    5003,
+    5004,
+    5005,
+    5006,
+    5007,
+    5008,
+    5009,
+    5010,
+    5011,
+    5012,
+    5014,
+    5015,
+    5016,
+    5017,
+    5018
+  ],
+  "rows": 1800,
+  "validation": {
+    "property_ids": [
+      1,
+      2,
+      3,
+      4,
+      54,
+      55,
+      56,
+      57,
+      58,
+      60,
+      62,
+      64,
+      68,
+      69,
+      70,
+      6011,
+      6012
+    ],
+    "npc_property_identity_count": 148
+  },
+  "comparison_only": {
+    "path": "unity/Assets/Official/Character/character-progression.json",
+    "manifest": "854_156383",
+    "sha256": "d92b18206c2a9ccbfc0a7ab6aa82744207da8efd92c1a7c01d883efed0a1c19c"
+  },
+  "output": {
+    "path": "unity/Assets/Official/Partners/partner-properties.json",
+    "sha256": "e91d6ad8585bbebb59b5667ff39e4b277184d78f4cd19906a7110da8544a72c4",
+    "bytes": 284408
+  },
+  "metadata_sha256": "6ed083221fa57ad68f9340ff91391f5afbac5062781e4e46d7b376ac6e2c442f",
+  "installed_sha256": {
+    "unity/Assets/Official/Partners/partner-properties.json": "e91d6ad8585bbebb59b5667ff39e4b277184d78f4cd19906a7110da8544a72c4",
+    "unity/Assets/Official/Partners/partner-properties.json.meta": "6ed083221fa57ad68f9340ff91391f5afbac5062781e4e46d7b376ac6e2c442f",
+    "unity/Assets/Game/Resources/Partners/OfficialPartnerAssetCatalog.asset": "ebe09b364f26c210f398e8e7a99f4059e7a4f52e09da3db6f83dd6eba9a17618",
+    "unity/Assets/Game/Resources/Partners/OfficialPartnerAssetCatalog.asset.meta": "09a5b67456ebd83196c3976bfd44026af985116cff0c729b1bb4f6e5b7db8e11",
+    "unity/Assets/Game/Resources/Partners.meta": "719cb8f404754fff80b41e1b3c077b15f1bce7586f6bfe9cda2aa6778aee3456",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfficialPartnerAssetCatalog.cs": "cd7083db41f6000e7635d4886ddc53d80213b08ed3eed7a63a5ce0a299703a44",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfficialPartnerAssetCatalog.cs.meta": "989f04a6dad2905a2aadbe761e90b206201ab1a48c440d16cd93c9b2707050da"
+  },
+  "runtime_source_sha256": {
+    "unity/Assets/Game/Runtime/Offline/Progression/OfficialPartnerAssetCatalog.cs": "cd7083db41f6000e7635d4886ddc53d80213b08ed3eed7a63a5ce0a299703a44",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfficialCharacterAssetCatalog.cs": "fb9d8f9c1e513fa65da6cf09673f439af9af0d6cb6b9f69e7e48c95dbd6c6492"
+  },
+  "migrated_methods": [
+    "LevelPropParser.GetConfigProps",
+    "LevelPropParser.TryGetPropDict",
+    "NpcInfoParser.GetFriendshipLevelPropDiff"
+  ],
+  "validation_source_sha256": {
+    "scripts/prepare_partner_property_validation.py": "bf417ce8eba5c9086bb91935a2e260a7aed9cc5a96694098f44f6268c98b1a68",
+    "scripts/fixtures/partner_property_catalog_validation.cs": "27811507cc37fbcf8ca739de89bcb942486d9bca70e68e2b76795d0010e4b1e5"
+  }
+}

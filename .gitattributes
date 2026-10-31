@@ -1365,3 +1365,15 @@ unity/Assets/Game/Runtime/Official/PartnersUI/GiftController.meta text eol=lf
 unity/Assets/Game/Runtime/Official/PartnersUI/GiftController/** text eol=lf
 unity/Assets/Official/Partners/UI/GiftController.meta text eol=lf
 unity/Assets/Official/Partners/UI/GiftController/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Preserve selected partner property data and bindings.
+scripts/prepare_current_partner_properties.py text eol=lf
+scripts/prepare_partner_property_validation.py text eol=lf
+scripts/fixtures/partner_property_catalog_validation.cs text eol=lf
+assets/reference/partner-properties-source-manifest.json text eol=lf
+unity/Assets/Official/Partners/partner-properties.json -text
+unity/Assets/Official/Partners/partner-properties.json.meta text eol=lf
+unity/Assets/Game/Resources/Partners.meta text eol=lf
+unity/Assets/Game/Resources/Partners/** text eol=lf
+unity/Assets/Game/Runtime/Offline/Progression/OfficialPartnerAssetCatalog.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/Progression/OfficialPartnerAssetCatalog.cs.meta text eol=lf
+unity/Assets/Game/Runtime/Offline/Progression/OfficialCharacterAssetCatalog.cs text eol=lf
