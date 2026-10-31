@@ -266,6 +266,8 @@ prepare_profession_playable.py 从 PlayerWorldProfessionUpgradeConfig.asset 的�
 
 `prepare_unity_profession_fonts.py` 按原 `FontAssetFontConfig` 取回 FZY4K 和 MPLUSRounded1c-Medium 的原 TTF，并校验原长度／MD5。MPLUS 原动态图集为 0×0、空数据的 Alpha8 Texture2D；恢复其原生字段和原 GUID 后，Unity 已验证空纹理的真实导入和参数。字体、纹理、官方配置及输入输出哈希见 [fonts-source-manifest.json](../../assets/reference/profession-ui/fonts-source-manifest.json)。字体服务和实际字形验证见本节后续记录，不用新绘图片补图集。`prepare_unity_profession_native_bindings.py` 沿真实 GUID 检查主面板及显式动态资源闭包；当前数量与剩余类型见本节后续记录。提示图托管类型已恢复，7 个 shader 的原始对象与现有 Windows 转换结果已逐项核实；只安装所有依赖已绑定的子闭包，不安装缺失组件或删减 prefab。
 
+Windows 构建前的 TMP 全局字体清理会读取 `atlasTexture.width`，上述原0×0图集在此处表现为空纹理引用并触发异常。`OfficialSkillRuntimeShaderBuild` 在构建范围内临时关闭 `Assets/Official/` 动态字体的清空标记，保留原字形表与图集，结束或失败后恢复原标记。实际调用 TMP 原预处理器已通过，11个原生字体及其19份字体／图集载荷在保存后逐字节不变，全部标记恢复；此项只覆盖构建前处理，整页 Windows 验证仍见缺项。
+
 `prepare_unity_profession_dynamic_sources.py` 从所选版本的原始成就、物品和规则提示 TextAsset 完全解码三张 Luban 表，记录全部构造器／字节哈希；只将职业组 10、四种奖励定义和 `ProfessionLevelInfo` 条目与旧打包投影逐项核对，不把整份历史配置标成当前版本。原 `ItemIconManager` 的 ID 覆盖与 `IconConfigPool` 类型覆盖／默认分支确认四种奖励均选择 APK 中的 `ItemIconDefault`；`RuleDialog` 也按原调用取回。`RuleDialog`、`TipInfo` 代码已迁入并通过隔离 Unity 编译，规则数据接口与实际弹窗调用仍待连接。现有 `BgDialogElement`、`ItemProgress` 及原生代码恢复的 `TMPEffect` 经来源／输出哈希核对后复用。
 
 依据：[dynamic-resources-source-manifest.json](../../assets/reference/profession-ui/dynamic-resources-source-manifest.json)。

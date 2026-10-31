@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
+using TMPro;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
@@ -16,6 +18,9 @@ namespace Zjcs.Editor.Skills
         private static RenderPipelineAsset previousPipeline;
         private static UnityEngine.Object previousShaderSettings;
         private static bool previousStripUnused;
+        private static readonly List<TMP_FontAsset> preservedFonts = new List<TMP_FontAsset>();
+        private static readonly FieldInfo clearFontOnBuild = typeof(TMP_FontAsset).GetField(
+            "m_ClearDynamicDataOnBuild", BindingFlags.Instance | BindingFlags.NonPublic);
         public int callbackOrder => -10000;
 
         public void OnPreprocessBuild(BuildReport report)
@@ -52,7 +57,25 @@ namespace Zjcs.Editor.Skills
             serialized.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(settings);
             AssetDatabase.SaveAssetIfDirty(settings);
+            PreserveNativeFontAtlases();
             Debug.Log("[Skills] Preserving shader variants for the original Home/battle runtime 2D pipeline.");
+        }
+
+        private static void PreserveNativeFontAtlases()
+        {
+            if (clearFontOnBuild == null)
+                throw new BuildFailedException("The pinned TMP dynamic-font build setting is missing.");
+            foreach (string guid in AssetDatabase.FindAssets("t:TMP_FontAsset", new[] { "Assets/Official" }))
+            {
+                TMP_FontAsset font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(AssetDatabase.GUIDToAssetPath(guid));
+                if (font == null || font.atlasPopulationMode != AtlasPopulationMode.Dynamic
+                    || !(bool)clearFontOnBuild.GetValue(font)) continue;
+                // Original glyphs and empty 0x0 atlas exports belong to the verified
+                // payload. TMP's global build cleanup must not rewrite either.
+                preservedFonts.Add(font);
+                clearFontOnBuild.SetValue(font, false);
+            }
+            Debug.Log("[Skills] Preserving " + preservedFonts.Count + " original dynamic font atlases during build.");
         }
 
         public void OnPostprocessBuild(BuildReport report)
@@ -63,6 +86,9 @@ namespace Zjcs.Editor.Skills
         public static void Restore()
         {
             if (!prepared) return;
+            foreach (TMP_FontAsset font in preservedFonts)
+                if (font != null) clearFontOnBuild.SetValue(font, true);
+            preservedFonts.Clear();
             GraphicsSettings.defaultRenderPipeline = previousPipeline;
             if (previousShaderSettings != null) {
                 var serialized = new SerializedObject(previousShaderSettings);
