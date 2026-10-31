@@ -1,0 +1,932 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    "scripts/prepare_current_partner_native.py": "db943cee0f9b54b356662522bf2a3d208b78c4d61fd718a366f747cdeccefaaa",
+    "scripts/official_apk.py": "ffc722b06e62bacc6689d98a7910562527fbcacc1c512c05e57a21bb8aa0ea46",
+    "scripts/official_manifest.py": "1aae5bd86af587511466e17308719c2e6b356be4117942809c7e6ba89e2d7399",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json": "264d79bcd2da2d47f86bc9e1c1956cd4e07853e09ad2248b691e2c92dd125d3c",
+    ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-textures/source-manifest.json": "095eb422b8a241e6468abd81940e22aff9ad22f89bc78161dbdba8bd1f45b3b0",
+    ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders/source-manifest.json": "09b81e5260175a1524a2178d37bea2b78752bdc85f130751e2d95398171fbe0b",
+    ".tools/source-packages/official-code/aot-metadata/source-manifest.json": "aaff0b5a2c873d332f49efd1a625f129aabaa1cb026dabb2ffe69d976c1fffc0",
+    ".tools/source-packages/official-code/aot-metadata/native-image.so": "1ff2ad2cd01378c167c2126e28add342473718bcab8f4072e2f82e0aa9f41f84",
+    ".tools/source-packages/WwiseBnk/wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile": "05d44c577bc0b5f8614bba477d9fde839fab4084e45a3d2bcc1651aa83b74365",
+    ".tools/source-packages/WwiseBnk/wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile": "a7e72b9478ce455a7ef12974f16e3f78e684ded497b7750f7901dacb66eacfad",
+    "scripts/npc_travel_language.py": "5c03df02e09d6b443520407928478018b0f74f959fc081e6bb00f033b65d1232",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Npc/NpcFriendshipDialog.prefab": "0449c1cba45e5517c57c219916ad2cddff9695498a10e4b5538348e68f3b8540",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Npc/NpcFriendshipDialog.prefab.meta": "d18e2d106c6fc771331c32caa0710c7164c8ba03c32572214240061ae63884f8",
+    ".tools/source-packages/current/884_156692/native-conversion/component-fields-all/source-manifest.json": "c82db6a6903d36856807688d11573793cdaef98d1da13d0d6108b6f3f04aeec5",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/UIDialog_Show_0.anim": "b51482cc68e10cb659e2eb690eef592ce64cce1fca63075b9646249ccfbb9cfc",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/UIDialog_Hide_0.anim": "0c08b977485b654e9f17da6fa62fe36aec7b02b13123ca5a5917e89f333f5815",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/BG/BG_Atlas/ImgBg_PopUps_0.asset": "25b405600503167d832ac49a9b2c3fe622469789910c532e5eea301ab24b05da",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Repeat/ImgBg_PopUpsWenLi_0.asset": "f878d4728a6292426745dda2a1cf5b807e598a37e64e9968c8c533091cc2df56",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/BG/BG_Atlas/ImgBg_PopUpsTitle_0.asset": "87339f8d8bf039b1a13255b3efbba8264e7a3abd49503085360d58996fe619fe",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset": "c775159727acc550a82b0ecc2ad98ff788ac29d2643147df18222189b88e8e70",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat": "f465cf50b955ba2a9f593f4594bcc53e831682c68fce2eec2bfca9e873f8b69a",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgRule_TitleLine.asset": "8a83e63acb6567016c8b06cc34fa9b2b360823a33a5c406b788e54ad19f93e70",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Repeat/ImgLine_MapSmall.asset": "e400724370d246af908d89a416015da5fe72233bc05bc7db07bcf76adab661bb",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/C_none_0.asset": "7f65da2cd60acfe24a9bbf3c7ec0216e0f2fc312203b606728809af3387395cf",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Wwise/ScriptableObjects/Event/1844E599-1636-4634-BE47-E7702A2D75D8_0.asset": "d2bbfc42e5a478c5b645f098c35576c135dbce5c9d6cf33b4c7ad0989d35ed70",
+    "scripts/prepare_partner_card_native.py": "4412a20d7ed675da1ed8a5414e129aa0a729dbf60523aff0c6611bce539af459",
+    "unity/Assets/Official/World/Map/13/Source/native-text-gradient.json": "084ccb449e6f0bde213c07b5990821afa4eaec04aa400a3917a72b2c7e1d6909",
+    "scripts/prepare_partner_gift_native.py": "85d4f1ec9403ea38884eab0572a2d4cbe7737ba5df441cb32350a3a959d3545e",
+    ".tools/source-packages/official-code/client-source/BgDialogElement.cs": "f1ed7fefdd22e0dd0303cda0abb2af87b8098357039a8373baef40223658f115",
+    ".tools/source-packages/official-code/client-source/LayoutElementClamper.cs": "db77b7ca71ff060422e17427fa5c0ac73f5e6dfeb1c884a8a9444237b492926d",
+    ".tools/source-packages/official-code/client-source/UIBloomGroup.cs": "8b0067368de53b85fa7e005eb79189a404a7ebe36f7e80ba48feed550c1886d1",
+    ".tools/source-packages/official-code/client-source/UIBloomGroupBase.cs": "71d223aa6113944e73237858a9c791bd13fa932b4e5c980ff714168037dc4106",
+    ".tools/source-packages/official-code/framework-source/PreviewTool.cs": "66b138f5f124629eb239d4fe9cd3e7b92a5bdd5e3bf691cedc24f6f002982611",
+    ".tools/source-packages/official-code/framework-firstpass-source/PopupWindow.cs": "bffa7ae9f9d3058a44519e2f899497945ce47f6ccac783ab0485b58751aa3f80",
+    ".tools/source-packages/official-code/framework-firstpass-source/PopupWindowSound.cs": "3a90a0108932895b5e9e01b51a7c5ade33efadb8892d088fe10bbb1450ed7e95",
+    ".tools/source-packages/official-code/framework-firstpass-source/MirrorImage.cs": "d95bb90ada43ef9971d9125d3c51543ffd5b202030e2947598b2bc607c3213b3",
+    ".tools/source-packages/official-code/framework-source/UGUIJszx/VerticalLayoutGroupJSZX.cs": "2cfd6ab0f9afd82ee6335a61c282d01f32fd937d03d0b0c08b7142ff2188efbc",
+    ".tools/source-packages/official-code/framework-source/UGUIJszx/HorizontalOrVerticalLayoutGroupJSZX.cs": "1c4b8bb77ffebe97dd98fe80f26eaadab15f158df48ec5637e26cfadbd9a83a4"
+  },
+  "objects": {
+    "cab-acb89e46c0e3f584025132259703b7fd:-1795106007289147885": {
+      "source": {
+        "bundle": "defaultpackage_assets_animation_ui.bundle",
+        "bundle_hash": "e64ddd2905926d89597e6ebd4f0178fd",
+        "path_id": "-1795106007289147885",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/e64ddd2905926d89597e6ebd4f0178fd.bundle",
+        "raw_size": 7330,
+        "raw_sha256": "1c77e30ceb3f2e0120d428888f2a51f0b7dcc6edfcdc034615a2588061ce48ff"
+      },
+      "type": "AnimationClip",
+      "original_sha256": "4b34a5b1a8ec3d37f2529d954ae6d3a19f0cf52d3d86806a885f29c7afcd6e90",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/UIDialog_Show_0.anim",
+      "output": "Animation/UI/UIDialog_Show_0.anim",
+      "guid": "4f47de04013a31144bcd6b136dc64a40",
+      "geometry": null
+    },
+    "cab-acb89e46c0e3f584025132259703b7fd:-4017949286549292378": {
+      "source": {
+        "bundle": "defaultpackage_assets_animation_ui.bundle",
+        "bundle_hash": "e64ddd2905926d89597e6ebd4f0178fd",
+        "path_id": "-4017949286549292378",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/e64ddd2905926d89597e6ebd4f0178fd.bundle",
+        "raw_size": 7330,
+        "raw_sha256": "1c77e30ceb3f2e0120d428888f2a51f0b7dcc6edfcdc034615a2588061ce48ff"
+      },
+      "type": "AnimationClip",
+      "original_sha256": "c9c6c1d42a56df576b6d2db8da08a5ef83e96ff0ab8a2745561e8e8df9cf2e0e",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/UIDialog_Hide_0.anim",
+      "output": "Animation/UI/UIDialog_Hide_0.anim",
+      "guid": "e1a513d341b3785c6ec7d9a3c7bf0cfc",
+      "geometry": null
+    },
+    "cab-919f7bfeb57d2ef24dceebf11e1b4624:-8915195432347274023": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_bg.bundle",
+        "bundle_hash": "3d76017b4b89f53e04c41a5e9f0369b2",
+        "path_id": "-8915195432347274023",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/3d76017b4b89f53e04c41a5e9f0369b2.bundle",
+        "raw_size": 4454718,
+        "raw_sha256": "b7422bab8c8a38ca1be17e238e255fa60aea120cc49741e7341743af2c9ae907"
+      },
+      "type": "SpriteAtlas",
+      "original_sha256": "3b998d25ec5f9980a4dd76f7f993f03ab26ee30de033c51c821fb69e3c20ff11",
+      "usage": "Packed sprite render data"
+    },
+    "cab-919f7bfeb57d2ef24dceebf11e1b4624:-3640136760535718006": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_bg.bundle",
+        "bundle_hash": "3d76017b4b89f53e04c41a5e9f0369b2",
+        "path_id": "-3640136760535718006",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/3d76017b4b89f53e04c41a5e9f0369b2.bundle",
+        "raw_size": 4454718,
+        "raw_sha256": "b7422bab8c8a38ca1be17e238e255fa60aea120cc49741e7341743af2c9ae907"
+      },
+      "type": "Sprite",
+      "original_sha256": "1d715624fd9e522b0a6640881076726d5c5b16f3bc4c418d9ac025c9ddb75fa7",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/BG/BG_Atlas/ImgBg_PopUps_0.asset",
+      "output": "Image/UI/BG/BG_Atlas/ImgBg_PopUps_0.asset",
+      "guid": "c7d50cb2d73f7fd317878138b72584c6",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:5695007633822459178": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "5695007633822459178",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Sprite",
+      "original_sha256": "54b3440f2d4d658ac3dfc342e187668e36c465ed4c1dc054b338ab69610d91cd",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Repeat/ImgBg_PopUpsWenLi_0.asset",
+      "output": "Image/UI/Common/Repeat/ImgBg_PopUpsWenLi_0.asset",
+      "guid": "45a7b82b33861fd89f2912c08a12ef7d",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
+    "cab-919f7bfeb57d2ef24dceebf11e1b4624:2517012644294285091": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_bg.bundle",
+        "bundle_hash": "3d76017b4b89f53e04c41a5e9f0369b2",
+        "path_id": "2517012644294285091",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/3d76017b4b89f53e04c41a5e9f0369b2.bundle",
+        "raw_size": 4454718,
+        "raw_sha256": "b7422bab8c8a38ca1be17e238e255fa60aea120cc49741e7341743af2c9ae907"
+      },
+      "type": "Sprite",
+      "original_sha256": "73eb1bc615a8c7636700fc84ed53e5cc32b012a09d450a37f9b212bf9bf33677",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/BG/BG_Atlas/ImgBg_PopUpsTitle_0.asset",
+      "output": "Image/UI/BG/BG_Atlas/ImgBg_PopUpsTitle_0.asset",
+      "guid": "d3e185195cbfd692c299b497bc51db1b",
+      "geometry": {
+        "vertices": 6,
+        "index_bytes": 24,
+        "index_sha256": "ec75c012de4d78a63445707003ab2f108f6b9ee467258c33cf9115e80cdc44da"
+      }
+    },
+    "cab-43221b4d126447a2b398f3477e814a2c:-1054575886599457342": {
+      "source": {
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+        "bundle_hash": "5718b6f06136fd5c5d48fe6f02b618a9",
+        "path_id": "-1054575886599457342",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5718b6f06136fd5c5d48fe6f02b618a9.bundle",
+        "raw_size": 415026,
+        "raw_sha256": "fa69dba3a3410b074ae45b79b6b3db3774223c11d3fae9b52c214b1881af8b8a"
+      },
+      "type": "MonoBehaviour",
+      "original_sha256": "993fe9f48bba80bc3f729c6cfabf269fdf7b91ac69fb2d013625ee8ac8a68031",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset",
+      "output": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset",
+      "guid": "b088a249154abaf4e9a07cad25d5aef4",
+      "geometry": null
+    },
+    "cab-43221b4d126447a2b398f3477e814a2c:8668477128756491714": {
+      "source": {
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+        "bundle_hash": "5718b6f06136fd5c5d48fe6f02b618a9",
+        "path_id": "8668477128756491714",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5718b6f06136fd5c5d48fe6f02b618a9.bundle",
+        "raw_size": 415026,
+        "raw_sha256": "fa69dba3a3410b074ae45b79b6b3db3774223c11d3fae9b52c214b1881af8b8a"
+      },
+      "type": "Material",
+      "original_sha256": "57b7f2adeb457a8f4f3b3842127ac1bdf497f87992d883bbfee812a4525383be",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat",
+      "output": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat",
+      "guid": "08ba59cf78205b78fb2c9a69237994ea",
+      "geometry": null
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:7027170908951735255": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "7027170908951735255",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "SpriteAtlas",
+      "original_sha256": "9d36c5be785859e80ca6304999830c104562d08a109dcd23ec500706c5c3fbd2",
+      "usage": "Packed sprite render data"
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:-3482933380132132977": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "-3482933380132132977",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Sprite",
+      "original_sha256": "1267014034eb3e27229d041fcb5db5188f742357e247f6b11f8704ec5a5426da",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgRule_TitleLine.asset",
+      "output": "Image/UI/Common/Common_Atlas/ImgRule_TitleLine.asset",
+      "guid": "bb36918a794070f02c701b907f3d2871",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:-1235626707185202928": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "-1235626707185202928",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Sprite",
+      "original_sha256": "d04d427e0820d0c3f93cc50ff25857678db666fa769bd5afb4b389d161ab7a6e",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Repeat/ImgLine_MapSmall.asset",
+      "output": "Image/UI/Common/Repeat/ImgLine_MapSmall.asset",
+      "guid": "d808db08afe8a5f2befbf7cd9cec4c37",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:-6201727972171027686": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "-6201727972171027686",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Sprite",
+      "original_sha256": "73f8e0b4f17d8d9838fad0f678437b3e0ed26585c7e2525ce6ac4bd90ab90699",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/C_none_0.asset",
+      "output": "Image/UI/Common/Common_Atlas/C_none_0.asset",
+      "guid": "f3b0b2fcddb51274e6595ff1cdcb4ab5",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
+    "cab-8ede2c00df79c3aff9bab2859b047085:-3184072659325268223": {
+      "source": {
+        "bundle": "defaultpackage_assets_wwise_scriptableobjects_event.bundle",
+        "bundle_hash": "d0ea86beaa052471f6138a9bddaa19f0",
+        "path_id": "-3184072659325268223",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/d0ea86beaa052471f6138a9bddaa19f0.bundle",
+        "raw_size": 440942,
+        "raw_sha256": "c4009d466fcf8199fd5c4b7ba92f9915f0509ced7ea74c28ddec8b4867a6970a"
+      },
+      "type": "MonoBehaviour",
+      "original_sha256": "4a35be6a38de212d2250e20e5b3ac1702e4ca86e9fffd2adb2387c1f5da875c5",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Wwise/ScriptableObjects/Event/1844E599-1636-4634-BE47-E7702A2D75D8_0.asset",
+      "output": "Wwise/ScriptableObjects/Event/1844E599-1636-4634-BE47-E7702A2D75D8_0.asset",
+      "guid": "7fb968207a40275e4256bc4409d53ea2",
+      "geometry": null
+    },
+    "cab-919f7bfeb57d2ef24dceebf11e1b4624:-7905913111627402023": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_bg.bundle",
+        "bundle_hash": "3d76017b4b89f53e04c41a5e9f0369b2",
+        "path_id": "-7905913111627402023",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/3d76017b4b89f53e04c41a5e9f0369b2.bundle",
+        "raw_size": 4454718,
+        "raw_sha256": "b7422bab8c8a38ca1be17e238e255fa60aea120cc49741e7341743af2c9ae907"
+      },
+      "type": "Texture2D",
+      "original_sha256": "ab198934a5d9c639b82f17f663e18f6b926cdd53aa36d0c5339f505797747695",
+      "native_path": null,
+      "output": "Converted/2d18f5c143cd7b36.asset",
+      "guid": "f5dd7bb66c35c359e06a2fce62ac8a7b",
+      "geometry": null
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:-3608043446638861014": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "-3608043446638861014",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Texture2D",
+      "original_sha256": "9299e98c3d1a4ae4e1c8a985d007f67c62f23d734a4e83350f74fa56aabe11bd",
+      "native_path": null,
+      "output": "Converted/2bc97c94df17e484.asset",
+      "guid": "5f614608452672dadb51761e989ad223",
+      "geometry": null
+    },
+    "cab-43221b4d126447a2b398f3477e814a2c:3935595767026349506": {
+      "source": {
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+        "bundle_hash": "5718b6f06136fd5c5d48fe6f02b618a9",
+        "path_id": "3935595767026349506",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5718b6f06136fd5c5d48fe6f02b618a9.bundle",
+        "raw_size": 415026,
+        "raw_sha256": "fa69dba3a3410b074ae45b79b6b3db3774223c11d3fae9b52c214b1881af8b8a"
+      },
+      "type": "Texture2D",
+      "original_sha256": "5100748872e5a73c20864292b0f19fb862964e3c2c50785768804056276fd4d8",
+      "native_path": null,
+      "output": "Converted/ac573a40fda4c096.asset",
+      "guid": "595049c2e6a1f516bcabc0f0a8cab09f",
+      "geometry": null
+    },
+    "cab-014000ed2538cb87d1aa4612be612002:-4286560471751938018": {
+      "source": {
+        "bundle": "defaultpackage_unityshaders.bundle",
+        "bundle_hash": "465300f28c23d7564868393936041212",
+        "path_id": "-4286560471751938018",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/465300f28c23d7564868393936041212.bundle",
+        "raw_size": 2909118,
+        "raw_sha256": "991da192cbcd00a1b3a2714b7ca649b7f416881f87b656dac17f5f1123da2e46"
+      },
+      "type": "Shader",
+      "original_sha256": "82cc97a220222d38ceeb7b173dd31fccede81cc11f4eca3a2c052177f11acd81",
+      "native_path": null,
+      "output": "Converted/f2e1ff40e17239bc.shader",
+      "guid": "0b5a526f51d54805e059fe74dc7aade8",
+      "geometry": null
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:8373551068376853463": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "8373551068376853463",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Texture2D",
+      "original_sha256": "53995e743aa5f4d717ce30a69b8100e7c73f21cfcc0c8f351a9f3a808f319cd0",
+      "native_path": null,
+      "output": "Converted/65b73523b080e5e7.asset",
+      "guid": "b40761794afa424fcfa0a6d493b5c729",
+      "geometry": null
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:8121551158945220880": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "8121551158945220880",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Texture2D",
+      "original_sha256": "6fff9f253e7a941ff1f6979a48a873a076625c0e51483800c2ba4e4cb4676fa5",
+      "native_path": null,
+      "output": "Converted/150573f41cfa3466.asset",
+      "guid": "3f51aa9fc9c66cbe3d90902e0f1b959c",
+      "geometry": null
+    }
+  },
+  "outputs": {
+    "Animation/UI/UIDialog_Show_0.anim": "7e4be63861452a3cdc37dc2c9240f02c49ef01ced7a81190bd36d74e57e2eb05",
+    "Animation/UI/UIDialog_Show_0.anim.meta": "d71704388058a5e1a61b54cfe683077c9f6f89ff845c210eff961de2d5af432b",
+    "Animation/UI/UIDialog_Hide_0.anim": "17db30edd0e7d6686a285f896b96ed22aeeb945ce57b1d88a58600f736bcabad",
+    "Animation/UI/UIDialog_Hide_0.anim.meta": "2c14cd2576d9edc27e2827aef605db47d84bd579f6488bd21c4ff4a58fcf45bb",
+    "Image/UI/BG/BG_Atlas/ImgBg_PopUps_0.asset": "0433159fff57ed16f669cb925f698fcaf265179a56674c4e36e06ec1e1fa3044",
+    "Image/UI/BG/BG_Atlas/ImgBg_PopUps_0.asset.meta": "b12dc2b67167a79e925fb7abb70f6cbfbce0a92897e5815fd7d75c11866d0a53",
+    "Image/UI/Common/Repeat/ImgBg_PopUpsWenLi_0.asset": "78560df2c5d061fc9c184cd878a50e9a420108660247f3b7ff56b5380f4c1443",
+    "Image/UI/Common/Repeat/ImgBg_PopUpsWenLi_0.asset.meta": "12e10e37bf8b0f641fff3f47a92d1bbfe8e18f7d0fdc1c6e21a59e9d6ead015c",
+    "Image/UI/BG/BG_Atlas/ImgBg_PopUpsTitle_0.asset": "66cd929d52a690af62588d443cddfe0d0c85ea9d96f87c1aca65c980db61bb86",
+    "Image/UI/BG/BG_Atlas/ImgBg_PopUpsTitle_0.asset.meta": "c6e46d597dc161a4f279bd23c6dc1224b2ec72465c8df523f1fbddd51ab459ae",
+    "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset": "8371c8c321efb85060bcc96875419a2125babcbeb7c15f34a4dfd2526c3caab2",
+    "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset.meta": "c73398661817650a11012e6405f6a3dba0c3c02368a9546cca757b1d01b975da",
+    "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat": "361207bd73188c9fa55778c632ae3ed8459a8eb4f1b81ac88346bcac134464e2",
+    "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat.meta": "78fe4f95be8d6cb2787099d08448dcc043f602506718c85d879e7377d29b3ce9",
+    "Image/UI/Common/Common_Atlas/ImgRule_TitleLine.asset": "bf7f18b3c7352132df2cdb8a240607c06052011f1be5c9fd52300d72ca8854a4",
+    "Image/UI/Common/Common_Atlas/ImgRule_TitleLine.asset.meta": "d137bfa09ba33e77e03894b17d3a2fbfc4e4aa7d96453fb8145075670f46802d",
+    "Image/UI/Common/Repeat/ImgLine_MapSmall.asset": "ce0ae7cf835ec3ca9a19a943d203c03f81f570861229f0fcf4c74b9110a07d87",
+    "Image/UI/Common/Repeat/ImgLine_MapSmall.asset.meta": "865451e3d54c8fd89dd249cf73ad5007f3ecb3bdf951fb9e33356f89d3fef6c7",
+    "Image/UI/Common/Common_Atlas/C_none_0.asset": "fae893cc28b978408f3c9605fa899395950b59600b31616caefdc3465439cb12",
+    "Image/UI/Common/Common_Atlas/C_none_0.asset.meta": "b473d70e4460bae02a3ff40de523fa13eec603864c52f39c2b75e73c92b7db6f",
+    "Wwise/ScriptableObjects/Event/1844E599-1636-4634-BE47-E7702A2D75D8_0.asset": "da461222c735964192bf4531b994a12e73236c17e57868d6e0b995351501d52c",
+    "Wwise/ScriptableObjects/Event/1844E599-1636-4634-BE47-E7702A2D75D8_0.asset.meta": "ec2bad1be556e207db42a8ae0b1d271a2efde9a2e1c6ecccf5350c1767a32f96",
+    "Converted/2d18f5c143cd7b36.asset": "165174c8f2c1cfd663f84abbe4c4d18ac04d4e3748424dd98948a04c5ef983af",
+    "Converted/2d18f5c143cd7b36.asset.meta": "54d049f4629c66a8326345402c88d9fbebd7a519ca01c67aebdc94a74ed7a236",
+    "Converted/2bc97c94df17e484.asset": "0c561ba3f3d41ec927874fa4158dc79995a7305b03fb7aed9a22fd2942ce83e8",
+    "Converted/2bc97c94df17e484.asset.meta": "32ced5e64dd739a5fa610d9ac19587e0944207f9c902277f2121e2b67d29f70b",
+    "Converted/ac573a40fda4c096.asset": "3c2d4082c52c96edb636f8e4a27bd11616b531b1ed30720d662b2d1d2201f8c9",
+    "Converted/ac573a40fda4c096.asset.meta": "b71cc69e4e7b0aa71c456069f3af2c24e9fa2e5e8063bc518898d587e21aa8aa",
+    "Converted/f2e1ff40e17239bc.shader": "6175d73864092e26c113b2a49d5379d8b72dd5f0e5e413765530ff0b1f1268dd",
+    "Converted/f2e1ff40e17239bc.shader.meta": "27703de905d15cfcf3d083497232d903db7f44f0129e77c859e0847e12c5516a",
+    "Converted/65b73523b080e5e7.asset": "d9fa5cf869d6674d386c40c1b773c0870096d049d1a980b1f257a976548b0446",
+    "Converted/65b73523b080e5e7.asset.meta": "72b156950e249ca94ae8df0294acf646dfd1ccf163fc31211826fe6343664471",
+    "Converted/150573f41cfa3466.asset": "1d94e736a3fd9e3fead7e2bc5544649faa8f5f4e27624bf9590303644dac61e3",
+    "Converted/150573f41cfa3466.asset.meta": "a20c5f7aaa0d3999c3687cf2c41041986701a6b61931100517f22fcd90564279",
+    "NpcFriendshipDialog.prefab": "3f5bf1840fc329092b8cb15e438a61c62094b931b404f3ce80503c2af06ed64d",
+    "NpcFriendshipDialog.prefab.meta": "802a719e8c087b6438fb2d51e9695a30cf99e7224eeb8c8b3c6798ac379c2b4e",
+    "partner-friendship-dialog-texts.json": "6a2d65ca0a7746d3a002be4e41f7b49dd16ce8c9e6bab9ee59ecf18024a18093",
+    "partner-friendship-dialog-texts.json.meta": "959fbf991ef216d77f90630cc28428d7970cd80254c70b2520341bb86c7735a1"
+  },
+  "native_recovery": {
+    "manifest": "884_156692",
+    "bundle": "defaultpackage_assets_prefabs_ui_npc.bundle",
+    "stage": "Recovered original hierarchy/fields only; runtime script and resource binding pending",
+    "generator_sha256": "db943cee0f9b54b356662522bf2a3d208b78c4d61fd718a366f747cdeccefaaa",
+    "component_cache": {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/component-fields-all/source-manifest.json",
+      "sha256": "c82db6a6903d36856807688d11573793cdaef98d1da13d0d6108b6f3f04aeec5"
+    },
+    "prefabs": [
+      {
+        "name": "NpcFriendshipDialog",
+        "originalRoot": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-7909115090442479469",
+        "originalSource": {
+          "bundle": "defaultpackage_assets_prefabs_ui_npc.bundle",
+          "bundle_hash": "2212f712f2ca157310ba8577a8c36879",
+          "path_id": "-7909115090442479469",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2212f712f2ca157310ba8577a8c36879.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 1079086,
+          "bundle_sha256": "a8847b99610c4b5e86ee8699e912c7cbcba059b065cef6a3ec0f3680861bebcb"
+        },
+        "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Npc/NpcFriendshipDialog.prefab",
+        "native_sha256": "0449c1cba45e5517c57c219916ad2cddff9695498a10e4b5538348e68f3b8540",
+        "mapped_objects": 311,
+        "recovered_components": 3,
+        "unresolved": 0,
+        "pendingBindings": {},
+        "output": "NpcFriendshipDialog.json",
+        "nativeMeta_sha256": "d18e2d106c6fc771331c32caa0710c7164c8ba03c32572214240061ae63884f8",
+        "output_sha256": "8c742ecef60318a9d1356a0165e5e633fec2502a387e7c23818d55bc38cb69f9"
+      }
+    ]
+  },
+  "template_selection": {
+    "scope": "Complete original dialog; no hierarchy extraction or geometry changes."
+  },
+  "roots": {
+    "NpcFriendshipDialog": {
+      "fileID": 1709254077376921,
+      "guid": "954642c5bf4390709bcd694df7ebbe7a",
+      "type": 3
+    }
+  },
+  "script_bindings": {
+    "MultiLanguageText": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldMultiLanguageText.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "231cab3c6fd951b7a2d14633a5465cbf",
+        "type": 3
+      },
+      "sha256": "490825671794bffc638d37170ab39c2e1523cd8bbfdb016cf4bf4e0966ea63ad",
+      "meta_sha256": "b3800ddfd9284bb2c13282b37175e83c6b21673564bc1683db546fc6cd6e2d38"
+    },
+    "NoDrawingRayCast": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/NoDrawingRayCast.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "ca63bc8db6d14902aadb5682859d849b",
+        "type": 3
+      },
+      "sha256": "4bd9084774d21b8a2b3bcde63358a0f1d4143c719172cf38c508c23d4b00ce57",
+      "meta_sha256": "5e7d19cee4ab59b784b51609205c2de4b78365584e30f1b8128de85bf5aab8e4"
+    },
+    "TMPro.TextMeshProUGUI": {
+      "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TextMeshProUGUI.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "f4688fdb7df04437aeb418b961361dc5",
+        "type": 3
+      },
+      "sha256": "f25b03386b3b6eaef0f6f164ae0230b74f09ea53145fdf8bcb6d4a01786af425",
+      "meta_sha256": "dabd328cbb3096519a4356686931a62663f4c934771d9525260ca4d6972620fd"
+    },
+    "TMPro.TMP_FontAsset": {
+      "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TMP_FontAsset.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "71c1514a6bd24e1e882cebbe1904ce04",
+        "type": 3
+      },
+      "sha256": "4944761e316e6c3e6053507283f4c1b310dd47312830346ef7efc4715ac403af",
+      "meta_sha256": "788d1b900702d38deac8b40940ddb3f065752ee2a1bbb9714dc2a63c6b669e12"
+    },
+    "UnityEngine.UI.GraphicRaycaster": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/GraphicRaycaster.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "dc42784cf147c0c48a680349fa168899",
+        "type": 3
+      },
+      "sha256": "a7c7eadb563eece18edc99969a570b2421ac7fee0fd39b02ccafa4a8ddd2eee2",
+      "meta_sha256": "bd85d59c1e6f2343419e25903d6ef60a7d4c39a491696cc04d1feb6865fd24b7"
+    },
+    "UnityEngine.UI.Image": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Image.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "fe87c0e1cc204ed48ad3b37840f39efc",
+        "type": 3
+      },
+      "sha256": "351dd72516d240f5722c55f72f8e95a0a92cf71e83358bbc922eee47bdb78502",
+      "meta_sha256": "5d5268c445723f854020175a8fdfe91d4ca7fbc62f360438d4224a3ecca32066"
+    },
+    "UnityEngine.UI.RectMask2D": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/RectMask2D.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "3312d7739989d2b4e91e6319e9a96d76",
+        "type": 3
+      },
+      "sha256": "9433b86119e688f9e413190ce2d6b3b0155d9f5e6d4770b59076cb45e6fb2b80",
+      "meta_sha256": "bc64a6ac2fb2ba78b9093564f028ca145929afe31b0e752ab489334134a08b91"
+    },
+    "UnityEngine.UI.ScrollRect": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/ScrollRect.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "1aa08ab6e0800fa44ae55d278d1423e3",
+        "type": 3
+      },
+      "sha256": "1e576cf5927c3aa8e55184154e0aa807f038407769a9e88cae3f5915b9935228",
+      "meta_sha256": "c1355876695aacc1b89f0a9ac7e01e68b7983be8fc07467b23cf51280ac20e3a"
+    },
+    "UnityEngine.UI.ContentSizeFitter": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/ContentSizeFitter.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "3245ec927659c4140ac4f8d17403cc18",
+        "type": 3
+      },
+      "sha256": "a6b30a3b6e697524ce16f07e1807e870faf8d0c3e8c43004474eb5b8bb3c887b",
+      "meta_sha256": "0fedd1ac89e603605d4632d8b992eeb450e1b0a82dcf16dc3fd9d4bb5acee9f7"
+    },
+    "UnityEngine.UI.GridLayoutGroup": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/GridLayoutGroup.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "8a8695521f0d02e499659fee002a26c2",
+        "type": 3
+      },
+      "sha256": "2386578edb132a9405c23dfd4f2c6383b978595777bfa80499cf2acd257ad94d",
+      "meta_sha256": "36e7cc6a16f9d519f5ff0d674de0df5cb312d4dc1149b779a8ba8b90ac59cbaf"
+    },
+    "UnityEngine.UI.HorizontalLayoutGroup": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/HorizontalLayoutGroup.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "30649d3a9faa99c48a7b1166b86bf2a0",
+        "type": 3
+      },
+      "sha256": "60c993b71761a9b431b8321f58ef397a100cd0f7febcf4d82c3e82e30b58459b",
+      "meta_sha256": "6056786a4f956f0ecf2c9a50b877b43200f97b28e1f2d97aceef2e38c453a3a9"
+    },
+    "UnityEngine.UI.LayoutElement": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/LayoutElement.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "306cc8c2b49d7114eaa3623786fc2126",
+        "type": 3
+      },
+      "sha256": "c6e88f6d086a6dfc4111a03024ea1279d6d2c6b755e0a5df50f64dfa06edd732",
+      "meta_sha256": "10054a60194f0eb3ad44e4448e6a985b477e5d3421055976067aaefaafdf7653"
+    },
+    "UnityEngine.UI.VerticalLayoutGroup": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/VerticalLayoutGroup.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "59f8146938fff824cb5fd77236b75775",
+        "type": 3
+      },
+      "sha256": "55ec0610da9479b4752008b23990fe486df9df4ff78958f92027edf86906d035",
+      "meta_sha256": "9d257813a1280923de2cd30de064f0f4487036b6f80435b97caca6776d0f47cb"
+    },
+    "NpcFriendshipPreviewPropItem": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/Gifts/NpcFriendshipPreviewPropItem.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "785e12930a4d6387aa736d0013e219fb",
+        "type": 3
+      },
+      "sha256": "7b9139fada1a84e03928a8fc84deea517597f924fd158f974172c330d9a39ce5",
+      "meta_sha256": "638b8974c8b4d97de15761bce2c9849be4989253601d1ade4d0ceeadc892d011"
+    },
+    "PlayerPropItem": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerPropItem.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "724b62b42146b5624624aa85b288ab3b",
+        "type": 3
+      },
+      "sha256": "14f5c8eebfd5c4f7e873a388b560849f6ea3b3199232d6b117332ebe468da9bc",
+      "meta_sha256": "58c5e748982303567a619487116d4c0698fa483761112b6cadd3a93a13185568"
+    },
+    "WwiseEventReference": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/WwiseEventReference.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "eda62e0b27051dfd578214e537c3c072",
+        "type": 3
+      },
+      "sha256": "7c7b698a69a8d3eb424dc94a32ab91b7364ca923979f89be53d405ee5f6d9942",
+      "meta_sha256": "f393e1af77160cb98a16b745897e728620a26cafe5e3033cf0c2d23196a428e3"
+    },
+    "BgDialogElement": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldBgDialogElement.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "392a4a771bd1ea850fa887e1f7c0662c",
+        "type": 3
+      },
+      "sha256": "ee3d7b83783b6c29c5042371ef6702b1ef677f81e4d533056f5d4bb89373cbc6",
+      "meta_sha256": "2d4ec5c8d5916c4410b5bb992f1745c8e5845e6ca8ce902cea5f3a2a55788438"
+    },
+    "LayoutElementClamper": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldLayoutElementClamper.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "af15cc145e0c5ce081a320cbc5d9d74d",
+        "type": 3
+      },
+      "sha256": "250d04905b53b80c55f8c384c4eb29c9dc0feea11e64d9354dcf6f5e0ff6940c",
+      "meta_sha256": "47bd284bfc1638c77d1032b87587a00b7a6cd3b9bfe5cf62c05599a185950d87"
+    },
+    "MirrorImage": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/MirrorImage.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "163a3f8effa97cfe560457984d4b3fa0",
+        "type": 3
+      },
+      "sha256": "34f9be3cf447552b0c60c076fd3c67af1d28b7b6f1ad6bdda235d7e374534645",
+      "meta_sha256": "eccc8ce8187fd103e04470e7e90560e47d93d62b02917a916060d71e11f76cfe"
+    },
+    "UIBloomGroup": {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/UIBloomGroup.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "1c803bfa2183a8c5bc8b8578de9ae788",
+        "type": 3
+      },
+      "sha256": "4c215802806ddb4bd4c65cb67fb4fdc432f429c600f873372c684f142587c5d6",
+      "meta_sha256": "0343b8e3361e1d23226ddcf35556f30c831ff9c5a0f1dfd7455829f252de62bf"
+    },
+    "UGUIJszx.VerticalLayoutGroupJSZX": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/VerticalLayoutGroupJSZX.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "f149748161dba954b9d372953f2b5df9",
+        "type": 3
+      },
+      "sha256": "b7a130f3c832b07f8537f83540e8c5364c15e1cd046a0af65ff2db8ce31e4502",
+      "meta_sha256": "a7344dcda0719376d9d2cc2307299428acdb432ef05c7ffa8ba4ab1870bd4a73"
+    },
+    "NpcFriendshipDialog": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog/NpcFriendshipDialog.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "2bd46e21c5aab813b48e514e3e7a85ae",
+        "type": 3
+      },
+      "sha256": "5c35e89f84363abea1fead50bf0425694a4f057ad654633a9742539242d5e8fa",
+      "meta_sha256": "322569c8016285885c6e65a3c5bedc2eaee5c1bcf680d20bcf31b73099224f1c"
+    },
+    "PopupWindow": {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapWindows/PopupWindow.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "2c587e2d0e03aa18e1cbbbf077d785bc",
+        "type": 3
+      },
+      "sha256": "32473fe3dbd113f9abf6562c2a495aac4116c19429f6d4b0d73b9dd57611208c",
+      "meta_sha256": "bf8f04993b1433587e34ae3f45745a779ff62b22ff9a7a0ceb64e53a050ff0af"
+    },
+    "PopupWindowSound": {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapWindows/PopupWindowSound.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "983310b6c448e1bf448f15f85fd6025e",
+        "type": 3
+      },
+      "sha256": "23eccad36e231ca4d443330d42deb02fc48a7192fc97b2bc1d80913d9f7d0791",
+      "meta_sha256": "cea0320bb9c1a8eb1129a05feda0f6e02b1849a6d8864586dd9e4ed01ffbcb33"
+    },
+    "PreviewTool": {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapWindows/PreviewTool.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "0b54024a1a6cb192121c43081e6746f5",
+        "type": 3
+      },
+      "sha256": "0b60ee8a774e0f4fd33fd100dd9a06c6f4b22fba1fe5f23fc2e9924c9501e02e",
+      "meta_sha256": "342770b1cab7466e0cde05ba52ffa92be3ef64133267a34e4824cd0f61a156c4"
+    }
+  },
+  "gradient_aot_methods": [
+    {
+      "method": "TMPColorGradient.get_TextMeshPro",
+      "address": "0x113a7564",
+      "byte_count": 168,
+      "sha256": "cba537e8c66d9153058b669eadb4279ceae811a563921a46649d726a608c1dd2"
+    },
+    {
+      "method": "TMPColorGradient.OnEnable",
+      "address": "0x113a760c",
+      "byte_count": 232,
+      "sha256": "37e564603ec78281bb6e8db156aa7d65b1137f93275fbb0826ce31fd4e8e3c0a"
+    },
+    {
+      "method": "TMPColorGradient.OnDisable",
+      "address": "0x113a7794",
+      "byte_count": 232,
+      "sha256": "05c6e238e3d7cec96321c30746b3eb3da7478cd370e66cfd2bab23498ddb0d59"
+    },
+    {
+      "method": "TMPColorGradient.SetColors",
+      "address": "0x113a787c",
+      "byte_count": 532,
+      "sha256": "b8bb619b5f3af2fb80e39583aebf8ffac7d2e34e1bf75460a9bbca2138607c10"
+    },
+    {
+      "method": "TMPColorGradient.SetGradientColor",
+      "address": "0x113a7a90",
+      "byte_count": 104,
+      "sha256": "74e82566c25b46528c86c9408a8075c7ed6d11a1dfc2ece86b35a87c13e62e4e"
+    },
+    {
+      "method": "TMPColorGradient.OnPreRenderText",
+      "address": "0x113a7af8",
+      "byte_count": 472,
+      "sha256": "3d00e8a188618a8b938599215612566ed5f0ff89ce8bdcd4394b0c0295f16d77"
+    },
+    {
+      "method": "TMPColorGradient.UpdateMesh",
+      "address": "0x113a76f4",
+      "byte_count": 160,
+      "sha256": "056c3371ac02a80b2d2c767e0ca18ec8cc00b67d83dbb2f933f0e461979bd336"
+    },
+    {
+      "method": "TMPColorGradient..ctor",
+      "address": "0x113a7cd0",
+      "byte_count": 116,
+      "sha256": "b74c4076e60eb0c57ff520190b6540a7403d88f7e88428ccb9af6cf3ef57b199"
+    }
+  ],
+  "gradient_observations": "Selected AOT: all eight methods inspected. Preserve inclusive line character bounds, all four vertices, rotated X/unrotated line extents, alpha-one keys, renderMode=255 and ForceMeshUpdate(false,false).",
+  "generator_sha256": "0326c64da4ef92bf741cafddad90ec5ab4cba18c9d841c69a6091a4684a88a4c",
+  "scope": "Complete native friendship dialog/controller; production local provider, populated gift icons and audio playback remain pending.",
+  "controller": {
+    "official_source": "884_156692",
+    "source_sha256": {
+      ".tools/source-packages/official-code/client-source/NpcFriendshipDialog.cs": "b5f76c5a09c85d17ef03f190d41ff33fd7570ce38beca30085d9b97993ad09c4",
+      ".tools/source-packages/official-code/client-source/INpcFriendshipDialog.cs": "4b425266990c0e74a854eba437ebbdde45dcc14734b1265fae47f6ae36069e88",
+      ".tools/source-packages/official-code/common-source/Common/NpcInfo.cs": "387c584e748963f1870e9861fee043e68fcc741cf52409fcdeffe294007c6a8d",
+      ".tools/source-packages/official-code/common-source/Common/NpcFriendshipLevelInfo.cs": "8650b430df234386d915148349dbbac297be0c7553d940bf1e4f343d833c02b3",
+      ".tools/source-packages/official-code/common-source/Common/ConditionType.cs": "99f4a625e61898abddfef171a4a762e41adc103badf44f9e2bddfcc1ca6ff783"
+    },
+    "output_sha256": {
+      "unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog/NpcFriendshipDialog.cs": "5c35e89f84363abea1fead50bf0425694a4f057ad654633a9742539242d5e8fa",
+      "unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog/NpcFriendshipDialog.cs.meta": "322569c8016285885c6e65a3c5bedc2eaee5c1bcf680d20bcf31b73099224f1c",
+      "unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog/PartnerFriendshipDialogUiServices.cs": "9799fe7abacbf011962913ec6f273134c92b2f409d181bfe9666b7f1f8a38f0f",
+      "unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog/PartnerFriendshipDialogUiServices.cs.meta": "471f1fd7957953084f4a2c5feb472e98eef62dc778ae27b0cccd1bc124589093",
+      "unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog/Zjcs.Official.PartnerFriendshipDialogUI.asmdef": "9c03548b52549aa95c82ad9c4d963c468ca90e46ec162921d31e807475c145a9",
+      "unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog/Zjcs.Official.PartnerFriendshipDialogUI.asmdef.meta": "e5d266edaa15030e81851e521cd88f7605aa581e76cbce970a3fadf78141ff98"
+    },
+    "generator_sha256": "44004798660b5ee2409de5bdada698e43593bbdcaacb57a9551af19acb1222a1",
+    "adaptations": [
+      "Explicit existing friendship/property, local player/configuration, reward-item comparison and icon-pool ports.",
+      "Original interface and consumed NPC/level/condition projections; no new reward or property rules.",
+      "Configure each original pooled preview before its existing initialization; preserve pool and callback order.",
+      "Window address registration is explicit in the eventual native window host."
+    ],
+    "scope": "Complete official friendship/rules controller staged; native window host/local provider not yet installed."
+  },
+  "installed_output_sha256": {
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Animation/UI/UIDialog_Show_0.anim": "7e4be63861452a3cdc37dc2c9240f02c49ef01ced7a81190bd36d74e57e2eb05",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Animation/UI/UIDialog_Show_0.anim.meta": "d71704388058a5e1a61b54cfe683077c9f6f89ff845c210eff961de2d5af432b",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Animation/UI/UIDialog_Hide_0.anim": "17db30edd0e7d6686a285f896b96ed22aeeb945ce57b1d88a58600f736bcabad",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Animation/UI/UIDialog_Hide_0.anim.meta": "2c14cd2576d9edc27e2827aef605db47d84bd579f6488bd21c4ff4a58fcf45bb",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Image/UI/BG/BG_Atlas/ImgBg_PopUps_0.asset": "0433159fff57ed16f669cb925f698fcaf265179a56674c4e36e06ec1e1fa3044",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Image/UI/BG/BG_Atlas/ImgBg_PopUps_0.asset.meta": "b12dc2b67167a79e925fb7abb70f6cbfbce0a92897e5815fd7d75c11866d0a53",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Image/UI/Common/Repeat/ImgBg_PopUpsWenLi_0.asset": "78560df2c5d061fc9c184cd878a50e9a420108660247f3b7ff56b5380f4c1443",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Image/UI/Common/Repeat/ImgBg_PopUpsWenLi_0.asset.meta": "12e10e37bf8b0f641fff3f47a92d1bbfe8e18f7d0fdc1c6e21a59e9d6ead015c",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Image/UI/BG/BG_Atlas/ImgBg_PopUpsTitle_0.asset": "66cd929d52a690af62588d443cddfe0d0c85ea9d96f87c1aca65c980db61bb86",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Image/UI/BG/BG_Atlas/ImgBg_PopUpsTitle_0.asset.meta": "c6e46d597dc161a4f279bd23c6dc1224b2ec72465c8df523f1fbddd51ab459ae",
+    "unity/Assets/Official/Partners/UI/Card/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset": "8371c8c321efb85060bcc96875419a2125babcbeb7c15f34a4dfd2526c3caab2",
+    "unity/Assets/Official/Partners/UI/Card/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset.meta": "ca5ebbdb674cc1b6c076da36edbe7bd84bfa2cbdcc63d98636f68782e0f2b093",
+    "unity/Assets/Official/Partners/UI/Card/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat": "361207bd73188c9fa55778c632ae3ed8459a8eb4f1b81ac88346bcac134464e2",
+    "unity/Assets/Official/Partners/UI/Card/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat.meta": "b632cf8e5e210b2fd2f3a4c3336aeb4a26a4182af86f3b5754e0993b483790dd",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Image/UI/Common/Common_Atlas/ImgRule_TitleLine.asset": "bf7f18b3c7352132df2cdb8a240607c06052011f1be5c9fd52300d72ca8854a4",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Image/UI/Common/Common_Atlas/ImgRule_TitleLine.asset.meta": "d137bfa09ba33e77e03894b17d3a2fbfc4e4aa7d96453fb8145075670f46802d",
+    "unity/Assets/Official/Partners/UI/Friendship/Image/UI/Common/Repeat/ImgLine_MapSmall.asset": "ce0ae7cf835ec3ca9a19a943d203c03f81f570861229f0fcf4c74b9110a07d87",
+    "unity/Assets/Official/Partners/UI/Friendship/Image/UI/Common/Repeat/ImgLine_MapSmall.asset.meta": "865451e3d54c8fd89dd249cf73ad5007f3ecb3bdf951fb9e33356f89d3fef6c7",
+    "unity/Assets/Official/Partners/UI/Card/Image/UI/Common/Common_Atlas/C_none_0.asset": "fae893cc28b978408f3c9605fa899395950b59600b31616caefdc3465439cb12",
+    "unity/Assets/Official/Partners/UI/Card/Image/UI/Common/Common_Atlas/C_none_0.asset.meta": "f2a0a0e5463d0a7eea10ebb269ef2a126a2e9bc68c74032d1e952b3fcab09980",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Wwise/ScriptableObjects/Event/1844E599-1636-4634-BE47-E7702A2D75D8_0.asset": "da461222c735964192bf4531b994a12e73236c17e57868d6e0b995351501d52c",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Wwise/ScriptableObjects/Event/1844E599-1636-4634-BE47-E7702A2D75D8_0.asset.meta": "ec2bad1be556e207db42a8ae0b1d271a2efde9a2e1c6ecccf5350c1767a32f96",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Converted/2d18f5c143cd7b36.asset": "165174c8f2c1cfd663f84abbe4c4d18ac04d4e3748424dd98948a04c5ef983af",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Converted/2d18f5c143cd7b36.asset.meta": "54d049f4629c66a8326345402c88d9fbebd7a519ca01c67aebdc94a74ed7a236",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Converted/2bc97c94df17e484.asset": "0c561ba3f3d41ec927874fa4158dc79995a7305b03fb7aed9a22fd2942ce83e8",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Converted/2bc97c94df17e484.asset.meta": "32ced5e64dd739a5fa610d9ac19587e0944207f9c902277f2121e2b67d29f70b",
+    "unity/Assets/Official/Partners/UI/Card/Converted/ac573a40fda4c096.asset": "3c2d4082c52c96edb636f8e4a27bd11616b531b1ed30720d662b2d1d2201f8c9",
+    "unity/Assets/Official/Partners/UI/Card/Converted/ac573a40fda4c096.asset.meta": "8c99dc8a326713d8bb800b6e38ca6c12252149b5009e3f4dfb6dbed93051841d",
+    "unity/Assets/Official/Partners/UI/Card/Converted/f2e1ff40e17239bc.shader": "6175d73864092e26c113b2a49d5379d8b72dd5f0e5e413765530ff0b1f1268dd",
+    "unity/Assets/Official/Partners/UI/Card/Converted/f2e1ff40e17239bc.shader.meta": "58ce327c2b4baf5e571f1ab90942ff52be883ec008686b508f1a3de2e8cd7092",
+    "unity/Assets/Official/Partners/UI/Card/Converted/65b73523b080e5e7.asset": "d9fa5cf869d6674d386c40c1b773c0870096d049d1a980b1f257a976548b0446",
+    "unity/Assets/Official/Partners/UI/Card/Converted/65b73523b080e5e7.asset.meta": "dcc531d73332259a5c0f0ef702943cf9b262a9a63d42362d5531ac534e810acd",
+    "unity/Assets/Official/Partners/UI/Friendship/Converted/150573f41cfa3466.asset": "1d94e736a3fd9e3fead7e2bc5544649faa8f5f4e27624bf9590303644dac61e3",
+    "unity/Assets/Official/Partners/UI/Friendship/Converted/150573f41cfa3466.asset.meta": "a20c5f7aaa0d3999c3687cf2c41041986701a6b61931100517f22fcd90564279",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/NpcFriendshipDialog.prefab": "3f5bf1840fc329092b8cb15e438a61c62094b931b404f3ce80503c2af06ed64d",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/NpcFriendshipDialog.prefab.meta": "802a719e8c087b6438fb2d51e9695a30cf99e7224eeb8c8b3c6798ac379c2b4e",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/partner-friendship-dialog-texts.json": "6a2d65ca0a7746d3a002be4e41f7b49dd16ce8c9e6bab9ee59ecf18024a18093",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/partner-friendship-dialog-texts.json.meta": "959fbf991ef216d77f90630cc28428d7970cd80254c70b2520341bb86c7735a1",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog/NpcFriendshipDialog.cs": "5c35e89f84363abea1fead50bf0425694a4f057ad654633a9742539242d5e8fa",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog/NpcFriendshipDialog.cs.meta": "322569c8016285885c6e65a3c5bedc2eaee5c1bcf680d20bcf31b73099224f1c",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog/PartnerFriendshipDialogUiServices.cs": "9799fe7abacbf011962913ec6f273134c92b2f409d181bfe9666b7f1f8a38f0f",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog/PartnerFriendshipDialogUiServices.cs.meta": "471f1fd7957953084f4a2c5feb472e98eef62dc778ae27b0cccd1bc124589093",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog/Zjcs.Official.PartnerFriendshipDialogUI.asmdef": "9c03548b52549aa95c82ad9c4d963c468ca90e46ec162921d31e807475c145a9",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog/Zjcs.Official.PartnerFriendshipDialogUI.asmdef.meta": "e5d266edaa15030e81851e521cd88f7605aa581e76cbce970a3fadf78141ff98"
+  },
+  "folder_meta_sha256": {
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Animation/UI.meta": "579f4c889584cbfd86fc64129db7725cdaf964f7fca07a59df255deddb8ebafd",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Animation.meta": "ace4acf78c7943567fd6add4127cd38345a76240267e5703b34ed5c2a799613e",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog.meta": "0312dda73daec8e42f40c749943b49b7c6028e0781aef27ee591426a3a53eb7e",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Image/UI/BG/BG_Atlas.meta": "cbd1a5630004c62310ca186d4bcc5eedab3f1f034e674232f7bc4f11b4025fcb",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Image/UI/BG.meta": "a61b2503d8f7f412c50261d28f1211016fc3c243b3ccb137297d8d1c5fb03807",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Image/UI.meta": "a40c21ce4a44c5314ce7509201b5c02db218c85c27357eea0640161a9ddbe941",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Image.meta": "e4fefac0091d59a69f92f89d3493a432f94bce623903bbdda36f60792267d304",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Image/UI/Common/Repeat.meta": "9be6eca4f7bed3bc4f816f2d973617ea6739e6a35f031695070610f304069955",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Image/UI/Common.meta": "ccb372d020cd5c37d03efb6a4ce4eb50a143f207ec0a19ab79ae7aec16abb67e",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Image/UI/Common/Common_Atlas.meta": "0767e40f1927b1ac49544fc5ba17aba2151fe92bcf80cba68fe4792fbd84ceca",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Wwise/ScriptableObjects/Event.meta": "bdc89c0f4cff342513cf969483cf1fc053da39b9a6007369e8cb9371c55c73a9",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Wwise/ScriptableObjects.meta": "7e1c48866fc7b01d4b99c6b87334e36ae9ce4bf88c5e867032771cd75d23a2b9",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Wwise.meta": "1ba776398e7eb3134a12438291b93e38450ff9c13df21bc5a6236d61fcd21be4",
+    "unity/Assets/Official/Partners/UI/FriendshipDialog/Converted.meta": "c67c987022dd4b33b60b9a62be436da63b5d8e641f7ea57a6cd78aa66bf3a46e",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog.meta": "779cf46aa734fb5eefb43976f3e1e690f3c0c15b6d8ccf56a96b13a21c72978f"
+  },
+  "reused_assets": [
+    "unity/Assets/Official/Partners/UI/Card/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset",
+    "unity/Assets/Official/Partners/UI/Card/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat",
+    "unity/Assets/Official/Partners/UI/Friendship/Image/UI/Common/Repeat/ImgLine_MapSmall.asset",
+    "unity/Assets/Official/Partners/UI/Card/Image/UI/Common/Common_Atlas/C_none_0.asset",
+    "unity/Assets/Official/Partners/UI/Card/Converted/ac573a40fda4c096.asset",
+    "unity/Assets/Official/Partners/UI/Card/Converted/f2e1ff40e17239bc.shader",
+    "unity/Assets/Official/Partners/UI/Card/Converted/65b73523b080e5e7.asset",
+    "unity/Assets/Official/Partners/UI/Friendship/Converted/150573f41cfa3466.asset"
+  ]
+}

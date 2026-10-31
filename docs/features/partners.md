@@ -120,6 +120,14 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 `prepare_partner_gift_native_validation.py` 建立隔离工程，使用实际原模板与迁移控制器检查普通属性、等级差值、旅行开关、空槽位模拟指针射线、粒子发射和声音对象注册／销毁，全部通过。隔离宿主采用实际同版本 URP 包建立 2D 管线，以运行原 `UniversalPipeline／Universal2D` shader；已查看普通、旅行、旅行关闭及原升级光带／星光四帧 GPU 画面，原 890 宽模板完整显示。数据、配置格式化及声音主机使用明确测试端点，这两份原属性模板没有按钮／详情入口，不增加测试按钮冒充交互。74 项安装资源／目录哈希核对、静态检查、主工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 均通过。完整好感窗口、正式本地属性提供者与实际音频播放尚未接通；当前模块不代表完整伙伴页或 Windows Player 已完成。
 
+### 当前原生好感详情窗口（局部）
+
+`Runtime/Official/PartnersUI/FriendshipDialog/` 从当前 `884_156692` 完整迁入 `NpcFriendshipDialog` 控制器，保留原偏好礼物排序／图标回收、连续规则编号、助战好感条件、普通／星神说明、旅行开关和阶位属性预览。仅以显式接口替换原配置、玩家、属性和图标管理器注入；池化预览先配置服务再执行原初始化，不改数值与分支。
+
+`scripts/prepare_partner_friendship_dialog_native.py` 恢复原窗口全部 311 个对象及原坐标／层级，绑定完整原 `PopupWindow`、开合 AnimationClip、`PopupWindowSound`、布局限制、镜像图片、Bloom 标记及预览工具。资源位于 `unity/Assets/Official/Partners/UI/FriendshipDialog/`；19 项载荷中 8 项按原 GUID 与完整字节复用既有伙伴依赖。中文文字从所选官方语言分包提取，原 Wwise 事件引用保留；输入、源码／组件绑定、依赖和安装哈希见[原生详情窗口来源](../../assets/reference/partner-friendship-dialog-source-manifest.json)。
+
+`prepare_partner_friendship_dialog_validation.py` 的隔离 URP Play Mode 使用实际原窗口，验证开合动画及事件顺序、助战条件显示／隐藏、原阶位加一过滤、跳过一级、18 行属性池化复用、普通／星神说明、旅行列隐藏与重排，以及实际射线路径的模拟滚轮和遮罩鼠标点击关闭。已查看打开、滚动及旅行受限三帧 GPU 画面；动态字体／图集在内存副本中生成字形，38 项测试资源与原暂存载荷字节一致。静态检查（81,228 个 GUID）、主工程导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和导入后 59 项资源／代码／目录哈希核对通过。属性、语言、窗口管理和声音端点为明确测试宿主，遮罩由测试宿主提供，不写入原 prefab。当前夹具覆盖空礼物偏好，非空偏好图标、正式本地配置／属性提供者、实际声音播放、页面入口、存档联动及 Windows Player 尚未验证；本节不表示完整伙伴系统已接通。
+
 ### 当前版伙伴配置输入（局部）
 
 `scripts/prepare_current_partner_rules.py` 从选定的 `884_156692` 主 Luban 包与独立 `NpcTalentTree` 包读取 16 张完整表，使用同版本反编译构造器、条件分派和元数据解码，并逐表检查全部字节已消费。`unity/Assets/Official/Partners/partner-rules.json` 保留 148 条 NPC、115 条礼物、100 条信物、10,000 条好感阈值、385 条档案、20 条称谓、62 条互动、3 条天赋物品、两组各 252 条天赋节点／属性，以及依赖的条件、功能门槛、物品和成就表。原表没有删行或改写版本；输入包／对象、全部实际使用的构造器、输出及元数据哈希见[配置来源](../../assets/reference/partner-rules-source-manifest.json)。

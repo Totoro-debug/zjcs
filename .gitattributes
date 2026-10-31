@@ -1339,3 +1339,13 @@ scripts/fixtures/partner_gift_native_validation.cs text eol=lf
 assets/reference/partner-gift-native-source-manifest.json text eol=lf
 unity/Assets/Official/Partners/UI/Friendship.meta text eol=lf
 unity/Assets/Official/Partners/UI/Friendship/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Preserve the selected full friendship dialog and its source receipts.
+scripts/prepare_partner_friendship_dialog_*.py text eol=lf
+scripts/fixtures/partner_friendship_dialog_validation.cs text eol=lf
+assets/reference/partner-friendship-dialog-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog/*.cs text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog/*.asmdef text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog/*.meta text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog.meta text eol=lf
+unity/Assets/Official/Partners/UI/FriendshipDialog.meta text eol=lf
+unity/Assets/Official/Partners/UI/FriendshipDialog/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
