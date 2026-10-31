@@ -97,9 +97,16 @@ class PartnerNativeRecovery:
                     self.typed[key] = self.schemas.read(obj)
         return self.typed[key]
 
-    def recover(self, name, destination):
-        original, = [obj for obj in self.objects if obj.type.name == 'GameObject' and obj.read().m_Name == name]
-        path = self.native / 'Prefabs/UI/Npc' / (name + '.prefab')
+    def recover(self, name, destination, *, bundle=BUNDLE, native_relative=None):
+        objects = self.objects if bundle == BUNDLE else self.apk.objects(bundle)
+        original, = [obj for obj in objects if obj.type.name == 'GameObject' and obj.read().m_Name == name
+                     and obj.read().m_Component[0].component.read().m_Father.path_id == 0]
+        relative = Path('Prefabs/UI/Npc') / (name + '.prefab') if native_relative is None else Path(native_relative)
+        path = self.native / relative
+        if path.suffix != '.prefab' or not path.resolve().is_relative_to(self.native.resolve()):
+            raise ValueError('Recover a prefab within the selected native source directory')
+        if bundle != BUNDLE and bundle not in self.proof.setdefault('additional_bundles', []):
+            self.proof['additional_bundles'].append(bundle)
         text = path.read_text('utf8')
         docs = documents(text)
         native_roots = []

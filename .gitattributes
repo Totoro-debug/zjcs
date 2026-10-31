@@ -1349,3 +1349,9 @@ unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog/*.meta text eol=l
 unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog.meta text eol=lf
 unity/Assets/Official/Partners/UI/FriendshipDialog.meta text eol=lf
 unity/Assets/Official/Partners/UI/FriendshipDialog/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Preserve native partner gift icon payloads and receipts byte-for-byte.
+scripts/prepare_partner_gift_preferences_*.py text eol=lf
+scripts/fixtures/partner_gift_preferences_validation.cs text eol=lf
+assets/reference/partner-gift-preferences-source-manifest.json text eol=lf
+unity/Assets/Official/Partners/UI/Gifts.meta text eol=lf
+unity/Assets/Official/Partners/UI/Gifts/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

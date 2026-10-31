@@ -126,7 +126,17 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 `scripts/prepare_partner_friendship_dialog_native.py` 恢复原窗口全部 311 个对象及原坐标／层级，绑定完整原 `PopupWindow`、开合 AnimationClip、`PopupWindowSound`、布局限制、镜像图片、Bloom 标记及预览工具。资源位于 `unity/Assets/Official/Partners/UI/FriendshipDialog/`；19 项载荷中 8 项按原 GUID 与完整字节复用既有伙伴依赖。中文文字从所选官方语言分包提取，原 Wwise 事件引用保留；输入、源码／组件绑定、依赖和安装哈希见[原生详情窗口来源](../../assets/reference/partner-friendship-dialog-source-manifest.json)。
 
-`prepare_partner_friendship_dialog_validation.py` 的隔离 URP Play Mode 使用实际原窗口，验证开合动画及事件顺序、助战条件显示／隐藏、原阶位加一过滤、跳过一级、18 行属性池化复用、普通／星神说明、旅行列隐藏与重排，以及实际射线路径的模拟滚轮和遮罩鼠标点击关闭。已查看打开、滚动及旅行受限三帧 GPU 画面；动态字体／图集在内存副本中生成字形，38 项测试资源与原暂存载荷字节一致。静态检查（81,228 个 GUID）、主工程导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和导入后 59 项资源／代码／目录哈希核对通过。属性、语言、窗口管理和声音端点为明确测试宿主，遮罩由测试宿主提供，不写入原 prefab。当前夹具覆盖空礼物偏好，非空偏好图标、正式本地配置／属性提供者、实际声音播放、页面入口、存档联动及 Windows Player 尚未验证；本节不表示完整伙伴系统已接通。
+`prepare_partner_friendship_dialog_validation.py` 的隔离 URP Play Mode 使用实际原窗口，验证开合动画及事件顺序、助战条件显示／隐藏、原阶位加一过滤、跳过一级、18 行属性池化复用、普通／星神说明、旅行列隐藏与重排，以及实际射线路径的模拟滚轮和遮罩鼠标点击关闭。已查看打开、滚动及旅行受限三帧 GPU 画面；动态字体／图集在内存副本中生成字形，38 项测试资源与原暂存载荷字节一致。静态检查（81,228 个 GUID）、主工程导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和导入后 59 项资源／代码／目录哈希核对通过。属性、语言、窗口管理和声音端点为明确测试宿主，遮罩由测试宿主提供，不写入原 prefab。该夹具覆盖空礼物偏好，非空图标的原生集成验证见下节；正式本地配置／属性提供者、实际声音播放、页面入口、存档联动及 Windows Player 尚未验证，本节不表示完整伙伴系统已接通。
+
+### 当前原生礼物偏好图标（局部）
+
+`scripts/prepare_partner_gift_preferences_native.py` 核对当前 `884_156692` 原 `ItemIconManagerConfig` 的实际字段：ID 替代列表为空，伙伴礼物与信物类型 328／433 均不在类型替代列表，故偏好列表使用原 `DefPrefab` 指向的 `ItemIconDefault`；赠礼选择格另使用原 `ItemIconNpcGift`。原图标的偏好／选中遮罩、品质底图、数量文字、按钮及子层级全部保留。`ItemIcon.Clear` 即使隐藏中心提示也会取 `HintTip`，因此同时恢复实际附件配置指向的 HintTip 与 ReduceTip，沿已迁移的原附件管理器和池创建／回收，不另造减号按钮。
+
+全部开放范围的 107 种偏好图标按原 `ItemInfo.GetIconPath`、`ResourceLoaderExtensions` 地址前缀及资源表定位，再核对原 Sprite／转换 Sprite 的 RenderDataKey，闭合实际纹理与图集依赖。已确认暂停的八位联动伙伴仍按[既定约定](offline-access.md#暂不开放的联动活动及伙伴)处理，其八种专属图像不进入本次加载范围；原配置表未删行。原八档品质底图、区域字体／TTF、数量格式与 ReduceDot 的 `Main_Cursor_Normal` 事件音频一并恢复；音频从原 Wwise 事件单叶图解码，保留增益和 PCM 参数。资源入口为 `unity/Assets/Official/Partners/UI/Gifts/`，`partner-gift-images.json` 保存显式图像／根对象／配置引用，来源见[礼物图标凭据](../../assets/reference/partner-gift-preferences-source-manifest.json)。
+
+`prepare_partner_gift_preferences_validation.py` 的隔离 URP Play Mode 使用完整原窗口与原生物品格，验证七项真实偏好按品质／ID 排列、图标遮挡射线与模拟鼠标点击、物品详情入口原参数、窗口关闭后的图标回收／订阅释放、107 种原图轮换显示、数量变化、偏好／选中遮罩、原 ReduceTip 附件创建／回收复用，以及复用后减少按钮仅触发一次。已查看非空偏好、滚动、空偏好／旅行受限及选中赠礼格四帧 GPU 画面。窗口、属性、调色和物品详情内容仍由明确隔离端点提供，测试池只承担图标宿主边界，附件使用实际已迁移的官方管理器与池。
+
+静态检查（81,471 个 GUID）、主工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过；Play Mode 前后 454 项暂存载荷／元数据、导入后 474 项安装资源／目录及 22 项实际使用的脚本绑定哈希一致。提取工具扩展以原 311 对象窗口逐对象回归，默认 NPC 路径保持一致。正式本地配置／属性提供者、物品详情弹窗内容、实际音频播放、完整赠礼页和 Windows Player 尚未接通；当前资源接入不表示伙伴系统已经完整完成。
 
 ### 当前版伙伴配置输入（局部）
 

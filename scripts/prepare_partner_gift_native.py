@@ -194,8 +194,18 @@ class PartnerGiftBinding(PartnerCardBinding):
             metadata.write_text('fileFormatVersion: 2\nguid: ' + target_guid + '\n' + importer + ':\n  externalObjects: {}\n', 'utf8', newline='\n')
             outputs[target.as_posix()] = sha(raw)
             outputs[target.as_posix() + '.meta'] = sha(metadata.read_bytes())
-        if self.audio_outputs:
-            raise ValueError('Emit original audio dependencies before validating friendship prefabs')
+        for target, (target_guid, raw) in self.audio_outputs.items():
+            path = folder / target
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(raw)
+            metadata = Path(str(path) + '.meta')
+            metadata.write_text('fileFormatVersion: 2\nguid: ' + target_guid +
+                '\nAudioImporter:\n  externalObjects: {}\n  serializedVersion: 7\n  defaultSettings:\n'
+                '    loadType: 0\n    sampleRateSetting: 0\n    sampleRateOverride: 0\n'
+                '    compressionFormat: 0\n    quality: 1\n    conversionMode: 0\n'
+                '  forceToMono: 0\n  normalize: 0\n  preloadAudioData: 1\n  loadInBackground: 0\n  ambisonic: 0\n  3D: 0\n', 'utf8', newline='\n')
+            outputs[target.as_posix()] = sha(raw)
+            outputs[target.as_posix() + '.meta'] = sha(metadata.read_bytes())
         inputs = dict(self.inputs)
         for name in ('prepare_partner_card_native.py', 'prepare_current_partner_native.py'):
             path = ROOT / 'scripts' / name
@@ -207,6 +217,8 @@ class PartnerGiftBinding(PartnerCardBinding):
                        roots=roots, script_bindings=self.script_sources, gradient_aot_methods=gradient,
                        gradient_observations='Selected AOT: all eight methods inspected. Preserve inclusive line character bounds, all four vertices, rotated X/unrotated line extents, alpha-one keys, renderMode=255 and ForceMeshUpdate(false,false).',
                        generator_sha256=sha(Path(__file__).read_bytes()))
+        if self.audio_proof:
+            receipt['audio'] = self.audio_proof
         (self.work / 'partner-gift-native-source-manifest.json').write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
         print('Staged original friendship property prefabs:', len(outputs), flush=True)
 
