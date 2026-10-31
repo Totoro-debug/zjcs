@@ -19,10 +19,10 @@ import urllib.parse
 import urllib.request
 
 from fetch_official_assets import APK, CACHE, SHA256, download
-from official_manifest import inventory_apk
+from official_source import OfficialSource
 
 CONFIG_URL = 'https://zhangjcsupdate.leiting.com/zhangjcs/version/release/110001_Main.dis'
-DESTINATION = CACHE / 'cloud/854_156383'
+DESTINATION = OfficialSource().cloud_path
 LOCAL = threading.local()
 TLS = ssl.create_default_context()
 
@@ -35,16 +35,14 @@ def load_config():
     with urllib.request.urlopen(CONFIG_URL, timeout=30) as response:
         raw = response.read(2 * 1024 * 1024)
     parsed = json.loads(raw)
-    selected = parsed.get('156383', parsed.get('default'))
+    source = OfficialSource()
+    selected = parsed.get(str(source.profile['apk']['build_version']), parsed.get('default'))
     if not isinstance(selected, dict):
         raise ValueError('No server configuration for this build')
     current = str(selected['ResVersion'])
-    reserve = json.loads(selected.get('ReserveJson') or '{}')
-    predownload = str(reserve.get('PredownloadConfig', {}).get('ResVersion', ''))
-    # An older advertised predownload directory may retain hashes replaced later.
-    historical = [str(value['ResVersion']) for value in parsed.values()
-                  if isinstance(value, dict) and value.get('ResVersion')]
-    versions = list(dict.fromkeys(v for v in [predownload, current, *historical] if v))
+    if current != source.profile['resource_version']:
+        raise ValueError('Official resources changed; run scripts/fetch_latest_official_sources.py')
+    versions = [current]
     roots = []
     for field in ['CdnUrl', 'CdnFallbackUrl']:
         base = selected.get(field)
@@ -147,7 +145,7 @@ def main():
     parser.add_argument('--workers', type=int, default=16, choices=range(1, 17), metavar='1..16')
     args = parser.parse_args()
     download()
-    inventory = inventory_apk(APK)
+    inventory = OfficialSource().inventory()
     roots, configuration = load_config()
     missing = [b for b in inventory['bundles'] if not b['packaged']
                and (not args.extract or re.search(args.extract, b['name']))]
@@ -176,7 +174,7 @@ def main():
                     print(f'Checked {len(results)}/{len(unique)}, verified {len(good)}, failed {len(results)-len(good)}, bytes {sum(r["size"] for r in good)}', flush=True)
     verified = [r for r in results if r['status'] != 'failed']
     failures = [r for r in results if r['status'] == 'failed']
-    report = {'checked_at_utc': utc_now(), 'apk_sha256': SHA256, 'manifest': '854_156383',
+    report = {'checked_at_utc': utc_now(), 'apk_sha256': SHA256, 'manifest': inventory['manifest'],
               'configuration': configuration, 'requested_missing_records': len(missing),
               'verified_files': len(verified), 'verified_bytes': sum(r['size'] for r in verified),
               'downloaded_this_run': sum(r['status'] == 'downloaded' for r in results),

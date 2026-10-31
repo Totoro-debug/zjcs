@@ -15,10 +15,12 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / '.tools/source-packages'
-URL = 'https://zhangjcsdlf.leiting.com/full/zjcs_M509085.apk'
-SIZE = 1024203578
-SHA256 = 'ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9'
-APK = CACHE / 'zjcs_M509085.apk'
+_SELECTION = json.loads((ROOT / 'official-source.json').read_text(encoding='utf-8'))
+_APK_SOURCE = _SELECTION['profiles'][_SELECTION['active']]['apk']
+URL = _APK_SOURCE['url']
+SIZE = _APK_SOURCE['size']
+SHA256 = _APK_SOURCE['sha256']
+APK = ROOT / _APK_SOURCE['path']
 
 def download():
     CACHE.mkdir(parents=True, exist_ok=True)
@@ -28,6 +30,18 @@ def download():
                 raise ValueError('Cached APK checksum mismatch; preserve and inspect the file')
         print('Using cached APK', APK, flush=True)
         return
+    # The public filename is reused for new releases. Verify the selected size
+    # before reusing ranges or downloading.
+    probe = urllib.request.Request(URL, headers={
+        'User-Agent': 'Mozilla/5.0', 'Referer': 'https://zjcs.leiting.com/',
+        'Range': 'bytes=0-0', 'Accept-Encoding': 'identity'})
+    with urllib.request.urlopen(probe, timeout=90) as response:
+        if response.status != 206 or response.headers.get('Content-Range') != f'bytes 0-0/{SIZE}':
+            raise ValueError('Official APK URL no longer serves the selected size; '
+                             'run scripts/fetch_latest_official_sources.py to refresh the source. '
+                             'Content-Range: ' + response.headers.get('Content-Range', '<missing>'))
+        if len(response.read(2)) != 1:
+            raise ValueError('Unexpected APK size probe response')
     chunk_size = 16 * 1024 * 1024
     def chunk(index):
         start = index * chunk_size
@@ -41,7 +55,7 @@ def download():
                     'User-Agent': 'Mozilla/5.0', 'Referer': 'https://zjcs.leiting.com/',
                     'Range': f'bytes={start}-{end}', 'Accept-Encoding': 'identity'})
                 with urllib.request.urlopen(req, timeout=90) as response:
-                    if response.status != 206 or not response.headers.get('Content-Range', '').startswith(f'bytes {start}-'):
+                    if response.status != 206 or response.headers.get('Content-Range') != f'bytes {start}-{end}/{SIZE}':
                         raise ValueError('Unexpected range response')
                     value = response.read(end - start + 2)
                 if len(value) != end - start + 1:
@@ -63,14 +77,14 @@ def download():
             out.write(value)
             digest.update(value)
     with zipfile.ZipFile(temporary) as archive:
-        if len(archive.infolist()) != 4601:
-            raise ValueError('Unexpected APK directory')
+        if archive.testzip() is not None:
+            raise ValueError('APK ZIP CRC verification failed')
     if digest.hexdigest() != SHA256:
         raise ValueError('Official APK checksum changed; inspect the source before repinning')
     temporary.replace(APK)
     for part in parts:
         part.unlink()
-    metadata = {'url': URL, 'size': SIZE, 'sha256': digest.hexdigest(), 'manifest': '854_156383'}
+    metadata = dict(_APK_SOURCE, zip_crc_verified=True)
     (CACHE / 'source.json').write_text(json.dumps(metadata, indent=2), encoding='utf-8')
     print(json.dumps(metadata), flush=True)
 
@@ -122,7 +136,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--extract', help='Regex matching source bundle names (optional)')
     parser.add_argument('--package', choices=['DefaultPackage', 'Launch', 'HybridCLR', 'Boot', 'WwiseBnk'], default='DefaultPackage')
-    parser.add_argument('--manifest', help='Explicit historical manifest; defaults to official-source.json active')
+    parser.add_argument('--manifest', help='Source profile; defaults to official-source.json active')
     args = parser.parse_args()
     download()
     if args.extract:

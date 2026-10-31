@@ -21,7 +21,33 @@ PACKAGES = ('Boot', 'Launch', 'HybridCLR', 'DefaultPackage', 'WwiseBnk')
 
 def read_url(url, limit=32 * 1024 * 1024):
     with urllib.request.urlopen(url, timeout=60) as response:
-        data = response.read(limit + 1)
+        length = int(response.headers.get('Content-Length', '0'))
+        if length > limit:
+            raise ValueError('Official response exceeds expected limit: ' + url)
+        if length <= 2 * 1024 * 1024:
+            data = response.read(limit + 1)
+        else:
+            data = None
+    if data is None:
+        def read_range(start):
+            end = min(length, start + 1024 * 1024) - 1
+            for attempt in range(3):
+                try:
+                    request = urllib.request.Request(url, headers={
+                        'Range': f'bytes={start}-{end}', 'Accept-Encoding': 'identity'})
+                    with urllib.request.urlopen(request, timeout=60) as response:
+                        if response.status != 206 or response.headers.get('Content-Range') != f'bytes {start}-{end}/{length}':
+                            raise ValueError('Official manifest range mismatch')
+                        chunk = response.read(end - start + 2)
+                    if len(chunk) != end - start + 1:
+                        raise ValueError('Truncated official manifest range')
+                    return chunk
+                except Exception:
+                    if attempt == 2:
+                        raise
+            raise AssertionError('Unreachable')
+        with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
+            data = b''.join(pool.map(read_range, range(0, length, 1024 * 1024)))
     if len(data) > limit:
         raise ValueError('Official response exceeds expected limit: ' + url)
     return data

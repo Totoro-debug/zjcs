@@ -8,22 +8,24 @@
 
 | 输入 | 固定身份／位置 |
 | --- | --- |
-| 官方 APK | `.tools/source-packages/zjcs_M509085.apk`；manifest `871_156598`；1,024,203,578 字节 |
-| APK SHA256 | `ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9` |
+| 当前官方 APK | `.tools/source-packages/zjcs_M509085.apk`；包内五包 `881_156673`；1,036,023,846 字节 |
+| APK SHA256 | `f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431` |
+| APK 校验凭据 | `.tools/source-packages/source.json`；MD5 `dede2bf63d1542b7fd02da1f2be59363` 与官方 HTTP ETag 一致，完整 ZIP CRC 通过 |
 | 官方下载 | [zjcs_M509085.apk](https://zhangjcsdlf.leiting.com/full/zjcs_M509085.apk)，入口来自[官网](https://zjcs.leiting.com/)配置接口 `https://zjcs.leiting.com/client/gameV2/home` |
-| 资源版本选择 | 根目录 `official-source.json`；当前五包 `871_156598`，资源目录 `202610211330871` |
-| 当前云端输入 | `.tools/source-packages/cloud/runtime/202610211330871/`；包含原清单、`inventory.json` 与 `receipts.jsonl` |
+| 资源版本选择 | 根目录 `official-source.json`；当前五包 `884_156692`，官方更新配置为 APK build `156673` 选择资源目录 `202610291150884` |
+| 当前云端输入 | `.tools/source-packages/cloud/runtime/202610291150884/`；五包清单共 21,030 个文件、3,271,984,657 字节，全量从该版本官方 CDN 下载 |
+| 云端完整性凭据 | 同目录 `inventory.json`、`receipts.jsonl`、`integrity.json`、`verified-cab-files.json`；21,030 个文件已通过清单大小／MD5、收据 SHA256／版本／精确 URL 复验，缺失／错误为 0；UnityFS 目录解码共 29,771 个唯一 CAB，WwiseBnk 原视频容器边界检查通过；不代表 Windows 转换成果或工程完整 |
 | 官方更新入口 | [110001_Main.dis](https://zhangjcsupdate.leiting.com/zhangjcs/version/release/110001_Main.dis) |
 | 官方程序集／反编译 | `.tools/source-packages/official-code/managed/decoded/`、`client-source/`、`common-source/` 等 |
 | 分包 | Boot、Launch、HybridCLR、DefaultPackage、WwiseBnk |
 
-APK 与热更新版本分别记录。原输入、转换产物及其前后哈希不统一改名为当前版本。历史版本的重建须显式恢复对应输入，或证明当前缓存文件与原清单大小、MD5及真实下载凭据 SHA256 一致；不能替换变化文件或修改预期哈希。当前保留范围由 `official-source.json` 标识，既有 Unity 成品与用户存档独立保留；本地保留不等于仓库外备份。
+只维护当前官方 APK 与其配套云端输入。APK 包内版本与配套热更新版本分别记录；转换产物的来源与哈希仍按实际输入记录，不把已有转换结果改标为当前版本。本地输入不等于仓库外备份。
 
 ## 凭据位置
 
 | 内容 | 入口 |
 | --- | --- |
-| 原始包与逐文件下载来源 | [runtime-cloud-source-manifest.json](official-map/runtime-cloud-source-manifest.json) 及缓存中的 `receipts.jsonl` |
+| 原始包与逐文件下载来源 | 当前缓存中的 `inventory.json`、`receipts.jsonl` 及 APK 同目录 `source.json` |
 | 当前来源切换与转换链 | `assets/reference/official-map/current-*-source-manifest.json`、`assets/reference/character-creation/current-*-source-manifest.json` |
 | 客户端／共享代码来源 | [官方程序集与反编译目录](../../.tools/source-packages/official-code/) 与各模块源码来源清单 |
 | 模块资源来源 | 本目录各模块的 `source-manifest.json`、`*-source-manifest.json` 及所属功能／地图页中的入口 |

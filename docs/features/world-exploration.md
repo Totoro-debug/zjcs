@@ -76,6 +76,6 @@ Map_Action_PeachExplore_1／2／3沿原map_sfx_01的Wwise Event→Action→Sound
 
 该批载荷已通过 Unity 2022.3.57f1c2 导入／编译和 `ProjectTools.Validate`；原三类结果窗的 Button 绑定与离散启用时刻3.183333／2.8／2.416667秒均与原曲线核对，共用原动画按各窗实际目标子集分别保存，避免转换结果互相覆盖。新增六份 prefab、十份被引用动画及技能图标基础资产已入工程，既有运行 prefab 未在批量覆盖。图形 Play Mode 已通过 `OfficialMap11PlayModeAcceptance.RunLostGoddess`：地图屏幕输入选中生成的8364实体，本地事务先保存类型4属性奖励及完成状态，再显示官方结果 prefab；实际截图确认标题、角色图、属性前后值和森之国 HUD，关闭按钮通过模拟 UGUI 点击关闭。隔离 Windows x64 Player 随后通过类型2技能升阶、类型3人物升级和类型4属性奖励三条流程：均由地图屏幕输入触发、以射线命中的屏幕坐标 UGUI 点击关闭，并冷读隔离档案确认对应奖励和完成状态持久化。截图复核发现类型2结果窗未显示技能图标；现已按官方 `LostGoddessResultTipsSkillRankItem` 绑定来源／目标图标、官方品质底框和星级显示，并通过 Unity 编译及 `ProjectTools.Validate`。该代码变更后的 Player 画面尚未复验：构建时 `D:` 卷剩余空间为0，Unity 在写入 Player 资源时断言失败。验证构建未发布到正式目录；完整玩法、剩余演出及画面缺陷仍待完成。
 
-原始 APK 保留，旧版云端目录按用户要求清理；如需重建，显式启用 `Apk(reuse_current_cache=True)`，直接读取当前871缓存中大小／MD5符合旧清单且SHA256符合真实下载凭据的同哈希文件，保留真实来源版本和URL。此选项不会恢复旧缓存，也不会以新版同名变化资源填充旧输入。
+官方输入统一使用 `official-source.json` 选定的当前 APK 与配套云端资源；输入位置与完整性凭据见[官方来源](../../assets/reference/SOURCES.md)。已有转换成果仍按所属来源清单记录真实输入哈希。
 
 共享保底依据为 `Common.StandardRandomGroup`、`RandomObj` 和 `PlayerExploreRecordDataWrap.RecordResult`。命中累计、连续未中计数及保底冲突需按这些实现迁移；组54的20次限制是累计产出次数，不能改成场上实体上限。

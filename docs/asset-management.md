@@ -47,7 +47,11 @@ try {
 
 保留真实版本、URL、原对象／CAB／PathID、输入输出哈希、工具与处理方式、`.meta` 和显式加载绑定。`Apk.current()`、`Apk()` 与 `Apk(manifest=None)` 均读取 `official-source.json` 选定的当前输入；需要复核非当前来源时必须显式指定其 manifest，不能把旧对象冒充当前版本。来源清单保留后续转换哈希链，不按旧基线覆盖其他会话新内容，不修改预期哈希绕过失败。
 
-资源迁移优先使用当前选择版本 `871_156598`。已转换到 Unity 工程中的内容一律保留。若经清单、对象与依赖闭包核实，当前版本确实没有对应原始资源，则保留既有处理结果并在所属功能／地图页记录缺项；不得伪写来源或宣称整个模块已迁完。
+运行 `python -B scripts/fetch_latest_official_sources.py` 直接获取官方当前 APK 和配套全量云端资源，不依赖模拟器。工具核对 APK HTTP 身份、完整大小、MD5／SHA256、ZIP CRC 与包内五包版本，再按该 APK build 的官方配置选择当前资源目录；仅使用该目录的两处官方 CDN，不使用预下载目录。所有资源下载通过后，`official-source.json` 只登记当前来源。APK 统一保存为 `.tools/source-packages/zjcs_M509085.apk`，下载凭据保存为同目录 `source.json`。之后 `fetch_official_assets.py` 等工具从当前配置读取路径和哈希。
+
+完整云端缓存（包括通常随 APK 打包的文件）用 `.tools/character-art-python/Scripts/python.exe -B scripts/verify_official_cloud_cache.py` 重新读取并复验。工具核对当前清单、库存身份、逐文件大小／MD5、收据 SHA256／精确 URL／版本和 UnityFS CAB 目录，WwiseBnk 中具有 `.bundle` 扩展名的原视频按 MP4 结构检查；全部通过后才更新缓存内完整性凭据。所用环境需安装 UnityPy 1.25.4；此检查不证明 CAB 外部引用闭包、Windows 转换或 Unity 工程完整。
+
+资源迁移使用 `official-source.json` 选定的当前版本。已转换到 Unity 工程中的内容一律保留。若经清单、对象与依赖闭包核实，当前版本确实没有对应原始资源，则保留既有处理结果并在所属功能／地图页记录缺项；不得伪写来源或宣称整个模块已迁完。
 
 ## Spine 角色动画迁移决策
 

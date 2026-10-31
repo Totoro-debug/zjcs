@@ -1,4 +1,4 @@
-"""Select the current official APK/CDN source, or an explicitly requested history.
+"""Select the configured current official APK and matching CDN resources.
 
 The native APK and hot-update manifests have independent versions. Every source
 manifest is pinned by SHA256 in the tracked official-source.json configuration.

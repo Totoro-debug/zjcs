@@ -75,15 +75,20 @@ def inventory_apk(apk, verify_packaged=False):
     import hashlib
     import zipfile
 
-    packages, bundles = {}, []
+    packages, bundles, versions = {}, [], set()
     with zipfile.ZipFile(apk) as archive:
         files = set(archive.namelist())
         for package in ['DefaultPackage', 'Boot', 'Launch', 'HybridCLR', 'WwiseBnk']:
-            source = f'assets/yoo/{package}/PackageManifest_{package}_854_156383.v3.bytes'
+            prefix = f'assets/yoo/{package}/PackageManifest_{package}_'
+            matches = [name for name in files if name.startswith(prefix) and name.endswith('.v3.bytes')]
+            if len(matches) != 1:
+                raise ValueError('Expected one APK manifest for ' + package)
+            source = matches[0]
             data = archive.read(source)
             manifest = read_manifest(data)
-            if manifest['package'] != package or manifest['version'] != '854_156383':
+            if manifest['package'] != package:
                 raise ValueError('Unexpected APK resource manifest')
+            versions.add(manifest['version'])
             summary = {'total': len(manifest['bundles']), 'packaged': 0,
                        'missing': 0, 'missing_bytes': 0,
                        'manifest_sha256': hashlib.sha256(data).hexdigest()}
@@ -104,7 +109,9 @@ def inventory_apk(apk, verify_packaged=False):
                     summary['missing_bytes'] += bundle['size']
                 bundles.append(bundle)
             packages[package] = summary
-    return {'manifest': '854_156383', 'packages': packages, 'bundles': bundles}
+    if len(versions) != 1:
+        raise ValueError('APK package versions disagree')
+    return {'manifest': versions.pop(), 'packages': packages, 'bundles': bundles}
 
 
 def read_asset_manifest(data):
@@ -143,7 +150,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--verify-packaged', action='store_true', help='Verify packaged file MD5 as well as size')
-    parser.add_argument('--manifest', help='Explicit historical manifest; defaults to the active official source')
+    parser.add_argument('--manifest', help='Source profile; defaults to the active official source')
     args = parser.parse_args()
     download()
     from official_source import OfficialSource
