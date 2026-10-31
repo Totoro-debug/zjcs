@@ -1,0 +1,77 @@
+{
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/ProfessionUI/NativeSkeletonData/Resources/ProfessionUI/NativeSkeletons/male.bytes",
+      "sha256": "7209fd0c72cbc5b32f44374d0c8921b9fe53d60b1dd404da3fc068359415f41f"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/NativeSkeletonData/Resources/ProfessionUI/NativeSkeletons/female.bytes",
+      "sha256": "6f12515b949321a7697392b81b99e4a3c293b729bf832cf324979cdc12ec2bef"
+    }
+  ],
+  "source_receipts": [
+    {
+      "path": "assets/reference/profession-ui/skeleton-data-source-manifest.json",
+      "sha256": "5e97038f987d2760cfa49ceaab182d52fac67ae29b43681a4b6ad612e2fdcd34"
+    },
+    {
+      "path": "assets/reference/battle-animation/constraint-channels-source-manifest.json",
+      "sha256": "6fc63bc6ec19567fb4035b58b229171887c4997a63603ec7e3af45560e38cb8a"
+    },
+    {
+      "path": "assets/reference/profession-ui/native-ik-source-manifest.json",
+      "sha256": "4019b56aa069e275cca5a1d975b317748a1ad4e77c1a21442bb31f97b946288b"
+    },
+    {
+      "path": "assets/reference/profession-ui/idle-transform-source-manifest.json",
+      "sha256": "619aa6834aa39ccbae3a597608ef047c4d4a6a44af99218ec7ee56af61efee0f"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_constraint_pose.py",
+    "sha256": "208634c6e174dfbf0e919bf3b2919586592655b9df218f0c9e2d9500170e084e"
+  },
+  "native_runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeConstraintPose.cs",
+      "sha256": "abab5c3b03636493aeadd70c2c15873c6702f2190f5e317c3d6d4deeedca5896"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeConstraintAnimation.cs",
+      "sha256": "a7fa68ae5a4f3cc2e51b603896a8d391df3161167fe081dbc73b5d8cc710e009"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeIdleIk.cs",
+      "sha256": "9e2ea2f896a25d6ffe257d137f22a59706ebf133c2c0e820c100b948dfa68578"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeIk.cs",
+      "sha256": "cb5a6d326dcfdeb825ff3640af395729ea4a63ba7e6389c1c32b558838792af9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeIdleTransform.cs",
+      "sha256": "8fdc85a9d286aa2b994c0f03749a7ac92d97077c04880fefd14387ab48c5e048"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBonePose.cs",
+      "sha256": "a32d4ce447d9e28c135830590f7739f9e00f30d4f45609fd3691956650d9fa2b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAppearanceSkeleton.cs",
+      "sha256": "081008aceeb1e442138f6e85fef68a6c52f040057e60daa794337a10cdbb53c4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimationChannels.cs",
+      "sha256": "991eb970376dcaad9a1ce2c1dc33354548241732d62fd582b30c9d09e9cb03e4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeCurve.cs",
+      "sha256": "6f9af85aaf275a98178e28030b3c60e4a8d943a0a1f3d59281ccbf85e5394679"
+    }
+  ],
+  "operation": "Reuse exact packaged original player data, native local/slot/deform sampling, and existing independently derived unit-scale IK and world-absolute transform geometry. Sample constraints at the identical normalized animation time, preserve source ordering and skin selection, and reset from original local pose on each evaluation. No animation SDK source or runtime is used.",
+  "limitations": [
+    "Explicitly pre-physics and unmixed. Existing solver restrictions remain enforced, including nonunit/sheared IK, local/relative transform constraints, and selective inheritance branches. Unknown active world constraint kinds and interleaved IK/transform orders are rejected. Formal player binding remains required."
+  ]
+}
