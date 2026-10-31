@@ -1,0 +1,41 @@
+{
+  "format": 1,
+  "official_source": "884_156692",
+  "source_sha256": {
+    ".tools/source-packages/official-code/client-source/NpcFriendshipLevelShow.cs": "0fa58ebc6d770ad026e44a925e03237b3a5921bbeec4ddcc2c5a84f20b9ac935",
+    ".tools/source-packages/official-code/client-source/NpcPanelNpcItem.cs": "fedff86a2fb4997a3ca51049ba88dfcfc534a1ba90c08448fc5b9525b0e0f7d6",
+    ".tools/source-packages/official-code/client-source/NpcPanelNpcList.cs": "30d9d7bbdf1fd0db0980079ee9e90d01051d98ebf3dbfcb8e1dd598dafa69b67",
+    ".tools/source-packages/official-code/client-source/LoopScrollRectUtil.cs": "0c730b7f4d390df745a72646b0b2b59a239a680b4b6df8e25c6b60ef167ed98e",
+    ".tools/source-packages/official-code/common-source/Common/MathUtils.cs": "d963ca73abf2c4ce64cabb09591ccda5ddfec29cba86ed895214a1c5d89333fb",
+    ".tools/source-packages/official-code/common-source/Common/NpcRoleType.cs": "0cc47390185f14b0511ca7f84cddf0fdf18c917183af35c88babe11b6f3395a2",
+    ".tools/source-packages/official-code/common-source/Common/NpcMeetType.cs": "8092bb859796db7d2b41683f837b621cf9b02aaff7c52084d601e6f106dd464a",
+    ".tools/source-packages/official-code/common-source/Common/LanguageUtils.cs": "ddc94bb5dd46f8c71b6d58ab0f03e2048cde72911de11e343304ce73e4b9a61c",
+    ".tools/source-packages/official-code/common-source/Common/NpcInfo.cs": "387c584e748963f1870e9861fee043e68fcc741cf52409fcdeffe294007c6a8d",
+    ".tools/source-packages/official-code/common-source/Common/CompositeCondition.cs": "9e45aefb344d4e75fffe52fa8f0fcea3e4886d3e396b2c3fa10128ebe35cf54d",
+    ".tools/source-packages/official-code/common-source/Common/HasItemCondition.cs": "fca0fa79cc49354068fc32d136863d5a77181fd9ae93596c1671a9f804641dd5",
+    ".tools/source-packages/official-code/common-source/Common/NpcFriendshipLevelInfoParser.cs": "0cea737f2519ddac5edbc847a176bd5d267c9d3cffecabd7a602ae4810d37c04"
+  },
+  "output_sha256": {
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/NpcFriendshipLevelShow.cs": "a2a996c9fcac3a6d6b739b1f6a5f1e4ff4fb7fde8baed79f4a42a8c2e28dfff5",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/NpcPanelNpcItem.cs": "86fb9ae215f8bc6442018a216c661ec8f08ef6a4a58410bea327830402ff30b5",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/NpcPanelNpcList.cs": "b312f1990b17ffee58acb07ee443e943dada74494100928c178c30e986f38fb6",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/LoopScrollRectUtil.cs": "61e645ded65d49749e8784a58fc69cd42829f73b84944e4733c2c9070bee6781",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/NpcRoleType.cs": "9ca8c83d7a7c3e160409aa58f179a4965d43eca9d809e4e8d7ae25db5c1e25e7",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/NpcMeetType.cs": "4cbee84dbd7c376812f6ffb8b1c4f9bfa2ae97bfd4bfaca7020689c84a55d53d",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/PartnerRosterLanguage.cs": "4667614f57817128fd5414ec8b844becc0ba1cd2a0e2bd04521cb1b6b5c6e252",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/Zjcs.Official.PartnerRosterUI.asmdef": "343c6c59217580582db5aa50211290fe1eab1b36226feb1151e7e062291b9ad7"
+  },
+  "local_adapter_sha256": {
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/PartnerRosterUiServices.cs": "a3b56d87167af2dbbae2fcd69c7e5442c90708bf4a26d655aac2e969a8f2411d",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerRosterUiServices.cs": "34d0075fe8b1babc8c19474ff34af5719e9ccd1cf6b6f73c4d2a6c32ba2c86bd",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/Zjcs.Offline.PartnersUI.asmdef": "1511b66c43ea9428bf1aa06db5582cf17cd143c21db452012cae6878f496cd9b"
+  },
+  "generator_sha256": "6ef5743e297638a51da4b94268126cc0259c137ac23caf2a219e95ec307ef841",
+  "adaptations": [
+    "Local player/parser/resource/window boundaries; same serialized field names and official branches.",
+    "MeetSound resolves the original Wwise event to its converted AudioClip, as existing shared sound components.",
+    "Meet request waits one Unity continuation before committing locally; reject restores click availability.",
+    "Cancel a 700 ms presentation when a pooled card is reinitialized/disabled to avoid using a recycled row."
+  ],
+  "scope": "Original roster/card/friendship controllers; native prefab/host installation is still required."
+}

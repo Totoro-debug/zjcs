@@ -72,6 +72,14 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 `prepare_partner_ui_validation.py` 使用实际迁移代码及实际共享 UI 源码建立隔离工程；`PartnerUiHelperValidation.Run` 在 Unity `2022.3.57f1c2` Play Mode 中以指针坐标、UI 射线命中和 pointer down／up／click 验证排序／反向、筛选重复点击、缓存、默认值、重置与开关，并验证队列延迟、去重、停止和清空。组件测试通过，已查看相机实际渲染的测试控件画面；该测试布局仅属于验证工程，不进入游戏，也不代表官方伙伴界面已还原。静态检查、主工程 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 均通过；完整伙伴页的入口、资源绑定、Play Mode 流程及 Windows Player 仍待完成。
 
+### 已接通的名册卡片控制器（局部）
+
+`Runtime/Official/PartnersUI/Roster/` 从当前 `884_156692` 迁移 `NpcPanelNpcList`、`NpcPanelNpcItem`、`NpcFriendshipLevelShow` 及原滚动位置扩展。名册控制器保留显示全部、排序通知、滚动位置恢复和原显示队列；卡片保留五种相遇状态、普通／特殊名字、官方立绘／背景地址和信物进度。等待／未结识卡片打开首个专属信物，已结识卡片按当前名册过滤后的顺序打开详情。好感条按当前等级的累计经验差计算，预览叠加本次好感；满级按原全局等级上限判断。
+
+`Offline/PartnersUI/OfflinePartnerRosterUiServices` 将控制器消费的玩家、配置、图片和窗口调用接到实际本地服务。相遇先完成信物扣除与伙伴记录的同一落盘事务，再发出原新增通知；卡片进入解锁状态、播放相遇音效，等待原 700 毫秒后刷新并请求好感提示。拒绝相遇会恢复点击状态；重复点击受请求中状态限制。卡片停用或重新绑定时取消旧的延迟提示并释放图片句柄，避免对象池中的旧伙伴影响新卡片。置顶和外部存档变化分别转发原置顶／移除／好感通知。原码、适配边界及输入输出哈希见[名册界面来源](../../assets/reference/partner-roster-ui-source-manifest.json)，重建入口为 `scripts/prepare_partner_roster_ui.py`。
+
+`prepare_partner_roster_ui_validation.py` 复制实际运行时程序集依赖，并使用隔离存档在 Unity Play Mode 验证指针坐标与射线命中后的按钮点击、信物不足、连续点击只扣一次、先保存后通知、700 毫秒延迟、信物／详情路由、置顶落盘恢复、好感比例／预览／满级、外部存档刷新及卡片回收后的订阅和句柄释放。控制器测试通过，已查看实际相机渲染的测试夹具；夹具仅在验证工程中使用，不是官方 UI 还原成果。静态检查、主工程编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。官方 prefab、音效／红点／窗口宿主的最终绑定、完整界面流程及 Windows Player 仍未完成。
+
 ### 当前原生 prefab 字段恢复（局部）
 
 `scripts/prepare_current_partner_native.py` 从当前 APK／已校验的配套云端资源读取官方 NPC bundle，对 `NpcPanel`、`NpcPanelNpcItem`、`NpcDetailPanel`、`NpcFriendshipDialog`、`NpcFriendshipPreviewPropItem` 和 `NpcFriendshipPropItemGroup` 逐节点核对原层级、名称、子节点和组件顺序，并以原程序集脚本身份校验转换器的 MonoScript 引用。共核对 7,004 个对象，补回 106 个被转换器省略的组件字段；原字段缓存和对象原始字节分别校验哈希。跨 prefab 引用保留目标 prefab 自身 GUID／根对象，未按相似名称匹配。
@@ -86,7 +94,7 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 相遇事务提交前重新读取存档，信物扣除、初始好感与实际相遇时间共同保存；重复事件不再次相遇或扣除。置顶及其时间单独保存，重复置顶保持原顺序。旧存档未记录的相遇时间保持零，不从注册时间或当前时间反推。来源函数、当前原码及配置哈希见 [名册规则来源](../../assets/reference/partner-roster-rules-source-manifest.json)。
 
-`scripts/test_partner_gifts.ps1` 的隔离 Unity 编译／存档验证同时覆盖地图锁定、区域未激活／探索完成／激活后的状态变化、部分信物显示、信物不足拒绝、可结识优先、真实结识扣除、重复相遇、置顶解锁／顺序、存档恢复及旧日期兼容；排序检查覆盖反向与固定优先级、最终伙伴号比较。当前为接口验证，尚未接通官方名册 prefab、入口或模拟点击流程，未据此认定界面、Play Mode 或 Windows Player 已完成。主工程正在运行其他 Unity 验证实例，本次未启动冲突实例执行 `ProjectTools.Validate`。
+`scripts/test_partner_gifts.ps1` 的隔离 Unity 编译／存档验证同时覆盖地图锁定、区域未激活／探索完成／激活后的状态变化、部分信物显示、信物不足拒绝、可结识优先、真实结识扣除、重复相遇、置顶解锁／顺序、存档恢复及旧日期兼容；排序检查覆盖反向与固定优先级、最终伙伴号比较。卡片的模拟点击与主工程验证范围见上文「已接通的名册卡片控制器」；官方名册 prefab 和实际入口尚未接通。
 
 ### 已迁移的送礼规则与存档接口（局部）
 
@@ -94,7 +102,7 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 `OfflineCharacterProgressionService.NpcGiftCandidates`、`AutoSelectNpcGifts` 和 `GiveNpcGifts` 接入上述规则，按 `NpcHelper.CanSendGiftToNpc` 拦截不能赠送的信物、属于其他伙伴的专属礼物及星神非偏好礼物。已选礼物可使好感恰好达到当前位阶上限；当前好感已经达到该上限时限制继续赠送。超过全局最高经验时返回待确认，明确确认后保留超出经验；礼物扣除和好感更新共同落盘，重复事件不重复扣除。提交前重新读取存档，避免长驻伙伴服务覆盖其他功能已保存的库存。
 
-验证：`scripts/test_partner_gifts.ps1` 编译实际 C# 规则，并使用隔离 Unity `2022.3.57f1c2` 工程编译实际养成依赖、加载工程现有官方配置，验证恰好升满、溢出取消／确认、重复提交、库存不足、存档重新读取、自动选量及 90 项其他伙伴专属礼物的排除。纯规则测试另覆盖偏好排序、已有选量、库存耗尽、两种取整差异及数值溢出。此处为 Editor 中的接口与存档验证，尚未验证伙伴界面、模拟点击、Play Mode 画面或 Windows Player；主工程 `ProjectTools.Validate` 启动因已有实例占用而未执行，不把隔离编译等同于主工程完整验证。
+验证：`scripts/test_partner_gifts.ps1` 编译实际 C# 规则，并使用隔离 Unity `2022.3.57f1c2` 工程编译实际养成依赖、加载工程现有官方配置，验证恰好升满、溢出取消／确认、重复提交、库存不足、存档重新读取、自动选量及 90 项其他伙伴专属礼物的排除。纯规则测试另覆盖偏好排序、已有选量、库存耗尽、两种取整差异及数值溢出。送礼仍为 Editor 中的接口与存档验证，尚未验证官方送礼界面、对应模拟输入、Play Mode 画面或 Windows Player。
 
 ## 自定义实现
 

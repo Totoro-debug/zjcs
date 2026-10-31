@@ -35,7 +35,7 @@
 | 当前来源切换与转换链 | `assets/reference/official-map/current-*-source-manifest.json`、`assets/reference/character-creation/current-*-source-manifest.json` |
 | 客户端／共享代码来源 | [官方程序集与反编译目录](../../.tools/source-packages/official-code/) 与各模块源码来源清单 |
 | 模块资源来源 | 本目录各模块的 `source-manifest.json`、`*-source-manifest.json` 及所属功能／地图页中的入口 |
-| 当前伙伴界面公共组件与原生字段输入 | [公共组件源码](partner-ui-helpers-source-manifest.json)、[原生 prefab 字段](partner-native-recovery-source-manifest.json)：`884_156692` 选定反编译输入、NPC bundle／对象、原字段缓存及转换输入输出哈希；运行接线与验证范围见[伙伴功能页](../../docs/features/partners.md) |
+| 当前伙伴界面公共组件、名册控制器与原生字段输入 | [公共组件源码](partner-ui-helpers-source-manifest.json)、[名册控制器源码](partner-roster-ui-source-manifest.json)、[原生 prefab 字段](partner-native-recovery-source-manifest.json)：`884_156692` 选定反编译输入、NPC bundle／对象、原字段缓存及转换输入输出哈希；运行接线与验证范围见[伙伴功能页](../../docs/features/partners.md) |
 | 森之国女神珍宝详情原 prefab 与 Unity 转换 | [转换清单](official-map/map11-treasure-detail-source-manifest.json)：APK `871_156598` bundle／PathID／输入哈希、转换工具哈希、Unity prefab 输出哈希 |
 | Windows Player 官方应用图标 | [来源清单](application-icon-source-manifest.json)：APK 内 `res/mipmap-xxxhdpi/app_icon.png` 原始 PNG 与 SHA256，绑定至 Windows Standalone PlayerSettings |
 | 通天塔 871 原生地形闭包 | [来源清单](official-map/map15-native-terrain-source-manifest.json)：`871_156598` 的14个官方地形根、CAB输入收据、原始shader GLES程序、MonoScript／Windows shader绑定及 Unity YAML 输出哈希 |
