@@ -190,3 +190,5 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 
 泽之国原小地图点击与当前相机框：prepare_unity_map13_minimap_mark_click.py 完整迁入原点击组件和坐标解析分支，以明确本地输入／相机／发布接口替换注入；保留源查询顺序、射线／viewport、错误与视野框行为。prepare_unity_map13_minimap_click_frame_assets.py 从已核验 MiniMap_13 原生转换结果提取原三对象视野框及切片精灵，复用同一原图集并保持原排序、层、隐藏状态和变换。8 次模拟鼠标输入及原生画面、Unity 编译／Validate／静态检查通过；正式面板／整图／存档／Player 尚待接通。见 [代码](official-map/map13-minimap-mark-click-code-source-manifest.json)、[资源](official-map/map13-native-minimap-click-frame-source-manifest.json) 与 [泽之国](../../docs/maps/map-13.md)。
 | 通天塔入口运行时定义 | `assets/official/regions/15.json`、`15-entities.json` 与 `unity/Assets/Game/Resources/Map15/Group/maps/15.json`，由 `scripts/prepare_unity_map15_runtime_data.py` 生成 `Assets/Official/World/Map/15/map15.json`、来源清单和 `Map15/Entities/catalog.json`；保留 25×30 导航、26 个实体与 871 组件闭合 |
+
+伙伴原生赠礼区域输入：当前 `884_156692` 的 NPC／物品／通用资源分包、原 `NpcDetailPanel` 字段缓存、原 Btn_Base_Click 编译常量及所选中文语言分包；APK 来源保持原 `881_156673` 标识。原对象身份、恢复字段、代码／资源输入哈希及转换方法见 [来源清单](partner-gift-controller-source-manifest.json)。

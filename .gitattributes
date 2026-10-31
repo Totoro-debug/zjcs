@@ -1355,3 +1355,13 @@ scripts/fixtures/partner_gift_preferences_validation.cs text eol=lf
 assets/reference/partner-gift-preferences-source-manifest.json text eol=lf
 unity/Assets/Official/Partners/UI/Gifts.meta text eol=lf
 unity/Assets/Official/Partners/UI/Gifts/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Preserve the original gift controller and recovered subtree.
+scripts/prepare_partner_gift_controller_*.py text eol=lf
+scripts/partner_gift_animator_binding.py text eol=lf
+scripts/templates/partner_gift_controller/** text eol=lf
+scripts/fixtures/partner_gift_controller_validation.cs text eol=lf
+assets/reference/partner-gift-controller-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/GiftController.meta text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/GiftController/** text eol=lf
+unity/Assets/Official/Partners/UI/GiftController.meta text eol=lf
+unity/Assets/Official/Partners/UI/GiftController/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

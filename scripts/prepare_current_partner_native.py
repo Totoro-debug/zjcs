@@ -42,6 +42,11 @@ def script_id(script):
 class UnityYamlLoader(yaml.SafeLoader):
     def construct_mapping(self, node, deep=False):
         for key, value in node.value:
+            if key.value == 'myKey' and value.tag == 'tag:yaml.org,2002:null' and value.value == '':
+                # Unity's blank serialized language key is an empty string.
+                # PyYAML's null would be emitted as the literal text "null",
+                # causing MultiLanguageText to overwrite static separators.
+                value.tag = 'tag:yaml.org,2002:str'
             if key.value in ('m_IndexBuffer', '_typelessdata', 'm_TypelessData'):
                 # Unity writes byte arrays as unquoted hex. YAML 1.1 otherwise
                 # turns digit-only buffers into integers (including octal),

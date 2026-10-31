@@ -138,6 +138,14 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 静态检查（81,471 个 GUID）、主工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过；Play Mode 前后 454 项暂存载荷／元数据、导入后 474 项安装资源／目录及 22 项实际使用的脚本绑定哈希一致。提取工具扩展以原 311 对象窗口逐对象回归，默认 NPC 路径保持一致。正式本地配置／属性提供者、物品详情弹窗内容、实际音频播放、完整赠礼页和 Windows Player 尚未接通；当前资源接入不表示伙伴系统已经完整完成。
 
+### 当前原生赠礼区域（局部）
+
+`Runtime/Official/PartnersUI/GiftController/` 从当前 `884_156692` 完整迁入 `NpcDetailPanelGiftContent`、`NpcGiftBlueDotItem` 和 `NpcFriendshipLevelContent`，保留原礼物排序、选量／减少／重置、自动补量、好感预览、精确升满与溢出确认、阶位／满级限制、称谓校验及响应后的刷新顺序。原配置、玩家、资源与窗口服务改为显式接口；原属性组和礼物格在初始化前绑定服务，原资源袋保留释放顺序。
+
+`prepare_partner_gift_controller_native.py` 从原 `NpcDetailPanel` 的 3,242 个对象中按实际控制器字段提取完整 GiftContent 子树（325 个对象），只断开提取根的父引用；原坐标、尺寸、层级和内部绑定不变。恢复原 Upgrade 附件及 `Btn_Base_Click` 控制器，逐项核对编译状态机的五个状态、四个转换、参数、条件、时间与五份原动画引用。资源安装到 `unity/Assets/Official/Partners/UI/GiftController/`，其余图标、属性与字体按原 GUID 和载荷复用。转换器对原空 `myKey` 误写字面值 null 的问题已修正；两份既有物品格及原属性组逐字段核对原 prefab 后恢复空键，保留原静态数量分隔符。此次凭据明确记录被替换的旧字节、原字段编号与新哈希，覆盖早期清单中的对应输出值。输入、代码、原生依赖与安装哈希见[赠礼区域来源](../../assets/reference/partner-gift-controller-source-manifest.json)。
+
+`prepare_partner_gift_controller_validation.py` 使用完整原子树及原物品格，在隔离 URP Play Mode 通过实际射线和模拟鼠标检查选择、减少、自动选量、重置、赠送异步响应、恰好升满、溢出确认、阶位／满级拒绝、称谓校验与回调顺序、库存蓝点、功能门槛和关闭订阅释放。选量使用所选版本真实礼物经验和偏好；等级、库存、属性、弹窗及声音仍由明确测试端点提供。已查看初始、选中、二级阶位限制与三级满级四帧实际 GPU 画面；静态检查（81,537 个 GUID）、主工程导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 通过，572 项安装文件及 23 项目录元数据哈希一致。正式完整详情宿主、真实本地配置／事务／存档提供者、原输入／确认弹窗、实际声音和 Windows Player 尚未接通，本节不表示完整伙伴功能已完成。
+
 ### 当前版伙伴配置输入（局部）
 
 `scripts/prepare_current_partner_rules.py` 从选定的 `884_156692` 主 Luban 包与独立 `NpcTalentTree` 包读取 16 张完整表，使用同版本反编译构造器、条件分派和元数据解码，并逐表检查全部字节已消费。`unity/Assets/Official/Partners/partner-rules.json` 保留 148 条 NPC、115 条礼物、100 条信物、10,000 条好感阈值、385 条档案、20 条称谓、62 条互动、3 条天赋物品、两组各 252 条天赋节点／属性，以及依赖的条件、功能门槛、物品和成就表。原表没有删行或改写版本；输入包／对象、全部实际使用的构造器、输出及元数据哈希见[配置来源](../../assets/reference/partner-rules-source-manifest.json)。
