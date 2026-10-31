@@ -66,17 +66,17 @@ class BundleReader:
         return self.loaded[key]
 
 
-def recover(bundle=None, only_class=None, limit=None, unsupported_only=False):
+def recover(bundle=None, only_class=None, limit=None, unsupported_only=False, all_inputs=False):
     source = OfficialSource()
     cache = ROOT/'.tools/source-packages/current'/source.version/'native-conversion'
-    selection_path = cache/'changed-inputs-source-manifest.json'
+    selection_path = cache/('source-manifest.json' if all_inputs else 'changed-inputs-source-manifest.json')
     selection = json.loads(selection_path.read_bytes())
     schemas = CurrentSchemas()
     reader = BundleReader(cache, json.loads((cache/'source-manifest.json').read_bytes()))
-    rows = [row for row in selection['inputs'] if row['format'] == 'UnityFS']
+    rows = [row for row in selection['inputs'] if row['format'] == 'UnityFS' or (all_inputs and row['format'] == 'builtin')]
     required_types = None
     if unsupported_only:
-        export = json.loads((cache/'native-export-complete-source-manifest.json').read_bytes())
+        export = json.loads((cache/('native-export-all-source-manifest.json' if all_inputs else 'native-export-complete-source-manifest.json')).read_bytes())
         required_types = {match[1] for issue in export['conversion_issues']
                           if (match := re.search(r'Could not read MonoBehaviour structure for `([^`]+)`', issue))}
         print('Supplementing unsupported component types:', len(required_types), flush=True)
@@ -84,7 +84,7 @@ def recover(bundle=None, only_class=None, limit=None, unsupported_only=False):
         rows = [row for row in rows if row['name'] == bundle]
         if not rows:
             raise ValueError('Probe bundle is not in the verified selection')
-    output = cache/('component-fields-probe' if bundle or only_class or limit else 'component-fields')
+    output = cache/('component-fields-probe' if bundle or only_class or limit else 'component-fields-all' if all_inputs else 'component-fields')
     output.mkdir(exist_ok=True)
     directories = {output}
     def ensure(path):
@@ -114,7 +114,7 @@ def recover(bundle=None, only_class=None, limit=None, unsupported_only=False):
                 raise ValueError('Content-addressed original component changed')
             if not raw_path.exists():
                 raw_path.write_bytes(raw)
-            record = dict(bundle=row['name'], cab=obj.assets_file.name, path_id=str(obj.path_id),
+            record = dict(bundle=row.get('name', Path(row['output']).name), cab=obj.assets_file.name, path_id=str(obj.path_id),
                           assembly=script.m_AssemblyName, type=name, raw_sha256=digest,
                           raw=raw_path.relative_to(output).as_posix())
             try:
@@ -159,5 +159,6 @@ if __name__ == '__main__':
     parser.add_argument('--only-class')
     parser.add_argument('--limit', type=int)
     parser.add_argument('--unsupported-only', action='store_true')
+    parser.add_argument('--all-inputs', action='store_true')
     args = parser.parse_args()
-    recover(args.bundle, args.only_class, args.limit, args.unsupported_only)
+    recover(args.bundle, args.only_class, args.limit, args.unsupported_only, args.all_inputs)

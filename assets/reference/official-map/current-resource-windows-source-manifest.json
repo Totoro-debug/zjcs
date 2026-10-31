@@ -1,0 +1,89 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/source-manifest.json",
+      "bytes": 115024275,
+      "sha256": "c444d983cb42aa33bd6b1a3e5d826b8bf5fe24e84871e667589ef6874c9824ae"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/all-assets/inventory.json",
+      "bytes": 23012325,
+      "sha256": "e94bf7391707decd859fbe4d7faf9ef1ce1d190df6c06005a28723766392c4fe"
+    }
+  ],
+  "native": {
+    "receipt": {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json",
+      "bytes": 114378086,
+      "sha256": "264d79bcd2da2d47f86bc9e1c1956cd4e07853e09ad2248b691e2c92dd125d3c"
+    },
+    "files": 467037,
+    "directory": ".tools/source-packages/current/884_156692/native-conversion/native-export-all"
+  },
+  "textures": {
+    "receipt": {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-textures/source-manifest.json",
+      "bytes": 136826710,
+      "sha256": "095eb422b8a241e6468abd81940e22aff9ad22f89bc78161dbdba8bd1f45b3b0"
+    },
+    "textures": 33264,
+    "mip_levels": 95412,
+    "pixel_bytes": 31320799878,
+    "formats": {
+      "RGBA32": 122,
+      "ASTC_RGB_6x6": 26440,
+      "ASTC_RGB_8x8": 453,
+      "ASTC_RGB_4x4": 6033,
+      "ASTC_RGB_10x10": 6,
+      "ASTC_RGB_12x12": 17,
+      "Alpha8": 99,
+      "RGB24": 6,
+      "ETC2_RGBA8": 51,
+      "ETC_RGB4": 3,
+      "RGBA4444": 34
+    },
+    "unresolved": 0
+  },
+  "components": {
+    "receipt": {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/component-fields-all/source-manifest.json",
+      "bytes": 28947130,
+      "sha256": "c82db6a6903d36856807688d11573793cdaef98d1da13d0d6108b6f3f04aeec5"
+    },
+    "types": 1315,
+    "objects": 44139,
+    "managed_references": 86366,
+    "unresolved": 0
+  },
+  "generators": [
+    {
+      "path": "scripts/prepare_current_asset_inventory.py",
+      "bytes": 4157,
+      "sha256": "34339a60ea7c43823cd3f7c3e81819ccc8984e6d05e76dab952fa201f159d27b"
+    },
+    {
+      "path": "scripts/convert_current_texture_mips.py",
+      "bytes": 11194,
+      "sha256": "026e026f8c462e386037823d46cbbb294ce28a12ff2ef5c11a9c7f867b93aab7"
+    },
+    {
+      "path": "scripts/recover_current_component_fields.py",
+      "bytes": 8597,
+      "sha256": "cd408c457491e527cb47fd9fed281297bfac68df30b9e0966e08aa0df1cef5c6"
+    },
+    {
+      "path": "scripts/prepare_current_windows_result.py",
+      "bytes": 3127,
+      "sha256": "a0360d636ea02e1944ee9613b0774be033458a4eedc53ee73a26edecb95828ca"
+    }
+  ],
+  "preservation": "Existing native exports, original raw objects, source CAB/PathID identities, unmatched historical inputs and previous converted payloads remain on disk.",
+  "limitations": [
+    "Conversion cache assets have not replaced existing game runtime assets.",
+    "Component fields include exact source PPtrs; native object rebinding remains a module integration task.",
+    "Native texture GUIDs and original CAB/PathID pairs are explicit in the texture receipt.",
+    "This receipt does not declare an external backup or a completed game feature."
+  ]
+}

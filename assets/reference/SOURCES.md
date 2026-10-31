@@ -20,6 +20,7 @@
 | 完整托管客户端 C# 归档 | [来源清单](official-client-code/source-manifest.json)；版本目录 `client-decompilation-manifest.json` 记录各项目全部输出文件 SHA256，覆盖所选 HybridCLR 清单的全部 10 个程序集；静态反编译，不执行游戏程序集，AOT 类型描述桩不计入 C# 方法实现 |
 | 当前配置与批量转换输入 | 当前版本目录 `official-data/`、`native-conversion/source-manifest.json`；后者保留五包 APK／云端资产路径目录、bundle 对应关系与逐文件原始／解码 SHA256 |
 | 当前反编译／配置／转换缓存凭据 | [准备来源清单](official-map/current-resource-preparation-source-manifest.json)：程序集、448 份原表、原生资源、WAV／媒体、组件字段、转换输入与 CAB 闭包清单的 SHA256；旧模块原始来源身份保留 |
+| 当前全量原生资源与 Windows 精确 mip | [结果清单](official-map/current-resource-windows-source-manifest.json)：全量原生输出、组件字段、全部纹理原生像素及原 mip 的逐文件清单 SHA256、源 CAB／PathID 和转换器身份；原输入、较早输出与未对应旧工程文件实际保留 |
 | APK 原生 IL2CPP 输入 | 版本代码目录 `native/arm64-v8a/libil2cpp.so`（347,966,368 字节）及 `native/armeabi-v7a/libil2cpp.so`（287,148,316 字节）；ZIP 条目、大小与 SHA256 记录在版本 `code-manifest.json` 的 `native_libraries`，提取不代表 AOT 反编译完成 |
 | APK AOT 类型资料 | 当前版本 `official-code/aot-metadata/source-manifest.json`：ARM64 原库、global-metadata、恢复镜像、ELF 分析视图、57,638 个类型及 148 份描述 DLL 的输入输出 SHA256 |
 | 分包 | Boot、Launch、HybridCLR、DefaultPackage、WwiseBnk |

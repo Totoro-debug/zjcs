@@ -32,6 +32,8 @@
 
 原生资源结果为 `native-conversion/native-export-complete/`，共 186,919 个文件，包含 prefab、场景、材质、纹理、动画及原始脚本载荷；3 个原版空字体图集保持零尺寸 Alpha8 数据和原 GUID。`raw-resources/` 包含 149 个原始文件对应的媒体与数据，共 25,479 个文件，其中 12,665 份为 WAV，44 份保留循环资料。`component-fields/` 的有效清单包含主导出器报缺的全部 466 种类型、8,768 个组件及 18,506 条托管引用，未解决项为 0，原始字节与 CAB／PathID 身份均保留。上述目录均位于当前版本的 `native-conversion/` 下。
 
+全量结果为 `native-conversion/native-export-all/`，覆盖当前全部 20,883 个 Unity 输入，共 467,037 个文件，较早转换目录仍实际保留。`component-fields-all/` 包含 1,315 种导出器报缺类型的 44,139 个组件字段和 86,366 条托管引用，解析未解决项为 0；原始对象字节及源 PPtr 同时保留，尚未回填为游戏工程中的原生对象引用。`all-assets/windows-textures/` 包含全部 33,264 个纹理对象、95,412 层原始 mip／立方体面层和 31,320,799,878 字节 Windows 原生像素，未解决项为 0；纹理保持原尺寸、色彩空间、采样参数及空动态纹理状态。新纹理以 CAB／PathID 明确对应稳定 GUID；旧工程素材与未对应旧输出保持实际文件。结果凭据见[全量 Windows 资源清单](../../assets/reference/official-map/current-resource-windows-source-manifest.json)。
+
 当前检查覆盖工程静态元数据、Editor／Player 编译、ProjectTools 校验、Windows D3D11 测试构建和启动窗口定位。校验仍有递归 DTO 序列化深度及 Edit Mode 清理提示；这些检查不证明完整游戏完成。启动画面见[启动](startup.md)，原位面列表的本地存档适配见[设置与存档](settings-and-save.md)，开场见[创角](character-creation.md)，地图战斗输入见[初始岛](../maps/map-10.md)。
 
 ## 自定义实现
@@ -46,7 +48,7 @@ Windows 使用可缩放竖屏与本地启动链；资源、规则和存档随游
 
 - 完整已提交工程从创角到家园、地图、战斗、退出及冷启动恢复的端到端运行与输入验证。
 - 各模块尚缺的官方 UI、模型、动画、音频、渲染及第三方依赖恢复，具体缺口见所属页。
-- 新版批量原生转换结果与旧工程资产的逐对象对应、补充字段及托管引用的原生对象回填、稳定 GUID／脚本绑定、Windows shader／精确 mip 和实际运行验证。
+- 新版批量转换结果与旧工程资产的逐对象接入、补充字段及托管引用的原生对象回填、脚本绑定、Windows shader 编译及游戏实际运行接入。
 - 清除校验中的序列化深度和 Edit Mode 清理提示，并验证受影响运行路径。
 - 与已提交源码、素材和文档一致的逐功能／地图 Windows 发布。
 
