@@ -23,6 +23,7 @@ def main():
                         project / 'Assets/Game/Runtime' / relative, dirs_exist_ok=True)
     shutil.copytree(work / 'card-assets', project / 'Assets/PartnerCard', dirs_exist_ok=True)
     shutil.copy2(ROOT / 'scripts/fixtures/partner_card_binding_validation.cs', project / 'Assets/Editor/PartnerCardBindingValidation.cs')
+    shutil.copy2(ROOT / 'scripts/fixtures/partner_roster_ui_validation.cs', project / 'Assets/Editor/PartnerRosterUiValidation.cs')
     assembly = project / 'Assets/Editor/Validation.asmdef'
     data = json.loads(assembly.read_bytes())
     data['references'] = sorted(set(data['references']) | {'Zjcs.Official.World.NativeText', 'Coffee.UIParticle'})

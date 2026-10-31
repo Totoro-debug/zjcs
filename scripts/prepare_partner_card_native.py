@@ -4,10 +4,12 @@ All staging is confined to the caller's validation workspace. Source object
 identities are learned from original PPtrs paired with native exported PPtrs;
 names never establish resource identity.
 """
+import argparse
 import hashlib
 import json
 from pathlib import Path
 import re
+import shutil
 import struct
 import subprocess
 import sys
@@ -19,6 +21,8 @@ from UnityPy.enums import ClassIDType
 import yaml
 
 from official_apk import ROOT
+from official_manifest import read_asset_manifest
+from npc_travel_language import language
 from prepare_current_partner_native import PartnerNativeRecovery, documents, identity
 from validation_workspace import validation_directory
 from prepare_unity_map13_native_sprite_yaml import Dumper as NativeDumper
@@ -56,6 +60,9 @@ class PartnerCardBinding:
         self.audio_outputs = {}
         self.audio_proof = {}
         self.inputs = {}
+        for name in ('prepare_current_partner_native.py', 'official_apk.py', 'official_manifest.py'):
+            path = ROOT / 'scripts' / name
+            self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
         self.assets = {}
         self.script_sources = {}
         self.by_name = {}
@@ -295,6 +302,7 @@ class PartnerCardBinding:
             self.redirects[source_guid] = self.scripts[full_name]
             return self.redirects[source_guid]
         path = None
+        geometry = None
         key = identity(obj)
         if obj.type.name in ('Texture2D', 'Cubemap', 'Shader'):
             rows = self.textures if obj.type.name != 'Shader' else self.shaders
@@ -336,9 +344,17 @@ class PartnerCardBinding:
                 data = docs
             if obj.type.name == 'Sprite':
                 sprite = obj.read(check_read=False)
+                source = self.recovery.fields(obj)
+                original_indices = bytes(source['m_RD']['m_IndexBuffer'])
+                native_sprite = docs[file_id]['Sprite']
+                if bytes.fromhex(native_sprite['m_RD']['m_IndexBuffer']) != original_indices:
+                    raise ValueError('Native sprite index bytes differ from original: ' + key)
+                vertices = source['m_RD']['m_VertexData']['m_VertexCount']
+                if native_sprite['m_RD']['m_VertexData']['m_VertexCount'] != vertices:
+                    raise ValueError('Native sprite vertex count differs from original: ' + key)
+                geometry = dict(vertices=vertices, index_bytes=len(original_indices), index_sha256=sha(original_indices))
                 if sprite.m_SpriteAtlas.path_id:
                     atlas = sprite.m_SpriteAtlas.deref()
-                    source = self.recovery.fields(obj)
                     packed, = [value for atlas_key, value in self.recovery.fields(atlas)['m_RenderDataMap']
                                if atlas_key == source['m_RenderDataKey']]
                     self.learn(packed, docs[file_id]['Sprite']['m_RD'], atlas)
@@ -350,7 +366,7 @@ class PartnerCardBinding:
         self.redirects[source_guid] = pointer
         self.proof[key] = dict(source=self.recovery.apk.provenance(obj), type=obj.type.name,
             original_sha256=sha(obj.get_raw_data()), native_path=path.relative_to(ROOT).as_posix() if path else None,
-            output=target.as_posix(), guid=target_guid)
+            output=target.as_posix(), guid=target_guid, geometry=geometry)
         self.queue.append((target, target_guid, data))
         return pointer
 
@@ -380,7 +396,123 @@ class PartnerCardBinding:
             return [self.replace(item) for item in value]
         return value
 
-    def build(self):
+    def dynamic_sprites(self, npc_ids):
+        rules = ROOT / 'unity/Assets/Official/Partners/partner-rules.json'
+        data = json.loads(rules.read_bytes())
+        if data['manifest'] != self.recovery.apk.version:
+            raise ValueError('Dynamic partner image configuration differs from selected source')
+        self.inputs[rules.relative_to(ROOT).as_posix()] = sha(rules.read_bytes())
+        original = ROOT / '.tools/source-packages/official-code/framework-firstpass-source/ResourceLoaderExtensions.cs'
+        selected = ROOT / '.tools/source-packages/current' / data['manifest'] / 'official-code/framework-firstpass-source/ResourceLoaderExtensions.cs'
+        if original.read_bytes() != selected.read_bytes() or '"Assets/Image/" + spriteName' not in original.read_text('utf-8-sig'):
+            raise ValueError('Original sprite address prefix changed')
+        self.inputs[original.relative_to(ROOT).as_posix()] = sha(original.read_bytes())
+        manifest = self.recovery.apk.source.manifest_bytes('DefaultPackage', self.recovery.apk.archive)
+        records = read_asset_manifest(manifest)
+        requested = {}
+        text_keys = {'ui_new_mark_text'}
+        for npc_id in npc_ids:
+            row, = [row for row in data['tables']['npc'] if row['Id'] == npc_id]
+            text_keys.add(row['NameKey'])
+            for field in ('FigureImage', 'SmallBgImage'):
+                requested.setdefault(row[field], []).append(dict(npc_id=npc_id, field=field))
+        bindings = []
+        for address, consumers in sorted(requested.items()):
+            full_address = 'Assets/Image/' + address
+            record, = [row for row in records if row['address'] == full_address or row['path'] == full_address + '.png']
+            sprites = [pointer.deref() for path, pointer in self.recovery.apk.container(record['bundle'])
+                       if path.casefold() == record['path'].casefold() and pointer.deref().type.name == 'Sprite']
+            obj, = sprites
+            source_key, source_id = self.recovery.fields(obj)['m_RenderDataKey']
+            render_guid = ''.join(format(source_key['data[' + str(i) + ']'], '08x')[::-1] for i in range(4))
+            if render_guid != record['guid']:
+                raise ValueError('Original sprite render key differs from asset manifest: ' + address)
+            name = self.name_key(obj.read(check_read=False).m_Name)
+            matches = []
+            for key in [name] + [name + str(i) for i in range(100)]:
+                for candidate in self.by_name.get(key, []):
+                    if candidate.suffix != '.asset':
+                        continue
+                    docs = documents(candidate.read_text('utf8'))
+                    if len(docs) == 1 and next(iter(docs.values())).get('Sprite', {}).get('m_RenderDataKey') == {render_guid: source_id}:
+                        matches.append(candidate)
+            candidate, = matches
+            source_guid = guid(Path(str(candidate) + '.meta'))
+            if source_guid in self.objects and identity(self.objects[source_guid]) != identity(obj):
+                raise ValueError('Dynamic sprite identity collides with serialized dependency')
+            self.objects[source_guid] = obj
+            pointer = self.load(source_guid)
+            bindings.append(dict(address=address, pointer=pointer, consumers=consumers, manifest_asset=record,
+                                 original=identity(obj), original_sha256=sha(obj.get_raw_data()),
+                                 source=self.recovery.apk.provenance(obj)))
+            print('Bound original dynamic sprite:', address, flush=True)
+        texts, text_sources = language(text_keys)
+        if set(texts) != text_keys:
+            raise ValueError('Original partner card language entries are unavailable: ' + repr(text_keys - texts.keys()))
+        language_manifest = self.recovery.apk.source.manifest('WwiseBnk', self.recovery.apk.archive)
+        language_records = {row['name']: row for row in language_manifest['bundles']}
+        for path, digest in text_sources.items():
+            raw = (ROOT / path).read_bytes()
+            record = language_records[Path(path).name]
+            if len(raw) != record['size'] or hashlib.md5(raw).hexdigest() != record['hash']:
+                raise ValueError('Language data differs from the selected WwiseBnk manifest: ' + path)
+            self.inputs[path] = digest
+        helper = ROOT / 'scripts/npc_travel_language.py'
+        self.inputs[helper.relative_to(ROOT).as_posix()] = sha(helper.read_bytes())
+        return dict(manifest=self.recovery.apk.version, asset_manifest_sha256=sha(manifest), sprites=bindings,
+                    language_manifest_sha256=sha(self.recovery.apk.source.manifest_bytes('WwiseBnk', self.recovery.apk.archive)),
+                    texts=[dict(key=key, text=value) for key, value in sorted(texts.items())],
+                    font=self.chinese_font(records))
+
+    def chinese_font(self, records):
+        def asset(path, kind):
+            row, = [row for row in records if row['path'] == path or row['address'] == path]
+            obj, = [pointer.deref() for name, pointer in self.recovery.apk.container(row['bundle'])
+                    if name.casefold() == row['path'].casefold() and pointer.deref().type.name == kind]
+            return obj
+
+        configs = []
+
+        def config(path):
+            obj = asset(path, 'TextAsset')
+            configs.append(dict(source=self.recovery.apk.provenance(obj), original=identity(obj),
+                                original_sha256=sha(obj.get_raw_data()), path=path))
+            return json.loads(obj.read().m_Script)
+
+        regional = config('Assets/TextMesh Pro/Assets/Fonts & Materials/MultiLanguageFontConfig.json')
+        original_fonts = config('Assets/TextMesh Pro/RawFonts/FontAssetFontConfig.json')
+        region = regional['RegionFontAssetDict']['CN']
+        name = region['Default']
+        if region['Fallbacks'] or regional['FontAssetDict']['zh_CN'] != name:
+            raise ValueError('Original CN font selection needs its full fallback chain')
+        obj = asset(name, 'MonoBehaviour')
+        key = identity(obj)
+        if key not in self.proof:
+            raise ValueError('Original regional font is outside the card resource closure: ' + key)
+        pointer, = [value for value in self.redirects.values() if value['guid'] == self.proof[key]['guid']]
+        definition = original_fonts['FontAssetInfoDict'][name]
+        font_obj = asset(definition['FontPath'], 'Font')
+        raw = bytes(font_obj.read(check_read=False).m_FontData)
+        if len(raw) != definition['Length'] or hashlib.md5(raw).hexdigest() != definition['Hash']:
+            raise ValueError('Original source font differs from its official font configuration')
+        font_guid = hashlib.md5(('zjcs:partner-source-font:' + identity(font_obj)).encode()).hexdigest()
+        font_pointer = dict(fileID=12800000, guid=font_guid, type=3)
+        self.script_guids.add(font_guid)
+        target = Path('Fonts') / Path(definition['FontPath']).name
+        self.queue.append((target, font_guid, raw))
+        self.proof[identity(font_obj)] = dict(source=self.recovery.apk.provenance(font_obj), type='Font',
+            original_sha256=sha(font_obj.get_raw_data()), font_data_sha256=sha(raw), output=target.as_posix(), guid=font_guid)
+        for filename in ('MultiLanguageFontService.cs', 'FontAssetFontService.cs', 'MultiLanguageText.cs'):
+            relative = Path('framework-firstpass-source') / filename
+            original = ROOT / '.tools/source-packages/official-code' / relative
+            selected = ROOT / '.tools/source-packages/current' / self.recovery.apk.version / 'official-code' / relative
+            if original.read_bytes() != selected.read_bytes():
+                raise ValueError('Original font source differs from selected version: ' + filename)
+            self.inputs[original.relative_to(ROOT).as_posix()] = sha(original.read_bytes())
+        return dict(region='CN', language='zh_CN', name=name, font_asset=pointer,
+                    source_font=font_pointer, source_font_definition=definition, configs=configs)
+
+    def build(self, npc_ids=()):
         self.recovery.recover('NpcPanelNpcItem', self.work / 'partner-native')
         self.recovery.finalize()
         _, _, card, _ = self.recovery.outputs[0]
@@ -431,6 +563,7 @@ class PartnerCardBinding:
             for ref in row['fields'].get('references', {}).get('RefIds', []) if ref['type']['class']}), flush=True)
         # Resolve the source-backed closure before any repository installation.
         card['documents'] = self.replace(card['documents'])
+        dynamic = self.dynamic_sprites(npc_ids) if npc_ids else None
         for target, target_guid, data in self.queue:
             if isinstance(data, dict):
                 print('Binding dependency:', target.as_posix(), flush=True)
@@ -455,9 +588,19 @@ class PartnerCardBinding:
                 raw = data
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(raw)
-            importer = ('PrefabImporter' if path.suffix == '.prefab' else 'ShaderImporter' if path.suffix == '.shader'
-                        else 'TrueTypeFontImporter' if path.suffix in ('.ttf', '.otf') else 'NativeFormatImporter')
+            extension = path.suffix.lower()
+            importer = ('PrefabImporter' if extension == '.prefab' else 'ShaderImporter' if extension == '.shader'
+                        else 'TrueTypeFontImporter' if extension in ('.ttf', '.otf') else 'NativeFormatImporter')
             Path(str(path) + '.meta').write_text('fileFormatVersion: 2\nguid: ' + target_guid + '\n' + importer + ':\n  externalObjects: {}\n', 'utf8')
+            outputs[target.as_posix()] = sha(raw)
+            outputs[target.as_posix() + '.meta'] = sha(Path(str(path) + '.meta').read_bytes())
+        if dynamic is not None:
+            target = Path('partner-card-images.json')
+            path = folder / target
+            raw = (json.dumps(dynamic, ensure_ascii=False, indent=2) + '\n').encode('utf8')
+            path.write_bytes(raw)
+            Path(str(path) + '.meta').write_text('fileFormatVersion: 2\nguid: ' + hashlib.md5(b'zjcs:partner-card-images').hexdigest()
+                + '\nTextScriptImporter:\n  externalObjects: {}\n', 'utf8')
             outputs[target.as_posix()] = sha(raw)
             outputs[target.as_posix() + '.meta'] = sha(Path(str(path) + '.meta').read_bytes())
         for target, (target_guid, raw) in self.audio_outputs.items():
@@ -476,11 +619,62 @@ class PartnerCardBinding:
             script_bindings=self.script_sources,
             graph_bindings=[dict(guid=value['guid'], name=value['name'], type=value['type'])
                             for value in self.proof.values() if value.get('output', '').startswith('Graph/')],
+            dynamic_images=dynamic,
             generator_sha256=sha(Path(__file__).read_bytes()))
         (self.work / 'partner-card-binding-source-manifest.json').write_text(json.dumps(receipt, ensure_ascii=False, indent=2), 'utf8')
         print('Staged source-backed native partner card:', folder, flush=True)
 
 
+def install_staged(work):
+    proof = ROOT / 'assets/reference/partner-card-binding-source-manifest.json'
+    receipt_path = work / proof.name
+    receipt = json.loads(receipt_path.read_bytes())
+    previous = json.loads(proof.read_bytes()) if proof.is_file() else {}
+    destination = ROOT / 'unity/Assets/Official/Partners/UI/Card'
+    if previous.get('installed_root') and set(previous['outputs']) - receipt['outputs'].keys():
+        raise ValueError('Refusing to forget installed payloads; retain the previous NPC image scope')
+    for name, digest in receipt['outputs'].items():
+        source = work / 'card-assets' / name
+        target = destination / name
+        if sha(source.read_bytes()) != digest:
+            raise ValueError('Staged native card changed: ' + name)
+        if target.is_file() and sha(target.read_bytes()) != previous.get('outputs', {}).get(name):
+            raise ValueError('Installed native card differs from prior provenance: ' + name)
+    folders = {destination, destination.parent}
+    for name in receipt['outputs']:
+        parent = (destination / name).parent
+        while parent != destination:
+            folders.add(parent)
+            parent = parent.parent
+    metadata = {}
+    for folder in folders:
+        identity = folder.relative_to(ROOT).as_posix()
+        raw = ('fileFormatVersion: 2\nguid: ' + hashlib.md5(('zjcs:partner-card-folder:' + identity).encode()).hexdigest()
+               + '\nfolderAsset: yes\nDefaultImporter:\n  externalObjects: {}\n  userData:\n  assetBundleName:\n  assetBundleVariant:\n').encode()
+        path = Path(str(folder) + '.meta')
+        if path.exists() and path.read_bytes().replace(b'\r\n', b'\n') != raw:
+            raise ValueError('Native card folder metadata differs: ' + identity)
+        metadata[path] = raw
+    for name in receipt['outputs']:
+        target = destination / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(work / 'card-assets' / name, target)
+    for path, raw in metadata.items():
+        path.write_bytes(raw)
+    receipt['installed_root'] = destination.relative_to(ROOT).as_posix()
+    receipt['folder_metadata'] = {path.relative_to(ROOT).as_posix(): sha(raw) for path, raw in sorted(metadata.items())}
+    raw = (json.dumps(receipt, ensure_ascii=False, indent=2) + '\n').encode('utf8')
+    receipt_path.write_bytes(raw)
+    proof.write_bytes(raw)
+    print('Installed verified original partner card:', destination, flush=True)
+
+
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--npc-ids', type=int, nargs='+', default=[], help='Also bind these original card figure/background addresses')
+    parser.add_argument('--install', action='store_true', help='Install verified staged assets and update their source receipt')
+    args = parser.parse_args()
     stage = validation_directory()
-    PartnerCardBinding(stage).build()
+    PartnerCardBinding(stage).build(args.npc_ids)
+    if args.install:
+        install_staged(stage)

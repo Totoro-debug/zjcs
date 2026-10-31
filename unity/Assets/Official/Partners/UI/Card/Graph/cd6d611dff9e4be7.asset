@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: 73d1312f954855f99cd6cbba7a148413, type: 3}
+  m_Name: '[15][Cnd]礼物可以转化为天赋点'
+  graph: {fileID: 11400000, guid: f1ef9cc05ccfc217522c02f231e4641a, type: 2}
+  position: {x: 3320.0, y: 1816.0}
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000, guid: e091101774773932e2ce72e3e1f96da3, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: 0602ee4a700faf777e63b6daa46cba30, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000, guid: e091101774773932e2ce72e3e1f96da3, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+  NodeId: -1
+  Mono: ''
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: ''
+  SelectedType: ''
+  NodeName: ''
+  TipDotNodeId: 15
+  TipDotNode: {rid: 5901298905561169944}
+  RuntimeTipDotNode: {rid: -2}
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 4
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels: []
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: '', ns: '', asm: ''}
+    - rid: 5901298905561169944
+      type: {class: TipDotNpcTalentTreeGiftCanTransToTalentPoint, ns: Zjcs.Official.PartnersUI, asm: Zjcs.Official.PartnerRosterUI}
+      data:
+        Parents: []
+        Childs: []
+        NodeKey: {GraphName: '', NodeName: ''}
+        TipDotInfo: {TipLevel: 0, Data: ''}
+        IsShowTip: 0

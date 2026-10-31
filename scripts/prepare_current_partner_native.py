@@ -39,8 +39,19 @@ def script_id(script):
     return struct.unpack('<i', MD4.new(('s\0\0\0' + script.m_Namespace + script.m_ClassName).encode()).digest()[:4])[0]
 
 
+class UnityYamlLoader(yaml.SafeLoader):
+    def construct_mapping(self, node, deep=False):
+        for key, value in node.value:
+            if key.value in ('m_IndexBuffer', '_typelessdata', 'm_TypelessData'):
+                # Unity writes byte arrays as unquoted hex. YAML 1.1 otherwise
+                # turns digit-only buffers into integers (including octal),
+                # corrupting triangle indices and dropping leading zeroes.
+                value.tag = 'tag:yaml.org,2002:str'
+        return super().construct_mapping(node, deep=deep)
+
+
 def documents(text):
-    return {int(file_id): yaml.safe_load(body) for file_id, body in re.findall(
+    return {int(file_id): yaml.load(body, Loader=UnityYamlLoader) for file_id, body in re.findall(
         r'^--- !u!\d+ &(-?\d+)\n(.*?)(?=^--- !u!|\Z)', text, re.M | re.S)}
 
 

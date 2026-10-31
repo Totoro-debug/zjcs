@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: 470ff18f5f06dc419f26859ff7e55db7, type: 3}
+  m_Name: '[4][State]Npc档案切页是否有提示'
+  graph: {fileID: 11400000, guid: f1ef9cc05ccfc217522c02f231e4641a, type: 2}
+  position: {x: 1960.0, y: 712.0}
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000, guid: 438e3c4ae8a542b40e8bef95d68cc9bb, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: 9cd8614f3ab2fb22cc8910677a43203c, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000, guid: 438e3c4ae8a542b40e8bef95d68cc9bb, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+  NodeId: -1
+  Mono: ''
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: Npc档案切页是否有提示
+  SelectedType: ''
+  NodeName: NpcProfileTabHasTip
+  TipDotNodeId: 4
+  TipDotNode: {rid: 4800079988176191732}
+  RuntimeTipDotNode: {rid: -2}
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 0
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels: []
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: '', ns: '', asm: ''}
+    - rid: 4800079988176191732
+      type: {class: TipDotLinkNpcProfileNode, ns: Zjcs.Official.PartnersUI, asm: Zjcs.Official.PartnerRosterUI}
+      data:
+        Parents: []
+        Childs: []
+        NodeKey: {GraphName: NpcDetailItem, NodeName: NpcProfileTabHasTip}
+        TipDotInfo: {TipLevel: 0, Data: ''}
+        IsShowTip: 0
+        mNodeSelector:
+          GraphNode: {fileID: 11400000, guid: e1a0470c9560aa657b0d292b3dde545f, type: 2}

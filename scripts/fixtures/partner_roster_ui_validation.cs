@@ -22,16 +22,37 @@ using Object = UnityEngine.Object;
 [InitializeOnLoad]
 public static class PartnerRosterUiValidation
 {
+    public static bool NativeCard => SessionState.GetBool("PartnerRosterUi.NativeCard", false);
     static PartnerRosterUiValidation()
     {
         EditorApplication.playModeStateChanged += state => {
             if (state == PlayModeStateChange.EnteredPlayMode && SessionState.GetBool("PartnerRosterUi", false))
                 new GameObject("PartnerRosterUiValidation").AddComponent<PartnerRosterUiRunner>();
         };
+        EditorApplication.update += () => {
+            if (SessionState.GetBool("PartnerRosterUi", false) &&
+                EditorApplication.timeSinceStartup > SessionState.GetFloat("PartnerRosterUi.Deadline", float.MaxValue))
+                Finish(new TimeoutException("Partner roster validation timed out"));
+        };
     }
     public static void Run()
     {
+        SessionState.SetBool("PartnerRosterUi.NativeCard", false);
+        Begin();
+    }
+    public static void RunNativeCard()
+    {
+        SessionState.SetBool("PartnerRosterUi.NativeCard", true);
+        Begin();
+    }
+    private static void Begin()
+    {
+        string work = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+        if (string.IsNullOrEmpty(work) || !File.Exists(Path.Combine(work, ".zjcs-validation.json")) ||
+            !Path.GetFullPath(Application.dataPath).StartsWith(Path.GetFullPath(work) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("Use an owned isolated Unity project");
         SessionState.SetBool("PartnerRosterUi", true);
+        SessionState.SetFloat("PartnerRosterUi.Deadline", (float)EditorApplication.timeSinceStartup + 120);
         EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
         EditorApplication.isPlaying = true;
     }
@@ -39,7 +60,7 @@ public static class PartnerRosterUiValidation
     {
         SessionState.SetBool("PartnerRosterUi", false);
         if (error != null) Debug.LogException(error);
-        else Debug.Log("PARTNER_ROSTER_UI_PASSED: actual save, simulated card input, 700ms unlock, progress/preview, routes, recycling and resource lifetime");
+        else Debug.Log((NativeCard ? "PARTNER_NATIVE_CARD_PASSED" : "PARTNER_ROSTER_UI_PASSED") + ": actual save, simulated card input, 700ms unlock, progress/preview, routes, recycling and resource lifetime");
         EditorApplication.Exit(error == null ? 0 : 1);
     }
 }
@@ -62,6 +83,28 @@ public sealed class PartnerRosterUiRunner : MonoBehaviour, IOfflinePartnerPresen
     private int errors, acquired, released, levelUps, gifts, details, failures, sounds, dotId;
     private readonly List<string> resourcePaths = new List<string>();
     private readonly List<string> notifications = new List<string>();
+    private readonly Dictionary<string, Sprite> nativeSprites = new Dictionary<string, Sprite>();
+    [Serializable] private sealed class Pointer { public string guid; public long fileID; }
+    [Serializable] private sealed class SpriteConsumer { public int npc_id; public string field; }
+    [Serializable] private sealed class SpriteBinding { public string address; public Pointer pointer; public SpriteConsumer[] consumers; }
+    [Serializable] private sealed class TextBinding { public string key, text; }
+    [Serializable] private sealed class FontBinding { public string region, language, name; public Pointer font_asset, source_font; }
+    [Serializable] private sealed class NativeCatalog { public string manifest; public SpriteBinding[] sprites; public TextBinding[] texts; public FontBinding font; }
+    [Serializable] private sealed class NativeNpc { public int Id, NpcType, NpcRoleType; public string NameKey, FigureImage, SmallBgImage; }
+    [Serializable] private sealed class NativeTables { public NativeNpc[] npc; }
+    [Serializable] private sealed class NativeRules { public string manifest; public NativeTables tables; }
+    // Explicit test endpoint only; full local graph manager/provider is outside this check.
+    private sealed class TipEndpoint : IProfessionTipDotSystem, IProfessionTipDotSystemController
+    {
+        public bool IsShowTipDot => true;
+        public bool TempLimitShowTip => false;
+        public Action OnTipDotShowChanged { get; set; }
+        public SafeAction OnTipDotSystemInited { get; set; } = new SafeAction();
+        public SafeAction OnTipDotSystemPreClear { get; set; } = new SafeAction();
+        public TipDotGraphType? GetGraphType(string name) => TipDotGraphType.Dynamic;
+        public bool LinkNodeStateChange(TipDotNodeKey key, GameObject owner, Action<TipDotStateInfo> callback) { callback(default); return true; }
+        public bool UnlinkNodeStateChange(TipDotNodeKey key, GameObject owner, Action<TipDotStateInfo> callback) => true;
+    }
 
     private IEnumerator Start()
     {
@@ -104,6 +147,47 @@ public sealed class PartnerRosterUiRunner : MonoBehaviour, IOfflinePartnerPresen
         Require(font != null, "Official font loads in fixture");
         WorldMultiLanguageText.Localize = key => key;
         WorldMultiLanguageText.LanguageFont = () => font;
+        if (PartnerRosterUiValidation.NativeCard)
+        {
+            var resources = JsonUtility.FromJson<NativeCatalog>(AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/PartnerCard/partner-card-images.json").text);
+            var currentRules = JsonUtility.FromJson<NativeRules>(read("Partners/partner-rules.json"));
+            Require(resources.manifest == "884_156692" && currentRules.manifest == resources.manifest, "Selected original card configuration");
+            var rosterNpcs = currentRules.tables.npc.Where(value => value.NpcType == 4 && value.NpcRoleType != 2
+                && (value.Id < 11015 || value.Id > 11022)).ToDictionary(value => value.Id);
+            var expectedAddresses = new HashSet<string>(rosterNpcs.Values.SelectMany(value => new[] { value.FigureImage, value.SmallBgImage }));
+            Require(expectedAddresses.SetEquals(resources.sprites.Select(value => value.address)), "All current roster figure/background addresses");
+            var expectedConsumers = new HashSet<string>(rosterNpcs.Keys.SelectMany(id => new[] { id + ":FigureImage", id + ":SmallBgImage" }));
+            var actualConsumers = new List<string>();
+            foreach (var binding in resources.sprites)
+            {
+                foreach (var consumer in binding.consumers)
+                {
+                    Require(rosterNpcs.TryGetValue(consumer.npc_id, out var definition), "Current roster image consumer");
+                    string address = consumer.field == "FigureImage" ? definition.FigureImage
+                        : consumer.field == "SmallBgImage" ? definition.SmallBgImage : null;
+                    Require(address == binding.address, "Exact original image field: " + consumer.npc_id + "/" + consumer.field);
+                    actualConsumers.Add(consumer.npc_id + ":" + consumer.field);
+                }
+                var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(AssetDatabase.GUIDToAssetPath(binding.pointer.guid));
+                Require(sprite != null && sprite.texture != null, "Original dynamic sprite: " + binding.address);
+                Require(sprite.vertices.Length == sprite.uv.Length && sprite.triangles.Length % 3 == 0,
+                    "Dynamic sprite geometry: " + binding.address + " vertices=" + sprite.vertices.Length + " uv=" + sprite.uv.Length + " indices=" + sprite.triangles.Length);
+                nativeSprites.Add(binding.address, sprite);
+            }
+            Require(expectedConsumers.SetEquals(actualConsumers) && expectedConsumers.Count == actualConsumers.Count, "Every roster image field bound exactly once");
+            var texts = resources.texts.ToDictionary(value => value.key, value => WorldBattleReportTextService.ProcessText(value.text));
+            Require(new HashSet<string>(rosterNpcs.Values.Select(value => value.NameKey).Concat(new[] { "ui_new_mark_text" })).SetEquals(texts.Keys), "All original roster names and card mark text");
+            WorldMultiLanguageText.Localize = key => texts.TryGetValue(key, out string value) ? value : key;
+            Require(resources.font.region == "CN" && resources.font.language == "zh_CN", "Original Chinese region/language selection");
+            var regionalFont = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(AssetDatabase.GUIDToAssetPath(resources.font.font_asset.guid));
+            var sourceFont = AssetDatabase.LoadAssetAtPath<Font>(AssetDatabase.GUIDToAssetPath(resources.font.source_font.guid));
+            Require(regionalFont != null && sourceFont != null && regionalFont.name == resources.font.name, "Original CN font and source TTF");
+            if (regionalFont.sourceFontFile == null) Set(regionalFont, "m_SourceFontFile", sourceFont); // Original FontAssetFontService.SetupFont.
+            regionalFont.fallbackFontAssetTable.Clear(); // Original CN region has no fallbacks.
+            foreach (char character in string.Concat(texts.Values))
+                Require(regionalFont.HasCharacter(character, true, true), "Original font includes card text U+" + ((int)character).ToString("X4"));
+            WorldMultiLanguageText.LanguageFont = () => regionalFont;
+        }
         fixtureSprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 2, 2), new Vector2(0.5f, 0.5f));
         events = new GameObject("SimulatedPointer", typeof(EventSystem)).GetComponent<EventSystem>();
         cameraUi = new GameObject("RenderCamera", typeof(Camera)).GetComponent<Camera>();
@@ -122,21 +206,27 @@ public sealed class PartnerRosterUiRunner : MonoBehaviour, IOfflinePartnerPresen
         Require(resourcePaths.SequenceEqual(new[] { services.GetDefinition(8401).FigureImage, services.GetDefinition(8401).SmallBgImage }), "Card loads exact official figure/background addresses");
         Click(detail.gameObject); yield return null;
         Require(gifts == 1 && details == 0, "Unmet card routes to exclusive gift");
-        Click(meet.gameObject); yield return null;
+        if (PartnerRosterUiValidation.NativeCard) Require(!meet.gameObject.activeInHierarchy, "Original unmet card hides meeting button");
+        else Click(meet.gameObject);
+        yield return null;
         Require(services.GetNpc(8401) == null && session.InventoryCount(1300) == 2, "Unmet card cannot start meeting");
+        if (PartnerRosterUiValidation.NativeCard) { yield return new WaitForSeconds(0.4f); Capture(Path.Combine(work, "native-card-unmet.png")); }
 
         session.ApplyCharacterMutation(player => player.Inventory.First(value => value.ItemId == 1300).Count = 3);
         services.Reload(); roster = services.NpcRoster(true).ToList(); index = roster.FindIndex(value => value.NpcClassId == 8401);
         card.Init(roster, index); card.Show(); yield return null;
         Require(Get<WorldStateSwitcher<NpcPanelNpcItem.LockStatus>>(card, "mLockEffectSwitcher").State == NpcPanelNpcItem.LockStatus.WaitLock, "Ready card waits for unlocking");
+        if (PartnerRosterUiValidation.NativeCard) { yield return new WaitForSeconds(0.4f); Capture(Path.Combine(work, "native-card-ready.png")); }
         Click(meet.gameObject); Click(meet.gameObject);
         yield return null; yield return null;
         Require(services.GetNpc(8401) != null && session.InventoryCount(1300) == 0 && notifications.Count(value => value == "add:8401") == 1, "Rapid pointer clicks commit once");
         Require(Get<WorldStateSwitcher<NpcPanelNpcItem.LockStatus>>(card, "mLockEffectSwitcher").State == NpcPanelNpcItem.LockStatus.Locking && levelUps == 0 && sounds == 1, "Saved meet begins original lock effect/audio");
+        if (PartnerRosterUiValidation.NativeCard) Capture(Path.Combine(work, "native-card-unlocking.png"));
         yield return new WaitForSeconds(0.35f);
         Require(levelUps == 0, "Unlock dialog waits for original 700ms delay");
         yield return new WaitForSeconds(0.5f);
         Require(levelUps == 1 && Get<WorldStateSwitcher<NpcPanelNpcItem.LockStatus>>(card, "mLockEffectSwitcher").State == NpcPanelNpcItem.LockStatus.Unlock, "Unlock finishes and shows level dialog once");
+        if (PartnerRosterUiValidation.NativeCard) Capture(Path.Combine(work, "native-card-met.png"));
         Click(detail.gameObject); yield return null;
         Require(details == 1 && gifts == 1, "Met card opens filtered met roster at same selected NPC");
         Require(services.SetCollected(8401, true).IsApplied && services.GetNpc(8401).IsCollected && notifications.Contains("pin:8401:True"), "Pin callback follows actual persisted state");
@@ -176,13 +266,15 @@ public sealed class PartnerRosterUiRunner : MonoBehaviour, IOfflinePartnerPresen
         session.ApplyCharacterMutation(player => player.CharacterProperties.NpcFriendships.First(value => value.NpcClassId == 8401).FriendshipExp = begin + gain);
         services.Reload(); yield return null;
         Require(notifications.Count(value => value == "friendship:8401") == 2 && Math.Abs(fill.fillAmount - (float)gain / (next - begin)) < 0.001f, "External saved friendship change refreshes live bar");
-        Capture(Path.Combine(work, "roster-controller-fixture.png"));
+        if (PartnerRosterUiValidation.NativeCard) yield return new WaitForSeconds(0.4f);
+        Capture(Path.Combine(work, PartnerRosterUiValidation.NativeCard ? "native-card-progress.png" : "roster-controller-fixture.png"));
         card.gameObject.SetActive(false); Require(acquired == released, "All resources released after final disable");
         Application.logMessageReceived -= Log;
     }
 
     private void MakeCard()
     {
+        if (PartnerRosterUiValidation.NativeCard) { MakeNativeCard(); return; }
         var root = Node("OfficialCardControllerFixture", canvas, 0, 0); root.SetActive(false);
         card = root.AddComponent<NpcPanelNpcItem>();
         content = Node("Content", root.transform, 0, 0); Set(card, "mContentRoot", content);
@@ -213,6 +305,35 @@ public sealed class PartnerRosterUiRunner : MonoBehaviour, IOfflinePartnerPresen
         Set(card, "mLockEffectSwitcher", Empty<NpcPanelNpcItem.LockStatus>(root));
         card.MeetSound = AudioClip.Create("OriginalEventBindingProbe", 441, 1, 44100, false);
         card.Configure(services);
+    }
+
+    private void MakeNativeCard()
+    {
+        var owner = Node("OriginalCardPrefabHost", canvas, 0, 0); owner.SetActive(false);
+        ((RectTransform)owner.transform).sizeDelta = Vector2.zero;
+        var source = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/PartnerCard/NpcPanelNpcItem.prefab");
+        var root = Object.Instantiate(source, owner.transform, false);
+        card = root.GetComponent<NpcPanelNpcItem>();
+        Require(root.GetComponentsInChildren<Transform>(true).Length == 72, "Original complete card hierarchy");
+        foreach (var node in root.GetComponentsInChildren<Transform>(true))
+            Require(GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(node.gameObject) == 0, "No missing native script: " + node.name);
+        foreach (var image in root.GetComponentsInChildren<Image>(true).Where(value => value.sprite != null))
+            Require(image.sprite.vertices.Length == image.sprite.uv.Length && image.sprite.triangles.Length % 3 == 0,
+                "Static sprite geometry: " + image.name + "/" + image.sprite.name + " vertices=" + image.sprite.vertices.Length + " uv=" + image.sprite.uv.Length + " indices=" + image.sprite.triangles.Length);
+        foreach (var label in root.GetComponentsInChildren<WorldMultiLanguageText>(true))
+        {
+            var effect = label.GetComponent<TMPEffect>();
+            if (effect != null) label.OnFontChanged += () => effect.SetupEffect(true); // Original MultiLanguageText.RefreshFont effect order.
+        }
+        var tips = new TipEndpoint();
+        foreach (var linker in root.GetComponentsInChildren<TipDotNodeLinker>(true)) { linker.Controller = tips; linker.TipDotSystem = tips; }
+        content = Get<GameObject>(card, "mContentRoot");
+        friendship = Get<NpcFriendshipLevelShow>(card, "mFriendshipLevel");
+        fill = Get<List<Image>>(friendship, "mFilledImages")[0];
+        detail = Get<Button>(card, "mDetailBtn"); meet = Get<Button>(card, "mMeetButton");
+        card.Configure(services);
+        Require(card.MeetSound != null && card.MeetSound.frequency == 48000, "Original meet Wwise audio is bound");
+        owner.SetActive(true);
     }
 
     private WorldMultiLanguageText Label(string name, Transform parent, float x, float y)
@@ -251,7 +372,8 @@ public sealed class PartnerRosterUiRunner : MonoBehaviour, IOfflinePartnerPresen
         RenderTexture.active = previous; Object.Destroy(image);
     }
     private void Log(string message, string stack, LogType type) { if (type == LogType.Exception || type == LogType.Error || type == LogType.Assert) errors++; }
-    public void BindNpcTipDot(TipDotNodeLinker linker, int npcClassId) { dotId = npcClassId; }
+    public void BindNpcTipDot(TipDotNodeLinker linker, int npcClassId)
+    { dotId = npcClassId; if (PartnerRosterUiValidation.NativeCard) linker.SetNodeInstanceInfo(new NpcNodeInstanceInfo(npcClassId)); }
     public void PostSound(AudioClip sound, GameObject owner) { sounds++; }
     public void ShowFriendshipLevelUp(NpcRosterItem npc, long oldExp, int oldLevel) { Require(npc != null && oldExp == 0 && oldLevel == 1, "Original initial-level popup arguments"); levelUps++; }
     public void ShowExclusiveGift(int itemId, Component owner) { Require(itemId == 1300 && owner == card, "Exclusive gift route preserves identity"); gifts++; }
@@ -259,7 +381,7 @@ public sealed class PartnerRosterUiRunner : MonoBehaviour, IOfflinePartnerPresen
     public void ShowError(int code) { throw new Exception("Unexpected error route " + code); }
     public void ShowProgressionResult(ProgressionResult result) { Require(!result.IsApplied, "Only rejected operations route to error display"); failures++; }
     public IProfessionAssetOperation<T> LoadAsset<T>(string path) where T : Object
-    { acquired++; resourcePaths.Add(path); return new Lease<T>(fixtureSprite as T, () => released++); }
+    { acquired++; resourcePaths.Add(path); return new Lease<T>((PartnerRosterUiValidation.NativeCard ? nativeSprites[path] : fixtureSprite) as T, () => released++); }
     public IProfessionAssetOperation<T> LoadAssetAsync<T>(string path) where T : Object => LoadAsset<T>(path);
     public IProfessionAssetOperation<T> LoadAssetByGuid<T>(string guid) where T : Object => throw new NotSupportedException();
     public IProfessionAssetOperation<T> LoadAssetAsyncByGuid<T>(string guid) where T : Object => throw new NotSupportedException();

@@ -88,13 +88,21 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 ### 当前原生卡片资源与提示图（局部）
 
-`scripts/prepare_partner_card_native.py` 在独立验证目录中闭合当前 `NpcPanelNpcItem` 的资源引用：保留 72 个原层级节点和 306 个对象，绑定实际迁移脚本、原动画、31 个 Image、8 个 TMP 文本、字体图集、粒子材质和精灵网格。精灵贴图按原 SpriteAtlas 的 RenderDataKey 解析，不以文件名建立资源身份；纹理及 shader 按原 CAB／PathID、对象字节哈希复用同版本 Windows 转换结果。89 个输出包含原卡片、86 个依赖和两条音效，元数据另行记录哈希；中间绑定凭据见[卡片资源来源](../../assets/reference/partner-card-binding-source-manifest.json)。这些输出目前只在验证工程中导入，未安装到正式游戏资源目录。
+`scripts/prepare_partner_card_native.py` 闭合当前 `NpcPanelNpcItem` 的资源引用：保留 72 个原层级节点和 306 个对象，绑定实际迁移脚本、原动画、31 个 Image、8 个 TMP 文本、字体图集、粒子材质和精灵网格。精灵贴图按原 SpriteAtlas 的 RenderDataKey 解析，不以文件名建立资源身份；纹理及 shader 按原 CAB／PathID、对象字节哈希复用同版本 Windows 转换结果。当前 261 个载荷及其元数据、105 份目录元数据已安装到 `unity/Assets/Official/Partners/UI/Card/`；包含原卡片、静态依赖、两条音效，以及下述名册伙伴的动态图片与字体输入。凭据及输入输出哈希见[卡片资源来源](../../assets/reference/partner-card-binding-source-manifest.json)。正式伙伴页面宿主仍未绑定。
+
+`prepare_current_partner_native.UnityYamlLoader` 保留 Unity 未加引号的十六进制字节字段，避免 YAML 1.1 将纯数字索引当成整数／八进制，损坏原三角形。卡片及动态依赖的 117 个精灵逐项核对原顶点数及完整索引字节，保留原网格；没有改用矩形网格规避渲染失败。
+
+`--npc-ids` 传入当前原名册范围的 77 位伙伴：`NpcType == MapExploreBoss`、排除 `NpcRoleType.StarGod` 及已确认暂停的 11015–11022。按原 `ResourceLoaderExtensions.LoadSprite` 的 `Assets/Image/` 前缀、当前资源表和原容器定位 FigureImage／SmallBgImage，共 98 个去重图片地址。原 Sprite 的 RenderDataKey 与资源表 GUID、转换 Sprite 的键对应后，再闭合原纹理与图集，形成 `partner-card-images.json` 显式加载表；每个地址保留伙伴／字段消费者。优先读取 APK，包内未提供的内容读取同版本已校验云端缓存；不混用历史版本。
+
+同一目录保存 77 位伙伴姓名及原卡片标记所需的 78 项当前中文文本。字体从原 `MultiLanguageFontConfig` 的 CN／zh_CN 配置选择 `FZY4K SDF - dynamic`，原 CN 配置没有备用字体；按 `FontAssetFontConfig` 恢复原始 TTF，并核对原长度与 MD5。验证宿主按原 `FontAssetFontService.SetupFont` 恢复 sourceFontFile，字体变化后沿原顺序重设文字效果，不用临时生成的字体替代原字体资产。
 
 原 `NpcAffinity_Get` 和 `Main_Cursor_Normal` 从卡片字段指向的 Wwise Event 追踪到实际 bank／Action／Sound／媒体，用官方开源工具 wwiser 与 vgmstream 解码。分别保留 0 dB／−6 dB 事件增益和 48 kHz 双声道 PCM；不以名称相近的音频替代。原事件对象、bank、媒体号、路由文本、工具和输出哈希均在同一凭据中记录。
 
 `Runtime/Official/PartnersUI/Roster/TipDots/` 迁移原节点工厂、外接／动态连接、伙伴与档案实例身份，以及赠礼、相遇、档案、馈赠和天赋提示节点。原条件分支、事件订阅、释放和克隆顺序保留，玩家／配置／条件处理由实例服务端口提供；复用已有官方提示聚合与成就核心。节点工厂仍先克隆非禁用节点、设置实例键与预设，再恢复图关系并逐个注入服务。赠礼提示仅统计现有偏好礼物，并要求能在当前个人阶位内提升好感等级。来源、转换方式及代码哈希见[提示节点来源](../../assets/reference/partner-tipdot-source-manifest.json)，重建入口为 `scripts/prepare_partner_tipdot_nodes.py`。服务端口尚未接入完整本地提示管理器，不能据此认定名册红点流程已完成。
 
-`prepare_partner_card_validation.py` 与 `PartnerCardBindingValidation.Run` 在 Unity `2022.3.57f1c2` 验证实际 prefab 和 25 个原提示图资产导入、九种运行节点反序列化／独立克隆、原图名称、端口归属、脚本／托管引用、字体图集、图片贴图、两条音频及 Windows 材质支持；原节点工厂对两张图实际恢复非禁用节点、连接、预设与实例键。指针逐处写入完整引用，避免 YAML 别名使 Unity 丢失端口归属。上述检查、名册控制器原有 Play Mode 存档与模拟点击回归、静态检查、主工程编译及 `Zjcs.Editor.ProjectTools.Validate` 均通过。当前原生卡片尚未进行完整 Play Mode 交互与画面核对，也未发布 Windows Player。
+`prepare_partner_card_validation.py` 与 `PartnerCardBindingValidation.Run` 在 Unity `2022.3.57f1c2` 验证实际 prefab 和 25 个原提示图资产导入、九种运行节点反序列化／独立克隆、原图名称、端口归属、脚本／托管引用、字体图集、图片贴图、两条音频及 Windows 材质支持；原节点工厂对两张图实际恢复非禁用节点、连接、预设与实例键。指针逐处写入完整引用，避免 YAML 别名使 Unity 丢失端口归属。
+
+`PartnerRosterUiValidation.RunNativeCard` 使用实际原卡片、原动画／图像／字体和隔离本地存档，以模拟鼠标射线验证信物不足、可结识、连续点击仅扣一次、700 毫秒解锁、拒绝／回收、好感比例／预览／满级、置顶与存档恢复；实际查看未结识、可结识、解锁中、已结识和外部好感更新的 GPU 画面。全部 77 位名册伙伴的图片地址、字段消费者、原图网格及全部姓名字形比对通过；实际卡片回归、提示图绑定、静态检查、主工程新增资源导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 均通过，导入后资源哈希保持一致。红点管理器和通知／信物／详情窗口使用明确验证端点，这些端点不进入游戏，不代表完整页面、红点或弹窗交互已经完成；Windows Player 尚未发布。
 
 ### 当前版伙伴配置输入（局部）
 

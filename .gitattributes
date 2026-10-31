@@ -1313,3 +1313,13 @@ assets/reference/battle-scenes/camera-source-manifest.json text eol=lf
 unity/Assets/Game/Resources/TowerPush/tower-battles.json text eol=lf
 scripts/prepare_character_world_append_geometry.py text eol=lf
 assets/reference/character-creation/world-append-geometry-source-manifest.json text eol=lf
+# Preserve source-verified current partner card payloads and recovery tools.
+scripts/prepare_current_partner_native.py text eol=lf
+scripts/prepare_partner_card_native.py text eol=lf
+scripts/prepare_partner_card_validation.py text eol=lf
+scripts/fixtures/partner_roster_ui_validation.cs text eol=lf
+assets/reference/partner-card-binding-source-manifest.json text eol=lf
+assets/reference/partner-native-recovery-source-manifest.json text eol=lf
+unity/Assets/Official/Partners/UI.meta text eol=lf
+unity/Assets/Official/Partners/UI/Card.meta text eol=lf
+unity/Assets/Official/Partners/UI/Card/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
