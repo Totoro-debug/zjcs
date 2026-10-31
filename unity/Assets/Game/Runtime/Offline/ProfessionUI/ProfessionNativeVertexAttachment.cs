@@ -14,6 +14,7 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly int boneCount;
         public int VertexCount => starts.Length - 1;
         public int InfluenceCount => influences.Length;
+        public int DeformValueCount => influences.Length * 2;
         public bool Weighted { get; }
 
         public ProfessionNativeVertexAttachment(float[] vertices, int vertexCount, int slotBone, int boneCount)
@@ -43,10 +44,16 @@ namespace Zjcs.Offline.ProfessionUI
             if (cursor != vertices.Length) throw new ArgumentException("Original vertex data has trailing values.");
             influences = decoded.ToArray();
         }
-        public void Evaluate(ProfessionNativeBonePose pose, Vector2[] output)
+        public void Evaluate(ProfessionNativeBonePose pose, Vector2[] output, IReadOnlyList<float> deform = null)
         {
             if (pose == null || pose.Count != boneCount || output == null || output.Length != VertexCount)
                 throw new ArgumentException("Original vertex output or bone layout differs.");
+            if (deform != null)
+            {
+                if (deform.Count != DeformValueCount) throw new ArgumentException("Original deform influence layout differs.");
+                foreach (float value in deform)
+                    if (float.IsNaN(value) || float.IsInfinity(value)) throw new ArgumentException("Original deform values must be finite.");
+            }
             for (int i = 0; i < VertexCount; i++)
             {
                 Vector2 sum = Vector2.zero;
@@ -56,8 +63,10 @@ namespace Zjcs.Offline.ProfessionUI
                     if (influence.Weight == 0) continue;
                     if (!pose.IsActive(influence.Bone)) throw new InvalidOperationException("A selected vertex requires an inactive original skin bone.");
                     Matrix4x4 m = pose.World(influence.Bone);
-                    sum.x += (m.m00 * influence.X + m.m01 * influence.Y + m.m03) * influence.Weight;
-                    sum.y += (m.m10 * influence.X + m.m11 * influence.Y + m.m13) * influence.Weight;
+                    float x = influence.X + (deform == null ? 0 : deform[j * 2]);
+                    float y = influence.Y + (deform == null ? 0 : deform[j * 2 + 1]);
+                    sum.x += (m.m00 * x + m.m01 * y + m.m03) * influence.Weight;
+                    sum.y += (m.m10 * x + m.m11 * y + m.m13) * influence.Weight;
                 }
                 output[i] = sum;
             }

@@ -11,6 +11,7 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly ProfessionNativeVertexAttachment vertices;
         private readonly float scale;
         public int VertexCount => vertices.VertexCount;
+        public override int DeformValueCount => vertices.DeformValueCount;
         public bool Closed { get; }
         public bool ConstantSpeed { get; }
         public IReadOnlyList<float> Lengths { get; }
@@ -29,9 +30,9 @@ namespace Zjcs.Offline.ProfessionUI
             Lengths = Array.AsReadOnly(retained); Closed = closed; ConstantSpeed = constantSpeed; scale = dataScale;
         }
 
-        public void ComputeVertices(ProfessionNativeBonePose pose, Vector2[] output)
+        public void ComputeVertices(ProfessionNativeBonePose pose, Vector2[] output, IReadOnlyList<float> deform = null)
         {
-            vertices.Evaluate(pose, output);
+            vertices.Evaluate(pose, output, deform);
             for (int i = 0; i < output.Length; i++) output[i] *= scale;
         }
     }

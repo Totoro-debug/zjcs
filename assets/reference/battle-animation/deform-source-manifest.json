@@ -1,0 +1,58 @@
+{
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/ProfessionUI/NativeSkeletonData/Resources/ProfessionUI/NativeSkeletons/male.bytes",
+      "sha256": "7209fd0c72cbc5b32f44374d0c8921b9fe53d60b1dd404da3fc068359415f41f"
+    },
+    {
+      "path": "unity/Assets/Official/ProfessionUI/NativeSkeletonData/Resources/ProfessionUI/NativeSkeletons/female.bytes",
+      "sha256": "6f12515b949321a7697392b81b99e4a3c293b729bf832cf324979cdc12ec2bef"
+    }
+  ],
+  "source_receipt": {
+    "path": "assets/reference/profession-ui/skeleton-data-source-manifest.json",
+    "sha256": "5e97038f987d2760cfa49ceaab182d52fac67ae29b43681a4b6ad612e2fdcd34"
+  },
+  "generator_sha256": "fba289622f49a69ad5f546543d9deabd6abdca7218ff4ce31562fae7cbbf39f2",
+  "decoder_helper": {
+    "path": "scripts/prepare_battle_constraint_channel_fixtures.py",
+    "sha256": "50546b0fcafe264ffb0bf74ca0423ee8e94db4a5f6a65f1e6559c627449973bb"
+  },
+  "original_tracks": 8,
+  "fixture_sha256": "9644358198b1c3f95aaf6cdd2391f82845531db2ae3b4d5a637c0faa2737f577",
+  "native_runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeDeformAnimation.cs",
+      "sha256": "620f21b2ea6faa92d519313412e562b80fcd42c7816763a97f9a21971d8f16d5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeVertexAttachment.cs",
+      "sha256": "282ec7c1c236588863bbfa760734ee1a6be6e4b219c4ed17b0b33c0eeb43228e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAttachment.cs",
+      "sha256": "160d9c08da716d26da4e6625491396467973564a58f67c2b82c9f83979a80da9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePathAttachment.cs",
+      "sha256": "619b49c343154ce26cedd20277a4eef15b22b6dbe56e92008af0740b96faa84e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeMeshBatches.cs",
+      "sha256": "803a6343a936148b978f8c2f10100030509eae80aa6492e538efa3350f93d550"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimationChannels.cs",
+      "sha256": "991eb970376dcaad9a1ce2c1dc33354548241732d62fd582b30c9d09e9cb03e4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAppearanceSkeleton.cs",
+      "sha256": "081008aceeb1e442138f6e85fef68a6c52f040057e60daa794337a10cdbb53c4"
+    }
+  ],
+  "operation": "Reuse exact lossless 871_156598 player data. Bind the eight single-key clipping-deformation tracks by original skin, slot and shared attachment identity; preserve source-unit influence offsets. Independently transform offsets through the original bone matrices and renderer data scale.",
+  "limitations": [
+    "Multiframe attachment deformation is explicitly unsupported; the eight original player tracks have one key each. Physics, world constraint solving, mixing and complete player actions remain required."
+  ]
+}

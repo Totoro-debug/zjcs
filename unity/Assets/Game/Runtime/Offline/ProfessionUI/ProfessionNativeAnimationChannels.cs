@@ -21,6 +21,7 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly ColorTrack[] colors;
         private readonly Color[] setupColors;
         private ProfessionNativeConstraintAnimation constraints;
+        private ProfessionNativeDeformAnimation deforms;
         public string Name { get; }
         public float Duration { get; }
         public IReadOnlyList<ProfessionNativeBonePose.Track> BoneTracks => bones;
@@ -28,6 +29,7 @@ namespace Zjcs.Offline.ProfessionUI
         public int ColorTrackCount => colors.Length;
         public IReadOnlyDictionary<string, object> OriginalFields { get; }
         public ProfessionNativeConstraintAnimation Constraints => constraints ?? (constraints = new ProfessionNativeConstraintAnimation(data, Name));
+        public ProfessionNativeDeformAnimation Deforms => deforms ?? (deforms = new ProfessionNativeDeformAnimation(data, Name));
 
         public ProfessionNativeAnimationChannels(ProfessionNativeSkeletonData data, string name)
         {

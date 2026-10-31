@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Zjcs.Official.ProfessionUI;
 
@@ -8,6 +9,7 @@ namespace Zjcs.Offline.ProfessionUI
     {
         public string Name { get; }
         public int SlotBone { get; }
+        public virtual int DeformValueCount => 0;
         protected ProfessionNativeAttachment(string name,int slotBone)
         {
             if(name==null||slotBone<0)throw new ArgumentException("Original attachment name or slot bone is invalid.");
@@ -27,6 +29,7 @@ namespace Zjcs.Offline.ProfessionUI
         public bool IsMesh => vertices!=null;
         public int VertexCount => vertices?.VertexCount??4;
         public int IndexCount => triangles.Length;
+        public override int DeformValueCount => vertices?.DeformValueCount ?? 0;
 
         public ProfessionNativeRenderAttachment(string name,string page,int slotBone,ProfessionNativeAtlasRegion region,
             float width,float height,float x,float y,float scaleX,float scaleY,float rotation,float dataScale)
@@ -51,17 +54,18 @@ namespace Zjcs.Offline.ProfessionUI
 
         public Vector2 Uv(int vertex)=>uvs[vertex];
         public int Index(int index)=>triangles[index];
-        public void ComputeVertices(ProfessionNativeBonePose pose,Vector3[] output)
+        public void ComputeVertices(ProfessionNativeBonePose pose,Vector3[] output,IReadOnlyList<float> deform=null)
         {
             if(pose==null||output==null||output.Length!=VertexCount||SlotBone>=pose.Count||!pose.IsActive(SlotBone))
                 throw new ArgumentException("Original render attachment requires its active slot and matching output.");
             if(vertices!=null)
             {
-                var world=new Vector2[VertexCount];vertices.Evaluate(pose,world);
+                var world=new Vector2[VertexCount];vertices.Evaluate(pose,world,deform);
                 for(int i=0;i<world.Length;i++)output[i]=new Vector3(world[i].x*dataScale,world[i].y*dataScale,0);
             }
             else
             {
+                if(deform!=null)throw new ArgumentException("Original region attachments do not carry vertex deformation.");
                 Matrix4x4 world=pose.World(SlotBone);
                 for(int i=0;i<4;i++)output[i]=world.MultiplyPoint3x4(localCorners[i])*dataScale;
             }
@@ -85,11 +89,17 @@ namespace Zjcs.Offline.ProfessionUI
         ProfessionNativeBonePose Pose { get; }
     }
 
+    public interface IProfessionNativeDeformSlot : IProfessionNativeAttachmentSlot
+    {
+        IReadOnlyList<float> Deform { get; }
+    }
+
     public sealed class ProfessionNativeBoundingAttachment : ProfessionNativeAttachment,IProfessionSkinClipBoundingBox
     {
         private readonly ProfessionNativeVertexAttachment vertices;
         private readonly float dataScale;
         public int WorldVerticesLength=>vertices.VertexCount*2;
+        public override int DeformValueCount=>vertices.DeformValueCount;
         public ProfessionNativeBoundingAttachment(string name,int slotBone,int boneCount,float[] sourceVertices,int vertexCount,float dataScale)
             :base(name,slotBone)
         {
@@ -100,7 +110,7 @@ namespace Zjcs.Offline.ProfessionUI
         {
             if(!(slot is IProfessionNativeAttachmentSlot native)||output==null||output.Length!=WorldVerticesLength)
                 throw new ArgumentException("Original bounding attachment requires a native slot and matching output.");
-            var world=new Vector2[vertices.VertexCount];vertices.Evaluate(native.Pose,world);
+            var world=new Vector2[vertices.VertexCount];vertices.Evaluate(native.Pose,world,(slot as IProfessionNativeDeformSlot)?.Deform);
             for(int i=0;i<world.Length;i++){output[i*2]=world[i].x*dataScale;output[i*2+1]=world[i].y*dataScale;}
         }
     }
@@ -111,6 +121,7 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly float dataScale;
         public int EndSlot { get; }
         public int VertexCount=>vertices.VertexCount;
+        public override int DeformValueCount=>vertices.DeformValueCount;
         public ProfessionNativeClippingAttachment(string name,int slotBone,int boneCount,float[] sourceVertices,int vertexCount,int endSlot,int slotCount,float dataScale)
             :base(name,slotBone)
         {
@@ -118,9 +129,9 @@ namespace Zjcs.Offline.ProfessionUI
                 throw new ArgumentException("Original clipping attachment end slot or data scale is invalid.");
             EndSlot=endSlot;vertices=new ProfessionNativeVertexAttachment(sourceVertices,vertexCount,slotBone,boneCount);this.dataScale=dataScale;
         }
-        public void ComputeVertices(ProfessionNativeBonePose pose,Vector2[] output)
+        public void ComputeVertices(ProfessionNativeBonePose pose,Vector2[] output,IReadOnlyList<float> deform=null)
         {
-            vertices.Evaluate(pose,output);for(int i=0;i<output.Length;i++)output[i]*=dataScale;
+            vertices.Evaluate(pose,output,deform);for(int i=0;i<output.Length;i++)output[i]*=dataScale;
         }
     }
 

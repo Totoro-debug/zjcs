@@ -17,8 +17,9 @@ namespace Zjcs.Offline.ProfessionUI
             public readonly bool Active,BreakAfter;
             public readonly Color32 Color;
             public readonly ProfessionNativeAttachment Attachment;
-            public Slot(int index,ProfessionNativeAttachment attachment,Color32 color,int blend=0,bool active=true,bool breakAfter=false)
-            {Index=index;Attachment=attachment;Color=color;Blend=blend;Active=active;BreakAfter=breakAfter;}
+            public readonly IReadOnlyList<float> Deform;
+            public Slot(int index,ProfessionNativeAttachment attachment,Color32 color,int blend=0,bool active=true,bool breakAfter=false,IReadOnlyList<float> deform=null)
+            {Index=index;Attachment=attachment;Color=color;Blend=blend;Active=active;BreakAfter=breakAfter;Deform=deform;}
         }
         public sealed class Batch
         {
@@ -67,11 +68,11 @@ namespace Zjcs.Offline.ProfessionUI
                     if(useClipping&&attachment is ProfessionNativeClippingAttachment clip)
                     {
                         if(clipping!=null)throw new NotSupportedException("Original clipping ranges overlap; their draw-order binding must be restored.");
-                        var boundary=new Vector2[clip.VertexCount];clip.ComputeVertices(pose,boundary);clipping=new ProfessionNativeConvexClipper(boundary);clipEnd=clip.EndSlot;clipStart=slot.Index;
+                        var boundary=new Vector2[clip.VertexCount];clip.ComputeVertices(pose,boundary,slot.Deform);clipping=new ProfessionNativeConvexClipper(boundary);clipEnd=clip.EndSlot;clipStart=slot.Index;
                     }
                     else if(attachment is ProfessionNativeRenderAttachment render)
                     {
-                        var points=new Vector3[render.VertexCount];render.ComputeVertices(pose,points);
+                        var points=new Vector3[render.VertexCount];render.ComputeVertices(pose,points,slot.Deform);
                         clippedVertices.Clear();clippedUvs.Clear();clippedIndices.Clear();
                         if(clipping==null)
                         {

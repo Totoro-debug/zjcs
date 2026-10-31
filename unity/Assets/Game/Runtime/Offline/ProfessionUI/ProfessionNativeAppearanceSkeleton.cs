@@ -28,7 +28,7 @@ namespace Zjcs.Offline.ProfessionUI
             public float C => World.m10;
             public float D => World.m11;
         }
-        private sealed class Slot : IProfessionNativeAttachmentSlot, IProfessionFollowerSlot
+        private sealed class Slot : IProfessionNativeDeformSlot, IProfessionFollowerSlot
         {
             private readonly ProfessionNativeAppearanceSkeleton owner;
             public int Index { get; }
@@ -37,6 +37,7 @@ namespace Zjcs.Offline.ProfessionUI
             internal Slot(ProfessionNativeAppearanceSkeleton owner, int index) { this.owner = owner; Index = index; }
             public ProfessionNativeBonePose Pose => owner.Pose;
             public object Attachment => owner.attachments.Attachment(Index);
+            public IReadOnlyList<float> Deform => owner.deforms[Index];
         }
         private readonly ProfessionNativeSkinSlots attachments;
         private readonly Slot[] slots;
@@ -45,6 +46,7 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly Bone[] bones;
         private readonly Func<int, float> customZOrder;
         private readonly Color[] animationColors;
+        private readonly IReadOnlyList<float>[] deforms;
         private readonly Dictionary<string, ProfessionNativeBonePose.Track[]> boneClips = new Dictionary<string, ProfessionNativeBonePose.Track[]>(StringComparer.Ordinal);
         private readonly Dictionary<string, ProfessionNativeSlotPose.Clip> slotClips = new Dictionary<string, ProfessionNativeSlotPose.Clip>(StringComparer.Ordinal);
         public ProfessionNativeSkeletonData Source { get; }
@@ -92,6 +94,7 @@ namespace Zjcs.Offline.ProfessionUI
             drawOrder = new IProfessionSkinClipSlot[slots.Length];
             followerOrder = new IProfessionFollowerSlot[slots.Length];
             animationColors = Enumerable.Repeat(Color.white, slots.Length).ToArray();
+            deforms = new IReadOnlyList<float>[slots.Length];
         }
         public ProfessionNativeSkin CreateSkin(string name) => new ProfessionNativeSkin(name, Source.SlotCount, Source.BoneCount,
             Source.Constraints.Count, Array.Empty<ProfessionNativeSkin.Entry>(), Array.Empty<int>(), Array.Empty<int>());
@@ -104,6 +107,7 @@ namespace Zjcs.Offline.ProfessionUI
         {
             if (attachment != null && (!(attachment is ProfessionNativeAttachment native) || native.SlotBone != SlotPose.Bone(slot)))
                 throw new NotSupportedException("Verify original cross-slot or non-native attachment binding.");
+            if (!ReferenceEquals(attachments.Attachment(slot), attachment)) deforms[slot] = null;
             attachments.SetAttachment(slot, attachment);
         }
         public void SetSkin(IProfessionAppearanceSkin skin)
@@ -111,15 +115,16 @@ namespace Zjcs.Offline.ProfessionUI
             var native = skin as ProfessionNativeSkin;
             if (skin != null && (native == null || native.SlotCount != Source.SlotCount || native.BoneCount != Source.BoneCount || native.ConstraintCount != Source.Constraints.Count))
                 throw new ArgumentException("Original combined skin belongs to another skeleton layout.");
-            attachments.SetSkin(native); UpdateCache();
+            attachments.SetSkin(native); Array.Clear(deforms, 0, deforms.Length); UpdateCache();
         }
         public void SetToSetupPose()
-        { Pose.Reset(); SlotPose.Reset(); attachments.ResetSlots(); nativeColors = false; }
+        { Pose.Reset(); SlotPose.Reset(); attachments.ResetSlots(); Array.Clear(deforms, 0, deforms.Length); nativeColors = false; }
         public void UpdateCache() => Pose.SetSkinBones(attachments.Skin?.Bones ?? (IReadOnlyList<int>)Array.Empty<int>());
 
         public void EvaluateUnmixedIdleBeforePhysics(string animation, float time)
         {
             nativeColors = false;
+            Array.Clear(deforms, 0, deforms.Length);
             if (animation != "home/idle_01" && animation != "100/idle_01" && animation != "200/idle_01")
                 throw new NotSupportedException("Verify additional original native skeleton animation: " + animation);
             if (!boneClips.TryGetValue(animation, out var bones))
@@ -141,8 +146,13 @@ namespace Zjcs.Offline.ProfessionUI
             if (channels == null) throw new ArgumentNullException(nameof(channels));
             channels.ApplyLocalPose(Pose, SlotPose, animationColors, Mathf.Max(0f, time), loop);
             nativeColors = true;
+            float poseTime = Mathf.Max(0f, time);
+            if (loop && channels.Duration > 0) poseTime %= channels.Duration;
             for (int i = 0; i < slots.Length; i++)
+            {
                 attachments.SetAttachment(i, attachments.Resolve(i, SlotPose.Attachment(i)));
+                deforms[i] = channels.Deforms.Sample(i, attachments.Attachment(i) as ProfessionNativeAttachment, poseTime);
+            }
         }
 
         // The two original default weapon skins have no active constraints.
@@ -158,7 +168,7 @@ namespace Zjcs.Offline.ProfessionUI
                 if (section.Key != "bones") throw new NotSupportedException("Restore additional original weapon timeline: " + section.Key);
             if (!boneClips.TryGetValue(animation, out var tracks))
             { tracks = Source.CreateBoneTracks(animation); boneClips.Add(animation, tracks); }
-            Pose.Apply(tracks, time); SlotPose.Reset(); attachments.ResetSlots();
+            Pose.Apply(tracks, time); SlotPose.Reset(); attachments.ResetSlots(); Array.Clear(deforms, 0, deforms.Length);
         }
 
         private bool nativeColors;
@@ -169,7 +179,7 @@ namespace Zjcs.Offline.ProfessionUI
             {
                 int index = SlotPose.DrawSlot(i);
                 result[i] = new ProfessionNativeMeshBatches.Slot(index, (ProfessionNativeAttachment)attachments.Attachment(index),
-                    nativeColors ? (Color32)animationColors[index] : SlotPose.Color(index), SlotPose.Blend(index), Pose.IsActive(SlotPose.Bone(index)), breaksAfter != null && breaksAfter.Contains(index));
+                    nativeColors ? (Color32)animationColors[index] : SlotPose.Color(index), SlotPose.Blend(index), Pose.IsActive(SlotPose.Bone(index)), breaksAfter != null && breaksAfter.Contains(index), deforms[index]);
             }
             return result;
         }
