@@ -261,7 +261,7 @@ namespace Zjcs.Presentation.Home
             int[] playerPassives = OfflineSkillProgression.EquippedPassiveSkills(playerSave.Skills);
             ApplyPassiveProperties(combat, skillItems, playerProperties, playerPassives,
                 itemId => OfflineSkillProgression.OwnedRank(playerSave.Skills, itemId),
-                itemId => SlotLevel(playerSave.Skills.PassiveSlotLevels, playerPassives, itemId), playerSave.SubRank);
+                itemId => PlayerSlotLevel(playerSave, 101, Array.IndexOf(playerPassives, itemId)), playerSave.SubRank);
             int maxHpId = combat.PropertyType("MaxHp");
             int speedId = combat.PropertyType("Speed");
             int[] playerPos = playerFaction.entryPositions[0];
@@ -318,7 +318,7 @@ namespace Zjcs.Presentation.Home
             return unit;
         }
 
-        private static void AssemblePlayer(FightOfficialCombatCatalog combat,
+        private void AssemblePlayer(FightOfficialCombatCatalog combat,
             FightOfficialSkillItemCatalog skillItems, FightBattleUnitState player, OfflinePlayerProgress save)
         {
             int[] equipped = OfflineSkillProgression.EquippedActiveSkills(save.Skills);
@@ -338,7 +338,7 @@ namespace Zjcs.Presentation.Home
                 int skinId = save.Wardrobe?.SkillSkins?.FirstOrDefault(value => value.SkillId == itemId)?.SkillSkinId ?? 0;
                 FightOfficialSkillItem item = skillItems.RequiredForSkin(itemId, skinId);
                 int rank = Math.Max(1, OfflineSkillProgression.OwnedRank(save.Skills, itemId));
-                int level = SlotLevel(save.Skills.ActiveSlotLevels, equipped, itemId);
+                int level = PlayerSlotLevel(save, 100, slot);
                 skills.Add(new FightOfficialSkillBinding
                 {
                     EntityId = item.EntityId, Slot = slot, ItemId = itemId, UseItemId = item.ItemId, SkillSkinId = skinId, Rank = rank,
@@ -358,8 +358,7 @@ namespace Zjcs.Presentation.Home
                 passives.Add(new FightOfficialPassiveSkillBinding
                 {
                     ItemId = itemId, Rank = Math.Max(1, OfflineSkillProgression.OwnedRank(save.Skills, itemId)),
-                    Level = SlotLevel(save.Skills.PassiveSlotLevels,
-                        OfflineSkillProgression.EquippedPassiveSkills(save.Skills), itemId), SubRank = player.SubRank
+                    Level = PlayerSlotLevel(save, 101, slot), SubRank = player.SubRank
                 });
             }
             combat.AssembleUnit(player, skills, combat.CreatePassiveStatusBindings(player, skillItems, passives));
@@ -409,10 +408,11 @@ namespace Zjcs.Presentation.Home
             }
         }
 
-        private static int SlotLevel(int[] levels, int[] equipped, int itemId)
+        private int PlayerSlotLevel(OfflinePlayerProgress save, int itemType, int slot)
         {
-            int slot = Array.IndexOf(equipped, itemId);
-            return levels != null && slot >= 0 && slot < levels.Length ? Math.Max(1, levels[slot]) : 1;
+            OfflineCharacterProgressionService progression = host.DailyDungeonProgression;
+            return Math.Max(1, progression.SkillProgression.SlotLevel(save.Skills, itemType, slot,
+                progression.SkillContext().CurrentSeasonId));
         }
 
         private static List<FightPropertyValue> ToProperties(IEnumerable<KeyValuePair<int, long>> values) =>

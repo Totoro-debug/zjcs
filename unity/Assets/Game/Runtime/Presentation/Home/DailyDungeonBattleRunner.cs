@@ -491,9 +491,8 @@ namespace Zjcs.Presentation.Home
                 itemId =>
                 {
                     int slot = Array.IndexOf(playerPassiveItems, itemId);
-                    return playerSave.Skills.PassiveSlotLevels != null && slot >= 0
-                        && slot < playerSave.Skills.PassiveSlotLevels.Length
-                        ? Math.Max(1, playerSave.Skills.PassiveSlotLevels[slot]) : 1;
+                    return Math.Max(1, progression.SkillProgression.SlotLevel(playerSave.Skills,
+                        101, slot, progression.SkillContext().CurrentSeasonId));
                 },
                 playerSave.SubRank);
             int maxHpId = combat.PropertyType("MaxHp");
@@ -733,7 +732,7 @@ namespace Zjcs.Presentation.Home
                 host.NpcAssistanceProgress.FinishBattle(10, dailyAssistEntryId, stageId);
         }
 
-        private static void AssemblePlayer(FightOfficialCombatCatalog combat,
+        private void AssemblePlayer(FightOfficialCombatCatalog combat,
             FightOfficialSkillItemCatalog skillItems, FightBattleUnitState player, OfflinePlayerProgress save)
         {
             int[] equipped = OfflineSkillProgression.EquippedActiveSkills(save.Skills);
@@ -753,8 +752,8 @@ namespace Zjcs.Presentation.Home
                 int skinId = save.Wardrobe?.SkillSkins?.FirstOrDefault(value => value.SkillId == itemId)?.SkillSkinId ?? 0;
                 FightOfficialSkillItem item = skillItems.RequiredForSkin(itemId, skinId);
                 int rank = Math.Max(1, OfflineSkillProgression.OwnedRank(save.Skills, itemId));
-                int level = save.Skills.ActiveSlotLevels != null && slot < save.Skills.ActiveSlotLevels.Length
-                    ? Math.Max(1, save.Skills.ActiveSlotLevels[slot]) : 1;
+                int level = Math.Max(1, battleProgression.SkillProgression.SlotLevel(save.Skills, 100, slot,
+                    battleProgression.SkillContext().CurrentSeasonId));
                 skills.Add(new FightOfficialSkillBinding
                 {
                     EntityId = item.EntityId, Slot = slot, ItemId = itemId, UseItemId = item.ItemId, SkillSkinId = skinId, Rank = rank,
@@ -777,8 +776,8 @@ namespace Zjcs.Presentation.Home
                 {
                     ItemId = itemId,
                     Rank = Math.Max(1, OfflineSkillProgression.OwnedRank(save.Skills, itemId)),
-                    Level = save.Skills.PassiveSlotLevels != null && slot < save.Skills.PassiveSlotLevels.Length
-                        ? Math.Max(1, save.Skills.PassiveSlotLevels[slot]) : 1,
+                    Level = Math.Max(1, battleProgression.SkillProgression.SlotLevel(save.Skills, 101, slot,
+                        battleProgression.SkillContext().CurrentSeasonId)),
                     SubRank = player.SubRank
                 });
             }

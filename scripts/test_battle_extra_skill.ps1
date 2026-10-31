@@ -7,17 +7,15 @@ Add-Type -Path $sources
 
 function Assert-Extra($condition, $message) { if (-not $condition) { throw $message } }
 function Read-Text($path) { return [System.IO.File]::ReadAllText((Join-Path $root $path)) }
-function Get-Sha($path) {
-    $bytes = [System.IO.File]::ReadAllBytes((Join-Path $root $path))
-    $hash = [System.Security.Cryptography.SHA256]::Create().ComputeHash($bytes)
-    return ([System.BitConverter]::ToString($hash) -replace '-', '').ToLowerInvariant()
-}
-
+$skillSource = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::ReadSourceManifest(
+    (Read-Text 'unity/Assets/Official/Combat/skill-rules-source-manifest.json'))
+$battleSource = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::ReadSourceManifest(
+    (Read-Text 'unity/Assets/Official/Combat/battle-rules-source-manifest.json'))
 $catalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load(
     (Read-Text 'unity/Assets/Official/Combat/skill-rules.json'),
-    (Get-Sha 'unity/Assets/Official/Combat/skill-rules.json'), '854_156383',
+    $skillSource.OutputSha256, $skillSource.Manifest,
     (Read-Text 'unity/Assets/Official/Combat/battle-rules.json'),
-    (Get-Sha 'unity/Assets/Official/Combat/battle-rules.json'), '854_156383')
+    $battleSource.OutputSha256, $battleSource.Manifest)
 
 $official = $catalog.CreateSkill(12090, 0, 0, 1, 1, 1, $null)
 Assert-Extra ($official.ExtraSkills.Count -eq 2) 'Official extra skill list mismatch'
@@ -78,4 +76,13 @@ $nested = Invoke-ExtraBattle (New-BaseSkill 12090 1.0)
 $nestedExtras = @($nested.Event.SkillCasts | Where-Object { $_.Slot -eq -1 })
 Assert-Extra ($nestedExtras.Count -eq 1 -and $nestedExtras[0].SkillEntityId -eq 12090) 'Extra skill cascade was not limited to one level'
 
-Write-Output 'Battle extra skill checks passed: official mapping, rate release, zero rate and single-level cascade.'
+# Attached action-end skills use the triggering skill's cultivation too.
+$cultivated = New-BaseSkill 63434 1.0
+$cultivated.Rank = 6; $cultivated.Level = 17; $cultivated.SubRank = 10
+$inherited = Invoke-ExtraBattle $cultivated
+$status = @($inherited.Checkpoint.Units | ForEach-Object { $_.Statuses } |
+    Where-Object { $_.ClassId -eq 24658 -and $_.RootSkillId -eq 63434 })
+Assert-Extra ($status.Count -gt 0) 'Official attached skill did not apply its configured status'
+Assert-Extra ($status[0].SourceSkillRank -eq 6 -and $status[0].SourceSkillLevel -eq 17 -and $status[0].SourceSubRank -eq 10) 'Attached skill did not inherit its triggering skill cultivation'
+
+Write-Output 'Battle extra skill checks passed: official mapping, rate release, zero rate, single-level cascade and inherited cultivation.'

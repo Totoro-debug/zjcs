@@ -7,17 +7,17 @@ Add-Type -Path $sources
 
 function Assert-Child($condition, $message) { if (-not $condition) { throw $message } }
 function Read-Text($path) { return [System.IO.File]::ReadAllText((Join-Path $root $path)) }
-function Get-Sha($path) {
-    $bytes = [System.IO.File]::ReadAllBytes((Join-Path $root $path))
-    $hash = [System.Security.Cryptography.SHA256]::Create().ComputeHash($bytes)
-    return ([System.BitConverter]::ToString($hash) -replace '-', '').ToLowerInvariant()
-}
-
+$skillSource = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::ReadSourceManifest(
+    (Read-Text 'unity/Assets/Official/Combat/skill-rules-source-manifest.json'))
+$battleSource = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::ReadSourceManifest(
+    (Read-Text 'unity/Assets/Official/Combat/battle-rules-source-manifest.json'))
+$formulaSource = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::ReadSourceManifest(
+    (Read-Text 'unity/Assets/Official/Combat/rules-source-manifest.json'))
 $catalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load(
     (Read-Text 'unity/Assets/Official/Combat/skill-rules.json'),
-    (Get-Sha 'unity/Assets/Official/Combat/skill-rules.json'), '854_156383',
+    $skillSource.OutputSha256, $skillSource.Manifest,
     (Read-Text 'unity/Assets/Official/Combat/battle-rules.json'),
-    (Get-Sha 'unity/Assets/Official/Combat/battle-rules.json'), '854_156383')
+    $battleSource.OutputSha256, $battleSource.Manifest)
 
 $officialHit = $catalog.CreateSkill(12730, 0, 0, 1, 1, 1, $null).HitGraphEntities |
     Where-Object { $_.EntityId -eq 12731 } | Select-Object -First 1
@@ -44,7 +44,7 @@ function New-ChildSkill($childId, $rate, $per) {
     return $skill
 }
 
-function Invoke-ChildBattle($skill, $enemyHp, $enemyMaxHp) {
+function Invoke-ChildBattle($skill, $enemyHp, $enemyMaxHp, $useOfficialDamageFormula = $false) {
     $player = New-Unit 1 1 0 0 5000 5000 100
     $player.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
     $player.SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{ Slot = 0; LimitedTimes = -1 })
@@ -56,6 +56,11 @@ function Invoke-ChildBattle($skill, $enemyHp, $enemyMaxHp) {
     $cp.Units.Add($player); $cp.Units.Add($enemy)
     $wave = [Zjcs.Combat.Official.FightBattleWaveState]::new(); $wave.Index = 0; $wave.UnitIds.Add(2); $cp.Waves.Add($wave)
     $formula = [Zjcs.Combat.Official.FightDamageFormula]::new([Zjcs.Combat.Official.FightDamagePropertySchema]::new(), [Zjcs.Combat.Official.FightDamageFormulaConfig]::new())
+    if ($useOfficialDamageFormula) {
+        $enemy.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $catalog.PropertyType('Attack'); Value = 100 })
+        $formula = $catalog.CreateDamageFormula((Read-Text 'unity/Assets/Official/Combat/rules.json'),
+            $formulaSource.OutputSha256, $formulaSource.Manifest)
+    }
     $executor = [Zjcs.Combat.Official.FightBattleExecutor]::Begin($cp, $formula,
         [Zjcs.Combat.Official.FightDamageSettlement]::new(), $catalog)
     return $executor.Step(0, 1)
@@ -78,4 +83,29 @@ Assert-Child (@($zero.Event.SkillCasts | Where-Object { $_.Slot -eq -1 }).Count 
 $nested = Invoke-ChildBattle (New-ChildSkill 12730 1.0 -1) 5000 5000
 Assert-Child (@($nested.Event.SkillCasts | Where-Object { $_.Slot -eq -1 -and $_.SkillEntityId -eq 12730 }).Count -eq 1) 'Child skill cascade was not limited to one level'
 
-Write-Output 'Battle child skill checks passed: official mapping, damaged-target cast, HP condition, zero rate and single-level cascade.'
+# Child effects follow the triggering skill's cultivation, not the damaged unit's level.
+$cultivated = New-ChildSkill 63434 1.0 -1
+$cultivated.Rank = 6; $cultivated.Level = 17; $cultivated.SubRank = 10
+$inherited = Invoke-ChildBattle $cultivated 5000 5000
+$status = @($inherited.Checkpoint.Units | ForEach-Object { $_.Statuses } |
+    Where-Object { $_.ClassId -eq 24658 -and $_.RootSkillId -eq 63434 })
+Assert-Child ($status.Count -gt 0) 'Official child skill did not apply its configured status'
+Assert-Child ($status[0].SourceSkillRank -eq 6 -and $status[0].SourceSkillLevel -eq 17 -and $status[0].SourceSubRank -eq 10) 'Child skill did not inherit its triggering skill cultivation'
+$restored = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(
+    [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($inherited.Checkpoint))
+$savedStatus = @($restored.Units | ForEach-Object { $_.Statuses } | Where-Object { $_.ClassId -eq 24658 })
+Assert-Child ($savedStatus[0].SourceSkillLevel -eq 17) 'Child status cultivation did not survive checkpoint restoration'
+
+# The inherited parameters must change actual official damage, not only status metadata.
+$plain = New-ChildSkill 11050 1.0 -1
+$plain.Rank = 1; $plain.Level = 1; $plain.SubRank = 1
+$boosted = New-ChildSkill 11050 1.0 -1
+$boosted.Rank = 6; $boosted.Level = 17; $boosted.SubRank = 10
+$plainResult = Invoke-ChildBattle $plain 5000 5000 $true
+$boostedResult = Invoke-ChildBattle $boosted 5000 5000 $true
+$plainDamage = @($plainResult.Event.DamageEvents | Where-Object { $_.SkillEntityId -eq 11050 })
+$boostedDamage = @($boostedResult.Event.DamageEvents | Where-Object { $_.SkillEntityId -eq 11050 })
+Assert-Child ($plainDamage.Count -gt 0 -and $boostedDamage.Count -gt 0) 'Official child damage was not executed'
+Assert-Child ([Math]::Abs($boostedDamage[0].DamageValue) -gt [Math]::Abs($plainDamage[0].DamageValue)) 'Parent cultivation did not scale actual child damage'
+
+Write-Output 'Battle child skill checks passed: official mapping, damaged-target cast, HP condition, zero rate, single-level cascade, inherited cultivation/status persistence and scaled damage.'

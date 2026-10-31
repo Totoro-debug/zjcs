@@ -403,7 +403,7 @@ namespace Zjcs.Presentation.Home
             if (battleRoot != null) { Destroy(battleRoot.gameObject); battleRoot = null; }
         }
 
-        private static void ApplyPlayerPassives(FightOfficialCombatCatalog combat,
+        private void ApplyPlayerPassives(FightOfficialCombatCatalog combat,
             FightOfficialSkillItemCatalog items, Dictionary<int, long> properties, OfflinePlayerProgress player)
         {
             int[] passives = OfflineSkillProgression.EquippedPassiveSkills(player.Skills);
@@ -412,8 +412,8 @@ namespace Zjcs.Presentation.Home
                 int id = passives[slot]; if (id <= 0) continue;
                 ApplyPassive(combat, items, properties, id,
                     OfflineSkillProgression.OwnedRank(player.Skills, id),
-                    player.Skills.PassiveSlotLevels != null && slot < player.Skills.PassiveSlotLevels.Length
-                        ? player.Skills.PassiveSlotLevels[slot] : 1, player.SubRank);
+                    host.DailyDungeonProgression.SkillProgression.SlotLevel(player.Skills, 101, slot,
+                        host.DailyDungeonProgression.SkillContext().CurrentSeasonId), player.SubRank);
             }
         }
 
@@ -437,7 +437,7 @@ namespace Zjcs.Presentation.Home
                     ? checked(current + pair.Value) : pair.Value;
         }
 
-        private static void AssemblePlayer(FightOfficialCombatCatalog combat, FightOfficialSkillItemCatalog items,
+        private void AssemblePlayer(FightOfficialCombatCatalog combat, FightOfficialSkillItemCatalog items,
             FightBattleUnitState unit, OfflinePlayerProgress player)
         {
             int[] equipped = OfflineSkillProgression.EquippedActiveSkills(player.Skills);
@@ -456,8 +456,8 @@ namespace Zjcs.Presentation.Home
                 int skinId = player.Wardrobe?.SkillSkins?.FirstOrDefault(value => value.SkillId == itemId)?.SkillSkinId ?? 0;
                 FightOfficialSkillItem item = items.RequiredForSkin(itemId, skinId);
                 int rank = Math.Max(1, OfflineSkillProgression.OwnedRank(player.Skills, itemId));
-                int level = player.Skills.ActiveSlotLevels != null && slot < player.Skills.ActiveSlotLevels.Length
-                    ? Math.Max(1, player.Skills.ActiveSlotLevels[slot]) : 1;
+                int level = Math.Max(1, host.DailyDungeonProgression.SkillProgression.SlotLevel(player.Skills, 100, slot,
+                    host.DailyDungeonProgression.SkillContext().CurrentSeasonId));
                 active.Add(new FightOfficialSkillBinding { EntityId = item.EntityId, Slot = slot, ItemId = itemId, UseItemId = item.ItemId, SkillSkinId = skinId,
                     Rank = rank, Level = level,
                     ProfessionAvailability = items.ProfessionAvailabilityFor(item.ItemId,
@@ -466,10 +466,12 @@ namespace Zjcs.Presentation.Home
                     Cooldown = combat.CalculateSkillCooldown(item.EntityId, rank, level, player.SubRank, properties),
                     Properties = ToProperties(combat.CalculateSkillProps(item.EntityId, rank, level, player.SubRank)) });
             }
-            var passive = OfflineSkillProgression.EquippedPassiveSkills(player.Skills).Where(value => value > 0)
-                .Select(value => new FightOfficialPassiveSkillBinding { ItemId = value,
-                    Rank = Math.Max(1, OfflineSkillProgression.OwnedRank(player.Skills, value)), Level = 1,
-                    SubRank = player.SubRank }).ToList();
+            var passive = OfflineSkillProgression.EquippedPassiveSkills(player.Skills)
+                .Select((value, slot) => new FightOfficialPassiveSkillBinding { ItemId = value,
+                    Rank = Math.Max(1, OfflineSkillProgression.OwnedRank(player.Skills, value)),
+                    Level = Math.Max(1, host.DailyDungeonProgression.SkillProgression.SlotLevel(player.Skills, 101, slot,
+                        host.DailyDungeonProgression.SkillContext().CurrentSeasonId)),
+                    SubRank = player.SubRank }).Where(value => value.ItemId > 0).ToList();
             combat.AssembleUnit(unit, active, combat.CreatePassiveStatusBindings(unit, items, passive));
         }
 

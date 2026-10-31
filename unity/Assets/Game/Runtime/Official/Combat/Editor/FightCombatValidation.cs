@@ -165,11 +165,13 @@ namespace Zjcs.Combat.Official.EditorTools
             var characterGuard = new FightBattleUnitState
             {
                 CharacterType = 1,
-                MonsterId = 3991,
+                MonsterId = 4002,
                 MonsterTemplateId = 3100
             };
-            if (OfficialBattleUnitWorldHudView.ResolveUnitBarEntityId(characterGuard) != 3991)
-                throw new InvalidOperationException("Official character guard HUD did not prefer its configured monster entity.");
+            // Arena guards use FightRolePlayerSpawnerComponentInfo.CharacterClassId (3100).
+            // The guard's MonsterId supplies combat properties, not its displayed character prefab.
+            if (OfficialBattleUnitWorldHudView.ResolveUnitBarEntityId(characterGuard) != 3100)
+                throw new InvalidOperationException("Official character guard HUD did not select its spawned character entity.");
 
             var templatedMonster = new FightBattleUnitState
             {

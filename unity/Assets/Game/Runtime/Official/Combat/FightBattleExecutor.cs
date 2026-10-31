@@ -616,7 +616,7 @@ namespace Zjcs.Combat.Official
                     if (hpTriggerSkills.Count > 0)
                         ExecuteTriggerSkills(target, hpTriggerSkills, casts, damageEvents, movements,
                             ref lastDelay);
-                    ApplyChildSkill(target, hit, casts, damageEvents, movements, ref lastDelay);
+                    ApplyChildSkill(target, skill, hit, casts, damageEvents, movements, ref lastDelay);
                 }
             }
             ApplySourceMoves(actor, skill, targets, movements, ref lastDelay);
@@ -1079,24 +1079,28 @@ namespace Zjcs.Combat.Official
         /// <summary>
         /// Official <c>FightDamageComponent.ChildSkillCfg</c>: after a hit lands, the damaged target may
         /// release the configured child skill (rate and remaining-HP condition). Child skills run one
-        /// level deep and keep their casts in the current step.
+        /// level deep and keep their casts in the current step. Offline cultivation follows the
+        /// triggering skill, as confirmed by the user; each child retains its own official prop factors.
         /// </summary>
-        private void ApplyChildSkill(FightBattleUnitState target, FightBattleHitDefinition hit,
+        private void ApplyChildSkill(FightBattleUnitState target, FightBattleSkillDefinition parentSkill,
+            FightBattleHitDefinition hit,
             List<FightBattleSkillCastEvent> casts, List<FightBattleDamageEvent> damageEvents,
             List<FightBattleMovementEvent> movements, ref float lastDelay)
         {
-            if (statusCatalog == null || hit == null || hit.ChildSkillId <= 0 || childDepth > 0) return;
+            if (statusCatalog == null || parentSkill == null || hit == null
+                || hit.ChildSkillId <= 0 || childDepth > 0) return;
             if (target == null || target.Hp <= 0) return;
             if (hit.ChildSkillRate < 1f && random.Next() > hit.ChildSkillRate) return;
             if (hit.ChildSkillLessThanHpPer >= 0f
                 && target.Hp / (double)Math.Max(1L, target.MaxHp) > hit.ChildSkillLessThanHpPer) return;
-            int level = Math.Max(1, target.Level);
-            int subRank = Math.Max(1, target.SubRank);
+            int rank = Math.Max(1, parentSkill.Rank);
+            int level = Math.Max(1, parentSkill.Level);
+            int subRank = Math.Max(1, parentSkill.SubRank);
             FightBattleSkillDefinition skill;
             try
             {
-                skill = statusCatalog.CreateSkill(hit.ChildSkillId, -1, 0, 1, level, subRank,
-                    ToPropertyList(statusCatalog.CalculateSkillProps(hit.ChildSkillId, 1, level, subRank)));
+                skill = statusCatalog.CreateSkill(hit.ChildSkillId, -1, 0, rank, level, subRank,
+                    ToPropertyList(statusCatalog.CalculateSkillProps(hit.ChildSkillId, rank, level, subRank)));
             }
             catch (InvalidOperationException)
             {
@@ -1195,8 +1199,9 @@ namespace Zjcs.Combat.Official
             extraDepth++;
             try
             {
-                int level = Math.Max(1, actor.Level);
-                int subRank = Math.Max(1, actor.SubRank);
+                int rank = Math.Max(1, skill.Rank);
+                int level = Math.Max(1, skill.Level);
+                int subRank = Math.Max(1, skill.SubRank);
                 foreach (FightBattleSkillExtra extra in skill.ExtraSkills)
                 {
                     if (extra == null || extra.SkillId <= 0) continue;
@@ -1204,8 +1209,8 @@ namespace Zjcs.Combat.Official
                     FightBattleSkillDefinition extraSkill;
                     try
                     {
-                        extraSkill = statusCatalog.CreateSkill(extra.SkillId, -1, 0, 1, level, subRank,
-                            ToPropertyList(statusCatalog.CalculateSkillProps(extra.SkillId, 1, level, subRank)));
+                        extraSkill = statusCatalog.CreateSkill(extra.SkillId, -1, 0, rank, level, subRank,
+                            ToPropertyList(statusCatalog.CalculateSkillProps(extra.SkillId, rank, level, subRank)));
                     }
                     catch (InvalidOperationException)
                     {
