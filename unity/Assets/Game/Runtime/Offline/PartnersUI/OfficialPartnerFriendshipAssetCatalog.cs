@@ -10,15 +10,18 @@ namespace Zjcs.Offline.PartnersUI
         [SerializeField] private TextAsset propertyTexts;
         [SerializeField] private TextAsset dialogTexts;
         [SerializeField] private GameObject dialogPrefab;
+        [SerializeField] private GameObject giftIconPrefab;
         public TextAsset PropertyConfiguration => propertyConfiguration;
         public TextAsset PropertyTexts => propertyTexts;
         public TextAsset DialogTexts => dialogTexts;
         public GameObject DialogPrefab => dialogPrefab;
+        public GameObject GiftIconPrefab => giftIconPrefab;
 
         public static OfficialPartnerFriendshipAssetCatalog LoadDefault()
         {
             var assets = Resources.Load<OfficialPartnerFriendshipAssetCatalog>("Partners/OfficialPartnerFriendshipAssetCatalog");
-            if (assets == null || assets.propertyConfiguration == null || assets.propertyTexts == null || assets.dialogTexts == null || assets.dialogPrefab == null)
+            if (assets == null || assets.propertyConfiguration == null || assets.propertyTexts == null || assets.dialogTexts == null
+                || assets.dialogPrefab == null || assets.giftIconPrefab == null)
                 throw new InvalidOperationException("Official partner friendship dialog/data bindings are missing.");
             return assets;
         }

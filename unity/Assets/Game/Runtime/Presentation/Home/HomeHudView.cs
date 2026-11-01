@@ -12,6 +12,7 @@ using Zjcs.Offline.Progression;
 using Zjcs.Official.Partners;
 using Zjcs.Official.PartnersUI;
 using Zjcs.Official.ProfessionUI;
+using Zjcs.Official.WorldUI;
 using Zjcs.Presentation.Inventory;
 
 namespace Zjcs.Presentation.Home
@@ -41,6 +42,8 @@ namespace Zjcs.Presentation.Home
         private PartnerRosterPanelView partnerRosterPanel;
         private PartnerDetailPanelView partnerDetailPanel;
         private PartnerGiftPanelView partnerGiftPanel;
+        private GameObject partnerFriendshipPanel;
+        private Func<string, string> previousFriendshipLocalize;
 
         private TextMeshProUGUI nameLabel;
         private TextMeshProUGUI levelLabel;
@@ -858,6 +861,13 @@ namespace Zjcs.Presentation.Home
 
         public void CloseDialog()
         {
+            if (partnerFriendshipPanel != null)
+            {
+                UnityEngine.Object.Destroy(partnerFriendshipPanel);
+                partnerFriendshipPanel = null;
+                WorldMultiLanguageText.Localize = previousFriendshipLocalize;
+                previousFriendshipLocalize = null;
+            }
             bool wasOpen = activeDialog != null;
             partnerRosterPanel?.Close();
             partnerRosterPanel = null;

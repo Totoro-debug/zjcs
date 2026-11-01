@@ -170,7 +170,7 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 Home 运行时现在为 `OfflinePartnerGiftPlayer` 提供 `OfflinePartnerItemInfo`，直接投影选定伙伴物品表的 `ClassId`、`Icon`、`IconEffect`、品质和堆叠字段，并把官方伙伴图像目录注册到 `ProfessionImageResourceBridge`。赠礼玩家因此可以从当前本地库存生成原 `IProfessionItemData`，`NpcDetailPanelGiftContent` 已沿官方偏好排序、图标和数量刷新路径消费这些数据；物品详情弹窗仍未接入。
 
-当前 Home 详情路由已接入官方 `NpcDetailPanelGiftContent` 与 `NpcFriendshipLevelContent` 子树。`PartnerGiftPanelView` 在官方 prefab 激活前绑定 `OfflinePartnerGiftUiServices`、本地库存／物品图标上下文、好感配置和图像附件池；赠礼成功调用 `OfflinePartnerGiftPlayer.GiveGifts`，按官方控制器的偏好倍率、自动选量、阶位上限、满级和溢出确认分支提交本地事务。伙伴卡片的专属礼物入口对已结识伙伴打开赠礼页。称谓输入和赠礼溢出确认已接入可交互的本地 Unity 弹窗，提交仍先执行原字符集／长度校验，再通过 `OfflinePartnerFriendshipTags` 保存；独立好感弹窗与物品详情弹窗尚未接入。当前静态检查和 Unity 初始化导入／编译通过，主工程 Play Mode 实际赠礼点击及 Windows Player 发布仍待完成。
+当前 Home 详情路由已接入官方 `NpcDetailPanelGiftContent` 与 `NpcFriendshipLevelContent` 子树。`PartnerGiftPanelView` 在官方 prefab 激活前绑定 `OfflinePartnerGiftUiServices`、本地库存／物品图标上下文、好感配置和图像附件池；赠礼成功调用 `OfflinePartnerGiftPlayer.GiveGifts`，按官方控制器的偏好倍率、自动选量、阶位上限、满级和溢出确认分支提交本地事务。伙伴卡片的专属礼物入口对已结识伙伴打开赠礼页。称谓输入和赠礼溢出确认已接入可交互的本地 Unity 弹窗，提交仍先执行原字符集／长度校验，再通过 `OfflinePartnerFriendshipTags` 保存；官方 `NpcFriendshipDialog` 已由本地等级、属性差值、偏好礼物与阶位服务驱动。物品详情弹窗仍未接入。静态元数据检查通过；主工程 Unity 初始化当前被工作区另一会话的 `FightStatusTriggerRuntime.cs` 编译错误阻断，主工程 Play Mode 实际赠礼点击及 Windows Player 发布仍待完成。
 
 `Runtime/Official/PartnersUI/GiftController/` 从当前 `884_156692` 完整迁入 `NpcDetailPanelGiftContent`、`NpcGiftBlueDotItem` 和 `NpcFriendshipLevelContent`，保留原礼物排序、选量／减少／重置、自动补量、好感预览、精确升满与溢出确认、阶位／满级限制、称谓校验及响应后的刷新顺序。原配置、玩家、资源与窗口服务改为显式接口；原属性组和礼物格在初始化前绑定服务，原资源袋保留释放顺序。
 

@@ -50,6 +50,16 @@ namespace Zjcs.Offline.PartnersUI
             foreach (var attachment in icon.GetComponentsInChildren<ItemIconAttachment>(true)) attachment.Bind(attachments);
         }
 
+        public ItemIcon CreateGiftIcon(int itemId, Transform parent, GameObject prefab)
+        {
+            if (prefab == null) return null;
+            ItemIcon icon = UnityEngine.Object.Instantiate(prefab, parent, false).GetComponent<ItemIcon>();
+            if (icon == null) return null;
+            BindGiftIcon(icon);
+            icon.Init(new OfflinePartnerItemData(itemId, GetItemInfo(itemId), GetItemAmount(itemId)));
+            return icon;
+        }
+
         public IProfessionUpgradePlayer MainPlayer => this;
         public bool ManagerAvailable => true;
         public SafeAction OnPlayerUpdate => playerUpdated;
@@ -138,6 +148,17 @@ namespace Zjcs.Offline.PartnersUI
             public event Action<IProfessionItemData, int, int> OnSkillRankUp;
             public event Action<Dictionary<int, int>, Dictionary<int, int>> OnSkillRankUpBatch;
             public bool CanGetItemFromMapLocation(object location) => false;
+        }
+
+        private sealed class OfflinePartnerItemData : IProfessionItemData
+        {
+            public OfflinePartnerItemData(int id, IProfessionItemInfo info, long count)
+            { Id = id; Info = info; Count = count; }
+            public int Id { get; }
+            public long Count { get; }
+            public IProfessionItemInfo Info { get; }
+            public Quality GetQuality() => Info.Quality;
+            public bool CanExpire() => false;
         }
     }
 }

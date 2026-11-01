@@ -10,6 +10,7 @@ using Zjcs.Official.Partners;
 using Zjcs.Official.PartnersUI;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Official.WorldUI;
+using Zjcs.Official.World.NativeLabelUI.Framework;
 
 namespace Zjcs.Presentation.Home
 {
@@ -127,7 +128,7 @@ namespace Zjcs.Presentation.Home
         void IOfflinePartnerDetailPresentation.PopupNpcBrief(IWindowOperator owner, PartnerDetailNpcTarget target)
             => Notify("伙伴 " + target.NpcClassId + " 等级 " + host.Level);
         void IOfflinePartnerDetailPresentation.PopupFriendship(IWindowOperator owner, bool starGod, Action<IPartnerGiftFriendshipDialog> initialize)
-            => Notify("伙伴好感度详情暂未独立展开");
+            => OpenPartnerFriendshipDialog(initialize);
         void IOfflinePartnerDetailPresentation.NavigateNpcPosition(int npcId, Action<PartnerDetailNavigateResult> complete)
             => complete?.Invoke(new PartnerDetailNavigateResult { IsSuccess = false, TipMsg = "伙伴位置导航暂不可用" });
         bool IOfflinePartnerDetailPresentation.IsNavigateTipValid(string tip) => !string.IsNullOrEmpty(tip);
@@ -153,11 +154,42 @@ namespace Zjcs.Presentation.Home
             dialog.Build(this, dialog.TextKey);
         }
         void IOfflinePartnerGiftPresentation.PopupFriendship(IWindowOperator owner, bool starGod, Action<IPartnerGiftFriendshipDialog> initialize)
-            => Notify("伙伴好感度详情暂未独立展开");
+            => OpenPartnerFriendshipDialog(initialize);
         object IOfflinePartnerGiftPresentation.Compact(long count) => host.HomeSettings?.FormatNumber(count) ?? count.ToString();
         void IOfflinePartnerGiftPresentation.Close(GameObject window) { if (window != null) UnityEngine.Object.Destroy(window); }
         void IOfflinePartnerGiftPresentation.ShowProgressionResult(ProgressionResult result)
             => Notify(result?.Message ?? "伙伴赠礼未完成");
+
+        private void OpenPartnerFriendshipDialog(Action<IPartnerGiftFriendshipDialog> initialize)
+        {
+            CloseDialog();
+            try
+            {
+                var root = UnityEngine.Object.Instantiate(host.PartnerFriendshipAssets.DialogPrefab,
+                    canvas.transform, false);
+                root.name = "OfficialPartnerFriendshipDialog";
+                var dialog = root.GetComponent<NpcFriendshipDialog>();
+                if (dialog == null) throw new InvalidOperationException("Official partner friendship dialog component is missing.");
+                dialog.Configure(host.PartnerFriendshipDialogServices);
+                previousFriendshipLocalize = WorldMultiLanguageText.Localize;
+                var localization = new OfflinePartnerLocalizationService(host.PartnerDetailAssets.Texts,
+                    host.PartnerDetailAssets.Common.GiftTexts, host.PartnerFriendshipAssets.PropertyTexts,
+                    host.PartnerFriendshipAssets.DialogTexts);
+                WorldMultiLanguageText.Localize = key => localization.GetText(key, LanguageType.zh_CN);
+                partnerFriendshipPanel = root;
+                initialize?.Invoke(new OfflinePartnerFriendshipDialogAdapter(dialog,
+                    host.PartnerFriendshipDialogServices));
+                root.GetComponent<WorldPopupWindow>()?.Show();
+            }
+            catch (Exception error)
+            {
+                if (partnerFriendshipPanel != null) UnityEngine.Object.Destroy(partnerFriendshipPanel);
+                partnerFriendshipPanel = null;
+                WorldMultiLanguageText.Localize = previousFriendshipLocalize;
+                previousFriendshipLocalize = null;
+                Notify("伙伴好感度详情打开失败：" + error.Message);
+            }
+        }
 
         private sealed class OfflinePartnerConfirmDialog : IPartnerGiftConfirmDialog
         {
@@ -183,6 +215,20 @@ namespace Zjcs.Presentation.Home
                     () => owner.ClosePartnerPrompt(this));
                 owner.CreatePartnerPromptButton(panel, "确认", new Vector2(0.56f, 0.1f), new Vector2(0.92f, 0.30f),
                     () => { owner.ClosePartnerPrompt(this); confirm?.Invoke(); });
+            }
+        }
+
+        private sealed class OfflinePartnerFriendshipDialogAdapter : IPartnerGiftFriendshipDialog
+        {
+            private readonly NpcFriendshipDialog dialog;
+            private readonly OfflinePartnerFriendshipDialogServices services;
+            public OfflinePartnerFriendshipDialogAdapter(NpcFriendshipDialog dialog,
+                OfflinePartnerFriendshipDialogServices services)
+            { this.dialog = dialog; this.services = services; }
+            public void Init(PartnerGiftNpcInfo npc)
+            {
+                if (npc == null) return;
+                dialog.Init(services.GetNpc(npc.Id));
             }
         }
         private sealed class OfflinePartnerInputDialog : IPartnerGiftInputDialog

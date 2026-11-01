@@ -63,6 +63,8 @@ namespace Zjcs.Presentation.Home
         private OfficialPartnerGiftPageAssetCatalog partnerGiftAssets;
         private OfflinePartnerGiftRuntimeBindings partnerGiftBindings;
         private OfflinePartnerGiftUiServices partnerGiftServices;
+        private OfficialPartnerFriendshipAssetCatalog partnerFriendshipAssets;
+        private OfflinePartnerFriendshipDialogServices partnerFriendshipDialogServices;
         private OfflineAstrologicalService astrological;
         private float astrologicalChargeStartTime;
         private float astrologicalNextChargeTick;
@@ -160,6 +162,8 @@ namespace Zjcs.Presentation.Home
         public OfficialPartnerGiftPageAssetCatalog PartnerGiftAssets => partnerGiftAssets;
         public OfflinePartnerGiftUiServices PartnerGiftServices => partnerGiftServices;
         public OfflinePartnerGiftRuntimeBindings PartnerGiftBindings => partnerGiftBindings;
+        public OfficialPartnerFriendshipAssetCatalog PartnerFriendshipAssets => partnerFriendshipAssets;
+        public OfflinePartnerFriendshipDialogServices PartnerFriendshipDialogServices => partnerFriendshipDialogServices;
         public OfflineArenaSession Arena => arena;
         public OfflineCharacterProgressionService DailyDungeonProgression
         {
@@ -780,14 +784,22 @@ namespace Zjcs.Presentation.Home
             ProfessionPropertyBindings.Current = propertyBindings;
             var properties = new OfflinePartnerFriendshipProperties(partnerCatalog, propertyBindings, () => false);
             partnerDetailSource = new OfflinePartnerDetailPropertySource(profile, partnerCatalog, properties);
+            var giftConfiguration = OfficialPartnerGiftAssetCatalog.LoadDefault();
             partnerGiftPlayer = new OfflinePartnerGiftPlayer(profile, partnerCatalog,
-                OfficialPartnerGiftAssetCatalog.LoadDefault(), id => new OfflinePartnerItemInfo(partnerCatalog, id), () => false);
+                giftConfiguration, id => new OfflinePartnerItemInfo(partnerCatalog, id), () => false);
             partnerGiftAssets = OfficialPartnerGiftPageAssetCatalog.LoadDefault();
             partnerGiftBindings = new OfflinePartnerGiftRuntimeBindings(profile, partnerCatalog, partnerGiftAssets,
                 id => new OfflinePartnerItemInfo(partnerCatalog, id), key => localization.GetText(key, LanguageType.zh_CN));
             partnerGiftServices = new OfflinePartnerGiftUiServices(profile, partnerGiftPlayer,
-                OfficialPartnerGiftAssetCatalog.LoadDefault(), properties, partnerGiftBindings,
+                giftConfiguration, properties, partnerGiftBindings,
                 partnerDetailImages, hud);
+            partnerFriendshipAssets = friendshipAssets;
+            partnerFriendshipDialogServices = new OfflinePartnerFriendshipDialogServices(partnerCatalog,
+                giftConfiguration, properties, () => profile.Save.Player.SubRank,
+                (itemId, parent) => partnerGiftBindings.CreateGiftIcon(itemId, parent,
+                    partnerFriendshipAssets.GiftIconPrefab),
+                icon => { if (icon != null) partnerGiftBindings.RecycleIcon(icon); },
+                key => localization.GetText(key, LanguageType.zh_CN));
             partnerDetailServices = new OfflinePartnerDetailPropertyServices(partnerCatalog, properties,
                 partnerDetailSource, partnerRoster, id => profile.Save.Player.CharacterProperties.Treasures
                     .Any(value => value.ClassId == id && value.Active), hud);
