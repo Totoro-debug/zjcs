@@ -17,7 +17,7 @@ def main():
     if not project.is_dir():
         prepare(work)
         (project / 'Assets/Editor/PartnerRosterUiValidation.cs').unlink()
-    for relative in ('Official/PartnersUI/Gifts', 'Official/World/NativeLabelUI',
+    for relative in ('Official/PartnersUI/Gifts', 'Official/CombatAppearance', 'Official/World/NativeLabelUI',
                      'Official/World/NativeText', 'Presentation/Opening/OfficialCoffeeUIParticle'):
         shutil.copytree(ROOT / 'unity/Assets/Game/Runtime' / relative,
                         project / 'Assets/Game/Runtime' / relative, dirs_exist_ok=True)
