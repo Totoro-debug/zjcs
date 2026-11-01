@@ -195,17 +195,25 @@ namespace Zjcs.Editor.Combat
             pixelsPerPoint = Mathf.Max(1f, EditorGUIUtility.pixelsPerPoint);
             Type type = typeof(EditorWindow).Assembly.GetType("UnityEditor.GameView");
             if (type == null) return false;
-            EditorWindow view = gameView;
-            if (view == null)
-                view = Resources.FindObjectsOfTypeAll(type).OfType<EditorWindow>().FirstOrDefault();
-            if (view == null) return false;
             PropertyInfo targetProperty = type.GetProperty("targetInView",
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             if (targetProperty == null) return false;
-            object value = targetProperty.GetValue(view, null);
-            if (!(value is Rect content) || content.width <= 1f || content.height <= 1f) return false;
-            window = view.position;
-            target = content;
+            EditorWindow bestView = null;
+            Rect bestContent = default;
+            float bestArea = 0f;
+            foreach (EditorWindow candidate in Resources.FindObjectsOfTypeAll(type).OfType<EditorWindow>())
+            {
+                object value = targetProperty.GetValue(candidate, null);
+                if (!(value is Rect content) || content.width <= 1f || content.height <= 1f) continue;
+                float area = content.width * content.height;
+                if (area <= bestArea) continue;
+                bestView = candidate;
+                bestContent = content;
+                bestArea = area;
+            }
+            if (bestView == null) return false;
+            window = bestView.position;
+            target = bestContent;
             return true;
         }
     }
