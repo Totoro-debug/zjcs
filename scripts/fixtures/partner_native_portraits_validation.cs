@@ -11,6 +11,13 @@ public static class PartnerNativePortraitsValidation
 {
     [Serializable] private sealed class Outcome { public int npc; public string animation, status, detail; public int vertices; }
     [Serializable] private sealed class Results { public Outcome[] outcomes; }
+    [Serializable] private sealed class IkOracleSample
+    {
+        public bool stretch, uniform;
+        public float softness, targetX, targetY;
+        public float parentRotation, childRotation, parentScaleX, parentScaleY, childX, childY;
+        public float parentA, parentB, parentC, parentD, childA, childB, childC, childD, childWorldX, childWorldY, tipX, tipY;
+    }
 
     public static void Run()
     {
@@ -20,6 +27,13 @@ public static class PartnerNativePortraitsValidation
 
     private static void Check()
     {
+        if (Environment.GetEnvironmentVariable("ZJCS_PARTNER_IK_ORACLE_ONLY") == "1")
+        {
+            CheckIkOracle();
+            return;
+        }
+        CheckPairIkModes();
+        CheckIkOracle();
         string work = Environment.GetEnvironmentVariable("ZJCS_PARTNER_PORTRAIT_DIR") ?? Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
         var outcomes = new List<Outcome>();
         int loaded = 0;
@@ -80,6 +94,88 @@ public static class PartnerNativePortraitsValidation
         CheckOriginalAlphaAndDeform(work);
         File.WriteAllText(Path.Combine(work, "portrait-native-sampling.json"), JsonUtility.ToJson(new Results { outcomes = outcomes.ToArray() }, true));
         Debug.Log("PARTNER_PORTRAIT_PACKAGES_PASSED: 54 identity/integrity-checked packages; original 8401 idle/click five samples and unclamped geometry. Other solver gaps are explicit in the sampling result; formal UI rendering remains pending.");
+    }
+
+    private static void CheckPairIkModes()
+    {
+        Vector2 clamped = ApplyPairMode(false, false, 0, 9, out _);
+        Require(Vector2.Distance(clamped, new Vector2(7, 3)) < .0001f,
+            "original non-stretch two-bone IK clamps unreachable target at maximum reach");
+        Vector2 softened = ApplyPairMode(false, false, 1, 7.5f, out _);
+        Require(Vector2.Distance(softened, new Vector2(6.9375f, 3)) < .0001f,
+            "original two-bone softness eases at the verified 5.5-unit oracle sample");
+        Vector2 stretched = ApplyPairMode(true, false, 0, 9, out Matrix4x4 nonUniform);
+        Require(Vector2.Distance(stretched, new Vector2(9, 3)) < .0001f &&
+            Mathf.Abs(new Vector2(nonUniform.m00, nonUniform.m10).magnitude - 1.4f) < .0001f &&
+            Mathf.Abs(new Vector2(nonUniform.m01, nonUniform.m11).magnitude - 1) < .0001f,
+            "original two-bone stretch scales the parent X axis to reach the target");
+        Vector2 uniformStretch = ApplyPairMode(true, true, 0, 9, out Matrix4x4 uniform);
+        Require(Vector2.Distance(uniformStretch, new Vector2(9, 3)) < .0001f &&
+            Mathf.Abs(new Vector2(uniform.m01, uniform.m11).magnitude - 1.4f) < .0001f,
+            "original uniform two-bone stretch scales both parent axes");
+    }
+
+    private static Vector2 ApplyPairMode(bool stretch, bool uniform, float softness, float targetX,
+        out Matrix4x4 firstWorld)
+    {
+        var pose = new ProfessionNativeBonePose(new[] {
+            new ProfessionNativeBonePose.Bone { name = "root", parent = -1 },
+            new ProfessionNativeBonePose.Bone { name = "first", parent = 0, x = 2, y = 3 },
+            new ProfessionNativeBonePose.Bone { name = "child", parent = 1, x = 3 },
+            new ProfessionNativeBonePose.Bone { name = "target", parent = -1, x = targetX, y = 3 } });
+        PartnerNativePortraitIk.ApplyPair(pose, new ProfessionNativeConstraintAnimation.IkState {
+            Name = "verified modes", Bones = new[] { 1, 2 }, Target = 3, ChildLength = 2,
+            Mix = 1, BendPositive = true, Stretch = stretch, Uniform = uniform, Softness = softness });
+        firstWorld = pose.World(1);
+        return pose.World(2).MultiplyPoint3x4(new Vector3(2, 0, 0));
+    }
+
+    private static void CheckIkOracle()
+    {
+        foreach (var sample in new[] {
+            new IkOracleSample { targetX = 4, targetY = 3 },
+            new IkOracleSample { targetX = 6, targetY = 3 },
+            new IkOracleSample { targetX = 9, targetY = 3 },
+            new IkOracleSample { softness = 1, targetX = 6, targetY = 3 },
+            new IkOracleSample { softness = 1, targetX = 6.5f, targetY = 3 },
+            new IkOracleSample { softness = 1, targetX = 7, targetY = 3 },
+            new IkOracleSample { softness = 1, targetX = 7.5f, targetY = 3 },
+            new IkOracleSample { softness = 1, targetX = 9, targetY = 3 },
+            new IkOracleSample { stretch = true, targetX = 9, targetY = 3 },
+            new IkOracleSample { stretch = true, uniform = true, targetX = 9, targetY = 3 }
+        })
+        {
+            string f(float value) => value.ToString("R", System.Globalization.CultureInfo.InvariantCulture);
+            string json = "{\"skeleton\":{\"hash\":\"ik-oracle\",\"spine\":\"4.2\"},\"bones\":["
+                + "{\"name\":\"root\"},{\"name\":\"first\",\"parent\":\"root\",\"x\":2,\"y\":3},"
+                + "{\"name\":\"child\",\"parent\":\"first\",\"x\":3,\"length\":2,\"rotation\":25},"
+                + "{\"name\":\"target\",\"x\":" + f(sample.targetX) + ",\"y\":" + f(sample.targetY) + "}],"
+                + "\"ik\":[{\"name\":\"pair\",\"order\":0,\"bones\":[\"first\",\"child\"],"
+                + "\"target\":\"target\",\"bendPositive\":true,\"mix\":1,\"softness\":" + f(sample.softness)
+                + ",\"stretch\":" + (sample.stretch ? "true" : "false")
+                + ",\"uniform\":" + (sample.uniform ? "true" : "false") + "}]}";
+            var data = new Spine.SkeletonJson(new Spine.Unity.RegionlessAttachmentLoader())
+                .ReadSkeletonData(new StringReader(json));
+            var skeleton = new Spine.Skeleton(data);
+            var constraint = skeleton.IkConstraints.Items[0];
+            constraint.Mix = 1;
+            skeleton.UpdateWorldTransform(Spine.Skeleton.Physics.Update);
+            Spine.Bone parent = skeleton.FindBone("first"), child = skeleton.FindBone("child");
+            sample.parentRotation = parent.Rotation;
+            sample.childRotation = child.Rotation;
+            sample.parentScaleX = parent.ScaleX;
+            sample.parentScaleY = parent.ScaleY;
+            sample.childX = child.X;
+            sample.childY = child.Y;
+            sample.parentA = parent.A; sample.parentB = parent.B;
+            sample.parentC = parent.C; sample.parentD = parent.D;
+            sample.childA = child.A; sample.childB = child.B;
+            sample.childC = child.C; sample.childD = child.D;
+            sample.childWorldX = child.WorldX; sample.childWorldY = child.WorldY;
+            sample.tipX = child.WorldX + child.A * 2;
+            sample.tipY = child.WorldY + child.C * 2;
+            Debug.Log("PARTNER_IK_ORACLE " + JsonUtility.ToJson(sample));
+        }
     }
 
     private static void CheckExtrapolation()

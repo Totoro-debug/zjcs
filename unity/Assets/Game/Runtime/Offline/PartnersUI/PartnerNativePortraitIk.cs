@@ -56,6 +56,7 @@ namespace Zjcs.Offline.PartnersUI
         {
             if (pose == null || state == null) throw new ArgumentNullException();
             if (state.Bones == null || state.Bones.Length != 2 || !float.IsFinite(state.Mix) ||
+                !float.IsFinite(state.Softness) || state.Softness < 0 ||
                 !float.IsFinite(state.ChildLength) || state.ChildLength < 0)
                 throw new ArgumentException("Original two-bone IK state is invalid: " + state.Name +
                     "; mix=" + state.Mix.ToString("R", System.Globalization.CultureInfo.InvariantCulture) +
@@ -63,8 +64,6 @@ namespace Zjcs.Offline.PartnersUI
             if (state.Mix == 0) return;
             if (state.ChildLength == 0)
                 throw new NotSupportedException("Bind original active two-bone IK zero-length child.");
-            if (state.Softness != 0 || state.Stretch || state.Compress)
-                throw new NotSupportedException("Restore the original partner portrait two-bone soft/stretch/compress IK branch.");
             int first = state.Bones[0], child = state.Bones[1];
             if (!pose.IsActive(first) || !pose.IsActive(child) || !pose.IsActive(state.Target) || pose.Parent(child) != first)
                 throw new ArgumentException("Original two-bone IK hierarchy is invalid or inactive.");
@@ -89,17 +88,40 @@ namespace Zjcs.Offline.PartnersUI
                 throw new NotSupportedException("Bind original two-bone IK zero child axis.");
             Matrix4x4 targetWorld = pose.World(state.Target);
             Vector3 target = parent.inverse.MultiplyPoint3x4(new Vector3(targetWorld.m03, targetWorld.m13, 0));
-            var direction = new Vector2(target.x - local.m03, target.y - local.m13) / size;
+            Vector2 targetDelta = new Vector2(target.x - local.m03, target.y - local.m13);
+            var direction = targetDelta / size;
             float firstAngle = Mathf.Atan2(x.y, x.x) * Mathf.Rad2Deg;
             float childAngle = Mathf.Atan2(childLocal.m10, childLocal.m00) * Mathf.Rad2Deg;
             // The existing independent cosine-law solver works in this circular
             // frame. Retain both current affine maps instead of discarding prior
             // constraint results by resetting their local source transforms.
             Vector2 childOffset = new Vector2(childLocal.m03, childLocal.m13);
+            if (state.Stretch) childOffset.y = childLocal.m13 = 0;
             if (direction.sqrMagnitude == 0 || childOffset.sqrMagnitude == 0)
                 throw new NotSupportedException("Coincident original two-bone IK origins require a verified branch.");
             float childLength = state.ChildLength * childScale;
             double a = childOffset.magnitude, b = childLength;
+            double reach = a + b;
+            float distance = direction.magnitude;
+            if (state.Stretch && state.Softness == 0 && distance > reach)
+            {
+                if (reach <= 0) throw new NotSupportedException("Original two-bone IK stretch has no reachable length.");
+                float stretch = 1 + ((float)(distance / reach) - 1) * state.Mix;
+                if (!(stretch > 0) || !float.IsFinite(stretch))
+                    throw new NotSupportedException("Original two-bone IK stretch produced an invalid scale.");
+                local.m00 *= stretch; local.m10 *= stretch;
+                if (state.Uniform) { local.m01 *= stretch; local.m11 *= stretch; }
+                size *= stretch;
+                direction = targetDelta / size;
+                distance = direction.magnitude;
+            }
+            float softness = state.Softness / size;
+            if (softness > 0 && distance > reach - softness)
+            {
+                float penetration = Mathf.Min(distance - (float)reach + softness, 2 * softness);
+                float softenedDistance = distance - penetration * penetration / (4 * softness);
+                if (distance > 0) direction *= softenedDistance / distance;
+            }
             double cosine = (direction.sqrMagnitude - a * a - b * b) / (2 * a * b);
             cosine = Math.Max(-1, Math.Min(1, cosine));
             double elbow = Math.Acos(cosine) * (state.BendPositive ? 1 : -1);
