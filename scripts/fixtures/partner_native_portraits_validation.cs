@@ -74,6 +74,7 @@ public static class PartnerNativePortraitsValidation
             outcomes.Where(value => value.npc == 8401).All(value => value.status == "sampled"), "original 8401 idle and click geometry");
         CheckExtrapolation();
         CheckOrderedConstraints();
+        CheckSingleBoneIk();
         CheckOriginalAlphaAndDeform(work);
         File.WriteAllText(Path.Combine(work, "portrait-native-sampling.json"), JsonUtility.ToJson(new Results { outcomes = outcomes.ToArray() }, true));
         Debug.Log("PARTNER_PORTRAIT_PACKAGES_PASSED: 54 identity/integrity-checked packages; original 8401 idle/click five samples and unclamped geometry. Other solver gaps are explicit in the sampling result; formal UI rendering remains pending.");
@@ -122,6 +123,49 @@ public static class PartnerNativePortraitsValidation
             pose.World(1).m03 == 20 && pose.World(4).m03 == 50 && pose.HasWorldOverride(1) && pose.HasWorldOverride(4),
             "later IK retains earlier parent and unrelated constraint results");
     }
+    private static void CheckSingleBoneIk()
+    {
+        var pose = new ProfessionNativeBonePose(new[] {
+            new ProfessionNativeBonePose.Bone { name = "parent", parent = -1 },
+            new ProfessionNativeBonePose.Bone { name = "aim", parent = 0, x = 2, y = 3, scaleX = 2, shearY = 20 },
+            new ProfessionNativeBonePose.Bone { name = "target", parent = -1 },
+            new ProfessionNativeBonePose.Bone { name = "other", parent = -1 } });
+        var parent = Matrix4x4.TRS(new Vector3(10, 20, 0), Quaternion.Euler(0, 0, 30), new Vector3(-2, 3, 1));
+        pose.OverrideWorld(0, parent);
+        Vector3 desired = parent.MultiplyPoint3x4(new Vector3(2, 11, 0));
+        pose.OverrideWorld(2, Matrix4x4.Translate(desired));
+        pose.OverrideWorld(3, Matrix4x4.Translate(new Vector3(90, 80, 0)));
+        var state = new ProfessionNativeConstraintAnimation.IkState {
+            Name = "stretch", Bones = new[] { 1 }, Target = 2, Mix = 1, Stretch = true, Uniform = true };
+        PartnerNativePortraitIk.ApplySingle(pose, state, 2);
+        Vector3 endpoint = pose.World(1).MultiplyPoint3x4(new Vector3(2, 0, 0));
+        var local = parent.inverse * pose.World(1);
+        Require(Vector3.Distance(endpoint, desired) < .0001f &&
+            Mathf.Abs(new Vector2(local.m01, local.m11).magnitude - 2) < .0001f &&
+            pose.HasWorldOverride(0) && pose.World(3).m03 == 90,
+            "single-bone stretch preserves shear, reflected nonuniform parent and unrelated constraints");
+        // A second constraint consumes the already solved affine transform.
+        desired = parent.MultiplyPoint3x4(new Vector3(2, 4, 0));
+        pose.OverrideWorld(2, Matrix4x4.Translate(desired));
+        state.Stretch = false; state.Compress = true; state.Uniform = false;
+        PartnerNativePortraitIk.ApplySingle(pose, state, 2);
+        local = parent.inverse * pose.World(1);
+        Require(Vector3.Distance(pose.World(1).MultiplyPoint3x4(new Vector3(2, 0, 0)), desired) < .0001f &&
+            Mathf.Abs(new Vector2(local.m01, local.m11).magnitude - 2) < .0001f,
+            "single-bone compression consumes a prior result and preserves independent Y scale");
+        pose.Reset();
+        pose.OverrideWorld(2, Matrix4x4.Translate(new Vector3(2, 11, 0)));
+        state.Compress = false; state.Stretch = true; state.Mix = .5f;
+        PartnerNativePortraitIk.ApplySingle(pose, state, 2);
+        var mixed = pose.World(1);
+        Require(Mathf.Abs(Mathf.Atan2(mixed.m10, mixed.m00) * Mathf.Rad2Deg - 45) < .0001f &&
+            Mathf.Abs(new Vector2(mixed.m00, mixed.m10).magnitude - 3) < .0001f,
+            "single-bone partial mix interpolates angle and requested length");
+        state.Mix = 0; var previous = pose.World(1);
+        PartnerNativePortraitIk.ApplySingle(pose, state, 2);
+        Require(pose.World(1) == previous, "zero IK mix preserves the prior result");
+    }
+
     private static void CheckOriginalAlphaAndDeform(string work)
     {
         var data = ProfessionNativeSkeletonData.LoadPartnerPortrait(File.ReadAllBytes(Path.Combine(work, "native-portraits/8453/portrait.bytes")), 8453);

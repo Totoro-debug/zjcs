@@ -112,6 +112,7 @@ def build(work):
         script_bindings={path.relative_to(ROOT).as_posix():sha(path.read_bytes()) for path in (script,Path(str(script)+'.meta'))},
         runtime_source_sha256={path.relative_to(ROOT).as_posix():sha(path.read_bytes()) for path in (
             ROOT/'unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerNativePortraitPose.cs',
+            ROOT/'unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerNativePortraitIk.cs',
             *[ROOT/'unity/Assets/Game/Runtime/Offline/ProfessionUI'/name for name in (
                 'ProfessionNativeSkeletonData.PartnerPortrait.cs','ProfessionNativeSkeletonData.cs',
                 'ProfessionNativeBonePose.cs','ProfessionNativeIdleIk.cs','ProfessionNativeIdleTransform.cs',

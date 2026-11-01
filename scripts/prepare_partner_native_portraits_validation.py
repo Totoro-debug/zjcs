@@ -26,6 +26,8 @@ def main():
         'Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeDeformAnimation.cs',
         'Assets/Game/Runtime/Offline/PartnersUI/PartnerNativePortraitPose.cs',
         'Assets/Game/Runtime/Offline/PartnersUI/PartnerNativePortraitPose.cs.meta',
+        'Assets/Game/Runtime/Offline/PartnersUI/PartnerNativePortraitIk.cs',
+        'Assets/Game/Runtime/Offline/PartnersUI/PartnerNativePortraitIk.cs.meta',
         'Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerPortraitAsset.cs',
         'Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerPortraitAsset.cs.meta',
     ):

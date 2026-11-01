@@ -1,6 +1,6 @@
 {
   "manifest": "884_156692",
-  "generator_sha256": "6ceb30f7607441bedbbb5724bf776bc3245f294f8c965916abc726529394c76b",
+  "generator_sha256": "1f251b37b808ab6538eb861113b1ed08879c95d1ce149e4873d8f26d5755c089",
   "portrait_source": {
     "manifest": "884_156692",
     "rule_source": {
@@ -10476,7 +10476,8 @@
     "unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerPortraitAsset.cs.meta": "3fb015703e3d68898021cc1a776a7783a511923e2e27dff57395acef909f8ddf"
   },
   "runtime_source_sha256": {
-    "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerNativePortraitPose.cs": "7c40158bcb09fbe9021d14f5498bae01ed0346766f25208e68aaf82a4f3db82e",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerNativePortraitPose.cs": "efe4dba1f7af6c16cf8293244ff4c542894754c9a8b9a4ec42b6767b2bab5e51",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerNativePortraitIk.cs": "1b35ca734cb88fe4cfcb0a498ba95d1fb128d58aa7629427f0755011a4db59c3",
     "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkeletonData.PartnerPortrait.cs": "ce3be94971da716a7b2bc20cd2e7444436cc3c6eba7dd1b0e372ffd448d88981",
     "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkeletonData.cs": "ca517c8baaed5b9e77af5f7a655f5bc92b541a2adf95e9fda0cc5d007ed67289",
     "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBonePose.cs": "4a0f1e6fa3df1768829c1196df7ff36a636ffaa7d6cbbf5b9b74ae3e4ea195a2",
@@ -10486,10 +10487,10 @@
     "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeDeformAnimation.cs": "1189d3ea6b851ae4a1510bcf2b7a4806859b81cb5d61015cc9aca785a7959731"
   },
   "validation_source_sha256": {
-    "scripts/prepare_partner_native_portraits_validation.py": "ca930e95a392244df9eba6ebb1834fca562df05efaab6c4d91ea237d30814c56",
+    "scripts/prepare_partner_native_portraits_validation.py": "1274b215d1f086e119e4fd47a29d6241bd6a9606919762207d6c91042d801373",
     "scripts/prepare_partner_portrait_graphics_validation.py": "238a90b9d6e411474ba25f280e8b419d9e6506a3faf7248208178ff262402465",
-    "scripts/fixtures/partner_native_portraits_validation.cs": "f7d2e8ca9c52cb3d1da35be9e068b8a1c8553f3b87c7dbd76c23dcafafcffc88",
-    "scripts/fixtures/partner_portrait_graphics_validation.cs": "ebd37b3c351d5dbb3c1f8da4016964157e6fb8e9f5e3290b786f541da3cee53c"
+    "scripts/fixtures/partner_native_portraits_validation.cs": "913600a11771b4e621cc56c98a41f4ac04d9aa6d579043ef1571edf3e1704a9e",
+    "scripts/fixtures/partner_portrait_graphics_validation.cs": "8ade4f2acf7fbd00e27883890e42132907f102d05bcaddcc197d04fcd161a8c4"
   },
   "scope": "Current native portrait data, complete native texture payloads and lazy Resources bindings installed. Full UI, other solver branches, mixing and Windows Player remain pending.",
   "installed_output_sha256": {

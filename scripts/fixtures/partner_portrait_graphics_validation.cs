@@ -31,7 +31,7 @@ public static class PartnerPortraitGraphicsValidation
     {
         SessionState.SetBool("PartnerPortraitGraphics", false);
         if (error != null) Debug.LogException(error);
-        else Debug.Log("PARTNER_PORTRAIT_GRAPHICS_PASSED: original 8401 native idle/click mesh and original converted UI shader rendered in Play Mode. Full window, transition mixing and click interaction remain pending.");
+        else Debug.Log("PARTNER_PORTRAIT_GRAPHICS_PASSED: selected original native idle/click meshes, installed textures and original converted UI shader rendered in Play Mode. Full window, transition mixing and click interaction remain pending.");
         if (error == null) PartnerNativePortraitsValidation.Run();
         else EditorApplication.Exit(1);
     }
@@ -61,9 +61,6 @@ public sealed class PartnerPortraitGraphicsRunner : MonoBehaviour
     {
         work = Environment.GetEnvironmentVariable("ZJCS_PARTNER_PORTRAIT_DIR");
         Application.logMessageReceived += (message, stack, type) => { if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert) errors++; };
-        var data = ProfessionNativeSkeletonData.LoadPartnerPortrait(File.ReadAllBytes(Path.Combine(work, "native-portraits/8401/portrait.bytes")), 8401);
-        var skeleton = new ProfessionNativeAppearanceSkeleton(data); skeleton.SetSkin(data.SkinCatalog.FindSkin("default"));
-        using var batches = new ProfessionNativeMeshBatches(data.SlotCount);
         var pipeline = UniversalRenderPipelineAsset.Create(ScriptableObject.CreateInstance<Renderer2DData>());
         GraphicsSettings.defaultRenderPipeline = pipeline; QualitySettings.renderPipeline = pipeline;
         cameraUi = new GameObject("OriginalPortraitCamera", typeof(Camera)).GetComponent<Camera>();
@@ -73,15 +70,21 @@ public sealed class PartnerPortraitGraphicsRunner : MonoBehaviour
         canvas = new GameObject("OriginalPortraitCanvas", typeof(RectTransform), typeof(Canvas)).GetComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceCamera; canvas.worldCamera = cameraUi; canvas.planeDistance = 1; canvas.scaleFactor = 768f / 1080;
         var portrait = new GameObject("OriginalPortraitMesh", typeof(RectTransform), typeof(CanvasRenderer)); portrait.transform.SetParent(canvas.transform, false);
-        // Actual selected npc config replaces the generic live prefab transform.
-        var rect = (RectTransform)portrait.transform; rect.anchoredPosition = new Vector2(-23, 442); rect.localScale = Vector3.one * .41999998688697815f;
+        var rect = (RectTransform)portrait.transform;
         rendererUi = portrait.GetComponent<CanvasRenderer>();
         var material = Instantiate(AssetDatabase.LoadAssetAtPath<Material>("Assets/PartnerCurrentValidation/Portrait/SkeletonGraphicDefault.mat"));
         if (!material || !material.shader.isSupported) throw new InvalidOperationException("Original current UI shader is unavailable.");
-        var resource = OfficialPartnerPortraitAsset.Load(8401);
+        foreach (int id in (Environment.GetEnvironmentVariable("ZJCS_PARTNER_PORTRAIT_IDS") ?? "8401,10412,10702").Split(',').Select(int.Parse).Distinct())
+        {
+        var resource = OfficialPartnerPortraitAsset.Load(id);
+        var data = resource.CreateSkeleton();
+        var skeleton = new ProfessionNativeAppearanceSkeleton(data); skeleton.SetSkin(data.SkinCatalog.FindSkin("default"));
+        using var batches = new ProfessionNativeMeshBatches(data.SlotCount);
+        // Actual selected npc config replaces the generic live prefab transform.
+        rect.anchoredPosition = resource.LiveOffset; rect.localScale = resource.LiveScale;
         var texture = resource.TextureForPage(resource.Pages[0].Name);
-        if (!texture || texture.width != 556 || texture.height != 1264 || texture.mipmapCount != 1 ||
-            texture.filterMode != FilterMode.Bilinear || texture.wrapMode != TextureWrapMode.Repeat)
+        if (!texture || texture.mipmapCount != 1 || texture.filterMode != FilterMode.Bilinear || texture.wrapMode != TextureWrapMode.Repeat ||
+            id == 8401 && (texture.width != 556 || texture.height != 1264))
             throw new InvalidOperationException("Original installed portrait texture descriptor differs.");
         rendererUi.materialCount = 1; rendererUi.SetMaterial(material, 0); rendererUi.SetTexture(texture); rendererUi.SetColor(Color.white);
         foreach (string clip in new[] { "idle_01", "click_01" })
@@ -96,8 +99,9 @@ public sealed class PartnerPortraitGraphicsRunner : MonoBehaviour
                 // Batch-mode editors do not invoke WaitForEndOfFrame. Capture submits
                 // the original UI shader explicitly through the active render pipeline.
                 rendererUi.SetMesh(mesh); yield return null;
-                Capture("portrait-8401-" + clip + "-" + fraction.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture) + ".png");
+                Capture("portrait-" + id + "-" + clip + "-" + fraction.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture) + ".png");
             }
+        }
         }
     }
     private void Capture(string name)
