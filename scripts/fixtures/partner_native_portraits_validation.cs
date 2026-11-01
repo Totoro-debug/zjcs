@@ -75,6 +75,7 @@ public static class PartnerNativePortraitsValidation
         CheckExtrapolation();
         CheckOrderedConstraints();
         CheckSingleBoneIk();
+        CheckAppliedPairIk();
         CheckOriginalAlphaAndDeform(work);
         File.WriteAllText(Path.Combine(work, "portrait-native-sampling.json"), JsonUtility.ToJson(new Results { outcomes = outcomes.ToArray() }, true));
         Debug.Log("PARTNER_PORTRAIT_PACKAGES_PASSED: 54 identity/integrity-checked packages; original 8401 idle/click five samples and unclamped geometry. Other solver gaps are explicit in the sampling result; formal UI rendering remains pending.");
@@ -164,6 +165,43 @@ public static class PartnerNativePortraitsValidation
         state.Mix = 0; var previous = pose.World(1);
         PartnerNativePortraitIk.ApplySingle(pose, state, 2);
         Require(pose.World(1) == previous, "zero IK mix preserves the prior result");
+    }
+
+    private static void CheckAppliedPairIk()
+    {
+        foreach (bool bend in new[] { true, false })
+        {
+            var pose = new ProfessionNativeBonePose(new[] {
+                new ProfessionNativeBonePose.Bone { name = "parent", parent = -1 },
+                new ProfessionNativeBonePose.Bone { name = "first", parent = 0 },
+                new ProfessionNativeBonePose.Bone { name = "child", parent = 1, x = 3 },
+                new ProfessionNativeBonePose.Bone { name = "target", parent = -1 },
+                new ProfessionNativeBonePose.Bone { name = "other", parent = -1 } });
+            var parent = Matrix4x4.TRS(new Vector3(20, 30, 0), Quaternion.Euler(0, 0, 20), new Vector3(-2, 3, 1));
+            pose.OverrideWorld(0, parent);
+            var first = Matrix4x4.TRS(new Vector3(2, 3, 0), Quaternion.Euler(0, 0, 30), new Vector3(2, 2, 1));
+            var child = Matrix4x4.TRS(new Vector3(3, 0, 0), Quaternion.Euler(0, 0, 25), new Vector3(1.5f, 1, 1));
+            pose.OverrideWorld(1, parent * first);
+            pose.OverrideWorld(2, parent * first * child);
+            Vector3 desired = parent.MultiplyPoint3x4(new Vector3(8, 11, 0));
+            pose.OverrideWorld(3, Matrix4x4.Translate(desired));
+            pose.OverrideWorld(4, Matrix4x4.Translate(new Vector3(90, 80, 0)));
+            var state = new ProfessionNativeConstraintAnimation.IkState {
+                Name = "applied pair", Bones = new[] { 1, 2 }, Target = 3, Mix = 1, ChildLength = 2, BendPositive = bend };
+            PartnerNativePortraitIk.ApplyPair(pose, state);
+            Vector3 endpoint = pose.World(2).MultiplyPoint3x4(new Vector3(2, 0, 0));
+            Vector3 elbow = parent.inverse.MultiplyPoint3x4(pose.World(2).MultiplyPoint3x4(Vector3.zero)) - new Vector3(2, 3, 0);
+            float cross = 6 * elbow.y - 8 * elbow.x;
+            Require(Vector3.Distance(endpoint, desired) < .0001f && (bend ? cross < 0 : cross > 0) &&
+                pose.HasWorldOverride(0) && pose.World(4).m03 == 90,
+                "two-bone applied affine chain reaches the target with both bends and preserves unrelated constraints");
+            var local = parent.inverse * pose.World(1);
+            Require(Mathf.Abs(new Vector2(local.m00, local.m10).magnitude - 2) < .0001f,
+                "two-bone IK preserves the existing uniform parent scale");
+            state.Mix = 0; Matrix4x4 previous = pose.World(2);
+            PartnerNativePortraitIk.ApplyPair(pose, state);
+            Require(pose.World(2) == previous, "zero two-bone IK mix preserves the solved chain");
+        }
     }
 
     private static void CheckOriginalAlphaAndDeform(string work)

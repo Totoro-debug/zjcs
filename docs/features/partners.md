@@ -274,11 +274,11 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 `prepare_partner_portrait_assets.py` 校验当前原对象字节及 Windows 原生贴图转换缓存，安装 54 份带版本、伙伴身份、压缩块长度和 SHA256 校验的数据包，以及全部原生 Texture2D 载荷、原配置字段和逐伙伴 Resources 引用，共 489 个文件。`OfficialPartnerPortraitAsset.Load` 按伙伴按需加载，保留原 LiveOffset、LiveScale、defaultMix、图集页与贴图绑定；不将所有立绘贴图集中预载。原生 Texture2D 保留原尺寸、单级 mip、色彩空间和采样字段。输入、处理工具、转换缓存、输出及绑定哈希集中记录于[立绘来源](../../assets/reference/partner-portrait-assets-source-manifest.json)，本批素材未纳入素材快照。
 
-独立原生几何层增加原负权重外插、反射目标偏移、约束顺序中已求解父骨骼保留、独立透明度通道和多关键帧稀疏网格形变。`PartnerNativePortraitIk` 独立构造父坐标系内的单骨骼朝向与长度变换，支持原 Stretch／Compress／Uniform、部分权重、反射及非均匀缩放父级，并消费前序约束的实际仿射结果；解析几何用例覆盖端点、角度、长度、剪切保持、连续约束与零权重。已有职业／角色入口维持原调用方式；伙伴入口只执行当前明确支持的分支，缺少的双骨骼 IK 软约束／拉伸压缩、部分已约束局部变换恢复、缩放／继承及凹多边形裁剪会明确拒绝，不能当作完整动画还原。
+独立原生几何层增加原负权重外插、反射目标偏移、约束顺序中已求解父骨骼保留、独立透明度通道和多关键帧稀疏网格形变。`PartnerNativePortraitIk` 独立构造父坐标系内的单骨骼朝向与长度变换，支持原 Stretch／Compress／Uniform、部分权重、反射及非均匀缩放父级，并消费前序约束的实际仿射结果；解析几何用例覆盖端点、角度、长度、剪切保持、连续约束与零权重。 双骨骼入口在当前父级正向等比仿射坐标内复用已有独立余弦定理解算，消费前序约束后的真实父／子矩阵并保留已求解祖先；支持当前子骨骼 X 轴长度，解析用例覆盖反射且非均匀缩放的祖先、既有等比父缩放、两种弯曲方向、末端对齐和零权重。首骨骼反射／非均匀缩放／剪切仍明确拒绝。已有职业／角色入口维持原调用方式；伙伴入口只执行当前明确支持的分支，缺少的双骨骼 IK 软约束／拉伸压缩、部分已约束局部变换恢复、缩放／继承及凹多边形裁剪会明确拒绝，不能当作完整动画还原。
 
-`prepare_partner_native_portraits_validation.py` 在隔离 Unity Play Mode 读取全部 54 份实际 Resources 绑定，验证版本、身份、篡改拒绝、图集页及原 mip 数，并采样全部 118 段动画的五个时点。目前 45 段可生成有限且有效的原网格，73 段命中上述尚未绑定分支；另通过负权重、反射与非零偏移、交错约束保留、原透明度关键帧以及原多帧线性／Bezier 稀疏形变检查。
+`prepare_partner_native_portraits_validation.py` 在隔离 Unity Play Mode 读取全部 54 份实际 Resources 绑定，验证版本、身份、篡改拒绝、图集页及原 mip 数，并采样全部 118 段动画的五个时点。目前 56 段可生成有限且有效的原网格，62 段命中上述尚未绑定分支；另通过负权重、反射与非零偏移、交错约束保留、原透明度关键帧以及原多帧线性／Bezier 稀疏形变检查。
 
-`prepare_partner_portrait_graphics_validation.py` 核对当前原 `NpcDetailLiveItem`、SkeletonGraphic 材质与原编译 shader，复用同版已校验的 Windows shader 转换缓存。隔离 URP Play Mode 使用实际 Resources 绑定的 Windows 原生 Texture2D 渲染并查看 8401、10412、10702 待机与点击各三个时点（共十八帧），原骨骼网格与贴图可见；原尺寸、mip、Bilinear 和 Repeat 采样字段检查通过。此项验证只覆盖独立绘制，未覆盖正式详情窗口、实际点击切换、过渡混合及 Windows Player。全部伙伴立绘仍须补齐未绑定的动画分支并接通原应用控制器。 本轮全工程静态检查通过（84,654 个 GUID），主工程 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。
+`prepare_partner_portrait_graphics_validation.py` 核对当前原 `NpcDetailLiveItem`、SkeletonGraphic 材质与原编译 shader，复用同版已校验的 Windows shader 转换缓存。隔离 URP Play Mode 使用实际 Resources 绑定的 Windows 原生 Texture2D 渲染并查看 8401、10412、10702、10503、10601 待机与点击各三个时点（共三十帧），原骨骼网格与贴图可见；原尺寸、mip、Bilinear 和 Repeat 采样字段检查通过。此项验证只覆盖独立绘制，未覆盖正式详情窗口、实际点击切换、过渡混合及 Windows Player。全部伙伴立绘仍须补齐未绑定的动画分支并接通原应用控制器。 本轮全工程静态检查通过（84,657 个 GUID），主工程 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。
 
 ## 自定义实现
 
