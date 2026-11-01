@@ -297,18 +297,18 @@ namespace Zjcs.Presentation.Home
             int profession, int[] position, int moveMask, Dictionary<int, long> properties,
             int maxHpId, int speedId, FightDamageFormula formula)
         {
-            long hp = Property(properties, maxHpId);
+            long hp = OfficialBattlePropertyAssembler.Value(properties, maxHpId);
             if (hp <= 0) throw new InvalidOperationException("Arena fighter MaxHp is invalid.");
             var unit = new FightBattleUnitState
             {
                 Id = id, Side = side, Level = level, SubRank = subRank, Profession = profession,
                 X = position[0], Y = position[1], Hp = hp, MaxHp = hp, LastMaxHp = hp,
-                MoveMask = moveMask, Properties = ToProperties(properties)
+                MoveMask = moveMask, Properties = OfficialBattlePropertyAssembler.ToNonZeroProperties(properties)
             };
             unit.MoveDist = formula.CalculateMoveDist(properties);
             unit.Turn.Id = id;
             unit.Turn.Hp = hp;
-            unit.Turn.Speed = CheckedProperty(properties, speedId);
+            unit.Turn.Speed = OfficialBattlePropertyAssembler.CheckedValue(properties, speedId);
             return unit;
         }
 
@@ -321,7 +321,7 @@ namespace Zjcs.Presentation.Home
                 int initial = skillItems.InitialActiveSkill(save.InitialWeaponType);
                 if (initial > 0) equipped = new[] { initial, 0, 0, 0 };
             }
-            IReadOnlyDictionary<int, long> props = PropertyMap(player.Properties);
+            IReadOnlyDictionary<int, long> props = OfficialBattlePropertyAssembler.ToMap(player.Properties);
             int weaponItemId = OfflineEquipmentOperations.EquippedItemIdAtPosition(save.Equipment, 10);
             int currentWeaponType = skillItems.ItemTypeFor(weaponItemId);
             var skills = new List<FightOfficialSkillBinding>();
@@ -341,7 +341,7 @@ namespace Zjcs.Presentation.Home
                         player.Profession, currentWeaponType, save.InitialWeaponType),
                     SubRank = player.SubRank,
                     Cooldown = combat.CalculateSkillCooldown(item.EntityId, rank, level, player.SubRank, props),
-                    Properties = ToProperties(combat.CalculateSkillProps(item.EntityId, rank, level, player.SubRank))
+                    Properties = OfficialBattlePropertyAssembler.ToNonZeroProperties(combat.CalculateSkillProps(item.EntityId, rank, level, player.SubRank))
                 });
             }
             var passives = new List<FightOfficialPassiveSkillBinding>();
@@ -362,7 +362,7 @@ namespace Zjcs.Presentation.Home
         private static void AssembleGuard(FightOfficialCombatCatalog combat,
             FightOfficialSkillItemCatalog skillItems, FightBattleUnitState unit, ArenaRuntimeGuard guard)
         {
-            IReadOnlyDictionary<int, long> props = PropertyMap(unit.Properties);
+            IReadOnlyDictionary<int, long> props = OfficialBattlePropertyAssembler.ToMap(unit.Properties);
             var skills = new List<FightOfficialSkillBinding>();
             int slot = 0;
             foreach (ArenaRuntimeSkill source in guard.activeSkills ?? Array.Empty<ArenaRuntimeSkill>())
@@ -375,7 +375,7 @@ namespace Zjcs.Presentation.Home
                     EntityId = item.EntityId, Slot = slot++, ItemId = source.skillId,
                     Rank = rank, Level = level, SubRank = guard.subRank,
                     Cooldown = combat.CalculateSkillCooldown(item.EntityId, rank, level, guard.subRank, props),
-                    Properties = ToProperties(combat.CalculateSkillProps(item.EntityId, rank, level, guard.subRank))
+                    Properties = OfficialBattlePropertyAssembler.ToNonZeroProperties(combat.CalculateSkillProps(item.EntityId, rank, level, guard.subRank))
                 });
             }
             var passives = (guard.passiveSkills ?? Array.Empty<ArenaRuntimeSkill>()).Select(value =>
@@ -400,29 +400,6 @@ namespace Zjcs.Presentation.Home
             OfflineCharacterProgressionService progression = host.DailyDungeonProgression;
             return Math.Max(1, progression.SkillProgression.SlotLevel(save.Skills, itemType, slot,
                 progression.SkillContext().CurrentSeasonId));
-        }
-
-        private static List<FightPropertyValue> ToProperties(IEnumerable<KeyValuePair<int, long>> values) =>
-            values.Where(value => value.Key > 0 && value.Value != 0).OrderBy(value => value.Key)
-                .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList();
-
-        private static Dictionary<int, long> PropertyMap(IEnumerable<FightPropertyValue> values)
-        {
-            var result = new Dictionary<int, long>();
-            foreach (FightPropertyValue value in values ?? Array.Empty<FightPropertyValue>())
-                if (value != null && value.Id > 0)
-                    result[value.Id] = result.TryGetValue(value.Id, out long current)
-                        ? checked(current + value.Value) : value.Value;
-            return result;
-        }
-
-        private static long Property(IReadOnlyDictionary<int, long> values, int id) =>
-            values.TryGetValue(id, out long result) ? result : 0L;
-
-        private static int CheckedProperty(IReadOnlyDictionary<int, long> values, int id)
-        {
-            long value = Property(values, id);
-            return value <= 0 ? 1 : checked((int)Math.Min(value, int.MaxValue));
         }
 
         private static int StableSeed(string id)

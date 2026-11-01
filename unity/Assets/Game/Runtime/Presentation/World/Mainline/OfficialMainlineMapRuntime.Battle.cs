@@ -335,17 +335,17 @@ namespace Zjcs.Presentation.World
                 Profession = progression.Player.Wardrobe.Profession,
                 X = playerEntry.X,
                 Y = playerEntry.Y,
-                Hp = Property(playerProperties, 3),
-                MaxHp = Property(playerProperties, 3),
-                LastMaxHp = Property(playerProperties, 3),
+                Hp = OfficialBattlePropertyAssembler.Value(playerProperties, 3),
+                MaxHp = OfficialBattlePropertyAssembler.Value(playerProperties, 3),
+                LastMaxHp = OfficialBattlePropertyAssembler.Value(playerProperties, 3),
                 MoveMask = moveMask,
-                Properties = ToProperties(playerProperties)
+                Properties = OfficialBattlePropertyAssembler.ToProperties(playerProperties)
             };
             if (player.MaxHp <= 0) throw new InvalidDataException("Official character battle MaxHp is not positive.");
             player.MoveDist = formula.CalculateMoveDist(playerProperties);
             player.Turn.Id = player.Id;
             player.Turn.Hp = player.Hp;
-            player.Turn.Speed = CheckedProperty(playerProperties, 4);
+            player.Turn.Speed = OfficialBattlePropertyAssembler.CheckedValue(playerProperties, 4);
             checkpoint.Units.Add(player);
             AssemblePlayerSkills(combatCatalog, skillItems, player);
             OfficialBattlePetEnergyAssembler.TryConfigure(player, progression.Player,
@@ -415,7 +415,7 @@ namespace Zjcs.Presentation.World
                 if (starter > 0) equipped = new[] { starter, 0, 0, 0 };
             }
 
-            IReadOnlyDictionary<int, long> sourceProps = PropertyMap(player.Properties);
+            IReadOnlyDictionary<int, long> sourceProps = OfficialBattlePropertyAssembler.ToMap(player.Properties);
             int weaponItemId = OfflineEquipmentOperations.EquippedItemIdAtPosition(
                 progression.Player.Equipment, 10);
             int currentWeaponType = skillItems.ItemTypeFor(weaponItemId);
@@ -447,7 +447,7 @@ namespace Zjcs.Presentation.World
                     SubRank = player.SubRank,
                     Cooldown = combatCatalog.CalculateSkillCooldown(item.EntityId, rank, level,
                         player.SubRank, sourceProps),
-                    Properties = ToProperties(combatCatalog.CalculateSkillProps(item.EntityId, rank,
+                    Properties = OfficialBattlePropertyAssembler.ToProperties(combatCatalog.CalculateSkillProps(item.EntityId, rank,
                         level, player.SubRank))
                 });
             }
@@ -480,7 +480,7 @@ namespace Zjcs.Presentation.World
             FightOfficialSkillItemCatalog skillItems, FightBattleUnitState unit,
             Map10RuntimeMonster source)
         {
-            IReadOnlyDictionary<int, long> sourceProps = PropertyMap(unit.Properties);
+            IReadOnlyDictionary<int, long> sourceProps = OfficialBattlePropertyAssembler.ToMap(unit.Properties);
             var bindings = new List<FightOfficialSkillBinding>();
             foreach (Map10RuntimeSkill skill in source.ActiveSkills ?? Array.Empty<Map10RuntimeSkill>())
             {
@@ -497,7 +497,7 @@ namespace Zjcs.Presentation.World
                     SubRank = unit.SubRank,
                     Cooldown = combatCatalog.CalculateSkillCooldown(skill.EntityId, rank, level,
                         unit.SubRank, sourceProps),
-                    Properties = ToProperties(combatCatalog.CalculateSkillProps(skill.EntityId, rank,
+                    Properties = OfficialBattlePropertyAssembler.ToProperties(combatCatalog.CalculateSkillProps(skill.EntityId, rank,
                         level, unit.SubRank))
                 });
             }
@@ -515,20 +515,6 @@ namespace Zjcs.Presentation.World
                 .CreatePassiveStatusBindings(unit, skillItems, passives);
             combatCatalog.AssembleUnit(unit, bindings, passiveStatuses);
         }
-
-        private static IReadOnlyDictionary<int, long> PropertyMap(List<FightPropertyValue> properties)
-        {
-            var result = new Dictionary<int, long>();
-            if (properties == null) return result;
-            foreach (FightPropertyValue property in properties)
-                if (property != null && property.Id > 0)
-                {
-                    result.TryGetValue(property.Id, out long current);
-                    result[property.Id] = checked(current + property.Value);
-                }
-            return result;
-        }
-
 
         private void OnBattleHudControl(string path)
         {

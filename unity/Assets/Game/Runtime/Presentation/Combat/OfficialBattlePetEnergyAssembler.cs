@@ -57,7 +57,7 @@ namespace Zjcs.Presentation.Combat
             state.SkillRank = Math.Max(1, rank);
             state.SkillLevel = level;
             state.SkillSubRank = subRank;
-            state.SkillProperties = new List<FightPropertyValue>(ToProperties(
+            state.SkillProperties = new List<FightPropertyValue>(OfficialBattlePropertyAssembler.ToProperties(
                 combat.CalculateSkillProps(skillEntityId, state.SkillRank, state.SkillLevel, subRank)));
             ConfigureEntitySkillSet(state, evolution, pet, characterCatalog, combat, skillItems,
                 owner, petProps, rank, level, subRank);
@@ -78,7 +78,7 @@ namespace Zjcs.Presentation.Combat
             FightOfficialSkillItemCatalog skillItems, FightBattleUnitState owner,
             OfflinePetPropSource petProps, int entityRank, int level, int subRank)
         {
-            var source = PropertyMap(owner.Properties);
+            var source = OfficialBattlePropertyAssembler.ToMap(owner.Properties);
             FightSummonPropertyInheritance inheritance = new FightSummonPropertyInheritance
             {
                 Fixed = new Dictionary<int, long>(), Summoner = new Dictionary<int, long>()
@@ -90,7 +90,7 @@ namespace Zjcs.Presentation.Combat
             var entityProps = new Dictionary<int, long>(petProps.CalculatePetEntityBaseProps(
                 pet.ClassId, level, inheritance.Fixed));
             Merge(entityProps, inheritance.Summoner);
-            state.EntityProperties = new List<FightPropertyValue>(ToProperties(entityProps));
+            state.EntityProperties = new List<FightPropertyValue>(OfficialBattlePropertyAssembler.ToProperties(entityProps));
 
             state.EntityActiveSkills.Clear();
             foreach (int itemId in IntArray(evolution, "EntityActiveSkills"))
@@ -101,7 +101,7 @@ namespace Zjcs.Presentation.Combat
                 int skillLevel = Math.Max(1, level);
                 state.EntityActiveSkills.Add(combat.CreateSkill(item.EntityId,
                     state.EntityActiveSkills.Count, itemId, skillRank, skillLevel, subRank,
-                    ToProperties(combat.CalculateSkillProps(item.EntityId, skillRank,
+                    OfficialBattlePropertyAssembler.ToProperties(combat.CalculateSkillProps(item.EntityId, skillRank,
                         skillLevel, subRank))));
             }
 
@@ -117,7 +117,7 @@ namespace Zjcs.Presentation.Combat
                         PetSkillRank(catalog, pet, itemId), Math.Max(1, level), subRank));
                     state.EntityPassiveStatusIds.AddRange(item.PassiveStatusIds ?? Array.Empty<int>());
                 }
-            state.EntityProperties = new List<FightPropertyValue>(ToProperties(entityProps));
+            state.EntityProperties = new List<FightPropertyValue>(OfficialBattlePropertyAssembler.ToProperties(entityProps));
         }
 
         private static void ApplySupportSkillsOnce(FightBattlePetEnergyState state,
@@ -128,7 +128,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (state.SupportSkillsApplied) return;
             var bindings = new List<FightOfficialPassiveSkillBinding>();
-            var propertyMap = PropertyMap(owner.Properties);
+            var propertyMap = OfficialBattlePropertyAssembler.ToMap(owner.Properties);
             foreach (int itemId in IntArray(evolution, "SupportSkills"))
             {
                 if (itemId <= 0 || !skillItems.TryGet(itemId, out FightOfficialSkillItem item)) continue;
@@ -145,10 +145,10 @@ namespace Zjcs.Presentation.Combat
             }
             if (bindings.Count > 0)
             {
-                long oldMaxHp = Property(owner.Properties, combat.PropertyType("MaxHp"));
-                owner.Properties = ToProperties(propertyMap);
-                owner.BaseProperties = ToProperties(propertyMap);
-                long newMaxHp = Property(owner.Properties, combat.PropertyType("MaxHp"));
+                long oldMaxHp = OfficialBattlePropertyAssembler.Value(owner.Properties, combat.PropertyType("MaxHp"));
+                owner.Properties = OfficialBattlePropertyAssembler.ToProperties(propertyMap);
+                owner.BaseProperties = OfficialBattlePropertyAssembler.ToProperties(propertyMap);
+                long newMaxHp = OfficialBattlePropertyAssembler.Value(owner.Properties, combat.PropertyType("MaxHp"));
                 if (newMaxHp > 0 && oldMaxHp > 0)
                 {
                     owner.MaxHp = newMaxHp;
@@ -182,26 +182,6 @@ namespace Zjcs.Presentation.Combat
         {
             return row != null && row.TryGetValue(key, out object value)
                 ? Convert.ToDouble(value, CultureInfo.InvariantCulture) : fallback;
-        }
-
-        private static List<FightPropertyValue> ToProperties(IReadOnlyDictionary<int, long> values)
-        {
-            return (values ?? new Dictionary<int, long>()).Where(value => value.Key > 0)
-                .OrderBy(value => value.Key)
-                .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value })
-                .ToList();
-        }
-
-        private static Dictionary<int, long> PropertyMap(IEnumerable<FightPropertyValue> values)
-        {
-            return (values ?? Array.Empty<FightPropertyValue>()).Where(value => value != null && value.Id > 0)
-                .GroupBy(value => value.Id).ToDictionary(group => group.Key,
-                    group => group.Sum(value => value.Value));
-        }
-
-        private static long Property(IEnumerable<FightPropertyValue> values, int id)
-        {
-            return PropertyMap(values).TryGetValue(id, out long value) ? value : 0L;
         }
 
         private static void Merge(Dictionary<int, long> destination, IEnumerable<KeyValuePair<int, long>> source)

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Zjcs.Combat.Official;
+using Zjcs.Presentation.Combat;
 
 namespace Zjcs.Presentation.World
 {
@@ -10,7 +11,7 @@ namespace Zjcs.Presentation.World
             Map10RuntimeMonster source, Dictionary<int, long> properties, int monsterLevel,
             int monsterSubRank, int id, int moveMask)
         {
-            long maxHp = Property(properties, 3);
+            long maxHp = OfficialBattlePropertyAssembler.Value(properties, 3);
             if (maxHp <= 0) throw new InvalidDataException("Official Map10 monster MaxHp is not positive: " + source.MonsterId);
             var unit = new FightBattleUnitState
             {
@@ -31,12 +32,12 @@ namespace Zjcs.Presentation.World
                 MaxHp = maxHp,
                 LastMaxHp = maxHp,
                 MoveMask = moveMask,
-                Properties = ToProperties(properties)
+                Properties = OfficialBattlePropertyAssembler.ToProperties(properties)
             };
             unit.MoveDist = formula.CalculateMoveDist(properties);
             unit.Turn.Id = unit.Id;
             unit.Turn.Hp = unit.Hp;
-            unit.Turn.Speed = CheckedProperty(properties, 4);
+            unit.Turn.Speed = OfficialBattlePropertyAssembler.CheckedValue(properties, 4);
             return unit;
         }
     }

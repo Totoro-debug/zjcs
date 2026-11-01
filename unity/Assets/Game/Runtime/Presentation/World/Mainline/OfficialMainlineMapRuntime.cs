@@ -603,12 +603,6 @@ namespace Zjcs.Presentation.World
             if (!closed && session != null) DisposeRuntime();
         }
 
-        private static List<FightPropertyValue> ToProperties(IReadOnlyDictionary<int, long> values)
-        {
-            return values.OrderBy(value => value.Key)
-                .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList();
-        }
-
         /// <summary>
         /// Evaluates the official condition ids attached to the battle speed table against the local
         /// character. Types this save cannot prove stay locked instead of opening for free.
@@ -620,17 +614,6 @@ namespace Zjcs.Presentation.World
                 context.UnlockedMapClassIds.Add(mapClassId);
             return progression.Catalog.EvaluateCondition(conditionId, context);
         }
-        private static long Property(IDictionary<int, long> properties, int id)
-        {
-            return properties.TryGetValue(id, out long value) ? value : 0;
-        }
-
-        private static int CheckedProperty(IDictionary<int, long> properties, int id)
-        {
-            long value = Property(properties, id);
-            return value <= 0 ? 1 : checked((int)Math.Min(value, int.MaxValue));
-        }
-
         private static int StableSeed(string profile, int stage)
         {
             unchecked

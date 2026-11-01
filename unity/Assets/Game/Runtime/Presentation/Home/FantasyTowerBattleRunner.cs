@@ -238,14 +238,14 @@ namespace Zjcs.Presentation.Home
             {
                 Id = 1, Side = 1, CharacterType = 1, Level = playerSave.Level,
                 SubRank = playerSave.SubRank, Profession = playerSave.Wardrobe.Profession,
-                X = spawn.X, Y = spawn.Y, Hp = Property(playerProps, maxHpId),
-                MaxHp = Property(playerProps, maxHpId), LastMaxHp = Property(playerProps, maxHpId),
-                MoveMask = moveMask, Properties = ToProperties(playerProps)
+                X = spawn.X, Y = spawn.Y, Hp = OfficialBattlePropertyAssembler.Value(playerProps, maxHpId),
+                MaxHp = OfficialBattlePropertyAssembler.Value(playerProps, maxHpId), LastMaxHp = OfficialBattlePropertyAssembler.Value(playerProps, maxHpId),
+                MoveMask = moveMask, Properties = OfficialBattlePropertyAssembler.ToNonZeroProperties(playerProps)
             };
             player.MoveDist = formula.CalculateMoveDist(playerProps);
             if (player.MaxHp <= 0) throw new InvalidOperationException("Official Fantasy Tower player MaxHp is invalid.");
             player.Turn.Id = player.Id; player.Turn.Hp = player.Hp;
-            player.Turn.Speed = CheckedProperty(playerProps, speedId);
+            player.Turn.Speed = OfficialBattlePropertyAssembler.CheckedValue(playerProps, speedId);
             checkpoint.Units.Add(player);
             AssemblePlayer(combat, skillItems, player, playerSave);
             OfficialBattlePetEnergyAssembler.TryConfigure(player, playerSave,
@@ -267,15 +267,15 @@ namespace Zjcs.Presentation.Home
                         MonsterType = monster.MonsterType, Level = Mathf.RoundToInt(monster.Level),
                         SubRank = monster.SubRank, Wave = sourceWave.Index,
                         X = monster.Position.X, Y = monster.Position.Y,
-                        Hp = Property(props, maxHpId), MaxHp = Property(props, maxHpId),
-                        LastMaxHp = Property(props, maxHpId), MoveMask = moveMask,
-                        Direction = monster.FlipX ? 1 : 0, Properties = ToProperties(props),
+                        Hp = OfficialBattlePropertyAssembler.Value(props, maxHpId), MaxHp = OfficialBattlePropertyAssembler.Value(props, maxHpId),
+                        LastMaxHp = OfficialBattlePropertyAssembler.Value(props, maxHpId), MoveMask = moveMask,
+                        Direction = monster.FlipX ? 1 : 0, Properties = OfficialBattlePropertyAssembler.ToNonZeroProperties(props),
                         MaxHpPlies = combat.MonsterHpPliesFor(monster.MonsterId,
                             monster.MonsterGroupNo, Mathf.RoundToInt(monster.Level))
                     };
                     unit.MoveDist = formula.CalculateMoveDist(props);
                     unit.Turn.Id = unit.Id; unit.Turn.Hp = unit.Hp;
-                    unit.Turn.Speed = CheckedProperty(props, speedId);
+                    unit.Turn.Speed = OfficialBattlePropertyAssembler.CheckedValue(props, speedId);
                     checkpoint.Units.Add(unit); wave.UnitIds.Add(unit.Id);
                     AssembleMonster(combat, skillItems, unit, monster);
                 }
@@ -416,7 +416,7 @@ namespace Zjcs.Presentation.Home
                 int initial = items.InitialActiveSkill(player.InitialWeaponType);
                 if (initial > 0) equipped = new[] { initial, 0, 0, 0 };
             }
-            Dictionary<int, long> properties = PropertyMap(unit.Properties);
+            Dictionary<int, long> properties = OfficialBattlePropertyAssembler.ToMap(unit.Properties);
             int weaponItemId = OfflineEquipmentOperations.EquippedItemIdAtPosition(player.Equipment, 10);
             int currentWeaponType = items.ItemTypeFor(weaponItemId);
             var active = new List<FightOfficialSkillBinding>();
@@ -434,7 +434,7 @@ namespace Zjcs.Presentation.Home
                         unit.Profession, currentWeaponType, player.InitialWeaponType),
                     SubRank = player.SubRank,
                     Cooldown = combat.CalculateSkillCooldown(item.EntityId, rank, level, player.SubRank, properties),
-                    Properties = ToProperties(combat.CalculateSkillProps(item.EntityId, rank, level, player.SubRank)) });
+                    Properties = OfficialBattlePropertyAssembler.ToNonZeroProperties(combat.CalculateSkillProps(item.EntityId, rank, level, player.SubRank)) });
             }
             var passive = OfflineSkillProgression.EquippedPassiveSkills(player.Skills)
                 .Select((value, slot) => new FightOfficialPassiveSkillBinding { ItemId = value,
@@ -449,7 +449,7 @@ namespace Zjcs.Presentation.Home
         private static void AssembleMonster(FightOfficialCombatCatalog combat, FightOfficialSkillItemCatalog items,
             FightBattleUnitState unit, Map10RuntimeMonster monster)
         {
-            Dictionary<int, long> properties = PropertyMap(unit.Properties);
+            Dictionary<int, long> properties = OfficialBattlePropertyAssembler.ToMap(unit.Properties);
             var active = new List<FightOfficialSkillBinding>();
             foreach (Map10RuntimeSkill source in monster.ActiveSkills ?? Array.Empty<Map10RuntimeSkill>())
             {
@@ -459,7 +459,7 @@ namespace Zjcs.Presentation.Home
                     SubRank = unit.SubRank,
                     Cooldown = combat.CalculateSkillCooldown(source.EntityId, Math.Max(1, source.Rank),
                         Math.Max(1, unit.Level), unit.SubRank, properties),
-                    Properties = ToProperties(combat.CalculateSkillProps(source.EntityId,
+                    Properties = OfficialBattlePropertyAssembler.ToNonZeroProperties(combat.CalculateSkillProps(source.EntityId,
                         Math.Max(1, source.Rank), Math.Max(1, unit.Level), unit.SubRank)) });
             }
             var passive = (monster.PassiveSkills ?? Array.Empty<int>()).Where(value => value > 0)
@@ -468,16 +468,6 @@ namespace Zjcs.Presentation.Home
             combat.AssembleUnit(unit, active, combat.CreatePassiveStatusBindings(unit, items, passive));
         }
 
-        private static List<FightPropertyValue> ToProperties(IEnumerable<KeyValuePair<int, long>> values) =>
-            values.Where(value => value.Key > 0 && value.Value != 0).OrderBy(value => value.Key)
-                .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList();
-        private static Dictionary<int, long> PropertyMap(IEnumerable<FightPropertyValue> values) =>
-            (values ?? Array.Empty<FightPropertyValue>()).Where(value => value != null && value.Id > 0)
-                .GroupBy(value => value.Id).ToDictionary(group => group.Key, group => group.Sum(value => value.Value));
-        private static long Property(IReadOnlyDictionary<int, long> values, int id) =>
-            values.TryGetValue(id, out long result) ? result : 0;
-        private static int CheckedProperty(IReadOnlyDictionary<int, long> values, int id) =>
-            checked((int)Property(values, id));
         private static int StableSeed(string slot, int stage)
         {
             unchecked { int hash = 17; foreach (char value in slot) hash = hash * 31 + value; return hash * 31 + stage; }
