@@ -137,6 +137,24 @@ namespace Zjcs.Offline.ProfessionUI
             Array.Clear(overridden, 0, overridden.Length);
         }
 
+        // Ordered constraints may rotate a fresh local bone beneath an already
+        // solved parent. Preserve that parent and unrelated solved branches.
+        // A previously overridden bone needs applied-local decomposition first.
+        public void SetConstrainedRotation(int bone, float value)
+        {
+            if (bone < 0 || bone >= source.Length) throw new ArgumentOutOfRangeException(nameof(bone));
+            Finite(value);
+            if (overridden[bone]) throw new NotSupportedException("Restore constrained applied-local rotation: " + source[bone].name);
+            rotation[bone] = value;
+            ready[bone] = false;
+            for (int i = bone + 1; i < source.Length; i++)
+            {
+                int parent = source[i].parent;
+                while (parent > bone) parent = source[parent].parent;
+                if (parent == bone) { ready[i] = false; overridden[i] = false; }
+            }
+        }
+
         // A world-space constraint runs after its dependencies. Retain unrelated
         // solved matrices, but discard descendant caches so their source local
         // transforms see this result. Reset/Apply starts a fresh unconstrained frame.

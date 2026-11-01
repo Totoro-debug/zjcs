@@ -189,7 +189,7 @@ namespace Zjcs.Offline.ProfessionUI
             foreach (var slot in OptionalObject(animation, "slots"))
                 foreach (var channel in Object(slot.Value))
                 {
-                    if (separateColorChannels && channel.Key == "rgba") continue;
+                    if (separateColorChannels && (channel.Key == "rgba" || channel.Key == "alpha")) continue;
                     if (channel.Key != "attachment") throw new NotSupportedException("Restore additional original slot timeline: " + channel.Key);
                     tracks.Add(new ProfessionNativeSlotPose.AttachmentTrack { slot = slotIndices[slot.Key], keys = Array(channel.Value).Select(v =>
                     {

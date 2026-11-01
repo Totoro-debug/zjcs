@@ -68,6 +68,15 @@ namespace Zjcs.Offline.ProfessionUI
         }
 
         public static void Apply(ProfessionNativeBonePose pose, IReadOnlyList<Constraint> constraints)
+            => Apply(pose, constraints, false);
+
+        // Illustration rigs contain deliberate negative/extrapolating weights.
+        // Keep the existing idle contract while retaining those finite values
+        // for the explicitly bound portrait path.
+        public static void ApplyUnclamped(ProfessionNativeBonePose pose, IReadOnlyList<Constraint> constraints)
+            => Apply(pose, constraints, true);
+
+        private static void Apply(ProfessionNativeBonePose pose, IReadOnlyList<Constraint> constraints, bool extrapolate)
         {
             if (pose == null || constraints == null) throw new ArgumentNullException();
             int previous = -1;
@@ -77,7 +86,8 @@ namespace Zjcs.Offline.ProfessionUI
                     throw new ArgumentException("Original transform constraints require their explicit source order and bones.");
                 previous = state.Order;
                 foreach (float mix in new[] { state.Rotation, state.X, state.Y, state.ScaleX, state.ScaleY, state.Shear })
-                    if (float.IsNaN(mix) || mix < 0 || mix > 1) throw new ArgumentException("Original transform mix is invalid.");
+                    if (float.IsNaN(mix) || float.IsInfinity(mix) || !extrapolate && (mix < 0 || mix > 1))
+                        throw new ArgumentException("Original transform mix is invalid.");
                 Finite(state.OffsetRotation); Finite(state.OffsetShear);
                 Finite(state.OffsetPosition.x); Finite(state.OffsetPosition.y); Finite(state.OffsetScale.x); Finite(state.OffsetScale.y);
                 if (state.Rotation == 0 && state.X == 0 && state.Y == 0 && state.ScaleX == 0 && state.ScaleY == 0 && state.Shear == 0) continue;
@@ -91,9 +101,11 @@ namespace Zjcs.Offline.ProfessionUI
                 var target = pose.World(state.Target);
                 // Source idle offsets have no scale or shear; a nonzero rotation
                 // offset on a reflected target needs its own verified contract.
-                if (state.OffsetScale != Vector2.zero || state.OffsetShear != 0 ||
-                    state.OffsetRotation != 0 && target.m00 * target.m11 - target.m01 * target.m10 < 0)
+                if (!extrapolate && (state.ScaleX != 0 && state.OffsetScale.x != 0 || state.ScaleY != 0 && state.OffsetScale.y != 0 ||
+                    state.Shear != 0 && state.OffsetShear != 0 ||
+                    state.Rotation != 0 && state.OffsetRotation != 0 && target.m00 * target.m11 - target.m01 * target.m10 < 0))
                     throw new NotSupportedException("Verify original reflected/scale/shear transform offset: " + state.Name);
+                float orientation = target.m00 * target.m11 - target.m01 * target.m10 < 0 ? -1 : 1;
                 foreach (int bone in state.Bones)
                 {
                     if (!pose.IsActive(bone)) continue;
@@ -106,16 +118,18 @@ namespace Zjcs.Offline.ProfessionUI
                         throw new NotSupportedException("Verify singular original transform directions: " + state.Name);
                     if (state.Rotation != 0)
                     {
-                        float degrees = Mathf.DeltaAngle(Angle(x), Angle(tx) + state.OffsetRotation) * state.Rotation;
+                        float degrees = Mathf.DeltaAngle(Angle(x), Angle(tx) + state.OffsetRotation * orientation) * state.Rotation;
                         var rotation = Quaternion.Euler(0, 0, degrees); x = rotation * x; y = rotation * y;
                     }
                     var position = target.MultiplyPoint3x4(state.OffsetPosition);
                     matrix.m03 = Mathf.LerpUnclamped(matrix.m03, position.x, state.X);
                     matrix.m13 = Mathf.LerpUnclamped(matrix.m13, position.y, state.Y);
-                    x = Resize(x, tx.magnitude, state.ScaleX, state.Name); y = Resize(y, ty.magnitude, state.ScaleY, state.Name);
+                    x = Resize(x, tx.magnitude + state.OffsetScale.x, state.ScaleX, state.Name);
+                    y = Resize(y, ty.magnitude + state.OffsetScale.y, state.ScaleY, state.Name);
                     if (state.Shear != 0)
                     {
-                        float current = Mathf.DeltaAngle(Angle(x), Angle(y)), desired = Mathf.DeltaAngle(Angle(tx), Angle(ty));
+                        float current = Mathf.DeltaAngle(Angle(x), Angle(y));
+                        float desired = Mathf.DeltaAngle(Angle(tx), Angle(ty)) + state.OffsetShear * orientation;
                         float degrees = Mathf.DeltaAngle(current, desired) * state.Shear;
                         y = Quaternion.Euler(0, 0, degrees) * y;
                     }

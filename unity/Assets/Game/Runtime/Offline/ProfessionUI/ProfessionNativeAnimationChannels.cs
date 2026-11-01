@@ -13,7 +13,7 @@ namespace Zjcs.Offline.ProfessionUI
     {
         private sealed class InheritKey { public float Time; public int Mode; }
         private sealed class InheritTrack { public int Bone; public InheritKey[] Keys; }
-        private sealed class ColorTrack { public int Slot; public ProfessionNativeCurve[] Channels; }
+        private sealed class ColorTrack { public int Slot, FirstAxis; public ProfessionNativeCurve[] Channels; }
         private readonly ProfessionNativeSkeletonData data;
         private readonly ProfessionNativeBonePose.Track[] bones;
         private readonly ProfessionNativeSlotPose.Clip slots;
@@ -63,17 +63,19 @@ namespace Zjcs.Offline.ProfessionUI
                 foreach (var channel in Map(slot.Value))
                 {
                     if (channel.Key == "attachment") continue;
-                    if (channel.Key != "rgba") throw new NotSupportedException("Bind original color channel: " + channel.Key);
+                    if (channel.Key != "rgba" && channel.Key != "alpha") throw new NotSupportedException("Bind original color channel: " + channel.Key);
+                    bool alpha = channel.Key == "alpha";
                     var rows = Rows(channel.Value).ToArray();
-                    var curves = new ProfessionNativeCurve[4];
-                    for (int axis = 0; axis < 4; axis++)
+                    var curves = new ProfessionNativeCurve[alpha ? 1 : 4];
+                    for (int axis = 0; axis < curves.Length; axis++)
                     {
                         var keys = new ProfessionNativeCurve.Key[rows.Length];
                         for (int i = 0; i < rows.Length; i++)
                         {
                             var row = rows[i];
                             var key = new ProfessionNativeCurve.Key { time = Number(row, "time"),
-                                value = ParseColor((string)row["color"])[axis] };
+                                value = alpha ? (row.TryGetValue("alpha", out object opacity) ? Convert.ToSingle(opacity, CultureInfo.InvariantCulture) : 1)
+                                    : ParseColor((string)row["color"])[axis] };
                             if (row.TryGetValue("curve", out object interpolation))
                             {
                                 if (interpolation is string text)
@@ -84,7 +86,7 @@ namespace Zjcs.Offline.ProfessionUI
                                 else
                                 {
                                     var handles = (List<object>)interpolation;
-                                    if (handles.Count != 16) throw new InvalidDataException("Original RGBA handle count differs.");
+                                    if (handles.Count != curves.Length * 4) throw new InvalidDataException("Original color handle count differs.");
                                     key.mode = 2;
                                     for (int j = 0; j < 4; j++) key.controls[j] = Convert.ToSingle(handles[axis * 4 + j], CultureInfo.InvariantCulture);
                                 }
@@ -93,7 +95,7 @@ namespace Zjcs.Offline.ProfessionUI
                         }
                         curves[axis] = new ProfessionNativeCurve(keys);
                     }
-                    colorTracks.Add(new ColorTrack { Slot = data.FindSlot(slot.Key), Channels = curves });
+                    colorTracks.Add(new ColorTrack { Slot = data.FindSlot(slot.Key), FirstAxis = alpha ? 3 : 0, Channels = curves });
                 }
             colors = colorTracks.ToArray();
         }
@@ -120,8 +122,8 @@ namespace Zjcs.Offline.ProfessionUI
             {
                 if (!bonePose.IsActive(slotPose.Bone(track.Slot))) continue;
                 Color color = slotColors[track.Slot];
-                for (int axis = 0; axis < 4; axis++)
-                    if (track.Channels[axis].TryEvaluate(time, out float value)) color[axis] = value;
+                for (int axis = 0; axis < track.Channels.Length; axis++)
+                    if (track.Channels[axis].TryEvaluate(time, out float value)) color[track.FirstAxis + axis] = value;
                 slotColors[track.Slot] = color;
             }
         }

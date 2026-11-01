@@ -19,6 +19,12 @@ namespace Zjcs.Offline.ProfessionUI
         }
 
         public static void Apply(ProfessionNativeBonePose pose, IReadOnlyList<Constraint> constraints)
+            => Apply(pose, constraints, false);
+
+        public static void ApplyPreservingWorldConstraints(ProfessionNativeBonePose pose, IReadOnlyList<Constraint> constraints)
+            => Apply(pose, constraints, true);
+
+        private static void Apply(ProfessionNativeBonePose pose, IReadOnlyList<Constraint> constraints, bool preserveWorld)
         {
             if (pose == null || constraints == null) throw new ArgumentNullException();
             int previousOrder = -1;
@@ -32,6 +38,8 @@ namespace Zjcs.Offline.ProfessionUI
                 if (constraint.mix == 0) continue;
                 foreach (int bone in constraint.bones)
                 {
+                    if (preserveWorld && pose.HasWorldOverride(bone))
+                        throw new NotSupportedException("Restore original IK applied-local decomposition.");
                     Vector2 scale = pose.LocalScale(bone), shear = pose.Shear(bone);
                     if (!pose.IsActive(bone) || scale.x != 1 || scale.y != 1 || shear.x != 0 || shear.y != 0 || pose.Inheritance(bone) != 0)
                         throw new NotSupportedException("This original IK chain requires a different scale, shear or inheritance binding.");
@@ -46,17 +54,23 @@ namespace Zjcs.Offline.ProfessionUI
                 Vector2 target = parent.inverse.MultiplyPoint3x4(new Vector3(targetWorld.m03, targetWorld.m13, 0));
                 target -= pose.LocalPosition(first);
                 if (constraint.bones.Length == 1)
-                    pose.SetRotation(first, ProfessionNativeIk.Aim(target, pose.LocalRotation(first), constraint.mix));
+                    Rotate(pose, first, ProfessionNativeIk.Aim(target, pose.LocalRotation(first), constraint.mix), preserveWorld);
                 else
                 {
                     int child = constraint.bones[1];
                     if (pose.Parent(child) != first) throw new ArgumentException("Original two-bone IK chain is not consecutive.");
                     var result = ProfessionNativeIk.SolvePair(target, pose.LocalPosition(child), constraint.childLength,
                         pose.LocalRotation(first), pose.LocalRotation(child), constraint.bendPositive, constraint.mix);
-                    pose.SetRotation(first, result.ParentRotation);
-                    pose.SetRotation(child, result.ChildRotation);
+                    Rotate(pose, first, result.ParentRotation, preserveWorld);
+                    Rotate(pose, child, result.ChildRotation, preserveWorld);
                 }
             }
+        }
+
+        private static void Rotate(ProfessionNativeBonePose pose, int bone, float rotation, bool preserveWorld)
+        {
+            if (preserveWorld) pose.SetConstrainedRotation(bone, rotation);
+            else pose.SetRotation(bone, rotation);
         }
     }
 }

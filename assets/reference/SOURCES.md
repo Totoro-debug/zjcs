@@ -257,3 +257,7 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 ### 当前伙伴详情属性区域输入
 
 `prepare_partner_detail_properties_ui.py` 核对选定 `884_156692` 的详情属性控制器、属性公式、原 UI 复位和简报回调源码；`prepare_partner_detail_properties_native.py` 沿当前 `NpcDetailPanel`、共享原属性组及 Sprite／Animator 依赖恢复原生区域，按 GUID 和实际字节复用现有载荷。输入包、对象、层级、转换和输出哈希见 [详情属性来源](partner-detail-properties-native-source-manifest.json)。八条原中文文字与 Resources 显式绑定见 [资源绑定来源](partner-detail-properties-assets-source-manifest.json)。当前 `level_prop.g.bytes` 追加三类天赋属性，仍保持实际 APK `881_156673` 与所选云端 `884_156692` 各自身份，输入和输出哈希见 [属性目录来源](partner-properties-source-manifest.json)。功能与验证范围仅在 [伙伴功能](../../docs/features/partners.md) 维护。未生成完整素材快照。
+
+### 当前伙伴动态立绘原生资源
+
+`prepare_partner_native_portraits.py` 按 `884_156692` 当前伙伴配置核对实际 APK `881_156673` 后，解析选定云端资源的容器地址、CAB、原对象及依赖，提取 54 份开放范围立绘。原始骨骼采用既有免费链路的 MIT `SkelToJson 1.0.1` 格式读取器，保留浮点精度并验证完整消费；原 binary、图集、SkeletonDataAsset／材质字段及贴图对象均登记原字节 SHA256。`prepare_partner_portrait_assets.py` 校验同版 Windows 原生 Texture2D 转换缓存，以逐伙伴 Resources 显式绑定安装原生载荷。原始对象、APK／云端来源、读取器 wheel、工具、转换输入、运行代码和 489 个输出文件哈希见 [partner-portrait-assets-source-manifest.json](partner-portrait-assets-source-manifest.json)。原 UI 材质／shader 的验证入口核对同版已校验的 Windows 转换缓存；行为、支持范围及实际验证结果统一在[伙伴功能](../../docs/features/partners.md)维护。本批素材未纳入素材快照。

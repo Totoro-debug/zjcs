@@ -1501,3 +1501,12 @@ unity/Assets/Game/Runtime/Offline/PartnersUI/*DetailPropert*.cs* text eol=lf
 unity/Assets/Game/Resources/Partners/OfficialPartnerDetailPropertyAssetCatalog.asset* text eol=lf
 unity/Assets/Official/Partners/UI/DetailProperties.meta text eol=lf
 unity/Assets/Official/Partners/UI/DetailProperties/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Current partner native portrait payloads and generated sources
+/unity/Assets/Official/Partners/Portraits/** -text
+/unity/Assets/Game/Resources/Partners/Portraits/** text eol=lf
+/unity/Assets/Game/Resources/Partners/Portraits.meta text eol=lf
+/assets/reference/partner-portrait-assets-source-manifest.json text eol=lf
+/scripts/prepare_partner_native_portraits*.py text eol=lf
+/scripts/prepare_partner_portrait*.py text eol=lf
+/scripts/fixtures/partner_*portrait*.cs text eol=lf
