@@ -46,11 +46,12 @@ function New-ReplaySkill($consume, $needed, $stacks, $relation) {
     return $skill
 }
 
-function Invoke-ReplayBattle($skill, $stacks) {
+function Invoke-ReplayBattle($skill, $stacks, $moreSkills = @()) {
     $player = New-Unit 1 1 0 0 1000 100
     $player.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
     $player.SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{ Slot = 0; LimitedTimes = -1 })
     $player.Skills.Add($skill)
+    foreach ($extra in $moreSkills) { $player.Skills.Add($extra) }
     $status = $catalog.CreateStatus(24031, 1, 1)
     $status.StackCount = $stacks
     $player.Statuses.Add($status)
@@ -76,8 +77,76 @@ Assert-Replay (($replayed.Checkpoint.Units[0].Statuses | Where-Object { $_.Class
 $notEnough = Invoke-ReplayBattle (New-ReplaySkill $true 10 10 1) 5
 Assert-Replay (@($notEnough.Event.SkillCasts | Where-Object { $_.SkillEntityId -eq 930 }).Count -eq 1) 'Replay fired without enough stacks'
 
-# Without consuming, the replayed skill must not replay again (single level).
-$nested = Invoke-ReplayBattle (New-ReplaySkill $false 1 1 1) 20
-Assert-Replay (@($nested.Event.SkillCasts | Where-Object { $_.SkillEntityId -eq 930 }).Count -eq 2) 'Replay cascaded beyond one level'
+# Each completed replay rechecks the remaining stacks.
+$continuous = Invoke-ReplayBattle (New-ReplaySkill $true 10 10 1) 20
+Assert-Replay (@($continuous.Event.SkillCasts | Where-Object { $_.SkillEntityId -eq 930 }).Count -eq 3) 'Twenty stacks did not produce two replays'
+Assert-Replay ($continuous.Checkpoint.Units[0].SkillState.ReplayCounts[0].Count -eq 2) 'Replay counter omitted a replay'
 
-Write-Output 'Battle skill replay checks passed: official mapping, stack condition, consumption and single-level replay.'
+# A configured per-round cap stops an otherwise persistent condition.
+$cappedSkill = New-ReplaySkill $false 1 1 1
+$cappedSkill.ReplayMaxCountEachRound = 3
+$capped = Invoke-ReplayBattle $cappedSkill 20
+Assert-Replay (@($capped.Event.SkillCasts | Where-Object { $_.SkillEntityId -eq 930 }).Count -eq 4) 'Configured replay cap was ignored'
+Assert-Replay ($capped.Checkpoint.Units[0].SkillState.ReplayCounts[0].Count -eq 3) 'Configured cap counter mismatch'
+
+$disabledSkill = New-ReplaySkill $true 10 10 1
+$disabledSkill.ReplayMaxCountEachRound = 0
+$disabled = Invoke-ReplayBattle $disabledSkill 20
+Assert-Replay (@($disabled.Event.SkillCasts | Where-Object { $_.SkillEntityId -eq 930 }).Count -eq 1) 'Zero replay cap did not disable replay'
+Assert-Replay (($disabled.Checkpoint.Units[0].Statuses | Where-Object { $_.ClassId -eq 24031 }).StackCount -eq 20) 'Blocked replay consumed stacks'
+
+# A long finite chain uses an iterative continuation, with no hidden one-level cap.
+$long = Invoke-ReplayBattle (New-ReplaySkill $true 10 10 1) 2000
+Assert-Replay (@($long.Event.SkillCasts | Where-Object { $_.SkillEntityId -eq 930 }).Count -eq 201) 'Long finite replay chain was truncated'
+Assert-Replay ($official.ReplayMaxCountEachRound -eq 1) 'Original replay maximum was not mapped'
+$roundtrip = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(
+    [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($capped.Checkpoint))
+Assert-Replay ($roundtrip.Units[0].SkillState.ReplayCounts[0].Count -eq 3) 'Replay count was lost during checkpoint restoration'
+Assert-Replay ($roundtrip.Units[0].Skills[0].ReplayMaxCountEachRound -eq 3) 'Replay cap was lost during checkpoint restoration'
+$rateSkill = New-ReplaySkill $false 1 1 1
+$rateSkill.ReplayUsesRate = $true; $rateSkill.ReplayChance = 1.0; $rateSkill.ReplayMaxCountEachRound = 2
+$rate = Invoke-ReplayBattle $rateSkill 0
+Assert-Replay (@($rate.Event.SkillCasts | Where-Object { $_.SkillEntityId -eq 930 }).Count -eq 3) 'Certain probability replay did not reach configured cap'
+$rateSkill.ReplayChance = 0.0
+$zeroRate = Invoke-ReplayBattle $rateSkill 0
+Assert-Replay (@($zeroRate.Event.SkillCasts | Where-Object { $_.SkillEntityId -eq 930 }).Count -eq 1) 'Zero probability replay fired'
+$officialRate = $catalog.CreateSkill(64120, 0, 0, 1, 1, 0, $null)
+Assert-Replay ($officialRate.ReplayUsesRate -and $officialRate.ReplayChance -eq 0.6 -and $officialRate.ReplayType -eq 2) 'Original probability/type mapping mismatch'
+Assert-Replay ($official.ReplayReplacementEntities.Count -eq 1 -and $official.ReplayReplacementEntities[0] -eq 13223) 'Original ordered replacement mapping mismatch'
+$slotTrigger = New-ReplaySkill $false 1 1 1
+$slotTrigger.ReplayUsesRate = $true; $slotTrigger.ReplayChance = 1.0
+$slotTrigger.ReplaySelectMatchingSlot = $true; $slotTrigger.ReplaySlotElementTypes.Add(101)
+$slotTarget = New-ReplaySkill $false 1 1 1
+$slotTarget.EntityId = 940; $slotTarget.Slot = 1; $slotTarget.ElementType = 101; $slotTarget.HasReplay = $false
+$slotResult = Invoke-ReplayBattle $slotTrigger 0 @($slotTarget)
+$selectedCasts = @($slotResult.Event.SkillCasts | Where-Object { $_.IsReplay })
+Assert-Replay ($selectedCasts.Count -eq 1 -and $selectedCasts[0].SkillEntityId -eq 940 -and $selectedCasts[0].Slot -eq 1) 'Conditional provider replayed itself instead of the matching slot'
+$slotTarget.ElementType = 103
+$noSlot = Invoke-ReplayBattle $slotTrigger 0 @($slotTarget)
+Assert-Replay (@($noSlot.Event.SkillCasts | Where-Object { $_.IsReplay }).Count -eq 0) 'Conditional provider selected an ineligible element'
+$originalProvider = $catalog.CreateSkill(62990, 0, 0, 1, 1, 0, $null)
+Assert-Replay ($originalProvider.ReplaySelectMatchingSlot -and ($originalProvider.ReplaySlotElementTypes -join ',') -eq '101,102') 'Original conditional provider mapping mismatch'
+$replaceSkill = New-ReplaySkill $true 10 10 1
+$replaceSkill.ReplayReplacementEntities.Add(13223)
+$replacement = Invoke-ReplayBattle $replaceSkill 20
+$replacementCasts = @($replacement.Event.SkillCasts | Where-Object { $_.IsReplay })
+Assert-Replay ($replacementCasts.Count -eq 1 -and $replacementCasts[0].SkillEntityId -eq 13223) 'Replay replacement did not execute the actual replacement entity'
+Assert-Replay (($replacement.Checkpoint.Units[0].Statuses | Where-Object { $_.ClassId -eq 24031 }).StackCount -eq 10) 'Replacement with zero continuation consumed a second stack payment'
+# Force only the five original variants' probability in memory.
+$oldCatalog = $catalog
+$needle = '"Replay":{"Rate":0.0,"ReplaceSkillArrayOnReplay":[13104,13105,13106,13107,13108]}'
+$replacementText = $needle.Replace('"Rate":0.0', '"Rate":1.0')
+$skillJson = (Read-Text 'unity/Assets/Official/Combat/skill-rules.json').Replace($needle, $replacementText)
+$battleJson = (Read-Text 'unity/Assets/Official/Combat/battle-rules.json').Replace($needle, $replacementText)
+function Hash-Text($text) {
+    return ([BitConverter]::ToString([Security.Cryptography.SHA256]::Create().ComputeHash([Text.Encoding]::UTF8.GetBytes($text))) -replace '-', '').ToLowerInvariant()
+}
+try {
+    $catalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load($skillJson, (Hash-Text $skillJson), '854_156383', $battleJson, (Hash-Text $battleJson), '854_156383')
+    $sequenceSkill = $catalog.CreateSkill(13104, 0, 0, 1, 1, 0, $null)
+    $sequence = Invoke-ReplayBattle $sequenceSkill 0
+    $ids = @($sequence.Event.SkillCasts | Where-Object { $_.IsReplay } | ForEach-Object { $_.SkillEntityId })
+    Assert-Replay (($ids -join ',') -eq '13104,13105,13106,13107,13108') "Ordered replacement sequence mismatch: $ids"
+    Assert-Replay ($sequence.Checkpoint.Units[0].SkillState.ReplayCounts[0].Count -eq 5) 'Variants did not share their original slot counter'
+} finally { $catalog = $oldCatalog }
+Write-Output 'Battle skill replay checks passed: continuous stacks/probability, configured caps, conditional slots, replacement entity and checkpoint counters.'

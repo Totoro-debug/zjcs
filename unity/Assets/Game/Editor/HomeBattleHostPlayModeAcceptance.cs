@@ -357,10 +357,12 @@ namespace Zjcs.Editor
                 name + " did not mount the common battle module/environment.");
             FightBattleCheckpoint checkpoint = controller.Checkpoint;
             TriggerChainProbe triggerChains = ConfigureTriggerChainProbe(checkpoint);
+            ReplayProbe replays = ConfigureReplayProbe(checkpoint);
             int initialCounter = checkpoint.Counter;
             controller.StepCompleted += result => {
                 checkpoint = result.Checkpoint;
                 triggerChains?.Observe(checkpoint);
+                replays?.Observe(checkpoint);
                 if (checkpoint.Counter == initialCounter + 1 || checkpoint.Finished)
                     Debug.Log("[Battle hosts] " + name + " step=" + checkpoint.Counter
                         + " finished=" + checkpoint.Finished);
@@ -378,6 +380,8 @@ namespace Zjcs.Editor
             }
             yield return SettleUi();
             yield return Capture(output, name + "-preparation");
+            // Compare the HUD anchor and scene timeline after this frame's LateUpdate.
+            yield return new WaitForEndOfFrame();
             VerifyTimelineProjection();
             var portraitSprites = VerifyCharacterPortraits(controller.Checkpoint);
             var portraitLeases = UnityEngine.Object.FindObjectsOfType<Zjcs.Presentation.CharacterCreation.CharacterNativePortraitLease>()
@@ -422,7 +426,9 @@ namespace Zjcs.Editor
                     if (!captured && checkpoint.Counter > initialCounter + 2)
                     {
                         yield return new WaitForEndOfFrame();
-                        VerifyTimelineProjection();
+                        // Compare the HUD anchor and scene timeline after this frame's LateUpdate.
+            yield return new WaitForEndOfFrame();
+            VerifyTimelineProjection();
                         foreach (var current in VerifyCharacterPortraits(checkpoint))
                             Require(portraitSprites.TryGetValue(current.Key, out Sprite original) && original == current.Value,
                                 name + " recaptured a character head while advancing the timeline.");
@@ -441,6 +447,7 @@ namespace Zjcs.Editor
                 name + " disappeared without executing and completing a real battle: counter="
                     + checkpoint.Counter + ", finished=" + checkpoint.Finished + ", initial=" + initialCounter);
             triggerChains?.Verify(name, checkpoint);
+            replays?.Verify(name, checkpoint);
             yield return SettleUi();
             yield return Capture(output, name + "-result");
             Debug.Log("[Battle hosts] " + name + " completed counter=" + checkpoint.Counter + " won=" + checkpoint.Outcome.Won);

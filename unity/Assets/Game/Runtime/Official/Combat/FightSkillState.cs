@@ -20,7 +20,17 @@ namespace Zjcs.Combat.Official
     {
         public int Round;
         public bool IsDriving;
+        public List<FightSkillReplayCounter> ReplayCounts = new List<FightSkillReplayCounter>();
         public List<FightSkillSlotState> Slots = new List<FightSkillSlotState>();
+    }
+
+    [Serializable]
+    public sealed class FightSkillReplayCounter
+    {
+        public int Round;
+        public int Slot;
+        public int EntityId;
+        public int Count;
     }
 
     public sealed class FightSkillState

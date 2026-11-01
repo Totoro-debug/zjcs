@@ -649,6 +649,7 @@ namespace Zjcs.Combat.Official
                 NeedConditionStatusMeetToRelease = Bool(skill,
                     "NeedConditionStatusMeetToRelease"),
                 LimitedTimes = Int(skill, "LimitedTimes", -1),
+                ReplayMaxCountEachRound = Int(skill, "ReplayMaxCountEachRound", -1),
                 ResetCooldownAtStart = Bool(skill, "ResetCDAtStart"),
                 CostType = Int(skill, "CostType"),
                 MustHaveValidCost = Bool(skill, "MustHaveValidCost"),
@@ -685,6 +686,17 @@ namespace Zjcs.Combat.Official
             if (extSkill != null) AddExtraSkills(extSkill, result.ExtraSkills);
             Dictionary<string, object> replay = Component(components, "FightSkillReplayComponent");
             if (replay != null) AddSkillReplay(replay, result);
+            Dictionary<string, object> replayCfg = Component(skill, "Replay");
+            if (replayCfg != null)
+            {
+                result.ReplayReplacementEntities = new List<int>(IntArray(replayCfg, "ReplaceSkillArrayOnReplay"));
+                if (replay == null && replayCfg.TryGetValue("Rate", out object chance)
+                    && Convert.ToDouble(chance, CultureInfo.InvariantCulture) > 0d)
+                {
+                    result.HasReplay = result.ReplayUsesRate = true;
+                    result.ReplayChance = Convert.ToDouble(chance, CultureInfo.InvariantCulture);
+                }
+            }
             var pending = new Queue<int>();
             var visited = new HashSet<int>();
             var references = new Dictionary<int, FightBattleHitReference>();
@@ -2122,12 +2134,37 @@ namespace Zjcs.Combat.Official
         /// Rate-based providers are honoured; other provider types are ignored.
         /// </summary>
         /// <summary>
-        /// Reads the status-stack replay condition. Only <c>StatusStackCountFilter</c> with an optional
-        /// <c>ConsumeStackStatusHanldeCfg</c> is modelled; other filter/handle types are ignored.
+        /// Reads rate or status-stack replay conditions, conditional element slots and optional
+        /// <c>ConsumeStackStatusHanldeCfg</c>; unsupported slot filters fail explicitly.
         /// </summary>
         private static void AddSkillReplay(Dictionary<string, object> replay,
             FightBattleSkillDefinition output)
         {
+            output.ReplayType = Int(replay, "ReplayType", 1);
+            var provider = Component(replay, "SlotProvider");
+            if (provider != null)
+            {
+                var condition = Component(provider, "Condition");
+                if (StringField(provider, "_type") != "ReplaySkillSlotByCondition"
+                    || condition == null || StringField(condition, "_type") != "LogicFilter"
+                    || Int(condition, "LogicType") != 1)
+                    throw new NotSupportedException("Unbound original replay slot filter.");
+                output.ReplaySelectMatchingSlot = true;
+                foreach (object entry in Array(Required(condition, "SubFilters"), "replay slot filters"))
+                {
+                    var slotFilter = Object(entry, "replay slot filter");
+                    if (StringField(slotFilter, "_type") != "SkillElementTypeFilter")
+                        throw new NotSupportedException("Unbound original replay slot subfilter.");
+                    output.ReplaySlotElementTypes.Add(Int(slotFilter, "ElementType"));
+                }
+            }
+            if (Component(replay, "FilterCondition") is Dictionary<string, object> rateFilter
+                && StringField(rateFilter, "_type") == "RateFilter")
+            {
+                output.HasReplay = output.ReplayUsesRate = true;
+                output.ReplayChance = Convert.ToDouble(Required(rateFilter, "Rate"), CultureInfo.InvariantCulture);
+                return;
+            }
             object raw;
             if (!replay.TryGetValue("FilterCondition", out raw) || !(raw is Dictionary<string, object> filter)
                 || StringField(filter, "_type") != "StatusStackCountFilter") return;

@@ -177,6 +177,11 @@ namespace Zjcs.Presentation.Combat
             }
             if (percent >= 1) moving = false;
         }
+        // Overlay HUD animation/layout can change the anchor after LateUpdate.
+        // Project again after Canvas layout so the scene and HUD use the same frame.
+        private void OnEnable() => Canvas.willRenderCanvases += LateUpdate;
+        private void OnDisable() => Canvas.willRenderCanvases -= LateUpdate;
+
         private void LateUpdate()
         {
             Camera camera = sceneCamera != null ? sceneCamera : Camera.main;

@@ -454,6 +454,13 @@ namespace Zjcs.Combat.Official
         // Official FightSkillReplayComponent: replay the skill when the owner holds a configured
         // status stack count (optionally consuming it).
         public bool HasReplay;
+        public bool ReplayUsesRate;
+        public bool ReplaySelectMatchingSlot;
+        public List<int> ReplaySlotElementTypes = new List<int>();
+        public double ReplayChance = 1d;
+        public int ReplayType = 1;
+        public List<int> ReplayReplacementEntities = new List<int>();
+        public int ReplayMaxCountEachRound = -1;
         public int ReplayStatusId;
         public int ReplayStackCount;
         public int ReplayRelation;

@@ -1,0 +1,128 @@
+{
+  "manifest": "884_156692",
+  "code_receipt": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "size": 6939,
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Console.dll",
+    "size": 16813568,
+    "sha256": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6"
+  },
+  "original_contracts": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillReplayCfg.cs",
+      "size": 383,
+      "sha256": "469e775902e0dde01cbd99f8c8db36a2b68ab6c15f3cbbf26a44351d2c7391bd"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillReplayComponentInfo.cs",
+      "size": 1012,
+      "sha256": "3e5141fab16c56eafbd03ee97a64b1b8e4b707aca2a461ab63b69d0168efea79"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillReplayComponentImplement.cs",
+      "size": 158,
+      "sha256": "7809d489eeeb9b38f4fe615e23d962dc2e03a2eaeaaf05b4c4ee92ded71cd22a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillComponentInfo.cs",
+      "size": 6580,
+      "sha256": "a8fd469ff28f0aa1142f3ab9e8a643d8d7ededd80c70dc0ee88a371155445008"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ReplaySkillSlotByCondition.cs",
+      "size": 540,
+      "sha256": "435857efd2a220313d9275d9d09294bebfbfd80b120f9c2c70bc26085855b43a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/RateFilter.cs",
+      "size": 466,
+      "sha256": "556905519deaf37e518222e2dcd05fbcc3831ef0ffff40b908e21e072a6baac0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LogicFilter.cs",
+      "size": 611,
+      "sha256": "6fa10ba1a5fbcb05d4499a3348cd340ad971a7642abd0b5fb916ee47a98888b9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/LogicFilterType.cs",
+      "size": 68,
+      "sha256": "c362965001c4f6507e15fb075c1a6d6994a12fe09c404482406041d30010b047"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillAgentComponentImplement.cs",
+      "size": 10408,
+      "sha256": "7a4a0b4f2c0d6c9e6419c1f03f5964239b4cf61151cd44f8a3443dfca8aa5f91"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillReplayModification.cs",
+      "size": 3038,
+      "sha256": "a7edcbad7182bfe29c3427a6c53225852d236c0a1ed6672570a94334fd48aaf9"
+    }
+  ],
+  "configuration_inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "size": 22729433,
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "size": 32798681,
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+    }
+  ],
+  "configuration_manifest": "854_156383",
+  "adapter": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
+      "size": 117946,
+      "sha256": "2d21e10f64522f64c53b59507fe8601cd1e73f4ac4ab2440de1c7d54a6d4ee38"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs",
+      "size": 42544,
+      "sha256": "b74198300d993f03d3aa5dcd388326df0224e669bc0f35216887d9ff192e4403"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightSkillState.cs",
+      "size": 6286,
+      "sha256": "2fed1a44bc388357fc5125402a978d63eb532dbdde33bbc5018718bfd9fee71c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs",
+      "size": 147161,
+      "sha256": "199c44a22d873543125c4101773ee2f4d4791e18e421e373d1eef6ebe3b6b36b"
+    }
+  ],
+  "validation": [
+    {
+      "path": "scripts/test_battle_skill_replay.ps1",
+      "size": 11004,
+      "sha256": "8cea64a518174e0ac7fcca21da1b0dbb8b3e4aada87fdda5d9daf63e747202f0"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.cs",
+      "size": 32239,
+      "sha256": "16e58b6d10cc4c5cac51d866b760c158a658bc98f9862aee9a0576dc6f39deca"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneTimelineView.cs",
+      "size": 11523,
+      "sha256": "a2a1c2ea43b9f634227e46c777996c3c75366b565fa2b1a6f099e76348a75ad7"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.Replay.cs",
+      "size": 2748,
+      "sha256": "b0590c00257e9b4dc1d4c440f7185c0a747d043a8157b8e07b87d1036aa58340"
+    }
+  ],
+  "recorder": {
+    "path": "scripts/record_battle_skill_replay_sources.py",
+    "size": 2815,
+    "sha256": "76e95cca3faaf5d69caa1cc7782e169d7013fbee3ddac0a2e552c1011461c42a"
+  },
+  "operation": "Retain historical configuration identity; inspect current original replay contracts and client-consumed modification. Server replay execution is absent. Implement the user-confirmed offline continuation and ordered replacements across original filters, per-round limits, actual skill identities and persistent counters."
+}
