@@ -68,6 +68,7 @@ namespace Zjcs.Presentation.Home
             if (Environment.GetCommandLineArgs().Contains("-partnersAcceptance"))
             {
                 HideForeignCanvases();
+                DumpFullscreen();
                 bool passed = false;
                 yield return VerifyPartners(runtime, value => passed = value);
                 Finish(passed);
@@ -630,6 +631,12 @@ namespace Zjcs.Presentation.Home
         }
         private void DumpFullscreen()
         {
+            foreach (Canvas canvas in Resources.FindObjectsOfTypeAll<Canvas>())
+            {
+                if (canvas == null || !canvas.isActiveAndEnabled) continue;
+                log.Add("CANVAS " + PathOf(canvas.transform) + " scene=" + canvas.gameObject.scene.name
+                    + " mode=" + canvas.renderMode + " order=" + canvas.sortingOrder);
+            }
             foreach (Image image in Resources.FindObjectsOfTypeAll<Image>())
             {
                 if (image == null || !image.isActiveAndEnabled || image.color.a < 0.5f) continue;
