@@ -232,11 +232,11 @@ namespace Zjcs.Presentation.Home
             BindPrefabButton(dailyChallengeAssistRoot, "CloseBtn_dark", CloseDailyChallengeAssist);
 
             Transform list = Find(dailyChallengeAssistRoot.transform,
-                middlePath + "FriendRobotGo/TopGo/Dropdown3/ScrollRect/LoopScrollRect/ViewParent/Viewport/Content");
+                middlePath + "FriendRobotGo/Scroll/Viewport/Content");
             Transform viewport = Find(dailyChallengeAssistRoot.transform,
-                middlePath + "FriendRobotGo/TopGo/Dropdown3/ScrollRect/LoopScrollRect/ViewParent/Viewport");
+                middlePath + "FriendRobotGo/Scroll/Viewport");
             ScrollRect scroll = Find(dailyChallengeAssistRoot.transform,
-                middlePath + "FriendRobotGo/TopGo/Dropdown3/ScrollRect")?.GetComponent<ScrollRect>();
+                middlePath + "FriendRobotGo/Scroll")?.GetComponent<ScrollRect>();
             if (list == null || viewport == null || scroll == null)
                 throw new InvalidOperationException("Official team invite robot list is incomplete.");
             scroll.viewport = viewport as RectTransform;
