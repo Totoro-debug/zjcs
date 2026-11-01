@@ -180,7 +180,8 @@ namespace Zjcs.Combat.Official
 
         public static int ApplySkillEndStatuses(FightBattleUnitState actor,
             FightBattleSkillDefinition skill, IReadOnlyList<FightBattleUnitState> units,
-            FightOfficialCombatCatalog catalog, FightRandomStream random)
+            FightOfficialCombatCatalog catalog, FightRandomStream random,
+            List<FightBattleStatusSkillInvocation> configuredSkillInvocations = null)
         {
             if (actor == null || skill == null || units == null || catalog == null
                 || actor.Statuses == null || !FightBattleTargeting.IsSelectable(actor)) return 0;
@@ -188,37 +189,56 @@ namespace Zjcs.Combat.Official
             int applied = 0;
             foreach (FightBattleStatusState status in statuses)
             {
-                if (!FightSkillTriggerPolicy.AllowsStatus(skill, status)
-                    || !status.HasSkillEndTrigger || !status.SkillEndRulesSupported
-                    || status.SkillEndFilteredActionTypes.Contains(skill.ActionType)) continue;
-                status.SkillEndMetCountProgress++;
-                if (status.SkillEndMetCountProgress < Math.Max(1, status.SkillEndMetCount)) continue;
-                status.SkillEndMetCountProgress = 0;
-                status.SkillEndTriggeredCount++;
-                foreach (FightBattleStatusStateTrigger trigger in status.SkillEndStatuses)
+                if (!FightSkillTriggerPolicy.AllowsStatus(skill, status)) continue;
+                if (status.HasSkillEndTrigger && status.SkillEndRulesSupported
+                    && !status.SkillEndFilteredActionTypes.Contains(skill.ActionType))
                 {
-                    if (trigger == null || trigger.EntityId <= 0 || trigger.AffectedByProp
-                        || (trigger.Target != FightStatusLifecycle.TargetApplicator
-                            && trigger.Target != StatusTriggerTargetCreator)
-                        || !Roll(trigger.BasePercent, random)) continue;
-                    int lifecycleTarget = trigger.Target == FightStatusLifecycle.TargetApplicator
-                        ? FightStatusLifecycle.TargetApplicator
-                        : FightStatusLifecycle.TargetCreator;
-                    int targetId = FightStatusLifecycle.ResolveTargetUnitId(status,
-                        lifecycleTarget, units);
-                    FightBattleUnitState target = FindUnit(units, targetId);
-                    if (target == null || !FightBattleTargeting.IsSelectable(target)) continue;
-                    int instanceId = 1;
-                    foreach (FightBattleStatusState existing in target.Statuses)
-                        if (existing != null && existing.InstanceId >= instanceId)
-                            instanceId = existing.InstanceId + 1;
-                    FightBattleStatusState template = catalog.CreateStatus(trigger.EntityId,
-                        target.Id, actor.Id, instanceId, skill.EntityId, skill.ItemId,
-                        skill.Rank, skill.Level, skill.SubRank, actor.Properties, 0, null,
-                        skill.BlessPropertyScales);
-                    template.ReportSource = FightBattleStatusReportSource.Resolve(status).Copy();
-                    FightStatusLifecycle.Apply(target, template, -1, instanceId, random);
-                    applied++;
+                    status.SkillEndMetCountProgress++;
+                    if (status.SkillEndMetCountProgress >= Math.Max(1, status.SkillEndMetCount))
+                    {
+                        status.SkillEndMetCountProgress = 0;
+                        status.SkillEndTriggeredCount++;
+                        foreach (FightBattleStatusStateTrigger trigger in status.SkillEndStatuses)
+                        {
+                            if (trigger == null || trigger.EntityId <= 0 || trigger.AffectedByProp
+                                || (trigger.Target != FightStatusLifecycle.TargetApplicator
+                                    && trigger.Target != StatusTriggerTargetCreator)
+                                || !Roll(trigger.BasePercent, random)) continue;
+                            int lifecycleTarget = trigger.Target == FightStatusLifecycle.TargetApplicator
+                                ? FightStatusLifecycle.TargetApplicator
+                                : FightStatusLifecycle.TargetCreator;
+                            int targetId = FightStatusLifecycle.ResolveTargetUnitId(status,
+                                lifecycleTarget, units);
+                            FightBattleUnitState target = FindUnit(units, targetId);
+                            if (target == null || !FightBattleTargeting.IsSelectable(target)) continue;
+                            int instanceId = 1;
+                            foreach (FightBattleStatusState existing in target.Statuses)
+                                if (existing != null && existing.InstanceId >= instanceId)
+                                    instanceId = existing.InstanceId + 1;
+                            FightBattleStatusState template = catalog.CreateStatus(trigger.EntityId,
+                                target.Id, actor.Id, instanceId, skill.EntityId, skill.ItemId,
+                                skill.Rank, skill.Level, skill.SubRank, actor.Properties, 0, null,
+                                skill.BlessPropertyScales);
+                            template.ReportSource = FightBattleStatusReportSource.Resolve(status).Copy();
+                            FightStatusLifecycle.Apply(target, template, -1, instanceId, random);
+                            applied++;
+                        }
+                    }
+                }
+                if (status.HasActionEndTrigger && status.ActionEndRulesSupported
+                    && (status.ActionEndActionTypes.Count == 0
+                        || status.ActionEndActionTypes.Contains(skill.ActionType))
+                    && Roll(status.ActionEndRate, random))
+                {
+                    int triggered = 0;
+                    foreach (FightBattleStatusStateTrigger trigger in status.ActionEndSkills)
+                        if (AppendThresholdSkill(actor, status, trigger, random,
+                            configuredSkillInvocations, null, units)) triggered++;
+                    if (triggered > 0)
+                    {
+                        status.ActionEndTriggeredCount++;
+                        applied += triggered;
+                    }
                 }
             }
             return applied;

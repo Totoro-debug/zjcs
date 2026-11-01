@@ -939,6 +939,8 @@ namespace Zjcs.Combat.Official
                 Component(components, "FightStatusSkillStartComponent");
             Dictionary<string, object> skillEnd =
                 Component(components, "FightStatusSkillEndComponent");
+            Dictionary<string, object> actionEnd =
+                Component(components, "FightStatusActionEndComponent");
             Dictionary<string, object> skillCooldownModify =
                 Component(components, "FightStatusSkillModifyCDComponent");
             Dictionary<string, object> permanentSkillCooldownReduction =
@@ -1059,6 +1061,10 @@ namespace Zjcs.Combat.Official
                 HasSkillEndTrigger = skillEnd != null,
                 SkillEndRulesSupported = skillEnd != null && SupportsSkillEnd(skillEnd),
                 SkillEndMetCount = skillEnd == null ? 1 : Int(skillEnd, "MetCount", 1),
+                HasActionEndTrigger = actionEnd != null,
+                ActionEndRulesSupported = actionEnd != null && SupportsActionEnd(actionEnd),
+                ActionEndTargetTypeAllEnd = actionEnd != null && Bool(actionEnd, "IsTargetTypeAllEnd"),
+                ActionEndRate = actionEnd == null ? 1f : Float(actionEnd, "Rate", 1f),
                 HasHpAccDecrease = hpAccDecrease != null,
                 AccumulatedDamage = ReadAccumulatedDamage(components),
                 HpAccUnitHp = hpAccDecrease == null ? -1L : Long(hpAccDecrease, "UnitHp", -1L),
@@ -1201,6 +1207,12 @@ namespace Zjcs.Combat.Official
                 result.SkillEndFilteredActionTypes.AddRange(IntArray(skillEnd, "FilterTypes"));
                 AddHpAccTriggerEntries(skillEnd, "StatusCfgs", "StatusId",
                     result.SkillEndStatuses, false);
+            }
+            if (actionEnd != null)
+            {
+                result.ActionEndActionTypes.AddRange(IntArray(actionEnd, "ActionTypes"));
+                AddHpAccTriggerEntries(actionEnd, "Skills", "SkillId",
+                    result.ActionEndSkills, true);
             }
             if (hpAccDecrease != null)
             {
@@ -2390,6 +2402,43 @@ namespace Zjcs.Combat.Official
                         || Int(propTarget, "PropType") != 0
                         || Bool(propTarget, "Heighest")
                         || Bool(propTarget, "SupportCustomFilter"))) return false;
+            }
+            return true;
+        }
+
+        private static bool SupportsActionEnd(Dictionary<string, object> component)
+        {
+            float rate = Float(component, "Rate", 1f);
+            if (rate < 0f || rate > 1f
+                || ArrayCount(component, "StatusReplacePropertyValues") > 0
+                || ArrayCount(component, "ActionTypes") == 0
+                || ArrayCount(component, "Skills") == 0) return false;
+            foreach (object item in Array(component["Skills"], "Skills"))
+            {
+                Dictionary<string, object> trigger = Object(item, "action end trigger skill");
+                Dictionary<string, object> custom = Component(trigger, "CustomDamageInfo");
+                Dictionary<string, object> propTarget = Component(trigger, "PropTarget");
+                if (Bool(trigger, "AffectedByProp") || Int(trigger, "Source") != 2
+                    || Int(trigger, "Target") != 2 || Bool(trigger, "UseAI")
+                    || Bool(trigger, "StackedCountToDamageFactor")
+                    || Int(trigger, "TargetPos") != 1
+                    || Float(trigger, "BasePercent", 1f) < 0f
+                    || Float(trigger, "BasePercent", 1f) > 1f
+                    || ArrayCount(trigger, "StatusReplacePropertyValues") > 0
+                    || ArrayCount(trigger, "TargetWithoutStatusIds") > 0
+                    || propTarget != null && (Bool(propTarget, "IsEnemy")
+                        || ArrayCount(propTarget, "RoleType") > 0
+                        || Bool(propTarget, "IncludeApplicator")
+                        || Int(propTarget, "PropType") != 0
+                        || Bool(propTarget, "Heighest")
+                        || Bool(propTarget, "SupportCustomFilter"))
+                    || custom != null && (Int(custom, "TargetType") != 0
+                        || Int(custom, "BaseProp") != 0
+                        || Bool(custom, "BaseCurrentHp")
+                        || Int(custom, "DamageProp") != 0
+                        || Int(custom, "UpperLimitTarget") != 0
+                        || Int(custom, "UpperLimitPropType") != 0
+                        || Int(custom, "UpperLimitPercent") != 0)) return false;
             }
             return true;
         }

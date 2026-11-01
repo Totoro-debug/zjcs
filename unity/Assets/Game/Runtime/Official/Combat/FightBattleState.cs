@@ -337,6 +337,14 @@ namespace Zjcs.Combat.Official
         public List<int> SkillEndFilteredActionTypes = new List<int>();
         public List<FightBattleStatusStateTrigger> SkillEndStatuses =
             new List<FightBattleStatusStateTrigger>();
+        public bool HasActionEndTrigger;
+        public bool ActionEndRulesSupported;
+        public bool ActionEndTargetTypeAllEnd;
+        public float ActionEndRate = 1f;
+        public int ActionEndTriggeredCount;
+        public List<int> ActionEndActionTypes = new List<int>();
+        public List<FightBattleStatusStateTrigger> ActionEndSkills =
+            new List<FightBattleStatusStateTrigger>();
         // Official FightStatusHpAccDecreaseComponent. Damage is accumulated independently of cures
         // per the confirmed offline rule; the configured threshold is consumed on each trigger.
         public bool HasHpAccDecrease;

@@ -77,6 +77,32 @@ Assert-Hp ($invocations.Count -eq 2 -and ($invocations.Trigger.EntityId -contain
     -and $invocations[0].SourceUnitId -eq $owner.Id) `
     'ApplyByAroundUnitCount did not execute its configured neighbour skill.'
 
+# 25030 releases 11330 at the end of an ActionType 60 skill.
+$actionEnd = $catalog.CreateStatus(25030, 1, 1, 5)
+$owner.Statuses.Clear(); $owner.Statuses.Add($actionEnd)
+$actionSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]@{
+    EntityId = 999901; ActionType = 60; Rank = 1; Level = 1; SubRank = 0
+}
+$actionInvocations = [Collections.Generic.List[Zjcs.Combat.Official.FightBattleStatusSkillInvocation]]::new()
+$actionApplied = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplySkillEndStatuses(
+    $owner, $actionSkill, $units, $catalog,
+    [Zjcs.Combat.Official.FightRandomStream]::new(17), $actionInvocations)
+Assert-Hp ($actionApplied -eq 1 -and $actionInvocations.Count -eq 1 `
+    -and $actionInvocations[0].Trigger.EntityId -eq 11330 `
+    -and $actionInvocations[0].SourceUnitId -eq $owner.Id `
+    -and $actionInvocations[0].TargetUnitId -eq $owner.Id) `
+    'ActionEnd did not collect the configured 11330 skill invocation.'
+$actionInvocations.Clear()
+$actionSkill.ActionType = 1
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplySkillEndStatuses(
+    $owner, $actionSkill, $units, $catalog,
+    [Zjcs.Combat.Official.FightRandomStream]::new(17), $actionInvocations)
+Assert-Hp ($actionInvocations.Count -eq 0) `
+    'ActionEnd ignored its configured action-type filter.'
+$unsupportedActionEnd = $catalog.CreateStatus(25144, 1, 1, 6)
+Assert-Hp (-not $unsupportedActionEnd.ActionEndRulesSupported) `
+    'ActionEnd accepted a trigger with unsupported custom damage parameters.'
+
 # 25067 removes its configured 24315 status when the HP condition is no longer met.
 $notMeet = $catalog.CreateStatus(25067, 1, 1, 5)
 $units.Clear(); $units.Add($owner)

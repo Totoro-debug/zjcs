@@ -748,10 +748,23 @@ namespace Zjcs.Combat.Official
             ApplySourceMoves(actor, skill, targets, movements, ref lastDelay);
             FightDamageFalloff.EndCast(units, skill);
             ApplyExtraSkills(actor, skill, casts, damageEvents, movements, ref lastDelay);
-            if (statusCatalog != null
-                && FightStatusTriggerRuntime.ApplySkillEndStatuses(actor, skill, units,
-                    statusCatalog, random) > 0)
-                RebuildBattleProperties();
+            if (statusCatalog != null)
+            {
+                var actionEndSkills = new List<FightBattleStatusSkillInvocation>();
+                if (FightStatusTriggerRuntime.ApplySkillEndStatuses(actor, skill, units,
+                    statusCatalog, random, actionEndSkills) > 0)
+                    RebuildBattleProperties();
+                if (actionEndSkills.Count > 0)
+                {
+                    ExecuteConfiguredStatusSkills(actionEndSkills, casts, damageEvents,
+                        movements, ref lastDelay, out float actionEndDuration,
+                        out float actionEndActionDuration);
+                    statusTriggerDuration = Math.Max(statusTriggerDuration, actionEndDuration);
+                    if (actionEndActionDuration >= 0f)
+                        statusTriggerActionDuration = Math.Max(statusTriggerActionDuration,
+                            actionEndActionDuration);
+                }
+            }
             ApplySkillReplay(actor, skill, casts, damageEvents, movements, ref lastDelay);
         }
 
