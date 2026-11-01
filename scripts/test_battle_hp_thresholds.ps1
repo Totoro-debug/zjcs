@@ -193,6 +193,22 @@ $summon.Hp = 0
 Assert-Hp (($summonOwner.Statuses | Where-Object ClassId -eq 24133).Count -eq 0) `
     'RoleSummonCount did not remove its owner status after summon loss.'
 
+# 25105 reacts to a qualifying removed role and keeps the dead role as target position.
+$roleDieOwner = Unit 50 100
+$roleDieOwner.Statuses.Add($catalog.CreateStatus(25105, $roleDieOwner.Id, $roleDieOwner.Id, 1))
+$roleDie = Unit 51 0 3
+$roleDie.Side = $roleDieOwner.Side
+$roleDieUnits = [Collections.Generic.List[Zjcs.Combat.Official.FightBattleUnitState]]::new()
+$roleDieUnits.Add($roleDieOwner); $roleDieUnits.Add($roleDie)
+$roleDieInvocations = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectRoleDieSkills(
+    $roleDie, $roleDieUnits, $catalog, [Zjcs.Combat.Official.FightRandomStream]::new(17))
+Assert-Hp ($roleDieOwner.Statuses[0].RoleDieRulesSupported `
+    -and $roleDieInvocations.Count -eq 1 `
+    -and $roleDieInvocations[0].Trigger.EntityId -eq 12050 `
+    -and $roleDieInvocations[0].TargetUnitId -eq $roleDieOwner.Id `
+    -and $roleDieInvocations[0].TargetPositionUnitId -eq $roleDie.Id) `
+    'RoleDie did not collect its configured death trigger.'
+
 # KillSkill status and skill triggers use the killer as source and honor filters/counts.
 $killStatus = $catalog.CreateStatus(25028, 1, 1, 7)
 $defeated = Unit 10 0

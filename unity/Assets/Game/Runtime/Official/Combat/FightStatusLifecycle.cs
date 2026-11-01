@@ -371,6 +371,23 @@ namespace Zjcs.Combat.Official
                     : CopyTriggers(new List<FightBattleStatusStateTrigger>
                         { template.RoleSummonCountStatus })[0],
                 RoleSummonCountLastCount = template.RoleSummonCountLastCount,
+                HasRoleDieTrigger = template.HasRoleDieTrigger,
+                RoleDieRulesSupported = template.RoleDieRulesSupported,
+                RoleDieCharacterTypes = Copy(template.RoleDieCharacterTypes),
+                RoleDieTryAtRemove = template.RoleDieTryAtRemove,
+                RoleDieTryHighestCombatRatingAtPlay = template.RoleDieTryHighestCombatRatingAtPlay,
+                RoleDieSameFaction = template.RoleDieSameFaction,
+                RoleDieMasterType = template.RoleDieMasterType,
+                RoleDieUniqueRole = template.RoleDieUniqueRole,
+                RoleDieMaxCount = template.RoleDieMaxCount,
+                RoleDieMeetCount = template.RoleDieMeetCount,
+                RoleDieMeetProgress = template.RoleDieMeetProgress,
+                RoleDieResetCountEveryRound = template.RoleDieResetCountEveryRound,
+                RoleDieTriggeredCount = template.RoleDieTriggeredCount,
+                RoleDieSeenUnitIds = template.RoleDieSeenUnitIds == null
+                    ? new HashSet<int>() : new HashSet<int>(template.RoleDieSeenUnitIds),
+                RoleDieSkills = CopyTriggers(template.RoleDieSkills),
+                RoleDieStatuses = CopyTriggers(template.RoleDieStatuses),
                 HasHpAccDecrease = template.HasHpAccDecrease,
                 AccumulatedDamage = template.AccumulatedDamage?.Copy(),
                 HpAccUnitHp = template.HpAccUnitHp,
@@ -480,7 +497,15 @@ namespace Zjcs.Combat.Official
                 foreach (FightBattleUnitState owner in units)
                     foreach (FightBattleStatusState status in owner.Statuses)
                         if (status != null)
+                        {
                             status.MoveNearRoundTriggeredCount = 0;
+                            if (status.RoleDieResetCountEveryRound)
+                            {
+                                status.RoleDieTriggeredCount = 0;
+                                status.RoleDieMeetProgress = 0;
+                                status.RoleDieSeenUnitIds.Clear();
+                            }
+                        }
             int removed = 0;
             foreach (FightBattleUnitState owner in units)
             for (int i = owner.Statuses.Count - 1; i >= 0; i--)

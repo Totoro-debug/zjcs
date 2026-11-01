@@ -799,8 +799,16 @@ namespace Zjcs.Combat.Official
                         ExecuteTriggerSkills(target, hpTriggerSkills, casts, damageEvents, movements,
                             ref lastDelay);
                     if (target.Hp <= 0)
+                    {
+                        List<FightBattleStatusSkillInvocation> roleDieInvocations =
+                            FightStatusTriggerRuntime.CollectRoleDieSkills(target, units,
+                                statusCatalog, random);
+                        if (roleDieInvocations.Count > 0)
+                            ExecuteConfiguredStatusSkills(roleDieInvocations, casts, damageEvents,
+                                movements, ref lastDelay, out _, out _);
                         FightStatusTriggerRuntime.ApplyKillSkills(actor, target, skill, units,
                             statusCatalog, random, configuredKillSkillInvocations);
+                    }
                     if (configuredKillSkillInvocations.Count > 0)
                     {
                         ExecuteConfiguredStatusSkills(configuredKillSkillInvocations, casts,

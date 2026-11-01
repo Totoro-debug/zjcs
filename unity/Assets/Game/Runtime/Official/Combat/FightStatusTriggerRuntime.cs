@@ -208,6 +208,77 @@ namespace Zjcs.Combat.Official
             return count;
         }
 
+        public static List<FightBattleStatusSkillInvocation> CollectRoleDieSkills(
+            FightBattleUnitState dead, IReadOnlyList<FightBattleUnitState> units,
+            FightOfficialCombatCatalog catalog, FightRandomStream random)
+        {
+            var result = new List<FightBattleStatusSkillInvocation>();
+            if (dead == null || units == null || catalog == null || dead.Hp > 0) return result;
+            foreach (FightBattleUnitState owner in units)
+            {
+                if (owner == null || owner.Statuses == null || owner.Hp <= 0) continue;
+                foreach (FightBattleStatusState status in new List<FightBattleStatusState>(owner.Statuses))
+                {
+                    if (status == null || !status.HasRoleDieTrigger || !status.RoleDieRulesSupported
+                        || !status.RoleDieTryAtRemove
+                        || status.RoleDieCharacterTypes.Count > 0
+                            && !status.RoleDieCharacterTypes.Contains(dead.CharacterType)
+                        || status.RoleDieSameFaction && owner.Side != dead.Side
+                        || status.RoleDieUniqueRole && !status.RoleDieSeenUnitIds.Add(dead.Id)
+                        || status.RoleDieMaxCount >= 0
+                            && status.RoleDieTriggeredCount >= status.RoleDieMaxCount) continue;
+                    status.RoleDieMeetProgress++;
+                    int meet = Math.Max(1, status.RoleDieMeetCount);
+                    if (status.RoleDieMeetProgress < meet) continue;
+                    status.RoleDieMeetProgress = 0;
+                    if (!Roll(1f, random)) continue;
+                    int added = 0;
+                    foreach (FightBattleStatusStateTrigger trigger in status.RoleDieSkills)
+                    {
+                        if (trigger == null || trigger.EntityId <= 0 || !Roll(trigger.BasePercent, random))
+                            continue;
+                        result.Add(new FightBattleStatusSkillInvocation
+                        {
+                            Trigger = trigger.WithSource(status),
+                            SourceUnitId = owner.Id,
+                            TargetUnitId = trigger.Target == 5 ? dead.Id : owner.Id,
+                            TargetPositionUnitId = dead.Id,
+                            AllowDeadTarget = trigger.Target == 5
+                        });
+                        added++;
+                    }
+                    if (ApplyRoleDieStatuses(owner, dead, status, catalog, random)) added++;
+                    if (added > 0) status.RoleDieTriggeredCount++;
+                }
+            }
+            return result;
+        }
+
+        private static bool ApplyRoleDieStatuses(FightBattleUnitState owner,
+            FightBattleUnitState dead, FightBattleStatusState sourceStatus,
+            FightOfficialCombatCatalog catalog, FightRandomStream random)
+        {
+            bool applied = false;
+            foreach (FightBattleStatusStateTrigger trigger in sourceStatus.RoleDieStatuses)
+            {
+                if (trigger == null || trigger.EntityId <= 0 || !Roll(trigger.BasePercent, random))
+                    continue;
+                FightBattleUnitState target = trigger.ApplyTarget == 5 ? dead : owner;
+                if (target == null) continue;
+                int instanceId = target.Statuses.Count == 0 ? 1
+                    : target.Statuses.Max(status => status == null ? 0 : status.InstanceId) + 1;
+                FightBattleStatusState template = catalog.CreateStatus(trigger.EntityId, target.Id,
+                    owner.Id, instanceId, sourceStatus.RootSkillId, sourceStatus.ApplyingSkillItemId,
+                    sourceStatus.SourceSkillRank, sourceStatus.SourceSkillLevel,
+                    sourceStatus.SourceSubRank, owner.Properties, 0,
+                    sourceStatus.ReplacementProperties, sourceStatus.BlessPropertyScales);
+                template.ReportSource = FightBattleStatusReportSource.Resolve(sourceStatus).Copy();
+                FightStatusLifecycle.Apply(target, template, -1, instanceId, random);
+                applied = true;
+            }
+            return applied;
+        }
+
         public static List<FightBattleStatusSkillInvocation> CollectSkillStartSkills(
             FightBattleUnitState actor, FightBattleSkillDefinition skill,
             IReadOnlyList<FightBattleUnitState> skillTargets,

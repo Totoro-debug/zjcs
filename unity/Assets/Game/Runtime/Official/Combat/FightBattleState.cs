@@ -426,6 +426,24 @@ namespace Zjcs.Combat.Official
         public int RoleSummonCountLimit;
         public FightBattleStatusStateTrigger RoleSummonCountStatus;
         public int RoleSummonCountLastCount = -1;
+        public bool HasRoleDieTrigger;
+        public bool RoleDieRulesSupported;
+        public List<int> RoleDieCharacterTypes = new List<int>();
+        public bool RoleDieTryAtRemove;
+        public bool RoleDieTryHighestCombatRatingAtPlay;
+        public bool RoleDieSameFaction = true;
+        public int RoleDieMasterType;
+        public bool RoleDieUniqueRole;
+        public int RoleDieMaxCount = -1;
+        public int RoleDieMeetCount = 1;
+        public int RoleDieMeetProgress;
+        public bool RoleDieResetCountEveryRound;
+        public int RoleDieTriggeredCount;
+        public HashSet<int> RoleDieSeenUnitIds = new HashSet<int>();
+        public List<FightBattleStatusStateTrigger> RoleDieSkills =
+            new List<FightBattleStatusStateTrigger>();
+        public List<FightBattleStatusStateTrigger> RoleDieStatuses =
+            new List<FightBattleStatusStateTrigger>();
         // Official FightStatusHpAccDecreaseComponent. Damage is accumulated independently of cures
         // per the confirmed offline rule; the configured threshold is consumed on each trigger.
         public bool HasHpAccDecrease;

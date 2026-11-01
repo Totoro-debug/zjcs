@@ -953,6 +953,8 @@ namespace Zjcs.Combat.Official
                 Component(components, "FightStatusActionStartComponent");
             Dictionary<string, object> roleSummonCount =
                 Component(components, "FightStatusRoleSummonCountComponent");
+            Dictionary<string, object> roleDie =
+                Component(components, "FightStatusRoleDieComponent");
             Dictionary<string, object> skillCooldownModify =
                 Component(components, "FightStatusSkillModifyCDComponent");
             Dictionary<string, object> permanentSkillCooldownReduction =
@@ -1145,6 +1147,20 @@ namespace Zjcs.Combat.Official
                     && Bool(roleSummonCount, "UpdateStatusStack"),
                 RoleSummonCountLimit = roleSummonCount == null ? 0
                     : Int(roleSummonCount, "LimitCount"),
+                HasRoleDieTrigger = roleDie != null,
+                RoleDieRulesSupported = roleDie != null && SupportsRoleDie(roleDie),
+                RoleDieCharacterTypes = roleDie == null ? new List<int>()
+                    : new List<int>(IntArray(roleDie, "CharacterTypes")),
+                RoleDieTryAtRemove = roleDie != null && Bool(roleDie, "TryAtRemove"),
+                RoleDieTryHighestCombatRatingAtPlay = roleDie != null
+                    && Bool(roleDie, "TryHighestCombatRatingAtPlay"),
+                RoleDieSameFaction = roleDie == null || Bool(roleDie, "SameFaction", true),
+                RoleDieMasterType = roleDie == null ? 0 : Int(roleDie, "MasterType"),
+                RoleDieUniqueRole = roleDie != null && Bool(roleDie, "UniqueRole"),
+                RoleDieMaxCount = roleDie == null ? -1 : Int(roleDie, "MaxCount", -1),
+                RoleDieMeetCount = roleDie == null ? 1 : Int(roleDie, "MeetCount", 1),
+                RoleDieResetCountEveryRound = roleDie != null
+                    && Bool(roleDie, "ResetTriggerCountEveryRound"),
                 HasHpAccDecrease = hpAccDecrease != null,
                 AccumulatedDamage = ReadAccumulatedDamage(components),
                 HpAccUnitHp = hpAccDecrease == null ? -1L : Long(hpAccDecrease, "UnitHp", -1L),
@@ -1367,6 +1383,11 @@ namespace Zjcs.Combat.Official
                     ["StatusList"] = new List<object> { summonStatus }
                 }, "StatusList", "StatusId", list, false);
                 if (list.Count > 0) result.RoleSummonCountStatus = list[0];
+            }
+            if (roleDie != null)
+            {
+                AddHpAccTriggerEntries(roleDie, "SkillCfgs", "SkillId", result.RoleDieSkills, true);
+                AddHpAccTriggerEntries(roleDie, "StatusCfgs", "StatusId", result.RoleDieStatuses, false);
             }
             if (hpAccDecrease != null)
             {
@@ -2735,6 +2756,42 @@ namespace Zjcs.Combat.Official
             return statusId > 0 && limit >= 0 && !Bool(status, "AffectedByProp")
                 && Int(status, "ApplyTarget") == 2
                 && ArrayCount(status, "StatusReplacePropertyValues") == 0;
+        }
+
+        private static bool SupportsRoleDie(Dictionary<string, object> component)
+        {
+            if (Bool(component, "TryHighestCombatRatingAtPlay")
+                || Int(component, "MeetCount", 1) < 1
+                || Int(component, "MaxCount", -1) < -1) return false;
+            bool hasTrigger = ArrayCount(component, "SkillCfgs") > 0
+                || ArrayCount(component, "StatusCfgs") > 0;
+            if (!hasTrigger) return true;
+            if (component.TryGetValue("SkillCfgs", out object rawSkills) && rawSkills != null)
+            foreach (object item in Array(rawSkills, "role die trigger skill"))
+            {
+                Dictionary<string, object> trigger = Object(item, "role die trigger skill");
+                Dictionary<string, object> custom = Component(trigger, "CustomDamageInfo");
+                if (Int(trigger, "SkillId") <= 0 || Bool(trigger, "AffectedByProp")
+                    || Int(trigger, "Source") != 2
+                    || (Int(trigger, "Target") != 2 && Int(trigger, "Target") != 5)
+                    || Int(trigger, "TargetPos") != 1 || Bool(trigger, "UseAI")
+                    || Bool(trigger, "StackedCountToDamageFactor")
+                    || custom != null && (Int(custom, "TargetType") != 0
+                        || Int(custom, "BaseProp") != 0 || Bool(custom, "BaseCurrentHp")
+                        || Int(custom, "DamageProp") != 0
+                        || Int(custom, "UpperLimitTarget") != 0
+                        || Int(custom, "UpperLimitPropType") != 0
+                        || Int(custom, "UpperLimitPercent") != 0)) return false;
+            }
+            if (component.TryGetValue("StatusCfgs", out object rawStatuses) && rawStatuses != null)
+            foreach (object item in Array(rawStatuses, "role die trigger status"))
+            {
+                Dictionary<string, object> trigger = Object(item, "role die trigger status");
+                if (Int(trigger, "StatusId") <= 0 || Bool(trigger, "AffectedByProp")
+                    || (Int(trigger, "ApplyTarget") != 2 && Int(trigger, "ApplyTarget") != 5)
+                    || ArrayCount(trigger, "StatusReplacePropertyValues") > 0) return false;
+            }
+            return true;
         }
 
         private static int ArrayCount(Dictionary<string, object> source, string field)
