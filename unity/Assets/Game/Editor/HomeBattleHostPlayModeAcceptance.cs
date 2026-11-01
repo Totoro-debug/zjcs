@@ -368,6 +368,10 @@ namespace Zjcs.Editor
             var controller = runner.GetComponent<OfficialBattleRuntimeController>();
             Require(controller != null && controller.Checkpoint != null && controller.HasBattleEnvironment,
                 name + " did not mount the common battle module/environment.");
+            var adapterField = typeof(OfficialBattleRuntimeController).GetField("modeAdapter",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            Require(adapterField != null && ReferenceEquals(adapterField.GetValue(controller), runner),
+                name + " did not pass itself as the common battle mode adapter.");
             FightBattleCheckpoint checkpoint = controller.Checkpoint;
             VerifyEquipmentBattlePassives(name, checkpoint, false);
             TriggerChainProbe triggerChains = ConfigureTriggerChainProbe(checkpoint);
