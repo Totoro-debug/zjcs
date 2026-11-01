@@ -42,6 +42,7 @@ namespace Zjcs.Presentation.Combat
         private FightProcessPlayback<float> stepPlayback;
         private OfficialBattlePreparationView preparationView;
         private bool battleCompletedRaised;
+        private FightBattleReport finalReport;
 
         // The game uses mouse input; acceptance can feed the same pointer path without OS input.
         public Func<OfficialBattlePointerFrame> PreparationPointerProvider { get; set; }
@@ -51,10 +52,12 @@ namespace Zjcs.Presentation.Combat
         public event Action<int> SpeedChanged;
         public event Action<FightBattlePhase, FightBattlePhase> PhaseChanged;
         public event Action<FightBattleCheckpoint> BattleCompleted;
+        public event Action<FightBattleReport> BattleReportReady;
         public event Action StepPresentationCompleted;
         public event Action PreparationPositionChanged;
 
         public FightBattleCheckpoint Checkpoint => executor == null ? null : executor.State;
+        public FightBattleReport FinalReport => finalReport;
         /// <summary>Presentation length of the last step, from the official skill/hit timing.</summary>
         public float LastStepSeconds { get; private set; } = 0.35f;
         public FightBattlePhase Phase => phases.Phase;
@@ -98,6 +101,7 @@ namespace Zjcs.Presentation.Combat
             if (request.Checkpoint == null) throw new ArgumentNullException(nameof(request.Checkpoint));
             if (request.WorldRoot == null) throw new ArgumentNullException(nameof(request.WorldRoot));
             battleCompletedRaised = false;
+            finalReport = null;
             if (float.IsNaN(request.InitialStepDelay) || float.IsInfinity(request.InitialStepDelay) || request.InitialStepDelay < 0)
                 throw new ArgumentOutOfRangeException(nameof(request.InitialStepDelay));
             var checkpoint = request.Checkpoint;
@@ -453,6 +457,7 @@ namespace Zjcs.Presentation.Combat
         private void CompleteStepPresentation()
         {
             FightBattleCheckpoint completedCheckpoint = null;
+            FightBattleReport completedReport = null;
             if (executor != null && executor.State.Finished)
             {
                 phases.BeginBattleEnd();
@@ -461,8 +466,11 @@ namespace Zjcs.Presentation.Combat
                 {
                     battleCompletedRaised = true;
                     completedCheckpoint = executor.State;
+                    completedReport = FightBattleReportBuilder.Build(completedCheckpoint);
+                    finalReport = completedReport;
                 }
             }
+            if (completedReport != null) BattleReportReady?.Invoke(completedReport);
             if (completedCheckpoint != null) BattleCompleted?.Invoke(completedCheckpoint);
             StepPresentationCompleted?.Invoke();
         }
@@ -532,6 +540,7 @@ namespace Zjcs.Presentation.Combat
             PreparationPointerProvider = null;
             hudVisible = true;
             battleCompletedRaised = false;
+            finalReport = null;
         }
 
         private void OnDestroy()
