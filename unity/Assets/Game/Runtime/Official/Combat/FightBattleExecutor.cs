@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Zjcs.Combat.Official
 {
@@ -393,17 +394,21 @@ namespace Zjcs.Combat.Official
             foreach (FightBattlePetEnergyState state in states)
             {
                 if (!FightBattlePetEnergyRuntime.CanRelease(state)) continue;
+                FightBattleUnitState caster = CreatePetEntityCaster(owner, state);
+                AttachPetEntityPassiveStatuses(caster, owner, state);
                 FightBattleSkillDefinition skill = statusCatalog.CreateSkill(state.SkillEntityId,
                     -1, state.SkillItemId, Math.Max(1, state.SkillRank), Math.Max(1, state.SkillLevel),
                     state.SkillSubRank > 0 ? state.SkillSubRank : owner.SubRank, state.SkillProperties);
-                List<FightBattleUnitState> targets = FightBattleTargeting.SelectInSkillRange(owner,
+                List<FightBattleUnitState> targets = FightBattleTargeting.SelectInSkillRange(caster,
                     units, skill, random: random);
                 if (targets.Count == 0 && skill.TargetType != 5
-                    && !FightBattleTargeting.HasCasterAreaTargets(owner, units, skill)) continue;
+                    && !FightBattleTargeting.HasCasterAreaTargets(caster, units, skill)) continue;
                 if (!FightBattlePetEnergyRuntime.ConsumeForRelease(state)) continue;
 
-                ExecuteSkill(owner, skill, targets, casts, damageEvents, movements,
+                ExecuteSkill(caster, skill, targets, casts, damageEvents, movements,
                     out float lastDelay, out float skillDuration, out float actionDuration);
+                owner.Hp = Math.Max(0L, Math.Min(owner.MaxHp, caster.Hp));
+                owner.Turn.Hp = owner.Hp;
                 casts.Add(new FightBattleSkillCastEvent
                 {
                     ActorId = owner.Id,
@@ -418,6 +423,54 @@ namespace Zjcs.Combat.Official
                     Math.Max(ResolveDuration(skill, lastDelay), skillDuration));
                 if (actionDuration >= 0f)
                     stepActionDuration = Math.Max(stepActionDuration, actionDuration);
+            }
+        }
+
+        private static FightBattleUnitState CreatePetEntityCaster(FightBattleUnitState owner,
+            FightBattlePetEnergyState state)
+        {
+            var caster = new FightBattleUnitState
+            {
+                Id = owner.Id,
+                MasterId = owner.Id,
+                Side = owner.Side,
+                CharacterType = 5,
+                Level = Math.Max(1, state.SkillLevel),
+                SubRank = state.SkillSubRank > 0 ? state.SkillSubRank : owner.SubRank,
+                Profession = owner.Profession,
+                X = owner.X,
+                Y = owner.Y,
+                Direction = owner.Direction,
+                Hp = owner.Hp,
+                MaxHp = owner.MaxHp,
+                LastMaxHp = owner.LastMaxHp,
+                Properties = state.EntityProperties == null || state.EntityProperties.Count == 0
+                    ? new List<FightPropertyValue>(owner.Properties)
+                    : state.EntityProperties.Select(value => new FightPropertyValue
+                    { Id = value.Id, Value = value.Value }).ToList(),
+                Statuses = new List<FightBattleStatusState>(),
+                Skills = state.EntityActiveSkills == null
+                    ? new List<FightBattleSkillDefinition>()
+                    : state.EntityActiveSkills,
+                SkillState = new FightSkillAgentState(),
+                Turn = new FightTurnUnit { Id = owner.Id, MasterId = owner.Id, Hp = owner.Hp }
+            };
+            caster.Hp = Math.Min(caster.Hp, caster.MaxHp);
+            return caster;
+        }
+
+        private void AttachPetEntityPassiveStatuses(FightBattleUnitState caster,
+            FightBattleUnitState owner, FightBattlePetEnergyState state)
+        {
+            if (statusCatalog == null || state.EntityPassiveStatusIds == null) return;
+            int index = 0;
+            foreach (int classId in state.EntityPassiveStatusIds)
+            {
+                if (classId <= 0) continue;
+                FightBattleStatusState status = statusCatalog.CreateStatus(classId, caster.Id, owner.Id,
+                    ++index, state.SkillEntityId, state.SkillItemId, Math.Max(1, state.SkillRank),
+                    Math.Max(1, state.SkillLevel), state.SkillSubRank, state.EntityProperties);
+                caster.Statuses.Add(status);
             }
         }
 

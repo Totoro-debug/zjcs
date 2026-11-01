@@ -74,7 +74,7 @@ Windows 竖屏显示适配按用户参考画面保留顶部安全留白：1080 U
 
 用户已确认伤害测试的单机规则：使用已迁移的本地战斗配置计算怪物属性，按原参数页勾选项应用怪物固定伤害 1／无限生命。这部分属于缺少服务器实现后的单机差异；原五组怪物、难度、回合数及勾选参数已连接本地 StageType 43 战斗，保留原 40 级开放条件。
 
-用户已确认幻兽能量的单机时序：战斗开始使用原初始能量；幻兽自己的回合开始恢复原配置能量；主人实际生命损失累计满最大生命的 1% 时恢复原配置能量，护盾吸收不计；达到阈值后在主人行动结束时按原技能配置实体化并扣除阈值。实体技能、属性及持续时间继续使用原配置。APK 中 `FightRolePetTransferEntityComponent`／`FightRolePetEnergyModification` 只消费服务器能量结果，原配置 `NaturalRecoverEnergy=50`、`MasterLoseHpRecoverEnergy=6`、`MasterLoseHpTrigerRecover≈0.01` 已核对；`FightBattlePetEnergyRuntime` 已接入战斗检查点初始化、宠物回合开始恢复、主人实际 HP 损失阈值累计及主人行动结束释放，释放继续经过官方 `CreateSkill`、目标选择、状态／子技能和动画事件链。幻兽实体属性与 `TriggerNeedEnergy`／`InitEnergy` 仍依赖选中宠物的完整配置行，未取得时不臆造默认技能阈值。
+用户已确认幻兽能量的单机时序：战斗开始使用原初始能量；幻兽自己的回合开始恢复原配置能量；主人实际生命损失累计满最大生命的 1% 时恢复原配置能量，护盾吸收不计；达到阈值后在主人行动结束时按原技能配置实体化并扣除阈值。实体技能、属性及持续时间继续使用原配置。APK 中 `FightRolePetTransferEntityComponent`／`FightRolePetEnergyModification` 只消费服务器能量结果，原配置 `NaturalRecoverEnergy=50`、`MasterLoseHpRecoverEnergy=6`、`MasterLoseHpTrigerRecover≈0.01` 已核对；`FightBattlePetEnergyRuntime` 已接入战斗检查点初始化、宠物回合开始恢复、主人实际 HP 损失阈值累计及主人行动结束释放，释放继续经过官方 `CreateSkill`、目标选择、状态／子技能和动画事件链。`OfficialBattlePetEnergyAssembler` 现在按 `FightEntityClassId`、宠物等级／品阶、主人属性调用 `CalculatePetEntityBaseProps` 与 `CalculateSummonInheritance`，装入实体主动技能和实体被动状态；支援技能按宠物等级和已保存品阶合并到主人属性与被动状态。实体释放使用 `CharacterType=5` 的临时施法源，不额外占行动条。完整宠物模型与独立 PetEntity 可见 HUD 仍需资源和绑定验证。
 
 伤害测试的公共结算适配已通过规则验证：StageType 43 的怪物伤害在护盾结算前固定为 1，无限生命保留 HP 并累计完整伤害，设置可随战斗检查点恢复；关闭选项或进入普通关卡恢复普通结算。入口为 `Runtime/Offline/Combat/FightDamageTestRules.cs`，验证为 `scripts/test_skill_damage_test.ps1`；普通战斗 97 组公式及规则回归亦已通过。参数页、实际战斗、结算、玩家／技能统计页及返回设置已经在带画面的 Play Mode 中通过模拟点击；战报列标题、头像绑定、原 Image 启用标志、遮罩图像显隐及主页输入遮挡已修正并实际查看画面。头像 UV 的 Unity Rect 字段映射已通过实际绑定器的失败／成功回归及 Play Mode 截图检查。主页 shader 使用显式绑定；`OfficialSkillRuntimeShaderBuild` 在构建依赖收集前登记官方 URP，保留运行时切换所需变体，并在构建后恢复编辑器设置，Player 在首场景前恢复启动管线。存档选择与技能模糊流程在 finally 恢复活动渲染目标。独立 Player 已在 675×1463 客户区通过伤害测试、玩家／技能统计与快照详情的模拟输入，并查看实际非黑帧画面；按最新不保存战报的方案调整后，Play Mode 与独立 Windows Player 的模拟点击复测均已通过，已查看头像和隐藏分享按钮后的实际画面。主页展开／收起入口恢复原控制器默认的 `FunctionEntrysUI_Folded` 零时长动画，避免两个按钮同时命中。验证启动工具补上 Player 窗口识别，在内置屏按命令行客户端尺寸显示窗口并保持不抢前台，避免隐藏黑帧与占位矩形改变竖屏尺寸。验证同时检查 PNG 非空与参考竖屏比例，避免隐藏黑帧或错误窗口尺寸冒充画面通过。
 
@@ -95,7 +95,7 @@ Windows 竖屏显示适配按用户参考画面保留顶部安全留白：1080 U
 - 培养页标题、四槽选择、真实材料数量／不足颜色、同品质升星与跨品质通知已按原组件绑定，并通过 Play Mode 模拟点击和实际截图检查；未装备横向列表已通过 Play Mode 模拟拖拽及点击原定位提示；角色等级上限提示与培养组前后切换已通过 Play Mode；上述培养流程另已通过 675×1463 独立 Windows Player 的模拟点击、键盘与拖拽，并查看实际截图。祝福赛季提示内容和槽级显示另已通过 Play Mode 与 Windows Player 验证。
 
 - 馈赠原道具详情已接入并通过 Play Mode；当前奖励涉及的单人公会种植、钓鱼、养殖来源（类型 22／23／24，对应道具 1530／1540／1550）尚未连接 Unity 目的界面，不能视为全部来源已可达。
-- 伤害测试参数、真实战斗、胜负结算、仅内存战报、主动与被动技能详情和原技能图标均已通过带画面 Play Mode 与 675×1463 Windows Player 验证；被动触发技能保留 `FightSourceInfo` 对应的物品、品阶和祝福槽级，状态消失后仍能查看本场快照。结算动作、附加表情和失败返回已通过实际运行验证；全队幻兽实体模型、实体被动／支援技能和完整宠物 HUD 仍需接入。
+- 伤害测试参数、真实战斗、胜负结算、仅内存战报、主动与被动技能详情和原技能图标均已通过带画面 Play Mode 与 675×1463 Windows Player 验证；被动触发技能保留 `FightSourceInfo` 对应的物品、品阶和祝福槽级，状态消失后仍能查看本场快照。结算动作、附加表情和失败返回已通过实际运行验证；全队幻兽实体模型、实体被动状态的实际触发覆盖和完整宠物 HUD 仍需接入验证。
 - 通用弹窗的原遮罩／点击外部关闭和系统消息已通过 Play Mode 与 Windows Player 验证；详情规则说明、技能皮肤替换／视频预览、词条窗口已迁移并通过 Play Mode；怪物／召唤物／幻兽详情链接与馈赠来源跳转仍需补齐。
 
 已从固定 APK 恢复 `MonsterBriefInfoPanel`、`MonsterDetailPropsDialog` prefab 与原模型绑定。怪物链接已接入原弹窗和战斗模型库；宠物实体链接按本地宠物阶段／等级、主人属性及官方 `CalculatePetEntityBaseProps`／`CalcSummonMonsterInheritProp` 组合属性。技能等级优先读取已保存等级；无保存值时按官方 `PetUtils.GetSkillRank`／`SkillRankInfoParser.GetOrigRank`，从技能品质选择原始最低 rank。详情尚未实例化 `ItemIconPetSkill`、`SkillWithOuterTagItem`，因此主动／被动技能项、技能详情点击与实际画面交互仍未完成；馈赠来源跳转也未接入。隔离工程此前通过 C# 编译、`ProjectTools.Validate` 和技能资源哈希校验，但未验证本次改动后的链接交互。

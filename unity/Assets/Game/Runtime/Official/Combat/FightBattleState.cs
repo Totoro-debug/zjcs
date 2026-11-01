@@ -82,12 +82,20 @@ namespace Zjcs.Combat.Official
         public bool Enabled;
         public int OwnerUnitId;
         public int PetUnitId;
+        public int PetClassId;
+        public int PetEntityClassId;
+        public int PetEvolutionPhase;
         public int SkillEntityId;
         public int SkillItemId;
         public int SkillRank = 1;
         public int SkillLevel = 1;
         public int SkillSubRank;
         public List<FightPropertyValue> SkillProperties = new List<FightPropertyValue>();
+        // The entityized pet does not occupy the turn queue, but its source type and
+        // inherited properties are required when the entity skill is released.
+        public List<FightPropertyValue> EntityProperties = new List<FightPropertyValue>();
+        public List<FightBattleSkillDefinition> EntityActiveSkills = new List<FightBattleSkillDefinition>();
+        public List<int> EntityPassiveStatusIds = new List<int>();
         public double CurrentEnergy;
         public double InitialEnergy;
         public double NeedEnergy;
@@ -96,6 +104,7 @@ namespace Zjcs.Combat.Official
         public double MasterLoseHpTriggerRecover = 0.01d;
         public double OwnerDamageAccumulator;
         public bool Initialized;
+        public bool SupportSkillsApplied;
     }
 
     [Serializable]
@@ -921,6 +930,12 @@ namespace Zjcs.Combat.Official
                 if (unit != null && unit.PetEnergy == null) unit.PetEnergy = new FightBattlePetEnergyState();
                 if (unit?.PetEnergy != null && unit.PetEnergy.SkillProperties == null)
                     unit.PetEnergy.SkillProperties = new List<FightPropertyValue>();
+                if (unit?.PetEnergy != null && unit.PetEnergy.EntityProperties == null)
+                    unit.PetEnergy.EntityProperties = new List<FightPropertyValue>();
+                if (unit?.PetEnergy != null && unit.PetEnergy.EntityActiveSkills == null)
+                    unit.PetEnergy.EntityActiveSkills = new List<FightBattleSkillDefinition>();
+                if (unit?.PetEnergy != null && unit.PetEnergy.EntityPassiveStatusIds == null)
+                    unit.PetEnergy.EntityPassiveStatusIds = new List<int>();
                 if (unit == null || unit.Id <= 0 || !ids.Add(unit.Id) || unit.Hp < 0
                     || unit.MaxHp < 0 || unit.Hp > unit.MaxHp || unit.MaxHpPlies < 0 || unit.MaxResilience < 0
                     || unit.Resilience < 0 || unit.Resilience > unit.MaxResilience

@@ -35,8 +35,8 @@ namespace Zjcs.Presentation.Combat
             int rank = PetSkillRank(characterCatalog, pet, skillItemId);
             int level = Math.Max(1, pet.Level);
             int subRank = owner.SubRank;
-            var abilityProps = new OfflinePetPropSource(characterCatalog)
-                .CalculateAbilityProps(pet.ClassId, pet.Abilities);
+            var petProps = new OfflinePetPropSource(characterCatalog);
+            var abilityProps = petProps.CalculateAbilityProps(pet.ClassId, pet.Abilities);
             int initPropId = characterCatalog.PropertyId("PetInitEnergy");
             abilityProps.TryGetValue(initPropId, out long abilityEnergy);
             Dictionary<string, object> skillRow = characterCatalog.Find("skill", skillItemId)
@@ -49,6 +49,9 @@ namespace Zjcs.Presentation.Combat
             state.Enabled = true;
             state.OwnerUnitId = owner.Id;
             state.PetUnitId = owner.Id;
+            state.PetClassId = pet.ClassId;
+            state.PetEntityClassId = Integer(evolution, "FightEntityClassId");
+            state.PetEvolutionPhase = pet.EvolutionPhase;
             state.SkillEntityId = skillEntityId;
             state.SkillItemId = skillItemId;
             state.SkillRank = Math.Max(1, rank);
@@ -56,6 +59,10 @@ namespace Zjcs.Presentation.Combat
             state.SkillSubRank = subRank;
             state.SkillProperties = new List<FightPropertyValue>(ToProperties(
                 combat.CalculateSkillProps(skillEntityId, state.SkillRank, state.SkillLevel, subRank)));
+            ConfigureEntitySkillSet(state, evolution, pet, characterCatalog, combat, skillItems,
+                owner, petProps, rank, level, subRank);
+            ApplySupportSkillsOnce(state, evolution, pet, characterCatalog, combat, skillItems,
+                owner, level, subRank);
             state.InitialEnergy = Math.Max(0d, initial);
             state.NeedEnergy = need;
             state.NaturalRecoverEnergy = 50d;
@@ -63,6 +70,94 @@ namespace Zjcs.Presentation.Combat
             state.MasterLoseHpTriggerRecover = 0.01d;
             owner.PetEnergy = state;
             return true;
+        }
+
+        private static void ConfigureEntitySkillSet(FightBattlePetEnergyState state,
+            Dictionary<string, object> evolution, OfflinePetInstance pet,
+            OfficialCharacterCatalog catalog, FightOfficialCombatCatalog combat,
+            FightOfficialSkillItemCatalog skillItems, FightBattleUnitState owner,
+            OfflinePetPropSource petProps, int entityRank, int level, int subRank)
+        {
+            var source = PropertyMap(owner.Properties);
+            FightSummonPropertyInheritance inheritance = new FightSummonPropertyInheritance
+            {
+                Fixed = new Dictionary<int, long>(), Summoner = new Dictionary<int, long>()
+            };
+            if (state.PetEntityClassId > 0 && combat.HasSummonInheritance(state.PetEntityClassId))
+                inheritance = combat.CalculateSummonInheritance(state.PetEntityClassId, level,
+                    entityRank, subRank, source);
+
+            var entityProps = new Dictionary<int, long>(petProps.CalculatePetEntityBaseProps(
+                pet.ClassId, level, inheritance.Fixed));
+            Merge(entityProps, inheritance.Summoner);
+            state.EntityProperties = new List<FightPropertyValue>(ToProperties(entityProps));
+
+            state.EntityActiveSkills.Clear();
+            foreach (int itemId in IntArray(evolution, "EntityActiveSkills"))
+            {
+                if (itemId <= 0 || !skillItems.TryGet(itemId, out FightOfficialSkillItem item)
+                    || item.EntityId <= 0) continue;
+                int skillRank = PetSkillRank(catalog, pet, itemId);
+                int skillLevel = Math.Max(1, level);
+                state.EntityActiveSkills.Add(combat.CreateSkill(item.EntityId,
+                    state.EntityActiveSkills.Count, itemId, skillRank, skillLevel, subRank,
+                    ToProperties(combat.CalculateSkillProps(item.EntityId, skillRank,
+                        skillLevel, subRank))));
+            }
+
+            state.EntityPassiveStatusIds.Clear();
+            foreach (int itemId in IntArray(evolution, "EntityPassiveSkills"))
+                if (itemId > 0 && skillItems.TryGet(itemId, out FightOfficialSkillItem item))
+                {
+                    Merge(entityProps, combat.CalculatePassiveSkillProps(item.PassiveRankPropId,
+                        item.PassiveGroupLevelPropId, item.PassiveRankFactorId, item.PassivePropFactors,
+                        PetSkillRank(catalog, pet, itemId), Math.Max(1, level), subRank));
+                    state.EntityPassiveStatusIds.AddRange(item.PassiveStatusIds ?? Array.Empty<int>());
+                }
+            state.EntityProperties = new List<FightPropertyValue>(ToProperties(entityProps));
+        }
+
+        private static void ApplySupportSkillsOnce(FightBattlePetEnergyState state,
+            Dictionary<string, object> evolution, OfflinePetInstance pet,
+            OfficialCharacterCatalog catalog, FightOfficialCombatCatalog combat,
+            FightOfficialSkillItemCatalog skillItems, FightBattleUnitState owner,
+            int level, int subRank)
+        {
+            if (state.SupportSkillsApplied) return;
+            var bindings = new List<FightOfficialPassiveSkillBinding>();
+            var propertyMap = PropertyMap(owner.Properties);
+            foreach (int itemId in IntArray(evolution, "SupportSkills"))
+            {
+                if (itemId <= 0 || !skillItems.TryGet(itemId, out FightOfficialSkillItem item)) continue;
+                int rank = PetSkillRank(catalog, pet, itemId);
+                int effectiveLevel = Math.Max(1, level);
+                IReadOnlyDictionary<int, long> properties = combat.CalculatePassiveSkillProps(
+                    item.PassiveRankPropId, item.PassiveGroupLevelPropId, item.PassiveRankFactorId,
+                    item.PassivePropFactors, rank, effectiveLevel, subRank);
+                Merge(propertyMap, properties);
+                bindings.Add(new FightOfficialPassiveSkillBinding
+                {
+                    ItemId = itemId, Rank = rank, Level = effectiveLevel, SubRank = subRank
+                });
+            }
+            if (bindings.Count > 0)
+            {
+                long oldMaxHp = Property(owner.Properties, combat.PropertyType("MaxHp"));
+                owner.Properties = ToProperties(propertyMap);
+                owner.BaseProperties = ToProperties(propertyMap);
+                long newMaxHp = Property(owner.Properties, combat.PropertyType("MaxHp"));
+                if (newMaxHp > 0 && oldMaxHp > 0)
+                {
+                    owner.MaxHp = newMaxHp;
+                    owner.Hp = Math.Min(newMaxHp, owner.Hp + (newMaxHp - oldMaxHp));
+                    owner.LastMaxHp = newMaxHp;
+                    owner.Turn.Hp = owner.Hp;
+                }
+                List<FightOfficialStatusBinding> statuses = combat.CreatePassiveStatusBindings(
+                    owner, skillItems, bindings);
+                combat.AssembleUnit(owner, null, statuses);
+            }
+            state.SupportSkillsApplied = true;
         }
 
         private static int PetSkillRank(OfficialCharacterCatalog catalog, OfflinePetInstance pet, int skillId)
@@ -86,11 +181,42 @@ namespace Zjcs.Presentation.Combat
                 ? Convert.ToDouble(value, CultureInfo.InvariantCulture) : fallback;
         }
 
-        private static IEnumerable<FightPropertyValue> ToProperties(IReadOnlyDictionary<int, long> values)
+        private static List<FightPropertyValue> ToProperties(IReadOnlyDictionary<int, long> values)
         {
             return (values ?? new Dictionary<int, long>()).Where(value => value.Key > 0)
                 .OrderBy(value => value.Key)
-                .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value });
+                .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value })
+                .ToList();
+        }
+
+        private static Dictionary<int, long> PropertyMap(IEnumerable<FightPropertyValue> values)
+        {
+            return (values ?? Array.Empty<FightPropertyValue>()).Where(value => value != null && value.Id > 0)
+                .GroupBy(value => value.Id).ToDictionary(group => group.Key,
+                    group => group.Sum(value => value.Value));
+        }
+
+        private static long Property(IEnumerable<FightPropertyValue> values, int id)
+        {
+            return PropertyMap(values).TryGetValue(id, out long value) ? value : 0L;
+        }
+
+        private static void Merge(Dictionary<int, long> destination, IEnumerable<KeyValuePair<int, long>> source)
+        {
+            if (source == null) return;
+            foreach (KeyValuePair<int, long> value in source)
+                if (value.Key > 0) destination[value.Key] = destination.TryGetValue(value.Key,
+                    out long current) ? checked(current + value.Value) : value.Value;
+        }
+
+        private static int[] IntArray(Dictionary<string, object> row, string key)
+        {
+            if (row == null || !row.TryGetValue(key, out object raw) || raw == null)
+                return Array.Empty<int>();
+            if (raw is List<object> values)
+                return values.Select(value => Convert.ToInt32(value, CultureInfo.InvariantCulture)).ToArray();
+            if (raw is int[] ints) return ints;
+            return Array.Empty<int>();
         }
     }
 }
