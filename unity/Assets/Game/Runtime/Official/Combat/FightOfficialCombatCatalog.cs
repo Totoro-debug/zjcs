@@ -2042,7 +2042,16 @@ namespace Zjcs.Combat.Official
                 && legacy != null)
                 foreach (object item in Array(legacy, legacyField))
                 {
-                    Dictionary<string, object> row = Object(item, "HP threshold status");
+                    Dictionary<string, object> row = item as Dictionary<string, object>;
+                    if (row == null)
+                    {
+                        int legacyId = Convert.ToInt32(item, CultureInfo.InvariantCulture);
+                        if (legacyId > 0) output.Add(new FightBattleStatusStateTrigger
+                        {
+                            EntityId = legacyId, BasePercent = 1f, ApplyTarget = 2
+                        });
+                        continue;
+                    }
                     int id = Int(row, "StatusId");
                     if (id > 0) output.Add(new FightBattleStatusStateTrigger
                     {

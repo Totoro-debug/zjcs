@@ -77,7 +77,41 @@ Assert-Hp ($invocations.Count -eq 2 -and ($invocations.Trigger.EntityId -contain
     -and $invocations[0].SourceUnitId -eq $owner.Id) `
     'ApplyByAroundUnitCount did not execute its configured neighbour skill.'
 
+# 25067 removes its configured 24315 status when the HP condition is no longer met.
+$notMeet = $catalog.CreateStatus(25067, 1, 1, 5)
+$units.Clear(); $units.Add($owner)
+$owner.Hp = 30
+$owner.Statuses.Clear(); $owner.Statuses.Add($notMeet)
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::Apply($owner, $catalog, $false,
+    $null, [Zjcs.Combat.Official.FightRandomStream]::new(17), $null, $units)
+Assert-Hp ($owner.Statuses.ClassId -contains 24315) `
+    'NotMeetRemoveStatus source did not apply its configured status.'
+$owner.Hp = 100
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::Apply($owner, $catalog, $false,
+    $null, [Zjcs.Combat.Official.FightRandomStream]::new(17), $null, $units)
+Assert-Hp (-not ($owner.Statuses.ClassId -contains 24315)) `
+    'NotMeetRemoveStatus did not remove its configured status after the condition cleared.'
+
+# 24202 skips its start check while an official ActionType 70 forbidden status exists.
+$forbiddenSource = $catalog.CreateStatus(24202, 1, 1, 6)
+$forbidden = $catalog.CreateStatus(24003, 1, 1, 7)
+$owner.Hp = 30
+$owner.Statuses.Clear(); $owner.Statuses.Add($forbiddenSource); $owner.Statuses.Add($forbidden)
+$invocations.Clear()
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::Apply($owner, $catalog, $true,
+    $null, [Zjcs.Combat.Official.FightRandomStream]::new(17), $null, $units, $invocations)
+Assert-Hp ($invocations.Count -eq 0 -and ($owner.Statuses.ClassId -contains 24202)) `
+    'IsCheckExsitForbidden did not suppress the forbidden start check.'
+$owner.Statuses.Remove($forbidden)
+$invocations.Clear()
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::Apply($owner, $catalog, $true,
+    $null, [Zjcs.Combat.Official.FightRandomStream]::new(17), $null, $units, $invocations)
+Assert-Hp ($invocations.Count -eq 1 -and $invocations[0].Trigger.EntityId -eq 10170 `
+    -and -not ($owner.Statuses.ClassId -contains 24202)) `
+    'IsCheckExsitForbidden did not resume the configured skill after the forbidden status ended.'
+
 $cooldown = $catalog.CreateStatus(25065, 1, 1, 5)
+$owner.Hp = 1
 $owner.Statuses.Clear(); $owner.Statuses.Add($cooldown)
 $owner.SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{
     Slot = 0; Cooldown = 5; LastRound = 0

@@ -308,10 +308,16 @@ namespace Zjcs.Combat.Official
                     && status.HpLessThanTriggeredCount >= status.HpLessThanMaxCount
                 || status.HpLessThanCharacterTypes.Count > 0
                     && !status.HpLessThanCharacterTypes.Contains(unit.CharacterType)) return false;
+            if (status.HpLessThanCheckExistForbidden && HasForbiddenTriggerStatus(unit)) return false;
             bool absolute = status.HpLessThan >= 0 && unit.Hp <= status.HpLessThan;
             bool percentage = status.HpLessThanPercentage >= 0f
                 && unit.Hp / (double)Math.Max(1L, unit.MaxHp) <= status.HpLessThanPercentage;
-            if (!absolute && !percentage || unit.Hp <= 0 && !status.HpLessThanInvokeOnDie) return false;
+            if (!absolute && !percentage || unit.Hp <= 0 && !status.HpLessThanInvokeOnDie)
+            {
+                if (status.HpLessThanNotMeetRemoveStatus)
+                    RemoveHpLessThanTriggeredStatuses(unit, status);
+                return false;
+            }
             int fired = 0;
             int immediateChecks = 0;
             do
@@ -341,6 +347,25 @@ namespace Zjcs.Combat.Official
             while ((absolute || percentage) && (status.HpLessThanMaxCount < 0
                 || status.HpLessThanTriggeredCount < status.HpLessThanMaxCount));
             return fired > 0;
+        }
+
+        private static bool HasForbiddenTriggerStatus(FightBattleUnitState unit)
+        {
+            if (unit == null || unit.Statuses == null) return false;
+            foreach (FightBattleStatusState status in unit.Statuses)
+                if (status != null && status.ActionType == 70) return true;
+            return false;
+        }
+
+        private static void RemoveHpLessThanTriggeredStatuses(FightBattleUnitState unit,
+            FightBattleStatusState source)
+        {
+            if (unit == null || source == null || unit.Statuses == null) return;
+            var ids = new HashSet<int>();
+            foreach (FightBattleStatusStateTrigger trigger in source.HpLessThanStatuses)
+                if (trigger != null && trigger.EntityId > 0) ids.Add(trigger.EntityId);
+            if (ids.Count == 0) return;
+            unit.Statuses.RemoveAll(value => value != null && ids.Contains(value.ClassId));
         }
 
         private static void ActivateStatus(FightBattleUnitState owner,
