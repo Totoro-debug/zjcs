@@ -168,6 +168,8 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 ### 当前原生赠礼区域（局部）
 
+Home 运行时现在为 `OfflinePartnerGiftPlayer` 提供 `OfflinePartnerItemInfo`，直接投影选定伙伴物品表的 `ClassId`、`Icon`、`IconEffect`、品质和堆叠字段，并把官方伙伴图像目录注册到 `ProfessionImageResourceBridge`。赠礼玩家因此可以从当前本地库存生成原 `IProfessionItemData`，后续 `NpcDetailPanelGiftContent` 接入时会沿官方偏好排序、图标和数量刷新路径消费这些数据；本轮尚未把赠礼 prefab、输入／确认弹窗和物品详情弹窗挂入正式窗口宿主。
+
 `Runtime/Official/PartnersUI/GiftController/` 从当前 `884_156692` 完整迁入 `NpcDetailPanelGiftContent`、`NpcGiftBlueDotItem` 和 `NpcFriendshipLevelContent`，保留原礼物排序、选量／减少／重置、自动补量、好感预览、精确升满与溢出确认、阶位／满级限制、称谓校验及响应后的刷新顺序。原配置、玩家、资源与窗口服务改为显式接口；原属性组和礼物格在初始化前绑定服务，原资源袋保留释放顺序。
 
 `prepare_partner_gift_controller_native.py` 从原 `NpcDetailPanel` 的 3,242 个对象中按实际控制器字段提取完整 GiftContent 子树（325 个对象），只断开提取根的父引用；原坐标、尺寸、层级和内部绑定不变。恢复原 Upgrade 附件及 `Btn_Base_Click` 控制器，逐项核对编译状态机的五个状态、四个转换、参数、条件、时间与五份原动画引用。资源安装到 `unity/Assets/Official/Partners/UI/GiftController/`，其余图标、属性与字体按原 GUID 和载荷复用。转换器对原空 `myKey` 误写字面值 null 的问题已修正；两份既有物品格及原属性组逐字段核对原 prefab 后恢复空键，保留原静态数量分隔符。此次凭据明确记录被替换的旧字节、原字段编号与新哈希，覆盖早期清单中的对应输出值。输入、代码、原生依赖与安装哈希见[赠礼区域来源](../../assets/reference/partner-gift-controller-source-manifest.json)。
