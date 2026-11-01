@@ -104,6 +104,8 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 `PartnerRosterUiValidation.RunNativeCard` 使用实际原卡片、原动画／图像／字体和隔离本地存档，以模拟鼠标射线验证信物不足、可结识、连续点击仅扣一次、700 毫秒解锁、拒绝／回收、好感比例／预览／满级、置顶与存档恢复；实际查看未结识、可结识、解锁中、已结识和外部好感更新的 GPU 画面。全部名册候选的图片地址、字段消费者、原图网格及显示文字字形纳入验证；实际卡片回归、提示图绑定、静态检查、主工程新增资源导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 均通过，导入后资源哈希保持一致。红点管理器和通知／信物／详情窗口使用明确验证端点，这些端点不进入游戏，不代表完整页面、红点或弹窗交互已经完成；Windows Player 尚未发布。
 
+本轮新增 `OfficialPartnerRosterAssetCatalog` 与 `PartnerRosterPanelView`：显式绑定已安装的原 `NpcRosterContent` 子树、108 个原卡片 Sprite 及两份原中文文本；Home 功能菜单的伙伴入口会实例化该官方层级，并将 `OfflinePartnerRosterUiServices` 注入原列表／对象池，卡片相遇、好感、置顶和礼物信物路由继续写入本地存档。生成与输入输出哈希见 [名册运行时绑定来源](../../assets/reference/partner-roster-runtime-source-manifest.json)。当前只接通名册入口和卡片层，完整 `NpcPanel` 宿主、详情／送礼页面和 Windows Player 仍需继续接入并验证。
+
 名册范围修正的原方法与输入输出哈希见[名册范围来源](../../assets/reference/partner-roster-scope-source-manifest.json)。相遇条件中的 `HasManualMeetNpc` 同样使用“排除探索首领”的原枚举范围，已结识商人／导师可满足原置顶解锁条件。重建卡片还逐对象恢复原 `MultiLanguageText.myKey` 空字符串，修正旧转换将其写成 `null` 的差异；除此字段及动态加载表外，原卡片与既有依赖字节保持不变。
 
 `PartnerRosterTransactionValidation` 已通过商人 8411、导师 8404 的名册／置顶条件与探索首领 3601 排除回归，并复核地图／区域、信物不足、相遇扣物品、置顶和存档恢复。原生名册在隔离 URP Play Mode 对这两类实际卡片执行模拟射线点击，连同全部显示、排序、反向、遮罩关闭、滚动和池释放检查通过，已查看五帧 GPU 画面。原生卡片验证逐项核对 88 个候选的 176 个图片消费者、108 个地址、89 项显示值、字形和网格；相遇／好感／置顶交互及五帧运行画面已复核，资源、图节点和音效实际引用检查通过。静态检查（81,651 个 GUID）、主工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过，安装资源哈希保持一致。完整页面、正式弹窗与 Player 仍未完成。
@@ -292,7 +294,7 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 ## 尚未实现
 
-- NPC名册、相遇／结识、详情、送礼、好感、档案与餐桌通话；活动开放范围以离线政策为准。
+- 完整 `NpcPanel` 宿主的对话／星神页、伙伴详情、送礼页面、档案与餐桌通话；当前已接通 Home 名册入口、原生卡片及本地相遇／好感／置顶服务。
 
 - 完成 Unity 实际入口、交互／表现、存档与失败恢复验证，并发布对应 Windows 可执行版本。
 - 史莱姆、孤独摇滚的八位伙伴及全部相关入口按[离线政策](offline-access.md#暂不开放的联动活动及伙伴)暂停，不列为自动开放目标。

@@ -13,6 +13,7 @@ using Zjcs.Offline.CharacterCreation;
 using Zjcs.Offline.Equipment;
 using Zjcs.Offline.Home;
 using Zjcs.Offline.Progression;
+using Zjcs.Offline.ProfessionUI;
 using Zjcs.Offline.State;
 using Zjcs.Offline.World;
 using Zjcs.Presentation.Inventory;
@@ -22,6 +23,7 @@ using Zjcs.Presentation.CharacterCreation;
 using Zjcs.Presentation.Wishes;
 using Zjcs.Presentation.Combat;
 using Zjcs.Combat.Official;
+using Zjcs.Offline.PartnersUI;
 
 namespace Zjcs.Presentation.Home
 {
@@ -49,6 +51,8 @@ namespace Zjcs.Presentation.Home
         private FightOfficialNpcAssistanceCatalog npcAssistanceCatalog;
         private OfflineArenaSession arena;
         private OfflineCharacterProgressionService progression;
+        private OfficialPartnerRosterAssetCatalog partnerRosterAssets;
+        private OfflinePartnerRosterUiServices partnerRoster;
         private OfflineAstrologicalService astrological;
         private float astrologicalChargeStartTime;
         private float astrologicalNextChargeTick;
@@ -139,6 +143,8 @@ namespace Zjcs.Presentation.Home
             fantasyTowerCatalog ?? (fantasyTowerCatalog = OfficialFantasyTowerCatalog.LoadDefault());
         public OfflineNpcAssistanceProgress NpcAssistanceProgress => npcAssistanceProgress;
         public FightOfficialNpcAssistanceCatalog NpcAssistanceCatalog => npcAssistanceCatalog;
+        public OfficialPartnerRosterAssetCatalog PartnerRosterAssets => partnerRosterAssets;
+        public OfflinePartnerRosterUiServices PartnerRoster => partnerRoster;
         public OfflineArenaSession Arena => arena;
         public OfflineCharacterProgressionService DailyDungeonProgression
         {
@@ -742,6 +748,10 @@ namespace Zjcs.Presentation.Home
             input.RewardClicked += OnRewardClicked;
             input.SetRewardHit(OnRewardHit);
             hud = new HomeHudView(this, uiParent);
+            partnerRosterAssets = OfficialPartnerRosterAssetCatalog.LoadDefault();
+            partnerRoster = new OfflinePartnerRosterUiServices(profile,
+                progression.Catalog, progression,
+                new OfflineProfessionImageResourceLoader(partnerRosterAssets.Images), hud);
             hud.Build();
             hud.ShowFantasyTowerPendingResult();
             fruitTreeTutorialVoiceSource = gameObject.AddComponent<AudioSource>();

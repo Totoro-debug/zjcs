@@ -7,7 +7,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zjcs.Offline.Home;
+using Zjcs.Offline.PartnersUI;
 using Zjcs.Offline.Progression;
+using Zjcs.Official.Partners;
+using Zjcs.Official.PartnersUI;
+using Zjcs.Official.ProfessionUI;
 using Zjcs.Presentation.Inventory;
 
 namespace Zjcs.Presentation.Home
@@ -16,7 +20,7 @@ namespace Zjcs.Presentation.Home
     /// Main-city HUD rebuilt from the official panels: top bar, avatar, five-tab
     /// bottom bar, function menu and the furniture/mail windows.
     /// </summary>
-    public sealed partial class HomeHudView
+    public sealed partial class HomeHudView, IOfflinePartnerPresentation
     {
         private static readonly string[] CurrencyIcons = { "Money_1", "Money_2", "Money_15" };
         private static readonly int[] CurrencyItems = { 1, 2, 15 };
@@ -33,6 +37,7 @@ namespace Zjcs.Presentation.Home
         private HomeUiRenderer bottomRenderer;
         private HomeUiRenderer functionsRenderer;
         private GameObject functionsPanel;
+        private PartnerRosterPanelView partnerRosterPanel;
 
         private TextMeshProUGUI nameLabel;
         private TextMeshProUGUI levelLabel;
@@ -367,7 +372,13 @@ namespace Zjcs.Presentation.Home
                 return;
             }
             if (path.Contains("FunctionEntrySettingsItem")) { OpenSettings(); return; }
-            if (path.Contains("FunctionEntryFriendItem") || path.Contains("FunctionEntrySocialItem")
+            if (path.Contains("FunctionEntryFriendItem"))
+            {
+                ToggleFunctions(false);
+                OpenPartnerRoster();
+                return;
+            }
+            if (path.Contains("FunctionEntrySocialItem")
                 || path.Contains("FunctionEntryUserItem") || path.Contains("FunctionEntryTopListItem"))
             {
                 Notify("社交与排行榜入口按离线范围关闭");
@@ -845,6 +856,8 @@ namespace Zjcs.Presentation.Home
         public void CloseDialog()
         {
             bool wasOpen = activeDialog != null;
+            partnerRosterPanel?.Close();
+            partnerRosterPanel = null;
             if (activePanelKey == "astrological_entry")
             {
                 host.EndAstrologicalCharge();
