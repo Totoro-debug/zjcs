@@ -26,7 +26,8 @@ namespace Zjcs.Editor
             ["Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/UniversalRenderPipelineSpineSkeletonEffect2D_19e49995.shader"] = 768,
             ["Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/EffectNoiseMaskPro_6d8d993d.shader"] = 260,
             ["Assets/Game/Runtime/Official/World/NativeMap14/Shaders/Butterfly1.shader"] = 260,
-            ["Assets/Game/Runtime/Offline/World/Map12/BuildingPreview.shader"] = 6
+            ["Assets/Game/Runtime/Offline/World/Map12/BuildingPreview.shader"] = 6,
+            ["Assets/Official/Partners/UI/Card/Converted/59de19d261370c02.shader"] = 260
         };
         private static readonly Dictionary<string, Selection> selections = new Dictionary<string, Selection>();
         public int callbackOrder => -100;
@@ -75,7 +76,7 @@ namespace Zjcs.Editor
                 }
             }
             finally { ShaderUtil.allowAsyncCompilation = previousAsync; }
-            if (stages != 7804) throw new BuildFailedException("Original shader stage count changed: " + stages);
+            if (stages != 8844) throw new BuildFailedException("Original shader stage count changed: " + stages);
             Debug.Log("Original sparse shaders: all " + stages + " Windows GPU stages across "
                 + originalPrograms.Count + " original shader assets compiled.");
             ProjectTools.Validate();
