@@ -165,14 +165,9 @@ namespace Zjcs.Presentation.Home
             {
                 Id = 1, Side = 1, CharacterType = 1, Level = playerSave.Level,
                 SubRank = playerSave.SubRank, Profession = playerSave.Wardrobe.Profession,
-                X = spawn.X, Y = spawn.Y, Hp = OfficialBattlePropertyAssembler.Value(playerProps, maxHpId),
-                MaxHp = OfficialBattlePropertyAssembler.Value(playerProps, maxHpId), LastMaxHp = OfficialBattlePropertyAssembler.Value(playerProps, maxHpId),
-                MoveMask = moveMask, Properties = OfficialBattlePropertyAssembler.ToNonZeroProperties(playerProps)
+                X = spawn.X, Y = spawn.Y, MoveMask = moveMask
             };
-            player.MoveDist = formula.CalculateMoveDist(playerProps);
-            if (player.MaxHp <= 0) throw new InvalidOperationException("Official damage-test player MaxHp is invalid.");
-            player.Turn.Id = player.Id; player.Turn.Hp = player.Hp;
-            player.Turn.Speed = OfficialBattlePropertyAssembler.CheckedValue(playerProps, speedId);
+            OfficialBattleUnitAssembler.Initialize(formula, player, playerProps, maxHpId, speedId);
             checkpoint.Units.Add(player);
             AssemblePlayer(combat, skillItems, player, playerSave, progression);
             OfficialBattlePetEnergyAssembler.TryConfigure(player, playerSave,
@@ -196,15 +191,11 @@ namespace Zjcs.Presentation.Home
                         MonsterType = monster.MonsterType, Level = Mathf.RoundToInt(monster.Level),
                         SubRank = monster.SubRank, Wave = sourceWave.Index,
                         X = monster.Position.X, Y = monster.Position.Y,
-                        Hp = OfficialBattlePropertyAssembler.Value(props, maxHpId), MaxHp = OfficialBattlePropertyAssembler.Value(props, maxHpId),
-                        LastMaxHp = OfficialBattlePropertyAssembler.Value(props, maxHpId), MoveMask = moveMask,
-                        Direction = monster.FlipX ? 1 : 0, Properties = OfficialBattlePropertyAssembler.ToNonZeroProperties(props),
+                        MoveMask = moveMask, Direction = monster.FlipX ? 1 : 0,
                         MaxHpPlies = combat.MonsterHpPliesFor(monster.MonsterId,
                             monster.MonsterGroupNo, Mathf.RoundToInt(monster.Level))
                     };
-                    unit.MoveDist = formula.CalculateMoveDist(props);
-                    unit.Turn.Id = unit.Id; unit.Turn.Hp = unit.Hp;
-                    unit.Turn.Speed = OfficialBattlePropertyAssembler.CheckedValue(props, speedId);
+                    OfficialBattleUnitAssembler.Initialize(formula, unit, props, maxHpId, speedId);
                     checkpoint.Units.Add(unit); wave.UnitIds.Add(unit.Id);
                     AssembleMonster(combat, skillItems, unit, monster);
                 }

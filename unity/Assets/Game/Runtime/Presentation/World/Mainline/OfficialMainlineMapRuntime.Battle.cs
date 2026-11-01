@@ -335,17 +335,9 @@ namespace Zjcs.Presentation.World
                 Profession = progression.Player.Wardrobe.Profession,
                 X = playerEntry.X,
                 Y = playerEntry.Y,
-                Hp = OfficialBattlePropertyAssembler.Value(playerProperties, 3),
-                MaxHp = OfficialBattlePropertyAssembler.Value(playerProperties, 3),
-                LastMaxHp = OfficialBattlePropertyAssembler.Value(playerProperties, 3),
-                MoveMask = moveMask,
-                Properties = OfficialBattlePropertyAssembler.ToProperties(playerProperties)
+                MoveMask = moveMask
             };
-            if (player.MaxHp <= 0) throw new InvalidDataException("Official character battle MaxHp is not positive.");
-            player.MoveDist = formula.CalculateMoveDist(playerProperties);
-            player.Turn.Id = player.Id;
-            player.Turn.Hp = player.Hp;
-            player.Turn.Speed = OfficialBattlePropertyAssembler.CheckedValue(playerProperties, 4);
+            OfficialBattleUnitAssembler.Initialize(formula, player, playerProperties, 3, 4, true);
             checkpoint.Units.Add(player);
             AssemblePlayerSkills(combatCatalog, skillItems, player);
             OfficialBattlePetEnergyAssembler.TryConfigure(player, progression.Player,

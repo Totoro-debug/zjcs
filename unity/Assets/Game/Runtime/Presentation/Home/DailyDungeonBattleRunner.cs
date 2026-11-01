@@ -496,16 +496,9 @@ namespace Zjcs.Presentation.Home
             {
                 Id = 1, Side = 1, CharacterType = 1, Level = playerSave.Level,
                 SubRank = playerSave.SubRank, Profession = playerSave.Wardrobe.Profession,
-                X = playerEntry[0], Y = playerEntry[1],
-                Hp = OfficialBattlePropertyAssembler.Value(playerProperties, maxHpId), MaxHp = OfficialBattlePropertyAssembler.Value(playerProperties, maxHpId),
-                LastMaxHp = OfficialBattlePropertyAssembler.Value(playerProperties, maxHpId), MoveMask = moveMask,
-                Properties = OfficialBattlePropertyAssembler.ToNonZeroProperties(playerProperties)
+                X = playerEntry[0], Y = playerEntry[1], MoveMask = moveMask
             };
-            if (player.MaxHp <= 0) throw new InvalidOperationException("Official character battle MaxHp is invalid.");
-            player.MoveDist = formula.CalculateMoveDist(playerProperties);
-            player.Turn.Id = player.Id;
-            player.Turn.Hp = player.Hp;
-            player.Turn.Speed = OfficialBattlePropertyAssembler.CheckedValue(playerProperties, speedId);
+            OfficialBattleUnitAssembler.Initialize(formula, player, playerProperties, maxHpId, speedId);
             checkpoint.Units.Add(player);
             AssemblePlayer(combat, skillItems, player, playerSave);
             OfficialBattlePetEnergyAssembler.TryConfigure(player, playerSave,
@@ -544,8 +537,6 @@ namespace Zjcs.Presentation.Home
                     OfficialBattlePassivePropertyAssembler.Apply(combat, skillItems, properties,
                         passiveItems.Select(itemId => new FightOfficialPassiveSkillBinding
                         { ItemId = itemId, Rank = 1, Level = Math.Max(1, level), SubRank = stage.subRank }));
-                    long monsterHp = OfficialBattlePropertyAssembler.Value(properties, maxHpId);
-                    if (monsterHp <= 0) throw new InvalidOperationException("Official daily dungeon monster MaxHp is invalid.");
                     var unit = new FightBattleUnitState
                     {
                         Id = checkpoint.Units.Count + 1, Side = 2, CharacterType = 2,
@@ -556,14 +547,9 @@ namespace Zjcs.Presentation.Home
                         SubRank = stage.subRank, Wave = wave.Index,
                         X = Mathf.RoundToInt(waveOrigin[0]) + source.x,
                         Y = Mathf.RoundToInt(waveOrigin[1]) + source.y,
-                        Hp = monsterHp, MaxHp = monsterHp, LastMaxHp = monsterHp,
-                        MoveMask = moveMask, Direction = source.flipX ? 1 : 0,
-                        Properties = OfficialBattlePropertyAssembler.ToNonZeroProperties(properties)
+                        MoveMask = moveMask, Direction = source.flipX ? 1 : 0
                     };
-                    unit.MoveDist = formula.CalculateMoveDist(properties);
-                    unit.Turn.Id = unit.Id;
-                    unit.Turn.Hp = unit.Hp;
-                    unit.Turn.Speed = OfficialBattlePropertyAssembler.CheckedValue(properties, speedId);
+                    OfficialBattleUnitAssembler.Initialize(formula, unit, properties, maxHpId, speedId);
                     checkpoint.Units.Add(unit);
                     wave.UnitIds.Add(unit.Id);
                     AssembleMonster(combat, skillItems, unit, monsterId, stage.monsterGroupNo);

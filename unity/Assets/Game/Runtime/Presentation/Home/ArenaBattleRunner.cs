@@ -297,18 +297,12 @@ namespace Zjcs.Presentation.Home
             int profession, int[] position, int moveMask, Dictionary<int, long> properties,
             int maxHpId, int speedId, FightDamageFormula formula)
         {
-            long hp = OfficialBattlePropertyAssembler.Value(properties, maxHpId);
-            if (hp <= 0) throw new InvalidOperationException("Arena fighter MaxHp is invalid.");
             var unit = new FightBattleUnitState
             {
                 Id = id, Side = side, Level = level, SubRank = subRank, Profession = profession,
-                X = position[0], Y = position[1], Hp = hp, MaxHp = hp, LastMaxHp = hp,
-                MoveMask = moveMask, Properties = OfficialBattlePropertyAssembler.ToNonZeroProperties(properties)
+                X = position[0], Y = position[1], MoveMask = moveMask
             };
-            unit.MoveDist = formula.CalculateMoveDist(properties);
-            unit.Turn.Id = id;
-            unit.Turn.Hp = hp;
-            unit.Turn.Speed = OfficialBattlePropertyAssembler.CheckedValue(properties, speedId);
+            OfficialBattleUnitAssembler.Initialize(formula, unit, properties, maxHpId, speedId);
             return unit;
         }
 
