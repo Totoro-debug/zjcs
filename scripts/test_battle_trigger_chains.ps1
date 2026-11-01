@@ -292,6 +292,28 @@ Assert-Chain ($null -ne $generatedActionStatus -and
     $actionUnits, $catalog, [Zjcs.Combat.Official.FightRandomStream]::new(12345))
 Assert-Chain ($null -eq ($actionOwner.Statuses | Where-Object ClassId -eq 60221)) 'Action-existence status was not removed after the matching action disappeared'
 
+# Official 25278 adds fourteen 24031 stacks at round start; every two stacks consume into 24187.
+$consumeRoundStatus = $catalog.CreateStatus(25278, 1, 1, 20, 0, 0, 6, 17, 10, $null)
+Assert-Chain ($consumeRoundStatus.RoundStartRulesSupported -and
+    $consumeRoundStatus.RoundStartStatuses.Count -eq 14 -and
+    $consumeRoundStatus.HasConsumeStackCount -and
+    $consumeRoundStatus.ConsumeStackCountRulesSupported -and
+    $consumeRoundStatus.ConsumeStackCountTargetStatusId -eq 24031 -and
+    $consumeRoundStatus.ConsumeStackCountThreshold -eq 2) 'Official round-start stack-consume configuration mismatch'
+$consumeRoundOwner = Unit 1 1 0 100
+$consumeRoundOwner.Statuses.Add($consumeRoundStatus)
+$consumeRoundUnits = [System.Collections.Generic.List[Zjcs.Combat.Official.FightBattleUnitState]]::new()
+$consumeRoundUnits.Add($consumeRoundOwner)
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyRoundStartStatuses(
+    $consumeRoundStatus, $consumeRoundOwner, $consumeRoundUnits, $catalog,
+    [Zjcs.Combat.Official.FightRandomStream]::new(12345))
+$stackedRoundStatus = $consumeRoundOwner.Statuses | Where-Object ClassId -eq 24031 | Select-Object -First 1
+Assert-Chain ($null -ne $stackedRoundStatus -and $stackedRoundStatus.StackCount -eq 14) 'Round-start status triggers did not add all configured stacks'
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyConsumeStackCounts(
+    $consumeRoundOwner, $catalog, [Zjcs.Combat.Official.FightRandomStream]::new(12345))
+$consumedTriggerStatus = $consumeRoundOwner.Statuses | Where-Object ClassId -eq 24187 | Select-Object -First 1
+Assert-Chain ($stackedRoundStatus.StackCount -eq 0 -and $null -ne $consumedTriggerStatus) 'Consume-stack count did not consume threshold pairs and trigger 24187'
+
 $restored = Run-Battle (New-Battle (Skill 9900100)) $true
 $first = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($chain.Checkpoint)
 $second = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($restored.Checkpoint)

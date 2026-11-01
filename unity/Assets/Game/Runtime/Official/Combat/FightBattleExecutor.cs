@@ -186,6 +186,20 @@ namespace Zjcs.Combat.Official
                 foreach (FightBattleUnitState summonOwner in units)
                     FightStatusTriggerRuntime.ApplyRoleSummonCount(summonOwner, units,
                         statusCatalog, random);
+            if (statusCatalog != null)
+            {
+                int roundStatusChanges = 0;
+                foreach (FightBattleUnitState source in new List<FightBattleUnitState>(units))
+                    foreach (FightBattleStatusState status in
+                        new List<FightBattleStatusState>(source.Statuses))
+                        roundStatusChanges += FightStatusTriggerRuntime.ApplyRoundStartStatuses(
+                            status, actor, units, statusCatalog, random);
+                foreach (FightBattleUnitState owner in units)
+                    roundStatusChanges += FightStatusTriggerRuntime.ApplyConsumeStackCounts(
+                        owner, statusCatalog, random);
+                if (roundStatusChanges > 0)
+                    RebuildBattleProperties();
+            }
             float statusEndDelay = 0f;
             ExecuteAccumulatedDamageEnds(casts, damageEvents, movements,
                 ref statusEndDelay, ref stepDuration, ref stepActionDuration);

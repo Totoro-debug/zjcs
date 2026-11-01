@@ -314,6 +314,8 @@ namespace Zjcs.Combat.Official
         public bool RoundStartTryAtStart;
         public List<FightBattleStatusStateTrigger> RoundStartSkills =
             new List<FightBattleStatusStateTrigger>();
+        public List<FightBattleStatusStateTrigger> RoundStartStatuses =
+            new List<FightBattleStatusStateTrigger>();
         public bool HasRoundEndTrigger;
         public bool RoundEndRulesSupported;
         public int RoundEndListenTarget;
@@ -466,6 +468,13 @@ namespace Zjcs.Combat.Official
         public int ActionExistAppliedStatusInstanceId;
         public bool IsActionExistGenerated;
         public int ActionExistSourceInstanceId;
+        // Official FightStatusConsumeStackCountComponent.
+        public bool HasConsumeStackCount;
+        public bool ConsumeStackCountRulesSupported;
+        public int ConsumeStackCountTargetStatusId;
+        public int ConsumeStackCountThreshold;
+        public List<FightBattleStatusStateTrigger> ConsumeStackCountStatuses =
+            new List<FightBattleStatusStateTrigger>();
         // Official FightStatusHpAccDecreaseComponent. Damage is accumulated independently of cures
         // per the confirmed offline rule; the configured threshold is consumed on each trigger.
         public bool HasHpAccDecrease;

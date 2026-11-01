@@ -47,6 +47,25 @@ namespace Zjcs.Combat.Official
             return result;
         }
 
+        public static int ApplyRoundStartStatuses(FightBattleStatusState source,
+            FightBattleUnitState listener, IReadOnlyList<FightBattleUnitState> units,
+            FightOfficialCombatCatalog catalog, FightRandomStream random)
+        {
+            if (source == null || listener == null || units == null || catalog == null
+                || !source.HasRoundStartTrigger || !source.RoundStartRulesSupported
+                || source.RoundStartStatuses == null
+                || (source.RoundStartMaxCount >= 0
+                    && source.RoundStartTriggeredCount >= source.RoundStartMaxCount)
+                || FightStatusLifecycle.ResolveTargetUnitId(source,
+                    source.RoundStartListenTarget, units) != listener.Id) return 0;
+            FightBattleUnitState target = units.FirstOrDefault(unit => unit != null
+                && unit.Id == source.OwnerId);
+            int applied = ApplyStatusTriggers(target, source, source.RoundStartStatuses,
+                catalog, random);
+            if (applied > 0) source.RoundStartTriggeredCount++;
+            return applied;
+        }
+
         public static List<FightBattleStatusSkillInvocation> CollectRoundEndSkills(
             FightBattleUnitState listener, IReadOnlyList<FightBattleUnitState> units,
             FightRandomStream random)
@@ -548,6 +567,66 @@ namespace Zjcs.Combat.Official
                 }
             }
             return changed;
+        }
+
+        public static int ApplyConsumeStackCounts(FightBattleUnitState owner,
+            FightOfficialCombatCatalog catalog, FightRandomStream random)
+        {
+            if (owner == null || owner.Statuses == null || catalog == null) return 0;
+            int triggered = 0;
+            foreach (FightBattleStatusState source in new List<FightBattleStatusState>(owner.Statuses))
+            {
+                if (source == null || !source.HasConsumeStackCount
+                    || !source.ConsumeStackCountRulesSupported
+                    || source.ConsumeStackCountTargetStatusId <= 0
+                    || source.ConsumeStackCountThreshold <= 0) continue;
+                FightBattleStatusState target = owner.Statuses.Find(status => status != null
+                    && status.ClassId == source.ConsumeStackCountTargetStatusId);
+                if (target == null) continue;
+                while (target.StackCount >= source.ConsumeStackCountThreshold)
+                {
+                    int previous = target.StackCount;
+                    target.StackCount -= source.ConsumeStackCountThreshold;
+                    FightStatusPropertyRuntime.OnStackChanged(target, previous);
+                    triggered++;
+                    triggered += ApplyStatusTriggers(owner, source,
+                        source.ConsumeStackCountStatuses, catalog, random);
+                    if (target.StackCount <= 0)
+                    {
+                        FightStatusLifecycle.End(owner, target);
+                        break;
+                    }
+                }
+            }
+            return triggered;
+        }
+
+        private static int ApplyStatusTriggers(FightBattleUnitState target,
+            FightBattleStatusState source, List<FightBattleStatusStateTrigger> triggers,
+            FightOfficialCombatCatalog catalog, FightRandomStream random)
+        {
+            if (target == null || source == null || triggers == null || catalog == null)
+                return 0;
+            int applied = 0;
+            foreach (FightBattleStatusStateTrigger trigger in triggers)
+            {
+                if (trigger == null || trigger.EntityId <= 0 || trigger.AffectedByProp
+                    || trigger.Target != FightStatusLifecycle.TargetApplicator
+                    || !Roll(trigger.BasePercent, random)) continue;
+                int instanceId = 1;
+                foreach (FightBattleStatusState existing in target.Statuses)
+                    if (existing != null && existing.InstanceId >= instanceId)
+                        instanceId = existing.InstanceId + 1;
+                FightBattleStatusState template = catalog.CreateStatus(trigger.EntityId,
+                    target.Id, source.CreatorId, instanceId, source.RootSkillId,
+                    source.ApplyingSkillItemId, source.SourceSkillRank, source.SourceSkillLevel,
+                    source.SourceSubRank, source.SourceProperties, 0,
+                    source.ReplacementProperties, source.BlessPropertyScales);
+                template.ReportSource = FightBattleStatusReportSource.Resolve(source).Copy();
+                FightStatusLifecycle.Apply(target, template, -1, instanceId, random);
+                applied++;
+            }
+            return applied;
         }
 
         private static FightBattleUnitState FindUnit(

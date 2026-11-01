@@ -959,6 +959,8 @@ namespace Zjcs.Combat.Official
                 Component(components, "FightStatusConsumeStackSkillDmgScaleComponent");
             Dictionary<string, object> actionExist =
                 Component(components, "FightStatusActionExistComponent");
+            Dictionary<string, object> consumeStackCount =
+                Component(components, "FightStatusConsumeStackCountComponent");
             Dictionary<string, object> skillCooldownModify =
                 Component(components, "FightStatusSkillModifyCDComponent");
             Dictionary<string, object> permanentSkillCooldownReduction =
@@ -1176,6 +1178,13 @@ namespace Zjcs.Combat.Official
                 ActionExistRulesSupported = actionExist != null
                     && SupportsActionExist(actionExist),
                 ActionExistStatusId = actionExist == null ? 0 : Int(actionExist, "StatusId"),
+                HasConsumeStackCount = consumeStackCount != null,
+                ConsumeStackCountRulesSupported = consumeStackCount != null
+                    && SupportsConsumeStackCount(consumeStackCount),
+                ConsumeStackCountTargetStatusId = consumeStackCount == null ? 0
+                    : Int(consumeStackCount, "TargetStatusClassId"),
+                ConsumeStackCountThreshold = consumeStackCount == null ? 0
+                    : Int(consumeStackCount, "StackCount"),
                 HasHpAccDecrease = hpAccDecrease != null,
                 AccumulatedDamage = ReadAccumulatedDamage(components),
                 HpAccUnitHp = hpAccDecrease == null ? -1L : Long(hpAccDecrease, "UnitHp", -1L),
@@ -1295,8 +1304,12 @@ namespace Zjcs.Combat.Official
                 ReadHpLimitInvokes(hpLimit, result.HpLimitInvokes);
             }
             if (roundStart != null)
+            {
                 AddHpAccTriggerEntries(roundStart, "StatusTriggerSkillCfgs", "SkillId",
                     result.RoundStartSkills, true);
+                AddHpAccTriggerEntries(roundStart, "StatusTriggerStatusCfgs", "StatusId",
+                    result.RoundStartStatuses, false);
+            }
             if (roundEnd != null)
                 AddHpAccTriggerEntries(roundEnd, "TriggerSkillCfgs", "SkillId",
                     result.RoundEndSkills, true);
@@ -1424,6 +1437,9 @@ namespace Zjcs.Combat.Official
             }
             if (actionExist != null)
                 result.ActionExistConditions.AddRange(IntArray(actionExist, "Conditions"));
+            if (consumeStackCount != null)
+                AddHpAccTriggerEntries(consumeStackCount, "StatusTriggerStatusCfgs", "StatusId",
+                    result.ConsumeStackCountStatuses, false);
             if (hpAccDecrease != null)
             {
                 AddHpAccTriggerEntries(hpAccDecrease, "StatusList", "StatusId",
@@ -2466,7 +2482,7 @@ namespace Zjcs.Combat.Official
                 && !Bool(component, "RemoveOldStatusOnEnd")
                 && ArrayCount(component, "TargetActions") == 0
                 && ArrayCount(component, "TriggerTargetNotStatus") == 0
-                && ArrayCount(component, "StatusTriggerStatusCfgs") == 0
+                && SupportsRoundStartStatuses(component)
                 && ArrayCount(component, "RoundStartHandles") == 0
                 && ArrayCount(component, "StatusReplacePropertyValues") == 0
                 && !HasNonNull(component, "FilterCondition")
@@ -2486,6 +2502,38 @@ namespace Zjcs.Combat.Official
                     || (Int(trigger, "TargetPos") != 0 && Int(trigger, "TargetPos") != 1)
                     || ArrayCount(trigger, "StatusReplacePropertyValues") > 0
                     || ArrayCount(trigger, "TargetWithoutStatusIds") > 0) return false;
+            }
+            return true;
+        }
+
+        private static bool SupportsRoundStartStatuses(Dictionary<string, object> component)
+        {
+            if (!component.TryGetValue("StatusTriggerStatusCfgs", out object raw) || raw == null)
+                return true;
+            foreach (object item in Array(raw, "StatusTriggerStatusCfgs"))
+            {
+                Dictionary<string, object> trigger = Object(item, "round start trigger status");
+                if (Int(trigger, "StatusId") <= 0 || Bool(trigger, "AffectedByProp")
+                    || Int(trigger, "ApplyTarget") != FightStatusLifecycle.TargetApplicator
+                    || ArrayCount(trigger, "StatusReplacePropertyValues") > 0)
+                    return false;
+            }
+            return true;
+        }
+
+        private static bool SupportsConsumeStackCount(Dictionary<string, object> component)
+        {
+            if (Int(component, "TargetStatusClassId") <= 0
+                || Int(component, "StackCount") <= 0
+                || ArrayCount(component, "StatusReplacePropertyValues") > 0
+                || ArrayCount(component, "StatusTriggerStatusCfgs") == 0) return false;
+            foreach (object item in Array(component["StatusTriggerStatusCfgs"],
+                "consume stack trigger status"))
+            {
+                Dictionary<string, object> trigger = Object(item, "consume stack trigger status");
+                if (Int(trigger, "StatusId") <= 0 || Bool(trigger, "AffectedByProp")
+                    || Int(trigger, "ApplyTarget") != FightStatusLifecycle.TargetApplicator
+                    || ArrayCount(trigger, "StatusReplacePropertyValues") > 0) return false;
             }
             return true;
         }
