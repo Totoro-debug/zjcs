@@ -72,7 +72,7 @@ Unity 规则载荷由 `scripts/prepare_unity_equipment_catalog.py` 从上述固�
 
 `OfflineEquipmentOperations` 已接入穿戴职业检查、部位强化报价和材料事务、星石候选/镶卸、碎片职业过滤与部位排序、碎片实例生成回调、装备分解限制与原奖励/星石返还、以及继承属性事务。强化和祝福限制读取原 `system_level_limit`、`system_level_gap_limit` 与材料表；星石条件由调用方按原条件对象求值；继承重掷由调用方传入官方生成回调，以便单机存档事务整体回滚。
 
-角色页的 `CharacterEquipSlots` 从五个原角色槽与背包调用穿戴、卸下、锁定、分解、强化、星石、继承、碎片合成操作；详情、候选排序、比较与操作状态绑定角色页。`OfflineEquipmentPropSource` 接入主副属性、普通/特殊词条、星石普通与特殊属性、祝福强化、套装阈值及装备共鸣；普通星石按原 `GemPartInfoParser.GetGemProp` 使用物品阶位和属性类型查 `level_prop`，特殊星石按 `EquipAttributesPropsInfo.GetGemSpecialProp` 取 `Props[0]`。有效词条按 `ExclusiveGroup`/`SelfExclusive` 比较战力后择优；`CalculateCombatRating` 已计算装备基础属性、套装评分、普通/特殊词条品质与祝福缩放。被动特殊词条的技能实体属性转换尚未合入战斗角色属性。角色属性页和战斗属性读取同一来源，分解/继承/镶卸/强化仍由 progression 存档事务提交。
+角色页的 `CharacterEquipSlots` 从五个原角色槽与背包调用穿戴、卸下、锁定、分解、强化、星石、继承、碎片合成操作；详情、候选排序、比较与操作状态绑定角色页。`OfflineEquipmentPropSource` 接入主副属性、普通/特殊词条、星石普通与特殊属性、祝福强化、套装阈值及装备共鸣；普通星石按原 `GemPartInfoParser.GetGemProp` 使用物品阶位和属性类型查 `level_prop`，特殊星石按 `EquipAttributesPropsInfo.GetGemSpecialProp` 取 `Props[0]`。有效词条按 `ExclusiveGroup`/`SelfExclusive` 比较战力后择优；`CalculateCombatRating` 已计算装备基础属性、套装评分、普通/特殊词条品质与祝福缩放。类型4/5的战斗被动已由战斗装配入口生成状态绑定；尚未接入的是 `IsApplyInBattle=false` 词条的战外属性转换。角色属性页和战斗属性读取同一来源，分解/继承/镶卸/强化仍由 progression 存档事务提交。
 
 `OfficialEquipmentGenerator` 按固定版 `EquipInfo.GenerateItemParams` 与 `EquipAttributeInfoParser` 的已还原数据迁移掉落等级、祝福等级、主副属性类型权重、随机词条类型/互斥、品质与阶位过滤、被动品质及套装抽取。代码依据为 `.tools/source-packages/official-code/common-source/Common/PlayerEquipDataExt.cs`、`EquipInfo.cs`、`EquipAttributeInfoParser.cs`、`EquipUpgradeMatInfoParser.cs` 和客户端 `EquipPromotePanelUpgradePanel.cs`、`EquipInheritSelectContent.cs`、`EquipSelectPanel.cs`。
 
@@ -86,7 +86,7 @@ Unity 官方载荷中有 39 个装备、强化、继承、星石、详情与碎�
 
 ## 尚未实现
 
-- 被动词条的正式战斗状态装配、品质首品阶、装备等级／套装平均等级、`LimitRank` 选择、替换参数和战斗内祝福缩放已接入；仍缺类型4且 `IsApplyInBattle=false` 的战外属性转换：原 `BattleFormulaHandler.CalcEquipTermExchangeProps` 按 `EquipAttributesPassiveSkillInfo.SkillId` 查技能实体，用词条品质对应的首个品阶、装备等级和持有者位阶计算技能属性，同位阶祝福经 `SkillPropMapFactorIds` 缩放，再由 `FightStatusPropComponent.TransitionPropCfgs` 按角色原始战斗总属性计算转换量。此转换没有把 `PropsFactors`／`QualityFactors` 再乘入技能属性；当前尚未合入玩家属性来源。
+- 类型4/5的正式战斗状态装配、品质首品阶、装备等级／套装平均等级、`LimitRank` 选择、替换参数和战斗内祝福缩放已接入；仍缺类型4且 `IsApplyInBattle=false` 的战外属性转换：原 `BattleFormulaHandler.CalcEquipTermExchangeProps` 按 `EquipAttributesPassiveSkillInfo.SkillId` 查技能实体，用词条品质对应的首个品阶、装备等级和持有者位阶计算技能属性，同位阶祝福经 `SkillPropMapFactorIds` 缩放，再由 `FightStatusPropComponent.TransitionPropCfgs` 按角色原始战斗总属性计算转换量。此转换没有把 `PropsFactors`／`QualityFactors` 再乘入技能属性；当前尚未合入玩家属性来源。
 - 继承事务已执行来源/目标实例更新并保存，但成功后界面只关闭弹窗并刷新装备槽；原继承结果页逐条显示接收属性、替换属性和首项奖励装备实例的表现尚未接入。
 - 当前交互面板使用已恢复节点模板组合，没有直接恢复装备原 prefab 完整坐标/锚点、字体和层级；尚缺星石长按原详情、部分重复合成确认及原材料不足/取消状态表现。
 - 恢复 `Effect_ui_Upgrade` 六个粒子系统、目标词条顺序、六类原奖励挂件与原按钮/动画音效；检查 Android prefab/bundle 与编译 shader 的 Windows 兼容性。
