@@ -366,6 +366,7 @@ namespace Zjcs.Presentation.Home
                     Level = PlayerSlotLevel(save, 101, slot), SubRank = player.SubRank
                 });
             }
+            passives.AddRange(OfficialEquipmentBattlePassives.Collect(host.DailyDungeonProgression, save, player.SubRank));
             combat.AssembleUnit(player, skills, combat.CreatePassiveStatusBindings(player, skillItems, passives));
         }
 

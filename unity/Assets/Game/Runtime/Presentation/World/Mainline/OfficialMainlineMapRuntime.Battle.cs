@@ -510,6 +510,7 @@ namespace Zjcs.Presentation.World
                     SubRank = player.SubRank
                 });
             }
+            passives.AddRange(OfficialEquipmentBattlePassives.Collect(progression, progression.Player, player.SubRank));
             List<FightOfficialStatusBinding> passiveStatuses = combatCatalog
                 .CreatePassiveStatusBindings(player, skillItems, passives);
             combatCatalog.AssembleUnit(player, bindings, passiveStatuses);

@@ -40,6 +40,7 @@ namespace Zjcs.Editor
                 player.InitialWeaponType = 200;
                 if (!player.Skills.Skills.Any(value => value.ClassId == 10014))
                     player.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = 10014, Rank = 1 });
+                ConfigureEquipmentBattleProfile(player, catalog.RankOfSubRank(player.SubRank));
             }, "battle-host-acceptance-fixture").IsApplied, "Could not prepare the isolated battle profile.");
             var progression = new OfflineCharacterProgressionService(profile, catalog);
             progression.AttachSkillRules(assets.LoadSkillRules(), assets.LoadSkillRecommendations().recommendations);
@@ -296,6 +297,13 @@ namespace Zjcs.Editor
 
         private static void VerifyTimelineProjection()
         {
+            // The equipment-only probe uses a fixed portrait viewport while the
+            // shared timeline anchor is validated by the regular host acceptance.
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_EQUIPMENT_TERMS_ACCEPTANCE") == "1")
+            {
+                Debug.Log("[Battle hosts] timeline projection deferred during equipment-term probe.");
+                return;
+            }
             var timeline = UnityEngine.Object.FindObjectOfType<OfficialBattleSceneTimelineView>();
             var home = UnityEngine.Object.FindObjectOfType<HomeFeatureRuntime>();
             var bindings = OfficialBattleTimelineAssets.Load();
@@ -361,6 +369,7 @@ namespace Zjcs.Editor
             Require(controller != null && controller.Checkpoint != null && controller.HasBattleEnvironment,
                 name + " did not mount the common battle module/environment.");
             FightBattleCheckpoint checkpoint = controller.Checkpoint;
+            VerifyEquipmentBattlePassives(name, checkpoint, false);
             TriggerChainProbe triggerChains = ConfigureTriggerChainProbe(checkpoint);
             ReplayProbe replays = ConfigureReplayProbe(checkpoint);
             StatusReplayProbe statusReplays = ConfigureStatusReplayProbe(checkpoint);
@@ -456,6 +465,7 @@ namespace Zjcs.Editor
             triggerChains?.Verify(name, checkpoint);
             replays?.Verify(name, checkpoint);
             statusReplays?.Verify(name, checkpoint);
+            VerifyEquipmentBattlePassives(name, checkpoint, true);
             yield return SettleUi();
             yield return Capture(output, name + "-result");
             Debug.Log("[Battle hosts] " + name + " completed counter=" + checkpoint.Counter + " won=" + checkpoint.Outcome.Won);

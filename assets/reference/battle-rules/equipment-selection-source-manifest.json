@@ -1,0 +1,145 @@
+{
+  "code_manifest": "884_156692",
+  "configuration_manifest": "854_156383",
+  "original": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleFormulaHandler.cs",
+      "bytes": 191212,
+      "sha256": "ce40db54d87030ded0a9f8a6dc95db5a3a4e46ae02bf76a9d273fe092a703d12"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EquipAttributeInfoParser.cs",
+      "bytes": 5196,
+      "sha256": "358b2385c7d9fbeba55f6bad2af62055b9d40f1cbd54d3a728891ad1327f435b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EquipAttributesPropsInfo.cs",
+      "bytes": 3701,
+      "sha256": "51750bf7df6c9db45501f632bbed57c67fa87ac83d0d7c6b6863aaf0a9227c31"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EquipAttributesPassiveSkillInfo.cs",
+      "bytes": 7642,
+      "sha256": "f52f402c26bb6a87ac154502882fc7eea03a45bd7b3becbfbcde1f8d4dc618c6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EquipAttributeConfig.cs",
+      "bytes": 3425,
+      "sha256": "ae6c85a8969efa2c7c8d4b8ba25256487051bb94059fadd40271ac895369df6e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SkillRankInfoParser.cs",
+      "bytes": 6213,
+      "sha256": "0722e5a0e5388d72b2c93ebee1fb8155c0b3b72f384fb6282a021d1944931849"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ValueType.cs",
+      "bytes": 66,
+      "sha256": "b7e6def918c4f3ee00f077e74f69bb6b02ccfb8b0a8f0b3f840689192fbd761c"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/Equipment/Runtime/equipment-runtime-rules.json",
+      "bytes": 13390605,
+      "sha256": "6217579aef537d1bebdf600ee0ebb3dfb449ec8596ef27af65e88e65bbaadb9a"
+    },
+    {
+      "path": "unity/Assets/Official/Equipment/Runtime/source-manifest.json",
+      "bytes": 2745,
+      "sha256": "7bbb4dbec02a1d535fce79be4fc7b53e0678f12354b5a9e3a9ad809ddda9538d"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/rules.json",
+      "bytes": 37209479,
+      "sha256": "ce75dd1cfa8309ccf5eb1b9eac01599404ad1f6579a7aa235c70ab2d730fc22c"
+    },
+    {
+      "path": "unity/Assets/Official/Skills/skill-runtime-rules.json",
+      "bytes": 1065888,
+      "sha256": "1ece75e11e618c4a3fef61bb490ed2a3f101f3560649c3384f37eafac8183aba"
+    }
+  ],
+  "adapters": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Progression/OfflineEquipmentPropSource.cs",
+      "bytes": 30323,
+      "sha256": "a1dff0f702ab43bfab12a31e6ab717a9047cefe69098d4963b61cbb965dbda20"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Progression/OfflineEquipmentPropSource.BattleTerms.cs",
+      "bytes": 5915,
+      "sha256": "410a82181dd4d0a726de235022376260e72af11413bc219902e37790c5cecd3c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.BattleTerms.cs",
+      "bytes": 1804,
+      "sha256": "2ea4086ce35897c818c0d97801c878c4726db614c02d0b741aa800d17dc5ade8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialEquipmentBattlePassives.cs",
+      "bytes": 1347,
+      "sha256": "5500064e4e03350b3a6daccc443eeb094b07a7386aedc9b289c192bb4375956f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs",
+      "bytes": 148331,
+      "sha256": "6119900658c84494f75e8e9b1000418f08e98d65cbf24a8d98bc3610e8cd69fb"
+    }
+  ],
+  "hosts": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/DailyDungeonBattleRunner.cs",
+      "bytes": 54531,
+      "sha256": "846681c4d10e0be228a6ce5d302657464899359dcc5fb98c0160efdfbc4b176a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/ArenaBattleRunner.cs",
+      "bytes": 27918,
+      "sha256": "dbc7cc0337a409853cd0daacc51eb8ac0429d9d6f93f49e11454664cbb2dc4ef"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/FantasyTowerBattleRunner.cs",
+      "bytes": 30096,
+      "sha256": "ba2853f4aa8862d4074c9623e4c3fd49e4e633c7aa814b519900e09c34e2c636"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/SkillDamageTestBattleRunner.cs",
+      "bytes": 21636,
+      "sha256": "4655c179f5b20b93ec193e6e42e8821395024589f26ff1a73025d707f9e753ac"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Battle.cs",
+      "bytes": 41000,
+      "sha256": "5527479e6700c60db68e12ab347d488b12fc0cc8b5227f2e0b5630df09451317"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.EquipmentTerms.cs",
+      "bytes": 4942,
+      "sha256": "ef21763f81cc39764a8f4caf5230c00117b1242abe6d901f8bdcd682e4465249"
+    }
+  ],
+  "validation": [
+    {
+      "path": "scripts/prepare_battle_equipment_selection_reference.py",
+      "bytes": 7561,
+      "sha256": "444437c9411c6e42b84bb193e98ee598dc522e78e6c73fd13c53fcfe5ed1ddb8"
+    },
+    {
+      "path": "scripts/fixtures/battle_equipment_selection.cs",
+      "bytes": 13877,
+      "sha256": "4751fcef25742a279476bf129232e21054819509b8cbbe7b08016126538422c0"
+    },
+    {
+      "path": "scripts/test_battle_equipment_selection.ps1",
+      "bytes": 1371,
+      "sha256": "382b20e03b3afa3179fef2299568e5f2f9f35d39028ac889d24dcf5194be9028"
+    },
+    {
+      "path": "scripts/test_battle_equipment_replay.ps1",
+      "bytes": 4874,
+      "sha256": "30f39b0fb8da1a41c55ccc24a7503999888d1fd242d3208d53078584c8c8134a"
+    }
+  ],
+  "operation": "Port the official CheckEquipsAllEffectTerm order: filter IsApplyInBattle before exclusivity, compare incoming LimitRank/BlessLevel contexts with ties retaining the first term, use first skill rank by quality, and bind equipped and active suit passive skills. Confirmed offline rule uses effective equipment level and integer mean for growing suit terms, while fixed replacement parameters remain unchanged; owner SubRank propagates to status and child skills."
+}

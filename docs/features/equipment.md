@@ -64,9 +64,11 @@ Unity 规则载荷由 `scripts/prepare_unity_equipment_catalog.py` 从上述固�
 
 `OfflineEquipmentProfile` 为五部位保留独立实例 ID、实例词条、星石、锁定状态、穿戴关系和各部位基础/赛季祝福强化状态。`OfflineMainlineProgressSession.ApplyCharacterMutation` 对装备数据与玩家背包使用同一存档副本及原子写盘，旧存档缺少装备字段时初始化为空装备档案。
 
-装备词条的类型替换参数已局部迁移：`OfficialEquipmentCatalog.CalculateTermReplacementProperties` 直接适配当前 `884_156692` 共享源码 `BattleFormulaHandler.CalcEquipTermsReplacePropDictByPropGroupIndices`、`EquipAttributesPassiveSkillInfo.GetEquipAttributePassiveSkillProp` 与祝福查询，消费保留 `854_156383` 身份的装备运行表。按实例索引取 `Props.Values`，保留原 `Long`／`Float` 类型及原始定点数；只有角色位阶与装备位阶相同且祝福非零时应用 `PropBlessScaleFactorIds`，缺少缩放行回退1，乘积向零截断。此参数计算不额外乘品质倍率；品质驱动的技能属性计算与 `PropsFactors`／`QualityFactors` 战力计算分别另行处理。被动技能绑定已将替换参数传到状态装配。输入、原方法与适配代码哈希见[装备词条来源](../../assets/reference/battle-rules/equipment-term-source-manifest.json)。有效穿戴词条／套装来源与正式宿主调用仍待接通，本项不表示装备被动玩法完整完成。
+装备词条的类型替换参数已局部迁移：`OfficialEquipmentCatalog.CalculateTermReplacementProperties` 直接适配当前 `884_156692` 共享源码 `BattleFormulaHandler.CalcEquipTermsReplacePropDictByPropGroupIndices`、`EquipAttributesPassiveSkillInfo.GetEquipAttributePassiveSkillProp` 与祝福查询，消费保留 `854_156383` 身份的装备运行表。按实例索引取 `Props.Values`，保留原 `Long`／`Float` 类型及原始定点数；只有角色位阶与物品 `LimitRank` 相同且祝福非零时应用 `PropBlessScaleFactorIds`，缺少缩放行回退1，乘积向零截断。此参数计算不额外乘品质倍率；品质驱动的技能属性计算与 `PropsFactors`／`QualityFactors` 战力计算分别另行处理。有效词条筛选、正式战斗装配、原方法和适配哈希见[装备被动选择来源清单](../../assets/reference/battle-rules/equipment-selection-source-manifest.json)。
 
-该参数链的规则验证入口为 `scripts/test_battle_equipment_replay.ps1`（PowerShell 7）：真实词条40015的浮点原值800与整数原值1经17015物品的被动装配，得到60150状态的8%概率／每回合一次；未改正式概率的确定性战斗在第2步实际重放，并通过检查点往返。词条40000验证165×1.5截断为247、跨位阶不缩放、缺少祝福行回退1及越界索引跳过；连续重放基线同时通过。Unity内置屏D3D12导入／编译与 `ProjectTools.Validate` 通过，退出码0。装备目录校验另验证1,223件装备、360种星石、39个原UI层级和132张原图；其UI载荷的末尾CRLF还原为LF后，与既有长度3,118,034及SHA256完全一致，来源清单未修改，并用 `.gitattributes` 保持该文件LF。全量静态检查通过；状态组件的通用参数读取及隔离战斗验证见[战斗执行](battle-execution.md)。此处为参数计算／装配验证，尚无穿戴操作至战斗的Play Mode或本项Windows Player验证。
+正式战斗装配已接通 `OfflineEquipmentPropSource.CollectBattlePassiveTerms`：按官方 `CheckEquipsAllEffectTerm` 先过滤 `IsApplyInBattle`，再按 `ExclusiveGroup`／`SelfExclusive` 使用后加入装备的 `LimitRank`、祝福和原战力上下文比较，平局保留先加入项。穿戴词条和达到阈值的套装被动都会生成 `FightOfficialPassiveSkillBinding`；词条品质映射到官方技能品阶的首个 `Rank`，装备词条使用 `GetLevel` 的有效装备等级，套装随等级变化时使用同品阶激活装备有效等级的整数平均，固定参数保持原值，来源位阶取持有者位阶。替换参数和 `SkillPropMapFactorIds` 祝福缩放随绑定传给状态及其子技能。装备基础属性、套装和战力路径也统一按物品 `LimitRank` 判断。输入、原方法与适配代码哈希见[装备词条来源](../../assets/reference/battle-rules/equipment-term-source-manifest.json)。
+
+规则验证入口包括 `scripts/test_battle_equipment_replay.ps1` 与 `scripts/test_battle_equipment_selection.ps1`（PowerShell 7）。前者验证真实40015／17015的800浮点原值、1整数上限、60150的8%概率和检查点；后者编译 `884_156692` 原 `CheckEquipsAllEffectTerm`、互斥评分、套装选择和属性组方法，与本地实现对比1,042组组合，覆盖战斗过滤、混合实现类型、入场品阶／祝福上下文、平局、套装平均等级和固定参数。Unity `ProjectTools.Validate` 和84,658 GUID静态检查通过。内置屏D3D12带画面公共宿主实际结算日常副本335步、竞技场22步、幻境之塔36步；三宿主均从隔离玩家装备档案装入真实40015词条及四件套50008，分别验证装备等级31、套装均值34、品质首技能品阶10、持有者位阶4、原类型替换值和检查点往返，日常副本按原8%概率命中两次，另两场未命中。实际查看日常副本准备截图；主城及战斗HUD的既有表现限制参见[战斗执行](battle-execution.md)。装备目录校验另验证1,223件装备、360种星石、39个原UI层级和132张原图；UI载荷末尾CRLF还原为LF后与既有长度3,118,034及SHA256一致，来源清单未修改。全量静态检查及重放回归通过；状态组件验证见[战斗执行](battle-execution.md)。本项尚未构建／发布Windows Player。
 
 `OfflineEquipmentOperations` 已接入穿戴职业检查、部位强化报价和材料事务、星石候选/镶卸、碎片职业过滤与部位排序、碎片实例生成回调、装备分解限制与原奖励/星石返还、以及继承属性事务。强化和祝福限制读取原 `system_level_limit`、`system_level_gap_limit` 与材料表；星石条件由调用方按原条件对象求值；继承重掷由调用方传入官方生成回调，以便单机存档事务整体回滚。
 
@@ -84,7 +86,7 @@ Unity 官方载荷中有 39 个装备、强化、继承、星石、详情与碎�
 
 ## 尚未实现
 
-- 被动词条的品质、索引、`EquivalentProps` 战力估值和祝福倍率，以及类型替换参数／被动装配传递已接入；有效穿戴／套装词条的正式战斗调用仍缺。另有类型4且 `IsApplyInBattle=false` 的战外属性转换：原 `BattleFormulaHandler.CalcEquipTermExchangeProps` 按 `EquipAttributesPassiveSkillInfo.SkillId` 查技能实体，用词条品质对应的首个品阶、等级1和 `SubRank.Norank` 计算技能属性，同位阶祝福经 `SkillPropMapFactorIds` 缩放，再由 `FightStatusPropComponent.TransitionPropCfgs` 按角色原始战斗总属性计算转换量。此转换没有把 `PropsFactors`／`QualityFactors` 再乘入技能属性；当前尚未合入玩家属性来源。
+- 被动词条的正式战斗状态装配、品质首品阶、装备等级／套装平均等级、`LimitRank` 选择、替换参数和战斗内祝福缩放已接入；仍缺类型4且 `IsApplyInBattle=false` 的战外属性转换：原 `BattleFormulaHandler.CalcEquipTermExchangeProps` 按 `EquipAttributesPassiveSkillInfo.SkillId` 查技能实体，用词条品质对应的首个品阶、装备等级和持有者位阶计算技能属性，同位阶祝福经 `SkillPropMapFactorIds` 缩放，再由 `FightStatusPropComponent.TransitionPropCfgs` 按角色原始战斗总属性计算转换量。此转换没有把 `PropsFactors`／`QualityFactors` 再乘入技能属性；当前尚未合入玩家属性来源。
 - 继承事务已执行来源/目标实例更新并保存，但成功后界面只关闭弹窗并刷新装备槽；原继承结果页逐条显示接收属性、替换属性和首项奖励装备实例的表现尚未接入。
 - 当前交互面板使用已恢复节点模板组合，没有直接恢复装备原 prefab 完整坐标/锚点、字体和层级；尚缺星石长按原详情、部分重复合成确认及原材料不足/取消状态表现。
 - 恢复 `Effect_ui_Upgrade` 六个粒子系统、目标词条顺序、六类原奖励挂件与原按钮/动画音效；检查 Android prefab/bundle 与编译 shader 的 Windows 兼容性。

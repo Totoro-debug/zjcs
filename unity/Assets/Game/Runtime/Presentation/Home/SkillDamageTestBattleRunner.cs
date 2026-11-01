@@ -289,6 +289,7 @@ namespace Zjcs.Presentation.Home
                     Level = Math.Max(1, progression.SkillProgression.SlotLevel(player.Skills, 101, slot,
                         progression.SkillContext().CurrentSeasonId)),
                     SubRank = player.SubRank }).Where(value => value.ItemId > 0).ToList();
+            passive.AddRange(OfficialEquipmentBattlePassives.Collect(progression, player, unit.SubRank));
             combat.AssembleUnit(unit, active, combat.CreatePassiveStatusBindings(unit, items, passive));
         }
 

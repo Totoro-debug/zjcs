@@ -4,6 +4,8 @@
 
 本页只记录官方输入与来源凭据。各模块的原始实现、转换／绑定细节、当前实现和验证边界见所属功能／地图页；逐文件记录以模块来源清单为准。
 
+原装备被动词条选择输入：`record_battle_equipment_selection_sources.py` 校验 `884_156692` 的战斗词条过滤／互斥比较、套装阈值、被动属性、技能品阶与 `854_156383` 装备／战斗数据；源代码、配置及运行适配 SHA256 见[装备被动选择来源](battle-rules/equipment-selection-source-manifest.json)，行为与验证见[装备功能](../../docs/features/equipment.md)。
+
 原场景部件应用代码输入：`prepare_battle_renderer_part_sources.py` 核验 `884_156692` 解码程序集与6份官方应用源码，记录加载／池化／分层／动作通知代码及显式适配端口；输入、依赖与迁移输出 SHA256 见 [场景部件凭据](battle-animation/renderer-parts-source-manifest.json)，当前实现及验证范围见[战斗执行](../../docs/features/battle-execution.md)。
 
 原核心人物战斗动作输入：`prepare_battle_core_pose_fixtures.py` 从哈希匹配的 `871_156598` 无损人物载荷提取全部职业战斗动作边界，复用已有原角色资源、外观配置／表、加载与染色链的来源凭据；输入、依赖、实现与夹具 SHA256 见 [核心人物动作凭据](battle-animation/core-pose-source-manifest.json)，使用和验证范围见[战斗执行](../../docs/features/battle-execution.md)。

@@ -10,7 +10,7 @@ namespace Zjcs.Offline.Progression
     /// Original <c>EquipPropChunk</c>: main/secondary/other equipment properties, upgraded and
     /// blessed values, and the active equipment suit thresholds.
     /// </summary>
-    public sealed class OfflineEquipmentPropSource : IOfflineCharacterScoredPropSource
+    public sealed partial class OfflineEquipmentPropSource : IOfflineCharacterScoredPropSource
     {
         private static readonly int[] Positions = { 10, 11, 12, 13, 14 };
 
@@ -119,10 +119,10 @@ namespace Zjcs.Offline.Progression
             int level = EquipLevel(player, equip, instance);
             int upgradeLevel = UpgradeLevel(player, Integer(type, "EquipPos"));
             int rank = rankOfSubRank(player.SubRank);
-            int equipRank = Integer(equip, "EquipRankIndex");
-            MergeMain(result, equip, level, upgradeLevel, instance.BlessLevel, rank, true,
+            int equipRank = Integer(item, "LimitRank");
+            MergeMain(result, equip, level, upgradeLevel, instance.BlessLevel, rank, Integer(item, "LimitRank"), true,
                 Integer(equip, "MainPropType"));
-            MergeMain(result, equip, level, upgradeLevel, instance.BlessLevel, rank, false,
+            MergeMain(result, equip, level, upgradeLevel, instance.BlessLevel, rank, Integer(item, "LimitRank"), false,
                 instance.SecondaryProperty);
             MergeOther(result, equip, instance, level, includeSpecialTerms ? rank : 0);
             return result;
@@ -137,7 +137,7 @@ namespace Zjcs.Offline.Progression
                 OfflineEquipmentInstance instance = Find(player, slot.InstanceId);
                 if (instance == null || instance.SuitId == 0) continue;
                 Dictionary<string, object> equip = catalog.Find("equip", instance.ItemId);
-                if (equip == null || Integer(equip, "EquipRankIndex") != rank) continue;
+                if (equip == null || Integer(catalog.Find("item", instance.ItemId), "LimitRank") != rank) continue;
                 counts[instance.SuitId] = counts.TryGetValue(instance.SuitId, out int count) ? count + 1 : 1;
             }
             var result = new Dictionary<int, long>();
@@ -151,7 +151,7 @@ namespace Zjcs.Offline.Progression
         }
 
         private void MergeMain(Dictionary<int, long> result, Dictionary<string, object> equip, int level,
-            int upgradeLevel, int blessLevel, int rank, bool main, int propType)
+            int upgradeLevel, int blessLevel, int rank, int equipRank, bool main, int propType)
         {
             string prefix = main ? "Main" : "Sec";
             if (propType == 0) return;
@@ -166,7 +166,7 @@ namespace Zjcs.Offline.Progression
                 double bless = catalog.PropertyValue(Integer(equip, "Bless" + prefix + "PropId"), blessLevel,
                     propType) / 10000.0;
                 long rawBless = (long)(value * bless);
-                if (Integer(equip, "EquipRankIndex") == rank) value += rawBless;
+                if (equipRank == rank) value += rawBless;
             }
             CharacterPropFormula.Merge(result, new Dictionary<int, long> { { propType, value } });
         }
@@ -205,11 +205,10 @@ namespace Zjcs.Offline.Progression
             Dictionary<string, object> row = catalog.Find("equip_attributes_props", term.PropertyId, "Id");
             List<object> groups = ObjectList(row, "Props");
             if (groups.Count == 0) return result;
-            int group = Math.Max(0, Math.Min(groups.Count - 1, term.Group));
+            int group = term.Group;
             Dictionary<string, object> values = groups[group] as Dictionary<string, object>;
             if (values == null) return result;
-            Dictionary<string, object> equip = instance == null ? null : catalog.Find("equip", instance.ItemId);
-            int equipRank = Integer(equip, "EquipRankIndex");
+            int equipRank = ItemLimitRank(instance);
             int blessLevel = instance == null ? 0 : instance.BlessLevel;
             double scale = equipRank == playerRank
                 ? BlessScale(Integer(row, "PropBlessScaleFactorId"), equipRank, blessLevel) : 1.0;
@@ -217,7 +216,8 @@ namespace Zjcs.Offline.Progression
             return result;
         }
 
-        private List<TermCandidate> EffectiveTerms(OfflinePlayerProgress player, CharacterPropScoreContext context)
+        private List<TermCandidate> EffectiveTerms(OfflinePlayerProgress player, CharacterPropScoreContext context,
+            bool checkApplyInBattle = false)
         {
             var result = new List<TermCandidate>();
             var exclusive = new Dictionary<int, TermCandidate>();
@@ -227,19 +227,21 @@ namespace Zjcs.Offline.Progression
                 if (instance == null) continue;
                 foreach (OfflineEquipmentTerm term in instance.Terms ?? new List<OfflineEquipmentTerm>())
                     AddEffectiveTerm(player, context, result, exclusive,
-                        new TermCandidate { Term = term, Instance = instance });
+                        new TermCandidate { Term = term, Instance = instance }, checkApplyInBattle);
             }
             foreach (TermCandidate candidate in ActiveSuitTerms(player))
-                AddEffectiveTerm(player, context, result, exclusive, candidate);
+                AddEffectiveTerm(player, context, result, exclusive, candidate, checkApplyInBattle);
             return result;
         }
 
         private void AddEffectiveTerm(OfflinePlayerProgress player, CharacterPropScoreContext context,
-            List<TermCandidate> effective, Dictionary<int, TermCandidate> exclusive, TermCandidate candidate)
+            List<TermCandidate> effective, Dictionary<int, TermCandidate> exclusive, TermCandidate candidate,
+            bool checkApplyInBattle)
         {
             if (candidate.Term == null || candidate.Term.PropertyId <= 0) return;
             Dictionary<string, object> attribute = catalog.Find("equip_attributes", candidate.Term.PropertyId, "Id");
             if (attribute == null) return;
+            if (checkApplyInBattle && !Boolean(attribute, "IsApplyInBattle")) return;
             int group = Integer(attribute, "ExclusiveGroup");
             bool selfExclusive = Boolean(attribute, "SelfExclusive");
             if (group == 0 && !selfExclusive)
@@ -254,7 +256,11 @@ namespace Zjcs.Offline.Progression
                 effective.Add(candidate);
                 return;
             }
-            if (TermCombatRating(player, current, context) >= TermCombatRating(player, candidate, context)) return;
+            // CheckTermJoinEffective scores both terms with the incoming equipment's context.
+            if (candidate.Instance == null)
+                throw new InvalidOperationException("Original suit term conflicts require an equipment source.");
+            if (TermCombatRating(player, current, context, candidate.Instance)
+                >= TermCombatRating(player, candidate, context, candidate.Instance)) return;
             effective.Remove(current);
             effective.Add(candidate);
             exclusive[key] = candidate;
@@ -263,15 +269,19 @@ namespace Zjcs.Offline.Progression
         private long TermCombatRating(OfflinePlayerProgress player, TermCandidate candidate,
             CharacterPropScoreContext context)
         {
+            return TermCombatRating(player, candidate, context, candidate?.Instance);
+        }
+
+        private long TermCombatRating(OfflinePlayerProgress player, TermCandidate candidate,
+            CharacterPropScoreContext context, OfflineEquipmentInstance scoringEquipment)
+        {
             if (context == null || candidate == null || candidate.Term == null) return 0L;
             Dictionary<string, object> attribute = catalog.Find("equip_attributes", candidate.Term.PropertyId, "Id");
             if (attribute == null) return 0L;
             int type = Integer(attribute, "Type");
             int playerRank = rankOfSubRank(player.SubRank);
-            Dictionary<string, object> equip = candidate.Instance == null ? null
-                : catalog.Find("equip", candidate.Instance.ItemId);
-            int equipRank = Integer(equip, "EquipRankIndex");
-            int blessLevel = candidate.Instance == null ? 0 : candidate.Instance.BlessLevel;
+            int equipRank = ItemLimitRank(scoringEquipment);
+            int blessLevel = scoringEquipment == null ? 0 : scoringEquipment.BlessLevel;
             bool sameRank = equipRank == playerRank;
             Dictionary<int, long> equivalent = PropertyMap(attribute, "EquivalentProps");
 
@@ -279,6 +289,7 @@ namespace Zjcs.Offline.Progression
             {
                 Dictionary<string, object> propRow = catalog.Find("equip_attributes_props",
                     candidate.Term.PropertyId, "Id");
+                if (propRow == null || ObjectList(propRow, "Props").Count <= candidate.Term.Group) return 0L;
                 if (equivalent != null)
                 {
                     long score = context.Common(equivalent);
@@ -286,7 +297,7 @@ namespace Zjcs.Offline.Progression
                         ? BlessScale(Integer(propRow, "PropBlessScaleFactorId"), equipRank, blessLevel) : 1.0;
                     return (long)(score * scale);
                 }
-                return context.Common(TermProperties(player, candidate.Term, candidate.Instance, playerRank));
+                return context.Common(TermProperties(player, candidate.Term, scoringEquipment, playerRank));
             }
             if ((type != 4 && type != 5) || equivalent == null) return 0L;
 
@@ -311,9 +322,10 @@ namespace Zjcs.Offline.Progression
             {
                 if (i >= factors.Count) return 0.0;
                 Dictionary<string, object> factor = factors[i] as Dictionary<string, object>;
+                if (Integer(factor, "Type") != 1) return 0.0; // Original ValueType.Float.
                 List<object> values = ObjectList(factor, "Values");
                 int index = indices[i];
-                if (index < 0 || index >= values.Count) return 0.0;
+                if (index >= values.Count) return 0.0;
                 result *= Convert.ToInt64(values[index], CultureInfo.InvariantCulture) / 10000.0;
             }
             return result;
@@ -351,7 +363,7 @@ namespace Zjcs.Offline.Progression
                     if (qualities.Count > 0)
                         term.SkillQuality = Convert.ToInt32(qualities[0], CultureInfo.InvariantCulture);
                 }
-                result.Add(new TermCandidate { Term = term });
+                result.Add(new TermCandidate { Term = term, SuitId = suit.Key });
             }
             return result;
         }
@@ -364,8 +376,7 @@ namespace Zjcs.Offline.Progression
             {
                 OfflineEquipmentInstance instance = Find(player, slot.InstanceId);
                 if (instance == null || instance.SuitId == 0) continue;
-                Dictionary<string, object> equip = catalog.Find("equip", instance.ItemId);
-                if (equip == null || Integer(equip, "EquipRankIndex") != rank) continue;
+                if (ItemLimitRank(instance) != rank) continue;
                 counts[instance.SuitId] = counts.TryGetValue(instance.SuitId, out int count) ? count + 1 : 1;
             }
             return counts;
@@ -418,7 +429,8 @@ namespace Zjcs.Offline.Progression
         {
             Dictionary<string, object> equip = catalog.Find("equip", instance.ItemId);
             int rank = rankOfSubRank(player.SubRank);
-            if (instance.SuitId == 0 || equip == null || Integer(equip, "EquipRankIndex") != rank) return 0L;
+            if (instance.SuitId == 0 || equip == null
+                || Integer(catalog.Find("item", instance.ItemId), "LimitRank") != rank) return 0L;
             int count = CompatibleSuitPositionCount(instance.SuitId, player.Wardrobe.Profession);
             if (count == 0) return 0L;
             var props = new Dictionary<int, long>();
@@ -433,7 +445,7 @@ namespace Zjcs.Offline.Progression
             var positions = new HashSet<int>();
             foreach (Dictionary<string, object> equip in catalog.Rows("equip"))
             {
-                if (Integer(equip, "SuitId") != suitId) continue;
+                if (!ObjectMap(equip, "SuitId").ContainsKey(suitId.ToString(CultureInfo.InvariantCulture))) continue;
                 int itemId = Integer(equip, "ClassId");
                 Dictionary<string, object> item = catalog.Find("item", itemId);
                 Dictionary<string, object> type = item == null ? null : EquipType(item);
@@ -551,6 +563,7 @@ namespace Zjcs.Offline.Progression
         {
             public OfflineEquipmentTerm Term;
             public OfflineEquipmentInstance Instance;
+            public int SuitId;
         }
     }
 

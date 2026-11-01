@@ -793,6 +793,7 @@ namespace Zjcs.Presentation.Home
                     SubRank = player.SubRank
                 });
             }
+            passives.AddRange(OfficialEquipmentBattlePassives.Collect(battleProgression, save, player.SubRank));
             combat.AssembleUnit(player, skills, combat.CreatePassiveStatusBindings(player, skillItems, passives));
         }
 

@@ -474,6 +474,7 @@ namespace Zjcs.Presentation.Home
                     Level = Math.Max(1, host.DailyDungeonProgression.SkillProgression.SlotLevel(player.Skills, 101, slot,
                         host.DailyDungeonProgression.SkillContext().CurrentSeasonId)),
                     SubRank = player.SubRank }).Where(value => value.ItemId > 0).ToList();
+            passive.AddRange(OfficialEquipmentBattlePassives.Collect(host.DailyDungeonProgression, player, unit.SubRank));
             combat.AssembleUnit(unit, active, combat.CreatePassiveStatusBindings(unit, items, passive));
         }
 
