@@ -955,6 +955,8 @@ namespace Zjcs.Combat.Official
                 Component(components, "FightStatusRoleSummonCountComponent");
             Dictionary<string, object> roleDie =
                 Component(components, "FightStatusRoleDieComponent");
+            Dictionary<string, object> consumeStackSkillDamage =
+                Component(components, "FightStatusConsumeStackSkillDmgScaleComponent");
             Dictionary<string, object> skillCooldownModify =
                 Component(components, "FightStatusSkillModifyCDComponent");
             Dictionary<string, object> permanentSkillCooldownReduction =
@@ -1161,6 +1163,13 @@ namespace Zjcs.Combat.Official
                 RoleDieMeetCount = roleDie == null ? 1 : Int(roleDie, "MeetCount", 1),
                 RoleDieResetCountEveryRound = roleDie != null
                     && Bool(roleDie, "ResetTriggerCountEveryRound"),
+                HasConsumeStackSkillDamageScale = consumeStackSkillDamage != null,
+                ConsumeStackSkillDamageScaleRulesSupported = consumeStackSkillDamage != null
+                    && SupportsConsumeStackSkillDamage(consumeStackSkillDamage),
+                ConsumeStackSkillDamageScaleValuePerStack = consumeStackSkillDamage == null
+                    ? 0L : Long(consumeStackSkillDamage, "ScaleValuePerStack"),
+                ConsumeStackSkillDamageRemoveOnSkillEnd = consumeStackSkillDamage != null
+                    && Bool(consumeStackSkillDamage, "IsRemoveStatusWhenSkillEnd"),
                 HasHpAccDecrease = hpAccDecrease != null,
                 AccumulatedDamage = ReadAccumulatedDamage(components),
                 HpAccUnitHp = hpAccDecrease == null ? -1L : Long(hpAccDecrease, "UnitHp", -1L),
@@ -1388,6 +1397,24 @@ namespace Zjcs.Combat.Official
             {
                 AddHpAccTriggerEntries(roleDie, "SkillCfgs", "SkillId", result.RoleDieSkills, true);
                 AddHpAccTriggerEntries(roleDie, "StatusCfgs", "StatusId", result.RoleDieStatuses, false);
+            }
+            if (consumeStackSkillDamage != null)
+            {
+                Dictionary<string, object> consume = Component(consumeStackSkillDamage,
+                    "FightStatusConsumeStackCfg");
+                if (consume != null)
+                {
+                    result.ConsumeStackSkillDamageStatusId = Int(consume,
+                        "ConsumeStackStatusEntityClassId");
+                    result.ConsumeStackSkillDamageMinStackCount = Int(consume,
+                        "TriggerApplyStackMinCount", 1);
+                    result.ConsumeStackSkillDamageConsumeCount = Int(consume,
+                        "ConsumeStackCount", -1);
+                    result.ConsumeStackSkillDamageScaleByStatusTypeCount = Bool(consume,
+                        "ScalePropByStatusTypeCount");
+                    result.ConsumeStackSkillDamageTriggerSkillIds.AddRange(IntArray(consume,
+                        "TriggerSkillEntityClassIds"));
+                }
             }
             if (hpAccDecrease != null)
             {
@@ -2792,6 +2819,20 @@ namespace Zjcs.Combat.Official
                     || ArrayCount(trigger, "StatusReplacePropertyValues") > 0) return false;
             }
             return true;
+        }
+
+        private static bool SupportsConsumeStackSkillDamage(Dictionary<string, object> component)
+        {
+            if (ArrayCount(component, "StatusReplacePropertyValues") > 0
+                || Long(component, "ScaleValuePerStack") == 0)
+                return false;
+            Dictionary<string, object> consume = Component(component,
+                "FightStatusConsumeStackCfg");
+            if (consume == null || Int(consume, "ConsumeStackStatusEntityClassId") <= 0
+                || ArrayCount(consume, "TriggerSkillEntityClassIds") == 0
+                || Int(consume, "TriggerApplyStackMinCount", 1) < 1)
+                return false;
+            return !Bool(consume, "ScalePropByStatusTypeCount");
         }
 
         private static int ArrayCount(Dictionary<string, object> source, string field)

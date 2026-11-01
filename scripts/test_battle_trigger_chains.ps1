@@ -241,6 +241,34 @@ $openSkill = Skill 9900600
     $attacker, $defender, $openSkill, $customHit, 0, $false)
 Assert-Chain ($customStatus.DamageCustomPropsTriggeredCount -eq 1) 'Open skill incorrectly required an explicit custom-property whitelist entry'
 
+# Official status 24768 consumes all stacks for skill 68270 and adds 1000/10000 damage per stack.
+$consumeStatus = $catalog.CreateStatus(24768, 1, 1, 1, 68270, 0, 6, 17, 10, $null)
+Assert-Chain ($consumeStatus.HasConsumeStackSkillDamageScale -and
+    $consumeStatus.ConsumeStackSkillDamageScaleRulesSupported -and
+    $consumeStatus.ConsumeStackSkillDamageScaleValuePerStack -eq 1000 -and
+    $consumeStatus.ConsumeStackSkillDamageStatusId -eq 24768 -and
+    $consumeStatus.ConsumeStackSkillDamageConsumeCount -eq -1 -and
+    $consumeStatus.ConsumeStackSkillDamageRemoveOnSkillEnd -and
+    $consumeStatus.ConsumeStackSkillDamageTriggerSkillIds -contains 68270) 'Official consume-stack damage configuration mismatch'
+$consumeStatus.StackCount = 3
+$consumeActor = Unit 1 1 0 100
+$consumeActor.Statuses.Add($consumeStatus)
+$consumeSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
+$consumeSkill.EntityId = 68270
+$consumeFactor = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::PrepareConsumeStackSkillDamageScale(
+    $consumeActor, $consumeSkill)
+Assert-Chain ([Math]::Abs($consumeFactor - 1.3) -lt 0.00001 -and
+    $consumeStatus.ConsumeStackSkillDamageConsumedCount -eq 3 -and
+    $consumeActor.Statuses.Count -eq 0) 'Consume-stack skill damage did not scale by and consume all configured stacks'
+$scaledTarget = Unit 2 2 1 1
+$scaledHit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
+$scaledHit.ActionType = 4; $scaledHit.DamageType = 8; $scaledHit.HasCustomDamage = $true
+$scaledHit.CustomDamage = 100
+$scaledResult = $customExecutor.Apply([Zjcs.Combat.Official.FightRandomStream]::new(12345), 3,
+    $consumeActor, $scaledTarget, $consumeSkill, $scaledHit, 0, $false, 0.0, $null, $false,
+    $consumeFactor)
+Assert-Chain ($scaledResult.Settlement.RealDamageValue -eq -130) 'Consume-stack skill damage multiplier was not applied to hit settlement'
+
 $restored = Run-Battle (New-Battle (Skill 9900100)) $true
 $first = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($chain.Checkpoint)
 $second = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($restored.Checkpoint)

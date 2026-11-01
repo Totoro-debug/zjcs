@@ -34,7 +34,8 @@ namespace Zjcs.Combat.Official
             FightBattleUnitState actor, FightBattleUnitState target,
             FightBattleSkillDefinition skill, FightBattleHitDefinition hit,
             int stageType, bool isPvp, double elementConfrontation = 0.0,
-            List<int> processedFalloffStatuses = null, bool allowDeadSource = false)
+            List<int> processedFalloffStatuses = null, bool allowDeadSource = false,
+            double skillDamageScale = 1.0)
         {
             if (actor == null) throw new ArgumentNullException(nameof(actor));
             if (target == null) throw new ArgumentNullException(nameof(target));
@@ -83,6 +84,7 @@ namespace Zjcs.Combat.Official
             {
                 long direct = custom.HasValue ? custom.Value : 0;
                 direct = direct == Int64.MinValue ? Int64.MinValue + 1 : -Math.Abs(direct);
+                direct = ScaleDamage(direct, skillDamageScale);
                 double reduction = FightBattleStatusDamageReducePerRuntime.Resolve(actor, target,
                     skill, result.Type, false, random);
                 direct = (long)(direct / Math.Max(1.0 + reduction, 0.1));
@@ -141,6 +143,9 @@ namespace Zjcs.Combat.Official
                         : -Math.Abs(skill.SkillCost);
                     result.Formula.AbsoluteDamage = Math.Abs(damage);
                 }
+                damage = ScaleDamage(damage, skillDamageScale);
+                result.Formula.AbsoluteDamage = ScaleDamage(result.Formula.AbsoluteDamage,
+                    skillDamageScale);
                 if (hit.UseDamageRate)
                 {
                     damage = (long)(damage * hit.DamageRate);
@@ -165,6 +170,15 @@ namespace Zjcs.Combat.Official
 
             target.Hp = targetEntity.Hp;
             return result;
+        }
+
+        private static long ScaleDamage(long damage, double scale)
+        {
+            if (scale == 1.0 || damage == 0) return damage;
+            double scaled = damage * scale;
+            if (scaled >= long.MaxValue) return long.MaxValue;
+            if (scaled <= long.MinValue) return long.MinValue;
+            return (long)Math.Round(scaled, MidpointRounding.AwayFromZero);
         }
 
         private long? CustomDamage(FightBattleUnitState actor, FightBattleUnitState target,

@@ -388,6 +388,23 @@ namespace Zjcs.Combat.Official
                     ? new HashSet<int>() : new HashSet<int>(template.RoleDieSeenUnitIds),
                 RoleDieSkills = CopyTriggers(template.RoleDieSkills),
                 RoleDieStatuses = CopyTriggers(template.RoleDieStatuses),
+                HasConsumeStackSkillDamageScale = template.HasConsumeStackSkillDamageScale,
+                ConsumeStackSkillDamageScaleRulesSupported =
+                    template.ConsumeStackSkillDamageScaleRulesSupported,
+                ConsumeStackSkillDamageScaleValuePerStack =
+                    template.ConsumeStackSkillDamageScaleValuePerStack,
+                ConsumeStackSkillDamageStatusId = template.ConsumeStackSkillDamageStatusId,
+                ConsumeStackSkillDamageMinStackCount =
+                    template.ConsumeStackSkillDamageMinStackCount,
+                ConsumeStackSkillDamageConsumeCount = template.ConsumeStackSkillDamageConsumeCount,
+                ConsumeStackSkillDamageScaleByStatusTypeCount =
+                    template.ConsumeStackSkillDamageScaleByStatusTypeCount,
+                ConsumeStackSkillDamageRemoveOnSkillEnd =
+                    template.ConsumeStackSkillDamageRemoveOnSkillEnd,
+                ConsumeStackSkillDamageTriggerSkillIds =
+                    Copy(template.ConsumeStackSkillDamageTriggerSkillIds),
+                ConsumeStackSkillDamageConsumedCount = template.ConsumeStackSkillDamageConsumedCount,
+                ConsumeStackSkillDamageTriggered = template.ConsumeStackSkillDamageTriggered,
                 HasHpAccDecrease = template.HasHpAccDecrease,
                 AccumulatedDamage = template.AccumulatedDamage?.Copy(),
                 HpAccUnitHp = template.HpAccUnitHp,

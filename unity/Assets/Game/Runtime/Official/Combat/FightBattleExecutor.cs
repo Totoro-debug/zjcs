@@ -580,6 +580,15 @@ namespace Zjcs.Combat.Official
                 }
             }
 
+            double skillDamageScale = 1.0;
+            if (statusCatalog != null)
+            {
+                skillDamageScale = FightStatusTriggerRuntime.PrepareConsumeStackSkillDamageScale(
+                    actor, skill);
+                if (skillDamageScale != 1.0)
+                    RebuildBattleProperties();
+            }
+
             FightDamageFalloff.BeginCast(skill, ref checkpoint.FalloffSerial);
             IReadOnlyList<FightBattleHitDefinition> hits = FightBattleHitCollector.CollectAll(skill);
             var randomTargetGroups = new Dictionary<int, RandomTargetGroupState>();
@@ -710,7 +719,7 @@ namespace Zjcs.Combat.Official
                     {
                         resolved = hitExecutor.Apply(random, damageId, actor, target,
                             skill, hit, checkpoint.StageType, checkpoint.IsPvp, elementConfrontation,
-                            new List<int>(), allowDeadSource);
+                            new List<int>(), allowDeadSource, skillDamageScale);
                     }
                     finally
                     {

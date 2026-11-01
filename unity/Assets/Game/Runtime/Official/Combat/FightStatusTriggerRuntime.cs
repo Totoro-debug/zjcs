@@ -435,8 +435,52 @@ namespace Zjcs.Combat.Official
                         applied += triggered;
                     }
                 }
+                if (status.ConsumeStackSkillDamageTriggered
+                    && status.ConsumeStackSkillDamageRemoveOnSkillEnd)
+                {
+                    FightStatusLifecycle.End(actor, status);
+                    status.ConsumeStackSkillDamageTriggered = false;
+                }
             }
             return applied;
+        }
+
+        /// <summary>
+        /// Official FightStatusConsumeStackSkillDmgScaleComponent: consume the configured stack
+        /// source once per matching skill cast and return its additive damage multiplier.
+        /// </summary>
+        public static double PrepareConsumeStackSkillDamageScale(FightBattleUnitState actor,
+            FightBattleSkillDefinition skill)
+        {
+            if (actor == null || skill == null || actor.Statuses == null
+                || !FightBattleTargeting.IsSelectable(actor)) return 1.0;
+            double scale = 1.0;
+            foreach (FightBattleStatusState effect in new List<FightBattleStatusState>(actor.Statuses))
+            {
+                if (effect == null || !effect.HasConsumeStackSkillDamageScale
+                    || !effect.ConsumeStackSkillDamageScaleRulesSupported
+                    || effect.ConsumeStackSkillDamageTriggerSkillIds == null
+                    || !effect.ConsumeStackSkillDamageTriggerSkillIds.Contains(skill.EntityId)) continue;
+                int statusId = effect.ConsumeStackSkillDamageStatusId > 0
+                    ? effect.ConsumeStackSkillDamageStatusId : effect.ClassId;
+                FightBattleStatusState source = actor.Statuses.Find(value => value != null
+                    && value.ClassId == statusId);
+                if (source == null || source.StackCount < effect.ConsumeStackSkillDamageMinStackCount)
+                    continue;
+                int consumed = effect.ConsumeStackSkillDamageConsumeCount < 0
+                    ? source.StackCount
+                    : Math.Min(source.StackCount, effect.ConsumeStackSkillDamageConsumeCount);
+                if (consumed <= 0) continue;
+                int previous = source.StackCount;
+                source.StackCount -= consumed;
+                FightStatusPropertyRuntime.OnStackChanged(source, previous);
+                effect.ConsumeStackSkillDamageConsumedCount = consumed;
+                effect.ConsumeStackSkillDamageTriggered = true;
+                scale *= 1.0 + effect.ConsumeStackSkillDamageScaleValuePerStack
+                    * consumed / 10000.0;
+                if (source.StackCount <= 0) FightStatusLifecycle.End(actor, source);
+            }
+            return Math.Max(0.0, scale);
         }
 
         private static FightBattleUnitState FindUnit(

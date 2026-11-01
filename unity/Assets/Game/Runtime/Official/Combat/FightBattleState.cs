@@ -444,6 +444,19 @@ namespace Zjcs.Combat.Official
             new List<FightBattleStatusStateTrigger>();
         public List<FightBattleStatusStateTrigger> RoleDieStatuses =
             new List<FightBattleStatusStateTrigger>();
+        // Official FightStatusConsumeStackSkillDmgScaleComponent. Matching skills consume the
+        // configured status stacks and scale the skill's damage by ScaleValuePerStack.
+        public bool HasConsumeStackSkillDamageScale;
+        public bool ConsumeStackSkillDamageScaleRulesSupported;
+        public long ConsumeStackSkillDamageScaleValuePerStack;
+        public int ConsumeStackSkillDamageStatusId;
+        public int ConsumeStackSkillDamageMinStackCount = 1;
+        public int ConsumeStackSkillDamageConsumeCount = -1;
+        public bool ConsumeStackSkillDamageScaleByStatusTypeCount;
+        public bool ConsumeStackSkillDamageRemoveOnSkillEnd;
+        public List<int> ConsumeStackSkillDamageTriggerSkillIds = new List<int>();
+        public int ConsumeStackSkillDamageConsumedCount;
+        public bool ConsumeStackSkillDamageTriggered;
         // Official FightStatusHpAccDecreaseComponent. Damage is accumulated independently of cures
         // per the confirmed offline rule; the configured threshold is consumed on each trigger.
         public bool HasHpAccDecrease;
