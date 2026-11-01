@@ -56,8 +56,13 @@ namespace Zjcs.Offline.ProfessionUI
         }
 
         public static ProfessionNativeSkeletonData Load(byte[] data)
+            => Load(data, "871_156598");
+
+        public static ProfessionNativeSkeletonData Load(byte[] data, string expectedManifest)
         {
             if (data == null) throw new ArgumentNullException(nameof(data));
+            if (expectedManifest != "871_156598" && expectedManifest != "884_156692")
+                throw new ArgumentException("Unsupported original skeleton source version.", nameof(expectedManifest));
             using (var stream = new MemoryStream(data, false))
             using (var reader = new BinaryReader(stream, new UTF8Encoding(false, true)))
             {
@@ -65,7 +70,7 @@ namespace Zjcs.Offline.ProfessionUI
                     throw new InvalidDataException("Unknown native skeleton data format.");
                 string manifest = ReadString(reader), sex = ReadString(reader);
                 float scale = reader.ReadSingle();
-                if (manifest != "871_156598" || sex != "male" && sex != "female" && sex != "primary-weapon" || !(scale > 0) || float.IsInfinity(scale))
+                if (manifest != expectedManifest || sex != "male" && sex != "female" && sex != "primary-weapon" || !(scale > 0) || float.IsInfinity(scale))
                     throw new InvalidDataException("Original skeleton source identity/scale differs.");
                 string skeleton = ReadBlock(reader, out string skeletonHash);
                 string atlas = ReadBlock(reader, out string atlasHash);
