@@ -45,7 +45,9 @@ namespace Zjcs.Offline.PartnersUI
             };
             content = Instantiate(assets.RosterPrefab, transform, false);
             content.name = "OfficialPartnerRosterContent";
-            content.SetActive(true);
+            // Configure the official list before enabling it. NpcPanelNpcList.OnEnable
+            // immediately reads the local player and fills the loop-scroll cells.
+            content.SetActive(false);
             var list = content.GetComponent<NpcPanelNpcList>();
             if (list == null) throw new InvalidOperationException("Official partner roster list component is missing.");
             list.Configure(services);
@@ -53,6 +55,7 @@ namespace Zjcs.Offline.PartnersUI
             if (loop == null || loop.DefaultPrefabSource == null || loop.DefaultPrefabSource.Prefab == null)
                 throw new InvalidOperationException("Official partner roster scroll binding is missing.");
             PrefabSource.SetValue(loop, new CardPool(loop.DefaultPrefabSource, services));
+            content.SetActive(true);
         }
 
         public void Close()

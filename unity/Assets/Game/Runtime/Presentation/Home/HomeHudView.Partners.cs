@@ -176,6 +176,11 @@ namespace Zjcs.Presentation.Home
                     host.PartnerDetailAssets.Common.GiftTexts, host.PartnerFriendshipAssets.PropertyTexts,
                     host.PartnerFriendshipAssets.DialogTexts);
                 WorldMultiLanguageText.Localize = key => localization.GetText(key, LanguageType.zh_CN);
+                previousFriendshipPool = ProfessionGameObjectPoolBridge.Provider;
+                ProfessionGameObjectPoolBridge.Provider = (scope, prefab, parent, keepWorld) =>
+                    UnityEngine.Object.Instantiate(prefab, parent, keepWorld);
+                foreach (WorldItemProgress progress in root.GetComponentsInChildren<WorldItemProgress>(true))
+                    progress.Compact = count => host.HomeSettings?.FormatNumber(count) ?? count.ToString();
                 partnerFriendshipPanel = root;
                 initialize?.Invoke(new OfflinePartnerFriendshipDialogAdapter(dialog,
                     host.PartnerFriendshipDialogServices));
@@ -185,6 +190,8 @@ namespace Zjcs.Presentation.Home
             {
                 if (partnerFriendshipPanel != null) UnityEngine.Object.Destroy(partnerFriendshipPanel);
                 partnerFriendshipPanel = null;
+                ProfessionGameObjectPoolBridge.Provider = previousFriendshipPool;
+                previousFriendshipPool = null;
                 WorldMultiLanguageText.Localize = previousFriendshipLocalize;
                 previousFriendshipLocalize = null;
                 Notify("伙伴好感度详情打开失败：" + error.Message);

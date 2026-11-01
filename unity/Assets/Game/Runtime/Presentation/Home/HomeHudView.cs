@@ -44,6 +44,7 @@ namespace Zjcs.Presentation.Home
         private PartnerGiftPanelView partnerGiftPanel;
         private GameObject partnerFriendshipPanel;
         private Func<string, string> previousFriendshipLocalize;
+        private Func<Transform, GameObject, Transform, bool, GameObject> previousFriendshipPool;
 
         private TextMeshProUGUI nameLabel;
         private TextMeshProUGUI levelLabel;
@@ -865,6 +866,8 @@ namespace Zjcs.Presentation.Home
             {
                 UnityEngine.Object.Destroy(partnerFriendshipPanel);
                 partnerFriendshipPanel = null;
+                ProfessionGameObjectPoolBridge.Provider = previousFriendshipPool;
+                previousFriendshipPool = null;
                 WorldMultiLanguageText.Localize = previousFriendshipLocalize;
                 previousFriendshipLocalize = null;
             }

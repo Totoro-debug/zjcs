@@ -140,7 +140,7 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 ### 当前原生好感详情窗口（局部）
 
-当前主城名册卡片已可打开恢复的官方 `NpcDetailPanelPropContent` 属性子树。`HomeFeatureRuntime` 显式加载 `OfficialPartnerDetailPropertyAssetCatalog`、伙伴属性配置和中文文本，`PartnerDetailPanelView` 复用官方 prefab、`NpcDetailPanelPropContent.Configure/Init`、官方 `PartnerDetailUiUtils` 对象创建和属性行布局；属性值由 `OfflinePartnerDetailPropertySource` 读取当前存档的好感等级／天赋节点并执行原 `PartnerNpcPropertyFormula`。收藏按钮通过 `OfflinePartnerDetailPropertyServices.SetCollected` 写入当前角色存档，窗口关闭时恢复全局对象池和本地化绑定。详情中的等级简报、导航和独立好感弹窗仍由 Home 本地端点承接：等级使用主角当前等级／阶位，导航在尚未有离线位置规则时保持关闭，独立好感弹窗待赠礼窗口宿主接入后再开放。当前验证已完成静态元数据检查和 Unity 初始化导入／编译；尚未完成主工程 Play Mode 实际点击、独立好感弹窗、完整赠礼区域及 Windows Player 发布。
+当前主城名册卡片已可打开恢复的官方 `NpcDetailPanelPropContent` 属性子树。`HomeFeatureRuntime` 显式加载 `OfficialPartnerDetailPropertyAssetCatalog`、伙伴属性配置和中文文本，`PartnerDetailPanelView` 复用官方 prefab、`NpcDetailPanelPropContent.Configure/Init`、官方 `PartnerDetailUiUtils` 对象创建和属性行布局；属性值由 `OfflinePartnerDetailPropertySource` 读取当前存档的好感等级／天赋节点并执行原 `PartnerNpcPropertyFormula`。收藏按钮通过 `OfflinePartnerDetailPropertyServices.SetCollected` 写入当前角色存档，窗口关闭时恢复全局对象池和本地化绑定。详情中的等级简报和导航由 Home 本地端点承接：等级使用主角当前等级／阶位，导航在尚未有离线位置规则时保持关闭；赠礼和好感说明弹窗现已由原控制器回调打开原生 prefab。
 
 `Runtime/Official/PartnersUI/FriendshipDialog/` 从当前 `884_156692` 完整迁入 `NpcFriendshipDialog` 控制器，保留原偏好礼物排序／图标回收、连续规则编号、助战好感条件、普通／星神说明、旅行开关和阶位属性预览。仅以显式接口替换原配置、玩家、属性和图标管理器注入；池化预览先配置服务再执行原初始化，不改数值与分支。
 
@@ -300,7 +300,9 @@ Home 运行时现在为 `OfflinePartnerGiftPlayer` 提供 `OfflinePartnerItemInf
 
 ## 尚未实现
 
-- 完整 `NpcPanel` 宿主的对话／星神页、伙伴详情、送礼页面、档案与餐桌通话；当前已接通 Home 名册入口、原生卡片及本地相遇／好感／置顶服务。
+- 完整 `NpcPanel` 宿主的对话／星神页、伙伴档案与餐桌通话；当前 Home 已接通原生名册卡片、本地相遇／好感／置顶、详情属性区、赠礼控制器和好感说明弹窗。
+- 正式窗口中的立绘／小模型、完整详情简报、伙伴位置导航、赠礼物品详情及声音仍未全部接通。
+- 主工程 Play Mode 可实例化名册、详情属性、赠礼及好感说明原生控制器；隔离赠礼规则／存档测试通过。当前正式窗口截图仍被启动流程前景层覆盖，不能作为实际画面验收，须修正主场景窗口层级后重验模拟输入、显示状态和存档恢复。
 
 - 完成 Unity 实际入口、交互／表现、存档与失败恢复验证，并发布对应 Windows 可执行版本。
 - 史莱姆、孤独摇滚的八位伙伴及全部相关入口按[离线政策](offline-access.md#暂不开放的联动活动及伙伴)暂停，不列为自动开放目标。

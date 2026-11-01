@@ -12,6 +12,7 @@ using Zjcs.Offline.Progression;
 using Zjcs.Offline.World;
 using Zjcs.Offline.Home;
 using Zjcs.Offline.State;
+using Zjcs.Official.PartnersUI;
 
 namespace Zjcs.Presentation.Home
 {
@@ -63,6 +64,15 @@ namespace Zjcs.Presentation.Home
             yield return null;
             yield return null;
             yield return null;
+
+            if (Environment.GetCommandLineArgs().Contains("-partnersAcceptance"))
+            {
+                HideForeignCanvases();
+                bool passed = false;
+                yield return VerifyPartners(runtime, value => passed = value);
+                Finish(passed);
+                yield break;
+            }
 
             if (Environment.GetCommandLineArgs().Contains("-dungeonsAcceptance"))
             {
@@ -600,13 +610,22 @@ namespace Zjcs.Presentation.Home
 
         private static void HideForeignCanvases()
         {
+            foreach (Transform node in Resources.FindObjectsOfTypeAll<Transform>())
+            {
+                if (node == null || !node.gameObject.scene.IsValid()) continue;
+                string name = node.name;
+                if (name.IndexOf("SaveSelection", StringComparison.OrdinalIgnoreCase) >= 0
+                    || name.IndexOf("AgeTip", StringComparison.OrdinalIgnoreCase) >= 0
+                    || name.IndexOf("BootSplash", StringComparison.OrdinalIgnoreCase) >= 0)
+                    node.gameObject.SetActive(false);
+            }
             foreach (Canvas canvas in Resources.FindObjectsOfTypeAll<Canvas>())
             {
                 if (canvas == null || canvas.name == "Home Canvas") continue;
-                string name = canvas.name;
-                if (name.IndexOf("CharacterCreation", StringComparison.OrdinalIgnoreCase) < 0
-                    && name.IndexOf("Opening", StringComparison.OrdinalIgnoreCase) < 0) continue;
-                canvas.gameObject.SetActive(false);
+                // Bootstrap keeps its splash/age and save-selection canvases alive
+                // while the home runtime is created. They must not cover the
+                // partner window captured by this Play Mode acceptance.
+                if (canvas.gameObject.scene.IsValid()) canvas.gameObject.SetActive(false);
             }
         }
         private void DumpFullscreen()
@@ -894,6 +913,68 @@ namespace Zjcs.Presentation.Home
                 log.Add("FAIL ui/" + name + ": " + error.Message);
                 return false;
             }
+        }
+
+        private IEnumerator VerifyPartners(HomeFeatureRuntime runtime, Action<bool> completed)
+        {
+            bool ok = true;
+            ok &= Check("partner-roster", () =>
+            {
+                InvokePrivate(runtime.Hud, "OpenPartnerRoster");
+                GameObject root = PrivateField<GameObject>(runtime.Hud, "activeDialog");
+                Assert(root != null && root.name == "PartnerRosterDialog", "official partner roster root opens");
+                Assert(PrivateField<object>(runtime.Hud, "partnerRosterPanel") != null,
+                    "official partner roster controller is bound");
+                return root.name;
+            });
+            yield return Capture("partners-roster.png");
+            ok &= Check("partner-detail", () =>
+            {
+                runtime.OpenPartnerDetail(8402);
+                GameObject root = PrivateField<GameObject>(runtime.Hud, "activeDialog");
+                Assert(root != null && root.name == "PartnerDetailDialog", "official partner detail root opens");
+                Assert(PrivateField<object>(runtime.Hud, "partnerDetailPanel") != null,
+                    "official partner detail controller is bound");
+                Assert(root.GetComponentsInChildren<MonoBehaviour>(true).Any(value =>
+                    value.GetType().Name == "NpcDetailPanelPropContent"),
+                    "official partner property content exists");
+                return root.name;
+            });
+            yield return Capture("partners-detail.png");
+            ok &= Check("partner-gift", () =>
+            {
+                runtime.OpenPartnerGift(8402);
+                GameObject root = PrivateField<GameObject>(runtime.Hud, "activeDialog");
+                Assert(root != null && root.name == "PartnerGiftDialog", "official partner gift root opens");
+                Assert(PrivateField<object>(runtime.Hud, "partnerGiftPanel") != null,
+                    "official partner gift controller is bound");
+                Assert(root.GetComponentsInChildren<MonoBehaviour>(true).Any(value =>
+                    value.GetType().Name == "NpcDetailPanelGiftContent"),
+                    "official partner gift content exists");
+                Assert(root.GetComponentsInChildren<MonoBehaviour>(true).Any(value =>
+                    value.GetType().Name == "NpcFriendshipLevelContent"),
+                    "official partner friendship level content exists");
+                return root.name;
+            });
+            yield return Capture("partners-gift.png");
+            ok &= Check("partner-friendship", () =>
+            {
+                MethodInfo friendship = runtime.Hud.GetType().GetMethod("OpenPartnerFriendshipDialog",
+                    BindingFlags.Instance | BindingFlags.NonPublic);
+                Assert(friendship != null, "friendship dialog route exists");
+                PartnerGiftNpcInfo npc = runtime.PartnerGiftServices.GetNpcInfo(8402);
+                Assert(npc != null, "friendship dialog partner metadata exists");
+                Action<IPartnerGiftFriendshipDialog> initialize = dialog => dialog.Init(npc);
+                friendship.Invoke(runtime.Hud, new object[] { initialize });
+                GameObject root = GameObject.Find("OfficialPartnerFriendshipDialog");
+                Assert(root != null, "official friendship dialog root opens");
+                Assert(root.GetComponents<MonoBehaviour>().Any(value => value.GetType().Name == "NpcFriendshipDialog"),
+                    "official friendship dialog controller is bound");
+                return root.name;
+            });
+            yield return Capture("partners-friendship.png");
+            runtime.Hud.TryHandleBack();
+            completed(ok);
         }
 
         private IEnumerator VerifyRealShopInput(HomeFeatureRuntime runtime, Action<bool> completed)

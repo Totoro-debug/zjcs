@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using Zjcs.Offline.Progression;
+using Zjcs.Offline.PartnersUI;
 using Zjcs.Offline.Skills;
 using Zjcs.Offline.State;
 
@@ -33,10 +34,12 @@ namespace Zjcs.Editor.Home
                 EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
                 EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
                 string runId = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "-" + Guid.NewGuid().ToString("N");
-                Environment.SetEnvironmentVariable("ZJCS_HOME_ACCEPTANCE_ROOT",
-                    Path.Combine(Path.GetTempPath(), "zjcs-home-acceptance-" + runId));
-                Environment.SetEnvironmentVariable("ZJCS_HOME_ACCEPTANCE_OUTPUT",
-                    Path.Combine(Directory.GetCurrentDirectory(), "output", "home-acceptance-" + runId));
+                if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("ZJCS_HOME_ACCEPTANCE_ROOT")))
+                    Environment.SetEnvironmentVariable("ZJCS_HOME_ACCEPTANCE_ROOT",
+                        Path.Combine(Path.GetTempPath(), "zjcs-home-acceptance-" + runId));
+                if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("ZJCS_HOME_ACCEPTANCE_OUTPUT")))
+                    Environment.SetEnvironmentVariable("ZJCS_HOME_ACCEPTANCE_OUTPUT",
+                        Path.Combine(Directory.GetCurrentDirectory(), "output", "home-acceptance-" + runId));
                 EditorSceneManager.OpenScene("Assets/Game/Scenes/Bootstrap.unity", OpenSceneMode.Single);
                 ConfigurePortraitGameView();
                 PrepareProfile();
@@ -172,6 +175,32 @@ namespace Zjcs.Editor.Home
                 foreach (int mapId in new[] { 11, 12, 13, 14, 17 })
                     if (!player.UnlockedMapClassIds.Contains(mapId)) player.UnlockedMapClassIds.Add(mapId);
             });
+            if (Environment.GetCommandLineArgs().Contains("-partnersAcceptance"))
+            {
+                OfflinePartnerGiftConfiguration configuration = OfficialPartnerGiftAssetCatalog.LoadDefault();
+                int level = Math.Min(100, configuration.GetMaxLevel(8402));
+                long experience = configuration.Get(8402, level).FriendshipExp;
+                Apply("partner", player =>
+                {
+                    OfflineNpcFriendship friendship = player.CharacterProperties.NpcFriendships
+                        .FirstOrDefault(value => value.NpcClassId == 8402);
+                    if (friendship == null)
+                    {
+                        friendship = new OfflineNpcFriendship { NpcClassId = 8402 };
+                        player.CharacterProperties.NpcFriendships.Add(friendship);
+                    }
+                    friendship.Level = level;
+                    friendship.FriendshipExp = experience;
+                    int giftId = configuration.GetNpcInfo(8402).GiftPreferenceDict.Keys.First();
+                    OfflineItemStack gift = player.Inventory.FirstOrDefault(value => value.ItemId == giftId);
+                    if (gift == null)
+                    {
+                        gift = new OfflineItemStack { ItemId = giftId };
+                        player.Inventory.Add(gift);
+                    }
+                    gift.Count = Math.Max(gift.Count, 20);
+                });
+            }
             Debug.Log("[HomeAcceptance] profile " + slotId + " ready at " + Root);
         }
 
