@@ -957,6 +957,8 @@ namespace Zjcs.Combat.Official
                 Component(components, "FightStatusRoleDieComponent");
             Dictionary<string, object> consumeStackSkillDamage =
                 Component(components, "FightStatusConsumeStackSkillDmgScaleComponent");
+            Dictionary<string, object> actionExist =
+                Component(components, "FightStatusActionExistComponent");
             Dictionary<string, object> skillCooldownModify =
                 Component(components, "FightStatusSkillModifyCDComponent");
             Dictionary<string, object> permanentSkillCooldownReduction =
@@ -1170,6 +1172,10 @@ namespace Zjcs.Combat.Official
                     ? 0L : Long(consumeStackSkillDamage, "ScaleValuePerStack"),
                 ConsumeStackSkillDamageRemoveOnSkillEnd = consumeStackSkillDamage != null
                     && Bool(consumeStackSkillDamage, "IsRemoveStatusWhenSkillEnd"),
+                HasActionExist = actionExist != null,
+                ActionExistRulesSupported = actionExist != null
+                    && SupportsActionExist(actionExist),
+                ActionExistStatusId = actionExist == null ? 0 : Int(actionExist, "StatusId"),
                 HasHpAccDecrease = hpAccDecrease != null,
                 AccumulatedDamage = ReadAccumulatedDamage(components),
                 HpAccUnitHp = hpAccDecrease == null ? -1L : Long(hpAccDecrease, "UnitHp", -1L),
@@ -1416,6 +1422,8 @@ namespace Zjcs.Combat.Official
                         "TriggerSkillEntityClassIds"));
                 }
             }
+            if (actionExist != null)
+                result.ActionExistConditions.AddRange(IntArray(actionExist, "Conditions"));
             if (hpAccDecrease != null)
             {
                 AddHpAccTriggerEntries(hpAccDecrease, "StatusList", "StatusId",
@@ -2833,6 +2841,16 @@ namespace Zjcs.Combat.Official
                 || Int(consume, "TriggerApplyStackMinCount", 1) < 1)
                 return false;
             return !Bool(consume, "ScalePropByStatusTypeCount");
+        }
+
+        private static bool SupportsActionExist(Dictionary<string, object> component)
+        {
+            if (Int(component, "StatusId") <= 0
+                || ArrayCount(component, "Conditions") == 0
+                || ArrayCount(component, "StatusReplacePropertyValues") > 0) return false;
+            foreach (int actionType in IntArray(component, "Conditions"))
+                if (actionType < 0 || actionType > 120) return false;
+            return true;
         }
 
         private static int ArrayCount(Dictionary<string, object> source, string field)

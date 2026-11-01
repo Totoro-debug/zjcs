@@ -483,6 +483,73 @@ namespace Zjcs.Combat.Official
             return Math.Max(0.0, scale);
         }
 
+        /// <summary>
+        /// Official FightStatusActionExistComponent: maintain the configured status while the
+        /// owner has at least one status whose ActionType matches a configured condition.
+        /// </summary>
+        public static int ApplyActionExistStatuses(IReadOnlyList<FightBattleUnitState> units,
+            FightOfficialCombatCatalog catalog, FightRandomStream random)
+        {
+            if (units == null || catalog == null) return 0;
+            int changed = 0;
+            foreach (FightBattleUnitState unit in units)
+            {
+                if (unit == null || unit.Statuses == null) continue;
+                var statuses = new List<FightBattleStatusState>(unit.Statuses);
+                foreach (FightBattleStatusState generated in statuses)
+                {
+                    if (generated == null || !generated.IsActionExistGenerated) continue;
+                    bool sourceExists = unit.Statuses.Exists(source => source != null
+                        && source.InstanceId == generated.ActionExistSourceInstanceId
+                        && source.HasActionExist);
+                    if (!sourceExists && FightStatusLifecycle.End(unit, generated)) changed++;
+                }
+                statuses = new List<FightBattleStatusState>(unit.Statuses);
+                foreach (FightBattleStatusState source in statuses)
+                {
+                    if (source == null || !source.HasActionExist
+                        || !source.ActionExistRulesSupported
+                        || source.ActionExistStatusId <= 0
+                        || source.ActionExistConditions == null) continue;
+                    bool conditionMet = source.ActionExistConditions.Exists(actionType =>
+                        unit.Statuses.Exists(candidate => candidate != null
+                            && candidate != source && candidate.ActionType == actionType));
+                    FightBattleStatusState applied = source.ActionExistAppliedStatusInstanceId <= 0
+                        ? null : unit.Statuses.Find(candidate => candidate != null
+                            && candidate.InstanceId == source.ActionExistAppliedStatusInstanceId
+                            && candidate.IsActionExistGenerated
+                            && candidate.ActionExistSourceInstanceId == source.InstanceId);
+                    if (!conditionMet)
+                    {
+                        if (applied != null && FightStatusLifecycle.End(unit, applied)) changed++;
+                        source.ActionExistAppliedStatusInstanceId = 0;
+                        continue;
+                    }
+                    if (applied != null) continue;
+                    int instanceId = 1;
+                    foreach (FightBattleStatusState existing in unit.Statuses)
+                        if (existing != null && existing.InstanceId >= instanceId)
+                            instanceId = existing.InstanceId + 1;
+                    FightBattleStatusState template = catalog.CreateStatus(source.ActionExistStatusId,
+                        unit.Id, source.CreatorId, instanceId, source.RootSkillId,
+                        source.ApplyingSkillItemId, source.SourceSkillRank, source.SourceSkillLevel,
+                        source.SourceSubRank, source.SourceProperties, 0,
+                        source.ReplacementProperties, source.BlessPropertyScales);
+                    template.IsActionExistGenerated = true;
+                    template.ActionExistSourceInstanceId = source.InstanceId;
+                    template.ReportSource = FightBattleStatusReportSource.Resolve(source).Copy();
+                    FightBattleStatusState created = FightStatusLifecycle.Apply(unit, template, -1,
+                        instanceId, random);
+                    if (created != null)
+                    {
+                        source.ActionExistAppliedStatusInstanceId = created.InstanceId;
+                        changed++;
+                    }
+                }
+            }
+            return changed;
+        }
+
         private static FightBattleUnitState FindUnit(
             IReadOnlyList<FightBattleUnitState> units, int unitId)
         {

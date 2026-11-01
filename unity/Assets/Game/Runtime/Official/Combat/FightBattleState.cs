@@ -457,6 +457,15 @@ namespace Zjcs.Combat.Official
         public List<int> ConsumeStackSkillDamageTriggerSkillIds = new List<int>();
         public int ConsumeStackSkillDamageConsumedCount;
         public bool ConsumeStackSkillDamageTriggered;
+        // Official FightStatusActionExistComponent. The generated status is tracked by source
+        // instance so an independently applied status with the same ClassId is preserved.
+        public bool HasActionExist;
+        public bool ActionExistRulesSupported;
+        public int ActionExistStatusId;
+        public List<int> ActionExistConditions = new List<int>();
+        public int ActionExistAppliedStatusInstanceId;
+        public bool IsActionExistGenerated;
+        public int ActionExistSourceInstanceId;
         // Official FightStatusHpAccDecreaseComponent. Damage is accumulated independently of cures
         // per the confirmed offline rule; the configured threshold is consumed on each trigger.
         public bool HasHpAccDecrease;

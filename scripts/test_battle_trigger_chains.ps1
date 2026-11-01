@@ -269,6 +269,29 @@ $scaledResult = $customExecutor.Apply([Zjcs.Combat.Official.FightRandomStream]::
     $consumeFactor)
 Assert-Chain ($scaledResult.Settlement.RealDamageValue -eq -130) 'Consume-stack skill damage multiplier was not applied to hit settlement'
 
+# Official action-existence status 60220 maintains 60221 while a shield action (ActionType 60)
+# exists on the same owner, and removes only the generated instance when the shield disappears.
+$actionExist = $catalog.CreateStatus(60220, 1, 1, 10, 0, 0, 6, 17, 10, $null)
+Assert-Chain ($actionExist.HasActionExist -and $actionExist.ActionExistRulesSupported -and
+    $actionExist.ActionExistStatusId -eq 60221 -and
+    $actionExist.ActionExistConditions -contains 60) 'Official action-existence configuration mismatch'
+$actionOwner = Unit 1 1 0 100
+$actionOwner.Statuses.Add($actionExist)
+$shieldAction = Status 9910060 1; $shieldAction.InstanceId = 11; $shieldAction.ActionType = 60
+$actionOwner.Statuses.Add($shieldAction)
+$actionUnits = [System.Collections.Generic.List[Zjcs.Combat.Official.FightBattleUnitState]]::new()
+$actionUnits.Add($actionOwner)
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyActionExistStatuses(
+    $actionUnits, $catalog, [Zjcs.Combat.Official.FightRandomStream]::new(12345))
+$generatedActionStatus = $actionOwner.Statuses | Where-Object ClassId -eq 60221 | Select-Object -First 1
+Assert-Chain ($null -ne $generatedActionStatus -and
+    $generatedActionStatus.IsActionExistGenerated -and
+    $generatedActionStatus.ActionExistSourceInstanceId -eq $actionExist.InstanceId) 'Action-existence status was not generated from the matching shield action'
+[void]$actionOwner.Statuses.Remove($shieldAction)
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyActionExistStatuses(
+    $actionUnits, $catalog, [Zjcs.Combat.Official.FightRandomStream]::new(12345))
+Assert-Chain ($null -eq ($actionOwner.Statuses | Where-Object ClassId -eq 60221)) 'Action-existence status was not removed after the matching action disappeared'
+
 $restored = Run-Battle (New-Battle (Skill 9900100)) $true
 $first = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($chain.Checkpoint)
 $second = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($restored.Checkpoint)

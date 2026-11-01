@@ -1932,6 +1932,8 @@ namespace Zjcs.Combat.Official
 
         private void RebuildBattleProperties()
         {
+            if (statusCatalog != null)
+                FightStatusTriggerRuntime.ApplyActionExistStatuses(units, statusCatalog, random);
             foreach (FightBattleUnitState unit in units)
                 foreach (FightBattleStatusState status in unit.Statuses)
                     if (status != null && status.StartRound < 0)
