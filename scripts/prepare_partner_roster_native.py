@@ -18,6 +18,13 @@ from validation_workspace import validation_directory
 
 
 class PartnerRosterBinding(PartnerGiftBinding):
+    def __init__(self, work):
+        super().__init__(work)
+        self.original_pointers = {}
+        self.prefab_object_pointers = {}
+        self.prefab_references = {}
+        self.original_objects_by_guid = {}
+
     def learn(self, source, native, owner):
         if isinstance(source, dict) and 'm_FileID' in source and source.get('m_PathID') and isinstance(native, dict) and native.get('guid'):
             from prepare_current_partner_native import pointer
@@ -34,11 +41,15 @@ class PartnerRosterBinding(PartnerGiftBinding):
                 self.animation_scripts[key] = dict(original=identity(linked), sha256=sha(linked.get_raw_data()),
                     native=native, pointer=target, type=full_name)
                 return
-            previous = self.objects.get(native['guid'])
+            key = (native['guid'], native.get('fileID'))
+            previous = self.original_pointers.get(key)
             if previous is not None and identity(previous) != identity(linked):
-                raise ValueError('Native GUID identity conflict: ' + repr((native['guid'], identity(owner),
-                    identity(previous), previous.type.name, sha(previous.get_raw_data()),
-                    identity(linked), linked.type.name, sha(linked.get_raw_data()))))
+                raise ValueError('Native prefab pointer maps to different original objects: ' + repr(
+                    (key, identity(previous), identity(linked))))
+            self.original_pointers[key] = linked
+            self.objects.setdefault(native['guid'], linked)
+            self.original_objects_by_guid.setdefault(native['guid'], {})[identity(linked)] = linked
+            return
         return super().learn(source, native, owner)
 
     def register_scripts(self):
@@ -48,6 +59,7 @@ class PartnerRosterBinding(PartnerGiftBinding):
         runtime = ROOT / 'unity/Assets/Game/Runtime/Official'
         paths = {name: runtime / 'PartnersUI' / (name + '.cs') for name in CLIENT}
         paths.update({
+            'MultiLanguageText': runtime / 'WorldUI/WorldMultiLanguageText.cs',
             'NpcPanelNpcList': runtime / 'PartnersUI/Roster/NpcPanelNpcList.cs',
             'UnityEngine.UI.LoopVerticalScrollRect': runtime / 'WorldUI/LoopScroll/LoopVerticalScrollRect.cs',
             'LoopScrollGridLayoutGroup': runtime / 'WorldUI/LoopScroll/LoopScrollGridLayoutGroup.cs',
@@ -74,6 +86,13 @@ class PartnerRosterBinding(PartnerGiftBinding):
     def replace(self, value):
         if isinstance(value, dict) and 'guid' in value and (value['guid'], value.get('fileID')) in self.animation_scripts:
             return self.animation_scripts[(value['guid'], value['fileID'])]['pointer']
+        if isinstance(value, dict) and value.get('guid') and value.get('fileID'):
+            key = (value['guid'], value['fileID'])
+            original = self.original_pointers.get(key)
+            if original is not None and identity(original) in self.prefab_object_pointers:
+                return self.prefab_object_pointers[identity(original)]
+            if value['guid'] in self.prefab_references:
+                return dict(fileID=value['fileID'], guid=self.prefab_references[value['guid']], type=value.get('type', 3))
         if isinstance(value, dict) and value == dict(**{'class': 'StateAnimatorConfig', 'ns': '', 'asm': 'Framework'}):
             return dict(**{'class': 'StateAnimatorConfig', 'ns': 'Zjcs.Official.PartnersUI', 'asm': 'Zjcs.Official.PartnersUI'})
         return super().replace(value)
@@ -100,8 +119,54 @@ class PartnerRosterBinding(PartnerGiftBinding):
             self.inputs[receipt_path.relative_to(ROOT).as_posix()] = sha(receipt_path.read_bytes())
             self.inputs[record['nativeSource']] = sha(native.read_bytes())
             self.redirects[source_guid] = receipt['root']
+            self.prefab_references[source_guid] = receipt['root']['guid']
+            self.prefab_object_pointers.update({key: dict(fileID=file_id, guid=receipt['root']['guid'], type=3)
+                for key, file_id in data['objectMap'].items()})
             self.shared_card = dict(original=original_root, original_sha256=sha(obj.get_raw_data()),
                 reference=receipt['root'], receipt=receipt_path.relative_to(ROOT).as_posix())
+            return self.redirects[source_guid]
+        candidates = list(self.original_objects_by_guid.get(source_guid, {}).values())
+        roots = [candidate for candidate in candidates if candidate.type.name == 'GameObject'
+            and candidate.read(check_read=False).m_Component[0].component.read(check_read=False).m_Father.path_id == 0]
+        if roots:
+            names = {candidate.read(check_read=False).m_Name for candidate in roots}
+            if len(names) != 1:
+                raise ValueError('One native prefab GUID resolves to multiple original roots: ' + repr(names))
+            obj = roots[0]
+        if source_guid not in self.redirects and obj is not None and obj.type.name == 'GameObject':
+            name = obj.read(check_read=False).m_Name
+            self.recovery.recover(name, self.work / 'partner-native')
+            native, _, data, record = self.recovery.outputs[-1]
+            original_root, = [key for key, value in data['objectMap'].items() if value == data['root']]
+            if original_root != identity(obj) or guid(Path(str(native) + '.meta')) != source_guid:
+                raise ValueError('Original external prefab root differs: ' + repr((name, original_root, identity(obj))))
+            target_guid = hashlib.md5(('zjcs:partner-current-prefab:' + source_guid).encode()).hexdigest()
+            target = Path('NativePrefabs') / (sha(source_guid.encode())[:16] + '.prefab')
+            self.prefab_references[source_guid] = target_guid
+            self.redirects[source_guid] = dict(fileID=data['root'], guid=target_guid, type=3)
+            self.prefab_object_pointers.update({key: dict(fileID=file_id, guid=target_guid, type=3)
+                for key, file_id in data['objectMap'].items()})
+            for key, pointer in data['external'].items():
+                self.original_pointers[(pointer['guid'], pointer['fileID'])] = self.original(key)
+                self.original_objects_by_guid.setdefault(pointer['guid'], {})[key] = self.original(key)
+                self.objects.setdefault(pointer['guid'], self.original(key))
+            for key, file_id in data['objectMap'].items():
+                owner = self.original(key)
+                self.learn(self.recovery.fields(owner), next(iter(data['documents'][file_id].values())), owner)
+            for script in data['scripts']:
+                fields = data['documents'][script['nativeFileID']]['MonoBehaviour']
+                full_name = '.'.join(filter(None, [script['namespace'], script['type']]))
+                if full_name not in self.scripts:
+                    raise ValueError('Original external prefab script has not been migrated: ' + full_name)
+                fields['m_Script'] = self.scripts[full_name]
+            resolved = self.replace(data['documents'])
+            self.queue.append((target, target_guid, resolved))
+            for path in (native, Path(str(native) + '.meta')):
+                self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
+            self.proof[identity(obj)] = dict(source=record['originalSource'], original_sha256=sha(obj.get_raw_data()),
+                output=target.as_posix(), guid=target_guid, mapped_objects=len(data['objectMap']),
+                nativeSource=record['nativeSource'], native_sha256=record['native_sha256'])
+            return self.redirects[source_guid]
         if source_guid not in self.redirects and obj is not None and obj.type.name == 'AnimatorController':
             return self.controller(source_guid, obj)
         try:
@@ -267,10 +332,10 @@ class PartnerRosterBinding(PartnerGiftBinding):
         for name in ('prepare_partner_gift_native.py', 'partner_gift_animator_binding.py', 'partner_roster_animator_binding.py'):
             path = ROOT / 'scripts' / name
             receipt['inputs'][path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
-        receipt['scope'] = 'Exact original roster subtree and static dependencies; complete NpcPanel host/dialogue/star-god pages are not installed.'
+        receipt['scope'] = 'Exact original mNpcListGo roster subtree and static dependencies; the complete NpcPanel host, dialogue and star-god pages are not installed.'
         receipt['animation_root_path_repairs'] = self.animation_root_paths
         receipt['adaptations'] = [
-            'Detach only the exact NpcPanel.mNpcListGo root parent; retain every original object, component, field and geometry.',
+            'Detach only the exact original NpcPanel.mNpcListGo root parent; retain every roster object, component, field and geometry.',
             'Bind original MonoScript references by assembly GUID plus script fileID, including animation curve bindings.',
             'Restore empty animation root curve paths only where original compiled path hash zero, attribute CRC, component type and script identity match; converted YAML null must not become a literal hierarchy path.',
             'Verify original flat animator states, motions, transitions, parameter types/names/defaults against compiled player constants.',

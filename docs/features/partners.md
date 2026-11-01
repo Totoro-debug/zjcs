@@ -114,6 +114,8 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 资源入口为 `unity/Assets/Official/Partners/UI/Roster/`，新增 19 项载荷，按原 GUID 和完整载荷字节复用已有 10 项依赖。卡片另按 CAB／PathID、原 GUID、安装凭据和完整字节核对后复用。原动画曲线的 MonoScript 引用使用程序集 GUID 与脚本 fileID 联合识别，保留不同组件共享同一程序集 GUID 的情况；排序控制器逐项核对状态、过渡、动作、条件和整数参数默认值。`TabObjectTransition`、`StateAnimatorConfig`、`StateAnimatorData` 从同版官方源码迁入，仅适配命名空间、既有状态端口和反编译枚举语法；原显隐顺序、参数分支、Trigger 重置和即时更新不变。原对象、字体／贴图／精灵／shader 依赖及源码、转换与安装哈希见[原生名册来源](../../assets/reference/partner-roster-native-source-manifest.json)。
 
+生成器将原名册的 `MultiLanguageText` 显式绑定到伙伴 UI 使用的 `WorldMultiLanguageText`，不按同名类自动选择另一个 `NativeLabelUI` 实现。重新生成的 prefab 与已安装资源 SHA-256 一致；隔离 Play Mode 再次通过 21 张本地伙伴记录、全部显示、排序／倒序、遮罩关闭、卡片点击、滚动和池租约释放，并已查看真实 GPU 画面。
+
 三份原开合动画中六处根曲线路径按 APK 的路径哈希 0、属性 CRC、组件类型和脚本指针联合核对，恢复转换缓存误写为 `null` 的空路径；否则透明遮罩虽随面板隐藏仍会截获卡片点击。排序标题、原筛选标签与实际开放的两种排序文字从同版语言分包绑定，未为隐藏的通用选项编造缺失翻译。
 
 `prepare_partner_roster_native_validation.py` 在隔离 URP Play Mode 使用实际原区域、卡片及本地名册服务／存档，模拟射线点击全部显示、结识排序、反向、遮罩关闭与卡片路由，核对初始／打开／关闭时遮罩真实启停、实际滚轮位移、重开后的原状态和全部图片资源租约释放，均通过。验证工程须一并复制原 `CombatAppearance` 程序集依赖，供赠礼和名册控制器共同使用的角色外观接口完成编译。已查看默认、全部显示、排序展开、关闭和滚动五帧 GPU 画面；50 项输入、72 项安装资源／目录、6 项迁移代码及验证源码哈希一致，静态检查、主工程导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 通过。此夹具仍使用既有历史名册规则目录，当前版条件接线、正式完整窗口／详情入口、提示管理、实际声音播放和 Windows Player 尚未完成；弹窗路由、提示及 Wwise 事件由明确测试端点承担，不进入产品。
