@@ -706,6 +706,8 @@ namespace Zjcs.Combat.Official
                     var triggerSkills = new List<int>();
                     var configuredTriggerSkills = new List<FightBattleStatusStateTrigger>();
                     var configuredHpTriggerSkills = new List<FightBattleStatusSkillInvocation>();
+                    var configuredKillSkillInvocations =
+                        new List<FightBattleStatusSkillInvocation>();
                     var hpTriggerSkills = new List<FightBattleStatusStateTrigger>();
                     configuredTriggerSkills.AddRange(resolved.TriggeredStatusSkillInvocations);
                     if (resolved.TriggeredStatusSkillInvocations.Count == 0)
@@ -742,6 +744,19 @@ namespace Zjcs.Combat.Official
                     if (hpTriggerSkills.Count > 0)
                         ExecuteTriggerSkills(target, hpTriggerSkills, casts, damageEvents, movements,
                             ref lastDelay);
+                    if (target.Hp <= 0)
+                        FightStatusTriggerRuntime.ApplyKillSkills(actor, target, skill, units,
+                            statusCatalog, random, configuredKillSkillInvocations);
+                    if (configuredKillSkillInvocations.Count > 0)
+                    {
+                        ExecuteConfiguredStatusSkills(configuredKillSkillInvocations, casts,
+                            damageEvents, movements, ref lastDelay, out float killDuration,
+                            out float killActionDuration);
+                        statusTriggerDuration = Math.Max(statusTriggerDuration, killDuration);
+                        if (killActionDuration >= 0f)
+                            statusTriggerActionDuration = Math.Max(statusTriggerActionDuration,
+                                killActionDuration);
+                    }
                     ApplyChildSkill(actor, target, skill, hit, casts, damageEvents, movements, ref lastDelay);
                 }
             }
@@ -1517,7 +1532,8 @@ namespace Zjcs.Combat.Official
                     continue;
                 }
                 InheritBlessingScales(skill, invocation.Trigger.BlessPropertyScales);
-                if (!IsExplicitTargetCompatible(source, target, skill.TargetType)
+                if (!invocation.AllowDeadTarget
+                    && !IsExplicitTargetCompatible(source, target, skill.TargetType)
                     || FightBattleTargeting.IsActionBlockedByStatus(target,
                         skill.BlockingTargetActionTypes)) continue;
 

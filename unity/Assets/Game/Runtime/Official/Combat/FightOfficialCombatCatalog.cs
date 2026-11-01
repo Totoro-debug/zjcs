@@ -941,6 +941,8 @@ namespace Zjcs.Combat.Official
                 Component(components, "FightStatusSkillEndComponent");
             Dictionary<string, object> actionEnd =
                 Component(components, "FightStatusActionEndComponent");
+            Dictionary<string, object> killSkill =
+                Component(components, "FightStatusKillSkillComponent");
             Dictionary<string, object> skillCooldownModify =
                 Component(components, "FightStatusSkillModifyCDComponent");
             Dictionary<string, object> permanentSkillCooldownReduction =
@@ -1065,6 +1067,23 @@ namespace Zjcs.Combat.Official
                 ActionEndRulesSupported = actionEnd != null && SupportsActionEnd(actionEnd),
                 ActionEndTargetTypeAllEnd = actionEnd != null && Bool(actionEnd, "IsTargetTypeAllEnd"),
                 ActionEndRate = actionEnd == null ? 1f : Float(actionEnd, "Rate", 1f),
+                HasKillSkill = killSkill != null,
+                KillSkillRulesSupported = killSkill != null && SupportsKillSkill(killSkill),
+                KillSkillRate = killSkill == null ? 0f : Float(killSkill, "Rate", 1f),
+                KillSkillEntityId = killSkill == null ? 0 : Int(killSkill, "SkillEntId"),
+                KillSkillStatusEntityId = killSkill == null ? 0 : Int(killSkill, "StatusEntClassId"),
+                KillSkillTargetDiePos = killSkill != null && Bool(killSkill, "IsSkillTargetDiePos"),
+                KillSkillCustomOverflowDamage = killSkill != null
+                    && Bool(killSkill, "IsCustomOverflowDamage"),
+                KillSkillUseCustomDamage = killSkill != null && Bool(killSkill, "IsUseCustomDamage"),
+                KillSkillMaxCount = killSkill == null ? -1 : Int(killSkill, "MaxCount", -1),
+                KillSkillResetCountEveryRound = killSkill != null
+                    && Bool(killSkill, "ResetCountEveryRound"),
+                KillSkillScaleDamageByCharacterTypeOnPvp = killSkill == null
+                    || Bool(killSkill, "ScaleDamageByCharacterTypeOnPvp", true),
+                KillSkillFilterSelf = killSkill != null && Bool(killSkill, "FilterSelf"),
+                KillSkillFilterClassIds = killSkill == null ? new List<int>()
+                    : new List<int>(IntArray(killSkill, "FilterClassIds")),
                 HasHpAccDecrease = hpAccDecrease != null,
                 AccumulatedDamage = ReadAccumulatedDamage(components),
                 HpAccUnitHp = hpAccDecrease == null ? -1L : Long(hpAccDecrease, "UnitHp", -1L),
@@ -2440,6 +2459,19 @@ namespace Zjcs.Combat.Official
                         || Int(custom, "UpperLimitPropType") != 0
                         || Int(custom, "UpperLimitPercent") != 0)) return false;
             }
+            return true;
+        }
+
+        private static bool SupportsKillSkill(Dictionary<string, object> component)
+        {
+            float rate = Float(component, "Rate", 1f);
+            int skillId = Int(component, "SkillEntId");
+            int statusId = Int(component, "StatusEntClassId");
+            if (rate < 0f || rate > 1f || skillId <= 0 && statusId <= 0
+                || skillId > 0 && statusId > 0
+                || Int(component, "MaxCount", -1) < -1
+                || Bool(component, "IsCustomOverflowDamage")
+                || Bool(component, "IsUseCustomDamage")) return false;
             return true;
         }
 

@@ -103,6 +103,49 @@ $unsupportedActionEnd = $catalog.CreateStatus(25144, 1, 1, 6)
 Assert-Hp (-not $unsupportedActionEnd.ActionEndRulesSupported) `
     'ActionEnd accepted a trigger with unsupported custom damage parameters.'
 
+# KillSkill status and skill triggers use the killer as source and honor filters/counts.
+$killStatus = $catalog.CreateStatus(25028, 1, 1, 7)
+$defeated = Unit 10 0
+$units.Clear(); $units.Add($owner); $units.Add($defeated)
+$owner.Hp = 100
+$owner.Statuses.Clear(); $owner.Statuses.Add($killStatus)
+$killApplied = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyKillSkills(
+    $owner, $defeated, $null, $units, $catalog,
+    [Zjcs.Combat.Official.FightRandomStream]::new(17))
+Assert-Hp ($killApplied -eq 1 -and ($owner.Statuses.ClassId -contains 24220)) `
+    'KillSkill did not apply its configured self status after a kill.'
+
+$killSkillStatus = $catalog.CreateStatus(60590, 1, 1, 8)
+$defeated.MonsterId = 3051
+$owner.Statuses.Clear(); $owner.Statuses.Add($killSkillStatus)
+$killInvocations = [Collections.Generic.List[Zjcs.Combat.Official.FightBattleStatusSkillInvocation]]::new()
+$killApplied = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyKillSkills(
+    $owner, $defeated, $null, $units, $catalog,
+    [Zjcs.Combat.Official.FightRandomStream]::new(17), $killInvocations)
+Assert-Hp ($killApplied -eq 1 -and $killInvocations.Count -eq 1 `
+    -and $killInvocations[0].Trigger.EntityId -eq 60591 `
+    -and $killInvocations[0].SourceUnitId -eq $owner.Id `
+    -and $killInvocations[0].TargetUnitId -eq $owner.Id) `
+    'KillSkill did not collect its filtered skill invocation.'
+$killInvocations.Clear()
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyKillSkills(
+    $owner, $defeated, $null, $units, $catalog,
+    [Zjcs.Combat.Official.FightRandomStream]::new(17), $killInvocations)
+Assert-Hp ($killInvocations.Count -eq 0) `
+    'KillSkill ignored its configured maximum trigger count.'
+
+$deathPositionStatus = $catalog.CreateStatus(25152, 1, 1, 9)
+$owner.Statuses.Clear(); $owner.Statuses.Add($deathPositionStatus)
+$killInvocations.Clear()
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyKillSkills(
+    $owner, $defeated, $null, $units, $catalog,
+    [Zjcs.Combat.Official.FightRandomStream]::new(17), $killInvocations)
+Assert-Hp ($killInvocations.Count -eq 1 `
+    -and $killInvocations[0].Trigger.EntityId -eq 12450 `
+    -and $killInvocations[0].TargetUnitId -eq $defeated.Id `
+    -and $killInvocations[0].AllowDeadTarget) `
+    'KillSkill did not preserve the configured death-position target.'
+
 # 25067 removes its configured 24315 status when the HP condition is no longer met.
 $notMeet = $catalog.CreateStatus(25067, 1, 1, 5)
 $units.Clear(); $units.Add($owner)

@@ -293,6 +293,20 @@ namespace Zjcs.Combat.Official
                 ActionEndTriggeredCount = template.ActionEndTriggeredCount,
                 ActionEndActionTypes = Copy(template.ActionEndActionTypes),
                 ActionEndSkills = CopyTriggers(template.ActionEndSkills),
+                HasKillSkill = template.HasKillSkill,
+                KillSkillRulesSupported = template.KillSkillRulesSupported,
+                KillSkillRate = template.KillSkillRate,
+                KillSkillEntityId = template.KillSkillEntityId,
+                KillSkillStatusEntityId = template.KillSkillStatusEntityId,
+                KillSkillTargetDiePos = template.KillSkillTargetDiePos,
+                KillSkillCustomOverflowDamage = template.KillSkillCustomOverflowDamage,
+                KillSkillUseCustomDamage = template.KillSkillUseCustomDamage,
+                KillSkillMaxCount = template.KillSkillMaxCount,
+                KillSkillResetCountEveryRound = template.KillSkillResetCountEveryRound,
+                KillSkillTriggeredCount = template.KillSkillTriggeredCount,
+                KillSkillScaleDamageByCharacterTypeOnPvp = template.KillSkillScaleDamageByCharacterTypeOnPvp,
+                KillSkillFilterSelf = template.KillSkillFilterSelf,
+                KillSkillFilterClassIds = Copy(template.KillSkillFilterClassIds),
                 HasHpAccDecrease = template.HasHpAccDecrease,
                 AccumulatedDamage = template.AccumulatedDamage?.Copy(),
                 HpAccUnitHp = template.HpAccUnitHp,
@@ -393,6 +407,11 @@ namespace Zjcs.Combat.Official
                 foreach (FightBattleStatusState status in actor.Statuses)
                     if (status != null && status.HasHpAccDecrease && status.HpAccResetAtRoundEnd)
                         status.HpAccDamageAccumulated = 0;
+            if (timing == TimingStart)
+                foreach (FightBattleUnitState owner in units)
+                    foreach (FightBattleStatusState status in owner.Statuses)
+                        if (status != null && status.KillSkillResetCountEveryRound)
+                            status.KillSkillTriggeredCount = 0;
             int removed = 0;
             foreach (FightBattleUnitState owner in units)
             for (int i = owner.Statuses.Count - 1; i >= 0; i--)

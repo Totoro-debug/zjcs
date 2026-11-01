@@ -345,6 +345,20 @@ namespace Zjcs.Combat.Official
         public List<int> ActionEndActionTypes = new List<int>();
         public List<FightBattleStatusStateTrigger> ActionEndSkills =
             new List<FightBattleStatusStateTrigger>();
+        public bool HasKillSkill;
+        public bool KillSkillRulesSupported;
+        public float KillSkillRate;
+        public int KillSkillEntityId;
+        public int KillSkillStatusEntityId;
+        public bool KillSkillTargetDiePos;
+        public bool KillSkillCustomOverflowDamage;
+        public bool KillSkillUseCustomDamage;
+        public int KillSkillMaxCount = -1;
+        public bool KillSkillResetCountEveryRound;
+        public int KillSkillTriggeredCount;
+        public bool KillSkillScaleDamageByCharacterTypeOnPvp = true;
+        public bool KillSkillFilterSelf;
+        public List<int> KillSkillFilterClassIds = new List<int>();
         // Official FightStatusHpAccDecreaseComponent. Damage is accumulated independently of cures
         // per the confirmed offline rule; the configured threshold is consumed on each trigger.
         public bool HasHpAccDecrease;
