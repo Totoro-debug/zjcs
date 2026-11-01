@@ -263,10 +263,8 @@ namespace Zjcs.Presentation.Home
 
             var playerProperties = new Dictionary<int, long>(progression.PropertyCalculator.Evaluate(
                 playerSave, host.Profile.Save.World, DateTimeOffset.Now.ToUnixTimeSeconds()).OutOfFightBattleProps);
-            int[] playerPassives = OfflineSkillProgression.EquippedPassiveSkills(playerSave.Skills);
-            ApplyPassiveProperties(combat, skillItems, playerProperties, playerPassives,
-                itemId => OfflineSkillProgression.OwnedRank(playerSave.Skills, itemId),
-                itemId => PlayerSlotLevel(playerSave, 101, Array.IndexOf(playerPassives, itemId)), playerSave.SubRank);
+            OfficialBattlePassivePropertyAssembler.ApplyEquippedPlayerPassives(combat, skillItems,
+                playerProperties, playerSave, progression);
             int maxHpId = combat.PropertyType("MaxHp");
             int speedId = combat.PropertyType("Speed");
             int[] playerPos = playerFaction.entryPositions[0];
@@ -282,11 +280,8 @@ namespace Zjcs.Presentation.Home
 
             Dictionary<int, long> guardProperties = new Dictionary<int, long>(combat.CalculateMonsterProps(
                 guard.monsterId, guard.monsterGroupId, guard.level, guard.subRank));
-            int[] guardPassives = (guard.passiveSkills ?? Array.Empty<ArenaRuntimeSkill>())
-                .Select(value => value.skillId).ToArray();
-            ApplyPassiveProperties(combat, skillItems, guardProperties, guardPassives,
-                itemId => Math.Max(1, guard.passiveSkills.First(value => value.skillId == itemId).rank),
-                itemId => Math.Max(1, guard.passiveSkills.First(value => value.skillId == itemId).level), guard.subRank);
+            ApplyPassiveProperties(combat, skillItems, guardProperties,
+                guard.passiveSkills ?? Array.Empty<ArenaRuntimeSkill>(), guard.subRank);
             foreach (int key in guardProperties.Keys.ToArray()) guardProperties[key] = checked(guardProperties[key] * 2L);
             int[] guardPos = guardFaction.entryPositions[0];
             var opponent = MakeUnit(2, 2, guard.level, guard.subRank, guard.profession,
@@ -400,20 +395,12 @@ namespace Zjcs.Presentation.Home
 
         private static void ApplyPassiveProperties(FightOfficialCombatCatalog combat,
             FightOfficialSkillItemCatalog skillItems, Dictionary<int, long> properties,
-            IEnumerable<int> itemIds, Func<int, int> rankForItem, Func<int, int> levelForItem, int subRank)
+            IEnumerable<ArenaRuntimeSkill> passives, int subRank)
         {
-            foreach (int itemId in itemIds ?? Array.Empty<int>())
-            {
-                if (itemId <= 0) continue;
-                FightOfficialSkillItem item = skillItems.Required(itemId);
-                IReadOnlyDictionary<int, long> passive = combat.CalculatePassiveSkillProps(
-                    item.PassiveRankPropId, item.PassiveGroupLevelPropId, item.PassiveRankFactorId,
-                    item.PassivePropFactors, Math.Max(1, rankForItem(itemId)),
-                    Math.Max(1, levelForItem(itemId)), subRank);
-                foreach (KeyValuePair<int, long> property in passive)
-                    properties[property.Key] = properties.TryGetValue(property.Key, out long current)
-                        ? checked(current + property.Value) : property.Value;
-            }
+            var bindings = (passives ?? Array.Empty<ArenaRuntimeSkill>())
+                .Select(value => new FightOfficialPassiveSkillBinding
+                { ItemId = value.skillId, Rank = value.rank, Level = value.level, SubRank = subRank });
+            OfficialBattlePassivePropertyAssembler.Apply(combat, skillItems, properties, bindings);
         }
 
         private int PlayerSlotLevel(OfflinePlayerProgress save, int itemType, int slot)

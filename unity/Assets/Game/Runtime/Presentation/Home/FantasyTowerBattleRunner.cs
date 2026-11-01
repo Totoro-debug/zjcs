@@ -230,7 +230,8 @@ namespace Zjcs.Presentation.Home
             FightDamageFormula formula = combatAssets.LoadDamageFormula();
             Dictionary<int, long> playerProps = new Dictionary<int, long>(progression.PropertyCalculator.Evaluate(
                 playerSave, host.Profile.Save.World, DateTimeOffset.Now.ToUnixTimeSeconds()).OutOfFightBattleProps);
-            ApplyPlayerPassives(combat, skillItems, playerProps, playerSave);
+            OfficialBattlePassivePropertyAssembler.ApplyEquippedPlayerPassives(combat, skillItems,
+                playerProps, playerSave, host.DailyDungeonProgression);
             int maxHpId = combat.PropertyType("MaxHp"), speedId = combat.PropertyType("Speed");
             var checkpoint = new FightBattleCheckpoint
             {
@@ -407,38 +408,12 @@ namespace Zjcs.Presentation.Home
             if (battleRoot != null) { Destroy(battleRoot.gameObject); battleRoot = null; }
         }
 
-        private void ApplyPlayerPassives(FightOfficialCombatCatalog combat,
-            FightOfficialSkillItemCatalog items, Dictionary<int, long> properties, OfflinePlayerProgress player)
-        {
-            int[] passives = OfflineSkillProgression.EquippedPassiveSkills(player.Skills);
-            for (int slot = 0; slot < passives.Length; slot++)
-            {
-                int id = passives[slot]; if (id <= 0) continue;
-                ApplyPassive(combat, items, properties, id,
-                    OfflineSkillProgression.OwnedRank(player.Skills, id),
-                    host.DailyDungeonProgression.SkillProgression.SlotLevel(player.Skills, 101, slot,
-                        host.DailyDungeonProgression.SkillContext().CurrentSeasonId), player.SubRank);
-            }
-        }
-
         private static void ApplyMonsterPassives(FightOfficialCombatCatalog combat,
             FightOfficialSkillItemCatalog items, Dictionary<int, long> properties, Map10RuntimeMonster monster)
         {
-            foreach (int id in monster.PassiveSkills ?? Array.Empty<int>())
-                if (id > 0) ApplyPassive(combat, items, properties, id, 1,
-                    Mathf.Max(1, Mathf.RoundToInt(monster.Level)), monster.SubRank);
-        }
-
-        private static void ApplyPassive(FightOfficialCombatCatalog combat, FightOfficialSkillItemCatalog items,
-            Dictionary<int, long> properties, int itemId, int rank, int level, int subRank)
-        {
-            FightOfficialSkillItem item = items.Required(itemId);
-            IReadOnlyDictionary<int, long> props = combat.CalculatePassiveSkillProps(item.PassiveRankPropId,
-                item.PassiveGroupLevelPropId, item.PassiveRankFactorId, item.PassivePropFactors,
-                Mathf.Max(1, rank), Mathf.Max(1, level), subRank);
-            foreach (KeyValuePair<int, long> pair in props)
-                properties[pair.Key] = properties.TryGetValue(pair.Key, out long current)
-                    ? checked(current + pair.Value) : pair.Value;
+            OfficialBattlePassivePropertyAssembler.Apply(combat, items, properties,
+                (monster.PassiveSkills ?? Array.Empty<int>()).Select(id => new FightOfficialPassiveSkillBinding
+                { ItemId = id, Rank = 1, Level = Mathf.Max(1, Mathf.RoundToInt(monster.Level)), SubRank = monster.SubRank }));
         }
 
         private void AssemblePlayer(FightOfficialCombatCatalog combat, FightOfficialSkillItemCatalog items,

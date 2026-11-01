@@ -331,7 +331,8 @@ namespace Zjcs.Presentation.World
             var playerProperties = new Dictionary<int, long>(
                 progression.EvaluateProps(DateTimeOffset.UtcNow.ToUnixTimeSeconds()).OutOfFightBattleProps);
             int playerSubRank = progression.Player.SubRank;
-            ApplyPlayerPassiveSkills(combatCatalog, skillItems, playerProperties, playerSubRank);
+            OfficialBattlePassivePropertyAssembler.ApplyEquippedPlayerPassives(combatCatalog,
+                skillItems, playerProperties, progression.Player, progression);
             Map10RuntimeFactionInfo faction = scene.FightComponent.FactionInfoList.First(value => value.Faction == 0);
             if (faction.EntryPosList == null || faction.EntryPosList.Length == 0)
                 throw new InvalidDataException("Official Map10 battle scene has no player entry position.");
@@ -405,45 +406,14 @@ namespace Zjcs.Presentation.World
             return checkpoint;
         }
 
-        private void ApplyPlayerPassiveSkills(FightOfficialCombatCatalog combatCatalog,
-            FightOfficialSkillItemCatalog skillItems, Dictionary<int, long> properties, int subRank)
-        {
-            OfflineSkillProfile profile = progression.Player.Skills;
-            int[] passives = OfflineSkillProgression.EquippedPassiveSkills(profile);
-            for (int slot = 0; slot < passives.Length; slot++)
-            {
-                int itemId = passives[slot];
-                if (itemId <= 0) continue;
-                int level = progression.SkillProgression.SlotLevel(profile, 101, slot,
-                    progression.SkillContext().CurrentSeasonId);
-                ApplyPassiveSkill(combatCatalog, skillItems, properties, itemId,
-                    OfflineSkillProgression.OwnedRank(profile, itemId), level, subRank);
-            }
-        }
-
         private static void ApplyMonsterPassiveSkills(FightOfficialCombatCatalog combatCatalog,
             FightOfficialSkillItemCatalog skillItems, Dictionary<int, long> properties,
             Map10RuntimeMonster source, int level, int subRank)
         {
             if (source.PassiveSkills == null) return;
-            foreach (int itemId in source.PassiveSkills)
-                if (itemId > 0)
-                    ApplyPassiveSkill(combatCatalog, skillItems, properties, itemId, 1, level, subRank);
-        }
-
-        private static void ApplyPassiveSkill(FightOfficialCombatCatalog combatCatalog,
-            FightOfficialSkillItemCatalog skillItems, Dictionary<int, long> properties, int itemId,
-            int rank, int level, int subRank)
-        {
-            if (!skillItems.TryGet(itemId, out FightOfficialSkillItem item))
-                throw new InvalidDataException("Official passive skill item is missing: " + itemId);
-            if (item.PassiveRankPropId <= 0 && item.PassiveGroupLevelPropId <= 0) return;
-            IReadOnlyDictionary<int, long> passive = combatCatalog.CalculatePassiveSkillProps(
-                item.PassiveRankPropId, item.PassiveGroupLevelPropId, item.PassiveRankFactorId,
-                item.PassivePropFactors, Math.Max(1, rank), Math.Max(1, level), subRank);
-            foreach (KeyValuePair<int, long> property in passive)
-                properties[property.Key] = properties.TryGetValue(property.Key, out long current)
-                    ? checked(current + property.Value) : property.Value;
+            OfficialBattlePassivePropertyAssembler.Apply(combatCatalog, skillItems, properties,
+                source.PassiveSkills.Select(itemId => new FightOfficialPassiveSkillBinding
+                { ItemId = itemId, Rank = 1, Level = level, SubRank = subRank }));
         }
 
         private void AssemblePlayerSkills(FightOfficialCombatCatalog combatCatalog,

@@ -497,16 +497,8 @@ namespace Zjcs.Presentation.Home
             };
             var playerProperties = new Dictionary<int, long>(progression.PropertyCalculator.Evaluate(
                 playerSave, battleProfile.Save.World, DateTimeOffset.Now.ToUnixTimeSeconds()).OutOfFightBattleProps);
-            int[] playerPassiveItems = OfflineSkillProgression.EquippedPassiveSkills(playerSave.Skills);
-            ApplyPassiveProperties(combat, skillItems, playerProperties, playerPassiveItems,
-                itemId => OfflineSkillProgression.OwnedRank(playerSave.Skills, itemId),
-                itemId =>
-                {
-                    int slot = Array.IndexOf(playerPassiveItems, itemId);
-                    return Math.Max(1, progression.SkillProgression.SlotLevel(playerSave.Skills,
-                        101, slot, progression.SkillContext().CurrentSeasonId));
-                },
-                playerSave.SubRank);
+            OfficialBattlePassivePropertyAssembler.ApplyEquippedPlayerPassives(combat, skillItems,
+                playerProperties, playerSave, progression);
             int maxHpId = combat.PropertyType("MaxHp");
             int speedId = combat.PropertyType("Speed");
             var player = new FightBattleUnitState
@@ -558,8 +550,9 @@ namespace Zjcs.Presentation.Home
                         monsterId, stage.monsterGroupNo, level, stage.subRank));
                     ApplyDailyBossDifficulty(properties, stage.subRank, level);
                     int[] passiveItems = combat.MonsterPassiveSkillItems(monsterId, stage.monsterGroupNo).ToArray();
-                    ApplyPassiveProperties(combat, skillItems, properties, passiveItems,
-                        _ => 1, _ => Math.Max(1, level), stage.subRank);
+                    OfficialBattlePassivePropertyAssembler.Apply(combat, skillItems, properties,
+                        passiveItems.Select(itemId => new FightOfficialPassiveSkillBinding
+                        { ItemId = itemId, Rank = 1, Level = Math.Max(1, level), SubRank = stage.subRank }));
                     long monsterHp = Property(properties, maxHpId);
                     if (monsterHp <= 0) throw new InvalidOperationException("Official daily dungeon monster MaxHp is invalid.");
                     var unit = new FightBattleUnitState
@@ -823,24 +816,6 @@ namespace Zjcs.Presentation.Home
                 .Where(value => value > 0).Select(value => new FightOfficialPassiveSkillBinding
                 { ItemId = value, Rank = 1, Level = Math.Max(1, unit.Level), SubRank = unit.SubRank }).ToList();
             combat.AssembleUnit(unit, skills, combat.CreatePassiveStatusBindings(unit, skillItems, passives));
-        }
-
-        private static void ApplyPassiveProperties(FightOfficialCombatCatalog combat,
-            FightOfficialSkillItemCatalog skillItems, Dictionary<int, long> properties,
-            IEnumerable<int> itemIds, Func<int, int> rankForItem, Func<int, int> levelForItem, int subRank)
-        {
-            foreach (int itemId in itemIds ?? Array.Empty<int>())
-            {
-                if (itemId <= 0) continue;
-                FightOfficialSkillItem item = skillItems.Required(itemId);
-                IReadOnlyDictionary<int, long> passive = combat.CalculatePassiveSkillProps(
-                    item.PassiveRankPropId, item.PassiveGroupLevelPropId, item.PassiveRankFactorId,
-                    item.PassivePropFactors, Math.Max(1, rankForItem(itemId)),
-                    Math.Max(1, levelForItem(itemId)), subRank);
-                foreach (KeyValuePair<int, long> property in passive)
-                    properties[property.Key] = properties.TryGetValue(property.Key, out long current)
-                        ? checked(current + property.Value) : property.Value;
-            }
         }
 
         private void ApplyDailyBossDifficulty(Dictionary<int, long> properties, int rank, int level)
