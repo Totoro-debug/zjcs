@@ -103,6 +103,44 @@ $unsupportedActionEnd = $catalog.CreateStatus(25144, 1, 1, 6)
 Assert-Hp (-not $unsupportedActionEnd.ActionEndRulesSupported) `
     'ActionEnd accepted a trigger with unsupported custom damage parameters.'
 
+# MoveNear triggers collect range targets at start and after movement.
+$nearSource = Unit 20 100
+$nearTarget = Unit 21 100 1
+$nearSource.X = 0; $nearSource.Y = 0; $nearSource.Side = 0
+$nearTarget.X = 1; $nearTarget.Y = 0; $nearTarget.Side = 1
+$nearStatus = $catalog.CreateStatus(12353, $nearSource.Id, $nearSource.Id, 1)
+$nearSource.Statuses.Add($nearStatus)
+$nearUnits = [Collections.Generic.List[Zjcs.Combat.Official.FightBattleUnitState]]::new()
+$nearUnits.Add($nearSource); $nearUnits.Add($nearTarget)
+$nearInvocations = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectMoveNearSkills(
+        $nearSource, $nearUnits,
+        [Zjcs.Combat.Official.FightStatusTriggerRuntime]::MoveNearEventStart,
+        $null, [Zjcs.Combat.Official.FightRandomStream]::new(17))
+Assert-Hp ($nearInvocations.Count -eq 1 -and $nearInvocations[0].Trigger.EntityId -eq 12570 `
+    -and $nearInvocations[0].SourceUnitId -eq $nearTarget.Id `
+    -and $nearInvocations[0].TargetUnitId -eq $nearSource.Id) `
+    'MoveNear start trigger did not preserve its configured range source and target.'
+$nearInvocations = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectMoveNearSkills(
+        $nearSource, $nearUnits,
+        [Zjcs.Combat.Official.FightStatusTriggerRuntime]::MoveNearEventStart,
+        $null, [Zjcs.Combat.Official.FightRandomStream]::new(17))
+Assert-Hp ($nearInvocations.Count -eq 0) 'MoveNear start trigger ignored its one-shot guard.'
+
+$nearEnter = $catalog.CreateStatus(12353, $nearSource.Id, $nearSource.Id, 2)
+$nearSource.Statuses.Clear(); $nearSource.Statuses.Add($nearEnter)
+$nearTarget.X = 1; $nearTarget.Y = 0
+$nearMovement = [Zjcs.Combat.Official.FightBattleMovementEvent]@{
+    UnitId = $nearTarget.Id; Path = [Collections.Generic.List[Zjcs.Combat.Official.FightGridPoint]]@(
+         [Zjcs.Combat.Official.FightGridPoint]@{ X = 3; Y = 0 },
+        [Zjcs.Combat.Official.FightGridPoint]@{ X = 1; Y = 0 })
+}
+$nearInvocations = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectMoveNearSkills(
+    $nearSource, $nearUnits,
+    [Zjcs.Combat.Official.FightStatusTriggerRuntime]::MoveNearEventEnterRange,
+    $nearMovement, [Zjcs.Combat.Official.FightRandomStream]::new(17))
+Assert-Hp ($nearInvocations.Count -eq 1 -and $nearInvocations[0].Trigger.EntityId -eq 12570) `
+    'MoveNear enter-range trigger did not detect the outside-to-inside transition.'
+
 # KillSkill status and skill triggers use the killer as source and honor filters/counts.
 $killStatus = $catalog.CreateStatus(25028, 1, 1, 7)
 $defeated = Unit 10 0

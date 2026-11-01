@@ -331,6 +331,176 @@ namespace Zjcs.Combat.Official
             return false;
         }
 
+        public const int MoveNearEventRound = 1;
+        public const int MoveNearEventMoved = 2;
+        public const int MoveNearEventEnterRange = 3;
+        public const int MoveNearEventStandRound = 4;
+        public const int MoveNearEventStart = 5;
+        public const int MoveNearEventInRangeMove = 6;
+
+        public static List<FightBattleStatusSkillInvocation> CollectMoveNearSkills(
+            FightBattleUnitState roundActor, IReadOnlyList<FightBattleUnitState> units,
+            int eventKind, FightBattleMovementEvent movement, FightRandomStream random)
+        {
+            var result = new List<FightBattleStatusSkillInvocation>();
+            if (units == null || random == null) return result;
+            int movedId = movement == null ? 0 : movement.UnitId;
+            foreach (FightBattleUnitState source in units)
+            {
+                if (source == null || source.Statuses == null) continue;
+                if ((eventKind == MoveNearEventRound || eventKind == MoveNearEventStart)
+                    && (roundActor == null || source.Id != roundActor.Id)) continue;
+                if (eventKind == MoveNearEventStandRound
+                    && (roundActor == null || source.Id == roundActor.Id)) continue;
+                if ((eventKind == MoveNearEventMoved || eventKind == MoveNearEventEnterRange
+                        || eventKind == MoveNearEventInRangeMove)
+                    && movedId <= 0) continue;
+                if (eventKind == MoveNearEventMoved && source.Id != movedId) continue;
+                foreach (FightBattleStatusState status in new List<FightBattleStatusState>(source.Statuses))
+                {
+                    if (status == null || !status.HasMoveNear || !status.MoveNearRulesSupported
+                        || !MoveNearEventEnabled(status, eventKind)
+                        || status.MoveNearMaxCount >= 0
+                            && status.MoveNearTriggeredCount >= status.MoveNearMaxCount
+                        || status.MoveNearMaxCountEachRound >= 0
+                            && status.MoveNearRoundTriggeredCount >= status.MoveNearMaxCountEachRound)
+                        continue;
+                    if (eventKind == MoveNearEventStart)
+                    {
+                        if (status.MoveNearStartTriggered) continue;
+                        status.MoveNearStartTriggered = true;
+                    }
+                    FightBattleUnitState moved = movedId <= 0 ? null : FindUnit(units, movedId);
+                    var candidates = new List<FightBattleUnitState>();
+                    var positions = new HashSet<FightGridPoint>();
+                    foreach (FightBattleUnitState candidate in units)
+                    {
+                        if (candidate == null || candidate.Id == source.Id
+                            || !MoveNearTargetMatches(source, candidate, status.MoveNearTargetType)
+                            || status.MoveNearCharacterTypes.Count > 0
+                                && !status.MoveNearCharacterTypes.Contains(candidate.CharacterType)
+                            || status.MoveNearNoTriggerIfRoleDie && candidate.Hp <= 0
+                            || eventKind == MoveNearEventStandRound
+                                && roundActor != null && candidate.Id != roundActor.Id
+                            || (eventKind == MoveNearEventEnterRange
+                                && (moved == null || candidate.Id != moved.Id
+                                    || !WasOutsideThenInside(source, candidate, movement,
+                                        status.MoveNearRange)))
+                            || (eventKind == MoveNearEventInRangeMove
+                                && (moved == null || candidate.Id != moved.Id
+                                    || !WasInsideThenInside(source, candidate, movement,
+                                        status.MoveNearRange)))
+                            || !IsMoveNearInRange(source, candidate, status.MoveNearRange)
+                            || status.MoveNearOnlyFirstInPosition
+                                && !positions.Add(new FightGridPoint(candidate.X, candidate.Y)))
+                            continue;
+                        candidates.Add(candidate);
+                    }
+                    foreach (FightBattleUnitState candidate in candidates)
+                    {
+                        if (status.MoveNearMaxCount >= 0
+                                && status.MoveNearTriggeredCount >= status.MoveNearMaxCount
+                            || status.MoveNearMaxCountEachRound >= 0
+                                && status.MoveNearRoundTriggeredCount
+                                    >= status.MoveNearMaxCountEachRound
+                            || !Roll(status.MoveNearRate, random)) continue;
+                        int added = 0;
+                        foreach (FightBattleStatusStateTrigger trigger in status.MoveNearSkills)
+                        {
+                            if (trigger == null || trigger.EntityId <= 0
+                                || !Roll(trigger.BasePercent, random)) continue;
+                            int sourceId = trigger.Source == 3 ? candidate.Id : source.Id;
+                            int targetId = trigger.Target == 2 ? source.Id : candidate.Id;
+                            result.Add(new FightBattleStatusSkillInvocation
+                            {
+                                Trigger = trigger.WithSource(status),
+                                SourceUnitId = sourceId,
+                                TargetUnitId = targetId,
+                                TargetPositionUnitId = candidate.Id,
+                                Delay = status.MoveNearSkillTriggerImmediately
+                                    ? 0f : Math.Max(0f, status.MoveNearSkillTriggerDelayTime)
+                            });
+                            added++;
+                        }
+                        if (added > 0)
+                        {
+                            status.MoveNearTriggeredCount += added;
+                            status.MoveNearRoundTriggeredCount += added;
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
+        private static bool MoveNearEventEnabled(FightBattleStatusState status, int eventKind)
+        {
+            switch (eventKind)
+            {
+                case MoveNearEventRound: return status.MoveNearTryAtRound;
+                case MoveNearEventMoved: return status.MoveNearTryAtMoved;
+                case MoveNearEventEnterRange: return status.MoveNearTryAtEnterRange;
+                case MoveNearEventStandRound: return status.MoveNearTryAtStandRound;
+                case MoveNearEventStart: return status.MoveNearTryAtStart;
+                case MoveNearEventInRangeMove: return status.MoveNearTryAtInRangeMove;
+                default: return false;
+            }
+        }
+
+        private static bool MoveNearTargetMatches(FightBattleUnitState source,
+            FightBattleUnitState candidate, int targetType)
+        {
+            if (source == null || candidate == null) return false;
+            switch (targetType)
+            {
+                case 1: return source.Side != candidate.Side;
+                case 2: return source.Side == candidate.Side;
+                case 3: return source.Side == candidate.Side && source.Id != candidate.Id;
+                case 4: return true;
+                default: return false;
+            }
+        }
+
+        private static bool IsMoveNearInRange(FightBattleUnitState source,
+            FightBattleUnitState candidate, List<FightGridPoint> range)
+        {
+            if (range == null || range.Count == 0) return false;
+            int dx = candidate.X - source.X, dy = candidate.Y - source.Y;
+            foreach (FightGridPoint offset in range)
+                if (offset.X == dx && offset.Y == dy) return true;
+            return false;
+        }
+
+        private static bool WasOutsideThenInside(FightBattleUnitState source,
+            FightBattleUnitState candidate, FightBattleMovementEvent movement,
+            List<FightGridPoint> range)
+        {
+            if (movement == null || movement.Path == null || movement.Path.Count < 2) return false;
+            FightGridPoint start = movement.Path[0];
+            bool outside = !IsMoveNearInRange(source.X, source.Y, start.X, start.Y, range);
+            return outside && IsMoveNearInRange(source, candidate, range);
+        }
+
+        private static bool WasInsideThenInside(FightBattleUnitState source,
+            FightBattleUnitState candidate, FightBattleMovementEvent movement,
+            List<FightGridPoint> range)
+        {
+            if (movement == null || movement.Path == null || movement.Path.Count < 2) return false;
+            FightGridPoint start = movement.Path[0];
+            return IsMoveNearInRange(source.X, source.Y, start.X, start.Y, range)
+                && IsMoveNearInRange(source, candidate, range);
+        }
+
+        private static bool IsMoveNearInRange(int sourceX, int sourceY,
+            int candidateX, int candidateY, List<FightGridPoint> range)
+        {
+            if (range == null) return false;
+            int dx = candidateX - sourceX, dy = candidateY - sourceY;
+            foreach (FightGridPoint offset in range)
+                if (offset.X == dx && offset.Y == dy) return true;
+            return false;
+        }
+
         public static int Apply(FightBattleUnitState unit, FightOfficialCombatCatalog catalog,
             bool atStart, List<FightBattleStatusStateTrigger> triggerSkills = null,
             FightRandomStream random = null, FightBattleSkillDefinition sourceSkill = null,

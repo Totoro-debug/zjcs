@@ -166,6 +166,7 @@ namespace Zjcs.Combat.Official
         public int SourceUnitId;
         public int TargetUnitId;
         public int TargetPositionUnitId;
+        public float Delay;
         public bool AllowDeadSource;
         public bool AllowDeadTarget;
     }
@@ -359,6 +360,31 @@ namespace Zjcs.Combat.Official
         public bool KillSkillScaleDamageByCharacterTypeOnPvp = true;
         public bool KillSkillFilterSelf;
         public List<int> KillSkillFilterClassIds = new List<int>();
+        public bool HasMoveNear;
+        public bool MoveNearRulesSupported;
+        public float MoveNearRate;
+        public int MoveNearSkillId;
+        public List<FightGridPoint> MoveNearRange = new List<FightGridPoint>();
+        public bool MoveNearTryAtRound;
+        public bool MoveNearTryAtMoved;
+        public bool MoveNearTryAtEnterRange;
+        public bool MoveNearTryAtStandRound;
+        public bool MoveNearTryAtStart;
+        public bool MoveNearTryAtInRangeMove;
+        public int MoveNearMaxCount = -1;
+        public int MoveNearTargetType;
+        public int MoveNearMaxCountEachRound = -1;
+        public int MoveNearTriggeredCount;
+        public int MoveNearRoundTriggeredCount;
+        public bool MoveNearStartTriggered;
+        public List<int> MoveNearCharacterTypes = new List<int>();
+        public float MoveNearSkillTriggerDelayTime;
+        public bool MoveNearNoTriggerIfRoleDie;
+        public bool MoveNearOnlyFirstInPosition = true;
+        public int MoveNearEnterRangeCauseFilter;
+        public bool MoveNearSkillTriggerImmediately;
+        public List<FightBattleStatusStateTrigger> MoveNearSkills =
+            new List<FightBattleStatusStateTrigger>();
         // Official FightStatusHpAccDecreaseComponent. Damage is accumulated independently of cures
         // per the confirmed offline rule; the configured threshold is consumed on each trigger.
         public bool HasHpAccDecrease;

@@ -943,6 +943,8 @@ namespace Zjcs.Combat.Official
                 Component(components, "FightStatusActionEndComponent");
             Dictionary<string, object> killSkill =
                 Component(components, "FightStatusKillSkillComponent");
+            Dictionary<string, object> moveNear =
+                Component(components, "FightStatusMoveNearComponent");
             Dictionary<string, object> skillCooldownModify =
                 Component(components, "FightStatusSkillModifyCDComponent");
             Dictionary<string, object> permanentSkillCooldownReduction =
@@ -1084,6 +1086,32 @@ namespace Zjcs.Combat.Official
                 KillSkillFilterSelf = killSkill != null && Bool(killSkill, "FilterSelf"),
                 KillSkillFilterClassIds = killSkill == null ? new List<int>()
                     : new List<int>(IntArray(killSkill, "FilterClassIds")),
+                HasMoveNear = moveNear != null,
+                MoveNearRulesSupported = moveNear != null && SupportsMoveNear(moveNear),
+                MoveNearRate = moveNear == null ? 0f : Float(moveNear, "Rate", 1f),
+                MoveNearSkillId = moveNear == null ? 0 : Int(moveNear, "SkillId"),
+                MoveNearTryAtRound = moveNear != null && Bool(moveNear, "TryAtRound"),
+                MoveNearTryAtMoved = moveNear != null && Bool(moveNear, "TryAtMoved"),
+                MoveNearTryAtEnterRange = moveNear != null && Bool(moveNear, "TryAtEnterRange"),
+                MoveNearTryAtStandRound = moveNear != null && Bool(moveNear, "TryAtStandRound"),
+                MoveNearTryAtStart = moveNear != null && Bool(moveNear, "TryAtStart"),
+                MoveNearTryAtInRangeMove = moveNear != null && Bool(moveNear, "TryAtInRangeMove"),
+                MoveNearMaxCount = moveNear == null ? -1 : Int(moveNear, "MaxCount", -1),
+                MoveNearTargetType = moveNear == null ? 0 : Int(moveNear, "TargetType"),
+                MoveNearMaxCountEachRound = moveNear == null ? -1
+                    : Int(moveNear, "MaxCountEachRound", -1),
+                MoveNearCharacterTypes = moveNear == null ? new List<int>()
+                    : new List<int>(IntArray(moveNear, "CharacterTypes")),
+                MoveNearSkillTriggerDelayTime = moveNear == null ? 0f
+                    : Float(moveNear, "SkillTriggerDelayTime", 0f),
+                MoveNearNoTriggerIfRoleDie = moveNear != null
+                    && Bool(moveNear, "NoTriggerIfRoleDie"),
+                MoveNearOnlyFirstInPosition = moveNear == null
+                    || Bool(moveNear, "OnlyFirstInPosition", true),
+                MoveNearEnterRangeCauseFilter = moveNear == null ? 0
+                    : Int(moveNear, "EnterRangeCauseFilter"),
+                MoveNearSkillTriggerImmediately = moveNear != null
+                    && Bool(moveNear, "SkillTriggerImmediately"),
                 HasHpAccDecrease = hpAccDecrease != null,
                 AccumulatedDamage = ReadAccumulatedDamage(components),
                 HpAccUnitHp = hpAccDecrease == null ? -1L : Long(hpAccDecrease, "UnitHp", -1L),
@@ -1232,6 +1260,23 @@ namespace Zjcs.Combat.Official
                 result.ActionEndActionTypes.AddRange(IntArray(actionEnd, "ActionTypes"));
                 AddHpAccTriggerEntries(actionEnd, "Skills", "SkillId",
                     result.ActionEndSkills, true);
+            }
+            if (moveNear != null)
+            {
+                if (moveNear.TryGetValue("Range", out object rawRange) && rawRange != null)
+                    foreach (object rawPoint in Array(rawRange, "FightStatusMoveNearComponent.Range"))
+                    {
+                        Dictionary<string, object> point = Object(rawPoint,
+                            "FightStatusMoveNearComponent.Range point");
+                        result.MoveNearRange.Add(new FightGridPoint(Int(point, "X"), Int(point, "Y")));
+                    }
+                AddHpAccTriggerEntries(moveNear, "Skills", "SkillId",
+                    result.MoveNearSkills, true);
+                if (result.MoveNearSkills.Count == 0 && result.MoveNearSkillId > 0)
+                    result.MoveNearSkills.Add(new FightBattleStatusStateTrigger
+                    {
+                        EntityId = result.MoveNearSkillId, Source = 2, Target = 5, TargetPos = 1
+                    });
             }
             if (hpAccDecrease != null)
             {
@@ -2472,6 +2517,49 @@ namespace Zjcs.Combat.Official
                 || Int(component, "MaxCount", -1) < -1
                 || Bool(component, "IsCustomOverflowDamage")
                 || Bool(component, "IsUseCustomDamage")) return false;
+            return true;
+        }
+
+        private static bool SupportsMoveNear(Dictionary<string, object> component)
+        {
+            float rate = Float(component, "Rate", 1f);
+            int skillId = Int(component, "SkillId");
+            if (rate < 0f || rate > 1f
+                || Int(component, "TargetType") < 1 || Int(component, "TargetType") > 4
+                || Int(component, "MaxCount", -1) < -1
+                || Int(component, "EnterRangeCauseFilter") < 0
+                || Int(component, "EnterRangeCauseFilter") > 2
+                || Float(component, "SkillTriggerDelayTime", 0f) < 0f
+                || ArrayCount(component, "StatusReplacePropertyValues") > 0
+                || skillId <= 0 && ArrayCount(component, "Skills") == 0) return false;
+            if (!component.TryGetValue("Skills", out object raw) || raw == null) return true;
+            foreach (object item in Array(raw, "Skills"))
+            {
+                Dictionary<string, object> trigger = Object(item, "move near trigger skill");
+                Dictionary<string, object> custom = Component(trigger, "CustomDamageInfo");
+                Dictionary<string, object> propTarget = Component(trigger, "PropTarget");
+                if (Bool(trigger, "AffectedByProp")
+                    || (Int(trigger, "Source") != 2 && Int(trigger, "Source") != 3)
+                    || (Int(trigger, "Target") != 2 && Int(trigger, "Target") != 5)
+                    || Bool(trigger, "UseAI") || Bool(trigger, "StackedCountToDamageFactor")
+                    || Int(trigger, "TargetPos") != 1
+                    || Float(trigger, "BasePercent", 1f) < 0f
+                    || Float(trigger, "BasePercent", 1f) > 1f
+                    || ArrayCount(trigger, "StatusReplacePropertyValues") > 0
+                    || ArrayCount(trigger, "TargetWithoutStatusIds") > 0
+                    || propTarget != null && (Bool(propTarget, "IsEnemy")
+                        || ArrayCount(propTarget, "RoleType") > 0
+                        || Bool(propTarget, "IncludeApplicator")
+                        || Int(propTarget, "PropType") != 0
+                        || Bool(propTarget, "Heighest")
+                        || Bool(propTarget, "SupportCustomFilter")
+                    ) || custom != null && (Int(custom, "TargetType") != 0
+                        || Int(custom, "BaseProp") != 0 || Bool(custom, "BaseCurrentHp")
+                        || Int(custom, "DamageProp") != 0
+                        || Int(custom, "UpperLimitTarget") != 0
+                        || Int(custom, "UpperLimitPropType") != 0
+                        || Int(custom, "UpperLimitPercent") != 0)) return false;
+            }
             return true;
         }
 

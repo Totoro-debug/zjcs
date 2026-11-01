@@ -187,6 +187,16 @@ namespace Zjcs.Combat.Official
                 ref statusEndDelay, ref stepDuration, ref stepActionDuration);
 
             if (statusCatalog != null)
+            {
+                ExecuteMoveNearTriggers(actor, FightStatusTriggerRuntime.MoveNearEventStart,
+                    null, casts, damageEvents, movements, ref stepDuration,
+                    ref stepActionDuration);
+                ExecuteMoveNearTriggers(actor, FightStatusTriggerRuntime.MoveNearEventRound,
+                    null, casts, damageEvents, movements, ref stepDuration,
+                    ref stepActionDuration);
+                ExecuteMoveNearTriggers(actor, FightStatusTriggerRuntime.MoveNearEventStandRound,
+                    null, casts, damageEvents, movements, ref stepDuration,
+                    ref stepActionDuration);
                 foreach (FightBattleUnitState source in new List<FightBattleUnitState>(units))
                 {
                     List<FightBattleStatusStateTrigger> roundStartSkills =
@@ -200,6 +210,7 @@ namespace Zjcs.Combat.Official
                     if (triggerActionDuration >= 0f)
                         stepActionDuration = Math.Max(stepActionDuration, triggerActionDuration);
                 }
+            }
             ExecutePendingCooldownModifySkills(casts, damageEvents, movements,
                 ref stepDuration, ref stepActionDuration);
             CollectStatusCustomActions(statusCustomActions);
@@ -265,6 +276,21 @@ namespace Zjcs.Combat.Official
                 MoveAwayFromNearestEnemy(actor, movements);
             // Keep unavailable-skill turns non-damaging; the local retreat rule may still move
             // the actor when a legal grid destination increases its distance from enemies.
+
+            if (statusCatalog != null)
+                for (int movementIndex = 0; movementIndex < movements.Count; movementIndex++)
+                {
+                    FightBattleMovementEvent movement = movements[movementIndex];
+                    ExecuteMoveNearTriggers(actor, FightStatusTriggerRuntime.MoveNearEventMoved,
+                        movement, casts, damageEvents, movements, ref stepDuration,
+                        ref stepActionDuration);
+                    ExecuteMoveNearTriggers(actor,
+                        FightStatusTriggerRuntime.MoveNearEventEnterRange, movement, casts,
+                        damageEvents, movements, ref stepDuration, ref stepActionDuration);
+                    ExecuteMoveNearTriggers(actor,
+                        FightStatusTriggerRuntime.MoveNearEventInRangeMove, movement, casts,
+                        damageEvents, movements, ref stepDuration, ref stepActionDuration);
+                }
 
             if (statusCatalog != null)
             {
@@ -1515,6 +1541,7 @@ namespace Zjcs.Combat.Official
                         && !invocation.AllowDeadTarget)
                     || (!FightBattleTargeting.IsSelectable(targetPosition)
                         && !invocation.AllowDeadTarget)) continue;
+                if (invocation.Delay > lastDelay) lastDelay = invocation.Delay;
 
                 FightBattleSkillDefinition skill;
                 try
@@ -1556,6 +1583,24 @@ namespace Zjcs.Combat.Official
                 if (actionDuration >= 0f)
                     maxActionDuration = Math.Max(maxActionDuration, actionDuration);
             }
+        }
+
+        private void ExecuteMoveNearTriggers(FightBattleUnitState roundActor, int eventKind,
+            FightBattleMovementEvent movement, List<FightBattleSkillCastEvent> casts,
+            List<FightBattleDamageEvent> damageEvents, List<FightBattleMovementEvent> movements,
+            ref float stepDuration, ref float stepActionDuration)
+        {
+            if (statusCatalog == null) return;
+            List<FightBattleStatusSkillInvocation> invocations =
+                FightStatusTriggerRuntime.CollectMoveNearSkills(roundActor, units, eventKind,
+                    movement, random);
+            if (invocations.Count == 0) return;
+            float triggerDelay = 0f;
+            ExecuteConfiguredStatusSkills(invocations, casts, damageEvents, movements,
+                ref triggerDelay, out float triggerDuration, out float triggerActionDuration);
+            stepDuration = Math.Max(stepDuration, triggerDuration + triggerDelay);
+            if (triggerActionDuration >= 0f)
+                stepActionDuration = Math.Max(stepActionDuration, triggerActionDuration);
         }
 
         private void ExecutePendingCooldownModifySkills(

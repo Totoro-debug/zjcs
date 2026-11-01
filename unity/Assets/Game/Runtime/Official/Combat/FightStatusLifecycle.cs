@@ -307,6 +307,31 @@ namespace Zjcs.Combat.Official
                 KillSkillScaleDamageByCharacterTypeOnPvp = template.KillSkillScaleDamageByCharacterTypeOnPvp,
                 KillSkillFilterSelf = template.KillSkillFilterSelf,
                 KillSkillFilterClassIds = Copy(template.KillSkillFilterClassIds),
+                HasMoveNear = template.HasMoveNear,
+                MoveNearRulesSupported = template.MoveNearRulesSupported,
+                MoveNearRate = template.MoveNearRate,
+                MoveNearSkillId = template.MoveNearSkillId,
+                MoveNearRange = template.MoveNearRange == null ? new List<FightGridPoint>()
+                    : new List<FightGridPoint>(template.MoveNearRange),
+                MoveNearTryAtRound = template.MoveNearTryAtRound,
+                MoveNearTryAtMoved = template.MoveNearTryAtMoved,
+                MoveNearTryAtEnterRange = template.MoveNearTryAtEnterRange,
+                MoveNearTryAtStandRound = template.MoveNearTryAtStandRound,
+                MoveNearTryAtStart = template.MoveNearTryAtStart,
+                MoveNearTryAtInRangeMove = template.MoveNearTryAtInRangeMove,
+                MoveNearMaxCount = template.MoveNearMaxCount,
+                MoveNearTargetType = template.MoveNearTargetType,
+                MoveNearMaxCountEachRound = template.MoveNearMaxCountEachRound,
+                MoveNearTriggeredCount = template.MoveNearTriggeredCount,
+                MoveNearRoundTriggeredCount = template.MoveNearRoundTriggeredCount,
+                MoveNearStartTriggered = template.MoveNearStartTriggered,
+                MoveNearCharacterTypes = Copy(template.MoveNearCharacterTypes),
+                MoveNearSkillTriggerDelayTime = template.MoveNearSkillTriggerDelayTime,
+                MoveNearNoTriggerIfRoleDie = template.MoveNearNoTriggerIfRoleDie,
+                MoveNearOnlyFirstInPosition = template.MoveNearOnlyFirstInPosition,
+                MoveNearEnterRangeCauseFilter = template.MoveNearEnterRangeCauseFilter,
+                MoveNearSkillTriggerImmediately = template.MoveNearSkillTriggerImmediately,
+                MoveNearSkills = CopyTriggers(template.MoveNearSkills),
                 HasHpAccDecrease = template.HasHpAccDecrease,
                 AccumulatedDamage = template.AccumulatedDamage?.Copy(),
                 HpAccUnitHp = template.HpAccUnitHp,
@@ -412,6 +437,11 @@ namespace Zjcs.Combat.Official
                     foreach (FightBattleStatusState status in owner.Statuses)
                         if (status != null && status.KillSkillResetCountEveryRound)
                             status.KillSkillTriggeredCount = 0;
+            if (timing == TimingStart)
+                foreach (FightBattleUnitState owner in units)
+                    foreach (FightBattleStatusState status in owner.Statuses)
+                        if (status != null)
+                            status.MoveNearRoundTriggeredCount = 0;
             int removed = 0;
             foreach (FightBattleUnitState owner in units)
             for (int i = owner.Statuses.Count - 1; i >= 0; i--)
