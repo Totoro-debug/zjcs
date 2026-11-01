@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Zjcs.Offline.Equipment
 {
-    public sealed class OfficialEquipmentCatalog
+    public sealed partial class OfficialEquipmentCatalog
     {
         private readonly Dictionary<string, List<Dictionary<string, object>>> tables;
         private readonly Dictionary<int, Dictionary<string, object>> propertyClasses;

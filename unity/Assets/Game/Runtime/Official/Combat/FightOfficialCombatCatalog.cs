@@ -852,7 +852,8 @@ namespace Zjcs.Combat.Official
                         SkillRank = binding.Rank,
                         SkillLevel = binding.Level,
                         SourceSubRank = binding.SubRank,
-                        SourceProperties = unit.Properties
+                        SourceProperties = unit.Properties,
+                        ReplacementProperties = binding.ReplacementProperties
                     });
                 }
             }
@@ -2658,6 +2659,7 @@ namespace Zjcs.Combat.Official
         public int Rank = 1;
         public int Level = 1;
         public int SubRank;
+        public IList<FightStatusReplacementValue> ReplacementProperties;
     }
 
     internal sealed class OfficialJson

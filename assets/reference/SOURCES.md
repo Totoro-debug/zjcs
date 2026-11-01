@@ -228,6 +228,8 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 
 技能连续重放来源：当前 `884_156692` 解码 `Console.dll`、代码回执及原重放配置／槽提供者／客户端消费契约、被动重放状态／四段标签查询／类型替换值契约，与保留 `854_156383` 身份的既有 `skill-rules.json`／`battle-rules.json` 分别记录。输入、适配代码和验证入口的 SHA256 由 `scripts/record_battle_skill_replay_sources.py` 写入 [来源清单](battle-rules/skill-replay-source-manifest.json)；服务器实现缺口、用户确认的单机规则与验证范围集中见[战斗执行](../../docs/features/battle-execution.md)。
 
+装备词条替换参数来源：`record_battle_equipment_term_sources.py` 核对当前 `884_156692` 解码程序集与 `BattleFormulaHandler`、词条参数／祝福查询原方法，保留既有 `854_156383` 装备和战斗运行表身份；原输入、适配代码和验证入口 SHA256 见[来源清单](battle-rules/equipment-term-source-manifest.json)，实际接入与验证范围见[装备功能](../../docs/features/equipment.md)。
+
 
 ### 当前伙伴自动结识来源
 

@@ -1,0 +1,106 @@
+{
+  "code_manifest": "884_156692",
+  "configuration_manifest": "854_156383",
+  "code_receipt": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "bytes": 6939,
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Console.dll",
+    "bytes": 16813568,
+    "sha256": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6"
+  },
+  "original": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleFormulaHandler.cs",
+      "bytes": 191212,
+      "sha256": "ce40db54d87030ded0a9f8a6dc95db5a3a4e46ae02bf76a9d273fe092a703d12"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EquipAttributesPassiveSkillInfo.cs",
+      "bytes": 7642,
+      "sha256": "f52f402c26bb6a87ac154502882fc7eea03a45bd7b3becbfbcde1f8d4dc618c6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EquipAttributeConfig.cs",
+      "bytes": 3425,
+      "sha256": "ae6c85a8969efa2c7c8d4b8ba25256487051bb94059fadd40271ac895369df6e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EquipAttributeBlessScaleInfoParser.cs",
+      "bytes": 1567,
+      "sha256": "fa1ba5bbc04a1d267a8d5096a9cd46d06c65d5772669354cd1178a90472c9cf0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/ValueType.cs",
+      "bytes": 66,
+      "sha256": "b7e6def918c4f3ee00f077e74f69bb6b02ccfb8b0a8f0b3f840689192fbd761c"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/Equipment/Runtime/equipment-runtime-rules.json",
+      "bytes": 13390605,
+      "sha256": "6217579aef537d1bebdf600ee0ebb3dfb449ec8596ef27af65e88e65bbaadb9a"
+    },
+    {
+      "path": "unity/Assets/Official/Equipment/Runtime/source-manifest.json",
+      "bytes": 2745,
+      "sha256": "7bbb4dbec02a1d535fce79be4fc7b53e0678f12354b5a9e3a9ad809ddda9538d"
+    },
+    {
+      "path": "unity/Assets/Official/Equipment/UI/equipment-ui.json",
+      "bytes": 3118034,
+      "sha256": "3d333d7a0c83b59f587b8d259bb0fdcdc91935e3030012ed4960d2a8367f699c"
+    },
+    {
+      "path": "unity/Assets/Official/Equipment/UI/source-manifest.json",
+      "bytes": 75328,
+      "sha256": "72ef83709da7f52fe5311f7ae7247d6535823685bd9695d02661719333ac1301"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/rules.json",
+      "bytes": 37209479,
+      "sha256": "ce75dd1cfa8309ccf5eb1b9eac01599404ad1f6579a7aa235c70ab2d730fc22c"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "bytes": 22729433,
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "bytes": 32798681,
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+    }
+  ],
+  "adapter": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Equipment/OfficialEquipmentCatalog.cs",
+      "bytes": 6592,
+      "sha256": "01d218fcb0a2aa129e145af80ea492d0236c1a643e06d7dbef75faf01bc6b286"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Equipment/OfficialEquipmentCatalog.TermReplacement.cs",
+      "bytes": 3159,
+      "sha256": "4e883922e2e1927072661825f812231f7aaf53fd3c113111fcf2136a5d363445"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs",
+      "bytes": 147638,
+      "sha256": "cdc5d2d24cc1a6e5e0810cf980c5836abd78c771e9930be73efe2701ed7a681e"
+    }
+  ],
+  "validation": {
+    "path": "scripts/test_battle_equipment_replay.ps1",
+    "bytes": 4874,
+    "sha256": "30f39b0fb8da1a41c55ccc24a7503999888d1fd242d3208d53078584c8c8134a"
+  },
+  "recorder": {
+    "path": "scripts/record_battle_equipment_term_sources.py",
+    "bytes": 3083,
+    "sha256": "d03d7b94f5e25004e3e05c23c39a1ddeb0554fa33acedb6f58439ca0e21d9360"
+  },
+  "operation": "Port original CalcEquipTermsReplacePropDictByPropGroupIndices and GetEquipAttributePassiveSkillProp: retain property indices, Long/Float fixed-point types, rank-gated blessing, missing-factor fallback and truncation. Pass replacements through passive skill bindings to original replay status configuration. No quality multiplier is introduced into this direct replacement formula. Equipped-term selection and formal gameplay-host integration are not yet connected."
+}
