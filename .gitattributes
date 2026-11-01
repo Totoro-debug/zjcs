@@ -1478,6 +1478,18 @@ unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.StatusParam
 unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.StatusReplay.cs text eol=lf
 unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.StatusReplay.cs text eol=lf
 
+# Preserve status property initialization adapters and their source identities.
+scripts/prepare_battle_status_property_reference.py text eol=lf
+scripts/test_battle_status_properties.ps1 text eol=lf
+scripts/test_battle_report_averages.ps1 text eol=lf
+assets/reference/battle-rules/status-properties-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/Combat/FightStatusPropertyRuntime*.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/Combat/FightStatusLifecycle.cs text eol=lf
+unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs text eol=lf
+unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/Combat/FightStatusPropertyModifiers.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/Combat/FightBattleExecutor.Replay.cs text eol=lf
+
 # Preserve current original partner property-region bytes and explicit code bindings.
 scripts/prepare_partner_detail_properties_*.py text eol=lf
 scripts/fixtures/partner_detail_properties_validation.cs text eol=lf

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Zjcs.Combat.Official
 {
-    public static class FightStatusPropertyRuntime
+    public static partial class FightStatusPropertyRuntime
     {
         public static void RebuildAll(IReadOnlyList<FightBattleUnitState> units,
             FightOfficialCombatCatalog catalog, FightDamageFormula formula)
@@ -26,6 +26,7 @@ namespace Zjcs.Combat.Official
             {
                 if (status == null) continue;
                 EnsurePropertyDefinition(status, catalog);
+                InitializeProperties(status, unit, units, properties, catalog, formula);
                 if ((status.HasPropertyComponent || status.ShieldKind != FightBattleShieldKind.None
                     || status.HasCreatorDamageBoost) && status.ResolvedProperties == null)
                     status.ResolvedProperties = ToValues(Resolve(status, unit, units, properties,
@@ -77,7 +78,8 @@ namespace Zjcs.Combat.Official
             FightBattleStatusState definition = catalog.CreateStatus(status.ClassId,
                 status.OwnerId, status.CreatorId, status.InstanceId, status.RootSkillId,
                 status.ApplyingSkillItemId, status.SourceSkillRank, status.SourceSkillLevel,
-                status.SourceSubRank, status.SourceProperties);
+                status.SourceSubRank, status.SourceProperties, replacementProperties: status.ReplacementProperties,
+                blessPropertyScales: status.BlessPropertyScales);
             status.HasPropertyComponent = definition.HasPropertyComponent;
             status.HasCreatorDamageBoost = definition.HasCreatorDamageBoost;
             status.PropertyTransitions = definition.PropertyTransitions;
@@ -90,15 +92,9 @@ namespace Zjcs.Combat.Official
             Dictionary<int, long> ownerProperties, FightOfficialCombatCatalog catalog,
             FightDamageFormula formula)
         {
-            var statusProperties = Map(catalog.CalculateSkillProps(
-                status.ClassId, Math.Max(1, status.SourceSkillRank),
-                Math.Max(1, status.SourceSkillLevel), Math.Max(0, status.SourceSubRank)));
-            if (status.IsOpenStack && status.ScalePropWhenChangeStacked && status.StackCount > 0)
-                Scale(statusProperties, status.StackCount);
-
-            Dictionary<int, long> sourceProperties = status.SourceProperties != null
-                ? Map(status.SourceProperties)
-                : UnitProperties(FindUnit(units, status.CreatorId));
+            var statusProperties = Map(status.StatusProperties);
+            if (!status.HasPropertyComponent) return statusProperties;
+            Dictionary<int, long> sourceProperties = SourceProperties(status, units);
             var result = new Dictionary<int, long>();
             foreach (FightBattleStatusPropertyTransition transition in status.PropertyTransitions
                 ?? new List<FightBattleStatusPropertyTransition>())
@@ -177,10 +173,8 @@ namespace Zjcs.Combat.Official
                                 * formula.ReadProperty(statusProperties, property.Key)));
                         break;
                     case "ShieldByConvertedCurHp":
-                        if (targetCurrentHp > 1)
-                            Add(result, formula.PropertyId("ConvertedCurHpShield"),
-                                (long)(targetCurrentHp * formula.ReadProperty(statusProperties,
-                                    property.Key)));
+                        Add(result, formula.PropertyId("ConvertedCurHpShield"), targetCurrentHp > 1
+                            ? (long)(targetCurrentHp * formula.ReadProperty(statusProperties, property.Key)) : 0L);
                         break;
                     default:
                         Add(result, property.Key, property.Value);
@@ -322,7 +316,7 @@ namespace Zjcs.Combat.Official
 
         private static void Add(Dictionary<int, long> properties, int id, long value)
         {
-            if (id <= 0 || value == 0) return;
+            if (id <= 0) return;
             properties[id] = Raw(properties, id) + value;
         }
 

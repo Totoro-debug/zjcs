@@ -96,6 +96,7 @@ namespace Zjcs.Combat.Official
             if (status.MaxStackedCount > 0) next = Math.Min(next, status.MaxStackedCount);
             if (next < 0) next = 0;
             status.StackCount = (int)next;
+            FightStatusPropertyRuntime.OnStackChanged(status, previous);
             return status.StackCount - previous;
         }
 
@@ -205,9 +206,14 @@ namespace Zjcs.Combat.Official
                 SourceSubRank = template.SourceSubRank,
                 PropertyDefinitionResolved = template.PropertyDefinitionResolved,
                 HasPropertyComponent = template.HasPropertyComponent,
-                SourceProperties = Copy(template.SourceProperties),
+                SourceProperties = template.SourceProperties == null ? null : Copy(template.SourceProperties),
+                ReplacementProperties = FightStatusPropertyModifiers.Copy(template.ReplacementProperties),
+                BlessPropertyScales = FightStatusPropertyModifiers.Copy(template.BlessPropertyScales),
+                StatusConfigProperties = template.StatusConfigProperties == null
+                    ? null : Copy(template.StatusConfigProperties),
+                StatusProperties = template.StatusProperties == null ? null : Copy(template.StatusProperties),
                 PropertyTransitions = CopyTransitions(template.PropertyTransitions),
-                ResolvedProperties = Copy(template.ResolvedProperties),
+                ResolvedProperties = template.ResolvedProperties == null ? null : Copy(template.ResolvedProperties),
                 HpTriggerPer = template.HpTriggerPer,
                 HpTriggerMaxCount = template.HpTriggerMaxCount,
                 HpTriggeredCount = template.HpTriggeredCount,

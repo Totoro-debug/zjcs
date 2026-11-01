@@ -53,9 +53,10 @@ for ($n=0; $n -lt 100 -and $loaded.Statistics.Skill(1,900,901).Casts -lt 11; $n+
 $row=[Zjcs.Combat.Official.FightBattleReportBuilder]::Build($loaded).Skills[0]
 Require ($row.Casts -eq 11 -and $row.DamageHits -eq 66 -and $row.DamageTargets -eq 22 -and $row.AvgDamageCountPerTarget -eq 3) 'Restored battle lost per-cast target counting'
 
-# A replay recursively invokes the same skill and must own another target set.
+# One configured replay invokes the same skill and must own another target set.
 $nested=New-Fixture
 $nested.Skill.HasReplay=$true; $nested.Skill.ReplayStatusId=99997
+$nested.Skill.ReplayMaxCountEachRound=1
 $nested.Skill.ReplayStackCount=1; $nested.Skill.ReplayRelation=1
 $nested.State.Units[0].Statuses.Add([Zjcs.Combat.Official.FightBattleStatusState]@{ ClassId=99997; InstanceId=1; DurationRound=-1; StackCount=1 })
 $step=$nested.Runner.Step(0,1)

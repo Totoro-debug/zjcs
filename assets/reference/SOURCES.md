@@ -232,6 +232,8 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 
 状态组件参数来源：`prepare_battle_status_parameters.py` 核对 `884_156692` 解码程序集，从原组件访问器与 Info 字段声明解析重载类型和继承关系；保留 `854_156383` 战斗配置身份。原方法、字段声明、输入、生成契约与适配／验证入口的 SHA256 见[来源清单](battle-rules/status-parameters-source-manifest.json)，行为与验证范围集中见[战斗执行](../../docs/features/battle-execution.md)。
 
+状态属性来源：`prepare_battle_status_property_reference.py` 核对当前解码程序集，提取原状态初始化、叠层更新、属性转换及共享公式方法；验证适配器和临时编译结果均保持独立命名空间。`884_156692` 原方法、`854_156383` 配置、生成器、适配和验证入口身份见[来源清单](battle-rules/status-properties-source-manifest.json)，行为与验证范围见[战斗执行](../../docs/features/battle-execution.md)。
+
 
 ### 当前伙伴自动结识来源
 

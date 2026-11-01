@@ -34,18 +34,53 @@ namespace Zjcs.Editor
                 player.Statuses.Add(status);
                 probe.ParameterStatusInstanceId = status.InstanceId;
             }
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_STATUS_PROPERTIES_ACCEPTANCE") == "1")
+            {
+                var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
+                var template = catalog.CreateStatus(60541, 1, 1, sourceProperties: player.Properties,
+                    replacementProperties: new List<FightStatusReplacementValue> {
+                        new FightStatusReplacementValue { PropertyId = 1, RawValue = 17 } },
+                    blessPropertyScales: new List<FightStatusPropertyScale> {
+                        new FightStatusPropertyScale { EntityId = 60541, PropertyId = 1, Factor = 1.5 } });
+                template.DurationRound = -1;
+                template.MaxStackedCount = -1;
+                var applied = FightStatusLifecycle.Apply(player, template, 0, 9901104);
+                Require(applied.ResolvedProperties == null,
+                    "A runtime-applied property status had an empty resolved cache before initialization.");
+                probe.PropertyStatusInstanceId = applied.InstanceId;
+            }
             return probe;
         }
 
         private sealed class StatusReplayProbe
         {
             public int ParameterStatusInstanceId;
+            public int PropertyStatusInstanceId;
+            private bool propertyStackUpdated;
 
             public void Observe(FightBattleCheckpoint checkpoint)
             {
                 foreach (var status in checkpoint.Units.Single(value => value.Id == 1).Statuses
                     .Where(value => value.InstanceId == 9901101 || value.InstanceId == 9901102))
                     Require(status.SkillReplay.CountEachRound <= 1, "A passive replay exceeded its independent round cap.");
+                if (PropertyStatusInstanceId > 0)
+                {
+                    var status = checkpoint.Units.Single(value => value.Id == 1).Statuses
+                        .Single(value => value.InstanceId == PropertyStatusInstanceId);
+                    long expected = propertyStackUpdated ? 50 : 25;
+                    Require(status.StatusProperties != null && status.StatusProperties.Single(value => value.Id == 1).Value == 25
+                        && status.ResolvedProperties != null && status.ResolvedProperties.Single(value => value.Id == 1).Value == expected,
+                        "Original raw replacement, blessing truncation or stacked property projection was lost.");
+                    if (!propertyStackUpdated)
+                    {
+                        FightStatusLifecycle.AddStack(status, 1);
+                        var assets = OfficialCombatAssetCatalog.LoadDefault();
+                        FightStatusPropertyRuntime.RebuildAll(checkpoint.Units, assets.Load(), assets.LoadDamageFormula());
+                        Require(status.ResolvedProperties.Single(value => value.Id == 1).Value == 50,
+                            "A stack change retained the old property cache.");
+                        propertyStackUpdated = true;
+                    }
+                }
             }
 
             public void Verify(string name, FightBattleCheckpoint checkpoint)
@@ -73,6 +108,9 @@ namespace Zjcs.Editor
                     Debug.Log("[Status parameter hosts] " + name + ": original 60170 -> 60171 casts=" + count
                         + ", typed probability and checkpoint passed.");
                 }
+                if (PropertyStatusInstanceId > 0)
+                    Debug.Log("[Status property hosts] " + name
+                        + ": runtime application, raw attack 17 -> blessing 25 -> two stacks 50 and checkpoint passed.");
             }
         }
     }

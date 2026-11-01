@@ -294,6 +294,10 @@ namespace Zjcs.Combat.Official
         public bool PropertyDefinitionResolved;
         public bool HasPropertyComponent;
         public List<FightPropertyValue> SourceProperties;
+        public List<FightStatusReplacementValue> ReplacementProperties;
+        public List<FightStatusPropertyScale> BlessPropertyScales;
+        public List<FightPropertyValue> StatusConfigProperties;
+        public List<FightPropertyValue> StatusProperties;
         public List<FightBattleStatusPropertyTransition> PropertyTransitions =
             new List<FightBattleStatusPropertyTransition>();
         public List<FightPropertyValue> ResolvedProperties;

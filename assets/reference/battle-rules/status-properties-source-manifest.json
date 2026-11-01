@@ -1,0 +1,154 @@
+{
+  "code_manifest": "884_156692",
+  "configuration_manifest": "854_156383",
+  "code_receipt": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "bytes": 6939,
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Console.dll",
+    "bytes": 16813568,
+    "sha256": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6"
+  },
+  "original": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleFormulaHandler.cs",
+      "bytes": 191212,
+      "sha256": "ce40db54d87030ded0a9f8a6dc95db5a3a4e46ae02bf76a9d273fe092a703d12"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusComponentImplement.cs",
+      "bytes": 6419,
+      "sha256": "1be892a13ef06108770a165ecdfac9637fbcbd900baed6658a62e43d827f6e8f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusComponentInfo.cs",
+      "bytes": 4018,
+      "sha256": "4ed2632fc593377db4196dcd018c7123d94ace78198c32115a5c8d9544e6b77f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusPropBaseComponent.cs",
+      "bytes": 2232,
+      "sha256": "f08ce280bd7b52eddbe3177e58385d44c24072625b16e0d5b8fb228ddefca04e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusPropCfg.cs",
+      "bytes": 2024,
+      "sha256": "02521706b1734dfd0062c595dfa7689476b55bdecaebe9309d961bbe951baede"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusUtilsHandler.cs",
+      "bytes": 8481,
+      "sha256": "7ac28ba04c74cf5908f4014f41505282e28168857dc73d75d1b2093469d09421"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/Formula.cs",
+      "bytes": 10907,
+      "sha256": "ab9fbc796367c78a25d18941bb58fab29e654ccc08228cc248b3422f21436b76"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PropType.cs",
+      "bytes": 10443,
+      "sha256": "265a81dbeab87b90e3a1c1423884610ed43ea9b535e488e20de0e0c41f9831b0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/StatusTargetType.cs",
+      "bytes": 126,
+      "sha256": "5af5eabb0dd40f085fada94b8be011e5d328878352004703f6a6daf57283b5e8"
+    }
+  ],
+  "adapter": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs",
+      "bytes": 148331,
+      "sha256": "6119900658c84494f75e8e9b1000418f08e98d65cbf24a8d98bc3610e8cd69fb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs",
+      "bytes": 42989,
+      "sha256": "8ed14916beffc6fc13e667451de4df14382a52422ecddd7d9331ce8eb868ff21"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusPropertyRuntime.cs",
+      "bytes": 16368,
+      "sha256": "d078bd07cffd727c859d0d4d4bc9fe586bfa8fa1f4aba9da52e4a55686513fac"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusPropertyRuntime.Initialization.cs",
+      "bytes": 3919,
+      "sha256": "78fc1cf1a65218618f286258a0196dafb5ba4567fa3a0487cf7af73e3ef5a0a1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusLifecycle.cs",
+      "bytes": 27783,
+      "sha256": "39a7d8efd7a47b8ba3bf4f5a4afc3a190a91fdcca8f2a20fdfbaea2d5a631d0c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightStatusPropertyModifiers.cs",
+      "bytes": 1317,
+      "sha256": "106877fcedf8aba77fdba97fb0424bb7a3a255b8fc103168e06deda9af4f014b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Combat/FightBattleExecutor.Replay.cs",
+      "bytes": 9702,
+      "sha256": "14f1bff7117a095e416b77c367db9d1f080e33ddb0ead170640cfe0433045131"
+    }
+  ],
+  "input": [
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "bytes": 22729433,
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "bytes": 32798681,
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/rules.json",
+      "bytes": 37209479,
+      "sha256": "ce75dd1cfa8309ccf5eb1b9eac01599404ad1f6579a7aa235c70ab2d730fc22c"
+    }
+  ],
+  "validation": {
+    "path": "scripts/test_battle_status_properties.ps1",
+    "bytes": 9083,
+    "sha256": "7b5368e600df8c27eafb0823158af9a1875137aa55148b514bfdbd11e195940a"
+  },
+  "regression": [
+    {
+      "path": "scripts/test_battle_status_application.ps1",
+      "bytes": 20384,
+      "sha256": "1b97ea130e72bc6963fcd265e171e0e9d3ca3d5a7abad3a17a98261adee96005"
+    },
+    {
+      "path": "scripts/test_battle_trigger_chains.ps1",
+      "bytes": 16335,
+      "sha256": "b7443eda29ab507ce06fa5900cdeebff5b0f05bfe0197ab6235ccc764abe6cc6"
+    },
+    {
+      "path": "scripts/test_battle_report_averages.ps1",
+      "bytes": 8379,
+      "sha256": "08fc8495f3d69a9e3c2f4fe486b7dd936b8df7da13f326b3db6a0a77c9429c6f"
+    },
+    {
+      "path": "scripts/test_battle_report_shields.ps1",
+      "bytes": 6033,
+      "sha256": "f64002547ca97b2f64c7658bc6392762e50a75c3f637462c9a31544fe8d1279b"
+    }
+  ],
+  "play_mode": {
+    "path": "unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.StatusReplay.cs",
+    "bytes": 7336,
+    "sha256": "12c0711a5d747088e31f7af613611fb8fef69c946c4e5e359cfc07d517967e73"
+  },
+  "generator": {
+    "path": "scripts/prepare_battle_status_property_reference.py",
+    "bytes": 16326,
+    "sha256": "abb9681509b69c24db112fc72a322dd2065214d74bb6e73e4e8eda96402874eb"
+  },
+  "generated_reference_sha256": "b07d3e5f42a5f590af5a7f3b3148b3131d3afd6b8cc2d835723afb6e1de23148",
+  "operation": "Run original InitProps, SetStackedCount, GetStatusProps, property projection and shared formulas against explicit local adapters. Compare initialization, raw replacement, stack/blessing order, zero-stack behavior, property transitions, shield conversion and checkpoint continuation. Adapters supply precomputed skill growth, local entities/props and logging; shared-stack arbitration and PVP scaling are outside this comparison."
+}

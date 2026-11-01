@@ -81,6 +81,8 @@ namespace Zjcs.Combat.Official
             return catalog;
         }
 
+        public bool HasEntityPropertyDefinition(int entityId) => skillEntityProps.ContainsKey(entityId);
+
         /// <summary>
         /// Computes the official skill property snapshot for an EC skill entity:
         /// level-prop row (from the entity's prop group level for the battle sub-rank) scaled by the
@@ -793,7 +795,8 @@ namespace Zjcs.Combat.Official
                     assembledStatuses.Add(CreateStatus(binding.ClassId, unit.Id, binding.CreatorId,
                         binding.InstanceId, binding.RootSkillId, binding.ApplyingSkillItemId,
                         binding.SkillRank, binding.SkillLevel, binding.SourceSubRank,
-                        binding.SourceProperties, binding.CustomShieldValue, binding.ReplacementProperties));
+                        binding.SourceProperties, binding.CustomShieldValue, binding.ReplacementProperties,
+                        binding.BlessPropertyScales));
                 }
             }
             unit.Skills.AddRange(assembledSkills);
@@ -853,7 +856,8 @@ namespace Zjcs.Combat.Official
                         SkillLevel = binding.Level,
                         SourceSubRank = binding.SubRank,
                         SourceProperties = unit.Properties,
-                        ReplacementProperties = binding.ReplacementProperties
+                        ReplacementProperties = binding.ReplacementProperties,
+                        BlessPropertyScales = binding.BlessPropertyScales
                     });
                 }
             }
@@ -885,7 +889,8 @@ namespace Zjcs.Combat.Official
             int instanceId = 0, int rootSkillId = 0, int applyingSkillItemId = 0,
             int sourceSkillRank = 1, int sourceSkillLevel = 1, int sourceSubRank = 0,
             IList<FightPropertyValue> sourceProperties = null, long customShieldValue = 0,
-            IList<FightStatusReplacementValue> replacementProperties = null)
+            IList<FightStatusReplacementValue> replacementProperties = null,
+            IList<FightStatusPropertyScale> blessPropertyScales = null)
         {
             Dictionary<string, object> components = ResolveStatusParameters(RequiredEntity(classId), replacementProperties);
             Dictionary<string, object> status = Component(components, "FightStatusComponent");
@@ -1068,7 +1073,9 @@ namespace Zjcs.Combat.Official
                 SourceSkillRank = Math.Max(1, sourceSkillRank),
                 SourceSkillLevel = Math.Max(1, sourceSkillLevel),
                 SourceSubRank = Math.Max(0, sourceSubRank),
-                SourceProperties = CopyProperties(sourceProperties),
+                SourceProperties = sourceProperties == null ? null : CopyProperties(sourceProperties),
+                ReplacementProperties = FightStatusPropertyModifiers.Copy(replacementProperties),
+                BlessPropertyScales = FightStatusPropertyModifiers.Copy(blessPropertyScales),
                 HasPropertyComponent = statusProps != null,
                 PropertyDefinitionResolved = true,
                 CustomShieldValue = Math.Max(0L, customShieldValue),
@@ -2651,6 +2658,7 @@ namespace Zjcs.Combat.Official
         public IList<FightPropertyValue> SourceProperties;
         public long CustomShieldValue;
         public IList<FightStatusReplacementValue> ReplacementProperties;
+        public IList<FightStatusPropertyScale> BlessPropertyScales;
     }
 
     public sealed class FightOfficialPassiveSkillBinding
@@ -2660,6 +2668,7 @@ namespace Zjcs.Combat.Official
         public int Level = 1;
         public int SubRank;
         public IList<FightStatusReplacementValue> ReplacementProperties;
+        public IList<FightStatusPropertyScale> BlessPropertyScales;
     }
 
     internal sealed class OfficialJson
