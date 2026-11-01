@@ -25,7 +25,7 @@ namespace Zjcs.Presentation.World
 {
     [UnityEngine.Scripting.APIUpdating.MovedFrom(true, "Zjcs.Presentation.World", null, "OfficialMap10GameRuntime")]
     [DisallowMultipleComponent]
-    public sealed partial class OfficialMainlineMapRuntime : MonoBehaviour
+    public sealed partial class OfficialMainlineMapRuntime : MonoBehaviour, IOfficialBattleModeAdapter
     {
 
         private sealed class Map10RuntimeStoryFrame
@@ -578,7 +578,6 @@ namespace Zjcs.Presentation.World
             if (entityView != null) entityView.EntitySelected -= navigation.OnEntitySelected;
             if (battleController != null)
             {
-                battleController.HudControlClicked -= OnBattleHudControl;
                 battleController.DisposeSession();
                 Destroy(battleController.gameObject);
             }

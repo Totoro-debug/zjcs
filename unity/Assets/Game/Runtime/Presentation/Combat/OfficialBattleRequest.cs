@@ -22,6 +22,9 @@ namespace Zjcs.Presentation.Combat
         public Transform WorldRoot;
         public Transform HudParent;
         public OfficialBattleHostPresentation HostPresentation;
+        // Optional mode adapter. The controller invokes it at the same completion boundaries
+        // exposed by its public events, so mode runners do not need to subscribe manually.
+        public IOfficialBattleModeAdapter ModeAdapter;
         // Optional presentation adapters. Omitted resolvers use the shared official catalogs;
         // maps with a captured player portrait or a version-specific NPC catalog override them.
         public Func<int, Sprite> SkillIcon;

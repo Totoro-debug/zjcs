@@ -13,7 +13,7 @@ using Zjcs.Presentation.Combat;
 
 namespace Zjcs.Presentation.Home
 {
-    public sealed class ArenaBattleRunner : MonoBehaviour
+    public sealed class ArenaBattleRunner : MonoBehaviour, IOfficialBattleModeAdapter
     {
         private HomeFeatureRuntime host;
         private Action<bool> completed;
@@ -139,8 +139,6 @@ namespace Zjcs.Presentation.Home
             playerTransform.SetParent(battleRoot, true);
 
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
-            controller.StepCompleted += OnStepCompleted;
-            controller.BattleCompleted += OnBattleCompleted;
             ArenaRuntimeAppearanceSet guardAppearance = (guard.appendAppearances
                     ?? Array.Empty<ArenaRuntimeAppearanceSet>())
                 .FirstOrDefault(value => value != null && value.sex == host.Arena.ActiveGuardSex);
@@ -166,6 +164,7 @@ namespace Zjcs.Presentation.Home
                             host.Arena.ActiveGuardSex, guard.profession, skinByType, excludes) : null),
                 HostPresentation = new OfficialBattleHostPresentation(host.Scene.Camera,
                     host.Scene.Root.transform, host.Hud.CanvasTransform, host.SetBattlePresentationActive),
+                ModeAdapter = this,
                 AnimationGroupResolver = unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
                 RestoreCheckpoint = restore,
                 StatueProgress = host.Profile
@@ -194,16 +193,20 @@ namespace Zjcs.Presentation.Home
             controller.Tick(Time.deltaTime);
         }
 
-        private void OnBattleCompleted(FightBattleCheckpoint checkpoint)
+        public void OnBattleCompleted(FightBattleCheckpoint checkpoint)
         {
             FinishBattle(checkpoint != null && checkpoint.Outcome != null && checkpoint.Outcome.Won);
         }
 
-        private void OnStepCompleted(FightBattleExecutionResult result)
+        public void OnBattleStepCompleted(FightBattleExecutionResult result)
         {
             if (result?.Checkpoint == null) return;
             host.Arena.RecordBattleCheckpoint(FightBattleCheckpointSerializer.Save(result.Checkpoint));
         }
+
+        public void OnBattleReportReady(FightBattleReport report) { }
+
+        public void OnBattleHudControlClicked(string path) { }
 
         private void FinishBattle(bool isWon)
         {
@@ -406,8 +409,6 @@ namespace Zjcs.Presentation.Home
         {
             if (controller != null)
             {
-                controller.StepCompleted -= OnStepCompleted;
-                controller.BattleCompleted -= OnBattleCompleted;
                 controller.DisposeSession();
                 Destroy(controller);
                 controller = null;

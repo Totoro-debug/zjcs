@@ -43,6 +43,7 @@ namespace Zjcs.Presentation.Combat
         private OfficialBattlePreparationView preparationView;
         private bool battleCompletedRaised;
         private FightBattleReport finalReport;
+        private IOfficialBattleModeAdapter modeAdapter;
 
         // The game uses mouse input; acceptance can feed the same pointer path without OS input.
         public Func<OfficialBattlePointerFrame> PreparationPointerProvider { get; set; }
@@ -124,6 +125,7 @@ namespace Zjcs.Presentation.Combat
             var statueProgress = request.StatueProgress;
             var options = request.Options;
             var nativeNpcFactory = request.NativeNpcFactory;
+            var requestedModeAdapter = request.ModeAdapter;
             remainingStepDelay = request.InitialStepDelay;
             if (hudParent == null) throw new ArgumentNullException(nameof(hudParent));
             sessionOptions = options ?? new OfficialBattleSessionOptions();
@@ -131,6 +133,7 @@ namespace Zjcs.Presentation.Combat
                 || sessionOptions.PrepareSeconds < 0 || float.IsNaN(sessionOptions.ShowMainPanelDelay)
                 || float.IsInfinity(sessionOptions.ShowMainPanelDelay) || sessionOptions.ShowMainPanelDelay < 0)
                 throw new ArgumentException("Battle preparation and HUD delays must be finite and nonnegative.", nameof(options));
+            modeAdapter = requestedModeAdapter;
 
             OfficialCombatAssetCatalog resolvedCombatAssets = combatAssets != null
                 ? combatAssets : OfficialCombatAssetCatalog.LoadDefault();
@@ -254,6 +257,7 @@ namespace Zjcs.Presentation.Combat
                     renderPipelineScope=null;
                     hostPresentation?.Dispose();
                     hostPresentation = null;
+                    modeAdapter = null;
                 }
                 throw;
             }
@@ -317,7 +321,9 @@ namespace Zjcs.Presentation.Combat
                 // hit must reach its configured time before the mode destroys the battle scene.
                 stepPlayback = new FightProcessPlayback<float>(new[] { LastStepSeconds }, value => value,
                     _ => CompleteStepPresentation());
+                IOfficialBattleModeAdapter adapter = modeAdapter;
                 StepCompleted?.Invoke(result);
+                adapter?.OnBattleStepCompleted(result);
                 return result;
             }
             finally
@@ -470,8 +476,17 @@ namespace Zjcs.Presentation.Combat
                     finalReport = completedReport;
                 }
             }
-            if (completedReport != null) BattleReportReady?.Invoke(completedReport);
-            if (completedCheckpoint != null) BattleCompleted?.Invoke(completedCheckpoint);
+            IOfficialBattleModeAdapter adapter = modeAdapter;
+            if (completedReport != null)
+            {
+                BattleReportReady?.Invoke(completedReport);
+                adapter?.OnBattleReportReady(completedReport);
+            }
+            if (completedCheckpoint != null)
+            {
+                BattleCompleted?.Invoke(completedCheckpoint);
+                adapter?.OnBattleCompleted(completedCheckpoint);
+            }
             StepPresentationCompleted?.Invoke();
         }
 
@@ -541,6 +556,7 @@ namespace Zjcs.Presentation.Combat
             hudVisible = true;
             battleCompletedRaised = false;
             finalReport = null;
+            modeAdapter = null;
         }
 
         private void OnDestroy()
@@ -555,7 +571,9 @@ namespace Zjcs.Presentation.Combat
                 Ready();
                 return;
             }
+            IOfficialBattleModeAdapter adapter = modeAdapter;
             HudControlClicked?.Invoke(path);
+            adapter?.OnBattleHudControlClicked(path);
         }
 
         private void OnSpeedCycled()

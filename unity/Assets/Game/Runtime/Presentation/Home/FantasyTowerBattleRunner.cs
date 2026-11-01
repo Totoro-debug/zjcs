@@ -13,7 +13,7 @@ using Zjcs.Presentation.World;
 
 namespace Zjcs.Presentation.Home
 {
-    public sealed class FantasyTowerBattleRunner : MonoBehaviour
+    public sealed class FantasyTowerBattleRunner : MonoBehaviour, IOfficialBattleModeAdapter
     {
         private HomeFeatureRuntime host;
         private OfflineFantasyTowerSession progress;
@@ -173,8 +173,6 @@ namespace Zjcs.Presentation.Home
             OfficialCombatAssetCatalog combatAssets = OfficialCombatAssetCatalog.LoadDefault();
             FightOfficialCombatCatalog combat = combatAssets.Load();
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
-            controller.StepCompleted += OnStepCompleted;
-            controller.BattleCompleted += OnBattleCompleted;
             controller.Begin(new OfficialBattleRequest
             {
                 Checkpoint = checkpoint,
@@ -185,6 +183,7 @@ namespace Zjcs.Presentation.Home
                     host.DailyDungeonProgression, host.ActiveProfileSlotId, host.SavesRoot),
                 HostPresentation = new OfficialBattleHostPresentation(host.Scene.Camera,
                     host.Scene.Root.transform, host.Hud.CanvasTransform, host.SetBattlePresentationActive),
+                ModeAdapter = this,
                 AnimationGroupResolver = unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
                 CombatAssets = combatAssets,
                 RestoreCheckpoint = restore,
@@ -302,18 +301,22 @@ namespace Zjcs.Presentation.Home
             controller.Tick(Time.deltaTime);
         }
 
-        private void OnBattleCompleted(FightBattleCheckpoint checkpoint)
+        public void OnBattleCompleted(FightBattleCheckpoint checkpoint)
         {
             Complete(checkpoint != null && checkpoint.Outcome != null && checkpoint.Outcome.Won);
         }
 
-        private void OnStepCompleted(FightBattleExecutionResult result)
+        public void OnBattleStepCompleted(FightBattleExecutionResult result)
         {
             FightBattleCheckpoint checkpoint = result?.Checkpoint;
             if (checkpoint == null) return;
             if (backgroundExecution) progress.SaveBackgroundCheckpoint(entryIndex, checkpoint);
             else progress.SaveForegroundCheckpoint(entryIndex, checkpoint);
         }
+
+        public void OnBattleReportReady(FightBattleReport report) { }
+
+        public void OnBattleHudControlClicked(string path) { }
 
         private void Complete(bool won)
         {
@@ -384,8 +387,6 @@ namespace Zjcs.Presentation.Home
             disposed = true;
             if (controller != null)
             {
-                controller.StepCompleted -= OnStepCompleted;
-                controller.BattleCompleted -= OnBattleCompleted;
                 controller.DisposeSession();
                 Destroy(controller); controller = null;
             }

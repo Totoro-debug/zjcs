@@ -12,7 +12,7 @@ using Zjcs.Presentation.Combat;
 
 namespace Zjcs.Presentation.Home
 {
-    public sealed class DailyDungeonBattleRunner : MonoBehaviour
+    public sealed class DailyDungeonBattleRunner : MonoBehaviour, IOfficialBattleModeAdapter
     {
         private HomeFeatureRuntime host;
         private Action<bool> completed;
@@ -264,9 +264,6 @@ namespace Zjcs.Presentation.Home
             playerTransform.SetParent(battleRoot, true);
 
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
-            controller.HudControlClicked += OnHudControlClicked;
-            controller.StepCompleted += OnStepCompleted;
-            controller.BattleCompleted += OnBattleCompleted;
             OfficialBattleHudCatalog hudCatalog = OfficialBattleHudCatalog.LoadDefault();
             Sprite fallback = hudCatalog.FindSprite("C_none-fa3e084e40.png");
             if (fallback == null) throw new InvalidOperationException("Official battle fallback portrait is missing.");
@@ -284,6 +281,7 @@ namespace Zjcs.Presentation.Home
                 HudParent = battleCanvas,
                 HostPresentation = privateMapEntry ? privateMapPresentation : new OfficialBattleHostPresentation(
                     host.Scene.Camera, host.Scene.Root.transform, battleCanvas, host.SetBattlePresentationActive),
+                ModeAdapter = this,
                 SkillIcon = itemId => skillIcons == null ? fallback : skillIcons.Find(itemId) ?? fallback,
                 TimelinePortrait = unit => characterPortrait(unit) ?? (unit.CharacterType != 1
                     && unit.MonsterId > 0 ? portraits?.Find(combat.MonsterIconId(unit.MonsterId)) : null),
@@ -305,12 +303,12 @@ namespace Zjcs.Presentation.Home
             controller.Tick(Time.deltaTime);
         }
 
-        private void OnBattleCompleted(FightBattleCheckpoint checkpoint)
+        public void OnBattleCompleted(FightBattleCheckpoint checkpoint)
         {
             CompleteBattle(checkpoint != null && checkpoint.Outcome != null && checkpoint.Outcome.Won);
         }
 
-        private void OnStepCompleted(FightBattleExecutionResult result)
+        public void OnBattleStepCompleted(FightBattleExecutionResult result)
         {
             if (result?.Checkpoint == null) return;
             string serialized = FightBattleCheckpointSerializer.Save(result.Checkpoint);
@@ -396,7 +394,7 @@ namespace Zjcs.Presentation.Home
             return grantedRewards;
         }
 
-        private void OnHudControlClicked(string path)
+        public void OnBattleHudControlClicked(string path)
         {
             if (path != null && path.IndexOf("Exit", StringComparison.OrdinalIgnoreCase) >= 0)
             {
@@ -405,6 +403,8 @@ namespace Zjcs.Presentation.Home
                 else if (!privateMapEntry) host.DailyDungeons.SaveBattleCheckpoint(serialized);
             }
         }
+
+        public void OnBattleReportReady(FightBattleReport report) { }
 
         private bool SaveChallengeCheckpoint(string serialized)
         {
@@ -427,9 +427,6 @@ namespace Zjcs.Presentation.Home
         {
             if (controller != null)
             {
-                controller.StepCompleted -= OnStepCompleted;
-                controller.BattleCompleted -= OnBattleCompleted;
-                controller.HudControlClicked -= OnHudControlClicked;
                 controller.DisposeSession();
                 Destroy(controller);
                 controller = null;

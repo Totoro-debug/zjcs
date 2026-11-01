@@ -153,9 +153,6 @@ namespace Zjcs.Presentation.World
             battleController = new GameObject("Map10OfficialBattle").AddComponent<OfficialBattleRuntimeController>();
             battleController.transform.SetParent(transform, false);
 
-            battleController.HudControlClicked += OnBattleHudControl;
-            battleController.BattleCompleted += OnBattleCompleted;
-
             Sprite fallbackPortrait = hud.uiCatalog.FindSprite("res://assets/official/sprites/C_none-fa3e084e40.png");
             if (fallbackPortrait == null) throw new InvalidOperationException("Official Map10 fallback battle portrait is missing.");
             OfficialCombatSkillIconCatalog skillIcons = OfficialCombatSkillIconCatalog.TryLoadDefault();
@@ -177,6 +174,7 @@ namespace Zjcs.Presentation.World
                 HudParent = uiParent,
                 HostPresentation = new OfficialBattleHostPresentation(worldCamera, null, hud.ui.OverlayRoot,
                     additionalHudRoots: new[] { hud.ui.Find("WorldCanvas", "/WorldCanvas").transform }),
+                ModeAdapter = this,
                 SkillIcon = skillIconResolver,
                 TimelinePortrait = unit => characterPortrait(unit) ?? (unit.CharacterType != 1
                     && unit.MonsterId > 0 ? monsterPortraits?.Find(combatCatalog.MonsterIconId(unit.MonsterId)) : null),
@@ -218,7 +216,7 @@ namespace Zjcs.Presentation.World
         private Action battleCompletion;
         private Map10RuntimeStage activeBattleStage;
 
-        private void OnBattleCompleted(FightBattleCheckpoint checkpoint)
+        public void OnBattleCompleted(FightBattleCheckpoint checkpoint)
         {
             FinishBattle();
         }
@@ -503,11 +501,15 @@ namespace Zjcs.Presentation.World
                 sourceProps, bindings, passives, true);
         }
 
-        private void OnBattleHudControl(string path)
+        public void OnBattleHudControlClicked(string path)
         {
             if (!string.IsNullOrEmpty(path) && path.IndexOf("Leave", StringComparison.OrdinalIgnoreCase) >= 0)
                 LeaveBattle();
         }
+
+        public void OnBattleStepCompleted(FightBattleExecutionResult result) { }
+
+        public void OnBattleReportReady(FightBattleReport report) { }
 
 
         private void FinishBattle()
@@ -643,8 +645,6 @@ namespace Zjcs.Presentation.World
             activeBattleStage = null;
             if (battleController != null)
             {
-                battleController.HudControlClicked -= OnBattleHudControl;
-                battleController.BattleCompleted -= OnBattleCompleted;
                 battleController.DisposeSession();
                 Destroy(battleController.gameObject);
                 battleController = null;

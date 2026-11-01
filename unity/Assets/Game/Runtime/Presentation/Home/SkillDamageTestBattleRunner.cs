@@ -13,7 +13,7 @@ namespace Zjcs.Presentation.Home
 {
     // StageDamageTestPanel request adapter. Grid, formations, skill assembly and
     // property calculations reuse the migrated official common battle pipeline.
-    public sealed class SkillDamageTestBattleRunner : MonoBehaviour
+    public sealed class SkillDamageTestBattleRunner : MonoBehaviour, IOfficialBattleModeAdapter
     {
         private HomeFeatureRuntime host;
         private OfficialSkillDamageTestRequest request;
@@ -57,13 +57,12 @@ namespace Zjcs.Presentation.Home
             OfficialCombatAssetCatalog assets = OfficialCombatAssetCatalog.LoadDefault();
             FightOfficialCombatCatalog combat = assets.Load();
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
-            controller.HudControlClicked += OnControl;
-            controller.BattleCompleted += OnBattleCompleted;
             controller.Begin(new OfficialBattleRequest
             {
                 Checkpoint = checkpoint,
                 WorldRoot = battleRoot,
                 HudParent = host.Hud.CanvasTransform,
+                ModeAdapter = this,
                 TimelinePortrait = OfficialBattleCharacterPortraits.ForProfile(battleRoot.gameObject,
                     host.DailyDungeonProgression, host.ActiveProfileSlotId, host.SavesRoot),
                 HostPresentation = new OfficialBattleHostPresentation(host.Scene.Camera,
@@ -94,7 +93,7 @@ namespace Zjcs.Presentation.Home
             controller.Tick(Time.deltaTime);
         }
 
-        private void OnBattleCompleted(FightBattleCheckpoint checkpoint)
+        public void OnBattleCompleted(FightBattleCheckpoint checkpoint)
         {
             if (complete || checkpoint == null) return;
             complete = true;
@@ -103,7 +102,7 @@ namespace Zjcs.Presentation.Home
             Destroy(this);
         }
 
-        private void OnControl(string path)
+        public void OnBattleHudControlClicked(string path)
         {
             if (!path.EndsWith("/CloseBtn/CloseBtn_normal", StringComparison.Ordinal)) return;
             complete = true;
@@ -112,11 +111,14 @@ namespace Zjcs.Presentation.Home
             Destroy(this);
         }
 
+        public void OnBattleStepCompleted(FightBattleExecutionResult result) { }
+
+        public void OnBattleReportReady(FightBattleReport report) { }
+
         private void OnDestroy() => DisposeBattle();
         private void DisposeBattle()
         {
             if (controller != null) {
-                controller.HudControlClicked -= OnControl; controller.BattleCompleted -= OnBattleCompleted;
                 controller.DisposeSession(); Destroy(controller); controller = null;
             }
             if (playerTransform != null) {
