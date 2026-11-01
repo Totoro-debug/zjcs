@@ -172,6 +172,8 @@ namespace Zjcs.Presentation.Home
                 if (dialog == null) throw new InvalidOperationException("Official partner friendship dialog component is missing.");
                 dialog.Configure(host.PartnerFriendshipDialogServices);
                 previousFriendshipLocalize = WorldMultiLanguageText.Localize;
+                previousFriendshipLanguageFont = WorldMultiLanguageText.LanguageFont;
+                WorldMultiLanguageText.LanguageFont = () => host.Catalog.Font;
                 var localization = new OfflinePartnerLocalizationService(host.PartnerDetailAssets.Texts,
                     host.PartnerDetailAssets.Common.GiftTexts, host.PartnerFriendshipAssets.PropertyTexts,
                     host.PartnerFriendshipAssets.DialogTexts);
@@ -194,6 +196,8 @@ namespace Zjcs.Presentation.Home
                 previousFriendshipPool = null;
                 WorldMultiLanguageText.Localize = previousFriendshipLocalize;
                 previousFriendshipLocalize = null;
+                WorldMultiLanguageText.LanguageFont = previousFriendshipLanguageFont;
+                previousFriendshipLanguageFont = null;
                 Notify("伙伴好感度详情打开失败：" + error.Message);
             }
         }

@@ -48,6 +48,7 @@ public class TipDotNodeLinker : MonoBehaviour
 	private void OnEnable()
 	{
 		mIsEnabled = true;
+		if (TipDotSystem == null) return;
 		OnSetShow();
 		IProfessionTipDotSystem tipDotSystem = TipDotSystem;
 		tipDotSystem.OnTipDotShowChanged = (Action)Delegate.Combine(tipDotSystem.OnTipDotShowChanged, new Action(OnSetShow));
@@ -58,6 +59,7 @@ public class TipDotNodeLinker : MonoBehaviour
 
 	private void OnDisable()
 	{
+		if (TipDotSystem == null) { mIsEnabled = false; return; }
 		DisconnectNode();
 		IProfessionTipDotSystem tipDotSystem = TipDotSystem;
 		tipDotSystem.OnTipDotShowChanged = (Action)Delegate.Remove(tipDotSystem.OnTipDotShowChanged, new Action(OnSetShow));
@@ -105,7 +107,7 @@ public class TipDotNodeLinker : MonoBehaviour
 		}
 		else
 		{
-			mTipDotContent.SetActive(TipDotSystem.IsShowTipDot);
+			if (TipDotSystem != null) mTipDotContent.SetActive(TipDotSystem.IsShowTipDot);
 		}
 	}
 

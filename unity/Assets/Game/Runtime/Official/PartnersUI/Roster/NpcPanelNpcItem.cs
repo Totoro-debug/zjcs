@@ -109,7 +109,7 @@ public class NpcPanelNpcItem : UIBase, IShowSequenceItem
 		base.OnEnable();
 		((UnityEvent)mDetailBtn.onClick).AddListener((UnityAction)OnDetailBtnClicked);
 		((UnityEvent)mMeetButton.onClick).AddListener((UnityAction)OnMeetClick);
-		services.NpcAdded += OnAddNewNpc;
+		if (services != null) services.NpcAdded += OnAddNewNpc;
 		mIsMeeting = false;
 	}
 
@@ -117,7 +117,7 @@ public class NpcPanelNpcItem : UIBase, IShowSequenceItem
 	{
 		((UnityEvent)mDetailBtn.onClick).RemoveListener((UnityAction)OnDetailBtnClicked);
 		((UnityEvent)mMeetButton.onClick).RemoveListener((UnityAction)OnMeetClick);
-		if (services.MainPlayerAvailable)
+		if (services != null && services.MainPlayerAvailable)
 		{
 			services.NpcAdded -= OnAddNewNpc;
 		}

@@ -11,12 +11,15 @@ namespace Zjcs.Offline.PartnersUI
     {
         private GameObject content;
         private Func<string, string> previousLocalize;
+        private Func<TMPro.TMP_FontAsset> previousLanguageFont;
         private Func<Transform, GameObject, Transform, bool, GameObject> previousPool;
         public void Open(OfficialPartnerDetailPropertyAssetCatalog assets, IPartnerDetailPropertyServices services,
             IPartnerDetailNpcData npc, PartnerDetailNpcInfo info, OfflinePartnerLocalizationService localization)
         {
             if (assets == null || services == null || npc == null || info == null || localization == null) throw new ArgumentNullException();
             previousLocalize = WorldMultiLanguageText.Localize;
+            previousLanguageFont = WorldMultiLanguageText.LanguageFont;
+            WorldMultiLanguageText.LanguageFont = () => Resources.Load<TMPro.TMP_FontAsset>("Combat/FZY4K-Dynamic");
             WorldMultiLanguageText.Localize = key => localization.GetText(key, LanguageType.zh_CN);
             previousPool = ProfessionGameObjectPoolBridge.Provider;
             ProfessionGameObjectPoolBridge.Provider = (scope, prefab, parent, keepWorld) => Instantiate(prefab, parent, keepWorld);
@@ -31,6 +34,7 @@ namespace Zjcs.Offline.PartnersUI
             if (content != null) Destroy(content);
             content = null; ProfessionGameObjectPoolBridge.Provider = previousPool; previousPool = null;
             WorldMultiLanguageText.Localize = previousLocalize; previousLocalize = null;
+            WorldMultiLanguageText.LanguageFont = previousLanguageFont; previousLanguageFont = null;
         }
     }
 }

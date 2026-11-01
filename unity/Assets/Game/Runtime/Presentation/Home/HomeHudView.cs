@@ -44,6 +44,7 @@ namespace Zjcs.Presentation.Home
         private PartnerGiftPanelView partnerGiftPanel;
         private GameObject partnerFriendshipPanel;
         private Func<string, string> previousFriendshipLocalize;
+        private Func<TMPro.TMP_FontAsset> previousFriendshipLanguageFont;
         private Func<Transform, GameObject, Transform, bool, GameObject> previousFriendshipPool;
 
         private TextMeshProUGUI nameLabel;
@@ -870,6 +871,8 @@ namespace Zjcs.Presentation.Home
                 previousFriendshipPool = null;
                 WorldMultiLanguageText.Localize = previousFriendshipLocalize;
                 previousFriendshipLocalize = null;
+                WorldMultiLanguageText.LanguageFont = previousFriendshipLanguageFont;
+                previousFriendshipLanguageFont = null;
             }
             bool wasOpen = activeDialog != null;
             partnerRosterPanel?.Close();

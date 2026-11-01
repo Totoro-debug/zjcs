@@ -32,11 +32,14 @@ namespace Zjcs.Offline.PartnersUI
             .GetField("mPrefabSource", BindingFlags.Instance | BindingFlags.NonPublic);
         private GameObject content;
         private Func<string, string> previousLocalize;
+        private Func<TMPro.TMP_FontAsset> previousLanguageFont;
 
         public void Open(OfficialPartnerRosterAssetCatalog assets, IPartnerRosterUiServices services)
         {
             if (assets == null || services == null) throw new ArgumentNullException();
             previousLocalize = WorldMultiLanguageText.Localize;
+            previousLanguageFont = WorldMultiLanguageText.LanguageFont;
+            WorldMultiLanguageText.LanguageFont = () => Resources.Load<TMPro.TMP_FontAsset>("Combat/FZY4K-Dynamic");
             var localize = assets.CreateLocalizer();
             WorldMultiLanguageText.Localize = key =>
             {
@@ -54,6 +57,10 @@ namespace Zjcs.Offline.PartnersUI
             var loop = content.GetComponentInChildren<LoopVerticalScrollRect>(true);
             if (loop == null || loop.DefaultPrefabSource == null || loop.DefaultPrefabSource.Prefab == null)
                 throw new InvalidOperationException("Official partner roster scroll binding is missing.");
+            // Unity enables a freshly instantiated loop cell before the prefab
+            // source returns it. Bind the official template first so its
+            // OnEnable subscription sees the local service immediately.
+            loop.DefaultPrefabSource.Prefab.GetComponent<NpcPanelNpcItem>()?.Configure(services);
             PrefabSource.SetValue(loop, new CardPool(loop.DefaultPrefabSource, services));
             content.SetActive(true);
         }
@@ -64,6 +71,8 @@ namespace Zjcs.Offline.PartnersUI
             content = null;
             WorldMultiLanguageText.Localize = previousLocalize;
             previousLocalize = null;
+            WorldMultiLanguageText.LanguageFont = previousLanguageFont;
+            previousLanguageFont = null;
         }
     }
 }

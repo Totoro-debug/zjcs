@@ -105,7 +105,7 @@ namespace Zjcs.Offline.PartnersUI
 
         public IProfessionAssetOperation<Sprite> LoadSprite(string path)
         {
-            var operation = images.LoadAsset<Sprite>(path);
+            var operation = images.LoadAsset<Sprite>("Assets/Image/" + path);
             if (operation == null || !operation.IsValid || operation.Result == null)
             {
                 operation?.Dispose();
