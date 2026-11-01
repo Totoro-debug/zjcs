@@ -1,0 +1,117 @@
+{
+  "manifest": "884_156692",
+  "code_receipt": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+  },
+  "official_application_sources": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/AppearanceSpine.cs",
+      "sha256": "dac2834daba045a61a8a4f9c492d601473eb5ee13df3063eeeb101ea6538edf3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/AppearanceRenderer.cs",
+      "sha256": "560652f3d03e04b51a37ac939264465e4ab8c0e2ab98a25f5131c62a91d24328"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/AppearanceMecanim.cs",
+      "sha256": "2fdb3d405507f02643fd3f03497c40c90c6e5cb2c23372046dcac83c9ba67e41"
+    }
+  ],
+  "shared_original_application_sources": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/SkinTextureAsset.cs",
+      "sha256": "c0ee47a760ea183d6c04b91e82cf63cb0ee3c63559f8d7fbff1db48912f48724"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/SkinTextureConfig.cs",
+      "sha256": "a2c8ca9d0618cca170b42cfceeab72943fa186e5e32c7556710f389f24f340f8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/IAppearanceComponent.cs",
+      "sha256": "0cf4b8ed45817f59ad38031bb72503d8fef2a1b02fbf79ba7f7c530c130a71a4"
+    }
+  ],
+  "migrated_application_and_ports": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceSpine.cs",
+      "sha256": "8b3c13773d1f5670c5fb46a900c3707b831537afa5ae02135df3892cfd20e4bb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceRenderer.cs",
+      "sha256": "d111fa5b8d8a10df13c3df2775eb8795004881208597c6edbd4c18a0ee434c05"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceMecanim.cs",
+      "sha256": "8cfb108b68034bb3556df62fc7df30fd5d4cbdfa19ddb3e97a0e28a8b86a6ae3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/ProfessionAppearanceSceneBindings.cs",
+      "sha256": "0782e465831318ca0b5f8c5c5560337126c857ef5563be4472f7a1466b15dbed"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/Zjcs.Official.CombatAppearance.asmref",
+      "sha256": "5db6f3f0cd827a8ee553e203bccb6fa127f335da6a32f42c2564a852baa6396c"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_scene_appearance_runtime.py",
+    "sha256": "5c3e7a430df2a0c1bdebfa65b4c099d583844dc25644eac0a8675ab20d4152c8"
+  },
+  "generator_helpers": [
+    {
+      "path": "scripts/prepare_battle_scene_renderer_runtime.py",
+      "sha256": "325786b1b1521481a3a62ff67f290c6aa61d4202bc649fbc084b1a26910f7b3d"
+    },
+    {
+      "path": "scripts/prepare_unity_profession_character_resources.py",
+      "sha256": "eb0cfc827f2e93e76186785866e05144bcaa3cb6074bd67436d217e4122d4f77"
+    }
+  ],
+  "shared_dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceSpineBindings.cs",
+      "sha256": "c79baef7286b3fa103eed910b0ad7a22dd50457879886cbe9d93d5f7012b39a8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceRendererLiteBindings.cs",
+      "sha256": "1c85595bdac38dee9be77242aea7caefee0655b6473ec373c0854b72331e0c5c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceRendererPartBindings.cs",
+      "sha256": "601c139f7a2491790792929235ff22a7c7213dcee008aa6d9aec13cb026bb60b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/SkeletonRendererTextureLoadHandler.cs",
+      "sha256": "40f05faff834d1d1ba069f88d47d4de0f611fcc7830dcc18a85c7c26ca486960"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IAppearanceComponent.cs",
+      "sha256": "c21352162bc08fa33098c2e8601473a6ffdb4c81c4ea4ba99dcdf54d21f74930"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/SkinTextureAsset.cs",
+      "sha256": "31eabe5f5a2cebd573e4116fb19928b0c05996653356ba67d8b2cc0d69c07dd4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/SkinTextureConfig.cs",
+      "sha256": "9a736c45567474b25a265bc59236b33ea4faf38ca7db70ec853f029aa9d0aabf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AssetGuidProxy.cs",
+      "sha256": "ab021a30876fae404d4f3320fb451cbd5a4a2e36b7a24989bf8101e980cf81a3"
+    }
+  ],
+  "validation": {
+    "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneAppearance.cs",
+    "sha256": "1e07c8eadf8748ad3f13076aacc4714a198604cec68869425263ec5e2c4a93ef"
+  },
+  "operation": "Copy the current original application classes in a separate namespace from the historical UI base. Preserve GUID loading, skin and material lifecycles, array callbacks, texture demand and Mecanim/cache call ordering; replace only framework/SDK operations with explicit resource, skeleton, renderer and cache ports.",
+  "limits": [
+    "This ports application behavior; the production renderer/Mecanim/cache backends, current texture/material resources, scene prefab, complete physics/mixing and formal battle/Windows Player binding remain required."
+  ]
+}

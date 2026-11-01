@@ -204,3 +204,5 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 伙伴当前原生名册区域：输入采用选定 `884_156692` 的官方 APK／已校验云端包及同版本原生转换缓存；`prepare_partner_roster_native.py` 按 `NpcPanel.mNpcListGo` 原指针提取并绑定名册层级，原卡片按 CAB／PathID、GUID 和已有凭据复用。动画曲线脚本以程序集 GUID＋脚本 fileID 核对，状态／过渡及参数默认值按原编译数据校验，Windows 精灵、贴图、字体与 shader 延用所选版本转换链。全部原对象、提取方式、源码／资源输入与安装输出哈希见 [原生名册来源](partner-roster-native-source-manifest.json)；使用方式见 [伙伴功能](../../docs/features/partners.md)。本次未生成完整素材快照。
 
 当前场景人物输入：所选 `884_156692` 的 APK 优先 `PlayerModel_Game` 原 prefab、公共 SkinAsset／Low 加载器、男女核心骨骼与全部分离动作、完整原图集；实际 APK 身份保持 `881_156673`。使用固定哈希的独立 MIT 格式读取器进行完整二进制消费和无损字段投影，当前与历史871分别保存。原字段、GUID、原包／对象、转换工具、完整输入输出哈希及显式本地绑定见 [场景人物来源](battle-animation/scene-core-source-manifest.json)；素材未生成完整快照。
+
+当前场景外观应用代码：从 `884_156692` 已核验的 `Assembly-CSharp.dll` 和反编译应用源码迁移 `AppearanceSpine`／`AppearanceRenderer`／`AppearanceMecanim`，与历史871 UI 基类分别保留；共用 SkinTextureAsset／配置和外观接口另核对当前源码。框架资源、渲染器、Mecanim 与缓存操作改为显式端口，输入程序集、原应用源码、共享依赖、转换脚本、程序集绑定和迁移输出哈希见 [场景外观运行时来源](battle-animation/scene-appearance-runtime-source-manifest.json)。未复制动画 SDK 实现。

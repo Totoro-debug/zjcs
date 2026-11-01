@@ -276,6 +276,8 @@ NPC 外观复用验证：`OfficialMap12NpcBattleModelView` 是现有 Map12 队�
 - **画面和音频**：完整复合外观、Animator 状态切换／过渡／混合、生成／复活／召唤特效、Playable 精确停止／中断、范围／弹道／挂点／排序、相机环境、粒子、材质、shader、飘字合并和音频速度同步。
 - **验证和发布**：通用战斗全流程 Play Mode 模拟输入、真实画面／遮挡／缩放／声音、重启续战和 Windows  Player 验证；完成前不能声称战斗功能完成或发布对应版本。
 
+当前场景外观应用生命周期：`prepare_battle_scene_appearance_runtime.py` 将当前官方 `AppearanceSpine`、`AppearanceRenderer`、`AppearanceMecanim` 迁入 `Zjcs.Official.CombatAppearance`，通过显式程序集引用接入既有外观程序集，历史871 UI 基类仍独立保留。直接复用原皮肤合并／染色、按 GUID 先加载纹理加载器再加载皮肤配置、同资源跳过／异资源释放后初始化、一次性组件订阅和缓存创建、换肤时先 Mecanim Update(0)／缓存通知再归还材质并重建网格、结束与销毁的原分支和执行顺序；框架资源句柄及渲染／Mecanim／缓存使用显式端口。纠正既有分段材质端口为官方 `void(Material[])`：就地替换整组材质、忽略空项、按原材质去重并共用实例，只在新增原材质时通知，不把分段重新克隆成独立一套。来源、原共享类型、程序集／迁移／端口／生成器与夹具哈希见 [场景外观运行时](../../assets/reference/battle-animation/scene-appearance-runtime-source-manifest.json)，分段端口凭据同步 [场景部件来源](../../assets/reference/battle-animation/renderer-parts-source-manifest.json)。内置屏 Direct3D 12 Play Mode 使用实际当前男性完整骨骼数据和隔离资源／渲染器／Mecanim／缓存探针，核对 GUID 句柄顺序、同资源与同布局异资源初始化、订阅和缓存只创建一次、主网格／分段数组共享、空材质与重复页、换肤归还、完整释放、销毁顺序，并重跑原全部部件生命周期检查；Unity 导入／编译、`ProjectTools.Validate` 和静态检查通过，编辑器正常退出。缺少程序集引用及探针 Update 消息签名问题均已修正后重跑；生成器复现时保留相同内容的源码和既有元数据，避免触发无关重编译。此项仅验证应用调用链，渲染器与外观组件按原同对象生命周期使用；没有执行正式 GPU 场景、跨性别骨骼切换、骨骼缓存算法、物理或动作混合。当前纹理／材质、Mecanim／分段渲染与缓存后端、原场景 prefab、正式战斗输入／存档及 Windows Player 构建／发布仍未接通。
+
 ### 原版战斗系统
 
 以下 F01—F43 是必须保留的通用功能范围，不代表当前全部完成。类名相对于上述官方客户端／共享源码目录。

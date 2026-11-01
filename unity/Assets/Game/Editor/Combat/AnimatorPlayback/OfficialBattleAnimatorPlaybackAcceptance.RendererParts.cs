@@ -28,7 +28,7 @@ namespace Zjcs.Editor.Combat
             var handler = root.AddComponent<AppearanceMecanimPartHandler>();
             handler.ConfigureParts(bindings);
             handler.ConfigureRenderer(endpoint, slots, bindings, "Default", 27);
-            handler.OnGetSharedMaterialDelegate = (renderer, material) => material;
+            handler.OnGetSharedMaterialDelegate = materials => { };
             int changed = 0;
             handler.OnSkinChanged.AddListener(() => changed++);
             try

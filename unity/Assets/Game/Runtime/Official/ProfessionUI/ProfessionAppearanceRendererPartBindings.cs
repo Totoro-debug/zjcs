@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Zjcs.Official.ProfessionUI
 {
     // Ports for the original application handlers; no animation SDK implementation.
-    public delegate Material ProfessionPartSharedMaterial(Renderer renderer, Material original);
+    public delegate void ProfessionPartSharedMaterial(Material[] sharedMaterials);
 
     public interface IProfessionAppearancePartSeparator
     {

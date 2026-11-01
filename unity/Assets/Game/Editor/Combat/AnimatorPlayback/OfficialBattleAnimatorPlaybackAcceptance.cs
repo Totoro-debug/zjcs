@@ -60,6 +60,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".rendererParts", false);
             SessionState.SetBool(Key + ".sceneWeapons", false);
             SessionState.SetBool(Key + ".sceneCoreSources", false);
+            SessionState.SetBool(Key + ".sceneAppearance", false);
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 180);
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             Hook();
@@ -113,7 +114,8 @@ namespace Zjcs.Editor.Combat
 
         private static IEnumerator Verify()
         {
-            var steps = SessionState.GetBool(Key + ".sceneCoreSources", false) ? SceneCoreSourceSteps()
+            var steps = SessionState.GetBool(Key + ".sceneAppearance", false) ? SceneAppearanceSteps()
+                : SessionState.GetBool(Key + ".sceneCoreSources", false) ? SceneCoreSourceSteps()
                 : SessionState.GetBool(Key + ".sceneWeapons", false) ? SceneWeaponSteps()
                 : SessionState.GetBool(Key + ".rendererParts", false) ? RendererPartSteps()
                 : SessionState.GetBool(Key + ".corePoses", false) ? CorePoseSteps()
@@ -133,7 +135,9 @@ namespace Zjcs.Editor.Combat
             if (errors == 0)
             {
                 SessionState.SetInt(Key + ".result", 0);
-                Debug.Log(SessionState.GetBool(Key + ".sceneCoreSources", false)
+                Debug.Log(SessionState.GetBool(Key + ".sceneAppearance", false)
+                    ? "Original current scene appearance application lifecycle passed Play Mode; production renderer/Mecanim/cache, complete physics/mixing and formal battle/Player integration remain required."
+                    : SessionState.GetBool(Key + ".sceneCoreSources", false)
                     ? "Current original scene character sources passed Play Mode: complete data, local channels and strict version separation. Production scene, texture/rendering, physics, mixing and formal battle/Player integration remain required."
                     : SessionState.GetBool(Key + ".sceneWeapons", false)
                     ? "Original scene weapon hierarchy, material lifecycle, attachment following and pre-physics GPU composition passed; production scene prefab/backend, physics, mixing and battle/Player integration remain required."
