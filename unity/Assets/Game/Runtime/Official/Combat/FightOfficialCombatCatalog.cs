@@ -101,7 +101,7 @@ namespace Zjcs.Combat.Official
                 levelProps = PropRows(levelPropId, level);
             IReadOnlyDictionary<int, long> result = prop.RankPropId > 0
                 ? ScaleProps(levelProps, PropRows(prop.RankPropId, rank), false)
-                : new Dictionary<int, long>(levelProps);
+                : CopyProperties(levelProps);
             return ScaleProps(result, prop.PropFactors, true);
         }
 
@@ -571,7 +571,7 @@ namespace Zjcs.Combat.Official
                 ? PropRows(levelPropId, level) : EmptyProps;
             IReadOnlyDictionary<int, long> result = rankPropId > 0
                 ? ScaleProps(levelProps, PropRows(rankPropId, rank), false)
-                : new Dictionary<int, long>(levelProps);
+                : CopyProperties(levelProps);
             var scaled = ScaleProps(result, propFactors ?? EmptyProps, true);
             if (rankFactorId <= 0) return scaled;
             IReadOnlyDictionary<int, long> rankFactor = PropRows(rankFactorId, rank);
@@ -1617,6 +1617,15 @@ namespace Zjcs.Combat.Official
             if (source == null) return;
             foreach (KeyValuePair<int, long> property in source)
                 AddProperty(target, property.Key, property.Value);
+        }
+
+        private static Dictionary<int, long> CopyProperties(IReadOnlyDictionary<int, long> source)
+        {
+            var result = new Dictionary<int, long>();
+            if (source == null) return result;
+            foreach (KeyValuePair<int, long> property in source)
+                result[property.Key] = property.Value;
+            return result;
         }
 
         private int PropertyId(string name)

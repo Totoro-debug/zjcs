@@ -839,7 +839,7 @@ namespace Zjcs.Combat.Official
             FightBattleUnitState reference)
         {
             int groupNo = actor.MonsterGroupNo;
-            var properties = new Dictionary<int, long>(statusCatalog.CalculateMonsterProps(
+            var properties = CopyProperties(statusCatalog.CalculateMonsterProps(
                 pool.MonsterId, groupNo, level, Math.Max(0, actor.SubRank)));
             if (hit.SummonInheritProps)
             {
@@ -1025,6 +1025,15 @@ namespace Zjcs.Combat.Official
         {
             return propertyId > 0 && properties != null
                 && properties.TryGetValue(propertyId, out long value) ? value : 0L;
+        }
+
+        private static Dictionary<int, long> CopyProperties(IReadOnlyDictionary<int, long> source)
+        {
+            var result = new Dictionary<int, long>();
+            if (source == null) return result;
+            foreach (KeyValuePair<int, long> property in source)
+                result[property.Key] = property.Value;
+            return result;
         }
 
         private FightBattleDamageEvent ApplySkillCost(FightBattleUnitState actor,

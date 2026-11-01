@@ -14,7 +14,7 @@ namespace Zjcs.Combat.Official
             foreach (FightPropertyValue property in target.Properties) source[property.Id] = property.Value;
             var inheritance = statusCatalog.CalculateSummonInheritance(pool.MonsterId,
                 skill.Level, skill.Rank, skill.SubRank, source);
-            var properties = new Dictionary<int, long>(inheritance.Fixed);
+            var properties = CopyProperties(inheritance.Fixed);
             foreach (var pair in inheritance.Summoner)
                 properties[pair.Key] = checked(Property(properties, pair.Key) + pair.Value);
             int hpId = formula.PropertyId("MaxHp");

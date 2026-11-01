@@ -73,7 +73,7 @@ namespace Zjcs.Combat.Official
                 level = PropRows(levelId, skillLevel);
             var fixedProps = fixedConfig.RankPropId > 0
                 ? ScaleProps(level, PropRows(fixedConfig.RankPropId, skillRank), false)
-                : new Dictionary<int, long>(level);
+                : CopyProperties(level);
             fixedProps = ScaleProps(fixedProps, fixedConfig.PropFactors, true);
             IReadOnlyDictionary<int, long> factors = EmptyProps;
             if (summonRankFactors.TryGetValue(addition.RankGroup, out var ranks)

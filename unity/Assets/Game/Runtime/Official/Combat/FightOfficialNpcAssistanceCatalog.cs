@@ -234,7 +234,7 @@ namespace Zjcs.Combat.Official
             Dictionary<int, long> extras = LongMap(profession, "ExtraProps");
             IReadOnlyDictionary<int, long> calculated = combat.CalculateNpcProps(Int(detail, "PropGroupId"),
                 factors, extras, effectiveLevel, subRank);
-            var properties = new Dictionary<int, long>(calculated);
+            var properties = CopyProperties(calculated);
             var active = ReadSkillList(profession, "ActiveSkills", "ActiveSkillRanks", effectiveLevel,
                 Int(profession, "SkillLevelOffset"));
             var passives = ReadSkillList(profession, "PassiveSkills", "PassiveSkillRanks", effectiveLevel,
@@ -395,6 +395,15 @@ namespace Zjcs.Combat.Official
 
         private static long Property(IReadOnlyDictionary<int, long> values, int id) =>
             values.TryGetValue(id, out long value) ? value : 0L;
+
+        private static Dictionary<int, long> CopyProperties(IReadOnlyDictionary<int, long> source)
+        {
+            var result = new Dictionary<int, long>();
+            if (source == null) return result;
+            foreach (KeyValuePair<int, long> property in source)
+                result[property.Key] = property.Value;
+            return result;
+        }
 
         private Dictionary<string, object> ResolveLevelDetail(int npcClassId, int rank, int level,
             out int effectiveLevel)
