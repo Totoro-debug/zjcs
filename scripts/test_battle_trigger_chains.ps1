@@ -36,9 +36,9 @@ function Add-FixtureSkill($id, $child, $extra, $canTrigger = $false) {
     } }
 }
 Add-FixtureSkill 9900100 9900200 0 $true
-Add-FixtureSkill 9900200 9900300 0
-Add-FixtureSkill 9900300 0 9900400
-Add-FixtureSkill 9900400 0 9900500
+Add-FixtureSkill 9900200 9900300 0 $true
+Add-FixtureSkill 9900300 0 9900400 $true
+Add-FixtureSkill 9900400 0 9900500 $true
 Add-FixtureSkill 9900500 0 0
 Add-FixtureSkill 9900600 0 0 $true
 Add-FixtureSkill 9900700 0 0 $true
@@ -103,7 +103,7 @@ function Run-Battle($cp, $restore = $false) {
 
 $chain = Run-Battle (New-Battle (Skill 9900100))
 Assert-Chain (($chain.Event.SkillCasts.SkillEntityId -join ',') -eq '9900200,9900300,9900400,9900500,9900100') "Direct child/extra chain was truncated or reordered: $($chain.Event.SkillCasts.SkillEntityId -join ','); HP $($chain.Checkpoint.Units[1].Hp)"
-Assert-Chain ($chain.Event.DamageEvents.Count -eq 5 -and $chain.Checkpoint.Units[1].Hp -eq 965) 'Multi-level chain did not settle every direct hit'
+Assert-Chain ($chain.Event.DamageEvents.Count -eq 5 -and $chain.Checkpoint.Units[1].Hp -eq 969) 'Multi-level chain did not settle every direct hit'
 Assert-Chain (@($chain.Event.DamageEvents | Where-Object { $_.SourceId -ne 1 -or $_.TargetId -ne 2 }).Count -eq 0) 'Deep children lost caster or original hit target'
 $buff = $chain.Checkpoint.Units[1].Statuses | Where-Object ClassId -eq 26004 | Select-Object -First 1
 Assert-Chain ($null -ne $buff -and $buff.SourceSkillRank -eq 6 -and $buff.SourceSkillLevel -eq 17 -and $buff.SourceSubRank -eq 10) 'Closed trigger flag suppressed a direct status or lost inherited cultivation'
@@ -124,6 +124,11 @@ $allowed = Hp-Status 9910010 2 9900600
 $excluded = Hp-Status 9910011 2 9900700
 $allowResult = Run-Battle (New-Battle $allowedSkill @() @($allowed, $excluded))
 Assert-Chain ($allowResult.Event.SkillCasts.Count -eq 2 -and $allowed.HpTriggeredCount -eq 1 -and $excluded.HpTriggeredCount -eq 0) 'Whitelist used a skill ID or let another status respond'
+
+# A closed parent still performs its configured hit, but its damage child is not released.
+$blockedChild = Skill 9900100; $blockedChild.CanTriggerChild = $false
+$blockedChildResult = Run-Battle (New-Battle $blockedChild)
+Assert-Chain (($blockedChildResult.Event.SkillCasts.SkillEntityId -join ',') -eq '9900100') 'CanTriggerChild=false released a configured child skill'
 
 # Skill-start and skill-end gates happen before rolling/counting, including nested casts.
 $start = Status 9910020 1

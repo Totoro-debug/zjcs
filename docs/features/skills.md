@@ -70,6 +70,8 @@ Editor 程序集显式引用 `Zjcs.Presentation.Character`，以供技能 Play M
 
 ## 自定义实现
 
+实体被动装配会读取官方 `DeactiveEntityPassiveSkills`，初始未激活的实体被动不合并属性或状态；其余实体被动按宠物已保存品阶、等级和持有者位阶传入实体技能源。
+
 Windows 竖屏显示适配按用户参考画面保留顶部安全留白：1080 UI 单位宽度对应约 137 UI 单位顶部留白，随窗口宽度缩放；这是桌面显示适配参数。原 `SafeArea` 的边界计算、PaddingTop／PaddingBottom、DisableTopAdapt／DisableBottomAdapt 与技能父级绑定保持官方数据，不修改内部槽位、方案或列表坐标。模糊遮罩恢复 APK 原 RawImage UV，并按 Windows 图形接口的纹理方向适配截图采样；不改变原 ScreenBlur 算法。
 
 用户已确认伤害测试的单机规则：使用已迁移的本地战斗配置计算怪物属性，按原参数页勾选项应用怪物固定伤害 1／无限生命。这部分属于缺少服务器实现后的单机差异；原五组怪物、难度、回合数及勾选参数已连接本地 StageType 43 战斗，保留原 40 级开放条件。

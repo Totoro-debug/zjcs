@@ -1205,14 +1205,14 @@ namespace Zjcs.Combat.Official
             List<FightBattleMovementEvent> movements, ref float lastDelay)
         {
             if (statusCatalog == null || parentSkill == null || hit == null
-                || hit.ChildSkillId <= 0) return;
+                || hit.ChildSkillId <= 0 || !parentSkill.CanTriggerChild) return;
             if (actor == null || target == null || target.Hp <= 0) return;
             if (hit.ChildSkillRate < 1f && random.Next() > hit.ChildSkillRate) return;
             if (hit.ChildSkillLessThanHpPer >= 0f
                 && target.Hp / (double)Math.Max(1L, target.MaxHp) > hit.ChildSkillLessThanHpPer) return;
             int rank = Math.Max(1, parentSkill.Rank);
             int level = Math.Max(1, parentSkill.Level);
-            int subRank = Math.Max(1, parentSkill.SubRank);
+            int subRank = Math.Max(0, parentSkill.SubRank);
             FightBattleSkillDefinition skill;
             try
             {
@@ -1279,7 +1279,7 @@ namespace Zjcs.Combat.Official
                 || skill.ExtraSkills.Count == 0) return;
             int rank = Math.Max(1, skill.Rank);
             int level = Math.Max(1, skill.Level);
-            int subRank = Math.Max(1, skill.SubRank);
+            int subRank = Math.Max(0, skill.SubRank);
             foreach (FightBattleSkillExtra extra in skill.ExtraSkills)
             {
                 if (extra == null || extra.SkillId <= 0) continue;

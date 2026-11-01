@@ -106,8 +106,11 @@ namespace Zjcs.Presentation.Combat
             }
 
             state.EntityPassiveStatusIds.Clear();
+            var deactivePassiveSkills = new HashSet<int>(IntArray(evolution,
+                "DeactiveEntityPassiveSkills"));
             foreach (int itemId in IntArray(evolution, "EntityPassiveSkills"))
-                if (itemId > 0 && skillItems.TryGet(itemId, out FightOfficialSkillItem item))
+                if (itemId > 0 && !deactivePassiveSkills.Contains(itemId)
+                    && skillItems.TryGet(itemId, out FightOfficialSkillItem item))
                 {
                     Merge(entityProps, combat.CalculatePassiveSkillProps(item.PassiveRankPropId,
                         item.PassiveGroupLevelPropId, item.PassiveRankFactorId, item.PassivePropFactors,
