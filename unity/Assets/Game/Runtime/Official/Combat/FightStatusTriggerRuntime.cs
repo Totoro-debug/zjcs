@@ -501,6 +501,162 @@ namespace Zjcs.Combat.Official
             return false;
         }
 
+        /// <summary>
+        /// Applies the configured MoveRange handler after a movement or round check. The server
+        /// handler is not present in the client package, so this keeps the official target filters
+        /// and status ownership explicit in the offline battle state.
+        /// </summary>
+        public static int ApplyMoveRange(FightBattleUnitState source,
+            IReadOnlyList<FightBattleUnitState> units, FightOfficialCombatCatalog catalog,
+            FightRandomStream random, bool roundCheck)
+        {
+            if (source == null || units == null || catalog == null || source.Statuses == null)
+                return 0;
+            int applied = 0;
+            foreach (FightBattleStatusState status in new List<FightBattleStatusState>(source.Statuses))
+            {
+                if (status == null || !status.HasMoveRange || !status.MoveRangeRulesSupported)
+                    continue;
+                if (roundCheck && status.MoveRangeHandleType == 1 && !status.MoveRangeCheckEveryRound)
+                    continue;
+                var candidates = new List<FightBattleUnitState>();
+                foreach (FightBattleUnitState candidate in units)
+                {
+                    if (!MoveRangeTargetMatches(source, candidate, status.MoveRangeTargetType)
+                        || status.MoveRangeExcludeDead && candidate.Hp <= 0
+                        || status.MoveRangeCharacterTypes.Count > 0
+                            && !status.MoveRangeCharacterTypes.Contains(candidate.CharacterType)
+                        || status.MoveRangeFilterClassIds.Count > 0
+                            && !status.MoveRangeFilterClassIds.Contains(MoveRangeClassId(candidate))
+                        || !status.MoveRangeUnlimited
+                            && !IsMoveNearInRange(source, candidate, status.MoveRangeOffsets))
+                        continue;
+                    candidates.Add(candidate);
+                }
+                if (status.MoveRangeHandleType == 1)
+                {
+                    var inside = new HashSet<int>(candidates.Select(candidate => candidate.Id));
+                    foreach (FightBattleUnitState candidate in candidates)
+                    {
+                        bool entered = status.MoveRangeInsideUnitIds.Add(candidate.Id);
+                        if ((entered || status.MoveRangeCheckEveryRound)
+                            && ApplyMoveRangeStatuses(candidate, source, status,
+                                status.MoveRangeCloseStatuses, catalog, random)) applied++;
+                    }
+                    foreach (int oldId in new List<int>(status.MoveRangeInsideUnitIds))
+                        if (!inside.Contains(oldId))
+                        {
+                            status.MoveRangeInsideUnitIds.Remove(oldId);
+                            FightBattleUnitState oldTarget = units.FirstOrDefault(unit =>
+                                unit != null && unit.Id == oldId);
+                            if (oldTarget != null)
+                                RemoveMoveRangeStatuses(new[] { oldTarget }, source.Id,
+                                    status.MoveRangeCloseStatuses);
+                        }
+                }
+                else if (status.MoveRangeHandleType == 2)
+                {
+                    bool meets = candidates.Count <= status.MoveRangeTargetCount;
+                    List<FightBattleStatusStateTrigger> desired = meets
+                        ? status.MoveRangeMeetStatuses : status.MoveRangeNotMeetStatuses;
+                    List<FightBattleStatusStateTrigger> other = meets
+                        ? status.MoveRangeNotMeetStatuses : status.MoveRangeMeetStatuses;
+                    RemoveMoveRangeStatuses(new[] { source }, source.Id, other);
+                    if (status.MoveRangeLastTargetCount != candidates.Count
+                        || !roundCheck && status.MoveRangeLastTargetCount < 0)
+                        if (ApplyMoveRangeStatuses(source, source, status, desired, catalog, random))
+                            applied++;
+                    status.MoveRangeLastTargetCount = candidates.Count;
+                }
+                else if (status.MoveRangeHandleType == 3)
+                {
+                    int desiredCount = status.MoveRangeMaxStack < 0
+                        ? candidates.Count : Math.Min(candidates.Count, status.MoveRangeMaxStack);
+                    int currentCount = CountMoveRangeStatuses(source, source.Id,
+                        status.MoveRangeCountStatuses);
+                    while (currentCount < desiredCount
+                        && ApplyMoveRangeStatuses(source, source, status,
+                            status.MoveRangeCountStatuses, catalog, random))
+                    {
+                        applied++; currentCount++;
+                    }
+                    if (desiredCount == 0)
+                        RemoveMoveRangeStatuses(new[] { source }, source.Id,
+                            status.MoveRangeCountStatuses);
+                }
+            }
+            return applied;
+        }
+
+        private static bool MoveRangeTargetMatches(FightBattleUnitState source,
+            FightBattleUnitState candidate, int targetType)
+        {
+            if (source == null || candidate == null || candidate.Id == source.Id) return false;
+            switch (targetType)
+            {
+                case 0: return false;
+                case 1: return source.Side != candidate.Side;
+                case 2: return source.Side == candidate.Side;
+                case 3: return source.Side == candidate.Side;
+                case 4: return true;
+                default: return source.Side == candidate.Side;
+            }
+        }
+
+        private static int MoveRangeClassId(FightBattleUnitState unit)
+        {
+            return unit.MonsterId != 0 ? unit.MonsterId
+                : unit.NpcClassId != 0 ? unit.NpcClassId : unit.MonsterTemplateId;
+        }
+
+        private static bool ApplyMoveRangeStatuses(FightBattleUnitState owner,
+            FightBattleUnitState source, FightBattleStatusState sourceStatus,
+            List<FightBattleStatusStateTrigger> triggers, FightOfficialCombatCatalog catalog,
+            FightRandomStream random)
+        {
+            bool applied = false;
+            if (triggers == null) return false;
+            foreach (FightBattleStatusStateTrigger trigger in triggers)
+            {
+                if (trigger == null || trigger.EntityId <= 0 || !Roll(trigger.BasePercent, random))
+                    continue;
+                int instanceId = 1;
+                foreach (FightBattleStatusState existing in owner.Statuses)
+                    if (existing != null && existing.InstanceId >= instanceId) instanceId = existing.InstanceId + 1;
+                FightBattleStatusState template = catalog.CreateStatus(trigger.EntityId, owner.Id,
+                    source.Id, instanceId, sourceStatus.RootSkillId, sourceStatus.ApplyingSkillItemId,
+                    sourceStatus.SourceSkillRank, sourceStatus.SourceSkillLevel, sourceStatus.SourceSubRank,
+                    source.Properties, 0, sourceStatus.ReplacementProperties,
+                    sourceStatus.BlessPropertyScales);
+                template.ReportSource = FightBattleStatusReportSource.Resolve(sourceStatus).Copy();
+                FightStatusLifecycle.Apply(owner, template, -1, instanceId, random);
+                applied = true;
+            }
+            return applied;
+        }
+
+        private static int CountMoveRangeStatuses(FightBattleUnitState owner, int sourceId,
+            List<FightBattleStatusStateTrigger> triggers)
+        {
+            if (owner == null || triggers == null) return 0;
+            var ids = new HashSet<int>(triggers.Where(trigger => trigger != null)
+                .Select(trigger => trigger.EntityId));
+            return owner.Statuses.Count(status => status != null && status.CreatorId == sourceId
+                && ids.Contains(status.ClassId));
+        }
+
+        private static void RemoveMoveRangeStatuses(IEnumerable<FightBattleUnitState> units,
+            int sourceId, List<FightBattleStatusStateTrigger> triggers)
+        {
+            if (units == null || triggers == null) return;
+            var ids = new HashSet<int>(triggers.Where(trigger => trigger != null)
+                .Select(trigger => trigger.EntityId));
+            foreach (FightBattleUnitState unit in units)
+                for (int i = unit.Statuses.Count - 1; i >= 0; i--)
+                    if (unit.Statuses[i] != null && unit.Statuses[i].CreatorId == sourceId
+                        && ids.Contains(unit.Statuses[i].ClassId)) FightStatusLifecycle.End(unit, unit.Statuses[i]);
+        }
+
         public static int Apply(FightBattleUnitState unit, FightOfficialCombatCatalog catalog,
             bool atStart, List<FightBattleStatusStateTrigger> triggerSkills = null,
             FightRandomStream random = null, FightBattleSkillDefinition sourceSkill = null,

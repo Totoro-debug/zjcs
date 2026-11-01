@@ -385,6 +385,29 @@ namespace Zjcs.Combat.Official
         public bool MoveNearSkillTriggerImmediately;
         public List<FightBattleStatusStateTrigger> MoveNearSkills =
             new List<FightBattleStatusStateTrigger>();
+        public bool HasMoveRange;
+        public bool MoveRangeRulesSupported;
+        public List<FightGridPoint> MoveRangeOffsets = new List<FightGridPoint>();
+        public int MoveRangeTargetType;
+        public bool MoveRangeExcludeDead;
+        public List<int> MoveRangeCharacterTypes = new List<int>();
+        public bool MoveRangeFindAllInCell;
+        public List<int> MoveRangeFilterClassIds = new List<int>();
+        public bool MoveRangeUnlimited;
+        public int MoveRangeHandleType;
+        public bool MoveRangeCheckEveryRound;
+        public int MoveRangeTargetCount;
+        public int MoveRangeMaxStack = -1;
+        public List<FightBattleStatusStateTrigger> MoveRangeCloseStatuses =
+            new List<FightBattleStatusStateTrigger>();
+        public List<FightBattleStatusStateTrigger> MoveRangeMeetStatuses =
+            new List<FightBattleStatusStateTrigger>();
+        public List<FightBattleStatusStateTrigger> MoveRangeNotMeetStatuses =
+            new List<FightBattleStatusStateTrigger>();
+        public List<FightBattleStatusStateTrigger> MoveRangeCountStatuses =
+            new List<FightBattleStatusStateTrigger>();
+        public int MoveRangeLastTargetCount = -1;
+        public HashSet<int> MoveRangeInsideUnitIds = new HashSet<int>();
         // Official FightStatusHpAccDecreaseComponent. Damage is accumulated independently of cures
         // per the confirmed offline rule; the configured threshold is consumed on each trigger.
         public bool HasHpAccDecrease;

@@ -188,6 +188,7 @@ namespace Zjcs.Combat.Official
 
             if (statusCatalog != null)
             {
+                    FightStatusTriggerRuntime.ApplyMoveRange(actor, units, statusCatalog, random, true);
                 ExecuteMoveNearTriggers(actor, FightStatusTriggerRuntime.MoveNearEventStart,
                     null, casts, damageEvents, movements, ref stepDuration,
                     ref stepActionDuration);
@@ -281,6 +282,10 @@ namespace Zjcs.Combat.Official
                 for (int movementIndex = 0; movementIndex < movements.Count; movementIndex++)
                 {
                     FightBattleMovementEvent movement = movements[movementIndex];
+                    if (statusCatalog != null)
+                        foreach (FightBattleUnitState rangeSource in units)
+                            FightStatusTriggerRuntime.ApplyMoveRange(rangeSource, units,
+                                statusCatalog, random, false);
                     ExecuteMoveNearTriggers(actor, FightStatusTriggerRuntime.MoveNearEventMoved,
                         movement, casts, damageEvents, movements, ref stepDuration,
                         ref stepActionDuration);

@@ -945,6 +945,8 @@ namespace Zjcs.Combat.Official
                 Component(components, "FightStatusKillSkillComponent");
             Dictionary<string, object> moveNear =
                 Component(components, "FightStatusMoveNearComponent");
+            Dictionary<string, object> moveRange =
+                Component(components, "FightStatusMoveRangeComponent");
             Dictionary<string, object> skillCooldownModify =
                 Component(components, "FightStatusSkillModifyCDComponent");
             Dictionary<string, object> permanentSkillCooldownReduction =
@@ -1112,6 +1114,15 @@ namespace Zjcs.Combat.Official
                     : Int(moveNear, "EnterRangeCauseFilter"),
                 MoveNearSkillTriggerImmediately = moveNear != null
                     && Bool(moveNear, "SkillTriggerImmediately"),
+                HasMoveRange = moveRange != null,
+                MoveRangeRulesSupported = moveRange != null && SupportsMoveRange(moveRange),
+                MoveRangeTargetType = moveRange == null ? 0 : Int(moveRange, "TargetType"),
+                MoveRangeExcludeDead = moveRange != null && Bool(moveRange, "IsExcludeDieTarget"),
+                MoveRangeCharacterTypes = moveRange == null ? new List<int>()
+                    : new List<int>(IntArray(moveRange, "GameCharacterTypes")),
+                MoveRangeFindAllInCell = moveRange != null && Bool(moveRange, "IsFindAllInCell"),
+                MoveRangeFilterClassIds = moveRange == null ? new List<int>()
+                    : new List<int>(IntArray(moveRange, "FilterClassIds")),
                 HasHpAccDecrease = hpAccDecrease != null,
                 AccumulatedDamage = ReadAccumulatedDamage(components),
                 HpAccUnitHp = hpAccDecrease == null ? -1L : Long(hpAccDecrease, "UnitHp", -1L),
@@ -1277,6 +1288,42 @@ namespace Zjcs.Combat.Official
                     {
                         EntityId = result.MoveNearSkillId, Source = 2, Target = 5, TargetPos = 1
                     });
+            }
+            if (moveRange != null)
+            {
+                if (moveRange.TryGetValue("Range", out object rawRange) && rawRange != null)
+                    foreach (object rawPoint in Array(rawRange, "FightStatusMoveRangeComponent.Range"))
+                    {
+                        Dictionary<string, object> point = Object(rawPoint,
+                            "FightStatusMoveRangeComponent.Range point");
+                        result.MoveRangeOffsets.Add(new FightGridPoint(Int(point, "X"), Int(point, "Y")));
+                    }
+                Dictionary<string, object> condition = null;
+                if (moveRange.TryGetValue("InRangeCondition", out object rawCondition)
+                    && rawCondition != null)
+                    condition = Object(rawCondition, "FightStatusMoveRangeComponent.InRangeCondition");
+                result.MoveRangeUnlimited = condition != null
+                    && string.Equals(StringField(condition, "_type"), "UnlimitedRangeCondition",
+                        StringComparison.Ordinal);
+                Dictionary<string, object> setting = null;
+                if (moveRange.TryGetValue("MoveRangeSetting", out object rawSetting)
+                    && rawSetting != null)
+                    setting = Object(rawSetting, "FightStatusMoveRangeComponent.MoveRangeSetting");
+                if (setting != null)
+                {
+                    result.MoveRangeHandleType = Int(setting, "HanldeType");
+                    result.MoveRangeCheckEveryRound = Bool(setting, "CheckEveryRound");
+                    result.MoveRangeTargetCount = Int(setting, "TargetCount");
+                    result.MoveRangeMaxStack = Int(setting, "MaxStack", -1);
+                    AddHpAccTriggerEntries(setting, "TriggerStatusCfgs", "StatusId",
+                        result.MoveRangeCloseStatuses, false);
+                    AddHpAccTriggerEntries(setting, "MeetConditionTriggerStatusCfgs", "StatusId",
+                        result.MoveRangeMeetStatuses, false);
+                    AddHpAccTriggerEntries(setting, "NotMeetConditionTriggerStatusCfgs", "StatusId",
+                        result.MoveRangeNotMeetStatuses, false);
+                    AddHpAccTriggerEntries(setting, "TriggerStatusCfgs", "StatusId",
+                        result.MoveRangeCountStatuses, false);
+                }
             }
             if (hpAccDecrease != null)
             {
@@ -2561,6 +2608,24 @@ namespace Zjcs.Combat.Official
                         || Int(custom, "UpperLimitPercent") != 0)) return false;
             }
             return true;
+        }
+
+        private static bool SupportsMoveRange(Dictionary<string, object> component)
+        {
+            int targetType = Int(component, "TargetType");
+            if (targetType < 0 || targetType > 10
+                || ArrayCount(component, "StatusReplacePropertyValues") > 0
+                || !component.TryGetValue("MoveRangeSetting", out object rawSetting)
+                || rawSetting == null) return false;
+            Dictionary<string, object> setting = Object(rawSetting, "move range setting");
+            int handleType = Int(setting, "HanldeType");
+            if (handleType < 1 || handleType > 3) return false;
+            if (handleType == 1)
+                return ArrayCount(setting, "TriggerStatusCfgs") > 0;
+            if (handleType == 2)
+                return ArrayCount(setting, "MeetConditionTriggerStatusCfgs") > 0
+                    || ArrayCount(setting, "NotMeetConditionTriggerStatusCfgs") > 0;
+            return ArrayCount(setting, "TriggerStatusCfgs") > 0;
         }
 
         private static int ArrayCount(Dictionary<string, object> source, string field)

@@ -141,6 +141,26 @@ $nearInvocations = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectMove
 Assert-Hp ($nearInvocations.Count -eq 1 -and $nearInvocations[0].Trigger.EntityId -eq 12570) `
     'MoveNear enter-range trigger did not detect the outside-to-inside transition.'
 
+# MoveRange applies and removes the configured aura status as a target crosses its range.
+$rangeSource = Unit 30 100
+$rangeTarget = Unit 31 100
+$rangeSource.X = 0; $rangeSource.Y = 0; $rangeSource.Side = 0
+$rangeTarget.X = 1; $rangeTarget.Y = 0; $rangeTarget.Side = 0
+$rangeStatus = $catalog.CreateStatus(24063, $rangeSource.Id, $rangeSource.Id, 1)
+$rangeSource.Statuses.Add($rangeStatus)
+$rangeUnits = [Collections.Generic.List[Zjcs.Combat.Official.FightBattleUnitState]]::new()
+$rangeUnits.Add($rangeSource); $rangeUnits.Add($rangeTarget)
+$rangeRandom = [Zjcs.Combat.Official.FightRandomStream]::new(17)
+$rangeApplied = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyMoveRange(
+    $rangeSource, $rangeUnits, $catalog, $rangeRandom, $false)
+Assert-Hp ($rangeApplied -eq 1 -and ($rangeTarget.Statuses | Where-Object ClassId -eq 24033).Count -eq 1) `
+    'MoveRange did not apply its configured in-range status.'
+$rangeTarget.X = 8
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyMoveRange(
+    $rangeSource, $rangeUnits, $catalog, $rangeRandom, $false)
+Assert-Hp (($rangeTarget.Statuses | Where-Object ClassId -eq 24033).Count -eq 0) `
+    'MoveRange did not remove its configured status after leaving the range.'
+
 # KillSkill status and skill triggers use the killer as source and honor filters/counts.
 $killStatus = $catalog.CreateStatus(25028, 1, 1, 7)
 $defeated = Unit 10 0
