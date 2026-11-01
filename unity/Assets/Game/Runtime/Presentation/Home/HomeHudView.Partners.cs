@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zjcs.Offline.PartnersUI;
@@ -146,7 +147,11 @@ namespace Zjcs.Presentation.Home
         void IOfflinePartnerGiftPresentation.PopupInput(Action<IPartnerGiftInputDialog> initialize)
             => initialize?.Invoke(new OfflinePartnerInputDialog(this));
         void IOfflinePartnerGiftPresentation.PopupConfirm(Action<IPartnerGiftConfirmDialog> initialize)
-            => initialize?.Invoke(new OfflinePartnerConfirmDialog());
+        {
+            var dialog = new OfflinePartnerConfirmDialog();
+            initialize?.Invoke(dialog);
+            dialog.Build(this, dialog.TextKey);
+        }
         void IOfflinePartnerGiftPresentation.PopupFriendship(IWindowOperator owner, bool starGod, Action<IPartnerGiftFriendshipDialog> initialize)
             => Notify("伙伴好感度详情暂未独立展开");
         object IOfflinePartnerGiftPresentation.Compact(long count) => host.HomeSettings?.FormatNumber(count) ?? count.ToString();
@@ -156,16 +161,170 @@ namespace Zjcs.Presentation.Home
 
         private sealed class OfflinePartnerConfirmDialog : IPartnerGiftConfirmDialog
         {
-            public void Init(string textKey, Action confirm) => confirm?.Invoke();
+            private GameObject root;
+            private Action confirm;
+            public string TextKey { get; private set; }
+
+            public GameObject GameObject => root;
+
+            public void Init(string textKey, Action onConfirm)
+            {
+                TextKey = textKey;
+                confirm = onConfirm;
+            }
+
+            public void Build(HomeHudView owner, string textKey)
+            {
+                root = owner.CreatePartnerPromptRoot("PartnerGiftConfirm");
+                Transform panel = owner.CreatePartnerPromptPanel(root.transform);
+                owner.CreatePartnerPromptText(panel, owner.LocalizePartnerText(textKey), 26f,
+                    new Vector2(0.08f, 0.52f), new Vector2(0.92f, 0.84f));
+                owner.CreatePartnerPromptButton(panel, "取消", new Vector2(0.08f, 0.1f), new Vector2(0.44f, 0.30f),
+                    () => owner.ClosePartnerPrompt(this));
+                owner.CreatePartnerPromptButton(panel, "确认", new Vector2(0.56f, 0.1f), new Vector2(0.92f, 0.30f),
+                    () => { owner.ClosePartnerPrompt(this); confirm?.Invoke(); });
+            }
         }
         private sealed class OfflinePartnerInputDialog : IPartnerGiftInputDialog
         {
             private readonly HomeHudView owner;
+            private GameObject root;
+            private TMP_InputField input;
+            private Action<string> submit;
             public OfflinePartnerInputDialog(HomeHudView owner) { this.owner = owner; }
-            public GameObject GameObject => owner.CanvasTransform == null ? null : owner.CanvasTransform.gameObject;
+            public GameObject GameObject => root;
             public void Init(string titleKey, string placeholderKey, Action<string> submit)
-                => owner.Notify("伙伴称谓输入窗口尚未接入");
+            {
+                this.submit = submit;
+                root = owner.CreatePartnerPromptRoot("PartnerGiftInput");
+                Transform panel = owner.CreatePartnerPromptPanel(root.transform);
+                owner.CreatePartnerPromptText(panel, owner.LocalizePartnerText(titleKey), 27f,
+                    new Vector2(0.08f, 0.72f), new Vector2(0.92f, 0.90f));
+                input = owner.CreatePartnerPromptInput(panel, owner.LocalizePartnerText(placeholderKey),
+                    new Vector2(0.08f, 0.43f), new Vector2(0.92f, 0.64f));
+                owner.CreatePartnerPromptButton(panel, "取消", new Vector2(0.08f, 0.10f), new Vector2(0.44f, 0.30f),
+                    () => owner.ClosePartnerPrompt(this));
+                owner.CreatePartnerPromptButton(panel, "确认", new Vector2(0.56f, 0.10f), new Vector2(0.92f, 0.30f),
+                    () =>
+                    {
+                        string value = input == null ? string.Empty : input.text;
+                        submit?.Invoke(value);
+                    });
+                input.Select();
+                input.ActivateInputField();
+            }
             public void SetNpcFriendshipTagModerationClickMask() { }
+        }
+
+        private string LocalizePartnerText(string key)
+            => WorldMultiLanguageText.Localize == null ? key : WorldMultiLanguageText.Localize(key);
+
+        private GameObject CreatePartnerPromptRoot(string name)
+        {
+            var root = new GameObject(name, typeof(RectTransform), typeof(Image));
+            root.transform.SetParent(canvas.transform, false);
+            RectTransform rect = (RectTransform)root.transform;
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+            root.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.66f);
+            return root;
+        }
+
+        private Transform CreatePartnerPromptPanel(Transform parent)
+        {
+            var panel = new GameObject("Panel", typeof(RectTransform), typeof(Image));
+            panel.transform.SetParent(parent, false);
+            RectTransform rect = (RectTransform)panel.transform;
+            rect.anchorMin = new Vector2(0.08f, 0.34f);
+            rect.anchorMax = new Vector2(0.92f, 0.66f);
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+            panel.GetComponent<Image>().color = new Color32(53, 47, 44, 248);
+            return panel.transform;
+        }
+
+        private TMP_Text CreatePartnerPromptText(Transform parent, string value, float size,
+            Vector2 anchorMin, Vector2 anchorMax)
+        {
+            var go = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
+            go.transform.SetParent(parent, false);
+            RectTransform rect = (RectTransform)go.transform;
+            rect.anchorMin = anchorMin;
+            rect.anchorMax = anchorMax;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+            var text = go.GetComponent<TextMeshProUGUI>();
+            text.font = catalog.Font;
+            text.fontSize = size;
+            text.color = Color.white;
+            text.alignment = TextAlignmentOptions.Center;
+            text.enableWordWrapping = true;
+            text.text = value ?? string.Empty;
+            text.raycastTarget = false;
+            return text;
+        }
+
+        private TMP_InputField CreatePartnerPromptInput(Transform parent, string placeholder,
+            Vector2 anchorMin, Vector2 anchorMax)
+        {
+            var go = new GameObject("Input", typeof(RectTransform), typeof(Image), typeof(TMP_InputField));
+            go.transform.SetParent(parent, false);
+            RectTransform rect = (RectTransform)go.transform;
+            rect.anchorMin = anchorMin;
+            rect.anchorMax = anchorMax;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+            Image image = go.GetComponent<Image>();
+            image.color = new Color32(238, 232, 218, 255);
+            var viewport = new GameObject("Viewport", typeof(RectTransform), typeof(RectMask2D));
+            viewport.transform.SetParent(go.transform, false);
+            RectTransform viewportRect = (RectTransform)viewport.transform;
+            viewportRect.anchorMin = new Vector2(0.03f, 0.08f);
+            viewportRect.anchorMax = new Vector2(0.97f, 0.92f);
+            viewportRect.offsetMin = Vector2.zero;
+            viewportRect.offsetMax = Vector2.zero;
+            var text = CreatePartnerPromptText(viewport.transform, string.Empty, 24f, Vector2.zero, Vector2.one);
+            text.alignment = TextAlignmentOptions.MidlineLeft;
+            var hint = CreatePartnerPromptText(viewport.transform, placeholder, 22f, Vector2.zero, Vector2.one);
+            hint.alignment = TextAlignmentOptions.MidlineLeft;
+            hint.color = new Color32(130, 125, 116, 255);
+            var field = go.GetComponent<TMP_InputField>();
+            field.textViewport = viewportRect;
+            field.textComponent = text;
+            field.placeholder = hint;
+            field.targetGraphic = image;
+            field.lineType = TMP_InputField.LineType.SingleLine;
+            field.contentType = TMP_InputField.ContentType.Standard;
+            field.characterLimit = 32;
+            return field;
+        }
+
+        private Button CreatePartnerPromptButton(Transform parent, string label, Vector2 anchorMin,
+            Vector2 anchorMax, UnityEngine.Events.UnityAction action)
+        {
+            var go = new GameObject(label, typeof(RectTransform), typeof(Image), typeof(Button));
+            go.transform.SetParent(parent, false);
+            RectTransform rect = (RectTransform)go.transform;
+            rect.anchorMin = anchorMin;
+            rect.anchorMax = anchorMax;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+            Image image = go.GetComponent<Image>();
+            image.color = new Color32(174, 123, 72, 255);
+            Button button = go.GetComponent<Button>();
+            button.targetGraphic = image;
+            button.onClick.AddListener(action);
+            CreatePartnerPromptText(go.transform, label, 22f, Vector2.zero, Vector2.one);
+            return button;
+        }
+
+        private void ClosePartnerPrompt(object dialog)
+        {
+            GameObject root = dialog is OfflinePartnerInputDialog inputDialog ? inputDialog.GameObject
+                : ((OfflinePartnerConfirmDialog)dialog).GameObject;
+            if (root != null) UnityEngine.Object.Destroy(root);
         }
     }
 }

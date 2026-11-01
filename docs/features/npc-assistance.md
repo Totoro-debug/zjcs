@@ -52,9 +52,9 @@ scripts/prepare_dungeon_bindings.py 从 prefabs_ui_fight_changebattleposarea 的
 - `HomeHudView.DailyChallenges.OpenDailyChallengeAssist` 与 `OpenDailyDungeonAssist` 使用官方 `TeamInvitePanel`／`TeamInvitePanelRobotItem` 资源显示候选并保存选择。日常副本与每日挑战共用 `RobotInvitePlayType.All`（10），选择按活动／房间分别保存；战斗开始时重核助战条件、单 NPC 次数和人数上限，`DailyDungeonBattleRunner.BuildCheckpoint` 调用 `CreateUnit` 并为伙伴寻找未占用的可行走格。普通副本 checkpoint 与助战快照一起恢复，启动失败回滚次数，战斗结束清除活动快照。
 - 官方通用 Team 邀请窗口与 RobotItem 已转换到 `unity/Assets/Game/Resources/Dungeons/UI/`，Windows 加载入口为上述 picker；该资源转换本身不代表其余玩法已接入。
 
-山之国战斗碑的原 `TeamInviteNpc` 使用独立 Team 候选链：`GetNpcs(MapExploreBoss)` 排除探索首领，再按 `IsFightAssist` 和原遇见／助战条件筛选，当前配置共有95名候选，包括具有正式战斗数据的9名导师和1名商人。新增 `TeamInviteNpcClassIds`／`CanInviteTeamNpc`／`CreateTeamInviteUnit` 供该原组队链使用；上述既有伙伴 API 的85名范围保留。95名资格、10名额外角色实际属性／技能装配及伙伴结果一致性已通过独立规则检查；窗口／地图队伍、站位、模型、次数和实际战斗尚未接线，范围与原代码哈希见[山之国](../maps/map-12.md)。
+山之国战斗碑的原 `TeamInviteNpc` 使用独立 Team 候选链：`GetNpcs(MapExploreBoss)` 排除探索首领，再按 `IsFightAssist` 和原遇见／助战条件筛选，当前配置共有95名候选，包括具有正式战斗数据的9名导师和1名商人。新增 `TeamInviteNpcClassIds`／`CanInviteTeamNpc`／`CreateTeamInviteUnit` 供该原组队链使用；上述既有伙伴 API 的85名范围保留。95名资格、10名额外角色实际属性／技能装配及伙伴结果一致性已通过独立规则检查；战斗碑现已接入原 TeamInvitePanel 的 NPC 页、选择保存、队伍容量校验、战斗单位创建和站位准备，范围与原代码哈希见[山之国](../maps/map-12.md)。
 
-战斗碑组队调用 `TeamPanelHelper` 的普通 Player 邀请页，再切换 NPC 标签；该入口没有初始化 `TeamInviteRobotPanel` 的 `RobotInvitePlayType`，因此这里不能套用日常助战的 All=10 配置。原 Team 页及邀请依赖的10份 prefab／645节点／1105个脚本载荷已完整解码并核对引用，尚未转换／绑定为可用的 Windows 队伍窗口；本地队伍、站位与真实战斗仍待接通，见[山之国](../maps/map-12.md)。
+战斗碑组队调用 `TeamPanelHelper` 的普通 Player 邀请页，再切换 NPC 标签；该入口没有初始化 `TeamInviteRobotPanel` 的 `RobotInvitePlayType`，因此这里不套用日常助战的 All=10 配置。原 Team 页及邀请依赖的10份 prefab／645节点／1105个脚本载荷已完整解码并核对引用，战斗碑使用已转换的 Map12 TeamInvitePanel、NPC 列表与本地战斗碑进度接线；更广泛的其他地图／玩法 Team 窗口仍待接通，见[山之国](../maps/map-12.md)。
 
 山之国原队伍邀请新增直接迁移的 `PlayerPlayTeamAction`，保留原 Team 动作与 NoneParam，并复用原状态互斥检查。独立编译与规则夹具验证邀请前的聊天／舞会／匹配限制、异步退出取消、退出成功及重新检查；原 NPC 邀请窗口和本地队伍事务尚未绑定，不代表可从正式地图邀请。
 

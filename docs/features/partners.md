@@ -168,9 +168,9 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 ### 当前原生赠礼区域（局部）
 
-Home 运行时现在为 `OfflinePartnerGiftPlayer` 提供 `OfflinePartnerItemInfo`，直接投影选定伙伴物品表的 `ClassId`、`Icon`、`IconEffect`、品质和堆叠字段，并把官方伙伴图像目录注册到 `ProfessionImageResourceBridge`。赠礼玩家因此可以从当前本地库存生成原 `IProfessionItemData`，后续 `NpcDetailPanelGiftContent` 接入时会沿官方偏好排序、图标和数量刷新路径消费这些数据；本轮尚未把赠礼 prefab、输入／确认弹窗和物品详情弹窗挂入正式窗口宿主。
+Home 运行时现在为 `OfflinePartnerGiftPlayer` 提供 `OfflinePartnerItemInfo`，直接投影选定伙伴物品表的 `ClassId`、`Icon`、`IconEffect`、品质和堆叠字段，并把官方伙伴图像目录注册到 `ProfessionImageResourceBridge`。赠礼玩家因此可以从当前本地库存生成原 `IProfessionItemData`，`NpcDetailPanelGiftContent` 已沿官方偏好排序、图标和数量刷新路径消费这些数据；物品详情弹窗仍未接入。
 
-当前 Home 详情路由已接入官方 `NpcDetailPanelGiftContent` 与 `NpcFriendshipLevelContent` 子树。`PartnerGiftPanelView` 在官方 prefab 激活前绑定 `OfflinePartnerGiftUiServices`、本地库存／物品图标上下文、好感配置和图像附件池；赠礼成功调用 `OfflinePartnerGiftPlayer.GiveGifts`，按官方控制器的偏好倍率、自动选量、阶位上限、满级和溢出确认分支提交本地事务。伙伴卡片的专属礼物入口对已结识伙伴打开赠礼页。称谓输入、确认和独立好感弹窗目前使用本地窗口端点，称谓仍沿原字符集与长度校验后保存；物品详情弹窗尚未接入。当前验证已完成静态元数据检查和 Unity 初始化导入／编译，尚未完成主工程 Play Mode 实际赠礼点击及 Windows Player 发布。
+当前 Home 详情路由已接入官方 `NpcDetailPanelGiftContent` 与 `NpcFriendshipLevelContent` 子树。`PartnerGiftPanelView` 在官方 prefab 激活前绑定 `OfflinePartnerGiftUiServices`、本地库存／物品图标上下文、好感配置和图像附件池；赠礼成功调用 `OfflinePartnerGiftPlayer.GiveGifts`，按官方控制器的偏好倍率、自动选量、阶位上限、满级和溢出确认分支提交本地事务。伙伴卡片的专属礼物入口对已结识伙伴打开赠礼页。称谓输入和赠礼溢出确认已接入可交互的本地 Unity 弹窗，提交仍先执行原字符集／长度校验，再通过 `OfflinePartnerFriendshipTags` 保存；独立好感弹窗与物品详情弹窗尚未接入。当前静态检查和 Unity 初始化导入／编译通过，主工程 Play Mode 实际赠礼点击及 Windows Player 发布仍待完成。
 
 `Runtime/Official/PartnersUI/GiftController/` 从当前 `884_156692` 完整迁入 `NpcDetailPanelGiftContent`、`NpcGiftBlueDotItem` 和 `NpcFriendshipLevelContent`，保留原礼物排序、选量／减少／重置、自动补量、好感预览、精确升满与溢出确认、阶位／满级限制、称谓校验及响应后的刷新顺序。原配置、玩家、资源与窗口服务改为显式接口；原属性组和礼物格在初始化前绑定服务，原资源袋保留释放顺序。
 
@@ -264,7 +264,7 @@ Home 运行时现在为 `OfflinePartnerGiftPlayer` 提供 `OfflinePartnerItemInf
 
 主工程 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过；最新全工程检查范围见下方详情属性区。
 
-正式伙伴窗口路由、完整物品／输入／确认弹窗内容、原调色及实际声音仍待接入；当前提供者与原生区域接线不表示伙伴系统或 Windows Player 已完成。
+正式伙伴窗口路由已接入，物品详情弹窗、独立好感弹窗、原赠礼弹窗的完整官方资源调色／声音和 Windows Player 验证仍待完成；当前接线不表示伙伴系统已完成。
 
 ### 当前原生详情属性区与天赋合并（局部）
 
