@@ -358,11 +358,13 @@ namespace Zjcs.Editor
             FightBattleCheckpoint checkpoint = controller.Checkpoint;
             TriggerChainProbe triggerChains = ConfigureTriggerChainProbe(checkpoint);
             ReplayProbe replays = ConfigureReplayProbe(checkpoint);
+            StatusReplayProbe statusReplays = ConfigureStatusReplayProbe(checkpoint);
             int initialCounter = checkpoint.Counter;
             controller.StepCompleted += result => {
                 checkpoint = result.Checkpoint;
                 triggerChains?.Observe(checkpoint);
                 replays?.Observe(checkpoint);
+                statusReplays?.Observe(checkpoint);
                 if (checkpoint.Counter == initialCounter + 1 || checkpoint.Finished)
                     Debug.Log("[Battle hosts] " + name + " step=" + checkpoint.Counter
                         + " finished=" + checkpoint.Finished);
@@ -448,6 +450,7 @@ namespace Zjcs.Editor
                     + checkpoint.Counter + ", finished=" + checkpoint.Finished + ", initial=" + initialCounter);
             triggerChains?.Verify(name, checkpoint);
             replays?.Verify(name, checkpoint);
+            statusReplays?.Verify(name, checkpoint);
             yield return SettleUi();
             yield return Capture(output, name + "-result");
             Debug.Log("[Battle hosts] " + name + " completed counter=" + checkpoint.Counter + " won=" + checkpoint.Outcome.Won);

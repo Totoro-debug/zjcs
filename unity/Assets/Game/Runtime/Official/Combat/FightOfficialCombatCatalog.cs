@@ -633,6 +633,7 @@ namespace Zjcs.Combat.Official
             {
                 EntityId = entityId,
                 RootEntityId = entityId,
+                GameplayTags = ReadGameplayTags(components),
                 Slot = slot,
                 ItemId = itemId,
                 Rank = rank,
@@ -792,7 +793,7 @@ namespace Zjcs.Combat.Official
                     assembledStatuses.Add(CreateStatus(binding.ClassId, unit.Id, binding.CreatorId,
                         binding.InstanceId, binding.RootSkillId, binding.ApplyingSkillItemId,
                         binding.SkillRank, binding.SkillLevel, binding.SourceSubRank,
-                        binding.SourceProperties, binding.CustomShieldValue));
+                        binding.SourceProperties, binding.CustomShieldValue, binding.ReplacementProperties));
                 }
             }
             unit.Skills.AddRange(assembledSkills);
@@ -882,7 +883,8 @@ namespace Zjcs.Combat.Official
         public FightBattleStatusState CreateStatus(int classId, int ownerId, int creatorId,
             int instanceId = 0, int rootSkillId = 0, int applyingSkillItemId = 0,
             int sourceSkillRank = 1, int sourceSkillLevel = 1, int sourceSubRank = 0,
-            IList<FightPropertyValue> sourceProperties = null, long customShieldValue = 0)
+            IList<FightPropertyValue> sourceProperties = null, long customShieldValue = 0,
+            IList<FightStatusReplacementValue> replacementProperties = null)
         {
             Dictionary<string, object> components = RequiredEntity(classId);
             Dictionary<string, object> status = Component(components, "FightStatusComponent");
@@ -936,6 +938,7 @@ namespace Zjcs.Combat.Official
                     && Bool(Component(components, "StatusEndComponent"), "RemoveApplyEntity"),
                 ActionType = action == null ? 0 : Int(action, "ActionType"),
                 HasBackToLifeComponent = HasBackToLifeComponent(classId),
+                SkillReplay = ReadStatusReplay(components, replacementProperties),
                 DurationRound = durationRound,
                 CurDurationRound = durationRound,
                 StartRound = -1,
@@ -2646,6 +2649,7 @@ namespace Zjcs.Combat.Official
         public int SourceSubRank;
         public IList<FightPropertyValue> SourceProperties;
         public long CustomShieldValue;
+        public IList<FightStatusReplacementValue> ReplacementProperties;
     }
 
     public sealed class FightOfficialPassiveSkillBinding

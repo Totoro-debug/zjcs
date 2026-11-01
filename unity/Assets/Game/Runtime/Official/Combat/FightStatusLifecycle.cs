@@ -170,6 +170,7 @@ namespace Zjcs.Combat.Official
                 RemoveApplyEntityOnEnd = template.RemoveApplyEntityOnEnd,
                 ActionType = template.ActionType,
                 HasBackToLifeComponent = template.HasBackToLifeComponent,
+                SkillReplay = template.SkillReplay?.Copy(),
                 DurationRound = template.DurationRound,
                 CurDurationRound = template.DurationRound,
                 StartRound = round,

@@ -163,6 +163,7 @@ namespace Zjcs.Combat.Official
         public int StatusType;
         public int ActionType;
         public bool HasBackToLifeComponent;
+        public FightBattleStatusReplayState SkillReplay;
         // Official FightStatusComponentInfo base fields. DurationRound < 0 means infinite.
         public int DurationRound;
         public int CurDurationRound;
@@ -393,6 +394,7 @@ namespace Zjcs.Combat.Official
         public int SkillType;
         public int ActionType;
         public int HitTargetActionType;
+        public long[] GameplayTags;
         public List<int> BlockingSourceActionTypes = new List<int>();
         public List<int> BlockingTargetActionTypes = new List<int>();
         public int SkillTargetType;
@@ -810,6 +812,7 @@ namespace Zjcs.Combat.Official
         public int SkillItemId;
         public bool IsReplay;
         public int ReplayType; // Official EReplaySkillType: Normal=0, Extra=1, ExtraWithTip=2.
+        public int ReplayStatusInstanceId; // Zero for a skill's own replay configuration.
         public List<int> TargetIds = new List<int>();
     }
 

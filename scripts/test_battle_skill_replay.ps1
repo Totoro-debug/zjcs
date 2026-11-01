@@ -46,7 +46,7 @@ function New-ReplaySkill($consume, $needed, $stacks, $relation) {
     return $skill
 }
 
-function Invoke-ReplayBattle($skill, $stacks, $moreSkills = @()) {
+function Invoke-ReplayBattle($skill, $stacks, $moreSkills = @(), $replayStatuses = @(), $configure = $null) {
     $player = New-Unit 1 1 0 0 1000 100
     $player.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
     $player.SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{ Slot = 0; LimitedTimes = -1 })
@@ -55,6 +55,7 @@ function Invoke-ReplayBattle($skill, $stacks, $moreSkills = @()) {
     $status = $catalog.CreateStatus(24031, 1, 1)
     $status.StackCount = $stacks
     $player.Statuses.Add($status)
+    foreach ($replayStatus in $replayStatuses) { $player.Statuses.Add($replayStatus) }
     $enemy = New-Unit 2 2 1 0 5000 1
     $cp = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
     $cp.StageId = 1; $cp.MaxRound = 10; $cp.RandomSeed = 23
@@ -64,6 +65,7 @@ function Invoke-ReplayBattle($skill, $stacks, $moreSkills = @()) {
     $formula = [Zjcs.Combat.Official.FightDamageFormula]::new([Zjcs.Combat.Official.FightDamagePropertySchema]::new(), [Zjcs.Combat.Official.FightDamageFormulaConfig]::new())
     $executor = [Zjcs.Combat.Official.FightBattleExecutor]::Begin($cp, $formula,
         [Zjcs.Combat.Official.FightDamageSettlement]::new(), $catalog)
+    if ($configure -ne $null) { & $configure $cp $executor }
     return $executor.Step(0, 1)
 }
 
