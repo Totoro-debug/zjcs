@@ -104,6 +104,7 @@ namespace Zjcs.Combat.Official
         public int SourceSkillRank;
         public int SourceSkillLevel;
         public int SourceSubRank;
+        public List<FightStatusPropertyScale> BlessPropertyScales;
 
         public FightBattleStatusStateTrigger WithSource(FightBattleStatusState status)
         {
@@ -112,6 +113,7 @@ namespace Zjcs.Combat.Official
             result.SourceSkillRank = status.SourceSkillRank;
             result.SourceSkillLevel = status.SourceSkillLevel;
             result.SourceSubRank = status.SourceSubRank;
+            result.BlessPropertyScales = FightStatusPropertyModifiers.Copy(status.BlessPropertyScales);
             return result;
         }
     }
@@ -394,6 +396,7 @@ namespace Zjcs.Combat.Official
         public int Rank;
         public int Level;
         public int SubRank;
+        public List<FightStatusPropertyScale> BlessPropertyScales;
         public FightSkillProfessionAvailability ProfessionAvailability;
         public int SkillType;
         public int ActionType;

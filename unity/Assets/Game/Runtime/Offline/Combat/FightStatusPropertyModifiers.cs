@@ -33,5 +33,18 @@ namespace Zjcs.Combat.Official
                     EntityId = value.EntityId, PropertyId = value.PropertyId, Factor = value.Factor });
             return result;
         }
+
+        public static void ApplyBlessingScales(int entityId,
+            IList<FightPropertyValue> properties, IEnumerable<FightStatusPropertyScale> scales)
+        {
+            if (properties == null || scales == null) return;
+            foreach (FightStatusPropertyScale scale in scales)
+            {
+                if (scale == null || scale.EntityId != entityId) continue;
+                foreach (FightPropertyValue property in properties)
+                    if (property != null && property.Id == scale.PropertyId)
+                        property.Value = (long)(property.Value * scale.Factor);
+            }
+        }
     }
 }

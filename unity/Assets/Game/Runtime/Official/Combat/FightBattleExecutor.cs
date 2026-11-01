@@ -870,7 +870,7 @@ namespace Zjcs.Combat.Official
             if (statusId <= 0) return null;
             FightBattleStatusState template = statusCatalog.CreateStatus(statusId, summon.Id,
                 actor.Id, NextStatusInstanceId(), skill.EntityId, skill.ItemId, skill.Rank,
-                skill.Level, skill.SubRank, actor.Properties);
+                skill.Level, skill.SubRank, actor.Properties, 0, null, skill.BlessPropertyScales);
             FightBattleStatusState applied = FightStatusLifecycle.Apply(summon, template,
                 StatusClockRound(template), template.InstanceId, random);
             FightStatusLifecycle.Initialize(applied, StatusClockRound(template));
@@ -1110,6 +1110,7 @@ namespace Zjcs.Combat.Official
             {
                 return;
             }
+            InheritBlessingScales(skill, parentSkill.BlessPropertyScales);
             // Do not run AI selection across the roster again: each hit owns its child target.
             // Self effects select the caster, while scoped hits retain the original hit position.
             var candidates = new List<FightBattleUnitState>
@@ -1180,6 +1181,7 @@ namespace Zjcs.Combat.Official
                 {
                     continue;
                 }
+                InheritBlessingScales(extraSkill, skill.BlessPropertyScales);
                 List<FightBattleUnitState> targets = FightBattleTargeting.Select(actor, units,
                     extraSkill.TargetType, 0, false, false, extraSkill, random);
                 if (targets.Count == 0
@@ -1245,6 +1247,7 @@ namespace Zjcs.Combat.Official
                 {
                     continue;
                 }
+                InheritBlessingScales(skill, trigger.BlessPropertyScales);
                 List<FightBattleUnitState> targets = FightBattleTargeting.Select(owner, units,
                     skill.TargetType, 0, false, false, skill, random);
                 if (targets.Count == 0
@@ -1294,6 +1297,7 @@ namespace Zjcs.Combat.Official
                 {
                     continue;
                 }
+                InheritBlessingScales(skill, trigger.BlessPropertyScales);
 
                 FightBattleUnitState targetPosition = null;
                 if (trigger.TargetPos == 1)
@@ -1362,6 +1366,7 @@ namespace Zjcs.Combat.Official
                 {
                     continue;
                 }
+                InheritBlessingScales(skill, invocation.Trigger.BlessPropertyScales);
                 if (!IsExplicitTargetCompatible(source, target, skill.TargetType)
                     || FightBattleTargeting.IsActionBlockedByStatus(target,
                         skill.BlockingTargetActionTypes)) continue;
@@ -1715,8 +1720,17 @@ namespace Zjcs.Combat.Official
                 owner.Id, actor.Id, instanceId, skill == null ? 0 : skill.EntityId,
                 skill == null ? 0 : skill.ItemId, skill == null ? 1 : skill.Rank,
                 skill == null ? 1 : skill.Level, skill == null ? actor.SubRank : skill.SubRank,
-                actor.Properties, customStatusValue);
+                actor.Properties, customStatusValue, null, skill?.BlessPropertyScales);
             FightStatusLifecycle.Apply(owner, template, -1, instanceId, random);
+        }
+
+        private static void InheritBlessingScales(FightBattleSkillDefinition skill,
+            IEnumerable<FightStatusPropertyScale> scales)
+        {
+            if (skill == null || scales == null) return;
+            skill.BlessPropertyScales = FightStatusPropertyModifiers.Copy(scales);
+            FightStatusPropertyModifiers.ApplyBlessingScales(skill.EntityId, skill.Properties,
+                skill.BlessPropertyScales);
         }
 
         private static long ResolveStatusCustomValue(FightBattleStatusApplication application,

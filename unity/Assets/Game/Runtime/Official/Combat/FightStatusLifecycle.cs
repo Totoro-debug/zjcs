@@ -397,7 +397,8 @@ namespace Zjcs.Combat.Official
                             Target = value.Target,
                             UseAI = value.UseAI,
                             TargetPos = value.TargetPos,
-                            StackedCountToDamageFactor = value.StackedCountToDamageFactor
+                            StackedCountToDamageFactor = value.StackedCountToDamageFactor,
+                            BlessPropertyScales = FightStatusPropertyModifiers.Copy(value.BlessPropertyScales)
                         });
             return result;
         }

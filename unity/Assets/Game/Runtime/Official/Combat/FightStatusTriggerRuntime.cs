@@ -213,7 +213,8 @@ namespace Zjcs.Combat.Official
                             instanceId = existing.InstanceId + 1;
                     FightBattleStatusState template = catalog.CreateStatus(trigger.EntityId,
                         target.Id, actor.Id, instanceId, skill.EntityId, skill.ItemId,
-                        skill.Rank, skill.Level, skill.SubRank, actor.Properties);
+                        skill.Rank, skill.Level, skill.SubRank, actor.Properties, 0, null,
+                        skill.BlessPropertyScales);
                     template.ReportSource = FightBattleStatusReportSource.Resolve(status).Copy();
                     FightStatusLifecycle.Apply(target, template, -1, instanceId, random);
                     applied++;
@@ -257,7 +258,10 @@ namespace Zjcs.Combat.Official
                         if (existing != null && existing.InstanceId >= instanceId)
                             instanceId = existing.InstanceId + 1;
                     FightBattleStatusState template = catalog.CreateStatus(statusId, unit.Id,
-                        status.CreatorId <= 0 ? unit.Id : status.CreatorId, instanceId);
+                        status.CreatorId <= 0 ? unit.Id : status.CreatorId, instanceId,
+                        status.RootSkillId, status.ApplyingSkillItemId, status.SourceSkillRank,
+                        status.SourceSkillLevel, status.SourceSubRank, status.SourceProperties,
+                        0, status.ReplacementProperties, status.BlessPropertyScales);
                     template.ReportSource = FightBattleStatusReportSource.Resolve(status).Copy();
                     FightStatusLifecycle.Apply(unit, template, -1, instanceId, random);
                 }
@@ -269,7 +273,9 @@ namespace Zjcs.Combat.Official
                                 EntityId = skillId,
                                 SourceSkillRank = Math.Max(1, status.SourceSkillRank),
                                 SourceSkillLevel = Math.Max(1, status.SourceSkillLevel),
-                                SourceSubRank = Math.Max(0, status.SourceSubRank)
+                                SourceSubRank = Math.Max(0, status.SourceSubRank),
+                                BlessPropertyScales = FightStatusPropertyModifiers.Copy(
+                                    status.BlessPropertyScales)
                             });
                 status.HpTriggeredCount++;
                 applied++;
@@ -339,7 +345,10 @@ namespace Zjcs.Combat.Official
                     if (existing != null && existing.InstanceId >= instanceId)
                         instanceId = existing.InstanceId + 1;
                 FightBattleStatusState template = catalog.CreateStatus(trigger.EntityId, unit.Id,
-                    unit.Id, instanceId);
+                    unit.Id, instanceId, source.RootSkillId, source.ApplyingSkillItemId,
+                    source.SourceSkillRank, source.SourceSkillLevel, source.SourceSubRank,
+                    source.SourceProperties, 0, source.ReplacementProperties,
+                    source.BlessPropertyScales);
                 template.ReportSource = FightBattleStatusReportSource.Resolve(source).Copy();
                 FightStatusLifecycle.Apply(unit, template, -1, instanceId, random);
             }

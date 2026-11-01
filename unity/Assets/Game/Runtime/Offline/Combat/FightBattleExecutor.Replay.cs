@@ -51,6 +51,7 @@ namespace Zjcs.Combat.Official
                     next.SkillSkinId = selected.SkillSkinId;
                     next.ProfessionAvailability = selected.ProfessionAvailability;
                     next.SkillCost = selected.SkillCost;
+                    InheritBlessingScales(next, selected.BlessPropertyScales);
                 }
             }
             var available = FightBattleTargeting.Select(actor, units, next.TargetType, 0, false, false, next, null);
