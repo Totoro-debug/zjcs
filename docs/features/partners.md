@@ -104,6 +104,16 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 `PartnerRosterUiValidation.RunNativeCard` 使用实际原卡片、原动画／图像／字体和隔离本地存档，以模拟鼠标射线验证信物不足、可结识、连续点击仅扣一次、700 毫秒解锁、拒绝／回收、好感比例／预览／满级、置顶与存档恢复；实际查看未结识、可结识、解锁中、已结识和外部好感更新的 GPU 画面。全部 77 位名册伙伴的图片地址、字段消费者、原图网格及全部姓名字形比对通过；实际卡片回归、提示图绑定、静态检查、主工程新增资源导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 均通过，导入后资源哈希保持一致。红点管理器和通知／信物／详情窗口使用明确验证端点，这些端点不进入游戏，不代表完整页面、红点或弹窗交互已经完成；Windows Player 尚未发布。
 
+### 当前原生名册区域（局部）
+
+`scripts/prepare_partner_roster_native.py` 从选定 `884_156692` 的原 `NpcPanel.mNpcListGo` 实际指针提取完整名册子树（1,159 个对象），只断开根的父引用；三列循环列表、卡片源、全部显示、好感／结识排序、反向、排序面板及开合动画的原层级、坐标与字段保留。根仍按原配置默认关闭，由窗口页签宿主激活；当前不包含完整 `NpcPanel` 的其他页签、对话与详情宿主。
+
+资源入口为 `unity/Assets/Official/Partners/UI/Roster/`，新增 19 项载荷，按原 GUID 和完整载荷字节复用已有 10 项依赖。卡片另按 CAB／PathID、原 GUID、安装凭据和完整字节核对后复用。原动画曲线的 MonoScript 引用使用程序集 GUID 与脚本 fileID 联合识别，保留不同组件共享同一程序集 GUID 的情况；排序控制器逐项核对状态、过渡、动作、条件和整数参数默认值。`TabObjectTransition`、`StateAnimatorConfig`、`StateAnimatorData` 从同版官方源码迁入，仅适配命名空间、既有状态端口和反编译枚举语法；原显隐顺序、参数分支、Trigger 重置和即时更新不变。原对象、字体／贴图／精灵／shader 依赖及源码、转换与安装哈希见[原生名册来源](../../assets/reference/partner-roster-native-source-manifest.json)。
+
+三份原开合动画中六处根曲线路径按 APK 的路径哈希 0、属性 CRC、组件类型和脚本指针联合核对，恢复转换缓存误写为 `null` 的空路径；否则透明遮罩虽随面板隐藏仍会截获卡片点击。排序标题、原筛选标签与实际开放的两种排序文字从同版语言分包绑定，未为隐藏的通用选项编造缺失翻译。
+
+`prepare_partner_roster_native_validation.py` 在隔离 URP Play Mode 使用实际原区域、卡片及本地名册服务／存档，模拟射线点击全部显示、结识排序、反向、遮罩关闭与卡片路由，核对初始／打开／关闭时遮罩真实启停、实际滚轮位移、重开后的原状态和全部图片资源租约释放，均通过。已查看默认、全部显示、排序展开、关闭和滚动五帧 GPU 画面；50 项输入、72 项安装资源／目录、6 项迁移代码及验证源码哈希一致，静态检查、主工程导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 通过。此夹具仍使用既有历史名册规则目录，当前版条件接线、正式完整窗口／详情入口、提示管理、实际声音播放和 Windows Player 尚未完成；弹窗路由、提示及 Wwise 事件由明确测试端点承担，不进入产品。
+
 ### 当前赠礼图标与好感属性组件（局部）
 
 `Runtime/Official/PartnersUI/Gifts/` 从当前 `884_156692` 完整迁移 `ItemIconNpcGift`、`NpcFriendshipPropItem`、`NpcFriendshipPreviewPropItem`、`NpcFriendshipPropItemGroup` 和原 CanvasGroup 显隐扩展，复用既有官方 `ItemIcon`、`ProfessionPlayerPropItem` 与属性格式化。赠礼图标沿用偏好／选中遮罩和减少按钮订阅；重复显示同一附件不增加监听，清理先执行原物品清理、隐藏偏好标记并移除减少监听，保留原选中状态和回调字段。

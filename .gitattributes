@@ -1395,3 +1395,15 @@ scripts/fixtures/partner_gift_player_validation.cs text eol=lf
 assets/reference/partner-gift-player-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftPlayer.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftInventoryRules.cs* text eol=lf
+
+# Preserve original roster hierarchy/resources and source receipts.
+scripts/prepare_partner_roster_native.py text eol=lf
+scripts/partner_roster_animator_binding.py text eol=lf
+scripts/prepare_partner_roster_native_validation.py text eol=lf
+scripts/fixtures/partner_roster_native_validation.cs text eol=lf
+assets/reference/partner-roster-native-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/TabObjectTransition.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/StateAnimatorConfig.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/StateAnimatorData.cs* text eol=lf
+unity/Assets/Official/Partners/UI/Roster.meta text eol=lf
+unity/Assets/Official/Partners/UI/Roster/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

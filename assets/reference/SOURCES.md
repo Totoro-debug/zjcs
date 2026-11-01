@@ -200,3 +200,5 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 - 伙伴称谓中文字符输入：当前 `884_156692` 的 `CustomContentSettings` 按 `zh_CN = 0` 指向 GUID `366b7fb6f251a70459f751d0fc324b65`，原 `FZY4K_Characters.txt` 为 65,628 字节，SHA256 `aa014998f49525ac47e63286168545af758912920bc6fcad0634c7575b233462`。`prepare_partner_gift_configuration.py` 通过原资源索引定位设置与 TextAsset，按 APK 优先／同版本已校验云端回退读取原对象并打包原字符载荷；输入包、对象、原码、输出及绑定哈希见 `partner-gift-configuration-source-manifest.json`。
 
 场景武器输入与应用代码：当前 `884_156692` 索引下 APK 优先解析的剑／法杖 Integrated prefab、原场景材质与 shader，按完整原对象字节身份复用已有模型／图集／高分辨率加载器，当前 Windows shader 转换保持独立身份；原四节点字段、程序集、应用源码、转换工具、输出哈希与显式绑定见 [场景武器](battle-animation/scene-weapon-source-manifest.json) 和 [轻量渲染器](battle-animation/scene-renderer-runtime-source-manifest.json)。
+
+伙伴当前原生名册区域：输入采用选定 `884_156692` 的官方 APK／已校验云端包及同版本原生转换缓存；`prepare_partner_roster_native.py` 按 `NpcPanel.mNpcListGo` 原指针提取并绑定名册层级，原卡片按 CAB／PathID、GUID 和已有凭据复用。动画曲线脚本以程序集 GUID＋脚本 fileID 核对，状态／过渡及参数默认值按原编译数据校验，Windows 精灵、贴图、字体与 shader 延用所选版本转换链。全部原对象、提取方式、源码／资源输入与安装输出哈希见 [原生名册来源](partner-roster-native-source-manifest.json)；使用方式见 [伙伴功能](../../docs/features/partners.md)。本次未生成完整素材快照。

@@ -1,0 +1,1850 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    "scripts/prepare_current_partner_native.py": "ee30c4ec65a5916cdde9927bc46f0980eb9435682d46e7b311ffc0be2917e580",
+    "scripts/official_apk.py": "ffc722b06e62bacc6689d98a7910562527fbcacc1c512c05e57a21bb8aa0ea46",
+    "scripts/official_manifest.py": "1aae5bd86af587511466e17308719c2e6b356be4117942809c7e6ba89e2d7399",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json": "264d79bcd2da2d47f86bc9e1c1956cd4e07853e09ad2248b691e2c92dd125d3c",
+    ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-textures/source-manifest.json": "095eb422b8a241e6468abd81940e22aff9ad22f89bc78161dbdba8bd1f45b3b0",
+    ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders/source-manifest.json": "09b81e5260175a1524a2178d37bea2b78752bdc85f130751e2d95398171fbe0b",
+    ".tools/source-packages/WwiseBnk/wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile": "05d44c577bc0b5f8614bba477d9fde839fab4084e45a3d2bcc1651aa83b74365",
+    ".tools/source-packages/WwiseBnk/wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile": "a7e72b9478ce455a7ef12974f16e3f78e684ded497b7750f7901dacb66eacfad",
+    "scripts/npc_travel_language.py": "5c03df02e09d6b443520407928478018b0f74f959fc081e6bb00f033b65d1232",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Npc/NpcPanel.prefab": "a279b3532f096dbd5470772f4884045ab3bcc23f1b9fa8457f35931512cc49cb",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Npc/NpcPanel.prefab.meta": "c5174f6d97932eaddce9f733e576f038ac900478edd5787053d84d52d92363f2",
+    ".tools/source-packages/current/884_156692/native-conversion/component-fields-all/source-manifest.json": "c82db6a6903d36856807688d11573793cdaef98d1da13d0d6108b6f3f04aeec5",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/NPCFavor/NPCFavor_Atlas/ImgBg_Paper.asset": "ed4a292cc413cf3cffedf8b6e37cab472edc1a106c95dcd9d597f481e911fb25",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/NPCFavor/NPCFavor_Atlas/ImgCircular.asset": "f87816e230bc4337f24943c3aa1cf2dbadf64178f9804465402875cb11ef3e25",
+    "unity/Assets/Official/Partners/UI/Card/NpcPanelNpcItem.prefab": "559bbcea13048e8faeb2d770f84c43af1c12a0eea4326151b4371786d27df24b",
+    "unity/Assets/Official/Partners/UI/Card/NpcPanelNpcItem.prefab.meta": "aa7ac04bd9e43c3110f2121973f29bd2d0965471d9d71ad05bd1d41ff8203e3b",
+    "assets/reference/partner-card-binding-source-manifest.json": "cae1e0a8caea9e6c63828ec626cbc9f140598a4523c2506784a5a6210d6702e6",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Npc/NpcPanelNpcItem.prefab": "34d40c30f745d6bbb72d72378ea1b51bc199731115f9ac65a2ad2c207c92d875",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/CollectBook/BaseCollectBookController.controller": "301c2e1f71a0b6e9c4fd98a8ac7341df6aef3065d6df6e763596e4f56d4f5075",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/CollectBook/BaseCollectBookController.controller.meta": "69f78dd9d3c924b25e8c2368adc45d8ed8429084e672e377bbec3a22d756fb9e",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBgScreen.asset": "2ead1827d669a211d948b573ddda5be93b6f813e22a27cb014ecf899df38c5cd",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset": "c775159727acc550a82b0ecc2ad98ff788ac29d2643147df18222189b88e8e70",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat": "f465cf50b955ba2a9f593f4594bcc53e831682c68fce2eec2bfca9e873f8b69a",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/C_none_0.asset": "7f65da2cd60acfe24a9bbf3c7ec0216e0f2fc312203b606728809af3387395cf",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Wwise/ScriptableObjects/Event/164C4624-F19E-4DA6-9ECA-4C36A1C1A09F.asset": "d5a0be7253da93915066679ce76fb3ce952506564acd62431290795cea3bab87",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/BtnScreen_Sel.asset": "acf099191701c6b34729ea00a1d3239bfef881eaa50b6beeb3db93f08f128f26",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/IconSort.asset": "d7b1a9b1038367be2b9fcb4e635b0329c2d7f558cdd68555284602655196056c",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/BtnScreen_Nor.asset": "f88df675996a95a1c2a3e1bc77f2f9a5a7c87d02a236cb0d9f177ceaf2c53bef",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3_0.asset": "af030280ed9c2bee89b5e4cf22ab10e5851d8999c3bfd14d0551124db69a0368",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBgScreen_Resetting.asset": "cc51ad350d1495caebd44f95a851e209ed2dd4a36c479ae7efe0082c32d1b5c3",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBgScreen_Fillet.asset": "6bcae9d97cc0bfe6dce1dc612d8c573650cb59a0eab77c1327b0fd4e3137c4f3",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgArrow.asset": "411c431a6cd009daf72aea61af6bf12ef58d059048025e7c1a1c0b858838c1eb",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgSwitchItem.asset": "23e8a743fd5399fa6314445a2311fa0fb52f3173cde4fc458aa73001bfee8743",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/BtnCheck_Nor_0.asset": "93286af3c1086c0230085c570de4de3c0817c2c14eada9e473e06b441a8bc487",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/BtnCheck_Sel_0.asset": "97d91cd1830640da33150ea32993100f449a35ae2f8971f560eafb2f668be823",
+    ".tools/source-packages/official-code/framework-firstpass-source/MultiLanguageFontService.cs": "ea21a58a8d6162e331d10ce81f72b19ce9096b15682c700d207f639892e7d0d5",
+    ".tools/source-packages/official-code/framework-firstpass-source/FontAssetFontService.cs": "4c13f0a4aab388c02a9d17d516da4ad845673a407d73749b7e6f8132151b040f",
+    ".tools/source-packages/official-code/framework-firstpass-source/MultiLanguageText.cs": "3229b04b116900b276a925e0ec9186717dbbf4cb91470b4758a4f514f216e963",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/CollectBook/BaseCollectBook_None.anim": "d28c500c1745081cfae900d0f22c7893fbf172e570256bfcb7b837679f6d87e0",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/CollectBook/BaseCollectBook_Open.anim": "a73a00012ec038cf557d97997685d2fd84f9aff52ec5bc29e9f78a2e031e2b30",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/CollectBook/BaseCollectBook_Close.anim": "dd0a22a4c6720efebf0764cf67a9cacbaf4afe7b851f76ca8d82ac8d1ee5ea07",
+    "scripts/prepare_partner_card_native.py": "4412a20d7ed675da1ed8a5414e129aa0a729dbf60523aff0c6611bce539af459",
+    "unity/Assets/Official/World/Map/13/Source/native-text-gradient.json": "084ccb449e6f0bde213c07b5990821afa4eaec04aa400a3917a72b2c7e1d6909",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/CollectSortType.cs": "6579316c10d5c1ece26e4f48445502d469462817448d04b63ff13cc4f6c8beaf",
+    ".tools/source-packages/official-code/client-source/UnityEngine.UI.Ext/TabObjectTransition.cs": "1f1119fc19d14db8a9c0c6dcca8179de8f7408abe703f8d6802069c781118a24",
+    ".tools/source-packages/official-code/framework-source/StateAnimatorConfig.cs": "435db91f1ea3c70be295404b2270d4914352ff7a4a4a8a308e2aa31ccc530305",
+    ".tools/source-packages/official-code/framework-source/StateAnimatorData.cs": "356e4d314dba1e05d7f3da43d2b33b046e7b9cb6755b00ee8c3298240b688c14",
+    "scripts/prepare_partner_gift_native.py": "84d18ed2d4a3e90bf9f99f4f1596621756123e4a12799fc1f6a23952d0197cdb",
+    "scripts/partner_gift_animator_binding.py": "6c55021513af938dce2ac172d54a468203dd6ec51bcd19d34de9fe40ec721a2e",
+    "scripts/partner_roster_animator_binding.py": "0a39f7488e361c7798ef7d28412ece82b4a36b9df018784d6dd5b557fb88e16d"
+  },
+  "objects": {
+    "cab-6f830ebf76212abbc7cd3f5d25d84b54:-7392947830906085273": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_npcfavor.bundle",
+        "bundle_hash": "7ffc33a902d11fa1c313d8f2e99feac0",
+        "path_id": "-7392947830906085273",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/7ffc33a902d11fa1c313d8f2e99feac0.bundle",
+        "raw_size": 1032244,
+        "raw_sha256": "20e1bb4f9c72d15b5ff3503ebacb793f6704da808ce3d8e2465189e207b3edd5"
+      },
+      "type": "SpriteAtlas",
+      "original_sha256": "61b7c2dc8b9011a47c7fe925c1ff9c0d5fdb0aedc5108f2a6a1613d07b2dd154",
+      "usage": "Packed sprite render data"
+    },
+    "cab-6f830ebf76212abbc7cd3f5d25d84b54:8735076975442043332": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_npcfavor.bundle",
+        "bundle_hash": "7ffc33a902d11fa1c313d8f2e99feac0",
+        "path_id": "8735076975442043332",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/7ffc33a902d11fa1c313d8f2e99feac0.bundle",
+        "raw_size": 1032244,
+        "raw_sha256": "20e1bb4f9c72d15b5ff3503ebacb793f6704da808ce3d8e2465189e207b3edd5"
+      },
+      "type": "Sprite",
+      "original_sha256": "e0b1d22e819b82292af416be3c2a7be95fc37855b290c9e894f17ef7be552a9a",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/NPCFavor/NPCFavor_Atlas/ImgBg_Paper.asset",
+      "output": "Image/UI/NPCFavor/NPCFavor_Atlas/ImgBg_Paper.asset",
+      "guid": "9676e46e006b3e7f8030d7769546d481",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
+    "cab-6f830ebf76212abbc7cd3f5d25d84b54:7393349953029016361": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_npcfavor.bundle",
+        "bundle_hash": "7ffc33a902d11fa1c313d8f2e99feac0",
+        "path_id": "7393349953029016361",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/7ffc33a902d11fa1c313d8f2e99feac0.bundle",
+        "raw_size": 1032244,
+        "raw_sha256": "20e1bb4f9c72d15b5ff3503ebacb793f6704da808ce3d8e2465189e207b3edd5"
+      },
+      "type": "Sprite",
+      "original_sha256": "265cb047ba9e2b3640ef100f9a1f7cc4147b522dfa8ce478404ccf00630e5874",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/NPCFavor/NPCFavor_Atlas/ImgCircular.asset",
+      "output": "Image/UI/NPCFavor/NPCFavor_Atlas/ImgCircular.asset",
+      "guid": "bc279e2a7a7fb2809187dce60a53381f",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
+    "cab-d6ceaa1943d569c2c6051701baec36b6:-5007746007756363867": {
+      "source": {
+        "bundle": "defaultpackage_assets_animation_ui_collectbook.bundle",
+        "bundle_hash": "59fc0f6049738224544983e96320c63d",
+        "path_id": "-5007746007756363867",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/59fc0f6049738224544983e96320c63d.bundle",
+        "raw_size": 2894,
+        "raw_sha256": "eb6f64bd7f871d9cee54c1c49d7f9c1fc4cd88d8503e2da0a9ab4b433038e030"
+      },
+      "original_sha256": "facfbb636cf06f19d3529b11147a99de530ee2f04db3840246eb546871f4ab16",
+      "output": "NativeControllers/783515380caa3aa2.controller",
+      "guid": "82a13a6541281144e4d52439de9ecd69",
+      "verified_runtime_subassets": {
+        "9100000": "controller",
+        "1107709254077376921": "state-machine",
+        "1101724804207875695": "transition:Closed -> SortPanel_Open",
+        "1102730242686860875": "state:Closed",
+        "1101703437598541787": "transition:SortPanel_Open -> SortPanel_Close",
+        "1102618682377417806": "state:SortPanel_Open",
+        "1101099118695303065": "transition:SortPanel_Close -> Closed",
+        "1102884547391421755": "state:SortPanel_Close"
+      }
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:7027170908951735255": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "7027170908951735255",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "SpriteAtlas",
+      "original_sha256": "9d36c5be785859e80ca6304999830c104562d08a109dcd23ec500706c5c3fbd2",
+      "usage": "Packed sprite render data"
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:-7577115986444142286": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "-7577115986444142286",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Sprite",
+      "original_sha256": "9e6695970f38d8c848df6efb33191f2b4f13965f50cf2981d0d7be2a3e5f7411",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBgScreen.asset",
+      "output": "Image/UI/Common/Common_Atlas/ImgBgScreen.asset",
+      "guid": "24ff65967a32b0cebfebc3693c36acf4",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
+    "cab-43221b4d126447a2b398f3477e814a2c:-1054575886599457342": {
+      "source": {
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+        "bundle_hash": "5718b6f06136fd5c5d48fe6f02b618a9",
+        "path_id": "-1054575886599457342",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5718b6f06136fd5c5d48fe6f02b618a9.bundle",
+        "raw_size": 415026,
+        "raw_sha256": "fa69dba3a3410b074ae45b79b6b3db3774223c11d3fae9b52c214b1881af8b8a"
+      },
+      "type": "MonoBehaviour",
+      "original_sha256": "993fe9f48bba80bc3f729c6cfabf269fdf7b91ac69fb2d013625ee8ac8a68031",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset",
+      "output": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset",
+      "guid": "b088a249154abaf4e9a07cad25d5aef4",
+      "geometry": null
+    },
+    "cab-43221b4d126447a2b398f3477e814a2c:8668477128756491714": {
+      "source": {
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+        "bundle_hash": "5718b6f06136fd5c5d48fe6f02b618a9",
+        "path_id": "8668477128756491714",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5718b6f06136fd5c5d48fe6f02b618a9.bundle",
+        "raw_size": 415026,
+        "raw_sha256": "fa69dba3a3410b074ae45b79b6b3db3774223c11d3fae9b52c214b1881af8b8a"
+      },
+      "type": "Material",
+      "original_sha256": "57b7f2adeb457a8f4f3b3842127ac1bdf497f87992d883bbfee812a4525383be",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat",
+      "output": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat",
+      "guid": "08ba59cf78205b78fb2c9a69237994ea",
+      "geometry": null
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:-6201727972171027686": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "-6201727972171027686",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Sprite",
+      "original_sha256": "73f8e0b4f17d8d9838fad0f678437b3e0ed26585c7e2525ce6ac4bd90ab90699",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/C_none_0.asset",
+      "output": "Image/UI/Common/Common_Atlas/C_none_0.asset",
+      "guid": "f3b0b2fcddb51274e6595ff1cdcb4ab5",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
+    "cab-8ede2c00df79c3aff9bab2859b047085:1117341224407773269": {
+      "source": {
+        "bundle": "defaultpackage_assets_wwise_scriptableobjects_event.bundle",
+        "bundle_hash": "d0ea86beaa052471f6138a9bddaa19f0",
+        "path_id": "1117341224407773269",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/d0ea86beaa052471f6138a9bddaa19f0.bundle",
+        "raw_size": 440942,
+        "raw_sha256": "c4009d466fcf8199fd5c4b7ba92f9915f0509ced7ea74c28ddec8b4867a6970a"
+      },
+      "type": "MonoBehaviour",
+      "original_sha256": "a29af6c60b91b02f3970b0dd3fbff08fae7a626ba15271af6fe1d2bd0b399e68",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Wwise/ScriptableObjects/Event/164C4624-F19E-4DA6-9ECA-4C36A1C1A09F.asset",
+      "output": "Wwise/ScriptableObjects/Event/164C4624-F19E-4DA6-9ECA-4C36A1C1A09F.asset",
+      "guid": "cf64a729e8076042d708cbb2250835ad",
+      "geometry": null
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:7845516067909657307": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "7845516067909657307",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Sprite",
+      "original_sha256": "5720fcd0163992e801bfb8b7b79171b694af6ad8d7373228a9095d30e4084598",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/BtnScreen_Sel.asset",
+      "output": "Image/UI/Common/Common_Atlas/BtnScreen_Sel.asset",
+      "guid": "9a044d7857024c92b8de3b657e41381c",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:1666412468020766736": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "1666412468020766736",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Sprite",
+      "original_sha256": "8733cde41585a14975ae4473f854e0fe3c6d23ef55f35cd37d912f02693571d5",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/IconSort.asset",
+      "output": "Image/UI/Common/Common_Atlas/IconSort.asset",
+      "guid": "e5c71efbd846835e180802a7ac665351",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:7216690217560396562": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "7216690217560396562",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Sprite",
+      "original_sha256": "8a6bd86aeebb49854187328bd31d6efb59415df5e5a2570564caa6cab6387e07",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/BtnScreen_Nor.asset",
+      "output": "Image/UI/Common/Common_Atlas/BtnScreen_Nor.asset",
+      "guid": "04ef31ade706ceecece5659314d41ed7",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
+    "cab-8ede2c00df79c3aff9bab2859b047085:5924382417553736613": {
+      "source": {
+        "bundle": "defaultpackage_assets_wwise_scriptableobjects_event.bundle",
+        "bundle_hash": "d0ea86beaa052471f6138a9bddaa19f0",
+        "path_id": "5924382417553736613",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/d0ea86beaa052471f6138a9bddaa19f0.bundle",
+        "raw_size": 440942,
+        "raw_sha256": "c4009d466fcf8199fd5c4b7ba92f9915f0509ced7ea74c28ddec8b4867a6970a"
+      },
+      "type": "MonoBehaviour",
+      "original_sha256": "aa98c17ed13ff350c43219d39320b67f9927ab0ac8c844b798e80bdda51f3dfe",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3_0.asset",
+      "output": "Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3_0.asset",
+      "guid": "a74c390372a1e5b98818a18ac1f760f9",
+      "geometry": null
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:-1533728594815414032": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "-1533728594815414032",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Sprite",
+      "original_sha256": "955a55ae1e7d9f25b68c13b0ca0b5d2eb26e7281efa6154ef41ad93121780c86",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBgScreen_Resetting.asset",
+      "output": "Image/UI/Common/Common_Atlas/ImgBgScreen_Resetting.asset",
+      "guid": "7b1e4d687bd5b14ae60acc6a8d2ef712",
+      "geometry": {
+        "vertices": 9,
+        "index_bytes": 42,
+        "index_sha256": "d7210aafd0a30150af65a385af8d7c750dfa63b483522bde22c2a7d01533abc9"
+      }
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:8447231666817072753": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "8447231666817072753",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Sprite",
+      "original_sha256": "62d7d0260abcad26544c403e4bfbdcf45ec43e2a5db23ee444b2e263694227e4",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBgScreen_Fillet.asset",
+      "output": "Image/UI/Common/Common_Atlas/ImgBgScreen_Fillet.asset",
+      "guid": "101b5b1f146692e3ca080becdbec8fd3",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:7644751697196712385": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "7644751697196712385",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Sprite",
+      "original_sha256": "9d343b419b24b5c0c1a35f0eeba24e30b11dab4219688584446bb356549459f2",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgArrow.asset",
+      "output": "Image/UI/Common/Common_Atlas/ImgArrow.asset",
+      "guid": "06912b194c5c818a2269b99e89043e7f",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:-1029425483254427548": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "-1029425483254427548",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Sprite",
+      "original_sha256": "b8eb04e8dd4f9008b001c94d84f4d4c436ee1fc6ae3f6c91895310c34f6e74dc",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgSwitchItem.asset",
+      "output": "Image/UI/Common/Common_Atlas/ImgSwitchItem.asset",
+      "guid": "94bad718dedbb4e1984834b5ebe77195",
+      "geometry": {
+        "vertices": 17,
+        "index_bytes": 90,
+        "index_sha256": "d299b6012ab0c597ac689d5135144014e02f698917848725f9882763aa93b3a8"
+      }
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:-1985464818016463037": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "-1985464818016463037",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Sprite",
+      "original_sha256": "b6ab4d68c225d187c4c76f74e6da07814a247aad301598a61729e307a2304902",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/BtnCheck_Nor_0.asset",
+      "output": "Image/UI/Common/Common_Atlas/BtnCheck_Nor_0.asset",
+      "guid": "889da87a9578f3363a5ac77941aea7da",
+      "geometry": {
+        "vertices": 6,
+        "index_bytes": 24,
+        "index_sha256": "e4db4a5ec4efa61a1167fb7f4b4c53f173a398858d3395ca4975b6e4044b827c"
+      }
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:5262215441426734615": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "5262215441426734615",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Sprite",
+      "original_sha256": "30371ae802cabfd52f0cb4031b30d5b07d5932477e4c42aba14adb5d2c8b8edf",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/BtnCheck_Sel_0.asset",
+      "output": "Image/UI/Common/Common_Atlas/BtnCheck_Sel_0.asset",
+      "guid": "7fb290c1ae8b9760776c081792eb6bdf",
+      "geometry": {
+        "vertices": 6,
+        "index_bytes": 24,
+        "index_sha256": "e4db4a5ec4efa61a1167fb7f4b4c53f173a398858d3395ca4975b6e4044b827c"
+      }
+    },
+    "cab-68c8ed9cb67cd68faa53d3a40124953b:-4610972457973430565": {
+      "source": {
+        "bundle": "defaultpackage_assets_textmesh_pro_fonts_fzy4k.bundle",
+        "bundle_hash": "f4e7267dbaeaf4aecd4b9fcc9d89e789",
+        "path_id": "-4610972457973430565",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/f4e7267dbaeaf4aecd4b9fcc9d89e789.bundle",
+        "raw_size": 7244199,
+        "raw_sha256": "e45a57a0a87ca207d3526accb7ad93546a5a2d014e285ac1180a24eb98f9624a"
+      },
+      "type": "Font",
+      "original_sha256": "f70d78156bff31e78d485a8c5b107d9e27dcc3f48adb2cf78ca0e3c5f8972d52",
+      "font_data_sha256": "90023872dffe6a58503de655bd0631bf3334ce3b6b72cc75a6625b685c94c386",
+      "output": "Fonts/FZY4K.TTF",
+      "guid": "361d52fe7fad65d6413db534072fdf5c"
+    },
+    "cab-6f830ebf76212abbc7cd3f5d25d84b54:-4775101118079885209": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_npcfavor.bundle",
+        "bundle_hash": "7ffc33a902d11fa1c313d8f2e99feac0",
+        "path_id": "-4775101118079885209",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/7ffc33a902d11fa1c313d8f2e99feac0.bundle",
+        "raw_size": 1032244,
+        "raw_sha256": "20e1bb4f9c72d15b5ff3503ebacb793f6704da808ce3d8e2465189e207b3edd5"
+      },
+      "type": "Texture2D",
+      "original_sha256": "5e7ffca85f33f27540d22e77adb67c90613d6a6ab70f06362fccdf4b59958fbf",
+      "native_path": null,
+      "output": "Converted/409f5b7a08357fee.asset",
+      "guid": "585b4518b726ef850b2e638f4f8efe5e",
+      "geometry": null
+    },
+    "cab-d6ceaa1943d569c2c6051701baec36b6:-7295242022764945636": {
+      "source": {
+        "bundle": "defaultpackage_assets_animation_ui_collectbook.bundle",
+        "bundle_hash": "59fc0f6049738224544983e96320c63d",
+        "path_id": "-7295242022764945636",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/59fc0f6049738224544983e96320c63d.bundle",
+        "raw_size": 2894,
+        "raw_sha256": "eb6f64bd7f871d9cee54c1c49d7f9c1fc4cd88d8503e2da0a9ab4b433038e030"
+      },
+      "type": "AnimationClip",
+      "original_sha256": "b36bcb60c6b6caebd01488ed0312ae81d6c7ca3e7d4fde1a6ca3bff5f4ab27bc",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/CollectBook/BaseCollectBook_None.anim",
+      "output": "Animation/UI/CollectBook/BaseCollectBook_None.anim",
+      "guid": "badaac15a21d5d96489478b76374b78e",
+      "geometry": null
+    },
+    "cab-d6ceaa1943d569c2c6051701baec36b6:6390555621377199522": {
+      "source": {
+        "bundle": "defaultpackage_assets_animation_ui_collectbook.bundle",
+        "bundle_hash": "59fc0f6049738224544983e96320c63d",
+        "path_id": "6390555621377199522",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/59fc0f6049738224544983e96320c63d.bundle",
+        "raw_size": 2894,
+        "raw_sha256": "eb6f64bd7f871d9cee54c1c49d7f9c1fc4cd88d8503e2da0a9ab4b433038e030"
+      },
+      "type": "AnimationClip",
+      "original_sha256": "ded1a9beab8924025896cff0bb160b7055c1c6b770223764a219070f72422e33",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/CollectBook/BaseCollectBook_Open.anim",
+      "output": "Animation/UI/CollectBook/BaseCollectBook_Open.anim",
+      "guid": "b8504387e593ff2b3efbb04911e16bfd",
+      "geometry": null
+    },
+    "cab-d6ceaa1943d569c2c6051701baec36b6:-4480105965643776953": {
+      "source": {
+        "bundle": "defaultpackage_assets_animation_ui_collectbook.bundle",
+        "bundle_hash": "59fc0f6049738224544983e96320c63d",
+        "path_id": "-4480105965643776953",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/59fc0f6049738224544983e96320c63d.bundle",
+        "raw_size": 2894,
+        "raw_sha256": "eb6f64bd7f871d9cee54c1c49d7f9c1fc4cd88d8503e2da0a9ab4b433038e030"
+      },
+      "type": "AnimationClip",
+      "original_sha256": "f240adbac6996345ae93d80538038256ef8b29eb14a188c77b39b848fdc02997",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Animation/UI/CollectBook/BaseCollectBook_Close.anim",
+      "output": "Animation/UI/CollectBook/BaseCollectBook_Close.anim",
+      "guid": "bb60e4c7c98f125aa1ea56793919262e",
+      "geometry": null
+    },
+    "cab-b162472e6e43e3e3d8cef5582d2f004d:8373551068376853463": {
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "8373551068376853463",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      },
+      "type": "Texture2D",
+      "original_sha256": "53995e743aa5f4d717ce30a69b8100e7c73f21cfcc0c8f351a9f3a808f319cd0",
+      "native_path": null,
+      "output": "Converted/65b73523b080e5e7.asset",
+      "guid": "b40761794afa424fcfa0a6d493b5c729",
+      "geometry": null
+    },
+    "cab-43221b4d126447a2b398f3477e814a2c:3935595767026349506": {
+      "source": {
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+        "bundle_hash": "5718b6f06136fd5c5d48fe6f02b618a9",
+        "path_id": "3935595767026349506",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5718b6f06136fd5c5d48fe6f02b618a9.bundle",
+        "raw_size": 415026,
+        "raw_sha256": "fa69dba3a3410b074ae45b79b6b3db3774223c11d3fae9b52c214b1881af8b8a"
+      },
+      "type": "Texture2D",
+      "original_sha256": "5100748872e5a73c20864292b0f19fb862964e3c2c50785768804056276fd4d8",
+      "native_path": null,
+      "output": "Converted/ac573a40fda4c096.asset",
+      "guid": "595049c2e6a1f516bcabc0f0a8cab09f",
+      "geometry": null
+    },
+    "cab-014000ed2538cb87d1aa4612be612002:-4286560471751938018": {
+      "source": {
+        "bundle": "defaultpackage_unityshaders.bundle",
+        "bundle_hash": "465300f28c23d7564868393936041212",
+        "path_id": "-4286560471751938018",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/465300f28c23d7564868393936041212.bundle",
+        "raw_size": 2909118,
+        "raw_sha256": "991da192cbcd00a1b3a2714b7ca649b7f416881f87b656dac17f5f1123da2e46"
+      },
+      "type": "Shader",
+      "original_sha256": "82cc97a220222d38ceeb7b173dd31fccede81cc11f4eca3a2c052177f11acd81",
+      "native_path": null,
+      "output": "Converted/f2e1ff40e17239bc.shader",
+      "guid": "0b5a526f51d54805e059fe74dc7aade8",
+      "geometry": null
+    }
+  },
+  "outputs": {
+    "Image/UI/NPCFavor/NPCFavor_Atlas/ImgBg_Paper.asset": "c83ba48ced51e0d681acafeacfbe8bcca4fe0fe4b4f8c586afe3752eb7838fb3",
+    "Image/UI/NPCFavor/NPCFavor_Atlas/ImgBg_Paper.asset.meta": "45c925c8622d71f6bf11a5f5e8854b678b1caf89e5b2a5de6ccd7fe12c169ec1",
+    "Image/UI/NPCFavor/NPCFavor_Atlas/ImgCircular.asset": "d70c55eda520dcb2a617c02d54e9dc84b396292ff7f11b99b05e25c1e86d94d1",
+    "Image/UI/NPCFavor/NPCFavor_Atlas/ImgCircular.asset.meta": "3f00829416f7a29186c4da0234089dbee2ba509e03479c9cb0470ec458800fc1",
+    "NativeControllers/783515380caa3aa2.controller": "1559fc6258af70d64e39d65c56b34f71fe1950970991a4dbc0d4755e19fb620f",
+    "NativeControllers/783515380caa3aa2.controller.meta": "42a75e9ef0628d4630e21f835742db035d9d3ad29985552381c7101c39a974c9",
+    "Image/UI/Common/Common_Atlas/ImgBgScreen.asset": "eda58611d5c3ddb9e34e5544b199816a8a9687a27b1d7393c20cb3a6edbb68ea",
+    "Image/UI/Common/Common_Atlas/ImgBgScreen.asset.meta": "ff1c266f11b04a671c39e011bcafea573533b6ab5e80c6d43ecdde6fb8e16ad1",
+    "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset": "8371c8c321efb85060bcc96875419a2125babcbeb7c15f34a4dfd2526c3caab2",
+    "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset.meta": "c73398661817650a11012e6405f6a3dba0c3c02368a9546cca757b1d01b975da",
+    "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat": "361207bd73188c9fa55778c632ae3ed8459a8eb4f1b81ac88346bcac134464e2",
+    "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat.meta": "78fe4f95be8d6cb2787099d08448dcc043f602506718c85d879e7377d29b3ce9",
+    "Image/UI/Common/Common_Atlas/C_none_0.asset": "fae893cc28b978408f3c9605fa899395950b59600b31616caefdc3465439cb12",
+    "Image/UI/Common/Common_Atlas/C_none_0.asset.meta": "b473d70e4460bae02a3ff40de523fa13eec603864c52f39c2b75e73c92b7db6f",
+    "Wwise/ScriptableObjects/Event/164C4624-F19E-4DA6-9ECA-4C36A1C1A09F.asset": "d297e068356b4e4520ab018bd64efd5fc63dd3cbef275e07ab1c05f7463ecf42",
+    "Wwise/ScriptableObjects/Event/164C4624-F19E-4DA6-9ECA-4C36A1C1A09F.asset.meta": "7db440ea79982b50b0e934de1804c42d3344a7dffadc0b32981cd7dbdb38d9e5",
+    "Image/UI/Common/Common_Atlas/BtnScreen_Sel.asset": "c198efd321b6e1704ae36b80e10f986e5fb2fafaea830bdf810fffea17f9227d",
+    "Image/UI/Common/Common_Atlas/BtnScreen_Sel.asset.meta": "71966c65cf93d313d88e2c21157ca829997dc1f8ab87e9292c3eebc1ff0d3177",
+    "Image/UI/Common/Common_Atlas/IconSort.asset": "0029ddec381f00c76b738bf41aa9dc65dc4efb68c73d86ef538c349b02359791",
+    "Image/UI/Common/Common_Atlas/IconSort.asset.meta": "f067d9c6e1c47a1fc2ffab058fc809074ece5abdab8bd5d1d007512c9c7d49a5",
+    "Image/UI/Common/Common_Atlas/BtnScreen_Nor.asset": "4af8d07a82068f817fde3cb4750080ed2f6985c7d81c7f26dcb5c9bf95bf7ccf",
+    "Image/UI/Common/Common_Atlas/BtnScreen_Nor.asset.meta": "9492bea278919b6425b6e69dd7663a1674c552af078350a36c2840abc7757452",
+    "Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3_0.asset": "9bc2d98bf82b9d1a47c9217efb7d03c4a23390a0b4966dca553bbf9708c12069",
+    "Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3_0.asset.meta": "fc2de4c689a9e1a402f70b4a054aa6700650c2cd7c182f32d3b2a0d17db58a2d",
+    "Image/UI/Common/Common_Atlas/ImgBgScreen_Resetting.asset": "877e16c61769be6862e26849798bc379d89cf1ad61c71022c4498d15a5baf1a3",
+    "Image/UI/Common/Common_Atlas/ImgBgScreen_Resetting.asset.meta": "ff821b1d9fdc8e98a334c7f7f76741db30342274a9fd78417c1f705de7b8de45",
+    "Image/UI/Common/Common_Atlas/ImgBgScreen_Fillet.asset": "b90d0dfb67239c1dddaefc8ffaa4092c5b425c9714924e11631509ccc11fe8f5",
+    "Image/UI/Common/Common_Atlas/ImgBgScreen_Fillet.asset.meta": "161bc27c05d31be7c253bc30bb9c2155d863e81099590777dee8ad9376e00928",
+    "Image/UI/Common/Common_Atlas/ImgArrow.asset": "7d654b48d388997e576737506b09f5df3fffe811eaa38bb59d8a9be8face002f",
+    "Image/UI/Common/Common_Atlas/ImgArrow.asset.meta": "4aa48e936dcb1642636b2ab77571800a8afa2d3c9bea597ad0391419a0877690",
+    "Image/UI/Common/Common_Atlas/ImgSwitchItem.asset": "268713d91ea15c8b6806a96957d5459fa55cdefa7fbc64658ee160b8b75cc6fa",
+    "Image/UI/Common/Common_Atlas/ImgSwitchItem.asset.meta": "088e69df464c09a7f5888629e98ffd4fd40c01066c85f87ddb876463ee099540",
+    "Image/UI/Common/Common_Atlas/BtnCheck_Nor_0.asset": "4ada045ce248ecd53e1a76a1a7a887ae741ba6f4c5dec3fee5b30110e6b7f5c2",
+    "Image/UI/Common/Common_Atlas/BtnCheck_Nor_0.asset.meta": "5758a5b6c426862c9c789b7ac21a9af665eb702ccbfaddcc2a1fe8c1d4e3ab56",
+    "Image/UI/Common/Common_Atlas/BtnCheck_Sel_0.asset": "952289f13b045774c304d2c383eb174e1ac0df85b69b24cf10ecd7a71bc45450",
+    "Image/UI/Common/Common_Atlas/BtnCheck_Sel_0.asset.meta": "3fd7cc12cbb5b0d9c6b22bd711a389e8c8d35708117a7462191c006fa1ced989",
+    "Fonts/FZY4K.TTF": "90023872dffe6a58503de655bd0631bf3334ce3b6b72cc75a6625b685c94c386",
+    "Fonts/FZY4K.TTF.meta": "a7c7c6a82975ee2ff324273fda091a78662752c2c269b550883bb3602ed4d3c7",
+    "Converted/409f5b7a08357fee.asset": "d33dd4c8acb0d04e51ffadb02acbf0cb8d5429d729bfc50b6c22c4a2b702eecb",
+    "Converted/409f5b7a08357fee.asset.meta": "0f1a0d87331f604071beb656b7ba0f8a19188eb50c94b629856d3893922af911",
+    "Animation/UI/CollectBook/BaseCollectBook_None.anim": "8751e904e4986a7c5b1f07887cbb0fab02ee1482e2cc422ea93a7f24c4834918",
+    "Animation/UI/CollectBook/BaseCollectBook_None.anim.meta": "63be5d809a01b0e662d98348f1b59183444876f8b84076be1bd574635f861315",
+    "Animation/UI/CollectBook/BaseCollectBook_Open.anim": "63eaebaeec28e17a9741494d1fd749f39d9fa008a40649a15116487b897459ba",
+    "Animation/UI/CollectBook/BaseCollectBook_Open.anim.meta": "a222aec7574d8c94541f7fa52b6fabd6ae59e72df8421f18003c82c30d6866a2",
+    "Animation/UI/CollectBook/BaseCollectBook_Close.anim": "ef488a56ef06e615c9a0f5623802b83177b30e1760836b5115c3e62a09cd8f82",
+    "Animation/UI/CollectBook/BaseCollectBook_Close.anim.meta": "65b7a0dd12276cd706c9929f708a71a725f2e8a569c5549cdb57ee69dca03956",
+    "Converted/65b73523b080e5e7.asset": "d9fa5cf869d6674d386c40c1b773c0870096d049d1a980b1f257a976548b0446",
+    "Converted/65b73523b080e5e7.asset.meta": "72b156950e249ca94ae8df0294acf646dfd1ccf163fc31211826fe6343664471",
+    "Converted/ac573a40fda4c096.asset": "3c2d4082c52c96edb636f8e4a27bd11616b531b1ed30720d662b2d1d2201f8c9",
+    "Converted/ac573a40fda4c096.asset.meta": "b71cc69e4e7b0aa71c456069f3af2c24e9fa2e5e8063bc518898d587e21aa8aa",
+    "Converted/f2e1ff40e17239bc.shader": "6175d73864092e26c113b2a49d5379d8b72dd5f0e5e413765530ff0b1f1268dd",
+    "Converted/f2e1ff40e17239bc.shader.meta": "27703de905d15cfcf3d083497232d903db7f44f0129e77c859e0847e12c5516a",
+    "NpcRosterContent.prefab": "77db167c167a2147191481151995a431862d753f412f8711c36f209b630561d0",
+    "NpcRosterContent.prefab.meta": "efe86c6472d56357ff7a701be73d58b92d429f9f735aa26ff3345c5daf20c5a7",
+    "Audio/Main_Cursor_Normal.wav": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
+    "Audio/Main_Cursor_Normal.wav.meta": "8f9ab35bdabe4e299e08971087abe7052acd77da183cb640c1e58a84a1893ba7",
+    "partner-roster-texts.json": "1e91da9a273d65b4d50433d21ed24868000a5f94d2b978642fe65fc462b86e10",
+    "partner-roster-texts.json.meta": "dde50ea7662dcc1e5ce31aa2b3f86b9163e33feb64969b5ea55c8ff72d8e4c8c"
+  },
+  "native_recovery": {
+    "manifest": "884_156692",
+    "bundle": "defaultpackage_assets_prefabs_ui_npc.bundle",
+    "stage": "Recovered original hierarchy/fields only; runtime script and resource binding pending",
+    "generator_sha256": "ee30c4ec65a5916cdde9927bc46f0980eb9435682d46e7b311ffc0be2917e580",
+    "component_cache": {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/component-fields-all/source-manifest.json",
+      "sha256": "c82db6a6903d36856807688d11573793cdaef98d1da13d0d6108b6f3f04aeec5"
+    },
+    "prefabs": [
+      {
+        "name": "NpcPanel",
+        "originalRoot": "cab-2b0348e1ff451d425e25e4ffbf1b133f:5196666809939467722",
+        "originalSource": {
+          "bundle": "defaultpackage_assets_prefabs_ui_npc.bundle",
+          "bundle_hash": "2212f712f2ca157310ba8577a8c36879",
+          "path_id": "5196666809939467722",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2212f712f2ca157310ba8577a8c36879.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 1079086,
+          "bundle_sha256": "a8847b99610c4b5e86ee8699e912c7cbcba059b065cef6a3ec0f3680861bebcb"
+        },
+        "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Npc/NpcPanel.prefab",
+        "native_sha256": "a279b3532f096dbd5470772f4884045ab3bcc23f1b9fa8457f35931512cc49cb",
+        "mapped_objects": 2962,
+        "recovered_components": 44,
+        "unresolved": 5,
+        "pendingBindings": {
+          "cab-2b0348e1ff451d425e25e4ffbf1b133f:5043122933981093025": {
+            "type": "AnimationClip",
+            "payload_sha256": "41ec61f6a281eb0d0b8d8fa8afc447bcdfa402f9da630fb7d1e271e23a0157e4",
+            "name": "NpcPanelDialogueItem_In"
+          },
+          "cab-2b0348e1ff451d425e25e4ffbf1b133f:-2245767671925989990": {
+            "type": "AnimationClip",
+            "payload_sha256": "0354fbfd29811c7e72ec508880c6fac3c86250a21ef58d4de07800a6644831d8",
+            "name": "NpcPanelDialogueItem_DialogueItem_In"
+          },
+          "cab-a5793799a60a3d47ab715c21c5c50156:-1945510921484628578": {
+            "type": "MonoBehaviour",
+            "payload_sha256": "dc5fd868f58a22538d64a5dd2e8556e9a7c42b54af283509665d3d129ea0a732",
+            "name": "[2][State]伙伴切页是否有提示"
+          },
+          "cab-a5793799a60a3d47ab715c21c5c50156:1650305864680607134": {
+            "type": "MonoBehaviour",
+            "payload_sha256": "475f8e441e4a9c8252e23d6dde30e27b5d59486ae1bba7664970e9a3ca091d6d",
+            "name": "[5][State]星神Npc是否有提示"
+          },
+          "cab-a5793799a60a3d47ab715c21c5c50156:-6707414203850814050": {
+            "type": "MonoBehaviour",
+            "payload_sha256": "4496c4ec4a0e88a4b85670979a8a2c7d2958fd25a35ae62076a5a0913048f588",
+            "name": "[3][State]通话切页是否有提示"
+          }
+        },
+        "output": "NpcPanel.json",
+        "nativeMeta_sha256": "c5174f6d97932eaddce9f733e576f038ac900478edd5787053d84d52d92363f2",
+        "output_sha256": "7f4653499d7002b93c3b94620c8455eaebe59afb3611babb465c73c5f0c6c2c4"
+      },
+      {
+        "name": "NpcPanelNpcItem",
+        "originalRoot": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-2952123314001349233",
+        "originalSource": {
+          "bundle": "defaultpackage_assets_prefabs_ui_npc.bundle",
+          "bundle_hash": "2212f712f2ca157310ba8577a8c36879",
+          "path_id": "-2952123314001349233",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2212f712f2ca157310ba8577a8c36879.bundle",
+          "manifest": "884_156692",
+          "bundle_size": 1079086,
+          "bundle_sha256": "a8847b99610c4b5e86ee8699e912c7cbcba059b065cef6a3ec0f3680861bebcb"
+        },
+        "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Npc/NpcPanelNpcItem.prefab",
+        "native_sha256": "34d40c30f745d6bbb72d72378ea1b51bc199731115f9ac65a2ad2c207c92d875",
+        "mapped_objects": 306,
+        "recovered_components": 6,
+        "unresolved": 2,
+        "pendingBindings": {
+          "cab-8ede2c00df79c3aff9bab2859b047085:2407862946138625182": {
+            "type": "MonoBehaviour",
+            "payload_sha256": "e9906f6627226d42df576c6558761776fff99a540ec2e48bf8b18185eff79ba1",
+            "name": "1DF9BC68-508C-4318-906E-EEFEEB76AEA5"
+          },
+          "cab-a5793799a60a3d47ab715c21c5c50156:-8464011310014223809": {
+            "type": "MonoBehaviour",
+            "payload_sha256": "f41f72c0cec41c769477aefdebb5c095e48291d06bcc05e56eed526740e37221",
+            "name": "[1][State]Npc详情页是否有提示"
+          }
+        },
+        "output": "NpcPanelNpcItem.json"
+      }
+    ]
+  },
+  "template_selection": {
+    "consumer": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-7807309474028118582",
+    "field": "mNpcListGo",
+    "source_root": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-2382834429350896182",
+    "native_root": 1519819979147140,
+    "mapped_objects": 1159,
+    "source_name": "NpcList",
+    "original_parent": {
+      "fileID": 224782363952479950
+    },
+    "detached_parent": {
+      "fileID": 0
+    },
+    "adaptation": "Exact original referenced roster subtree; detach root parent only. Complete hierarchy/geometry/fields retained."
+  },
+  "roots": {
+    "NpcRosterContent": {
+      "fileID": 1519819979147140,
+      "guid": "5b1d85e19312db8e665b0fb48561eca9",
+      "type": 3
+    }
+  },
+  "script_bindings": {
+    "MultiLanguageText": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldMultiLanguageText.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "231cab3c6fd951b7a2d14633a5465cbf",
+        "type": 3
+      },
+      "sha256": "490825671794bffc638d37170ab39c2e1523cd8bbfdb016cf4bf4e0966ea63ad",
+      "meta_sha256": "b3800ddfd9284bb2c13282b37175e83c6b21673564bc1683db546fc6cd6e2d38"
+    },
+    "NoDrawingRayCast": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/NoDrawingRayCast.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "ca63bc8db6d14902aadb5682859d849b",
+        "type": 3
+      },
+      "sha256": "4bd9084774d21b8a2b3bcde63358a0f1d4143c719172cf38c508c23d4b00ce57",
+      "meta_sha256": "5e7d19cee4ab59b784b51609205c2de4b78365584e30f1b8128de85bf5aab8e4"
+    },
+    "ButtonSound": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldButtonSound.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "7ca1062a147dbcee6f3b4734289d7e9a",
+        "type": 3
+      },
+      "sha256": "7f036dd701cc8f2ecdf9d45c6a14669b2863bb6a80a47bd1ee9efce04838c58e",
+      "meta_sha256": "e0206e2f91719f5c462d3975621de510f269a14d6a3d9eacd00d086326933b9a"
+    },
+    "TMPro.TextMeshProUGUI": {
+      "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TextMeshProUGUI.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "f4688fdb7df04437aeb418b961361dc5",
+        "type": 3
+      },
+      "sha256": "f25b03386b3b6eaef0f6f164ae0230b74f09ea53145fdf8bcb6d4a01786af425",
+      "meta_sha256": "dabd328cbb3096519a4356686931a62663f4c934771d9525260ca4d6972620fd"
+    },
+    "TMPro.TMP_FontAsset": {
+      "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TMP_FontAsset.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "71c1514a6bd24e1e882cebbe1904ce04",
+        "type": 3
+      },
+      "sha256": "4944761e316e6c3e6053507283f4c1b310dd47312830346ef7efc4715ac403af",
+      "meta_sha256": "788d1b900702d38deac8b40940ddb3f065752ee2a1bbb9714dc2a63c6b669e12"
+    },
+    "UnityEngine.UI.Button": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Button.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "4e29b1a8efbd4b44bb3f3716e73f07ff",
+        "type": 3
+      },
+      "sha256": "e8f00d2c3b759c08408c97c75084e065a2a539662783b7f5835fae5d937e9e26",
+      "meta_sha256": "4430ccd81a742991bc19d4d0d230d7cc8e3c928673e3d98ba1d944f27a673415"
+    },
+    "UnityEngine.UI.Image": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Image.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "fe87c0e1cc204ed48ad3b37840f39efc",
+        "type": 3
+      },
+      "sha256": "351dd72516d240f5722c55f72f8e95a0a92cf71e83358bbc922eee47bdb78502",
+      "meta_sha256": "5d5268c445723f854020175a8fdfe91d4ca7fbc62f360438d4224a3ecca32066"
+    },
+    "UnityEngine.UI.RectMask2D": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/RectMask2D.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "3312d7739989d2b4e91e6319e9a96d76",
+        "type": 3
+      },
+      "sha256": "9433b86119e688f9e413190ce2d6b3b0155d9f5e6d4770b59076cb45e6fb2b80",
+      "meta_sha256": "bc64a6ac2fb2ba78b9093564f028ca145929afe31b0e752ab489334134a08b91"
+    },
+    "UnityEngine.UI.Toggle": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Toggle.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "9085046f02f69544eb97fd06b6048fe2",
+        "type": 3
+      },
+      "sha256": "83fba5c173bc5b694df5a36ac46a16bf65bef5f119b1f1c835e59cf2cbdd2a69",
+      "meta_sha256": "72bce650a1d76dddfeaf21a14ec42199abc3b6050c86d682d9b07276e4cf2e9b"
+    },
+    "UnityEngine.UI.ContentSizeFitter": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/ContentSizeFitter.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "3245ec927659c4140ac4f8d17403cc18",
+        "type": 3
+      },
+      "sha256": "a6b30a3b6e697524ce16f07e1807e870faf8d0c3e8c43004474eb5b8bb3c887b",
+      "meta_sha256": "0fedd1ac89e603605d4632d8b992eeb450e1b0a82dcf16dc3fd9d4bb5acee9f7"
+    },
+    "UnityEngine.UI.GridLayoutGroup": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/GridLayoutGroup.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "8a8695521f0d02e499659fee002a26c2",
+        "type": 3
+      },
+      "sha256": "2386578edb132a9405c23dfd4f2c6383b978595777bfa80499cf2acd257ad94d",
+      "meta_sha256": "36e7cc6a16f9d519f5ff0d674de0df5cb312d4dc1149b779a8ba8b90ac59cbaf"
+    },
+    "UnityEngine.UI.HorizontalLayoutGroup": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/HorizontalLayoutGroup.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "30649d3a9faa99c48a7b1166b86bf2a0",
+        "type": 3
+      },
+      "sha256": "60c993b71761a9b431b8321f58ef397a100cd0f7febcf4d82c3e82e30b58459b",
+      "meta_sha256": "6056786a4f956f0ecf2c9a50b877b43200f97b28e1f2d97aceef2e38c453a3a9"
+    },
+    "UnityEngine.UI.LayoutElement": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/LayoutElement.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "306cc8c2b49d7114eaa3623786fc2126",
+        "type": 3
+      },
+      "sha256": "c6e88f6d086a6dfc4111a03024ea1279d6d2c6b755e0a5df50f64dfa06edd732",
+      "meta_sha256": "10054a60194f0eb3ad44e4448e6a985b477e5d3421055976067aaefaafdf7653"
+    },
+    "UnityEngine.UI.VerticalLayoutGroup": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/VerticalLayoutGroup.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "59f8146938fff824cb5fd77236b75775",
+        "type": 3
+      },
+      "sha256": "55ec0610da9479b4752008b23990fe486df9df4ff78958f92027edf86906d035",
+      "meta_sha256": "9d257813a1280923de2cd30de064f0f4487036b6f80435b97caca6776d0f47cb"
+    },
+    "WwiseEventReference": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/WwiseEventReference.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "eda62e0b27051dfd578214e537c3c072",
+        "type": 3
+      },
+      "sha256": "7c7b698a69a8d3eb424dc94a32ab91b7364ca923979f89be53d405ee5f6d9942",
+      "meta_sha256": "f393e1af77160cb98a16b745897e728620a26cafe5e3033cf0c2d23196a428e3"
+    },
+    "CollectSortGroup": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/CollectSortGroup.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "41112c8f25cf37ddeda82e44269451d1",
+        "type": 3
+      },
+      "sha256": "fb5f6d805e98f496b1bc983f7f33dddbb330153de96dae53592625e2d6084ce1",
+      "meta_sha256": "6b6e31934111e08ec20e341a4925f6b1d3a663da906cf238edb7761eb0341771"
+    },
+    "CollectSortGroupItem": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/CollectSortGroupItem.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "9753a7b3eb6c2e2ae2f889ea96a19791",
+        "type": 3
+      },
+      "sha256": "5c96d57af9849a21cf0bf538a921349533c8232b55c28aeda5e621c15b8d7a16",
+      "meta_sha256": "e9450fe21ecbab0b585b226e1774b112ea9442cfcfd5d3e8ec11f52393a27f5d"
+    },
+    "FilterGroupForProfession": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/FilterGroupForProfession.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "4f55c1c2b14c2d1036257e52b35b1a25",
+        "type": 3
+      },
+      "sha256": "f61e85fb33ae1da64cc74d7b61648102867a2012fc1980e9e4fd0f2109556272",
+      "meta_sha256": "1f92d33553706a8f0a449b9454a2c53a1bb7127b373671cc53425b0d5a1e66dc"
+    },
+    "FilterGroupItemForProfession": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/FilterGroupItemForProfession.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "d007a00b439ef5d1763c3dde9be7f9d1",
+        "type": 3
+      },
+      "sha256": "6ca98f00f178cd1fae1a2fc6edc50bc0cdb67bdb9d54f0b2b2ad16365284ce18",
+      "meta_sha256": "628a19d51a5967c0a9357d5fd1818d2a2607da7a34b924b4787e641f33c17784"
+    },
+    "FilterGroupForItemType": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/FilterGroupForItemType.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "b5201063ee5f90795f6237abcf895f86",
+        "type": 3
+      },
+      "sha256": "333599772ae41f77a62d2e4e1e0e011b141d702122d9ab556ae718d11c8bb760",
+      "meta_sha256": "b04f1fdc2c89f0ad7cef44bf4da4c56523371e5b9d3caa0d91682491e2bc4d3c"
+    },
+    "FilterGroupItemForItemType": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/FilterGroupItemForItemType.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "bbc4d209ead35bc65576f7e2eecb0756",
+        "type": 3
+      },
+      "sha256": "b75461e0dd577937ee0e37310d9756c86ff3f526f76853cac3281e68f21b2ded",
+      "meta_sha256": "ae377880feb83a60cf7bd0843596acdd5422bcfe364e9db51812e1f80a6366ca"
+    },
+    "FilterGroupForQuality": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/FilterGroupForQuality.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "6990afbe674affe79b3f59c6852328a2",
+        "type": 3
+      },
+      "sha256": "1ea5b345a3d04c87c6715d9ec1d35f7c3fa50416690bbf637d62262672fdf9b0",
+      "meta_sha256": "ec8e396a145d3056a395183755b9d10494b32a22113e4298661a85e0df2c0fbf"
+    },
+    "FilterGroupItemForRank": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/FilterGroupItemForRank.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "0489edb88c6d9cb9ddb405c16aba64a6",
+        "type": 3
+      },
+      "sha256": "7771a8243186e7c6d4cc5a9cda2690a858fa018ae81dd5274463c7d7c7189baf",
+      "meta_sha256": "3eec6336bf4f38d898bb1822e127fa06c0ae6137756dd205ed45265b09a057f3"
+    },
+    "FilterGroupForElement": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/FilterGroupForElement.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "5724b50cca7de3cb46a4532478d6d0e3",
+        "type": 3
+      },
+      "sha256": "d298e153c2a7d2b067e4856d263731d396c7d790383b84b796e1bc3c53509c90",
+      "meta_sha256": "060929d54d2764370188f7fa2848f39680f2581c5b7292763653e6509b013719"
+    },
+    "FilterGroupItemForElement": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/FilterGroupItemForElement.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "1792227c7e7ad3e314ef5cc048cc0a5f",
+        "type": 3
+      },
+      "sha256": "f770763337ece65f0edc5f1a6004f2d18f1dd2c3b149b347f40eb960f1772842",
+      "meta_sha256": "c48df7175b341de7f42f5ebba58db0b22fa22a2798780a83edf04ce74e02c9f1"
+    },
+    "FilterGroupForProperty": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/FilterGroupForProperty.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "cc77b359c1cab44a66e7ed1b8414aaaf",
+        "type": 3
+      },
+      "sha256": "d3b3080a39dd8096d0f7d56acb615c728c4b6e85b8cdb443811c52f4a0cd5ae5",
+      "meta_sha256": "90473c5a47d23e4fa6e082f830e4f2717ed03fc139f721c4ea97222f7a0ecfa8"
+    },
+    "FilterGroupItemForProperty": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/FilterGroupItemForProperty.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "4210569012dbf296f80948dc76550f2c",
+        "type": 3
+      },
+      "sha256": "70c77647acf8b01b633899d2d24c26a11a16d5ead57f511e81d671bdfae655a0",
+      "meta_sha256": "99139a5df497045839796a2ce6de14212263ef29527a1177827f6bea173ab8e8"
+    },
+    "SwitchShowBtn": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/SwitchShowBtn.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "06969f3d3e80a821bd9e1d5b1de1c345",
+        "type": 3
+      },
+      "sha256": "7d46b1d86f81f1f360fdd97e63bcd515b4eaf301a45f7a8f568a881357ea96e3",
+      "meta_sha256": "2cd95b9d529a879fee7f16b19eb14f3e4b1373f66739ea7121b594c4f1b88269"
+    },
+    "MultiTextsControler": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/MultiTextsControler.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "6a4ab62f7241f160596cf5714c9daf95",
+        "type": 3
+      },
+      "sha256": "39096137d10694841fc840be128c4d50082c3724d7a1696496cfbe5994ed8b41",
+      "meta_sha256": "ace8482c540aa980c61367177fb5662b3dd16adf64910074474457ac69cc7f07"
+    },
+    "FilterSortPanel": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/FilterSortPanel.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "815d5c56382fc95392171d07f7950302",
+        "type": 3
+      },
+      "sha256": "156eddeec2b39be129268e1279532e0d72c4164557b911d63bfbf7fb8006b2e5",
+      "meta_sha256": "873ca40a69c0c4502550cbf78cf82648c512865c99ed9c9356035017ac432b39"
+    },
+    "ListItemShowSequence": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/ListItemShowSequence.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "2f503ced864e2aa7942aa5356e5a1c7d",
+        "type": 3
+      },
+      "sha256": "364eedcf576065785227b1b48e2610ac9bbd5a857f4ca95f97e7a40bcef87789",
+      "meta_sha256": "d2ee7fe624c22b89049e497a3306d21642df2e25770720b71f474190d5d39522"
+    },
+    "NpcPanelNpcList": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/NpcPanelNpcList.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "65b4841dc2f6a2532c73a46428b16e09",
+        "type": 3
+      },
+      "sha256": "b312f1990b17ffee58acb07ee443e943dada74494100928c178c30e986f38fb6",
+      "meta_sha256": "56a4c2f9cf1072d91b54a806201e2ae5fa9fde3df47b0d5252a7ea75aedac98a"
+    },
+    "UnityEngine.UI.LoopVerticalScrollRect": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/LoopScroll/LoopVerticalScrollRect.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "9209043607036019f5b633b9980a2359",
+        "type": 3
+      },
+      "sha256": "018aabd5d9ae3b903dd6248db707742d38522d946d677230f87c56753f3a85fa",
+      "meta_sha256": "414507773dc7d18d769163ee0efe43b0c656b159f60ca4884b6b40478ef33649"
+    },
+    "LoopScrollGridLayoutGroup": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/LoopScroll/LoopScrollGridLayoutGroup.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "9077ca8d802a2c57efd082697269d582",
+        "type": 3
+      },
+      "sha256": "98f2cbcd596f5e32e8afcb2e274410db7b108d595cf46f10c651b2a33c379f7c",
+      "meta_sha256": "4beb9881264f612d2a3b48fc134cab0ed870cfc9bbc11a182348889e70c4610f"
+    },
+    "UnityEngine.UI.Ext.TabGroup": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldTabGroup.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "7025e6658f4d59c69dbe84a5c559859e",
+        "type": 3
+      },
+      "sha256": "5216b3822697780a8eeaeb556fd4f76a5cb6416c62267bbcd4b80f91b398aec1",
+      "meta_sha256": "9ea696c56ce338f277afe9e180296f7e4e1755209ee3ce542dd9b2a1814ef8b8"
+    },
+    "UnityEngine.UI.Ext.TabItem": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldTabItem.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "40e873e3119e5372aa62f9679d2a0522",
+        "type": 3
+      },
+      "sha256": "94193dffaef1ffa1c416a53c229a5d07c9266a447b426f71f0e5fb772ff0f80e",
+      "meta_sha256": "95720001af0bbe35ab272c64026c6ca9fcb8f4ace717e16dba6f870a0bb43e10"
+    },
+    "UnityEngine.UI.Ext.TabObjectTransition": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/TabObjectTransition.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "c589ac30419039726b93709225878b43",
+        "type": 3
+      },
+      "sha256": "a95e466ab96dad47e6ae67f4558911611a258ec298f07628d0e6b917b326094f",
+      "meta_sha256": "bbba65c95573e7c5f244f80c9902dd4914ccf573d03eb6b4a8cb4de89f9a8405"
+    },
+    "UIToggle": {
+      "path": "unity/Assets/Game/Runtime/Official/SkillsUI/UIToggle.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "4a85e1dd4cf052328b71669240b941c5",
+        "type": 3
+      },
+      "sha256": "f870e981f124b5b32d53e4c656f7edcd09f21c26558517a1c7c8ec16ebfa9f3c",
+      "meta_sha256": "dc504492ccb7832eecc6a4f921c77340142f1891ca7bc00afd1077efafdb8fd0"
+    },
+    "UIClickSound": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/UIClickSound.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "26fc32eae8ae20e4c3ce956f63542480",
+        "type": 3
+      },
+      "sha256": "5e460e8158f9f9a033cbbf48cbd78c806f03ddce8edf3a5e16c5bcedd659af60",
+      "meta_sha256": "25f235fd858a0ed2bee3d28973598c5465164602084a358aa45ef45837e15ebf"
+    },
+    "LayoutElementClamper": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldLayoutElementClamper.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "af15cc145e0c5ce081a320cbc5d9d74d",
+        "type": 3
+      },
+      "sha256": "250d04905b53b80c55f8c384c4eb29c9dc0feea11e64d9354dcf6f5e0ff6940c",
+      "meta_sha256": "47bd284bfc1638c77d1032b87587a00b7a6cd3b9bfe5cf62c05599a185950d87"
+    }
+  },
+  "generator_sha256": "6401a3c223a65aa968a80a7c62087ba79ac8d77763e7c956dabc17ebad97a873",
+  "audio": {
+    "cab-8ede2c00df79c3aff9bab2859b047085:5924382417553736613": {
+      "event": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -1230300647802800322
+        },
+        "m_Name": "ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3",
+        "objectName": "Main_Cursor_Normal",
+        "id": 3772241779,
+        "guid": "ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3"
+      },
+      "original_sha256": "aa98c17ed13ff350c43219d39320b67f9927ab0ac8c844b798e80bdda51f3dfe",
+      "source": {
+        "bundle": "defaultpackage_assets_wwise_scriptableobjects_event.bundle",
+        "bundle_hash": "d0ea86beaa052471f6138a9bddaa19f0",
+        "path_id": "5924382417553736613",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/d0ea86beaa052471f6138a9bddaa19f0.bundle",
+        "raw_size": 440942,
+        "raw_sha256": "c4009d466fcf8199fd5c4b7ba92f9915f0509ced7ea74c28ddec8b4867a6970a"
+      },
+      "bank": {
+        "id": 3844515483,
+        "language": 0,
+        "path": "Audio/Banks/wwisebnk_assets_wwisedata_android_minimum_pck.rawfile/3844515483-0.bnk",
+        "sha256": "caebe0a00e8b21f1fcdacd3a1a9c24beca84d9b1c04e71f60318217e30c3381c"
+      },
+      "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+      "txtp": "../banks/3844515483.bnk #s2 #i  #v -6.0dB  ##80286812.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0020-event.txtp\n# - banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[20] 3772241779\n#\n#     CAkActionPlay[19] 1026573382\n#\n#       CAkSound[1] 983794440\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 80286812\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n",
+      "gain_db": -6.0,
+      "media_id": 80286812,
+      "pcm": {
+        "channels": 2,
+        "rate": 48000,
+        "frames": 7200,
+        "sample_width": 2
+      },
+      "output": "Audio/Main_Cursor_Normal.wav",
+      "output_sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
+      "pointer": {
+        "fileID": 8300000,
+        "guid": "a349287c39df984af5f51e2338d53e9f",
+        "type": 3
+      },
+      "tools": {
+        ".tools\\wwiser\\wwiser.py": "6a12fb9ba8ae3dc0724bfdcbf1ab1657e39e9c60e6bea091275cf044e3267323",
+        ".tools\\vgmstream\\vgmstream-cli.exe": "10fb0691538d3133f0115a071f89775fc99f32210b7e5991cfc3c2869247e4b2"
+      }
+    }
+  },
+  "font": {
+    "region": "CN",
+    "language": "zh_CN",
+    "name": "FZY4K SDF - dynamic",
+    "font_asset": {
+      "fileID": 11400000,
+      "guid": "b088a249154abaf4e9a07cad25d5aef4",
+      "type": 2
+    },
+    "source_font": {
+      "fileID": 12800000,
+      "guid": "361d52fe7fad65d6413db534072fdf5c",
+      "type": 3
+    },
+    "source_font_definition": {
+      "FontPath": "Assets/TextMesh Pro/Fonts/FZY4K.TTF",
+      "RawFontPath": "Assets/TextMesh Pro/RawFonts/FZY4K.bytes",
+      "Hash": "11a2dd2b22891535ec398a00c33ab4e1",
+      "Length": 10017464
+    },
+    "configs": [
+      {
+        "source": {
+          "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+          "bundle_hash": "5718b6f06136fd5c5d48fe6f02b618a9",
+          "path_id": "-6461299786733695581",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/5718b6f06136fd5c5d48fe6f02b618a9.bundle",
+          "raw_size": 415026,
+          "raw_sha256": "fa69dba3a3410b074ae45b79b6b3db3774223c11d3fae9b52c214b1881af8b8a"
+        },
+        "original": "cab-43221b4d126447a2b398f3477e814a2c:-6461299786733695581",
+        "original_sha256": "dde5715dcb061a826bbba0bda0ee2185a03fa959379803410e7cd048615c6c8e",
+        "path": "Assets/TextMesh Pro/Assets/Fonts & Materials/MultiLanguageFontConfig.json"
+      },
+      {
+        "source": {
+          "bundle": "defaultpackage_assets_textmesh_pro_rawfonts_fontassetfontconfig.bundle",
+          "bundle_hash": "21b128d62ad3efaa58f4f7fc04aa979f",
+          "path_id": "6242301411135133937",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/21b128d62ad3efaa58f4f7fc04aa979f.bundle",
+          "raw_size": 945,
+          "raw_sha256": "7a34d3bf237df94442a7e5681b52e83c2785228c1f6a54560a2d27e4f9338ceb"
+        },
+        "original": "cab-239b5290b6b31b4f6678dc9ce6ee2394:6242301411135133937",
+        "original_sha256": "bb346460c9200a1bab8421812ed0071e832bd67dda00e390f21c27f532b132ef",
+        "path": "Assets/TextMesh Pro/RawFonts/FontAssetFontConfig.json"
+      }
+    ]
+  },
+  "shared_card": {
+    "original": "cab-2b0348e1ff451d425e25e4ffbf1b133f:-2952123314001349233",
+    "original_sha256": "521b91a3ec0d4b3650680a602b1e61f5ba09a58c789bf4a12e6207bf139cc51c",
+    "reference": {
+      "fileID": 1709254077376921,
+      "guid": "ab1e20c5f8691ae4e30b3e07568ebc93",
+      "type": 3
+    },
+    "receipt": "assets/reference/partner-card-binding-source-manifest.json"
+  },
+  "animation_script_bindings": [
+    {
+      "original": "cab-d6ceaa1943d569c2c6051701baec36b6:-4448497653027179337",
+      "sha256": "91042425efefa4ad8ce1df6db9f06df042e07c8f4524fbb5a7c539e112d17cdd",
+      "native": {
+        "fileID": 1392445389,
+        "guid": "d3e719b59ab71ba3f6b398058c866280",
+        "type": 3
+      },
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "4e29b1a8efbd4b44bb3f3716e73f07ff",
+        "type": 3
+      },
+      "type": "UnityEngine.UI.Button"
+    },
+    {
+      "original": "cab-d6ceaa1943d569c2c6051701baec36b6:3342380008012313180",
+      "sha256": "aac61ac368b2957fbea7c43c0671021e6ba25011f2b621113a8e367dbbc74031",
+      "native": {
+        "fileID": -1919275775,
+        "guid": "7aa338e2f5263348de25eb85a28aad0d",
+        "type": 3
+      },
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "ca63bc8db6d14902aadb5682859d849b",
+        "type": 3
+      },
+      "type": "NoDrawingRayCast"
+    },
+    {
+      "original": "cab-d6ceaa1943d569c2c6051701baec36b6:350208831926335389",
+      "sha256": "99675d4fbd7698ff1cc99aa93d8e632769d16ae1a79243473d964cf438e02705",
+      "native": {
+        "fileID": -765806418,
+        "guid": "d3e719b59ab71ba3f6b398058c866280",
+        "type": 3
+      },
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "fe87c0e1cc204ed48ad3b37840f39efc",
+        "type": 3
+      },
+      "type": "UnityEngine.UI.Image"
+    }
+  ],
+  "runtime_code": {
+    "unity/Assets/Game/Runtime/Official/PartnersUI/TabObjectTransition.cs": "a95e466ab96dad47e6ae67f4558911611a258ec298f07628d0e6b917b326094f",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/TabObjectTransition.cs.meta": "bbba65c95573e7c5f244f80c9902dd4914ccf573d03eb6b4a8cb4de89f9a8405",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/StateAnimatorConfig.cs": "cef10f3aca7071f07ebd200ac851e44a9b4922d121bf2f6938a32a73abacc624",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/StateAnimatorConfig.cs.meta": "56a9fdc7c97c1afd1df81b13688553a621899ab5d8bad8163c6d33beead9afb5",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/StateAnimatorData.cs": "d43668859f4deb03ab38e5e1a638c1474b8217394df65ead899b9a2f4cedf5b3",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/StateAnimatorData.cs.meta": "bee3f34a888ac1706757cd9af03f07f167eae2dba83e8a48403f0ae0243d8b08"
+  },
+  "scope": "Exact original roster subtree and static dependencies; complete NpcPanel host/dialogue/star-god pages are not installed.",
+  "animation_root_path_repairs": [
+    {
+      "original": "cab-d6ceaa1943d569c2c6051701baec36b6:-7295242022764945636",
+      "field": "m_FloatCurves",
+      "curve_index": 1,
+      "original_binding_index": 1,
+      "original_binding": {
+        "path": 0,
+        "attribute": 3305885265,
+        "script": {
+          "m_FileID": 0,
+          "m_PathID": -4448497653027179337
+        },
+        "typeID": 114,
+        "customType": 24,
+        "isPPtrCurve": 0,
+        "isIntCurve": 0,
+        "isSerializeReferenceCurve": 0
+      },
+      "converted": null,
+      "restored": ""
+    },
+    {
+      "original": "cab-d6ceaa1943d569c2c6051701baec36b6:-7295242022764945636",
+      "field": "m_FloatCurves",
+      "curve_index": 2,
+      "original_binding_index": 2,
+      "original_binding": {
+        "path": 0,
+        "attribute": 3305885265,
+        "script": {
+          "m_FileID": 0,
+          "m_PathID": 3342380008012313180
+        },
+        "typeID": 114,
+        "customType": 24,
+        "isPPtrCurve": 0,
+        "isIntCurve": 0,
+        "isSerializeReferenceCurve": 0
+      },
+      "converted": null,
+      "restored": ""
+    },
+    {
+      "original": "cab-d6ceaa1943d569c2c6051701baec36b6:6390555621377199522",
+      "field": "m_FloatCurves",
+      "curve_index": 1,
+      "original_binding_index": 2,
+      "original_binding": {
+        "path": 0,
+        "attribute": 3305885265,
+        "script": {
+          "m_FileID": 0,
+          "m_PathID": -4448497653027179337
+        },
+        "typeID": 114,
+        "customType": 24,
+        "isPPtrCurve": 0,
+        "isIntCurve": 0,
+        "isSerializeReferenceCurve": 0
+      },
+      "converted": null,
+      "restored": ""
+    },
+    {
+      "original": "cab-d6ceaa1943d569c2c6051701baec36b6:6390555621377199522",
+      "field": "m_FloatCurves",
+      "curve_index": 2,
+      "original_binding_index": 3,
+      "original_binding": {
+        "path": 0,
+        "attribute": 3305885265,
+        "script": {
+          "m_FileID": 0,
+          "m_PathID": 3342380008012313180
+        },
+        "typeID": 114,
+        "customType": 24,
+        "isPPtrCurve": 0,
+        "isIntCurve": 0,
+        "isSerializeReferenceCurve": 0
+      },
+      "converted": null,
+      "restored": ""
+    },
+    {
+      "original": "cab-d6ceaa1943d569c2c6051701baec36b6:-4480105965643776953",
+      "field": "m_FloatCurves",
+      "curve_index": 1,
+      "original_binding_index": 2,
+      "original_binding": {
+        "path": 0,
+        "attribute": 3305885265,
+        "script": {
+          "m_FileID": 0,
+          "m_PathID": -4448497653027179337
+        },
+        "typeID": 114,
+        "customType": 24,
+        "isPPtrCurve": 0,
+        "isIntCurve": 0,
+        "isSerializeReferenceCurve": 0
+      },
+      "converted": null,
+      "restored": ""
+    },
+    {
+      "original": "cab-d6ceaa1943d569c2c6051701baec36b6:-4480105965643776953",
+      "field": "m_FloatCurves",
+      "curve_index": 2,
+      "original_binding_index": 3,
+      "original_binding": {
+        "path": 0,
+        "attribute": 3305885265,
+        "script": {
+          "m_FileID": 0,
+          "m_PathID": 3342380008012313180
+        },
+        "typeID": 114,
+        "customType": 24,
+        "isPPtrCurve": 0,
+        "isIntCurve": 0,
+        "isSerializeReferenceCurve": 0
+      },
+      "converted": null,
+      "restored": ""
+    }
+  ],
+  "adaptations": [
+    "Detach only the exact NpcPanel.mNpcListGo root parent; retain every original object, component, field and geometry.",
+    "Bind original MonoScript references by assembly GUID plus script fileID, including animation curve bindings.",
+    "Restore empty animation root curve paths only where original compiled path hash zero, attribute CRC, component type and script identity match; converted YAML null must not become a literal hierarchy path.",
+    "Verify original flat animator states, motions, transitions, parameter types/names/defaults against compiled player constants.",
+    "Reuse the separately verified current original card prefab by its CAB/PathID, native GUID and installed receipt.",
+    "TabObjectTransition and StateAnimatorConfig/Data keep original branches, order and serialized field names; namespace/interface aliases and decompiler enum-arithmetic cast only.",
+    "Retain inactive generic sort/filter options; include the original active Friendship/ActivateTime language entries without inventing missing generic keys."
+  ],
+  "installed_root": "unity/Assets/Official/Partners/UI/Roster",
+  "installed_outputs": {
+    "unity/Assets/Official/Partners/UI/Roster.meta": "846fd9c4ea667a9778c4200a6979797d59f1a4137cd9aae6f386507f42086e33",
+    "unity/Assets/Official/Partners/UI/Roster/NativeControllers.meta": "97619bdd5089e978638e74cacb951f7c5d05f70edf6ba8c4bc37a636b50c7d42",
+    "unity/Assets/Official/Partners/UI/Roster/Animation.meta": "75d6197dacd9c6ca853d2315606d6e69feb8a58bc6c4654d3da77d8cd5626fb4",
+    "unity/Assets/Official/Partners/UI/Roster/Image.meta": "08f7f837b0c890cf1905bd1c533d0251147b3d87287d31b19e0be8f26cb09a1a",
+    "unity/Assets/Official/Partners/UI/Roster/Wwise.meta": "c1b14fc2f2ba56ca2b7250c7d6cf581a21a20cc927a5f27df97c1f484f65f1ba",
+    "unity/Assets/Official/Partners/UI/Roster/Animation/UI.meta": "5626d487a566ccc0f6e7937ba36323433d70f14f9645a40f0020df9c676edd2b",
+    "unity/Assets/Official/Partners/UI/Roster/Wwise/ScriptableObjects.meta": "a9bd4fd04f86e47477b18d24c67f92831e99ac1abe3f7d83d0f063204835ad10",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI.meta": "0e86b9ed4133868972505c1c56d3406eb77da3219e14b01b0d23efdd371626ea",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/NPCFavor.meta": "ba28b94a5a7b9c733007199fb7caece72944764e74a58178c5ef79d1f86405ff",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common.meta": "3b1d958cc0acadf055c8d3f7d19eb2f96fe2bd1aa559a8e2952667a0bb58749b",
+    "unity/Assets/Official/Partners/UI/Roster/Animation/UI/CollectBook.meta": "262bbd51396a8cba91d0026c4e0d76222014683ddb84fe6362d87a5adc183b95",
+    "unity/Assets/Official/Partners/UI/Roster/Wwise/ScriptableObjects/Event.meta": "f108e9eebc3ea2c4148e2605889ce92ab39621171e51554522c92259105cacf2",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas.meta": "2b572b07d114ec3a9c13516e8d71427c2d64113af02c7fae3c719083b52beade",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/NPCFavor/NPCFavor_Atlas.meta": "99e639523bd83ae2aaecd6d5c1ebcb471abf409b9f5370cd757a6410c7574731",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/NPCFavor/NPCFavor_Atlas/ImgBg_Paper.asset": "c83ba48ced51e0d681acafeacfbe8bcca4fe0fe4b4f8c586afe3752eb7838fb3",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/NPCFavor/NPCFavor_Atlas/ImgBg_Paper.asset.meta": "45c925c8622d71f6bf11a5f5e8854b678b1caf89e5b2a5de6ccd7fe12c169ec1",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/NPCFavor/NPCFavor_Atlas/ImgCircular.asset": "d70c55eda520dcb2a617c02d54e9dc84b396292ff7f11b99b05e25c1e86d94d1",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/NPCFavor/NPCFavor_Atlas/ImgCircular.asset.meta": "3f00829416f7a29186c4da0234089dbee2ba509e03479c9cb0470ec458800fc1",
+    "unity/Assets/Official/Partners/UI/Roster/NativeControllers/783515380caa3aa2.controller": "1559fc6258af70d64e39d65c56b34f71fe1950970991a4dbc0d4755e19fb620f",
+    "unity/Assets/Official/Partners/UI/Roster/NativeControllers/783515380caa3aa2.controller.meta": "42a75e9ef0628d4630e21f835742db035d9d3ad29985552381c7101c39a974c9",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/ImgBgScreen.asset": "eda58611d5c3ddb9e34e5544b199816a8a9687a27b1d7393c20cb3a6edbb68ea",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/ImgBgScreen.asset.meta": "ff1c266f11b04a671c39e011bcafea573533b6ab5e80c6d43ecdde6fb8e16ad1",
+    "unity/Assets/Official/Partners/UI/Card/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset": "8371c8c321efb85060bcc96875419a2125babcbeb7c15f34a4dfd2526c3caab2",
+    "unity/Assets/Official/Partners/UI/Card/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset.meta": "ca5ebbdb674cc1b6c076da36edbe7bd84bfa2cbdcc63d98636f68782e0f2b093",
+    "unity/Assets/Official/Partners/UI/Card/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat": "361207bd73188c9fa55778c632ae3ed8459a8eb4f1b81ac88346bcac134464e2",
+    "unity/Assets/Official/Partners/UI/Card/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat.meta": "b632cf8e5e210b2fd2f3a4c3336aeb4a26a4182af86f3b5754e0993b483790dd",
+    "unity/Assets/Official/Partners/UI/Card/Image/UI/Common/Common_Atlas/C_none_0.asset": "fae893cc28b978408f3c9605fa899395950b59600b31616caefdc3465439cb12",
+    "unity/Assets/Official/Partners/UI/Card/Image/UI/Common/Common_Atlas/C_none_0.asset.meta": "f2a0a0e5463d0a7eea10ebb269ef2a126a2e9bc68c74032d1e952b3fcab09980",
+    "unity/Assets/Official/Partners/UI/Roster/Wwise/ScriptableObjects/Event/164C4624-F19E-4DA6-9ECA-4C36A1C1A09F.asset": "d297e068356b4e4520ab018bd64efd5fc63dd3cbef275e07ab1c05f7463ecf42",
+    "unity/Assets/Official/Partners/UI/Roster/Wwise/ScriptableObjects/Event/164C4624-F19E-4DA6-9ECA-4C36A1C1A09F.asset.meta": "7db440ea79982b50b0e934de1804c42d3344a7dffadc0b32981cd7dbdb38d9e5",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/BtnScreen_Sel.asset": "c198efd321b6e1704ae36b80e10f986e5fb2fafaea830bdf810fffea17f9227d",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/BtnScreen_Sel.asset.meta": "71966c65cf93d313d88e2c21157ca829997dc1f8ab87e9292c3eebc1ff0d3177",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/IconSort.asset": "0029ddec381f00c76b738bf41aa9dc65dc4efb68c73d86ef538c349b02359791",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/IconSort.asset.meta": "f067d9c6e1c47a1fc2ffab058fc809074ece5abdab8bd5d1d007512c9c7d49a5",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/BtnScreen_Nor.asset": "4af8d07a82068f817fde3cb4750080ed2f6985c7d81c7f26dcb5c9bf95bf7ccf",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/BtnScreen_Nor.asset.meta": "9492bea278919b6425b6e69dd7663a1674c552af078350a36c2840abc7757452",
+    "unity/Assets/Official/Partners/UI/Gifts/Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3_0.asset": "9bc2d98bf82b9d1a47c9217efb7d03c4a23390a0b4966dca553bbf9708c12069",
+    "unity/Assets/Official/Partners/UI/Gifts/Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3_0.asset.meta": "fc2de4c689a9e1a402f70b4a054aa6700650c2cd7c182f32d3b2a0d17db58a2d",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/ImgBgScreen_Resetting.asset": "877e16c61769be6862e26849798bc379d89cf1ad61c71022c4498d15a5baf1a3",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/ImgBgScreen_Resetting.asset.meta": "ff821b1d9fdc8e98a334c7f7f76741db30342274a9fd78417c1f705de7b8de45",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/ImgBgScreen_Fillet.asset": "b90d0dfb67239c1dddaefc8ffaa4092c5b425c9714924e11631509ccc11fe8f5",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/ImgBgScreen_Fillet.asset.meta": "161bc27c05d31be7c253bc30bb9c2155d863e81099590777dee8ad9376e00928",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/ImgArrow.asset": "7d654b48d388997e576737506b09f5df3fffe811eaa38bb59d8a9be8face002f",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/ImgArrow.asset.meta": "4aa48e936dcb1642636b2ab77571800a8afa2d3c9bea597ad0391419a0877690",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/ImgSwitchItem.asset": "268713d91ea15c8b6806a96957d5459fa55cdefa7fbc64658ee160b8b75cc6fa",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/ImgSwitchItem.asset.meta": "088e69df464c09a7f5888629e98ffd4fd40c01066c85f87ddb876463ee099540",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/BtnCheck_Nor_0.asset": "4ada045ce248ecd53e1a76a1a7a887ae741ba6f4c5dec3fee5b30110e6b7f5c2",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/BtnCheck_Nor_0.asset.meta": "5758a5b6c426862c9c789b7ac21a9af665eb702ccbfaddcc2a1fe8c1d4e3ab56",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/BtnCheck_Sel_0.asset": "952289f13b045774c304d2c383eb174e1ac0df85b69b24cf10ecd7a71bc45450",
+    "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/BtnCheck_Sel_0.asset.meta": "3fd7cc12cbb5b0d9c6b22bd711a389e8c8d35708117a7462191c006fa1ced989",
+    "unity/Assets/Official/Partners/UI/Card/Fonts/FZY4K.TTF": "90023872dffe6a58503de655bd0631bf3334ce3b6b72cc75a6625b685c94c386",
+    "unity/Assets/Official/Partners/UI/Card/Fonts/FZY4K.TTF.meta": "02058a2fe33f24f7f7b87f46ea2187de921da1bdf3687d6a597b89f1ab3337b3",
+    "unity/Assets/Official/Partners/UI/Card/Converted/409f5b7a08357fee.asset": "d33dd4c8acb0d04e51ffadb02acbf0cb8d5429d729bfc50b6c22c4a2b702eecb",
+    "unity/Assets/Official/Partners/UI/Card/Converted/409f5b7a08357fee.asset.meta": "c3b8cbde7da730e461b72ff989241eed5a1a37146f1e0a1b6217779753918366",
+    "unity/Assets/Official/Partners/UI/Roster/Animation/UI/CollectBook/BaseCollectBook_None.anim": "8751e904e4986a7c5b1f07887cbb0fab02ee1482e2cc422ea93a7f24c4834918",
+    "unity/Assets/Official/Partners/UI/Roster/Animation/UI/CollectBook/BaseCollectBook_None.anim.meta": "63be5d809a01b0e662d98348f1b59183444876f8b84076be1bd574635f861315",
+    "unity/Assets/Official/Partners/UI/Roster/Animation/UI/CollectBook/BaseCollectBook_Open.anim": "63eaebaeec28e17a9741494d1fd749f39d9fa008a40649a15116487b897459ba",
+    "unity/Assets/Official/Partners/UI/Roster/Animation/UI/CollectBook/BaseCollectBook_Open.anim.meta": "a222aec7574d8c94541f7fa52b6fabd6ae59e72df8421f18003c82c30d6866a2",
+    "unity/Assets/Official/Partners/UI/Roster/Animation/UI/CollectBook/BaseCollectBook_Close.anim": "ef488a56ef06e615c9a0f5623802b83177b30e1760836b5115c3e62a09cd8f82",
+    "unity/Assets/Official/Partners/UI/Roster/Animation/UI/CollectBook/BaseCollectBook_Close.anim.meta": "65b7a0dd12276cd706c9929f708a71a725f2e8a569c5549cdb57ee69dca03956",
+    "unity/Assets/Official/Partners/UI/Card/Converted/65b73523b080e5e7.asset": "d9fa5cf869d6674d386c40c1b773c0870096d049d1a980b1f257a976548b0446",
+    "unity/Assets/Official/Partners/UI/Card/Converted/65b73523b080e5e7.asset.meta": "dcc531d73332259a5c0f0ef702943cf9b262a9a63d42362d5531ac534e810acd",
+    "unity/Assets/Official/Partners/UI/Card/Converted/ac573a40fda4c096.asset": "3c2d4082c52c96edb636f8e4a27bd11616b531b1ed30720d662b2d1d2201f8c9",
+    "unity/Assets/Official/Partners/UI/Card/Converted/ac573a40fda4c096.asset.meta": "8c99dc8a326713d8bb800b6e38ca6c12252149b5009e3f4dfb6dbed93051841d",
+    "unity/Assets/Official/Partners/UI/Card/Converted/f2e1ff40e17239bc.shader": "6175d73864092e26c113b2a49d5379d8b72dd5f0e5e413765530ff0b1f1268dd",
+    "unity/Assets/Official/Partners/UI/Card/Converted/f2e1ff40e17239bc.shader.meta": "58ce327c2b4baf5e571f1ab90942ff52be883ec008686b508f1a3de2e8cd7092",
+    "unity/Assets/Official/Partners/UI/Roster/NpcRosterContent.prefab": "77db167c167a2147191481151995a431862d753f412f8711c36f209b630561d0",
+    "unity/Assets/Official/Partners/UI/Roster/NpcRosterContent.prefab.meta": "efe86c6472d56357ff7a701be73d58b92d429f9f735aa26ff3345c5daf20c5a7",
+    "unity/Assets/Official/Partners/UI/Card/Audio/Main_Cursor_Normal.wav": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
+    "unity/Assets/Official/Partners/UI/Card/Audio/Main_Cursor_Normal.wav.meta": "e013acd8c067c2a332ffe549e3e6ff1cbd58e7772f8395c00c3380d3f9568d6e",
+    "unity/Assets/Official/Partners/UI/Roster/partner-roster-texts.json": "1e91da9a273d65b4d50433d21ed24868000a5f94d2b978642fe65fc462b86e10",
+    "unity/Assets/Official/Partners/UI/Roster/partner-roster-texts.json.meta": "dde50ea7662dcc1e5ce31aa2b3f86b9163e33feb64969b5ea55c8ff72d8e4c8c"
+  },
+  "reused_assets": [
+    {
+      "staged": "Image/UI/NPCFavor/NPCFavor_Atlas/ImgBg_Paper.asset",
+      "installed": "unity/Assets/Official/Partners/UI/Roster/Image/UI/NPCFavor/NPCFavor_Atlas/ImgBg_Paper.asset",
+      "guid": "9676e46e006b3e7f8030d7769546d481",
+      "sha256": "c83ba48ced51e0d681acafeacfbe8bcca4fe0fe4b4f8c586afe3752eb7838fb3",
+      "metadata_sha256": "45c925c8622d71f6bf11a5f5e8854b678b1caf89e5b2a5de6ccd7fe12c169ec1"
+    },
+    {
+      "staged": "Image/UI/NPCFavor/NPCFavor_Atlas/ImgCircular.asset",
+      "installed": "unity/Assets/Official/Partners/UI/Roster/Image/UI/NPCFavor/NPCFavor_Atlas/ImgCircular.asset",
+      "guid": "bc279e2a7a7fb2809187dce60a53381f",
+      "sha256": "d70c55eda520dcb2a617c02d54e9dc84b396292ff7f11b99b05e25c1e86d94d1",
+      "metadata_sha256": "3f00829416f7a29186c4da0234089dbee2ba509e03479c9cb0470ec458800fc1"
+    },
+    {
+      "staged": "NativeControllers/783515380caa3aa2.controller",
+      "installed": "unity/Assets/Official/Partners/UI/Roster/NativeControllers/783515380caa3aa2.controller",
+      "guid": "82a13a6541281144e4d52439de9ecd69",
+      "sha256": "1559fc6258af70d64e39d65c56b34f71fe1950970991a4dbc0d4755e19fb620f",
+      "metadata_sha256": "42a75e9ef0628d4630e21f835742db035d9d3ad29985552381c7101c39a974c9"
+    },
+    {
+      "staged": "Image/UI/Common/Common_Atlas/ImgBgScreen.asset",
+      "installed": "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/ImgBgScreen.asset",
+      "guid": "24ff65967a32b0cebfebc3693c36acf4",
+      "sha256": "eda58611d5c3ddb9e34e5544b199816a8a9687a27b1d7393c20cb3a6edbb68ea",
+      "metadata_sha256": "ff1c266f11b04a671c39e011bcafea573533b6ab5e80c6d43ecdde6fb8e16ad1"
+    },
+    {
+      "staged": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset",
+      "installed": "unity/Assets/Official/Partners/UI/Card/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset",
+      "guid": "b088a249154abaf4e9a07cad25d5aef4",
+      "sha256": "8371c8c321efb85060bcc96875419a2125babcbeb7c15f34a4dfd2526c3caab2",
+      "metadata_sha256": "ca5ebbdb674cc1b6c076da36edbe7bd84bfa2cbdcc63d98636f68782e0f2b093"
+    },
+    {
+      "staged": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat",
+      "installed": "unity/Assets/Official/Partners/UI/Card/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat",
+      "guid": "08ba59cf78205b78fb2c9a69237994ea",
+      "sha256": "361207bd73188c9fa55778c632ae3ed8459a8eb4f1b81ac88346bcac134464e2",
+      "metadata_sha256": "b632cf8e5e210b2fd2f3a4c3336aeb4a26a4182af86f3b5754e0993b483790dd"
+    },
+    {
+      "staged": "Image/UI/Common/Common_Atlas/C_none_0.asset",
+      "installed": "unity/Assets/Official/Partners/UI/Card/Image/UI/Common/Common_Atlas/C_none_0.asset",
+      "guid": "f3b0b2fcddb51274e6595ff1cdcb4ab5",
+      "sha256": "fae893cc28b978408f3c9605fa899395950b59600b31616caefdc3465439cb12",
+      "metadata_sha256": "f2a0a0e5463d0a7eea10ebb269ef2a126a2e9bc68c74032d1e952b3fcab09980"
+    },
+    {
+      "staged": "Wwise/ScriptableObjects/Event/164C4624-F19E-4DA6-9ECA-4C36A1C1A09F.asset",
+      "installed": "unity/Assets/Official/Partners/UI/Roster/Wwise/ScriptableObjects/Event/164C4624-F19E-4DA6-9ECA-4C36A1C1A09F.asset",
+      "guid": "cf64a729e8076042d708cbb2250835ad",
+      "sha256": "d297e068356b4e4520ab018bd64efd5fc63dd3cbef275e07ab1c05f7463ecf42",
+      "metadata_sha256": "7db440ea79982b50b0e934de1804c42d3344a7dffadc0b32981cd7dbdb38d9e5"
+    },
+    {
+      "staged": "Image/UI/Common/Common_Atlas/BtnScreen_Sel.asset",
+      "installed": "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/BtnScreen_Sel.asset",
+      "guid": "9a044d7857024c92b8de3b657e41381c",
+      "sha256": "c198efd321b6e1704ae36b80e10f986e5fb2fafaea830bdf810fffea17f9227d",
+      "metadata_sha256": "71966c65cf93d313d88e2c21157ca829997dc1f8ab87e9292c3eebc1ff0d3177"
+    },
+    {
+      "staged": "Image/UI/Common/Common_Atlas/IconSort.asset",
+      "installed": "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/IconSort.asset",
+      "guid": "e5c71efbd846835e180802a7ac665351",
+      "sha256": "0029ddec381f00c76b738bf41aa9dc65dc4efb68c73d86ef538c349b02359791",
+      "metadata_sha256": "f067d9c6e1c47a1fc2ffab058fc809074ece5abdab8bd5d1d007512c9c7d49a5"
+    },
+    {
+      "staged": "Image/UI/Common/Common_Atlas/BtnScreen_Nor.asset",
+      "installed": "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/BtnScreen_Nor.asset",
+      "guid": "04ef31ade706ceecece5659314d41ed7",
+      "sha256": "4af8d07a82068f817fde3cb4750080ed2f6985c7d81c7f26dcb5c9bf95bf7ccf",
+      "metadata_sha256": "9492bea278919b6425b6e69dd7663a1674c552af078350a36c2840abc7757452"
+    },
+    {
+      "staged": "Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3_0.asset",
+      "installed": "unity/Assets/Official/Partners/UI/Gifts/Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3_0.asset",
+      "guid": "a74c390372a1e5b98818a18ac1f760f9",
+      "sha256": "9bc2d98bf82b9d1a47c9217efb7d03c4a23390a0b4966dca553bbf9708c12069",
+      "metadata_sha256": "fc2de4c689a9e1a402f70b4a054aa6700650c2cd7c182f32d3b2a0d17db58a2d"
+    },
+    {
+      "staged": "Image/UI/Common/Common_Atlas/ImgBgScreen_Resetting.asset",
+      "installed": "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/ImgBgScreen_Resetting.asset",
+      "guid": "7b1e4d687bd5b14ae60acc6a8d2ef712",
+      "sha256": "877e16c61769be6862e26849798bc379d89cf1ad61c71022c4498d15a5baf1a3",
+      "metadata_sha256": "ff821b1d9fdc8e98a334c7f7f76741db30342274a9fd78417c1f705de7b8de45"
+    },
+    {
+      "staged": "Image/UI/Common/Common_Atlas/ImgBgScreen_Fillet.asset",
+      "installed": "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/ImgBgScreen_Fillet.asset",
+      "guid": "101b5b1f146692e3ca080becdbec8fd3",
+      "sha256": "b90d0dfb67239c1dddaefc8ffaa4092c5b425c9714924e11631509ccc11fe8f5",
+      "metadata_sha256": "161bc27c05d31be7c253bc30bb9c2155d863e81099590777dee8ad9376e00928"
+    },
+    {
+      "staged": "Image/UI/Common/Common_Atlas/ImgArrow.asset",
+      "installed": "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/ImgArrow.asset",
+      "guid": "06912b194c5c818a2269b99e89043e7f",
+      "sha256": "7d654b48d388997e576737506b09f5df3fffe811eaa38bb59d8a9be8face002f",
+      "metadata_sha256": "4aa48e936dcb1642636b2ab77571800a8afa2d3c9bea597ad0391419a0877690"
+    },
+    {
+      "staged": "Image/UI/Common/Common_Atlas/ImgSwitchItem.asset",
+      "installed": "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/ImgSwitchItem.asset",
+      "guid": "94bad718dedbb4e1984834b5ebe77195",
+      "sha256": "268713d91ea15c8b6806a96957d5459fa55cdefa7fbc64658ee160b8b75cc6fa",
+      "metadata_sha256": "088e69df464c09a7f5888629e98ffd4fd40c01066c85f87ddb876463ee099540"
+    },
+    {
+      "staged": "Image/UI/Common/Common_Atlas/BtnCheck_Nor_0.asset",
+      "installed": "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/BtnCheck_Nor_0.asset",
+      "guid": "889da87a9578f3363a5ac77941aea7da",
+      "sha256": "4ada045ce248ecd53e1a76a1a7a887ae741ba6f4c5dec3fee5b30110e6b7f5c2",
+      "metadata_sha256": "5758a5b6c426862c9c789b7ac21a9af665eb702ccbfaddcc2a1fe8c1d4e3ab56"
+    },
+    {
+      "staged": "Image/UI/Common/Common_Atlas/BtnCheck_Sel_0.asset",
+      "installed": "unity/Assets/Official/Partners/UI/Roster/Image/UI/Common/Common_Atlas/BtnCheck_Sel_0.asset",
+      "guid": "7fb290c1ae8b9760776c081792eb6bdf",
+      "sha256": "952289f13b045774c304d2c383eb174e1ac0df85b69b24cf10ecd7a71bc45450",
+      "metadata_sha256": "3fd7cc12cbb5b0d9c6b22bd711a389e8c8d35708117a7462191c006fa1ced989"
+    },
+    {
+      "staged": "Fonts/FZY4K.TTF",
+      "installed": "unity/Assets/Official/Partners/UI/Card/Fonts/FZY4K.TTF",
+      "guid": "361d52fe7fad65d6413db534072fdf5c",
+      "sha256": "90023872dffe6a58503de655bd0631bf3334ce3b6b72cc75a6625b685c94c386",
+      "metadata_sha256": "02058a2fe33f24f7f7b87f46ea2187de921da1bdf3687d6a597b89f1ab3337b3"
+    },
+    {
+      "staged": "Converted/409f5b7a08357fee.asset",
+      "installed": "unity/Assets/Official/Partners/UI/Card/Converted/409f5b7a08357fee.asset",
+      "guid": "585b4518b726ef850b2e638f4f8efe5e",
+      "sha256": "d33dd4c8acb0d04e51ffadb02acbf0cb8d5429d729bfc50b6c22c4a2b702eecb",
+      "metadata_sha256": "c3b8cbde7da730e461b72ff989241eed5a1a37146f1e0a1b6217779753918366"
+    },
+    {
+      "staged": "Animation/UI/CollectBook/BaseCollectBook_None.anim",
+      "installed": "unity/Assets/Official/Partners/UI/Roster/Animation/UI/CollectBook/BaseCollectBook_None.anim",
+      "guid": "badaac15a21d5d96489478b76374b78e",
+      "sha256": "8751e904e4986a7c5b1f07887cbb0fab02ee1482e2cc422ea93a7f24c4834918",
+      "metadata_sha256": "63be5d809a01b0e662d98348f1b59183444876f8b84076be1bd574635f861315"
+    },
+    {
+      "staged": "Animation/UI/CollectBook/BaseCollectBook_Open.anim",
+      "installed": "unity/Assets/Official/Partners/UI/Roster/Animation/UI/CollectBook/BaseCollectBook_Open.anim",
+      "guid": "b8504387e593ff2b3efbb04911e16bfd",
+      "sha256": "63eaebaeec28e17a9741494d1fd749f39d9fa008a40649a15116487b897459ba",
+      "metadata_sha256": "a222aec7574d8c94541f7fa52b6fabd6ae59e72df8421f18003c82c30d6866a2"
+    },
+    {
+      "staged": "Animation/UI/CollectBook/BaseCollectBook_Close.anim",
+      "installed": "unity/Assets/Official/Partners/UI/Roster/Animation/UI/CollectBook/BaseCollectBook_Close.anim",
+      "guid": "bb60e4c7c98f125aa1ea56793919262e",
+      "sha256": "ef488a56ef06e615c9a0f5623802b83177b30e1760836b5115c3e62a09cd8f82",
+      "metadata_sha256": "65b7a0dd12276cd706c9929f708a71a725f2e8a569c5549cdb57ee69dca03956"
+    },
+    {
+      "staged": "Converted/65b73523b080e5e7.asset",
+      "installed": "unity/Assets/Official/Partners/UI/Card/Converted/65b73523b080e5e7.asset",
+      "guid": "b40761794afa424fcfa0a6d493b5c729",
+      "sha256": "d9fa5cf869d6674d386c40c1b773c0870096d049d1a980b1f257a976548b0446",
+      "metadata_sha256": "dcc531d73332259a5c0f0ef702943cf9b262a9a63d42362d5531ac534e810acd"
+    },
+    {
+      "staged": "Converted/ac573a40fda4c096.asset",
+      "installed": "unity/Assets/Official/Partners/UI/Card/Converted/ac573a40fda4c096.asset",
+      "guid": "595049c2e6a1f516bcabc0f0a8cab09f",
+      "sha256": "3c2d4082c52c96edb636f8e4a27bd11616b531b1ed30720d662b2d1d2201f8c9",
+      "metadata_sha256": "8c99dc8a326713d8bb800b6e38ca6c12252149b5009e3f4dfb6dbed93051841d"
+    },
+    {
+      "staged": "Converted/f2e1ff40e17239bc.shader",
+      "installed": "unity/Assets/Official/Partners/UI/Card/Converted/f2e1ff40e17239bc.shader",
+      "guid": "0b5a526f51d54805e059fe74dc7aade8",
+      "sha256": "6175d73864092e26c113b2a49d5379d8b72dd5f0e5e413765530ff0b1f1268dd",
+      "metadata_sha256": "58ce327c2b4baf5e571f1ab90942ff52be883ec008686b508f1a3de2e8cd7092"
+    },
+    {
+      "staged": "NpcRosterContent.prefab",
+      "installed": "unity/Assets/Official/Partners/UI/Roster/NpcRosterContent.prefab",
+      "guid": "5b1d85e19312db8e665b0fb48561eca9",
+      "sha256": "77db167c167a2147191481151995a431862d753f412f8711c36f209b630561d0",
+      "metadata_sha256": "efe86c6472d56357ff7a701be73d58b92d429f9f735aa26ff3345c5daf20c5a7"
+    },
+    {
+      "staged": "Audio/Main_Cursor_Normal.wav",
+      "installed": "unity/Assets/Official/Partners/UI/Card/Audio/Main_Cursor_Normal.wav",
+      "guid": "a349287c39df984af5f51e2338d53e9f",
+      "sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
+      "metadata_sha256": "e013acd8c067c2a332ffe549e3e6ff1cbd58e7772f8395c00c3380d3f9568d6e"
+    },
+    {
+      "staged": "partner-roster-texts.json",
+      "installed": "unity/Assets/Official/Partners/UI/Roster/partner-roster-texts.json",
+      "guid": "94a0f6a5e14d514bbe213ae1b6448d43",
+      "sha256": "1e91da9a273d65b4d50433d21ed24868000a5f94d2b978642fe65fc462b86e10",
+      "metadata_sha256": "dde50ea7662dcc1e5ce31aa2b3f86b9163e33feb64969b5ea55c8ff72d8e4c8c"
+    }
+  ],
+  "validation_source_sha256": {
+    "scripts/prepare_partner_roster_native_validation.py": "baf0af76968e9b32d5fbd85b6298b424423bdd20f752062151bcf0b4c773a5b8",
+    "scripts/fixtures/partner_roster_native_validation.cs": "2393969a4ae0a1f36cfcadf96c311c2940f9aeaa3eabc59d83765463a0536891"
+  }
+}
