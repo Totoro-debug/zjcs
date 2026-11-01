@@ -110,6 +110,44 @@ public static class PartnerConditionValidation
             Require(service.MeetNpc(id, "current-meet-" + id).IsApplied && session.InventoryCount(needed.ClassId) == 0, "Current trader/tutor meeting consumes signals");
         }
         foreach (int id in Enumerable.Range(11015, 8)) Require(!service.CanMeetNpc(id) && !service.MeetNpc(id, "closed-" + id).IsApplied, "Closed collaboration partner " + id);
+        Require(session.ApplyCharacterMutation(value => {
+            value.CharacterCreated = false; value.Level = 1; value.HasManualMeetNpc = false;
+            value.Inventory.Clear(); value.CharacterProperties.NpcFriendships.Clear();
+        }).IsApplied, "Seed uncreated character");
+        DateTime metAt = new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Utc);
+        var auto = new OfflineCharacterProgressionService(session, catalog, () => metAt, refreshDerivedProgress: false);
+        Require(auto.MeetAutomaticNpcs().Status == ProgressionResultStatus.Unchanged
+            && !session.Save.Player.CharacterProperties.NpcFriendships.Any(), "Browsing an uncreated profile cannot meet partners");
+        Require(session.ApplyCharacterMutation(value => { value.CharacterCreated = true; value.CharacterName = "Auto"; value.Level = 0; }).IsApplied,
+            "Seed existing character without auto partner");
+        Require(auto.MeetAutomaticNpcs().Status == ProgressionResultStatus.Unchanged
+            && !session.Save.Player.CharacterProperties.NpcFriendships.Any(), "Created character below original base-level condition cannot auto-meet");
+        Require(session.ApplyCharacterMutation(value => value.Level = 1).IsApplied, "Reach original auto-meet base level");
+        before = File.ReadAllBytes(slots.GetProgressPath(slot)); failed = false;
+        using (var locked = new FileStream(slots.GetProgressPath(slot), FileMode.Open, FileAccess.Read, FileShare.Read))
+        {
+            try { var result = auto.MeetAutomaticNpcs(); Debug.Log("Auto-meet locked result: " + result.Status + ": " + result.Message); }
+            catch (IOException) { failed = true; }
+        }
+        Require(failed && before.SequenceEqual(File.ReadAllBytes(slots.GetProgressPath(slot)))
+            && !session.Save.Player.CharacterProperties.NpcFriendships.Any(), "Auto-meet write failure rolls back");
+        Require(auto.MeetAutomaticNpcs().IsApplied, "Retry original auto-meet condition");
+        var met = session.Save.Player.CharacterProperties.NpcFriendships.Single();
+        Require(met.NpcClassId == 8402 && met.Level == 1 && met.FriendshipExp == 0
+            && met.ActivateTimeTicks == metAt.Ticks && !session.Save.Player.HasManualMeetNpc,
+            "Only original automatic partner and configured initial friendship, current time");
+        before = File.ReadAllBytes(slots.GetProgressPath(slot));
+        Require(auto.MeetAutomaticNpcs().Status == ProgressionResultStatus.Unchanged
+            && before.SequenceEqual(File.ReadAllBytes(slots.GetProgressPath(slot))), "Repeated load does not rewrite meeting");
+        Require(session.ApplyCharacterMutation(value => {
+            var npc = value.CharacterProperties.NpcFriendships.Single();
+            npc.Level = 10; npc.FriendshipExp = 12345; npc.CustomFriendshipTag = "kept";
+        }).IsApplied, "Seed existing friendship progress");
+        metAt = metAt.AddDays(1);
+        Require(auto.MeetAutomaticNpcs().Status == ProgressionResultStatus.Unchanged, "Existing auto partner is never recreated");
+        var restored = OfflineMainlineProgressSession.InspectCharacter(slots, slot).Save.Player.CharacterProperties.NpcFriendships.Single();
+        Require(restored.Level == 10 && restored.FriendshipExp == 12345 && restored.CustomFriendshipTag == "kept"
+            && restored.ActivateTimeTicks == metAt.AddDays(-1).Ticks, "Auto-meet preserves progress, title and original activation time");
     }
     private static void CheckCompositeOrdering()
     {

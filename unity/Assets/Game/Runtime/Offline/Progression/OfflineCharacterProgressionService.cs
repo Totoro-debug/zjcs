@@ -28,7 +28,7 @@ namespace Zjcs.Offline.Progression
         private readonly Func<DateTime> npcClock;
 
         public OfflineCharacterProgressionService(OfflineMainlineProgressSession session,
-            OfficialCharacterCatalog catalog, Func<DateTime> npcClock = null)
+            OfficialCharacterCatalog catalog, Func<DateTime> npcClock = null, bool refreshDerivedProgress = true)
         {
             this.session = session ?? throw new ArgumentNullException(nameof(session));
             this.catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
@@ -41,7 +41,7 @@ namespace Zjcs.Offline.Progression
             propertyCalculator.AddSource(petPropertySource);
             PetProgression = new OfflinePetProgressionService(session, CalculatePetCombatRating);
             LegionBuildings = new OfflineLegionBuildingProgressionService(session, catalog);
-            RefreshDerivedProgress(session.Save.Player);
+            if (refreshDerivedProgress) RefreshDerivedProgress(session.Save.Player);
             derivedPlayer = session.Save.Player;
         }
 

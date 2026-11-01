@@ -1423,3 +1423,9 @@ unity/Assets/Game/Runtime/Offline/Progression/OfficialCharacterCatalog.Partners.
 
 # Preserve local partner title adapter metadata.
 unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerFriendshipTags.cs* text eol=lf
+
+# Preserve automatic partner trigger source evidence.
+scripts/prepare_partner_automatic_meeting.py text eol=lf
+assets/reference/partner-automatic-meeting-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.Partners.cs text eol=lf
+unity/Assets/Game/Editor/CharacterCreation/CharacterCreationPlayModeAcceptance.cs text eol=lf

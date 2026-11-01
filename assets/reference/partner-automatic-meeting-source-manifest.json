@@ -1,0 +1,54 @@
+{
+  "manifest": "884_156692",
+  "generator_sha256": "1fc84c916f5bdf95199849a2095d0ba05fbb027375f124e3208c8fc554471c8c",
+  "source_sha256": {
+    ".tools/source-packages/official-code/common-source/Common/PlayerNpcDataWrap.cs": "43f73f3d2654dc14f0c8c4e11cdde157dcc7be6dfc2b98ca274ddf61d7fa64c5",
+    ".tools/source-packages/official-code/common-source/MsgPlayerNpc.cs": "e775cda9b3b0558b2ff7786e667aaa861dd4d70a47c9df2e4ee8d30096317276",
+    ".tools/source-packages/official-code/client-source/NPCHandler.cs": "9dd5abde0433a1a94131ac8e40ff60863de7978f9561a50afb0ef9a9936314a2",
+    "unity/Assets/Official/Partners/partner-rules.json": "1ab5dd32c4ef68297aea6a847cb0e5ced686634bb4fb7f4c28a1aa7bf70398fd",
+    "assets/reference/partner-condition-source-manifest.json": "23c7593d1f6306fb106387490bf4bfee61957b70de444436a257fc54ca27fb25"
+  },
+  "methods": {
+    "common-source/Common/PlayerNpcDataWrap.cs": {
+      "public static PlayerNpcDataWrap CreateNpcDataByInfo(long playerId, NpcInfo info, int? initialLevel = null)": "670328fd9892c8d84aa573abebc6496eb82e4132b01d62ae77974e208b50fce2"
+    },
+    "common-source/MsgPlayerNpc.cs": {
+      "protected override void OnMessage(NetMessage data)": "c03a7a9ba944244508f00fae956e86fb9d682f5183d251f6f2534578c6b6b50c"
+    },
+    "client-source/NPCHandler.cs": {
+      "private void MainPlayer_OnAddNewNpc(int classId, NpcMeetType type)": "aabbb475224167d610c13844b74d9267c8b2a7991af266af584c09882a1d0f70"
+    }
+  },
+  "automatic_partners": [
+    {
+      "id": 8402,
+      "condition": {
+        "Jumpable": null,
+        "Level": 1,
+        "Op": ">=",
+        "_type": "LevelCondition"
+      },
+      "initial_level": 1,
+      "initial_experience": 0
+    }
+  ],
+  "binding_sha256": {
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.cs": "d5b116e786a39cc431db44f9eebdfee18b46afed29f3693b037f41f8e48d221a",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.Partners.cs": "9143a1448033fb9b079b78e855ad715a6568c1c7c9ebbd1a6e734743aef9d7bf",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterExperience.cs": "8084648a7c9992db2375428a05c3850c9c69cfbc14d6d95f4d3ccea220b79a78",
+    "unity/Assets/Game/Runtime/Offline/CharacterCreation/CharacterCreationOfflineService.cs": "44b1a6a7cfe3ca10b1a6bc057923d2aead9cd003817cd5fbee6b813ca6cc0e5b",
+    "unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowController.cs": "199920c2c2c73fdc0bdefd6bef852f3de4a2a7ba99d0ca03f323d70be943a2e1"
+  },
+  "validation_source_sha256": {
+    "scripts/fixtures/partner_condition_validation.cs": "caf28618362443512eadfd1699f4d07969734641122d809a232ff2ade845afd3",
+    "unity/Assets/Game/Editor/CharacterCreation/CharacterCreationPlayModeAcceptance.cs": "e63cd15173d77d4b8b795895d81a41c88df8d384ca0f788886f9f60fdfaf397c"
+  },
+  "adaptations": [
+    "User-confirmed offline trigger: character creation and entry into an existing profile.",
+    "Original current CanMeet condition and configured initial friendship; current local activation time.",
+    "Creation and automatic meeting share the character-creation transaction.",
+    "Profile-card browsing and portrait inspection remain read-only; existing meetings are never recreated.",
+    "Auto initialization preserves saved levels; no rank-limit row means no known cap in the local partner base-level projection.",
+    "Original client message and notification handlers are evidence of consumption, not a recovered server trigger."
+  ]
+}

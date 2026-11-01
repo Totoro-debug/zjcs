@@ -326,6 +326,7 @@ namespace Zjcs.Offline.CharacterCreation
             if (session.Save.CreatedAtUnixSeconds == 0)
                 session.Save.CreatedAtUnixSeconds = slots.GetCreatedAtUnixSeconds(slotId);
 
+            var partners = new OfflineCharacterProgressionService(session, characterCatalog, refreshDerivedProgress: false);
             ProgressionResult result = session.ApplyCharacterMutation(player =>
             {
                 player.CharacterName = draft.name;
@@ -338,12 +339,21 @@ namespace Zjcs.Offline.CharacterCreation
                 player.Wardrobe.WornSkins = wornSkins;
                 player.Wardrobe.WornItems = wornItems;
                 player.Wardrobe.Dyes = dyes;
+                partners.AddAutomaticNpcs(player);
             }, "character-create:" + slotId);
 
             if (result.Status != ProgressionResultStatus.Applied)
                 return Fail(string.IsNullOrEmpty(result.Message) ? "角色存档未能保存。" : result.Message, out error);
 
             return true;
+        }
+
+        public ProgressionResult PrepareCharacterForPlay(string slotId)
+        {
+            if (!slots.Contains(slotId))
+                throw new DirectoryNotFoundException("The selected profile slot does not exist.");
+            var session = OfflineMainlineProgressSession.OpenCharacter(slots, slotId);
+            return new OfflineCharacterProgressionService(session, characterCatalog, refreshDerivedProgress: false).MeetAutomaticNpcs();
         }
 
         public bool TrySetInitialWeapon(string slotId, int weaponType, out string error)

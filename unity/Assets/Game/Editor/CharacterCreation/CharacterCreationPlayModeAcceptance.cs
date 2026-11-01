@@ -201,6 +201,11 @@ namespace Zjcs.Editor.CharacterCreation
 
             Zjcs.Presentation.Opening.CharacterOpeningFlow.SkipOpeningForAcceptance = true;
             Zjcs.Presentation.Opening.CharacterOpeningFlow.SkipFirstStoryForAcceptance = false;
+            if (Environment.GetEnvironmentVariable("ZJCS_PARTNER_AUTOMEET_ONLY") == "1")
+            {
+                yield return VerifyPartnerAutoMeet(controller, service, testPath);
+                yield break;
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_MAP11_HOME_RETURN_ONLY") == "1")
             {
                 yield return VerifyMap11HomeReturn(controller, service, testPath);
@@ -567,6 +572,80 @@ namespace Zjcs.Editor.CharacterCreation
             Finish(true, null);
         }
 
+        private static IEnumerator VerifyPartnerAutoMeet(CharacterCreationFlowController controller,
+            CharacterCreationOfflineService service, string testPath)
+        {
+            Zjcs.Presentation.Opening.CharacterOpeningFlow.SkipFirstStoryForAcceptance = true;
+            yield return WaitUntil(() => Screen(controller).GetComponentsInChildren<TMP_Text>()
+                .Any(text => text.text != null && text.text.Contains("新建存档")), "Save creation button did not become ready.");
+            yield return Capture(controller, "partner-auto-save-selection");
+            ClickLastButtonByLabel(Screen(controller), "新建存档");
+            yield return WaitForPage(controller, "body");
+            yield return WaitForTransition(controller);
+            ClickOfficial(controller, "NextBtn");
+            yield return WaitForPage(controller, "appearance");
+            yield return WaitForTransition(controller);
+            ClickOfficial(controller, "NextBtn");
+            yield return WaitForPage(controller, "name");
+            yield return WaitForTransition(controller);
+            var slots = new ProfileSlotCatalog(testPath);
+            string slot = (string)Field(controller, "slotId").GetValue(controller);
+            var session = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
+            Require(!session.Save.Player.CharacterCreated && session.Save.Player.CharacterProperties.NpcFriendships.Count == 0,
+                "The isolated draft unexpectedly has a created character or partner.");
+            // Existing local drafts start at level zero. Exercise the confirmed
+            // condition at its threshold without changing production creation defaults.
+            Require(session.ApplyCharacterMutation(player => player.Level = 1).IsApplied,
+                "Could not prepare the isolated level-one draft.");
+            Deep(Panel(controller).transform, "NameInput").GetComponent<TMP_InputField>().text = "自动伙伴验收";
+            yield return new WaitForSecondsRealtime(.4f);
+            yield return Capture(controller, "partner-auto-before-creation");
+            ClickOfficial(controller, "CommonBtn_2");
+            yield return WaitUntil(() => Screen(controller) != null && Screen(controller).name == "Screen_选择初始职业",
+                "Creation did not reach initial weapon selection.");
+            ClickLastButtonByLabel(Screen(controller), "战士");
+            yield return WaitUntil(() => Screen(controller).name == "Screen_角色创建完成", "Partner creation did not finish.");
+            session.Reload();
+            var created = session.Save.Player.CharacterProperties.NpcFriendships.Single();
+            Require(created.NpcClassId == 8402 && created.Level == 1 && created.FriendshipExp == 0
+                && created.ActivateTimeTicks > 0, "Creation did not save the configured automatic partner.");
+            yield return Capture(controller, "partner-auto-created");
+
+            // Model a real older profile that predates the local auto trigger.
+            Require(session.ApplyCharacterMutation(player => player.CharacterProperties.NpcFriendships.Clear()).IsApplied,
+                "Could not prepare the older isolated profile.");
+            byte[] beforeBrowse = File.ReadAllBytes(slots.GetProgressPath(slot));
+            ClickLastButtonByLabel(Screen(controller), "返回存档");
+            yield return WaitUntil(() => Screen(controller).GetComponent<OfficialSaveSelectionView>()?.IsReady == true,
+                "Older profile card did not become ready.");
+            Require(beforeBrowse.SequenceEqual(File.ReadAllBytes(slots.GetProgressPath(slot))),
+                "Browsing profile cards unexpectedly wrote partner state.");
+            ClickAt(FindTextContaining("自动伙伴验收").GetComponentInParent<Button>().gameObject);
+            yield return WaitUntil(() => Screen(controller).name == "Screen_角色创建完成", "Older profile did not load.");
+            session.Reload();
+            var loaded = session.Save.Player.CharacterProperties.NpcFriendships.Single();
+            Require(loaded.NpcClassId == 8402 && loaded.Level == 1 && loaded.FriendshipExp == 0,
+                "Actual profile-entry click did not initialize the missing automatic partner.");
+            long activation = loaded.ActivateTimeTicks;
+            Require(session.ApplyCharacterMutation(player => {
+                var npc = player.CharacterProperties.NpcFriendships.Single();
+                npc.Level = 10; npc.FriendshipExp = 12345; npc.CustomFriendshipTag = "kept";
+            }).IsApplied, "Could not seed existing partner progress.");
+            byte[] beforeReload = File.ReadAllBytes(slots.GetProgressPath(slot));
+            ClickLastButtonByLabel(Screen(controller), "返回存档");
+            yield return WaitUntil(() => Screen(controller).GetComponent<OfficialSaveSelectionView>()?.IsReady == true,
+                "Existing partner profile card did not become ready.");
+            ClickAt(FindTextContaining("自动伙伴验收").GetComponentInParent<Button>().gameObject);
+            yield return WaitUntil(() => Screen(controller).name == "Screen_角色创建完成", "Repeated profile entry did not finish.");
+            session.Reload(); loaded = session.Save.Player.CharacterProperties.NpcFriendships.Single();
+            Require(loaded.Level == 10 && loaded.FriendshipExp == 12345 && loaded.CustomFriendshipTag == "kept"
+                && loaded.ActivateTimeTicks == activation && beforeReload.SequenceEqual(File.ReadAllBytes(slots.GetProgressPath(slot))),
+                "Repeated profile entry overwrote existing friendship, title, time or save bytes.");
+            yield return Capture(controller, "partner-auto-reloaded");
+            Debug.Log("PARTNER_AUTOMEET_UI_PASSED: simulated creation/profile-entry clicks, original initial friendship, read-only browsing, older-save initialization and preservation on repeated load.");
+            Finish(true, null);
+        }
+
         private static IEnumerator VerifyMap11HomeReturn(CharacterCreationFlowController controller,
             CharacterCreationOfflineService service, string testPath)
         {
@@ -731,7 +810,7 @@ namespace Zjcs.Editor.CharacterCreation
             group.GetType().GetMethod("AddCustomSize").Invoke(group, new[] { size });
             int index = (int)group.GetType().GetMethod("GetTotalCount").Invoke(group, null) - 1;
             Type viewType = editor.GetType("UnityEditor.GameView");
-            EditorWindow view = EditorWindow.GetWindow(viewType);
+            EditorWindow view = EditorWindow.GetWindow(viewType, false, null, false);
             viewType.GetProperty("selectedSizeIndex", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).SetValue(view, index);
         }
 

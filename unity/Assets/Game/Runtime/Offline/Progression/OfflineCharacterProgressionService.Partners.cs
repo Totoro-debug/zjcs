@@ -7,12 +7,50 @@ namespace Zjcs.Offline.Progression
 {
     public sealed partial class OfflineCharacterProgressionService
     {
+        public ProgressionResult MeetAutomaticNpcs()
+        {
+            session.Reload();
+            return session.ApplyCharacterMutationIfChanged(AddAutomaticNpcs);
+        }
+
+        // Also runs inside the character-creation transaction, so creation and
+        // the confirmed offline auto-meeting trigger are saved together.
+        public bool AddAutomaticNpcs(OfflinePlayerProgress player)
+        {
+            if (!catalog.HasCurrentPartnerRules || !player.CharacterCreated) return false;
+            bool changed = false;
+            foreach (var npc in catalog.PartnerRows("npc"))
+            {
+                int id = Integer(npc, "Id");
+                if (!Boolean(npc, "IsAutoMeet") || Integer(npc, "NpcType") == 2
+                    || (id >= 11015 && id <= 11022)
+                    || player.CharacterProperties.NpcFriendships.Any(value => value.NpcClassId == id)) continue;
+                if (!TryNpcMeetRequirements(npc, player, out var requiredItems)) continue;
+                int level = Integer(catalog.PartnerRows("game_settings").FirstOrDefault(), "NpcDefaultFriendshipLevel");
+                var initial = catalog.PartnerRows("npc_friendship_level")
+                    .FirstOrDefault(value => Integer(value, "Id") == id && Integer(value, "Level") == level);
+                if (level <= 0 || initial == null || Long(initial, "FriendshipExp") < 0)
+                    throw new InvalidOperationException("The official initial NPC friendship state is unavailable.");
+                foreach (var requirement in requiredItems)
+                    if (!OfflineInventoryOperations.Consume(player, requirement.Key, requirement.Value, 0).IsApplied)
+                        throw new InvalidOperationException("Automatic NPC meet items changed before saving.");
+                player.CharacterProperties.NpcFriendships.Add(new OfflineNpcFriendship {
+                    NpcClassId = id, Level = level, FriendshipExp = Long(initial, "FriendshipExp"),
+                    ActivateTimeTicks = npcClock().ToUniversalTime().Ticks });
+                changed = true;
+            }
+            return changed;
+        }
+
         private OfficialConditionContext NpcConditionContext(OfflinePlayerProgress player)
         {
+            int baseLevelLimit = catalog.HasCurrentPartnerRules
+                ? OfflineCharacterExperience.BaseLevelLimit(player.SubRank, catalog.LevelLimits) : 0;
             var context = new OfficialConditionContext
             {
-                Level = catalog.HasCurrentPartnerRules ? Math.Min(player.Level,
-                    OfflineCharacterExperience.BaseLevelLimit(player.SubRank, catalog.LevelLimits)) : player.Level,
+                // An unranked newly created profile has no rank-limit row. Its
+                // saved level is still the base level; zero is not a level cap.
+                Level = baseLevelLimit > 0 ? Math.Min(player.Level, baseLevelLimit) : player.Level,
                 ItemCounts = player.Inventory.Where(value => value != null && value.ItemId > 0)
                     .GroupBy(value => value.ItemId).ToDictionary(group => group.Key, group => group.Sum(value => value.Count)),
                 UnlockedMapClassIds = new HashSet<int>(player.UnlockedMapClassIds),

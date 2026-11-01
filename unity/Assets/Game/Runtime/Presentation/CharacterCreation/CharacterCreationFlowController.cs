@@ -223,6 +223,12 @@ namespace Zjcs.Presentation.CharacterCreation
                     draft = null;
                     slotId = id;
                     bool hasCharacter = service.HasCharacter(id);
+                    if (hasCharacter)
+                    {
+                        ProgressionResult partners = service.PrepareCharacterForPlay(id);
+                        if (partners.Status == ProgressionResultStatus.InvalidState)
+                            throw new InvalidOperationException(partners.Message);
+                    }
                     ProfileSelectionPreference.Write(SaveSelectionProbe.ProfileRoot, slotId);
                     if (!hasCharacter)
                     {
