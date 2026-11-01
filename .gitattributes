@@ -1470,6 +1470,14 @@ unity/Assets/Game/Runtime/Offline/Equipment/OfficialEquipmentCatalog.cs text eol
 unity/Assets/Game/Runtime/Offline/Equipment/OfficialEquipmentCatalog.TermReplacement.cs* text eol=lf
 unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs text eol=lf
 
+# Preserve raw identities of the original status parameter adapter.
+scripts/prepare_battle_status_parameters.py text eol=lf
+scripts/test_battle_status_parameters.ps1 text eol=lf
+assets/reference/battle-rules/status-parameters-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.StatusParameter*.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.StatusReplay.cs text eol=lf
+unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.StatusReplay.cs text eol=lf
+
 # Preserve current original partner property-region bytes and explicit code bindings.
 scripts/prepare_partner_detail_properties_*.py text eol=lf
 scripts/fixtures/partner_detail_properties_validation.cs text eol=lf

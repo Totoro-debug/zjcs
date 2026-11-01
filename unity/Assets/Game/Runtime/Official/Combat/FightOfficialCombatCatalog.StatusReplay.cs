@@ -6,7 +6,7 @@ namespace Zjcs.Combat.Official
     public sealed partial class FightOfficialCombatCatalog
     {
         public FightBattleStatusReplayState StatusReplayDefinition(int classId)
-            => ReadStatusReplay(RequiredEntity(classId), null);
+            => ReadStatusReplay(RequiredEntity(classId));
 
         public long[] SkillGameplayTags(int entityId)
         {
@@ -23,42 +23,15 @@ namespace Zjcs.Combat.Official
             return result;
         }
 
-        // FightStatusBaseComponent.GetPropertyReplaceValue / FightStatusUtilsHandler.
-        // Explicit status ReplaceProps retain their own type; actor properties are not substitutes.
-        private static double ReplayParameter(Dictionary<string, object> component, string name,
-            double fallback, bool floating, IList<FightStatusReplacementValue> values)
-        {
-            object raw;
-            if (values == null || !component.TryGetValue("StatusReplacePropertyValues", out raw) || raw == null)
-                return fallback;
-            foreach (object entry in Array(raw, "status replay replacement properties"))
-            {
-                var replacement = Object(entry, "status replay replacement property");
-                if (StringField(replacement, "PropertyName") != name) continue;
-                int id = Int(replacement, "SpecialParamProp");
-                foreach (var value in values)
-                    if (value != null && value.PropertyId == id)
-                    {
-                        if (floating) return value.IsFloat ? (float)(value.RawValue / 10000d) : unchecked((int)value.RawValue);
-                        return value.IsFloat ? (int)(value.RawValue / 10000d) : unchecked((int)value.RawValue);
-                    }
-                return fallback;
-            }
-            return fallback;
-        }
-
-        private static FightBattleStatusReplayState ReadStatusReplay(Dictionary<string, object> components,
-            IList<FightStatusReplacementValue> replacementProperties)
+        private static FightBattleStatusReplayState ReadStatusReplay(Dictionary<string, object> components)
         {
             var component = Component(components, "FightStatusSkillReplayComponent");
             if (component == null) return null;
             var result = new FightBattleStatusReplayState
             {
-                Rate = (float)ReplayParameter(component, "Rate", Float(component, "Rate", 1f), true, replacementProperties),
-                AddRateWhenNotHit = (float)ReplayParameter(component, "AddRateWhenNotHit",
-                    Float(component, "AddRateWhenNotHit", 0f), true, replacementProperties),
-                MaxCountEachRound = (int)ReplayParameter(component, "MaxCountEachRound",
-                    Int(component, "MaxCountEachRound"), false, replacementProperties),
+                Rate = Float(component, "Rate", 1f),
+                AddRateWhenNotHit = Float(component, "AddRateWhenNotHit", 0f),
+                MaxCountEachRound = Int(component, "MaxCountEachRound"),
                 IsCheckSkillLimitedTimes = Bool(component, "IsCheckSkillLimitedTimes"),
                 FilterTypes = new List<int>(IntArray(component, "FilterTypes")),
                 TriggerInGameStatusList = new List<int>(IntArray(component, "TriggerInGameStatusList"))

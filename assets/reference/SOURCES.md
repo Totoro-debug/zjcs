@@ -230,6 +230,8 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 
 装备词条替换参数来源：`record_battle_equipment_term_sources.py` 核对当前 `884_156692` 解码程序集与 `BattleFormulaHandler`、词条参数／祝福查询原方法，保留既有 `854_156383` 装备和战斗运行表身份；原输入、适配代码和验证入口 SHA256 见[来源清单](battle-rules/equipment-term-source-manifest.json)，实际接入与验证范围见[装备功能](../../docs/features/equipment.md)。
 
+状态组件参数来源：`prepare_battle_status_parameters.py` 核对 `884_156692` 解码程序集，从原组件访问器与 Info 字段声明解析重载类型和继承关系；保留 `854_156383` 战斗配置身份。原方法、字段声明、输入、生成契约与适配／验证入口的 SHA256 见[来源清单](battle-rules/status-parameters-source-manifest.json)，行为与验证范围集中见[战斗执行](../../docs/features/battle-execution.md)。
+
 
 ### 当前伙伴自动结识来源
 

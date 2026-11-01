@@ -887,7 +887,7 @@ namespace Zjcs.Combat.Official
             IList<FightPropertyValue> sourceProperties = null, long customShieldValue = 0,
             IList<FightStatusReplacementValue> replacementProperties = null)
         {
-            Dictionary<string, object> components = RequiredEntity(classId);
+            Dictionary<string, object> components = ResolveStatusParameters(RequiredEntity(classId), replacementProperties);
             Dictionary<string, object> status = Component(components, "FightStatusComponent");
             Dictionary<string, object> action = Component(components, "ActionComponent");
             Dictionary<string, object> statusProps = Component(components, "FightStatusPropComponent")
@@ -939,7 +939,7 @@ namespace Zjcs.Combat.Official
                     && Bool(Component(components, "StatusEndComponent"), "RemoveApplyEntity"),
                 ActionType = action == null ? 0 : Int(action, "ActionType"),
                 HasBackToLifeComponent = HasBackToLifeComponent(classId),
-                SkillReplay = ReadStatusReplay(components, replacementProperties),
+                SkillReplay = ReadStatusReplay(components),
                 DurationRound = durationRound,
                 CurDurationRound = durationRound,
                 StartRound = -1,

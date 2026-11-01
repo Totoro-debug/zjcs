@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Zjcs.Combat.Official;
+using Zjcs.Presentation.Combat;
 
 namespace Zjcs.Editor
 {
@@ -20,11 +22,25 @@ namespace Zjcs.Editor
                 player.Statuses.Add(new FightBattleStatusState { InstanceId = 9901101 + i, ClassId = 9901101 + i,
                     OwnerId = 1, CreatorId = 1, StartRound = 0, DurationRound = -1, CurDurationRound = -1,
                     SkillReplay = new FightBattleStatusReplayState { Rate = 1f, MaxCountEachRound = 1 } });
-            return new StatusReplayProbe();
+            var probe = new StatusReplayProbe();
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_STATUS_PARAMETERS_ACCEPTANCE") == "1")
+            {
+                var values = new List<FightStatusReplacementValue> {
+                    new FightStatusReplacementValue { PropertyId = 5001, RawValue = 10000, IsFloat = true } };
+                var status = OfficialCombatAssetCatalog.LoadDefault().Load().CreateStatus(60170, 1, 1,
+                    9901103, replacementProperties: values);
+                Require(status.RoundStartRulesSupported && status.RoundStartRate == 1f,
+                    "The original equipment status did not resolve its typed round-start parameter.");
+                player.Statuses.Add(status);
+                probe.ParameterStatusInstanceId = status.InstanceId;
+            }
+            return probe;
         }
 
         private sealed class StatusReplayProbe
         {
+            public int ParameterStatusInstanceId;
+
             public void Observe(FightBattleCheckpoint checkpoint)
             {
                 foreach (var status in checkpoint.Units.Single(value => value.Id == 1).Statuses
@@ -49,6 +65,14 @@ namespace Zjcs.Editor
                     name + " did not preserve passive replay progress and provenance in its checkpoint.");
                 Debug.Log("[Status replay hosts] " + name + ": independent FIFO replays=" + replays.Length
                     + ", round caps, release counts and checkpoint passed.");
+                if (ParameterStatusInstanceId > 0)
+                {
+                    int count = checkpoint.Receipts.SelectMany(value => value.Event.SkillCasts)
+                        .Count(value => value.ActorId == 1 && value.SkillEntityId == 60171);
+                    Require(count > 0, name + " did not execute the original parameterized round-start child skill.");
+                    Debug.Log("[Status parameter hosts] " + name + ": original 60170 -> 60171 casts=" + count
+                        + ", typed probability and checkpoint passed.");
+                }
             }
         }
     }
