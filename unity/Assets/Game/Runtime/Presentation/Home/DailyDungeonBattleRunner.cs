@@ -525,6 +525,8 @@ namespace Zjcs.Presentation.Home
             player.Turn.Speed = CheckedProperty(playerProperties, speedId);
             checkpoint.Units.Add(player);
             AssemblePlayer(combat, skillItems, player, playerSave);
+            OfficialBattlePetEnergyAssembler.TryConfigure(player, playerSave,
+                progression.Catalog, combat, skillItems);
 
             Dictionary<int, DailyDungeonRuntimeFormation> formations = battleCatalog.formations
                 .ToDictionary(value => value.id);

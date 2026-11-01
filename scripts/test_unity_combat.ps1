@@ -1480,4 +1480,16 @@ $unrelatedPoolReady = [Zjcs.Combat.Official.FightBattleTargeting]::FindReadySkil
     $otherSummonActor, $otherSummonUnits, 1)
 Assert-Combat ($null -ne $unrelatedPoolReady -and $unrelatedPoolReady.EntityId -eq 58140) 'Unrelated summon types incorrectly consumed the hatch skill pools'
 
-Write-Output "Unity combat core checks passed: $($reference.cases.Count) pinned formula vectors, official catalog loading and digest validation, AI priority groups and filters, skill/status assembly, HP accumulated damage triggers, no-release turn progression, passive status initialization, status damage reduction, shield and skill cost execution, official chained hit graph, status falloff, battle victory, checkpoint replay, random stream, timeline, targeting, multi-target falloff, cross-wave spawn selection, official summon execution/caps and pool-specific release, and conditional tentacle repair."
+$petOwner = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$petOwner.Id = 1; $petOwner.MaxHp = 1000; $petOwner.Hp = 1000
+$petOwner.PetEnergy.Enabled = $true; $petOwner.PetEnergy.OwnerUnitId = 1
+$petOwner.PetEnergy.InitialEnergy = 10; $petOwner.PetEnergy.NeedEnergy = 20
+$petOwner.PetEnergy.MasterLoseHpRecoverEnergy = 6; $petOwner.PetEnergy.MasterLoseHpTriggerRecover = 0.01
+$petUnits = [System.Collections.Generic.List[Zjcs.Combat.Official.FightBattleUnitState]]::new()
+$petUnits.Add($petOwner)
+[Zjcs.Combat.Official.FightBattlePetEnergyRuntime]::Initialize($petOwner)
+Assert-Combat ($petOwner.PetEnergy.CurrentEnergy -eq 10) 'Pet energy did not initialize from the configured initial energy'
+[Zjcs.Combat.Official.FightBattlePetEnergyRuntime]::RecordOwnerDamage($petUnits, 1, 25)
+Assert-Combat ($petOwner.PetEnergy.CurrentEnergy -eq 22.0 -and [Math]::Abs($petOwner.PetEnergy.OwnerDamageAccumulator - 5.0) -lt 0.001) 'Pet owner damage threshold did not exclude remainder or restore energy'
+Assert-Combat ([Zjcs.Combat.Official.FightBattlePetEnergyRuntime]::ConsumeForRelease($petOwner.PetEnergy) -and $petOwner.PetEnergy.CurrentEnergy -eq 2.0) 'Pet energy release did not consume the configured threshold'
+Write-Output "Unity combat core checks passed: $($reference.cases.Count) pinned formula vectors, official catalog loading and digest validation, AI priority groups and filters, skill/status assembly, HP accumulated damage triggers, no-release turn progression, passive status initialization, status damage reduction, shield and skill cost execution, official chained hit graph, status falloff, battle victory, checkpoint replay, random stream, timeline, targeting, multi-target falloff, cross-wave spawn selection, official summon execution/caps and pool-specific release, conditional tentacle repair, and pet energy timing."

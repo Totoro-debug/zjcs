@@ -64,6 +64,9 @@ namespace Zjcs.Combat.Official
         public FightSkillAgentState SkillState = new FightSkillAgentState();
         public FightTurnUnit Turn = new FightTurnUnit();
         public List<FightBattleStatusState> Statuses = new List<FightBattleStatusState>();
+        // Official FightRolePetTransferEntity state. A player unit owns the transfer state while
+        // the configured pet skill is released at the owner's action end.
+        public FightBattlePetEnergyState PetEnergy = new FightBattlePetEnergyState();
         public List<FightBattleStatusApplicationEvent> PendingStatusApplications = new List<FightBattleStatusApplicationEvent>();
         public List<FightBattleStatusState> EndedAccumulatedDamageStatuses = new List<FightBattleStatusState>();
         public List<FightBattleFalloffCounter> FalloffCounts = new List<FightBattleFalloffCounter>();
@@ -71,6 +74,28 @@ namespace Zjcs.Combat.Official
         {
             new FightGridPoint(0, 0)
         };
+    }
+
+    [Serializable]
+    public sealed class FightBattlePetEnergyState
+    {
+        public bool Enabled;
+        public int OwnerUnitId;
+        public int PetUnitId;
+        public int SkillEntityId;
+        public int SkillItemId;
+        public int SkillRank = 1;
+        public int SkillLevel = 1;
+        public int SkillSubRank;
+        public List<FightPropertyValue> SkillProperties = new List<FightPropertyValue>();
+        public double CurrentEnergy;
+        public double InitialEnergy;
+        public double NeedEnergy;
+        public double NaturalRecoverEnergy;
+        public double MasterLoseHpRecoverEnergy;
+        public double MasterLoseHpTriggerRecover = 0.01d;
+        public double OwnerDamageAccumulator;
+        public bool Initialized;
     }
 
     [Serializable]
@@ -818,6 +843,7 @@ namespace Zjcs.Combat.Official
         public int SkillEntityId;
         public int SkillItemId;
         public bool IsReplay;
+        public bool IsPetEnergy;
         public int ReplayType; // Official EReplaySkillType: Normal=0, Extra=1, ExtraWithTip=2.
         public int ReplayStatusInstanceId; // Zero for a skill's own replay configuration.
         public List<int> TargetIds = new List<int>();
@@ -892,10 +918,14 @@ namespace Zjcs.Combat.Official
             var ids = new HashSet<int>();
             foreach (FightBattleUnitState unit in checkpoint.Units)
             {
+                if (unit != null && unit.PetEnergy == null) unit.PetEnergy = new FightBattlePetEnergyState();
+                if (unit?.PetEnergy != null && unit.PetEnergy.SkillProperties == null)
+                    unit.PetEnergy.SkillProperties = new List<FightPropertyValue>();
                 if (unit == null || unit.Id <= 0 || !ids.Add(unit.Id) || unit.Hp < 0
                     || unit.MaxHp < 0 || unit.Hp > unit.MaxHp || unit.MaxHpPlies < 0 || unit.MaxResilience < 0
                     || unit.Resilience < 0 || unit.Resilience > unit.MaxResilience
                     || unit.Properties == null || unit.Skills == null || unit.SkillState == null || unit.Turn == null
+                    || unit.PetEnergy == null || unit.PetEnergy.SkillProperties == null
                     || unit.Statuses == null || unit.FalloffCounts == null)
                     throw new ArgumentException("Fight checkpoint contains an invalid unit.", nameof(checkpoint));
                 if (unit.Turn.Id != unit.Id || unit.Turn.MasterId != unit.MasterId)

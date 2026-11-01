@@ -256,6 +256,8 @@ namespace Zjcs.Presentation.Home
             player.Turn.Speed = CheckedProperty(playerProps, speedId);
             checkpoint.Units.Add(player);
             AssemblePlayer(combat, skillItems, player, playerSave);
+            OfficialBattlePetEnergyAssembler.TryConfigure(player, playerSave,
+                progression.Catalog, combat, skillItems);
 
             foreach (Map10RuntimeWave sourceWave in (roster.Waves ?? Array.Empty<Map10RuntimeWave>()).OrderBy(value => value.Index))
             {

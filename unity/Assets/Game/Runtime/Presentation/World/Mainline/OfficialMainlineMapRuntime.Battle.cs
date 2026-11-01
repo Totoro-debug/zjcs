@@ -359,6 +359,8 @@ namespace Zjcs.Presentation.World
             player.Turn.Speed = CheckedProperty(playerProperties, 4);
             checkpoint.Units.Add(player);
             AssemblePlayerSkills(combatCatalog, skillItems, player);
+            OfficialBattlePetEnergyAssembler.TryConfigure(player, progression.Player,
+                progression.Catalog, combatCatalog, skillItems);
 
             int nextUnitId = 2;
             bool mountLift = mapClassId == 12 && entity?.PlacementId == 3501 && stage.Id == 102;

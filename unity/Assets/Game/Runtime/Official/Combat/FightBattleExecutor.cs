@@ -52,6 +52,7 @@ namespace Zjcs.Combat.Official
             hitExecutor = new FightBattleHitExecutor(formula, settlement, checkpoint.DamageTest);
             foreach (FightBattleUnitState unit in checkpoint.Units)
             {
+                FightBattlePetEnergyRuntime.Initialize(unit);
                 ApplyMonsterInfo(unit);
                 InitializeUnitResilience(unit);
                 ApplySkillAiPriorities(unit);
@@ -151,6 +152,9 @@ namespace Zjcs.Combat.Official
             var skillState = new FightSkillState(actor.SkillState);
             int actorRound = unchecked(actor.SkillState.Round + 1);
             skillState.BeginRound(actorRound);
+            if (actor.PetEnergy != null && actor.PetEnergy.Enabled
+                && actor.PetEnergy.OwnerUnitId > 0 && actor.PetEnergy.OwnerUnitId != actor.Id)
+                FightBattlePetEnergyRuntime.RecoverAtPetRoundStart(actor);
             if (statusCatalog != null && actor.Statuses != null)
                 foreach (FightBattleStatusState status in actor.Statuses)
                     if (status != null && statusCatalog.StatusStopsSkillCooldown(status.ClassId))
@@ -270,6 +274,8 @@ namespace Zjcs.Combat.Official
                         stepActionDuration = Math.Max(stepActionDuration, triggerActionDuration);
                 }
             }
+            ExecutePetEnergySkill(actor, casts, damageEvents, movements,
+                ref stepDuration, ref stepActionDuration);
             ExecutePendingCooldownModifySkills(casts, damageEvents, movements,
                 ref stepDuration, ref stepActionDuration);
             CollectStatusCustomActions(statusCustomActions);
@@ -369,6 +375,52 @@ namespace Zjcs.Combat.Official
             UpdateOutcome(1);
         }
 
+        private void ExecutePetEnergySkill(FightBattleUnitState owner,
+            List<FightBattleSkillCastEvent> casts, List<FightBattleDamageEvent> damageEvents,
+            List<FightBattleMovementEvent> movements, ref float stepDuration,
+            ref float stepActionDuration)
+        {
+            if (owner == null || owner.Hp <= 0 || statusCatalog == null) return;
+            var states = new List<FightBattlePetEnergyState>();
+            if (owner.PetEnergy != null && owner.PetEnergy.Enabled
+                && (owner.PetEnergy.OwnerUnitId == 0 || owner.PetEnergy.OwnerUnitId == owner.Id))
+                states.Add(owner.PetEnergy);
+            foreach (FightBattleUnitState unit in units)
+                if (unit != null && unit != owner && unit.PetEnergy != null && unit.PetEnergy.Enabled
+                    && unit.PetEnergy.OwnerUnitId == owner.Id)
+                    states.Add(unit.PetEnergy);
+
+            foreach (FightBattlePetEnergyState state in states)
+            {
+                if (!FightBattlePetEnergyRuntime.CanRelease(state)) continue;
+                FightBattleSkillDefinition skill = statusCatalog.CreateSkill(state.SkillEntityId,
+                    -1, state.SkillItemId, Math.Max(1, state.SkillRank), Math.Max(1, state.SkillLevel),
+                    state.SkillSubRank > 0 ? state.SkillSubRank : owner.SubRank, state.SkillProperties);
+                List<FightBattleUnitState> targets = FightBattleTargeting.SelectInSkillRange(owner,
+                    units, skill, random: random);
+                if (targets.Count == 0 && skill.TargetType != 5
+                    && !FightBattleTargeting.HasCasterAreaTargets(owner, units, skill)) continue;
+                if (!FightBattlePetEnergyRuntime.ConsumeForRelease(state)) continue;
+
+                ExecuteSkill(owner, skill, targets, casts, damageEvents, movements,
+                    out float lastDelay, out float skillDuration, out float actionDuration);
+                casts.Add(new FightBattleSkillCastEvent
+                {
+                    ActorId = owner.Id,
+                    Slot = -1,
+                    SkillEntityId = skill.EntityId,
+                    SkillItemId = skill.ItemId,
+                    IsPetEnergy = true,
+                    TargetIds = targets.ConvertAll(value => value.Id)
+                });
+                checkpoint.Statistics.RecordCast(owner.Id, skill.EntityId, skill.ItemId);
+                stepDuration = Math.Max(stepDuration,
+                    Math.Max(ResolveDuration(skill, lastDelay), skillDuration));
+                if (actionDuration >= 0f)
+                    stepActionDuration = Math.Max(stepActionDuration, actionDuration);
+            }
+        }
+
         private void ExecuteSkill(FightBattleUnitState actor, FightBattleSkillDefinition skill,
             List<FightBattleUnitState> targets, List<FightBattleSkillCastEvent> casts,
             List<FightBattleDamageEvent> damageEvents, List<FightBattleMovementEvent> movements,
@@ -394,6 +446,7 @@ namespace Zjcs.Combat.Official
             if (skillCost != null) damageEvents.Add(skillCost);
             long skillCostHp = skillCost == null
                 ? 0L : Math.Max(0L, skillCost.BeforeHp - skillCost.AfterHp);
+            FightBattlePetEnergyRuntime.RecordOwnerDamage(units, actor.Id, skillCostHp);
 
             if (statusCatalog != null)
             {
@@ -594,6 +647,7 @@ namespace Zjcs.Combat.Official
                     if (resolved.TriggeredStatusSkillInvocations.Count == 0)
                         triggerSkills.AddRange(resolved.TriggeredStatusSkills);
                     long actualHpLoss = Math.Max(0L, beforeHp - target.Hp);
+                    FightBattlePetEnergyRuntime.RecordOwnerDamage(units, target.Id, actualHpLoss);
                     CollectUnflinchingActions(target, actualHpLoss, skill);
                     FightStatusTriggerRuntime.ApplyAccumulatedDamage(target,
                         actualHpLoss, statusCatalog, random, configuredTriggerSkills, skill);

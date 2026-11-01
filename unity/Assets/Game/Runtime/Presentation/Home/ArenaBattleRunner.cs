@@ -277,6 +277,8 @@ namespace Zjcs.Presentation.Home
                 ? playerFaction.entryDirections[0] : 0;
             checkpoint.Units.Add(player);
             AssemblePlayer(combat, skillItems, player, playerSave);
+            OfficialBattlePetEnergyAssembler.TryConfigure(player, playerSave,
+                progression.Catalog, combat, skillItems);
 
             Dictionary<int, long> guardProperties = new Dictionary<int, long>(combat.CalculateMonsterProps(
                 guard.monsterId, guard.monsterGroupId, guard.level, guard.subRank));
