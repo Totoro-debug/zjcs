@@ -170,7 +170,17 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 原 `CustomContentSettings` 的 `zh_CN` 入口指向原 `FZY4K_Characters.txt`，已按原 GUID 解析实际 TextAsset 并原样打包，`Resources/Partners/OfficialPartnerGiftAssetCatalog.asset` 显式绑定当前配置目录和该字符文件。称谓逐个 UTF-16 字符核对原白名单，长度复用与当前原码一致的 `Official/SkillRules/CJK` 文本元素算法；空称谓返回 1513，超过原 12 长度上限返回 1514，原自定义称谓好感门槛为 100 级。没有增加另一套正则过滤或字符替换规则。
 
-`prepare_partner_gift_configuration_validation.py` 在实际迁移程序集及显式绑定资产的隔离 Unity Play Mode 中通过 10,000 条阈值各三点、1,176 项阶位上限、115 种礼物各 16 组数量／倍率、两组缺 NPC 定义的数据、关系背景区间及完整原字库／CJK 边界检查。静态检查（81,561 个 GUID）、主工程导入／编译和 `Zjcs.Editor.ProjectTools.Validate` 通过，输入／输出与验证源码哈希核对一致。本提供者尚未安装到正式伙伴窗口；真实库存／存档事务、称谓保存、原输入／确认窗口、完整页面模拟点击和 Windows Player 均待接通。
+`prepare_partner_gift_configuration_validation.py` 在实际迁移程序集及显式绑定资产的隔离 Unity Play Mode 中通过 10,000 条阈值各三点、1,176 项阶位上限、115 种礼物各 16 组数量／倍率、两组缺 NPC 定义的数据、关系背景区间及完整原字库／CJK 边界检查。静态检查（81,561 个 GUID）、主工程导入／编译和 `Zjcs.Editor.ProjectTools.Validate` 通过，输入／输出与验证源码哈希核对一致。本提供者尚未安装到正式伙伴窗口；原窗口的玩家提供者安装、称谓保存、原输入／确认窗口、完整页面模拟点击和 Windows Player 均待接通。
+
+### 当前库存与赠礼事务桥接（局部）
+
+`Offline/PartnersUI/OfflinePartnerGiftPlayer` 将原 `IPartnerGiftPlayer` 端口接到实际 `OfflineMainlineProgressSession`，不复制一份玩家背包供界面修改。伙伴和礼物视图按本地物品／伙伴号保持身份，取值始终读取最新 `Save.Player`，因此事务替换玩家对象或重读存档后仍能看到新数量、等级和好感。物品显示配置、功能门槛与称谓读写由宿主显式绑定；称谓服务端审核差异尚未确认，不在这里假定保存规则。
+
+`OfflinePartnerGiftInventoryRules` 按当前版 `NpcInfoParser.ProcessNpcExclusiveGift` 和 `NpcHelper.CanSendGiftToNpc` 建立完整专属礼物归属，保留原背包顺序、礼物／信物类型过滤、不可赠送信物和星神非偏好礼物的排除。赠礼命令只消费当前 `884_156692` 的配置提供者，不改用历史 NPC 阈值或物品表。校验后复用本地 `ApplyCharacterMutation` 和 `OfflineInventoryOperations.Consume`，将礼物数量、单位记录、累计好感、好感等级及重复请求凭据共同落盘；旧存档仅有等级但经验为零时，界面和事务统一沿用已有单机接口的原等级阈值恢复。保留现有算术越界拒绝，以及超过全局最高经验须确认、确认后保留超出经验的已确认方案。
+
+通知在保存成功后发出，物品通知携带原 `preCount`，好感通知先携带旧／新等级，再通知好感变化。外部存档更新按实际差异刷新；写入失败不发布本次赠礼通知、不改变内存数量／好感或主存档，释放文件占用后可用同一请求重试。代码、原方法、配置依赖及验证源码哈希见[玩家桥接凭据](../../assets/reference/partner-gift-player-source-manifest.json)，记录入口为 `scripts/prepare_partner_gift_player.py`。
+
+`prepare_partner_gift_player_validation.py` 在隔离 Unity Play Mode 使用实际玩家／事务代码与隔离存档，通过实时视图、偏好赠礼、保存后通知参数与顺序、单位记录扣除、重复请求、库存不足、专属礼物拒绝、外部存档刷新、文件占用写入失败／同请求重试、旧等级经验恢复、恰好满级、溢出取消／确认及阶位限制；并检查全部 17,020 组伙伴／礼物归属组合。静态检查（81,564 个 GUID）、主工程导入／编译和 `Zjcs.Editor.ProjectTools.Validate` 通过。这仍是状态提供者的 Play Mode 验证，尚未安装到正式窗口；完整原 UI 模拟点击、称谓保存、实际 Windows Player 与发布尚未完成。
 
 ### 原面板页签控制器（局部）
 
