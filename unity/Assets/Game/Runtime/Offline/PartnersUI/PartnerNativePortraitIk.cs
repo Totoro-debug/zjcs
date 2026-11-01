@@ -14,7 +14,7 @@ namespace Zjcs.Offline.PartnersUI
         {
             if (pose == null || state == null) throw new ArgumentNullException();
             if (state.Bones == null || state.Bones.Length != 1 || !float.IsFinite(state.Mix) ||
-                state.Mix < 0 || state.Mix > 1 || !float.IsFinite(originalLength) || originalLength < 0)
+                !float.IsFinite(originalLength) || originalLength < 0)
                 throw new ArgumentException("Original single-bone IK state is invalid.");
             if (state.Mix == 0) return;
             int bone = state.Bones[0];
@@ -56,9 +56,13 @@ namespace Zjcs.Offline.PartnersUI
         {
             if (pose == null || state == null) throw new ArgumentNullException();
             if (state.Bones == null || state.Bones.Length != 2 || !float.IsFinite(state.Mix) ||
-                state.Mix < 0 || state.Mix > 1 || !float.IsFinite(state.ChildLength) || state.ChildLength <= 0)
-                throw new ArgumentException("Original two-bone IK state is invalid.");
+                !float.IsFinite(state.ChildLength) || state.ChildLength < 0)
+                throw new ArgumentException("Original two-bone IK state is invalid: " + state.Name +
+                    "; mix=" + state.Mix.ToString("R", System.Globalization.CultureInfo.InvariantCulture) +
+                    "; length=" + state.ChildLength.ToString("R", System.Globalization.CultureInfo.InvariantCulture));
             if (state.Mix == 0) return;
+            if (state.ChildLength == 0)
+                throw new NotSupportedException("Bind original active two-bone IK zero-length child.");
             if (state.Softness != 0 || state.Stretch || state.Compress)
                 throw new NotSupportedException("Restore the original partner portrait two-bone soft/stretch/compress IK branch.");
             int first = state.Bones[0], child = state.Bones[1];
@@ -91,10 +95,21 @@ namespace Zjcs.Offline.PartnersUI
             // The existing independent cosine-law solver works in this circular
             // frame. Retain both current affine maps instead of discarding prior
             // constraint results by resetting their local source transforms.
-            var result = ProfessionNativeIk.SolvePair(direction, new Vector2(childLocal.m03, childLocal.m13),
-                state.ChildLength * childScale, firstAngle, childAngle, state.BendPositive, state.Mix);
-            local = RotateAxes(local, Mathf.DeltaAngle(firstAngle, result.ParentRotation));
-            childLocal = RotateAxes(childLocal, Mathf.DeltaAngle(childAngle, result.ChildRotation));
+            Vector2 childOffset = new Vector2(childLocal.m03, childLocal.m13);
+            if (direction.sqrMagnitude == 0 || childOffset.sqrMagnitude == 0)
+                throw new NotSupportedException("Coincident original two-bone IK origins require a verified branch.");
+            float childLength = state.ChildLength * childScale;
+            double a = childOffset.magnitude, b = childLength;
+            double cosine = (direction.sqrMagnitude - a * a - b * b) / (2 * a * b);
+            cosine = Math.Max(-1, Math.Min(1, cosine));
+            double elbow = Math.Acos(cosine) * (state.BendPositive ? 1 : -1);
+            double offset = Math.Atan2(childOffset.y, childOffset.x);
+            double shoulder = Math.Atan2(direction.y, direction.x) -
+                Math.Atan2(b * Math.Sin(elbow), a + b * Math.Cos(elbow)) - offset;
+            float parentDelta = Mathf.DeltaAngle(firstAngle, (float)(shoulder * (180 / Math.PI))) * state.Mix;
+            float childDelta = Mathf.DeltaAngle(childAngle, (float)((elbow + offset) * (180 / Math.PI))) * state.Mix;
+            local = RotateAxes(local, parentDelta);
+            childLocal = RotateAxes(childLocal, childDelta);
             Matrix4x4 solved = parent * local;
             pose.OverrideWorld(first, solved);
             pose.OverrideWorld(child, solved * childLocal);

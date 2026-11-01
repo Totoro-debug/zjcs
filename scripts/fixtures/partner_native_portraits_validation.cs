@@ -76,6 +76,7 @@ public static class PartnerNativePortraitsValidation
         CheckOrderedConstraints();
         CheckSingleBoneIk();
         CheckAppliedPairIk();
+        CheckPortraitNoRotation();
         CheckOriginalAlphaAndDeform(work);
         File.WriteAllText(Path.Combine(work, "portrait-native-sampling.json"), JsonUtility.ToJson(new Results { outcomes = outcomes.ToArray() }, true));
         Debug.Log("PARTNER_PORTRAIT_PACKAGES_PASSED: 54 identity/integrity-checked packages; original 8401 idle/click five samples and unclamped geometry. Other solver gaps are explicit in the sampling result; formal UI rendering remains pending.");
@@ -165,6 +166,9 @@ public static class PartnerNativePortraitsValidation
         state.Mix = 0; var previous = pose.World(1);
         PartnerNativePortraitIk.ApplySingle(pose, state, 2);
         Require(pose.World(1) == previous, "zero IK mix preserves the prior result");
+        state.Mix = 1.02596927f;
+        PartnerNativePortraitIk.ApplySingle(pose, state, 2);
+        Require(float.IsFinite(pose.World(1).m00), "original Bezier overshoot weight remains unclamped");
     }
 
     private static void CheckAppliedPairIk()
@@ -199,9 +203,36 @@ public static class PartnerNativePortraitsValidation
             Require(Mathf.Abs(new Vector2(local.m00, local.m10).magnitude - 2) < .0001f,
                 "two-bone IK preserves the existing uniform parent scale");
             state.Mix = 0; Matrix4x4 previous = pose.World(2);
+            state.ChildLength = 0;
             PartnerNativePortraitIk.ApplyPair(pose, state);
             Require(pose.World(2) == previous, "zero two-bone IK mix preserves the solved chain");
+            state.Mix = 1.02596927f; state.ChildLength = 2;
+            PartnerNativePortraitIk.ApplyPair(pose, state);
+            Require(float.IsFinite(pose.World(2).m00), "two-bone Bezier overshoot weight remains unclamped");
         }
+    }
+
+    private static void CheckPortraitNoRotation()
+    {
+        var bones = new[] {
+            new ProfessionNativeBonePose.Bone { name = "parent", parent = -1 },
+            new ProfessionNativeBonePose.Bone { name = "selective", parent = 0, inherit = 2, x = 1, y = 2 } };
+        var matrix = Matrix4x4.TRS(new Vector3(10, 20, 0), Quaternion.Euler(0, 0, 30), new Vector3(-2, 3, 1));
+        var restricted = new ProfessionNativeBonePose(bones); restricted.OverrideWorld(0, matrix);
+        Reject(() => restricted.World(1));
+        var pose = new ProfessionNativeBonePose(bones, true); pose.OverrideWorld(0, matrix);
+        var result = pose.World(1); Vector3 expected = matrix.MultiplyPoint3x4(new Vector3(1, 2, 0));
+        Require(Mathf.Abs(result.m00 - 2.25f) < .00001f && Mathf.Abs(result.m11 - 2.75f) < .00001f &&
+            Mathf.Abs(result.m01 + Mathf.Sqrt(3) * .25f) < .00001f && Mathf.Abs(result.m10 - result.m01) < .00001f &&
+            Mathf.Abs(result.m00 * result.m11 - result.m01 * result.m10 - 6) < .00001f &&
+            Vector2.Distance(new Vector2(result.m03, result.m13), expected) < .00001f,
+            "nonuniform no-rotation removes reflection, preserves positive stretches and retains parent-space translation");
+        // Pure parent rotation has no effect on the child's own orientation.
+        pose.OverrideWorld(0, Matrix4x4.Rotate(Quaternion.Euler(0, 0, 73)));
+        result = pose.World(1);
+        Require(Mathf.Abs(result.m00 - 1) < .00001f && Mathf.Abs(result.m11 - 1) < .00001f &&
+            Mathf.Abs(result.m10) < .00001f && Mathf.Abs(result.m01) < .00001f,
+            "no-rotation preserves the existing uniform branch");
     }
 
     private static void CheckOriginalAlphaAndDeform(string work)

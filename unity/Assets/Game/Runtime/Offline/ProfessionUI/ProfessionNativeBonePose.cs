@@ -36,6 +36,7 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly Vector2[] position, scale, shear;
         private readonly int[] inheritance;
         private readonly float[] rotation;
+        private readonly bool allowNonuniformNoRotation;
         public int Count => source.Length;
         public bool IsActive(int bone) => active[bone];
         public Matrix4x4 World(int bone) => EvaluateWorld(bone);
@@ -47,8 +48,9 @@ namespace Zjcs.Offline.ProfessionUI
         public float LocalRotation(int bone) => rotation[bone];
         public bool HasWorldOverride(int bone) => overridden[bone];
 
-        public ProfessionNativeBonePose(Bone[] bones)
+        public ProfessionNativeBonePose(Bone[] bones, bool allowNonuniformNoRotation = false)
         {
+            this.allowNonuniformNoRotation = allowNonuniformNoRotation;
             if (bones == null || bones.Length == 0) throw new ArgumentException("Original bone hierarchy is empty.");
             source = new Bone[bones.Length];
             var names = new HashSet<string>(StringComparer.Ordinal);
@@ -192,14 +194,21 @@ namespace Zjcs.Offline.ProfessionUI
                 // The current female core sleeve chains have orthogonal parent
                 // axes of equal length. Removing rotation and reflection has an
                 // unambiguous result here: retain only their common magnitude.
-                // General nonuniform/sheared parents require a separate binding.
+                // Partner portraits also bind the nonuniform planar construction.
                 var x = new Vector2(parent.m00, parent.m10);
                 var y = new Vector2(parent.m01, parent.m11);
                 float tolerance = .00002f * Mathf.Max(x.sqrMagnitude, y.sqrMagnitude);
                 if (Mathf.Abs(x.sqrMagnitude - y.sqrMagnitude) > tolerance || Mathf.Abs(Vector2.Dot(x, y)) > tolerance)
-                    throw new NotSupportedException("Nonuniform original no-rotation inheritance is unbound: " + b.name);
-                float magnitude = x.magnitude;
-                basis = Matrix4x4.Scale(new Vector3(magnitude, magnitude, 1)) * Axes(rotation[i], shear[i].x, shear[i].y, scale[i]);
+                {
+                    if (!allowNonuniformNoRotation)
+                        throw new NotSupportedException("Nonuniform original no-rotation inheritance is unbound: " + b.name);
+                    basis = WithoutParentRotation(parent) * Axes(rotation[i], shear[i].x, shear[i].y, scale[i]);
+                }
+                else
+                {
+                    float magnitude = x.magnitude;
+                    basis = Matrix4x4.Scale(new Vector3(magnitude, magnitude, 1)) * Axes(rotation[i], shear[i].x, shear[i].y, scale[i]);
+                }
             }
             else if (inheritance[i] == 3)
                 basis = WithoutParentScale(parent, rotation[i], shear[i], scale[i]);
@@ -209,6 +218,36 @@ namespace Zjcs.Offline.ProfessionUI
             return basis;
         }
 
+
+        private static Matrix4x4 WithoutParentRotation(Matrix4x4 parent)
+        {
+            // Independent axis/area construction. Resolve a direction into the
+            // parent's orthogonal X frame, retain positive longitudinal and
+            // transverse stretch, then express it in the same world frame.
+            // Nonuniform stretch can still change an angle; rotation and
+            // reflection themselves are removed (spine-bones#Transform-inheritance).
+            var x = new Vector2(parent.m00, parent.m10);
+            float along = x.magnitude, across;
+            Vector2 u;
+            if (along > 1e-7f)
+            {
+                u = x / along;
+                across = Mathf.Abs(parent.m00 * parent.m11 - parent.m01 * parent.m10) / along;
+            }
+            else
+            {
+                var y = new Vector2(parent.m01, parent.m11);
+                across = y.magnitude;
+                u = across > 1e-7f ? new Vector2(y.y, -y.x) / across : Vector2.right;
+                along = 0;
+            }
+            var v = new Vector2(-u.y, u.x);
+            Matrix4x4 result = Matrix4x4.identity;
+            result.m00 = along * u.x * u.x + across * v.x * v.x;
+            result.m01 = result.m10 = along * u.x * u.y + across * v.x * v.y;
+            result.m11 = along * u.y * u.y + across * v.y * v.y;
+            return result;
+        }
 
         private static Matrix4x4 WithoutParentScale(Matrix4x4 parent, float rotation, Vector2 shear, Vector2 scale)
         {
