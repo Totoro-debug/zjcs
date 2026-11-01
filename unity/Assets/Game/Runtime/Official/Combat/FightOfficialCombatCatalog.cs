@@ -927,6 +927,10 @@ namespace Zjcs.Combat.Official
             Dictionary<string, object> falloff = Component(components, "FightStatusDamageFalloffComponent");
             Dictionary<string, object> hpDecrease =
                 Component(components, "FightStatusHpDecreaseUnitComponent");
+            Dictionary<string, object> hpLessThan =
+                Component(components, "FightStatusHpLessThanComponent");
+            Dictionary<string, object> hpLimit =
+                Component(components, "FightStatusHpLimitComponent");
             Dictionary<string, object> roundStart =
                 Component(components, "FightStatusRoundStartComponent");
             Dictionary<string, object> roundEnd =
@@ -1002,6 +1006,28 @@ namespace Zjcs.Combat.Official
                 HpTriggerPer = hpDecrease == null ? -1f : Float(hpDecrease, "UnitHpPer", -1f),
                 HpTriggerMaxCount = hpDecrease == null ? -1 : Int(hpDecrease, "MaxCount", -1),
                 HpTriggerAtStart = hpDecrease != null && Bool(hpDecrease, "TryAtStart"),
+                HasHpLessThan = hpLessThan != null,
+                HpLessThan = hpLessThan == null ? -1L : Long(hpLessThan, "HpLessThan", -1L),
+                HpLessThanPercentage = hpLessThan == null ? -1f
+                    : Float(hpLessThan, "HpLessThanPercentage", -1f),
+                HpLessThanInvokeOnDie = hpLessThan != null && Bool(hpLessThan, "IsInvokeOnDie"),
+                HpLessThanTryAtStart = hpLessThan != null && Bool(hpLessThan, "TryAtStart"),
+                HpLessThanMaxCount = hpLessThan == null ? -1 : Int(hpLessThan, "MaxCount", -1),
+                HpLessThanAutoDestroy = hpLessThan != null && Bool(hpLessThan, "AutoDestory"),
+                HpLessThanCheckExistForbidden = hpLessThan != null
+                    && Bool(hpLessThan, "IsCheckExsitForbidden"),
+                HpLessThanNotMeetRemoveStatus = hpLessThan != null
+                    && Bool(hpLessThan, "NotMeetRemoveStatus"),
+                HpLessThanTargetType = hpLessThan == null ? 0 : Int(hpLessThan, "TargetType"),
+                HpLessThanTryAfterInvoke = hpLessThan != null && Bool(hpLessThan, "TryAfterInvoke"),
+                HpLessThanReportSkillTriggerCount = hpLessThan != null
+                    && Bool(hpLessThan, "ReportSkillTriggerCount"),
+                HasHpLimit = hpLimit != null,
+                HpLimitLowerLimit = hpLimit == null ? 0 : Int(hpLimit, "LowerLimit"),
+                HpLimitMaxCount = hpLimit == null ? -1 : Int(hpLimit, "MaxCount", -1),
+                HpLimitAutoRemove = hpLimit != null && Bool(hpLimit, "AutoRemove"),
+                HpLimitAutoRemoveImmediately = hpLimit != null && Bool(hpLimit, "AutoRemoveImmediately"),
+                HpLimitExecuteOrder = hpLimit == null ? 0 : Int(hpLimit, "ExcuteOrder"),
                 HasRoundStartTrigger = roundStart != null,
                 RoundStartRulesSupported = roundStart != null
                     && SupportsRoundStart(roundStart),
@@ -1124,6 +1150,32 @@ namespace Zjcs.Combat.Official
             {
                 AddHpTriggerStatuses(hpDecrease, result.HpTriggerStatuses);
                 AddHpTriggerSkills(hpDecrease, result.HpTriggerSkills);
+            }
+            if (hpLessThan != null)
+            {
+                result.HpLessThanReplacementProperties = ReadReplacementProperties(hpLessThan,
+                    "StatusReplacePropertyValues");
+                result.HpLessThanCharacterTypes.AddRange(IntArray(hpLessThan, "CharacterTypes"));
+                result.HpLessThanDeactivatePassiveSkills.AddRange(
+                    IntArray(hpLessThan, "DeactivatePassiveSkills"));
+                result.HpLessThanActivatePassiveSkills.AddRange(
+                    IntArray(hpLessThan, "ActivatePassiveSkills"));
+                AddHpThresholdStatuses(hpLessThan, "StatusList", "StatusCfgs",
+                    result.HpLessThanStatuses);
+                AddHpThresholdSkills(hpLessThan, "SkillId", "SkillCfgs",
+                    result.HpLessThanSkills);
+            }
+            if (hpLimit != null)
+            {
+                result.HpLimitReplacementProperties = ReadReplacementProperties(hpLimit,
+                    "StatusReplacePropertyValues");
+                Dictionary<string, object> listener = Component(hpLimit, "ListenerSetting");
+                result.HpLimitListenerType = listener == null ? 0 : Int(listener, "Type");
+                result.HpLimitPassTriggerTarget = Bool(hpLimit, "PassTriggerTarget");
+                AddHpThresholdStatuses(hpLimit, "StatusList", null, result.HpLimitStatuses);
+                AddHpThresholdSkills(hpLimit, "SkillList", null, result.HpLimitSkills,
+                    "SkillId");
+                ReadHpLimitInvokes(hpLimit, result.HpLimitInvokes);
             }
             if (roundStart != null)
                 AddHpAccTriggerEntries(roundStart, "StatusTriggerSkillCfgs", "SkillId",
@@ -1979,6 +2031,135 @@ namespace Zjcs.Combat.Official
                 Dictionary<string, object> row = Object(item, "hp trigger status");
                 int statusId = Int(row, "StatusId");
                 if (statusId > 0) output.Add(statusId);
+            }
+        }
+
+        private static void AddHpThresholdStatuses(Dictionary<string, object> component,
+            string legacyField, string configuredField, List<FightBattleStatusStateTrigger> output)
+        {
+            if (component == null || output == null) return;
+            if (!string.IsNullOrEmpty(legacyField) && component.TryGetValue(legacyField, out object legacy)
+                && legacy != null)
+                foreach (object item in Array(legacy, legacyField))
+                {
+                    Dictionary<string, object> row = Object(item, "HP threshold status");
+                    int id = Int(row, "StatusId");
+                    if (id > 0) output.Add(new FightBattleStatusStateTrigger
+                    {
+                        EntityId = id, BasePercent = Float(row, "BasePercent", 1f),
+                        AffectedByProp = Bool(row, "AffectedByProp"),
+                        ApplyTarget = Int(row, "ApplyTarget", 2),
+                        StatusReplacementProperties = ReadReplacementProperties(row,
+                            "StatusReplacePropertyValues")
+                    });
+                }
+            if (string.IsNullOrEmpty(configuredField)
+                || !component.TryGetValue(configuredField, out object configured)
+                || configured == null) return;
+            foreach (object item in Array(configured, configuredField))
+            {
+                Dictionary<string, object> row = Object(item, "HP threshold status config");
+                int id = Int(row, "StatusId");
+                if (id <= 0) continue;
+                output.Add(new FightBattleStatusStateTrigger
+                {
+                    EntityId = id, BasePercent = Float(row, "BasePercent", 1f),
+                    AffectedByProp = Bool(row, "AffectedByProp"),
+                    ApplyTarget = Int(row, "ApplyTarget", 2),
+                    StatusReplacementProperties = ReadReplacementProperties(row,
+                        "StatusReplacePropertyValues")
+                });
+            }
+        }
+
+        private static void AddHpThresholdSkills(Dictionary<string, object> component,
+            string legacyField, string configuredField, List<FightBattleStatusStateTrigger> output,
+            string legacyIdField = "SkillId")
+        {
+            if (component == null || output == null) return;
+            if (!string.IsNullOrEmpty(legacyField) && component.TryGetValue(legacyField, out object legacy)
+                && legacy != null)
+            {
+                if (legacy is Dictionary<string, object>)
+                    AddHpThresholdSkill(Object(legacy, "HP threshold skill"), legacyIdField, output);
+                else if (legacy is List<object> || legacy is object[])
+                    foreach (object item in Array(legacy, legacyField))
+                        AddHpThresholdSkill(Object(item, "HP threshold skill"), legacyIdField, output);
+                else
+                {
+                    int id = Convert.ToInt32(legacy, CultureInfo.InvariantCulture);
+                    if (id > 0) output.Add(new FightBattleStatusStateTrigger { EntityId = id });
+                }
+            }
+            if (string.IsNullOrEmpty(configuredField)
+                || !component.TryGetValue(configuredField, out object configured)
+                || configured == null) return;
+            foreach (object item in Array(configured, configuredField))
+                AddHpThresholdSkill(Object(item, "HP threshold skill config"), "SkillId", output);
+        }
+
+        private static void AddHpThresholdSkill(Dictionary<string, object> row, string idField,
+            List<FightBattleStatusStateTrigger> output)
+        {
+            int id = Int(row, idField);
+            if (id <= 0) return;
+            output.Add(new FightBattleStatusStateTrigger
+            {
+                EntityId = id, BasePercent = Float(row, "BasePercent", 1f),
+                AffectedByProp = Bool(row, "AffectedByProp"), Source = Int(row, "Source"),
+                Target = Int(row, "Target"), UseAI = Bool(row, "UseAI"),
+                TargetPos = Int(row, "TargetPos"),
+                StackedCountToDamageFactor = Bool(row, "StackedCountToDamageFactor"),
+                SourceSkillItemId = Int(row, "SkillItemId"),
+                TargetWithoutStatusIds = IntArray(row, "TargetWithoutStatusIds"),
+                StatusReplacementProperties = ReadReplacementProperties(row,
+                    "StatusReplacePropertyValues")
+            });
+        }
+
+        private static List<FightStatusReplacementValue> ReadReplacementProperties(
+            Dictionary<string, object> row, string field)
+        {
+            var result = new List<FightStatusReplacementValue>();
+            if (row == null || !row.TryGetValue(field, out object raw) || raw == null) return result;
+            foreach (object item in Array(raw, field))
+            {
+                Dictionary<string, object> value = Object(item, field + " entry");
+                int propertyId = Int(value, "PropertyId", Int(value, "Prop"));
+                if (propertyId <= 0) continue;
+                result.Add(new FightStatusReplacementValue
+                {
+                    PropertyId = propertyId,
+                    RawValue = Long(value, "Value", Long(value, "RawValue")),
+                    IsFloat = Bool(value, "IsFloat")
+                });
+            }
+            return result;
+        }
+
+        private static void ReadHpLimitInvokes(Dictionary<string, object> component,
+            List<FightBattleStatusInvoke> output)
+        {
+            if (component == null || output == null || !component.TryGetValue("InvokeCfgs", out object raw)
+                || raw == null) return;
+            foreach (object item in Array(raw, "FightStatusHpLimitComponent.InvokeCfgs"))
+            {
+                Dictionary<string, object> row = Object(item, "HP limit invoke");
+                var invoke = new FightBattleStatusInvoke
+                {
+                    Type = Int(row, "Type"), Target = Int(row, "Target"),
+                    ChangeCooldown = Int(row, "ChangeCD"), TargetType = Int(row, "TargetType"),
+                    MaxCount = Int(row, "MaxCount", -1),
+                    CharacterEntityClassIds = IntArray(row, "CharacterEntityClassIds"),
+                    CharacterTypes = IntArray(row, "CharacterTypes")
+                };
+                if (row.TryGetValue("Range", out object range) && range != null)
+                    foreach (object rawPoint in Array(range, "HP limit invoke range"))
+                    {
+                        Dictionary<string, object> point = Object(rawPoint, "HP limit invoke point");
+                        invoke.Range.Add(new FightGridPoint(Int(point, "X"), Int(point, "Y")));
+                    }
+                output.Add(invoke);
             }
         }
 

@@ -43,6 +43,14 @@ namespace Zjcs.Combat.Official
             status.SkillCooldownModifyPending = false;
         }
 
+        public static void ChangeCooldown(FightBattleUnitState unit, int delta)
+        {
+            if (unit == null || unit.SkillState == null || delta == 0) return;
+            var skillState = new FightSkillState(unit.SkillState);
+            foreach (FightSkillSlotState slot in unit.SkillState.Slots)
+                if (slot != null) skillState.ChangeCooldown(slot.Slot, delta);
+        }
+
         private static void ApplyPermanentReduction(FightBattleUnitState unit,
             FightBattleStatusState status)
         {

@@ -138,6 +138,9 @@ namespace Zjcs.Combat.Official
         public int SourceSkillRank;
         public int SourceSkillLevel;
         public int SourceSubRank;
+        public int ApplyTarget;
+        public int[] TargetWithoutStatusIds;
+        public List<FightStatusReplacementValue> StatusReplacementProperties;
         public List<FightStatusPropertyScale> BlessPropertyScales;
 
         public FightBattleStatusStateTrigger WithSource(FightBattleStatusState status)
@@ -147,6 +150,10 @@ namespace Zjcs.Combat.Official
             result.SourceSkillRank = status.SourceSkillRank;
             result.SourceSkillLevel = status.SourceSkillLevel;
             result.SourceSubRank = status.SourceSubRank;
+            result.ApplyTarget = ApplyTarget;
+            result.TargetWithoutStatusIds = TargetWithoutStatusIds == null
+                ? null : (int[])TargetWithoutStatusIds.Clone();
+            result.StatusReplacementProperties = FightStatusPropertyModifiers.Copy(StatusReplacementProperties);
             result.BlessPropertyScales = FightStatusPropertyModifiers.Copy(status.BlessPropertyScales);
             return result;
         }
@@ -159,6 +166,8 @@ namespace Zjcs.Combat.Official
         public int SourceUnitId;
         public int TargetUnitId;
         public int TargetPositionUnitId;
+        public bool AllowDeadSource;
+        public bool AllowDeadTarget;
     }
 
     [Serializable]
@@ -256,6 +265,43 @@ namespace Zjcs.Combat.Official
         public bool HpTriggerAtStart;
         public List<int> HpTriggerStatuses = new List<int>();
         public List<int> HpTriggerSkills = new List<int>();
+        public bool HasHpLessThan;
+        public long HpLessThan = -1;
+        public float HpLessThanPercentage = -1f;
+        public bool HpLessThanInvokeOnDie;
+        public bool HpLessThanTryAtStart;
+        public int HpLessThanMaxCount = -1;
+        public int HpLessThanTriggeredCount;
+        public bool HpLessThanAutoDestroy;
+        public bool HpLessThanCheckExistForbidden;
+        public bool HpLessThanNotMeetRemoveStatus;
+        public int HpLessThanTargetType;
+        public bool HpLessThanTryAfterInvoke;
+        public bool HpLessThanReportSkillTriggerCount;
+        public List<int> HpLessThanCharacterTypes = new List<int>();
+        public List<int> HpLessThanDeactivatePassiveSkills = new List<int>();
+        public List<int> HpLessThanActivatePassiveSkills = new List<int>();
+        public List<FightBattleStatusStateTrigger> HpLessThanStatuses =
+            new List<FightBattleStatusStateTrigger>();
+        public List<FightBattleStatusStateTrigger> HpLessThanSkills =
+            new List<FightBattleStatusStateTrigger>();
+        public List<FightStatusReplacementValue> HpLessThanReplacementProperties;
+        public bool HasHpLimit;
+        public int HpLimitLowerLimit;
+        public int HpLimitMaxCount = -1;
+        public int HpLimitTriggeredCount;
+        public bool HpLimitAutoRemove;
+        public bool HpLimitAutoRemoveImmediately;
+        public int HpLimitExecuteOrder;
+        public int HpLimitListenerType;
+        public bool HpLimitPassTriggerTarget;
+        public List<FightBattleStatusStateTrigger> HpLimitStatuses =
+            new List<FightBattleStatusStateTrigger>();
+        public List<FightBattleStatusStateTrigger> HpLimitSkills =
+            new List<FightBattleStatusStateTrigger>();
+        public List<FightStatusReplacementValue> HpLimitReplacementProperties;
+        public List<FightBattleStatusInvoke> HpLimitInvokes =
+            new List<FightBattleStatusInvoke>();
         public bool HasRoundStartTrigger;
         public bool RoundStartRulesSupported;
         public int RoundStartListenTarget;
@@ -363,6 +409,19 @@ namespace Zjcs.Combat.Official
         public bool ShieldInitialized;
         // Set only by a successful new lifecycle application, never inferred from a restored shield.
         public bool ShieldGrantPending;
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusInvoke
+    {
+        public int Type;
+        public int Target;
+        public int ChangeCooldown;
+        public int TargetType;
+        public int MaxCount = -1;
+        public int[] CharacterEntityClassIds = Array.Empty<int>();
+        public int[] CharacterTypes = Array.Empty<int>();
+        public List<FightGridPoint> Range = new List<FightGridPoint>();
     }
 
     [Serializable]

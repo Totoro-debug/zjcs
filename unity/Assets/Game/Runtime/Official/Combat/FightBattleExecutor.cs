@@ -347,7 +347,8 @@ namespace Zjcs.Combat.Official
                     random);
             if (statusCatalog != null)
                 foreach (FightBattleUnitState unit in units)
-                    FightStatusTriggerRuntime.Apply(unit, statusCatalog, true, random: random);
+                    FightStatusTriggerRuntime.Apply(unit, statusCatalog, true, random: random,
+                        units: units);
             RebuildBattleProperties();
             lastGlobalRound = turns.GlobalRound();
 
@@ -704,6 +705,7 @@ namespace Zjcs.Combat.Official
                     TransmitVoodooDamage(target, damage, damageEvents, casts);
                     var triggerSkills = new List<int>();
                     var configuredTriggerSkills = new List<FightBattleStatusStateTrigger>();
+                    var configuredHpTriggerSkills = new List<FightBattleStatusSkillInvocation>();
                     var hpTriggerSkills = new List<FightBattleStatusStateTrigger>();
                     configuredTriggerSkills.AddRange(resolved.TriggeredStatusSkillInvocations);
                     if (resolved.TriggeredStatusSkillInvocations.Count == 0)
@@ -721,7 +723,7 @@ namespace Zjcs.Combat.Official
                     ApplyHitMove(actor, target, hit, movements);
                     ApplyHemophagia(actor, hit, damage, hitDelay, skill, damageEvents);
                     FightStatusTriggerRuntime.Apply(target, statusCatalog, false, hpTriggerSkills,
-                        random, skill);
+                        random, skill, units, configuredHpTriggerSkills);
                     RebuildBattleProperties();
                     float endedDuration = 0f, endedActionDuration = -1f;
                     ExecuteAccumulatedDamageEnds(casts, damageEvents, movements,
@@ -733,6 +735,9 @@ namespace Zjcs.Combat.Official
                             ref lastDelay);
                     if (configuredTriggerSkills.Count > 0)
                         ExecuteConfiguredTriggerSkills(target, configuredTriggerSkills, casts,
+                            damageEvents, movements, ref lastDelay, out _, out _);
+                    if (configuredHpTriggerSkills.Count > 0)
+                        ExecuteConfiguredStatusSkills(configuredHpTriggerSkills, casts,
                             damageEvents, movements, ref lastDelay, out _, out _);
                     if (hpTriggerSkills.Count > 0)
                         ExecuteTriggerSkills(target, hpTriggerSkills, casts, damageEvents, movements,
@@ -793,7 +798,8 @@ namespace Zjcs.Combat.Official
                     summon.VoodooDoll.VoodooStatusInstanceId = mark == null ? 0 : mark.InstanceId;
                     ApplySummonStatus(summon, reference, skill, summon.VoodooDoll.FollowDieStatusId);
                 }
-                FightStatusTriggerRuntime.Apply(summon, statusCatalog, true, random: random);
+                FightStatusTriggerRuntime.Apply(summon, statusCatalog, true, random: random,
+                    units: units);
                 RebuildBattleProperties();
             }
         }
@@ -1475,9 +1481,12 @@ namespace Zjcs.Combat.Official
                         out FightBattleUnitState target)
                     || !unitById.TryGetValue(invocation.TargetPositionUnitId,
                         out FightBattleUnitState targetPosition)
-                    || !FightBattleTargeting.IsSelectable(source)
-                    || !FightBattleTargeting.IsSelectable(target)
-                    || !FightBattleTargeting.IsSelectable(targetPosition)) continue;
+                    || (!FightBattleTargeting.IsSelectable(source)
+                        && !invocation.AllowDeadSource)
+                    || (!FightBattleTargeting.IsSelectable(target)
+                        && !invocation.AllowDeadTarget)
+                    || (!FightBattleTargeting.IsSelectable(targetPosition)
+                        && !invocation.AllowDeadTarget)) continue;
 
                 FightBattleSkillDefinition skill;
                 try
@@ -1511,7 +1520,7 @@ namespace Zjcs.Combat.Official
                 cast.TargetIds.Add(target.Id);
                 casts.Add(cast);
                 ExecuteSkill(source, skill, targets, casts, damageEvents, movements,
-                    out float delay, targetPosition);
+                    out float delay, targetPosition, invocation.AllowDeadSource);
                 if (delay > lastDelay) lastDelay = delay;
                 maxDuration = Math.Max(maxDuration, ResolveDuration(skill, delay));
                 float actionDuration = ResolveActionDuration(skill, delay);

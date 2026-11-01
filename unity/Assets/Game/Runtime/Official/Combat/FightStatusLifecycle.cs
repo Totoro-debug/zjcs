@@ -221,6 +221,40 @@ namespace Zjcs.Combat.Official
                 HpTriggerAtStart = template.HpTriggerAtStart,
                 HpTriggerStatuses = Copy(template.HpTriggerStatuses),
                 HpTriggerSkills = Copy(template.HpTriggerSkills),
+                HasHpLessThan = template.HasHpLessThan,
+                HpLessThan = template.HpLessThan,
+                HpLessThanPercentage = template.HpLessThanPercentage,
+                HpLessThanInvokeOnDie = template.HpLessThanInvokeOnDie,
+                HpLessThanTryAtStart = template.HpLessThanTryAtStart,
+                HpLessThanMaxCount = template.HpLessThanMaxCount,
+                HpLessThanTriggeredCount = template.HpLessThanTriggeredCount,
+                HpLessThanAutoDestroy = template.HpLessThanAutoDestroy,
+                HpLessThanCheckExistForbidden = template.HpLessThanCheckExistForbidden,
+                HpLessThanNotMeetRemoveStatus = template.HpLessThanNotMeetRemoveStatus,
+                HpLessThanTargetType = template.HpLessThanTargetType,
+                HpLessThanTryAfterInvoke = template.HpLessThanTryAfterInvoke,
+                HpLessThanReportSkillTriggerCount = template.HpLessThanReportSkillTriggerCount,
+                HpLessThanCharacterTypes = Copy(template.HpLessThanCharacterTypes),
+                HpLessThanDeactivatePassiveSkills = Copy(template.HpLessThanDeactivatePassiveSkills),
+                HpLessThanActivatePassiveSkills = Copy(template.HpLessThanActivatePassiveSkills),
+                HpLessThanStatuses = CopyTriggers(template.HpLessThanStatuses),
+                HpLessThanSkills = CopyTriggers(template.HpLessThanSkills),
+                HpLessThanReplacementProperties = FightStatusPropertyModifiers.Copy(
+                    template.HpLessThanReplacementProperties),
+                HasHpLimit = template.HasHpLimit,
+                HpLimitLowerLimit = template.HpLimitLowerLimit,
+                HpLimitMaxCount = template.HpLimitMaxCount,
+                HpLimitTriggeredCount = template.HpLimitTriggeredCount,
+                HpLimitAutoRemove = template.HpLimitAutoRemove,
+                HpLimitAutoRemoveImmediately = template.HpLimitAutoRemoveImmediately,
+                HpLimitExecuteOrder = template.HpLimitExecuteOrder,
+                HpLimitListenerType = template.HpLimitListenerType,
+                HpLimitPassTriggerTarget = template.HpLimitPassTriggerTarget,
+                HpLimitStatuses = CopyTriggers(template.HpLimitStatuses),
+                HpLimitSkills = CopyTriggers(template.HpLimitSkills),
+                HpLimitReplacementProperties = FightStatusPropertyModifiers.Copy(
+                    template.HpLimitReplacementProperties),
+                HpLimitInvokes = CopyInvokes(template.HpLimitInvokes),
                 HasRoundStartTrigger = template.HasRoundStartTrigger,
                 RoundStartRulesSupported = template.RoundStartRulesSupported,
                 RoundStartListenTarget = template.RoundStartListenTarget,
@@ -399,8 +433,35 @@ namespace Zjcs.Combat.Official
                             UseAI = value.UseAI,
                             TargetPos = value.TargetPos,
                             StackedCountToDamageFactor = value.StackedCountToDamageFactor,
+                            ApplyTarget = value.ApplyTarget,
+                            TargetWithoutStatusIds = value.TargetWithoutStatusIds == null
+                                ? null : (int[])value.TargetWithoutStatusIds.Clone(),
+                            StatusReplacementProperties = FightStatusPropertyModifiers.Copy(
+                                value.StatusReplacementProperties),
                             BlessPropertyScales = FightStatusPropertyModifiers.Copy(value.BlessPropertyScales)
                         });
+            return result;
+        }
+
+        private static List<FightBattleStatusInvoke> CopyInvokes(
+            List<FightBattleStatusInvoke> values)
+        {
+            var result = new List<FightBattleStatusInvoke>();
+            if (values == null) return result;
+            foreach (FightBattleStatusInvoke value in values)
+                if (value != null)
+                    result.Add(new FightBattleStatusInvoke
+                    {
+                        Type = value.Type, Target = value.Target,
+                        ChangeCooldown = value.ChangeCooldown, TargetType = value.TargetType,
+                        MaxCount = value.MaxCount,
+                        CharacterEntityClassIds = value.CharacterEntityClassIds == null ? Array.Empty<int>()
+                            : (int[])value.CharacterEntityClassIds.Clone(),
+                        CharacterTypes = value.CharacterTypes == null ? Array.Empty<int>()
+                            : (int[])value.CharacterTypes.Clone(),
+                        Range = value.Range == null ? new List<FightGridPoint>()
+                            : new List<FightGridPoint>(value.Range)
+                    });
             return result;
         }
 
