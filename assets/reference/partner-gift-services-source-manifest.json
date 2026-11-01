@@ -1,0 +1,51 @@
+{
+  "manifest": "884_156692",
+  "generator_sha256": "0ddd4fc1e3b4f89b03950a31ea1e7b67c659bbf025dc8397319bc4627af4d316",
+  "inputs": {
+    ".tools/source-packages/official-code/client-source/NpcDetailPanelGiftContent.cs": "2555857a851ee7d13b59d674ee9614de7eea9c973e8644b03f81a4fe8b835a6a",
+    ".tools/source-packages/official-code/common-source/Common/LanguageUtils.cs": "ddc94bb5dd46f8c71b6d58ab0f03e2048cde72911de11e343304ce73e4b9a61c",
+    ".tools/source-packages/official-code/common-source/Common/NpcAdventureSettings.cs": "2b71e1cb3156820390a9846fa15188f0835433ea5d91b5e44d743dc26986a864",
+    ".tools/source-packages/official-code/framework-firstpass-source/ResourceLoaderExtensions.cs": "5b48448dcee0bdb0e9c3c21366c394de986ad4901683abdd6c0c48c9493d386b",
+    "assets/reference/partner-gift-configuration-source-manifest.json": "1afe01ba6cc2eb8e5ad87ed252ef3b2e0da7e62accd3099dfae3c998c94a5a6a",
+    "assets/reference/partner-gift-player-source-manifest.json": "6b30d3a092851315f2ee218b73ee0d668d64b20608292d87502f08bd76a7b606",
+    "assets/reference/partner-gift-presentation-assets-source-manifest.json": "a2a4115c217c317fd66858b92732359f7e1f728a00b900abd84ecaabc9e18487",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftPlayer.cs": "978739fce163073b387405cdf4a98888528b292746af5002119c649d9b8079a6",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerFriendshipTags.cs": "9b73be9ec3d310a0eab1c7a2cd29b9e7fd042ff7346de5c621337c650bbbb2cf",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerFriendshipProperties.cs": "a8b51eb6c4dc66cfc3175c43ca5a483a0fb6cb5b818e7246986e52cd74d69397"
+  },
+  "methods": {
+    "client-source/NpcDetailPanelGiftContent.cs": {
+      "private void DoGiveGift()": "601ea6afa001876a3ac900794166c0856d28b335e09ca8a146e278291b5afa42",
+      "private void OnCustomFriendShipTag()": "19515a05f01e66c2b4bc32a5739de4ae62750e8d26af78a35e7ae0605457cc73"
+    },
+    "common-source/Common/LanguageUtils.cs": {
+      "public static string GetNpcFriendshipTagNameKey(int tagId)": "c8b6e24f8a540bae347b96acb83ec1ad74f28b824d20b347a8f9659ec091e9e5"
+    },
+    "common-source/Common/NpcAdventureSettings.cs": {
+      "public bool IsTraveNpcUnlock(Player player)": "ab06e8e78b8d4536b1107c9c94940a1c2e3584e68621df5660d68f2a2ed0509f",
+      "public bool IsUnlockTraveNpcProp(Player player, PropType propType)": "f41354d89b2c5856609c8dcfc39723b506bab517cec08215cb367bd3b56e15ec"
+    },
+    "framework-firstpass-source/ResourceLoaderExtensions.cs": {}
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftUiServices.cs": "c3199377cc91f1142efb55b559fb33c1052526b5fe2bf84da3d3263dcda99c5f",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftUiServices.cs.meta": "aa26cb949ac4d471e679f6290e870a232abae5dceb9963ffbbe201d3592bc296",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerGiftPageAssetCatalog.cs": "754146a79d575d15b8065f7580f18fe2212fa64a9f0b6dd92f0cb17f2abe4a5c",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerGiftPageAssetCatalog.cs.meta": "084b1416a9367e877330aaf9e103031d82cd85b502299e349b6b7fcff073f955",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/Zjcs.Offline.PartnersUI.asmdef": "f7db35b088cb7fc72c71955b4230c39d72157d80fc1965e4d8bab8b20f2f485b"
+  },
+  "validation_source_sha256": {
+    "scripts/prepare_partner_gift_current_validation.py": "c2a46fba4b667a44f7c1799dccb67cac8bcf4296be09037c46e82a3829893d03",
+    "scripts/fixtures/partner_gift_current_steps.cs": "9992e969a92a09b592a45aee82cc8e7050abd51f2bd3030b12ff140313d72207",
+    "scripts/fixtures/partner_gift_controller_validation.cs": "d03c3d803140c7ffd878ad42365bec5a98c0d5bddce18895791f636e585a8ea4",
+    "scripts/fixtures/partner_gift_preferences_validation.cs": "5c0eb3534fe1690dbfe7051ce9cec7c5540c5ef74de0071278e77c2e560b37c1"
+  },
+  "adaptations": [
+    "Current configuration/player/property ports supply the original full gift controller.",
+    "Copy selected quantities before the deferred local response; original DoGiveGift has already performed overflow confirmation.",
+    "Atomic local command publishes player events before the original success callback; file write failures report failure without success.",
+    "Original sprite prefix, relationship language key and travel-property gate are retained.",
+    "Explicit Resources references package the native gift subtree, all available preference images, relationship backgrounds, attachment roots and original fonts."
+  ],
+  "scope": "Native gift subtree and local transactions; formal complete partner window routing, production popup contents and Windows Player remain pending."
+}

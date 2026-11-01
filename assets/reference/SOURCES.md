@@ -237,3 +237,8 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 ### 当前伙伴好感属性界面输入
 
 `prepare_partner_property_ui_configuration.py` 按选定 `884_156692` 读取 APK 优先的主 Luban `entry`、当前属性表及中文 WwiseBnk 语言载荷，保留实际 APK `881_156673` 身份；完整二进制消费、原构造器、包／对象／语言输入与配置输出哈希见 [属性界面来源](partner-property-ui-source-manifest.json)。原奖励比较器、实际字段调用、枚举与迁移输出见 [奖励排序来源](partner-reward-comparer-source-manifest.json)。本地服务及 Resources 引用的代码、原 prefab／配置与显式绑定哈希见 [服务绑定来源](partner-friendship-services-source-manifest.json)。功能行为与验证范围统一见 [伙伴功能](../../docs/features/partners.md)。未新增美术载荷，未生成完整素材快照。
+
+
+### 当前伙伴赠礼动态资源与服务输入
+
+`prepare_partner_gift_presentation_assets.py` 依照选定 `884_156692` 的关系配置、资源地址、原 Sprite RenderDataKey 与已核验原生转换缓存，按 APK 优先／同版云端资源闭合八张称谓背景及图集／Windows 贴图，并提取二十条原中文称谓。实际 APK 仍保持 `881_156673` 身份。原包、对象、网格、转换输入输出、复用载荷与 Resources 绑定哈希见 [赠礼动态资源来源](partner-gift-presentation-assets-source-manifest.json)。原赠礼提交、称谓校验、语言键、图片前缀及旅行属性门槛的源方法和本地服务适配哈希见 [赠礼服务来源](partner-gift-services-source-manifest.json)；具体行为与验证范围仅在 [伙伴功能](../../docs/features/partners.md) 维护。未生成完整素材快照。

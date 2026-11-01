@@ -1445,3 +1445,18 @@ unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerFriendshipProperties.
 unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerFriendshipDialogServices.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerFriendshipAssetCatalog.cs* text eol=lf
 unity/Assets/Game/Resources/Partners/OfficialPartnerFriendshipAssetCatalog.asset* text eol=lf
+
+# Preserve selected native gift page resources and local service bindings.
+scripts/prepare_partner_gift_services.py text eol=lf
+scripts/prepare_partner_gift_presentation_assets.py text eol=lf
+scripts/prepare_partner_gift_current_validation.py text eol=lf
+scripts/fixtures/partner_gift_current_steps.cs text eol=lf
+assets/reference/partner-gift-services-source-manifest.json text eol=lf
+assets/reference/partner-gift-presentation-assets-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftUiServices.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerGiftPageAssetCatalog.cs* text eol=lf
+unity/Assets/Game/Resources/Partners/OfficialPartnerGiftPageAssetCatalog.asset* text eol=lf
+unity/Assets/Game/Resources/Partners/OfficialPartnerGiftPageImages.asset* text eol=lf
+unity/Assets/Game/Resources/Partners/OfficialPartnerRelationshipImages.asset* text eol=lf
+unity/Assets/Official/Partners/UI/GiftPresentation.meta text eol=lf
+unity/Assets/Official/Partners/UI/GiftPresentation/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

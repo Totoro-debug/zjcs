@@ -244,6 +244,18 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 验证：`scripts/test_partner_gifts.ps1` 编译实际 C# 规则，并使用隔离 Unity `2022.3.57f1c2` 工程编译实际养成依赖、加载工程现有官方配置，验证恰好升满、溢出取消／确认、重复提交、库存不足、存档重新读取、自动选量及 90 项其他伙伴专属礼物的排除。纯规则测试另覆盖偏好排序、已有选量、库存耗尽、两种取整差异及数值溢出。送礼仍为 Editor 中的接口与存档验证，尚未验证官方送礼界面、对应模拟输入、Play Mode 画面或 Windows Player。
 
+### 当前原生赠礼页与本地事务接线（局部）
+
+`OfflinePartnerGiftUiServices` 将实际迁移的 `NpcDetailPanelGiftContent` 与 `NpcFriendshipLevelContent` 接到当前配置、实际 `OfflinePartnerGiftPlayer`、好感属性提供者和称谓存档。窗口端继续执行原偏好、阶位、最高等级、溢出确认和自动选量逻辑；服务复制本次选量后在后续主线程继续执行本地事务，先保存并发布库存／好感通知，再执行原成功回调。`DoGiveGift` 已经过原溢出确认后才提交允许溢出的事务；取消确认不触发事务。写盘失败仅报告失败，不执行成功回调，不清空选择、不改变库存和好感，用户可再次点击重试。称谓沿已确认的本地保存方案，保留原字库、长度、伙伴资格与好感门槛。
+
+`prepare_partner_gift_presentation_assets.py` 按所选 `884_156692` 的 `npc_friendship_tag.TagBg`、原资源索引和 Sprite RenderDataKey 恢复八张普通／星神关系背景，闭合原图集与同版本 Windows 贴图，提取二十条原称谓文本。图片加载保留官方 `Assets/Image/` 前缀。`Resources/Partners/OfficialPartnerGiftPageAssetCatalog` 显式绑定原赠礼区域、文字、107 种当前开放范围的偏好图像、八张称谓背景、三个原附件入口、原配置和区域字体／TTF；已确认暂停的联动伙伴范围不变。来源见[赠礼资源绑定](../../assets/reference/partner-gift-presentation-assets-source-manifest.json)与[本地赠礼服务](../../assets/reference/partner-gift-services-source-manifest.json)。
+
+`prepare_partner_gift_current_validation.py` 在隔离 Unity URP Play Mode 加载上述实际 Resources 目录与原赠礼区域，使用模拟鼠标射线验证选择、减少、重置、自动选择、赠送、阶位拒绝和最高等级溢出确认；确认前不扣库存，确认后保留原超出经验。实际本地事务覆盖先保存后回调、逐件库存扣除、重读恢复、存档文件占用时不执行成功回调且保留选量、释放后重试，以及原称谓字库拒绝／成功保存。八张背景均验证可加载且具有贴图；已查看打开、选中、赠送后、阶位上限与满级五帧 GPU 画面。验证宿主仍提供弹窗端口及测试调色，不代表完整正式窗口。
+
+主工程 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。全工程静态检查已执行，当前被其他会话新增的 `SkillDamageTestValidation.DungeonEntry.cs.meta` 的 31 位 GUID 阻断；未改写该会话文件，也未记作静态检查通过。
+
+正式伙伴窗口路由、完整物品／输入／确认弹窗内容、原调色及实际声音仍待接入；当前提供者与原生区域接线不表示伙伴系统或 Windows Player 已完成。
+
 ## 自定义实现
 
 用户已确认：自定义伙伴称谓通过原字库与长度校验后直接在本地保存，不等待线上文本审核；保留原伙伴资格及好感等级门槛。自动伙伴在创建角色及读档后检查原相遇条件，满足且尚未拥有时自动结识，初始好感使用原配置；此触发时机是确认的单机方案，不声称取得服务器实现。
