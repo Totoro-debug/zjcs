@@ -122,7 +122,7 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 `Runtime/Official/PartnersUI/Gifts/` 从当前 `884_156692` 完整迁移 `ItemIconNpcGift`、`NpcFriendshipPropItem`、`NpcFriendshipPreviewPropItem`、`NpcFriendshipPropItemGroup` 和原 CanvasGroup 显隐扩展，复用既有官方 `ItemIcon`、`ProfessionPlayerPropItem` 与属性格式化。赠礼图标沿用偏好／选中遮罩和减少按钮订阅；重复显示同一附件不增加监听，清理先执行原物品清理、隐藏偏好标记并移除减少监听，保留原选中状态和回调字段。
 
-属性行保留普通／旅行分支、正数增量标记和背景开关。预览首级读取完整属性、后续读取相邻等级差，按原顺序只显示正数变化；差值超过两项时记录配置错误并提前返回。旅行分支沿用原语言参数与旅行功能开关。属性组按行号取增量，未使用槽位同时关闭透明度、交互和射线。配置、功能门槛和属性表经显式服务接口提供，本地提供者与原生赠礼／详情窗口的最终绑定尚未完成。
+属性行保留普通／旅行分支、正数增量标记和背景开关。预览首级读取完整属性、后续读取相邻等级差，按原顺序只显示正数变化；差值超过两项时记录配置错误并提前返回。旅行分支沿用原语言参数与旅行功能开关。属性组按行号取增量，未使用槽位同时关闭透明度、交互和射线。配置、功能门槛和属性表经显式服务接口提供，当前本地提供者及原生好感窗口的接线见下文，原生赠礼／正式详情页最终绑定尚未完成。
 
 重建入口为 `scripts/prepare_partner_gift_ui.py`，版本比对、原源码及输出哈希见[赠礼组件来源](../../assets/reference/partner-gift-ui-source-manifest.json)。`prepare_partner_gift_ui_validation.py` 在隔离 Unity Play Mode 验证实际控制器的模拟鼠标射线点击、重复绑定只触发一次、清理／复用／空回调、普通属性实际文本、正／零／负增量、旅行文本、组内按行号取增量、空槽位射线关闭、预览基准／差值／负值过滤／旅行门槛，以及超过两项差值的原诊断提前返回。已查看修正测试标签重叠后的 GPU 截图；测试控件和语言端点不进入正式游戏，不代表完整官方赠礼界面已还原。静态检查（81,115 个 GUID）、主工程编译与 `Zjcs.Editor.ProjectTools.Validate` 通过；15 项输出哈希核对通过，原生窗口绑定与 Windows Player 尚未完成。
 
@@ -132,7 +132,7 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 资源安装到 `unity/Assets/Official/Partners/UI/Friendship/`，新增 19 项载荷及其元数据，按 GUID 与完整载荷字节复用卡片目录已有的 11 项依赖。字体、精灵网格、纹理、shader、效果材质与原 `Main_Upgrade` 事件引用均追溯到实际官方对象；`AkEvent.triggerList` 从原对象解码，修复转换器写成字符串的整型列表。`TMPColorGradient` 使用已迁移完整原类，逐项复核当前所选 APK AOT 的八个方法及字节哈希。原始输入、消费指针、提取变换和安装输出哈希见[原生好感属性来源](../../assets/reference/partner-gift-native-source-manifest.json)。
 
-`prepare_partner_gift_native_validation.py` 建立隔离工程，使用实际原模板与迁移控制器检查普通属性、等级差值、旅行开关、空槽位模拟指针射线、粒子发射和声音对象注册／销毁，全部通过。隔离宿主采用实际同版本 URP 包建立 2D 管线，以运行原 `UniversalPipeline／Universal2D` shader；已查看普通、旅行、旅行关闭及原升级光带／星光四帧 GPU 画面，原 890 宽模板完整显示。数据、配置格式化及声音主机使用明确测试端点，这两份原属性模板没有按钮／详情入口，不增加测试按钮冒充交互。74 项安装资源／目录哈希核对、静态检查、主工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 均通过。完整好感窗口、正式本地属性提供者与实际音频播放尚未接通；当前模块不代表完整伙伴页或 Windows Player 已完成。
+`prepare_partner_gift_native_validation.py` 建立隔离工程，使用实际原模板与迁移控制器检查普通属性、等级差值、旅行开关、空槽位模拟指针射线、粒子发射和声音对象注册／销毁，全部通过。隔离宿主采用实际同版本 URP 包建立 2D 管线，以运行原 `UniversalPipeline／Universal2D` shader；已查看普通、旅行、旅行关闭及原升级光带／星光四帧 GPU 画面，原 890 宽模板完整显示。数据、配置格式化及声音主机使用明确测试端点，这两份原属性模板没有按钮／详情入口，不增加测试按钮冒充交互。74 项安装资源／目录哈希核对、静态检查、主工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 均通过。后续完整好感窗口与当前本地属性提供者见下文，实际音频播放尚未接通；当前模块不代表完整伙伴页或 Windows Player 已完成。
 
 ### 当前原生好感详情窗口（局部）
 
@@ -140,7 +140,15 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 `scripts/prepare_partner_friendship_dialog_native.py` 恢复原窗口全部 311 个对象及原坐标／层级，绑定完整原 `PopupWindow`、开合 AnimationClip、`PopupWindowSound`、布局限制、镜像图片、Bloom 标记及预览工具。资源位于 `unity/Assets/Official/Partners/UI/FriendshipDialog/`；19 项载荷中 8 项按原 GUID 与完整字节复用既有伙伴依赖。中文文字从所选官方语言分包提取，原 Wwise 事件引用保留；输入、源码／组件绑定、依赖和安装哈希见[原生详情窗口来源](../../assets/reference/partner-friendship-dialog-source-manifest.json)。
 
-`prepare_partner_friendship_dialog_validation.py` 的隔离 URP Play Mode 使用实际原窗口，验证开合动画及事件顺序、助战条件显示／隐藏、原阶位加一过滤、跳过一级、18 行属性池化复用、普通／星神说明、旅行列隐藏与重排，以及实际射线路径的模拟滚轮和遮罩鼠标点击关闭。已查看打开、滚动及旅行受限三帧 GPU 画面；动态字体／图集在内存副本中生成字形，38 项测试资源与原暂存载荷字节一致。静态检查（81,228 个 GUID）、主工程导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和导入后 59 项资源／代码／目录哈希核对通过。属性、语言、窗口管理和声音端点为明确测试宿主，遮罩由测试宿主提供，不写入原 prefab。该夹具覆盖空礼物偏好，非空图标的原生集成验证见下节；正式本地配置／属性提供者、实际声音播放、页面入口、存档联动及 Windows Player 尚未验证，本节不表示完整伙伴系统已接通。
+`prepare_partner_friendship_dialog_validation.py` 的隔离 URP Play Mode 使用实际原窗口，验证开合动画及事件顺序、助战条件显示／隐藏、原阶位加一过滤、跳过一级、18 行属性池化复用、普通／星神说明、旅行列隐藏与重排，以及实际射线路径的模拟滚轮和遮罩鼠标点击关闭。已查看打开、滚动及旅行受限三帧 GPU 画面；动态字体／图集在内存副本中生成字形，38 项测试资源与原暂存载荷字节一致。静态检查（81,228 个 GUID）、主工程导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和导入后 59 项资源／代码／目录哈希核对通过。属性、语言、窗口管理和声音端点为明确测试宿主，遮罩由测试宿主提供，不写入原 prefab。该夹具覆盖空礼物偏好，非空图标的原生集成验证见下节；当前本地配置／属性提供者验证见下节；实际声音播放、页面入口、存档联动及 Windows Player 尚未验证，本节不表示完整伙伴系统已接通。
+
+### 当前好感属性与详情窗口本地提供者（局部）
+
+`Offline/PartnersUI/OfflinePartnerFriendshipProperties` 将原属性组件接到当前 `OfficialPartnerCatalog` 的完整等级属性与相邻等级差值，不另写属性公式；委派属性类型读取原 `NpcAdventureSettings.TravelNpcPropTypeList`（6010、6011、6012），旅行功能限制由当前宿主实时提供。`OfflinePartnerFriendshipDialogServices` 投影当前伙伴、好感等级表及实时个人阶位，原窗口继续执行跳过一级和 `SubRank + 1` 的可见等级筛选。助战提示严格读取原窗口使用的 `CanMeetCondition` 好感条件分支，不改用 `AssistCondition`；当前配置没有符合该分支的伙伴时隐藏提示。
+
+`prepare_partner_property_ui_configuration.py` 完整读取当前 Luban 的 891 条 `entry`，与既有 352 条 `prop_cfg` 组合，核对全部 49 个属性词条引用，并从所选官方中文语言包提取 215 项伙伴名、相关属性及词条文本。配置位于 `Assets/Official/Partners/partner-property-ui.json` 和 `partner-property-texts.json`。格式化复用 `OfflineProfessionPropertyBindings` 与原属性格式函数；偏好图标排序迁移原 `PlayerTaskDataUtils.sRewardItemComparer` 实际调用的 `RewardPreviewItemComparer.RewardItemComparer`，保留指定经验／货币优先、品质降序和物品号升序及原比较执行顺序。来源见[属性界面配置](../../assets/reference/partner-property-ui-source-manifest.json)、[奖励排序](../../assets/reference/partner-reward-comparer-source-manifest.json)和[本地服务绑定](../../assets/reference/partner-friendship-services-source-manifest.json)。
+
+`Resources/Partners/OfficialPartnerFriendshipAssetCatalog.asset` 显式引用原生好感详情 prefab、原窗口语言、属性配置和属性语言，提供本地运行时加载入口。`prepare_partner_friendship_current_validation.py` 在隔离 Unity Play Mode 实际从该 Resources 目录加载，使用当前本地配置／属性提供者和原生窗口、字体、礼物图标，通过模拟鼠标射线验证七项真实偏好、物品入口参数、滚轮位移、遮罩关闭、原开合动画／事件、阶位变化下 59 行／9 行预览及对象池复用、旅行列可见性和原奖励排序。已查看打开、滚动、旅行受限三帧 GPU 画面。静态检查通过（84,309 个 GUID），主工程导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 通过；属性配置、排序、本地服务及既有赠礼绑定输出哈希一致。窗口管理、声音及物品详情内容仍由明确测试端点承担；正式伙伴详情页路由、实际声音、存档联动和 Windows Player 尚未完成。
 
 ### 当前原生礼物偏好图标（局部）
 
@@ -150,7 +158,7 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 `prepare_partner_gift_preferences_validation.py` 的隔离 URP Play Mode 使用完整原窗口与原生物品格，验证七项真实偏好按品质／ID 排列、图标遮挡射线与模拟鼠标点击、物品详情入口原参数、窗口关闭后的图标回收／订阅释放、107 种原图轮换显示、数量变化、偏好／选中遮罩、原 ReduceTip 附件创建／回收复用，以及复用后减少按钮仅触发一次。已查看非空偏好、滚动、空偏好／旅行受限及选中赠礼格四帧 GPU 画面。窗口、属性、调色和物品详情内容仍由明确隔离端点提供，测试池只承担图标宿主边界，附件使用实际已迁移的官方管理器与池。
 
-静态检查（81,471 个 GUID）、主工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过；Play Mode 前后 454 项暂存载荷／元数据、导入后 474 项安装资源／目录及 22 项实际使用的脚本绑定哈希一致。提取工具扩展以原 311 对象窗口逐对象回归，默认 NPC 路径保持一致。正式本地配置／属性提供者、物品详情弹窗内容、实际音频播放、完整赠礼页和 Windows Player 尚未接通；当前资源接入不表示伙伴系统已经完整完成。
+静态检查（81,471 个 GUID）、主工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过；Play Mode 前后 454 项暂存载荷／元数据、导入后 474 项安装资源／目录及 22 项实际使用的脚本绑定哈希一致。提取工具扩展以原 311 对象窗口逐对象回归，默认 NPC 路径保持一致。当前本地配置／属性提供者接线见前文；物品详情弹窗内容、实际音频播放、完整赠礼页和 Windows Player 尚未接通；当前资源接入不表示伙伴系统已经完整完成。
 
 ### 当前原生赠礼区域（局部）
 

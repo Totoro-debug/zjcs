@@ -1,0 +1,33 @@
+{
+  "manifest": "884_156692",
+  "generator_sha256": "a461d8ad2abd88b05fb49288bc164338ccf03f91123d2f82f063d9e4fe20af9b",
+  "source_sha256": {
+    ".tools/source-packages/official-code/common-source/ItemComparerBase.cs": "ef161394145f5f18bb8f85cf6499ce493a5480b078c83a0da7063833488706fb",
+    ".tools/source-packages/official-code/common-source/RewardPreviewItemComparer.cs": "47fdd0ebc80fa85b25fde4b448c807b3db7d2d62ea4b9e04515456b0c37b8e12",
+    ".tools/source-packages/official-code/common-source/Common/PlayerTaskDataUtils.cs": "710c2a4e97317a18ba0fdd8ee0e56585961defaadf80ad8d81b35656d26a0891",
+    ".tools/source-packages/official-code/common-source/ItemComparerType.cs": "637d402cfb9190465a2d02cb739eee19fe097bc45c0d086790dbb28429201c01",
+    ".tools/source-packages/official-code/common-source/ComparerOrderType.cs": "cd176dba5fc1b8e2b8d8db020ee7c06db9c316ebec5d256020c76a81517c31fc",
+    ".tools/source-packages/official-code/common-source/Common/ItemType.cs": "8a1a33483ed28de00b9bc37dd60899ae0cb2fa7d7bd821b42f6e43cdcb3dbcaf"
+  },
+  "methods": {
+    "ItemComparerBase.cs": {
+      "public virtual int RewardItemComparer(ItemInfo x, ItemInfo y)": "89530353e7224e8c1da8362c88f2904eb1983d0cad33bd88f13c54dfc59eed0f",
+      "public static int ComparerResult(long x, long y, ComparerOrderType type)": "6a3e95e860bf963d5714de78b99ca47750684e1a8eee860fa6768928856e298f",
+      "protected virtual long GetScore(ItemInfo itemInfo, ItemComparerType comparerType)": "a586de61fdd7e516ca6d92e7c85855a27505cf3c8f31f7945f279161adabaa4a",
+      "protected int Comparer(ItemInfo x, ItemInfo y, List<(ItemComparerType comparerType, ComparerOrderType orderType)> priorityList)": "be458602476ac935dddf03389488399ee3fca988630c2495331d56634cc9a35c",
+      "public static int ConvertLong2IntForSort(long longValue)": "294d8224eb74dd70aa1521943546a8acb73d3ee543b76555f0132cbf733232da"
+    },
+    "RewardPreviewItemComparer.cs": {
+      "protected override long GetScore(ItemInfo itemInfo, ItemComparerType comparerType)": "0d2387321481d4dcb10df886e257dacdfc9b622cb2233e408b2b524acc0d7f7f"
+    }
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog/PartnerRewardPreviewItemComparer.cs": "6b436e933a3107cf55a934d5cbc8f847da348f9729ac4504711c382299602f0f",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog/PartnerRewardPreviewItemComparer.cs.meta": "1379dc2165b2e33f8c97ba817755377f62c9e12c353d45f3dd138886aabc7fa5"
+  },
+  "adaptations": [
+    "Typed item projection and explicit player-experience item binding.",
+    "Original unused comparer entry points omitted; complete consumed methods and enum identities retained.",
+    "Original unsupported-order diagnostic logging omitted; fallback return value retained."
+  ]
+}

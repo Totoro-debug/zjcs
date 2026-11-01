@@ -1429,3 +1429,19 @@ scripts/prepare_partner_automatic_meeting.py text eol=lf
 assets/reference/partner-automatic-meeting-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.Partners.cs text eol=lf
 unity/Assets/Game/Editor/CharacterCreation/CharacterCreationPlayModeAcceptance.cs text eol=lf
+
+# Preserve current friendship property data and explicit native dialog bindings.
+scripts/prepare_partner_property_ui_configuration.py text eol=lf
+scripts/prepare_partner_reward_comparer.py text eol=lf
+scripts/prepare_partner_friendship_services.py text eol=lf
+scripts/prepare_partner_friendship_current_validation.py text eol=lf
+assets/reference/partner-property-ui-source-manifest.json text eol=lf
+assets/reference/partner-reward-comparer-source-manifest.json text eol=lf
+assets/reference/partner-friendship-services-source-manifest.json text eol=lf
+unity/Assets/Official/Partners/partner-property-ui.json* text eol=lf
+unity/Assets/Official/Partners/partner-property-texts.json* text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/FriendshipDialog/PartnerRewardPreviewItemComparer.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerFriendshipProperties.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerFriendshipDialogServices.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerFriendshipAssetCatalog.cs* text eol=lf
+unity/Assets/Game/Resources/Partners/OfficialPartnerFriendshipAssetCatalog.asset* text eol=lf

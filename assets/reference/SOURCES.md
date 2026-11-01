@@ -232,3 +232,8 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 ### 当前伙伴自动结识来源
 
 `prepare_partner_automatic_meeting.py` 核对选定 `884_156692` 的 `PlayerNpcDataWrap.CreateNpcDataByInfo`、`MsgPlayerNpc.OnMessage` 和 `NPCHandler.MainPlayer_OnAddNewNpc` 原码，并记录当前自动伙伴条件、原默认好感等级与经验、创角／读档接线和验证源码哈希。来源见 [partner-automatic-meeting-source-manifest.json](partner-automatic-meeting-source-manifest.json)，触发时机的单机决策与实际实现／验证范围仅在 [伙伴功能](../../docs/features/partners.md) 维护。未新增美术载荷，未生成完整素材快照。
+
+
+### 当前伙伴好感属性界面输入
+
+`prepare_partner_property_ui_configuration.py` 按选定 `884_156692` 读取 APK 优先的主 Luban `entry`、当前属性表及中文 WwiseBnk 语言载荷，保留实际 APK `881_156673` 身份；完整二进制消费、原构造器、包／对象／语言输入与配置输出哈希见 [属性界面来源](partner-property-ui-source-manifest.json)。原奖励比较器、实际字段调用、枚举与迁移输出见 [奖励排序来源](partner-reward-comparer-source-manifest.json)。本地服务及 Resources 引用的代码、原 prefab／配置与显式绑定哈希见 [服务绑定来源](partner-friendship-services-source-manifest.json)。功能行为与验证范围统一见 [伙伴功能](../../docs/features/partners.md)。未新增美术载荷，未生成完整素材快照。
