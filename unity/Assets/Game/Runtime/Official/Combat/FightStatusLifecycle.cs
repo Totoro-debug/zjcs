@@ -188,6 +188,7 @@ namespace Zjcs.Combat.Official
                 ForbiddenOnApplicatorDie = template.ForbiddenOnApplicatorDie,
                 AiMoreHit = template.AiMoreHit,
                 HasCreatorDamageBoost = template.HasCreatorDamageBoost,
+                DamageProcess = template.DamageProcess == null ? null : template.DamageProcess.Copy(),
                 FollowRoundUpdateTimingOnGlobalRound = template.FollowRoundUpdateTimingOnGlobalRound,
                 IsFixedProp = template.IsFixedProp,
                 StackCount = template.StackCount,

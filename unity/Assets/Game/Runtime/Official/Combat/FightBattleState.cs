@@ -217,6 +217,7 @@ namespace Zjcs.Combat.Official
         public bool ForbiddenOnApplicatorDie;
         public bool AiMoreHit;
         public bool HasCreatorDamageBoost;
+        public FightBattleStatusDamageProcessInfo DamageProcess;
         public bool FollowRoundUpdateTimingOnGlobalRound;
         public bool IsFixedProp;
         public int StackCount = 1;
@@ -362,6 +363,43 @@ namespace Zjcs.Combat.Official
         public bool ShieldInitialized;
         // Set only by a successful new lifecycle application, never inferred from a restored shield.
         public bool ShieldGrantPending;
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusDamageProcessInfo
+    {
+        public int Target;
+        public int ProcessPhase;
+        public int DamageType;
+        public List<int> SourceActionTypes = new List<int>();
+        public int ReducePercentPropertyId;
+        public int AddPercentPropertyId;
+        public bool TriggerOnlyDamageFromApplicator;
+        public bool UseHitEventToApplicator;
+        public bool TriggerOnlyDamageFromCreatorAndSummons;
+        public bool CheckSourceIsEnemy;
+        public bool NoIndependentMultiplier;
+        public bool Supported;
+
+        public FightBattleStatusDamageProcessInfo Copy()
+        {
+            return new FightBattleStatusDamageProcessInfo
+            {
+                Target = Target,
+                ProcessPhase = ProcessPhase,
+                DamageType = DamageType,
+                SourceActionTypes = SourceActionTypes == null
+                    ? new List<int>() : new List<int>(SourceActionTypes),
+                ReducePercentPropertyId = ReducePercentPropertyId,
+                AddPercentPropertyId = AddPercentPropertyId,
+                TriggerOnlyDamageFromApplicator = TriggerOnlyDamageFromApplicator,
+                UseHitEventToApplicator = UseHitEventToApplicator,
+                TriggerOnlyDamageFromCreatorAndSummons = TriggerOnlyDamageFromCreatorAndSummons,
+                CheckSourceIsEnemy = CheckSourceIsEnemy,
+                NoIndependentMultiplier = NoIndependentMultiplier,
+                Supported = Supported
+            };
+        }
     }
 
     [Serializable]

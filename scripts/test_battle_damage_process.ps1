@@ -10,6 +10,16 @@ $catalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load(
     (Read-Source 'skill-rules'), (Hash-Source 'skill-rules'), '854_156383',
     (Read-Source 'battle-rules'), (Hash-Source 'battle-rules'), '854_156383')
 $formula = $catalog.CreateDamageFormula((Read-Source 'rules'), (Hash-Source 'rules'), '854_156383')
+function Set-StatusProperty($status, [int]$id, [long]$value) {
+    $status.ResolvedProperties=[System.Collections.Generic.List[Zjcs.Combat.Official.FightPropertyValue]]::new()
+    $status.ResolvedProperties.Add([Zjcs.Combat.Official.FightPropertyValue]@{Id=$id;Value=$value})
+}
+function Generic-ProcessFixture([int]$statusId, [int]$creatorId=1) {
+    $source=New-Unit 1 1; $target=New-Unit 2 2
+    $status=$catalog.CreateStatus($statusId, 2, $creatorId, 1, 0, 0, 1, 1, 1, $null)
+    $target.Statuses.Add($status)
+    return @{Source=$source;Target=$target;Status=$status}
+}
 function New-Unit([int]$id, [int]$side) {
     $u = [Zjcs.Combat.Official.FightBattleUnitState]::new()
     $u.Id=$id; $u.Side=$side; $u.X=$id; $u.Y=1; $u.Hp=100000; $u.MaxHp=100000
@@ -80,6 +90,32 @@ $baseline.Hit.ActionType=5; $baseline.Target.Hp=99900
 $baselineResult=Hit $baseline
 Require ($result.IsCure -and $result.Cure.Cure -eq $baselineResult.Cure.Cure -and
     $f.Target.Hp -eq $baseline.Target.Hp) 'Damage-only mark modifier affected healing'
+$g=Generic-ProcessFixture 25108
+Set-StatusProperty $g.Status 232 5000
+$g.Source.Statuses.Add([Zjcs.Combat.Official.FightBattleStatusState]@{ActionType=58})
+$processed=[Zjcs.Combat.Official.FightStatusDamageProcessRuntime]::BeforeShield($g.Source,$g.Target,-1000,$formula,1)
+Require ($processed -eq -666) '25108 did not reduce Ridicule-source damage before shielding'
+$g.Source.Statuses.Clear()
+$processed=[Zjcs.Combat.Official.FightStatusDamageProcessRuntime]::BeforeShield($g.Source,$g.Target,-1000,$formula,1)
+Require ($processed -eq -1000) '25108 applied without its source Ridicule action'
+$g=Generic-ProcessFixture 25126
+Set-StatusProperty $g.Status 232 5000
+$g.Source.Statuses.Add([Zjcs.Combat.Official.FightBattleStatusState]@{ActionType=58})
+$g.Target.Side=1
+$processed=[Zjcs.Combat.Official.FightStatusDamageProcessRuntime]::BeforeShield($g.Source,$g.Target,-1000,$formula,1)
+Require ($processed -eq -666) '25126 did not apply same-side configured damage'
+$g.Target.Side=2
+$processed=[Zjcs.Combat.Official.FightStatusDamageProcessRuntime]::BeforeShield($g.Source,$g.Target,-1000,$formula,1)
+Require ($processed -eq -666) '25126 did not reduce configured damage'
+$g=Generic-ProcessFixture 25136
+Set-StatusProperty $g.Status 2000 2000
+$processed=[Zjcs.Combat.Official.FightStatusDamageProcessRuntime]::BeforeShield($g.Source,$g.Target,100,$formula,2)
+Require ($processed -eq 120) '25136 did not increase cure before settlement'
+$g=Generic-ProcessFixture 24198
+Set-StatusProperty $g.Status 228 5000
+$g.Source.MasterId=1
+$processed=[Zjcs.Combat.Official.FightStatusDamageProcessRuntime]::BeforeShield($g.Source,$g.Target,-100,$formula,1)
+Require ($processed -eq -150) '24198 did not apply creator-summon vulnerable damage'
 # Use the complete executor to verify accumulation, expiry, source credit and checkpoint replay together.
 $f=New-Fixture 1 $true 100
 $f.Hit.DamageType=2

@@ -61,6 +61,10 @@ namespace Zjcs.Combat.Official
                 long? customCure = skill.HasCustomCure ? (long?)skill.CustomCure : custom;
                 result.Cure = formula.CalculateCure(sourceProps, targetProps,
                     hit.DamageProperty, hit.FixedDamageProperty, customCure);
+                result.Cure.Cure = FightStatusDamageProcessRuntime.BeforeShield(actor, target,
+                    result.Cure.Cure, formula, 2);
+                result.Cure.AbsoluteCure = FightStatusDamageProcessRuntime.BeforeShield(actor, target,
+                    result.Cure.AbsoluteCure, formula, 2);
                 if (reduction != 0.0)
                 {
                     double scale = 1.0 / Math.Max(1.0 + reduction, 0.1);
@@ -84,6 +88,7 @@ namespace Zjcs.Combat.Official
                 direct = (long)(direct / Math.Max(1.0 + reduction, 0.1));
                 direct = FightDamageFalloff.Apply(random, actor, target, skill, hit,
                     direct, processedFalloffStatuses);
+                direct = FightStatusDamageProcessRuntime.BeforeShield(actor, target, direct, formula, 1);
                 direct = FightStatusCreatorDamageBoostRuntime.BeforeShield(actor, target, direct, formula);
                 if (damageTest != null) direct = damageTest.Damage(stageType, actor, target, direct);
                 long absorbed = FightBattleShieldRuntime.AbsorbDamage(random, target, hit,
@@ -145,7 +150,10 @@ namespace Zjcs.Combat.Official
                     damage = FightDamageFalloff.Apply(random, actor, target, skill, hit, damage,
                         processedFalloffStatuses);
                 if (hit.DamageType != 0 && !result.Type.Blinding && !result.Type.Dodge && !result.Type.Immunity)
+                {
+                    damage = FightStatusDamageProcessRuntime.BeforeShield(actor, target, damage, formula, 1);
                     damage = FightStatusCreatorDamageBoostRuntime.BeforeShield(actor, target, damage, formula);
+                }
                 if (damageTest != null) damage = damageTest.Damage(stageType, actor, target, damage);
                 damage = FightBattleShieldRuntime.AbsorbDamage(random, target, hit, damage,
                     out result.ShieldDamage, result.TriggeredStatusSkills, skill,

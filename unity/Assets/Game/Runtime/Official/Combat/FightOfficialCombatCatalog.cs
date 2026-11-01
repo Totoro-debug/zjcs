@@ -877,6 +877,32 @@ namespace Zjcs.Combat.Official
                 && ArrayCount(cfg, "StatusReplacePropertyValues") == 0;
         }
 
+        private static FightBattleStatusDamageProcessInfo ParseDamageProcess(
+            Dictionary<string, object> component)
+        {
+            if (component == null) return null;
+            var result = new FightBattleStatusDamageProcessInfo
+            {
+                Target = Int(component, "Target"),
+                ProcessPhase = Int(component, "ProcessPhase"),
+                DamageType = Int(component, "DamageType"),
+                ReducePercentPropertyId = Int(component, "ReducePercentPropType"),
+                AddPercentPropertyId = Int(component, "AddPercentPropType"),
+                TriggerOnlyDamageFromApplicator = Bool(component, "TriggerOnlyDamageFromApplicator"),
+                UseHitEventToApplicator = Bool(component, "UseHitEventToApplicator"),
+                TriggerOnlyDamageFromCreatorAndSummons =
+                    Bool(component, "TriggerOnlyDamageFromCreatorAndSummons"),
+                CheckSourceIsEnemy = Bool(component, "CheckSourceIsEnemy"),
+                NoIndependentMultiplier = false,
+                Supported = Int(component, "Target") == 2
+                    && (Int(component, "ProcessPhase") == 0 || Int(component, "ProcessPhase") == 1)
+                    && (Int(component, "DamageType") == 1 || Int(component, "DamageType") == 2)
+                    && ArrayCount(component, "StatusReplacePropertyValues") == 0
+            };
+            result.SourceActionTypes.AddRange(IntArray(component, "SourceActionTypes"));
+            return result;
+        }
+
         public bool StatusMoreHit(int classId)
         {
             if (!entities.TryGetValue(classId, out Dictionary<string, object> components)) return false;
@@ -921,6 +947,14 @@ namespace Zjcs.Combat.Official
                 Component(components, "FightStatusSkillConditionComponent");
             Dictionary<string, object> damageCustomProps =
                 Component(components, "FightStatusBattleFormulaDamageCustomPropsComponent");
+            Dictionary<string, object> damageProcess =
+                Component(components, "FightStatusDamageProcessComponent");
+            Dictionary<string, object> damageProcessNoIndependent =
+                Component(components, "FightStatusDamageProcessNoIndependentMultiplierComponent");
+            FightBattleStatusDamageProcessInfo damageProcessInfo =
+                ParseDamageProcess(damageProcess ?? damageProcessNoIndependent);
+            if (damageProcessInfo != null && damageProcessNoIndependent != null)
+                damageProcessInfo.NoIndependentMultiplier = true;
             Dictionary<string, object> shieldPersistent =
                 Component(components, "FightStatusShieldPersistentComponent");
             Dictionary<string, object> shieldDisposable =
@@ -961,6 +995,7 @@ namespace Zjcs.Combat.Official
                 ForbiddenOnApplicatorDie = Bool(status, "ForbiddenOnApplicatorDie"),
                 AiMoreHit = Component(status, "AI") != null && Bool(Component(status, "AI"), "MoreHit"),
                 HasCreatorDamageBoost = StatusHasCreatorDamageBoost(classId),
+                DamageProcess = damageProcessInfo,
                 FollowRoundUpdateTimingOnGlobalRound = Bool(status,
                     "FollowRoundUpdateTimingOnGlobalRound"),
                 IsFixedProp = Bool(status, "IsFixedProp"),
