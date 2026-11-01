@@ -422,6 +422,10 @@ namespace Zjcs.Combat.Official
         public int[] CharacterEntityClassIds = Array.Empty<int>();
         public int[] CharacterTypes = Array.Empty<int>();
         public List<FightGridPoint> Range = new List<FightGridPoint>();
+        public List<FightBattleStatusStateTrigger> Statuses =
+            new List<FightBattleStatusStateTrigger>();
+        public List<FightBattleStatusStateTrigger> Skills =
+            new List<FightBattleStatusStateTrigger>();
     }
 
     [Serializable]

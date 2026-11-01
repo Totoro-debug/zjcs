@@ -2159,7 +2159,38 @@ namespace Zjcs.Combat.Official
                         Dictionary<string, object> point = Object(rawPoint, "HP limit invoke point");
                         invoke.Range.Add(new FightGridPoint(Int(point, "X"), Int(point, "Y")));
                     }
+                ReadHpLimitInvokeTriggers(row, "StatusCfgs", false, invoke.Statuses);
+                ReadHpLimitInvokeTriggers(row, "SkillCfgs", true, invoke.Skills);
                 output.Add(invoke);
+            }
+        }
+
+        private static void ReadHpLimitInvokeTriggers(Dictionary<string, object> row,
+            string field, bool skill, List<FightBattleStatusStateTrigger> output)
+        {
+            if (row == null || output == null || !row.TryGetValue(field, out object raw)
+                || raw == null) return;
+            foreach (object item in Array(raw, "HP limit invoke " + field))
+            {
+                Dictionary<string, object> value = Object(item, "HP limit invoke trigger");
+                int entityId = Int(value, skill ? "SkillId" : "StatusId");
+                if (entityId <= 0) continue;
+                output.Add(new FightBattleStatusStateTrigger
+                {
+                    EntityId = entityId,
+                    BasePercent = Float(value, "BasePercent", 1f),
+                    AffectedByProp = Bool(value, "AffectedByProp"),
+                    Source = skill ? Int(value, "Source") : 0,
+                    Target = skill ? Int(value, "Target") : 0,
+                    TargetPos = skill ? Int(value, "TargetPos") : 0,
+                    UseAI = skill && Bool(value, "UseAI"),
+                    StackedCountToDamageFactor = skill
+                        && Bool(value, "StackedCountToDamageFactor"),
+                    ApplyTarget = skill ? 0 : Int(value, "ApplyTarget"),
+                    TargetWithoutStatusIds = IntArray(value, "TargetWithoutStatusIds"),
+                    StatusReplacementProperties = ReadReplacementProperties(value,
+                        "StatusReplacePropertyValues")
+                });
             }
         }
 

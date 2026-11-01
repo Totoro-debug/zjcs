@@ -460,7 +460,9 @@ namespace Zjcs.Combat.Official
                         CharacterTypes = value.CharacterTypes == null ? Array.Empty<int>()
                             : (int[])value.CharacterTypes.Clone(),
                         Range = value.Range == null ? new List<FightGridPoint>()
-                            : new List<FightGridPoint>(value.Range)
+                            : new List<FightGridPoint>(value.Range),
+                        Statuses = CopyTriggers(value.Statuses),
+                        Skills = CopyTriggers(value.Skills)
                     });
             return result;
         }

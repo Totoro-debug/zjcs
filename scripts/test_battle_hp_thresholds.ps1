@@ -63,6 +63,20 @@ $invocations.Clear()
 Assert-Hp ($invocations.Count -eq 1 -and $invocations[0].Trigger.EntityId -eq 60051) `
     'HP-limit configured skill invocation was not collected.'
 
+# 25296 exercises ApplyByAroundUnitCount: its configured grid-item neighbour 3051
+# is discovered from the owner position and contributes one configured skill invocation.
+$around = $catalog.CreateStatus(25296, 1, 1, 4)
+$aroundTarget = Unit 9 100 6
+$aroundTarget.MonsterId = 3051; $aroundTarget.X = 1; $aroundTarget.Y = 0
+$units.Clear(); $units.Add($owner); $units.Add($aroundTarget)
+$owner.Statuses.Clear(); $owner.Statuses.Add($around)
+$invocations.Clear()
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::Apply($owner, $catalog, $false,
+    $null, [Zjcs.Combat.Official.FightRandomStream]::new(17), $null, $units, $invocations)
+Assert-Hp ($invocations.Count -eq 2 -and ($invocations.Trigger.EntityId -contains 13548) `
+    -and $invocations[0].SourceUnitId -eq $owner.Id) `
+    'ApplyByAroundUnitCount did not execute its configured neighbour skill.'
+
 $cooldown = $catalog.CreateStatus(25065, 1, 1, 5)
 $owner.Statuses.Clear(); $owner.Statuses.Add($cooldown)
 $owner.SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{

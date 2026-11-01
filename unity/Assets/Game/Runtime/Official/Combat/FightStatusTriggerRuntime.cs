@@ -377,31 +377,116 @@ namespace Zjcs.Combat.Official
             foreach (FightBattleStatusStateTrigger trigger in status.HpLimitSkills)
                 AppendThresholdSkill(unit, status, trigger, random, configuredTriggerSkills, null, units);
             foreach (FightBattleStatusInvoke invoke in status.HpLimitInvokes)
-                if (invoke != null && invoke.Type == 1)
+                if (invoke != null)
                 {
-                    int targetId = invoke.Target == 0 ? unit.Id
-                        : FightStatusLifecycle.ResolveTargetUnitId(status, invoke.Target, units);
-                    FightBattleUnitState target = FindUnit(units, targetId) ?? unit;
-                    FightStatusCooldownRuntime.ChangeCooldown(target, invoke.ChangeCooldown);
+                    if (invoke.Type == 1)
+                    {
+                        int targetId = invoke.Target == 0 ? unit.Id
+                            : FightStatusLifecycle.ResolveTargetUnitId(status, invoke.Target, units);
+                        FightBattleUnitState target = FindUnit(units, targetId) ?? unit;
+                        FightStatusCooldownRuntime.ChangeCooldown(target, invoke.ChangeCooldown);
+                    }
+                    else if (invoke.Type == 2)
+                        ApplyAroundInvoke(unit, status, invoke, catalog, units, random,
+                            configuredTriggerSkills);
                 }
             status.HpLimitTriggeredCount++;
             if (status.HpLimitAutoRemove) FightStatusLifecycle.End(unit, status);
             return true;
         }
 
+        private static int ApplyAroundInvoke(FightBattleUnitState owner,
+            FightBattleStatusState source, FightBattleStatusInvoke invoke,
+            FightOfficialCombatCatalog catalog, IReadOnlyList<FightBattleUnitState> units,
+            FightRandomStream random, List<FightBattleStatusSkillInvocation> configured)
+        {
+            if (owner == null || source == null || invoke == null || units == null) return 0;
+            int applied = 0;
+            foreach (FightBattleUnitState target in SelectAroundTargets(owner, invoke, units))
+            {
+                foreach (FightBattleStatusStateTrigger trigger in invoke.Statuses)
+                    if (ApplyThresholdStatus(owner, source, trigger, catalog, units, random, target))
+                        applied++;
+                foreach (FightBattleStatusStateTrigger trigger in invoke.Skills)
+                    if (AppendThresholdSkill(owner, source, trigger, random, configured, null,
+                        units, target)) applied++;
+            }
+            return applied;
+        }
+
+        private static List<FightBattleUnitState> SelectAroundTargets(
+            FightBattleUnitState owner, FightBattleStatusInvoke invoke,
+            IReadOnlyList<FightBattleUnitState> units)
+        {
+            var result = new List<FightBattleUnitState>();
+            if (invoke.TargetType == 5) return result;
+            var offsets = invoke.Range == null || invoke.Range.Count == 0
+                ? new List<FightGridPoint> { new FightGridPoint(0, 0) }
+                : invoke.Range;
+            var seen = new HashSet<int>();
+            foreach (FightGridPoint offset in offsets)
+                foreach (FightBattleUnitState candidate in units)
+                {
+                    if (candidate == null || !FightBattleTargeting.IsSelectable(candidate)
+                        || !AroundTargetTypeMatches(owner, candidate, invoke.TargetType)
+                        || invoke.CharacterTypes != null && invoke.CharacterTypes.Length > 0
+                            && !invoke.CharacterTypes.Contains(candidate.CharacterType)
+                        || invoke.CharacterEntityClassIds != null
+                            && invoke.CharacterEntityClassIds.Length > 0
+                            && !MatchesEntityClass(candidate, invoke.CharacterEntityClassIds)
+                        || offset.X != candidate.X - owner.X || offset.Y != candidate.Y - owner.Y
+                        || !seen.Add(candidate.Id)) continue;
+                    result.Add(candidate);
+                    if (invoke.MaxCount > 0 && result.Count >= invoke.MaxCount) return result;
+                }
+            return result;
+        }
+
+        private static bool AroundTargetTypeMatches(FightBattleUnitState owner,
+            FightBattleUnitState candidate, int targetType)
+        {
+            switch (targetType)
+            {
+                case 0: return candidate.Id == owner.Id;
+                case 1: return candidate.Side != owner.Side;
+                case 2: return candidate.Side == owner.Side;
+                case 3: return candidate.Side == owner.Side && candidate.Id != owner.Id;
+                case 4: return true;
+                case 6: return candidate.Id == owner.MasterId;
+                case 7: return candidate.MasterId == owner.Id;
+                case 8: return candidate.Side == owner.Side && candidate.Id != owner.Id
+                    && candidate.CharacterType == 1;
+                case 9: return candidate.Side == owner.Side
+                    && (candidate.CharacterType == 1 || candidate.CharacterType == 4);
+                case 10: return candidate.Side == owner.Side && candidate.Id != owner.Id
+                    && (candidate.CharacterType == 1 || candidate.CharacterType == 4);
+                default: return false;
+            }
+        }
+
+        private static bool MatchesEntityClass(FightBattleUnitState candidate, int[] classIds)
+        {
+            foreach (int classId in classIds)
+                if (classId > 0 && (candidate.MonsterId == classId
+                    || candidate.MonsterTemplateId == classId || candidate.NpcClassId == classId))
+                    return true;
+            return false;
+        }
+
         private static bool ApplyThresholdStatus(FightBattleUnitState owner,
             FightBattleStatusState source, FightBattleStatusStateTrigger trigger,
             FightOfficialCombatCatalog catalog, IReadOnlyList<FightBattleUnitState> units,
-            FightRandomStream random)
+            FightRandomStream random, FightBattleUnitState targetOverride = null)
         {
             if (trigger == null || trigger.EntityId <= 0 || trigger.AffectedByProp
                 || !Roll(trigger.BasePercent, random)) return false;
+            FightBattleUnitState filterTarget = targetOverride ?? owner;
             if (trigger.TargetWithoutStatusIds != null
-                && trigger.TargetWithoutStatusIds.Any(id => owner.Statuses.Exists(value =>
+                && trigger.TargetWithoutStatusIds.Any(id => filterTarget.Statuses.Exists(value =>
                     value != null && value.ClassId == id))) return false;
-            int targetId = trigger.ApplyTarget == 0 ? owner.Id
+            int targetId = trigger.ApplyTarget == 0 ? filterTarget.Id
                 : FightStatusLifecycle.ResolveTargetUnitId(source, trigger.ApplyTarget, units);
-            FightBattleUnitState target = FindUnit(units, targetId) ?? owner;
+            FightBattleUnitState target = FindUnit(units, targetId) ?? filterTarget;
             if (!FightBattleTargeting.IsSelectable(target) && target.Hp > 0) return false;
             int instanceId = 1;
             foreach (FightBattleStatusState existing in target.Statuses)
@@ -429,7 +514,8 @@ namespace Zjcs.Combat.Official
             FightBattleStatusState source, FightBattleStatusStateTrigger trigger,
             FightRandomStream random, List<FightBattleStatusSkillInvocation> configured,
             List<FightBattleStatusStateTrigger> simple,
-            IReadOnlyList<FightBattleUnitState> units)
+            IReadOnlyList<FightBattleUnitState> units,
+            FightBattleUnitState targetOverride = null)
         {
             if (trigger == null || trigger.EntityId <= 0 || trigger.AffectedByProp
                 || !Roll(trigger.BasePercent, random)) return false;
@@ -441,9 +527,10 @@ namespace Zjcs.Combat.Official
             }
             int sourceId = trigger.Source == 0 ? owner.Id
                 : FightStatusLifecycle.ResolveTargetUnitId(source, trigger.Source, units);
-            int targetId = trigger.Target == 0 ? owner.Id
+            int targetId = trigger.Target == 0 ? (targetOverride == null ? owner.Id : targetOverride.Id)
                 : FightStatusLifecycle.ResolveTargetUnitId(source, trigger.Target, units);
-            int targetPositionId = trigger.TargetPos == 1 ? targetId : owner.Id;
+            int targetPositionId = trigger.TargetPos == 1 ? targetId
+                : targetOverride == null ? owner.Id : targetOverride.Id;
             configured.Add(new FightBattleStatusSkillInvocation
             {
                 Trigger = copy, SourceUnitId = sourceId > 0 ? sourceId : owner.Id,
