@@ -112,7 +112,8 @@ public sealed class PartnerRosterNativeRunner : MonoBehaviour, IOfflinePartnerPr
         string repo = Environment.GetEnvironmentVariable("ZJCS_REPOSITORY_ROOT"), work = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
         Func<string, string> read = path => File.ReadAllText(Path.Combine(repo, "unity/Assets/Official", path));
         var catalog = OfficialCharacterCatalog.Parse(read("Character/character-progression.json"), read("Character/item-time-limits.json"),
-            read("CharacterCreation/wardrobe.json"), read("CharacterCreation/wardrobe-rules.json"), read("Character/character-overview.json"));
+            read("CharacterCreation/wardrobe.json"), read("CharacterCreation/wardrobe-rules.json"), read("Character/character-overview.json"),
+            OfficialPartnerCatalog.Parse(read("Partners/partner-rules.json"), read("Partners/partner-properties.json")));
         var tasks = OfficialMainlineTaskCatalog.Load(File.ReadAllText(Path.Combine(repo, "unity/Assets/Game/Resources/Official/Progression/mainline-tasks.json")),
             File.ReadAllText(Path.Combine(repo, "unity/Assets/Game/Resources/Official/Progression/mainline-tasks-source-manifest.json")));
         var slots = new ProfileSlotCatalog(Path.Combine(work, "profiles"));
@@ -122,12 +123,12 @@ public sealed class PartnerRosterNativeRunner : MonoBehaviour, IOfflinePartnerPr
             player.UnlockedMapClassIds.Add(11); player.UnlockedMapClassIds.Add(12);
             player.Inventory.Add(new OfflineItemStack { ItemId = 1300, Count = 2 });
             int rank = 0;
-            var developable = new HashSet<int>(catalog.Rows("npc_friendship_level").Where(row => Convert.ToInt32(row["Level"]) >= 4).Select(row => Convert.ToInt32(row["Id"])));
-            foreach (int id in catalog.Rows("npc").Where(row => Convert.ToInt32(row["NpcType"]) != 2 && Convert.ToInt32(row["NpcRoleType"]) != 2)
+            var developable = new HashSet<int>(catalog.PartnerRows("npc_friendship_level").Where(row => Convert.ToInt32(row["Level"]) >= 4).Select(row => Convert.ToInt32(row["Id"])));
+            foreach (int id in catalog.PartnerRows("npc").Where(row => Convert.ToInt32(row["NpcType"]) != 2 && Convert.ToInt32(row["NpcRoleType"]) != 2)
                 .Select(row => Convert.ToInt32(row["Id"])).Where(id => id != 8401 && (id < 11015 || id > 11022) && developable.Contains(id)).Take(21))
             {
                 int level = ++rank % 4 + 1;
-                long exp = Convert.ToInt64(catalog.Rows("npc_friendship_level").Single(row => Convert.ToInt32(row["Id"]) == id && Convert.ToInt32(row["Level"]) == level)["FriendshipExp"]);
+                long exp = Convert.ToInt64(catalog.PartnerRows("npc_friendship_level").Single(row => Convert.ToInt32(row["Id"]) == id && Convert.ToInt32(row["Level"]) == level)["FriendshipExp"]);
                 player.CharacterProperties.NpcFriendships.Add(new OfflineNpcFriendship { NpcClassId = id, Level = level, FriendshipExp = exp, ActivateTimeTicks = 10000 - rank,
                     IsCollected = id == 8404 || id == 8411, CollectedTimeTicks = rank });
             }

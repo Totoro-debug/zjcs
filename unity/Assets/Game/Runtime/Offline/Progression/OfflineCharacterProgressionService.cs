@@ -131,14 +131,15 @@ namespace Zjcs.Offline.Progression
 
         public IReadOnlyList<int> MeetableNpcCandidates()
         {
-            return catalog.Rows("npc").Select(row => Integer(row, "Id"))
+            return catalog.PartnerRows("npc").Select(row => Integer(row, "Id"))
                 .Where(npcId => npcId > 0 && CanMeetNpc(npcId))
                 .Distinct().OrderBy(npcId => npcId).ToArray();
         }
 
         public bool CanMeetNpc(int npcClassId)
         {
-            Dictionary<string, object> npc = catalog.Find("npc", npcClassId, "Id");
+            if (npcClassId >= 11015 && npcClassId <= 11022) return false; // Confirmed closed collaboration groups.
+            Dictionary<string, object> npc = catalog.FindPartner("npc", npcClassId, "Id");
             if (npc == null || (Player.CharacterProperties?.NpcFriendships
                 ?? new List<OfflineNpcFriendship>()).Any(value => value != null
                     && value.NpcClassId == npcClassId)) return false;
@@ -147,7 +148,7 @@ namespace Zjcs.Offline.Progression
 
         public IReadOnlyDictionary<int, long> NpcMeetItemRequirements(int npcClassId)
         {
-            Dictionary<string, object> npc = catalog.Find("npc", npcClassId, "Id");
+            Dictionary<string, object> npc = catalog.FindPartner("npc", npcClassId, "Id");
             return npc != null && TryNpcMeetRequirements(npc, Player, out Dictionary<int, long> items,
                 requireConditionMet: false)
                 ? items : new Dictionary<int, long>();
@@ -160,12 +161,12 @@ namespace Zjcs.Offline.Progression
             session.Reload();
             if (Player.AppliedCharacterEventIds.Contains(eventId))
                 return new ProgressionResult { Status = ProgressionResultStatus.Unchanged };
-            Dictionary<string, object> npc = catalog.Find("npc", npcClassId, "Id");
+            Dictionary<string, object> npc = catalog.FindPartner("npc", npcClassId, "Id");
             if (npc == null || !CanMeetNpc(npcClassId))
                 return Invalid("The NPC meet condition is not satisfied or the NPC was already met.");
-            int defaultLevel = Integer(catalog.Rows("game_settings").FirstOrDefault(),
+            int defaultLevel = Integer(catalog.PartnerRows("game_settings").FirstOrDefault(),
                 "NpcDefaultFriendshipLevel");
-            Dictionary<string, object> initialFriendship = catalog.Rows("npc_friendship_level")
+            Dictionary<string, object> initialFriendship = catalog.PartnerRows("npc_friendship_level")
                 .FirstOrDefault(value => Integer(value, "Id") == npcClassId
                     && Integer(value, "Level") == defaultLevel);
             long initialExperience = Long(initialFriendship, "FriendshipExp");
@@ -188,7 +189,8 @@ namespace Zjcs.Offline.Progression
                         throw new InvalidOperationException("NPC meet items changed before the transaction was saved.");
                 }
                 foreach (KeyValuePair<int, long> requirement in currentRequirements)
-                    player.Inventory.First(value => value.ItemId == requirement.Key).Count -= requirement.Value;
+                    if (!OfflineInventoryOperations.Consume(player, requirement.Key, requirement.Value, 0).IsApplied)
+                        throw new InvalidOperationException("NPC meet items changed before the transaction was saved.");
                 properties.NpcFriendships.Add(new OfflineNpcFriendship
                 {
                     NpcClassId = npcClassId,
@@ -1066,7 +1068,7 @@ namespace Zjcs.Offline.Progression
             Dictionary<string, object> condition = Map(npc, "CanMeetCondition");
             if (condition == null || player == null) return false;
             var context = NpcConditionContext(player);
-            if (requireConditionMet && !catalog.EvaluateCondition(condition, context)) return false;
+            if (requireConditionMet && !catalog.EvaluatePartnerCondition(condition, context)) return false;
             return CollectNpcMeetItems(condition, context, requiredItems, new HashSet<int>());
         }
 
@@ -1103,10 +1105,10 @@ namespace Zjcs.Offline.Progression
                     foreach (object rawId in orIds)
                     {
                         int id = Convert.ToInt32(rawId, CultureInfo.InvariantCulture);
-                        Dictionary<string, object> row = catalog.Find("conditions", id, "ClassId");
+                        Dictionary<string, object> row = catalog.FindPartner("conditions", id, "ClassId");
                         Dictionary<string, object> child = Map(row, "Condition");
                         if (firstBranch == null) firstBranch = child;
-                        if (!catalog.EvaluateCondition(child, context)) continue;
+                        if (!catalog.EvaluatePartnerCondition(child, context)) continue;
                         var branchItems = new Dictionary<int, long>();
                         if (!TryCollectNpcMeetConditionId(id, context, branchItems, visiting)) continue;
                         foreach (KeyValuePair<int, long> item in branchItems)
@@ -1119,7 +1121,7 @@ namespace Zjcs.Offline.Progression
                     return firstBranch != null
                         && CollectNpcMeetItems(firstBranch, context, requiredItems, visiting);
                 default:
-                    return catalog.EvaluateCondition(condition, context);
+                    return catalog.EvaluatePartnerCondition(condition, context);
             }
         }
 
@@ -1129,7 +1131,7 @@ namespace Zjcs.Offline.Progression
             if (conditionId <= 0 || !visiting.Add(conditionId)) return false;
             try
             {
-                Dictionary<string, object> row = catalog.Find("conditions", conditionId, "ClassId");
+                Dictionary<string, object> row = catalog.FindPartner("conditions", conditionId, "ClassId");
                 return CollectNpcMeetItems(Map(row, "Condition"), context, requiredItems, visiting);
             }
             finally

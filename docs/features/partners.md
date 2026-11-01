@@ -106,7 +106,7 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 名册范围修正的原方法与输入输出哈希见[名册范围来源](../../assets/reference/partner-roster-scope-source-manifest.json)。相遇条件中的 `HasManualMeetNpc` 同样使用“排除探索首领”的原枚举范围，已结识商人／导师可满足原置顶解锁条件。重建卡片还逐对象恢复原 `MultiLanguageText.myKey` 空字符串，修正旧转换将其写成 `null` 的差异；除此字段及动态加载表外，原卡片与既有依赖字节保持不变。
 
-`PartnerRosterTransactionValidation` 已通过商人 8411、导师 8404 的名册／置顶条件与探索首领 3601 排除回归，并复核地图／区域、信物不足、相遇扣物品、置顶和存档恢复。原生名册在隔离 URP Play Mode 对这两类实际卡片执行模拟射线点击，连同全部显示、排序、反向、遮罩关闭、滚动和池释放检查通过，已查看五帧 GPU 画面。原生卡片验证逐项核对 88 个候选的 176 个图片消费者、108 个地址、89 项显示值、字形和网格；相遇／好感／置顶交互及五帧运行画面已复核，资源、图节点和音效实际引用检查通过。静态检查（81,651 个 GUID）、主工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过，安装资源哈希保持一致。完整页面、当前条件接线、正式弹窗与 Player 仍未完成。
+`PartnerRosterTransactionValidation` 已通过商人 8411、导师 8404 的名册／置顶条件与探索首领 3601 排除回归，并复核地图／区域、信物不足、相遇扣物品、置顶和存档恢复。原生名册在隔离 URP Play Mode 对这两类实际卡片执行模拟射线点击，连同全部显示、排序、反向、遮罩关闭、滚动和池释放检查通过，已查看五帧 GPU 画面。原生卡片验证逐项核对 88 个候选的 176 个图片消费者、108 个地址、89 项显示值、字形和网格；相遇／好感／置顶交互及五帧运行画面已复核，资源、图节点和音效实际引用检查通过。静态检查（81,651 个 GUID）、主工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过，安装资源哈希保持一致。完整页面、正式弹窗与 Player 仍未完成。
 
 ### 当前原生名册区域（局部）
 
@@ -204,13 +204,25 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 ### 已迁移的名册与相遇状态（局部）
 
-`Runtime/Official/Partners/NpcRosterRules.cs` 与 `OfflineCharacterProgressionService.Partners.cs` 按当前 `884_156692` 的 `NpcHelper`、`NpcPanelNpcList`、`NpcComparer` 恢复五种结识状态、名册显示条件及好感／相遇时间排序。判断依次为已结识、可结识、可显示后的等待／未结识；可结识条件优先于可显示条件。默认显示已结识及可结识伙伴；勾选全部后增加等待结识伙伴，以及拥有首个专属信物的未结识伙伴。名册限定原 `MapExploreBoss` 类别并排除星神和已确认暂停的八位联动伙伴。
+`Runtime/Official/Partners/NpcRosterRules.cs` 与 `OfflineCharacterProgressionService.Partners.cs` 按当前 `884_156692` 的 `NpcHelper`、`NpcPanelNpcList`、`NpcComparer` 恢复五种结识状态、名册显示条件及好感／相遇时间排序。判断依次为已结识、可结识、可显示后的等待／未结识；可结识条件优先于可显示条件。默认显示已结识及可结识伙伴；勾选全部后增加等待结识伙伴，以及拥有首个专属信物的未结识伙伴。名册排除原 `MapExploreBoss` 类别、星神和已确认暂停的八位联动伙伴。
 
 排序固定优先结识状态、置顶、置顶时间升序及伙伴类型，再比较选中的好感或相遇时间，最后按伙伴号降序；反向只改变选中的排序键。置顶功能按 `function_limit` 判断，其中 `HasManualMeetNpcCondition` 按原码同时检查“已拥有手动结识伙伴”和“当前存在满足结识条件的手动伙伴”，不直接使用历史存档的布尔标记。地图可达读取 `UnlockedMapClassIds`；区域激活读取 `ActivatedGoddessRegions`，探索完成本身不等于区域激活。
 
 相遇事务提交前重新读取存档，信物扣除、初始好感与实际相遇时间共同保存；重复事件不再次相遇或扣除。置顶及其时间单独保存，重复置顶保持原顺序。旧存档未记录的相遇时间保持零，不从注册时间或当前时间反推。来源函数、当前原码及配置哈希见 [名册规则来源](../../assets/reference/partner-roster-rules-source-manifest.json)。
 
 `scripts/test_partner_gifts.ps1` 的隔离 Unity 编译／存档验证同时覆盖地图锁定、区域未激活／探索完成／激活后的状态变化、部分信物显示、信物不足拒绝、可结识优先、真实结识扣除、重复相遇、置顶解锁／顺序、存档恢复及旧日期兼容；排序检查覆盖反向与固定优先级、最终伙伴号比较。卡片的模拟点击与主工程验证范围见上文「已接通的名册卡片控制器」；官方名册 prefab 和实际入口尚未接通。
+
+### 当前名册条件与相遇事务接线（局部）
+
+`scripts/prepare_partner_conditions.py` 从选定 `884_156692` 迁移 `DataHub`、九类条件及相遇／信物／比较辅助方法，共 19 份原方法或代码块；读取全部 148 条 NPC 的相遇、显示、等待条件及置顶功能 1011，闭合 72 个条件号。保留原条件枚举、字段默认值、分支顺序与短路；未知比较符沿原默认分支按 `>=`，空 AND 为真、空 OR 为假，运行时缺失子条件保留空项而不跳过。`GetHasItemCanMeetCondition` 只找直接子条件中的首个信物条件，不递归展开。源码、当前配置、闭包、适配和输出哈希见[当前条件来源](../../assets/reference/partner-condition-source-manifest.json)。
+
+`OfficialCharacterCatalog.Partners` 为名册提供当前版本的 NPC、条件、功能门槛、物品、好感阈值与初始等级；相遇状态、置顶、卡片元数据及信物进度消费此目录。其他功能继续通过各自原有数据入口读取配置。玩家端口读取实际背包、已结识记录、可达地图和已激活女神区域；基础等级复用现有单机技能条件的投影，即角色等级与原阶位基础等级上限的较小值。原 8408／8409 的手动相遇条件是基础等级至少 38，满足后即参与原手动伙伴判断，不额外要求信物。
+
+相遇继续使用已确认的本地单事务方案，提交前重读存档并复核当前条件；信物通过 `OfflineInventoryOperations.Consume` 同步扣除数量和逐件记录，空栈一并移除。初始好感、结识时间与事件凭据共同保存，成功后才由界面桥接发通知；写盘失败可用同一事件重试。11015–11022 的暂停约定同时应用于相遇命令。
+
+`PartnerConditionValidation.Run` 在隔离 Unity 工程通过九类条件、比较默认分支、基础等级数据优先级、物品数据后备、复合短路／空列表／缺失子项、直接信物提取与当前相遇事务断言，包含实际文件锁写盘失败、回滚、同事件重试、逐件记录扣除、商人／导师和读档恢复。原生名册及卡片均切换为当前配置，在 URP Play Mode 通过模拟鼠标射线、显示全部、排序／反向／关闭遮罩、商人／导师卡片、滚动、信物不足、连续相遇只扣一次、700 毫秒解锁、置顶及存档恢复；已查看名册五帧和卡片五帧实际 GPU 画面。静态检查（84,287 个 GUID）、主工程导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 通过。本节仍为名册与事务局部验证，完整页面宿主、正式弹窗及 Windows Player 尚未完成。
+
+当前名册唯一自动伙伴 8402 的原 `IsAutoMeet` 为真、相遇条件为基础等级至少 1。`MsgPlayerNpc.OnMessage` 只消费服务器新增数据并触发通知，`NPCHandler.MainPlayer_OnAddNewNpc` 只处理自动结识广播；尚未取得服务器自动触发实现。是否在创建角色及读档后检查原条件并自动结识，已作为具体单机差异询问用户，未据推测添加触发逻辑。
 
 ### 已迁移的送礼规则与存档接口（局部）
 

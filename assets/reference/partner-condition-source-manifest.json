@@ -1,0 +1,201 @@
+{
+  "manifest": "884_156692",
+  "source_sha256": {
+    "scripts/templates/partner_conditions/PartnerConditionRules.cs": "5d230c34176c74a7882c703efe13aa6f2beb2cb4427e100843e320bd4f9a2c86",
+    "unity/Assets/Official/Partners/partner-rules.json": "1ab5dd32c4ef68297aea6a847cb0e5ced686634bb4fb7f4c28a1aa7bf70398fd",
+    ".tools/source-packages/official-code/common-source/Common/ICondition.cs": "12a4005edaf53df080240808b91e6e3e55fc08bceb91fd154e6c3993cdc704ff",
+    ".tools/source-packages/official-code/common-source/Common/ConditionDataType.cs": "e067894427667bfe5da439df11bef5338c45fa6e3376cdfb307775ecc7ca7921",
+    ".tools/source-packages/official-code/common-source/Common/ConditionType.cs": "99f4a625e61898abddfef171a4a762e41adc103badf44f9e2bddfcc1ca6ff783",
+    ".tools/source-packages/official-code/common-source/Common/NpcType.cs": "87a7df90779dae2db4f942969ae790b3cb3b7dfa81239ddefb03501241e47d6b",
+    ".tools/source-packages/official-code/common-source/Common/NoneCondition.cs": "f52b9e5e8f51ffec64b2781a9a0395ca38f6032ed367960a6198fdd803ad586f",
+    ".tools/source-packages/official-code/common-source/Common/AlwaysCondition.cs": "d5525bc8d9c519a74f2ed9d36c4a7ed550a5ccc041c348f1701fc8273b954860",
+    ".tools/source-packages/official-code/common-source/Common/LevelCondition.cs": "f3c1f31e2877f83a97df6f48d7230f50b48b5b0cf3420bb542a363ee37c8000e",
+    ".tools/source-packages/official-code/common-source/Common/HasItemCondition.cs": "fca0fa79cc49354068fc32d136863d5a77181fd9ae93596c1671a9f804641dd5",
+    ".tools/source-packages/official-code/common-source/Common/MapUnlockCondition.cs": "4967a1cb05b4d1029b1590501eb1fb6e0957193c9c7827626eed5368dde779f8",
+    ".tools/source-packages/official-code/common-source/Common/MapRegionActivedCondition.cs": "1152e0d30105cfe5e9962e4bc4b9b64ac428780ec63fd3afa4db0f71c3ac8056",
+    ".tools/source-packages/official-code/common-source/Common/HasManualMeetNpcCondition.cs": "c3465c86bfe691d5808187ee940dc7bbebac2417750254bedafc5970e1fd2ec1",
+    ".tools/source-packages/official-code/common-source/Common/CompositeCondition.cs": "9e45aefb344d4e75fffe52fa8f0fcea3e4886d3e396b2c3fa10128ebe35cf54d",
+    ".tools/source-packages/official-code/common-source/Common/CompositeAndCondition.cs": "1a7d5ccf8f1dcf8401e1a46aeb4596bd464f5c8774edc50adcdb4d55b111571c",
+    ".tools/source-packages/official-code/common-source/Common/CompositeOrCondition.cs": "b4d4f14990bcc59bb196a4bfcc360df4d38f1142e040ec9015c14211b6530aca",
+    ".tools/source-packages/official-code/common-source/Common/ConditionInfoParser.cs": "ba10895470c4d9d3b330852b968504dd955009179bb75b3685ea67eed998981f",
+    ".tools/source-packages/official-code/common-source/Common/NpcInfoParser.cs": "2323757139ca2742d3a563e983439feaefd03136d71a0b3094583a7c9d6e7eee",
+    ".tools/source-packages/official-code/common-source/Common/NpcInfo.cs": "387c584e748963f1870e9861fee043e68fcc741cf52409fcdeffe294007c6a8d",
+    ".tools/source-packages/official-code/common-source/Common/Formula.cs": "ab9fbc796367c78a25d18941bb58fab29e654ccc08228cc248b3422f21436b76",
+    ".tools/source-packages/official-code/common-source/NpcHelper.cs": "37ae9a0c2c0acfdc482bc71682c52608777d749c148deec0729bc1c0ffeca0f8"
+  },
+  "methods": {
+    "common-source/Common/ICondition.cs": {
+      "DataHub": "79cbcf7635ff4bc0900a214db12136df69bbd587ea9e0fbfdb6476b0f05f7323"
+    },
+    "common-source/Common/NoneCondition.cs": {
+      "public override bool IsMet(DataHub dataHub)": "7bfda4f9f7b9a135c4a6f8fceb57bb1ca9334c963208738f34a4895eb312ee6e"
+    },
+    "common-source/Common/AlwaysCondition.cs": {
+      "public override bool IsMet(DataHub dataHub)": "9f31097c8ade50aa8fef992f7a5f57704aa5800e2501c323ffc5b8a1092c48fd"
+    },
+    "common-source/Common/LevelCondition.cs": {
+      "public override bool IsMet(DataHub dataHub)": "79c92bfb2b7c40c2dc5b1bd77e3f4b8d736efd93003f21742bd6d25246030799",
+      "private int GetLevel(DataHub dataHub)": "ef07eb13c90fe82a0c092141801b54e3f7e197d3c2bbc97263f772b894ef34b8"
+    },
+    "common-source/Common/HasItemCondition.cs": {
+      "public override bool IsMet(DataHub dataHub)": "92c23eb971977ad6b3c24e2ff949c37adc7426eecd5aeccddab6dfa9c6a82a79"
+    },
+    "common-source/Common/MapUnlockCondition.cs": {
+      "public override bool IsMet(DataHub dataHub)": "f0c1a880e3d2d702038f0f01911644a1d2fb53d65f2fcaf0a127f1d9d502829c"
+    },
+    "common-source/Common/MapRegionActivedCondition.cs": {
+      "public override bool IsMet(DataHub dataHub)": "aefc4b6d1cb7b46e7b15c976fac228e16fbc87cd7a5d99431f5bf2b7413f835d",
+      "private int GetValue(DataHub dataHub)": "6f24f6c4600cbd7f8b5720f0cb99cdcaa8c7fb83626f52540d249df428341482"
+    },
+    "common-source/Common/HasManualMeetNpcCondition.cs": {
+      "public override bool IsMet(DataHub dataHub)": "9a99f3c2516d04b848ea67080ce8e6d0b0955c121d3a835da3ebc3ab4067ae20",
+      "private bool CheckMeet(DataHub hub)": "eecccce90c5b68d85367c3a29f03488fd976928ea497c645f9b2776b76d74eb9"
+    },
+    "common-source/Common/CompositeCondition.cs": {
+      "public List<ICondition> GetConditions()": "3a657bd6eeb29e3e0c8d19c4c313acfa011e88b02c5652447d413942b92cef21"
+    },
+    "common-source/Common/CompositeAndCondition.cs": {
+      "public override bool IsMet(DataHub dataHub)": "b7e6ffe5f687141e93a0ea6bb62cf287e7ca61e23f08bf68c2b1f837dba1724b"
+    },
+    "common-source/Common/CompositeOrCondition.cs": {
+      "public override bool IsMet(DataHub dataHub)": "21c4b5546f905b49a99c347c2d4d3581f60a9be44389552e8f86685f36b50cca"
+    },
+    "common-source/Common/ConditionInfoParser.cs": {
+      "public ICondition GetCondition(int id)": "9593a241aefc4f7165dcd9cf7206bea0fe7e0ed78222a9922bb0f729111c080a"
+    },
+    "common-source/Common/NpcInfoParser.cs": {
+      "public IEnumerable<NpcInfo> GetNpcs(NpcType ignoreType)": "c39bd0fc45d7143034fb88e3e2af0bb362131a6600fa5605310dcce94ec44b50"
+    },
+    "common-source/Common/NpcInfo.cs": {
+      "public HasItemCondition GetHasItemCanMeetCondition()": "f6c4a4e1d5fe07f058aa95d7caa5669febfe4c4d7e8dd6c1e82f8cb59e6c62aa"
+    },
+    "common-source/Common/Formula.cs": {
+      "public static bool Compare<T>(T lhs, string op, T rhs) where T : IComparable<T>, IEquatable<T>": "08bee63598aba5a4622459f23793aa107656bc0e8310570bc8385d48094ca239"
+    },
+    "common-source/NpcHelper.cs": {
+      "public static NpcMeetStatus GetNpcMeetStatus(Player player, int npcClassId)": "54e8967615e2f8a40a56444979ffab4f446375de5718c8aa237a6c0ffcd95184"
+    }
+  },
+  "generator_sha256": "474bb4480a0c5e2e56f113a622e7692f17df20a539c0ed7c78f02267adfb4c97",
+  "closure": {
+    "npc_count": 148,
+    "condition_ids": [
+      14,
+      111,
+      112,
+      113,
+      114,
+      118,
+      120,
+      123,
+      127,
+      3038,
+      5500,
+      5501,
+      5502,
+      5503,
+      5504,
+      5505,
+      5506,
+      5507,
+      5508,
+      5510,
+      5511,
+      5512,
+      5513,
+      5514,
+      5520,
+      5521,
+      5522,
+      5523,
+      5524,
+      5530,
+      5531,
+      5532,
+      5533,
+      5534,
+      5540,
+      5541,
+      5542,
+      5543,
+      5544,
+      5545,
+      5546,
+      5550,
+      5551,
+      5552,
+      5553,
+      5554,
+      5555,
+      5556,
+      5557,
+      5560,
+      5561,
+      5562,
+      5563,
+      5564,
+      5565,
+      5566,
+      5567,
+      5570,
+      5571,
+      5572,
+      5573,
+      5574,
+      5575,
+      8500,
+      8501,
+      8502,
+      8505,
+      8506,
+      8507,
+      8510,
+      8511,
+      8512
+    ],
+    "types": [
+      "AlwaysCondition",
+      "CompositeAndCondition",
+      "CompositeOrCondition",
+      "HasItemCondition",
+      "HasManualMeetNpcCondition",
+      "LevelCondition",
+      "MapRegionActivedCondition",
+      "MapUnlockCondition",
+      "NoneCondition"
+    ],
+    "collection_function": 1011
+  },
+  "bindings_sha256": {
+    "unity/Assets/Game/Runtime/Offline/Progression/OfficialPartnerAssetCatalog.cs": "66c5107850172f8ed4ae3434f8d773084a8db00bedb7e7064bb51d891b5189eb",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfficialCharacterAssetCatalog.cs": "ce81b9f59726e92883a93a878a471033da61cabb00534aa0299b38e3b01bd3a5",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfficialCharacterCatalog.Partners.cs": "4acc36624040a680f0f01cf757d698f4f7cebf44df20a3b255f30356877373a1",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.cs": "0585ace7fdda6b84e2064448f3e47d1e452624c15efc44627b13454db0c9a403",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.Partners.cs": "c49386921f11865310194f6a2fc5af2dc7635ee5a8df49d1e2a9a73a7556f9b8",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerRosterUiServices.cs": "53cdfe5622769e4d67072fc4dbf60421c28ce6601fb610f90e1f090e478f80ac"
+  },
+  "validation_sha256": {
+    "scripts/fixtures/partner_condition_validation.cs": "862880da1fd0557eab0a513f0683c32f473cca4c2bc42c6fc2a0a5b5e8681995",
+    "scripts/fixtures/partner_roster_transaction_validation.cs": "ba1cc54eee71fe2b6837f579a277b8692140cb614c70ab12d2ce870ca2667faa",
+    "scripts/fixtures/partner_roster_native_validation.cs": "fd77e2269369a03983defed96363c92e7d0a1a70e3d3392e784cb96c731f8c3a",
+    "scripts/fixtures/partner_roster_ui_validation.cs": "ba24f227c2140a37d6ecebdef40bddf93be8d53ef8e62e1c25defdb5a48acdca",
+    "scripts/prepare_partner_conditions_validation.py": "96cf6af63c9cda298aa53cdc5a8f85ef32c64650658117bd351ecd2131b3a727"
+  },
+  "outputs": {
+    "PartnerConditionRules.cs": "05f94593ecc1c02be92857167622b24ae5bde6bd0a70548abab7d6b37f1fca9a",
+    "PartnerConditionRules.cs.meta": "47f51e92c99a142ad95e80b2d358abd3faf8a35a38cb28061a915b7ebbb8e999"
+  },
+  "adaptations": [
+    "Original selected IsMet/helper/compare/data-hub methods, condition type identities and iteration order.",
+    "Diagnostic logging omitted; return values, null entries, short circuit and default comparison retained.",
+    "Typed local player/configuration ports; no network or server implementations invented.",
+    "Only NPC meet/show/wait and collection-unlock configuration closure is instantiated.",
+    "Current partner metadata/items/levels are scoped separately from other historical character tables.",
+    "Local BaseLevel uses the existing base-level projection bounded by official rank level limits.",
+    "Existing offline meet transaction consumes signal items including tracked units and saves before UI notification."
+  ],
+  "installed_outputs": {
+    "unity/Assets/Game/Runtime/Official/Partners/PartnerConditionRules.cs": "05f94593ecc1c02be92857167622b24ae5bde6bd0a70548abab7d6b37f1fca9a",
+    "unity/Assets/Game/Runtime/Official/Partners/PartnerConditionRules.cs.meta": "47f51e92c99a142ad95e80b2d358abd3faf8a35a38cb28061a915b7ebbb8e999"
+  }
+}

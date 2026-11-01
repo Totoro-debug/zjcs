@@ -58,7 +58,7 @@ namespace Zjcs.Offline.PartnersUI
 
         public PartnerNpcDefinition GetDefinition(int id)
         {
-            var row = catalog.Find("npc", id, "Id");
+            var row = catalog.FindPartner("npc", id, "Id");
             if (row == null) throw new InvalidOperationException("Official partner definition is missing: " + id);
             return new PartnerNpcDefinition { Id = id, NpcRoleType = (NpcRoleType)Int(row, "NpcRoleType"),
                 NameKey = Text(row, "NameKey"), FigureImage = Text(row, "FigureImage"), SmallBgImage = Text(row, "SmallBgImage"),
@@ -66,18 +66,25 @@ namespace Zjcs.Offline.PartnersUI
                     ? Convert.ToInt32(values.FirstOrDefault() ?? 0) : 0 };
         }
 
-        public bool HasItemDefinition(int id) => catalog.FindItem(id) != null;
-        public int FriendshipMaxLevel(int id) => catalog.Rows("npc_friendship_level").Where(row => Int(row, "Id") == id)
+        public bool HasItemDefinition(int id) => catalog.FindPartnerItem(id) != null;
+        public int FriendshipMaxLevel(int id) => catalog.PartnerRows("npc_friendship_level").Where(row => Int(row, "Id") == id)
             .Select(row => Int(row, "Level")).DefaultIfEmpty().Max();
         public long FriendshipExp(int id, int level)
         {
-            var row = catalog.Rows("npc_friendship_level").FirstOrDefault(value => Int(value, "Id") == id && Int(value, "Level") == level);
+            var row = catalog.PartnerRows("npc_friendship_level").FirstOrDefault(value => Int(value, "Id") == id && Int(value, "Level") == level);
             if (row == null) throw new InvalidOperationException("Official partner friendship threshold is missing: " + id + "/" + level);
             return Number(row, "FriendshipExp");
         }
 
         public PartnerMeetProgress? MeetProgress(int id)
         {
+            if (catalog.HasCurrentPartnerRules)
+            {
+                var requirement = catalog.CurrentPartnerMeetRequirement(id);
+                if (!requirement.HasValue) return null;
+                return new PartnerMeetProgress(session.Save.Player.Inventory.Where(item => item.ItemId == requirement.Value.ClassId)
+                    .Sum(item => item.Count), requirement.Value.Count);
+            }
             // NpcInfo.GetHasItemCanMeetCondition checks the condition itself or
             // the FIRST direct HasItem child of a composite, without flattening.
             var row = catalog.Find("npc", id, "Id");
@@ -151,7 +158,7 @@ namespace Zjcs.Offline.PartnersUI
             }
         }
 
-        private bool GetAutoMeet(int id) => catalog.Find("npc", id, "Id")?.TryGetValue("IsAutoMeet", out var value) == true && value is bool auto && auto;
+        private bool GetAutoMeet(int id) => catalog.FindPartner("npc", id, "Id")?.TryGetValue("IsAutoMeet", out var value) == true && value is bool auto && auto;
         private Dictionary<int, NpcRosterItem> Snapshot() => session.Save.Player.CharacterProperties.NpcFriendships
             .ToDictionary(value => value.NpcClassId, value => SnapshotOne(value.NpcClassId));
         private NpcRosterItem SnapshotOne(int id)

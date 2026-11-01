@@ -211,3 +211,8 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 
 
 伙伴名册候选范围：`prepare_partner_roster_scope.py` 核对选定 `884_156692` 的 `NpcInfoParser.GetNpcs` 排除语义、原名册及手动相遇条件消费，将商人／职业导师的原图像纳入显式卡片绑定。新增资源仍经 APK 优先、同版本云端、Sprite RenderDataKey 与原对象身份闭合。原语言表没有的 `ui_npc_name_10609` 沿原客户端返回键名；卡片的原空字符串 myKey 按原对象修复，不创建替代名称或美术。原方法、输入／输出哈希与替换范围见[名册范围来源](partner-roster-scope-source-manifest.json)，具体行为见[伙伴功能](../../docs/features/partners.md)。未生成完整素材快照。
+
+
+### 当前伙伴名册条件来源
+
+`scripts/prepare_partner_conditions.py` 复用选定 `884_156692` 的反编译公共代码，逐字节核对工作来源与 `current/884_156692/official-code/`，提取 `DataHub`、条件枚举、字段默认值及 19 份条件／相遇／信物／比较原方法或代码块。输入为当前 `partner-rules.json` 中 148 条 NPC 的相遇／显示／等待条件与置顶功能 1011，引用闭包为 72 个条件号、九类条件；没有重新标记历史配置版本。原源码／方法、配置、生成器、适配绑定与输出哈希见 [partner-condition-source-manifest.json](partner-condition-source-manifest.json)。

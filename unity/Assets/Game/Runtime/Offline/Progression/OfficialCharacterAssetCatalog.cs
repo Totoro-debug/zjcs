@@ -192,7 +192,7 @@ namespace Zjcs.Offline.Progression
         public int CurrentTalentTreeNodeId;
     }
 
-    public sealed class OfficialCharacterCatalog
+    public sealed partial class OfficialCharacterCatalog
     {
         private readonly Dictionary<string, List<Dictionary<string, object>>> tables;
         private readonly Dictionary<int, Dictionary<string, object>> items;

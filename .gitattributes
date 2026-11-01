@@ -1411,3 +1411,12 @@ unity/Assets/Official/Partners/UI/Roster/** -text whitespace=blank-at-eol,blank-
 # Preserve current roster-scope source proof.
 scripts/prepare_partner_roster_scope.py text eol=lf
 assets/reference/partner-roster-scope-source-manifest.json text eol=lf
+
+# Preserve selected partner condition source and scoped bindings.
+scripts/prepare_partner_conditions.py text eol=lf
+scripts/prepare_partner_conditions_validation.py text eol=lf
+scripts/fixtures/partner_condition_validation.cs text eol=lf
+scripts/templates/partner_conditions/** text eol=lf
+assets/reference/partner-condition-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/Partners/PartnerConditionRules.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/Progression/OfficialCharacterCatalog.Partners.cs* text eol=lf

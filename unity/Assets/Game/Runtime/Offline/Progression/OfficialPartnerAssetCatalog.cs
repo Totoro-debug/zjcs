@@ -37,6 +37,9 @@ namespace Zjcs.Offline.Progression
         }
         private readonly Dictionary<string, List<Dictionary<string, object>>> tables;
         private readonly Dictionary<int, PropertyClass> classes;
+        private Zjcs.Official.Partners.PartnerConditionRules conditions;
+        public Zjcs.Official.Partners.PartnerConditionRules Conditions => conditions ??
+            (conditions = new Zjcs.Official.Partners.PartnerConditionRules(name => Rows(name)));
         private OfficialPartnerCatalog(Dictionary<string, List<Dictionary<string, object>>> tables,
             Dictionary<int, PropertyClass> classes) { this.tables = tables; this.classes = classes; }
         public string Manifest => "884_156692";

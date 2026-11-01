@@ -11,7 +11,8 @@ namespace Zjcs.Offline.Progression
         {
             var context = new OfficialConditionContext
             {
-                Level = player.Level,
+                Level = catalog.HasCurrentPartnerRules ? Math.Min(player.Level,
+                    OfflineCharacterExperience.BaseLevelLimit(player.SubRank, catalog.LevelLimits)) : player.Level,
                 ItemCounts = player.Inventory.Where(value => value != null && value.ItemId > 0)
                     .GroupBy(value => value.ItemId).ToDictionary(group => group.Key, group => group.Sum(value => value.Count)),
                 UnlockedMapClassIds = new HashSet<int>(player.UnlockedMapClassIds),
@@ -22,7 +23,8 @@ namespace Zjcs.Offline.Progression
             };
             // HasManualMeetNpcCondition.CheckMeet includes both already met and
             // currently meetable non-auto NPCs, not just the legacy saved flag.
-            context.HasManualMeetNpc = catalog.Rows("npc").Any(npc => Integer(npc, "NpcType") != 2
+            context.HasManualMeetNpc = catalog.HasCurrentPartnerRules ? catalog.HasManualMeetPartner(context)
+                : catalog.PartnerRows("npc").Any(npc => Integer(npc, "NpcType") != 2
                 && !Boolean(npc, "IsAutoMeet") && (context.NpcFriendshipLevels.ContainsKey(Integer(npc, "Id"))
                     || catalog.EvaluateCondition(Map(npc, "CanMeetCondition"), context)));
             return context;
@@ -32,6 +34,7 @@ namespace Zjcs.Offline.Progression
         {
             if (npc == null) return NpcMeetStatus.NotMeet;
             int id = Integer(npc, "Id");
+            if (catalog.HasCurrentPartnerRules) return catalog.CurrentPartnerMeetStatus(id, context);
             if (context.NpcFriendshipLevels.ContainsKey(id)) return NpcMeetStatus.HadMeet;
             if (catalog.EvaluateCondition(Map(npc, "CanMeetCondition"), context)) return NpcMeetStatus.CanMeet;
             bool canShow = catalog.EvaluateCondition(Map(npc, "CanShowCondition"), context);
@@ -40,15 +43,15 @@ namespace Zjcs.Offline.Progression
         }
 
         public NpcMeetStatus NpcMeetStatusOf(int npcClassId) => NpcMeetStatusOf(
-            catalog.Find("npc", npcClassId, "Id"), NpcConditionContext(Player));
+            catalog.FindPartner("npc", npcClassId, "Id"), NpcConditionContext(Player));
 
         public bool CanPinNpc => CanPinNpcWithContext(NpcConditionContext(Player));
 
         private bool CanPinNpcWithContext(OfficialConditionContext context)
         {
-            var limit = catalog.Rows("function_limit").FirstOrDefault(row => Integer(row, "Type") == 1011
+            var limit = catalog.PartnerRows("function_limit").FirstOrDefault(row => Integer(row, "Type") == 1011
                 && Integer(row, "Key0") == 0 && Integer(row, "Key1") == 0);
-            return limit == null || catalog.EvaluateCondition(Map(limit, "Condition"), context);
+            return limit == null || catalog.EvaluatePartnerCondition(Map(limit, "Condition"), context);
         }
 
         public IReadOnlyList<NpcRosterItem> NpcRoster(bool showAll = false,
@@ -58,7 +61,7 @@ namespace Zjcs.Offline.Progression
             var context = NpcConditionContext(player);
             var records = player.CharacterProperties.NpcFriendships.ToDictionary(value => value.NpcClassId);
             var result = new List<NpcRosterItem>();
-            foreach (var npc in catalog.Rows("npc"))
+            foreach (var npc in catalog.PartnerRows("npc"))
             {
                 int id = Integer(npc, "Id");
                 if (Integer(npc, "NpcType") == 2 || Integer(npc, "NpcRoleType") == 2) continue;
@@ -70,7 +73,7 @@ namespace Zjcs.Offline.Progression
                 if (!NpcRosterRules.IsVisible(status, showAll, InventoryCount(player, giftId) > 0)) continue;
                 records.TryGetValue(id, out var record);
                 // Official transient cards use CreateNpcDataByInfo(..., initialLevel: 1).
-                var initial = record == null ? catalog.Rows("npc_friendship_level")
+                var initial = record == null ? catalog.PartnerRows("npc_friendship_level")
                     .FirstOrDefault(row => Integer(row, "Id") == id && Integer(row, "Level") == 1) : null;
                 result.Add(new NpcRosterItem
                 {

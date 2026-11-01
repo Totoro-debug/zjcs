@@ -126,7 +126,8 @@ public sealed class PartnerRosterUiRunner : MonoBehaviour, IOfflinePartnerPresen
         string work = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
         Func<string, string> read = path => File.ReadAllText(Path.Combine(repo, "unity/Assets/Official", path));
         var catalog = OfficialCharacterCatalog.Parse(read("Character/character-progression.json"), read("Character/item-time-limits.json"),
-            read("CharacterCreation/wardrobe.json"), read("CharacterCreation/wardrobe-rules.json"), read("Character/character-overview.json"));
+            read("CharacterCreation/wardrobe.json"), read("CharacterCreation/wardrobe-rules.json"), read("Character/character-overview.json"),
+            OfficialPartnerCatalog.Parse(read("Partners/partner-rules.json"), read("Partners/partner-properties.json")));
         var tasks = OfficialMainlineTaskCatalog.Load(File.ReadAllText(Path.Combine(repo, "unity/Assets/Game/Resources/Official/Progression/mainline-tasks.json")),
             File.ReadAllText(Path.Combine(repo, "unity/Assets/Game/Resources/Official/Progression/mainline-tasks-source-manifest.json")));
         var slots = new ProfileSlotCatalog(Path.Combine(work, "profiles"));
