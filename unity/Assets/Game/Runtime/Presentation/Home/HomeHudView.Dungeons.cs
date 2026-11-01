@@ -860,45 +860,14 @@ namespace Zjcs.Presentation.Home
             dailyDungeonDialogRoot.name = "DailyDungeonBigMapDialog";
             dailyDungeonDialogRoot.transform.SetAsLastSibling();
             PlaceModalCanvasOnTop(dailyDungeonDialogRoot);
-            ApplyOfficialDungeonBindings(dailyDungeonDialogRoot, "DailyDungeonBigMapDialog");
-            BindPrefabButton(dailyDungeonDialogRoot, "CloseBtn", ShowDailyDungeonLeaveConfirm);
             RenderDailyDungeonRoute();
         }
 
         private void RenderDailyDungeonRoute()
         {
-            var run = host.DailyDungeons.ActiveRun;
-            if (run == null || dailyDungeonDialogRoot == null) return;
-            var map = host.DailyDungeons.FindMap(run.mapGroupId);
-            if (map == null) throw new InvalidOperationException("Daily dungeon route map configuration is missing.");
-            Transform grid = Find(dailyDungeonDialogRoot.transform, "RoomGrid");
-            if (grid == null) return;
-            foreach (Transform child in grid) UnityEngine.Object.Destroy(child.gameObject);
-            GameObject roomPrefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonRoomItem");
-            if (roomPrefab == null) throw new InvalidOperationException("Official daily dungeon room item is missing.");
-            for (int index = 0; index < map.roomArray.Length; index++)
-            {
-                int roomId = map.roomArray[index];
-                if (roomId <= 0) continue;
-                var room = host.DailyDungeons.FindRoom(roomId);
-                if (room == null || room.type == 0) continue;
-                bool visible = run.clearedRoomIds.Contains(roomId) || roomId == run.currentRoomId
-                    || run.clearedRoomIds.Select(host.DailyDungeons.FindRoom)
-                        .Any(previous => previous != null
-                            && (previous.nextRoomIds ?? Array.Empty<int>()).Contains(roomId));
-                if (!visible) continue;
-                GameObject item = UnityEngine.Object.Instantiate(roomPrefab, grid, false);
-                item.name = "Room_" + roomId;
-                ApplyOfficialDungeonBindings(item, "DailyDungeonRoomItem");
-                SetPrefabActive(item, "SelectImg", roomId == run.currentRoomId);
-                SetPrefabActive(item, "RewardIconImg", room.surpriseRewards != null
-                    && room.surpriseRewards.Any(value => value.difficulty == run.difficulty
-                        && value.rewardRuleIds != null && value.rewardRuleIds.Length > 0));
-                Button select = item.GetComponent<Button>();
-                if (select == null) select = item.AddComponent<Button>();
-                int selectedRoom = roomId;
-                select.onClick.AddListener(() => SelectDailyDungeonRoom(selectedRoom));
-            }
+            if (dailyDungeonDialogRoot == null || host.DailyDungeons.ActiveRun == null) return;
+            World.OfficialDungeonRoutePresenter.Refresh(dailyDungeonDialogRoot, host.DailyDungeons,
+                SelectDailyDungeonRoom, ShowDailyDungeonLeaveConfirm);
         }
 
         private void SelectDailyDungeonRoom(int roomId)

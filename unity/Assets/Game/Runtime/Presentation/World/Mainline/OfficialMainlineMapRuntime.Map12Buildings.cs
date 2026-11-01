@@ -218,10 +218,6 @@ namespace Zjcs.Presentation.World
             map12PrivateDungeonRouteDialog.name = "DailyDungeonBigMapDialog";
             map12PrivateDungeonRouteDialog.transform.SetAsLastSibling();
             PlaceMap12PrivateDungeonRouteOnTop();
-            OfficialDungeonUiBindingRuntime.Apply(map12PrivateDungeonRouteDialog, "DailyDungeonBigMapDialog");
-            Button close = map12PrivateDungeonRouteDialog.GetComponentsInChildren<Button>(true)
-                .FirstOrDefault(value => value.name == "CloseBtn");
-            if (close != null) close.onClick.AddListener(CloseMap12PrivateDungeonRoute);
             RenderMap12PrivateDungeonRoute();
             ShowMap12PrivateDungeonRoute();
         }
@@ -249,71 +245,11 @@ namespace Zjcs.Presentation.World
             if (popup != null) popup.Show();
         }
 
-        private WorldDailyDungeonRoute map12PrivateDungeonRouteModel;
-
         private void RenderMap12PrivateDungeonRoute()
         {
             if (map12PrivateDungeonRouteDialog == null || map12PrivateDungeonSession?.ActiveRun == null) return;
-            DailyDungeonRunSave run = map12PrivateDungeonSession.ActiveRun;
-            DailyDungeonRuntimeMap map = map12PrivateDungeonSession.Catalog.maps
-                .FirstOrDefault(value => value.id == run.mapGroupId);
-            bool choosing = run.clearedRoomIds.Contains(run.currentRoomId) && !run.privateRouteComplete;
-            var window = OfficialDungeonUiBindingRuntime.ConfigureRouteWindow(map12PrivateDungeonRouteDialog, choosing);
-            GridLayoutGroup grid = window.Grid;
-            LoopVerticalScrollRect scroll = window.Scroll;
-            if (map == null || grid == null || scroll == null)
-                throw new InvalidOperationException("Official private dungeon route bindings are incomplete.");
-            if (map12PrivateDungeonRouteModel == null)
-            {
-                map12PrivateDungeonRouteModel = new WorldDailyDungeonRoute {
-                    ColumnCount = map.columnCount, RowCount = map.rowCount, RoomArray = map.roomArray };
-                foreach (int roomId in map.roomArray.Where(value => value > 0).Distinct())
-                {
-                    DailyDungeonRuntimeRoom room = map12PrivateDungeonSession.FindRoom(roomId);
-                    if (room == null) throw new InvalidDataException("Official private route room is missing: " + roomId);
-                    map12PrivateDungeonRouteModel.Rooms.Add(roomId, new WorldDailyDungeonRoute.Room {
-                        Id = roomId, Type = room.type, NextRoomIds = room.nextRoomIds ?? Array.Empty<int>() });
-                }
-                OfficialDungeonUiBindingRuntime.BindRouteStyles(map12PrivateDungeonRouteModel);
-            }
-            map12PrivateDungeonRouteModel.CurrentRoomId = run.currentRoomId;
-            map12PrivateDungeonRouteModel.FinishedRoomIdList = new HashSet<int>(run.clearedRoomIds);
-            grid.constraintCount = map.columnCount;
-            scroll.dataSource = new Map12PrivateDungeonRouteDataSource(this, map12PrivateDungeonRouteModel, choosing);
-            scroll.totalCount = map.rowCount * map.columnCount;
-            var coordinates = map12PrivateDungeonRouteModel.GetCoordinatesByRoomId(run.currentRoomId);
-            // DailyDungeonBigMapDialog.GetBigMapShowIndex for normal / choose-area modes.
-            int index = map12PrivateDungeonRouteModel.GetIndexByCoordinates(coordinates.x + (choosing ? -1 : -2), coordinates.y);
-            scroll.RefillCells(Mathf.Clamp(index, 0, scroll.totalCount));
-            OfficialDungeonUiBindingRuntime.RefreshRouteGrades(map12PrivateDungeonRouteDialog, window,
-                map.gradeRows.Where(value => value.difficulty == run.difficulty)
-                    .Select(value => new KeyValuePair<int, int>(value.grade, value.row)), map.rowCount);
-        }
-
-        private sealed class Map12PrivateDungeonRouteDataSource : LoopScrollDataSource
-        {
-            private readonly OfficialMainlineMapRuntime owner;
-            private readonly WorldDailyDungeonRoute route;
-            private readonly bool choosing;
-            public Map12PrivateDungeonRouteDataSource(OfficialMainlineMapRuntime owner, WorldDailyDungeonRoute route, bool choosing)
-            { this.owner = owner; this.route = route; this.choosing = choosing; }
-            public void ProvideData(Transform transform, int index)
-            {
-                int roomId = route.GetRoomIdByIndex(index);
-                WorldDailyDungeonRoomItem view = OfficialDungeonUiBindingRuntime.BindRouteRoom(transform.gameObject);
-                view.RefreshView(roomId, route, choosing);
-                transform.name = "Room_" + roomId;
-                DailyDungeonRunSave run = owner.map12PrivateDungeonSession.ActiveRun;
-                bool eligible = roomId > 0 && !run.privateRouteComplete && !run.clearedRoomIds.Contains(roomId)
-                    && (roomId == run.currentRoomId || (run.clearedRoomIds.Contains(run.currentRoomId)
-                        && route.Rooms[run.currentRoomId].NextRoomIds.Contains(roomId)));
-                view.ClickBtn.interactable = eligible;
-                view.ClickBtn.onClick.RemoveAllListeners();
-                view.ClickBtn.onClick.AddListener(() => {
-                    if (roomId != route.CurrentRoomId) view.ShowSelectedRoom(roomId, route);
-                    owner.SelectMap12PrivateDungeonRoom(roomId);
-                });
-            }
+            OfficialDungeonRoutePresenter.Refresh(map12PrivateDungeonRouteDialog, map12PrivateDungeonSession,
+                SelectMap12PrivateDungeonRoom, CloseMap12PrivateDungeonRoute);
         }
 
         private void SelectMap12PrivateDungeonRoom(int roomId)

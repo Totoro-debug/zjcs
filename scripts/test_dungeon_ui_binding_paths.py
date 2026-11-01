@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main():
     source = (ROOT / "unity/Assets/Game/Runtime/Presentation/World/OfficialDungeonUiBindingRuntime.cs").read_text(encoding="utf8")
-    start = source.index("        private static Transform Find(")
+    start = source.index("        internal static Transform Find(")
     end = source.index("        private static Sprite LoadSprite(", start)
     fixture = (ROOT / "scripts/fixtures/dungeon_ui_binding_paths_harness.cs").read_text(encoding="utf8")
     dotnet = shutil.which("dotnet")

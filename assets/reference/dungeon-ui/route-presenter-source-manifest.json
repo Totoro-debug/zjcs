@@ -1,0 +1,109 @@
+{
+  "selected_manifest": "884_156692",
+  "reused_native_ui_manifest": "871_156598",
+  "historical_ui_receipt": {
+    "path": "assets/reference/dungeon-ui/prefab-binding-source-manifest.json",
+    "sha256": "fb4865eab3c2980a791d82ac6793926750068f9ef323d77249e24485d23a868d",
+    "hashLineEndings": "raw"
+  },
+  "ui_bindings": {
+    "path": "unity/Assets/StreamingAssets/Dungeons/UI/official-bindings.json",
+    "sha256": "9109e4c4d1ca5b31e1be104d51c2dd60748b8539128e47a9a3994eddbe96638e",
+    "hashLineEndings": "raw"
+  },
+  "native_prefabs": [
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/UI/DailyDungeonBigMapDialog.prefab",
+      "sha256": "f658b20b7222a2f7c6db34187c6b00fe504f25dbe270766646fff9cbf5f2b3c2",
+      "hashLineEndings": "raw"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/UI/DailyDungeonBigMapRoomItem.prefab",
+      "sha256": "9d973f6c20848b04486117db4251e49427a68fccd06e59712fd12625028337f9",
+      "hashLineEndings": "raw"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Dungeons/UI/DailyDungeonGradeItem.prefab",
+      "sha256": "7e9ea286d6d5c6c5ec9497fe5a7bc7442d066ffe2d765187975c6fb44263bdd8",
+      "hashLineEndings": "raw"
+    }
+  ],
+  "official_code": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/DailyDungeonBigMapDialog.cs",
+      "sha256": "ba6031fe1f9806f8b3caabf4c7fd4d4bc80d405b14ca3dfafdf9e6493bc7b2bc",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/DailyDungeonBigMapRoomItem.cs",
+      "sha256": "991f3affdb24a1b91d767e5bbe4718cd69a53736d2eb2120acdd906cc33c546f",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/DailyDungeonRoomItem.cs",
+      "sha256": "c660a8bc65f479ef288941cebab6744a611d30573b1388722c12cd2c93d2ef84",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/DailyDungeonMapGroupInfoParser.cs",
+      "sha256": "756b8748f008d5039b60ea31e395e6ab5b6bc3fd130ada90e2469c5947f3421d",
+      "hashLineEndings": "LF"
+    }
+  ],
+  "reused_ports": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldDailyDungeonRoute.cs",
+      "sha256": "7fbaed28a5596f2bea328cdffc2c8d4186e1ff6fdbafe50f13bee38d47432f1f",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldDailyDungeonRoomItem.cs",
+      "sha256": "48d1a8ee4f259ec3929e99ef467d61803621e0939b2401fb574a4ccef7f095e5",
+      "hashLineEndings": "LF"
+    }
+  ],
+  "runtime": {
+    "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialDungeonRoutePresenter.cs",
+    "sha256": "8c87706d3153e68c2d96036d9642a59d64c5928bf09d5d52ca35ae0aa2211657",
+    "hashLineEndings": "LF"
+  },
+  "shared_bindings": {
+    "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialDungeonUiBindingRuntime.cs",
+    "sha256": "875475ba8346a6456a5bc6e9436f26c17b5d769ce9bd54ae597ef482605348a4",
+    "hashLineEndings": "LF"
+  },
+  "callers": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.Dungeons.cs",
+      "sha256": "f1de833274ab4af24f33dbf5557f078bd393d709ca05a3630cd62494e9e25a05",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Map12Buildings.cs",
+      "sha256": "72760c403ebd385b23e518a44d4a04454f65b4c6dc040af3411b26a887d8873c",
+      "hashLineEndings": "LF"
+    }
+  ],
+  "validation": {
+    "path": "unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.cs",
+    "sha256": "0b11a28ccb7ba7f727a11af34fe69a214eb5818f0cb3050a2645086b6d1577dd",
+    "hashLineEndings": "LF"
+  },
+  "map12_validation": {
+    "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.BuildingRuntime.cs",
+    "sha256": "68c42eb662586b70afdfd0827bb37c16f4ec84e542699309629aef46f56b5d6f",
+    "hashLineEndings": "LF"
+  },
+  "binding_path_validation": {
+    "path": "scripts/test_dungeon_ui_binding_paths.py",
+    "sha256": "66f5ef31a6285bb03bb687fb36999fd6ed7d4774ecfaa528ccc9e5441f3d98a6",
+    "hashLineEndings": "LF"
+  },
+  "generator": {
+    "path": "scripts/record_dungeon_route_presenter.py",
+    "sha256": "b512a3fc9a3805bd7eac81ec0012550e0d25266e7911311e4bf88454acbb93f0",
+    "hashLineEndings": "LF"
+  },
+  "operation": "Extract the already validated Map12 route presentation into one module: original cell pooling, coordinates, normal/choose views, roads, grades, selection order and eligible room callbacks. Home and Map12 retain their existing session, room result and exit decisions.",
+  "scope": "No new art or audio payload. The original 871 native UI identity is preserved separately from the selected 884 code references. No active online matchmaking or route reward rule is added."
+}

@@ -244,6 +244,8 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 
 日常入口匹配面板：`prepare_dungeon_matching_panels.py` 按当前 `884_156692`、实际 APK `881_156673` 优先及同版已核验资源，读取五个原 prefab 的匹配小窗、`SafeArea`、布局参数、目录初始状态与声音事件对象；原代码、输入、生成器与输出哈希见 [匹配面板来源](dungeon-ui/matching-panel-source-manifest.json)。`TeamMatch_Waiting_1` 复用历史 Map12 已转换 PCM，生成器实际核对当前 `ui_sfx_01` 整包 MD5／长度／SHA256 与其历史输入字节相同，并校验 WAV 输出哈希；历史音频回执保持原版本身份。本次仅新增绑定描述，不新增音频／美术载荷，未生成完整素材快照；行为与验证范围见 [游记与日常副本](../../docs/features/dungeons.md)。
 
+公共副本路线：`record_dungeon_route_presenter.py` 将既有 `871_156598` 路线窗、房间与评级原生 prefab，以及未改写的历史 `official-bindings.json`／原来源清单登记在 `dungeon-ui/route-presenter-source-manifest.json`；当前 `884_156692` 原路线代码、已迁移的路线／房间类、公共显示器与两个调用方分别登记哈希。未新增美术或音频载荷，也未改写旧版来源身份。
+
 
 ### 当前伙伴赠礼动态资源与服务输入
 

@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Zjcs.Combat.Official;
+using Zjcs.Official.WorldUI;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.Skills;
 using Zjcs.Offline.State;
@@ -100,6 +101,7 @@ namespace Zjcs.Editor
                 click(Root("DailyDungeonDialog").GetComponentsInChildren<Button>().First(value => value.name == "GoToBtn" && value.interactable));
                 yield return SettleUi();
                 Require(home.DailyDungeons.ActiveRun != null, "Daily entry did not create a route.");
+                yield return Capture(output, "daily-route");
                 for (int attempt = 0; attempt < 20 && UnityEngine.Object.FindObjectOfType<DailyDungeonBattleRunner>() == null; attempt++)
                 {
                     var run = home.DailyDungeons.ActiveRun;
@@ -111,7 +113,7 @@ namespace Zjcs.Editor
                         roomId = (current.nextRoomIds ?? Array.Empty<int>()).FirstOrDefault();
                         Require(roomId > 0, "Daily route has no next combat room.");
                     }
-                    click(Active<Button>().Single(value => value.name == "Room_" + roomId));
+                    click(Active<WorldDailyDungeonRoomItem>().Single(value => value.name == "Room_" + roomId).ClickBtn);
                     yield return SettleUi();
                     var solo = Active<Button>().FirstOrDefault(value => value.name == "SoloChallengeButton");
                     if (solo != null) { click(solo); yield return SettleUi(); }
