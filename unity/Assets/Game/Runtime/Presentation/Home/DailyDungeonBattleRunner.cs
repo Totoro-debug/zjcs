@@ -758,10 +758,7 @@ namespace Zjcs.Presentation.Home
                     Level = level,
                     ProfessionAvailability = skillItems.ProfessionAvailabilityFor(item.ItemId,
                         player.Profession, currentWeaponType, save.InitialWeaponType),
-                    SubRank = player.SubRank,
-                    Cooldown = combat.CalculateSkillCooldown(item.EntityId, rank, level,
-                        player.SubRank, properties),
-                    Properties = OfficialBattlePropertyAssembler.ToNonZeroProperties(combat.CalculateSkillProps(item.EntityId, rank, level, player.SubRank))
+                    SubRank = player.SubRank
                 });
             }
             var passives = new List<FightOfficialPassiveSkillBinding>();
@@ -780,7 +777,7 @@ namespace Zjcs.Presentation.Home
                 });
             }
             passives.AddRange(OfficialEquipmentBattlePassives.Collect(battleProgression, save, player.SubRank));
-            combat.AssembleUnit(player, skills, combat.CreatePassiveStatusBindings(player, skillItems, passives));
+            OfficialBattleSkillAssembler.AssembleUnit(combat, skillItems, player, properties, skills, passives);
         }
 
         private static void AssembleMonster(FightOfficialCombatCatalog combat,
@@ -796,17 +793,13 @@ namespace Zjcs.Presentation.Home
                 skills.Add(new FightOfficialSkillBinding
                 {
                     EntityId = item.EntityId, Slot = slot++, ItemId = itemId,
-                    Rank = 1, Level = Math.Max(1, unit.Level), SubRank = unit.SubRank,
-                    Cooldown = combat.CalculateSkillCooldown(item.EntityId, 1,
-                        Math.Max(1, unit.Level), unit.SubRank, properties),
-                    Properties = OfficialBattlePropertyAssembler.ToNonZeroProperties(combat.CalculateSkillProps(item.EntityId, 1,
-                        Math.Max(1, unit.Level), unit.SubRank))
+                    Rank = 1, Level = Math.Max(1, unit.Level), SubRank = unit.SubRank
                 });
             }
             var passives = combat.MonsterPassiveSkillItems(monsterId, groupNo)
                 .Where(value => value > 0).Select(value => new FightOfficialPassiveSkillBinding
                 { ItemId = value, Rank = 1, Level = Math.Max(1, unit.Level), SubRank = unit.SubRank }).ToList();
-            combat.AssembleUnit(unit, skills, combat.CreatePassiveStatusBindings(unit, skillItems, passives));
+            OfficialBattleSkillAssembler.AssembleUnit(combat, skillItems, unit, properties, skills, passives);
         }
 
         private void ApplyDailyBossDifficulty(Dictionary<int, long> properties, int rank, int level)

@@ -444,11 +444,7 @@ namespace Zjcs.Presentation.World
                     Level = level,
                     ProfessionAvailability = skillItems.ProfessionAvailabilityFor(item.ItemId,
                         player.Profession, currentWeaponType, progression.Player.InitialWeaponType),
-                    SubRank = player.SubRank,
-                    Cooldown = combatCatalog.CalculateSkillCooldown(item.EntityId, rank, level,
-                        player.SubRank, sourceProps),
-                    Properties = OfficialBattlePropertyAssembler.ToProperties(combatCatalog.CalculateSkillProps(item.EntityId, rank,
-                        level, player.SubRank))
+                    SubRank = player.SubRank
                 });
             }
             if (bindings.Count == 0)
@@ -471,9 +467,8 @@ namespace Zjcs.Presentation.World
                 });
             }
             passives.AddRange(OfficialEquipmentBattlePassives.Collect(progression, progression.Player, player.SubRank));
-            List<FightOfficialStatusBinding> passiveStatuses = combatCatalog
-                .CreatePassiveStatusBindings(player, skillItems, passives);
-            combatCatalog.AssembleUnit(player, bindings, passiveStatuses);
+            OfficialBattleSkillAssembler.AssembleUnit(combatCatalog, skillItems, player,
+                sourceProps, bindings, passives, true);
         }
 
         private static void AssembleMonsterSkills(FightOfficialCombatCatalog combatCatalog,
@@ -494,11 +489,7 @@ namespace Zjcs.Presentation.World
                     ItemId = skill.ItemId,
                     Rank = rank,
                     Level = level,
-                    SubRank = unit.SubRank,
-                    Cooldown = combatCatalog.CalculateSkillCooldown(skill.EntityId, rank, level,
-                        unit.SubRank, sourceProps),
-                    Properties = OfficialBattlePropertyAssembler.ToProperties(combatCatalog.CalculateSkillProps(skill.EntityId, rank,
-                        level, unit.SubRank))
+                    SubRank = unit.SubRank
                 });
             }
             var passives = new List<FightOfficialPassiveSkillBinding>();
@@ -511,9 +502,8 @@ namespace Zjcs.Presentation.World
                         Level = Math.Max(1, unit.Level),
                         SubRank = unit.SubRank
                     });
-            List<FightOfficialStatusBinding> passiveStatuses = combatCatalog
-                .CreatePassiveStatusBindings(unit, skillItems, passives);
-            combatCatalog.AssembleUnit(unit, bindings, passiveStatuses);
+            OfficialBattleSkillAssembler.AssembleUnit(combatCatalog, skillItems, unit,
+                sourceProps, bindings, passives, true);
         }
 
         private void OnBattleHudControl(string path)

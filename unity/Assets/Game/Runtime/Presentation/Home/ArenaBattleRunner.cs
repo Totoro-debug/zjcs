@@ -339,9 +339,7 @@ namespace Zjcs.Presentation.Home
                     Level = level,
                     ProfessionAvailability = skillItems.ProfessionAvailabilityFor(item.ItemId,
                         player.Profession, currentWeaponType, save.InitialWeaponType),
-                    SubRank = player.SubRank,
-                    Cooldown = combat.CalculateSkillCooldown(item.EntityId, rank, level, player.SubRank, props),
-                    Properties = OfficialBattlePropertyAssembler.ToNonZeroProperties(combat.CalculateSkillProps(item.EntityId, rank, level, player.SubRank))
+                    SubRank = player.SubRank
                 });
             }
             var passives = new List<FightOfficialPassiveSkillBinding>();
@@ -356,7 +354,7 @@ namespace Zjcs.Presentation.Home
                 });
             }
             passives.AddRange(OfficialEquipmentBattlePassives.Collect(host.DailyDungeonProgression, save, player.SubRank));
-            combat.AssembleUnit(player, skills, combat.CreatePassiveStatusBindings(player, skillItems, passives));
+            OfficialBattleSkillAssembler.AssembleUnit(combat, skillItems, player, props, skills, passives);
         }
 
         private static void AssembleGuard(FightOfficialCombatCatalog combat,
@@ -373,16 +371,14 @@ namespace Zjcs.Presentation.Home
                 skills.Add(new FightOfficialSkillBinding
                 {
                     EntityId = item.EntityId, Slot = slot++, ItemId = source.skillId,
-                    Rank = rank, Level = level, SubRank = guard.subRank,
-                    Cooldown = combat.CalculateSkillCooldown(item.EntityId, rank, level, guard.subRank, props),
-                    Properties = OfficialBattlePropertyAssembler.ToNonZeroProperties(combat.CalculateSkillProps(item.EntityId, rank, level, guard.subRank))
+                    Rank = rank, Level = level, SubRank = guard.subRank
                 });
             }
             var passives = (guard.passiveSkills ?? Array.Empty<ArenaRuntimeSkill>()).Select(value =>
                 new FightOfficialPassiveSkillBinding
                 { ItemId = value.skillId, Rank = Math.Max(1, value.rank),
                     Level = Math.Max(1, value.level), SubRank = guard.subRank }).ToList();
-            combat.AssembleUnit(unit, skills, combat.CreatePassiveStatusBindings(unit, skillItems, passives));
+            OfficialBattleSkillAssembler.AssembleUnit(combat, skillItems, unit, props, skills, passives);
         }
 
         private static void ApplyPassiveProperties(FightOfficialCombatCatalog combat,
