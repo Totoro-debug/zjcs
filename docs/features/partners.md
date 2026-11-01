@@ -178,11 +178,11 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 ### 当前好感属性与本地配置目录（局部）
 
-`scripts/prepare_current_partner_properties.py` 先核对 APK 中的实际文件，再按所选 `884_156692` 的 WwiseBnk 索引读取并校验原 `level_prop.g.bytes`；沿原 `LevelPropBinaryReader` 的区段／类别／偏移和有符号 64 位变长数读取 18 类、1,800 行伙伴好感属性。当前 73 条默认属性和 352 条属性定义从同版本 Luban 构造器解码，全部原数值保留。来源、原始二进制哈希、源码／构造器、NPC 类别映射对照及输出见[当前好感属性来源](../../assets/reference/partner-properties-source-manifest.json)。
+`scripts/prepare_current_partner_properties.py` 先核对 APK 中的实际文件，再按所选 `884_156692` 的 WwiseBnk 索引读取并校验原 `level_prop.g.bytes`；沿原 `LevelPropBinaryReader` 的区段／类别／偏移和有符号 64 位变长数读取 18 类伙伴好感属性及三类当前天赋属性，共 21 类、1,803 行。天赋类别来自当前 `npc_talent_tree_npc_map_prop.PropId`，保留其 `PropLevel` 和属性筛选。当前 73 条默认属性和 352 条属性定义从同版本 Luban 构造器解码，全部原数值保留。来源、原始二进制哈希、源码／构造器、NPC 类别映射对照及输出见[当前好感属性来源](../../assets/reference/partner-properties-source-manifest.json)。
 
 `OfficialPartnerAssetCatalog` 在 `Resources/Partners/OfficialPartnerAssetCatalog.asset` 显式绑定当前 `partner-rules.json` 与 `partner-properties.json`；`OfficialPartnerCatalog` 检查两个输入均为 `884_156692`，提供当前表和属性，沿原解析器补默认值、保留等级缺项、最高等级越界取最高行，以及原好感差值枚举顺序。当前 NPC 的 148 项属性类别映射与历史名册逐项一致，角色总表加载时将该目录提供给现有好感属性计算；已结识 8401 的二级好感实际加入生命 174、经验每小时产量 300，按原宝物增益顺序继续计算。
 
-`prepare_partner_property_validation.py` 在隔离 Unity Play Mode 运行实际本地目录与好感属性块，并以仅改变命名空间的官方原 `LevelPropBinaryReader` 和 `PropType` 为独立参照，逐项通过 1,800 行、1,782 个相邻等级差值、低于首级／越过最高级、148 项 NPC 属性身份及实际加成检查。混用版本拒绝检查通过，静态检查（81,548 个 GUID）、主工程导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 通过。等级与库存完整 UI、真实存档恢复和 Windows Player 尚未在这一步验证；伙伴名册／赠礼的正式页面提供者仍待接通。
+`prepare_partner_property_validation.py` 在隔离 Unity Play Mode 运行实际本地目录与好感属性块，并以仅改变命名空间的官方原 `LevelPropBinaryReader` 和 `PropType` 为独立参照，逐项通过 1,803 行、1,782 个相邻等级差值、低于首级／越过最高级、148 项 NPC 属性身份及实际加成检查。混用版本拒绝检查通过。等级与库存完整 UI、真实存档恢复和 Windows Player 尚未在这一步验证；伙伴名册／赠礼的正式页面提供者仍待接通。当前工程检查范围见下文详情属性区。
 
 ### 当前赠礼、阶位与称谓配置提供者（局部）
 
@@ -252,9 +252,21 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 `prepare_partner_gift_current_validation.py` 在隔离 Unity URP Play Mode 加载上述实际 Resources 目录与原赠礼区域，使用模拟鼠标射线验证选择、减少、重置、自动选择、赠送、阶位拒绝和最高等级溢出确认；确认前不扣库存，确认后保留原超出经验。实际本地事务覆盖先保存后回调、逐件库存扣除、重读恢复、存档文件占用时不执行成功回调且保留选量、释放后重试，以及原称谓字库拒绝／成功保存。八张背景均验证可加载且具有贴图；已查看打开、选中、赠送后、阶位上限与满级五帧 GPU 画面。验证宿主仍提供弹窗端口及测试调色，不代表完整正式窗口。
 
-主工程 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。全工程静态检查已执行，当前被其他会话新增的 `SkillDamageTestValidation.DungeonEntry.cs.meta` 的 31 位 GUID 阻断；未改写该会话文件，也未记作静态检查通过。
+主工程 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过；最新全工程检查范围见下方详情属性区。
 
 正式伙伴窗口路由、完整物品／输入／确认弹窗内容、原调色及实际声音仍待接入；当前提供者与原生区域接线不表示伙伴系统或 Windows Player 已完成。
+
+### 当前原生详情属性区与天赋合并（局部）
+
+`prepare_partner_detail_properties_ui.py` 迁移选定 `884_156692` 的 `NpcDetailPanelPropContent`，保留属性排序、旅行门槛、每组两项、交替背景、原珍宝百分比及转为整数的截断顺序。`PartnerNpcPropertyFormula` 提取原 `BattleFormulaHandler` 的好感／天赋计算及属性合并方法，读取实际存档的好感等级和已激活天赋节点；按当前 `PropId`、`PropLevel`、`PropTypes` 取值并合并，保留原零值、分支和执行顺序。`OfflinePartnerDetailPropertySource` 使用上文当前属性目录，补齐三类天赋属性，不采用历史总表的缺省值替代。
+
+`OfflinePartnerDetailPropertyServices` 将置顶接到现有本地事务，保存成功后才回复原控制器；伙伴视图始终读取最新存档，支持连续置顶与取消。珍宝是否激活由宿主显式绑定，品质倍率取当前原配置。好感说明、伙伴战斗属性简报及地图跳转保留显式窗口／导航端口；原 `LiteInfoCallbackBase` 的调用、异常处理、复用与销毁释放语义保留，仅适配类型与日志。尚未声称这些端口的完整正式页面已接通。
+
+`prepare_partner_detail_properties_native.py` 从当前原 `NpcDetailPanel` 截取完整属性区域，仅解除根父节点，保留原层级、坐标、布局、材质、图像、按钮和 Animator。共享属性行与既有同 GUID、同字节资产复用，原点击控制器由编译状态机数据恢复；`UIUtils.Instantiate` 的对象创建、注入、复位及激活顺序继续保留。`prepare_partner_detail_properties_assets.py` 提取八条原中文文字，并在 `Resources/Partners/OfficialPartnerDetailPropertyAssetCatalog` 显式绑定原生区域及既有原字体／图像目录。代码、转换、实际包／对象和输入输出哈希见[详情属性来源](../../assets/reference/partner-detail-properties-native-source-manifest.json)及[显式资源绑定](../../assets/reference/partner-detail-properties-assets-source-manifest.json)。未新增替代美术或布局。
+
+`prepare_partner_detail_properties_validation.py` 在隔离 Unity URP Play Mode 使用实际 Resources 原区域、当前配置和隔离存档，通过三位伙伴全部已激活天赋节点的属性合并、未拥有伙伴不贡献属性、实际好感等级、原双列组数、无遮挡指针置顶／取消及两次磁盘恢复、10110 实际关联珍宝的附加值、好感／简报／导航按钮端口调用顺序、跳转隐藏和回调销毁释放。已查看打开、置顶和珍宝生效三帧实际 GPU 画面。简报数值与导航结果由验证宿主提供，未记为正式简报／地图流程已经完成。当前属性目录另通过官方原二进制读取器的 21 类、1,803 行比对。
+
+全工程静态检查通过（84,374 个 GUID），主工程 Unity 导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 通过。正式完整详情、立绘／小模型、弹窗内容、声音与 Windows Player 尚未在本区域完成。
 
 ## 自定义实现
 

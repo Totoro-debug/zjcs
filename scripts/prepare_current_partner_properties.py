@@ -1,4 +1,4 @@
-"""Recover selected NPC friendship properties from the original indexed binary."""
+"""Recover selected NPC friendship and talent properties from the original binary."""
 import argparse
 import hashlib
 import json
@@ -42,6 +42,7 @@ def build(work):
         raise ValueError('Selected property binary size/MD5 mismatch')
     (work / 'reference-level-prop.g.bytes').write_bytes(raw)
     wanted = {row['LevelPropId'] for row in rules['tables']['npc'] if row['LevelPropId'] > 0}
+    wanted.update(row['PropId'] for row in rules['tables']['npc_talent_tree_npc_map_prop'] if row['PropId'] > 0)
     classes = decode_level_props(raw, wanted)
     code = ROOT / '.tools/source-packages/current' / apk.version / 'official-code'
     constructors = Constructors(code)
@@ -92,7 +93,8 @@ def build(work):
         binary=dict(package='WwiseBnk', bundle=record, source=origin, sha256=sha(raw),
                     apk_checked_first=dict(entry=entry, packaged=packaged)), tables=table_inputs,
         classes=sorted(wanted), rows=sum(len(value['rows']) for value in classes.values()),
-        validation=dict(property_ids=sorted(used_properties), npc_property_identity_count=len(new_ids)),
+        validation=dict(property_ids=sorted(used_properties), npc_property_identity_count=len(new_ids),
+                        talent_property_classes=sorted({row['PropId'] for row in rules['tables']['npc_talent_tree_npc_map_prop']})),
         comparison_only=dict(path=baseline_path.relative_to(ROOT).as_posix(), manifest=baseline['manifest'], sha256=sha(baseline_path.read_bytes())),
         output=dict(path=target.relative_to(ROOT).as_posix(), sha256=sha(output), bytes=len(output)),
         metadata_sha256=sha(metadata(target, False)))

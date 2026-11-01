@@ -33,7 +33,7 @@ public static class PartnerPropertyCatalogValidation
     {
         Require(Application.isPlaying, "actual Play Mode");
         var catalog = OfficialPartnerAssetCatalog.LoadDefault();
-        Require(catalog.Manifest == "884_156692" && catalog.PropertyClassIds.Count == 18, "selected version and classes");
+        Require(catalog.Manifest == "884_156692" && catalog.PropertyClassIds.Count == 21, "selected version and classes");
         string path = Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"), "reference-level-prop.g.bytes");
         int compared = 0;
         using (var original = new LevelPropBinaryReader(File.ReadAllBytes(path)))
@@ -61,7 +61,7 @@ public static class PartnerPropertyCatalogValidation
                 Require(ReferenceEquals(maximum, catalog.GetLevelProps(id, last + 1)), "original maximum clamp");
             }
         }
-        Require(compared == 1800 && catalog.GetLevelProps(-1, 1) == null, "complete reference comparison");
+        Require(compared == 1803 && catalog.GetLevelProps(-1, 1) == null, "complete reference comparison");
         string root = Path.Combine(Environment.GetEnvironmentVariable("ZJCS_REPOSITORY_ROOT"), "unity/Assets/Official");
         Func<string, string> read = name => File.ReadAllText(Path.Combine(root, name));
         bool rejected = false;
@@ -83,7 +83,7 @@ public static class PartnerPropertyCatalogValidation
         Require(result.Count == 2 && result[3] == 174 && result[57] == 300, "real property chunk receives current NPC bonus");
         var baseline = character.GetLevelProps(5015, 2);
         Require(baseline[3] == 174 && baseline[57] == 300, "shared character consumers use the selected NPC rows");
-        Debug.Log("PARTNER_PROPERTY_CATALOG_PASSED: 1800 original binary rows, 1782 original deltas, bounds, 148 NPC identities, actual friendship property chunk. PlayMode=True; complete partner UI/save/Player not covered.");
+        Debug.Log("PARTNER_PROPERTY_CATALOG_PASSED: 1803 original binary rows, 1782 original deltas, bounds, 148 NPC identities, friendship and three talent classes. PlayMode=True; complete partner UI/save/Player not covered.");
     }
     private static void Require(bool value, string message)
     {

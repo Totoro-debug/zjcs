@@ -1,6 +1,6 @@
 {
   "manifest": "884_156692",
-  "generator_sha256": "93aceefe4ff9b173b9546043eab076f2c240e0efc7219ae0f96469fe7c2a7c66",
+  "generator_sha256": "88ec994ff32d0dd5f706bb62e8866008e64dca63ecc35681235d0a9bbf40f5dd",
   "source_sha256": {
     "unity/Assets/Official/Partners/partner-rules.json": "1ab5dd32c4ef68297aea6a847cb0e5ced686634bb4fb7f4c28a1aa7bf70398fd",
     ".tools/source-packages/current/884_156692/official-code/common-source/Common/Tables.cs": "0e4882f1ad41958e5ec017543447e17f5196c5453f8168c685926ea2c134c9bc",
@@ -104,9 +104,12 @@
     5015,
     5016,
     5017,
-    5018
+    5018,
+    10608,
+    10708,
+    10801
   ],
-  "rows": 1800,
+  "rows": 1803,
   "validation": {
     "property_ids": [
       1,
@@ -127,7 +130,12 @@
       6011,
       6012
     ],
-    "npc_property_identity_count": 148
+    "npc_property_identity_count": 148,
+    "talent_property_classes": [
+      10608,
+      10708,
+      10801
+    ]
   },
   "comparison_only": {
     "path": "unity/Assets/Official/Character/character-progression.json",
@@ -136,22 +144,22 @@
   },
   "output": {
     "path": "unity/Assets/Official/Partners/partner-properties.json",
-    "sha256": "e91d6ad8585bbebb59b5667ff39e4b277184d78f4cd19906a7110da8544a72c4",
-    "bytes": 284408
+    "sha256": "0f69391d8aa1f760d39b393cc6961b3381546e7d41f06b6faa7884b4e2331a90",
+    "bytes": 284978
   },
   "metadata_sha256": "6ed083221fa57ad68f9340ff91391f5afbac5062781e4e46d7b376ac6e2c442f",
   "installed_sha256": {
-    "unity/Assets/Official/Partners/partner-properties.json": "e91d6ad8585bbebb59b5667ff39e4b277184d78f4cd19906a7110da8544a72c4",
+    "unity/Assets/Official/Partners/partner-properties.json": "0f69391d8aa1f760d39b393cc6961b3381546e7d41f06b6faa7884b4e2331a90",
     "unity/Assets/Official/Partners/partner-properties.json.meta": "6ed083221fa57ad68f9340ff91391f5afbac5062781e4e46d7b376ac6e2c442f",
     "unity/Assets/Game/Resources/Partners/OfficialPartnerAssetCatalog.asset": "ebe09b364f26c210f398e8e7a99f4059e7a4f52e09da3db6f83dd6eba9a17618",
     "unity/Assets/Game/Resources/Partners/OfficialPartnerAssetCatalog.asset.meta": "09a5b67456ebd83196c3976bfd44026af985116cff0c729b1bb4f6e5b7db8e11",
     "unity/Assets/Game/Resources/Partners.meta": "719cb8f404754fff80b41e1b3c077b15f1bce7586f6bfe9cda2aa6778aee3456",
-    "unity/Assets/Game/Runtime/Offline/Progression/OfficialPartnerAssetCatalog.cs": "cd7083db41f6000e7635d4886ddc53d80213b08ed3eed7a63a5ce0a299703a44",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfficialPartnerAssetCatalog.cs": "66c5107850172f8ed4ae3434f8d773084a8db00bedb7e7064bb51d891b5189eb",
     "unity/Assets/Game/Runtime/Offline/Progression/OfficialPartnerAssetCatalog.cs.meta": "989f04a6dad2905a2aadbe761e90b206201ab1a48c440d16cd93c9b2707050da"
   },
   "runtime_source_sha256": {
-    "unity/Assets/Game/Runtime/Offline/Progression/OfficialPartnerAssetCatalog.cs": "cd7083db41f6000e7635d4886ddc53d80213b08ed3eed7a63a5ce0a299703a44",
-    "unity/Assets/Game/Runtime/Offline/Progression/OfficialCharacterAssetCatalog.cs": "fb9d8f9c1e513fa65da6cf09673f439af9af0d6cb6b9f69e7e48c95dbd6c6492"
+    "unity/Assets/Game/Runtime/Offline/Progression/OfficialPartnerAssetCatalog.cs": "66c5107850172f8ed4ae3434f8d773084a8db00bedb7e7064bb51d891b5189eb",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfficialCharacterAssetCatalog.cs": "ce81b9f59726e92883a93a878a471033da61cabb00534aa0299b38e3b01bd3a5"
   },
   "migrated_methods": [
     "LevelPropParser.GetConfigProps",
@@ -160,6 +168,6 @@
   ],
   "validation_source_sha256": {
     "scripts/prepare_partner_property_validation.py": "bf417ce8eba5c9086bb91935a2e260a7aed9cc5a96694098f44f6268c98b1a68",
-    "scripts/fixtures/partner_property_catalog_validation.cs": "27811507cc37fbcf8ca739de89bcb942486d9bca70e68e2b76795d0010e4b1e5"
+    "scripts/fixtures/partner_property_catalog_validation.cs": "91bdd6b328452bbb2823903c75ed052986d899fbc74d987217c01d4057fa3515"
   }
 }

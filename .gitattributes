@@ -1469,3 +1469,15 @@ assets/reference/battle-rules/equipment-term-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Offline/Equipment/OfficialEquipmentCatalog.cs text eol=lf
 unity/Assets/Game/Runtime/Offline/Equipment/OfficialEquipmentCatalog.TermReplacement.cs* text eol=lf
 unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs text eol=lf
+
+# Preserve current original partner property-region bytes and explicit code bindings.
+scripts/prepare_partner_detail_properties_*.py text eol=lf
+scripts/fixtures/partner_detail_properties_validation.cs text eol=lf
+scripts/templates/partner_detail/** text eol=lf
+assets/reference/partner-detail-properties-*-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Detail.meta text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Detail/** text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersUI/*DetailPropert*.cs* text eol=lf
+unity/Assets/Game/Resources/Partners/OfficialPartnerDetailPropertyAssetCatalog.asset* text eol=lf
+unity/Assets/Official/Partners/UI/DetailProperties.meta text eol=lf
+unity/Assets/Official/Partners/UI/DetailProperties/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
