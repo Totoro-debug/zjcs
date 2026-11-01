@@ -231,11 +231,11 @@ namespace Zjcs.Presentation.Home
             SetNamedText(dailyChallengeAssistRoot.transform, "TitleTxt", "选择助战伙伴");
             BindPrefabButton(dailyChallengeAssistRoot, "CloseBtn_dark", CloseDailyChallengeAssist);
 
-            Transform list = Find(dailyChallengeAssistRoot.transform,
+            Transform list = dailyChallengeAssistRoot.transform.Find(
                 middlePath + "FriendRobotGo/Scroll/Viewport/Content");
-            Transform viewport = Find(dailyChallengeAssistRoot.transform,
+            Transform viewport = dailyChallengeAssistRoot.transform.Find(
                 middlePath + "FriendRobotGo/Scroll/Viewport");
-            ScrollRect scroll = Find(dailyChallengeAssistRoot.transform,
+            ScrollRect scroll = dailyChallengeAssistRoot.transform.Find(
                 middlePath + "FriendRobotGo/Scroll")?.GetComponent<ScrollRect>();
             if (list == null || viewport == null || scroll == null)
                 throw new InvalidOperationException("Official team invite robot list is incomplete.");
@@ -286,7 +286,7 @@ namespace Zjcs.Presentation.Home
                     validSelection, maxPlayer);
             list.GetComponent<RectTransform>().sizeDelta = new Vector2(0f, candidates.Count * 126f);
 
-            Transform actions = Find(dailyChallengeAssistRoot.transform, middlePath + "FriendRobotGo/BottomGo");
+            Transform actions = dailyChallengeAssistRoot.transform.Find(middlePath + "FriendRobotGo/BottomGo");
             if (actions == null)
                 throw new InvalidOperationException("Official team invite action row is missing.");
             Transform startNode = Find(actions, "CommonBtn_12");
