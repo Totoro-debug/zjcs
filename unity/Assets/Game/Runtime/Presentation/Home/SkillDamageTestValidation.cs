@@ -13,11 +13,12 @@ using Zjcs.Offline.State;
 namespace Zjcs.Presentation.Home
 {
     // Explicit Editor/Windows Player diagnostic. Only command-line validation creates this component.
-    public sealed class SkillDamageTestValidation : MonoBehaviour
+    public sealed partial class SkillDamageTestValidation : MonoBehaviour
     {
         private string output;
         private Exception failure;
         private float deadline;
+        private bool dungeonEntry;
         [Serializable] private sealed class Result { public bool passed; public string error; }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -25,11 +26,14 @@ namespace Zjcs.Presentation.Home
         {
             string[] args = Environment.GetCommandLineArgs();
             int at = Array.IndexOf(args, "--zjcs-validate-skill-damage");
+            bool entry = at < 0;
+            if (entry) at = Array.IndexOf(args, "--zjcs-validate-dungeon-entry");
             if (at < 0 || at + 1 >= args.Length) return;
             Application.runInBackground = true;
             var host = new GameObject("SkillDamageTestValidation");
             DontDestroyOnLoad(host);
             var runner = host.AddComponent<SkillDamageTestValidation>();
+            runner.dungeonEntry = entry;
             runner.output = Path.GetFullPath(args[at + 1]);
             Directory.CreateDirectory(runner.output);
             runner.deadline = Time.realtimeSinceStartup + 300f;
@@ -84,7 +88,8 @@ namespace Zjcs.Presentation.Home
             Require(progression.EquipSkill(10014, 0).IsApplied, "Could not equip the damage-test Player skill.");
             foreach (Canvas canvas in FindObjectsOfType<Canvas>()) canvas.gameObject.SetActive(false);
             foreach (Camera camera in FindObjectsOfType<Camera>()) camera.enabled = false;
-            yield return Exercise(slot, saveRoot, output, Click);
+            if (dungeonEntry) yield return ExerciseDungeonEntry(slot, saveRoot, output, Click);
+            else yield return Exercise(slot, saveRoot, output, Click);
         }
 
         private void Finish(bool passed, Exception error)
@@ -96,7 +101,8 @@ namespace Zjcs.Presentation.Home
             }
             File.WriteAllText(Path.Combine(output, "result.json"), JsonUtility.ToJson(new Result { passed = passed, error = error?.ToString() }, true));
             if (error != null) Debug.LogException(error);
-            else Debug.Log("Skills damage-test Windows Player validation passed.");
+            else Debug.Log(dungeonEntry ? "Dungeon entry Windows Player validation passed."
+                : "Skills damage-test Windows Player validation passed.");
             Application.Quit(passed ? 0 : 1);
         }
 

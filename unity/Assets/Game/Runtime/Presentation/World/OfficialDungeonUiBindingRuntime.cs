@@ -16,7 +16,7 @@ namespace Zjcs.Presentation.World
         [Serializable] private sealed class Prefab
         { public string name; public PopupBinding popup; public TransformBinding[] transforms; public SafeAreaBinding[] safeAreas; public LayoutBinding[] layouts; public ScrollBinding[] scrolls; public ButtonBinding[] buttons;
           public RoomViewBinding roomView; public RouteWindowBinding routeWindow; public GradeItemBinding gradeItem; public PrivateDetailBinding privateDetail; public PrivateDialogBinding privateDialog; public PrivateUnlockBinding privateUnlock;
-          public LocalizationBinding[] localizations;
+          public LocalizationBinding[] localizations; public ObjectStateBinding[] initialStates, detailLockStates, previewStates, catalogueButtonStates;
           public GradeGridBinding[] gradeGrids; public string roomButton; public ImageBinding[] images; public TextBinding[] texts; }
         [Serializable] private sealed class PopupBinding
         { public string path; public string[] objects; public bool enabled, closeByClickMask; public int maskType; public PopupClipBinding[] clips; public PopupMaskBinding mask; public PopupSoundBinding sound; public MatchingBinding matching; }
@@ -444,6 +444,24 @@ namespace Zjcs.Presentation.World
             }
         }
 
+        internal static void RestoreEntryLayouts(GameObject root, string serialized)
+        {
+            Prefab binding = JsonUtility.FromJson<Prefab>(serialized);
+            foreach (LayoutBinding layout in binding.layouts)
+                layout.objects[0] = root.name;
+            RestoreLayouts(root, binding);
+            if (binding.initialStates != null) SetObjectState(root, binding.initialStates, 0);
+        }
+
+        internal static void RefreshCatalogueDetail(GameObject root, string serialized, bool unlocked, bool canEnter)
+        {
+            Prefab binding = JsonUtility.FromJson<Prefab>(serialized);
+            SetObjectState(root, binding.detailLockStates, unlocked ? 0 : 1);
+            SetObjectState(root, binding.previewStates, 0);
+            // DailyDungeonUnlockContent.GetBtnShowState: no stage/match/ban at the local catalogue.
+            if (unlocked) SetObjectState(root, binding.catalogueButtonStates, canEnter ? 0 : 8);
+        }
+
         private static void RestoreLayouts(GameObject root, Prefab binding)
         {
             foreach (LayoutBinding item in binding.layouts ?? Array.Empty<LayoutBinding>())
@@ -729,7 +747,7 @@ namespace Zjcs.Presentation.World
             button.targetGraphic = target;
         }
 
-        private static Transform Find(Transform root, string path, string[] names)
+        internal static Transform Find(Transform root, string path, string[] names)
         {
             Transform node = root;
             if (!string.IsNullOrEmpty(path))

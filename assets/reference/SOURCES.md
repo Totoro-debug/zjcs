@@ -240,6 +240,8 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 
 `prepare_partner_property_ui_configuration.py` 按选定 `884_156692` 读取 APK 优先的主 Luban `entry`、当前属性表及中文 WwiseBnk 语言载荷，保留实际 APK `881_156673` 身份；完整二进制消费、原构造器、包／对象／语言输入与配置输出哈希见 [属性界面来源](partner-property-ui-source-manifest.json)。原奖励比较器、实际字段调用、枚举与迁移输出见 [奖励排序来源](partner-reward-comparer-source-manifest.json)。本地服务及 Resources 引用的代码、原 prefab／配置与显式绑定哈希见 [服务绑定来源](partner-friendship-services-source-manifest.json)。功能行为与验证范围统一见 [伙伴功能](../../docs/features/partners.md)。未新增美术载荷，未生成完整素材快照。
 
+日常入口匹配面板：`prepare_dungeon_matching_panels.py` 按当前 `884_156692`、实际 APK `881_156673` 优先及同版已核验资源，读取五个原 prefab 的匹配小窗、`SafeArea`、布局参数、目录初始状态与声音事件对象；原代码、输入、生成器与输出哈希见 [匹配面板来源](dungeon-ui/matching-panel-source-manifest.json)。`TeamMatch_Waiting_1` 复用历史 Map12 已转换 PCM，生成器实际核对当前 `ui_sfx_01` 整包 MD5／长度／SHA256 与其历史输入字节相同，并校验 WAV 输出哈希；历史音频回执保持原版本身份。本次仅新增绑定描述，不新增音频／美术载荷，未生成完整素材快照；行为与验证范围见 [游记与日常副本](../../docs/features/dungeons.md)。
+
 
 ### 当前伙伴赠礼动态资源与服务输入
 

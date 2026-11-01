@@ -92,9 +92,12 @@ namespace Zjcs.Editor
                         + " scale=" + value.localScale + " world=" + value.position));
                 click(entry);
                 yield return SettleUi();
-                click(Active<Button>().First(value => value.name.StartsWith("Dungeon_", StringComparison.Ordinal)));
+                yield return Capture(output, "daily-entry");
+                int firstDungeon = home.DailyDungeons.PublicDungeons((map, region) => home.MapRegionProgress(map, region) >= 10000).First().id;
+                click(Active<Button>().Single(value => value.name == "Dungeon_" + firstDungeon));
                 yield return SettleUi();
-                click(Active<Button>().First(value => value.name == "BattleBtn" && value.interactable));
+                yield return Capture(output, "daily-dialog");
+                click(Root("DailyDungeonDialog").GetComponentsInChildren<Button>().First(value => value.name == "GoToBtn" && value.interactable));
                 yield return SettleUi();
                 Require(home.DailyDungeons.ActiveRun != null, "Daily entry did not create a route.");
                 for (int attempt = 0; attempt < 20 && UnityEngine.Object.FindObjectOfType<DailyDungeonBattleRunner>() == null; attempt++)

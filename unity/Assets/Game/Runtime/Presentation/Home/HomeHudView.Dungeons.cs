@@ -734,6 +734,9 @@ namespace Zjcs.Presentation.Home
             SetPrefabActive(dailyDungeonDialogRoot, "UnlockBtn", !unlocked && selectedDifficulty > 0);
             SetPrefabActive(dailyDungeonDialogRoot, "BattleBtn", unlocked);
             SetPrefabActive(dailyDungeonDialogRoot, "GoToBtn", unlocked);
+            World.OfficialDungeonEntryBindings.RefreshCatalogueDetail(dailyDungeonDialogRoot, unlocked,
+                host.DailyDungeons.CanEnter(selectedDungeonId, selectedDifficulty, true,
+                    condition => IsDailyDungeonConditionMet(selectedDungeonId, condition)));
         }
 
         private void RefreshDailyDungeonUnlockConditions(bool unlocked)
@@ -1184,6 +1187,13 @@ namespace Zjcs.Presentation.Home
                 text.color = ReadColor(textBinding.color);
                 textCount++;
             }
+
+            World.OfficialDungeonEntryBindings.Apply(root, prefabName,
+                (clip, emitter) => World.OfficialDungeonUiAudio.Post(clip, emitter, (source, active) =>
+                {
+                    if (active) HomeAudioSettings.Register(source, HomeAudioChannel.Sound);
+                    else HomeAudioSettings.Unregister(source);
+                }));
 
             if (imageCount != binding.images.Length || textCount != binding.texts.Length)
                 throw new InvalidOperationException("Official dungeon UI binding count mismatch: " + prefabName);

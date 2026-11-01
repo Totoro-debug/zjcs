@@ -10,13 +10,15 @@
 
 日常副本与竞技的规则、存档及 Home 接入已实现；官方 UI prefab、界面资源绑定和实际战斗流程尚未完整还原或验收，因此本功能未完成。
 
-公共战斗入口回归：日常副本已通过真实执行器推进至有效胜负结算，检查了人物比例、脚下血条和敌我阵列画面。竞技目录改用 Newtonsoft.Json 保留原 `entryPositions` 嵌套数组；守卫 `AppendAppearances` 的值按原 `AppendAppearanceInfoParser.TryGetSkinId` 作为物品 ClassId，先按性别解析 `SkinDict`，再交由已有穿戴规则处理皮肤绑定与互斥，避免误作 Spine 皮肤 ID。守卫属性保留其 MonsterId，人物及血条则按原 `FightRolePlayerSpawnerComponentInfo.CharacterClassId` 默认3100挂载，避免拿属性来源 ID 查找人物 prefab。公共 runner 集成已在 Play Mode 通过日常388步、竞技25步、阶梯62步的真实推进、有效结算、HUD速度点击与主城相机／显隐恢复；竞技守卫职业服装补齐原附件及骨骼槽序后，另行通过27步战斗与退出恢复，并查看准备／交战截图确认衣装、头发层级及脚下血条。游记截图仍有未绑定图像和占位文本，日常目录的原匹配 AnimationSoundPlayer 也尚未接回，完整入口视觉与交互未验收。
+公共战斗入口回归：日常副本已通过真实执行器推进至有效胜负结算，检查了人物比例、脚下血条和敌我阵列画面。竞技目录改用 Newtonsoft.Json 保留原 `entryPositions` 嵌套数组；守卫 `AppendAppearances` 的值按原 `AppendAppearanceInfoParser.TryGetSkinId` 作为物品 ClassId，先按性别解析 `SkinDict`，再交由已有穿戴规则处理皮肤绑定与互斥，避免误作 Spine 皮肤 ID。守卫属性保留其 MonsterId，人物及血条则按原 `FightRolePlayerSpawnerComponentInfo.CharacterClassId` 默认3100挂载，避免拿属性来源 ID 查找人物 prefab。公共 runner 集成已在 Play Mode 通过日常388步、竞技25步、阶梯62步的真实推进、有效结算、HUD速度点击与主城相机／显隐恢复；竞技守卫职业服装补齐原附件及骨骼槽序后，另行通过27步战斗与退出恢复，并查看准备／交战截图确认衣装、头发层级及脚下血条。游记截图仍有未绑定图像和占位文本。日常目录已补接原未匹配初始状态与动画声音接收器，目录卡片布局恢复后已实际查看完整窗口；详情主按钮已通过模拟点击创建本地路线，房间选择的射线点击仍失败；画面还存在外语默认文本、未绑定内容和遮罩问题，不能据此认定完整入口视觉与交互已验收。
 
 ## 原始官方实现
 
 游记、每日副本与竞技使用各自的原入口、地图／房间、难度、队伍邀请、评级和奖励配置；原 UI 的引用与脚本字段保持独立。
 
 ### 官方代码与资源依据
+
+日常入口的匹配小窗按当前 `884_156692` 原 `GameMatchMiniPanel.OnEnable → RefreshUI → HideContent` 恢复未匹配时的初始隐藏状态；原 `AnimationSoundPlayer.PostEvent` 绑定复用 `WorldAnimationSoundPlayer` 和公共 `OfficialDungeonUiAudio`，并注册 Home 音效设置。`prepare_dungeon_matching_panels.py` 从原 prefab 读取 `mContentGo` 与声音事件指针，生成 `Dungeons/matching-panel-bindings.json`；运行入口为公共 `OfficialDungeonEntryBindings.Apply`，Home 不维护另一套节点／声音映射。同一绑定从原 prefab 恢复 `SafeArea` 的上下边距与适配开关，并在原 Transform 恢复后应用已有 `WorldSafeArea`，避免日常主内容区域保留序列化的零尺寸。原生 LayoutGroup、ContentSizeFitter、LayoutElement、RectMask2D 等参数交给已有公共布局恢复实现；目录的 `DetailContentStateSwitcher` 按原 `InitContent` 设为 false。列表项重命名只影响实例根节点的校验名，子层级仍按原路径与名称核对。目录详情按原 `DailyDungeonDetailContent` 切换锁定／预览容器，并按 `DailyDungeonUnlockContent.GetBtnShowState` 的无场景、无匹配／禁入分支选择 `GoTo` 或 `GotoMatchConditionLimit`，不再把目录按钮与场景内 `BattleBtn` 同时展开；能否进入仍由既有 `CanEnter`／条件求值决定。本次只恢复没有匹配任务时的入口状态与原动画音效绑定，未实现在线匹配任务、倒计时、取消或目标更新。原包／对象、代码、音频身份及运行输出哈希见 [匹配面板来源](../../assets/reference/dungeon-ui/matching-panel-source-manifest.json)。
 
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
@@ -43,6 +45,8 @@
 场景时间轴粒子：`prepare_battle_timeline_particles.py` 以固定 `871_156598` APK 的 `GameRoundCharacterItem_Scene` 及已校验依赖，经 AssetRipper 1.3.14 保留两组原生 ParticleSystem／Renderer 和四个 Transform，恢复两份材质／两张原贴图。Windows 材质绑定按原 `USE_MAINTEX` 第一粒子 pass 的 GLES 程序转换，保留第二地图投影 pass 原始程序供后续所属流程使用；没有启用原 prefab 关闭的 `UIParticle` 父节点。原 bundle／组件／材质／shader／贴图哈希、解码包、工具／生成器、导出输入和输出见 [timeline-particles-source-manifest.json](../../assets/reference/battle-hud/timeline-particles-source-manifest.json)，显式引用随场景时间轴原生 prefab 打包。
 
 ## 完整还原部分
+
+入口初始化的局部回归已在内置屏 Direct3D 12 Play Mode 运行：`ProjectTools.Validate`、脚本编译及元数据静态检查通过，模拟点击游记→日常目录→第一张可用卡片→详情“前往副本”后实际创建本地路线；已查看游记、目录及详情的完整窗口截图。继续点击路线房间时，原 `Room_1101` 位于底部且未命中 UI 射线，完整入口到战斗回归未通过，后续将复用已有 Map12 原路线显示器修复。`--zjcs-validate-dungeon-entry <输出目录>` 已提供 Windows Player 隔离入口与受控原音效播放探针；本次尚未执行该 Player 探针，接收器已接回不等于声音实机验证通过。
 游记进入战斗前的原生绑定：`prepare_travel_entry_layout.py` 校验当前可用的官方 home bundle 与既有871来源记录的 MD5、SHA256、字节数和 prefab PathID 完全相同，并核对 `SafeArea` 原代码哈希未变；恢复3个原 `SafeArea`、1个 `AspectRatioFitter`、10个 `NoDrawingRayCast` 点击区域和日常副本／竞技／幻境之塔的3个 `EntryButton` PPtr。使用原类型完整字段读取并检查消费字节数，UGUI schema 来自固定 Unity 编辑器编译程序集；未新增图像。历史来源身份保留，当前相同输入的取得位置、对象及转换输出哈希记录于[绑定来源清单](../../assets/reference/dungeon-ui/prefab-binding-source-manifest.json)的 `travel_entry_layout`。日常副本按原 `DailyDungeonEntry` 接入，修正旧实现误将 `MapGamePlayEntry` 连接到日常副本；竞技和幻境之塔按原子按钮引用接入。
 
 

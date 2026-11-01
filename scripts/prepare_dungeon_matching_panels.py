@@ -1,0 +1,199 @@
+"""Restore original no-match initialization and animation sound bindings on entry pages."""
+from pathlib import Path
+import hashlib
+import json
+import os
+import shutil
+import struct
+
+from current_component_schemas import CurrentSchemas
+from official_apk import Apk
+from official_source import OfficialSource
+from prepare_dungeon_ui_bindings import relative_transform_path
+from UnityPy.classes import PPtr
+
+ROOT = Path(__file__).resolve().parents[1]
+OUTPUT = ROOT/'unity/Assets/Game/Resources/Dungeons/matching-panel-bindings.json'
+RECEIPT = ROOT/'assets/reference/dungeon-ui/matching-panel-source-manifest.json'
+RUNTIME = ROOT/'unity/Assets/Game/Runtime/Presentation/World/OfficialDungeonEntryBindings.cs'
+PREFABS = [('TravelNotesPanel','prefabs_ui_home'),
+           ('DailyDungeonEntryPanel','prefabs_ui_dailydungeon'),('DailyDungeonEntryPanelItem','prefabs_ui_dailydungeon'),
+           ('DailyDungeonDialog','prefabs_ui_dailydungeon'),('ArenaPanel','prefabs_ui_arena')]
+LAYOUTS = ('GridLayoutGroup','VerticalLayoutGroup','HorizontalLayoutGroup','HorizontalLayoutGroupJSZX',
+           'LayoutElement','LayoutElementClamper','ContentSizeFitter','RectMask2D')
+
+def layout_record(obj, cls, fields, path, names):
+    raw=obj.get_raw_data()
+    row=dict(path='/'.join(map(str,path)),objects=names,type=cls,enabled=bool(fields['m_Enabled']))
+    if cls=='GridLayoutGroup':
+        if len(raw)!=84: raise ValueError('Review original grid layout size')
+        values=struct.unpack_from('<7i4f2i',raw,32)
+        row.update(padding=list(values[:4]),alignment=values[4],startCorner=values[5],startAxis=values[6],
+            cellSize=list(values[7:9]),spacing=list(values[9:11]),constraint=values[11],constraintCount=values[12])
+    elif cls in ('VerticalLayoutGroup','HorizontalLayoutGroup'):
+        if len(raw)!=84: raise ValueError('Review original horizontal/vertical layout size')
+        values=struct.unpack_from('<5if7i',raw,32)
+        row.update(padding=list(values[:4]),alignment=values[4],layoutSpacing=values[5],flags=list(values[6:]))
+    elif cls in ('HorizontalLayoutGroupJSZX','LayoutElement'):
+        from prepare_character_creation_opening import decode_layout_component
+        decoded={}
+        if not decode_layout_component(cls,raw,decoded): raise ValueError('Unbound original layout')
+        if cls=='LayoutElement':row['element']=decoded['layout_element']
+        else:
+            value=decoded['horizontal_layout']
+            row.update(padding=value['padding'],alignment=value['alignment'],layoutSpacing=value['spacing'],
+                spacingList=value['spacing_list'],flags=value['flags'])
+    elif cls=='LayoutElementClamper':
+        row['clamp']={key:fields[key] for key in ('mMaxPreferredWidth','mMaxPreferredHeight')}
+    elif cls=='ContentSizeFitter':
+        if len(raw)!=40: raise ValueError('Review original content fitter size')
+        row['fit']=list(struct.unpack_from('<2i',raw,32))
+    else:
+        if len(raw)!=56: raise ValueError('Review original rectangle mask size')
+        row.update(padding=list(struct.unpack_from('<4f',raw,32)),softness=list(struct.unpack_from('<2i',raw,48)))
+    return row
+
+def state_records(fields, name, nodes):
+    refs={value['rid']:value for value in fields['references']['RefIds']}
+    configs=fields[name]['mStateConfigs']
+    if len(configs)!=1:raise ValueError('Review original object state: '+name+' '+str([refs[v['rid']]['type'] for v in configs]))
+    config=refs[configs[0]['rid']]
+    if config['type']['class']!='StateGameObjectConfig':raise ValueError('Review original state config: '+name)
+    rows=[]
+    for value in config['data']['mStateGameObjectData']['GoConfig']:
+        paths=[]
+        for pointer in value['GameObjects']:
+            if pointer['m_FileID']!=0:raise ValueError('Original state target is outside the prefab')
+            paths.append('/'.join(map(str,nodes[pointer['m_PathID']][0])))
+        rows.append(dict(state=value['State']['mValue'],objects=paths))
+    return rows
+
+def sha(raw): return hashlib.sha256(raw).hexdigest()
+
+def file_record(path):
+    raw=path.read_bytes()
+    if path.suffix in ('.cs','.py'): raw=raw.replace(b'\r\n',b'\n')
+    return dict(path=path.relative_to(ROOT).as_posix(), sha256=sha(raw), hashLineEndings='LF')
+
+def build():
+    if shutil.which('dotnet') is None:
+        os.environ['PATH']=str(ROOT/'.tools/dotnet')+os.pathsep+os.environ.get('PATH','')
+    apk=Apk.current()
+    if apk.version!='884_156692': raise ValueError('Review matching source version before reproduction')
+    schemas=CurrentSchemas()
+    audio_receipt=ROOT/'assets/reference/official-map/map12-ui-audio-source-manifest.json'
+    audio=json.loads(audio_receipt.read_bytes())
+    package=next(p for p in audio['packages'] if 'ui_sfx_01' in p['name'])
+    current=next(p for p in OfficialSource().manifest('WwiseBnk')['bundles'] if p['name']==package['name'])
+    entry='assets/yoo/WwiseBnk/'+current['file']
+    if entry in apk.archive.namelist():
+        payload=apk.archive.read(entry)
+        audio_source=dict(origin='apk_zip',entry=entry,apk_manifest=apk.source.apk_version)
+    else:
+        path=ROOT/'.tools/source-packages/WwiseBnk'/package['name']
+        payload=path.read_bytes()
+        audio_source=dict(origin='verified_cache',path=path.relative_to(ROOT).as_posix())
+    if len(payload)!=current['size'] or hashlib.md5(payload).hexdigest()!=current['hash'] or sha(payload)!=package['sha256']:
+        raise ValueError('Current original UI sound package differs from the converted PCM source')
+    events={row['id']:row for row in audio['events'] if row['bank']['package']==package['name']}
+    sources=[]; prefabs=[]
+    def source(obj,**fields):
+        sources.append(dict(source=apk.provenance(obj),payload_sha256=sha(obj.get_raw_data()),**fields))
+    for name,bundle in PREFABS:
+        prefab=apk.asset(bundle,'/'+name+'.prefab')
+        nodes=list(relative_transform_path(prefab.read()))
+        by_id={go.object_reader.path_id:(path,names) for go,path,names,_ in nodes}
+        row=dict(name=name,contents=[],sounds=[],safeAreas=[])
+        layouts=[]; initial_states=None; detail_states={}
+        source(prefab,prefab=name)
+        for go,path,names,_ in nodes:
+            for pair in go.m_Component:
+                obj=pair.component.deref()
+                if obj.type.name!='MonoBehaviour': continue
+                cls=obj.read(check_read=False).m_Script.read().m_ClassName
+                if cls not in ('GameMatchMiniPanel','AnimationSoundPlayer','SafeArea','DailyDungeonEntryPanel',
+                               'DailyDungeonDetailContent','DailyDungeonUnlockContent')+LAYOUTS: continue
+                if cls in ('DailyDungeonDetailContent','DailyDungeonUnlockContent') and name!='DailyDungeonDialog':continue
+                fields=schemas.read(obj)
+                source(obj,prefab=name,objects=names,fields=fields)
+                if cls in LAYOUTS:
+                    layouts.append(layout_record(obj,cls,fields,path,names))
+                    continue
+                if cls=='DailyDungeonDetailContent':
+                    detail_states.update(detailLockStates=state_records(fields,'LockContentStateSwitcher',by_id),
+                        previewStates=state_records(fields,'mPreviewStateSwitcher',by_id))
+                    continue
+                if cls=='DailyDungeonUnlockContent':
+                    detail_states['catalogueButtonStates']=state_records(fields,'BtnStateSwitcher',by_id)
+                    continue
+                if cls=='DailyDungeonEntryPanel':
+                    references={value['rid']:value for value in fields['references']['RefIds']}
+                    configs=fields['DetailContentStateSwitcher']['mStateConfigs']
+                    if len(configs)!=1:raise ValueError('Review original daily initial state')
+                    config=references[configs[0]['rid']]
+                    if config['type']['class']!='StateGameObjectConfig':raise ValueError('Review original daily state config')
+                    initial_states=[]
+                    for value in config['data']['mStateGameObjectData']['GoConfig']:
+                        paths=[]
+                        for pointer in value['GameObjects']:
+                            if pointer['m_FileID']!=0:raise ValueError('Original state target is outside the prefab')
+                            paths.append('/'.join(map(str,by_id[pointer['m_PathID']][0])))
+                        initial_states.append(dict(state=value['State']['mValue'],objects=paths))
+                    continue
+                if cls=='SafeArea':
+                    row['safeAreas'].append(dict(path='/'.join(map(str,path)),objects=names,enabled=bool(fields['m_Enabled']),
+                        **{key:(bool(fields[key]) if key.startswith('Disable') else fields[key]) for key in ['PaddingTop','PaddingBottom','DisableTopAdapt','DisableBottomAdapt']}))
+                    continue
+                if cls=='GameMatchMiniPanel':
+                    pointer=fields['mContentGo']
+                    if pointer['m_FileID']!=0: raise ValueError('Matching content is outside its prefab')
+                    target,target_names=by_id[pointer['m_PathID']]
+                    row['contents'].append(dict(path='/'.join(map(str,target)),objects=target_names))
+                else:
+                    binding=dict(path='/'.join(map(str,path)),objects=names,enabled=bool(fields['m_Enabled']),events=[])
+                    for event in fields['mEvents']:
+                        obj_ref=PPtr(**event['WwiseObjectReference'],assetsfile=obj.assets_file).deref()
+                        value=schemas.read(obj_ref)
+                        source(obj_ref,fields=value)
+                        rendered=events[value['id']]
+                        if rendered['name']!=value['objectName'] or sha((ROOT/rendered['path']).read_bytes())!=rendered['sha256']:
+                            raise ValueError('Original animation event differs from its converted local audio')
+                        binding['events'].append(dict(id=value['id'],name=value['objectName'],resource=rendered['resource']))
+                    row['sounds'].append(binding)
+        if name in ('DailyDungeonEntryPanel','DailyDungeonDialog') and (len(row['contents'])!=1 or len(row['sounds'])!=1):
+            raise ValueError('Original matching panel bindings are incomplete: '+name)
+        layout=dict(layouts=layouts,**detail_states)
+        if initial_states is not None:layout['initialStates']=initial_states
+        row['layoutJson']=json.dumps(layout,ensure_ascii=False,separators=(',',':'))
+        prefabs.append(row)
+    code=ROOT/'.tools/source-packages/current'/apk.version/'official-code/client-source/GameMatchMiniPanel.cs'
+    text=code.read_text(encoding='utf-8-sig')
+    if 'if (!mainPlayer.IsInGameMatch)' not in text or 'mContentGo.SetActive(false)' not in text:
+        raise ValueError('Review the original unmatched visibility branch')
+    OUTPUT.write_text(json.dumps(dict(manifest=apk.version,prefabs=prefabs),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+    OUTPUT.with_name(OUTPUT.name+'.meta').write_text('fileFormatVersion: 2\nguid: 3c6bacaf46a749de95e0c140ec3509e8\nTextScriptImporter:\n  externalObjects: {}\n  userData:\n  assetBundleName:\n  assetBundleVariant:\n',encoding='utf-8',newline='\n')
+    RECEIPT.parent.mkdir(parents=True,exist_ok=True)
+    RECEIPT.write_text(json.dumps(dict(manifest=apk.version,apk_manifest=apk.source.apk_version,
+        apk_sha256=apk.source.apk_sha256,sources=sources,code_sources=[file_record(code),
+        file_record(code.parents[1]/'launch-source/AnimationSoundPlayer.cs'),
+        file_record(code.parents[1]/'framework-firstpass-source/SafeArea.cs'),
+        file_record(code.with_name('DailyDungeonEntryPanel.cs'))],
+        detail_code_sources=[file_record(code.with_name('DailyDungeonDetailContent.cs')),
+        file_record(code.with_name('DailyDungeonUnlockContent.cs')),
+        file_record(code.parents[1]/'common-source/Common/PlayerDailyDungeonDataExt.cs')],
+        audio_source=audio_source,audio_manifest=current,audio_package_sha256=sha(payload),
+        reused_audio_receipt=file_record(audio_receipt),runtime=file_record(RUNTIME),
+        reused_runtime=[file_record(ROOT/'unity/Assets/Game/Runtime/Official/WorldUI/WorldAnimationSoundPlayer.cs'),
+        file_record(ROOT/'unity/Assets/Game/Runtime/Presentation/World/OfficialDungeonUiAudio.cs'),
+        file_record(ROOT/'unity/Assets/Game/Runtime/Official/WorldUI/WorldSafeArea.cs')],
+        integration=file_record(ROOT/'unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.Dungeons.cs'),
+        shared_layout_runtime=file_record(ROOT/'unity/Assets/Game/Runtime/Presentation/World/OfficialDungeonUiBindingRuntime.cs'),
+        validation=[file_record(ROOT/'unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.cs'),
+        file_record(ROOT/'unity/Assets/Game/Runtime/Presentation/Home/SkillDamageTestValidation.cs'),
+        file_record(ROOT/'unity/Assets/Game/Runtime/Presentation/Home/SkillDamageTestValidation.DungeonEntry.cs')],
+        generator=file_record(Path(__file__).resolve()),output=file_record(OUTPUT),
+        operation='Bind the original serialized AnimationSoundPlayer event list to the verified existing local PCM and restore GameMatchMiniPanel.RefreshUI/HideContent for entry pages without an active game-match task. Restore serialized original SafeArea fields after original transforms; preserve hierarchy and animation events.',
+        limitations=['Active matchmaking requests, target changes, cancellation and countdown are not implemented by this initialization binding.']),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+    print('Verified original matching bindings:',[(p['name'],len(p['contents']),len(p['sounds'])) for p in prefabs])
+
+if __name__=='__main__': build()
