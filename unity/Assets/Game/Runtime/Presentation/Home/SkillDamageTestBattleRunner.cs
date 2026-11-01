@@ -127,21 +127,12 @@ namespace Zjcs.Presentation.Home
             Map10RuntimeFightGridGroundComponent sourceGrid = scene.FightGridGroundComponent;
             if (sourceGrid?.Size == null || sourceGrid.PosInfos == null || sourceGrid.OriginPos == null)
                 throw new InvalidOperationException("Official damage-test scene grid is malformed.");
-            var grid = new FightBattleGrid
-            {
-                Width = sourceGrid.Size.X, Height = sourceGrid.Size.Y,
-                OriginX = sourceGrid.OriginPos.X, OriginY = sourceGrid.OriginPos.Y,
-                OriginZ = sourceGrid.OriginPos.Z, DefaultGroundType = 2
-            };
-            int moveMask = 0;
-            foreach (Map10RuntimeBattleCell cell in sourceGrid.PosInfos)
-            {
-                grid.Cells.Add(new FightBattleGridCell { X = cell.Pos.X, Y = cell.Pos.Y,
-                    GroundType = cell.GroundType, Height = cell.Height });
-                if (cell.Height >= 999) grid.BlockedPositions.Add(new FightGridPoint(cell.Pos.X, cell.Pos.Y));
-                else if (cell.GroundType >= 0 && cell.GroundType < 31) moveMask |= 1 << cell.GroundType;
-            }
-            if (moveMask == 0) throw new InvalidOperationException("Official damage-test scene has no walkable cells.");
+            OfficialBattleGridBuild gridBuild = OfficialBattleGridAssembler.Build(sourceGrid.Size.X,
+                sourceGrid.Size.Y, sourceGrid.OriginPos.X, sourceGrid.OriginPos.Y, sourceGrid.OriginPos.Z,
+                sourceGrid.PosInfos.Select(cell => new FightBattleGridCell { X = cell.Pos.X, Y = cell.Pos.Y,
+                    GroundType = cell.GroundType, Height = cell.Height }), "damage-test");
+            FightBattleGrid grid = gridBuild.Grid;
+            int moveMask = gridBuild.MoveMask;
             Map10RuntimeFactionInfo faction = scene.FightComponent?.FactionInfoList?
                 .FirstOrDefault(value => value.Faction == 0);
             if (faction?.EntryPosList == null || faction.EntryPosList.Length == 0)

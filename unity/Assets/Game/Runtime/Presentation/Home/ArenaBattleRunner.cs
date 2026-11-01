@@ -221,23 +221,15 @@ namespace Zjcs.Presentation.Home
         {
             if (scene.gridWidth <= 0 || scene.gridHeight <= 0 || scene.cells == null)
                 throw new InvalidOperationException("Official arena battle grid is malformed.");
-            var grid = new FightBattleGrid
-            {
-                Width = scene.gridWidth,
-                Height = scene.gridHeight,
-                OriginX = scene.gridOrigin != null && scene.gridOrigin.Length > 0 ? scene.gridOrigin[0] : 0f,
-                OriginY = scene.gridOrigin != null && scene.gridOrigin.Length > 1 ? scene.gridOrigin[1] : 0f,
-                OriginZ = scene.gridOrigin != null && scene.gridOrigin.Length > 2 ? scene.gridOrigin[2] : 0f,
-                DefaultGroundType = 2
-            };
-            int moveMask = 0;
-            foreach (ArenaRuntimeCell cell in scene.cells)
-            {
-                grid.Cells.Add(new FightBattleGridCell
-                { X = cell.x, Y = cell.y, GroundType = cell.groundType, Height = cell.height });
-                if (cell.height >= 999) grid.BlockedPositions.Add(new FightGridPoint(cell.x, cell.y));
-                else if (cell.groundType >= 0 && cell.groundType < 31) moveMask |= 1 << cell.groundType;
-            }
+            OfficialBattleGridBuild gridBuild = OfficialBattleGridAssembler.Build(scene.gridWidth,
+                scene.gridHeight,
+                scene.gridOrigin != null && scene.gridOrigin.Length > 0 ? scene.gridOrigin[0] : 0f,
+                scene.gridOrigin != null && scene.gridOrigin.Length > 1 ? scene.gridOrigin[1] : 0f,
+                scene.gridOrigin != null && scene.gridOrigin.Length > 2 ? scene.gridOrigin[2] : 0f,
+                scene.cells.Select(cell => new FightBattleGridCell
+                { X = cell.x, Y = cell.y, GroundType = cell.groundType, Height = cell.height }), "arena");
+            FightBattleGrid grid = gridBuild.Grid;
+            int moveMask = gridBuild.MoveMask;
             ArenaRuntimeFaction playerFaction = scene.factions.FirstOrDefault(value => value.id == 0);
             ArenaRuntimeFaction guardFaction = scene.factions.FirstOrDefault(value => value.id == 1);
             if (moveMask == 0 || playerFaction?.entryPositions == null || guardFaction?.entryPositions == null

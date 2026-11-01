@@ -286,26 +286,14 @@ namespace Zjcs.Presentation.World
             if (scene.FightGridGroundComponent == null || scene.FightGridGroundComponent.Size == null
                 || scene.FightGridGroundComponent.PosInfos == null)
                 throw new InvalidDataException("Official Map10 battle grid is malformed for GameId " + scene.GameId);
-            var grid = new FightBattleGrid
-            {
-                Width = scene.FightGridGroundComponent.Size.X,
-                Height = scene.FightGridGroundComponent.Size.Y,
-                OriginX = scene.FightGridGroundComponent.OriginPos.X,
-                OriginY = scene.FightGridGroundComponent.OriginPos.Y,
-                OriginZ = scene.FightGridGroundComponent.OriginPos.Z,
-                DefaultGroundType = 2
-            };
-            int moveMask = 0;
-            foreach (Map10RuntimeBattleCell cell in scene.FightGridGroundComponent.PosInfos)
-            {
-                grid.Cells.Add(new FightBattleGridCell
-                {
-                    X = cell.Pos.X, Y = cell.Pos.Y, GroundType = cell.GroundType, Height = cell.Height
-                });
-                if (cell.Height >= 999) grid.BlockedPositions.Add(new FightGridPoint(cell.Pos.X, cell.Pos.Y));
-                else if (cell.GroundType >= 0 && cell.GroundType < 31) moveMask |= 1 << cell.GroundType;
-            }
-            if (moveMask == 0) throw new InvalidDataException("Official Map10 battle grid has no walkable ground.");
+            OfficialBattleGridBuild gridBuild = OfficialBattleGridAssembler.Build(
+                scene.FightGridGroundComponent.Size.X, scene.FightGridGroundComponent.Size.Y,
+                scene.FightGridGroundComponent.OriginPos.X, scene.FightGridGroundComponent.OriginPos.Y,
+                scene.FightGridGroundComponent.OriginPos.Z,
+                scene.FightGridGroundComponent.PosInfos.Select(cell => new FightBattleGridCell
+                { X = cell.Pos.X, Y = cell.Pos.Y, GroundType = cell.GroundType, Height = cell.Height }), "Map10");
+            FightBattleGrid grid = gridBuild.Grid;
+            int moveMask = gridBuild.MoveMask;
 
             var checkpoint = new FightBattleCheckpoint
             {
