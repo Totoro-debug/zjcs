@@ -1215,7 +1215,10 @@ namespace Zjcs.Combat.Official
                 && target.Hp / (double)Math.Max(1L, target.MaxHp) > hit.ChildSkillLessThanHpPer) return;
             int rank = Math.Max(1, parentSkill.Rank);
             int level = Math.Max(1, parentSkill.Level);
-            int subRank = Math.Max(0, parentSkill.SubRank);
+            // Skill property tables are keyed from the first real sub-rank. A legacy/root
+            // skill may omit cultivation (0), but its child still inherits the source skill's
+            // parameters and must resolve the official minimum sub-rank rather than an empty row.
+            int subRank = Math.Max(1, parentSkill.SubRank);
             FightBattleSkillDefinition skill;
             try
             {

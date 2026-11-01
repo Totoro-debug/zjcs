@@ -13,6 +13,13 @@ namespace Zjcs.Combat.Official
         {
             if (status.StatusConfigProperties != null && status.StatusProperties != null) return;
             if (!catalog.ContainsEntity(status.ClassId)) return;
+            // A non-empty projected cache with no initialization dictionaries is a legacy
+            // checkpoint snapshot. Preserve it while rebuilding the missing source caches;
+            // an empty list remains unresolved and is recomputed below.
+            bool preserveResolved = status.ResolvedProperties != null
+                && status.ResolvedProperties.Count > 0
+                && status.StatusConfigProperties == null
+                && status.StatusProperties == null;
             Dictionary<int, long> source = SourceProperties(status, units);
             var config = new Dictionary<int, long>();
             if (catalog.HasEntityPropertyDefinition(status.ClassId))
@@ -47,7 +54,7 @@ namespace Zjcs.Combat.Official
             status.StatusProperties = ToValues(properties);
             // Older checkpoints can contain an empty projected cache. Recreate it
             // from the recovered initialization data; shield progress stays intact.
-            status.ResolvedProperties = null;
+            if (!preserveResolved) status.ResolvedProperties = null;
         }
 
         public static void OnStackChanged(FightBattleStatusState status, int previous)
