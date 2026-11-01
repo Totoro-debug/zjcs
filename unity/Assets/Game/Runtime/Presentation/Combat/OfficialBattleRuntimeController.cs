@@ -134,16 +134,20 @@ namespace Zjcs.Presentation.Combat
 
             combatCatalog = resolvedCombatAssets.Load();
             modelKey = modelKey ?? (unit => unit.Id == 1 ? null : resolvedModelCatalog.ResolveModelKey(unit));
-            if (skillIcon == null || timelinePortrait == null)
+            if (skillIcon == null)
             {
                 Sprite fallback = resolvedHudCatalog.FindSprite("C_none-fa3e084e40.png");
                 if (fallback == null) throw new InvalidOperationException("Official battle fallback portrait is missing.");
                 var icons = OfficialCombatSkillIconCatalog.TryLoadDefault();
-                var portraits = OfficialBattleMonsterPortraitCatalog.TryLoadDefault();
                 skillIcon = skillIcon ?? (itemId => icons?.Find(itemId) ?? fallback);
-                timelinePortrait = timelinePortrait ?? (unit => unit.MonsterId > 0
-                    ? portraits?.Find(combatCatalog.MonsterIconId(unit.MonsterId)) ?? fallback : fallback);
             }
+            var portraitOverride = timelinePortrait;
+            var portraits = OfficialBattleMonsterPortraitCatalog.TryLoadDefault();
+            Sprite portraitFallback = resolvedHudCatalog.FindSprite("C_none-fa3e084e40.png");
+            if (portraitFallback == null) throw new InvalidOperationException("Official battle fallback portrait is missing.");
+            timelinePortrait = unit => portraitOverride?.Invoke(unit) ?? (unit.MonsterId > 0
+                && unit.CharacterType != 1 ? portraits?.Find(combatCatalog.MonsterIconId(unit.MonsterId)) : null)
+                ?? portraitFallback;
             this.statueProgress = statueProgress;
             statueEffectsEnded = false;
             if (!restoreCheckpoint && statueProgress != null)
@@ -177,7 +181,7 @@ namespace Zjcs.Presentation.Combat
                 nextHud.SpeedCycled += OnSpeedCycled;
                 if (sessionOptions.ShowMainPanelDelay <= 0)
                 {
-                    nextHudRoot = nextHud.Mount(hudParent);
+                    nextHudRoot = nextHud.Mount(hudParent, hostPresentation?.Camera);
                     RefreshPetFunction(nextHud);
                     nextHud.Refresh(checkpoint);
                     nextHud.RefreshSkillSlots(checkpoint, skillIcon);
@@ -581,7 +585,7 @@ namespace Zjcs.Presentation.Combat
         private void MountDelayedHud()
         {
             if (executor == null || hudView == null || pendingHudParent == null || hudRoot != null) return;
-            hudRoot = hudView.Mount(pendingHudParent);
+            hudRoot = hudView.Mount(pendingHudParent, hostPresentation?.Camera);
             RefreshPetFunction(hudView);
             hudView.Refresh(Checkpoint);
             hudView.RefreshSkillSlots(Checkpoint, skillIconResolver);

@@ -23,11 +23,12 @@ namespace Zjcs.Presentation.Combat
         private OfficialBattleTimelineAssets assets;
         private RectTransform attach;
         private Canvas canvas;
+        private Camera sceneCamera;
         private Transform slot;
         private float start, end, moveTime;
         private bool moving;
 
-        public static OfficialBattleSceneTimelineView Mount(GameObject hudRoot)
+        public static OfficialBattleSceneTimelineView Mount(GameObject hudRoot, Camera sceneCamera = null)
         {
             var assets = OfficialBattleTimelineAssets.Load();
             RectTransform anchor = hudRoot.transform.Find(assets.Anchor).GetComponent<RectTransform>();
@@ -36,6 +37,7 @@ namespace Zjcs.Presentation.Combat
             view.assets = assets;
             view.attach = anchor;
             view.canvas = anchor.GetComponentInParent<Canvas>();
+            view.sceneCamera = sceneCamera;
             view.slot = root.transform.Find(assets.SceneBindings.slot);
             SpriteRenderer line = root.transform.Find(assets.SceneBindings.line).GetComponent<SpriteRenderer>();
             float width = line.size.x * line.transform.localScale.x;
@@ -113,7 +115,9 @@ namespace Zjcs.Presentation.Combat
 
         private void BindPortrait(GameObject card, FightBattleUnitState unit, Sprite portrait, Sprite faction)
         {
-            bool npc = unit.NpcClassId > 0, monster = !npc && unit.MonsterId > 0;
+            // Character guards retain a monster template for attributes, while
+            // GameRoundCharacterItemScene selects their player portrait first.
+            bool npc = unit.NpcClassId > 0, monster = !npc && unit.CharacterType != 1 && unit.MonsterId > 0;
             var binding = assets.CardBindings;
             card.transform.Find(binding.mainPlayerEffect).gameObject.SetActive(unit.Id == 1);
             card.transform.Find(binding.playerRoot).gameObject.SetActive(!npc && !monster);
@@ -175,7 +179,7 @@ namespace Zjcs.Presentation.Combat
         }
         private void LateUpdate()
         {
-            Camera camera = Camera.main;
+            Camera camera = sceneCamera != null ? sceneCamera : Camera.main;
             if (attach == null || canvas == null || camera == null) return;
             // Overlay canvases use a null UI camera on Windows. The official
             // screen-to-world anchor and camera-size scaling remain unchanged.

@@ -167,7 +167,8 @@ namespace Zjcs.Presentation.World
                 return icon != null ? icon : fallbackPortrait;
             };
             FightOfficialCombatCatalog combatCatalog = OfficialCombatAssetCatalog.LoadDefault().Load();
-            Sprite playerBattlePortrait = CaptureBattlePlayerHead(battleController.gameObject);
+            var characterPortrait = Zjcs.Presentation.Character.OfficialBattleCharacterPortraits.ForProfile(
+                battleRoot.gameObject, progression, slotId, persistentDataPath);
             battleController.Begin(new OfficialBattleRequest
             {
                 Checkpoint = checkpoint,
@@ -176,9 +177,8 @@ namespace Zjcs.Presentation.World
                 HostPresentation = new OfficialBattleHostPresentation(worldCamera, null, hud.ui.OverlayRoot,
                     additionalHudRoots: new[] { hud.ui.Find("WorldCanvas", "/WorldCanvas").transform }),
                 SkillIcon = skillIconResolver,
-                TimelinePortrait = unit => unit.MonsterId > 0
-                    ? (monsterPortraits == null ? null : monsterPortraits.Find(combatCatalog.MonsterIconId(unit.MonsterId)))
-                    : playerBattlePortrait,
+                TimelinePortrait = unit => characterPortrait(unit) ?? (unit.CharacterType != 1
+                    && unit.MonsterId > 0 ? monsterPortraits?.Find(combatCatalog.MonsterIconId(unit.MonsterId)) : null),
                 RestoreCheckpoint = resume != null,
                 EnvironmentGameId = scene.GameId,
                 AnimationGroupResolver = unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),

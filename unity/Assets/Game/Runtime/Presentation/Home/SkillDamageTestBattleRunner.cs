@@ -63,6 +63,8 @@ namespace Zjcs.Presentation.Home
                 Checkpoint = checkpoint,
                 WorldRoot = battleRoot,
                 HudParent = host.Hud.CanvasTransform,
+                TimelinePortrait = OfficialBattleCharacterPortraits.ForProfile(battleRoot.gameObject,
+                    host.DailyDungeonProgression, host.ActiveProfileSlotId, host.SavesRoot),
                 HostPresentation = new OfficialBattleHostPresentation(host.Scene.Camera,
                     host.Scene.Root.transform, host.Hud.CanvasTransform, host.SetBattlePresentationActive),
                 AnimationGroupResolver = unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),

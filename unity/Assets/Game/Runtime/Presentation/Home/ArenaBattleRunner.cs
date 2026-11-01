@@ -140,19 +140,6 @@ namespace Zjcs.Presentation.Home
 
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
             controller.StepCompleted += OnStepCompleted;
-            controller.Begin(new OfficialBattleRequest
-            {
-                Checkpoint = checkpoint,
-                WorldRoot = battleRoot,
-                EnvironmentGameId = scene.gameId,
-                HudParent = host.Hud.CanvasTransform,
-                HostPresentation = new OfficialBattleHostPresentation(host.Scene.Camera,
-                    host.Scene.Root.transform, host.Hud.CanvasTransform, host.SetBattlePresentationActive),
-                AnimationGroupResolver = unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
-                RestoreCheckpoint = restore,
-                StatueProgress = host.Profile
-            });
-            controller.AttachUnitTransform(1, playerTransform);
             ArenaRuntimeAppearanceSet guardAppearance = (guard.appendAppearances
                     ?? Array.Empty<ArenaRuntimeAppearanceSet>())
                 .FirstOrDefault(value => value != null && value.sex == host.Arena.ActiveGuardSex);
@@ -165,6 +152,24 @@ namespace Zjcs.Presentation.Home
                     throw new InvalidDataException("Official arena guard appearance contains an invalid skin binding.");
                 skinByType.Add(skin.skinType, skin.skinId);
             }
+            controller.Begin(new OfficialBattleRequest
+            {
+                Checkpoint = checkpoint,
+                WorldRoot = battleRoot,
+                EnvironmentGameId = scene.gameId,
+                HudParent = host.Hud.CanvasTransform,
+                TimelinePortrait = OfficialBattleCharacterPortraits.ForProfile(battleRoot.gameObject,
+                    host.DailyDungeonProgression, host.ActiveProfileSlotId, host.SavesRoot,
+                    (unit, excludes) => unit.Id == 2
+                        ? CharacterCreationNativeModelFactory.CreateArenaGuardModel(
+                            host.Arena.ActiveGuardSex, guard.profession, skinByType, excludes) : null),
+                HostPresentation = new OfficialBattleHostPresentation(host.Scene.Camera,
+                    host.Scene.Root.transform, host.Hud.CanvasTransform, host.SetBattlePresentationActive),
+                AnimationGroupResolver = unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
+                RestoreCheckpoint = restore,
+                StatueProgress = host.Profile
+            });
+            controller.AttachUnitTransform(1, playerTransform);
             GameObject guardModel = CharacterCreationNativeModelFactory.CreateArenaGuardModel(
                 host.Arena.ActiveGuardSex, guard.profession, skinByType);
             guardTransform = guardModel.transform;

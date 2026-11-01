@@ -94,7 +94,7 @@ namespace Zjcs.Presentation.Combat
             stageStatusDialogRenderer = new OfficialBattleHudRenderer(resolved);
         }
 
-        public GameObject Mount(Transform parent)
+        public GameObject Mount(Transform parent, Camera sceneCamera = null)
         {
             if (parent == null) throw new ArgumentNullException(nameof(parent));
             root = renderer.Create("main", parent, (path, node) =>
@@ -108,7 +108,7 @@ namespace Zjcs.Presentation.Combat
             skillSlots = OfficialBattleSkillSlotBindings.Mount(renderer);
             OfficialBattleFunctionEntryBindings.Mount(renderer,
                 () => stageStatusDialogRoot != null && stageStatusDialogRoot.activeInHierarchy);
-            sceneTimeline = OfficialBattleSceneTimelineView.Mount(root);
+            sceneTimeline = OfficialBattleSceneTimelineView.Mount(root, sceneCamera);
             speedRoot = speedRenderer.Create("speed", root.transform, (path, node) =>
             {
                 Button button = node.GetComponent<Button>();

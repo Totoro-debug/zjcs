@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -288,6 +289,49 @@ namespace Zjcs.Editor
             Debug.Log("[Battle hosts] arena disk restore passed at step=" + expected.Counter);
         }
 
+        private static void VerifyTimelineProjection()
+        {
+            var timeline = UnityEngine.Object.FindObjectOfType<OfficialBattleSceneTimelineView>();
+            var home = UnityEngine.Object.FindObjectOfType<HomeFeatureRuntime>();
+            var bindings = OfficialBattleTimelineAssets.Load();
+            Transform anchor = Root("FightMainPanel").Find(bindings.Anchor);
+            Canvas canvas = anchor.GetComponentInParent<Canvas>();
+            Camera output = home.Scene.Camera;
+            Vector2 expected = RectTransformUtility.WorldToScreenPoint(
+                canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera, anchor.position);
+            Vector2 actual = output.WorldToScreenPoint(timeline.transform.position);
+            Require(Vector2.Distance(actual, expected) < 2f,
+                "The scene timeline differs from its original HUD anchor: expected=" + expected
+                + " actual=" + actual + " output=" + output.name + " main=" + Camera.main?.name);
+            Debug.Log("[Battle hosts] timeline projection passed with " + output.name);
+        }
+
+        private static Dictionary<int, Sprite> VerifyCharacterPortraits(FightBattleCheckpoint checkpoint)
+        {
+            var sprites = new Dictionary<int, Sprite>();
+            var binding = OfficialBattleTimelineAssets.Load().CardBindings;
+            foreach (var unit in checkpoint.Units.Where(value => value.NpcClassId == 0
+                && (value.Id == 1 || value.CharacterType == 1) && value.Hp > 0 && !value.Ended))
+            {
+                Transform card = Root("GameRoundCharacterItem_" + unit.Id);
+                Require(card != null && card.Find(binding.playerRoot).gameObject.activeSelf
+                    && !card.Find(binding.monster).gameObject.activeSelf,
+                    "A battle character used the monster portrait branch: " + unit.Id);
+                var circle = card.Find(binding.player).GetComponent<Zjcs.Official.WorldUI.WorldCircleSpriteRenderer>();
+                Sprite sprite = circle == null ? null : circle.Sprite;
+                Require(sprite != null && sprite.texture.width == 100 && sprite.texture.height == 120,
+                    "A battle character did not use the original head photography size: " + unit.Id);
+                var pixels = sprite.texture.GetPixels32().Where(value => value.a > 128).ToArray();
+                int colors = pixels.Select(value => value.r * 65536 + value.g * 256 + value.b).Distinct().Count();
+                Require(pixels.Length >= 1000 && pixels.Length <= 11500
+                    && colors >= 50,
+                    "A battle character head is blank, opaque or lacks original image colors: " + unit.Id
+                    + " visible=" + pixels.Length + " colors=" + colors);
+                sprites.Add(unit.Id, sprite);
+            }
+            return sprites;
+        }
+
         private static IEnumerator RunArenaHost(HomeFeatureRuntime home, string output, Action<Selectable> click)
         {
             int tickets = home.Arena.Tickets, results = home.Arena.Wins + home.Arena.Losses;
@@ -332,7 +376,14 @@ namespace Zjcs.Editor
                     && value.transform.parent.name == "StartBtn" && value.interactable);
                 if (start == null) yield return null;
             }
+            yield return SettleUi();
             yield return Capture(output, name + "-preparation");
+            VerifyTimelineProjection();
+            var portraitSprites = VerifyCharacterPortraits(controller.Checkpoint);
+            var portraitLeases = UnityEngine.Object.FindObjectsOfType<Zjcs.Presentation.CharacterCreation.CharacterNativePortraitLease>()
+                .Where(value => portraitSprites.Values.Contains(value.Sprite)).ToArray();
+            Require(portraitLeases.Length == portraitSprites.Count,
+                name + " did not own exactly one captured head per character.");
             if (name == "arena")
             {
                 Transform guard = Root("ArenaGuardCharacter");
@@ -369,11 +420,21 @@ namespace Zjcs.Editor
                 {
                     Require(Time.realtimeSinceStartup < deadline, name + " battle timed out.");
                     if (!captured && checkpoint.Counter > initialCounter + 2)
-                    { yield return Capture(output, name + "-playing"); captured = true; }
+                    {
+                        yield return new WaitForEndOfFrame();
+                        VerifyTimelineProjection();
+                        foreach (var current in VerifyCharacterPortraits(checkpoint))
+                            Require(portraitSprites.TryGetValue(current.Key, out Sprite original) && original == current.Value,
+                                name + " recaptured a character head while advancing the timeline.");
+                        yield return Capture(output, name + "-playing"); captured = true;
+                    }
                     yield return null;
                 }
             }
             finally { Time.timeScale = previousTimeScale; }
+            yield return null;
+            Require(portraitLeases.All(value => value == null) && portraitSprites.Values.All(value => value == null),
+                name + " retained character portrait resources after releasing its battle.");
             File.WriteAllText(Path.Combine(output, name + "-final.json"), FightBattleCheckpointSerializer.Save(checkpoint));
             Require(checkpoint.Finished && checkpoint.Outcome != null && !checkpoint.Outcome.Invalid
                 && checkpoint.Counter > initialCounter,

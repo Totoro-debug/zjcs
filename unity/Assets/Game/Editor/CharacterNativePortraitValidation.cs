@@ -2,10 +2,12 @@ using System;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using Zjcs.Combat.Official;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.State;
 using Zjcs.Presentation.CharacterCreation;
 using Zjcs.Presentation.Combat;
+using Zjcs.Presentation.Character;
 
 namespace Zjcs.Editor
 {
@@ -13,37 +15,39 @@ namespace Zjcs.Editor
     {
         public static void Validate(string slot, string root)
         {
-            CharacterPortraitPhotography settings = CharacterPortraitPhotography.LoadBattleHead();
             var session = OfflineMainlineProgressSession.OpenCharacter(new ProfileSlotCatalog(root), slot);
             var progression = new OfflineCharacterProgressionService(session, OfficialCharacterAssetCatalog.LoadDefault().Load());
-            var appearance = progression.ResolveAppearance();
-            foreach (int type in settings.excludes) appearance.SkinByType.Remove(type);
-            GameObject model = CharacterCreationNativeModelFactory.CreatePreviewModel(slot, root, appearance);
-            Texture2D texture = null;
+            var owner = new GameObject("Shared battle portrait validation owner");
             try
             {
-                model.transform.position = new Vector3(10000, 10000, 0);
-                Animator animator = model.GetComponent<Animator>();
-                if (!OfficialBattleCharacterAnimationCatalog.TryResolve(animator.runtimeAnimatorController,
-                    settings.animation, out string state)) throw new InvalidOperationException("Original head pose is not converted.");
-                texture = CharacterNativePortraitCapture.Capture(model, settings, state);
+                string before = JsonUtility.ToJson(session.Save);
+                var portrait = OfficialBattleCharacterPortraits.ForProfile(owner, progression, slot, root);
+                var player = new FightBattleUnitState { Id = 1, CharacterType = 1 };
+                Sprite sprite = portrait(player);
+                if (sprite == null || portrait(player) != sprite || owner.GetComponents<CharacterNativePortraitLease>().Length != 1
+                    || portrait(new FightBattleUnitState { Id = 2, CharacterType = 2, MonsterId = 3207 }) != null
+                    || portrait(new FightBattleUnitState { Id = 3, CharacterType = 1, NpcClassId = 8402 }) != null
+                    || JsonUtility.ToJson(session.Save) != before)
+                    throw new InvalidOperationException("Shared battle photography did not preserve ownership, reuse, portrait branches or profile state.");
+                Texture2D texture = sprite.texture;
                 Color32[] pixels = texture.GetPixels32();
                 int visible = pixels.Count(value => value.a > 128);
                 int colors = pixels.Where(value => value.a > 128)
                     .Select(value => value.r * 65536 + value.g * 256 + value.b).Distinct().Count();
-                if (texture.width != 100 || texture.height != 120 || visible < 1000 || visible > 11500 || colors < 50)
-                    throw new InvalidOperationException("Native head capture is empty, opaque or lacks original character pixels: visible=" + visible + " colors=" + colors);
-                string output = Path.GetFullPath(Path.Combine(Application.dataPath, "../../.tools/battle-system-migration"));
+                string output = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
+                if (string.IsNullOrWhiteSpace(output)) throw new InvalidOperationException("Set ZJCS_VALIDATION_DIR for native head validation.");
+                output = Path.Combine(output, "portraits");
                 Directory.CreateDirectory(output);
                 string sex = session.Save.Player.Wardrobe.Sex == 1 ? "female" : "male";
                 File.WriteAllBytes(Path.Combine(output, "native-head-" + sex + ".png"), texture.EncodeToPNG());
-                Debug.Log("Official native head photography passed: " + sex + " pose=" + state
+                if (texture.width != 100 || texture.height != 120 || visible < 1000 || visible > 11500 || colors < 50)
+                    throw new InvalidOperationException("Native head capture is empty, opaque or lacks original character pixels: visible=" + visible + " colors=" + colors);
+                Debug.Log("Official shared native head photography passed: " + sex
                     + " visible=" + visible + " colors=" + colors + ".");
             }
             finally
             {
-                if (texture != null) UnityEngine.Object.Destroy(texture);
-                UnityEngine.Object.Destroy(model);
+                UnityEngine.Object.Destroy(owner);
             }
         }
     }

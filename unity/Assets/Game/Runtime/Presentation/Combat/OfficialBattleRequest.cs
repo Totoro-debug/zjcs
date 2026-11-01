@@ -20,6 +20,7 @@ namespace Zjcs.Presentation.Combat
         // Optional presentation adapters. Omitted resolvers use the shared official catalogs;
         // maps with a captured player portrait or a version-specific NPC catalog override them.
         public Func<int, Sprite> SkillIcon;
+        // Partial override: null results use the shared official monster/fallback catalog.
         public Func<FightBattleUnitState, Sprite> TimelinePortrait;
         public Func<FightBattleUnitState, string> ModelKey;
         public Func<FightBattleUnitState, FightBattleStepEvent, string> AnimationForEvent;

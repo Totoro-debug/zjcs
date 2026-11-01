@@ -372,10 +372,7 @@ namespace Zjcs.Editor
                 Debug.Log("Battle model: " + modelRenderer.name + " position=" + modelRenderer.transform.position
                     + " scale=" + modelRenderer.transform.lossyScale + " bounds=" + modelRenderer.bounds);
             Require(!worldTerrain.activeSelf, "World terrain remained active over the battle scene.");
-            Require(((Zjcs.Presentation.Combat.OfficialBattleRuntimeController)controller)
-                    .TryGetSceneCamera(out _, out float sourceCameraSize)
-                && Camera.main != null && Mathf.Approximately(Camera.main.orthographicSize, sourceCameraSize),
-                "The recovered scene camera did not use its official orthographic size.");
+            VerifyOriginalCamera(sceneController);
             Renderer[] battleModels = UnityEngine.Object.FindObjectsOfType<Renderer>()
                 .Where(value => value.name.StartsWith("Native draw ", StringComparison.Ordinal)).ToArray();
             Require(battleModels.Length > 0 && battleModels.Any(value => value.isVisible),
@@ -777,6 +774,32 @@ namespace Zjcs.Editor
             if (EventSystem.current == null)
                 new GameObject("Map10BattleAcceptanceEventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
             return canvas;
+        }
+
+        [Serializable] private sealed class CameraBindings { public CameraBinding[] cameras; }
+        [Serializable] private sealed class CameraBinding
+        {
+            public int gameId;
+            public float baseSize;
+            public float[] baseAspect;
+        }
+
+        private static void VerifyOriginalCamera(Zjcs.Presentation.Combat.OfficialBattleRuntimeController controller)
+        {
+            Require(controller.OwnsPresentationCamera && Camera.main != null,
+                "The common battle module did not take ownership of the map camera.");
+            var cameraRoot = UnityEngine.Object.FindObjectsOfType<Transform>()
+                .Single(value => value.name.StartsWith("Official Battle Camera ", StringComparison.Ordinal));
+            var source = JsonUtility.FromJson<CameraBindings>(
+                Resources.Load<TextAsset>("Combat/battle-camera-bindings").text).cameras
+                .Single(value => cameraRoot.name == "Official Battle Camera " + value.gameId);
+            // GameCameraIniter.Adaptor preserves the original width on taller viewports.
+            // Comparing with the unadapted scene size incorrectly rejects a valid portrait view.
+            float expected = source.baseSize * Mathf.Max(1f,
+                source.baseAspect[0] / source.baseAspect[1] / Camera.main.aspect);
+            Require(Mathf.Approximately(Camera.main.orthographicSize, expected),
+                "The battle camera differs from the original aspect adapter: expected=" + expected
+                + " actual=" + Camera.main.orthographicSize + " aspect=" + Camera.main.aspect);
         }
 
         private static IEnumerator Capture(string filename)

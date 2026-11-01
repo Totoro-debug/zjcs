@@ -361,6 +361,7 @@ namespace Zjcs.Presentation.World
                     avatar.transform, hud.ui.OverlayRoot,
                     new OfficialBattleHostPresentation(worldCamera, mapRoot, hud.ui.OverlayRoot,
                         additionalHudRoots: new[] { hud.ui.Find("WorldCanvas", "/WorldCanvas").transform }),
+                    slotId, persistentDataPath,
                     (Action<bool>)FinishMap12PrivateDungeonBattle });
                 if (map12PrivateDungeonRouteDialog != null) map12PrivateDungeonRouteDialog.SetActive(false);
             }

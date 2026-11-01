@@ -38,6 +38,7 @@ namespace Zjcs.Presentation.Home
         private bool privateMapEntry;
         private int privateMapRoomId;
         private OfficialBattleHostPresentation privateMapPresentation;
+        private string portraitSlotId, portraitSavesRoot;
 
         public void Begin(HomeFeatureRuntime runtime, int selectedRoomId, string assistEntryId,
             Action<bool> onCompleted)
@@ -48,6 +49,8 @@ namespace Zjcs.Presentation.Home
             battleCatalog = host.DailyDungeons.Catalog;
             battleCanvas = host.Hud.CanvasTransform;
             battlePlayer = host.HomePlayerTransform;
+            portraitSlotId = host.ActiveProfileSlotId;
+            portraitSavesRoot = host.SavesRoot;
             completed = onCompleted;
             if (string.IsNullOrWhiteSpace(assistEntryId))
                 throw new ArgumentException("Daily dungeon assistance entry identity is required.", nameof(assistEntryId));
@@ -122,7 +125,8 @@ namespace Zjcs.Presentation.Home
 
         public void BeginPrivateMapRoom(OfflineMainlineProgressSession profile,
             OfflineCharacterProgressionService progression, OfflineDailyDungeonSession dungeons,
-            Transform player, Transform canvas, OfficialBattleHostPresentation presentation, Action<bool> onCompleted)
+            Transform player, Transform canvas, OfficialBattleHostPresentation presentation,
+            string slotId, string savesRoot, Action<bool> onCompleted)
         {
             if (profile == null || progression == null || dungeons == null || player == null || canvas == null)
                 throw new ArgumentNullException("Private daily dungeon battle dependencies are incomplete.");
@@ -132,6 +136,8 @@ namespace Zjcs.Presentation.Home
             battleCatalog = dungeons.Catalog;
             battlePlayer = player;
             battleCanvas = canvas;
+            portraitSlotId = slotId;
+            portraitSavesRoot = savesRoot;
             privateMapEntry = true;
             completed = onCompleted;
 
@@ -154,6 +160,8 @@ namespace Zjcs.Presentation.Home
             int stageType, int durationHours, int dailyLimit, int difficulty, Action<bool> onCompleted)
         {
             host = runtime ?? throw new ArgumentNullException(nameof(runtime));
+            portraitSlotId = host.ActiveProfileSlotId;
+            portraitSavesRoot = host.SavesRoot;
             battleProfile = host.Profile;
             battleProgression = host.DailyDungeonProgression;
             battleCatalog = host.DailyDungeons.Catalog;
@@ -265,6 +273,8 @@ namespace Zjcs.Presentation.Home
             OfficialBattleMonsterPortraitCatalog portraits = privateMapEntry
                 ? Resources.Load<OfficialBattleMonsterPortraitCatalog>("Map12/monster-portraits")
                 : OfficialBattleMonsterPortraitCatalog.TryLoadDefault();
+            var characterPortrait = OfficialBattleCharacterPortraits.ForProfile(battleRoot.gameObject,
+                battleProgression, portraitSlotId, portraitSavesRoot);
             controller.Begin(new OfficialBattleRequest
             {
                 Checkpoint = checkpoint,
@@ -274,8 +284,8 @@ namespace Zjcs.Presentation.Home
                 HostPresentation = privateMapEntry ? privateMapPresentation : new OfficialBattleHostPresentation(
                     host.Scene.Camera, host.Scene.Root.transform, battleCanvas, host.SetBattlePresentationActive),
                 SkillIcon = itemId => skillIcons == null ? fallback : skillIcons.Find(itemId) ?? fallback,
-                TimelinePortrait = unit => unit.MonsterId > 0 && portraits != null
-                    ? portraits.Find(combat.MonsterIconId(unit.MonsterId)) ?? fallback : fallback,
+                TimelinePortrait = unit => characterPortrait(unit) ?? (unit.CharacterType != 1
+                    && unit.MonsterId > 0 ? portraits?.Find(combat.MonsterIconId(unit.MonsterId)) : null),
                 AnimationGroupResolver = unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
                 HudCatalog = hudCatalog,
                 RestoreCheckpoint = restore,

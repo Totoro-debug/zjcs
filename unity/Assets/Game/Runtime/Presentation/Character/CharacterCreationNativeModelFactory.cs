@@ -59,7 +59,7 @@ namespace Zjcs.Presentation.CharacterCreation
         }
 
         public static GameObject CreateArenaGuardModel(int sex, int profession,
-            IReadOnlyDictionary<int, int> appendAppearances)
+            IReadOnlyDictionary<int, int> appendAppearances, IEnumerable<int> excludedSkinTypes = null)
         {
             CharacterCreationAssetCatalog assets = CharacterCreationAssetCatalog.LoadDefault();
             GameObject prefab = sex == 1 ? assets.FemaleNativeModelPrefab : assets.MaleNativeModelPrefab;
@@ -83,6 +83,8 @@ namespace Zjcs.Presentation.CharacterCreation
             }
             WardrobeResolution appearanceResolution = OfflineWardrobeRules.Resolve(state,
                 characterCatalog.Appearances, characterCatalog.Skins, characterCatalog.AllowedSkins);
+            if (excludedSkinTypes != null)
+                foreach (int type in excludedSkinTypes) appearanceResolution.SkinByType.Remove(type);
 
             GameObject model = UnityEngine.Object.Instantiate(prefab);
             model.name = "ArenaGuardCharacter";

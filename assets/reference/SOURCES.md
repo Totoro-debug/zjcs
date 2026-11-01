@@ -209,6 +209,8 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 
 当前动态场景分段代码：从同版已核验 `Assembly-CSharp.dll` 的 `DynamicSkeletonRenderSeparator` 应用源码迁移池化、排序与可见性分支，SDK 基类调用替换为显式端口，Unity 网格赋值采用独立原生后端。原程序集／应用源码、转换与迁移输出哈希见 [动态场景分段来源](battle-animation/scene-separator-source-manifest.json)；验证复用既有当前来源剑、杖原资源，没有新增美术载荷，也未复制 SDK 渲染实现。
 
+公共战斗人物头像材质参数：`record_battle_character_portrait_material.py` 按当前 `884_156692` 索引、APK 优先及已校验同版云端依赖，读取男女原骨骼→图集→全部937份材质，核对原 `_WorldClipHeight` 统一为 -1,000,000。原包／对象、指针、参数、工具和运行绑定哈希见 [头像材质来源](battle-hud/character-portrait-material-source-manifest.json)。仅恢复临时摄影模型的原裁剪参数，没有生成或修改美术载荷；摄影参数和旧版来源仍各自保留。
+
 
 伙伴名册候选范围：`prepare_partner_roster_scope.py` 核对选定 `884_156692` 的 `NpcInfoParser.GetNpcs` 排除语义、原名册及手动相遇条件消费，将商人／职业导师的原图像纳入显式卡片绑定。新增资源仍经 APK 优先、同版本云端、Sprite RenderDataKey 与原对象身份闭合。原语言表没有的 `ui_npc_name_10609` 沿原客户端返回键名；卡片的原空字符串 myKey 按原对象修复，不创建替代名称或美术。原方法、输入／输出哈希与替换范围见[名册范围来源](partner-roster-scope-source-manifest.json)，具体行为见[伙伴功能](../../docs/features/partners.md)。未生成完整素材快照。
 
