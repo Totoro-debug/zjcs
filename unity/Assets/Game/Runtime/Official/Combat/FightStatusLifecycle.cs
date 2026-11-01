@@ -363,6 +363,14 @@ namespace Zjcs.Combat.Official
                 ActionStartActionTypes = Copy(template.ActionStartActionTypes),
                 ActionStartSkills = CopyTriggers(template.ActionStartSkills),
                 ActionStartTriggeredCount = template.ActionStartTriggeredCount,
+                HasRoleSummonCount = template.HasRoleSummonCount,
+                RoleSummonCountRulesSupported = template.RoleSummonCountRulesSupported,
+                RoleSummonCountUpdateStack = template.RoleSummonCountUpdateStack,
+                RoleSummonCountLimit = template.RoleSummonCountLimit,
+                RoleSummonCountStatus = template.RoleSummonCountStatus == null ? null
+                    : CopyTriggers(new List<FightBattleStatusStateTrigger>
+                        { template.RoleSummonCountStatus })[0],
+                RoleSummonCountLastCount = template.RoleSummonCountLastCount,
                 HasHpAccDecrease = template.HasHpAccDecrease,
                 AccumulatedDamage = template.AccumulatedDamage?.Copy(),
                 HpAccUnitHp = template.HpAccUnitHp,

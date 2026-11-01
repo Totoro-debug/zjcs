@@ -153,6 +153,61 @@ namespace Zjcs.Combat.Official
             return result;
         }
 
+        public static int ApplyRoleSummonCount(FightBattleUnitState owner,
+            IReadOnlyList<FightBattleUnitState> units, FightOfficialCombatCatalog catalog,
+            FightRandomStream random)
+        {
+            if (owner == null || units == null || catalog == null || owner.Statuses == null)
+                return 0;
+            int count = 0;
+            foreach (FightBattleUnitState unit in units)
+                if (unit != null && unit.MasterId == owner.Id && unit.Hp > 0) count++;
+            foreach (FightBattleStatusState sourceStatus in new List<FightBattleStatusState>(owner.Statuses))
+            {
+                if (sourceStatus == null || !sourceStatus.HasRoleSummonCount
+                    || !sourceStatus.RoleSummonCountRulesSupported
+                    || sourceStatus.RoleSummonCountStatus == null) continue;
+                int desired = sourceStatus.RoleSummonCountLimit > 0
+                    ? Math.Min(count, sourceStatus.RoleSummonCountLimit) : count;
+                FightBattleStatusState existing = owner.Statuses.FirstOrDefault(status =>
+                    status != null && status.ClassId == sourceStatus.RoleSummonCountStatus.EntityId
+                    && status.CreatorId == owner.Id);
+                if (desired <= 0)
+                {
+                    if (existing != null) FightStatusLifecycle.End(owner, existing);
+                    sourceStatus.RoleSummonCountLastCount = 0;
+                    continue;
+                }
+                if (sourceStatus.RoleSummonCountUpdateStack && existing != null
+                    && existing.StackCount != desired)
+                {
+                    int previous = existing.StackCount;
+                    existing.StackCount = desired;
+                    FightStatusPropertyRuntime.OnStackChanged(existing, previous);
+                    sourceStatus.RoleSummonCountLastCount = desired;
+                    continue;
+                }
+                if (existing != null)
+                {
+                    sourceStatus.RoleSummonCountLastCount = desired;
+                    continue;
+                }
+                int instanceId = owner.Statuses.Count == 0 ? 1
+                    : owner.Statuses.Max(status => status == null ? 0 : status.InstanceId) + 1;
+                FightBattleStatusState template = catalog.CreateStatus(
+                    sourceStatus.RoleSummonCountStatus.EntityId, owner.Id, owner.Id, instanceId,
+                    sourceStatus.RootSkillId, sourceStatus.ApplyingSkillItemId,
+                    sourceStatus.SourceSkillRank, sourceStatus.SourceSkillLevel,
+                    sourceStatus.SourceSubRank, owner.Properties, 0,
+                    sourceStatus.ReplacementProperties, sourceStatus.BlessPropertyScales);
+                if (sourceStatus.RoleSummonCountUpdateStack) template.StackCount = desired;
+                template.ReportSource = FightBattleStatusReportSource.Resolve(sourceStatus).Copy();
+                FightStatusLifecycle.Apply(owner, template, -1, instanceId, random);
+                sourceStatus.RoleSummonCountLastCount = desired;
+            }
+            return count;
+        }
+
         public static List<FightBattleStatusSkillInvocation> CollectSkillStartSkills(
             FightBattleUnitState actor, FightBattleSkillDefinition skill,
             IReadOnlyList<FightBattleUnitState> skillTargets,

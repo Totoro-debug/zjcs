@@ -182,6 +182,10 @@ namespace Zjcs.Combat.Official
 
             if (FightStatusLifecycle.TickTurn(actor, units, actorRound, FightStatusLifecycle.TimingStart) > 0)
                 RebuildBattleProperties();
+            if (statusCatalog != null)
+                foreach (FightBattleUnitState summonOwner in units)
+                    FightStatusTriggerRuntime.ApplyRoleSummonCount(summonOwner, units,
+                        statusCatalog, random);
             float statusEndDelay = 0f;
             ExecuteAccumulatedDamageEnds(casts, damageEvents, movements,
                 ref statusEndDelay, ref stepDuration, ref stepActionDuration);

@@ -420,6 +420,12 @@ namespace Zjcs.Combat.Official
         public List<FightBattleStatusStateTrigger> ActionStartSkills =
             new List<FightBattleStatusStateTrigger>();
         public int ActionStartTriggeredCount;
+        public bool HasRoleSummonCount;
+        public bool RoleSummonCountRulesSupported;
+        public bool RoleSummonCountUpdateStack;
+        public int RoleSummonCountLimit;
+        public FightBattleStatusStateTrigger RoleSummonCountStatus;
+        public int RoleSummonCountLastCount = -1;
         // Official FightStatusHpAccDecreaseComponent. Damage is accumulated independently of cures
         // per the confirmed offline rule; the configured threshold is consumed on each trigger.
         public bool HasHpAccDecrease;

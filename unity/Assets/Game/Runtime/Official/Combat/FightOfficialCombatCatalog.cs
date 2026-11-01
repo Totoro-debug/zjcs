@@ -951,6 +951,8 @@ namespace Zjcs.Combat.Official
                 Component(components, "FightStatusRoundCheckSkillComponent");
             Dictionary<string, object> actionStart =
                 Component(components, "FightStatusActionStartComponent");
+            Dictionary<string, object> roleSummonCount =
+                Component(components, "FightStatusRoleSummonCountComponent");
             Dictionary<string, object> skillCooldownModify =
                 Component(components, "FightStatusSkillModifyCDComponent");
             Dictionary<string, object> permanentSkillCooldownReduction =
@@ -1136,6 +1138,13 @@ namespace Zjcs.Combat.Official
                 ActionStartRulesSupported = actionStart != null
                     && SupportsActionStart(actionStart),
                 ActionStartRate = actionStart == null ? 1f : Float(actionStart, "Rate", 1f),
+                HasRoleSummonCount = roleSummonCount != null,
+                RoleSummonCountRulesSupported = roleSummonCount != null
+                    && SupportsRoleSummonCount(roleSummonCount),
+                RoleSummonCountUpdateStack = roleSummonCount != null
+                    && Bool(roleSummonCount, "UpdateStatusStack"),
+                RoleSummonCountLimit = roleSummonCount == null ? 0
+                    : Int(roleSummonCount, "LimitCount"),
                 HasHpAccDecrease = hpAccDecrease != null,
                 AccumulatedDamage = ReadAccumulatedDamage(components),
                 HpAccUnitHp = hpAccDecrease == null ? -1L : Long(hpAccDecrease, "UnitHp", -1L),
@@ -1346,6 +1355,18 @@ namespace Zjcs.Combat.Official
                 result.ActionStartActionTypes.AddRange(IntArray(actionStart, "ActionTypes"));
                 AddHpAccTriggerEntries(actionStart, "Skills", "SkillId",
                     result.ActionStartSkills, true);
+            }
+            if (roleSummonCount != null && roleSummonCount.TryGetValue("StatusCfg", out object rawSummonStatus)
+                && rawSummonStatus != null)
+            {
+                var list = new List<FightBattleStatusStateTrigger>();
+                Dictionary<string, object> summonStatus = Object(rawSummonStatus,
+                    "FightStatusRoleSummonCountComponent.StatusCfg");
+                AddHpAccTriggerEntries(new Dictionary<string, object>
+                {
+                    ["StatusList"] = new List<object> { summonStatus }
+                }, "StatusList", "StatusId", list, false);
+                if (list.Count > 0) result.RoleSummonCountStatus = list[0];
             }
             if (hpAccDecrease != null)
             {
@@ -2703,6 +2724,17 @@ namespace Zjcs.Combat.Official
                             || Int(custom, "UpperLimitPercent") != 0))) return false;
             }
             return true;
+        }
+
+        private static bool SupportsRoleSummonCount(Dictionary<string, object> component)
+        {
+            if (!component.TryGetValue("StatusCfg", out object raw) || raw == null) return false;
+            Dictionary<string, object> status = Object(raw, "role summon count status");
+            int statusId = Int(status, "StatusId");
+            int limit = Int(component, "LimitCount");
+            return statusId > 0 && limit >= 0 && !Bool(status, "AffectedByProp")
+                && Int(status, "ApplyTarget") == 2
+                && ArrayCount(status, "StatusReplacePropertyValues") == 0;
         }
 
         private static int ArrayCount(Dictionary<string, object> source, string field)

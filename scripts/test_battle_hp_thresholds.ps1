@@ -175,6 +175,24 @@ $rangeTarget.X = 8
 Assert-Hp (($rangeTarget.Statuses | Where-Object ClassId -eq 24033).Count -eq 0) `
     'MoveRange did not remove its configured status after leaving the range.'
 
+# 25104 tracks the owner's summoned-unit count and removes the aura when none remain.
+$summonOwner = Unit 40 100
+$summonOwner.Statuses.Add($catalog.CreateStatus(25104, $summonOwner.Id, $summonOwner.Id, 1))
+$summon = Unit 41 100
+$summon.MasterId = $summonOwner.Id
+$summonUnits = [Collections.Generic.List[Zjcs.Combat.Official.FightBattleUnitState]]::new()
+$summonUnits.Add($summonOwner); $summonUnits.Add($summon)
+$summonRandom = [Zjcs.Combat.Official.FightRandomStream]::new(17)
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyRoleSummonCount(
+    $summonOwner, $summonUnits, $catalog, $summonRandom)
+Assert-Hp (($summonOwner.Statuses | Where-Object ClassId -eq 24133).Count -eq 1) `
+    'RoleSummonCount did not apply its configured owner status.'
+$summon.Hp = 0
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyRoleSummonCount(
+    $summonOwner, $summonUnits, $catalog, $summonRandom)
+Assert-Hp (($summonOwner.Statuses | Where-Object ClassId -eq 24133).Count -eq 0) `
+    'RoleSummonCount did not remove its owner status after summon loss.'
+
 # KillSkill status and skill triggers use the killer as source and honor filters/counts.
 $killStatus = $catalog.CreateStatus(25028, 1, 1, 7)
 $defeated = Unit 10 0
