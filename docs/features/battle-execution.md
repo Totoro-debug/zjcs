@@ -18,7 +18,7 @@
 
 战斗预览对象在编辑模式校验结束时使用 `DestroyImmediate` 清理创建的模型网格、材质、贴图、HUD、挂载父节点及临时 SortingGroup；运行时仍使用 `Destroy`。已有地图角色在释放临时父节点前恢复原父级、姿态及动画，原有 SortingGroup 仅恢复状态。该处理不删除导入资产，避免 `ProjectTools.Validate` 结束时留下编辑模式销毁错误。
 
-公共表现上下文 `OfficialBattleHostPresentation` 捕获调用方相机及可见根节点，战斗前台显示时暂停主城更新并隐藏原场景／HUD，退出或转入后台时恢复原相机投影、姿态和显隐。`OfficialBattleCameraView` 消费原 `GameCameraIniter.Adaptor` 的宽高比和尺寸，并复用已安装的 Cinemachine 及原群组取景字段；256个 GameId 的绑定由 `prepare_battle_camera_bindings.py` 可复现提取，来源见[相机清单](../../assets/reference/battle-scenes/camera-source-manifest.json)。日常、竞技、阶梯、技能测试及主线入口共用该相机实现。日常副本已实际执行至结算并检查新截图；本次发现玩家模型被1.25倍本地系数额外放大，已移除该系数，人物与血条的重新对齐仍待实际战斗画面验证。日常、竞技、阶梯的实际结算与主城恢复集成均已通过，竞技守卫职业服装和头发层级也已在实际战斗截图核对；Map10 已通过共用镜头下的准备／播放、速度与聊天模拟输入、最终命中等待、结束返回及原相机／角色层级恢复，七张实际运行截图已检查；技能试打也已在共用镜头与原生主角模型下完成十回合、结算、玩家／技能统计、技能快照与返回设置，十张新截图已检查。相机手动拖拽／缩放、原镜头偏移混合及全部场景画面尚未验收，不能据此声称完整相机迁移。
+公共表现上下文 `OfficialBattleHostPresentation` 捕获调用方相机及可见根节点，战斗前台显示时暂停主城更新并隐藏原场景／HUD，退出或转入后台时恢复原相机投影、姿态和显隐。`OfficialBattleCameraView` 消费原 `GameCameraIniter.Adaptor` 的宽高比和尺寸，并复用已安装的 Cinemachine 及原群组取景字段；256个 GameId 的绑定由 `prepare_battle_camera_bindings.py` 可复现提取，来源见[相机清单](../../assets/reference/battle-scenes/camera-source-manifest.json)。日常、竞技、阶梯、技能测试及主线入口共用该相机实现。日常副本已实际执行至结算并检查新截图；玩家模型的额外1.25倍本地系数已移除，独立 Windows Player 验证显示官方0.3模型比例与脚下血条居中对齐。日常、竞技、阶梯的实际结算与主城恢复集成均已通过，竞技守卫职业服装和头发层级也已在实际战斗截图核对；Map10 已通过共用镜头下的准备／播放、速度与聊天模拟输入、最终命中等待、结束返回及原相机／角色层级恢复，七张实际运行截图已检查；技能试打也已在共用镜头与原生主角模型下完成十回合、结算、玩家／技能统计、技能快照与返回设置，十张新截图已检查。相机手动拖拽／缩放、原镜头偏移混合及全部场景画面尚未验收，不能据此声称完整相机迁移。
 
 场景行动条从公共表现上下文显式取得本场输出相机，覆盖 HUD 立即挂载及延迟挂载路径；不再依赖主城未设置的 `Camera.main`。原 `GameRoundScene` 的屏幕锚点转换、相机尺寸缩放和 prefab 坐标保持原计算，适配仅补足相机引用。位置回归在渲染帧末比较原 HUD 锚点与行动条实际投影，避免在 Cinemachine 本帧更新前读取旧位置。日常、竞技场和塔层的准备／播放投影检查均通过，已检查其实际画面；Windows Player 技能试打的行动条位置也已核对。
 
@@ -156,6 +156,9 @@ prepare_home_ui.py 从固定 871_156598 的 FurnitureFastHangUpDialog、其 Item
 - `FightBattleCheckpointSerializer` 提供版本化 JSON 保存／读取，并在恢复时校验；检查点保留战斗状态、事件序号、随机种子和统计，重复或旧步骤不会再次结算。
 - `OfficialBattleRuntimeController`、`OfficialBattleSceneView`、`OfficialBattleHudView`、`OfficialBattleRoundDisplay` 和相关 Catalog 已接入场景、时间轴、血条、Boss、技能槽、状态、战报行、伤害飘字、元素反馈、镜头和公共控件。官方战斗 prefab／材质／字体按来源清单绑定。
 - 公共战斗模块为 `OfficialBattleRuntimeController`。所有现有运行入口（主线地图、日常副本／每日挑战、竞技场、幻境之塔、技能伤害测试）通过 `Begin(OfficialBattleRequest)` 启动或恢复同一实现；请求提供检查点、世界挂点、HUD 挂点及实际有差异的配置／适配器。模块内部建立格网映射、默认技能图标／头像／模型目录和朝向，管理 HUD、战斗环境、跳跃移动、技能演出、CD／回合／行动条、胜负与统计。角色职业动作组、地图专属头像／NPC 模型作为适配器注入，避免公共战斗反向依赖角色界面程序集。
+
+- 公共战斗属性装配器 `OfficialBattlePassivePropertyAssembler` 已接入主线地图、日常副本、竞技场、幻境之塔和技能伤害测试。入口只提供玩家存档／技能槽或模式专属怪物被动绑定；装配器统一按官方技能目录求取被动的品阶、槽级、位阶参数并以 checked 规则合并战斗属性，缺失技能项保持显式失败。幻兽能量支援技能仍由 `OfficialBattlePetEnergyAssembler` 保留其专用的能量与继承规则。这样各入口不再复制同一套被动属性公式，新增战斗模式可通过绑定列表接入公共实现。
+- 公共格网装配器 `OfficialBattleGridAssembler` 已接入日常副本、竞技场、幻境之塔、技能伤害测试和主线地图。各玩法只适配自己的场景 cell 数据；公共实现统一生成 `FightBattleGrid`、阻挡格、可行走 `MoveMask` 和空格网校验，保持原地面类型与高度阈值规则一致。
 - 各入口每帧只调用 `Tick(deltaTime)` 请求推进。准备、暂停和当前演出由模块统一门控；初始等待默认为既有本地入口的0.8秒，后续推进等待当前演出完成。删除独立的 `OfficialBattleProgressDriver` 和各 Runner 的战斗计时器；主线保留的延迟只用于地图／剧情过渡。所有实时结果交接均等待 `CanCompleteBattle`，步骤回执只保存检查点，防止致命一击尚未播完就销毁场景。已经结束的每日挑战存档在挂载之前按检查点结算恢复。
 - 家园各入口传入各自官方场景 GameId，并复用公共技能动作解析，移除始终返回 `idle_01` 的适配器。玩法适配器继续负责角色原挂点恢复、入口隐藏、消耗／奖励原子事务及持久化；战斗胜负、战报计数和检查点结构复用已有规则实现。请求支持后续周常／活动入口使用同一模块，但尚未接入的玩法不计为已迁移。主线 Map10 与技能试伤入口已通过模拟输入运行验证；日常副本、竞技场和幻境之塔已验证公共 Runner 启动、HUD 开始／倍速输入、真实胜负及主城恢复，三个入口窗口的完整点击流程仍待验证。
 - `OfficialBattleNativeAnimationLibrary` 和 `OfficialBattleNativeModelView` 已能加载已恢复的原生模型数据；固定版原动画采样包包含403个模型的4609条动画数据，纹理页按来源清单校验。岩灵／替身模型、HUD 绑定和部分骨骼姿态已做局部  Play Mode 检查；抽帧网格不等同 Animator 状态切换、逐骨骼混合或完整战斗演出。
