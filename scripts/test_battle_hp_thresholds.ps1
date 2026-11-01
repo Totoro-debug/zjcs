@@ -103,6 +103,20 @@ $unsupportedActionEnd = $catalog.CreateStatus(25144, 1, 1, 6)
 Assert-Hp (-not $unsupportedActionEnd.ActionEndRulesSupported) `
     'ActionEnd accepted a trigger with unsupported custom damage parameters.'
 
+# 24148 triggers its action-start skill for the configured action type.
+$actionStart = $catalog.CreateStatus(24148, 1, 1, 6)
+$owner.Statuses.Clear(); $owner.Statuses.Add($actionStart)
+$actionStartSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]@{
+    EntityId = 999902; ActionType = 1; Rank = 1; Level = 1; SubRank = 0
+}
+$actionStartInvocations = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectActionStartSkills(
+    $owner, $actionStartSkill, $units, [Zjcs.Combat.Official.FightRandomStream]::new(17))
+Assert-Hp ($actionStart.ActionStartRulesSupported -and $actionStartInvocations.Count -eq 1 `
+    -and $actionStartInvocations[0].Trigger.EntityId -eq 13498 `
+    -and $actionStartInvocations[0].SourceUnitId -eq $owner.Id `
+    -and $actionStartInvocations[0].TargetUnitId -eq $owner.Id) `
+    'ActionStart did not collect its configured skill invocation.'
+
 # MoveNear triggers collect range targets at start and after movement.
 $nearSource = Unit 20 100
 $nearTarget = Unit 21 100 1

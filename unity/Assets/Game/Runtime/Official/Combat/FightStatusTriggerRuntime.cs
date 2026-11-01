@@ -210,6 +210,43 @@ namespace Zjcs.Combat.Official
             return result;
         }
 
+        public static List<FightBattleStatusSkillInvocation> CollectActionStartSkills(
+            FightBattleUnitState actor, FightBattleSkillDefinition skill,
+            IReadOnlyList<FightBattleUnitState> units, FightRandomStream random)
+        {
+            var result = new List<FightBattleStatusSkillInvocation>();
+            if (actor == null || skill == null || units == null || actor.Statuses == null
+                || !FightBattleTargeting.IsSelectable(actor)) return result;
+            foreach (FightBattleStatusState status in actor.Statuses)
+            {
+                if (!FightSkillTriggerPolicy.AllowsStatus(skill, status)
+                    || !status.HasActionStartTrigger || !status.ActionStartRulesSupported
+                    || status.ActionStartActionTypes == null
+                    || !status.ActionStartActionTypes.Contains(skill.ActionType)) continue;
+                if (!Roll(status.ActionStartRate, random)) continue;
+                int added = 0;
+                foreach (FightBattleStatusStateTrigger trigger in status.ActionStartSkills)
+                {
+                    if (trigger == null || trigger.EntityId <= 0 || !Roll(trigger.BasePercent, random))
+                        continue;
+                    int sourceId = trigger.Source == 3
+                        ? FightStatusLifecycle.ResolveTargetUnitId(status,
+                            FightStatusLifecycle.TargetCreator, units) : status.OwnerId;
+                    if (sourceId <= 0) continue;
+                    result.Add(new FightBattleStatusSkillInvocation
+                    {
+                        Trigger = trigger.WithSource(status),
+                        SourceUnitId = sourceId,
+                        TargetUnitId = status.OwnerId,
+                        TargetPositionUnitId = actor.Id
+                    });
+                    added++;
+                }
+                if (added > 0) status.ActionStartTriggeredCount++;
+            }
+            return result;
+        }
+
         public static int ApplySkillEndStatuses(FightBattleUnitState actor,
             FightBattleSkillDefinition skill, IReadOnlyList<FightBattleUnitState> units,
             FightOfficialCombatCatalog catalog, FightRandomStream random,

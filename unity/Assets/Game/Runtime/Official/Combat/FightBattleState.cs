@@ -413,6 +413,13 @@ namespace Zjcs.Combat.Official
         public int RoundCheckSkillListenTarget;
         public List<FightBattleStatusStateTrigger> RoundCheckSkillSkills =
             new List<FightBattleStatusStateTrigger>();
+        public bool HasActionStartTrigger;
+        public bool ActionStartRulesSupported;
+        public float ActionStartRate = 1f;
+        public List<int> ActionStartActionTypes = new List<int>();
+        public List<FightBattleStatusStateTrigger> ActionStartSkills =
+            new List<FightBattleStatusStateTrigger>();
+        public int ActionStartTriggeredCount;
         // Official FightStatusHpAccDecreaseComponent. Damage is accumulated independently of cures
         // per the confirmed offline rule; the configured threshold is consumed on each trigger.
         public bool HasHpAccDecrease;
