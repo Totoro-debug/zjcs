@@ -15,6 +15,8 @@ def main():
         raise ValueError('Review partner player rules when changing the selected version')
     inputs, methods, outputs = {}, {}, {}
     declarations = {
+        'client-source/NpcDetailPanelGiftContent.cs': ['private void OnCustomFriendShipTag()'],
+        'common-source/Common/PlayerNpcDataWrap.cs': [],
         'common-source/Common/NpcMeetType.cs': [],
         'common-source/NpcHelper.cs': ['public static bool CanSendGiftToNpc(Player player, int giftId, int npcClassId)',
             'public static IEnumerable<PlayerItemDataWrap> GetAllCanSendToNpcGift(this Player player, int npcClassId)'],
@@ -36,11 +38,12 @@ def main():
         methods[name] = {signature: sha(method(text, signature).encode()) for signature in signatures}
     for name in ('unity/Assets/Game/Runtime/Offline/Progression/OfflineInventoryOperations.cs',
             'unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineProgressSession.cs',
+            'unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterPropertyProgress.cs',
             'unity/Assets/Game/Runtime/Official/Partners/NpcGiftRules.cs',
             'unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftConfiguration.cs',
             'assets/reference/partner-gift-configuration-source-manifest.json', 'unity/Assets/Official/Partners/partner-rules.json'):
         inputs[name] = sha((ROOT / name).read_bytes())
-    for name in ('OfflinePartnerGiftInventoryRules', 'OfflinePartnerGiftPlayer'):
+    for name in ('OfflinePartnerGiftInventoryRules', 'OfflinePartnerGiftPlayer', 'OfflinePartnerFriendshipTags'):
         path = ROOT / 'unity/Assets/Game/Runtime/Offline/PartnersUI' / (name + '.cs')
         meta(path)
         metadata = Path(str(path) + '.meta')
@@ -56,7 +59,9 @@ def main():
             'Atomic local gift command reuses ApplyCharacterMutation and OfflineInventoryOperations.Consume; no server implementation is claimed.',
             'Notifications run after saving, carry previous item count and previous/new friendship levels; external reload publishes actual differences.',
             'Existing local overflow-confirmation and arithmetic range checks are retained.',
-            'Custom-title reading/writing and function access remain explicit host ports; no moderation policy is inferred.'])
+            'Confirmed offline custom-title policy saves after original character/length checks and existing NPC/level eligibility.',
+            'Optional legacy title host ports remain available; the default local player reads/writes the current atomic save.',
+            'Custom-title response runs after saving; replay and write-failure retry use the existing character event mechanism.'])
     (ROOT / 'assets/reference/partner-gift-player-source-manifest.json').write_text(json.dumps(proof, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
     print('Recorded current partner inventory/player bridge and original client evidence.')
 

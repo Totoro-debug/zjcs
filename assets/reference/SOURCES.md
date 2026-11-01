@@ -220,3 +220,8 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 ### 当前伙伴名册条件来源
 
 `scripts/prepare_partner_conditions.py` 复用选定 `884_156692` 的反编译公共代码，逐字节核对工作来源与 `current/884_156692/official-code/`，提取 `DataHub`、条件枚举、字段默认值及 19 份条件／相遇／信物／比较原方法或代码块。输入为当前 `partner-rules.json` 中 148 条 NPC 的相遇／显示／等待条件与置顶功能 1011，引用闭包为 72 个条件号、九类条件；没有重新标记历史配置版本。原源码／方法、配置、生成器、适配绑定与输出哈希见 [partner-condition-source-manifest.json](partner-condition-source-manifest.json)。
+
+
+### 当前伙伴自定义称谓来源
+
+`prepare_partner_gift_player.py` 新增核对选定 `884_156692` 的 `NpcDetailPanelGiftContent.OnCustomFriendShipTag` 及 `PlayerNpcDataWrap` 原字段。输入、方法、当前存档结构、默认本地称谓提供者、玩家适配与验证源码哈希见 [partner-gift-player-source-manifest.json](partner-gift-player-source-manifest.json)。单机审核差异及实际验证范围统一见 [伙伴功能](../../docs/features/partners.md)。未新增美术载荷，未生成完整素材快照。

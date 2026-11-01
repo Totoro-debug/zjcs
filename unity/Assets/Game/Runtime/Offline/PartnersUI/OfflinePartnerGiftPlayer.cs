@@ -53,6 +53,15 @@ namespace Zjcs.Offline.PartnersUI
         private Snapshot known;
         public OfflinePartnerGiftPlayer(OfflineMainlineProgressSession session, OfficialPartnerCatalog catalog,
             OfflinePartnerGiftConfiguration configuration, Func<int, IProfessionItemInfo> getItemInfo,
+            Func<bool> addressListLimited, Func<long> clock = null)
+            : this(session, catalog, configuration, getItemInfo, addressListLimited,
+                new OfflinePartnerFriendshipTags(session, configuration), clock) { }
+        private OfflinePartnerGiftPlayer(OfflineMainlineProgressSession session, OfficialPartnerCatalog catalog,
+            OfflinePartnerGiftConfiguration configuration, Func<int, IProfessionItemInfo> getItemInfo,
+            Func<bool> addressListLimited, OfflinePartnerFriendshipTags tags, Func<long> clock)
+            : this(session, catalog, configuration, getItemInfo, addressListLimited, tags.Get, tags.SetFromPlayer, clock) { }
+        public OfflinePartnerGiftPlayer(OfflineMainlineProgressSession session, OfficialPartnerCatalog catalog,
+            OfflinePartnerGiftConfiguration configuration, Func<int, IProfessionItemInfo> getItemInfo,
             Func<bool> addressListLimited, Func<int, string> readTag, Action<int, string> writeTag, Func<long> clock = null)
         {
             this.session = session ?? throw new ArgumentNullException(nameof(session));

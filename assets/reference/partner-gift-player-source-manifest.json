@@ -1,7 +1,9 @@
 {
   "manifest": "884_156692",
-  "generator_sha256": "d1ea70bd6aa9bc56165986cf50ef34935b0daa6905631613ecd35885977e9347",
+  "generator_sha256": "3907b6f46549eb5750520d9e5a20c71d35cfc30254e9fd8b0dc7bc06077eae54",
   "source_sha256": {
+    ".tools/source-packages/official-code/client-source/NpcDetailPanelGiftContent.cs": "2555857a851ee7d13b59d674ee9614de7eea9c973e8644b03f81a4fe8b835a6a",
+    ".tools/source-packages/official-code/common-source/Common/PlayerNpcDataWrap.cs": "43f73f3d2654dc14f0c8c4e11cdde157dcc7be6dfc2b98ca274ddf61d7fa64c5",
     ".tools/source-packages/official-code/common-source/Common/NpcMeetType.cs": "8092bb859796db7d2b41683f837b621cf9b02aaff7c52084d601e6f106dd464a",
     ".tools/source-packages/official-code/common-source/NpcHelper.cs": "37ae9a0c2c0acfdc482bc71682c52608777d749c148deec0729bc1c0ffeca0f8",
     ".tools/source-packages/official-code/common-source/Common/NpcInfoParser.cs": "2323757139ca2742d3a563e983439feaefd03136d71a0b3094583a7c9d6e7eee",
@@ -10,12 +12,17 @@
     ".tools/source-packages/official-code/common-source/Common/PlayerItemDataWrap.cs": "cb377aac1d7443c4096d9e56c6e09c9fff186ac63b88df6a57126e1bb08fc186",
     "unity/Assets/Game/Runtime/Offline/Progression/OfflineInventoryOperations.cs": "a5d785eece9dea609d5a3ebc0beb73bb329eaac42e596fe7127307cf71bffd45",
     "unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineProgressSession.cs": "fd8af403d90c1919156c5ba36a2f4ad73c05ddd21c26314b35631b451d3b1699",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterPropertyProgress.cs": "f9c0eef14a76c91fc2ff7118415c8a8f3d53dfe38acab1537d3574fe0a85e34a",
     "unity/Assets/Game/Runtime/Official/Partners/NpcGiftRules.cs": "879827f31cca059fdc95b15682bc957579d8416cfbb6b9efd24e60f38320b7c8",
     "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftConfiguration.cs": "f8470162e7c73a5471bbc59ad43c89a6a01fbf5adb5d0118bdf75f539fce910e",
     "assets/reference/partner-gift-configuration-source-manifest.json": "69edd319e488f4658d8bc7ace5863759df8d1a1bbd6430b9fd9947df3c54f62b",
     "unity/Assets/Official/Partners/partner-rules.json": "1ab5dd32c4ef68297aea6a847cb0e5ced686634bb4fb7f4c28a1aa7bf70398fd"
   },
   "methods": {
+    "client-source/NpcDetailPanelGiftContent.cs": {
+      "private void OnCustomFriendShipTag()": "19515a05f01e66c2b4bc32a5739de4ae62750e8d26af78a35e7ae0605457cc73"
+    },
+    "common-source/Common/PlayerNpcDataWrap.cs": {},
     "common-source/Common/NpcMeetType.cs": {},
     "common-source/NpcHelper.cs": {
       "public static bool CanSendGiftToNpc(Player player, int giftId, int npcClassId)": "0a5ccb26b9fe3d77f9d5cef2cc63e2ad0293863da1e8c149fb6ae1f440e169ae",
@@ -41,12 +48,14 @@
   "outputs": {
     "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftInventoryRules.cs": "0ad23a85f9398b607d191122c1511dac1a2bc9383795d714f667d84786f768d8",
     "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftInventoryRules.cs.meta": "9a33e367539814e8eb9d13e04aace9463a7871179d84a238e74d1c0f2fe82801",
-    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftPlayer.cs": "beb627b2d401b000ff9e0aacc83094b31ee62b4c125c1d1a608c8809c1ce7ec9",
-    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftPlayer.cs.meta": "4b6298d714843c4103ea7d5c0e147b4e8f6262c071e8eccc5aa3a0914ed4bb86"
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftPlayer.cs": "978739fce163073b387405cdf4a98888528b292746af5002119c649d9b8079a6",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftPlayer.cs.meta": "4b6298d714843c4103ea7d5c0e147b4e8f6262c071e8eccc5aa3a0914ed4bb86",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerFriendshipTags.cs": "9b73be9ec3d310a0eab1c7a2cd29b9e7fd042ff7346de5c621337c650bbbb2cf",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerFriendshipTags.cs.meta": "7d5c6fbb196542dff3ca36041de374513d6f45a6e22222274c084989df691fb4"
   },
   "validation_source_sha256": {
     "scripts/prepare_partner_gift_player_validation.py": "529903b936a0885552b0b66ad1921505ed17cc6bc359e949479b1fec49eff99e",
-    "scripts/fixtures/partner_gift_player_validation.cs": "117b177e5d0e342ac2b63343e38b6d17f115c175265f5e5a9e5b3665e76ee298"
+    "scripts/fixtures/partner_gift_player_validation.cs": "5f612a796a17cadf7d2780bb7d94643478ae60e2790b8072b1cab51d5edc6ffa"
   },
   "adaptations": [
     "Current selected tables supply item types, exclusive gifts, preferences, rank caps and cumulative friendship.",
@@ -54,6 +63,8 @@
     "Atomic local gift command reuses ApplyCharacterMutation and OfflineInventoryOperations.Consume; no server implementation is claimed.",
     "Notifications run after saving, carry previous item count and previous/new friendship levels; external reload publishes actual differences.",
     "Existing local overflow-confirmation and arithmetic range checks are retained.",
-    "Custom-title reading/writing and function access remain explicit host ports; no moderation policy is inferred."
+    "Confirmed offline custom-title policy saves after original character/length checks and existing NPC/level eligibility.",
+    "Optional legacy title host ports remain available; the default local player reads/writes the current atomic save.",
+    "Custom-title response runs after saving; replay and write-failure retry use the existing character event mechanism."
   ]
 }

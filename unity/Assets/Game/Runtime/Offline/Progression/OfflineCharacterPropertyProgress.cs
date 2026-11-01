@@ -167,6 +167,7 @@ namespace Zjcs.Offline.Progression
     }
     [System.Serializable] public sealed class OfflineNpcFriendship
     {
+        public string CustomFriendshipTag = string.Empty;
         public int NpcClassId;
         public int Level;
         public long FriendshipExp;

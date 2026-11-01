@@ -54,7 +54,7 @@ public static class PartnerGiftPlayerValidation
             ClassId = I(row, "ClassId"), Icon = (string)row["RawIcon"], IconEffect = (string)row["IconEffect"],
             Quality = (Quality)I(row, "Quality"), CanOverlap = (bool)row["CanOverlap"] });
         bool limited = false;
-        // Custom-title moderation is deliberately outside this inventory fixture.
+        // The original delegated constructor is also retained for explicit hosts.
         var player = new OfflinePartnerGiftPlayer(session, catalog, configuration, id => infos[id], () => limited,
             id => "", (id, tag) => { throw new NotSupportedException("Custom-title policy is not this fixture's subject."); }, () => 1000);
         Action<long, int, int> seed = (exp, rank, level) => {
@@ -146,7 +146,39 @@ public static class PartnerGiftPlayerValidation
                 eligibilityCases++;
             }
         Require(eligibilityCases == 17020 && !rules.CanSendGiftToNpc(-1, 8401), "complete eligibility coverage");
-        Debug.Log("PARTNER_GIFT_PLAYER_PASSED: actual local transactions, live views, saved-before-notify ordering, replay, inventory units, external reload, caps/overflow, " + eligibilityCases + " eligibility combinations. PlayMode=True; complete UI/Player/custom-title save not covered.");
+        seed(maximum.FriendshipExp, topRank, 100);
+        var tags = new OfflinePartnerFriendshipTags(session, configuration);
+        Require(tags.Get(8401) == "" && tags.CheckText(null) == 1513 && tags.CheckText("") == 1513
+            && tags.CheckText(new string('a', 100)) == 1514 && tags.CheckText("\uD83D\uDE00") == 1150, "original title checks and legacy default");
+        var realPlayer = new OfflinePartnerGiftPlayer(session, catalog, configuration, id => infos[id], () => false);
+        var realNpc = realPlayer.GetNpcByClassId(8401);
+        int titleCallbacks = 0;
+        Action<string> savedTitle = title => {
+            var reopened = OfflineMainlineProgressSession.OpenForCommerce(slots, slot);
+            Require(reopened.Save.Player.CharacterProperties.NpcFriendships.Single(npc => npc.NpcClassId == 8401).CustomFriendshipTag == title,
+                "title success follows disk commit");
+            titleCallbacks++;
+        };
+        byte[] titleBefore = File.ReadAllBytes(slots.GetProgressPath(slot));
+        bool titleWriteFailed = false;
+        using (var locked = new FileStream(slots.GetProgressPath(slot), FileMode.Open, FileAccess.Read, FileShare.Read))
+        {
+            try { tags.Set(8401, "\u631A\u53CB", "title-retry", savedTitle); } catch (IOException) { titleWriteFailed = true; }
+        }
+        Require(titleWriteFailed && titleCallbacks == 0 && realNpc.CustomFriendShipTag == ""
+            && titleBefore.SequenceEqual(File.ReadAllBytes(slots.GetProgressPath(slot))), "title failure preserves save, live view and callback");
+        Require(tags.Set(8401, "\u631A\u53CB", "title-retry", savedTitle).IsApplied && titleCallbacks == 1
+            && realNpc.CustomFriendShipTag == "\u631A\u53CB", "title retry and live player view");
+        Require(tags.Set(8401, "different", "title-retry").Status == ProgressionResultStatus.Unchanged
+            && tags.Get(8401) == "\u631A\u53CB", "replayed title identity cannot apply another text");
+        realPlayer.SetNpcFriendshipTag(8401, "\u631A\u53CB");
+        Require(tags.Get(8401) == "\u631A\u53CB", "original post-response player setter is harmless");
+        Require(!tags.Set(8401, "", "empty-title").IsApplied && !tags.Set(-1, "a", "missing-title").IsApplied, "invalid title commands rejected");
+        Require(session.ApplyCharacterMutation(value => value.CharacterProperties.NpcFriendships.Single().Level = 99).IsApplied,
+            "seed title level below official requirement");
+        Require(!tags.Set(8401, "a", "low-level-title").IsApplied, "title level threshold rechecked");
+        realPlayer.Reload(); Require(realNpc.CustomFriendShipTag == "\u631A\u53CB", "title survives later transactions and reload");
+        Debug.Log("PARTNER_GIFT_PLAYER_PASSED: actual local transactions, live views, save ordering, replay, inventory units, caps/overflow, confirmed local title persistence/failure/retry, " + eligibilityCases + " eligibility combinations. PlayMode=True; complete UI/Player not covered.");
     }
     private static int I(Dictionary<string, object> row, string key) => Convert.ToInt32(row[key]);
     private static void Require(bool value, string message) { if (!value) throw new InvalidOperationException("Partner gift player: " + message); }

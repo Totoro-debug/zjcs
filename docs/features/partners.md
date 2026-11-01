@@ -188,13 +188,15 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 ### 当前库存与赠礼事务桥接（局部）
 
-`Offline/PartnersUI/OfflinePartnerGiftPlayer` 将原 `IPartnerGiftPlayer` 端口接到实际 `OfflineMainlineProgressSession`，不复制一份玩家背包供界面修改。伙伴和礼物视图按本地物品／伙伴号保持身份，取值始终读取最新 `Save.Player`，因此事务替换玩家对象或重读存档后仍能看到新数量、等级和好感。物品显示配置、功能门槛与称谓读写由宿主显式绑定；称谓服务端审核差异尚未确认，不在这里假定保存规则。
+`Offline/PartnersUI/OfflinePartnerGiftPlayer` 将原 `IPartnerGiftPlayer` 端口接到实际 `OfflineMainlineProgressSession`，不复制一份玩家背包供界面修改。伙伴和礼物视图按本地物品／伙伴号保持身份，取值始终读取最新 `Save.Player`，因此事务替换玩家对象或重读存档后仍能看到新数量、等级和好感。物品显示配置与功能门槛由宿主显式绑定；默认称谓读写使用下述实际本地存档提供者，既有显式宿主端口继续可用。
 
 `OfflinePartnerGiftInventoryRules` 按当前版 `NpcInfoParser.ProcessNpcExclusiveGift` 和 `NpcHelper.CanSendGiftToNpc` 建立完整专属礼物归属，保留原背包顺序、礼物／信物类型过滤、不可赠送信物和星神非偏好礼物的排除。赠礼命令只消费当前 `884_156692` 的配置提供者，不改用历史 NPC 阈值或物品表。校验后复用本地 `ApplyCharacterMutation` 和 `OfflineInventoryOperations.Consume`，将礼物数量、单位记录、累计好感、好感等级及重复请求凭据共同落盘；旧存档仅有等级但经验为零时，界面和事务统一沿用已有单机接口的原等级阈值恢复。保留现有算术越界拒绝，以及超过全局最高经验须确认、确认后保留超出经验的已确认方案。
 
 通知在保存成功后发出，物品通知携带原 `preCount`，好感通知先携带旧／新等级，再通知好感变化。外部存档更新按实际差异刷新；写入失败不发布本次赠礼通知、不改变内存数量／好感或主存档，释放文件占用后可用同一请求重试。代码、原方法、配置依赖及验证源码哈希见[玩家桥接凭据](../../assets/reference/partner-gift-player-source-manifest.json)，记录入口为 `scripts/prepare_partner_gift_player.py`。
 
-`prepare_partner_gift_player_validation.py` 在隔离 Unity Play Mode 使用实际玩家／事务代码与隔离存档，通过实时视图、偏好赠礼、保存后通知参数与顺序、单位记录扣除、重复请求、库存不足、专属礼物拒绝、外部存档刷新、文件占用写入失败／同请求重试、旧等级经验恢复、恰好满级、溢出取消／确认及阶位限制；并检查全部 17,020 组伙伴／礼物归属组合。静态检查（81,564 个 GUID）、主工程导入／编译和 `Zjcs.Editor.ProjectTools.Validate` 通过。这仍是状态提供者的 Play Mode 验证，尚未安装到正式窗口；完整原 UI 模拟点击、称谓保存、实际 Windows Player 与发布尚未完成。
+`OfflinePartnerFriendshipTags` 将自定义称谓保存到实际伙伴记录的 `CustomFriendshipTag`，旧存档缺字段时读取为空。命令重新读档，依次检查原字库、原长度、当前伙伴资格和原 100 级好感门槛，再与请求凭据原子落盘；写盘成功后才执行原窗口所需的成功回调。默认玩家视图随存档对象替换读取最新称谓；原响应回调再次设置同值时不重复写盘。文本审核的单机差异见「自定义实现」。
+
+`prepare_partner_gift_player_validation.py` 在隔离 Unity Play Mode 使用实际玩家／事务代码与隔离存档，通过实时视图、偏好赠礼、保存后通知参数与顺序、单位记录扣除、重复请求、库存不足、专属礼物拒绝、外部存档刷新、文件占用写入失败／同请求重试、旧等级经验恢复、恰好满级、溢出取消／确认及阶位限制；并检查全部 17,020 组伙伴／礼物归属组合。称谓覆盖原校验错误码、伙伴／好感资格、旧存档空值、写入失败时无成功回调、同请求重试、重复请求及读档恢复。静态检查（84,294 个 GUID）、主工程导入／编译和 `Zjcs.Editor.ProjectTools.Validate` 通过。这仍是状态提供者的 Play Mode 验证，尚未安装到正式窗口；完整原 UI 模拟点击、原输入弹窗、实际 Windows Player 与发布尚未完成。
 
 ### 原面板页签控制器（局部）
 
@@ -222,7 +224,7 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 `PartnerConditionValidation.Run` 在隔离 Unity 工程通过九类条件、比较默认分支、基础等级数据优先级、物品数据后备、复合短路／空列表／缺失子项、直接信物提取与当前相遇事务断言，包含实际文件锁写盘失败、回滚、同事件重试、逐件记录扣除、商人／导师和读档恢复。原生名册及卡片均切换为当前配置，在 URP Play Mode 通过模拟鼠标射线、显示全部、排序／反向／关闭遮罩、商人／导师卡片、滚动、信物不足、连续相遇只扣一次、700 毫秒解锁、置顶及存档恢复；已查看名册五帧和卡片五帧实际 GPU 画面。静态检查（84,287 个 GUID）、主工程导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 通过。本节仍为名册与事务局部验证，完整页面宿主、正式弹窗及 Windows Player 尚未完成。
 
-当前名册唯一自动伙伴 8402 的原 `IsAutoMeet` 为真、相遇条件为基础等级至少 1。`MsgPlayerNpc.OnMessage` 只消费服务器新增数据并触发通知，`NPCHandler.MainPlayer_OnAddNewNpc` 只处理自动结识广播；尚未取得服务器自动触发实现。是否在创建角色及读档后检查原条件并自动结识，已作为具体单机差异询问用户，未据推测添加触发逻辑。
+当前名册唯一自动伙伴 8402 的原 `IsAutoMeet` 为真、相遇条件为基础等级至少 1。`MsgPlayerNpc.OnMessage` 只消费服务器新增数据并触发通知，`NPCHandler.MainPlayer_OnAddNewNpc` 只处理自动结识广播；尚未取得服务器自动触发实现。本地触发方案已确认，见下文「自定义实现」，创建角色及读档接线仍待完成。
 
 ### 已迁移的送礼规则与存档接口（局部）
 
@@ -233,6 +235,8 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 验证：`scripts/test_partner_gifts.ps1` 编译实际 C# 规则，并使用隔离 Unity `2022.3.57f1c2` 工程编译实际养成依赖、加载工程现有官方配置，验证恰好升满、溢出取消／确认、重复提交、库存不足、存档重新读取、自动选量及 90 项其他伙伴专属礼物的排除。纯规则测试另覆盖偏好排序、已有选量、库存耗尽、两种取整差异及数值溢出。送礼仍为 Editor 中的接口与存档验证，尚未验证官方送礼界面、对应模拟输入、Play Mode 画面或 Windows Player。
 
 ## 自定义实现
+
+用户已确认：自定义伙伴称谓通过原字库与长度校验后直接在本地保存，不等待线上文本审核；保留原伙伴资格及好感等级门槛。自动伙伴在创建角色及读档后检查原相遇条件，满足且尚未拥有时自动结识，初始好感使用原配置；此触发时机是确认的单机方案，不声称取得服务器实现。
 
 服务端通话创建／最终确认方法未取得。用户补证已完成前段并满足后续条件时可当天续接，超出好感最高值经原浪费确认后仍累计；本地按此保存，不反推旧结识日期。
 
