@@ -266,6 +266,7 @@ namespace Zjcs.Presentation.Home
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
             controller.HudControlClicked += OnHudControlClicked;
             controller.StepCompleted += OnStepCompleted;
+            controller.BattleCompleted += OnBattleCompleted;
             OfficialBattleHudCatalog hudCatalog = OfficialBattleHudCatalog.LoadDefault();
             Sprite fallback = hudCatalog.FindSprite("C_none-fa3e084e40.png");
             if (fallback == null) throw new InvalidOperationException("Official battle fallback portrait is missing.");
@@ -301,13 +302,12 @@ namespace Zjcs.Presentation.Home
         private void Update()
         {
             if (controller == null || controller.Checkpoint == null || resultHandled) return;
-            FightBattleCheckpoint checkpoint = controller.Checkpoint;
-            if (controller.CanCompleteBattle)
-            {
-                CompleteBattle(checkpoint.Outcome.Won);
-                return;
-            }
             controller.Tick(Time.deltaTime);
+        }
+
+        private void OnBattleCompleted(FightBattleCheckpoint checkpoint)
+        {
+            CompleteBattle(checkpoint != null && checkpoint.Outcome != null && checkpoint.Outcome.Won);
         }
 
         private void OnStepCompleted(FightBattleExecutionResult result)
@@ -428,6 +428,7 @@ namespace Zjcs.Presentation.Home
             if (controller != null)
             {
                 controller.StepCompleted -= OnStepCompleted;
+                controller.BattleCompleted -= OnBattleCompleted;
                 controller.HudControlClicked -= OnHudControlClicked;
                 controller.DisposeSession();
                 Destroy(controller);

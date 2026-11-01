@@ -154,6 +154,7 @@ namespace Zjcs.Presentation.World
             battleController.transform.SetParent(transform, false);
 
             battleController.HudControlClicked += OnBattleHudControl;
+            battleController.BattleCompleted += OnBattleCompleted;
 
             Sprite fallbackPortrait = hud.uiCatalog.FindSprite("res://assets/official/sprites/C_none-fa3e084e40.png");
             if (fallbackPortrait == null) throw new InvalidOperationException("Official Map10 fallback battle portrait is missing.");
@@ -216,6 +217,11 @@ namespace Zjcs.Presentation.World
 
         private Action battleCompletion;
         private Map10RuntimeStage activeBattleStage;
+
+        private void OnBattleCompleted(FightBattleCheckpoint checkpoint)
+        {
+            FinishBattle();
+        }
 
         /// <summary>
         /// Persists the running battle so a map re-entry after closing the game can restore it. The
@@ -638,6 +644,7 @@ namespace Zjcs.Presentation.World
             if (battleController != null)
             {
                 battleController.HudControlClicked -= OnBattleHudControl;
+                battleController.BattleCompleted -= OnBattleCompleted;
                 battleController.DisposeSession();
                 Destroy(battleController.gameObject);
                 battleController = null;

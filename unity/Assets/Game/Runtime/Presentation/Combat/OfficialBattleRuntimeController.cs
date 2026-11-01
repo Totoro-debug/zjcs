@@ -41,6 +41,7 @@ namespace Zjcs.Presentation.Combat
         private bool statueEffectsEnded;
         private FightProcessPlayback<float> stepPlayback;
         private OfficialBattlePreparationView preparationView;
+        private bool battleCompletedRaised;
 
         // The game uses mouse input; acceptance can feed the same pointer path without OS input.
         public Func<OfficialBattlePointerFrame> PreparationPointerProvider { get; set; }
@@ -49,6 +50,7 @@ namespace Zjcs.Presentation.Combat
         public event Action<string> HudControlClicked;
         public event Action<int> SpeedChanged;
         public event Action<FightBattlePhase, FightBattlePhase> PhaseChanged;
+        public event Action<FightBattleCheckpoint> BattleCompleted;
         public event Action StepPresentationCompleted;
         public event Action PreparationPositionChanged;
 
@@ -95,6 +97,7 @@ namespace Zjcs.Presentation.Combat
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (request.Checkpoint == null) throw new ArgumentNullException(nameof(request.Checkpoint));
             if (request.WorldRoot == null) throw new ArgumentNullException(nameof(request.WorldRoot));
+            battleCompletedRaised = false;
             if (float.IsNaN(request.InitialStepDelay) || float.IsInfinity(request.InitialStepDelay) || request.InitialStepDelay < 0)
                 throw new ArgumentOutOfRangeException(nameof(request.InitialStepDelay));
             var checkpoint = request.Checkpoint;
@@ -449,11 +452,18 @@ namespace Zjcs.Presentation.Combat
 
         private void CompleteStepPresentation()
         {
+            FightBattleCheckpoint completedCheckpoint = null;
             if (executor != null && executor.State.Finished)
             {
                 phases.BeginBattleEnd();
                 EndBattle();
+                if (!battleCompletedRaised)
+                {
+                    battleCompletedRaised = true;
+                    completedCheckpoint = executor.State;
+                }
             }
+            if (completedCheckpoint != null) BattleCompleted?.Invoke(completedCheckpoint);
             StepPresentationCompleted?.Invoke();
         }
 
@@ -521,6 +531,7 @@ namespace Zjcs.Presentation.Combat
             sessionOptions = null;
             PreparationPointerProvider = null;
             hudVisible = true;
+            battleCompletedRaised = false;
         }
 
         private void OnDestroy()

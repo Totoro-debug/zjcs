@@ -140,6 +140,7 @@ namespace Zjcs.Presentation.Home
 
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
             controller.StepCompleted += OnStepCompleted;
+            controller.BattleCompleted += OnBattleCompleted;
             ArenaRuntimeAppearanceSet guardAppearance = (guard.appendAppearances
                     ?? Array.Empty<ArenaRuntimeAppearanceSet>())
                 .FirstOrDefault(value => value != null && value.sex == host.Arena.ActiveGuardSex);
@@ -190,12 +191,12 @@ namespace Zjcs.Presentation.Home
         private void Update()
         {
             if (controller == null || controller.Checkpoint == null || resultHandled) return;
-            if (controller.CanCompleteBattle)
-            {
-                FinishBattle(controller.Checkpoint.Outcome.Won);
-                return;
-            }
             controller.Tick(Time.deltaTime);
+        }
+
+        private void OnBattleCompleted(FightBattleCheckpoint checkpoint)
+        {
+            FinishBattle(checkpoint != null && checkpoint.Outcome != null && checkpoint.Outcome.Won);
         }
 
         private void OnStepCompleted(FightBattleExecutionResult result)
@@ -406,6 +407,7 @@ namespace Zjcs.Presentation.Home
             if (controller != null)
             {
                 controller.StepCompleted -= OnStepCompleted;
+                controller.BattleCompleted -= OnBattleCompleted;
                 controller.DisposeSession();
                 Destroy(controller);
                 controller = null;

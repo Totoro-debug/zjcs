@@ -58,6 +58,7 @@ namespace Zjcs.Presentation.Home
             FightOfficialCombatCatalog combat = assets.Load();
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
             controller.HudControlClicked += OnControl;
+            controller.BattleCompleted += OnBattleCompleted;
             controller.Begin(new OfficialBattleRequest
             {
                 Checkpoint = checkpoint,
@@ -91,9 +92,12 @@ namespace Zjcs.Presentation.Home
         {
             if (controller == null || complete) return;
             controller.Tick(Time.deltaTime);
-            if (!controller.CanCompleteBattle) return;
+        }
+
+        private void OnBattleCompleted(FightBattleCheckpoint checkpoint)
+        {
+            if (complete || checkpoint == null) return;
             complete = true;
-            FightBattleCheckpoint checkpoint = controller.Checkpoint;
             DisposeBattle();
             Completed?.Invoke(checkpoint);
             Destroy(this);
@@ -112,7 +116,8 @@ namespace Zjcs.Presentation.Home
         private void DisposeBattle()
         {
             if (controller != null) {
-                controller.HudControlClicked -= OnControl; controller.DisposeSession(); Destroy(controller); controller = null;
+                controller.HudControlClicked -= OnControl; controller.BattleCompleted -= OnBattleCompleted;
+                controller.DisposeSession(); Destroy(controller); controller = null;
             }
             if (playerTransform != null) {
                 playerTransform.SetParent(previousPlayerParent, false); playerTransform.localPosition = previousPlayerPosition;

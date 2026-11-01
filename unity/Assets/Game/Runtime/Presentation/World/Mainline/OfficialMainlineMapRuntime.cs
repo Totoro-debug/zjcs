@@ -263,7 +263,6 @@ namespace Zjcs.Presentation.World
                 try
                 {
                     if (battleController.Tick(Time.deltaTime)) SaveActiveBattle(false);
-                    if (battleController.CanCompleteBattle) FinishBattle();
                 }
                 catch (Exception error)
                 {

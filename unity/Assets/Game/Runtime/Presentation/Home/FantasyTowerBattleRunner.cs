@@ -174,6 +174,7 @@ namespace Zjcs.Presentation.Home
             FightOfficialCombatCatalog combat = combatAssets.Load();
             controller = gameObject.AddComponent<OfficialBattleRuntimeController>();
             controller.StepCompleted += OnStepCompleted;
+            controller.BattleCompleted += OnBattleCompleted;
             controller.Begin(new OfficialBattleRequest
             {
                 Checkpoint = checkpoint,
@@ -298,8 +299,12 @@ namespace Zjcs.Presentation.Home
             if (controller == null) return;
             FightBattleCheckpoint checkpoint = controller.Checkpoint;
             if (checkpoint == null) return;
-            if (controller.CanCompleteBattle) { Complete(checkpoint.Outcome.Won); return; }
             controller.Tick(Time.deltaTime);
+        }
+
+        private void OnBattleCompleted(FightBattleCheckpoint checkpoint)
+        {
+            Complete(checkpoint != null && checkpoint.Outcome != null && checkpoint.Outcome.Won);
         }
 
         private void OnStepCompleted(FightBattleExecutionResult result)
@@ -380,6 +385,7 @@ namespace Zjcs.Presentation.Home
             if (controller != null)
             {
                 controller.StepCompleted -= OnStepCompleted;
+                controller.BattleCompleted -= OnBattleCompleted;
                 controller.DisposeSession();
                 Destroy(controller); controller = null;
             }
