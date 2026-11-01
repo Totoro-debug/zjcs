@@ -154,8 +154,14 @@ namespace Zjcs.Combat.Official
             int actorRound = unchecked(actor.SkillState.Round + 1);
             skillState.BeginRound(actorRound);
             if (actor.PetEnergy != null && actor.PetEnergy.Enabled
-                && actor.PetEnergy.OwnerUnitId > 0 && actor.PetEnergy.OwnerUnitId != actor.Id)
-                FightBattlePetEnergyRuntime.RecoverAtPetRoundStart(actor);
+                && actor.PetEnergy.OwnerUnitId > 0)
+            {
+                // Until the visible PetEntity is registered as its own unit, the owner turn is
+                // the deterministic offline equivalent of the pet's round-start callback.
+                if (actor.PetEnergy.PetUnitId == actor.Id
+                    || actor.PetEnergy.PetUnitId != actor.PetEnergy.OwnerUnitId)
+                    FightBattlePetEnergyRuntime.RecoverAtPetRoundStart(actor);
+            }
             if (statusCatalog != null && actor.Statuses != null)
                 foreach (FightBattleStatusState status in actor.Statuses)
                     if (status != null && statusCatalog.StatusStopsSkillCooldown(status.ClassId))
