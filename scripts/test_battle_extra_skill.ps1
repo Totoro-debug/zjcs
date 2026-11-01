@@ -71,10 +71,11 @@ Assert-Extra ($result.Event.SkillCasts.Count -eq 2) 'Base or extra cast event co
 $zero = Invoke-ExtraBattle (New-BaseSkill 10640 0.0)
 Assert-Extra (@($zero.Event.SkillCasts | Where-Object { $_.Slot -eq -1 }).Count -eq 0) 'Zero-rate extra skill was released'
 
-# Extra skills do not cascade: releasing 12090 (which itself has extras) adds one level only.
+# The confirmed offline rule follows the extra list on 12090 after it is released as an extra.
 $nested = Invoke-ExtraBattle (New-BaseSkill 12090 1.0)
 $nestedExtras = @($nested.Event.SkillCasts | Where-Object { $_.Slot -eq -1 })
-Assert-Extra ($nestedExtras.Count -eq 1 -and $nestedExtras[0].SkillEntityId -eq 12090) 'Extra skill cascade was not limited to one level'
+Assert-Extra ($nestedExtras.Count -gt 1 -and $nestedExtras[0].SkillEntityId -eq 12090) 'Configured extra skill cascade was truncated'
+Assert-Extra (@($nestedExtras | Where-Object { $_.SkillEntityId -in @(12093, 12094) }).Count -gt 0) 'Nested official extra skills were not executed'
 
 # Attached action-end skills use the triggering skill's cultivation too.
 $cultivated = New-BaseSkill 63434 1.0
@@ -85,4 +86,4 @@ $status = @($inherited.Checkpoint.Units | ForEach-Object { $_.Statuses } |
 Assert-Extra ($status.Count -gt 0) 'Official attached skill did not apply its configured status'
 Assert-Extra ($status[0].SourceSkillRank -eq 6 -and $status[0].SourceSkillLevel -eq 17 -and $status[0].SourceSubRank -eq 10) 'Attached skill did not inherit its triggering skill cultivation'
 
-Write-Output 'Battle extra skill checks passed: official mapping, rate release, zero rate, single-level cascade and inherited cultivation.'
+Write-Output 'Battle extra skill checks passed: official mapping, rate release, zero rate, configured cascade and inherited cultivation.'

@@ -16,7 +16,7 @@ namespace Zjcs.Editor
 {
     // Invoked by the existing isolated Play Mode runner. No result callbacks or
     // executor internals are used to manufacture a completed battle.
-    public static class HomeBattleHostPlayModeAcceptance
+    public static partial class HomeBattleHostPlayModeAcceptance
     {
         public static void Run()
         {
@@ -312,9 +312,11 @@ namespace Zjcs.Editor
             Require(controller != null && controller.Checkpoint != null && controller.HasBattleEnvironment,
                 name + " did not mount the common battle module/environment.");
             FightBattleCheckpoint checkpoint = controller.Checkpoint;
+            TriggerChainProbe triggerChains = ConfigureTriggerChainProbe(checkpoint);
             int initialCounter = checkpoint.Counter;
             controller.StepCompleted += result => {
                 checkpoint = result.Checkpoint;
+                triggerChains?.Observe(checkpoint);
                 if (checkpoint.Counter == initialCounter + 1 || checkpoint.Finished)
                     Debug.Log("[Battle hosts] " + name + " step=" + checkpoint.Counter
                         + " finished=" + checkpoint.Finished);
@@ -377,6 +379,7 @@ namespace Zjcs.Editor
                 && checkpoint.Counter > initialCounter,
                 name + " disappeared without executing and completing a real battle: counter="
                     + checkpoint.Counter + ", finished=" + checkpoint.Finished + ", initial=" + initialCounter);
+            triggerChains?.Verify(name, checkpoint);
             yield return SettleUi();
             yield return Capture(output, name + "-result");
             Debug.Log("[Battle hosts] " + name + " completed counter=" + checkpoint.Counter + " won=" + checkpoint.Outcome.Won);

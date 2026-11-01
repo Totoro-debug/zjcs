@@ -79,7 +79,8 @@ namespace Zjcs.Combat.Official
                     && (status.SkillEntityClassId <= 0 || status.SkillEntityClassId != ItemId(skill))) continue;
                 if ((status.FalloffTarget & 4) != 0 && status.CreatorId != source.Id) continue;
                 if ((status.FalloffTarget & 8) != 0 && status.ApplyingSkillItemId != ItemId(skill)) continue;
-                if (status.IsCheckSkillTrigger && skill != null && !skill.CanTriggerChild) continue;
+                if (status.IsCheckSkillTrigger
+                    && !FightSkillTriggerPolicy.AllowsStatus(skill, status)) continue;
 
                 processed.Add(statusKey);
                 if (status.Rate <= 0 || (status.Rate < 1.0 && (random == null || random.Next() >= status.Rate)))

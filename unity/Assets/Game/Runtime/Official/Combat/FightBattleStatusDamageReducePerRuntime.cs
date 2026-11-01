@@ -97,7 +97,8 @@ namespace Zjcs.Combat.Official
             foreach (FightBattleStatusState status in target.Statuses)
             {
                 FightBattleStatusDamageReducePerInfo info = status == null ? null : status.DamageReducePer;
-                if (info == null || !info.Supported || !Eligible(info, source, target, skill,
+                if (!FightSkillTriggerPolicy.AllowsStatus(skill, status)
+                    || info == null || !info.Supported || !Eligible(info, source, target, skill,
                     damageType, isCure) || info.MaxCount >= 0 && info.TriggeredCount >= info.MaxCount)
                     continue;
 

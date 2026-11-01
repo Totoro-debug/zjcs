@@ -392,7 +392,7 @@ namespace Zjcs.Combat.Official
             long skillCostHp = skillCost == null
                 ? 0L : Math.Max(0L, skillCost.BeforeHp - skillCost.AfterHp);
 
-            if (statusCatalog != null && triggerDepth == 0)
+            if (statusCatalog != null)
             {
                 List<FightBattleStatusSkillInvocation> skillStartSkills =
                     FightStatusTriggerRuntime.CollectSkillStartSkills(actor, skill, targets,
@@ -582,16 +582,18 @@ namespace Zjcs.Combat.Official
                     };
                     damageEvents.Add(damage);
                     checkpoint.Statistics.RecordHit(damage, damageHitTargets);
-                    FightStatusAccumulatedDamageRuntime.RecordHit(target, damage);
+                    FightStatusAccumulatedDamageRuntime.RecordHit(target, damage, skill);
                     TransmitVoodooDamage(target, damage, damageEvents, casts);
                     var triggerSkills = new List<int>();
                     var configuredTriggerSkills = new List<FightBattleStatusStateTrigger>();
                     var hpTriggerSkills = new List<FightBattleStatusStateTrigger>();
-                    triggerSkills.AddRange(resolved.TriggeredStatusSkills);
+                    configuredTriggerSkills.AddRange(resolved.TriggeredStatusSkillInvocations);
+                    if (resolved.TriggeredStatusSkillInvocations.Count == 0)
+                        triggerSkills.AddRange(resolved.TriggeredStatusSkills);
                     long actualHpLoss = Math.Max(0L, beforeHp - target.Hp);
-                    CollectUnflinchingActions(target, actualHpLoss);
+                    CollectUnflinchingActions(target, actualHpLoss, skill);
                     FightStatusTriggerRuntime.ApplyAccumulatedDamage(target,
-                        actualHpLoss, statusCatalog, random, configuredTriggerSkills);
+                        actualHpLoss, statusCatalog, random, configuredTriggerSkills, skill);
                     ApplyHitStatuses(actor, target, skill, hit, random, skillCostHp,
                         actualHpLoss);
                     ApplyResilienceHit(actor, target, skill, hit, resolved, casts,
@@ -600,7 +602,7 @@ namespace Zjcs.Combat.Official
                     ApplyHitMove(actor, target, hit, movements);
                     ApplyHemophagia(actor, hit, damage, hitDelay, skill, damageEvents);
                     FightStatusTriggerRuntime.Apply(target, statusCatalog, false, hpTriggerSkills,
-                        random);
+                        random, skill);
                     RebuildBattleProperties();
                     float endedDuration = 0f, endedActionDuration = -1f;
                     ExecuteAccumulatedDamageEnds(casts, damageEvents, movements,
@@ -623,7 +625,7 @@ namespace Zjcs.Combat.Official
             FightDamageFalloff.EndCast(units, skill);
             ApplyExtraSkills(actor, skill, casts, damageEvents, movements, ref lastDelay);
             ApplySkillReplay(actor, skill, casts, damageEvents, movements, ref lastDelay);
-            if (statusCatalog != null && triggerDepth == 0
+            if (statusCatalog != null
                 && FightStatusTriggerRuntime.ApplySkillEndStatuses(actor, skill, units,
                     statusCatalog, random) > 0)
                 RebuildBattleProperties();
@@ -1074,13 +1076,11 @@ namespace Zjcs.Combat.Official
             return true;
         }
 
-        private int childDepth;
-
         /// <summary>
         /// Official <c>FightDamageComponent.ChildSkillCfg</c> supplies the child, rate and target-HP
         /// condition. The confirmed offline rule preserves the triggering caster, cultivation and
         /// hit target as the position anchor; the child still applies its own side, scope and effects.
-        /// Child skills currently run one level deep and keep their casts in the current step.
+        /// Direct child effects keep their casts in the current step and follow their own configuration.
         /// </summary>
         private void ApplyChildSkill(FightBattleUnitState actor, FightBattleUnitState target,
             FightBattleSkillDefinition parentSkill,
@@ -1089,7 +1089,7 @@ namespace Zjcs.Combat.Official
             List<FightBattleMovementEvent> movements, ref float lastDelay)
         {
             if (statusCatalog == null || parentSkill == null || hit == null
-                || hit.ChildSkillId <= 0 || childDepth > 0) return;
+                || hit.ChildSkillId <= 0) return;
             if (actor == null || target == null || target.Hp <= 0) return;
             if (hit.ChildSkillRate < 1f && random.Next() > hit.ChildSkillRate) return;
             if (hit.ChildSkillLessThanHpPer >= 0f
@@ -1125,17 +1125,9 @@ namespace Zjcs.Combat.Official
             };
             foreach (FightBattleUnitState unit in targets) cast.TargetIds.Add(unit.Id);
             casts.Add(cast);
-            childDepth++;
-            try
-            {
-                ExecuteSkill(actor, skill, targets, casts, damageEvents, movements,
-                    out float delay, target);
-                if (delay > lastDelay) lastDelay = delay;
-            }
-            finally
-            {
-                childDepth--;
-            }
+            ExecuteSkill(actor, skill, targets, casts, damageEvents, movements,
+                out float delay, target);
+            if (delay > lastDelay) lastDelay = delay;
         }
 
         private int replayDepth;
@@ -1190,11 +1182,9 @@ namespace Zjcs.Combat.Official
             }
         }
 
-        private int extraDepth;
-
         /// <summary>
         /// Official <c>FightSkillExtSkillComponent</c>: when the skill action ends, roll each entry's
-        /// rate and release the extra skill as the same actor. Extra skills run one level deep and
+        /// rate and release the extra skill as the same actor. Extra skills continue by configuration and
         /// keep their casts/damage in the current step.
         /// </summary>
         private void ApplyExtraSkills(FightBattleUnitState actor, FightBattleSkillDefinition skill,
@@ -1202,64 +1192,54 @@ namespace Zjcs.Combat.Official
             List<FightBattleMovementEvent> movements, ref float lastDelay)
         {
             if (statusCatalog == null || skill == null || skill.ExtraSkills == null
-                || skill.ExtraSkills.Count == 0 || extraDepth > 0) return;
-            extraDepth++;
-            try
+                || skill.ExtraSkills.Count == 0) return;
+            int rank = Math.Max(1, skill.Rank);
+            int level = Math.Max(1, skill.Level);
+            int subRank = Math.Max(1, skill.SubRank);
+            foreach (FightBattleSkillExtra extra in skill.ExtraSkills)
             {
-                int rank = Math.Max(1, skill.Rank);
-                int level = Math.Max(1, skill.Level);
-                int subRank = Math.Max(1, skill.SubRank);
-                foreach (FightBattleSkillExtra extra in skill.ExtraSkills)
+                if (extra == null || extra.SkillId <= 0) continue;
+                if (extra.Rate < 1f && random.Next() > extra.Rate) continue;
+                FightBattleSkillDefinition extraSkill;
+                try
                 {
-                    if (extra == null || extra.SkillId <= 0) continue;
-                    if (extra.Rate < 1f && random.Next() > extra.Rate) continue;
-                    FightBattleSkillDefinition extraSkill;
-                    try
-                    {
-                        extraSkill = statusCatalog.CreateSkill(extra.SkillId, -1, 0, rank, level, subRank,
-                            ToPropertyList(statusCatalog.CalculateSkillProps(extra.SkillId, rank, level, subRank)));
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        continue;
-                    }
-                    List<FightBattleUnitState> targets = FightBattleTargeting.Select(actor, units,
-                        extraSkill.TargetType, 0, false, false, extraSkill, random);
-                    if (targets.Count == 0
-                        && !FightBattleTargeting.HasCasterAreaTargets(actor, units, extraSkill)) continue;
-                    checkpoint.Statistics.RecordCast(actor.Id, extraSkill.EntityId, extraSkill.ItemId);
-                    var cast = new FightBattleSkillCastEvent
-                    {
-                        ActorId = actor.Id,
-                        Slot = -1,
-                        SkillEntityId = extraSkill.EntityId,
-                        SkillItemId = extraSkill.ItemId
-                    };
-                    foreach (FightBattleUnitState target in targets) cast.TargetIds.Add(target.Id);
-                    casts.Add(cast);
-                    ExecuteSkill(actor, extraSkill, targets, casts, damageEvents, movements,
-                        out float delay);
-                    if (delay > lastDelay) lastDelay = delay;
+                    extraSkill = statusCatalog.CreateSkill(extra.SkillId, -1, 0, rank, level, subRank,
+                        ToPropertyList(statusCatalog.CalculateSkillProps(extra.SkillId, rank, level, subRank)));
                 }
-            }
-            finally
-            {
-                extraDepth--;
+                catch (InvalidOperationException)
+                {
+                    continue;
+                }
+                List<FightBattleUnitState> targets = FightBattleTargeting.Select(actor, units,
+                    extraSkill.TargetType, 0, false, false, extraSkill, random);
+                if (targets.Count == 0
+                    && !FightBattleTargeting.HasCasterAreaTargets(actor, units, extraSkill)) continue;
+                checkpoint.Statistics.RecordCast(actor.Id, extraSkill.EntityId, extraSkill.ItemId);
+                var cast = new FightBattleSkillCastEvent
+                {
+                    ActorId = actor.Id,
+                    Slot = -1,
+                    SkillEntityId = extraSkill.EntityId,
+                    SkillItemId = extraSkill.ItemId
+                };
+                foreach (FightBattleUnitState target in targets) cast.TargetIds.Add(target.Id);
+                casts.Add(cast);
+                ExecuteSkill(actor, extraSkill, targets, casts, damageEvents, movements,
+                    out float delay);
+                if (delay > lastDelay) lastDelay = delay;
             }
         }
 
-        private int triggerDepth;
-
         /// <summary>
-        /// Executes the skill list of an HP-triggered status as the status owner. Trigger casts run at
-        /// most one level deep (a trigger skill cannot start another trigger chain), keep their damage
+        /// Executes the skill list of an HP-triggered status as the status owner. Trigger casts are
+        /// governed by the skill trigger flag and status whitelist, keep their damage
         /// and movement events in the current step, and do not consume the owner's skill slots.
         /// </summary>
         private void ExecuteTriggerSkills(FightBattleUnitState owner, List<int> skillIds,
             List<FightBattleSkillCastEvent> casts, List<FightBattleDamageEvent> damageEvents,
             List<FightBattleMovementEvent> movements, ref float lastDelay)
         {
-            if (statusCatalog == null || skillIds == null || skillIds.Count == 0 || triggerDepth > 0) return;
+            if (statusCatalog == null || skillIds == null || skillIds.Count == 0) return;
             var triggers = new List<FightBattleStatusStateTrigger>();
             foreach (int skillId in skillIds)
                 triggers.Add(new FightBattleStatusStateTrigger
@@ -1277,48 +1257,40 @@ namespace Zjcs.Combat.Official
             List<FightBattleSkillCastEvent> casts, List<FightBattleDamageEvent> damageEvents,
             List<FightBattleMovementEvent> movements, ref float lastDelay)
         {
-            if (statusCatalog == null || triggers == null || triggers.Count == 0 || triggerDepth > 0) return;
-            triggerDepth++;
-            try
+            if (statusCatalog == null || triggers == null || triggers.Count == 0) return;
+            foreach (FightBattleStatusStateTrigger trigger in triggers)
             {
-                foreach (FightBattleStatusStateTrigger trigger in triggers)
+                if (trigger == null || trigger.EntityId <= 0) continue;
+                FightBattleSkillDefinition skill;
+                try
                 {
-                    if (trigger == null || trigger.EntityId <= 0) continue;
-                    FightBattleSkillDefinition skill;
-                    try
-                    {
-                        int rank = Math.Max(1, trigger.SourceSkillRank);
-                        int level = Math.Max(1, trigger.SourceSkillLevel);
-                        int subRank = Math.Max(0, trigger.SourceSubRank);
-                        skill = statusCatalog.CreateSkill(trigger.EntityId, -1, 0, rank, level, subRank,
-                            ToPropertyList(statusCatalog.CalculateSkillProps(trigger.EntityId,
-                                rank, level, subRank)));
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        continue;
-                    }
-                    List<FightBattleUnitState> targets = FightBattleTargeting.Select(owner, units,
-                        skill.TargetType, 0, false, false, skill, random);
-                    if (targets.Count == 0
-                        && !FightBattleTargeting.HasCasterAreaTargets(owner, units, skill)) continue;
-                    checkpoint.Statistics.RecordCast(owner.Id, skill.EntityId, skill.ItemId);
-                    var cast = new FightBattleSkillCastEvent
-                    {
-                        ActorId = owner.Id,
-                        Slot = -1,
-                        SkillEntityId = skill.EntityId,
-                        SkillItemId = skill.ItemId
-                    };
-                    foreach (FightBattleUnitState target in targets) cast.TargetIds.Add(target.Id);
-                    casts.Add(cast);
-                    ExecuteSkill(owner, skill, targets, casts, damageEvents, movements, out float delay);
-                    if (delay > lastDelay) lastDelay = delay;
+                    int rank = Math.Max(1, trigger.SourceSkillRank);
+                    int level = Math.Max(1, trigger.SourceSkillLevel);
+                    int subRank = Math.Max(0, trigger.SourceSubRank);
+                    skill = statusCatalog.CreateSkill(trigger.EntityId, -1, 0, rank, level, subRank,
+                        ToPropertyList(statusCatalog.CalculateSkillProps(trigger.EntityId,
+                            rank, level, subRank)));
                 }
-            }
-            finally
-            {
-                triggerDepth--;
+                catch (InvalidOperationException)
+                {
+                    continue;
+                }
+                List<FightBattleUnitState> targets = FightBattleTargeting.Select(owner, units,
+                    skill.TargetType, 0, false, false, skill, random);
+                if (targets.Count == 0
+                    && !FightBattleTargeting.HasCasterAreaTargets(owner, units, skill)) continue;
+                checkpoint.Statistics.RecordCast(owner.Id, skill.EntityId, skill.ItemId);
+                var cast = new FightBattleSkillCastEvent
+                {
+                    ActorId = owner.Id,
+                    Slot = -1,
+                    SkillEntityId = skill.EntityId,
+                    SkillItemId = skill.ItemId
+                };
+                foreach (FightBattleUnitState target in targets) cast.TargetIds.Add(target.Id);
+                casts.Add(cast);
+                ExecuteSkill(owner, skill, targets, casts, damageEvents, movements, out float delay);
+                if (delay > lastDelay) lastDelay = delay;
             }
         }
 
@@ -1330,64 +1302,56 @@ namespace Zjcs.Combat.Official
         {
             maxDuration = 0f;
             maxActionDuration = -1f;
-            if (statusCatalog == null || triggers == null || triggers.Count == 0 || triggerDepth > 0)
+            if (statusCatalog == null || triggers == null || triggers.Count == 0)
                 return;
-            triggerDepth++;
-            try
+            int level = Math.Max(1, owner.Level);
+            int subRank = Math.Max(1, owner.SubRank);
+            foreach (FightBattleStatusStateTrigger trigger in triggers)
             {
-                int level = Math.Max(1, owner.Level);
-                int subRank = Math.Max(1, owner.SubRank);
-                foreach (FightBattleStatusStateTrigger trigger in triggers)
+                if (trigger == null || trigger.EntityId <= 0) continue;
+                FightBattleSkillDefinition skill;
+                try
                 {
-                    if (trigger == null || trigger.EntityId <= 0) continue;
-                    FightBattleSkillDefinition skill;
-                    try
-                    {
-                        int rank = Math.Max(1, trigger.SourceSkillRank);
-                        int skillLevel = trigger.SourceSkillLevel > 0 ? trigger.SourceSkillLevel : level;
-                        int skillSubRank = trigger.SourceSubRank > 0 ? trigger.SourceSubRank : subRank;
-                        skill = statusCatalog.CreateSkill(trigger.EntityId, -1, trigger.SourceSkillItemId,
-                            rank, skillLevel, skillSubRank,
-                            ToPropertyList(statusCatalog.CalculateSkillProps(trigger.EntityId, rank,
-                                skillLevel, skillSubRank)));
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        continue;
-                    }
-
-                    FightBattleUnitState targetPosition = null;
-                    if (trigger.TargetPos == 1)
-                        targetPosition = owner;
-                    else if (trigger.TargetPos != 0)
-                        continue;
-                    List<FightBattleUnitState> targets = FightBattleTargeting.Select(owner, units,
-                        skill.TargetType, 0, false, false, skill, random);
-                    if (targets.Count == 0 && targetPosition == null
-                        && !FightBattleTargeting.HasCasterAreaTargets(owner, units, skill)) continue;
-
-                    checkpoint.Statistics.RecordCast(owner.Id, skill.EntityId, skill.ItemId);
-                    var cast = new FightBattleSkillCastEvent
-                    {
-                        ActorId = owner.Id,
-                        Slot = -1,
-                        SkillEntityId = skill.EntityId,
-                        SkillItemId = skill.ItemId
-                    };
-                    foreach (FightBattleUnitState target in targets) cast.TargetIds.Add(target.Id);
-                    casts.Add(cast);
-                    ExecuteSkill(owner, skill, targets, casts, damageEvents, movements,
-                        out float delay, targetPosition);
-                    if (delay > lastDelay) lastDelay = delay;
-                    maxDuration = Math.Max(maxDuration, ResolveDuration(skill, delay));
-                    float actionDuration = ResolveActionDuration(skill, delay);
-                    if (actionDuration >= 0f)
-                        maxActionDuration = Math.Max(maxActionDuration, actionDuration);
+                    int rank = Math.Max(1, trigger.SourceSkillRank);
+                    int skillLevel = trigger.SourceSkillLevel > 0 ? trigger.SourceSkillLevel : level;
+                    int skillSubRank = trigger.SourceSubRank > 0 ? trigger.SourceSubRank : subRank;
+                    skill = statusCatalog.CreateSkill(trigger.EntityId, -1, trigger.SourceSkillItemId,
+                        rank, skillLevel, skillSubRank,
+                        ToPropertyList(statusCatalog.CalculateSkillProps(trigger.EntityId, rank,
+                            skillLevel, skillSubRank)));
                 }
-            }
-            finally
-            {
-                triggerDepth--;
+                catch (InvalidOperationException)
+                {
+                    continue;
+                }
+
+                FightBattleUnitState targetPosition = null;
+                if (trigger.TargetPos == 1)
+                    targetPosition = owner;
+                else if (trigger.TargetPos != 0)
+                    continue;
+                List<FightBattleUnitState> targets = FightBattleTargeting.Select(owner, units,
+                    skill.TargetType, 0, false, false, skill, random);
+                if (targets.Count == 0 && targetPosition == null
+                    && !FightBattleTargeting.HasCasterAreaTargets(owner, units, skill)) continue;
+
+                checkpoint.Statistics.RecordCast(owner.Id, skill.EntityId, skill.ItemId);
+                var cast = new FightBattleSkillCastEvent
+                {
+                    ActorId = owner.Id,
+                    Slot = -1,
+                    SkillEntityId = skill.EntityId,
+                    SkillItemId = skill.ItemId
+                };
+                foreach (FightBattleUnitState target in targets) cast.TargetIds.Add(target.Id);
+                casts.Add(cast);
+                ExecuteSkill(owner, skill, targets, casts, damageEvents, movements,
+                    out float delay, targetPosition);
+                if (delay > lastDelay) lastDelay = delay;
+                maxDuration = Math.Max(maxDuration, ResolveDuration(skill, delay));
+                float actionDuration = ResolveActionDuration(skill, delay);
+                if (actionDuration >= 0f)
+                    maxActionDuration = Math.Max(maxActionDuration, actionDuration);
             }
         }
 
@@ -1399,66 +1363,57 @@ namespace Zjcs.Combat.Official
         {
             maxDuration = 0f;
             maxActionDuration = -1f;
-            if (statusCatalog == null || invocations == null || invocations.Count == 0
-                || triggerDepth > 0) return;
-            triggerDepth++;
-            try
+            if (statusCatalog == null || invocations == null || invocations.Count == 0) return;
+            foreach (FightBattleStatusSkillInvocation invocation in invocations)
             {
-                foreach (FightBattleStatusSkillInvocation invocation in invocations)
+                if (invocation == null || invocation.Trigger == null
+                    || !unitById.TryGetValue(invocation.SourceUnitId,
+                        out FightBattleUnitState source)
+                    || !unitById.TryGetValue(invocation.TargetUnitId,
+                        out FightBattleUnitState target)
+                    || !unitById.TryGetValue(invocation.TargetPositionUnitId,
+                        out FightBattleUnitState targetPosition)
+                    || !FightBattleTargeting.IsSelectable(source)
+                    || !FightBattleTargeting.IsSelectable(target)
+                    || !FightBattleTargeting.IsSelectable(targetPosition)) continue;
+
+                FightBattleSkillDefinition skill;
+                try
                 {
-                    if (invocation == null || invocation.Trigger == null
-                        || !unitById.TryGetValue(invocation.SourceUnitId,
-                            out FightBattleUnitState source)
-                        || !unitById.TryGetValue(invocation.TargetUnitId,
-                            out FightBattleUnitState target)
-                        || !unitById.TryGetValue(invocation.TargetPositionUnitId,
-                            out FightBattleUnitState targetPosition)
-                        || !FightBattleTargeting.IsSelectable(source)
-                        || !FightBattleTargeting.IsSelectable(target)
-                        || !FightBattleTargeting.IsSelectable(targetPosition)) continue;
-
-                    FightBattleSkillDefinition skill;
-                    try
-                    {
-                        FightBattleStatusStateTrigger trigger = invocation.Trigger;
-                        int rank = Math.Max(1, trigger.SourceSkillRank);
-                        int level = trigger.SourceSkillLevel > 0 ? trigger.SourceSkillLevel : Math.Max(1, source.Level);
-                        int subRank = trigger.SourceSubRank > 0 ? trigger.SourceSubRank : Math.Max(1, source.SubRank);
-                        skill = statusCatalog.CreateSkill(trigger.EntityId, -1, trigger.SourceSkillItemId,
-                            rank, level, subRank, ToPropertyList(statusCatalog.CalculateSkillProps(
-                                trigger.EntityId, rank, level, subRank)));
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        continue;
-                    }
-                    if (!IsExplicitTargetCompatible(source, target, skill.TargetType)
-                        || FightBattleTargeting.IsActionBlockedByStatus(target,
-                            skill.BlockingTargetActionTypes)) continue;
-
-                    var targets = new List<FightBattleUnitState> { target };
-                    checkpoint.Statistics.RecordCast(source.Id, skill.EntityId, skill.ItemId);
-                    var cast = new FightBattleSkillCastEvent
-                    {
-                        ActorId = source.Id,
-                        Slot = -1,
-                        SkillEntityId = skill.EntityId,
-                        SkillItemId = skill.ItemId
-                    };
-                    cast.TargetIds.Add(target.Id);
-                    casts.Add(cast);
-                    ExecuteSkill(source, skill, targets, casts, damageEvents, movements,
-                        out float delay, targetPosition);
-                    if (delay > lastDelay) lastDelay = delay;
-                    maxDuration = Math.Max(maxDuration, ResolveDuration(skill, delay));
-                    float actionDuration = ResolveActionDuration(skill, delay);
-                    if (actionDuration >= 0f)
-                        maxActionDuration = Math.Max(maxActionDuration, actionDuration);
+                    FightBattleStatusStateTrigger trigger = invocation.Trigger;
+                    int rank = Math.Max(1, trigger.SourceSkillRank);
+                    int level = trigger.SourceSkillLevel > 0 ? trigger.SourceSkillLevel : Math.Max(1, source.Level);
+                    int subRank = trigger.SourceSubRank > 0 ? trigger.SourceSubRank : Math.Max(1, source.SubRank);
+                    skill = statusCatalog.CreateSkill(trigger.EntityId, -1, trigger.SourceSkillItemId,
+                        rank, level, subRank, ToPropertyList(statusCatalog.CalculateSkillProps(
+                            trigger.EntityId, rank, level, subRank)));
                 }
-            }
-            finally
-            {
-                triggerDepth--;
+                catch (InvalidOperationException)
+                {
+                    continue;
+                }
+                if (!IsExplicitTargetCompatible(source, target, skill.TargetType)
+                    || FightBattleTargeting.IsActionBlockedByStatus(target,
+                        skill.BlockingTargetActionTypes)) continue;
+
+                var targets = new List<FightBattleUnitState> { target };
+                checkpoint.Statistics.RecordCast(source.Id, skill.EntityId, skill.ItemId);
+                var cast = new FightBattleSkillCastEvent
+                {
+                    ActorId = source.Id,
+                    Slot = -1,
+                    SkillEntityId = skill.EntityId,
+                    SkillItemId = skill.ItemId
+                };
+                cast.TargetIds.Add(target.Id);
+                casts.Add(cast);
+                ExecuteSkill(source, skill, targets, casts, damageEvents, movements,
+                    out float delay, targetPosition);
+                if (delay > lastDelay) lastDelay = delay;
+                maxDuration = Math.Max(maxDuration, ResolveDuration(skill, delay));
+                float actionDuration = ResolveActionDuration(skill, delay);
+                if (actionDuration >= 0f)
+                    maxActionDuration = Math.Max(maxActionDuration, actionDuration);
             }
         }
 
@@ -1467,7 +1422,7 @@ namespace Zjcs.Combat.Official
             List<FightBattleMovementEvent> movements, ref float stepDuration,
             ref float stepActionDuration)
         {
-            if (statusCatalog == null || triggerDepth > 0) return;
+            if (statusCatalog == null) return;
             foreach (FightBattleUnitState unit in units)
                 if (unit != null && unit.Statuses != null)
                     foreach (FightBattleStatusState status in unit.Statuses)
@@ -1504,14 +1459,16 @@ namespace Zjcs.Combat.Official
             }
         }
 
-        private void CollectUnflinchingActions(FightBattleUnitState target, long actualHpLoss)
+        private void CollectUnflinchingActions(FightBattleUnitState target, long actualHpLoss,
+            FightBattleSkillDefinition sourceSkill = null)
         {
             if (target == null || actualHpLoss <= 0 || target.Statuses == null
                 || currentStepStatusCustomActions == null) return;
             // The server invocation timing is unavailable; offline uses one configured-rate check per actual HP loss.
             foreach (FightBattleStatusState status in target.Statuses)
             {
-                if (status == null || !status.HasUnflinchingOnDamageComponent
+                if (!FightSkillTriggerPolicy.AllowsStatus(sourceSkill, status)
+                    || !status.HasUnflinchingOnDamageComponent
                     || random.Next() > status.UnflinchingOnDamageRate) continue;
                 currentStepStatusCustomActions.Add(new FightBattleStatusCustomActionEvent
                 {
@@ -2228,7 +2185,6 @@ namespace Zjcs.Combat.Official
                 if (value != null && value.Id == propertyId) return value.Value;
             return 0;
         }
-
 
         private int NextDamageId()
         {

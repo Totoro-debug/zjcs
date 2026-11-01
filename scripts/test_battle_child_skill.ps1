@@ -90,11 +90,12 @@ Assert-Child (@($high.Event.SkillCasts | Where-Object { $_.Slot -eq -1 }).Count 
 $low = Invoke-ChildBattle (New-ChildSkill 10640 1.0 0.3) 100 5000
 Assert-Child (@($low.Event.SkillCasts | Where-Object { $_.Slot -eq -1 -and $_.SkillEntityId -eq 10640 }).Count -eq 1) 'Child skill did not fire below its HP threshold'
 
-# Zero rate never triggers, and child skills do not cascade.
+# Zero rate never triggers; the nested official child's HP condition remains in force.
 $zero = Invoke-ChildBattle (New-ChildSkill 10640 0.0 -1) 5000 5000
 Assert-Child (@($zero.Event.SkillCasts | Where-Object { $_.Slot -eq -1 }).Count -eq 0) 'Zero-rate child skill was released'
 $nested = Invoke-ChildBattle (New-ChildSkill 12730 1.0 -1) 5000 5000
-Assert-Child (@($nested.Event.SkillCasts | Where-Object { $_.Slot -eq -1 -and $_.SkillEntityId -eq 12730 }).Count -eq 1) 'Child skill cascade was not limited to one level'
+Assert-Child (@($nested.Event.SkillCasts | Where-Object { $_.Slot -eq -1 -and $_.SkillEntityId -eq 12730 }).Count -eq 1) 'Nested official child was not released'
+Assert-Child (@($nested.Event.SkillCasts | Where-Object { $_.SkillEntityId -eq 12733 }).Count -eq 0) 'Nested child ignored its HP condition'
 
 # Child effects follow the triggering skill's cultivation, not the damaged unit's level.
 $cultivated = New-ChildSkill 63434 1.0 -1
@@ -143,4 +144,4 @@ $cures = @($healed.Event.DamageEvents | Where-Object { $_.SkillEntityId -eq 1273
 Assert-Child (@($cures | Where-Object { $_.SourceId -eq 1 -and $_.TargetId -eq 2 -and $_.AfterHp -gt $_.BeforeHp }).Count -eq 1) 'Healing child did not heal its original friendly hit target'
 Assert-Child (@($cures | Where-Object { $_.TargetId -eq 3 -or $_.SourceId -ne 1 }).Count -eq 0) 'Healing child changed faction or caster'
 
-Write-Output 'Battle child skill checks passed: official mapping, original caster/target, HP condition, zero rate, single-level cascade, inherited cultivation/status persistence, self buff, healing and separate area-hit children.'
+Write-Output 'Battle child skill checks passed: official mapping, original caster/target, HP condition, zero rate, nested HP condition, inherited cultivation/status persistence, self buff, healing and separate area-hit children.'

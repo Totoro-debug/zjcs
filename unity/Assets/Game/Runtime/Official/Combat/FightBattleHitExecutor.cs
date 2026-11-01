@@ -12,6 +12,8 @@ namespace Zjcs.Combat.Official
         public long ShieldDamage;
         public bool IsCure;
         public List<int> TriggeredStatusSkills = new List<int>();
+        public List<FightBattleStatusStateTrigger> TriggeredStatusSkillInvocations =
+            new List<FightBattleStatusStateTrigger>();
     }
 
     public sealed class FightBattleHitExecutor
@@ -85,7 +87,8 @@ namespace Zjcs.Combat.Official
                 direct = FightStatusCreatorDamageBoostRuntime.BeforeShield(actor, target, direct, formula);
                 if (damageTest != null) direct = damageTest.Damage(stageType, actor, target, direct);
                 long absorbed = FightBattleShieldRuntime.AbsorbDamage(random, target, hit,
-                    direct, out result.ShieldDamage, result.TriggeredStatusSkills);
+                    direct, out result.ShieldDamage, result.TriggeredStatusSkills, skill,
+                    result.TriggeredStatusSkillInvocations);
                 result.Formula = new FightDamageFormulaResult { Damage = absorbed, AbsoluteDamage = direct };
                 result.Settlement = damageTest == null ? settlement.Apply(damageId, sourceEntity, targetEntity, absorbed)
                     : damageTest.Settle(settlement, stageType, damageId, sourceEntity, targetEntity, target, absorbed);
@@ -145,7 +148,8 @@ namespace Zjcs.Combat.Official
                     damage = FightStatusCreatorDamageBoostRuntime.BeforeShield(actor, target, damage, formula);
                 if (damageTest != null) damage = damageTest.Damage(stageType, actor, target, damage);
                 damage = FightBattleShieldRuntime.AbsorbDamage(random, target, hit, damage,
-                    out result.ShieldDamage, result.TriggeredStatusSkills);
+                    out result.ShieldDamage, result.TriggeredStatusSkills, skill,
+                    result.TriggeredStatusSkillInvocations);
                 result.Formula.Damage = damage;
                 result.Settlement = damageTest == null ? settlement.Apply(damageId, sourceEntity, targetEntity, damage)
                     : damageTest.Settle(settlement, stageType, damageId, sourceEntity, targetEntity, target, damage);
@@ -193,7 +197,7 @@ namespace Zjcs.Combat.Official
                 float threshold = status.DamageCustomPropsDmgGreaterMaxHpPer;
                 if (threshold >= 0f && damage <= target.MaxHp * (double)threshold) continue;
                 if (status.DamageCustomPropsCheckSkillTrigger
-                    && (skill == null || !skill.CanTriggerStatusEntityIds.Contains(status.ClassId)))
+                    && (skill == null || !FightSkillTriggerPolicy.AllowsStatus(skill, status)))
                     continue;
                 float rate = Math.Max(0f, Math.Min(1f, status.DamageCustomPropsRate));
                 if (rate < 1f && (random == null || random.Next() > rate)) continue;
@@ -312,7 +316,8 @@ namespace Zjcs.Combat.Official
 
         public static long AbsorbDamage(FightRandomStream random, FightBattleUnitState target,
             FightBattleHitDefinition hit, long damage, out long shieldDamage,
-            IList<int> destroyedSkills = null)
+            IList<int> destroyedSkills = null, FightBattleSkillDefinition sourceSkill = null,
+            IList<FightBattleStatusStateTrigger> destroyedSkillInvocations = null)
         {
             shieldDamage = 0;
             if (damage >= 0 || target == null || hit == null || hit.IgnoreShield
@@ -384,8 +389,16 @@ namespace Zjcs.Combat.Official
 
                 if (destroyed)
                 {
-                    if (status.ShieldDestroyedSkillId > 0)
+                    if (status.ShieldDestroyedSkillId > 0
+                        && FightSkillTriggerPolicy.AllowsStatus(sourceSkill, status))
+                    {
+                        if (destroyedSkillInvocations != null)
+                            destroyedSkillInvocations.Add(new FightBattleStatusStateTrigger
+                            {
+                                EntityId = status.ShieldDestroyedSkillId
+                            }.WithSource(status));
                         destroyedSkills?.Add(status.ShieldDestroyedSkillId);
+                    }
                     target.Statuses.RemoveAt(i);
                 }
                 else i++;

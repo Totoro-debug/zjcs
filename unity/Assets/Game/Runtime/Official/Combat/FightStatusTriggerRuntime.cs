@@ -131,7 +131,7 @@ namespace Zjcs.Combat.Official
                 || actor.Statuses == null || !FightBattleTargeting.IsSelectable(actor)) return result;
             foreach (FightBattleStatusState status in actor.Statuses)
             {
-                if (status == null || !status.HasSkillStartTrigger
+                if (!FightSkillTriggerPolicy.AllowsStatus(skill, status) || !status.HasSkillStartTrigger
                     || !status.SkillStartRulesSupported || status.SkillStartSource != 2
                     || (status.SkillStartMaxCount >= 0
                         && status.SkillStartTriggeredCount >= status.SkillStartMaxCount)
@@ -187,7 +187,8 @@ namespace Zjcs.Combat.Official
             int applied = 0;
             foreach (FightBattleStatusState status in statuses)
             {
-                if (status == null || !status.HasSkillEndTrigger || !status.SkillEndRulesSupported
+                if (!FightSkillTriggerPolicy.AllowsStatus(skill, status)
+                    || !status.HasSkillEndTrigger || !status.SkillEndRulesSupported
                     || status.SkillEndFilteredActionTypes.Contains(skill.ActionType)) continue;
                 status.SkillEndMetCountProgress++;
                 if (status.SkillEndMetCountProgress < Math.Max(1, status.SkillEndMetCount)) continue;
@@ -232,14 +233,15 @@ namespace Zjcs.Combat.Official
 
         public static int Apply(FightBattleUnitState unit, FightOfficialCombatCatalog catalog,
             bool atStart, List<FightBattleStatusStateTrigger> triggerSkills = null,
-            FightRandomStream random = null)
+            FightRandomStream random = null, FightBattleSkillDefinition sourceSkill = null)
         {
             if (unit == null || catalog == null || unit.Statuses == null || unit.MaxHp <= 0) return 0;
             int applied = 0;
             for (int i = unit.Statuses.Count - 1; i >= 0; i--)
             {
                 FightBattleStatusState status = unit.Statuses[i];
-                if (status == null || status.HpTriggerPer <= 0f) continue;
+                if (!FightSkillTriggerPolicy.AllowsStatus(sourceSkill, status)
+                    || status.HpTriggerPer <= 0f) continue;
                 bool hasStatuses = status.HpTriggerStatuses != null && status.HpTriggerStatuses.Count > 0;
                 bool hasSkills = status.HpTriggerSkills != null && status.HpTriggerSkills.Count > 0;
                 if (!hasStatuses && !hasSkills) continue;
@@ -281,7 +283,8 @@ namespace Zjcs.Combat.Official
         /// </summary>
         public static int ApplyAccumulatedDamage(FightBattleUnitState unit, long actualHpDamage,
             FightOfficialCombatCatalog catalog, FightRandomStream random,
-            List<FightBattleStatusStateTrigger> triggerSkills = null)
+            List<FightBattleStatusStateTrigger> triggerSkills = null,
+            FightBattleSkillDefinition sourceSkill = null)
         {
             if (unit == null || catalog == null || actualHpDamage <= 0 || unit.MaxHp <= 0
                 || unit.Statuses == null) return 0;
@@ -290,7 +293,8 @@ namespace Zjcs.Combat.Official
             for (int i = initialStatusCount - 1; i >= 0; i--)
             {
                 FightBattleStatusState status = unit.Statuses[i];
-                if (status == null || !status.HasHpAccDecrease) continue;
+                if (!FightSkillTriggerPolicy.AllowsStatus(sourceSkill, status)
+                    || !status.HasHpAccDecrease) continue;
                 long threshold = Threshold(status, unit.MaxHp);
                 if (threshold <= 0) continue;
                 if (status.HpAccMaxCount >= 0

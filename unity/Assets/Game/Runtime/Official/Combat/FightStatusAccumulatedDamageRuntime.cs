@@ -47,7 +47,8 @@ namespace Zjcs.Combat.Official
     /// </summary>
     public static class FightStatusAccumulatedDamageRuntime
     {
-        public static void RecordHit(FightBattleUnitState target, FightBattleDamageEvent damage)
+        public static void RecordHit(FightBattleUnitState target, FightBattleDamageEvent damage,
+            FightBattleSkillDefinition sourceSkill = null)
         {
             if (target == null || target.Statuses == null || damage == null || damage.TargetId != target.Id
                 || damage.IsSkillCost || damage.IsCure || damage.TrueDamage || damage.BeforeHp <= damage.AfterHp) return;
@@ -55,7 +56,8 @@ namespace Zjcs.Combat.Official
             foreach (FightBattleStatusState status in target.Statuses)
             {
                 FightBattleStatusAccumulatedDamage accumulator = status?.AccumulatedDamage;
-                if (accumulator == null || !accumulator.RulesSupported || accumulator.DamageResultType != 1
+                if (!FightSkillTriggerPolicy.AllowsStatus(sourceSkill, status)
+                    || accumulator == null || !accumulator.RulesSupported || accumulator.DamageResultType != 1
                     || !accumulator.HitDamageTypes.Contains(damage.DamageType)
                     || accumulator.OnlyDamageByCreator && damage.SourceId != status.CreatorId) continue;
                 accumulator.HpDamage = checked(accumulator.HpDamage + amount);
