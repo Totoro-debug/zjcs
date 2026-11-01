@@ -295,23 +295,22 @@ namespace Zjcs.Presentation.World
             FightBattleGrid grid = gridBuild.Grid;
             int moveMask = gridBuild.MoveMask;
 
-            var checkpoint = new FightBattleCheckpoint
+            OfficialCombatAssetCatalog combatAssets = OfficialCombatAssetCatalog.LoadDefault();
+            FightOfficialCombatCatalog combatCatalog = combatAssets.Load();
+            FightStageStatusCatalog stageStatuses = combatAssets.LoadStageStatusCatalog();
+            var checkpoint = OfficialBattleCheckpointAssembler.Create(new OfficialBattleCheckpointOptions
             {
                 StageId = stage.Id,
                 StageType = stage.Type,
-                IsPvp = false,
                 ResultRules = new FightBattleResultRules(),
                 MaxRound = stage.MaxRound > 0 ? stage.MaxRound : roster.MaxRound,
                 IsPlayerRoundLimit = stage.IsPlayerRoundLimit,
                 PlayerRoundLimit = stage.PlayerRoundLimit,
                 RandomSeed = StableSeed(slotId, stage.Id),
-                Grid = grid
-            };
-            OfficialCombatAssetCatalog combatAssets = OfficialCombatAssetCatalog.LoadDefault();
-            FightOfficialCombatCatalog combatCatalog = combatAssets.Load();
-            FightStageStatusCatalog stageStatuses = combatAssets.LoadStageStatusCatalog();
-            checkpoint.StageStatus = stageStatuses.CreateCheckpointConfig(
-                stageStatuses.ClassIdOfStage(stage.Id));
+                Grid = grid,
+                StageStatuses = stageStatuses,
+                StageStatusClassId = stageStatuses.ClassIdOfStage(stage.Id)
+            });
             FightOfficialSkillItemCatalog skillItems = combatAssets.LoadSkillItems();
             var formula = combatAssets.LoadDamageFormula();
             // Final battle props from the official chunk pipeline. The raw level/rank table only

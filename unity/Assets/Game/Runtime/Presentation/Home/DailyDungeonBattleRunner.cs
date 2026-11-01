@@ -473,19 +473,19 @@ namespace Zjcs.Presentation.Home
             OfflinePlayerProgress playerSave = battleProfile.Save.Player;
             FightOfficialSkillItemCatalog skillItems = combatAssets.LoadSkillItems();
             FightDamageFormula formula = combatAssets.LoadDamageFormula();
-            var checkpoint = new FightBattleCheckpoint
+            FightStageStatusCatalog stageStatuses = combatAssets.LoadStageStatusCatalog();
+            var checkpoint = OfficialBattleCheckpointAssembler.Create(new OfficialBattleCheckpointOptions
             {
                 StageId = stage.id,
                 StageType = 11, // Common.StageType.DailyDungeon
-                IsPvp = false,
                 MaxRound = stage.maxRound > 0 ? stage.maxRound : 25,
                 IsPlayerRoundLimit = stage.isPlayerRoundLimit,
                 PlayerRoundLimit = stage.playerRoundLimit,
                 RandomSeed = StableSeed(run.id, stage.id),
                 Grid = grid,
-                StageStatus = combatAssets.LoadStageStatusCatalog().CreateCheckpointConfig(
-                    combatAssets.LoadStageStatusCatalog().ClassIdOfStage(stage.id))
-            };
+                StageStatuses = stageStatuses,
+                StageStatusClassId = stageStatuses.ClassIdOfStage(stage.id)
+            });
             var playerProperties = new Dictionary<int, long>(progression.PropertyCalculator.Evaluate(
                 playerSave, battleProfile.Save.World, DateTimeOffset.Now.ToUnixTimeSeconds()).OutOfFightBattleProps);
             OfficialBattlePassivePropertyAssembler.ApplyEquippedPlayerPassives(combat, skillItems,

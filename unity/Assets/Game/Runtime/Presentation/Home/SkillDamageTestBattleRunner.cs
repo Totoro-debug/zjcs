@@ -149,17 +149,21 @@ namespace Zjcs.Presentation.Home
             OfficialBattlePassivePropertyAssembler.ApplyEquippedPlayerPassives(combat, skillItems,
                 playerProps, playerSave, progression);
             int maxHpId = combat.PropertyType("MaxHp"), speedId = combat.PropertyType("Speed");
-            var checkpoint = new FightBattleCheckpoint
+            FightStageStatusCatalog stageStatuses = combatAssets.LoadStageStatusCatalog();
+            var checkpoint = OfficialBattleCheckpointAssembler.Create(new OfficialBattleCheckpointOptions
             {
-                StageId = stage.Id, StageType = stage.Type, IsPvp = false,
+                StageId = stage.Id,
+                StageType = stage.Type,
                 MaxRound = request.MaxRound,
                 DamageTest = new FightDamageTestRules { Difficulty = request.Difficulty,
                     EnableMonsterOneDamage = request.EnableMonsterOneDamage, EnableMonsterUnlimitHp = request.EnableMonsterUnlimitHp },
-                IsPlayerRoundLimit = stage.IsPlayerRoundLimit, PlayerRoundLimit = stage.PlayerRoundLimit,
-                RandomSeed = (int)((uint)Guid.NewGuid().GetHashCode() % (FightRandomStream.Modulus - 1)) + 1, Grid = grid,
-                StageStatus = combatAssets.LoadStageStatusCatalog().CreateCheckpointConfig(
-                    combatAssets.LoadStageStatusCatalog().ClassIdOfStage(stage.Id))
-            };
+                IsPlayerRoundLimit = stage.IsPlayerRoundLimit,
+                PlayerRoundLimit = stage.PlayerRoundLimit,
+                RandomSeed = (int)((uint)Guid.NewGuid().GetHashCode() % (FightRandomStream.Modulus - 1)) + 1,
+                Grid = grid,
+                StageStatuses = stageStatuses,
+                StageStatusClassId = stageStatuses.ClassIdOfStage(stage.Id)
+            });
             Map10RuntimePoint spawn = faction.EntryPosList[0];
             var player = new FightBattleUnitState
             {

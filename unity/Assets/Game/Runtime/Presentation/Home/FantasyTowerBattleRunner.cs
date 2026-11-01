@@ -224,15 +224,19 @@ namespace Zjcs.Presentation.Home
             OfficialBattlePassivePropertyAssembler.ApplyEquippedPlayerPassives(combat, skillItems,
                 playerProps, playerSave, host.DailyDungeonProgression);
             int maxHpId = combat.PropertyType("MaxHp"), speedId = combat.PropertyType("Speed");
-            var checkpoint = new FightBattleCheckpoint
+            FightStageStatusCatalog stageStatuses = combatAssets.LoadStageStatusCatalog();
+            var checkpoint = OfficialBattleCheckpointAssembler.Create(new OfficialBattleCheckpointOptions
             {
-                StageId = stage.Id, StageType = stage.Type, IsPvp = false,
+                StageId = stage.Id,
+                StageType = stage.Type,
                 MaxRound = stage.MaxRound > 0 ? stage.MaxRound : roster.MaxRound,
-                IsPlayerRoundLimit = stage.IsPlayerRoundLimit, PlayerRoundLimit = stage.PlayerRoundLimit,
-                RandomSeed = StableSeed(host.ActiveProfileSlotId, stage.Id), Grid = grid,
-                StageStatus = combatAssets.LoadStageStatusCatalog().CreateCheckpointConfig(
-                    combatAssets.LoadStageStatusCatalog().ClassIdOfStage(stage.Id))
-            };
+                IsPlayerRoundLimit = stage.IsPlayerRoundLimit,
+                PlayerRoundLimit = stage.PlayerRoundLimit,
+                RandomSeed = StableSeed(host.ActiveProfileSlotId, stage.Id),
+                Grid = grid,
+                StageStatuses = stageStatuses,
+                StageStatusClassId = stageStatuses.ClassIdOfStage(stage.Id)
+            });
             Map10RuntimePoint spawn = faction.EntryPosList[0];
             var player = new FightBattleUnitState
             {

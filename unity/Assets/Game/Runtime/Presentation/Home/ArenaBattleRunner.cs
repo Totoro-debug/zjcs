@@ -240,18 +240,18 @@ namespace Zjcs.Presentation.Home
             OfflineCharacterProgressionService progression = host.DailyDungeonProgression;
             FightOfficialSkillItemCatalog skillItems = combatAssets.LoadSkillItems();
             FightDamageFormula formula = combatAssets.LoadDamageFormula();
-            var checkpoint = new FightBattleCheckpoint
+            int stageId = host.Arena.Catalog.settings.StageId;
+            FightStageStatusCatalog stageStatuses = combatAssets.LoadStageStatusCatalog();
+            var checkpoint = OfficialBattleCheckpointAssembler.Create(new OfficialBattleCheckpointOptions
             {
-                StageId = host.Arena.Catalog.settings.StageId,
+                StageId = stageId,
                 StageType = 28, // Common.StageType.Arena
-                IsPvp = false,
                 MaxRound = 25,
                 RandomSeed = StableSeed(host.Arena.Save.activeChallengeId),
-                Grid = grid
-            };
-            FightStageStatusCatalog stageStatuses = combatAssets.LoadStageStatusCatalog();
-            checkpoint.StageStatus = stageStatuses.CreateCheckpointConfig(
-                stageStatuses.ClassIdOfStage(checkpoint.StageId));
+                Grid = grid,
+                StageStatuses = stageStatuses,
+                StageStatusClassId = stageStatuses.ClassIdOfStage(stageId)
+            });
 
             var playerProperties = new Dictionary<int, long>(progression.PropertyCalculator.Evaluate(
                 playerSave, host.Profile.Save.World, DateTimeOffset.Now.ToUnixTimeSeconds()).OutOfFightBattleProps);
