@@ -6,7 +6,8 @@ using UnityEngine;
 namespace Zjcs.Presentation.CharacterCreation
 {
     /// <summary>Evaluates official bone-local attachment geometry on the existing native Animator bones.</summary>
-    public sealed class CharacterNativeAttachmentGeometry : MonoBehaviour
+    public sealed class CharacterNativeAttachmentGeometry : MonoBehaviour,
+        Zjcs.Presentation.Combat.IOfficialBattleCharacterSexSource
     {
         [Serializable] private sealed class Payload { public string manifest; public Body[] sexes; }
         [Serializable] private sealed class Receipt { public string manifest, output_sha256; }
@@ -48,6 +49,8 @@ namespace Zjcs.Presentation.CharacterCreation
         private Body sourceBody;
         private readonly List<Material> appendMaterials = new List<Material>();
         public IReadOnlyList<string> OriginalBoneNames => Array.ConvertAll(bones, value => value.name);
+        public string SourceSex => sourceBody == null ? null : sourceBody.sex;
+        string Zjcs.Presentation.Combat.IOfficialBattleCharacterSexSource.Sex => SourceSex;
         private Func<int, Matrix4x4> originalPoseWorld;
         private Func<string, string, string, bool> originalPoseVisible;
         private Func<string, int> originalPoseOrder;

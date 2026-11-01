@@ -85,6 +85,8 @@ namespace Zjcs.Presentation.Combat
         private sealed class AttachedAnimatorView
         {
             public Animator Animator;
+            public RuntimeAnimatorController OriginalController;
+            public bool UsingOfficialGameController;
             public string Group;
             public string CurrentAnimation;
             public bool AnimationLoops;
@@ -887,9 +889,13 @@ namespace Zjcs.Presentation.Combat
             if (animator == null) return null;
             string group = animationGroupResolver(state);
             if (string.IsNullOrEmpty(group)) return null;
+            RuntimeAnimatorController originalController = animator.runtimeAnimatorController;
+            bool usingOfficialGameController = TryBindOfficialGameController(body, animator, group);
             var view = new AttachedAnimatorView
             {
                 Animator = animator,
+                OriginalController = originalController,
+                UsingOfficialGameController = usingOfficialGameController,
                 Group = group
             };
             attachedAnimators[state.Id] = view;
@@ -1024,6 +1030,36 @@ namespace Zjcs.Presentation.Combat
             if (view == null) return;
             view.SkillPlaybacks?.Dispose();
             view.SkillPlaybacks = null;
+            if (view.UsingOfficialGameController && view.Animator != null
+                && view.OriginalController != null)
+            {
+                view.Animator.runtimeAnimatorController = view.OriginalController;
+                view.Animator.Rebind();
+                view.Animator.Update(0f);
+            }
+        }
+
+        private static bool TryBindOfficialGameController(Transform body, Animator animator, string group)
+        {
+            string sex = null;
+            foreach (MonoBehaviour component in body.GetComponentsInChildren<MonoBehaviour>(true))
+                if (component is IOfficialBattleCharacterSexSource source)
+                {
+                    sex = source.Sex;
+                    break;
+                }
+            if ((sex != "male" && sex != "female") || (group != "100" && group != "200")) return false;
+            string profession = group == "100" ? "Zhanshi" : "Fashi";
+            RuntimeAnimatorController controller = Resources.Load<RuntimeAnimatorController>(
+                "Combat/GameAnimators/Anim/" + (sex == "female" ? "Female_" : "Male_")
+                + profession + "_Controller");
+            if (controller == null || animator.runtimeAnimatorController == controller) return false;
+            animator.runtimeAnimatorController = controller;
+            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            animator.applyRootMotion = false;
+            animator.Rebind();
+            animator.Update(0f);
+            return true;
         }
 
         private void RemovePendingAnimations(int unitId)

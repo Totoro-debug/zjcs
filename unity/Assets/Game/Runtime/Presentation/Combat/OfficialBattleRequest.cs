@@ -5,6 +5,11 @@ using Zjcs.Offline.Progression;
 
 namespace Zjcs.Presentation.Combat
 {
+    public interface IOfficialBattleCharacterSexSource
+    {
+        string Sex { get; }
+    }
+
     /// <summary>Mode adapter inputs. Checkpoint contains official grid, roster, skills and result
     /// rules. The common module owns HUD, scene, movement, cooldowns, turns and statistics.
     /// Rewards and durable mode transactions remain with the caller.</summary>
