@@ -947,6 +947,8 @@ namespace Zjcs.Combat.Official
                 Component(components, "FightStatusMoveNearComponent");
             Dictionary<string, object> moveRange =
                 Component(components, "FightStatusMoveRangeComponent");
+            Dictionary<string, object> roundCheckSkill =
+                Component(components, "FightStatusRoundCheckSkillComponent");
             Dictionary<string, object> skillCooldownModify =
                 Component(components, "FightStatusSkillModifyCDComponent");
             Dictionary<string, object> permanentSkillCooldownReduction =
@@ -1123,6 +1125,11 @@ namespace Zjcs.Combat.Official
                 MoveRangeFindAllInCell = moveRange != null && Bool(moveRange, "IsFindAllInCell"),
                 MoveRangeFilterClassIds = moveRange == null ? new List<int>()
                     : new List<int>(IntArray(moveRange, "FilterClassIds")),
+                HasRoundCheckSkill = roundCheckSkill != null,
+                RoundCheckSkillRulesSupported = roundCheckSkill != null
+                    && SupportsRoundCheckSkill(roundCheckSkill),
+                RoundCheckSkillListenTarget = roundCheckSkill == null ? 0
+                    : Int(roundCheckSkill, "ListenTargetType"),
                 HasHpAccDecrease = hpAccDecrease != null,
                 AccumulatedDamage = ReadAccumulatedDamage(components),
                 HpAccUnitHp = hpAccDecrease == null ? -1L : Long(hpAccDecrease, "UnitHp", -1L),
@@ -1325,6 +1332,9 @@ namespace Zjcs.Combat.Official
                         result.MoveRangeCountStatuses, false);
                 }
             }
+            if (roundCheckSkill != null)
+                AddHpAccTriggerEntries(roundCheckSkill, "TriggerSkillCfgs", "SkillId",
+                    result.RoundCheckSkillSkills, true);
             if (hpAccDecrease != null)
             {
                 AddHpAccTriggerEntries(hpAccDecrease, "StatusList", "StatusId",
@@ -2626,6 +2636,25 @@ namespace Zjcs.Combat.Official
                 return ArrayCount(setting, "MeetConditionTriggerStatusCfgs") > 0
                     || ArrayCount(setting, "NotMeetConditionTriggerStatusCfgs") > 0;
             return ArrayCount(setting, "TriggerStatusCfgs") > 0;
+        }
+
+        private static bool SupportsRoundCheckSkill(Dictionary<string, object> component)
+        {
+            int listenTarget = Int(component, "ListenTargetType");
+            if (listenTarget < 1 || listenTarget > 4
+                || ArrayCount(component, "TriggerSkillCfgs") == 0) return false;
+            foreach (object item in Array(component["TriggerSkillCfgs"],
+                "round check trigger skill"))
+            {
+                Dictionary<string, object> trigger = Object(item, "round check trigger skill");
+                if (Int(trigger, "SkillId") <= 0 || Float(trigger, "BasePercent", 1f) < 0f
+                    || Float(trigger, "BasePercent", 1f) > 1f
+                    || Bool(trigger, "AffectedByProp") || Int(trigger, "Source") != 2
+                    || Int(trigger, "Target") != 2 || Bool(trigger, "UseAI")
+                    || Int(trigger, "TargetPos") != 1
+                    || Bool(trigger, "StackedCountToDamageFactor")) return false;
+            }
+            return true;
         }
 
         private static int ArrayCount(Dictionary<string, object> source, string field)

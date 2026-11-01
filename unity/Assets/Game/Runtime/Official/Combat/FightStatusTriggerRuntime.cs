@@ -121,6 +121,38 @@ namespace Zjcs.Combat.Official
             return result;
         }
 
+        public static List<FightBattleStatusSkillInvocation> CollectRoundCheckSkills(
+            FightBattleUnitState listener, IReadOnlyList<FightBattleUnitState> units,
+            FightRandomStream random)
+        {
+            var result = new List<FightBattleStatusSkillInvocation>();
+            if (listener == null || units == null || listener.Statuses == null) return result;
+            foreach (FightBattleUnitState owner in units)
+            {
+                if (owner == null || owner.Statuses == null) continue;
+                foreach (FightBattleStatusState status in owner.Statuses)
+                {
+                    if (status == null || !status.HasRoundCheckSkill
+                        || !status.RoundCheckSkillRulesSupported
+                        || FightStatusLifecycle.ResolveTargetUnitId(status,
+                            status.RoundCheckSkillListenTarget, units) != listener.Id) continue;
+                    foreach (FightBattleStatusStateTrigger trigger in status.RoundCheckSkillSkills)
+                    {
+                        if (trigger == null || trigger.EntityId <= 0 || !Roll(trigger.BasePercent, random))
+                            continue;
+                        result.Add(new FightBattleStatusSkillInvocation
+                        {
+                            Trigger = trigger.WithSource(status),
+                            SourceUnitId = owner.Id,
+                            TargetUnitId = owner.Id,
+                            TargetPositionUnitId = owner.Id
+                        });
+                    }
+                }
+            }
+            return result;
+        }
+
         public static List<FightBattleStatusSkillInvocation> CollectSkillStartSkills(
             FightBattleUnitState actor, FightBattleSkillDefinition skill,
             IReadOnlyList<FightBattleUnitState> skillTargets,

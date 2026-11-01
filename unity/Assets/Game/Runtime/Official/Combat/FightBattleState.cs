@@ -408,6 +408,11 @@ namespace Zjcs.Combat.Official
             new List<FightBattleStatusStateTrigger>();
         public int MoveRangeLastTargetCount = -1;
         public HashSet<int> MoveRangeInsideUnitIds = new HashSet<int>();
+        public bool HasRoundCheckSkill;
+        public bool RoundCheckSkillRulesSupported;
+        public int RoundCheckSkillListenTarget;
+        public List<FightBattleStatusStateTrigger> RoundCheckSkillSkills =
+            new List<FightBattleStatusStateTrigger>();
         // Official FightStatusHpAccDecreaseComponent. Damage is accumulated independently of cures
         // per the confirmed offline rule; the configured threshold is consumed on each trigger.
         public bool HasHpAccDecrease;

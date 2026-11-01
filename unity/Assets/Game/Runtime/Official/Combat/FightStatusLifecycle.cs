@@ -353,6 +353,10 @@ namespace Zjcs.Combat.Official
                 MoveRangeLastTargetCount = template.MoveRangeLastTargetCount,
                 MoveRangeInsideUnitIds = template.MoveRangeInsideUnitIds == null
                     ? new HashSet<int>() : new HashSet<int>(template.MoveRangeInsideUnitIds),
+                HasRoundCheckSkill = template.HasRoundCheckSkill,
+                RoundCheckSkillRulesSupported = template.RoundCheckSkillRulesSupported,
+                RoundCheckSkillListenTarget = template.RoundCheckSkillListenTarget,
+                RoundCheckSkillSkills = CopyTriggers(template.RoundCheckSkillSkills),
                 HasHpAccDecrease = template.HasHpAccDecrease,
                 AccumulatedDamage = template.AccumulatedDamage?.Copy(),
                 HpAccUnitHp = template.HpAccUnitHp,
