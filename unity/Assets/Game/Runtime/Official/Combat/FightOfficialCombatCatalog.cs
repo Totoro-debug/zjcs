@@ -895,7 +895,7 @@ namespace Zjcs.Combat.Official
                 CheckSourceIsEnemy = Bool(component, "CheckSourceIsEnemy"),
                 NoIndependentMultiplier = false,
                 Supported = Int(component, "Target") == 2
-                    && (Int(component, "ProcessPhase") == 0 || Int(component, "ProcessPhase") == 1)
+                    && Int(component, "ProcessPhase") == 0
                     && (Int(component, "DamageType") == 1 || Int(component, "DamageType") == 2)
                     && ArrayCount(component, "StatusReplacePropertyValues") == 0
             };
