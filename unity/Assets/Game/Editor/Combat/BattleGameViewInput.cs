@@ -74,11 +74,19 @@ namespace Zjcs.Editor.Combat
         {
             if (point.x >= 0f && point.y >= 0f && point.x <= Screen.width && point.y <= Screen.height)
                 return point;
+            float desktopWidth = Display.main == null ? Screen.width : Display.main.systemWidth;
+            float desktopHeight = Display.main == null ? Screen.height : Display.main.systemHeight;
+            if (desktopWidth > Screen.width || desktopHeight > Screen.height)
+            {
+                Vector2 proportional = new Vector2(point.x * Screen.width / Mathf.Max(1f, desktopWidth),
+                    point.y * Screen.height / Mathf.Max(1f, desktopHeight));
+                if (proportional.x >= 0f && proportional.y >= 0f
+                    && proportional.x <= Screen.width && proportional.y <= Screen.height)
+                    return proportional;
+            }
             if (!TryGetGameViewContent(out Rect window, out Rect target, out float pixelsPerPoint))
                 return point;
 
-            float desktopWidth = Display.main == null ? Screen.width : Display.main.systemWidth;
-            float desktopHeight = Display.main == null ? Screen.height : Display.main.systemHeight;
             float scale = target.width / Mathf.Max(1f, Screen.width);
             float x = point.x / pixelsPerPoint - window.x - target.x;
             float yFromTop = desktopHeight / pixelsPerPoint - point.y / pixelsPerPoint
