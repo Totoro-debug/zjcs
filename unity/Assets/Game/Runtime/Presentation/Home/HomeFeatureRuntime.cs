@@ -58,6 +58,7 @@ namespace Zjcs.Presentation.Home
         private OfflinePartnerDetailPropertyServices partnerDetailServices;
         private OfflinePartnerDetailPropertySource partnerDetailSource;
         private OfflinePartnerGiftPlayer partnerGiftPlayer;
+        private OfflineProfessionImageResourceLoader partnerDetailImages;
         private OfflineAstrologicalService astrological;
         private float astrologicalChargeStartTime;
         private float astrologicalNextChargeTick;
@@ -762,17 +763,18 @@ namespace Zjcs.Presentation.Home
             partnerDetailAssets = OfficialPartnerDetailPropertyAssetCatalog.LoadDefault();
             var friendshipAssets = OfficialPartnerFriendshipAssetCatalog.LoadDefault();
             var partnerCatalog = OfficialPartnerAssetCatalog.LoadDefault();
-            var detailImages = new OfflineProfessionImageResourceLoader(partnerDetailAssets.Common.Images);
+            partnerDetailImages = new OfflineProfessionImageResourceLoader(partnerDetailAssets.Common.Images);
+            ProfessionImageResourceBridge.Provider = image => partnerDetailImages;
             var localization = new OfflinePartnerLocalizationService(partnerDetailAssets.Texts,
                 partnerDetailAssets.Common.GiftTexts, friendshipAssets.PropertyTexts, friendshipAssets.DialogTexts);
             var propertyBindings = new OfflineProfessionPropertyBindings(friendshipAssets.PropertyConfiguration,
-                detailImages, localization, (owner, path, name, description, control) => { },
+                partnerDetailImages, localization, (owner, path, name, description, control) => { },
                 (owner, rank, description, effect, noEffect, noSeason) => { });
             ProfessionPropertyBindings.Current = propertyBindings;
             var properties = new OfflinePartnerFriendshipProperties(partnerCatalog, propertyBindings, () => false);
             partnerDetailSource = new OfflinePartnerDetailPropertySource(profile, partnerCatalog, properties);
             partnerGiftPlayer = new OfflinePartnerGiftPlayer(profile, partnerCatalog,
-                OfficialPartnerGiftAssetCatalog.LoadDefault(), id => null, () => false);
+                OfficialPartnerGiftAssetCatalog.LoadDefault(), id => new OfflinePartnerItemInfo(partnerCatalog, id), () => false);
             partnerDetailServices = new OfflinePartnerDetailPropertyServices(partnerCatalog, properties,
                 partnerDetailSource, partnerRoster, id => profile.Save.Player.CharacterProperties.Treasures
                     .Any(value => value.ClassId == id && value.Active), hud);
