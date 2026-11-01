@@ -20,7 +20,8 @@ namespace Zjcs.Presentation.Home
     /// Main-city HUD rebuilt from the official panels: top bar, avatar, five-tab
     /// bottom bar, function menu and the furniture/mail windows.
     /// </summary>
-    public sealed partial class HomeHudView : IOfflinePartnerPresentation, IOfflinePartnerDetailPresentation
+    public sealed partial class HomeHudView : IOfflinePartnerPresentation, IOfflinePartnerDetailPresentation,
+        IOfflinePartnerGiftPresentation
     {
         private static readonly string[] CurrencyIcons = { "Money_1", "Money_2", "Money_15" };
         private static readonly int[] CurrencyItems = { 1, 2, 15 };
@@ -39,6 +40,7 @@ namespace Zjcs.Presentation.Home
         private GameObject functionsPanel;
         private PartnerRosterPanelView partnerRosterPanel;
         private PartnerDetailPanelView partnerDetailPanel;
+        private PartnerGiftPanelView partnerGiftPanel;
 
         private TextMeshProUGUI nameLabel;
         private TextMeshProUGUI levelLabel;
@@ -861,6 +863,8 @@ namespace Zjcs.Presentation.Home
             partnerRosterPanel = null;
             partnerDetailPanel?.Close();
             partnerDetailPanel = null;
+            partnerGiftPanel?.Close();
+            partnerGiftPanel = null;
             if (activePanelKey == "astrological_entry")
             {
                 host.EndAstrologicalCharge();

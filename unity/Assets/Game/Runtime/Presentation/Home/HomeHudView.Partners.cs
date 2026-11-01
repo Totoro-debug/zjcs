@@ -8,6 +8,7 @@ using Zjcs.Offline.Progression;
 using Zjcs.Official.Partners;
 using Zjcs.Official.PartnersUI;
 using Zjcs.Official.ProfessionUI;
+using Zjcs.Official.WorldUI;
 
 namespace Zjcs.Presentation.Home
 {
@@ -41,7 +42,11 @@ namespace Zjcs.Presentation.Home
         void IOfflinePartnerPresentation.ShowFriendshipLevelUp(NpcRosterItem npc, long oldFriendship, int oldLevel)
             => Notify(npc == null ? "伙伴已结识" : "已结识伙伴 " + npc.NpcClassId);
         void IOfflinePartnerPresentation.ShowExclusiveGift(int itemId, Component owner)
-            => Notify("礼物 " + itemId + " 可用于结识伙伴");
+        {
+            var npc = host.PartnerRoster.NpcRoster(true).FirstOrDefault(value => value.ExclusiveGiftId == itemId);
+            if (npc != null && npc.MeetStatus == NpcMeetStatus.HadMeet) host.OpenPartnerGift(npc.NpcClassId);
+            else Notify("礼物 " + itemId + " 可用于结识伙伴");
+        }
         void IOfflinePartnerPresentation.ShowNpcDetails(List<NpcRosterItem> npcs, int index)
         {
             if (index < 0 || index >= npcs.Count) { Notify("伙伴详情"); return; }
@@ -85,6 +90,34 @@ namespace Zjcs.Presentation.Home
             catch (Exception error) { partnerDetailPanel?.Close(); partnerDetailPanel = null; Notify("伙伴详情打开失败：" + error.Message); }
         }
 
+        internal void OpenPartnerGift(int npcId, OfficialPartnerGiftPageAssetCatalog assets,
+            OfflinePartnerGiftUiServices services, OfflinePartnerGiftPlayer gifts)
+        {
+            CloseDialog();
+            try
+            {
+                var npcData = gifts.GetNpcByClassId(npcId);
+                if (npcData == null) throw new InvalidOperationException("伙伴尚未结识");
+                var config = OfficialPartnerGiftAssetCatalog.LoadDefault();
+                var info = config.GetNpcInfo(npcId);
+                if (info == null) throw new InvalidOperationException("Official partner gift row is missing: " + npcId);
+                var root = new GameObject("PartnerGiftDialog", typeof(RectTransform), typeof(Image), typeof(Button));
+                root.transform.SetParent(canvas.transform, false);
+                var rect = (RectTransform)root.transform; rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one;
+                rect.offsetMin = Vector2.zero; rect.offsetMax = Vector2.zero;
+                root.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.62f);
+                root.GetComponent<Button>().transition = Selectable.Transition.None;
+                root.GetComponent<Button>().onClick.AddListener(CloseDialog);
+                var panel = root.AddComponent<PartnerGiftPanelView>();
+                partnerGiftPanel = panel;
+                panel.Open(assets, services, npcData, info,
+                    new OfflinePartnerLocalizationService(assets.GiftTexts, assets.RelationshipTexts),
+                    () => Notify("伙伴好感度已更新"));
+                activeDialog = root; activeDialogRenderer = null; activePanelKey = "partner_gift";
+            }
+            catch (Exception error) { partnerGiftPanel?.Close(); partnerGiftPanel = null; Notify("伙伴赠礼打开失败：" + error.Message); }
+        }
+
         bool IOfflinePartnerDetailPresentation.CanNavigateNpc(int npcId) => false;
         PartnerDetailNpcTarget IOfflinePartnerDetailPresentation.CreateNpcTarget(int npcId) => new PartnerDetailNpcTarget { NpcClassId = npcId };
         void IOfflinePartnerDetailPresentation.GetLiteInfo(PartnerDetailNpcTarget target, PartnerDetailLiteInfoCallback callback)
@@ -100,5 +133,39 @@ namespace Zjcs.Presentation.Home
         void IOfflinePartnerDetailPresentation.BroadcastNavigateTip(string tip) => Notify(tip);
         string IOfflinePartnerDetailPresentation.GetText(string key) => key;
         void IOfflinePartnerDetailPresentation.SystemMessage(string text) => Notify(text);
+
+        void IOfflinePartnerGiftPresentation.ConfigureGiftIcon(ItemIconNpcGift icon)
+        {
+            host.PartnerGiftBindings?.BindGiftIcon(icon);
+        }
+        void IOfflinePartnerGiftPresentation.ShowError(int error, object args, bool flag)
+            => Notify("伙伴赠礼操作不可用：" + error);
+        string IOfflinePartnerGiftPresentation.GetText(string key)
+            => WorldMultiLanguageText.Localize == null ? key : WorldMultiLanguageText.Localize(key);
+        void IOfflinePartnerGiftPresentation.SystemMessage(string text) => Notify(text);
+        void IOfflinePartnerGiftPresentation.PopupInput(Action<IPartnerGiftInputDialog> initialize)
+            => initialize?.Invoke(new OfflinePartnerInputDialog(this));
+        void IOfflinePartnerGiftPresentation.PopupConfirm(Action<IPartnerGiftConfirmDialog> initialize)
+            => initialize?.Invoke(new OfflinePartnerConfirmDialog());
+        void IOfflinePartnerGiftPresentation.PopupFriendship(IWindowOperator owner, bool starGod, Action<IPartnerGiftFriendshipDialog> initialize)
+            => Notify("伙伴好感度详情暂未独立展开");
+        object IOfflinePartnerGiftPresentation.Compact(long count) => host.HomeSettings?.FormatNumber(count) ?? count.ToString();
+        void IOfflinePartnerGiftPresentation.Close(GameObject window) { if (window != null) UnityEngine.Object.Destroy(window); }
+        void IOfflinePartnerGiftPresentation.ShowProgressionResult(ProgressionResult result)
+            => Notify(result?.Message ?? "伙伴赠礼未完成");
+
+        private sealed class OfflinePartnerConfirmDialog : IPartnerGiftConfirmDialog
+        {
+            public void Init(string textKey, Action confirm) => confirm?.Invoke();
+        }
+        private sealed class OfflinePartnerInputDialog : IPartnerGiftInputDialog
+        {
+            private readonly HomeHudView owner;
+            public OfflinePartnerInputDialog(HomeHudView owner) { this.owner = owner; }
+            public GameObject GameObject => owner.CanvasTransform == null ? null : owner.CanvasTransform.gameObject;
+            public void Init(string titleKey, string placeholderKey, Action<string> submit)
+                => owner.Notify("伙伴称谓输入窗口尚未接入");
+            public void SetNpcFriendshipTagModerationClickMask() { }
+        }
     }
 }

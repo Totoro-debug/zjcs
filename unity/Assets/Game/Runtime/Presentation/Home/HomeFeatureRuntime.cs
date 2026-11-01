@@ -25,6 +25,7 @@ using Zjcs.Presentation.Combat;
 using Zjcs.Combat.Official;
 using Zjcs.Offline.PartnersUI;
 using Zjcs.Official.ProfessionUI;
+using Zjcs.Official.World.NativeLabelUI.Framework;
 
 namespace Zjcs.Presentation.Home
 {
@@ -59,6 +60,9 @@ namespace Zjcs.Presentation.Home
         private OfflinePartnerDetailPropertySource partnerDetailSource;
         private OfflinePartnerGiftPlayer partnerGiftPlayer;
         private OfflineProfessionImageResourceLoader partnerDetailImages;
+        private OfficialPartnerGiftPageAssetCatalog partnerGiftAssets;
+        private OfflinePartnerGiftRuntimeBindings partnerGiftBindings;
+        private OfflinePartnerGiftUiServices partnerGiftServices;
         private OfflineAstrologicalService astrological;
         private float astrologicalChargeStartTime;
         private float astrologicalNextChargeTick;
@@ -153,6 +157,9 @@ namespace Zjcs.Presentation.Home
         public OfflinePartnerRosterUiServices PartnerRoster => partnerRoster;
         public OfficialPartnerDetailPropertyAssetCatalog PartnerDetailAssets => partnerDetailAssets;
         public OfflinePartnerDetailPropertyServices PartnerDetailServices => partnerDetailServices;
+        public OfficialPartnerGiftPageAssetCatalog PartnerGiftAssets => partnerGiftAssets;
+        public OfflinePartnerGiftUiServices PartnerGiftServices => partnerGiftServices;
+        public OfflinePartnerGiftRuntimeBindings PartnerGiftBindings => partnerGiftBindings;
         public OfflineArenaSession Arena => arena;
         public OfflineCharacterProgressionService DailyDungeonProgression
         {
@@ -775,6 +782,12 @@ namespace Zjcs.Presentation.Home
             partnerDetailSource = new OfflinePartnerDetailPropertySource(profile, partnerCatalog, properties);
             partnerGiftPlayer = new OfflinePartnerGiftPlayer(profile, partnerCatalog,
                 OfficialPartnerGiftAssetCatalog.LoadDefault(), id => new OfflinePartnerItemInfo(partnerCatalog, id), () => false);
+            partnerGiftAssets = OfficialPartnerGiftPageAssetCatalog.LoadDefault();
+            partnerGiftBindings = new OfflinePartnerGiftRuntimeBindings(profile, partnerCatalog, partnerGiftAssets,
+                id => new OfflinePartnerItemInfo(partnerCatalog, id), key => localization.GetText(key, LanguageType.zh_CN));
+            partnerGiftServices = new OfflinePartnerGiftUiServices(profile, partnerGiftPlayer,
+                OfficialPartnerGiftAssetCatalog.LoadDefault(), properties, partnerGiftBindings,
+                partnerDetailImages, hud);
             partnerDetailServices = new OfflinePartnerDetailPropertyServices(partnerCatalog, properties,
                 partnerDetailSource, partnerRoster, id => profile.Save.Player.CharacterProperties.Treasures
                     .Any(value => value.ClassId == id && value.Active), hud);
@@ -1768,6 +1781,12 @@ namespace Zjcs.Presentation.Home
         {
             if (hud == null || partnerDetailServices == null || partnerGiftPlayer == null) return;
             hud.OpenPartnerDetail(npcId, partnerDetailAssets, partnerDetailServices, partnerGiftPlayer);
+        }
+
+        public void OpenPartnerGift(int npcId)
+        {
+            if (hud == null || partnerGiftServices == null || partnerGiftPlayer == null) return;
+            hud.OpenPartnerGift(npcId, partnerGiftAssets, partnerGiftServices, partnerGiftPlayer);
         }
 
         public bool EnterMainland()
