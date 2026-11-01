@@ -108,7 +108,10 @@ namespace Zjcs.Offline.PartnersUI
         public GameObject Instantiate(GameObject prefab, Transform parent, EUIInstantiateFlag flag = EUIInstantiateFlag.All)
             => prefab == null ? null : UnityEngine.Object.Instantiate(prefab, parent, false);
         public void InstantiateAsync(string prefab, Transform parent, Action<GameObject> callback)
-            => callback?.Invoke(string.IsNullOrEmpty(prefab) ? null : UnityEngine.Resources.Load<GameObject>(prefab));
+        {
+            GameObject source = string.IsNullOrEmpty(prefab) ? null : UnityEngine.Resources.Load<GameObject>(prefab);
+            callback?.Invoke(source == null ? null : UnityEngine.Object.Instantiate(source, parent, false));
+        }
         public void PopupInfoDialog(IProfessionItemData data, IWindowOperator owner, long required, Action<GameObject> callback) { }
         public void PopupInfoDialog(IProfessionItemInfo info, IWindowOperator owner, long required, Action<GameObject> callback) { }
         public long GetItemAmount(int itemId) => session.Save.Player.Inventory.Find(value => value.ItemId == itemId)?.Count ?? 0;
