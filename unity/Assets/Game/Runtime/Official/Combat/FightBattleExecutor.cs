@@ -411,11 +411,9 @@ namespace Zjcs.Combat.Official
                     && !FightBattleTargeting.HasCasterAreaTargets(caster, units, skill)) continue;
                 if (!FightBattlePetEnergyRuntime.ConsumeForRelease(state)) continue;
 
-                ExecuteSkill(caster, skill, targets, casts, damageEvents, movements,
-                    out float lastDelay, out float skillDuration, out float actionDuration);
-                owner.Hp = Math.Max(0L, Math.Min(owner.MaxHp, caster.Hp));
-                owner.Turn.Hp = owner.Hp;
-                casts.Add(new FightBattleSkillCastEvent
+                // Record the entity skill before executing its hit graph, matching ordinary
+                // casts so the animation timeline and child-cast order start at the root skill.
+                var cast = new FightBattleSkillCastEvent
                 {
                     ActorId = owner.Id,
                     Slot = -1,
@@ -423,8 +421,13 @@ namespace Zjcs.Combat.Official
                     SkillItemId = skill.ItemId,
                     IsPetEnergy = true,
                     TargetIds = targets.ConvertAll(value => value.Id)
-                });
+                };
+                casts.Add(cast);
                 checkpoint.Statistics.RecordCast(owner.Id, skill.EntityId, skill.ItemId);
+                ExecuteSkill(caster, skill, targets, casts, damageEvents, movements,
+                    out float lastDelay, out float skillDuration, out float actionDuration);
+                owner.Hp = Math.Max(0L, Math.Min(owner.MaxHp, caster.Hp));
+                owner.Turn.Hp = owner.Hp;
                 stepDuration = Math.Max(stepDuration,
                     Math.Max(ResolveDuration(skill, lastDelay), skillDuration));
                 if (actionDuration >= 0f)
