@@ -88,13 +88,13 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 ### 当前原生卡片资源与提示图（局部）
 
-`scripts/prepare_partner_card_native.py` 闭合当前 `NpcPanelNpcItem` 的资源引用：保留 72 个原层级节点和 306 个对象，绑定实际迁移脚本、原动画、31 个 Image、8 个 TMP 文本、字体图集、粒子材质和精灵网格。精灵贴图按原 SpriteAtlas 的 RenderDataKey 解析，不以文件名建立资源身份；纹理及 shader 按原 CAB／PathID、对象字节哈希复用同版本 Windows 转换结果。当前 261 个载荷及其元数据、105 份目录元数据已安装到 `unity/Assets/Official/Partners/UI/Card/`；包含原卡片、静态依赖、两条音效，以及下述名册伙伴的动态图片与字体输入。凭据及输入输出哈希见[卡片资源来源](../../assets/reference/partner-card-binding-source-manifest.json)。正式伙伴页面宿主仍未绑定。
+`scripts/prepare_partner_card_native.py` 闭合当前 `NpcPanelNpcItem` 的资源引用：保留 72 个原层级节点和 306 个对象，绑定实际迁移脚本、原动画、31 个 Image、8 个 TMP 文本、字体图集、粒子材质和精灵网格。精灵贴图按原 SpriteAtlas 的 RenderDataKey 解析，不以文件名建立资源身份；纹理及 shader 按原 CAB／PathID、对象字节哈希复用同版本 Windows 转换结果。当前 281 个载荷及其元数据、115 份目录元数据已安装到 `unity/Assets/Official/Partners/UI/Card/`；包含原卡片、静态依赖、两条音效，以及下述名册伙伴的动态图片与字体输入。凭据及输入输出哈希见[卡片资源来源](../../assets/reference/partner-card-binding-source-manifest.json)。正式伙伴页面宿主仍未绑定。
 
 `prepare_current_partner_native.UnityYamlLoader` 保留 Unity 未加引号的十六进制字节字段，避免 YAML 1.1 将纯数字索引当成整数／八进制，损坏原三角形。卡片及动态依赖的 117 个精灵逐项核对原顶点数及完整索引字节，保留原网格；没有改用矩形网格规避渲染失败。
 
-`--npc-ids` 传入当前原名册范围的 77 位伙伴：`NpcType == MapExploreBoss`、排除 `NpcRoleType.StarGod` 及已确认暂停的 11015–11022。按原 `ResourceLoaderExtensions.LoadSprite` 的 `Assets/Image/` 前缀、当前资源表和原容器定位 FigureImage／SmallBgImage，共 98 个去重图片地址。原 Sprite 的 RenderDataKey 与资源表 GUID、转换 Sprite 的键对应后，再闭合原纹理与图集，形成 `partner-card-images.json` 显式加载表；每个地址保留伙伴／字段消费者。优先读取 APK，包内未提供的内容读取同版本已校验云端缓存；不混用历史版本。
+`scripts/prepare_partner_roster_scope.py` 按原 `NpcInfoParser.GetNpcs(ignoreType)` 的排除语义恢复 88 位候选：排除 `NpcType.MapExploreBoss`（2）、`NpcRoleType.StarGod`（2）及已确认暂停的 11015–11022。商人和职业导师也按原相遇／显示条件参与名册；不将参数误作普通伙伴筛选。按原 `ResourceLoaderExtensions.LoadSprite` 的 `Assets/Image/` 前缀、当前资源表和原容器定位 FigureImage／SmallBgImage，共 108 个去重图片地址。原 Sprite 的 RenderDataKey 与资源表 GUID、转换 Sprite 的键对应后，再闭合原纹理与图集，形成 `partner-card-images.json` 显式加载表；每个地址保留伙伴／字段消费者。优先读取 APK，包内未提供的内容读取同版本已校验云端缓存；不混用历史版本。
 
-同一目录保存 77 位伙伴姓名及原卡片标记所需的 78 项当前中文文本。字体从原 `MultiLanguageFontConfig` 的 CN／zh_CN 配置选择 `FZY4K SDF - dynamic`，原 CN 配置没有备用字体；按 `FontAssetFontConfig` 恢复原始 TTF，并核对原长度与 MD5。验证宿主按原 `FontAssetFontService.SetupFont` 恢复 sourceFontFile，字体变化后沿原顺序重设文字效果，不用临时生成的字体替代原字体资产。
+同一目录保存名册名称与原卡片标记的 89 项显示值。88 个候选中，10611 的原 NameKey 为 `ui_npc_name_10609`；选定版本的原启动／游戏中文二进制语言表均无此键，沿原 `LocalizationBinaryTextService.TryGetOriginalText → GetText → LocalizationTextService.GetMissingKeyText` 返回键名，不编造角色名称。该 NPC 的原相遇条件为 `Alwaysfalse`，正常名册流程不会显示它。字体从原 `MultiLanguageFontConfig` 的 CN／zh_CN 配置选择 `FZY4K SDF - dynamic`，原 CN 配置没有备用字体；按 `FontAssetFontConfig` 恢复原始 TTF，并核对原长度与 MD5。验证宿主按原 `FontAssetFontService.SetupFont` 恢复 sourceFontFile，字体变化后沿原顺序重设文字效果，不用临时生成的字体替代原字体资产。
 
 原 `NpcAffinity_Get` 和 `Main_Cursor_Normal` 从卡片字段指向的 Wwise Event 追踪到实际 bank／Action／Sound／媒体，用官方开源工具 wwiser 与 vgmstream 解码。分别保留 0 dB／−6 dB 事件增益和 48 kHz 双声道 PCM；不以名称相近的音频替代。原事件对象、bank、媒体号、路由文本、工具和输出哈希均在同一凭据中记录。
 
@@ -102,7 +102,11 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 `prepare_partner_card_validation.py` 与 `PartnerCardBindingValidation.Run` 在 Unity `2022.3.57f1c2` 验证实际 prefab 和 25 个原提示图资产导入、九种运行节点反序列化／独立克隆、原图名称、端口归属、脚本／托管引用、字体图集、图片贴图、两条音频及 Windows 材质支持；原节点工厂对两张图实际恢复非禁用节点、连接、预设与实例键。指针逐处写入完整引用，避免 YAML 别名使 Unity 丢失端口归属。
 
-`PartnerRosterUiValidation.RunNativeCard` 使用实际原卡片、原动画／图像／字体和隔离本地存档，以模拟鼠标射线验证信物不足、可结识、连续点击仅扣一次、700 毫秒解锁、拒绝／回收、好感比例／预览／满级、置顶与存档恢复；实际查看未结识、可结识、解锁中、已结识和外部好感更新的 GPU 画面。全部 77 位名册伙伴的图片地址、字段消费者、原图网格及全部姓名字形比对通过；实际卡片回归、提示图绑定、静态检查、主工程新增资源导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 均通过，导入后资源哈希保持一致。红点管理器和通知／信物／详情窗口使用明确验证端点，这些端点不进入游戏，不代表完整页面、红点或弹窗交互已经完成；Windows Player 尚未发布。
+`PartnerRosterUiValidation.RunNativeCard` 使用实际原卡片、原动画／图像／字体和隔离本地存档，以模拟鼠标射线验证信物不足、可结识、连续点击仅扣一次、700 毫秒解锁、拒绝／回收、好感比例／预览／满级、置顶与存档恢复；实际查看未结识、可结识、解锁中、已结识和外部好感更新的 GPU 画面。全部名册候选的图片地址、字段消费者、原图网格及显示文字字形纳入验证；实际卡片回归、提示图绑定、静态检查、主工程新增资源导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 均通过，导入后资源哈希保持一致。红点管理器和通知／信物／详情窗口使用明确验证端点，这些端点不进入游戏，不代表完整页面、红点或弹窗交互已经完成；Windows Player 尚未发布。
+
+名册范围修正的原方法与输入输出哈希见[名册范围来源](../../assets/reference/partner-roster-scope-source-manifest.json)。相遇条件中的 `HasManualMeetNpc` 同样使用“排除探索首领”的原枚举范围，已结识商人／导师可满足原置顶解锁条件。重建卡片还逐对象恢复原 `MultiLanguageText.myKey` 空字符串，修正旧转换将其写成 `null` 的差异；除此字段及动态加载表外，原卡片与既有依赖字节保持不变。
+
+`PartnerRosterTransactionValidation` 已通过商人 8411、导师 8404 的名册／置顶条件与探索首领 3601 排除回归，并复核地图／区域、信物不足、相遇扣物品、置顶和存档恢复。原生名册在隔离 URP Play Mode 对这两类实际卡片执行模拟射线点击，连同全部显示、排序、反向、遮罩关闭、滚动和池释放检查通过，已查看五帧 GPU 画面。原生卡片验证逐项核对 88 个候选的 176 个图片消费者、108 个地址、89 项显示值、字形和网格；相遇／好感／置顶交互及五帧运行画面已复核，资源、图节点和音效实际引用检查通过。静态检查（81,651 个 GUID）、主工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过，安装资源哈希保持一致。完整页面、当前条件接线、正式弹窗与 Player 仍未完成。
 
 ### 当前原生名册区域（局部）
 

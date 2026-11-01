@@ -446,9 +446,7 @@ class PartnerCardBinding:
                                  original=identity(obj), original_sha256=sha(obj.get_raw_data()),
                                  source=self.recovery.apk.provenance(obj)))
             print('Bound original dynamic sprite:', address, flush=True)
-        texts, text_sources = language(text_keys)
-        if set(texts) != text_keys:
-            raise ValueError('Original partner card language entries are unavailable: ' + repr(text_keys - texts.keys()))
+        texts, text_sources = self.card_language(text_keys)
         language_manifest = self.recovery.apk.source.manifest('WwiseBnk', self.recovery.apk.archive)
         language_records = {row['name']: row for row in language_manifest['bundles']}
         for path, digest in text_sources.items():
@@ -463,6 +461,12 @@ class PartnerCardBinding:
                     language_manifest_sha256=sha(self.recovery.apk.source.manifest_bytes('WwiseBnk', self.recovery.apk.archive)),
                     texts=[dict(key=key, text=value) for key, value in sorted(texts.items())],
                     font=self.chinese_font(records))
+
+    def card_language(self, text_keys):
+        texts, sources = language(text_keys)
+        if set(texts) != text_keys:
+            raise ValueError('Original partner card language entries are unavailable: ' + repr(text_keys - texts.keys()))
+        return texts, sources
 
     def chinese_font(self, records):
         def asset(path, kind):

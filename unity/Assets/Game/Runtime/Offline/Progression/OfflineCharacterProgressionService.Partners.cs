@@ -22,7 +22,7 @@ namespace Zjcs.Offline.Progression
             };
             // HasManualMeetNpcCondition.CheckMeet includes both already met and
             // currently meetable non-auto NPCs, not just the legacy saved flag.
-            context.HasManualMeetNpc = catalog.Rows("npc").Any(npc => Integer(npc, "NpcType") == 4
+            context.HasManualMeetNpc = catalog.Rows("npc").Any(npc => Integer(npc, "NpcType") != 2
                 && !Boolean(npc, "IsAutoMeet") && (context.NpcFriendshipLevels.ContainsKey(Integer(npc, "Id"))
                     || catalog.EvaluateCondition(Map(npc, "CanMeetCondition"), context)));
             return context;
@@ -61,7 +61,7 @@ namespace Zjcs.Offline.Progression
             foreach (var npc in catalog.Rows("npc"))
             {
                 int id = Integer(npc, "Id");
-                if (Integer(npc, "NpcType") != 4 || Integer(npc, "NpcRoleType") == 2) continue;
+                if (Integer(npc, "NpcType") == 2 || Integer(npc, "NpcRoleType") == 2) continue;
                 // User-confirmed offline policy: the two collaboration groups remain closed.
                 if (id >= 11015 && id <= 11022) continue;
                 NpcMeetStatus status = NpcMeetStatusOf(npc, context);

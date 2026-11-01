@@ -19,6 +19,22 @@ public static class PartnerRosterTransactionValidation
         }).IsApplied, "Seed empty partner roster");
         Require(service.NpcMeetStatusOf(8406) == NpcMeetStatus.NotMeet, "Locked map hides an unavailable NPC");
         Require(!service.CanPinNpc, "Pin remains locked without manual meet or condition");
+        foreach (int id in new[] { 8411, 8404 })
+        {
+            Require(session.ApplyCharacterMutation(player => player.CharacterProperties.NpcFriendships.Add(
+                new OfflineNpcFriendship { NpcClassId = id, Level = 1 })).IsApplied, "Seed met trader/tutor");
+            Require(service.NpcRoster().Any(value => value.NpcClassId == id), "Original roster includes trader/tutor " + id);
+            Require(service.CanPinNpc, "Original HasManualMeetNpc accepts trader/tutor " + id);
+            Require(session.ApplyCharacterMutation(player => player.CharacterProperties.NpcFriendships.Clear()).IsApplied,
+                "Restore empty roster after trader/tutor regression");
+            Require(!service.CanPinNpc, "Removing the only manual NPC restores locked pin condition");
+        }
+        Require(session.ApplyCharacterMutation(player => player.CharacterProperties.NpcFriendships.Add(
+            new OfflineNpcFriendship { NpcClassId = 3601, Level = 1 })).IsApplied, "Seed exploration-boss record");
+        Require(!service.NpcRoster(true).Any(value => value.NpcClassId == 3601) && !service.CanPinNpc,
+            "Original ignore argument excludes exploration bosses from roster and manual-meet pin condition");
+        Require(session.ApplyCharacterMutation(player => player.CharacterProperties.NpcFriendships.Clear()).IsApplied,
+            "Restore empty roster after boss regression");
         Require(session.ApplyCharacterMutation(player => player.UnlockedMapClassIds.Add(11)).IsApplied, "Unlock map 11");
         Require(service.NpcMeetStatusOf(8406) == NpcMeetStatus.UnMeet, "Map accessibility enables CanShow");
         Require(!service.NpcRoster(true).Any(value => value.NpcClassId == 8406), "UnMeet without a signal item stays hidden");

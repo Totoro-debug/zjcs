@@ -143,8 +143,11 @@ public sealed class PartnerRosterUiRunner : MonoBehaviour, IOfflinePartnerPresen
         services.NpcFriendshipUpdated += id => notifications.Add("friendship:" + id);
         services.NpcCollectedChanged += (id, on) => notifications.Add("pin:" + id + ":" + on);
         services.NpcRemoved += id => notifications.Add("remove:" + id);
-        font = TMP_FontAsset.CreateFontAsset(AssetDatabase.LoadAssetAtPath<Font>("Assets/Editor/FZY4K.ttf"));
-        Require(font != null, "Official font loads in fixture");
+        if (!PartnerRosterUiValidation.NativeCard)
+        {
+            font = TMP_FontAsset.CreateFontAsset(AssetDatabase.LoadAssetAtPath<Font>("Assets/Editor/FZY4K.ttf"));
+            Require(font != null, "Official font loads in fixture");
+        }
         WorldMultiLanguageText.Localize = key => key;
         WorldMultiLanguageText.LanguageFont = () => font;
         if (PartnerRosterUiValidation.NativeCard)
@@ -152,7 +155,7 @@ public sealed class PartnerRosterUiRunner : MonoBehaviour, IOfflinePartnerPresen
             var resources = JsonUtility.FromJson<NativeCatalog>(AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/PartnerCard/partner-card-images.json").text);
             var currentRules = JsonUtility.FromJson<NativeRules>(read("Partners/partner-rules.json"));
             Require(resources.manifest == "884_156692" && currentRules.manifest == resources.manifest, "Selected original card configuration");
-            var rosterNpcs = currentRules.tables.npc.Where(value => value.NpcType == 4 && value.NpcRoleType != 2
+            var rosterNpcs = currentRules.tables.npc.Where(value => value.NpcType != 2 && value.NpcRoleType != 2
                 && (value.Id < 11015 || value.Id > 11022)).ToDictionary(value => value.Id);
             var expectedAddresses = new HashSet<string>(rosterNpcs.Values.SelectMany(value => new[] { value.FigureImage, value.SmallBgImage }));
             Require(expectedAddresses.SetEquals(resources.sprites.Select(value => value.address)), "All current roster figure/background addresses");
@@ -187,6 +190,7 @@ public sealed class PartnerRosterUiRunner : MonoBehaviour, IOfflinePartnerPresen
             foreach (char character in string.Concat(texts.Values))
                 Require(regionalFont.HasCharacter(character, true, true), "Original font includes card text U+" + ((int)character).ToString("X4"));
             WorldMultiLanguageText.LanguageFont = () => regionalFont;
+            font = regionalFont;
         }
         fixtureSprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 2, 2), new Vector2(0.5f, 0.5f));
         events = new GameObject("SimulatedPointer", typeof(EventSystem)).GetComponent<EventSystem>();

@@ -75,11 +75,11 @@ public static class PartnerCardBindingValidation
                 Require(text.font != null && text.fontSharedMaterial != null, "Original font/material: " + text.name);
                 Require(text.font.atlasTextures.Length > 0 && text.font.atlasTextures.All(value => value != null), "Original font atlases");
             }
-            var sounds = AssetDatabase.FindAssets("t:AudioClip", new[] { root });
+            var sounds = AssetDatabase.GetDependencies(root + "/NpcPanelNpcItem.prefab", true)
+                .Select(path => AssetDatabase.LoadAssetAtPath<AudioClip>(path)).Where(clip => clip != null).Distinct().ToArray();
             Require(sounds.Length == 2, "Both original Wwise events are bound");
-            foreach (string guid in sounds)
+            foreach (var clip in sounds)
             {
-                var clip = AssetDatabase.LoadAssetAtPath<AudioClip>(AssetDatabase.GUIDToAssetPath(guid));
                 Require(clip != null && clip.samples > 0 && clip.frequency == 48000, "Decoded original audio");
             }
             var images = card.GetComponentsInChildren<Image>(true);

@@ -434,6 +434,39 @@
       }
     },
     {
+      "address": "UI/NPC/Npc_Individual/10502/npc_role_10502",
+      "pointer": {
+        "fileID": 21300000,
+        "guid": "e0781cb8917ac07cc53f204d440ff3a0",
+        "type": 2
+      },
+      "consumers": [
+        {
+          "npc_id": 10502,
+          "field": "FigureImage"
+        }
+      ],
+      "manifest_asset": {
+        "address": "",
+        "path": "Assets/Image/UI/NPC/Npc_Individual/10502/npc_role_10502.png",
+        "guid": "df6119b995d171f42ac8ca318ac957b4",
+        "tags": [],
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_10502.bundle"
+      },
+      "original": "cab-7210f9b4d96dfac9c3a9ac3b3239815e:2202337288915842792",
+      "original_sha256": "9d7f18696e461866026528758c9a65c1ccc5c09baf9081ea5dfbcaa02a721caa",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_10502.bundle",
+        "bundle_hash": "ff4367ec7166d69c0544ce81b2541fe1",
+        "path_id": "2202337288915842792",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ff4367ec7166d69c0544ce81b2541fe1.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 754365,
+        "bundle_sha256": "8b134242220e42cf3cc6c796cbdfef3b65a806f7f465766cc5f5e6da8c70728b"
+      }
+    },
+    {
       "address": "UI/NPC/Npc_Individual/10503/npc_role_10503",
       "pointer": {
         "fileID": 21300000,
@@ -497,6 +530,39 @@
         "manifest": "884_156692",
         "bundle_size": 529845,
         "bundle_sha256": "ab619bceff2af74966162d35fcf2364d6c85fe85e4e730f4e97af44da7d37c32"
+      }
+    },
+    {
+      "address": "UI/NPC/Npc_Individual/10505/npc_role_10505",
+      "pointer": {
+        "fileID": 21300000,
+        "guid": "6ce01e05d64a708d22380766720f4655",
+        "type": 2
+      },
+      "consumers": [
+        {
+          "npc_id": 10505,
+          "field": "FigureImage"
+        }
+      ],
+      "manifest_asset": {
+        "address": "",
+        "path": "Assets/Image/UI/NPC/Npc_Individual/10505/npc_role_10505.png",
+        "guid": "56119c248e5b7084e8ef4393071505c5",
+        "tags": [],
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_10505.bundle"
+      },
+      "original": "cab-58d9b1321cbce47ed9f50444e364076c:8288591510054040821",
+      "original_sha256": "967c5c8960fa2920de97f6e484ec6a7c2fd5913f83d6c7928040672ceeb736eb",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_10505.bundle",
+        "bundle_hash": "853690d443d0f1838834ed3e373a713e",
+        "path_id": "8288591510054040821",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/853690d443d0f1838834ed3e373a713e.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 967714,
+        "bundle_sha256": "2abb7062fc40f27df0ba2c9817410423f4e90a1b92e8ab9f1771ca4d1359f18a"
       }
     },
     {
@@ -805,6 +871,10 @@
       },
       "consumers": [
         {
+          "npc_id": 10611,
+          "field": "FigureImage"
+        },
+        {
           "npc_id": 10709,
           "field": "FigureImage"
         }
@@ -959,6 +1029,39 @@
         "manifest": "884_156692",
         "bundle_size": 754797,
         "bundle_sha256": "22b9d3fc3b95f0840e2e1e850a5108aa50d80ff19b752cd395f8f37306da43e3"
+      }
+    },
+    {
+      "address": "UI/NPC/Npc_Individual/10705/npc_role_10705",
+      "pointer": {
+        "fileID": 21300000,
+        "guid": "769049699a87a10a66ed7bbe3d0e37c4",
+        "type": 2
+      },
+      "consumers": [
+        {
+          "npc_id": 10705,
+          "field": "FigureImage"
+        }
+      ],
+      "manifest_asset": {
+        "address": "",
+        "path": "Assets/Image/UI/NPC/Npc_Individual/10705/npc_role_10705.png",
+        "guid": "31ef82b6c9a2b8245bae6661a8f7c6b7",
+        "tags": [],
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_10705.bundle"
+      },
+      "original": "cab-f4550e4c43253497259a51f1d34851dc:6268229564112484415",
+      "original_sha256": "14160b9fcd07035978d24985eaece6fc677b10787ba2d24a1055f3c893b1e99c",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_10705.bundle",
+        "bundle_hash": "10b2c4f2ef72016194bebddd6ebaa1c7",
+        "path_id": "6268229564112484415",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/10b2c4f2ef72016194bebddd6ebaa1c7.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 734263,
+        "bundle_sha256": "fbea3d2454be99a0045e0aa9888e193b682bf161bafe04cdcf1935cc9610fe44"
       }
     },
     {
@@ -2055,6 +2158,39 @@
       }
     },
     {
+      "address": "UI/NPC/Npc_Individual/8404/npc_role_8404",
+      "pointer": {
+        "fileID": 21300000,
+        "guid": "337a30813ab61454a68d62b7a57bbca1",
+        "type": 2
+      },
+      "consumers": [
+        {
+          "npc_id": 8404,
+          "field": "FigureImage"
+        }
+      ],
+      "manifest_asset": {
+        "address": "",
+        "path": "Assets/Image/UI/NPC/Npc_Individual/8404/npc_role_8404.png",
+        "guid": "29c67be8d66800545a7a492db6363822",
+        "tags": [],
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8404.bundle"
+      },
+      "original": "cab-7b6939c5dd7742d8e1b94534c1e856d2:-4886538881763350454",
+      "original_sha256": "d335eac39c5abd69da31fb38b3e217dcd05a45da57098c71216567a866a78882",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8404.bundle",
+        "bundle_hash": "08552bd7e4cb68c13175711c1b06628d",
+        "path_id": "-4886538881763350454",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/08552bd7e4cb68c13175711c1b06628d.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 522284,
+        "bundle_sha256": "088a69de0a74fffa8ae2df27a5d88ede9ffb735426403cc821731ff40f9902e1"
+      }
+    },
+    {
       "address": "UI/NPC/Npc_Individual/8406/npc_role_8406",
       "pointer": {
         "fileID": 21300000,
@@ -2187,6 +2323,74 @@
       }
     },
     {
+      "address": "UI/NPC/Npc_Individual/8411/npc_role_8411",
+      "pointer": {
+        "fileID": 21300000,
+        "guid": "f8edc61c48653e04dbc266b102f5751f",
+        "type": 2
+      },
+      "consumers": [
+        {
+          "npc_id": 8411,
+          "field": "FigureImage"
+        }
+      ],
+      "manifest_asset": {
+        "address": "",
+        "path": "Assets/Image/UI/NPC/Npc_Individual/8411/npc_role_8411.png",
+        "guid": "352e34a5b1358e04295914f1a7a50ed7",
+        "tags": [],
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8411.bundle"
+      },
+      "original": "cab-37527c0a8f82ac576a367d39551eeef7:7541662666244379625",
+      "original_sha256": "1392b922129d288de9e35e51e85f32e7214175f258a4a74451c92d0c61fbe60b",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8411.bundle",
+        "bundle_hash": "6e1c338bce637e16d2dc45c150a210ef",
+        "path_id": "7541662666244379625",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/6e1c338bce637e16d2dc45c150a210ef.bundle",
+        "raw_size": 596296,
+        "raw_sha256": "8143e5b8b9958c70912a8c6415b2c1421bb788c16f08631d3e0fe6480f04844e"
+      }
+    },
+    {
+      "address": "UI/NPC/Npc_Individual/8416/npc_role_8416",
+      "pointer": {
+        "fileID": 21300000,
+        "guid": "726b20dabc45cc923a4b4ac585855ed5",
+        "type": 2
+      },
+      "consumers": [
+        {
+          "npc_id": 8416,
+          "field": "FigureImage"
+        }
+      ],
+      "manifest_asset": {
+        "address": "",
+        "path": "Assets/Image/UI/NPC/Npc_Individual/8416/npc_role_8416.png",
+        "guid": "b42b000fc13802946b615ad66a36bb01",
+        "tags": [],
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8416.bundle"
+      },
+      "original": "cab-3c33a0aa21b719c607f479511e931beb:8046799694782917840",
+      "original_sha256": "88612a48a1ea293b84c417c27199d394e0059aee30421c7daa7bf71ed022fed8",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8416.bundle",
+        "bundle_hash": "13e5d52f42727a50dce1386c66cdcdc8",
+        "path_id": "8046799694782917840",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/13e5d52f42727a50dce1386c66cdcdc8.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 646578,
+        "bundle_sha256": "f31d0ae98ab6090a10a79d1bf3d3db254723ed48b281094ecd5c3fc46a6cabf9"
+      }
+    },
+    {
       "address": "UI/NPC/Npc_Individual/8421/npc_role_8421",
       "pointer": {
         "fileID": 21300000,
@@ -2250,6 +2454,41 @@
         "manifest": "884_156692",
         "bundle_size": 477696,
         "bundle_sha256": "98d169eb4c212ef792de623146f01045ab1092cd04cd2b8439728b318020da36"
+      }
+    },
+    {
+      "address": "UI/NPC/Npc_Individual/8423/npc_role_8423",
+      "pointer": {
+        "fileID": 21300000,
+        "guid": "e27119dfd60d9d024f96c4e1bc6ddfe2",
+        "type": 2
+      },
+      "consumers": [
+        {
+          "npc_id": 8423,
+          "field": "FigureImage"
+        }
+      ],
+      "manifest_asset": {
+        "address": "",
+        "path": "Assets/Image/UI/NPC/Npc_Individual/8423/npc_role_8423.png",
+        "guid": "2dccdfb6a04932649894b35b96028d23",
+        "tags": [],
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8423.bundle"
+      },
+      "original": "cab-e001e14f16e8e8149ebdbdbf98523680:-3827086728238650492",
+      "original_sha256": "109aec9874868b0d759eca5558ae53276b788e03f13982be49ced12c0735c40b",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8423.bundle",
+        "bundle_hash": "4f6816eb35ebd43332b178677a05e5c4",
+        "path_id": "-3827086728238650492",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/4f6816eb35ebd43332b178677a05e5c4.bundle",
+        "raw_size": 508350,
+        "raw_sha256": "5dc753406e85ad5f97ba1347e6354b8a204bb715607d73689a33c85b1e81dde4"
       }
     },
     {
@@ -2418,6 +2657,72 @@
       }
     },
     {
+      "address": "UI/NPC/Npc_Individual/8441/npc_role_8441",
+      "pointer": {
+        "fileID": 21300000,
+        "guid": "d06a5349da252f98f328c816615f638a",
+        "type": 2
+      },
+      "consumers": [
+        {
+          "npc_id": 8441,
+          "field": "FigureImage"
+        }
+      ],
+      "manifest_asset": {
+        "address": "",
+        "path": "Assets/Image/UI/NPC/Npc_Individual/8441/npc_role_8441.png",
+        "guid": "65a1d46ff0e067f4ea4e17dee7ac1978",
+        "tags": [],
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8441.bundle"
+      },
+      "original": "cab-2995bc940d90347c600e0830e497bb8c:-5935264503700911657",
+      "original_sha256": "5f9e869304a93e588514e04aeb206d0f65740838e4f63d62154b6ee0c99f94e3",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8441.bundle",
+        "bundle_hash": "93eca988875a949b156394c9f6f0d855",
+        "path_id": "-5935264503700911657",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/93eca988875a949b156394c9f6f0d855.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 678195,
+        "bundle_sha256": "d325383dbcc8283e1ceed7886ee467586dedc879a593095e3c61fe0e426f9a50"
+      }
+    },
+    {
+      "address": "UI/NPC/Npc_Individual/8442/npc_role_8442",
+      "pointer": {
+        "fileID": 21300000,
+        "guid": "a46a75d9101584db9766adb15b9a9100",
+        "type": 2
+      },
+      "consumers": [
+        {
+          "npc_id": 8442,
+          "field": "FigureImage"
+        }
+      ],
+      "manifest_asset": {
+        "address": "",
+        "path": "Assets/Image/UI/NPC/Npc_Individual/8442/npc_role_8442.png",
+        "guid": "284f429e5a38f0d4c9d69ea7ba9e201e",
+        "tags": [],
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8442.bundle"
+      },
+      "original": "cab-bee394e16eb211f1ce79cb2175364dbe:-201314330666002003",
+      "original_sha256": "0e7d522b18cac0cf94b3af5ce7c69228733aec5f3e9de3e591e4a39d186b4fef",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8442.bundle",
+        "bundle_hash": "af90da72790d1a641d2b7e31ee7ef984",
+        "path_id": "-201314330666002003",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/af90da72790d1a641d2b7e31ee7ef984.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 524203,
+        "bundle_sha256": "fc10cd168c9453f0c9e160d067185a42a39b7944d366961272df51385e2ccf5f"
+      }
+    },
+    {
       "address": "UI/NPC/Npc_Individual/8451/npc_role_8451",
       "pointer": {
         "fileID": 21300000,
@@ -2448,6 +2753,39 @@
         "manifest": "884_156692",
         "bundle_size": 1364832,
         "bundle_sha256": "a31d688a670e2fd18d3334f719a998bbfa54b30d379b2d6d62e2390f8fb14c08"
+      }
+    },
+    {
+      "address": "UI/NPC/Npc_Individual/8452/npc_role_8452",
+      "pointer": {
+        "fileID": 21300000,
+        "guid": "d2fb068ea07e5e6918cbfdf06db6777b",
+        "type": 2
+      },
+      "consumers": [
+        {
+          "npc_id": 8452,
+          "field": "FigureImage"
+        }
+      ],
+      "manifest_asset": {
+        "address": "",
+        "path": "Assets/Image/UI/NPC/Npc_Individual/8452/npc_role_8452.png",
+        "guid": "eea69d932fc7f01439fdc34e95e8b31f",
+        "tags": [],
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8452.bundle"
+      },
+      "original": "cab-ec8f629555ea8b3c171f1c7912ac4ac1:-2723700575969833624",
+      "original_sha256": "fc75fc14203d2895162008e545c523a86926cdf5ab740c96996c63aba992f884",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8452.bundle",
+        "bundle_hash": "65d4c6153e2f30f7faaabd75c60d0a41",
+        "path_id": "-2723700575969833624",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/65d4c6153e2f30f7faaabd75c60d0a41.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 1543387,
+        "bundle_sha256": "9960d0d89994038fcbefe0e218361ff8af67dbc9ef6a5eb4d72fdc37990705d7"
       }
     },
     {
@@ -2610,6 +2948,10 @@
         },
         {
           "npc_id": 10704,
+          "field": "SmallBgImage"
+        },
+        {
+          "npc_id": 10705,
           "field": "SmallBgImage"
         },
         {
@@ -3008,6 +3350,10 @@
           "field": "SmallBgImage"
         },
         {
+          "npc_id": 8452,
+          "field": "SmallBgImage"
+        },
+        {
           "npc_id": 8453,
           "field": "SmallBgImage"
         },
@@ -3051,6 +3397,10 @@
       },
       "consumers": [
         {
+          "npc_id": 8404,
+          "field": "SmallBgImage"
+        },
+        {
           "npc_id": 8406,
           "field": "SmallBgImage"
         },
@@ -3064,6 +3414,10 @@
         },
         {
           "npc_id": 8409,
+          "field": "SmallBgImage"
+        },
+        {
+          "npc_id": 8411,
           "field": "SmallBgImage"
         },
         {
@@ -3107,6 +3461,10 @@
         },
         {
           "npc_id": 8422,
+          "field": "SmallBgImage"
+        },
+        {
+          "npc_id": 8423,
           "field": "SmallBgImage"
         },
         {
@@ -3159,6 +3517,14 @@
         {
           "npc_id": 8440,
           "field": "SmallBgImage"
+        },
+        {
+          "npc_id": 8441,
+          "field": "SmallBgImage"
+        },
+        {
+          "npc_id": 8442,
+          "field": "SmallBgImage"
         }
       ],
       "manifest_asset": {
@@ -3197,6 +3563,10 @@
         },
         {
           "npc_id": 8402,
+          "field": "SmallBgImage"
+        },
+        {
+          "npc_id": 8416,
           "field": "SmallBgImage"
         }
       ],
@@ -3257,6 +3627,10 @@
         {
           "npc_id": 10607,
           "field": "SmallBgImage"
+        },
+        {
+          "npc_id": 10611,
+          "field": "SmallBgImage"
         }
       ],
       "manifest_asset": {
@@ -3294,11 +3668,19 @@
           "field": "SmallBgImage"
         },
         {
+          "npc_id": 10502,
+          "field": "SmallBgImage"
+        },
+        {
           "npc_id": 10503,
           "field": "SmallBgImage"
         },
         {
           "npc_id": 10504,
+          "field": "SmallBgImage"
+        },
+        {
+          "npc_id": 10505,
           "field": "SmallBgImage"
         },
         {
@@ -3664,12 +4046,20 @@
       "text": "格鲁德"
     },
     {
+      "key": "ui_npc_name_10502",
+      "text": "阿斯特丽德"
+    },
+    {
       "key": "ui_npc_name_10503",
       "text": "西尔维娅"
     },
     {
       "key": "ui_npc_name_10504",
       "text": "伊丝娜"
+    },
+    {
+      "key": "ui_npc_name_10505",
+      "text": "芙蕾雅"
     },
     {
       "key": "ui_npc_name_10506",
@@ -3708,6 +4098,10 @@
       "text": "瑞文"
     },
     {
+      "key": "ui_npc_name_10609",
+      "text": "ui_npc_name_10609"
+    },
+    {
       "key": "ui_npc_name_10701",
       "text": "伊米尔"
     },
@@ -3722,6 +4116,10 @@
     {
       "key": "ui_npc_name_10704",
       "text": "夏尔"
+    },
+    {
+      "key": "ui_npc_name_10705",
+      "text": "卡珊德拉"
     },
     {
       "key": "ui_npc_name_10706",
@@ -3764,6 +4162,10 @@
       "text": "绯乐"
     },
     {
+      "key": "ui_npc_name_8404_2",
+      "text": "村长"
+    },
+    {
       "key": "ui_npc_name_8406",
       "text": "赫密斯"
     },
@@ -3780,12 +4182,24 @@
       "text": "基利安"
     },
     {
+      "key": "ui_npc_name_8411",
+      "text": "森森"
+    },
+    {
+      "key": "ui_npc_name_8416",
+      "text": "神秘商人"
+    },
+    {
       "key": "ui_npc_name_8421",
       "text": "卡尔"
     },
     {
       "key": "ui_npc_name_8422",
       "text": "梅克娜"
+    },
+    {
+      "key": "ui_npc_name_8423",
+      "text": "妮娜"
     },
     {
       "key": "ui_npc_name_8424",
@@ -3808,8 +4222,20 @@
       "text": "十兵卫"
     },
     {
+      "key": "ui_npc_name_8441",
+      "text": "未央"
+    },
+    {
+      "key": "ui_npc_name_8442",
+      "text": "终末"
+    },
+    {
       "key": "ui_npc_name_8451",
       "text": "惠"
+    },
+    {
+      "key": "ui_npc_name_8452",
+      "text": "茗"
     },
     {
       "key": "ui_npc_name_8453",

@@ -123,12 +123,13 @@ public sealed class PartnerRosterNativeRunner : MonoBehaviour, IOfflinePartnerPr
             player.Inventory.Add(new OfflineItemStack { ItemId = 1300, Count = 2 });
             int rank = 0;
             var developable = new HashSet<int>(catalog.Rows("npc_friendship_level").Where(row => Convert.ToInt32(row["Level"]) >= 4).Select(row => Convert.ToInt32(row["Id"])));
-            foreach (int id in catalog.Rows("npc").Where(row => Convert.ToInt32(row["NpcType"]) == 4 && Convert.ToInt32(row["NpcRoleType"]) != 2)
+            foreach (int id in catalog.Rows("npc").Where(row => Convert.ToInt32(row["NpcType"]) != 2 && Convert.ToInt32(row["NpcRoleType"]) != 2)
                 .Select(row => Convert.ToInt32(row["Id"])).Where(id => id != 8401 && (id < 11015 || id > 11022) && developable.Contains(id)).Take(21))
             {
                 int level = ++rank % 4 + 1;
                 long exp = Convert.ToInt64(catalog.Rows("npc_friendship_level").Single(row => Convert.ToInt32(row["Id"]) == id && Convert.ToInt32(row["Level"]) == level)["FriendshipExp"]);
-                player.CharacterProperties.NpcFriendships.Add(new OfflineNpcFriendship { NpcClassId = id, Level = level, FriendshipExp = exp, ActivateTimeTicks = 10000 - rank });
+                player.CharacterProperties.NpcFriendships.Add(new OfflineNpcFriendship { NpcClassId = id, Level = level, FriendshipExp = exp, ActivateTimeTicks = 10000 - rank,
+                    IsCollected = id == 8404 || id == 8411, CollectedTimeTicks = rank });
             }
         }).IsApplied, "Seed isolated actual profile");
         services = new OfflinePartnerRosterUiServices(session, catalog, new OfflineCharacterProgressionService(session, catalog), this, this);
@@ -165,9 +166,18 @@ public sealed class PartnerRosterNativeRunner : MonoBehaviour, IOfflinePartnerPr
         host.SetActive(true); yield return null; yield return new WaitForSeconds(0.8f);
         Require(loop.totalCount == services.NpcRoster(false).Count, "Original initial roster count: " + loop.totalCount + "/" + services.NpcRoster(false).Count + ", active=" + list.isActiveAndEnabled);
         Require(loop.content.GetComponentsInChildren<NpcPanelNpcItem>().Length > 0, "Original list instantiates visible cards");
+        Require(services.NpcRoster(false).Any(value => value.NpcClassId == 8404)
+            && services.NpcRoster(false).Any(value => value.NpcClassId == 8411), "Original roster shows saved tutor and trader cards");
         var filter = root.GetComponentInChildren<FilterSortPanel>(true);
         Require(!filter.CloseBtn.enabled && !filter.CloseBtn.targetGraphic.enabled, "Original initial animation disables root close mask");
         Capture("native-roster-default.png");
+        foreach (int id in new[] { 8404, 8411 })
+        {
+            var card = loop.content.GetComponentsInChildren<NpcPanelNpcItem>().Single(value => Get<NpcRosterItem>(value, "mNpcDataWrap").NpcClassId == id);
+            int before = detailCalls;
+            Click(Get<Button>(card, "mDetailBtn").gameObject); yield return null;
+            Require(detailCalls == before + 1, "Simulated pointer opens original trader/tutor card " + id);
+        }
         var showAll = root.GetComponentInChildren<Zjcs.Official.SkillsUI.UIToggle>(true);
         Click(showAll.gameObject); yield return null; yield return new WaitForSeconds(0.8f);
         Require(showAll.isOn && loop.totalCount == services.NpcRoster(true).Count && loop.totalCount > services.NpcRoster(false).Count, "Original show-all simulated click adds unmet gift owner: on=" + showAll.isOn + ", count=" + loop.totalCount + ", default=" + services.NpcRoster(false).Count + ", all=" + services.NpcRoster(true).Count);
@@ -187,7 +197,7 @@ public sealed class PartnerRosterNativeRunner : MonoBehaviour, IOfflinePartnerPr
         Capture("native-roster-closed.png");
         var metCard = loop.content.GetComponentsInChildren<NpcPanelNpcItem>().First(card => Get<Button>(card, "mDetailBtn").gameObject.activeInHierarchy);
         Click(Get<Button>(metCard, "mDetailBtn").gameObject); yield return null;
-        Require(detailCalls + giftCalls == 1, "Visible original card dispatches its route");
+        Require(detailCalls + giftCalls == 3, "Visible original card dispatches its route");
         var beforeScroll = loop.content.anchoredPosition;
         var pointer = new PointerEventData(events) { scrollDelta = new Vector2(0, -20) };
         ExecuteEvents.Execute(loop.gameObject, pointer, ExecuteEvents.scrollHandler); yield return new WaitForSeconds(0.6f);
