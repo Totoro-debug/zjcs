@@ -1,0 +1,51 @@
+{
+  "manifest": "884_156692",
+  "receipt": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+  },
+  "original_application": {
+    "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.SpineExt/DynamicSkeletonRenderSeparator.cs",
+    "sha256": "8b9acb11d37399feba83878e0cfd6fa5c8158f4a3d750c77119f35a47cd4d3d5"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/DynamicSkeletonRenderSeparator.cs",
+      "sha256": "3199ed68f807eae9a259e0fa36f1f333ead63d8e3b78e2cff2d615e072c152c6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/ProfessionSceneSeparatorBindings.cs",
+      "sha256": "a40c614da64ee0b323e21064a9fd011490c3c8c1b920e8d9e32b2c53c8402e94"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneMeshSeparator.cs",
+      "sha256": "0f7b8a70e4d6ab9b2b0464f7bc5028b435d180a862b15b775eb45eff646bf066"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneMeshPart.cs",
+      "sha256": "82526bcad9a173a8b299ebfe181d47e1f42dfcb2657d5fe4b56b02f156a26e4c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneSeparator.cs",
+      "sha256": "774151c7ce13aa9afdd308175c9acd01392a18a7faf16def60aec05877189a89"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_scene_separator_runtime.py",
+    "sha256": "04456116c5443cde7d8644e3c06b033e11d659840958861510f3adf0e8fdd0e9"
+  },
+  "helpers": [
+    {
+      "path": "scripts/prepare_battle_scene_appearance_runtime.py",
+      "sha256": "5c3e7a430df2a0c1bdebfa65b4c099d583844dc25644eac0a8675ab20d4152c8"
+    }
+  ],
+  "operation": "Preserve the original application's reverse shrink/FIFO reuse, new-only sorting, minimum/extra part counts, visibility notifications and active-only destruction. Replace SDK base calls with explicit ports and independent native Unity mesh assignment.",
+  "limits": [
+    "The native backend consumes completed geometry and source page materials; it does not implement animation, physics, mixing or the SDK optimization algorithm. Production scene/character bindings and Windows Player validation remain required."
+  ]
+}
