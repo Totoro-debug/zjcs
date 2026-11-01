@@ -24,6 +24,7 @@ using Zjcs.Presentation.Wishes;
 using Zjcs.Presentation.Combat;
 using Zjcs.Combat.Official;
 using Zjcs.Offline.PartnersUI;
+using Zjcs.Official.ProfessionUI;
 
 namespace Zjcs.Presentation.Home
 {
@@ -53,6 +54,10 @@ namespace Zjcs.Presentation.Home
         private OfflineCharacterProgressionService progression;
         private OfficialPartnerRosterAssetCatalog partnerRosterAssets;
         private OfflinePartnerRosterUiServices partnerRoster;
+        private OfficialPartnerDetailPropertyAssetCatalog partnerDetailAssets;
+        private OfflinePartnerDetailPropertyServices partnerDetailServices;
+        private OfflinePartnerDetailPropertySource partnerDetailSource;
+        private OfflinePartnerGiftPlayer partnerGiftPlayer;
         private OfflineAstrologicalService astrological;
         private float astrologicalChargeStartTime;
         private float astrologicalNextChargeTick;
@@ -145,6 +150,8 @@ namespace Zjcs.Presentation.Home
         public FightOfficialNpcAssistanceCatalog NpcAssistanceCatalog => npcAssistanceCatalog;
         public OfficialPartnerRosterAssetCatalog PartnerRosterAssets => partnerRosterAssets;
         public OfflinePartnerRosterUiServices PartnerRoster => partnerRoster;
+        public OfficialPartnerDetailPropertyAssetCatalog PartnerDetailAssets => partnerDetailAssets;
+        public OfflinePartnerDetailPropertyServices PartnerDetailServices => partnerDetailServices;
         public OfflineArenaSession Arena => arena;
         public OfflineCharacterProgressionService DailyDungeonProgression
         {
@@ -752,6 +759,23 @@ namespace Zjcs.Presentation.Home
             partnerRoster = new OfflinePartnerRosterUiServices(profile,
                 progression.Catalog, progression,
                 new OfflineProfessionImageResourceLoader(partnerRosterAssets.Images), hud);
+            partnerDetailAssets = OfficialPartnerDetailPropertyAssetCatalog.LoadDefault();
+            var friendshipAssets = OfficialPartnerFriendshipAssetCatalog.LoadDefault();
+            var partnerCatalog = OfficialPartnerAssetCatalog.LoadDefault();
+            var detailImages = new OfflineProfessionImageResourceLoader(partnerDetailAssets.Common.Images);
+            var localization = new OfflinePartnerLocalizationService(partnerDetailAssets.Texts,
+                partnerDetailAssets.Common.GiftTexts, friendshipAssets.PropertyTexts, friendshipAssets.DialogTexts);
+            var propertyBindings = new OfflineProfessionPropertyBindings(friendshipAssets.PropertyConfiguration,
+                detailImages, localization, (owner, path, name, description, control) => { },
+                (owner, rank, description, effect, noEffect, noSeason) => { });
+            ProfessionPropertyBindings.Current = propertyBindings;
+            var properties = new OfflinePartnerFriendshipProperties(partnerCatalog, propertyBindings, () => false);
+            partnerDetailSource = new OfflinePartnerDetailPropertySource(profile, partnerCatalog, properties);
+            partnerGiftPlayer = new OfflinePartnerGiftPlayer(profile, partnerCatalog,
+                OfficialPartnerGiftAssetCatalog.LoadDefault(), id => null, () => false);
+            partnerDetailServices = new OfflinePartnerDetailPropertyServices(partnerCatalog, properties,
+                partnerDetailSource, partnerRoster, id => profile.Save.Player.CharacterProperties.Treasures
+                    .Any(value => value.ClassId == id && value.Active), hud);
             hud.Build();
             hud.ShowFantasyTowerPendingResult();
             fruitTreeTutorialVoiceSource = gameObject.AddComponent<AudioSource>();
@@ -1737,6 +1761,12 @@ namespace Zjcs.Presentation.Home
         }
 
         public void ShowInventoryNotice(string message) => hud?.ShowNotice(message);
+
+        public void OpenPartnerDetail(int npcId)
+        {
+            if (hud == null || partnerDetailServices == null || partnerGiftPlayer == null) return;
+            hud.OpenPartnerDetail(npcId, partnerDetailAssets, partnerDetailServices, partnerGiftPlayer);
+        }
 
         public bool EnterMainland()
         {

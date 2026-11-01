@@ -140,6 +140,8 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 ### 当前原生好感详情窗口（局部）
 
+当前主城名册卡片已可打开恢复的官方 `NpcDetailPanelPropContent` 属性子树。`HomeFeatureRuntime` 显式加载 `OfficialPartnerDetailPropertyAssetCatalog`、伙伴属性配置和中文文本，`PartnerDetailPanelView` 复用官方 prefab、`NpcDetailPanelPropContent.Configure/Init`、官方 `PartnerDetailUiUtils` 对象创建和属性行布局；属性值由 `OfflinePartnerDetailPropertySource` 读取当前存档的好感等级／天赋节点并执行原 `PartnerNpcPropertyFormula`。收藏按钮通过 `OfflinePartnerDetailPropertyServices.SetCollected` 写入当前角色存档，窗口关闭时恢复全局对象池和本地化绑定。详情中的等级简报、导航和独立好感弹窗仍由 Home 本地端点承接：等级使用主角当前等级／阶位，导航在尚未有离线位置规则时保持关闭，独立好感弹窗待赠礼窗口宿主接入后再开放。当前验证已完成静态元数据检查和 Unity 初始化导入／编译；尚未完成主工程 Play Mode 实际点击、独立好感弹窗、完整赠礼区域及 Windows Player 发布。
+
 `Runtime/Official/PartnersUI/FriendshipDialog/` 从当前 `884_156692` 完整迁入 `NpcFriendshipDialog` 控制器，保留原偏好礼物排序／图标回收、连续规则编号、助战好感条件、普通／星神说明、旅行开关和阶位属性预览。仅以显式接口替换原配置、玩家、属性和图标管理器注入；池化预览先配置服务再执行原初始化，不改数值与分支。
 
 `scripts/prepare_partner_friendship_dialog_native.py` 恢复原窗口全部 311 个对象及原坐标／层级，绑定完整原 `PopupWindow`、开合 AnimationClip、`PopupWindowSound`、布局限制、镜像图片、Bloom 标记及预览工具。资源位于 `unity/Assets/Official/Partners/UI/FriendshipDialog/`；19 项载荷中 8 项按原 GUID 与完整字节复用既有伙伴依赖。中文文字从所选官方语言分包提取，原 Wwise 事件引用保留；输入、源码／组件绑定、依赖和安装哈希见[原生详情窗口来源](../../assets/reference/partner-friendship-dialog-source-manifest.json)。
