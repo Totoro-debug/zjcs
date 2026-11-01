@@ -512,7 +512,7 @@ namespace Zjcs.Editor
         private static IEnumerator Capture(string directory, string name)
         {
             yield return new WaitForEndOfFrame();
-            ScreenCapture.CaptureScreenshot(Path.Combine(directory, "battle-host-" + name + ".png"));
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(Path.Combine(directory, "battle-host-" + name + ".png"));
             yield return null;
         }
         private static void Require(bool condition, string message)

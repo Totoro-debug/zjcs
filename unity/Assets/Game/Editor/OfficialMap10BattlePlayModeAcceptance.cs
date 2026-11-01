@@ -818,7 +818,7 @@ namespace Zjcs.Editor
                 Canvas.ForceUpdateCanvases();
                 expectedWidth=Screen.width;expectedHeight=Screen.height;
                 if (File.Exists(path)) File.Delete(path);
-                ScreenCapture.CaptureScreenshot(path);
+                yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(path);
                 do { yield return null; }
                 while (!File.Exists(path) && Time.realtimeSinceStartup<deadline);
                 if (!File.Exists(path)) break;

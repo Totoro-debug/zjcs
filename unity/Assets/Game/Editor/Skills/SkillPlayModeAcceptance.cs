@@ -343,7 +343,8 @@ namespace Zjcs.Editor.Skills
             Require(headTexture != null && headTexture.GetPixels32().Count(value => value.a > 10) > 100,
                 "The original shared player portrait rendered an empty image.");
             File.WriteAllBytes(Path.Combine(ValidationDirectory, "zjcs-skills-head.png"), headTexture.EncodeToPNG());
-            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-opening.png"));
+            yield return new WaitForEndOfFrame();
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-opening.png"));
             yield return null;
             if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_ATTACHMENTS_ONLY") == "1") {
                 yield return ValidateListAttachments(session, progression, panel);
@@ -371,7 +372,7 @@ namespace Zjcs.Editor.Skills
                 var saved = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(new ProfileSlotCatalog(root).GetProgressPath(slot)));
                 Require(saved.Player.Skills.Plans[progression.Player.Skills.SelectedPlan].Name == originalPlanName, "The renamed plan was not restored from disk.");
             }
-            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-plan-input.png"));
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-plan-input.png"));
             yield return null;
             Button entrySkill = FindVisibleOwnedSkillRowButton("SkillListItem", progression, 10015, out _);
             Require(entrySkill != null, "The owned skill with original entry links is missing.");
@@ -384,14 +385,14 @@ namespace Zjcs.Editor.Skills
             var link = linkedText.textInfo.linkInfo[0];
             var firstCharacter = linkedText.textInfo.characterInfo[link.linkTextfirstCharacterIndex];
             Vector3 localLinkPoint = (firstCharacter.bottomLeft + firstCharacter.topRight) * .5f;
-            Vector2 linkPoint = RectTransformUtility.WorldToScreenPoint(null, linkedText.transform.TransformPoint(localLinkPoint));
+            Vector2 linkPoint = PointerPosition(linkedText.transform.TransformPoint(localLinkPoint));
             SimulatePointerClickAt(linkedText.gameObject, linkPoint);
             yield return new WaitForSecondsRealtime(.7f);
             var entryTip = UnityEngine.Object.FindObjectsOfType<Transform>()
                 .FirstOrDefault(value => value.name == "skill_entry_tip" && value.gameObject.activeInHierarchy);
             Require(entryTip != null && entryTip.GetComponentsInChildren<TMPro.TMP_Text>()
                 .Any(value => !string.IsNullOrEmpty(value.text)), "Clicking an original entry link did not populate its native tip.");
-            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "skills-entry-tip.png"));
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(Path.Combine(ValidationDirectory, "skills-entry-tip.png"));
             yield return new WaitForEndOfFrame();
             Require(panel.HandleEscape(), "The original entry tip did not close.");
             yield return null;
@@ -418,7 +419,7 @@ namespace Zjcs.Editor.Skills
                 .FirstOrDefault(value => value.name == "skill_gift_item_detail" && value.gameObject.activeInHierarchy);
             Require(giftDetail != null && giftDetail.GetComponentsInChildren<TMPro.TMP_Text>()
                 .Any(value => !string.IsNullOrEmpty(value.text)), "A gift reward icon did not open its native item detail.");
-            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "skills-gift-item-detail.png"));
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(Path.Combine(ValidationDirectory, "skills-gift-item-detail.png"));
             yield return new WaitForEndOfFrame();
             Require(giftDetail.GetComponentsInChildren<TMPro.TMP_Text>().All(value => !value.text.Contains("{0}")),
                 "A visible gift item label retains its original formatting placeholder.");
@@ -433,14 +434,14 @@ namespace Zjcs.Editor.Skills
                 && !progression.ClaimSkillAchievements(33).IsApplied, "A skill gift reward can be claimed repeatedly.");
             yield return new WaitForSecondsRealtime(.4f);
             yield return new WaitForEndOfFrame();
-            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-gifts.png"));
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-gifts.png"));
             yield return null;
             Button qualityGift = achievementContent.GetComponentsInChildren<Button>(false)
                 .First(value => value.name == "AchievementTabGroupItem_14 (1)");
             SimulatePointerClick(qualityGift);
             yield return new WaitForSecondsRealtime(.4f);
             yield return new WaitForEndOfFrame();
-            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-quality-gifts.png"));
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-quality-gifts.png"));
             yield return null;
             SimulatePointerClick(skillPageTab);
             Require(skillContent.gameObject.activeInHierarchy && !achievementContent.gameObject.activeInHierarchy, "The official skill tab did not restore its skill content.");
@@ -449,10 +450,10 @@ namespace Zjcs.Editor.Skills
                 yield return null;
             string screenshot = Path.Combine(ValidationDirectory, "zjcs-skills-playmode.png");
             int selectedPlan = progression.Player.Skills.SelectedPlan;
-            ScreenCapture.CaptureScreenshot(screenshot);
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(screenshot);
             Button nextPlanButton = FindButton("NextPlanBtn");
             Require(nextPlanButton != null, "Skill plan switch button is missing.");
-            Vector2 buttonPosition = RectTransformUtility.WorldToScreenPoint(null, nextPlanButton.transform.position);
+            Vector2 buttonPosition = PointerPosition(nextPlanButton.transform.position);
             var pointer = new PointerEventData(EventSystem.current)
             {
                 position = buttonPosition
@@ -489,7 +490,7 @@ namespace Zjcs.Editor.Skills
             Require(recommendationDialog != null && recommendationDialog.activeInHierarchy, "The official skill recommendation dialog did not open.");
             applyRecommendation = FindRaycastableButton("SaveBtn");
             Require(applyRecommendation != null, "The official recommendation item has no active apply button.");
-            ScreenCapture.CaptureScreenshot(recommendationScreenshot);
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(recommendationScreenshot);
             yield return new WaitForEndOfFrame();
             yield return null;
             SimulatePointerClick(applyRecommendation);
@@ -561,7 +562,7 @@ namespace Zjcs.Editor.Skills
             yield return null;
             Canvas.ForceUpdateCanvases();
             yield return new WaitForSecondsRealtime(0.4f);
-            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-reference-match.png"));
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-reference-match.png"));
             Button detailButton = FindVisibleOwnedSkillRowButton("SkillListItem", progression, 0, out _);
             Require(detailButton != null, "The skill list detail button is missing after slot selection.");
             yield return null;
@@ -577,7 +578,7 @@ namespace Zjcs.Editor.Skills
             yield return new WaitForSecondsRealtime(.3f);
             Require(UnityEngine.Object.FindObjectsOfType<TMPro.TMP_Text>().Any(value => value.text == "已置顶该技能" && value.isActiveAndEnabled),
                 "The original favorite system message did not render.");
-            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-system-message.png"));
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-system-message.png"));
             Require(UnityEngine.Object.FindObjectsOfType<RectTransform>(true).Any(value => value.name == "CharacterPanelSkillListSeparator" && value.gameObject.activeInHierarchy), "Favoriting a skill did not restore the official separator between collected and uncollected skills.");
             Require(panel.IsOpen, "Collecting a skill closed the full skill page.");
             Require(favoriteButton != null && favoriteButton.gameObject.activeInHierarchy,
@@ -690,7 +691,7 @@ namespace Zjcs.Editor.Skills
             Button skillUpgradeButton = FindButton("UpgradeBtn");
             Require(skillUpgradeButton != null && skillUpgradeButton.isActiveAndEnabled, "The official skill detail rank promotion action is missing.");
             yield return new WaitForSecondsRealtime(.4f);
-            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "skills-rank-detail.png"));
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(Path.Combine(ValidationDirectory, "skills-rank-detail.png"));
             yield return new WaitForEndOfFrame();
             SimulatePointerClick(skillUpgradeButton);
             Button rankUpgradeButton = UnityEngine.Object.FindObjectsOfType<Button>(true).FirstOrDefault(value => value.name == "UseItemBtn" && value.transform.parent != null && value.transform.parent.parent != null && value.transform.parent.parent.name == "RankUpContent");
@@ -827,7 +828,7 @@ namespace Zjcs.Editor.Skills
             UnityEngine.Object.Destroy(videoPixels);
             Require(skinDialog.GetComponentsInChildren<TMPro.TMP_Text>().Any(value => value.name == "Desc" && !string.IsNullOrWhiteSpace(value.text)),
                 "The original skin description is blank.");
-            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "skills-skin.png"));
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(Path.Combine(ValidationDirectory, "skills-skin.png"));
             yield return null;
             SimulatePointerClick(skinDialog.GetComponentsInChildren<Button>().First(value => value.name == "CommonBtn_PlayVideo"));
             yield return new WaitForSecondsRealtime(.5f);
@@ -840,7 +841,7 @@ namespace Zjcs.Editor.Skills
             var aspect = expandedVideo.GetComponentInChildren<AspectRatioFitter>();
             Require(aspect != null && Math.Abs(aspect.aspectRatio - (float)expandedPlayer.width / expandedPlayer.height) < .001f,
                 "The expanded official video did not preserve its native aspect ratio.");
-            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "skills-skin-video.png"));
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(Path.Combine(ValidationDirectory, "skills-skin-video.png"));
             yield return null;
             SimulatePointerClick(expandedVideo.GetComponentsInChildren<Button>().First(value => value.name == "CloseBtn"));
             yield return null;
@@ -883,7 +884,7 @@ namespace Zjcs.Editor.Skills
             SimulatePointerClick(DamageToggle("MonsterHp", "ToggleText (1)"));
             SimulatePointerClick(DamageToggle("MonsterHurt", "ToggleText (1)"));
             yield return null;
-            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "skills-damage-settings.png"));
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(Path.Combine(ValidationDirectory, "skills-damage-settings.png"));
             yield return null;
             SimulatePointerClick(damageDialog.GetComponentsInChildren<Button>().First(value => value.name == "StartTest"));
             Require(damageRequest != null && damageRequest.StageId == 72001 && damageRequest.Difficulty == 1
@@ -929,7 +930,7 @@ namespace Zjcs.Editor.Skills
             Require(Attachment(10000, 13) && Attachment(10000, 8), "Mergeable pieces lost their original center hint or merge red dot.");
             Require(Row(10000).GetComponentsInChildren<TMPro.TMP_Text>().Any(value => value.text.Contains("合成")),
                 "The original merge hint did not use its Chinese localization.");
-            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "skills-list-merge-attachment.png"));
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(Path.Combine(ValidationDirectory, "skills-list-merge-attachment.png"));
             yield return null;
             SimulatePointerClick(Row(10000).GetComponent<Button>());
             yield return new WaitForSecondsRealtime(.6f);
@@ -937,7 +938,7 @@ namespace Zjcs.Editor.Skills
             yield return new WaitForSecondsRealtime(.3f);
             Require(progression.IsNewSessionItem(10000) && Attachment(10000, 4) && !Attachment(10000, 13),
                 "Merging through the original dialog did not replace the hint with a transient new-skill mark.");
-            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "skills-list-new-attachment.png"));
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(Path.Combine(ValidationDirectory, "skills-list-new-attachment.png"));
             yield return null;
             SimulatePointerClick(Row(10000).GetComponent<Button>());
             yield return new WaitForSecondsRealtime(.6f);
@@ -962,7 +963,7 @@ namespace Zjcs.Editor.Skills
                 "The incompatible newly acquired skill lost an original attachment.");
             Require(Row(mismatch).GetComponentsInChildren<TMPro.TMP_Text>().Any(value => value.text.Contains("职业")),
                 "The original profession warning was not localized.");
-            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "skills-list-profession-attachment.png"));
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(Path.Combine(ValidationDirectory, "skills-list-profession-attachment.png"));
             yield return null;
             Debug.Log("[Skills attachments] Original merge hint, merge red dot, acquired mark, click-to-clear and profession mismatch passed through simulated input.");
         }
@@ -997,7 +998,7 @@ namespace Zjcs.Editor.Skills
             {
                 var pointer = new PointerEventData(EventSystem.current)
                 {
-                    position = RectTransformUtility.WorldToScreenPoint(null, candidate.transform.position)
+                    position = PointerPosition(candidate.transform.position)
                 };
                 var raycasts = new System.Collections.Generic.List<RaycastResult>();
                 EventSystem.current.RaycastAll(pointer, raycasts);
@@ -1042,7 +1043,7 @@ namespace Zjcs.Editor.Skills
                     Button candidate = FindSkillRowButton(buttonName, owned.ClassId.ToString(System.Globalization.CultureInfo.InvariantCulture));
                     if (candidate == null)
                         continue;
-                    Vector2 position = RectTransformUtility.WorldToScreenPoint(null, candidate.transform.position);
+                    Vector2 position = PointerPosition(candidate.transform.position);
                     if (position.x < 0 || position.x > Screen.width || position.y < 0 || position.y > Screen.height)
                         continue;
                     if (scroll != null && scroll.viewport != null && !RectTransformUtility.RectangleContainsScreenPoint(scroll.viewport, position))
@@ -1072,14 +1073,14 @@ namespace Zjcs.Editor.Skills
             var pointer = new PointerEventData(EventSystem.current)
             {
                 button = PointerEventData.InputButton.Left,
-                position = RectTransformUtility.WorldToScreenPoint(null, icon.position)
+                position = PointerPosition(icon.position)
             };
             ExecuteEvents.Execute(source, pointer, ExecuteEvents.beginDragHandler);
             bool hasDragHandler = source.GetComponents<MonoBehaviour>().Any(value => value != null && value.GetType().Name == "SkillSlotDrag");
             bool targetHasDragHandler = target.GetComponents<MonoBehaviour>().Any(value => value != null && value.GetType().Name == "SkillSlotDrag");
             bool began = UnityEngine.Object.FindObjectsOfType<RectTransform>(true).Any(value => value.name == "SkillDragGhost");
             Require(began, "The skill slot did not begin dragging its icon; source handler=" + hasDragHandler + ", target handler=" + targetHasDragHandler + ".");
-            pointer.position = RectTransformUtility.WorldToScreenPoint(null, target.transform.position);
+            pointer.position = PointerPosition(target.transform.position);
             bool dragged = ExecuteEvents.Execute(source, pointer, ExecuteEvents.dragHandler);
             bool ended = ExecuteEvents.Execute(source, pointer, ExecuteEvents.endDragHandler);
             Debug.Log("[Skills acceptance] drag dispatch: began=" + began + ", dragged=" + dragged + ", ended=" + ended + ", destination screen=" + pointer.position);
@@ -1093,7 +1094,7 @@ namespace Zjcs.Editor.Skills
             var pointer = new PointerEventData(EventSystem.current)
             {
                 button = PointerEventData.InputButton.Left,
-                position = RectTransformUtility.WorldToScreenPoint(null, hitTarget.position)
+                position = PointerPosition(hitTarget.position)
             };
             var raycasts = new System.Collections.Generic.List<RaycastResult>();
             EventSystem.current.RaycastAll(pointer, raycasts);
@@ -1164,6 +1165,12 @@ namespace Zjcs.Editor.Skills
 
             position = default;
             return false;
+        }
+
+        private static Vector2 PointerPosition(Vector3 worldPoint)
+        {
+            return Combat.BattleGameViewInput.NormalizeScreenPoint(
+                RectTransformUtility.WorldToScreenPoint(null, worldPoint));
         }
 
         private static void Require(bool condition, string message)

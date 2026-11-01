@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Reflection;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -64,6 +66,78 @@ namespace Zjcs.Editor.Combat
             yield return ClickScreenPoint(point, label);
         }
 
+        /// <summary>
+        /// Converts a point returned by an editor overlay canvas into the logical
+        /// Game View surface used by EventSystem raycasts.
+        /// </summary>
+        public static Vector2 NormalizeScreenPoint(Vector2 point)
+        {
+            if (point.x >= 0f && point.y >= 0f && point.x <= Screen.width && point.y <= Screen.height)
+                return point;
+            if (!TryGetGameViewContent(out Rect window, out Rect target, out float pixelsPerPoint))
+                return point;
+
+            float desktopWidth = Display.main == null ? Screen.width : Display.main.systemWidth;
+            float desktopHeight = Display.main == null ? Screen.height : Display.main.systemHeight;
+            float scale = target.width / Mathf.Max(1f, Screen.width);
+            float x = point.x / pixelsPerPoint - window.x - target.x;
+            float yFromTop = desktopHeight / pixelsPerPoint - point.y / pixelsPerPoint
+                - window.y - target.y;
+            return new Vector2(x / scale, (target.height - yFromTop) / scale);
+        }
+
+        /// <summary>
+        /// Captures only the rendered Game View content. Editor screenshots otherwise
+        /// include the entire desktop when the Game View is embedded or scaled.
+        /// </summary>
+        public static IEnumerator CaptureGameViewScreenshot(string path)
+        {
+            if (string.IsNullOrEmpty(path)) throw new ArgumentException("A screenshot path is required.", nameof(path));
+            Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(path)));
+            string fullPath = path + ".full.png";
+            if (File.Exists(fullPath)) File.Delete(fullPath);
+            yield return new WaitForEndOfFrame();
+            ScreenCapture.CaptureScreenshot(fullPath);
+            float deadline = Time.realtimeSinceStartup + 5f;
+            while (!File.Exists(fullPath) && Time.realtimeSinceStartup < deadline)
+                yield return null;
+            if (!File.Exists(fullPath))
+                throw new InvalidOperationException("The Game View screenshot was not written: " + fullPath);
+
+            byte[] bytes = File.ReadAllBytes(fullPath);
+            Texture2D source = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+            try
+            {
+                if (!source.LoadImage(bytes, false))
+                    throw new InvalidOperationException("The Game View screenshot is not a valid PNG: " + fullPath);
+                if (!TryGetGameViewContent(out Rect window, out Rect target, out float pixelsPerPoint))
+                {
+                    File.Copy(fullPath, path, true);
+                    yield break;
+                }
+
+                int left = Mathf.Clamp(Mathf.RoundToInt((window.x + target.x) * pixelsPerPoint), 0, source.width - 1);
+                int top = Mathf.Clamp(Mathf.RoundToInt((window.y + target.y) * pixelsPerPoint), 0, source.height - 1);
+                int width = Mathf.Clamp(Mathf.RoundToInt(target.width * pixelsPerPoint), 1, source.width - left);
+                int height = Mathf.Clamp(Mathf.RoundToInt(target.height * pixelsPerPoint), 1, source.height - top);
+                int bottom = source.height - top - height;
+                bottom = Mathf.Clamp(bottom, 0, source.height - height);
+                Texture2D cropped = new Texture2D(width, height, TextureFormat.RGBA32, false);
+                try
+                {
+                    cropped.SetPixels(source.GetPixels(left, bottom, width, height));
+                    cropped.Apply(false, false);
+                    File.WriteAllBytes(path, cropped.EncodeToPNG());
+                }
+                finally { UnityEngine.Object.DestroyImmediate(cropped); }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(source);
+                if (File.Exists(fullPath)) File.Delete(fullPath);
+            }
+        }
+
         public static IEnumerator ClickScreenPoint(Vector2 point, string label = "battlefield")
         {
             if (gameView == null) throw new InvalidOperationException("Focus the Game view first.");
@@ -112,6 +186,27 @@ namespace Zjcs.Editor.Combat
                 + " press=" + pointer.pointerPress?.name);
             yield return new WaitForSecondsRealtime(0.12f);
             yield break;
+        }
+
+        private static bool TryGetGameViewContent(out Rect window, out Rect target, out float pixelsPerPoint)
+        {
+            window = default;
+            target = default;
+            pixelsPerPoint = Mathf.Max(1f, EditorGUIUtility.pixelsPerPoint);
+            Type type = typeof(EditorWindow).Assembly.GetType("UnityEditor.GameView");
+            if (type == null) return false;
+            EditorWindow view = gameView;
+            if (view == null)
+                view = Resources.FindObjectsOfTypeAll(type).OfType<EditorWindow>().FirstOrDefault();
+            if (view == null) return false;
+            PropertyInfo targetProperty = type.GetProperty("targetInView",
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            if (targetProperty == null) return false;
+            object value = targetProperty.GetValue(view, null);
+            if (!(value is Rect content) || content.width <= 1f || content.height <= 1f) return false;
+            window = view.position;
+            target = content;
+            return true;
         }
     }
 }
