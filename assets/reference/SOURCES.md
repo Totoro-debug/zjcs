@@ -198,3 +198,5 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 伙伴好感属性输入：所选 `884_156692` 的 WwiseBnk `wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile` 与同版本 Luban `level_prop_default_value`／`prop_cfg`；APK 优先核对、原索引、二进制、构造器及转换哈希见 [来源清单](partner-properties-source-manifest.json)。
 
 - 伙伴称谓中文字符输入：当前 `884_156692` 的 `CustomContentSettings` 按 `zh_CN = 0` 指向 GUID `366b7fb6f251a70459f751d0fc324b65`，原 `FZY4K_Characters.txt` 为 65,628 字节，SHA256 `aa014998f49525ac47e63286168545af758912920bc6fcad0634c7575b233462`。`prepare_partner_gift_configuration.py` 通过原资源索引定位设置与 TextAsset，按 APK 优先／同版本已校验云端回退读取原对象并打包原字符载荷；输入包、对象、原码、输出及绑定哈希见 `partner-gift-configuration-source-manifest.json`。
+
+场景武器输入与应用代码：当前 `884_156692` 索引下 APK 优先解析的剑／法杖 Integrated prefab、原场景材质与 shader，按完整原对象字节身份复用已有模型／图集／高分辨率加载器，当前 Windows shader 转换保持独立身份；原四节点字段、程序集、应用源码、转换工具、输出哈希与显式绑定见 [场景武器](battle-animation/scene-weapon-source-manifest.json) 和 [轻量渲染器](battle-animation/scene-renderer-runtime-source-manifest.json)。

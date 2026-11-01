@@ -1,0 +1,94 @@
+{
+  "manifest": "884_156692",
+  "code_receipt": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+  },
+  "official_application_sources": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem/AppearanceRendererLite.cs",
+      "sha256": "e0441d3ba36839af8381c6955de47eabd9ca1e02d86d858bd33be2fe07fe8d44"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/SkeletonRendererTextureLoadHandler.cs",
+      "sha256": "972d306cece7b460464336b5a6c5dcfdff62841cbc9cb90aa1044d33303080d1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.SpineExt/AppearanceRendererLiteMaterialOverride.cs",
+      "sha256": "95de81145948d778afde384b77802469651ab400c65a246dbc869205dcb6fc63"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/AppearanceAddressUtils.cs",
+      "sha256": "97d0805f9ab9c32bddbbd4cee9321acae6653441c512f539b52c1320ec95be22"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/AppearanceAnimUtils.cs",
+      "sha256": "32b704601acfdd112d8d289ef4082fa51fb5e7e0dd78281a76a1b56ebd1748c3"
+    }
+  ],
+  "migrated_application_and_ports": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceRendererLite.cs",
+      "sha256": "f07bc35c75cd47472901dcfc5d505e7a1c220975b45f85e79a6aac870998cb17"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/SkeletonRendererTextureLoadHandler.cs",
+      "sha256": "40f05faff834d1d1ba069f88d47d4de0f611fcc7830dcc18a85c7c26ca486960"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceRendererLiteMaterialOverride.cs",
+      "sha256": "ea42053c9a01035a46c256961acb56fffb6d33f8a3816f3681e2d7937b43b0f8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceRendererLiteBindings.cs",
+      "sha256": "1c85595bdac38dee9be77242aea7caefee0655b6473ec373c0854b72331e0c5c"
+    }
+  ],
+  "existing_dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceAssetManager.cs",
+      "sha256": "88b93577d484e7c2f1f2f70d63cbf33352770157e6361e1d00bee43804978a7f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IAppearanceAssetManager.cs",
+      "sha256": "3d9d83f20dcd72d3d05d9c448bf457b2bc4fd790a18714baecc1deb27c8bf175"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/YooAssetTextureLoader.cs",
+      "sha256": "0cc74727a5f0b792f2e97c0258c7cc07b74321b9f3ce9b0e0db92407b7cdcb39"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceSkeletonPart.cs",
+      "sha256": "d73ddb7b7be018985b33dff5123bb4e854acf9cfada920aeb8f5fab761e539da"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/SkeletonRendererFollower.cs",
+      "sha256": "ee3128c81b45da2963f66c3c9c7a5ce73051a4323c332a07b3ee28fba1616f34"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/BaseSkeletonFollower.cs",
+      "sha256": "ba2ef614a29d46fb92d24e1a6a8e8c5876f35190f9957564d8f478cfa1d447e2"
+    }
+  ],
+  "validation": {
+    "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneWeapons.cs",
+    "sha256": "e5bd0349c0ef4a8e562bb26d9c62f7795ef10d0ef475d611459266d353ac361c"
+  },
+  "generator": {
+    "path": "scripts/prepare_battle_scene_renderer_runtime.py",
+    "sha256": "325786b1b1521481a3a62ff67f290c6aa61d4202bc649fbc084b1a26910f7b3d"
+  },
+  "adaptations": [
+    "SDK component calls and skin attachment atlas-page lookup use explicit ports; no SDK implementation is copied.",
+    "Framework resource handles and disposable bag use the existing packaged resource port and IDisposable lifetimes.",
+    "Original initialization, material deduplication, shared/independent selection, texture demand/refcounts, replacement and destruction order are retained."
+  ],
+  "limits": [
+    "The linked Play Mode fixture reconstructs the selected original four-node hierarchies across explicit native diagnostic endpoints; it is not a production prefab/backend.",
+    "Production renderer depth, complete physics/mixing and gameplay/Windows Player integration remain required."
+  ]
+}

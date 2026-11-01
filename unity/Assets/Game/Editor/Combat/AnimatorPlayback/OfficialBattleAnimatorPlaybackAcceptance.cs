@@ -58,6 +58,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".physicsChannels", false);
             SessionState.SetBool(Key + ".corePoses", false);
             SessionState.SetBool(Key + ".rendererParts", false);
+            SessionState.SetBool(Key + ".sceneWeapons", false);
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 180);
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             Hook();
@@ -111,7 +112,8 @@ namespace Zjcs.Editor.Combat
 
         private static IEnumerator Verify()
         {
-            var steps = SessionState.GetBool(Key + ".rendererParts", false) ? RendererPartSteps()
+            var steps = SessionState.GetBool(Key + ".sceneWeapons", false) ? SceneWeaponSteps()
+                : SessionState.GetBool(Key + ".rendererParts", false) ? RendererPartSteps()
                 : SessionState.GetBool(Key + ".corePoses", false) ? CorePoseSteps()
                 : SessionState.GetBool(Key + ".physicsChannels", false) ? PhysicsChannelSteps()
                 : SessionState.GetBool(Key + ".localTransforms", false) ? LocalTransformSteps()
@@ -129,7 +131,9 @@ namespace Zjcs.Editor.Combat
             if (errors == 0)
             {
                 SessionState.SetInt(Key + ".result", 0);
-                Debug.Log(SessionState.GetBool(Key + ".rendererParts", false)
+                Debug.Log(SessionState.GetBool(Key + ".sceneWeapons", false)
+                    ? "Original scene weapon hierarchy, material lifecycle, attachment following and pre-physics GPU composition passed; production scene prefab/backend, physics, mixing and battle/Player integration remain required."
+                    : SessionState.GetBool(Key + ".rendererParts", false)
                     ? "Original scene part application Play Mode passed; original scene prefab, renderer backend, actual weapon rendering and formal battle binding remain required."
                     : SessionState.GetBool(Key + ".corePoses", false)
                     ? "Original complete core skill pose Play Mode passed before physics; separate weapons/parts, physical motion, mixing and formal battle/Player binding remain required."

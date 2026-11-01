@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Name: Original integrated scene weapon sources
+  m_EditorClassIdentifier: ''
+  m_Script: {fileID: 11500000, guid: cd1826a74f5058238311f27f2cead3b5, type: 3}
+  weapon: {fileID: 11400000, guid: caa10c23486b5c9d8ce0f61ccf225d63, type: 2}
+  textures: {fileID: 11400000, guid: da76546705f85f80bfd9e38906619247, type: 2}
+  entries:
+  - Path: Assets/Prefabs/Appearance/PlayerPart/pWeapon_100_G_007/pWeapon_100_G_007_Integrated.prefab
+    Guid: 1e385ee7fd8869a47ac468845caa0d87
+    InitialSkin: pWeapon_100_G_007
+    InitialAnimation: 100/100_loop
+    Hierarchy: {fileID: 4900000, guid: 48a89cd3e6d75a269bc09e7bc52dc3cb, type: 3}
+    OriginalMaterial: {fileID: 2100000, guid: 4839f0d087355328aada3d6b4a766ef8, type: 2}
+  - Path: Assets/Prefabs/Appearance/PlayerPart/pWeapon_200_G_007/pWeapon_200_G_007_Integrated.prefab
+    Guid: 33015525af6423b42b7ce11fa8175da1
+    InitialSkin: pWeapon_200_G_007
+    InitialAnimation: 200/200_loop
+    Hierarchy: {fileID: 4900000, guid: 2e807149007251368d69562c630f9e85, type: 3}
+    OriginalMaterial: {fileID: 2100000, guid: ff4b99f57c1e59a4a49725950b789ee8, type: 2}
