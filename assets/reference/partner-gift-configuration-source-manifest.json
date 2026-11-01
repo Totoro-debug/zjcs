@@ -1,0 +1,211 @@
+{
+  "manifest": "884_156692",
+  "generator_sha256": "bc641fe3171c5c4d3f5bd816a9448181cfb494223a8bbc1a6389577488de0131",
+  "source_sha256": {
+    "scripts/templates/partner_gift_controller/OfflinePartnerGiftConfiguration.cs": "487ff43d9db05e42ffda6df14034c0e6ae9dd42a5765eb5383858325a996538c",
+    ".tools/source-packages/official-code/common-source/Common/NpcFriendshipLevelInfoParser.cs": "0cea737f2519ddac5edbc847a176bd5d267c9d3cffecabd7a602ae4810d37c04",
+    ".tools/source-packages/official-code/common-source/Common/NpcGiftInfoParser.cs": "c157ef3aff402b70efec1d729ddf25b22291826881b5deee9fd31c53473d6b59",
+    ".tools/source-packages/official-code/common-source/Common/NpcFriendshipTagInfoParser.cs": "7a3fa77501dff135335ac46784ab8f93174fa51f4c897ef100dd9947983c29ec",
+    ".tools/source-packages/official-code/common-source/Common/NpcFriendshipTagInfo.cs": "c9d60d5cc94aeb01ddc79cdc8f53ded3d92cb6008026d5d69b0cf5a4d5f74f82",
+    ".tools/source-packages/official-code/client-source/FontCharacterValidChecker.cs": "066e60d4f402076a63ebd1823a88ad2f6e73cf8538a3b7d7b525529d6adb3fc9",
+    ".tools/source-packages/official-code/common-source/Common/FormulaHandler.cs": "1c9d25ef741f342b419a85f53ed3287a7c86a7397847a6170176a62276fbce98",
+    ".tools/source-packages/official-code/common-source/Common/CJK.cs": "afd15ce009aefeb323c4be456c6802f2d44d30b6112afcc1e7e44820866d42b3",
+    "unity/Assets/Game/Runtime/Official/SkillRules/CJK.cs": "445d6d8f5528b5572adf35fd3e636110b74dda3ba8307c562c9c71db7081a3e9",
+    ".tools/source-packages/official-code/common-source/CustomContentSettings.cs": "4b5deda7b52e7ff3c47c1db094007382e294c8c67ce9fe2372a097239b021b31",
+    ".tools/source-packages/official-code/common-source/Common/ItemType.cs": "8a1a33483ed28de00b9bc37dd60899ae0cb2fa7d7bd821b42f6e43cdcb3dbcaf",
+    ".tools/source-packages/official-code/common-source/Common/NpcRoleType.cs": "0cc47390185f14b0511ca7f84cddf0fdf18c917183af35c88babe11b6f3395a2",
+    ".tools/source-packages/official-code/common-source/Common/NpcInfo.cs": "387c584e748963f1870e9861fee043e68fcc741cf52409fcdeffe294007c6a8d",
+    ".tools/source-packages/official-code/framework-firstpass-source/Framework/LanguageType.cs": "b210affe39919e8910223f8d8e28643d4a5af472578da494715677848021c121",
+    "scripts/official_apk.py": "ffc722b06e62bacc6689d98a7910562527fbcacc1c512c05e57a21bb8aa0ea46",
+    "scripts/official_manifest.py": "1aae5bd86af587511466e17308719c2e6b356be4117942809c7e6ba89e2d7399",
+    "scripts/prepare_current_partner_native.py": "ee30c4ec65a5916cdde9927bc46f0980eb9435682d46e7b311ffc0be2917e580",
+    "scripts/prepare_partner_ui_helpers.py": "eea896a4dd8136716c41adb6e99cc139c7577ddbf95758f9bcd68365ee9600ea",
+    "unity/Assets/Official/Partners/partner-rules.json": "1ab5dd32c4ef68297aea6a847cb0e5ced686634bb4fb7f4c28a1aa7bf70398fd",
+    "unity/Assets/Official/Partners/partner-properties.json": "e91d6ad8585bbebb59b5667ff39e4b277184d78f4cd19906a7110da8544a72c4",
+    "unity/Assets/Game/Resources/Partners/OfficialPartnerAssetCatalog.asset": "ebe09b364f26c210f398e8e7a99f4059e7a4f52e09da3db6f83dd6eba9a17618"
+  },
+  "methods": {
+    "common-source/Common/NpcFriendshipLevelInfoParser.cs": {
+      "public override void PostParse()": "d49e708f4e4281fd51319509f35ad3d9f3d578bb3749143e481dba77776047ac",
+      "public int GetMaxLevel(int id)": "425c05728cfd9740af1539a3faaccca8f98b8ba0d6aaac4f9e9ea4a1fd32c47f",
+      "public int GetMaxSubRankLevel(int id, SubRank subRank)": "fb9a434a8cd4f17852d431ef7db9e07e47a521b47d3145a9f999839eca9e3861",
+      "public List<int> GetSubRankLevelList(int id, SubRank subRank)": "41e532dfce82a186923469d232863c7860f87e76adbdfca89d24e9609dc2f60f",
+      "public int GetFriendshipLevelByExp(int id, long friendshipExp, SubRank subRank)": "227f997e60f3e442c9ae2355f0758c6986b5550d96eeb6ccd76a9a6703667605"
+    },
+    "common-source/Common/NpcGiftInfoParser.cs": {
+      "public int GetAllExpByDict(Dictionary<int, long> giftDict, Dictionary<int, double> giftPreferenceDict)": "877c7d52bd26f26f0d1ea5f37231141244fcdf6d85239b7486dcb052c55a7c53"
+    },
+    "common-source/Common/NpcFriendshipTagInfoParser.cs": {
+      "protected override void PostParse(Dictionary<int, NpcFriendshipTagInfo> configs)": "afcfa1525662aa696ff41773125a4928a2dd25fbcff830e0b166bbfb66f4d4ec",
+      "private List<NpcFriendshipTagInfo> GetTagInfoByRoleType(NpcRoleType roleType)": "b2707d70dd907d06c95be62435ae31d2ab45e137df3b454a3749e5fc3415f8b2",
+      "public NpcFriendshipTagInfo GetTagInfoByRoleTypeAndLevel(NpcRoleType roleType, int level)": "b57f1159e9f7c1db58b4c063da6795002ec232da26a1a1eff58d2d975ce7680b"
+    },
+    "common-source/Common/NpcFriendshipTagInfo.cs": {
+      "public bool InRangeLevel(int level)": "48ed3591ab767650eee9b3323ba4d6f061b288e670ea8e31dd37c76078e9617f"
+    },
+    "client-source/FontCharacterValidChecker.cs": {
+      "public bool IsAllCharacterValid(string content)": "9f6f9554236390686c485b6c406b713810c962c68168488ba6b207277bca3bc3"
+    },
+    "common-source/Common/FormulaHandler.cs": {
+      "public bool IsOverCharacterCountLimit(string str, int limitCount)": "3695dbba346d820c0bbe9bcfdb41ceeff545a0beea01b25c91d801dd611db083",
+      "public int GetCharacterCount(string str)": "f7a9084164c70d9abcc65e12afd2243dfe10bade33bf3e718f3eff893cf9cff5",
+      "public int CheckNpcFriendshipTagLegal(string name)": "7fcd8865dcd20fd41bb1fe2278c7e5214e4286dafb49f705b6d75857002edc12"
+    }
+  },
+  "asset_manifest_sha256": "89288d53cf6b2948673be7e844e86a6a6800df94b7373cf1b457a35c6379fa23",
+  "settings": {
+    "record": {
+      "address": "Assets/ScriptableConfig/CustomContentSettings",
+      "path": "Assets/ScriptableConfig/Modules/Text/CustomContentSettings.asset",
+      "guid": "48303b451f8daf04e90a8b6dfd8f8b8a",
+      "tags": [
+        "Config",
+        "Payd_Base"
+      ],
+      "bundle": "defaultpackage_assets_scriptableconfig_modules_text.bundle"
+    },
+    "source": {
+      "bundle": "defaultpackage_assets_scriptableconfig_modules_text.bundle",
+      "bundle_hash": "d23c2f2c027f134223a3b7ba83c45149",
+      "path_id": "7386436463780728044",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/d23c2f2c027f134223a3b7ba83c45149.bundle",
+      "raw_size": 705,
+      "raw_sha256": "e1c0017f5662524aca3693f4bc94e858ed4d07356646fe9c84f35ca81f75b3e0"
+    },
+    "identity": "cab-20149677309bf49d92920e7ed5381835:7386436463780728044",
+    "original_sha256": "1a60beec267355447a9b687b05734d1280fcdac9ec6bec687b33fd7ac86f47b4",
+    "fields": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      },
+      "m_Enabled": 1,
+      "m_Script": {
+        "m_FileID": 0,
+        "m_PathID": 1721209068303290670
+      },
+      "m_Name": "CustomContentSettings",
+      "mLanguageCharactersAssetList": [
+        {
+          "LanguageType": 0,
+          "CharactersAsset": {
+            "mAssetGuid": "366b7fb6f251a70459f751d0fc324b65"
+          }
+        },
+        {
+          "LanguageType": 1,
+          "CharactersAsset": {
+            "mAssetGuid": "366b7fb6f251a70459f751d0fc324b65"
+          }
+        },
+        {
+          "LanguageType": 2,
+          "CharactersAsset": {
+            "mAssetGuid": "13eb4b205bab6b34295e5ec2f06e4dc5"
+          }
+        },
+        {
+          "LanguageType": 3,
+          "CharactersAsset": {
+            "mAssetGuid": "b6207dd3b87953c4b83f35d1fafd40d5"
+          }
+        },
+        {
+          "LanguageType": 4,
+          "CharactersAsset": {
+            "mAssetGuid": "c2ae05fc66ac9964eb428976e6004055"
+          }
+        },
+        {
+          "LanguageType": 5,
+          "CharactersAsset": {
+            "mAssetGuid": "13eb4b205bab6b34295e5ec2f06e4dc5"
+          }
+        },
+        {
+          "LanguageType": 6,
+          "CharactersAsset": {
+            "mAssetGuid": "13eb4b205bab6b34295e5ec2f06e4dc5"
+          }
+        },
+        {
+          "LanguageType": 7,
+          "CharactersAsset": {
+            "mAssetGuid": "13eb4b205bab6b34295e5ec2f06e4dc5"
+          }
+        },
+        {
+          "LanguageType": 8,
+          "CharactersAsset": {
+            "mAssetGuid": "13eb4b205bab6b34295e5ec2f06e4dc5"
+          }
+        },
+        {
+          "LanguageType": 9,
+          "CharactersAsset": {
+            "mAssetGuid": "13eb4b205bab6b34295e5ec2f06e4dc5"
+          }
+        }
+      ],
+      "mDefaultCharactersAsset": {
+        "mAssetGuid": "366b7fb6f251a70459f751d0fc324b65"
+      }
+    }
+  },
+  "characters": {
+    "language": "zh_CN",
+    "language_type": 0,
+    "guid": "366b7fb6f251a70459f751d0fc324b65",
+    "record": {
+      "address": "FZY4K_Characters",
+      "path": "Assets/TextMesh Pro/FontCharacter/FZY4K_Characters.txt",
+      "guid": "366b7fb6f251a70459f751d0fc324b65",
+      "tags": [
+        "NeedReboot",
+        "Payd_Base"
+      ],
+      "bundle": "defaultpackage_assets_textmesh_pro_fontcharacter.bundle"
+    },
+    "source": {
+      "bundle": "defaultpackage_assets_textmesh_pro_fontcharacter.bundle",
+      "bundle_hash": "3ff688327bf6ba84ef62c6d66ae06e54",
+      "path_id": "-8281743035790638627",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/3ff688327bf6ba84ef62c6d66ae06e54.bundle",
+      "raw_size": 253102,
+      "raw_sha256": "f61c9a7035fe09f16b666206c48dc7c0300c450f86c111516d5a93988a25c772"
+    },
+    "identity": "cab-d1a08b02ef4b73ab63518650996d8858:-8281743035790638627",
+    "original_sha256": "6f3ed554d9b0410299bd5d19bd533dc3674de51926805b2b6fb0c1f49460bee3",
+    "sha256": "aa014998f49525ac47e63286168545af758912920bc6fcad0634c7575b233462",
+    "bytes": 65628
+  },
+  "validation_source_sha256": {
+    "scripts/prepare_partner_gift_configuration_validation.py": "2b0f846973ba929abf7ba8a93dae1d602c0ed565154449b1c66cf9e215284e5d",
+    "scripts/fixtures/partner_gift_configuration_validation.cs": "7b8253619ef688a5fe270025cd71644c17576c31898057d253e1660aa22689cf"
+  },
+  "adaptations": [
+    "Typed projections and indexed table bindings; original iteration order retained.",
+    "Original diagnostic logging omitted at absent-configuration branches; return values retained.",
+    "CN original CustomContentSettings whitelist is explicitly packaged; no remote font lookup.",
+    "Reuse byte-equivalent selected CJK implementation in Official.SkillRules."
+  ],
+  "outputs": {
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftConfiguration.cs": "f8470162e7c73a5471bbc59ad43c89a6a01fbf5adb5d0118bdf75f539fce910e",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftConfiguration.cs.meta": "0e35126d000588ee7112e0bcd9160fdfd97965a7d12a9f5116d7b48e48c1d67d",
+    "unity/Assets/Official/Partners/partner-custom-characters.txt": "aa014998f49525ac47e63286168545af758912920bc6fcad0634c7575b233462",
+    "unity/Assets/Official/Partners/partner-custom-characters.txt.meta": "331fcc7e091ce73a140df9d9f8b16c8b4645070745b72ca1681e6c2471a3bd3d",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerGiftAssetCatalog.cs": "138aab5726c1f406b5425b5d9f794dcfc9efa7a5f2e22a885906d1eab4fa32b7",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerGiftAssetCatalog.cs.meta": "c67ea92e0f50741bbb6b6927853ea156042d69ddf4a6ad6bf8c8c1230ce8da65",
+    "unity/Assets/Game/Resources/Partners/OfficialPartnerGiftAssetCatalog.asset": "66615db42d66bed848a1c751d5f6f98ba625bde952fdc4854592f4cceb29fa4e",
+    "unity/Assets/Game/Resources/Partners/OfficialPartnerGiftAssetCatalog.asset.meta": "c923577c9082d65c9392f3576264299a98970d84d90a925f74abb95e1df64097",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/Zjcs.Offline.PartnersUI.asmdef": "250ee0cb22cef75e20bfde75f67ffa0091eaa996062ba151d5acadd7ee88f225"
+  }
+}

@@ -162,6 +162,16 @@ NpcPanelNpcItem.MeetSound 指向 NpcAffinity_Get（事件 723930271），经固�
 
 `prepare_partner_property_validation.py` 在隔离 Unity Play Mode 运行实际本地目录与好感属性块，并以仅改变命名空间的官方原 `LevelPropBinaryReader` 和 `PropType` 为独立参照，逐项通过 1,800 行、1,782 个相邻等级差值、低于首级／越过最高级、148 项 NPC 属性身份及实际加成检查。混用版本拒绝检查通过，静态检查（81,548 个 GUID）、主工程导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 通过。等级与库存完整 UI、真实存档恢复和 Windows Player 尚未在这一步验证；伙伴名册／赠礼的正式页面提供者仍待接通。
 
+### 当前赠礼、阶位与称谓配置提供者（局部）
+
+`Offline/PartnersUI/OfflinePartnerGiftConfiguration` 实现原赠礼控制器的 `IPartnerGiftLevels`、`IPartnerGiftExperience` 配置端口，并提供当前 NPC、礼物、关系背景及称谓校验。`prepare_partner_gift_configuration.py` 从选定 `884_156692` 的 `NpcFriendshipLevelInfoParser`、`NpcGiftInfoParser`、`NpcFriendshipTagInfoParser`、`NpcFriendshipTagInfo.InRangeLevel`、`FormulaHandler` 与 `FontCharacterValidChecker` 提取原方法体；只投影所需字段、绑定本地目录并移除缺配置分支的诊断日志，保留返回值、算术和枚举顺序。来源和输出见[配置提供者凭据](../../assets/reference/partner-gift-configuration-source-manifest.json)。
+
+10,000 条累计阈值保留原顺序，包含缺少 NPC 定义的 8403／8419 两组共 200 行；这些组仍可查询阈值，阶位上限按原码返回 0。不可培养伙伴也返回 0；其余伙伴只取不超过当前阶位的最高配置组，再取该组最大等级。经验换算按累计经验与阶位同时过滤。115 条礼物配置保留不能赠送的信物排除、未知物品使整批结果归零、每种礼物先乘数量／偏好并按 `Math.Round` 五成双取整再累加的原顺序；不把信物类型当作普通礼物类型。
+
+原 `CustomContentSettings` 的 `zh_CN` 入口指向原 `FZY4K_Characters.txt`，已按原 GUID 解析实际 TextAsset 并原样打包，`Resources/Partners/OfficialPartnerGiftAssetCatalog.asset` 显式绑定当前配置目录和该字符文件。称谓逐个 UTF-16 字符核对原白名单，长度复用与当前原码一致的 `Official/SkillRules/CJK` 文本元素算法；空称谓返回 1513，超过原 12 长度上限返回 1514，原自定义称谓好感门槛为 100 级。没有增加另一套正则过滤或字符替换规则。
+
+`prepare_partner_gift_configuration_validation.py` 在实际迁移程序集及显式绑定资产的隔离 Unity Play Mode 中通过 10,000 条阈值各三点、1,176 项阶位上限、115 种礼物各 16 组数量／倍率、两组缺 NPC 定义的数据、关系背景区间及完整原字库／CJK 边界检查。静态检查（81,561 个 GUID）、主工程导入／编译和 `Zjcs.Editor.ProjectTools.Validate` 通过，输入／输出与验证源码哈希核对一致。本提供者尚未安装到正式伙伴窗口；真实库存／存档事务、称谓保存、原输入／确认窗口、完整页面模拟点击和 Windows Player 均待接通。
+
 ### 原面板页签控制器（局部）
 
 `scripts/prepare_partner_panel_controller.py` 迁入当前版 `NpcPanel`、`NpcPanelTabType`，从原 `NpcPanelUtils` 与 `FunctionType` 提取伙伴／通话／星神对应的 `65／57／174` 功能门槛。字段名称、门槛遍历、默认页回退、标题、页签关闭回调及关闭窗口重置均保留；复用已有官方 `PanelTitle`、`MonoDictionary`、`WorldTabGroup`、`WorldTabItem`、`WorldStateSwitcher`。本地宿主通过 `IPartnerPanelServices` 提供功能判断与通话列表初始化，不再访问全局在线玩家。代码入口为 `Runtime/Official/PartnersUI/Roster/NpcPanel.cs`；选定官方源码及迁移输出哈希见[面板控制器来源](../../assets/reference/partner-panel-controller-source-manifest.json)。

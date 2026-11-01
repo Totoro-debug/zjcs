@@ -196,3 +196,5 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 伙伴原生赠礼区域输入：当前 `884_156692` 的 NPC／物品／通用资源分包、原 `NpcDetailPanel` 字段缓存、原 Btn_Base_Click 编译常量及所选中文语言分包；APK 来源保持原 `881_156673` 标识。原对象身份、恢复字段、代码／资源输入哈希及转换方法见 [来源清单](partner-gift-controller-source-manifest.json)。
 
 伙伴好感属性输入：所选 `884_156692` 的 WwiseBnk `wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile` 与同版本 Luban `level_prop_default_value`／`prop_cfg`；APK 优先核对、原索引、二进制、构造器及转换哈希见 [来源清单](partner-properties-source-manifest.json)。
+
+- 伙伴称谓中文字符输入：当前 `884_156692` 的 `CustomContentSettings` 按 `zh_CN = 0` 指向 GUID `366b7fb6f251a70459f751d0fc324b65`，原 `FZY4K_Characters.txt` 为 65,628 字节，SHA256 `aa014998f49525ac47e63286168545af758912920bc6fcad0634c7575b233462`。`prepare_partner_gift_configuration.py` 通过原资源索引定位设置与 TextAsset，按 APK 优先／同版本已校验云端回退读取原对象并打包原字符载荷；输入包、对象、原码、输出及绑定哈希见 `partner-gift-configuration-source-manifest.json`。
