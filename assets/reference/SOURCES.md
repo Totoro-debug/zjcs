@@ -380,3 +380,7 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 ### 伙伴当前玩家资料控件
 
 `partner-player-info-source-manifest.json` 记录所选 `884_156692` 的 `PlayerInfoUI`、`ActorTargetData`、`NpcTargetData`、代码清单和程序集哈希，以及当前运行代码、生成／验证脚本与复用依赖的哈希。`scripts/prepare_partner_player_info.py` 从该客户端源码迁移资料控件，复用既有显式服务适配；未重新提取美术，也不改写其他职业控件的历史版本来源。
+
+### 伙伴当前主角资料投影
+
+`partner-main-player-source-manifest.json` 记录所选 `884_156692` 的 `PlayerInfoData(Player)`、`PlayerTargetData`、`PlayerPetExt`、`Player`、继承目标及程序集输入，以及本地主角资料适配、现有稳定身份／属性／外观依赖与验证脚本的逐文件哈希。由 `scripts/record_partner_main_player_sources.py` 记录；本批没有美术提取或素材快照。

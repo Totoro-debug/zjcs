@@ -430,6 +430,14 @@ NPC 资料投影同时保留实际原 `NpcTargetData` 对象的 `ServerId`，头
 
 完整原三页窗口的隔离 Play Mode 已通过：实际 151 个 NPC／职业图标导入与取用、NPC 默认服务器编号、原收藏图片显隐、联系人展开、通话选择、读档后记录／视图身份、标签切换和返回按钮均完成验证，实际 450×800 收藏显示／隐藏及展开画面已查看。通讯录原 `PinMask` 引用为空，保持原资源；没有补造遮罩。独立资料控件检查另行覆盖调用方显隐、空目标、合击兼容、原助战次数／冷却短路，并回归外观、文字、九类事件、句柄释放与模拟鼠标按钮；其画面只是分支检查夹具，不计为原版页面美术。根工程导入／编译、`ProjectTools.Validate` 及静态检查（88,268 个 GUID）通过。完整主角资料、消息播放、Home 接线与 Windows Player 仍未完成。
 
+### 当前主角资料的本地投影（局部）
+
+`OfflinePartnerPlayerInfoSource` 沿用当前原 `PlayerInfoData(Player)` 的字段顺序，将选中真实存档的稳定角色 ID、原样姓名、等级／阶位、实际配置属性计算器的战力，以及既有外观协议适配接到资料结构。姓名使用原 `CultureTextArg` 的不翻译分支，头像路径接受宿主的可空值；不编造服务器头像初始值。玩家目标继承原 `ServerId=-1`，形象路径与玩家助战资格仍要求宿主显式提供原调用绑定。资料中的 `EngagePetClassId` 读取 `FollowPetIndex` 对应宠物，区别于资料弹窗所用的第一技能方案宠物，不能互相替代。来源与逐文件哈希见[主角资料来源](../../assets/reference/partner-main-player-source-manifest.json)。
+
+本地事务会替换 `Save.Player`，因此宿主在事务成功后调用 `SynchronizeCommittedPlayer`，先构造完整的新一代资料，再通过原管理器 `SafeAction OnPlayerUpdate` 通知控件重新读取。旧代保留原九类事件订阅接口但不逐字段修改；不推测服务器的字段通知顺序。此读取适配不改写游戏存档，跨来源资料拒绝读取，构造失败保留上次资料且不通知。生产宿主须使用已接上装备／技能等来源的实际属性服务，不能用缺项计算器或夹具资料冒充完整战力。
+
+隔离 Unity 编辑器验证已通过真实档案创建、稳定身份、等级及重算战力、男女／职业外观切换、跟随宠物与技能方案宠物不同的分支、通知时完整数据可读、失败不发布／不写盘及真实重新读档。主工程导入／编译、`ProjectTools.Validate` 与静态检查（88,272 个 GUID）通过。该项只验证数据投影，没有把字段断言算作页面交互／画面验证；原主角 UI 外观分支、完整消息行、Home 生产宿主及 Windows Player 仍未接通。
+
 ### 当前主角头像摄影棚与原生拍摄（局部）
 
 `prepare_partner_player_portraits.py` 从所选 `884_156692` 的实际头像 bundle 恢复原 `CharacterPortraitStudio` 的 24 个对象，保留五个 GameObject 的层级、变换、原摄影机、Animator、SortingGroup 及组件引用。原 `HeadCharacterPortraitBuilder`、外观排除复制和空 `PreviewTool` 迁入工程；显式依赖替代注入，拍摄仍由原 `CharacterPortraitPhotographer` 执行。摄影棚中的动画与绘制组件接到既有免费原生角色后端，不读取或复制动画 SDK 实现。

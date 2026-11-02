@@ -1903,3 +1903,16 @@ unity/Assets/Game/Runtime/Offline/PartnersNpc/OfflinePartnerNpcRuntime.cs text e
 unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerNpcIconBindings.cs text eol=lf
 unity/Assets/Game/Editor/ProfessionUI/ProfessionPlayerInfoValidation.cs text eol=lf
 assets/reference/partner-player-info-source-manifest.json text eol=lf
+
+# Preserve selected partner main-player projection hashes.
+scripts/prepare_partner_main_player_validation.py text eol=lf
+scripts/record_partner_main_player_sources.py text eol=lf
+scripts/fixtures/partner_main_player_validation.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerPlayerInfoSource.cs* text eol=lf
+assets/reference/partner-main-player-source-manifest.json text eol=lf
+
+# Preserve selected original common minimap root source hashes.
+scripts/prepare_mainline_minimap_root.py text eol=lf
+assets/reference/official-map/mainline-minimap-root-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/World/MainlineMiniMapRoot/** text eol=lf
+unity/Assets/Game/Runtime/Official/World/MainlineMiniMapRoot.meta text eol=lf

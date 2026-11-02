@@ -1,0 +1,46 @@
+{
+  "manifest": "884_156692",
+  "official_source_sha256": {
+    ".tools/source-packages/current/884_156692/code-manifest.json": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActorTargetData.cs": "7d7b25e3301ea51575ddcc03981db340e3570946d68a9a7f6b993ae309d756e8",
+    ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d",
+    ".tools/source-packages/current/884_156692/official-code/managed/decoded/Console.dll": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6",
+    "official-source.json": "a29067dd1363590c8fde67a7d5326fcb5a4632441e8c73ae8b64300aa491a3a6",
+    ".tools/source-packages/current/884_156692/official-code/client-source/PlayerInfoData.cs": "c1107135cca4dc6cfdf1c98bb69784c8b93649412085b286902541903a71b6b9",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/Player.cs": "e0b324d6cf965e194cc517c176e8fae80f16dda7019e42d705ed6ae7d44da611",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerPetExt.cs": "dc4efe741dead77034c8849f904f8f7d6371dc11a7fe8d3ef3bb7008313bea0d",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerTargetData.cs": "5964bc7c0a91a247fb755a6431a1e70d131b37a20260dd1877595474787c581c"
+  },
+  "binding_source_sha256": {
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerPlayerInfoSource.cs": "e0130f2adedeb44cb167fb1d7c726fc2f92e610bb5425f6d8f0944ec15c76d85",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerPlayerInfoSource.cs.meta": "8483839c3563d93d3d8d6db7a4ff9dc8d54b0e3655164b56806b1702d66d2b95"
+  },
+  "validation_source_sha256": {
+    "scripts/fixtures/partner_main_player_validation.cs": "a802f2a7364bf448eb36c0a0d86abc3d7085b9f12237d89333a116b42f680f89",
+    "scripts/prepare_partner_main_player_validation.py": "89224fa4878d03a309ee452ce7afc2d0b7595c95ee2ab4db34f783dc46983a85",
+    "scripts/record_partner_main_player_sources.py": "e39839cbc17c14d268965ff44d43b0b2c6d761ee3372b5778e5897fc47f47c00"
+  },
+  "dependency_source_sha256": {
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerInfoData.cs": "bb76039f9c8c2b0f92922fe653b8dc5986aebef5b3ee95d78571e519eb349fe7",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerInfoBindings.cs": "3464b51bf40955579437499b91f5e6a347ab0191476631530c41f941ae24726a",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/SafeAction.cs": "e798e1f556d7fd4311ed67a47f45c851efb6fc63dc80ae34fa8dabd217ad8668",
+    "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/CultureTextArg.cs": "7c85bd79afaf483e12ea368eef6215e6d812d1ba8bee5c26ce57d9547416a700",
+    "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionAppearanceBindings.cs": "c621cb3b0d23da831180ac741c0c1780df044332fe44ff38b1753dd4c89d2f61",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.Partners.cs": "9143a1448033fb9b079b78e855ad715a6568c1c7c9ebbd1a6e734743aef9d7bf",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.cs": "6a07fe800a03680a9ea8a4b9d8c5bb5edaa57ae97b7819d371a328983172a76d",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineLocalActorIdentities.cs": "440b218cde44dfc4239031c54ab19ee46d510cc92b60932e014f52df8cfddac3",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineProgressSession.cs": "be33450fa00309f2371e15d53240f9c81acbc05b103a8e1343f3ae997b2e2d0d",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflinePetProgress.cs": "e0801b839d1ed79d2cacd471f982d3d5e797c670214f2376ad8b083bf23f0039",
+    "unity/Assets/Official/Combat/SceneCharacterAppearance/Resources/Combat/SceneAppearance/AppearanceAnimNameCombineRule.asset": "594e444f08eb77fbc27b65fbca272ec0928a9902038aa6c5d59a988936e6fbe3",
+    "unity/Assets/Official/Combat/SceneCharacterAppearance/Resources/Combat/SceneAppearance/AppearanceConfig.asset": "4deefe51575b46d980df4983bed346e4504921a3a42c67a3b8d87609be77da0d",
+    "unity/Assets/Official/Combat/SceneCharacterAppearance/Resources/Combat/SceneAppearance/appearance-tables.json": "4436568647fc48bb2faa1adf9eacdfe84e8442cd83e7a7270457a0cdda461c01",
+    "unity/Assets/Official/Combat/SceneCharacterAppearance/Resources/Combat/SceneAppearance/skin-defaults.json": "6e7f34a0516720c35ec14370a0a5acbf1c05c0275edc453775c9fea3ab5ce1d2"
+  },
+  "operation": [
+    "Port the selected PlayerInfoData(Player) field projection onto the actual selected local profile, configured property calculator and original appearance protocol adapter.",
+    "Player target preserves inherited ServerId=-1; figure and assistance calls require explicit host bindings.",
+    "EngagePetClassId reads FollowPetIndex, independently of first skill-plan pet used by PlayerBriefInfo.",
+    "Local committed profile replacement publishes a complete new info generation through the original SafeAction manager boundary; no guessed server field-event order.",
+    "This receipt covers data projection; full original UI appearance, dialogue host and Windows delivery remain separate unfinished work."
+  ]
+}
