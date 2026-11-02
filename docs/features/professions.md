@@ -12,6 +12,8 @@
 
 队伍窗口复用职业头像时，已移除 `Zjcs.Official.ProfessionUI.asmdef` 中不存在的 `Unity.Collections` 程序集引用；此 Unity 版本的 `NativeArray` 由已引用的引擎核心程序集提供，保留原 GPU 像素读回代码。受影响源码及隔离 Unity 编译、全工程验证通过，关联的本地来源哈希已同步。
 
+`Zjcs.Offline.ProfessionUI` 显式引用 `UniTask`，供本地头像状态实现原 `IPersistentState` 的异步接口；不能依靠其他程序集的间接引用编译该接口。主工程导入／编译及 `ProjectTools.Validate` 已通过，此依赖检查不代表职业页面或头像业务流程完成。
+
 原职业总览、职业树、导师、晋升与自由转职使用 Profession 配置、前置／条件、技能与装备关系、角色原模型和演出。
 
 ### 待迁移的规则与表现
