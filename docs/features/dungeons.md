@@ -48,9 +48,11 @@
 
 ## 完整还原部分
 
-日常副本入口已在内置屏 Direct3D 11 Play Mode 通过模拟鼠标点击：游记→日常目录→第一张可用卡片→详情“前往副本”→1101营地→1102战斗房→公共原生助战确认→实际公共战斗。空伙伴选择运行388步后真实失败结算并返回保留的路线，检查点已结束；已查看入口、邀请、准备、战斗和返回画面。Unity编译、`ProjectTools.Validate` 与公共邀请窗口的独立输入检查通过。竞技场完整入口当前停在 `OfficialDungeonUiBindingRuntime.RestoreLayouts` 的原生层级索引越界，尚未到达对战；竞技与塔层的既有运行器检查不代表正式入口通过。`--zjcs-validate-dungeon-entry <输出目录>` 的Windows Player隔离探针尚未执行，本批未发布新Player。助战视图实现与验证边界见[NPC邀请](npc-assistance.md)。
+日常副本入口已在内置屏 Direct3D 11 Play Mode 通过模拟鼠标点击：游记→日常目录→第一张可用卡片→详情“前往副本”→1101营地→1102战斗房→公共原生助战确认→实际公共战斗。空伙伴选择运行388步后真实失败结算并返回保留的路线，检查点已结束；已查看入口、邀请、准备、战斗和返回画面。Unity编译、`ProjectTools.Validate` 与公共邀请窗口的独立输入检查通过。竞技场已通过游记原入口、对手挑战按钮、公共HUD及6步真实失败结算，票券减少一次且结果增加一次，已检查准备、交战及返回画面。竞技场原层级索引越界已修复；爬塔正式入口仍停在游记原 `DemonBattleEntry` 未初始化激活，尚未进入塔层。底栏适配按原 `PublicBottomBar／TabGroup` 同步互斥的输入选中状态，模拟“家园→游记”能在结算后重新打开游记。全量静态检查通过（89,779个GUID），Unity导入／编译和 `ProjectTools.Validate` 通过。`--zjcs-validate-dungeon-entry <输出目录>` 的Windows Player隔离探针尚未执行，本批未发布新Player。助战视图实现与验证边界见[NPC邀请](npc-assistance.md)。
 游记进入战斗前的原生绑定：`prepare_travel_entry_layout.py` 校验当前可用的官方 home bundle 与既有871来源记录的 MD5、SHA256、字节数和 prefab PathID 完全相同，并核对 `SafeArea` 原代码哈希未变；恢复3个原 `SafeArea`、1个 `AspectRatioFitter`、10个 `NoDrawingRayCast` 点击区域和日常副本／竞技／幻境之塔的3个 `EntryButton` PPtr。使用原类型完整字段读取并检查消费字节数，UGUI schema 来自固定 Unity 编辑器编译程序集；未新增图像。历史来源身份保留，当前相同输入的取得位置、对象及转换输出哈希记录于[绑定来源清单](../../assets/reference/dungeon-ui/prefab-binding-source-manifest.json)的 `travel_entry_layout`。日常副本按原 `DailyDungeonEntry` 接入，修正旧实现误将 `MapGamePlayEntry` 连接到日常副本；竞技和幻境之塔按原子按钮引用接入。
 
+
+竞技场入口的原生布局绑定与面板使用同一历史来源：现存 `ArenaPanel` 和 Image／TMP 接线属于871_156598，884面板新增的组别控件改变了子节点索引，不能直接套用其布局。`prepare_dungeon_matching_panels.py` 按既有来源清单核验历史官方bundle的MD5、SHA256和字节数，并将887个原层级路径与现存原生prefab逐项对照后提取对应布局；来源清单将该历史输入与当前884输入分别记载，生成阶段发现原生层级变化即停止。没有跳过缺失节点或修改原布局。竞技场正式入口与本场战斗／结算已通过，884新增控件、全部界面图形／文本与完整战斗演出仍未完成。凭据见[入口初始化来源](../../assets/reference/dungeon-ui/matching-panel-source-manifest.json)。
 
 官方资源已按固定版 `871_156598` 转换为本地运行目录：`scripts/prepare_dungeons_runtime.py` 导出日常副本地图、房间、难度条件、奖励规则及战斗场景；`scripts/prepare_battle_arena.py --runtime --verify-apk` 导出竞技守卫（含原性别分组附加皮肤）、名次模板、匹配策略和竞技战斗场景。资源由 `OfflineDailyDungeonSession`、`OfflineArenaSession` 读取并校验。
 

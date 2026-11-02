@@ -458,6 +458,12 @@ namespace Zjcs.Presentation.Home
             {
                 if (bottomRenderer == null) break;
                 bottomRenderer.SetActiveByName(tabNames[i] + "/UnlockObj/Anim/SelectedBgImg", i == selectedTab);
+                // PublicBottomBar's original TabGroup keeps exactly the selected
+                // tab on. The local UGUI adapter must synchronize its input state
+                // as well as the original selected-background objects.
+                GameObject tab = bottomRenderer.AllNodes.FirstOrDefault(value => value.name == "UnlockObj"
+                    && value.transform.parent != null && value.transform.parent.name == tabNames[i]);
+                tab?.GetComponent<Toggle>()?.SetIsOnWithoutNotify(i == selectedTab);
             }
         }
 

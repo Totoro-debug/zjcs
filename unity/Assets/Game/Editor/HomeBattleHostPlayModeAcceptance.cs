@@ -625,9 +625,15 @@ namespace Zjcs.Editor
         private static IEnumerator OpenTravel(HomeFeatureRuntime home, Action<Selectable> click)
         {
             for (int i = 0; i < 8 && home.Hud.TryHandleBack(); i++) yield return SettleUi();
+            // Returning through the window stack does not select a different
+            // bottom tab. Exercise a real tab transition before reopening it.
+            click(home.Hud.CanvasTransform.GetComponentsInChildren<Selectable>().First(value => value.name == "UnlockObj"
+                && value.transform.parent.name == "Home"));
+            yield return SettleUi();
             click(home.Hud.CanvasTransform.GetComponentsInChildren<Selectable>().First(value => value.name == "UnlockObj"
                 && value.transform.parent.name == "TravelNote"));
             yield return SettleUi();
+            Require(Root("TravelNotesPanel") != null, "Simulated bottom-tab navigation did not reopen travel notes.");
         }
 
         private static Action CaptureHomeRestoration(HomeFeatureRuntime home)

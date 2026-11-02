@@ -398,3 +398,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 公共战前助战选择复用既有 Map12 原生邀请面板与伙伴条目，`scripts/record_battle_assist_selection.py` 直接读取选定884_156692的APK优先资源，对照保留871来源的逐对象提取记录；外部引用表编号变化逐项解析并核对目标原始载荷，移除的旧在线外观脚本单独排除。没有修改美术或布局载荷；当前APK／bundle／CAB、历史输入、运行prefab／meta及接线哈希见[来源清单](battle-hud/assist-selection-source-manifest.json)，实现与验证边界见[NPC邀请](../../docs/features/npc-assistance.md)。
 
 伙伴主角物理输入沿用所选 `884_156692` 当前角色数据包及其原骨骼／约束／待机通道；原包与对象身份引用当前 [scene-core 来源](battle-animation/scene-core-source-manifest.json)。[主角物理来源清单](partner-player-physics-source-manifest.json) 记录实际数据包、公开调用所用既有二进制及取样／回放文件的哈希与处理方式；可选数值取样仅写隔离目录，未复制 SDK 实现或新增素材载荷。
+
+竞技场既有871原生面板的布局输入按[原副本面板来源](dungeon-ui/prefab-binding-source-manifest.json)所记历史官方CDN地址恢复，保留原bundle MD5／SHA256／字节数并验证全部887个原生层级路径；历史布局与当前884入口数据分别记录于[入口初始化来源](dungeon-ui/matching-panel-source-manifest.json)，生成器为 `scripts/prepare_dungeon_matching_panels.py`。资源版本及运行边界见[副本](../../docs/features/dungeons.md)。

@@ -3,8 +3,10 @@ from pathlib import Path
 import hashlib
 import json
 import os
+import re
 import shutil
 import struct
+import urllib.request
 
 from current_component_schemas import CurrentSchemas
 from official_apk import Apk
@@ -75,6 +77,65 @@ def file_record(path):
     if path.suffix in ('.cs','.py'): raw=raw.replace(b'\r\n',b'\n')
     return dict(path=path.relative_to(ROOT).as_posix(), sha256=sha(raw), hashLineEndings='LF')
 
+
+def native_hierarchy(path):
+    """Read only original GameObject/Transform identities from the native export."""
+    blocks = {int(identity): (int(kind), body) for kind, identity, body in re.findall(
+        r'--- !u!(\d+) &(-?\d+)\n(.*?)(?=\n--- !u!|\Z)', path.read_text(encoding='utf-8'), re.S)}
+    names = {}
+    for identity, (kind, body) in blocks.items():
+        if kind != 1: continue
+        value = re.search(r'\n  m_Name: (.*)', body)[1]
+        names[identity] = (json.loads(value) if value.startswith('"') else
+                           value[1:-1].replace("''", "'") if value.startswith("'") else value)
+    nodes = {}
+    for identity, (kind, body) in blocks.items():
+        if kind not in (4, 224): continue
+        game_object = int(re.search(r'm_GameObject: \{fileID: (-?\d+)', body)[1])
+        parent = int(re.search(r'm_Father: \{fileID: (-?\d+)', body)[1])
+        children = re.search(r'  m_Children:(.*?)(?=\n  \w)', body, re.S)[1]
+        nodes[identity] = (names[game_object], parent, [int(value) for value in re.findall(r'fileID: (-?\d+)', children)])
+    roots = [identity for identity, node in nodes.items() if node[1] == 0]
+    if len(roots) != 1: raise ValueError('Expected one original native prefab root')
+    result = {}
+    def visit(identity, path=(), parents=()):
+        name, _, children = nodes[identity]
+        result['/'.join(map(str, path))] = list(parents + (name,))
+        for index, child in enumerate(children): visit(child, path + (index,), parents + (name,))
+    visit(roots[0])
+    return result
+
+
+def retained_arena(apk):
+    # This shipped native panel and its Image/TMP bindings belong to 871. The
+    # selected 884 panel adds group controls and cannot supply its layout paths.
+    input_path = ROOT/'assets/reference/dungeon-ui/prefab-binding-source-manifest.json'
+    receipt = json.loads(input_path.read_bytes())
+    original = next(row['source'] for row in receipt['prefabs'] if row['name'] == 'ArenaPanel')
+    if receipt['manifest'] != '871_156598' or original['manifest'] != '871_156598':
+        raise ValueError('Review retained native ArenaPanel source identity')
+    path = ROOT/'.tools/source-packages/historical/871_156598/defaultpackage_assets_prefabs_ui_arena.bundle'
+    if not path.exists():
+        raw = urllib.request.urlopen(original['url'], timeout=30).read()
+        if (len(raw) != original['bundle_size'] or hashlib.md5(raw).hexdigest() != original['bundle_hash']
+                or sha(raw) != original['bundle_sha256']):
+            raise ValueError('Historical original arena bundle failed source verification')
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(raw)
+    raw = path.read_bytes()
+    if (len(raw) != original['bundle_size'] or hashlib.md5(raw).hexdigest() != original['bundle_hash']
+            or sha(raw) != original['bundle_sha256']):
+        raise ValueError('Retained original arena bundle failed source verification')
+    bundle = apk.env.load_file(Apk.decode(raw), name='retained-871-arena.bundle')
+    asset = next(value for value in bundle.files.values() if hasattr(value, 'container'))
+    prefab = next(value.deref() for key, value in asset.container.items() if key.endswith('/ArenaPanel.prefab'))
+    if str(prefab.path_id) != original['path_id']: raise ValueError('Historical arena root identity differs')
+    native = ROOT/'unity/Assets/Game/Resources/Dungeons/UI/ArenaPanel.prefab'
+    paths = {'/'.join(map(str, path)): list(names) for _, path, names, _ in relative_transform_path(prefab.read())}
+    if paths != native_hierarchy(native): raise ValueError('Arena native hierarchy differs from its original source')
+    return prefab, original, dict(source=original, cached_input=dict(path=path.relative_to(ROOT).as_posix(), sha256=sha(raw)),
+        source_receipt=file_record(input_path), native=file_record(native), nodes=len(paths))
+
 def build():
     if shutil.which('dotnet') is None:
         os.environ['PATH']=str(ROOT/'.tools/dotnet')+os.pathsep+os.environ.get('PATH','')
@@ -96,14 +157,23 @@ def build():
     if len(payload)!=current['size'] or hashlib.md5(payload).hexdigest()!=current['hash'] or sha(payload)!=package['sha256']:
         raise ValueError('Current original UI sound package differs from the converted PCM source')
     events={row['id']:row for row in audio['events'] if row['bank']['package']==package['name']}
-    sources=[]; prefabs=[]
+    sources=[]; prefabs=[]; retained_sources=[]
+    historical_asset = None; historical_source = None
     def source(obj,**fields):
-        sources.append(dict(source=apk.provenance(obj),payload_sha256=sha(obj.get_raw_data()),**fields))
+        provenance = dict(historical_source, path_id=str(obj.path_id)) if obj.assets_file is historical_asset else apk.provenance(obj)
+        sources.append(dict(source=provenance,payload_sha256=sha(obj.get_raw_data()),**fields))
     for name,bundle in PREFABS:
-        prefab=apk.asset(bundle,'/'+name+'.prefab')
+        historical_asset = None; historical_source = None
+        if name == 'ArenaPanel':
+            prefab, historical_source, retained = retained_arena(apk)
+            historical_asset = prefab.assets_file
+            retained_sources.append(retained)
+        else:
+            prefab=apk.asset(bundle,'/'+name+'.prefab')
         nodes=list(relative_transform_path(prefab.read()))
         by_id={go.object_reader.path_id:(path,names) for go,path,names,_ in nodes}
-        row=dict(name=name,contents=[],sounds=[],safeAreas=[])
+        row=dict(name=name,sourceManifest=historical_source['manifest'] if historical_source else apk.version,
+                 contents=[],sounds=[],safeAreas=[])
         layouts=[]; initial_states=None; detail_states={}
         source(prefab,prefab=name)
         for go,path,names,_ in nodes:
@@ -174,7 +244,7 @@ def build():
     OUTPUT.with_name(OUTPUT.name+'.meta').write_text('fileFormatVersion: 2\nguid: 3c6bacaf46a749de95e0c140ec3509e8\nTextScriptImporter:\n  externalObjects: {}\n  userData:\n  assetBundleName:\n  assetBundleVariant:\n',encoding='utf-8',newline='\n')
     RECEIPT.parent.mkdir(parents=True,exist_ok=True)
     RECEIPT.write_text(json.dumps(dict(manifest=apk.version,apk_manifest=apk.source.apk_version,
-        apk_sha256=apk.source.apk_sha256,sources=sources,code_sources=[file_record(code),
+        apk_sha256=apk.source.apk_sha256,sources=sources,retained_native_sources=retained_sources,code_sources=[file_record(code),
         file_record(code.parents[1]/'launch-source/AnimationSoundPlayer.cs'),
         file_record(code.parents[1]/'framework-firstpass-source/SafeArea.cs'),
         file_record(code.with_name('DailyDungeonEntryPanel.cs'))],
@@ -188,12 +258,17 @@ def build():
         file_record(ROOT/'unity/Assets/Game/Runtime/Official/WorldUI/WorldSafeArea.cs')],
         integration=file_record(ROOT/'unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.Dungeons.cs'),
         shared_layout_runtime=file_record(ROOT/'unity/Assets/Game/Runtime/Presentation/World/OfficialDungeonUiBindingRuntime.cs'),
+        entry_navigation=dict(code_sources=[file_record(code.with_name('PublicBottomBar.cs')),
+            file_record(code.parent/'UnityEngine.UI.Ext/TabGroup.cs')],
+            integration=file_record(ROOT/'unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.cs'),
+            operation='Keep the existing local UGUI tab input state synchronized with the selected tab, following PublicBottomBar/TabGroup exclusive selection; no layout or artwork changes.'),
         validation=[file_record(ROOT/'unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.cs'),
         file_record(ROOT/'unity/Assets/Game/Runtime/Presentation/Home/SkillDamageTestValidation.cs'),
         file_record(ROOT/'unity/Assets/Game/Runtime/Presentation/Home/SkillDamageTestValidation.DungeonEntry.cs')],
         generator=file_record(Path(__file__).resolve()),output=file_record(OUTPUT),
         operation='Bind the original serialized AnimationSoundPlayer event list to the verified existing local PCM and restore GameMatchMiniPanel.RefreshUI/HideContent for entry pages without an active game-match task. Restore serialized original SafeArea fields after original transforms; preserve hierarchy and animation events.',
-        limitations=['Active matchmaking requests, target changes, cancellation and countdown are not implemented by this initialization binding.']),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+        limitations=['Active matchmaking requests, target changes, cancellation and countdown are not implemented by this initialization binding.',
+            'ArenaPanel uses its verified retained 871_156598 native hierarchy and matching historical layout payloads. The selected 884 group controls are not applied to that older hierarchy; their complete UI migration remains pending.']),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print('Verified original matching bindings:',[(p['name'],len(p['contents']),len(p['sounds'])) for p in prefabs])
 
 if __name__=='__main__': build()
