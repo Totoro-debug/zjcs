@@ -12,6 +12,8 @@ namespace Zjcs.Combat.Official
                     && status.RoundStartPropTargetRulesResolved && status.RoundStartMeetRulesResolved
                     && status.RoundStartRandomRulesResolved && status.RoundStartSourceRulesResolved
                     && status.RoundStartMergeRulesResolved
+                    && status.RoundStartDelayRulesResolved
+                    && status.RoundStartFilterRulesResolved
                     // Earlier checkpoints parsed merged-count definitions but intentionally blocked them.
                     && (!status.RoundStartMergeMaxCountOnStackRound || status.RoundStartRulesSupported)) return;
             var definition = statusCatalog.CreateStatus(status.ClassId, status.OwnerId,
@@ -20,6 +22,24 @@ namespace Zjcs.Combat.Official
                 replacementProperties: status.ReplacementProperties, blessPropertyScales: status.BlessPropertyScales);
             status.RoundStartRulesSupported = definition.RoundStartRulesSupported;
             status.RoundStartSourceRulesResolved = true;
+            if (!status.RoundStartFilterRulesResolved)
+            {
+                status.RoundStartRequiresFriendWithoutStatuses = definition.RoundStartRequiresFriendWithoutStatuses;
+                status.RoundStartFriendIncludeApplicator = definition.RoundStartFriendIncludeApplicator;
+                status.RoundStartFriendExcludedStatuses = new List<int>(definition.RoundStartFriendExcludedStatuses);
+                status.RoundStartFilterRulesResolved = true;
+            }
+            if (!status.RoundStartDelayRulesResolved)
+            {
+                status.RoundStartDelayRound = definition.RoundStartDelayRound;
+                status.RoundStartDelayRoundType = definition.RoundStartDelayRoundType;
+                // Original delayed definitions use the same applicator clock for lifetime
+                // and listening. Their saved StartRound is the retained application/refresh time.
+                if (status.RoundStartDelayRound > 0 && status.StartRound >= 0
+                    && status.RoundStartListenTarget == status.RoundTarget)
+                    status.RoundStartDelayStartRound = status.StartRound;
+                status.RoundStartDelayRulesResolved = true;
+            }
             if (!status.RoundStartMergeRulesResolved)
             {
                 status.RoundStartMergeMaxCountOnStackRound = definition.RoundStartMergeMaxCountOnStackRound;
@@ -70,7 +90,21 @@ namespace Zjcs.Combat.Official
         private static bool IsPendingRoundStart(FightBattleUnitState owner, FightBattleStatusState status)
         {
             return owner != null && !owner.Ended && status != null && !status.RoundStartStartChecked
-                && status.HasRoundStartTrigger && status.RoundStartRulesSupported && status.RoundStartTryAtStart;
+                && status.HasRoundStartTrigger && status.RoundStartRulesSupported && status.RoundStartTryAtStart
+                && status.RoundStartDelayRound == 0;
+        }
+
+        private int RoundStartClockRound(FightBattleStatusState status)
+        {
+            int id = FightStatusLifecycle.ResolveTargetUnitId(status, status.RoundStartListenTarget, units);
+            return unitById.TryGetValue(id, out var listener) ? listener.SkillState.Round : -1;
+        }
+
+        private void InitializeRoundStartDelay(FightBattleStatusState status)
+        {
+            if (status != null && status.HasRoundStartTrigger && status.RoundStartDelayRound > 0
+                && status.RoundStartDelayRoundType == 1 && status.RoundStartDelayStartRound < 0)
+                status.RoundStartDelayStartRound = RoundStartClockRound(status);
         }
 
         private int StartRoundStatus(FightBattleUnitState owner, FightBattleStatusState status)

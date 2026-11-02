@@ -9,6 +9,99 @@ namespace Zjcs.Editor
 {
     public static partial class HomeBattleHostPlayModeAcceptance
     {
+        private static RoundDelayProbe ConfigureRoundDelayProbe(FightBattleCheckpoint checkpoint)
+        {
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_ROUND_DELAY_ACCEPTANCE") != "1") return null;
+            var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
+            foreach (var unit in checkpoint.Units)
+            {
+                long hp = unit.Id == 1 ? 5000000L : 2000000L;
+                foreach (var property in unit.Properties.Concat(unit.BaseProperties))
+                {
+                    if (property.Id == catalog.PropertyType("MaxHp")) property.Value = hp;
+                    if (unit.Id != 1 && property.Id == catalog.PropertyType("Attack")) property.Value = 1000L;
+                }
+                unit.MaxHp = unit.LastMaxHp = unit.Hp = unit.Turn.Hp = hp;
+            }
+            var player = checkpoint.Units.Single(value => value.Id == 1);
+            var statuses = new[] { 25140, 25213, 64603, 25285, 24207 }.Select(id =>
+            {
+                var template = catalog.CreateStatus(id, 1, 1, 990000 + id, id, 0, 5, 20, 1, null);
+                return FightStatusLifecycle.Apply(player, template, player.SkillState.Round, template.InstanceId);
+            }).ToArray();
+            return new RoundDelayProbe(catalog, statuses);
+        }
+
+        private sealed class RoundDelayProbe
+        {
+            private readonly FightOfficialCombatCatalog catalog;
+            private readonly FightBattleStatusState recurring, once, bomb, filtered, exclusion;
+            private int lastRound, actualBombCasts, filteredCasts;
+            private bool refreshed, checkedRenewal;
+            public bool ReadyToCapture => recurring.RoundStartTriggeredCount >= 2;
+            public RoundDelayProbe(FightOfficialCombatCatalog catalog, FightBattleStatusState[] states)
+            { this.catalog = catalog; recurring = states[0]; once = states[1]; bomb = states[2];
+                filtered = states[3]; exclusion = states[4]; }
+            public void ObserveStep(OfficialBattleRuntimeController controller)
+            {
+                var cp = controller.Checkpoint;
+                var player = cp.Units.Single(value => value.Id == 1);
+                int round = player.SkillState.Round;
+                var step = cp.Receipts.Last().Event;
+                var casts = step.SkillCasts.Where(value => value.SkillEntityId == 64604).ToArray();
+                actualBombCasts += casts.Length;
+                var filterCasts = step.SkillCasts.Where(value => value.SkillEntityId == 13370).ToArray();
+                filteredCasts += filterCasts.Length;
+                Require(filterCasts.Length == 0 || round == 4 && filterCasts.Length == 1
+                    && filterCasts[0].ActorId == 1,
+                    "Filtered delayed skill did not wait for a friend free of the excluded statuses.");
+                Require(casts.Length == 0 || round == 3 && casts.Length == 1 && casts[0].ActorId == 1,
+                    "Original delayed bomb did not execute from its real source in personal round three.");
+                if (round == lastRound) return;
+                lastRound = round;
+                int expected = round < 3 ? 0 : round < 6 ? 1 : round - 4;
+                Require(recurring.RoundStartTriggeredCount == expected
+                    && once.RoundStartTriggeredCount == (round < 3 ? 0 : 1)
+                    && bomb.RoundStartTriggeredCount == (round < 3 ? 0 : 1)
+                    && filtered.RoundStartTriggeredCount == (round < 4 ? 0 : 1),
+                    "Delayed status invoked early, repeated its initial wait, or lost counters on renewal.");
+                if (round >= 3)
+                    Require(player.Statuses.Any(value => value.ClassId == 24431)
+                        && player.Statuses.Any(value => value.ClassId == 24852)
+                        && !player.Statuses.Contains(bomb),
+                        "Original delayed effects were missing or the three-round bomb did not expire.");
+                if (round == 3 && !refreshed)
+                {
+                    var latest = catalog.CreateStatus(25140, 1, 1, 999140, 25140, 0, 5, 20, 1, null);
+                    var renewed = FightStatusLifecycle.Apply(player, latest, round, latest.InstanceId);
+                    Require(ReferenceEquals(renewed, recurring) && recurring.RoundStartDelayStartRound == 3
+                        && recurring.RoundStartTriggeredCount == 1 && recurring.RoundStartMeetProgress == 1,
+                        "Same-source delay refresh reset accumulated effects instead of its waiting clock.");
+                    refreshed = true;
+                    Require(filtered.RoundStartMeetProgress == 0 && player.Statuses.Contains(exclusion),
+                        "Failed friend condition accumulated progress or lost its original exclusion.");
+                    FightStatusLifecycle.End(player, exclusion);
+                }
+                if (round >= 6) checkedRenewal = true;
+                Debug.Log("[Round delay hosts] personalRound=" + round + ", recurring="
+                    + recurring.RoundStartTriggeredCount + ", once=" + once.RoundStartTriggeredCount
+                    + ", bomb=" + bomb.RoundStartTriggeredCount + ", filtered=" + filtered.RoundStartTriggeredCount
+                    + ", delayAnchor=" + recurring.RoundStartDelayStartRound);
+            }
+            public void Verify(string host, FightBattleCheckpoint checkpoint)
+            {
+                Require(refreshed && checkedRenewal && actualBombCasts == 1 && filteredCasts == 1
+                    && once.RoundStartTriggeredCount == 1,
+                    host + " did not finish original delayed execution and renewed waiting.");
+                string saved = FightBattleCheckpointSerializer.Save(checkpoint);
+                Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
+                    host + " changed listener delay or retained effects after checkpoint reload.");
+                Debug.Log("[Round delay hosts] " + host + ": original third-round bomb/statuses, one initial wait,"
+                    + " renewal waits through rounds four/five then resumes from six, friend condition blocks round three"
+                    + " then permits original 13370 in round four, retained counters and checkpoint passed.");
+            }
+        }
+
         private static RoundStatusSourcesProbe ConfigureRoundStatusSourcesProbe(FightBattleCheckpoint checkpoint)
         {
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_STATUS_SOURCES_ACCEPTANCE") != "1") return null;

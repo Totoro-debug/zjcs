@@ -71,6 +71,7 @@ namespace Zjcs.Combat.Official
         internal Action<FightBattleUnitState, FightBattleStatusState> StatusStarted;
         internal Action<FightBattleUnitState, FightBattleStatusState> StatusEnded;
         internal Func<FightBattleStatusState, int> StatusRoundResolver;
+        internal Func<FightBattleStatusState, int> RoundStartClockResolver;
         // Official FightRolePetTransferEntity state. A player unit owns the transfer state while
         // the configured pet skill is released at the owner's action end.
         public FightBattlePetEnergyState PetEnergy = new FightBattlePetEnergyState();
@@ -393,6 +394,13 @@ namespace Zjcs.Combat.Official
         public bool RoundStartRulesSupported;
         public int RoundStartListenTarget;
         public int RoundStartDelayRound;
+        public int RoundStartDelayRoundType;
+        public int RoundStartDelayStartRound = -1;
+        public bool RoundStartDelayRulesResolved;
+        public bool RoundStartFilterRulesResolved;
+        public bool RoundStartRequiresFriendWithoutStatuses;
+        public bool RoundStartFriendIncludeApplicator;
+        public List<int> RoundStartFriendExcludedStatuses = new List<int>();
         public float RoundStartRate = 1f;
         public int RoundStartMaxCount = -1;
         public bool RoundStartMergeMaxCountOnStackRound;

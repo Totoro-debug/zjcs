@@ -1019,6 +1019,7 @@ namespace Zjcs.Combat.Official
             if (status == null) throw new InvalidOperationException("Official entity is not a status: " + classId);
 
             int durationRound = Int(status, "DurationRound");
+            var roundStartFriendFilter = ReadRoundStartFriendFilter(roundStart);
             var result = new FightBattleStatusState
             {
                 InstanceId = instanceId,
@@ -1081,6 +1082,14 @@ namespace Zjcs.Combat.Official
                     : Int(roundStart, "ListenTargetType"),
                 RoundStartDelayRound = roundStart == null ? 0
                     : Int(roundStart, "DelayRound"),
+                RoundStartDelayRoundType = roundStart == null ? 0 : Int(roundStart, "DelayRoundType"),
+                RoundStartDelayRulesResolved = true,
+                RoundStartFilterRulesResolved = true,
+                RoundStartRequiresFriendWithoutStatuses = roundStartFriendFilter != null,
+                RoundStartFriendIncludeApplicator = roundStartFriendFilter != null
+                    && Bool(Component(roundStart, "FilterCondition"), "IncludeMe"),
+                RoundStartFriendExcludedStatuses = roundStartFriendFilter == null ? new List<int>()
+                    : new List<int>(IntArray(roundStartFriendFilter, "StatusClassIds")),
                 RoundStartRate = roundStart == null ? 1f
                     : Float(roundStart, "Rate", 1f),
                 RoundStartMaxCount = roundStart == null ? -1
@@ -2539,11 +2548,23 @@ namespace Zjcs.Combat.Official
             };
         }
 
+        private static Dictionary<string, object> ReadRoundStartFriendFilter(Dictionary<string, object> component)
+        {
+            var filter = component == null ? null : Component(component, "FilterCondition");
+            if (filter == null || StringField(filter, "_type") != "AnyFriendMatchFilter") return null;
+            var not = Component(filter, "FriendCondition");
+            if (not == null || StringField(not, "_type") != "LogicNotFilter") return null;
+            var statuses = Component(not, "TargetFilter");
+            return statuses != null && StringField(statuses, "_type") == "EntityHasAnyStatusFilter"
+                ? statuses : null;
+        }
+
         private static bool SupportsRoundStart(Dictionary<string, object> component)
         {
             return Int(component, "ListenCharacterType") == 0
-                && Int(component, "DelayRound") == 0
-                && Int(component, "DelayRoundType") == 0
+                && (Int(component, "DelayRound") == 0 && Int(component, "DelayRoundType") == 0
+                    || Int(component, "DelayRound") > 0 && Int(component, "DelayRoundType") == 1
+                        && Int(component, "ListenTargetType") >= 1 && Int(component, "ListenTargetType") <= 4)
                 && Int(component, "MeetCount", 1) >= 1
                 && (Int(component, "RoundStartPhase") == 0 || Int(component, "RoundStartPhase") == 5)
                 && Float(component, "TargetHpPer", -1f) < 0f
@@ -2554,7 +2575,7 @@ namespace Zjcs.Combat.Official
                 && SupportsRoundStartStatuses(component)
                 && ArrayCount(component, "RoundStartHandles") == 0
                 && ArrayCount(component, "StatusReplacePropertyValues") == 0
-                && !HasNonNull(component, "FilterCondition")
+                && (!HasNonNull(component, "FilterCondition") || ReadRoundStartFriendFilter(component) != null)
                 && SupportsRoundStartSkills(component);
         }
 

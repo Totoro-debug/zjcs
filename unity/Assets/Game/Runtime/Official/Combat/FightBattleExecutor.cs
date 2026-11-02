@@ -88,6 +88,8 @@ namespace Zjcs.Combat.Official
             lastGlobalRound = turns.GlobalRound();
             random = new FightRandomStream(checkpoint.RandomSeed);
             if (initialize) Initialize();
+            foreach (var unit in units)
+                foreach (var status in unit.Statuses) InitializeRoundStartDelay(status);
         }
 
         public FightBattleCheckpoint State => checkpoint;
@@ -146,6 +148,8 @@ namespace Zjcs.Combat.Official
             }
             if (counter != checkpoint.Counter + 1) throw new InvalidOperationException("Fight step counter is out of order.");
             if (checkpoint.Finished) throw new InvalidOperationException("Fight is already finished.");
+            foreach (var unit in units)
+                foreach (var status in unit.Statuses) InitializeRoundStartDelay(status);
 
             FightBattleExecutionResult startup = ExecutePendingStatusStarts(sequence, counter);
             if (startup != null) return startup;
@@ -966,6 +970,8 @@ namespace Zjcs.Combat.Official
                 summon.StatusStarted = OnStatusStarted;
                 summon.StatusEnded = OnStatusEnded;
                 summon.StatusRoundResolver = StatusClockRound;
+                summon.RoundStartClockResolver = RoundStartClockRound;
+                foreach (var status in summon.Statuses) InitializeRoundStartDelay(status);
                 checkpoint.Units.Add(summon);
                 checkpoint.Statistics.Unit(summon.Id);
                 turns.RegisterUnit(summon.Turn, hit.SummonImmediateRound);

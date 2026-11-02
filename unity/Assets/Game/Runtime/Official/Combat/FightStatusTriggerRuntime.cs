@@ -36,11 +36,15 @@ namespace Zjcs.Combat.Official
                     || (onlyStatus != null && status != onlyStatus)
                     || !status.RoundStartRulesSupported || (atStatusStart && !status.RoundStartTryAtStart)
                     || (!atStatusStart && status.RoundStartPhase != phase)
-                    || status.RoundStartDelayRound != 0 || status.RoundStartMeetCount < 1
+                    || status.RoundStartMeetCount < 1
                     || (FightStatusLifecycle.RoundStartMaximumCount(status) >= 0
                         && status.RoundStartTriggeredCount >= FightStatusLifecycle.RoundStartMaximumCount(status))
                     || FightStatusLifecycle.ResolveTargetUnitId(status,
                         status.RoundStartListenTarget, units) != listener.Id
+                    || status.RoundStartDelayRound > 0 && (atStatusStart
+                        || status.RoundStartDelayRoundType != 1 || status.RoundStartDelayStartRound < 0
+                        || (long)listener.SkillState.Round - status.RoundStartDelayStartRound <= status.RoundStartDelayRound)
+                    || !RoundStartFriendConditionMatches(source, status, units)
                     || !Roll(status.RoundStartRate, random)) continue;
 
                 // User-confirmed offline rule: retain a reached threshold until a
@@ -96,6 +100,21 @@ namespace Zjcs.Combat.Official
                 }
             }
             return result;
+        }
+
+        private static bool RoundStartFriendConditionMatches(FightBattleUnitState owner,
+            FightBattleStatusState status, IReadOnlyList<FightBattleUnitState> units)
+        {
+            if (!status.RoundStartRequiresFriendWithoutStatuses) return true;
+            if (units == null) return false;
+            // Confirmed offline meaning of AnyFriendMatch -> Not -> HasAnyStatus:
+            // alive, present friends include players, NPCs and summons, without a targetability gate.
+            foreach (var candidate in units)
+                if (candidate != null && candidate.Hp > 0 && !candidate.Ended && candidate.Side == owner.Side
+                    && (status.RoundStartFriendIncludeApplicator || candidate.Id != owner.Id)
+                    && !candidate.Statuses.Any(value => value != null
+                        && status.RoundStartFriendExcludedStatuses.Contains(value.ClassId))) return true;
+            return false;
         }
 
         private static FightBattleUnitState ResolveRoundStartPropertyTarget(FightBattleUnitState owner,

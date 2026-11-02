@@ -267,6 +267,12 @@ namespace Zjcs.Combat.Official
                 RoundStartRulesSupported = template.RoundStartRulesSupported,
                 RoundStartListenTarget = template.RoundStartListenTarget,
                 RoundStartDelayRound = template.RoundStartDelayRound,
+                RoundStartDelayRoundType = template.RoundStartDelayRoundType,
+                RoundStartDelayRulesResolved = template.RoundStartDelayRulesResolved,
+                RoundStartFilterRulesResolved = template.RoundStartFilterRulesResolved,
+                RoundStartRequiresFriendWithoutStatuses = template.RoundStartRequiresFriendWithoutStatuses,
+                RoundStartFriendIncludeApplicator = template.RoundStartFriendIncludeApplicator,
+                RoundStartFriendExcludedStatuses = Copy(template.RoundStartFriendExcludedStatuses),
                 RoundStartRate = template.RoundStartRate,
                 RoundStartMaxCount = template.RoundStartMaxCount,
                 RoundStartMergeMaxCountOnStackRound = template.RoundStartMergeMaxCountOnStackRound,
@@ -505,6 +511,7 @@ namespace Zjcs.Combat.Official
                 Scope = template.Scope
             };
             unit.Statuses.Add(applied);
+            if (round >= 0) InitializeRoundStartDelay(unit, applied);
             if (applied.HasBackToLifeComponent) unit.Hp = 1;
             FightStatusCooldownRuntime.Invoke(unit, applied, random);
             RecordApplication(unit, template);
@@ -551,6 +558,19 @@ namespace Zjcs.Combat.Official
             if (existing.IsAddDurationRound) ExtendDurationOnStack(existing, refreshRound);
             else ResetDurationOnStack(existing, refreshRound);
             existing.DurationPreparedBeforeStart = refreshRound < 0;
+            existing.RoundStartDelayStartRound = -1;
+            if (refreshRound >= 0) InitializeRoundStartDelay(unit, existing);
+        }
+
+        internal static void InitializeRoundStartDelay(FightBattleUnitState owner, FightBattleStatusState status)
+        {
+            if (status == null || !status.HasRoundStartTrigger || status.RoundStartDelayRound <= 0
+                || status.RoundStartDelayRoundType != 1 || status.RoundStartDelayStartRound >= 0) return;
+            if (owner.RoundStartClockResolver != null)
+                status.RoundStartDelayStartRound = owner.RoundStartClockResolver(status);
+            else if (status.RoundStartListenTarget == TargetApplicator
+                || status.RoundStartListenTarget == TargetCreator && status.CreatorId == owner.Id)
+                status.RoundStartDelayStartRound = owner.SkillState.Round;
         }
 
         // Keep accepted applications separate from active instances: refresh/stack applications
