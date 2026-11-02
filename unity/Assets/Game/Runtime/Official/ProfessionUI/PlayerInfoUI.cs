@@ -31,7 +31,7 @@ public class PlayerInfoUI : MonoBehaviour
 
 	public SpriteRenderer PlayerIconSprite;
 
-	public PlayerAppearance PlayerAppearance;
+	public PlayerAppearanceInfo PlayerAppearance;
 
 	public Image CollectionImg;
 

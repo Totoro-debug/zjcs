@@ -388,3 +388,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 ### 伙伴当前主角资料投影
 
 `partner-main-player-source-manifest.json` 记录所选 `884_156692` 的 `PlayerInfoData(Player)`、`PlayerTargetData`、`PlayerPetExt`、`Player`、继承目标及程序集输入，以及本地主角资料适配、现有稳定身份／属性／外观依赖与验证脚本的逐文件哈希。由 `scripts/record_partner_main_player_sources.py` 记录；本批没有美术提取或素材快照。
+
+伙伴当前 UI 外观的选定 `884_156692` 应用源码、程序集及原生端点哈希见[UI 外观代码来源](partner-ui-appearance-source-manifest.json)，入口为 `prepare_partner_ui_appearance.py`。当前 APK 的材质配置对象、UI 染色 shader 与复用默认材质的各自来源、原对象字节及 Windows 显式绑定哈希见[UI 外观资源来源](partner-ui-appearance-assets-source-manifest.json)，由 `prepare_partner_ui_appearance_assets.py` 记录；历史来源不混标，本批未生成完整素材快照。 High 加载器的 APK／同版缓存对象、702 项映射、977 个纹理 GUID、原 ASTC 全部 mip、Windows 转换／同载荷占位图复用及显式加载哈希见[High 纹理来源](partner-ui-high-textures-source-manifest.json)，入口为 `prepare_partner_ui_high_textures.py`。

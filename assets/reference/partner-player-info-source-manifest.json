@@ -10,14 +10,14 @@
     "official-source.json": "a29067dd1363590c8fde67a7d5326fcb5a4632441e8c73ae8b64300aa491a3a6"
   },
   "binding_source_sha256": {
-    "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerInfoUI.cs": "f404dbff0a8da2102cf015ec68d9b954952e205b721d468d2b3b3ebc18ab59f3",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerInfoUI.cs": "b0731d0c6dfbf45fdace06e73ca444be4f34c0e984c33c5ebf9ba8714eec965a",
     "unity/Assets/Game/Runtime/Offline/PartnersNpc/OfflinePartnerNpcRuntime.cs": "ecda2401f6329874e553f775912272e80ed3fee8741c90905041574f247e5638",
     "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerNpcIconBindings.cs": "663562d6dabab99922993d493c024f710d2be0eb644eada7bd628cdc79807e5c"
   },
   "validation_source_sha256": {
     "scripts/fixtures/partner_npc_icon_validation.cs": "91bd967f0a1845b6aecfe0d004f3eee511982aca39427264649afb4ca19046f0",
     "scripts/prepare_partner_npc_icon_validation.py": "daa2cd67a4f713d39ba3073fa939ceec27714799b0945f85b85a647d04655afc",
-    "scripts/prepare_partner_player_info.py": "86ca2d6c1cb7b9be4c09e5b0a51536f93e8d6b25cea11c4253abb3a1ebc6a43f",
+    "scripts/prepare_partner_player_info.py": "f0970207750d7b5f5803a52c5517c9fa4c7cdedffb894c3d660b42f17ab9489d",
     "scripts/prepare_partner_player_info_validation.py": "b164690ef1d1139b85401a4acd456b0de9d36d1362406dfe3ba0314ad97c43e8",
     "unity/Assets/Game/Editor/ProfessionUI/ProfessionPlayerInfoValidation.cs": "cd37c2ecd8b9d61403553d8dc7a1e74701a5b7debf1f7809997975e0b1fbe481"
   },
@@ -39,6 +39,7 @@
     "PlayerInfoUI is copied from the selected 884 source; explicit host services replace injection and original opaque protocol/enum adapters remain.",
     "Collection visibility consumes the caller flag; pin mask checks collection reference, flag and target before original team compatibility/cooldown branches.",
     "NPC lite info preserves ServerId read from the actual selected NpcTargetData instance; icon target forwards it without assigning a server.",
+    "The appearance field accepts its original shared PlayerAppearanceInfo lifecycle, allowing the current application implementation without losing the serialized component reference.",
     "Other profession widgets retain their separate historical source manifests; this receipt does not relabel them or claim full partner/Windows integration."
   ]
 }

@@ -60,7 +60,7 @@ namespace Zjcs.Offline.ProfessionUI
         public float ZSpacing => meshGenerator.settings.zSpacing;
         public int UpdateWhenInvisible => updateWhenInvisible;
         public int UpdateMode => canvasRenderer.cull ? updateWhenInvisible : 3;
-        public IProfessionAppearanceAnimationState AnimationState => source?.AnimationState;
+        public IProfessionAppearanceAnimationState AnimationState => State != null ? source?.AnimationState : null;
         public Material[] MaterialsMultipleCanvasRenderers { get; private set; } = Array.Empty<Material>();
         public Texture[] TexturesMultipleCanvasRenderers { get; private set; } = Array.Empty<Texture>();
         public event Action<IProfessionAppearanceUIGraphic> OnCustomDemandLoading;

@@ -1917,3 +1917,21 @@ scripts/prepare_mainline_minimap_offline_validation.py text eol=lf
 assets/reference/official-map/mainline-minimap-root-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Official/World/MainlineMiniMapRoot/** text eol=lf
 unity/Assets/Game/Runtime/Official/World/MainlineMiniMapRoot.meta text eol=lf
+
+# Preserve selected original partner UI appearance and native endpoint hashes.
+scripts/prepare_partner_ui_appearance*.py text eol=lf
+scripts/prepare_partner_main_avatar_validation.py text eol=lf
+scripts/fixtures/partner_main_avatar_validation.cs text eol=lf
+assets/reference/partner-ui-appearance*-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceUI.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimationAppearance.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionUi*Bindings.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionCurrentUiSkinClipBindings.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeUiCharacterPose.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeUiGraphic.cs* text eol=lf
+unity/Assets/Official/Partners/Appearance/** text eol=lf
+unity/Assets/Official/Partners/Appearance.meta text eol=lf
+
+scripts/prepare_partner_ui_high_textures.py text eol=lf
+assets/reference/partner-ui-high-textures-source-manifest.json filter=lfs diff=lfs merge=lfs -text
+unity/Assets/Official/Partners/Appearance/HighTextures/Resources/Partners/HighTexturePayloads/*.asset filter=lfs diff=lfs merge=lfs -text

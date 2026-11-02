@@ -1,0 +1,152 @@
+{
+  "manifest": "884_156692",
+  "code_receipt": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+  },
+  "application_sources": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/AppearanceUI.cs",
+      "sha256": "5b68576e007fec2bdaffda98722cbc54ba6e87308fce84e06dc99a10fa114b2f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem/PlayerAnimationAppearance.cs",
+      "sha256": "61aac786ea6044bb7e6e803e8d368fbb5576fc6837efa197b7062cac5e8f0f3d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/AppearanceAnimUtils.cs",
+      "sha256": "32b704601acfdd112d8d289ef4082fa51fb5e7e0dd78281a76a1b56ebd1748c3"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceUI.cs",
+      "sha256": "54827131c7302d006f826c198186b96c3faad557a954b035fb8cca1f25fbba1a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceUI.cs.meta",
+      "sha256": "17cbb540bd4d60ec81f4a43b5176c31f4c082dd60c864e41c0b642805f8582fa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimationAppearance.cs",
+      "sha256": "5221d2bb5cb6fd9f2c104c235294eac13e7b7a514772b76d67fb36686b8a4956"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimationAppearance.cs.meta",
+      "sha256": "4c786bced874d498d8e8cd589904eb0cdf7ad538e5a407aaceb9f6fb464893fe"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_partner_ui_appearance.py",
+    "sha256": "3d684c166b7606bc9a7be1081e5036ac9aa385b9a475b78c5b29e671ce7c4375"
+  },
+  "dependencies": [
+    {
+      "path": "scripts/prepare_battle_scene_appearance_runtime.py",
+      "sha256": "5c3e7a430df2a0c1bdebfa65b4c099d583844dc25644eac0a8675ab20d4152c8"
+    },
+    {
+      "path": "scripts/prepare_unity_profession_player_appearance.py",
+      "sha256": "ec2e98cb086a31985f2e3ddd03a3c9501a6548c1dc268162d996e5aeac8b79c3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceSpine.cs",
+      "sha256": "8b3c13773d1f5670c5fb46a900c3707b831537afa5ae02135df3892cfd20e4bb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs",
+      "sha256": "d89b6bfaac4e7a0b982928e151b121de40f2662c7b9e76df34ab151d4f963c99"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAppearance.cs",
+      "sha256": "bcf86846ef5d3d72ad10d7b22c9126655dad57a987b106ffcf366cde1d212ea4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceUIBindings.cs",
+      "sha256": "aabbfa39bcf829ba52e6da7ca56e4e8af50c30eb06bdffe920b5c5470e1d73b3"
+    },
+    {
+      "path": "assets/reference/partner-ui-appearance-assets-source-manifest.json",
+      "sha256": "db903fd6b7c5b7262441f3e6994a8e2784319c32d36ed22fe733249171bede5d"
+    },
+    {
+      "path": "assets/reference/partner-ui-high-textures-source-manifest.json",
+      "sha256": "6523c9f53bc0e1a5c8c0dded6c177ea19cfbd6c4f7aa64e7e661215c78428436"
+    }
+  ],
+  "retained_skin_clip": {
+    "current_source": {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/AppearanceSkinClip.cs",
+      "sha256": "5f1c541d5729c6d54358a77a3515e0a89f434e2afc62652dc0ba5eb987777ca7"
+    },
+    "historical_receipt": {
+      "path": "assets/reference/profession-ui/skin-clip-source-manifest.json",
+      "sha256": "2cbfd61c4441aad5bfaaf52f3b564b7341c23bbb0bf966206d67a6adf63612c0"
+    },
+    "runtime": {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceSkinClip.cs",
+      "sha256": "991363d3cc0254b9f179958f20a45ebbe728ecdf80f9fe85265b44922dee6b10"
+    },
+    "operation": "Only this application source file is byte-identical to the historical source recorded by the retained port; no whole-version equivalence is asserted."
+  },
+  "native_ports": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionUiAnimationBindings.cs",
+      "sha256": "5daae1e6d94ba030bd25551ce8e162d200ddcca91f127dbe4375193381b330bb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionUiAnimationBindings.cs.meta",
+      "sha256": "550cc4e3b625c1d44efd0c0be7019a1d4fe85df4db36fd72e500e2b7b874c592"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionUiAppearanceBindings.cs",
+      "sha256": "a91acce661c6fae1fa3a273b390daf80ee00fa74a41c169a01b5fb42b97715f4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionUiAppearanceBindings.cs.meta",
+      "sha256": "2d973d294263de8d8915a725fa1ddc806efa0b59c3476ac2db125e3505117935"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeUiCharacterPose.cs",
+      "sha256": "d594307b69fab7c2a88af700ebf73dd6c5fb1cf6f184187a8c19c04c49871bdc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeUiCharacterPose.cs.meta",
+      "sha256": "617cb766a7e0cf848eb798be176396f9b6078d1cc2a444e2f731bb677562ff60"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeUiGraphic.cs",
+      "sha256": "662ba8abf4593f6a2c03ff4ea03e093c845432a43afc80d8fc64017fe3d36783"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeUiGraphic.cs.meta",
+      "sha256": "4c53150cd00e24391837b212122e1de03b225cf85285c5afd62b64dd374dd813"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionCurrentUiSkinClipBindings.cs",
+      "sha256": "eed203dc40098811a53aa951ca2bbb35a2440409efd86a53ded90b2f9063910e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionCurrentUiSkinClipBindings.cs.meta",
+      "sha256": "9bf2bdf79df747c87c2ae238e8de74ccb677f4e737ddace74ae89bab95381c11"
+    }
+  ],
+  "validation": [
+    {
+      "path": "scripts/prepare_partner_main_avatar_validation.py",
+      "sha256": "9bb7c74891fc8f9fdf042264bb59dd7744fc4494824ee96f43ddb3020bde55eb"
+    },
+    {
+      "path": "scripts/fixtures/partner_main_avatar_validation.cs",
+      "sha256": "854520183a1c7d05ba3558827664823f764bc8e84678ab5e5fd0d7308ad3d4d9"
+    }
+  ],
+  "operation": "Copy complete selected application methods and fields into the current shared appearance lifecycle. Preserve pre-load animation selection, mask-delayed skins/dyes, texture/material reference ordering and OnReleaseBeforeSORelease; explicit native ports replace SDK/injection only.",
+  "limits": [
+    "UI pose production, complete avatar host integration and Windows Player validation remain required."
+  ]
+}

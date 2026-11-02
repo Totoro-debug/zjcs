@@ -28,6 +28,9 @@ def main():
     text = re.sub(r'^using (?:AppearanceSystem|R3);\n', '', text, flags=re.M)
     text = 'using Zjcs.Official.WorldUI;\n' + text
     text = text.replace('MultiLanguageText', 'WorldMultiLanguageText').replace('StateSwitcher<', 'WorldStateSwitcher<')
+    # Both the historical and current game-owned appearance implementations
+    # inherit this original lifecycle. Preserve the actual prefab component.
+    text = text.replace('public PlayerAppearance PlayerAppearance;', 'public PlayerAppearanceInfo PlayerAppearance;')
     for name in ('PlayerAnimationAppearanceScene', 'HeadCharacterPortrait', 'HonorTitleItemProvider', 'PlanesIconItem'):
         text = re.sub(r'\b' + name + r' (?=\w)', 'Component ', text)
     text = text.replace('private DisposableBag mDisposableBag;', 'private ProfessionResourceOperationBag mDisposableBag = new ProfessionResourceOperationBag();').replace('\t\tmDisposableBag = default;\n', '')
@@ -110,6 +113,7 @@ def main():
             'PlayerInfoUI is copied from the selected 884 source; explicit host services replace injection and original opaque protocol/enum adapters remain.',
             'Collection visibility consumes the caller flag; pin mask checks collection reference, flag and target before original team compatibility/cooldown branches.',
             'NPC lite info preserves ServerId read from the actual selected NpcTargetData instance; icon target forwards it without assigning a server.',
+            'The appearance field accepts its original shared PlayerAppearanceInfo lifecycle, allowing the current application implementation without losing the serialized component reference.',
             'Other profession widgets retain their separate historical source manifests; this receipt does not relabel them or claim full partner/Windows integration.'
         ])
     receipt.write_text(json.dumps(proof, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')

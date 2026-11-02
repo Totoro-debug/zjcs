@@ -438,6 +438,20 @@ NPC 资料投影同时保留实际原 `NpcTargetData` 对象的 `ServerId`，头
 
 隔离 Unity 编辑器验证已通过真实档案创建、稳定身份、等级及重算战力、男女／职业外观切换、跟随宠物与技能方案宠物不同的分支、通知时完整数据可读、失败不发布／不写盘及真实重新读档。主工程导入／编译、`ProjectTools.Validate` 与静态检查（88,272 个 GUID）通过。该项只验证数据投影，没有把字段断言算作页面交互／画面验证；原主角 UI 外观分支、完整消息行、Home 生产宿主及 Windows Player 仍未接通。
 
+### 当前主角 UI 骨架头像（局部）
+
+`prepare_partner_ui_appearance.py` 从选定 `884_156692` 迁入当前 `AppearanceUI` 与 `PlayerAnimationAppearance`，接到已迁移的同版 `AppearanceSpine`／`AppearanceCharacter`／`PlayerAppearance`。保留先选择动画再加载骨架、遮罩延迟应用皮肤／染色、原材质需求加载及销毁前解绑／释放配置的顺序。`PlayerInfoUI.PlayerAppearance` 使用原共同基类 `PlayerAppearanceInfo`，使当前与历史原派生类都能保持原序列化引用和 `RefreshAppearance` 调用；不改变自己／他人或 UI／场景分支。
+
+`OfflineProfessionUiAppearanceBindings` 预热当前男女原生骨架，按原 GUID 加载皮肤及 High 纹理配置，并绑定实际 Canvas 端点。`OfflineProfessionUiAnimationBindings` 保留未初始化时只设置起始动画的原分支；不会将 prefab 遗留的 `home/idle_M_01` 冒充有效动画。原规则在初始化之前选择 `map/idle_01`。`ProfessionNativeUiCharacterPose` 接受显式完整姿态计算回调，保留轨道、循环及重播归零；当前原生发丝裁切端口接到同版外观类。持续动画的物理约束尚未补齐，生产入口不安装跳过物理的回调。
+
+`prepare_partner_ui_high_textures.py` 恢复头像原字段指定的 `7747b1622b6dcd941ac31d869760ad8d` High 加载器，保留全部 702 项占位图映射、977 个实际纹理 GUID、原卸载／清晰度字段及纹理色彩空间、采样器和全部 mip；原 ASTC 转为 Windows RGBA32。占位图仅在原对象与编码图像字节一致时复用当前场景资产，实际纹理沿用 High 地址，不以场景 Low 加载器替代。显式入口为 `Partners/appearance-resources`，来源见[High 纹理来源](../../assets/reference/partner-ui-high-textures-source-manifest.json)。
+
+`prepare_partner_ui_appearance_assets.py` 恢复原 `AppearanceAssetManagerConfig` 两个字段，显式绑定当前 APK 中已转换的 UI 染色 shader；它与历史版本的原始字节不同。默认骨架材质仅在完整原对象载荷一致时复用，分别保留来源。资源地址为 `Partners/appearance-asset-manager-config`；代码与资源输入输出哈希见[当前 UI 外观代码](../../assets/reference/partner-ui-appearance-source-manifest.json)和[材质配置来源](../../assets/reference/partner-ui-appearance-assets-source-manifest.json)。本批未生成完整素材快照。
+
+`prepare_partner_main_avatar_validation.py` 在隔离工程保留原 `NpcPanel` 层级、字段、遮罩和资源，仅将六组外观脚本引用绑定到当前原类。Play Mode 使用其中真实头像子树及原玩家／自己状态配置，验证男女 × 两种职业的零时刻画面、真实组合皮肤／染色、切换性别后切回的 GPU 像素完全一致，以及销毁后纹理引用归零且无运行错误；已查看四组截图。该检查显式冻结在零时刻，并拒绝正时间步的未完成物理计算，不算持续动画、完整资料控件刷新、鼠标交互或整页运行通过。正式 `NpcPanel` 的当前外观脚本绑定、完整姿态生产、Home 宿主与 Windows Player 仍未接通。
+
+本批代码的主工程 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过；High 纹理追加后，隔离工程已完成实际导入、编译及上述 Play Mode 验证，静态检查通过（89,449 个 GUID）。追加后的主工程复核遇到其他会话占用，没有停用其编辑器；不将该次复核计作通过。
+
 ### 当前主角头像摄影棚与原生拍摄（局部）
 
 `prepare_partner_player_portraits.py` 从所选 `884_156692` 的实际头像 bundle 恢复原 `CharacterPortraitStudio` 的 24 个对象，保留五个 GameObject 的层级、变换、原摄影机、Animator、SortingGroup 及组件引用。原 `HeadCharacterPortraitBuilder`、外观排除复制和空 `PreviewTool` 迁入工程；显式依赖替代注入，拍摄仍由原 `CharacterPortraitPhotographer` 执行。摄影棚中的动画与绘制组件接到既有免费原生角色后端，不读取或复制动画 SDK 实现。
