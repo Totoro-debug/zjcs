@@ -27,7 +27,8 @@ namespace Zjcs.Combat.Official
         {
             if (status == null || status.StartRound >= 0) return;
             status.StartRound = round;
-            status.CurDurationRound = status.DurationRound;
+            if (!status.DurationPreparedBeforeStart) status.CurDurationRound = status.DurationRound;
+            status.DurationPreparedBeforeStart = false;
         }
 
         /// <summary>
@@ -144,9 +145,8 @@ namespace Zjcs.Combat.Official
         }
 
         /// <summary>
-        /// Applies a status template to a unit with the official same-status behaviour:
-        /// <c>Parallel</c> keeps both, <c>Immediate</c> replaces the old instance, <c>Discard</c>
-        /// keeps the old instance. Open stacking adds stacks to the existing instance instead.
+        /// Applies a status template using the confirmed same-entity/skill renewal policy,
+        /// retaining the official configured layer and duration arithmetic.
         /// </summary>
         public static FightBattleStatusState Apply(FightBattleUnitState unit,
             FightBattleStatusState template, int round, int instanceId,
@@ -156,33 +156,13 @@ namespace Zjcs.Combat.Official
             if (template == null) throw new ArgumentNullException(nameof(template));
             if (unit.VoodooDoll != null && template.StatusType == 1) return null;
             if (unit.Statuses == null) unit.Statuses = new List<FightBattleStatusState>();
-            FightBattleStatusState existing = null;
             var origin = FightBattleStatusOrigin.Resolve(template);
-            foreach (FightBattleStatusState candidate in unit.Statuses)
-                if (candidate != null && candidate.ClassId == template.ClassId
-                    && FightBattleStatusOrigin.Matches(FightBattleStatusOrigin.Resolve(candidate), origin))
-                { existing = candidate; break; }
+            FightBattleStatusState existing = FindMatchingStatus(unit, template, origin);
             if (existing != null)
             {
                 // Confirmed offline identity rule: distinct entities/skills coexist. A repeat
                 // from the same entity and skill keeps the live instance and its accumulated effects.
-                int refreshRound = round;
-                if (refreshRound < 0)
-                {
-                    if (unit.StatusRoundResolver != null) refreshRound = unit.StatusRoundResolver(template);
-                    else if (template.RoundTarget == TargetApplicator
-                        || template.RoundTarget == TargetCreator && template.CreatorId == unit.Id)
-                        refreshRound = unit.SkillState?.Round ?? 0;
-                    else if (template.DurationRound >= 0)
-                        throw new InvalidOperationException("Refreshing this status requires its actual round clock.");
-                }
-                RefreshSource(existing, template, origin);
-                if (existing.IsOpenStack)
-                {
-                    AddStack(existing, template.StackCount > 0 ? template.StackCount : 1);
-                }
-                if (existing.IsAddDurationRound) ExtendDurationOnStack(existing, refreshRound);
-                else ResetDurationOnStack(existing, refreshRound);
+                RefreshExisting(unit, existing, template, origin, round);
                 if (existing.IsOpenStack) FightStatusCooldownRuntime.Invoke(unit, existing, random);
                 RecordApplication(unit, template);
                 return existing;
@@ -530,6 +510,47 @@ namespace Zjcs.Combat.Official
             RecordApplication(unit, template);
             unit.StatusStarted?.Invoke(unit, applied);
             return applied;
+        }
+
+        // Assembly attaches templates before the executor starts their lifecycle. Repeated
+        // bindings still renew one source, without manufacturing status-start/CD events early.
+        internal static void AttachInitial(FightBattleUnitState unit, FightBattleStatusState template)
+        {
+            var origin = FightBattleStatusOrigin.Resolve(template);
+            var existing = FindMatchingStatus(unit, template, origin);
+            if (existing == null) unit.Statuses.Add(template);
+            else if (existing.StartRound >= 0) Apply(unit, template, -1, template.InstanceId);
+            else RefreshExisting(unit, existing, template, origin, -1);
+        }
+
+        private static FightBattleStatusState FindMatchingStatus(FightBattleUnitState unit,
+            FightBattleStatusState template, FightBattleStatusOrigin origin)
+        {
+            foreach (FightBattleStatusState candidate in unit.Statuses)
+                if (candidate != null && candidate.ClassId == template.ClassId
+                    && FightBattleStatusOrigin.Matches(FightBattleStatusOrigin.Resolve(candidate), origin))
+                    return candidate;
+            return null;
+        }
+
+        private static void RefreshExisting(FightBattleUnitState unit, FightBattleStatusState existing,
+            FightBattleStatusState template, FightBattleStatusOrigin origin, int round)
+        {
+            int refreshRound = round;
+            if (refreshRound < 0 && existing.StartRound >= 0)
+            {
+                if (unit.StatusRoundResolver != null) refreshRound = unit.StatusRoundResolver(template);
+                else if (template.RoundTarget == TargetApplicator
+                    || template.RoundTarget == TargetCreator && template.CreatorId == unit.Id)
+                    refreshRound = unit.SkillState?.Round ?? 0;
+                else if (template.DurationRound >= 0)
+                    throw new InvalidOperationException("Refreshing this status requires its actual round clock.");
+            }
+            RefreshSource(existing, template, origin);
+            if (existing.IsOpenStack) AddStack(existing, template.StackCount > 0 ? template.StackCount : 1);
+            if (existing.IsAddDurationRound) ExtendDurationOnStack(existing, refreshRound);
+            else ResetDurationOnStack(existing, refreshRound);
+            existing.DurationPreparedBeforeStart = refreshRound < 0;
         }
 
         // Keep accepted applications separate from active instances: refresh/stack applications

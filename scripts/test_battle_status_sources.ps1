@@ -58,12 +58,16 @@ $unknown=New-OriginStatus 24640 2 0
 Assert-StatusSource (-not [Zjcs.Combat.Official.FightBattleStatusOrigin]::Matches([Zjcs.Combat.Official.FightBattleStatusOrigin]::Resolve($unknown),[Zjcs.Combat.Official.FightBattleStatusOrigin]::Resolve($unknown))) 'Missing skill identity was guessed from the status class'
 $equipmentOwner=[Zjcs.Combat.Official.FightBattleUnitState]@{Id=1;Hp=1000;MaxHp=1000}
 $passives=[System.Collections.Generic.List[Zjcs.Combat.Official.FightOfficialPassiveSkillBinding]]::new()
-foreach($gear in 101,102){
+foreach($gear in 101,101,102){
     $passives.Add([Zjcs.Combat.Official.FightOfficialPassiveSkillBinding]@{ItemId=17052;Rank=1;Level=1;SubRank=1;Origin=[Zjcs.Combat.Official.FightBattleStatusOrigin]@{IsSet=$true;EntityKind=1;EntityId=$gear}})
 }
 $bindings=$catalog.CreatePassiveStatusBindings($equipmentOwner,$items,$passives)
 $catalog.AssembleUnit($equipmentOwner,$null,$bindings)
 Assert-StatusSource ($equipmentOwner.Statuses.Count -eq 2 -and $equipmentOwner.Statuses[0].Origin.EntityId -eq 101 -and $equipmentOwner.Statuses[1].Origin.EntityId -eq 102 -and $equipmentOwner.Statuses[0].Origin.UnitId -eq 1 -and $equipmentOwner.Statuses[0].Origin.SkillItemId -eq 17052) 'Passive assembly discarded equipment identity or its real skill'
+Assert-StatusSource (@($equipmentOwner.Statuses|Where-Object {$_.StartRound -ne -1 -or $_.RoundStartTriggeredCount -ne 0}).Count -eq 0 -and $equipmentOwner.PendingStatusApplications.Count -eq 0) 'Repeated initial passive started its lifecycle or reported an application before battle startup'
+$initialPassive=$equipmentOwner.Statuses[0]
+$catalog.AssembleUnit($equipmentOwner,$null,$catalog.CreatePassiveStatusBindings($equipmentOwner,$items,$passives))
+Assert-StatusSource ($equipmentOwner.Statuses.Count -eq 2 -and [object]::ReferenceEquals($initialPassive,$equipmentOwner.Statuses[0]) -and $initialPassive.StartRound -eq -1) 'Repeated assembly duplicated or started an existing passive instance'
 [Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectRoundStartInvocations($equipmentOwner,$equipmentOwner,[Zjcs.Combat.Official.FightBattleUnitState[]]@($equipmentOwner),[Zjcs.Combat.Official.FightRandomStream]::new(23),$catalog)|Out-Null
 $effects=@($equipmentOwner.Statuses|Where-Object {$_.ClassId -eq 60521 -or $_.ClassId -eq 60522})
 Assert-StatusSource ($effects.Count -eq 2 -and @($effects.Origin.EntityId|Sort-Object -Unique).Count -eq 2 -and @($effects|Where-Object {$_.Origin.SkillItemId -ne 17052 -or $_.Origin.EntityKind -ne 1}).Count -eq 0) 'Original equipment passive status effects lost independent origins'
@@ -131,6 +135,23 @@ function Invoke-OriginBattle($restore,$legacy=$false){
 }
 $continuous=Invoke-OriginBattle $false
 Assert-StatusSource ($continuous -eq (Invoke-OriginBattle $true)) 'Independent source renewal changed after per-round checkpoint restore'
+# Finite initial statuses can use a different unit's clock. Merge their configured
+# duration before that clock starts, and retain it across a prepared checkpoint.
+$prepared=[Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load($continuous)
+$preparedOwner=$prepared.Units[0];$preparedOwner.Statuses.Clear()
+$initialBindings=[System.Collections.Generic.List[Zjcs.Combat.Official.FightOfficialStatusBinding]]::new()
+foreach($instance in 9001,9002){$initialBindings.Add([Zjcs.Combat.Official.FightOfficialStatusBinding]@{ClassId=24640;InstanceId=$instance;CreatorId=2;RootSkillId=63280;SkillRank=5;SkillLevel=20;SourceSubRank=1})}
+$catalog.AssembleUnit($preparedOwner,$null,$initialBindings)
+$preparedStatus=$preparedOwner.Statuses[0]
+Assert-StatusSource ($preparedOwner.Statuses.Count -eq 1 -and $preparedStatus.StartRound -eq -1 -and $preparedStatus.CurDurationRound -eq 6 -and [Zjcs.Combat.Official.FightStatusLifecycle]::RoundStartMaximumCount($preparedStatus) -eq 6) 'Initial finite duration merge lost its duration or quota before the actual clock started'
+$prepared=[Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load([Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($prepared))
+$preparedStatus=$prepared.Units[0].Statuses[0]
+[Zjcs.Combat.Official.FightStatusLifecycle]::Initialize($preparedStatus,8)
+Assert-StatusSource ($preparedStatus.StartRound -eq 8 -and $preparedStatus.CurDurationRound -eq 6 -and -not $preparedStatus.DurationPreparedBeforeStart) 'Prepared checkpoint startup discarded the already merged duration'
+$preparedOwner.Statuses.Clear()
+foreach($binding in $initialBindings){$binding.ClassId=12202}
+$catalog.AssembleUnit($preparedOwner,$null,$initialBindings)
+Assert-StatusSource ($preparedOwner.Statuses.Count -eq 1 -and $preparedOwner.Statuses[0].StartRound -eq -1 -and $preparedOwner.Statuses[0].RoundTarget -eq 1) 'Initial creator-clock renewal required or fabricated a clock before battle startup'
 # Missing legacy origin fields remain absent on untouched instances, but the formerly blocked
 # definition must become executable without resetting its counters or duration.
 $legacyRun=Invoke-OriginBattle $true $true

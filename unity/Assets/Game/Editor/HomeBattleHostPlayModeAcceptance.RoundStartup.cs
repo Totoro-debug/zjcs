@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Zjcs.Combat.Official;
@@ -23,16 +24,23 @@ namespace Zjcs.Editor
                 unit.MaxHp = unit.LastMaxHp = unit.Hp = unit.Turn.Hp = hp;
             }
             var guard = checkpoint.Units.Single(value => value.Id == 2);
-            foreach (long equipmentId in new[] { 8801L, 8802L })
+            var passives = new List<FightOfficialPassiveSkillBinding>();
+            foreach (long equipmentId in new[] { 8801L, 8801L, 8802L })
             {
-                var passive = catalog.CreateStatus(60560, 2, 2, (int)equipmentId, 60560, 17056, 1, 1, 1, null);
-                passive.Origin = new FightBattleStatusOrigin
+                passives.Add(new FightOfficialPassiveSkillBinding
                 {
-                    IsSet = true, UnitId = 2, EntityKind = FightBattleStatusOrigin.Equipment,
-                    EntityId = equipmentId, SkillItemId = 17056, SkillEntityId = 60560
-                };
-                guard.Statuses.Add(passive);
+                    ItemId = 17056, Rank = 1, Level = 1, SubRank = 1,
+                    Origin = new FightBattleStatusOrigin { EntityKind = FightBattleStatusOrigin.Equipment,
+                        EntityId = equipmentId }
+                });
             }
+            var skillItems = OfficialCombatAssetCatalog.LoadDefault().LoadSkillItems();
+            catalog.AssembleUnit(guard, null, catalog.CreatePassiveStatusBindings(guard, skillItems, passives));
+            catalog.AssembleUnit(guard, null, catalog.CreatePassiveStatusBindings(guard, skillItems, passives));
+            Require(guard.Statuses.Count(value => value.ClassId == 60560) == 2
+                && guard.Statuses.Where(value => value.ClassId == 60560).All(value => value.StartRound == -1
+                    && value.RoundStartTriggeredCount == 0),
+                "Repeated initial equipment binding duplicated or prematurely started its passive.");
             guard.Skills.Clear(); guard.SkillState.Slots.Clear();
             var summon = catalog.CreateSkill(10710, 0, 0, 5, 20, 1, null);
             summon.LimitedTimes = 1;

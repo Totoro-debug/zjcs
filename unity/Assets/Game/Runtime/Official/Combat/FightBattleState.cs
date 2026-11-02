@@ -293,6 +293,8 @@ namespace Zjcs.Combat.Official
         public int DurationRound;
         public int CurDurationRound;
         public int StartRound;
+        // Initial assembly may merge duration before its configured round clock exists.
+        public bool DurationPreparedBeforeStart;
         public int RoundTarget;
         public int RoundUpdateTiming;
         public bool RemoveAtRoundTargetDestroy;

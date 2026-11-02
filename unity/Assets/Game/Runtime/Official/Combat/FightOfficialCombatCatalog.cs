@@ -818,7 +818,8 @@ namespace Zjcs.Combat.Official
             }
             unit.Skills.AddRange(assembledSkills);
             unit.SkillState.Slots.AddRange(assembledSlots);
-            unit.Statuses.AddRange(assembledStatuses);
+            foreach (FightBattleStatusState status in assembledStatuses)
+                FightStatusLifecycle.AttachInitial(unit, status);
             if (unit.ReportSkillSnapshots == null) unit.ReportSkillSnapshots = new List<FightBattleSkillDefinition>();
             foreach (FightOfficialStatusBinding binding in statuses ?? new List<FightOfficialStatusBinding>())
             {
