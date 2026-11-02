@@ -119,6 +119,12 @@ namespace Zjcs.Offline.ProfessionUI
             return null;
         }
 
+        internal void UseOriginalBezierSegments()
+        {
+            foreach (var track in tracks)
+                foreach (var key in track.Keys) key.Transition?.UseOriginalBezierSegments();
+        }
+
         private static Dictionary<string, object> Map(object value)
             => value as Dictionary<string, object> ?? throw new InvalidDataException("Original deform fields are not an object.");
         private static float Number(Dictionary<string, object> value, string name)

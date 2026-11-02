@@ -5,8 +5,8 @@ using Zjcs.Official.ProfessionUI;
 namespace Zjcs.Offline.ProfessionUI
 {
     // Track zero for the actual UI application calls (mixDuration=0,
-    // endResumeLast=false). The caller supplies the completed native pose solver,
-    // including active physics; no pre-physics fallback is installed here.
+    // endResumeLast=false). The default producer includes the native ordered
+    // constraints and physics; specialized producers remain explicit.
     public sealed class ProfessionNativeUiCharacterPose : IProfessionNativeUiPoseSource
     {
         private readonly ProfessionNativeSceneCharacterAsset asset;
@@ -18,6 +18,11 @@ namespace Zjcs.Offline.ProfessionUI
         private float time;
         private bool loop;
         private readonly State state;
+
+        public ProfessionNativeUiCharacterPose(ProfessionNativeSceneCharacterAsset asset,
+            Func<string, int, Material> material, Func<string, Texture> texture)
+            : this(asset, new ProfessionNativePlayerPhysicsPose(asset ? asset.Data :
+                throw new ArgumentNullException(nameof(asset))).Apply, material, texture) { }
 
         public ProfessionNativeUiCharacterPose(ProfessionNativeSceneCharacterAsset asset,
             Action<ProfessionNativeAppearanceSkeleton, ProfessionNativeAnimationChannels, float, bool, float> solve,
@@ -42,7 +47,7 @@ namespace Zjcs.Offline.ProfessionUI
         public void Play(ProfessionNativeAppearanceSkeleton skeleton, string name, bool repeat)
         {
             RequireOwned(skeleton);
-            var channels = new ProfessionNativeAnimationChannels(asset.Data, name);
+            var channels = new ProfessionNativeAnimationChannels(asset.Data, name, originalBezierSegments: true);
             current = new Track(channels); loop = repeat; time = 0;
         }
         public void Apply(ProfessionNativeAppearanceSkeleton skeleton, float deltaTime)

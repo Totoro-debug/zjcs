@@ -1,0 +1,189 @@
+{
+  "manifest": "884_156692",
+  "dependencies": [
+    {
+      "path": "assets/reference/battle-animation/scene-core-source-manifest.json",
+      "sha256": "69384a713035cb15c226880fa3c6f11cda7da9ca4f7d5d195fa4d45e38560396"
+    },
+    {
+      "path": "assets/reference/partner-ui-appearance-source-manifest.json",
+      "sha256": "edb94a99b174d53ee903fc1b9030f64faf60ec81ce8b0f44f32b1135ed7866ba"
+    },
+    {
+      "path": "assets/reference/partner-player-physics-source-manifest.json",
+      "sha256": "d1ba5179be11d37bde327b43a01764f2288f4fc1f5351a0915a96003059c43b1"
+    },
+    {
+      "path": "assets/reference/battle-animation/constraint-pose-source-manifest.json",
+      "sha256": "cd4dc482dd83e5d4a8956ea6954d4db3479c8efb5b8b252947dd864377ce169d"
+    },
+    {
+      "path": "assets/reference/battle-animation/physics-channels-source-manifest.json",
+      "sha256": "f779450ec27cf72d04d55b295e22fced565aa1b5558b6eee37ee0f336f8682cd"
+    }
+  ],
+  "original_inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/SceneCharacterSources/male.bytes",
+      "sha256": "8f97682b90384ce84601a1ec1e86b7bd6bb1f71f96b32a8d1760212c9ba5c57a"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SceneCharacterSources/female.bytes",
+      "sha256": "3f2ceef9d2b254d418acb213d04ced2241efa2fcfa238c924065e2f328e773c2"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePlayerPhysicsPose.cs",
+      "sha256": "cecb74556c13b696e6d31ef32fcf99b72b00627b40a5b62f08ae94c55b194d50"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePlayerPhysicsPose.cs.meta",
+      "sha256": "5b8f7b3f8fbde7142f6e50e5dd7759885e29f449c9a299005e9fad4785604c7b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSpringConstraint.cs",
+      "sha256": "93d74c1070e81840f69f90f5c13efa67835401af08d2d4e524fd9712f5d70296"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSpringConstraint.cs.meta",
+      "sha256": "5be414ab985a9324f0a60fe0c038bb63b61880885fd98139e1704d03f20c89ee"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeUiCharacterPose.cs",
+      "sha256": "832c7855946a848e041fab3fa651a1bfe75edffa1ce5d87d4a002ea9ea6a3226"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeUiCharacterPose.cs.meta",
+      "sha256": "617cb766a7e0cf848eb798be176396f9b6078d1cc2a444e2f731bb677562ff60"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeConstraintPose.cs",
+      "sha256": "a41e84ff7a9b806e1c0ba76a5ddc5f1a415bd0e02e42df5339fc9defaa724b4a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeConstraintPose.cs.meta",
+      "sha256": "d54c47b6c580292b385a532cd3832ee9948962bb59292e99e6a60c3d8e48916f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeConstraintAnimation.cs",
+      "sha256": "343a2ba640a2dd856b6106018e4b6956aa9d24fc76d94af22cb2e676f82109b6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeConstraintAnimation.cs.meta",
+      "sha256": "a4f95c3dcbb25c676710f4f99f85e08ff6ec64b0e463d34e4b81efdeb6dc1557"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePhysicsAnimation.cs",
+      "sha256": "1e281e3846e503b9ceb2530fbe7174010557ebeacfec3b3b64423feaacb18a9d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePhysicsAnimation.cs.meta",
+      "sha256": "f93ffc9286016f15ee484c3ea18dd664394134279e12bd3b05e8234c429c20d8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAppearanceSkeleton.cs",
+      "sha256": "881c5562a6f9731e381e296471f739cb150ba8ea842ba0aee34c9d802b079953"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAppearanceSkeleton.cs.meta",
+      "sha256": "c66bb8dede110b60bdd01de35c3b1ece86979ca4bbf6f566352166ecee3e846e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBonePose.cs",
+      "sha256": "7c9eed826995fb498eda6742350205b30272985e34f21ff70f2521179540be16"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBonePose.cs.meta",
+      "sha256": "028d2ee0033d09b65a5feec9b6e98495b7c577f80e0ac54794c7c4cc489b9fe3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimationChannels.cs",
+      "sha256": "14d1b3cf9a4eae5acde4b0795074a93bad05099cb107ae05b218213013fda4d4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimationChannels.cs.meta",
+      "sha256": "a4b31802b884035deab842fed6cae31e637e1aecce0adf12f0d1fae5e8f9001b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeCurve.cs",
+      "sha256": "df4bb0cdb4b785a884359df7792311ea9eaedab0946dffd8037680d9f647cfe3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeCurve.cs.meta",
+      "sha256": "cd2a90f17ba7a32e72d94033d82176fc38f763390a827ad5bfbee61cd378b7a3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBezierPolyline.cs",
+      "sha256": "6b0fca884053585ff3dcb6a3b2da912b4f78c7c83ffd4cae19a8b987e00f42f0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBezierPolyline.cs.meta",
+      "sha256": "71bf9de08020ed7a23a9e6ffe7b02da19ef017194432d6140bbc7158b78292ef"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeDeformAnimation.cs",
+      "sha256": "59102d2a7209fd3f02c135cb4770de8b91ea40ed4b7115b3835000bacad1ad50"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeDeformAnimation.cs.meta",
+      "sha256": "c99cc578402c755cc8b32d862dd616d6f6cf9a898aec56d19b0e7bf506ed9bef"
+    }
+  ],
+  "helpers": [
+    {
+      "path": "scripts/fixtures/partner_main_avatar_validation.cs",
+      "sha256": "818057bd9e945e85dfdead8381f286b70d6a4fa425ded5b24cee300972a30fe3"
+    },
+    {
+      "path": "scripts/prepare_partner_main_avatar_validation.py",
+      "sha256": "9bb7c74891fc8f9fdf042264bb59dd7744fc4494824ee96f43ddb3020bde55eb"
+    },
+    {
+      "path": "scripts/fixtures/partner_player_pose_reference.cs",
+      "sha256": "43fa28e40f9d047002960806c3f12c8659fe8cd1bef55449b46fe9e7a6b9781c"
+    },
+    {
+      "path": "scripts/verify_partner_player_pose_reference.py",
+      "sha256": "e8e73857ee8bfdde811b17e8dddb262c51430cae906a662ea1d08dbe2dddc1fd"
+    },
+    {
+      "path": "scripts/test_partner_player_bezier.py",
+      "sha256": "368bf8ca8c77dc425145f5fba905079a4e2217a5eb955c0772412e2b6316d598"
+    },
+    {
+      "path": "scripts/fixtures/partner_player_bezier_validation.cs",
+      "sha256": "b1b5913648ecaa30079526d538e45f1fe3e0367433ed9494c4dcb16a0f6a967d"
+    },
+    {
+      "path": "scripts/fixtures/partner_player_bezier_reference.txt",
+      "sha256": "8fa8d924b919f3177471cecef6fa4a505a47ce0886204827e1dd512eddd48a56"
+    }
+  ],
+  "generator": {
+    "path": "scripts/record_partner_player_pose.py",
+    "sha256": "dbd07c35b23df6f98516a1f5a523fe1cb269f6233d955bc938a203ac3dced2ef"
+  },
+  "recorded_numerical_inputs": {
+    "reference_binary_sha256": "48c6f5e1923ce5758871e9ec931e3250fac79c76dd031f89bcbab69b4c1e48d9",
+    "fixture": {
+      "path": "scripts/fixtures/partner_player_bezier_reference.txt",
+      "sha256": "8fa8d924b919f3177471cecef6fa4a505a47ce0886204827e1dd512eddd48a56"
+    },
+    "cases": 4,
+    "samples": 244,
+    "selected_original_curve": "male / map/idle_01 / shenti_0 / rotate, first two authored keys",
+    "other_inputs": "Three synthetic control-point configurations used only to distinguish numerical sampling semantics"
+  },
+  "operation": [
+    "Use original unscaled local bone coordinates, setup bone lengths and skeleton referenceScale. Mesh conversion retains the original dataScale.",
+    "Sample original skin-selected constraints and animation channels. Solve verified IK/transform stages, then update active x/y/rotate physics in original order and invalidate descendant world matrices.",
+    "Retain physical histories and skeleton clock through animation replay and skin changes. Newly created skeletons own new histories. Initially inactive constraints bind on their first active update.",
+    "Explicit setup-only samplers apply original setup constraints before any animation track exists. No arbitrary animation substitutes for setup.",
+    "Independently construct ten equal-parameter planar Bezier chords for the current UI producer, including local, color, constraint, physics and deform curves. Other callers retain their explicitly selected existing curve policy.",
+    "The optional JSON reference transport restores omitted transform setup mix fields to their original binary zero defaults; packaged source payloads remain byte-identical.",
+    "Unknown constraint kinds, interleaved physics ordering and unsupported scale/shear physics are rejected.",
+    "The game and native producer have no animation SDK dependency. The optional reference helper invokes public APIs on an explicitly supplied existing binary in an owned validation workspace.",
+    "Earlier receipts keep their historical implementation identities; this receipt records the current extensions without modifying their original input hashes."
+  ]
+}

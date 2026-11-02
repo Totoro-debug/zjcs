@@ -18,6 +18,7 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly AnimationCurve curve;
         private readonly Key[] original;
         private readonly float firstTime;
+        private ProfessionNativeBezierPolyline[] originalSegments;
         public int KeyCount => curve.length;
 
         public ProfessionNativeCurve(Key[] source)
@@ -85,9 +86,23 @@ namespace Zjcs.Offline.ProfessionUI
             // Preserve the exact source constant instead of clamping IK inputs.
             if (a.mode == 0 && a.value == b.value) { value = a.value; return true; }
             if (a.mode != 2) { value = curve.Evaluate(time); return true; }
+            if (originalSegments != null) { value = originalSegments[lo].Evaluate(time); return true; }
             double parameter = InvertTime(a.time, a.controls.x, a.controls.z, b.time, time);
             value = (float)Cubic(a.value, a.controls.y, a.controls.w, b.value, parameter);
             return true;
+        }
+
+        internal void UseOriginalBezierSegments()
+        {
+            if (originalSegments != null) return;
+            originalSegments = new ProfessionNativeBezierPolyline[original.Length];
+            for (int index = 0; index + 1 < original.Length; index++)
+            {
+                var a = original[index]; var b = original[index + 1];
+                if (a.mode != 2) continue;
+                originalSegments[index] = new ProfessionNativeBezierPolyline(a.time, a.value, a.controls.x, a.controls.y,
+                    a.controls.z, a.controls.w, b.time, b.value);
+            }
         }
 
         private static double InvertTime(double a, double b, double c, double d, double time)

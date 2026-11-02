@@ -27,6 +27,12 @@ namespace Zjcs.Offline.ProfessionUI
         public string Name { get; }
         public int TrackCount => mixes.Count;
 
+        public static ProfessionNativePhysicsAnimation CreateSetup(ProfessionNativeSkeletonData data)
+            => new ProfessionNativePhysicsAnimation(data);
+
+        private ProfessionNativePhysicsAnimation(ProfessionNativeSkeletonData data)
+        { this.data = data ?? throw new ArgumentNullException(nameof(data)); }
+
         public ProfessionNativePhysicsAnimation(ProfessionNativeSkeletonData data, string animation)
         {
             this.data = data ?? throw new ArgumentNullException(nameof(data));
@@ -71,6 +77,9 @@ namespace Zjcs.Offline.ProfessionUI
         }
 
         // Inspection of one source constraint, independently of skin selection.
+        internal void UseOriginalBezierSegments()
+        { foreach (var curve in mixes.Values) curve.UseOriginalBezierSegments(); }
+
         public State Sample(string constraint, float time)
         {
             ValidateTime(time);

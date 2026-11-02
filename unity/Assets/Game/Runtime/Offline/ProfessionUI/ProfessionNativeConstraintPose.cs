@@ -7,6 +7,19 @@ namespace Zjcs.Offline.ProfessionUI
     // verified geometric solvers and reject their unbound branches.
     public static class ProfessionNativeConstraintPose
     {
+        public static void EvaluateSetupBeforePhysics(ProfessionNativeAppearanceSkeleton skeleton,
+            ProfessionNativeConstraintAnimation setup)
+        {
+            if (skeleton == null || setup == null) throw new ArgumentNullException();
+            if (!ReferenceEquals(setup.Source, skeleton.Source) || setup.Name != null)
+                throw new ArgumentException("Bind explicit original setup constraints for this skeleton.", nameof(setup));
+            var ik = setup.SampleIk(0, skeleton.SkinConstraints);
+            var transforms = setup.SampleTransforms(0, skeleton.SkinConstraints);
+            ValidateConstraints(ik, transforms);
+            skeleton.SetToSetupPose();
+            Solve(skeleton, ik, transforms);
+        }
+
         public static void EvaluateBeforePhysics(ProfessionNativeAppearanceSkeleton skeleton,
             ProfessionNativeAnimationChannels channels, float time, bool loop = true)
         {

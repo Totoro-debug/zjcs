@@ -400,3 +400,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 伙伴主角物理输入沿用所选 `884_156692` 当前角色数据包及其原骨骼／约束／待机通道；原包与对象身份引用当前 [scene-core 来源](battle-animation/scene-core-source-manifest.json)。[主角物理来源清单](partner-player-physics-source-manifest.json) 记录实际数据包、公开调用所用既有二进制及取样／回放文件的哈希与处理方式；可选数值取样仅写隔离目录，未复制 SDK 实现或新增素材载荷。
 
 竞技场既有871原生面板的布局输入按[原副本面板来源](dungeon-ui/prefab-binding-source-manifest.json)所记历史官方CDN地址恢复，保留原bundle MD5／SHA256／字节数并验证全部887个原生层级路径；历史布局与当前884入口数据分别记录于[入口初始化来源](dungeon-ui/matching-panel-source-manifest.json)，生成器为 `scripts/prepare_dungeon_matching_panels.py`。资源版本及运行边界见[副本](../../docs/features/dungeons.md)。
+
+伙伴当前主角连续姿态沿用所选 `884_156692` 角色数据包、原皮肤集合和 UI 应用入口；[连续姿态来源](partner-player-pose-source-manifest.json) 记录原数据、依赖来源清单、当前独立原生代码及既录数值输入的哈希。`record_partner_player_pose.py` 记录来源；可选公开调用仅在隔离目录取样，JSON 参照传输显式恢复原二进制投影省略的变换约束零值，未修改原输入或复制 SDK 实现。本批未新增美术或完整素材快照。

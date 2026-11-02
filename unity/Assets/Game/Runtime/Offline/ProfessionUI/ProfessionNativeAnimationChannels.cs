@@ -23,21 +23,33 @@ namespace Zjcs.Offline.ProfessionUI
         private ProfessionNativeConstraintAnimation constraints;
         private ProfessionNativeDeformAnimation deforms;
         private ProfessionNativePhysicsAnimation physics;
+        private readonly bool originalBezierSegments;
         public string Name { get; }
         public float Duration { get; }
         public IReadOnlyList<ProfessionNativeBonePose.Track> BoneTracks => bones;
         public int InheritanceTrackCount => inheritance.Length;
         public int ColorTrackCount => colors.Length;
         public IReadOnlyDictionary<string, object> OriginalFields { get; }
-        public ProfessionNativeConstraintAnimation Constraints => constraints ?? (constraints = new ProfessionNativeConstraintAnimation(data, Name));
-        public ProfessionNativeDeformAnimation Deforms => deforms ?? (deforms = new ProfessionNativeDeformAnimation(data, Name));
-        public ProfessionNativePhysicsAnimation Physics => physics ?? (physics = new ProfessionNativePhysicsAnimation(data, Name));
+        public ProfessionNativeConstraintAnimation Constraints {
+            get { if (constraints == null) { constraints = new ProfessionNativeConstraintAnimation(data, Name);
+                if (originalBezierSegments) constraints.UseOriginalBezierSegments(); } return constraints; }
+        }
+        public ProfessionNativeDeformAnimation Deforms {
+            get { if (deforms == null) { deforms = new ProfessionNativeDeformAnimation(data, Name);
+                if (originalBezierSegments) deforms.UseOriginalBezierSegments(); } return deforms; }
+        }
+        public ProfessionNativePhysicsAnimation Physics {
+            get { if (physics == null) { physics = new ProfessionNativePhysicsAnimation(data, Name);
+                if (originalBezierSegments) physics.UseOriginalBezierSegments(); } return physics; }
+        }
 
-        public ProfessionNativeAnimationChannels(ProfessionNativeSkeletonData data, string name)
+        public ProfessionNativeAnimationChannels(ProfessionNativeSkeletonData data, string name, bool originalBezierSegments = false)
         {
             this.data = data ?? throw new ArgumentNullException(nameof(data));
             Name = name; OriginalFields = data.GetAnimation(name);
+            this.originalBezierSegments = originalBezierSegments;
             bones = data.CreateBoneTracks(name); slots = data.CreateSlotClip(name, true);
+            if (originalBezierSegments) foreach (var track in bones) track.Curve.UseOriginalBezierSegments();
             Duration = LastTime(OriginalFields);
             string[] modes = { "normal", "onlyTranslation", "noRotationOrReflection", "noScale", "noScaleOrReflection" };
             var inheritTracks = new List<InheritTrack>();
@@ -94,6 +106,7 @@ namespace Zjcs.Offline.ProfessionUI
                             keys[i] = key;
                         }
                         curves[axis] = new ProfessionNativeCurve(keys);
+                        if (originalBezierSegments) curves[axis].UseOriginalBezierSegments();
                     }
                     colorTracks.Add(new ColorTrack { Slot = data.FindSlot(slot.Key), FirstAxis = alpha ? 3 : 0, Channels = curves });
                 }

@@ -25,11 +25,11 @@ public static class PartnerMainAvatarValidation
     {
         EditorApplication.playModeStateChanged += state => {
             if (state == PlayModeStateChange.EnteredPlayMode && SessionState.GetBool(Key, false))
-                new GameObject("Original partner avatar frame-zero validation").AddComponent<PartnerMainAvatarRunner>();
+                new GameObject("Original partner avatar continuous animation validation").AddComponent<PartnerMainAvatarRunner>();
         };
         EditorApplication.update += () => {
             if (SessionState.GetBool(Key, false) && EditorApplication.timeSinceStartup > SessionState.GetFloat(Key + ".Deadline", float.MaxValue))
-                Finish(new TimeoutException("Original avatar frame-zero validation timed out"));
+                Finish(new TimeoutException("Original avatar continuous animation validation timed out"));
         };
     }
     public static void Run()
@@ -141,16 +141,17 @@ public sealed class PartnerMainAvatarRunner : MonoBehaviour
                     "Original serialized initial state remains unchanged");
                 Require(parts.IgnoreSkinTypes.Select(value => (int)value).SequenceEqual(new[] { 12, 7, 8 }),
                     "Use the original avatar exclusions rather than clearing parts");
-                // This check deliberately covers only t=0. No positive-delta
-                // pre-physics pose is accepted or installed in production.
+                // Capture a deterministic initial frame, then exercise the
+                // actual LateUpdate producer with the original unfrozen setting.
                 graphic.freeze = true;
-                var binding = new OfflineProfessionUiAppearanceBindings(resources, graphic, manager, config, asset =>
-                    new ProfessionNativeUiCharacterPose(asset, (skeleton, channels, time, loop, delta) => {
-                        if (time != 0 || delta != 0) throw new NotSupportedException("Frame-zero fixture requires complete physics before advancing time");
-                        if (channels != null) ProfessionNativeConstraintPose.EvaluateBeforePhysics(skeleton, channels, 0, loop);
-                    }, (page, blend) => blend == 0 ? graphic.material : blend == 1 ? graphic.additiveMaterial :
+                ProfessionNativePlayerPhysicsPose physicalPose = null;
+                var binding = new OfflineProfessionUiAppearanceBindings(resources, graphic, manager, config, asset => {
+                    physicalPose = new ProfessionNativePlayerPhysicsPose(asset.Data);
+                    return new ProfessionNativeUiCharacterPose(asset, physicalPose.Apply,
+                        (page, blend) => blend == 0 ? graphic.material : blend == 1 ? graphic.additiveMaterial :
                         blend == 2 ? graphic.multiplyMaterial : blend == 3 ? graphic.screenMaterial : throw new Exception("Original blend"),
-                        page => resources.MaterialForPage(asset, page).mainTexture));
+                        page => resources.MaterialForPage(asset, page).mainTexture);
+                });
                 var serialized = new SerializedObject(ui);
                 Require(serialized.FindProperty("TextureLoaderGuid").FindPropertyRelative("mAssetGuid").stringValue == resources.LoaderGuid
                     && serialized.FindProperty("SkinTextureAssetGuid").FindPropertyRelative("mAssetGuid").stringValue == resources.SkinGuid,
@@ -195,6 +196,29 @@ public sealed class PartnerMainAvatarRunner : MonoBehaviour
                     .Count(color => color.r > 120 && color.g > 80 && color.b > 45 && color.r > color.b) > 200,
                     "Visible colored face and hair rather than the unselected portrait-loading silhouette");
                 File.WriteAllBytes(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"), "avatar-" + sex + "-" + profession + ".png"), image.EncodeToPNG());
+                var initialWorld = Enumerable.Range(0, graphic.State.Pose.Count).Select(graphic.State.Pose.World).ToArray();
+                RecordNativePose(graphic.State, sex, profession);
+                Require(physicalPose.PhysicsTime == 0, "Initial skeleton physics clock starts at zero");
+                graphic.freeze = false;
+                float duration = new ProfessionNativeAnimationChannels(graphic.State.Source, player.AnimName).Duration;
+                int movingFrames = 0;
+                while (movingFrames < 120 || physicalPose.PhysicsTime <= duration + 1f / 60)
+                {
+                    if (++movingFrames > 1800) throw new InvalidOperationException("Actual avatar animation did not reach its original loop boundary");
+                    yield return null;
+                }
+                Require(physicalPose.PhysicsTime > duration, "Actual LateUpdate crosses the original animation loop boundary");
+                Require(initialWorld.Where((matrix, index) => graphic.State.Pose.IsActive(index)
+                    && matrix != graphic.State.Pose.World(index)).Any(), "Original positive-time bone poses move");
+                Canvas.ForceUpdateCanvases();
+                RenderPipeline.SubmitRenderRequest(camera, new UniversalRenderPipeline.SingleCameraRequest { destination = render });
+                RenderTexture.active = render; image.ReadPixels(new Rect(0, 0, 320, 320), 0, 0); image.Apply(); RenderTexture.active = prior;
+                Require(!colors.SequenceEqual(image.GetPixels32()), "Continuous native animation changes actual GPU pixels");
+                File.WriteAllBytes(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"), "avatar-moving-" + sex + "-" + profession + ".png"), image.EncodeToPNG());
+                float elapsed = physicalPose.PhysicsTime;
+                graphic.freeze = true;
+                graphic.PlayAnimation(player.AnimName, true); graphic.ApplyAnimation();
+                Require(physicalPose.PhysicsTime == elapsed, "Track replay retains the original skeleton physics clock");
                 var initial = graphic.State;
                 var otherSex = sex == Sex.Male ? Sex.Female : Sex.Male;
                 var otherData = new ProfessionAppearanceResolver(tables).BuildDefaultAppearanceData(config, otherSex, (Profession)profession);
@@ -202,13 +226,14 @@ public sealed class PartnerMainAvatarRunner : MonoBehaviour
                 Require(graphic.State != initial && graphic.State.Source != initial.Source,
                     "Current UI sex switch binds the matching new native pose and skin layout");
                 player.RefreshAppearance(17, sex, profession, appearance.AppearanceData);
+                Require(physicalPose.PhysicsTime == 0, "Replacing the original skeleton resets its physical clock");
                 yield return null;
                 Canvas.ForceUpdateCanvases(); graphic.ApplyAnimation(); Canvas.ForceUpdateCanvases();
                 RenderPipeline.SubmitRenderRequest(camera, new UniversalRenderPipeline.SingleCameraRequest { destination = render });
                 RenderTexture.active = render; image.ReadPixels(new Rect(0, 0, 320, 320), 0, 0); image.Apply(); RenderTexture.active = prior;
                 Require(colors.SequenceEqual(image.GetPixels32()), "Releasing and switching sex back restores identical actual GPU pixels");
                 Object.DestroyImmediate(image);
-                Debug.Log("[Original partner avatar t=0] " + sex + "/" + profession + ", animation=" + player.AnimName
+                Debug.Log("[Original partner avatar continuous] " + sex + "/" + profession + ", animation=" + player.AnimName + ", frames=" + movingFrames + ", duration=" + duration + ", physical seconds=" + elapsed
                     + ", batches=" + graphic.canvasRenderers.Count + ", dye materials=" + ui.IndependentMaterialDict.Count);
                 Object.DestroyImmediate(root);
                 Object.DestroyImmediate(owner);
@@ -227,6 +252,32 @@ public sealed class PartnerMainAvatarRunner : MonoBehaviour
     }
     static AssetGuidProxy<T> Proxy<T>(string guid) where T : Object
     { var value = new AssetGuidProxy<T>(); JsonUtility.FromJsonOverwrite("{\"mAssetGuid\":\"" + guid + "\"}", value); return value; }
+    static void RecordNativePose(ProfessionNativeAppearanceSkeleton displayed, Sex sex, int profession)
+    {
+        var native = new ProfessionNativeAppearanceSkeleton(displayed.Source);
+        native.SetSkin(displayed.Skin); native.SetToSetupPose(); native.UpdateCache();
+        var solver = new ProfessionNativePlayerPhysicsPose(displayed.Source);
+        var animation = new ProfessionNativeAnimationChannels(displayed.Source, "map/idle_01", originalBezierSegments: true);
+        var skin = (ProfessionNativeSkin)displayed.Skin;
+        string path = Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"), "native-pose-" + sex + "-" + profession + ".txt");
+        using var output = new StreamWriter(path);
+        output.WriteLine("B|" + string.Join(",", skin.Bones));
+        output.WriteLine("C|" + string.Join(",", skin.Constraints));
+        float time = 0;
+        for (int frame = 0; frame <= 240; frame++)
+        {
+            float delta = frame == 0 ? 0 : 1f / 60;
+            time += delta; solver.Apply(native, animation, time, true, delta);
+            for (int bone = 0; bone < native.Pose.Count; bone++)
+            {
+                if (!native.Pose.IsActive(bone)) continue;
+                var matrix = native.Pose.World(bone);
+                output.WriteLine(string.Join("|", frame, bone,
+                    string.Join(",", new[] { matrix.m00, matrix.m01, matrix.m10, matrix.m11, matrix.m03, matrix.m13 }
+                        .Select(value => value.ToString("R", System.Globalization.CultureInfo.InvariantCulture)))));
+            }
+        }
+    }
     sealed class Parts : IProfessionAppearancePartBindings
     {
         public AppearanceConfig Config { get; }

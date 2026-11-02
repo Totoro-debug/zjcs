@@ -442,15 +442,15 @@ NPC 资料投影同时保留实际原 `NpcTargetData` 对象的 `ServerId`，头
 
 `prepare_partner_ui_appearance.py` 从选定 `884_156692` 迁入当前 `AppearanceUI` 与 `PlayerAnimationAppearance`，接到已迁移的同版 `AppearanceSpine`／`AppearanceCharacter`／`PlayerAppearance`。保留先选择动画再加载骨架、遮罩延迟应用皮肤／染色、原材质需求加载及销毁前解绑／释放配置的顺序。`PlayerInfoUI.PlayerAppearance` 使用原共同基类 `PlayerAppearanceInfo`，使当前与历史原派生类都能保持原序列化引用和 `RefreshAppearance` 调用；不改变自己／他人或 UI／场景分支。
 
-`OfflineProfessionUiAppearanceBindings` 预热当前男女原生骨架，按原 GUID 加载皮肤及 High 纹理配置，并绑定实际 Canvas 端点。`OfflineProfessionUiAnimationBindings` 保留未初始化时只设置起始动画的原分支；不会将 prefab 遗留的 `home/idle_M_01` 冒充有效动画。原规则在初始化之前选择 `map/idle_01`。`ProfessionNativeUiCharacterPose` 接受显式完整姿态计算回调，保留轨道、循环及重播归零；当前原生发丝裁切端口接到同版外观类。持续动画的物理约束尚未补齐，生产入口不安装跳过物理的回调。
+`OfflineProfessionUiAppearanceBindings` 预热当前男女原生骨架，按原 GUID 加载皮肤及 High 纹理配置，并绑定实际 Canvas 端点。`OfflineProfessionUiAnimationBindings` 保留未初始化时只设置起始动画的原分支；不会将 prefab 遗留的 `home/idle_M_01` 冒充有效动画。原规则在初始化之前选择 `map/idle_01`。`ProfessionNativeUiCharacterPose` 保留轨道、循环及重播归零；默认姿态生产已包含下节的原生约束与物理计算，也可显式传入完整姿态回调。当前原生发丝裁切端口接到同版外观类。
 
 `prepare_partner_ui_high_textures.py` 恢复头像原字段指定的 `7747b1622b6dcd941ac31d869760ad8d` High 加载器，保留全部 702 项占位图映射、977 个实际纹理 GUID、原卸载／清晰度字段及纹理色彩空间、采样器和全部 mip；原 ASTC 转为 Windows RGBA32。占位图仅在原对象与编码图像字节一致时复用当前场景资产，实际纹理沿用 High 地址，不以场景 Low 加载器替代。显式入口为 `Partners/appearance-resources`，来源见[High 纹理来源](../../assets/reference/partner-ui-high-textures-source-manifest.json)。
 
 `prepare_partner_ui_appearance_assets.py` 恢复原 `AppearanceAssetManagerConfig` 两个字段，显式绑定当前 APK 中已转换的 UI 染色 shader；它与历史版本的原始字节不同。默认骨架材质仅在完整原对象载荷一致时复用，分别保留来源。资源地址为 `Partners/appearance-asset-manager-config`；代码与资源输入输出哈希见[当前 UI 外观代码](../../assets/reference/partner-ui-appearance-source-manifest.json)和[材质配置来源](../../assets/reference/partner-ui-appearance-assets-source-manifest.json)。本批未生成完整素材快照。
 
-`prepare_partner_main_avatar_validation.py` 在隔离工程保留原 `NpcPanel` 层级、字段、遮罩和资源，仅将六组外观脚本引用绑定到当前原类。Play Mode 使用其中真实头像子树及原玩家／自己状态配置，验证男女 × 两种职业的零时刻画面、真实组合皮肤／染色、切换性别后切回的 GPU 像素完全一致，以及销毁后纹理引用归零且无运行错误；已查看四组截图。该检查显式冻结在零时刻，并拒绝正时间步的未完成物理计算，不算持续动画、完整资料控件刷新、鼠标交互或整页运行通过。正式 `NpcPanel` 的当前外观脚本绑定、完整姿态生产、Home 宿主与 Windows Player 仍未接通。
+`prepare_partner_main_avatar_validation.py` 在隔离工程保留原 `NpcPanel` 层级、字段、遮罩和资源，仅将六组外观脚本引用绑定到当前原类。Play Mode 使用其中真实头像子树及原玩家／自己状态配置，验证真实组合皮肤／染色、切换性别后切回的初始 GPU 像素完全一致，以及销毁后纹理引用归零且无运行错误。连续动画、跨循环与完整骨架数值对照范围见下节；完整资料控件刷新、鼠标交互和整页运行尚未验证。正式 `NpcPanel` 的当前外观脚本绑定、Home 宿主与 Windows Player 仍未接通。
 
-头像代码与全部 High 纹理的主工程 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 已通过；头像子树的隔离 Play Mode 范围仍限于上文记录的零时刻画面，持续物理播放的接线范围见下节。
+头像代码与全部 High 纹理的主工程 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 已通过；连续物理播放的接线与当前验证范围见下节。
 
 ### 当前主角原生物理计算（局部）
 
@@ -460,7 +460,17 @@ NPC 资料投影同时保留实际原 `NpcTargetData` 对象的 `ServerId`，头
 
 可选 `capture_partner_player_physics_reference.py --reference-dll <现有二进制> --verify-player-assets` 仅在隔离目录通过公开 API 取得数值参照；固定回放数据已验证可逐字节重建。真实资产检查读取当前男女角色的原骨骼和 `map/idle_01` 通道，分别对 1,543／1,807 个独立物理约束的 120 帧输入矩阵进行对照，共 402,000 次，最大差为 `7.62939453×10⁻⁶`。该检查由参照提供各约束输入矩阵，不算独立层级求解、完整动画、原生 UI 或实际换装链已通过。人工大幅旋转／位移的全部皮肤同时激活压力输入仍有极少量更大浮点偏差，不能扩大为任意动画与任意状态完全一致。
 
-来源、数据包、数值参照二进制、取样工具及实现／回放输入输出哈希见[主角物理依据](../../assets/reference/partner-player-physics-source-manifest.json)。当前原始玩家物理数据没有 ScaleX／ShearX 通道；尚未将这两类扩展视作支持。约束顺序、皮肤激活、初始绑定、原动画采样和物理时钟仍待整合到连续头像播放器。主工程 Unity 导入／编译与 `Zjcs.Editor.ProjectTools.Validate`、全工程静态检查（89,779 个 GUID）通过；正式头像连续播放、画面／输入、存档与 Windows Player 尚未完成。
+来源、数据包、数值参照二进制、取样工具及实现／回放输入输出哈希见[主角物理依据](../../assets/reference/partner-player-physics-source-manifest.json)。当前原始玩家物理数据没有 ScaleX／ShearX 通道；尚未将这两类扩展视作支持。约束顺序、皮肤激活、初始绑定、原动画采样和物理时钟已接到下节的连续头像播放器。主工程 Unity 导入／编译与 `Zjcs.Editor.ProjectTools.Validate`、全工程静态检查（89,779 个 GUID）通过；正式头像连续播放、画面／输入、存档与 Windows Player 尚未完成。
+
+### 当前主角头像连续动画（局部）
+
+`ProfessionNativePlayerPhysicsPose` 使用当前男女原骨架的局部坐标、骨长、参考尺寸和皮肤约束集合，先求原 IK／变换约束，再按原顺序施加位移／旋转物理并更新后代矩阵。骨架物理时钟与动画轨道分开；重复播放只重置动画时间，皮肤暂时移除约束不清除其历史，更换骨架则重建状态。没有轨道时用显式原设置姿态求解，不选择其他动画代替；未支持的约束类型、交错物理顺序及 ScaleX／ShearX 仍明确拒绝。
+
+原头像播放器启用独立构造的十段 Bezier 折线求值，并传递到骨骼、颜色、约束、物理和形变通道；该取样方式通过既有二进制公开 API 的数值输入确认，不复制 SDK 实现。对照输入将原二进制投影省略的变换约束零混合值显式补为零，避免 JSON 读取器的非零默认值改变参照；原数据包字节未改变。代码、原输入、既录数值和可选参照工具的哈希见[连续头像来源](../../assets/reference/partner-player-pose-source-manifest.json)，维护入口为 `record_partner_player_pose.py`。
+
+`scripts/test_partner_player_bezier.py` 不加载 SDK，已通过当前原身体曲线及三组几何控制点的 244 个既录数值，最大差 `9.06×10⁻⁶`。隔离 URP Play Mode 使用原头像、遮罩、组合皮肤、High 纹理与染色材质，男女 × 两种职业均通过实际 `LateUpdate` 连续播放并跨过原 `2.666667` 秒循环边界；已查看四组连续播放 GPU 画面。重播保留物理时钟、更换性别后重建时钟、切回后初始 GPU 像素一致、释放后纹理引用归零及无运行错误均通过。每组另对 241 帧完整活动骨架作公开调用数值对照，合计 109,896 个姿态；矩阵系数最大差约 `3.04×10⁻⁶`，原坐标位置最大差约 `0.00055`。
+
+上述结果只覆盖当前原默认头像组合及 `map/idle_01`，不扩大为任意外观、其他动画、正式页面输入、完整资料刷新、存档或 Windows Player 已验证。正式伙伴入口及详情中的统一外观生命周期仍待接线。主工程 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate`、全工程静态检查（89,840 个 GUID）通过。
 
 ### 当前主角头像摄影棚与原生拍摄（局部）
 

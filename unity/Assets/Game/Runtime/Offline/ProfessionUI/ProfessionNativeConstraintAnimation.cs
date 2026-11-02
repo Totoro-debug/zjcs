@@ -34,6 +34,14 @@ namespace Zjcs.Offline.ProfessionUI
         private static readonly string[] TransformAxes = { "mixRotate", "mixX", "mixY", "mixScaleX", "mixScaleY", "mixShearY" };
         private static readonly float[] TransformDefaults = { 1, 1, 1, 1, 1, 0 };
         public string Name { get; }
+        internal ProfessionNativeSkeletonData Source => data;
+
+        // Setup constraints exist before any animation track is assigned.
+        public static ProfessionNativeConstraintAnimation CreateSetup(ProfessionNativeSkeletonData data)
+            => new ProfessionNativeConstraintAnimation(data);
+
+        private ProfessionNativeConstraintAnimation(ProfessionNativeSkeletonData data)
+        { this.data = data ?? throw new ArgumentNullException(nameof(data)); }
 
         public ProfessionNativeConstraintAnimation(ProfessionNativeSkeletonData data, string animation)
         {
@@ -172,6 +180,12 @@ namespace Zjcs.Offline.ProfessionUI
                 }
                 destination.Add(pair.Key, new Timeline { Rows = rows, Curves = curves });
             }
+        }
+
+        internal void UseOriginalBezierSegments()
+        {
+            foreach (var timeline in ik.Values.Concat(transforms.Values))
+                foreach (var curve in timeline.Curves) curve.UseOriginalBezierSegments();
         }
 
         private HashSet<int> Selection(float time, IReadOnlyList<int> skinConstraints)
