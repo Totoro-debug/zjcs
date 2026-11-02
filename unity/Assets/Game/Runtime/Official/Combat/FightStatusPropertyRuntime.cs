@@ -33,6 +33,9 @@ namespace Zjcs.Combat.Official
                         catalog, formula));
                 FightBattleShieldRuntime.Initialize(status, status.ResolvedProperties,
                     formula.PropertyId("Shield"));
+                // FightStatusPropComponent removes its contribution while forbidden;
+                // cached values, layers and the live instance remain available on release.
+                if (status.HasPropertyComponent && status.ForbiddenType != 0) continue;
                 if (!status.HasPropertyComponent)
                 {
                     if (status.ShieldKind != FightBattleShieldKind.None && status.ShieldInitialized)

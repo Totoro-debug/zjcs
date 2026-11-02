@@ -10,6 +10,8 @@ namespace Zjcs.Combat.Official
         private void OnStatusForbiddenChanged(FightBattleUnitState owner,
             FightBattleStatusState status, bool wasForbidden)
         {
+            if (statusCatalog != null)
+                FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
             var listener = roundStartNotForbiddenListener;
             if (!wasForbidden || status.ForbiddenType != 0 || !status.RoundStartTryAtNotForbidden
                 || listener == null || movementStartContext == null || statusCatalog == null

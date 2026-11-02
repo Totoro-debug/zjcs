@@ -32,7 +32,8 @@ namespace Zjcs.Editor
                 .GetField("hitExecutor", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(executor);
             var settlement = (FightDamageSettlement)typeof(FightBattleHitExecutor)
                 .GetField("settlement", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(hits);
-            return new RoundForbiddenProbe(player, status, settlement);
+            return new RoundForbiddenProbe(player, status, settlement, catalog,
+                OfficialCombatAssetCatalog.LoadDefault().LoadDamageFormula(), checkpoint.Units);
         }
 
         private sealed class RoundForbiddenProbe
@@ -40,12 +41,17 @@ namespace Zjcs.Editor
             private readonly FightBattleUnitState player;
             private readonly FightBattleStatusState status;
             private readonly FightDamageSettlement settlement;
+            private readonly FightOfficialCombatCatalog catalog;
+            private readonly FightDamageFormula formula;
+            private readonly List<FightBattleUnitState> units;
             private int lastRound, releaseRounds;
             public bool ReadyToCapture => releaseRounds >= 2;
             public RoundForbiddenProbe(FightBattleUnitState player, FightBattleStatusState status,
-                FightDamageSettlement settlement)
+                FightDamageSettlement settlement, FightOfficialCombatCatalog catalog,
+                FightDamageFormula formula, List<FightBattleUnitState> units)
             {
                 this.player = player; this.status = status; this.settlement = settlement;
+                this.catalog = catalog; this.formula = formula; this.units = units;
                 settlement.SourceHit += OnHit;
             }
             private void OnHit(FightDamageEvent hit)
@@ -54,6 +60,7 @@ namespace Zjcs.Editor
                 int round = player.SkillState.Round;
                 if (round == lastRound) return;
                 lastRound = round;
+                CheckMutexProperties();
                 Require(status.RoundStartTriggeredCount == round + releaseRounds,
                     "Original 25117 did not perform its normal round-start invocation.");
                 var produced = player.Statuses.Single(value => value.ClassId == 24392);
@@ -79,6 +86,46 @@ namespace Zjcs.Editor
                     "Original 25117 did not retain its per-listener round quota.");
                 Debug.Log("[Round forbidden hosts] personalRound=" + round + ", normal=" + round
                     + ", extra=" + releaseRounds + ", actual=" + status.RoundStartTriggeredCount);
+            }
+            private void CheckMutexProperties()
+            {
+                long Attack() => player.Properties.First(value => value.Id == formula.PropertyId("Attack")).Value;
+                FightBattleStatusState Apply(int id, long equipmentId, int instance)
+                {
+                    var template = catalog.CreateStatus(id, player.Id, player.Id, instance, 10110, 0, 5, 20, 1);
+                    template.Origin = new FightBattleStatusOrigin { IsSet = true, UnitId = player.Id,
+                        EntityKind = FightBattleStatusOrigin.Equipment, EntityId = equipmentId,
+                        SkillEntityId = 10110 };
+                    return FightStatusLifecycle.Apply(player, template, player.SkillState.Round, instance);
+                }
+                FightStatusPropertyRuntime.RebuildAll(units, catalog, formula);
+                long baseline = Attack();
+                var low = Apply(24040, 8801, 9924040);
+                FightStatusPropertyRuntime.RebuildAll(units, catalog, formula);
+                long lowAttack = Attack();
+                var cached = low.ResolvedProperties;
+                var high = Apply(24041, 8801, 9924041);
+                Require(low.ForbiddenType == FightStatusLifecycle.ForbiddenMutex && high.ForbiddenType == 0
+                    && Attack() < lowAttack && lowAttack < baseline && ReferenceEquals(cached, low.ResolvedProperties),
+                    "Real status startup did not suppress the lower-weight attack contribution immediately.");
+                var independent = Apply(24040, 8802, 9924042);
+                FightStatusPropertyRuntime.RebuildAll(units, catalog, formula);
+                long combined = Attack();
+                Require(independent.ForbiddenType == 0 && combined < lowAttack,
+                    "Independent equipment was suppressed by another origin's mutex group.");
+                FightStatusLifecycle.SetForbidden(player, low, FightStatusLifecycle.ForbiddenStatusTrigger, true);
+                FightStatusLifecycle.End(player, high);
+                Require(low.ForbiddenType == FightStatusLifecycle.ForbiddenStatusTrigger && Attack() == lowAttack,
+                    "Removing the winner cleared another forbidden reason or lost the independent contribution.");
+                FightStatusLifecycle.SetForbidden(player, low, FightStatusLifecycle.ForbiddenStatusTrigger, false);
+                Require(low.ForbiddenType == 0 && Attack() < lowAttack && Attack() > combined
+                    && ReferenceEquals(cached, low.ResolvedProperties) && low.StackCount == 1,
+                    "Fully released status did not restore its retained contribution.");
+                FightStatusLifecycle.End(player, low); FightStatusLifecycle.End(player, independent);
+                FightStatusPropertyRuntime.RebuildAll(units, catalog, formula);
+                Require(Attack() == baseline, "Removed mutex fixtures left an attack contribution behind.");
+                Debug.Log("[Status mutex hosts] 24040/24041: actual startup/end, independent equipment,"
+                    + " combined forbidden reasons, cached values and immediate attack restoration passed.");
             }
             public void ObserveStep(OfficialBattleRuntimeController controller)
             {

@@ -106,6 +106,23 @@ Invoke-ZjcsValidation -Name 'skills-status-property-rules' -ScriptBlock {
         param($s) $s.IsOpenStack=$true; $s.ScalePropWhenChangeStacked=$true; $s.MaxStackedCount=-1
     }
     Assert-Replay ((Property-Map $scaled.Units[1].Properties)[1] -eq 145) 'A projected stack change did not reach the live unit attack property.'
+    $disabled = $scaled.Units[1].Statuses[0]
+    [void][Zjcs.Combat.Official.FightStatusLifecycle]::SetForbidden($scaled.Units[1], $disabled, 2, $true)
+    [void][Zjcs.Combat.Official.FightStatusLifecycle]::SetForbidden($scaled.Units[1], $disabled, 4, $true)
+    [Zjcs.Combat.Official.FightStatusPropertyRuntime]::RebuildAll($scaled.Units, $catalog, $formula)
+    Assert-Replay ((Property-Map $scaled.Units[1].Properties)[1] -eq 77) 'Forbidden property state still contributed attack.'
+    [void][Zjcs.Combat.Official.FightStatusLifecycle]::AddStack($disabled, 1)
+    [Zjcs.Combat.Official.FightStatusPropertyRuntime]::RebuildAll($scaled.Units, $catalog, $formula)
+    Assert-Replay ($disabled.StackCount -eq 3 -and (Property-Map $disabled.ResolvedProperties)[1] -eq 153 -and (Property-Map $scaled.Units[1].Properties)[1] -eq 77) 'Disabled stacking lost its original two-stage projection or resumed its live contribution.'
+    $savedDisabled = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($scaled)
+    $scaled = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load($savedDisabled)
+    $disabled = $scaled.Units[1].Statuses[0]
+    [void][Zjcs.Combat.Official.FightStatusLifecycle]::SetForbidden($scaled.Units[1], $disabled, 2, $false)
+    [Zjcs.Combat.Official.FightStatusPropertyRuntime]::RebuildAll($scaled.Units, $catalog, $formula)
+    Assert-Replay ((Property-Map $scaled.Units[1].Properties)[1] -eq 77) 'Partial release after reload restored a still-forbidden contribution.'
+    [void][Zjcs.Combat.Official.FightStatusLifecycle]::SetForbidden($scaled.Units[1], $disabled, 4, $false)
+    [Zjcs.Combat.Official.FightStatusPropertyRuntime]::RebuildAll($scaled.Units, $catalog, $formula)
+    Assert-Replay ((Property-Map $scaled.Units[1].Properties)[1] -eq 230 -and $disabled.StackCount -eq 3) 'Full release did not retain and restore updated layers after reload.'
     $null = Check-StatusProperties 12062 @{ 1=17 } @{ 1=1.5 } @(2, 0, 3) {
         param($s) $s.IsOpenStack=$true; $s.ScalePropWhenChangeStacked=$true; $s.StackCount=0; $s.MaxStackedCount=-1
     }

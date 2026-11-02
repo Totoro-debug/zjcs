@@ -901,6 +901,7 @@ namespace Zjcs.Combat.Official
                 foreach (FightBattleStatusState status in new List<FightBattleStatusState>(source.Statuses))
                 {
                     if (status == null || startingStatus != null && !ReferenceEquals(status, startingStatus)
+                        || status.ForbiddenType != 0
                         || !status.HasMoveNear || !status.MoveNearRulesSupported
                         || !MoveNearEventEnabled(status, eventKind)
                         || status.MoveNearMaxCount >= 0
@@ -1644,7 +1645,7 @@ namespace Zjcs.Combat.Official
                 FightBattleStatusState status = initialStatuses[i];
                 if (status == null || !unit.Statuses.Contains(status)) continue;
                 if (!FightSkillTriggerPolicy.AllowsStatus(sourceSkill, status)
-                    || !status.HasHpAccDecrease) continue;
+                    || !status.HasHpAccDecrease || status.ForbiddenType != 0) continue;
                 long threshold = Threshold(status, unit.MaxHp);
                 if (threshold <= 0) continue;
                 if (status.HpAccMaxCount >= 0

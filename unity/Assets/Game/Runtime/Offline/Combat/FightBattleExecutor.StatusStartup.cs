@@ -11,6 +11,10 @@ namespace Zjcs.Combat.Official
                     || unit.StatusRoundResolver != null
                     || unit.RoundStartClockResolver != null)
                     throw new InvalidOperationException("A battle unit is already executing a step.");
+            bool mutexChanged = false;
+            foreach (var unit in units) mutexChanged |= statusMutex.Synchronize(unit);
+            if (mutexChanged && statusCatalog != null)
+                FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
             foreach (var unit in units)
             {
                 unit.StatusStarted = OnStatusStarted;
@@ -39,6 +43,9 @@ namespace Zjcs.Combat.Official
 
         private void OnStatusEnded(FightBattleUnitState owner, FightBattleStatusState ended)
         {
+            statusMutex.Remove(owner, ended);
+            if (statusCatalog != null && ended != null && ended.HasPropertyComponent)
+                FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
             if (movementStartContext == null || statusCatalog == null || owner == null
                 || owner.Ended || ended == null || ended.ActionType != 70) return;
             foreach (var listener in new System.Collections.Generic.List<FightBattleStatusState>(owner.Statuses))
@@ -52,6 +59,9 @@ namespace Zjcs.Combat.Official
 
         private void OnStatusStarted(FightBattleUnitState owner, FightBattleStatusState status)
         {
+            statusMutex.Add(owner, status);
+            if (statusCatalog != null && status != null && status.HasPropertyComponent)
+                FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
             var context = movementStartContext;
             if (context == null || statusCatalog == null || status == null
                 || owner == null || owner.Ended) return;

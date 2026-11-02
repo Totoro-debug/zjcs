@@ -47,6 +47,7 @@ namespace Zjcs.Combat.Official
         }
         private MovementStartContext movementStartContext;
         private bool applyingActionExistStatuses;
+        private readonly FightStatusMutexRuntime statusMutex;
         private FightBattleExecutor(FightBattleCheckpoint checkpoint, FightDamageFormula formula,
             FightDamageSettlement settlement, bool initialize,
             FightOfficialCombatCatalog statusCatalog = null,
@@ -56,6 +57,7 @@ namespace Zjcs.Combat.Official
             this.formula = formula ?? throw new ArgumentNullException(nameof(formula));
             this.statusCatalog = statusCatalog;
             this.skillItems = skillItems;
+            statusMutex = new FightStatusMutexRuntime(statusCatalog?.StatusMutexGroups);
             FightBattleCheckpointRules.Validate(checkpoint, !initialize);
             if (formula == null) throw new ArgumentNullException(nameof(formula));
             if (settlement == null) throw new ArgumentNullException(nameof(settlement));
@@ -87,7 +89,10 @@ namespace Zjcs.Combat.Official
             turns = new FightTurnQueue(checkpoint.Timeline, Turns());
             lastGlobalRound = turns.GlobalRound();
             random = new FightRandomStream(checkpoint.RandomSeed);
+            foreach (var unit in units) statusMutex.Synchronize(unit);
             if (initialize) Initialize();
+            else if (statusCatalog != null)
+                FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
             foreach (var unit in units)
                 foreach (var status in unit.Statuses) InitializeRoundStartDelay(status);
         }
@@ -2104,6 +2109,7 @@ namespace Zjcs.Combat.Official
                 try { FightStatusTriggerRuntime.ApplyActionExistStatuses(units, statusCatalog, random); }
                 finally { applyingActionExistStatuses = false; }
             }
+            foreach (FightBattleUnitState unit in units) statusMutex.Synchronize(unit);
             foreach (FightBattleUnitState unit in units)
                 foreach (FightBattleStatusState status in unit.Statuses)
                     if (status != null && status.StartRound < 0)
