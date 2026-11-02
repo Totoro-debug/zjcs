@@ -1,0 +1,24 @@
+{
+  "manifest": "884_156692",
+  "input_sha256": {
+    "scripts/templates/partner_dialogue/PartnerConversationRules.cs": "fe7c3d5c9525ecedf344fa2db01346837868e73fbd8639d9cda9677544753ecb",
+    ".tools/source-packages/official-code/common-source/Common/DialogueStatus.cs": "226e77e07b6b8ff5ad5d06967d189926e895d89007564c7f141bb6b28093b987",
+    ".tools/source-packages/official-code/common-source/Common/DialogueType.cs": "ea3e6b042f750cb42b48c3ab3a4a6241fee66ebdfff3396a8610bca28545c8f0",
+    ".tools/source-packages/official-code/common-source/Common/PlayerNpcDialogueDataWrap.cs": "7f249c1e58dfb53d6b8000f36659c2f869e5fcca4f7ef14bb06d420db3f49d6b"
+  },
+  "original_method_sha256": {
+    "PlayerNpcDialogueDataWrap.public static PlayerNpcDialogueDataWrap Create(long playerId, long npcId, int dialogClassId, int nodeId)": "d66c2334d64e4dfa1df5fafabe6573465a70d74ab1c1579a13eb3e3feaef2bc7",
+    "PlayerNpcDialogueDataWrap.public void SetCurrentNodeAndUpdateStatus(int nodeId, Player player)": "307fcecc992c4b2ce0fad230bf212dd3541002601a9fb86311b8e3399d388b41"
+  },
+  "generator_sha256": "15401d20feff8626a94e87756b76f03cef9d505bdb9fd941850ba6b971b62fd9",
+  "output_sha256": {
+    "unity/Assets/Game/Runtime/Official/Partners/PartnerConversationRules.cs": "529bb58790eea8e8e0fd664a12a4c21dfa30c1ae36ccccb3798050f9388cbd88",
+    "unity/Assets/Game/Runtime/Official/Partners/PartnerConversationRules.cs.meta": "9a3def6db23ca86a1cbdde1517783f44130c21e3387c336783c97d1a9d3b1ed6"
+  },
+  "adaptations": [
+    "Database identity and clock are supplied by the local transaction owner.",
+    "Player/configuration and condition evaluation use explicit interfaces.",
+    "Retain the original existing-status branch and update notification order.",
+    "Conversation triggering, daily scheduling and rewards are not supplied by these two original methods."
+  ]
+}

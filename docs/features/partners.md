@@ -336,6 +336,14 @@ Home 赠礼溢出回调现打开原窗口，保留原标题、说明、按钮、
 
 本夹具只验证新存档没有通话的空状态及原备用行，不代表正式通话存档／播放服务已完成；提示图由明确夹具端点提供。分页和返回音效从原 `UIClickSound.AkEvent` 恢复事件及实际 Wwise 媒体，显式绑定 `Main_Tag`（680474747）和原返回点击事件（3772241779）。`OfflinePartnerUiSoundScope` 保留好感窗口默认解析器，增加完整窗口解析器，并将原 `AkGameObj` 的注册、定位和注销转发给底层声音宿主；窗口关闭恢复宿主，已发声的独立音源按 PCM 时长结束。隔离 Play Mode 已验证模拟分页点击使用实际 PCM 的播放状态、声音对象生命周期无异常及关闭恢复，并复核上述五帧 GPU 画面。全工程静态检查通过（85,050 个 GUID）；主工程新增资源导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。正式 Home 完整窗口入口、全部详情依赖、助战集成及 Windows Player 仍须继续。
 
+### 当前通话配置与原状态推进规则（局部）
+
+`prepare_partner_dialogue_configuration.py` 使用选定 `884_156692` 的原生成构造器解码 `npc_dialogue.g`，取得 349 组、6,707 个节点。运行时 `OfficialPartnerConversationCatalog` 保留原后续节点／通话顺序、发言人、每日限制、解锁／连锁条件及奖励数值；`OfficialPartnerConversationAssetCatalog` 在 Resources 显式绑定本地表。条件通过实际玩家端口注入，未将缺少的条件实现默认放行。原包、对象、载荷、完整消费格式、生成器、运行适配及安装哈希见[通话配置来源](../../assets/reference/partner-dialogue-rules-source-manifest.json)。
+
+`PartnerConversationRecord.Create` 和 `SetCurrentNodeAndUpdateStatus` 直接迁移原共享 `PlayerNpcDialogueDataWrap` 的两个方法，只将数据库身份生成、时钟和玩家／配置访问改为显式本地端口。保留创建时的首节点、历史追加、更新时间、末节点结束、任一后续条件未满足即暂停及最后发出更新通知的顺序。原推进方法在全部后续条件满足时仍保留已有状态，未擅自将既有 `Pause` 改成 `InProgress`。原方法、枚举、模板与输出身份见[通话状态规则来源](../../assets/reference/partner-conversation-rules-source-manifest.json)。
+
+纯 C# 验证对实际全部节点运行终止／继续分支，核对运行时表中的顺序、空值、每日限制和奖励数量，并覆盖身份、历史、分支暂停及通知顺序；全部通过。隔离 Unity 工程复制实际 Progression 及其依赖程序集，在 Play Mode 通过实际 Resources 目录加载完整表；条件采用明确的不可执行验证端口，该夹具不验证玩家条件或通话交互。静态检查通过（85,058 个 GUID）。本轮主工程校验因其他战斗验证实例占用而未执行，仍须补跑。通话触发、条件服务、本地存档事务、奖励领取和原播放窗口尚未接通，本节不表示正式通话功能已完成。
+
 ### 当前原生详情属性区与天赋合并（局部）
 
 `prepare_partner_detail_properties_ui.py` 迁移选定 `884_156692` 的 `NpcDetailPanelPropContent`，保留属性排序、旅行门槛、每组两项、交替背景、原珍宝百分比及转为整数的截断顺序。`PartnerNpcPropertyFormula` 提取原 `BattleFormulaHandler` 的好感／天赋计算及属性合并方法，读取实际存档的好感等级和已激活天赋节点；按当前 `PropId`、`PropLevel`、`PropTypes` 取值并合并，保留原零值、分支和执行顺序。`OfflinePartnerDetailPropertySource` 使用上文当前属性目录，补齐三类天赋属性，不采用历史总表的缺省值替代。

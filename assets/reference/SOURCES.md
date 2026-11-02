@@ -308,6 +308,8 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 
 完整窗口音效由原 `UIClickSound` 的 Wwise Event 指针追踪至所选资源事件／媒体，复用既有 Wwise 解码器保留原增益。新增 `Main_Tag.wav`（事件 680474747，媒体 69663821，48 kHz 双声道，16,800 帧，PCM SHA256 `99bdf2db7f7db2cbd4c80a13237906fe8cf86591b05d2fe3a68c9c6867785e9b`）；返回点击复用已核实的事件 3772241779 资源。包内检索、事件图、转换工具、原增益、输出及 Resources 显式绑定哈希见 `partner-panel-native-source-manifest.json`；共享好感声音适配器的原 Git 身份和接口适配记录同步到 `partner-friendship-window-source-manifest.json`。本批未生成完整素材快照。
 
+当前伙伴通话配置来自选定 `884_156692` 的 `npc_dialogue.g` 实际载荷，按该版本生成构造器解码；原包／对象、载荷、递归消费格式源码、元数据和安装绑定 SHA256 见 `partner-dialogue-rules-source-manifest.json`。`prepare_partner_dialogue_rules.py` 从同版共享 `PlayerNpcDialogueDataWrap` 提取创建与节点状态更新方法，保留原方法哈希并记录数据库／时钟／玩家端口适配，见 `partner-conversation-rules-source-manifest.json`。本批无新增美术资源，未生成完整素材快照；行为与验证范围仅在[伙伴页](../../docs/features/partners.md)维护。
+
 公共地图白雾来源见 `official-map/mainline-grid-fog-source-manifest.json`，提取入口为 `scripts/prepare_mainline_grid_fog.py`。当前 884_156692 的 MapRoot_11／12／13／16 官方根对象及 MapRoot_15 明确空雾层绑定、CAB 实际凭据、完整雾层 subtree 与依赖对象原始字节 SHA256、ASTC／RGBA mip 哈希、shader 程序哈希及 Unity 原生输出分别记录；当前原客户端 `CloudController2` 与历史已迁移代码的身份核对单独记录，不覆盖历史输入版本。`LocalGridVisibilityAgent` 记录当前官方完整源文件、本地生命周期适配产物及转换工具哈希；运行绑定和验证范围见[主线地图公共模块](../../docs/features/mainline-map-modules.md)及[泽之国](../../docs/maps/map-13.md)。
 
 公共地图网格输入来源见 `official-map/mainline-grid-visibility-data-source-manifest.json`。`prepare_mainline_grid_visibility_data.py` 从当前版本原根网格、实体放置／身体／视野与区域解锁包读取真实载荷，使用已核对程序集与已准备源码清单的生成格式解码，保留坐标、区域顺序及营地关系；记录原包对象／载荷、全部消费格式源码、输出哈希。与历史 Map13 输入分别登记，未混写旧版本清单。

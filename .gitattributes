@@ -1602,3 +1602,14 @@ unity/Assets/Official/World/Mainline/** -text whitespace=-blank-at-eol
 scripts/prepare_mainline_grid_fog.py text eol=lf
 
 scripts/prepare_mainline_grid_visibility_data.py text eol=lf
+
+# Partner conversation configuration and recorded Unity script importer bytes.
+scripts/prepare_partner_dialogue_configuration.py text eol=lf
+scripts/prepare_partner_dialogue_rules.py text eol=lf
+scripts/prepare_partner_conversation_binding_validation.py text eol=lf
+scripts/test_partner_conversation_rules.py text eol=lf
+scripts/templates/partner_dialogue/*.cs text eol=lf
+scripts/fixtures/partner_conversation*.cs text eol=lf
+unity/Assets/Game/Runtime/Official/Partners/PartnerConversationRules.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/Progression/OfficialPartnerConversation*.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/Progression/OfficialPartnerConversation*.cs.meta -text whitespace=-blank-at-eol
