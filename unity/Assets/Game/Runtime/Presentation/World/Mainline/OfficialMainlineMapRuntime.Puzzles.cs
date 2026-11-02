@@ -188,7 +188,7 @@ namespace Zjcs.Presentation.World
             MapPuzzleEntityState[] states = puzzles.Save();
             Map13WaterState[] waterStates = map13NavigationSession?.Water.Save();
             MapGridPoint player = navigation.currentGrid;
-            byte[] map13VisibilityBefore = map13GridVisibility?.Snapshot();
+            byte[] map13VisibilityBefore = mapGridVisibility?.Snapshot();
             bool progressPendingBefore = puzzleRegionProgressPending;
             puzzleMutationActive = true;
             try { mutation(); SaveLocalProgress(); }
@@ -199,7 +199,7 @@ namespace Zjcs.Presentation.World
                 if (waterStates != null)
                     map13NavigationSession = Map13NavigationAssets.LoadDefault().Open(waterStates);
                 navigation.SetAvatarPosition(player);
-                if (map13VisibilityBefore != null) RestoreMap13Visibility(map13VisibilityBefore);
+                if (map13VisibilityBefore != null) RestoreMapVisibility(map13VisibilityBefore);
                 SynchronizePuzzleEntities();
                 puzzleRegionProgressPending = progressPendingBefore;
                 if (hud.ui != null) hud.ShowOfficialNotice("保存失败，请稍后重试");

@@ -58,7 +58,7 @@ namespace Zjcs.Presentation.World
             localSave.gridX = navigation.currentGrid.X;
             localSave.gridY = navigation.currentGrid.Y;
             if (puzzles != null) localSave.puzzleStates = puzzles.Save();
-            SnapshotMap13Visibility();
+            SnapshotMapVisibility();
             if (map13NavigationSession != null) localSave.map13WaterStates = map13NavigationSession.Water.Save();
             LocalJsonSaveFile.Write(mapSavePath, JsonUtility.ToJson(localSave, true), ValidLocalSave);
         }
@@ -74,7 +74,7 @@ namespace Zjcs.Presentation.World
                     : Mathf.CeilToInt(session.Definition.Navigation.Height);
                 return parsed != null && parsed.schema == 1 && parsed.slotId == slotId
                     && parsed.gridX >= 0 && parsed.gridX < width && parsed.gridY >= 0 && parsed.gridY < height
-                    && (mapClassId != 13 || ValidMap13Visibility(parsed.map13GridVisibility))
+                    && ValidMapVisibility(mapClassId == 13 ? parsed.map13GridVisibility : parsed.gridVisibility, width, height)
                     && (mapClassId != 13 || parsed.map13WaterStates == null
                         || parsed.map13WaterStates.All(value => value != null && value.PlacementId > 0
                             && value.Grid.X >= 0 && value.Grid.X < 240 && value.Grid.Y >= 0 && value.Grid.Y < 240

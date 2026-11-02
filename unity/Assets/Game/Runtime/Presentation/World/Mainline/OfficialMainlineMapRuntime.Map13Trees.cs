@@ -18,7 +18,7 @@ namespace Zjcs.Presentation.World
                 id => mapEntities.TryGetValue(id, out var entity) ? entity.State : 0,
                 id => mapEntities.TryGetValue(id, out var entity) && entity.Active
                     && !localSave.completedEntityPlacements.Contains(id) && !IsMapLogicEntityDestroyed(id)
-                    && map13GridVisibility != null && map13GridVisibility.IsVisible(new Pos2d(entity.Grid.X, entity.Grid.Y)), 1);
+                    && mapGridVisibility != null && mapGridVisibility.IsVisible(new Pos2d(entity.Grid.X, entity.Grid.Y)), 1);
             entityView.NativeVisualFactory = (info, owner) => map13Trees.TryCreate(info.PlacementId, info.EntityClassId,
                 new Vector2Int(info.Grid[0], info.Grid[1]), info.State, owner);
             entityView.NativeGridSetter = (id, grid) => map13Trees.TrySetGrid(id, new Vector2Int(grid.X, grid.Y));

@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "operation": "Extract the existing local visibility implementation into one configuration-driven module. Preserve the migrated original component, body/camp queries, event ordering, RLE and legacy Map13 save field. Move Map13-specific source assertions to its loader. Validate local snapshot runs before the original recovering decoder.",
+  "operation": "Extract the existing local visibility implementation into one configuration-driven module. Preserve the migrated original component, body/camp queries, event ordering, RLE and legacy Map13 save field. Bind Map11 and Map13 through the same placement-checked loader, snapshot lifecycle and original fog. Other maps use the generic gridVisibility save field. Restore also rebinds live fog after a rollback. Keep original Map13-specific source assertions in its loader. Validate local snapshot runs before the original recovering decoder.",
   "official_source_receipt": {
     "path": "assets/reference/official-map/map13-grid-visibility-source-manifest.json",
     "sha256": "181328cd8e53ca29f5c39051d4c212522830bedb3c727cba1978caca7a5e943c"
@@ -10,6 +10,42 @@
     "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13GridVisibility/OfflineMap13GridVisibility.cs",
     "sha256": "023a003609012913ae2bb500b7e6f5d631163905e1a06bb8bb3f3f4aa7988ede"
   },
+  "active_map_bindings": [
+    {
+      "mapClassId": 11,
+      "definition": {
+        "path": "unity/Assets/Official/World/Map/11/map11.json",
+        "sha256": "38b8caee230a4df54c1a99718022e480b68b88d9e5565ec6750caebee4b3ce70"
+      },
+      "visibility": {
+        "path": "unity/Assets/Official/World/Mainline/Visibility/Resources/World/Mainline/Visibility/Map11/visibility.json",
+        "sha256": "1fae60c0493e20a336b2f15425cc94882a8e21ed71d705ec749de9b3eaccb1a6"
+      },
+      "bodies": {
+        "path": "unity/Assets/Official/World/Mainline/Visibility/Resources/World/Mainline/Visibility/Map11/bodies.json",
+        "sha256": "e8488367236acd85121289caa4ca23b61d3e5193b5b8fdb17380177d36e7dc85"
+      },
+      "checked_placements": 1803,
+      "method": "Compare every original placement id, class and grid coordinate, and active ground dimensions. Input versions retain their separate receipts; no blanket version equivalence is asserted."
+    },
+    {
+      "mapClassId": 13,
+      "definition": {
+        "path": "unity/Assets/Official/World/Map/13/map13.json",
+        "sha256": "08200254758f6744a09c82fe871145f76f98ba590b9b59e4ca8c87e047ef98da"
+      },
+      "visibility": {
+        "path": "unity/Assets/Official/World/Map/13/Resources/Map13/grid-visibility.json",
+        "sha256": "0d9bdaae666f05415dc9ef93ffc2743c32212bdfe9b8ac614c8f8de17a196676"
+      },
+      "bodies": {
+        "path": "unity/Assets/Official/World/Map/13/Resources/Map13/grid-entities.json",
+        "sha256": "528f292710130158812d93843d8220b7ba8481f8da6b14436fa5045ee473be02"
+      },
+      "checked_placements": 2690,
+      "method": "Compare every original placement id, class and grid coordinate, and active ground dimensions. Input versions retain their separate receipts; no blanket version equivalence is asserted."
+    }
+  ],
   "unchanged_official_implementation": [
     {
       "path": "unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/EcContainerStartEntityEventDelegate.cs",
@@ -112,7 +148,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.NativeMap13.cs",
-      "sha256": "fdffe3cf0c5e53003dae90927bd0c5448803b3aaf8ddb3fe0baa5eb47774792c"
+      "sha256": "d11d8b3865b0237d6cd93ae37526bc67c7eb18063c59717161f103bad25bde93"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Zjcs.Presentation.World.asmdef",
@@ -133,6 +169,50 @@
     {
       "path": "unity/Assets/Game/Editor/Map13GridVisibility/SharedMapGridVisibilityAcceptance.cs.meta",
       "sha256": "bd120e3dffee65c54ca597d007c0a754472c5339007daeef75bec5710c423815"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.GridVisibility.cs",
+      "sha256": "9bcbdb5e5c867825ea63f9b144d524ff1c0b83354aee23cda44be4ac5f061ddb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.GridVisibility.cs.meta",
+      "sha256": "a0583f73b8eb9744c2c0886dadb10c646e986db43edef51fc8cc8e3b28244fb4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapProfile.cs",
+      "sha256": "ede5a49c6627e9ef8bdf9c529dbccd077433d6bcfab893ae8f1f6e9753d8b5fa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs",
+      "sha256": "700676775b6631a0e02a0afcf30dd0d2b6ecba9aaba434b8b3a78425225c5ff3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Persistence.cs",
+      "sha256": "ee162d8ad900cf53f202cb775ec4d6af0290c951ff64c52924d4edd16b0c6129"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Puzzles.cs",
+      "sha256": "fd1d74df9d805bd66fa238de1a73c44b2b7f6382c15d18da25f02c0cc9e45055"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Map13Trees.cs",
+      "sha256": "0fc71e3c1f38190b5a951e940f26e57c478b55b53e0a9836a7fe00c591567201"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineStatuesModule.Goddess.cs",
+      "sha256": "b011b6add41b0d8f1065de3d210d5bd5240a2869818f3bb324d4576ebd5e44f0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialMap10RuntimeData.cs",
+      "sha256": "f91d0f6e0321b85b77adbd59fc77149b2bad6d2059883c1f917779ff3a78d294"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13Mainline/OfficialMap13MainlinePlayAcceptance.cs",
+      "sha256": "f39f9f9e5198d6d3b1535155d419507cafe51b697adb8fe6b71528ad2028b9d2"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13Mainline/Zjcs.Editor.Map13Mainline.asmdef",
+      "sha256": "6ca9c63a3e83715ed7bf67811e2f7d6761d0f350ce64538e78fde9f093c79107"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapMarkDataAcceptance.cs",
@@ -161,6 +241,6 @@
   ],
   "tool": {
     "path": "scripts/record_mainline_grid_visibility_sources.py",
-    "sha256": "d9ff4eb923bc121215a16341868748cb6718ff585ff42e7d5eeb68d6dff11ce6"
+    "sha256": "8a5a6b44d0c3fdcd4eb9443fd78720be1cbc7e70741868fc1d630566c67d2d62"
   }
 }

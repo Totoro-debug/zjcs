@@ -52,6 +52,12 @@ namespace Zjcs.Presentation.World
             RequiredAccessConditions = Array.AsReadOnly(conditions);
         }
 
+        public string GridVisibilityResource => MapClassId == 13 ? Resource("grid-visibility")
+            : MapClassId == 11 ? "World/Mainline/Visibility/Map11/visibility" : null;
+        public string GridBodiesResource => MapClassId == 13 ? Resource("grid-entities")
+            : MapClassId == 11 ? "World/Mainline/Visibility/Map11/bodies" : null;
+        public string GridFogResource => GridVisibilityResource == null ? null : "World/Mainline/Fog/Map" + MapClassId;
+
         public string Resource(string path) => "Map" + MapClassId + "/" + path;
 
         public string NativeUi(string path) => HasNativeUi ? NativeUiRoot + path

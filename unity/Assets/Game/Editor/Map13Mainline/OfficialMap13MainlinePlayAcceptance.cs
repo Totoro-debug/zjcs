@@ -9,6 +9,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 using Zjcs.Editor.Combat;
 using Zjcs.Offline.Progression;
@@ -31,6 +32,7 @@ namespace Zjcs.Editor.Map13Mainline
         private const string Key="Map13.FormalNativeEntry";
         private static bool started,failed;
         private static string Output=>Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR")??throw new InvalidDataException("Explicit validation directory required.");
+        private static int MapId=>SessionState.GetInt(Key+".map",13);
         static OfficialMap13MainlinePlayAcceptance()
         {
             EditorApplication.update+=Tick;
@@ -38,14 +40,21 @@ namespace Zjcs.Editor.Map13Mainline
             {
                 if(state!=PlayModeStateChange.EnteredEditMode||!SessionState.GetBool(Key,false))return;
                 SessionState.SetBool(Key,false);PlayerSettings.colorSpace=(ColorSpace)SessionState.GetInt(Key+".color",0);
+                string pipeline=SessionState.GetString(Key+".pipeline","");
+                string quality=SessionState.GetString(Key+".qualityPipeline","");
+                GraphicsSettings.defaultRenderPipeline=string.IsNullOrEmpty(pipeline)?null:AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>(pipeline);
+                QualitySettings.renderPipeline=string.IsNullOrEmpty(quality)?null:AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>(quality);
                 EditorApplication.Exit(SessionState.GetInt(Key+".result",1));
             };
         }
         public static void Run()
         {
+            SessionState.SetInt(Key+".map",13);
             SessionState.SetBool(Key+".trees",false);
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION","1");
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_SIMULATED","1");
+            SessionState.SetString(Key+".pipeline",AssetDatabase.GetAssetPath(GraphicsSettings.defaultRenderPipeline));
+            SessionState.SetString(Key+".qualityPipeline",AssetDatabase.GetAssetPath(QualitySettings.renderPipeline));
             SessionState.SetInt(Key+".color",(int)PlayerSettings.colorSpace);PlayerSettings.colorSpace=ColorSpace.Linear;
             ShaderUtil.allowAsyncCompilation=false;
             SessionState.SetBool(Key,true);SessionState.SetInt(Key+".result",1);
@@ -53,6 +62,13 @@ namespace Zjcs.Editor.Map13Mainline
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);EditorApplication.isPlaying=true;
         }
         public static void RunTrees(){Run();SessionState.SetBool(Key+".trees",true);}
+        public static void RunMap11()
+        {
+            Run();SessionState.SetInt(Key+".map",11);
+            // Map11's migrated region-light adapter uses the committed built-in
+            // renderer. Keep another session's temporary pipeline out of this fixture.
+            GraphicsSettings.defaultRenderPipeline=null;QualitySettings.renderPipeline=null;
+        }
         public static void RunRules()
         {
             try
@@ -71,7 +87,7 @@ namespace Zjcs.Editor.Map13Mainline
                 var restored=new OfflineMapPuzzleSession(data.puzzleRules,snapshot);
                 Require(JsonUtility.ToJson(new SavedPuzzles{states=snapshot})==JsonUtility.ToJson(new SavedPuzzles{states=restored.Save()}),
                     "All original puzzle states failed their local cold restore.");
-                File.WriteAllText(Path.Combine(Output,"map13-formal-puzzle-rules.json"),JsonUtility.ToJson(new SavedPuzzles{states=snapshot},true));
+                File.WriteAllText(Path.Combine(Output,"map"+MapId+"-formal-puzzle-rules.json"),JsonUtility.ToJson(new SavedPuzzles{states=snapshot},true));
                 Debug.Log("Map13 original puzzle rules passed: 2690 placements, 6 step-grid / 5 road-switch terminals, original numeric locks and full local state restore.");
                 EditorApplication.Exit(0);
             }
@@ -111,7 +127,7 @@ namespace Zjcs.Editor.Map13Mainline
             string saves=Path.Combine(Output,"formal-map13-profile-"+Guid.NewGuid().ToString("N"));
             var slots=new ProfileSlotCatalog(saves);string slot=slots.CreateSlot();
             var save=new OfflineMainlineSave{CreatedAtUnixSeconds=DateTimeOffset.UtcNow.ToUnixTimeSeconds()};
-            save.Player.CharacterCreated=true;save.Player.CharacterName="泽之国验证";save.Player.InitialWeaponType=201;
+            save.Player.CharacterCreated=true;save.Player.CharacterName=MapId==13?"泽之国验证":"森之国验证";save.Player.InitialWeaponType=201;
             var characterCatalog=OfficialCharacterAssetCatalog.LoadDefault().Load();
             save.Player.Level=90;save.Player.Experience=characterCatalog.CumulativeLevelExperience[90];
             save.Player.SubRank=characterCatalog.LevelLimits.Where(r=>r.PlayerBlessLevel==0&&r.PlayerLevel>=90).Min(r=>r.SubRank);
@@ -120,18 +136,23 @@ namespace Zjcs.Editor.Map13Mainline
             save.Tasks.ClaimedMainlineTaskIds.AddRange(OfficialMainlineTaskCatalog.LoadDefault().OrderedTasks.Where(t=>t.classId<=1040).Select(t=>t.classId));
             File.WriteAllText(slots.GetProgressPath(slot),JsonUtility.ToJson(save,true));
             var progression=OfflineMainlineProgressSession.OpenCharacter(slots,slot);
-            var initializedWardrobe=new OfflineCharacterProgressionService(progression,characterCatalog).InitializeWardrobe("map13-formal-entry-wardrobe");
+            var initializedWardrobe=new OfflineCharacterProgressionService(progression,characterCatalog).InitializeWardrobe("map"+MapId+"-formal-entry-wardrobe");
             Require(initializedWardrobe.Status==ProgressionResultStatus.Applied,"Isolated character fixture must use consistent official rank/subrank/level values.");
             var runtime=Open(slot,saves,canvas.transform);
-            var world=Field<OfficialMap13NativeWorldView>(runtime,"nativeMap13World");
-            float deadline=Time.realtimeSinceStartup+120;while(!world.IsReady&&Time.realtimeSinceStartup<deadline)yield return null;
-            Require(world.IsReady,"Formal Map13 original partitions did not become ready.");
+            float deadline=Time.realtimeSinceStartup+120;
+            if(MapId==13)
+            {
+                var world=Field<OfficialMap13NativeWorldView>(runtime,"nativeMap13World");
+                while(!world.IsReady&&Time.realtimeSinceStartup<deadline)yield return null;
+                Require(world.IsReady,"Formal Map13 original partitions did not become ready.");
+            }
             var navigation=Field<object>(runtime,"navigation");var initial=Field<MapGridPoint>(navigation,"currentGrid");
-            Require((int)Call(runtime,"GetDefaultEntryId")==11001&&initial.Equals(new MapGridPoint(113,233)),"Original TbMapWorldInfo.DefEntryId 11001 and its (113,233) placement were not used.");
-            Require(Field<object>(runtime,"map13GridVisibility")!=null,"Formal original grid component is not bound.");
+            if(MapId==13)Require((int)Call(runtime,"GetDefaultEntryId")==11001&&initial.Equals(new MapGridPoint(113,233)),"Original TbMapWorldInfo.DefEntryId 11001 and its (113,233) placement were not used.");
+            if(MapId==11)Require((int)Call(runtime,"GetDefaultEntryId")==101&&initial.Equals(new MapGridPoint(167,133)),"Original Map11 DefEntryId 101 and its (167,133) placement were not used.");
+            Require(Field<object>(runtime,"mapGridVisibility")!=null,"Formal original grid component is not bound.");
             yield return new WaitForSecondsRealtime(2);Canvas.ForceUpdateCanvases();
             int initialVisible=CheckFog(runtime);
-            ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map13-formal-entry.png"));yield return new WaitForSecondsRealtime(.5f);
+            ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map"+MapId+"-formal-entry.png"));yield return new WaitForSecondsRealtime(.5f);
             var camera=Field<Camera>(runtime,"worldCamera");var session=Field<OfficialWorldMapSession>(runtime,"session");
             MapGridPoint target=initial;Vector2 screen=default;bool found=false;
             foreach(var offset in new[]{new MapGridPoint(1,0),new MapGridPoint(-1,0),new MapGridPoint(0,1),new MapGridPoint(0,-1),new MapGridPoint(2,0),new MapGridPoint(0,2)})
@@ -150,20 +171,72 @@ namespace Zjcs.Editor.Map13Mainline
             runtime.PointerPressProvider=()=>null;Require(sent&&Field<MapGridPoint>(navigation,"currentGrid").Equals(target),"Simulated map pointer did not move the formal player.");
             yield return new WaitForSecondsRealtime(2);
             Require(CheckFog(runtime)>initialVisible,"Simulated movement did not reveal additional original fog cells.");
-            string mapSave=Path.Combine(slots.GetSlotDirectory(slot),"map-13-save.json");
-            var before=JsonUtility.FromJson<VisibilitySave>(File.ReadAllText(mapSave));Require(!string.IsNullOrEmpty(before.map13GridVisibility),"Formal map save omitted original compressed visibility.");
-            ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map13-formal-moved.png"));yield return new WaitForSecondsRealtime(.5f);
+            string mapSave=Path.Combine(slots.GetSlotDirectory(slot),"map-"+MapId+"-save.json");
+            var before=JsonUtility.FromJson<VisibilitySave>(File.ReadAllText(mapSave));Require(!string.IsNullOrEmpty(before.Encoded(MapId)),"Formal map save omitted original compressed visibility.");
+            ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map"+MapId+"-formal-moved.png"));yield return new WaitForSecondsRealtime(.5f);
             Call(runtime,"CloseMap");yield return null;yield return null;
             runtime=Open(slot,saves,canvas.transform);yield return new WaitForSecondsRealtime(3);
             Require(Field<MapGridPoint>(Field<object>(runtime,"navigation"),"currentGrid").Equals(target),"Formal map position did not survive reopen.");
-            var after=JsonUtility.FromJson<VisibilitySave>(File.ReadAllText(mapSave));Require(before.map13GridVisibility==after.map13GridVisibility,"Formal visibility bytes changed on cold reopen.");
+            var after=JsonUtility.FromJson<VisibilitySave>(File.ReadAllText(mapSave));Require(before.Encoded(MapId)==after.Encoded(MapId),"Formal visibility bytes changed on cold reopen.");
             CheckFog(runtime);
-            ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map13-formal-restored.png"));yield return new WaitForSecondsRealtime(.5f);
+            ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map"+MapId+"-formal-restored.png"));yield return new WaitForSecondsRealtime(.5f);
             Call(runtime,"CloseMap");yield return null;yield return null;
             if(SessionState.GetBool(Key+".trees",false))yield return TreeSteps(slot,saves,canvas.transform,mapSave);
-            Require(!failed,"Formal Map13 entry emitted runtime errors.");
-            File.WriteAllText(Path.Combine(Output,"map13-formal-entry.json"),JsonUtility.ToJson(new Proof{editor=Application.unityVersion,backend=SystemInfo.graphicsDeviceType.ToString(),play_mode=true,simulated_pointer=true,save_reopen=true,entry_x=initial.X,entry_y=initial.Y,moved_x=target.X,moved_y=target.Y},true));
-            Debug.Log("Map13 formal native entry passed: original environment/HUD, simulated map pointer, local grid visibility/position save and cold reopen.");
+            if(MapId==11)yield return GoddessSteps(slot,saves,canvas.transform);
+            Require(!failed,"Formal map entry emitted runtime errors.");
+            File.WriteAllText(Path.Combine(Output,"map"+MapId+"-formal-entry.json"),JsonUtility.ToJson(new Proof{map_id=MapId,editor=Application.unityVersion,backend=SystemInfo.graphicsDeviceType.ToString(),play_mode=true,simulated_pointer=true,save_reopen=true,entry_x=initial.X,entry_y=initial.Y,moved_x=target.X,moved_y=target.Y},true));
+            Debug.Log("Map"+MapId+" formal entry passed: original environment/HUD, simulated map pointer, local grid visibility/position save and cold reopen.");
+        }
+        private static IEnumerator GoddessSteps(string slot,string saves,Transform ui)
+        {
+            var runtime=Open(slot,saves,ui);yield return new WaitForSecondsRealtime(3);
+            var session=Field<OfficialWorldMapSession>(runtime,"session");
+            var goddess=session.Definition.Entities.Single(e=>e.Id==202);
+            var point=new MapGridPoint(goddess.Grid[0],goddess.Grid[1]);
+            var adjacent=new[]{new MapGridPoint(point.X-1,point.Y),new MapGridPoint(point.X+1,point.Y),
+                new MapGridPoint(point.X,point.Y-1),new MapGridPoint(point.X,point.Y+1)}.First(session.Movement.IsFit);
+            var navigation=Field<object>(runtime,"navigation");
+            Call(navigation,"SetAvatarPosition",adjacent);
+            // Explicit completed-placement fixture; the production progress calculator and all tested input remain live.
+            var local=Field<object>(runtime,"localSave");
+            local.GetType().GetField("completedEntityPlacements").SetValue(local,session.Definition.Entities
+                .Where(e=>e.Region==goddess.Region&&e.TypeId!=202).Select(e=>e.Id).ToArray());
+            Call(Field<object>(runtime,"regions"),"RefreshRegionProgress",true);
+            Call(runtime,"RefreshEntityActivity");Call(runtime,"SaveLocalProgress");
+            yield return new WaitForSecondsRealtime(2);
+            var visibility=Field<OfflineMapGridVisibility>(runtime,"mapGridVisibility");
+            Require(visibility.RegionPositions(goddess.Region).Any(p=>!visibility.IsVisible(p)),"Region fixture has no undiscovered fog to unlock.");
+            var camera=Field<Camera>(runtime,"worldCamera");
+            Vector2 position=camera.WorldToScreenPoint((Vector3)Call(navigation,"GridToWorld",point));
+            var hits=new List<RaycastResult>();EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current){position=position},hits);
+            Require(hits.Count==0,"Official HUD occludes the goddess fixture.");
+            bool sent=false;runtime.PointerPressProvider=()=>{if(sent)return null;sent=true;return position;};
+            float deadline=Time.realtimeSinceStartup+15;
+            var statues=Field<object>(runtime,"statues");
+            while(Field<Zjcs.Official.WorldUI.GoddessTouchDialog>(statues,"goddessDialog")==null&&Time.realtimeSinceStartup<deadline)yield return null;
+            runtime.PointerPressProvider=()=>null;
+            var dialog=Field<Zjcs.Official.WorldUI.GoddessTouchDialog>(statues,"goddessDialog");
+            Require(sent&&dialog&&dialog.myTouchBtn.gameObject.activeInHierarchy,"Simulated goddess selection did not open the source activation dialog.");
+            yield return new WaitForSecondsRealtime(.5f);Canvas.ForceUpdateCanvases();
+            ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map11-goddess-ready.png"));yield return new WaitForSecondsRealtime(.5f);
+            var button=dialog.myTouchBtn;
+            var pointer=new PointerEventData(EventSystem.current){position=RectTransformUtility.WorldToScreenPoint(null,button.transform.position),button=PointerEventData.InputButton.Left};
+            hits.Clear();EventSystem.current.RaycastAll(pointer,hits);
+            Require(hits.Count>0&&ExecuteEvents.GetEventHandler<IPointerClickHandler>(hits[0].gameObject)==button.gameObject,"Original goddess activation button is occluded.");
+            ExecuteEvents.Execute(button.gameObject,pointer,ExecuteEvents.pointerDownHandler);
+            ExecuteEvents.Execute(button.gameObject,pointer,ExecuteEvents.pointerUpHandler);
+            ExecuteEvents.Execute(button.gameObject,pointer,ExecuteEvents.pointerClickHandler);
+            Require(visibility.RegionPositions(goddess.Region).All(visibility.IsVisible),"Goddess activation did not immediately clear the original region grids.");
+            yield return new WaitForSecondsRealtime(3);CheckFog(runtime);
+            var progress=Field<OfflineMainlineProgressSession>(runtime,"progressionSave");
+            Require(progress.Save.World.ActivatedGoddessRegions.Any(r=>r.MapClassId==11&&r.Region==goddess.Region),"Goddess activation was not saved.");
+            ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map11-goddess-unlocked.png"));yield return new WaitForSecondsRealtime(.5f);
+            Call(runtime,"CloseMap");yield return null;yield return null;
+            runtime=Open(slot,saves,ui);yield return new WaitForSecondsRealtime(3);
+            visibility=Field<OfflineMapGridVisibility>(runtime,"mapGridVisibility");
+            Require(visibility.RegionPositions(goddess.Region).All(visibility.IsVisible),"Activated region visibility did not survive cold reopen.");
+            CheckFog(runtime);Call(runtime,"CloseMap");yield return null;yield return null;
+            Debug.Log("Map11 original goddess input passed: explicit region completion fixture, simulated map/button clicks, immediate grid unlock and cold restore.");
         }
         private static IEnumerator TreeSteps(string slot,string saves,Transform ui,string mapSave)
         {
@@ -229,7 +302,7 @@ namespace Zjcs.Editor.Map13Mainline
         [Serializable]private sealed class TreeSave{public int[] completedEntityPlacements;}
         private static int CheckFog(OfficialMainlineMapRuntime runtime)
         {
-            var visibility=Field<OfflineMapGridVisibility>(runtime,"map13GridVisibility");
+            var visibility=Field<OfflineMapGridVisibility>(runtime,"mapGridVisibility");
             var clouds=UnityEngine.Object.FindObjectsOfType<CloudController2>();
             Require(clouds.Length==1&&Field<object>(runtime,"gridFog")!=null,"Formal map must own one original common fog instance.");
             var cloud=clouds[0];
@@ -249,11 +322,11 @@ namespace Zjcs.Editor.Map13Mainline
         {
             var model=CharacterCreationNativeModelFactory.CreateWorldModel(slot,saves,out string name);
             var runtime=new GameObject("Map13 formal runtime").AddComponent<OfficialMainlineMapRuntime>();
-            runtime.MapMusicVolume=()=>0;runtime.MapVoiceVolume=()=>0;runtime.Begin(13,slot,saves,ui,model,name,null);return runtime;
+            runtime.MapMusicVolume=()=>0;runtime.MapVoiceVolume=()=>0;runtime.Begin(MapId,slot,saves,ui,model,name,null);return runtime;
         }
         private static void Require(bool value,string message){if(!value)throw new InvalidDataException(message);}
-        [Serializable]private sealed class VisibilitySave{public string map13GridVisibility;}
-        [Serializable]private sealed class Proof{public string editor,backend;public bool play_mode,simulated_pointer,save_reopen;public int entry_x,entry_y,moved_x,moved_y;}
+        [Serializable]private sealed class VisibilitySave{public string map13GridVisibility,gridVisibility;public string Encoded(int map)=>map==13?map13GridVisibility:gridVisibility;}
+        [Serializable]private sealed class Proof{public string editor,backend;public bool play_mode,simulated_pointer,save_reopen;public int map_id,entry_x,entry_y,moved_x,moved_y;}
         private sealed class Runner:MonoBehaviour{}
     }
 }

@@ -416,7 +416,7 @@ namespace Zjcs.Presentation.World
             avatar.transform.SetParent(mapRoot, false);
             avatar.name = "Map" + mapClassId + "Player_" + slotId;
             if (mapClassId == 13) RefreshMap13FollowerObjects();
-            if (localSaveCreated && (MapProfile.DefaultEntryPlacementId > 0 || mapClassId == 13))
+            if (localSaveCreated && (MapProfile.DefaultEntryPlacementId > 0 || MapProfile.GridVisibilityResource != null))
             {
                 int entryId = GetDefaultEntryId();
                 if (!mapEntities.TryGetValue(entryId, out Map10RuntimeEntity entry))
@@ -442,6 +442,7 @@ namespace Zjcs.Presentation.World
             else if (mapClassId == 13) InitializeNativeMap13();
             else if (mapClassId == 14) InitializeNativeMap14();
             else regions.InitializeFog(terrain.transform);
+            if (mapClassId != 13) InitializeSharedMapVisibility();
         }
 
         private void CreateWorldCamera()

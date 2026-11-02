@@ -18,6 +18,26 @@ def record(relative):
     return {"path": relative, "sha256": sha((ROOT / relative).read_bytes().replace(b"\r\n", b"\n"))}
 
 
+def map_binding(map_id, visibility, bodies):
+    definition = f"unity/Assets/Official/World/Map/{map_id}/map{map_id}.json"
+    ground = json.loads((ROOT / definition).read_bytes())
+    config = json.loads((ROOT / visibility).read_bytes())
+    body = json.loads((ROOT / bodies).read_bytes())
+    nav = ground["Navigation"]
+    if config["mapClassId"] != map_id or config["size"] != [nav["Width"], nav["Height"]]:
+        raise ValueError("Visibility dimensions differ from active map: " + str(map_id))
+    placed = {row["Id"]: row for row in ground["Entities"]}
+    if len(placed) != len(body["entities"]):
+        raise ValueError("Visibility placement count differs from active map: " + str(map_id))
+    for row in body["entities"]:
+        target = placed[row["placementId"]]
+        pos = row["transform"]["Pos"]
+        if target["EntityId"] != row["classId"] or target["Grid"] != [pos["X"], pos["Y"]]:
+            raise ValueError("Visibility placement differs from active map: " + str(row["placementId"]))
+    return dict(mapClassId=map_id, definition=record(definition), visibility=record(visibility), bodies=record(bodies),
+        checked_placements=len(placed), method="Compare every original placement id, class and grid coordinate, and active ground dimensions. Input versions retain their separate receipts; no blanket version equivalence is asserted.")
+
+
 def build():
     # A Git predecessor records our offline implementation's origin. It is not
     # represented as an official client/server source.
@@ -31,15 +51,28 @@ def build():
         "unity/Assets/Game/Editor/Map13GridVisibility/Zjcs.Editor.Map13.GridVisibility.asmdef",
         "unity/Assets/Game/Editor/Map13GridVisibility/SharedMapGridVisibilityAcceptance.cs",
         "unity/Assets/Game/Editor/Map13GridVisibility/SharedMapGridVisibilityAcceptance.cs.meta"]
+    outputs += ["unity/Assets/Game/Runtime/Presentation/World/Mainline/" + name for name in (
+        "OfficialMainlineMapRuntime.GridVisibility.cs", "OfficialMainlineMapRuntime.GridVisibility.cs.meta",
+        "OfficialMainlineMapProfile.cs", "OfficialMainlineMapRuntime.cs",
+        "OfficialMainlineMapRuntime.Persistence.cs", "OfficialMainlineMapRuntime.Puzzles.cs",
+        "OfficialMainlineMapRuntime.Map13Trees.cs", "OfficialMainlineStatuesModule.Goddess.cs")]
+    outputs += ["unity/Assets/Game/Runtime/Presentation/World/OfficialMap10RuntimeData.cs",
+        "unity/Assets/Game/Editor/Map13Mainline/OfficialMap13MainlinePlayAcceptance.cs",
+        "unity/Assets/Game/Editor/Map13Mainline/Zjcs.Editor.Map13Mainline.asmdef"]
     outputs += ["unity/Assets/Game/Editor/Map13MiniMap/" + name for name in (
         "OfficialMap13MiniMapMarkDataAcceptance.cs", "OfficialMap13MiniMapMarkManagersAcceptance.cs",
         "OfficialMap13MiniMapMarkSpawnAcceptance.cs", "OfficialMap13MiniMapMarkSupportsAcceptance.cs",
         "OfficialMap13MiniMapMasksAcceptance.cs", "Zjcs.Editor.Map13.MiniMap.asmdef")]
     result = {
         "format": 1,
-        "operation": "Extract the existing local visibility implementation into one configuration-driven module. Preserve the migrated original component, body/camp queries, event ordering, RLE and legacy Map13 save field. Move Map13-specific source assertions to its loader. Validate local snapshot runs before the original recovering decoder.",
+        "operation": "Extract the existing local visibility implementation into one configuration-driven module. Preserve the migrated original component, body/camp queries, event ordering, RLE and legacy Map13 save field. Bind Map11 and Map13 through the same placement-checked loader, snapshot lifecycle and original fog. Other maps use the generic gridVisibility save field. Restore also rebinds live fog after a rollback. Keep original Map13-specific source assertions in its loader. Validate local snapshot runs before the original recovering decoder.",
         "official_source_receipt": record(official),
         "offline_predecessor": {"commit": PREDECESSOR, "path": OLD, "sha256": sha(previous)},
+        "active_map_bindings": [map_binding(11,
+            "unity/Assets/Official/World/Mainline/Visibility/Resources/World/Mainline/Visibility/Map11/visibility.json",
+            "unity/Assets/Official/World/Mainline/Visibility/Resources/World/Mainline/Visibility/Map11/bodies.json"),
+            map_binding(13, "unity/Assets/Official/World/Map/13/Resources/Map13/grid-visibility.json",
+                "unity/Assets/Official/World/Map/13/Resources/Map13/grid-entities.json")],
         "unchanged_official_implementation": [record(p.relative_to(ROOT).as_posix()) for p in sorted(
             (ROOT / "unity/Assets/Game/Runtime/Official/World/Map13GridVisibility").glob("*.cs"))],
         "text_hashing": "UTF-8 file bytes with CRLF normalized to LF; original source receipts retain their own hash conventions.",
