@@ -23,6 +23,7 @@ namespace Zjcs.Presentation.Combat
         private readonly Action<Transform, FightBattleUnitState> orientUnit;
         private readonly OfficialBattleHudCatalog hudCatalog;
         private readonly OfficialBattleSkillPlayableCatalog skillPlayableCatalog;
+        private readonly OfficialBattleMovementAnimationCatalog movementAnimations;
         private readonly OfficialBattleDamageVisibilityCatalog damageVisibility;
         private readonly Transform damageRoot;
         private readonly Dictionary<int, UnitView> units = new Dictionary<int, UnitView>();
@@ -119,6 +120,7 @@ namespace Zjcs.Presentation.Combat
             this.animationForEvent = animationForEvent ?? OfficialBattleAnimationFallback.Resolve;
             skillPlayableCatalog = usesOfficialAnimationFallback
                 ? OfficialBattleSkillPlayableCatalog.LoadDefault() : null;
+            movementAnimations = usesOfficialAnimationFallback ? new OfficialBattleMovementAnimationCatalog() : null;
             this.animationGroupResolver = animationGroupResolver;
             this.nativeNpcFactory = nativeNpcFactory;
             this.orientUnit = orientUnit ?? ((_, __) => { });
@@ -921,6 +923,7 @@ namespace Zjcs.Presentation.Combat
 
         private void ScheduleOfficialAnimationCues(FightBattleStepEvent stepEvent)
         {
+            var movementCues = movementAnimations.Build(stepEvent, gridToWorld);
             foreach (OfficialBattleAnimationCue cue in OfficialBattleAnimationTimeline.Build(
                          stepEvent, skillPlayableCatalog == null ? null : skillPlayableCatalog.Data))
             {
@@ -929,6 +932,20 @@ namespace Zjcs.Presentation.Combat
                 bool hasAttached = attachedTransforms.TryGetValue(cue.UnitId, out Transform attached)
                     && attached != null;
                 if (!hasAttached && !units.ContainsKey(cue.UnitId)) continue;
+                if (hasAttached && cue.Movement != null
+                    && movementCues.TryGetValue(cue.Movement, out var originals))
+                {
+                    AttachedAnimatorView animator = GetOrCreateAttachedAnimator(state, attached);
+                    bool supported = animator != null && originals.TrueForAll(value =>
+                        OfficialBattleAnimatorPlayback.Supports(animator.Animator, value.SkillPlayable));
+                    if (supported)
+                    {
+                        foreach (var original in originals)
+                            pendingUnitAnimations.Add(new PendingUnitAnimation
+                                { Cue = original, Serial = ++pendingAnimationSerial });
+                        continue;
+                    }
+                }
                 pendingUnitAnimations.Add(new PendingUnitAnimation
                 {
                     Cue = cue,
@@ -988,10 +1005,12 @@ namespace Zjcs.Presentation.Combat
             FightBattleUnitState state, long serial, float elapsedSinceScheduled)
         {
             OfficialBattleSkillPlayableCue playable = eventCue.SkillPlayable;
+            if (eventCue.StopAfter >= 0f && elapsedSinceScheduled >= eventCue.StopAfter) return;
             if (attachedTransforms.TryGetValue(state.Id, out Transform attached) && attached != null)
             {
                 AttachedAnimatorView view = GetOrCreateAttachedAnimator(state, attached);
-                PlayAttachedSkillPlayable(view, playable, serial, elapsedSinceScheduled);
+                PlayAttachedSkillPlayable(view, playable, serial, elapsedSinceScheduled,
+                    eventCue.StopAfter < 0f ? -1f : eventCue.StopAfter - elapsedSinceScheduled);
                 return;
             }
 
@@ -1010,7 +1029,7 @@ namespace Zjcs.Presentation.Combat
         }
 
         private void PlayAttachedSkillPlayable(AttachedAnimatorView view,
-            OfficialBattleSkillPlayableCue playable, long serial, float elapsedSinceScheduled)
+            OfficialBattleSkillPlayableCue playable, long serial, float elapsedSinceScheduled, float ownerDuration = -1f)
         {
             if (view == null || view.Animator == null || playable == null) return;
             // Preview-only controllers have neither the official skill parameter nor
@@ -1021,7 +1040,7 @@ namespace Zjcs.Presentation.Combat
                 view.SkillPlaybacks = new OfficialBattleAnimatorPlayback(view.Animator, root);
             AnimationClip clip = skillPlayableCatalog == null ? null : skillPlayableCatalog.LoadClip(playable);
             clip = OfficialBattleCharacterAnimationCatalog.ResolveNativeMotion(view.OriginalController, clip);
-            view.SkillPlaybacks.Play(playable, clip);
+            view.SkillPlaybacks.Play(playable, clip, ownerDuration);
         }
 
         private void AdvanceAttachedPlayableLifetimes(float deltaTime)

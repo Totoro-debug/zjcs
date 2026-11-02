@@ -383,6 +383,7 @@ namespace Zjcs.Editor
                 name + " did not pass itself as the common battle mode adapter.");
             FightBattleCheckpoint checkpoint = controller.Checkpoint;
             GridMotionProbe gridMotion = ConfigureGridMotionProbe(controller);
+            MoveAnimatorProbe moveAnimators = ConfigureMoveAnimatorProbe(controller);
             VerifyEquipmentBattlePassives(name, checkpoint, false);
             TriggerChainProbe triggerChains = ConfigureTriggerChainProbe(checkpoint);
             ReplayProbe replays = ConfigureReplayProbe(checkpoint);
@@ -405,6 +406,7 @@ namespace Zjcs.Editor
             controller.StepCompleted += result => {
                 checkpoint = result.Checkpoint;
                 gridMotion?.Observe();
+                moveAnimators?.Observe();
                 triggerChains?.Observe(checkpoint);
                 replays?.Observe(checkpoint);
                 replays?.ObserveTiming(controller);
@@ -555,6 +557,7 @@ namespace Zjcs.Editor
                     + checkpoint.Counter + ", finished=" + checkpoint.Finished + ", initial=" + initialCounter);
             triggerChains?.Verify(name, checkpoint);
             gridMotion?.Verify(name);
+            moveAnimators?.Verify(name);
             replays?.Verify(name, checkpoint);
             statusReplays?.Verify(name, checkpoint);
             triggerTiming?.Verify(name, checkpoint);

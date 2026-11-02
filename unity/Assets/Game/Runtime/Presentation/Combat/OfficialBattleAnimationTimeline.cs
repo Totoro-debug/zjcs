@@ -13,6 +13,8 @@ namespace Zjcs.Presentation.Combat
         public int Priority;
         public int Order;
         public OfficialBattleSkillPlayableCue SkillPlayable;
+        public FightBattleMovementEvent Movement;
+        public float StopAfter = -1f;
     }
 
     [Serializable]
@@ -96,6 +98,7 @@ namespace Zjcs.Presentation.Combat
                     cues.Add(new OfficialBattleAnimationCue
                     {
                         UnitId = movement.UnitId,
+                        Movement = movement,
                         Animation = "run_01",
                         Loop = true,
                         Delay = NormalizeDelay(movement.Delay),

@@ -357,3 +357,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 战斗角色移动轨迹来源见 [battle-animation/grid-motion-source-manifest.json](battle-animation/grid-motion-source-manifest.json)。`prepare_battle_grid_motion.py` 按现有规则选择的21个角色移动动作，从所选884_156692官方APK优先、同版已校验云端缓存其次解析原prefab及MyPlayableTrack／MyCurveTrack引用，分别记录对象字节、原游戏应用／共享代码、曲线及阶跃切线、原序列时间与Windows显式资源绑定哈希；历史规则的来源单独保留，无新增自绘素材，未生成完整素材快照。
 
 伙伴通讯录头像与职业图标来源见 [partner-npc-icons-source-manifest.json](partner-npc-icons-source-manifest.json)。`prepare_partner_npc_icons.py` 记录选定 `884_156692` 的原 NPC／职业二进制表、实际 APK 优先及同版云端缓存来源、Sprite 渲染键和 CAB／对象、原生 Sprite 网格／索引及 Windows 纹理转换缓存、同 GUID 同载荷依赖复用、151 个图标地址的显式绑定与安装 SHA256；原消费代码及本地绑定源码分别登记。未生成完整素材快照。
+
+战斗移动 Animator 来源见 [move-animators-source-manifest.json](battle-animation/move-animators-source-manifest.json)：选定884_156692的原 `MyFightSkill`／`MyFightActionSkillMove` prefab、默认 `MyPlayableSequence` 与 `MyPlayableAnimator` 节点，保留APK优先与校验云端来源、对象字段、输出哈希和未消费的非 Animator 节点；由 `scripts/prepare_battle_move_animators.py` 提取为 `Combat/move-animators`，历史技能／规则载荷保持各自原版本。

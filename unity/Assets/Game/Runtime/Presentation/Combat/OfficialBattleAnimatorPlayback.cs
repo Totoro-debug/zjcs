@@ -17,6 +17,7 @@ namespace Zjcs.Presentation.Combat
         private readonly AnimationController controller;
         private readonly MyPlayableCenter center = new MyPlayableCenter();
         private readonly List<MyPlayableAnimator> active = new List<MyPlayableAnimator>();
+        private readonly Dictionary<MyPlayableAnimator, float> ownerLifetimes = new Dictionary<MyPlayableAnimator, float>();
         private bool disposed;
 
         public static bool Supports(Animator animator, OfficialBattleSkillPlayableCue cue)
@@ -63,9 +64,9 @@ namespace Zjcs.Presentation.Combat
             ownedController = controller.RuntimeAnimatorController;
         }
 
-        public void Play(OfficialBattleSkillPlayableCue cue, AnimationClip clip)
+        public void Play(OfficialBattleSkillPlayableCue cue, AnimationClip clip, float ownerDuration = -1f)
         {
-            if (disposed || !Supports(animator, cue)) return;
+            if (disposed || ownerDuration == 0f || !Supports(animator, cue)) return;
             var instance = new GameObject("SkillAnimatorPlayable");
             instance.transform.SetParent(root.transform, false);
             MyPlayableAnimator playable;
@@ -100,6 +101,7 @@ namespace Zjcs.Presentation.Combat
             playable.UpdateHashMapString();
             playable.Init(animator.gameObject, animator.gameObject);
             active.Add(playable);
+            if (ownerDuration > 0f) ownerLifetimes.Add(playable, ownerDuration);
             playable.TryPlay();
         }
 
@@ -109,11 +111,21 @@ namespace Zjcs.Presentation.Combat
             center.Update(deltaTime);
             center.LateUpdate();
             for (int index = active.Count - 1; index >= 0; index--)
-                if (active[index] == null || active[index].myStatus == MyPlayable.PlayableStatus.Stop)
+            {
+                MyPlayableAnimator playable = active[index];
+                if (playable != null && ownerLifetimes.TryGetValue(playable, out float remaining))
                 {
-                    if (active[index] != null) Destroy(active[index].gameObject);
+                    remaining -= deltaTime;
+                    ownerLifetimes[playable] = remaining;
+                    if (remaining <= 0f) playable.Stop(true);
+                }
+                if (playable == null || playable.myStatus == MyPlayable.PlayableStatus.Stop)
+                {
+                    if (!ReferenceEquals(playable, null)) ownerLifetimes.Remove(playable);
+                    if (playable != null) Destroy(playable.gameObject);
                     active.RemoveAt(index);
                 }
+            }
         }
 
         public void Stop()
@@ -125,6 +137,7 @@ namespace Zjcs.Presentation.Combat
                     Destroy(active[index].gameObject);
                 }
             active.Clear();
+            ownerLifetimes.Clear();
             center.RemoveAll();
         }
 

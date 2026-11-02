@@ -398,9 +398,11 @@ NPC 外观复用验证：`OfficialMap12NpcBattleModelView` 是现有 Map12 队�
 
 角色移动轨迹（局部迁移）：`FightOfficialCombatCatalog.CreateRoleMovement` 从角色各自的 `MoveSkillId`／`BackMoveSkillId` 读取动作、延迟和时长；玩家、NPC及怪物配置分别解析，技能位移也把原 `MoveBehaviourId` 传入可保存的事件。`OfficialBattleGridMotion` 消费选定884_156692的21套原 `MyPlayableTrack → MyCurveTrack`，保留逐关键帧切线、阶跃切线、轨迹时长、定速／定时、距离映射和序列内延迟；公共 `OfficialBattleSceneView` 用它替代已绑定动作的匀速插值，路径结束仍回到准确格点。来源、APK优先／已校验云端缓存读取及显式资源绑定见[移动轨迹来源](../../assets/reference/battle-animation/grid-motion-source-manifest.json)，重建入口为 `prepare_battle_grid_motion.py`。历史规则载荷保持原版本，未改标为884。技能移动、命中位移、行动创建与断点恢复规则回归通过；Unity 全工程编译与 ProjectTools.Validate 通过。D3D11 Play Mode 通过公共 runner 与模拟 HUD 输入完成日常、竞技场、塔三类宿主：分别记录 177、3、33 个已绑定原动作的移动事件，并逐次核对断点往返后的动作标识；日常另记录 13 个原配置无后撤技能的既有离线后撤事件。独立原曲线参考值、等待、暂停、逐格边界与最终格点检查通过，已查看三类宿主的实际准备、战斗与退出画面。该验证不覆盖各功能入口窗口、完整结算界面或 Windows Player，尚不计作完整跳跃还原。
 
+移动 Animator 分层播放（局部迁移）：`prepare_battle_move_animators.py` 从选定884_156692的原技能与移动动作 prefab 分别提取21条技能记录（10个 Animator 节点）和21条动作记录（11个 Animator 节点），未配置动画的记录保留为空。`OfficialBattleMovementAnimationCatalog` 保留技能开始时的一次触发以及逐格动作的独立时序，按实际世界路径距离计算定速动作的生命周期；`OfficialBattleSceneView` 仅对具备全部原参数的已附加 Animator 用这些原节点替代通用跑步回退。每格动作到期或取消时经已迁移的 `MyPlayableAnimator.Stop` 恢复原参数，技能自身的无限时长不擅自改成有限时长。原动画规则回归、静态检查（87,407个GUID）、Unity全工程导入／编译与 `ProjectTools.Validate` 通过。D3D11 Play Mode 使用原Game控制器验证原布尔参数施加、暂停、逐格到期、下一格重启和取消后的参数恢复，并独立核对前进／后撤原触发器、技能只触发一次、逐格世界距离时长以及连续路径顺序。通过公共runner和模拟HUD输入完成日常、竞技场、塔三类宿主，分别观察到6、3、26个实际排入队列的原 `run`／`houtui` 触发器；已查看准备、战斗与退出画面。这证明动作配置与Animator接线，不代表相应状态已具备可见的原身体动画，也不覆盖功能入口窗口、完整结算界面或Windows Player。来源、原节点字段、明确未接入的骨骼／音频节点和显式加载路径见[移动 Animator 来源](../../assets/reference/battle-animation/move-animators-source-manifest.json)。
+
 ## 尚未实现
 
-移动动作播放尚未完整迁移：上述21套轨迹覆盖角色配置选择的普通／退回／固定速度移动，不能代替原 `MyFightSkill` 的 `run`／`houtui` 触发、各怪物移动动画、骨骼跟随、音频／碰撞表现、逐格朝向恢复与其他技能专属位移轨迹。当前通用动画队列仍存在统一跑步回退；部分怪物的原 `BackMoveSkillId=0`，既有离线后撤以 `IsRetreat` 标识并保留动作编号0，不擅自指定玩家后撤或其他原动作，也不计作原移动轨迹还原。完整跳跃动作与正式Windows Player验证、发布尚未完成。
+移动动作播放尚未完整迁移：上述21套轨迹和分层 Animator 接线仍不能代替各怪物原控制器与渲染适配、原可见身体动画、骨骼跟随、音频／碰撞表现、逐格朝向恢复与其他技能专属位移轨迹。没有 Animator 或不具备原参数的模型仍保留通用跑步回退，不计作原移动动作还原；部分怪物的原 `BackMoveSkillId=0`，既有离线后撤以 `IsRetreat` 标识并保留动作编号0，不擅自指定玩家后撤或其他原动作，也不计作原移动轨迹还原。完整跳跃动作与正式Windows Player验证、发布尚未完成。
 
 HP 启动的动画绑定仍有缺项：实际公共宿主中的13500能在零时刻进入动画队列并绑定原200/skill_41，但该路径当前选中的是只有占位曲线的clip，尚不能驱动完整骨骼动作。Animator时间推进或Override绑定成功不计作人物动作还原。自动开战宿主可能在准备截图前已经施法，待机网格检查现仅在Preparing阶段执行；不能用该待机检查代替施法动作验证。
 
