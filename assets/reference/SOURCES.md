@@ -304,4 +304,6 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 
 选定 `884_156692` 的完整 `NpcPanel` 与原 `TabBottomBarCellController` 继续由 `prepare_partner_panel_native.py` 恢复；覆盖控制器按 Unity 原生资源类型 2 绑定，不更改原动画或状态机。`partner_panel_language.py` 从两份原中文语言二进制读取完整窗口键，输入哈希及 Resources 输出记录在 `partner-panel-native-source-manifest.json`。宿主、原生外观连接与隔离验证源码哈希记录在 `partner-panel-runtime-source-manifest.json`；功能范围见 [伙伴页](../../docs/features/partners.md)。
 
-公共地图白雾来源见 `official-map/mainline-grid-fog-source-manifest.json`，提取入口为 `scripts/prepare_mainline_grid_fog.py`。当前 884_156692 的 MapRoot_13 官方根对象、CAB 实际凭据、完整雾层 subtree 与依赖对象原始字节 SHA256、ASTC／RGBA mip 哈希、shader 程序哈希及 Unity 原生输出分别记录；当前原客户端 `CloudController2` 与历史已迁移代码的身份核对单独记录，不覆盖历史输入版本。`LocalGridVisibilityAgent` 记录当前官方完整源文件、本地生命周期适配产物及转换工具哈希；运行绑定和验证范围见[主线地图公共模块](../../docs/features/mainline-map-modules.md)及[泽之国](../../docs/maps/map-13.md)。
+公共地图白雾来源见 `official-map/mainline-grid-fog-source-manifest.json`，提取入口为 `scripts/prepare_mainline_grid_fog.py`。当前 884_156692 的 MapRoot_11／12／13／16 官方根对象及 MapRoot_15 明确空雾层绑定、CAB 实际凭据、完整雾层 subtree 与依赖对象原始字节 SHA256、ASTC／RGBA mip 哈希、shader 程序哈希及 Unity 原生输出分别记录；当前原客户端 `CloudController2` 与历史已迁移代码的身份核对单独记录，不覆盖历史输入版本。`LocalGridVisibilityAgent` 记录当前官方完整源文件、本地生命周期适配产物及转换工具哈希；运行绑定和验证范围见[主线地图公共模块](../../docs/features/mainline-map-modules.md)及[泽之国](../../docs/maps/map-13.md)。
+
+公共地图网格输入来源见 `official-map/mainline-grid-visibility-data-source-manifest.json`。`prepare_mainline_grid_visibility_data.py` 从当前版本原根网格、实体放置／身体／视野与区域解锁包读取真实载荷，使用已核对程序集与已准备源码清单的生成格式解码，保留坐标、区域顺序及营地关系；记录原包对象／载荷、全部消费格式源码、输出哈希。与历史 Map13 输入分别登记，未混写旧版本清单。

@@ -9,6 +9,42 @@ namespace Zjcs.Editor.MapGridVisibility
 {
     public static class SharedMapGridVisibilityAcceptance
     {
+        public static void RunSourceMaps()
+        {
+            Run();
+            foreach (int mapId in new[] { 11, 12, 15, 16 })
+            {
+                string root = "World/Mainline/Visibility/Map" + mapId + "/";
+                var configuration = JsonUtility.FromJson<OfflineMapGridVisibility.Configuration>(Resources.Load<TextAsset>(root + "visibility").text);
+                var bodies = JsonUtility.FromJson<OfflineMapGridVisibility.BodyConfiguration>(Resources.Load<TextAsset>(root + "bodies").text);
+                var start = new Pos2d(configuration.size[0] / 2, configuration.size[1] / 2);
+                // Explicit rule fixture: all original placed entities are active,
+                // region lookup returns 0, movement does not test navigation.
+                // Actual scene/region adapters must be verified by their hosts.
+                using var map = new OfflineMapGridVisibility(configuration, bodies, start, null, Array.Empty<int>(), _ => 0, _ => true);
+                using var isolated = new OfflineMapGridVisibility(configuration, bodies, start, null, Array.Empty<int>(), _ => 0, _ => true);
+                byte[] baseline = isolated.Snapshot();
+                Require(map.IsVisible(start), "Original configured player cannot see its own cell.");
+                map.MovePlayer(new Pos2d(start.X + 1, start.Y));
+                map.MovePlayer(new Pos2d(start.X + 2, start.Y));
+                Require(map.IsVisible(new Pos2d(start.X + 2, start.Y)), "Original view/body inputs did not reveal the moved player.");
+                foreach (var region in configuration.regions) map.UnlockRegion(region.region);
+                foreach (var region in configuration.regions)
+                    foreach (var point in map.RegionPositions(region.region))
+                        if (point.X >= 0 && point.Y >= 0 && point.X < configuration.size[0] && point.Y < configuration.size[1])
+                            Require(map.IsVisible(point), "Original activation/extension cell remains hidden.");
+                Require(baseline.SequenceEqual(isolated.Snapshot()), "Different map instances mutated each other's original payload.");
+                byte[] snapshot = map.Snapshot();
+                using var restored = new OfflineMapGridVisibility(configuration, bodies, new Pos2d(start.X + 2, start.Y), snapshot,
+                    Array.Empty<int>(), _ => 0, _ => true);
+                Require(snapshot.SequenceEqual(restored.Snapshot()), "Actual source payload changed bytes on cold restore.");
+                for (int y = 0; y < configuration.size[1]; y++) for (int x = 0; x < configuration.size[0]; x++)
+                    Require(map.IsVisible(new Pos2d(x, y)) == restored.IsVisible(new Pos2d(x, y)), "Actual source cell differs on cold restore.");
+                Debug.Log($"Original shared visibility input passed: Map{mapId}, {configuration.size[0]}x{configuration.size[1]}, " +
+                    $"{bodies.templates.Length} body templates, {bodies.entities.Length} placements, {configuration.regions.Length} regions; isolated rule fixture, exact all-cell cold restore.");
+            }
+        }
+
         public static void Run()
         {
             // First exercise the original 57,600-cell payload and its persisted

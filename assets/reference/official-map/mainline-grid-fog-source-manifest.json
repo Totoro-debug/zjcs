@@ -1,0 +1,1463 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "code_identity": {
+    "current": {
+      "path": ".tools/source-packages/official-code/client-source/CloudController2.cs",
+      "sha256": "4b437ff3016682bfe3b14e68df788557ac3e1f23a1478514cc12c8364e9ac420"
+    },
+    "migrated": {
+      "path": "unity/Assets/Game/Runtime/Official/MapRootFog/CloudController2.cs",
+      "sha256": "c9fa7bddb6f55059fdcc3cc693044875b46206881cce54deadaac37b7e58ec67"
+    },
+    "prior_receipt": {
+      "path": "assets/reference/official-map/map14-root-fog-source-manifest.json",
+      "sha256": "8c9e0e9d42e100f128215badcef1b1a347e641050fa606d06a03ede8c497934f"
+    }
+  },
+  "maps": [
+    {
+      "mapClassId": 11,
+      "cloudEnabled": true,
+      "root": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_11.bundle",
+        "bundle_hash": "ceddc0e3975126d068884b9690eccff4",
+        "path_id": "-3918786204313718640",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ceddc0e3975126d068884b9690eccff4.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3009,
+        "bundle_sha256": "1eaff8529a74bbf5efbe2c59381b42b3695b0a50a73ac77c7d6d66560748c131"
+      },
+      "root_sha256": "97b450cae975595105b4b8992f5b24cf462cd186032e727c052e239d601e0b25",
+      "prefab": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Map11.prefab",
+      "object_count": 10,
+      "diffusion_speed": 5.0
+    },
+    {
+      "mapClassId": 12,
+      "cloudEnabled": true,
+      "root": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_12.bundle",
+        "bundle_hash": "43b4a5543a9a6721578f5c6c8f0537a0",
+        "path_id": "5778308820361685571",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/43b4a5543a9a6721578f5c6c8f0537a0.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2982,
+        "bundle_sha256": "6e3e9cd71f7f9ff3997f05c0a64dfe6ecc86d3bb72741a8189c9cfa4a9eec5f6"
+      },
+      "root_sha256": "39660ce96e5c572c0f29599afc78741597e1542d0d98088d551145d26586557b",
+      "prefab": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Map12.prefab",
+      "object_count": 10,
+      "diffusion_speed": 5.0
+    },
+    {
+      "mapClassId": 13,
+      "cloudEnabled": true,
+      "root": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_13.bundle",
+        "bundle_hash": "3cb5995945731170f76c32f581866176",
+        "path_id": "475951840286324027",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/3cb5995945731170f76c32f581866176.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2977,
+        "bundle_sha256": "3f697d31a5efc5a87f98238dce5e5cfa3f2cfa35e7320f6f67272672b51a2492"
+      },
+      "root_sha256": "efc5a66a9377eb9b44f2ce30af9db7a76f4d9dabc3c50ab265af596a9205ab2c",
+      "prefab": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Map13.prefab",
+      "object_count": 10,
+      "diffusion_speed": 5.0
+    },
+    {
+      "mapClassId": 15,
+      "root": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_15.bundle",
+        "bundle_hash": "582fa16e199dd038fe5605dcbe54156a",
+        "path_id": "3083409236013775150",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/582fa16e199dd038fe5605dcbe54156a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2102,
+        "bundle_sha256": "750b9608d495f1d270c77d32fe3c163e6bf4fe18623f134662a8968987d70ed5"
+      },
+      "root_sha256": "60ee1270d57a5bb806b6db2054c6675f91e13a8ab97f4e905e942dfa01f4008f",
+      "cloudEnabled": false,
+      "agent": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_15.bundle",
+        "bundle_hash": "582fa16e199dd038fe5605dcbe54156a",
+        "path_id": "-9156577474292254418",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/582fa16e199dd038fe5605dcbe54156a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2102,
+        "bundle_sha256": "750b9608d495f1d270c77d32fe3c163e6bf4fe18623f134662a8968987d70ed5"
+      },
+      "agent_sha256": "5f58787b9ee86ee6cc8ce6c7775cba5d345271f53c7547c5c84d7c41601be1ae",
+      "originalCloudController": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      },
+      "reason": "Original root visibility agent explicitly binds no CloudController."
+    },
+    {
+      "mapClassId": 16,
+      "cloudEnabled": true,
+      "root": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_16.bundle",
+        "bundle_hash": "291306239d0df6146104de33d1397fa7",
+        "path_id": "3333357410591503865",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/291306239d0df6146104de33d1397fa7.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2958,
+        "bundle_sha256": "2e51aea3aab063f0be789dbd0d9f0832ed7bc0aee586e3386baa7a6d8baaef2a"
+      },
+      "root_sha256": "c8d25c810c286fbde3000762a623f006f61ae67ea9004fd63ff8a0cba891b229",
+      "prefab": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Map16.prefab",
+      "object_count": 10,
+      "diffusion_speed": 5.0
+    }
+  ],
+  "objects": [
+    {
+      "mapClassId": 11,
+      "identity": "cab-5f7cf0d44f460185b80d9a5c65622a52:-2774397254449827696",
+      "type": "GameObject",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_11.bundle",
+        "bundle_hash": "ceddc0e3975126d068884b9690eccff4",
+        "path_id": "-2774397254449827696",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ceddc0e3975126d068884b9690eccff4.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3009,
+        "bundle_sha256": "1eaff8529a74bbf5efbe2c59381b42b3695b0a50a73ac77c7d6d66560748c131"
+      },
+      "object_sha256": "c4d44cb71a6a64d4453a6ea503b4376eda1ae7d2cf1648fe483e98a80c46c55b"
+    },
+    {
+      "mapClassId": 11,
+      "identity": "cab-5f7cf0d44f460185b80d9a5c65622a52:-7607628004756688752",
+      "type": "Transform",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_11.bundle",
+        "bundle_hash": "ceddc0e3975126d068884b9690eccff4",
+        "path_id": "-7607628004756688752",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ceddc0e3975126d068884b9690eccff4.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3009,
+        "bundle_sha256": "1eaff8529a74bbf5efbe2c59381b42b3695b0a50a73ac77c7d6d66560748c131"
+      },
+      "object_sha256": "605dca33b3f3994bb1f2f8800cd9f898a0b0e4364add58232768c3beecd14588"
+    },
+    {
+      "identity": "cab-88f81a27d26535e17d6dc837d6d592a1:6689845855893749246",
+      "type": "Material",
+      "name": "CloudDisappear",
+      "source": {
+        "bundle": "defaultpackage_share_cdbda34d1d0a718844e0e1fef4348c9f.bundle",
+        "bundle_hash": "db62927fe2bd88c855676c3921f3d17a",
+        "path_id": "6689845855893749246",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/db62927fe2bd88c855676c3921f3d17a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 881,
+        "bundle_sha256": "b56324886eff77de5a5c061ba173fbeb6a55f4e8f5705d17b0376bfe08ecc5f0"
+      },
+      "object_sha256": "752d3acb1d3933e713832123ab1faf5634a80502304392a7da304202433ae5e2",
+      "output": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/CloudDisappear-ec94ad68015e.mat"
+    },
+    {
+      "identity": "cab-014000ed2538cb87d1aa4612be612002:3604295756931584565",
+      "type": "Shader",
+      "name": "Unlit/CloudDisappear",
+      "source": {
+        "bundle": "defaultpackage_unityshaders.bundle",
+        "bundle_hash": "465300f28c23d7564868393936041212",
+        "path_id": "3604295756931584565",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/465300f28c23d7564868393936041212.bundle",
+        "raw_size": 2909118,
+        "raw_sha256": "991da192cbcd00a1b3a2714b7ca649b7f416881f87b656dac17f5f1123da2e46"
+      },
+      "object_sha256": "43fd00ffbb6388c8d600b54a51ea6a9eb5b366d3f54f0f3619974df216080c6f",
+      "output": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/Unlit_CloudDisappear-1a70a275e166.shader",
+      "programs": [
+        {
+          "type": "kShaderGpuProgramGLES3",
+          "keywords": [],
+          "source_sha256": "3bf2218535ade92fa4ba699bb2dbe23118c73aa3a7274baf16b8ad659182387f"
+        }
+      ]
+    },
+    {
+      "identity": "cab-eaa358cf9769fc093e4daa6663e0710a:-999956608771656188",
+      "type": "Texture2D",
+      "name": "CloudMask",
+      "source": {
+        "bundle": "defaultpackage_share_6bc65192913e359db63122edcce41e6f.bundle",
+        "bundle_hash": "45c0c0eaf6a770be5a5046abd7e50c30",
+        "path_id": "-999956608771656188",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/45c0c0eaf6a770be5a5046abd7e50c30.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 25072,
+        "bundle_sha256": "ee736c04b40614c50f76b5cc4dbd947fe601f6cbcf7ef2da7a370ce9f8c807a2"
+      },
+      "object_sha256": "ac4478c2a58f343f01f67272470d634a42aefe3a33e10d06a628cb92a0c1fb22",
+      "output": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/CloudMask-441ca5f3cedf.asset",
+      "compressed_sha256": "0e12bc81dcd9692e1f0819de2aaf0d8f42c2688b1d7570c6afb5883f249e01d7",
+      "rgba_sha256": "700e690af323c764e69b13a25621b8c4071613166a15138005a207f38cb6da4b",
+      "mips": [
+        {
+          "level": 0,
+          "width": 400,
+          "height": 400,
+          "astc_offset": 0,
+          "astc_size": 71824,
+          "astc_sha256": "0e12bc81dcd9692e1f0819de2aaf0d8f42c2688b1d7570c6afb5883f249e01d7",
+          "rgba_offset": 0,
+          "rgba_size": 640000,
+          "rgba_sha256": "700e690af323c764e69b13a25621b8c4071613166a15138005a207f38cb6da4b"
+        }
+      ],
+      "profile": "LDR_SRGB"
+    },
+    {
+      "identity": "cab-9da8dad83c15f98e78dce6938dd350b7:-1500851196581370438",
+      "type": "Material",
+      "name": "Cloud",
+      "source": {
+        "bundle": "defaultpackage_share_1bf0b2b2a6d671b194fcc1e596db1185.bundle",
+        "bundle_hash": "bf93f393ea1ceaf9b66480e8d821d55b",
+        "path_id": "-1500851196581370438",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/bf93f393ea1ceaf9b66480e8d821d55b.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 119496,
+        "bundle_sha256": "b1b6b2967c1afaf21d7a66eebddb691aa24124dbe44c3ab3d8ce48a33ed9bd98"
+      },
+      "object_sha256": "0f4a357b9a954f978a3e5fc76861940985209b2a4b006780c44cfb9400bf4932",
+      "output": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/Cloud-6e11bdd5b099.mat"
+    },
+    {
+      "identity": "cab-014000ed2538cb87d1aa4612be612002:-8389220098454528511",
+      "type": "Shader",
+      "name": "Unlit/Cloud",
+      "source": {
+        "bundle": "defaultpackage_unityshaders.bundle",
+        "bundle_hash": "465300f28c23d7564868393936041212",
+        "path_id": "-8389220098454528511",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/465300f28c23d7564868393936041212.bundle",
+        "raw_size": 2909118,
+        "raw_sha256": "991da192cbcd00a1b3a2714b7ca649b7f416881f87b656dac17f5f1123da2e46"
+      },
+      "object_sha256": "10c58a57d91bde4ecb11dcac4ef251d446fcf2cca88898a85d2a2c2be834c76e",
+      "output": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/Unlit_Cloud-e4b65d9159bd.shader",
+      "programs": [
+        {
+          "type": "kShaderGpuProgramGLES3",
+          "keywords": [],
+          "source_sha256": "34c815fc0e1a2d2236e3a4e9e401eca7c365824e54959a816b9406f20109aa7a"
+        }
+      ]
+    },
+    {
+      "identity": "cab-9da8dad83c15f98e78dce6938dd350b7:5235296405223423046",
+      "type": "Texture2D",
+      "name": "CloudShape02",
+      "source": {
+        "bundle": "defaultpackage_share_1bf0b2b2a6d671b194fcc1e596db1185.bundle",
+        "bundle_hash": "bf93f393ea1ceaf9b66480e8d821d55b",
+        "path_id": "5235296405223423046",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/bf93f393ea1ceaf9b66480e8d821d55b.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 119496,
+        "bundle_sha256": "b1b6b2967c1afaf21d7a66eebddb691aa24124dbe44c3ab3d8ce48a33ed9bd98"
+      },
+      "object_sha256": "3349f845386e2bb2263ed3f131cff5098daece028b6ec54b069c76ad26382124",
+      "output": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/CloudShape02-5be5bec3bd59.asset",
+      "compressed_sha256": "8d2f3303bfb7a1f6ba2b0baefd8313d659207dadbf4b3f675ee6de1c26ff397a",
+      "rgba_sha256": "beb5ead1d984453e5ad5a21f254ddb8da7b9aa367386f32d33dbb6900ceb8720",
+      "mips": [
+        {
+          "level": 0,
+          "width": 512,
+          "height": 512,
+          "astc_offset": 0,
+          "astc_size": 118336,
+          "astc_sha256": "ba27ba133a65d6cd81e437845c7fdf807d8e6491e405198ba0fbf90e98672e0d",
+          "rgba_offset": 0,
+          "rgba_size": 1048576,
+          "rgba_sha256": "0da1a604f8fe60f4c9d8b9497ef82b39279a03bc303afc29fe489c41f75028fd"
+        },
+        {
+          "level": 1,
+          "width": 256,
+          "height": 256,
+          "astc_offset": 118336,
+          "astc_size": 29584,
+          "astc_sha256": "77bc9bf3e8ac8efb90f9d71a1776e64a4240290ba4be21d33ddb318b31b1cff7",
+          "rgba_offset": 1048576,
+          "rgba_size": 262144,
+          "rgba_sha256": "d2cee7bb38eb3d36e8ad83243bbe7064209a0deffbb1044362c75df55177b016"
+        },
+        {
+          "level": 2,
+          "width": 128,
+          "height": 128,
+          "astc_offset": 147920,
+          "astc_size": 7744,
+          "astc_sha256": "85b7b6e5d424d362b87e208ff2115d64fe39bcef22d599448dbd313287bd3630",
+          "rgba_offset": 1310720,
+          "rgba_size": 65536,
+          "rgba_sha256": "d39d0e5317f31d850c3a38ff93129e1751a6e0e0da51b88cb2e249084e636494"
+        },
+        {
+          "level": 3,
+          "width": 64,
+          "height": 64,
+          "astc_offset": 155664,
+          "astc_size": 1936,
+          "astc_sha256": "a16ba8f58d7db08decb159acda23e0568edc04ec059322b6a4bf40e0c935fdee",
+          "rgba_offset": 1376256,
+          "rgba_size": 16384,
+          "rgba_sha256": "104c5d4b22c4fa2167e8a22d249e431598e233d1f2e563fc115da93df0d7ad48"
+        },
+        {
+          "level": 4,
+          "width": 32,
+          "height": 32,
+          "astc_offset": 157600,
+          "astc_size": 576,
+          "astc_sha256": "87794f12fe313c309bd001adc67125ef899bae6af02a9b74529751f1b4a362b0",
+          "rgba_offset": 1392640,
+          "rgba_size": 4096,
+          "rgba_sha256": "78923c20d83ad889bdfa95844ae12991d57816f7c706635392f99d5802fb90b1"
+        },
+        {
+          "level": 5,
+          "width": 16,
+          "height": 16,
+          "astc_offset": 158176,
+          "astc_size": 144,
+          "astc_sha256": "7e7b78abcd8150b20b6d2c9309afba9508aa0ea06e7af8404d803e5c67a7864a",
+          "rgba_offset": 1396736,
+          "rgba_size": 1024,
+          "rgba_sha256": "d9b31f717d69980e9883f35248f914a8c1770cfd6f6e74f8128309a6ce27bc52"
+        },
+        {
+          "level": 6,
+          "width": 8,
+          "height": 8,
+          "astc_offset": 158320,
+          "astc_size": 64,
+          "astc_sha256": "4cd7bf15c576d98ead35c387ec16b853e262bd09f6d34adbc116dc0d0c070fd1",
+          "rgba_offset": 1397760,
+          "rgba_size": 256,
+          "rgba_sha256": "5fc2800cb464b636c79ba323d633bea01079ccd20ca07c06ad8d2732c7e7678d"
+        },
+        {
+          "level": 7,
+          "width": 4,
+          "height": 4,
+          "astc_offset": 158384,
+          "astc_size": 16,
+          "astc_sha256": "021f2160e81bb0e036430c881214558fd69c1733a6feb634c498d89728b62c26",
+          "rgba_offset": 1398016,
+          "rgba_size": 64,
+          "rgba_sha256": "ab4ffeeb6c8fa536e4062c052698726359bdcc97d3d38ec0226857bada33164c"
+        },
+        {
+          "level": 8,
+          "width": 2,
+          "height": 2,
+          "astc_offset": 158400,
+          "astc_size": 16,
+          "astc_sha256": "22413f140cdae7d77cf67880b2826614203447a23da82e408539ec586ddaeca2",
+          "rgba_offset": 1398080,
+          "rgba_size": 16,
+          "rgba_sha256": "9f585e69bd47ad3ba08677bdd7be0f4a080e0be081fee62a146cb8617812138f"
+        },
+        {
+          "level": 9,
+          "width": 1,
+          "height": 1,
+          "astc_offset": 158416,
+          "astc_size": 16,
+          "astc_sha256": "451594aae18587cf9be5fe541b5b8de429430356163d285533e6a3019dc9e20b",
+          "rgba_offset": 1398096,
+          "rgba_size": 4,
+          "rgba_sha256": "d37d40b8f24942255557ec4daf80ca5a70bf90c665a3cbde2e605629d048b9d8"
+        }
+      ],
+      "profile": "LDR_SRGB"
+    },
+    {
+      "identity": "cab-2ee6a855847308633bb05800af09879e:-7417097687183900640",
+      "type": "Texture2D",
+      "name": "CloudNoise02",
+      "source": {
+        "bundle": "defaultpackage_share_e06b5b36d4968dd93745bdb84bbe6a83.bundle",
+        "bundle_hash": "dd4d91b2ebcefd1265062bc7bfcc8066",
+        "path_id": "-7417097687183900640",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/dd4d91b2ebcefd1265062bc7bfcc8066.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 102285,
+        "bundle_sha256": "b7fca8fb3d076a161cbc88fd17f6d27920d0bb1bcb00efae00edf7eded7e1e4b"
+      },
+      "object_sha256": "7f65768829cc4ff1e3799c25ef0ae7e2a9abe31b3b16c2f83bf8c62c48a31b8e",
+      "output": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/CloudNoise02-d6aeb3864929.asset",
+      "compressed_sha256": "666a3b977b9c33cda4f495039096ff50758a7e173e898e90e8cfcb2fe0b0a1dd",
+      "rgba_sha256": "2f25e85e51badda8817679cd8bae228966c9e4fcfd7408e56170d1585c2dff74",
+      "mips": [
+        {
+          "level": 0,
+          "width": 512,
+          "height": 512,
+          "astc_offset": 0,
+          "astc_size": 118336,
+          "astc_sha256": "6ff518fa6c981558ab90b1078f6271aaa31f318de94ca3ca5a66a2ffcd3c6c14",
+          "rgba_offset": 0,
+          "rgba_size": 1048576,
+          "rgba_sha256": "33f6c861363aced8b2f3c59db1db4820e177591b0b61af5891c58fa33dedcd95"
+        },
+        {
+          "level": 1,
+          "width": 256,
+          "height": 256,
+          "astc_offset": 118336,
+          "astc_size": 29584,
+          "astc_sha256": "584999d2786cbb6901dd8ec93af0e451220b0a59ef544f47576a329aa38c506b",
+          "rgba_offset": 1048576,
+          "rgba_size": 262144,
+          "rgba_sha256": "ed9cdd0612e9f668aef4e1763329531febde0868ef2eb621f675b4698b8e3edd"
+        },
+        {
+          "level": 2,
+          "width": 128,
+          "height": 128,
+          "astc_offset": 147920,
+          "astc_size": 7744,
+          "astc_sha256": "131d4955bde73b1a21ccef5ea7dbab941d86f2d7944eb2fe25e51627c6fdfde7",
+          "rgba_offset": 1310720,
+          "rgba_size": 65536,
+          "rgba_sha256": "fccd2703cb952dd6fc8bf803e503ac2ee9bd76e90f000bc6d954ee830e201889"
+        },
+        {
+          "level": 3,
+          "width": 64,
+          "height": 64,
+          "astc_offset": 155664,
+          "astc_size": 1936,
+          "astc_sha256": "b86bc7fafb99b74d4a34b5023994e495b242fb7f4dcdf340432927dcc7370005",
+          "rgba_offset": 1376256,
+          "rgba_size": 16384,
+          "rgba_sha256": "a2c30ecc2ea04a278f92716b192c5f4b5ef1e28d394c7cc7be34e3ebb75fec39"
+        },
+        {
+          "level": 4,
+          "width": 32,
+          "height": 32,
+          "astc_offset": 157600,
+          "astc_size": 576,
+          "astc_sha256": "48c546dca691f450c4f397e31693cec85f5a8f422fd41398f6b0f7320813b54a",
+          "rgba_offset": 1392640,
+          "rgba_size": 4096,
+          "rgba_sha256": "9b5edf4ad5934185525243f7b57f8a9596fd35813a8ed3893cd96126c817fae6"
+        },
+        {
+          "level": 5,
+          "width": 16,
+          "height": 16,
+          "astc_offset": 158176,
+          "astc_size": 144,
+          "astc_sha256": "29c2f7b64551caa67b63ef98d665a809ec47f8850e25f6940f121743bc104e7d",
+          "rgba_offset": 1396736,
+          "rgba_size": 1024,
+          "rgba_sha256": "7428d6b35d01f698a2112c5d8d3cc14a6224c9b77a55b0d68e75618b4bbb76eb"
+        },
+        {
+          "level": 6,
+          "width": 8,
+          "height": 8,
+          "astc_offset": 158320,
+          "astc_size": 64,
+          "astc_sha256": "54e6592ff62e097400d31a75231ff34de2d1b43c8f3167778023bec4180b7b95",
+          "rgba_offset": 1397760,
+          "rgba_size": 256,
+          "rgba_sha256": "c4cdae313d0d59206682f7a7ddd5989f0190632fc857f8f476e75e0caf4081dd"
+        },
+        {
+          "level": 7,
+          "width": 4,
+          "height": 4,
+          "astc_offset": 158384,
+          "astc_size": 16,
+          "astc_sha256": "9ed14784358f1e1324580b907221638a3d0e4e0ebbee844b5fcfbd790debef49",
+          "rgba_offset": 1398016,
+          "rgba_size": 64,
+          "rgba_sha256": "b8411abef788420013b65fd475df34935d8d1666917c3451edb954849de114fc"
+        },
+        {
+          "level": 8,
+          "width": 2,
+          "height": 2,
+          "astc_offset": 158400,
+          "astc_size": 16,
+          "astc_sha256": "cbe1a3d45ddae7c696e1fcade63b0f281e0d7f6d5e9e3ad9029b66b1746bb839",
+          "rgba_offset": 1398080,
+          "rgba_size": 16,
+          "rgba_sha256": "ca7c6321d06a3602d4956c6fd761366a21e5ac5bd4cf91b3d5dee7de50cc0164"
+        },
+        {
+          "level": 9,
+          "width": 1,
+          "height": 1,
+          "astc_offset": 158416,
+          "astc_size": 16,
+          "astc_sha256": "c82b1db39ecdba43106f9e0bb29959cf86003d6e09906797d7b851a20f7000fe",
+          "rgba_offset": 1398096,
+          "rgba_size": 4,
+          "rgba_sha256": "8925a91b6019ff138739ec7badd958954ce152653302b97dd5e1f0bdb427c054"
+        }
+      ],
+      "profile": "LDR_SRGB"
+    },
+    {
+      "identity": "cab-88f81a27d26535e17d6dc837d6d592a1:2480472313088213287",
+      "type": "Material",
+      "name": "CloudMask",
+      "source": {
+        "bundle": "defaultpackage_share_cdbda34d1d0a718844e0e1fef4348c9f.bundle",
+        "bundle_hash": "db62927fe2bd88c855676c3921f3d17a",
+        "path_id": "2480472313088213287",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/db62927fe2bd88c855676c3921f3d17a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 881,
+        "bundle_sha256": "b56324886eff77de5a5c061ba173fbeb6a55f4e8f5705d17b0376bfe08ecc5f0"
+      },
+      "object_sha256": "495c25c3e9279bbb50de2c9e774e1a06b76f22428551ae447115d695dfe8270c",
+      "output": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/CloudMask-f1dd7ee85de4.mat"
+    },
+    {
+      "identity": "cab-014000ed2538cb87d1aa4612be612002:1843727352357857538",
+      "type": "Shader",
+      "name": "Unlit/CloudMask",
+      "source": {
+        "bundle": "defaultpackage_unityshaders.bundle",
+        "bundle_hash": "465300f28c23d7564868393936041212",
+        "path_id": "1843727352357857538",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/465300f28c23d7564868393936041212.bundle",
+        "raw_size": 2909118,
+        "raw_sha256": "991da192cbcd00a1b3a2714b7ca649b7f416881f87b656dac17f5f1123da2e46"
+      },
+      "object_sha256": "58b56265fcb5e28902d351ee5f2a83e95addcd0b707272b7ba1aaa64b6295ab3",
+      "output": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/Unlit_CloudMask-bc2ec340ef20.shader",
+      "programs": [
+        {
+          "type": "kShaderGpuProgramGLES3",
+          "keywords": [],
+          "source_sha256": "c933562749cd3460a12a7e1b12b2df2d8568ebdae4ffde0df97ace260f5ab246"
+        }
+      ]
+    },
+    {
+      "mapClassId": 11,
+      "identity": "cab-5f7cf0d44f460185b80d9a5c65622a52:3212864228240453776",
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_11.bundle",
+        "bundle_hash": "ceddc0e3975126d068884b9690eccff4",
+        "path_id": "3212864228240453776",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ceddc0e3975126d068884b9690eccff4.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3009,
+        "bundle_sha256": "1eaff8529a74bbf5efbe2c59381b42b3695b0a50a73ac77c7d6d66560748c131"
+      },
+      "object_sha256": "35723f0b4647bc39ab6b22c29cfe5220441a15cfa64bca8b39f524c6f6f8b7ff"
+    },
+    {
+      "mapClassId": 11,
+      "identity": "cab-5f7cf0d44f460185b80d9a5c65622a52:-7782242374517591920",
+      "type": "GameObject",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_11.bundle",
+        "bundle_hash": "ceddc0e3975126d068884b9690eccff4",
+        "path_id": "-7782242374517591920",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ceddc0e3975126d068884b9690eccff4.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3009,
+        "bundle_sha256": "1eaff8529a74bbf5efbe2c59381b42b3695b0a50a73ac77c7d6d66560748c131"
+      },
+      "object_sha256": "2e54c224b707aae72204dcdfc3f21a06dd1ea88bb22a5c78823c76449c4cb322"
+    },
+    {
+      "mapClassId": 11,
+      "identity": "cab-5f7cf0d44f460185b80d9a5c65622a52:2751143193671954576",
+      "type": "Transform",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_11.bundle",
+        "bundle_hash": "ceddc0e3975126d068884b9690eccff4",
+        "path_id": "2751143193671954576",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ceddc0e3975126d068884b9690eccff4.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3009,
+        "bundle_sha256": "1eaff8529a74bbf5efbe2c59381b42b3695b0a50a73ac77c7d6d66560748c131"
+      },
+      "object_sha256": "b70d29eebaac3af7b048831a0e3cff25c1474a8748cbe4dff14fa55a387874be"
+    },
+    {
+      "mapClassId": 11,
+      "identity": "cab-5f7cf0d44f460185b80d9a5c65622a52:4314483498577293456",
+      "type": "MeshFilter",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_11.bundle",
+        "bundle_hash": "ceddc0e3975126d068884b9690eccff4",
+        "path_id": "4314483498577293456",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ceddc0e3975126d068884b9690eccff4.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3009,
+        "bundle_sha256": "1eaff8529a74bbf5efbe2c59381b42b3695b0a50a73ac77c7d6d66560748c131"
+      },
+      "object_sha256": "baa4e38e651735a64c410d0e6179198b801a3ee1b60912506ce76cd7897ffb3f"
+    },
+    {
+      "mapClassId": 11,
+      "identity": "cab-5f7cf0d44f460185b80d9a5c65622a52:6715132257262694544",
+      "type": "MeshRenderer",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_11.bundle",
+        "bundle_hash": "ceddc0e3975126d068884b9690eccff4",
+        "path_id": "6715132257262694544",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ceddc0e3975126d068884b9690eccff4.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3009,
+        "bundle_sha256": "1eaff8529a74bbf5efbe2c59381b42b3695b0a50a73ac77c7d6d66560748c131"
+      },
+      "object_sha256": "ccdf15caaa335ddf68e6ac8a29e51514a4436a372741dcf55d989ea731f77c96"
+    },
+    {
+      "mapClassId": 11,
+      "identity": "cab-5f7cf0d44f460185b80d9a5c65622a52:-8797325418464218992",
+      "type": "GameObject",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_11.bundle",
+        "bundle_hash": "ceddc0e3975126d068884b9690eccff4",
+        "path_id": "-8797325418464218992",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ceddc0e3975126d068884b9690eccff4.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3009,
+        "bundle_sha256": "1eaff8529a74bbf5efbe2c59381b42b3695b0a50a73ac77c7d6d66560748c131"
+      },
+      "object_sha256": "170f8e0535ba7ac75cbbd00e1f4a86e90d287aae2790a431a469d1c5827a2b58"
+    },
+    {
+      "mapClassId": 11,
+      "identity": "cab-5f7cf0d44f460185b80d9a5c65622a52:207579257461338256",
+      "type": "Transform",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_11.bundle",
+        "bundle_hash": "ceddc0e3975126d068884b9690eccff4",
+        "path_id": "207579257461338256",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ceddc0e3975126d068884b9690eccff4.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3009,
+        "bundle_sha256": "1eaff8529a74bbf5efbe2c59381b42b3695b0a50a73ac77c7d6d66560748c131"
+      },
+      "object_sha256": "291d5effe78a928fe241f415f7f37026e1b55e0c298147e648516557c7b8122b"
+    },
+    {
+      "identity": "cab-eaa358cf9769fc093e4daa6663e0710a:4311270437589710340",
+      "type": "Sprite",
+      "name": "CloudMask",
+      "source": {
+        "bundle": "defaultpackage_share_6bc65192913e359db63122edcce41e6f.bundle",
+        "bundle_hash": "45c0c0eaf6a770be5a5046abd7e50c30",
+        "path_id": "4311270437589710340",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/45c0c0eaf6a770be5a5046abd7e50c30.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 25072,
+        "bundle_sha256": "ee736c04b40614c50f76b5cc4dbd947fe601f6cbcf7ef2da7a370ce9f8c807a2"
+      },
+      "object_sha256": "ea5d2919ed1a0ec2b0446b6ec9c716a8b1bd7f10756cf53afcdd70adb71f3b02",
+      "output": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/CloudMask-f63667cdbfc0.asset"
+    },
+    {
+      "mapClassId": 11,
+      "identity": "cab-5f7cf0d44f460185b80d9a5c65622a52:7536783762300203152",
+      "type": "SpriteRenderer",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_11.bundle",
+        "bundle_hash": "ceddc0e3975126d068884b9690eccff4",
+        "path_id": "7536783762300203152",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ceddc0e3975126d068884b9690eccff4.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3009,
+        "bundle_sha256": "1eaff8529a74bbf5efbe2c59381b42b3695b0a50a73ac77c7d6d66560748c131"
+      },
+      "object_sha256": "3fa817e6f1cc1c178fa72383363da47b3396db6e41c01b66092017b17c7b159f"
+    },
+    {
+      "mapClassId": 12,
+      "identity": "cab-63e15b72981f201be6c5a5dcfe6a6135:4410472894704396867",
+      "type": "GameObject",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_12.bundle",
+        "bundle_hash": "43b4a5543a9a6721578f5c6c8f0537a0",
+        "path_id": "4410472894704396867",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/43b4a5543a9a6721578f5c6c8f0537a0.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2982,
+        "bundle_sha256": "6e3e9cd71f7f9ff3997f05c0a64dfe6ecc86d3bb72741a8189c9cfa4a9eec5f6"
+      },
+      "object_sha256": "544b210f2f844259ac54bcefb412444e600e07f394a85e67f4285b3eaab58a37"
+    },
+    {
+      "mapClassId": 12,
+      "identity": "cab-63e15b72981f201be6c5a5dcfe6a6135:1579643721543002691",
+      "type": "Transform",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_12.bundle",
+        "bundle_hash": "43b4a5543a9a6721578f5c6c8f0537a0",
+        "path_id": "1579643721543002691",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/43b4a5543a9a6721578f5c6c8f0537a0.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2982,
+        "bundle_sha256": "6e3e9cd71f7f9ff3997f05c0a64dfe6ecc86d3bb72741a8189c9cfa4a9eec5f6"
+      },
+      "object_sha256": "89bb700b57afe3b71f070b0f47e54804ff9b3d754fbb5d4473c4e79556097f11"
+    },
+    {
+      "mapClassId": 12,
+      "identity": "cab-63e15b72981f201be6c5a5dcfe6a6135:977795095284623939",
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_12.bundle",
+        "bundle_hash": "43b4a5543a9a6721578f5c6c8f0537a0",
+        "path_id": "977795095284623939",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/43b4a5543a9a6721578f5c6c8f0537a0.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2982,
+        "bundle_sha256": "6e3e9cd71f7f9ff3997f05c0a64dfe6ecc86d3bb72741a8189c9cfa4a9eec5f6"
+      },
+      "object_sha256": "35cdf344eba43685ef2649c4a6006aebc52b9c67af48cf18ee8141983831fc36"
+    },
+    {
+      "mapClassId": 12,
+      "identity": "cab-63e15b72981f201be6c5a5dcfe6a6135:2298588621264202307",
+      "type": "GameObject",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_12.bundle",
+        "bundle_hash": "43b4a5543a9a6721578f5c6c8f0537a0",
+        "path_id": "2298588621264202307",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/43b4a5543a9a6721578f5c6c8f0537a0.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2982,
+        "bundle_sha256": "6e3e9cd71f7f9ff3997f05c0a64dfe6ecc86d3bb72741a8189c9cfa4a9eec5f6"
+      },
+      "object_sha256": "24babb9ac482117207d75e67b5c28c7dd01b445c62b3da832d4d7106e25e18dc"
+    },
+    {
+      "mapClassId": 12,
+      "identity": "cab-63e15b72981f201be6c5a5dcfe6a6135:-4708904011151168957",
+      "type": "Transform",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_12.bundle",
+        "bundle_hash": "43b4a5543a9a6721578f5c6c8f0537a0",
+        "path_id": "-4708904011151168957",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/43b4a5543a9a6721578f5c6c8f0537a0.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2982,
+        "bundle_sha256": "6e3e9cd71f7f9ff3997f05c0a64dfe6ecc86d3bb72741a8189c9cfa4a9eec5f6"
+      },
+      "object_sha256": "26a31e7c7c472ed2191276c4fe39d515e52d25f82209dc320e27487d042114ce"
+    },
+    {
+      "mapClassId": 12,
+      "identity": "cab-63e15b72981f201be6c5a5dcfe6a6135:-3621751705817241021",
+      "type": "MeshFilter",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_12.bundle",
+        "bundle_hash": "43b4a5543a9a6721578f5c6c8f0537a0",
+        "path_id": "-3621751705817241021",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/43b4a5543a9a6721578f5c6c8f0537a0.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2982,
+        "bundle_sha256": "6e3e9cd71f7f9ff3997f05c0a64dfe6ecc86d3bb72741a8189c9cfa4a9eec5f6"
+      },
+      "object_sha256": "92f5622b30958e6481fb71dd56be03a4f1d18553834b0947bafbbe77dd4c4d24"
+    },
+    {
+      "mapClassId": 12,
+      "identity": "cab-63e15b72981f201be6c5a5dcfe6a6135:1691760016528779843",
+      "type": "MeshRenderer",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_12.bundle",
+        "bundle_hash": "43b4a5543a9a6721578f5c6c8f0537a0",
+        "path_id": "1691760016528779843",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/43b4a5543a9a6721578f5c6c8f0537a0.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2982,
+        "bundle_sha256": "6e3e9cd71f7f9ff3997f05c0a64dfe6ecc86d3bb72741a8189c9cfa4a9eec5f6"
+      },
+      "object_sha256": "33a7c7ed1fe5b7cc5e321ac7cf192336ae71da63a9a8d659eb2a619e3bcccf3b"
+    },
+    {
+      "mapClassId": 12,
+      "identity": "cab-63e15b72981f201be6c5a5dcfe6a6135:2475169527883573827",
+      "type": "GameObject",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_12.bundle",
+        "bundle_hash": "43b4a5543a9a6721578f5c6c8f0537a0",
+        "path_id": "2475169527883573827",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/43b4a5543a9a6721578f5c6c8f0537a0.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2982,
+        "bundle_sha256": "6e3e9cd71f7f9ff3997f05c0a64dfe6ecc86d3bb72741a8189c9cfa4a9eec5f6"
+      },
+      "object_sha256": "fa2f916eb2d6652e3ff9ed04d9fc7c104b66c9e49e8e8b62490d7fd293c78f49"
+    },
+    {
+      "mapClassId": 12,
+      "identity": "cab-63e15b72981f201be6c5a5dcfe6a6135:-1140299194719589821",
+      "type": "Transform",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_12.bundle",
+        "bundle_hash": "43b4a5543a9a6721578f5c6c8f0537a0",
+        "path_id": "-1140299194719589821",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/43b4a5543a9a6721578f5c6c8f0537a0.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2982,
+        "bundle_sha256": "6e3e9cd71f7f9ff3997f05c0a64dfe6ecc86d3bb72741a8189c9cfa4a9eec5f6"
+      },
+      "object_sha256": "f5d453eabde385d632be63289fa6f1506e6f021338099bc0e782f9c53970827b"
+    },
+    {
+      "mapClassId": 12,
+      "identity": "cab-63e15b72981f201be6c5a5dcfe6a6135:-3536594793313981885",
+      "type": "SpriteRenderer",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_12.bundle",
+        "bundle_hash": "43b4a5543a9a6721578f5c6c8f0537a0",
+        "path_id": "-3536594793313981885",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/43b4a5543a9a6721578f5c6c8f0537a0.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2982,
+        "bundle_sha256": "6e3e9cd71f7f9ff3997f05c0a64dfe6ecc86d3bb72741a8189c9cfa4a9eec5f6"
+      },
+      "object_sha256": "5c2e2540ad1dfc552892a496cd65676e542bca5e24c3678728df82e3abd432e8"
+    },
+    {
+      "mapClassId": 13,
+      "identity": "cab-3624f4c1fc4a880b85de0d2f48f89d2d:-9176292602916588229",
+      "type": "GameObject",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_13.bundle",
+        "bundle_hash": "3cb5995945731170f76c32f581866176",
+        "path_id": "-9176292602916588229",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/3cb5995945731170f76c32f581866176.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2977,
+        "bundle_sha256": "3f697d31a5efc5a87f98238dce5e5cfa3f2cfa35e7320f6f67272672b51a2492"
+      },
+      "object_sha256": "93a0f3e417c323acc7a208d31d05a4ffb1e180e7cc404a51e3570a3ee91d8268"
+    },
+    {
+      "mapClassId": 13,
+      "identity": "cab-3624f4c1fc4a880b85de0d2f48f89d2d:-7690058840973331141",
+      "type": "Transform",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_13.bundle",
+        "bundle_hash": "3cb5995945731170f76c32f581866176",
+        "path_id": "-7690058840973331141",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/3cb5995945731170f76c32f581866176.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2977,
+        "bundle_sha256": "3f697d31a5efc5a87f98238dce5e5cfa3f2cfa35e7320f6f67272672b51a2492"
+      },
+      "object_sha256": "53fd5fcc454cf59e8e611d2cf63f40f3431279e41ec5fc6c0df705296b4a6e2b"
+    },
+    {
+      "mapClassId": 13,
+      "identity": "cab-3624f4c1fc4a880b85de0d2f48f89d2d:-1299017259676748485",
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_13.bundle",
+        "bundle_hash": "3cb5995945731170f76c32f581866176",
+        "path_id": "-1299017259676748485",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/3cb5995945731170f76c32f581866176.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2977,
+        "bundle_sha256": "3f697d31a5efc5a87f98238dce5e5cfa3f2cfa35e7320f6f67272672b51a2492"
+      },
+      "object_sha256": "8d6bfbac614d22419bbe16103c8890cf7f2b792bbe4095ffab89f5acf377ac4d"
+    },
+    {
+      "mapClassId": 13,
+      "identity": "cab-3624f4c1fc4a880b85de0d2f48f89d2d:-339129499806943941",
+      "type": "GameObject",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_13.bundle",
+        "bundle_hash": "3cb5995945731170f76c32f581866176",
+        "path_id": "-339129499806943941",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/3cb5995945731170f76c32f581866176.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2977,
+        "bundle_sha256": "3f697d31a5efc5a87f98238dce5e5cfa3f2cfa35e7320f6f67272672b51a2492"
+      },
+      "object_sha256": "1c22fc34c6d2dd8f8a35adddc858bc806f83df2451e5534a29abe51241568771"
+    },
+    {
+      "mapClassId": 13,
+      "identity": "cab-3624f4c1fc4a880b85de0d2f48f89d2d:-2912885154815363781",
+      "type": "Transform",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_13.bundle",
+        "bundle_hash": "3cb5995945731170f76c32f581866176",
+        "path_id": "-2912885154815363781",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/3cb5995945731170f76c32f581866176.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2977,
+        "bundle_sha256": "3f697d31a5efc5a87f98238dce5e5cfa3f2cfa35e7320f6f67272672b51a2492"
+      },
+      "object_sha256": "977a2a20381ff13744276e9da462a590be838dd89578038c3c30d2dd7cc10b30"
+    },
+    {
+      "mapClassId": 13,
+      "identity": "cab-3624f4c1fc4a880b85de0d2f48f89d2d:-2847871273864219333",
+      "type": "MeshFilter",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_13.bundle",
+        "bundle_hash": "3cb5995945731170f76c32f581866176",
+        "path_id": "-2847871273864219333",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/3cb5995945731170f76c32f581866176.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2977,
+        "bundle_sha256": "3f697d31a5efc5a87f98238dce5e5cfa3f2cfa35e7320f6f67272672b51a2492"
+      },
+      "object_sha256": "309e47a40f9652f7d14ccb239bd7fd70778c085ca9f4b8b9b31f35737c2b7ab1"
+    },
+    {
+      "mapClassId": 13,
+      "identity": "cab-3624f4c1fc4a880b85de0d2f48f89d2d:-6601903198542252741",
+      "type": "MeshRenderer",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_13.bundle",
+        "bundle_hash": "3cb5995945731170f76c32f581866176",
+        "path_id": "-6601903198542252741",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/3cb5995945731170f76c32f581866176.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2977,
+        "bundle_sha256": "3f697d31a5efc5a87f98238dce5e5cfa3f2cfa35e7320f6f67272672b51a2492"
+      },
+      "object_sha256": "5553b0f20cd32feba4530af1e925514cc419e8bf6467e0814dae1e90a14533b0"
+    },
+    {
+      "mapClassId": 13,
+      "identity": "cab-3624f4c1fc4a880b85de0d2f48f89d2d:-584684807355779781",
+      "type": "GameObject",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_13.bundle",
+        "bundle_hash": "3cb5995945731170f76c32f581866176",
+        "path_id": "-584684807355779781",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/3cb5995945731170f76c32f581866176.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2977,
+        "bundle_sha256": "3f697d31a5efc5a87f98238dce5e5cfa3f2cfa35e7320f6f67272672b51a2492"
+      },
+      "object_sha256": "d270edaadb181029de7ea38d9bbb50a0fa1936add6911de44af91ea107461a4c"
+    },
+    {
+      "mapClassId": 13,
+      "identity": "cab-3624f4c1fc4a880b85de0d2f48f89d2d:61018755479549243",
+      "type": "Transform",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_13.bundle",
+        "bundle_hash": "3cb5995945731170f76c32f581866176",
+        "path_id": "61018755479549243",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/3cb5995945731170f76c32f581866176.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2977,
+        "bundle_sha256": "3f697d31a5efc5a87f98238dce5e5cfa3f2cfa35e7320f6f67272672b51a2492"
+      },
+      "object_sha256": "d37b23aedfb74c76764371866271709d902e782096c1e4623dba1c3fe1ef549c"
+    },
+    {
+      "mapClassId": 13,
+      "identity": "cab-3624f4c1fc4a880b85de0d2f48f89d2d:2422908581828080955",
+      "type": "SpriteRenderer",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_13.bundle",
+        "bundle_hash": "3cb5995945731170f76c32f581866176",
+        "path_id": "2422908581828080955",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/3cb5995945731170f76c32f581866176.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2977,
+        "bundle_sha256": "3f697d31a5efc5a87f98238dce5e5cfa3f2cfa35e7320f6f67272672b51a2492"
+      },
+      "object_sha256": "07bace6711c4918f1672ed4bede3adb2dfbf6be78a57b7e059b2a25a93308cea"
+    },
+    {
+      "mapClassId": 16,
+      "identity": "cab-dc658d7eda6525a417ff78cbbc5cc2a7:-3736877809665640967",
+      "type": "GameObject",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_16.bundle",
+        "bundle_hash": "291306239d0df6146104de33d1397fa7",
+        "path_id": "-3736877809665640967",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/291306239d0df6146104de33d1397fa7.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2958,
+        "bundle_sha256": "2e51aea3aab063f0be789dbd0d9f0832ed7bc0aee586e3386baa7a6d8baaef2a"
+      },
+      "object_sha256": "c6ea6315e1ea1a68f8bca0f67005275749a4947434754f442ee453fba7f8d2b5"
+    },
+    {
+      "mapClassId": 16,
+      "identity": "cab-dc658d7eda6525a417ff78cbbc5cc2a7:-6028976244557810183",
+      "type": "Transform",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_16.bundle",
+        "bundle_hash": "291306239d0df6146104de33d1397fa7",
+        "path_id": "-6028976244557810183",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/291306239d0df6146104de33d1397fa7.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2958,
+        "bundle_sha256": "2e51aea3aab063f0be789dbd0d9f0832ed7bc0aee586e3386baa7a6d8baaef2a"
+      },
+      "object_sha256": "1e88e22df055eb09f11f8f6f6305ad99294b7a6a246be649a5b8b7d43754d3dd"
+    },
+    {
+      "mapClassId": 16,
+      "identity": "cab-dc658d7eda6525a417ff78cbbc5cc2a7:-1045534793159281159",
+      "type": "MonoBehaviour",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_16.bundle",
+        "bundle_hash": "291306239d0df6146104de33d1397fa7",
+        "path_id": "-1045534793159281159",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/291306239d0df6146104de33d1397fa7.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2958,
+        "bundle_sha256": "2e51aea3aab063f0be789dbd0d9f0832ed7bc0aee586e3386baa7a6d8baaef2a"
+      },
+      "object_sha256": "a58fe511781314b6440017c561de6f6c170e3af949a5fae8dd6a782e6c5a9503"
+    },
+    {
+      "mapClassId": 16,
+      "identity": "cab-dc658d7eda6525a417ff78cbbc5cc2a7:-8504939599514110471",
+      "type": "GameObject",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_16.bundle",
+        "bundle_hash": "291306239d0df6146104de33d1397fa7",
+        "path_id": "-8504939599514110471",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/291306239d0df6146104de33d1397fa7.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2958,
+        "bundle_sha256": "2e51aea3aab063f0be789dbd0d9f0832ed7bc0aee586e3386baa7a6d8baaef2a"
+      },
+      "object_sha256": "1b1ce099755106bceb09283affd2ae81ab6caca9ca4a47a962f568f3b5f6316d"
+    },
+    {
+      "mapClassId": 16,
+      "identity": "cab-dc658d7eda6525a417ff78cbbc5cc2a7:8280179840457045497",
+      "type": "Transform",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_16.bundle",
+        "bundle_hash": "291306239d0df6146104de33d1397fa7",
+        "path_id": "8280179840457045497",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/291306239d0df6146104de33d1397fa7.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2958,
+        "bundle_sha256": "2e51aea3aab063f0be789dbd0d9f0832ed7bc0aee586e3386baa7a6d8baaef2a"
+      },
+      "object_sha256": "cdb5d5d2a4816be0fc4afa2917ae3b6abf9ac17aa52ebe73d635c97a8c062269"
+    },
+    {
+      "mapClassId": 16,
+      "identity": "cab-dc658d7eda6525a417ff78cbbc5cc2a7:4662261020651812345",
+      "type": "MeshFilter",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_16.bundle",
+        "bundle_hash": "291306239d0df6146104de33d1397fa7",
+        "path_id": "4662261020651812345",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/291306239d0df6146104de33d1397fa7.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2958,
+        "bundle_sha256": "2e51aea3aab063f0be789dbd0d9f0832ed7bc0aee586e3386baa7a6d8baaef2a"
+      },
+      "object_sha256": "113b5e7807b64e37664b0138e4996f146b300dd490663b935ae3ba352d9129a5"
+    },
+    {
+      "mapClassId": 16,
+      "identity": "cab-dc658d7eda6525a417ff78cbbc5cc2a7:-2522834606051559943",
+      "type": "MeshRenderer",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_16.bundle",
+        "bundle_hash": "291306239d0df6146104de33d1397fa7",
+        "path_id": "-2522834606051559943",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/291306239d0df6146104de33d1397fa7.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2958,
+        "bundle_sha256": "2e51aea3aab063f0be789dbd0d9f0832ed7bc0aee586e3386baa7a6d8baaef2a"
+      },
+      "object_sha256": "ed88c0660300e698068d00731f40ad54899dfaeb172e2420caa4b2953997d4e1"
+    },
+    {
+      "mapClassId": 16,
+      "identity": "cab-dc658d7eda6525a417ff78cbbc5cc2a7:-8721752655724939783",
+      "type": "GameObject",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_16.bundle",
+        "bundle_hash": "291306239d0df6146104de33d1397fa7",
+        "path_id": "-8721752655724939783",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/291306239d0df6146104de33d1397fa7.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2958,
+        "bundle_sha256": "2e51aea3aab063f0be789dbd0d9f0832ed7bc0aee586e3386baa7a6d8baaef2a"
+      },
+      "object_sha256": "a34e7d535b9879654e2bd07e03ba10a0b9ff6a9cb055d93c61b720a26a56698d"
+    },
+    {
+      "mapClassId": 16,
+      "identity": "cab-dc658d7eda6525a417ff78cbbc5cc2a7:4042039529914627577",
+      "type": "Transform",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_16.bundle",
+        "bundle_hash": "291306239d0df6146104de33d1397fa7",
+        "path_id": "4042039529914627577",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/291306239d0df6146104de33d1397fa7.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2958,
+        "bundle_sha256": "2e51aea3aab063f0be789dbd0d9f0832ed7bc0aee586e3386baa7a6d8baaef2a"
+      },
+      "object_sha256": "054c12a4c9c255e3b610bf8b0806ea2cfe83d78269094e98c5922c1424166864"
+    },
+    {
+      "identity": "cab-014000ed2538cb87d1aa4612be612002:-7504259843138580660",
+      "type": "Material",
+      "name": "Sprites-Default",
+      "source": {
+        "bundle": "defaultpackage_unityshaders.bundle",
+        "bundle_hash": "465300f28c23d7564868393936041212",
+        "path_id": "-7504259843138580660",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/465300f28c23d7564868393936041212.bundle",
+        "raw_size": 2909118,
+        "raw_sha256": "991da192cbcd00a1b3a2714b7ca649b7f416881f87b656dac17f5f1123da2e46"
+      },
+      "object_sha256": "442b0fb54cfb17fa1a6b66f2d9609745a1b2b13e9dccc6d4b652b8c54a7bae03",
+      "output": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/Sprites-Default-305e57d012cf.mat"
+    },
+    {
+      "identity": "cab-014000ed2538cb87d1aa4612be612002:3262840161956400972",
+      "type": "Shader",
+      "name": "Sprites/Default",
+      "source": {
+        "bundle": "defaultpackage_unityshaders.bundle",
+        "bundle_hash": "465300f28c23d7564868393936041212",
+        "path_id": "3262840161956400972",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/465300f28c23d7564868393936041212.bundle",
+        "raw_size": 2909118,
+        "raw_sha256": "991da192cbcd00a1b3a2714b7ca649b7f416881f87b656dac17f5f1123da2e46"
+      },
+      "object_sha256": "83afafe0799c1a3c72386cab6a069c3ba52bd38c8271189a2a4ed2e14373790c",
+      "output": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/Sprites_Default-d2a609d20610.shader",
+      "programs": [
+        {
+          "type": "kShaderGpuProgramGLES3",
+          "keywords": [],
+          "source_sha256": "469d4a8e5a8c41fbf02e97b1e37421a43452a448612dd76aa5aed086d51fed55"
+        },
+        {
+          "type": "kShaderGpuProgramGLES3",
+          "keywords": [
+            "PIXELSNAP_ON"
+          ],
+          "source_sha256": "9b2eae5a9ef7e26bf4cd9ac294d61ef00fc44a31fba44c37df67e893c4486c8a"
+        },
+        {
+          "type": "kShaderGpuProgramGLES3",
+          "keywords": [
+            "ETC1_EXTERNAL_ALPHA"
+          ],
+          "source_sha256": "80ef5fbded5e3d056b47d638ecce461d05004f985fb6c0ad4b668b72f24f4824"
+        },
+        {
+          "type": "kShaderGpuProgramGLES3",
+          "keywords": [
+            "ETC1_EXTERNAL_ALPHA",
+            "PIXELSNAP_ON"
+          ],
+          "source_sha256": "3390e8252c8f586eaad76f0bc120e9a39c7f97debb7dc9ed60055e13f88226f9"
+        }
+      ]
+    },
+    {
+      "mapClassId": 16,
+      "identity": "cab-dc658d7eda6525a417ff78cbbc5cc2a7:1737015579129083385",
+      "type": "SpriteRenderer",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_map_maproot_maproot_16.bundle",
+        "bundle_hash": "291306239d0df6146104de33d1397fa7",
+        "path_id": "1737015579129083385",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/291306239d0df6146104de33d1397fa7.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2958,
+        "bundle_sha256": "2e51aea3aab063f0be789dbd0d9f0832ed7bc0aee586e3386baa7a6d8baaef2a"
+      },
+      "object_sha256": "92f82ea450668b333d68d9f11e60e537b825cf5b4b6f06897832be6ba7e8c23a"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/Cloud-6e11bdd5b099.mat",
+      "sha256": "71176ed9ff1e47e9cac851c79b92e56b754e2be8c8cf87e08fb7286d09e47e70"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/Cloud-6e11bdd5b099.mat.meta",
+      "sha256": "60f394ede49312c504d96b205fb99833425b03fab397098a78d9c20c63396f8f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/CloudDisappear-ec94ad68015e.mat",
+      "sha256": "79367dcd7b600c380ed087db4d028c156f090b9230734a8081c873acc5253c72"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/CloudDisappear-ec94ad68015e.mat.meta",
+      "sha256": "afdfa68f5641317c23976582e47cb05122d55c424d7cbd68f196047bfa4010de"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/CloudMask-441ca5f3cedf.asset",
+      "sha256": "b69a6a99723f38910e4dc8be5ff059976e18b9d889f013a1e20c3cb06a95be8b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/CloudMask-441ca5f3cedf.asset.meta",
+      "sha256": "fb73907b1bc788fbd95ae650dd06978631d2e0f56fdb4a2661eec418e3ffaa39"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/CloudMask-f1dd7ee85de4.mat",
+      "sha256": "b3098a8e439dd84abf03f7710b0706a0406252f66e4d85a2f04be3e313d95ba4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/CloudMask-f1dd7ee85de4.mat.meta",
+      "sha256": "ee264949b5263915f3df9d42334c6e301faac318f3389ea7626f90c5eea05ecf"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/CloudMask-f63667cdbfc0.asset",
+      "sha256": "c88c42abc030b88b81307f68159c49c4cb41287a5a37bdb964914a8721849342"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/CloudMask-f63667cdbfc0.asset.meta",
+      "sha256": "f84f7518e1f4d40e93d8033b10d26ff200583ff74478906cfb7c24bae10e0e1a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/CloudNoise02-d6aeb3864929.asset",
+      "sha256": "ec052ccabe24bf8bf9b4d78e17819fda25dd97b2f035aed2fdc08a1a199600fa"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/CloudNoise02-d6aeb3864929.asset.meta",
+      "sha256": "d964353d306fa67d21cdfaef444fedd8ddfa44f4b47f857ce8360982400f8c90"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/CloudShape02-5be5bec3bd59.asset",
+      "sha256": "33c0dac9ad2cb4c166af59ec856f79da2ac6e00a75d6f192e45442d7c576f3ad"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/CloudShape02-5be5bec3bd59.asset.meta",
+      "sha256": "871b5d0e2f911ce99d2dee0a01bb87211c24297f910c01de8e667ca746e2f84c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/Sprites-Default-305e57d012cf.mat",
+      "sha256": "a5fc59f6a9da799137b6d4ea51fec94b9878547fb50d3b6dbb8d5efc1426f103"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/Sprites-Default-305e57d012cf.mat.meta",
+      "sha256": "196e2b11b40e9b64671853e79962693d11d6da960bccebf0e58e028405130351"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/Sprites_Default-d2a609d20610.shader",
+      "sha256": "1dd38017de271b1209dd4d7267840daba930dd9182e6d0814168b1bef4ef5e0b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/Sprites_Default-d2a609d20610.shader.meta",
+      "sha256": "1ccb14df09c99fb2704b4ef0792d9d74a6827b500ae0521dd8d297d17492339f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/Unlit_Cloud-e4b65d9159bd.shader",
+      "sha256": "ccaacad4b84287b5d9c73c163ea4c8c0999896a7fe0df91aab0ed88d2d7bcb77"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/Unlit_Cloud-e4b65d9159bd.shader.meta",
+      "sha256": "53f07005f7d6535ead07393a43354864d9b4f56ef9455f6b5ebd3fd8c2310e7d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/Unlit_CloudDisappear-1a70a275e166.shader",
+      "sha256": "ee855954faa0ae19eb08570c104ec5888f9e75a023e3776c22ad49942542dbea"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/Unlit_CloudDisappear-1a70a275e166.shader.meta",
+      "sha256": "7607d83d3f3a4b2360526c6adca467053f3a6285de340dbf79b6d4e684a65a81"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/Unlit_CloudMask-bc2ec340ef20.shader",
+      "sha256": "0ec20c0e76cdf21b566a953edf9f1116d79c82e078c290e611b32568481e1caa"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets/Unlit_CloudMask-bc2ec340ef20.shader.meta",
+      "sha256": "cd40d2c6fb2f868aa0b782d714bd11b4d50d3f9c98b6f2d3d5718c703b479297"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Assets.meta",
+      "sha256": "f43e568c4f1945d6425b40ef2fdc78bcae69d8687976aaa0ccebb2962e6f4434"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Map11.prefab",
+      "sha256": "3f4ff1d9f74ba9efa43d03dd091dc811af23f92b583707dd846eb0cd9e7d165d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Map11.prefab.meta",
+      "sha256": "ed97eee519b37adebf675912f8e551e2737528abf7d24b7eae087e79fff11527"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Map12.prefab",
+      "sha256": "5a129290159d3bc5a46cded1b395e066cdfa2fc86086be58e9d8a5dae193034f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Map12.prefab.meta",
+      "sha256": "c7e49994cdc6c43e1f606bab9eb520a9109b2a2b30f17df137cfe9db2994c6e9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Map13.prefab",
+      "sha256": "c60e76e80b59324bc8817fb1b8832f5eac37286df4d1d65eda5281873bb799e9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Map13.prefab.meta",
+      "sha256": "6b9c0331c5fc5d455a728198789c1ad7baa593779c6bc21f57fb0c3eee7d1eda"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Map16.prefab",
+      "sha256": "3d4a4ad96671e962a9ea8aa77584e3849a14bbbcd07bef8df10f19a38e893899"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog/Map16.prefab.meta",
+      "sha256": "e0a51cc90415941f41227031b73b9683d49af6d17de9978a3dd0252ef460e1ac"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline/Fog.meta",
+      "sha256": "069148523883d7b5a057e22f266ebaba7871987c865a5e1fa5d478bf33259a03"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World/Mainline.meta",
+      "sha256": "25fe6149537443f1ba763d154175fbf880bca3d71662e2d53f039bbe098da9e8"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources/World.meta",
+      "sha256": "90fc87e5cec7799483a7e06ede176a018bf3ca81eff5d971eab4769b69f1b98f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Mainline/Fog/Resources.meta",
+      "sha256": "c5ec8224ad2744ac6f82de705a86d7c1e7157f6a2db451d685a2df73aaf26757"
+    }
+  ],
+  "agent": {
+    "original": {
+      "path": ".tools/source-packages/official-code/client-source/MyGridVisibilityAgent.cs",
+      "sha256": "a78d152074f9aae61537d5a8274b0501978dbb9f12105a015318d3ef6e358ab4"
+    },
+    "migrated": {
+      "path": "unity/Assets/Game/Runtime/Official/MapRootFog/LocalGridVisibilityAgent.cs",
+      "sha256": "dcefe5713457fd2f304f9b69601e2d2681f71a4c761c5f23f88f3a6a9a8bf3a5"
+    },
+    "adaptation": "Replace only DI/entity lifecycle, original ground/visibility wrappers and transfer/UI-character lookups with local inputs; complete original agent event/reveal/ban/target implementation retained."
+  },
+  "operation": "Extract the exact original map-root cloud GameObject subtree and component order; detach only its outer parent. Restore all pointer dependencies, native Sprite geometry, ASTC mip chains, original material properties/pass programs and explicit migrated CloudController2 MonoScript binding. Current resources and historical code identity are recorded separately.",
+  "tool": {
+    "path": "scripts/prepare_mainline_grid_fog.py",
+    "sha256": "38e851ca44bbe26b5f8cdd96b406275c1a44d136ae48ab3159560708044a5e9d"
+  },
+  "conversion_tools": [
+    {
+      "path": "scripts/official_apk.py",
+      "sha256": "ffc722b06e62bacc6689d98a7910562527fbcacc1c512c05e57a21bb8aa0ea46"
+    },
+    {
+      "path": "scripts/official_unity_schema.py",
+      "sha256": "934af3c56159da97a5c6d97a1412547b3ca847f71303bd961bbd37bee8b3aceb"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_native_scene.py",
+      "sha256": "64548e5dc5cf77322f20ecf0f6f8627f4ee85aff2d724036e7fead73b90382b1"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_native_sprite_yaml.py",
+      "sha256": "14dfe9eb5e89760f862abccda6bfee2ee1a97447454c2d98124e3dff210b763e"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_water_shaders.py",
+      "sha256": "da5022fd9f2fb6502e3e629c1c5acf5c5ce158bfc6ceba52f809b5bd5b1052a8"
+    }
+  ]
+}

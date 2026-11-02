@@ -311,6 +311,8 @@ Map13 原剧情 prefab Windows 转换与 NPC 序列：固定 871_156598 的 278 
 
 - 共享可见性消费数据 Map13VisibilityData 已开放虚拟访问器与变更方法，以便龙之国投影直接消费原 VisibilityComponent；默认的增删标志运算和事件派发顺序保持原官方实现。龙之国四类整根雕像的隔离 Play Mode 已覆盖原字段、原增删事件及投影释放；这不代表泽之国正式地图／玩家／交互已接通。生成器 scripts/prepare_unity_map13_entity_visibility_views.py，来源见[共享可见性消费来源](../../assets/reference/official-map/map13-entity-visibility-views-source-manifest.json)及[龙之国原共享绑定](map-14.md)。
 
+公共白雾路径已接入正式 Map13 入口：网格状态仍使用已有 871 输入及存档，雾层 subtree 与依赖显式使用当前选择的 884_156692 资源。两版 `CloudController2` 的归一化源码 SHA256 一致；新来源未覆盖旧来源记录。`scripts/prepare_mainline_grid_fog.py` 从官方 MapRoot_13 中提取 `myVisibilitySlot` 的原 10 个对象、原 Sprite 网格、纹理全部 mip、材质字段与 shader 程序，移除外层父引用后绑定已迁移脚本；Windows 资源入口为 `Resources/World/Mainline/Fog/Map13`，清单为 [公共白雾来源](../../assets/reference/official-map/mainline-grid-fog-source-manifest.json)。正式宿主在恢复可见性与建立原 URP 地形后创建公共雾层，结束时先退订事件再释放网格。静态元数据检查（85,027 GUID）和 `ProjectTools.Validate` 通过。新路径已通过 Unity 2022.3.57f1c2 编译及带图形 Play Mode：正式入口 (113,233) 的 57,600 格雾层与压缩存档逐格一致；模拟鼠标地图点击移至 (114,233)，可见格由67增至80，原扩散结束后全部格一致；退出重开后坐标与存档字节不变，80个可见格恢复。原 Sprite／纹理／受支持 shader 与实际云网格均已检查，入口／移动后／恢复截图已实际查看。该验证未覆盖女神交互清雾、跨图传送揭雾、全部剧情、其他地图或 Windows Player；未据此声明整图或完整功能发布。
+
 ## 自定义实现
 
 已确认的跟随者单机方案：`AddNpcFollowerNode` 按节点配置将 8402／8440／8441／8442 去重写入持久化跟随者列表，`RemovePlayerNpcFollowerAllNode` 清空。用户允许手动实现缺失显示类，现已补入 `OfficialMap13NpcFollowerView`；地图宿主管理跟随移动和持久化，显示类交由 `OfficialNativeNpcModelView` 管理模型、原材质及动画生命周期。该模块复用经逐项核对一致的 Map12／Map13 两份官方骨骼与 Atlas 数据包，恢复原合并皮肤、五张原图集、五份原材质、原 shader 和 NPC 模型变换。8402 原缩放为 (0.23,0.23,1)，其余三者为 (0.3,0.3,1)，模型偏移为 (0,-0.5,-0.5)。

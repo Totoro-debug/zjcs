@@ -70,6 +70,8 @@
 
 通天塔原炮口震屏：`prepare_map15_impulse.py` 从固定 APK／匹配原 CDN 的世界场景读取唯一自由虚拟相机的 `CinemachineImpulseListener`、原五类炮口／镜面 `MyGridTransform` 和 `WorldGamePlay_part1.g.bytes` 的真实中心，输出 `assets/official/map15-impulse.json`，须加入 Unity 显式加载清单。震屏片段及原 NoiseSettings 随 `tower-cannons-source-manifest.json` 保留；本项独立 `tower-impulse-source-manifest.json` 保留 18 个原 Unity 对象、输入输出哈希、固定 APK `libunity.so` 原 ARM64 `Mathf.PerlinNoise` 函数／512 项置换表／归一化常量区段哈希、官方 Cinemachine 2.9.7 UPM 包实际 URL 和归档／源码哈希。`scripts/fixtures/map15-perlin-native.json` 的 56 组输入输出由 Unicorn 独立执行原 ARM64 入口产生；原三维距离、传播速度、包络、随机相位、指数衰减和监听器配置直接采用，二维呈现接收原 XY 位移；不新增原场景未配置的次级反应。
 
+公共网格输入已从当前所选 `884_156692` 的 APK／已校验缓存单独提取：140×120 网格、43 份区域揭格列表、61 份身体模板、1021 个实体放置，角色与视野按原根配置传入。资源入口为 `Resources/World/Mainline/Visibility/Map16/visibility` 与 `bodies`。原 `MapRoot_16` 的完整雾层 subtree 与依赖已转换为 `Resources/World/Mainline/Fog/Map16`。来源与输出哈希见[公共网格输入清单](../../assets/reference/official-map/mainline-grid-visibility-data-source-manifest.json)及[公共雾层清单](../../assets/reference/official-map/mainline-grid-fog-source-manifest.json)。这批是当前版本的独立载荷，未覆盖历史输入；尚未接入本地图正式宿主，不表示完整地图或 Windows Player 已完成。
+
 ## 自定义实现
 
 原客户端 `AloneWorldMapEntryItemContentCommonBase.FinshAward` 仅提供 `OperPlayerAloneMapFinshAward(16)` 请求，包内没有服务端领取实现。经用户明确允许，单机在本地按原奖励规则 `770／771` 发放钻石 200、金币 80000，并持久化一次性领取记录；奖励、剧情、随机状态和领取记录同事务写盘，失败回滚，冷加载后防止重复领取。领奖表现按原 `SourceOperate.AloneMapAward=222`、`def_award_handler[222].AwardStyle=Popup` 调用项目已转换的 `AwardPanel`，保留两种货币图标、数量及延迟关闭交互；原生。

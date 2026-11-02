@@ -19,6 +19,9 @@ using Zjcs.Presentation.World;
 using Zjcs.Presentation.World.NativeMap13;
 using Zjcs.Official.World;
 using Zjcs.Offline.World.NativeMap13TreeEntities;
+using Zjcs.Offline.World.MapGridVisibility;
+using Zjcs.Official.MapRootFog;
+using Zjcs.Official.World.NativeTerrain.Common;
 
 namespace Zjcs.Editor.Map13Mainline
 {
@@ -127,6 +130,7 @@ namespace Zjcs.Editor.Map13Mainline
             Require((int)Call(runtime,"GetDefaultEntryId")==11001&&initial.Equals(new MapGridPoint(113,233)),"Original TbMapWorldInfo.DefEntryId 11001 and its (113,233) placement were not used.");
             Require(Field<object>(runtime,"map13GridVisibility")!=null,"Formal original grid component is not bound.");
             yield return new WaitForSecondsRealtime(2);Canvas.ForceUpdateCanvases();
+            int initialVisible=CheckFog(runtime);
             ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map13-formal-entry.png"));yield return new WaitForSecondsRealtime(.5f);
             var camera=Field<Camera>(runtime,"worldCamera");var session=Field<OfficialWorldMapSession>(runtime,"session");
             MapGridPoint target=initial;Vector2 screen=default;bool found=false;
@@ -144,6 +148,8 @@ namespace Zjcs.Editor.Map13Mainline
             bool sent=false;runtime.PointerPressProvider=()=>{if(sent)return null;sent=true;return screen;};
             deadline=Time.realtimeSinceStartup+15;while(!Field<MapGridPoint>(navigation,"currentGrid").Equals(target)&&Time.realtimeSinceStartup<deadline)yield return null;
             runtime.PointerPressProvider=()=>null;Require(sent&&Field<MapGridPoint>(navigation,"currentGrid").Equals(target),"Simulated map pointer did not move the formal player.");
+            yield return new WaitForSecondsRealtime(2);
+            Require(CheckFog(runtime)>initialVisible,"Simulated movement did not reveal additional original fog cells.");
             string mapSave=Path.Combine(slots.GetSlotDirectory(slot),"map-13-save.json");
             var before=JsonUtility.FromJson<VisibilitySave>(File.ReadAllText(mapSave));Require(!string.IsNullOrEmpty(before.map13GridVisibility),"Formal map save omitted original compressed visibility.");
             ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map13-formal-moved.png"));yield return new WaitForSecondsRealtime(.5f);
@@ -151,6 +157,7 @@ namespace Zjcs.Editor.Map13Mainline
             runtime=Open(slot,saves,canvas.transform);yield return new WaitForSecondsRealtime(3);
             Require(Field<MapGridPoint>(Field<object>(runtime,"navigation"),"currentGrid").Equals(target),"Formal map position did not survive reopen.");
             var after=JsonUtility.FromJson<VisibilitySave>(File.ReadAllText(mapSave));Require(before.map13GridVisibility==after.map13GridVisibility,"Formal visibility bytes changed on cold reopen.");
+            CheckFog(runtime);
             ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map13-formal-restored.png"));yield return new WaitForSecondsRealtime(.5f);
             Call(runtime,"CloseMap");yield return null;yield return null;
             if(SessionState.GetBool(Key+".trees",false))yield return TreeSteps(slot,saves,canvas.transform,mapSave);
@@ -220,6 +227,24 @@ namespace Zjcs.Editor.Map13Mainline
             }
         }
         [Serializable]private sealed class TreeSave{public int[] completedEntityPlacements;}
+        private static int CheckFog(OfficialMainlineMapRuntime runtime)
+        {
+            var visibility=Field<OfflineMapGridVisibility>(runtime,"map13GridVisibility");
+            var clouds=UnityEngine.Object.FindObjectsOfType<CloudController2>();
+            Require(clouds.Length==1&&Field<object>(runtime,"gridFog")!=null,"Formal map must own one original common fog instance.");
+            var cloud=clouds[0];
+            Require(cloud.CloudTemplate.sprite&&cloud.CloudTemplate.sprite.texture.width>0&&cloud.Cloud.sharedMaterial.shader.isSupported,
+                "Original fog sprite/texture/shader binding is incomplete.");
+            Require(cloud.Cloud.GetComponent<MeshFilter>().sharedMesh.vertexCount>0,"Original live fog geometry was not rendered.");
+            int visible=0;
+            for(int y=0;y<visibility.Component.Height;y++)for(int x=0;x<visibility.Component.Width;x++)
+            {
+                var p=new Pos2d(x,y);bool clear=visibility.IsVisible(p);if(clear)visible++;
+                Require(cloud.Contains(p)!=clear,"Original cloud state differs from saved visibility at "+p);
+            }
+            Debug.Log("Formal common fog matched every original map cell; visible="+visible);
+            return visible;
+        }
         private static OfficialMainlineMapRuntime Open(string slot,string saves,Transform ui)
         {
             var model=CharacterCreationNativeModelFactory.CreateWorldModel(slot,saves,out string name);

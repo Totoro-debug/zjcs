@@ -80,6 +80,12 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 
 `SharedMapGridVisibilityAcceptance.Run` 已通过 Unity 2022.3.57f1c2 编译与规则执行：原 Map13 的 148 份身体模板、2,690 份放置、106 地区、57,600 格和 RLE 冷读字节保持一致；四组 17×9 接口夹具验证不同地图身份、角色模板、半径、实例隔离、移动与公开地区、存档及损坏游程拒绝。夹具不代表相应地图已迁移。静态元数据检查与 `ProjectTools.Validate` 通过。图形 Play Mode 中的实际地图入口、移动与冷读范围见[泽之国](../maps/map-13.md)，不据规则测试声明白雾画面或其他地图完成。
 
+公共白雾 Module 位于 `Presentation/World/Mainline/OfficialMainlineGridFog.cs`，以原根 prefab、相机、地形坐标、公共可见性实例和玩家／传送坐标为 Interface，内部完成原 prefab 实例化、独立材质、原 `CloudController2` 初始化与结束清理。`LocalGridVisibilityAgent` 从完整官方 `MyGridVisibilityAgent` 迁移，只将实体容器、DI 生命周期与角色查询换成本地 Adapter；原单格／多格事件、即时移除、按距离扩散、暂缓揭雾、源坐标覆盖及目标集合均保留。现有 `MapRootVisibility` 的容器生命周期 Adapter 继续保留供原实体宿主使用；公共地图宿主不依赖该动态容器。Map13 已接线；其他地图尚未接入这条白雾路径。当前验证结果在[泽之国](../maps/map-13.md)维护。
+
+当前版 Map11／12／15／16 的真实网格与身体输入已按原生成格式解码，使用 `World/Mainline/Visibility/Map<ID>/` 的独立 Resources 地址，等待各图正式 Adapter 接线。Map11／12／13／16 的原雾层 prefab 已分别恢复；Map15 原根的 `CloudController` 显式为空，该差异以配置保持。资源规格及接入／验证范围只在各地图页维护；共同来源见 `mainline-grid-visibility-data-source-manifest.json` 与 `mainline-grid-fog-source-manifest.json`。
+
+静态元数据检查（85,050 GUID）与 `ProjectTools.Validate` 通过。`SharedMapGridVisibilityAcceptance.RunSourceMaps` 已在 Unity 2022.3.57f1c2 中通过：保留原 Map13 与四组小尺寸 Interface 夹具回归，再使用 Map11／12／15／16 的真实原版输入执行移动揭格、全部区域列表、独立实例及逐格／逐字节冷读。后四图使用显式规则夹具（实体全部活动、地区查询返回0、不检查通行），未代替各图真实地区 Adapter、导航或地图交互验证。
+
 ## 自定义实现
 
 沿用已确认的本地地图存档、神像最近可站立格传送和英雄／魔女共享每日访问额度。规则细节分别见[森之国](../maps/map-11.md)、[战斗执行](battle-execution.md)；地图奖励沿用户确认方案：原权重选取、原数量乘等级／阶位倍率，小数按概率取整，再应用原属性29加成并向下取整。普通点位按原配置扣体力57×5；命运探寻来源实体须按官方来源规则免体力。刷新沿用户确认的本地方案：保留点位、区域开放、原组间隔与上限，计入离线时间。

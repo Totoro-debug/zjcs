@@ -124,6 +124,8 @@ Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD�
 
 `scripts/prepare_mainline_fog.py` 读取固定854官方 `partition_mapground_11_extensions` 的73份 `LightRegion` 原层级、Light2D字段和 `map_region_active_anim`，从 APK builtin 取原 `2D Renderer Data` 与2048×128 `FalloffLookupTexture`；全局白光来自已核实的同版本 bare 地形依赖。APK／缓存实际对象、输入与输出哈希见 [区域阴影来源](../../assets/reference/official-map/map11-region-lights-source-manifest.json)。`prepare_mainline_fog_meshes.py` 在隔离 Unity 2022.3.57f1c2 工程中调用固定原 Unity Graphics `LightUtility.GenerateShapeMesh`、UTess／Clipper；固定Git blob、Mathematics包和73份网格哈希见 [网格来源](../../assets/reference/official-map/map11-light-meshes-source-manifest.json)。`prepare_mainline_fog_shaders.py` 机械转换 APK 原 Light2D 与 Sprite-Lit GLES 程序，保持原表达式、深度／剔除和 Multiply 分支，见 [程序来源](../../assets/reference/official-map/map11-light-shaders-source-manifest.json)。显式加载 `Resources/Map11/Fog` 与 `World/Mainline/RegionLight2D`／`RegionSpriteLit`，运行范围和仍缺的日夜装饰／小地图遮罩见 [公共模块](../features/mainline-map-modules.md)。
 
+公共网格输入已从当前所选 `884_156692` 的 APK／已校验缓存单独提取：240×180 网格、77 份区域揭格列表、111 份身体模板、1803 个实体放置，角色与视野按原根配置传入。资源入口为 `Resources/World/Mainline/Visibility/Map11/visibility` 与 `bodies`。原 `MapRoot_11` 的完整雾层 subtree 与依赖已转换为 `Resources/World/Mainline/Fog/Map11`。来源与输出哈希见[公共网格输入清单](../../assets/reference/official-map/mainline-grid-visibility-data-source-manifest.json)及[公共雾层清单](../../assets/reference/official-map/mainline-grid-fog-source-manifest.json)。这批是当前版本的独立载荷，未覆盖历史输入；尚未接入本地图正式宿主，不表示完整地图或 Windows Player 已完成。
+
 ## 自定义实现
 
 原线上组队按已确认原剧情 NPC 资格、等级、位阶和技能适配，不生成真人玩家。公共刷新使用本地时钟；普通路线保留真实败北、产出和等待，后期资格回访不能记作普通角色自然成长。

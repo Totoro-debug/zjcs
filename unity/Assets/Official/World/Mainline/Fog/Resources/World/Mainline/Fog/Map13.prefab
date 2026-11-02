@@ -1,0 +1,187 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &-9176292602916588229
+GameObject:
+  m_Component:
+  - component: {fileID: -7690058840973331141}
+  - component: {fileID: -1299017259676748485}
+  m_Layer: 0
+  m_Name: myVisibilitySlot
+  m_Tag: 0
+  m_IsActive: 1
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+--- !u!4 &-7690058840973331141
+Transform:
+  m_GameObject: {fileID: -9176292602916588229}
+  m_LocalRotation: {x: -0.0, y: -0.0, z: -0.0, w: 1.0}
+  m_LocalPosition: {x: 0.0, y: 0.0, z: 0.0}
+  m_LocalScale: {x: 1.0, y: 1.0, z: 1.0}
+  m_Children:
+  - {fileID: 61018755479549243}
+  - {fileID: -2912885154815363781}
+  m_Father: {fileID: 0}
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 2
+--- !u!114 &-1299017259676748485
+MonoBehaviour:
+  m_GameObject: {fileID: -9176292602916588229}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: 6534105f5d9244c5f61f6e57e1c14c8d, type: 3}
+  m_Name: ''
+  CloudTemplate: {fileID: 2422908581828080955}
+  DiffusionSpeed: 5.0
+  DisappearMat: {fileID: 2100000, guid: 0dd269b206e57f3246664ef6d7ebb066, type: 2}
+  CloudMat: {fileID: 2100000, guid: 245eb5a7337928b0ff52f5121533eb12, type: 2}
+  Cloud: {fileID: -6601903198542252741}
+  CloudMaskMat: {fileID: 2100000, guid: 23530061d6b1b53cfd4dc461fbf0c9f7, type: 2}
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &-339129499806943941
+GameObject:
+  m_Component:
+  - component: {fileID: -2912885154815363781}
+  - component: {fileID: -2847871273864219333}
+  - component: {fileID: -6601903198542252741}
+  m_Layer: 0
+  m_Name: Cloud
+  m_Tag: 0
+  m_IsActive: 0
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+--- !u!4 &-2912885154815363781
+Transform:
+  m_GameObject: {fileID: -339129499806943941}
+  m_LocalRotation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}
+  m_LocalPosition: {x: 0.0, y: 0.0, z: 0.0}
+  m_LocalScale: {x: 300.0, y: 300.0, z: 300.0}
+  m_Children: []
+  m_Father: {fileID: -7690058840973331141}
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 2
+--- !u!33 &-2847871273864219333
+MeshFilter:
+  m_GameObject: {fileID: -339129499806943941}
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &-6601903198542252741
+MeshRenderer:
+  m_GameObject: {fileID: -339129499806943941}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 0
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_LightmapIndex: 65535
+  m_LightmapIndexDynamic: 65535
+  m_LightmapTilingOffset: {x: 1.0, y: 1.0, z: 0.0, w: 0.0}
+  m_LightmapTilingOffsetDynamic: {x: 1.0, y: 1.0, z: 0.0, w: 0.0}
+  m_Materials:
+  - {fileID: 2100000, guid: 245eb5a7337928b0ff52f5121533eb12, type: 2}
+  m_StaticBatchInfo: {firstSubMesh: 0, subMeshCount: 0}
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_SortingLayerID: -922319373
+  m_SortingLayer: 21
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+  m_EnlightenVertexStream: {fileID: 0}
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &-584684807355779781
+GameObject:
+  m_Component:
+  - component: {fileID: 61018755479549243}
+  - component: {fileID: 2422908581828080955}
+  m_Layer: 0
+  m_Name: Template
+  m_Tag: 0
+  m_IsActive: 0
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+--- !u!4 &61018755479549243
+Transform:
+  m_GameObject: {fileID: -584684807355779781}
+  m_LocalRotation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}
+  m_LocalPosition: {x: 0.0, y: 0.0, z: 0.0}
+  m_LocalScale: {x: 1.0, y: 1.0, z: 1.0}
+  m_Children: []
+  m_Father: {fileID: -7690058840973331141}
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 2
+--- !u!212 &2422908581828080955
+SpriteRenderer:
+  m_GameObject: {fileID: -584684807355779781}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_LightmapIndex: 65535
+  m_LightmapIndexDynamic: 65535
+  m_LightmapTilingOffset: {x: 1.0, y: 1.0, z: 0.0, w: 0.0}
+  m_LightmapTilingOffsetDynamic: {x: 1.0, y: 1.0, z: 0.0, w: 0.0}
+  m_Materials:
+  - {fileID: 2100000, guid: 23530061d6b1b53cfd4dc461fbf0c9f7, type: 2}
+  m_StaticBatchInfo: {firstSubMesh: 0, subMeshCount: 0}
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_SortingLayerID: -922319373
+  m_SortingLayer: 21
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: fa04141d949e7a466ffadca9368b85b6, type: 2}
+  m_Color: {r: 1.0, g: 1.0, b: 1.0, a: 1.0}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1.0, y: 1.0}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}

@@ -17,6 +17,7 @@ namespace Zjcs.Presentation.World
     {
         private OfficialMap13NativeWorldView nativeMap13World;
         private OfflineMapGridVisibility map13GridVisibility;
+        private OfficialMainlineGridFog gridFog;
         private OfflineMap13NavigationSession map13NavigationSession;
         private OfflineMainlineSave nativeMap13ObservedSave;
         private sealed class Map13NativeState:IMap13NativeWorldState
@@ -44,6 +45,8 @@ namespace Zjcs.Presentation.World
             worldCamera.transform.position=new Vector3(avatar.transform.position.x,avatar.transform.position.y,map11WorldViewSource.cameraZ);
             foreach(Renderer renderer in avatar.GetComponentsInChildren<Renderer>(true))renderer.sortingLayerName="Object";
             nativeMap13World=OfficialMap13NativeWorldView.Create(mapRoot,worldCamera,new Map13NativeState(this));
+            gridFog=OfficialMainlineGridFog.Create(mapRoot,worldCamera,Resources.Load<GameObject>("World/Mainline/Fog/Map13"),
+                session.Definition.Navigation,map13GridVisibility,()=>new Pos2d(navigation.currentGrid.X,navigation.currentGrid.Y));
             nativeMap13ObservedSave=progressionSave.Save;
             SaveLocalProgress();
         }
@@ -97,6 +100,7 @@ namespace Zjcs.Presentation.World
         }
         private void DisposeNativeMap13()
         {
+            gridFog?.Dispose();gridFog=null;
             map13Trees?.Dispose();map13Trees=null;
             CleanMap13StoryPlayables();
             map13StoryPlayableScope?.Dispose();map13StoryPlayableScope=null;

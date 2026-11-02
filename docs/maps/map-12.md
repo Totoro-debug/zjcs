@@ -238,6 +238,8 @@ NPC 组合皮肤已按官方 `AppearanceCombineSkin.CreateNewSkin` 迁入：按 
 
 山之国另已恢复两份原实体的309包转换输入及12条原托管引用，核对四节点层级和挂点 PPtr；两张原碑精灵通过同源对象字节校验并绑定本地精灵目录。两份正式原生实体、七点位目录、四视图及独立原演出池宿主已迁入，显式资源引用／逆向补丁核对、8项独立编译和静态检查通过；原生显示工厂／周期事件与回收已接入主地图，个人一次领奖保留碑体，小地图按原公共状态显示；角色档案先提交时的周期数及恢复不重复计数夹具已追加，主地图42项依赖与夹具独立编译通过，原专用弹窗／NPC 及实际运行仍待完成，具体来源与未完成范围仍见[山之国](map-12.md)。
 
+公共网格输入已从当前所选 `884_156692` 的 APK／已校验缓存单独提取：280×210 网格、99 份区域揭格列表、136 份身体模板、2591 个实体放置，角色与视野按原根配置传入。资源入口为 `Resources/World/Mainline/Visibility/Map12/visibility` 与 `bodies`。原 `MapRoot_12` 的完整雾层 subtree 与依赖已转换为 `Resources/World/Mainline/Fog/Map12`。来源与输出哈希见[公共网格输入清单](../../assets/reference/official-map/mainline-grid-visibility-data-source-manifest.json)及[公共雾层清单](../../assets/reference/official-map/mainline-grid-fog-source-manifest.json)。这批是当前版本的独立载荷，未覆盖历史输入；尚未接入本地图正式宿主，不表示完整地图或 Windows Player 已完成。
+
 ## 自定义实现
 
 私有日常副本的战斗表现通过公共 `OfficialBattleHostPresentation` 接管地图相机、宿主场景及独立根 Canvas 中的地图 HUD，并在退出时恢复；活动期间暂停地图镜头跟随，避免两个系统同时写相机。内置屏 Play Mode 已模拟地图／路线按钮输入，完成原12102／30152战斗及后续12104、12106、12107、12108房间，核对相机接管、退出投影、人物原父级／缩放和 HUD 逐节点显隐恢复，以及私图存档冷读。已查看完整450×800战斗及返回画面，地图小地图／任务栏不再叠加到战斗 HUD；隔离存档中的人物资料、公共次数、奖励和购买状态保持不变。公共接口与仍未完成的通用表现见[战斗执行](../features/battle-execution.md)。

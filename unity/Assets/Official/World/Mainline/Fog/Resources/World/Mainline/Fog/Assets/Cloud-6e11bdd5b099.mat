@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  m_Name: Cloud
+  m_Shader: {fileID: 4800000, guid: b466216dc955e57484432ea68fcbfed5, type: 3}
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    m_TexEnvs:
+      _MainTex:
+        m_Texture: {fileID: 2800000, guid: 3b41618457d8a0ac7e03c63f4b01aeb4, type: 2}
+        m_Scale: {x: 7.0, y: 7.0}
+        m_Offset: {x: 0.0, y: 0.0}
+      _MaskTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1.0, y: 1.0}
+        m_Offset: {x: 0.0, y: 0.0}
+      _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: 7dcce21b2c01f43ecee700b9d3e8a9f3, type: 2}
+        m_Scale: {x: 5.0, y: 5.0}
+        m_Offset: {x: 0.0, y: 0.0}
+    m_Ints: {}
+    m_Floats: {_DisturbSpeed: 0.04800000041723251, _MainTiling: 0.14000000059604645,
+      _NoiseTiling: 0.23000000417232513, _Param: 5.0, _Strength: 12.899999618530273}
+    m_Colors:
+      _C: {r: 0.9292452931404114, g: 1.0, b: 1.0, a: 1.0}
+      _CloudDir: {r: -0.07000000029802322, g: 0.07999999821186066, b: 0.0, a: 0.0}
+      _CloudRect: {r: -0.5, g: -0.5, b: 1.0, a: 1.0}
+      _Dir: {r: 0.05000000074505806, g: 0.05000000074505806, b: 0.0, a: 0.0}
+      _NoiseDir: {r: 0.0, g: 0.0, b: 0.0, a: 0.0}
+      _Tint: {r: 0.6431372761726379, g: 0.6917365789413452, b: 0.7137255072593689,
+        a: 1.0}
+    serializedVersion: 3
+  m_BuildTextureStacks: []
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 8
