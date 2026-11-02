@@ -472,6 +472,16 @@ NPC 资料投影同时保留实际原 `NpcTargetData` 对象的 `ServerId`，头
 
 上述结果只覆盖当前原默认头像组合及 `map/idle_01`，不扩大为任意外观、其他动画、正式页面输入、完整资料刷新、存档或 Windows Player 已验证。正式伙伴入口及详情中的统一外观生命周期仍待接线。主工程 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate`、全工程静态检查（89,840 个 GUID）通过。
 
+### 当前主角头像组件运行绑定（局部）
+
+`OfflineProfessionUiPlayerBindings` 将当前原 `PlayerAnimationAppearance`、`AppearanceUI`、`AppearanceCharacter`、`AppearanceUIPartHandler` 与原生图形绑定为每个窗口独立的组件图。绑定在原窗口激活及骨架初始化前执行；从原 `AppearanceUI` 序列化字段读取 skin／High 加载器代理，逐项核对选定资源目录身份后保留代理。玩家外观、部件加载器及材质管理器由所属存档宿主提供，不生成另一套外观状态，也不改原部件排除、遮罩、初始动画、freeze 或 prefab 布局。
+
+重复遍历已绑定树保留其动画轨道；绑定新窗口或回收行时先移除已销毁 Unity 对象。默认姿态生产者使用已迁移的连续物理求解，显式特殊姿态生产者仍可注入。原组件继续负责销毁时的图形、材质和纹理请求释放；材质／纹理服务寿命由宿主管理。代码及依赖凭据见[组件运行绑定来源](../../assets/reference/partner-ui-player-bindings-source-manifest.json)，记录入口为 `record_partner_ui_player_bindings.py`。
+
+隔离 URP Play Mode 已以实际原头像、遮罩及 High 纹理验证男女 × 两种职业：重复绑定不替换轨道，实际连续播放跨过原循环，切换性别再切回恢复原初始像素；销毁后通过默认运行姿态生产者重新绑定，四组 GPU 像素均与原初始画面完全一致，释放后纹理引用归零且无运行错误。已查看四组连续播放画面。验证工程关闭 Editor 异步 shader 编译，避免将临时未染色画面作为基准，并检查实际原默认眼睛染色；完整冷导入与缓存运行均通过。主工程导入／编译、`Zjcs.Editor.ProjectTools.Validate` 及静态检查（89,841 个 GUID）通过。
+
+本节只记录组件图接线；正式伙伴页完整资料、通话、入口及宿主服务生命周期仍待接通，不能据此计作完整窗口或 Windows Player 已完成。
+
 ### 当前主角头像摄影棚与原生拍摄（局部）
 
 `prepare_partner_player_portraits.py` 从所选 `884_156692` 的实际头像 bundle 恢复原 `CharacterPortraitStudio` 的 24 个对象，保留五个 GameObject 的层级、变换、原摄影机、Animator、SortingGroup 及组件引用。原 `HeadCharacterPortraitBuilder`、外观排除复制和空 `PreviewTool` 迁入工程；显式依赖替代注入，拍摄仍由原 `CharacterPortraitPhotographer` 执行。摄影棚中的动画与绘制组件接到既有免费原生角色后端，不读取或复制动画 SDK 实现。

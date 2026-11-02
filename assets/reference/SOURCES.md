@@ -404,3 +404,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 伙伴当前主角连续姿态沿用所选 `884_156692` 角色数据包、原皮肤集合和 UI 应用入口；[连续姿态来源](partner-player-pose-source-manifest.json) 记录原数据、依赖来源清单、当前独立原生代码及既录数值输入的哈希。`record_partner_player_pose.py` 记录来源；可选公开调用仅在隔离目录取样，JSON 参照传输显式恢复原二进制投影省略的变换约束零值，未修改原输入或复制 SDK 实现。本批未新增美术或完整素材快照。
 
 公共小地图 HUD 使用所选 `884_156692` 的 `defaultpackage_assets_prefabs_ui_map_minimap.bundle`，输入先核对 APK 清单与实际包内对象，APK 未打包后取匹配云端实际载荷（SHA256 `76d3697a2d0cd78c990a8a487e5bdfd49b4e2791bd4d43e0df11d01706ecb981`）。完整原 `MiniMapMaskedUI.prefab` 的79个序列化对象、原脚本／字体／图形依赖、语言组配置及 `Main_Cursor_Normal` 事件解码依据见 [HUD 原代码凭据](official-map/mainline-minimap-hud-code-source-manifest.json)与[原生转换凭据](official-map/mainline-current-minimap-hud-source-manifest.json)。`prepare_mainline_minimap_native_hud.py` 保留原布局字段及 fileID，按实际 CAB/PPtr 和所选 Windows 转换哈希显式绑定；声音记录原事件、bank、媒体、工具和输出PCM。历史原公共 UI 仅在逐文件原输入哈希相等时复用，元数据文本按 LF／无行尾空格记录。
+
+伙伴当前原 UI 主角组件的运行绑定沿用已记录的 `884_156692` 外观代码、材质与 High 纹理目录；[运行绑定来源](partner-ui-player-bindings-source-manifest.json) 记录这些来源清单及本地接线、逐文件输出和验证工具的哈希。入口为 `scripts/record_partner_ui_player_bindings.py`；没有重新提取或修改原素材载荷，历史凭据保持原输入身份。

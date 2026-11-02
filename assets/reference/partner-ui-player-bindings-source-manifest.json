@@ -1,0 +1,54 @@
+{
+  "manifest": "884_156692",
+  "dependencies": [
+    {
+      "path": "assets/reference/partner-ui-appearance-source-manifest.json",
+      "sha256": "edb94a99b174d53ee903fc1b9030f64faf60ec81ce8b0f44f32b1135ed7866ba"
+    },
+    {
+      "path": "assets/reference/partner-ui-appearance-assets-source-manifest.json",
+      "sha256": "db903fd6b7c5b7262441f3e6994a8e2784319c32d36ed22fe733249171bede5d"
+    },
+    {
+      "path": "assets/reference/partner-ui-high-textures-source-manifest.json",
+      "sha256": "6523c9f53bc0e1a5c8c0dded6c177ea19cfbd6c4f7aa64e7e661215c78428436"
+    },
+    {
+      "path": "assets/reference/partner-player-pose-source-manifest.json",
+      "sha256": "3f0c56de5537654396ccaf7afc93ae11b8b5f18215bdff6d9d2ec43c2e71ba06"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionUiPlayerBindings.cs",
+      "sha256": "6db3619774d3185e4a7412049e013915099d4b9f17717cbf0e8237259d005e2b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionUiPlayerBindings.cs.meta",
+      "sha256": "ba9f51c48636476ccccbea74edd82d5af3bfaa57acb4038c4f81e2669b5e092c"
+    }
+  ],
+  "helpers": [
+    {
+      "path": "scripts/prepare_partner_main_avatar_validation.py",
+      "sha256": "9bb7c74891fc8f9fdf042264bb59dd7744fc4494824ee96f43ddb3020bde55eb"
+    },
+    {
+      "path": "scripts/fixtures/partner_main_avatar_validation.cs",
+      "sha256": "fa110bcb3f0bb31b2f1be4a994b320aa786df6e802bcac5b29afb67ac8049df1"
+    }
+  ],
+  "generator": {
+    "path": "scripts/record_partner_ui_player_bindings.py",
+    "sha256": "e191cedc50b75a5121853618f7024babe98beb449752f574b8234f2a7b8da72d"
+  },
+  "operation": [
+    "Read the original serialized SkinTextureAssetGuid and TextureLoaderGuid from each current AppearanceUI. Require exact identities from the selected native catalog; retain the original proxy objects.",
+    "Bind the original AppearanceUI, AppearanceCharacter, AppearanceUIPartHandler and PlayerAnimationAppearance before activation and skeleton initialization.",
+    "Use the profile-owned player appearance, part loader and material manager. The original component lifecycle owns renderer and texture requests.",
+    "A repeated visit leaves an already bound original animation track intact. Destroyed Unity owners are pruned before binding rented or reopened trees.",
+    "The default producer uses the existing independent native player pose. Explicit specialized pose producers remain injectable without changing original materials or layout.",
+    "No original payload, prefab layout, serialized exclusions, initial animation or freeze setting is changed. No new art or full asset snapshot is produced.",
+    "Earlier receipts retain their historical source identities. This receipt records the current window binding and validation helper."
+  ]
+}

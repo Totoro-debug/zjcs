@@ -37,6 +37,11 @@ public static class PartnerMainAvatarValidation
         string work = Path.GetFullPath(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"));
         if (!Path.GetFullPath(Application.dataPath).StartsWith(work + Path.DirectorySeparatorChar))
             throw new InvalidOperationException("Owned isolated project required");
+        // The isolated Editor must finish the selected dye variants before GPU
+        // comparisons. Player builds ship compiled variants, not Editor async
+        // compilation's temporary undyed rendering.
+        EditorSettings.asyncShaderCompilation = false;
+        ShaderUtil.allowAsyncCompilation = false;
         EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
         SessionState.SetBool(Key, true);
         SessionState.SetFloat(Key + ".Deadline", (float)EditorApplication.timeSinceStartup + 600);
@@ -145,20 +150,10 @@ public sealed class PartnerMainAvatarRunner : MonoBehaviour
                 // actual LateUpdate producer with the original unfrozen setting.
                 graphic.freeze = true;
                 ProfessionNativePlayerPhysicsPose physicalPose = null;
-                var binding = new OfflineProfessionUiAppearanceBindings(resources, graphic, manager, config, asset => {
-                    physicalPose = new ProfessionNativePlayerPhysicsPose(asset.Data);
-                    return new ProfessionNativeUiCharacterPose(asset, physicalPose.Apply,
-                        (page, blend) => blend == 0 ? graphic.material : blend == 1 ? graphic.additiveMaterial :
-                        blend == 2 ? graphic.multiplyMaterial : blend == 3 ? graphic.screenMaterial : throw new Exception("Original blend"),
-                        page => resources.MaterialForPage(asset, page).mainTexture);
-                });
                 var serialized = new SerializedObject(ui);
                 Require(serialized.FindProperty("TextureLoaderGuid").FindPropertyRelative("mAssetGuid").stringValue == resources.LoaderGuid
                     && serialized.FindProperty("SkinTextureAssetGuid").FindPropertyRelative("mAssetGuid").stringValue == resources.SkinGuid,
                     "Preserve the exact original avatar skin/High-loader GUIDs");
-                ui.Configure(binding, Proxy<SkinTextureAsset>(resources.SkinGuid), Proxy<YooAssetTextureLoader>(resources.LoaderGuid), parts);
-                ui.ConfigureUI(binding); character.Configure(binding, parts);
-                parts.ConfigureParts(new Parts(config, tables.SpineSkinInfoParser));
                 var data = new ProfessionAppearanceResolver(tables).BuildDefaultAppearanceData(config, sex, (Profession)profession);
                 var saved = new OfflinePlayerProgress { InitialWeaponType = profession == 1 ? 200 : 201 };
                 saved.Wardrobe.Sex = (int)sex; saved.Wardrobe.Profession = profession;
@@ -169,13 +164,25 @@ public sealed class PartnerMainAvatarRunner : MonoBehaviour
                         Hue = pair.Value.Hsv.H, Saturation = pair.Value.Hsv.S, Value = pair.Value.Hsv.V });
                 var appearance = new OfflineProfessionAppearanceBindings(17, () => saved, _ => saved.InitialWeaponType,
                     tables, config, rules, defaults);
-                player.ConfigurePlayerAppearance(appearance);
+                var windowBindings = new OfflineProfessionUiPlayerBindings(resources, manager,
+                    new Parts(config, tables.SpineSkinInfoParser), appearance, (target, asset) => {
+                        physicalPose = new ProfessionNativePlayerPhysicsPose(asset.Data);
+                        return new ProfessionNativeUiCharacterPose(asset, physicalPose.Apply,
+                            (page, blend) => blend == 0 ? target.material : blend == 1 ? target.additiveMaterial :
+                            blend == 2 ? target.multiplyMaterial : blend == 3 ? target.screenMaterial : throw new Exception("Original blend"),
+                            page => resources.MaterialForPage(asset, page).mainTexture);
+                    });
+                Require(windowBindings.BindTree(root) == 1 && windowBindings.BindTree(root) == 0,
+                    "Runtime window binding visits the original avatar exactly once");
                 var oldClip = ProfessionAppearanceSkinClipBindings.Current;
                 ProfessionAppearanceSkinClipBindings.Current = new OfflineProfessionCurrentUiSkinClipBindings(oldClip);
                 try { canvasGo.SetActive(true); }
                 finally { ProfessionAppearanceSkinClipBindings.Current = oldClip; }
                 Require(graphic.AnimationState == null, "Awake with no asset must not fabricate a track");
                 player.RefreshAppearance(17, sex, profession, appearance.AppearanceData);
+                var initialTrack = graphic.AnimationState.GetCurrent(0);
+                Require(windowBindings.BindTree(root) == 0 && ReferenceEquals(initialTrack, graphic.AnimationState.GetCurrent(0)),
+                    "Revisiting an active bound tree preserves the original animation track");
                 Require(player.AnimName == "map/idle_01" && graphic.startingAnimation == player.AnimName
                     && graphic.AnimationState.GetCurrent(0).Animation.Name == player.AnimName,
                     "Original phase animation selected before first skeleton initialization");
@@ -195,6 +202,8 @@ public sealed class PartnerMainAvatarRunner : MonoBehaviour
                 Require(colors.Where((color, index) => Math.Abs(index % 320 - 160) < 24 && Math.Abs(index / 320 - 153) < 24)
                     .Count(color => color.r > 120 && color.g > 80 && color.b > 45 && color.r > color.b) > 200,
                     "Visible colored face and hair rather than the unselected portrait-loading silhouette");
+                Require(colors.Count(color => color.b > color.r + 40 && color.b > color.g + 10) > 5,
+                    "The original default eye dye is rendered before comparing frozen GPU frames");
                 File.WriteAllBytes(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"), "avatar-" + sex + "-" + profession + ".png"), image.EncodeToPNG());
                 var initialWorld = Enumerable.Range(0, graphic.State.Pose.Count).Select(graphic.State.Pose.World).ToArray();
                 RecordNativePose(graphic.State, sex, profession);
@@ -237,6 +246,36 @@ public sealed class PartnerMainAvatarRunner : MonoBehaviour
                     + ", batches=" + graphic.canvasRenderers.Count + ", dye materials=" + ui.IndependentMaterialDict.Count);
                 Object.DestroyImmediate(root);
                 Object.DestroyImmediate(owner);
+                canvasGo.SetActive(false);
+                var reopened = Object.Instantiate(prototypeInfo.gameObject, staging.transform, false);
+                var reopenedInfo = reopened.GetComponent<PlayerInfoUI>();
+                reopenedInfo.mStateSwitcher.SetState(ActorTargetType.Player);
+                ((WorldStateSwitcher<bool>)typeof(PlayerInfoUI).GetField("mIsMyselfSwitcher", BindingFlags.NonPublic | BindingFlags.Instance)
+                    .GetValue(reopenedInfo)).SetState(true);
+                var reopenedPlayer = (Current.PlayerAnimationAppearance)reopenedInfo.PlayerAppearance;
+                var reopenedGraphic = reopenedPlayer.GetComponent<ProfessionNativeUiGraphic>();
+                reopenedGraphic.freeze = true;
+                var reopenedRoot = reopenedPlayer.GetComponentInParent<Mask>(true).transform.parent.gameObject;
+                reopenedRoot.transform.SetParent(canvasGo.transform, false);
+                ((RectTransform)reopenedRoot.transform).anchoredPosition = Vector2.zero;
+                var productionBindings = new OfflineProfessionUiPlayerBindings(resources, manager,
+                    new Parts(config, tables.SpineSkinInfoParser), appearance);
+                Require(productionBindings.BindTree(reopenedRoot) == 1, "Reopened native avatar uses the runtime default pose producer");
+                oldClip = ProfessionAppearanceSkinClipBindings.Current;
+                ProfessionAppearanceSkinClipBindings.Current = new OfflineProfessionCurrentUiSkinClipBindings(oldClip);
+                try { canvasGo.SetActive(true); }
+                finally { ProfessionAppearanceSkinClipBindings.Current = oldClip; }
+                reopenedPlayer.RefreshAppearance(17, sex, profession, appearance.AppearanceData);
+                yield return null;
+                Canvas.ForceUpdateCanvases(); reopenedGraphic.ApplyAnimation(); Canvas.ForceUpdateCanvases();
+                RenderPipeline.SubmitRenderRequest(camera, new UniversalRenderPipeline.SingleCameraRequest { destination = render });
+                RenderTexture.active = render;
+                var reopenedImage = new Texture2D(320, 320, TextureFormat.RGBA32, false);
+                reopenedImage.ReadPixels(new Rect(0, 0, 320, 320), 0, 0); reopenedImage.Apply(); RenderTexture.active = prior;
+                Require(colors.SequenceEqual(reopenedImage.GetPixels32()),
+                    "Window destruction and runtime default binding restore identical original GPU pixels");
+                Object.DestroyImmediate(reopenedImage);
+                Object.DestroyImmediate(reopenedRoot); Object.DestroyImmediate(reopened);
                 resources.Loader.TryUnloadUnusedTextures(true);
                 Require(textures.LoadedTextureCount == 0, "Original avatar destruction releases every requested High texture");
                 Require(errors.Count == 0, "No original application or native renderer errors: " + string.Join("\n", errors));
@@ -250,8 +289,6 @@ public sealed class PartnerMainAvatarRunner : MonoBehaviour
             Object.DestroyImmediate(staging); Object.DestroyImmediate(canvasGo); Object.DestroyImmediate(camera.gameObject); render.Release(); Object.DestroyImmediate(render);
         }
     }
-    static AssetGuidProxy<T> Proxy<T>(string guid) where T : Object
-    { var value = new AssetGuidProxy<T>(); JsonUtility.FromJsonOverwrite("{\"mAssetGuid\":\"" + guid + "\"}", value); return value; }
     static void RecordNativePose(ProfessionNativeAppearanceSkeleton displayed, Sex sex, int profession)
     {
         var native = new ProfessionNativeAppearanceSkeleton(displayed.Source);
