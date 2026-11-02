@@ -15,6 +15,7 @@ using Zjcs.Offline.State;
 using Zjcs.Official.PartnersUI;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Offline.PartnersUI;
+using Zjcs.Official.WorldUI;
 
 namespace Zjcs.Presentation.Home
 {
@@ -72,7 +73,9 @@ namespace Zjcs.Presentation.Home
                 HideForeignCanvases();
                 DumpFullscreen();
                 bool passed = false;
-                yield return VerifyPartners(runtime, value => passed = value);
+                if (Environment.GetCommandLineArgs().Contains("-partnerTitlesAcceptance"))
+                    yield return VerifyPartnerTitles(runtime, value => passed = value);
+                else yield return VerifyPartners(runtime, value => passed = value);
                 Finish(passed);
                 yield break;
             }
@@ -1046,7 +1049,121 @@ namespace Zjcs.Presentation.Home
             completed(ok);
         }
 
-        private static void ClickPartnerUi(Component target)
+        private IEnumerator VerifyPartnerTitles(HomeFeatureRuntime runtime, Action<bool> completed)
+        {
+            bool ok = true;
+            NpcDetailPanelGiftContent gift = null;
+            ok &= Check("partner-title-entry", () =>
+            {
+                runtime.OpenPartnerGift(8402);
+                gift = PrivateField<GameObject>(runtime.Hud, "activeDialog")
+                    .GetComponentInChildren<NpcDetailPanelGiftContent>();
+                Assert(gift != null, "official gift page is missing");
+                var button = PrivateField<Button>(gift, "mCustomFriendshipTagBtn");
+                Assert(button.gameObject.activeInHierarchy, "original friendship title eligibility is not satisfied");
+                return "original custom-title eligibility is satisfied";
+            });
+            yield return null;
+            yield return null;
+            ok &= Check("partner-title-open", () =>
+            {
+                ClickPartnerUi(PrivateField<Button>(gift, "mCustomFriendshipTagBtn"));
+                return "original custom-title button opened the official InputDialog";
+            });
+            yield return new WaitForSeconds(.4f);
+            yield return Capture("partners-title-input.png");
+            WorldInputDialog input = null;
+            ok &= Check("partner-title-cancel", () =>
+            {
+                input = GameObject.Find("OfficialPartnerInputDialog").GetComponent<WorldInputDialog>();
+                Assert(input.TitleText.Text == "修改标签", "original custom-title header is not localized: " + input.TitleText.Text);
+                Assert(!input.ResetBtn.gameObject.activeSelf, "unused original reset button was not hidden");
+                ClickPartnerUi(input.CancelBtn);
+                return "original cancel button closes only the input window";
+            });
+            yield return new WaitForSeconds(.4f);
+            ok &= Check("partner-title-empty", () =>
+            {
+                Assert(GameObject.Find("OfficialPartnerInputDialog") == null, "cancelled input window remains visible");
+                Assert(gift.gameObject.activeInHierarchy, "cancel closed the underlying gift page");
+                ClickPartnerUi(PrivateField<Button>(gift, "mCustomFriendshipTagBtn"));
+                input = GameObject.Find("OfficialPartnerInputDialog").GetComponent<WorldInputDialog>();
+                return "reopened original input window";
+            });
+            yield return new WaitForSeconds(.4f);
+            ok &= Check("partner-title-empty-submit", () =>
+            {
+                ClickPartnerUi(input.ConfirmBtn);
+                Assert(input != null && input.gameObject.activeInHierarchy, "empty invalid title closed the dialog");
+                Assert(string.IsNullOrEmpty(runtime.Profile.Save.Player.CharacterProperties.NpcFriendships
+                    .Single(value => value.NpcClassId == 8402).CustomFriendshipTag), "invalid empty title changed the save");
+                ClickPartnerUi(input.InputField);
+                return "empty title rejected; pointer focused the official TMP input";
+            });
+            yield return null;
+            ok &= Check("partner-title-keyboard", () =>
+            {
+                Assert(input.InputField.isFocused, "official input field did not receive pointer focus");
+                foreach (char value in "挚友") input.InputField.ProcessEvent(new Event
+                    { type = EventType.KeyDown, character = value, keyCode = KeyCode.None });
+                // TMP.ProcessEvent exposes KeyPressed alone. OnUpdateSelected
+                // follows that call with UpdateLabel; use its public equivalent
+                // while simulating keys without focusing an operating-system window.
+                input.InputField.ForceLabelUpdate();
+                return "Chinese keys processed with the normal TMP label refresh";
+            });
+            yield return null;
+            yield return null;
+            ok &= Check("partner-title-keyboard-display", () =>
+            {
+                Assert(input.InputField.text == "挚友", "simulated keyboard input was not consumed: " + input.InputField.text);
+                Assert(input.InputField.textComponent.text.Contains("挚友"),
+                    "official input label does not display the entered title: " + input.InputField.textComponent.text);
+                return "Chinese text consumed and displayed through TMP selected-input events";
+            });
+            yield return Capture("partners-title-entered.png");
+            ok &= Check("partner-title-submit", () => { ClickPartnerUi(input.ConfirmBtn); return "official confirm clicked"; });
+            float deadline = Time.realtimeSinceStartup + 5f;
+            while (GameObject.Find("OfficialPartnerInputDialog") != null && Time.realtimeSinceStartup < deadline)
+                yield return null;
+            ok &= Check("partner-title-save", () =>
+            {
+                runtime.Profile.Reload();
+                Assert(runtime.Profile.Save.Player.CharacterProperties.NpcFriendships
+                    .Single(value => value.NpcClassId == 8402).CustomFriendshipTag == "挚友", "custom title was not restored from disk");
+                Assert(GameObject.Find("OfficialPartnerInputDialog") == null, "successful input did not close");
+                Assert(PrivateField<WorldMultiLanguageText>(gift, "mFriendshipTagText").Text == "挚友",
+                    "official gift page did not refresh the custom title");
+                return "confirmed local title saved, refreshed and restored from disk";
+            });
+            yield return Capture("partners-title-saved.png");
+            ok &= Check("partner-title-mask-open", () =>
+            {
+                ClickPartnerUi(PrivateField<Button>(gift, "mCustomFriendshipTagBtn"));
+                return "reopened for original modal mask pointer validation";
+            });
+            yield return new WaitForSeconds(.6f);
+            ok &= Check("partner-title-mask-click", () =>
+            {
+                var mask = GameObject.Find("OfficialPartnerInputMask").GetComponent<WorldWindowMask>();
+                Assert(mask.AttachWindow != null && mask.Canvas.sortingOrder == mask.AttachWindow.Canvas.sortingOrder - 1,
+                    "original modal mask is not attached below the input window");
+                ClickPartnerUi(mask.Button, new Vector2(10, 10));
+                return "outside pointer raycast reaches the official mask";
+            });
+            yield return new WaitForSeconds(.4f);
+            ok &= Check("partner-title-mask-close", () =>
+            {
+                Assert(GameObject.Find("OfficialPartnerInputDialog") == null,
+                    "outside mask click did not close the input window");
+                Assert(gift.gameObject.activeInHierarchy, "mask click closed the underlying gift page");
+                return "mask closed only the original input window";
+            });
+            runtime.Hud.TryHandleBack();
+            completed(ok);
+        }
+
+        private static void ClickPartnerUi(Component target, Vector2? screenPosition = null)
         {
             Assert(target != null && target.gameObject.activeInHierarchy, "partner pointer target is inactive");
             Canvas.ForceUpdateCanvases();
@@ -1056,7 +1173,7 @@ namespace Zjcs.Presentation.Home
             var pointer = new PointerEventData(EventSystem.current)
             {
                 button = PointerEventData.InputButton.Left,
-                position = RectTransformUtility.WorldToScreenPoint(camera, rect.TransformPoint(rect.rect.center))
+                position = screenPosition ?? RectTransformUtility.WorldToScreenPoint(camera, rect.TransformPoint(rect.rect.center))
             };
             var hits = new List<RaycastResult>();
             EventSystem.current.RaycastAll(pointer, hits);

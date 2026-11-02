@@ -263,3 +263,7 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 ### 当前伙伴动态立绘原生资源
 
 `prepare_partner_native_portraits.py` 按 `884_156692` 当前伙伴配置核对实际 APK `881_156673` 后，解析选定云端资源的容器地址、CAB、原对象及依赖，提取 54 份开放范围立绘。原始骨骼采用既有免费链路的 MIT `SkelToJson 1.0.1` 格式读取器，保留浮点精度并验证完整消费；原 binary、图集、SkeletonDataAsset／材质字段及贴图对象均登记原字节 SHA256。`prepare_partner_portrait_assets.py` 校验同版 Windows 原生 Texture2D 转换缓存，以逐伙伴 Resources 显式绑定安装原生载荷。原始对象、APK／云端来源、读取器 wheel、工具、转换输入、运行代码和 489 个输出文件哈希见 [partner-portrait-assets-source-manifest.json](partner-portrait-assets-source-manifest.json)。原 UI 材质／shader 的验证入口核对同版已校验的 Windows 转换缓存；行为、支持范围及实际验证结果统一在[伙伴功能](../../docs/features/partners.md)维护。本批素材未纳入素材快照。
+
+### 当前伙伴称谓输入窗口资源
+
+`prepare_partner_input_dialog.py` 按选定 `884_156692` 恢复原 `InputDialog` 和 `MainCanvas` 默认窗口容器引用的普通遮罩；实际 APK 仍保持 `881_156673` 身份。沿原容器 PPtr、脚本身份和列表索引确认遮罩，不按名称猜测对象；共享 native 恢复器支持核对完整子树并只解除根父节点。原对象字段用于恢复空字符串，原编译曲线用于恢复空动画根路径；新资源引用通过 Resources 目录显式绑定。输入包、CAB／PathID、Windows 转换、原中文文本、原声音 Event／bank／媒体、工具、复用与输出哈希见[称谓输入来源](partner-input-dialog-source-manifest.json)。功能及实际验证范围仅在[伙伴功能](../../docs/features/partners.md)维护。本批未生成完整素材快照。

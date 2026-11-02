@@ -270,6 +270,16 @@ Home 的名册宿主先初始化原滚动列表对象池，在停用池中创建
 
 主工程 `-homeAcceptance -partnersAcceptance` 使用隔离存档和唯一 450×800 Game View，跳过并行的常规启动流程。Play Mode 经真实 UI 射线检查卡片显示后点击详情，以及礼物选择、重置、重新选择和赠送；核对实际礼物 Sprite、原偏好经验、扣除一件库存及重新读档后的数值。已查看名册、详情属性、赠礼前后和六种偏好礼物的实际画面。全工程静态检查通过（84,680 个 GUID），主工程 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。此验证覆盖现有原生区域的正式服务接线，仍未覆盖完整官方窗口壳、档案／通话、立绘、声音和 Windows Player。
 
+### 当前官方称谓输入窗口（局部）
+
+`prepare_partner_input_dialog.py` 从选定 `884_156692` 的原 `InputDialog` 恢复完整窗口，并按原 `MainCanvas` 默认 `WindowContainer.MaskList` 的 `WindowMaskType.Mask` 绑定确切遮罩子树。仅解除遮罩根父节点，保留原对象、层级、矩形、颜色、材质、按钮和动画；`Resources/Partners/OfficialPartnerPromptAssetCatalog` 显式绑定窗口、遮罩及原中文文本。已核验相同 GUID／字节的依赖复用现有伙伴资源，不覆盖其他窗口素材。来源、原 CAB／PathID、处理步骤与输出哈希见[称谓输入来源](../../assets/reference/partner-input-dialog-source-manifest.json)。本批未生成素材快照。
+
+`WorldInputDialog` 与 `WorldContentModerationClickMask` 移植原初始化、确定、取消、重置、提示与屏蔽检查顺序；窗口关闭与内容自定义状态由宿主投影。称谓仍经原赠礼控制器的字库、长度、伙伴资格和好感门槛校验，按下文已确认方案本地保存。原输入框字符上限保留，不使用临时窗口的 32 字符限制。保存成功后刷新原称谓文本并播放原退出动画；取消与返回只关闭输入窗口，保留赠礼页。遮罩使用原窗口排序间隔与点击保护时长。
+
+原转换器的空字符串与空动画根路径分别依据原对象字段和编译曲线绑定恢复；空语言键及输入框空值保持原空字符串，不写成字面值 `null`。原缺少的 `ui_null` 继续沿官方 `GetMissingKeyText` 返回键名，不自造翻译。点击音和返回音追踪原 Wwise Event／bank／媒体，复用已核验的本地 PCM；播放器使用 Unity 对象空值检查再补建 `AudioSource`。
+
+主工程隔离 Play Mode 已通过原按钮鼠标射线、取消后保留赠礼页、空称谓拒绝、中文键盘事件及 TMP 正常文字刷新、成功保存并刷新称谓、重新读档，以及点击原遮罩仅关闭输入窗口。已查看打开、输入“挚友”和保存后三帧 450×800 实际 GPU 画面；名册、详情属性、赠礼选择／重置／提交及磁盘恢复、好感说明回归通过并查看五帧实际画面。赠礼规则测试通过舍入、顺序、已有选择、库存及溢出；全工程静态检查（84,707 个 GUID）、主工程 Unity 导入／编译和 `Zjcs.Editor.ProjectTools.Validate` 通过。完整伙伴窗口、赠礼溢出确认弹窗及 Windows Player 仍未完成。
+
 ### 当前原生详情属性区与天赋合并（局部）
 
 `prepare_partner_detail_properties_ui.py` 迁移选定 `884_156692` 的 `NpcDetailPanelPropContent`，保留属性排序、旅行门槛、每组两项、交替背景、原珍宝百分比及转为整数的截断顺序。`PartnerNpcPropertyFormula` 提取原 `BattleFormulaHandler` 的好感／天赋计算及属性合并方法，读取实际存档的好感等级和已激活天赋节点；按当前 `PropId`、`PropLevel`、`PropTypes` 取值并合并，保留原零值、分支和执行顺序。`OfflinePartnerDetailPropertySource` 使用上文当前属性目录，补齐三类天赋属性，不采用历史总表的缺省值替代。

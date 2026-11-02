@@ -38,7 +38,8 @@ namespace Zjcs.Presentation.Home
         void IOfflinePartnerPresentation.PostSound(AudioClip sound, GameObject owner)
         {
             if (sound == null || owner == null) return;
-            var source = owner.GetComponent<AudioSource>() ?? owner.AddComponent<AudioSource>();
+            var source = owner.GetComponent<AudioSource>();
+            if (source == null) source = owner.AddComponent<AudioSource>();
             source.playOnAwake = false; source.spatialBlend = 0f; source.PlayOneShot(sound);
         }
         void IOfflinePartnerPresentation.ShowFriendshipLevelUp(NpcRosterItem npc, long oldFriendship, int oldLevel)
@@ -148,7 +149,7 @@ namespace Zjcs.Presentation.Home
             => WorldMultiLanguageText.Localize == null ? key : WorldMultiLanguageText.Localize(key);
         void IOfflinePartnerGiftPresentation.SystemMessage(string text) => Notify(text);
         void IOfflinePartnerGiftPresentation.PopupInput(Action<IPartnerGiftInputDialog> initialize)
-            => initialize?.Invoke(new OfflinePartnerInputDialog(this));
+            => OpenPartnerInputDialog(initialize);
         void IOfflinePartnerGiftPresentation.PopupConfirm(Action<IPartnerGiftConfirmDialog> initialize)
         {
             var dialog = new OfflinePartnerConfirmDialog();
@@ -158,7 +159,11 @@ namespace Zjcs.Presentation.Home
         void IOfflinePartnerGiftPresentation.PopupFriendship(IWindowOperator owner, bool starGod, Action<IPartnerGiftFriendshipDialog> initialize)
             => OpenPartnerFriendshipDialog(initialize);
         object IOfflinePartnerGiftPresentation.Compact(long count) => host.HomeSettings?.FormatNumber(count) ?? count.ToString();
-        void IOfflinePartnerGiftPresentation.Close(GameObject window) { if (window != null) UnityEngine.Object.Destroy(window); }
+        void IOfflinePartnerGiftPresentation.Close(GameObject window)
+        {
+            if (window == partnerInputWindow && window != null) ClosePartnerInputWindow();
+            else if (window != null) UnityEngine.Object.Destroy(window);
+        }
         void IOfflinePartnerGiftPresentation.ShowProgressionResult(ProgressionResult result)
             => Notify(result?.Message ?? "伙伴赠礼未完成");
 
@@ -244,35 +249,105 @@ namespace Zjcs.Presentation.Home
                 dialog.Init(services.GetNpc(npc.Id));
             }
         }
-        private sealed class OfflinePartnerInputDialog : IPartnerGiftInputDialog
+        private GameObject partnerInputWindow;
+        private GameObject partnerInputMask;
+
+        private void OpenPartnerInputDialog(Action<IPartnerGiftInputDialog> initialize)
+        {
+            DestroyPartnerInputWindow();
+            var assets = OfficialPartnerPromptAssetCatalog.LoadDefault();
+            var staging = new GameObject("PartnerInputStaging", typeof(RectTransform));
+            staging.transform.SetParent(canvas.transform, false);
+            staging.SetActive(false);
+            try
+            {
+                var root = UnityEngine.Object.Instantiate(assets.InputPrefab, staging.transform, false);
+                root.name = "OfficialPartnerInputDialog";
+                var dialog = root.GetComponent<WorldInputDialog>();
+                if (dialog == null) throw new InvalidOperationException("Official input dialog component is missing.");
+                var localization = new OfflinePartnerLocalizationService(assets.Texts);
+                foreach (WorldMultiLanguageText text in root.GetComponentsInChildren<WorldMultiLanguageText>(true))
+                    text.Localizer = key => localization.GetText(key, LanguageType.zh_CN);
+                foreach (TMP_Text text in root.GetComponentsInChildren<TMP_Text>(true)) text.font = catalog.Font;
+                foreach (WorldContentModerationClickMask mask in root.GetComponentsInChildren<WorldContentModerationClickMask>(true))
+                    mask.Configure(new OfflinePartnerContentModeration(this));
+                foreach (WorldButtonSound sound in root.GetComponentsInChildren<WorldButtonSound>(true))
+                    sound.Post = PostPartnerPromptSound;
+                foreach (WorldPopupWindowSound sound in root.GetComponentsInChildren<WorldPopupWindowSound>(true))
+                    sound.Post = PostPartnerPromptSound;
+                dialog.CloseWindow = _ => ClosePartnerInputWindow();
+                var popup = root.GetComponent<WorldPopupWindow>();
+                popup.SetMaskClickAction(() => ClosePartnerInputWindow());
+                partnerInputWindow = root;
+                initialize?.Invoke(new OfflinePartnerInputDialog(dialog));
+                root.transform.SetParent(canvas.transform, false);
+                root.SetActive(true);
+                // Original WindowContainer.OnWindowShowing adds ten, then
+                // WindowMaskBase attaches the native mask at window order - 1.
+                int order = canvas.sortingOrder;
+                foreach (Canvas current in canvas.GetComponentsInChildren<Canvas>())
+                    if (current.overrideSorting && !current.transform.IsChildOf(root.transform))
+                        order = Math.Max(order, current.sortingOrder);
+                popup.SetCanvasSortingOrder(order + 10);
+                partnerInputMask = UnityEngine.Object.Instantiate(assets.MaskPrefab, canvas.transform, false);
+                partnerInputMask.name = "OfficialPartnerInputMask";
+                partnerInputMask.GetComponent<WorldWindowMask>().AttachToWindow(popup);
+                popup.Show();
+            }
+            catch
+            {
+                DestroyPartnerInputWindow();
+                throw;
+            }
+            finally { UnityEngine.Object.Destroy(staging); }
+        }
+
+        private void PostPartnerPromptSound(AudioClip clip, GameObject owner)
+            => ((IOfflinePartnerPresentation)this).PostSound(clip, owner);
+
+        private bool ClosePartnerInputWindow()
+        {
+            if (partnerInputWindow == null) return false;
+            var root = partnerInputWindow;
+            root.GetComponent<WorldPopupWindow>().Hide(() =>
+            {
+                if (partnerInputWindow == root) partnerInputWindow = null;
+                if (partnerInputMask != null) UnityEngine.Object.Destroy(partnerInputMask);
+                partnerInputMask = null;
+                if (root != null) UnityEngine.Object.Destroy(root);
+            });
+            return true;
+        }
+
+        private void DestroyPartnerInputWindow()
+        {
+            if (partnerInputWindow != null) UnityEngine.Object.Destroy(partnerInputWindow);
+            partnerInputWindow = null;
+            if (partnerInputMask != null) UnityEngine.Object.Destroy(partnerInputMask);
+            partnerInputMask = null;
+        }
+
+        private sealed class OfflinePartnerContentModeration : IWorldContentModerationServices
         {
             private readonly HomeHudView owner;
-            private GameObject root;
-            private TMP_InputField input;
-            private Action<string> submit;
-            public OfflinePartnerInputDialog(HomeHudView owner) { this.owner = owner; }
-            public GameObject GameObject => root;
+            public OfflinePartnerContentModeration(HomeHudView value) { owner = value; }
+#pragma warning disable 0067
+            public event Action<HashSet<long>> DisabledUpdated;
+#pragma warning restore 0067
+            // Confirmed offline custom-title policy has no server disable switch.
+            public bool CheckDisabled(int customType) => false;
+            public void ShowError(int code) => ((IOfflinePartnerGiftPresentation)owner).ShowError(code, null, false);
+        }
+
+        private sealed class OfflinePartnerInputDialog : IPartnerGiftInputDialog
+        {
+            private readonly WorldInputDialog dialog;
+            public OfflinePartnerInputDialog(WorldInputDialog value) { dialog = value; }
+            public GameObject GameObject => dialog.gameObject;
             public void Init(string titleKey, string placeholderKey, Action<string> submit)
-            {
-                this.submit = submit;
-                root = owner.CreatePartnerPromptRoot("PartnerGiftInput");
-                Transform panel = owner.CreatePartnerPromptPanel(root.transform);
-                owner.CreatePartnerPromptText(panel, owner.LocalizePartnerText(titleKey), 27f,
-                    new Vector2(0.08f, 0.72f), new Vector2(0.92f, 0.90f));
-                input = owner.CreatePartnerPromptInput(panel, owner.LocalizePartnerText(placeholderKey),
-                    new Vector2(0.08f, 0.43f), new Vector2(0.92f, 0.64f));
-                owner.CreatePartnerPromptButton(panel, "取消", new Vector2(0.08f, 0.10f), new Vector2(0.44f, 0.30f),
-                    () => owner.ClosePartnerPrompt(this));
-                owner.CreatePartnerPromptButton(panel, "确认", new Vector2(0.56f, 0.10f), new Vector2(0.92f, 0.30f),
-                    () =>
-                    {
-                        string value = input == null ? string.Empty : input.text;
-                        submit?.Invoke(value);
-                    });
-                input.Select();
-                input.ActivateInputField();
-            }
-            public void SetNpcFriendshipTagModerationClickMask() { }
+                => dialog.Init(titleKey, placeholderKey, submit);
+            // Original Common.ContentCustomType.NpcFriendShipTag = 11.
+            public void SetNpcFriendshipTagModerationClickMask() => dialog.SetContentModerationClickMask(11);
         }
 
         private string LocalizePartnerText(string key)
@@ -323,41 +398,6 @@ namespace Zjcs.Presentation.Home
             text.text = value ?? string.Empty;
             text.raycastTarget = false;
             return text;
-        }
-
-        private TMP_InputField CreatePartnerPromptInput(Transform parent, string placeholder,
-            Vector2 anchorMin, Vector2 anchorMax)
-        {
-            var go = new GameObject("Input", typeof(RectTransform), typeof(Image), typeof(TMP_InputField));
-            go.transform.SetParent(parent, false);
-            RectTransform rect = (RectTransform)go.transform;
-            rect.anchorMin = anchorMin;
-            rect.anchorMax = anchorMax;
-            rect.offsetMin = Vector2.zero;
-            rect.offsetMax = Vector2.zero;
-            Image image = go.GetComponent<Image>();
-            image.color = new Color32(238, 232, 218, 255);
-            var viewport = new GameObject("Viewport", typeof(RectTransform), typeof(RectMask2D));
-            viewport.transform.SetParent(go.transform, false);
-            RectTransform viewportRect = (RectTransform)viewport.transform;
-            viewportRect.anchorMin = new Vector2(0.03f, 0.08f);
-            viewportRect.anchorMax = new Vector2(0.97f, 0.92f);
-            viewportRect.offsetMin = Vector2.zero;
-            viewportRect.offsetMax = Vector2.zero;
-            var text = CreatePartnerPromptText(viewport.transform, string.Empty, 24f, Vector2.zero, Vector2.one);
-            text.alignment = TextAlignmentOptions.MidlineLeft;
-            var hint = CreatePartnerPromptText(viewport.transform, placeholder, 22f, Vector2.zero, Vector2.one);
-            hint.alignment = TextAlignmentOptions.MidlineLeft;
-            hint.color = new Color32(130, 125, 116, 255);
-            var field = go.GetComponent<TMP_InputField>();
-            field.textViewport = viewportRect;
-            field.textComponent = text;
-            field.placeholder = hint;
-            field.targetGraphic = image;
-            field.lineType = TMP_InputField.LineType.SingleLine;
-            field.contentType = TMP_InputField.ContentType.Standard;
-            field.characterLimit = 32;
-            return field;
         }
 
         private Button CreatePartnerPromptButton(Transform parent, string label, Vector2 anchorMin,

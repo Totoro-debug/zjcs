@@ -794,6 +794,7 @@ namespace Zjcs.Presentation.Home
 
         public bool TryHandleBack()
         {
+            if (ClosePartnerInputWindow()) return true;
             if (NpcTravelModalOpen)
             {
                 CloseNpcTravelPages();
@@ -863,6 +864,7 @@ namespace Zjcs.Presentation.Home
 
         public void CloseDialog()
         {
+            DestroyPartnerInputWindow();
             if (partnerFriendshipPanel != null)
             {
                 UnityEngine.Object.Destroy(partnerFriendshipPanel);

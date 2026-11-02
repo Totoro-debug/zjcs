@@ -21,7 +21,11 @@ namespace Zjcs.Official.WorldUI
         private bool closing;
         private float mShowStartTime;
         private Action mMaskClickAction;
-        public bool CloseByClickMask { get; set; }
+        private Playable lastPlayable;
+        public bool IsPause { get; private set; }
+        public event Action<GameObject> OnPauseEvent, OnResumeEvent;
+        [SerializeField] private bool mCloseByClickMask;
+        public bool CloseByClickMask { get => mCloseByClickMask; set => mCloseByClickMask = value; }
 
         private void Awake()
         {
@@ -40,7 +44,7 @@ namespace Zjcs.Official.WorldUI
             if (transition != null) StopCoroutine(transition);
             mShowStartTime = Time.time;
             OnShowing?.Invoke(this);
-            transition = StartCoroutine(Transition(mShowClip, () => { OnShow?.Invoke(this); Play(mLoopClip); }));
+            transition = StartCoroutine(Transition(mShowClip, () => { OnShow?.Invoke(this); Play(mLoopClip); }, true));
         }
 
         public void Hide(Action completed)
@@ -54,10 +58,39 @@ namespace Zjcs.Official.WorldUI
                 gameObject.SetActive(false);
                 OnHide?.Invoke(this);
                 completed?.Invoke();
-            }));
+            }, false));
         }
 
         public void SetMaskClickAction(Action action) => mMaskClickAction = action;
+
+        public bool Pause()
+        {
+            if (IsPause) return false;
+            IsPause = true;
+            lastPlayable = output.GetSourcePlayable();
+            output.SetSourcePlayable(Playable.Null);
+            SetCanvasEnable(false);
+            OnPauseEvent?.Invoke(gameObject);
+            return true;
+        }
+
+        public bool Resume()
+        {
+            if (!IsPause) return false;
+            IsPause = false;
+            SetCanvasEnable(true);
+            if (lastPlayable.IsValid()) output.SetSourcePlayable(lastPlayable);
+            OnResumeEvent?.Invoke(gameObject);
+            return true;
+        }
+
+        private void SetCanvasEnable(bool enable)
+        {
+            var group = GetComponent<CanvasGroup>();
+            group.alpha = enable ? 1f : 0f;
+            group.interactable = enable;
+            group.blocksRaycasts = enable;
+        }
 
         public void SetCanvasSortingOrder(int order)
         {
@@ -80,10 +113,18 @@ namespace Zjcs.Official.WorldUI
             return true;
         }
 
-        private IEnumerator Transition(AnimationClip clip, Action completed)
+        private IEnumerator Transition(AnimationClip clip, Action completed, bool supportPause)
         {
             Play(clip);
-            if (clip != null) yield return new WaitForSeconds(clip.length);
+            if (clip != null)
+            {
+                float remaining = clip.length;
+                while (remaining > 0f)
+                {
+                    yield return null;
+                    if (!(IsPause & supportPause)) remaining -= Time.deltaTime;
+                }
+            }
             transition = null;
             completed?.Invoke();
         }

@@ -186,7 +186,8 @@ namespace Zjcs.Editor.Home
             if (Environment.GetCommandLineArgs().Contains("-partnersAcceptance"))
             {
                 OfflinePartnerGiftConfiguration configuration = OfficialPartnerGiftAssetCatalog.LoadDefault();
-                int level = 1;
+                int level = Environment.GetCommandLineArgs().Contains("-partnerTitlesAcceptance")
+                    ? configuration.CanCustomTagFriendShipLevel : 1;
                 long experience = configuration.Get(8402, level).FriendshipExp;
                 Apply("partner", player =>
                 {

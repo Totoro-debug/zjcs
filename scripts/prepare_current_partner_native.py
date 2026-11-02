@@ -39,7 +39,7 @@ def script_id(script):
     return struct.unpack('<i', MD4.new(('s\0\0\0' + script.m_Namespace + script.m_ClassName).encode()).digest()[:4])[0]
 
 
-class UnityYamlLoader(yaml.SafeLoader):
+class UnityYamlLoader(getattr(yaml, 'CSafeLoader', yaml.SafeLoader)):
     def construct_mapping(self, node, deep=False):
         for key, value in node.value:
             if key.value == 'myKey' and value.tag == 'tag:yaml.org,2002:null' and value.value == '':
@@ -102,10 +102,18 @@ class PartnerNativeRecovery:
                     self.typed[key] = self.schemas.read(obj)
         return self.typed[key]
 
-    def recover(self, name, destination, *, bundle=BUNDLE, native_relative=None):
+    def recover(self, name, destination, *, bundle=BUNDLE, native_relative=None,
+                source_root=None, native_root_id=None):
         objects = self.objects if bundle == BUNDLE else self.apk.objects(bundle)
-        original, = [obj for obj in objects if obj.type.name == 'GameObject' and obj.read().m_Name == name
-                     and obj.read().m_Component[0].component.read().m_Father.path_id == 0]
+        if (source_root is None) != (native_root_id is None):
+            raise ValueError('Subtree recovery needs both original and native root identities')
+        if source_root is None:
+            original, = [obj for obj in objects if obj.type.name == 'GameObject' and obj.read().m_Name == name
+                         and obj.read().m_Component[0].component.read().m_Father.path_id == 0]
+        else:
+            original = source_root
+            if original.type.name != 'GameObject' or not any(identity(obj) == identity(original) for obj in objects):
+                raise ValueError('Original subtree root does not belong to the selected bundle')
         relative = Path('Prefabs/UI/Npc') / (name + '.prefab') if native_relative is None else Path(native_relative)
         path = self.native / relative
         if path.suffix != '.prefab' or not path.resolve().is_relative_to(self.native.resolve()):
@@ -117,10 +125,11 @@ class PartnerNativeRecovery:
         native_roots = []
         for file_id, doc in docs.items():
             go = doc.get('GameObject')
-            if go is None or go['m_Name'] != name:
+            if go is None or go['m_Name'] != original.read().m_Name:
                 continue
             transform = docs[go['m_Component'][0]['component']['fileID']]
-            if next(iter(transform.values()))['m_Father']['fileID'] == 0:
+            if ((native_root_id is not None and file_id == native_root_id)
+                    or (native_root_id is None and next(iter(transform.values()))['m_Father']['fileID'] == 0)):
                 native_roots.append(file_id)
         native_root, = native_roots
         mapping, pairs = {}, []
@@ -161,6 +170,12 @@ class PartnerNativeRecovery:
                 visit(child_go, target_go, hierarchy + '/' + child_go.read().m_Name)
 
         visit(original, native_root, name)
+        subtree = None
+        if source_root is not None:
+            docs = {file_id: docs[file_id] for file_id in mapping.values()}
+            transform = next(iter(docs[docs[native_root]['GameObject']['m_Component'][0]['component']['fileID']].values()))
+            subtree = dict(original_parent=transform['m_Father'], detached_parent=dict(fileID=0))
+            transform['m_Father'] = dict(fileID=0)
         external, unresolved = {}, {}
 
         def learn(source, native, owner):
@@ -229,6 +244,8 @@ class PartnerNativeRecovery:
             mapped_objects=len(mapping), recovered_components=len(recovered), unresolved=len(unresolved),
             pendingBindings=unresolved,
             output=output.name)
+        if subtree is not None:
+            record['subtree'] = subtree
         self.outputs.append((path, output, data, record))
         self.proof['prefabs'].append(record)
         print(name, 'objects', len(mapping), 'recovered', len(recovered), 'external pending', len(unresolved), flush=True)
