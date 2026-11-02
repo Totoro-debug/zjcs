@@ -99,6 +99,107 @@ namespace Zjcs.Editor
             }
         }
 
+        private static HpRecoveryProbe ConfigureHpRecoveryProbe(FightBattleCheckpoint checkpoint)
+        {
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HP_RECOVERY_ACCEPTANCE") != "1") return null;
+            var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
+            var player = checkpoint.Units.Single(value => value.Id == 1);
+            var enemy = checkpoint.Units.First(value => value.Side != player.Side && value.Hp > 0);
+            foreach (var unit in new[] { player, enemy })
+            {
+                long max = unit == player ? 1000000L : 3000000L;
+                foreach (var property in unit.Properties.Concat(unit.BaseProperties))
+                    if (property.Id == catalog.PropertyType("MaxHp")) property.Value = max;
+                unit.MaxHp = unit.LastMaxHp = max;
+                unit.Hp = unit.Turn.Hp = unit == player ? 400000L : max;
+            }
+            player.Properties.Add(new FightPropertyValue { Id = 990999, Value = 10000 });
+            player.BaseProperties.Add(new FightPropertyValue { Id = 990999, Value = 10000 });
+            player.Statuses.Add(catalog.CreateStatus(25067, 1, 1, 9925067));
+            // Isolated checkpoint only: deterministic fixed hits retain the real player skill's
+            // identity/presentation. The original status and shipped rule tables stay untouched.
+            var playerSkill = player.Skills.First(value => value.Slot == 0);
+            ConfigureHpRecoverySkill(playerSkill, 500000, true);
+            player.SkillState.Slots.First(value => value.Slot == 0).Cooldown = 0;
+            var enemySkill = enemy.Skills.First(value => value.Slot == 0);
+            enemy.Skills.Clear(); enemy.SkillState.Slots.Clear();
+            ConfigureHpRecoverySkill(enemySkill, 200000, false);
+            enemy.Skills.Add(enemySkill);
+            enemy.SkillState.Slots.Add(new FightSkillSlotState { Slot = 0, LimitedTimes = -1 });
+            foreach (var entry in checkpoint.Timeline.Entries)
+                entry.Next = entry.Id == enemy.Id ? 1 : entry.Id == player.Id ? 2 : entry.Next;
+            checkpoint.Timeline.Entries.Sort((left, right) => left.Next.CompareTo(right.Next));
+            return new HpRecoveryProbe(enemy.Id);
+        }
+
+        private static void ConfigureHpRecoverySkill(FightBattleSkillDefinition skill, long damage, bool lifesteal)
+        {
+            var originalHit = FightBattleHitCollector.CollectAll(skill).First(value => value.HasFixedDamage);
+            skill.HitGraphRoots.Clear(); skill.HitGraphRootEntityIds.Clear(); skill.HitGraphRootEntityId = 0;
+            skill.HitGraphEntities.Clear(); skill.Hits.Clear(); skill.Range.Clear();
+            for (int x = -12; x <= 12; x++)
+                for (int y = -12; y <= 12; y++) skill.Range.Add(new FightGridPoint(x, y));
+            skill.CanTriggerChild = true;
+            skill.TargetType = 1; skill.SkillTargetType = 0;
+            skill.Hits.Add(new FightBattleHitDefinition { EntityId = originalHit.EntityId, DamageId = originalHit.DamageId,
+                DamageType = 8, HasCustomDamage = true, CustomDamage = damage, Delay = 0.4f,
+                HemophagiaProperty = lifesteal ? 990999 : 0 });
+        }
+
+        private sealed class HpRecoveryProbe
+        {
+            private readonly int enemyId;
+            private bool activated, recovered, rendered;
+            public bool ReadyToCapture { get; private set; }
+            public HpRecoveryProbe(int enemyId) { this.enemyId = enemyId; }
+            public void ObserveStep(OfficialBattleRuntimeController controller)
+            {
+                var cp = controller.Checkpoint;
+                var step = cp.Receipts.Last().Event;
+                var player = cp.Units.Single(value => value.Id == 1);
+                if (!activated)
+                {
+                    Require(step.ActorId == enemyId && player.Hp > 0L && player.Hp <= player.MaxHp * 3 / 10
+                        && player.Statuses.Any(value => value.ClassId == 24315),
+                        "Enemy hit did not activate original 25067 -> 24315 below 30% HP: actor="
+                        + step.ActorId + ", hp=" + player.Hp + ", maxHp=" + player.MaxHp
+                        + ", statuses=" + string.Join(",", player.Statuses.Select(value => value.ClassId))
+                        + ", casts=" + string.Join(",", step.SkillCasts.Select(value => value.SkillEntityId))
+                        + ", damage=" + string.Join(",", step.DamageEvents.Select(value => value.SourceId
+                            + ">" + value.TargetId + ":" + value.Damage)));
+                    activated = true;
+                    return;
+                }
+                if (recovered) return;
+                var heal = step.DamageEvents.FirstOrDefault(value => value.SourceId == 1 && value.IsCure);
+                if (heal == null) return;
+                Require(heal.TargetId == 1 && heal.AfterHp > 300000L && Math.Abs(heal.Delay - 0.4f) < 0.0001f
+                    && player.Statuses.All(value => value.ClassId != 24315),
+                    "Lifesteal did not clear original 24315 at its parent hit time.");
+                recovered = true;
+                Debug.Log("[HP recovery hosts] original 25067 -> 24315: enemy hit activated; lifesteal="
+                    + heal.Damage + ", afterHp=" + heal.AfterHp + "; threshold cleanup passed.");
+            }
+            public void ObservePresentation()
+            {
+                if (!recovered) return;
+                var floats = UnityEngine.Object.FindObjectsOfType<OfficialBattleDamageFloat>()
+                    .Where(value => value.TargetId == 1 && value.EffectType == 3
+                        && value.GetComponentsInChildren<Renderer>().Any(renderer => renderer.isVisible)).ToArray();
+                rendered |= floats.Length > 0;
+                ReadyToCapture = floats.Any(value => (float)typeof(OfficialBattleDamageFloat)
+                    .GetField("elapsed", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(value) >= 0.15f);
+            }
+            public void Verify(string host, FightBattleCheckpoint checkpoint)
+            {
+                Require(activated && recovered && rendered, host + " did not execute/render its lifesteal recovery.");
+                string saved = FightBattleCheckpointSerializer.Save(checkpoint);
+                Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
+                    host + " changed its HP recovery checkpoint after reload.");
+                Debug.Log("[HP recovery hosts] " + host + ": native cure float and checkpoint reload passed.");
+            }
+        }
+
         private static HpListenerProbe ConfigureHpListenerProbe(FightBattleCheckpoint checkpoint)
         {
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HP_LISTENER_ACCEPTANCE") != "1") return null;

@@ -834,6 +834,7 @@ namespace Zjcs.Combat.Official
                     var configuredKillSkillInvocations =
                         new List<FightBattleStatusSkillInvocation>();
                     var hpTriggerSkills = new List<FightBattleStatusStateTrigger>();
+                    var hemophagiaTriggerSkills = new List<FightBattleStatusStateTrigger>();
                     configuredTriggerSkills.AddRange(resolved.TriggeredStatusSkillInvocations);
                     if (resolved.TriggeredStatusSkillInvocations.Count == 0)
                         triggerSkills.AddRange(resolved.TriggeredStatusSkills);
@@ -848,7 +849,11 @@ namespace Zjcs.Combat.Official
                         damageEvents, movements, ref lastDelay);
                     ApplyHitDisperse(actor, target, hit, random);
                     ApplyHitMove(actor, target, skill, hit, movements);
-                    ApplyHemophagia(actor, hit, damage, hitDelay, skill, damageEvents);
+                    bool recoveredHp = ApplyHemophagia(actor, hit, damage, hitDelay, skill, damageEvents);
+                    if (recoveredHp && actor != target)
+                        FightStatusTriggerRuntime.Apply(actor, statusCatalog, false, hemophagiaTriggerSkills,
+                            random, skill, units, configuredHpTriggerSkills,
+                            executeHpSkills: ExecuteHpStartupSkills);
                     FightStatusTriggerRuntime.Apply(target, statusCatalog, false, hpTriggerSkills,
                         random, skill, units, configuredHpTriggerSkills,
                         executeHpSkills: ExecuteHpStartupSkills);
@@ -869,6 +874,9 @@ namespace Zjcs.Combat.Official
                             damageEvents, movements, ref lastDelay, out _, out _);
                     if (hpTriggerSkills.Count > 0)
                         ExecuteTriggerSkills(target, hpTriggerSkills, casts, damageEvents, movements,
+                            ref lastDelay);
+                    if (hemophagiaTriggerSkills.Count > 0)
+                        ExecuteTriggerSkills(actor, hemophagiaTriggerSkills, casts, damageEvents, movements,
                             ref lastDelay);
                     if (target.Hp <= 0)
                     {
@@ -1837,23 +1845,23 @@ namespace Zjcs.Combat.Official
         /// table does not mark it, so the scale is an explicit local assumption) and the heal is
         /// recorded as a cure event so statistics and replay stay consistent.
         /// </summary>
-        private void ApplyHemophagia(FightBattleUnitState actor, FightBattleHitDefinition hit,
+        private bool ApplyHemophagia(FightBattleUnitState actor, FightBattleHitDefinition hit,
             FightBattleDamageEvent applied, float delay, FightBattleSkillDefinition skill,
             List<FightBattleDamageEvent> events)
         {
-            if (hit.HemophagiaProperty <= 0 || applied == null || applied.IsCure) return;
+            if (hit.HemophagiaProperty <= 0 || applied == null || applied.IsCure) return false;
             long dealt = Math.Abs(applied.Damage);
-            if (dealt <= 0) return;
+            if (dealt <= 0) return false;
             long property = GetProperty(actor, hit.HemophagiaProperty);
-            if (property <= 0) return;
+            if (property <= 0) return false;
             double rate = property / 10000.0;
             if (rate > 1.0) rate = 1.0;
             long heal = (long)Math.Round(dealt * rate);
-            if (heal <= 0) return;
+            if (heal <= 0) return false;
             long before = actor.Hp;
             actor.Hp = Math.Min(actor.MaxHp, actor.Hp + heal);
             long actual = actor.Hp - before;
-            if (actual <= 0) return;
+            if (actual <= 0) return false;
             var cure = new FightBattleDamageEvent
             {
                 DamageId = applied.DamageId,
@@ -1874,6 +1882,7 @@ namespace Zjcs.Combat.Official
             };
             events.Add(cure);
             checkpoint.Statistics.RecordHit(cure);
+            return true;
         }
 
         /// <summary>

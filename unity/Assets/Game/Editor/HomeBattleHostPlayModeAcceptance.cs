@@ -388,6 +388,7 @@ namespace Zjcs.Editor
             HpStartupProbe hpStartup = ConfigureHpStartupProbe(checkpoint);
             HpListenerProbe hpListener = ConfigureHpListenerProbe(checkpoint);
             HpForbiddenProbe hpForbidden = ConfigureHpForbiddenProbe(checkpoint);
+            HpRecoveryProbe hpRecovery = ConfigureHpRecoveryProbe(checkpoint);
             int initialCounter = checkpoint.Counter;
             controller.StepCompleted += result => {
                 checkpoint = result.Checkpoint;
@@ -399,6 +400,7 @@ namespace Zjcs.Editor
                 hpStartup?.ObserveStep(controller);
                 hpListener?.ObserveStep(controller);
                 hpForbidden?.ObserveStep(controller);
+                hpRecovery?.ObserveStep(controller);
                 if (checkpoint.Counter == initialCounter + 1 || checkpoint.Finished)
                     Debug.Log("[Battle hosts] " + name + " step=" + checkpoint.Counter
                         + " finished=" + checkpoint.Finished);
@@ -462,13 +464,15 @@ namespace Zjcs.Editor
             float previousTimeScale = Time.timeScale;
             try
             {
-                Time.timeScale = hpListener == null ? 5 : 1;
+                Time.timeScale = hpListener == null && hpRecovery == null ? 5 : 1;
                 while (runner != null)
                 {
                     triggerTiming?.ObservePresentation();
                     hpStartup?.ObservePresentation();
                     hpListener?.ObservePresentation();
-                    if (!capturedCure && hpListener != null && hpListener.ReadyToCapture)
+                    hpRecovery?.ObservePresentation();
+                    if (!capturedCure && (hpListener != null && hpListener.ReadyToCapture
+                        || hpRecovery != null && hpRecovery.ReadyToCapture))
                     {
                         float captureTimeScale = Time.timeScale;
                         Time.timeScale = 0f;
@@ -508,6 +512,7 @@ namespace Zjcs.Editor
             hpStartup?.Verify(name, checkpoint);
             hpListener?.Verify(name, checkpoint);
             hpForbidden?.Verify(name, checkpoint);
+            hpRecovery?.Verify(name, checkpoint);
             VerifyEquipmentBattlePassives(name, checkpoint, true);
             yield return SettleUi();
             yield return Capture(output, name + "-result");
