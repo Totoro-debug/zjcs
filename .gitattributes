@@ -1559,3 +1559,27 @@ unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerStarGodUiServices.cs*
 unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerStarGodPanelView.cs* text eol=lf
 unity/Assets/Official/Partners/UI/StarGod.meta -text
 unity/Assets/Official/Partners/UI/StarGod/** -text
+
+# Preserve complete partner panel dependencies and independent Canvas sources.
+scripts/prepare_partner_panel_*.py text eol=lf
+scripts/partner_panel_animator_binding.py text eol=lf
+scripts/record_partner_panel_runtime_sources.py text eol=lf
+scripts/fixtures/partner_panel_native_graphic_validation.cs text eol=lf
+assets/reference/partner-panel-*-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Offline/ProfessionUI/IProfessionNativeUiPoseSource.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeUi*Graphic.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerPanelAssetCatalog.cs* text eol=lf
+# Unity writes empty importer values with a trailing space; retain exact metadata bytes.
+unity/Assets/Game/Runtime/Offline/ProfessionUI/IProfessionNativeUiPoseSource.cs.meta -text whitespace=-blank-at-eol
+unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeUi*Graphic.cs.meta -text whitespace=-blank-at-eol
+unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerPanelAssetCatalog.cs.meta -text whitespace=-blank-at-eol
+unity/Assets/Game/Runtime/Official/PartnersUI/StateAnimation*.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/PartnerPanelTipDotServices.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/Pet*.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDot*Furniture*.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotHasAnyNpcDialogueConditionNode.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotLinkNpcNode.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotLinkPet*.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotPet*.cs* text eol=lf
+unity/Assets/Official/Partners/UI/Panel.meta -text
+unity/Assets/Official/Partners/UI/Panel/** -text

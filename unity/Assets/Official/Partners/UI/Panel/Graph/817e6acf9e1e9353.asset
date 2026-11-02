@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: 73d1312f954855f99cd6cbba7a148413, type: 3}
+  m_Name: '[16][Cnd]检查是否已经拥有家具'
+  graph: {fileID: 11400000, guid: 5539fb5427500005ab779dda70bf607f, type: 2}
+  position: {x: 1560.0, y: -72.0}
+  ports:
+    keys:
+    - Parents
+    - Childs
+    values:
+    - _fieldName: Parents
+      _node: {fileID: 11400000, guid: a1d71511dfd80ecc5a9d6282277abc65, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Childs
+        node: {fileID: 11400000, guid: 3bcde8c927a221f3dd10e28b5c24a298, type: 2}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+    - _fieldName: Childs
+      _node: {fileID: 11400000, guid: a1d71511dfd80ecc5a9d6282277abc65, type: 2}
+      _typeQualifiedName: XNode.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _flowConnectionType: 0
+      _dynamic: 0
+  NodeId: -1
+  Mono: ''
+  IsMonoShow: 0
+  Parents: {fileID: 0}
+  Childs: {fileID: 0}
+  IsBan: 0
+  NodeDesc: ''
+  SelectedType: ''
+  NodeName: ''
+  TipDotNodeId: 16
+  TipDotNode: {rid: 2750172587488445061}
+  RuntimeTipDotNode: {rid: -2}
+  PresetData:
+    Priority: 1
+    PresetTipLevel: 4
+    NeedAllShow: 0
+    IsRoot: 0
+    IgnoreLevels: []
+    IsReverse: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: '', ns: '', asm: ''}
+    - rid: 2750172587488445061
+      type: {class: TipDotHasFurnitureConditionNode, ns: Zjcs.Official.PartnersUI, asm: Zjcs.Official.PartnerRosterUI}
+      data:
+        Parents: []
+        Childs: []
+        NodeKey: {GraphName: DiningTable, NodeName: d20564cf-1d1d-4574-bde8-1353f83b9c04}
+        TipDotInfo: {TipLevel: 0, Data: ''}
+        IsShowTip: 0
+        mFurniture: 2

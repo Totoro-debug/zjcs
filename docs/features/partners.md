@@ -316,6 +316,16 @@ Home 赠礼溢出回调现打开原窗口，保留原标题、说明、按钮、
 
 本轮全工程静态检查通过（84,865 个 GUID）；主工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。原生资源记录 93 项输入、284 项安装输出及 39 份脚本绑定。完整正式宿主仍未完成。
 
+### 当前完整名册窗口资源与原生 Canvas 后端（局部）
+
+`prepare_partner_panel_native.py` 恢复当前 `884_156692` 完整 `NpcPanel` 的 2,962 个对象，不再截取单页；沿原外部引用恢复 200 对象的对话条目，并复用名册卡片与星神分组。保留三个分页、关闭入口、标题、层级、坐标、原材质、粒子和动画。原 `StateAnimationConfig`／`StateAnimationData` 仅适配命名空间与既有状态接口；分页控制器的无动作初始状态和 Entry 选择器对照包内编译常量逐项验证，未改写为简化状态机。三段与已安装名册同来源、同字节的动画显式重映射到既有 GUID，保留共享控制器和元数据。输入、对象身份、映射、输出及显式 Resources 目录见[完整窗口资源来源](../../assets/reference/partner-panel-native-source-manifest.json)；本批未生成素材快照。
+
+窗口依赖的家具修复／拥有、未读通话、伙伴动态链接及宠物升级／进化／潜能／技能／能力提示节点由原代码直接迁移到 `Roster/TipDots/`，只将玩家、解析器、条件订阅及克隆依赖改为显式端口。保留原注册／注销顺序、宠物食物倒序累计及严格大于所需经验的比较，未删除原提示图。完整窗口对应的本地数据与图运行服务仍待绑定，不据此声称提示功能已接通。
+
+`ProfessionNativeUiGraphic` 保留原六个玩家外观原型的序列化字段；这些原型的骨骼资产原本为空，未选择玩家时不生成替代图形。独立 Canvas 后端消费已有原生骨骼姿态及网格批次，使用原图集页、材质、UV、顶点色和索引，按 Canvas 像素比例绘制并接受 UI 遮罩。动画求值由显式姿态来源负责；完整玩家外观动画过渡、额外翻转／布局／物理／分隔参数和正式窗口宿主不在本后端已完成范围。代码及加载绑定见[窗口运行绑定来源](../../assets/reference/partner-panel-runtime-source-manifest.json)。
+
+`prepare_partner_panel_validation.py` 在隔离 Unity URP Play Mode 导入完整窗口依赖，检查六个原外观原型、原材质与动画字段以及全部组件引用。独立绘制使用实际 8401／10412 原生骨骼、图集和贴图，验证三个待机时点的顶点变化、几何／材质通知、冻结后重开、网格边界及重复释放；RectMask2D 额外检查实际 GPU 裁剪边界外无角色像素。已查看八帧 450×800 GPU 画面，运行无 Unity 错误。姿态来源在此验证中显式采用未混合动画，不代表原应用动画图与完整窗口交互已经完成。全工程静态检查通过（84,993 个 GUID），主工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。完整窗口共记录 481 项安装路径，复用 161 项已有资产；正式窗口启用、数据服务、模拟点击流程及 Windows Player 尚未完成。
+
 ### 当前原生详情属性区与天赋合并（局部）
 
 `prepare_partner_detail_properties_ui.py` 迁移选定 `884_156692` 的 `NpcDetailPanelPropContent`，保留属性排序、旅行门槛、每组两项、交替背景、原珍宝百分比及转为整数的截断顺序。`PartnerNpcPropertyFormula` 提取原 `BattleFormulaHandler` 的好感／天赋计算及属性合并方法，读取实际存档的好感等级和已激活天赋节点；按当前 `PropId`、`PropLevel`、`PropTypes` 取值并合并，保留原零值、分支和执行顺序。`OfflinePartnerDetailPropertySource` 使用上文当前属性目录，补齐三类天赋属性，不采用历史总表的缺省值替代。

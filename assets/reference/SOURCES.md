@@ -289,3 +289,7 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 `prepare_partner_star_god_ui.py` 校验选定 `884_156692` 的四个星神控制器及共享排序、配置、图像定位原码；输入与输出见 [星神控制器来源](partner-star-god-ui-source-manifest.json)。`prepare_partner_star_god_native.py` 沿原 `NpcPanel` 星神区域及其真实外部 `StarGodNpcItemGroupItem` 引用恢复完整层级，依组件对象身份保留跨 prefab PPtr，并闭合三个星神的地区图像、九种相遇信物原图标、中文文本、动画、原 Wwise Event 对应 PCM 及 Windows 原生资源。先核对实际 APK `881_156673`，再使用所选云端资源和已校验转换缓存；输入包／对象、工具、资源复用、输出和 Resources 显式绑定哈希见 [星神原生资源来源](partner-star-god-native-source-manifest.json)。行为与验证范围仅在[伙伴功能](../../docs/features/partners.md)维护。本批未生成完整素材快照。
 
 星神相遇材料枚举直接取当前 `NpcHelper.GetMeetNpcItems`，由 `partner-condition-source-manifest.json` 记录原方法、生成器与运行输出；当前图标同时保留原地址、manifest GUID、Sprite 对象及 Windows 转换身份。本地状态与原页面加载绑定的输入输出哈希见 [星神本地绑定来源](partner-star-god-local-source-manifest.json)。
+
+### 当前完整伙伴窗口来源
+
+`prepare_partner_panel_native.py` 按选定 `884_156692` 恢复完整 `NpcPanel`、外部对话条目和实际资源依赖，复用已校验名册卡片与星神分组。先核对 APK，再使用所选云端资源与 Windows 转换缓存；原控制器常量校验、同来源动画 GUID 复用、图节点原码、状态动画支持及安装输出哈希见[完整窗口原生来源](partner-panel-native-source-manifest.json)。独立原生 Canvas 后端、显式 Resources 绑定与验证输入见[窗口运行绑定来源](partner-panel-runtime-source-manifest.json)。行为与验证范围仅在[伙伴功能](../../docs/features/partners.md)维护，本批未纳入素材快照。
