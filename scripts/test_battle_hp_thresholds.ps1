@@ -253,7 +253,7 @@ Assert-Hp ($killInvocations.Count -eq 1 `
     'KillSkill did not preserve the configured death-position target.'
 
 # 25067 removes its configured 24315 status when the HP condition is no longer met.
-$notMeet = $catalog.CreateStatus(25067, 1, 1, 5)
+$notMeet = $catalog.CreateStatus(25067, 1, 1, 5, 25067, 14521, 5, 20, 1)
 $units.Clear(); $units.Add($owner)
 $owner.Hp = 30
 $owner.Statuses.Clear(); $owner.Statuses.Add($notMeet)
@@ -266,6 +266,45 @@ $owner.Hp = 100
     $null, [Zjcs.Combat.Official.FightRandomStream]::new(17), $null, $units)
 Assert-Hp (-not ($owner.Statuses.ClassId -contains 24315)) `
     'NotMeetRemoveStatus did not remove its configured status after the condition cleared.'
+
+# A condition clears only its own contribution, including after checkpoint restoration.
+foreach ($restore in $false, $true) {
+    $owner.Hp = 30; $owner.Statuses.Clear()
+    $notMeet = $catalog.CreateStatus(25067, 1, 1, 5, 25067, 14521, 5, 20, 1)
+    $notMeet.Origin = [Zjcs.Combat.Official.FightBattleStatusOrigin]@{
+        IsSet=$true; UnitId=1; EntityKind=1; EntityId=8801; SkillItemId=14521; SkillEntityId=25067 }
+    $owner.Statuses.Add($notMeet)
+    foreach ($kind in 'equipment','creator','skill','unknown') {
+        $other = $catalog.CreateStatus(24315, 1, 1, (100 + $owner.Statuses.Count), 25067, 14521, 5, 20, 1)
+        $other.Origin = $notMeet.Origin.Copy()
+        if ($kind -eq 'equipment') { $other.Origin.EntityId = 8802 }
+        if ($kind -eq 'creator') { $other.Origin.UnitId = 2 }
+        if ($kind -eq 'skill') { $other.Origin.SkillItemId = 14522 }
+        if ($kind -eq 'unknown') {
+            $other.Origin = $null; $other.RootSkillId = 0; $other.ApplyingSkillItemId = 0
+        }
+        $other.StackCount = 7; $other.RoundStartTriggeredCount = 3
+        $owner.Statuses.Add($other)
+    }
+    [void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::Apply($owner, $catalog, $false,
+        $null, [Zjcs.Combat.Official.FightRandomStream]::new(17), $null, $units)
+    Assert-Hp (@($owner.Statuses | Where-Object ClassId -eq 24315).Count -eq 5) 'Low HP merged independent contributions.'
+    $cp = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
+    $owner.Turn.Id = $owner.Id; $owner.Turn.MasterId = $owner.MasterId; $owner.Turn.Hp = $owner.Hp
+    $cp.StageId = 1; $cp.MaxRound = 12; $cp.RandomSeed = 17; $cp.Units.Add($owner)
+    if ($restore) {
+        $cp = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(
+            [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($cp))
+        $owner = $cp.Units[0]; $units.Clear(); $units.Add($owner)
+    }
+    $foreign = @($owner.Statuses | Where-Object { $_.ClassId -eq 24315 -and $_.StackCount -eq 7 })
+    $owner.Hp = 100
+    [void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::Apply($owner, $catalog, $false,
+        $null, [Zjcs.Combat.Official.FightRandomStream]::new(17), $null, $units)
+    Assert-Hp (@($owner.Statuses | Where-Object ClassId -eq 24315).Count -eq 4 `
+        -and @($foreign | Where-Object { $owner.Statuses.Contains($_) -and $_.StackCount -eq 7 -and $_.RoundStartTriggeredCount -eq 3 }).Count -eq 4) `
+        'Condition cleanup erased another equipment, creator, skill or unknown contribution.'
+}
 
 # 24202 skips its start check while an official ActionType 70 forbidden status exists.
 $forbiddenSource = $catalog.CreateStatus(24202, 1, 1, 6)

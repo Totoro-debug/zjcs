@@ -302,7 +302,15 @@ namespace Zjcs.Editor
             }
             player.Properties.Add(new FightPropertyValue { Id = 990999, Value = 10000 });
             player.BaseProperties.Add(new FightPropertyValue { Id = 990999, Value = 10000 });
-            player.Statuses.Add(catalog.CreateStatus(25067, 1, 1, 9925067));
+            var threshold = catalog.CreateStatus(25067, 1, 1, 9925067, 25067, 14521, 5, 20, 1);
+            threshold.Origin = new FightBattleStatusOrigin { IsSet = true, UnitId = 1,
+                EntityKind = FightBattleStatusOrigin.Equipment, EntityId = 8801,
+                SkillItemId = 14521, SkillEntityId = 25067 };
+            player.Statuses.Add(threshold);
+            var other = catalog.CreateStatus(24315, 1, 1, 9924315, 25067, 14521, 5, 20, 1);
+            other.Origin = threshold.Origin.Copy(); other.Origin.EntityId = 8802;
+            other.StackCount = 7;
+            player.Statuses.Add(other);
             // Isolated checkpoint only: deterministic fixed hits retain the real player skill's
             // identity/presentation. The original status and shipped rule tables stay untouched.
             var playerSkill = player.Skills.First(value => value.Slot == 0);
@@ -316,7 +324,7 @@ namespace Zjcs.Editor
             foreach (var entry in checkpoint.Timeline.Entries)
                 entry.Next = entry.Id == enemy.Id ? 1 : entry.Id == player.Id ? 2 : entry.Next;
             checkpoint.Timeline.Entries.Sort((left, right) => left.Next.CompareTo(right.Next));
-            return new HpRecoveryProbe(enemy.Id);
+            return new HpRecoveryProbe(enemy.Id, other);
         }
 
         private static void ConfigureHpRecoverySkill(FightBattleSkillDefinition skill, long damage, bool lifesteal)
@@ -336,9 +344,11 @@ namespace Zjcs.Editor
         private sealed class HpRecoveryProbe
         {
             private readonly int enemyId;
+            private readonly FightBattleStatusState otherContribution;
             private bool activated, recovered, rendered;
             public bool ReadyToCapture { get; private set; }
-            public HpRecoveryProbe(int enemyId) { this.enemyId = enemyId; }
+            public HpRecoveryProbe(int enemyId, FightBattleStatusState otherContribution)
+            { this.enemyId = enemyId; this.otherContribution = otherContribution; }
             public void ObserveStep(OfficialBattleRuntimeController controller)
             {
                 var cp = controller.Checkpoint;
@@ -347,7 +357,8 @@ namespace Zjcs.Editor
                 if (!activated)
                 {
                     Require(step.ActorId == enemyId && player.Hp > 0L && player.Hp <= player.MaxHp * 3 / 10
-                        && player.Statuses.Any(value => value.ClassId == 24315),
+                        && player.Statuses.Count(value => value.ClassId == 24315) == 2
+                        && player.Statuses.Contains(otherContribution) && otherContribution.StackCount == 7,
                         "Enemy hit did not activate original 25067 -> 24315 below 30% HP: actor="
                         + step.ActorId + ", hp=" + player.Hp + ", maxHp=" + player.MaxHp
                         + ", statuses=" + string.Join(",", player.Statuses.Select(value => value.ClassId))
@@ -361,11 +372,12 @@ namespace Zjcs.Editor
                 var heal = step.DamageEvents.FirstOrDefault(value => value.SourceId == 1 && value.IsCure);
                 if (heal == null) return;
                 Require(heal.TargetId == 1 && heal.AfterHp > 300000L && Math.Abs(heal.Delay - 0.4f) < 0.0001f
-                    && player.Statuses.All(value => value.ClassId != 24315),
-                    "Lifesteal did not clear original 24315 at its parent hit time.");
+                    && player.Statuses.Count(value => value.ClassId == 24315) == 1
+                    && player.Statuses.Contains(otherContribution) && otherContribution.StackCount == 7,
+                    "Lifesteal did not clear only its own original 24315 at its parent hit time.");
                 recovered = true;
                 Debug.Log("[HP recovery hosts] original 25067 -> 24315: enemy hit activated; lifesteal="
-                    + heal.Damage + ", afterHp=" + heal.AfterHp + "; threshold cleanup passed.");
+                    + heal.Damage + ", afterHp=" + heal.AfterHp + "; other equipment contribution retained.");
             }
             public void ObservePresentation()
             {

@@ -1404,7 +1404,11 @@ namespace Zjcs.Combat.Official
             foreach (FightBattleStatusStateTrigger trigger in source.HpLessThanStatuses)
                 if (trigger != null && trigger.EntityId > 0) ids.Add(trigger.EntityId);
             if (ids.Count == 0) return;
-            unit.Statuses.RemoveAll(value => value != null && ids.Contains(value.ClassId));
+            FightBattleStatusOrigin origin = FightBattleStatusOrigin.Resolve(source);
+            foreach (FightBattleStatusState value in unit.Statuses.ToArray())
+                if (value != null && ids.Contains(value.ClassId)
+                    && FightBattleStatusOrigin.Matches(origin, FightBattleStatusOrigin.Resolve(value)))
+                    FightStatusLifecycle.End(unit, value);
         }
 
         private static void ActivateStatus(FightBattleUnitState owner,

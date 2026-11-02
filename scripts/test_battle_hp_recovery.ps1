@@ -42,13 +42,20 @@ function Fixture($restore = $false, $canTrigger = $true, $whitelist = $false, $l
         $u.SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{Slot=0;LimitedTimes=-1})
         $cp.Units.Add($u)
     }
-    $cp.Units[0].Statuses.Add($catalog.CreateStatus(25067,1,1,9925067))
+    $threshold = $catalog.CreateStatus(25067,1,1,9925067,25067,14521,5,20,1)
+    $threshold.Origin = [Zjcs.Combat.Official.FightBattleStatusOrigin]@{
+        IsSet=$true; UnitId=1; EntityKind=1; EntityId=8801; SkillItemId=14521; SkillEntityId=25067 }
+    $cp.Units[0].Statuses.Add($threshold)
+    $other = $catalog.CreateStatus(24315,1,1,9924315,25067,14521,5,20,1)
+    $other.Origin = $threshold.Origin.Copy(); $other.Origin.EntityId = 8802; $other.StackCount = 7
+    $cp.Units[0].Statuses.Add($other)
     $wave = [Zjcs.Combat.Official.FightBattleWaveState]::new(); $wave.Index = 0
     $wave.UnitIds.Add(2); $cp.Waves.Add($wave)
     $runner = [Zjcs.Combat.Official.FightBattleExecutor]::Begin($cp,$formula,
         [Zjcs.Combat.Official.FightDamageSettlement]::new(),$catalog,$items)
     $first = $runner.Step(0,1)
     Assert-Recovery ($first.Event.ActorId -eq 2 -and $cp.Units[0].Hp -eq 20000 -and $cp.Units[0].Statuses.ClassId -contains 24315) "Enemy hit did not activate original 25067 -> 24315 below 30% HP: actor=$($first.Event.ActorId) hp=$($cp.Units[0].Hp) statuses=$($cp.Units[0].Statuses.ClassId) hits=$($first.Event.DamageEvents.Count)"
+    Assert-Recovery (@($cp.Units[0].Statuses | Where-Object ClassId -eq 24315).Count -eq 2) 'A real hit merged different equipment contributions.'
     if ($legacy) {
         # The old HP skill list has no explicit source ID. It must execute on the healed actor.
         $status = [Zjcs.Combat.Official.FightBattleStatusState]@{
@@ -73,7 +80,10 @@ function Fixture($restore = $false, $canTrigger = $true, $whitelist = $false, $l
     $heals = @($step.Event.DamageEvents | Where-Object { $_.SkillEntityId -eq 990201 -and $_.IsCure })
     Assert-Recovery ($step.Event.ActorId -eq 1 -and $heals.Count -eq 1 -and $heals[0].SourceId -eq 1 -and $heals[0].TargetId -eq 1 -and $heals[0].AfterHp -gt 30000 -and [Math]::Abs($heals[0].Delay - 0.4) -lt 0.00001) 'Lifesteal did not heal its caster above 30% at the parent hit time'
     $shouldRemove = $canTrigger -or $whitelist
-    Assert-Recovery (($cp.Units[0].Statuses.ClassId -notcontains 24315) -eq $shouldRemove) "Original 24315 recovery cleanup ignored actor HP notification or trigger policy: canTrigger=$canTrigger whitelist=$whitelist"
+    $remaining = @($cp.Units[0].Statuses | Where-Object ClassId -eq 24315)
+    Assert-Recovery ($remaining.Count -eq $(if ($shouldRemove) {1} else {2}) `
+        -and @($remaining | Where-Object { $_.Origin.EntityId -eq 8802 -and $_.StackCount -eq 7 }).Count -eq 1) `
+        "Original 24315 recovery cleanup ignored source ownership or trigger policy: canTrigger=$canTrigger whitelist=$whitelist"
     if ($legacy -or $configured) {
         $casts = @($step.Event.SkillCasts | Where-Object SkillEntityId -eq 10170)
         Assert-Recovery ($casts.Count -eq 1 -and $casts[0].ActorId -eq 1) 'Healed actor HP skill executed on the damage target'
@@ -89,4 +99,4 @@ Assert-Recovery ($direct -eq (Fixture $true)) 'Lifesteal HP notification changed
 [void](Fixture $false $false $true)
 [void](Fixture $false $true $false $true)
 [void](Fixture $false $true $false $false $true)
-Write-Output 'HP recovery passed: real hit activates original 25067 -> 24315; lifesteal removes it above threshold; trigger policy, whitelist, actor skill source, parent hit time and deterministic restore.'
+Write-Output 'HP recovery passed: real hit activates original 25067 -> 24315; lifesteal removes only its own contribution; other equipment, trigger policy, whitelist, actor skill source, parent hit time and deterministic restore.'
