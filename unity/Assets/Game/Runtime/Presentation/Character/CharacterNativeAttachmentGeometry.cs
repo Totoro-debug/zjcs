@@ -51,21 +51,52 @@ namespace Zjcs.Presentation.CharacterCreation
         public IReadOnlyList<string> OriginalBoneNames => Array.ConvertAll(bones, value => value.name);
         public string SourceSex => sourceBody == null ? null : sourceBody.sex;
         string Zjcs.Presentation.Combat.IOfficialBattleCharacterSexSource.Sex => SourceSex;
-        private Func<int, Matrix4x4> originalPoseWorld;
-        private Func<string, string, string, bool> originalPoseVisible;
-        private Func<string, int> originalPoseOrder;
+        private PoseBinding currentPose;
+
+        private sealed class PoseBinding : IDisposable
+        {
+            private CharacterNativeAttachmentGeometry owner;
+            internal readonly PoseBinding Previous;
+            internal readonly Func<int, Matrix4x4> World;
+            internal readonly Func<string, string, string, bool> Visible;
+            internal readonly Func<string, int> Order;
+            internal bool Released;
+
+            internal PoseBinding(CharacterNativeAttachmentGeometry owner, PoseBinding previous,
+                Func<int, Matrix4x4> world, Func<string, string, string, bool> visible,
+                Func<string, int> order)
+            { this.owner = owner; Previous = previous; World = world; Visible = visible; Order = order; }
+
+            public void Dispose()
+            {
+                if (Released) return;
+                Released = true;
+                if (owner != null) owner.ReleasePose(this);
+                owner = null;
+            }
+        }
 
         // A directly evaluated original skeleton supplies affine matrices,
         // attachment switches and draw order without decomposing shear into
         // Unity Transform rotations/scales or changing the atlas geometry.
-        public void BindOriginalPose(Func<int, Matrix4x4> boneWorld,
+        // Dispose restores the previous live binding, or the Animator bones.
+        // Leases may be released out of order; a failed bind restores its predecessor.
+        public IDisposable BindOriginalPose(Func<int, Matrix4x4> boneWorld,
             Func<string, string, string, bool> visible, Func<string, int> order)
         {
-            originalPoseWorld = boneWorld ?? throw new ArgumentNullException(nameof(boneWorld));
-            originalPoseVisible = visible ?? throw new ArgumentNullException(nameof(visible));
-            originalPoseOrder = order ?? throw new ArgumentNullException(nameof(order));
-            foreach (var draw in draws)
-                if (draw.Renderer != null) draw.Renderer.transform.SetParent(transform, false);
+            var binding = new PoseBinding(this, currentPose,
+                boneWorld ?? throw new ArgumentNullException(nameof(boneWorld)),
+                visible ?? throw new ArgumentNullException(nameof(visible)),
+                order ?? throw new ArgumentNullException(nameof(order)));
+            currentPose = binding;
+            try { LateUpdate(); return binding; }
+            catch { binding.Dispose(); throw; }
+        }
+
+        private void ReleasePose(PoseBinding binding)
+        {
+            if (currentPose != binding) return;
+            while (currentPose != null && currentPose.Released) currentPose = currentPose.Previous;
             LateUpdate();
         }
 
@@ -288,16 +319,18 @@ namespace Zjcs.Presentation.CharacterCreation
             foreach (Draw draw in draws)
             {
                 if (draw.Source == null) continue;
-                bool visible = originalPoseWorld == null ? draw.Source.gameObject.activeInHierarchy
-                    : draw.Source.gameObject.activeSelf && originalPoseVisible(draw.Skin, draw.Slot, draw.Attachment);
+                Transform drawParent = currentPose == null ? draw.Source.transform : transform;
+                if (draw.Renderer != null && draw.Renderer.transform.parent != drawParent)
+                    draw.Renderer.transform.SetParent(drawParent, false);
+                bool visible = currentPose == null ? draw.Source.gameObject.activeInHierarchy
+                    : draw.Source.gameObject.activeSelf && currentPose.Visible(draw.Skin, draw.Slot, draw.Attachment);
                 if (!visible) { if (draw.Renderer != null) draw.Renderer.enabled = false; continue; }
                 if (draw.Renderer == null) CreateDraw(draw);
-                if (originalPoseWorld != null && draw.Renderer.transform.parent != transform)
-                    draw.Renderer.transform.SetParent(transform, false);
+                if (draw.Renderer.transform.parent != drawParent) draw.Renderer.transform.SetParent(drawParent, false);
                 draw.Renderer.enabled = draw.Source.enabled && !draw.PreviousForceOff;
                 if (!draw.Renderer.enabled) continue;
                 draw.Renderer.sortingLayerID = draw.Source.sortingLayerID;
-                draw.Renderer.sortingOrder = originalPoseOrder == null ? draw.Source.sortingOrder : originalPoseOrder(draw.Slot);
+                draw.Renderer.sortingOrder = currentPose == null ? draw.Source.sortingOrder : currentPose.Order(draw.Slot);
                 draw.Source.GetPropertyBlock(draw.Properties);
                 draw.Renderer.SetPropertyBlock(draw.Properties);
                 Matrix4x4 toLocal = draw.Renderer.transform.worldToLocalMatrix;
@@ -305,8 +338,8 @@ namespace Zjcs.Presentation.CharacterCreation
                 {
                     Vector3 world = Vector3.zero;
                     foreach (Influence influence in draw.Vertices[vertex])
-                        world += (originalPoseWorld == null ? bones[influence.Bone].TransformPoint(influence.Position)
-                            : originalPoseWorld(influence.Bone).MultiplyPoint3x4(influence.Position)) * influence.Weight;
+                        world += (currentPose == null ? bones[influence.Bone].TransformPoint(influence.Position)
+                            : currentPose.World(influence.Bone).MultiplyPoint3x4(influence.Position)) * influence.Weight;
                     draw.Positions[vertex] = toLocal.MultiplyPoint3x4(world);
                 }
                 draw.Mesh.vertices = draw.Positions;
@@ -334,6 +367,8 @@ namespace Zjcs.Presentation.CharacterCreation
 
         private void OnDestroy()
         {
+            initialized = false;
+            currentPose = null;
             foreach (var material in appendMaterials) {
                 if (Application.isPlaying) Destroy(material); else DestroyImmediate(material);
             }

@@ -23,6 +23,7 @@ namespace Zjcs.Presentation.Character
         private int[] drawOrder;
         private float started, duration;
         private CharacterNativeAttachmentGeometry geometry;
+        private IDisposable poseBinding;
         private Matrix4x4[] worldMatrices;
         private bool[] worldReady;
         private readonly Dictionary<(string slot, string attachment), string> attachmentSkins = new Dictionary<(string, string), string>();
@@ -78,8 +79,11 @@ namespace Zjcs.Presentation.Character
             if (!expectedBones.SequenceEqual(geometry.OriginalBoneNames))
                 throw new InvalidOperationException("Original result skeleton and attachment bone order differ.");
             Apply(0);
-            geometry.BindOriginalPose(BoneWorld, Visible, Order);
+            poseBinding?.Dispose();
+            poseBinding = geometry.BindOriginalPose(BoneWorld, Visible, Order);
         }
+
+        private void OnDestroy() => poseBinding?.Dispose();
 
         private void Update()
         {
