@@ -141,8 +141,35 @@ namespace Zjcs.Editor.Combat
                         CaptureSceneRendererCamera(SceneCharacterBounds(native, weapon), label + "-reload-visibility"); draw();
                         Require(baseline.SequenceEqual(CaptureSceneRendererCamera(bounds, label + "-released-reloaded"))
                             && root.transform.localToWorldMatrix == callerTransform, "full release/reload restores original pixels and preserves caller scale/anchor");
+                        var combined = native.State.Skin;
+                        var originalSeparator = native.Separator;
+                        var opposite = catalog.Models.Single(candidate => candidate.Sex != model.Sex);
+                        bool rejected = false;
+                        try { bindings.GetSkeletonData(opposite.Asset, true); }
+                        catch (InvalidOperationException) { rejected = true; }
+                        Require(rejected && ReferenceEquals(combined, native.State.Skin), "a catalog query cannot rebind the active skin to an uninitialized foreign skeleton");
+                        rejected = false;
+                        try { combined.AddSkin(opposite.Asset.Data.SkinCatalog.FindSkin("default")); }
+                        catch (ArgumentException) { rejected = true; }
+                        Require(rejected, "populated cross-layout skin combinations still fail explicitly");
+                        var oppositeData = new AppearanceRuntimeData(opposite.Sex == "male" ? Sex.Male : Sex.Female,
+                            SceneCharacterSkins(opposite, group), appendSkins: data.AppendSkins);
+                        character.SetRuntimeData(oppositeData); draw();
+                        Require(appearance.SkeletonDataAsset == opposite.Asset && native.State.Source == opposite.Asset.Data
+                            && ReferenceEquals(combined, native.State.Skin) && ReferenceEquals(originalSeparator, native.Separator),
+                            "same original character retains its combined skin and separator across different native skeleton layouts");
+                        CaptureSceneRendererCamera(SceneCharacterBounds(native, weapon), label + "-opposite-visibility"); draw();
+                        CaptureSceneRendererCamera(SceneCharacterBounds(native, weapon), label + "-opposite");
+                        Require(parts.LoadedSkeletonDict[SkinType.pWeapon].Part.GameObject == go,
+                            "cross-layout character switch retains and rebinds its actual equipped weapon");
+                        character.SetRuntimeData(data); draw();
+                        CaptureSceneRendererCamera(SceneCharacterBounds(native, weapon), label + "-restored-visibility"); draw();
+                        Require(ReferenceEquals(combined, native.State.Skin)
+                            && baseline.SequenceEqual(CaptureSceneRendererCamera(bounds, label + "-layout-restored"))
+                            && root.transform.localToWorldMatrix == callerTransform,
+                            "switching back restores exact original camera pixels, combined-skin identity and caller transform");
                         Debug.Log("[Current native character appearance] " + model.Sex + "/" + group + ": "
-                            + string.Join(",", appearance.Skins) + "; actual dye/reset/part-return/reload camera comparisons passed.");
+                            + string.Join(",", appearance.Skins) + "; actual dye/reset/part-return/reload and cross-layout round-trip camera comparisons passed.");
                     }
                     finally
                     {

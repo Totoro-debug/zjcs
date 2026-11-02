@@ -79,8 +79,18 @@ namespace Zjcs.Offline.ProfessionUI
             var initial = next.Data.FindSkin(nextSettings.InitialSkin);
             if (initial == null) throw new InvalidOperationException("Original scene initial skin is unavailable.");
             next.SetSkin(initial); next.SetToSetupPose(); next.UpdateCache();
-            Release();
+            bool keepSeparator = separator && backend != null;
+            var reboundSlots = keepSeparator ? SeparatorSlots.Select(slot =>
+            {
+                var order = State.DrawOrder;
+                int draw = Array.FindIndex(order, candidate => ReferenceEquals(candidate, slot));
+                if (draw < 0) throw new ArgumentException("Original separator slot does not belong to the previous scene skeleton.");
+                string name = State.SlotPose.Name(State.SlotPose.DrawSlot(draw));
+                return next.FindSlot(name) ?? throw new NotSupportedException("Bind the original separator slot in the replacement scene skeleton: " + name);
+            }).ToArray() : Array.Empty<IProfessionSkinClipSlot>();
+            ReleaseSkeleton(keepSeparator);
             initializedAsset = asset; settings = nextSettings; State = next;
+            SeparatorSlots.AddRange(reboundSlots);
             batches = new ProfessionNativeMeshBatches(next.SlotCount);
             if (!appliedHierarchy) { settings.Apply(Main.MeshRenderer); appliedHierarchy = asset.Hierarchy; }
             Main.MeshRenderer.enabled = settings.Enabled;
@@ -208,12 +218,25 @@ namespace Zjcs.Offline.ProfessionUI
             renderer.sharedMaterials = materials;
         }
 
-        public void Release()
+        public void Release() => ReleaseSkeleton(false);
+
+        private void ReleaseSkeleton(bool keepSeparator)
         {
             SuspendSceneParts();
-            backend?.Dispose(); backend = null;
-            if (separator) { if (Application.isPlaying) Destroy(separator); else DestroyImmediate(separator); }
-            separator = null; SeparatorSlots.Clear();
+            if (keepSeparator)
+            {
+                // The original body draws before its part handler refreshes.
+                // Retain separator subscriptions/pool across a skeleton rebuild,
+                // but never leave old geometry or material identities attached.
+                backend.ClearSkeletonGeometry();
+            }
+            else
+            {
+                backend?.Dispose(); backend = null;
+                if (separator) { if (Application.isPlaying) Destroy(separator); else DestroyImmediate(separator); }
+                separator = null;
+            }
+            SeparatorSlots.Clear();
             batches?.Dispose(); batches = null;
             CustomMaterialOverride.Clear(); replacements.Clear();
             var main = Main;

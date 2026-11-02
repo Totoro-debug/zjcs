@@ -96,6 +96,8 @@ def main():
         "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneCharacterAppearance.cs")]
     for path in paths:
         if path.suffix == ".cs": meta(path)
+    # This shared native type already has its original extraction-time GUID.
+    paths.append(ROOT / "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkin.cs")
     proof = dict(manifest=apk.version, code_receipt=identity(code_receipt), assembly=identity(assembly),
         original_character=identity(original), source=apk.provenance(source),
         payload_sha256=hashlib.sha256(source.get_raw_data()).hexdigest(), original_fields=values,
@@ -111,7 +113,7 @@ def main():
             pose="Explicit external completed-pose callback; weapon Play/Apply retain the producer clock"),
         operation="Copy selected original AppearanceCharacter and all current AppearanceConfig fields; retain preheated asset lookup, part filtering, append skins, dye-copy order and release branches. Reuse only byte-verified original configuration types. Bind original AppearanceRenderer lifecycle to actual native geometry, Low textures, independent material pool and separately completed poses.",
         limits=["Native character assets contain all exported animations, so no SDK split-loader object is fabricated. Native pose completion is an explicit caller dependency, not Mecanim/AnimationState/physics/mixing/cache implementation.",
-                "Each current binding is verified with a fixed-sex actor. Rebinding an existing combined native skin to another sex's skeleton layout remains unimplemented.",
+                "Only empty actor-owned combined native skins rebind to an initialized skeleton layout; populated incompatible combinations remain rejected. Original SetupSkin retains and clears the same combined object before assembly.",
                 "This stage does not restore the full original character prefab or bind production battle/Windows Player appearance."])
     target = ROOT / "assets/reference/battle-animation/scene-character-appearance-source-manifest.json"
     write_changed(target, json.dumps(proof, ensure_ascii=False, indent=2) + "\n")

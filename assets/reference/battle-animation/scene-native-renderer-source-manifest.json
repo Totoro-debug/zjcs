@@ -34,7 +34,15 @@
   "outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.cs",
-      "sha256": "c5078fda7dd9dc56de7f726e99c615b3f09b3f0bd35a18ea1d2b2574b0d6990f"
+      "sha256": "e01c61bb6659232fdb5f4cc972ef0104d333c4a6acc495c2e6db9984f0fb1153"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneMeshSeparator.cs",
+      "sha256": "aa2307346d3d034c45832886fbb1de58964d00e0577bebe073551bbb18b0c077"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkin.cs",
+      "sha256": "c6296a2a4aac4da4c44649b365d0f8976920db8b013118641287a79467ff5805"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRendererSettings.cs",
@@ -78,7 +86,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneRenderer.cs",
-      "sha256": "b01c4abd5ab7cf65f0812c51cdbc37ed9d80adaed659d57a9e72bccd26c26b72"
+      "sha256": "5bd61ed9632979d8d1f7093a9290144eb0fec29875654d47f4b91bbae776c9bc"
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneFollowers.cs",
@@ -90,7 +98,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneCharacterAppearance.cs",
-      "sha256": "6495322f8fa926f122966d64239db0e127b9bb07d7c6f153dc8fd86239b7d828"
+      "sha256": "ebbf960f5f3317401356a839030b94b5fc4450388d56cf898816ad9ca9f7b7dc"
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.cs",
@@ -129,7 +137,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_scene_native_renderer.py",
-    "sha256": "fe9d3f9610d70aafa8fb4e83132ab9aa29084af7a4400dd2b09bf4aa57c38e7c"
+    "sha256": "ee54b11696af18d4958d5bb1e3f70ebe70b42c74930c18b3e49c0f78a77bd710"
   },
   "binding": {
     "catalog": "Combat/SceneCharacters/appearance-resources",
@@ -140,7 +148,7 @@
     "pose": "ProfessionNativeSceneRenderer.State; consume completed poses without changing the caller transform",
     "appearance": "IProfessionAppearanceSceneRenderer / IProfessionAppearancePartRenderer",
     "parts": "Original DynamicSkeletonRenderSeparator with independent ProfessionNativeSceneMeshSeparator",
-    "followers": "IProfessionFollowerRenderer; current original zSpacing=0 and updateWhenInvisible=0. Whole/split native Renderer visibility supplies the original application's full-update value 3. Original rebuild event rebinds the same source followers to the new skeleton."
+    "followers": "IProfessionFollowerRenderer; current original zSpacing=0 and updateWhenInvisible=0. Whole/split native Renderer visibility supplies the original application's full-update value 3. Original rebuild event rebinds the same source followers to the new skeleton. Skeleton changes retain the separator subscriptions and fragment pool, clear active and pooled geometry/materials, and rebind cut slots by original name before the original body-first appearance draw."
   },
   "pool_receipt": {
     "path": "assets/reference/battle-animation/renderer-parts-source-manifest.json",

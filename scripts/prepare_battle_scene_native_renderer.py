@@ -44,6 +44,8 @@ def main():
             hierarchy]],
         "outputs": [identity(path) for path in [
             "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.cs",
+            "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneMeshSeparator.cs",
+            "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkin.cs",
             "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRendererSettings.cs",
             "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.Parts.cs",
             "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeScenePartOrder.cs",
@@ -67,7 +69,7 @@ def main():
             "pose": "ProfessionNativeSceneRenderer.State; consume completed poses without changing the caller transform",
             "appearance": "IProfessionAppearanceSceneRenderer / IProfessionAppearancePartRenderer",
             "parts": "Original DynamicSkeletonRenderSeparator with independent ProfessionNativeSceneMeshSeparator",
-            "followers": "IProfessionFollowerRenderer; current original zSpacing=0 and updateWhenInvisible=0. Whole/split native Renderer visibility supplies the original application's full-update value 3. Original rebuild event rebinds the same source followers to the new skeleton."},
+            "followers": "IProfessionFollowerRenderer; current original zSpacing=0 and updateWhenInvisible=0. Whole/split native Renderer visibility supplies the original application's full-update value 3. Original rebuild event rebinds the same source followers to the new skeleton. Skeleton changes retain the separator subscriptions and fragment pool, clear active and pooled geometry/materials, and rebind cut slots by original name before the original body-first appearance draw."},
         "pool_receipt": identity("assets/reference/battle-animation/renderer-parts-source-manifest.json"),
         "native_ordering": "Internal SortingGroups retain source draw-slot order while original MeshRenderer fields stay intact. Even keys identify fragment starts; the actual G_007 independent sword/staff binds an odd after-point key between its two body fragments. Existing ordering objects remain with pooled parts for same-frame reuse. Current original part renderer layer/order must be uniform.",
         "independent_parts": "Assemble all four source nodes and transforms, original SkeletonRendererFollower fields and AppearanceSkeletonPart/AppearanceRendererLite application code. Native body Low and weapon High resources share one explicit GUID/atlas router. A mandatory external pose producer receives animation changes and separately completes the current pose after skin/setup resets, without restarting or advancing time; drawing performs no clock, physics or mixing. Prior extraction receipts retain their historical runtime identities; current catalog/resource binding extensions are recorded above without changing the extracted payloads.",

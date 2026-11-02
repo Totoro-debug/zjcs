@@ -35,6 +35,12 @@ namespace Zjcs.Offline.ProfessionUI
             CheckLifetime();
             foreach (var part in PartsRenderers) if (part.GameObject) part.MeshRenderer.sharedMaterials = Array.Empty<Material>();
         }
+        internal void ClearSkeletonGeometry()
+        {
+            CheckLifetime();
+            foreach (var part in owned)
+                if (part) { part.Clear(); part.MeshRenderer.sharedMaterials = Array.Empty<Material>(); }
+        }
 
         public void Render(IReadOnlyList<ProfessionNativeMeshBatches.Batch> batches,
             IReadOnlyList<int> separatorDrawIndices, Func<ProfessionNativeMeshBatches.Batch, Material> material)

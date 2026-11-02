@@ -16,7 +16,7 @@ namespace Zjcs.Offline.ProfessionUI
             public readonly object Attachment;
             public Entry(int slot, string key, object attachment) { Slot = slot; Key = key; Attachment = attachment; }
         }
-        private readonly int slotCount, boneCount, constraintCount;
+        private int slotCount, boneCount, constraintCount;
         private readonly Dictionary<(int, string), object> attachments = new Dictionary<(int, string), object>();
         private readonly List<int> bones = new List<int>(), constraints = new List<int>();
         private readonly HashSet<int> boneSet = new HashSet<int>(), constraintSet = new HashSet<int>();
@@ -55,6 +55,14 @@ namespace Zjcs.Offline.ProfessionUI
         }
         public void Clear()
         { attachments.Clear(); bones.Clear(); constraints.Clear(); boneSet.Clear(); constraintSet.Clear(); }
+        internal void RebindEmptyLayout(int slots, int bones, int constraints)
+        {
+            if (slots <= 0 || bones <= 0 || constraints < 0)
+                throw new ArgumentException("Original skin layout is invalid.");
+            if (attachments.Count != 0 || this.bones.Count != 0 || this.constraints.Count != 0)
+                throw new InvalidOperationException("Clear the combined skin before rebinding its skeleton layout.");
+            slotCount = slots; boneCount = bones; constraintCount = constraints;
+        }
         public void AddSkin(IProfessionAppearanceSkin source)
         {
             var skin = source as ProfessionNativeSkin;

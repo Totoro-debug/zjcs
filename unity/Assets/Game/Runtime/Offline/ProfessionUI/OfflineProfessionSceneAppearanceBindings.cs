@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Zjcs.Official.CombatAppearance;
 using Zjcs.Official.ProfessionUI;
@@ -18,6 +19,7 @@ namespace Zjcs.Offline.ProfessionUI
         }
         private readonly ProfessionNativeSceneRenderer renderer;
         private readonly ScriptableObject[] preheated = new ScriptableObject[2];
+        private readonly List<ProfessionNativeSkin> combinedSkins = new List<ProfessionNativeSkin>();
         public ProfessionNativeSceneAppearanceResources Resources { get; }
         public IAppearanceAssetManager AssetManager { get; }
         public AppearanceConfig Config { get; }
@@ -53,9 +55,25 @@ namespace Zjcs.Offline.ProfessionUI
             return renderer;
         }
         public IProfessionAppearanceSkeletonData GetSkeletonData(ScriptableObject asset, bool quiet)
-        { Resources.FindModel(asset); return ((ProfessionNativeSceneCharacterAsset)asset).Data.SkinCatalog; }
+        {
+            Resources.FindModel(asset);
+            var data = ((ProfessionNativeSceneCharacterAsset)asset).Data;
+            if (renderer.skeletonDataAsset != asset || renderer.State?.Source != data)
+                throw new InvalidOperationException("Initialize the bound scene skeleton before assembling its skins.");
+            // Original SetupSkin clears and retains its combined object even when
+            // Init has changed skeletons. Only our empty actor-owned skins rebind;
+            // catalog skins and populated cross-layout combinations stay guarded.
+            foreach (var skin in combinedSkins)
+                if (skin.SlotCount != data.SlotCount || skin.BoneCount != data.BoneCount || skin.ConstraintCount != data.Constraints.Count)
+                    skin.RebindEmptyLayout(data.SlotCount, data.BoneCount, data.Constraints.Count);
+            return data.SkinCatalog;
+        }
         public IProfessionAppearanceSkin CreateSkin(string name)
-            => (renderer.State ?? throw new InvalidOperationException("Initialize the native scene skeleton before creating its combined skin.")).CreateSkin(name);
+        {
+            var skin = (renderer.State ?? throw new InvalidOperationException("Initialize the native scene skeleton before creating its combined skin.")).CreateSkin(name);
+            combinedSkins.Add(skin);
+            return skin;
+        }
         public IProfessionAppearanceSceneCache CreateMecanimCache(IProfessionAppearanceSceneMecanim mecanim)
             => throw new NotSupportedException("This binding consumes completed native poses; SDK Mecanim translation and bone caching are not bound.");
     }

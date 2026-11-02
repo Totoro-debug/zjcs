@@ -72,7 +72,7 @@ namespace Zjcs.Editor.Combat
                         renderer.skeletonDataAsset = model.Asset;
                         renderer.Initialize(true, false);
                         Require(ReferenceEquals(renderer.Skeleton, parts.Skeleton) && renderer.SeparatorSlotCount == 0, "one skeleton behind both original drawing interfaces");
-                        Require(ownedParts.All(part => !part || !part.activeSelf), "reinitialization immediately retires old scene parts");
+                        Require(ownedParts.All(part => !part || !part.activeSelf), "previous complete release leaves no active owned scene parts");
                         var state = native.State;
                         bool unboundDepth = false;
                         try { _ = ((IProfessionFollowerSlot)state.DrawOrder[0]).zOrder; } catch (NotSupportedException) { unboundDepth = true; }
@@ -162,12 +162,26 @@ namespace Zjcs.Editor.Combat
                         try { parts.LateUpdateMesh(); } catch (ArgumentException) { rejected = true; }
                         Require(rejected, "duplicate separator identities cannot silently change segment count");
                         parts.SeparatorSlots.RemoveAt(parts.SeparatorSlots.Count - 1);
+                        parts.SeparatorSlots.RemoveAt(0);
+                        split.ReInitPartRenderers(main.MeshRenderer.sortingLayerID, 0, 0, 0);
+                        parts.LateUpdateMesh();
+                        Require(!active.Last().gameObject.activeSelf, "original separator shrink parks a fragment in its pool before rebuilding");
+                        var oldSlots = parts.SeparatorSlots.ToArray();
+                        var slotNames = oldSlots.Select(slot =>
+                        {
+                            int draw = Array.FindIndex(state.DrawOrder, candidate => ReferenceEquals(candidate, slot));
+                            return state.SlotPose.Name(state.SlotPose.DrawSlot(draw));
+                        }).ToArray();
                         main.MeshRenderer.sortingOrder = 177;
                         renderer.skeletonDataAsset = catalog.Models.Single(m => m.Sex != model.Sex).Asset;
                         renderer.Initialize(false, false);
-                        Require(native.State.Source.Sex != model.Sex && parts.Separator == null && parts.SeparatorSlots.Count == 0
-                            && active.All(p => !p.gameObject.activeSelf) && main.MeshRenderer.sortingOrder == 177,
-                            "cross-sex asset switch retires old segments and identities while retaining caller renderer sorting");
+                        Require(native.State.Source.Sex != model.Sex && ReferenceEquals(parts.Separator, split)
+                            && parts.SeparatorSlots.Count == oldSlots.Length
+                            && parts.SeparatorSlots.Select((slot, i) => !oldSlots.Contains(slot)
+                                && ReferenceEquals(slot, native.State.FindSlot(slotNames[i]))).All(value => value)
+                            && active.All(p => p.Mesh.vertexCount == 0 && p.MeshRenderer.sharedMaterials.Length == 0)
+                            && main.MeshRenderer.sortingOrder == 177,
+                            "cross-sex asset switch retains the separator pool, clears old geometry/materials and rebinds slot names to new identities without changing caller sorting");
                         followers.CheckRebuilt();
                         main.MeshRenderer.sortingOrder = 0;
                         native.Release(); native.Release();
