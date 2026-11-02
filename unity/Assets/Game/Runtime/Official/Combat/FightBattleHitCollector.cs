@@ -163,6 +163,8 @@ namespace Zjcs.Combat.Official
                     {
                         MoveBehaviourId = entity.HitMove.MoveBehaviourId,
                         Delay = entity.HitMove.Delay,
+                        MoveDuration = entity.HitMove.MoveDuration,
+                        MoveSpeed = entity.HitMove.MoveSpeed,
                         OffsetX = entity.HitMove.OffsetX,
                         OffsetY = entity.HitMove.OffsetY,
                         TowardsTargetPos = entity.HitMove.TowardsTargetPos,
@@ -171,7 +173,8 @@ namespace Zjcs.Combat.Official
                         BasePercent = entity.HitMove.BasePercent,
                         AffectedByProp = entity.HitMove.AffectedByProp,
                         CancelDiagonally = entity.HitMove.CancelDiagonally,
-                        HasConditions = entity.HitMove.HasConditions
+                        HasConditions = entity.HitMove.HasConditions,
+                        Conditions = CopyMoveConditions(entity.HitMove.Conditions)
                     }
                 });
 
@@ -196,6 +199,20 @@ namespace Zjcs.Combat.Official
             CollectChildren(entities, entity.RandomTargetHits, result, branch, depth + 1, 2,
                 Math.Max(1, entity.MiniHitTargetCount), childRandomTargetContext,
                 ref nextRandomTargetGroupId);
+        }
+
+        private static List<FightBattleSkillMoveCondition> CopyMoveConditions(
+            List<FightBattleSkillMoveCondition> conditions)
+        {
+            var result = new List<FightBattleSkillMoveCondition>();
+            if (conditions == null) return result;
+            foreach (FightBattleSkillMoveCondition condition in conditions)
+                result.Add(condition == null ? null : new FightBattleSkillMoveCondition
+                {
+                    Type = condition.Type,
+                    Distance = condition.Distance
+                });
+            return result;
         }
 
         private static void CollectChildren(IReadOnlyList<FightBattleHitEntity> entities,

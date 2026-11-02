@@ -84,7 +84,7 @@ function New-MoveSkill($rangeX, $distance, $towards, $conditions, $direction = 1
     return $skill
 }
 
-function Invoke-MoveBattle($skill, $player, $enemy) {
+function Invoke-MoveBattle($skill, $player, $enemy, $restore = $false) {
     $skill.Slot = 0; $skill.EntityId = 8200; $skill.ItemId = 8200
     $player.Skills.Clear(); $player.Skills.Add($skill)
     $player.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
@@ -95,7 +95,14 @@ function Invoke-MoveBattle($skill, $player, $enemy) {
     $cp.Grid.Width = 10; $cp.Grid.Height = 10; $cp.Grid.DefaultGroundType = 2
     $cp.Units.Add($player); $cp.Units.Add($enemy)
     $wave = [Zjcs.Combat.Official.FightBattleWaveState]::new(); $wave.Index = 0; $wave.UnitIds.Add(2); $cp.Waves.Add($wave)
-    return [Zjcs.Combat.Official.FightBattleExecutor]::Begin($cp, $moveFormula, [Zjcs.Combat.Official.FightDamageSettlement]::new()).Step(0, 1)
+    $executor = [Zjcs.Combat.Official.FightBattleExecutor]::Begin($cp, $moveFormula, [Zjcs.Combat.Official.FightDamageSettlement]::new())
+    if ($restore) {
+        $cp = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(
+            [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($cp))
+        $executor = [Zjcs.Combat.Official.FightBattleExecutor]::Restore($cp, $moveFormula,
+            [Zjcs.Combat.Official.FightDamageSettlement]::new())
+    }
+    return $executor.Step(0, 1)
 }
 
 $player = New-Unit 1 1 0 0 1000
@@ -168,3 +175,54 @@ $diagonal = Invoke-MoveBattle (New-MoveSkill 1 1 $true $false 2 1) $diagonalPlay
 Assert-Move ($diagonalEnemy.X -eq 3 -and $diagonalEnemy.Y -eq 4) 'Diagonal path-side displacement did not use the deterministic horizontal-axis tie break'
 
 Write-Output 'Battle hit displacement checks passed: official mapping, probability and EffectRate, knockback, pull, blocked destination, move conditions and deterministic path-side movement.'
+
+# Exercise catalog -> graph expansion -> executor -> movement receipt. Keep the official
+# move configuration and normalize only the hit damage/range in this isolated fixture.
+function Invoke-GraphMove($skillId, $moveId, $distance, $conditionDistance = -1, $restore = $false) {
+    $original = $catalog.CreateSkill($skillId, 0, $skillId, 1, 1, 0, $null)
+    $node = $original.HitGraphEntities | Where-Object {
+        $null -ne $_.HitMove -and $_.HitMove.MoveBehaviourId -eq $moveId
+    } | Select-Object -First 1
+    Assert-Move ($null -ne $node) "Missing original movement $moveId"
+    if ($conditionDistance -ge 0) {
+        $node.HitMove.HasConditions = $true
+        $node.HitMove.Conditions.Add([Zjcs.Combat.Official.FightBattleSkillMoveCondition]@{
+            Type = 'SkillTargetDistanceMoveCondition'; Distance = $conditionDistance
+        })
+    }
+    $node.DamageType = 8; $node.DamageParam = 1; $node.Delay = 0
+    $node.Scope.Clear(); $node.ChainedHits.Clear()
+    $node.CustomTargetHits.Clear(); $node.RandomTargetHits.Clear()
+    $fixture = New-MoveSkill $distance 1 $false $false
+    $fixture.Hits.Clear(); $fixture.HitGraphRootEntityId = $node.EntityId
+    $fixture.HitGraphEntities.Add($node)
+    $fixture.Duration = 0; $fixture.AllEndedDuration = -1; $fixture.AllRelevantEndedDuration = -1
+    $collected = [Zjcs.Combat.Official.FightBattleHitCollector]::CollectAll($fixture)[0].HitMove
+    Assert-Move ($collected.MoveDuration -eq $node.HitMove.MoveDuration -and
+        $collected.MoveSpeed -eq $node.HitMove.MoveSpeed) 'Graph expansion lost original movement timing'
+    if ($conditionDistance -ge 0) {
+        Assert-Move ($collected.HasConditions -and $collected.Conditions.Count -eq 1 -and
+            $collected.Conditions[0].Distance -eq $conditionDistance) 'Graph expansion lost its move conditions'
+        $collected.Conditions[0].Distance = 99
+        Assert-Move ($node.HitMove.Conditions[0].Distance -eq $conditionDistance) 'Expanded move conditions mutated the source graph'
+    }
+    $actor = New-Unit 1 1 0 0 1000
+    $target = New-Unit 2 2 $distance 0 5000
+    return Invoke-MoveBattle $fixture $actor $target $restore
+}
+$speedMove = Invoke-GraphMove 13550 13553 1
+Assert-Move ($speedMove.Event.Movements.Count -eq 1 -and
+    $speedMove.Event.Movements[0].MoveSpeed -eq 2.5 -and
+    [Math]::Abs($speedMove.Event.Duration - 0.4) -lt 0.000001) 'Official speed-based knockback reverted to default movement pacing'
+$fixedMove = Invoke-GraphMove 64360 64363 3
+Assert-Move ($fixedMove.Event.Movements.Count -eq 1 -and
+    [Math]::Abs($fixedMove.Event.Movements[0].MoveDuration - 0.32) -lt 0.000001 -and
+    [Math]::Abs($fixedMove.Event.Duration - 0.64) -lt 0.000001) 'Official per-segment drag duration was lost'
+$graphCondition = Invoke-GraphMove 13550 13553 1 1
+Assert-Move ($graphCondition.Event.Movements.Count -eq 1) 'Graph move condition failed at the distance boundary'
+$graphConditionBlocked = Invoke-GraphMove 13550 13553 2 1
+Assert-Move ($graphConditionBlocked.Event.Movements.Count -eq 0) 'Graph move condition passed beyond its distance boundary'
+$graphRestored = Invoke-GraphMove 13550 13553 1 1 $true
+Assert-Move ([Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($graphRestored.Checkpoint) -eq
+    [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($graphCondition.Checkpoint)) 'Restoring the graph changed movement timing or conditions'
+Write-Output 'Battle graph displacement checks passed: original 13553 speed, 64363 segment duration, independent condition copies, distance boundary and deterministic restore.'

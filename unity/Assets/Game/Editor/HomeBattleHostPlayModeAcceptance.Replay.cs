@@ -65,7 +65,22 @@ namespace Zjcs.Editor
                 listener.CurDurationRound = -1;
                 player.Statuses.Add(listener);
             }
-            return new ReplayProbe(skill.EntityId, observeConsumption, factorSourceId);
+            bool observeHitMove = Environment.GetEnvironmentVariable("ZJCS_BATTLE_HIT_MOVE_TIMING_ACCEPTANCE") == "1";
+            if (observeHitMove)
+            {
+                var catalog = Zjcs.Presentation.Combat.OfficialCombatAssetCatalog.LoadDefault().Load();
+                var move = catalog.CreateSkill(13550, -1, 0, 1, 1, 1, null).HitGraphEntities
+                    .Single(value => value.HitMove != null && value.HitMove.MoveBehaviourId == 13553).HitMove;
+                // Only this observation fixture attaches the original knockback to the host skill.
+                // The production skill table and the saved character's equipped skills are unchanged.
+                move.HasConditions = true;
+                move.Conditions.Add(new FightBattleSkillMoveCondition
+                    { Type = "SkillTargetDistanceMoveCondition", Distance = 99 });
+                var node = skill.HitGraphEntities.FirstOrDefault(value => value.HasFixedDamage);
+                Require(node != null, "The host fixture has no hit graph node for movement observation.");
+                node.HitMove = move;
+            }
+            return new ReplayProbe(skill.EntityId, observeConsumption, factorSourceId, observeHitMove);
         }
         private sealed class ReplayProbe
         {
@@ -76,14 +91,27 @@ namespace Zjcs.Editor
             private int replayed;
             private readonly int factorSourceId;
             private bool observedStackFactor;
-            public ReplayProbe(int entity, bool observeConsumption, int factorSourceId)
-            { this.entity = entity; this.observeConsumption = observeConsumption; this.factorSourceId = factorSourceId; }
+            private readonly bool observeHitMove;
+            private bool observedHitMove;
+            public ReplayProbe(int entity, bool observeConsumption, int factorSourceId, bool observeHitMove)
+            {
+                this.entity = entity; this.observeConsumption = observeConsumption;
+                this.factorSourceId = factorSourceId; this.observeHitMove = observeHitMove;
+            }
             public void Observe(FightBattleCheckpoint checkpoint)
             {
                 var player = checkpoint.Units.Single(value => value.Id == 1);
                 Require(player.SkillState.ReplayCounts.All(value => value.Count <= 2), "Replay exceeded configured round limit.");
                 replayed = checkpoint.Receipts.SelectMany(value => value.Event.SkillCasts)
                     .Count(value => value.ActorId == 1 && value.SkillEntityId == entity && value.IsReplay);
+                if (observeHitMove)
+                {
+                    var movements = checkpoint.Receipts.Where(value => value.Event.SkillCasts.Any(cast =>
+                            cast.ActorId == 1 && cast.SkillEntityId == entity))
+                        .SelectMany(value => value.Event.Movements).Where(value => value.UnitId != 1);
+                    observedHitMove |= movements.Any(value => value.Path.Count > 1
+                        && value.MoveDuration == -1f && value.MoveSpeed == 2.5f);
+                }
                 if (factorSourceId != 0 && !observedStackFactor
                     && checkpoint.Receipts.Any(value => value.Event.Movements.Any(move => move.UnitId == 1)))
                 {
@@ -138,10 +166,12 @@ namespace Zjcs.Editor
                     name + " did not verify the action-existence transition across real executor steps.");
                 Require(factorSourceId == 0 || observedStackFactor,
                     name + " did not exercise the original stacking action-start passive.");
+                Require(!observeHitMove || observedHitMove,
+                    name + " did not retain the original 13553 speed through the conditional hit graph.");
                 string saved = FightBattleCheckpointSerializer.Save(checkpoint);
                 Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
                     name + " did not retain replay counts and results in the checkpoint.");
-                Debug.Log("[Replay hosts] " + name + ": two configured consecutive replays, stack consumption, caps and checkpoint passed; stacking action-start=" + observedStackFactor + ".");
+                Debug.Log("[Replay hosts] " + name + ": two configured consecutive replays, stack consumption, caps and checkpoint passed; stacking action-start=" + observedStackFactor + "; hit-move timing=" + observedHitMove + ".");
             }
         }
     }
