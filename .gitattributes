@@ -1613,3 +1613,8 @@ scripts/fixtures/partner_conversation*.cs text eol=lf
 unity/Assets/Game/Runtime/Official/Partners/PartnerConversationRules.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/Progression/OfficialPartnerConversation*.cs text eol=lf
 unity/Assets/Game/Runtime/Offline/Progression/OfficialPartnerConversation*.cs.meta -text whitespace=-blank-at-eol
+
+# Original conversation condition methods and reproducible validation sources.
+scripts/prepare_partner_conversation_conditions.py text eol=lf
+scripts/test_partner_conversation_conditions.py text eol=lf
+unity/Assets/Game/Runtime/Official/Partners/PartnerConversationConditionRules.cs* text eol=lf
