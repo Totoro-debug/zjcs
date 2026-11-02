@@ -359,3 +359,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 伙伴通讯录头像与职业图标来源见 [partner-npc-icons-source-manifest.json](partner-npc-icons-source-manifest.json)。`prepare_partner_npc_icons.py` 记录选定 `884_156692` 的原 NPC／职业二进制表、实际 APK 优先及同版云端缓存来源、Sprite 渲染键和 CAB／对象、原生 Sprite 网格／索引及 Windows 纹理转换缓存、同 GUID 同载荷依赖复用、151 个图标地址的显式绑定与安装 SHA256；原消费代码及本地绑定源码分别登记。未生成完整素材快照。
 
 战斗移动 Animator 来源见 [move-animators-source-manifest.json](battle-animation/move-animators-source-manifest.json)：选定884_156692的原 `MyFightSkill`／`MyFightActionSkillMove` prefab、默认 `MyPlayableSequence` 与 `MyPlayableAnimator` 节点，保留APK优先与校验云端来源、对象字段、输出哈希和未消费的非 Animator 节点；由 `scripts/prepare_battle_move_animators.py` 提取为 `Combat/move-animators`，历史技能／规则载荷保持各自原版本。
+
+伙伴本地身份存档适配的输入及输出哈希随 [通话事务来源](partner-conversation-transactions-source-manifest.json) 登记；复用所选 884_156692 的原节点／好感等级方法与现有配置，新增适配代码、迁移验证源码及记录工具分别记录 SHA256。本批无新增美术载荷或素材快照。

@@ -15,7 +15,7 @@ namespace Zjcs.Offline.Progression
         private readonly OfficialCharacterCatalog character;
         private readonly OfflinePartnerConversationPlayer player;
         private readonly long playerId;
-        private readonly Func<long> nextIdentity;
+        private readonly Func<OfflinePlayerProgress, long> nextIdentity;
         private readonly Func<bool> functionLimited;
         private readonly Action committed;
         private readonly int dayLimit, timeZone;
@@ -27,6 +27,21 @@ namespace Zjcs.Offline.Progression
         public OfflinePartnerConversationService(OfflineMainlineProgressSession session,
             OfficialCharacterCatalog character, OfflinePartnerConversationPlayer player, long playerId,
             Func<long> nextIdentity, Func<bool> functionLimited, int serverTimeZoneHours, Action committed)
+            : this(session, character, player, playerId,
+                nextIdentity == null ? null : new Func<OfflinePlayerProgress, long>(_ => nextIdentity()),
+                functionLimited, serverTimeZoneHours, committed) { }
+
+        // The production host first persists actor mappings, then allocates
+        // conversation IDs inside the same clone as records and daily counts.
+        public OfflinePartnerConversationService(OfflineMainlineProgressSession session,
+            OfficialCharacterCatalog character, OfflinePartnerConversationPlayer player,
+            Func<bool> functionLimited, int serverTimeZoneHours, Action committed)
+            : this(session, character, player, session.Save.Player.CharacterProperties.LocalActorIdentities.PlayerId,
+                OfflineLocalActorIdentities.Allocate, functionLimited, serverTimeZoneHours, committed) { }
+
+        private OfflinePartnerConversationService(OfflineMainlineProgressSession session,
+            OfficialCharacterCatalog character, OfflinePartnerConversationPlayer player, long playerId,
+            Func<OfflinePlayerProgress, long> nextIdentity, Func<bool> functionLimited, int serverTimeZoneHours, Action committed)
         {
             this.session = session ?? throw new ArgumentNullException(nameof(session));
             this.character = character ?? throw new ArgumentNullException(nameof(character));
@@ -78,9 +93,9 @@ namespace Zjcs.Offline.Progression
             if (value.Kind != DateTimeKind.Utc) throw new InvalidOperationException("Bind the original conversation clock in UTC.");
             return value;
         }
-        private long NewIdentity(HashSet<long> occupied)
+        private long NewIdentity(HashSet<long> occupied, OfflinePlayerProgress transactionPlayer)
         {
-            long value = nextIdentity();
+            long value = nextIdentity(transactionPlayer);
             if (value <= 0 || !occupied.Add(value)) throw new InvalidOperationException("The local identity generator returned an occupied or invalid ID.");
             return value;
         }
@@ -102,11 +117,15 @@ namespace Zjcs.Offline.Progression
             var result = session.ApplyCharacterMutationIfChanged(value => {
                 var progress = value.CharacterProperties.NpcConversations;
                 ValidateOwner(progress);
+                var identities = value.CharacterProperties.LocalActorIdentities;
+                bool changed = identities.PlayerId != 0 && OfflineLocalActorIdentities.Ensure(value);
+                if (identities.PlayerId != 0 && identities.PlayerId != playerId)
+                    throw new InvalidOperationException("Saved local actor owner differs from the conversation host.");
                 var occupied = new HashSet<long>(progress.Records.SelectMany(row => new[] { row.NpcId, row.DialogueId, row.PlayerId }));
                 occupied.Add(playerId);
+                foreach (var npcIdentity in identities.Npcs) occupied.Add(npcIdentity.NpcId);
                 var transactionPlayer = player.ForCharacterMutation(value, _ => throw new InvalidOperationException("Creation must not emit a node-update notification."));
                 var daily = new OfflinePartnerConversationDayLimits(progress, player.DialogueConfiguration, UtcNow, dayLimit, resetTime, timeZone);
-                bool changed = false;
                 foreach (var friendship in value.CharacterProperties.NpcFriendships)
                 {
                     int npcClass = friendship.NpcClassId;
@@ -114,7 +133,9 @@ namespace Zjcs.Offline.Progression
                     var npc = character.FindPartner("npc", npcClass);
                     if (npc == null) throw new InvalidOperationException("Original NPC configuration is absent: " + npcClass);
                     if (!(npc["Dialogues"] is List<object> order)) continue;
-                    long npcId = progress.Records.FirstOrDefault(row => row.NpcClassId == npcClass)?.NpcId ?? 0;
+                    long npcId = identities.PlayerId == 0
+                        ? progress.Records.FirstOrDefault(row => row.NpcClassId == npcClass)?.NpcId ?? 0
+                        : identities.NpcId(npcClass);
                     foreach (object raw in order)
                     {
                         int classId = Convert.ToInt32(raw, CultureInfo.InvariantCulture);
@@ -127,8 +148,8 @@ namespace Zjcs.Offline.Progression
                         // ValidateOwner rejects orphaned quotas before a new
                         // NPC identity can bypass an existing daily count.
                         if (npcId != 0 && daily.CheckNpcDialogueHasDayLimit(npcId, classId)) continue;
-                        if (npcId == 0) npcId = NewIdentity(occupied);
-                        long id = NewIdentity(occupied);
+                        if (npcId == 0) npcId = NewIdentity(occupied, value);
+                        long id = NewIdentity(occupied, value);
                         var record = PartnerConversationRecord.Create(playerId, npcId, classId, 1, id, UtcNow());
                         progress.Records.Add(OfflineNpcConversation.FromRecord(npcClass, record));
                         daily.RecordNpcDialogueDayLimit(npcId, classId);

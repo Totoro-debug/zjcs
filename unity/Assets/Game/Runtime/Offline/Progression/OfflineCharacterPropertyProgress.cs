@@ -16,6 +16,7 @@ namespace Zjcs.Offline.Progression
         public List<OfflineExtraProperty> ExtraProperties = new List<OfflineExtraProperty>();
         public List<OfflineNpcFriendship> NpcFriendships = new List<OfflineNpcFriendship>();
         public OfflineNpcConversationProgress NpcConversations = new OfflineNpcConversationProgress();
+        public OfflineLocalActorIdentities LocalActorIdentities = new OfflineLocalActorIdentities();
         public List<OfflineNpcTalentTree> NpcTalentTrees = new List<OfflineNpcTalentTree>();
         public List<OfflineCharacterTreasure> Treasures = new List<OfflineCharacterTreasure>();
         public List<OfflineTreasureElementLevel> TreasureElementLevels = new List<OfflineTreasureElementLevel>();
@@ -58,6 +59,7 @@ namespace Zjcs.Offline.Progression
             if (progress.NpcFriendships == null) progress.NpcFriendships = new List<OfflineNpcFriendship>();
             if (progress.NpcConversations == null) progress.NpcConversations = new OfflineNpcConversationProgress();
             OfflineNpcConversationProgress.Normalize(progress.NpcConversations);
+            if (progress.LocalActorIdentities == null) progress.LocalActorIdentities = new OfflineLocalActorIdentities();
             if (progress.NpcTalentTrees == null) progress.NpcTalentTrees = new List<OfflineNpcTalentTree>();
             if (progress.Treasures == null) progress.Treasures = new List<OfflineCharacterTreasure>();
             if (progress.TreasureElementLevels == null)
@@ -79,6 +81,7 @@ namespace Zjcs.Offline.Progression
                 || progress.ExtraProperties == null || progress.ExtraProperties.Count > 20000
                 || progress.NpcFriendships == null || progress.NpcFriendships.Count > 1000
                 || !OfflineNpcConversationProgress.IsValid(progress.NpcConversations)
+                || !OfflineLocalActorIdentities.IsValid(progress)
                 || progress.NpcTalentTrees == null || progress.NpcTalentTrees.Count > 1000
                 || progress.Treasures == null || progress.Treasures.Count > 5000
                 || progress.TreasureElementLevels == null || progress.TreasureElementLevels.Count > 100

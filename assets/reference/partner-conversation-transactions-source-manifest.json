@@ -19,15 +19,19 @@
     "unity/Assets/Game/Runtime/Offline/Progression/OfflineInventoryOperations.cs": "a5d785eece9dea609d5a3ebc0beb73bb329eaac42e596fe7127307cf71bffd45"
   },
   "installed_output_sha256": {
-    "unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerConversationService.cs": "188ab42a287fe1db0250b917b786d2f17b955436539aee22b6f0168c8cdb0b87",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerConversationService.cs": "a5aff56a12491d9e3ba8c1bafaadd9c43bddba59309c7308b4cd27083ed63976",
     "unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerConversationService.cs.meta": "e8a76abbfdc5f83d9c29a7a9eb35f6e2f78dd267677e24d26cc7658566914494",
-    "unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerConversationPlayer.cs": "ad8d702c17e0bebb7faf0872f16fd342f90b21595395d9621a5403b11146becb"
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerConversationPlayer.cs": "ad8d702c17e0bebb7faf0872f16fd342f90b21595395d9621a5403b11146becb",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineLocalActorIdentities.cs": "440b218cde44dfc4239031c54ab19ee46d510cc92b60932e014f52df8cfddac3",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineLocalActorIdentities.cs.meta": "d276c5fb20a66a3359cd648590c1cf9fe8318417a34728cbcd9f0a903a46d997",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterPropertyProgress.cs": "aeb2919e455e844a401b510c4a7151c29e6211b55819b32b6266665c2cd2bce4"
   },
   "validation_source_sha256": {
-    "scripts/prepare_partner_conversation_transaction_validation.py": "e80d03df5adbe70c2ec21b8c938abd85548cfecf0c8a404869e50984b3c35bc9",
-    "scripts/fixtures/partner_conversation_transaction_validation.cs": "6ab30f74d82a59efddb95e907a648dee687c66dce30ccb1cb776754291e508b5"
+    "scripts/prepare_partner_conversation_transaction_validation.py": "1bdddc69f7b426517f437926a379b6976d0fa230adf4040b4f180efde35ac148",
+    "scripts/fixtures/partner_conversation_transaction_validation.cs": "ec233a3f05d4cf410c541a23e2d5d815d6636d5780e7b778a3d13112f2555b60",
+    "scripts/fixtures/partner_local_actor_identity_validation.cs": "305dbc5c33d27bce3d940c0478ef2852562d22964c247b9741b7974d4dd94bda"
   },
-  "recorder_sha256": "1fc11a4512948fa3bdb8fcb9c19d1394bb3855afef6e7046cf636e0b055e0f6b",
+  "recorder_sha256": "414b7fabf2cf69ebc5a1115be9fa2cd8f959849fb7f16aca5be1b7561205810c",
   "original": [
     "Use original NPC Dialogues order, node unlock/chain conditions, Auto type and original daily check/record methods.",
     "Use original Create and SetCurrentNodeAndUpdateStatus; capture their update notification until disk commit.",
@@ -39,11 +43,14 @@
     "No automatic refresh on creation/load/friendship/condition change or the daily clock boundary.",
     "Acknowledge only an original eligible successor; grant its configured item/friendship reward with history/status in one transaction.",
     "Persist a deterministic per-dialogue/node receipt; review and repeated acknowledgment cannot duplicate rewards.",
-    "Local identity generation, original function availability and post-commit presentation remain required host dependencies."
+    "Persist local player/NPC identity mappings and a checked high-water sequence; allocate new dialogue IDs inside the transaction clone.",
+    "Adopt existing conversation identities and retain reward-receipt IDs when migrating a legacy profile.",
+    "Original function availability and post-commit presentation remain required host dependencies."
   ],
   "validation_scope": [
     "Actual complete dialogue 2021, configured item 110 x3, same-day chain 2022, per-NPC daily quota and real disk rollback.",
     "All selected official RewardFriendship fields are zero; the nonzero branch uses one clearly marked, restored in-memory synthetic fixture value.",
-    "Native nonempty address-book input, concrete identity/function host binding and playback window are not exercised."
+    "Production identity allocator, legacy adoption, reload, collision/exhaustion rejection and actual creation/migration disk rollback.",
+    "Native nonempty address-book input, concrete Home function binding and playback window are not exercised."
   ]
 }

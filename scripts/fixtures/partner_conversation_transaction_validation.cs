@@ -176,6 +176,7 @@ public sealed class PartnerConversationTransactionRunner : MonoBehaviour
         Require(clonePlayer.GetItemAmount(999001) == 3 && player.GetItemAmount(999001) == 0
             && clonePlayer.GetNpcFriendshipLevel(8402) == 1 && player.GetNpcFriendshipLevel(8402) >= 40,
             "Original conditions inside reward transaction read the cloned player, without publishing it");
+        PartnerLocalActorIdentityValidation.Validate(slots, session, character, conversations, now);
         Debug.Log("PARTNER_CONVERSATION_TRANSACTIONS_PASSED: actual open-only creation, original complete dialogue 2021, exact node reward 110 x3, disk rollback, receipts, same-day 2022 chain and original daily quota. Native UI/Player not exercised.");
     }
 }

@@ -14,6 +14,8 @@ def main():
     (editor / 'PartnerConversationWorldValidation.cs').unlink()
     shutil.copy2(ROOT / 'scripts/fixtures/partner_conversation_transaction_validation.cs',
         editor / 'PartnerConversationTransactionValidation.cs')
+    shutil.copy2(ROOT / 'scripts/fixtures/partner_local_actor_identity_validation.cs',
+        editor / 'PartnerLocalActorIdentityValidation.cs')
     print('Prepared actual original conversations/world and local reward transactions', flush=True)
 
 
