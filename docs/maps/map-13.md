@@ -166,7 +166,9 @@ Map13 原剧情 prefab Windows 转换与 NPC 序列：固定 871_156598 的 278 
 
 ## 完整还原部分
 
-小地图离线协调组件现通过公共模块调用原白雾和标记初始化，成功、空响应、错误响应及当前／其他地图重新启用分支已在隔离Play Mode验证。使用本图原57,600格导航与106地区，核对12格动态解锁和1,326格公开地区补全；已查看温泉乡实时／离线原图层画面。共享调用顺序及仍缺正式存档投影、完整根／HUD接线的边界，见[主线地图公共模块](../features/mainline-map-modules.md)。
+小地图离线协调组件现通过公共模块调用原白雾和标记初始化，成功、空响应、错误响应及当前／其他地图重新启用分支已在隔离Play Mode验证。使用本图原57,600格导航与106地区，核对12格动态解锁和1,326格公开地区补全；已查看温泉乡实时／离线原图层画面。共享调用顺序及仍缺正式存档投影、正式宿主／HUD接线的边界，见[主线地图公共模块](../features/mainline-map-modules.md)。
+
+完整原小地图根已通过公共 `MainlineMiniMap` 工厂运行：所选884原747个序列化对象文档与外部原prefab引用保持完整，实际Play Mode验证离线响应、全屏视野与事件顺序、重新启用、纹理复用／销毁及订阅释放，已查看温泉乡原层级渲染截图。实体／资源查询在此夹具中为空，关闭事件为直接调用；正式地图存档、HUD模拟输入、图标和Player仍未接通。详见[公共模块](../features/mainline-map-modules.md)与[当前完整根来源](../../assets/reference/official-map/map13-current-minimap-root-source-manifest.json)。
 
 当前区域地面中的12份原 Unity Tile 使用现有严格程序集解码器恢复完整字段，包含 Sprite、颜色、矩阵、实例对象、标志和碰撞类型；导出缓存只有头部时继续从原二进制恢复。Sprite 按原 CAB／PathID 对应绑定资源，空运行标记复用现有官方 `WorldPreviewTool`，不依赖其他模块新增的副本。
 
@@ -210,7 +212,7 @@ Map13 原剧情 prefab Windows 转换与 NPC 序列：固定 871_156598 的 278 
 
 泽之国原小地图视野模块：完整迁移四份原视野处理器，保留矩形重叠的含边界判定、半径向上取整、X 优先的格子顺序、原身体偏移裁剪和控制器订阅顺序；复用原 `MyGridTransform`。隔离 Play Mode 已验证 483 个有序可见格、25 组矩形边界、真实原格子事件、同格不更新、角色替换／空角色／重新进入及释放时取消订阅；无运行错误，Unity 编译、`ProjectTools.Validate` 和元数据检查通过。此项为视野核心；正式相机／小地图根组件、区域标记、完整输入存档与 Windows Player 仍待接通。见 [原视野代码与验证](../../assets/reference/official-map/map13-minimap-view-code-source-manifest.json)。
 
-泽之国小地图原始层级与遮罩核心：已核对 `MiniMap_13` 的完整 40 包 CAB 闭包、9,052 个对象和 4,283 个组件；小地图原资源包保留 908 个原 GameObject／Transform、107 个 Tilemap 和 324 个应用组件的来源身份，12 处托管引用按原 RID、字段、浮点位和指针目标恢复。完整原导出层级以来源文本保存，尚未作为可运行 prefab 绑定。原 `MiniMapMaskHandler` 的十组图块条件、四向旋转、边缘／拐角优先级、可见格子更新和状态切换已迁入 C#；隔离 Play Mode 验证全部 256 种邻格组合、原生 Tilemap 旋转和最后一格解锁移除，运行错误为零。Unity 导入／编译与 `ProjectTools.Validate` 已通过。正式入口的小地图资源修正、其余管理器、区域遮罩／标记、完整输入存档和 Windows Player 仍待完成。来源见 [原小地图层级](../../assets/reference/official-map/map13-native-minimap-source-manifest.json) 与 [遮罩原代码及验证](../../assets/reference/official-map/map13-minimap-mask-code-source-manifest.json)；素材未进入完整快照。
+泽之国小地图原始层级与遮罩核心：已核对 `MiniMap_13` 的完整 40 包 CAB 闭包、9,052 个对象和 4,283 个组件；小地图原资源包保留 908 个原 GameObject／Transform、107 个 Tilemap 和 324 个应用组件的来源身份，12 处托管引用按原 RID、字段、浮点位和指针目标恢复。此历史871导出层级以来源文本保存；当前884完整根已按上文另行原生绑定。原 `MiniMapMaskHandler` 的十组图块条件、四向旋转、边缘／拐角优先级、可见格子更新和状态切换已迁入 C#；隔离 Play Mode 验证全部 256 种邻格组合、原生 Tilemap 旋转和最后一格解锁移除，运行错误为零。Unity 导入／编译与 `ProjectTools.Validate` 已通过。正式入口的小地图资源修正、其余管理器、区域遮罩／标记、完整输入存档和 Windows Player 仍待完成。来源见 [原小地图层级](../../assets/reference/official-map/map13-native-minimap-source-manifest.json) 与 [遮罩原代码及验证](../../assets/reference/official-map/map13-minimap-mask-code-source-manifest.json)；素材未进入完整快照。
 
 正式主线入口已接入泽之国原分区地形／环境／地区标签、原 HUD、原默认入口 11001（113，233）及本地压缩视野存档；地图模拟点击移动后冷读的位置和视野字节一致。三处 8363 藤蔓（2701／4105／7302）绑定普通／雪地完整原实体根 prefab，使用原 EC 生命周期、身体／状态／奖励查询、挂点、原生实时骨骼几何与原出现／循环／消散演出；模拟点击分别获得物品 115 ×4／5／6，原 2.83 秒移除完成后隐藏，重进后保持完成且不重复发奖。相机深度读取官方 player-view 的 −250，保留原 XY→Z 排序；验证同时检查实际视锥、淡入透明度和 4／5／6 个果实显示，九张实际运行画面已查看。代码为 `OfficialMainlineMapRuntime.NativeMap13`、`Map13Trees`、`Offline/World/NativeMap13TreeWorld`；显式载荷为 `Map13/Native/tree-world-assets`，来源与执行范围见[本地藤蔓来源](../../assets/reference/official-map/map13-native-tree-world-source-manifest.json)。完整相机控制、其余实体／跟随者、完整剧情与 Windows Player 仍待完成，整图未发布；未生成完整素材快照。 Unity 导入／编译、ProjectTools.Validate 及根工程 74,281 GUID 静态检查通过。
 

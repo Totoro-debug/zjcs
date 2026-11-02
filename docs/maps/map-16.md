@@ -20,9 +20,11 @@
 
 ## 完整还原部分
 
+完整原小地图 prefab 已接入公共 `MainlineMiniMap` 实例工厂，保留原根315个序列化对象文档及全部原外部说明／接缝线引用；`MapAreaTile` 保留原继承关系、区域编号和完整Tile字段。隔离 GUI Play Mode 已检查本图完整 prefab 的脚本、托管类型及对象引用；使用本图140×120网格、43地区和配置4，通过与泽之国相同工厂的加载、原离线请求／等待隐藏和订阅释放。此项尚未提供本图正式存档响应、地区白雾／实体图标实播或HUD模拟交互；不视为本图完整小地图完成。来源见[当前完整小地图根](../../assets/reference/official-map/map16-current-minimap-root-source-manifest.json)，公共生命周期与验证边界见[公共模块](../features/mainline-map-modules.md)。
+
 尚无本图完整 Unity 游玩流程的完成结论。
 
-小地图区域地面使用公共 `MainlineMiniMapRegions`，由 `MainlineMiniMapRegionAssets` 提供本图原 Ground subtree、43个地区插槽及原区域 Tilemap，状态、角色和可见范围通过 `IMainlineMiniMapRegionState` 注入。资源入口为 `Resources/Map16/Native/mini-map-regions`，原生载荷在 `NativeMiniMapCurrent`，共120个资产／meta输出。转换器核对原 YooAsset GUID 与所选版本资源索引后绑定本地 prefab，不把转换缓存的 Unity GUID 当作原 YooAsset GUID。原 `MapMeCharacterUIBase`／`MiniMapPrivateRegionMaskManager` 与已迁移源码逐字节核对，保留初始化、地区开放事件、公私有 Z、倒序可见性遍历、缓存复用、十秒回收和释放顺序。可见范围由公共模块订阅原 `IMapViewRangeHandler` 事件，普通刷新不重复发布；替换处理器统一退订／订阅并发布一次，停用／销毁时释放订阅，不释放外部拥有的处理器。当前范围仅为区域地面；原白雾、标记、相机、完整 MiniMap 根和正式输入／存档仍待绑定。资源与代码来源见[本图区域地面](../../assets/reference/official-map/map16-current-minimap-regions-source-manifest.json)及[公共区域模块](../../assets/reference/official-map/mainline-minimap-regions-source-manifest.json)。
+小地图区域地面使用公共 `MainlineMiniMapRegions`，由 `MainlineMiniMapRegionAssets` 提供本图原 Ground subtree、43个地区插槽及原区域 Tilemap，状态、角色和可见范围通过 `IMainlineMiniMapRegionState` 注入。资源入口为 `Resources/Map16/Native/mini-map-regions`，原生载荷在 `NativeMiniMapCurrent`，共120个资产／meta输出。转换器核对原 YooAsset GUID 与所选版本资源索引后绑定本地 prefab，不把转换缓存的 Unity GUID 当作原 YooAsset GUID。原 `MapMeCharacterUIBase`／`MiniMapPrivateRegionMaskManager` 与已迁移源码逐字节核对，保留初始化、地区开放事件、公私有 Z、倒序可见性遍历、缓存复用、十秒回收和释放顺序。可见范围由公共模块订阅原 `IMapViewRangeHandler` 事件，普通刷新不重复发布；替换处理器统一退订／订阅并发布一次，停用／销毁时释放订阅，不释放外部拥有的处理器。此段范围仅为区域地面；完整根工厂见上文，正式宿主的白雾、标记、相机、输入／存档仍待接线。资源与代码来源见[本图区域地面](../../assets/reference/official-map/map16-current-minimap-regions-source-manifest.json)及[公共区域模块](../../assets/reference/official-map/mainline-minimap-regions-source-manifest.json)。
 
 四份原 Unity Tile 的字段由当前程序集严格解码恢复，包含 Sprite、颜色、矩阵、实例对象、标志及碰撞类型；不使用只含头部的导出缓存作为完整 Tile。原 Sprite 引用按 CAB／PathID 精确对应已绑定资源，矩阵只转换 Unity YAML 字段名。空运行标记复用已有官方 `WorldPreviewTool`，原 `PreviewTool` 源码已按当前版本核对。
 
