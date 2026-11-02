@@ -3,7 +3,7 @@
   "outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimatorPose.cs",
-      "sha256": "3ee915b74e8167c5774fd53b62832b96f12171215031864a450948e1a104626e"
+      "sha256": "9d7efca7356d9ff55331821dfebcc9f56364c278b78fa404d249893bf5b76acb"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimatorPose.cs.meta",
@@ -19,7 +19,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Map13Mainline/Zjcs.Editor.Map13Mainline.asmdef",
-      "sha256": "6ca9c63a3e83715ed7bf67811e2f7d6761d0f350ce64538e78fde9f093c79107"
+      "sha256": "d9992b6bc9f91d3c988aeac7cb5fb5b2115f42a794e45912e1c3f90097021501"
     }
   ],
   "dependencies": [
@@ -37,7 +37,7 @@
     },
     {
       "path": "assets/reference/battle-animation/scene-player-animator-source-manifest.json",
-      "sha256": "24d227b464202aea17c3e1451b14f134d90d07cff3894e8db31435f9768e0977"
+      "sha256": "0ee95dbf6e55c34bae9f00817e56f0a79a163e6375eb7829fee732394b7b9453"
     },
     {
       "path": "assets/reference/battle-animation/mecanim-cache-scope-source-manifest.json",
@@ -46,7 +46,7 @@
   ],
   "generator": {
     "path": "scripts/record_battle_native_animator_pose.py",
-    "sha256": "33ad59dd0f5718d7f353f8d0c661fb1a0894b77077f9e3308fa7e14c10b45046"
+    "sha256": "15e698a0311893eb135b9995c9b32aa11714b891bab2e83292ecd86d72f07e9a"
   },
   "documentation": [
     "https://docs.unity3d.com/2022.3/Documentation/ScriptReference/AnimatorStateInfo-normalizedTime.html",
@@ -54,7 +54,7 @@
   ],
   "binding": "Explicit Animator and pose solver. Native original motion names and clip time are consumed without a second playback clock; source changes invalidate native channel bindings.",
   "limits": [
-    "Only one full-weight layer and motion without transitions. Mixing is explicitly rejected before pose mutation.",
+    "ApplyUnmixed accepts only one full-weight layer/motion and rejects transitions before pose mutation. ApplyMixNext additionally requires an explicit mixed-pose solver; its current configuration, implementation and validation are recorded separately in native-mix-next-source-manifest.json.",
     "The validation binds EvaluateBeforePhysics, not a complete physics solver. Production battle/prefab integration remains pending.",
     "No SDK source is read or copied. No original cache is substituted for Game animation."
   ]

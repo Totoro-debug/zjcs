@@ -111,19 +111,35 @@ namespace Zjcs.Offline.ProfessionUI
             if (float.IsNaN(time) || float.IsInfinity(time) || time < 0) throw new ArgumentOutOfRangeException(nameof(time));
             if (loop && Duration > 0) time %= Duration;
             bonePose.Apply(bones, time);
+            slotPose.Apply(slots, time); System.Array.Copy(setupColors, slotColors, setupColors.Length);
+            ApplyDiscreteAndColors(bonePose, slotPose, slotColors, time, 1);
+        }
+
+        internal void ApplyReplace(ProfessionNativeBonePose bonePose, ProfessionNativeSlotPose slotPose,
+            Color[] slotColors, float time, float alpha)
+        {
+            bonePose.ApplyReplace(bones, time, alpha);
+            if (alpha == 0) return;
+            slotPose.ApplyReplace(slots, time);
+            ApplyDiscreteAndColors(bonePose, slotPose, slotColors, time, alpha);
+        }
+
+        private void ApplyDiscreteAndColors(ProfessionNativeBonePose bonePose, ProfessionNativeSlotPose slotPose,
+            Color[] slotColors, float time, float alpha)
+        {
             foreach (var track in inheritance)
             {
                 if (!bonePose.IsActive(track.Bone)) continue;
                 foreach (var key in track.Keys)
                 { if (key.Time > time) break; bonePose.SetInheritance(track.Bone, key.Mode); }
             }
-            slotPose.Apply(slots, time); System.Array.Copy(setupColors, slotColors, setupColors.Length);
             foreach (var track in colors)
             {
                 if (!bonePose.IsActive(slotPose.Bone(track.Slot))) continue;
                 Color color = slotColors[track.Slot];
                 for (int axis = 0; axis < track.Channels.Length; axis++)
-                    if (track.Channels[axis].TryEvaluate(time, out float value)) color[track.FirstAxis + axis] = value;
+                    if (track.Channels[axis].TryEvaluate(time, out float value))
+                        color[track.FirstAxis + axis] = ProfessionNativeBonePose.MixValue(color[track.FirstAxis + axis], value, alpha);
                 slotColors[track.Slot] = color;
             }
         }

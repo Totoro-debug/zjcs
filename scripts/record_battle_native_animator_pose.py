@@ -1,4 +1,4 @@
-"""Record the independent Unity Animator to native unmixed-pose adapter."""
+"""Record the independent Unity Animator to explicitly solved native poses."""
 import json
 from pathlib import Path
 from prepare_battle_scene_appearance_runtime import ROOT, identity, meta, write_changed
@@ -19,7 +19,7 @@ def main():
                  documentation=['https://docs.unity3d.com/2022.3/Documentation/ScriptReference/AnimatorStateInfo-normalizedTime.html',
                                 'https://docs.unity3d.com/2022.3/Documentation/ScriptReference/Animator.GetCurrentAnimatorClipInfo.html'],
                  binding='Explicit Animator and pose solver. Native original motion names and clip time are consumed without a second playback clock; source changes invalidate native channel bindings.',
-                 limits=['Only one full-weight layer and motion without transitions. Mixing is explicitly rejected before pose mutation.',
+                 limits=['ApplyUnmixed accepts only one full-weight layer/motion and rejects transitions before pose mutation. ApplyMixNext additionally requires an explicit mixed-pose solver; its current configuration, implementation and validation are recorded separately in native-mix-next-source-manifest.json.',
                          'The validation binds EvaluateBeforePhysics, not a complete physics solver. Production battle/prefab integration remains pending.',
                          'No SDK source is read or copied. No original cache is substituted for Game animation.'])
     write_changed(ROOT / 'assets/reference/battle-animation/native-animator-pose-source-manifest.json', json.dumps(proof, ensure_ascii=False, indent=2) + '\n')

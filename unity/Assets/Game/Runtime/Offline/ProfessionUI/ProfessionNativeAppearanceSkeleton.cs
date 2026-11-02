@@ -155,6 +155,28 @@ namespace Zjcs.Offline.ProfessionUI
             }
         }
 
+        // Local stage only, called before either motion's world constraints.
+        internal void ApplyMixNext(ProfessionNativeAnimationChannels incoming, float time, float alpha)
+        {
+            incoming.ApplyReplace(Pose, SlotPose, animationColors, time, alpha);
+            if (alpha == 0) return;
+            for (int slot = 0; slot < slots.Length; slot++)
+            {
+                var attachment = attachments.Resolve(slot, SlotPose.Attachment(slot));
+                if (!ReferenceEquals(attachment, attachments.Attachment(slot))) deforms[slot] = null;
+                attachments.SetAttachment(slot, attachment);
+                var target = incoming.Deforms.Sample(slot, attachment as ProfessionNativeAttachment, time);
+                if (target == null) continue;
+                var previous = deforms[slot];
+                if (previous != null && previous.Count != target.Count)
+                    throw new InvalidOperationException("Original mixed deform layout differs.");
+                var mixed = new float[target.Count];
+                for (int axis = 0; axis < mixed.Length; axis++)
+                    mixed[axis] = Mathf.LerpUnclamped(previous == null ? 0 : previous[axis], target[axis], alpha);
+                deforms[slot] = mixed;
+            }
+        }
+
         // The two original default weapon skins have no active constraints.
         // Refuse constrained parts rather than silently displaying a setup pose.
         public void EvaluateUnmixedWeaponAnimation(string animation, float time)

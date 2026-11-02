@@ -102,6 +102,40 @@ namespace Zjcs.Offline.ProfessionUI
             return result.OrderBy(state => state.Order).ToArray();
         }
 
+        // Sampled setup values are not target keys: only an incoming timeline
+        // whose first key has been reached may replace the outgoing constraint.
+        internal void ApplyReplace(IkState[] states, ProfessionNativeIdleTransform.Constraint[] transformStates,
+            float time, float alpha)
+        {
+            if (alpha == 0) return;
+            foreach (var state in states)
+            {
+                if (!ik.TryGetValue(state.Name, out var timeline)) continue;
+                if (timeline.Curves[0].TryEvaluate(time, out float mix))
+                    state.Mix = ProfessionNativeBonePose.MixValue(state.Mix, mix, alpha);
+                if (timeline.Curves[1].TryEvaluate(time, out float softness))
+                    state.Softness = ProfessionNativeBonePose.MixValue(state.Softness, softness, alpha);
+                for (int frame = timeline.Rows.Length - 1; frame >= 0; frame--)
+                {
+                    var row = timeline.Rows[frame];
+                    if (Number(row, "time") > time) continue;
+                    state.BendPositive = Bool(row, "bendPositive", true);
+                    state.Stretch = Bool(row, "stretch"); state.Compress = Bool(row, "compress");
+                    break;
+                }
+            }
+            foreach (var state in transformStates)
+            {
+                if (!transforms.TryGetValue(state.Name, out var timeline)) continue;
+                float[] values = { state.Rotation, state.X, state.Y, state.ScaleX, state.ScaleY, state.Shear };
+                for (int axis = 0; axis < values.Length; axis++)
+                    if (timeline.Curves[axis].TryEvaluate(time, out float target))
+                        values[axis] = ProfessionNativeBonePose.MixValue(values[axis], target, alpha);
+                state.Rotation = values[0]; state.X = values[1]; state.Y = values[2];
+                state.ScaleX = values[3]; state.ScaleY = values[4]; state.Shear = values[5];
+            }
+        }
+
         private static void Bind(IReadOnlyDictionary<string, object> animation, string kind, string[] axes,
             float[] defaults, Dictionary<string, Timeline> destination)
         {

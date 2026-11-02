@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace Zjcs.Offline.ProfessionUI
 {
-    // Independent, unmixed discrete source timelines. Rendering, skin lookup
-    // and animation blending remain separate stages; no SDK code is used.
+    // Independent discrete source timelines, with an incoming Replace overlay.
+    // Rendering and skin lookup remain separate stages; no SDK code is used.
     public sealed class ProfessionNativeSlotPose
     {
         [Serializable] public sealed class Slot
@@ -94,7 +94,14 @@ namespace Zjcs.Offline.ProfessionUI
         public void Apply(Clip clip, float time)
         {
             if (clip == null || clip.SlotCount != Count) throw new ArgumentException("Original slot clip layout differs.");
-            Finite(time); Reset();
+            Finite(time);
+            Reset();
+            ApplyReplace(clip, time);
+        }
+        internal void ApplyReplace(Clip clip, float time)
+        {
+            if (clip == null || clip.SlotCount != Count) throw new ArgumentException("Original slot clip layout differs.");
+            Finite(time);
             foreach (AttachmentTrack track in clip.Tracks)
             {
                 if (!bones.IsActive(source[track.slot].bone)) continue;

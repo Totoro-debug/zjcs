@@ -105,6 +105,7 @@ namespace Zjcs.Editor.Combat
                     else player.ReapplyOwnAnimator();
                     if (SessionState.GetBool(Key + ".sceneAnimatorPose", false)) CheckSceneAnimatorPose(player);
                     if (SessionState.GetBool(Key + ".sceneMecanimParts", false)) CheckSceneMecanimParts(player);
+                    if (SessionState.GetBool(Key + ".sceneMixNext", false)) CheckSceneMixNext(player);
                     Debug.Log("[Current player Animator] " + selectedController.name + ": direct=" + !useController
                         + "; original idle/skill playable, controller restoration and reapply passed. Native body poses remain explicit pre-physics diagnostics.");
                 }

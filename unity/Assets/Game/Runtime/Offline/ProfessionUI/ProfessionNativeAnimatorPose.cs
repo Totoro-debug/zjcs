@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace Zjcs.Offline.ProfessionUI
 {
-    // Unity owns the graph, speed and clock. This adapter consumes one unmixed
-    // original motion; the supplied solver owns constraints and physics.
+    // Unity owns the graph, speed and clocks. Explicit unmixed/MixNext paths
+    // consume original motions; the supplied solver owns constraints and physics.
     public sealed class ProfessionNativeAnimatorPose
     {
         public readonly struct Frame
@@ -21,17 +21,29 @@ namespace Zjcs.Offline.ProfessionUI
             { Clip = clip; Animation = animation; Time = time; MotionTime = motionTime; Loop = loop; PlaysBackward = playsBackward; }
         }
 
+        public readonly struct MixNextFrame
+        {
+            public readonly Frame Outgoing, Incoming;
+            public readonly float Weight;
+            internal MixNextFrame(Frame outgoing, Frame incoming, float weight)
+            { Outgoing = outgoing; Incoming = incoming; Weight = weight; }
+        }
+
         private readonly Animator animator;
         private readonly Action<ProfessionNativeAppearanceSkeleton, ProfessionNativeAnimationChannels, float, bool> solve;
+        private readonly Action<ProfessionNativeAppearanceSkeleton, MixNextFrame> mix;
         private readonly List<AnimatorClipInfo> clips = new List<AnimatorClipInfo>(1);
+        private readonly List<AnimatorClipInfo> nextClips = new List<AnimatorClipInfo>(1);
         private readonly Dictionary<string, ProfessionNativeAnimationChannels> channels = new Dictionary<string, ProfessionNativeAnimationChannels>(StringComparer.Ordinal);
         private ProfessionNativeSkeletonData source;
 
         public ProfessionNativeAnimatorPose(Animator animator,
-            Action<ProfessionNativeAppearanceSkeleton, ProfessionNativeAnimationChannels, float, bool> solve)
+            Action<ProfessionNativeAppearanceSkeleton, ProfessionNativeAnimationChannels, float, bool> solve,
+            Action<ProfessionNativeAppearanceSkeleton, MixNextFrame> mixNext = null)
         {
             this.animator = animator ? animator : throw new ArgumentNullException(nameof(animator));
             this.solve = solve ?? throw new ArgumentNullException(nameof(solve));
+            mix = mixNext;
         }
 
         public Frame ApplyUnmixed(ProfessionNativeAppearanceSkeleton skeleton)
@@ -49,7 +61,36 @@ namespace Zjcs.Offline.ProfessionUI
             animator.GetCurrentAnimatorClipInfo(0, clips);
             if (clips.Count != 1 || !clips[0].clip || Mathf.Abs(clips[0].weight - 1f) > .00001f)
                 throw new NotSupportedException("Native animation sampling requires one full-weight original motion.");
-            var clip = clips[0].clip;
+            var frame = Read(skeleton, clips[0].clip, animator.GetCurrentAnimatorStateInfo(0));
+            solve(skeleton, frame.Animation, frame.Time, frame.Loop);
+            return frame;
+        }
+
+        // This explicit path matches the original Game prefab's auto-reset,
+        // custom MixNext/Replace base layer. It does not guess blend-tree,
+        // additive, multi-layer or interrupted-transition semantics.
+        public MixNextFrame ApplyMixNext(ProfessionNativeAppearanceSkeleton skeleton)
+        {
+            if (skeleton == null) throw new ArgumentNullException(nameof(skeleton));
+            if (mix == null) throw new InvalidOperationException("Bind an explicit native MixNext solver.");
+            if (!animator || !animator.runtimeAnimatorController || animator.layerCount != 1 || !animator.IsInTransition(0))
+                throw new NotSupportedException("MixNext requires an active single-layer original Animator transition.");
+            animator.GetCurrentAnimatorClipInfo(0, clips); animator.GetNextAnimatorClipInfo(0, nextClips);
+            if (clips.Count != 1 || nextClips.Count != 1 || !clips[0].clip || !nextClips[0].clip)
+                throw new NotSupportedException("MixNext requires one outgoing and one incoming original motion.");
+            float weight = nextClips[0].weight, previous = clips[0].weight;
+            if (float.IsNaN(weight) || float.IsInfinity(weight) || weight < 0 || weight > 1 ||
+                float.IsNaN(previous) || float.IsInfinity(previous) || previous < 0 || previous > 1 ||
+                Mathf.Abs(previous + weight - 1) > .0001f)
+                throw new NotSupportedException("Original two-motion Animator weights are not complementary.");
+            var frame = new MixNextFrame(Read(skeleton, clips[0].clip, animator.GetCurrentAnimatorStateInfo(0)),
+                Read(skeleton, nextClips[0].clip, animator.GetNextAnimatorStateInfo(0)), weight);
+            mix(skeleton, frame);
+            return frame;
+        }
+
+        private Frame Read(ProfessionNativeAppearanceSkeleton skeleton, AnimationClip clip, AnimatorStateInfo state)
+        {
             if (!ReferenceEquals(source, skeleton.Source))
             { channels.Clear(); source = skeleton.Source; }
             if (!channels.TryGetValue(clip.name, out var animation))
@@ -57,7 +98,6 @@ namespace Zjcs.Offline.ProfessionUI
                 animation = new ProfessionNativeAnimationChannels(source, clip.name);
                 channels.Add(clip.name, animation);
             }
-            var state = animator.GetCurrentAnimatorStateInfo(0);
             float time = state.normalizedTime * clip.length;
             if (float.IsNaN(time) || float.IsInfinity(time)) throw new InvalidOperationException("Animator motion time is not finite.");
             float motionTime = time;
@@ -68,7 +108,6 @@ namespace Zjcs.Offline.ProfessionUI
             time = state.loop && animation.Duration > 0
                 ? time - Mathf.Floor(time / animation.Duration) * animation.Duration
                 : Mathf.Clamp(time, 0, animation.Duration);
-            solve(skeleton, animation, time, state.loop);
             return new Frame(clip, animation, time, motionTime, state.loop,
                 animator.speed * state.speed * state.speedMultiplier < 0);
         }

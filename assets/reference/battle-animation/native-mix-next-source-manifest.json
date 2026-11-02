@@ -1,0 +1,114 @@
+{
+  "manifest": "884_156692",
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/SceneCharacterSources/PlayerModel_Game-source.json",
+      "sha256": "eadc90ce5c44c08bc54ef39b107ccd77626db193df30bdf406f109c4f1b7a517"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/global-metadata.dat",
+      "sha256": "c0fe5e062fb3ed1814781e54fd1b4859757970632655138adc091820ded88e0e"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Zjcs.Editor.asmdef",
+      "sha256": "f2cfb7915d559a32ff018760851b15189bb8ce27dd1ad9bcc4c15d1459fde117"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "assets/reference/battle-animation/scene-core-source-manifest.json",
+      "sha256": "69384a713035cb15c226880fa3c6f11cda7da9ca4f7d5d195fa4d45e38560396"
+    },
+    {
+      "path": "assets/reference/battle-animation/game-animators-source-manifest.json",
+      "sha256": "e3444117d2b5423d54ef6f2e730559ae9445b0741b68290b852cab87883f9a73"
+    },
+    {
+      "path": "assets/reference/battle-animation/native-animator-pose-source-manifest.json",
+      "sha256": "3a34f5b6137c5ad974ad8be65a3f5db8447ea4e5c611330bd3d6cf71a2df750f"
+    },
+    {
+      "path": "assets/reference/battle-animation/scene-mecanim-parts-source-manifest.json",
+      "sha256": "0535f44d857b477093f56e88586dd8a91abc749c92fc4f3574ac3f202e9051aa"
+    }
+  ],
+  "translator": {
+    "autoReset": 1,
+    "useCustomMixMode": 1,
+    "layerMixModes": [
+      1
+    ],
+    "layerBlendModes": [
+      1
+    ]
+  },
+  "public_enum_constants": {
+    "MixMode": {
+      "AlwaysMix": 0,
+      "MixNext": 1,
+      "Hard": 2,
+      "Match": 3
+    },
+    "MixBlend": {
+      "Setup": 0,
+      "First": 1,
+      "Replace": 2,
+      "Add": 3
+    }
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimatorPose.cs",
+      "sha256": "9d7efca7356d9ff55331821dfebcc9f56364c278b78fa404d249893bf5b76acb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimationChannels.cs",
+      "sha256": "51072fd862b0a1e961259389b636ba9b179ad1a83c488639cb01f425f0ebf99e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBonePose.cs",
+      "sha256": "7c9eed826995fb498eda6742350205b30272985e34f21ff70f2521179540be16"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSlotPose.cs",
+      "sha256": "99d7d8686ed0fb758a120661ead2b2c5b729ff0c2e72b28069179698df2d4e16"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAppearanceSkeleton.cs",
+      "sha256": "881c5562a6f9731e381e296471f739cb150ba8ea842ba0aee34c9d802b079953"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeConstraintAnimation.cs",
+      "sha256": "70cc7bc1d43cd5009d130d226cb01f0486512e4e20dc280eccc9e68b67347aa2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeConstraintPose.cs",
+      "sha256": "067061daf3f81dc30280c8c100d9f8b88af9dc0bef5f9d97e4c59154e1205702"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneMixNext.cs",
+      "sha256": "5a25aaad4dbd7bf0ebdee7fa329472fb09194bde8770ccf929c98839f48fbc51"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneMixNext.cs.meta",
+      "sha256": "823f53b0ba4325895cc92508d77d743f9b73d80f22b9beea972d67820473cf81"
+    }
+  ],
+  "generator": {
+    "path": "scripts/record_battle_native_mix_next.py",
+    "sha256": "f41b12ac94cc99366e106dda27dafcb365c0b97f48fb7d0736ac7d018eda5912"
+  },
+  "documentation": [
+    "https://en.esotericsoftware.com/spine-unity-main-components-4.2#Animation-Blending-Control",
+    "https://esotericsoftware.com/spine-api-reference-4.2#MixBlend",
+    "https://en.esotericsoftware.com/forum/d/16410-about-negative-bone-scale-web-player"
+  ],
+  "binding": "Explicit two-motion Animator MixNext snapshot and solver; retain each original motion clock and actual incoming clip weight. Reset the outgoing local pose, replace only reached incoming keyed properties, switch discrete keys, mix reflected scale magnitudes using the incoming sign, then solve mixed IK/transform constraints once. No solved world-matrix interpolation or independent clock.",
+  "limits": [
+    "EvaluateBeforePhysics and EvaluateMixNextBeforePhysics remain explicit pre-physics stages, with the existing geometric solver restrictions. Full physical motion is not implemented by these methods.",
+    "Only actual single-layer, single-outgoing/single-incoming complementary clip weights are accepted. Blend trees, other mix modes/layers and interrupted-transition parity remain unverified.",
+    "The actual current eight-character fixture verifies idle/hit local channels, attachment/draw order, clocks, weights, repeatability and rendered body pixels. Animated colors/deforms/inheritance and additional constraint branches require further original-input validation.",
+    "The scene drawing endpoint still explicitly consumes the unmixed path; transition notifications, other native poses and production battle/Windows Player integration remain pending.",
+    "Previous receipts retain their historical extraction/implementation identities. This receipt records the current common channel and solver extensions without changing original payloads."
+  ]
+}

@@ -99,6 +99,21 @@ namespace Zjcs.Offline.ProfessionUI
             if (tracks == null) throw new ArgumentNullException(nameof(tracks));
             Finite(time);
             Reset();
+            ApplyReplace(tracks, time, 1);
+        }
+
+        // Incoming MixNext motion: only keyed properties replace the current
+        // local pose. Do not interpolate solved world matrices or reset unkeyed
+        // properties. Source rotation values retain their authored turns.
+        internal void ApplyReplace(IReadOnlyList<Track> tracks, float time, float alpha)
+        {
+            if (tracks == null) throw new ArgumentNullException(nameof(tracks));
+            Finite(time);
+            Finite(alpha);
+            if (alpha < 0 || alpha > 1) throw new ArgumentOutOfRangeException(nameof(alpha));
+            if (alpha == 0) return;
+            Array.Clear(ready, 0, ready.Length);
+            Array.Clear(overridden, 0, overridden.Length);
             foreach (Track track in tracks)
             {
                 if (track == null || track.Bone < 0 || track.Bone >= source.Length || track.Channel < 0 || track.Channel > 6)
@@ -108,15 +123,27 @@ namespace Zjcs.Offline.ProfessionUI
                 Bone b = source[i];
                 switch (track.Channel)
                 {
-                    case 0: rotation[i] = b.rotation + value; break;
-                    case 1: position[i].x = b.x + value; break;
-                    case 2: position[i].y = b.y + value; break;
-                    case 3: scale[i].x = b.scaleX * value; break;
-                    case 4: scale[i].y = b.scaleY * value; break;
-                    case 5: shear[i].x = b.shearX + value; break;
-                    case 6: shear[i].y = b.shearY + value; break;
+                    case 0: rotation[i] = MixValue(rotation[i], b.rotation + value, alpha); break;
+                    case 1: position[i].x = MixValue(position[i].x, b.x + value, alpha); break;
+                    case 2: position[i].y = MixValue(position[i].y, b.y + value, alpha); break;
+                    case 3: scale[i].x = MixScale(scale[i].x, b.scaleX * value, alpha); break;
+                    case 4: scale[i].y = MixScale(scale[i].y, b.scaleY * value, alpha); break;
+                    case 5: shear[i].x = MixValue(shear[i].x, b.shearX + value, alpha); break;
+                    case 6: shear[i].y = MixValue(shear[i].y, b.shearY + value, alpha); break;
                 }
             }
+        }
+
+        internal static float MixValue(float current, float target, float alpha) =>
+            alpha == 1 ? target : Mathf.LerpUnclamped(current, target, alpha);
+
+        private static float MixScale(float current, float target, float alpha)
+        {
+            if (alpha == 1) return target;
+            // Non-additive incoming scale switches reflection immediately;
+            // magnitude blends without collapsing a reflected bone through zero.
+            float signedCurrent = Mathf.Abs(current) * (target > 0 ? 1 : target < 0 ? -1 : 0);
+            return Mathf.LerpUnclamped(signedCurrent, target, alpha);
         }
 
         public void UpdateWorld()

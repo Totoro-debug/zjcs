@@ -1639,6 +1639,17 @@ unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerDialogueUiServices.cs
 # Map11 runtime hashes the original LF definition bytes.
 unity/Assets/Official/World/Map/11/map11.json text eol=lf
 
+# Keep the native MixNext source fingerprints stable on Windows checkout.
+scripts/record_battle_native_mix_next.py text eol=lf
+unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneMixNext.cs* text eol=lf
+assets/reference/battle-animation/scene-native-renderer-source-manifest.json text eol=lf
+assets/reference/battle-animation/scene-character-appearance-source-manifest.json text eol=lf
+assets/reference/battle-animation/scene-player-appearance-source-manifest.json text eol=lf
+assets/reference/battle-animation/scene-player-animator-source-manifest.json text eol=lf
+assets/reference/battle-animation/native-animator-pose-source-manifest.json text eol=lf
+assets/reference/battle-animation/scene-mecanim-parts-source-manifest.json text eol=lf
+assets/reference/battle-animation/native-mix-next-source-manifest.json text eol=lf
+
 # Preserve the decoded substitute mover and its source fingerprints.
 scripts/prepare_battle_voodoo_grid.py text eol=lf
 unity/Assets/Game/Runtime/Official/Combat/FightOfficialVoodooGridRules.cs* text eol=lf
