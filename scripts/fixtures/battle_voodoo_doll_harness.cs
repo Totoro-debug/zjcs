@@ -7,7 +7,7 @@ public static class BattleVoodooDollHarness
     static void Check(bool value, string message) { if (!value) throw new Exception(message); }
     static FightBattleUnitState Unit(int id, int side, int type, long hp, int speed) {
         var u = new FightBattleUnitState { Id=id, Side=side, CharacterType=type, Hp=hp,
-            MaxHp=hp, LastMaxHp=hp, Level=150, SubRank=1, X=5, Y=5 };
+            MaxHp=hp, LastMaxHp=hp, Level=150, SubRank=1, MoveMask=5, X=5, Y=5 };
         u.Properties.Add(new FightPropertyValue {Id=1,Value=10001});
         u.Properties.Add(new FightPropertyValue {Id=2,Value=10003});
         u.Properties.Add(new FightPropertyValue {Id=3,Value=hp});
@@ -90,6 +90,56 @@ public static class BattleVoodooDollHarness
         Check(source.Ended && source.Statuses.Count==0,"Creator-clock lifetime did not destroy the applicator.");
         linked.Hp=0;Check(restored.ResultRules.Evaluate(restored,1).Won,
             "A target-type substitute incorrectly blocked enemy clear.");
+    }
+
+    public static string RunHpTriggers(FightOfficialCombatCatalog catalog, FightOfficialSkillItemCatalog items,
+        FightDamageFormula formula, int mode, bool restore)
+    {
+        var player=Unit(1,1,1,5000000,1000);
+        var enemy=Unit(2,2,2,2000000,1);enemy.X=6;
+        var summon=catalog.CreateSkill(12200,0,10097,5,20,1,null);
+        player.Skills.Add(summon);player.SkillState.Slots.Add(catalog.CreateSkillSlot(summon,0));
+        var cp=new FightBattleCheckpoint {StageId=1001,RandomSeed=13,ResultRules=new FightBattleResultRules(),
+            Grid=new FightBattleGrid {Width=20,Height=20,DefaultGroundType=0}};
+        cp.Units.Add(player);cp.Units.Add(enemy);
+        var runner=FightBattleExecutor.Begin(cp,formula,new FightDamageSettlement(),catalog,items);
+        runner.Step(0,1);
+        var doll=cp.Units.Find(value=>value.VoodooDoll!=null);
+        Check(doll!=null,"HP fixture did not produce the original 4600 substitute.");
+        enemy.Statuses.Add(catalog.CreateStatus(25067,2,2,9925067,0,0,5,20,1));
+        enemy.Statuses.Add(catalog.CreateStatus(24202,2,2,9924202,0,0,5,20,1));
+        doll.Hp=doll.MaxHp=doll.LastMaxHp=500000;
+        doll.Properties.Find(value=>value.Id==3).Value=500000;
+        doll.BaseProperties.Find(value=>value.Id==3).Value=500000;
+        player.Skills.Clear();player.SkillState.Slots.Clear();
+        var attack=new FightBattleSkillDefinition {EntityId=90010,Slot=0,TargetType=1};
+        attack.Range.Add(new FightGridPoint(0,2));
+        attack.Hits.Add(new FightBattleHitDefinition {EntityId=90011,DamageType=8,
+            HasCustomDamage=true,CustomDamage=1600000,Delay=0.4f});
+        player.Skills.Add(attack);player.SkillState.Slots.Add(new FightSkillSlotState {Slot=0,LimitedTimes=-1});
+        if(restore) {
+            cp=FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(cp));
+            runner=FightBattleExecutor.Restore(cp,formula,new FightDamageSettlement(),catalog,items);
+            enemy=cp.Units.Find(value=>value.Id==2);
+        }
+        var step=runner.Step(0,2).Event;
+        Check(enemy.Hp==400000,"Substitute lost full transmitted HP loss.");
+        var casts=step.SkillCasts.FindAll(value=>value.SkillEntityId==10170);
+        bool allowed=mode!=0;
+        Check(enemy.Statuses.Exists(value=>value.ClassId==24315)==(mode==1),
+            "Substitute HP notification bypassed original 10140 trigger flags/whitelist.");
+        Check(casts.Count==(allowed?1:0) && enemy.Statuses.Exists(value=>value.ClassId==24202)!=allowed,
+            "Allowed substitute HP skill was lost, duplicated or not automatically removed.");
+        if(allowed) {
+            Check(casts[0].ActorId==2 && Math.Abs(casts[0].Delay-0.4f)<0.00001f,
+                "Substitute HP skill lost its status owner or parent transmission time.");
+            Check(step.DamageEvents.Exists(value=>value.SkillEntityId==10170 && value.SourceId==2
+                && Math.Abs(value.Delay-0.4f)<0.00001f),"Allowed HP invocation did not execute its real damage.");
+        }
+        var sync=step.SkillCasts.Find(value=>value.SkillEntityId==10140);
+        Check(sync!=null && Math.Abs(sync.Delay-0.4f)<0.00001f,
+            "Substitute sync cast did not retain the parent hit time.");
+        return FightBattleCheckpointSerializer.Save(cp);
     }
 }
 

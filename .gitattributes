@@ -1638,3 +1638,8 @@ unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerDialogueUiServices.cs
 
 # Map11 runtime hashes the original LF definition bytes.
 unity/Assets/Official/World/Map/11/map11.json text eol=lf
+
+# Preserve the decoded substitute mover and its source fingerprints.
+scripts/prepare_battle_voodoo_grid.py text eol=lf
+unity/Assets/Game/Runtime/Official/Combat/FightOfficialVoodooGridRules.cs* text eol=lf
+assets/reference/battle-rules/voodoo-grid-source-manifest.json text eol=lf

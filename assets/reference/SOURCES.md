@@ -325,3 +325,5 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 `prepare_partner_conversation_world.py` 从选定 `884_156692` 的 MapInfoWrap 和实体扩展原载荷提取通话地图事实，并记录实际包／对象、字段格式源码、构造器、已确认的生产存档单位及全部本地安装绑定哈希，见 `partner-conversation-world-source-manifest.json`。未生成完整素材快照。
 
 伙伴通讯录的原通知消费与本地存档绑定凭据见 [partner-dialogue-local-ui-source-manifest.json](partner-dialogue-local-ui-source-manifest.json)，记录选定官方客户端／共享源码、原 UI 契约、适配代码及验证输入输出哈希。
+
+替身地面绑定来源见 `battle-rules/voodoo-grid-source-manifest.json`。`prepare_battle_voodoo_grid.py` 从884_156692所选官方APK读取4600移动组件与同版 `EC/entity_grid_mover` 表，使用同版格式代码解码，记录包内实际对象、原始字节、代码、生成器及C#编译绑定哈希；已绑定旧战斗目录仅作组件身份核对，版本分别记录。无新增美术载荷，未生成完整素材快照；行为和验证范围见[战斗执行页](../../docs/features/battle-execution.md)。

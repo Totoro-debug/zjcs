@@ -658,8 +658,6 @@ namespace Zjcs.Combat.Official
                 MustHaveValidCost = Bool(skill, "MustHaveValidCost"),
                 TargetType = Int(skill, "TargetType", 1),
                 Range = range,
-                CanTriggerChild = Bool(skill, "CanTriggerChild", true),
-                CanTriggerStatusEntityIds = new List<int>(IntArray(skill, "CanTriggerStatusEntityIds")),
                 ResetReleasedTimeOnNextWave = Bool(skill, "ResetReleasedTimeOnNextWave"),
                 HasCustomDamage = false,
                 RangeVerified = true,
@@ -684,6 +682,7 @@ namespace Zjcs.Combat.Official
                 HitGraphEntities = new List<FightBattleHitEntity>()
             };
 
+            ReadSkillTriggerPolicy(skill, result);
             AddSourceMoves(skill, result.SourceMoves);
             Dictionary<string, object> extSkill = Component(components, "FightSkillExtSkillComponent");
             if (extSkill != null) AddExtraSkills(extSkill, result.ExtraSkills);
@@ -729,6 +728,22 @@ namespace Zjcs.Combat.Official
             if (result.HitGraphEntities.Count == 0)
                 throw new InvalidOperationException("Official skill has no resolved hit graph: " + entityId);
             return result;
+        }
+
+        /// <summary>Response gates for an already settled effect; this context is never cast.</summary>
+        public FightBattleSkillDefinition CreateSkillTriggerContext(int entityId)
+        {
+            var skill = Component(RequiredEntity(entityId), "FightSkillComponent");
+            if (skill == null) throw new InvalidOperationException("Official entity is not a skill: " + entityId);
+            var result = new FightBattleSkillDefinition { EntityId = entityId, RootEntityId = entityId };
+            ReadSkillTriggerPolicy(skill, result);
+            return result;
+        }
+
+        private static void ReadSkillTriggerPolicy(Dictionary<string, object> source, FightBattleSkillDefinition result)
+        {
+            result.CanTriggerChild = Bool(source, "CanTriggerChild", true);
+            result.CanTriggerStatusEntityIds = new List<int>(IntArray(source, "CanTriggerStatusEntityIds"));
         }
 
         public FightSkillSlotState CreateSkillSlot(FightBattleSkillDefinition skill, long cooldown,

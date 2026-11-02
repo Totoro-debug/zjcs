@@ -331,7 +331,9 @@ namespace Zjcs.Editor
             var sprites = new Dictionary<int, Sprite>();
             var binding = OfficialBattleTimelineAssets.Load().CardBindings;
             foreach (var unit in checkpoint.Units.Where(value => value.NpcClassId == 0
-                && (value.Id == 1 || value.CharacterType == 1) && value.Hp > 0 && !value.Ended))
+                && (value.Id == 1 || value.CharacterType == 1) && value.Hp > 0 && !value.Ended
+                && (Resources.Load<OfficialSummonSkeletonData>("Combat/Summons/" + value.MonsterId + "-data")
+                    ?.Source.showOnRoundProgress != false)))
             {
                 Transform card = Root("GameRoundCharacterItem_" + unit.Id);
                 Require(card != null && card.Find(binding.playerRoot).gameObject.activeSelf
@@ -390,6 +392,7 @@ namespace Zjcs.Editor
             HpForbiddenProbe hpForbidden = ConfigureHpForbiddenProbe(checkpoint);
             HpRecoveryProbe hpRecovery = ConfigureHpRecoveryProbe(checkpoint);
             HpCostProbe hpCost = ConfigureHpCostProbe(checkpoint);
+            HpSubstituteProbe hpSubstitute = ConfigureHpSubstituteProbe(checkpoint);
             int initialCounter = checkpoint.Counter;
             controller.StepCompleted += result => {
                 checkpoint = result.Checkpoint;
@@ -403,6 +406,7 @@ namespace Zjcs.Editor
                 hpForbidden?.ObserveStep(controller);
                 hpRecovery?.ObserveStep(controller);
                 hpCost?.ObserveStep(controller);
+                hpSubstitute?.ObserveStep(controller);
                 if (checkpoint.Counter == initialCounter + 1 || checkpoint.Finished)
                     Debug.Log("[Battle hosts] " + name + " step=" + checkpoint.Counter
                         + " finished=" + checkpoint.Finished);
@@ -466,20 +470,24 @@ namespace Zjcs.Editor
             float previousTimeScale = Time.timeScale;
             try
             {
-                Time.timeScale = hpListener == null && hpRecovery == null && hpCost == null ? 5 : 1;
+                Time.timeScale = hpListener == null && hpRecovery == null && hpCost == null && hpSubstitute == null ? 5 : 1;
                 while (runner != null)
                 {
                     triggerTiming?.ObservePresentation();
                     hpStartup?.ObservePresentation();
                     hpListener?.ObservePresentation();
                     hpRecovery?.ObservePresentation();
+                    hpSubstitute?.ObservePresentation();
+                    if (hpSubstitute != null && hpSubstitute.MayAccelerate) Time.timeScale = 5;
                     if (!capturedCure && (hpListener != null && hpListener.ReadyToCapture
                         || hpRecovery != null && hpRecovery.ReadyToCapture
-                        || hpCost != null && hpCost.ReadyToCapture))
+                        || hpCost != null && hpCost.ReadyToCapture
+                        || hpSubstitute != null && hpSubstitute.ReadyToCapture))
                     {
                         float captureTimeScale = Time.timeScale;
                         Time.timeScale = 0f;
-                        try { yield return Capture(output, name + (hpCost != null ? "-hp-cost" : "-hp-cure")); }
+                        try { yield return Capture(output, name + (hpSubstitute != null ? "-hp-substitute"
+                            : hpCost != null ? "-hp-cost" : "-hp-cure")); }
                         finally { Time.timeScale = captureTimeScale; }
                         capturedCure = true;
                     }
@@ -517,6 +525,7 @@ namespace Zjcs.Editor
             hpForbidden?.Verify(name, checkpoint);
             hpRecovery?.Verify(name, checkpoint);
             hpCost?.Verify(name, checkpoint);
+            hpSubstitute?.Verify(name, checkpoint);
             VerifyEquipmentBattlePassives(name, checkpoint, true);
             yield return SettleUi();
             yield return Capture(output, name + "-result");

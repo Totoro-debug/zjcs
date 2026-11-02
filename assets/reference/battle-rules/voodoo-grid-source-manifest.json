@@ -1,0 +1,108 @@
+{
+  "manifest": "884_156692",
+  "inputs": [
+    {
+      "asset": "/EC/entity_grid_mover.g.bytes",
+      "provenance": {
+        "bundle": "defaultpackage_assets_config_luban_ec.bundle",
+        "bundle_hash": "63c23eae2715809080bd1c246b6f063e",
+        "path_id": "-4165658816141399837",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/63c23eae2715809080bd1c246b6f063e.bundle",
+        "raw_size": 31317,
+        "raw_sha256": "f55910165fbc464ea485bec9f4f8c0bc3643931127a4d5276809a83d43a53e39"
+      },
+      "payload_sha256": "276907e3a6b8fb8aaaa96ca768e51a6a4b30b401468c3a535c364ec15ce20657",
+      "bytes": 50
+    },
+    {
+      "asset": "/FightOther_part1.g.bytes",
+      "provenance": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+        "path_id": "-7293414054127896566",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/9d66af1ccf3d15813270d7ce90a48c7e.bundle",
+        "raw_size": 6876458,
+        "raw_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f"
+      },
+      "payload_sha256": "58691eabda7b5c14f3a91046964225634d40fd57a52cd4f6e0ec61961aec20c6",
+      "bytes": 13802
+    }
+  ],
+  "sources": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EntityGridMoverInfo.cs",
+      "sha256": "7093e61ecc974675061d1fcd58eb8ba038ee04685bc9e1dee10cc8c3b2754279"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EntityGridMoverInfoParser.cs",
+      "sha256": "9bac5afd5b49106427a656e8643b7a80eea2bc1a58d515c2deb14f41f7f9c5da"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GridMoverComponentInfo.cs",
+      "sha256": "9192fe7435eab0ca2d4d9df410e1a849695fc724317a74410ff055285fae253a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GroundType.cs",
+      "sha256": "1292cacc79578a628df15516b5069aa37194aa88f6d00c1ed41ef41ad9b093e2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbEntityGridMoverInfo.cs",
+      "sha256": "23149d3cf20b35c1bfda9f68888a856413db13f3d8e26861b9ae2cbf0741b94f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/MessagePack.Formatters.Common/FightGridMoverComponentInfoFormatter.cs",
+      "sha256": "21f1b4381d7db596baf6ddb3986f02782313dab8cad81c6198cb1415e12d781b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Console.dll",
+      "sha256": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/global-metadata.dat",
+      "sha256": "c0fe5e062fb3ed1814781e54fd1b4859757970632655138adc091820ded88e0e"
+    }
+  ],
+  "code_manifest": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "mover": {
+    "MoveActionId": 0,
+    "WalkableGroundTypeKey": 3,
+    "WalkableGroundTypeServerOverrideKey": 0
+  },
+  "ground_types": [
+    0,
+    6
+  ],
+  "bound_combat_entity": {
+    "path": "unity/Assets/Official/Combat/battle-rules.json",
+    "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803",
+    "entity_id": 4600,
+    "component": "FightGridMoverComponent",
+    "component_equal": true
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialVoodooGridRules.cs",
+      "sha256": "d6d46ae2791b046daa02f35671d78fb979fbd4a4ef00521c1cd43790c3555e1e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialVoodooGridRules.cs.meta",
+      "sha256": "e2b874d51c3a942106f2a115468d4bded0e5a8984e80118c4b614c9c5b39ad4c"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_voodoo_grid.py",
+    "sha256": "b2c4e733f5d1920124f2958cd67178675b7fe45d0c02268f44fe0cc3708dba52"
+  },
+  "conversion": "GridMoverComponentInfo.GetMoveMask: OR 1 << ground; compile the selected-version mover and its table together."
+}

@@ -11,6 +11,7 @@ namespace Zjcs.Combat.Official
         public int RoundType;
         public int SyncHitEntityId;
         public int SyncDamageEntityId;
+        public int MoveMask;
         public List<FightGridPoint> Body = new List<FightGridPoint>();
     }
 
@@ -29,6 +30,9 @@ namespace Zjcs.Combat.Official
                 RoundType = Int(Component(components, "FightRoundComponent"), "RoundType")
             };
             var grid = Component(components, "GridTransformComponent");
+            var mover = Component(components, "FightGridMoverComponent");
+            output.MoveMask = FightOfficialVoodooGridRules.MoveMask(entityId,
+                Int(mover, "WalkableGroundTypeKey"), Int(mover, "WalkableGroundTypeServerOverrideKey"));
             var syncSkill = Component(RequiredEntity(output.SyncSkillEntityId), "FightSkillComponent");
             var hits = Array(Required(syncSkill, "HitList"), "substitute sync hits");
             if (hits.Count != 1) throw new InvalidOperationException("Unsupported substitute sync hit graph.");

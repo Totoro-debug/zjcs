@@ -26,7 +26,7 @@ namespace Zjcs.Combat.Official
                 Wave = actor.Wave, X = position.X, Y = position.Y, Direction = target.Direction,
                 Hp = properties[hpId], MaxHp = properties[hpId], LastMaxHp = properties[hpId],
                 BaseProperties = ToPropertyList(properties), Properties = ToPropertyList(properties),
-                BodyOffsets = config.Body,
+                BodyOffsets = config.Body, MoveMask = config.MoveMask,
                 VoodooDoll = new FightVoodooDollLink { TargetId = target.Id,
                     SyncSkillEntityId = config.SyncSkillEntityId, VoodooStatusId = config.VoodooStatusId,
                     FollowDieStatusId = config.FollowDieStatusId, SyncHitEntityId = config.SyncHitEntityId,
@@ -49,16 +49,18 @@ namespace Zjcs.Combat.Official
             FightBattleDamageEvent damage = FightVoodooDollRules.Transmit(doll, target, suffered,
                 NextDamageId());
             if (damage == null) return;
+            var syncTriggerContext = statusCatalog?.CreateSkillTriggerContext(damage.SkillEntityId);
             events.Add(damage);
             casts.Add(new FightBattleSkillCastEvent { ActorId = doll.Id, Slot = -1,
-                SkillEntityId = damage.SkillEntityId, TargetIds = new List<int> {target.Id} });
+                SkillEntityId = damage.SkillEntityId, Delay = damage.Delay, TargetIds = new List<int> {target.Id} });
             checkpoint.Statistics.RecordCast(doll.Id, damage.SkillEntityId, 0);
             checkpoint.Statistics.RecordHit(damage, new HashSet<int>());
-            FightStatusAccumulatedDamageRuntime.RecordHit(target, damage);
-            CollectUnflinchingActions(target, Math.Max(0, damage.BeforeHp - damage.AfterHp));
+            FightStatusAccumulatedDamageRuntime.RecordHit(target, damage, syncTriggerContext);
+            CollectUnflinchingActions(target, Math.Max(0, damage.BeforeHp - damage.AfterHp), syncTriggerContext);
             FightStatusTriggerRuntime.ApplyAccumulatedDamage(target,
-                Math.Max(0, damage.BeforeHp - damage.AfterHp), statusCatalog, random);
-            FightStatusTriggerRuntime.Apply(target, statusCatalog, false, random: random);
+                Math.Max(0, damage.BeforeHp - damage.AfterHp), statusCatalog, random,
+                sourceSkill: syncTriggerContext);
+            ApplyHpChangeTriggers(target, syncTriggerContext);
             TransmitVoodooDamage(target, damage, events, casts, visited);
         }
 

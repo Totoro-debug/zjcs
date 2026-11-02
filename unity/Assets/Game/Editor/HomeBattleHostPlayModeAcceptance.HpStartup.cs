@@ -99,6 +99,129 @@ namespace Zjcs.Editor
             }
         }
 
+        private static HpSubstituteProbe ConfigureHpSubstituteProbe(FightBattleCheckpoint checkpoint)
+        {
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HP_SUBSTITUTE_ACCEPTANCE") != "1") return null;
+            var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
+            var player = checkpoint.Units.Single(value => value.Id == 1);
+            var enemy = checkpoint.Units.First(value => value.Side != player.Side && value.Hp > 0);
+            var attack = player.Skills.First(value => value.Slot == 0);
+            foreach (var unit in checkpoint.Units)
+            {
+                long hp = unit == player ? 5000000L : 2000000L;
+                foreach (var property in unit.Properties.Concat(unit.BaseProperties))
+                {
+                    if (property.Id == catalog.PropertyType("MaxHp")) property.Value = hp;
+                    if (unit != player && property.Id == catalog.PropertyType("Attack"))
+                        property.Value = Math.Min(property.Value, 100L);
+                }
+                unit.MaxHp = unit.LastMaxHp = hp;
+                unit.Hp = unit.Turn.Hp = unit == player ? hp : 900000L;
+            }
+            var occupied = new HashSet<FightGridPoint>();
+            foreach (var unit in checkpoint.Units.Where(value => value != enemy && value.Hp > 0))
+                foreach (var offset in unit.BodyOffsets) occupied.Add(new FightGridPoint(unit.X + offset.X, unit.Y + offset.Y));
+            var nearby = new[] { new FightGridPoint(1, 0), new FightGridPoint(-1, 0),
+                new FightGridPoint(0, -1), new FightGridPoint(0, 1) };
+            var position = nearby.Select(value => new FightGridPoint(player.X + value.X, player.Y + value.Y))
+                .First(value => enemy.BodyOffsets.All(offset => checkpoint.Grid.CanStand(value + offset, enemy.MoveMask, occupied)));
+            enemy.X = position.X; enemy.Y = position.Y;
+            player.Skills.Clear(); player.SkillState.Slots.Clear();
+            var summon = catalog.CreateSkill(12200, 0, 10097, 5, 20, 1, null);
+            summon.LimitedTimes = 1;
+            player.Skills.Add(summon); player.SkillState.Slots.Add(catalog.CreateSkillSlot(summon, 0));
+            foreach (var entry in checkpoint.Timeline.Entries)
+                if (entry.Id == 1) entry.Next = 1;
+            checkpoint.Timeline.Entries.Sort((left, right) => left.Next.CompareTo(right.Next));
+            return new HpSubstituteProbe(catalog, enemy.Id, attack);
+        }
+
+        private sealed class HpSubstituteProbe
+        {
+            private readonly FightOfficialCombatCatalog catalog;
+            private readonly int enemyId;
+            private readonly FightBattleSkillDefinition attack;
+            private int dollId;
+            private bool transmitted, rendered;
+            private OfficialBattleSceneView scene;
+            public bool ReadyToCapture => rendered;
+            public bool MayAccelerate => transmitted && rendered;
+            public HpSubstituteProbe(FightOfficialCombatCatalog catalog, int enemyId, FightBattleSkillDefinition attack)
+            { this.catalog = catalog; this.enemyId = enemyId; this.attack = attack; }
+            public void ObserveStep(OfficialBattleRuntimeController controller)
+            {
+                var cp = controller.Checkpoint;
+                var step = cp.Receipts.Last().Event;
+                var enemy = cp.Units.Single(value => value.Id == enemyId);
+                if (dollId == 0)
+                {
+                    var doll = cp.Units.SingleOrDefault(value => value.MasterId == 1 && value.MonsterId == 4600);
+                    if (doll == null)
+                    {
+                        Require(!step.SkillCasts.Any(value => value.ActorId == 1 && value.SkillEntityId == 12200),
+                            "Original 12200 did not create its substitute on the actual arena grid.");
+                        return;
+                    }
+                    dollId = doll.Id;
+                    scene = (OfficialBattleSceneView)typeof(OfficialBattleRuntimeController)
+                        .GetField("sceneView", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(controller);
+                    // The real summon supplies identity, placement and rendering. Arm the next
+                    // isolated input only after that entity exists; the runner advances normally.
+                    doll.Hp = doll.Turn.Hp = doll.MaxHp = doll.LastMaxHp = 500000L;
+                    foreach (var property in doll.Properties.Concat(doll.BaseProperties))
+                        if (property.Id == catalog.PropertyType("MaxHp")) property.Value = 500000L;
+                    enemy.Statuses.Add(catalog.CreateStatus(25067, enemyId, enemyId, 9925067));
+                    enemy.Statuses.Add(catalog.CreateStatus(24202, enemyId, enemyId, 9924202));
+                    var player = cp.Units.Single(value => value.Id == 1);
+                    ConfigureHpRecoverySkill(attack, 800000L, false);
+                    attack.Range.Clear(); attack.Range.Add(new FightGridPoint(doll.X - player.X, doll.Y - player.Y));
+                    attack.LimitedTimes = 1;
+                    player.Skills.Clear(); player.SkillState.Slots.Clear();
+                    player.Skills.Add(attack); player.SkillState.Slots.Add(catalog.CreateSkillSlot(attack, 0));
+                    return;
+                }
+                if (transmitted) return;
+                var damage = step.DamageEvents.FirstOrDefault(value => value.SkillEntityId == 10140 && value.TargetId == enemyId);
+                if (damage == null) return;
+                var cast = step.SkillCasts.Single(value => value.SkillEntityId == 10140);
+                var suffered = step.DamageEvents.Single(value => value.TargetId == dollId && !value.IsCure);
+                Require(damage.DamageValue == suffered.DamageValue && damage.AfterHp > 0L
+                    && damage.AfterHp <= enemy.MaxHp * 3 / 10
+                    && Math.Abs(damage.Delay - 0.4f) < 0.0001f && Math.Abs(cast.Delay - damage.Delay) < 0.0001f
+                    && enemy.Statuses.All(value => value.ClassId != 24315)
+                    && enemy.Statuses.Any(value => value.ClassId == 24202)
+                    && step.SkillCasts.All(value => value.SkillEntityId != 10170),
+                    "Real substitute bypassed original 10140 HP trigger gates or lost its hit time.");
+                transmitted = true;
+                Debug.Log("[HP substitute hosts] original 4600 -> 10140: full input=" + damage.DamageValue
+                    + ", afterHp=" + damage.AfterHp + " at 0.4s; original HP response gate passed.");
+            }
+            public void ObservePresentation()
+            {
+                if (scene == null || rendered || dollId == 0) return;
+                var body = (Transform)typeof(OfficialBattleSceneView).GetMethod("Body",
+                    BindingFlags.Instance | BindingFlags.NonPublic).Invoke(scene, new object[] { dollId });
+                rendered = body != null && body.GetComponentsInChildren<MeshRenderer>().Any(value => value.enabled
+                    && !value.forceRenderingOff && value.isVisible && value.GetComponent<MeshFilter>()?.sharedMesh?.vertexCount > 0);
+                if (rendered)
+                {
+                    var source = Resources.Load<OfficialSummonSkeletonData>("Combat/Summons/4600-data");
+                    Require(source != null && !source.Source.showOnRoundProgress
+                        && Root("GameRoundCharacterItem_" + dollId) == null
+                        && body.GetComponentsInChildren<Transform>().Any(value => value.name == "MonsterModel_" + source.Source.modelId),
+                        "Substitute lost its official model or appeared on the hidden round progress.");
+                }
+            }
+            public void Verify(string host, FightBattleCheckpoint checkpoint)
+            {
+                Require(transmitted && rendered, host + " did not render its real substitute and verify the HP gate.");
+                string saved = FightBattleCheckpointSerializer.Save(checkpoint);
+                Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
+                    host + " changed its substitute HP checkpoint after reload.");
+                Debug.Log("[HP substitute hosts] " + host + ": native 4600 geometry and checkpoint reload passed.");
+            }
+        }
+
         private static HpCostProbe ConfigureHpCostProbe(FightBattleCheckpoint checkpoint)
         {
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HP_COST_ACCEPTANCE") != "1") return null;
