@@ -14,6 +14,9 @@ namespace Zjcs.Official.WorldUI
         public Button ConfirmBtn, CancelBtn;
         public WorldPopupWindow PopupWindow;
         public WorldLockMaskWithTime LockMaskWithTime;
+        // The original HyperLinkClickListener lives in the consuming UI assembly.
+        // Keep its serialized component binding without an assembly dependency cycle.
+        public MonoBehaviour HyperLinkClickListener;
         public float LockTime, CancelBtnCustomWidth;
         public LayoutElement CancelBtnLayoutElement;
         [NonSerialized] public Action CloseWindow;

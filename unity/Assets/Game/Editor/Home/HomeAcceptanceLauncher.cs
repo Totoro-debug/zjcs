@@ -189,8 +189,19 @@ namespace Zjcs.Editor.Home
                 int level = Environment.GetCommandLineArgs().Contains("-partnerTitlesAcceptance")
                     ? configuration.CanCustomTagFriendShipLevel : 1;
                 long experience = configuration.Get(8402, level).FriendshipExp;
+                bool overflow = Environment.GetCommandLineArgs().Contains("-partnerOverflowAcceptance");
+                int requiredSubRank = 0;
+                if (overflow)
+                {
+                    level = configuration.GetMaxLevel(8402) - 1;
+                    experience = configuration.GetMaxLevelInfo(8402).FriendshipExp - 1;
+                    requiredSubRank = OfficialPartnerAssetCatalog.LoadDefault().Rows("npc_friendship_level")
+                        .Where(row => Convert.ToInt32(row["Id"]) == 8402)
+                        .Max(row => Convert.ToInt32(row["SubRankLimit"]));
+                }
                 Apply("partner", player =>
                 {
+                    if (overflow) player.SubRank = Math.Max(player.SubRank, requiredSubRank);
                     OfflineNpcFriendship friendship = player.CharacterProperties.NpcFriendships
                         .FirstOrDefault(value => value.NpcClassId == 8402);
                     if (friendship == null)

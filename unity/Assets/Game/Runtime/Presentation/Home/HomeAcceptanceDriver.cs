@@ -75,6 +75,8 @@ namespace Zjcs.Presentation.Home
                 bool passed = false;
                 if (Environment.GetCommandLineArgs().Contains("-partnerTitlesAcceptance"))
                     yield return VerifyPartnerTitles(runtime, value => passed = value);
+                else if (Environment.GetCommandLineArgs().Contains("-partnerOverflowAcceptance"))
+                    yield return VerifyPartnerGiftOverflow(runtime, value => passed = value);
                 else yield return VerifyPartners(runtime, value => passed = value);
                 Finish(passed);
                 yield break;
@@ -1045,6 +1047,99 @@ namespace Zjcs.Presentation.Home
                 return root.name;
             });
             yield return Capture("partners-friendship.png");
+            runtime.Hud.TryHandleBack();
+            completed(ok);
+        }
+
+        private IEnumerator VerifyPartnerGiftOverflow(HomeFeatureRuntime runtime, Action<bool> completed)
+        {
+            bool ok = true;
+            NpcDetailPanelGiftContent gift = null;
+            ItemIcon icon = null;
+            int giftId = 0;
+            long inventory = 0, friendship = 0;
+            ok &= Check("partner-overflow-entry", () =>
+            {
+                runtime.OpenPartnerGift(8402);
+                gift = PrivateField<GameObject>(runtime.Hud, "activeDialog")
+                    .GetComponentInChildren<NpcDetailPanelGiftContent>();
+                return "original gift page opened";
+            });
+            float populationDeadline = Time.realtimeSinceStartup + 5f;
+            while (gift != null && PrivateField<Dictionary<int, ItemIcon>>(gift, "mGiftItemIconDict").Count == 0
+                && Time.realtimeSinceStartup < populationDeadline) yield return null;
+            ok &= Check("partner-overflow-gifts", () =>
+            {
+                var icons = PrivateField<Dictionary<int, ItemIcon>>(gift, "mGiftItemIconDict");
+                Assert(icons.Count > 0, "original gift list did not populate");
+                giftId = icons.Keys.First();
+                icon = icons[giftId];
+                inventory = runtime.ItemCount(giftId);
+                friendship = runtime.Profile.Save.Player.CharacterProperties.NpcFriendships
+                    .Single(value => value.NpcClassId == 8402).FriendshipExp;
+                return "original configuration places friendship one point below its maximum";
+            });
+            yield return null;
+            yield return null;
+            ok &= Check("partner-overflow-open", () =>
+            {
+                ClickPartnerUi(icon.Button);
+                ClickPartnerUi(PrivateField<Button>(gift, "mGiveGiftBtn"));
+                return "original selected gift and give button trigger overflow confirmation";
+            });
+            yield return new WaitForSeconds(.6f);
+            yield return Capture("partners-overflow-confirm.png");
+            ok &= Check("partner-overflow-cancel", () =>
+            {
+                var dialog = GameObject.Find("OfficialPartnerGiftConfirmDialog").GetComponent<WorldConfirmDialog>();
+                Assert(dialog.TitleText.Text == "确认", "original confirmation title was not localized");
+                Assert(dialog.HyperLinkClickListener is HyperLinkClickListener,
+                    "original confirmation hyperlink component reference was not restored");
+                Assert(!string.IsNullOrEmpty(dialog.ContentText.mTxt.Text)
+                    && dialog.ContentText.mTxt.myKey == "ui_npc_detail_give_gift_overflow_tip",
+                    "original gift overflow content was not bound");
+                ClickPartnerUi(dialog.CancelBtn);
+                return "original cancel button clicked";
+            });
+            yield return new WaitForSeconds(.4f);
+            ok &= Check("partner-overflow-cancel-save", () =>
+            {
+                runtime.Profile.Reload();
+                Assert(GameObject.Find("OfficialPartnerGiftConfirmDialog") == null, "cancelled confirmation remains visible");
+                Assert(runtime.ItemCount(giftId) == inventory, "cancel consumed a gift");
+                Assert(runtime.Profile.Save.Player.CharacterProperties.NpcFriendships
+                    .Single(value => value.NpcClassId == 8402).FriendshipExp == friendship,
+                    "cancel changed friendship");
+                Assert(PrivateField<Dictionary<int, long>>(gift, "mSelectedGiftDict")[giftId] == 1,
+                    "cancel cleared the pending original gift selection");
+                ClickPartnerUi(PrivateField<Button>(gift, "mGiveGiftBtn"));
+                return "cancel preserves gift, friendship and pending selection across disk reload";
+            });
+            yield return new WaitForSeconds(.6f);
+            ok &= Check("partner-overflow-confirm", () =>
+            {
+                var dialog = GameObject.Find("OfficialPartnerGiftConfirmDialog").GetComponent<WorldConfirmDialog>();
+                ClickPartnerUi(dialog.ConfirmBtn);
+                return "original confirm invokes the existing local gift transaction";
+            });
+            float deadline = Time.realtimeSinceStartup + 5f;
+            while ((runtime.ItemCount(giftId) == inventory || GameObject.Find("OfficialPartnerGiftConfirmDialog") != null)
+                && Time.realtimeSinceStartup < deadline) yield return null;
+            ok &= Check("partner-overflow-confirm-save", () =>
+            {
+                runtime.Profile.Reload();
+                var config = OfficialPartnerGiftAssetCatalog.LoadDefault();
+                var npc = runtime.Profile.Save.Player.CharacterProperties.NpcFriendships.Single(value => value.NpcClassId == 8402);
+                Assert(runtime.ItemCount(giftId) == inventory - 1, "confirmed overflow gift was not consumed once");
+                long expectedFriendship = friendship + config.GetAllExpByDict(new Dictionary<int, long> { [giftId] = 1 },
+                    config.GetNpcInfo(8402).GiftPreferenceDict);
+                Assert(npc.FriendshipExp == expectedFriendship
+                    && npc.Level == config.GetMaxLevel(8402), "confirmed gift did not preserve overflow experience at maximum level");
+                Assert(GameObject.Find("OfficialPartnerGiftConfirmDialog") == null, "confirmed window did not close");
+                Assert(gift.gameObject.activeInHierarchy, "confirmation closed the underlying gift page");
+                return "one gift consumed, maximum level and confirmed overflow experience restored from disk";
+            });
+            yield return Capture("partners-overflow-saved.png");
             runtime.Hud.TryHandleBack();
             completed(ok);
         }

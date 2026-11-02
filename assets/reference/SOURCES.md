@@ -267,3 +267,7 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 ### 当前伙伴称谓输入窗口资源
 
 `prepare_partner_input_dialog.py` 按选定 `884_156692` 恢复原 `InputDialog` 和 `MainCanvas` 默认窗口容器引用的普通遮罩；实际 APK 仍保持 `881_156673` 身份。沿原容器 PPtr、脚本身份和列表索引确认遮罩，不按名称猜测对象；共享 native 恢复器支持核对完整子树并只解除根父节点。原对象字段用于恢复空字符串，原编译曲线用于恢复空动画根路径；新资源引用通过 Resources 目录显式绑定。输入包、CAB／PathID、Windows 转换、原中文文本、原声音 Event／bank／媒体、工具、复用与输出哈希见[称谓输入来源](partner-input-dialog-source-manifest.json)。功能及实际验证范围仅在[伙伴功能](../../docs/features/partners.md)维护。本批未生成完整素材快照。
+
+### 当前伙伴赠礼确认窗口资源
+
+`prepare_partner_confirm_dialog.py` 按同一选定 `884_156692` 核对原 `ConfirmDialog` 的对象层级、组件字段、CAB 依赖及 Windows 原生转换载荷；实际 APK 身份仍为 `881_156673`。依据原序列化字段恢复空字符串及空集合，依据编译曲线恢复空动画根路径；相同 GUID 且字节一致的伙伴资源复用现有载荷。输入版本、包／对象身份、原中文文本、Wwise 声音、工具、资源复用及输出哈希见[赠礼确认来源](partner-confirm-dialog-source-manifest.json)。显式加载与实际行为范围在[伙伴功能](../../docs/features/partners.md)维护。本批未生成完整素材快照。

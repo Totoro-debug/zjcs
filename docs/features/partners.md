@@ -280,6 +280,14 @@ Home 的名册宿主先初始化原滚动列表对象池，在停用池中创建
 
 主工程隔离 Play Mode 已通过原按钮鼠标射线、取消后保留赠礼页、空称谓拒绝、中文键盘事件及 TMP 正常文字刷新、成功保存并刷新称谓、重新读档，以及点击原遮罩仅关闭输入窗口。已查看打开、输入“挚友”和保存后三帧 450×800 实际 GPU 画面；名册、详情属性、赠礼选择／重置／提交及磁盘恢复、好感说明回归通过并查看五帧实际画面。赠礼规则测试通过舍入、顺序、已有选择、库存及溢出；全工程静态检查（84,707 个 GUID）、主工程 Unity 导入／编译和 `Zjcs.Editor.ProjectTools.Validate` 通过。完整伙伴窗口、赠礼溢出确认弹窗及 Windows Player 仍未完成。
 
+### 当前官方赠礼溢出确认窗口（局部）
+
+`scripts/prepare_partner_confirm_dialog.py` 从选定 `884_156692` 的原 `ConfirmDialog` 恢复完整 222 个对象，按原脚本身份、CAB 与资源引用绑定 Windows 原生 prefab。复用既有 `WorldConfirmDialog`、文本对齐、计时遮罩等官方移植，补齐原 `AutoAlignForSingleMultiLineTextContent` 和原超链接组件的序列化引用；空字符串、空集合及动画根路径按原字段恢复。来源、原码、脚本绑定和输入输出哈希见[确认窗口凭据](../../assets/reference/partner-confirm-dialog-source-manifest.json)。
+
+Home 赠礼溢出回调现打开原窗口，保留原标题、说明、按钮、布局、开合动画与声音事件，沿用原普通窗口遮罩。确认调用既有本地赠礼事务；取消保留待赠选择，两个动作均只关闭上层确认窗口。满级后溢出的累计好感沿用本页已确认方案保存，不截断为满级阈值；好感等级仍按原配置计算。
+
+隔离完整工程 Play Mode 已通过原礼物格、赠送按钮和确认／取消按钮的模拟鼠标射线，验证取消不扣物、不改好感且保留选量，确认仅扣一份、升至原满级并保留溢出经验，重新读盘结果一致。已查看 450×800 的原确认框和满级赠礼画面。共享输入窗口回归通过原称谓按钮、空值拒绝、中文输入／显示、确认保存、读盘恢复与遮罩关闭，并查看三帧实际画面。全工程静态检查通过（84,719 个 GUID）；主工程导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 通过。此模块不代表完整伙伴窗口、立绘、助战或 Windows Player 已完成。
+
 ### 当前原生详情属性区与天赋合并（局部）
 
 `prepare_partner_detail_properties_ui.py` 迁移选定 `884_156692` 的 `NpcDetailPanelPropContent`，保留属性排序、旅行门槛、每组两项、交替背景、原珍宝百分比及转为整数的截断顺序。`PartnerNpcPropertyFormula` 提取原 `BattleFormulaHandler` 的好感／天赋计算及属性合并方法，读取实际存档的好感等级和已激活天赋节点；按当前 `PropId`、`PropLevel`、`PropTypes` 取值并合并，保留原零值、分支和执行顺序。`OfflinePartnerDetailPropertySource` 使用上文当前属性目录，补齐三类天赋属性，不采用历史总表的缺省值替代。
