@@ -408,6 +408,7 @@ namespace Zjcs.Editor
             // Compare the HUD anchor and scene timeline after this frame's LateUpdate.
             yield return new WaitForEndOfFrame();
             VerifyTimelineProjection();
+            VerifyAttachedPlayerPresentation(runner);
             var portraitSprites = VerifyCharacterPortraits(controller.Checkpoint);
             var portraitLeases = UnityEngine.Object.FindObjectsOfType<Zjcs.Presentation.CharacterCreation.CharacterNativePortraitLease>()
                 .Where(value => portraitSprites.Values.Contains(value.Sprite)).ToArray();
@@ -451,9 +452,9 @@ namespace Zjcs.Editor
                     if (!captured && checkpoint.Counter > initialCounter + 2)
                     {
                         yield return new WaitForEndOfFrame();
-                        // Compare the HUD anchor and scene timeline after this frame's LateUpdate.
-            yield return new WaitForEndOfFrame();
-            VerifyTimelineProjection();
+                        // Compare scene/HUD after this frame's LateUpdate.
+                        VerifyTimelineProjection();
+                        VerifyAttachedPlayerPresentation(runner);
                         foreach (var current in VerifyCharacterPortraits(checkpoint))
                             Require(portraitSprites.TryGetValue(current.Key, out Sprite original) && original == current.Value,
                                 name + " recaptured a character head while advancing the timeline.");
@@ -495,6 +496,9 @@ namespace Zjcs.Editor
             Quaternion rotation = camera.transform.rotation;
             float size = camera.orthographicSize, near = camera.nearClipPlane, far = camera.farClipPlane;
             Transform parent = home.HomePlayerTransform.parent;
+            Vector3 playerPosition = home.HomePlayerTransform.localPosition;
+            Quaternion playerRotation = home.HomePlayerTransform.localRotation;
+            Vector3 playerScale = home.HomePlayerTransform.localScale;
             var visible = home.Hud.CanvasTransform.Cast<Transform>().Concat(home.Scene.Root.transform.Cast<Transform>())
                 .Where(value => value.name != "HomeToast") // Toast expiry is independent of battle restoration.
                 .ToDictionary(value => value.gameObject, value => value.gameObject.activeSelf);
@@ -505,6 +509,10 @@ namespace Zjcs.Editor
                     && Mathf.Approximately(camera.nearClipPlane, near) && Mathf.Approximately(camera.farClipPlane, far),
                     "Battle exit did not restore the host camera projection/pose.");
                 Require(home.HomePlayerTransform.parent == parent, "Battle exit did not restore the host avatar parent.");
+                Require(Vector3.Distance(home.HomePlayerTransform.localPosition, playerPosition) < .001f
+                    && Quaternion.Angle(home.HomePlayerTransform.localRotation, playerRotation) < .001f
+                    && Vector3.Distance(home.HomePlayerTransform.localScale, playerScale) < .001f,
+                    "Battle exit did not restore the host avatar position/rotation/scale.");
                 foreach (var pair in visible)
                     Require(pair.Key == null || pair.Key.activeSelf == pair.Value,
                         "Battle exit changed the host object's visibility: " + pair.Key.name);
@@ -521,7 +529,17 @@ namespace Zjcs.Editor
         private static IEnumerator Capture(string directory, string name)
         {
             yield return new WaitForEndOfFrame();
-            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(Path.Combine(directory, "battle-host-" + name + ".png"));
+            string path = Path.Combine(directory, "battle-host-" + name + ".png");
+            int width = Screen.width, height = Screen.height;
+            yield return Combat.BattleGameViewInput.CaptureGameViewScreenshot(path);
+            var frame = new Texture2D(2, 2);
+            try
+            {
+                Require(frame.LoadImage(File.ReadAllBytes(path)) && frame.width == width && frame.height == height,
+                    "The screenshot cropped the rendered game surface: expected " + width + "x" + height
+                    + ", actual " + frame.width + "x" + frame.height + ".");
+            }
+            finally { UnityEngine.Object.Destroy(frame); }
             yield return null;
         }
         private static void Require(bool condition, string message)

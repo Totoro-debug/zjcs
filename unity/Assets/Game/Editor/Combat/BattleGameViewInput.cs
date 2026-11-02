@@ -95,55 +95,23 @@ namespace Zjcs.Editor.Combat
         }
 
         /// <summary>
-        /// Captures only the rendered Game View content. Editor screenshots otherwise
-        /// include the entire desktop when the Game View is embedded or scaled.
+        /// Saves the full game render surface, independent of the editor window's
+        /// desktop position, display scaling, and Game View zoom.
         /// </summary>
         public static IEnumerator CaptureGameViewScreenshot(string path)
         {
             if (string.IsNullOrEmpty(path)) throw new ArgumentException("A screenshot path is required.", nameof(path));
             Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(path)));
-            string fullPath = path + ".full.png";
-            if (File.Exists(fullPath)) File.Delete(fullPath);
             yield return new WaitForEndOfFrame();
-            ScreenCapture.CaptureScreenshot(fullPath);
-            float deadline = Time.realtimeSinceStartup + 5f;
-            while (!File.Exists(fullPath) && Time.realtimeSinceStartup < deadline)
-                yield return null;
-            if (!File.Exists(fullPath))
-                throw new InvalidOperationException("The Game View screenshot was not written: " + fullPath);
-
-            byte[] bytes = File.ReadAllBytes(fullPath);
-            Texture2D source = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+            Texture2D frame = ScreenCapture.CaptureScreenshotAsTexture();
+            if (frame == null) throw new InvalidOperationException("The Game View render surface was not captured.");
             try
             {
-                if (!source.LoadImage(bytes, false))
-                    throw new InvalidOperationException("The Game View screenshot is not a valid PNG: " + fullPath);
-                if (!TryGetGameViewContent(out Rect window, out Rect target, out float pixelsPerPoint))
-                {
-                    File.Copy(fullPath, path, true);
-                    yield break;
-                }
-
-                int left = Mathf.Clamp(Mathf.RoundToInt((window.x + target.x) * pixelsPerPoint), 0, source.width - 1);
-                int top = Mathf.Clamp(Mathf.RoundToInt((window.y + target.y) * pixelsPerPoint), 0, source.height - 1);
-                int width = Mathf.Clamp(Mathf.RoundToInt(target.width * pixelsPerPoint), 1, source.width - left);
-                int height = Mathf.Clamp(Mathf.RoundToInt(target.height * pixelsPerPoint), 1, source.height - top);
-                int bottom = source.height - top - height;
-                bottom = Mathf.Clamp(bottom, 0, source.height - height);
-                Texture2D cropped = new Texture2D(width, height, TextureFormat.RGBA32, false);
-                try
-                {
-                    cropped.SetPixels(source.GetPixels(left, bottom, width, height));
-                    cropped.Apply(false, false);
-                    File.WriteAllBytes(path, cropped.EncodeToPNG());
-                }
-                finally { UnityEngine.Object.DestroyImmediate(cropped); }
+                if (frame.width != Screen.width || frame.height != Screen.height)
+                    throw new InvalidOperationException("The screenshot does not cover the full game render surface.");
+                File.WriteAllBytes(path, frame.EncodeToPNG());
             }
-            finally
-            {
-                UnityEngine.Object.DestroyImmediate(source);
-                if (File.Exists(fullPath)) File.Delete(fullPath);
-            }
+            finally { UnityEngine.Object.DestroyImmediate(frame); }
         }
 
         public static IEnumerator ClickScreenPoint(Vector2 point, string label = "battlefield")
