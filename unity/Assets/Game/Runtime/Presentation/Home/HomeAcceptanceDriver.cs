@@ -13,6 +13,8 @@ using Zjcs.Offline.World;
 using Zjcs.Offline.Home;
 using Zjcs.Offline.State;
 using Zjcs.Official.PartnersUI;
+using Zjcs.Official.ProfessionUI;
+using Zjcs.Offline.PartnersUI;
 
 namespace Zjcs.Presentation.Home
 {
@@ -934,10 +936,31 @@ namespace Zjcs.Presentation.Home
                     "official partner roster controller is bound");
                 return root.name;
             });
+            float rosterDeadline = Time.realtimeSinceStartup + 5f;
+            while (Time.realtimeSinceStartup < rosterDeadline)
+            {
+                yield return null;
+                var current = PrivateField<GameObject>(runtime.Hud, "activeDialog");
+                var visible = current.GetComponentsInChildren<NpcPanelNpcItem>();
+                if (visible.Length > 0 && visible.All(card =>
+                    PrivateField<GameObject>(card, "mContentRoot").activeInHierarchy)) break;
+            }
+            ok &= Check("partner-roster-content", () =>
+            {
+                var root = PrivateField<GameObject>(runtime.Hud, "activeDialog");
+                var cards = root.GetComponentsInChildren<NpcPanelNpcItem>();
+                Assert(cards.Length > 0, "official roster has no cells");
+                foreach (var card in cards)
+                    Assert(PrivateField<GameObject>(card, "mContentRoot").activeInHierarchy,
+                        "official card content did not appear after the display sequence");
+                return cards.Length + " visible official cards";
+            });
             yield return Capture("partners-roster.png");
             ok &= Check("partner-detail", () =>
             {
-                runtime.OpenPartnerDetail(8402);
+                var roster = PrivateField<GameObject>(runtime.Hud, "activeDialog");
+                var card = roster.GetComponentsInChildren<NpcPanelNpcItem>().First();
+                ClickPartnerUi(PrivateField<Button>(card, "mDetailBtn"));
                 GameObject root = PrivateField<GameObject>(runtime.Hud, "activeDialog");
                 Assert(root != null && root.name == "PartnerDetailDialog", "official partner detail root opens");
                 Assert(PrivateField<object>(runtime.Hud, "partnerDetailPanel") != null,
@@ -964,6 +987,45 @@ namespace Zjcs.Presentation.Home
                 return root.name;
             });
             yield return Capture("partners-gift.png");
+            var giftRoot = PrivateField<GameObject>(runtime.Hud, "activeDialog");
+            var giftPanel = giftRoot.GetComponentInChildren<NpcDetailPanelGiftContent>();
+            var giftIcons = PrivateField<Dictionary<int, ItemIcon>>(giftPanel, "mGiftItemIconDict");
+            int giftId = giftIcons.Keys.First();
+            long inventoryBefore = runtime.ItemCount(giftId);
+            long friendshipBefore = runtime.Profile.Save.Player.CharacterProperties.NpcFriendships
+                .Single(value => value.NpcClassId == 8402).FriendshipExp;
+            int expectedExperience = OfficialPartnerGiftAssetCatalog.LoadDefault().GetAllExpByDict(
+                new Dictionary<int, long> { [giftId] = 1 }, runtime.PartnerGiftServices.GetNpcInfo(8402).GiftPreferenceDict);
+            ok &= Check("partner-gift-selection-input", () =>
+            {
+                var icon = giftIcons[giftId];
+                Assert(PrivateField<ImageProxy>(icon, "mIconProxy").Sprite != null,
+                    "official gift icon is missing: " + giftId + "/" + icon.myInfo.Icon);
+                ClickPartnerUi(icon.Button);
+                Assert(PrivateField<Dictionary<int, long>>(giftPanel, "mSelectedGiftDict")[giftId] == 1,
+                    "gift pointer did not select one item");
+                ClickPartnerUi(PrivateField<Button>(giftPanel, "mResetBtn"));
+                Assert(PrivateField<Dictionary<int, long>>(giftPanel, "mSelectedGiftDict").Count == 0,
+                    "gift reset pointer did not clear selection");
+                ClickPartnerUi(icon.Button);
+                ClickPartnerUi(PrivateField<Button>(giftPanel, "mGiveGiftBtn"));
+                return "selected, reset, selected and submitted through official buttons";
+            });
+            float giftDeadline = Time.realtimeSinceStartup + 5f;
+            while (runtime.ItemCount(giftId) == inventoryBefore && Time.realtimeSinceStartup < giftDeadline)
+                yield return null;
+            ok &= Check("partner-gift-save", () =>
+            {
+                runtime.Profile.Reload();
+                Assert(runtime.ItemCount(giftId) == inventoryBefore - 1, "gift inventory was not saved");
+                Assert(runtime.Profile.Save.Player.CharacterProperties.NpcFriendships
+                    .Single(value => value.NpcClassId == 8402).FriendshipExp == friendshipBefore + expectedExperience,
+                    "original gift experience was not saved");
+                Assert(PrivateField<Dictionary<int, long>>(giftPanel, "mSelectedGiftDict").Count == 0,
+                    "gift selection was not cleared after saving");
+                return "original experience and one gift consumed, restored from disk";
+            });
+            yield return Capture("partners-gift-saved.png");
             ok &= Check("partner-friendship", () =>
             {
                 MethodInfo friendship = runtime.Hud.GetType().GetMethod("OpenPartnerFriendshipDialog",
@@ -982,6 +1044,29 @@ namespace Zjcs.Presentation.Home
             yield return Capture("partners-friendship.png");
             runtime.Hud.TryHandleBack();
             completed(ok);
+        }
+
+        private static void ClickPartnerUi(Component target)
+        {
+            Assert(target != null && target.gameObject.activeInHierarchy, "partner pointer target is inactive");
+            Canvas.ForceUpdateCanvases();
+            var rect = (RectTransform)target.transform;
+            var canvas = target.GetComponentInParent<Canvas>();
+            Camera camera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
+            var pointer = new PointerEventData(EventSystem.current)
+            {
+                button = PointerEventData.InputButton.Left,
+                position = RectTransformUtility.WorldToScreenPoint(camera, rect.TransformPoint(rect.rect.center))
+            };
+            var hits = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointer, hits);
+            Assert(hits.Count > 0 && (hits[0].gameObject == target.gameObject
+                || hits[0].gameObject.transform.IsChildOf(target.transform)),
+                "partner pointer blocked at " + target.name + ": " + (hits.FirstOrDefault().gameObject?.name ?? "none"));
+            pointer.pointerCurrentRaycast = hits[0];
+            ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerDownHandler);
+            ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerUpHandler);
+            ExecuteEvents.ExecuteHierarchy(hits[0].gameObject, pointer, ExecuteEvents.pointerClickHandler);
         }
 
         private IEnumerator VerifyRealShopInput(HomeFeatureRuntime runtime, Action<bool> completed)
@@ -1399,7 +1484,9 @@ namespace Zjcs.Presentation.Home
 
         private static T PrivateField<T>(object target, string name)
         {
-            FieldInfo field = target.GetType().GetField(name, BindingFlags.Instance | BindingFlags.NonPublic);
+            FieldInfo field = null;
+            for (Type type = target.GetType(); type != null && field == null; type = type.BaseType)
+                field = type.GetField(name, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
             if (field == null) throw new MissingFieldException(target.GetType().FullName, name);
             return (T)field.GetValue(target);
         }

@@ -21,7 +21,9 @@ namespace Zjcs.Offline.PartnersUI
             var row = catalog.Rows("item").FirstOrDefault(value => Convert.ToInt32(value["ClassId"]) == classId);
             if (row == null) throw new InvalidOperationException("Official partner item is missing: " + classId);
             ClassId = classId;
-            Icon = Text(row, "Icon");
+            // ItemInfo.Icon evaluates GetIconPath; gift items have no PartInfo,
+            // so the original branch returns the serialized RawIcon field.
+            Icon = Text(row, "RawIcon");
             IconEffect = Text(row, "IconEffect");
             Quality = (Quality)Number(row, "Quality");
             CanOverlap = !row.TryGetValue("CanOverlap", out var overlap) || Convert.ToBoolean(overlap);

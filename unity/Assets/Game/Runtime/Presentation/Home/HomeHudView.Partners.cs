@@ -86,7 +86,8 @@ namespace Zjcs.Presentation.Home
                 root.GetComponent<Button>().onClick.AddListener(CloseDialog);
                 var panel = root.AddComponent<PartnerDetailPanelView>();
                 partnerDetailPanel = panel;
-                panel.Open(assets, services, npc, info, new OfflinePartnerLocalizationService(assets.Texts, assets.Common.GiftTexts));
+                panel.Open(assets, services, npc, info, new OfflinePartnerLocalizationService(assets.Texts,
+                    assets.Common.GiftTexts, host.PartnerFriendshipAssets.PropertyTexts));
                 activeDialog = root; activeDialogRenderer = null; activePanelKey = "partner_detail";
             }
             catch (Exception error) { partnerDetailPanel?.Close(); partnerDetailPanel = null; Notify("伙伴详情打开失败：" + error.Message); }
@@ -113,7 +114,8 @@ namespace Zjcs.Presentation.Home
                 var panel = root.AddComponent<PartnerGiftPanelView>();
                 partnerGiftPanel = panel;
                 panel.Open(assets, services, npcData, info,
-                    new OfflinePartnerLocalizationService(assets.GiftTexts, assets.RelationshipTexts),
+                    new OfflinePartnerLocalizationService(assets.GiftTexts, assets.RelationshipTexts,
+                        host.PartnerFriendshipAssets.PropertyTexts),
                     () => Notify("伙伴好感度已更新"));
                 activeDialog = root; activeDialogRenderer = null; activePanelKey = "partner_gift";
             }

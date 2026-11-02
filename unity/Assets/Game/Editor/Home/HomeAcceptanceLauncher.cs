@@ -75,7 +75,7 @@ namespace Zjcs.Editor.Home
             object sizes = singleton.GetProperty("instance").GetValue(null);
             Type groupType = editor.GetType("UnityEditor.GameViewSizeGroupType");
             object group = sizesType.GetMethod("GetGroup").Invoke(sizes,
-                new[] { Enum.ToObject(groupType, 1) });
+                new[] { Enum.Parse(groupType, "Standalone") });
             Type sizeType = editor.GetType("UnityEditor.GameViewSize");
             Type kindType = editor.GetType("UnityEditor.GameViewSizeType");
             MethodInfo countMethod = group.GetType().GetMethod("GetTotalCount");
@@ -109,9 +109,17 @@ namespace Zjcs.Editor.Home
                 selectedIndex = (int)countMethod.Invoke(group, null) - 1;
             }
             Type viewType = editor.GetType("UnityEditor.GameView");
-            EditorWindow view = EditorWindow.GetWindow(viewType);
+            foreach (EditorWindow old in Resources.FindObjectsOfTypeAll(viewType)) old.Close();
+            // Keep a visible render surface in unattended runs. A selected size
+            // on a docked, hidden Game tab can leave Screen at the desktop size.
+            EditorWindow view = ScriptableObject.CreateInstance(viewType) as EditorWindow;
+            Rect editorBounds = EditorGUIUtility.GetMainWindowPosition();
+            view.titleContent = new GUIContent("Home partner validation");
+            view.position = new Rect(editorBounds.x + 40, editorBounds.y + 40, width, height + 21);
+            view.Show();
             viewType.GetProperty("selectedSizeIndex", BindingFlags.Instance | BindingFlags.Public
                 | BindingFlags.NonPublic).SetValue(view, selectedIndex);
+            view.Repaint();
         }
 
         private static void PrepareProfile()
@@ -178,7 +186,7 @@ namespace Zjcs.Editor.Home
             if (Environment.GetCommandLineArgs().Contains("-partnersAcceptance"))
             {
                 OfflinePartnerGiftConfiguration configuration = OfficialPartnerGiftAssetCatalog.LoadDefault();
-                int level = Math.Min(100, configuration.GetMaxLevel(8402));
+                int level = 1;
                 long experience = configuration.Get(8402, level).FriendshipExp;
                 Apply("partner", player =>
                 {

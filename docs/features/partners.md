@@ -266,6 +266,10 @@ Home 运行时现在为 `OfflinePartnerGiftPlayer` 提供 `OfflinePartnerItemInf
 
 正式伙伴窗口路由已接入，物品详情弹窗、独立好感弹窗、原赠礼弹窗的完整官方资源调色／声音和 Windows Player 验证仍待完成；当前接线不表示伙伴系统已完成。
 
+Home 的名册宿主先初始化原滚动列表对象池，在停用池中创建并绑定本地服务后才启用卡片，保留新增伙伴事件订阅时机。赠礼物品按官方 `ItemInfo.GetIconPath` 的无 `PartInfo` 分支读取 `RawIcon`，图标从实际赠礼目录加载；停用节点的祖先查找同样保留绑定。原 `LanguageManager`、`CultureNumberArg.Compact` 和 `WorldItemProgress` 数量格式化器已接线；详情与赠礼区域同时读取既有原属性中文表，避免显示属性键名。
+
+主工程 `-homeAcceptance -partnersAcceptance` 使用隔离存档和唯一 450×800 Game View，跳过并行的常规启动流程。Play Mode 经真实 UI 射线检查卡片显示后点击详情，以及礼物选择、重置、重新选择和赠送；核对实际礼物 Sprite、原偏好经验、扣除一件库存及重新读档后的数值。已查看名册、详情属性、赠礼前后和六种偏好礼物的实际画面。全工程静态检查通过（84,680 个 GUID），主工程 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。此验证覆盖现有原生区域的正式服务接线，仍未覆盖完整官方窗口壳、档案／通话、立绘、声音和 Windows Player。
+
 ### 当前原生详情属性区与天赋合并（局部）
 
 `prepare_partner_detail_properties_ui.py` 迁移选定 `884_156692` 的 `NpcDetailPanelPropContent`，保留属性排序、旅行门槛、每组两项、交替背景、原珍宝百分比及转为整数的截断顺序。`PartnerNpcPropertyFormula` 提取原 `BattleFormulaHandler` 的好感／天赋计算及属性合并方法，读取实际存档的好感等级和已激活天赋节点；按当前 `PropId`、`PropLevel`、`PropTypes` 取值并合并，保留原零值、分支和执行顺序。`OfflinePartnerDetailPropertySource` 使用上文当前属性目录，补齐三类天赋属性，不采用历史总表的缺省值替代。
@@ -302,7 +306,7 @@ Home 运行时现在为 `OfflinePartnerGiftPlayer` 提供 `OfflinePartnerItemInf
 
 - 完整 `NpcPanel` 宿主的对话／星神页、伙伴档案与餐桌通话；当前 Home 已接通原生名册卡片、本地相遇／好感／置顶、详情属性区、赠礼控制器和好感说明弹窗。
 - 正式窗口中的立绘／小模型、完整详情简报、伙伴位置导航、赠礼物品详情及声音仍未全部接通。
-- 主工程 Play Mode 可实例化名册、详情属性、赠礼及好感说明控制器；隔离赠礼规则／存档测试通过。已补齐原名册卡片的本地服务注入、`Assets/Image/` 资源路径和离线红点生命周期保护，详情截图中的中文字体已恢复；当前正式窗口截图仍显示名册资源初始化层，且伙伴面板未保持官方竖屏比例，尚未完成模拟指针、完整交互、存档恢复和 Windows Player 验证。
+- 主工程 Play Mode 已通过名册卡片和赠礼按钮的模拟射线点击、赠送落盘及读档恢复，原生区域在 450×800 下显示，初始化遮罩、礼物空图标和属性键名问题已修复。完整页面交互、手动结识的正式宿主流程、声音与 Windows Player 仍未完成。
 
 - 完成 Unity 实际入口、交互／表现、存档与失败恢复验证，并发布对应 Windows 可执行版本。
 - 史莱姆、孤独摇滚的八位伙伴及全部相关入口按[离线政策](offline-access.md#暂不开放的联动活动及伙伴)暂停，不列为自动开放目标。

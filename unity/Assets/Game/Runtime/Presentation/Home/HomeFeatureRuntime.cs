@@ -775,9 +775,14 @@ namespace Zjcs.Presentation.Home
             var friendshipAssets = OfficialPartnerFriendshipAssetCatalog.LoadDefault();
             var partnerCatalog = OfficialPartnerAssetCatalog.LoadDefault();
             partnerDetailImages = new OfflineProfessionImageResourceLoader(partnerDetailAssets.Common.Images);
-            ProfessionImageResourceBridge.Provider = image => partnerDetailImages;
+            partnerGiftAssets = OfficialPartnerGiftPageAssetCatalog.LoadDefault();
+            var partnerGiftImages = new OfflineProfessionImageResourceLoader(partnerGiftAssets.Images);
+            ProfessionImageResourceBridge.Provider = image => image.GetComponentInParent<ItemIcon>(true) != null
+                ? partnerGiftImages : partnerDetailImages;
             var localization = new OfflinePartnerLocalizationService(partnerDetailAssets.Texts,
-                partnerDetailAssets.Common.GiftTexts, friendshipAssets.PropertyTexts, friendshipAssets.DialogTexts);
+                partnerDetailAssets.Common.GiftTexts, friendshipAssets.PropertyTexts, friendshipAssets.DialogTexts,
+                partnerGiftAssets.GiftTexts, partnerGiftAssets.RelationshipTexts);
+            LanguageManager.Initialize(localization);
             var propertyBindings = new OfflineProfessionPropertyBindings(friendshipAssets.PropertyConfiguration,
                 partnerDetailImages, localization, (owner, path, name, description, control) => { },
                 (owner, rank, description, effect, noEffect, noSeason) => { });
@@ -787,7 +792,6 @@ namespace Zjcs.Presentation.Home
             var giftConfiguration = OfficialPartnerGiftAssetCatalog.LoadDefault();
             partnerGiftPlayer = new OfflinePartnerGiftPlayer(profile, partnerCatalog,
                 giftConfiguration, id => new OfflinePartnerItemInfo(partnerCatalog, id), () => false);
-            partnerGiftAssets = OfficialPartnerGiftPageAssetCatalog.LoadDefault();
             partnerGiftBindings = new OfflinePartnerGiftRuntimeBindings(profile, partnerCatalog, partnerGiftAssets,
                 id => new OfflinePartnerItemInfo(partnerCatalog, id), key => localization.GetText(key, LanguageType.zh_CN));
             partnerGiftServices = new OfflinePartnerGiftUiServices(profile, partnerGiftPlayer,

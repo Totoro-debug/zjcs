@@ -48,6 +48,8 @@ namespace Zjcs.Offline.PartnersUI
             if (icon == null) return;
             icon.Bind(this);
             foreach (var attachment in icon.GetComponentsInChildren<ItemIconAttachment>(true)) attachment.Bind(attachments);
+            foreach (var progress in icon.GetComponentsInChildren<WorldItemProgress>(true))
+                progress.Compact = count => CultureNumberArg.Compact(count).ToString();
         }
 
         public ItemIcon CreateGiftIcon(int itemId, Transform parent, GameObject prefab)
@@ -97,7 +99,7 @@ namespace Zjcs.Offline.PartnersUI
             if (!infos.TryGetValue(itemId, out var value)) infos[itemId] = value = getItemInfo(itemId);
             return value;
         }
-        public object Compact(long count) => count.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        public object Compact(long count) => CultureNumberArg.Compact(count);
         public object CultureText(string key) => text(key);
         public string GetItemNameKey(int itemId) => "item_name_" + itemId;
         public bool TryGetSourceData(int itemId, out IReadOnlyList<IProfessionItemSource> sources) { sources = null; return false; }

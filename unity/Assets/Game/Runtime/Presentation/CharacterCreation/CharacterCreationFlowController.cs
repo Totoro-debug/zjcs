@@ -74,6 +74,8 @@ namespace Zjcs.Presentation.CharacterCreation
 #if UNITY_EDITOR
             // Battle acceptance creates its own scene and isolated profile.
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION") == "1") return;
+            // Home acceptance creates the runtime with its own isolated profile.
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-homeAcceptance") >= 0) return;
 #endif
 #if UNITY_EDITOR || DEVELOPMENT_BUILD || ZJCS_MAINLINE_MODULE_VALIDATION
             if (Array.IndexOf(Environment.GetCommandLineArgs(), OfficialMainlineMapModuleProbe.Argument) >= 0) return;

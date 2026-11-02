@@ -57,11 +57,10 @@ namespace Zjcs.Offline.PartnersUI
             var loop = content.GetComponentInChildren<LoopVerticalScrollRect>(true);
             if (loop == null || loop.DefaultPrefabSource == null || loop.DefaultPrefabSource.Prefab == null)
                 throw new InvalidOperationException("Official partner roster scroll binding is missing.");
-            // Unity enables a freshly instantiated loop cell before the prefab
-            // source returns it. Bind the official template first so its
-            // OnEnable subscription sees the local service immediately.
-            loop.DefaultPrefabSource.Prefab.GetComponent<NpcPanelNpcItem>()?.Configure(services);
-            PrefabSource.SetValue(loop, new CardPool(loop.DefaultPrefabSource, services));
+            // Resolve the original source before wrapping it. Its getter creates
+            // the inactive pool, so a new cell can be configured before OnEnable.
+            var source = loop.prefabSource;
+            PrefabSource.SetValue(loop, new CardPool(source, services));
             content.SetActive(true);
         }
 
