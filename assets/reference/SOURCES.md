@@ -323,3 +323,5 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 `partner-conversation-local-source-manifest.json` 记录当前 `PlayerNpcDialogueData`／包装器身份、本地 JsonUtility 字段适配、已迁移规则依赖、实际存档读取与验证源码哈希；生成入口为 `record_partner_conversation_local_sources.py`。无新增美术资源，未生成完整素材快照。
 
 `prepare_partner_conversation_world.py` 从选定 `884_156692` 的 MapInfoWrap 和实体扩展原载荷提取通话地图事实，并记录实际包／对象、字段格式源码、构造器、已确认的生产存档单位及全部本地安装绑定哈希，见 `partner-conversation-world-source-manifest.json`。未生成完整素材快照。
+
+伙伴通讯录的原通知消费与本地存档绑定凭据见 [partner-dialogue-local-ui-source-manifest.json](partner-dialogue-local-ui-source-manifest.json)，记录选定官方客户端／共享源码、原 UI 契约、适配代码及验证输入输出哈希。
