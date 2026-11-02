@@ -1093,6 +1093,8 @@ namespace Zjcs.Combat.Official
     public sealed class FightBattleSkillCastEvent
     {
         public int ActorId;
+        // Start time relative to this step; Playable cue times are relative to this cast.
+        public float Delay;
         public int Slot;
         public int SkillEntityId;
         public int SkillItemId;

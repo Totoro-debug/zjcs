@@ -740,7 +740,10 @@ namespace Zjcs.Combat.Official
             foreach (FightBattleUnitState source in units)
             {
                 if (source == null || source.Statuses == null) continue;
-                if ((eventKind == MoveNearEventRound || eventKind == MoveNearEventStart)
+                if (eventKind == MoveNearEventStart && (source.Ended || source.Hp <= 0)) continue;
+                // TryAtStart belongs to status startup, including owners without a turn.
+                // Only TryAtRound waits for the status owner's personal round.
+                if (eventKind == MoveNearEventRound
                     && (roundActor == null || source.Id != roundActor.Id)) continue;
                 if (eventKind == MoveNearEventStandRound
                     && (roundActor == null || source.Id == roundActor.Id)) continue;

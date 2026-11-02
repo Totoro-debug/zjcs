@@ -95,6 +95,16 @@ if ($mapped.Count -ne 1 -or $mapped[0].SkillPlayable -ne $playable -or
     $mapped[0].Animation -ne '200/skill_01' -or [Math]::Abs([double]$mapped[0].Delay - 0.25) -gt 0.001) {
     throw 'Official skill Playable mapping was not scheduled with its configured delay.'
 }
+$cast.Delay = 1.0
+$mapped = [Zjcs.Presentation.Combat.OfficialBattleAnimationTimeline]::Build($step, $skillCatalog)
+if ([Math]::Abs([double]$mapped[0].Delay - 1.25) -gt 0.001) {
+    throw 'A delayed cast played its animation before the configured skill start.'
+}
+# Rebuilding must not mutate the shared catalog cue or accumulate the offset.
+$mapped = [Zjcs.Presentation.Combat.OfficialBattleAnimationTimeline]::Build($step, $skillCatalog)
+if ($playable.time -ne 0.25 -or [Math]::Abs([double]$mapped[0].Delay - 1.25) -gt 0.001) {
+    throw 'Scheduling one delayed cast changed another cast using the same official Playable.'
+}
 
 $runtimeCatalogPath = Join-Path $root 'unity/Assets/Game/Resources/Combat/skill-playables.json'
 $runtimeCatalog = Get-Content $runtimeCatalogPath -Raw | ConvertFrom-Json

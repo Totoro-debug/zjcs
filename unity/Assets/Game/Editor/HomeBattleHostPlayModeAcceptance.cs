@@ -384,12 +384,14 @@ namespace Zjcs.Editor
             TriggerChainProbe triggerChains = ConfigureTriggerChainProbe(checkpoint);
             ReplayProbe replays = ConfigureReplayProbe(checkpoint);
             StatusReplayProbe statusReplays = ConfigureStatusReplayProbe(checkpoint);
+            TriggerTimingProbe triggerTiming = ConfigureTriggerTimingProbe(checkpoint);
             int initialCounter = checkpoint.Counter;
             controller.StepCompleted += result => {
                 checkpoint = result.Checkpoint;
                 triggerChains?.Observe(checkpoint);
                 replays?.Observe(checkpoint);
                 statusReplays?.Observe(checkpoint);
+                triggerTiming?.ObserveStep(controller);
                 if (checkpoint.Counter == initialCounter + 1 || checkpoint.Finished)
                     Debug.Log("[Battle hosts] " + name + " step=" + checkpoint.Counter
                         + " finished=" + checkpoint.Finished);
@@ -452,6 +454,7 @@ namespace Zjcs.Editor
                 Time.timeScale = 5;
                 while (runner != null)
                 {
+                    triggerTiming?.ObservePresentation();
                     Require(Time.realtimeSinceStartup < deadline, name + " battle timed out.");
                     if (!captured && checkpoint.Counter > initialCounter + 2)
                     {
@@ -479,6 +482,7 @@ namespace Zjcs.Editor
             triggerChains?.Verify(name, checkpoint);
             replays?.Verify(name, checkpoint);
             statusReplays?.Verify(name, checkpoint);
+            triggerTiming?.Verify(name, checkpoint);
             VerifyEquipmentBattlePassives(name, checkpoint, true);
             yield return SettleUi();
             yield return Capture(output, name + "-result");

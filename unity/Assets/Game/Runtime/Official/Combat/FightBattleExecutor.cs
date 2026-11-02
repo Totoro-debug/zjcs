@@ -1610,8 +1610,6 @@ namespace Zjcs.Combat.Official
                         && !invocation.AllowDeadTarget)
                     || (!FightBattleTargeting.IsSelectable(targetPosition)
                         && !invocation.AllowDeadTarget)) continue;
-                if (invocation.Delay > lastDelay) lastDelay = invocation.Delay;
-
                 FightBattleSkillDefinition skill;
                 try
                 {
@@ -1635,6 +1633,9 @@ namespace Zjcs.Combat.Official
 
                 var targets = new List<FightBattleUnitState> { target };
                 checkpoint.Statistics.RecordCast(source.Id, skill.EntityId, skill.ItemId);
+                int castStart = casts.Count;
+                int damageStart = damageEvents.Count;
+                int movementStart = movements.Count;
                 var cast = new FightBattleSkillCastEvent
                 {
                     ActorId = source.Id,
@@ -1645,14 +1646,31 @@ namespace Zjcs.Combat.Official
                 cast.TargetIds.Add(target.Id);
                 casts.Add(cast);
                 ExecuteSkill(source, skill, targets, casts, damageEvents, movements,
-                    out float delay, targetPosition, invocation.AllowDeadSource,
+                    out float delay, out float nestedDuration, out float nestedActionDuration,
+                    targetPosition, invocation.AllowDeadSource,
                     invocation.DamageFactor);
-                if (delay > lastDelay) lastDelay = delay;
-                maxDuration = Math.Max(maxDuration, ResolveDuration(skill, delay));
-                float actionDuration = ResolveActionDuration(skill, delay);
+                // FightStatusMoveNearComponentInfo.SkillTriggerDelayTime delays the entire skill,
+                // including its nested triggers. Keep each event relative until execution returns.
+                float offset = Math.Max(0f, invocation.Delay);
+                OffsetSkillEvents(casts, castStart, damageEvents, damageStart, movements,
+                    movementStart, offset);
+                lastDelay = Math.Max(lastDelay, offset + delay);
+                maxDuration = Math.Max(maxDuration, offset + Math.Max(
+                    ResolveDuration(skill, delay), nestedDuration));
+                float actionDuration = Math.Max(ResolveActionDuration(skill, delay), nestedActionDuration);
                 if (actionDuration >= 0f)
-                    maxActionDuration = Math.Max(maxActionDuration, actionDuration);
+                    maxActionDuration = Math.Max(maxActionDuration, offset + actionDuration);
             }
+        }
+
+        private static void OffsetSkillEvents(List<FightBattleSkillCastEvent> casts, int castStart,
+            List<FightBattleDamageEvent> damageEvents, int damageStart,
+            List<FightBattleMovementEvent> movements, int movementStart, float offset)
+        {
+            if (offset <= 0f) return;
+            for (int index = castStart; index < casts.Count; index++) casts[index].Delay += offset;
+            for (int index = damageStart; index < damageEvents.Count; index++) damageEvents[index].Delay += offset;
+            for (int index = movementStart; index < movements.Count; index++) movements[index].Delay += offset;
         }
 
         private void ExecuteMoveNearTriggers(FightBattleUnitState roundActor, int eventKind,
@@ -1668,7 +1686,7 @@ namespace Zjcs.Combat.Official
             float triggerDelay = 0f;
             ExecuteConfiguredStatusSkills(invocations, casts, damageEvents, movements,
                 ref triggerDelay, out float triggerDuration, out float triggerActionDuration);
-            stepDuration = Math.Max(stepDuration, triggerDuration + triggerDelay);
+            stepDuration = Math.Max(stepDuration, Math.Max(triggerDuration, triggerDelay));
             if (triggerActionDuration >= 0f)
                 stepActionDuration = Math.Max(stepActionDuration, triggerActionDuration);
         }
@@ -1911,6 +1929,7 @@ namespace Zjcs.Combat.Official
                 FightStatusTriggerRuntime.CollectActionStartSkills(mover, actionType,
                     units, random, sourceSkill);
             if (invocations.Count == 0) return;
+            int castStart = movementStartContext.Casts.Count;
             int damageStart = movementStartContext.DamageEvents.Count;
             int movementStart = movements.Count;
             float delay = 0f;
@@ -1919,10 +1938,8 @@ namespace Zjcs.Combat.Official
                 out float duration, out float actionDuration);
             // Nested results are relative to the movement action that started them.
             float offset = Math.Max(0f, movement.Delay);
-            for (int index = damageStart; index < movementStartContext.DamageEvents.Count; index++)
-                movementStartContext.DamageEvents[index].Delay += offset;
-            for (int index = movementStart; index < movements.Count; index++)
-                movements[index].Delay += offset;
+            OffsetSkillEvents(movementStartContext.Casts, castStart,
+                movementStartContext.DamageEvents, damageStart, movements, movementStart, offset);
             movementStartContext.Duration = Math.Max(movementStartContext.Duration,
                 offset + Math.Max(duration, delay));
             if (actionDuration >= 0f)

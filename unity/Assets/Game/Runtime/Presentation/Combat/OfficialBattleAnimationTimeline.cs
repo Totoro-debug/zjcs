@@ -80,7 +80,7 @@ namespace Zjcs.Presentation.Combat
                             UnitId = cast.ActorId,
                             Animation = playable.kind == 1 ? playable.animation : string.Empty,
                             Loop = false,
-                            Delay = NormalizeDelay(playable.time),
+                            Delay = NormalizeDelay(cast.Delay) + NormalizeDelay(playable.time),
                             Priority = 1,
                             Order = order++,
                             SkillPlayable = playable
