@@ -1,0 +1,171 @@
+{
+  "manifest": "884_156692",
+  "code_extraction": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+    }
+  ],
+  "sources": [
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyPlayableStackPlay.cs",
+        "sha256": "53758e2bf2140b476ea43d6dd6046d7e126bdfab4639373664a271db3fe02fd4"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/MyPlayableStackPlay.cs",
+        "sha256": "0d5599690224afe922abff2fe9922e999be946687638568f91bb6b23a26fe377"
+      },
+      "unchanged_method_bodies": {
+        "MyPlayableStackPlay": "48bc86f4294368b9aaf64f22a24f5f6817f852bbb3952bed81c129857a7fcf60",
+        "Play": "9763269a7fda25fc0ce320d47b334e40432ee5388847e447d9eca9964ce450cc",
+        "Stop": "8b3e5baf947a0bd98eedec741f95b11486d60c6938ad075a560468f3994526fd"
+      }
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/StackCountPlayableMap.cs",
+        "sha256": "1b4ff76422172acde051f1c9b3dbb35437336b2ef869415a8057194e1a97275c"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/StackCountPlayableMap.cs",
+        "sha256": "72415ebf7e51feeaca4b9c81c04206cd91507cd236886ab0c3fe684f99ef210c"
+      },
+      "unchanged_method_bodies": {
+        "Match": "ca60738fc334fd18fa9af31848b707b95e0ed5b8dc706b84c827401a7163fe72"
+      }
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/ApplyEffectByPriority.cs",
+        "sha256": "d840cd99f6df944c86e73f3c2f59494f65c200cebe8f9e9c0e18398ebafbdc0a"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/ApplyEffectByPriority.cs",
+        "sha256": "0fd5f21c149be413868a633e507de8241646090dc5011e4ded756d4af7688bcd"
+      },
+      "unchanged_method_bodies": {
+        "PlayImpl": "1ce2643ea538cb11daaac7f18ee3c45c2e81aa8d01d3e05732095e6244505623",
+        "StopImpl": "6a5136460171df4d54d489e05706b49fa4fc480377e7840ca1190ec24749201b",
+        "ProcessEffect": "5b1961b3bcfa84ae8fbb047aa62a3d2bdf64c4f05bfaa2961ac5139aabbc9c5c",
+        "ProcessOtherPausePlayable": "3331d5004ec523ce3e3e3ae9981b582485c5b83b0c8fd5cd390b4f2b34d2fa01",
+        "OnInterruptedByHigherPriority": "c276c5efc2d1043d44f7c9df592adc8571275177c5d2364773e778f5ae7b0b0c",
+        "ResumeOnOtherHigherPriorityStop": "bb5167ee613f7c7843c2f84b061c4be298a7c61b8c4246513d8ca9fef77019d7",
+        "PausePlayable": "b7340ccc3659ebc86aacffa0fd1fe9fd93a7b96cd142059dd3e2ce4bdf3be673"
+      },
+      "original_mono_script_file_id": 1552490721
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_status_playable_runtime.py",
+    "sha256": "d0f60276e38c6439f743d36413a006cb7a55acc992761c7652fe8797210f2e10"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/MyPlayableStackPlay.cs",
+      "sha256": "0d5599690224afe922abff2fe9922e999be946687638568f91bb6b23a26fe377"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/MyPlayableStackPlay.cs.meta",
+      "sha256": "0c00acca132667baeb7f411254ef41501a2eac5fba11cb41a38c726132206df1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/StackCountPlayableMap.cs",
+      "sha256": "72415ebf7e51feeaca4b9c81c04206cd91507cd236886ab0c3fe684f99ef210c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/StackCountPlayableMap.cs.meta",
+      "sha256": "33e0364a820b0a4b60b3f9d6e95ec9f722c66ba018d1ef5ba2e7339d984539c8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/ApplyEffectByPriority.cs",
+      "sha256": "0fd5f21c149be413868a633e507de8241646090dc5011e4ded756d4af7688bcd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/ApplyEffectByPriority.cs.meta",
+      "sha256": "7cbcf98ecc159f2107aa5b3e046229b1492a39dc2037f3e8038ffc0337763618"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/Zjcs.Official.BattleStatusPlayables.asmdef",
+      "sha256": "f1fba23691d951cad76c6ead8d69209873f493f1b22069602a38e6733e6cc8f5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/Zjcs.Official.BattleStatusPlayables.asmdef.meta",
+      "sha256": "ff9e947aa27a4bfaedbc53f9935be7c785c17803e41cb0cabd1453457e081c4a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables.meta",
+      "sha256": "2601861db5071152bf9a463b8166d8ff0f77da56624da17016e2c9ad967b4087"
+    }
+  ],
+  "conversion_helpers": [
+    {
+      "path": "scripts/prepare_unity_story_sound_runtime.py",
+      "sha256": "841dc964f433cac4a93840a2f71e7623795f864df0fadb9422faa48ba8f6515a"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/BattleStatusPlayables/OfficialBattleStatusPlayableAcceptance.cs",
+      "sha256": "b11facfe89d9e6d1f57c5b737c742c1eadae497d8fea164e673dfc2dc953dab9"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/BattleStatusPlayables/Zjcs.Editor.BattleStatusPlayables.asmdef",
+      "sha256": "012041a21dfda6a93e70fcc132940f9e9b289b13daaf7b589078e6c2ae6faf43"
+    },
+    {
+      "path": "scripts/prepare_battle_status_playable_validation.py",
+      "sha256": "3a3ef7723a01a6f676f960d3aa0fad3db0f2a7a736328438a8469bc4a18a766a"
+    },
+    {
+      "path": "scripts/prepare_battle_movement_effect_validation.py",
+      "sha256": "f15db13517ab3acf5bda8c74ed814830062913edf165a1ae9a9bbb2c597d29f1"
+    }
+  ],
+  "reused_dependencies": [
+    {
+      "path": "assets/reference/official-map/map14-story-playable-runtime-source-manifest.json",
+      "sha256": "cee22423c4cdbb183ba8d728650b5fbf7f96e1aea81642a2c26834d7ed7cfdac"
+    },
+    {
+      "path": "assets/reference/official-map/map14-story-playable-manager-source-manifest.json",
+      "sha256": "d39f6fdc8a42a8f5fdba85ebf442dd85fd4bf1493e2717ee1bed2233956ba41a"
+    },
+    {
+      "path": "assets/reference/official-map/map14-story-attachment-transform-runtime-source-manifest.json",
+      "sha256": "bb99ca1945f09c905675cc4ed823a595e4ee81d73605e4e4866bf376d5961095"
+    },
+    {
+      "path": "assets/reference/battle-animation/ground-effects-assets-source-manifest.json",
+      "sha256": "da1d4f3e33c7af664c6d9b739684ecd3008e67f0276e3563b587a435c9e6aa52"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayable.cs",
+      "sha256": "0f981098b910fae1a559e54582ebb80e43bddf1f295ab011af81e6191ce88660"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableCenter.cs",
+      "sha256": "fcb3e2450d4c500c2cbea4bd0321d21afddf51ddb6d640e3b775b3c363a74008"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyEnableOnPlay.cs",
+      "sha256": "9031a17d29199a44af50a2cf289ab70dbf4885c4f238c6e5b3f96d0341f0a77e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/MyPlayableManager.cs",
+      "sha256": "0111325eef0cb0e242cc94c0be3b6591d4510e9cba87d8ae34f26e73595b9504"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/AttachPosCfg.cs",
+      "sha256": "bed13f24e3a87ef7c9ea767d1ab5f89b2453ae0cdcfa29986d15d046fbdbe0c8"
+    }
+  ],
+  "adaptation": "Original application source. Namespace/import/Object aliases and explicit scene-center injection only; all stack matching, transition ordering, stop behavior, attachment-target priority partitioning, interruption and resume method bodies remain identical.",
+  "limits": [
+    "Status entity lifecycle, complete native status graph assets and actor bindings are separate required migration work."
+  ]
+}

@@ -6,6 +6,8 @@
 
 头顶状态项的所选 `884_156692` 原生 `BattleStatusItem` prefab、官方显示／计数源码及转换输出哈希见[状态项来源](battle-hud/status-item-source-manifest.json)，入口为 `scripts/prepare_battle_status_item.py`。复用哈希匹配的原生导出缓存、原 SpriteRenderer／TMP／描边参数和相同官方 FZY4K TTF 的既有 Windows 字体绑定；历史854状态栏网格另按原凭据保留；回合调用计数的当前共享／客户端源码与历史854规则／显示标记分别核对并登记。本批未生成完整素材快照，行为与验证范围见[战斗执行](../../docs/features/battle-execution.md)。
 
+状态表现基础运行代码取所选 `884_156692` 的已核验 Assembly-CSharp.dll 与客户端反编译源文件；原程序集、三个原文件、11个方法体指纹、脚本fileID、命名空间／显式注入适配、输出C#／meta及既有依赖凭据哈希见[状态表现代码来源](battle-animation/status-playable-runtime-source-manifest.json)，入口为 `scripts/prepare_battle_status_playable_runtime.py`。独立图形夹具复用既有原生水波粒子来源，无新增美术或完整素材快照；迁移与验证范围见[战斗执行](../../docs/features/battle-execution.md)。
+
 原装备被动词条选择输入：`record_battle_equipment_selection_sources.py` 校验 `884_156692` 的战斗词条过滤／互斥比较、套装阈值、被动属性、技能品阶与 `854_156383` 装备／战斗数据；源代码、配置及运行适配 SHA256 见[装备被动选择来源](battle-rules/equipment-selection-source-manifest.json)，行为与验证见[装备功能](../../docs/features/equipment.md)。
 
 原场景部件应用代码输入：`prepare_battle_renderer_part_sources.py` 核验 `884_156692` 解码程序集与8份官方应用源码（含 `CharacterPartEntryProvider`／`CharacterPartPoolEntry`），记录加载／池化／分层／动作通知代码及显式适配端口；输入、依赖与迁移输出 SHA256 见 [场景部件凭据](battle-animation/renderer-parts-source-manifest.json)，当前实现及验证范围见[战斗执行](../../docs/features/battle-execution.md)。
