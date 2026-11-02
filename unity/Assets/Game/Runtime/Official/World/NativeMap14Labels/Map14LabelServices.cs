@@ -53,17 +53,26 @@ namespace Zjcs.Official.World.NativeMap14Labels
         // Unity JSON represents a null List as empty; retain the original Luban null branch explicitly.
         public bool HasCombatRatingLevelValues;
         public int RecommendCombatRatingIndex;
+        [NonSerialized] private Func<bool> unlockTimeReached;
+        // The local adapter supplies the already-confirmed map-access decision;
+        // no server rank dates are synthesized by a world label.
+        public void BindUnlockTimeReached(Func<bool> value) => unlockTimeReached = value ?? throw new ArgumentNullException(nameof(value));
         public long CombatRating => HasCombatRatingLevelValues ? CombatRatingLevelValues[RecommendCombatRatingIndex] : 0L;
         public void ValidateMap14Scope()
         {
             if (ClassId != 14 || LimitServerRank != 0 || LimitServerRankUnlockDayOffset != 0 || ReleaseTimeId != 0 || ReleaseTimeOffset != 0)
                 throw new InvalidOperationException("Bind the original timed/rank region services before expanding the proven Map14 label scope.");
         }
-        public bool ExistLimit() { ValidateMap14Scope(); return LimitLevel > 0; }
+        public bool ExistLimit()
+        {
+            if (unlockTimeReached == null) ValidateMap14Scope();
+            return LimitLevel > 0 || LimitServerRank != 0 || ReleaseTimeId > 0;
+        }
         public bool IsLimited(int level) => IsLimitedByType(level) != MapRegionLimitType.None;
         public MapRegionLimitType IsLimitedByType(int level)
         {
-            ValidateMap14Scope();
+            if (unlockTimeReached == null) ValidateMap14Scope();
+            else if (!unlockTimeReached()) return MapRegionLimitType.RegionUnlockTime;
             return level < LimitLevel ? MapRegionLimitType.Level : MapRegionLimitType.None;
         }
     }

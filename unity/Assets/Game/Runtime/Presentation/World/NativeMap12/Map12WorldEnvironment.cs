@@ -43,9 +43,10 @@ namespace Zjcs.Presentation.World.NativeMap12
         public Pos2d PosToGrid(Vector3 position) => new Pos2d((int)(position.x - Data.origin[0] + .5f), (int)(position.y - Data.origin[1] + .5f));
         public int QueryRegion(Pos2d point) => point.X < 0 || point.X >= Data.width || point.Y < 0 || point.Y >= Data.height
             ? -1 : Data.regionGrid[point.Y * Data.width + point.X];
-        // Visibility is supplied by the existing saved goddess activation policy;
-        // no network visibility RPC is sent by this local visual adapter.
-        public void UnlockAllRegionPositions(int map, int region) { }
+        public void UnlockAllRegionPositions(int map, int region)
+        {
+            if (map == MapClassId) state.UnlockAllRegionPositions(region);
+        }
         public void Refresh()
         {
             foreach (var region in Data.regions)

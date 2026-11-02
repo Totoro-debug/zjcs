@@ -2,7 +2,7 @@
 
 [总索引](../README.md)
 
-状态：公共模块抽取已完成；功能迁移未完成（各玩法的原表现与内容缺项仍待接入）
+状态：未完成（已提取共享宿主及部分地图网格；各玩法的原表现与内容缺项仍待接入）
 
 ## 功能简介
 
@@ -29,6 +29,10 @@
 `Resources/Official/Progression/mainline-tasks.json` 的 `output_sha256` 对照 `TextAsset.text`，Git 固定其工作树换行为 LF，确保 Windows `core.autocrlf=true` 检出仍与清单一致。
 
 公共代码位于 [`Presentation/World/Mainline`](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/)。`OfficialMainlineMapRuntime` 在 `Awake` 为每次入图分别创建 HUD、区域、导航、雕像、体力、探寻、小地图七个模块，负责按原顺序组装、更新和退出；窗口、路线、待交互对象、区域进度、刷新计时、动态实体和渲染目标由所属模块持有。模块实现使用宿主内的私有类型保持封装，不把单张地图或单个角色的可变状态放入全局单例。各图专属剧情、首战引导、机关、音频与实体载荷留在原适配层。
+
+原生地形的公共绑定在独立程序集 `Zjcs.Presentation.World.MainlineNativeGround`：`MainlineWorldLabels` 将原区域描述／战力／多语言标签绑定到地图数据和 `IMainlineWorldLabelState`；`MainlineWorldEnvironment` 对原灯光、环境和分区组件提供同一份区域、进度、位置与揭格服务。状态与进度数组按 Region ID 索引，保留原配置的枚举顺序；不能把 Map14 原表中先76后75的顺序当成状态下标。Map14 分区视图复用这两项服务；`MainlineNativeGround` 为 Map15 整图 prefab 提供非激活实例化、依赖绑定、原 URP 管线切换和退出恢复。角色／镜头资源地址独立于 HUD 是否迁移，避免无 HUD 的地图跳过原模型缩放和镜头参数。此项仍不等于通天塔完整 HUD、楼层与交互已经迁移。来源见[原生地形公共绑定清单](../../assets/reference/official-map/mainline-native-ground-source-manifest.json)。
+
+公共宿主通过 `OfficialMainlineMapRuntime.NativeGround.cs` 的 `MainlineNativeGroundState` Adapter 提供角色位置、等级／战力、地区状态、探索点及公共揭格；整图资源地址由地图档案传入。`NativeMap14.cs` 仅保留龙之国分区视图的创建、刷新与释放，消费同一状态 Interface。骨骼地面载荷通过 `MainlineGroundAnimation` 复用项目独立原生绘制端；原素材与具体运行验证范围见[通天塔入口](../maps/map-15.md)。
 
 入口组件保留原 MonoScript GUID 和 `MovedFrom`；纯 C# 模块沿用原脚本 `.meta`，原 prefab、层级、坐标、动画、数值、执行次序与存档 DTO 保持兼容。`OfficialMainlineUiCatalog` 按当前 `MapProfile.NativeUiRoot` 缓存原 UI 目录，HUD、雕像、奖励列表、探寻与小地图共用它；通用文本不再由女神像持有或加载。
 
@@ -80,13 +84,15 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 
 `SharedMapGridVisibilityAcceptance.Run` 已通过 Unity 2022.3.57f1c2 编译与规则执行：原 Map13 的 148 份身体模板、2,690 份放置、106 地区、57,600 格和 RLE 冷读字节保持一致；四组 17×9 接口夹具验证不同地图身份、角色模板、半径、实例隔离、移动与公开地区、存档及损坏游程拒绝。夹具不代表相应地图已迁移。静态元数据检查与 `ProjectTools.Validate` 通过。图形 Play Mode 中的实际地图入口、移动与冷读范围见[泽之国](../maps/map-13.md)，不据规则测试声明白雾画面或其他地图完成。
 
-公共白雾 Module 位于 `Presentation/World/Mainline/OfficialMainlineGridFog.cs`，以原根 prefab、相机、地形坐标、公共可见性实例和玩家／传送坐标为 Interface，内部完成原 prefab 实例化、独立材质、原 `CloudController2` 初始化与结束清理。`LocalGridVisibilityAgent` 从完整官方 `MyGridVisibilityAgent` 迁移，只将实体容器、DI 生命周期与角色查询换成本地 Adapter；原单格／多格事件、即时移除、按距离扩散、暂缓揭雾、源坐标覆盖及目标集合均保留。现有 `MapRootVisibility` 的容器生命周期 Adapter 继续保留供原实体宿主使用；公共地图宿主不依赖该动态容器。Map11／13 的正式宿主已通过公共载入层接线；其余地图尚未接入这条白雾路径。当前验证结果分别在[森之国](../maps/map-11.md)和[泽之国](../maps/map-13.md)维护。
+公共白雾 Module 位于 `Presentation/World/Mainline/OfficialMainlineGridFog.cs`，以原根 prefab、相机、地形坐标、公共可见性实例和玩家／传送坐标为 Interface，内部完成原 prefab 实例化、独立材质、原 `CloudController2` 初始化与结束清理。`LocalGridVisibilityAgent` 从完整官方 `MyGridVisibilityAgent` 迁移，只将实体容器、DI 生命周期与角色查询换成本地 Adapter；原单格／多格事件、即时移除、按距离扩散、暂缓揭雾、源坐标覆盖及目标集合均保留。现有 `MapRootVisibility` 的容器生命周期 Adapter 继续保留供原实体宿主使用；公共地图宿主不依赖该动态容器。Map11／12／13 的正式宿主已通过公共载入层接入原白雾；Map15 复用可见性且保留原无白雾差异。当前验证范围在各地图页维护。
 
-当前版 Map11／12／15／16 的真实网格与身体输入已按原生成格式解码，使用 `World/Mainline/Visibility/Map<ID>/` 的独立 Resources 地址；Map11 已接入正式 Adapter，Map12／15／16 等待接线。Map11／12／13／16 的原雾层 prefab 已分别恢复；Map15 原根的 `CloudController` 显式为空，该差异以配置保持。资源规格及接入／验证范围只在各地图页维护；共同来源见 `mainline-grid-visibility-data-source-manifest.json` 与 `mainline-grid-fog-source-manifest.json`。
+当前版 Map11／12／15／16 的真实网格与身体输入已按原生成格式解码，使用 `World/Mainline/Visibility/Map<ID>/` 的独立 Resources 地址；Map11／12／15 已接入正式 Adapter，Map16 等待接线。Map11／12／13／16 的原雾层 prefab 已分别恢复；Map15 原根的 `CloudController` 显式为空，该差异以配置保持。资源规格及接入／验证范围只在各地图页维护；共同来源见 `mainline-grid-visibility-data-source-manifest.json` 与 `mainline-grid-fog-source-manifest.json`。
 
 静态元数据检查（85,050 GUID）与 `ProjectTools.Validate` 通过。`SharedMapGridVisibilityAcceptance.RunSourceMaps` 已在 Unity 2022.3.57f1c2 中通过：保留原 Map13 与四组小尺寸 Interface 夹具回归，再使用 Map11／12／15／16 的真实原版输入执行移动揭格、全部区域列表、独立实例及逐格／逐字节冷读。后四图使用显式规则夹具（实体全部活动、地区查询返回0、不检查通行），未代替各图真实地区 Adapter、导航或地图交互验证。
 
 公共可见性的加载、坐标／实体来源核对、区域查询、快照、白雾绑定和清理集中至 `OfficialMainlineMapRuntime.GridVisibility.cs`。Map13 保留旧 JSON 字段，其他地图使用 `gridVisibility`；事务回滚更换可见性实例时同时重新绑定雾层事件，避免继续监听已释放实例。当前接入与验证范围见各地图页。
+
+地图档案显式配置网格／身体／白雾地址、是否要求独立小地图 prefab 及交互配置版本，公共载入层不再按 Map14 写专用分支。Map12／13 的地区、奖励预览、区域刷新和英雄结果索引从各自已校验的 `871_156598` 原表转换，避免误用仅含 Map10／11 的早期共享地区数组。空奖励列表按原表保留；来源与绑定哈希见[各图交互配置](../../assets/reference/official-map/mainline-interaction-maps-source-manifest.json)。
 
 ## 自定义实现
 

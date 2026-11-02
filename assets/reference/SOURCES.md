@@ -326,6 +326,10 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 
 公共地图网格输入来源见 `official-map/mainline-grid-visibility-data-source-manifest.json`。`prepare_mainline_grid_visibility_data.py` 从当前版本原根网格、实体放置／身体／视野与区域解锁包读取真实载荷，使用已核对程序集与已准备源码清单的生成格式解码，保留坐标、区域顺序及营地关系；记录原包对象／载荷、全部消费格式源码、输出哈希。与历史 Map13 输入分别登记，未混写旧版本清单。
 
+各图交互配置的独立绑定见 `official-map/mainline-interaction-maps-source-manifest.json`。`prepare_mainline_interaction_maps.py` 复用原交互转换器，严格核对 Map12／13 各自 `871_156598` 原表及 EC 模板字节，记录地区、奖励预览、区域刷新、英雄结果索引与本地载入配置的输入／输出哈希；不覆盖早期共享表或 Map14 的来源记录。本批无新增美术，未生成素材快照。
+
+Map15 遗漏配置行的恢复见 `official-map/map15-configurations-source-manifest.json`，由 `prepare_mainline_map15_configurations.py` 从所选 `884_156692` 实际官方载荷解码世界、地区、入口条件与完整实体扩展参数原行，核对全部消费构造源码及实际 750 格导航；记录历史定义的固定 Git 身份和历史输入，与当前包／对象／载荷分开。更新后的定义、载荷大小与输出 SHA256 由 `unity/Assets/Official/World/Map/15/source-manifest.json` 绑定；本批无新增美术，未生成素材快照。
+
 `prepare_partner_conversation_conditions.py` 从同版共享条件类与 `Formula` 提取实际通话条件闭包，记录原文件／方法、生成模板、复用规则、玩家端口适配及输出 SHA256，见 `partner-conversation-conditions-source-manifest.json`。无新增美术资源；未生成完整素材快照。
 
 `partner-conversation-local-source-manifest.json` 记录当前 `PlayerNpcDialogueData`／包装器身份、本地 JsonUtility 字段适配、已迁移规则依赖、实际存档读取与验证源码哈希；生成入口为 `record_partner_conversation_local_sources.py`。无新增美术资源，未生成完整素材快照。
@@ -337,6 +341,10 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 替身地面绑定来源见 `battle-rules/voodoo-grid-source-manifest.json`。`prepare_battle_voodoo_grid.py` 从884_156692所选官方APK读取4600移动组件与同版 `EC/entity_grid_mover` 表，使用同版格式代码解码，记录包内实际对象、原始字节、代码、生成器及C#编译绑定哈希；已绑定旧战斗目录仅作组件身份核对，版本分别记录。无新增美术载荷，未生成完整素材快照；行为和验证范围见[战斗执行页](../../docs/features/battle-execution.md)。
 
 伙伴通话每日限制的原 `Player`／`TimeUtils` 方法、记录字段、配置依赖及本地存档适配哈希见 [partner-conversation-day-limits-source-manifest.json](partner-conversation-day-limits-source-manifest.json)，重建入口为 `prepare_partner_conversation_day_limits.py`。本批无新增美术，未生成素材快照。
+
+Map15 原模型／镜头与标签数据来源见 `official-map/map15-world-view-source-manifest.json`，提取入口为 `prepare_mainline_map15_world_view.py`；分别记录当前 APK 对象字节、消费格式程序集、语言 rawfile、原地区配置、历史共享样式／位阶表及原生 prefab 输入。公共标签／环境绑定的固定代码前身、原区域条件代码及安装输出哈希由 `record_mainline_native_ground_sources.py` 写入 `official-map/mainline-native-ground-source-manifest.json`；不覆盖历史 Map14 来源清单，无新增美术载荷，未生成完整素材快照。
+
+Map15 入口当前原生地面来源见 `official-map/map15-current-ground-source-manifest.json`，提取入口为 `prepare_mainline_map15_native_ground.py`。按所选 `884_156692` 的真实 CAB／PPtr、完整字段导出与已校验 Windows 纹理／shader 转换逐项重绑，保留原层级、瓦片 Sprite、标签和渲染参数；新增载荷独立放在 `NativeCurrent/`，不覆盖历史 `NativeTerrain/`。四份原骨骼、网格、路径、动画和 atlas 经固定哈希的 MIT 格式读取器解码，绑定项目独立原生动画绘制端；不复制或反编译动画 SDK 实现。收据分别记录原对象、脚本绑定、工具和逐文件输出哈希；本批未进入完整素材快照。
 
 伙伴通话节点／好感等级原方法与本地事务边界的源码、字段适配、原数据及验证哈希见 [partner-conversation-transactions-source-manifest.json](partner-conversation-transactions-source-manifest.json)，记录入口为 `record_partner_conversation_transaction_sources.py`；原好感等级方法经过声明适配后的逐词核对。本批无新增美术，未生成素材快照。
 

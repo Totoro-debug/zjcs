@@ -18,7 +18,7 @@ namespace Zjcs.Presentation.World
 
         private void RefreshMap11CameraResolution()
         {
-            if (!MapProfile.HasNativeUi || storyCameraActive) return;
+            if (MapProfile.PlayerViewResource == null || storyCameraActive) return;
             var resolution = new Vector2Int(Screen.width, Screen.height);
             if (resolution == map11CameraResolution) return;
             map11CameraResolution = resolution;
@@ -29,7 +29,7 @@ namespace Zjcs.Presentation.World
         // priority and safe bounds read from WorldCamera/controller.
         private float DefaultWorldCameraSize()
         {
-            if (!MapProfile.HasNativeUi) return 7.5f;
+            if (MapProfile.PlayerViewResource == null) return 7.5f;
             var data = map11WorldViewSource ?? throw new InvalidDataException("Official camera source is not loaded.");
             float aspect = (float)Screen.height / Screen.width;
             float size = data.cameraAdaptPriority == 1 ? data.cameraSafeExtents.y
@@ -43,7 +43,7 @@ namespace Zjcs.Presentation.World
         // the skeleton alone; the world prefab owns its model offset, scale and layer.
         private GameObject MountMap11Player(GameObject model)
         {
-            var source = Resources.Load<TextAsset>(MapResource("BaseGround/player-view"));
+            var source = Resources.Load<TextAsset>(MapProfile.PlayerViewResource);
             if (source == null) throw new InvalidDataException("Official world player view is not bound.");
             var data = JsonUtility.FromJson<Map11PlayerViewSource>(source.text);
             map11WorldViewSource = data;
@@ -53,7 +53,7 @@ namespace Zjcs.Presentation.World
             model.transform.localScale = data.modelScale;
             var sorting = root.AddComponent<SortingGroup>();
             sorting.sortingOrder = data.sortingOrder;
-            if (mapClassId == 12 || mapClassId == 13)
+            if (mapClassId == 12 || mapClassId == 13 || MapProfile.NativeGroundLabelResource != null)
             {
                 sorting.sortingLayerID = data.sortingLayerId;
                 sorting.sortingOrder = data.nativeSortingOrder;

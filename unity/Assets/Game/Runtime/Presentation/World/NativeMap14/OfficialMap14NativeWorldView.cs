@@ -25,15 +25,8 @@ using LabelRegionStatus = Zjcs.Official.World.NativeMap14Labels.MapRegionStatus;
 
 namespace Zjcs.Presentation.World.NativeMap14
 {
-    public interface IMap14NativeWorldState
+    public interface IMap14NativeWorldState : IMainlineWorldGroundState
     {
-        Vector3 PlayerWorldPosition { get; }
-        int PlayerLevel { get; }
-        int PlayerSubRank { get; }
-        long PlayerCombatRating { get; }
-        bool IsPublicRegion(int region);
-        int GetRegionProgress(int region);
-        int GetRegionGoddessId(int region);
     }
 
     public sealed class OfficialMap14NativeWorldView : MonoBehaviour, IDisposable
@@ -43,8 +36,8 @@ namespace Zjcs.Presentation.World.NativeMap14
         public NativeMap14SharedRoot SharedRoot { get; private set; }
 
         private NativeMap13AssetCatalog catalog;
-        private Map14WorldEnvironment environment;
-        private Map14WorldLabels labels;
+        private MainlineWorldEnvironment environment;
+        private MainlineWorldLabels labels;
         private RenderPipelineAsset previousPipeline, previousQuality;
         private bool pipelineBound, disposed;
         private UniversalAdditionalCameraData addedCameraData;
@@ -52,7 +45,7 @@ namespace Zjcs.Presentation.World.NativeMap14
         private NativeMap14SharedConfiguration sharedConfiguration;
         private NativeMap14SharedData sharedData;
 
-        public static OfficialMap14NativeWorldView Create(Transform parent, Camera camera, IMap14NativeWorldState state)
+        public static OfficialMap14NativeWorldView Create(Transform parent, Camera camera, IMainlineWorldGroundState state)
         {
             var host = new GameObject("Map14 original native world");
             host.SetActive(false);
@@ -73,7 +66,7 @@ namespace Zjcs.Presentation.World.NativeMap14
             }
         }
 
-        private void Initialize(Camera camera, IMap14NativeWorldState state)
+        private void Initialize(Camera camera, IMainlineWorldGroundState state)
         {
             if (QualitySettings.activeColorSpace != ColorSpace.Linear)
                 throw new InvalidOperationException("Map14 original assets require the APK's Linear project color space.");
@@ -116,8 +109,8 @@ namespace Zjcs.Presentation.World.NativeMap14
                 || labelsData.regions.Select(region => region.Region).Distinct().Count() != labelsData.regions.Length)
                 throw new InvalidDataException("Original Map14 region labels are malformed or not index-aligned.");
 
-            environment = new Map14WorldEnvironment(GroundRoot, shared.EnvironmentData, labelsData, state);
-            labels = new Map14WorldLabels(environment, state, shared.Font);
+            environment = new MainlineWorldEnvironment(GroundRoot, shared.EnvironmentData, labelsData, state);
+            labels = new MainlineWorldLabels(labelsData, state, shared.Font);
             NativeMap13EnvironmentBinding.Bind(instance, environment);
             labels.Bind(instance);
 
@@ -259,165 +252,4 @@ namespace Zjcs.Presentation.World.NativeMap14
         }
     }
 
-    internal sealed class Map14WorldEnvironment : IMapEnvironmentServices<MapGroundRoot, MapEnvData>,
-        IPartitionWorldContext<TerrainRegionStatus>
-    {
-        private readonly IMap14NativeWorldState state;
-        private readonly List<TerrainRegionStatus> statuses;
-        private List<int> progress;
-
-        public MapGroundRoot MapGroundRoot { get; }
-        public MapEnvData EnvironmentData { get; }
-        public Map14LabelData Data { get; }
-        public int MapClassId => 14;
-        public int CurrentRegion => Data.QueryRegion(PlayerWorldPosition);
-        public Vector3 PlayerWorldPosition => state.PlayerWorldPosition;
-        public event Action<int, List<int>> OnWorldMapProgressUpdate;
-        public event Action<int, int, TerrainRegionStatus, TerrainRegionStatus> OnMapStatusUpdate;
-
-        public Map14WorldEnvironment(MapGroundRoot root, MapEnvData config, Map14LabelData data, IMap14NativeWorldState state)
-        {
-            MapGroundRoot = root;
-            EnvironmentData = config;
-            Data = data;
-            this.state = state;
-            statuses = Data.regions.Select(region => Status(region.Region)).ToList();
-            progress = Data.regions.Select(region => state.GetRegionProgress(region.Region)).ToList();
-        }
-
-        private TerrainRegionStatus Status(int region) => state.IsPublicRegion(region)
-            ? TerrainRegionStatus.Public : TerrainRegionStatus.Private;
-        public List<TerrainRegionStatus> GetCurrentMapStatus() => statuses;
-        public int GetMapRegionGoddessId(int mapClassId, int region) => mapClassId == 14 ? state.GetRegionGoddessId(region) : 0;
-        public int GetWorldMapRegionProgress(int mapClassId, int region) => mapClassId == 14 ? state.GetRegionProgress(region) : 0;
-        public bool WorldMapRegionCleared(int mapClassId, int region, int value) => mapClassId == 14 && value != 0
-            && (region < 0 || region >= Data.maxProgress.Length || Data.maxProgress[region] == 0
-                || value >= Data.maxProgress[region]);
-        public Pos2d PosToGrid(Vector3 position) => new Pos2d(
-            (int)(position.x - Data.origin[0] + 0.5f), (int)(position.y - Data.origin[1] + 0.5f));
-        public int QueryRegion(Pos2d position) => position.X < 0 || position.X >= Data.width
-            || position.Y < 0 || position.Y >= Data.height ? -1 : Data.regionGrid[position.Y * Data.width + position.X];
-        public void UnlockAllRegionPositions(int mapClassId, int region) { }
-
-        public void Refresh()
-        {
-            foreach (MapRegionInfo region in Data.regions)
-            {
-                int id = region.Region;
-                TerrainRegionStatus next = Status(id), previous = statuses[id];
-                if (next == previous) continue;
-                statuses[id] = next;
-                OnMapStatusUpdate?.Invoke(14, id, previous, next);
-            }
-            List<int> nextProgress = Data.regions.Select(region => state.GetRegionProgress(region.Region)).ToList();
-            if (progress.SequenceEqual(nextProgress)) return;
-            progress = nextProgress;
-            OnWorldMapProgressUpdate?.Invoke(14, progress);
-        }
-    }
-
-    internal sealed class Map14WorldLabels : IMap14LabelServices, IMap14LabelPlayer,
-        ILanguageTypeService, ILocalizationTextService, IDisposable
-    {
-        private readonly Map14WorldEnvironment environment;
-        private readonly IMap14NativeWorldState state;
-        private readonly Dictionary<string, string> texts;
-        private readonly MultiLanguageUIService ui;
-        private readonly Map14LabelFontInstance font;
-        private readonly LabelRegionStatus[] statuses;
-        private List<int> progress;
-
-        public Map14WorldLabels(Map14WorldEnvironment environment, IMap14NativeWorldState state, TMP_FontAsset sourceFont)
-        {
-            this.environment = environment;
-            this.state = state;
-            texts = environment.Data.texts.ToDictionary(value => value.key, value => value.value);
-            font = new Map14LabelFontInstance(sourceFont);
-            ui = new MultiLanguageUIService(this);
-            Level = state.PlayerLevel;
-            SubRank = state.PlayerSubRank;
-            CombatRating = state.PlayerCombatRating;
-            statuses = environment.Data.regions.Select(region => Status(region.Region)).ToArray();
-            progress = environment.Data.regions.Select(region => state.GetRegionProgress(region.Region)).ToList();
-        }
-
-        public void Bind(GameObject instance) => Map14LabelBinding.Bind(instance, this, ui, this, this, font);
-        public void Dispose() { ui.Dispose(); font.Dispose(); }
-        public int MapClassId => 14;
-        public bool IsMapInitialized => true;
-        public event Action Initialized { add { } remove { } }
-        public IMap14LabelPlayer Player => this;
-        public bool IsTeamMember => false;
-        public int QueryRegion(Vector3 position) => environment.Data.QueryRegion(position);
-        public MapRegionInfo GetRegion(int mapClassId, int region) => environment.Data.regions.Single(value => value.ClassId == mapClassId && value.Region == region);
-        public string GetRegionNameKey(int mapClassId, int region) => "region_" + mapClassId + "_" + region;
-        public object CompactNumber(long value) => Zjcs.Offline.Progression.OfficialPropFormat.Compact(value);
-        public int CalcWorldMapRegionProgress(int mapClassId, int region, int value) => environment.Data.CalcWorldMapRegionProgress(mapClassId, region, value);
-        public int CalcRankSuppression(int mine, int other) => environment.Data.CalcRankSuppression(mine, other);
-        public bool TryGetLevelColor(CombatRateingColorType type, int level, out Color color) => environment.Data.TryGetLevelColor(type, level, out color);
-        public DateTime Now => throw new InvalidOperationException("Map14 has no timed region limits.");
-        public double CalcRemainSecond(DateTime endTime) => throw new InvalidOperationException("Map14 has no timed region limits.");
-        public object FormatTimeSpan(TimeSpan span, int format) => throw new InvalidOperationException("Map14 has no timed region limits.");
-        public int Level { get; private set; }
-        public int SubRank { get; private set; }
-        public long CombatRating { get; private set; }
-        public event Action<int> OnLevelUpdate;
-        public event Action<long, long> OnCombatRatingChanged;
-        public event Action<int, List<int>> OnWorldMapProgressUpdate;
-        public event Action<int, int, LabelRegionStatus, LabelRegionStatus> OnMapStatusUpdate;
-        public event Action<int> OnPlanesRankUnlock { add { } remove { } }
-        public event Action<long> OnDebugTimeOffset { add { } remove { } }
-        public bool RegionIsActived(int mapClassId, int region) => GetMapRegionStatus(mapClassId, region) == LabelRegionStatus.Public;
-        public LabelRegionStatus GetMapRegionStatus(int mapClassId, int region) => mapClassId != 14 || region < 0 || region >= statuses.Length
-            ? LabelRegionStatus.None : statuses[region];
-        public int GetWorldMapRegionProgress(int mapClassId, int region) => mapClassId != 14 || region < 0 || region >= statuses.Length
-            ? 0 : state.GetRegionProgress(region);
-
-        public void Refresh()
-        {
-            int nextLevel = state.PlayerLevel;
-            if (nextLevel != Level) { Level = nextLevel; OnLevelUpdate?.Invoke(Level); }
-            SubRank = state.PlayerSubRank;
-            long nextRating = state.PlayerCombatRating;
-            if (nextRating != CombatRating)
-            {
-                long previous = CombatRating;
-                CombatRating = nextRating;
-                OnCombatRatingChanged?.Invoke(previous, nextRating);
-            }
-            foreach (MapRegionInfo region in environment.Data.regions)
-            {
-                int id = region.Region;
-                LabelRegionStatus next = Status(id), previous = statuses[id];
-                if (next == previous) continue;
-                statuses[id] = next;
-                OnMapStatusUpdate?.Invoke(14, id, previous, next);
-            }
-            List<int> nextProgress = environment.Data.regions.Select(region => state.GetRegionProgress(region.Region)).ToList();
-            if (progress.SequenceEqual(nextProgress)) return;
-            progress = nextProgress;
-            OnWorldMapProgressUpdate?.Invoke(14, progress);
-        }
-
-        private LabelRegionStatus Status(int region) => state.IsPublicRegion(region)
-            ? LabelRegionStatus.Public : LabelRegionStatus.Private;
-        public LanguageType CurrentLanguage
-        {
-            get => LanguageType.zh_CN;
-            set { if (value != LanguageType.zh_CN) throw new NotSupportedException("Map14 binds the official Simplified Chinese text closure."); }
-        }
-        public bool IsShowLanguageKey { get; set; }
-        public bool IsShowMissingKeyText { get; set; }
-        public event Action<LanguageType> OnLanguageChanged { add { } remove { } }
-        public bool ContainsKey(string key) => texts.ContainsKey(key);
-        public string GetText(string key, LanguageType language, params object[] args) => texts.TryGetValue(key, out string value)
-            ? value : throw new KeyNotFoundException("Original Map14 world-label key is unbound: " + key);
-        public bool TryGetOriginalText(string key, LanguageType language, out string result) => texts.TryGetValue(key, out result);
-        public bool TryGetText(string key, LanguageType language, out string result) => texts.TryGetValue(key, out result);
-        public bool TryGetText(string key, out string result) => texts.TryGetValue(key, out result);
-        public string GetTextFormated(string key, LanguageType language, params object[] args) => string.Format(GetText(key, language), args);
-        public void ReloadData() => throw new NotSupportedException("Map14 original world-label text data is immutable.");
-        public void SetReplacer(ITextReplacer replacer) => throw new NotSupportedException("No world-label text replacer is configured.");
-        public void AddDataProvider(ILanguageTextDataProvider provider) => throw new NotSupportedException("Map14 original world-label text data is immutable.");
-    }
 }

@@ -21,6 +21,11 @@ namespace Zjcs.Presentation.World
             public bool IsPublicRegion(int region) => host.regions.IsPublicRegion(region);
             public int GetRegionProgress(int region) => host.regions.regionPoints.TryGetValue(region, out int points) ? points : 0;
             public int GetRegionGoddessId(int region) => host.mapEntities.Values.SingleOrDefault(e => e.Region == region && e.TypeId == 202)?.PlacementId ?? 0;
+            public void UnlockAllRegionPositions(int region)
+            {
+                host.mapGridVisibility?.UnlockRegion(region);
+                host.SaveLocalProgress();
+            }
         }
         private void InitializeNativeMap12()
         {

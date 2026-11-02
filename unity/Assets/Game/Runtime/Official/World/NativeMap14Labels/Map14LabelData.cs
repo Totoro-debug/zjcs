@@ -27,7 +27,7 @@ namespace Zjcs.Official.World.NativeMap14Labels
         // Original FormulaHandler, BattleFormulaHandler and EnumExt.ToRank.
         public int CalcWorldMapRegionProgress(int map, int region, int progress)
         {
-            if (map != 14) return 0;
+            if (map != mapClassId) return 0;
             int max = region >= 0 && region < maxProgress.Length ? maxProgress[region] : 0;
             if (max == 0) return 0;
             return (int)((double)((float)progress / (float)max) * 10000.0);

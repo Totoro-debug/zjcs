@@ -18,6 +18,7 @@ using Zjcs.Offline.World;
 using Zjcs.Presentation.CharacterCreation;
 using Zjcs.Presentation.World;
 using Zjcs.Presentation.World.NativeMap13;
+using Zjcs.Presentation.World.NativeMap12;
 using Zjcs.Official.World;
 using Zjcs.Offline.World.NativeMap13TreeEntities;
 using Zjcs.Offline.World.MapGridVisibility;
@@ -44,11 +45,23 @@ namespace Zjcs.Editor.Map13Mainline
                 string quality=SessionState.GetString(Key+".qualityPipeline","");
                 GraphicsSettings.defaultRenderPipeline=string.IsNullOrEmpty(pipeline)?null:AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>(pipeline);
                 QualitySettings.renderPipeline=string.IsNullOrEmpty(quality)?null:AssetDatabase.LoadAssetAtPath<RenderPipelineAsset>(quality);
+                string queue=SessionState.GetString(Key+".queue","");
+                if(SessionState.GetInt(Key+".result",1)==0&&!string.IsNullOrEmpty(queue))
+                {
+                    string[] maps=queue.Split(',');string remaining=string.Join(",",maps.Skip(1));
+                    EditorApplication.delayCall+=()=>
+                    {
+                        if(maps[0]=="15")RunMap15();else Run();
+                        SessionState.SetString(Key+".queue",remaining);
+                    };
+                    return;
+                }
                 EditorApplication.Exit(SessionState.GetInt(Key+".result",1));
             };
         }
         public static void Run()
         {
+            started=false;failed=false;SessionState.SetString(Key+".queue","");
             SessionState.SetInt(Key+".map",13);
             SessionState.SetBool(Key+".trees",false);
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION","1");
@@ -67,6 +80,14 @@ namespace Zjcs.Editor.Map13Mainline
             Run();SessionState.SetInt(Key+".map",11);
             // Map11's migrated region-light adapter uses the committed built-in
             // renderer. Keep another session's temporary pipeline out of this fixture.
+            GraphicsSettings.defaultRenderPipeline=null;QualitySettings.renderPipeline=null;
+        }
+        public static void RunMap12(){Run();SessionState.SetInt(Key+".map",12);}
+        public static void RunSharedMaps(){RunMap12();SessionState.SetString(Key+".queue","15,13");}
+        public static void RunMap15And13(){RunMap15();SessionState.SetString(Key+".queue","13");}
+        public static void RunMap15()
+        {
+            Run();SessionState.SetInt(Key+".map",15);
             GraphicsSettings.defaultRenderPipeline=null;QualitySettings.renderPipeline=null;
         }
         public static void RunRules()
@@ -127,12 +148,12 @@ namespace Zjcs.Editor.Map13Mainline
             string saves=Path.Combine(Output,"formal-map13-profile-"+Guid.NewGuid().ToString("N"));
             var slots=new ProfileSlotCatalog(saves);string slot=slots.CreateSlot();
             var save=new OfflineMainlineSave{CreatedAtUnixSeconds=DateTimeOffset.UtcNow.ToUnixTimeSeconds()};
-            save.Player.CharacterCreated=true;save.Player.CharacterName=MapId==13?"泽之国验证":"森之国验证";save.Player.InitialWeaponType=201;
+            save.Player.CharacterCreated=true;save.Player.CharacterName="地图"+MapId+"验证";save.Player.InitialWeaponType=201;
             var characterCatalog=OfficialCharacterAssetCatalog.LoadDefault().Load();
             save.Player.Level=90;save.Player.Experience=characterCatalog.CumulativeLevelExperience[90];
             save.Player.SubRank=characterCatalog.LevelLimits.Where(r=>r.PlayerBlessLevel==0&&r.PlayerLevel>=90).Min(r=>r.SubRank);
             save.Player.Rank=characterCatalog.RankOfSubRank(save.Player.SubRank);save.Player.Wardrobe.Profession=1;
-            save.Player.UnlockedMapClassIds.AddRange(new[]{11,12,13});
+            save.Player.UnlockedMapClassIds.AddRange(new[]{11,12,13,15});
             save.Tasks.ClaimedMainlineTaskIds.AddRange(OfficialMainlineTaskCatalog.LoadDefault().OrderedTasks.Where(t=>t.classId<=1040).Select(t=>t.classId));
             File.WriteAllText(slots.GetProgressPath(slot),JsonUtility.ToJson(save,true));
             var progression=OfflineMainlineProgressSession.OpenCharacter(slots,slot);
@@ -146,11 +167,37 @@ namespace Zjcs.Editor.Map13Mainline
                 while(!world.IsReady&&Time.realtimeSinceStartup<deadline)yield return null;
                 Require(world.IsReady,"Formal Map13 original partitions did not become ready.");
             }
+            if(MapId==12)
+            {
+                var world=Field<OfficialMap12NativeWorldView>(runtime,"nativeMap12World");
+                while(!world.IsReady&&Time.realtimeSinceStartup<deadline)yield return null;
+                Require(world.IsReady,"Formal Map12 original partitions did not become ready.");
+            }
             var navigation=Field<object>(runtime,"navigation");var initial=Field<MapGridPoint>(navigation,"currentGrid");
             if(MapId==13)Require((int)Call(runtime,"GetDefaultEntryId")==11001&&initial.Equals(new MapGridPoint(113,233)),"Original TbMapWorldInfo.DefEntryId 11001 and its (113,233) placement were not used.");
             if(MapId==11)Require((int)Call(runtime,"GetDefaultEntryId")==101&&initial.Equals(new MapGridPoint(167,133)),"Original Map11 DefEntryId 101 and its (167,133) placement were not used.");
+            if(MapId==12)Require((int)Call(runtime,"GetDefaultEntryId")==101&&initial.Equals(new MapGridPoint(248,32)),"Original Map12 entry 101 at (248,32) was not used.");
+            if(MapId==15)Require((int)Call(runtime,"GetDefaultEntryId")==101&&initial.Equals(new MapGridPoint(12,6)),"Original Map15 entry 101 at (12,6) was not used.");
             Require(Field<object>(runtime,"mapGridVisibility")!=null,"Formal original grid component is not bound.");
             yield return new WaitForSecondsRealtime(2);Canvas.ForceUpdateCanvases();
+            if(MapId==15)
+            {
+                var originals=runtime.GetComponentsInChildren<MainlineGroundAnimation>(true);
+                Require(originals.Length==10&&originals.All(value=>value.VertexCount>0),"Map15 lost original animated ground geometry.");
+                var animated=originals.Where(value=>!string.IsNullOrEmpty(value.AnimationName)&&value.GetComponent<MeshRenderer>().isVisible).ToArray();
+                Require(animated.Length>0&&animated.All(value=>value.Elapsed>0),"Visible original ground animation clocks did not advance.");
+                var poses=animated.Select(value=>value.GetComponent<MeshFilter>().sharedMesh.vertices).ToArray();
+                var colors=animated.Select(value=>value.GetComponent<MeshFilter>().sharedMesh.colors32).ToArray();
+                yield return new WaitForSecondsRealtime(.35f);
+                Require(animated.Where((value,index)=>!poses[index].SequenceEqual(value.GetComponent<MeshFilter>().sharedMesh.vertices)
+                    ||!colors[index].SequenceEqual(value.GetComponent<MeshFilter>().sharedMesh.colors32)).Any(),"Visible original ground animation did not change its rendered geometry/colors.");
+                var tiles=runtime.GetComponentsInChildren<UnityEngine.Tilemaps.Tilemap>(true);
+                int renderedCells=0;
+                foreach(var tile in tiles)foreach(var pos in tile.cellBounds.allPositionsWithin)
+                    if(tile.HasTile(pos)&&tile.GetSprite(pos))renderedCells++;
+                Require(renderedCells>0,"Original ground tiles lost their serialized sprite references.");
+                Debug.Log("Map15 original ground: "+originals.Length+" animated instances, "+renderedCells+" cells with bound tile sprites.");
+            }
             int initialVisible=CheckFog(runtime);
             ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map"+MapId+"-formal-entry.png"));yield return new WaitForSecondsRealtime(.5f);
             var camera=Field<Camera>(runtime,"worldCamera");var session=Field<OfficialWorldMapSession>(runtime,"session");
@@ -182,16 +229,16 @@ namespace Zjcs.Editor.Map13Mainline
             ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map"+MapId+"-formal-restored.png"));yield return new WaitForSecondsRealtime(.5f);
             Call(runtime,"CloseMap");yield return null;yield return null;
             if(SessionState.GetBool(Key+".trees",false))yield return TreeSteps(slot,saves,canvas.transform,mapSave);
-            if(MapId==11)yield return GoddessSteps(slot,saves,canvas.transform);
+            if(MapId==11||MapId==12)yield return GoddessSteps(slot,saves,canvas.transform);
             Require(!failed,"Formal map entry emitted runtime errors.");
             File.WriteAllText(Path.Combine(Output,"map"+MapId+"-formal-entry.json"),JsonUtility.ToJson(new Proof{map_id=MapId,editor=Application.unityVersion,backend=SystemInfo.graphicsDeviceType.ToString(),play_mode=true,simulated_pointer=true,save_reopen=true,entry_x=initial.X,entry_y=initial.Y,moved_x=target.X,moved_y=target.Y},true));
-            Debug.Log("Map"+MapId+" formal entry passed: original environment/HUD, simulated map pointer, local grid visibility/position save and cold reopen.");
+            Debug.Log("Map"+MapId+" formal entry passed: shared map host, simulated map pointer, local grid visibility/position save and cold reopen.");
         }
         private static IEnumerator GoddessSteps(string slot,string saves,Transform ui)
         {
             var runtime=Open(slot,saves,ui);yield return new WaitForSecondsRealtime(3);
             var session=Field<OfficialWorldMapSession>(runtime,"session");
-            var goddess=session.Definition.Entities.Single(e=>e.Id==202);
+            var goddess=session.Definition.Entities.Single(e=>e.Id==(MapId==12?315:202));
             var point=new MapGridPoint(goddess.Grid[0],goddess.Grid[1]);
             var adjacent=new[]{new MapGridPoint(point.X-1,point.Y),new MapGridPoint(point.X+1,point.Y),
                 new MapGridPoint(point.X,point.Y-1),new MapGridPoint(point.X,point.Y+1)}.First(session.Movement.IsFit);
@@ -218,7 +265,7 @@ namespace Zjcs.Editor.Map13Mainline
             var dialog=Field<Zjcs.Official.WorldUI.GoddessTouchDialog>(statues,"goddessDialog");
             Require(sent&&dialog&&dialog.myTouchBtn.gameObject.activeInHierarchy,"Simulated goddess selection did not open the source activation dialog.");
             yield return new WaitForSecondsRealtime(.5f);Canvas.ForceUpdateCanvases();
-            ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map11-goddess-ready.png"));yield return new WaitForSecondsRealtime(.5f);
+            ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map"+MapId+"-goddess-ready.png"));yield return new WaitForSecondsRealtime(.5f);
             var button=dialog.myTouchBtn;
             var pointer=new PointerEventData(EventSystem.current){position=RectTransformUtility.WorldToScreenPoint(null,button.transform.position),button=PointerEventData.InputButton.Left};
             hits.Clear();EventSystem.current.RaycastAll(pointer,hits);
@@ -229,14 +276,14 @@ namespace Zjcs.Editor.Map13Mainline
             Require(visibility.RegionPositions(goddess.Region).All(visibility.IsVisible),"Goddess activation did not immediately clear the original region grids.");
             yield return new WaitForSecondsRealtime(3);CheckFog(runtime);
             var progress=Field<OfflineMainlineProgressSession>(runtime,"progressionSave");
-            Require(progress.Save.World.ActivatedGoddessRegions.Any(r=>r.MapClassId==11&&r.Region==goddess.Region),"Goddess activation was not saved.");
-            ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map11-goddess-unlocked.png"));yield return new WaitForSecondsRealtime(.5f);
+            Require(progress.Save.World.ActivatedGoddessRegions.Any(r=>r.MapClassId==MapId&&r.Region==goddess.Region),"Goddess activation was not saved.");
+            ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map"+MapId+"-goddess-unlocked.png"));yield return new WaitForSecondsRealtime(.5f);
             Call(runtime,"CloseMap");yield return null;yield return null;
             runtime=Open(slot,saves,ui);yield return new WaitForSecondsRealtime(3);
             visibility=Field<OfflineMapGridVisibility>(runtime,"mapGridVisibility");
             Require(visibility.RegionPositions(goddess.Region).All(visibility.IsVisible),"Activated region visibility did not survive cold reopen.");
             CheckFog(runtime);Call(runtime,"CloseMap");yield return null;yield return null;
-            Debug.Log("Map11 original goddess input passed: explicit region completion fixture, simulated map/button clicks, immediate grid unlock and cold restore.");
+            Debug.Log("Map"+MapId+" original goddess input passed: explicit region completion fixture, simulated map/button clicks, immediate grid unlock and cold restore.");
         }
         private static IEnumerator TreeSteps(string slot,string saves,Transform ui,string mapSave)
         {
@@ -304,6 +351,15 @@ namespace Zjcs.Editor.Map13Mainline
         {
             var visibility=Field<OfflineMapGridVisibility>(runtime,"mapGridVisibility");
             var clouds=UnityEngine.Object.FindObjectsOfType<CloudController2>();
+            if(MapId==15)
+            {
+                Require(clouds.Length==0&&Field<object>(runtime,"gridFog")==null,"Original Map15 must retain its explicit absent CloudController.");
+                int count=0;
+                for(int y=0;y<visibility.Component.Height;y++)for(int x=0;x<visibility.Component.Width;x++)
+                    if(visibility.IsVisible(new Pos2d(x,y)))count++;
+                Debug.Log("Formal Map15 preserved original absent fog; visible="+count);
+                return count;
+            }
             Require(clouds.Length==1&&Field<object>(runtime,"gridFog")!=null,"Formal map must own one original common fog instance.");
             var cloud=clouds[0];
             Require(cloud.CloudTemplate.sprite&&cloud.CloudTemplate.sprite.texture.width>0&&cloud.Cloud.sharedMaterial.shader.isSupported,

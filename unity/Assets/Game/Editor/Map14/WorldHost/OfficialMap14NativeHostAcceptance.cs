@@ -106,6 +106,14 @@ namespace Zjcs.Editor.Map14
             if (context.GetCurrentMapStatus().Count != 111)
                 throw new InvalidDataException("Map14 production host lost original region states.");
             Capture(camera, target, Path.Combine(output, "entry-private.png"));
+            // The original table enumerates region 76 before 75. The runtime
+            // status list must still address these states by Region ID.
+            state.PublicRegion = 75;
+            view.RefreshState();
+            var mixed = context.GetCurrentMapStatus();
+            if (mixed[75] != MapRegionStatus.Public || mixed[76] != MapRegionStatus.Private)
+                throw new InvalidDataException("Shared environment indexed states by table order instead of Region ID.");
+            state.PublicRegion = -1;
             state.Public = true;
             view.UnlockRegion(state.Position);
             yield return new WaitForSecondsRealtime(5.25f);
@@ -186,12 +194,14 @@ namespace Zjcs.Editor.Map14
         }
         private sealed class State : IMap14NativeWorldState
         {
-            public Vector3 Position; public bool Public;
+            public void UnlockAllRegionPositions(int region) { } // Map14 fixture has no grid-visibility component.
+
+            public Vector3 Position; public bool Public; public int PublicRegion = -1;
             public Vector3 PlayerWorldPosition => Position;
             public int PlayerLevel => 130;
             public int PlayerSubRank => 12;
             public long PlayerCombatRating => 6000000;
-            public bool IsPublicRegion(int region) => Public;
+            public bool IsPublicRegion(int region) => Public || region == PublicRegion;
             public int GetRegionProgress(int region) => 0;
             public int GetRegionGoddessId(int region) => 0;
         }

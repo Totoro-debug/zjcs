@@ -172,7 +172,7 @@ namespace Zjcs.Presentation.World
             mapSavePath = Path.Combine(new ProfileSlotCatalog(persistentDataPath).GetSlotDirectory(slotId),
                 "map-" + mapClassId + "-save.json");
             uiParent = targetUiParent;
-            avatar = MapProfile.HasNativeUi ? MountMap11Player(characterModel) : characterModel;
+            avatar = MapProfile.PlayerViewResource != null ? MountMap11Player(characterModel) : characterModel;
             characterName = displayName ?? string.Empty;
             closeCallback = onClose;
             // Original FollowSceneActiveSelfController enables the global
@@ -215,6 +215,7 @@ namespace Zjcs.Presentation.World
             FlushPuzzleRegionProgress();
             FlushMap12ChestProgress();
             RefreshNativeMap14State();
+            RefreshConfiguredNativeGround();
             stamina.RefreshStaminaPoints();
             exploration.RefreshExploration();
             dialoguePortraits?.Tick(Time.unscaledDeltaTime);
@@ -294,7 +295,7 @@ namespace Zjcs.Presentation.World
             Vector3 target = storyCameraActive
                 ? storyCameraTarget
                 : avatar.transform.position + new Vector3(0f, 0f, -20f);
-            if (mapClassId == 13) target.z = map11WorldViewSource.cameraZ;
+            if (mapClassId == 13 || MapProfile.NativeGroundLabelResource != null) target.z = map11WorldViewSource.cameraZ;
             worldCamera.transform.position = storyCameraActive
                 ? Vector3.SmoothDamp(worldCamera.transform.position, target, ref storyCameraVelocity, 0.18f)
                 : Vector3.SmoothDamp(worldCamera.transform.position, target, ref cameraVelocity, 0.18f);
@@ -343,7 +344,7 @@ namespace Zjcs.Presentation.World
             mapRoot.SetParent(transform, false);
             WorldMapAssets assets = session.Assets;
             GameObject terrain = null;
-            if (mapClassId != 12 && mapClassId != 13 && mapClassId != 14)
+            if (mapClassId != 12 && mapClassId != 13 && mapClassId != 14 && MapProfile.NativeGroundLabelResource == null)
             {
                 terrain = Instantiate(assets.GroundPrefab, mapRoot, false);
                 terrain.name = "Map" + mapClassId + "Terrain";
@@ -441,6 +442,7 @@ namespace Zjcs.Presentation.World
             if (mapClassId == 12) InitializeNativeMap12();
             else if (mapClassId == 13) InitializeNativeMap13();
             else if (mapClassId == 14) InitializeNativeMap14();
+            else if (MapProfile.NativeGroundLabelResource != null) InitializeConfiguredNativeGround();
             else regions.InitializeFog(terrain.transform);
             if (mapClassId != 13) InitializeSharedMapVisibility();
         }
@@ -464,8 +466,8 @@ namespace Zjcs.Presentation.World
             worldCamera.orthographicSize = DefaultWorldCameraSize();
             worldCamera.clearFlags = CameraClearFlags.SolidColor;
             worldCamera.backgroundColor = new Color(0.08f, 0.12f, 0.12f, 1f);
-            worldCamera.nearClipPlane = MapProfile.HasNativeUi ? map11WorldViewSource.cameraNear : 0.1f;
-            worldCamera.farClipPlane = MapProfile.HasNativeUi ? map11WorldViewSource.cameraFar : 100f;
+            worldCamera.nearClipPlane = MapProfile.PlayerViewResource != null ? map11WorldViewSource.cameraNear : 0.1f;
+            worldCamera.farClipPlane = MapProfile.PlayerViewResource != null ? map11WorldViewSource.cameraFar : 100f;
             worldCamera.cullingMask &= ~(1 << 30);
             worldCamera.transform.position = avatar.transform.position + new Vector3(0f, 0f, -20f);
         }
@@ -565,6 +567,8 @@ namespace Zjcs.Presentation.World
             map12SteleEntities = null;
             nativeMap12World?.Dispose();
             DisposeNativeMap14();
+            configuredNativeGround?.Dispose();
+            configuredNativeGround = null;
             nativeMap14EntityFactory?.Dispose();
             nativeMap14EntityFactory = null;
             DisposeNativeMap13();

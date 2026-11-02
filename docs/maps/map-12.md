@@ -238,7 +238,11 @@ NPC 组合皮肤已按官方 `AppearanceCombineSkin.CreateNewSkin` 迁入：按 
 
 山之国另已恢复两份原实体的309包转换输入及12条原托管引用，核对四节点层级和挂点 PPtr；两张原碑精灵通过同源对象字节校验并绑定本地精灵目录。两份正式原生实体、七点位目录、四视图及独立原演出池宿主已迁入，显式资源引用／逆向补丁核对、8项独立编译和静态检查通过；原生显示工厂／周期事件与回收已接入主地图，个人一次领奖保留碑体，小地图按原公共状态显示；角色档案先提交时的周期数及恢复不重复计数夹具已追加，主地图42项依赖与夹具独立编译通过，原专用弹窗／NPC 及实际运行仍待完成，具体来源与未完成范围仍见[山之国](map-12.md)。
 
-公共网格输入已从当前所选 `884_156692` 的 APK／已校验缓存单独提取：280×210 网格、99 份区域揭格列表、136 份身体模板、2591 个实体放置，角色与视野按原根配置传入。资源入口为 `Resources/World/Mainline/Visibility/Map12/visibility` 与 `bodies`。原 `MapRoot_12` 的完整雾层 subtree 与依赖已转换为 `Resources/World/Mainline/Fog/Map12`。来源与输出哈希见[公共网格输入清单](../../assets/reference/official-map/mainline-grid-visibility-data-source-manifest.json)及[公共雾层清单](../../assets/reference/official-map/mainline-grid-fog-source-manifest.json)。这批是当前版本的独立载荷，未覆盖历史输入；尚未接入本地图正式宿主，不表示完整地图或 Windows Player 已完成。
+公共网格输入已从当前所选 `884_156692` 的 APK／已校验缓存单独提取：280×210 网格、99 份区域揭格列表、136 份身体模板、2591 个实体放置，角色与视野按原根配置传入。资源入口为 `Resources/World/Mainline/Visibility/Map12/visibility` 与 `bodies`。原 `MapRoot_12` 的完整雾层 subtree 与依赖已转换为 `Resources/World/Mainline/Fog/Map12`。来源与输出哈希见[公共网格输入清单](../../assets/reference/official-map/mainline-grid-visibility-data-source-manifest.json)及[公共雾层清单](../../assets/reference/official-map/mainline-grid-fog-source-manifest.json)。这批是当前版本的独立载荷，历史输入保持各自来源。正式宿主已通过公共载入层接入；载入逐项核对地图尺寸和全部实体的放置 ID、类别及坐标。移动与冷读使用公共网格 Module 和 `gridVisibility` 存档字段。原 `MapEnvEffect.UnlockRegion` 的区域光启动后回调已接到同一 Module 的区域揭格，沿原执行顺序立即清除区域网格。当前适配代码及绑定哈希见[公共网格来源](../../assets/reference/official-map/mainline-grid-visibility-source-manifest.json)；不表示完整地图或 Windows Player 已完成。
+
+女神窗口及公共交互已改为按地图档案加载 `Map12/interactions`，保留本图 99 个地区的官方等级、阶位、探寻限制、奖励预览和区域刷新配置，英雄奖励按原模板结果索引及周期权重转换；不再查询只含 Map10／11 的旧地区数组。原始字节、历史版本及输出绑定见[各图交互来源](../../assets/reference/official-map/mainline-interaction-maps-source-manifest.json)。
+
+公共网格接线已通过 Unity 2022.3.57f1c2／Direct3D11 图形 Play Mode：正式入口101位于(248,32)，模拟地图点击移动至(249,32)，可见格由86增至97，全部58,800格与原雾层逐格核对；重开后位置和压缩存档字节保持一致。在地区完成的显式夹具下，模拟选择原失落女神像315并点击原激活按钮，地区2的238格即时揭开且冷读保留。入口、移动、恢复及女神按钮／激活后五张实际截图已查看。此范围不代表连续游玩、全部雕像／每日访问、完整人物头像或 Windows Player 发布完成。
 
 ## 自定义实现
 

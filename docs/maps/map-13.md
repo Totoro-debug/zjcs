@@ -313,6 +313,10 @@ Map13 原剧情 prefab Windows 转换与 NPC 序列：固定 871_156598 的 278 
 
 公共白雾路径已接入正式 Map13 入口：网格状态仍使用已有 871 输入及存档，雾层 subtree 与依赖显式使用当前选择的 884_156692 资源。两版 `CloudController2` 的归一化源码 SHA256 一致；新来源未覆盖旧来源记录。`scripts/prepare_mainline_grid_fog.py` 从官方 MapRoot_13 中提取 `myVisibilitySlot` 的原 10 个对象、原 Sprite 网格、纹理全部 mip、材质字段与 shader 程序，移除外层父引用后绑定已迁移脚本；Windows 资源入口为 `Resources/World/Mainline/Fog/Map13`，清单为 [公共白雾来源](../../assets/reference/official-map/mainline-grid-fog-source-manifest.json)。正式宿主通过 `OfficialMainlineMapRuntime.GridVisibility.cs` 的公共载入层恢复可见性，在原 URP 地形后创建公共雾层；载入时核对地形尺寸、角色及全部2,690个实体放置的编号、类型、坐标，保持原地区标签查询、来源断言与 `map13GridVisibility` 字段。事务回滚更换网格实例时重新绑定雾层，结束时先退订事件再释放网格。静态元数据检查和 `ProjectTools.Validate` 通过。新路径已通过 Unity 2022.3.57f1c2 编译及带图形 Play Mode：正式入口 (113,233) 的 57,600 格雾层与压缩存档逐格一致；模拟鼠标地图点击移至 (114,233)，可见格由67增至80，原扩散结束后全部格一致；退出重开后坐标与存档字节不变，80个可见格恢复。原 Sprite／纹理／受支持 shader 与实际云网格均已检查，入口／移动后／恢复截图已实际查看。该验证未覆盖女神交互清雾、跨图传送揭雾、全部剧情、其他地图或 Windows Player；未据此声明整图或完整功能发布。
 
+公共交互配置通过地图档案独立加载 `Map13/interactions`，从本图已核验的 `871_156598` 原始配置与 EC 模板转换 106 个地区的等级、阶位、探寻限制、奖励预览、区域刷新及英雄结果索引，不再沿用仅含 Map10／11 地区的旧表。输入及输出哈希见[各图交互来源](../../assets/reference/official-map/mainline-interaction-maps-source-manifest.json)。
+
+地图档案与公共地形绑定调整后，正式入口、模拟点击(113,233)→(114,233)、57,600格白雾核对及存档重开已再次通过图形 Play Mode，可见格仍为67→80，三张实际截图已查看。此回归未覆盖全部新交互配置消费与各类雕像。
+
 ## 自定义实现
 
 已确认的跟随者单机方案：`AddNpcFollowerNode` 按节点配置将 8402／8440／8441／8442 去重写入持久化跟随者列表，`RemovePlayerNpcFollowerAllNode` 清空。用户允许手动实现缺失显示类，现已补入 `OfficialMap13NpcFollowerView`；地图宿主管理跟随移动和持久化，显示类交由 `OfficialNativeNpcModelView` 管理模型、原材质及动画生命周期。该模块复用经逐项核对一致的 Map12／Map13 两份官方骨骼与 Atlas 数据包，恢复原合并皮肤、五张原图集、五份原材质、原 shader 和 NPC 模型变换。8402 原缩放为 (0.23,0.23,1)，其余三者为 (0.3,0.3,1)，模型偏移为 (0,-0.5,-0.5)。

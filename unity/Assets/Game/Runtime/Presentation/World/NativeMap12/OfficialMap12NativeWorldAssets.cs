@@ -36,5 +36,6 @@ namespace Zjcs.Presentation.World.NativeMap12
         bool IsPublicRegion(int region);
         int GetRegionProgress(int region);
         int GetRegionGoddessId(int region);
+        void UnlockAllRegionPositions(int region);
     }
 }

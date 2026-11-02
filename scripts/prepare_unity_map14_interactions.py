@@ -52,7 +52,7 @@ def witch_payload(tables, entities):
     return dict(witchInfos=infos, witchResultEffects=effects, witchPeriodicityAwards=awards)
 
 
-def interaction_payload(templates, tables):
+def interaction_payload(templates, tables, map_id=14, region_count=111, version=VERSION):
     statuses = {row["ClassId"]: row for row in tables["status_effect"]}
     heroes = []
     for entity_id in (6570, 6571, 6572, 6573):
@@ -86,14 +86,14 @@ def interaction_payload(templates, tables):
         heroes.append(dict(EntityClassId=entity_id, Effects=effects, PeriodicAwards=awards))
     regions = [dict(MapClassId=row["ClassId"], Region=row["Region"], Level=row["Level"],
                     SubRank=row["SubRank"], ForbidExplore=row["ForbidExplore"], DropItems=row["DropItems"])
-               for row in tables["Map/map_region"] if row["ClassId"] == 14]
-    if sorted(row["Region"] for row in regions) != list(range(111)):
-        raise ValueError("Dragon Country interaction regions changed")
-    return dict(manifest=VERSION, mapClassId=14, heroes=heroes,
+               for row in tables["Map/map_region"] if row["ClassId"] == map_id]
+    if sorted(row["Region"] for row in regions) != list(range(region_count)):
+        raise ValueError("Original interaction regions changed for map " + str(map_id))
+    return dict(manifest=version, mapClassId=map_id, heroes=heroes,
                 parameters=[dict(EntityClassId=row["EntityClassId"], CompleteState=row["CompleteState"],
                                  PublicDefaultState=row["PublicDefaultState"], Progress=row["Progress"],
                                  CostItems=row["CostItems"] or []) for row in tables["Map/entity_extend_parameter"]],
-                regions=regions, areas=[row for row in tables["Map/map_area"] if row["ClassId"] == 14])
+                regions=regions, areas=[row for row in tables["Map/map_area"] if row["ClassId"] == map_id])
 
 
 def build():

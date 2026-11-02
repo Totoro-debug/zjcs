@@ -17,14 +17,13 @@ namespace Zjcs.Presentation.World
 
         public static OfficialMainlineInteractionCatalog Load(int selectedMapClassId = 11)
         {
-            bool currentDragonCountry = selectedMapClassId == 14;
-            TextAsset source = Resources.Load<TextAsset>(currentDragonCountry
-                ? "Map14/interactions" : "World/Mainline/interactions");
+            var profile = OfficialMainlineMapProfile.Get(selectedMapClassId);
+            TextAsset source = Resources.Load<TextAsset>(profile.InteractionResource);
             var result = source == null ? null : JsonUtility.FromJson<OfficialMainlineInteractionCatalog>(source.text);
-            if (result == null || result.manifest != (currentDragonCountry ? "871_156598" : "854_156383") || result.heroes?.Length != 4
+            if (result == null || result.manifest != profile.InteractionManifest || result.heroes?.Length != 4
                 || result.parameters == null || result.regions == null || result.areas == null
-                || (currentDragonCountry && (result.mapClassId != 14 || result.regions.Length != 111
-                    || result.regions.Any(region => region.MapClassId != 14)))
+                || (profile.InteractionResource != "World/Mainline/interactions" && (result.mapClassId != selectedMapClassId
+                    || result.regions.Length != profile.RegionCount || result.regions.Any(region => region.MapClassId != selectedMapClassId)))
                 || result.heroes.Any(hero => hero.PeriodicAwards.Length != 3
                     || hero.PeriodicAwards.Sum(award => award.Weight) != 100))
                 throw new InvalidDataException("The official shared map interaction catalog is incomplete.");

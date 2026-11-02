@@ -1668,6 +1668,19 @@ unity/Assets/Game/Resources/Partners/OfficialPartnerDialoguePlaybackAssetCatalog
 
 # Map11 runtime hashes the original LF definition bytes.
 unity/Assets/Official/World/Map/11/map11.json text eol=lf
+# Map15 uses the same original-byte source verification.
+unity/Assets/Official/World/Map/15/map15.json text eol=lf
+# Original Map14 table guards compare the original LF bytes.
+unity/Assets/Official/World/Map/14/Source/templates.json text eol=lf
+unity/Assets/Official/World/Map/14/Source/tables.json text eol=lf
+scripts/prepare_mainline_interaction_maps.py text eol=lf
+scripts/prepare_unity_map14_interactions.py text eol=lf
+unity/Assets/Game/Resources/Map12/interactions.json* text eol=lf
+unity/Assets/Game/Resources/Map13/interactions.json* text eol=lf
+assets/reference/official-map/mainline-interaction-maps-source-manifest.json text eol=lf
+scripts/prepare_mainline_map15_configurations.py text eol=lf
+assets/reference/official-map/map15-configurations-source-manifest.json text eol=lf
+unity/Assets/Official/World/Map/15/source-manifest.json text eol=lf
 
 # Keep the native MixNext source fingerprints stable on Windows checkout.
 scripts/record_battle_native_mix_next.py text eol=lf
@@ -1707,3 +1720,28 @@ scripts/record_battle_scene_weapon_playback.py text eol=lf
 scripts/prepare_battle_voodoo_grid.py text eol=lf
 unity/Assets/Game/Runtime/Official/Combat/FightOfficialVoodooGridRules.cs* text eol=lf
 assets/reference/battle-rules/voodoo-grid-source-manifest.json text eol=lf
+
+# Preserve shared native-ground source and generated view identities.
+scripts/prepare_mainline_map15_world_view.py text eol=lf
+scripts/record_mainline_native_ground_sources.py text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/MainlineNativeGround/** text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/MainlineNativeGround.meta text eol=lf
+unity/Assets/Game/Resources/Map15/BaseGround/** text eol=lf
+unity/Assets/Game/Resources/Map15/BaseGround.meta text eol=lf
+unity/Assets/Game/Resources/Map15/Native/** text eol=lf
+unity/Assets/Game/Resources/Map15/Native.meta text eol=lf
+assets/reference/official-map/map15-world-view-source-manifest.json text eol=lf
+assets/reference/official-map/mainline-native-ground-source-manifest.json text eol=lf
+
+scripts/prepare_mainline_map15_native_ground.py text eol=lf
+
+unity/Assets/Official/World/Map/15/NativeCurrent/** -text
+
+unity/Assets/Official/World/Map/15/NativeCurrent.meta -text
+
+unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkeletonData.World.cs* text eol=lf
+
+assets/reference/official-map/map15-current-ground-source-manifest.json text eol=lf
+
+# Preserve the original butterfly payload bytes verified at runtime.
+unity/Assets/Official/World/Map/14/NativeButterflies/models.json text eol=lf

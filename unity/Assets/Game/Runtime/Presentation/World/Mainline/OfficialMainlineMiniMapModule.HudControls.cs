@@ -28,11 +28,10 @@ namespace Zjcs.Presentation.World
         {
             public void CreateMinimap(GameObject prefab)
             {
-                // The APK has no standalone Map14 minimap prefab. The native
-                // Map14 world owns its terrain/labels and therefore runs
-                // without the shared minimap geometry instance.
-                if (prefab == null && host.mapClassId == 14) return;
-                if (prefab == null) throw new InvalidOperationException("Official Map10 minimap prefab is missing.");
+                // Map15's original MiniMapPath is empty. Map14's existing native
+                // adapter has not yet bound its separate minimap geometry.
+                if (prefab == null && !host.MapProfile.RequiresMiniMapPrefab) return;
+                if (prefab == null) throw new InvalidOperationException("Official Map" + host.mapClassId + " minimap prefab is missing.");
                 var viewRoot = new GameObject("Map10MinimapCameraRoot");
                 viewRoot.transform.SetParent(host.transform, false);
                 GameObject map = Instantiate(prefab, viewRoot.transform, false);

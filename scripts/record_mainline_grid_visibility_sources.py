@@ -54,8 +54,13 @@ def build():
     outputs += ["unity/Assets/Game/Runtime/Presentation/World/Mainline/" + name for name in (
         "OfficialMainlineMapRuntime.GridVisibility.cs", "OfficialMainlineMapRuntime.GridVisibility.cs.meta",
         "OfficialMainlineMapProfile.cs", "OfficialMainlineMapRuntime.cs",
+        "OfficialMainlineInteractionCatalog.cs",
+        "OfficialMainlineMiniMapModule.HudControls.cs",
         "OfficialMainlineMapRuntime.Persistence.cs", "OfficialMainlineMapRuntime.Puzzles.cs",
         "OfficialMainlineMapRuntime.Map13Trees.cs", "OfficialMainlineStatuesModule.Goddess.cs")]
+    outputs += ["unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.NativeMap12.cs",
+        "unity/Assets/Game/Runtime/Presentation/World/NativeMap12/OfficialMap12NativeWorldAssets.cs",
+        "unity/Assets/Game/Runtime/Presentation/World/NativeMap12/Map12WorldEnvironment.cs"]
     outputs += ["unity/Assets/Game/Runtime/Presentation/World/OfficialMap10RuntimeData.cs",
         "unity/Assets/Game/Editor/Map13Mainline/OfficialMap13MainlinePlayAcceptance.cs",
         "unity/Assets/Game/Editor/Map13Mainline/Zjcs.Editor.Map13Mainline.asmdef"]
@@ -65,12 +70,16 @@ def build():
         "OfficialMap13MiniMapMasksAcceptance.cs", "Zjcs.Editor.Map13.MiniMap.asmdef")]
     result = {
         "format": 1,
-        "operation": "Extract the existing local visibility implementation into one configuration-driven module. Preserve the migrated original component, body/camp queries, event ordering, RLE and legacy Map13 save field. Bind Map11 and Map13 through the same placement-checked loader, snapshot lifecycle and original fog. Other maps use the generic gridVisibility save field. Restore also rebinds live fog after a rollback. Keep original Map13-specific source assertions in its loader. Validate local snapshot runs before the original recovering decoder.",
+        "operation": "Extract the existing local visibility implementation into one configuration-driven module. Preserve the migrated original component, body/camp queries, event ordering, RLE and legacy Map13 save field. Bind Map11, Map12, Map13 and Map15 through the same placement-checked loader, snapshot lifecycle; Map15 preserves its original absent fog. Map12 forwards the original region-light unlock callback to the same module. Other maps use the generic gridVisibility save field. Restore also rebinds live fog after a rollback. Keep original Map13-specific source assertions in its loader. Validate local snapshot runs before the original recovering decoder.",
         "official_source_receipt": record(official),
+        "official_region_unlock": record("unity/Assets/Game/Runtime/Official/World/NativeEnvironment/MapEnvEffect.cs"),
         "offline_predecessor": {"commit": PREDECESSOR, "path": OLD, "sha256": sha(previous)},
         "active_map_bindings": [map_binding(11,
             "unity/Assets/Official/World/Mainline/Visibility/Resources/World/Mainline/Visibility/Map11/visibility.json",
             "unity/Assets/Official/World/Mainline/Visibility/Resources/World/Mainline/Visibility/Map11/bodies.json"),
+            *[map_binding(n,
+                f"unity/Assets/Official/World/Mainline/Visibility/Resources/World/Mainline/Visibility/Map{n}/visibility.json",
+                f"unity/Assets/Official/World/Mainline/Visibility/Resources/World/Mainline/Visibility/Map{n}/bodies.json") for n in (12, 15)],
             map_binding(13, "unity/Assets/Official/World/Map/13/Resources/Map13/grid-visibility.json",
                 "unity/Assets/Official/World/Map/13/Resources/Map13/grid-entities.json")],
         "unchanged_official_implementation": [record(p.relative_to(ROOT).as_posix()) for p in sorted(

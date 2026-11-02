@@ -21,7 +21,12 @@ namespace Zjcs.Offline.World.NativeMap14Labels
             {
                 // TMP can add glyphs in Awake, before MultiLanguageText.Start refreshes
                 // its font. Bind the same original font data to its local instance first.
-                component.GetComponent<TMPro.TMP_Text>().font = fonts.GetMultiLanguageFontAsset().FontAsset;
+                var text = component.GetComponent<TMPro.TMP_Text>();
+                // The 3D TMP font setter accesses its renderer before Awake.
+                // Populate the package's lazy cache from the original component.
+                if (text is TMPro.TextMeshPro meshText && !meshText.renderer)
+                    throw new InvalidOperationException("Original world-space text has no Renderer.");
+                text.font = fonts.GetMultiLanguageFontAsset().FontAsset;
                 component.BindLanguageServices(ui, language);
                 component.LocalizationTextService = localization;
                 component.MultiLanguageFontService = fonts;

@@ -1,0 +1,545 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "operation": "Restore omitted original Map15 map/world, region, access-condition and complete entity-parameter rows. Preserve the original empty MiniMapPath. Keep the historical definition's other fields, with every navigation cell and navigation field explicitly compared against the selected actual ground; no whole-version equivalence is asserted.",
+  "predecessor": {
+    "commit": "fa3fa56ebc05f52d698d5266f040caaa4a25b8f7",
+    "definition": {
+      "path": "unity/Assets/Official/World/Map/15/map15.json",
+      "sha256": "9bb23d7d84c43624c0e6908353f692ffff6b3a48f09456c7fdbd077373728410"
+    },
+    "source_manifest": {
+      "path": "unity/Assets/Official/World/Map/15/source-manifest.json",
+      "sha256": "20afe3ce654106e61cf43f34986b29b62b20b3f5317cf287a549072fabf42540"
+    }
+  },
+  "inputs": [
+    {
+      "bundle": "defaultpackage_assets_config_ec_maprootentitylite.bundle",
+      "bundle_hash": "63f4aebd6e13561813369e56fe345ec8",
+      "path_id": "-8739360442931495173",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/63f4aebd6e13561813369e56fe345ec8.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 385610,
+      "bundle_sha256": "73abe48ef89f1881bb9dd1a0283cda49b271db4d0f868f631a38e7ab69f6b467",
+      "payload_sha256": "a78204605902add9fa0d605a8d9766729f426eea8c617b1583c59aa6fcdce9e4",
+      "object_sha256": "3bec6781dca1b8e29b8a90c1f0e9d022e421c2d0685f30d96638ebaf279d3ef6"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban_map.bundle",
+      "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+      "path_id": "8484321971040082196",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+      "raw_size": 197305,
+      "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7",
+      "payload_sha256": "0bc7e55e56586c0e0f8b8ba0e6c4f0f6e65ef703ff41301e808988ceed0670dd",
+      "object_sha256": "48fd03fe49163ae85c49b885c2d22de48a64df0bd1012e187b90f0e251391e00"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban_map.bundle",
+      "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+      "path_id": "-6051789679960494712",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+      "raw_size": 197305,
+      "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7",
+      "payload_sha256": "beeae896bd37221692243faae8b0c353941b0a42dac66eedb28a6314df276df4",
+      "object_sha256": "8bad50ab4aa195df71f84382a88ec638a2515759cf437d530861e24bcdf04a61"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban_map.bundle",
+      "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+      "path_id": "-475710695530452369",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+      "raw_size": 197305,
+      "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7",
+      "payload_sha256": "04525b1a307baeed8ed49e4004a855b2e0239176718ac08c912f34f2e0467bfa",
+      "object_sha256": "c62b345792b69067902a1eff4a5b7f4abdae89de465c24f5d63b7366c924fcb2"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "2135504609496173008",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "payload_sha256": "87610428d6195c06ff55291ae24423cc949df7ac25bfb8953cc3798a1aaa31e5",
+      "object_sha256": "dd7aad6a00838406a0333a6e97ae3b199f5fae728b3bf6d9fdf6e52bef5ba6b6"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban_map.bundle",
+      "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+      "path_id": "-957009542101312328",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+      "raw_size": 197305,
+      "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7",
+      "payload_sha256": "b2e99626a80beb4e07669d42f0c738a5620b30683a80757679103694d85e93d4",
+      "object_sha256": "3e1d2c7e522869cd5b93bd54b24fa14d7e965633041ae3ee8209fbc130616823"
+    }
+  ],
+  "prepared_source": {
+    "path": ".tools/source-packages/prepared-code-source-manifest.json",
+    "sha256": "3980e0fee6807cb2ac398a7713cb16cf747c5bef108de89e1c301bc77945d7e9"
+  },
+  "constructors": [
+    {
+      "path": ".tools/source-packages/official-code/global-metadata.dat",
+      "sha256": "c0fe5e062fb3ed1814781e54fd1b4859757970632655138adc091820ded88e0e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/TbMapInfo.cs",
+      "sha256": "1e710760f1fd5ffe755ad0557de5d03886a5d0d15bf3405bb60f6dae9c927d36"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapInfo.cs",
+      "sha256": "38a537f395d85bb38bc299898ba682265915388ffc3fc21ec40ea18dcecc3e47"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/TbMapWorldInfo.cs",
+      "sha256": "c36d30a01c3b4dd5391668f2f8f0c606396a435dc9af7f2d969e872f51f0ff86"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapWorldInfo.cs",
+      "sha256": "bbb818e98ec2f7a1798476ac4308aaaa9a2b5e81d882fac4ba10315ccf912118"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapPartInfoBase.cs",
+      "sha256": "88f4d8137d4f45c6b09f78a9d630f0f60806fb9e87388c1356f03e11c57925aa"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/ICondition.cs",
+      "sha256": "12a4005edaf53df080240808b91e6e3e55fc08bceb91fd154e6c3993cdc704ff"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapWorldActivedCondition.cs",
+      "sha256": "44b6780760161608245e96fe0b0e304d21f243c9ce4221ee4055df1c6154c24c"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/TbMapRegionInfo.cs",
+      "sha256": "258715211bf3d24f619622a6fecad7382f23541751266910be8a1e2b35402d71"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapRegionInfo.cs",
+      "sha256": "c98644f4854ff2f4c4e03b4e517d8d6799d323f6eabb7bbc6f64d281c2537a36"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/TbConditionInfo.cs",
+      "sha256": "c63e330312d43ad3e89e8e654863b8652d395246b33ba9796425c7ff996dae63"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/ConditionInfo.cs",
+      "sha256": "7621ca17ebe2cfa68b441ae7e6c8e370447ae89fab9a0222aaecc2e32161ceb3"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/NoneCondition.cs",
+      "sha256": "f52b9e5e8f51ffec64b2781a9a0395ca38f6032ed367960a6198fdd803ad586f"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapUnlockCondition.cs",
+      "sha256": "4967a1cb05b4d1029b1590501eb1fb6e0957193c9c7827626eed5368dde779f8"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/SubRankCondition.cs",
+      "sha256": "5754156223f0fba2094056f64be9f558868de2d2bd036201a67cdd9cfef5ce29"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/AnyDailyDungeonUnlockCondition.cs",
+      "sha256": "242a4cc479da09ae1f9ca60bb3f4d0ea35b5b50f28bbfde40b8f9a83c0c1a135"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/CompositeOrCondition.cs",
+      "sha256": "b4d4f14990bcc59bb196a4bfcc360df4d38f1142e040ec9015c14211b6530aca"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/CompositeCondition.cs",
+      "sha256": "9e45aefb344d4e75fffe52fa8f0fcea3e4886d3e396b2c3fa10128ebe35cf54d"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/StoryCountCondition.cs",
+      "sha256": "a3d4ce9ab5ac81304ab0ef1b25991b55eabd7609684e9351ed846453007849fc"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/LevelCondition.cs",
+      "sha256": "f3c1f31e2877f83a97df6f48d7230f50b48b5b0cf3420bb542a363ee37c8000e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/PlayAsYouDownloadCondition.cs",
+      "sha256": "7a1007446987d58a5346a7878e4058a5d810629430509e938f2ad1047ae6b714"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/HasItemCondition.cs",
+      "sha256": "fca0fa79cc49354068fc32d136863d5a77181fd9ae93596c1671a9f804641dd5"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/HasOrUsedItemCondition.cs",
+      "sha256": "d37a5c11aa2efd3f9fab1650642cf0d0484fd5849fb77ade10978ded720e06eb"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/AnyMapGoddessActivedCondition.cs",
+      "sha256": "dc2c945985a87f2e651349acfe8016ac59fe5698e0629477d2c05fc472846a8b"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/HasManualMeetNpcCondition.cs",
+      "sha256": "c3465c86bfe691d5808187ee940dc7bbebac2417750254bedafc5970e1fd2ec1"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/InLegionCondition.cs",
+      "sha256": "a409ddb2ce5f18dc143db1d3a6bcf22fc5f29646c6ef99cd1e7db7d328cd7caa"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MaxProfessionRankCondition.cs",
+      "sha256": "a2dbe26e8ac46e01db42d038fc4a86b6bae4ad4e460d20c307a417ab3becc7bf"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/WorldMapProgressCondition.cs",
+      "sha256": "d5285a197953c12c27748f12990047d59804c70b83079232c518192238f3a021"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/SeasonBlessLevelCondition.cs",
+      "sha256": "01a73760d0acb2580af46b6ff5b5681b1cbf0949d737aa2ae91e953119b2e350"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/NpcAdventureUnlockCondition.cs",
+      "sha256": "88fad13924ffee04429707b0737061bb9e04ae666772d581c2e4ffb9f2d698ec"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/RegisteredDaysCondition.cs",
+      "sha256": "26740c526b7af5d2f1d59cfcedefe9f91e2fafde3a3bbb99bcce1afb871280ac"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/ProfessionUnlockCondition.cs",
+      "sha256": "429516e38dba7f7f5aaae990e6df008d083553875fbd63c8c9f8a0286afee545"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapGalaxyIsClearedCondition.cs",
+      "sha256": "0d3a2d933018d1cd7686f74ee8004621f821218ac1e7d91aaf14bf99e72cdcfd"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/CompositeAndCondition.cs",
+      "sha256": "1a7d5ccf8f1dcf8401e1a46aeb4596bd464f5c8774edc50adcdb4d55b111571c"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/AlwaysCondition.cs",
+      "sha256": "d5525bc8d9c519a74f2ed9d36c4a7ed550a5ccc041c348f1701fc8273b954860"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/SubRankBetweenCondition.cs",
+      "sha256": "738e80ce5b1556b22e9fffbfb5e615c971176a2793d936f2bd8b18e23693a602"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/PlayerProfessionFactionCondition.cs",
+      "sha256": "bbdc25a4f79632e1cdc03418324198387dc20994772e5ea79dcc94c158ff3eeb"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/PlayerProfessionCondition.cs",
+      "sha256": "aab00582befdfa0170aaaadc7b94fff520a3e7a297778ed094f1d6a207c41655"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/StagePassCondition.cs",
+      "sha256": "f116338ed5c03a4f0ac22183861eb5a3eb2f5c63d09885356002217f5d4bf47a"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/DemonBattleLayerPassCondition.cs",
+      "sha256": "f9036f38526802373d8edf31d4828c6f771d82afba3c81ac2595f98f5180525a"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/DemonBattlePassCondition.cs",
+      "sha256": "77b90a8743fc2f76e199159aa99e3f7aad06a235ef08988e1145e15409235431"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapWorldAloneStatusCondition.cs",
+      "sha256": "801ded9fd70165486c170ce34650012ae3cb13ea0920ffea1e8bbea4433dcbfb"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/LogicalNotCondition.cs",
+      "sha256": "1d2d73d8b550dd85e3c73e4b522a56ac4645dafefd9cd1fc7f851214580ff45f"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapLogicEntityEndByTagCondition.cs",
+      "sha256": "51be63de02c93729761e25201991595a49b03bdd9d49412234217e4441be6a5e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/ServerSeasonUnlockDaysCondition.cs",
+      "sha256": "036872e56f561817f29929b82ee80cac709fefd9e78320807d6183f7edec3fcd"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/IsActivityOpenCondition.cs",
+      "sha256": "e76e1f4a0eb38aeb4ecdaa0b433c17d45f2cb7509cf673ab8bd385217a3f693e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/AwardRetrieveItemMaxDaysCondition.cs",
+      "sha256": "e9822ec21c48416cddd8489aa40f7b2e20ef705913fc336c8b276e0fd2fbf309"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/AwardRetrieveItemCountCondition.cs",
+      "sha256": "31cf62fd19330de9555086d10a111cbf6572ddd385ab69cece7c875c91f8093c"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/PlanesIdCondition.cs",
+      "sha256": "90357805e080cfb0a53bf92997239129b319c015c782393da38a5e58108cd061"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/ServerDaysCondition.cs",
+      "sha256": "13174356ac4c1fc96e2f6de4e842c070a9412150ecb5c92c519d4618a855c49e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/NoBlessCombatRatingCondition.cs",
+      "sha256": "9a6469fd27ea919855b6a11ddbec5a8258d1ef8300637997c4df70b766bb445f"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/AccumulatedPayCondition.cs",
+      "sha256": "0eaf3a283d03e06e71ed2a3b65ec58f87c4933aa90a26bda44efc489b0bc12b3"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/EquipLevelCondition.cs",
+      "sha256": "abf3f6b0e677afd7f7d07016f4a88a53051485b943342980e91c6f53425748d2"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/EquipSeasonLevelCondition.cs",
+      "sha256": "82f2a6e627b0f2876e576fe65ba79f01bc454137580162afde30e1dfced6aba2"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapLocationCondition.cs",
+      "sha256": "def782b1f2b231ae5557c7e4328d353deb8a4906fabcc3f1db56cadd3c2d27a5"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapRegionActivedCondition.cs",
+      "sha256": "1152e0d30105cfe5e9962e4bc4b9b64ac428780ec63fd3afa4db0f71c3ac8056"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapGoddessCondition.cs",
+      "sha256": "7c705f054a8bd091faa55279b1fef5173dd1a1597c738bb9d05cab9717c12f77"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/NpcAdventureFinishedNodeCondition.cs",
+      "sha256": "bb1c35710f10b1af43a2ed0083c54bd7dabd9550e0cc29226a9247a3b91ec4a4"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapRegionGoddessCondition.cs",
+      "sha256": "28cc2f2d4c4e910b728532a893ed8b88148f9b234b88d6012619d2c9d18cef22"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/HasItemTypeCondition.cs",
+      "sha256": "6da637782893312e7684ec945db2a108b4271c442f37741852b67e107c5f827f"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/HasItemTypeWithQualityCondition.cs",
+      "sha256": "a4ed9c9983a1aa20cc0f9c466e1e8a6d55dad477f4d64e699caf510a162e07f2"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/StoryStatusCondition.cs",
+      "sha256": "810d9d0d67a3e2637e1edcb458eb9d4acf81ea87888a10bfd0211b6a72ff0c13"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/GemRankCondition.cs",
+      "sha256": "fdb16e50cb6a1ce3148049a62aeef58fe7d54f4badaa596da9d802004d84cb0e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/PlayDialogCountCondition.cs",
+      "sha256": "891e82bceaf7ddc86a0694e4e2c550f59f877e7cf935dae73271cf9b788af7cd"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/HandInItemTimesCondition.cs",
+      "sha256": "78beb394ecdfd397c19f855f1960f887350a3a620e3e4b9eb567ec10f8f74981"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/InitialWeaponCondition.cs",
+      "sha256": "aa873282f13ea2c0aa2b8cdb31c09416e840c6d6dc2299ef86cc1bb2c2c4f726"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/HasStatusCondition.cs",
+      "sha256": "3f2f1dabc98e3d9194411fa343dc530022fe1c46c67cb31d592d482caa7ab86f"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/CanGetItemsCondition.cs",
+      "sha256": "e226c16d5fac1dbd45d4e1b101a686df8c3b84034bc8063ef297add419ece306"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/CanFightMonsterCondition.cs",
+      "sha256": "61783cb568e6609fce6913ab659d8443224960f7cb736ea7cfa2d2492d2cdab8"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/NpcFriendshipLevelCondition.cs",
+      "sha256": "e642aad9b169d7a9cd54b1995aaed4f61c602e553726fd684e93963696e6759d"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/NpcFriendshipMaxLevelCondition.cs",
+      "sha256": "065bba17b71ec77ba1dae670af19f29096c0a948b08cad9e989573b351c3d0f1"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/DemonKingChallengeableCondition.cs",
+      "sha256": "e07a5bd22dd6372c387412d8d642bd94c673c7608e218fe2d51ed2a158f28e21"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/JointStrikeActiveOpenCondition.cs",
+      "sha256": "256cebac7e24fb0ac131eba72bbc18f9e092af814ff4318adf859bb143076c55"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/ActivityLiveSignUpCondition.cs",
+      "sha256": "3e523d44b6988fd0caa267834fdb5c0ea88f1ce14c1c972d913f7cdb63d9b377"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/HasAnyNpcExclusiveGiftCondition.cs",
+      "sha256": "ab6733eb0c899ab98b8f9cb76c8a2273e9d0b798469f2c4c98956db4a2db349e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/HasNpcCountCondition.cs",
+      "sha256": "e2f566a5c7446673ef93e763a6c61a5fb688f29c8601db217a23aeae6ee1a845"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/NpcTalentTreeNodePreNodeActiveCountCondition.cs",
+      "sha256": "53006a3f6500eebe8eb69882ebc3c264ea6349073219593c26724e98a2b9e839"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/CombatRatingOrRankSuppressCondition.cs",
+      "sha256": "64c3c2b2df0b978faff5a6d4d99b54652074cce0fee3e438afae72d9248b4460"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/DailyDungeonPersonalGradeCondition.cs",
+      "sha256": "657c607949b4045cf4e0509e5ee27c8fe081e0e16566648a6a66863c18a2240b"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/DailyDungeonUnlockCondition.cs",
+      "sha256": "2b7d17c8d2b6736f6fbe6c18a83b61fded2289b08bb02ec63137eb07a219858e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/ServerRankUnlockDaysCondition.cs",
+      "sha256": "f699a9792e9994ed535a006c7dc097316bb9bdafc61d903ceecab5dc7a95ac46"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/DailyDungeonUnlockDifficultyCondition.cs",
+      "sha256": "f4d1608a57b4b7d0301e1fa5a57a31fbc83e9f830e1c2cd99c379a148caebb07"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/AccumulatedPayStarValueCondition.cs",
+      "sha256": "6fbbdf34b3fe033f78ed7c5e60628d8305dc771599db9e9b0651272d35b334a6"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/LogicDomainServerDaysCondition.cs",
+      "sha256": "d27dcd00991a062fb266a6c671ea0144c9a133099d9073f7fed7453598bac387"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/PlayerRankAtServerRankCondition.cs",
+      "sha256": "ea6f06e48c2e453a604c24160030a49f28336b6d15b3f34b1b130c25c4f3e9e4"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/PlayerChannelCondition.cs",
+      "sha256": "f8eb485a4ad60bddac86d61a99ce70b633ee08d95975c7b8accd2be3262637b6"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/PlayerMediaCondition.cs",
+      "sha256": "15ad9b00374fb2f5801fb249fe1bff1e826874f5a706c258db5ab27c8d3009f6"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/ReleaseTypeCondition.cs",
+      "sha256": "1de588d2bacd8ff7f5a7de8b72739b256aeb4518f071cd2e9fa68987eb9a533c"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/RegionCodeCondition.cs",
+      "sha256": "4d1f14fd4fd30a44f59d0b6ac7eebcd704bdb990e054c34bd800820c7c0f0e21"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/PlayerLoginCondition.cs",
+      "sha256": "fd30349068dddffe259c42d4a533be57650beb11d01e27ea809ac3dc61392279"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/SDKLoginCondition.cs",
+      "sha256": "bc5d7443add08a7a7f7cdb9bbb971921ed3b37337210837962a720808d84f4d6"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/EnterpriseWXLinkedCondition.cs",
+      "sha256": "bf98e348dc8ae786526592f3337d85bfbfebe39ceaa23d77099415f085fd1d34"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/PlanesMergeActivityEnableCondition.cs",
+      "sha256": "3be4a2b0ff9cfaf377bd571521cee5c0c7613ca6e4204cac618402a905a01171"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/DomainTypeCondition.cs",
+      "sha256": "a08171d99aa1298878019fe9184139a65fdb38d3a489ba8b39ae96ff8e55c813"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/AccountLostDaysCondition.cs",
+      "sha256": "29ff7820054fee727bb4a3933ff7eb5fda8cf91132f6490454a03614371b7592"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/RecentDaysAccumulatedPayCondition.cs",
+      "sha256": "d1a3a5cb21d146d02ccc5d875b95d11ba7cd0391011bf414da00fb12dc6d5898"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/RecentDaysAccumulatedCostCondition.cs",
+      "sha256": "6094c8ac4bab561e2cee4a6105c8b936843336c127a60834fe8f2f3614a4a582"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/GeneralRankUnlockCondition.cs",
+      "sha256": "754ef5f458abfabade54425c15d31dabdaead80dbdd17ef03fa2223af2d8ae89"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/LegionMapBuildingLevelCondition.cs",
+      "sha256": "6b5d2788aa0433c2dfb17b4c0943f382fa6189a49f6d6dfb924b6203be52a546"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/CelebrationPhotoAlbumPersonalNpcInRangeCondition.cs",
+      "sha256": "9369ee1899acc159885e0ac49601374c0b78621ce7d51e5975b1bd22f3aafaf7"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapCurrentRegionActivedCondition.cs",
+      "sha256": "341d945d3e1c7cc85cef6bc77a008691e73d518175e157c42dc481d146415c4b"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/TbEntityExtendParameterInfo.cs",
+      "sha256": "55e9736fd13d78290da60583f951f724c1c261831a2b02536e42e1f49ff0befb"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/EntityExtendParameterInfo.cs",
+      "sha256": "574e01256562165a68d4a0c9710db1594890f3841374aef67e07da156da3a49b"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/StageCostItem.cs",
+      "sha256": "d58df808f7c160cd8c58dea8d7fe50026536eeea06bcea70ea624408dcc86e39"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/StageCostItemSingle.cs",
+      "sha256": "79581fbff9c5175e38345a3a903c498bbf083af479909f413699dad8c844a1b6"
+    }
+  ],
+  "historical_inputs": [
+    {
+      "path": "D:/Desktop/zjcs/assets/official/regions/15.json",
+      "sha256": "d1493189fa6c1d5c876073f4ebeb16bf3797f5dff477f1bbe32209044c5dded2"
+    },
+    {
+      "path": "D:/Desktop/zjcs/assets/official/regions/15-entities.json",
+      "sha256": "db3f16064e49db503c164f15566cd29f7f3f54394df89404038eecc5e1777622"
+    },
+    {
+      "path": "D:/Desktop/zjcs/unity/Assets/Game/Resources/Map15/Group/maps/15.json",
+      "sha256": "46653cabafb3f142ba7805b71149dfbc5c14e6e933cbeb835eb5c9f6ae66c958"
+    }
+  ],
+  "checked_navigation_cells": 750,
+  "tool": {
+    "path": "scripts/prepare_mainline_map15_configurations.py",
+    "sha256": "f402ae4f4d2a7b18c5ed68b31730943d3bda4f48ba2d8c71e0546fa91f15c630"
+  }
+}

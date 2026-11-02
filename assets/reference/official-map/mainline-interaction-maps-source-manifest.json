@@ -1,0 +1,90 @@
+{
+  "format": 1,
+  "operation": "Reuse the original hero result-index converter with each map's own verified region, area and EC tables. Preserve ordered rewards, original costs and empty DropItems arrays; retain separate historical source receipts.",
+  "maps": [
+    {
+      "mapClassId": 12,
+      "manifest": "871_156598",
+      "source_receipt": {
+        "path": "assets/reference/official-map/map12-source-manifest.json",
+        "sha256": "2ab3d830767e5d157b3f689e93679a1716a3c44e0dbc07af36622df90f747eda"
+      },
+      "inputs": [
+        {
+          "path": "unity/Assets/Official/World/Map/12/Source/templates.json",
+          "sha256": "fe5c8ece6925a1eb80dc1bfea8da8064398337fd44b147788a2d1ffa12c32f4e"
+        },
+        {
+          "path": "unity/Assets/Official/World/Map/12/Source/tables.json",
+          "sha256": "885bb1d57aa0bcb6e63352df48d974b333d1990bfe088efb5d5c3c3cb7a54653"
+        }
+      ],
+      "regions": 99,
+      "areas": 105,
+      "heroes": 4,
+      "parameters": 621
+    },
+    {
+      "mapClassId": 13,
+      "manifest": "871_156598",
+      "source_receipt": {
+        "path": "assets/reference/official-map/map13-source-manifest.json",
+        "sha256": "3399a7eeafb70e1999b11c186575fbc8277f534f7020b0a887d4401b59e74114"
+      },
+      "inputs": [
+        {
+          "path": "unity/Assets/Official/World/Map/13/Source/templates.json",
+          "sha256": "d2244e946dd2e860381f67570bc3495d73efa790e1b783faf6841194d9d9580d"
+        },
+        {
+          "path": "unity/Assets/Official/World/Map/13/Source/tables.json",
+          "sha256": "e54c871ff3f6dbbb1e0a5a9cb0891153824e280442424760ad2523bbddbcc09c"
+        }
+      ],
+      "regions": 106,
+      "areas": 111,
+      "heroes": 4,
+      "parameters": 621
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Map12/interactions.json",
+      "sha256": "bef633b7e38b5631bfd29aaba613c1957ed8f9e66105407cb3a1fbc357a1a42f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map12/interactions.json.meta",
+      "sha256": "99ef5bffde8f144f063a681c07f241249eb88035e7e158bb8705f28cba487525"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/interactions.json",
+      "sha256": "d7a1eb7bc70b370c1da663abfe7a8b2b28fc01350d28de13947e9c4e44325631"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/interactions.json.meta",
+      "sha256": "d62e31615ba895effaeaa75ed351f783f264cdac3e4f7dc369ff686201050a58"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_mainline_interaction_maps.py",
+      "sha256": "45fd161936d01be8d3d62e88ddf2bb4f29071610d7c28637fc3c7c5eff5e9e79"
+    },
+    {
+      "path": "scripts/prepare_unity_map14_interactions.py",
+      "sha256": "e8158e2dba7540626a559de3017e3e6f25e0033c51b1988e229c4d678e6881fc"
+    }
+  ],
+  "runtime_bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineInteractionCatalog.cs",
+      "hashLineEndings": "LF",
+      "sha256": "b479568e7fab1a52afc245d7c99df32042ee520170c6ef85afdf7b37ac8e5e32"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapProfile.cs",
+      "hashLineEndings": "LF",
+      "sha256": "a7b58b04afaea631973f98e800de6c8b71287cc275a1ed78bcb19a4df016b018"
+    }
+  ]
+}

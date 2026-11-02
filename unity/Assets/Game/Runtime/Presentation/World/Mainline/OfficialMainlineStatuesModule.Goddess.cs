@@ -164,7 +164,7 @@ namespace Zjcs.Presentation.World
                 host.regions.regionFog?.Refresh(host.navigation.GridToWorld(entity.Grid));
                 // Original MapEnvEffect.UnlockRegion clears grid cells directly
                 // after starting the region light activation, without waiting
-                // for its fade. Native Map13 supplies this callback itself.
+                // for its fade. Native Map12/13 supply this callback themselves.
                 if (host.regions.regionFog != null) host.mapGridVisibility?.UnlockRegion(entity.Region);
                 host.nativeMap12World?.UnlockRegion(host.navigation.GridToWorld(entity.Grid));
                 host.nativeMap13World?.UnlockRegion(host.navigation.GridToWorld(entity.Grid));
