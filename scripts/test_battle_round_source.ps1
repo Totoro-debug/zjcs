@@ -34,14 +34,15 @@ foreach($id in 24105,24135,24136,24179,24235,24243,24318,24333,24334,24343,24420
 foreach($id in 24037,24038,24045,24222,24472,24473,24474,24486,24640){
     Assert-RoundSource ($catalog.CreateStatus($id,1,2).RoundStartRulesSupported) 'Confirmed source-aware merged duration/count branch remains blocked'
 }
-function Invoke-SourceBattle($statusId,$restore,$legacy,$dead=$false,$sourcePosition=$false){
+function Invoke-SourceBattle($statusId,$restore,$legacy,$dead=$false,$sourcePosition=$false,$ended=$false){
     $cp=New-SourceCheckpoint $statusId
     if($sourcePosition){$cp.Units[0].Statuses[0].RoundStartSkills[0].TargetPos=0}
-    if($dead){
+    if($dead -or $ended){
         $survivor=(New-SourceCheckpoint $statusId).Units[1]
         $survivor.Id=$survivor.Turn.Id=3;$survivor.X=5
         $cp.Units.Add($survivor)
-        $cp.Units[1].Hp=$cp.Units[1].Turn.Hp=0
+        $cp.Units[1].Ended=$ended
+        if($dead){$cp.Units[1].Hp=$cp.Units[1].Turn.Hp=0}
     }
     $runner=[Zjcs.Combat.Official.FightBattleExecutor]::Begin($cp,$formula,[Zjcs.Combat.Official.FightDamageSettlement]::new(),$catalog,$items)
     $skillId=$cp.Units[0].Statuses[0].RoundStartSkills[0].EntityId
@@ -84,6 +85,9 @@ foreach($id in 24105,24135,24136,24243,24318){
     $expected=Invoke-SourceBattle $id $false $false $true
     Assert-RoundSource ($expected -eq (Invoke-SourceBattle $id $true $false $true)) "Per-round restore changed dead-creator damage for $id"
     Assert-RoundSource ($expected -eq (Invoke-SourceBattle $id $true $true $true)) "Legacy definition changed dead-creator continuation for $id"
+    $expected=Invoke-SourceBattle $id $false $false $false $false $true
+    Assert-RoundSource ($expected -eq (Invoke-SourceBattle $id $true $false $false $false $true)) "Per-round restore changed departed-creator damage for $id"
+    Assert-RoundSource ($expected -eq (Invoke-SourceBattle $id $true $true $false $false $true)) "Legacy definition changed departed-creator continuation for $id"
 }
 # Original creator/self targets are independent of the status holder and listener.
 foreach($id in 24235,24333,24334,24535,24538,24814,26056){
@@ -101,10 +105,14 @@ Assert-RoundSource ($expected -eq (Invoke-SourceBattle 24105 $true $false $true 
 $cp=New-SourceCheckpoint 24105;$source=$cp.Units[0].Statuses[0];$source.RoundStartSkills[0].TargetPos=0
 $call=[Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectRoundStartInvocations($cp.Units[0],$cp.Units[0],$cp.Units,[Zjcs.Combat.Official.FightRandomStream]::new(23),$catalog)
 Assert-RoundSource ($call.Count -eq 1 -and $call[0].TargetPositionUnitId -eq 2) 'Source position used the victim instead of the creator'
-foreach($creatorId in 99,2){
-    $cp=New-SourceCheckpoint 24105;$source=$cp.Units[0].Statuses[0];$source.CreatorId=$creatorId
-    if($creatorId -eq 2){$cp.Units[1].Ended=$true}
-    $call=[Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectRoundStartInvocations($cp.Units[0],$cp.Units[0],$cp.Units,[Zjcs.Combat.Official.FightRandomStream]::new(23),$catalog)
-    Assert-RoundSource ($call.Count -eq 0 -and $source.RoundStartTriggeredCount -eq 0) 'Unavailable creator was replaced by the victim or consumed an actual call'
-}
-Write-Output 'Round source checks passed: original creator/victim damage, creator/self targets, listener and position, cultivation, finite duration/counts, receipts, legacy and per-turn continuation; source-aware merged-count definitions are enabled.'
+$cp=New-SourceCheckpoint 24105;$source=$cp.Units[0].Statuses[0];$source.CreatorId=99
+$call=[Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectRoundStartInvocations($cp.Units[0],$cp.Units[0],$cp.Units,[Zjcs.Combat.Official.FightRandomStream]::new(23),$catalog)
+Assert-RoundSource ($call.Count -eq 0 -and $source.RoundStartTriggeredCount -eq 0) 'Missing creator was replaced by the victim or consumed an actual call'
+$expected=Invoke-SourceBattle 24105 $false $false $false $true $true
+Assert-RoundSource ($expected -eq (Invoke-SourceBattle 24105 $true $false $false $true $true)) 'Departed creator source-position cast changed after restore'
+# The source exception must not retain effects whose configured round target was destroyed.
+$cp=New-SourceCheckpoint 24105;$source=$cp.Units[0].Statuses[0]
+$source.RoundTarget=1;$source.RemoveAtRoundTargetDestroy=$true;$cp.Units[1].Ended=$true
+Assert-RoundSource ([Zjcs.Combat.Official.FightStatusLifecycle]::RemoveDestroyedTargets($cp.Units) -eq 1 -and $cp.Units[0].Statuses.Count -eq 0) 'A departed living-HP round target bypassed configured destroy removal'
+
+Write-Output 'Round source checks passed: original creator/victim damage, creator/self targets, listener and position, cultivation, dead/departed creator damage and source position, configured destroy removal, finite duration/counts, receipts, legacy and per-turn continuation; source-aware merged-count definitions are enabled.'

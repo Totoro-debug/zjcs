@@ -63,9 +63,9 @@ namespace Zjcs.Combat.Official
                     var caster = trigger.Source == 2 ? source
                         : FindUnit(units, status.CreatorId);
                     // User-confirmed offline rule: an applied creator-sourced effect
-                    // keeps settling from its original creator after that role dies.
+                    // keeps settling from its retained creator after death or departure.
                     bool allowDeadSource = trigger.Source == 3 && caster != null
-                        && caster.Hp <= 0 && !caster.Ended;
+                        && (caster.Hp <= 0 || caster.Ended);
                     if (!FightBattleTargeting.IsSelectable(caster) && !allowDeadSource) continue;
                     var target = hasPropertyTarget
                         ? ResolveRoundStartPropertyTarget(source, status, trigger, units, catalog)
@@ -275,7 +275,7 @@ namespace Zjcs.Combat.Official
                 return 0;
             int count = 0;
             foreach (FightBattleUnitState unit in units)
-                if (unit != null && unit.MasterId == owner.Id && unit.Hp > 0) count++;
+                if (unit != null && !unit.Ended && unit.MasterId == owner.Id && unit.Hp > 0) count++;
             foreach (FightBattleStatusState sourceStatus in new List<FightBattleStatusState>(owner.Statuses))
             {
                 if (sourceStatus == null || !sourceStatus.HasRoleSummonCount

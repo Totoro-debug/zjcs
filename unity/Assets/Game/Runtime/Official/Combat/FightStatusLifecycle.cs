@@ -785,7 +785,7 @@ namespace Zjcs.Combat.Official
                     FightBattleUnitState target = null;
                     for (int t = 0; t < units.Count; t++)
                         if (units[t] != null && units[t].Id == targetId) { target = units[t]; break; }
-                    if (target != null && target.Hp > 0) continue;
+                    if (target != null && target.Hp > 0 && !target.Ended) continue;
                     End(unit, status);
                     removed++;
                 }

@@ -75,6 +75,12 @@ $summonRng=[Zjcs.Combat.Official.FightRandomStream]::new(23)
 foreach($rebuild in 1..3){[Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyRoleSummonCount($summonOwner,$summonUnits,$catalog,$summonRng)|Out-Null}
 $effects=@($summonOwner.Statuses|Where-Object ClassId -eq 60561)
 Assert-StatusSource ($effects.Count -eq 2 -and @($effects.Origin.EntityId|Sort-Object -Unique).Count -eq 2 -and @($effects|Where-Object StackCount -ne 1).Count -eq 0) 'Summon-count producer selected another equipment source or repeatedly added layers'
+$summon.Ended=$true
+[Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyRoleSummonCount($summonOwner,$summonUnits,$catalog,$summonRng)|Out-Null
+Assert-StatusSource (@($summonOwner.Statuses|Where-Object ClassId -eq 60561).Count -eq 0 -and $summon.Hp -gt 0) 'Departed summon with retained HP was still counted as an active summon'
+$summon.Ended=$false
+[Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyRoleSummonCount($summonOwner,$summonUnits,$catalog,$summonRng)|Out-Null
+Assert-StatusSource (@($summonOwner.Statuses|Where-Object ClassId -eq 60561).Count -eq 2) 'Live summons did not restore the independent equipment effects'
 $summon.Hp=0
 [Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyRoleSummonCount($summonOwner,$summonUnits,$catalog,$summonRng)|Out-Null
 Assert-StatusSource (@($summonOwner.Statuses|Where-Object ClassId -eq 60561).Count -eq 0) 'Summon-count producer left another source contribution after all summons disappeared'

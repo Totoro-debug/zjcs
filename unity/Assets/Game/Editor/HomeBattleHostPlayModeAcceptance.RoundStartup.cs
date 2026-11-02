@@ -46,8 +46,8 @@ namespace Zjcs.Editor
         {
             private readonly FightOfficialCombatCatalog catalog;
             private FightBattleStatusState guardState, rockState;
-            private int rockId, guardCalls, rockCalls;
-            private bool independentEquipmentObserved;
+            private int rockId, guardCalls, rockCalls, departedRockCalls;
+            private bool independentEquipmentObserved, equipmentRemovalObserved;
             public bool ReadyToCapture => guardCalls >= 4;
             public RoundStatusSourcesProbe(FightOfficialCombatCatalog catalog) { this.catalog = catalog; }
             private FightBattleStatusState Create(int creator, int instance) =>
@@ -67,10 +67,6 @@ namespace Zjcs.Editor
                         if (property.Id == catalog.PropertyType("Attack")) property.Value = 1000L;
                     }
                     rock.MaxHp = rock.LastMaxHp = rock.Hp = rock.Turn.Hp = 2000000L;
-                    // Keep the real summon present throughout this source-isolation fixture.
-                    // Production lifespan remains unchanged; vanished creators are a separate gap.
-                    var lifespan = rock.Statuses.Single(value => value.RemoveApplyEntityOnEnd);
-                    lifespan.DurationRound = lifespan.CurDurationRound = 30;
                     guardState = FightStatusLifecycle.Apply(player, Create(2, 9924640), player.SkillState.Round, 9924640);
                     rockState = FightStatusLifecycle.Apply(player, Create(rockId, 9924641), player.SkillState.Round, 9924641);
                     Require(player.Statuses.Count(value => value.ClassId == 24640) == 2,
@@ -80,12 +76,17 @@ namespace Zjcs.Editor
                 var step = cp.Receipts.Last().Event;
                 var equipmentEffects = cp.Units.Single(value => value.Id == 2).Statuses
                     .Where(value => value.ClassId == 60561).ToArray();
-                Require(equipmentEffects.Length == 2 && equipmentEffects.All(value => value.StackCount == 1
-                    && value.Origin.EntityKind == FightBattleStatusOrigin.Equipment)
-                    && equipmentEffects.Select(value => value.Origin.EntityId).OrderBy(value => value)
-                        .SequenceEqual(new[] { 8801L, 8802L }),
-                    "Same-owner equipment summon-count effects collided or accumulated each other's layers.");
-                independentEquipmentObserved = true;
+                bool rockEnded = cp.Units.Single(value => value.Id == rockId).Ended;
+                if (equipmentEffects.Length == 0 && rockEnded) equipmentRemovalObserved = true;
+                else
+                {
+                    Require(equipmentEffects.Length == 2 && equipmentEffects.All(value => value.StackCount == 1
+                        && value.Origin.EntityKind == FightBattleStatusOrigin.Equipment)
+                        && equipmentEffects.Select(value => value.Origin.EntityId).OrderBy(value => value)
+                            .SequenceEqual(new[] { 8801L, 8802L }),
+                        "Same-owner equipment summon-count effects collided or accumulated each other's layers.");
+                    independentEquipmentObserved = true;
+                }
                 foreach (int caster in new[] { 2, rockId })
                 {
                     var casts = step.SkillCasts.Where(value => value.SkillEntityId == 63280 && value.ActorId == caster).ToArray();
@@ -97,8 +98,10 @@ namespace Zjcs.Editor
                         && damage.Length == 1 && damage[0].TargetId == 1 && damage[0].Damage < 0
                         && damage[0].AfterHp < damage[0].BeforeHp && state.RoundStartTriggeredCount == calls,
                         "Independent guard/rock source lost its original victim, actual damage or invocation count.");
+                    if (caster == rockId && rockEnded) departedRockCalls++;
                     Debug.Log("[Status sources hosts] original 24640 -> 63280 -> 63281: caster=" + caster
-                        + ", call=" + calls + ", damage=" + damage[0].Damage + ", personalRound=" + player.SkillState.Round);
+                        + ", call=" + calls + ", damage=" + damage[0].Damage + ", personalRound=" + player.SkillState.Round
+                        + ", departedCreator=" + (caster == rockId && rockEnded));
                 }
                 if (guardCalls == 1 && guardState.RoundStartStackRoundCount == 1)
                 {
@@ -111,7 +114,8 @@ namespace Zjcs.Editor
             }
             public void Verify(string host, FightBattleCheckpoint checkpoint)
             {
-                Require(guardCalls == 6 && rockCalls == 3 && independentEquipmentObserved
+                Require(guardCalls == 6 && rockCalls == 3 && departedRockCalls > 0
+                    && independentEquipmentObserved && equipmentRemovalObserved
                     && guardState.RoundStartStackRoundCount == 2 && rockState.RoundStartStackRoundCount == 1
                     && guardState.SourceSkillRank == 5 && guardState.SourceSkillLevel == 20
                     && !checkpoint.Units.Single(value => value.Id == 1).Statuses.Any(value => value.ClassId == 24640),
@@ -119,7 +123,7 @@ namespace Zjcs.Editor
                 string saved = FightBattleCheckpointSerializer.Save(checkpoint);
                 Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
                     host + " changed independent source state after checkpoint reload.");
-                Debug.Log("[Status sources hosts] " + host + ": guard six calls, rock three calls, two independent equipment summon-count effects, retained live instance and cultivation, independent expiry and checkpoint passed.");
+                Debug.Log("[Status sources hosts] " + host + ": guard six calls, rock three calls, departed rock still casts, independent equipment effects are removed after its departure, retained live instance and cultivation, independent expiry and checkpoint passed.");
             }
         }
 
