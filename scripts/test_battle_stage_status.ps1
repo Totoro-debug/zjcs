@@ -20,7 +20,7 @@ function Get-Sha($path) {
 }
 
 # Official rules parsing: stage -> fight_stage_status class and its view list.
-$stageCatalog = [Zjcs.Combat.Official.FightStageStatusCatalog]::Parse((Read-Text 'assets/official/rules.json'))
+$stageCatalog = [Zjcs.Combat.Official.FightStageStatusCatalog]::Parse((Read-Text 'unity/Assets/Official/Combat/rules.json'))
 Assert-Stage ($stageCatalog.ClassIdOfStage(1001) -eq 0) 'Stage 1001 unexpectedly maps to a stage status row'
 Assert-Stage ($stageCatalog.ClassIdOfStage(9910) -eq 1) 'Stage 9910 stage status mapping mismatch'
 $official = $stageCatalog.Find(1)

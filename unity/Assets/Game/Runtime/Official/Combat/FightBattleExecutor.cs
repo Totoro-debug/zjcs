@@ -40,10 +40,13 @@ namespace Zjcs.Combat.Official
         {
             public List<FightBattleSkillCastEvent> Casts;
             public List<FightBattleDamageEvent> DamageEvents;
+            public List<FightBattleMovementEvent> Movements;
+            public float StatusStartTime;
             public float Duration;
             public float ActionDuration = -1f;
         }
         private MovementStartContext movementStartContext;
+        private bool applyingActionExistStatuses;
         private FightBattleExecutor(FightBattleCheckpoint checkpoint, FightDamageFormula formula,
             FightDamageSettlement settlement, bool initialize,
             FightOfficialCombatCatalog statusCatalog = null,
@@ -130,7 +133,7 @@ namespace Zjcs.Combat.Official
             unit.AiType = aiType;
         }
 
-        public FightBattleExecutionResult Step(int sequence, int counter)
+        private FightBattleExecutionResult StepCore(int sequence, int counter)
         {
             if (sequence != checkpoint.Sequence) throw new InvalidOperationException("Fight sequence does not match.");
             if (counter <= checkpoint.Counter)
@@ -179,7 +182,7 @@ namespace Zjcs.Combat.Official
             var movements = new List<FightBattleMovementEvent>();
             var casts = new List<FightBattleSkillCastEvent>();
             var damageEvents = new List<FightBattleDamageEvent>();
-            movementStartContext = new MovementStartContext { Casts = casts, DamageEvents = damageEvents };
+            movementStartContext = new MovementStartContext { Casts = casts, DamageEvents = damageEvents, Movements = movements };
             var statusCustomActions = new List<FightBattleStatusCustomActionEvent>();
             currentStepSpawnedUnitIds = new List<int>();
             currentStepStatusCustomActions = statusCustomActions;
@@ -192,7 +195,7 @@ namespace Zjcs.Combat.Official
             if (FightStatusLifecycle.TickTurn(actor, units, actorRound, FightStatusLifecycle.TimingStart) > 0)
                 RebuildBattleProperties();
             if (statusCatalog != null)
-                foreach (FightBattleUnitState summonOwner in units)
+                foreach (FightBattleUnitState summonOwner in new List<FightBattleUnitState>(units))
                     FightStatusTriggerRuntime.ApplyRoleSummonCount(summonOwner, units,
                         statusCatalog, random);
             float statusEndDelay = 0f;
@@ -570,7 +573,7 @@ namespace Zjcs.Combat.Official
             // Movement listeners have local times, just like other nested skills. Return
             // their lifetime to the caller before that caller offsets the whole cast.
             var previousMovementContext = movementStartContext;
-            movementStartContext = new MovementStartContext { Casts = casts, DamageEvents = damageEvents };
+            movementStartContext = new MovementStartContext { Casts = casts, DamageEvents = damageEvents, Movements = movements };
             try
             {
                 ExecuteSkillCore(actor, skill, targets, casts, damageEvents, movements,
@@ -758,6 +761,7 @@ namespace Zjcs.Combat.Official
                     if (target.VoodooDoll != null && (hit.ActionType == 5 || skill.SkillType == 3)) continue;
                     float hitDelay = HitDelay(actor, target, hit);
                     if (hitDelay > lastDelay) lastDelay = hitDelay;
+                    movementStartContext.StatusStartTime = Math.Max(0f, hitDelay);
                     long beforeHp = target.Hp;
                     int damageId = NextDamageId();
                     bool originalHasCustomDamage = hit.HasCustomDamage;
@@ -887,11 +891,13 @@ namespace Zjcs.Combat.Official
                     ApplyChildSkill(actor, target, skill, hit, casts, damageEvents, movements, ref lastDelay);
                 }
             }
+            movementStartContext.StatusStartTime = 0f;
             ApplySourceMoves(actor, skill, targets, movements, ref lastDelay);
             FightDamageFalloff.EndCast(units, skill);
             ApplyExtraSkills(actor, skill, casts, damageEvents, movements, ref lastDelay);
             if (statusCatalog != null)
             {
+                movementStartContext.StatusStartTime = Math.Max(0f, ResolveActionDuration(skill, lastDelay));
                 var actionEndSkills = new List<FightBattleStatusSkillInvocation>();
                 if (FightStatusTriggerRuntime.ApplySkillEndStatuses(actor, skill, units,
                     statusCatalog, random, actionEndSkills) > 0)
@@ -941,6 +947,7 @@ namespace Zjcs.Combat.Official
 
                 units.Add(summon);
                 unitById.Add(summon.Id, summon);
+                summon.StatusStarted = OnStatusStarted;
                 checkpoint.Units.Add(summon);
                 checkpoint.Statistics.Unit(summon.Id);
                 turns.RegisterUnit(summon.Turn, hit.SummonImmediateRound);
@@ -2044,8 +2051,14 @@ namespace Zjcs.Combat.Official
 
         private void RebuildBattleProperties()
         {
-            if (statusCatalog != null)
-                FightStatusTriggerRuntime.ApplyActionExistStatuses(units, statusCatalog, random);
+            if (statusCatalog != null && !applyingActionExistStatuses)
+            {
+                // A newly started status may cast synchronously while its action-existence
+                // producer is still recording the new instance. Do not enter that producer twice.
+                applyingActionExistStatuses = true;
+                try { FightStatusTriggerRuntime.ApplyActionExistStatuses(units, statusCatalog, random); }
+                finally { applyingActionExistStatuses = false; }
+            }
             foreach (FightBattleUnitState unit in units)
                 foreach (FightBattleStatusState status in unit.Statuses)
                     if (status != null && status.StartRound < 0)

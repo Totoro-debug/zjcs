@@ -309,3 +309,16 @@ Assert-Hp ($repeat.HpLessThanTriggeredCount -eq 1 -and $owner.Statuses.Count -eq
     'HP-less-than automatic removal or count handling failed.'
 
 Write-Output 'Battle HP-threshold checks passed: official death status, configured skill, HP limit, count and auto-removal.'
+
+# TryAtStart is an additional check, not a filter that disables later HP-change checks.
+$startAndLater = $catalog.CreateStatus(24202, 1, 1, 8)
+$owner.Hp = 100
+$owner.Statuses.Clear(); $owner.Statuses.Add($startAndLater)
+$invocations.Clear()
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::Apply($owner, $catalog, $true,
+    $null, [Zjcs.Combat.Official.FightRandomStream]::new(17), $null, $units, $invocations)
+Assert-Hp ($invocations.Count -eq 0 -and $startAndLater.HpLessThanTriggeredCount -eq 0) 'Full HP consumed the start threshold'
+$owner.Hp = 30
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::Apply($owner, $catalog, $false,
+    $null, [Zjcs.Combat.Official.FightRandomStream]::new(17), $null, $units, $invocations)
+Assert-Hp ($invocations.Count -eq 1 -and $invocations[0].Trigger.EntityId -eq 10170) 'TryAtStart incorrectly disabled ordinary HP changes'

@@ -1,0 +1,47 @@
+using System;
+
+namespace Zjcs.Combat.Official
+{
+    public sealed partial class FightBattleExecutor
+    {
+        public FightBattleExecutionResult Step(int sequence, int counter)
+        {
+            foreach (var unit in units)
+                if (unit.StatusStarted != null)
+                    throw new InvalidOperationException("A battle unit is already executing a step.");
+            foreach (var unit in units) unit.StatusStarted = OnStatusStarted;
+            try { return StepCore(sequence, counter); }
+            finally
+            {
+                // Include units summoned during this step. No delegate or executor is retained
+                // by the checkpoint, including when a configuration fails during a nested cast.
+                foreach (var unit in units) unit.StatusStarted = null;
+                movementStartContext = null;
+            }
+        }
+
+        private void OnStatusStarted(FightBattleUnitState owner, FightBattleStatusState status)
+        {
+            var context = movementStartContext;
+            if (context == null || statusCatalog == null || status == null
+                || !status.HasMoveNear || !status.MoveNearTryAtStart || !status.MoveNearRulesSupported
+                || owner == null || owner.Ended || owner.Hp <= 0) return;
+
+            // FightStatusComponentImplement.Start initializes props, registers the status,
+            // initializes its round clock, then fires status start. Stacking/discarding an
+            // existing entity does not enter this callback.
+            FightStatusLifecycle.Initialize(status, StatusClockRound(status));
+            var invocations = FightStatusTriggerRuntime.CollectMoveNearSkills(owner, units,
+                FightStatusTriggerRuntime.MoveNearEventStart, null, random, status);
+            if (invocations.Count == 0) return;
+            FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
+            foreach (var invocation in invocations)
+                invocation.Delay += Math.Max(0f, context.StatusStartTime);
+            float delay = 0f;
+            ExecuteConfiguredStatusSkills(invocations, context.Casts, context.DamageEvents,
+                context.Movements, ref delay, out float duration, out float actionDuration);
+            context.Duration = Math.Max(context.Duration, Math.Max(delay, duration));
+            context.ActionDuration = Math.Max(context.ActionDuration, actionDuration);
+        }
+    }
+}

@@ -20,19 +20,19 @@ namespace Zjcs.Combat.Official
             foreach (FightBattleStatusGroup group in config.CharacterStatus)
             {
                 if (group == null) continue;
-                foreach (FightBattleUnitState unit in units)
+                foreach (FightBattleUnitState unit in new List<FightBattleUnitState>(units))
                     if (unit != null && unit.CharacterType == group.Key)
                         ApplyStatuses(unit, group.Status, statuses, round, random);
             }
             foreach (FightBattleStatusGroup group in config.ProfessionStatus)
             {
                 if (group == null) continue;
-                foreach (FightBattleUnitState unit in units)
+                foreach (FightBattleUnitState unit in new List<FightBattleUnitState>(units))
                     if (unit != null && unit.Profession == group.Key)
                         ApplyStatuses(unit, group.Status, statuses, round, random);
             }
             if (config.TargetIdStatus.Count > 0)
-                foreach (FightBattleUnitState unit in units)
+                foreach (FightBattleUnitState unit in new List<FightBattleUnitState>(units))
                 {
                     if (unit == null || unit.MonsterId <= 0) continue;
                     if (config.TargetIdStatus.Contains(unit.MonsterId))
@@ -56,7 +56,7 @@ namespace Zjcs.Combat.Official
             foreach (FightBattleStatusGroup group in config.FactionGlobalRoundStatus)
             {
                 if (group == null) continue;
-                foreach (FightBattleUnitState unit in units)
+                foreach (FightBattleUnitState unit in new List<FightBattleUnitState>(units))
                     if (unit != null && unit.Side == group.Key + 1)
                         ApplyStatuses(unit, group.Status, statuses, globalRound, random);
             }
@@ -86,7 +86,7 @@ namespace Zjcs.Combat.Official
             IReadOnlyList<FightBattleUnitState> units, int round, FightRandomStream random)
         {
             if (classIds == null || classIds.Count == 0) return;
-            foreach (FightBattleUnitState unit in units)
+            foreach (FightBattleUnitState unit in new List<FightBattleUnitState>(units))
                 ApplyStatuses(unit, classIds, statuses, round, random);
         }
 

@@ -64,6 +64,8 @@ namespace Zjcs.Combat.Official
         public FightSkillAgentState SkillState = new FightSkillAgentState();
         public FightTurnUnit Turn = new FightTurnUnit();
         public List<FightBattleStatusState> Statuses = new List<FightBattleStatusState>();
+        // Runtime-only subscription, scoped to an executor step. Checkpoints contain public fields.
+        internal Action<FightBattleUnitState, FightBattleStatusState> StatusStarted;
         // Official FightRolePetTransferEntity state. A player unit owns the transfer state while
         // the configured pet skill is released at the owner's action end.
         public FightBattlePetEnergyState PetEnergy = new FightBattlePetEnergyState();

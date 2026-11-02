@@ -36,14 +36,17 @@ namespace Zjcs.Editor
                 if (property.Id == attack) property.Value = Math.Min(property.Value, 100L);
             }
             enemy.MaxHp = enemy.Hp = enemy.Turn.Hp = 1000000L;
-            foreach (int statusId in new[] { 12353, 12593 })
-            {
-                var status = catalog.CreateStatus(statusId, enemy.Id, enemy.Id, 9900980 + statusId);
-                // The second fixture substitutes a moving skill to exercise its original clip.
-                if (statusId == 12593) status.MoveNearSkills[0].EntityId = 13500;
-                enemy.Statuses.Add(status);
-            }
-            return new TriggerTimingProbe();
+            // Create the real trap from a hit, after the step's initial startup sweep.
+            // This fixture changes only the isolated checkpoint, never the official table.
+            var skill = player.Skills.First(value => value.Slot == 0);
+            var hit = skill.HitGraphEntities.First(value => value.HasFixedDamage);
+            hit.AppliedStatuses.Add(new FightBattleStatusApplication
+                { StatusId = 12353, TargetType = 2, AffectedByProp = false });
+            var animationStatus = catalog.CreateStatus(12593, enemy.Id, enemy.Id, 9913573);
+            // Keep the separate original moving-animation observation from the startup fixture.
+            animationStatus.MoveNearSkills[0].EntityId = 13500;
+            enemy.Statuses.Add(animationStatus);
+            return new TriggerTimingProbe(skill.EntityId, hit.EntityId);
         }
 
         private sealed class TriggerTimingProbe
@@ -51,17 +54,33 @@ namespace Zjcs.Editor
             private bool queuedAnimation;
             private bool playedAnimation;
             private bool delayedDamage;
+            private readonly int parentSkill;
+            private readonly int parentHit;
+            private float observedStartupTime;
+            public TriggerTimingProbe(int skill, int hit) { parentSkill = skill; parentHit = hit; }
             public void ObserveStep(OfficialBattleRuntimeController controller)
             {
                 var step = controller.Checkpoint.Receipts.Last().Event;
+                if (!delayedDamage)
+                {
+                    var parent = step.DamageEvents.FirstOrDefault(value => value.SkillEntityId == parentSkill
+                        && value.HitEntityId == parentHit && value.SourceId == 1);
+                    if (parent != null)
+                    {
+                        var trap = step.SkillCasts.FirstOrDefault(value => value.SkillEntityId == 12570
+                            && value.TargetIds.Contains(parent.TargetId));
+                        Require(trap != null && Math.Abs(trap.Delay - parent.Delay - 1f) < 0.0001f,
+                            "A hit-created trap waited for the next step or lost its parent hit time.");
+                        Require(step.DamageEvents.Any(value => value.SkillEntityId == 12570
+                            && Math.Abs(value.Delay - trap.Delay - 0.2f) < 0.0001f),
+                            "The hit-created original trap lost its local hit time.");
+                        delayedDamage = true;
+                        observedStartupTime = trap.Delay;
+                    }
+                }
                 var cast = step.SkillCasts.FirstOrDefault(value => value.SkillEntityId == 13500);
                 if (cast == null) return;
                 Require(cast.Delay == 1f, "The delayed range trigger lost its cast start time.");
-                var hits = step.DamageEvents.Where(value => value.SkillEntityId == 12570).ToArray();
-                Require(hits.Length > 0, "The original trap did not produce a hit inside its configured range.");
-                Require(hits.All(value => value.Delay >= 1.1999f),
-                    "The original trap damage played before its one-second trigger delay.");
-                delayedDamage = true;
                 var scene = typeof(OfficialBattleRuntimeController).GetField("sceneView",
                     BindingFlags.Instance | BindingFlags.NonPublic).GetValue(controller);
                 var pending = (IEnumerable)typeof(OfficialBattleSceneView).GetField("pendingUnitAnimations",
@@ -97,7 +116,8 @@ namespace Zjcs.Editor
                 Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
                     host + " did not retain cast start times in the checkpoint.");
                 Debug.Log("[Trigger timing hosts] " + host
-                    + ": original trap hit at 1.2s; skill animation queued at 1s and consumed by the real Animator; checkpoint passed.");
+                    + ": hit-created trap cast at " + observedStartupTime
+                    + "s in the parent step; separate original animation queued at 1s and consumed by the real Animator; checkpoint passed.");
             }
         }
     }

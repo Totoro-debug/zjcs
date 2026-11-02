@@ -486,6 +486,7 @@ namespace Zjcs.Combat.Official
             if (applied.HasBackToLifeComponent) unit.Hp = 1;
             FightStatusCooldownRuntime.Invoke(unit, applied, random);
             RecordApplication(unit, template);
+            unit.StatusStarted?.Invoke(unit, applied);
             return applied;
         }
 

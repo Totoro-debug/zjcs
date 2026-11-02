@@ -504,7 +504,7 @@ namespace Zjcs.Combat.Official
         {
             if (units == null || catalog == null) return 0;
             int changed = 0;
-            foreach (FightBattleUnitState unit in units)
+            foreach (FightBattleUnitState unit in new List<FightBattleUnitState>(units))
             {
                 if (unit == null || unit.Statuses == null) continue;
                 var statuses = new List<FightBattleStatusState>(unit.Statuses);
@@ -732,7 +732,8 @@ namespace Zjcs.Combat.Official
 
         public static List<FightBattleStatusSkillInvocation> CollectMoveNearSkills(
             FightBattleUnitState roundActor, IReadOnlyList<FightBattleUnitState> units,
-            int eventKind, FightBattleMovementEvent movement, FightRandomStream random)
+            int eventKind, FightBattleMovementEvent movement, FightRandomStream random,
+            FightBattleStatusState startingStatus = null)
         {
             var result = new List<FightBattleStatusSkillInvocation>();
             if (units == null || random == null) return result;
@@ -753,11 +754,12 @@ namespace Zjcs.Combat.Official
                 if (eventKind == MoveNearEventMoved && source.Id != movedId) continue;
                 foreach (FightBattleStatusState status in new List<FightBattleStatusState>(source.Statuses))
                 {
-                    if (status == null || !status.HasMoveNear || !status.MoveNearRulesSupported
+                    if (status == null || startingStatus != null && !ReferenceEquals(status, startingStatus)
+                        || !status.HasMoveNear || !status.MoveNearRulesSupported
                         || !MoveNearEventEnabled(status, eventKind)
                         || status.MoveNearMaxCount >= 0
                             && status.MoveNearTriggeredCount >= status.MoveNearMaxCount
-                        || status.MoveNearMaxCountEachRound >= 0
+                        || status.MoveNearMaxCountEachRound > 0
                             && status.MoveNearRoundTriggeredCount >= status.MoveNearMaxCountEachRound)
                         continue;
                     if (eventKind == MoveNearEventStart)
@@ -795,7 +797,7 @@ namespace Zjcs.Combat.Official
                     {
                         if (status.MoveNearMaxCount >= 0
                                 && status.MoveNearTriggeredCount >= status.MoveNearMaxCount
-                            || status.MoveNearMaxCountEachRound >= 0
+                            || status.MoveNearMaxCountEachRound > 0
                                 && status.MoveNearRoundTriggeredCount
                                     >= status.MoveNearMaxCountEachRound
                             || !Roll(status.MoveNearRate, random)) continue;
@@ -1060,9 +1062,11 @@ namespace Zjcs.Combat.Official
         {
             if (unit == null || catalog == null || unit.Statuses == null || unit.MaxHp <= 0) return 0;
             int applied = 0;
-            for (int i = unit.Statuses.Count - 1; i >= 0; i--)
+            var initialStatuses = new List<FightBattleStatusState>(unit.Statuses);
+            for (int i = initialStatuses.Count - 1; i >= 0; i--)
             {
-                FightBattleStatusState status = unit.Statuses[i];
+                FightBattleStatusState status = initialStatuses[i];
+                if (status == null || !unit.Statuses.Contains(status)) continue;
                 if (!FightSkillTriggerPolicy.AllowsStatus(sourceSkill, status)) continue;
                 if (status.HpTriggerPer > 0f)
                 {
@@ -1119,7 +1123,7 @@ namespace Zjcs.Combat.Official
             List<FightBattleStatusSkillInvocation> configuredTriggerSkills)
         {
             if (status == null || !status.HasHpLessThan
-                || atStart != status.HpLessThanTryAtStart
+                || atStart && !status.HpLessThanTryAtStart
                 || status.HpLessThanTargetType > 0 && units != null
                     && FightStatusLifecycle.ResolveTargetUnitId(status,
                         status.HpLessThanTargetType, units) != unit.Id
@@ -1398,10 +1402,11 @@ namespace Zjcs.Combat.Official
             if (unit == null || catalog == null || actualHpDamage <= 0 || unit.MaxHp <= 0
                 || unit.Statuses == null) return 0;
             int triggered = 0;
-            int initialStatusCount = unit.Statuses.Count;
-            for (int i = initialStatusCount - 1; i >= 0; i--)
+            var initialStatuses = new List<FightBattleStatusState>(unit.Statuses);
+            for (int i = initialStatuses.Count - 1; i >= 0; i--)
             {
-                FightBattleStatusState status = unit.Statuses[i];
+                FightBattleStatusState status = initialStatuses[i];
+                if (status == null || !unit.Statuses.Contains(status)) continue;
                 if (!FightSkillTriggerPolicy.AllowsStatus(sourceSkill, status)
                     || !status.HasHpAccDecrease) continue;
                 long threshold = Threshold(status, unit.MaxHp);
