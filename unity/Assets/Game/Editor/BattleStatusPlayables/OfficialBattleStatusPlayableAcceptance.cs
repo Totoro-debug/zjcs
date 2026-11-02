@@ -118,12 +118,13 @@ namespace Zjcs.Editor
             public GameObject Instantiate(GameObject prefab, Transform parent, bool worldPositionStays)
             {
                 var instance = UnityEngine.Object.Instantiate(prefab, parent, worldPositionStays);
-                var playable = instance.GetComponent<ProbePlayable>();
-                playable.MyPlayableCenter = center;
-                playable.Record = events.Add;
-                var priority = instance.GetComponent<ApplyEffectByPriority>();
-                if (priority != null) priority.MyPlayableCenter = center;
-                instances.Add(playable);
+                foreach (var playable in instance.GetComponentsInChildren<MyPlayable>(true))
+                {
+                    playable.MyPlayableCenter = center;
+                    if (playable is ProbePlayable probe) { probe.Record = events.Add; instances.Add(probe); }
+                }
+                foreach (var priority in instance.GetComponentsInChildren<ApplyEffectByPriority>(true))
+                    priority.MyPlayableCenter = center;
                 return instance;
             }
 
@@ -259,6 +260,8 @@ namespace Zjcs.Editor
                 Require(instances.All(value => value == null || !value.gameObject.activeInHierarchy), "Final manager removal left live pooled visuals.");
                 IEnumerator lifecycle = StatusViewSteps();
                 while (lifecycle.MoveNext()) yield return lifecycle.Current;
+                IEnumerator orbits = OrbitSteps();
+                while (orbits.MoveNext()) yield return orbits.Current;
             }
 
             public void Dispose()

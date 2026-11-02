@@ -1,0 +1,100 @@
+{
+  "manifest": "884_156692",
+  "code_extraction": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+  },
+  "original": {
+    "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyPlayableOrbitMovement.cs",
+    "sha256": "0c17b9a694d062c4a326eb556bfaa82907972fbe4d0d281c58a0537c6abbe65c"
+  },
+  "original_mono_script_file_id": -413707684,
+  "verified_methods_after_scene_instantiation_and_diagnostics_adaptation": {
+    "Awake()": "01333f9686ba9699f04153dd9530ea7e73ce90abd83518dd5882a7b1bfdc7099",
+    "OnDestroy()": "e7076b48086c507f403b4c5ceadc8a5eb4a23dc31d5876cd091d2469e7cf9b65",
+    "InitImpl()": "bc69f180d5dd5c128a8baf1446599127a21852a791288834b4f90d5fb25d7761",
+    "PlayImpl()": "8714020ec0033fc59751bb2e068dc6d36e816a5c5a19f984585621bc5dff33cf",
+    "ProcessFrameImpl(float deltaTime)": "895d50cdce76c13dd1c6fcfde995675a76c6f1b3457642798d523f35cb1d4f4e",
+    "PostProcessFrameImpl(float deltaTime)": "29840ab39f4116f2381e7d25b2e9cd12e1c6f7157e2ec0b165ce4b61f2e10be1",
+    "StopImpl()": "febf56cd2e7fa8025c9011ec08e7fc390142ecdd44829607fe11a94c2e45a9e7",
+    "GetDuration()": "2db1fddf7c38f0028962e70849456165ff688222f5bbc1d82fa394542ceb5e58",
+    "SetOrbitLevel(int orbitLevel)": "9636af0417df0239a9729fadef4933903c3a1559880a19bd6d5a433f5c32efb5",
+    "TryGetCurrentOrbiterInfo(out OrbiterInfo info)": "fbf6264fe0a5371cb9841609a1b4be83e8bfa518214a56eecb5dfd5c7bae001c",
+    "TryGetOrbitInfoIndex(int orbitLevel, out int index)": "61cfa053fc532361aead7d6674c159936fa7507c73429f9b94aecda28e460ceb",
+    "RefreshOrbiters(int preOrbitInfoIndex, int orbitInfoIndex)": "fa7ee45558e124671e42f905601acaae116516b45b5bf4104b6dd56a8dc79712",
+    "ChangeOrbiters(OrbiterInfo info, GameObject preOrbiter, GameObject orbiter)": "0d089f8be65f687925bfecca4338f1a80b968ac130aed1af0e38789a5f90ce83",
+    "AlignOrbiters(OrbiterInfo info)": "d9f0a8ff01fe56742477397240c75d41053c4e64a3694d26aa32749203d7c2b0",
+    "RefreshAngleBetweenOrbiters()": "4e9f344ebed51d2b2849127b224ff99f71fd944ce0df984139caf3d957c4ca36",
+    "InitOrbiterPool()": "a86e2ac88dc274b091e6f5f277914056d0f80c7493a00a77c690164360a63585",
+    "ClearOrbiterPool()": "4489637a37aafb7371135b4746f56e4a941ebfb38b9dcc39024cf8a0407afd7c",
+    "SetPlayableStatusStackCount(int count)": "7597595497630f98be7f2b8fe8199db81489da576e5be1b54c0179888e155f53",
+    "MyPlayableOrbitMovement()": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  "offline_pool_reset": "Extra ResetData override returns live orbiters through the original StopImpl before clearing private selection caches. Parent-sequence reset can precede deferred child stop. This prevents unchanged-stack reuse from retaining an empty old range and releases original pool objects before discarding their pool index; original 19 methods remain otherwise unchanged.",
+  "generator": {
+    "path": "scripts/prepare_battle_status_orbit_runtime.py",
+    "sha256": "f4bd0a34b9b0762b01353f3f0693f0b9546811ff4f08729935deeff76163a79a"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/MyPlayableOrbitMovement.cs",
+      "sha256": "b2aed1bc1d6910a1c2768ce080cdeb8fc81311e9467a0fbbb5e1c6e3660d6113"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/MyPlayableOrbitMovement.cs.meta",
+      "sha256": "037cb4af8f0baa0cbdb844f80b4f816cffaf8efd527b5c112758e17e60a7b2f7"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/BattleStatusPlayables/OfficialBattleStatusPlayableAcceptance.Orbits.cs",
+      "sha256": "25aa20921e82e189536fb0aa4db782ec2e0b41ac5a9e21f174e4be11fe491b53"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/BattleStatusPlayables/OfficialBattleStatusPlayableAcceptance.cs",
+      "sha256": "86f6d1167bc94004e5233a9fbbdf3810aa54a14d85b95e6514e8aca383a07abb"
+    },
+    {
+      "path": "scripts/prepare_battle_status_playable_validation.py",
+      "sha256": "0fcaf114bc9fc2ba3379df16a3877d40d253714c09c502093d13e151ae72eb5a"
+    },
+    {
+      "path": "scripts/prepare_battle_status_orbit_assets.py",
+      "sha256": "f53f55c8cf6186998d004b69e286f56a559947d3c0b02e297b75d0871865da11"
+    }
+  ],
+  "reused_dependencies": [
+    {
+      "path": "assets/reference/battle-animation/status-view-runtime-source-manifest.json",
+      "sha256": "e926f49d8e45c1557dc6dd38b975dede1910a38cbf23004451dc34a6aeb919cc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/StoryPlayableInstantiation.cs",
+      "sha256": "a53decd4b47df4287a49836e59e55fcff100af442466835354efff6a88f5df5f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/AttachPosCfg.cs",
+      "sha256": "bed13f24e3a87ef7c9ea767d1ab5f89b2453ae0cdcfa29986d15d046fbdbe0c8"
+    },
+    {
+      "path": "scripts/prepare_battle_status_view_runtime.py",
+      "sha256": "d94d8ac36b4430328e7e81c74c4d89589e2a9265fdae9aded107dd2f3a5f1739"
+    },
+    {
+      "path": "scripts/prepare_unity_story_playable_runtime.py",
+      "sha256": "a7fb5b558c63f4896d510067e103fd406cc82d94b599c27766661776de874711"
+    },
+    {
+      "path": "scripts/prepare_unity_story_sound_runtime.py",
+      "sha256": "841dc964f433cac4a93840a2f71e7623795f864df0fadb9422faa48ba8f6515a"
+    }
+  ],
+  "adaptation": "Original orbit fields, first inclusive level range, shared/distinct orbiter pools, position/LookAt, signed playable time and stop behavior retained. Scene DI instantiation uses the existing explicit scoped factory; framework diagnostics use Unity logging.",
+  "limits": [
+    "Original native orbit graphs and actual status/actor binding require separate asset and runtime integration."
+  ]
+}

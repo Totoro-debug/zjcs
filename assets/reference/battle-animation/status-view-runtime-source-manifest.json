@@ -334,7 +334,7 @@
   "reused_dependencies": [
     {
       "path": "assets/reference/battle-animation/status-playable-runtime-source-manifest.json",
-      "sha256": "0d65018753e6da0e50c3db73e33d95cf5f197702e5e5c523285f0b399f28643b"
+      "sha256": "169014e280973e286e843f2f88294d673d493de64609adf655bd165edda17ea0"
     },
     {
       "path": "scripts/prepare_unity_story_sound_runtime.py",
@@ -352,7 +352,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/BattleStatusPlayables/OfficialBattleStatusPlayableAcceptance.cs",
-      "sha256": "14955ce2c3612c74afb9a45425f8608a74a3fa2bd371040cb5361134bcb4ded3"
+      "sha256": "86f6d1167bc94004e5233a9fbbdf3810aa54a14d85b95e6514e8aca383a07abb"
     },
     {
       "path": "unity/Assets/Game/Editor/BattleStatusPlayables/Zjcs.Editor.BattleStatusPlayables.asmdef",
@@ -360,7 +360,7 @@
     },
     {
       "path": "scripts/prepare_battle_status_playable_validation.py",
-      "sha256": "3a3ef7723a01a6f676f960d3aa0fad3db0f2a7a736328438a8469bc4a18a766a"
+      "sha256": "0fcaf114bc9fc2ba3379df16a3877d40d253714c09c502093d13e151ae72eb5a"
     }
   ],
   "adaptation": "Official MyFightStatus lifecycle and MyFightStatusAgent membership. Original local status/entity metadata, events, shared-stack totals, creator/master GameObjects and icon availability enter through explicit host interfaces; no rule computation is added. Original DI becomes Bind, disposable forbidden subscription becomes a symmetric event subscription, framework logging becomes Unity diagnostics.",

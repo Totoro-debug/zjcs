@@ -10,6 +10,8 @@
 
 状态实体表现代码取所选 `884_156692` 已核验的 Assembly-CSharp.dll、Framework.FirstPass.Runtime.dll 与七份应用／框架源码；共享层数和可叠层元数据另登记五份原始边界证据。原文件、22个核心方法的显式实体访问替换核对、原脚本fileID、诊断／绑定适配、输出C#／meta及依赖哈希见[状态实体表现代码来源](battle-animation/status-view-runtime-source-manifest.json)，入口为 `scripts/prepare_battle_status_view_runtime.py`。本批复用既有原生水波粒子夹具，无新增美术或完整素材快照；行为与验证范围见[战斗执行](../../docs/features/battle-execution.md)。
 
+原生状态环绕输入取所选 `884_156692` Assembly-CSharp.dll、`MyPlayableOrbitMovement`、三组原prefab及其已核验原生导出／Windows转换缓存；原APK对象、每个纹理mip、全量Shader转换、脚本fileID、十九个方法适配指纹、34个资源及显式绑定哈希见[环绕代码来源](battle-animation/status-orbit-runtime-source-manifest.json)和[环绕资源来源](battle-animation/status-orbit-assets-source-manifest.json)。重建入口为 `scripts/prepare_battle_status_orbit_runtime.py`／`scripts/prepare_battle_status_orbit_assets.py`，对象池适配及验证范围见[战斗执行](../../docs/features/battle-execution.md)。本批未生成完整素材快照。
+
 原装备被动词条选择输入：`record_battle_equipment_selection_sources.py` 校验 `884_156692` 的战斗词条过滤／互斥比较、套装阈值、被动属性、技能品阶与 `854_156383` 装备／战斗数据；源代码、配置及运行适配 SHA256 见[装备被动选择来源](battle-rules/equipment-selection-source-manifest.json)，行为与验证见[装备功能](../../docs/features/equipment.md)。
 
 原场景部件应用代码输入：`prepare_battle_renderer_part_sources.py` 核验 `884_156692` 解码程序集与8份官方应用源码（含 `CharacterPartEntryProvider`／`CharacterPartPoolEntry`），记录加载／池化／分层／动作通知代码及显式适配端口；输入、依赖与迁移输出 SHA256 见 [场景部件凭据](battle-animation/renderer-parts-source-manifest.json)，当前实现及验证范围见[战斗执行](../../docs/features/battle-execution.md)。
