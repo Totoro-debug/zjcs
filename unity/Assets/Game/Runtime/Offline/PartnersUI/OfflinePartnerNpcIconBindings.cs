@@ -87,7 +87,7 @@ namespace Zjcs.Offline.PartnersUI
             { Info = info; this.figure = figure; this.canAssist = canAssist; }
             public ActorTargetType TargetType => ActorTargetType.Npc;
             public long TargetId => Info.TargetId;
-            public long ServerId => 0; // Original NpcTargetData constructor leaves this field unset.
+            public long ServerId => Info.ServerId;
             public bool IsNpc => true;
             public int NpcClassId => Info.NpcClassId;
             public string GetFigurePath(Sex sex) => figure(NpcClassId, sex);

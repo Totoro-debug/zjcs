@@ -1893,3 +1893,13 @@ unity/Assets/Official/World/Map/12/NativeMiniMapCurrent.meta -text
 unity/Assets/Official/World/Map/14/NativeMiniMapCurrent/** -text
 unity/Assets/Official/World/Map/14/NativeMiniMapCurrent.meta -text
 unity/Assets/Game/Runtime/Offline/Progression/Zjcs.Offline.Progression.asmdef text eol=lf
+
+# Preserve selected partner player-info source and binding hashes.
+scripts/prepare_partner_player_info*.py text eol=lf
+scripts/prepare_partner_npc_icon_validation.py text eol=lf
+scripts/fixtures/partner_npc_icon_validation.cs text eol=lf
+unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerInfoUI.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersNpc/OfflinePartnerNpcRuntime.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerNpcIconBindings.cs text eol=lf
+unity/Assets/Game/Editor/ProfessionUI/ProfessionPlayerInfoValidation.cs text eol=lf
+assets/reference/partner-player-info-source-manifest.json text eol=lf

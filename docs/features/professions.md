@@ -140,7 +140,7 @@
 
 原玩家信息与自身头像：`prepare_unity_profession_player_info.py` 保留完整 `PlayerInfoUI`／`PlayerIconMe` 应用方法与字段、两种原枚举，数据结构只迁入消费字段和 Id 属性；全部数据构造明确留给上游，不以夹具替代生产规则。协议外观／简讯保持原对象引用，职业／位阶等值保持整数；复用已迁移状态切换和原资源释放顺序。真实子控件和生产数据／资源服务尚未绑定，无完整职业页面结论。
 
-依据：`profession-ui/player-info-source-manifest.json`。
+依据：`profession-ui/player-info-source-manifest.json`。伙伴接线已将共享 `PlayerInfoUI` 更新至所选 `884_156692`；当前来源、显示规则与验证范围统一维护在[伙伴资料控件](partners.md#当前资料控件与-npc-目标的版本接线局部)，其余头像控件仍按各自来源清单记录。
 
 `scripts/prepare_profession_appearance.py` 与 `extract_profession_appearance.mjs` 从固定 APK／匹配原 CDN 的男女 Spine、职业皮肤表、主副武器部件、原 atlas／colormap 生成 `assets/characters/profession/`；来源对象、包版本、输入输出 SHA256 见 `profession-appearance/source-manifest.json`。职业肖像使用原 Profession 摄影尺寸、偏移、正交视野与透明背景，未知剪影着色逻辑来自原 GlobalUIConfig.SpineSolidColorMaterial。原 PointAttachment、部件缩放、正背面动画、UV 与网格变形均保留；没有绘制替代贴图。该目录只登记已经接入的职业 UI 服装及骨骼武器，独立装饰粒子和地图／战斗服装动作不混报为完成。
 

@@ -1,0 +1,44 @@
+{
+  "manifest": "884_156692",
+  "official_source_sha256": {
+    ".tools/source-packages/current/884_156692/code-manifest.json": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4",
+    ".tools/source-packages/current/884_156692/official-code/client-source/PlayerInfoUI.cs": "622cc9e51e18ca793b7ea0fb0b89f839a20d0d420d229a8441be6f189c1d2a03",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ActorTargetData.cs": "7d7b25e3301ea51575ddcc03981db340e3570946d68a9a7f6b993ae309d756e8",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcTargetData.cs": "8dd82f3532fc35e2016cc794ca1a5ac44cf0bf8f252a201ed7145080d76ceab7",
+    ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d",
+    ".tools/source-packages/current/884_156692/official-code/managed/decoded/Console.dll": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6",
+    "official-source.json": "a29067dd1363590c8fde67a7d5326fcb5a4632441e8c73ae8b64300aa491a3a6"
+  },
+  "binding_source_sha256": {
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerInfoUI.cs": "f404dbff0a8da2102cf015ec68d9b954952e205b721d468d2b3b3ebc18ab59f3",
+    "unity/Assets/Game/Runtime/Offline/PartnersNpc/OfflinePartnerNpcRuntime.cs": "ecda2401f6329874e553f775912272e80ed3fee8741c90905041574f247e5638",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerNpcIconBindings.cs": "663562d6dabab99922993d493c024f710d2be0eb644eada7bd628cdc79807e5c"
+  },
+  "validation_source_sha256": {
+    "scripts/fixtures/partner_npc_icon_validation.cs": "91bd967f0a1845b6aecfe0d004f3eee511982aca39427264649afb4ca19046f0",
+    "scripts/prepare_partner_npc_icon_validation.py": "daa2cd67a4f713d39ba3073fa939ceec27714799b0945f85b85a647d04655afc",
+    "scripts/prepare_partner_player_info.py": "86ca2d6c1cb7b9be4c09e5b0a51536f93e8d6b25cea11c4253abb3a1ebc6a43f",
+    "scripts/prepare_partner_player_info_validation.py": "b164690ef1d1139b85401a4acd456b0de9d36d1362406dfe3ba0314ad97c43e8",
+    "unity/Assets/Game/Editor/ProfessionUI/ProfessionPlayerInfoValidation.cs": "cd37c2ecd8b9d61403553d8dc7a1e74701a5b7debf1f7809997975e0b1fbe481"
+  },
+  "dependency_source_sha256": {
+    "assets/reference/partner-npc-runtime-source-manifest.json": "1c42e943a68c6422a2c89aa343b670c9a91be0b8b10b70f1472f4c1b84e39ddc",
+    "assets/reference/profession-ui/player-info-source-manifest.json": "49c359c1685d2f0df7a42f0092858b5a3a4a757a123d89f67111a3901c97c77a",
+    "scripts/prepare_unity_profession_photographer.py": "21b43ad45b60fea01af75928c8213b54045ec4461a54bb8e411a571382c6d282",
+    "scripts/prepare_unity_profession_player_appearance.py": "ec2e98cb086a31985f2e3ddd03a3c9501a6548c1dc268162d996e5aeac8b79c3",
+    "scripts/prepare_unity_profession_player_info.py": "f984726a68e1c0c000fde99c31de9312f38e654727a85c8279de15fc888d9ad2",
+    "scripts/prepare_unity_profession_ui_parts.py": "ecbd7039f9fa4dff5e6453c23ca41dda07b9cf32a732d1bff87fd8659b5b291b",
+    "unity/Assets/Game/Editor/ProfessionUI/ProfessionPlayerInfoValidation.cs.meta": "d84571e1c63fd057abc66a913b4fba477c84d4571373b4878821f1fade988269",
+    "unity/Assets/Game/Editor/ProfessionUI/ProfessionValidationWorkspace.cs": "9e2eff8fa019b5f3a0429c8c38358b20ffb66b8320c521cab020ecf2601ff6d8",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerInfoUI.cs.meta": "d8c71fa2d771c091abf9c014bbca68ff4d01b2131e8f894def542fe5cb7ef624",
+    "unity/Assets/Game/Runtime/Offline/PartnersNpc/OfflinePartnerNpcRuntime.cs.meta": "b819c68ba877bba439d26210c10211ff5b0298f701dd6b1f6acb036e11344716",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerNpcIconBindings.cs.meta": "02c0e192706b68ff3e9308b6b408fde5d1688f6cc192c328115de715b4a14840",
+    "unity/Assets/Official/Partners/UI/Panel/NpcPanel.prefab": "99a08091411b08e43ea7531c3d0e5dab98811b467cd501b2dd119683b47c0627"
+  },
+  "operation": [
+    "PlayerInfoUI is copied from the selected 884 source; explicit host services replace injection and original opaque protocol/enum adapters remain.",
+    "Collection visibility consumes the caller flag; pin mask checks collection reference, flag and target before original team compatibility/cooldown branches.",
+    "NPC lite info preserves ServerId read from the actual selected NpcTargetData instance; icon target forwards it without assigning a server.",
+    "Other profession widgets retain their separate historical source manifests; this receipt does not relabel them or claim full partner/Windows integration."
+  ]
+}

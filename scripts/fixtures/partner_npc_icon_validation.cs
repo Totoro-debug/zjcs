@@ -78,7 +78,7 @@ public static class PartnerNpcIconValidation
         return dialogues;
     }
 
-    public static void CheckFolded(GameObject root, Action<GameObject> click)
+    public static void CheckFolded(GameObject root, Action<GameObject> click, Action<string> capture)
     {
         var row = root.GetComponentsInChildren<NpcPanelDialogueListNpcItem>().Single();
         var wrapper = Field<Component>(row, "mIcon") as TeamPlayerIcon;
@@ -87,12 +87,22 @@ public static class PartnerNpcIconValidation
         var info = icon.mInfoData;
         Require(info.Id == 8001 && info.TargetData.IsNpc && info.Level == 1 && info.SubRank == runtime.Norank
             && info.Profession == 10 && info.CombatRating == 1045, "Address-book actor identity and original level/rank/profession/combat rating");
+        Require(info.TargetData.ServerId == -1, "Actual original NPC target inherits ActorTargetData.ServerId = -1");
         Require(info.Name != "ui_npc_name_8402" && !string.IsNullOrEmpty(info.Name), "Actual original NPC name is localized");
         Require(icon.InfoUI.PlayerIcon.sprite == images.Entries.Single(r => r.Path == "UI/NPC/Npc_Icon/Map_11/npc_icon_8402").Asset,
             "Original NPC appearance branch uses the selected native Sprite");
         Require(icon.InfoUI.ProfessionIconGo == null, "Original address-book prefab leaves the profession icon's activation root unset; retain that branch");
         Require(icon.InfoUI.PlayerFigure == null && icon.InfoUI.NpcAppearanceSlot == null,
             "This original NPC row uses the Sprite branch without a full-body model slot");
+        Require(icon.InfoUI.CollectionImg && !icon.InfoUI.PinMask, "Actual original row retains collection image and its empty mask reference");
+        icon.InfoUI.SetShowCollectionImg(true);
+        Require(icon.InfoUI.CollectionImg.gameObject.activeInHierarchy,
+            "Selected widget displays caller collection state even when this NPC fixture has no main-player provider");
+        capture("npc-icons-collection-shown.png");
+        icon.InfoUI.SetShowCollectionImg(false);
+        Require(!icon.InfoUI.CollectionImg.gameObject.activeSelf,
+            "Caller hides the actual native collection object without adding a mask");
+        capture("npc-icons-collection-hidden.png");
         // The original full-row button covers the avatar here; use that actual
         // pointer handler, which opens the contact's conversation list.
         click(Field<Button>(row, "mBtn").gameObject);

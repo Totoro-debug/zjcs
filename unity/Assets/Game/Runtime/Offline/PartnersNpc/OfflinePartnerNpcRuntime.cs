@@ -16,6 +16,7 @@ namespace Zjcs.Offline.PartnersNpc
     public sealed class OfflinePartnerNpcLiteInfo
     {
         public long TargetId { get; internal set; }
+        public long ServerId { get; internal set; }
         public long OwnerPlayerId { get; internal set; }
         public int NpcClassId { get; internal set; }
         public int Level { get; internal set; }
@@ -130,7 +131,8 @@ namespace Zjcs.Offline.PartnersNpc
                 if (!(bool)Property(detail, "IsValid")) throw new InvalidOperationException("Original NPC combat detail is missing: " + npcClassId);
                 object npc = Property(detail, "NpcInfo");
                 return new OfflinePartnerNpcLiteInfo {
-                    TargetId = Convert.ToInt64(Property(fight, "TargetId")), OwnerPlayerId = ownerPlayerId, NpcClassId = npcClassId,
+                    TargetId = Convert.ToInt64(Property(fight, "TargetId")), ServerId = Convert.ToInt64(Property(target, "ServerId")),
+                    OwnerPlayerId = ownerPlayerId, NpcClassId = npcClassId,
                     Level = Convert.ToInt32(Property(fight, "Level")), SubRank = Convert.ToInt32(Property(fight, "SubRank")),
                     CreatePlanesRank = Convert.ToInt32(Property(fight, "CreatePlanesRank")), Profession = Convert.ToInt32(Property(detail, "Profession")),
                     Sex = Convert.ToInt32(Field(npc, "Sex")), NameKey = (string)Field(npc, "NameKey"), Icon = (string)Field(npc, "Icon"),

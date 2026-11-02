@@ -60,7 +60,7 @@ public class PlayerInfoUI : MonoBehaviour
 
 	private PlayerInfoData mPlayerInfoData;
 
-	private bool mShowNpcCollectionImg;
+	private bool mShowCollectionImg;
 
 	private ProfessionResourceOperationBag mDisposableBag = new ProfessionResourceOperationBag();
 
@@ -106,7 +106,7 @@ public class PlayerInfoUI : MonoBehaviour
 
 	public void SetShowCollectionImg(bool isShow)
 	{
-		mShowNpcCollectionImg = isShow;
+		mShowCollectionImg = isShow;
 		RefreshImgCollection();
 		RefreshPinMask();
 	}
@@ -383,42 +383,15 @@ public class PlayerInfoUI : MonoBehaviour
 	{
 		if (!((Object)(object)CollectionImg == (Object)null))
 		{
-			((Component)CollectionImg).gameObject.SetActive(ShouldShowCollectionImg());
+			((Component)CollectionImg).gameObject.SetActive(mShowCollectionImg);
 		}
-	}
-
-	private bool ShouldShowCollectionImg()
-	{
-		if (InfoBindings.MainPlayer == null)
-		{
-			return false;
-		}
-		IProfessionInfoNpcTarget npcTargetData = mPlayerInfoData.TargetData as IProfessionInfoNpcTarget;
-		if (npcTargetData == null)
-		{
-			return false;
-		}
-		if (InfoBindings.MainPlayer.IsNpcPinLimited)
-		{
-			return false;
-		}
-		if (!mShowNpcCollectionImg)
-		{
-			return false;
-		}
-		return IsCollectedNpc(npcTargetData.NpcClassId);
-	}
-
-	private bool IsCollectedNpc(int npcClassId)
-	{
-		return InfoBindings.MainPlayer.IsNpcCollected(npcClassId) ?? false;
 	}
 
 	private void RefreshPinMask()
 	{
 		if (!((Object)(object)PinMask == (Object)null))
 		{
-			if ((Object)(object)CollectionImg == (Object)null || !ShouldShowCollectionImg())
+			if ((Object)(object)CollectionImg == (Object)null || !mShowCollectionImg || mPlayerInfoData.TargetData == null)
 			{
 				((Component)PinMask).gameObject.SetActive(false);
 			}

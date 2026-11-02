@@ -46,7 +46,7 @@ def main():
         'word : localizeRoster(key)': 'word : PartnerNpcIconValidation.Localize(key, localizeRoster)',
         'Capture("panel-host-dialogue-empty.png");':
             'Capture("npc-icons-folded.png");\n'
-            '        PartnerNpcIconValidation.CheckFolded(view.Content, Click);\n'
+            '        PartnerNpcIconValidation.CheckFolded(view.Content, Click, Capture);\n'
             '        yield return new WaitForSeconds(0.5f);\n'
             '        PartnerNpcIconValidation.CheckUnfolded(view.Content, Click);\n'
             '        Capture("npc-icons-unfolded.png");',
