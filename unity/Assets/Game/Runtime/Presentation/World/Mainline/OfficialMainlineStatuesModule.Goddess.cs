@@ -168,6 +168,7 @@ namespace Zjcs.Presentation.World
                 if (host.regions.regionFog != null) host.mapGridVisibility?.UnlockRegion(entity.Region);
                 host.nativeMap12World?.UnlockRegion(host.navigation.GridToWorld(entity.Grid));
                 host.nativeMap13World?.UnlockRegion(host.navigation.GridToWorld(entity.Grid));
+                host.configuredNativeGround?.UnlockRegion(host.navigation.GridToWorld(entity.Grid));
                 host.SaveLocalProgress();
             }
 

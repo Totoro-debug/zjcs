@@ -1,4 +1,5 @@
-"""Bind the original common player/camera and Map15 native world labels."""
+"""Bind the original common player/camera and a configured map's native labels."""
+import argparse
 import json
 import re
 from pathlib import Path
@@ -12,7 +13,7 @@ from prepare_mainline_map15_configurations import record, sha
 from refresh_current_localization import language
 
 
-def build():
+def build(map_id=15):
     apk = Apk.current()
     sources = []
 
@@ -59,8 +60,10 @@ def build():
     if prepared["manifest"] != apk.version or expected.get(assembly["path"]) != assembly["sha256"]:
         raise ValueError("Selected original camera format assembly differs")
 
-    definition_path = ROOT / "unity/Assets/Official/World/Map/15/map15.json"
+    definition_path = ROOT / f"unity/Assets/Official/World/Map/{map_id}/map{map_id}.json"
     definition = json.loads(definition_path.read_bytes())
+    if definition["ClassId"] != map_id:
+        raise ValueError("Original map definition identity differs")
     regions = [json.loads(c["Json"]) for c in definition["Configs"] if c["TableName"] == "TbMapRegionInfo"]
     # These shared serialized UI/rank values retain their own historical provenance.
     shared_path = ROOT / "unity/Assets/Official/World/Map/14/Resources/Map14/Native/region-label-data.json"
@@ -70,10 +73,10 @@ def build():
     for region in regions:
         region["RecommendCombatRatingIndex"] = ui["recommendCombatRatingIndex"]
         region["HasCombatRatingLevelValues"] = region["CombatRatingLevelValues"] is not None
-    native = ROOT / "unity/Assets/Official/World/Map/15/NativeCurrent"
-    if not (native / "Resources/Map15/Native/current-ground.prefab").is_file():
-        raise ValueError("Bind the complete selected original Map15 native ground first")
-    required = {"region_15_" + str(r["Region"]) for r in regions}
+    native = ROOT / f"unity/Assets/Official/World/Map/{map_id}/NativeCurrent"
+    if not (native / f"Resources/Map{map_id}/Native/current-ground.prefab").is_file():
+        raise ValueError(f"Bind the complete selected original Map{map_id} native ground first")
+    required = {f"region_{map_id}_" + str(r["Region"]) for r in regions}
     prefab_inputs = []
     for prefab in sorted(native.rglob("*.prefab")):
         text = prefab.read_text(encoding="utf8")
@@ -84,32 +87,37 @@ def build():
     texts, language_inputs = language(ROOT / ".tools/source-packages/WwiseBnk")
     missing = [k for k in required if xxhash.xxh64_intdigest(k.encode()) not in texts]
     if missing:
-        raise ValueError("Unresolved original Map15 label keys: " + str(missing))
+        raise ValueError(f"Unresolved original Map{map_id} label keys: " + str(missing))
     nav = definition["Navigation"]
     area_to_region = {area: r["Region"] for r in regions for area in r["Areas"] or []}
-    data = dict(manifest=apk.version, mapClassId=15, width=nav["Width"], height=nav["Height"],
+    maxima = {r["Region"]: r["Value"] for r in definition["MaxRegionProgress"]}
+    if set(maxima) != set(range(len(regions))) or set(maxima) != {r["Region"] for r in regions}:
+        raise ValueError("Original label region IDs are not unique contiguous indexes")
+    data = dict(manifest=apk.version, mapClassId=map_id, width=nav["Width"], height=nav["Height"],
         origin=[nav["Origin"][k] for k in ("X", "Y", "Z")], regions=regions,
         regionGrid=[area_to_region.get(c["RawValues"][0], -1) for row in nav["Rows"] for c in row["Cells"]],
-        maxProgress=[r["Value"] for r in definition["MaxRegionProgress"]],
+        maxProgress=[maxima[region] for region in range(len(regions))],
         texts=[dict(key=k, value=texts[xxhash.xxh64_intdigest(k.encode())]) for k in sorted(required)],
         **{k: shared[k] for k in ("suppressUnlockRank", "subRankToRank", "combatRatingColors")})
     outputs = []
     for name, value in (("BaseGround/player-view", view), ("Native/region-label-data", data)):
-        target = ROOT / "unity/Assets/Game/Resources/Map15" / (name + ".json")
+        target = ROOT / f"unity/Assets/Game/Resources/Map{map_id}" / (name + ".json")
         write(target, encode(value))
         import_meta(target, "TextScriptImporter")
         import_meta(target.parent, "DefaultImporter", folder=True)
         outputs.append(record(target))
-    proof = dict(format=1, manifest=apk.version, mapClassId=15, player_camera_objects=sources,
+    proof = dict(format=1, manifest=apk.version, mapClassId=map_id, player_camera_objects=sources,
         language_inputs=language_inputs, native_prefab_inputs=prefab_inputs,
         schema_assembly=assembly, prepared_code=record(prepared_path), schema_types=sorted(schemas.records),
         configuration_input=record(definition_path), historical_shared_inputs=[record(shared_path), record(ui_path)],
         tool=record(Path(__file__)), outputs=outputs,
-        operation="Read original common 3001 player model/offset/sorting and WorldCamera projection/adaptor. Bind original Map15 region rows, native prefab language keys and verified selected language. Shared historical label themes/rank mapping retain explicit input identities; no full-version equivalence is asserted.")
-    write(ROOT / "assets/reference/official-map/map15-world-view-source-manifest.json", encode(proof))
+        operation=f"Read original common 3001 player model/offset/sorting and WorldCamera projection/adaptor. Bind original Map{map_id} region rows, native prefab language keys and verified selected language. Index progress maxima by region ID while retaining original row order. Shared historical label themes/rank mapping retain explicit input identities; no full-version equivalence is asserted.")
+    write(ROOT / f"assets/reference/official-map/map{map_id}-world-view-source-manifest.json", encode(proof))
     apk.archive.close()
-    print("Map15 original player/camera and native label data:", len(required), "language keys")
+    print(f"Map{map_id} original player/camera and native label data:", len(required), "language keys")
 
 
 if __name__ == "__main__":
-    build()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--map-id", type=int, default=15)
+    build(parser.parse_args().map_id)

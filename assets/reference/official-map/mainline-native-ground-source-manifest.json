@@ -16,7 +16,66 @@
   },
   "original_view_receipt": {
     "path": "assets/reference/official-map/map15-world-view-source-manifest.json",
-    "sha256": "73d6a8a1f5e5e72d8ea77fa2e31862b4180aa2e40fac42617a068866ad024314"
+    "sha256": "d2c6cc5330fd6d8479c31f46c94b72f3ee1140b05b4b62e7eba3b297f4e2e93e"
+  },
+  "current_water_equivalence": {
+    "manifest": "884_156692",
+    "assembly": {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/CustomWater.dll",
+      "sha256": "2079df13caa06ae56758042d7c3f844be32e649c3d035deb20c4c7a94862252f"
+    },
+    "code_manifest": {
+      "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+      "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+    },
+    "original_migration_receipt": {
+      "path": "assets/reference/official-map/map13-native-water-code-source-manifest.json",
+      "sha256": "f277cbdf79d90c42e4ef5f6132b0dc52627ac6e441f3f17717638560a2b40acd"
+    },
+    "extraction": {
+      "bundle": "hybridclr_assets_hybridclrdata_dlls_customwater_dll.bundle",
+      "bundle_hash": "5541847680b376975c525dbc6f0de6ad",
+      "path_id": "-711126512220388104",
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/HybridCLR/5541847680b376975c525dbc6f0de6ad.bundle",
+        "manifest": "884_156692"
+      },
+      "text_asset_sha256": "c5a2dfe4466f26513e0901dca0749edd552f309094c160375b9a28a10d2a63be",
+      "decoded_sha256": "2079df13caa06ae56758042d7c3f844be32e649c3d035deb20c4c7a94862252f"
+    },
+    "installed_outputs": [
+      {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/WaterController.cs",
+        "sha256": "e71867866473ee4ae57e2279c465653d7d5097f59e8bce341fece2358b322aa8",
+        "original_class": "WaterController"
+      },
+      {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/PartialSubmersion.cs",
+        "sha256": "3d497b9e94959af7feaf805a50abeb513dba191899f1d2da38932b04aed3036f",
+        "original_class": "PartialSubmersion"
+      },
+      {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/SeaRendererReplacement.cs",
+        "sha256": "2424ac689dbe40e350689e4282a0bf3ffd5310684efe97026059d53a4ccae27a",
+        "original_class": "SeaRendererReplacement"
+      },
+      {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/FordingSpriteRenderer.cs",
+        "sha256": "a37724c54cf37b8d6fa0395686454c4b3802b6c64c4368686f7e2fc1d58ccc45",
+        "original_class": "FordingSpriteRenderer"
+      },
+      {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/WaterMaskRenderer.cs",
+        "sha256": "4af4a1d1c963e8c8b181fb9e839edc18b75a88ce63493f502e50e295ffda73ff",
+        "original_class": "WaterMaskRenderer"
+      },
+      {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Zjcs.Official.World.NativeWater.asmdef",
+        "sha256": "0889aca133334529fac06f0f2db52e6a6c18a9e54026e322f35d70bc3fb37121"
+      }
+    ],
+    "scope": "CustomWater.dll is byte-identical across these two recorded inputs; the six installed migration outputs still match. This is not whole-client version equivalence."
   },
   "hashing": "UTF-8 bytes normalized to LF for installed code; original input receipts retain their own hash conventions.",
   "outputs": [
@@ -46,7 +105,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/MainlineNativeGround/MainlineNativeGround.cs",
-      "sha256": "b022cbc42f2c5f6d152ee9c5b47219fe2569de651783f1c488656c0c2aa2cd70"
+      "sha256": "7464e3c3fb10587c39ccd64add681a2758fdf8cf2b8c03eb3325bd8f5c8c8c14"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/MainlineNativeGround/MainlineNativeGround.cs.meta",
@@ -83,6 +142,14 @@
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap14/OfficialMap14NativeWorldView.cs",
       "sha256": "a62d61ccf7590eaf127b05de6c85ebcda8c5cb35d489ae65549ac64cafa5fde6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineStatuesModule.Goddess.cs",
+      "sha256": "46e7479e9c5390dd95614322a6e760973bb83d9a4de8b1dee408d74202d26a6f"
+    },
+    {
+      "path": "scripts/prepare_mainline_ground_validation.py",
+      "sha256": "e8273576b0925a056d1766ce2d51d80b8e2776afefffdeb752209dd176783ec6"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap14/Zjcs.Presentation.World.NativeMap14.asmdef",
@@ -143,10 +210,30 @@
     {
       "path": "unity/Assets/Game/Editor/Map14/WorldHost/Zjcs.Editor.Map14.WorldHost.asmdef",
       "sha256": "e41e66dded448120b182f5c5246d78184b7efe2005a5b918b303850d3cb5c086"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.cs",
+      "sha256": "c6fe41f8e7359dcd6c48a0bc9ffa131cb9e9e160563227afe36649d3358c566d"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.cs.meta",
+      "sha256": "3b3eae4bb8239b87854eaaca81227b0048a8dc939d11e637289f2f45ff21465f"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineNativeGround/Zjcs.Editor.MainlineNativeGround.asmdef",
+      "sha256": "9789fb0a984860b21ecd67dda02060433c535b21b697ccd6e51cbf90fe11c489"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineNativeGround/Zjcs.Editor.MainlineNativeGround.asmdef.meta",
+      "sha256": "afe5d031fd337e456da38e599578865000216fb5c0279d987bef0307e78ff183"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineNativeGround.meta",
+      "sha256": "f96bcf571a63f08d432e30e76e9fc8dbde4e42c439102ffa1d71c63a671c4ab9"
     }
   ],
   "tool": {
     "path": "scripts/record_mainline_native_ground_sources.py",
-    "sha256": "47ae4f011d5456faa82b3c99dac277c299b882cdc3c844d52b433ddc5ef9161e"
+    "sha256": "d8257363863f8daea7f536d4691c9bf8e828626a257e9fce06424416ca2a6560"
   }
 }

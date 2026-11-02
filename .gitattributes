@@ -1763,3 +1763,17 @@ unity/Assets/StreamingAssets/PartnerNpcShared.meta text eol=lf
 unity/Assets/StreamingAssets/PartnerNpcShared/**/*.meta text eol=lf
 unity/Assets/StreamingAssets/PartnerNpcShared/**/*.bytes -diff
 assets/reference/partner-npc-runtime-source-manifest.json text eol=lf
+
+# Preserve configured native map definitions and whale-island dependency bytes.
+scripts/prepare_mainline_map_definition.py text eol=lf
+scripts/prepare_mainline_ground_validation.py text eol=lf
+scripts/prepare_mainline_map16_native_ground.py text eol=lf
+unity/Assets/Game/Editor/MainlineNativeGround/** text eol=lf
+unity/Assets/Game/Editor/MainlineNativeGround.meta text eol=lf
+unity/Assets/Game/Resources/Map16/** text eol=lf
+unity/Assets/Game/Resources/Map16.meta text eol=lf
+unity/Assets/Official/World/Map/16/** text eol=lf
+unity/Assets/Official/World/Map/16.meta text eol=lf
+unity/Assets/Official/World/Map/16/NativeCurrent/** -text
+unity/Assets/Official/World/Map/16/NativeCurrent.meta -text
+assets/reference/official-map/map16-*-source-manifest.json text eol=lf

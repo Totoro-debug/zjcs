@@ -5,6 +5,7 @@ No animation SDK runtime is copied or loaded.
 """
 import hashlib
 import json
+from dataclasses import dataclass
 from pathlib import Path
 import re
 import struct
@@ -28,6 +29,16 @@ BUNDLE = 'defaultpackage_assets_prefabs_map_map_tower15_snowfloor1.bundle'
 MODULE = ROOT / 'unity/Assets/Game/Runtime/Presentation/World/MainlineNativeGround'
 
 
+@dataclass(frozen=True)
+class GroundSource:
+    map_id: int
+    prefab_address: str
+    bundle: str
+
+
+MAP15 = GroundSource(15, 'Assets/Prefabs/Map/Map_Tower15_SnowFloor1/' + NAME + '.prefab', BUNDLE)
+
+
 class Dumper(BindingDumper):
     pass
 
@@ -46,9 +57,25 @@ def stable(name):
 
 
 class GroundBinding(PartnerCardBinding):
+    def __init__(self, work, source=MAP15):
+        if source.map_id <= 0 or not source.prefab_address.startswith('Assets/Prefabs/') or not source.prefab_address.endswith('.prefab'):
+            raise ValueError('An explicit original map identity and prefab address are required')
+        self.source = source
+        self.destination = ROOT / f'unity/Assets/Official/World/Map/{source.map_id}/NativeCurrent'
+        self.receipt_path = ROOT / f'assets/reference/official-map/map{source.map_id}-current-ground-source-manifest.json'
+        super().__init__(work)
+
+    def native_guid(self, name):
+        # Preserve all previously installed Map15 identities. Other maps own
+        # their copied dependency closure and must not duplicate those GUIDs.
+        return stable(name if self.source.map_id == 15 else f'Map{self.source.map_id}:' + name)
+
     def register_scripts(self):
         paths = {name: unity_script_path(path) for name, path in SCRIPT_TARGETS.items()}
         paths.update(MyTile=unity_script_path('Game/Runtime/Official/World/NativeTerrain/MyTile.cs'),
+            MapRegionLight=unity_script_path('Game/Runtime/Official/World/NativeEnvironment/MapRegionLight.cs'),
+            SeaRendererReplacement=unity_script_path('Game/Runtime/Official/World/NativeWater/SeaRendererReplacement.cs'),
+            WaterConfig=unity_script_path('Game/Runtime/Official/World/NativeWater/WaterConfig.cs'),
             SkeletonAnimation=MODULE / 'MainlineGroundAnimation.cs',
             TMP_FontAsset=ROOT / 'unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TMP_FontAsset.cs')
         namespaces = dict(SkeletonAnimation='Spine.Unity', Light2D='UnityEngine.Rendering.Universal',
@@ -95,7 +122,7 @@ class GroundBinding(PartnerCardBinding):
             if re.search(rb'guid: [0-9a-f]{32}', raw):
                 raise ValueError('Bind additional native mesh dependencies explicitly')
             target = path.relative_to(self.native)
-            result = dict(fileID=4300000, guid=stable(source_guid), type=2)
+            result = dict(fileID=4300000, guid=self.native_guid(source_guid), type=2)
             self.redirects[source_guid] = result
             self.script_guids.add(result['guid'])
             self.queue.append((target, result['guid'], raw))
@@ -109,7 +136,7 @@ class GroundBinding(PartnerCardBinding):
         result = super().load(source_guid)
         if len(self.queue) > before:
             target, _, data = self.queue[-1]
-            new = stable(source_guid)
+            new = self.native_guid(source_guid)
             result['guid'] = new
             self.queue[-1] = target, new, data
             self.proof[identity(obj)]['guid'] = new
@@ -157,12 +184,12 @@ class GroundBinding(PartnerCardBinding):
             + string(fields['m_Name']) + struct.pack('<f', fields['scale'])
             + block(json.dumps(decoded, ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode())
             + block(json.dumps(regions, ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode()))
-        payload = Path('Skeletons') / (stable(source_guid) + '.bytes')
-        payload_guid = stable('payload:' + source_guid)
+        payload = Path('Skeletons') / (self.native_guid(source_guid) + '.bytes')
+        payload_guid = self.native_guid('payload:' + source_guid)
         self.queue.append((payload, payload_guid, data))
         self.script_guids.add(payload_guid)
-        target = Path('Skeletons') / (stable(source_guid) + '.asset')
-        target_guid = stable(source_guid)
+        target = Path('Skeletons') / (self.native_guid(source_guid) + '.asset')
+        target_guid = self.native_guid(source_guid)
         result = dict(fileID=11400000, guid=target_guid, type=2)
         self.redirects[source_guid] = result
         self.script_guids.add(target_guid)
@@ -187,8 +214,9 @@ class GroundBinding(PartnerCardBinding):
         return result
 
     def build_ground(self):
-        self.recovery.recover(NAME, self.work / 'map15-ground-native', bundle=BUNDLE,
-            native_relative='Prefabs/Map/Map_Tower15_SnowFloor1/' + NAME + '.prefab')
+        name = Path(self.source.prefab_address).stem
+        self.recovery.recover(name, self.work / f'map{self.source.map_id}-ground-native', bundle=self.source.bundle,
+            native_relative=self.source.prefab_address.removeprefix('Assets/'))
         self.recovery.finalize()
         source, _, card, record = self.recovery.outputs[0]
         source_key = source.relative_to(self.cache / 'native-export-all').as_posix()
@@ -203,8 +231,8 @@ class GroundBinding(PartnerCardBinding):
             fields = card['documents'][script['nativeFileID']]['MonoBehaviour']
             full_name = '.'.join(filter(None, [script['namespace'], script['type']]))
             fields['m_Script'] = self.scripts[full_name]
-        prefab_guid = stable('root:' + NAME)
-        target = Path('Resources/Map15/Native/current-ground.prefab')
+        prefab_guid = self.native_guid('root:' + name)
+        target = Path(f'Resources/Map{self.source.map_id}/Native/current-ground.prefab')
         self.queue.append((target, prefab_guid, card['documents']))
         outputs = {}
         index = 0
@@ -224,10 +252,10 @@ class GroundBinding(PartnerCardBinding):
                 raw = raw.encode('utf8')
             else:
                 raw = data
-            path = DEST / target
+            path = self.destination / target
             path.parent.mkdir(parents=True, exist_ok=True)
             if path.is_file() and path.read_bytes() != raw:
-                previous = json.loads(RECEIPT.read_bytes()) if RECEIPT.is_file() else {}
+                previous = json.loads(self.receipt_path.read_bytes()) if self.receipt_path.is_file() else {}
                 if sha(path.read_bytes()) != previous.get('outputs', {}).get(path.relative_to(ROOT).as_posix()):
                     raise ValueError('Preserve changed native ground output: ' + str(path))
             path.write_bytes(raw)
@@ -241,13 +269,13 @@ class GroundBinding(PartnerCardBinding):
                 raise ValueError('Installed native ground GUID changed')
             outputs[path.relative_to(ROOT).as_posix()] = sha(raw)
             outputs[metadata.relative_to(ROOT).as_posix()] = sha(metadata.read_bytes())
-        for folder in (DEST, *sorted(p for p in DEST.rglob('*') if p.is_dir())):
+        for folder in (self.destination, *sorted(p for p in self.destination.rglob('*') if p.is_dir())):
             metadata = Path(str(folder) + '.meta')
             if not metadata.exists():
-                metadata.write_text('fileFormatVersion: 2\nguid: ' + stable('folder:' + folder.relative_to(DEST).as_posix())
+                metadata.write_text('fileFormatVersion: 2\nguid: ' + self.native_guid('folder:' + folder.relative_to(self.destination).as_posix())
                     + '\nfolderAsset: yes\nDefaultImporter:\n  externalObjects: {}\n', 'utf8')
             outputs[metadata.relative_to(ROOT).as_posix()] = sha(metadata.read_bytes())
-        receipt = dict(format=1, manifest=self.recovery.apk.version, mapClassId=15,
+        receipt = dict(format=1, manifest=self.recovery.apk.version, mapClassId=self.source.map_id,
             input_receipts=self.inputs, root_source=record, root_pointer=dict(fileID=card['root'], guid=prefab_guid, type=3),
             objects=self.proof, skeletons=self.skeletons, scripts=self.script_sources, outputs=outputs,
             format_reader_sha256=WHEEL_SHA256, tools={p.relative_to(ROOT).as_posix(): sha(p.read_bytes()) for p in
@@ -255,8 +283,8 @@ class GroundBinding(PartnerCardBinding):
                     'prepare_partner_card_native.py', 'prepare_unity_profession_skeleton_data.py',
                     'prepare_native_character_geometry.py', 'convert_official_skeletons.py')]]},
             operation='Pair original CAB/PPtr hierarchy and complete selected native fields. Bind exact native GUID dependencies, verified current Windows textures/shaders, and independent original skeleton/atlas data. Preserve native fileIDs, tile sprites, labels, transforms and renderers. Historical terrain exports remain separate.')
-        RECEIPT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
-        print('Bound current original Map15 ground:', len(outputs), 'outputs,', len(self.skeletons), 'skeletons', flush=True)
+        self.receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
+        print(f'Bound current original Map{self.source.map_id} ground:', len(outputs), 'outputs,', len(self.skeletons), 'skeletons', flush=True)
 
 
 if __name__ == '__main__':

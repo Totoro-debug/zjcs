@@ -34,6 +34,8 @@
 
 公共宿主通过 `OfficialMainlineMapRuntime.NativeGround.cs` 的 `MainlineNativeGroundState` Adapter 提供角色位置、等级／战力、地区状态、探索点及公共揭格；整图资源地址由地图档案传入。`NativeMap14.cs` 仅保留龙之国分区视图的创建、刷新与释放，消费同一状态 Interface。骨骼地面载荷通过 `MainlineGroundAnimation` 复用项目独立原生绘制端；原素材与具体运行验证范围见[通天塔入口](../maps/map-15.md)。
 
+公共原生地面转换器 `GroundBinding` 以 `GroundSource` 显式接收地图 ID、原 prefab 地址和 bundle；Map15 的原 GUID 保持不变，Map16 采用独立范围。地图定义和角色／镜头／标签数据提取同样按地图 ID 消费实际官方输入，尚未迁移的地图不自动注册。`MainlineNativeGround.UnlockRegion` 保留原环境激活动作与揭格回调顺序，区别于普通状态刷新；女神像的公共地面调用使用该 Interface。两图已通过隔离图形 Play Mode 的同一宿主生命周期夹具，具体范围及缺口见[鲸背岛](../maps/map-16.md)。所用 CustomWater.dll 已与当前所选版本逐字节核对一致，仅此程序集可复用原水面代码凭据，不能据此认定其他历史输入等价。
+
 入口组件保留原 MonoScript GUID 和 `MovedFrom`；纯 C# 模块沿用原脚本 `.meta`，原 prefab、层级、坐标、动画、数值、执行次序与存档 DTO 保持兼容。`OfficialMainlineUiCatalog` 按当前 `MapProfile.NativeUiRoot` 缓存原 UI 目录，HUD、雕像、奖励列表、探寻与小地图共用它；通用文本不再由女神像持有或加载。
 
 | 模块 | 当前代码与复用范围 |

@@ -1,0 +1,6556 @@
+{
+  "3001": {
+    "CharacterComponent": {},
+    "ActionAgentComponent": {},
+    "PropComponent": {},
+    "LevelComponent": {},
+    "GridMoverComponent": {
+      "MoveActionId": 22021,
+      "WalkableGroundTypeKey": 3,
+      "WalkableGroundTypeServerOverrideKey": 1
+    },
+    "TransformComponent": {},
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "WorldMapCharacterComponent": {
+      "ViewRange": 5
+    },
+    "EquipAgentComponent": {},
+    "MapRegionStatusComponent": {},
+    "VisibilityCustomComponent": {},
+    "NpcFollowerControllerComponent": {},
+    "MapStatusAgentComponent": {}
+  },
+  "3002": {
+    "CharacterComponent": {},
+    "ActionAgentComponent": {},
+    "PropComponent": {},
+    "LevelComponent": {},
+    "GridMoverComponent": {
+      "MoveActionId": 22021,
+      "WalkableGroundTypeKey": 3,
+      "WalkableGroundTypeServerOverrideKey": 1
+    },
+    "TransformComponent": {},
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "WorldMapCharacterComponent": {
+      "ViewRange": 5
+    },
+    "EquipAgentComponent": {},
+    "MapRegionStatusComponent": {},
+    "VisibilityCustomComponent": {},
+    "NpcFollowerControllerComponent": {},
+    "MapStatusAgentComponent": {}
+  },
+  "5001": {
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 101,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 3,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": -1,
+          "Y": 0
+        },
+        {
+          "X": 0,
+          "Y": -1
+        },
+        {
+          "X": 0,
+          "Y": 0
+        },
+        {
+          "X": 0,
+          "Y": 1
+        },
+        {
+          "X": 1,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "StageBehStageComponent": {
+      "StageInfoList": [
+        {
+          "Desc": "",
+          "BtnText": "",
+          "_unused_2": null,
+          "StageId": 1014,
+          "LevelAdd": 0.0
+        }
+      ],
+      "DestoryOnLost": false,
+      "FastForwardType": 4,
+      "CompleteOnLost": false,
+      "AdditionPropType": 0
+    }
+  },
+  "5003": {
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 102,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 3,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": -1,
+          "Y": 0
+        },
+        {
+          "X": -1,
+          "Y": 1
+        },
+        {
+          "X": 0,
+          "Y": -1
+        },
+        {
+          "X": 0,
+          "Y": 0
+        },
+        {
+          "X": 0,
+          "Y": 1
+        },
+        {
+          "X": 0,
+          "Y": 2
+        },
+        {
+          "X": 1,
+          "Y": -1
+        },
+        {
+          "X": 1,
+          "Y": 0
+        },
+        {
+          "X": 1,
+          "Y": 1
+        },
+        {
+          "X": 1,
+          "Y": 2
+        },
+        {
+          "X": 2,
+          "Y": 0
+        },
+        {
+          "X": 2,
+          "Y": 1
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 1,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 1,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.5,
+        0.5
+      ],
+      "IsRigidBody": true
+    },
+    "VisibilityGridComponent": {},
+    "StageBehStageComponent": {
+      "StageInfoList": [
+        {
+          "Desc": "",
+          "BtnText": "",
+          "_unused_2": null,
+          "StageId": 1081,
+          "LevelAdd": 0.0
+        }
+      ],
+      "DestoryOnLost": false,
+      "FastForwardType": 7,
+      "CompleteOnLost": false,
+      "AdditionPropType": 0
+    },
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {}
+  },
+  "5005": {
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 103,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 3,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": -2,
+          "Y": -1
+        },
+        {
+          "X": -2,
+          "Y": 0
+        },
+        {
+          "X": -2,
+          "Y": 1
+        },
+        {
+          "X": -1,
+          "Y": -2
+        },
+        {
+          "X": -1,
+          "Y": -1
+        },
+        {
+          "X": -1,
+          "Y": 0
+        },
+        {
+          "X": -1,
+          "Y": 1
+        },
+        {
+          "X": -1,
+          "Y": 2
+        },
+        {
+          "X": 0,
+          "Y": -2
+        },
+        {
+          "X": 0,
+          "Y": -1
+        },
+        {
+          "X": 0,
+          "Y": 0
+        },
+        {
+          "X": 0,
+          "Y": 1
+        },
+        {
+          "X": 0,
+          "Y": 2
+        },
+        {
+          "X": 1,
+          "Y": -2
+        },
+        {
+          "X": 1,
+          "Y": -1
+        },
+        {
+          "X": 1,
+          "Y": 0
+        },
+        {
+          "X": 1,
+          "Y": 1
+        },
+        {
+          "X": 1,
+          "Y": 2
+        },
+        {
+          "X": 2,
+          "Y": -1
+        },
+        {
+          "X": 2,
+          "Y": 0
+        },
+        {
+          "X": 2,
+          "Y": 1
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": -1,
+            "Y": -1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": -1,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": -1,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": -1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 1,
+            "Y": -1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 1,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 1,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "VisibilityGridComponent": {},
+    "StageBehStageComponent": {
+      "StageInfoList": [
+        {
+          "Desc": "",
+          "BtnText": "",
+          "_unused_2": null,
+          "StageId": 1092,
+          "LevelAdd": 0.0
+        }
+      ],
+      "DestoryOnLost": false,
+      "FastForwardType": 7,
+      "CompleteOnLost": false,
+      "AdditionPropType": 0
+    },
+    "WorldEntityLevelComponent": {},
+    "EntitySourceComponent": {},
+    "EntityPlayerInteractionComponent": {}
+  },
+  "6000": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": false,
+      "AutoNextState": true,
+      "StageWorldType": 201,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 204,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 9,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": -1
+        },
+        {
+          "X": -1,
+          "Y": 0
+        },
+        {
+          "X": 0,
+          "Y": 0
+        },
+        {
+          "X": 0,
+          "Y": 1
+        },
+        {
+          "X": 1,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultActiveableEntityActiveComponent": {},
+    "VisibilityGridComponent": {},
+    "WorldActiveableEntityComponent": {
+      "ActiveableEntityType": 1
+    },
+    "EntitySourceComponent": {}
+  },
+  "6011": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 1,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": false,
+      "AutoNextState": false,
+      "StageWorldType": 202,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [
+                {
+                  "CompType": 101,
+                  "CompIndex": 0
+                }
+              ],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 204,
+                  "CompIndex": 0
+                },
+                {
+                  "CompType": 209,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 1,
+          "Y": 0
+        },
+        {
+          "X": 0,
+          "Y": 0
+        },
+        {
+          "X": -1,
+          "Y": 0
+        },
+        {
+          "X": 0,
+          "Y": 1
+        },
+        {
+          "X": 0,
+          "Y": -1
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageConRegionProgressFullComponent": {},
+    "StageResultSelfStateUpdateComponent": {
+      "InfoList": [
+        {
+          "State": 1
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "StageResultActiveableEntityActiveComponent": {},
+    "WorldActiveableEntityComponent": {
+      "ActiveableEntityType": 3
+    },
+    "EntitySourceComponent": {},
+    "LostGoddessFurniturePropComponent": {}
+  },
+  "6320": {
+    "WorldStageComponent": {
+      "DestroyOnEnd": false,
+      "AutoNextState": true,
+      "StageWorldType": 304,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 3,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 9,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": -2
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": -1,
+            "Y": -1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": -1,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": -1,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": -1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 1,
+            "Y": -1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 1,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 1,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": -1,
+            "Y": -2
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "VisibilityGridComponent": {},
+    "StageBehStageComponent": {
+      "StageInfoList": [
+        {
+          "Desc": "",
+          "BtnText": "",
+          "_unused_2": null,
+          "StageId": 142,
+          "LevelAdd": 0.0
+        }
+      ],
+      "DestoryOnLost": false,
+      "FastForwardType": 0,
+      "CompleteOnLost": false,
+      "AdditionPropType": 0
+    },
+    "WorldEntityLevelComponent": {},
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": "ui_explore_text"
+        }
+      ]
+    },
+    "EntityExtraDataComponent": {
+      "IntDataList": [],
+      "StringDataList": []
+    },
+    "EntitySourceComponent": {}
+  },
+  "6350": {
+    "WorldStageComponent": {
+      "DestroyOnEnd": false,
+      "AutoNextState": true,
+      "StageWorldType": 301,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 3,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 9,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": -2
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": -1,
+            "Y": -1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": -1,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": -1,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": -1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 1,
+            "Y": -1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 1,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 1,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": -1,
+            "Y": -2
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "VisibilityGridComponent": {},
+    "StageBehStageComponent": {
+      "StageInfoList": [
+        {
+          "Desc": "",
+          "BtnText": "",
+          "_unused_2": null,
+          "StageId": 202,
+          "LevelAdd": 0.0
+        }
+      ],
+      "DestoryOnLost": false,
+      "FastForwardType": 0,
+      "CompleteOnLost": false,
+      "AdditionPropType": 0
+    },
+    "WorldEntityLevelComponent": {},
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": "ui_explore_text"
+        }
+      ]
+    },
+    "EntitySourceComponent": {},
+    "EntityPlayerInteractionComponent": {}
+  },
+  "6360": {
+    "WorldStageComponent": {
+      "DestroyOnEnd": false,
+      "AutoNextState": true,
+      "StageWorldType": 302,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 3,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 9,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": -2
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": -1,
+            "Y": -1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": -1,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": -1,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": -1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 1,
+            "Y": -1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 1,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 1,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": -1,
+            "Y": -2
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "VisibilityGridComponent": {},
+    "StageBehStageComponent": {
+      "StageInfoList": [
+        {
+          "Desc": "",
+          "BtnText": "",
+          "_unused_2": null,
+          "StageId": 232,
+          "LevelAdd": 0.0
+        }
+      ],
+      "DestoryOnLost": false,
+      "FastForwardType": 0,
+      "CompleteOnLost": false,
+      "AdditionPropType": 0
+    },
+    "WorldEntityLevelComponent": {},
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": "ui_explore_text"
+        }
+      ]
+    },
+    "EntitySourceComponent": {},
+    "EntityPlayerInteractionComponent": {}
+  },
+  "6370": {
+    "WorldStageComponent": {
+      "DestroyOnEnd": false,
+      "AutoNextState": true,
+      "StageWorldType": 303,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 3,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 9,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": -2
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": -1,
+            "Y": -1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": -1,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": -1,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": -1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 1,
+            "Y": -1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 1,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 1,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": -1,
+            "Y": -2
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "VisibilityGridComponent": {},
+    "StageBehStageComponent": {
+      "StageInfoList": [
+        {
+          "Desc": "",
+          "BtnText": "",
+          "_unused_2": null,
+          "StageId": 262,
+          "LevelAdd": 0.0
+        }
+      ],
+      "DestoryOnLost": false,
+      "FastForwardType": 0,
+      "CompleteOnLost": false,
+      "AdditionPropType": 0
+    },
+    "WorldEntityLevelComponent": {},
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": "ui_explore_text"
+        }
+      ]
+    },
+    "EntitySourceComponent": {},
+    "EntityPlayerInteractionComponent": {}
+  },
+  "6501": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": false,
+      "AutoNextState": false,
+      "StageWorldType": 209,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 254,
+                  "CompIndex": 0
+                },
+                {
+                  "CompType": 209,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            },
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 1
+              },
+              "Results": [
+                {
+                  "CompType": 258,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 9,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 1,
+          "Y": 0
+        },
+        {
+          "X": 0,
+          "Y": 1
+        },
+        {
+          "X": 0,
+          "Y": -1
+        },
+        {
+          "X": -1,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "EntityPuzzleTerminalComponent": {
+      "MapWorldPuzzleType": 4
+    },
+    "VisibilityGridComponent": {},
+    "WorldStageActiveComponent": {
+      "DefaultActive": true,
+      "IsSaveActive": true
+    },
+    "StageResultAutoPuzzleComponent": {},
+    "EntitySourceComponent": {},
+    "StageResultSelfStateUpdateComponent": {
+      "InfoList": [
+        {
+          "State": 1
+        }
+      ]
+    },
+    "StageResultResetPuzzleComponent": {},
+    "EntityPlayerInteractionComponent": {}
+  },
+  "6530": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": true,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": false
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": false,
+      "AutoNextState": true,
+      "StageWorldType": 208,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 9,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 234,
+                  "CompIndex": 0
+                },
+                {
+                  "CompType": 203,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 9,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": -1,
+          "Y": 0
+        },
+        {
+          "X": 0,
+          "Y": -1
+        },
+        {
+          "X": 0,
+          "Y": 0
+        },
+        {
+          "X": 0,
+          "Y": 1
+        },
+        {
+          "X": 1,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "EntityUnlockWorldStateCompleteComponent": {},
+    "StageResultLoEntitySpawnComponent": {},
+    "VisibilityGridComponent": {},
+    "StageResultStateUpdateComponent": {},
+    "EntitySourceComponent": {}
+  },
+  "6541": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": true,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": false,
+      "AutoNextState": false,
+      "StageWorldType": 206,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 9,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": -1,
+          "Y": 0
+        },
+        {
+          "X": 0,
+          "Y": -1
+        },
+        {
+          "X": 0,
+          "Y": 0
+        },
+        {
+          "X": 0,
+          "Y": 1
+        },
+        {
+          "X": 1,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "VisibilityGridComponent": {},
+    "CharacterPositionOverlapDetectorComponent": {
+      "TargetPosOffsetThanMe": {
+        "X": 0,
+        "Y": 0
+      },
+      "IsEnabledInPrivateMap": true,
+      "IsEnabledInPublicMap": false,
+      "DisableDefaultActiveStatus": false,
+      "OverlapTimesIsActivity": 1,
+      "OverlapDirection": [],
+      "ActivityResult": {
+        "CompType": 500,
+        "CompIndex": 0
+      }
+    },
+    "WorldStageActiveComponent": {
+      "DefaultActive": true,
+      "IsSaveActive": true
+    },
+    "EntitySourceComponent": {}
+  },
+  "6544": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": true,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": false,
+      "AutoNextState": false,
+      "StageWorldType": 206,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 9,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": -1,
+          "Y": 0
+        },
+        {
+          "X": 0,
+          "Y": -1
+        },
+        {
+          "X": 0,
+          "Y": 0
+        },
+        {
+          "X": 0,
+          "Y": 1
+        },
+        {
+          "X": 1,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "VisibilityGridComponent": {},
+    "CharacterPositionOverlapDetectorComponent": {
+      "TargetPosOffsetThanMe": {
+        "X": 0,
+        "Y": 0
+      },
+      "IsEnabledInPrivateMap": true,
+      "IsEnabledInPublicMap": false,
+      "DisableDefaultActiveStatus": false,
+      "OverlapTimesIsActivity": 1,
+      "OverlapDirection": [
+        0
+      ],
+      "ActivityResult": {
+        "CompType": 500,
+        "CompIndex": 0
+      }
+    },
+    "WorldStageActiveComponent": {
+      "DefaultActive": true,
+      "IsSaveActive": true
+    },
+    "EntitySourceComponent": {}
+  },
+  "6545": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": true,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": false,
+      "AutoNextState": false,
+      "StageWorldType": 206,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 9,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": -1,
+          "Y": 0
+        },
+        {
+          "X": 0,
+          "Y": -1
+        },
+        {
+          "X": 0,
+          "Y": 0
+        },
+        {
+          "X": 0,
+          "Y": 1
+        },
+        {
+          "X": 1,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "VisibilityGridComponent": {},
+    "CharacterPositionOverlapDetectorComponent": {
+      "TargetPosOffsetThanMe": {
+        "X": 0,
+        "Y": 0
+      },
+      "IsEnabledInPrivateMap": true,
+      "IsEnabledInPublicMap": false,
+      "DisableDefaultActiveStatus": false,
+      "OverlapTimesIsActivity": 1,
+      "OverlapDirection": [
+        1
+      ],
+      "ActivityResult": {
+        "CompType": 500,
+        "CompIndex": 0
+      }
+    },
+    "WorldStageActiveComponent": {
+      "DefaultActive": true,
+      "IsSaveActive": true
+    },
+    "EntitySourceComponent": {}
+  },
+  "6548": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": true,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": false,
+      "AutoNextState": false,
+      "StageWorldType": 206,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 9,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": -1,
+          "Y": 0
+        },
+        {
+          "X": 0,
+          "Y": -1
+        },
+        {
+          "X": 0,
+          "Y": 0
+        },
+        {
+          "X": 0,
+          "Y": 1
+        },
+        {
+          "X": 1,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "VisibilityGridComponent": {},
+    "CharacterPositionOverlapDetectorComponent": {
+      "TargetPosOffsetThanMe": {
+        "X": 0,
+        "Y": 0
+      },
+      "IsEnabledInPrivateMap": true,
+      "IsEnabledInPublicMap": false,
+      "DisableDefaultActiveStatus": false,
+      "OverlapTimesIsActivity": 2,
+      "OverlapDirection": [],
+      "ActivityResult": {
+        "CompType": 500,
+        "CompIndex": 0
+      }
+    },
+    "WorldStageActiveComponent": {
+      "DefaultActive": true,
+      "IsSaveActive": true
+    },
+    "EntitySourceComponent": {}
+  },
+  "6570": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": false,
+      "AutoNextState": true,
+      "StageWorldType": 223,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 238,
+                  "CompIndex": 0
+                },
+                {
+                  "CompType": 212,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 9,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [
+                {
+                  "CompType": 110,
+                  "CompIndex": 0
+                }
+              ],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 249,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": -1,
+          "Y": 0
+        },
+        {
+          "X": -1,
+          "Y": 1
+        },
+        {
+          "X": 0,
+          "Y": -1
+        },
+        {
+          "X": 0,
+          "Y": 2
+        },
+        {
+          "X": 1,
+          "Y": 0
+        },
+        {
+          "X": 1,
+          "Y": 1
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": "ui_witch_visit_btn_text"
+        }
+      ]
+    },
+    "StageResultAwardExtraPropComponent": {
+      "AwardExtraPropInfos": [
+        {
+          "AwardExtraProps": [
+            {
+              "PropId": 410,
+              "Level": 0,
+              "PropType": 3
+            }
+          ]
+        }
+      ]
+    },
+    "StageResultAwardStatusEffectComponent": {
+      "AwardStatusEffectInfos": [
+        {
+          "mAwardStatusEffects": [
+            100
+          ]
+        },
+        {
+          "mAwardStatusEffects": [
+            110
+          ]
+        },
+        {
+          "mAwardStatusEffects": [
+            120
+          ]
+        }
+      ]
+    },
+    "StageResultModifyHpPercentComponent": {
+      "HpModifyInfos": [
+        1.0
+      ]
+    },
+    "StageConPlayerPeriodicityInteractionComponent": {
+      "PeriodicityInteractionGroupIds": [
+        1
+      ],
+      "IsNegation": false
+    },
+    "StageResultPeriodicityRandomAwardComponent": {
+      "PeriodicityGroupIds": [
+        1
+      ],
+      "PeriodicityRandomAwardGroupIds": [
+        2
+      ]
+    },
+    "EntitySourceComponent": {}
+  },
+  "6571": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": false,
+      "AutoNextState": true,
+      "StageWorldType": 223,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 238,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 9,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [
+                {
+                  "CompType": 110,
+                  "CompIndex": 0
+                }
+              ],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 249,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": -1,
+          "Y": 0
+        },
+        {
+          "X": -1,
+          "Y": 1
+        },
+        {
+          "X": 0,
+          "Y": -1
+        },
+        {
+          "X": 0,
+          "Y": 2
+        },
+        {
+          "X": 1,
+          "Y": 0
+        },
+        {
+          "X": 1,
+          "Y": 1
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": "ui_witch_visit_btn_text"
+        }
+      ]
+    },
+    "StageResultAwardExtraPropComponent": {
+      "AwardExtraPropInfos": [
+        {
+          "AwardExtraProps": [
+            {
+              "PropId": 410,
+              "Level": 0,
+              "PropType": 1
+            }
+          ]
+        }
+      ]
+    },
+    "StageResultAwardStatusEffectComponent": {
+      "AwardStatusEffectInfos": [
+        {
+          "mAwardStatusEffects": [
+            101
+          ]
+        },
+        {
+          "mAwardStatusEffects": [
+            111
+          ]
+        },
+        {
+          "mAwardStatusEffects": [
+            121
+          ]
+        }
+      ]
+    },
+    "StageResultModifyHpPercentComponent": {
+      "HpModifyInfos": [
+        1.0
+      ]
+    },
+    "StageConPlayerPeriodicityInteractionComponent": {
+      "PeriodicityInteractionGroupIds": [
+        1
+      ],
+      "IsNegation": false
+    },
+    "StageResultPeriodicityRandomAwardComponent": {
+      "PeriodicityGroupIds": [
+        1
+      ],
+      "PeriodicityRandomAwardGroupIds": [
+        2
+      ]
+    },
+    "EntitySourceComponent": {}
+  },
+  "6572": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": false,
+      "AutoNextState": true,
+      "StageWorldType": 223,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 238,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 9,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [
+                {
+                  "CompType": 110,
+                  "CompIndex": 0
+                }
+              ],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 249,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": -1,
+          "Y": 0
+        },
+        {
+          "X": -1,
+          "Y": 1
+        },
+        {
+          "X": 0,
+          "Y": -1
+        },
+        {
+          "X": 0,
+          "Y": 2
+        },
+        {
+          "X": 1,
+          "Y": 0
+        },
+        {
+          "X": 1,
+          "Y": 1
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": "ui_witch_visit_btn_text"
+        }
+      ]
+    },
+    "StageResultAwardExtraPropComponent": {
+      "AwardExtraPropInfos": [
+        {
+          "AwardExtraProps": [
+            {
+              "PropId": 410,
+              "Level": 0,
+              "PropType": 304
+            },
+            {
+              "PropId": 410,
+              "Level": 0,
+              "PropType": 305
+            }
+          ]
+        }
+      ]
+    },
+    "StageResultAwardStatusEffectComponent": {
+      "AwardStatusEffectInfos": [
+        {
+          "mAwardStatusEffects": [
+            102
+          ]
+        },
+        {
+          "mAwardStatusEffects": [
+            112
+          ]
+        },
+        {
+          "mAwardStatusEffects": [
+            122
+          ]
+        }
+      ]
+    },
+    "StageResultModifyHpPercentComponent": {
+      "HpModifyInfos": [
+        1.0
+      ]
+    },
+    "StageConPlayerPeriodicityInteractionComponent": {
+      "PeriodicityInteractionGroupIds": [
+        1
+      ],
+      "IsNegation": false
+    },
+    "StageResultPeriodicityRandomAwardComponent": {
+      "PeriodicityGroupIds": [
+        1
+      ],
+      "PeriodicityRandomAwardGroupIds": [
+        2
+      ]
+    },
+    "EntitySourceComponent": {}
+  },
+  "6573": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": false,
+      "AutoNextState": true,
+      "StageWorldType": 223,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 238,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 9,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [
+                {
+                  "CompType": 110,
+                  "CompIndex": 0
+                }
+              ],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 249,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": -1,
+          "Y": 0
+        },
+        {
+          "X": -1,
+          "Y": 1
+        },
+        {
+          "X": 0,
+          "Y": -1
+        },
+        {
+          "X": 0,
+          "Y": 2
+        },
+        {
+          "X": 1,
+          "Y": 0
+        },
+        {
+          "X": 1,
+          "Y": 1
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": "ui_witch_visit_btn_text"
+        }
+      ]
+    },
+    "StageResultAwardExtraPropComponent": {
+      "AwardExtraPropInfos": [
+        {
+          "AwardExtraProps": [
+            {
+              "PropId": 410,
+              "Level": 0,
+              "PropType": 58
+            },
+            {
+              "PropId": 410,
+              "Level": 0,
+              "PropType": 60
+            }
+          ]
+        }
+      ]
+    },
+    "StageResultAwardStatusEffectComponent": {
+      "AwardStatusEffectInfos": [
+        {
+          "mAwardStatusEffects": [
+            103
+          ]
+        },
+        {
+          "mAwardStatusEffects": [
+            113
+          ]
+        },
+        {
+          "mAwardStatusEffects": [
+            123
+          ]
+        }
+      ]
+    },
+    "StageResultModifyHpPercentComponent": {
+      "HpModifyInfos": [
+        1.0
+      ]
+    },
+    "StageConPlayerPeriodicityInteractionComponent": {
+      "PeriodicityInteractionGroupIds": [
+        1
+      ],
+      "IsNegation": false
+    },
+    "StageResultPeriodicityRandomAwardComponent": {
+      "PeriodicityGroupIds": [
+        1
+      ],
+      "PeriodicityRandomAwardGroupIds": [
+        2
+      ]
+    },
+    "EntitySourceComponent": {}
+  },
+  "6574": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": false,
+      "AutoNextState": true,
+      "StageWorldType": 223,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 238,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 9,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [
+                {
+                  "CompType": 110,
+                  "CompIndex": 0
+                }
+              ],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 249,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": -1,
+          "Y": 0
+        },
+        {
+          "X": -1,
+          "Y": 1
+        },
+        {
+          "X": 0,
+          "Y": -1
+        },
+        {
+          "X": 0,
+          "Y": 2
+        },
+        {
+          "X": 1,
+          "Y": 0
+        },
+        {
+          "X": 1,
+          "Y": 1
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": "ui_witch_visit_btn_text"
+        }
+      ]
+    },
+    "StageResultAwardExtraPropComponent": {
+      "AwardExtraPropInfos": [
+        {
+          "AwardExtraProps": [
+            {
+              "PropId": 410,
+              "Level": 0,
+              "PropType": 2
+            }
+          ]
+        }
+      ]
+    },
+    "StageResultAwardStatusEffectComponent": {
+      "AwardStatusEffectInfos": [
+        {
+          "mAwardStatusEffects": [
+            104
+          ]
+        },
+        {
+          "mAwardStatusEffects": [
+            114
+          ]
+        },
+        {
+          "mAwardStatusEffects": [
+            124
+          ]
+        }
+      ]
+    },
+    "StageResultModifyHpPercentComponent": {
+      "HpModifyInfos": [
+        1.0
+      ]
+    },
+    "StageConPlayerPeriodicityInteractionComponent": {
+      "PeriodicityInteractionGroupIds": [
+        1
+      ],
+      "IsNegation": false
+    },
+    "StageResultPeriodicityRandomAwardComponent": {
+      "PeriodicityGroupIds": [
+        1
+      ],
+      "PeriodicityRandomAwardGroupIds": [
+        2
+      ]
+    },
+    "EntitySourceComponent": {}
+  },
+  "6575": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": false,
+      "AutoNextState": true,
+      "StageWorldType": 223,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 238,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 9,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [
+                {
+                  "CompType": 110,
+                  "CompIndex": 0
+                }
+              ],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 249,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": -1,
+          "Y": 0
+        },
+        {
+          "X": -1,
+          "Y": 1
+        },
+        {
+          "X": 0,
+          "Y": -1
+        },
+        {
+          "X": 0,
+          "Y": 2
+        },
+        {
+          "X": 1,
+          "Y": 0
+        },
+        {
+          "X": 1,
+          "Y": 1
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": "ui_witch_visit_btn_text"
+        }
+      ]
+    },
+    "StageResultAwardExtraPropComponent": {
+      "AwardExtraPropInfos": [
+        {
+          "AwardExtraProps": [
+            {
+              "PropId": 410,
+              "Level": 0,
+              "PropType": 4
+            }
+          ]
+        }
+      ]
+    },
+    "StageResultAwardStatusEffectComponent": {
+      "AwardStatusEffectInfos": [
+        {
+          "mAwardStatusEffects": [
+            105
+          ]
+        },
+        {
+          "mAwardStatusEffects": [
+            115
+          ]
+        },
+        {
+          "mAwardStatusEffects": [
+            125
+          ]
+        }
+      ]
+    },
+    "StageResultModifyHpPercentComponent": {
+      "HpModifyInfos": [
+        1.0
+      ]
+    },
+    "StageConPlayerPeriodicityInteractionComponent": {
+      "PeriodicityInteractionGroupIds": [
+        1
+      ],
+      "IsNegation": false
+    },
+    "StageResultPeriodicityRandomAwardComponent": {
+      "PeriodicityGroupIds": [
+        1
+      ],
+      "PeriodicityRandomAwardGroupIds": [
+        2
+      ]
+    },
+    "EntitySourceComponent": {}
+  },
+  "8007": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 512,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            151
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8008": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 512,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            152
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8009": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 512,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            153
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8010": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 601,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            113
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8020": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 602,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            182
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8025": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 603,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            193
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8200": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 521,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            710,
+            711,
+            713,
+            714,
+            716,
+            717
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8201": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 521,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            720,
+            721,
+            722,
+            723,
+            724,
+            725,
+            726
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    },
+    "WorldStageActiveComponent": {
+      "DefaultActive": true,
+      "IsSaveActive": true
+    }
+  },
+  "8202": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 521,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            730,
+            731,
+            732,
+            735,
+            736,
+            737,
+            738,
+            739
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8203": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 521,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            740,
+            741,
+            742,
+            745,
+            746,
+            747,
+            748,
+            749
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8206": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 511,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            121
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8212": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 519,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 232,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    },
+    "StageResultAwardItemComponent": {
+      "AwardItemInfos": []
+    }
+  },
+  "8213": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 519,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 232,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    },
+    "StageResultAwardItemComponent": {
+      "AwardItemInfos": []
+    }
+  },
+  "8221": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 514,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            101
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8222": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 514,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            102
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8223": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 514,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            103
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8240": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 513,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            280
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8241": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 513,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            281
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8242": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 513,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            282
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8300": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 506,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            160
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8305": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 507,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            165
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8310": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 502,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            110
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8311": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 502,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            111
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8312": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 502,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            112
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8340": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 503,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            180
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8341": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 503,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            181
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8342": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 503,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            179
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8343": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 503,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            185
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8345": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 512,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            154
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8346": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 512,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            155
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8347": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 512,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            156
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8350": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 504,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            190
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8351": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 504,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            191
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8352": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 504,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            192
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    }
+  },
+  "8363": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 7,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [
+        {
+          "PosOne": {
+            "X": 0,
+            "Y": 0
+          },
+          "PosTwo": {
+            "X": 0,
+            "Y": 1
+          }
+        }
+      ],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 510,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 232,
+                  "CompIndex": 0
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    },
+    "StageResultAwardItemComponent": {
+      "AwardItemInfos": [
+        {
+          "ItemId": 115,
+          "Count": 10
+        }
+      ]
+    }
+  },
+  "8368": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 7,
+          "IgnoreClick": true,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [
+        {
+          "PosOne": {
+            "X": 0,
+            "Y": 0
+          },
+          "PosTwo": {
+            "X": 0,
+            "Y": 1
+          }
+        }
+      ],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": false,
+      "AutoNextState": true,
+      "StageWorldType": 508,
+      "StateInfos": [
+        {
+          "EnterResults": [
+            {
+              "CompType": 217,
+              "CompIndex": 0
+            }
+          ],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                },
+                {
+                  "CompType": 217,
+                  "CompIndex": 1
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 9,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            893,
+            894
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    },
+    "StageResultOverrideBodyGroundTypeComponent": {
+      "PosInfos": [
+        {
+          "BodyRangeOverrideInfos": [
+            {
+              "Pos": {
+                "X": 0,
+                "Y": 0
+              },
+              "GroundType": 7,
+              "IgnoreClick": false,
+              "OverrideGroundType": false
+            }
+          ]
+        }
+      ],
+      "OperationInfos": [
+        {
+          "DataIndex": 0,
+          "IsRevertGroundType": false
+        },
+        {
+          "DataIndex": 0,
+          "IsRevertGroundType": true
+        }
+      ]
+    }
+  },
+  "8370": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 7,
+          "IgnoreClick": true,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": true,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 1,
+            "Y": 0
+          },
+          "GroundType": 7,
+          "IgnoreClick": true,
+          "OverrideGroundType": false
+        },
+        {
+          "Pos": {
+            "X": 1,
+            "Y": 1
+          },
+          "GroundType": 2,
+          "IgnoreClick": true,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": false,
+      "AutoNextState": true,
+      "StageWorldType": 508,
+      "StateInfos": [
+        {
+          "EnterResults": [
+            {
+              "CompType": 217,
+              "CompIndex": 0
+            }
+          ],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 2,
+                "CompIndex": 0
+              },
+              "Results": [
+                {
+                  "CompType": 200,
+                  "CompIndex": 0
+                },
+                {
+                  "CompType": 217,
+                  "CompIndex": 1
+                }
+              ],
+              "Select": 7
+            }
+          ]
+        },
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 9,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": 0,
+          "Y": 0
+        },
+        {
+          "X": 1,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "StageResultAwardComponent": {
+      "AwardInfos": [
+        {
+          "RuleIds": [
+            895,
+            896
+          ],
+          "AdditionPropType": 0
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityLockBodyGroundTypeOverrideComponent": {
+      "GroundTypeOverrideTo": 2
+    },
+    "StageResultOverrideBodyGroundTypeComponent": {
+      "PosInfos": [
+        {
+          "BodyRangeOverrideInfos": [
+            {
+              "Pos": {
+                "X": 0,
+                "Y": 0
+              },
+              "GroundType": 7,
+              "IgnoreClick": false,
+              "OverrideGroundType": false
+            },
+            {
+              "Pos": {
+                "X": 1,
+                "Y": 0
+              },
+              "GroundType": 7,
+              "IgnoreClick": false,
+              "OverrideGroundType": false
+            },
+            {
+              "Pos": {
+                "X": 1,
+                "Y": 1
+              },
+              "GroundType": 2,
+              "IgnoreClick": false,
+              "OverrideGroundType": false
+            },
+            {
+              "Pos": {
+                "X": 0,
+                "Y": 1
+              },
+              "GroundType": 2,
+              "IgnoreClick": false,
+              "OverrideGroundType": false
+            }
+          ]
+        }
+      ],
+      "OperationInfos": [
+        {
+          "DataIndex": 0,
+          "IsRevertGroundType": false
+        },
+        {
+          "DataIndex": 0,
+          "IsRevertGroundType": true
+        }
+      ]
+    }
+  },
+  "8443": {
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": false,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "EntityLockComponent": {
+      "UnlockActionId": 0
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": false,
+      "StageWorldType": 4,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 9,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [
+        {
+          "X": -1,
+          "Y": 0
+        },
+        {
+          "X": 0,
+          "Y": -1
+        },
+        {
+          "X": 0,
+          "Y": 0
+        },
+        {
+          "X": 0,
+          "Y": 1
+        },
+        {
+          "X": 1,
+          "Y": 0
+        }
+      ],
+      "InteractionFirst": false
+    },
+    "StageBehTouchComponent": {
+      "TouchInfoList": [
+        {
+          "Desc": "",
+          "BtnText": ""
+        }
+      ]
+    },
+    "VisibilityGridComponent": {},
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {},
+    "EntityExtraDataComponent": {
+      "IntDataList": [],
+      "StringDataList": []
+    },
+    "WorldNpcComponent": {
+      "NpcClassId": 8438,
+      "FightHelpForbid": false
+    },
+    "TransformComponent": {}
+  },
+  "8601": {
+    "EntityCampComponent": {},
+    "GridTransformComponent": {
+      "BodyRangeInfos": [
+        {
+          "Pos": {
+            "X": 0,
+            "Y": 0
+          },
+          "GroundType": 0,
+          "IgnoreClick": true,
+          "OverrideGroundType": false
+        }
+      ],
+      "BodyCrossBlockedInfos": [],
+      "UnlockWholeRequestCount": 1,
+      "RealCenter": [
+        0.0,
+        0.0
+      ],
+      "IsRigidBody": true
+    },
+    "WorldStageComponent": {
+      "DestroyOnEnd": true,
+      "AutoNextState": true,
+      "StageWorldType": 107,
+      "StateInfos": [
+        {
+          "EnterResults": [],
+          "SubStateList": [
+            {
+              "Conditions": [],
+              "Behaviour": {
+                "CompType": 6,
+                "CompIndex": 0
+              },
+              "Results": [],
+              "Select": 7
+            }
+          ]
+        }
+      ],
+      "InteractiveRange": [],
+      "InteractionFirst": false
+    },
+    "VisibilityGridComponent": {},
+    "StageBehStageCampComponent": {
+      "StageInfoList": [
+        {
+          "Desc": "",
+          "BtnText": "",
+          "_unused_2": null,
+          "StageId": 0,
+          "LevelAdd": 0.0
+        }
+      ],
+      "DestoryOnLost": false,
+      "FastForwardType": 7,
+      "CompleteOnLost": false,
+      "AdditionPropType": 0
+    },
+    "WorldEntityLevelComponent": {},
+    "EntityPlayerInteractionComponent": {},
+    "EntitySourceComponent": {}
+  },
+  "22021": {
+    "ActionComponent": {
+      "ActionType": 1
+    },
+    "ActionWorldMoveComponent": {}
+  }
+}

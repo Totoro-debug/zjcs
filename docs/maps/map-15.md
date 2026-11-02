@@ -46,6 +46,8 @@
 
 共享宿主入口已通过 Unity 2022.3.57f1c2／Direct3D11 图形 Play Mode：十个骨骼实例均生成非空几何，可见且有原默认动画的实例时钟推进，间隔0.35秒后渲染顶点或颜色变化；339格保留 Tile Sprite。入口101使用(12,6)，模拟地图点击到(13,6)，公共可见格61→72；原无白雾状态保留，重开后位置与压缩字节一致。已实际查看入口、移动与重开三张截图，原地面、区域文字、角色与装饰可见。该流程未加载完整 HUD，未验证雕像、奖励、后续楼层或 Windows Player，不代表本图完成。
 
+入口原生转换现与鲸背岛共用 `GroundBinding`／`GroundSource`，原 Map15 资产 GUID 和469项输出保持不变。公共宿主隔离图形 Play Mode 另检查了两图加载、释放、管线／相机恢复和重新加载，并实际查看画面；这是无 HUD／角色的显式状态夹具，补充模块生命周期检查，不替代上述正式入口或完整楼层验证。共享水面程序集的版本核对仅覆盖清单所列 CustomWater.dll，不声明其他旧载荷与当前版本等价。
+
 ## 自定义实现
 
 按用户明确确认，沿用龙之国的单机自动解谜方案。固定版客户端／Common 的 `StageResultAutoPuzzleComponentImplement`、`StageResultResetPuzzleComponentImplement` 及相关请求保留目标、费用和结果标记，缺少服务端执行器；本地适配不标为原服务端逻辑。依据为 [`MyStageResultAutoPuzzle.cs`](../../.tools/source-packages/official-code/client-source/MyStageResultAutoPuzzle.cs)、[`MyStageResultResetPuzzle.cs`](../../.tools/source-packages/official-code/client-source/MyStageResultResetPuzzle.cs) 及对应 Common 标记组件。通天塔 5 处火炮终端只清除原 `NeedRemoveLoEntityIds`，2 处特殊锁及 5 处普通锁终端只解开原 `LockLoEntityIds`，使用原交互费用（道具 325×1），不补发炮、失败演出或奖励。重置仅恢复指定目标，保留其他状态、背包、奖励凭据和角色位置；原配置仅 4 个终端有重置分支，保留其余终端的原菜单，不新增重置按钮。

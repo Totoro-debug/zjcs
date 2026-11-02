@@ -55,6 +55,17 @@ namespace Zjcs.Presentation.World
 
         public void Refresh() { environment?.Refresh(); labels?.Refresh(); }
 
+        public void UnlockRegion(Vector3 worldPosition)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(MainlineNativeGround));
+            var effect = environment.MapGroundRoot.EnvEffect;
+            if (!effect) throw new InvalidOperationException("Original region activation requires MapEnvEffect.");
+            // The original activation action starts lighting before revealing
+            // region cells. A status refresh alone does not execute that action.
+            Refresh();
+            effect.UnlockRegion(worldPosition);
+        }
+
         public void Dispose()
         {
             if (disposed) return;

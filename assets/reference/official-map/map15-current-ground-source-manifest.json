@@ -5398,6 +5398,36 @@
       "sha256": "061d48a9fb7a009db1702928e36f255019c474e9496a30033c0c30f2f95f57b4",
       "meta_sha256": "7e55c8ed3412ebdc4f136a9cc2fcea3fb5781d59625daf090f61304fc7198b69"
     },
+    "MapRegionLight": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeEnvironment/MapRegionLight.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "6bebec7eaedc72e740cde9f28752132c",
+        "type": 3
+      },
+      "sha256": "1e48797a960d623e8fa12e0786f31419fba118efd8a1f25f528c62f30cf2d3b6",
+      "meta_sha256": "818d61b64577541c4ab4051f523fbbc8faeba201770a075df6559d61af11bd9e"
+    },
+    "SeaRendererReplacement": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/SeaRendererReplacement.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "491e197cf42b0bfdd07e5265e3efef57",
+        "type": 3
+      },
+      "sha256": "2424ac689dbe40e350689e4282a0bf3ffd5310684efe97026059d53a4ccae27a",
+      "meta_sha256": "dfc11a5cbcbde2ab60216aad7217a1e394edd1655ee3673b3dc5d75863883ec8"
+    },
+    "WaterConfig": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/WaterConfig.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "9e364722364b5c6eac748205ab1d2cb7",
+        "type": 3
+      },
+      "sha256": "2ea10375512dd5eb3c2ea08ebad386718b3e70afd2b122d1df6fa684a3cb129d",
+      "meta_sha256": "2c8845ffd904b234913b13a89e9864363a4c912c6c16af3cf101ebc80a687ea0"
+    },
     "TMPro.TMP_FontAsset": {
       "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TMP_FontAsset.cs",
       "pointer": {
@@ -5887,7 +5917,7 @@
   },
   "format_reader_sha256": "e6a0c0c5a38c811c7b23074fb22381615edbbc0be42db2cd12468764228e8897",
   "tools": {
-    "scripts/prepare_mainline_map15_native_ground.py": "30d0380bc1fbf3bc13ddd400a6f21de8758a81689dfa025723b6035a5e10fdcf",
+    "scripts/prepare_mainline_map15_native_ground.py": "e849806b99c66aef01dbdb484dec314d48f6ef1c92a0cc8f435594bc0d56526e",
     "scripts/prepare_current_partner_native.py": "1c54fd235607be85882c616e78b079674c1f0b452bb88027229711ba70cb2b23",
     "scripts/prepare_partner_card_native.py": "1b7eace9cc46cef7b80c07d0d7882c90c7ea33af4035d1669017603dbfca3778",
     "scripts/prepare_unity_profession_skeleton_data.py": "308ed647a43a89aef77ca7d91d06124213fd0b18431ca8743834ae267697548c",
