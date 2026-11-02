@@ -2515,6 +2515,7 @@ namespace Zjcs.Combat.Official
                 Dictionary<string, object> trigger = Object(item, "round start trigger status");
                 if (Int(trigger, "StatusId") <= 0 || Bool(trigger, "AffectedByProp")
                     || Int(trigger, "ApplyTarget") != FightStatusLifecycle.TargetApplicator
+                    || HasTriggerPropTarget(trigger)
                     || ArrayCount(trigger, "StatusReplacePropertyValues") > 0)
                     return false;
             }
@@ -2533,9 +2534,19 @@ namespace Zjcs.Combat.Official
                 Dictionary<string, object> trigger = Object(item, "consume stack trigger status");
                 if (Int(trigger, "StatusId") <= 0 || Bool(trigger, "AffectedByProp")
                     || Int(trigger, "ApplyTarget") != FightStatusLifecycle.TargetApplicator
+                    || HasTriggerPropTarget(trigger)
                     || ArrayCount(trigger, "StatusReplacePropertyValues") > 0) return false;
             }
             return true;
+        }
+
+        private static bool HasTriggerPropTarget(Dictionary<string, object> trigger)
+        {
+            Dictionary<string, object> target = Component(trigger, "PropTarget");
+            return target != null && (Bool(target, "IsEnemy")
+                || ArrayCount(target, "RoleType") > 0 || Bool(target, "IncludeApplicator")
+                || Int(target, "PropType") != 0 || Bool(target, "Heighest")
+                || Bool(target, "SupportCustomFilter"));
         }
 
         private static bool SupportsRoundEnd(Dictionary<string, object> component)
@@ -2897,7 +2908,7 @@ namespace Zjcs.Combat.Official
                 || ArrayCount(component, "Conditions") == 0
                 || ArrayCount(component, "StatusReplacePropertyValues") > 0) return false;
             foreach (int actionType in IntArray(component, "Conditions"))
-                if (actionType < 0 || actionType > 120) return false;
+                if (actionType < 50 || actionType > 80) return false;
             return true;
         }
 

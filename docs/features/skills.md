@@ -58,6 +58,8 @@ Unity 已新增离线技能档案与规则服务 [OfflineSkillProfile.cs](../../
 
 Editor 程序集显式引用 `Zjcs.Presentation.Character`，以供技能 Play Mode 验收访问人物技能面板；该引用由 `Zjcs.Editor.asmdef` 声明。
 
+技能及复用该入口的公共战斗 Play Mode 验收器按 `GameViewSizeGroupType.Standalone` 名称选择桌面分组，进入交互前必须确认实际渲染尺寸为 675×1463。截图应读取完整 Game View 渲染面；已有 Game View 截图再次按桌面窗口坐标裁剪会得到一像素窄图，不能计为画面验证通过。公共战斗触发链的实际运行范围见[战斗执行](battle-execution.md)。
+
 馈赠沿用原 `AchievementPanelWithTypes → AchievementPanelBase → AchievementPanelItem` 的两组数据键：Group 33 为 `CostItem(42200, SkillLevelUp)`，保留 895 条固定奖励；Group 9 为 `SkillScoreCount`，由原 15 条初始记录及 4,500×15 条循环增量记录展开为 67,515 个里程碑。积分按 `PlayerSkillDataExt.GetSkillScoreCountByAllSkill` 汇总持有技能各阶位的 `skill_rank.Score`，列表按原搜索范围、已完成优先排序及五行数量显示。点击领取按原 group、count=-1 行为，在同一本地事务中发放当前组全部可领奖励并保存领取凭据；重复领取不增加道具。培养材料累计值只在实际成功的槽位升级事务中增加，旧存档缺少此历史字段时从 0 开始，不由库存或当前等级反推。原页签动画、状态颜色、箱子、奖励图标和文案已绑定；原 TMP 自动缩放及换行参数从固定 APK 组件恢复。规则检查 `python -B scripts/test_skill_achievements.py` 已通过，完整技能 Play Mode 加入材料馈赠的模拟点击领取、重复领取防护及品质页切换后再次通过。奖励图标已连接原 `ItemDetailDialog`：显示品质、数量、原说明及来源条件，按原规则隐藏不可用的使用／附加属性区域。
 
 人物预览的阴影已恢复原 `AttachmentFollower` 对 `shadow` 骨骼的位置与局部缩放跟随，不再保留 prefab 编辑态的静止位置。Windows 程序通过正常本地启动进入隔离技能档案，使用 EventSystem 首个射线命中、按下／抬起／点击验证入口、方案、推荐、分类和返回，且实看运行截图、重新读取档案核对方案与装配；测试存档与用户存档分开。已发布入口为 `D:/Desktop/杖剑传说/杖剑传说.exe`；新增馈赠流程已在重建后的 Windows Player 中完成两类奖励领取、重复领取防护、页签切换和存档重载验证，未将整体技能功能标为完成。

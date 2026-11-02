@@ -186,20 +186,6 @@ namespace Zjcs.Combat.Official
                 foreach (FightBattleUnitState summonOwner in units)
                     FightStatusTriggerRuntime.ApplyRoleSummonCount(summonOwner, units,
                         statusCatalog, random);
-            if (statusCatalog != null)
-            {
-                int roundStatusChanges = 0;
-                foreach (FightBattleUnitState source in new List<FightBattleUnitState>(units))
-                    foreach (FightBattleStatusState status in
-                        new List<FightBattleStatusState>(source.Statuses))
-                        roundStatusChanges += FightStatusTriggerRuntime.ApplyRoundStartStatuses(
-                            status, actor, units, statusCatalog, random);
-                foreach (FightBattleUnitState owner in units)
-                    roundStatusChanges += FightStatusTriggerRuntime.ApplyConsumeStackCounts(
-                        owner, statusCatalog, random);
-                if (roundStatusChanges > 0)
-                    RebuildBattleProperties();
-            }
             float statusEndDelay = 0f;
             ExecuteAccumulatedDamageEnds(casts, damageEvents, movements,
                 ref statusEndDelay, ref stepDuration, ref stepActionDuration);
@@ -219,7 +205,9 @@ namespace Zjcs.Combat.Official
                 foreach (FightBattleUnitState source in new List<FightBattleUnitState>(units))
                 {
                     List<FightBattleStatusStateTrigger> roundStartSkills =
-                        FightStatusTriggerRuntime.CollectRoundStartSkills(source, actor, units, random);
+                        FightStatusTriggerRuntime.CollectRoundStartSkills(source, actor, units, random,
+                            statusCatalog);
+                    RebuildBattleProperties();
                     if (roundStartSkills.Count == 0) continue;
                     float triggerDelay = 0f;
                     ExecuteConfiguredTriggerSkills(source, roundStartSkills, casts, damageEvents,
@@ -598,7 +586,7 @@ namespace Zjcs.Combat.Official
             if (statusCatalog != null)
             {
                 skillDamageScale = FightStatusTriggerRuntime.PrepareConsumeStackSkillDamageScale(
-                    actor, skill);
+                    actor, skill, statusCatalog, random);
                 if (skillDamageScale != 1.0)
                     RebuildBattleProperties();
             }

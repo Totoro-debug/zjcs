@@ -49,7 +49,7 @@ namespace Zjcs.Editor.Skills
             Type singleton = typeof(ScriptableSingleton<>).MakeGenericType(sizesType);
             object sizes = singleton.GetProperty("instance").GetValue(null);
             object group = sizesType.GetMethod("GetGroup").Invoke(sizes,
-                new[] { Enum.ToObject(editor.GetType("UnityEditor.GameViewSizeGroupType"), 1) });
+                new[] { Enum.Parse(editor.GetType("UnityEditor.GameViewSizeGroupType"), "Standalone") });
             Type sizeType = editor.GetType("UnityEditor.GameViewSize");
             object size = Activator.CreateInstance(sizeType, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
                 null, new object[] { Enum.ToObject(editor.GetType("UnityEditor.GameViewSizeType"), 1), width, height, "Skills reference" }, null);
@@ -208,6 +208,14 @@ namespace Zjcs.Editor.Skills
 
         private static IEnumerator Scenario()
         {
+            float surfaceDeadline = Time.realtimeSinceStartup + 15f;
+            while (Screen.width != 675 || Screen.height != 1463)
+            {
+                Require(Time.realtimeSinceStartup < surfaceDeadline,
+                    "The skill acceptance render surface is " + Screen.width + "x" + Screen.height
+                    + "; expected 675x1463 before input or screenshots.");
+                yield return null;
+            }
             // The battle-only runner supplies its own profile and suppresses the
             // application bootstrap. The Home/skill flow below is still exercised.
             bool isolatedBattle = Environment.GetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION") == "1";

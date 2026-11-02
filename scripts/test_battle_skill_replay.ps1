@@ -75,6 +75,15 @@ $casts = @($replayed.Event.SkillCasts | Where-Object { $_.SkillEntityId -eq 930 
 Assert-Replay ($casts.Count -eq 2) "Replay cast count is $($casts.Count) instead of 2"
 Assert-Replay (($replayed.Checkpoint.Units[0].Statuses | Where-Object { $_.ClassId -eq 24031 }).Count -eq 0) 'Replay did not consume the status stacks'
 
+# Real cumulative-consumption passive must observe replay costs, without consuming charges
+# independently. Disable its already-exercised round-start grant in this isolated fixture.
+$consumeListener = $catalog.CreateStatus(25278, 1, 1, 991, 0, 0, 6, 17, 10, $null)
+$consumeListener.HasRoundStartTrigger = $false
+$consumptionResult = Invoke-ReplayBattle (New-ReplaySkill $true 10 10 1) 10 @() @($consumeListener)
+$consumptionBuff = $consumptionResult.Checkpoint.Units[0].Statuses | Where-Object ClassId -eq 24187 | Select-Object -First 1
+Assert-Replay ($null -ne $consumptionBuff -and $consumptionBuff.StackCount -eq 5 -and
+    $consumeListener.ConsumeStackCountProgress -eq 0) 'Replay costs did not notify the cumulative-consumption passive exactly once'
+
 # Not enough stacks: no replay.
 $notEnough = Invoke-ReplayBattle (New-ReplaySkill $true 10 10 1) 5
 Assert-Replay (@($notEnough.Event.SkillCasts | Where-Object { $_.SkillEntityId -eq 930 }).Count -eq 1) 'Replay fired without enough stacks'

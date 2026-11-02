@@ -58,10 +58,8 @@ namespace Zjcs.Combat.Official
             if (available.Count == 0 && !FightBattleTargeting.HasCasterAreaTargets(actor, units, next)) return false;
             if (consumeStatus != null && consumeCount > 0)
             {
-                int previous = consumeStatus.StackCount;
-                consumeStatus.StackCount -= consumeCount;
-                FightStatusPropertyRuntime.OnStackChanged(consumeStatus, previous);
-                if (consumeStatus.StackCount <= 0) FightStatusLifecycle.End(actor, consumeStatus);
+                FightStatusTriggerRuntime.ConsumeStacks(actor, consumeStatus, consumeCount,
+                    statusCatalog, random, selected);
                 RebuildBattleProperties();
             }
             counter.Count = checked(counter.Count + 1);

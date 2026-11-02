@@ -15,11 +15,12 @@ namespace Zjcs.Combat.Official
 
         public static List<FightBattleStatusStateTrigger> CollectRoundStartSkills(
             FightBattleUnitState source, FightBattleUnitState listener,
-            IReadOnlyList<FightBattleUnitState> units, FightRandomStream random)
+            IReadOnlyList<FightBattleUnitState> units, FightRandomStream random,
+            FightOfficialCombatCatalog catalog = null)
         {
             var result = new List<FightBattleStatusStateTrigger>();
             if (source == null || listener == null || source.Statuses == null) return result;
-            foreach (FightBattleStatusState status in source.Statuses)
+            foreach (FightBattleStatusState status in new List<FightBattleStatusState>(source.Statuses))
             {
                 if (status == null || !status.HasRoundStartTrigger
                     || !status.RoundStartRulesSupported || status.RoundStartTryAtStart
@@ -42,28 +43,12 @@ namespace Zjcs.Combat.Official
                     result.Add(trigger.WithSource(status));
                     added++;
                 }
+                if (catalog != null)
+                    added += ApplyStatusTriggers(source, status, status.RoundStartStatuses,
+                        catalog, random);
                 if (added > 0) status.RoundStartTriggeredCount++;
             }
             return result;
-        }
-
-        public static int ApplyRoundStartStatuses(FightBattleStatusState source,
-            FightBattleUnitState listener, IReadOnlyList<FightBattleUnitState> units,
-            FightOfficialCombatCatalog catalog, FightRandomStream random)
-        {
-            if (source == null || listener == null || units == null || catalog == null
-                || !source.HasRoundStartTrigger || !source.RoundStartRulesSupported
-                || source.RoundStartStatuses == null
-                || (source.RoundStartMaxCount >= 0
-                    && source.RoundStartTriggeredCount >= source.RoundStartMaxCount)
-                || FightStatusLifecycle.ResolveTargetUnitId(source,
-                    source.RoundStartListenTarget, units) != listener.Id) return 0;
-            FightBattleUnitState target = units.FirstOrDefault(unit => unit != null
-                && unit.Id == source.OwnerId);
-            int applied = ApplyStatusTriggers(target, source, source.RoundStartStatuses,
-                catalog, random);
-            if (applied > 0) source.RoundStartTriggeredCount++;
-            return applied;
         }
 
         public static List<FightBattleStatusSkillInvocation> CollectRoundEndSkills(
@@ -469,7 +454,8 @@ namespace Zjcs.Combat.Official
         /// source once per matching skill cast and return its additive damage multiplier.
         /// </summary>
         public static double PrepareConsumeStackSkillDamageScale(FightBattleUnitState actor,
-            FightBattleSkillDefinition skill)
+            FightBattleSkillDefinition skill, FightOfficialCombatCatalog catalog = null,
+            FightRandomStream random = null)
         {
             if (actor == null || skill == null || actor.Statuses == null
                 || !FightBattleTargeting.IsSelectable(actor)) return 1.0;
@@ -486,25 +472,22 @@ namespace Zjcs.Combat.Official
                     && value.ClassId == statusId);
                 if (source == null || source.StackCount < effect.ConsumeStackSkillDamageMinStackCount)
                     continue;
-                int consumed = effect.ConsumeStackSkillDamageConsumeCount < 0
+                int consumed = effect.ConsumeStackSkillDamageConsumeCount == -1
                     ? source.StackCount
                     : Math.Min(source.StackCount, effect.ConsumeStackSkillDamageConsumeCount);
                 if (consumed <= 0) continue;
-                int previous = source.StackCount;
-                source.StackCount -= consumed;
-                FightStatusPropertyRuntime.OnStackChanged(source, previous);
                 effect.ConsumeStackSkillDamageConsumedCount = consumed;
                 effect.ConsumeStackSkillDamageTriggered = true;
                 scale *= 1.0 + effect.ConsumeStackSkillDamageScaleValuePerStack
                     * consumed / 10000.0;
-                if (source.StackCount <= 0) FightStatusLifecycle.End(actor, source);
+                ConsumeStacks(actor, source, consumed, catalog, random, skill);
             }
             return Math.Max(0.0, scale);
         }
 
         /// <summary>
         /// Official FightStatusActionExistComponent: maintain the configured status while the
-        /// owner has at least one status whose ActionType matches a configured condition.
+        /// owner has every configured ActionType.
         /// </summary>
         public static int ApplyActionExistStatuses(IReadOnlyList<FightBattleUnitState> units,
             FightOfficialCombatCatalog catalog, FightRandomStream random)
@@ -530,17 +513,18 @@ namespace Zjcs.Combat.Official
                         || !source.ActionExistRulesSupported
                         || source.ActionExistStatusId <= 0
                         || source.ActionExistConditions == null) continue;
-                    bool conditionMet = source.ActionExistConditions.Exists(actionType =>
+                    bool conditionMet = source.ActionExistConditions.TrueForAll(actionType =>
                         unit.Statuses.Exists(candidate => candidate != null
                             && candidate != source && candidate.ActionType == actionType));
                     FightBattleStatusState applied = source.ActionExistAppliedStatusInstanceId <= 0
                         ? null : unit.Statuses.Find(candidate => candidate != null
                             && candidate.InstanceId == source.ActionExistAppliedStatusInstanceId
-                            && candidate.IsActionExistGenerated
-                            && candidate.ActionExistSourceInstanceId == source.InstanceId);
+                            && candidate.ClassId == source.ActionExistStatusId);
                     if (!conditionMet)
                     {
-                        if (applied != null && FightStatusLifecycle.End(unit, applied)) changed++;
+                        if (applied != null && applied.IsActionExistGenerated
+                            && applied.ActionExistSourceInstanceId == source.InstanceId
+                            && FightStatusLifecycle.End(unit, applied)) changed++;
                         source.ActionExistAppliedStatusInstanceId = 0;
                         continue;
                     }
@@ -569,33 +553,46 @@ namespace Zjcs.Combat.Official
             return changed;
         }
 
-        public static int ApplyConsumeStackCounts(FightBattleUnitState owner,
-            FightOfficialCombatCatalog catalog, FightRandomStream random)
+        // Consumption is an event, not a round-start deduction. Ordinary expiry/removal is
+        // deliberately excluded: the official tooltip counts cumulatively consumed stacks.
+        public static int ConsumeStacks(FightBattleUnitState owner, FightBattleStatusState status,
+            int requested, FightOfficialCombatCatalog catalog, FightRandomStream random,
+            FightBattleSkillDefinition skill = null)
         {
-            if (owner == null || owner.Statuses == null || catalog == null) return 0;
+            if (owner == null || status == null || requested <= 0
+                || owner.Statuses == null || !owner.Statuses.Contains(status)) return 0;
+            int consumed = Math.Min(Math.Max(0, status.StackCount), requested);
+            if (consumed == 0) return 0;
+            int previous = status.StackCount;
+            status.StackCount -= consumed;
+            FightStatusPropertyRuntime.OnStackChanged(status, previous);
+            if (status.StackCount == 0) FightStatusLifecycle.End(owner, status);
+            NotifyStackConsumed(owner, status.ClassId, consumed, catalog, random, skill);
+            return consumed;
+        }
+
+        public static int NotifyStackConsumed(FightBattleUnitState owner, int statusId, int consumed,
+            FightOfficialCombatCatalog catalog, FightRandomStream random,
+            FightBattleSkillDefinition skill = null)
+        {
+            if (owner == null || owner.Statuses == null || catalog == null || consumed <= 0)
+                return 0;
             int triggered = 0;
             foreach (FightBattleStatusState source in new List<FightBattleStatusState>(owner.Statuses))
             {
                 if (source == null || !source.HasConsumeStackCount
+                    || skill != null && !FightSkillTriggerPolicy.AllowsStatus(skill, source)
                     || !source.ConsumeStackCountRulesSupported
-                    || source.ConsumeStackCountTargetStatusId <= 0
+                    || source.ConsumeStackCountTargetStatusId != statusId
                     || source.ConsumeStackCountThreshold <= 0) continue;
-                FightBattleStatusState target = owner.Statuses.Find(status => status != null
-                    && status.ClassId == source.ConsumeStackCountTargetStatusId);
-                if (target == null) continue;
-                while (target.StackCount >= source.ConsumeStackCountThreshold)
+                long total = (long)source.ConsumeStackCountProgress + consumed;
+                long count = total / source.ConsumeStackCountThreshold;
+                source.ConsumeStackCountProgress = (int)(total % source.ConsumeStackCountThreshold);
+                for (long i = 0; i < count; i++)
                 {
-                    int previous = target.StackCount;
-                    target.StackCount -= source.ConsumeStackCountThreshold;
-                    FightStatusPropertyRuntime.OnStackChanged(target, previous);
                     triggered++;
                     triggered += ApplyStatusTriggers(owner, source,
                         source.ConsumeStackCountStatuses, catalog, random);
-                    if (target.StackCount <= 0)
-                    {
-                        FightStatusLifecycle.End(owner, target);
-                        break;
-                    }
                 }
             }
             return triggered;

@@ -143,6 +143,16 @@ namespace Zjcs.Combat.Official
                     foreach (object item in list) instance.Add(ConvertValue(item, elementType));
                 return instance;
             }
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(HashSet<>))
+            {
+                Type elementType = type.GetGenericArguments()[0];
+                object instance = Activator.CreateInstance(type);
+                MethodInfo add = type.GetMethod("Add", new[] { elementType });
+                if (list != null)
+                    foreach (object item in list)
+                        add.Invoke(instance, new[] { ConvertValue(item, elementType) });
+                return instance;
+            }
             var map = raw as Dictionary<string, object>;
             if (map == null) return null;
             object nested = Activator.CreateInstance(type);

@@ -473,6 +473,7 @@ namespace Zjcs.Combat.Official
         public bool ConsumeStackCountRulesSupported;
         public int ConsumeStackCountTargetStatusId;
         public int ConsumeStackCountThreshold;
+        public int ConsumeStackCountProgress;
         public List<FightBattleStatusStateTrigger> ConsumeStackCountStatuses =
             new List<FightBattleStatusStateTrigger>();
         // Official FightStatusHpAccDecreaseComponent. Damage is accumulated independently of cures

@@ -417,6 +417,7 @@ namespace Zjcs.Combat.Official
                 ConsumeStackCountRulesSupported = template.ConsumeStackCountRulesSupported,
                 ConsumeStackCountTargetStatusId = template.ConsumeStackCountTargetStatusId,
                 ConsumeStackCountThreshold = template.ConsumeStackCountThreshold,
+                ConsumeStackCountProgress = template.ConsumeStackCountProgress,
                 ConsumeStackCountStatuses = CopyTriggers(template.ConsumeStackCountStatuses),
                 HasHpAccDecrease = template.HasHpAccDecrease,
                 AccumulatedDamage = template.AccumulatedDamage?.Copy(),

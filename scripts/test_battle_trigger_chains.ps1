@@ -292,7 +292,7 @@ Assert-Chain ($null -ne $generatedActionStatus -and
     $actionUnits, $catalog, [Zjcs.Combat.Official.FightRandomStream]::new(12345))
 Assert-Chain ($null -eq ($actionOwner.Statuses | Where-Object ClassId -eq 60221)) 'Action-existence status was not removed after the matching action disappeared'
 
-# Official 25278 adds fourteen 24031 stacks at round start; every two stacks consume into 24187.
+# Official 25278 adds fourteen 24031 stacks at round start and listens to actual consumption.
 $consumeRoundStatus = $catalog.CreateStatus(25278, 1, 1, 20, 0, 0, 6, 17, 10, $null)
 Assert-Chain ($consumeRoundStatus.RoundStartRulesSupported -and
     $consumeRoundStatus.RoundStartStatuses.Count -eq 14 -and
@@ -304,15 +304,95 @@ $consumeRoundOwner = Unit 1 1 0 100
 $consumeRoundOwner.Statuses.Add($consumeRoundStatus)
 $consumeRoundUnits = [System.Collections.Generic.List[Zjcs.Combat.Official.FightBattleUnitState]]::new()
 $consumeRoundUnits.Add($consumeRoundOwner)
-[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyRoundStartStatuses(
-    $consumeRoundStatus, $consumeRoundOwner, $consumeRoundUnits, $catalog,
-    [Zjcs.Combat.Official.FightRandomStream]::new(12345))
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectRoundStartSkills(
+    $consumeRoundOwner, $consumeRoundOwner, $consumeRoundUnits,
+    [Zjcs.Combat.Official.FightRandomStream]::new(12345), $catalog)
 $stackedRoundStatus = $consumeRoundOwner.Statuses | Where-Object ClassId -eq 24031 | Select-Object -First 1
 Assert-Chain ($null -ne $stackedRoundStatus -and $stackedRoundStatus.StackCount -eq 14) 'Round-start status triggers did not add all configured stacks'
-[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyConsumeStackCounts(
-    $consumeRoundOwner, $catalog, [Zjcs.Combat.Official.FightRandomStream]::new(12345))
+$consumeRng = [Zjcs.Combat.Official.FightRandomStream]::new(12345)
+Assert-Chain ($null -eq ($consumeRoundOwner.Statuses | Where-Object ClassId -eq 24187)) 'Adding charges incorrectly triggered the consumption listener'
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::ConsumeStacks(
+    $consumeRoundOwner, $stackedRoundStatus, 1, $catalog, $consumeRng)
+Assert-Chain ($stackedRoundStatus.StackCount -eq 13 -and
+    $consumeRoundStatus.ConsumeStackCountProgress -eq 1 -and
+    $null -eq ($consumeRoundOwner.Statuses | Where-Object ClassId -eq 24187)) 'A partial threshold consumed extra charges or triggered early'
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::ConsumeStacks(
+    $consumeRoundOwner, $stackedRoundStatus, 4, $catalog, $consumeRng)
 $consumedTriggerStatus = $consumeRoundOwner.Statuses | Where-Object ClassId -eq 24187 | Select-Object -First 1
-Assert-Chain ($stackedRoundStatus.StackCount -eq 0 -and $null -ne $consumedTriggerStatus) 'Consume-stack count did not consume threshold pairs and trigger 24187'
+Assert-Chain ($stackedRoundStatus.StackCount -eq 9 -and $consumedTriggerStatus.StackCount -eq 2 -and
+    $consumeRoundStatus.ConsumeStackCountProgress -eq 1) 'Cumulative consumption did not retain its remainder or removed extra charges'
+$consumeCheckpoint = New-Battle (Skill 9900600)
+$consumeCheckpoint.Units[0].Statuses.AddRange($consumeRoundOwner.Statuses)
+[void][Zjcs.Combat.Official.FightBattleExecutor]::Begin($consumeCheckpoint, $formula,
+    [Zjcs.Combat.Official.FightDamageSettlement]::new(), $catalog)
+[void]$consumeRoundStatus.MoveRangeInsideUnitIds.Add(2)
+$consumeSaved = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($consumeCheckpoint)
+$consumeCheckpoint = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(
+    $consumeSaved)
+$restoredConsumeOwner = $consumeCheckpoint.Units[0]
+$restoredConsumeListener = $restoredConsumeOwner.Statuses | Where-Object ClassId -eq 25278 | Select-Object -First 1
+Assert-Chain ($restoredConsumeListener.ConsumeStackCountProgress -eq 1 -and
+    $restoredConsumeListener.MoveRangeInsideUnitIds.Contains(2) -and
+    [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($consumeCheckpoint) -eq $consumeSaved) 'Consumption remainder or tracked range membership was lost on checkpoint restore'
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::ConsumeStacks(
+    $restoredConsumeOwner, ($restoredConsumeOwner.Statuses | Where-Object ClassId -eq 24031 | Select-Object -First 1),
+    1, $catalog, $consumeRng)
+Assert-Chain ($restoredConsumeListener.ConsumeStackCountProgress -eq 0 -and
+    ($restoredConsumeOwner.Statuses | Where-Object ClassId -eq 24187 | Select-Object -First 1).StackCount -eq 3) 'Restored consumption listener did not reach its next threshold'
+$closedConsumption = Skill 9900600; $closedConsumption.CanTriggerChild = $false
+$consumptionSeed = $consumeRng.Seed
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::NotifyStackConsumed(
+    $restoredConsumeOwner, 24031, 1, $catalog, $consumeRng, $closedConsumption)
+Assert-Chain ($restoredConsumeListener.ConsumeStackCountProgress -eq 0 -and
+    $consumeRng.Seed -eq $consumptionSeed) 'A blocked consumption listener changed progress or RNG'
+$closedConsumption.CanTriggerStatusEntityIds.Add(25278)
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::NotifyStackConsumed(
+    $restoredConsumeOwner, 24031, 1, $catalog, $consumeRng, $closedConsumption)
+Assert-Chain ($restoredConsumeListener.ConsumeStackCountProgress -eq 1) 'Whitelisted consumption listener did not record the consumed layer'
+
+# Both branches share the component probability and one invocation count. A status branch
+# must not consume the last invocation before the skill branch has been collected.
+$mixedOwner = Unit 1 1 0 100
+$mixed = $catalog.CreateStatus(25278, 1, 1, 50, 0, 0, 6, 17, 10, $null)
+$mixed.RoundStartRate = 0
+$mixed.RoundStartSkills.Add([Zjcs.Combat.Official.FightBattleStatusStateTrigger]@{
+    EntityId = 9900600; Source = 2; Target = 2; BasePercent = 1
+})
+$mixedOwner.Statuses.Add($mixed)
+$mixedUnits = [System.Collections.Generic.List[Zjcs.Combat.Official.FightBattleUnitState]]::new()
+$mixedUnits.Add($mixedOwner)
+$mixedSkills = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectRoundStartSkills(
+    $mixedOwner, $mixedOwner, $mixedUnits, $consumeRng, $catalog)
+Assert-Chain ($mixedSkills.Count -eq 0 -and $mixedOwner.Statuses.Count -eq 1 -and
+    $mixed.RoundStartTriggeredCount -eq 0) 'Zero component probability still applied a round-start status'
+$mixed.RoundStartRate = 1
+$mixedSkills = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectRoundStartSkills(
+    $mixedOwner, $mixedOwner, $mixedUnits, $consumeRng, $catalog)
+Assert-Chain ($mixedSkills.Count -eq 1 -and $mixed.RoundStartTriggeredCount -eq 1 -and
+    ($mixedOwner.Statuses | Where-Object ClassId -eq 24031 | Select-Object -First 1).StackCount -eq 14) 'Round-start branches did not share one successful invocation'
+$mixedSkills = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectRoundStartSkills(
+    $mixedOwner, $mixedOwner, $mixedUnits, $consumeRng, $catalog)
+Assert-Chain ($mixedSkills.Count -eq 0 -and
+    ($mixedOwner.Statuses | Where-Object ClassId -eq 24031 | Select-Object -First 1).StackCount -eq 14) 'Round-start status branch bypassed MaxCount'
+
+# Multiple ActionType conditions are conjunctive; unrelated applications of the same status
+# must not receive another application every time battle properties are rebuilt.
+$actionOwner.Statuses.Add($shieldAction)
+$actionExist.ActionExistConditions.Add(56)
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyActionExistStatuses($actionUnits, $catalog, $consumeRng)
+Assert-Chain ($null -eq ($actionOwner.Statuses | Where-Object ClassId -eq 60221)) 'Action-existence accepted only one of multiple required actions'
+$burnAction = Status 9910056 1; $burnAction.InstanceId = 30; $burnAction.ActionType = 56
+$actionOwner.Statuses.Add($burnAction)
+$externalActionStatus = $catalog.CreateStatus(60221, 1, 1, 31, 0, 0, 6, 17, 10, $null)
+$externalActionStatus.IsOpenStack = $true; $externalActionStatus.MaxStackedCount = 100
+$actionOwner.Statuses.Add($externalActionStatus)
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyActionExistStatuses($actionUnits, $catalog, $consumeRng)
+$externalStacks = $externalActionStatus.StackCount
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyActionExistStatuses($actionUnits, $catalog, $consumeRng)
+Assert-Chain ($externalActionStatus.StackCount -eq $externalStacks) 'Action-existence repeatedly stacked onto an existing same-class status'
+[void]$actionOwner.Statuses.Remove($burnAction)
+[void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyActionExistStatuses($actionUnits, $catalog, $consumeRng)
+Assert-Chain ($actionOwner.Statuses.Contains($externalActionStatus)) 'Action-existence removed an external same-class status'
 
 $restored = Run-Battle (New-Battle (Skill 9900100)) $true
 $first = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($chain.Checkpoint)
