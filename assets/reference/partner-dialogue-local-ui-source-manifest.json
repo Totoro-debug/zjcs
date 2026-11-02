@@ -8,24 +8,24 @@
   },
   "dependency_sha256": {
     "assets/reference/partner-conversation-local-source-manifest.json": "d9e0a11b7d9543e031f7912feb25bfe177864a13883d026c668037a934a294e9",
-    "assets/reference/partner-dialogue-list-ui-source-manifest.json": "2d3cda7d7d27359ec08222b38c273303ab525d7acffd714fd4e0bda1ff1250a9",
-    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/PartnerDialogueUiServices.cs": "e39798ca643951b70a05d69ba53270fdcb2d38a9c7eaf1404c12ba5649434382",
+    "assets/reference/partner-dialogue-list-ui-source-manifest.json": "d48d66225e124a47e3f5a0584cceb762c115f60a51625f1e116327a5378e4de6",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/PartnerDialogueUiServices.cs": "1cee9e50e06dca72bde57c9c8d2222da7f8e5786d7a68e544dbcc4618df268bb",
     "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/NpcPanelDialogueList.cs": "e702ae82dbd2aa49a916f9af1bfeda6d46a6d5b2693fb287399386b91e16f0f7",
     "unity/Assets/Game/Runtime/Official/WorldUI/MovementType.cs": "d54b2092c59fc3a27a0f5f52123b83e670a707c6e982925143ecd1cb16701ba5"
   },
   "installed_output_sha256": {
-    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerDialogueUiServices.cs": "51baf5b517fe6d2b88e028b30db3bf7682172cd0300850b6a25f8d8a4fa339e9",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerDialogueUiServices.cs": "cfc66c86b9718cb7271b2c0e3ae2d7d4d756a39677c89a73fe73ff16f2e3697a",
     "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerDialogueUiServices.cs.meta": "7b0a596e0b155432471a7b0f8c8e1a2e707964a38ea61e6a71528c36aeec1144"
   },
   "validation_source_sha256": {
     "scripts/prepare_partner_dialogue_local_ui_validation.py": "f6f57c1bdb2041adcfe40b453e8911282638401baceac24d680ce1461747b55b",
     "scripts/fixtures/partner_dialogue_local_ui_validation.cs": "b3fa2b4773eb3c994483e61b8c45a456a11d2f6a5b9ebb2f6108595f50b202b1"
   },
-  "recorder_sha256": "b487cce8b035ab79c57b80514f185626402bbe79cc065ee07181c6d3f952203c",
+  "recorder_sha256": "85da1d586f251775379d467c9338df7e07abd3c871ce86bb19dba76ac915e7db",
   "operation": [
     "Read actual committed profile conversations and their original NPC/player/dialogue identities.",
     "Publish each added dialogue separately so the original first-NPC full scan and subsequent append cannot duplicate rows.",
-    "Keep mutable original UI view references across saved updates and unchanged reloads.",
+    "Keep mutable original UI view references across saved updates and unchanged reloads, including original player identity and a stable node-history list.",
     "Unpublish removed rows before notification, retaining their NPC view through the original refresh callback.",
     "Validate the complete original-node and NPC identity relation before publishing any delta.",
     "Resolve node conditions using the actual original conversation configuration and saved player adapter.",
@@ -33,6 +33,6 @@
   ],
   "limitations": [
     "The Play Mode fixture validates state/notifications and real disk rollback only.",
-    "The production native avatar, nonempty panel interaction, playback window, trigger and reward transaction remain pending."
+    "This address-book adapter does not itself supply the production avatar, native interaction, playback window or creation/reward transaction."
   ]
 }

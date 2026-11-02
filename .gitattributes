@@ -1646,6 +1646,26 @@ scripts/prepare_partner_conversation_transaction_validation.py text eol=lf
 scripts/record_partner_conversation_transaction_sources.py text eol=lf
 unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerConversationService.cs* text eol=lf
 
+# Partner dialogue playback preserves official native bytes and code hashes.
+scripts/prepare_partner_dialogue_playback_ui.py text eol=lf
+scripts/prepare_partner_dialogue_playback_native.py text eol=lf
+scripts/prepare_partner_dialogue_playback_validation.py text eol=lf
+scripts/partner_dialogue_playback_language.py text eol=lf
+scripts/record_partner_dialogue_playback_sources.py text eol=lf
+scripts/fixtures/partner_dialogue_playback_validation.cs text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/DialoguePlayback/** text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/DialoguePlayback.meta text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/DialoguePlayback.meta whitespace=-blank-at-eol
+unity/Assets/Game/Runtime/Official/PartnersUI/DialoguePlayback/*.meta whitespace=-blank-at-eol
+unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerDialoguePlaybackServices.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerDialoguePlaybackAssetCatalog.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerDialoguePlaybackView.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerDialoguePlaybackServices.cs.meta whitespace=-blank-at-eol
+unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerDialoguePlaybackAssetCatalog.cs.meta whitespace=-blank-at-eol
+unity/Assets/Official/Partners/UI/DialoguePlayback/** -text
+unity/Assets/Official/Partners/UI/DialoguePlayback.meta -text
+unity/Assets/Game/Resources/Partners/OfficialPartnerDialoguePlaybackAssetCatalog.asset* -text
+
 # Map11 runtime hashes the original LF definition bytes.
 unity/Assets/Official/World/Map/11/map11.json text eol=lf
 

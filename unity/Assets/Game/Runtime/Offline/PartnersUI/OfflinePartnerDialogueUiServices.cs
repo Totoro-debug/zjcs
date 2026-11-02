@@ -100,6 +100,8 @@ namespace Zjcs.Offline.PartnersUI
                 if (!dialogues.TryGetValue(entry.Key, out var view))
                     dialogues.Add(entry.Key, view = new PartnerDialogueData());
                 view.NpcId = value.NpcId; view.DialogueId = value.DialogueId;
+                view.PlayerId = value.PlayerId;
+                view.DialogueNodes.Clear(); view.DialogueNodes.AddRange(value.DialogueNodes);
                 view.DialogueClassId = value.DialogueClassId; view.CurrentNode = value.CurrentNode;
                 view.DialogueStatus = (PartnerDialogueStatus)value.DialogueStatus;
                 view.DateTime = new DateTime(value.DateTimeTicks, (DateTimeKind)value.ClockKind);

@@ -15,7 +15,8 @@ namespace Zjcs.Official.PartnersUI
     }
     public sealed class PartnerDialogueData
     {
-        public long NpcId, DialogueId;
+        public long NpcId, DialogueId, PlayerId;
+        public readonly List<int> DialogueNodes = new List<int>();
         public int DialogueClassId, CurrentNode;
         public PartnerDialogueStatus DialogueStatus;
         public DateTime DateTime;

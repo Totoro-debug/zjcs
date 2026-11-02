@@ -335,3 +335,5 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 伙伴通话每日限制的原 `Player`／`TimeUtils` 方法、记录字段、配置依赖及本地存档适配哈希见 [partner-conversation-day-limits-source-manifest.json](partner-conversation-day-limits-source-manifest.json)，重建入口为 `prepare_partner_conversation_day_limits.py`。本批无新增美术，未生成素材快照。
 
 伙伴通话节点／好感等级原方法与本地事务边界的源码、字段适配、原数据及验证哈希见 [partner-conversation-transactions-source-manifest.json](partner-conversation-transactions-source-manifest.json)，记录入口为 `record_partner_conversation_transaction_sources.py`；原好感等级方法经过声明适配后的逐词核对。本批无新增美术，未生成素材快照。
+
+伙伴原通话播放代码与完整窗口的输入版本、原代码、APK／云端对象、Windows 转换、同源资源复用、语言及显式加载绑定哈希见 [partner-dialogue-playback-ui-source-manifest.json](partner-dialogue-playback-ui-source-manifest.json)、[partner-dialogue-playback-native-source-manifest.json](partner-dialogue-playback-native-source-manifest.json)；入口为 `prepare_partner_dialogue_playback_ui.py`／`prepare_partner_dialogue_playback_native.py`。本地服务与验证源码指纹见 [partner-dialogue-playback-runtime-source-manifest.json](partner-dialogue-playback-runtime-source-manifest.json)，入口为 `record_partner_dialogue_playback_sources.py`。本批素材未纳入完整素材快照。

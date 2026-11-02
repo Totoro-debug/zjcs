@@ -1,0 +1,36 @@
+{
+  "manifest": "884_156692",
+  "installed_output_sha256": {
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerDialoguePlaybackServices.cs": "74b365c83d631d10aa5f084739f4556f1ff2a8ca7e4a6d6509af7cdc8962ae71",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerDialoguePlaybackServices.cs.meta": "976f98dd7fd0152c41c433b8d5137af10aac030b58fad4a95bc7ed682bf45e54",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerDialoguePlaybackView.cs": "4ea70cf97f09948490669db2e2400d12894d1a3688951c615f0be5bcf8f4ec12",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerDialoguePlaybackView.cs.meta": "690b59259cfc53dcf709b5893383b1823aee595b41e3a18e6bd2a604b26badfd",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/Zjcs.Offline.PartnersUI.asmdef": "c381abde2f766ac0009e955f1db241c6c0ba6a8c6100e46fee6b2fb09114e4fa",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/PartnerDialogueUiServices.cs": "1cee9e50e06dca72bde57c9c8d2222da7f8e5786d7a68e544dbcc4618df268bb",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerDialogueUiServices.cs": "cfc66c86b9718cb7271b2c0e3ae2d7d4d756a39677c89a73fe73ff16f2e3697a"
+  },
+  "dependency_sha256": {
+    "assets/reference/partner-dialogue-playback-ui-source-manifest.json": "0b5b4eaca06f53da12f7d452be3dcb70b04f8633efc502d917d80ec74ad6be65",
+    "assets/reference/partner-dialogue-playback-native-source-manifest.json": "d73b2f5cfea0b121496c14514ba2ab85e63670281a60b77cf182fbb63a3af76d",
+    "assets/reference/partner-dialogue-local-ui-source-manifest.json": "7a51bdf6460160e2c7ba9755de48e16805e66eecf4e842a5bec93ce4c1f6ad32",
+    "assets/reference/partner-conversation-transactions-source-manifest.json": "6983bf8320f366ef281d8100bb7ddf12273f0652a03a172bf846522b99fd38b3",
+    "unity/Assets/Game/Runtime/Official/StoryBubbles/TMP_TypeWriterEffect.cs": "dd0eaebebe82cac4e8f9163a5474025af1b7bbb6f78f9ce9c1977a9a9d8b3ef3"
+  },
+  "validation_source_sha256": {
+    "scripts/prepare_partner_dialogue_playback_validation.py": "7516ad5967d90b4f5157f8cb9a3da16a2e195d70d14aa647a5bfeaabbbf54c4d",
+    "scripts/fixtures/partner_dialogue_playback_validation.cs": "58724a874ad538cc9cbf6f32705199919cf6fc2bf588c347a8ffcedd088d6e87"
+  },
+  "recorder_sha256": "8c358370ee2d365d4c978cc4b9394537a920fd42d033b2be8322b3eb05a6292e",
+  "scope": [
+    "Explicit ports bind original playback controllers to committed stable dialogue views and local acknowledgment transactions.",
+    "Copy original player identity and node history into the stable view before publishing each update; retain the history list identity.",
+    "Handle disk IO/access failure as a completed error acknowledgment without publishing uncommitted state.",
+    "The native window owner binds controllers, original row pool, localized text, images and original sound scope before initialization/activation."
+  ],
+  "validation_scope": [
+    "Exact original main prefab and external row import; actual 2021 option order/text keys and native simulated pointer input.",
+    "Actual saved legal branch, failed-write rollback/error completion, stale option rejection, stable history references and disk reload.",
+    "Actual original option hiding, award-handler subscription lifetime and selected official PCM.",
+    "Full transcript automatic playback, avatar presentation, award popup, hyper-link navigation, Home entry and Windows Player are not covered by this bounded option check."
+  ]
+}

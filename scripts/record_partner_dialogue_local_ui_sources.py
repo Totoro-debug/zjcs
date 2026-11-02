@@ -35,13 +35,13 @@ def main():
         recorder_sha256=sha(Path(__file__)),
         operation=['Read actual committed profile conversations and their original NPC/player/dialogue identities.',
             'Publish each added dialogue separately so the original first-NPC full scan and subsequent append cannot duplicate rows.',
-            'Keep mutable original UI view references across saved updates and unchanged reloads.',
+            'Keep mutable original UI view references across saved updates and unchanged reloads, including original player identity and a stable node-history list.',
             'Unpublish removed rows before notification, retaining their NPC view through the original refresh callback.',
             'Validate the complete original-node and NPC identity relation before publishing any delta.',
             'Resolve node conditions using the actual original conversation configuration and saved player adapter.',
             'Require explicit native presentation services; this adapter supplies no substitute UI or avatars.'],
         limitations=['The Play Mode fixture validates state/notifications and real disk rollback only.',
-            'The production native avatar, nonempty panel interaction, playback window, trigger and reward transaction remain pending.'])
+            'This address-book adapter does not itself supply the production avatar, native interaction, playback window or creation/reward transaction.'])
     destination = ROOT / 'assets/reference/partner-dialogue-local-ui-source-manifest.json'
     destination.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
     print('Recorded original address-book consumers and committed-profile adapter', flush=True)
