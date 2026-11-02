@@ -37,8 +37,8 @@ namespace Zjcs.Combat.Official
                     || !status.RoundStartRulesSupported || (atStatusStart && !status.RoundStartTryAtStart)
                     || (!atStatusStart && status.RoundStartPhase != phase)
                     || status.RoundStartDelayRound != 0 || status.RoundStartMeetCount < 1
-                    || (status.RoundStartMaxCount >= 0
-                        && status.RoundStartTriggeredCount >= status.RoundStartMaxCount)
+                    || (FightStatusLifecycle.RoundStartMaximumCount(status) >= 0
+                        && status.RoundStartTriggeredCount >= FightStatusLifecycle.RoundStartMaximumCount(status))
                     || FightStatusLifecycle.ResolveTargetUnitId(status,
                         status.RoundStartListenTarget, units) != listener.Id
                     || !Roll(status.RoundStartRate, random)) continue;

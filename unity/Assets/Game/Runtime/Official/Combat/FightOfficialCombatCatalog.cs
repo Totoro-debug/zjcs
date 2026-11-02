@@ -1076,6 +1076,9 @@ namespace Zjcs.Combat.Official
                     : Float(roundStart, "Rate", 1f),
                 RoundStartMaxCount = roundStart == null ? -1
                     : Int(roundStart, "MaxCount", -1),
+                RoundStartMergeMaxCountOnStackRound = roundStart != null
+                    && Bool(roundStart, "MergeMaxCountOnStackRound"),
+                RoundStartMergeRulesResolved = true,
                 RoundStartMeetCount = roundStart == null ? 1
                     : Int(roundStart, "MeetCount", 1),
                 RoundStartResetMeetCountOnInvoke = roundStart != null

@@ -76,8 +76,18 @@ namespace Zjcs.Combat.Official
             int start = status.StartRound < 0 ? round : status.StartRound;
             int remaining = status.CurDurationRound - (round - start);
             status.CurDurationRound = Math.Min(status.DurationRound + remaining,
-                status.MaxAddDurationRound > 0 ? status.MaxAddDurationRound : status.DurationRound + remaining);
+                status.MaxAddDurationRound);
             status.StartRound = round;
+            // FightStatusStackRoundModification always emits OnStackRound, including
+            // when the duration cap leaves the resulting duration unchanged.
+            if (status.HasRoundStartTrigger && status.RoundStartMergeMaxCountOnStackRound)
+                status.RoundStartStackRoundCount++;
+        }
+
+        /// <summary>FightStatusRoundStartComponent.mMaxCount, independent of status layer stacks.</summary>
+        public static int RoundStartMaximumCount(FightBattleStatusState status)
+        {
+            return status == null ? 0 : status.RoundStartMaxCount * status.RoundStartStackRoundCount;
         }
 
         public static void ResetDurationOnStack(FightBattleStatusState status, int round)
@@ -264,6 +274,9 @@ namespace Zjcs.Combat.Official
                 RoundStartDelayRound = template.RoundStartDelayRound,
                 RoundStartRate = template.RoundStartRate,
                 RoundStartMaxCount = template.RoundStartMaxCount,
+                RoundStartMergeMaxCountOnStackRound = template.RoundStartMergeMaxCountOnStackRound,
+                RoundStartStackRoundCount = template.RoundStartStackRoundCount,
+                RoundStartMergeRulesResolved = template.RoundStartMergeRulesResolved,
                 RoundStartMeetCount = template.RoundStartMeetCount,
                 RoundStartResetMeetCountOnInvoke = template.RoundStartResetMeetCountOnInvoke,
                 RoundStartMeetRulesResolved = template.RoundStartMeetRulesResolved,

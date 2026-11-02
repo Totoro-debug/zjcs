@@ -8,6 +8,69 @@ namespace Zjcs.Editor
 {
     public static partial class HomeBattleHostPlayModeAcceptance
     {
+        private static RoundMergeFormulaProbe ConfigureRoundMergeFormulaProbe(FightBattleCheckpoint checkpoint)
+        {
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_ROUND_MERGE_FORMULA_ACCEPTANCE") != "1") return null;
+            var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
+            foreach (var unit in checkpoint.Units)
+            {
+                long hp = unit.Id == 1 ? 5000000L : 2000000L;
+                foreach (var property in unit.Properties.Concat(unit.BaseProperties))
+                {
+                    if (property.Id == catalog.PropertyType("MaxHp")) property.Value = hp;
+                    if (unit.Id != 1 && property.Id == catalog.PropertyType("Attack")) property.Value = 1000L;
+                }
+                unit.MaxHp = unit.LastMaxHp = unit.Hp = unit.Turn.Hp = hp;
+            }
+            var source = catalog.CreateStatus(24640, 1, 2, 9924640, 0, 0, 5, 20, 1, null);
+            // Isolated formula fixture: selection of an old instance is deliberately bypassed.
+            // Production definitions remain unsupported until that missing server rule is resolved.
+            source.RoundStartRulesSupported = true;
+            FightStatusLifecycle.Initialize(source, 0);
+            checkpoint.Units.Single(value => value.Id == 1).Statuses.Add(source);
+            return new RoundMergeFormulaProbe(source);
+        }
+
+        private sealed class RoundMergeFormulaProbe
+        {
+            private readonly FightBattleStatusState source;
+            private int calls;
+            public bool ReadyToCapture => calls >= 4;
+            public RoundMergeFormulaProbe(FightBattleStatusState source) { this.source = source; }
+            public void ObserveStep(OfficialBattleRuntimeController controller)
+            {
+                var cp = controller.Checkpoint;
+                var step = cp.Receipts.Last().Event;
+                var casts = step.SkillCasts.Where(value => value.SkillEntityId == 63280 && value.ActorId == 2).ToArray();
+                if (casts.Length == 0) return;
+                calls++;
+                if (calls == 1)
+                    FightStatusLifecycle.ExtendDurationOnStack(source,
+                        cp.Units.Single(value => value.Id == 1).SkillState.Round);
+                var damage = step.DamageEvents.Where(value => value.SkillEntityId == 63280 && value.SourceId == 2).ToArray();
+                Require(casts.Length == 1 && casts[0].TargetIds.SequenceEqual(new[] { 1 })
+                    && damage.Length == 1 && damage[0].TargetId == 1 && damage[0].Damage < 0
+                    && damage[0].AfterHp < damage[0].BeforeHp,
+                    "Duration formula fixture lost actual creator damage against its victim.");
+                Require(source.RoundStartTriggeredCount == calls && calls <= 6
+                    && source.RoundStartStackRoundCount == 2 && FightStatusLifecycle.RoundStartMaximumCount(source) == 6
+                    && source.CurDurationRound == 5 && source.StartRound == 1
+                    && source.SourceSkillRank == 5 && source.SourceSkillLevel == 20,
+                    "Duration formula fixture lost retained invocation count, quota or cultivation.");
+                Debug.Log("[Round merge formula hosts] 24640 -> 63280 -> 63281: call=" + calls
+                    + ", damage=" + damage[0].Damage + ", renewed-duration=5, start-round=1, stack-round=2, maximum=6.");
+            }
+            public void Verify(string host, FightBattleCheckpoint checkpoint)
+            {
+                Require(calls == 6 && !checkpoint.Units.Single(value => value.Id == 1).Statuses.Contains(source),
+                    host + " did not finish all six formula-fixture calls and remove its exhausted state.");
+                string saved = FightBattleCheckpointSerializer.Save(checkpoint);
+                Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
+                    host + " changed the duration formula fixture after checkpoint reload.");
+                Debug.Log("[Round merge formula hosts] " + host + ": six actual damage calls, exhausted removal and checkpoint passed; instance selection remains disabled.");
+            }
+        }
+
         private static RoundSourceProbe ConfigureRoundSourceProbe(FightBattleCheckpoint checkpoint)
         {
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_ROUND_SOURCE_ACCEPTANCE") != "1") return null;

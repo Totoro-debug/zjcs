@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Zjcs.Combat.Official
@@ -9,13 +10,22 @@ namespace Zjcs.Combat.Official
             if (!status.HasRoundStartTrigger
                 || status.RoundStartDefinitionResolved && status.RoundStartTargetRulesResolved
                     && status.RoundStartPropTargetRulesResolved && status.RoundStartMeetRulesResolved
-                    && status.RoundStartRandomRulesResolved && status.RoundStartSourceRulesResolved) return;
+                    && status.RoundStartRandomRulesResolved && status.RoundStartSourceRulesResolved
+                    && status.RoundStartMergeRulesResolved) return;
             var definition = statusCatalog.CreateStatus(status.ClassId, status.OwnerId,
                 status.CreatorId, status.InstanceId, status.RootSkillId, status.ApplyingSkillItemId,
                 status.SourceSkillRank, status.SourceSkillLevel, status.SourceSubRank, status.SourceProperties,
                 replacementProperties: status.ReplacementProperties, blessPropertyScales: status.BlessPropertyScales);
             status.RoundStartRulesSupported = definition.RoundStartRulesSupported;
             status.RoundStartSourceRulesResolved = true;
+            if (!status.RoundStartMergeRulesResolved)
+            {
+                status.RoundStartMergeMaxCountOnStackRound = definition.RoundStartMergeMaxCountOnStackRound;
+                // No previous duration-merge implementation recorded extra stack rounds.
+                // Preserve actual calls; missing legacy stack-round history starts at one.
+                status.RoundStartStackRoundCount = Math.Max(1, status.RoundStartStackRoundCount);
+                status.RoundStartMergeRulesResolved = true;
+            }
             if (!status.RoundStartRandomRulesResolved)
             {
                 status.RoundStartRandomOneStatus = definition.RoundStartRandomOneStatus;
@@ -92,8 +102,8 @@ namespace Zjcs.Combat.Official
             // User-confirmed offline boundary: finish the final invocation before removing
             // its source. Unlimited triggers never exhaust this counter.
             if (status.RoundStartTriggeredCount > before && status.RoundStartRemoveWhenNotEnoughTimes
-                && status.RoundStartMaxCount >= 0
-                && status.RoundStartMaxCount - status.RoundStartTriggeredCount < status.RoundStartMeetCount
+                && FightStatusLifecycle.RoundStartMaximumCount(status) >= 0
+                && FightStatusLifecycle.RoundStartMaximumCount(status) - status.RoundStartTriggeredCount < status.RoundStartMeetCount
                 && owner.Statuses.Contains(status)) FightStatusLifecycle.End(owner, status);
             return status.RoundStartTriggeredCount - before;
         }
