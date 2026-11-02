@@ -17,7 +17,7 @@ namespace Zjcs.Offline.ProfessionUI
         private ProfessionNativeSceneWeaponCatalog.Entry entry;
         private ProfessionNativeSceneRendererSettings settings;
         private ProfessionNativeMeshBatches batches;
-        private Action<ProfessionNativeAppearanceSkeleton, string, bool> play;
+        private IProfessionNativeSceneWeaponPoseProducer poses;
         private bool fieldsApplied;
         public ProfessionNativeAppearanceSkeleton State { get; private set; }
         public Component Component => this;
@@ -37,18 +37,18 @@ namespace Zjcs.Offline.ProfessionUI
         private ProfessionNativeSceneMeshPart Main => GetComponent<ProfessionNativeSceneMeshPart>();
 
         public void Configure(ProfessionNativeSceneWeaponCatalog resources, string skin,
-            Action<ProfessionNativeAppearanceSkeleton, string, bool> poseProducer)
+            IProfessionNativeSceneWeaponPoseProducer poseProducer)
         {
             if (State != null) throw new InvalidOperationException("Release the independent scene weapon before rebinding its sources.");
             catalog = resources ? resources : throw new ArgumentNullException(nameof(resources));
             entry = catalog.Find(skin);
-            play = poseProducer ?? throw new ArgumentNullException(nameof(poseProducer));
+            poses = poseProducer ?? throw new ArgumentNullException(nameof(poseProducer));
         }
 
         public void Initialize(bool overwrite, bool quiet)
         {
             if (State != null && !overwrite) return;
-            if (!catalog || entry == null || play == null) throw new InvalidOperationException("Bind original weapon sources and its pose producer first.");
+            if (!catalog || entry == null || poses == null) throw new InvalidOperationException("Bind original weapon sources and its pose producer first.");
             var nextSettings = ProfessionNativeSceneRendererSettings.LoadWeapon(entry.Hierarchy);
             if (nextSettings.InitialSkin != entry.InitialSkin || nextSettings.InitialAnimation != entry.InitialAnimation)
                 throw new InvalidOperationException("Original independent weapon prefab and catalog disagree.");
@@ -87,12 +87,16 @@ namespace Zjcs.Offline.ProfessionUI
         {
             if (State == null) throw new InvalidOperationException("Initialize the independent weapon before requesting its animation.");
             if (!State.Source.AnimationNames.Contains(name)) throw new NotSupportedException("Original independent weapon animation is unavailable: " + name);
-            play(State, name, loop);
+            poses.Play(State, name, loop);
         }
 
         public void UpdateAnimationAndMesh()
         {
             Initialize(false, false);
+            // Original AppearanceRendererLite requests animation-and-mesh after
+            // changing its rendering state. Complete the live animation again
+            // so a skin/setup reset cannot leave the bones in their rest pose.
+            poses.Apply(State);
             batches.Build(State.Pose, State.CreateDrawSlots(), settings.UseClipping, settings.PmaVertexColors);
             Main.Assign(batches.Batches, batch =>
             {

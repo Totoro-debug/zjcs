@@ -50,11 +50,15 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneWeapon.cs",
-      "sha256": "780ea7c0f1c9e9bbda84bbc11200222690784da85ca99ab5d804d1eb27bc04d7"
+      "sha256": "008957b70326f6f87b494aeae32167aac61b746932e9f1e265d6e7c81d9de64e"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneWeaponRenderer.cs",
-      "sha256": "bc87042926d57493be422ed7a0394a09b3f329329f09483e74e6a7285d641f97"
+      "sha256": "78fbac2d28af9eb57046873d177dc59b00ca7d493c14131d7699969d6f0cf0be"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/IProfessionNativeSceneWeaponPoseProducer.cs",
+      "sha256": "67da5d80a974ed5bc11a6d9ee523fdc813fd72180511ba82192c26d3dda14ce0"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneWeaponCatalog.cs",
@@ -70,7 +74,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionScenePartPoolBindings.cs",
-      "sha256": "0f5f2e52c15eb123d394a4c54137d2df98f4f9ed73ebeefbe89bae0335927c3a"
+      "sha256": "0c5528a7cdd4d179ade3a74beb79077cbf087d782abaa1e075a49969eac1c324"
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneRenderer.cs",
@@ -82,11 +86,15 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneIntegratedParts.cs",
-      "sha256": "88a98c4f2e5c9394f848ecee9226b2f105b3ad0304ca76483bbbdc3359c973fb"
+      "sha256": "ffcdeb53537109485d3225b7d1ac4ab462c4e1dede92fb16dd7bf66f3a4351b8"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneCharacterAppearance.cs",
+      "sha256": "6495322f8fa926f122966d64239db0e127b9bb07d7c6f153dc8fd86239b7d828"
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.cs",
-      "sha256": "17f2d19f2a45fad3d952dda80e07ca6105ad32d61656cdfd06fd87eb37f28f55"
+      "sha256": "ba7d18dbbd26cd77a51e610d778f7eb7d6199e8c841c2cff7dce4ac3ef9deb9a"
     }
   ],
   "follower_application_reuse": [
@@ -121,7 +129,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_scene_native_renderer.py",
-    "sha256": "efb1b8959b6e04f0237c6787fa4cf581813912c8433b2b457bc360a9126f2ddb"
+    "sha256": "fe9d3f9610d70aafa8fb4e83132ab9aa29084af7a4400dd2b09bf4aa57c38e7c"
   },
   "binding": {
     "catalog": "Combat/SceneCharacters/appearance-resources",
@@ -139,7 +147,7 @@
     "sha256": "19a6671de28c1e523240b0a2b1cdb479bf1ac0c3a0d2976e22cbb48677765af0"
   },
   "native_ordering": "Internal SortingGroups retain source draw-slot order while original MeshRenderer fields stay intact. Even keys identify fragment starts; the actual G_007 independent sword/staff binds an odd after-point key between its two body fragments. Existing ordering objects remain with pooled parts for same-frame reuse. Current original part renderer layer/order must be uniform.",
-  "independent_parts": "Assemble all four source nodes and transforms, original SkeletonRendererFollower fields and AppearanceSkeletonPart/AppearanceRendererLite application code. Native body Low and weapon High resources share one explicit GUID/atlas router. A mandatory external pose producer receives animation requests; drawing performs no clock, physics or mixing. Prior extraction receipts retain their historical runtime identities; current catalog/resource binding extensions are recorded above without changing the extracted payloads.",
+  "independent_parts": "Assemble all four source nodes and transforms, original SkeletonRendererFollower fields and AppearanceSkeletonPart/AppearanceRendererLite application code. Native body Low and weapon High resources share one explicit GUID/atlas router. A mandatory external pose producer receives animation changes and separately completes the current pose after skin/setup resets, without restarting or advancing time; drawing performs no clock, physics or mixing. Prior extraction receipts retain their historical runtime identities; current catalog/resource binding extensions are recorded above without changing the extracted payloads.",
   "limits": [
     "Normal-blend current character slots and uniform original part sorting only; unsupported prefab drawing fields, slot blends, divergent part sorting and unbound custom follower slot depth fail explicitly. Current zero-spacing followers take the original early-return branch without reading custom depth. Nonzero spacing, drawable anchor insertion, ZFront, multiple parts at one slot and other part prefabs remain unbound.",
     "The pose producer, full physics, mixing, original scene prefab assembly and production battle/Windows Player integration remain required."

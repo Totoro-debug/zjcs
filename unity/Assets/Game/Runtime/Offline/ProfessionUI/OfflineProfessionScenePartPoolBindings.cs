@@ -19,14 +19,14 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly ProfessionNativeSceneWeaponCatalog catalog;
         private readonly IProfessionAppearanceUILiteBindings materials;
         private readonly IProfessionAppearancePartBindings parts;
-        private readonly Action<ProfessionNativeAppearanceSkeleton, string, bool> poses;
+        private readonly IProfessionNativeSceneWeaponPoseProducer poses;
         private readonly Func<bool> usePool;
         private readonly Dictionary<GameObject, ProfessionNativeSceneWeapon> instances = new Dictionary<GameObject, ProfessionNativeSceneWeapon>();
         public bool UsePool => usePool();
         public int LiveInstanceCount => instances.Count;
         public OfflineProfessionScenePartPoolBindings(ProfessionNativeSceneWeaponCatalog catalog,
             IProfessionAppearanceUILiteBindings materials, IProfessionAppearancePartBindings parts,
-            Action<ProfessionNativeAppearanceSkeleton, string, bool> poses, Func<bool> usePool)
+            IProfessionNativeSceneWeaponPoseProducer poses, Func<bool> usePool)
         {
             this.catalog = catalog ? catalog : throw new ArgumentNullException(nameof(catalog));
             this.materials = materials ?? throw new ArgumentNullException(nameof(materials));

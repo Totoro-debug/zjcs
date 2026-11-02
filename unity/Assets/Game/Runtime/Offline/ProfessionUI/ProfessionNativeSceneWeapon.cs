@@ -35,7 +35,7 @@ namespace Zjcs.Offline.ProfessionUI
 
         public static ProfessionNativeSceneWeapon Create(ProfessionNativeSceneWeaponCatalog catalog, string skin,
             Transform parent, ProfessionNativeSceneRenderer target, IProfessionAppearanceUILiteBindings materials, IProfessionAppearancePartBindings parts,
-            Action<ProfessionNativeAppearanceSkeleton, string, bool> poseProducer)
+            IProfessionNativeSceneWeaponPoseProducer poseProducer)
         {
             if (!catalog || !parent || !target || materials == null || parts == null || poseProducer == null) throw new ArgumentNullException();
             var entry = catalog.Find(skin);

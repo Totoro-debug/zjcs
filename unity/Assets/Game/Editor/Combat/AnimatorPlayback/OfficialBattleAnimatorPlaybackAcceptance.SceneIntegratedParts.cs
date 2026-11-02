@@ -69,15 +69,9 @@ namespace Zjcs.Editor.Combat
                     native.OnGetUpdatedSharedMaterials += replace;
                     var slot = new GameObject("PartSlot").transform; slot.SetParent(root.transform, false);
                     var binding = new ScenePartBindings(config);
-                    var requests = new Dictionary<ProfessionNativeAppearanceSkeleton, string>();
-                    Action<ProfessionNativeAppearanceSkeleton, string, bool> play = (state, name, loop) =>
-                    {
-                        Require(loop, "current source weapon animation requests loop");
-                        requests[state] = name;
-                        state.EvaluateUnmixedWeaponAnimation(name, 0);
-                    };
+                    var poses = new SceneDiagnosticWeaponPoses();
                     bool usePool = true;
-                    var resources = new OfflineProfessionScenePartPoolBindings(weapons, materials, binding, play, () => usePool);
+                    var resources = new OfflineProfessionScenePartPoolBindings(weapons, materials, binding, poses, () => usePool);
                     using var pool = new CharacterPartEntryProvider(resources);
                     var handler = root.AddComponent<AppearanceRendererPartHandler>();
                     handler.ConfigureParts(binding); handler.ConfigureRenderer(native, slot, pool, SortingLayer.IDToName(1182434123), 0);
@@ -116,7 +110,7 @@ namespace Zjcs.Editor.Combat
                         foreach (string action in new[] { group + "/idle_01", group + "/skill_41" })
                         {
                             SetIntegratedBodyPose(native, model.Sex, group, action, .4f);
-                            weapon.State.EvaluateUnmixedWeaponAnimation(requests[weapon.State], .4f);
+                            poses.Apply(weapon.State);
                             native.LateUpdateMesh(); follower.ForceUpdate(); weapon.UpdateAnimationAndMesh();
                             var point = ((IProfessionFollowerSkeleton)native.State).FindSlot(follower.SlotName);
                             Require(point.Attachment is ProfessionNativePointAttachment && follower.Gos.Single().activeSelf,
@@ -152,7 +146,7 @@ namespace Zjcs.Editor.Combat
                                 && rebuiltMaterial.mainTexture == page.Main,
                                 "weapon geometry rebuild retains original lite-owned live High material rather than drawing its placeholder");
                             // Restore the same explicit diagnostic pose after rebuilding.
-                            weapon.State.EvaluateUnmixedWeaponAnimation(requests[weapon.State], .4f);
+                            poses.Apply(weapon.State);
                             weapon.UpdateAnimationAndMesh();
                             Require(before.SequenceEqual(CaptureSceneRendererCamera(bounds, model.Sex + "-" + action.Replace('/', '-') + "-rebuilt")),
                                 "actual portrait pixels retain the weapon High texture and geometry after rebuild");
