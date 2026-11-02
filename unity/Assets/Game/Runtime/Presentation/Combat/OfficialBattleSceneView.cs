@@ -86,7 +86,7 @@ namespace Zjcs.Presentation.Combat
         {
             public Animator Animator;
             public RuntimeAnimatorController OriginalController;
-            public bool UsingOfficialGameController;
+            public AnimatorOverrideController NativeGameController;
             public string Group;
             public string CurrentAnimation;
             public bool AnimationLoops;
@@ -890,12 +890,12 @@ namespace Zjcs.Presentation.Combat
             string group = animationGroupResolver(state);
             if (string.IsNullOrEmpty(group)) return null;
             RuntimeAnimatorController originalController = animator.runtimeAnimatorController;
-            bool usingOfficialGameController = TryBindOfficialGameController(body, animator, group);
+            AnimatorOverrideController nativeGameController = TryBindOfficialGameController(body, animator, group);
             var view = new AttachedAnimatorView
             {
                 Animator = animator,
                 OriginalController = originalController,
-                UsingOfficialGameController = usingOfficialGameController,
+                NativeGameController = nativeGameController,
                 Group = group
             };
             attachedAnimators[state.Id] = view;
@@ -1003,6 +1003,7 @@ namespace Zjcs.Presentation.Combat
             if (view.SkillPlaybacks == null)
                 view.SkillPlaybacks = new OfficialBattleAnimatorPlayback(view.Animator, root);
             AnimationClip clip = skillPlayableCatalog == null ? null : skillPlayableCatalog.LoadClip(playable);
+            clip = OfficialBattleCharacterAnimationCatalog.ResolveNativeMotion(view.OriginalController, clip);
             view.SkillPlaybacks.Play(playable, clip);
         }
 
@@ -1030,16 +1031,17 @@ namespace Zjcs.Presentation.Combat
             if (view == null) return;
             view.SkillPlaybacks?.Dispose();
             view.SkillPlaybacks = null;
-            if (view.UsingOfficialGameController && view.Animator != null
+            if (view.NativeGameController != null && view.Animator != null
                 && view.OriginalController != null)
             {
                 view.Animator.runtimeAnimatorController = view.OriginalController;
                 view.Animator.Rebind();
                 view.Animator.Update(0f);
             }
+            if (view.NativeGameController != null) DestroySceneObject(view.NativeGameController);
         }
 
-        private static bool TryBindOfficialGameController(Transform body, Animator animator, string group)
+        private static AnimatorOverrideController TryBindOfficialGameController(Transform body, Animator animator, string group)
         {
             string sex = null;
             foreach (MonoBehaviour component in body.GetComponentsInChildren<MonoBehaviour>(true))
@@ -1048,18 +1050,21 @@ namespace Zjcs.Presentation.Combat
                     sex = source.Sex;
                     break;
                 }
-            if ((sex != "male" && sex != "female") || (group != "100" && group != "200")) return false;
+            if ((sex != "male" && sex != "female") || (group != "100" && group != "200")) return null;
             string profession = group == "100" ? "Zhanshi" : "Fashi";
             RuntimeAnimatorController controller = Resources.Load<RuntimeAnimatorController>(
                 "Combat/GameAnimators/Anim/" + (sex == "female" ? "Female_" : "Male_")
                 + profession + "_Controller");
-            if (controller == null || animator.runtimeAnimatorController == controller) return false;
-            animator.runtimeAnimatorController = controller;
+            if (controller == null || animator.runtimeAnimatorController == null
+                || animator.runtimeAnimatorController == controller) return null;
+            var nativeController = OfficialBattleCharacterAnimationCatalog.BindNativeMotions(
+                animator.runtimeAnimatorController, controller);
+            animator.runtimeAnimatorController = nativeController;
             animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             animator.applyRootMotion = false;
             animator.Rebind();
             animator.Update(0f);
-            return true;
+            return nativeController;
         }
 
         private void RemovePendingAnimations(int unitId)
@@ -1154,7 +1159,7 @@ namespace Zjcs.Presentation.Combat
             activeDamageFloats.Clear();
         }
 
-        private static void DestroySceneObject(GameObject instance)
+        private static void DestroySceneObject(UnityEngine.Object instance)
         {
             if (Application.isPlaying) UnityEngine.Object.Destroy(instance);
             else UnityEngine.Object.DestroyImmediate(instance);

@@ -409,6 +409,8 @@ namespace Zjcs.Editor
             yield return new WaitForEndOfFrame();
             VerifyTimelineProjection();
             VerifyAttachedPlayerPresentation(runner);
+            yield return SkillDamageTestValidation.VerifyBattleCharacterMotion(
+                runner.GetComponentInParent<HomeFeatureRuntime>().HomePlayerTransform);
             var portraitSprites = VerifyCharacterPortraits(controller.Checkpoint);
             var portraitLeases = UnityEngine.Object.FindObjectsOfType<Zjcs.Presentation.CharacterCreation.CharacterNativePortraitLease>()
                 .Where(value => portraitSprites.Values.Contains(value.Sprite)).ToArray();

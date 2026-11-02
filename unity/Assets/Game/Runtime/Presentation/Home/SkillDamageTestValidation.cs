@@ -220,6 +220,7 @@ namespace Zjcs.Presentation.Home
             var battle = home.GetComponent<Zjcs.Presentation.Home.SkillDamageTestBattleRunner>();
             Require(battle != null && battle.Controller != null, "Starting the original damage test did not mount a battle.");
             Require(home.Hud.AnyModalOpen, "The home world accepted input behind the damage test.");
+            yield return VerifyBattleCharacterMotion(home.HomePlayerTransform);
             var checkpoint = battle.Controller.Checkpoint;
             File.WriteAllText(Path.Combine(outputDirectory, "skills-battle-checkpoint.json"),
                 JsonUtility.ToJson(checkpoint, true));
