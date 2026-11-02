@@ -1722,6 +1722,14 @@ namespace Zjcs.Combat.Official
             return action != null && CanStartAction(unit, Int(action, "ActionType"));
         }
 
+        public int EntityActionType(int actionEntityId)
+        {
+            if (!entities.TryGetValue(actionEntityId,
+                out Dictionary<string, object> components)) return 0;
+            Dictionary<string, object> action = Component(components, "ActionComponent");
+            return action == null ? 0 : Int(action, "ActionType");
+        }
+
         private void ParseSkillPropertyTables(Dictionary<string, object> skillCatalog)
         {
             Dictionary<string, object> props = Object(Required(skillCatalog, "props"), "skill props");

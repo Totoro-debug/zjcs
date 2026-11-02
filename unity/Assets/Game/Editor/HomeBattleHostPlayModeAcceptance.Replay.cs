@@ -43,7 +43,6 @@ namespace Zjcs.Editor
             int factorSourceId = 0;
             if (observeStackFactor)
             {
-                skill.ActionType = 6;
                 skill.CanTriggerChild = true;
                 var source = checkpoint.Units.First(value => value.Side != player.Side && value.Hp > 0);
                 factorSourceId = source.Id;
@@ -86,19 +85,20 @@ namespace Zjcs.Editor
                 replayed = checkpoint.Receipts.SelectMany(value => value.Event.SkillCasts)
                     .Count(value => value.ActorId == 1 && value.SkillEntityId == entity && value.IsReplay);
                 if (factorSourceId != 0 && !observedStackFactor
-                    && checkpoint.Receipts.Any(value => value.Event.SkillCasts.Any(cast =>
-                        cast.ActorId == 1 && cast.SkillEntityId == entity)))
+                    && checkpoint.Receipts.Any(value => value.Event.Movements.Any(move => move.UnitId == 1)))
                 {
                     var hits = checkpoint.Receipts.SelectMany(value => value.Event.DamageEvents)
                         .Where(value => value.SkillEntityId == 58980).ToArray();
-                    Require(hits.Length == 3 && hits.All(value => value.SourceId == factorSourceId
+                    int movementCount = checkpoint.Receipts.SelectMany(value => value.Event.Movements)
+                        .Count(value => value.UnitId == 1);
+                    Require(hits.Length == movementCount && hits.All(value => value.SourceId == factorSourceId
                         && value.TargetId == 1 && value.Damage < 0 && value.Damage % 3 == 0),
-                        "The original three-stack action-start passive did not deal scaled damage for the cast and two replays: "
+                        "The original three-stack action-start passive did not deal scaled damage once per real movement: "
                         + string.Join(",", hits.Select(value => value.SourceId + "->" + value.TargetId + ":" + value.Damage))
                         + "; actor=" + checkpoint.Receipts.Last().Event.ActorId + "; playerHP=" + player.Hp
                         + "; casts=" + string.Join(",", checkpoint.Receipts.Last().Event.SkillCasts.Select(value => value.SkillEntityId)));
                     observedStackFactor = true;
-                    // Exercise one original cast plus its two replays; later rounds use the usual fixture.
+                    // Observe the real movement action; later turns retain the ordinary replay fixture.
                     FightStatusLifecycle.End(player, player.Statuses.Single(value => value.InstanceId == 9900996));
                 }
                 if (observeConsumption)

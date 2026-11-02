@@ -344,15 +344,24 @@ namespace Zjcs.Combat.Official
             FightBattleUnitState actor, FightBattleSkillDefinition skill,
             IReadOnlyList<FightBattleUnitState> units, FightRandomStream random)
         {
+            return skill == null ? new List<FightBattleStatusSkillInvocation>()
+                : CollectActionStartSkills(actor, skill.ActionType, units, random, skill);
+        }
+
+        public static List<FightBattleStatusSkillInvocation> CollectActionStartSkills(
+            FightBattleUnitState actor, int actionType,
+            IReadOnlyList<FightBattleUnitState> units, FightRandomStream random,
+            FightBattleSkillDefinition sourceSkill = null)
+        {
             var result = new List<FightBattleStatusSkillInvocation>();
-            if (actor == null || skill == null || units == null || actor.Statuses == null
+            if (actor == null || units == null || actor.Statuses == null
                 || !FightBattleTargeting.IsSelectable(actor)) return result;
             foreach (FightBattleStatusState status in actor.Statuses)
             {
-                if (!FightSkillTriggerPolicy.AllowsStatus(skill, status)
+                if (!FightSkillTriggerPolicy.AllowsStatus(sourceSkill, status)
                     || !status.HasActionStartTrigger || !status.ActionStartRulesSupported
                     || status.ActionStartActionTypes == null
-                    || !status.ActionStartActionTypes.Contains(skill.ActionType)) continue;
+                    || !status.ActionStartActionTypes.Contains(actionType)) continue;
                 if (!Roll(status.ActionStartRate, random)) continue;
                 int added = 0;
                 foreach (FightBattleStatusStateTrigger trigger in status.ActionStartSkills)
