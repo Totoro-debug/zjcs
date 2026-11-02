@@ -21,11 +21,12 @@ namespace Zjcs.Offline.Progression
         private readonly IOfflinePartnerConversationWorld world;
         private readonly Func<DateTime> clock;
         private readonly Action<PartnerConversationRecord> update;
+        private readonly Func<OfflinePlayerProgress> playerSource;
 
         public OfflinePartnerConversationPlayer(OfflineMainlineProgressSession session,
             OfficialCharacterCatalog character, IPartnerConversationConfiguration configuration,
             IOfflinePartnerConversationWorld world, Func<DateTime> clock,
-            Action<PartnerConversationRecord> update)
+            Action<PartnerConversationRecord> update, Func<OfflinePlayerProgress> playerSource = null)
         {
             this.session = session ?? throw new ArgumentNullException(nameof(session));
             this.character = character ?? throw new ArgumentNullException(nameof(character));
@@ -33,6 +34,15 @@ namespace Zjcs.Offline.Progression
             this.world = world ?? throw new ArgumentNullException(nameof(world));
             this.clock = clock ?? throw new ArgumentNullException(nameof(clock));
             this.update = update ?? throw new ArgumentNullException(nameof(update));
+            this.playerSource = playerSource ?? (() => session.Save.Player);
+        }
+
+        public OfflinePartnerConversationPlayer ForCharacterMutation(OfflinePlayerProgress player,
+            Action<PartnerConversationRecord> update)
+        {
+            if (player == null) throw new ArgumentNullException(nameof(player));
+            return new OfflinePartnerConversationPlayer(session, character, DialogueConfiguration,
+                world, clock, update, () => player);
         }
 
         public IPartnerConversationConfiguration DialogueConfiguration { get; }
@@ -42,20 +52,20 @@ namespace Zjcs.Offline.Progression
         {
             get
             {
-                var player = session.Save.Player;
+                var player = playerSource();
                 int limit = OfflineCharacterExperience.BaseLevelLimit(player.SubRank, character.LevelLimits);
                 return limit > 0 ? Math.Min(player.Level, limit) : player.Level;
             }
         }
-        public long GetItemAmount(int classId) => session.InventoryCount(classId);
-        public bool IsMapAccessible(int mapClassId) => session.Save.Player.UnlockedMapClassIds.Contains(mapClassId);
+        public long GetItemAmount(int classId) => playerSource().Inventory.FirstOrDefault(value => value.ItemId == classId)?.Count ?? 0;
+        public bool IsMapAccessible(int mapClassId) => playerSource().UnlockedMapClassIds.Contains(mapClassId);
         public bool RegionIsActived(int mapClassId, int region) => session.Save.World.ActivatedGoddessRegions
             .Any(value => value.MapClassId == mapClassId && value.Region == region);
-        public bool HasNpc(int npcClassId) => session.Save.Player.CharacterProperties.NpcFriendships
+        public bool HasNpc(int npcClassId) => playerSource().CharacterProperties.NpcFriendships
             .Any(value => value.NpcClassId == npcClassId);
-        public int GetNpcFriendshipLevel(int npcClassId) => session.Save.Player.CharacterProperties.NpcFriendships
+        public int GetNpcFriendshipLevel(int npcClassId) => playerSource().CharacterProperties.NpcFriendships
             .FirstOrDefault(value => value.NpcClassId == npcClassId)?.Level ?? 0;
-        public IEnumerable<PartnerConversationRecord> GetEndDialogues() => session.Save.Player.CharacterProperties
+        public IEnumerable<PartnerConversationRecord> GetEndDialogues() => playerSource().CharacterProperties
             .NpcConversations.Records.Where(value => value.DialogueStatus == PartnerConversationStatus.End)
             .Select(value => value.ToRecord());
         public int GetStoryCount(string storyKey) => session.StoryCount(storyKey);

@@ -331,3 +331,5 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 替身地面绑定来源见 `battle-rules/voodoo-grid-source-manifest.json`。`prepare_battle_voodoo_grid.py` 从884_156692所选官方APK读取4600移动组件与同版 `EC/entity_grid_mover` 表，使用同版格式代码解码，记录包内实际对象、原始字节、代码、生成器及C#编译绑定哈希；已绑定旧战斗目录仅作组件身份核对，版本分别记录。无新增美术载荷，未生成完整素材快照；行为和验证范围见[战斗执行页](../../docs/features/battle-execution.md)。
 
 伙伴通话每日限制的原 `Player`／`TimeUtils` 方法、记录字段、配置依赖及本地存档适配哈希见 [partner-conversation-day-limits-source-manifest.json](partner-conversation-day-limits-source-manifest.json)，重建入口为 `prepare_partner_conversation_day_limits.py`。本批无新增美术，未生成素材快照。
+
+伙伴通话节点／好感等级原方法与本地事务边界的源码、字段适配、原数据及验证哈希见 [partner-conversation-transactions-source-manifest.json](partner-conversation-transactions-source-manifest.json)，记录入口为 `record_partner_conversation_transaction_sources.py`；原好感等级方法经过声明适配后的逐词核对。本批无新增美术，未生成素材快照。

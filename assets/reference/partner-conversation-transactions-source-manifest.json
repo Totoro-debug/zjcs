@@ -1,0 +1,49 @@
+{
+  "manifest": "884_156692",
+  "source_sha256": {
+    ".tools/source-packages/official-code/common-source/Common/PlayerNpcDialogueManager.cs": "a7234564bda87cd4d018468463da27ccba77d3f533815265f636c142c88913fb",
+    ".tools/source-packages/official-code/common-source/Common/PlayerNpcDialogueDataWrap.cs": "7f249c1e58dfb53d6b8000f36659c2f869e5fcca4f7ef14bb06d420db3f49d6b",
+    ".tools/source-packages/official-code/common-source/Common/NpcFriendshipLevelInfoParser.cs": "0cea737f2519ddac5edbc847a176bd5d267c9d3cffecabd7a602ae4810d37c04",
+    ".tools/source-packages/official-code/client-source/NpcDialoguePanel.cs": "7217a0ebe6487de95cb18376e0c0786d87de35f2e83b72aceb5a21a477cb606a",
+    ".tools/source-packages/official-code/client-source/NpcDialoguePanelOptionItem.cs": "6746ab094fdb9bebcf0e97964dcb552f5dbf168f7b7181bdbd226f0aa7df24fe",
+    ".tools/source-packages/official-code/client-source/HomeNpcChatEntry.cs": "b2dd701280827510b7a0cd6bb99dde0e15e64ba6a3e44db89843c9d3173564d6"
+  },
+  "original_friendship_method_sha256": "227f997e60f3e442c9ae2355f0758c6986b5550d96eeb6ccd76a9a6703667605",
+  "dependency_sha256": {
+    "assets/reference/partner-conversation-rules-source-manifest.json": "1c32f9f1f11b4b6113ccb7085fce913b446ee2c4a58134bbd809fe8b74c7ff72",
+    "assets/reference/partner-conversation-day-limits-source-manifest.json": "257091100bb10880c701437aa30aa9106b2b2802f3769c3e00ecaa885c5e27ca",
+    "assets/reference/partner-conversation-world-source-manifest.json": "6849e733ce3ab4f722b6b4d33fb5f06517e7fd14810d0f030ac996d736085d7b",
+    "assets/reference/partner-conversation-conditions-source-manifest.json": "1ee39805eef7d53273153cc8ed2631522a4c615af3af3e2dcb0d50cd5cb4a7ae",
+    "unity/Assets/Official/Partners/partner-rules.json": "1ab5dd32c4ef68297aea6a847cb0e5ced686634bb4fb7f4c28a1aa7bf70398fd",
+    "unity/Assets/Official/Partners/partner-dialogue-rules.json": "7768faa50de422b414504c8f054649ebe37e586c2f1d13bb487b6f7abfc9d2b8",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineInventoryOperations.cs": "a5d785eece9dea609d5a3ebc0beb73bb329eaac42e596fe7127307cf71bffd45"
+  },
+  "installed_output_sha256": {
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerConversationService.cs": "188ab42a287fe1db0250b917b786d2f17b955436539aee22b6f0168c8cdb0b87",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerConversationService.cs.meta": "e8a76abbfdc5f83d9c29a7a9eb35f6e2f78dd267677e24d26cc7658566914494",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerConversationPlayer.cs": "ad8d702c17e0bebb7faf0872f16fd342f90b21595395d9621a5403b11146becb"
+  },
+  "validation_source_sha256": {
+    "scripts/prepare_partner_conversation_transaction_validation.py": "e80d03df5adbe70c2ec21b8c938abd85548cfecf0c8a404869e50984b3c35bc9",
+    "scripts/fixtures/partner_conversation_transaction_validation.cs": "6ab30f74d82a59efddb95e907a648dee687c66dce30ccb1cb776754291e508b5"
+  },
+  "recorder_sha256": "1fc11a4512948fa3bdb8fcb9c19d1394bb3855afef6e7046cf636e0b055e0f6b",
+  "original": [
+    "Use original NPC Dialogues order, node unlock/chain conditions, Auto type and original daily check/record methods.",
+    "Use original Create and SetCurrentNodeAndUpdateStatus; capture their update notification until disk commit.",
+    "Verify the friendship level method token-for-token against selected original source after row/rank/lookup adaptations.",
+    "Resolve conditions from the cloned transaction player while world/story facts remain live committed session inputs."
+  ],
+  "confirmed_local_boundary": [
+    "Only an explicit partner panel opening requests eligible not-yet-started conversations.",
+    "No automatic refresh on creation/load/friendship/condition change or the daily clock boundary.",
+    "Acknowledge only an original eligible successor; grant its configured item/friendship reward with history/status in one transaction.",
+    "Persist a deterministic per-dialogue/node receipt; review and repeated acknowledgment cannot duplicate rewards.",
+    "Local identity generation, original function availability and post-commit presentation remain required host dependencies."
+  ],
+  "validation_scope": [
+    "Actual complete dialogue 2021, configured item 110 x3, same-day chain 2022, per-NPC daily quota and real disk rollback.",
+    "All selected official RewardFriendship fields are zero; the nonzero branch uses one clearly marked, restored in-memory synthetic fixture value.",
+    "Native nonempty address-book input, concrete identity/function host binding and playback window are not exercised."
+  ]
+}
