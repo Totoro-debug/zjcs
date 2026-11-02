@@ -24,13 +24,15 @@ namespace Zjcs.Combat.Official
         {
             var context = movementStartContext;
             if (context == null || statusCatalog == null || status == null
-                || !status.HasMoveNear || !status.MoveNearTryAtStart || !status.MoveNearRulesSupported
-                || owner == null || owner.Ended || owner.Hp <= 0) return;
+                || owner == null || owner.Ended) return;
 
             // FightStatusComponentImplement.Start initializes props, registers the status,
             // initializes its round clock, then fires status start. Stacking/discarding an
             // existing entity does not enter this callback.
             FightStatusLifecycle.Initialize(status, StatusClockRound(status));
+            StartHpStatus(owner, status);
+            if (!status.HasMoveNear || !status.MoveNearTryAtStart || !status.MoveNearRulesSupported
+                || owner.Hp <= 0 || !owner.Statuses.Contains(status)) return;
             var invocations = FightStatusTriggerRuntime.CollectMoveNearSkills(owner, units,
                 FightStatusTriggerRuntime.MoveNearEventStart, null, random, status);
             if (invocations.Count == 0) return;

@@ -385,6 +385,7 @@ namespace Zjcs.Editor
             ReplayProbe replays = ConfigureReplayProbe(checkpoint);
             StatusReplayProbe statusReplays = ConfigureStatusReplayProbe(checkpoint);
             TriggerTimingProbe triggerTiming = ConfigureTriggerTimingProbe(checkpoint);
+            HpStartupProbe hpStartup = ConfigureHpStartupProbe(checkpoint);
             int initialCounter = checkpoint.Counter;
             controller.StepCompleted += result => {
                 checkpoint = result.Checkpoint;
@@ -393,6 +394,7 @@ namespace Zjcs.Editor
                 replays?.ObserveTiming(controller);
                 statusReplays?.Observe(checkpoint);
                 triggerTiming?.ObserveStep(controller);
+                hpStartup?.ObserveStep(controller);
                 if (checkpoint.Counter == initialCounter + 1 || checkpoint.Finished)
                     Debug.Log("[Battle hosts] " + name + " step=" + checkpoint.Counter
                         + " finished=" + checkpoint.Finished);
@@ -414,8 +416,11 @@ namespace Zjcs.Editor
             yield return new WaitForEndOfFrame();
             VerifyTimelineProjection();
             VerifyAttachedPlayerPresentation(runner);
-            yield return SkillDamageTestValidation.VerifyBattleCharacterMotion(
-                runner.GetComponentInParent<HomeFeatureRuntime>().HomePlayerTransform);
+            // Auto-start hosts may already be casting by this point. A spell's geometry is
+            // not an idle-pose check; observe idle only while the host is still preparing.
+            if (controller.Phase == FightBattlePhase.Preparing)
+                yield return SkillDamageTestValidation.VerifyBattleCharacterMotion(
+                    runner.GetComponentInParent<HomeFeatureRuntime>().HomePlayerTransform);
             var portraitSprites = VerifyCharacterPortraits(controller.Checkpoint);
             var portraitLeases = UnityEngine.Object.FindObjectsOfType<Zjcs.Presentation.CharacterCreation.CharacterNativePortraitLease>()
                 .Where(value => portraitSprites.Values.Contains(value.Sprite)).ToArray();
@@ -456,6 +461,7 @@ namespace Zjcs.Editor
                 while (runner != null)
                 {
                     triggerTiming?.ObservePresentation();
+                    hpStartup?.ObservePresentation();
                     replays?.ObservePresentation();
                     Require(Time.realtimeSinceStartup < deadline, name + " battle timed out.");
                     if (!captured && checkpoint.Counter > initialCounter + 2)
@@ -485,6 +491,7 @@ namespace Zjcs.Editor
             replays?.Verify(name, checkpoint);
             statusReplays?.Verify(name, checkpoint);
             triggerTiming?.Verify(name, checkpoint);
+            hpStartup?.Verify(name, checkpoint);
             VerifyEquipmentBattlePassives(name, checkpoint, true);
             yield return SettleUi();
             yield return Capture(output, name + "-result");

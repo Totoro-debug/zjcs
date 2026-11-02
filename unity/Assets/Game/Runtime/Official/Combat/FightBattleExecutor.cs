@@ -145,6 +145,10 @@ namespace Zjcs.Combat.Official
             if (counter != checkpoint.Counter + 1) throw new InvalidOperationException("Fight step counter is out of order.");
             if (checkpoint.Finished) throw new InvalidOperationException("Fight is already finished.");
 
+            FightBattleExecutionResult startup = ExecutePendingHpStarts(sequence, counter);
+            if (startup != null) return startup;
+            if (checkpoint.Finished) return RecordTerminal(sequence, counter);
+
             RefreshTurnUnits();
             FightTurnUnit turn = turns.Next();
             if (turn == null)
@@ -407,10 +411,6 @@ namespace Zjcs.Combat.Official
             if (checkpoint.StageStatus != null && statusCatalog != null)
                 FightStageStatusRuntime.ApplyStart(checkpoint.StageStatus, statusCatalog, units, 0,
                     random);
-            if (statusCatalog != null)
-                foreach (FightBattleUnitState unit in units)
-                    FightStatusTriggerRuntime.Apply(unit, statusCatalog, true, random: random,
-                        units: units);
             RebuildBattleProperties();
             lastGlobalRound = turns.GlobalRound();
 
@@ -442,7 +442,8 @@ namespace Zjcs.Combat.Official
             checkpoint.Timeline.Entries.Clear();
             checkpoint.Timeline.PendingChanges.Clear();
             turns.Initialize();
-            UpdateOutcome(1);
+            if (!HasPendingHpStarts()) UpdateOutcome(1);
+            checkpoint.RandomSeed = random.Seed;
         }
 
         private void ExecutePetEnergySkill(FightBattleUnitState owner,
@@ -961,8 +962,10 @@ namespace Zjcs.Combat.Official
                     summon.VoodooDoll.VoodooStatusInstanceId = mark == null ? 0 : mark.InstanceId;
                     ApplySummonStatus(summon, reference, skill, summon.VoodooDoll.FollowDieStatusId);
                 }
-                FightStatusTriggerRuntime.Apply(summon, statusCatalog, true, random: random,
-                    units: units);
+                // Initial monster passives precede registration; additional statuses start
+                // through StatusStarted. Sweep only still-pending HP starts, once each.
+                foreach (var status in new List<FightBattleStatusState>(summon.Statuses))
+                    if (summon.Statuses.Contains(status)) StartHpStatus(summon, status);
                 RebuildBattleProperties();
             }
         }
@@ -1647,9 +1650,9 @@ namespace Zjcs.Combat.Official
                         out FightBattleUnitState targetPosition)
                     || (!FightBattleTargeting.IsSelectable(source)
                         && !invocation.AllowDeadSource)
-                    || (!FightBattleTargeting.IsSelectable(target)
+                    || (!invocation.SelectTargets && !FightBattleTargeting.IsSelectable(target)
                         && !invocation.AllowDeadTarget)
-                    || (!FightBattleTargeting.IsSelectable(targetPosition)
+                    || (!invocation.SelectTargets && !FightBattleTargeting.IsSelectable(targetPosition)
                         && !invocation.AllowDeadTarget)) continue;
                 FightBattleSkillDefinition skill;
                 try
@@ -1667,12 +1670,16 @@ namespace Zjcs.Combat.Official
                     continue;
                 }
                 InheritBlessingScales(skill, invocation.Trigger.BlessPropertyScales);
-                if (!invocation.AllowDeadTarget
+                if (!invocation.SelectTargets && !invocation.AllowDeadTarget
                     && !IsExplicitTargetCompatible(source, target, skill.TargetType)
-                    || FightBattleTargeting.IsActionBlockedByStatus(target,
+                    || !invocation.SelectTargets && FightBattleTargeting.IsActionBlockedByStatus(target,
                         skill.BlockingTargetActionTypes)) continue;
 
-                var targets = new List<FightBattleUnitState> { target };
+                var targets = invocation.SelectTargets
+                    ? FightBattleTargeting.Select(source, units, skill.TargetType, 0, false, false, skill, random)
+                    : new List<FightBattleUnitState> { target };
+                if (targets.Count == 0 && skill.TargetType != 5
+                    && !FightBattleTargeting.HasCasterAreaTargets(source, units, skill)) continue;
                 checkpoint.Statistics.RecordCast(source.Id, skill.EntityId, skill.ItemId);
                 int castStart = casts.Count;
                 int damageStart = damageEvents.Count;
@@ -1684,11 +1691,11 @@ namespace Zjcs.Combat.Official
                     SkillEntityId = skill.EntityId,
                     SkillItemId = skill.ItemId
                 };
-                cast.TargetIds.Add(target.Id);
+                foreach (var selected in targets) cast.TargetIds.Add(selected.Id);
                 casts.Add(cast);
                 ExecuteSkill(source, skill, targets, casts, damageEvents, movements,
                     out float delay, out float nestedDuration, out float nestedActionDuration,
-                    targetPosition, invocation.AllowDeadSource,
+                    invocation.SelectTargets ? null : targetPosition, invocation.AllowDeadSource,
                     invocation.DamageFactor);
                 // FightStatusMoveNearComponentInfo.SkillTriggerDelayTime delays the entire skill,
                 // including its nested triggers. Keep each event relative until execution returns.

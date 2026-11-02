@@ -171,6 +171,8 @@ namespace Zjcs.Combat.Official
         public float Delay;
         public bool AllowDeadSource;
         public bool AllowDeadTarget;
+        // Legacy threshold SkillId/SkillList without explicit source/target uses the skill AI.
+        public bool SelectTargets;
         // Capture at trigger time; later stacking must not change an already collected cast.
         public double DamageFactor = 1.0;
     }
@@ -268,6 +270,7 @@ namespace Zjcs.Combat.Official
         public int HpTriggerMaxCount = -1;
         public int HpTriggeredCount;
         public bool HpTriggerAtStart;
+        public bool HpStartChecked;
         public List<int> HpTriggerStatuses = new List<int>();
         public List<int> HpTriggerSkills = new List<int>();
         public bool HasHpLessThan;

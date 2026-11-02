@@ -1058,7 +1058,8 @@ namespace Zjcs.Combat.Official
             bool atStart, List<FightBattleStatusStateTrigger> triggerSkills = null,
             FightRandomStream random = null, FightBattleSkillDefinition sourceSkill = null,
             IReadOnlyList<FightBattleUnitState> units = null,
-            List<FightBattleStatusSkillInvocation> configuredTriggerSkills = null)
+            List<FightBattleStatusSkillInvocation> configuredTriggerSkills = null,
+            FightBattleStatusState startingStatus = null)
         {
             if (unit == null || catalog == null || unit.Statuses == null || unit.MaxHp <= 0) return 0;
             int applied = 0;
@@ -1066,7 +1067,8 @@ namespace Zjcs.Combat.Official
             for (int i = initialStatuses.Count - 1; i >= 0; i--)
             {
                 FightBattleStatusState status = initialStatuses[i];
-                if (status == null || !unit.Statuses.Contains(status)) continue;
+                if (status == null || !unit.Statuses.Contains(status)
+                    || startingStatus != null && !ReferenceEquals(status, startingStatus)) continue;
                 if (!FightSkillTriggerPolicy.AllowsStatus(sourceSkill, status)) continue;
                 if (status.HpTriggerPer > 0f)
                 {
@@ -1368,7 +1370,7 @@ namespace Zjcs.Combat.Official
             if (trigger == null || trigger.EntityId <= 0 || trigger.AffectedByProp
                 || !Roll(trigger.BasePercent, random)) return false;
             FightBattleStatusStateTrigger copy = trigger.WithSource(source);
-            if (configured == null || trigger.Source == 0 && trigger.Target == 0)
+            if (configured == null || trigger.Source == 0 && trigger.Target == 0 && simple != null)
             {
                 if (simple != null) simple.Add(copy);
                 return true;
@@ -1382,6 +1384,7 @@ namespace Zjcs.Combat.Official
             configured.Add(new FightBattleStatusSkillInvocation
             {
                 Trigger = copy, SourceUnitId = sourceId > 0 ? sourceId : owner.Id,
+                SelectTargets = trigger.Source == 0 && trigger.Target == 0,
                 TargetUnitId = targetId > 0 ? targetId : owner.Id,
                 TargetPositionUnitId = targetPositionId > 0 ? targetPositionId : owner.Id,
                 AllowDeadSource = source.HpLessThanInvokeOnDie && owner.Hp <= 0,

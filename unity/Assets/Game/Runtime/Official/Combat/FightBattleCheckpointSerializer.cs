@@ -103,6 +103,10 @@ namespace Zjcs.Combat.Official
         private static void Populate(object target, Dictionary<string, object> values)
         {
             if (target == null || values == null) return;
+            // Older checkpoints already performed their HP startup checks in Begin. Preserve
+            // that boundary rather than replaying it after upgrading a saved battle.
+            if (target is FightBattleStatusState status && !values.ContainsKey("HpStartChecked"))
+                status.HpStartChecked = true;
             foreach (FieldInfo field in SerializableFields(target.GetType()))
             {
                 object raw;
