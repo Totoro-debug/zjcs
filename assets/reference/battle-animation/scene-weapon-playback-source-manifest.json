@@ -1,0 +1,198 @@
+{
+  "manifest": "884_156692",
+  "application": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/AppearanceAnimUtils.cs",
+      "sha256": "32b704601acfdd112d8d289ef4082fa51fb5e7e0dd78281a76a1b56ebd1748c3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSkeletonPart.cs",
+      "sha256": "0c70913261248eedaf7f00d8bdb1c6bc53533b466ae79bc1144fd7fad47f84ce"
+    }
+  ],
+  "metadata": {
+    "path": ".tools/source-packages/current/884_156692/official-code/global-metadata.dat",
+    "sha256": "c0fe5e062fb3ed1814781e54fd1b4859757970632655138adc091820ded88e0e"
+  },
+  "public_update_timing": {
+    "ManualUpdate": 0,
+    "InUpdate": 1,
+    "InFixedUpdate": 2,
+    "InLateUpdate": 3
+  },
+  "prefabs": [
+    {
+      "source": {
+        "path": "unity/Assets/Official/ProfessionUI/SceneWeaponSources/pWeapon_100_G_007_Integrated-source.json",
+        "sha256": "fa323316aba8127c0c73765a5a3ae4ab7991b056b3f8788e3bc311d9ecc4dc60"
+      },
+      "clock": {
+        "_animationName": "100/100_loop",
+        "loop": 1,
+        "timeScale": 1.0,
+        "updateTiming": 1,
+        "unscaledTime": 0,
+        "updateWhenInvisible": 0,
+        "clearStateOnDisable": 0
+      }
+    },
+    {
+      "source": {
+        "path": "unity/Assets/Official/ProfessionUI/SceneWeaponSources/pWeapon_200_G_007_Integrated-source.json",
+        "sha256": "3348bc5511d64914dd22fe2beb44ff7841757a794b7adc66f9b692f3d43529f1"
+      },
+      "clock": {
+        "_animationName": "200/200_loop",
+        "loop": 1,
+        "timeScale": 1.0,
+        "updateTiming": 1,
+        "unscaledTime": 0,
+        "updateWhenInvisible": 0,
+        "clearStateOnDisable": 0
+      }
+    }
+  ],
+  "reused_payload": {
+    "path": "unity/Assets/Official/ProfessionUI/WeaponResources/primary-weapon.bytes",
+    "sha256": "9ec40b28b6f3982c5c363b1116f8278f8cb54d700a7f51c0eb79a9b3f206d24e"
+  },
+  "original_payload_manifest": "871_156598",
+  "motions": {
+    "100/100_loop": {
+      "duration": 4.0,
+      "sections": [
+        "bones"
+      ]
+    },
+    "100/loop_L": {
+      "duration": 4.0,
+      "sections": [
+        "bones"
+      ]
+    },
+    "100/loop_R": {
+      "duration": 4.0,
+      "sections": [
+        "bones"
+      ]
+    },
+    "200/200_loop": {
+      "duration": 4.0,
+      "sections": [
+        "bones"
+      ]
+    },
+    "200/loop_L": {
+      "duration": 4.0,
+      "sections": [
+        "bones"
+      ]
+    },
+    "200/loop_R": {
+      "duration": 4.0,
+      "sections": [
+        "bones"
+      ]
+    }
+  },
+  "dependencies": [
+    {
+      "path": "assets/reference/battle-animation/scene-weapon-source-manifest.json",
+      "sha256": "2c5ffcff04189c38afb37c75f7bc8f07a02e6fdf9a95026addbfa5585e0a151c"
+    },
+    {
+      "path": "assets/reference/battle-animation/scene-native-renderer-source-manifest.json",
+      "sha256": "480591a20c3f83b329362dd566153257becaabe910c039809800f9e632cf8773"
+    },
+    {
+      "path": "assets/reference/battle-animation/scene-mecanim-parts-source-manifest.json",
+      "sha256": "1d5f5c97494c111b9ef2d47ebde32e584fcc208ea37a5b2b2930b2bd0899bc28"
+    },
+    {
+      "path": "assets/reference/battle-animation/scene-skill-motions-source-manifest.json",
+      "sha256": "a9b1d617a7d26df6283f8ec69f1e3d05d4d49a4ebf7aafbde6c782a2b8f90827"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneWeaponPlayback.cs",
+      "sha256": "f5b57d86b78486230f90343accb0679cad11202ac3b26c9815bf96520d70fdd8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneWeaponPlayback.cs.meta",
+      "sha256": "168c15d78cfdd2d1c0a6fff898194fb26fe4fc978d12f7141cee9ecf03d5dde3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneWeaponRenderer.cs",
+      "sha256": "41c47d4367ddfe959ee9859983e4a68ae1d4ac293b0cf734ec0f242040583f56"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneWeaponRenderer.cs.meta",
+      "sha256": "0e74174c7f7f2e5a81a269fa8113fab499de4ce9265c25a4216faefbe6e5fb0c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRendererSettings.cs",
+      "sha256": "4ccef9df26d87410d6da6639f6213145560fec26fc0c101bca75273387f35183"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRendererSettings.cs.meta",
+      "sha256": "a2ed58ecb2fb97845e252e4cf359f54d5ce9e91e4ce105e77b821dd752002c08"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneWeapon.cs",
+      "sha256": "e56e303f501b3faaeebbacb29a6f91c59f2e7bd2bbd74b4023fdbe7865af099f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneWeapon.cs.meta",
+      "sha256": "b75622777fd448314ddf695a6640190892293a2b960685582d41eeff095eea1a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionScenePartPoolBindings.cs",
+      "sha256": "7dfd942bac4c82af192330ec8786722daaee3bd3337e226e9e19cf63c0a223ec"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionScenePartPoolBindings.cs.meta",
+      "sha256": "a67068f1e49aac80df2a4d3f54b46f063251a3819570dd4ea7086ded239bdffe"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.cs",
+      "sha256": "483c8772b573c6c2f7ec882af7e8cfc4c7c9478d78b5c59fbffd01876e26a01c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.cs.meta",
+      "sha256": "70cf32819c75d89a60a7e05b420bdaae7a69071c321effa18e0a942844a27b88"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ScenePlayerAppearance.cs",
+      "sha256": "5a87168d5644a572be43391f2e390ca6f45ccb88f4eae16c30bb9529df65d608"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ScenePlayerAppearance.cs.meta",
+      "sha256": "9ffd129351209c166be97275583b74c80b932b161e9fe1e8deabe7245c53107c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneWeaponPlayback.cs",
+      "sha256": "3b491997fc3bcec00441e2d953838bd54b3c9f6428b97f95c3e20301477c5149"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneWeaponPlayback.cs.meta",
+      "sha256": "0f5f478d9d844bb3684e24e359123a622e558482e660faf4dfccb2e7d1e17a8d"
+    }
+  ],
+  "generator": {
+    "path": "scripts/record_battle_scene_weapon_playback.py",
+    "sha256": "2e6e10e31d728f7be498cca43ae9e98255ada442f44cbfd18c6b135750c2f016"
+  },
+  "documentation": [
+    "https://esotericsoftware.com/spine-api-reference-4.2#AnimationState-setAnimation",
+    "https://esotericsoftware.com/spine-api-reference-4.2#TrackEntry-mixDuration"
+  ],
+  "binding": "Original application requests restart track zero with explicit zero mix and immediately apply/render. Each assembled native weapon now owns an independent clock, advanced only by scaled Unity Update while visible according to its exact prefab settings. Apply/redraw after skin resets does not advance time. Explicit diagnostic producers remain available; the default pool/assembly entry uses live playback.",
+  "limits": [
+    "Only original bone-only weapon motions with no active constraints and the two verified G_007 prefabs are supported by this entry. Other update settings are rejected explicitly.",
+    "The reused historical weapon payload remains labeled 871_156598; current exact-byte reuse evidence is preserved in the scene-weapon receipt. No replacement or relabeling of animation data.",
+    "Current Game body motions have no original part-animation mapping. The live test explicitly requests existing loop_L/loop_R weapon motions and does not invent a Game mapping.",
+    "Body poses remain before physics. Production battle host wiring, complete physics/mixing/FX/audio and Windows Player integration are still incomplete.",
+    "The portrait fixture fits a camera around original geometry; it does not establish official host scale, HUD alignment, UI input or save restoration."
+  ]
+}

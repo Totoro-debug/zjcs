@@ -73,6 +73,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".sceneMixNext", false);
             SessionState.SetBool(Key + ".sceneBoundMixNext", false);
             SessionState.SetBool(Key + ".sceneSkillMotions", false);
+            SessionState.SetBool(Key + ".sceneWeaponPlayback", false);
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 180);
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             Hook();

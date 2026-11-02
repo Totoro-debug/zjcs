@@ -25,13 +25,16 @@ namespace Zjcs.Offline.ProfessionUI
         public bool UsePool => usePool();
         public int LiveInstanceCount => instances.Count;
         public OfflineProfessionScenePartPoolBindings(ProfessionNativeSceneWeaponCatalog catalog,
+            IProfessionAppearanceUILiteBindings materials, IProfessionAppearancePartBindings parts, Func<bool> usePool)
+            : this(catalog, materials, parts, null, usePool) { }
+        public OfflineProfessionScenePartPoolBindings(ProfessionNativeSceneWeaponCatalog catalog,
             IProfessionAppearanceUILiteBindings materials, IProfessionAppearancePartBindings parts,
             IProfessionNativeSceneWeaponPoseProducer poses, Func<bool> usePool)
         {
             this.catalog = catalog ? catalog : throw new ArgumentNullException(nameof(catalog));
             this.materials = materials ?? throw new ArgumentNullException(nameof(materials));
             this.parts = parts ?? throw new ArgumentNullException(nameof(parts));
-            this.poses = poses ?? throw new ArgumentNullException(nameof(poses));
+            this.poses = poses;
             this.usePool = usePool ?? throw new ArgumentNullException(nameof(usePool));
         }
         public IProfessionCharacterPartPrefab LoadPrefab(string path) => new Prefab(catalog.FindPath(path));

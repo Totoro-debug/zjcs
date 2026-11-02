@@ -6,9 +6,8 @@ using Zjcs.Official.ProfessionUI;
 
 namespace Zjcs.Offline.ProfessionUI
 {
-    // Independent drawing endpoint for completed original primary-weapon poses.
-    // Animation requests cross to the caller's pose producer; drawing never
-    // resets time, approximates a transition or substitutes another animation.
+    // Independent drawing endpoint for original primary-weapon poses. The
+    // default clock advances in Update; diagnostic producers remain explicit.
     [RequireComponent(typeof(ProfessionNativeSceneMeshPart))]
     public sealed class ProfessionNativeSceneWeaponRenderer : MonoBehaviour,
         IProfessionAppearanceRendererLite, IProfessionFollowerRenderer, IProfessionPartAnimatedSkeleton
@@ -18,6 +17,7 @@ namespace Zjcs.Offline.ProfessionUI
         private ProfessionNativeSceneRendererSettings settings;
         private ProfessionNativeMeshBatches batches;
         private IProfessionNativeSceneWeaponPoseProducer poses;
+        private ProfessionNativeSceneWeaponPlayback playback;
         private bool fieldsApplied;
         public ProfessionNativeAppearanceSkeleton State { get; private set; }
         public Component Component => this;
@@ -37,12 +37,13 @@ namespace Zjcs.Offline.ProfessionUI
         private ProfessionNativeSceneMeshPart Main => GetComponent<ProfessionNativeSceneMeshPart>();
 
         public void Configure(ProfessionNativeSceneWeaponCatalog resources, string skin,
-            IProfessionNativeSceneWeaponPoseProducer poseProducer)
+            IProfessionNativeSceneWeaponPoseProducer poseProducer = null)
         {
             if (State != null) throw new InvalidOperationException("Release the independent scene weapon before rebinding its sources.");
             catalog = resources ? resources : throw new ArgumentNullException(nameof(resources));
             entry = catalog.Find(skin);
-            poses = poseProducer ?? throw new ArgumentNullException(nameof(poseProducer));
+            playback = poseProducer == null ? new ProfessionNativeSceneWeaponPlayback() : null;
+            poses = poseProducer ?? playback;
         }
 
         public void Initialize(bool overwrite, bool quiet)
@@ -88,6 +89,7 @@ namespace Zjcs.Offline.ProfessionUI
             if (State == null) throw new InvalidOperationException("Initialize the independent weapon before requesting its animation.");
             if (!State.Source.AnimationNames.Contains(name)) throw new NotSupportedException("Original independent weapon animation is unavailable: " + name);
             poses.Play(State, name, loop);
+            if (playback != null) UpdateAnimationAndMesh();
         }
 
         public void UpdateAnimationAndMesh()
@@ -109,6 +111,11 @@ namespace Zjcs.Offline.ProfessionUI
         }
 
         public void OnBecameVisible() => OnCustomDemandLoading?.Invoke(this);
+        private void Update()
+        {
+            if (State != null && playback != null && UpdateMode != 0)
+                playback.Advance(Time.deltaTime);
+        }
         private void LateUpdate() { if (State != null) UpdateAnimationAndMesh(); }
         public void Release()
         {

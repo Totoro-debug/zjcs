@@ -35,8 +35,10 @@ namespace Zjcs.Offline.ProfessionUI
         public static ProfessionNativeSceneRendererSettings LoadWeapon(TextAsset source)
         {
             var result = Load(source, "Spine", "Spine.Unity.SkeletonAnimation", 1, true);
-            if (Convert.ToSingle(result.skeleton["timeScale"]) != 1)
-                throw new NotSupportedException("Bind the original independent weapon clock scale before drawing.");
+            if (Convert.ToSingle(result.skeleton["timeScale"]) != 1
+                || Int(result.skeleton, "updateTiming") != 1 || Flag(result.skeleton, "unscaledTime")
+                || result.UpdateWhenInvisible != 0)
+                throw new NotSupportedException("Bind additional original independent weapon clock settings before drawing.");
             return result;
         }
 

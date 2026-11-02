@@ -219,6 +219,8 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 
 当前完整场景动作载荷：`prepare_battle_scene_motions.py` 核对所选884_156692男女两个原动作bundle、独立原生转换凭据及当前骨骼动作名称闭包，保留448条男性和455条女性AnimationClip的原始字段。27份已导入原clip按实际输入身份复用，876份新增载荷逐字节复制，只有导入meta的GUID显式重绑定；动画子资产的容器地址不是唯一动作地址，目录按原性别与动作名称绑定。原包、对象、转换输入、原始与导入meta、输出哈希、完整目录及原始时长差异见[场景动作来源](battle-animation/scene-motions-source-manifest.json)。真实技能clip经过原应用Playable与统一原生绘制端的接线身份见[技能动作接线来源](battle-animation/scene-skill-motions-source-manifest.json)。该清单也记录独立曲线端对原恒定线性区间的精确常量处理及对应源轨道回归入口，保留原始曲线载荷与IK范围保护。未读取或复制动画SDK实现，新增载荷未进入完整快照；实现与实际验证范围只在[战斗执行](../../docs/features/battle-execution.md)维护。
 
+当前独立武器播放时钟：原应用 `AppearanceAnimUtils.PlayAnimation`／`SetAnimation`、`AppearanceSkeletonPart`、两份当前集成武器 prefab 时序字段、公开 UpdateTiming 枚举常量和独立实现接线身份见[武器播放来源](battle-animation/scene-weapon-playback-source-manifest.json)，重建入口为 `record_battle_scene_weapon_playback.py`。六条原骨骼动作继续复用已核验与当前包对象字节一致的历史871原生载荷，保留原来源标签；本批无素材变动或完整快照，不读取或复制动画SDK实现。
+
 当前统一场景MixNext绘制与通知：`record_battle_scene_bound_mix_next.py` 沿用当前884_156692人物载荷、已有独立混合端与原应用部件通知消费代码，记录统一姿态入口、绘制接线和验证入口的当前身份。原应用、公开行为文档、依赖及输入输出哈希见[统一绘制与通知来源](battle-animation/scene-bound-mix-next-source-manifest.json)。不读取或复制动画SDK实现，不改变人物／武器素材载荷；实现与实际验证范围只在[战斗执行](../../docs/features/battle-execution.md)维护。
 
 当前原生MixNext输入与独立接线：`record_battle_native_mix_next.py` 核对当前884_156692的PlayerModel_Game载荷中原translator配置，并仅从原global-metadata.dat读取相关公开枚举常量，不读取SDK方法实现。原载荷／元数据身份、公开行为文档、局部通道与约束混合、真实Animator验证入口及当前输入输出哈希见[MixNext来源清单](battle-animation/native-mix-next-source-manifest.json)。没有修改人物／武器素材载荷；功能和实际验证范围只在[战斗执行](../../docs/features/battle-execution.md)维护。

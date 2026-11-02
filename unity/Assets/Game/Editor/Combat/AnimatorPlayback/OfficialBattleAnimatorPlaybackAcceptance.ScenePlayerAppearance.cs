@@ -70,8 +70,10 @@ namespace Zjcs.Editor.Combat
                         ? root.AddComponent<AppearanceMecanimPartHandler>() : root.AddComponent<AppearanceRendererPartHandler>();
                     parts.ConfigureParts(partBindings);
                     var slot = new GameObject("PartSlot").transform; slot.SetParent(root.transform, false);
-                    var poolResources = new OfflineProfessionScenePartPoolBindings(weapons, weaponMaterials, partBindings,
-                        new SceneDiagnosticWeaponPoses(), () => true);
+                    var poolResources = SessionState.GetBool(Key + ".sceneWeaponPlayback", false)
+                        ? new OfflineProfessionScenePartPoolBindings(weapons, weaponMaterials, partBindings, () => true)
+                        : new OfflineProfessionScenePartPoolBindings(weapons, weaponMaterials, partBindings,
+                            new SceneDiagnosticWeaponPoses(), () => true);
                     using var pool = new CharacterPartEntryProvider(poolResources);
                     parts.ConfigureRenderer(native, slot, pool, SortingLayer.IDToName(1182434123), 0);
                     var appearance = root.AddComponent<ProfessionNativeSceneAppearance>();
@@ -122,6 +124,11 @@ namespace Zjcs.Editor.Combat
                         {
                             var skill = ObserveSceneSkillMotion(native, root.GetComponent<Animator>(), labelSuffix);
                             while (skill.MoveNext()) yield return skill.Current;
+                        }
+                        if (SessionState.GetBool(Key + ".sceneWeaponPlayback", false))
+                        {
+                            var clock = ObserveSceneWeaponPlayback(native, parts, labelSuffix);
+                            while (clock.MoveNext()) yield return clock.Current;
                         }
                         afterInit?.Invoke(player);
                         Require(saved == JsonUtility.ToJson(profile), "default restoration and player refresh preserve persisted local wardrobe bytes");
