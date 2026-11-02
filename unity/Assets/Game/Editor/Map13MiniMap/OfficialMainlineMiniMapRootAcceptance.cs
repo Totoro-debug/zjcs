@@ -25,7 +25,7 @@ namespace Zjcs.Editor.Map13MiniMap
     public sealed class MainlineMiniMapRootStateFixture : Map13ManagedFixture
     {
         internal Map13MaskFixture Mask;
-        internal int BoundMap=13;
+        internal int BoundMap=13,BoundRegionCount=106;
         internal MapRootEntityLiteSingleInfo OtherLite;
         public override int MapClassId => BoundMap;
         internal Dictionary<string,GameObject> RegionalPrefabs;
@@ -50,7 +50,7 @@ namespace Zjcs.Editor.Map13MiniMap
         public override GameObject InstantiateDisplay(GameObject prefab,Transform parent) => Mask.InstantiateDisplay(prefab,parent);
         public override IMiniMapDescriptionAssetLease<GameObject> LoadPrefab(string path) => Mask.LoadPrefab(path);
         public override IEnumerable<Pos2d> ForEachMapRegionActivedAllGrid(int map,int region) => Mask.ForEachMapRegionActivedAllGrid(map,region);
-        public override List<Status> GetMapStatusListInTeam(int map) => Enumerable.Repeat(Status.Private,map==16?43:106).ToList();
+        public override List<Status> GetMapStatusListInTeam(int map) => Enumerable.Repeat(Status.Private,BoundRegionCount).ToList();
         public override IMiniMapRegionAssetLease LoadAssetByGuid(string guid) => new RegionLease(RegionalPrefabs[guid]);
         public override GameObject InstantiateRegion(GameObject prefab,Transform parent,bool world) => Object.Instantiate(prefab,parent,world);
         private sealed class RegionLease : IMiniMapRegionAssetLease
@@ -124,10 +124,20 @@ namespace Zjcs.Editor.Map13MiniMap
             public override void AddPosUpdatedReceiver(IGridTransformPosUpdatedEventReceiver receiver)=>throw new NotSupportedException();
             public override void RemovePosUpdatedReceiver(IGridTransformPosUpdatedEventReceiver receiver)=>throw new NotSupportedException();
         }
-        [Serializable] private sealed class Fixture{public int width,height;public float[] origin;public Cell[] cells;public Area[] areas;public RegionRow[] regions;}
+        [Serializable] private sealed class Fixture{public int mapClassId,configId,width,height;public float[] origin;public Cell[] cells;public Area[] areas;public RegionRow[] regions;}
         [Serializable] private sealed class Cell{public int area,ground;}
         [Serializable] private sealed class Area{public int x,y,count;}
         [Serializable] private sealed class RegionRow{public int RegionTag,Region;public List<int> Areas;}
+        private static MapRootEntityLiteSingleInfo ReadNavigation(int map,Fixture input)
+        {
+            var lite=new MapRootEntityLiteSingleInfo{MapClassId=map,MapGroundSize=new Pos2d(input.width,input.height),MapGroundOriginPos=new Vector3(input.origin[0],input.origin[1],input.origin[2]),PosDataArray=new MapRootEntityLiteGridInfo[input.height][],AreaInfos=input.areas.Select(a=>new MapRootEntityLiteAreaInfo{TotalPos=new Pos2d(a.x,a.y),TotalCount=a.count}).ToArray()};
+            for(int y=0;y<input.height;y++)
+            {
+                lite.PosDataArray[y]=new MapRootEntityLiteGridInfo[input.width];
+                for(int x=0;x<input.width;x++){var cell=input.cells[y*input.width+x];lite.PosDataArray[y][x]=new MapRootEntityLiteGridInfo{Area=cell.area,GroundType=(GroundType)cell.ground};}
+            }
+            return lite;
+        }
         public static void Run(){Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION","1");SessionState.SetBool(Key,true);Hook();EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);EditorApplication.isPlaying=true;}
         [InitializeOnLoadMethod] private static void Hook(){if(!SessionState.GetBool(Key,false))return;errors=0;Application.logMessageReceived+=Observe;EditorApplication.playModeStateChanged+=Mode;}
         private static void Observe(string message,string trace,LogType kind){if(kind==LogType.Error||kind==LogType.Exception||kind==LogType.Assert)errors++;}
@@ -139,7 +149,7 @@ namespace Zjcs.Editor.Map13MiniMap
             const string native="Assets/Official/World/Map/13/NativeMiniMapRootCurrent/";
             var prefab=AssetDatabase.LoadAssetAtPath<GameObject>(native+"Resources/Map13/Native/mini-map-root.prefab");
             Require(prefab&&prefab.GetComponent<MainlineNativeMiniMapRoot>().MapClassId==13,"Complete native original root");
-            foreach(string folder in new[]{native.TrimEnd('/'),"Assets/Official/World/Map/16/NativeMiniMapRootCurrent"})
+            foreach(string folder in new[]{10,11,12,13,14,16}.Select(id=>$"Assets/Official/World/Map/{id}/NativeMiniMapRootCurrent"))
             foreach(string guid in AssetDatabase.FindAssets("t:Prefab",new[]{folder}))
             {
                 var asset=AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guid));Require(!PrefabUtility.HasManagedReferencesWithMissingTypes(asset),"Original managed-reference type binding");
@@ -150,8 +160,7 @@ namespace Zjcs.Editor.Map13MiniMap
             var description=host.AddComponent<Map13DescriptionFixture>();var labels=new DescriptionLabels();description.Labels=labels;
             description.Settings=AssetDatabase.LoadAssetAtPath<MiniMapSettings>("Assets/Official/World/Map/13/NativeMiniMapSettings/ScriptableConfig/Modules/MapCommon/MiniMapSettings.asset");
             var input=JsonUtility.FromJson<Fixture>(File.ReadAllText(Path.Combine(Workspace,"minimap-description-fixture.json")));
-            var lite=new MapRootEntityLiteSingleInfo{MapClassId=13,MapGroundSize=new Pos2d(input.width,input.height),MapGroundOriginPos=new Vector3(input.origin[0],input.origin[1],input.origin[2]),PosDataArray=new MapRootEntityLiteGridInfo[input.height][],AreaInfos=input.areas.Select(a=>new MapRootEntityLiteAreaInfo{TotalPos=new Pos2d(a.x,a.y),TotalCount=a.count}).ToArray()};
-            for(int y=0;y<input.height;y++){lite.PosDataArray[y]=new MapRootEntityLiteGridInfo[input.width];for(int x=0;x<input.width;x++){var cell=input.cells[y*input.width+x];lite.PosDataArray[y][x]=new MapRootEntityLiteGridInfo{Area=cell.area,GroundType=(GroundType)cell.ground};}}
+            var lite=ReadNavigation(13,input);
             description.Lite=lite;description.Regions=input.regions.ToDictionary(r=>r.Region,r=>new MiniMapRegionInfo{LabelInfo=labels.Data.regions[r.Region],Areas=r.Areas,RegionTag=(MapRegionType)r.RegionTag});description.AreaRegions=description.Regions.Values.SelectMany(r=>r.Areas.Select(a=>new{a,r.Region})).ToDictionary(v=>v.a,v=>v.Region);
             var mask=host.AddComponent<Map13MaskFixture>();mask.Description=description;mask.Agent=host.AddComponent<Map13MaskAgentFixture>();
             var visibility=JsonUtility.FromJson<OfflineMapGridVisibility.Configuration>(Resources.Load<TextAsset>("Map13/grid-visibility").text);mask.ActiveRegions=visibility.regions.ToDictionary(r=>r.region,r=>new MapActivedRegionGridInfo{RegionActivedGrids=r.RegionActivedGrids,RegionExtendVisiableGrids=r.RegionExtendVisiableGrids});
@@ -193,16 +202,29 @@ namespace Zjcs.Editor.Map13MiniMap
             // geometry/settings. Its unresolved local response policy stays pending.
             var islandInput=JsonUtility.FromJson<Fixture>(File.ReadAllText(Path.Combine(Workspace,"minimap-description-fixture-16.json")));
             Require(islandInput.width==140&&islandInput.height==120&&islandInput.regions.Length==43,"Original island fixture identity");
-            var islandLite=new MapRootEntityLiteSingleInfo{MapClassId=16,MapGroundSize=new Pos2d(islandInput.width,islandInput.height),MapGroundOriginPos=new Vector3(islandInput.origin[0],islandInput.origin[1],islandInput.origin[2]),PosDataArray=new MapRootEntityLiteGridInfo[islandInput.height][],AreaInfos=islandInput.areas.Select(a=>new MapRootEntityLiteAreaInfo{TotalPos=new Pos2d(a.x,a.y),TotalCount=a.count}).ToArray()};
-            for(int y=0;y<islandInput.height;y++){islandLite.PosDataArray[y]=new MapRootEntityLiteGridInfo[islandInput.width];for(int x=0;x<islandInput.width;x++){var cell=islandInput.cells[y*islandInput.width+x];islandLite.PosDataArray[y][x]=new MapRootEntityLiteGridInfo{Area=cell.area,GroundType=(GroundType)cell.ground};}}
-            state.BoundMap=16;state.OtherLite=islandLite;state.Current=13;data.ExpectedMap=16;bindings.MinimapConfigId=4;((ResourcePoints)bindings.ResourcePoints).BoundMap=16;
+            var islandLite=ReadNavigation(16,islandInput);
+            Require(islandInput.mapClassId==16&&islandInput.configId==4,"Original island setting identity");
+            state.BoundMap=16;state.BoundRegionCount=43;state.OtherLite=islandLite;state.Current=13;data.ExpectedMap=16;bindings.MinimapConfigId=islandInput.configId;((ResourcePoints)bindings.ResourcePoints).BoundMap=16;
             var islandPrefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Official/World/Map/16/NativeMiniMapRootCurrent/Resources/Map16/Native/mini-map-root.prefab");
             Require(islandPrefab&&islandPrefab.GetComponent<MainlineNativeMiniMapRoot>().MapClassId==16,"Second complete original prefab");
             var islandModule=MainlineMiniMap.Create(islandPrefab,null,bindings);for(int i=0;i<4;i++)yield return null;
             var islandRoot=Object.FindObjectOfType<MainlineNativeMiniMapRoot>();Require(data.Requests==3&&islandRoot.MapClassId==16&&!islandRoot.GetComponent<OfflineMiniMap>().HaveDataShow.State,"Island identity and pending offline lifecycle");
             islandModule.Dispose();yield return null;Require(characters.Subscribers==0,"Island native instance releases subscriptions");
+            foreach(int map in new[]{10,11,12,14})
+            {
+                var otherInput=JsonUtility.FromJson<Fixture>(File.ReadAllText(Path.Combine(Workspace,$"minimap-description-fixture-{map}.json")));
+                Require(otherInput.mapClassId==map&&otherInput.configId>0,"Original map and setting identity");
+                var otherLite=ReadNavigation(map,otherInput);
+                state.BoundMap=map;state.BoundRegionCount=otherInput.regions.Length;state.OtherLite=otherLite;data.ExpectedMap=map;bindings.MinimapConfigId=otherInput.configId;((ResourcePoints)bindings.ResourcePoints).BoundMap=map;
+                var otherPrefab=AssetDatabase.LoadAssetAtPath<GameObject>($"Assets/Official/World/Map/{map}/NativeMiniMapRootCurrent/Resources/Map{map}/Native/mini-map-root.prefab");
+                Require(otherPrefab&&otherPrefab.GetComponent<MainlineNativeMiniMapRoot>().MapClassId==map,"Complete selected original map root");
+                var regional=otherPrefab.GetComponentInChildren<MiniMapPrivateRegionMaskManager>(true);Require(new SerializedObject(regional).FindProperty("mRegionTilemapSlots").arraySize==otherInput.regions.Length,"Original region slots match installed configuration");
+                int requested=data.Requests;var otherModule=MainlineMiniMap.Create(otherPrefab,null,bindings);for(int i=0;i<4;i++)yield return null;
+                var otherRoot=Object.FindObjectOfType<MainlineNativeMiniMapRoot>();Require(data.Requests==requested+1&&otherRoot.MapClassId==map&&!otherRoot.GetComponent<OfflineMiniMap>().HaveDataShow.State,"Configured pending original map instance");
+                otherModule.Dispose();yield return null;Require(characters.Subscribers==0,"Configured instance subscription release");
+            }
             Object.Destroy(host);Object.Destroy(cameraHost);Object.Destroy(texture);yield return null;labels.Dispose();
-            File.WriteAllText(Path.Combine(Workspace,"native-minimap-root-proof.json"),"{\"map\":13,\"complete_original_prefab\":true,\"offline_response\":true,\"fullscreen\":true,\"native_render\":true,\"reentry\":true,\"subscriptions_released\":true,\"map16_pending_instance\":true}");Debug.Log("MAINLINE_MINIMAP_NATIVE_ROOT_PASS");
+            File.WriteAllText(Path.Combine(Workspace,"native-minimap-root-proof.json"),"{\"map\":13,\"complete_original_prefab\":true,\"offline_response\":true,\"fullscreen\":true,\"native_render\":true,\"reentry\":true,\"subscriptions_released\":true,\"pending_only_native_maps\":[10,11,12,14,16]}");Debug.Log("MAINLINE_MINIMAP_NATIVE_ROOT_PASS");
         }
     }
 }

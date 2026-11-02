@@ -21,12 +21,14 @@ def main():
     fixture_data=dict(width=n['Width'],height=n['Height'],origin=[n['Origin'][a] for a in 'XYZ'],cells=[dict(area=c['RawValues'][0],ground=c['RawValues'][1]) for row in n['Rows'] for c in row['Cells']],areas=[dict(x=a['Cell'][0],y=a['Cell'][1],count=a['Value']) for a in n['AreaMappings']],regions=regions)
     if len(fixture_data['cells'])!=57600:raise ValueError('Incomplete original navigation fixture')
     (work/'minimap-description-fixture.json').write_text(json.dumps(fixture_data,separators=(',',':')),'utf8')
-    island=json.loads((source/'Assets/Official/World/Map/16/map16.json').read_bytes());nav=island['Navigation']
-    island_regions=[json.loads(row['Json']) for row in island['Configs'] if row['TableName']=='TbMapRegionInfo']
-    if (nav['Width'],nav['Height'],len(island_regions))!=(140,120,43):raise ValueError('Review installed Map16 fixture identity')
-    island_data=dict(width=nav['Width'],height=nav['Height'],origin=[nav['Origin'][a] for a in 'XYZ'],cells=[dict(area=c['RawValues'][0],ground=c['RawValues'][1]) for row in nav['Rows'] for c in row['Cells']],areas=[dict(x=a['Cell'][0],y=a['Cell'][1],count=a['Value']) for a in nav['AreaMappings']],regions=island_regions)
-    if len(island_data['cells'])!=16800:raise ValueError('Incomplete original Map16 navigation fixture')
-    (work/'minimap-description-fixture-16.json').write_text(json.dumps(island_data,separators=(',',':')),'utf8')
+    for map_id,expected in {10:(60,60,5),11:(240,180,77),12:(280,210,99),14:(280,280,111),16:(140,120,43)}.items():
+     installed=json.loads((source/f'Assets/Official/World/Map/{map_id}/map{map_id}.json').read_bytes());nav=installed['Navigation']
+     map_regions=[json.loads(row['Json']) for row in installed['Configs'] if row['TableName']=='TbMapRegionInfo']
+     info,=[json.loads(row['Json']) for row in installed['Configs'] if row['TableName']=='TbMapInfo']
+     if (nav['Width'],nav['Height'],len(map_regions))!=expected or info['ClassId']!=map_id:raise ValueError('Review installed map fixture identity: '+str(map_id))
+     map_data=dict(mapClassId=map_id,configId=info['MinimapConfigId'],width=nav['Width'],height=nav['Height'],origin=[nav['Origin'][a] for a in 'XYZ'],cells=[dict(area=c['RawValues'][0],ground=c['RawValues'][1]) for row in nav['Rows'] for c in row['Cells']],areas=[dict(x=a['Cell'][0],y=a['Cell'][1],count=a['Value']) for a in nav['AreaMappings']],regions=map_regions)
+     if len(map_data['cells'])!=expected[0]*expected[1]:raise ValueError('Incomplete original navigation fixture: '+str(map_id))
+     (work/f'minimap-description-fixture-{map_id}.json').write_text(json.dumps(map_data,separators=(',',':')),'utf8')
     modules={json.loads(p.read_bytes())['name']:p for p in runtime.rglob('*.asmdef')};selected=set()
     def stage_modules(pending):
      added=set()
@@ -51,6 +53,10 @@ def main():
     base=source/'Assets/Official/World/Map/13'
     pending=[p for name in ['NativeMiniMapRegions','NativeMiniMapSettings','NativeMiniMapMasks','NativeMiniMapDescriptions','NativeMiniMapCurrent','NativeMiniMapRootCurrent'] for p in (base/name).rglob('*') if p.is_file() and p.suffix!='.meta']
     pending += [p for name in ['NativeMiniMapCurrent','NativeMiniMapRootCurrent'] for p in (source/'Assets/Official/World/Map/16'/name).rglob('*') if p.is_file() and p.suffix!='.meta']
+    for map_id in (10,11,12,14):
+     native=source/f'Assets/Official/World/Map/{map_id}/NativeMiniMapRootCurrent'
+     if not native.is_dir():raise ValueError('Prepare the complete selected minimap root: '+str(map_id))
+     pending += [p for p in native.rglob('*') if p.is_file() and p.suffix!='.meta']
     pending += [base/'NativePipeline/UniversalRenderPipeline.asset',base/'NativeText/FZY4K-Dynamic.asset',base/'Resources/Map13/Native/region-label-data.json',source/'Assets/Game/Resources/Map13/Native/combat-rating-config.asset',base/'Resources/Map13/grid-visibility.json',source/'Assets/TextMesh Pro/Resources/TMP Settings.asset']
     seen=set()
     while pending:

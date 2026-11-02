@@ -43,6 +43,8 @@ CAB 读取器通过原清单中唯一相同 MD5 解析旧缓存的 `_materials.b
 
 ## 完整还原部分
 
+完整原小地图根已通过公共 `MainlineMiniMap` 工厂绑定，保留所选884的87个原序列化对象文档、原接缝线及主／支地区说明引用。隔离 GUI Play Mode 检查全部脚本、托管引用类型和对象引用；使用本图已安装的60×60导航、5地区和原配置1，验证地区插槽数量、加载、原离线请求／等待隐藏及销毁退订。此项未提供本图正式离线响应、白雾／实体标记画面、HUD模拟输入或Player结论；正式宿主接线仍待完成。来源见[当前完整小地图根](../../assets/reference/official-map/map10-current-minimap-root-source-manifest.json)，共用生命周期与验证边界见[公共模块](../features/mainline-map-modules.md)。
+
 当前 `884_156692` 的原 `MiniMap_10` 地区地面独立转换至 `Assets/Official/World/Map/10/NativeMiniMapCurrent/`，保留原 Grid、5 个地区插槽／Tilemap、YooAsset GUID、Tile 字段及原管理器的可见性／公开状态／缓存生命周期，使用公共 `MainlineMiniMapRegions`，地图仅提供原生目录与状态适配。来源见[当前地区小地图清单](../../assets/reference/official-map/map10-current-minimap-regions-source-manifest.json)，公共实现见[主线地图公共模块](../features/mainline-map-modules.md)。本批当前资源与本页历史地图载荷分别保留，不据此声明旧版本地图数据等价；本图已通过公共 Interface 的图形 Play Mode：原区域图块、地区0公开后的原 Z 切换、范围处理器替换及旧事件隔离、缓存复用、原游戏时间十秒回收、释放与重挂，实际前后画面已查看；夹具直接提供地区／角色状态，未覆盖输入或地图存档。正式小地图根、标记／白雾、HUD 输入与存档接线仍未完成。
 
 原 `UI/map10-ui.json` 按来源清单固定为提交中的 LF 字节，防止 Windows 检出转换 CRLF 后导致原 UI 校验失败；层级、精灵映射和原来源哈希均沿用该载荷。

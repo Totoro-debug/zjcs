@@ -377,7 +377,7 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 
 完整小地图根、离线协调组件及离线标记当前初始化的输入、输出与适配来源见[主线小地图根凭据](official-map/mainline-minimap-root-source-manifest.json)。`prepare_mainline_minimap_root.py` 从所选884源码迁移；历史871标记管理器凭据独立保留，当前凭据仅覆盖其中Init方法，重新生成历史管理器后须再运行本转换器。未生成完整素材快照。
 
-完整原生小地图 prefab 来源见[Map13根资源](official-map/map13-current-minimap-root-source-manifest.json)与[Map16根资源](official-map/map16-current-minimap-root-source-manifest.json)。`prepare_mainline_minimap_native_root.py` 按所选884的实际APK／同版缓存、原层级与外部prefab引用恢复，记录CAB／PPtr、原Tile全部字段、Sprite身份、Windows转换、脚本逐文件等价凭据、显式绑定及公共实例工厂哈希；历史版本来源分别保留，不声明整版等价。本批未生成完整素材快照，行为与验证范围见[公共模块页](../../docs/features/mainline-map-modules.md)。
+完整原生小地图 prefab 来源见[Map10根资源](official-map/map10-current-minimap-root-source-manifest.json)、[Map11根资源](official-map/map11-current-minimap-root-source-manifest.json)、[Map12根资源](official-map/map12-current-minimap-root-source-manifest.json)、[Map13根资源](official-map/map13-current-minimap-root-source-manifest.json)、[Map14根资源](official-map/map14-current-minimap-root-source-manifest.json)、[Map16根资源](official-map/map16-current-minimap-root-source-manifest.json)。`prepare_mainline_minimap_native_root.py` 按所选884的实际APK／同版缓存、原层级与外部prefab引用恢复，记录CAB／PPtr、原Tile全部字段、Sprite身份、Windows转换、脚本逐文件等价凭据、显式绑定及公共实例工厂哈希；历史版本来源分别保留，不声明整版等价。元数据按仓库LF规范记录哈希，不改变字段或GUID。本批未生成完整素材快照，行为与验证范围见[公共模块页](../../docs/features/mainline-map-modules.md)。
 
 伙伴主角头像的选定884_156692原摄影棚、PlayerPortraitSettings／AppearanceConfig对象字段、三个原Sprite及Windows转换依赖见[主角头像来源](partner-player-portraits-source-manifest.json)。`prepare_partner_player_portraits.py` 记录APK优先／匹配缓存、CAB／对象身份、枚举列表恢复、显式脚本／资源绑定和逐文件哈希；当前角色与外观输入引用各自已校验来源，不混标历史头像配置，本批未生成完整素材快照。
 

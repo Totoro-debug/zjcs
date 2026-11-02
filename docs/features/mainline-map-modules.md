@@ -12,13 +12,22 @@
 
 ## 原始官方实现
 
-当前 `884_156692` 的完整原 `MiniMap` 根代码已迁入内部 `MainlineMiniMapRoot`，保留角色／全图视野处理器的缓存和订阅切换、原全屏显隐调用顺序、相机定位／边界裁剪、标记查找及关闭事件；配置、状态与资源从既有本地端口接入。公共 `MainlineMiniMap.Create` 通过具体脚本 `MainlineNativeMiniMapRoot` 绑定完整原 prefab，在激活前注入状态、角色、离线响应、资源、标记、点击和白雾坐标端口；实例统一管理显隐、全屏、关闭事件、纹理和销毁。泽之国与鲸背岛使用同一入口及各自配置，正式地图宿主／HUD接线仍未完成。离线标记初始化另按当前官方源码补入缺实体字典、容器实体及地区实体列表的分支；原64组条件、64次回调、24组归属条件及新增缺数据路径已在 Play Mode 通过。历史871源码凭据保留，只有 `OfflineMiniMapMarkManager.Init` 由当前源码覆盖，见[完整根与当前初始化来源](../../assets/reference/official-map/mainline-minimap-root-source-manifest.json)。
+当前 `884_156692` 的完整原 `MiniMap` 根代码已迁入内部 `MainlineMiniMapRoot`，保留角色／全图视野处理器的缓存和订阅切换、原全屏显隐调用顺序、相机定位／边界裁剪、标记查找及关闭事件；配置、状态与资源从既有本地端口接入。公共 `MainlineMiniMap.Create` 通过具体脚本 `MainlineNativeMiniMapRoot` 绑定完整原 prefab，在激活前注入状态、角色、离线响应、资源、标记、点击和白雾坐标端口；实例统一管理显隐、全屏、关闭事件、纹理和销毁。初始岛、森之国、山之国、泽之国、龙之国与鲸背岛使用同一入口及各自配置，正式地图宿主／HUD接线仍未完成。离线标记初始化另按当前官方源码补入缺实体字典、容器实体及地区实体列表的分支；原64组条件、64次回调、24组归属条件及新增缺数据路径已在 Play Mode 通过。历史871源码凭据保留，只有 `OfflineMiniMapMarkManager.Init` 由当前源码覆盖，见[完整根与当前初始化来源](../../assets/reference/official-map/mainline-minimap-root-source-manifest.json)。
 
 原 `OfflineMiniMap` 协调组件已复用同一公共根程序集：非当前地图且地图ID大于零时，先隐藏旧数据并请求本地数据端口；空响应／错误码保留隐藏状态，成功时按原顺序显示内容、初始化离线白雾、初始化离线标记。重新启用当前地图不请求离线数据，重新启用非当前地图重新请求。所选884的 `StateSwitcher` 与历史原输入哈希一致，继续复用已迁移实现；原仅供编辑器使用的 `RequireComponent(MiniMap)` 因公共根为抽象类而不迁入，完整原生实例绑定须在激活前校验根组件。`prepare_mainline_minimap_offline_validation.py` 准备隔离工程；Play Mode 使用已安装的泽之国原图层、57,600格导航、106地区、原可见数据编解码及隔离保存文件，验证成功／空响应／错误响应、切图重新启用、先白雾后标记、12格动态解锁、1,326格公开地区填充和四种雾效shader变体；已查看实时与离线两张实际渲染截图。此处验证的是协调组件与图层，正式地图存档到完整响应的投影及HUD／输入／Player仍未接通；完整原根实例验证见下文。
 
-完整原 prefab 由 `prepare_mainline_minimap_native_root.py` 恢复，泽之国与鲸背岛分别保留所选884的747／315个原序列化对象文档及原接缝线、主／支地区说明 prefab 引用。原 Tile 的 Sprite、颜色、矩阵、实例对象、标志和碰撞字段从实际对象恢复，鲸背岛的 `MapAreaTile.Area` 与原完整类型声明一并迁移。主根的16种应用脚本逐文件核对当前原输入与已有迁移凭据，仅离线标记 Init 的覆盖范围按当前根凭据另记；不同来源版本不作整版等价处理。来源见[泽之国完整根](../../assets/reference/official-map/map13-current-minimap-root-source-manifest.json)与[鲸背岛完整根](../../assets/reference/official-map/map16-current-minimap-root-source-manifest.json)。
+完整原 prefab 由 `prepare_mainline_minimap_native_root.py` 恢复，保留各图原序列化对象文档及原接缝线、主／支地区说明 prefab 引用。原 Tile 的 Sprite、颜色、矩阵、实例对象、标志和碰撞字段从实际对象恢复，`MapAreaTile.Area` 与原完整类型声明一并迁移。主根的16种应用脚本逐文件核对当前原输入与已有迁移凭据，仅离线标记 Init 的覆盖范围按当前根凭据另记；不同来源版本不作整版等价处理。完整根及各图已安装验证导航分开核对，参数如下：
 
-隔离 GUI Play Mode 已验证两张完整原 prefab 的全部 MonoScript、托管引用类型和序列化对象引用。泽之国使用原57,600格／106地区夹具，通过延迟离线响应、原白雾及标记初始化、全屏视野切换与缓存恢复、关闭事件、重新启用、订阅释放；已查看温泉乡原层级实际渲染截图。原尺寸的小地图纹理复用同一实例，公共工厂停用实例后释放纹理，重复销毁不重复处理。鲸背岛使用本图16,800格／43地区及配置4，通过同一工厂验证原根加载、离线请求保持隐藏和销毁释放；未给它套用泽之国离线响应。此夹具的实体／资源查询为空，关闭事件直接调用原入口，尚未验证正式HUD中的模拟点击、真实实体图标、采集资源、地图存档响应投影或Windows Player。主工程 Unity 导入／编译、`ProjectTools.Validate` 与静态元数据检查通过。
+| 地图 | 原根对象文档 | 验证导航 | 地区 | 原配置 | 来源 |
+| --- | ---: | --- | ---: | ---: | --- |
+| 初始岛 | 87 | 60×60 | 5 | 1 | [完整根](../../assets/reference/official-map/map10-current-minimap-root-source-manifest.json) |
+| 森之国 | 531 | 240×180 | 77 | 2 | [完整根](../../assets/reference/official-map/map11-current-minimap-root-source-manifest.json) |
+| 山之国 | 672 | 280×210 | 99 | 2 | [完整根](../../assets/reference/official-map/map12-current-minimap-root-source-manifest.json) |
+| 泽之国 | 747 | 240×240 | 106 | 2 | [完整根](../../assets/reference/official-map/map13-current-minimap-root-source-manifest.json) |
+| 龙之国 | 732 | 280×280 | 111 | 2 | [完整根](../../assets/reference/official-map/map14-current-minimap-root-source-manifest.json) |
+| 鲸背岛 | 315 | 140×120 | 43 | 4 | [完整根](../../assets/reference/official-map/map16-current-minimap-root-source-manifest.json) |
+
+隔离 GUI Play Mode 已验证六张完整原 prefab 的全部 MonoScript、托管引用类型和序列化对象引用。泽之国使用原57,600格／106地区夹具，通过延迟离线响应、原白雾及标记初始化、全屏视野切换与缓存恢复、关闭事件、重新启用、订阅释放；已查看温泉乡原层级实际渲染截图。原尺寸的小地图纹理复用同一实例，公共工厂停用实例后释放纹理，重复销毁不重复处理。初始岛、森之国、山之国、龙之国与鲸背岛分别使用本图已安装的导航、地区和原配置，通过同一工厂验证原根加载、地区插槽数量、离线请求保持隐藏和销毁释放；未给它们套用泽之国离线响应。此夹具的实体／资源查询为空，关闭事件直接调用原入口，尚未验证正式HUD中的模拟点击、真实实体图标、采集资源、地图存档响应投影或Windows Player。主工程 Unity 导入／编译、`ProjectTools.Validate` 与静态元数据检查通过。
 
 主线地图共享原 WorldCanvas／WorldStage 界面、地区条件、导航、交互、剧情、机关、雕像、小地图和进度规则；单图放置及差异由地图页维护。
 
