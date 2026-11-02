@@ -100,6 +100,7 @@ namespace Zjcs.Editor.Combat
                             "initialized reapply restores the owned Animator and retains the same source controller");
                     }
                     else player.ReapplyOwnAnimator();
+                    if (SessionState.GetBool(Key + ".sceneAnimatorPose", false)) CheckSceneAnimatorPose(player);
                     Debug.Log("[Current player Animator] " + selectedController.name + ": direct=" + !useController
                         + "; original idle/skill playable, controller restoration and reapply passed. Native body poses remain explicit pre-physics diagnostics.");
                 }
