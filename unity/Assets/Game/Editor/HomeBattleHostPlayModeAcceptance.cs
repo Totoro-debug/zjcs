@@ -393,6 +393,7 @@ namespace Zjcs.Editor
             HpRecoveryProbe hpRecovery = ConfigureHpRecoveryProbe(checkpoint);
             HpCostProbe hpCost = ConfigureHpCostProbe(checkpoint);
             HpSubstituteProbe hpSubstitute = ConfigureHpSubstituteProbe(checkpoint);
+            RoundStartupProbe roundStartup = ConfigureRoundStartupProbe(checkpoint);
             int initialCounter = checkpoint.Counter;
             controller.StepCompleted += result => {
                 checkpoint = result.Checkpoint;
@@ -407,6 +408,7 @@ namespace Zjcs.Editor
                 hpRecovery?.ObserveStep(controller);
                 hpCost?.ObserveStep(controller);
                 hpSubstitute?.ObserveStep(controller);
+                roundStartup?.ObserveStep(controller);
                 if (checkpoint.Counter == initialCounter + 1 || checkpoint.Finished)
                     Debug.Log("[Battle hosts] " + name + " step=" + checkpoint.Counter
                         + " finished=" + checkpoint.Finished);
@@ -470,7 +472,7 @@ namespace Zjcs.Editor
             float previousTimeScale = Time.timeScale;
             try
             {
-                Time.timeScale = hpListener == null && hpRecovery == null && hpCost == null && hpSubstitute == null ? 5 : 1;
+                Time.timeScale = hpListener == null && hpRecovery == null && hpCost == null && hpSubstitute == null && roundStartup == null ? 5 : 1;
                 while (runner != null)
                 {
                     triggerTiming?.ObservePresentation();
@@ -478,15 +480,18 @@ namespace Zjcs.Editor
                     hpListener?.ObservePresentation();
                     hpRecovery?.ObservePresentation();
                     hpSubstitute?.ObservePresentation();
+                    if (roundStartup != null && capturedCure) Time.timeScale = 5;
                     if (hpSubstitute != null && hpSubstitute.MayAccelerate) Time.timeScale = 5;
                     if (!capturedCure && (hpListener != null && hpListener.ReadyToCapture
                         || hpRecovery != null && hpRecovery.ReadyToCapture
                         || hpCost != null && hpCost.ReadyToCapture
-                        || hpSubstitute != null && hpSubstitute.ReadyToCapture))
+                        || hpSubstitute != null && hpSubstitute.ReadyToCapture
+                        || roundStartup != null && roundStartup.ReadyToCapture))
                     {
                         float captureTimeScale = Time.timeScale;
                         Time.timeScale = 0f;
-                        try { yield return Capture(output, name + (hpSubstitute != null ? "-hp-substitute"
+                        try { yield return Capture(output, name + (roundStartup != null ? "-round-startup"
+                            : hpSubstitute != null ? "-hp-substitute"
                             : hpCost != null ? "-hp-cost" : "-hp-cure")); }
                         finally { Time.timeScale = captureTimeScale; }
                         capturedCure = true;
@@ -526,6 +531,7 @@ namespace Zjcs.Editor
             hpRecovery?.Verify(name, checkpoint);
             hpCost?.Verify(name, checkpoint);
             hpSubstitute?.Verify(name, checkpoint);
+            roundStartup?.Verify(name, checkpoint);
             VerifyEquipmentBattlePassives(name, checkpoint, true);
             yield return SettleUi();
             yield return Capture(output, name + "-result");

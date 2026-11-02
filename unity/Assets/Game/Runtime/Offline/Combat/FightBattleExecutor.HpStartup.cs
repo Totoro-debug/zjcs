@@ -27,12 +27,12 @@ namespace Zjcs.Combat.Official
                     || status.HpTriggerPer > 0f && status.HpTriggerAtStart || status.HasHpLimit);
         }
 
-        private bool HasPendingHpStarts()
+        private bool HasPendingStatusStarts()
         {
             if (statusCatalog == null) return false;
             foreach (var owner in units)
                 foreach (var status in owner.Statuses)
-                    if (IsPendingHpStart(owner, status)) return true;
+                    if (IsPendingHpStart(owner, status) || IsPendingRoundStart(owner, status)) return true;
             return false;
         }
 
@@ -90,9 +90,9 @@ namespace Zjcs.Combat.Official
             context.ActionDuration = Math.Max(context.ActionDuration, actionDuration);
         }
 
-        private FightBattleExecutionResult ExecutePendingHpStarts(int sequence, int counter)
+        private FightBattleExecutionResult ExecutePendingStatusStarts(int sequence, int counter)
         {
-            if (!HasPendingHpStarts()) return null;
+            if (!HasPendingStatusStarts()) return null;
             var before = new Dictionary<int, long>();
             foreach (var unit in units) before[unit.Id] = unit.Hp;
             var context = new MovementStartContext
@@ -115,10 +115,12 @@ namespace Zjcs.Combat.Official
                         var statuses = new List<FightBattleStatusState>(owner.Statuses);
                         // Preserve the original HP collector's reverse status order.
                         for (int index = statuses.Count - 1; index >= 0; index--)
-                            if (owner.Statuses.Contains(statuses[index]) && IsPendingHpStart(owner, statuses[index]))
+                            if (owner.Statuses.Contains(statuses[index])
+                                && (IsPendingHpStart(owner, statuses[index]) || IsPendingRoundStart(owner, statuses[index])))
                             {
                                 if (firstOwner == null) firstOwner = owner;
                                 changed += StartHpStatus(owner, statuses[index]);
+                                changed += StartRoundStatus(owner, statuses[index]);
                             }
                     }
                     RebuildBattleProperties();
@@ -130,7 +132,7 @@ namespace Zjcs.Combat.Official
                     SpawnNextWaveIfCleared();
                     UpdateOutcome(Math.Max(1, turns.GlobalRound()));
                 }
-                while (!checkpoint.Finished && HasPendingHpStarts());
+                while (!checkpoint.Finished && HasPendingStatusStarts());
                 bool hpChanged = false;
                 foreach (var unit in units)
                     if (!before.TryGetValue(unit.Id, out long hp) || hp != unit.Hp) hpChanged = true;

@@ -18,12 +18,23 @@ namespace Zjcs.Combat.Official
             IReadOnlyList<FightBattleUnitState> units, FightRandomStream random,
             FightOfficialCombatCatalog catalog = null)
         {
-            var result = new List<FightBattleStatusStateTrigger>();
+            return CollectRoundStartInvocations(source, listener, units, random, catalog)
+                .ConvertAll(value => value.Trigger);
+        }
+
+        public static List<FightBattleStatusSkillInvocation> CollectRoundStartInvocations(
+            FightBattleUnitState source, FightBattleUnitState listener,
+            IReadOnlyList<FightBattleUnitState> units, FightRandomStream random,
+            FightOfficialCombatCatalog catalog = null, FightBattleStatusState onlyStatus = null,
+            bool atStatusStart = false)
+        {
+            var result = new List<FightBattleStatusSkillInvocation>();
             if (source == null || listener == null || source.Statuses == null) return result;
             foreach (FightBattleStatusState status in new List<FightBattleStatusState>(source.Statuses))
             {
                 if (status == null || !status.HasRoundStartTrigger
-                    || !status.RoundStartRulesSupported || status.RoundStartTryAtStart
+                    || (onlyStatus != null && status != onlyStatus)
+                    || !status.RoundStartRulesSupported || (atStatusStart && !status.RoundStartTryAtStart)
                     || status.RoundStartDelayRound != 0 || status.RoundStartMeetCount != 1
                     || (status.RoundStartMaxCount >= 0
                         && status.RoundStartTriggeredCount >= status.RoundStartMaxCount)
@@ -35,12 +46,21 @@ namespace Zjcs.Combat.Official
                 foreach (FightBattleStatusStateTrigger trigger in status.RoundStartSkills)
                 {
                     if (trigger == null || trigger.EntityId <= 0 || trigger.AffectedByProp
-                        || trigger.Source != 2 || trigger.Target != 2 || trigger.UseAI
+                        || trigger.Source != 2 || (trigger.Target != 1 && trigger.Target != 2) || trigger.UseAI
                         || trigger.StackedCountToDamageFactor
                         || (trigger.TargetPos != 0 && trigger.TargetPos != 1)
-                        || (trigger.TargetPos == 1 && source.Id != listener.Id)
                         || !Roll(trigger.BasePercent, random)) continue;
-                    result.Add(trigger.WithSource(status));
+                    int targetId = trigger.Target == 1 ? listener.Id : source.Id;
+                    result.Add(new FightBattleStatusSkillInvocation
+                    {
+                        Trigger = trigger.WithSource(status), SourceUnitId = source.Id,
+                        TargetUnitId = targetId,
+                        TargetPositionUnitId = trigger.TargetPos == 1 ? targetId : source.Id,
+                        // Keep the existing applicator-scope skill targeting. An explicit
+                        // TriggerSource is the listened-to role, including a summon master.
+                        SelectTargets = trigger.Target == 2,
+                        UseTargetPositionWithSelection = trigger.TargetPos == 1
+                    });
                     added++;
                 }
                 if (catalog != null)

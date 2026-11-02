@@ -174,6 +174,7 @@ namespace Zjcs.Combat.Official
         public bool AllowDeadTarget;
         // Legacy threshold SkillId/SkillList without explicit source/target uses the skill AI.
         public bool SelectTargets;
+        public bool UseTargetPositionWithSelection;
         // Capture at trigger time; later stacking must not change an already collected cast.
         public double DamageFactor = 1.0;
     }
@@ -324,6 +325,9 @@ namespace Zjcs.Combat.Official
         public int RoundStartMeetCount = 1;
         public int RoundStartTriggeredCount;
         public bool RoundStartTryAtStart;
+        public bool RoundStartStartChecked;
+        public bool RoundStartDefinitionResolved;
+        public bool RoundStartRemoveWhenNotEnoughTimes;
         public List<FightBattleStatusStateTrigger> RoundStartSkills =
             new List<FightBattleStatusStateTrigger>();
         public List<FightBattleStatusStateTrigger> RoundStartStatuses =

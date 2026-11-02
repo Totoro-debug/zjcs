@@ -52,6 +52,7 @@ namespace Zjcs.Combat.Official
             // existing entity does not enter this callback.
             FightStatusLifecycle.Initialize(status, StatusClockRound(status));
             StartHpStatus(owner, status);
+            StartRoundStatus(owner, status);
             if (!status.HasMoveNear || !status.MoveNearTryAtStart || !status.MoveNearRulesSupported
                 || owner.Hp <= 0 || !owner.Statuses.Contains(status)) return;
             var invocations = FightStatusTriggerRuntime.CollectMoveNearSkills(owner, units,

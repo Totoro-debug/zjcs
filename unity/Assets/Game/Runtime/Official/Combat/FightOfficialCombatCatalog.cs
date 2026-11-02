@@ -1080,6 +1080,9 @@ namespace Zjcs.Combat.Official
                     : Int(roundStart, "MeetCount", 1),
                 RoundStartTryAtStart = roundStart != null
                     && Bool(roundStart, "TryAtStart"),
+                RoundStartDefinitionResolved = true,
+                RoundStartRemoveWhenNotEnoughTimes = roundStart != null
+                    && Bool(roundStart, "RemoveWhenNotEnoughTimes"),
                 HasRoundEndTrigger = roundEnd != null,
                 RoundEndRulesSupported = roundEnd != null && SupportsRoundEnd(roundEnd),
                 RoundEndListenTarget = roundEnd == null ? 0
@@ -2505,7 +2508,6 @@ namespace Zjcs.Combat.Official
                 && Int(component, "MeetCount", 1) == 1
                 && Int(component, "RoundStartPhase") == 0
                 && Float(component, "TargetHpPer", -1f) < 0f
-                && !Bool(component, "TryAtStart")
                 && !Bool(component, "TryAtNotForbidden")
                 && !Bool(component, "StatusRandomOneTrigger")
                 && !Bool(component, "RemoveOldStatusOnInvoke")
@@ -2527,7 +2529,7 @@ namespace Zjcs.Combat.Official
             {
                 Dictionary<string, object> trigger = Object(item, "round start trigger skill");
                 if (Bool(trigger, "AffectedByProp") || Int(trigger, "Source") != 2
-                    || Int(trigger, "Target") != 2 || Bool(trigger, "UseAI")
+                    || (Int(trigger, "Target") != 1 && Int(trigger, "Target") != 2) || Bool(trigger, "UseAI")
                     || Bool(trigger, "StackedCountToDamageFactor")
                     || (Int(trigger, "TargetPos") != 0 && Int(trigger, "TargetPos") != 1)
                     || ArrayCount(trigger, "StatusReplacePropertyValues") > 0

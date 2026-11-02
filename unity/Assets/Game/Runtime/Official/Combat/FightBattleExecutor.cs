@@ -76,6 +76,7 @@ namespace Zjcs.Combat.Official
                             status.AiMoreHit = statusCatalog.StatusMoreHit(status.ClassId);
                             status.HasCreatorDamageBoost = statusCatalog.StatusHasCreatorDamageBoost(status.ClassId);
                             RestoreHpChangeStackDefinition(status);
+                            RestoreRoundStartDefinition(status);
                         }
                 units.Add(unit);
                 unitById.Add(unit.Id, unit);
@@ -146,7 +147,7 @@ namespace Zjcs.Combat.Official
             if (counter != checkpoint.Counter + 1) throw new InvalidOperationException("Fight step counter is out of order.");
             if (checkpoint.Finished) throw new InvalidOperationException("Fight is already finished.");
 
-            FightBattleExecutionResult startup = ExecutePendingHpStarts(sequence, counter);
+            FightBattleExecutionResult startup = ExecutePendingStatusStarts(sequence, counter);
             if (startup != null) return startup;
             if (checkpoint.Finished) return RecordTerminal(sequence, counter);
 
@@ -221,18 +222,8 @@ namespace Zjcs.Combat.Official
                     ref stepActionDuration);
                 foreach (FightBattleUnitState source in new List<FightBattleUnitState>(units))
                 {
-                    List<FightBattleStatusStateTrigger> roundStartSkills =
-                        FightStatusTriggerRuntime.CollectRoundStartSkills(source, actor, units, random,
-                            statusCatalog);
+                    ExecuteRoundStartTriggers(source, actor);
                     RebuildBattleProperties();
-                    if (roundStartSkills.Count == 0) continue;
-                    float triggerDelay = 0f;
-                    ExecuteConfiguredTriggerSkills(source, roundStartSkills, casts, damageEvents,
-                        movements, ref triggerDelay, out float triggerDuration,
-                        out float triggerActionDuration);
-                    stepDuration = Math.Max(stepDuration, triggerDuration);
-                    if (triggerActionDuration >= 0f)
-                        stepActionDuration = Math.Max(stepActionDuration, triggerActionDuration);
                 }
                 List<FightBattleStatusSkillInvocation> roundCheckInvocations =
                     FightStatusTriggerRuntime.CollectRoundCheckSkills(actor, units, random);
@@ -443,7 +434,7 @@ namespace Zjcs.Combat.Official
             checkpoint.Timeline.Entries.Clear();
             checkpoint.Timeline.PendingChanges.Clear();
             turns.Initialize();
-            if (!HasPendingHpStarts()) UpdateOutcome(1);
+            if (!HasPendingStatusStarts()) UpdateOutcome(1);
             checkpoint.RandomSeed = random.Seed;
         }
 
@@ -1707,7 +1698,8 @@ namespace Zjcs.Combat.Official
                 casts.Add(cast);
                 ExecuteSkill(source, skill, targets, casts, damageEvents, movements,
                     out float delay, out float nestedDuration, out float nestedActionDuration,
-                    invocation.SelectTargets ? null : targetPosition, invocation.AllowDeadSource,
+                    !invocation.SelectTargets || invocation.UseTargetPositionWithSelection
+                        ? targetPosition : null, invocation.AllowDeadSource,
                     invocation.DamageFactor);
                 // FightStatusMoveNearComponentInfo.SkillTriggerDelayTime delays the entire skill,
                 // including its nested triggers. Keep each event relative until execution returns.

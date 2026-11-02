@@ -267,6 +267,8 @@ namespace Zjcs.Combat.Official
                 RoundStartMeetCount = template.RoundStartMeetCount,
                 RoundStartTriggeredCount = template.RoundStartTriggeredCount,
                 RoundStartTryAtStart = template.RoundStartTryAtStart,
+                RoundStartDefinitionResolved = template.RoundStartDefinitionResolved,
+                RoundStartRemoveWhenNotEnoughTimes = template.RoundStartRemoveWhenNotEnoughTimes,
                 RoundStartSkills = CopyTriggers(template.RoundStartSkills),
                 RoundStartStatuses = CopyTriggers(template.RoundStartStatuses),
                 HasRoundEndTrigger = template.HasRoundEndTrigger,
