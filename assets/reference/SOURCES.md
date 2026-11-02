@@ -297,3 +297,9 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 `prepare_partner_panel_native.py` 按选定 `884_156692` 恢复完整 `NpcPanel`、外部对话条目和实际资源依赖，复用已校验名册卡片与星神分组。先核对 APK，再使用所选云端资源与 Windows 转换缓存；原控制器常量校验、同来源动画 GUID 复用、图节点原码、状态动画支持及安装输出哈希见[完整窗口原生来源](partner-panel-native-source-manifest.json)。独立原生 Canvas 后端、显式 Resources 绑定与验证输入见[窗口运行绑定来源](partner-panel-runtime-source-manifest.json)。行为与验证范围仅在[伙伴功能](../../docs/features/partners.md)维护，本批未纳入素材快照。
 
 公共主线地图网格提取：沿用已核实的 Map13 原共享视野代码／配置来源，不重新标记为当前 APK 版本；离线适配的 Git 前身、未修改的官方实现、公共类与程序集迁移、显式消费绑定和归一化文本 SHA256 见[公共网格来源](official-map/mainline-grid-visibility-source-manifest.json)。生成工具为 `record_mainline_grid_visibility_sources.py`，无新增美术素材；实现及验证范围见[公共地图模块](../../docs/features/mainline-map-modules.md)。
+
+### 完整伙伴窗口宿主绑定
+
+选定 `884_156692` 的完整 `NpcPanel` 与原 `TabBottomBarCellController` 继续由 `prepare_partner_panel_native.py` 恢复；覆盖控制器按 Unity 原生资源类型 2 绑定，不更改原动画或状态机。`partner_panel_language.py` 从两份原中文语言二进制读取完整窗口键，输入哈希及 Resources 输出记录在 `partner-panel-native-source-manifest.json`。宿主、原生外观连接与隔离验证源码哈希记录在 `partner-panel-runtime-source-manifest.json`；功能范围见 [伙伴页](../../docs/features/partners.md)。
+
+公共地图白雾来源见 `official-map/mainline-grid-fog-source-manifest.json`，提取入口为 `scripts/prepare_mainline_grid_fog.py`。当前 884_156692 的 MapRoot_13 官方根对象、CAB 实际凭据、完整雾层 subtree 与依赖对象原始字节 SHA256、ASTC／RGBA mip 哈希、shader 程序哈希及 Unity 原生输出分别记录；当前原客户端 `CloudController2` 与历史已迁移代码的身份核对单独记录，不覆盖历史输入版本。`LocalGridVisibilityAgent` 记录当前官方完整源文件、本地生命周期适配产物及转换工具哈希；运行绑定和验证范围见[主线地图公共模块](../../docs/features/mainline-map-modules.md)及[泽之国](../../docs/maps/map-13.md)。

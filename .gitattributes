@@ -1586,3 +1586,17 @@ unity/Assets/Official/Partners/UI/Panel/** -text
 
 # Hash-verified Map13 presentation must keep its generated LF bytes.
 unity/Assets/Game/Resources/Map13/entity-presentation.json text eol=lf
+
+# Partner window host source and recorded importer bytes.
+scripts/partner_panel_language.py text eol=lf
+scripts/prepare_partner_panel_host_validation.py text eol=lf
+scripts/fixtures/partner_panel_host_validation.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerPanelView.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerPanelView.cs.meta -text whitespace=-blank-at-eol
+unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionNativeSkinClipBindings.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionNativeSkinClipBindings.cs.meta -text whitespace=-blank-at-eol
+
+# Preserve original common-map fog serialization and source receipt bytes.
+unity/Assets/Official/World/Mainline.meta -text
+unity/Assets/Official/World/Mainline/** -text whitespace=-blank-at-eol
+scripts/prepare_mainline_grid_fog.py text eol=lf

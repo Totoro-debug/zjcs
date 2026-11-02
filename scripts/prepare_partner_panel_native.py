@@ -17,6 +17,14 @@ NAME = 'partner-panel-native-source-manifest.json'
 
 
 class PartnerPanelBinding(PartnerStarGodBinding):
+    def load(self, source_guid):
+        pointer = super().load(source_guid)
+        obj = self.objects.get(source_guid)
+        if obj is not None and obj.type.name == 'AnimatorOverrideController':
+            pointer = dict(pointer, type=2)  # Native Unity asset, not an imported file.
+            self.redirects[source_guid] = pointer
+        return pointer
+
     def controller(self, source_guid, obj):
         native = self.native_path(source_guid, obj)
         raw = native.read_bytes()
@@ -97,6 +105,15 @@ class PartnerPanelBinding(PartnerStarGodBinding):
         for path in support_inputs + [ROOT / 'scripts/prepare_partner_panel_support.py', ROOT / 'scripts/partner_panel_animator_binding.py']:
             receipt['inputs'][path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
         receipt['support_output_sha256'] = {path.relative_to(ROOT).as_posix(): sha(path.read_bytes()) for path in support_outputs}
+        from partner_panel_language import panel_language
+        texts, language_inputs = panel_language(self.work / 'gift-assets/NpcPanel.prefab')
+        receipt['panel_texts'] = texts
+        receipt['inputs'].update(language_inputs)
+        # The staged prefab is already checked in outputs; it is not a durable
+        # raw input after the owned validation workspace is removed.
+        receipt['inputs'].pop((self.work / 'gift-assets/NpcPanel.prefab').relative_to(ROOT).as_posix())
+        helper = ROOT / 'scripts/partner_panel_language.py'
+        receipt['inputs'][helper.relative_to(ROOT).as_posix()] = sha(helper.read_bytes())
         receipt['scope'] = 'Complete original NpcPanel and external templates. Application services and actual interaction validation are recorded separately.'
         (self.work / NAME).write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
 
@@ -148,6 +165,13 @@ def install(work):
         if not raw.startswith(b'%YAML'): return raw
         return re.sub(rb'(?<=guid: )[0-9a-f]{32}', lambda m: aliases.get(m[0].decode(), m[0].decode()).encode(), raw)
     destination = base / 'UI/Panel'
+    previous_path = ROOT / 'assets/reference' / NAME
+    previous = json.loads(previous_path.read_bytes()) if previous_path.exists() else None
+    override_guids = {row['guid'] for row in receipt['objects'].values() if row.get('type') == 'AnimatorOverrideController'}
+    def fix_override_references(raw):
+        for key in override_guids:
+            raw = raw.replace(('guid: ' + key + ', type: 3').encode(), ('guid: ' + key + ', type: 2').encode())
+        return raw
     planned, installed, reused = [], {}, []
     for name, expected in receipt['outputs'].items():
         source = work / 'gift-assets' / name
@@ -159,7 +183,12 @@ def install(work):
         raw = remap(source.read_bytes())
         meta_raw = canonical_meta.get(source_key, Path(str(source) + '.meta').read_bytes())
         if target.exists():
-            if raw != target.read_bytes(): raise ValueError('Preserve differing asset: ' + str(target))
+            old_raw = target.read_bytes()
+            if raw != old_raw:
+                old_hash = previous and previous['installed_output_sha256'].get(target.relative_to(ROOT).as_posix())
+                if sha(old_raw) != old_hash or fix_override_references(old_raw) != raw:
+                    raise ValueError('Preserve differing asset: ' + str(target))
+                planned.append((raw, target))
             existing_meta = Path(str(target) + '.meta').read_bytes()
             if meta_raw != existing_meta:
                 if yaml.safe_load(meta_raw) != yaml.safe_load(existing_meta):
@@ -179,7 +208,7 @@ def install(work):
     body = dict(m_ObjectHideFlags=0, m_CorrespondingSourceObject=dict(fileID=0), m_PrefabInstance=dict(fileID=0),
         m_PrefabAsset=dict(fileID=0), m_GameObject=dict(fileID=0), m_Enabled=1, m_EditorHideFlags=0,
         m_Script=dict(fileID=11500000, guid=guid(script_meta), type=3), m_Name='OfficialPartnerPanelAssetCatalog',
-        m_EditorClassIdentifier='', panelPrefab=receipt['roots']['NpcPanel'])
+        m_EditorClassIdentifier='', panelPrefab=receipt['roots']['NpcPanel'], texts=receipt['panel_texts'])
     catalog.write_text('%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n--- !u!114 &11400000\n' +
         yaml.dump(dict(MonoBehaviour=body), Dumper=Dumper, sort_keys=False, allow_unicode=True, width=1000000), 'utf8', newline='\n')
     for path in (catalog, metadata(catalog, 'NativeFormatImporter'), script, script_meta):

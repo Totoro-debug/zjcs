@@ -1,19 +1,26 @@
 {
   "manifest": "884_156692",
-  "generator_sha256": "a1810a3ffb14220c07aab6d5e85fe67260d6270c5203d79064bca772686145ab",
+  "generator_sha256": "01334c41037338f765ea57811c214704544d06f5000072a74060edecde7c6173",
   "source_receipt_sha256": {
-    "assets/reference/partner-panel-native-source-manifest.json": "cfb87ea544dbb6bccf028f098cbd16de26e92e3e5dc55d723c07e3d1dba1bd81"
+    "assets/reference/partner-panel-native-source-manifest.json": "439831e5d9f85e3107fd8a44b88fb9ed4b4cd4ff23ea77b22c7f6d5596a5ab56"
   },
   "binding_sha256": {
     "unity/Assets/Game/Runtime/Offline/ProfessionUI/IProfessionNativeUiPoseSource.cs": "b069d49791940d006117fdf3dfeca0fc514b8116f465d5ed939df3d4c0777564",
     "unity/Assets/Game/Runtime/Offline/ProfessionUI/IProfessionNativeUiPoseSource.cs.meta": "c118eb5d75e2ae76abd0f008f8e10e02d3e2e5153c9829f058ecf11dfd2009e3",
     "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeUiBatchGraphic.cs": "9b42b966a5ca4b88dcdae33e0fdc5479720cd8e531911ea55df5a6a07069aa33",
     "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeUiBatchGraphic.cs.meta": "cac273625fcd02ba64c2d043c8120704178ea290f59b60e10c933a29da324ad5",
-    "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeUiGraphic.cs": "ac6139760a519005c3c45e85c56099f360ee5478aee3375882451d174477c64a",
+    "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeUiGraphic.cs": "9d312e7a33111403815f07f07256f8ef82a76b60c78c7868e75b3ea5d00a9e90",
     "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeUiGraphic.cs.meta": "4c53150cd00e24391837b212122e1de03b225cf85285c5afd62b64dd374dd813",
-    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerPanelAssetCatalog.cs": "35f10984b8be339800cebdb64ba3ac1caf76b16aa47f56e74b5f3ab986d85868",
+    "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionNativeSkinClipBindings.cs": "bb3cada96aa903211e46407e3bf8ff69b8683b2cf57269a9b97444c24ccb1f89",
+    "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionNativeSkinClipBindings.cs.meta": "2d3345c34c0a96eef5a5f1333a31dd864d56356319bcec130b938c8bae31435f",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerPanelAssetCatalog.cs": "705f9222e42e3a5a0c097dd6f438345096599840497a7a4d6f81fb7c21ff7c96",
     "unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerPanelAssetCatalog.cs.meta": "bd25678a4b6c6bb2044ac9f7335b8b5fbba613d6a9582a0087f44c39340ecd4e",
-    "scripts/prepare_partner_panel_validation.py": "6e8532e4c49f0d219ba6e8b2bd82e069b317a98d9ada19007a50b05718b7de61",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerPanelView.cs": "cd08ae2ee320011e2d517d4c73029fa5b32b345c4aa20623ec9d305216342be1",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerPanelView.cs.meta": "10674a3f1ed06586f931b50733a0c82ec2d5426f6ebdf3793abdb6d3280b567a",
+    "scripts/prepare_partner_panel_validation.py": "62b8c8292369800ac90bde7ec14af70bba74dc4a6f4cd1328c78facb277f42bf",
+    "scripts/prepare_partner_panel_host_validation.py": "094aeeced3990507e945fec1208d72bd4182f853d9b8bd2e0963f20ff0d3664a",
+    "scripts/partner_panel_language.py": "828ef8f470d906cbab8c970302e7a920de4ced05ca0f3afff2243c80d27c5bde",
+    "scripts/fixtures/partner_panel_host_validation.cs": "c43027595319c7a3833eb00230871702c9df8d3ff31b3894b6ad0c2d70c439f2",
     "scripts/fixtures/partner_panel_native_graphic_validation.cs": "40ec4bbf4edc06d366fece91115a147f9b049116592553ed22a392699068ddc9"
   },
   "adaptations": [
@@ -21,6 +28,9 @@
     "Independent Canvas geometry consumes the existing native pose/mesh implementation and exact atlas materials.",
     "The pose source owns animation evaluation; this backend does not invent transition rules.",
     "Require explicit bindings for unsupported original graphic settings.",
-    "Full original window activation, player avatar animation and graph services remain separate work."
+    "Host the complete original three-page window and retain its popup and tab animation controllers.",
+    "Scope original language, image, pool and native skin bindings to the window lifetime.",
+    "Initialize original dialogue/roster/star-god rows through the real local-service boundaries.",
+    "Production dialogue persistence/playback, player avatar animation and graph services remain separate work."
   ]
 }

@@ -12,7 +12,7 @@ namespace Zjcs.Offline.ProfessionUI
     // fields retain the original prefab values; no Spine runtime code is used.
     [RequireComponent(typeof(CanvasRenderer))]
     public sealed class ProfessionNativeUiGraphic : MaskableGraphic,
-        IProfessionAppearanceUIGraphic, IProfessionOffScreenGraphic, IProfessionFollowerGraphic
+        IProfessionAppearanceUIGraphic, IProfessionOffScreenGraphic, IProfessionFollowerGraphic, IProfessionAppearancePartGraphic
     {
         [Serializable] public sealed class MeshSettings
         {
@@ -45,6 +45,11 @@ namespace Zjcs.Offline.ProfessionUI
         public Component Instance => this;
         public float MeshScale => (canvas ? canvas.referencePixelsPerUnit : 100f) * referenceScale * layoutScale;
         public List<CanvasRenderer> canvasRenderers => renderers;
+        public List<IProfessionSkinClipSlot> separatorSlots { get; } = new List<IProfessionSkinClipSlot>();
+        public List<ProfessionAppearancePartInstruction> separatorPartInstructions { get; } = new List<ProfessionAppearancePartInstruction>();
+        public List<Transform> SeparatorParts => separatorParts;
+        IProfessionAppearancePartSkeleton IProfessionAppearancePartGraphic.Skeleton => State;
+        bool IProfessionAppearancePartGraphic.enableSeparatorSlots { get => enableSeparatorSlots; set => enableSeparatorSlots = value; }
         public IProfessionAppearanceSkeleton Skeleton => State;
         IProfessionFollowerSkeleton IProfessionFollowerAnimation.Skeleton => State;
         bool IProfessionAppearanceUIGraphic.allowMultipleCanvasRenderers { get => allowMultipleCanvasRenderers; set => allowMultipleCanvasRenderers = value; }
@@ -152,6 +157,15 @@ namespace Zjcs.Offline.ProfessionUI
                 if (i >= count) graphics[i].Clear();
             }
         }
+        public void PrepareInstructionsAndRenderers(bool isOnValidate)
+        {
+            if (enableSeparatorSlots || separatorSlots.Count != 0 || separatorParts.Count != 0)
+                throw new NotSupportedException("Bind original UI appearance separator rendering before selecting parts.");
+            separatorPartInstructions.Clear();
+            if (State != null && State.SlotCount > 0)
+                separatorPartInstructions.Add(new ProfessionAppearancePartInstruction(State.SlotCount - 1));
+            SyncSubmeshGraphicsWithCanvasRenderers();
+        }
         public void MatchRectTransformWithBounds()
         {
             if (batches == null || batches.Batches.Count == 0) return;
@@ -180,6 +194,7 @@ namespace Zjcs.Offline.ProfessionUI
         {
             foreach (var graphic in graphics) if (graphic) graphic.Clear();
             batches?.Dispose(); batches = null; State = null;
+            separatorPartInstructions.Clear();
             MaterialsMultipleCanvasRenderers = Array.Empty<Material>(); TexturesMultipleCanvasRenderers = Array.Empty<Texture>();
         }
         protected override void OnDestroy() { Release(); base.OnDestroy(); }

@@ -203,7 +203,8 @@
     "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/PartnerPanelTipDotServices.cs": "847609587ec256a01adc54e90a3eb6e66aafd3687e74e03fb498cd861bc65f0e",
     "scripts/prepare_partner_panel_tipdots.py": "03b1fdbac829be34228f79634c239285bc21fa159e1d7bd2c4b9effb86f2d4b6",
     "scripts/prepare_partner_panel_support.py": "9901f48aa057d69cd30203471b21f3936a34653d5b85c88bb84316698b6b2b7b",
-    "scripts/partner_panel_animator_binding.py": "8d36a83ce6ece284ad5b8c04b14d1eba8ab76f3f190cd97526af4a4f957b8721"
+    "scripts/partner_panel_animator_binding.py": "8d36a83ce6ece284ad5b8c04b14d1eba8ab76f3f190cd97526af4a4f957b8721",
+    "scripts/partner_panel_language.py": "828ef8f470d906cbab8c970302e7a920de4ced05ca0f3afff2243c80d27c5bde"
   },
   "objects": {
     "cab-bb18508a2ba4bc6780bd94afce15f45d:-5455506486165478007": {
@@ -5261,7 +5262,7 @@
     "Animation/UI/ToggleOn.anim.meta": "cc71f416fb6488f2bd5d738fbd53850b1b102c0c9608f175036ccc70420bdafd",
     "Animation/UI/Public/TabBottomBarCell_On.anim": "a64996c27f5aecd079a0d34c1204cc5dd709205042226fbed0ce1b7bbabd8495",
     "Animation/UI/Public/TabBottomBarCell_On.anim.meta": "55acf45c89f60f4d2a4a97472e679935ec37c134802ec6095fd90de87b3019d3",
-    "NpcPanel.prefab": "46b53046e653edc9be5b9eb66b4ba9317083b00e0b89d0d1cbdba01f37589e02",
+    "NpcPanel.prefab": "99a08091411b08e43ea7531c3d0e5dab98811b467cd501b2dd119683b47c0627",
     "NpcPanel.prefab.meta": "f8f995e820e909b933201afa5b07b9995408bf0bbdddf9d5286963bf6ad6bdbf",
     "partner-gift-texts.json": "d4a1a18f038a169208a6618cfe2ceab1c28045188347cef3acccb58423646dba",
     "partner-gift-texts.json.meta": "8dfefcf0dafea5a155bbff78609f32edd437428b0fa265888b71bc33f7245102",
@@ -5331,7 +5332,7 @@
         },
         "output": "NpcPanel.json",
         "nativeMeta_sha256": "c5174f6d97932eaddce9f733e576f038ac900478edd5787053d84d52d92363f2",
-        "output_sha256": "a0393cf110bcfc775fb795df5ae7183dc884ac4ed6695914975ed20bde17ec8f"
+        "output_sha256": "74bb2348ca0408feebe9f56e37eed9f4e16e47ec02ed1ac6a8181c8d3cc584fc"
       },
       {
         "name": "NpcPanelDialogueItem",
@@ -6421,13 +6422,13 @@
         "guid": "ff59ed8c605b66c8b81c5f010666b6ad",
         "type": 3
       },
-      "sha256": "ac6139760a519005c3c45e85c56099f360ee5478aee3375882451d174477c64a",
+      "sha256": "9d312e7a33111403815f07f07256f8ef82a76b60c78c7868e75b3ea5d00a9e90",
       "meta_sha256": "4c53150cd00e24391837b212122e1de03b225cf85285c5afd62b64dd374dd813"
     }
   },
   "gradient_aot_methods": [],
   "gradient_observations": "Selected AOT: all eight methods inspected. Preserve inclusive line character bounds, all four vertices, rotated X/unrotated line extents, alpha-one keys, renderMode=255 and ForceMeshUpdate(false,false).",
-  "generator_sha256": "8ab5fc0af6666134abc308d103d3a60b18fb13dd08bead95fad6dc4779374704",
+  "generator_sha256": "cb8b26871e3b16b065396fec36ee088e8efdd6baf15d4e7433e68ca7e3608bb6",
   "audio": {
     "cab-8ede2c00df79c3aff9bab2859b047085:787661554415058694": {
       "event": {
@@ -7222,6 +7223,72 @@
     "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/PetEvolutionPhase.cs.meta": "8b9d09657f138d88d2843f13779a4e4b1f8a8dbe6c110823c232382b268c0e4d",
     "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/PartnerPanelTipDotServices.cs.meta": "5cc668f266fb656a5c8ba07eab7fe1a6b44c09996f4bab6c95f0199d741943df"
   },
+  "panel_texts": [
+    {
+      "key": "CollectBookPanel.Reset",
+      "text": "清空"
+    },
+    {
+      "key": "CollectBookPanel.Select",
+      "text": "筛选"
+    },
+    {
+      "key": "CollectBookPanel.Sort",
+      "text": "排序"
+    },
+    {
+      "key": "CollectBookPanel.Type_Element",
+      "text": "元素"
+    },
+    {
+      "key": "CollectBookPanel.Type_Profession",
+      "text": "职业"
+    },
+    {
+      "key": "CollectBookPanel.Type_Property",
+      "text": "属性"
+    },
+    {
+      "key": "CollectBookPanel.Type_Quality",
+      "text": "品质"
+    },
+    {
+      "key": "CollectBookPanel.Type_Skill",
+      "text": "技能"
+    },
+    {
+      "key": "CollectSortType.Default",
+      "text": "默认"
+    },
+    {
+      "key": "ui_new_mark_text",
+      "text": "新"
+    },
+    {
+      "key": "ui_npc_panel_addressbook",
+      "text": "伙伴"
+    },
+    {
+      "key": "ui_npc_panel_dialogue",
+      "text": "通话"
+    },
+    {
+      "key": "ui_npc_panel_dialogue_empty",
+      "text": "当前没有通话"
+    },
+    {
+      "key": "ui_npc_show_all_can_meet",
+      "text": "显示所有可结识伙伴"
+    },
+    {
+      "key": "ui_npc_star_god_title",
+      "text": "星间之神"
+    },
+    {
+      "key": "ui_rank_up_text",
+      "text": "进阶"
+    }
+  ],
   "installed_output_sha256": {
     "unity/Assets/Official/Partners/UI/StarGod/Image/UI/NPC/Npc_Individual/10608/npc_img_10608.asset": "a3b9e8112709307e169410c9df441a8dbfb35b1df3d04a98f7b54c0bb50c1cc4",
     "unity/Assets/Official/Partners/UI/StarGod/Image/UI/NPC/Npc_Individual/10608/npc_img_10608.asset.meta": "090369d75d91973bd8823fe22b264ac83059cf154321e140d1b2f69186781734",
@@ -7655,7 +7722,7 @@
     "unity/Assets/Official/Partners/UI/Panel/Animation/UI/ToggleOn.anim.meta": "cc71f416fb6488f2bd5d738fbd53850b1b102c0c9608f175036ccc70420bdafd",
     "unity/Assets/Official/Partners/UI/Panel/Animation/UI/Public/TabBottomBarCell_On.anim": "a64996c27f5aecd079a0d34c1204cc5dd709205042226fbed0ce1b7bbabd8495",
     "unity/Assets/Official/Partners/UI/Panel/Animation/UI/Public/TabBottomBarCell_On.anim.meta": "55acf45c89f60f4d2a4a97472e679935ec37c134802ec6095fd90de87b3019d3",
-    "unity/Assets/Official/Partners/UI/Panel/NpcPanel.prefab": "46b53046e653edc9be5b9eb66b4ba9317083b00e0b89d0d1cbdba01f37589e02",
+    "unity/Assets/Official/Partners/UI/Panel/NpcPanel.prefab": "99a08091411b08e43ea7531c3d0e5dab98811b467cd501b2dd119683b47c0627",
     "unity/Assets/Official/Partners/UI/Panel/NpcPanel.prefab.meta": "f8f995e820e909b933201afa5b07b9995408bf0bbdddf9d5286963bf6ad6bdbf",
     "unity/Assets/Official/Partners/UI/Friendship/partner-gift-texts.json": "d4a1a18f038a169208a6618cfe2ceab1c28045188347cef3acccb58423646dba",
     "unity/Assets/Official/Partners/UI/Friendship/partner-gift-texts.json.meta": "8dfefcf0dafea5a155bbff78609f32edd437428b0fa265888b71bc33f7245102",
@@ -7700,9 +7767,9 @@
     "unity/Assets/Official/Partners/UI/Panel/Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Materials.meta": "64caa32a9908f701e5c19823a84f9bb273a39ac6282fb58c9360cac7995c7e36",
     "unity/Assets/Official/Partners/UI/Panel/Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Materials/SkeletonGraphic-PMATexture.meta": "9d16986f9fd9f2e5eafa396ccca1bf8bc33a14ca55b47c506edc3097b09b02ca",
     "unity/Assets/Official/Partners/UI/Panel/Wwise/ScriptableObjects/Event.meta": "ce756a58c96d25f61759c289bafe410448983326a3b1b47234874bfc508f2fdb",
-    "unity/Assets/Game/Resources/Partners/OfficialPartnerPanelAssetCatalog.asset": "9d84bc6ec52bcebe603559a53b19258bb397c6485012e10fa2c2f69a8b8cb0ee",
+    "unity/Assets/Game/Resources/Partners/OfficialPartnerPanelAssetCatalog.asset": "a6807496f7861f22720852f6196682da77ac403ba690813099096b3a091a68ba",
     "unity/Assets/Game/Resources/Partners/OfficialPartnerPanelAssetCatalog.asset.meta": "f5c5803d14e92e08a68fa17bd7b9c41e51b600ac2d52f81140c3ce611b879c3f",
-    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerPanelAssetCatalog.cs": "35f10984b8be339800cebdb64ba3ac1caf76b16aa47f56e74b5f3ab986d85868",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerPanelAssetCatalog.cs": "705f9222e42e3a5a0c097dd6f438345096599840497a7a4d6f81fb7c21ff7c96",
     "unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerPanelAssetCatalog.cs.meta": "bd25678a4b6c6bb2044ac9f7335b8b5fbba613d6a9582a0087f44c39340ecd4e"
   },
   "reused_assets": [
@@ -7718,9 +7785,29 @@
     "unity/Assets/Official/Partners/UI/StarGod/Image/ItemIcon/Gift/Journal_NoAtlas/item_1376.asset",
     "unity/Assets/Official/Partners/UI/StarGod/Image/ItemIcon/Gift/Journal_NoAtlas/item_1377.asset",
     "unity/Assets/Official/Partners/UI/StarGod/Image/ItemIcon/Gift/Journal_NoAtlas/item_1378.asset",
+    "unity/Assets/Official/Partners/UI/Panel/AnimationClip/NpcPanel_Show.anim",
+    "unity/Assets/Official/Partners/UI/Panel/Animation/UI/UIPanelFade_Hide.anim",
     "unity/Assets/Official/Partners/UI/Card/Image/UI/Common/Common_Atlas/C_none_0.asset",
+    "unity/Assets/Official/Partners/UI/Panel/AnimationClip/NpcPanelDialogueItem_In.anim",
+    "unity/Assets/Official/Partners/UI/Panel/AnimationClip/NpcPanelDialogueItem_Off.anim",
+    "unity/Assets/Official/Partners/UI/Panel/AnimationClip/NpcPanelDialogueItem_Open.anim",
+    "unity/Assets/Official/Partners/UI/Panel/Image/UI/Common/Common_Atlas/ImgPlayerList3.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Image/UI/NPCFavor/NPCFavor_Atlas/ImgPlayerList5.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Image/UI/NPCFavor/NPCFavor_Atlas/Img_Chat.asset",
     "unity/Assets/Official/Partners/UI/Gifts/Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3_0.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Image/UI/Common/Common_Atlas/C_jindutiao_di.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Image/UI/Common/Common_Atlas/C_jindutiao.asset",
     "unity/Assets/Official/Partners/UI/Gifts/Image/UI/Common/Mask/ImgMask.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Materials/Spine/SkeletonGraphicDye_0.mat",
+    "unity/Assets/Official/Partners/UI/Panel/Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Materials/SkeletonGraphic-PMATexture/SkeletonGraphicAdditive_0.mat",
+    "unity/Assets/Official/Partners/UI/Panel/Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Materials/SkeletonGraphic-PMATexture/SkeletonGraphicMultiply_0.mat",
+    "unity/Assets/Official/Partners/UI/Panel/Packages/com.esotericsoftware.spine.spine-unity/Runtime/spine-unity/Materials/SkeletonGraphic-PMATexture/SkeletonGraphicScreen_0.mat",
+    "unity/Assets/Official/Partners/UI/Panel/Converted/40485242f8bdc154.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Image/UI/NPC/Npc_Icon/Map_13/npc_icon_8441.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Image/UI/Common/Common_Atlas/ImgBgHead_Bg.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Image/UI/Common/Common_Atlas/ImgTouxiang_1.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Image/ItemIcon/ProfessionSmall/350.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Image/UI/Common/Common_Atlas/ImgLeader.asset",
     "unity/Assets/Official/Partners/UI/Card/Image/UI/Common/Common_Atlas/ImgNpcPanelNpcItem_Pinned.asset",
     "unity/Assets/Official/Partners/UI/Card/Image/UI/Common/Common_Atlas/ImgRed_0.asset",
     "unity/Assets/Official/Partners/UI/Card/TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium SDF.asset",
@@ -7732,6 +7819,8 @@
     "unity/Assets/Official/Partners/UI/DialogueEntry/Image/UI/NPCFavor/NPCFavor_Atlas/ImgBg_Dialogue.asset",
     "unity/Assets/Official/Partners/UI/DialogueEntry/Image/UI/NPCFavor/NPCFavor_Atlas/IconChat.asset",
     "unity/Assets/Official/Partners/UI/Card/Image/UI/Common/Common_Atlas/ImgRedDot_0.asset",
+    "unity/Assets/Official/Partners/UI/Panel/NativePrefabs/39af9cbc1cf8b837.prefab",
+    "unity/Assets/Official/Partners/UI/Panel/Image/UI/Common/Common_Atlas/IconRemind3.asset",
     "unity/Assets/Official/Partners/UI/Card/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic_0.asset",
     "unity/Assets/Official/Partners/UI/Card/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat",
     "unity/Assets/Official/Partners/UI/GiftController/NativeControllers/186ea4e8dc0d2d56.controller",
@@ -7817,7 +7906,31 @@
     "unity/Assets/Official/Partners/UI/StarGod/Image/UI/StarGod/StarGod_Atlas/ImgStarGod_FrameBg.asset",
     "unity/Assets/Official/Partners/UI/StarGod/Image/UI/StarGod/ImgStarGodBg.asset",
     "unity/Assets/Official/Partners/UI/StarGod/Image/UI/StarGod/ImgStarGod_FrameBg7.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Image/UI/Common/Common_Atlas/ImgBg_Title_0.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Image/UI/Common/ImgDrop_Title2.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Image/UI/Common/Common_Atlas/ImgLine_Title2_0.asset",
     "unity/Assets/Official/Partners/UI/Confirm/Image/UI/Common/Common_Atlas/ImgLine_0.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Image/UI/Common/Repeat/ImgDot.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Image/UI/Common/Common_Atlas/ImgReturnBg_0.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Animation/UI/Public/TabBottomBarCellController.overrideController",
+    "unity/Assets/Official/Partners/UI/Panel/Image/UI/Common/Common_Atlas/ImgSelected_bg_0.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Graph/42b08bd9fcfc04c7.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Graph/2ad9014e09c63912.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Graph/9f89615cb102db33.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Graph/cf9622232fda6ae0.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Graph/8ecb78b730901ce1.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Graph/61163b347568de36.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Graph/477ce31f28f09cab.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Graph/817e6acf9e1e9353.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Graph/3598ab6cead569bb.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Graph/74dbd8aa43911827.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Graph/0a0bb9561c7b5046.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Graph/c28420790c6c823a.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Graph/65c863354b905727.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Graph/3b17365a71929a53.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Image/UI/Common/Common_Atlas/ImgReturn_0.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Wwise/ScriptableObjects/Event/7FC118C0-9451-43DC-BE37-E7EC0B805273.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Wwise/ScriptableObjects/Event/C723F430-164F-4368-B823-AE0331CFFDF7.asset",
     "unity/Assets/Official/Partners/UI/StarGod/Converted/584c01ab34c8934c.asset",
     "unity/Assets/Official/Partners/UI/StarGod/Converted/f3461cf3ffaa673b.asset",
     "unity/Assets/Official/Partners/UI/StarGod/Converted/42c270e7fe033582.asset",
@@ -7833,6 +7946,12 @@
     "unity/Assets/Official/Partners/UI/Card/Converted/65b73523b080e5e7.asset",
     "unity/Assets/Official/Partners/UI/Card/Converted/409f5b7a08357fee.asset",
     "unity/Assets/Official/Partners/UI/Gifts/Converted/65145f215e560660.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Converted/a47e585df18fdd49.shader",
+    "unity/Assets/Official/Partners/UI/Panel/Converted/e114b697dba4bc1f.shader",
+    "unity/Assets/Official/Partners/UI/Panel/Converted/8644487d86454cb0.shader",
+    "unity/Assets/Official/Partners/UI/Panel/Converted/53081b3d6cba92b2.shader",
+    "unity/Assets/Official/Partners/UI/Panel/Converted/cddfe7a9d8dff712.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Converted/ad0ed8cb73082325.asset",
     "unity/Assets/Official/Partners/UI/Card/Converted/3d622c0e10f20cde.asset",
     "unity/Assets/Official/Partners/UI/Card/Converted/f2e1ff40e17239bc.shader",
     "unity/Assets/Official/Partners/UI/Card/Converted/ac573a40fda4c096.asset",
@@ -7863,9 +7982,18 @@
     "unity/Assets/Official/Partners/UI/Card/Converted/3aad5295dab368e8.asset",
     "unity/Assets/Official/Partners/UI/StarGod/Converted/ea119bb30e8df84d.asset",
     "unity/Assets/Official/Partners/UI/StarGod/Converted/fabe0da66bfa3da5.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Converted/2be57551e1fed600.asset",
+    "unity/Assets/Official/Partners/UI/Panel/Converted/8470f49199264ef4.asset",
+    "unity/Assets/Official/Partners/UI/Panel/NativeControllers/065f87e650090e9a.controller",
+    "unity/Assets/Official/Partners/UI/Panel/Animation/UI/ToggleOff.anim",
+    "unity/Assets/Official/Partners/UI/Panel/Animation/UI/Public/TabBottomBarCell_Off.anim",
+    "unity/Assets/Official/Partners/UI/Panel/Animation/UI/ToggleOn.anim",
+    "unity/Assets/Official/Partners/UI/Panel/Animation/UI/Public/TabBottomBarCell_On.anim",
+    "unity/Assets/Official/Partners/UI/Panel/NpcPanel.prefab",
     "unity/Assets/Official/Partners/UI/Friendship/partner-gift-texts.json",
     "unity/Assets/Official/Partners/UI/StarGod/Audio/StarGod_Open_01.wav",
     "unity/Assets/Official/Partners/UI/Card/Audio/Main_Cursor_Normal.wav",
+    "unity/Assets/Official/Partners/UI/Panel/Audio/NpcAffinity_Phone_Off.wav",
     "unity/Assets/Official/Partners/UI/StarGod/Audio/StarGod_NPC_unlock_01.wav"
   ],
   "canonical_animation_references": {
