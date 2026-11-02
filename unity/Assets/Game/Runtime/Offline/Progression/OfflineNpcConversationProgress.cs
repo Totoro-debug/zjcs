@@ -9,12 +9,20 @@ namespace Zjcs.Offline.Progression
     public sealed class OfflineNpcConversationProgress
     {
         public List<OfflineNpcConversation> Records = new List<OfflineNpcConversation>();
+        public List<OfflineNpcConversationDayLimit> DayLimits = new List<OfflineNpcConversationDayLimit>();
+
+        public static void Normalize(OfflineNpcConversationProgress progress)
+        {
+            if (progress.DayLimits == null) progress.DayLimits = new List<OfflineNpcConversationDayLimit>();
+        }
 
         public static bool IsValid(OfflineNpcConversationProgress progress)
         {
             return progress != null && progress.Records != null
                 && progress.Records.All(OfflineNpcConversation.IsValid)
-                && progress.Records.Select(value => value.DialogueId).Distinct().Count() == progress.Records.Count;
+                && progress.Records.Select(value => value.DialogueId).Distinct().Count() == progress.Records.Count
+                && progress.DayLimits != null && progress.DayLimits.All(OfflineNpcConversationDayLimit.IsValid)
+                && progress.DayLimits.Select(value => value.NpcId).Distinct().Count() == progress.DayLimits.Count;
         }
     }
 

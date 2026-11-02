@@ -1,0 +1,38 @@
+{
+  "manifest": "884_156692",
+  "input_sha256": {
+    ".tools/source-packages/official-code/common-source/Common/Player.cs": "e0b324d6cf965e194cc517c176e8fae80f16dda7019e42d705ed6ae7d44da611",
+    ".tools/source-packages/official-code/common-source/Common/NpcDialogueDayLimitRecordData.cs": "3f9772a455eecdd90774eb19422949cff90397bf85d3012b0573ecc7d3d40674",
+    ".tools/source-packages/official-code/common-source/Common/TimeUtils.cs": "f00bb313e48acf2af929cb579bff803dae3e857c496ab9f34c950734d2c44bbc",
+    "scripts/templates/partner_dialogue/PartnerConversationDayLimitRules.cs": "c954cae585d5c3299680459c5afa1c9ac8106f994e8830b6ec2dedc793aa749d"
+  },
+  "original_method_sha256": {
+    "Player.public bool CheckNpcDialogueHasDayLimit(long npcId, int dialogueId)": "3267c293bac39088924927ed21f47cb2f51b0df79be75aae6eb096583926d3a3",
+    "Player.public void RecordNpcDialogueDayLimit(long npcId, int dialogueId)": "48366b5b15f003c9c1b0ead1439093843d00d187ba587b7632c6aa55cc4eaefa",
+    "TimeUtils.public static (int hour, int minute, int second) GetDailyResetTimeOfDay()": "a96a6429d10fcb6fdf488c86eb8bc3cab1648e983f1c14a2892d0662af276e83",
+    "TimeUtils.public static DateTime GetDailyResetTimeFromDate(DateTime dateTime)": "8c7061c979f7162ac8bfdcde6ab355d3857555fb8178fb4b0bc363b8208eace1",
+    "TimeUtils.public static DateTime GetDailyResetTimeFromDateWithOffset(DateTime dateTime, int days)": "7c2cb94b35b6c5fdefc47f1aba485cce86cc2e63694e8de738eb42575baf4910"
+  },
+  "generator_sha256": "28db139baa90ee2a7fdc0ae09ebddcb7b3c7fc1e7a62d36cb9fde2770b9b06bc",
+  "installed_output_sha256": {
+    "unity/Assets/Game/Runtime/Official/Partners/PartnerConversationDayLimitRules.cs": "31dd3172a158a824e509cb17f9c9122aba9180239b01edc76f2389d898994255",
+    "unity/Assets/Game/Runtime/Official/Partners/PartnerConversationDayLimitRules.cs.meta": "815d8add63e71ee862ca975e9abab00c373694c13533399400f530587abc2906"
+  },
+  "local_output_sha256": {
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineNpcConversationDayLimit.cs": "b135089f5d2c845157d0aca2351c899e24487f618f1ddaccee8d32886c008820",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineNpcConversationDayLimit.cs.meta": "98e4cc0579ba24d93bc3defbc54711fbc90c6ab7eacc962a2ce7516e9c3e4a4e",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineNpcConversationProgress.cs": "5657c78d1bfb20d694ae9eeefb7194bb280394d74479755fd4c8820614b84d0b",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterPropertyProgress.cs": "2ef299365a439391af42f385a7350001f9be0e61fd2c0713048e72a2ef48c10d"
+  },
+  "validation_source_sha256": {
+    "scripts/prepare_partner_conversation_day_limit_validation.py": "6e5ceefecd86e7122bae25cb4b73bbc8d0142297b335e6e320771cdfd9d53004",
+    "scripts/fixtures/partner_conversation_day_limit_validation.cs": "8e1319803c4ee2bad51b855c31aa17d7b8d7979031eed6e4cb719f0e6afd5025",
+    "scripts/fixtures/partner_gift_transaction_validation.cs": "d3ddb1cab54ff8069aa2c807d7715a64665f7e29a131b8018baf512f8f466e8b",
+    "scripts/fixtures/partner_roster_transaction_validation.cs": "ba1cc54eee71fe2b6837f579a277b8692140cb614c70ab12d2ce870ca2667faa"
+  },
+  "adaptations": [
+    "Original check/record branches, clock call order and increment/reset sequence.",
+    "Original reset-hour timezone modulo, Unix-epoch clamp and next-day offset.",
+    "Explicit original configuration, record collection, UTC clock, limit and reset settings; diagnostic logs omitted."
+  ]
+}

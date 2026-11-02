@@ -57,6 +57,7 @@ namespace Zjcs.Offline.Progression
             if (progress.ExtraProperties == null) progress.ExtraProperties = new List<OfflineExtraProperty>();
             if (progress.NpcFriendships == null) progress.NpcFriendships = new List<OfflineNpcFriendship>();
             if (progress.NpcConversations == null) progress.NpcConversations = new OfflineNpcConversationProgress();
+            OfflineNpcConversationProgress.Normalize(progress.NpcConversations);
             if (progress.NpcTalentTrees == null) progress.NpcTalentTrees = new List<OfflineNpcTalentTree>();
             if (progress.Treasures == null) progress.Treasures = new List<OfflineCharacterTreasure>();
             if (progress.TreasureElementLevels == null)
