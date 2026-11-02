@@ -27,19 +27,40 @@ public class OfflineMiniMapMarkManager : MonoBehaviour, IMiniMapMark, IMiniMapMa
 	public void Init(int mapClassId, PlayerOfflineMiniMapDataResponse data)
 	{
 		IMiniMapMarkDataQueries entityExtendParameterInfoParser = MarkContext.MarkDataQueries;
+		if (data.LiteEntityDataDict == null)
+		{
+			Debug.LogError("OfflineMiniMapMarkManager.Init 离线数据缺少实体字典, mapClassId:" + mapClassId);
+			return;
+		}
 		foreach (KeyValuePair<int, PlayerOfflineMiniMapLiteEntityData> item in data.LiteEntityDataDict)
 		{
 			MiniMapMarkLoEntityInfo containerEntityInfo = MarkContext.MarkDataQueries.GetContainerEntityInfo(mapClassId, item.Key);
-			bool num = data.ActiveRegions != null && data.ActiveRegions.Contains(containerEntityInfo.PosInfo.Region);
-			MiniMapMarkExtendInfo entityExtendParameterInfo = entityExtendParameterInfoParser.GetEntityExtend(containerEntityInfo.DefSpawnEntityInfo.ClassId);
-			if (num || (item.Value.State != entityExtendParameterInfo.CompleteState && item.Value.State >= 0) || !entityExtendParameterInfo.MiniMapMarkHideInEnd)
+			if (containerEntityInfo == null)
 			{
-				CreateEntityIconObject(mapClassId, item.Key, item.Value.EntityClassId, item.Value.State, containerEntityInfo.PosInfo.Area);
+				Debug.LogWarning("OfflineMiniMapMarkManager.Init 实体在mapinfowrap中不存在, mapClassId:" + mapClassId + " loEntityId:" + item.Key);
 			}
+			else
+			{
+				bool num = data.ActiveRegions != null && data.ActiveRegions.Contains(containerEntityInfo.PosInfo.Region);
+				MiniMapMarkExtendInfo entityExtendParameterInfo = entityExtendParameterInfoParser.GetEntityExtend(containerEntityInfo.DefSpawnEntityInfo.ClassId);
+				if (num || (item.Value.State != entityExtendParameterInfo.CompleteState && item.Value.State >= 0) || !entityExtendParameterInfo.MiniMapMarkHideInEnd)
+				{
+					CreateEntityIconObject(mapClassId, item.Key, item.Value.EntityClassId, item.Value.State, containerEntityInfo.PosInfo.Area);
+				}
+			}
+		}
+		if (data.ActiveRegions == null)
+		{
+			return;
 		}
 		foreach (int activeRegion in data.ActiveRegions)
 		{
-			foreach (MiniMapMarkLoEntityInfo item2 in MarkContext.ManagedQueries.GetEntityByMapRegion(mapClassId, activeRegion))
+			IEnumerable<MiniMapMarkLoEntityInfo> entityByMapRegion = MarkContext.ManagedQueries.GetEntityByMapRegion(mapClassId, activeRegion);
+			if (entityByMapRegion == null)
+			{
+				continue;
+			}
+			foreach (MiniMapMarkLoEntityInfo item2 in entityByMapRegion)
 			{
 				MiniMapMarkExtendInfo entityExtendParameterInfo2 = entityExtendParameterInfoParser.GetEntityExtend(item2.DefSpawnEntityInfo.ClassId);
 				if (entityExtendParameterInfo2.MiniMapMarkShowInPublic && entityExtendParameterInfo2.MiniMapMarkShowInOffline)

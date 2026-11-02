@@ -1,0 +1,58 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MiniMap.cs",
+      "sha256": "191e08c425fa9390556bb003077b65aa1b0a472b0467fd4ceb207f1af44622d7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/CameraUtils.cs",
+      "sha256": "c221f4c958c75ce978fe4a166c6234b6f9dce26c04985ed56739e19a54edb303"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/OfflineMiniMapMarkManager.cs",
+      "sha256": "7ecf5246233275784ad29ed971ce29d739815684e9fba1f51dfb69881105275b"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/MainlineMiniMapRoot/MainlineMiniMapRoot.cs",
+      "sha256": "58b325c235ded296d9941bf911b0a676473125f9831073ab966e580595e81108"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/MainlineMiniMapRoot/MainlineMiniMapRoot.cs.meta",
+      "sha256": "83601c49148d395174fb786fad3ccf81be9753839b95e16c69eaec5c55f766d4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/MainlineMiniMapRoot/Zjcs.Official.World.MainlineMiniMapRoot.asmdef",
+      "sha256": "e1e21688f4293a5b9ee35ee04342d570c1573e71eb71713a3ddd3ee219b6dc0d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/MainlineMiniMapRoot/Zjcs.Official.World.MainlineMiniMapRoot.asmdef.meta",
+      "sha256": "2c3630af835e5b58aecda75037d75a217e71cab8cf7ccb2ebafe3d57b22b56c3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/MainlineMiniMapRoot.meta",
+      "sha256": "60df44a1b05002c26904e42e9f75247a636815cb6b67f71917996cca3e99be7c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkManagers/OfflineMiniMapMarkManager.cs",
+      "sha256": "fb1c3060bb79b40fb77e44d97949bfe0ce055ddb977a216e67eee42cc7d86348"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkManagers/OfflineMiniMapMarkManager.cs.meta",
+      "sha256": "d581a850be7bc49fbad55d27d728a65d53c56b14461dbcfbebc43e864bae92fd"
+    }
+  ],
+  "historical_offline_initialization": "assets/reference/official-map/map13-minimap-mark-managers-code-source-manifest.json",
+  "operation": "Copy the complete original MiniMap root lifecycle, range ownership, full-screen ordering, camera positioning, mark lookup and close events. Replace only existing local state/configuration/resource ports, serialized field/property bridges and diagnostics. Preserve the camera view formula and entity body-offset iteration. Supersede only the historical offline marker Init body with the selected original null-data/container/region-list branches; retain its serialized identity and other methods.",
+  "limitations": [
+    "The original root remains an abstract local-state seam until the production map adapter and original prefab are bound. No formal UI, input, map-save or Player completion is asserted."
+  ],
+  "hashing": "Repository text outputs use UTF-8 LF.",
+  "tool": {
+    "path": "scripts/prepare_mainline_minimap_root.py",
+    "sha256": "5833f602432dc82001271bf96c0c71ba4ec7cab651c7ae353e9a8a9cf7e7490b"
+  }
+}
