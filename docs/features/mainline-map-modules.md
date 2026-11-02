@@ -29,6 +29,10 @@
 
 隔离 GUI Play Mode 已验证六张完整原 prefab 的全部 MonoScript、托管引用类型和序列化对象引用。泽之国使用原57,600格／106地区夹具，通过延迟离线响应、原白雾及标记初始化、全屏视野切换与缓存恢复、关闭事件、重新启用、订阅释放；已查看温泉乡原层级实际渲染截图。原尺寸的小地图纹理复用同一实例，公共工厂停用实例后释放纹理，重复销毁不重复处理。初始岛、森之国、山之国、龙之国与鲸背岛分别使用本图已安装的导航、地区和原配置，通过同一工厂验证原根加载、地区插槽数量、离线请求保持隐藏和销毁释放；未给它们套用泽之国离线响应。此夹具的实体／资源查询为空，关闭事件直接调用原入口，尚未验证正式HUD中的模拟点击、真实实体图标、采集资源、地图存档响应投影或Windows Player。主工程 Unity 导入／编译、`ProjectTools.Validate` 与静态元数据检查通过。
 
+公共小地图 HUD 另迁入当前原 `MiniMapMaskedUI`、`AreaInfoUI`、`PublicMapBranchLineBtn` 完整路径及 `MultiLanguageTMPControler`／语言组配置，原局部坐标、区域名称、原探索度公式、延迟弹窗回调取当前地图、公开地区与频道数显隐、战斗错误4131及状态配色分支均保留。`MainlineMiniMap.AttachHud` 在原父插槽内实例化完整79对象的 `MiniMapMaskedUI.prefab`，激活前绑定地图／角色／语言／字体／窗口／声音；与主实例共同显隐并先销毁 HUD，再释放纹理。原按钮声音 `Main_Cursor_Normal` 从实际 Wwise 事件、bank和媒体解码，不用替代声音。资源、脚本与逐文件原输入等价凭据见[原 HUD 代码](../../assets/reference/official-map/mainline-minimap-hud-code-source-manifest.json)和[原生 HUD](../../assets/reference/official-map/mainline-current-minimap-hud-source-manifest.json)。
+
+隔离 GUI Play Mode 使用泽之国当前地图实例，通过原角色渲染器将真实已探索地块绘入原尺寸 RenderTexture，再由原圆形 HUD 显示；已查看实际截图。模拟鼠标经原 GraphicRaycaster／Button 验证打开全屏页的请求及延迟初始化地图ID、战斗中禁止切线和非战斗时请求分线窗口；窗口内容使用显式夹具，仅验证原按钮消费路径。真实导航地区查询、坐标事件、探索度更新、单频道隐藏／多频道显示、当前状态配色、模块显隐／销毁和全部订阅释放通过。频道列表和颜色使用显式测试数据，未据此决定正式单机分线；女神头像地区通知、正式 WorldCanvas 插槽、完整全屏／分线窗口、正式存档状态及 Player 接线仍待完成。
+
 主线地图共享原 WorldCanvas／WorldStage 界面、地区条件、导航、交互、剧情、机关、雕像、小地图和进度规则；单图放置及差异由地图页维护。
 
 ### 官方代码与资源依据

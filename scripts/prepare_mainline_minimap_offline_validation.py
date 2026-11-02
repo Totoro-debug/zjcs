@@ -51,8 +51,11 @@ def main():
         m=re.search(rb'(?m)^guid: ([a-f0-9]{32})',meta.read_bytes())
         if m:package_guids.add(m[1])
     base=source/'Assets/Official/World/Map/13'
+    shared_hud=source/'Assets/Official/World/Shared/NativeMiniMapHudCurrent'
+    if not shared_hud.is_dir():raise ValueError('Prepare the complete selected minimap HUD')
     pending=[p for name in ['NativeMiniMapRegions','NativeMiniMapSettings','NativeMiniMapMasks','NativeMiniMapDescriptions','NativeMiniMapCurrent','NativeMiniMapRootCurrent'] for p in (base/name).rglob('*') if p.is_file() and p.suffix!='.meta']
     pending += [p for name in ['NativeMiniMapCurrent','NativeMiniMapRootCurrent'] for p in (source/'Assets/Official/World/Map/16'/name).rglob('*') if p.is_file() and p.suffix!='.meta']
+    pending += [p for p in shared_hud.rglob('*') if p.is_file() and p.suffix!='.meta']
     for map_id in (10,11,12,14):
      native=source/f'Assets/Official/World/Map/{map_id}/NativeMiniMapRootCurrent'
      if not native.is_dir():raise ValueError('Prepare the complete selected minimap root: '+str(map_id))

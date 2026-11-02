@@ -12,6 +12,26 @@ from prepare_mainline_map15_native_ground import GroundSource, guid, script_id, 
 from validation_workspace import validation_directory
 
 
+def integration_sources():
+    module = ROOT / 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap'
+    paths = sorted(p for p in module.iterdir() if p.is_file())
+    paths += [ROOT / 'scripts/prepare_mainline_minimap_offline_validation.py']
+    paths += sorted((ROOT / 'unity/Assets/Game/Editor/Map13MiniMap').glob('OfficialMainlineMiniMapRootAcceptance*.cs*'))
+    return [dict(path=p.relative_to(ROOT).as_posix(),sha256=sha(p.read_bytes())) for p in paths]
+
+
+def refresh_integration(map_id):
+    receipt_path = ROOT / f'assets/reference/official-map/map{map_id}-current-minimap-root-source-manifest.json'
+    receipt = json.loads(receipt_path.read_bytes())
+    for name, expected in receipt['outputs'].items():
+        if sha((ROOT / name).read_bytes()) != expected:
+            raise ValueError('Preserve changed original root output: ' + name)
+    receipt['integration'] = integration_sources()
+    receipt['input_receipts'][Path(__file__).relative_to(ROOT).as_posix()] = sha(Path(__file__).read_bytes())
+    receipt_path.write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n',encoding='utf8',newline='\n')
+    print('Refreshed verified unchanged native root integration:',map_id)
+
+
 class MiniMapRootBinding(MiniMapRegionsBinding):
     def __init__(self, work, map_id):
         super().__init__(work, map_id)
@@ -204,23 +224,19 @@ class MiniMapRootBinding(MiniMapRegionsBinding):
             self.inputs[original.relative_to(ROOT).as_posix()] = original_hash
             equivalence.append(dict(selected=original.relative_to(ROOT).as_posix(), reused=selected))
         self.inputs[Path(__file__).relative_to(ROOT).as_posix()] = sha(Path(__file__).read_bytes())
-        integration = []
-        module = ROOT / 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap'
-        paths = sorted(p for p in module.iterdir() if p.is_file())
-        paths += [ROOT / 'scripts/prepare_mainline_minimap_offline_validation.py',
-            ROOT / 'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.cs',
-            ROOT / 'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.cs.meta']
-        for path in paths:
-            integration.append(dict(path=path.relative_to(ROOT).as_posix(), sha256=sha(path.read_bytes())))
         self.write_outputs(record, pointer, recovered_tile_fields=self.tile_fields,
             dependency_prefabs=self.prefab_sources,
             original_code_equivalence=equivalence,
-            integration=integration,
+            integration=integration_sources(),
             scope='Complete original root hierarchy and serialized references. The shared factory supplies local dependencies before activation; formal map/HUD/Player integration remains separate.')
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(__doc__)
     parser.add_argument('--map-id', type=int, choices=(10, 11, 12, 13, 14, 16), required=True)
+    parser.add_argument('--refresh-integration', action='store_true', help='Verify unchanged native outputs and refresh shared factory/fixture hashes only')
     args = parser.parse_args()
-    MiniMapRootBinding(validation_directory(), args.map_id).build_root()
+    if args.refresh_integration:
+        refresh_integration(args.map_id)
+    else:
+        MiniMapRootBinding(validation_directory(), args.map_id).build_root()

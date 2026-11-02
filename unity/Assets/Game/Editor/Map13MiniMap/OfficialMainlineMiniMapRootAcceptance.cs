@@ -57,7 +57,7 @@ namespace Zjcs.Editor.Map13MiniMap
         { public RegionLease(GameObject prefab){Result=prefab;} public GameObject Result{get;} public void Dispose(){} }
     }
 
-    public static class OfficialMainlineMiniMapRootAcceptance
+    public static partial class OfficialMainlineMiniMapRootAcceptance
     {
         private const string Key="Zjcs.MainlineMiniMapRoot.Running";
         private static IEnumerator routine;
@@ -97,6 +97,7 @@ namespace Zjcs.Editor.Map13MiniMap
         }
         private sealed class Queries : IMiniMapManagedQueries,IMiniMapManagedAreaAgent,IMiniMapMarkGridGround
         {
+            public Func<Pos2d,int> RegionAt;
             public long MainPlayerId=>1;
             public MiniMapManagedMapPartInfo GetMapPartInfo(int map)=>new MiniMapManagedMapPartInfo{SupportPrivateRegion=true,SupportPublicRegion=true};
             public List<Status> GetCurrentMapStatus()=>Enumerable.Repeat(Status.None,106).ToList();
@@ -104,7 +105,7 @@ namespace Zjcs.Editor.Map13MiniMap
             public IMiniMapSpawnEntity GetEntity(Zjcs.Official.StoryPlayables.EcEntityIdentifier id)=>null;
             public IEnumerable<MiniMapMarkLoEntityInfo> GetEntityByMapRegion(int map,int region)=>Array.Empty<MiniMapMarkLoEntityInfo>();
             public Dictionary<Zjcs.Official.StoryPlayables.EcEntityIdentifier,IMiniMapSpawnEntity> GetAreaEntity(int area)=>null;
-            public int GridToRegion(int map,Pos2d position)=>0;
+            public int GridToRegion(int map,Pos2d position)=>RegionAt?.Invoke(position)??0;
             public IMiniMapMarkCell GetPosData(Pos2d position)=>null;
         }
         private sealed class Characters : IMiniMapCharacterManager,IMiniMapCharacterController
@@ -116,13 +117,15 @@ namespace Zjcs.Editor.Map13MiniMap
         }
         private sealed class GridData : ECGridTransformData
         {
+            internal readonly HashSet<IGridTransformPosUpdatedEventReceiver> Receivers=new HashSet<IGridTransformPosUpdatedEventReceiver>();
+            internal void Move(Pos2d position){var previous=Position;Position=position;foreach(var receiver in Receivers.ToArray())receiver.GridTransform_OnPosUpdated(this,previous);}
             public Pos2d Position;public MapRootEntityLiteSingleInfo Lite;
             public override Pos2d Pos=>Position;public override Direction Direction=>Direction.Up;public override bool FlipX=>false;
             public override ECGridTransformInfo Info=>null;
             public override Vector3 GridToPosition(Pos2d grid)=>Lite.GridToPos(grid);
             public override Pos2d PositionToGrid(Vector3 pos)=>Lite.PosToGrid(pos);
-            public override void AddPosUpdatedReceiver(IGridTransformPosUpdatedEventReceiver receiver)=>throw new NotSupportedException();
-            public override void RemovePosUpdatedReceiver(IGridTransformPosUpdatedEventReceiver receiver)=>throw new NotSupportedException();
+            public override void AddPosUpdatedReceiver(IGridTransformPosUpdatedEventReceiver receiver)=>Receivers.Add(receiver);
+            public override void RemovePosUpdatedReceiver(IGridTransformPosUpdatedEventReceiver receiver)=>Receivers.Remove(receiver);
         }
         [Serializable] private sealed class Fixture{public int mapClassId,configId,width,height;public float[] origin;public Cell[] cells;public Area[] areas;public RegionRow[] regions;}
         [Serializable] private sealed class Cell{public int area,ground;}
@@ -198,6 +201,12 @@ namespace Zjcs.Editor.Map13MiniMap
             root.FireToCloseFullScreen();module.HideFullScreen(controller);Require(show==1&&hide==1&&close==1&&!root.IsFullScreen,"Original close/hide dispatch order");
             module.SetActive(false);module.SetActive(true);yield return null;Require(data.Requests==2&&!offline.HaveDataShow.State,"Full native instance re-entry requests and hides");
             module.Dispose();module.Dispose();yield return null;Require(characters.Subscribers==0&&!miniTexture,"Complete native hierarchy releases character subscriptions and owned texture");
+            state.Current=13;
+            host.AddComponent<MyEntity>();host.AddComponent<MyTransform>().Position=lite.GridToPos(center);
+            var hudModule=MainlineMiniMap.Create(prefab,null,bindings);for(int i=0;i<5;i++)yield return null;
+            var hudRoot=Object.FindObjectOfType<MainlineNativeMiniMapRoot>();
+            var hudTest=VerifyHud(hudModule,hudRoot,state,labels,(GridData)grid.Component,queries);while(hudTest.MoveNext())yield return hudTest.Current;
+            hudModule.Dispose();yield return null;Require(characters.Subscribers==0,"Current-map native HUD instance cleanup");state.Current=16;
             // A second actual map uses the same factory and its own original
             // geometry/settings. Its unresolved local response policy stays pending.
             var islandInput=JsonUtility.FromJson<Fixture>(File.ReadAllText(Path.Combine(Workspace,"minimap-description-fixture-16.json")));

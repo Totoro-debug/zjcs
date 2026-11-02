@@ -1956,3 +1956,15 @@ scripts/fixtures/partner_player_bezier* text eol=lf
 assets/reference/partner-player-pose-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePlayerPhysicsPose.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBezierPolyline.cs* text eol=lf
+
+# Selected shared original minimap HUD and explicit local bindings.
+scripts/prepare_mainline_minimap_hud_code.py text eol=lf
+scripts/prepare_mainline_minimap_native_hud.py text eol=lf
+assets/reference/official-map/mainline-*minimap-hud*-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/World/MainlineMiniMapHud/** text eol=lf
+unity/Assets/Game/Runtime/Official/World/MainlineMiniMapHud.meta text eol=lf
+unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Hud.cs* text eol=lf
+unity/Assets/Official/World/Shared/NativeMiniMapHudCurrent/** text eol=lf
+unity/Assets/Official/World/Shared/NativeMiniMapHudCurrent.meta text eol=lf
+unity/Assets/Official/World/Shared.meta text eol=lf
+unity/Assets/Official/World/Shared/NativeMiniMapHudCurrent/**/*.wav -text

@@ -9,7 +9,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
 {
     // Owns the complete original instance and binds every injected dependency
     // before Awake/OnEnable. No original hierarchy or layout is reconstructed.
-    public sealed class MainlineMiniMap : IDisposable
+    public sealed partial class MainlineMiniMap : IDisposable
     {
         private readonly GameObject owner;
         private readonly MainlineNativeMiniMapRoot root;
@@ -74,11 +74,18 @@ namespace Zjcs.Offline.World.MainlineMiniMap
         { add => root.OnWantToCloseFullScreen += value; remove => root.OnWantToCloseFullScreen -= value; }
         public void ShowFullScreen(MiniMapCameraController camera) => root.OnShowFullScreenMiniMap(camera);
         public void HideFullScreen(MiniMapCameraController camera) => root.OnHideFullScreenMiniMap(camera);
-        public void SetActive(bool active) => owner.SetActive(active);
+        public void SetActive(bool active)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(MainlineMiniMap));
+            if (!active && hud != null) hud.SetActive(false);
+            owner.SetActive(active);
+            if (active && hud != null) hud.SetActive(true);
+        }
         public void Dispose()
         {
             if (disposed) return;
             disposed = true;
+            DisposeHud();
             if (owner != null) { owner.SetActive(false); Object.Destroy(owner); }
             if (texture != null) { texture.Release(); Object.Destroy(texture); texture = null; }
         }
