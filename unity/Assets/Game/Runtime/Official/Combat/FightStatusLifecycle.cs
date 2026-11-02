@@ -267,6 +267,8 @@ namespace Zjcs.Combat.Official
                 RoundStartMeetCount = template.RoundStartMeetCount,
                 RoundStartResetMeetCountOnInvoke = template.RoundStartResetMeetCountOnInvoke,
                 RoundStartMeetRulesResolved = template.RoundStartMeetRulesResolved,
+                RoundStartRandomOneStatus = template.RoundStartRandomOneStatus,
+                RoundStartRandomRulesResolved = template.RoundStartRandomRulesResolved,
                 RoundStartTriggeredCount = template.RoundStartTriggeredCount,
                 RoundStartTryAtStart = template.RoundStartTryAtStart,
                 RoundStartDefinitionResolved = template.RoundStartDefinitionResolved,

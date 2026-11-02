@@ -259,5 +259,64 @@ namespace Zjcs.Editor
                 Debug.Log("[Round meet hosts] " + host + ": third round starts 24478; later rounds retain gate; checkpoint passed.");
             }
         }
+        private static RoundRandomProbe ConfigureRoundRandomProbe(FightBattleCheckpoint checkpoint)
+        {
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_ROUND_RANDOM_ACCEPTANCE") != "1") return null;
+            var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
+            foreach (var unit in checkpoint.Units)
+            {
+                long hp = unit.Id == 1 ? 5000000L : 2000000L;
+                foreach (var property in unit.Properties.Concat(unit.BaseProperties))
+                {
+                    if (property.Id == catalog.PropertyType("MaxHp")) property.Value = hp;
+                    if (unit.Id != 1 && property.Id == catalog.PropertyType("Attack")) property.Value = 100L;
+                }
+                unit.MaxHp = unit.LastMaxHp = unit.Hp = unit.Turn.Hp = hp;
+            }
+            var player = checkpoint.Units.Single(value => value.Id == 1);
+            var repeated = catalog.CreateStatus(25120, 1, 1, 9925120, 0, 0, 5, 20, 1, null);
+            var once = catalog.CreateStatus(60520, 1, 1, 9960520, 0, 0, 5, 20, 1, null);
+            player.Statuses.Add(repeated); player.Statuses.Add(once);
+            return new RoundRandomProbe(repeated, once);
+        }
+
+        private sealed class RoundRandomProbe
+        {
+            private readonly FightBattleStatusState repeated, once;
+            private int lastRound;
+            public bool ReadyToCapture => lastRound >= 1;
+            public RoundRandomProbe(FightBattleStatusState repeated, FightBattleStatusState once)
+            { this.repeated = repeated; this.once = once; }
+            public void ObserveStep(OfficialBattleRuntimeController controller)
+            {
+                var cp = controller.Checkpoint;
+                var player = cp.Units.Single(value => value.Id == 1);
+                int round = player.SkillState.Round;
+                if (round == lastRound) return;
+                lastRound = round;
+                var effects = player.Statuses.Where(value => value.ClassId == 24396
+                    || value.ClassId == 24398 || value.ClassId == 24399).ToArray();
+                Require(effects.Length == 1 && repeated.RoundStartTriggeredCount == round
+                    && once.RoundStartTriggeredCount == 1 && effects[0].SourceSkillRank == 5
+                    && effects[0].SourceSkillLevel == 20
+                    && effects[0].StatusProperties.Any(value => value.Value != 0),
+                    "Original 25120 selected multiple states, lost its real property effect or changed 60520's one-call cap.");
+                if (round == 1)
+                    Require(player.Statuses.Count(value => value.ClassId == 60521 || value.ClassId == 60522) == 1,
+                        "Original 60520 did not select exactly one configured state.");
+                Debug.Log("[Round random hosts] personalRound=" + round + ", 25120 selected="
+                    + effects[0].ClassId + ", repeated=" + repeated.RoundStartTriggeredCount
+                    + ", 60520 count=" + once.RoundStartTriggeredCount + ", original nonzero props preserved.");
+            }
+            public void Verify(string host, FightBattleCheckpoint checkpoint)
+            {
+                Require(lastRound >= 3 && repeated.RoundStartTriggeredCount >= 3 && once.RoundStartTriggeredCount == 1,
+                    host + " did not exercise repeated and one-call random status selection.");
+                string saved = FightBattleCheckpointSerializer.Save(checkpoint);
+                Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
+                    host + " changed its random-state checkpoint after reload.");
+                Debug.Log("[Round random hosts] " + host + ": original single random buffs, finite cap and checkpoint passed.");
+            }
+        }
     }
 }

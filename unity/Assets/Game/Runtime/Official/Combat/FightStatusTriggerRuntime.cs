@@ -78,7 +78,7 @@ namespace Zjcs.Combat.Official
                 }
                 if (catalog != null)
                     added += ApplyStatusTriggers(source, status, status.RoundStartStatuses,
-                        catalog, random);
+                        catalog, random, status.RoundStartRandomOneStatus);
                 if (added > 0)
                 {
                     status.RoundStartTriggeredCount++;
@@ -704,13 +704,19 @@ namespace Zjcs.Combat.Official
 
         private static int ApplyStatusTriggers(FightBattleUnitState target,
             FightBattleStatusState source, List<FightBattleStatusStateTrigger> triggers,
-            FightOfficialCombatCatalog catalog, FightRandomStream random)
+            FightOfficialCombatCatalog catalog, FightRandomStream random, bool randomOne = false)
         {
             if (target == null || source == null || triggers == null || catalog == null)
                 return 0;
+            // User-confirmed offline rule: choose one configured entry uniformly,
+            // then roll only its probability. A failed roll does not draw another.
+            if (randomOne && triggers.Count > 1 && random == null) return 0;
+            int selected = randomOne && triggers.Count > 1 ? (int)(random.Next() * triggers.Count) : 0;
             int applied = 0;
-            foreach (FightBattleStatusStateTrigger trigger in triggers)
+            for (int i = 0; i < triggers.Count; i++)
             {
+                if (randomOne && i != selected) continue;
+                FightBattleStatusStateTrigger trigger = triggers[i];
                 if (trigger == null || trigger.EntityId <= 0 || trigger.AffectedByProp
                     || trigger.Target != FightStatusLifecycle.TargetApplicator
                     || !Roll(trigger.BasePercent, random)) continue;

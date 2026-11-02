@@ -397,6 +397,7 @@ namespace Zjcs.Editor
             RoundTargetsProbe roundTargets = ConfigureRoundTargetsProbe(checkpoint);
             RoundPropsProbe roundProps = ConfigureRoundPropsProbe(checkpoint);
             RoundMeetProbe roundMeet = ConfigureRoundMeetProbe(checkpoint);
+            RoundRandomProbe roundRandom = ConfigureRoundRandomProbe(checkpoint);
             int initialCounter = checkpoint.Counter;
             controller.StepCompleted += result => {
                 checkpoint = result.Checkpoint;
@@ -415,6 +416,7 @@ namespace Zjcs.Editor
                 roundTargets?.ObserveStep(controller);
                 roundProps?.ObserveStep(controller);
                 roundMeet?.ObserveStep(controller);
+                roundRandom?.ObserveStep(controller);
                 if (checkpoint.Counter == initialCounter + 1 || checkpoint.Finished)
                     Debug.Log("[Battle hosts] " + name + " step=" + checkpoint.Counter
                         + " finished=" + checkpoint.Finished);
@@ -478,7 +480,7 @@ namespace Zjcs.Editor
             float previousTimeScale = Time.timeScale;
             try
             {
-                Time.timeScale = hpListener == null && hpRecovery == null && hpCost == null && hpSubstitute == null && roundStartup == null && roundTargets == null && roundProps == null && roundMeet == null ? 5 : 1;
+                Time.timeScale = hpListener == null && hpRecovery == null && hpCost == null && hpSubstitute == null && roundStartup == null && roundTargets == null && roundProps == null && roundMeet == null && roundRandom == null ? 5 : 1;
                 while (runner != null)
                 {
                     triggerTiming?.ObservePresentation();
@@ -490,6 +492,7 @@ namespace Zjcs.Editor
                     if (roundTargets != null && capturedCure) Time.timeScale = 5;
                     if (roundProps != null && capturedCure) Time.timeScale = 5;
                     if (roundMeet != null && capturedCure) Time.timeScale = 5;
+                    if (roundRandom != null && capturedCure) Time.timeScale = 5;
                     if (hpSubstitute != null && hpSubstitute.MayAccelerate) Time.timeScale = 5;
                     if (!capturedCure && (hpListener != null && hpListener.ReadyToCapture
                         || hpRecovery != null && hpRecovery.ReadyToCapture
@@ -498,11 +501,13 @@ namespace Zjcs.Editor
                         || roundStartup != null && roundStartup.ReadyToCapture
                         || roundTargets != null && roundTargets.ReadyToCapture
                         || roundProps != null && roundProps.ReadyToCapture
-                        || roundMeet != null && roundMeet.ReadyToCapture))
+                        || roundMeet != null && roundMeet.ReadyToCapture
+                        || roundRandom != null && roundRandom.ReadyToCapture))
                     {
                         float captureTimeScale = Time.timeScale;
                         Time.timeScale = 0f;
-                        try { yield return Capture(output, name + (roundMeet != null ? "-round-meet"
+                        try { yield return Capture(output, name + (roundRandom != null ? "-round-random"
+                            : roundMeet != null ? "-round-meet"
                             : roundProps != null ? "-round-props"
                             : roundTargets != null ? "-round-targets"
                             : roundStartup != null ? "-round-startup"
@@ -550,6 +555,7 @@ namespace Zjcs.Editor
             roundTargets?.Verify(name, checkpoint);
             roundProps?.Verify(name, checkpoint);
             roundMeet?.Verify(name, checkpoint);
+            roundRandom?.Verify(name, checkpoint);
             VerifyEquipmentBattlePassives(name, checkpoint, true);
             yield return SettleUi();
             yield return Capture(output, name + "-result");

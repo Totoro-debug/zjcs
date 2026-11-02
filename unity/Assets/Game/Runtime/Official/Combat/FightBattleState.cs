@@ -346,6 +346,8 @@ namespace Zjcs.Combat.Official
         public int RoundStartMeetProgress;
         public bool RoundStartResetMeetCountOnInvoke;
         public bool RoundStartMeetRulesResolved;
+        public bool RoundStartRandomOneStatus;
+        public bool RoundStartRandomRulesResolved;
         public int RoundStartTriggeredCount;
         public bool RoundStartTryAtStart;
         public bool RoundStartStartChecked;

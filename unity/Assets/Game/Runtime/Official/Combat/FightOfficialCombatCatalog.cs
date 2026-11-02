@@ -1081,6 +1081,8 @@ namespace Zjcs.Combat.Official
                 RoundStartResetMeetCountOnInvoke = roundStart != null
                     && Bool(roundStart, "ResetMeetCountOnInvoke"),
                 RoundStartMeetRulesResolved = true,
+                RoundStartRandomOneStatus = roundStart != null && Bool(roundStart, "StatusRandomOneTrigger"),
+                RoundStartRandomRulesResolved = true,
                 RoundStartTryAtStart = roundStart != null
                     && Bool(roundStart, "TryAtStart"),
                 RoundStartDefinitionResolved = true,
@@ -2533,7 +2535,6 @@ namespace Zjcs.Combat.Official
                 && (Int(component, "RoundStartPhase") == 0 || Int(component, "RoundStartPhase") == 5)
                 && Float(component, "TargetHpPer", -1f) < 0f
                 && !Bool(component, "TryAtNotForbidden")
-                && !Bool(component, "StatusRandomOneTrigger")
                 && !Bool(component, "RemoveOldStatusOnInvoke")
                 && !Bool(component, "RemoveOldStatusOnEnd")
                 && ArrayCount(component, "TargetActions") == 0

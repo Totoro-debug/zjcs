@@ -8,12 +8,18 @@ namespace Zjcs.Combat.Official
         {
             if (!status.HasRoundStartTrigger
                 || status.RoundStartDefinitionResolved && status.RoundStartTargetRulesResolved
-                    && status.RoundStartPropTargetRulesResolved && status.RoundStartMeetRulesResolved) return;
+                    && status.RoundStartPropTargetRulesResolved && status.RoundStartMeetRulesResolved
+                    && status.RoundStartRandomRulesResolved) return;
             var definition = statusCatalog.CreateStatus(status.ClassId, status.OwnerId,
                 status.CreatorId, status.InstanceId, status.RootSkillId, status.ApplyingSkillItemId,
                 status.SourceSkillRank, status.SourceSkillLevel, status.SourceSubRank, status.SourceProperties,
                 replacementProperties: status.ReplacementProperties, blessPropertyScales: status.BlessPropertyScales);
             status.RoundStartRulesSupported = definition.RoundStartRulesSupported;
+            if (!status.RoundStartRandomRulesResolved)
+            {
+                status.RoundStartRandomOneStatus = definition.RoundStartRandomOneStatus;
+                status.RoundStartRandomRulesResolved = true;
+            }
             if (!status.RoundStartMeetRulesResolved)
             {
                 status.RoundStartResetMeetCountOnInvoke = definition.RoundStartResetMeetCountOnInvoke;
