@@ -8,18 +8,19 @@
   },
   "adapted_modules": [
     {
-      "source": "Framework.FirstPass.Runtime",
-      "platformBinding": null,
-      "name": "Zjcs.Partners884.Framework.FirstPass.Runtime",
-      "methodFingerprint": "b02646aa0f368faabec321d20e48502a50bbe88c8c93826d266c77a965d89ddc",
-      "sourceModuleId": "05e23a89-978e-468f-a23f-13fd56e083f1",
       "moduleId": "2c78f75e-a14a-46e6-9d0f-15082077ea44",
-      "sha256": "25479079b9319d5c9239d743ae8dc82f6ee863f233a6b98716d5e13e832104dc"
+      "sourceModuleId": "05e23a89-978e-468f-a23f-13fd56e083f1",
+      "name": "Zjcs.Partners884.Framework.FirstPass.Runtime",
+      "platformBinding": null,
+      "sha256": "25479079b9319d5c9239d743ae8dc82f6ee863f233a6b98716d5e13e832104dc",
+      "methodFingerprint": "b02646aa0f368faabec321d20e48502a50bbe88c8c93826d266c77a965d89ddc",
+      "source": "Framework.FirstPass.Runtime"
     },
     {
-      "source": "Console",
+      "moduleId": "2b5179ae-4d14-0247-5ac1-c35f486186c5",
+      "sourceModuleId": "a20ff94d-1cb1-4735-9028-ff5d6ce07886",
+      "name": "Zjcs.Partners884.Console",
       "platformBinding": {
-        "method": "System.String Common.RawFileUtility::GetRawFilePath(System.String)",
         "originalInstructions": [
           "IL_0000: call System.IServiceProvider Framework.DependencyInjection.ApplicationScope::get_Current()",
           "IL_0005: call !!0 Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions::GetService<Framework.IRawFileLoader>(System.IServiceProvider)",
@@ -39,23 +40,22 @@
           "IL_0025: ret"
         ],
         "operation": "Resolve bundled local absolute path; no YooAsset or network cache lookup.",
+        "method": "System.String Common.RawFileUtility::GetRawFilePath(System.String)",
         "windowsInstructions": [
           "IL_0000: ldarg.0",
           "IL_0001: call System.String System.IO.Path::GetFullPath(System.String)",
           "IL_0006: ret"
         ]
       },
-      "name": "Zjcs.Partners884.Console",
+      "sha256": "740824cb134816d92c978176d43736efd4f5c743cd0e1d06cb94f6611f489216",
       "methodFingerprint": "e7e1d35deb84772e6de69fe9570ec5c08426019fdc221c833a241b4d405d38ef",
-      "sourceModuleId": "a20ff94d-1cb1-4735-9028-ff5d6ce07886",
-      "moduleId": "2b5179ae-4d14-0247-5ac1-c35f486186c5",
-      "sha256": "740824cb134816d92c978176d43736efd4f5c743cd0e1d06cb94f6611f489216"
+      "source": "Console"
     },
     {
       "source": "publisher LiteDB 5.0.20 netstandard2.0",
+      "sha256": "cb20227a771e862fe98301d1407a2eaab26b032e54c1c429c1a8fbed6d1d4c7e",
       "name": "LiteDB",
-      "moduleId": "b132ccd6-5c02-42e0-a5e3-839c6502d6c3",
-      "sha256": "cb20227a771e862fe98301d1407a2eaab26b032e54c1c429c1a8fbed6d1d4c7e"
+      "moduleId": "b132ccd6-5c02-42e0-a5e3-839c6502d6c3"
     }
   ],
   "litedb": {
@@ -515,7 +515,7 @@
     "unity/Assets/Game/Runtime/Offline/PartnersNpc/OfficialPartnerNpcRuntimeCatalog.cs.meta": "f5b1cecbb7c74735987658b870730fdedd783c8335ce1da741cacf38d906aa4e",
     "unity/Assets/Game/Runtime/Offline/PartnersNpc/OfflinePartnerNpcAssemblies.cs": "59e9009e397d1a40fef908e1423bc7357198858995a3628c22792f9c1ef49dee",
     "unity/Assets/Game/Runtime/Offline/PartnersNpc/OfflinePartnerNpcAssemblies.cs.meta": "2e637916016d6a11a7c8d4c8d304a3b39fd0cda7e39ffb3c416415607d16734d",
-    "unity/Assets/Game/Runtime/Offline/PartnersNpc/OfflinePartnerNpcRuntime.cs": "b0daecc6b4e2c9d303e42e44afba8fd5b409d87c88974ae3210fdac17238e48f",
+    "unity/Assets/Game/Runtime/Offline/PartnersNpc/OfflinePartnerNpcRuntime.cs": "a595b34dabdb189b7003219834b03cb426dca83d10a2eb68c8b0b6bfb3f62cb9",
     "unity/Assets/Game/Runtime/Offline/PartnersNpc/OfflinePartnerNpcRuntime.cs.meta": "b819c68ba877bba439d26210c10211ff5b0298f701dd6b1f6acb036e11344716",
     "unity/Assets/Game/Runtime/Offline/PartnersNpc/Zjcs.Offline.PartnersNpc.asmdef": "732c36610b5de6860bff4eb3875c15fe05ff0c8b51eabbc3a35718bb2c78f72d",
     "unity/Assets/Game/Runtime/Offline/PartnersNpc/Zjcs.Offline.PartnersNpc.asmdef.meta": "3b76483a20c7d3d22adb412568fdb2479be34308bda79b7fff05d3a2ed815762",

@@ -138,6 +138,17 @@ namespace Zjcs.Offline.PartnersNpc
             }
         }
 
+        public string ProfessionIcon(int profession, bool third)
+        {
+            CheckAccess();
+            using (Enter())
+            {
+                object parser = RequiredParser("ProfessionBaseInfoParser");
+                return (string)parser.GetType().GetMethod(third ? "GetThirdIconPath" : "GetFirstIconPath")
+                    .Invoke(parser, new[] { Enum.ToObject(Common("Profession"), profession) });
+            }
+        }
+
         private Type Common(string name) => assemblies.Shared.GetType("Common." + name, true);
         private IParser RequiredParser(string name) => manager.GetParser(Common(name)) ?? throw new InvalidOperationException("Original parser was not registered: " + name);
         private static object Field(object owner, string name) => owner.GetType().GetField(name).GetValue(owner);
