@@ -90,7 +90,7 @@ namespace Zjcs.Offline.ProfessionUI
             disposed = true;
             OnGetSharedMaterial = null;
             foreach (var part in owned)
-                if (part) { if (Application.isPlaying) Object.Destroy(part.gameObject); else Object.DestroyImmediate(part.gameObject); }
+                if (part) { part.gameObject.SetActive(false); if (Application.isPlaying) Object.Destroy(part.gameObject); else Object.DestroyImmediate(part.gameObject); }
             owned.Clear(); PartsRenderers.Clear();
         }
     }

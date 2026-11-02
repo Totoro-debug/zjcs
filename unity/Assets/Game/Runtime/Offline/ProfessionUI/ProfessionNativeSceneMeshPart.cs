@@ -22,6 +22,7 @@ namespace Zjcs.Offline.ProfessionUI
                 return mesh;
             }
         }
+        public void Clear() { if (mesh) mesh.Clear(); }
         private void OnDestroy()
         {
             if (!mesh) return;

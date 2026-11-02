@@ -1,0 +1,55 @@
+{
+  "manifest": "884_156692",
+  "operation": "Independently bind completed native character poses to original application renderer/part interfaces, preserving current atlas identity, prefab MeshRenderer fields, clipping/PMA, source-slot separators and material callbacks. Never sample or substitute animation, physics or mixing in the drawing endpoint.",
+  "inputs": [
+    {
+      "path": "assets/reference/battle-animation/scene-core-source-manifest.json",
+      "sha256": "69384a713035cb15c226880fa3c6f11cda7da9ca4f7d5d195fa4d45e38560396"
+    },
+    {
+      "path": "assets/reference/battle-animation/scene-texture-source-manifest.json",
+      "sha256": "15d856235237d84f79432e6e214e6f1b2611fbea4d0b15d08f864ea31853315c"
+    },
+    {
+      "path": "assets/reference/battle-animation/scene-separator-source-manifest.json",
+      "sha256": "b71cd9e7cd1f7512389b7c67869db39773fef83c90ce5b4ae95017b066ca5bb6"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SceneCharacterSources/PlayerModel_Game-source.json",
+      "sha256": "eadc90ce5c44c08bc54ef39b107ccd77626db193df30bdf406f109c4f1b7a517"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.cs",
+      "sha256": "d78eefdabc97e7843f156c135f1a95e12b418090f8d5f1143932ecf1a4783f1e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRendererSettings.cs",
+      "sha256": "3a7104e370864285adad4e775780be77ce14c9497da7a0c225aea8ecf7029bbf"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneRenderer.cs",
+      "sha256": "d6c7adf9988dc35ba5a6af57cc2c03f61ba41e0536788c795aa3b210a2ee9ead"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_scene_native_renderer.py",
+    "sha256": "ee3352dc4dfb6bf2e825bcab877200ff24e5653ed7fc5b58573f8ca19f92c2dc"
+  },
+  "binding": {
+    "catalog": "Combat/SceneCharacters/appearance-resources",
+    "models": [
+      "Combat/SceneCharacters/male",
+      "Combat/SceneCharacters/female"
+    ],
+    "pose": "ProfessionNativeSceneRenderer.State; consume completed poses without changing the caller transform",
+    "appearance": "IProfessionAppearanceSceneRenderer / IProfessionAppearancePartRenderer",
+    "parts": "Original DynamicSkeletonRenderSeparator with independent ProfessionNativeSceneMeshSeparator"
+  },
+  "native_ordering": "Internal SortingGroups retain source draw-slot order while original MeshRenderer fields stay intact. Even keys identify fragment starts; odd after-slot keys are reserved for future native scene part adapters. Current original part renderer layer/order must be uniform.",
+  "limits": [
+    "Normal-blend current character slots and uniform original part sorting only; unsupported prefab drawing fields, slot blends, divergent part sorting and unbound follower slot depth fail explicitly.",
+    "The pose producer, full physics, mixing, original scene prefab assembly and production battle/Windows Player integration remain required."
+  ]
+}

@@ -211,6 +211,8 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 
 当前动态场景分段代码：从同版已核验 `Assembly-CSharp.dll` 的 `DynamicSkeletonRenderSeparator` 应用源码迁移池化、排序与可见性分支，SDK 基类调用替换为显式端口，Unity 网格赋值采用独立原生后端。原程序集／应用源码、转换与迁移输出哈希见 [动态场景分段来源](battle-animation/scene-separator-source-manifest.json)；验证复用既有当前来源剑、杖原资源，没有新增美术载荷，也未复制 SDK 渲染实现。
 
+当前原生场景绘制端：复用上述 `884_156692` 人物层级、完整图集／Low 目录和分段应用来源，独立编写 Unity 网格赋值及原字段绑定；没有读取或复制动画 SDK 实现，没有新增或重绘美术载荷。输入及独立实现输出哈希、Resources 地址和原外观接口绑定由 `prepare_battle_scene_native_renderer.py` 记录于 [原生场景绘制来源](battle-animation/scene-native-renderer-source-manifest.json)。
+
 当前场景 Low 人物纹理与材质：按 `884_156692` 索引从实际 `881_156673` APK 优先提取，缺少的包使用已核验同版云缓存；恢复原702组 Low 映射、977个按需 GUID、764条皮肤配置和男女937份原材质。原 ASTC 使用固定 astc_encoder 0.1.12 解码为 Windows 原生 RGBA32，保留原 mip／采样／色彩空间及材质字段，世界 shader 复用字节身份一致的既有当前转换；历史效果载荷缺少采样版本时另生成当前资产。原包／对象、编码与解码字节、工具／运行绑定和全部输出哈希见 [场景纹理来源](battle-animation/scene-texture-source-manifest.json)。素材未生成完整快照。
 
 公共战斗人物头像材质参数：`record_battle_character_portrait_material.py` 按当前 `884_156692` 索引、APK 优先及已校验同版云端依赖，读取男女原骨骼→图集→全部937份材质，核对原 `_WorldClipHeight` 统一为 -1,000,000。原包／对象、指针、参数、工具和运行绑定哈希见 [头像材质来源](battle-hud/character-portrait-material-source-manifest.json)。仅恢复临时摄影模型的原裁剪参数，没有生成或修改美术载荷；摄影参数和旧版来源仍各自保留。

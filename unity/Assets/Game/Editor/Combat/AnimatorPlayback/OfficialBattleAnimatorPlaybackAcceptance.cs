@@ -63,6 +63,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".sceneAppearance", false);
             SessionState.SetBool(Key + ".sceneSeparator", false);
             SessionState.SetBool(Key + ".sceneTextures", false);
+            SessionState.SetBool(Key + ".sceneRenderer", false);
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 180);
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             Hook();
@@ -116,7 +117,8 @@ namespace Zjcs.Editor.Combat
 
         private static IEnumerator Verify()
         {
-            var steps = SessionState.GetBool(Key + ".sceneTextures", false) ? SceneTextureSteps()
+            var steps = SessionState.GetBool(Key + ".sceneRenderer", false) ? SceneRendererSteps()
+                : SessionState.GetBool(Key + ".sceneTextures", false) ? SceneTextureSteps()
                 : SessionState.GetBool(Key + ".sceneSeparator", false) ? SceneSeparatorSteps()
                 : SessionState.GetBool(Key + ".sceneAppearance", false) ? SceneAppearanceSteps()
                 : SessionState.GetBool(Key + ".sceneCoreSources", false) ? SceneCoreSourceSteps()
@@ -139,7 +141,9 @@ namespace Zjcs.Editor.Combat
             if (errors == 0)
             {
                 SessionState.SetInt(Key + ".result", 0);
-                Debug.Log(SessionState.GetBool(Key + ".sceneTextures", false)
+                Debug.Log(SessionState.GetBool(Key + ".sceneRenderer", false)
+                    ? "Current native scene renderer passed actual character mesh/material/separator/transform/lifetime Play Mode checks; pose production, full physics/mixing and production battle/Player integration remain required."
+                    : SessionState.GetBool(Key + ".sceneTextures", false)
                     ? "Complete current original Low scene resources passed native/GPU/parameter/lifetime verification and four current core pre-physics diagnostic rasters; production scene, full physics/mixing and battle/Windows Player integration remain required."
                     : SessionState.GetBool(Key + ".sceneSeparator", false)
                     ? "Original dynamic scene separator and native mesh backend passed Play Mode with actual original weapon GPU pixels; production character scene, physics, mixing and formal battle/Player integration remain required."
