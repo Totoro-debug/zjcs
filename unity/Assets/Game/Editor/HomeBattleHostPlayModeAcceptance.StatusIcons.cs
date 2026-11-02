@@ -70,10 +70,51 @@ namespace Zjcs.Editor
                             "Original world counter/font binding did not retain seven layers.");
                         text.ForceMeshUpdate(); Capture("counter");
                         Check(Array.Empty<FightBattleStatusState>(), Array.Empty<FightBattleStatusState>(), "counter-cleared");
+                        CheckRoundStartCounter();
                     }
                     Debug.Log("[Status icon hosts] original mutex instances: hidden while forbidden,"
                         + " independent equipment visible, partial release hidden, full release appended, native icon pool reused/cleared.");
                 }
+            }
+
+            private void CheckRoundStartCounter()
+            {
+                // Separate display/checkpoint fixture using the original invocation
+                // collector; it does not inject extra damage into the host battle.
+                var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
+                var checkpoint = new FightBattleCheckpoint { StageId = 1, RandomSeed = 23 };
+                checkpoint.Units.Add(new FightBattleUnitState { Id = 1, CharacterType = 1, Hp = 100, MaxHp = 100 });
+                checkpoint.Units.Add(new FightBattleUnitState { Id = 2, CharacterType = 1, Hp = 100, MaxHp = 100 });
+                foreach (var role in checkpoint.Units) role.Turn.Id = role.Id;
+                var owner = checkpoint.Units[0];
+                var template = catalog.CreateStatus(24037, 1, 2, 9924037, 12950, 1295, 5, 20, 1);
+                var status = FightStatusLifecycle.Apply(owner, template, 0, template.InstanceId);
+                void Display(string expected, string phase)
+                {
+                    Check(new[] { status }, new[] { status }, phase);
+                    var text = view.Root.Find("StatusLayout").GetChild(0).Find("StackCountText").GetComponent<TMPro.TextMeshPro>();
+                    Require(text.gameObject.activeSelf == (expected != null)
+                        && (expected == null || text.text == expected), "Native round-start text mismatch: " + phase);
+                    text.ForceMeshUpdate(); Capture(phase);
+                }
+                Display("3", "round-initial");
+                Require(FightStatusTriggerRuntime.CollectRoundStartInvocations(owner, owner,
+                    checkpoint.Units, new FightRandomStream(23), catalog, status).Count == 1,
+                    "Original counter fixture did not collect its first invocation.");
+                Display("2", "round-invoked");
+                Require(ReferenceEquals(status, FightStatusLifecycle.Apply(owner, template, 0, 9994037)),
+                    "Original custom counter refresh replaced its retained status.");
+                Display("5", "round-renewed");
+                checkpoint = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
+                owner = checkpoint.Units[0]; status = owner.Statuses.Single();
+                Display("5", "round-reloaded");
+                for (int call = 0; call < 5; call++)
+                    Require(FightStatusTriggerRuntime.CollectRoundStartInvocations(owner, owner,
+                        checkpoint.Units, new FightRandomStream(23), catalog, status).Count == 1,
+                        "Reloaded counter fixture lost remaining invocations.");
+                Display(null, "round-exhausted");
+                Check(Array.Empty<FightBattleStatusState>(), Array.Empty<FightBattleStatusState>(), "round-cleared");
+                Debug.Log("[Status icon hosts] original 24037 custom counter rendered 3/2/5, retained 5 after checkpoint reload, hid exhausted count.");
             }
 
             private void Capture(string phase)

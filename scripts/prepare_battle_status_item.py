@@ -35,6 +35,13 @@ def main():
     assert proof['manifest'] == '884_156692'
     expected = {row['path']: row['sha256'] for row in proof['outputs']}
     assert digest(SOURCE.read_bytes()) == expected[SOURCE.relative_to(EXPORT).as_posix()]
+    rules = ROOT / 'unity/Assets/Official/Combat/battle-rules.json'
+    rules_receipt = ROOT / 'unity/Assets/Official/Combat/battle-rules-source-manifest.json'
+    displays = ROOT / 'unity/Assets/Game/Resources/Combat/battle-status-icons.json'
+    original_rules = json.loads(rules_receipt.read_bytes())
+    original_displays = json.loads(displays.read_bytes())
+    assert original_rules['manifest'] == original_displays['manifest'] == '854_156383'
+    assert digest(rules.read_bytes()) == original_rules['output_sha256'] == original_displays['battleRulesSha256']
     font = EXPORT / 'ExportedProject/Assets/TextMesh Pro/Fonts/FZY4K.ttf'
     assert digest(font.read_bytes()) == expected[font.relative_to(EXPORT).as_posix()]
     assert digest(font.read_bytes()) == '90023872dffe6a58503de655bd0631bf3334ce3b6b72cc75a6625b685c94c386'
@@ -82,12 +89,17 @@ def main():
     TARGET.parent.mkdir(exist_ok=True); meta(TARGET.parent, True)
     TARGET.write_text(text, encoding='utf-8'); meta(TARGET)
     inputs = [SOURCE, font, source_font, source_material, item, effect, font_asset, material, background,
+              rules, rules_receipt, displays,
               ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/FightStatusItem.cs',
               ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/FightStatusItemBase.cs',
-              ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/FightStatusController.cs']
+              ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/FightStatusController.cs',
+              ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusRoundStart.cs',
+              ROOT / '.tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusRoundStartComponent.cs']
     inputs += [Path(str(p)+'.meta') for p in (item, effect, tmp, font_asset, material, background)]
     runtime = [ROOT / name for name in (
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleUnitWorldHudView.cs',
+        'unity/Assets/Game/Runtime/Official/Combat/FightStatusLifecycle.cs',
+        'scripts/test_battle_round_merge.ps1',
         'unity/Assets/Game/Editor/Combat/OfficialBattleStatusCounterAcceptance.cs',
         'unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.RoundStartup.cs',
         'unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.StatusIcons.cs')]
@@ -95,7 +107,7 @@ def main():
         'converter_receipt': identity(CACHE / 'native-export-all-source-manifest.json'),
         'generator': identity(Path(__file__)), 'outputs': [identity(TARGET), identity(Path(str(TARGET)+'.meta'))],
         'runtime': [identity(p) for p in runtime],
-        'adaptation': 'Original native prefab; explicit sprite overload and literal count formatter. Original builtin sprite material, sorting, TMP parameters and TMPEffect retained. Bind identical official FZY4K TTF through the installed native world-tip font/material port; no alternate font or artwork. Historical 854 unit-bar cell/layout binding remains separately pinned and unchanged.'}, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+        'adaptation': 'Original native prefab; explicit sprite overload and literal count formatter. Original builtin sprite material, sorting, TMP parameters and TMPEffect retained. Bind identical official FZY4K TTF through the installed native world-tip font/material port; no alternate font or artwork. Historical 854 unit-bar cell/layout binding remains separately pinned and unchanged. Remaining invocation counts follow the current shared GetRemainCount and client MyFightStatusRoundStart producer against separately verified historical rules/display flags.'}, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
 
 
 if __name__ == '__main__': main()

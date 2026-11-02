@@ -72,6 +72,7 @@ namespace Zjcs.Editor.Combat
                 owner.Statuses.Clear();
                 scene.Refresh(checkpoint);
                 Require(!Count(root).transform.parent.gameObject.activeSelf, "Removed status retained a visible pooled icon.");
+                VerifyRoundStartCounters(scene, root);
                 Debug.Log("Original status counters passed: five target clocks, creator updates, configured fallback, zero/infinite hiding, pooled reuse and one stack; PlayMode=" + Application.isPlaying);
             }
             finally { scene?.Dispose(); UnityEngine.Object.DestroyImmediate(root); }
@@ -79,6 +80,67 @@ namespace Zjcs.Editor.Combat
 
         private static TMP_Text Count(GameObject root) => root.GetComponentsInChildren<TMP_Text>(true)
             .Single(value => value.name == "StackCountText");
+
+        private static void VerifyRoundStartCounters(OfficialBattleSceneView scene, GameObject root)
+        {
+            var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
+            var checkpoint = new FightBattleCheckpoint { StageId = 1, RandomSeed = 23 };
+            foreach (int id in new[] { 1, 2 })
+            {
+                var unit = new FightBattleUnitState { Id = id, CharacterType = 1, Hp = 100, MaxHp = 100 };
+                unit.Turn.Id = id;
+                checkpoint.Units.Add(unit);
+            }
+            foreach (int id in new[] { 24037, 24038, 24045, 24222, 24472, 24473, 24474, 24486, 24640 })
+            {
+                var owner = checkpoint.Units[0];
+                owner.Statuses.Clear();
+                var template = catalog.CreateStatus(id, 1, 2, id, 12950, 1295, 5, 20, 1);
+                var status = FightStatusLifecycle.Apply(owner, template, 0, id);
+                scene.Refresh(checkpoint);
+                Require(Count(root).gameObject.activeSelf && Count(root).text == "3",
+                    "Original custom round-start counter was not initialized: " + id);
+                var calls = FightStatusTriggerRuntime.CollectRoundStartInvocations(owner, owner,
+                    checkpoint.Units, new FightRandomStream(23), catalog, status);
+                Require(calls.Count == 1 && status.RoundStartTriggeredCount == 1,
+                    "Original round-start invocation was not collected: " + id);
+                scene.Refresh(checkpoint);
+                Require(Count(root).text == "2", "Invocation did not reduce the native custom counter: " + id);
+                var renewed = FightStatusLifecycle.Apply(owner, template, 0, id + 100000);
+                Require(ReferenceEquals(renewed, status) && status.RoundStartStackRoundCount == 2,
+                    "Original same-source duration refresh did not retain its round-start quota: " + id);
+                scene.Refresh(checkpoint);
+                Require(Count(root).text == "5", "Custom counter used layer stacks or duration instead of remaining calls: " + id);
+                checkpoint = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
+                owner = checkpoint.Units[0]; status = owner.Statuses.Single();
+                scene.Refresh(checkpoint);
+                Require(Count(root).text == "5", "Checkpoint reload lost the native remaining-call counter: " + id);
+                for (int call = 0; call < 5; call++)
+                    Require(FightStatusTriggerRuntime.CollectRoundStartInvocations(owner, owner,
+                        checkpoint.Units, new FightRandomStream(23), catalog, status).Count == 1,
+                        "Original extended invocation quota ended early: " + id);
+                scene.Refresh(checkpoint);
+                Require(!Count(root).gameObject.activeSelf, "An exhausted custom counter remained visible: " + id);
+                status.RoundStartMaxCount = -1;
+                scene.Refresh(checkpoint);
+                Require(!Count(root).gameObject.activeSelf, "An unlimited custom counter showed negative calls: " + id);
+            }
+            foreach (int id in new[] { 24343, 24481, 25090 })
+            {
+                // Display fixture for the original round-replacement flag; this
+                // does not assert execution of unsupported trigger parameters.
+                var owner = checkpoint.Units[0]; owner.Statuses.Clear();
+                var status = catalog.CreateStatus(id, 1, 2, id);
+                owner.Statuses.Add(status);
+                scene.Refresh(checkpoint);
+                Require(Count(root).gameObject.activeSelf && Count(root).text == "3",
+                    "Original round-start replacement counter was hidden: " + id);
+                status.RoundStartTriggeredCount = 1;
+                scene.Refresh(checkpoint);
+                Require(Count(root).text == "2", "Round replacement read the duration clock instead of invocation count: " + id);
+            }
+            Debug.Log("Original round-start icon counters passed: nine custom definitions, collected invocations, same-origin refresh, six-call quota, checkpoint reload, exhausted/unlimited hiding and three round-replacement definitions.");
+        }
 
         private static void VerifyPixels(TMP_Text text)
         {

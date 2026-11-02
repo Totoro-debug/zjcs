@@ -10,9 +10,11 @@ $catalog=[Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load($skills,(Hash-M
 foreach($id in 24037,24038,24045,24222,24472,24473,24474,24486,24640){
     $source=$catalog.CreateStatus($id,1,2,990000+$id,12950,1295,5,20,1,$null)
     Assert-RoundMerge ($source.RoundStartMergeMaxCountOnStackRound -and $source.RoundStartStackRoundCount -eq 1 -and [Zjcs.Combat.Official.FightStatusLifecycle]::RoundStartMaximumCount($source) -eq 3) "Original $id lost its initial duration-merge quota"
+    Assert-RoundMerge ([Zjcs.Combat.Official.FightStatusLifecycle]::RoundStartRemainingCount($source) -eq 3) 'Original custom icon count did not start with three remaining invocations'
     $source.StartRound=0;$source.RoundStartTriggeredCount=1
     [Zjcs.Combat.Official.FightStatusLifecycle]::ExtendDurationOnStack($source,1)
     Assert-RoundMerge ($source.CurDurationRound -eq 5 -and $source.StartRound -eq 1 -and $source.RoundStartTriggeredCount -eq 1 -and [Zjcs.Combat.Official.FightStatusLifecycle]::RoundStartMaximumCount($source) -eq 6) 'Duration renewal reset actual calls or failed to add the original three-call quota'
+    Assert-RoundMerge ([Zjcs.Combat.Official.FightStatusLifecycle]::RoundStartRemainingCount($source) -eq 5) 'Custom count used status layers or elapsed rounds instead of retained invocation quota'
 }
 $source=$catalog.CreateStatus(24640,1,2)
 $source.StartRound=0
@@ -20,6 +22,7 @@ foreach($application in 1..12){[Zjcs.Combat.Official.FightStatusLifecycle]::Exte
 Assert-RoundMerge ($source.CurDurationRound -eq 30 -and $source.RoundStartStackRoundCount -eq 13 -and [Zjcs.Combat.Official.FightStatusLifecycle]::RoundStartMaximumCount($source) -eq 39) 'Duration cap suppressed the original stack-round notification or counted status layers instead'
 $source.RoundStartMaxCount=-1
 Assert-RoundMerge ([Zjcs.Combat.Official.FightStatusLifecycle]::RoundStartMaximumCount($source) -lt 0) 'Unlimited quota became finite after duration stacking'
+Assert-RoundMerge ([Zjcs.Combat.Official.FightStatusLifecycle]::RoundStartRemainingCount($source) -eq -1) 'Original unlimited remaining count sentinel was lost'
 $source=$catalog.CreateStatus(25077,1,1)
 $source.IsAddDurationRound=$true;$source.DurationRound=$source.CurDurationRound=3;$source.StartRound=0
 [Zjcs.Combat.Official.FightStatusLifecycle]::ExtendDurationOnStack($source,0)
@@ -69,6 +72,10 @@ function Invoke-MergeFormulaBattle($restore){
             $active=$cp.Units[0].Statuses[0]
             [Zjcs.Combat.Official.FightStatusLifecycle]::ExtendDurationOnStack($active,$cp.Units[0].SkillState.Round)
             Assert-RoundMerge ($active.RoundStartTriggeredCount -eq 1 -and $active.CurDurationRound -eq 5 -and $active.StartRound -eq 1) 'Live extension reset the first actual invocation or used the wrong remaining duration'
+        }
+        if($round -lt 6){
+            $remaining=[Zjcs.Combat.Official.FightStatusLifecycle]::RoundStartRemainingCount($cp.Units[0].Statuses[0])
+            Assert-RoundMerge ($remaining -eq (6-$round)) 'Real creator damage or checkpoint reload lost the display invocation count'
         }
         Assert-RoundMerge (($cp.Units[0].Statuses.Count -eq 1) -eq ($round -lt 6)) 'Extended state was not removed immediately after its sixth actual invocation'
     }

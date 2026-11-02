@@ -371,11 +371,22 @@ namespace Zjcs.Presentation.Combat
             if (status == null) return string.Empty;
             if (showRoundReplaceStack)
             {
-                if (hasRoundStartComponent) return string.Empty;
-                int remaining = FightStatusLifecycle.IconRemainingRound(status, units);
+                int remaining = hasRoundStartComponent
+                    ? FightStatusLifecycle.RoundStartMaximumCount(status) < 0
+                        ? status.DurationRound - status.RoundStartTriggeredCount
+                        : FightStatusLifecycle.RoundStartRemainingCount(status)
+                    : FightStatusLifecycle.IconRemainingRound(status, units);
                 return remaining > 0 ? remaining.ToString(CultureInfo.InvariantCulture) : string.Empty;
             }
-            if (showCustomCount || !showStackCount || status.StackCount <= 0)
+            if (showCustomCount)
+            {
+                // MyFightStatusRoundStart updates the custom icon count on both
+                // invocation and duration stacking, independently of layer stacks.
+                int remaining = hasRoundStartComponent
+                    ? FightStatusLifecycle.RoundStartRemainingCount(status) : 0;
+                return remaining > 0 ? remaining.ToString(CultureInfo.InvariantCulture) : string.Empty;
+            }
+            if (!showStackCount || status.StackCount <= 0)
                 return string.Empty;
             return status.StackCount.ToString(CultureInfo.InvariantCulture);
         }

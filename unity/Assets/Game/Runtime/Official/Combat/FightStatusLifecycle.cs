@@ -108,6 +108,13 @@ namespace Zjcs.Combat.Official
             return status == null ? 0 : status.RoundStartMaxCount * status.RoundStartStackRoundCount;
         }
 
+        /// <summary>Official FightStatusRoundStartComponent.GetRemainCount.</summary>
+        public static int RoundStartRemainingCount(FightBattleStatusState status)
+        {
+            int maximum = RoundStartMaximumCount(status);
+            return maximum < 0 ? -1 : maximum - (status?.RoundStartTriggeredCount ?? 0);
+        }
+
         public static void ResetDurationOnStack(FightBattleStatusState status, int round)
         {
             if (status == null) return;

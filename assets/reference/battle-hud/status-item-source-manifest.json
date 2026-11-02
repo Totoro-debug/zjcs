@@ -27,7 +27,7 @@
     },
     {
       "path": "unity/Assets/Official/Combat/ElementFeedback/Resources/Combat/ElementFeedback/Font_993fe9f48bba80bc.asset",
-      "sha256": "fb12b13daedf28fe4b7dfbb4d84347eb1add629c3d7a43caa14ef6182bffc761"
+      "sha256": "75645ae0769a95b6f4fa053090d0e85a4f4f7970426688dce9a93b08f287a790"
     },
     {
       "path": "unity/Assets/Official/Combat/ElementFeedback/Resources/Combat/ElementFeedback/Material_57b7f2adeb457a8f.mat",
@@ -36,6 +36,18 @@
     {
       "path": "unity/Assets/Official/Combat/HUD/Sprites/BG_Abnormal-56ca57608c.png",
       "sha256": "1480e8df6c6d7f220065f2467eba65ddb670bfdd9e6607b103671833538f9243"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules-source-manifest.json",
+      "sha256": "cef8b0b5a12460f2bdb2b4d8031f95fb8d560a391a9170641e401b67ef08968b"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/battle-status-icons.json",
+      "sha256": "ac23e85cfcf855ec4c997f62b28e91ed1ee580f182bcf393f3783cfe57a8a6f4"
     },
     {
       "path": ".tools/source-packages/current/884_156692/official-code/client-source/FightStatusItem.cs",
@@ -48,6 +60,14 @@
     {
       "path": ".tools/source-packages/current/884_156692/official-code/client-source/FightStatusController.cs",
       "sha256": "22d9a2ef0d7f4c6a4059517775c66da7d188412ae81c8e0f1f9a67c2ee837bab"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusRoundStart.cs",
+      "sha256": "6e3793b3c5affea7908502892e9624d69589ed3fcc4f6d6770442094b29ff6dd"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusRoundStartComponent.cs",
+      "sha256": "8ae5b3ceba853982ca7a2c30735d201836967b1f6164bd973992978217ec99d0"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/WorldUI/FightStatusItem.cs.meta",
@@ -80,7 +100,7 @@
   },
   "generator": {
     "path": "scripts/prepare_battle_status_item.py",
-    "sha256": "99f5d68e25cd92ee338f6f361d29e41e058a5add1202008610ca8dfdee666b38"
+    "sha256": "9397942af2491e1c8ab78aac7b3b0d0d543b842aeefb5a603d747f5faf8ce0ea"
   },
   "outputs": [
     {
@@ -95,11 +115,19 @@
   "runtime": [
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleUnitWorldHudView.cs",
-      "sha256": "e5d3dd5ad45ee0eb7a5db559b5a93f43c795b47e4dc8284aa1ecf19408381536"
+      "sha256": "945605b32a78b4b8e18116f9f5465a08565a6c3044b460135523e1782166e78a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusLifecycle.cs",
+      "sha256": "a36ce1206fdef7a6bf06cc44623f4c76ed133762a66a38d11a19eb5b82bb8ceb"
+    },
+    {
+      "path": "scripts/test_battle_round_merge.ps1",
+      "sha256": "16cd12122e2e42eb44750f8e7333e7a5ffcdea3228567f018d307fa6caf5f606"
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/OfficialBattleStatusCounterAcceptance.cs",
-      "sha256": "346aefd29d83b9cfd73f6176c2c520330b06015e84416939d2bea002a6b54f7b"
+      "sha256": "4ac26c8615356ef162f34e74b186d8dc5499d02ea744abb5ea38019db29c97a3"
     },
     {
       "path": "unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.RoundStartup.cs",
@@ -107,8 +135,8 @@
     },
     {
       "path": "unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.StatusIcons.cs",
-      "sha256": "a83352266aef39beac79734686c9690dae76dbaf13e5f0b0754a6678f23e7fa2"
+      "sha256": "34fcf11a786fd6619867609940457c007c6649e907a159d69a643407eafb4adb"
     }
   ],
-  "adaptation": "Original native prefab; explicit sprite overload and literal count formatter. Original builtin sprite material, sorting, TMP parameters and TMPEffect retained. Bind identical official FZY4K TTF through the installed native world-tip font/material port; no alternate font or artwork. Historical 854 unit-bar cell/layout binding remains separately pinned and unchanged."
+  "adaptation": "Original native prefab; explicit sprite overload and literal count formatter. Original builtin sprite material, sorting, TMP parameters and TMPEffect retained. Bind identical official FZY4K TTF through the installed native world-tip font/material port; no alternate font or artwork. Historical 854 unit-bar cell/layout binding remains separately pinned and unchanged. Remaining invocation counts follow the current shared GetRemainCount and client MyFightStatusRoundStart producer against separately verified historical rules/display flags."
 }
