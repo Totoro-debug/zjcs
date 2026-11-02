@@ -13,7 +13,7 @@ using Zjcs.Official.StoryPlayables;
 
 namespace Zjcs.Editor
 {
-    public static class OfficialBattleStatusPlayableAcceptance
+    public static partial class OfficialBattleStatusPlayableAcceptance
     {
         private const string Key = "Zjcs.Battle.StatusPlayableAcceptance";
         private const string Effect = "Combat/GroundEffects/Prefabs/EcEntity/Fight/FightSkill/Move/Effect/Eff_Role_Wave";
@@ -84,7 +84,7 @@ namespace Zjcs.Editor
         private static void Require(bool condition, string message)
         { if (!condition) throw new InvalidOperationException("Status playable: " + message); }
 
-        private sealed class Scope : IDisposable, IStoryPlayableInstanceFactory
+        private sealed partial class Scope : IDisposable, IStoryPlayableInstanceFactory
         {
             private readonly GameObject root = new GameObject("Status playable scope");
             private readonly MyPlayableCenter center = new MyPlayableCenter();
@@ -257,6 +257,8 @@ namespace Zjcs.Editor
                     .All(value => value.mySource == sourceA && value.myTarget == sourceB), "A pooled transition lost its source/target arguments.");
                 manager.RemoveAllPlayable(true); center.RemoveAll(); yield return null;
                 Require(instances.All(value => value == null || !value.gameObject.activeInHierarchy), "Final manager removal left live pooled visuals.");
+                IEnumerator lifecycle = StatusViewSteps();
+                while (lifecycle.MoveNext()) yield return lifecycle.Current;
             }
 
             public void Dispose()
@@ -269,7 +271,7 @@ namespace Zjcs.Editor
 
         private sealed class Runner : MonoBehaviour { }
 
-        public sealed class ProbePlayable : MyPlayable
+        public sealed partial class ProbePlayable : MyPlayable
         {
             public string Id;
             public float Duration;

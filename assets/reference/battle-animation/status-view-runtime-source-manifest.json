@@ -1,0 +1,370 @@
+{
+  "manifest": "884_156692",
+  "code_extraction": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Framework.FirstPass.Runtime.dll",
+      "sha256": "e4af045ab17cc6cb3a80403913c03ef5f15a736875c57bf67f3e44cff415627e"
+    }
+  ],
+  "sources": [
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatus.cs",
+        "sha256": "6703467530851893a67bd76e3d6a2d15253cf336d3c6abe23b6a1a104ddace1d"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/MyFightStatus.cs",
+        "sha256": "504c6797a56e88f403e9982f55be9a285f8f4ebd2cc12f2d2b967e088dae4ea2"
+      },
+      "unchanged_method_bodies": {
+        "StopOldDisplay(MyFightStatus oldDisplayStatus)": "b634e62c19f5309b504a074f142a6e01e7845a2710f288e9b3c6b3e6f3ba20b1",
+        "RunStackCountPlayable(int stackCount)": "0494a7d270868cdc658a41a2dce79e426661e8638e66932414f4273255c9190c",
+        "OnStackedPlayableStop(MyPlayable playable)": "294d34c057b58b47527a37303962ea9c924be6afeaa2e1ba73d702372a6e3baf",
+        "StopStackPlayable()": "c4ea6f8b32886c3e63b0971118ffe05c266c86f1c730068c8df6f675ad26ce93",
+        "StopMasterCastPlayable()": "5fa5e85ffa2e32634aea5b621178c779e305ca8116977a351f786445447d4fb7",
+        "GetStatusPlayableParams()": "2cec4a9582c1a3b618cf3beee3eb2aa9ca125716ca88d5bab021629110ab6cd3",
+        "PlayAllPlayable()": "3f6e7e76706a54da072b80ba8151311fa7bb9185a5b909defc7eb82b7e55d9ee",
+        "StopAllPlayable()": "36fc92f01d009a30060cd627287864559605e532b6900930460a0f7e3ea058d8",
+        "StopPlayPlayable()": "78fe4731e66aa1d0b8aa403f276929eba9cfa3c10ba161867493c2e8d2b12b65",
+        "TryGetPlayables(ref HashSet<GameObject> playables)": "4bad76e48168e9f4d0fa4681e7548005c50849cfa360e5c643101cb2c04d03a7"
+      },
+      "entity_boundary_methods": {
+        "OnStart(bool newEntity)": {
+          "original": "ab932bb1b7681f4a44d08c68e26ae83cbd59d4896dd29b3ab562f7155152a822",
+          "migrated": "55314dc859f2b96dc912a5a26df552e1eae868b667b59f5ad7215b78ee3ce605"
+        },
+        "NotifyStartEvent()": {
+          "original": "34d84626c618646fc6f9f1139a4cc7c88852ade7afdb33f46df8735467b6bfcd",
+          "migrated": "caa5bf971c23d49ba4b9b41798b08cb45a7a203d992b27d802f1c53893800ec4"
+        },
+        "NotifyEndEvent()": {
+          "original": "fcde9f768be4d23a609dc44d8ce9092bd14d004c32e7bcfce269f74f8e93a2b0",
+          "migrated": "4ddc45da43440c41810235ea0346b85a749e665e51442ec27c9999880f751a49"
+        },
+        "RefreshStackCountPlayable(int toCount)": {
+          "original": "71319ce81d1bc0d25433ea4215bac8c574c7b7aec3705299e333278d25cbe4ef",
+          "migrated": "0694bbe2f6d7fb4d3ed1ed59b7b24a87b0acc73a96e2067f566d73e9774a597c"
+        },
+        "GetSameShareStackStatuses()": {
+          "original": "fa96a90cb2b01d453c7f8803149ecb5e33ac52eb7e42f818c429738edd803731",
+          "migrated": "29ff7d993ded40f4c1420821169b4c54921933f6fa3feb563bd13c8ece7d786e"
+        },
+        "RefreshStackCountPlayable()": {
+          "original": "4cc9f836abcf6ca6be73c2d569de55659c1283c86f333d6e404e8d81d61bbd40",
+          "migrated": "50e16246c1386a240e390fde711aec966d6b9183d479341954fa8bc7134475a4"
+        },
+        "PlayStackPlayable()": {
+          "original": "ee6cd61a4de98f01685fc952800bb329c4186bceb5aac5b4f94d054f3919b05f",
+          "migrated": "de342132b5d2d547b56984a28a947c13c2dd0e27cb39e057d6770951a417b04d"
+        },
+        "PlayMasterCastPlayable()": {
+          "original": "daf4bf8947d3870020ca91846bfa7e14fd564e95a5870d7e4508d0a8a5941e13",
+          "migrated": "4c2400a1d980b8cc1f1deb348f745987c0f9f0693779c7b31cd8a99dc39e47c8"
+        },
+        "PlayPlabable()": {
+          "original": "3379819a70589b9badff0d17290bf35cab9391642cfbdfb5effdf9dcb0664882",
+          "migrated": "80a860efe16e6d6035b010bd920a4e3b5d2cd5df169089cd8d4a8b5527d4fdbf"
+        },
+        "PlayStackedPlayable()": {
+          "original": "d8bdb158efa4f2a6add844b5c60380835cfb7d36d054ce0618975e1e1855ca80",
+          "migrated": "2d8073890d9b2405e41fdc718dec1f0254fa1db1b070036c74c9d06321fe08a5"
+        },
+        "StopStackedPlayable()": {
+          "original": "297d3adb02c90893d27a72fbc2b48085b9e449f7461a8b80d67dfd718a448b11",
+          "migrated": "02f5c0c12bd03464d3fe100cfa03af9fe6fdcb52c89b4eba6c9f6443d3e15ce2"
+        },
+        "PlaySpecialStackedPlayable(StackCountPlayableMap config, int stackCount)": {
+          "original": "6d14428d9d246e101a0ca6bdcd2b77ea74d004c8f2b4da63ce572f504555df9d",
+          "migrated": "7dbcebd460abe4ea7fb4437c2da5aabba1d7216a5db2c0107a331b5ada7805e5"
+        },
+        "StopSpecialStackedPlayable(int stackCount)": {
+          "original": "36976c0318d42e73899c1382c36cb84eeb213240b82e7d8c779ba7d47ab0c6e8",
+          "migrated": "986336127cdc4ac662957458dc65fa7c6db201b96926dc8ec8db06616e001919"
+        },
+        "CanShowSpriteIcon()": {
+          "original": "03349c683a6e9bce5f2fac7a48fe09bc2b6138119a0f72da71e344c11d0e7d74",
+          "migrated": "df4b97ea3ae712991a63cf083778987090871c2b5d2abc9f48d3c2a04fdc8d03"
+        }
+      },
+      "verified_visual_bodies_after_explicit_entity_access_substitution": {
+        "OnStatusStackUpdate(FightStatusComponent status, int fromCount, int toCount)": "c0f99e503416e0d36e7628e33991075368a734e099fc54356ac36d70f252019a",
+        "RefreshStackCountPlayable(int toCount)": "0694bbe2f6d7fb4d3ed1ed59b7b24a87b0acc73a96e2067f566d73e9774a597c",
+        "GetSameShareStackStatuses()": "29ff7d993ded40f4c1420821169b4c54921933f6fa3feb563bd13c8ece7d786e",
+        "RefreshStackCountPlayable()": "50e16246c1386a240e390fde711aec966d6b9183d479341954fa8bc7134475a4",
+        "StopOldDisplay(MyFightStatus oldDisplayStatus)": "b634e62c19f5309b504a074f142a6e01e7845a2710f288e9b3c6b3e6f3ba20b1",
+        "OnStatusInvoked(FightStatusComponent status)": "76a8c26cbbe83a9af87e9ca8b131dfb92d181d45294c2240a5bdba5bce2a7cb0",
+        "OnForbiddenChanged(FightStatusComponent status, bool preForbidden)": "3905ad08e5cfc03433c4de717aad3abb20756b0efe557b41ee60d27ddd830dfe",
+        "RunStackCountPlayable(int stackCount)": "0494a7d270868cdc658a41a2dce79e426661e8638e66932414f4273255c9190c",
+        "OnStackedPlayableStop(MyPlayable playable)": "294d34c057b58b47527a37303962ea9c924be6afeaa2e1ba73d702372a6e3baf",
+        "PlayStackPlayable()": "de342132b5d2d547b56984a28a947c13c2dd0e27cb39e057d6770951a417b04d",
+        "StopStackPlayable()": "c4ea6f8b32886c3e63b0971118ffe05c266c86f1c730068c8df6f675ad26ce93",
+        "StopMasterCastPlayable()": "5fa5e85ffa2e32634aea5b621178c779e305ca8116977a351f786445447d4fb7",
+        "GetStatusPlayableParams()": "2cec4a9582c1a3b618cf3beee3eb2aa9ca125716ca88d5bab021629110ab6cd3",
+        "PlayAllPlayable()": "3f6e7e76706a54da072b80ba8151311fa7bb9185a5b909defc7eb82b7e55d9ee",
+        "StopAllPlayable()": "36fc92f01d009a30060cd627287864559605e532b6900930460a0f7e3ea058d8",
+        "PlayPlabable()": "80a860efe16e6d6035b010bd920a4e3b5d2cd5df169089cd8d4a8b5527d4fdbf",
+        "StopPlayPlayable()": "78fe4731e66aa1d0b8aa403f276929eba9cfa3c10ba161867493c2e8d2b12b65",
+        "PlayStackedPlayable()": "2d8073890d9b2405e41fdc718dec1f0254fa1db1b070036c74c9d06321fe08a5",
+        "StopStackedPlayable()": "02f5c0c12bd03464d3fe100cfa03af9fe6fdcb52c89b4eba6c9f6443d3e15ce2",
+        "PlaySpecialStackedPlayable(StackCountPlayableMap config, int stackCount)": "7dbcebd460abe4ea7fb4437c2da5aabba1d7216a5db2c0107a331b5ada7805e5",
+        "StopSpecialStackedPlayable(int stackCount)": "986336127cdc4ac662957458dc65fa7c6db201b96926dc8ec8db06616e001919",
+        "TryGetPlayables(ref HashSet<GameObject> playables)": "4bad76e48168e9f4d0fa4681e7548005c50849cfa360e5c643101cb2c04d03a7"
+      },
+      "original_mono_script_file_id": -1481699058
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusAgent.cs",
+        "sha256": "0ddc9ca4c35266438fbe33ac424b32566012608f6bc19bf4342621f1819f9693"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/MyFightStatusAgent.cs",
+        "sha256": "a0f4aeeba47f4c71ed6e386e432fc2bf7a506f3968f2b947aa26a250e16ccf10"
+      },
+      "unchanged_method_bodies": {
+        "ApplyStatus(MyFightStatus status)": "6df5148371ec7194af34e73054ff1c84cf18061200e9d370bc3c99ecfb9bafcf",
+        "EndStatus(MyFightStatus status)": "c415024530ef097dfb360e06204b3d79ee517efc6cecf20c958b65e8dd26c6c0"
+      },
+      "entity_boundary_methods": {},
+      "verified_visual_bodies_after_explicit_entity_access_substitution": {},
+      "original_mono_script_file_id": -2006594241
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/ApplyByStatusStackCount.cs",
+        "sha256": "2460a45bdbe431cf6a114f261f53d45fca52e67caa933b435999c96dcc1b2d6a"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/ApplyByStatusStackCount.cs",
+        "sha256": "2e15b81be389f872e737a063582ef78e02756fd5d502dccd84fa0f4bdde9beb4"
+      },
+      "unchanged_method_bodies": {
+        "InitImpl(MyPlayable playable, MyPlayableApplyAttribute applyAttr)": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "OnDestroy()": "9f7458e5435646d396f1b6f888cf2d2dc89baff681ea87fde37e9de23eda64f7"
+      },
+      "entity_boundary_methods": {
+        "PlayImpl(MyPlayable playable, MyPlayableApplyAttribute applyAttr)": {
+          "original": "d1817a4dc247373376262ee41d50027419688d79c9973fdadea1880d312d80b0",
+          "migrated": "157b62d84aa0dec9d292a25981b0cfc73e73800011ab57d6ef3dff7ca40bed9d"
+        },
+        "Playable_OnStop(MyPlayable playable)": {
+          "original": "4f54c249eaa5d21a5fa4a456842520168b99f36a36062b634b674fc79aeb57ea",
+          "migrated": "de47926b6fc3f392cd792422ba2152081b437a5f1ef5c7d946c296cca009ca65"
+        }
+      },
+      "verified_visual_bodies_after_explicit_entity_access_substitution": {},
+      "original_mono_script_file_id": -270686477
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/ApplyOverrideToStatusSource.cs",
+        "sha256": "9f08b6ee8d67a3c525186e0f9da7ed4b36eac2c9d2809110de271544ac2b5a66"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/ApplyOverrideToStatusSource.cs",
+        "sha256": "78eb3f82fd62dc82fba075dbf0146079a7077d6f60c64a97892081aaef1ceacb"
+      },
+      "unchanged_method_bodies": {},
+      "entity_boundary_methods": {
+        "TryGetOverrideGameObject(MyPlayable playable, out GameObject overrideObject)": {
+          "original": "92fa0ab6b885461e1e8e5bb722d0f85fa40274109b348768d3468f5f3b7aaf8c",
+          "migrated": "8ea6baaf4a4c092155da9ca9e1829181c8505ea9baf89476ba6ca1c7fdef6f40"
+        }
+      },
+      "verified_visual_bodies_after_explicit_entity_access_substitution": {},
+      "original_mono_script_file_id": 28360647
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/ApplyOverrideSourceOrTarget.cs",
+        "sha256": "2a782492530d25527dddc47cbdddd5d0c81c664475aabf72c3889f4843a29e95"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/ApplyOverrideSourceOrTarget.cs",
+        "sha256": "51bbdb96c37029668c3bbf55ab8ef5120b571a72eb354ca058483790fcc26b79"
+      },
+      "unchanged_method_bodies": {
+        "InitImpl(MyPlayable playable, MyPlayableApplyAttribute applyAttr)": "ed9b5f88441d1a69ca6d6eea745e50e4eda2356615531b06961d6fde80616312",
+        "PlayImpl(MyPlayable playable, MyPlayableApplyAttribute applyAttr)": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+      },
+      "entity_boundary_methods": {},
+      "verified_visual_bodies_after_explicit_entity_access_substitution": {},
+      "original_mono_script_file_id": 373026430
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/IChangePlayableStatusStackCount.cs",
+        "sha256": "51f39781a1f118495bc672ce14715da0053180b80a6c535ad9cab44e89f2dcf8"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/IChangePlayableStatusStackCount.cs",
+        "sha256": "75093c062b581e71f135f744ee357cdbe73118a0602712331a9dd0590ae3f9ef"
+      },
+      "unchanged_method_bodies": {},
+      "entity_boundary_methods": {},
+      "verified_visual_bodies_after_explicit_entity_access_substitution": {}
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source/Framework/GAction.cs",
+        "sha256": "89cffeb6e4af0389ed8d5917d69f95172e2a83e25004cab18717a1704de17ef7"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/GAction3.cs",
+        "sha256": "4aa04d629d035d0b67e7311acbb8f8eeca396985646cac28e8f66e5203ce63fa"
+      },
+      "unchanged_method_bodies": {
+        "Invoke(T1 param1, T2 param2, T3 param3)": "c68495b25c8baedf0b556b6017531a4e39c65db6ff09f01d9826cf25cfc46d96",
+        "Subscribe(Action<T1, T2, T3> handler)": "516d8edc946f9231a75d8d7b168939a02b1defdb579338c9e6385d72766c7d9a",
+        "GetVersion()": "ab9aba3e067777925812b19ab271a2600006c6851be9cbb71503aab5d67c6590"
+      },
+      "entity_boundary_methods": {
+        "SafeInvoke(T1 param1, T2 param2, T3 param3)": {
+          "original": "a98602845258c65d7efe88ebb37a1b24f6ac1421fa1811d9889f61e8beabf39d",
+          "migrated": "16fc4ce926092634aeb3eff306f5ea3644922fd4a06e922e49d7662af23a01df"
+        }
+      },
+      "verified_visual_bodies_after_explicit_entity_access_substitution": {}
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_status_view_runtime.py",
+    "sha256": "d94d8ac36b4430328e7e81c74c4d89589e2a9265fdae9aded107dd2f3a5f1739"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/MyFightStatus.cs",
+      "sha256": "504c6797a56e88f403e9982f55be9a285f8f4ebd2cc12f2d2b967e088dae4ea2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/MyFightStatus.cs.meta",
+      "sha256": "14d89eb5ed4c9723870e218138398c5c055b58399b0c5300f7b944ef581fba0a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/MyFightStatusAgent.cs",
+      "sha256": "a0f4aeeba47f4c71ed6e386e432fc2bf7a506f3968f2b947aa26a250e16ccf10"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/MyFightStatusAgent.cs.meta",
+      "sha256": "29e7c326dff6099dbf2a876571671409387eee0b915d3cdaddc836306597bf07"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/ApplyByStatusStackCount.cs",
+      "sha256": "2e15b81be389f872e737a063582ef78e02756fd5d502dccd84fa0f4bdde9beb4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/ApplyByStatusStackCount.cs.meta",
+      "sha256": "0442dc0e90a14a3e86d18f0e161ee0f06f49517c06c464e5506cc5ce19eb6a6b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/ApplyOverrideToStatusSource.cs",
+      "sha256": "78eb3f82fd62dc82fba075dbf0146079a7077d6f60c64a97892081aaef1ceacb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/ApplyOverrideToStatusSource.cs.meta",
+      "sha256": "c295b758bec94a4d73b43df61f82978c851d934553f0cfc4672bb3f3d2eeed04"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/ApplyOverrideSourceOrTarget.cs",
+      "sha256": "51bbdb96c37029668c3bbf55ab8ef5120b571a72eb354ca058483790fcc26b79"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/ApplyOverrideSourceOrTarget.cs.meta",
+      "sha256": "9187695a80c39a34c2af2c6c8de5b3a4d2c6c7344208ecc104362dad458e3ee8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/IChangePlayableStatusStackCount.cs",
+      "sha256": "75093c062b581e71f135f744ee357cdbe73118a0602712331a9dd0590ae3f9ef"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/IChangePlayableStatusStackCount.cs.meta",
+      "sha256": "f6f66783f3242826f7a421208d00e3ff9dfda13329b12b8c4c4d189f9145b41f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/GAction3.cs",
+      "sha256": "4aa04d629d035d0b67e7311acbb8f8eeca396985646cac28e8f66e5203ce63fa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/GAction3.cs.meta",
+      "sha256": "29a7552ccb9325ff48a9235ab47ef06b45de37c3a989f98fadf82a24e146613f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/IFightStatusPlayableContext.cs",
+      "sha256": "049e37959cb223d8ddffb1f2e0765de642c1d3df4723ef1f9da90f533c1a2c0d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/IFightStatusPlayableContext.cs.meta",
+      "sha256": "dd0dd5e04264a6b8af824b68a24da28c3ab3502eb385119aae87aa35df52d1a6"
+    }
+  ],
+  "entity_boundary_evidence": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightStatusShareStack.cs",
+      "sha256": "239b14e6f198c62ea072f0c48b01c5c533a41295575dc1b2f883339edc045a50"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusComponentInfo.cs",
+      "sha256": "4ed2632fc593377db4196dcd018c7123d94ace78198c32115a5c8d9544e6b77f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusAgentComponent.cs",
+      "sha256": "25ff2bb6d454ca5fb497e74435261f51b6e38d8de36d00e8ced3472377bca572"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusShareStackComponent.cs",
+      "sha256": "9b58d4453ebfdd2eb8c3e40053b5f098e1545ebcf9464c7133c8ae0aaa05d235"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightStatusShareStackComponentInfo.cs",
+      "sha256": "fb06e807dbe6dc8d032e5c907c47dcb43406b9450db22ce3d3387ce2075db4bd"
+    }
+  ],
+  "boundary": {
+    "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/IFightStatusPlayableContext.cs",
+    "sha256": "049e37959cb223d8ddffb1f2e0765de642c1d3df4723ef1f9da90f533c1a2c0d"
+  },
+  "reused_dependencies": [
+    {
+      "path": "assets/reference/battle-animation/status-playable-runtime-source-manifest.json",
+      "sha256": "0d65018753e6da0e50c3db73e33d95cf5f197702e5e5c523285f0b399f28643b"
+    },
+    {
+      "path": "scripts/prepare_unity_story_sound_runtime.py",
+      "sha256": "841dc964f433cac4a93840a2f71e7623795f864df0fadb9422faa48ba8f6515a"
+    },
+    {
+      "path": "scripts/prepare_unity_story_playable_runtime.py",
+      "sha256": "a7fb5b558c63f4896d510067e103fd406cc82d94b599c27766661776de874711"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/BattleStatusPlayables/OfficialBattleStatusPlayableAcceptance.StatusView.cs",
+      "sha256": "fa07d2d5b1b0b30b5b7367dd90f6b4b0dc4ff04ad93a9d4862734b70b1bf21be"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/BattleStatusPlayables/OfficialBattleStatusPlayableAcceptance.cs",
+      "sha256": "14955ce2c3612c74afb9a45425f8608a74a3fa2bd371040cb5361134bcb4ded3"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/BattleStatusPlayables/Zjcs.Editor.BattleStatusPlayables.asmdef",
+      "sha256": "e3610c31f26a96d41712209e3c144c8cc44045184b5c565c49422361013eb1de"
+    },
+    {
+      "path": "scripts/prepare_battle_status_playable_validation.py",
+      "sha256": "3a3ef7723a01a6f676f960d3aa0fad3db0f2a7a736328438a8469bc4a18a766a"
+    }
+  ],
+  "adaptation": "Official MyFightStatus lifecycle and MyFightStatusAgent membership. Original local status/entity metadata, events, shared-stack totals, creator/master GameObjects and icon availability enter through explicit host interfaces; no rule computation is added. Original DI becomes Bind, disposable forbidden subscription becomes a symmetric event subscription, framework logging becomes Unity diagnostics.",
+  "limits": [
+    "Full native status graphs, shared-stack rule producers and formal battle actor/timeline binding are not supplied by this view component."
+  ]
+}
