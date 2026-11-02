@@ -80,7 +80,10 @@ namespace Zjcs.Editor.Combat
                         renderer.Initialize(false, false);
                         Require(ReferenceEquals(state, native.State), "same-asset initialization retains live pose identity");
                         var skin = state.CreateSkin("Current original scene body render diagnostic");
-                        foreach (string name in new[] { "default", "body_" + group + "_" + (model.Sex == "male" ? "M" : "F") + "_01", model.Sex == "male" ? "hair_G_01" : "hair_F_01" })
+                        // Include the actual base weapon attachment: integrated
+                        // weapon followers gate visibility on this source key.
+                        foreach (string name in new[] { "default", "body_" + group + "_" + (model.Sex == "male" ? "M" : "F") + "_01", model.Sex == "male" ? "hair_G_01" : "hair_F_01",
+                            group == "100" ? "pWeapon_100_G_001" : "pWeapon_200_G_002" })
                             skin.AddSkin(state.Data.FindSkin(name));
                         state.SetSkin(skin); state.SetToSetupPose();
                         // Explicit diagnostic input: this is not the production motion driver.
@@ -101,6 +104,8 @@ namespace Zjcs.Editor.Combat
                         var baseline = CaptureSceneRenderer(new[] { main }, model.Sex + "-" + group + "-whole", viewBounds);
                         var worldBounds = main.MeshRenderer.bounds;
                         var cameraBaseline = CaptureSceneRendererCamera(worldBounds, model.Sex + "-" + group + "-whole");
+                        using var followers = new SceneRendererFollowerProbe(native, group);
+                        followers.CheckVisible();
                         var triangles = SceneRendererTriangles(new[] { main });
                         int vertices = main.Mesh.vertexCount;
                         parts.SeparatorSlots.Add(state.DrawOrder[state.SlotCount / 2]);
@@ -114,6 +119,7 @@ namespace Zjcs.Editor.Combat
                         Require(triangles.SequenceEqual(SceneRendererTriangles(active)), "whole and split source triangles retain exact vertex positions, UVs, colors and draw order");
                         Require(baseline.SequenceEqual(CaptureSceneRenderer(active, model.Sex + "-" + group + "-split", viewBounds)), "current character whole and split GPU pixels match exactly");
                         Require(cameraBaseline.SequenceEqual(CaptureSceneRendererCamera(worldBounds, model.Sex + "-" + group + "-split")), "actual portrait camera preserves split renderer sorting and caller transform");
+                        followers.CheckVisible();
                         parts.SeparatorSlots.Clear();
                         split.ReInitPartRenderers(main.MeshRenderer.sortingLayerID, 0, 0, 0);
                         parts.LateUpdateMesh();
@@ -126,6 +132,8 @@ namespace Zjcs.Editor.Combat
                         Require(triangles.SequenceEqual(SceneRendererTriangles(active))
                             && cameraBaseline.SequenceEqual(CaptureSceneRendererCamera(worldBounds, model.Sex + "-" + group + "-pooled")),
                             "shrinking and growing pooled fragments preserves source triangles and actual portrait pixels");
+                        followers.CheckVisible();
+                        followers.CheckInvisible(active.Select(p => p.MeshRenderer).ToArray());
                         Require(active.All(p => p.MeshRenderer.sharedMaterials.All(m => clones.ContainsValue(m))), "whole and split materials reuse actual current instances");
                         var visible = active.SelectMany(p => p.MeshRenderer.sharedMaterials).First();
                         var original = clones.Single(pair => pair.Value == visible).Key;
@@ -160,9 +168,11 @@ namespace Zjcs.Editor.Combat
                         Require(native.State.Source.Sex != model.Sex && parts.Separator == null && parts.SeparatorSlots.Count == 0
                             && active.All(p => !p.gameObject.activeSelf) && main.MeshRenderer.sortingOrder == 177,
                             "cross-sex asset switch retires old segments and identities while retaining caller renderer sorting");
+                        followers.CheckRebuilt();
                         main.MeshRenderer.sortingOrder = 0;
                         native.Release(); native.Release();
                         Require(native.State == null && main.Mesh.vertexCount == 0 && main.MeshRenderer.sharedMaterials.Length == 0, "repeated release clears old geometry and materials");
+                        followers.CheckReleased();
                         yield return null;
                         Require(ownedParts.All(part => !part), "reinitialization and release destroy every owned scene part");
                     }

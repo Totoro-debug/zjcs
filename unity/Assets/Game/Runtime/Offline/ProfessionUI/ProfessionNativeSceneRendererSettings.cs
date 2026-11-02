@@ -24,6 +24,8 @@ namespace Zjcs.Offline.ProfessionUI
         public bool PmaVertexColors => Flag(skeleton, "pmaVertexColors");
         public bool DisableRenderingOnOverride => Flag(skeleton, "disableRenderingOnOverride");
         public bool Enabled => Flag(mesh, "m_Enabled");
+        public float ZSpacing => Convert.ToSingle(skeleton["zSpacing"]);
+        public int UpdateWhenInvisible => Int(skeleton, "updateWhenInvisible");
 
         public static ProfessionNativeSceneRendererSettings Load(TextAsset source)
         {

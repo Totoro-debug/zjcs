@@ -13,7 +13,8 @@ namespace Zjcs.Offline.ProfessionUI
     [RequireComponent(typeof(ProfessionNativeSceneMeshPart))]
     public sealed class ProfessionNativeSceneRenderer : MonoBehaviour,
         IProfessionAppearanceSceneRenderer, IProfessionAppearancePartRenderer,
-        IProfessionSceneSeparatorRenderer, IProfessionAppearanceMaterialReplacement
+        IProfessionSceneSeparatorRenderer, IProfessionAppearanceMaterialReplacement,
+        IProfessionFollowerRenderer
     {
         private ProfessionNativeSceneAppearanceResources resources;
         private ProfessionNativeSceneCharacterAsset initializedAsset;
@@ -29,6 +30,13 @@ namespace Zjcs.Offline.ProfessionUI
         public GameObject GameObject => gameObject;
         public IProfessionAppearanceSkeleton Skeleton => State;
         IProfessionSkinClipSkeleton IProfessionAppearancePartRenderer.Skeleton => State;
+        IProfessionFollowerSkeleton IProfessionFollowerAnimation.Skeleton => State;
+        // The verified current prefab has zero spacing. The original follower
+        // returns before consulting either custom depth or draw-order depth.
+        public bool UseCustomZSpacing => false;
+        public float ZSpacing => settings?.ZSpacing ?? 0;
+        public int UpdateWhenInvisible => settings?.UpdateWhenInvisible ?? 0;
+        public int UpdateMode => State != null && HasVisibleGeometry() ? 3 : UpdateWhenInvisible;
         public string SkeletonDataName => initializedAsset ? "character_" + (State.Source.Sex == "male" ? "Male" : "Female") + "_1" : null;
         public Dictionary<Material, Material> CustomMaterialOverride { get; } = new Dictionary<Material, Material>();
         public List<IProfessionSkinClipSlot> SeparatorSlots { get; } = new List<IProfessionSkinClipSlot>();
@@ -36,7 +44,19 @@ namespace Zjcs.Offline.ProfessionUI
         public IProfessionAppearancePartSeparator Separator => separator;
         public event Action<Material[]> OnGetUpdatedSharedMaterials;
         public event Action<IProfessionAppearanceRendererLite> OnCustomDemandLoading;
+        public event Action<IProfessionFollowerAnimation> OnAnimationRebuild;
         private ProfessionNativeSceneMeshPart Main => GetComponent<ProfessionNativeSceneMeshPart>();
+
+        private bool HasVisibleGeometry()
+        {
+            // The whole renderer is disabled when the original separator owns
+            // the draw. Testing it alone would freeze every attached part.
+            if (backend != null)
+                return backend.PartsRenderers.Any(part => part.GameObject.activeInHierarchy
+                    && part.MeshRenderer.enabled && part.MeshRenderer.isVisible);
+            var main = Main.MeshRenderer;
+            return main.enabled && main.isVisible && gameObject.activeInHierarchy;
+        }
 
         public void Configure(ProfessionNativeSceneAppearanceResources catalog)
         {
@@ -64,6 +84,7 @@ namespace Zjcs.Offline.ProfessionUI
             batches = new ProfessionNativeMeshBatches(next.SlotCount);
             if (!appliedHierarchy) { settings.Apply(Main.MeshRenderer); appliedHierarchy = asset.Hierarchy; }
             Main.MeshRenderer.enabled = settings.Enabled;
+            OnAnimationRebuild?.Invoke(this);
         }
 
         public IEnumerable<Material> SkinMaterials(IProfessionAppearanceSkin skin)
