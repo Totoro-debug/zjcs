@@ -387,6 +387,7 @@ namespace Zjcs.Editor
             TriggerTimingProbe triggerTiming = ConfigureTriggerTimingProbe(checkpoint);
             HpStartupProbe hpStartup = ConfigureHpStartupProbe(checkpoint);
             HpListenerProbe hpListener = ConfigureHpListenerProbe(checkpoint);
+            HpForbiddenProbe hpForbidden = ConfigureHpForbiddenProbe(checkpoint);
             int initialCounter = checkpoint.Counter;
             controller.StepCompleted += result => {
                 checkpoint = result.Checkpoint;
@@ -397,6 +398,7 @@ namespace Zjcs.Editor
                 triggerTiming?.ObserveStep(controller);
                 hpStartup?.ObserveStep(controller);
                 hpListener?.ObserveStep(controller);
+                hpForbidden?.ObserveStep(controller);
                 if (checkpoint.Counter == initialCounter + 1 || checkpoint.Finished)
                     Debug.Log("[Battle hosts] " + name + " step=" + checkpoint.Counter
                         + " finished=" + checkpoint.Finished);
@@ -505,6 +507,7 @@ namespace Zjcs.Editor
             triggerTiming?.Verify(name, checkpoint);
             hpStartup?.Verify(name, checkpoint);
             hpListener?.Verify(name, checkpoint);
+            hpForbidden?.Verify(name, checkpoint);
             VerifyEquipmentBattlePassives(name, checkpoint, true);
             yield return SettleUi();
             yield return Capture(output, name + "-result");

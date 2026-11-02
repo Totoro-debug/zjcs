@@ -53,6 +53,52 @@ namespace Zjcs.Editor
             return new HpStartupProbe(summon, counted);
         }
 
+        private static HpForbiddenProbe ConfigureHpForbiddenProbe(FightBattleCheckpoint checkpoint)
+        {
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HP_FORBIDDEN_ACCEPTANCE") != "1") return null;
+            var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
+            var player = checkpoint.Units.Single(value => value.Id == 1);
+            player.Hp = player.Turn.Hp = Math.Max(1L, player.MaxHp * 3 / 10);
+            foreach (var enemy in checkpoint.Units.Where(value => value.Side != player.Side))
+            {
+                foreach (var property in enemy.Properties.Concat(enemy.BaseProperties))
+                {
+                    if (property.Id == catalog.PropertyType("MaxHp")) property.Value = 1000000L;
+                    if (property.Id == catalog.PropertyType("Attack")) property.Value = Math.Min(property.Value, 100L);
+                }
+                enemy.MaxHp = enemy.Hp = enemy.Turn.Hp = 1000000L;
+            }
+            player.Statuses.Add(catalog.CreateStatus(24202, 1, 1, 9914202));
+            player.Statuses.Add(catalog.CreateStatus(24456, 1, 1, 9914456));
+            return new HpForbiddenProbe();
+        }
+
+        private sealed class HpForbiddenProbe
+        {
+            private bool observed;
+            public void ObserveStep(OfficialBattleRuntimeController controller)
+            {
+                var cp = controller.Checkpoint;
+                var step = cp.Receipts.Last().Event;
+                var casts = step.SkillCasts.Where(value => value.SkillEntityId == 10170).ToArray();
+                if (casts.Length == 0) return;
+                Require(!observed && casts.Length == 1 && cp.Units[0].SkillState.Round >= 3
+                    && cp.Units[0].Statuses.All(value => value.ClassId != 24456 && value.ClassId != 24202),
+                    "Forbidden exit did not perform exactly one original HP recheck at expiry.");
+                Require(step.DamageEvents.Any(value => value.SkillEntityId == 10170),
+                    "Forbidden exit dropped its original skill damage event.");
+                observed = true;
+            }
+            public void Verify(string host, FightBattleCheckpoint checkpoint)
+            {
+                Require(observed, host + " never performed its original forbidden-exit HP recheck.");
+                string saved = FightBattleCheckpointSerializer.Save(checkpoint);
+                Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
+                    host + " changed its forbidden-exit checkpoint after reload.");
+                Debug.Log("[HP forbidden hosts] " + host + ": original 24456 expiry -> 24202 -> 10170 once; damage and checkpoint passed.");
+            }
+        }
+
         private static HpListenerProbe ConfigureHpListenerProbe(FightBattleCheckpoint checkpoint)
         {
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HP_LISTENER_ACCEPTANCE") != "1") return null;

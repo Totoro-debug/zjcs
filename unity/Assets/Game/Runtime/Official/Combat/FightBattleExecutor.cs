@@ -951,6 +951,7 @@ namespace Zjcs.Combat.Official
                 units.Add(summon);
                 unitById.Add(summon.Id, summon);
                 summon.StatusStarted = OnStatusStarted;
+                summon.StatusEnded = OnStatusEnded;
                 checkpoint.Units.Add(summon);
                 checkpoint.Statistics.Unit(summon.Id);
                 turns.RegisterUnit(summon.Turn, hit.SummonImmediateRound);

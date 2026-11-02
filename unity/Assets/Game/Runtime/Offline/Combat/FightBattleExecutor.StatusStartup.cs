@@ -7,16 +7,37 @@ namespace Zjcs.Combat.Official
         public FightBattleExecutionResult Step(int sequence, int counter)
         {
             foreach (var unit in units)
-                if (unit.StatusStarted != null)
+                if (unit.StatusStarted != null || unit.StatusEnded != null)
                     throw new InvalidOperationException("A battle unit is already executing a step.");
-            foreach (var unit in units) unit.StatusStarted = OnStatusStarted;
+            foreach (var unit in units)
+            {
+                unit.StatusStarted = OnStatusStarted;
+                unit.StatusEnded = OnStatusEnded;
+            }
             try { return StepCore(sequence, counter); }
             finally
             {
                 // Include units summoned during this step. No delegate or executor is retained
                 // by the checkpoint, including when a configuration fails during a nested cast.
-                foreach (var unit in units) unit.StatusStarted = null;
+                foreach (var unit in units)
+                {
+                    unit.StatusStarted = null;
+                    unit.StatusEnded = null;
+                }
                 movementStartContext = null;
+            }
+        }
+
+        private void OnStatusEnded(FightBattleUnitState owner, FightBattleStatusState ended)
+        {
+            if (movementStartContext == null || statusCatalog == null || owner == null
+                || owner.Ended || ended == null || ended.ActionType != 70) return;
+            foreach (var listener in new System.Collections.Generic.List<FightBattleStatusState>(owner.Statuses))
+            {
+                if (listener == null || !listener.HasHpLessThan
+                    || !listener.HpLessThanCheckExistForbidden || !owner.Statuses.Contains(listener)) continue;
+                FightStatusTriggerRuntime.Apply(owner, statusCatalog, false, random: random,
+                    units: units, startingStatus: listener, executeHpSkills: ExecuteHpStartupSkills);
             }
         }
 

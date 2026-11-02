@@ -66,6 +66,7 @@ namespace Zjcs.Combat.Official
         public List<FightBattleStatusState> Statuses = new List<FightBattleStatusState>();
         // Runtime-only subscription, scoped to an executor step. Checkpoints contain public fields.
         internal Action<FightBattleUnitState, FightBattleStatusState> StatusStarted;
+        internal Action<FightBattleUnitState, FightBattleStatusState> StatusEnded;
         // Official FightRolePetTransferEntity state. A player unit owns the transfer state while
         // the configured pet skill is released at the owner's action end.
         public FightBattlePetEnergyState PetEnergy = new FightBattlePetEnergyState();

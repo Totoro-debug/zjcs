@@ -542,17 +542,20 @@ namespace Zjcs.Combat.Official
                             }
                         }
             int removed = 0;
-            foreach (FightBattleUnitState owner in units)
-            for (int i = owner.Statuses.Count - 1; i >= 0; i--)
+            foreach (FightBattleUnitState owner in new List<FightBattleUnitState>(units))
             {
-                FightBattleStatusState status = owner.Statuses[i];
-                if (status == null) continue;
-                if (status.RoundUpdateTiming != timing) continue;
-                if (ResolveTargetUnitId(status, units) != actor.Id) continue;
-                if (status.StartRound < 0) Initialize(status, round);
-                if (!IsExpired(status, round)) continue;
-                End(owner, status);
-                removed++;
+                var initialStatuses = new List<FightBattleStatusState>(owner.Statuses);
+                for (int i = initialStatuses.Count - 1; i >= 0; i--)
+                {
+                    FightBattleStatusState status = initialStatuses[i];
+                    if (status == null || !owner.Statuses.Contains(status)) continue;
+                    if (status.RoundUpdateTiming != timing) continue;
+                    if (ResolveTargetUnitId(status, units) != actor.Id) continue;
+                    if (status.StartRound < 0) Initialize(status, round);
+                    if (!IsExpired(status, round)) continue;
+                    End(owner, status);
+                    removed++;
+                }
             }
             return removed;
         }
@@ -563,6 +566,7 @@ namespace Zjcs.Combat.Official
             if (status.AccumulatedDamage != null && status.AccumulatedDamage.RulesSupported)
                 unit.EndedAccumulatedDamageStatuses.Add(status);
             if (status.RemoveApplyEntityOnEnd) unit.Ended = true;
+            unit.StatusEnded?.Invoke(unit, status);
             return true;
         }
 
