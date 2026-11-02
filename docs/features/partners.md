@@ -288,6 +288,12 @@ Home 赠礼溢出回调现打开原窗口，保留原标题、说明、按钮、
 
 隔离完整工程 Play Mode 已通过原礼物格、赠送按钮和确认／取消按钮的模拟鼠标射线，验证取消不扣物、不改好感且保留选量，确认仅扣一份、升至原满级并保留溢出经验，重新读盘结果一致。已查看 450×800 的原确认框和满级赠礼画面。共享输入窗口回归通过原称谓按钮、空值拒绝、中文输入／显示、确认保存、读盘恢复与遮罩关闭，并查看三帧实际画面。全工程静态检查通过（84,719 个 GUID）；主工程导入／编译与 `Zjcs.Editor.ProjectTools.Validate` 通过。此模块不代表完整伙伴窗口、立绘、助战或 Windows Player 已完成。
 
+### 当前好感说明窗口与所属页面（局部）
+
+好感说明窗口宿主恢复原 `NpcFriendshipLevelContent.OnClickTipBtn`／`NpcDetailPanelPropContent.OnClickTipBtn` 的所属窗口弹出关系：说明覆盖赠礼／属性页，遮罩和返回只关闭说明，底层选量及服务保留。`prepare_partner_friendship_window.py` 按当前原 `NpcFriendshipDialog.mMaskType=3` 恢复默认容器的确切模糊遮罩，迁移原 `WindowBlurMask`、窗口状态及遮罩挂接顺序。Windows 屏幕采集适配保留原 1/13 分辨率及四层下采样／上采样、七点 shader 表达式；当前 APK 的 ScreenBlur 程序与历史转换不同，单独生成当前 Windows shader，不改写旧版素材。原礼物点击事件复用当前伙伴卡片中已核验的同事件 PCM，以页面作用域安装及恢复声音宿主。窗口、遮罩、当前 shader、复用依赖与运行绑定见[好感窗口来源](../../assets/reference/partner-friendship-window-source-manifest.json)。
+
+主工程 Play Mode 已通过实际原礼物格、赠礼／属性说明按钮与原模糊遮罩的模拟鼠标射线，验证非空偏好、属性预览、遮罩排序、保留待赠选择、重复打开／返回、关闭所属页时清理窗口及恢复池／语言／声音服务。已查看赠礼与属性入口的两帧 450×800 GPU 画面；称谓输入和赠礼溢出确认回归均通过，并查看五帧画面及核对磁盘恢复。全工程静态检查通过（84,732 个 GUID），主工程导入／编译和 `Zjcs.Editor.ProjectTools.Validate` 通过；11 项安装载荷／目录、24 项运行代码及元数据、46 项输入与 27 份脚本绑定哈希一致。完整伙伴宿主、立绘、助战及 Windows Player 仍未完成。
+
 ### 当前原生详情属性区与天赋合并（局部）
 
 `prepare_partner_detail_properties_ui.py` 迁移选定 `884_156692` 的 `NpcDetailPanelPropContent`，保留属性排序、旅行门槛、每组两项、交替背景、原珍宝百分比及转为整数的截断顺序。`PartnerNpcPropertyFormula` 提取原 `BattleFormulaHandler` 的好感／天赋计算及属性合并方法，读取实际存档的好感等级和已激活天赋节点；按当前 `PropId`、`PropLevel`、`PropTypes` 取值并合并，保留原零值、分支和执行顺序。`OfflinePartnerDetailPropertySource` 使用上文当前属性目录，补齐三类天赋属性，不采用历史总表的缺省值替代。

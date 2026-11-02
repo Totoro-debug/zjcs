@@ -795,6 +795,7 @@ namespace Zjcs.Presentation.Home
         public bool TryHandleBack()
         {
             if (ClosePartnerPromptWindow()) return true;
+            if (ClosePartnerFriendshipWindow()) return true;
             if (NpcTravelModalOpen)
             {
                 CloseNpcTravelPages();
@@ -865,17 +866,7 @@ namespace Zjcs.Presentation.Home
         public void CloseDialog()
         {
             DestroyPartnerPromptWindow();
-            if (partnerFriendshipPanel != null)
-            {
-                UnityEngine.Object.Destroy(partnerFriendshipPanel);
-                partnerFriendshipPanel = null;
-                ProfessionGameObjectPoolBridge.Provider = previousFriendshipPool;
-                previousFriendshipPool = null;
-                WorldMultiLanguageText.Localize = previousFriendshipLocalize;
-                previousFriendshipLocalize = null;
-                WorldMultiLanguageText.LanguageFont = previousFriendshipLanguageFont;
-                previousFriendshipLanguageFont = null;
-            }
+            DestroyPartnerFriendshipWindow();
             bool wasOpen = activeDialog != null;
             partnerRosterPanel?.Close();
             partnerRosterPanel = null;

@@ -10,6 +10,7 @@ namespace Zjcs.Offline.PartnersUI
     public sealed class PartnerDetailPanelView : MonoBehaviour
     {
         private GameObject content;
+        private OfflinePartnerUiSoundScope soundScope;
         private Func<string, string> previousLocalize;
         private Func<TMPro.TMP_FontAsset> previousLanguageFont;
         private Func<Transform, GameObject, Transform, bool, GameObject> previousPool;
@@ -17,6 +18,7 @@ namespace Zjcs.Offline.PartnersUI
             IPartnerDetailNpcData npc, PartnerDetailNpcInfo info, OfflinePartnerLocalizationService localization)
         {
             if (assets == null || services == null || npc == null || info == null || localization == null) throw new ArgumentNullException();
+            soundScope = new OfflinePartnerUiSoundScope();
             previousLocalize = WorldMultiLanguageText.Localize;
             previousLanguageFont = WorldMultiLanguageText.LanguageFont;
             WorldMultiLanguageText.LanguageFont = () => Resources.Load<TMPro.TMP_FontAsset>("Combat/FZY4K-Dynamic");
@@ -31,7 +33,8 @@ namespace Zjcs.Offline.PartnersUI
         }
         public void Close()
         {
-            if (content != null) Destroy(content);
+            if (content != null) { content.SetActive(false); Destroy(content); }
+            soundScope?.Dispose(); soundScope = null;
             content = null; ProfessionGameObjectPoolBridge.Provider = previousPool; previousPool = null;
             WorldMultiLanguageText.Localize = previousLocalize; previousLocalize = null;
             WorldMultiLanguageText.LanguageFont = previousLanguageFont; previousLanguageFont = null;

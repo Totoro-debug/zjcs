@@ -271,3 +271,7 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 ### 当前伙伴赠礼确认窗口资源
 
 `prepare_partner_confirm_dialog.py` 按同一选定 `884_156692` 核对原 `ConfirmDialog` 的对象层级、组件字段、CAB 依赖及 Windows 原生转换载荷；实际 APK 身份仍为 `881_156673`。依据原序列化字段恢复空字符串及空集合，依据编译曲线恢复空动画根路径；相同 GUID 且字节一致的伙伴资源复用现有载荷。输入版本、包／对象身份、原中文文本、Wwise 声音、工具、资源复用及输出哈希见[赠礼确认来源](partner-confirm-dialog-source-manifest.json)。显式加载与实际行为范围在[伙伴功能](../../docs/features/partners.md)维护。本批未生成完整素材快照。
+
+### 当前伙伴好感说明窗口与模糊遮罩资源
+
+`prepare_partner_friendship_window.py` 按当前 `884_156692` 恢复完整 `NpcFriendshipDialog`，沿原 `MainCanvas` 默认容器的类型 3 遮罩引用恢复确切子树；实际 APK 保持 `881_156673` 身份。窗口与旧版绑定使用独立 GUID，字节相同的依赖复用既有伙伴素材。当前 APK `CustomRenderTexture/ScreenBlur` 程序单独转换为 Windows shader，保持原采样表达式；历史 shader 及材质模板身份分别记录，不混改来源。原空字段、动画根路径、窗口／遮罩原码、Wwise 声音及复用的同事件 PCM、输入／输出及显式绑定哈希见[好感窗口来源](partner-friendship-window-source-manifest.json)。行为与验证范围仅在[伙伴功能](../../docs/features/partners.md)维护。本批未生成完整素材快照。

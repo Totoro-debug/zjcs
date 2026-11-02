@@ -7,7 +7,7 @@ namespace Zjcs.Official.WorldUI
     // Original WindowMask + WindowMaskBase. WindowMask.Prepare completes
     // immediately and its attach/unattach hooks are empty in the client.
     [RequireComponent(typeof(Canvas), typeof(GraphicRaycaster))]
-    public sealed class WorldWindowMask : MonoBehaviour
+    public class WorldWindowMask : MonoBehaviour
     {
         [SerializeField] private int mMaskType;
         [SerializeField] private Button mBtn;
@@ -27,7 +27,9 @@ namespace Zjcs.Official.WorldUI
         public void AttachToWindow(WorldPopupWindow window)
         {
             ApplyMaskEffect(window);
+            var previous = AttachWindow;
             AttachWindow = window;
+            if (previous != null) OnUnattachToWindow(previous);
             if (window == null) Debug.LogError("AttachToWindow -> window is null");
             else
             {
@@ -35,14 +37,19 @@ namespace Zjcs.Official.WorldUI
                 Canvas.sortingOrder = AttachWindow.Canvas.sortingOrder - 1;
                 gameObject.SetActive(true);
                 Canvas.overrideSorting = true;
+                OnAttachToWindow(AttachWindow);
             }
         }
         public void UnattachToWindow()
         {
+            var previous = AttachWindow;
             AttachWindow = null;
             ClearMaskEffect();
             gameObject.SetActive(false);
+            if (previous != null) OnUnattachToWindow(previous);
         }
+        protected virtual void OnAttachToWindow(WorldPopupWindow window) { }
+        protected virtual void OnUnattachToWindow(WorldPopupWindow window) { }
         public void Refresh() => Canvas.enabled = !AttachWindow.IsPause;
         private void ApplyMaskEffect(WorldPopupWindow window)
         {

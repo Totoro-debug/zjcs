@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -165,43 +166,123 @@ namespace Zjcs.Presentation.Home
 
         private void OpenPartnerFriendshipDialog(Action<IPartnerGiftFriendshipDialog> initialize)
         {
-            CloseDialog();
+            DestroyPartnerFriendshipWindow();
+            var staging = new GameObject("PartnerFriendshipStaging", typeof(RectTransform));
+            staging.transform.SetParent(canvas.transform, false);
+            staging.SetActive(false);
             try
             {
-                var root = UnityEngine.Object.Instantiate(host.PartnerFriendshipAssets.DialogPrefab,
-                    canvas.transform, false);
-                root.name = "OfficialPartnerFriendshipDialog";
-                var dialog = root.GetComponent<NpcFriendshipDialog>();
-                if (dialog == null) throw new InvalidOperationException("Official partner friendship dialog component is missing.");
-                dialog.Configure(host.PartnerFriendshipDialogServices);
                 previousFriendshipLocalize = WorldMultiLanguageText.Localize;
                 previousFriendshipLanguageFont = WorldMultiLanguageText.LanguageFont;
+                previousFriendshipPool = ProfessionGameObjectPoolBridge.Provider;
+                partnerFriendshipServicesInstalled = true;
                 WorldMultiLanguageText.LanguageFont = () => host.Catalog.Font;
                 var localization = new OfflinePartnerLocalizationService(host.PartnerDetailAssets.Texts,
                     host.PartnerDetailAssets.Common.GiftTexts, host.PartnerFriendshipAssets.PropertyTexts,
                     host.PartnerFriendshipAssets.DialogTexts);
                 WorldMultiLanguageText.Localize = key => localization.GetText(key, LanguageType.zh_CN);
-                previousFriendshipPool = ProfessionGameObjectPoolBridge.Provider;
                 ProfessionGameObjectPoolBridge.Provider = (scope, prefab, parent, keepWorld) =>
                     UnityEngine.Object.Instantiate(prefab, parent, keepWorld);
+                var assets = OfficialPartnerFriendshipWindowAssetCatalog.LoadDefault();
+                var root = UnityEngine.Object.Instantiate(assets.WindowPrefab,
+                    staging.transform, false);
+                partnerFriendshipPanel = root;
+                root.name = "OfficialPartnerFriendshipDialog";
+                var dialog = root.GetComponent<NpcFriendshipDialog>();
+                if (dialog == null) throw new InvalidOperationException("Official partner friendship dialog component is missing.");
+                dialog.Configure(host.PartnerFriendshipDialogServices);
+                foreach (WorldButtonSound sound in root.GetComponentsInChildren<WorldButtonSound>(true))
+                    sound.Post = PostPartnerPromptSound;
+                foreach (WorldPopupWindowSound sound in root.GetComponentsInChildren<WorldPopupWindowSound>(true))
+                    sound.Post = PostPartnerPromptSound;
                 foreach (WorldItemProgress progress in root.GetComponentsInChildren<WorldItemProgress>(true))
                     progress.Compact = count => host.HomeSettings?.FormatNumber(count) ?? count.ToString();
-                partnerFriendshipPanel = root;
                 initialize?.Invoke(new OfflinePartnerFriendshipDialogAdapter(dialog,
                     host.PartnerFriendshipDialogServices));
-                root.GetComponent<WorldPopupWindow>()?.Show();
+                var popup = root.GetComponent<WorldPopupWindow>();
+                popup.SetMaskClickAction(() => ClosePartnerFriendshipWindow());
+                root.SetActive(false);
+                root.transform.SetParent(canvas.transform, false);
+                int order = canvas.sortingOrder;
+                foreach (Canvas current in canvas.GetComponentsInChildren<Canvas>())
+                    if (current.overrideSorting && !current.transform.IsChildOf(root.transform))
+                        order = Math.Max(order, current.sortingOrder);
+                partnerFriendshipMask = UnityEngine.Object.Instantiate(assets.BlurMaskPrefab, staging.transform, false);
+                partnerFriendshipMask.name = "OfficialPartnerFriendshipMask";
+                partnerFriendshipMask.SetActive(false);
+                partnerFriendshipMask.transform.SetParent(canvas.transform, false);
+                partnerFriendshipCapture = host.gameObject.AddComponent<PartnerWindowBlurCapture>();
+                partnerFriendshipCapture.Initialize(assets.BlurMaterial);
+                var mask = partnerFriendshipMask.GetComponent<WorldWindowBlurMask>();
+                mask.BlurManager = partnerFriendshipCapture;
+                partnerFriendshipPreparation = host.StartCoroutine(PreparePartnerFriendshipWindow(root, popup, mask, order + 10));
             }
             catch (Exception error)
             {
-                if (partnerFriendshipPanel != null) UnityEngine.Object.Destroy(partnerFriendshipPanel);
+                DestroyPartnerFriendshipWindow();
+                Debug.LogException(error);
+                Notify("伙伴好感度详情打开失败：" + error.Message);
+            }
+            finally { UnityEngine.Object.Destroy(staging); }
+        }
+
+        private GameObject partnerFriendshipMask;
+        private bool partnerFriendshipServicesInstalled;
+        private PartnerWindowBlurCapture partnerFriendshipCapture;
+        private Coroutine partnerFriendshipPreparation;
+
+        private IEnumerator PreparePartnerFriendshipWindow(GameObject root, WorldPopupWindow popup, WorldWindowBlurMask mask, int order)
+        {
+            yield return mask.Prepare(popup, false);
+            if (root == null || partnerFriendshipPanel != root) yield break;
+            root.SetActive(true);
+            popup.SetCanvasSortingOrder(order);
+            popup.Show();
+            mask.AttachToWindow(popup);
+            partnerFriendshipPreparation = null;
+        }
+
+        private bool ClosePartnerFriendshipWindow()
+        {
+            if (partnerFriendshipPanel == null) return false;
+            var root = partnerFriendshipPanel;
+            if (!root.activeInHierarchy) { DestroyPartnerFriendshipWindow(); return true; }
+            root.GetComponent<WorldPopupWindow>().Hide(() =>
+            {
+                if (partnerFriendshipPanel == root) DestroyPartnerFriendshipWindow();
+            });
+            return true;
+        }
+
+        private void DestroyPartnerFriendshipWindow()
+        {
+            if (partnerFriendshipPreparation != null) host.StopCoroutine(partnerFriendshipPreparation);
+            partnerFriendshipPreparation = null;
+            if (partnerFriendshipMask != null)
+            {
+                partnerFriendshipMask.GetComponent<WorldWindowBlurMask>().UnattachToWindow();
+                UnityEngine.Object.Destroy(partnerFriendshipMask);
+            }
+            partnerFriendshipMask = null;
+            if (partnerFriendshipCapture != null) UnityEngine.Object.Destroy(partnerFriendshipCapture);
+            partnerFriendshipCapture = null;
+            if (partnerFriendshipPanel != null)
+            {
+                // Recycle the original dialog's rows and icons while its services
+                // are still installed, before restoring the underlying page.
+                partnerFriendshipPanel.SetActive(false);
+                UnityEngine.Object.Destroy(partnerFriendshipPanel);
                 partnerFriendshipPanel = null;
+            }
+            if (partnerFriendshipServicesInstalled)
+            {
+                partnerFriendshipServicesInstalled = false;
                 ProfessionGameObjectPoolBridge.Provider = previousFriendshipPool;
                 previousFriendshipPool = null;
                 WorldMultiLanguageText.Localize = previousFriendshipLocalize;
                 previousFriendshipLocalize = null;
                 WorldMultiLanguageText.LanguageFont = previousFriendshipLanguageFont;
                 previousFriendshipLanguageFont = null;
-                Notify("伙伴好感度详情打开失败：" + error.Message);
             }
         }
 

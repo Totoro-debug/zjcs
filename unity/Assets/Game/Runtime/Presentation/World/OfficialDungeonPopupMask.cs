@@ -149,17 +149,20 @@ namespace Zjcs.Presentation.World
         }
 
         private void Blur(RenderTexture capture, RenderTexture target)
+            => Blur(capture, target, blurMaterial);
+
+        public static void Blur(RenderTexture capture, RenderTexture target, Material material)
         {
             var up = new RenderTexture[4];
             var down = new RenderTexture[4];
             RenderTexture source = capture;
             void Blit(RenderTexture from, RenderTexture to, Vector2 direction)
             {
-                blurMaterial.SetVector("_BlurDir", direction);
-                blurMaterial.SetVector("_GlobalMipBias", Vector2.zero);
-                blurMaterial.SetTexture("_BlitTexture", from);
-                blurMaterial.SetVector("_BlitTexture_TexelSize", new Vector4(1f / from.width, 1f / from.height, from.width, from.height));
-                Graphics.Blit(from, to, blurMaterial, 0);
+                material.SetVector("_BlurDir", direction);
+                material.SetVector("_GlobalMipBias", Vector2.zero);
+                material.SetTexture("_BlitTexture", from);
+                material.SetVector("_BlitTexture_TexelSize", new Vector4(1f / from.width, 1f / from.height, from.width, from.height));
+                Graphics.Blit(from, to, material, 0);
             }
             try
             {

@@ -77,6 +77,8 @@ namespace Zjcs.Presentation.Home
                     yield return VerifyPartnerTitles(runtime, value => passed = value);
                 else if (Environment.GetCommandLineArgs().Contains("-partnerOverflowAcceptance"))
                     yield return VerifyPartnerGiftOverflow(runtime, value => passed = value);
+                else if (Environment.GetCommandLineArgs().Contains("-partnerFriendshipAcceptance"))
+                    yield return VerifyPartnerFriendshipOverlay(runtime, value => passed = value);
                 else yield return VerifyPartners(runtime, value => passed = value);
                 Finish(passed);
                 yield break;
@@ -1048,6 +1050,127 @@ namespace Zjcs.Presentation.Home
             });
             yield return Capture("partners-friendship.png");
             runtime.Hud.TryHandleBack();
+            completed(ok);
+        }
+
+        private IEnumerator VerifyPartnerFriendshipOverlay(HomeFeatureRuntime runtime, Action<bool> completed)
+        {
+            bool ok = true;
+            GameObject giftRoot = null;
+            NpcDetailPanelGiftContent gift = null;
+            Button tip = null;
+            int giftId = 0;
+            var initialPool = ProfessionGameObjectPoolBridge.Provider;
+            var initialLocalize = WorldMultiLanguageText.Localize;
+            var initialFont = WorldMultiLanguageText.LanguageFont;
+            var initialSound = OfficialWwiseEvent.Host;
+            ok &= Check("partner-friendship-gift-entry", () =>
+            {
+                runtime.OpenPartnerGift(8402);
+                giftRoot = PrivateField<GameObject>(runtime.Hud, "activeDialog");
+                gift = giftRoot.GetComponentInChildren<NpcDetailPanelGiftContent>();
+                tip = PrivateField<Button>(giftRoot.GetComponentInChildren<NpcFriendshipLevelContent>(), "mTipBtn");
+                return "original gift page and friendship information button bound";
+            });
+            float deadline = Time.realtimeSinceStartup + 5f;
+            while (gift != null && PrivateField<Dictionary<int, ItemIcon>>(gift, "mGiftItemIconDict").Count == 0
+                && Time.realtimeSinceStartup < deadline) yield return null;
+            var giftPool = ProfessionGameObjectPoolBridge.Provider;
+            var giftLocalize = WorldMultiLanguageText.Localize;
+            var giftFont = WorldMultiLanguageText.LanguageFont;
+            ok &= Check("partner-friendship-gift-tip", () =>
+            {
+                var icons = PrivateField<Dictionary<int, ItemIcon>>(gift, "mGiftItemIconDict");
+                giftId = icons.Keys.First();
+                ClickPartnerUi(icons[giftId].Button);
+                ClickPartnerUi(tip);
+                return "selected one gift and clicked original information button";
+            });
+            yield return new WaitForSeconds(.6f);
+            ok &= Check("partner-friendship-overlay", () =>
+            {
+                var root = GameObject.Find("OfficialPartnerFriendshipDialog");
+                Assert(root != null && root.GetComponent<NpcFriendshipDialog>() != null, "original friendship window did not open");
+                var blur = GameObject.Find("OfficialPartnerFriendshipMask").GetComponent<WorldWindowBlurMask>();
+                Assert(blur.MaskType == 3 && blur.Image.texture is RenderTexture, "original blur mask capture is unbound");
+                Assert(giftRoot != null && giftRoot.activeInHierarchy
+                    && PrivateField<GameObject>(runtime.Hud, "activeDialog") == giftRoot, "information popup replaced the underlying gift page");
+                var dialog = root.GetComponent<NpcFriendshipDialog>();
+                Assert(PrivateField<List<ItemIcon>>(dialog, "mItemIcons").Count > 0, "original preferred gifts are absent");
+                Assert(PrivateField<List<NpcFriendshipPreviewPropItem>>(dialog, "mPropItems").Count > 0,
+                    "original friendship property preview is absent");
+                Assert(PrivateField<Dictionary<int, long>>(gift, "mSelectedGiftDict")[giftId] == 1,
+                    "opening information cleared the pending gift");
+                return "original preference icons and property preview overlay the existing selected gift";
+            });
+            yield return Capture("partners-friendship-overlay.png");
+            ok &= Check("partner-friendship-mask", () =>
+            {
+                var mask = GameObject.Find("OfficialPartnerFriendshipMask").GetComponent<WorldWindowMask>();
+                Assert(mask.Canvas.sortingOrder > gift.GetComponentInParent<Canvas>().sortingOrder,
+                    "original blur mask sorts behind the underlying gift page");
+                ClickPartnerUi(mask, new Vector2(1f, 1f));
+                return "outside pointer reaches original window mask";
+            });
+            yield return new WaitForSeconds(.6f);
+            ok &= Check("partner-friendship-return", () =>
+            {
+                Assert(GameObject.Find("OfficialPartnerFriendshipDialog") == null
+                    && GameObject.Find("OfficialPartnerFriendshipMask") == null, "friendship popup or mask remained after closing");
+                Assert(giftRoot != null && giftRoot.activeInHierarchy, "mask closed the underlying gift page");
+                Assert(PrivateField<Dictionary<int, long>>(gift, "mSelectedGiftDict")[giftId] == 1,
+                    "closing information cleared the selected gift");
+                Assert(ProfessionGameObjectPoolBridge.Provider == giftPool && WorldMultiLanguageText.Localize == giftLocalize
+                    && WorldMultiLanguageText.LanguageFont == giftFont, "underlying page services were not restored");
+                ClickPartnerUi(tip);
+                return "original gift selection and page services preserved after mask close";
+            });
+            yield return new WaitForSeconds(.6f);
+            ok &= Check("partner-friendship-back", () =>
+            {
+                Assert(GameObject.Find("OfficialPartnerFriendshipDialog") != null, "friendship window did not reopen");
+                Assert(runtime.Hud.TryHandleBack(), "back did not handle the friendship popup");
+                return "back routed to upper friendship window";
+            });
+            yield return new WaitForSeconds(.6f);
+            ok &= Check("partner-friendship-back-return", () =>
+            {
+                Assert(GameObject.Find("OfficialPartnerFriendshipDialog") == null && giftRoot != null && giftRoot.activeInHierarchy,
+                    "back did not preserve the underlying gift page");
+                ClickPartnerUi(tip);
+                return "gift page remains interactive after reopening and back";
+            });
+            yield return new WaitForSeconds(.6f);
+            runtime.Hud.CloseDialog();
+            yield return null;
+            ok &= Check("partner-friendship-owner-close", () =>
+            {
+                Assert(giftRoot == null && GameObject.Find("OfficialPartnerFriendshipDialog") == null
+                    && GameObject.Find("OfficialPartnerFriendshipMask") == null, "closing the owner leaked its popup");
+                Assert(ProfessionGameObjectPoolBridge.Provider == initialPool && WorldMultiLanguageText.Localize == initialLocalize
+                    && WorldMultiLanguageText.LanguageFont == initialFont, "owner close did not restore original host services");
+                Assert(ReferenceEquals(OfficialWwiseEvent.Host, initialSound), "owner close did not restore sound host");
+                runtime.OpenPartnerDetail(8402);
+                return "owner close cleaned popup and restored services";
+            });
+            yield return new WaitForSeconds(.3f);
+            ok &= Check("partner-friendship-property-tip", () =>
+            {
+                var detail = PrivateField<GameObject>(runtime.Hud, "activeDialog").GetComponentInChildren<NpcDetailPanelPropContent>();
+                ClickPartnerUi(PrivateField<Button>(detail, "mTipBtn"));
+                return "owner close cleaned popup and restored services; original property information button clicked";
+            });
+            yield return new WaitForSeconds(.6f);
+            yield return Capture("partners-friendship-property-overlay.png");
+            ok &= Check("partner-friendship-property-owner", () =>
+            {
+                Assert(GameObject.Find("OfficialPartnerFriendshipDialog") != null
+                    && PrivateField<GameObject>(runtime.Hud, "activeDialog")?.GetComponentInChildren<NpcDetailPanelPropContent>() != null,
+                    "property information popup replaced the underlying detail page");
+                runtime.Hud.CloseDialog();
+                return "original property page also retains its owner beneath the information popup";
+            });
+            yield return null;
             completed(ok);
         }
 

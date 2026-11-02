@@ -10,6 +10,8 @@ namespace Zjcs.Official.WorldUI
     [RequireComponent(typeof(Animator), typeof(CanvasGroup))]
     public sealed class WorldPopupWindow : MonoBehaviour
     {
+        public enum EState { None, Showing, Show, Hiding, Hide }
+        public EState State { get; private set; }
         public AnimationClip mShowClip, mHideClip, mLoopClip;
         public event Action<WorldPopupWindow> OnShowing, OnHiding, OnShow, OnHide;
         public WorldGAction OnCanvasSortingOrderChanged = new WorldGAction();
@@ -43,18 +45,21 @@ namespace Zjcs.Official.WorldUI
             closing = false;
             if (transition != null) StopCoroutine(transition);
             mShowStartTime = Time.time;
+            State = EState.Showing;
             OnShowing?.Invoke(this);
-            transition = StartCoroutine(Transition(mShowClip, () => { OnShow?.Invoke(this); Play(mLoopClip); }, true));
+            transition = StartCoroutine(Transition(mShowClip, () => { State = EState.Show; OnShow?.Invoke(this); Play(mLoopClip); }, true));
         }
 
         public void Hide(Action completed)
         {
             if (closing) return;
             closing = true;
+            State = EState.Hiding;
             if (transition != null) StopCoroutine(transition);
             OnHiding?.Invoke(this);
             transition = StartCoroutine(Transition(mHideClip, () =>
             {
+                State = EState.Hide;
                 gameObject.SetActive(false);
                 OnHide?.Invoke(this);
                 completed?.Invoke();
