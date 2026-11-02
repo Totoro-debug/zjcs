@@ -214,13 +214,19 @@ class GroundBinding(PartnerCardBinding):
         return result
 
     def build_ground(self):
-        name = Path(self.source.prefab_address).stem
-        self.recovery.recover(name, self.work / f'map{self.source.map_id}-ground-native', bundle=self.source.bundle,
-            native_relative=self.source.prefab_address.removeprefix('Assets/'))
+        pointer, record = self.bind_prefab(self.source,
+            Path(f'Resources/Map{self.source.map_id}/Native/current-ground.prefab'))
+        self.write_outputs(record, pointer)
+
+    def bind_prefab(self, source, target, *, source_root=None, native_root_id=None):
+        name = source_root.read().m_Name if source_root is not None else Path(source.prefab_address).stem
+        self.recovery.recover(name, self.work / f'map{self.source.map_id}-ground-native', bundle=source.bundle,
+            native_relative=source.prefab_address.removeprefix('Assets/'),
+            source_root=source_root, native_root_id=native_root_id)
         self.recovery.finalize()
-        source, _, card, record = self.recovery.outputs[0]
-        source_key = source.relative_to(self.cache / 'native-export-all').as_posix()
-        if sha(source.read_bytes()) != self.checked[source_key]:
+        native_source, _, card, record = self.recovery.outputs[-1]
+        source_key = native_source.relative_to(self.cache / 'native-export-all').as_posix()
+        if sha(native_source.read_bytes()) != self.checked[source_key]:
             raise ValueError('Original selected ground prefab export changed')
         for key, ref in card['external'].items():
             self.objects[ref['guid']] = self.original(key)
@@ -232,8 +238,11 @@ class GroundBinding(PartnerCardBinding):
             full_name = '.'.join(filter(None, [script['namespace'], script['type']]))
             fields['m_Script'] = self.scripts[full_name]
         prefab_guid = self.native_guid('root:' + name)
-        target = Path(f'Resources/Map{self.source.map_id}/Native/current-ground.prefab')
+        self.script_guids.add(prefab_guid)
         self.queue.append((target, prefab_guid, card['documents']))
+        return dict(fileID=card['root'], guid=prefab_guid, type=3), record
+
+    def write_outputs(self, record, root_pointer, **details):
         outputs = {}
         index = 0
         while index < len(self.queue):
@@ -276,7 +285,7 @@ class GroundBinding(PartnerCardBinding):
                     + '\nfolderAsset: yes\nDefaultImporter:\n  externalObjects: {}\n', 'utf8')
             outputs[metadata.relative_to(ROOT).as_posix()] = sha(metadata.read_bytes())
         receipt = dict(format=1, manifest=self.recovery.apk.version, mapClassId=self.source.map_id,
-            input_receipts=self.inputs, root_source=record, root_pointer=dict(fileID=card['root'], guid=prefab_guid, type=3),
+            input_receipts=self.inputs, root_source=record, root_pointer=root_pointer, **details,
             objects=self.proof, skeletons=self.skeletons, scripts=self.script_sources, outputs=outputs,
             format_reader_sha256=WHEEL_SHA256, tools={p.relative_to(ROOT).as_posix(): sha(p.read_bytes()) for p in
                 [Path(__file__), *[ROOT / 'scripts' / name for name in ('prepare_current_partner_native.py',

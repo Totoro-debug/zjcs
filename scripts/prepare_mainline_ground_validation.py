@@ -66,6 +66,8 @@ def main():
     # Package TextMeshPro.Awake waits for this Resources asset in the editor;
     # a serialized text component alone otherwise never generates its mesh.
     pending.append(source / 'Assets/TextMesh Pro/Resources/TMP Settings.asset')
+    for map_id in (13, 16):
+        pending.append(source / f'Assets/Official/World/Map/{map_id}/NativeMiniMapCurrent/Resources/Map{map_id}/Native/mini-map-regions.asset')
     for map_id in (15, 16):
         pending.append(source / f'Assets/Official/World/Map/{map_id}/NativeCurrent/Resources/Map{map_id}/Native/current-ground.prefab')
         pending.extend((source / f'Assets/Game/Resources/Map{map_id}/Native').glob('*.json'))

@@ -207,14 +207,16 @@ namespace Zjcs.Editor.MainlineNativeGround
                 yield return null;
                 Require(errors == 0, "Original ground lifecycle logged errors for Map" + mapId);
             }
+            var miniMapSteps = VerifyMiniMapRegions(output, pipeline);
+            while (miniMapSteps.MoveNext()) yield return miniMapSteps.Current;
         }
-        private static void Capture(Camera camera, RenderTexture target, string path)
+        private static void Capture(Camera camera, RenderTexture target, string path, int minimumColors = 32)
         {
             camera.Render(); var previous = RenderTexture.active; RenderTexture.active = target;
             var texture = new Texture2D(target.width, target.height, TextureFormat.RGBA32, false, true);
             texture.ReadPixels(new Rect(0, 0, target.width, target.height), 0, 0); texture.Apply();
             RenderTexture.active = previous; File.WriteAllBytes(path, texture.EncodeToPNG());
-            Require(texture.GetPixels32().Select(c => c.r + 256 * c.g + 65536 * c.b).Distinct().Take(32).Count() >= 32, "Rendered original scene detail.");
+            Require(texture.GetPixels32().Select(c => c.r + 256 * c.g + 65536 * c.b).Distinct().Take(minimumColors).Count() >= minimumColors, "Rendered original scene detail.");
             UnityEngine.Object.Destroy(texture);
         }
         private static void Require(bool condition, string message) { if (!condition) throw new InvalidDataException(message); }

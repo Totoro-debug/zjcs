@@ -1,0 +1,154 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "original_code_equivalence": [
+    {
+      "selected": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MapMeCharacterUIBase.cs",
+        "sha256": "158f022010adcbf032fab2d356c334c8d18257c377492a1a56176ef6838d740f"
+      },
+      "historical": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapMeCharacterUIBase.cs",
+        "sha256": "158f022010adcbf032fab2d356c334c8d18257c377492a1a56176ef6838d740f"
+      }
+    },
+    {
+      "selected": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MiniMapPrivateRegionMaskManager.cs",
+        "sha256": "f90ed2e24a6a44566b054324e7ab268694ead5ec4ce5c5bb9d106c7e82e207b7"
+      },
+      "historical": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/MiniMapPrivateRegionMaskManager.cs",
+        "sha256": "f90ed2e24a6a44566b054324e7ab268694ead5ec4ce5c5bb9d106c7e82e207b7"
+      }
+    }
+  ],
+  "original_empty_preview_tool": {
+    "path": ".tools/source-packages/current/884_156692/official-code/framework-source/PreviewTool.cs",
+    "sha256": "4ddaa24b47c3ffe51098efee491e91d941c1f8d1eab8f955da08bff246770861"
+  },
+  "tile_schema_assembly": {
+    "path": ".tools/source-packages/current/884_156692/native-conversion/changed-inputs/Managed/UnityEngine.TilemapModule.dll",
+    "sha256": "f776da7ca288629ab0fdf1bb8496a2a1cd73bc69cec2883dd0ef1f60f063101a"
+  },
+  "tile_schema_tools": [
+    {
+      "path": "scripts/current_component_schemas.py",
+      "sha256": "ad1689eb66dd2061acbe79fe5602d2d10e5aa23f97ed2fdabd6dbce473d5ae52"
+    },
+    {
+      "path": "scripts/official_unity_schema.py",
+      "sha256": "5ec21a2e168115e596dfeac36ace6a786f08e2d05eb56e7b9760c6a3ccb15e58"
+    }
+  ],
+  "historical_migration": {
+    "path": "assets/reference/official-map/map13-minimap-region-manager-code-source-manifest.json",
+    "sha256": "bd7419799e1b92d2e097e40c0bcdd6854f2c1daf447e3b76dc2445b050b48799"
+  },
+  "resource_receipts": [
+    {
+      "path": "assets/reference/official-map/map13-current-minimap-regions-source-manifest.json",
+      "sha256": "26e99d6131f43e6ebc7ba0b50a5eaa3c77c6129dd2111810ce81418405f34f33"
+    },
+    {
+      "path": "assets/reference/official-map/map16-current-minimap-regions-source-manifest.json",
+      "sha256": "22155a2039d985c56da6a4a0bead23a27005b6e4f4087d84ed7188eef1844162"
+    }
+  ],
+  "operation": "Bind the original Ground subtree, Grid, region slots and all region Tilemaps. Preserve original region manager initialization, status events, public/private Z, reverse visibility traversal, inactive cache reuse and ten-second retirement. Inject local state/controller/view-range and original GUID asset leases before activation. Original view-range notifications remain explicit so periodic refresh cannot reset retirement. Each map supplies its original asset catalog; original root MiniMap and other UI/marker/mask managers are not replaced or claimed complete.",
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/MainlineMiniMapRegions/MainlineMiniMapRegionAssets.cs",
+      "sha256": "9ac2ba35763be5799b231159812b39f6350b6d7d3fee2e97663f6983182b4dff"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/MainlineMiniMapRegions/MainlineMiniMapRegionAssets.cs.meta",
+      "sha256": "e97f7c0a5901a1e76623ec31d22ce79e338ca14bda9ca608cb544605a4dcf88c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/MainlineMiniMapRegions/MainlineMiniMapRegionContext.cs",
+      "sha256": "ea594810d67062d1616fa899f0cf6942187cb90b2603b39631209a77c2b9c072"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/MainlineMiniMapRegions/MainlineMiniMapRegionContext.cs.meta",
+      "sha256": "3e2c45d715b5e11777022f6c758e9eb0e3a5d92c446b4fd68d437a7e2a75ddd7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/MainlineMiniMapRegions/MainlineMiniMapRegions.cs",
+      "sha256": "bbaabfb8e26e66d0407b783ffba469e6e2ca63f2c492ff86f3f7bade56cdc882"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/MainlineMiniMapRegions/MainlineMiniMapRegions.cs.meta",
+      "sha256": "4b67bed920a78ad6ad4a1bcd85c837c219ad5eb61c75e2cdf463181642c8b9d9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/MainlineMiniMapRegions/Zjcs.Presentation.World.MainlineMiniMapRegions.asmdef",
+      "sha256": "81dfe421a5ab565acfc8fdc7c061247ca3686c608d935e4902ecf97e7f8853d1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/MainlineMiniMapRegions/Zjcs.Presentation.World.MainlineMiniMapRegions.asmdef.meta",
+      "sha256": "2ad7cf3fb78b5b9824d2c714782ca0ac413122c57472e6dae277da1c677adab2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/MainlineMiniMapRegions.meta",
+      "sha256": "08a471f001b5d5a1ed7f6d52e62e4460cfe2190450113c436ffa3d6da8656fb8"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.cs",
+      "sha256": "0a413354885835686502e0ac7c7aa4c8472b2f7b8195f060f4c130f885f80cae"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.cs.meta",
+      "sha256": "3b3eae4bb8239b87854eaaca81227b0048a8dc939d11e637289f2f45ff21465f"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.MiniMapRegions.cs",
+      "sha256": "f8b45fd6b2ca248fdcf8deae6703a4b4b17bde8baab35b752999d9d39f8d176d"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.MiniMapRegions.cs.meta",
+      "sha256": "5abfd37018718cdb31a36f27daa3c63e01992e23dfb45d5b33022521c677e69c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.RegionTime.cs",
+      "sha256": "c5473f33cd18e2ab81b24899eacfa6b4b7290209c720f9d9c4da28a3e8b3a5c2"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.RegionTime.cs.meta",
+      "sha256": "abe37e608cc3c21837a0d54bb7d863cc15d3bb6965ea2ed169e760503059d6bb"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineNativeGround/Zjcs.Editor.MainlineNativeGround.asmdef",
+      "sha256": "6496a3d786b4b86cb6f386ba7ace8392af6b12893ade13368cf46eef775bad3a"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineNativeGround/Zjcs.Editor.MainlineNativeGround.asmdef.meta",
+      "sha256": "afe5d031fd337e456da38e599578865000216fb5c0279d987bef0307e78ff183"
+    },
+    {
+      "path": "scripts/prepare_mainline_minimap_regions.py",
+      "sha256": "13a3fe566aabcc2e8e876fbca00fafdbe2238c1279c3e2bfd3d2b021454c05ad"
+    },
+    {
+      "path": "scripts/prepare_mainline_map15_native_ground.py",
+      "sha256": "032906887d4ebac036d3056c42ed48fb2d26135c7a9d076dbee6c5531063de54"
+    },
+    {
+      "path": "scripts/prepare_mainline_ground_validation.py",
+      "sha256": "4e1f96cbb68a38911df0ca34299d07322345fbc5febd1fe1d1e89f8c87aa1a08"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldPreviewTool.cs",
+      "sha256": "cac60f774a77274ddd2aecded199ed7d8e1a518393b43c6a989878660d5eb9dc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldPreviewTool.cs.meta",
+      "sha256": "fc1ab77bb44f702ee85cb116af55dd156471a6016c44f3c2cd248fadb090f984"
+    }
+  ],
+  "hashing": "Repository text outputs use UTF-8 LF; native asset receipts retain raw bytes.",
+  "tool": {
+    "path": "scripts/record_mainline_minimap_regions_sources.py",
+    "sha256": "c3fef7f776a7bb10bef142bdbffb172600888aaeca936da6d05d06d7f27c0806"
+  }
+}

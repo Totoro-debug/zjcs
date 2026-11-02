@@ -8,6 +8,8 @@
 
 主线地图通过 `OfficialMainlineMapRuntime.Begin(mapClassId, …)` 使用同一套运行时。`OfficialMainlineMapProfile` 当前登记 Map10–15；各图数据、表现和游玩完成范围以所属地图页为准，登记或可进入不表示整图完成。地图资源、区域条件、剧情、实体和进度仍按地图 ID 隔离。新增地图须先迁移其官方数据与专属流程，再登记配置，不能仅替换地图 ID 后宣称地图完成。鲸背岛 Map16 尚未登记此运行时。
 
+小地图区域地面由公共 `MainlineMiniMapRegions` 管理原 prefab 实例、原管理器的状态／范围事件及资源生命周期。各图提供 `MainlineMiniMapRegionAssets` 与 `IMainlineMiniMapRegionState`；范围变化显式通知，普通状态刷新不会重置原十秒回收期限。所选版本的 Map13／Map16 已分别转换106／43份原区域 Tilemap，复用同一实现；完整原小地图根、白雾、标记及正式宿主接线仍未完成。实际验证范围分别见[泽之国](../maps/map-13.md)和[鲸背岛](../maps/map-16.md)，来源见[公共小地图区域模块](../../assets/reference/official-map/mainline-minimap-regions-source-manifest.json)。
+
 ## 原始官方实现
 
 主线地图共享原 WorldCanvas／WorldStage 界面、地区条件、导航、交互、剧情、机关、雕像、小地图和进度规则；单图放置及差异由地图页维护。

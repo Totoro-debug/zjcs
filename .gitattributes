@@ -1826,3 +1826,16 @@ unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.RegionTime.
 /unity/Assets/Official/Combat/Audio/** -text -diff
 /unity/Assets/Official/Combat/Audio.meta text eol=lf
 /unity/Assets/Official/Combat/Audio/**/*.meta text eol=lf diff
+
+# Preserve original regional minimap payloads and their shared bindings.
+scripts/prepare_mainline_minimap_regions.py text eol=lf
+scripts/record_mainline_minimap_regions_sources.py text eol=lf
+assets/reference/official-map/mainline-minimap-regions-source-manifest.json text eol=lf
+assets/reference/official-map/map*-current-minimap-regions-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/MainlineMiniMapRegions/** text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/MainlineMiniMapRegions.meta text eol=lf
+unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.MiniMapRegions.cs* text eol=lf
+unity/Assets/Official/World/Map/13/NativeMiniMapCurrent/** -text
+unity/Assets/Official/World/Map/13/NativeMiniMapCurrent.meta -text
+unity/Assets/Official/World/Map/16/NativeMiniMapCurrent/** -text
+unity/Assets/Official/World/Map/16/NativeMiniMapCurrent.meta -text

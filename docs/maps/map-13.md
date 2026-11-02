@@ -166,6 +166,12 @@ Map13 原剧情 prefab Windows 转换与 NPC 序列：固定 871_156598 的 278 
 
 ## 完整还原部分
 
+当前区域地面中的12份原 Unity Tile 使用现有严格程序集解码器恢复完整字段，包含 Sprite、颜色、矩阵、实例对象、标志和碰撞类型；导出缓存只有头部时继续从原二进制恢复。Sprite 按原 CAB／PathID 对应绑定资源，空运行标记复用现有官方 `WorldPreviewTool`，不依赖其他模块新增的副本。
+
+公共区域地面已在隔离 Unity Play Mode 通过本图106区检查：全部原 Tilemap、目标地区开放 Z 事件、范围外隐藏、期限前实例复用、十秒回收与重新加载、卸载及状态重进，无运行错误；初始／重进画面均已查看。相机采用原小地图渲染器索引1，范围仅为局部画面检查，未完成正式原相机／UI、白雾、标记、模拟输入、正式存档与 Windows Player 验证。
+
+公共小地图区域地面入口为 `MainlineMiniMapRegions`，与鲸背岛复用同一原管理器及状态／角色／可见范围适配。Map13 的所选 `884_156692` 原 Ground subtree、106份区域 Tilemap 和完整依赖已转换至 `NativeMiniMapCurrent`，资源入口为 `Resources/Map13/Native/mini-map-regions`，共262个资产／meta输出。原 YooAsset GUID 按同版资源索引显式映射；此批保留当前版本来源，历史 `871_156598` 的小地图来源与产物不改标。原 `MapMeCharacterUIBase`／`MiniMapPrivateRegionMaskManager` 两份源码与历史已迁移实现的原输入逐字节一致，仅据此复用对应代码，不声明整版等价。公共模块保留地区状态事件、可见性、十秒缓存回收与释放；完整小地图根、白雾、标记及正式输入／存档接线仍待完成。见[当前区域地面来源](../../assets/reference/official-map/map13-current-minimap-regions-source-manifest.json)及[公共模块来源](../../assets/reference/official-map/mainline-minimap-regions-source-manifest.json)。
+
 泽之国原小地图点击与视野框：完整迁入 MiniMapMarkClick 和原 MapPosToGrid 解析分支，保留先发布点击再按组件顺序查询标记、交互检查／错误分支、3D 射线命中时采用碰撞体 Transform 位置、主相机 viewport 回退、减去小地图位移、原主相机尺寸推导视野框、只更新 XY 并保留 Z，以及可见性对象销毁后的禁止移动分支。原 record struct 按 Unity 编译器支持的等价成员适配。由原 MiniMap_13 prefab 恢复 CurrentCameraRect 的三对象子树与原切片精灵，复用已校验的同一官方图集，仅解除外部父级引用。Play Mode 通过事件系统射线和原桌面 UITouchInput 模拟 8 次点击，核对 7 次发布、2 次交互检查、弹窗分支、首个标记优先、4 次视野移动、隐藏取消订阅／重入及世界坐标 Z 保留；原视野框实际渲染图已查看（5,315 个非黑像素）。Unity 编译、ProjectTools.Validate、主工程静态检查（77,375 GUID）和隔离静态检查（35,974 GUID）通过。此处标记查询／弹窗为明确的输入规则夹具，正式全屏面板、完整地图输入／存档与 Windows Player 仍待接通。见 [点击代码](../../assets/reference/official-map/map13-minimap-mark-click-code-source-manifest.json) 和 [原视野框](../../assets/reference/official-map/map13-native-minimap-click-frame-source-manifest.json)。
 
 泽之国原小地图筛选界面：迁入 `MiniMapMarkUIFilter`、条目、分组控件与过渡动画代码，使用原筛选 prefab 和 201 行同版本配置；按原 map group/class 字段筛出 30 行泽之国标记并加载原图标。保留全选／全不选／自由选择、条目状态变化、资源层选择事件和点击关闭分支。内置屏 Play Mode 使用完整原 prefab、原通用对象池和 EventSystem，模拟点击打开、全选、单项取消并切换自由选择，实际原界面画面已查看。生产存档适配器按 profile 槽读写状态，独立冷读验证覆盖真实文件写入、新实例恢复条目与选择模式及损坏存档拒绝；原 UI 的 Play Mode 使用隔离状态端口夹具，未声称该次点击操作写入磁盘。正式地图入口、原筛选组件与整图标记根尚未合并，Windows Player 未验证。入口为 `prepare_unity_map13_minimap_mark_filter.py`、`Runtime/Official/World/Map13MiniMapMarkFilter`、`MainlineMiniMapFilterPersistentState` 与 `OfficialMap13MiniMapMarkFilterAcceptance`；来源和哈希见 [筛选代码来源](../../assets/reference/official-map/map13-minimap-mark-filter-code-source-manifest.json) 与 [筛选原生资源来源](../../assets/reference/official-map/map13-native-minimap-filter-source-manifest.json)。
@@ -316,6 +322,8 @@ Map13 原剧情 prefab Windows 转换与 NPC 序列：固定 871_156598 的 278 
 公共交互配置通过地图档案独立加载 `Map13/interactions`，从本图已核验的 `871_156598` 原始配置与 EC 模板转换 106 个地区的等级、阶位、探寻限制、奖励预览、区域刷新及英雄结果索引，不再沿用仅含 Map10／11 地区的旧表。输入及输出哈希见[各图交互来源](../../assets/reference/official-map/mainline-interaction-maps-source-manifest.json)。
 
 地图档案与公共地形绑定调整后，正式入口、模拟点击(113,233)→(114,233)、57,600格白雾核对及存档重开已再次通过图形 Play Mode，可见格仍为67→80，三张实际截图已查看。此回归未覆盖全部新交互配置消费与各类雕像。
+
+本批公共区域地面的主工程 Unity 导入／编译、`ProjectTools.Validate` 与静态元数据检查通过，资源清单中的当前原生输出已逐文件核对哈希。
 
 ## 自定义实现
 

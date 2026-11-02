@@ -16,11 +16,17 @@
 
 地区表保留各区原等级、子位阶、奖励与相邻区。时间条件包含无时间限制和位阶4加14至32天的不同偏移；不得把所有地区统一改成14天。原 `Common.MapRegionInfo` 保留时间条件先于等级的判定、超过指定服务器位阶立即通过、缺少开放日期时关闭等分支；原 `MapUtils.TryGetMapUnlockTimeByServerRank` 在开放日期上 `AddDays(offset)`。本地日期来源的已确认替代见下文。
 
-地面 prefab 的原层级含4224个 Unity 对象，引用区域灯、世界标签、水面及 `SeaRendererReplacement`。其 `Water_map13` 是实际引用的共享水面配置，继续按原 CAB／PPtr 恢复；名称含13不表示改用另一张地图的配置。独立小地图还引用43份 `MinimapRegionTilemap/RegionGround_*` 原 prefab，尚待原生转换与接线。
+地面 prefab 的原层级含4224个 Unity 对象，引用区域灯、世界标签、水面及 `SeaRendererReplacement`。其 `Water_map13` 是实际引用的共享水面配置，继续按原 CAB／PPtr 恢复；名称含13不表示改用另一张地图的配置。独立小地图引用43份 `MinimapRegionTilemap/RegionGround_*` 原 prefab；区域地面已原生转换，完整小地图根与正式地图接线仍待完成。
 
 ## 完整还原部分
 
 尚无本图完整 Unity 游玩流程的完成结论。
+
+小地图区域地面使用公共 `MainlineMiniMapRegions`，由 `MainlineMiniMapRegionAssets` 提供本图原 Ground subtree、43个地区插槽及原区域 Tilemap，状态、角色和可见范围通过 `IMainlineMiniMapRegionState` 注入。资源入口为 `Resources/Map16/Native/mini-map-regions`，原生载荷在 `NativeMiniMapCurrent`，共120个资产／meta输出。转换器核对原 YooAsset GUID 与所选版本资源索引后绑定本地 prefab，不把转换缓存的 Unity GUID 当作原 YooAsset GUID。原 `MapMeCharacterUIBase`／`MiniMapPrivateRegionMaskManager` 与已迁移源码逐字节核对，保留初始化、地区开放事件、公私有 Z、倒序可见性遍历、缓存复用、十秒回收和释放顺序。当前范围仅为区域地面；原白雾、标记、相机、完整 MiniMap 根和正式输入／存档仍待绑定。资源与代码来源见[本图区域地面](../../assets/reference/official-map/map16-current-minimap-regions-source-manifest.json)及[公共区域模块](../../assets/reference/official-map/mainline-minimap-regions-source-manifest.json)。
+
+四份原 Unity Tile 的字段由当前程序集严格解码恢复，包含 Sprite、颜色、矩阵、实例对象、标志及碰撞类型；不使用只含头部的导出缓存作为完整 Tile。原 Sprite 引用按 CAB／PathID 精确对应已绑定资源，矩阵只转换 Unity YAML 字段名。空运行标记复用已有官方 `WorldPreviewTool`，原 `PreviewTool` 源码已按当前版本核对。
+
+公共区域地面在隔离 Unity Play Mode 中以本图全部43区验证：原 Tilemap 加载、仅目标地区的开放 Z 变化、范围外隐藏、期限前实例复用、十秒后回收、重新加载、释放与带已有公开状态重进均通过，无运行错误。使用原渲染器索引1及原材质，已查看初始／重进实际运行截图；镜头范围为本次局部检查设置，不代表正式小地图镜头已迁移。此验证不包含白雾、标记、UI／模拟输入、正式地图存档或 Windows Player。
 
 局部数据入口由 [`prepare_mainline_map_definition.py`](../../scripts/prepare_mainline_map_definition.py) 按地图 ID 提取，输出 `Assets/Official/World/Map/16/map16.json` 及 `Source/` 中的导航、放置、完整 EC、63份递归模板／动作和原配置表。它对比原导航／MapInfoWrap／EC 的身份与实体闭包，核对43区探索上限，验证消费的109份已准备官方源码；不填造默认实体、地图条件或移动规则。来源见[地图定义清单](../../assets/reference/official-map/map16-definition-source-manifest.json)。
 
@@ -35,6 +41,8 @@
 Unity 2022.3.57f1c2 内置屏隔离图形 Play Mode 已通过公共 `MainlineNativeGround` Interface 加载、释放和重新加载 Map15／16 原地面，检查原组件绑定、几何、URP／相机恢复，并实际查看两图各三张画面。鲸背岛以原入口坐标和显式地区夹具验证私有阴影、单区公开后的原 `MapEnvEffect.UnlockRegion`／区域灯演出及揭格回调，重新加载保留同一区域灯光状态。状态刷新本身不替代原区域激活动作；公共女神像路径已接入这项地面调用。另核对原标签倒计时文字网格，实际查看位阶4倒计时、到期自动解除时间锁、另一未到期地区及其位阶5取消时间锁的四张运行画面。到期检查只推进注入时钟并等待原 UniTask 刷新，不直接调用业务回调或视图刷新。隔离工程按依赖闭包携带原字体、材质、TMP Settings 及其 shader include，文字不以非空字符串代替渲染验证。
 
 同一 Play Mode 使用本图实际43行地区配置检查各自14至32天偏移、边界前一秒／恰好到期、时间条件先于等级、较低／较高位阶和缺失日期分支。隔离角色档案通过现有 `SetPlayerProgress` 记录首次位阶4日期、重复赋值保留日期，并重新打开档案冷读核对。该夹具使用测试相机与显式角色／地区状态，无角色／HUD或模拟地图输入；不覆盖自然晋阶、正式地图入口、整图进度存档或 Windows Player。隔离工程不执行全工程校验；另在正式 Unity 工程执行导入／编译和 `ProjectTools.Validate` 通过，静态元数据检查已通过。
+
+本批主工程 Unity 导入／编译、`ProjectTools.Validate` 和静态元数据检查通过；公共转换器回归核对 Map15 的469项、Map16 的1434项既有地面输出逐字节不变，地面与原时间标签 Play Mode 回归及画面检查通过。
 
 ## 自定义实现
 
