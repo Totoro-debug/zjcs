@@ -64,23 +64,7 @@ namespace Zjcs.Offline.ProfessionUI
             {
                 var part = PartsRenderers[i] as ProfessionNativeSceneMeshPart;
                 if (!part) throw new InvalidOperationException("The native separator owns its mesh parts.");
-                var group = groups[i];
-                var combines = new CombineInstance[group.Count];
-                var materials = new Material[group.Count];
-                int vertices = 0;
-                for (int j = 0; j < group.Count; j++)
-                {
-                    combines[j] = new CombineInstance { mesh = group[j].Mesh, subMeshIndex = 0 };
-                    materials[j] = material(group[j]);
-                    if (!materials[j]) throw new InvalidOperationException("Original scene atlas page material is unbound.");
-                    vertices = checked(vertices + group[j].Mesh.vertexCount);
-                }
-                Mesh mesh = part.Mesh;
-                mesh.Clear();
-                mesh.indexFormat = vertices > 65535 ? IndexFormat.UInt32 : IndexFormat.UInt16;
-                if (combines.Length > 0) mesh.CombineMeshes(combines, false, false);
-                if (materials.Length > 0) OnGetSharedMaterial?.Invoke(materials);
-                part.MeshRenderer.sharedMaterials = materials;
+                part.Assign(groups[i], material, materials => OnGetSharedMaterial?.Invoke(materials));
             }
         }
         private void CheckLifetime() { if (disposed) throw new ObjectDisposedException(nameof(ProfessionNativeSceneMeshSeparator)); }

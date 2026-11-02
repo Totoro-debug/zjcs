@@ -11,7 +11,7 @@ namespace Zjcs.Offline.ProfessionUI
     // Independent Unity drawing endpoint. The pose producer owns animation,
     // mixing and constraints; this module never substitutes a sampled pose.
     [RequireComponent(typeof(ProfessionNativeSceneMeshPart))]
-    public sealed class ProfessionNativeSceneRenderer : MonoBehaviour,
+    public sealed partial class ProfessionNativeSceneRenderer : MonoBehaviour,
         IProfessionAppearanceSceneRenderer, IProfessionAppearancePartRenderer,
         IProfessionSceneSeparatorRenderer, IProfessionAppearanceMaterialReplacement,
         IProfessionFollowerRenderer
@@ -85,6 +85,7 @@ namespace Zjcs.Offline.ProfessionUI
             if (!appliedHierarchy) { settings.Apply(Main.MeshRenderer); appliedHierarchy = asset.Hierarchy; }
             Main.MeshRenderer.enabled = settings.Enabled;
             OnAnimationRebuild?.Invoke(this);
+            ResumeSceneParts();
         }
 
         public IEnumerable<Material> SkinMaterials(IProfessionAppearanceSkin skin)
@@ -99,6 +100,7 @@ namespace Zjcs.Offline.ProfessionUI
         }
 
         public void UpdateAnimationAndMesh() => LateUpdateMesh();
+        private void LateUpdate() { if (State != null) LateUpdateMesh(); }
 
         public void LateUpdateMesh()
         {
@@ -113,6 +115,7 @@ namespace Zjcs.Offline.ProfessionUI
                 slotIndices.Add(State.SlotPose.DrawSlot(draw));
             }
             if (cuts.Count > 0 && backend == null) throw new InvalidOperationException("Initialize original separator parts before drawing split geometry.");
+            if (sceneParts.Count > 0 && backend == null) throw new InvalidOperationException("Bind original separator slots before drawing independent scene parts.");
             batches.Build(State.Pose, State.CreateDrawSlots(slotIndices), settings.UseClipping, settings.PmaVertexColors);
             if (backend != null)
             {
@@ -122,21 +125,7 @@ namespace Zjcs.Offline.ProfessionUI
             }
             else
             {
-                var combines = new CombineInstance[batches.Batches.Count];
-                var materials = new Material[combines.Length];
-                int vertices = 0;
-                for (int i = 0; i < combines.Length; i++)
-                {
-                    var batch = batches.Batches[i];
-                    combines[i] = new CombineInstance { mesh = batch.Mesh, subMeshIndex = 0 };
-                    materials[i] = MaterialFor(batch);
-                    vertices = checked(vertices + batch.Mesh.vertexCount);
-                }
-                Mesh mesh = Main.Mesh; mesh.Clear();
-                mesh.indexFormat = vertices > 65535 ? IndexFormat.UInt32 : IndexFormat.UInt16;
-                if (combines.Length > 0) mesh.CombineMeshes(combines, false, false);
-                if (materials.Length > 0) OnGetUpdatedSharedMaterials?.Invoke(materials);
-                Main.MeshRenderer.sharedMaterials = materials;
+                Main.Assign(batches.Batches, MaterialFor, materials => OnGetUpdatedSharedMaterials?.Invoke(materials));
                 Main.MeshRenderer.enabled = settings.Enabled;
             }
             OnCustomDemandLoading?.Invoke(this);
@@ -164,6 +153,7 @@ namespace Zjcs.Offline.ProfessionUI
                     throw new NotSupportedException("Original native slot ordering exceeds Unity's local sorting range.");
                 group.sortingOrder = order;
             }
+            UpdateScenePartOrder(State.DrawOrder, cuts, first);
             SortingGroup.UpdateAllSortingGroups();
         }
 
@@ -220,6 +210,7 @@ namespace Zjcs.Offline.ProfessionUI
 
         public void Release()
         {
+            SuspendSceneParts();
             backend?.Dispose(); backend = null;
             if (separator) { if (Application.isPlaying) Destroy(separator); else DestroyImmediate(separator); }
             separator = null; SeparatorSlots.Clear();
@@ -233,6 +224,6 @@ namespace Zjcs.Offline.ProfessionUI
             }
             State = null; initializedAsset = null; settings = null;
         }
-        private void OnDestroy() => Release();
+        private void OnDestroy() { Release(); DisposeSceneParts(); }
     }
 }

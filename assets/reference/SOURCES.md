@@ -6,7 +6,7 @@
 
 原装备被动词条选择输入：`record_battle_equipment_selection_sources.py` 校验 `884_156692` 的战斗词条过滤／互斥比较、套装阈值、被动属性、技能品阶与 `854_156383` 装备／战斗数据；源代码、配置及运行适配 SHA256 见[装备被动选择来源](battle-rules/equipment-selection-source-manifest.json)，行为与验证见[装备功能](../../docs/features/equipment.md)。
 
-原场景部件应用代码输入：`prepare_battle_renderer_part_sources.py` 核验 `884_156692` 解码程序集与6份官方应用源码，记录加载／池化／分层／动作通知代码及显式适配端口；输入、依赖与迁移输出 SHA256 见 [场景部件凭据](battle-animation/renderer-parts-source-manifest.json)，当前实现及验证范围见[战斗执行](../../docs/features/battle-execution.md)。
+原场景部件应用代码输入：`prepare_battle_renderer_part_sources.py` 核验 `884_156692` 解码程序集与8份官方应用源码（含 `CharacterPartEntryProvider`／`CharacterPartPoolEntry`），记录加载／池化／分层／动作通知代码及显式适配端口；输入、依赖与迁移输出 SHA256 见 [场景部件凭据](battle-animation/renderer-parts-source-manifest.json)，当前实现及验证范围见[战斗执行](../../docs/features/battle-execution.md)。
 
 原核心人物战斗动作输入：`prepare_battle_core_pose_fixtures.py` 从哈希匹配的 `871_156598` 无损人物载荷提取全部职业战斗动作边界，复用已有原角色资源、外观配置／表、加载与染色链的来源凭据；输入、依赖、实现与夹具 SHA256 见 [核心人物动作凭据](battle-animation/core-pose-source-manifest.json)，使用和验证范围见[战斗执行](../../docs/features/battle-execution.md)。
 
@@ -211,7 +211,7 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 
 当前动态场景分段代码：从同版已核验 `Assembly-CSharp.dll` 的 `DynamicSkeletonRenderSeparator` 应用源码迁移池化、排序与可见性分支，SDK 基类调用替换为显式端口，Unity 网格赋值采用独立原生后端。原程序集／应用源码、转换与迁移输出哈希见 [动态场景分段来源](battle-animation/scene-separator-source-manifest.json)；验证复用既有当前来源剑、杖原资源，没有新增美术载荷，也未复制 SDK 渲染实现。
 
-当前原生场景绘制端：复用上述 `884_156692` 人物层级、完整图集／Low 目录和分段应用来源，独立编写 Unity 网格赋值及原字段绑定；没有读取或复制动画 SDK 实现，没有新增或重绘美术载荷。输入及独立实现输出哈希、Resources 地址和原外观／跟随接口绑定由 `prepare_battle_scene_native_renderer.py` 记录于 [原生场景绘制来源](battle-animation/scene-native-renderer-source-manifest.json)。其中当前 `BaseSkeletonFollower`／`SkeletonRendererFollower` 应用源码逐字节哈希与历史迁移凭据一致，复用既有应用迁移；清单同时保留当前输入、历史源身份及迁移输出，未读取动画 SDK 实现。
+当前原生场景绘制端：复用上述 `884_156692` 人物层级、完整图集／Low 目录和分段应用来源，独立编写 Unity 网格赋值及原字段绑定；没有读取或复制动画 SDK 实现，没有新增或重绘美术载荷。输入及独立实现输出哈希、Resources 地址和原外观／跟随接口绑定由 `prepare_battle_scene_native_renderer.py` 记录于 [原生场景绘制来源](battle-animation/scene-native-renderer-source-manifest.json)。其中当前 `BaseSkeletonFollower`／`SkeletonRendererFollower` 应用源码逐字节哈希与历史迁移凭据一致，复用既有应用迁移；清单同时保留当前输入、历史源身份及迁移输出，未读取动画 SDK 实现。独立剑／杖继续使用已提取的当前四节点层级、原点槽／材质／跟随字段和已核验字节身份的原载荷；新原生装配、同场景 Low／High 路由、官方部件池端口及验证入口哈希也写入该清单，先前提取凭据保留其原输入及运行时身份，不改标版本。
 
 当前场景 Low 人物纹理与材质：按 `884_156692` 索引从实际 `881_156673` APK 优先提取，缺少的包使用已核验同版云缓存；恢复原702组 Low 映射、977个按需 GUID、764条皮肤配置和男女937份原材质。原 ASTC 使用固定 astc_encoder 0.1.12 解码为 Windows 原生 RGBA32，保留原 mip／采样／色彩空间及材质字段，世界 shader 复用字节身份一致的既有当前转换；历史效果载荷缺少采样版本时另生成当前资产。原包／对象、编码与解码字节、工具／运行绑定和全部输出哈希见 [场景纹理来源](battle-animation/scene-texture-source-manifest.json)。素材未生成完整快照。
 

@@ -28,11 +28,14 @@ def main() -> None:
         "AppearanceRendererPartHandler.cs", "AppearanceMecanimPartHandler.cs", "AppearanceAnimationPartHandler.cs",
         "AppearanceSkeletonPart.cs", "AppearanceSystem.Runtime/AppearanceSkeletonPartEntry.cs",
         "AppearanceSystem.Runtime/EffectPartEntry.cs",
+        "AppearanceSystem.Runtime/CharacterPartEntryProvider.cs",
+        "AppearanceSystem.Runtime/CharacterPartPoolEntry.cs",
     )]
     runtime = ROOT / "unity/Assets/Game/Runtime/Official/ProfessionUI"
     migrated = [runtime / name for name in (
         "AppearanceRendererPartHandler.cs", "AppearanceMecanimPartHandler.cs", "AppearanceAnimationPartHandler.cs",
         "AppearanceSkeletonPartEntry.cs", "EffectPartEntry.cs", "ProfessionAppearanceRendererPartBindings.cs",
+        "CharacterPartEntryProvider.cs", "ProfessionCharacterPartPoolBindings.cs",
     )]
     proof = {
         "manifest": VERSION,
@@ -48,6 +51,7 @@ def main() -> None:
         "validation": identity(ROOT / "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.RendererParts.cs"),
         "generator": identity(Path(__file__).resolve()),
         "scope": "Official application lifecycle, resource routing, separation requests and animation notification forwarding through explicit ports. No animation SDK implementation is used.",
+        "pool_binding": "Original path cache, LIFO reuse, one-second scan, twenty-second lifetime, counts, follower clearing and scene/low-memory branches. The native adapter instantiates verified TextAsset prefab definitions and binds the actual completed-pose drawing endpoint; the pool entry retains the real resource owner as IDisposable instead of a framework GameObject handle.",
         "limits": ["Scene part prefabs and renderer/separator/Mecanim backends are not restored by these ports.",
                    "Play Mode probes verify application call ordering and lifecycle, not actual weapon rendering, motion, gameplay input, saves or Windows Player."],
     }

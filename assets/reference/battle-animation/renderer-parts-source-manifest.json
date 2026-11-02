@@ -33,6 +33,14 @@
     {
       "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/EffectPartEntry.cs",
       "sha256": "9058836fca58329b8829a1162d7b054377bbec10c1bed30b7d516b3f08128b2a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/CharacterPartEntryProvider.cs",
+      "sha256": "4065b017813cd0c379f9f5051028554d77b79aec7359c476213d800afb7be87d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/CharacterPartPoolEntry.cs",
+      "sha256": "8a53ce6dec648c879e0c2ea5fa56521c9760bf9a4d7d21ba89e857291f91a9f2"
     }
   ],
   "migrated_application_and_ports": [
@@ -59,6 +67,14 @@
     {
       "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceRendererPartBindings.cs",
       "sha256": "601c139f7a2491790792929235ff22a7c7213dcee008aa6d9aec13cb026bb60b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/CharacterPartEntryProvider.cs",
+      "sha256": "3296a189103a241a537cad613060ce100b8ab42da2d89e423f2c11c67787888f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionCharacterPartPoolBindings.cs",
+      "sha256": "e0bfe2d47976a0b554dee5c3fbf965f3ad74b3ffd4d0748a38d53c3a6835c70d"
     }
   ],
   "existing_part_dependencies": [
@@ -80,7 +96,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/CharacterPartPoolEntry.cs",
-      "sha256": "2ccc2997374f75f26d80900dcc72d0a92edf55b1ada97608b3f822f42586c732"
+      "sha256": "27ac4a4d1d5db2e2c93f8e998ec5a987ed0337c29b7262b98ac44338335bef39"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearancePartPaths.cs",
@@ -93,9 +109,10 @@
   },
   "generator": {
     "path": "scripts/prepare_battle_renderer_part_sources.py",
-    "sha256": "666d9f6f7c0fccd6858b1a7c184a1eba0e31514f8d3c69ede755e66d4f3d6a46"
+    "sha256": "190be338bc718fd6f42cffbdbd88a63fc44799e32328a744f4bbd800446a7cc9"
   },
   "scope": "Official application lifecycle, resource routing, separation requests and animation notification forwarding through explicit ports. No animation SDK implementation is used.",
+  "pool_binding": "Original path cache, LIFO reuse, one-second scan, twenty-second lifetime, counts, follower clearing and scene/low-memory branches. The native adapter instantiates verified TextAsset prefab definitions and binds the actual completed-pose drawing endpoint; the pool entry retains the real resource owner as IDisposable instead of a framework GameObject handle.",
   "limits": [
     "Scene part prefabs and renderer/separator/Mecanim backends are not restored by these ports.",
     "Play Mode probes verify application call ordering and lifecycle, not actual weapon rendering, motion, gameplay input, saves or Windows Player."

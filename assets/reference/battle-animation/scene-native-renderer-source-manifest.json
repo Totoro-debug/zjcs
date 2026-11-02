@@ -12,7 +12,7 @@
     },
     {
       "path": "assets/reference/battle-animation/scene-separator-source-manifest.json",
-      "sha256": "b71cd9e7cd1f7512389b7c67869db39773fef83c90ce5b4ae95017b066ca5bb6"
+      "sha256": "3231c0a4ccc88dc147033a8fcee57e9c3689d3cde8371d8b36243086902fc331"
     },
     {
       "path": "assets/reference/battle-animation/scene-weapon-source-manifest.json",
@@ -34,11 +34,43 @@
   "outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.cs",
-      "sha256": "66e998f63eb778aad8a5499842c451e98cad9a7f713c0812499e0a9cac82dac7"
+      "sha256": "c5078fda7dd9dc56de7f726e99c615b3f09b3f0bd35a18ea1d2b2574b0d6990f"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRendererSettings.cs",
-      "sha256": "e362084c1b85c9e3ceb1e0d3f2ef2e305ff9b17949f02d07321b0356aed897dc"
+      "sha256": "d4ed48a94d57d55db56f877067d7692f2dd27b03d443391eb867c9dd07da067e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.Parts.cs",
+      "sha256": "812d8c08d6cbb313bfb8295db710d6906ccb58cfaedd95d3e4eabc2e7f458caa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeScenePartOrder.cs",
+      "sha256": "b9f6d43a3b79aa4b3a46660fcb4f0b989110568d85743563a3ffa36b92d33050"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneWeapon.cs",
+      "sha256": "780ea7c0f1c9e9bbda84bbc11200222690784da85ca99ab5d804d1eb27bc04d7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneWeaponRenderer.cs",
+      "sha256": "bc87042926d57493be422ed7a0394a09b3f329329f09483e74e6a7285d641f97"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneWeaponCatalog.cs",
+      "sha256": "663135b96ec4c0dd1c2b094826a7f5b9f3bb96491250e99bd4c09bf19a2f15fd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeWeaponTextureResources.cs",
+      "sha256": "3f195f616ed0777fe787408c9964da7326ad67be9b46ffe146a4d07e3a1e43c7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionBattleSceneTextures.cs",
+      "sha256": "ab1e062eb209e3cfd6eb41b9a37eda27e752b6c44a685b97ac809cf16e7f3672"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionScenePartPoolBindings.cs",
+      "sha256": "0f5f2e52c15eb123d394a4c54137d2df98f4f9ed73ebeefbe89bae0335927c3a"
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneRenderer.cs",
@@ -47,6 +79,14 @@
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneFollowers.cs",
       "sha256": "9a5922a5339b31f6565a4d6c230d85d83dddac408dea9c5360b9fee7caa5628c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneIntegratedParts.cs",
+      "sha256": "88a98c4f2e5c9394f848ecee9226b2f105b3ad0304ca76483bbbdc3359c973fb"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.cs",
+      "sha256": "17f2d19f2a45fad3d952dda80e07ca6105ad32d61656cdfd06fd87eb37f28f55"
     }
   ],
   "follower_application_reuse": [
@@ -81,7 +121,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_scene_native_renderer.py",
-    "sha256": "a3163cf2f5aaaf467d3688e1f5ae805ae2ec1c7512d67fc5537982a4652b03d7"
+    "sha256": "efb1b8959b6e04f0237c6787fa4cf581813912c8433b2b457bc360a9126f2ddb"
   },
   "binding": {
     "catalog": "Combat/SceneCharacters/appearance-resources",
@@ -94,9 +134,14 @@
     "parts": "Original DynamicSkeletonRenderSeparator with independent ProfessionNativeSceneMeshSeparator",
     "followers": "IProfessionFollowerRenderer; current original zSpacing=0 and updateWhenInvisible=0. Whole/split native Renderer visibility supplies the original application's full-update value 3. Original rebuild event rebinds the same source followers to the new skeleton."
   },
-  "native_ordering": "Internal SortingGroups retain source draw-slot order while original MeshRenderer fields stay intact. Even keys identify fragment starts; odd after-slot keys are reserved for future native scene part adapters. Current original part renderer layer/order must be uniform.",
+  "pool_receipt": {
+    "path": "assets/reference/battle-animation/renderer-parts-source-manifest.json",
+    "sha256": "19a6671de28c1e523240b0a2b1cdb479bf1ac0c3a0d2976e22cbb48677765af0"
+  },
+  "native_ordering": "Internal SortingGroups retain source draw-slot order while original MeshRenderer fields stay intact. Even keys identify fragment starts; the actual G_007 independent sword/staff binds an odd after-point key between its two body fragments. Existing ordering objects remain with pooled parts for same-frame reuse. Current original part renderer layer/order must be uniform.",
+  "independent_parts": "Assemble all four source nodes and transforms, original SkeletonRendererFollower fields and AppearanceSkeletonPart/AppearanceRendererLite application code. Native body Low and weapon High resources share one explicit GUID/atlas router. A mandatory external pose producer receives animation requests; drawing performs no clock, physics or mixing. Prior extraction receipts retain their historical runtime identities; current catalog/resource binding extensions are recorded above without changing the extracted payloads.",
   "limits": [
-    "Normal-blend current character slots and uniform original part sorting only; unsupported prefab drawing fields, slot blends, divergent part sorting and unbound custom follower slot depth fail explicitly. Current zero-spacing followers take the original early-return branch without reading custom depth; nonzero spacing and native part insertion remain unbound.",
+    "Normal-blend current character slots and uniform original part sorting only; unsupported prefab drawing fields, slot blends, divergent part sorting and unbound custom follower slot depth fail explicitly. Current zero-spacing followers take the original early-return branch without reading custom depth. Nonzero spacing, drawable anchor insertion, ZFront, multiple parts at one slot and other part prefabs remain unbound.",
     "The pose producer, full physics, mixing, original scene prefab assembly and production battle/Windows Player integration remain required."
   ]
 }

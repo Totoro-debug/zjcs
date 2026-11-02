@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 using Zjcs.Official.ProfessionUI;
 
@@ -17,6 +18,7 @@ namespace Zjcs.Offline.ProfessionUI
         public YooAssetTextureLoader Loader => loader;
         public ProfessionNativeTextureAtlas Atlas => atlas;
         public AppearanceAssetManagerConfig ManagerConfig => managerConfig;
+        public string[] TextureGuids => textures.Select(entry => entry.Guid).ToArray();
         public ScriptableObject LoadPath(string path)
         {
             if (path == loaderPath) return loader;

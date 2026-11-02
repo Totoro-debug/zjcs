@@ -1,4 +1,5 @@
 using System;
+using Zjcs.Official.ProfessionUI;
 using UnityEngine;
 
 namespace Zjcs.Offline.ProfessionUI
@@ -22,6 +23,13 @@ namespace Zjcs.Offline.ProfessionUI
         {
             foreach (var entry in entries) if (entry.InitialSkin == skin) return entry;
             throw new NotSupportedException("Original scene weapon prefab is not converted: " + skin);
+        }
+        public Entry FindPath(string path)
+        {
+            foreach (var entry in entries)
+                if (ProfessionAppearancePartPaths.GetPlayerPartPrefabRenderer(PlayerPartMode.Integrated, entry.InitialSkin) == path)
+                    return entry;
+            throw new NotSupportedException("Original independent scene part path is not converted: " + path);
         }
     }
 }

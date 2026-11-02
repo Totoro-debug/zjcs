@@ -26,17 +26,36 @@ namespace Zjcs.Offline.ProfessionUI
         public bool Enabled => Flag(mesh, "m_Enabled");
         public float ZSpacing => Convert.ToSingle(skeleton["zSpacing"]);
         public int UpdateWhenInvisible => Int(skeleton, "updateWhenInvisible");
+        public string InitialAnimation => (string)skeleton["_animationName"];
+        public bool Loop => Flag(skeleton, "loop");
 
         public static ProfessionNativeSceneRendererSettings Load(TextAsset source)
+            => Load(source, null, "Spine.Unity.SkeletonMecanim", 0, false);
+
+        public static ProfessionNativeSceneRendererSettings LoadWeapon(TextAsset source)
         {
-            var root = Obj(Arr(Obj(OfficialEquipmentJson.Parse(source.text))["nodes"])[0]);
+            var result = Load(source, "Spine", "Spine.Unity.SkeletonAnimation", 1, true);
+            if (Convert.ToSingle(result.skeleton["timeScale"]) != 1)
+                throw new NotSupportedException("Bind the original independent weapon clock scale before drawing.");
+            return result;
+        }
+
+        private static ProfessionNativeSceneRendererSettings Load(TextAsset source, string nodeName,
+            string skeletonType, int materialCount, bool allowImmutableTriangles)
+        {
+            var nodes = Arr(Obj(OfficialEquipmentJson.Parse(source.text))["nodes"]).Select(Obj).ToArray();
+            var root = nodeName == null ? nodes[0] : nodes.Single(n => (string)n["name"] == nodeName);
             var components = Arr(root["components"]).Select(Obj).ToArray();
             var mesh = Obj(components.Single(c => (string)c["type"] == "MeshRenderer")["fields"]);
-            var skeleton = Obj(components.Single(c => (string)c["type"] == "Spine.Unity.SkeletonMecanim")["fields"]);
+            var skeleton = Obj(components.Single(c => (string)c["type"] == skeletonType)["fields"]);
             // Fail explicitly if a future selected prefab needs an unbound drawing feature.
-            foreach (string field in new[] { "initialFlipX", "initialFlipY", "zSpacing", "tintBlack", "singleSubmesh", "fixDrawOrder", "addNormals", "calculateTangents", "maskInteraction", "immutableTriangles", "clearStateOnDisable" })
+            foreach (string field in new[] { "initialFlipX", "initialFlipY", "zSpacing", "tintBlack", "singleSubmesh", "fixDrawOrder", "addNormals", "calculateTangents", "maskInteraction", "clearStateOnDisable" })
                 if (Convert.ToSingle(skeleton[field]) != 0) throw new NotSupportedException("Bind original scene renderer field: " + field);
-            if (Arr(skeleton["separatorSlotNames"]).Count != 0 || Arr(mesh["m_Materials"]).Count != 0)
+            // Reassigning complete native triangles is also valid for a source
+            // immutable-topology hint; it never freezes a changed native mesh.
+            if (!allowImmutableTriangles && Flag(skeleton, "immutableTriangles"))
+                throw new NotSupportedException("Bind original scene immutable triangle hint.");
+            if (Arr(skeleton["separatorSlotNames"]).Count != 0 || Arr(mesh["m_Materials"]).Count != materialCount)
                 throw new NotSupportedException("Bind original scene initial separators and materials.");
             foreach (string field in new[] { "m_StaticBatchRoot", "m_ProbeAnchor", "m_LightProbeVolumeOverride", "m_AdditionalVertexStreams", "m_EnlightenVertexStream" })
                 if (Convert.ToInt64(Obj(mesh[field])["m_PathID"]) != 0 || Convert.ToInt32(Obj(mesh[field])["m_FileID"]) != 0)

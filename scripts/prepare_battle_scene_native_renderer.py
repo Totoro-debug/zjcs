@@ -45,8 +45,18 @@ def main():
         "outputs": [identity(path) for path in [
             "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.cs",
             "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRendererSettings.cs",
+            "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.Parts.cs",
+            "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeScenePartOrder.cs",
+            "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneWeapon.cs",
+            "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneWeaponRenderer.cs",
+            "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneWeaponCatalog.cs",
+            "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeWeaponTextureResources.cs",
+            "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionBattleSceneTextures.cs",
+            "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionScenePartPoolBindings.cs",
             "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneRenderer.cs",
-            "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneFollowers.cs"]],
+            "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneFollowers.cs",
+            "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneIntegratedParts.cs",
+            "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.cs"]],
         "follower_application_reuse": followers,
         "generator": identity("scripts/prepare_battle_scene_native_renderer.py"),
         "binding": {
@@ -56,8 +66,10 @@ def main():
             "appearance": "IProfessionAppearanceSceneRenderer / IProfessionAppearancePartRenderer",
             "parts": "Original DynamicSkeletonRenderSeparator with independent ProfessionNativeSceneMeshSeparator",
             "followers": "IProfessionFollowerRenderer; current original zSpacing=0 and updateWhenInvisible=0. Whole/split native Renderer visibility supplies the original application's full-update value 3. Original rebuild event rebinds the same source followers to the new skeleton."},
-        "native_ordering": "Internal SortingGroups retain source draw-slot order while original MeshRenderer fields stay intact. Even keys identify fragment starts; odd after-slot keys are reserved for future native scene part adapters. Current original part renderer layer/order must be uniform.",
-        "limits": ["Normal-blend current character slots and uniform original part sorting only; unsupported prefab drawing fields, slot blends, divergent part sorting and unbound custom follower slot depth fail explicitly. Current zero-spacing followers take the original early-return branch without reading custom depth; nonzero spacing and native part insertion remain unbound.",
+        "pool_receipt": identity("assets/reference/battle-animation/renderer-parts-source-manifest.json"),
+        "native_ordering": "Internal SortingGroups retain source draw-slot order while original MeshRenderer fields stay intact. Even keys identify fragment starts; the actual G_007 independent sword/staff binds an odd after-point key between its two body fragments. Existing ordering objects remain with pooled parts for same-frame reuse. Current original part renderer layer/order must be uniform.",
+        "independent_parts": "Assemble all four source nodes and transforms, original SkeletonRendererFollower fields and AppearanceSkeletonPart/AppearanceRendererLite application code. Native body Low and weapon High resources share one explicit GUID/atlas router. A mandatory external pose producer receives animation requests; drawing performs no clock, physics or mixing. Prior extraction receipts retain their historical runtime identities; current catalog/resource binding extensions are recorded above without changing the extracted payloads.",
+        "limits": ["Normal-blend current character slots and uniform original part sorting only; unsupported prefab drawing fields, slot blends, divergent part sorting and unbound custom follower slot depth fail explicitly. Current zero-spacing followers take the original early-return branch without reading custom depth. Nonzero spacing, drawable anchor insertion, ZFront, multiple parts at one slot and other part prefabs remain unbound.",
             "The pose producer, full physics, mixing, original scene prefab assembly and production battle/Windows Player integration remain required."]}
     target = ROOT / "assets/reference/battle-animation/scene-native-renderer-source-manifest.json"
     content = json.dumps(proof, ensure_ascii=False, indent=2) + "\n"

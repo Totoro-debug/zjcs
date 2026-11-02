@@ -1,6 +1,7 @@
 namespace Zjcs.Official.ProfessionUI
 {
 using Object = UnityEngine.Object;
+using System;
 using UnityEngine;
 
 public class CharacterPartPoolEntry
@@ -11,7 +12,7 @@ public class CharacterPartPoolEntry
 
 	public GameObject GoPart { get; private set; }
 
-	private IProfessionAssetOperation<GameObject> AssetHandle { get; set; }
+	private IDisposable AssetHandle { get; set; }
 
 	public string AssetPath { get; private set; }
 
@@ -36,7 +37,7 @@ public class CharacterPartPoolEntry
 
 	}
 
-	public CharacterPartPoolEntry(GameObject goPart, string assetPath, IProfessionAssetOperation<GameObject> assetHandle, bool inPool)
+	public CharacterPartPoolEntry(GameObject goPart, string assetPath, IDisposable assetHandle, bool inPool)
 	{
 
 		GoPart = goPart;
