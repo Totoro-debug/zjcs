@@ -64,16 +64,29 @@ namespace Zjcs.Editor.MainlineNativeGround
                         && tiles.Where(tile => tile != first).All(tile => tile.transform.parent.localPosition.z == -1),
                         "Original status event switches only the selected region Z.");
                     var ids = tiles.Select(tile => tile.GetInstanceID()).OrderBy(value => value).ToArray();
-                    state.Range.Visible = false; view.ViewRangeChanged();
+                    state.Range.SetVisible(false);
                     Require(parent.GetComponentsInChildren<Tilemap>().Length == 0, "Original manager hides out-of-range regions.");
                     yield return new WaitForSecondsRealtime(.1f);
-                    state.Range.Visible = true; view.ViewRangeChanged();
+                    state.Range.SetVisible(true);
                     Require(ids.SequenceEqual(parent.GetComponentsInChildren<Tilemap>().Select(tile => tile.GetInstanceID()).OrderBy(value => value)),
                         "Original inactive cache is reused before its deadline.");
-                    state.Range.Visible = false; view.ViewRangeChanged();
-                    yield return new WaitForSecondsRealtime(10.25f);
+                    state.Range.SetVisible(false);
+                    var previousRange = state.Range;
+                    state.Range = new FixtureRange();
+                    state.Range.SetVisible(false);
+                    view.Refresh();
+                    float retireAt = Time.realtimeSinceStartup + 10.25f;
+                    while (Time.realtimeSinceStartup < retireAt)
+                    {
+                        previousRange.SetVisible(true);
+                        previousRange.SetVisible(false);
+                        view.Refresh();
+                        Require(parent.GetComponentsInChildren<Tilemap>().Length == 0,
+                            "A replaced range handler must not reactivate the current hidden regions.");
+                        yield return null;
+                    }
                     Require(parent.GetComponentsInChildren<Tilemap>(true).Length == 0, "Original ten-second inactive retirement.");
-                    state.Range.Visible = true; view.ViewRangeChanged();
+                    state.Range.SetVisible(true);
                     yield return null;
                     Require(parent.GetComponentsInChildren<Tilemap>().Length == assets.Regions.Length,
                         "Original regions reload after retirement.");
@@ -102,7 +115,7 @@ namespace Zjcs.Editor.MainlineNativeGround
         private sealed class MiniMapState : IMainlineMiniMapRegionState
         {
             public readonly MapRegionStatus[] Statuses;
-            public readonly FixtureRange Range = new FixtureRange();
+            public FixtureRange Range = new FixtureRange();
             public MiniMapState(int mapId, int regions) { CurrentMapClassId = mapId; Statuses = Enumerable.Repeat(MapRegionStatus.Private, regions).ToArray(); }
             public int CurrentMapClassId { get; }
             public bool HasMainPlayer => true;
@@ -116,7 +129,8 @@ namespace Zjcs.Editor.MainlineNativeGround
         }
         private sealed class FixtureRange : IMapViewRangeHandler
         {
-            public bool Visible = true;
+            public bool Visible { get; private set; } = true;
+            public void SetVisible(bool visible) { Visible = visible; OnVisibleRangeUpdate.Invoke(this); }
             public GAction<IMapViewRangeHandler> OnVisibleRangeUpdate { get; set; } = new GAction<IMapViewRangeHandler>();
             public IReadOnlyList<Pos2d> VisiblePosList => null;
             public bool IsEntityInViewRange(IMiniMapEntityBody body) => Visible;

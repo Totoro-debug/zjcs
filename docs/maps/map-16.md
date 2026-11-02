@@ -22,11 +22,11 @@
 
 尚无本图完整 Unity 游玩流程的完成结论。
 
-小地图区域地面使用公共 `MainlineMiniMapRegions`，由 `MainlineMiniMapRegionAssets` 提供本图原 Ground subtree、43个地区插槽及原区域 Tilemap，状态、角色和可见范围通过 `IMainlineMiniMapRegionState` 注入。资源入口为 `Resources/Map16/Native/mini-map-regions`，原生载荷在 `NativeMiniMapCurrent`，共120个资产／meta输出。转换器核对原 YooAsset GUID 与所选版本资源索引后绑定本地 prefab，不把转换缓存的 Unity GUID 当作原 YooAsset GUID。原 `MapMeCharacterUIBase`／`MiniMapPrivateRegionMaskManager` 与已迁移源码逐字节核对，保留初始化、地区开放事件、公私有 Z、倒序可见性遍历、缓存复用、十秒回收和释放顺序。当前范围仅为区域地面；原白雾、标记、相机、完整 MiniMap 根和正式输入／存档仍待绑定。资源与代码来源见[本图区域地面](../../assets/reference/official-map/map16-current-minimap-regions-source-manifest.json)及[公共区域模块](../../assets/reference/official-map/mainline-minimap-regions-source-manifest.json)。
+小地图区域地面使用公共 `MainlineMiniMapRegions`，由 `MainlineMiniMapRegionAssets` 提供本图原 Ground subtree、43个地区插槽及原区域 Tilemap，状态、角色和可见范围通过 `IMainlineMiniMapRegionState` 注入。资源入口为 `Resources/Map16/Native/mini-map-regions`，原生载荷在 `NativeMiniMapCurrent`，共120个资产／meta输出。转换器核对原 YooAsset GUID 与所选版本资源索引后绑定本地 prefab，不把转换缓存的 Unity GUID 当作原 YooAsset GUID。原 `MapMeCharacterUIBase`／`MiniMapPrivateRegionMaskManager` 与已迁移源码逐字节核对，保留初始化、地区开放事件、公私有 Z、倒序可见性遍历、缓存复用、十秒回收和释放顺序。可见范围由公共模块订阅原 `IMapViewRangeHandler` 事件，普通刷新不重复发布；替换处理器统一退订／订阅并发布一次，停用／销毁时释放订阅，不释放外部拥有的处理器。当前范围仅为区域地面；原白雾、标记、相机、完整 MiniMap 根和正式输入／存档仍待绑定。资源与代码来源见[本图区域地面](../../assets/reference/official-map/map16-current-minimap-regions-source-manifest.json)及[公共区域模块](../../assets/reference/official-map/mainline-minimap-regions-source-manifest.json)。
 
 四份原 Unity Tile 的字段由当前程序集严格解码恢复，包含 Sprite、颜色、矩阵、实例对象、标志及碰撞类型；不使用只含头部的导出缓存作为完整 Tile。原 Sprite 引用按 CAB／PathID 精确对应已绑定资源，矩阵只转换 Unity YAML 字段名。空运行标记复用已有官方 `WorldPreviewTool`，原 `PreviewTool` 源码已按当前版本核对。
 
-公共区域地面在隔离 Unity Play Mode 中以本图全部43区验证：原 Tilemap 加载、仅目标地区的开放 Z 变化、范围外隐藏、期限前实例复用、十秒后回收、重新加载、释放与带已有公开状态重进均通过，无运行错误。使用原渲染器索引1及原材质，已查看初始／重进实际运行截图；镜头范围为本次局部检查设置，不代表正式小地图镜头已迁移。此验证不包含白雾、标记、UI／模拟输入、正式地图存档或 Windows Player。
+公共区域地面在隔离 Unity Play Mode 中以本图全部43区验证：原 Tilemap 加载、仅目标地区的开放 Z 变化、原范围事件驱动的隐藏、期限前实例复用、范围处理器替换／旧事件隔离、持续普通刷新仍按十秒回收、重新加载、释放与带已有公开状态重进均通过，无运行错误。使用原渲染器索引1及原材质，已查看初始／重进实际运行截图；镜头范围为本次局部检查设置，不代表正式小地图镜头已迁移。此验证不包含白雾、标记、UI／模拟输入、正式地图存档或 Windows Player。
 
 局部数据入口由 [`prepare_mainline_map_definition.py`](../../scripts/prepare_mainline_map_definition.py) 按地图 ID 提取，输出 `Assets/Official/World/Map/16/map16.json` 及 `Source/` 中的导航、放置、完整 EC、63份递归模板／动作和原配置表。它对比原导航／MapInfoWrap／EC 的身份与实体闭包，核对43区探索上限，验证消费的109份已准备官方源码；不填造默认实体、地图条件或移动规则。来源见[地图定义清单](../../assets/reference/official-map/map16-definition-source-manifest.json)。
 

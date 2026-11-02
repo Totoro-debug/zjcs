@@ -29,6 +29,7 @@ namespace Zjcs.Presentation.World
         {
             if (!assets || !assets.Ground || assets.MapClassId <= 0 || state == null || assets.Regions == null
                 || assets.Regions.Length == 0 || state.RegionStatuses == null
+                || state.ViewRange == null || state.ViewRange.OnVisibleRangeUpdate == null
                 || state.RegionStatuses.Count != assets.Regions.Length
                 || assets.Regions.Any(row => row == null || !row.Prefab || string.IsNullOrEmpty(row.OriginalGuid))
                 || assets.Regions.Select(row => row.OriginalGuid).Distinct().Count() != assets.Regions.Length)
@@ -55,14 +56,6 @@ namespace Zjcs.Presentation.World
         {
             if (disposed) throw new ObjectDisposedException(nameof(MainlineMiniMapRegions));
             context.Refresh();
-        }
-
-        // Call when the original view-range handler reports a change. Repeating
-        // this every frame would reset the original ten-second retirement delay.
-        public void ViewRangeChanged()
-        {
-            if (disposed) throw new ObjectDisposedException(nameof(MainlineMiniMapRegions));
-            context.PublishViewRange();
         }
 
         public void Dispose()

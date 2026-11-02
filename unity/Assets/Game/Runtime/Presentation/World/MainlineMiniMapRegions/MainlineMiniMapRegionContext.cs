@@ -16,6 +16,8 @@ namespace Zjcs.Presentation.World
         private Dictionary<string, GameObject> prefabs;
         private List<MapRegionStatus> statuses;
         private IMiniMapCharacterController character;
+        private IMapViewRangeHandler range;
+        private IDisposable rangeSubscription;
 
         internal void Bind(MainlineMiniMapRegionAssets assets, IMainlineMiniMapRegionState state)
         {
@@ -24,12 +26,13 @@ namespace Zjcs.Presentation.World
             prefabs = assets.Regions.ToDictionary(row => row.OriginalGuid, row => row.Prefab);
             statuses = state.RegionStatuses.ToList();
             character = state.Character;
+            range = state.ViewRange;
         }
 
         public override int MapClassId => assets.MapClassId;
         public override int CurrentMapClassId => state.CurrentMapClassId;
         public override bool HasMainPlayer => state.HasMainPlayer;
-        public override IMapViewRangeHandler ViewRangeHandler => state.ViewRange;
+        public override IMapViewRangeHandler ViewRangeHandler => range;
         public IMiniMapCharacterController MyMeUiCharacter => character;
         public event Action<IMiniMapCharacterController, IMiniMapCharacterController> OnMeMapControllerUpdated;
         public override event Action<IMapViewRangeHandler> OnVisibleRangeUpdate;
@@ -47,6 +50,16 @@ namespace Zjcs.Presentation.World
         {
             if (state.RegionStatuses.Count != statuses.Count)
                 throw new InvalidDataException("Minimap region state dimensions changed.");
+            var nextRange = state.ViewRange;
+            if (nextRange == null || nextRange.OnVisibleRangeUpdate == null)
+                throw new InvalidDataException("Original minimap view range is not bound.");
+            if (!ReferenceEquals(range, nextRange))
+            {
+                ReleaseRangeSubscription();
+                range = nextRange;
+                if (isActiveAndEnabled) SubscribeRange();
+                OnVisibleRangeUpdate?.Invoke(range);
+            }
             var nextCharacter = state.Character;
             if (!ReferenceEquals(character, nextCharacter))
             {
@@ -64,7 +77,23 @@ namespace Zjcs.Presentation.World
             }
         }
 
-        internal void PublishViewRange() => OnVisibleRangeUpdate?.Invoke(ViewRangeHandler);
+        private void OnEnable() => SubscribeRange();
+        private void OnDisable() => ReleaseRangeSubscription();
+        private void OnDestroy() => ReleaseRangeSubscription();
+        private void SubscribeRange()
+        {
+            if (rangeSubscription == null && range != null)
+                rangeSubscription = range.OnVisibleRangeUpdate.Subscribe(PublishViewRange);
+        }
+        private void ReleaseRangeSubscription()
+        {
+            rangeSubscription?.Dispose();
+            rangeSubscription = null;
+        }
+        private void PublishViewRange(IMapViewRangeHandler source)
+        {
+            if (ReferenceEquals(source, range)) OnVisibleRangeUpdate?.Invoke(range);
+        }
 
         private sealed class Lease : IMiniMapRegionAssetLease
         {
