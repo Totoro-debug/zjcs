@@ -1,0 +1,76 @@
+{
+  "manifest": "884_156692",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/ApplyByGroundType.cs",
+      "sha256": "74985d35c1ca65745d75ceecc64ca013ba698b2d8a9afcbc7d7e1041d5a7e5cc"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source/AssetGuidProxy.cs",
+      "sha256": "d18995873a98356885c49afcb34ff24cc8a6644b28b6f6e7ae3a44fe7e91b04f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GroundType.cs",
+      "sha256": "1292cacc79578a628df15516b5069aa37194aa88f6d00c1ed41ef41ad9b093e2"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryGroundEffects.meta",
+      "sha256": "157684162c456115fbd8bd12925bef72015430455f2822a9e31039adf7ff9998"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryGroundEffects/ApplyByGroundType.cs",
+      "sha256": "4d3edca2dfbc9539c1146d6d5e6483d44bdedcd67196efcc9b80804ee483487c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryGroundEffects/ApplyByGroundType.cs.meta",
+      "sha256": "209777acd1c016451e967642d89f2bb4a2200a0f2276e70c12b50f21dee8b0b7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryGroundEffects/AssetGuidProxy.cs",
+      "sha256": "a83b15e3d404473caa888f168032a5b11b35be09811821d592c251e8487b4add"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryGroundEffects/AssetGuidProxy.cs.meta",
+      "sha256": "258eb90a3176354d9c954af1017c521ab417308258e88d273adabec28c707540"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryGroundEffects/GroundType.cs",
+      "sha256": "75b0de3cc03cc08d35c4aa8c54eb4772d76bd4fa456402c2b6490227ea978f8b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryGroundEffects/GroundType.cs.meta",
+      "sha256": "48a749101dc8feb3ed6aa1f6afad30516bed030282c2f537d816fd819b2e0733"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryGroundEffects/IPlayableGroundEffectHost.cs",
+      "sha256": "253a9963a5d5b88a1dbcecfb95b98c79b47e4fc55c9ada008d3fb004aac4a725"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryGroundEffects/IPlayableGroundEffectHost.cs.meta",
+      "sha256": "713f6443c5a6b59e44a8c2cf1228c97fcab22740f8e6df941f3c32b36de5acbf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryGroundEffects/Zjcs.Official.StoryGroundEffects.asmdef",
+      "sha256": "3e5783b56733910f909893355b15a122e977fe240ca12d4a1bbd8ca9ea9c6f78"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryGroundEffects/Zjcs.Official.StoryGroundEffects.asmdef.meta",
+      "sha256": "e256780423447679a0a36e070dd3302409cab5e0c6843c5250dd32b9f99a5ac5"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_ground_effect_runtime.py",
+    "sha256": "379bbee410715352687a43d3bc29903a450419742759f4762290a0c3744364c4"
+  },
+  "binding": "Original ApplyByGroundType retains Init/Play/Update/Stop, terrain selection/IgnoreKey fallback, unchanged-terrain suppression, native slot parenting, activation, application and handle lifetime. Explicit host replaces fight/map/loader/service-provider injection; ground lookup receives the original attachment local position.",
+  "adaptations": [
+    "Framework IDisposableBag replaced by equivalent per-instance IDisposable list disposed on destruction.",
+    "Original diagnostic formatters replaced by Unity diagnostics; original branches remain.",
+    "GroundType and AssetGuidProxy are isolated native ports, avoiding a dependency on map or profession UI assemblies."
+  ],
+  "limitations": [
+    "Runtime port alone does not bind the 17 original movement follow-bone nodes or deliver their complete native effect closure."
+  ]
+}

@@ -365,6 +365,8 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 
 战斗移动声音的选定884_156692原技能／动作序列、Wwise事件引用、APK优先与已校验云端银行、原HIRC路由／效果参数载荷、WEM和解码PCM身份见[移动声音来源](battle-animation/movement-sounds-source-manifest.json)。`scripts/prepare_battle_movement_sounds.py` 复用银行身份核验与vgmstream解码，保留未归一化、未烘焙增益的原PCM并生成Unity显式资源；规则选择载荷保留854来源，不与当前音频或871历史战斗音频混标。
 
+战斗移动地形选择与四个原生粒子资源的选定884_156692应用／框架源码、APK优先及匹配云端来源、已核验原生转换输入、当前shader的520个Windows程序、三张贴图的全部原mip解码与逐文件输出哈希见[运行代码来源](battle-animation/ground-effects-runtime-source-manifest.json)及[资源来源](battle-animation/ground-effects-assets-source-manifest.json)。入口为 `prepare_battle_ground_effect_runtime.py`／`prepare_battle_ground_effect_assets.py`；既有水波淡出脚本仅核对所复用的原应用文件与当前源码字节一致，不声明整版等价。本批未生成完整素材快照。
+
 地区时间公共适配来源见 [mainline-region-time-source-manifest.json](official-map/mainline-region-time-source-manifest.json)。`prepare_mainline_region_time.py`／`record_mainline_region_time_sources.py` 核对所选884_156692的原地区时间判定、日期偏移、UniTask刷新状态机和时间格式源码，记录每实例日期／语言服务绑定与安装输出哈希；当前格式源码仅此文件与历史语言来源逐字节一致，不声明外围程序集或整版等价。地图标签语言键由各图原配置及原时间格式消费路径提取，未新增替代字体或美术；本批未生成完整素材快照。
 
 小地图区域地面来源见 [Map13当前资源](official-map/map13-current-minimap-regions-source-manifest.json)、[Map16当前资源](official-map/map16-current-minimap-regions-source-manifest.json)与[公共绑定代码](official-map/mainline-minimap-regions-source-manifest.json)。`prepare_mainline_minimap_regions.py` 复用公共原生恢复器，记录所选884_156692的APK优先／匹配缓存、原Ground子树、地区prefab、YooAsset索引GUID及Windows转换依赖和逐文件哈希。原YooAsset GUID与转换缓存Unity GUID分别保留；仅核对两份区域管理源码与历史输入逐字节一致，不声明整版等价。历史小地图来源独立保留，本批未生成完整素材快照。

@@ -422,6 +422,12 @@ NPC 外观复用验证：`OfficialMap12NpcBattleModelView` 是现有 Map12 队�
 
 移动声音验证：内置屏Direct3D 11隔离Play Mode通过，复制的运行代码与当前公共模块逐字节相同；5段原PCM的采样率、声道、帧数和导入后逐样本SHA256一致，实际音频线程产生非零缓冲。21条技能／21条动作的8个原节点核对即时／延迟触发、事件顺序和目标；原序列、原循环阈值、停止事件、已缩放时钟、取消未触发节点、重复停止、同一调度器的并发单位及不同后端互不干扰、无目标时使用Playable自身对象和全局UI后端恢复均通过，编辑器退出0。源音频读取工具5项测试与全工程静态检查（87,656 GUID）通过。最终全工程编译仍被另一地图未提交的 `NativeGroundAcceptance.MiniMapRegions` 类型歧义阻断，原 `ProjectTools.Validate` 未能在该最终工程状态执行，未将隔离验证记为全工程通过。夹具直接派发事件并播放原干声音频，不涉及界面输入、存档、正式宿主或Windows Player发布。
 
+移动地形特效（局部迁移）：当前884_156692原 `ApplyByGroundType` 已迁入独立 `StoryGroundEffects` 程序集，保留 Init／Play／定时 Update／Stop 顺序、按附加对象本地坐标采样地形、精确类型优先与原 `IgnoreKey=8888` 回退、同地形不重建、无效配置不加载、原 Slot 挂载、停止停用及销毁时释放加载句柄。战斗／地图地面、资源加载与依赖注入通过显式宿主接口传入；`OfficialBattleGroundEffectLibrary` 只绑定本地原 prefab，没有从类型名称推测资源。来源及服务边界见[地形选择运行代码](../../assets/reference/battle-animation/ground-effects-runtime-source-manifest.json)。
+
+四个原移动地形资源 `Eff_Role_FlySmoke`、`Eff_Role_JumpWave`、`Eff_Role_Runsmoke`、`Eff_Role_Wave` 已恢复为 Unity 原生 prefab，保留原粒子模块、曲线、层级、材质及网格。三张原贴图分别保留9／10／11级全部原 mip，ASTC逐级解码为原行序RGBA32，没有翻转、重采样或重新压缩；当前原 shader 的520个程序复用字节核验的 Windows 转换，改名以隔离显式绑定。水波上的原 `MyEffectFadeOut` 复用已有迁移，已核对其当前与历史原应用源码逐字节一致。APK优先／匹配云端凭据、转换缓存输入、原 shader／贴图对象、完整 mip 与输出哈希见[地形特效资源](../../assets/reference/battle-animation/ground-effects-assets-source-manifest.json)。原17个移动 FollowBone 节点及其完整序列仍未装入公共战斗宿主，不能将本批资源与局部适配视为完整移动特效；其他技能／受击特效、完整声音后端及 Windows Player 发布仍待完成。
+
+地形特效验证：全工程Unity导入／编译、`ProjectTools.Validate` 和静态检查（87,700 GUID）通过。内置屏Direct3D 11 Play Mode使用上述真实资源与原 `ApplyByGroundType`／`MyPlayableFollowBone`，核对非单位父变换下的本地坐标、Source／Target地形采样、普通地形与浅水选择、IgnoreKey回退、无效项不回退、同地形不重建、地形更换停用旧对象、停止／重启、加载句柄销毁以及独立宿主；以原15300起跳的body挂点、偏移和1.2特效比例核对跟随，不修改人物比例。四个原生prefab均实际发射粒子并通过材质／Windows shader检查，450×800渲染分别产生2559／1671／1215／505个可见像素，四张实际运行图已查看，编辑器退出0。测试启动存档使用隔离目录；本次验证仅覆盖资源和组件组合，不覆盖完整战斗入口、17节点调度、地图实际地形采样接线、交互或Windows Player发布。
+
 ## 尚未实现
 
 来源隔离仍有边界：旧战斗存档若已丢失装备实例来源，不能从状态ID或相同技能反推出原装备；仅有直接施法／技能元数据时使用现存记录，不编造历史来源。创建者记录已完全不存在时不伪造施法者或改用受击者；保留记录的阵亡／离场路径见本节确认规则。范围计数型效果与层数组合、同来源重复生产者贡献的撤销及全部复杂触发联动仍需继续迁移验证。
