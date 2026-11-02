@@ -6,8 +6,16 @@ namespace Zjcs.Offline.PartnersUI
     public sealed class OfficialPartnerPanelAssetCatalog : ScriptableObject
     {
         [Serializable] public sealed class TextBinding { public string key, text; }
+        [Serializable] public sealed class SoundBinding { public uint eventId; public AudioClip clip; }
         [SerializeField] private GameObject panelPrefab;
         [SerializeField] private TextBinding[] texts;
+        [SerializeField] private SoundBinding[] sounds;
+        public AudioClip GetSound(uint eventId)
+        {
+            foreach (var row in sounds ?? Array.Empty<SoundBinding>())
+                if (row.eventId == eventId) return row.clip ? row.clip : throw new InvalidOperationException("Original partner event PCM is unbound: " + eventId);
+            return null;
+        }
         public GameObject PanelPrefab => panelPrefab ? panelPrefab :
             throw new InvalidOperationException("Complete original partner panel prefab is unbound.");
         public Func<string, string> CreateLocalizer(Func<string, string> fallback)

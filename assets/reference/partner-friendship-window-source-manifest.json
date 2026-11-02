@@ -1799,11 +1799,18 @@
     "unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.cs.meta": "cfede3b465b84277cce0d23ee90f5c109d3e99254d2f762edf1de273d8aab1c0",
     "unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.cs": "6678fd4fbe375ffad962ff1c8604b8f2b0fb1186e27dcb7462d9ef22019b279a",
     "unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.cs.meta": "a488132666146062b256052983f60f69048073ce26dddba509dadba21606850b",
-    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerUiSoundScope.cs": "cdcb978ce44de1471d69e69e2c4218acb2d61f33cc3d2484dfb8b778fe698316",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerUiSoundScope.cs": "63bbab4aee30b601a1d581451dd90cdbdc07090699716fa81697cda44d090184",
     "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerUiSoundScope.cs.meta": "efe37b47803ded233a9b46f070729d66e14bdba78dca903a80b9b258b33b5139",
     "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerGiftPanelView.cs": "340290149e03a4dbc3b87f4ac07273ba4268522f56c0fd249566e28c78ec57ca",
     "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerGiftPanelView.cs.meta": "bb371da05262b6aa17ef39c077032379a976a1acbc053f1ddb71abdd92e1d861",
     "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerDetailPanelView.cs": "1b847898ea8b2c6701104c42837978efb3e7c5db20a8069981961024dd36f54f",
     "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerDetailPanelView.cs.meta": "0d1c6946263d043279ad8d6be2db9797b1c229dc230b675c7afc47d9d5ac77e5"
+  },
+  "shared_runtime_adaptations": {
+    "sound_scope": {
+      "original_commit": "93840ba46e95b9d38c8b53a645d7e1c690498849",
+      "original_sha256": "cdcb978ce44de1471d69e69e2c4218acb2d61f33cc3d2484dfb8b778fe698316",
+      "adaptation": "Retain default friendship click resolver; add an explicit panel event-to-PCM resolver overload and forward original sound-object registration and lifetime calls to the underlying host."
+    }
   }
 }

@@ -74,6 +74,7 @@ namespace Zjcs.Offline.PartnersUI
         private IProfessionAppearanceSkinClipBindings previousSkinClip;
         private OfflineProfessionNativeSkinClipBindings skinClip;
         private DialogueBindings dialogueBindings;
+        private OfflinePartnerUiSoundScope sounds;
         public GameObject Content => content;
         public WorldPopupWindow Window => content ? content.GetComponent<WorldPopupWindow>() : null;
 
@@ -92,6 +93,7 @@ namespace Zjcs.Offline.PartnersUI
             previousSkinClip = ProfessionAppearanceSkinClipBindings.Current;
             try
             {
+                sounds = new OfflinePartnerUiSoundScope(assets.GetSound);
                 skinClip = new OfflineProfessionNativeSkinClipBindings(previousSkinClip);
                 ProfessionAppearanceSkinClipBindings.Current = skinClip;
                 WorldMultiLanguageText.Localize = assets.CreateLocalizer(value.Localize); WorldMultiLanguageText.LanguageFont = () => value.Font;
@@ -157,6 +159,7 @@ namespace Zjcs.Offline.PartnersUI
             ProfessionImageResourceBridge.Provider = previousImages; ProfessionGameObjectPoolBridge.Provider = previousPool;
             ProfessionAppearanceSkinClipBindings.Current = previousSkinClip;
             skinClip?.Dispose(); skinClip = null; context = null;
+            sounds?.Dispose(); sounds = null;
             dialogueBindings = null;
             previousLocalize = null; previousFont = null; previousImages = null; previousPool = null; previousSkinClip = null;
         }

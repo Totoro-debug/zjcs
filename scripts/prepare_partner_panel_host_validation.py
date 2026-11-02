@@ -28,6 +28,14 @@ def main():
         shutil.copy2(source, target)
         copied[relative] = hashlib.sha256(source.read_bytes()).hexdigest()
         copied_path.write_text(json.dumps(copied, indent=2), 'utf8', newline='\n')
+    native = json.loads((ROOT / 'assets/reference/partner-panel-native-source-manifest.json').read_bytes())
+    for relative, expected in native['installed_output_sha256'].items():
+        if not relative.endswith(('.wav', '.wav.meta')): continue
+        source = ROOT / relative
+        if hashlib.sha256(source.read_bytes()).hexdigest() != expected: raise ValueError('Panel PCM changed: ' + relative)
+        target = project / source.relative_to(ROOT / 'unity')
+        if target.exists() and target.read_bytes() != source.read_bytes(): raise ValueError('Preserve changed fixture PCM: ' + str(target))
+        target.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(source, target)
     editor = project / 'Assets/Editor'
     for name in ('PartnerPanelNativeGraphicValidation.cs', 'PartnerStarGodLocalValidation.cs'):
         (editor / name).unlink(missing_ok=True)

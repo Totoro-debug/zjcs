@@ -164,6 +164,7 @@ public sealed class PartnerPanelHostRunner : MonoBehaviour, IOfflinePartnerPrese
         var words = assets.Texts.ToDictionary(row => row.key, row => row.text);
         view = canvas.gameObject.AddComponent<PartnerPanelView>();
         var previousSkin = ProfessionAppearanceSkinClipBindings.Current;
+        var previousSound = OfficialWwiseEvent.Host;
         var limited = new HashSet<int>();
         var context = new PartnerPanelContext {
             Roster = roster, StarGod = services, Dialogues = new NewProfileDialogueFixture(), Windows = new Windows(this),
@@ -180,15 +181,18 @@ public sealed class PartnerPanelHostRunner : MonoBehaviour, IOfflinePartnerPrese
         Require(view.Content.GetComponentsInChildren<NpcPanelNpcItem>().Length > 0, "Original roster pool populated");
         Capture("panel-host-roster.png");
         Click(tabs[NpcPanelTabType.Dialogue].gameObject);
+        VerifyTabSound();
         yield return new WaitForSeconds(0.5f);
         Require(tabs[NpcPanelTabType.Dialogue].isOn && Get<GameObject>(panel, "mNpcDialogueListGo").activeInHierarchy, "Pointer switches original dialogue page");
         Capture("panel-host-dialogue-empty.png");
         Click(tabs[NpcPanelTabType.StarGod].gameObject);
+        VerifyTabSound();
         yield return new WaitForSeconds(0.5f);
         Require(tabs[NpcPanelTabType.StarGod].isOn && view.Content.GetComponentInChildren<NpcPanelStarGodContent>(), "Pointer switches original star-god page");
         Require(view.Content.GetComponentsInChildren<StarGodNpcItem>().Any(item => Get<NpcRosterItem>(item, "mNpcData") != null), "Original star-god pool populated");
         Capture("panel-host-star-god.png");
         Click(tabs[NpcPanelTabType.NpcList].gameObject);
+        VerifyTabSound();
         yield return new WaitForSeconds(0.4f);
         Require(tabs[NpcPanelTabType.NpcList].isOn, "Pointer returns to original roster");
         var closeButton = view.Content.GetComponentsInChildren<CloseWindowBtn>().Select(row => row.myButton).Distinct().Single();
@@ -196,6 +200,7 @@ public sealed class PartnerPanelHostRunner : MonoBehaviour, IOfflinePartnerPrese
         Require(view.Window.State == WorldPopupWindow.EState.Hiding, "Original close button starts actual hide clip");
         yield return new WaitForSeconds(0.7f);
         Require(!view.Content && ReferenceEquals(previousSkin, ProfessionAppearanceSkinClipBindings.Current), "Hide completion destroys window and restores scoped bindings");
+        Require(ReferenceEquals(previousSound, OfficialWwiseEvent.Host), "Hide completion restores underlying sound host");
         view.Open(OfficialPartnerPanelAssetCatalog.Load(), context, NpcPanelTabType.StarGod);
         yield return new WaitForSeconds(0.7f);
         Require(view.Content.GetComponentInChildren<NpcPanelStarGodContent>(), "Reopen original window on requested page");
@@ -278,9 +283,6 @@ public sealed class PartnerPanelHostRunner : MonoBehaviour, IOfflinePartnerPrese
     public void ShowProgressionResult(ProgressionResult result) { Require(!result.IsApplied, "Rejected transaction"); failures++; }
     public uint PostEvent(uint id, GameObject emitter)
     {
-        // Verify dispatch identity only for the tab event. PCM routing for this
-        // SDK event belongs to the application's global Wwise host.
-        if (id == 680474747) return 1;
         Require(id == 3772241779, "Original common click event");
         PostSound(AssetDatabase.LoadAssetAtPath<AudioClip>(AssetDatabase.GUIDToAssetPath("a349287c39df984af5f51e2338d53e9f")), emitter); return (uint)sounds;
     }
@@ -293,6 +295,14 @@ public sealed class PartnerPanelHostRunner : MonoBehaviour, IOfflinePartnerPrese
     public void SetDefaultListeners(GameObject emitter) { }
     public void SetScalingFactor(GameObject emitter, float factor) { }
     public void UnregisterGameObject(GameObject emitter) { }
+    void VerifyTabSound()
+    {
+        var clip = OfficialPartnerPanelAssetCatalog.Load().GetSound(680474747);
+        Require(clip && clip.samples > 0, "Original Main_Tag PCM is packaged");
+        var voice = Object.FindObjectsOfType<AudioSource>().Single(source => source.gameObject.name == "PartnerSound:680474747");
+        Require(voice.clip == clip && voice.isPlaying && !voice.loop && voice.spatialBlend == 0,
+            "Simulated original tab click plays its actual event PCM through the scoped host");
+    }
     void Click(GameObject button)
     {
         Canvas.ForceUpdateCanvases(); var rect = (RectTransform)button.transform;

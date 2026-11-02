@@ -91,6 +91,16 @@ class PartnerPanelBinding(PartnerStarGodBinding):
             self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
         cache = self.recovery.proof['component_cache']
         self.inputs[cache['path']] = cache['sha256']
+        sound_bindings = {}
+        for row in panel['scripts']:
+            if row['type'] != 'UIClickSound': continue
+            owner = self.original(row['original'])
+            pointer = self.sound(self.recovery.fields(owner)['AkEvent'], owner)
+            proof, = [value for value in self.audio_proof.values() if value['pointer'] == pointer]
+            event_id = proof['event']['id']
+            sound_bindings[event_id] = dict(eventId=event_id, clip=pointer)
+        if set(sound_bindings) != {680474747, 3772241779}: raise ValueError('Inspect original partner window click events')
+        self.panel_wwise_bindings = list(sound_bindings.values())
         self.star_god_images = self.static_images()
         return [('NpcPanel', panel)]
 
@@ -108,6 +118,7 @@ class PartnerPanelBinding(PartnerStarGodBinding):
         from partner_panel_language import panel_language
         texts, language_inputs = panel_language(self.work / 'gift-assets/NpcPanel.prefab')
         receipt['panel_texts'] = texts
+        receipt['panel_wwise_bindings'] = self.panel_wwise_bindings
         receipt['inputs'].update(language_inputs)
         # The staged prefab is already checked in outputs; it is not a durable
         # raw input after the owned validation workspace is removed.
@@ -208,7 +219,7 @@ def install(work):
     body = dict(m_ObjectHideFlags=0, m_CorrespondingSourceObject=dict(fileID=0), m_PrefabInstance=dict(fileID=0),
         m_PrefabAsset=dict(fileID=0), m_GameObject=dict(fileID=0), m_Enabled=1, m_EditorHideFlags=0,
         m_Script=dict(fileID=11500000, guid=guid(script_meta), type=3), m_Name='OfficialPartnerPanelAssetCatalog',
-        m_EditorClassIdentifier='', panelPrefab=receipt['roots']['NpcPanel'], texts=receipt['panel_texts'])
+        m_EditorClassIdentifier='', panelPrefab=receipt['roots']['NpcPanel'], texts=receipt['panel_texts'], sounds=receipt['panel_wwise_bindings'])
     catalog.write_text('%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n--- !u!114 &11400000\n' +
         yaml.dump(dict(MonoBehaviour=body), Dumper=Dumper, sort_keys=False, allow_unicode=True, width=1000000), 'utf8', newline='\n')
     for path in (catalog, metadata(catalog, 'NativeFormatImporter'), script, script_meta):
