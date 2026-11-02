@@ -1083,6 +1083,7 @@ namespace Zjcs.Combat.Official
                 RoundStartMeetRulesResolved = true,
                 RoundStartRandomOneStatus = roundStart != null && Bool(roundStart, "StatusRandomOneTrigger"),
                 RoundStartRandomRulesResolved = true,
+                RoundStartSourceRulesResolved = true,
                 RoundStartTryAtStart = roundStart != null
                     && Bool(roundStart, "TryAtStart"),
                 RoundStartDefinitionResolved = true,
@@ -2535,6 +2536,7 @@ namespace Zjcs.Combat.Official
                 && (Int(component, "RoundStartPhase") == 0 || Int(component, "RoundStartPhase") == 5)
                 && Float(component, "TargetHpPer", -1f) < 0f
                 && !Bool(component, "TryAtNotForbidden")
+                && !Bool(component, "MergeMaxCountOnStackRound")
                 && !Bool(component, "RemoveOldStatusOnInvoke")
                 && !Bool(component, "RemoveOldStatusOnEnd")
                 && ArrayCount(component, "TargetActions") == 0
@@ -2553,9 +2555,12 @@ namespace Zjcs.Combat.Official
             {
                 Dictionary<string, object> trigger = Object(item, "round start trigger skill");
                 bool hasPropertyTarget = ReadTriggerPropTarget(trigger) != null;
-                if (Bool(trigger, "AffectedByProp") || Int(trigger, "Source") != 2
+                int source = Int(trigger, "Source");
+                if (Bool(trigger, "AffectedByProp") || (source != 2 && source != 3)
+                    || (source == 3 && hasPropertyTarget)
                     || (Int(trigger, "Target") != 1 && Int(trigger, "Target") != 2
-                        && Int(trigger, "Target") != 7 && !hasPropertyTarget) || Bool(trigger, "UseAI")
+                        && Int(trigger, "Target") != 3 && Int(trigger, "Target") != 7
+                        && !hasPropertyTarget) || Bool(trigger, "UseAI")
                     || (!hasPropertyTarget && Int(trigger, "Target") == 2
                         && ArrayCount(component, "TriggerTargetNotStatus") > 0)
                     || Bool(trigger, "StackedCountToDamageFactor")

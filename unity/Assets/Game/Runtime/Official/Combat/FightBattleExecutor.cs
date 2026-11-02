@@ -1664,7 +1664,8 @@ namespace Zjcs.Combat.Official
                     || (!invocation.SelectTargets && !FightBattleTargeting.IsSelectable(target)
                         && !invocation.AllowDeadTarget)
                     || (!invocation.SelectTargets && !FightBattleTargeting.IsSelectable(targetPosition)
-                        && !invocation.AllowDeadTarget)) continue;
+                        && !invocation.AllowDeadTarget
+                        && !(invocation.AllowDeadSource && targetPosition == source))) continue;
                 FightBattleSkillDefinition skill;
                 try
                 {

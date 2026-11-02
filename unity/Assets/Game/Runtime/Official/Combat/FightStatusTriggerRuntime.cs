@@ -53,25 +53,35 @@ namespace Zjcs.Combat.Official
                 {
                     bool hasPropertyTarget = trigger?.PropTarget != null && trigger.PropTarget.PropertyId != 0;
                     if (trigger == null || trigger.EntityId <= 0 || trigger.AffectedByProp
-                        || trigger.Source != 2 || (trigger.Target != 1 && trigger.Target != 2
+                        || (trigger.Source != 2 && trigger.Source != 3)
+                        || (trigger.Source == 3 && hasPropertyTarget)
+                        || (trigger.Target != 1 && trigger.Target != 2 && trigger.Target != 3
                             && trigger.Target != 7 && !hasPropertyTarget) || trigger.UseAI
                         || trigger.StackedCountToDamageFactor
                         || (trigger.TargetPos != 0 && trigger.TargetPos != 1)
                         || !Roll(trigger.BasePercent, random)) continue;
+                    var caster = trigger.Source == 2 ? source
+                        : FindUnit(units, status.CreatorId);
+                    // User-confirmed offline rule: an applied creator-sourced effect
+                    // keeps settling from its original creator after that role dies.
+                    bool allowDeadSource = trigger.Source == 3 && caster != null
+                        && caster.Hp <= 0 && !caster.Ended;
+                    if (!FightBattleTargeting.IsSelectable(caster) && !allowDeadSource) continue;
                     var target = hasPropertyTarget
                         ? ResolveRoundStartPropertyTarget(source, status, trigger, units, catalog)
-                        : ResolveRoundStartSkillTarget(source, listener, trigger.Target, units,
+                        : ResolveRoundStartSkillTarget(source, listener, status, trigger.Target, units,
                             status.RoundStartExcludedTargetStatuses);
                     if (target == null) continue;
                     int targetId = target.Id;
                     result.Add(new FightBattleStatusSkillInvocation
                     {
-                        Trigger = trigger.WithSource(status), SourceUnitId = source.Id,
+                        Trigger = trigger.WithSource(status), SourceUnitId = caster.Id,
                         TargetUnitId = targetId,
-                        TargetPositionUnitId = trigger.TargetPos == 1 ? targetId : source.Id,
+                        TargetPositionUnitId = trigger.TargetPos == 1 ? targetId : caster.Id,
+                        AllowDeadSource = allowDeadSource,
                         // Keep the existing applicator-scope skill targeting. An explicit
                         // TriggerSource is the listened-to role, including a summon master.
-                        SelectTargets = !hasPropertyTarget && trigger.Target == 2,
+                        SelectTargets = !hasPropertyTarget && trigger.Source == 2 && trigger.Target == 2,
                         UseTargetPositionWithSelection = trigger.TargetPos == 1
                     });
                     added++;
@@ -124,13 +134,19 @@ namespace Zjcs.Combat.Official
         }
 
         private static FightBattleUnitState ResolveRoundStartSkillTarget(FightBattleUnitState owner,
-            FightBattleUnitState listener, int targetType, IReadOnlyList<FightBattleUnitState> units,
+            FightBattleUnitState listener, FightBattleStatusState status, int targetType,
+            IReadOnlyList<FightBattleUnitState> units,
             List<int> excludedStatuses)
         {
             bool Eligible(FightBattleUnitState unit) => unit != null && FightBattleTargeting.IsSelectable(unit)
                 && (excludedStatuses == null || !unit.Statuses.Any(value => excludedStatuses.Contains(value.ClassId)));
             if (targetType == 1) return Eligible(listener) ? listener : null;
             if (targetType == 2) return Eligible(owner) ? owner : null;
+            if (targetType == 3)
+            {
+                var creator = FindUnit(units, status.CreatorId);
+                return Eligible(creator) ? creator : null;
+            }
             if (targetType != 7 || units == null) return null;
             FightBattleUnitState selected = null;
             foreach (var candidate in units)

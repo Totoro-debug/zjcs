@@ -8,6 +8,105 @@ namespace Zjcs.Editor
 {
     public static partial class HomeBattleHostPlayModeAcceptance
     {
+        private static RoundSourceProbe ConfigureRoundSourceProbe(FightBattleCheckpoint checkpoint)
+        {
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_ROUND_SOURCE_ACCEPTANCE") != "1") return null;
+            var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
+            foreach (var unit in checkpoint.Units)
+            {
+                long hp = unit.Id == 1 ? 5000000L : 2000000L;
+                foreach (var property in unit.Properties.Concat(unit.BaseProperties))
+                {
+                    if (property.Id == catalog.PropertyType("MaxHp")) property.Value = hp;
+                    if (unit.Id != 1 && property.Id == catalog.PropertyType("Attack")) property.Value = 1000L;
+                }
+                unit.MaxHp = unit.LastMaxHp = unit.Hp = unit.Turn.Hp = hp;
+            }
+            var player = checkpoint.Units.Single(value => value.Id == 1);
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_ROUND_DEAD_SOURCE_ACCEPTANCE") == "1")
+            {
+                var guard = checkpoint.Units.Single(value => value.Id == 2);
+                guard.Skills.Clear(); guard.SkillState.Slots.Clear();
+                var summon = catalog.CreateSkill(10710, 0, 0, 5, 20, 1, null);
+                summon.LimitedTimes = 1;
+                guard.Skills.Add(summon); guard.SkillState.Slots.Add(catalog.CreateSkillSlot(summon, 0));
+                foreach (var entry in checkpoint.Timeline.Entries) if (entry.Id == 2) entry.Next = 0;
+                checkpoint.Timeline.Entries.Sort((left, right) => left.Next.CompareTo(right.Next));
+                return new RoundSourceProbe(null, catalog);
+            }
+            var source = catalog.CreateStatus(24105, 1, 2, 9924105, 0, 0, 5, 20, 1, null);
+            player.Statuses.Add(source);
+            return new RoundSourceProbe(source);
+        }
+
+        private sealed class RoundSourceProbe
+        {
+            private FightBattleStatusState source;
+            private readonly FightOfficialCombatCatalog catalog;
+            private int calls;
+            private bool creatorWasDead, invokedAfterDeath, creatorDefeatedByHit;
+            public bool ReadyToCapture => catalog == null ? calls > 0 : invokedAfterDeath;
+            public RoundSourceProbe(FightBattleStatusState source, FightOfficialCombatCatalog catalog = null)
+            { this.source = source; this.catalog = catalog; }
+            public void ObserveStep(OfficialBattleRuntimeController controller)
+            {
+                var cp = controller.Checkpoint;
+                var step = cp.Receipts.Last().Event;
+                var player = cp.Units.Single(value => value.Id == 1);
+                var guard = cp.Units.Single(value => value.Id == 2);
+                if (source == null)
+                {
+                    var rock = cp.Units.FirstOrDefault(value => value.MasterId == 2);
+                    if (rock == null) return;
+                    foreach (var property in rock.Properties.Concat(rock.BaseProperties))
+                        if (property.Id == catalog.PropertyType("MaxHp")) property.Value = 2000000L;
+                    rock.Hp = rock.Turn.Hp = rock.MaxHp = rock.LastMaxHp = 2000000L;
+                    source = catalog.CreateStatus(24105, 1, 2, 9924105, 0, 0, 5, 20, 1, null);
+                    source = FightStatusLifecycle.Apply(player, source, player.SkillState.Round, 9924105);
+                    // Isolated input: another original status hit defeats the creator;
+                    // its actual summoned enemy keeps the battlefield active afterward.
+                    guard.Hp = guard.Turn.Hp = 1;
+                    FightStatusLifecycle.Apply(guard,
+                        catalog.CreateStatus(24105, 2, 1, 9924106, 0, 0, 5, 20, 1, null),
+                        guard.SkillState.Round, 9924106);
+                    return;
+                }
+                var casts = step.SkillCasts.Where(value => value.SkillEntityId == 59680 && value.ActorId == 2).ToArray();
+                bool alreadyDead = creatorWasDead;
+                creatorWasDead = guard.Hp <= 0;
+                if (step.DamageEvents.Any(value => value.SkillEntityId == 59680
+                    && value.SourceId == 1 && value.TargetId == 2 && value.Damage < 0 && value.AfterHp == 0))
+                    creatorDefeatedByHit = true;
+                if (casts.Length == 0) return;
+                calls++;
+                var damage = step.DamageEvents.Where(value => value.SkillEntityId == 59680 && value.SourceId == 2).ToArray();
+                Require(casts.Length == 1 && casts[0].ActorId == 2
+                    && casts[0].TargetIds.SequenceEqual(new[] { 1 })
+                    && damage.Length == 1 && damage[0].SourceId == 2 && damage[0].TargetId == 1
+                    && damage[0].Damage < 0 && damage[0].AfterHp < damage[0].BeforeHp,
+                    "Original 24105 did not retain its creator, explicit victim or actual damage.");
+                Require(source.RoundStartTriggeredCount == calls && calls <= 2
+                    && source.SourceSkillRank == 5 && source.SourceSkillLevel == 20
+                    && player.SkillState.Round == calls,
+                    "Creator damage lost its original cultivation, finite calls or victim round clock.");
+                if (alreadyDead) invokedAfterDeath = true;
+                Debug.Log("[Round source hosts] original 24105 -> 59680 -> 59681: caster=2, victim=1, call="
+                    + calls + ", damage=" + damage[0].Damage + ", creatorAlreadyDead=" + alreadyDead
+                    + ", rank=5, level=20.");
+            }
+            public void Verify(string host, FightBattleCheckpoint checkpoint)
+            {
+                Require(calls == 2 && !checkpoint.Units.Single(value => value.Id == 1).Statuses.Contains(source),
+                    host + " did not finish the original two creator-sourced damage rounds and duration.");
+                Require(catalog == null || invokedAfterDeath && creatorDefeatedByHit,
+                    host + " did not settle original creator damage after its actual defeat.");
+                string saved = FightBattleCheckpointSerializer.Save(checkpoint);
+                Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
+                    host + " changed creator source state after checkpoint reload.");
+                Debug.Log("[Round source hosts] " + host + ": original caster/victim damage, two-call lifetime and checkpoint passed.");
+            }
+        }
+
         private static RoundStartupProbe ConfigureRoundStartupProbe(FightBattleCheckpoint checkpoint)
         {
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_ROUND_STARTUP_ACCEPTANCE") != "1") return null;

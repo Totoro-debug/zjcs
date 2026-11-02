@@ -9,12 +9,13 @@ namespace Zjcs.Combat.Official
             if (!status.HasRoundStartTrigger
                 || status.RoundStartDefinitionResolved && status.RoundStartTargetRulesResolved
                     && status.RoundStartPropTargetRulesResolved && status.RoundStartMeetRulesResolved
-                    && status.RoundStartRandomRulesResolved) return;
+                    && status.RoundStartRandomRulesResolved && status.RoundStartSourceRulesResolved) return;
             var definition = statusCatalog.CreateStatus(status.ClassId, status.OwnerId,
                 status.CreatorId, status.InstanceId, status.RootSkillId, status.ApplyingSkillItemId,
                 status.SourceSkillRank, status.SourceSkillLevel, status.SourceSubRank, status.SourceProperties,
                 replacementProperties: status.ReplacementProperties, blessPropertyScales: status.BlessPropertyScales);
             status.RoundStartRulesSupported = definition.RoundStartRulesSupported;
+            status.RoundStartSourceRulesResolved = true;
             if (!status.RoundStartRandomRulesResolved)
             {
                 status.RoundStartRandomOneStatus = definition.RoundStartRandomOneStatus;
