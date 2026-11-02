@@ -78,7 +78,7 @@ namespace Zjcs.Editor.Combat
         }
 
         private static TMP_Text Count(GameObject root) => root.GetComponentsInChildren<TMP_Text>(true)
-            .Single(value => value.name == "CountTxt");
+            .Single(value => value.name == "StackCountText");
 
         private static void VerifyPixels(TMP_Text text)
         {

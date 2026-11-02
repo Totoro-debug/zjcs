@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zjcs.Combat.Official;
@@ -22,7 +21,6 @@ namespace Zjcs.Presentation.Combat
         }
 
         private readonly OfficialBattleHudCatalog catalog;
-        private readonly OfficialBattleHudRenderer statusRenderer;
         private readonly GameObject root;
         private readonly Canvas canvas;
         private readonly Transform statusRoot;
@@ -31,6 +29,7 @@ namespace Zjcs.Presentation.Combat
         private readonly Dictionary<string, BarGraphic> bars =
             new Dictionary<string, BarGraphic>(StringComparer.Ordinal);
         private readonly List<GameObject> statusItems = new List<GameObject>();
+        private readonly List<FightBattleStatusState> visibleStatuses = new List<FightBattleStatusState>();
         private string statusSignature;
         private string effectRole;
         private float effectStart;
@@ -89,7 +88,6 @@ namespace Zjcs.Presentation.Combat
             this.catalog = catalog;
             this.binding = binding;
             faction = factionOverride ?? catalog.UnitBarFaction(unit.Id == 1 || unit.Side == 1);
-            statusRenderer = new OfficialBattleHudRenderer(catalog);
 
             root = new GameObject("OfficialBattleUnitHud_" + unit.Id,
                 typeof(RectTransform), typeof(Canvas));
@@ -206,6 +204,7 @@ namespace Zjcs.Presentation.Combat
             OfficialBattleSceneBindings.DestroyCreatedObject(root);
             bars.Clear();
             statusItems.Clear();
+            visibleStatuses.Clear();
         }
 
         private void CreateBar(BattleUnitBarPart part)
@@ -297,19 +296,25 @@ namespace Zjcs.Presentation.Combat
 
         private void RefreshStatuses(FightBattleUnitState unit, IReadOnlyList<FightBattleUnitState> units)
         {
-            var signature = new StringBuilder();
+            // FightStatusController removes forbidden entries and appends them
+            // on release; it keeps different status instances as separate icons.
+            visibleStatuses.RemoveAll(status => status.ForbiddenType != 0
+                || unit.Statuses == null || !unit.Statuses.Contains(status));
             if (unit.Statuses != null)
                 foreach (FightBattleStatusState status in unit.Statuses)
-                    if (status != null
+                    if (status != null && status.ForbiddenType == 0 && !visibleStatuses.Contains(status)
                         && catalog.TryGetStatusDisplay(status.ClassId, out _, out _,
-                            out bool showSpriteAboveUnit, out bool showStackCount,
-                            out bool showRoundReplaceStack, out bool showCustomCount,
-                            out bool hasRoundStartComponent)
-                        && showSpriteAboveUnit)
-                        signature.Append(status.InstanceId).Append(':').Append(status.ClassId).Append(':')
-                            .Append(status.StackCount).Append(':')
-                            .Append(StatusCountText(status, units, showStackCount,
-                                showRoundReplaceStack, showCustomCount, hasRoundStartComponent)).Append(';');
+                            out bool showSprite, out _, out _, out _, out _) && showSprite)
+                        visibleStatuses.Add(status);
+            var signature = new StringBuilder();
+            foreach (FightBattleStatusState status in visibleStatuses)
+                if (catalog.TryGetStatusDisplay(status.ClassId, out _, out _,
+                    out _, out bool showStackCount, out bool showRoundReplaceStack,
+                    out bool showCustomCount, out bool hasRoundStartComponent))
+                    signature.Append(status.InstanceId).Append(':').Append(status.ClassId).Append(':')
+                        .Append(status.StackCount).Append(':')
+                        .Append(StatusCountText(status, units, showStackCount,
+                            showRoundReplaceStack, showCustomCount, hasRoundStartComponent)).Append(';');
             string nextSignature = signature.ToString();
             if (statusSignature == nextSignature) return;
             statusSignature = nextSignature;
@@ -320,7 +325,7 @@ namespace Zjcs.Presentation.Combat
             }
 
             int shown = 0;
-            foreach (FightBattleStatusState status in unit.Statuses)
+            foreach (FightBattleStatusState status in visibleStatuses)
             {
                 if (status == null
                     || !catalog.TryGetStatusDisplay(status.ClassId, out Sprite icon, out Sprite background,
@@ -337,43 +342,23 @@ namespace Zjcs.Presentation.Combat
                 }
                 else
                 {
-                    item = statusRenderer.Create("status_item", statusRoot);
+                    var prefab = Resources.Load<GameObject>("Combat/Status/BattleStatusItem");
+                    if (prefab == null) throw new InvalidOperationException("Original world status prefab is missing.");
+                    item = UnityEngine.Object.Instantiate(prefab, statusRoot, false);
                     statusItems.Add(item);
                 }
                 RectTransform itemRect = item.GetComponent<RectTransform>();
                 float cellWidth = binding.statusLayout.cellSize[0];
                 float cellHeight = binding.statusLayout.cellSize[1];
                 itemRect.anchorMin = itemRect.anchorMax = Vector2.zero;
-                itemRect.pivot = Vector2.zero;
-                itemRect.localScale = new Vector3(1f / HudPixelsPerWorldUnit,
-                    1f / HudPixelsPerWorldUnit, 1f);
-                itemRect.anchoredPosition = new Vector2((shown % binding.statusLayout.columns) * cellWidth,
-                    (shown / binding.statusLayout.columns) * cellHeight);
-                Image backgroundImage = item.GetComponent<Image>();
-                if (backgroundImage != null)
-                {
-                    backgroundImage.sprite = background;
-                    backgroundImage.enabled = background != null;
-                    backgroundImage.raycastTarget = false;
-                }
-                Transform iconNode = item.transform.Find("StatusImg");
-                Image iconImage = iconNode == null ? null : iconNode.GetComponent<Image>();
-                if (iconImage != null)
-                {
-                    iconImage.sprite = icon;
-                    iconImage.enabled = icon != null;
-                    iconImage.raycastTarget = false;
-                }
-                if (iconNode != null) iconNode.gameObject.SetActive(icon != null && iconImage != null);
-                Transform countNode = item.transform.Find("CountTxt");
-                TMP_Text countText = countNode == null ? null : countNode.GetComponent<TMP_Text>();
-                if (countText != null)
-                {
-                    string count = StatusCountText(status, units, showStackCount,
-                        showRoundReplaceStack, showCustomCount, hasRoundStartComponent);
-                    countText.gameObject.SetActive(!string.IsNullOrEmpty(count));
-                    if (!string.IsNullOrEmpty(count)) countText.text = count;
-                }
+                itemRect.sizeDelta = new Vector2(cellWidth, cellHeight);
+                itemRect.anchoredPosition = new Vector2(
+                    (shown % binding.statusLayout.columns + itemRect.pivot.x) * cellWidth,
+                    (shown / binding.statusLayout.columns + itemRect.pivot.y) * cellHeight);
+                string count = StatusCountText(status, units, showStackCount,
+                    showRoundReplaceStack, showCustomCount, hasRoundStartComponent);
+                item.GetComponent<Zjcs.Official.WorldUI.FightStatusItem>().Show(icon, background,
+                    string.IsNullOrEmpty(count) ? 0 : int.Parse(count, CultureInfo.InvariantCulture));
                 shown++;
             }
             SetUnusedStatusItemsActive(shown);

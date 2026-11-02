@@ -89,6 +89,7 @@ namespace Zjcs.Editor
             }
             private void CheckMutexProperties()
             {
+                using var icons = new StatusIconProbe(player.Id, lastRound == 2);
                 long Attack() => player.Properties.First(value => value.Id == formula.PropertyId("Attack")).Value;
                 FightBattleStatusState Apply(int id, long equipmentId, int instance)
                 {
@@ -101,27 +102,33 @@ namespace Zjcs.Editor
                 FightStatusPropertyRuntime.RebuildAll(units, catalog, formula);
                 long baseline = Attack();
                 var low = Apply(24040, 8801, 9924040);
+                icons.Check(new[] { low }, new[] { low }, "initial");
                 FightStatusPropertyRuntime.RebuildAll(units, catalog, formula);
                 long lowAttack = Attack();
                 var cached = low.ResolvedProperties;
                 var high = Apply(24041, 8801, 9924041);
+                icons.Check(new[] { low, high }, new[] { high }, "priority");
                 Require(low.ForbiddenType == FightStatusLifecycle.ForbiddenMutex && high.ForbiddenType == 0
                     && Attack() < lowAttack && lowAttack < baseline && ReferenceEquals(cached, low.ResolvedProperties),
                     "Real status startup did not suppress the lower-weight attack contribution immediately.");
                 var independent = Apply(24040, 8802, 9924042);
+                icons.Check(new[] { low, high, independent }, new[] { high, independent }, "independent");
                 FightStatusPropertyRuntime.RebuildAll(units, catalog, formula);
                 long combined = Attack();
                 Require(independent.ForbiddenType == 0 && combined < lowAttack,
                     "Independent equipment was suppressed by another origin's mutex group.");
                 FightStatusLifecycle.SetForbidden(player, low, FightStatusLifecycle.ForbiddenStatusTrigger, true);
                 FightStatusLifecycle.End(player, high);
+                icons.Check(new[] { low, independent }, new[] { independent }, "partial");
                 Require(low.ForbiddenType == FightStatusLifecycle.ForbiddenStatusTrigger && Attack() == lowAttack,
                     "Removing the winner cleared another forbidden reason or lost the independent contribution.");
                 FightStatusLifecycle.SetForbidden(player, low, FightStatusLifecycle.ForbiddenStatusTrigger, false);
+                icons.Check(new[] { low, independent }, new[] { independent, low }, "released");
                 Require(low.ForbiddenType == 0 && Attack() < lowAttack && Attack() > combined
                     && ReferenceEquals(cached, low.ResolvedProperties) && low.StackCount == 1,
                     "Fully released status did not restore its retained contribution.");
                 FightStatusLifecycle.End(player, low); FightStatusLifecycle.End(player, independent);
+                icons.Check(Array.Empty<FightBattleStatusState>(), Array.Empty<FightBattleStatusState>(), "ended");
                 FightStatusPropertyRuntime.RebuildAll(units, catalog, formula);
                 Require(Attack() == baseline, "Removed mutex fixtures left an attack contribution behind.");
                 Debug.Log("[Status mutex hosts] 24040/24041: actual startup/end, independent equipment,"
