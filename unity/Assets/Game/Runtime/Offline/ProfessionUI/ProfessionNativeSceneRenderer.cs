@@ -23,6 +23,7 @@ namespace Zjcs.Offline.ProfessionUI
         private DynamicSkeletonRenderSeparator separator;
         private ProfessionNativeSceneRendererSettings settings;
         private TextAsset appliedHierarchy;
+        private TextAsset portraitHierarchy;
         private readonly Dictionary<Material, Material> replacements = new Dictionary<Material, Material>();
         public ScriptableObject skeletonDataAsset { get; set; }
         public ProfessionNativeAppearanceSkeleton State { get; private set; }
@@ -65,6 +66,15 @@ namespace Zjcs.Offline.ProfessionUI
             resources = catalog;
         }
 
+        public void ConfigurePortrait(ProfessionNativeSceneAppearanceResources catalog, TextAsset hierarchy)
+        {
+            if (!hierarchy) throw new ArgumentNullException(nameof(hierarchy));
+            if (State != null) throw new InvalidOperationException("Configure the original studio before initializing its actor.");
+            Configure(catalog);
+            _ = ProfessionNativeSceneRendererSettings.LoadPortrait(hierarchy);
+            portraitHierarchy = hierarchy;
+        }
+
         public void Initialize(bool overwrite, bool quiet)
         {
             if (!overwrite && State != null && initializedAsset == skeletonDataAsset) return;
@@ -72,9 +82,11 @@ namespace Zjcs.Offline.ProfessionUI
             var asset = skeletonDataAsset as ProfessionNativeSceneCharacterAsset;
             if (!asset) throw new NotSupportedException("The native scene renderer requires a verified current scene character asset.");
             resources.FindModel(asset);
-            if (appliedHierarchy && appliedHierarchy != asset.Hierarchy)
+            var hierarchy = portraitHierarchy ? portraitHierarchy : asset.Hierarchy;
+            if (appliedHierarchy && appliedHierarchy != hierarchy)
                 throw new NotSupportedException("Rebuild the original scene hierarchy before switching to a different renderer prefab.");
-            var nextSettings = ProfessionNativeSceneRendererSettings.Load(asset.Hierarchy);
+            var nextSettings = portraitHierarchy ? ProfessionNativeSceneRendererSettings.LoadPortrait(hierarchy)
+                : ProfessionNativeSceneRendererSettings.Load(hierarchy);
             var next = new ProfessionNativeAppearanceSkeleton(asset.Data);
             var initial = next.Data.FindSkin(nextSettings.InitialSkin);
             if (initial == null) throw new InvalidOperationException("Original scene initial skin is unavailable.");
@@ -92,7 +104,7 @@ namespace Zjcs.Offline.ProfessionUI
             initializedAsset = asset; settings = nextSettings; State = next;
             SeparatorSlots.AddRange(reboundSlots);
             batches = new ProfessionNativeMeshBatches(next.SlotCount);
-            if (!appliedHierarchy) { settings.Apply(Main.MeshRenderer); appliedHierarchy = asset.Hierarchy; }
+            if (!appliedHierarchy) { settings.Apply(Main.MeshRenderer); appliedHierarchy = hierarchy; }
             Main.MeshRenderer.enabled = settings.Enabled;
             OnAnimationRebuild?.Invoke(this);
             ResumeSceneParts();
@@ -126,7 +138,7 @@ namespace Zjcs.Offline.ProfessionUI
             }
             if (cuts.Count > 0 && backend == null) throw new InvalidOperationException("Initialize original separator parts before drawing split geometry.");
             if (sceneParts.Count > 0 && backend == null) throw new InvalidOperationException("Bind original separator slots before drawing independent scene parts.");
-            batches.Build(State.Pose, State.CreateDrawSlots(slotIndices), settings.UseClipping, settings.PmaVertexColors);
+            batches.Build(State.Pose, State.CreateDrawSlots(slotIndices), settings.UseClipping, settings.PmaVertexColors, settings.ZSpacing);
             if (backend != null)
             {
                 backend.Render(batches.Batches, cuts.ToArray(), MaterialFor);

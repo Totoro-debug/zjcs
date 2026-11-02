@@ -42,8 +42,17 @@ namespace Zjcs.Offline.ProfessionUI
             return result;
         }
 
+        public static ProfessionNativeSceneRendererSettings LoadPortrait(TextAsset source)
+        {
+            var result = Load(source, "PlayerModel", "Spine.Unity.SkeletonAnimation", 0, false, true);
+            if (Convert.ToSingle(result.skeleton["timeScale"]) != 1
+                || Int(result.skeleton, "updateTiming") != 1 || Flag(result.skeleton, "unscaledTime"))
+                throw new NotSupportedException("Bind additional original portrait animation settings.");
+            return result;
+        }
+
         private static ProfessionNativeSceneRendererSettings Load(TextAsset source, string nodeName,
-            string skeletonType, int materialCount, bool allowImmutableTriangles)
+            string skeletonType, int materialCount, bool allowImmutableTriangles, bool allowZSpacing = false)
         {
             var nodes = Arr(Obj(OfficialEquipmentJson.Parse(source.text))["nodes"]).Select(Obj).ToArray();
             var root = nodeName == null ? nodes[0] : nodes.Single(n => (string)n["name"] == nodeName);
@@ -52,7 +61,10 @@ namespace Zjcs.Offline.ProfessionUI
             var skeleton = Obj(components.Single(c => (string)c["type"] == skeletonType)["fields"]);
             // Fail explicitly if a future selected prefab needs an unbound drawing feature.
             foreach (string field in new[] { "initialFlipX", "initialFlipY", "zSpacing", "tintBlack", "singleSubmesh", "fixDrawOrder", "addNormals", "calculateTangents", "maskInteraction", "clearStateOnDisable" })
-                if (Convert.ToSingle(skeleton[field]) != 0) throw new NotSupportedException("Bind original scene renderer field: " + field);
+                if (!(allowZSpacing && field == "zSpacing") && Convert.ToSingle(skeleton[field]) != 0)
+                    throw new NotSupportedException("Bind original scene renderer field: " + field);
+            float spacing = Convert.ToSingle(skeleton["zSpacing"]);
+            if (float.IsNaN(spacing) || float.IsInfinity(spacing)) throw new InvalidOperationException("Nonfinite original slot depth.");
             // Reassigning complete native triangles is also valid for a source
             // immutable-topology hint; it never freezes a changed native mesh.
             if (!allowImmutableTriangles && Flag(skeleton, "immutableTriangles"))

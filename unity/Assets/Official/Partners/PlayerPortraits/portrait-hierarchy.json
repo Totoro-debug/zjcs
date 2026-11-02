@@ -1,0 +1,704 @@
+{
+  "manifest": "884_156692",
+  "nodes": [
+    {
+      "name": "CharacterPortraitStudio",
+      "components": [
+        {
+          "type": "Transform",
+          "fields": {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": 2066510573717580272
+            },
+            "m_LocalRotation": {
+              "x": -0.0,
+              "y": -0.0,
+              "z": -0.0,
+              "w": 1.0
+            },
+            "m_LocalPosition": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "m_LocalScale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "m_Children": [
+              {
+                "m_FileID": 0,
+                "m_PathID": 5110459548386486768
+              }
+            ],
+            "m_Father": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          },
+          "original": "cab-1ab27bab75ff1082e4250bc7a1d59af2:-6163310374754358800",
+          "original_sha256": "9ffc85ec4366262d33356dddac19af762f4fade9afb5d8cbc69404154fb68419"
+        },
+        {
+          "type": "CharacterPortraitPhotographer",
+          "fields": {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": 2066510573717580272
+            },
+            "m_Enabled": 1,
+            "m_Script": {
+              "m_FileID": 0,
+              "m_PathID": -8375445638963488094
+            },
+            "m_Name": "",
+            "mCamera": {
+              "m_FileID": 0,
+              "m_PathID": 7086959530480265712
+            },
+            "mAppearance": {
+              "m_FileID": 0,
+              "m_PathID": 5998958739205286384
+            },
+            "mAppearanceAnimation": {
+              "m_FileID": 0,
+              "m_PathID": 4519980094806780400
+            },
+            "mMeshFilter": {
+              "m_FileID": 0,
+              "m_PathID": 4563458050744478192
+            }
+          },
+          "original": "cab-1ab27bab75ff1082e4250bc7a1d59af2:-4907835147123070480",
+          "original_sha256": "02547a138a0611c77e8d186053f0c8beb93f8f82b4919cd243f8bdb05750f6df"
+        }
+      ]
+    },
+    {
+      "name": "Content",
+      "components": [
+        {
+          "type": "Transform",
+          "fields": {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": 8050841937683245552
+            },
+            "m_LocalRotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "w": 1.0
+            },
+            "m_LocalPosition": {
+              "x": -1024.0,
+              "y": -1024.0,
+              "z": -1024.0
+            },
+            "m_LocalScale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "m_Children": [
+              {
+                "m_FileID": 0,
+                "m_PathID": -3293112509817198096
+              },
+              {
+                "m_FileID": 0,
+                "m_PathID": 4405852464241732080
+              }
+            ],
+            "m_Father": {
+              "m_FileID": 0,
+              "m_PathID": -6163310374754358800
+            }
+          },
+          "original": "cab-1ab27bab75ff1082e4250bc7a1d59af2:5110459548386486768",
+          "original_sha256": "3c40e8940e55d45913dc5e45e11cc7da82502b25be49abc2818e07c1af6607d8"
+        }
+      ]
+    },
+    {
+      "name": "PortraitCamera",
+      "components": [
+        {
+          "type": "Transform",
+          "fields": {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": -4363855048957728272
+            },
+            "m_LocalRotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "w": 1.0
+            },
+            "m_LocalPosition": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "m_LocalScale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "m_Children": [],
+            "m_Father": {
+              "m_FileID": 0,
+              "m_PathID": 5110459548386486768
+            }
+          },
+          "original": "cab-1ab27bab75ff1082e4250bc7a1d59af2:-3293112509817198096",
+          "original_sha256": "e7cb5b821eeda9250f96cc174997fe20cf485a3797ea595ae10f2ccd09aa2f8e"
+        },
+        {
+          "type": "Camera",
+          "fields": {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": -4363855048957728272
+            },
+            "m_Enabled": 0,
+            "m_ClearFlags": 2,
+            "m_BackGroundColor": {
+              "r": 0.1921568661928177,
+              "g": 0.3019607961177826,
+              "b": 0.4745098054409027,
+              "a": 0.0
+            },
+            "m_projectionMatrixMode": 1,
+            "m_GateFitMode": 2,
+            "m_Iso": 200,
+            "m_ShutterSpeed": 0.004999999888241291,
+            "m_Aperture": 16.0,
+            "m_FocusDistance": 10.0,
+            "m_FocalLength": 50.0,
+            "m_BladeCount": 5,
+            "m_Curvature": {
+              "x": 2.0,
+              "y": 11.0
+            },
+            "m_BarrelClipping": 0.25,
+            "m_Anamorphism": 0.0,
+            "m_SensorSize": {
+              "x": 36.0,
+              "y": 24.0
+            },
+            "m_LensShift": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "m_NormalizedViewPortRect": {
+              "x": 0.0,
+              "y": 0.0,
+              "width": 1.0,
+              "height": 1.0
+            },
+            "near clip plane": 0.30000001192092896,
+            "far clip plane": 1000.0,
+            "field of view": 60.0,
+            "orthographic": true,
+            "orthographic size": 5.0,
+            "m_Depth": 0.0,
+            "m_CullingMask": {
+              "m_Bits": 16385
+            },
+            "m_RenderingPath": -1,
+            "m_TargetTexture": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "m_TargetDisplay": 0,
+            "m_TargetEye": 3,
+            "m_HDR": true,
+            "m_AllowMSAA": true,
+            "m_AllowDynamicResolution": false,
+            "m_ForceIntoRT": false,
+            "m_OcclusionCulling": true,
+            "m_StereoConvergence": 10.0,
+            "m_StereoSeparation": 0.02199999988079071
+          },
+          "original": "cab-1ab27bab75ff1082e4250bc7a1d59af2:7086959530480265712",
+          "original_sha256": "adc64a92e6eadd31b4e453d8fbeb23f69d1c1401c790783026a986879d893288"
+        },
+        {
+          "type": "UnityEngine.Rendering.Universal.UniversalAdditionalCameraData",
+          "fields": {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": -4363855048957728272
+            },
+            "m_Enabled": 1,
+            "m_Script": {
+              "m_FileID": 0,
+              "m_PathID": -6826085577169510010
+            },
+            "m_Name": "",
+            "m_RenderShadows": 1,
+            "m_RequiresDepthTextureOption": 2,
+            "m_RequiresOpaqueTextureOption": 2,
+            "m_CameraType": 0,
+            "m_Cameras": [],
+            "m_RendererIndex": -1,
+            "m_VolumeLayerMask": {
+              "m_Bits": 1
+            },
+            "m_VolumeTrigger": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "m_VolumeFrameworkUpdateModeOption": 1,
+            "m_RenderPostProcessing": 0,
+            "m_Antialiasing": 0,
+            "m_AntialiasingQuality": 2,
+            "m_StopNaN": 0,
+            "m_Dithering": 0,
+            "m_ClearDepth": 1,
+            "m_AllowXRRendering": 1,
+            "m_AllowHDROutput": 1,
+            "m_UseScreenCoordOverride": 0,
+            "m_ScreenSizeOverride": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "w": 0.0
+            },
+            "m_ScreenCoordScaleBias": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "w": 0.0
+            },
+            "m_RequiresDepthTexture": 0,
+            "m_RequiresColorTexture": 0,
+            "m_Version": 2.0,
+            "m_TaaSettings": {
+              "m_Quality": 3,
+              "m_FrameInfluence": 0.10000000149011612,
+              "m_JitterScale": 1.0,
+              "m_MipBias": 0.0,
+              "m_VarianceClampScale": 0.8999999761581421,
+              "m_ContrastAdaptiveSharpening": 0.0
+            }
+          },
+          "original": "cab-1ab27bab75ff1082e4250bc7a1d59af2:4347503634087700976",
+          "original_sha256": "1b5b656603fa0e848a221a2e4ad9b9a82859e8b45db99c6b41f952be4244f026"
+        }
+      ]
+    },
+    {
+      "name": "PlayerModel",
+      "components": [
+        {
+          "type": "Transform",
+          "fields": {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": 5180301060353518064
+            },
+            "m_LocalRotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "w": 1.0
+            },
+            "m_LocalPosition": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "m_LocalScale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "m_Children": [
+              {
+                "m_FileID": 0,
+                "m_PathID": -2615541788487620112
+              }
+            ],
+            "m_Father": {
+              "m_FileID": 0,
+              "m_PathID": 5110459548386486768
+            }
+          },
+          "original": "cab-1ab27bab75ff1082e4250bc7a1d59af2:4405852464241732080",
+          "original_sha256": "15eb0bd44f8cfebe194fbe02c42edbbdbed13fb061ac01dcc4e286baa558495b"
+        },
+        {
+          "type": "MeshFilter",
+          "fields": {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": 5180301060353518064
+            },
+            "m_Mesh": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          },
+          "original": "cab-1ab27bab75ff1082e4250bc7a1d59af2:4563458050744478192",
+          "original_sha256": "d037832a1cc494d07ededa6e99dc7dbe6e2998b0d67139519d7d80d5f2d41a01"
+        },
+        {
+          "type": "MeshRenderer",
+          "fields": {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": 5180301060353518064
+            },
+            "m_Enabled": true,
+            "m_CastShadows": 1,
+            "m_ReceiveShadows": 1,
+            "m_DynamicOccludee": 1,
+            "m_StaticShadowCaster": 0,
+            "m_MotionVectors": 1,
+            "m_LightProbeUsage": 1,
+            "m_ReflectionProbeUsage": 1,
+            "m_RayTracingMode": 2,
+            "m_RayTraceProcedural": 0,
+            "m_RenderingLayerMask": 1,
+            "m_RendererPriority": 0,
+            "m_LightmapIndex": 65535,
+            "m_LightmapIndexDynamic": 65535,
+            "m_LightmapTilingOffset": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 0.0,
+              "w": 0.0
+            },
+            "m_LightmapTilingOffsetDynamic": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 0.0,
+              "w": 0.0
+            },
+            "m_Materials": [],
+            "m_StaticBatchInfo": {
+              "firstSubMesh": 0,
+              "subMeshCount": 0
+            },
+            "m_StaticBatchRoot": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "m_ProbeAnchor": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "m_LightProbeVolumeOverride": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "m_SortingLayerID": 0,
+            "m_SortingLayer": 0,
+            "m_SortingOrder": 0,
+            "m_AdditionalVertexStreams": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "m_EnlightenVertexStream": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          },
+          "original": "cab-1ab27bab75ff1082e4250bc7a1d59af2:3472364316786780656",
+          "original_sha256": "d2ce85cbb34bd9be6d69b3cc706d5685cecb8361f579688d44674912d888606c"
+        },
+        {
+          "type": "Spine.Unity.SkeletonAnimation",
+          "fields": {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": 5180301060353518064
+            },
+            "m_Enabled": 1,
+            "m_Script": {
+              "m_FileID": 0,
+              "m_PathID": 175525945580115722
+            },
+            "m_Name": "",
+            "skeletonDataAsset": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "initialSkinName": "default",
+            "initialFlipX": 0,
+            "initialFlipY": 0,
+            "updateWhenInvisible": 3,
+            "separatorSlotNames": [],
+            "zSpacing": -0.00019999999494757503,
+            "useClipping": 1,
+            "immutableTriangles": 0,
+            "pmaVertexColors": 1,
+            "clearStateOnDisable": 0,
+            "tintBlack": 0,
+            "singleSubmesh": 0,
+            "fixDrawOrder": 0,
+            "addNormals": 0,
+            "calculateTangents": 0,
+            "maskInteraction": 0,
+            "maskMaterials": {
+              "materialsMaskDisabled": [],
+              "materialsInsideMask": [],
+              "materialsOutsideMask": []
+            },
+            "disableRenderingOnOverride": 1,
+            "physicsPositionInheritanceFactor": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "physicsRotationInheritanceFactor": 0.0,
+            "physicsMovementRelativeTo": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "updateTiming": 1,
+            "unscaledTime": 0,
+            "_animationName": "",
+            "loop": 1,
+            "timeScale": 1.0
+          },
+          "original": "cab-1ab27bab75ff1082e4250bc7a1d59af2:4823260961343498736",
+          "original_sha256": "480965636f0d39582ede583b597b42800946d15fbe7124a1cbbfeee2704b9d37"
+        },
+        {
+          "type": "AppearanceSystem.Runtime.AppearanceAnimation",
+          "fields": {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": 5180301060353518064
+            },
+            "m_Enabled": 1,
+            "m_Script": {
+              "m_FileID": 0,
+              "m_PathID": -5756867037014836865
+            },
+            "m_Name": "",
+            "SkinTextureAssetGuid": {
+              "mAssetGuid": "87bd06b35b068b849b40f5b5d71b420a"
+            },
+            "mPartHandler": {
+              "m_FileID": 0,
+              "m_PathID": 985970652091738608
+            },
+            "TextureLoaderGuid": {
+              "mAssetGuid": "8f832ea7ecc2ee74c9539cb088df10eb"
+            },
+            "mSkeletonRenderer": {
+              "m_FileID": 0,
+              "m_PathID": 4823260961343498736
+            }
+          },
+          "original": "cab-1ab27bab75ff1082e4250bc7a1d59af2:4519980094806780400",
+          "original_sha256": "9dab04f4d5b50bd2db8aa263237cdb93c3e0c6f1115e9a145b1ee1cfeaf2094e"
+        },
+        {
+          "type": "Animator",
+          "fields": {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": 5180301060353518064
+            },
+            "m_Enabled": 1,
+            "m_Avatar": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "m_Controller": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "m_CullingMode": 2,
+            "m_UpdateMode": 0,
+            "m_ApplyRootMotion": false,
+            "m_LinearVelocityBlending": false,
+            "m_StabilizeFeet": false,
+            "m_HasTransformHierarchy": true,
+            "m_AllowConstantClipSamplingOptimization": true,
+            "m_KeepAnimatorStateOnDisable": false,
+            "m_WriteDefaultValuesOnDisable": false
+          },
+          "original": "cab-1ab27bab75ff1082e4250bc7a1d59af2:-7252027543674918416",
+          "original_sha256": "a6eadb199164d1929efba0fbbe794bad0dafcef49b05dc991b2344535294489e"
+        },
+        {
+          "type": "AppearanceSystem.Runtime.AppearanceCharacter",
+          "fields": {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": 5180301060353518064
+            },
+            "m_Enabled": 1,
+            "m_Script": {
+              "m_FileID": 0,
+              "m_PathID": 8709055287036770056
+            },
+            "m_Name": "",
+            "mPartHandler": {
+              "m_FileID": 0,
+              "m_PathID": 985970652091738608
+            }
+          },
+          "original": "cab-1ab27bab75ff1082e4250bc7a1d59af2:5998958739205286384",
+          "original_sha256": "1467033aac5b0b29a9a77ec9078c6a3370e9ecc8a0c072d7bf29315b06b47e60"
+        },
+        {
+          "type": "AppearanceRendererPartHandler",
+          "fields": {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": 5180301060353518064
+            },
+            "m_Enabled": 1,
+            "m_Script": {
+              "m_FileID": 0,
+              "m_PathID": 4740577091047105499
+            },
+            "m_Name": "",
+            "IgnoreSkinTypes": [],
+            "mSkeletonRenderer": {
+              "m_FileID": 0,
+              "m_PathID": 4823260961343498736
+            },
+            "mSlot": {
+              "m_FileID": 0,
+              "m_PathID": -2615541788487620112
+            },
+            "mSortingLayer": "Object",
+            "mDefaultSortingOrder": 0
+          },
+          "original": "cab-1ab27bab75ff1082e4250bc7a1d59af2:985970652091738608",
+          "original_sha256": "d997920c5ffa4f685a44435412c9080114105748650c205e69d4d1c2e31e7d66"
+        },
+        {
+          "type": "AppearanceSystem.Runtime.AppearanceSkinClip",
+          "fields": {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": 5180301060353518064
+            },
+            "m_Enabled": 1,
+            "m_Script": {
+              "m_FileID": 0,
+              "m_PathID": -6090044764727397913
+            },
+            "m_Name": "",
+            "mSkinType": 3,
+            "mClipMeshProvideSlotName": "body_tou_S/headOrnament_1_ZZ_A",
+            "mAppearanceCharacter": {
+              "m_FileID": 0,
+              "m_PathID": 5998958739205286384
+            },
+            "mAppearanceSpine": {
+              "m_FileID": 0,
+              "m_PathID": 4519980094806780400
+            }
+          },
+          "original": "cab-1ab27bab75ff1082e4250bc7a1d59af2:2433987079682288112",
+          "original_sha256": "4d85a22be21e72d32326c848e5949e8734981728ee81f64d4bf7d9c3124f911b"
+        },
+        {
+          "type": "PreviewTool",
+          "fields": {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": 5180301060353518064
+            },
+            "m_Enabled": 1,
+            "m_Script": {
+              "m_FileID": 0,
+              "m_PathID": -4840151349972904996
+            },
+            "m_Name": ""
+          },
+          "original": "cab-1ab27bab75ff1082e4250bc7a1d59af2:-5314819504818984464",
+          "original_sha256": "8cb2434be63a357260993188abbf7631dbcfe8ee29f168ccccdb4021a13a488b"
+        },
+        {
+          "type": "SortingGroup",
+          "fields": {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": 5180301060353518064
+            },
+            "m_Enabled": 1,
+            "m_SortingLayerID": 1182434123,
+            "m_SortingLayer": 18,
+            "m_SortingOrder": 1024,
+            "m_SortAtRoot": false
+          },
+          "original": "cab-1ab27bab75ff1082e4250bc7a1d59af2:-7418485983090415120",
+          "original_sha256": "9bd80a5b83e0c179725d86d1137fb5918c2ca44abc687f0ae1f5503492cab488"
+        },
+        {
+          "type": "AppearanceSystem.PlayerAppearance",
+          "fields": {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": 5180301060353518064
+            },
+            "m_Enabled": 1,
+            "m_Script": {
+              "m_FileID": 0,
+              "m_PathID": -1350743208429414392
+            },
+            "m_Name": "",
+            "AppearanceCharacter": {
+              "m_FileID": 0,
+              "m_PathID": 5998958739205286384
+            },
+            "AppendSkinType": 2,
+            "mAppearanceInfoList": []
+          },
+          "original": "cab-1ab27bab75ff1082e4250bc7a1d59af2:-9218893465824040464",
+          "original_sha256": "aa0f8bd5e9a6f7fc10517ea443b56951f69a8fcbf4d130b934773bc9263ea57a"
+        }
+      ]
+    },
+    {
+      "name": "PartSlot",
+      "components": [
+        {
+          "type": "Transform",
+          "fields": {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": -5646688610219628048
+            },
+            "m_LocalRotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "w": 1.0
+            },
+            "m_LocalPosition": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "m_LocalScale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "m_Children": [],
+            "m_Father": {
+              "m_FileID": 0,
+              "m_PathID": 4405852464241732080
+            }
+          },
+          "original": "cab-1ab27bab75ff1082e4250bc7a1d59af2:-2615541788487620112",
+          "original_sha256": "345dbfb9b462e162c2eb67f71b405ac567600d777be74ba5998f004d4621e83c"
+        }
+      ]
+    }
+  ]
+}

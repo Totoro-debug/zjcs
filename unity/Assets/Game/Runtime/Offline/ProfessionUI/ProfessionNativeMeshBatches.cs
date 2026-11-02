@@ -48,9 +48,10 @@ namespace Zjcs.Offline.ProfessionUI
             if(slotCount<=0)throw new ArgumentOutOfRangeException(nameof(slotCount));
             this.slotCount=slotCount;seen=new bool[slotCount];Batches=active.AsReadOnly();
         }
-        public void Build(ProfessionNativeBonePose pose,IReadOnlyList<Slot> drawOrder,bool useClipping=true,bool pmaVertexColors=false)
+        public void Build(ProfessionNativeBonePose pose,IReadOnlyList<Slot> drawOrder,bool useClipping=true,bool pmaVertexColors=false,float zSpacing=0)
         {
             if(disposed)throw new ObjectDisposedException(nameof(ProfessionNativeMeshBatches));
+            if(float.IsNaN(zSpacing)||float.IsInfinity(zSpacing))throw new ArgumentOutOfRangeException(nameof(zSpacing));
             if(pose==null||drawOrder==null||drawOrder.Count!=slotCount)throw new ArgumentException("Original draw order must include every source slot.");
             Array.Clear(seen,0,seen.Length);
             foreach(Slot slot in drawOrder)
@@ -90,6 +91,10 @@ namespace Zjcs.Offline.ProfessionUI
                         }
                         if(clippedIndices.Count>0)
                         {
+                            for(int i=0;i<clippedVertices.Count;i++)
+                            {
+                                Vector3 point=clippedVertices[i];point.z=draw*zSpacing;clippedVertices[i]=point;
+                            }
                             if(current==null||current.Page!=render.Page||current.Blend!=slot.Blend)
                             {
                                 if(active.Count==pool.Count)pool.Add(new Batch());current=pool[active.Count];current.Clear();current.Page=render.Page;current.Blend=slot.Blend;current.FirstDrawIndex=draw;active.Add(current);

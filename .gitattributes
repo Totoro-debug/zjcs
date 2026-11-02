@@ -1839,3 +1839,21 @@ unity/Assets/Official/World/Map/13/NativeMiniMapCurrent/** -text
 unity/Assets/Official/World/Map/13/NativeMiniMapCurrent.meta -text
 unity/Assets/Official/World/Map/16/NativeMiniMapCurrent/** -text
 unity/Assets/Official/World/Map/16/NativeMiniMapCurrent.meta -text
+
+# Preserve selected original partner player-portrait resources and bindings.
+scripts/prepare_partner_player_portraits.py text eol=lf
+scripts/prepare_partner_player_portrait_validation.py text eol=lf
+scripts/fixtures/partner_player_portrait_validation.cs text eol=lf
+assets/reference/partner-player-portraits-source-manifest.json text eol=lf
+unity/Assets/Official/Partners/PlayerPortraits/** -text
+unity/Assets/Official/Partners/PlayerPortraits.meta -text
+unity/Assets/Game/Resources/Partners/OfficialPartnerPlayerPortraitResources.asset* text eol=lf
+unity/Assets/Game/Runtime/Official/ProfessionUI/HeadCharacterPortraitBuilder.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/ProfessionUI/PreviewTool.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePortraitAppearance.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePortraitStudioResources.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionPortraitSkinClipBindings.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionPortraitStudio.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRendererSettings.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeMeshBatches.cs text eol=lf

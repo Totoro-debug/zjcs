@@ -422,6 +422,16 @@ Home 赠礼溢出回调现打开原窗口，保留原标题、说明、按钮、
 
 本节验证只覆盖原通讯录 NPC 分支；主角头像与血条、完整消息播放、奖励弹窗、超链接、Home 身份／功能接线及 Windows Player 未执行。通话预览使用已迁移的原播放文字目录；正式宿主须一并绑定该文字服务与原 `UIUtils.ResetUI` 的变换／自动激活顺序。整体伙伴功能仍未完成。
 
+### 当前主角头像摄影棚与原生拍摄（局部）
+
+`prepare_partner_player_portraits.py` 从所选 `884_156692` 的实际头像 bundle 恢复原 `CharacterPortraitStudio` 的 24 个对象，保留五个 GameObject 的层级、变换、原摄影机、Animator、SortingGroup 及组件引用。原 `HeadCharacterPortraitBuilder`、外观排除复制和空 `PreviewTool` 迁入工程；显式依赖替代注入，拍摄仍由原 `CharacterPortraitPhotographer` 执行。摄影棚中的动画与绘制组件接到既有免费原生角色后端，不读取或复制动画 SDK 实现。
+
+当前原 `PlayerPortraitSettings` 与 `AppearanceConfig` 从实际原对象字段恢复，保留全部列表、枚举、哈希权重、裁切、尺寸和排除顺序，避免转换器将枚举列表写成标量。三张默认／加载／禁用图片保留原 Sprite 网格和 Windows 纹理依赖，已有依赖仅在同 GUID、同载荷时复用。原棚 `zSpacing=-0.0002` 由原生网格按源绘制顺序接入，现有零间距入口保持其配置。显式资源入口为 `Resources/Partners/OfficialPartnerPlayerPortraitResources`，代码、原包／CAB／对象、配置字段、绑定与逐文件哈希见[主角头像来源](../../assets/reference/partner-player-portraits-source-manifest.json)。本批未纳入完整素材快照。
+
+`OfflineProfessionPortraitStudio` 接收实际玩家外观、原材质管理器、部件池和部件配置服务，在原棚激活前完成绑定；发型遮罩持有该角色的实例端口。拍摄使用原消息行／通讯录的 `home/idle_01`、当前男女角色数据、原 Low／染色纹理、原摄影参数与拍后释放路径。本入口只取同步零时刻照片，不声明持续动画、物理运动、全衣柜特效或独立部件已完整支持。原头像管理器的排队、缓存及正式 Home／消息行绑定仍待接通。
+
+已在实际 Play Mode 中用原摄影机完成男女角色、职业 1／10 的八次拍摄：四组头像均为原 `100×120`、有透明边缘与角色有效像素，查看实际成图确认发型、脸部和服装正常。逐源槽位核对非零深度不改变 XY、裁切三角形、UV、PMA 颜色及图集页；外观排除不修改请求方数据；释放后重拍像素完全一致，经过实际帧与回收后原 Low 纹理持有数归零。四种原头像尺寸及参数已加载核对，实际成图仅覆盖 Head；根工程导入／编译、ProjectTools.Validate 与静态检查（87,656 个 GUID）均通过。本验证没有模拟正式页面点击、缓存恢复或 Windows Player，不将这些范围记为完成。
+
 ### 当前原生详情属性区与天赋合并（局部）
 
 `prepare_partner_detail_properties_ui.py` 迁移选定 `884_156692` 的 `NpcDetailPanelPropContent`，保留属性排序、旅行门槛、每组两项、交替背景、原珍宝百分比及转为整数的截断顺序。`PartnerNpcPropertyFormula` 提取原 `BattleFormulaHandler` 的好感／天赋计算及属性合并方法，读取实际存档的好感等级和已激活天赋节点；按当前 `PropId`、`PropLevel`、`PropTypes` 取值并合并，保留原零值、分支和执行顺序。`OfflinePartnerDetailPropertySource` 使用上文当前属性目录，补齐三类天赋属性，不采用历史总表的缺省值替代。

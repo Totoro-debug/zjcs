@@ -368,3 +368,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 地区时间公共适配来源见 [mainline-region-time-source-manifest.json](official-map/mainline-region-time-source-manifest.json)。`prepare_mainline_region_time.py`／`record_mainline_region_time_sources.py` 核对所选884_156692的原地区时间判定、日期偏移、UniTask刷新状态机和时间格式源码，记录每实例日期／语言服务绑定与安装输出哈希；当前格式源码仅此文件与历史语言来源逐字节一致，不声明外围程序集或整版等价。地图标签语言键由各图原配置及原时间格式消费路径提取，未新增替代字体或美术；本批未生成完整素材快照。
 
 小地图区域地面来源见 [Map13当前资源](official-map/map13-current-minimap-regions-source-manifest.json)、[Map16当前资源](official-map/map16-current-minimap-regions-source-manifest.json)与[公共绑定代码](official-map/mainline-minimap-regions-source-manifest.json)。`prepare_mainline_minimap_regions.py` 复用公共原生恢复器，记录所选884_156692的APK优先／匹配缓存、原Ground子树、地区prefab、YooAsset索引GUID及Windows转换依赖和逐文件哈希。原YooAsset GUID与转换缓存Unity GUID分别保留；仅核对两份区域管理源码与历史输入逐字节一致，不声明整版等价。历史小地图来源独立保留，本批未生成完整素材快照。
+
+伙伴主角头像的选定884_156692原摄影棚、PlayerPortraitSettings／AppearanceConfig对象字段、三个原Sprite及Windows转换依赖见[主角头像来源](partner-player-portraits-source-manifest.json)。`prepare_partner_player_portraits.py` 记录APK优先／匹配缓存、CAB／对象身份、枚举列表恢复、显式脚本／资源绑定和逐文件哈希；当前角色与外观输入引用各自已校验来源，不混标历史头像配置，本批未生成完整素材快照。
