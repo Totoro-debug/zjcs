@@ -1,0 +1,103 @@
+{
+  "manifest": "884_156692",
+  "original_player_data": {
+    "path": "assets/reference/battle-animation/scene-core-source-manifest.json",
+    "sha256": "69384a713035cb15c226880fa3c6f11cda7da9ca4f7d5d195fa4d45e38560396"
+  },
+  "reference_binary": {
+    "path": "unity/Library/ScriptAssemblies/spine-csharp.dll",
+    "sha256": "48c6f5e1923ce5758871e9ec931e3250fac79c76dd031f89bcbab69b4c1e48d9"
+  },
+  "recorded_observations": {
+    "cases": 34,
+    "frames": 4080,
+    "fixture": {
+      "path": "scripts/fixtures/partner_player_physics_reference.txt",
+      "sha256": "42d8f4ea6cbb4a8011e302b6cfa5714b712183f04a31b2e3f12172e7441bb7f0"
+    },
+    "player_assets": {
+      "male": {
+        "constraints": 1543,
+        "frames": 120,
+        "checks": 185160,
+        "maximum_error": 7.62939453e-06,
+        "source": {
+          "path": "unity/Assets/Official/Combat/SceneCharacterSources/male.bytes",
+          "sha256": "8f97682b90384ce84601a1ec1e86b7bd6bb1f71f96b32a8d1760212c9ba5c57a"
+        },
+        "skeleton_sha256": "ef602ab7788230ffa3243a88b69e1b1a24ddff76d48ca9bde534a9a91726a2d6",
+        "animation": "map/idle_01"
+      },
+      "female": {
+        "constraints": 1807,
+        "frames": 120,
+        "checks": 216840,
+        "maximum_error": 7.62939453e-06,
+        "source": {
+          "path": "unity/Assets/Official/Combat/SceneCharacterSources/female.bytes",
+          "sha256": "3f2ceef9d2b254d418acb213d04ced2241efa2fcfa238c924065e2f328e773c2"
+        },
+        "skeleton_sha256": "de4b0bbe43d1a23baabf9422cfe3f75b224b2765856c8dac6a4e9ac7f52f4cb9",
+        "animation": "map/idle_01"
+      }
+    }
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSpringConstraint.cs",
+      "sha256": "93d74c1070e81840f69f90f5c13efa67835401af08d2d4e524fd9712f5d70296"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSpringConstraint.cs.meta",
+      "sha256": "5be414ab985a9324f0a60fe0c038bb63b61880885fd98139e1704d03f20c89ee"
+    },
+    {
+      "path": "scripts/test_partner_player_physics.py",
+      "sha256": "8593520120abcbeed3ea54d9ccc96bce4703872b322544b63df4032e565d9f4a"
+    },
+    {
+      "path": "scripts/capture_partner_player_physics_reference.py",
+      "sha256": "25c2dbd246188a7b806b85205cd97fd29a2d96ef83b0ab77046c877bbd0d6699"
+    },
+    {
+      "path": "scripts/fixtures/partner_player_physics_reference_capture.cs",
+      "sha256": "0ad09d6cf9505a1ce557769a0cfa58798ec3aae90e3d6c5cf9fd23d23a48cdc9"
+    },
+    {
+      "path": "scripts/fixtures/partner_player_physics_asset_reference.cs",
+      "sha256": "14363d3b66c2f2b0491ae612e4c189e026373076f563b1c780108d0784c3eb17"
+    },
+    {
+      "path": "scripts/fixtures/partner_player_physics_validation.cs",
+      "sha256": "dc262741b3c227042225acc93690a6428a9207f6a570de0680c5f2e16cea9b99"
+    },
+    {
+      "path": "scripts/fixtures/partner_player_physics_reference.txt",
+      "sha256": "42d8f4ea6cbb4a8011e302b6cfa5714b712183f04a31b2e3f12172e7441bb7f0"
+    }
+  ],
+  "generator": {
+    "path": "scripts/record_partner_player_physics.py",
+    "sha256": "b534a8400113456c9b14c4155a50e86080a7ecb7361059cd5b965d91d951842d"
+  },
+  "operation": [
+    "Independently implement planar spring and affine mathematics from asset parameters; no SDK implementation is copied, translated or shipped by this module.",
+    "The optional observation tool calls only public APIs on an explicitly supplied existing binary, in an owned temporary directory. Numerical observations are separate from implementation source.",
+    "The game, native conversion and recorded-observation regression test have no reference-runtime dependency.",
+    "C rows bind an initial world pose and clock; D rows record an initially inactive constraint whose first active pose is bound before subsequent updates.",
+    "Reference asset checks supply each individual constraint input matrix; they do not verify the independent hierarchy, pose controller, rendered animation or Windows Player."
+  ],
+  "supported_channels": [
+    "x",
+    "y",
+    "rotate"
+  ],
+  "host_responsibilities": [
+    "source constraint order",
+    "skin activation",
+    "initial pose and skeleton clock",
+    "pose sampling",
+    "replay and skin lifecycle",
+    "reject unimplemented scaleX/shearX channels"
+  ]
+}

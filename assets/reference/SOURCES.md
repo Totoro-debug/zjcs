@@ -396,3 +396,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 伙伴当前 UI 外观的选定 `884_156692` 应用源码、程序集及原生端点哈希见[UI 外观代码来源](partner-ui-appearance-source-manifest.json)，入口为 `prepare_partner_ui_appearance.py`。当前 APK 的材质配置对象、UI 染色 shader 与复用默认材质的各自来源、原对象字节及 Windows 显式绑定哈希见[UI 外观资源来源](partner-ui-appearance-assets-source-manifest.json)，由 `prepare_partner_ui_appearance_assets.py` 记录；历史来源不混标，本批未生成完整素材快照。 High 加载器的 APK／同版缓存对象、702 项映射、977 个纹理 GUID、原 ASTC 全部 mip、Windows 转换／同载荷占位图复用及显式加载哈希见[High 纹理来源](partner-ui-high-textures-source-manifest.json)，入口为 `prepare_partner_ui_high_textures.py`。
 
 公共战前助战选择复用既有 Map12 原生邀请面板与伙伴条目，`scripts/record_battle_assist_selection.py` 直接读取选定884_156692的APK优先资源，对照保留871来源的逐对象提取记录；外部引用表编号变化逐项解析并核对目标原始载荷，移除的旧在线外观脚本单独排除。没有修改美术或布局载荷；当前APK／bundle／CAB、历史输入、运行prefab／meta及接线哈希见[来源清单](battle-hud/assist-selection-source-manifest.json)，实现与验证边界见[NPC邀请](../../docs/features/npc-assistance.md)。
+
+伙伴主角物理输入沿用所选 `884_156692` 当前角色数据包及其原骨骼／约束／待机通道；原包与对象身份引用当前 [scene-core 来源](battle-animation/scene-core-source-manifest.json)。[主角物理来源清单](partner-player-physics-source-manifest.json) 记录实际数据包、公开调用所用既有二进制及取样／回放文件的哈希与处理方式；可选数值取样仅写隔离目录，未复制 SDK 实现或新增素材载荷。
