@@ -3,7 +3,7 @@ $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $combat = Join-Path $root 'unity/Assets/Game/Runtime/Official/Combat'
 $sources = Get-FightCombatSources
-Add-Type -Path $sources
+Add-Type -Path (@($sources) + (Join-Path $root 'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleAnimationTimeline.cs'))
 
 function Assert-Replay($condition, $message) { if (-not $condition) { throw $message } }
 function Read-Text($path) { return [System.IO.File]::ReadAllText((Join-Path $root $path)) }
@@ -35,6 +35,7 @@ function New-Unit($id, $side, $x, $y, $hp, $speed) {
 function New-ReplaySkill($consume, $needed, $stacks, $relation) {
     $skill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
     $skill.Slot = 0; $skill.EntityId = 930; $skill.ItemId = 931; $skill.TargetType = 1
+    $skill.ActionDuration = 1.0; $skill.Duration = 1.2
     $skill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new(1, 0))
     $hit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
     $hit.EntityId = 932; $hit.DamageId = 933; $hit.DamageType = 8
@@ -92,6 +93,22 @@ Assert-Replay (@($notEnough.Event.SkillCasts | Where-Object { $_.SkillEntityId -
 $continuous = Invoke-ReplayBattle (New-ReplaySkill $true 10 10 1) 20
 Assert-Replay (@($continuous.Event.SkillCasts | Where-Object { $_.SkillEntityId -eq 930 }).Count -eq 3) 'Twenty stacks did not produce two replays'
 Assert-Replay ($continuous.Checkpoint.Units[0].SkillState.ReplayCounts[0].Count -eq 2) 'Replay counter omitted a replay'
+Assert-Replay ((@($continuous.Event.SkillCasts | Where-Object IsReplay).Delay -join ',') -eq '1,2') 'Continuous replay casts did not wait for preceding action ends'
+Assert-Replay (($continuous.Event.DamageEvents.Delay -join ',') -eq '0,1,2') 'Replay damage did not inherit its cast start time'
+Assert-Replay ([Math]::Abs($continuous.Event.Duration - 3.2) -lt 0.00001 -and
+    [Math]::Abs($continuous.Event.ActionDuration - 3.0) -lt 0.00001) 'Replay action and lifetime totals were not retained separately'
+
+# AllEnded tails belong to each individual cast, without another tail on the whole queue.
+$tailSkill = New-ReplaySkill $true 10 10 1
+$tailSkill.ActionDuration = -1; $tailSkill.Duration = -1
+$tailSkill.AllEndedActionDuration = 0.4; $tailSkill.AllEndedDuration = 0.9
+$tailSkill.Hits[0].Delay = 0.2
+$tailResult = Invoke-ReplayBattle $tailSkill 20
+$tailCasts = @($tailResult.Event.SkillCasts | Where-Object IsReplay)
+Assert-Replay ([Math]::Abs($tailCasts[0].Delay - 0.6) -lt 0.00001 -and
+    [Math]::Abs($tailCasts[1].Delay - 1.2) -lt 0.00001) 'Relative action-end replay delays changed'
+Assert-Replay ([Math]::Abs($tailResult.Event.Duration - 2.3) -lt 0.00001 -and
+    [Math]::Abs($tailResult.Event.ActionDuration - 1.8) -lt 0.00001) 'Lifetime tail was duplicated after replay'
 
 # A configured per-round cap stops an otherwise persistent condition.
 $cappedSkill = New-ReplaySkill $false 1 1 1
@@ -159,5 +176,58 @@ try {
     $ids = @($sequence.Event.SkillCasts | Where-Object { $_.IsReplay } | ForEach-Object { $_.SkillEntityId })
     Assert-Replay (($ids -join ',') -eq '13104,13105,13106,13107,13108') "Ordered replacement sequence mismatch: $ids"
     Assert-Replay ($sequence.Checkpoint.Units[0].SkillState.ReplayCounts[0].Count -eq 5) 'Variants did not share their original slot counter'
+    $start = [double]$sequenceSkill.ActionDuration
+    foreach ($cast in @($sequence.Event.SkillCasts | Where-Object IsReplay)) {
+        $variant = $catalog.CreateSkill($cast.SkillEntityId, 0, 0, 1, 1, 0, $null)
+        Assert-Replay ([Math]::Abs($cast.Delay - $start) -lt 0.00001) "Variant $($cast.SkillEntityId) did not wait for the preceding variant's action"
+        $hits = @($sequence.Event.DamageEvents | Where-Object { $_.SkillEntityId -eq $cast.SkillEntityId })
+        if ($cast.SkillEntityId -ne 13104 -and $hits.Count -gt 0) {
+            Assert-Replay (($hits | Where-Object Delay -lt $start).Count -eq 0) "Variant $($cast.SkillEntityId) start=$start hits=$($hits.Delay -join ',') did not retain cast timing"
+        }
+        $start += $variant.ActionDuration
+    }
 } finally { $catalog = $oldCatalog }
+
+# A real move and its real action-start listener must remain local to each replay
+# until the entire cast is placed on the FIFO timeline.
+$movingReplay = New-ReplaySkill $true 10 10 1
+$movingReplay.EntityId = 13500
+$move = $catalog.CreateSkill(13500, -1, 0, 1, 1, 1, $null).SourceMoves[0]
+$move.Conditions[0].Distance = 99 # Only the fixture keeps all three moves reachable.
+$movingReplay.SourceMoves.Add($move)
+$moving = Invoke-ReplayBattle $movingReplay 20 @() @() {
+    param($cp, $executor)
+    $cp.Units[0].X = 4; $cp.Units[1].X = 5
+    $listener = $catalog.CreateStatus(24346, 1, 2, 9900996)
+    $listener.StackCount = 1
+    $cp.Units[0].Statuses.Add($listener)
+}
+Assert-Replay ($moving.Event.Movements.Count -eq 3) 'The moving replay fixture did not execute all three original moves'
+$listenerCasts = @($moving.Event.SkillCasts | Where-Object SkillEntityId -eq 58980)
+$listenerHits = @($moving.Event.DamageEvents | Where-Object SkillEntityId -eq 58980)
+Assert-Replay ($listenerCasts.Count -eq 3 -and $listenerHits.Count -eq 3) 'Original nested movement listeners were lost'
+for ($i = 0; $i -lt 3; $i++) {
+    $expected = 0.8 + $i
+    Assert-Replay ([Math]::Abs($moving.Event.Movements[$i].Delay - $expected) -lt 0.00001 -and
+        [Math]::Abs($listenerCasts[$i].Delay - $expected) -lt 0.00001 -and
+        [Math]::Abs($listenerHits[$i].Delay - $expected) -lt 0.00001) 'Nested movement, cast or damage was offset more or less than once'
+}
+Assert-Replay ([Math]::Abs($moving.Event.Duration - 3.3) -lt 0.00001) 'The last replay lost its nested movement-listener lifetime'
+$playables = Get-Content (Join-Path $root 'unity/Assets/Game/Resources/Combat/skill-playables.json') -Raw | ConvertFrom-Json
+$data = [Zjcs.Presentation.Combat.OfficialBattleSkillPlayableCatalogData]::new()
+foreach ($record in $playables.skills | Where-Object skill_entity_id -eq 13500) {
+    $entry = [Zjcs.Presentation.Combat.OfficialBattleSkillPlayableRecord]::new()
+    $entry.skill_entity_id = $record.skill_entity_id
+    foreach ($cue in $record.playables) {
+        $entry.playables.Add([Zjcs.Presentation.Combat.OfficialBattleSkillPlayableCue]@{
+            kind = $cue.kind; time = $cue.time; animation = $cue.animation
+        })
+    }
+    $data.skills.Add($entry)
+}
+$cues = @([Zjcs.Presentation.Combat.OfficialBattleAnimationTimeline]::Build($moving.Event, $data) | Where-Object { $null -ne $_.SkillPlayable })
+Assert-Replay (($cues.Delay -join ',') -eq '0,1,2') 'Original 13500 Playables did not follow replay cast starts'
+$savedTiming = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($moving.Checkpoint)
+Assert-Replay ([Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save(
+    [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load($savedTiming)) -eq $savedTiming) 'Replay event timing was lost during checkpoint restoration'
 Write-Output 'Battle skill replay checks passed: continuous stacks/probability, configured caps, conditional slots, replacement entity and checkpoint counters.'

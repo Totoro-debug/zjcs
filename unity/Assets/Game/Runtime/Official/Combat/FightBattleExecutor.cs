@@ -550,7 +550,14 @@ namespace Zjcs.Combat.Official
             double externalDamageFactor = 1.0)
         {
             ExecuteSkill(actor, skill, targets, casts, damageEvents, movements, out lastDelay,
-                out _, out _, targetPosition, allowDeadSource, externalDamageFactor);
+                out float nestedDuration, out float nestedActionDuration,
+                targetPosition, allowDeadSource, externalDamageFactor);
+            if (movementStartContext != null)
+            {
+                movementStartContext.Duration = Math.Max(movementStartContext.Duration, nestedDuration);
+                movementStartContext.ActionDuration = Math.Max(movementStartContext.ActionDuration,
+                    nestedActionDuration);
+            }
         }
 
         private void ExecuteSkill(FightBattleUnitState actor, FightBattleSkillDefinition skill,
@@ -559,6 +566,32 @@ namespace Zjcs.Combat.Official
             out float lastDelay, out float statusTriggerDuration,
             out float statusTriggerActionDuration, FightBattleUnitState targetPosition = null,
             bool allowDeadSource = false, double externalDamageFactor = 1.0)
+        {
+            // Movement listeners have local times, just like other nested skills. Return
+            // their lifetime to the caller before that caller offsets the whole cast.
+            var previousMovementContext = movementStartContext;
+            movementStartContext = new MovementStartContext { Casts = casts, DamageEvents = damageEvents };
+            try
+            {
+                ExecuteSkillCore(actor, skill, targets, casts, damageEvents, movements,
+                    out lastDelay, out statusTriggerDuration, out statusTriggerActionDuration,
+                    targetPosition, allowDeadSource, externalDamageFactor);
+                statusTriggerDuration = Math.Max(statusTriggerDuration, movementStartContext.Duration);
+                statusTriggerActionDuration = Math.Max(statusTriggerActionDuration,
+                    movementStartContext.ActionDuration);
+            }
+            finally
+            {
+                movementStartContext = previousMovementContext;
+            }
+        }
+
+        private void ExecuteSkillCore(FightBattleUnitState actor, FightBattleSkillDefinition skill,
+            List<FightBattleUnitState> targets, List<FightBattleSkillCastEvent> casts,
+            List<FightBattleDamageEvent> damageEvents, List<FightBattleMovementEvent> movements,
+            out float lastDelay, out float statusTriggerDuration,
+            out float statusTriggerActionDuration, FightBattleUnitState targetPosition,
+            bool allowDeadSource, double externalDamageFactor)
         {
             lastDelay = 0f;
             statusTriggerDuration = 0f;
@@ -874,7 +907,8 @@ namespace Zjcs.Combat.Official
                             actionEndActionDuration);
                 }
             }
-            ApplySkillReplay(actor, skill, casts, damageEvents, movements, ref lastDelay);
+            ApplySkillReplay(actor, skill, casts, damageEvents, movements, lastDelay,
+                ref statusTriggerDuration, ref statusTriggerActionDuration);
         }
 
         private void SpawnSummons(FightBattleUnitState actor, FightBattleSkillDefinition skill,

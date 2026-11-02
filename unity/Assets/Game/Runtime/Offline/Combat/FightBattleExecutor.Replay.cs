@@ -125,13 +125,20 @@ namespace Zjcs.Combat.Official
         // A replay's own end processing appends its newly triggered casts behind existing requests.
         private void ApplySkillReplay(FightBattleUnitState actor, FightBattleSkillDefinition skill,
             List<FightBattleSkillCastEvent> casts, List<FightBattleDamageEvent> damageEvents,
-            List<FightBattleMovementEvent> movements, ref float lastDelay)
+            List<FightBattleMovementEvent> movements, float lastDelay,
+            ref float maxDuration, ref float maxActionDuration)
         {
             if (actor.Hp <= 0 || actor.Ended) return;
             CollectDirectSkillReplay(actor, skill);
             CollectStatusSkillReplays(actor, skill);
             if (executingSkillReplays) return;
             executingSkillReplays = true;
+            // FightSkillComponentInfo.Replay fires at action end. Keep lifetime tails
+            // separate from the local last-hit time: later casts must not make the
+            // original skill's AllEndedDuration apply again to the whole queue.
+            // The legacy adapter has no finite boundary for an action configured -1;
+            // retain its unresolved zero-offset path rather than invent a duration.
+            float replayStart = Math.Max(0f, ResolveActionDuration(skill, lastDelay));
             try
             {
                 while (pendingSkillReplays.Count > 0)
@@ -145,12 +152,26 @@ namespace Zjcs.Combat.Official
                     var slot = source.SkillState.Slots.Find(value => value.Slot == next.Slot);
                     if (slot != null) slot.ReleasedTimes = checked(slot.ReleasedTimes + 1);
                     checkpoint.Statistics.RecordCast(source.Id, next.EntityId, next.ItemId);
+                    int castStart = casts.Count;
+                    int damageStart = damageEvents.Count;
+                    int movementStart = movements.Count;
                     var cast = new FightBattleSkillCastEvent { ActorId = source.Id, Slot = next.Slot,
                         SkillEntityId = next.EntityId, SkillItemId = next.ItemId, IsReplay = true, ReplayType = request.ReplayType, ReplayStatusInstanceId = request.StatusInstanceId };
                     foreach (var target in targets) cast.TargetIds.Add(target.Id);
                     casts.Add(cast);
-                    ExecuteSkill(source, next, targets, casts, damageEvents, movements, out float delay);
-                    lastDelay = Math.Max(lastDelay, delay);
+                    ExecuteSkill(source, next, targets, casts, damageEvents, movements,
+                        out float delay, out float nestedDuration, out float nestedActionDuration);
+                    OffsetSkillEvents(casts, castStart, damageEvents, damageStart, movements,
+                        movementStart, replayStart);
+                    maxDuration = Math.Max(maxDuration, replayStart + Math.Max(
+                        ResolveDuration(next, delay), nestedDuration));
+                    float actionDuration = ResolveActionDuration(next, delay);
+                    float actionEnd = Math.Max(actionDuration, nestedActionDuration);
+                    if (actionEnd >= 0f)
+                        maxActionDuration = Math.Max(maxActionDuration, replayStart + actionEnd);
+                    // FIFO also applies when several passives already queued their casts:
+                    // a continuation joins the tail and starts after the preceding action.
+                    replayStart += Math.Max(0f, actionDuration);
                 }
             }
             finally

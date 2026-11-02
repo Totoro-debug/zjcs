@@ -53,6 +53,7 @@ namespace Zjcs.Presentation.Combat
             public string PrefabKey;
             public Color Color;
             public float Elapsed;
+            public float StartDelay;
         }
 
         private sealed class PendingUnitAnimation
@@ -201,12 +202,15 @@ namespace Zjcs.Presentation.Combat
                     || !OfficialBattleWorldTips.CanShowReplay(cast.SkillEntityId)) continue;
                 FightBattleUnitState actor = FindUnit(checkpoint, cast.ActorId);
                 if (actor == null) continue;
-                SpawnOfficialDamageFloat(new PendingDamageFloat
+                var pending = new PendingDamageFloat
                 {
                     Target = actor,
                     PrefabKey = "damage_FightResetSkillCDFloatEffect",
-                    Color = Color.white
-                });
+                    Color = Color.white,
+                    StartDelay = Mathf.Max(0f, cast.Delay)
+                };
+                if (pending.StartDelay > 0f) pendingDamageFloats.Add(pending);
+                else SpawnOfficialDamageFloat(pending);
             }
         }
 
@@ -751,11 +755,12 @@ namespace Zjcs.Presentation.Combat
                 PendingDamageFloat pending = pendingDamageFloats[index];
                 float previous = pending.Elapsed;
                 pending.Elapsed += deltaTime;
-                if (pending.Elapsed < pending.Damage.Delay) continue;
+                float delay = pending.Damage == null ? pending.StartDelay : pending.Damage.Delay;
+                if (pending.Elapsed < delay) continue;
                 pendingDamageFloats.RemoveAt(index);
                 OfficialBattleDamageFloat floatView = SpawnOfficialDamageFloat(pending);
                 if (floatView != null)
-                    floatView.Tick(Mathf.Max(0f, pending.Elapsed - Math.Max(previous, pending.Damage.Delay)));
+                    floatView.Tick(Mathf.Max(0f, pending.Elapsed - Math.Max(previous, delay)));
             }
             foreach (UnitView view in units.Values) view.Hud?.Tick(deltaTime);
             foreach (OfficialBattleUnitWorldHudView hud in attachedUnitHuds.Values) hud?.Tick(deltaTime);

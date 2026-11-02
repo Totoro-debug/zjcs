@@ -34,6 +34,7 @@ $second = New-StatusReplay 9901002 1 1
 $result = Invoke-ReplayBattle (New-StatusReplaySkill) 0 @() @($first, $second)
 $casts = Replay-Casts $result
 Assert-Replay (($casts.ReplayStatusInstanceId -join ',') -eq '9901001,9901002,9901001') 'Status replay did not retain FIFO continuation order.'
+Assert-Replay (($casts.Delay -join ',') -eq '1,2,3') 'Independent passive replays overlapped instead of following FIFO action ends.'
 Assert-Replay ($result.Checkpoint.Units[0].SkillState.Slots[0].ReleasedTimes -eq 4) 'Replay releases did not enter the original release counter.'
 Assert-Replay ($first.SkillReplay.CountEachRound -eq 2 -and $second.SkillReplay.CountEachRound -eq 1) 'Independent status caps were merged.'
 

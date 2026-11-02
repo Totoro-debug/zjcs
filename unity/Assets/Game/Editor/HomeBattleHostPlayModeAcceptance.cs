@@ -390,6 +390,7 @@ namespace Zjcs.Editor
                 checkpoint = result.Checkpoint;
                 triggerChains?.Observe(checkpoint);
                 replays?.Observe(checkpoint);
+                replays?.ObserveTiming(controller);
                 statusReplays?.Observe(checkpoint);
                 triggerTiming?.ObserveStep(controller);
                 if (checkpoint.Counter == initialCounter + 1 || checkpoint.Finished)
@@ -455,6 +456,7 @@ namespace Zjcs.Editor
                 while (runner != null)
                 {
                     triggerTiming?.ObservePresentation();
+                    replays?.ObservePresentation();
                     Require(Time.realtimeSinceStartup < deadline, name + " battle timed out.");
                     if (!captured && checkpoint.Counter > initialCounter + 2)
                     {

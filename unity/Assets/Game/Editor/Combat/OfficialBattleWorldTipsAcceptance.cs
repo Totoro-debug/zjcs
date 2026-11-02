@@ -77,6 +77,18 @@ namespace Zjcs.Editor.Combat
                 hiddenStep.SkillCasts.Add(new FightBattleSkillCastEvent {ActorId=2,SkillEntityId=13220,IsReplay=true,ReplayType=2});
                 scene.ShowDamageFloats(hiddenStep,checkpoint,OfficialBattleDamageColors.Load());
                 Require(root.GetComponentsInChildren<OfficialBattleDamageFloat>(true).Single().EffectType==10,"ExtraWithTip replay lost its original tip.");
+                foreach(var old in root.GetComponentsInChildren<OfficialBattleDamageFloat>(true)) UnityEngine.Object.DestroyImmediate(old.gameObject);
+                hiddenStep.SkillCasts[0].Delay=.75f;
+                scene.ShowDamageFloats(hiddenStep,checkpoint,OfficialBattleDamageColors.Load());
+                Require(root.GetComponentsInChildren<OfficialBattleDamageFloat>(true).Length==0,"A queued replay tip appeared before its cast.");
+                scene.Tick(.5f);
+                Require(root.GetComponentsInChildren<OfficialBattleDamageFloat>(true).Length==0,"The replay tip ignored the remaining cast delay.");
+                scene.Tick(.25f);
+                var replayTip=root.GetComponentsInChildren<OfficialBattleDamageFloat>(true).Single();
+                Require(replayTip.EffectType==10,"The delayed replay tip did not spawn at its cast start.");
+                scene.Tick(.35f);
+                var replayText=replayTip.GetComponentInChildren<TextMeshPro>();replayText.ForceMeshUpdate();
+                VerifyPixels(replayTip,replayText,210);
                 foreach(int action in new[] {1,2})
                 {
                     foreach(var old in root.GetComponentsInChildren<OfficialBattleDamageFloat>(true)) UnityEngine.Object.DestroyImmediate(old.gameObject);
@@ -217,7 +229,7 @@ namespace Zjcs.Editor.Combat
         {
             private int counter,targetId,type,customAction;
             private string word;
-            private bool verified,requiresMovement,birthAnchorObserved;
+            private bool verified,requiresMovement,birthAnchorObserved,replayQueued;
             public string Observation {get;private set;}
 
             public static Probe Install(OfficialBattleRuntimeController controller)
@@ -317,8 +329,15 @@ namespace Zjcs.Editor.Combat
             private void ObserveBirth(FightBattleExecutionResult result)
             {
                 if (result.Checkpoint.Counter!=counter) return;
-                var view=UnityEngine.Object.FindObjectsOfType<OfficialBattleDamageFloat>()
-                    .Single(v=>v.TargetId==targetId && v.EffectType==type);
+                Require(result.Event.SkillCasts.Any(v=>v.ActorId==targetId && v.IsReplay && v.Delay>0f),
+                    "The moving replay did not retain its action-end start time.");
+                Require(!UnityEngine.Object.FindObjectsOfType<OfficialBattleDamageFloat>()
+                    .Any(v=>v.TargetId==targetId && v.EffectType==type),"A moving replay tip appeared before the replay started.");
+                replayQueued=true;
+            }
+
+            private void VerifyBirthAnchor(OfficialBattleDamageFloat view)
+            {
                 Transform body=view.transform.parent.Find("Battle attached unit 3100");
                 var prefab=OfficialBattleWorldTips.Find("damage_FightResetSkillCDFloatEffect").prefab;
                 Require(body!=null && Mathf.Abs(view.transform.position.x-body.position.x-prefab.sceneOffset[0])<.0001f
@@ -326,7 +345,7 @@ namespace Zjcs.Editor.Combat
                     && Mathf.Abs(view.transform.localPosition.z)<.0001f,
                     "The moving replay tip did not initialize from the actual attached player transform.");
                 birthAnchorObserved=true;
-                Debug.Log("Moving world tip birth anchor passed: real StepCompleted observation matches current attached entity position.");
+                Debug.Log("Moving world tip birth anchor passed: delayed replay tip matches current attached entity position.");
             }
 
             public bool TryVerify(FightBattleCheckpoint checkpoint)
@@ -342,8 +361,8 @@ namespace Zjcs.Editor.Combat
                 else if (type==10)
                 {
                     Require(step.SkillCasts.Any(v=>v.ActorId==1 && v.IsReplay),"Live replay receipt is absent.");
-                    if (requiresMovement) Require(birthAnchorObserved && step.Movements.Any(v=>v.UnitId==targetId && v.Path.Count>1),
-                        "The live moving replay tip was not observed at its entity's current position.");
+                    if (requiresMovement) Require(replayQueued && step.Movements.Any(v=>v.UnitId==targetId && v.Path.Count>1),
+                        "The live moving replay was not queued after a real movement.");
                 }
                 else if (type==11)
                 {
@@ -361,6 +380,7 @@ namespace Zjcs.Editor.Combat
                 }
                 var view=UnityEngine.Object.FindObjectsOfType<OfficialBattleDamageFloat>()
                     .FirstOrDefault(v=>v.TargetId==targetId && v.EffectType==type && v.name.EndsWith("_Scene",StringComparison.Ordinal));
+                if (requiresMovement && view!=null && !birthAnchorObserved) VerifyBirthAnchor(view);
                 var text=view==null?null:view.GetComponentsInChildren<TextMeshPro>().FirstOrDefault(v=>v.text==word && v.color.a>.05f);
                 Observation="counter="+checkpoint.Counter+", type="+type+", native view="+(view!=null)+", word="+word;
                 if(text==null || !text.renderer.isVisible)return false;

@@ -1,7 +1,11 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using Zjcs.Combat.Official;
+using Zjcs.Presentation.Combat;
 
 namespace Zjcs.Editor
 {
@@ -16,6 +20,21 @@ namespace Zjcs.Editor
             skill.ReplayStackCount = 10; skill.ReplayRelation = 1;
             skill.ReplayConsumeStack = true; skill.ReplayConsumeCount = 10;
             skill.ReplayMaxCountEachRound = 2; skill.ReplayReplacementEntities.Clear();
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_REPLAY_TIMING_ACCEPTANCE") == "1")
+            {
+                skill.ReplayType = 2;
+                var rules = OfficialCombatAssetCatalog.LoadDefault().Load();
+                int attack = rules.PropertyType("Attack"), maxHp = rules.PropertyType("MaxHp");
+                foreach (var enemy in checkpoint.Units.Where(value => value.Side != player.Side))
+                {
+                    foreach (var property in enemy.Properties.Concat(enemy.BaseProperties))
+                    {
+                        if (property.Id == attack) property.Value = Math.Min(property.Value, 100L);
+                        if (property.Id == maxHp) property.Value = 1000000L;
+                    }
+                    enemy.MaxHp = enemy.Hp = enemy.Turn.Hp = 1000000L;
+                }
+            }
             player.Statuses.Add(new FightBattleStatusState { InstanceId = 9900991, ClassId = 9900991,
                 OwnerId = 1, CreatorId = 1, StackCount = 20, DurationRound = -1,
                 CurDurationRound = -1, StartRound = 0 });
@@ -93,6 +112,11 @@ namespace Zjcs.Editor
             private bool observedStackFactor;
             private readonly bool observeHitMove;
             private bool observedHitMove;
+            private readonly bool observeTiming = Environment.GetEnvironmentVariable("ZJCS_BATTLE_REPLAY_TIMING_ACCEPTANCE") == "1";
+            private bool queuedTiming;
+            private string timingAnimation;
+            private Type animatorPlayableType;
+            private readonly HashSet<int> playedInstances = new HashSet<int>();
             public ReplayProbe(int entity, bool observeConsumption, int factorSourceId, bool observeHitMove)
             {
                 this.entity = entity; this.observeConsumption = observeConsumption;
@@ -155,6 +179,59 @@ namespace Zjcs.Editor
                     }
                 }
             }
+            public void ObserveTiming(OfficialBattleRuntimeController controller)
+            {
+                if (!observeTiming || queuedTiming) return;
+                var step = controller.Checkpoint.Receipts.Last().Event;
+                var casts = step.SkillCasts.Where(value => value.ActorId == 1
+                    && value.SkillEntityId == entity).OrderBy(value => value.Delay).ToArray();
+                if (casts.Count(value => value.IsReplay) == 0) return;
+                Require(casts.Length == 3 && !casts[0].IsReplay,
+                    "The replay timing fixture did not retain its original cast and two replays.");
+                var skill = controller.Checkpoint.Units.Single(value => value.Id == 1).Skills.Single(value => value.EntityId == entity);
+                Require(skill.ActionDuration > 0f && Mathf.Abs(casts[1].Delay - skill.ActionDuration) < 0.0001f
+                    && Mathf.Abs(casts[2].Delay - skill.ActionDuration * 2f) < 0.0001f,
+                    "The host replays did not wait for each preceding configured action end.");
+                var playable = OfficialBattleSkillPlayableCatalog.LoadDefault().Data.skills
+                    .Single(value => value.skill_entity_id == entity).playables.First(value => value.kind == 1);
+                timingAnimation = playable.animation;
+                var scene = typeof(OfficialBattleRuntimeController).GetField("sceneView",
+                    BindingFlags.Instance | BindingFlags.NonPublic).GetValue(controller);
+                var pending = (IEnumerable)typeof(OfficialBattleSceneView).GetField("pendingUnitAnimations",
+                    BindingFlags.Instance | BindingFlags.NonPublic).GetValue(scene);
+                var starts = new List<float>();
+                foreach (object item in pending)
+                {
+                    var cue = (OfficialBattleAnimationCue)item.GetType().GetField("Cue").GetValue(item);
+                    if (cue.UnitId == 1 && cue.SkillPlayable?.animation == timingAnimation) starts.Add(cue.Delay);
+                }
+                starts.Sort();
+                Require(starts.Count == 3 && starts.Where((value, index) =>
+                    Mathf.Abs(value - casts[index].Delay - playable.time) > 0.0001f).Count() == 0,
+                    "The real scene did not queue three original Playables at their replay start times.");
+                var hits = step.DamageEvents.Where(value => value.SourceId == 1 && value.SkillEntityId == entity).ToArray();
+                Require(hits.Any(value => value.Delay >= casts[2].Delay), "The final replay hit lost its start time.");
+                queuedTiming = true;
+                Debug.Log("[Replay timing] casts=" + string.Join(",", casts.Select(value => value.Delay))
+                    + "; animation=" + timingAnimation + "; duration=" + step.Duration);
+            }
+            public void ObservePresentation()
+            {
+                if (!observeTiming || !queuedTiming || playedInstances.Count >= 3) return;
+                var homePlayer = GameObject.Find("HomePlayer");
+                var animator = homePlayer == null ? null : homePlayer.GetComponentInChildren<Animator>(true);
+                if (animatorPlayableType == null)
+                    animatorPlayableType = AppDomain.CurrentDomain.GetAssemblies().Select(value =>
+                        value.GetType("Zjcs.Official.StoryAnimation.MyPlayableOverrideAnimator")).First(value => value != null);
+                foreach (var playable in UnityEngine.Object.FindObjectsOfType(animatorPlayableType))
+                {
+                    var clip = (AnimationClip)animatorPlayableType.GetField("OverrideClip").GetValue(playable);
+                    var apply = animatorPlayableType.GetField("myApplyComponent").GetValue(playable);
+                    if (clip != null && clip.name.StartsWith(timingAnimation, StringComparison.Ordinal)
+                        && apply != null && ReferenceEquals(apply.GetType().GetField("myAnimator").GetValue(apply), animator))
+                        playedInstances.Add(playable.GetInstanceID());
+                }
+            }
             public void Verify(string name, FightBattleCheckpoint checkpoint)
             {
                 Observe(checkpoint);
@@ -168,10 +245,12 @@ namespace Zjcs.Editor
                     name + " did not exercise the original stacking action-start passive.");
                 Require(!observeHitMove || observedHitMove,
                     name + " did not retain the original 13553 speed through the conditional hit graph.");
+                Require(!observeTiming || (queuedTiming && playedInstances.Count >= 3),
+                    name + " did not play three distinct original Animator playables on the replay timeline: " + playedInstances.Count);
                 string saved = FightBattleCheckpointSerializer.Save(checkpoint);
                 Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
                     name + " did not retain replay counts and results in the checkpoint.");
-                Debug.Log("[Replay hosts] " + name + ": two configured consecutive replays, stack consumption, caps and checkpoint passed; stacking action-start=" + observedStackFactor + "; hit-move timing=" + observedHitMove + ".");
+                Debug.Log("[Replay hosts] " + name + ": two configured consecutive replays, stack consumption, caps and checkpoint passed; stacking action-start=" + observedStackFactor + "; hit-move timing=" + observedHitMove + "; replay timing=" + queuedTiming + "; Animator instances=" + playedInstances.Count + ".");
             }
         }
     }
