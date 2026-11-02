@@ -369,9 +369,10 @@ namespace Zjcs.Editor
             }
         }
 
-        private static RoundMergeFormulaProbe ConfigureRoundMergeFormulaProbe(FightBattleCheckpoint checkpoint)
+        private static RoundMergeFormulaProbe ConfigureRoundMergeFormulaProbe(OfficialBattleRuntimeController controller)
         {
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_ROUND_MERGE_FORMULA_ACCEPTANCE") != "1") return null;
+            var checkpoint = controller.Checkpoint;
             var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
             foreach (var unit in checkpoint.Units)
             {
@@ -383,19 +384,65 @@ namespace Zjcs.Editor
                 }
                 unit.MaxHp = unit.LastMaxHp = unit.Hp = unit.Turn.Hp = hp;
             }
-            var source = catalog.CreateStatus(24640, 1, 2, 9924640, 0, 0, 5, 20, 1, null);
-            // Formula-only fixture; the separate source probe exercises actual instance selection.
-            FightStatusLifecycle.Initialize(source, 0);
-            checkpoint.Units.Single(value => value.Id == 1).Statuses.Add(source);
-            return new RoundMergeFormulaProbe(source);
+            var template = catalog.CreateStatus(24640, 1, 2, 9924640, 63280, 0, 5, 20, 1, null);
+            var source = FightStatusLifecycle.Apply(checkpoint.Units.Single(value => value.Id == 1), template, 0, template.InstanceId);
+            var executor = (FightBattleExecutor)typeof(OfficialBattleRuntimeController)
+                .GetField("executor", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(controller);
+            var hits = (FightBattleHitExecutor)typeof(FightBattleExecutor)
+                .GetField("hitExecutor", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(executor);
+            var settlement = (FightDamageSettlement)typeof(FightBattleHitExecutor)
+                .GetField("settlement", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(hits);
+            var scene = (OfficialBattleSceneView)typeof(OfficialBattleRuntimeController)
+                .GetField("sceneView", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(controller);
+            scene.Refresh(checkpoint);
+            return new RoundMergeFormulaProbe(source, template, checkpoint, settlement, scene);
         }
 
         private sealed class RoundMergeFormulaProbe
         {
             private readonly FightBattleStatusState source;
+            private readonly FightBattleStatusState template;
+            private readonly FightBattleCheckpoint checkpoint;
+            private readonly FightDamageSettlement settlement;
+            private readonly OfficialBattleSceneView scene;
             private int calls;
+            private bool renewed;
             public bool ReadyToCapture => calls >= 4;
-            public RoundMergeFormulaProbe(FightBattleStatusState source) { this.source = source; }
+            public RoundMergeFormulaProbe(FightBattleStatusState source, FightBattleStatusState template,
+                FightBattleCheckpoint checkpoint, FightDamageSettlement settlement, OfficialBattleSceneView scene)
+            {
+                this.source = source; this.template = template; this.checkpoint = checkpoint;
+                this.settlement = settlement; this.scene = scene;
+                settlement.SourceHit += OnHit;
+                CheckCounter("3");
+            }
+            private void OnHit(FightDamageEvent hit)
+            {
+                if (renewed || hit.SourceId != 2 || hit.TargetId != 1 || source.RoundStartTriggeredCount != 1) return;
+                var player = checkpoint.Units.Single(value => value.Id == 1);
+                Require(ReferenceEquals(source, FightStatusLifecycle.Apply(player, template,
+                    player.SkillState.Round, 9924641)), "Real hit-time renewal replaced its same-source instance.");
+                renewed = true;
+            }
+            private void CheckCounter(string expected)
+            {
+                var huds = (Dictionary<int, OfficialBattleUnitWorldHudView>)typeof(OfficialBattleSceneView)
+                    .GetField("attachedUnitHuds", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(scene);
+                var hud = huds[1];
+                var visible = (List<FightBattleStatusState>)typeof(OfficialBattleUnitWorldHudView)
+                    .GetField("visibleStatuses", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(hud);
+                int index = visible.IndexOf(source);
+                if (expected == null)
+                {
+                    Require(index < 0, "Exhausted real status retained a native world icon.");
+                    return;
+                }
+                var layout = hud.Root.Find("StatusLayout");
+                Require(index >= 0 && index < layout.childCount, "Real remaining-call icon is missing from the attached player.");
+                var text = layout.GetChild(index).Find("StackCountText").GetComponent<TMPro.TextMeshPro>();
+                Require(text.gameObject.activeInHierarchy && text.text == expected,
+                    "Real attached status counter mismatch: expected=" + expected + ", actual=" + text.text);
+            }
             public void ObserveStep(OfficialBattleRuntimeController controller)
             {
                 var cp = controller.Checkpoint;
@@ -403,30 +450,38 @@ namespace Zjcs.Editor
                 var casts = step.SkillCasts.Where(value => value.SkillEntityId == 63280 && value.ActorId == 2).ToArray();
                 if (casts.Length == 0) return;
                 calls++;
-                if (calls == 1)
-                    FightStatusLifecycle.ExtendDurationOnStack(source,
-                        cp.Units.Single(value => value.Id == 1).SkillState.Round);
                 var damage = step.DamageEvents.Where(value => value.SkillEntityId == 63280 && value.SourceId == 2).ToArray();
                 Require(casts.Length == 1 && casts[0].TargetIds.SequenceEqual(new[] { 1 })
                     && damage.Length == 1 && damage[0].TargetId == 1 && damage[0].Damage < 0
                     && damage[0].AfterHp < damage[0].BeforeHp,
                     "Duration formula fixture lost actual creator damage against its victim.");
                 Require(source.RoundStartTriggeredCount == calls && calls <= 6
+                    && renewed
                     && source.RoundStartStackRoundCount == 2 && FightStatusLifecycle.RoundStartMaximumCount(source) == 6
                     && source.CurDurationRound == 5 && source.StartRound == 1
                     && source.SourceSkillRank == 5 && source.SourceSkillLevel == 20,
-                    "Duration formula fixture lost retained invocation count, quota or cultivation.");
+                    "Duration formula fixture lost retained invocation count, quota or cultivation: calls=" + calls
+                    + ", recorded=" + source.RoundStartTriggeredCount + ", renewed=" + renewed
+                    + ", stack-round=" + source.RoundStartStackRoundCount + ", duration=" + source.CurDurationRound
+                    + ", start=" + source.StartRound + ", rank=" + source.SourceSkillRank + ", level=" + source.SourceSkillLevel);
+                CheckCounter(calls < 6 ? (6 - calls).ToString() : null);
+                var restored = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(cp));
+                if (calls < 6)
+                    Require(FightStatusLifecycle.RoundStartRemainingCount(restored.Units.Single(value => value.Id == 1)
+                        .Statuses.Single(value => value.InstanceId == source.InstanceId)) == 6 - calls,
+                        "Actual damage step checkpoint lost the visible remaining-call count.");
                 Debug.Log("[Round merge formula hosts] 24640 -> 63280 -> 63281: call=" + calls
                     + ", damage=" + damage[0].Damage + ", renewed-duration=5, start-round=1, stack-round=2, maximum=6.");
             }
             public void Verify(string host, FightBattleCheckpoint checkpoint)
             {
+                settlement.SourceHit -= OnHit;
                 Require(calls == 6 && !checkpoint.Units.Single(value => value.Id == 1).Statuses.Contains(source),
                     host + " did not finish all six formula-fixture calls and remove its exhausted state.");
                 string saved = FightBattleCheckpointSerializer.Save(checkpoint);
                 Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
                     host + " changed the duration formula fixture after checkpoint reload.");
-                Debug.Log("[Round merge formula hosts] " + host + ": six actual damage calls, exhausted removal and checkpoint passed; instance selection uses the separate source probe.");
+                Debug.Log("[Round merge formula hosts] " + host + ": six actual damage calls, same-source hit-time renewal, native attached counters 3/5/4/3/2/1, exhausted icon removal and per-step checkpoint counts passed.");
             }
         }
 

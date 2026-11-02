@@ -425,7 +425,7 @@ namespace Zjcs.Editor
             RoundMeetProbe roundMeet = ConfigureRoundMeetProbe(checkpoint);
             RoundRandomProbe roundRandom = ConfigureRoundRandomProbe(checkpoint);
             RoundSourceProbe roundSource = ConfigureRoundSourceProbe(checkpoint);
-            RoundMergeFormulaProbe roundMergeFormula = ConfigureRoundMergeFormulaProbe(checkpoint);
+            RoundMergeFormulaProbe roundMergeFormula = ConfigureRoundMergeFormulaProbe(controller);
             RoundStatusSourcesProbe statusSources = ConfigureRoundStatusSourcesProbe(checkpoint);
             RoundDelayProbe roundDelay = ConfigureRoundDelayProbe(checkpoint);
             RoundForbiddenProbe roundForbidden = ConfigureRoundForbiddenProbe(controller);
