@@ -404,6 +404,7 @@ namespace Zjcs.Editor
             RoundMergeFormulaProbe roundMergeFormula = ConfigureRoundMergeFormulaProbe(checkpoint);
             RoundStatusSourcesProbe statusSources = ConfigureRoundStatusSourcesProbe(checkpoint);
             RoundDelayProbe roundDelay = ConfigureRoundDelayProbe(checkpoint);
+            RoundForbiddenProbe roundForbidden = ConfigureRoundForbiddenProbe(controller);
             int initialCounter = checkpoint.Counter;
             controller.StepCompleted += result => {
                 checkpoint = result.Checkpoint;
@@ -418,6 +419,7 @@ namespace Zjcs.Editor
                 hpListener?.ObserveStep(controller);
                 hpForbidden?.ObserveStep(controller);
                 hpRecovery?.ObserveStep(controller);
+                roundForbidden?.ObserveStep(controller);
                 hpCost?.ObserveStep(controller);
                 hpSubstitute?.ObserveStep(controller);
                 roundStartup?.ObserveStep(controller);
@@ -492,7 +494,7 @@ namespace Zjcs.Editor
             float previousTimeScale = Time.timeScale;
             try
             {
-                Time.timeScale = hpListener == null && hpRecovery == null && hpCost == null && hpSubstitute == null && roundStartup == null && roundTargets == null && roundProps == null && roundMeet == null && roundRandom == null && roundSource == null && roundMergeFormula == null && statusSources == null && roundDelay == null ? 5 : 1;
+                Time.timeScale = hpListener == null && hpRecovery == null && hpCost == null && hpSubstitute == null && roundStartup == null && roundTargets == null && roundProps == null && roundMeet == null && roundRandom == null && roundSource == null && roundMergeFormula == null && statusSources == null && roundDelay == null && roundForbidden == null ? 5 : 1;
                 while (runner != null)
                 {
                     triggerTiming?.ObservePresentation();
@@ -509,6 +511,7 @@ namespace Zjcs.Editor
                     if (roundMergeFormula != null && capturedCure) Time.timeScale = 5;
                     if (statusSources != null && capturedCure) Time.timeScale = 5;
                     if (roundDelay != null && capturedCure) Time.timeScale = 5;
+                    if (roundForbidden != null && capturedCure) Time.timeScale = 5;
                     if (hpSubstitute != null && hpSubstitute.MayAccelerate) Time.timeScale = 5;
                     if (!capturedCure && (hpListener != null && hpListener.ReadyToCapture
                         || hpRecovery != null && hpRecovery.ReadyToCapture
@@ -522,11 +525,13 @@ namespace Zjcs.Editor
                         || roundSource != null && roundSource.ReadyToCapture
                         || roundMergeFormula != null && roundMergeFormula.ReadyToCapture
                         || statusSources != null && statusSources.ReadyToCapture
-                        || roundDelay != null && roundDelay.ReadyToCapture))
+                        || roundDelay != null && roundDelay.ReadyToCapture
+                        || roundForbidden != null && roundForbidden.ReadyToCapture))
                     {
                         float captureTimeScale = Time.timeScale;
                         Time.timeScale = 0f;
-                        try { yield return Capture(output, name + (roundDelay != null ? "-round-delay"
+                        try { yield return Capture(output, name + (roundForbidden != null ? "-round-forbidden"
+                            : roundDelay != null ? "-round-delay"
                             : statusSources != null ? "-status-sources"
                             : roundMergeFormula != null ? "-round-merge-formula"
                             : roundSource != null ? "-round-source"
@@ -575,6 +580,7 @@ namespace Zjcs.Editor
             hpListener?.Verify(name, checkpoint);
             hpForbidden?.Verify(name, checkpoint);
             hpRecovery?.Verify(name, checkpoint);
+            roundForbidden?.Verify(name, checkpoint);
             hpCost?.Verify(name, checkpoint);
             hpSubstitute?.Verify(name, checkpoint);
             roundStartup?.Verify(name, checkpoint);

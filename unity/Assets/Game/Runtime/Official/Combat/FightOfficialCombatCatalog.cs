@@ -1085,6 +1085,8 @@ namespace Zjcs.Combat.Official
                 RoundStartDelayRoundType = roundStart == null ? 0 : Int(roundStart, "DelayRoundType"),
                 RoundStartDelayRulesResolved = true,
                 RoundStartFilterRulesResolved = true,
+                RoundStartForbiddenRulesResolved = true,
+                RoundStartTryAtNotForbidden = roundStart != null && Bool(roundStart, "TryAtNotForbidden"),
                 RoundStartRequiresFriendWithoutStatuses = roundStartFriendFilter != null,
                 RoundStartFriendIncludeApplicator = roundStartFriendFilter != null
                     && Bool(Component(roundStart, "FilterCondition"), "IncludeMe"),
@@ -2568,7 +2570,8 @@ namespace Zjcs.Combat.Official
                 && Int(component, "MeetCount", 1) >= 1
                 && (Int(component, "RoundStartPhase") == 0 || Int(component, "RoundStartPhase") == 5)
                 && Float(component, "TargetHpPer", -1f) < 0f
-                && !Bool(component, "TryAtNotForbidden")
+                && (!Bool(component, "TryAtNotForbidden")
+                    || Int(component, "ListenTargetType") >= 1 && Int(component, "ListenTargetType") <= 4)
                 && !Bool(component, "RemoveOldStatusOnInvoke")
                 && !Bool(component, "RemoveOldStatusOnEnd")
                 && ArrayCount(component, "TargetActions") == 0

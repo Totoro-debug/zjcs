@@ -193,6 +193,7 @@ namespace Zjcs.Combat.Official
             var casts = new List<FightBattleSkillCastEvent>();
             var damageEvents = new List<FightBattleDamageEvent>();
             movementStartContext = new MovementStartContext { Casts = casts, DamageEvents = damageEvents, Movements = movements };
+            roundStartNotForbiddenListener = actor;
             var statusCustomActions = new List<FightBattleStatusCustomActionEvent>();
             currentStepSpawnedUnitIds = new List<int>();
             currentStepStatusCustomActions = statusCustomActions;
@@ -354,6 +355,7 @@ namespace Zjcs.Combat.Official
                 ref stepDuration, ref stepActionDuration);
             CollectStatusCustomActions(statusCustomActions);
 
+            roundStartNotForbiddenListener = null;
             skillState.FinishRound();
             turn.ActionRound = actor.SkillState.Round;
             SynchronizeTurn(actor);
@@ -969,6 +971,7 @@ namespace Zjcs.Combat.Official
                 unitById.Add(summon.Id, summon);
                 summon.StatusStarted = OnStatusStarted;
                 summon.StatusEnded = OnStatusEnded;
+                summon.StatusForbiddenChanged = OnStatusForbiddenChanged;
                 summon.StatusRoundResolver = StatusClockRound;
                 summon.RoundStartClockResolver = RoundStartClockRound;
                 foreach (var status in summon.Statuses) InitializeRoundStartDelay(status);

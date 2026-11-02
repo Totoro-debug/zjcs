@@ -33,6 +33,8 @@ namespace Zjcs.Combat.Official
             foreach (FightBattleStatusState status in new List<FightBattleStatusState>(source.Statuses))
             {
                 if (status == null || !status.HasRoundStartTrigger
+                    || status.ForbiddenType != 0
+                    || status.ForbiddenOnApplicatorDie && source.Hp <= 0
                     || (onlyStatus != null && status != onlyStatus)
                     || !status.RoundStartRulesSupported || (atStatusStart && !status.RoundStartTryAtStart)
                     || (!atStatusStart && status.RoundStartPhase != phase)

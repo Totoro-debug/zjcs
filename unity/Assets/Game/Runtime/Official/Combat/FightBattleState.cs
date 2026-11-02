@@ -70,6 +70,7 @@ namespace Zjcs.Combat.Official
         // Runtime-only subscription, scoped to an executor step. Checkpoints contain public fields.
         internal Action<FightBattleUnitState, FightBattleStatusState> StatusStarted;
         internal Action<FightBattleUnitState, FightBattleStatusState> StatusEnded;
+        internal Action<FightBattleUnitState, FightBattleStatusState, bool> StatusForbiddenChanged;
         internal Func<FightBattleStatusState, int> StatusRoundResolver;
         internal Func<FightBattleStatusState, int> RoundStartClockResolver;
         // Official FightRolePetTransferEntity state. A player unit owns the transfer state while
@@ -307,6 +308,7 @@ namespace Zjcs.Combat.Official
         public bool ScalePropWhenChangeStacked;
         public bool ApplyIgnoreResilience;
         public bool ForbiddenOnApplicatorDie;
+        public int ForbiddenType;
         public bool AiMoreHit;
         public bool HasCreatorDamageBoost;
         public FightBattleStatusDamageProcessInfo DamageProcess;
@@ -398,6 +400,10 @@ namespace Zjcs.Combat.Official
         public int RoundStartDelayStartRound = -1;
         public bool RoundStartDelayRulesResolved;
         public bool RoundStartFilterRulesResolved;
+        public bool RoundStartForbiddenRulesResolved;
+        public bool RoundStartTryAtNotForbidden;
+        public int RoundStartNotForbiddenListenerId;
+        public int RoundStartNotForbiddenRound = -1;
         public bool RoundStartRequiresFriendWithoutStatuses;
         public bool RoundStartFriendIncludeApplicator;
         public List<int> RoundStartFriendExcludedStatuses = new List<int>();

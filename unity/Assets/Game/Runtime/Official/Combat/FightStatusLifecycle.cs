@@ -22,6 +22,23 @@ namespace Zjcs.Combat.Official
         public const int BehaviourImmediate = 1;
         public const int BehaviourDiscard = 2;
 
+        // Common.EFightStatusForbiddenType, including combined independent reasons.
+        public const int ForbiddenApplicatorDie = 1, ForbiddenMutex = 2,
+            ForbiddenStatusTrigger = 4, ForbiddenEffectInSequence = 8;
+
+        public static bool SetForbidden(FightBattleUnitState unit, FightBattleStatusState status,
+            int type, bool value)
+        {
+            if (unit == null || status == null || !unit.Statuses.Contains(status)
+                || type == ForbiddenApplicatorDie && !status.ForbiddenOnApplicatorDie) return false;
+            bool before = status.ForbiddenType != 0;
+            status.ForbiddenType = value ? status.ForbiddenType | type : status.ForbiddenType & ~type;
+            if (before == (status.ForbiddenType != 0)) return false;
+            // The original event carries the previous overall forbidden value.
+            unit.StatusForbiddenChanged?.Invoke(unit, status, before);
+            return true;
+        }
+
         /// <summary>Initializes the official round bookkeeping when the status is first applied.</summary>
         public static void Initialize(FightBattleStatusState status, int round)
         {
@@ -191,6 +208,7 @@ namespace Zjcs.Combat.Official
                 ScalePropWhenChangeStacked = template.ScalePropWhenChangeStacked,
                 ApplyIgnoreResilience = template.ApplyIgnoreResilience,
                 ForbiddenOnApplicatorDie = template.ForbiddenOnApplicatorDie,
+                ForbiddenType = template.ForbiddenType,
                 AiMoreHit = template.AiMoreHit,
                 HasCreatorDamageBoost = template.HasCreatorDamageBoost,
                 DamageProcess = template.DamageProcess == null ? null : template.DamageProcess.Copy(),
@@ -270,6 +288,8 @@ namespace Zjcs.Combat.Official
                 RoundStartDelayRoundType = template.RoundStartDelayRoundType,
                 RoundStartDelayRulesResolved = template.RoundStartDelayRulesResolved,
                 RoundStartFilterRulesResolved = template.RoundStartFilterRulesResolved,
+                RoundStartForbiddenRulesResolved = template.RoundStartForbiddenRulesResolved,
+                RoundStartTryAtNotForbidden = template.RoundStartTryAtNotForbidden,
                 RoundStartRequiresFriendWithoutStatuses = template.RoundStartRequiresFriendWithoutStatuses,
                 RoundStartFriendIncludeApplicator = template.RoundStartFriendIncludeApplicator,
                 RoundStartFriendExcludedStatuses = Copy(template.RoundStartFriendExcludedStatuses),

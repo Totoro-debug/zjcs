@@ -5,6 +5,26 @@ namespace Zjcs.Combat.Official
 {
     public sealed partial class FightBattleExecutor
     {
+        private FightBattleUnitState roundStartNotForbiddenListener;
+
+        private void OnStatusForbiddenChanged(FightBattleUnitState owner,
+            FightBattleStatusState status, bool wasForbidden)
+        {
+            var listener = roundStartNotForbiddenListener;
+            if (!wasForbidden || status.ForbiddenType != 0 || !status.RoundStartTryAtNotForbidden
+                || listener == null || movementStartContext == null || statusCatalog == null
+                || !owner.Statuses.Contains(status) || !status.RoundStartRulesSupported
+                || FightStatusLifecycle.ResolveTargetUnitId(status, status.RoundStartListenTarget, units) != listener.Id
+                || status.RoundStartNotForbiddenListenerId == listener.Id
+                    && status.RoundStartNotForbiddenRound == listener.SkillState.Round) return;
+            // The first complete release consumes this round's extra attempt, even if
+            // probability/conditions fail. Record it before invoking nested effects.
+            status.RoundStartNotForbiddenListenerId = listener.Id;
+            status.RoundStartNotForbiddenRound = listener.SkillState.Round;
+            ExecuteRoundStartStatus(owner, listener, status, false, status.RoundStartPhase);
+            RebuildBattleProperties();
+        }
+
         private void RestoreRoundStartDefinition(FightBattleStatusState status)
         {
             if (!status.HasRoundStartTrigger
@@ -14,6 +34,7 @@ namespace Zjcs.Combat.Official
                     && status.RoundStartMergeRulesResolved
                     && status.RoundStartDelayRulesResolved
                     && status.RoundStartFilterRulesResolved
+                    && status.RoundStartForbiddenRulesResolved
                     // Earlier checkpoints parsed merged-count definitions but intentionally blocked them.
                     && (!status.RoundStartMergeMaxCountOnStackRound || status.RoundStartRulesSupported)) return;
             var definition = statusCatalog.CreateStatus(status.ClassId, status.OwnerId,
@@ -22,6 +43,11 @@ namespace Zjcs.Combat.Official
                 replacementProperties: status.ReplacementProperties, blessPropertyScales: status.BlessPropertyScales);
             status.RoundStartRulesSupported = definition.RoundStartRulesSupported;
             status.RoundStartSourceRulesResolved = true;
+            if (!status.RoundStartForbiddenRulesResolved)
+            {
+                status.RoundStartTryAtNotForbidden = definition.RoundStartTryAtNotForbidden;
+                status.RoundStartForbiddenRulesResolved = true;
+            }
             if (!status.RoundStartFilterRulesResolved)
             {
                 status.RoundStartRequiresFriendWithoutStatuses = definition.RoundStartRequiresFriendWithoutStatuses;

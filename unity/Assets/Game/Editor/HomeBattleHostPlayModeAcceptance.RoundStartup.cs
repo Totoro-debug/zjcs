@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using Zjcs.Combat.Official;
 using Zjcs.Presentation.Combat;
@@ -9,6 +10,92 @@ namespace Zjcs.Editor
 {
     public static partial class HomeBattleHostPlayModeAcceptance
     {
+        private static RoundForbiddenProbe ConfigureRoundForbiddenProbe(OfficialBattleRuntimeController controller)
+        {
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_ROUND_FORBIDDEN_ACCEPTANCE") != "1") return null;
+            var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
+            var checkpoint = controller.Checkpoint;
+            foreach (var unit in checkpoint.Units)
+            {
+                long hp = unit.Id == 1 ? 5000000L : 2000000L;
+                foreach (var property in unit.Properties.Concat(unit.BaseProperties))
+                    if (property.Id == catalog.PropertyType("MaxHp")) property.Value = hp;
+                unit.MaxHp = unit.LastMaxHp = unit.Hp = unit.Turn.Hp = hp;
+                ConfigureHpRecoverySkill(unit.Skills.First(value => value.Slot == 0), 1000L, false);
+            }
+            var player = checkpoint.Units.Single(value => value.Id == 1);
+            var template = catalog.CreateStatus(25117, 1, 1, 9925117, 25117, 0, 5, 20, 1);
+            var status = FightStatusLifecycle.Apply(player, template, player.SkillState.Round, template.InstanceId);
+            var executor = (FightBattleExecutor)typeof(OfficialBattleRuntimeController)
+                .GetField("executor", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(controller);
+            var hits = (FightBattleHitExecutor)typeof(FightBattleExecutor)
+                .GetField("hitExecutor", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(executor);
+            var settlement = (FightDamageSettlement)typeof(FightBattleHitExecutor)
+                .GetField("settlement", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(hits);
+            return new RoundForbiddenProbe(player, status, settlement);
+        }
+
+        private sealed class RoundForbiddenProbe
+        {
+            private readonly FightBattleUnitState player;
+            private readonly FightBattleStatusState status;
+            private readonly FightDamageSettlement settlement;
+            private int lastRound, releaseRounds;
+            public bool ReadyToCapture => releaseRounds >= 2;
+            public RoundForbiddenProbe(FightBattleUnitState player, FightBattleStatusState status,
+                FightDamageSettlement settlement)
+            {
+                this.player = player; this.status = status; this.settlement = settlement;
+                settlement.SourceHit += OnHit;
+            }
+            private void OnHit(FightDamageEvent hit)
+            {
+                if (hit.SourceId != player.Id) return;
+                int round = player.SkillState.Round;
+                if (round == lastRound) return;
+                lastRound = round;
+                Require(status.RoundStartTriggeredCount == round + releaseRounds,
+                    "Original 25117 did not perform its normal round-start invocation.");
+                var produced = player.Statuses.Single(value => value.ClassId == 24392);
+                // Isolated event-input fixture: an actual hit supplies the active round and
+                // timing. Original forbidden-reason producers require separate migration.
+                for (int attempt = 0; attempt < 2; attempt++)
+                {
+                    FightStatusLifecycle.SetForbidden(player, status, FightStatusLifecycle.ForbiddenMutex, true);
+                    FightStatusLifecycle.SetForbidden(player, status, FightStatusLifecycle.ForbiddenStatusTrigger, true);
+                    int before = status.RoundStartTriggeredCount;
+                    FightStatusLifecycle.SetForbidden(player, status, FightStatusLifecycle.ForbiddenMutex, false);
+                    Require(status.RoundStartTriggeredCount == before && status.ForbiddenType != 0,
+                        "Partial release invoked a still-disabled original status.");
+                    FightStatusLifecycle.SetForbidden(player, status, FightStatusLifecycle.ForbiddenStatusTrigger, false);
+                    Require(status.RoundStartTriggeredCount == before + (attempt == 0 ? 1 : 0)
+                        && player.Statuses.Contains(produced)
+                        && produced.SourceSkillRank == 5 && produced.SourceSkillLevel == 20,
+                        "Original 25117 lost its extra attempt, repeated it, or replaced its live buff/cultivation.");
+                }
+                releaseRounds++;
+                Require(status.RoundStartNotForbiddenListenerId == player.Id
+                    && status.RoundStartNotForbiddenRound == round,
+                    "Original 25117 did not retain its per-listener round quota.");
+                Debug.Log("[Round forbidden hosts] personalRound=" + round + ", normal=" + round
+                    + ", extra=" + releaseRounds + ", actual=" + status.RoundStartTriggeredCount);
+            }
+            public void ObserveStep(OfficialBattleRuntimeController controller)
+            {
+                string saved = FightBattleCheckpointSerializer.Save(controller.Checkpoint);
+                Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
+                    "Forbidden-release checkpoint did not preserve its reason mask/quota.");
+            }
+            public void Verify(string host, FightBattleCheckpoint checkpoint)
+            {
+                settlement.SourceHit -= OnHit;
+                int rounds = checkpoint.Units.Single(value => value.Id == player.Id).SkillState.Round;
+                Require(releaseRounds >= 3 && status.RoundStartTriggeredCount == rounds + releaseRounds,
+                    host + " did not execute normal plus one extra invocation across real turns.");
+                Debug.Log("[Round forbidden hosts] " + host + ": original 25117/24392, controlled hit-event releases, quota and reload passed.");
+            }
+        }
+
         private static RoundDelayProbe ConfigureRoundDelayProbe(FightBattleCheckpoint checkpoint)
         {
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_ROUND_DELAY_ACCEPTANCE") != "1") return null;
