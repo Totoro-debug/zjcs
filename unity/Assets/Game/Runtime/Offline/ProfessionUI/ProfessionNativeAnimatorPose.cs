@@ -11,10 +11,14 @@ namespace Zjcs.Offline.ProfessionUI
         public readonly struct Frame
         {
             public readonly AnimationClip Clip;
+            public readonly ProfessionNativeAnimationChannels Animation;
             public readonly float Time;
+            public readonly float MotionTime;
             public readonly bool Loop;
-            internal Frame(AnimationClip clip, float time, bool loop)
-            { Clip = clip; Time = time; Loop = loop; }
+            public readonly bool PlaysBackward;
+            internal Frame(AnimationClip clip, ProfessionNativeAnimationChannels animation, float time,
+                float motionTime, bool loop, bool playsBackward)
+            { Clip = clip; Animation = animation; Time = time; MotionTime = motionTime; Loop = loop; PlaysBackward = playsBackward; }
         }
 
         private readonly Animator animator;
@@ -56,6 +60,7 @@ namespace Zjcs.Offline.ProfessionUI
             var state = animator.GetCurrentAnimatorStateInfo(0);
             float time = state.normalizedTime * clip.length;
             if (float.IsNaN(time) || float.IsInfinity(time)) throw new InvalidOperationException("Animator motion time is not finite.");
+            float motionTime = time;
             // Original name-carrier clips retain their animation duration. A
             // mismatched binding must be restored, never stretched to fit.
             if (Mathf.Abs(clip.length - animation.Duration) > 1f / 30f + .00001f)
@@ -64,7 +69,8 @@ namespace Zjcs.Offline.ProfessionUI
                 ? time - Mathf.Floor(time / animation.Duration) * animation.Duration
                 : Mathf.Clamp(time, 0, animation.Duration);
             solve(skeleton, animation, time, state.loop);
-            return new Frame(clip, time, state.loop);
+            return new Frame(clip, animation, time, motionTime, state.loop,
+                animator.speed * state.speed * state.speedMultiplier < 0);
         }
     }
 }

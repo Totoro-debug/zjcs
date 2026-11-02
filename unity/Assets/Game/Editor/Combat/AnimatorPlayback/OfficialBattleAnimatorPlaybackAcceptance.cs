@@ -69,6 +69,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".scenePlayerAppearance", false);
             SessionState.SetBool(Key + ".scenePlayerAnimator", false);
             SessionState.SetBool(Key + ".sceneAnimatorPose", false);
+            SessionState.SetBool(Key + ".sceneMecanimParts", false);
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 180);
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             Hook();
@@ -150,7 +151,9 @@ namespace Zjcs.Editor.Combat
             if (errors == 0)
             {
                 SessionState.SetInt(Key + ".result", 0);
-                Debug.Log(SessionState.GetBool(Key + ".sceneAnimatorPose", false)
+                Debug.Log(SessionState.GetBool(Key + ".sceneMecanimParts", false)
+                    ? "Native bound Animator pose and original Mecanim part notification lifecycle passed; pre-physics fixture only, full mixing/physics and production battle/Player integration remain required."
+                    : SessionState.GetBool(Key + ".sceneAnimatorPose", false)
                     ? "Current native unmixed Animator pose passed actual graph time/speed/loop, original override identity, native matrices/pixels and rejection checks; full mixing/physics and production battle/Player integration remain required."
                     : SessionState.GetBool(Key + ".scenePlayerAnimator", false)
                     ? "Current original player Animator selection passed native controller/profile/rendered lifecycle and original playable graph checks; native Mecanim pose consumption, full physics/mixing and battle/Player integration remain required."

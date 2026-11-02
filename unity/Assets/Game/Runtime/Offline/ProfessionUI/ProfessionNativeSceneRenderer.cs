@@ -8,8 +8,8 @@ using Zjcs.Official.ProfessionUI;
 
 namespace Zjcs.Offline.ProfessionUI
 {
-    // Independent Unity drawing endpoint. The pose producer owns animation,
-    // mixing and constraints; this module never substitutes a sampled pose.
+    // Independent Unity drawing endpoint. An explicitly bound pose producer owns
+    // animation, mixing and constraints; no sampled-pose fallback is installed.
     [RequireComponent(typeof(ProfessionNativeSceneMeshPart))]
     public sealed partial class ProfessionNativeSceneRenderer : MonoBehaviour,
         IProfessionAppearanceSceneRenderer, IProfessionAppearancePartRenderer,
@@ -109,8 +109,8 @@ namespace Zjcs.Offline.ProfessionUI
                     yield return resources.MaterialForPage(initializedAsset, render.Page);
         }
 
-        public void UpdateAnimationAndMesh() => LateUpdateMesh();
-        private void LateUpdate() { if (State != null) LateUpdateMesh(); }
+        public void UpdateAnimationAndMesh() { UpdateBoundAnimatorPose(); LateUpdateMesh(); }
+        private void LateUpdate() { if (State != null) { UpdateBoundAnimatorPose(); LateUpdateMesh(); } }
 
         public void LateUpdateMesh()
         {
@@ -246,6 +246,7 @@ namespace Zjcs.Offline.ProfessionUI
                 main.MeshRenderer.enabled = false;
             }
             State = null; initializedAsset = null; settings = null;
+            ClearAnimatorNotification();
         }
         private void OnDestroy() { Release(); DisposeSceneParts(); }
     }

@@ -33,7 +33,7 @@ def main():
                           "historical_source_identity": prior["source"]})
     proof = {
         "manifest": "884_156692",
-        "operation": "Independently bind completed native character poses to original application renderer/part interfaces, preserving current atlas identity, prefab MeshRenderer fields, clipping/PMA, source-slot separators and material callbacks. Never sample or substitute animation, physics or mixing in the drawing endpoint.",
+        "operation": "Independently bind native character poses to original application renderer/part interfaces, preserving current atlas identity, prefab MeshRenderer fields, clipping/PMA, source-slot separators and material callbacks. LateUpdateMesh only consumes completed geometry; an optional explicit native Animator producer is called before UpdateAnimationAndMesh/LateUpdate drawing. No pose, physics or mixing fallback is installed.",
         "inputs": [identity(path) for path in [
             "assets/reference/battle-animation/scene-core-source-manifest.json",
             "assets/reference/battle-animation/scene-texture-source-manifest.json",

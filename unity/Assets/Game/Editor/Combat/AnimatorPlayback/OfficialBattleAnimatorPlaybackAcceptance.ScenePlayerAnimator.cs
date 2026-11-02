@@ -40,6 +40,9 @@ namespace Zjcs.Editor.Combat
                 {
                     instances++;
                     var animator = root.AddComponent<Animator>(); animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                    if (SessionState.GetBool(Key + ".sceneMecanimParts", false))
+                        root.GetComponent<ProfessionNativeSceneRenderer>().BindAnimatorPose(
+                            new ProfessionNativeAnimatorPose(animator, ProfessionNativeConstraintPose.EvaluateBeforePhysics));
                     var player = root.AddComponent<PlayerAnimatorAppearance>();
                     player.ConfigurePlayerAppearance(graph); player.Animator = animator; player.PlayerPhase = PlayerPhase.Game;
                     player.ConfigureAnimatorResources(catalog.Contains, Load);
@@ -101,6 +104,7 @@ namespace Zjcs.Editor.Combat
                     }
                     else player.ReapplyOwnAnimator();
                     if (SessionState.GetBool(Key + ".sceneAnimatorPose", false)) CheckSceneAnimatorPose(player);
+                    if (SessionState.GetBool(Key + ".sceneMecanimParts", false)) CheckSceneMecanimParts(player);
                     Debug.Log("[Current player Animator] " + selectedController.name + ": direct=" + !useController
                         + "; original idle/skill playable, controller restoration and reapply passed. Native body poses remain explicit pre-physics diagnostics.");
                 }

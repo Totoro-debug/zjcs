@@ -217,6 +217,8 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 
 当前玩家外观与默认资料输入：`prepare_battle_scene_player_appearance.py` 逐字节核对当前应用与共享迁移来源，从实际APK的 Luban 分包完整解码所选 `884_156692` 的9张表，保留外观消费字段、枚举和集合顺序；全局设置按当前生成构造器读取，包括独立 Luban 向量结构，严格消费全部载荷。`PlayerAppearance` 直接迁自当前应用源码，动画名称组合规则恢复原 ScriptableObject 字段；当前表、默认剑／杖设置和规则使用独立 `Combat/SceneAppearance` 地址。历史共享解析器仅比较已迁移的 PostParse／查询方法，不把已变化、未迁移的随机选择方法纳入复用结论。原程序集／metadata、167份构造器源码、39项应用身份比对、配置对象及输入输出哈希见[玩家外观来源](battle-animation/scene-player-appearance-source-manifest.json)。不读取或复制动画SDK实现；新增载荷未进入完整快照。
 
+当前原生场景Mecanim部件通知：`ProfessionNativeSceneRenderer.BindAnimatorPose` 显式接入原生Animator姿态生产者，并通过既有 `IProfessionAppearancePartMecanim` 交给当前原版 `AppearanceMecanimPartHandler`。原应用来源、独立接入、验证入口及输入输出哈希见[场景Mecanim部件来源](battle-animation/scene-mecanim-parts-source-manifest.json)。该记录不表示完整混合、物理或正式战斗宿主已经完成。
+
 当前原生Animator姿态输入：`ProfessionNativeAnimatorPose` 将真实Unity控制器的原clip身份与时钟传给显式姿态求解委托，当前原控制器、人物输入及既有约束端分别保留来源身份；没有读取SDK实现。独立端口、验证入口、编译依赖、生成器及相关输入输出哈希见[Animator姿态来源](battle-animation/native-animator-pose-source-manifest.json)。该记录不表示混合、物理或正式战斗场景已接通。
 
 当前骨骼缓存配置：`record_battle_mecanim_cache_scope.py` 核对所选884应用程序集、9份游戏应用源码、实际配置bundle和其骨骼／clip引用，读取原 `BoneTransformCacheManagerConfig`。男女各自的配置列表只有 `map/idle_01`、`map/run_01`；原对象字节、APK／云端归属、配置字段、输入及工具哈希见[骨骼缓存来源](battle-animation/mecanim-cache-scope-source-manifest.json)。仅记录来源，不读取动画SDK源码。

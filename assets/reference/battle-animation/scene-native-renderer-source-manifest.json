@@ -1,6 +1,6 @@
 {
   "manifest": "884_156692",
-  "operation": "Independently bind completed native character poses to original application renderer/part interfaces, preserving current atlas identity, prefab MeshRenderer fields, clipping/PMA, source-slot separators and material callbacks. Never sample or substitute animation, physics or mixing in the drawing endpoint.",
+  "operation": "Independently bind native character poses to original application renderer/part interfaces, preserving current atlas identity, prefab MeshRenderer fields, clipping/PMA, source-slot separators and material callbacks. LateUpdateMesh only consumes completed geometry; an optional explicit native Animator producer is called before UpdateAnimationAndMesh/LateUpdate drawing. No pose, physics or mixing fallback is installed.",
   "inputs": [
     {
       "path": "assets/reference/battle-animation/scene-core-source-manifest.json",
@@ -34,7 +34,7 @@
   "outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.cs",
-      "sha256": "e01c61bb6659232fdb5f4cc972ef0104d333c4a6acc495c2e6db9984f0fb1153"
+      "sha256": "09958980a901261aecee301288cd6122e19d7fd06357d5bcb89f37f5f82927d5"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneMeshSeparator.cs",
@@ -102,7 +102,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.cs",
-      "sha256": "abbaf846eb1fb7b716b2602ffaf713719d8c69f5b78bbf8d329b2ee30a95080f"
+      "sha256": "fbd91a3cbc9475fb5954220d44d7c06b54f37a400754edfc4ac0058e729de615"
     }
   ],
   "follower_application_reuse": [
@@ -137,7 +137,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_scene_native_renderer.py",
-    "sha256": "ee54b11696af18d4958d5bb1e3f70ebe70b42c74930c18b3e49c0f78a77bd710"
+    "sha256": "3159e71f05801e9eb32f145f1a079af04379db330553d5660e2342217c71e315"
   },
   "binding": {
     "catalog": "Combat/SceneCharacters/appearance-resources",

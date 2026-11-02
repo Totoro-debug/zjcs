@@ -1,0 +1,72 @@
+{
+  "manifest": "884_156692",
+  "application": [
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceMecanimPartHandler.cs",
+        "sha256": "38e7289a0a72b39b1302a538e9cdb9557537c3c11dc83183264edb54c6ba49a8"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceMecanimPartHandler.cs",
+        "sha256": "0a5c48095841b68f3f8255effdc3eef13478e7b5eb5b74ae4c7bb4f74ed1b7a4"
+      }
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSkeletonPart.cs",
+        "sha256": "0c70913261248eedaf7f00d8bdb1c6bc53533b466ae79bc1144fd7fad47f84ce"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceSkeletonPart.cs",
+        "sha256": "d73ddb7b7be018985b33dff5123bb4e854acf9cfada920aeb8f5fab761e539da"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.Animator.cs",
+      "sha256": "92e3c9e28a2fdecd1e95d26485a6e7185463b7b119d528f3ea9b4bd511fe5858"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.Animator.cs.meta",
+      "sha256": "78bbd418dabbaa148056058d30c638634b1535cabac3e85eba5885a48f90fe4f"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneMecanimParts.cs",
+      "sha256": "9fa69c4e876f826e143d44d6381c9934734028a75eef14fada560c3fa5602819"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneMecanimParts.cs.meta",
+      "sha256": "7b764cb24721e1513e80db7441969f14aa24dc2aba6f5e354cbbdacc0daf7425"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "assets/reference/battle-animation/renderer-parts-source-manifest.json",
+      "sha256": "19a6671de28c1e523240b0a2b1cdb479bf1ac0c3a0d2976e22cbb48677765af0"
+    },
+    {
+      "path": "assets/reference/battle-animation/scene-native-renderer-source-manifest.json",
+      "sha256": "9baae992a6d926de2ed36b3cfac44e62fe6ad766792a3632e024bd4573711e07"
+    },
+    {
+      "path": "assets/reference/battle-animation/scene-player-animator-source-manifest.json",
+      "sha256": "24d227b464202aea17c3e1451b14f134d90d07cff3894e8db31435f9768e0977"
+    },
+    {
+      "path": "assets/reference/battle-animation/native-animator-pose-source-manifest.json",
+      "sha256": "63562f4071fc474045d9f7a5dbbb2a42cd84548e258b63459c84daf5316a8cd2"
+    }
+  ],
+  "generator": {
+    "path": "scripts/record_battle_scene_mecanim_parts.py",
+    "sha256": "27ee6841337769cf9e3593be76fea939f66c0dfa3ac51e0bcb82af423e3cf3b2"
+  },
+  "binding": "Explicit native pose producer; UpdateAnimationAndMesh and LateUpdate consume the actual Animator before drawing. Native animation identities, original motion names and actual current/previous input times cross the existing original Mecanim part interface.",
+  "limits": [
+    "Only the existing unmixed single-layer pose domain is accepted. Rejected transitions emit no part notification.",
+    "The actual Play Mode fixture explicitly chooses EvaluateBeforePhysics; independent weapon poses still use an explicit diagnostic producer. Full physics, mixing, culling/update timing and production battle/Player integration remain pending.",
+    "The original current initial weapon config has only map source mappings, so Game idle/hit names do not request a new independent weapon motion. No extra mappings or art are created.",
+    "The validation observes and forwards the actual original part interface; callback scalar arguments are native Animator inputs, not a claim of full SDK callback parity. No SDK implementation is used or copied."
+  ]
+}

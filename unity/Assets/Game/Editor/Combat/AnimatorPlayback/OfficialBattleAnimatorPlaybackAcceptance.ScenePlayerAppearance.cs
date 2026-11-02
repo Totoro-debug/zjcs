@@ -66,15 +66,21 @@ namespace Zjcs.Editor.Combat
                     var native = root.AddComponent<ProfessionNativeSceneRenderer>(); native.Configure(catalog);
                     var bindings = new OfflineProfessionSceneAppearanceBindings(catalog, native, manager, config);
                     var partBindings = new ScenePartBindings(config);
-                    var parts = root.AddComponent<AppearanceRendererPartHandler>(); parts.ConfigureParts(partBindings);
+                    AppearanceRendererPartHandler parts = SessionState.GetBool(Key + ".sceneMecanimParts", false)
+                        ? root.AddComponent<AppearanceMecanimPartHandler>() : root.AddComponent<AppearanceRendererPartHandler>();
+                    parts.ConfigureParts(partBindings);
                     var slot = new GameObject("PartSlot").transform; slot.SetParent(root.transform, false);
                     var poolResources = new OfflineProfessionScenePartPoolBindings(weapons, weaponMaterials, partBindings,
                         new SceneDiagnosticWeaponPoses(), () => true);
                     using var pool = new CharacterPartEntryProvider(poolResources);
                     parts.ConfigureRenderer(native, slot, pool, SortingLayer.IDToName(1182434123), 0);
                     var appearance = root.AddComponent<ProfessionNativeSceneAppearance>();
-                    appearance.Configure(bindings, parts, state => ProfessionNativeConstraintPose.EvaluateBeforePhysics(
-                        state, new ProfessionNativeAnimationChannels(state.Source, graph.GetProfessionIdStr(graph.Profession) + "/idle_01"), .4f, false));
+                    appearance.Configure(bindings, parts, state =>
+                    {
+                        if (SessionState.GetBool(Key + ".sceneMecanimParts", false)) native.ApplyAnimatorPose();
+                        else ProfessionNativeConstraintPose.EvaluateBeforePhysics(state,
+                            new ProfessionNativeAnimationChannels(state.Source, graph.GetProfessionIdStr(graph.Profession) + "/idle_01"), .4f, false);
+                    });
                     var character = root.AddComponent<SceneCharacter>(); character.Configure(bindings, parts);
                     var observer = root.AddComponent<ScenePlayerAppearanceObserver>(); observer.Character = character;
                     var player = createPlayer == null ? root.AddComponent<ScenePlayer>() : createPlayer(root, graph);
@@ -92,6 +98,21 @@ namespace Zjcs.Editor.Combat
                         player.Init(17, onComplete: () => completions++);
                         Require(player.Inited && player.IsSelf && events == 1 && completions == 1,
                             "original self registration, refresh, event and initialization callback");
+                        if (SessionState.GetBool(Key + ".sceneMecanimParts", false))
+                        {
+                            int automatic = 0;
+                            var before = Enumerable.Range(0, native.State.Pose.Count).Select(native.State.Pose.World).ToArray();
+                            ProfessionPartClipApplied applied = (animation, name, layer, weight, time, lastTime, backward) =>
+                            { if (time > 0) automatic++; };
+                            native.OnClipApplied += applied;
+                            try
+                            {
+                                for (int frame = 0; automatic < 2 && frame < 60; frame++) yield return null;
+                                Require(automatic >= 2 && before.Where((matrix, i) => matrix != native.State.Pose.World(i)).Any(),
+                                    "actual Play Mode LateUpdate consumes the live Animator and changes native bones without a manual sampling call");
+                            }
+                            finally { native.OnClipApplied -= applied; }
+                        }
                         afterInit?.Invoke(player);
                         Require(saved == JsonUtility.ToJson(profile), "default restoration and player refresh preserve persisted local wardrobe bytes");
                         Require(appearance.Skins.Contains("performFace") && !appearance.Skins.Contains("map_01")
