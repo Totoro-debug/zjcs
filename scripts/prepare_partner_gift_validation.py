@@ -10,7 +10,7 @@ def prepare(work):
     project = work / 'unity'
     assets = project / 'Assets'
     modules = ('Offline/Progression', 'Offline/Equipment', 'Offline/Skills', 'Offline/State',
-               'Official/SkillRules', 'Official/Partners')
+               'Official/SkillRules', 'Official/Partners', 'Official/PlayerHealth')
     for module in modules:
         source = ROOT / 'unity/Assets/Game/Runtime' / module
         for path in source.rglob('*'):

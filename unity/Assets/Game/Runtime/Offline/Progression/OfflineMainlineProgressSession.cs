@@ -76,6 +76,7 @@ namespace Zjcs.Offline.Progression
         public OfflineEquipmentProfile Equipment = new OfflineEquipmentProfile();
         public OfflineSkillProfile Skills = new OfflineSkillProfile();
         public OfflinePetProgress Pets = new OfflinePetProgress();
+        public OfflinePlayerHealthProgress Health = new OfflinePlayerHealthProgress();
         public OfflineCharacterPropertyProgress CharacterProperties = new OfflineCharacterPropertyProgress();
         public OfflineNpcTravelProgress NpcTravel = new OfflineNpcTravelProgress();
         public List<OfflineStoryProgress> Stories = new List<OfflineStoryProgress>();
@@ -1238,6 +1239,7 @@ namespace Zjcs.Offline.Progression
                 return false;
             Normalize(save);
             if (save.Player.Experience < 0 || save.Player.Level < 0 || save.Player.Rank < 0
+                || !OfflinePlayerHealthProgress.IsValid(save.Player.Health)
                 || save.CreatedAtUnixSeconds < 0
                 || save.Player.BlessingExperience < 0 || save.Player.SubRank < 0 || save.Player.SeasonRank < 0
                 || save.Player.SeasonBaseLevel < 0 || save.Player.MaxProfessionRank < 0 || save.Player.GuildName == null
@@ -1404,6 +1406,10 @@ namespace Zjcs.Offline.Progression
             OfflineSkillProgression.Normalize(save.Player.Skills);
             if (save.Player.Pets == null) save.Player.Pets = new OfflinePetProgress();
             OfflinePetProgress.Normalize(save.Player.Pets, save.Player.PetGacha);
+            // Confirmed offline migration: absent HP starts full. The initializer
+            // is deliberately applied only to missing data, never existing zero HP.
+            if (save.Player.Health == null) save.Player.Health = new OfflinePlayerHealthProgress
+            { HpPercentVal = 1f, HpUpdateTimeTicks = DateTime.UtcNow.Ticks };
             if (save.Player.CharacterProperties == null)
                 save.Player.CharacterProperties = new OfflineCharacterPropertyProgress();
             OfflineCharacterPropertyProgress.Normalize(save.Player.CharacterProperties);

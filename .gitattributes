@@ -1870,3 +1870,16 @@ scripts/prepare_mainline_map_interactions.py text eol=lf
 assets/reference/official-map/map16-interactions-source-manifest.json text eol=lf
 unity/Assets/Official/World/Map/16/Source/interaction-tables.json* text eol=lf
 unity/Assets/Game/Resources/Map16/interactions.json* text eol=lf
+
+# Original player health and partner avatar HP binding.
+scripts/record_partner_player_health_sources.py text eol=lf
+scripts/prepare_partner_player_health_validation.py text eol=lf
+scripts/prepare_partner_gift_validation.py text eol=lf
+assets/reference/partner-player-health-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/PlayerHealth/** text eol=lf
+unity/Assets/Game/Runtime/Official/PlayerHealth.meta text eol=lf
+unity/Assets/Game/Runtime/Offline/Progression/OfflinePlayerHealth.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerPlayerHpBindings.cs* text eol=lf
+unity/Assets/Game/Editor/PlayerHealth/** text eol=lf
+unity/Assets/Game/Editor/PlayerHealth.meta text eol=lf
+unity/Assets/Game/Runtime/Offline/Progression/Zjcs.Offline.Progression.asmdef text eol=lf

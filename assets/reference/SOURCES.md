@@ -374,3 +374,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 伙伴主角头像的选定884_156692原摄影棚、PlayerPortraitSettings／AppearanceConfig对象字段、三个原Sprite及Windows转换依赖见[主角头像来源](partner-player-portraits-source-manifest.json)。`prepare_partner_player_portraits.py` 记录APK优先／匹配缓存、CAB／对象身份、枚举列表恢复、显式脚本／资源绑定和逐文件哈希；当前角色与外观输入引用各自已校验来源，不混标历史头像配置，本批未生成完整素材快照。
 
 鲸背岛交互配置来源见 [map16-interactions-source-manifest.json](official-map/map16-interactions-source-manifest.json)。`prepare_mainline_map_interactions.py` 按地图ID复用所选884_156692的定义输入与公共英雄结果索引转换器，额外解码原状态效果／周期随机奖励表；记录APK优先／匹配缓存、原构造器源码、模板来源凭据、逐文件输出哈希与工具，不混入历史871配置。本批无新增美术或完整素材快照。
+
+伙伴主角血量读取／恢复采用所选884_156692的Common.Player、FormulaHandler、TimeManager与BattleFormulaHandler，原头像血条采用同版PlayerIconMeHpSliderNormal；输入、代码绑定与依赖哈希见[主角血量来源](partner-player-health-source-manifest.json)，由 `record_partner_player_health_sources.py` 记录。本批不新增美术载荷或素材快照。
