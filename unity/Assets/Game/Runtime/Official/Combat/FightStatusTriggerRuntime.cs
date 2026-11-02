@@ -1158,7 +1158,10 @@ namespace Zjcs.Combat.Official
                     if (AppendThresholdSkill(unit, status, trigger, random, configuredTriggerSkills,
                         triggerSkills, units)) fired++;
                 status.HpLessThanTriggeredCount++;
-                if (status.HpLessThanAutoDestroy)
+                // AutoDestory: remove when the configured trigger count is exhausted.
+                // A negative maximum is unlimited, so it never reaches that boundary.
+                if (status.HpLessThanAutoDestroy && status.HpLessThanMaxCount >= 0
+                    && status.HpLessThanTriggeredCount >= status.HpLessThanMaxCount)
                 {
                     FightStatusLifecycle.End(unit, status);
                     break;

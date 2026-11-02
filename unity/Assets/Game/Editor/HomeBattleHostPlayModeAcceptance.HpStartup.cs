@@ -37,7 +37,20 @@ namespace Zjcs.Editor
             bool summon = Environment.GetEnvironmentVariable("ZJCS_BATTLE_HP_STARTUP_SUMMON_ACCEPTANCE") == "1";
             if (summon) legacy.HpTriggerSkills.Insert(0, 10710);
             player.Statuses.Add(legacy);
-            return new HpStartupProbe(summon);
+            FightBattleStatusState counted = null;
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HP_COUNT_ACCEPTANCE") == "1")
+            {
+                // Exercise finite automatic removal in the actual startup scheduler. This
+                // isolated copy omits effects so the existing real-skill probes stay distinct.
+                counted = catalog.CreateStatus(24202, 1, 1, 9914204);
+                counted.ClassId = 9914204;
+                counted.HpLessThanMaxCount = 3;
+                counted.HpLessThanTryAfterInvoke = true;
+                counted.HpLessThanSkills.Clear();
+                counted.HpLessThanStatuses.Clear();
+                player.Statuses.Add(counted);
+            }
+            return new HpStartupProbe(summon, counted);
         }
 
         private sealed class HpStartupProbe
@@ -49,13 +62,18 @@ namespace Zjcs.Editor
             private int summonId;
             private OfficialBattleSceneView sceneView;
             private bool renderedSummon;
-            public HpStartupProbe(bool requiresSummon) { this.requiresSummon = requiresSummon; }
+            private readonly FightBattleStatusState counted;
+            public HpStartupProbe(bool requiresSummon, FightBattleStatusState counted)
+            { this.requiresSummon = requiresSummon; this.counted = counted; }
             public void ObserveStep(OfficialBattleRuntimeController controller)
             {
                 if (observedStep) return;
                 var cp = controller.Checkpoint;
                 var step = cp.Receipts.Last().Event;
                 Require(cp.Units.All(value => value.SkillState.Round == 0), "HP startup consumed a personal turn.");
+                if (counted != null)
+                    Require(counted.HpLessThanTriggeredCount == 3 && !cp.Units[0].Statuses.Contains(counted),
+                        "HP automatic removal did not wait for its configured three invocations.");
                 var original = step.SkillCasts.Where(value => value.SkillEntityId == 10170).ToArray();
                 var moving = step.SkillCasts.Where(value => value.SkillEntityId == 13500).ToArray();
                 Require(original.Length == 1 && moving.Length == 1
@@ -122,6 +140,7 @@ namespace Zjcs.Editor
                     + " no personal turn consumed; original marker bound by real Animator; checkpoint passed."
                     + " Skill 41 bone motion remains unconverted and is not asserted by this probe.");
                 if (requiresSummon) Debug.Log("[HP startup hosts] " + host + ": original 10710 -> 3181 spawn event and visible native geometry passed.");
+                if (counted != null) Debug.Log("[HP startup hosts] " + host + ": finite HP threshold invoked three times before automatic removal.");
             }
         }
     }

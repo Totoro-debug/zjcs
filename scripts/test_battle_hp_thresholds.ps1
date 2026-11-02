@@ -305,8 +305,31 @@ $repeat.HpLessThanAutoDestroy = $true
 $owner.Statuses.Clear(); $owner.Statuses.Add($repeat)
 [void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::Apply($owner, $catalog, $false,
     $null, [Zjcs.Combat.Official.FightRandomStream]::new(17), $null, $units)
-Assert-Hp ($repeat.HpLessThanTriggeredCount -eq 1 -and $owner.Statuses.Count -eq 0) `
+Assert-Hp ($repeat.HpLessThanTriggeredCount -eq 2 -and $owner.Statuses.Count -eq 0) `
     'HP-less-than automatic removal or count handling failed.'
+
+# AutoDestory means remove at the configured maximum, not at the first invocation.
+# Keep the real threshold skill and vary only count/continuous-check options.
+foreach ($maximum in 0, 3, -1) {
+    $counted = $catalog.CreateStatus(24202, 1, 1, 9)
+    $counted.HpLessThanMaxCount = $maximum
+    $counted.HpLessThanTryAfterInvoke = $false
+    $owner.Hp = 1
+    $owner.Statuses.Clear(); $owner.Statuses.Add($counted)
+    $invocations.Clear()
+    for ($attempt = 1; $attempt -le 4; $attempt++) {
+        [void][Zjcs.Combat.Official.FightStatusTriggerRuntime]::Apply($owner, $catalog, $false,
+            $null, [Zjcs.Combat.Official.FightRandomStream]::new(17), $null, $units, $invocations)
+        $expectedCount = $(if ($maximum -lt 0) { $attempt } else { [Math]::Min($attempt, $maximum) })
+        Assert-Hp ($counted.HpLessThanTriggeredCount -eq $expectedCount) `
+            "HP threshold max=$maximum consumed the wrong trigger count at attempt $attempt."
+        $expectedAlive = $maximum -le 0 -or $attempt -lt $maximum
+        Assert-Hp ($owner.Statuses.Contains($counted) -eq $expectedAlive) `
+            "HP threshold max=$maximum removed its status before the limit at attempt $attempt."
+        Assert-Hp ($invocations.Count -eq $expectedCount) `
+            "HP threshold max=$maximum lost or repeated its configured skill."
+    }
+}
 
 Write-Output 'Battle HP-threshold checks passed: official death status, configured skill, HP limit, count and auto-removal.'
 
