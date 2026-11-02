@@ -285,6 +285,10 @@ namespace Zjcs.Combat.Official
         public bool HpLessThanNotMeetRemoveStatus;
         public int HpLessThanTargetType;
         public bool HpLessThanTryAfterInvoke;
+        public bool HpLessThanChangeStackResolved;
+        public float HpLessThanChangeStackRate;
+        public int HpLessThanChangeStackUnit;
+        [NonSerialized] internal bool HpLessThanEvaluating;
         public bool HpLessThanReportSkillTriggerCount;
         public List<int> HpLessThanCharacterTypes = new List<int>();
         public List<int> HpLessThanDeactivatePassiveSkills = new List<int>();

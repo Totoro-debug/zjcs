@@ -5,6 +5,21 @@ namespace Zjcs.Combat.Official
 {
     public sealed partial class FightBattleExecutor
     {
+        private void RestoreHpChangeStackDefinition(FightBattleStatusState status)
+        {
+            if (!status.HasHpLessThan || status.HpLessThanChangeStackResolved) return;
+            // Older checkpoints contain the listener and its counters but not ChangeStackCfg.
+            // Restore only that missing definition, preserving the saved stack/count boundary.
+            var definition = statusCatalog.CreateStatus(status.ClassId, status.OwnerId,
+                status.CreatorId, status.InstanceId, status.RootSkillId, status.ApplyingSkillItemId,
+                status.SourceSkillRank, status.SourceSkillLevel, status.SourceSubRank,
+                status.SourceProperties, replacementProperties: status.ReplacementProperties,
+                blessPropertyScales: status.BlessPropertyScales);
+            status.HpLessThanChangeStackRate = definition.HpLessThanChangeStackRate;
+            status.HpLessThanChangeStackUnit = definition.HpLessThanChangeStackUnit;
+            status.HpLessThanChangeStackResolved = true;
+        }
+
         private static bool IsPendingHpStart(FightBattleUnitState owner, FightBattleStatusState status)
         {
             return owner != null && !owner.Ended && status != null && !status.HpStartChecked
@@ -31,7 +46,7 @@ namespace Zjcs.Combat.Official
             var simple = new List<FightBattleStatusStateTrigger>();
             var configured = new List<FightBattleStatusSkillInvocation>();
             int changed = FightStatusTriggerRuntime.Apply(owner, statusCatalog, true, simple,
-                random, null, units, configured, status);
+                random, null, units, configured, status, ExecuteHpStartupSkills);
             foreach (var trigger in simple)
                 configured.Add(new FightBattleStatusSkillInvocation
                 {

@@ -1279,6 +1279,13 @@ namespace Zjcs.Combat.Official
             }
             if (hpLessThan != null)
             {
+                result.HpLessThanChangeStackResolved = true;
+                var changeStack = Component(hpLessThan, "ChangeStackCfg");
+                if (changeStack != null)
+                {
+                    result.HpLessThanChangeStackRate = Float(changeStack, "BasePercent", 0f);
+                    result.HpLessThanChangeStackUnit = Int(changeStack, "ChangeUnit");
+                }
                 result.HpLessThanReplacementProperties = ReadReplacementProperties(hpLessThan,
                     "StatusReplacePropertyValues");
                 result.HpLessThanCharacterTypes.AddRange(IntArray(hpLessThan, "CharacterTypes"));

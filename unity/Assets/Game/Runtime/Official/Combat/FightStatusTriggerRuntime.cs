@@ -1059,122 +1059,183 @@ namespace Zjcs.Combat.Official
             FightRandomStream random = null, FightBattleSkillDefinition sourceSkill = null,
             IReadOnlyList<FightBattleUnitState> units = null,
             List<FightBattleStatusSkillInvocation> configuredTriggerSkills = null,
-            FightBattleStatusState startingStatus = null)
+            FightBattleStatusState startingStatus = null,
+            Action<List<FightBattleStatusSkillInvocation>> executeHpSkills = null)
         {
             if (unit == null || catalog == null || unit.Statuses == null || unit.MaxHp <= 0) return 0;
             int applied = 0;
-            var initialStatuses = new List<FightBattleStatusState>(unit.Statuses);
-            for (int i = initialStatuses.Count - 1; i >= 0; i--)
+            // HP-less-than listens to HitTargetType relative to the status applicator,
+            // rather than StatusTargetType relative to the unit whose HP changed.
+            var owners = !atStart && units != null
+                ? new List<FightBattleUnitState>(units) : new List<FightBattleUnitState> { unit };
+            if (!owners.Contains(unit)) owners.Insert(0, unit);
+            foreach (var owner in owners)
             {
-                FightBattleStatusState status = initialStatuses[i];
-                if (status == null || !unit.Statuses.Contains(status)
-                    || startingStatus != null && !ReferenceEquals(status, startingStatus)) continue;
-                if (!FightSkillTriggerPolicy.AllowsStatus(sourceSkill, status)) continue;
-                if (status.HpTriggerPer > 0f)
+                if (owner == null || owner.Ended) continue;
+                var initialStatuses = new List<FightBattleStatusState>(owner.Statuses);
+                for (int i = initialStatuses.Count - 1; i >= 0; i--)
                 {
-                    bool hasStatuses = status.HpTriggerStatuses != null && status.HpTriggerStatuses.Count > 0;
-                    bool hasSkills = status.HpTriggerSkills != null && status.HpTriggerSkills.Count > 0;
-                    if ((hasStatuses || hasSkills) && (!atStart || status.HpTriggerAtStart)
-                        && (status.HpTriggerMaxCount < 0
-                            || status.HpTriggeredCount < status.HpTriggerMaxCount)
-                        && unit.Hp / (double)unit.MaxHp <= status.HpTriggerPer)
+                    FightBattleStatusState status = initialStatuses[i];
+                    if (status == null || !owner.Statuses.Contains(status)
+                        || startingStatus != null && !ReferenceEquals(status, startingStatus)) continue;
+                    if (!FightSkillTriggerPolicy.AllowsStatus(sourceSkill, status)) continue;
+                    if (owner == unit && status.HpTriggerPer > 0f)
                     {
-                        foreach (int statusId in status.HpTriggerStatuses ?? new List<int>())
+                        bool hasStatuses = status.HpTriggerStatuses != null && status.HpTriggerStatuses.Count > 0;
+                        bool hasSkills = status.HpTriggerSkills != null && status.HpTriggerSkills.Count > 0;
+                        if ((hasStatuses || hasSkills) && (!atStart || status.HpTriggerAtStart)
+                            && (status.HpTriggerMaxCount < 0
+                                || status.HpTriggeredCount < status.HpTriggerMaxCount)
+                            && unit.Hp / (double)unit.MaxHp <= status.HpTriggerPer)
                         {
-                            if (statusId <= 0) continue;
-                            int instanceId = 1;
-                            foreach (FightBattleStatusState existing in unit.Statuses)
-                                if (existing != null && existing.InstanceId >= instanceId)
-                                    instanceId = existing.InstanceId + 1;
-                            FightBattleStatusState template = catalog.CreateStatus(statusId, unit.Id,
-                                status.CreatorId <= 0 ? unit.Id : status.CreatorId, instanceId,
-                                status.RootSkillId, status.ApplyingSkillItemId, status.SourceSkillRank,
-                                status.SourceSkillLevel, status.SourceSubRank, status.SourceProperties,
-                                0, status.ReplacementProperties, status.BlessPropertyScales);
-                            template.ReportSource = FightBattleStatusReportSource.Resolve(status).Copy();
-                            FightStatusLifecycle.Apply(unit, template, -1, instanceId, random);
+                            foreach (int statusId in status.HpTriggerStatuses ?? new List<int>())
+                            {
+                                if (statusId <= 0) continue;
+                                int instanceId = 1;
+                                foreach (FightBattleStatusState existing in unit.Statuses)
+                                    if (existing != null && existing.InstanceId >= instanceId)
+                                        instanceId = existing.InstanceId + 1;
+                                FightBattleStatusState template = catalog.CreateStatus(statusId, unit.Id,
+                                    status.CreatorId <= 0 ? unit.Id : status.CreatorId, instanceId,
+                                    status.RootSkillId, status.ApplyingSkillItemId, status.SourceSkillRank,
+                                    status.SourceSkillLevel, status.SourceSubRank, status.SourceProperties,
+                                    0, status.ReplacementProperties, status.BlessPropertyScales);
+                                template.ReportSource = FightBattleStatusReportSource.Resolve(status).Copy();
+                                FightStatusLifecycle.Apply(unit, template, -1, instanceId, random);
+                            }
+                            if (triggerSkills != null && status.HpTriggerSkills != null)
+                                foreach (int skillId in status.HpTriggerSkills)
+                                    if (skillId > 0)
+                                        triggerSkills.Add(new FightBattleStatusStateTrigger
+                                        {
+                                            EntityId = skillId,
+                                            SourceSkillRank = Math.Max(1, status.SourceSkillRank),
+                                            SourceSkillLevel = Math.Max(1, status.SourceSkillLevel),
+                                            SourceSubRank = Math.Max(0, status.SourceSubRank),
+                                            BlessPropertyScales = FightStatusPropertyModifiers.Copy(
+                                                status.BlessPropertyScales)
+                                        });
+                            status.HpTriggeredCount++;
+                            applied++;
                         }
-                        if (triggerSkills != null && status.HpTriggerSkills != null)
-                            foreach (int skillId in status.HpTriggerSkills)
-                                if (skillId > 0)
-                                    triggerSkills.Add(new FightBattleStatusStateTrigger
-                                    {
-                                        EntityId = skillId,
-                                        SourceSkillRank = Math.Max(1, status.SourceSkillRank),
-                                        SourceSkillLevel = Math.Max(1, status.SourceSkillLevel),
-                                        SourceSubRank = Math.Max(0, status.SourceSubRank),
-                                        BlessPropertyScales = FightStatusPropertyModifiers.Copy(
-                                            status.BlessPropertyScales)
-                                    });
-                        status.HpTriggeredCount++;
-                        applied++;
                     }
+                    if (atStart && units != null)
+                    {
+                        foreach (var changedUnit in new List<FightBattleUnitState>(units))
+                            if (ApplyHpLessThan(owner, changedUnit, status, catalog, true, units, random,
+                                triggerSkills, configuredTriggerSkills, executeHpSkills)) applied++;
+                    }
+                    else if (ApplyHpLessThan(owner, unit, status, catalog, atStart, units, random,
+                        triggerSkills, configuredTriggerSkills, executeHpSkills)) applied++;
+                    if (owner == unit && ApplyHpLimit(unit, status, catalog, atStart, units, random,
+                        configuredTriggerSkills)) applied++;
                 }
-                if (ApplyHpLessThan(unit, status, catalog, atStart, units, random,
-                    triggerSkills, configuredTriggerSkills)) applied++;
-                if (ApplyHpLimit(unit, status, catalog, atStart, units, random,
-                    configuredTriggerSkills)) applied++;
             }
             return applied;
         }
 
-        private static bool ApplyHpLessThan(FightBattleUnitState unit,
+        private static bool ApplyHpLessThan(FightBattleUnitState owner, FightBattleUnitState changed,
             FightBattleStatusState status, FightOfficialCombatCatalog catalog, bool atStart,
             IReadOnlyList<FightBattleUnitState> units, FightRandomStream random,
             List<FightBattleStatusStateTrigger> triggerSkills,
-            List<FightBattleStatusSkillInvocation> configuredTriggerSkills)
+            List<FightBattleStatusSkillInvocation> configuredTriggerSkills,
+            Action<List<FightBattleStatusSkillInvocation>> executeHpSkills)
         {
-            if (status == null || !status.HasHpLessThan
+            if (status == null || !status.HasHpLessThan || status.HpLessThanEvaluating
+                || changed == null || changed.Ended || changed.MaxHp <= 0
+                || !owner.Statuses.Contains(status)
                 || atStart && !status.HpLessThanTryAtStart
-                || status.HpLessThanTargetType > 0 && units != null
-                    && FightStatusLifecycle.ResolveTargetUnitId(status,
-                        status.HpLessThanTargetType, units) != unit.Id
+                || !AroundTargetTypeMatches(owner, changed, status.HpLessThanTargetType)
                 || status.HpLessThanMaxCount >= 0
                     && status.HpLessThanTriggeredCount >= status.HpLessThanMaxCount
                 || status.HpLessThanCharacterTypes.Count > 0
-                    && !status.HpLessThanCharacterTypes.Contains(unit.CharacterType)) return false;
-            if (status.HpLessThanCheckExistForbidden && HasForbiddenTriggerStatus(unit)) return false;
-            bool absolute = status.HpLessThan >= 0 && unit.Hp <= status.HpLessThan;
-            bool percentage = status.HpLessThanPercentage >= 0f
-                && unit.Hp / (double)Math.Max(1L, unit.MaxHp) <= status.HpLessThanPercentage;
-            if (!absolute && !percentage || unit.Hp <= 0 && !status.HpLessThanInvokeOnDie)
+                    && !status.HpLessThanCharacterTypes.Contains(changed.CharacterType)) return false;
+            if (status.HpLessThanCheckExistForbidden && HasForbiddenTriggerStatus(owner)) return false;
+            if (!HpLessThanMeets(changed, status))
             {
                 if (status.HpLessThanNotMeetRemoveStatus)
-                    RemoveHpLessThanTriggeredStatuses(unit, status);
+                    RemoveHpLessThanTriggeredStatuses(owner, status);
                 return false;
             }
             int fired = 0;
-            int immediateChecks = 0;
-            do
+            status.HpLessThanEvaluating = true;
+            try
             {
-                immediateChecks++;
-                foreach (int statusId in status.HpLessThanDeactivatePassiveSkills)
-                    unit.Statuses.RemoveAll(value => value != null && value.ClassId == statusId);
-                foreach (int statusId in status.HpLessThanActivatePassiveSkills)
-                    ActivateStatus(unit, status, statusId, catalog, random);
-                foreach (FightBattleStatusStateTrigger trigger in status.HpLessThanStatuses)
-                    if (ApplyThresholdStatus(unit, status, trigger, catalog, units, random)) fired++;
-                foreach (FightBattleStatusStateTrigger trigger in status.HpLessThanSkills)
-                    if (AppendThresholdSkill(unit, status, trigger, random, configuredTriggerSkills,
-                        triggerSkills, units)) fired++;
-                status.HpLessThanTriggeredCount++;
-                // AutoDestory: remove when the configured trigger count is exhausted.
-                // A negative maximum is unlimited, so it never reaches that boundary.
-                if (status.HpLessThanAutoDestroy && status.HpLessThanMaxCount >= 0
-                    && status.HpLessThanTriggeredCount >= status.HpLessThanMaxCount)
+                do
                 {
-                    FightStatusLifecycle.End(unit, status);
-                    break;
+                    foreach (int statusId in status.HpLessThanDeactivatePassiveSkills)
+                        owner.Statuses.RemoveAll(value => value != null && value.ClassId == statusId);
+                    foreach (int statusId in status.HpLessThanActivatePassiveSkills)
+                        ActivateStatus(owner, status, statusId, catalog, random);
+                    foreach (FightBattleStatusStateTrigger trigger in status.HpLessThanStatuses)
+                        if (ApplyThresholdStatus(owner, status, trigger, catalog, units, random,
+                            changed, true)) fired++;
+                    var invocations = executeHpSkills == null ? configuredTriggerSkills
+                        : new List<FightBattleStatusSkillInvocation>();
+                    foreach (FightBattleStatusStateTrigger trigger in status.HpLessThanSkills)
+                        if (AppendThresholdSkill(owner, status, trigger, random, invocations,
+                            triggerSkills, units, changed, true)) fired++;
+                    status.HpLessThanTriggeredCount++;
+                    if (status.IsOpenStack && status.HpLessThanChangeStackUnit != 0
+                        && Roll(status.HpLessThanChangeStackRate, random))
+                    {
+                        if (status.HpLessThanChangeStackUnit < 0)
+                            ConsumeStacks(owner, status, (int)Math.Min(int.MaxValue,
+                                -(long)status.HpLessThanChangeStackUnit), catalog, random);
+                        else FightStatusLifecycle.AddStack(status, status.HpLessThanChangeStackUnit);
+                    }
+                    // Execute the immediate invocation before testing the resulting HP. The
+                    // running marker prevents its own cure callback from recursively entering
+                    // this same listener; other configured listeners remain eligible.
+                    if (executeHpSkills != null && invocations.Count > 0) executeHpSkills(invocations);
+                    if (status.HpLessThanAutoDestroy && status.HpLessThanMaxCount >= 0
+                        && status.HpLessThanTriggeredCount >= status.HpLessThanMaxCount)
+                        FightStatusLifecycle.End(owner, status);
+                    if (!owner.Statuses.Contains(status) || !status.HpLessThanTryAfterInvoke
+                        || executeHpSkills == null && status.HpLessThanMaxCount < 0) break;
                 }
-                if (!status.HpLessThanTryAfterInvoke || immediateChecks >= 1
-                    && status.HpLessThanMaxCount < 0) break;
-                absolute = status.HpLessThan >= 0 && unit.Hp <= status.HpLessThan;
-                percentage = status.HpLessThanPercentage >= 0f
-                    && unit.Hp / (double)Math.Max(1L, unit.MaxHp) <= status.HpLessThanPercentage;
+                while (HpLessThanMeets(changed, status) && (status.HpLessThanMaxCount < 0
+                    || status.HpLessThanTriggeredCount < status.HpLessThanMaxCount));
+                return fired > 0;
             }
-            while ((absolute || percentage) && (status.HpLessThanMaxCount < 0
-                || status.HpLessThanTriggeredCount < status.HpLessThanMaxCount));
-            return fired > 0;
+            finally { status.HpLessThanEvaluating = false; }
+        }
+
+        private static bool HpLessThanMeets(FightBattleUnitState changed, FightBattleStatusState status)
+        {
+            return changed != null && !changed.Ended && changed.MaxHp > 0
+                && (changed.Hp > 0 || status.HpLessThanInvokeOnDie)
+                && (status.HpLessThan >= 0 && changed.Hp <= status.HpLessThan
+                    || status.HpLessThanPercentage >= 0f
+                        && changed.Hp / (double)changed.MaxHp <= status.HpLessThanPercentage);
+        }
+
+        private static int ResolveHpTriggerTarget(FightBattleUnitState owner,
+            FightBattleUnitState changed, FightBattleStatusState status, int targetType,
+            IReadOnlyList<FightBattleUnitState> units)
+        {
+            // FightStatusHpLessThanComponentInfo: TriggerSource is the applicator;
+            // TriggerTarget is the character whose HP changed.
+            switch (targetType)
+            {
+                case 0: case 1: case 2: return owner.Id;
+                case 3: return status.CreatorId;
+                case 5: return changed.Id;
+                case 8: return owner.MasterId;
+                case 4:
+                    return units == null ? 0 : units.Where(value => value != null
+                        && value.Id != owner.Id && value.Side == owner.Side
+                        && FightBattleTargeting.IsSelectable(value))
+                        .OrderBy(value => Math.Abs(value.X - owner.X) + Math.Abs(value.Y - owner.Y))
+                        .Select(value => value.Id).FirstOrDefault();
+                case 7:
+                    return units == null ? 0 : units.Where(value => value != null
+                        && value.Id != owner.Id && value.Side == owner.Side && value.CharacterType == 1
+                        && FightBattleTargeting.IsSelectable(value))
+                        .OrderBy(value => value.Hp / (double)Math.Max(1L, value.MaxHp))
+                        .Select(value => value.Id).FirstOrDefault();
+                default: return 0;
+            }
         }
 
         private static bool HasForbiddenTriggerStatus(FightBattleUnitState unit)
@@ -1329,7 +1390,8 @@ namespace Zjcs.Combat.Official
         private static bool ApplyThresholdStatus(FightBattleUnitState owner,
             FightBattleStatusState source, FightBattleStatusStateTrigger trigger,
             FightOfficialCombatCatalog catalog, IReadOnlyList<FightBattleUnitState> units,
-            FightRandomStream random, FightBattleUnitState targetOverride = null)
+            FightRandomStream random, FightBattleUnitState targetOverride = null,
+            bool hpChangeContext = false)
         {
             if (trigger == null || trigger.EntityId <= 0 || trigger.AffectedByProp
                 || !Roll(trigger.BasePercent, random)) return false;
@@ -1337,8 +1399,10 @@ namespace Zjcs.Combat.Official
             if (trigger.TargetWithoutStatusIds != null
                 && trigger.TargetWithoutStatusIds.Any(id => filterTarget.Statuses.Exists(value =>
                     value != null && value.ClassId == id))) return false;
-            int targetId = trigger.ApplyTarget == 0 ? filterTarget.Id
-                : FightStatusLifecycle.ResolveTargetUnitId(source, trigger.ApplyTarget, units);
+            int targetId = hpChangeContext
+                ? ResolveHpTriggerTarget(owner, filterTarget, source, trigger.ApplyTarget, units)
+                : trigger.ApplyTarget == 0 ? filterTarget.Id
+                    : FightStatusLifecycle.ResolveTargetUnitId(source, trigger.ApplyTarget, units);
             FightBattleUnitState target = FindUnit(units, targetId) ?? filterTarget;
             if (!FightBattleTargeting.IsSelectable(target) && target.Hp > 0) return false;
             int instanceId = 1;
@@ -1368,7 +1432,7 @@ namespace Zjcs.Combat.Official
             FightRandomStream random, List<FightBattleStatusSkillInvocation> configured,
             List<FightBattleStatusStateTrigger> simple,
             IReadOnlyList<FightBattleUnitState> units,
-            FightBattleUnitState targetOverride = null)
+            FightBattleUnitState targetOverride = null, bool hpChangeContext = false)
         {
             if (trigger == null || trigger.EntityId <= 0 || trigger.AffectedByProp
                 || !Roll(trigger.BasePercent, random)) return false;
@@ -1378,16 +1442,24 @@ namespace Zjcs.Combat.Official
                 if (simple != null) simple.Add(copy);
                 return true;
             }
-            int sourceId = trigger.Source == 0 ? owner.Id
-                : FightStatusLifecycle.ResolveTargetUnitId(source, trigger.Source, units);
-            int targetId = trigger.Target == 0 ? (targetOverride == null ? owner.Id : targetOverride.Id)
-                : FightStatusLifecycle.ResolveTargetUnitId(source, trigger.Target, units);
-            int targetPositionId = trigger.TargetPos == 1 ? targetId
+            int sourceId = hpChangeContext
+                ? ResolveHpTriggerTarget(owner, targetOverride, source, trigger.Source, units)
+                : trigger.Source == 0 ? owner.Id
+                    : FightStatusLifecycle.ResolveTargetUnitId(source, trigger.Source, units);
+            int targetId = hpChangeContext
+                ? ResolveHpTriggerTarget(owner, targetOverride, source, trigger.Target, units)
+                : trigger.Target == 0 ? (targetOverride == null ? owner.Id : targetOverride.Id)
+                    : FightStatusLifecycle.ResolveTargetUnitId(source, trigger.Target, units);
+            int targetPositionId = trigger.TargetPos == 1
+                ? hpChangeContext ? targetOverride.Id : targetId
                 : targetOverride == null ? owner.Id : targetOverride.Id;
             configured.Add(new FightBattleStatusSkillInvocation
             {
                 Trigger = copy, SourceUnitId = sourceId > 0 ? sourceId : owner.Id,
-                SelectTargets = trigger.Source == 0 && trigger.Target == 0,
+                SelectTargets = trigger.Source == 0 && trigger.Target == 0
+                    || hpChangeContext && trigger.UseAI,
+                DamageFactor = hpChangeContext && trigger.StackedCountToDamageFactor
+                    ? Math.Max(0, source.StackCount) : 1.0,
                 TargetUnitId = targetId > 0 ? targetId : owner.Id,
                 TargetPositionUnitId = targetPositionId > 0 ? targetPositionId : owner.Id,
                 AllowDeadSource = source.HpLessThanInvokeOnDie && owner.Hp <= 0,

@@ -75,6 +75,7 @@ namespace Zjcs.Combat.Official
                             if (status.SkillReplay == null) status.SkillReplay = statusCatalog.StatusReplayDefinition(status.ClassId);
                             status.AiMoreHit = statusCatalog.StatusMoreHit(status.ClassId);
                             status.HasCreatorDamageBoost = statusCatalog.StatusHasCreatorDamageBoost(status.ClassId);
+                            RestoreHpChangeStackDefinition(status);
                         }
                 units.Add(unit);
                 unitById.Add(unit.Id, unit);
@@ -849,7 +850,8 @@ namespace Zjcs.Combat.Official
                     ApplyHitMove(actor, target, skill, hit, movements);
                     ApplyHemophagia(actor, hit, damage, hitDelay, skill, damageEvents);
                     FightStatusTriggerRuntime.Apply(target, statusCatalog, false, hpTriggerSkills,
-                        random, skill, units, configuredHpTriggerSkills);
+                        random, skill, units, configuredHpTriggerSkills,
+                        executeHpSkills: ExecuteHpStartupSkills);
                     RebuildBattleProperties();
                     float endedDuration = 0f, endedActionDuration = -1f;
                     ExecuteAccumulatedDamageEnds(casts, damageEvents, movements,

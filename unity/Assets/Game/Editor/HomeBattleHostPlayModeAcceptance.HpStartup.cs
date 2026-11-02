@@ -53,6 +53,66 @@ namespace Zjcs.Editor
             return new HpStartupProbe(summon, counted);
         }
 
+        private static HpListenerProbe ConfigureHpListenerProbe(FightBattleCheckpoint checkpoint)
+        {
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HP_LISTENER_ACCEPTANCE") != "1") return null;
+            var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
+            var player = checkpoint.Units.Single(value => value.Id == 1);
+            foreach (var property in player.Properties.Concat(player.BaseProperties))
+                if (property.Id == catalog.PropertyType("MaxHp")) property.Value = 1000000L;
+            player.MaxHp = player.LastMaxHp = 1000000L;
+            player.Hp = player.Turn.Hp = 300000L;
+            var status = catalog.CreateStatus(24478, 1, 1, 9914478, 0, 0, 5, 20, 1);
+            status.StackCount = 5;
+            player.Statuses.Add(status);
+            return new HpListenerProbe(status);
+        }
+
+        private sealed class HpListenerProbe
+        {
+            private readonly FightBattleStatusState status;
+            private bool observed;
+            public bool RenderedCure { get; private set; }
+            public bool ReadyToCapture { get; private set; }
+            public HpListenerProbe(FightBattleStatusState status) { this.status = status; }
+            public void ObserveStep(OfficialBattleRuntimeController controller)
+            {
+                if (observed) return;
+                var cp = controller.Checkpoint;
+                var step = cp.Receipts.Last().Event;
+                var heals = step.DamageEvents.Where(value => value.SkillEntityId == 12620).ToArray();
+                Require(heals.Length == 5 && heals.All(value => value.IsCure && value.Damage > 0
+                    && value.SourceId == 1 && value.TargetId == 1 && value.Delay == 0f),
+                    "Original 24478 did not execute five immediate positive 12620 cures.");
+                Require(status.HpLessThanTriggeredCount == 5 && status.StackCount == 0
+                    && !cp.Units[0].Statuses.Contains(status) && cp.Units.All(value => value.SkillState.Round == 0),
+                    "Original 24478 did not exhaust its five stacks before the first personal turn.");
+                Require(cp.Units[0].Hp == 300000L + heals.Sum(value => value.Damage),
+                    "Original 24478 did not retain its real HP change.");
+                observed = true;
+                Debug.Log("[HP listeners hosts] original 24478 -> 12620: five cures, total="
+                    + heals.Sum(value => value.Damage) + "; stack exhaustion and no personal turn passed.");
+            }
+            public void ObservePresentation()
+            {
+                if (!observed) return;
+                var floats = UnityEngine.Object.FindObjectsOfType<OfficialBattleDamageFloat>()
+                    .Where(value => value.TargetId == 1 && value.EffectType == 3
+                        && value.GetComponentsInChildren<Renderer>().Any(renderer => renderer.isVisible)).ToArray();
+                RenderedCure |= floats.Length > 0;
+                ReadyToCapture = floats.Any(value => (float)typeof(OfficialBattleDamageFloat)
+                    .GetField("elapsed", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(value) >= 0.15f);
+            }
+            public void Verify(string host, FightBattleCheckpoint checkpoint)
+            {
+                Require(observed && RenderedCure, host + " did not render its native HP listener cure float.");
+                string saved = FightBattleCheckpointSerializer.Save(checkpoint);
+                Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
+                    host + " changed its HP listener checkpoint after reload.");
+                Debug.Log("[HP listeners hosts] " + host + ": native cure float and checkpoint reload passed.");
+            }
+        }
+
         private sealed class HpStartupProbe
         {
             private bool observedStep;

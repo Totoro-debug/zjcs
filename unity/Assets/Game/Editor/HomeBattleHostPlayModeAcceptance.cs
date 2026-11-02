@@ -386,6 +386,7 @@ namespace Zjcs.Editor
             StatusReplayProbe statusReplays = ConfigureStatusReplayProbe(checkpoint);
             TriggerTimingProbe triggerTiming = ConfigureTriggerTimingProbe(checkpoint);
             HpStartupProbe hpStartup = ConfigureHpStartupProbe(checkpoint);
+            HpListenerProbe hpListener = ConfigureHpListenerProbe(checkpoint);
             int initialCounter = checkpoint.Counter;
             controller.StepCompleted += result => {
                 checkpoint = result.Checkpoint;
@@ -395,6 +396,7 @@ namespace Zjcs.Editor
                 statusReplays?.Observe(checkpoint);
                 triggerTiming?.ObserveStep(controller);
                 hpStartup?.ObserveStep(controller);
+                hpListener?.ObserveStep(controller);
                 if (checkpoint.Counter == initialCounter + 1 || checkpoint.Finished)
                     Debug.Log("[Battle hosts] " + name + " step=" + checkpoint.Counter
                         + " finished=" + checkpoint.Finished);
@@ -454,14 +456,24 @@ namespace Zjcs.Editor
                 Require(controller.SpeedIndex != previousSpeed, name + " speed HUD input was not consumed.");
             float deadline = Time.realtimeSinceStartup + 180;
             bool captured = false;
+            bool capturedCure = false;
             float previousTimeScale = Time.timeScale;
             try
             {
-                Time.timeScale = 5;
+                Time.timeScale = hpListener == null ? 5 : 1;
                 while (runner != null)
                 {
                     triggerTiming?.ObservePresentation();
                     hpStartup?.ObservePresentation();
+                    hpListener?.ObservePresentation();
+                    if (!capturedCure && hpListener != null && hpListener.ReadyToCapture)
+                    {
+                        float captureTimeScale = Time.timeScale;
+                        Time.timeScale = 0f;
+                        try { yield return Capture(output, name + "-hp-cure"); }
+                        finally { Time.timeScale = captureTimeScale; }
+                        capturedCure = true;
+                    }
                     replays?.ObservePresentation();
                     Require(Time.realtimeSinceStartup < deadline, name + " battle timed out.");
                     if (!captured && checkpoint.Counter > initialCounter + 2)
@@ -492,6 +504,7 @@ namespace Zjcs.Editor
             statusReplays?.Verify(name, checkpoint);
             triggerTiming?.Verify(name, checkpoint);
             hpStartup?.Verify(name, checkpoint);
+            hpListener?.Verify(name, checkpoint);
             VerifyEquipmentBattlePassives(name, checkpoint, true);
             yield return SettleUi();
             yield return Capture(output, name + "-result");
