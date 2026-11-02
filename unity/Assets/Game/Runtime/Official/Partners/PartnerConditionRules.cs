@@ -73,6 +73,44 @@ namespace Zjcs.Official.Partners
             internal MeetRequirement(int classId, int count, string op) { ClassId = classId; Count = count; Op = op; }
         }
 
+            public List<(int, int)> GetMeetNpcItems(int npcClassId)
+    {
+        NpcInfo npcInfo = npcs.Get(npcClassId);
+        if (npcInfo == null)
+        {
+            return null;
+        }
+        if (npcInfo.CanMeetCondition == null || npcInfo.CanMeetCondition.Type == ConditionType.None)
+        {
+            return null;
+        }
+        List<HasItemCondition> list = new List<HasItemCondition>();
+        if (npcInfo.CanMeetCondition.IsComposite)
+        {
+            foreach (ICondition condition in (npcInfo.CanMeetCondition as CompositeCondition).GetConditions())
+            {
+                if (condition.Type == ConditionType.HasItem)
+                {
+                    list.Add(condition as HasItemCondition);
+                }
+            }
+        }
+        else
+        {
+            if (npcInfo.CanMeetCondition.Type != ConditionType.HasItem)
+            {
+                return null;
+            }
+            list.Add(npcInfo.CanMeetCondition as HasItemCondition);
+        }
+        List<(int, int)> list2 = new List<(int, int)>();
+        foreach (HasItemCondition item in list)
+        {
+            list2.Add((item.ClassId, item.Count));
+        }
+        return list2;
+    }
+
         private ICondition Create(Dictionary<string, object> node)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));

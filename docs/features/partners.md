@@ -306,11 +306,15 @@ Home 赠礼溢出回调现打开原窗口，保留原标题、说明、按钮、
 
 `prepare_partner_star_god_ui.py` 迁移选定 `884_156692` 的 `NpcPanelStarGodContent`、`StarGodNpcItemGroupItem`、`StarGodNpcItemContent` 与 `StarGodNpcItem`，保留地图探索 Boss 排除、星神身份、未相遇隐藏、原置顶／好感排序、向上取整分组、单个首组居中及多组顶部锚点。卡片按原顺序更新相遇状态、名字、地点、链接等级、立绘 pivot、信物与置顶图；复用现有原 `ImageLocator`。原禁用错误 53897、可相遇请求、已相遇详情顺序、解锁动画及其长度乘 0.8 后的等级提示保持；对象池停用／重新绑定取消旧延迟并释放图片句柄。12 份原输入与 12 份代码／元数据输出见[星神控制器来源](../../assets/reference/partner-star-god-ui-source-manifest.json)。玩家、库存、窗口与提示图仍通过显式服务端口承接，尚未接入完整正式宿主。
 
-`prepare_partner_star_god_native.py` 从原 `NpcPanel` 取完整星神区域，仅解除根父级，并沿实际外部组件引用恢复 2,552 对象的 `StarGodNpcItemGroupItem`；跨 prefab 引用保留确切组件 fileID，不用根 GameObject 替代。保留原坐标、层级、材质、粒子、网格及动画，按当前配置及 CN 地区图片选择提取 10608／10708／10801 的原静态立绘和中文文本。两条原星神开场／解锁 Wwise 事件沿实际 bank／媒体解码为 PCM；普通点击复用已有同事件原 PCM。Windows Mesh 导出中的空二进制字段改用 Unity 自身的空标量格式，修复原 `null` 文本导致的顶点数据读取断言及 UI 几何线程崩溃；原位置、索引、UV、通道及其他字段保留。资源先核对 APK，再取所选云端与已验证 Windows 转换缓存，245 项实际安装文件／目录及 39 份脚本绑定见[星神资源来源](../../assets/reference/partner-star-god-native-source-manifest.json)。`OfficialPartnerStarGodAssetCatalog` 显式绑定实际 Resources 页面、三个星神、图片和文字；本批未纳入素材快照。
+`prepare_partner_star_god_native.py` 从原 `NpcPanel` 取完整星神区域，仅解除根父级，并沿实际外部组件引用恢复 2,552 对象的 `StarGodNpcItemGroupItem`；跨 prefab 引用保留确切组件 fileID，不用根 GameObject 替代。保留原坐标、层级、材质、粒子、网格及动画，按当前配置及 CN 地区图片选择提取 10608／10708／10801 的原静态立绘、九种结识信物图标和中文文本。两条原星神开场／解锁 Wwise 事件沿实际 bank／媒体解码为 PCM；普通点击复用已有同事件原 PCM。Windows Mesh 导出中的空二进制字段改用 Unity 自身的空标量格式，修复原 `null` 文本导致的顶点数据读取断言及 UI 几何线程崩溃；原位置、索引、UV、通道及其他字段保留。资源先核对 APK，再取所选云端与已验证 Windows 转换缓存，284 项实际安装文件／目录及 39 份脚本绑定见[星神资源来源](../../assets/reference/partner-star-god-native-source-manifest.json)。`OfficialPartnerStarGodAssetCatalog` 显式绑定实际 Resources 页面、三个星神、图片路径／原 GUID 和文字；本批未纳入素材快照。
 
-`prepare_partner_star_god_validation.py` 建立包含原 UI 粒子程序集的隔离工程，以实际安装的 Resources 目录运行 Unity URP Play Mode。原按钮的模拟指针射线验证详情端口、禁用分支、相遇请求、原音频播放、动画延迟及拥有对象身份更新；另验证原分组／居中、置顶优先、链接等级事件、长整型比较溢出、关闭取消提示、重新开启及图片／事件释放。核对 Mesh 原四顶点和六索引，已查看单个、三人分组及解锁后的三帧 450×800 GPU 画面。库存／信物图标、实际相遇事务与存档、详情窗口内容、完整分页入口及 Windows Player 不在此隔离验证范围；不据此记为伙伴功能完成。
+`OfflinePartnerStarGodUiServices` 将相遇、置顶及好感事件接到现有本地名册事务；保存成功后才通知原卡片，连续相遇请求在事务完成前合并。已拥有星神保留同一运行对象，先更新等级、经验、时间与置顶字段再通知；等级通知单独保留上次已通知等级，避免同次置顶／等级更新或读状态操作吞掉等级变化。预览记录不写入存档。`PartnerConditionRules.GetMeetNpcItems` 直接迁移原 `NpcHelper` 方法，只枚举复合条件的直接子项并保留原顺序，不用普通伙伴的首个信物进度替代三种材料。`PartnerStarGodPanelView` 在停用父级内实例化原页面，绑定对象池、图像、语言、声音与宿主注入后启用；关闭时先停用，恢复外层图像／语言服务并释放句柄。代码与所依赖原始凭据见[星神本地绑定来源](../../assets/reference/partner-star-god-local-source-manifest.json)。完整 `NpcPanel` 入口尚未接到该宿主。
 
-全工程静态检查通过（84,841 个 GUID）；主工程最终导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。12 份源码输入／输出、83 项原生资源输入、245 项安装输出及 39 份脚本绑定哈希一致。正式星神库存、相遇存档和完整宿主仍未完成。
+`prepare_partner_star_god_validation.py` 建立包含原 UI 粒子程序集的隔离工程，以实际安装的 Resources 目录运行 Unity URP Play Mode。原按钮的模拟指针射线验证详情端口、禁用分支、相遇请求、原音频播放、动画延迟及拥有对象身份更新；另验证原分组／居中、置顶优先、链接等级事件、长整型比较溢出、关闭取消提示、重新开启及图片／事件释放。核对 Mesh 原四顶点和六索引，已查看单个、三人分组及解锁后的三帧 450×800 GPU 画面。
+
+`prepare_partner_star_god_local_validation.py` 补齐实际程序集的 `.asmref` 目录及 ItemIcon 资源依赖，在同版本 URP Play Mode 使用正式本地星神服务、原页面和隔离存档。模拟鼠标射线验证连续点击仅结识一次、三份不同信物一起扣除、磁盘保存后发新增事件、按原动画长度乘 0.8 后提示、拥有对象替换预览与详情请求；新建会话恢复结识、材料与好感。外部事务同时更新链接等级和置顶，读状态后仍收到原 1→5 等级通知，并保留卡片对象身份。材料不足拒绝相遇；重新打开后原分组显示另外两位可相遇星神，九种信物均通过原 ItemIcon 的实际图像绑定。已查看信物、结识、等级／置顶和三人分组四帧 450×800 GPU 画面，运行无 Unity 错误。提示图计算、信物详情弹窗、完整正式分页入口、详情窗口内容及 Windows Player 不在该隔离验证范围；不据此记为伙伴功能完成。
+
+本轮全工程静态检查通过（84,865 个 GUID）；主工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。原生资源记录 93 项输入、284 项安装输出及 39 份脚本绑定。完整正式宿主仍未完成。
 
 ### 当前原生详情属性区与天赋合并（局部）
 

@@ -185,7 +185,7 @@ public sealed class PartnerStarGodRunner : MonoBehaviour, IPartnerStarGodUiServi
         OfficialWwiseEvent.Host = this;
         fixture = JsonUtility.FromJson<Fixture>(AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/Editor/star-god-fixture.json").text);
         var catalog = OfficialPartnerStarGodAssetCatalog.LoadDefault();
-        Require(catalog.Definitions.Length == 3 && catalog.Images.Length == 3, "Installed Resources catalog binds all selected star-gods");
+        Require(catalog.Definitions.Length == 3 && catalog.Images.Length == 12, "Installed Resources catalog binds selected star-gods and nine meet fragments");
         fixture.definitions = catalog.Definitions;
         Require(fixture.definitions.All(row => row.IsStarGodNpc && !row.IsMapExploreBoss && row.Id > 0), "Installed catalog retains original star-god role and NPC type");
         foreach (var row in catalog.Images) sprites.Add(row.path, row.sprite);

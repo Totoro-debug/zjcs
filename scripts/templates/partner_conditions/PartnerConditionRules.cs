@@ -72,6 +72,8 @@ namespace Zjcs.Official.Partners
             internal MeetRequirement(int classId, int count, string op) { ClassId = classId; Count = count; Op = op; }
         }
 
+        /*GET_MEET_ITEMS*/
+
         private ICondition Create(Dictionary<string, object> node)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));

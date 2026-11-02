@@ -187,12 +187,7 @@ class PartnerStarGodBinding(PartnerDialogueEntryBinding):
             tables[name] = dict(rows=decoder.table(raw, table), source=self.recovery.apk.provenance(obj), sha256=sha(raw))
         records = read_asset_manifest(self.recovery.apk.source.manifest_bytes('DefaultPackage', self.recovery.apk.archive))
         bindings, definitions, keys = [], [], set()
-        for row in source['tables']['npc']:
-            if row['NpcRoleType'] != 2 or row['NpcType'] == 2: continue
-            region = next((value for value in tables['npc_region_image.g']['rows'] if value['NpcId'] == row['Id']), None)
-            regional = region.get('RegionFullBodyRImages') if region else None
-            # Common.RegionCodeEnum CN=0; current selected source is checked below.
-            address = (regional.get('0') or regional.get(0) if regional else None) or row['FullBodyImage']
+        def sprite(address):
             record, = [value for value in records if value['address'] == 'Assets/Image/' + address
                 or value['path'] == 'Assets/Image/' + address + '.png']
             obj, = [ref.deref() for path, ref in self.recovery.apk.container(record['bundle'])
@@ -212,26 +207,43 @@ class PartnerStarGodBinding(PartnerDialogueEntryBinding):
             source_guid = guid(Path(str(native) + '.meta'))
             self.objects[source_guid] = obj
             pointer = self.load(source_guid)
+            bindings.append(dict(address=address, pointer=pointer, source=self.recovery.apk.provenance(obj),
+                original=identity(obj), original_sha256=sha(obj.get_raw_data()), manifest_asset=record))
+
+        meet_items = set()
+        conditions = {row['ClassId']: row['Condition'] for row in source['tables']['conditions']}
+        for row in source['tables']['npc']:
+            if row['NpcRoleType'] != 2 or row['NpcType'] == 2: continue
+            region = next((value for value in tables['npc_region_image.g']['rows'] if value['NpcId'] == row['Id']), None)
+            regional = region.get('RegionFullBodyRImages') if region else None
+            # Common.RegionCodeEnum CN=0; current selected source is checked below.
+            address = (regional.get('0') or regional.get(0) if regional else None) or row['FullBodyImage']
+            sprite(address)
+            condition = row['CanMeetCondition']
+            direct = [conditions[value] for value in condition['Ids']] if condition['_type'] in (
+                'CompositeAndCondition', 'CompositeOrCondition') else [condition]
+            meet_items.update(value['ClassId'] for value in direct if value['_type'] == 'HasItemCondition')
             star = next((value for value in tables['npc_star_god.g']['rows'] if value['NpcClassId'] == row['Id']), None)
             location_key = 'npc_star_god_location_' + str(row['Id']) if star else None
             keys.add(row['NameKey'])
             if location_key: keys.add(location_key)
-            bindings.append(dict(address=address, pointer=pointer, source=self.recovery.apk.provenance(obj),
-                original=identity(obj), original_sha256=sha(obj.get_raw_data()), manifest_asset=record))
             definitions.append(dict(Id=row['Id'], IsStarGodNpc=True, IsMapExploreBoss=False,
                 NameKey=row['NameKey'], LocationDescKey=location_key, StaticFullBodyImagePath=address))
+        item_rows = {row['ClassId']: row for row in source['tables']['item']}
+        for item in sorted(meet_items): sprite(item_rows[item]['RawIcon'])
         from npc_travel_language import language
         texts, inputs = language(keys)
         if set(texts) != keys: raise ValueError('Selected star-god language is incomplete')
         self.inputs.update(inputs)
         for relative in ('common-source/Common/NpcStarGodInfo.cs', 'common-source/Common/NpcRegionImageInfo.cs',
                          'framework-firstpass-source/ResourceLoaderExtensions.cs', 'launch-source/AnimationSoundPlayer.cs',
-                         'launch-source/UIMesh.cs', 'launch-source/RotateAnimation.cs', 'launch-source/Common/RegionCodeEnum.cs'):
+                         'launch-source/UIMesh.cs', 'launch-source/RotateAnimation.cs', 'launch-source/Common/RegionCodeEnum.cs',
+                         'common-source/NpcHelper.cs'):
             path = ROOT / '.tools/source-packages/official-code' / relative
             selected = ROOT / '.tools/source-packages/current' / self.recovery.apk.version / 'official-code' / relative
             if path.read_bytes() != selected.read_bytes(): raise ValueError('Selected source differs: ' + relative)
             self.inputs[path.relative_to(ROOT).as_posix()] = sha(path.read_bytes())
-        return dict(sprites=bindings, definitions=definitions, tables=tables,
+        return dict(sprites=bindings, definitions=definitions, tables=tables, meet_item_ids=sorted(meet_items),
             texts=[dict(key=key, text=texts[key]) for key in sorted(texts)])
 
     def build(self):
@@ -319,7 +331,8 @@ def install(work):
         m_EditorClassIdentifier='', pagePrefab=receipt['roots']['NpcPanelStarGodContent'],
         definitions=[{key: int(value) if isinstance(value, bool) else value for key, value in row.items()}
                      for row in data['definitions']],
-        images=[dict(path=row['address'], sprite=row['pointer']) for row in data['sprites']], texts=data['texts'])
+        images=[dict(path=row['address'], assetGuid=row['manifest_asset']['guid'], sprite=row['pointer'])
+                for row in data['sprites']], texts=data['texts'])
     from prepare_partner_card_native import Dumper
     catalog.write_text('%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n--- !u!114 &11400000\n' +
         yaml.dump(dict(MonoBehaviour=body), Dumper=Dumper, sort_keys=False, allow_unicode=True, width=1000000), 'utf8', newline='\n')

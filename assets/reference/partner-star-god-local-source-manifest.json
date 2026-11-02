@@ -1,0 +1,25 @@
+{
+  "manifest": "884_156692",
+  "generator_sha256": "419434fa7e4ad7d228a5c8f0e5970a28b4fc06c8ac9c240b35d4aaef60e0b066",
+  "source_receipt_sha256": {
+    "assets/reference/partner-condition-source-manifest.json": "6a4e68a19bec0146a68e38ecf0800a0e0bcd739adf9aa196dc24307fa3e0d454",
+    "assets/reference/partner-star-god-ui-source-manifest.json": "d40e4c41f8463b3eae2244d65fbfb28b882acf84b307b5a4b6088dec242147ad",
+    "assets/reference/partner-star-god-native-source-manifest.json": "6ecef08fb814493d057ed4ef0481d2582151d84db18852865384961153665aad"
+  },
+  "binding_sha256": {
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerStarGodUiServices.cs": "df5d05323e5f99ddd0af3bf09b8fc4d3d6aedc7b541cb88e9d025923f6a7d285",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerStarGodUiServices.cs.meta": "d6bf6a63426a3175889dad37fd8ffb43f4ed38ff73e5de05c3298260410608e9",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerStarGodPanelView.cs": "976295f44f1f34d2d5d0e4d66b4453ce48d500fe6321a761364fa44295011cd9",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerStarGodPanelView.cs.meta": "aa97c7d2d489582f728271d1630561fbde15059487f35dbc58754ee6af901353",
+    "scripts/prepare_partner_star_god_local_validation.py": "77a46e65782a8774e2e1ca4d83d9ce1c48fa337c1e8e5d0ab09d60e581bbaacb",
+    "scripts/prepare_partner_star_god_validation.py": "35f88ddd845646ac76f17ccc3c44a72963d60ec6034418bc79546dead3e8b3dd",
+    "scripts/fixtures/partner_star_god_local_validation.cs": "3fba1b01dacae9a7c3d65aef55724bbb28f55fd53cf2f9bc8f86b0362706a053"
+  },
+  "adaptations": [
+    "Use existing local roster transactions and notify only after saving.",
+    "Preserve owned NPC identity and update values before forwarding original page events.",
+    "Preview records remain transient; original GetMeetNpcItems preserves direct-child order.",
+    "Bind original native page and pool before activation; restore image/localization providers when closing.",
+    "Use actual selected sprites and original ItemIcon context; no new UI layout or replacement art."
+  ]
+}

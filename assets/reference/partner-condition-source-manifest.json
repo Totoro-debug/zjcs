@@ -1,7 +1,7 @@
 {
   "manifest": "884_156692",
   "source_sha256": {
-    "scripts/templates/partner_conditions/PartnerConditionRules.cs": "5d230c34176c74a7882c703efe13aa6f2beb2cb4427e100843e320bd4f9a2c86",
+    "scripts/templates/partner_conditions/PartnerConditionRules.cs": "dc9b916aa0627e4049689069cb57ba2df17fff1280e13fee5dc2991526eec7c5",
     "unity/Assets/Official/Partners/partner-rules.json": "1ab5dd32c4ef68297aea6a847cb0e5ced686634bb4fb7f4c28a1aa7bf70398fd",
     ".tools/source-packages/official-code/common-source/Common/ICondition.cs": "12a4005edaf53df080240808b91e6e3e55fc08bceb91fd154e6c3993cdc704ff",
     ".tools/source-packages/official-code/common-source/Common/ConditionDataType.cs": "e067894427667bfe5da439df11bef5338c45fa6e3376cdfb307775ecc7ca7921",
@@ -20,8 +20,8 @@
     ".tools/source-packages/official-code/common-source/Common/ConditionInfoParser.cs": "ba10895470c4d9d3b330852b968504dd955009179bb75b3685ea67eed998981f",
     ".tools/source-packages/official-code/common-source/Common/NpcInfoParser.cs": "2323757139ca2742d3a563e983439feaefd03136d71a0b3094583a7c9d6e7eee",
     ".tools/source-packages/official-code/common-source/Common/NpcInfo.cs": "387c584e748963f1870e9861fee043e68fcc741cf52409fcdeffe294007c6a8d",
-    ".tools/source-packages/official-code/common-source/Common/Formula.cs": "ab9fbc796367c78a25d18941bb58fab29e654ccc08228cc248b3422f21436b76",
-    ".tools/source-packages/official-code/common-source/NpcHelper.cs": "37ae9a0c2c0acfdc482bc71682c52608777d749c148deec0729bc1c0ffeca0f8"
+    ".tools/source-packages/official-code/common-source/NpcHelper.cs": "37ae9a0c2c0acfdc482bc71682c52608777d749c148deec0729bc1c0ffeca0f8",
+    ".tools/source-packages/official-code/common-source/Common/Formula.cs": "ab9fbc796367c78a25d18941bb58fab29e654ccc08228cc248b3422f21436b76"
   },
   "methods": {
     "common-source/Common/ICondition.cs": {
@@ -69,14 +69,15 @@
     "common-source/Common/NpcInfo.cs": {
       "public HasItemCondition GetHasItemCanMeetCondition()": "f6c4a4e1d5fe07f058aa95d7caa5669febfe4c4d7e8dd6c1e82f8cb59e6c62aa"
     },
+    "common-source/NpcHelper.cs": {
+      "public static List<(int, int)> GetMeetNpcItems(int npcClassId)": "fd24481d1831f815d59d0a54045d848108973c6a594f0ffc9e129e07fb7315e8",
+      "public static NpcMeetStatus GetNpcMeetStatus(Player player, int npcClassId)": "54e8967615e2f8a40a56444979ffab4f446375de5718c8aa237a6c0ffcd95184"
+    },
     "common-source/Common/Formula.cs": {
       "public static bool Compare<T>(T lhs, string op, T rhs) where T : IComparable<T>, IEquatable<T>": "08bee63598aba5a4622459f23793aa107656bc0e8310570bc8385d48094ca239"
-    },
-    "common-source/NpcHelper.cs": {
-      "public static NpcMeetStatus GetNpcMeetStatus(Player player, int npcClassId)": "54e8967615e2f8a40a56444979ffab4f446375de5718c8aa237a6c0ffcd95184"
     }
   },
-  "generator_sha256": "474bb4480a0c5e2e56f113a622e7692f17df20a539c0ed7c78f02267adfb4c97",
+  "generator_sha256": "f57a02d74f94d1dbde1998555730b309dfe3869f065095071784c7efddd921c1",
   "closure": {
     "npc_count": 148,
     "condition_ids": [
@@ -172,7 +173,7 @@
     "unity/Assets/Game/Runtime/Offline/Progression/OfficialCharacterCatalog.Partners.cs": "4acc36624040a680f0f01cf757d698f4f7cebf44df20a3b255f30356877373a1",
     "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.cs": "d5b116e786a39cc431db44f9eebdfee18b46afed29f3693b037f41f8e48d221a",
     "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.Partners.cs": "9143a1448033fb9b079b78e855ad715a6568c1c7c9ebbd1a6e734743aef9d7bf",
-    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerRosterUiServices.cs": "53cdfe5622769e4d67072fc4dbf60421c28ce6601fb610f90e1f090e478f80ac"
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerRosterUiServices.cs": "81f29e003927fb8c379cd6c8e271869cbaea947f8b25a10c485f412dace74fe8"
   },
   "validation_sha256": {
     "scripts/fixtures/partner_condition_validation.cs": "caf28618362443512eadfd1699f4d07969734641122d809a232ff2ade845afd3",
@@ -182,7 +183,7 @@
     "scripts/prepare_partner_conditions_validation.py": "96cf6af63c9cda298aa53cdc5a8f85ef32c64650658117bd351ecd2131b3a727"
   },
   "outputs": {
-    "PartnerConditionRules.cs": "05f94593ecc1c02be92857167622b24ae5bde6bd0a70548abab7d6b37f1fca9a",
+    "PartnerConditionRules.cs": "b60dbfbfac661fd48cf92a8fc07ad72f7d5fccb6520a1b9151c4efeccc0aaedb",
     "PartnerConditionRules.cs.meta": "47f51e92c99a142ad95e80b2d358abd3faf8a35a38cb28061a915b7ebbb8e999"
   },
   "adaptations": [
@@ -195,7 +196,7 @@
     "Existing offline meet transaction consumes signal items including tracked units and saves before UI notification."
   ],
   "installed_outputs": {
-    "unity/Assets/Game/Runtime/Official/Partners/PartnerConditionRules.cs": "05f94593ecc1c02be92857167622b24ae5bde6bd0a70548abab7d6b37f1fca9a",
+    "unity/Assets/Game/Runtime/Official/Partners/PartnerConditionRules.cs": "b60dbfbfac661fd48cf92a8fc07ad72f7d5fccb6520a1b9151c4efeccc0aaedb",
     "unity/Assets/Game/Runtime/Official/Partners/PartnerConditionRules.cs.meta": "47f51e92c99a142ad95e80b2d358abd3faf8a35a38cb28061a915b7ebbb8e999"
   }
 }

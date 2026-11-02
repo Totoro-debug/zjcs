@@ -3,9 +3,30 @@ import hashlib
 import json
 from pathlib import Path
 import shutil
+import re
 
 from official_apk import ROOT
 from validation_workspace import validation_directory
+
+
+def copy_modules(project, runtime, modules, selected):
+    module_guids = {re.search(r'(?m)^guid: ([0-9a-f]{32})', Path(str(path) + '.meta').read_text('utf8'))[1]: name
+                    for name, path in modules.items()}
+    folders = [modules[name].parent for name in selected]
+    for reference in runtime.rglob('*.asmref'):
+        target = json.loads(reference.read_bytes())['reference']
+        target = module_guids.get(target[5:]) if target.startswith('GUID:') else target
+        if target in selected: folders.append(reference.parent)
+    for folder in folders:
+        for source in folder.rglob('*'):
+            if not source.is_file() or source.suffix not in ('.cs', '.meta', '.asmdef', '.asmref'): continue
+            parent = source.parent
+            while parent != folder and not list(parent.glob('*.asmdef')) and not list(parent.glob('*.asmref')): parent = parent.parent
+            if parent != folder: continue
+            if source.suffix == '.meta' and Path(str(source)[:-5]).suffix not in ('.cs', '.asmdef', '.asmref'): continue
+            target = project / 'Assets/Game/Runtime' / source.relative_to(runtime)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, target)
 
 
 def main():
@@ -16,7 +37,7 @@ def main():
     runtime = ROOT / 'unity/Assets/Game/Runtime'
     modules = {json.loads(path.read_bytes())['name']: path for path in runtime.rglob('*.asmdef')}
     # Native effect components are reached through prefab GUIDs, not C# references.
-    pending, selected, external = ['Zjcs.Official.PartnerRosterUI', 'Coffee.UIParticle'], set(), set()
+    pending, selected, external = ['Zjcs.Official.PartnerRosterUI', 'Coffee.UIParticle', 'Zjcs.Offline.ProfessionUI'], set(), set()
     while pending:
         name = pending.pop()
         if name in selected: continue
@@ -27,23 +48,14 @@ def main():
         pending.extend(json.loads(modules[name].read_bytes()).get('references', []))
     if external - {'Unity.ugui', 'UnityEngine.UI', 'Unity.TextMeshPro', 'UniTask'}:
         raise ValueError('Inspect validation dependencies: ' + repr(external))
-    for name in selected:
-        folder = modules[name].parent
-        for path in folder.rglob('*'):
-            if not path.is_file() or path.suffix not in ('.cs', '.meta', '.asmdef'): continue
-            parent = path.parent
-            while parent != folder and not list(parent.glob('*.asmdef')): parent = parent.parent
-            if parent != folder: continue
-            target = project / 'Assets/Game/Runtime' / path.relative_to(runtime)
-            target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(path, target)
+    copy_modules(project, runtime, modules, selected)
     editor = project / 'Assets/Editor'
     editor.mkdir(parents=True)
     shutil.copy2(ROOT / 'scripts/fixtures/partner_star_god_validation.cs', editor / 'PartnerStarGodValidation.cs')
     (editor / 'Validation.asmdef').write_text(json.dumps(dict(name='PartnerStarGodValidation', includePlatforms=['Editor'],
         references=['Unity.ugui', 'Unity.TextMeshPro', 'Unity.RenderPipelines.Universal.Runtime', 'Unity.RenderPipelines.Core.Runtime',
             'Zjcs.Official.PartnerRosterUI', 'Zjcs.Official.Partners', 'Zjcs.Official.WorldUI',
-            'Zjcs.Official.PartnersUI', 'Zjcs.Official.ProfessionUI'])), 'utf8', newline='\n')
+            'Zjcs.Official.PartnersUI', 'Zjcs.Official.ProfessionUI', 'Zjcs.Offline.ProfessionUI'])), 'utf8', newline='\n')
     installed = json.loads((ROOT / 'assets/reference/partner-star-god-native-source-manifest.json').read_bytes())
     for name, expected in installed['installed_output_sha256'].items():
         source = ROOT / name

@@ -100,6 +100,8 @@ def build(work):
     text = text.replace('/*GET_CONDITION*/', selected('Common/ConditionInfoParser.cs', 'public ICondition GetCondition(int id)'))
     text = text.replace('/*GET_NPCS*/', selected('Common/NpcInfoParser.cs', 'public IEnumerable<NpcInfo> GetNpcs(NpcType ignoreType)'))
     text = text.replace('/*GET_MEET_ITEM*/', selected('Common/NpcInfo.cs', 'public HasItemCondition GetHasItemCanMeetCondition()'))
+    meet_items = selected('NpcHelper.cs', 'public static List<(int, int)> GetMeetNpcItems(int npcClassId)', 1)
+    text = text.replace('/*GET_MEET_ITEMS*/', meet_items.replace('public static', 'public').replace('Parsers.Instance.NpcInfoParser', 'npcs'))
     text = text.replace('/*COMPARE*/', selected('Common/Formula.cs', 'public static bool Compare<T>(T lhs, string op, T rhs) where T : IComparable<T>, IEquatable<T>'))
     status = selected('NpcHelper.cs', 'public static NpcMeetStatus GetNpcMeetStatus(Player player, int npcClassId)', 1)
     text = text.replace('/*MEET_STATUS*/', status.replace('public static', 'private').replace('Parsers.Instance.NpcInfoParser', 'npcs'))
