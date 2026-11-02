@@ -302,6 +302,16 @@ Home 赠礼溢出回调现打开原窗口，保留原标题、说明、按钮、
 
 隔离 Unity Play Mode 已通过原按钮的实际模拟射线、原 PCM 播放、原开场文字、进行中／暂停／结束状态及红点、重新启用不重复监听、序列显示／隐藏及最终释放，并核对通话排序边界与名称占位符。验证视口使用当前原 1080×1920 缩放和原父级布局参数，已查看进行中、结束两帧 450×800 GPU 画面；这是独立条目验证，完整分页、折叠列表、正式通话窗口和 Windows Player 仍未验证。已从实际安装的 Resources 目录引用重跑并通过；全工程静态检查通过（84,753 个 GUID），40 项安装输出、26 项资源输入、10 份脚本绑定及 12 份控制器输入／输出哈希一致。主工程本轮验证未完成，Unity 报告工程被另一实例打开；隔离工程编译及本条目 Play Mode 通过。
 
+### 当前星神分页与原生分组模板（局部）
+
+`prepare_partner_star_god_ui.py` 迁移选定 `884_156692` 的 `NpcPanelStarGodContent`、`StarGodNpcItemGroupItem`、`StarGodNpcItemContent` 与 `StarGodNpcItem`，保留地图探索 Boss 排除、星神身份、未相遇隐藏、原置顶／好感排序、向上取整分组、单个首组居中及多组顶部锚点。卡片按原顺序更新相遇状态、名字、地点、链接等级、立绘 pivot、信物与置顶图；复用现有原 `ImageLocator`。原禁用错误 53897、可相遇请求、已相遇详情顺序、解锁动画及其长度乘 0.8 后的等级提示保持；对象池停用／重新绑定取消旧延迟并释放图片句柄。12 份原输入与 12 份代码／元数据输出见[星神控制器来源](../../assets/reference/partner-star-god-ui-source-manifest.json)。玩家、库存、窗口与提示图仍通过显式服务端口承接，尚未接入完整正式宿主。
+
+`prepare_partner_star_god_native.py` 从原 `NpcPanel` 取完整星神区域，仅解除根父级，并沿实际外部组件引用恢复 2,552 对象的 `StarGodNpcItemGroupItem`；跨 prefab 引用保留确切组件 fileID，不用根 GameObject 替代。保留原坐标、层级、材质、粒子、网格及动画，按当前配置及 CN 地区图片选择提取 10608／10708／10801 的原静态立绘和中文文本。两条原星神开场／解锁 Wwise 事件沿实际 bank／媒体解码为 PCM；普通点击复用已有同事件原 PCM。Windows Mesh 导出中的空二进制字段改用 Unity 自身的空标量格式，修复原 `null` 文本导致的顶点数据读取断言及 UI 几何线程崩溃；原位置、索引、UV、通道及其他字段保留。资源先核对 APK，再取所选云端与已验证 Windows 转换缓存，245 项实际安装文件／目录及 39 份脚本绑定见[星神资源来源](../../assets/reference/partner-star-god-native-source-manifest.json)。`OfficialPartnerStarGodAssetCatalog` 显式绑定实际 Resources 页面、三个星神、图片和文字；本批未纳入素材快照。
+
+`prepare_partner_star_god_validation.py` 建立包含原 UI 粒子程序集的隔离工程，以实际安装的 Resources 目录运行 Unity URP Play Mode。原按钮的模拟指针射线验证详情端口、禁用分支、相遇请求、原音频播放、动画延迟及拥有对象身份更新；另验证原分组／居中、置顶优先、链接等级事件、长整型比较溢出、关闭取消提示、重新开启及图片／事件释放。核对 Mesh 原四顶点和六索引，已查看单个、三人分组及解锁后的三帧 450×800 GPU 画面。库存／信物图标、实际相遇事务与存档、详情窗口内容、完整分页入口及 Windows Player 不在此隔离验证范围；不据此记为伙伴功能完成。
+
+全工程静态检查通过（84,841 个 GUID）；主工程最终导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。12 份源码输入／输出、83 项原生资源输入、245 项安装输出及 39 份脚本绑定哈希一致。正式星神库存、相遇存档和完整宿主仍未完成。
+
 ### 当前原生详情属性区与天赋合并（局部）
 
 `prepare_partner_detail_properties_ui.py` 迁移选定 `884_156692` 的 `NpcDetailPanelPropContent`，保留属性排序、旅行门槛、每组两项、交替背景、原珍宝百分比及转为整数的截断顺序。`PartnerNpcPropertyFormula` 提取原 `BattleFormulaHandler` 的好感／天赋计算及属性合并方法，读取实际存档的好感等级和已激活天赋节点；按当前 `PropId`、`PropLevel`、`PropTypes` 取值并合并，保留原零值、分支和执行顺序。`OfflinePartnerDetailPropertySource` 使用上文当前属性目录，补齐三类天赋属性，不采用历史总表的缺省值替代。

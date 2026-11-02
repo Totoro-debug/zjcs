@@ -1546,3 +1546,12 @@ unity/Assets/Game/Runtime/Official/PartnersUI/Roster/*Dialogue*.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerDialogueAssetCatalog.cs* text eol=lf
 unity/Assets/Official/Partners/UI/DialogueEntry.meta -text
 unity/Assets/Official/Partners/UI/DialogueEntry/** -text
+
+# Preserve selected star-god controller and native prefab bytes.
+scripts/prepare_partner_star_god_*.py text eol=lf
+scripts/fixtures/partner_star_god_validation.cs text eol=lf
+assets/reference/partner-star-god-*-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Roster/*StarGod*.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerStarGodAssetCatalog.cs* text eol=lf
+unity/Assets/Official/Partners/UI/StarGod.meta -text
+unity/Assets/Official/Partners/UI/StarGod/** -text

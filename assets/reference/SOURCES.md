@@ -281,3 +281,7 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 ### 当前伙伴对话名册与原生条目来源
 
 当前 `884_156692` 的三个对话名册控制器、共享排序／红点／名称替换原码见 `partner-dialogue-list-ui-source-manifest.json`；原 `NpcPanel` 的外部 `NpcPanelDialogueItem` 引用及 66 对象子模板、原生转换缓存、资源复用、输入输出哈希与显式目录绑定见 `partner-dialogue-entry-native-source-manifest.json`。资源先核对固定 APK，再使用选定云端资源及现有 Windows 转换缓存；未混用版本，未新增素材快照。
+
+### 当前伙伴星神分页与分组模板来源
+
+`prepare_partner_star_god_ui.py` 校验选定 `884_156692` 的四个星神控制器及共享排序、配置、图像定位原码；输入与输出见 [星神控制器来源](partner-star-god-ui-source-manifest.json)。`prepare_partner_star_god_native.py` 沿原 `NpcPanel` 星神区域及其真实外部 `StarGodNpcItemGroupItem` 引用恢复完整层级，依组件对象身份保留跨 prefab PPtr，并闭合三个星神的地区图像、中文文本、动画、原 Wwise Event 对应 PCM 及 Windows 原生资源。先核对实际 APK `881_156673`，再使用所选云端资源和已校验转换缓存；输入包／对象、工具、资源复用、输出和 Resources 显式绑定哈希见 [星神原生资源来源](partner-star-god-native-source-manifest.json)。行为与验证范围仅在[伙伴功能](../../docs/features/partners.md)维护。本批未生成完整素材快照。
