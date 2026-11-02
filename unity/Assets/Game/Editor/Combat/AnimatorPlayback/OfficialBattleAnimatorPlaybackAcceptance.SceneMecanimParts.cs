@@ -72,7 +72,7 @@ namespace Zjcs.Editor.Combat
                 using (var playback = new OfficialBattleAnimatorPlayback(animator, player.transform))
                 {
                     playback.Play(cue, hit); animator.Update(.02f); animator.Update(.02f);
-                    var first = native.ApplyAnimatorPose();
+                    var first = native.ApplyAnimatorPose().Current;
                     firstIdentity = first.Animation;
                     Require(observed.Calls == 1 && observed.Last == hit.name && ReferenceEquals(identity, first.Animation),
                         "original Mecanim handler forwards the actual native animation to the actual original part");
@@ -87,7 +87,7 @@ namespace Zjcs.Editor.Combat
                 using (var playback = new OfficialBattleAnimatorPlayback(animator, player.transform))
                 {
                     playback.Play(cue, carrier); animator.Update(.02f); animator.Update(.02f);
-                    var same = native.ApplyAnimatorPose();
+                    var same = native.ApplyAnimatorPose().Current;
                     Require(same.Clip == carrier && ReferenceEquals(firstIdentity, same.Animation) && observed.Calls == 1,
                         "distinct Unity carrier of the same native animation does not restart original part playback");
                 }

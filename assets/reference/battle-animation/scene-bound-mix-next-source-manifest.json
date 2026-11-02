@@ -1,0 +1,110 @@
+{
+  "manifest": "884_156692",
+  "application": [
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceMecanimPartHandler.cs",
+        "sha256": "38e7289a0a72b39b1302a538e9cdb9557537c3c11dc83183264edb54c6ba49a8"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceMecanimPartHandler.cs",
+        "sha256": "0a5c48095841b68f3f8255effdc3eef13478e7b5eb5b74ae4c7bb4f74ed1b7a4"
+      }
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSkeletonPart.cs",
+        "sha256": "0c70913261248eedaf7f00d8bdb1c6bc53533b466ae79bc1144fd7fad47f84ce"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceSkeletonPart.cs",
+        "sha256": "d73ddb7b7be018985b33dff5123bb4e854acf9cfada920aeb8f5fab761e539da"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/SceneCharacterSources/PlayerModel_Game-source.json",
+      "sha256": "eadc90ce5c44c08bc54ef39b107ccd77626db193df30bdf406f109c4f1b7a517"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "assets/reference/battle-animation/native-mix-next-source-manifest.json",
+      "sha256": "27fcb4d522804f768b1a5fe999a6c6356b3579f6c84e9cebe9712cb3e942f5fa"
+    },
+    {
+      "path": "assets/reference/battle-animation/scene-mecanim-parts-source-manifest.json",
+      "sha256": "22b6382618594949b4bd09c7444e2b626f675aeb86feb331ba1095be819ff41e"
+    },
+    {
+      "path": "assets/reference/battle-animation/scene-player-animator-source-manifest.json",
+      "sha256": "bed248f2c8009b215f8921b6d3deac876735c4b0088c1819d90d69b693e85c82"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimatorPose.cs",
+      "sha256": "c345092fdf41177b11e5da042bc19d7e688d3fdc1b8121de62bd0310c8353cbf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimatorPose.cs.meta",
+      "sha256": "b2605c4428a27abca715756e2335a54251cb014dad44253b727f887971cde922"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.Animator.cs",
+      "sha256": "088c8b3a5f83d77e258336d6ee4cf728ba3844669812aab1d8645ce17e3c2c20"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.Animator.cs.meta",
+      "sha256": "78bbd418dabbaa148056058d30c638634b1535cabac3e85eba5885a48f90fe4f"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneBoundMixNext.cs",
+      "sha256": "604344490408310fac4c49ba8b156a08927ff02c124a881934e88c8020e9d8fb"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneBoundMixNext.cs.meta",
+      "sha256": "eabdf43344b9128ccba0864754de6e74de61980786efd2f33199c610e35912a9"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ScenePlayerAnimator.cs",
+      "sha256": "5f4f43de23bb726a4394b8b99910872e9f471ab9a6d9bee0def1379280effb4b"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ScenePlayerAnimator.cs.meta",
+      "sha256": "cbb4202419e9f63b0b1dfc8e86461ce2a85b17433ba7ebd67fe33b12f736f372"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ScenePlayerAppearance.cs",
+      "sha256": "d60e52265d0a711055e2e4c5af9b600fcf6622ac15de109d076cbd22c362a25e"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ScenePlayerAppearance.cs.meta",
+      "sha256": "9ffd129351209c166be97275583b74c80b932b161e9fe1e8deabe7245c53107c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.cs",
+      "sha256": "70bb90d44af9e03c8592b18c63dceb3dc84a54bd53b25da7884336f89b266e65"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.cs.meta",
+      "sha256": "70cf32819c75d89a60a7e05b420bdaae7a69071c321effa18e0a942844a27b88"
+    }
+  ],
+  "generator": {
+    "path": "scripts/record_battle_scene_bound_mix_next.py",
+    "sha256": "bec027f56749c286ca66a333bc3fb553d16c4e7c8c852d949e0b0a10979f99db"
+  },
+  "documentation": [
+    "https://en.esotericsoftware.com/spine-unity-main-components-4.2#Animation-Blending-Control"
+  ],
+  "binding": "One explicit pose producer/drawing entry consumes actual unmixed or MixNext Animator inputs. A completed mixed local/constraint pose emits outgoing native identity at full weight followed by the nonzero incoming identity at its actual weight. Input-time history is retained separately for each native motion. Both UpdateAnimationAndMesh and actual renderer LateUpdate use this entry. The original application handler retains its own identity guard and forwards unchanged original names to actual parts.",
+  "limits": [
+    "The fixture explicitly binds pre-physics solvers. Full physical motion, other mix modes/layers, blend trees, interrupted transitions, production battle hosts and Windows Player integration remain pending.",
+    "Callback scalar values describe this independent native interface and actual Animator inputs. Public blending documentation and original application consumption do not establish parity with every internal SDK callback timing or scalar convention.",
+    "Original Game idle/hit names have no mapping in the initial independent weapon animation dictionary. The original ignore branch is preserved; no weapon mapping, motion or artwork is invented.",
+    "Actual current four controllers and eight characters cover source/target event order, identity/history, original handler lifecycle and real GPU body rendering. The full physics/culling/update scheduling domain remains unverified.",
+    "Earlier receipts preserve their extraction stages and narrower entry-point scope. This receipt records the subsequent unified drawing and transition notification binding without modifying original payloads."
+  ]
+}

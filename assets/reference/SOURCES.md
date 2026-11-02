@@ -217,6 +217,8 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 
 当前玩家外观与默认资料输入：`prepare_battle_scene_player_appearance.py` 逐字节核对当前应用与共享迁移来源，从实际APK的 Luban 分包完整解码所选 `884_156692` 的9张表，保留外观消费字段、枚举和集合顺序；全局设置按当前生成构造器读取，包括独立 Luban 向量结构，严格消费全部载荷。`PlayerAppearance` 直接迁自当前应用源码，动画名称组合规则恢复原 ScriptableObject 字段；当前表、默认剑／杖设置和规则使用独立 `Combat/SceneAppearance` 地址。历史共享解析器仅比较已迁移的 PostParse／查询方法，不把已变化、未迁移的随机选择方法纳入复用结论。原程序集／metadata、167份构造器源码、39项应用身份比对、配置对象及输入输出哈希见[玩家外观来源](battle-animation/scene-player-appearance-source-manifest.json)。不读取或复制动画SDK实现；新增载荷未进入完整快照。
 
+当前统一场景MixNext绘制与通知：`record_battle_scene_bound_mix_next.py` 沿用当前884_156692人物载荷、已有独立混合端与原应用部件通知消费代码，记录统一姿态入口、绘制接线和验证入口的当前身份。原应用、公开行为文档、依赖及输入输出哈希见[统一绘制与通知来源](battle-animation/scene-bound-mix-next-source-manifest.json)。不读取或复制动画SDK实现，不改变人物／武器素材载荷；实现与实际验证范围只在[战斗执行](../../docs/features/battle-execution.md)维护。
+
 当前原生MixNext输入与独立接线：`record_battle_native_mix_next.py` 核对当前884_156692的PlayerModel_Game载荷中原translator配置，并仅从原global-metadata.dat读取相关公开枚举常量，不读取SDK方法实现。原载荷／元数据身份、公开行为文档、局部通道与约束混合、真实Animator验证入口及当前输入输出哈希见[MixNext来源清单](battle-animation/native-mix-next-source-manifest.json)。没有修改人物／武器素材载荷；功能和实际验证范围只在[战斗执行](../../docs/features/battle-execution.md)维护。
 
 当前原生场景Mecanim部件通知：`ProfessionNativeSceneRenderer.BindAnimatorPose` 显式接入原生Animator姿态生产者，并通过既有 `IProfessionAppearancePartMecanim` 交给当前原版 `AppearanceMecanimPartHandler`。原应用来源、独立接入、验证入口及输入输出哈希见[场景Mecanim部件来源](battle-animation/scene-mecanim-parts-source-manifest.json)。该记录不表示完整混合、物理或正式战斗宿主已经完成。

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Zjcs.Official.ProfessionUI;
 
 namespace Zjcs.Offline.ProfessionUI
@@ -7,8 +8,7 @@ namespace Zjcs.Offline.ProfessionUI
     {
         private ProfessionNativeAnimatorPose animatorPose;
         private ProfessionNativeAppearanceSkeleton notifiedSkeleton;
-        private ProfessionNativeAnimationChannels notifiedAnimation;
-        private float notifiedTime;
+        private readonly Dictionary<ProfessionNativeAnimationChannels, float> notifiedTimes = new Dictionary<ProfessionNativeAnimationChannels, float>();
         public event ProfessionPartClipApplied OnClipApplied;
 
         // Bind explicitly: callers must choose a completed constraint/physics
@@ -19,20 +19,28 @@ namespace Zjcs.Offline.ProfessionUI
             ClearAnimatorNotification();
         }
 
-        public ProfessionNativeAnimatorPose.Frame ApplyAnimatorPose()
+        public ProfessionNativeAnimatorPose.AppliedFrame ApplyAnimatorPose()
         {
             if (animatorPose == null) throw new InvalidOperationException("Bind the native Animator pose producer first.");
             Initialize(false, false);
-            var frame = animatorPose.ApplyUnmixed(State);
-            float previous = ReferenceEquals(notifiedSkeleton, State) && ReferenceEquals(notifiedAnimation, frame.Animation)
-                ? notifiedTime : -1;
-            notifiedSkeleton = State; notifiedAnimation = frame.Animation; notifiedTime = frame.MotionTime;
+            var frame = animatorPose.Apply(State);
+            NotifyApplied(frame.Current, 1);
+            if (frame.Incoming.HasValue && frame.IncomingWeight > 0)
+                NotifyApplied(frame.Incoming.Value, frame.IncomingWeight);
+            return frame;
+        }
+
+        private void NotifyApplied(ProfessionNativeAnimatorPose.Frame frame, float weight)
+        {
+            if (!ReferenceEquals(notifiedSkeleton, State))
+            { notifiedTimes.Clear(); notifiedSkeleton = State; }
+            float previous = notifiedTimes.TryGetValue(frame.Animation, out float time) ? time : -1;
+            notifiedTimes[frame.Animation] = frame.MotionTime;
             // The original part handler compares animation identity, not the
             // Unity carrier clip. Multiple carriers of one native motion must
             // not repeatedly restart the independent part animation.
-            OnClipApplied?.Invoke(frame.Animation, frame.Animation.Name, 0, 1,
+            OnClipApplied?.Invoke(frame.Animation, frame.Animation.Name, 0, weight,
                 frame.MotionTime, previous, frame.PlaysBackward);
-            return frame;
         }
 
         private void UpdateBoundAnimatorPose()
@@ -42,7 +50,7 @@ namespace Zjcs.Offline.ProfessionUI
 
         private void ClearAnimatorNotification()
         {
-            notifiedSkeleton = null; notifiedAnimation = null; notifiedTime = -1;
+            notifiedSkeleton = null; notifiedTimes.Clear();
         }
     }
 }

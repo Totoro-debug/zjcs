@@ -29,6 +29,15 @@ namespace Zjcs.Offline.ProfessionUI
             { Outgoing = outgoing; Incoming = incoming; Weight = weight; }
         }
 
+        public readonly struct AppliedFrame
+        {
+            public readonly Frame Current;
+            public readonly Frame? Incoming;
+            public readonly float IncomingWeight;
+            internal AppliedFrame(Frame current, Frame? incoming, float incomingWeight)
+            { Current = current; Incoming = incoming; IncomingWeight = incomingWeight; }
+        }
+
         private readonly Animator animator;
         private readonly Action<ProfessionNativeAppearanceSkeleton, ProfessionNativeAnimationChannels, float, bool> solve;
         private readonly Action<ProfessionNativeAppearanceSkeleton, MixNextFrame> mix;
@@ -44,6 +53,19 @@ namespace Zjcs.Offline.ProfessionUI
             this.animator = animator ? animator : throw new ArgumentNullException(nameof(animator));
             this.solve = solve ?? throw new ArgumentNullException(nameof(solve));
             mix = mixNext;
+        }
+
+        // Callers consume one completed pose without inspecting the Animator
+        // graph themselves. An unbound mixer retains the strict unmixed domain.
+        public AppliedFrame Apply(ProfessionNativeAppearanceSkeleton skeleton)
+        {
+            if (mix != null && animator && animator.runtimeAnimatorController && animator.layerCount == 1
+                && animator.IsInTransition(0))
+            {
+                var transition = ApplyMixNext(skeleton);
+                return new AppliedFrame(transition.Outgoing, transition.Incoming, transition.Weight);
+            }
+            return new AppliedFrame(ApplyUnmixed(skeleton), null, 0);
         }
 
         public Frame ApplyUnmixed(ProfessionNativeAppearanceSkeleton skeleton)

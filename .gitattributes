@@ -1660,6 +1660,15 @@ assets/reference/battle-animation/native-animator-pose-source-manifest.json text
 assets/reference/battle-animation/scene-mecanim-parts-source-manifest.json text eol=lf
 assets/reference/battle-animation/native-mix-next-source-manifest.json text eol=lf
 
+# Preserve unified scene MixNext drawing and notification fingerprints.
+scripts/record_battle_scene_bound_mix_next.py text eol=lf
+unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneBoundMixNext.cs* text eol=lf
+unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneMecanimParts.cs text eol=lf
+unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ScenePlayerAnimator.cs text eol=lf
+unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ScenePlayerAppearance.cs text eol=lf
+unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.cs text eol=lf
+assets/reference/battle-animation/scene-bound-mix-next-source-manifest.json text eol=lf
+
 # Preserve the decoded substitute mover and its source fingerprints.
 scripts/prepare_battle_voodoo_grid.py text eol=lf
 unity/Assets/Game/Runtime/Official/Combat/FightOfficialVoodooGridRules.cs* text eol=lf

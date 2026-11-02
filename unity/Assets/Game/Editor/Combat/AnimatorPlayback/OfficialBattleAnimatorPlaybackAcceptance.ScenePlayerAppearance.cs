@@ -113,6 +113,11 @@ namespace Zjcs.Editor.Combat
                             }
                             finally { native.OnClipApplied -= applied; }
                         }
+                        if (SessionState.GetBool(Key + ".sceneBoundMixNext", false))
+                        {
+                            var mixing = ObserveSceneBoundMixNext(native, root.GetComponent<Animator>(), labelSuffix);
+                            while (mixing.MoveNext()) yield return mixing.Current;
+                        }
                         afterInit?.Invoke(player);
                         Require(saved == JsonUtility.ToJson(profile), "default restoration and player refresh preserve persisted local wardrobe bytes");
                         Require(appearance.Skins.Contains("performFace") && !appearance.Skins.Contains("map_01")

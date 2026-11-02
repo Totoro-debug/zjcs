@@ -42,7 +42,8 @@ namespace Zjcs.Editor.Combat
                     var animator = root.AddComponent<Animator>(); animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
                     if (SessionState.GetBool(Key + ".sceneMecanimParts", false))
                         root.GetComponent<ProfessionNativeSceneRenderer>().BindAnimatorPose(
-                            new ProfessionNativeAnimatorPose(animator, ProfessionNativeConstraintPose.EvaluateBeforePhysics));
+                            new ProfessionNativeAnimatorPose(animator, ProfessionNativeConstraintPose.EvaluateBeforePhysics,
+                                SessionState.GetBool(Key + ".sceneBoundMixNext", false) ? SolveSceneMixNext : null));
                     var player = root.AddComponent<PlayerAnimatorAppearance>();
                     player.ConfigurePlayerAppearance(graph); player.Animator = animator; player.PlayerPhase = PlayerPhase.Game;
                     player.ConfigureAnimatorResources(catalog.Contains, Load);
@@ -103,9 +104,13 @@ namespace Zjcs.Editor.Combat
                             "initialized reapply restores the owned Animator and retains the same source controller");
                     }
                     else player.ReapplyOwnAnimator();
+                    if (SessionState.GetBool(Key + ".sceneBoundMixNext", false))
+                        player.GetComponent<ProfessionNativeSceneRenderer>().BindAnimatorPose(
+                            new ProfessionNativeAnimatorPose(animator, ProfessionNativeConstraintPose.EvaluateBeforePhysics));
                     if (SessionState.GetBool(Key + ".sceneAnimatorPose", false)) CheckSceneAnimatorPose(player);
                     if (SessionState.GetBool(Key + ".sceneMecanimParts", false)) CheckSceneMecanimParts(player);
                     if (SessionState.GetBool(Key + ".sceneMixNext", false)) CheckSceneMixNext(player);
+                    if (SessionState.GetBool(Key + ".sceneBoundMixNext", false)) CheckSceneBoundMixNext(player);
                     Debug.Log("[Current player Animator] " + selectedController.name + ": direct=" + !useController
                         + "; original idle/skill playable, controller restoration and reapply passed. Native body poses remain explicit pre-physics diagnostics.");
                 }
