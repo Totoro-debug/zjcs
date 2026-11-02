@@ -807,11 +807,13 @@ namespace Zjcs.Combat.Official
                         throw new ArgumentException("Official status binding identity is invalid.", nameof(statuses));
                     if (!statusIds.Add(binding.InstanceId))
                         throw new InvalidOperationException("Official combat unit has duplicate status instance " + binding.InstanceId);
-                    assembledStatuses.Add(CreateStatus(binding.ClassId, unit.Id, binding.CreatorId,
+                    var assembledStatus = CreateStatus(binding.ClassId, unit.Id, binding.CreatorId,
                         binding.InstanceId, binding.RootSkillId, binding.ApplyingSkillItemId,
                         binding.SkillRank, binding.SkillLevel, binding.SourceSubRank,
                         binding.SourceProperties, binding.CustomShieldValue, binding.ReplacementProperties,
-                        binding.BlessPropertyScales));
+                        binding.BlessPropertyScales);
+                    assembledStatus.Origin = binding.Origin?.Copy();
+                    assembledStatuses.Add(assembledStatus);
                 }
             }
             unit.Skills.AddRange(assembledSkills);
@@ -855,6 +857,11 @@ namespace Zjcs.Combat.Official
                     throw new ArgumentException("Official passive skill binding is invalid.",
                         nameof(passiveSkills));
                 FightOfficialSkillItem item = skillItems.Required(binding.ItemId);
+                var origin = binding.Origin?.Copy() ?? new FightBattleStatusOrigin { EntityId = unit.Id };
+                origin.IsSet = true;
+                origin.UnitId = unit.Id;
+                origin.SkillItemId = item.ItemId;
+                origin.SkillEntityId = item.EntityId;
                 foreach (int statusId in item.PassiveStatusIds ?? System.Array.Empty<int>())
                 {
                     if (statusId <= 0) continue;
@@ -863,6 +870,7 @@ namespace Zjcs.Combat.Official
                     result.Add(new FightOfficialStatusBinding
                     {
                         ClassId = statusId,
+                        Origin = origin.Copy(),
                         InstanceId = nextInstanceId++,
                         CreatorId = unit.Id,
                         RootSkillId = item.EntityId,
@@ -2539,7 +2547,6 @@ namespace Zjcs.Combat.Official
                 && (Int(component, "RoundStartPhase") == 0 || Int(component, "RoundStartPhase") == 5)
                 && Float(component, "TargetHpPer", -1f) < 0f
                 && !Bool(component, "TryAtNotForbidden")
-                && !Bool(component, "MergeMaxCountOnStackRound")
                 && !Bool(component, "RemoveOldStatusOnInvoke")
                 && !Bool(component, "RemoveOldStatusOnEnd")
                 && ArrayCount(component, "TargetActions") == 0
@@ -3501,6 +3508,7 @@ namespace Zjcs.Combat.Official
 
     public sealed class FightOfficialStatusBinding
     {
+        public FightBattleStatusOrigin Origin;
         public int ClassId;
         public int InstanceId;
         public int CreatorId;
@@ -3517,6 +3525,7 @@ namespace Zjcs.Combat.Official
 
     public sealed class FightOfficialPassiveSkillBinding
     {
+        public FightBattleStatusOrigin Origin;
         public int ItemId;
         public int Rank = 1;
         public int Level = 1;

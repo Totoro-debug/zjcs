@@ -47,6 +47,7 @@ namespace Zjcs.Combat.Official
                         selected.Level, selected.SubRank, ToPropertyList(statusCatalog.CalculateSkillProps(entity,
                             selected.Rank, selected.Level, selected.SubRank)));
                     next.RootEntityId = selected.RootEntityId;
+                    next.StatusOrigin = FightBattleStatusOrigin.Resolve(selected, actor.Id).Copy();
                     next.UseItemId = selected.UseItemId;
                     next.SkillSkinId = selected.SkillSkinId;
                     next.ProfessionAvailability = selected.ProfessionAvailability;

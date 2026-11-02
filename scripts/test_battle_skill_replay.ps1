@@ -78,7 +78,7 @@ Assert-Replay (($replayed.Checkpoint.Units[0].Statuses | Where-Object { $_.Class
 
 # Real cumulative-consumption passive must observe replay costs, without consuming charges
 # independently. Disable its already-exercised round-start grant in this isolated fixture.
-$consumeListener = $catalog.CreateStatus(25278, 1, 1, 991, 0, 0, 6, 17, 10, $null)
+$consumeListener = $catalog.CreateStatus(25278, 1, 1, 991, 25278, 10662, 6, 17, 10, $null)
 $consumeListener.HasRoundStartTrigger = $false
 $consumptionResult = Invoke-ReplayBattle (New-ReplaySkill $true 10 10 1) 10 @() @($consumeListener)
 $consumptionBuff = $consumptionResult.Checkpoint.Units[0].Statuses | Where-Object ClassId -eq 24187 | Select-Object -First 1

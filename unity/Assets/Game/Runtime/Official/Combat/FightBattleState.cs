@@ -70,6 +70,7 @@ namespace Zjcs.Combat.Official
         // Runtime-only subscription, scoped to an executor step. Checkpoints contain public fields.
         internal Action<FightBattleUnitState, FightBattleStatusState> StatusStarted;
         internal Action<FightBattleUnitState, FightBattleStatusState> StatusEnded;
+        internal Func<FightBattleStatusState, int> StatusRoundResolver;
         // Official FightRolePetTransferEntity state. A player unit owns the transfer state while
         // the configured pet skill is released at the owner's action end.
         public FightBattlePetEnergyState PetEnergy = new FightBattlePetEnergyState();
@@ -168,9 +169,12 @@ namespace Zjcs.Combat.Official
         public List<FightStatusReplacementValue> StatusReplacementProperties;
         public List<FightStatusPropertyScale> BlessPropertyScales;
 
+        public FightBattleStatusOrigin Origin;
+
         public FightBattleStatusStateTrigger WithSource(FightBattleStatusState status)
         {
             var result = (FightBattleStatusStateTrigger)MemberwiseClone();
+            result.Origin = FightBattleStatusOrigin.Resolve(status).Copy();
             result.SourceSkillItemId = FightBattleStatusReportSource.Resolve(status).SkillItemId;
             result.SourceSkillRank = status.SourceSkillRank;
             result.SourceSkillLevel = status.SourceSkillLevel;
@@ -200,6 +204,49 @@ namespace Zjcs.Combat.Official
         public bool UseTargetPositionWithSelection;
         // Capture at trigger time; later stacking must not change an already collected cast.
         public double DamageFactor = 1.0;
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusOrigin
+    {
+        public const int Unit = 0, Equipment = 1, Suit = 2;
+        public bool IsSet;
+        public int UnitId;
+        public int EntityKind;
+        public long EntityId;
+        public int SkillItemId;
+        public int SkillEntityId;
+
+        public FightBattleStatusOrigin Copy() => (FightBattleStatusOrigin)MemberwiseClone();
+
+        public static FightBattleStatusOrigin Resolve(FightBattleStatusState status)
+        {
+            return status.Origin != null && status.Origin.IsSet ? status.Origin : new FightBattleStatusOrigin
+            {
+                IsSet = true, UnitId = status.CreatorId, EntityId = status.CreatorId,
+                SkillItemId = status.ApplyingSkillItemId, SkillEntityId = status.RootSkillId
+            };
+        }
+
+        public static FightBattleStatusOrigin Resolve(FightBattleSkillDefinition skill, int casterId)
+        {
+            return skill?.StatusOrigin != null && skill.StatusOrigin.IsSet ? skill.StatusOrigin : new FightBattleStatusOrigin
+            {
+                IsSet = true, UnitId = casterId, EntityId = casterId,
+                SkillItemId = skill?.UseItemId > 0 ? skill.UseItemId : skill?.ItemId ?? 0,
+                SkillEntityId = skill?.RootEntityId > 0 ? skill.RootEntityId : skill?.EntityId ?? 0
+            };
+        }
+
+        public static bool Matches(FightBattleStatusOrigin left, FightBattleStatusOrigin right)
+        {
+            if (left == null || right == null || !left.IsSet || !right.IsSet
+                || left.UnitId <= 0 || left.UnitId != right.UnitId
+                || left.EntityKind != right.EntityKind || left.EntityId <= 0 || left.EntityId != right.EntityId)
+                return false;
+            if (left.SkillItemId > 0 && right.SkillItemId > 0) return left.SkillItemId == right.SkillItemId;
+            return left.SkillEntityId > 0 && left.SkillEntityId == right.SkillEntityId;
+        }
     }
 
     [Serializable]
@@ -234,6 +281,7 @@ namespace Zjcs.Combat.Official
     [Serializable]
     public sealed class FightBattleStatusState
     {
+        public FightBattleStatusOrigin Origin;
         public bool RemoveApplyEntityOnEnd;
         public int InstanceId;
         public int ClassId;
@@ -714,6 +762,7 @@ namespace Zjcs.Combat.Official
     [Serializable]
     public sealed class FightBattleSkillDefinition
     {
+        public FightBattleStatusOrigin StatusOrigin;
         public int Slot;
         public int ItemId;
         public int UseItemId;

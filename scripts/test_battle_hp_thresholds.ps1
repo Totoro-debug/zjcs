@@ -160,7 +160,7 @@ $rangeSource = Unit 30 100
 $rangeTarget = Unit 31 100
 $rangeSource.X = 0; $rangeSource.Y = 0; $rangeSource.Side = 0
 $rangeTarget.X = 1; $rangeTarget.Y = 0; $rangeTarget.Side = 0
-$rangeStatus = $catalog.CreateStatus(24063, $rangeSource.Id, $rangeSource.Id, 1)
+$rangeStatus = $catalog.CreateStatus(24063, $rangeSource.Id, $rangeSource.Id, 1, 10500, 10000)
 $rangeSource.Statuses.Add($rangeStatus)
 $rangeUnits = [Collections.Generic.List[Zjcs.Combat.Official.FightBattleUnitState]]::new()
 $rangeUnits.Add($rangeSource); $rangeUnits.Add($rangeTarget)
@@ -177,7 +177,7 @@ Assert-Hp (($rangeTarget.Statuses | Where-Object ClassId -eq 24033).Count -eq 0)
 
 # 25104 tracks the owner's summoned-unit count and removes the aura when none remain.
 $summonOwner = Unit 40 100
-$summonOwner.Statuses.Add($catalog.CreateStatus(25104, $summonOwner.Id, $summonOwner.Id, 1))
+$summonOwner.Statuses.Add($catalog.CreateStatus(25104, $summonOwner.Id, $summonOwner.Id, 1, 25104, 10591))
 $summon = Unit 41 100
 $summon.MasterId = $summonOwner.Id
 $summonUnits = [Collections.Generic.List[Zjcs.Combat.Official.FightBattleUnitState]]::new()

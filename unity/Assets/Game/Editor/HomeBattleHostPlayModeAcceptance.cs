@@ -402,6 +402,7 @@ namespace Zjcs.Editor
             RoundRandomProbe roundRandom = ConfigureRoundRandomProbe(checkpoint);
             RoundSourceProbe roundSource = ConfigureRoundSourceProbe(checkpoint);
             RoundMergeFormulaProbe roundMergeFormula = ConfigureRoundMergeFormulaProbe(checkpoint);
+            RoundStatusSourcesProbe statusSources = ConfigureRoundStatusSourcesProbe(checkpoint);
             int initialCounter = checkpoint.Counter;
             controller.StepCompleted += result => {
                 checkpoint = result.Checkpoint;
@@ -425,6 +426,7 @@ namespace Zjcs.Editor
                 roundRandom?.ObserveStep(controller);
                 roundSource?.ObserveStep(controller);
                 roundMergeFormula?.ObserveStep(controller);
+                statusSources?.ObserveStep(controller);
                 if (checkpoint.Counter == initialCounter + 1 || checkpoint.Finished)
                     Debug.Log("[Battle hosts] " + name + " step=" + checkpoint.Counter
                         + " finished=" + checkpoint.Finished);
@@ -488,7 +490,7 @@ namespace Zjcs.Editor
             float previousTimeScale = Time.timeScale;
             try
             {
-                Time.timeScale = hpListener == null && hpRecovery == null && hpCost == null && hpSubstitute == null && roundStartup == null && roundTargets == null && roundProps == null && roundMeet == null && roundRandom == null && roundSource == null && roundMergeFormula == null ? 5 : 1;
+                Time.timeScale = hpListener == null && hpRecovery == null && hpCost == null && hpSubstitute == null && roundStartup == null && roundTargets == null && roundProps == null && roundMeet == null && roundRandom == null && roundSource == null && roundMergeFormula == null && statusSources == null ? 5 : 1;
                 while (runner != null)
                 {
                     triggerTiming?.ObservePresentation();
@@ -503,6 +505,7 @@ namespace Zjcs.Editor
                     if (roundRandom != null && capturedCure) Time.timeScale = 5;
                     if (roundSource != null && capturedCure) Time.timeScale = 5;
                     if (roundMergeFormula != null && capturedCure) Time.timeScale = 5;
+                    if (statusSources != null && capturedCure) Time.timeScale = 5;
                     if (hpSubstitute != null && hpSubstitute.MayAccelerate) Time.timeScale = 5;
                     if (!capturedCure && (hpListener != null && hpListener.ReadyToCapture
                         || hpRecovery != null && hpRecovery.ReadyToCapture
@@ -514,11 +517,13 @@ namespace Zjcs.Editor
                         || roundMeet != null && roundMeet.ReadyToCapture
                         || roundRandom != null && roundRandom.ReadyToCapture
                         || roundSource != null && roundSource.ReadyToCapture
-                        || roundMergeFormula != null && roundMergeFormula.ReadyToCapture))
+                        || roundMergeFormula != null && roundMergeFormula.ReadyToCapture
+                        || statusSources != null && statusSources.ReadyToCapture))
                     {
                         float captureTimeScale = Time.timeScale;
                         Time.timeScale = 0f;
-                        try { yield return Capture(output, name + (roundMergeFormula != null ? "-round-merge-formula"
+                        try { yield return Capture(output, name + (statusSources != null ? "-status-sources"
+                            : roundMergeFormula != null ? "-round-merge-formula"
                             : roundSource != null ? "-round-source"
                             : roundRandom != null ? "-round-random"
                             : roundMeet != null ? "-round-meet"
@@ -574,6 +579,7 @@ namespace Zjcs.Editor
             roundRandom?.Verify(name, checkpoint);
             roundSource?.Verify(name, checkpoint);
             roundMergeFormula?.Verify(name, checkpoint);
+            statusSources?.Verify(name, checkpoint);
             VerifyEquipmentBattlePassives(name, checkpoint, true);
             yield return SettleUi();
             yield return Capture(output, name + "-result");

@@ -32,7 +32,7 @@ foreach($id in 24105,24135,24136,24179,24235,24243,24318,24333,24334,24343,24420
     Assert-RoundSource ($catalog.CreateStatus($id,1,2).RoundStartRulesSupported) "Original creator trigger $id remains unsupported"
 }
 foreach($id in 24037,24038,24045,24222,24472,24473,24474,24486,24640){
-    Assert-RoundSource (-not $catalog.CreateStatus($id,1,2).RoundStartRulesSupported) 'Unimplemented merged duration/count branch was silently enabled'
+    Assert-RoundSource ($catalog.CreateStatus($id,1,2).RoundStartRulesSupported) 'Confirmed source-aware merged duration/count branch remains blocked'
 }
 function Invoke-SourceBattle($statusId,$restore,$legacy,$dead=$false,$sourcePosition=$false){
     $cp=New-SourceCheckpoint $statusId
@@ -107,4 +107,4 @@ foreach($creatorId in 99,2){
     $call=[Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectRoundStartInvocations($cp.Units[0],$cp.Units[0],$cp.Units,[Zjcs.Combat.Official.FightRandomStream]::new(23),$catalog)
     Assert-RoundSource ($call.Count -eq 0 -and $source.RoundStartTriggeredCount -eq 0) 'Unavailable creator was replaced by the victim or consumed an actual call'
 }
-Write-Output 'Round source checks passed: original creator/victim damage, creator/self targets, listener and position, cultivation, finite duration/counts, receipts, legacy and per-turn continuation; unsupported merged-count branches remain explicit.'
+Write-Output 'Round source checks passed: original creator/victim damage, creator/self targets, listener and position, cultivation, finite duration/counts, receipts, legacy and per-turn continuation; source-aware merged-count definitions are enabled.'

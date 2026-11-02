@@ -47,7 +47,7 @@ function Invoke-MergeFormulaBattle($restore){
         $cp.Units.Add($u)
     }
     $source=$catalog.CreateStatus(24640,1,2,9924640,0,0,5,20,1,$null)
-    # Formula-only fixture; production instance selection is intentionally not enabled.
+    # Formula-only fixture; source-aware instance selection is tested separately.
     $source.RoundStartRulesSupported=$true
     [Zjcs.Combat.Official.FightStatusLifecycle]::Initialize($source,0)
     $cp.Units[0].Statuses.Add($source)
@@ -75,4 +75,4 @@ function Invoke-MergeFormulaBattle($restore){
     return [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($cp)
 }
 Assert-RoundMerge ((Invoke-MergeFormulaBattle $false) -eq (Invoke-MergeFormulaBattle $true)) 'Per-round save/restore changed duration quota or damage continuation'
-Write-Output 'Round merge formula checks passed: nine original definitions, independent quota, retained calls, duration cap notifications, unlimited quota, literal caps; isolated real damage fixture executes six calls, removes its exhausted state and resumes exactly. Instance selection is not yet enabled.'
+Write-Output 'Round merge formula checks passed: nine original definitions, independent quota, retained calls, duration cap notifications, unlimited quota, literal caps; isolated real damage fixture executes six calls, removes its exhausted state and resumes exactly. Source-aware instance selection is covered by test_battle_status_sources.ps1.'

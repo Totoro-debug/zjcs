@@ -285,7 +285,9 @@ namespace Zjcs.Combat.Official
                     ? Math.Min(count, sourceStatus.RoleSummonCountLimit) : count;
                 FightBattleStatusState existing = owner.Statuses.FirstOrDefault(status =>
                     status != null && status.ClassId == sourceStatus.RoleSummonCountStatus.EntityId
-                    && status.CreatorId == owner.Id);
+                    && status.CreatorId == owner.Id
+                    && FightBattleStatusOrigin.Matches(FightBattleStatusOrigin.Resolve(status),
+                        FightBattleStatusOrigin.Resolve(sourceStatus)));
                 if (desired <= 0)
                 {
                     if (existing != null) FightStatusLifecycle.End(owner, existing);
@@ -316,6 +318,7 @@ namespace Zjcs.Combat.Official
                     sourceStatus.ReplacementProperties, sourceStatus.BlessPropertyScales);
                 if (sourceStatus.RoleSummonCountUpdateStack) template.StackCount = desired;
                 template.ReportSource = FightBattleStatusReportSource.Resolve(sourceStatus).Copy();
+                template.Origin = FightBattleStatusOrigin.Resolve(sourceStatus).Copy();
                 FightStatusLifecycle.Apply(owner, template, -1, instanceId, random);
                 sourceStatus.RoleSummonCountLastCount = desired;
             }
@@ -387,6 +390,7 @@ namespace Zjcs.Combat.Official
                     sourceStatus.SourceSubRank, owner.Properties, 0,
                     sourceStatus.ReplacementProperties, sourceStatus.BlessPropertyScales);
                 template.ReportSource = FightBattleStatusReportSource.Resolve(sourceStatus).Copy();
+                template.Origin = FightBattleStatusOrigin.Resolve(sourceStatus).Copy();
                 FightStatusLifecycle.Apply(target, template, -1, instanceId, random);
                 applied = true;
             }
@@ -539,6 +543,7 @@ namespace Zjcs.Combat.Official
                                 skill.Rank, skill.Level, skill.SubRank, actor.Properties, 0, null,
                                 skill.BlessPropertyScales);
                             template.ReportSource = FightBattleStatusReportSource.Resolve(status).Copy();
+                            template.Origin = FightBattleStatusOrigin.Resolve(status).Copy();
                             FightStatusLifecycle.Apply(target, template, -1, instanceId, random);
                             applied++;
                         }
@@ -661,6 +666,7 @@ namespace Zjcs.Combat.Official
                     template.IsActionExistGenerated = true;
                     template.ActionExistSourceInstanceId = source.InstanceId;
                     template.ReportSource = FightBattleStatusReportSource.Resolve(source).Copy();
+                    template.Origin = FightBattleStatusOrigin.Resolve(source).Copy();
                     FightBattleStatusState created = FightStatusLifecycle.Apply(unit, template, -1,
                         instanceId, random);
                     if (created != null)
@@ -746,6 +752,7 @@ namespace Zjcs.Combat.Official
                     source.SourceSubRank, source.SourceProperties, 0,
                     source.ReplacementProperties, source.BlessPropertyScales);
                 template.ReportSource = FightBattleStatusReportSource.Resolve(source).Copy();
+                template.Origin = FightBattleStatusOrigin.Resolve(source).Copy();
                 FightStatusLifecycle.Apply(target, template, -1, instanceId, random);
                 applied++;
             }
@@ -795,6 +802,7 @@ namespace Zjcs.Combat.Official
                         status.SourceProperties, 0, status.ReplacementProperties,
                         status.BlessPropertyScales);
                     template.ReportSource = FightBattleStatusReportSource.Resolve(status).Copy();
+                    template.Origin = FightBattleStatusOrigin.Resolve(status).Copy();
                     FightStatusLifecycle.Apply(killer, template, -1, instanceId, random);
                     fired = true;
                 }
@@ -806,6 +814,7 @@ namespace Zjcs.Combat.Official
                         Trigger = new FightBattleStatusStateTrigger
                         {
                             EntityId = status.KillSkillEntityId,
+                            Origin = FightBattleStatusOrigin.Resolve(status).Copy(),
                             SourceSkillItemId = FightBattleStatusReportSource.Resolve(status).SkillItemId,
                             SourceSkillRank = Math.Max(1, status.SourceSkillRank),
                             SourceSkillLevel = Math.Max(1, status.SourceSkillLevel),
@@ -1063,7 +1072,7 @@ namespace Zjcs.Combat.Official
                             FightBattleUnitState oldTarget = units.FirstOrDefault(unit =>
                                 unit != null && unit.Id == oldId);
                             if (oldTarget != null)
-                                RemoveMoveRangeStatuses(new[] { oldTarget }, source.Id,
+                                RemoveMoveRangeStatuses(new[] { oldTarget }, source.Id, FightBattleStatusOrigin.Resolve(status),
                                     status.MoveRangeCloseStatuses);
                         }
                 }
@@ -1074,7 +1083,7 @@ namespace Zjcs.Combat.Official
                         ? status.MoveRangeMeetStatuses : status.MoveRangeNotMeetStatuses;
                     List<FightBattleStatusStateTrigger> other = meets
                         ? status.MoveRangeNotMeetStatuses : status.MoveRangeMeetStatuses;
-                    RemoveMoveRangeStatuses(new[] { source }, source.Id, other);
+                    RemoveMoveRangeStatuses(new[] { source }, source.Id, FightBattleStatusOrigin.Resolve(status), other);
                     if (status.MoveRangeLastTargetCount != candidates.Count
                         || !roundCheck && status.MoveRangeLastTargetCount < 0)
                         if (ApplyMoveRangeStatuses(source, source, status, desired, catalog, random))
@@ -1085,7 +1094,7 @@ namespace Zjcs.Combat.Official
                 {
                     int desiredCount = status.MoveRangeMaxStack < 0
                         ? candidates.Count : Math.Min(candidates.Count, status.MoveRangeMaxStack);
-                    int currentCount = CountMoveRangeStatuses(source, source.Id,
+                    int currentCount = CountMoveRangeStatuses(source, source.Id, FightBattleStatusOrigin.Resolve(status),
                         status.MoveRangeCountStatuses);
                     while (currentCount < desiredCount
                         && ApplyMoveRangeStatuses(source, source, status,
@@ -1094,7 +1103,7 @@ namespace Zjcs.Combat.Official
                         applied++; currentCount++;
                     }
                     if (desiredCount == 0)
-                        RemoveMoveRangeStatuses(new[] { source }, source.Id,
+                        RemoveMoveRangeStatuses(new[] { source }, source.Id, FightBattleStatusOrigin.Resolve(status),
                             status.MoveRangeCountStatuses);
                 }
             }
@@ -1142,6 +1151,7 @@ namespace Zjcs.Combat.Official
                     source.Properties, 0, sourceStatus.ReplacementProperties,
                     sourceStatus.BlessPropertyScales);
                 template.ReportSource = FightBattleStatusReportSource.Resolve(sourceStatus).Copy();
+                template.Origin = FightBattleStatusOrigin.Resolve(sourceStatus).Copy();
                 FightStatusLifecycle.Apply(owner, template, -1, instanceId, random);
                 applied = true;
             }
@@ -1149,17 +1159,19 @@ namespace Zjcs.Combat.Official
         }
 
         private static int CountMoveRangeStatuses(FightBattleUnitState owner, int sourceId,
+            FightBattleStatusOrigin origin,
             List<FightBattleStatusStateTrigger> triggers)
         {
             if (owner == null || triggers == null) return 0;
             var ids = new HashSet<int>(triggers.Where(trigger => trigger != null)
                 .Select(trigger => trigger.EntityId));
             return owner.Statuses.Count(status => status != null && status.CreatorId == sourceId
-                && ids.Contains(status.ClassId));
+                && ids.Contains(status.ClassId)
+                && FightBattleStatusOrigin.Matches(FightBattleStatusOrigin.Resolve(status), origin));
         }
 
         private static void RemoveMoveRangeStatuses(IEnumerable<FightBattleUnitState> units,
-            int sourceId, List<FightBattleStatusStateTrigger> triggers)
+            int sourceId, FightBattleStatusOrigin origin, List<FightBattleStatusStateTrigger> triggers)
         {
             if (units == null || triggers == null) return;
             var ids = new HashSet<int>(triggers.Where(trigger => trigger != null)
@@ -1167,7 +1179,9 @@ namespace Zjcs.Combat.Official
             foreach (FightBattleUnitState unit in units)
                 for (int i = unit.Statuses.Count - 1; i >= 0; i--)
                     if (unit.Statuses[i] != null && unit.Statuses[i].CreatorId == sourceId
-                        && ids.Contains(unit.Statuses[i].ClassId)) FightStatusLifecycle.End(unit, unit.Statuses[i]);
+                        && ids.Contains(unit.Statuses[i].ClassId)
+                        && FightBattleStatusOrigin.Matches(FightBattleStatusOrigin.Resolve(unit.Statuses[i]), origin))
+                        FightStatusLifecycle.End(unit, unit.Statuses[i]);
         }
 
         public static int Apply(FightBattleUnitState unit, FightOfficialCombatCatalog catalog,
@@ -1217,6 +1231,7 @@ namespace Zjcs.Combat.Official
                                     status.SourceSkillLevel, status.SourceSubRank, status.SourceProperties,
                                     0, status.ReplacementProperties, status.BlessPropertyScales);
                                 template.ReportSource = FightBattleStatusReportSource.Resolve(status).Copy();
+                                template.Origin = FightBattleStatusOrigin.Resolve(status).Copy();
                                 FightStatusLifecycle.Apply(unit, template, -1, instanceId, random);
                             }
                             if (triggerSkills != null && status.HpTriggerSkills != null)
@@ -1387,6 +1402,7 @@ namespace Zjcs.Combat.Official
                 source.SourceSkillLevel, source.SourceSubRank, source.SourceProperties, 0,
                 source.ReplacementProperties, source.BlessPropertyScales);
             template.ReportSource = FightBattleStatusReportSource.Resolve(source).Copy();
+            template.Origin = FightBattleStatusOrigin.Resolve(source).Copy();
             FightStatusLifecycle.Apply(owner, template, -1, instanceId, random);
         }
 
@@ -1539,6 +1555,7 @@ namespace Zjcs.Combat.Official
                             : source.ReplacementProperties,
                 source.BlessPropertyScales);
             template.ReportSource = FightBattleStatusReportSource.Resolve(source).Copy();
+            template.Origin = FightBattleStatusOrigin.Resolve(source).Copy();
             FightStatusLifecycle.Apply(target, template, -1, instanceId, random);
             return true;
         }
@@ -1652,6 +1669,7 @@ namespace Zjcs.Combat.Official
                     source.SourceProperties, 0, source.ReplacementProperties,
                     source.BlessPropertyScales);
                 template.ReportSource = FightBattleStatusReportSource.Resolve(source).Copy();
+                template.Origin = FightBattleStatusOrigin.Resolve(source).Copy();
                 FightStatusLifecycle.Apply(unit, template, -1, instanceId, random);
             }
         }

@@ -7,12 +7,13 @@ namespace Zjcs.Combat.Official
         public FightBattleExecutionResult Step(int sequence, int counter)
         {
             foreach (var unit in units)
-                if (unit.StatusStarted != null || unit.StatusEnded != null)
+                if (unit.StatusStarted != null || unit.StatusEnded != null || unit.StatusRoundResolver != null)
                     throw new InvalidOperationException("A battle unit is already executing a step.");
             foreach (var unit in units)
             {
                 unit.StatusStarted = OnStatusStarted;
                 unit.StatusEnded = OnStatusEnded;
+                unit.StatusRoundResolver = StatusClockRound;
             }
             try { return StepCore(sequence, counter); }
             finally
@@ -23,6 +24,7 @@ namespace Zjcs.Combat.Official
                 {
                     unit.StatusStarted = null;
                     unit.StatusEnded = null;
+                    unit.StatusRoundResolver = null;
                 }
                 movementStartContext = null;
             }

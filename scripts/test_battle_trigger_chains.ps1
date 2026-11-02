@@ -293,7 +293,7 @@ Assert-Chain ($null -ne $generatedActionStatus -and
 Assert-Chain ($null -eq ($actionOwner.Statuses | Where-Object ClassId -eq 60221)) 'Action-existence status was not removed after the matching action disappeared'
 
 # Official 25278 adds fourteen 24031 stacks at round start and listens to actual consumption.
-$consumeRoundStatus = $catalog.CreateStatus(25278, 1, 1, 20, 0, 0, 6, 17, 10, $null)
+$consumeRoundStatus = $catalog.CreateStatus(25278, 1, 1, 20, 25278, 10662, 6, 17, 10, $null)
 Assert-Chain ($consumeRoundStatus.RoundStartRulesSupported -and
     $consumeRoundStatus.RoundStartStatuses.Count -eq 14 -and
     $consumeRoundStatus.HasConsumeStackCount -and
@@ -353,7 +353,7 @@ Assert-Chain ($restoredConsumeListener.ConsumeStackCountProgress -eq 1) 'Whiteli
 # Both branches share the component probability and one invocation count. A status branch
 # must not consume the last invocation before the skill branch has been collected.
 $mixedOwner = Unit 1 1 0 100
-$mixed = $catalog.CreateStatus(25278, 1, 1, 50, 0, 0, 6, 17, 10, $null)
+$mixed = $catalog.CreateStatus(25278, 1, 1, 50, 25278, 10662, 6, 17, 10, $null)
 $mixed.RoundStartRate = 0
 $mixed.RoundStartSkills.Add([Zjcs.Combat.Official.FightBattleStatusStateTrigger]@{
     EntityId = 9900600; Source = 2; Target = 2; BasePercent = 1

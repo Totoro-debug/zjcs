@@ -543,6 +543,11 @@ namespace Zjcs.Combat.Official
                 FightBattleStatusState status = statusCatalog.CreateStatus(classId, caster.Id, owner.Id,
                     ++index, state.SkillEntityId, state.SkillItemId, Math.Max(1, state.SkillRank),
                     Math.Max(1, state.SkillLevel), state.SkillSubRank, state.EntityProperties);
+                status.Origin = new FightBattleStatusOrigin
+                {
+                    IsSet = true, UnitId = caster.Id, EntityId = caster.Id,
+                    SkillItemId = state.SkillItemId, SkillEntityId = state.SkillEntityId
+                };
                 caster.Statuses.Add(status);
             }
         }
@@ -960,6 +965,7 @@ namespace Zjcs.Combat.Official
                 unitById.Add(summon.Id, summon);
                 summon.StatusStarted = OnStatusStarted;
                 summon.StatusEnded = OnStatusEnded;
+                summon.StatusRoundResolver = StatusClockRound;
                 checkpoint.Units.Add(summon);
                 checkpoint.Statistics.Unit(summon.Id);
                 turns.RegisterUnit(summon.Turn, hit.SummonImmediateRound);
@@ -1170,6 +1176,7 @@ namespace Zjcs.Combat.Official
             FightBattleStatusState template = statusCatalog.CreateStatus(statusId, summon.Id,
                 actor.Id, NextStatusInstanceId(), skill.EntityId, skill.ItemId, skill.Rank,
                 skill.Level, skill.SubRank, actor.Properties, 0, null, skill.BlessPropertyScales);
+            template.Origin = FightBattleStatusOrigin.Resolve(skill, actor.Id).Copy();
             FightBattleStatusState applied = FightStatusLifecycle.Apply(summon, template,
                 StatusClockRound(template), template.InstanceId, random);
             FightStatusLifecycle.Initialize(applied, StatusClockRound(template));
@@ -1422,6 +1429,7 @@ namespace Zjcs.Combat.Official
             {
                 return;
             }
+            skill.StatusOrigin = FightBattleStatusOrigin.Resolve(parentSkill, actor.Id).Copy();
             InheritBlessingScales(skill, parentSkill.BlessPropertyScales);
             // Do not run AI selection across the roster again: each hit owns its child target.
             // Self effects select the caster, while scoped hits retain the original hit position.
@@ -1493,6 +1501,7 @@ namespace Zjcs.Combat.Official
                 {
                     continue;
                 }
+                extraSkill.StatusOrigin = FightBattleStatusOrigin.Resolve(skill, actor.Id).Copy();
                 InheritBlessingScales(extraSkill, skill.BlessPropertyScales);
                 List<FightBattleUnitState> targets = FightBattleTargeting.Select(actor, units,
                     extraSkill.TargetType, 0, false, false, extraSkill, random);
@@ -1559,6 +1568,7 @@ namespace Zjcs.Combat.Official
                 {
                     continue;
                 }
+                skill.StatusOrigin = trigger.Origin?.Copy();
                 InheritBlessingScales(skill, trigger.BlessPropertyScales);
                 List<FightBattleUnitState> targets = FightBattleTargeting.Select(owner, units,
                     skill.TargetType, 0, false, false, skill, random);
@@ -1609,6 +1619,7 @@ namespace Zjcs.Combat.Official
                 {
                     continue;
                 }
+                skill.StatusOrigin = trigger.Origin?.Copy();
                 InheritBlessingScales(skill, trigger.BlessPropertyScales);
 
                 FightBattleUnitState targetPosition = null;
@@ -1681,6 +1692,7 @@ namespace Zjcs.Combat.Official
                 {
                     continue;
                 }
+                skill.StatusOrigin = invocation.Trigger.Origin?.Copy();
                 InheritBlessingScales(skill, invocation.Trigger.BlessPropertyScales);
                 if (!invocation.SelectTargets && !invocation.AllowDeadTarget
                     && !IsExplicitTargetCompatible(source, target, skill.TargetType)
@@ -2128,6 +2140,7 @@ namespace Zjcs.Combat.Official
                 skill == null ? 0 : skill.ItemId, skill == null ? 1 : skill.Rank,
                 skill == null ? 1 : skill.Level, skill == null ? actor.SubRank : skill.SubRank,
                 actor.Properties, customStatusValue, null, skill?.BlessPropertyScales);
+            template.Origin = FightBattleStatusOrigin.Resolve(skill, actor.Id).Copy();
             FightStatusLifecycle.Apply(owner, template, -1, instanceId, random);
         }
 

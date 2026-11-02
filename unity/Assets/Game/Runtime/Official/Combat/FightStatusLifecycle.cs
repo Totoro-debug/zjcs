@@ -4,8 +4,8 @@ using System.Collections.Generic;
 namespace Zjcs.Combat.Official
 {
     /// <summary>
-    /// Base status lifecycle from <c>FightStatusComponentInfo</c>: round duration, stacking and the
-    /// official same-status merge rules. Component effects are delegated to their runtime handlers.
+    /// Base status lifetime and stack arithmetic from <c>FightStatusComponentInfo</c>, with the
+    /// user-confirmed offline source identity/renewal policy. Component effects use their handlers.
     /// </summary>
     public static class FightStatusLifecycle
     {
@@ -157,25 +157,40 @@ namespace Zjcs.Combat.Official
             if (unit.VoodooDoll != null && template.StatusType == 1) return null;
             if (unit.Statuses == null) unit.Statuses = new List<FightBattleStatusState>();
             FightBattleStatusState existing = null;
+            var origin = FightBattleStatusOrigin.Resolve(template);
             foreach (FightBattleStatusState candidate in unit.Statuses)
-                if (candidate != null && candidate.ClassId == template.ClassId) { existing = candidate; break; }
+                if (candidate != null && candidate.ClassId == template.ClassId
+                    && FightBattleStatusOrigin.Matches(FightBattleStatusOrigin.Resolve(candidate), origin))
+                { existing = candidate; break; }
             if (existing != null)
             {
+                // Confirmed offline identity rule: distinct entities/skills coexist. A repeat
+                // from the same entity and skill keeps the live instance and its accumulated effects.
+                int refreshRound = round;
+                if (refreshRound < 0)
+                {
+                    if (unit.StatusRoundResolver != null) refreshRound = unit.StatusRoundResolver(template);
+                    else if (template.RoundTarget == TargetApplicator
+                        || template.RoundTarget == TargetCreator && template.CreatorId == unit.Id)
+                        refreshRound = unit.SkillState?.Round ?? 0;
+                    else if (template.DurationRound >= 0)
+                        throw new InvalidOperationException("Refreshing this status requires its actual round clock.");
+                }
+                RefreshSource(existing, template, origin);
                 if (existing.IsOpenStack)
                 {
                     AddStack(existing, template.StackCount > 0 ? template.StackCount : 1);
-                    if (existing.IsAddDurationRound) ExtendDurationOnStack(existing, round);
-                    else if (existing.IsResetDurationWhenStack) ResetDurationOnStack(existing, round);
-                    FightStatusCooldownRuntime.Invoke(unit, existing, random);
-                    RecordApplication(unit, template);
-                    return existing;
                 }
-                if (existing.ActionBehOfSameStatus == BehaviourDiscard) return existing;
-                if (existing.ActionBehOfSameStatus == BehaviourImmediate) End(unit, existing);
+                if (existing.IsAddDurationRound) ExtendDurationOnStack(existing, refreshRound);
+                else ResetDurationOnStack(existing, refreshRound);
+                if (existing.IsOpenStack) FightStatusCooldownRuntime.Invoke(unit, existing, random);
+                RecordApplication(unit, template);
+                return existing;
             }
             var applied = new FightBattleStatusState
             {
                 InstanceId = instanceId,
+                Origin = origin.Copy(),
                 ClassId = template.ClassId,
                 StatusType = template.StatusType,
                 RemoveApplyEntityOnEnd = template.RemoveApplyEntityOnEnd,
@@ -520,6 +535,24 @@ namespace Zjcs.Combat.Official
         // Keep accepted applications separate from active instances: refresh/stack applications
         // count once each, including several applications before the next property rebuild.
         // Use the incoming source, which can differ from the existing instance's original creator.
+        private static void RefreshSource(FightBattleStatusState existing, FightBattleStatusState template,
+            FightBattleStatusOrigin origin)
+        {
+            existing.Origin = origin.Copy();
+            existing.CreatorId = template.CreatorId;
+            existing.RootSkillId = template.RootSkillId;
+            existing.ApplyingSkillItemId = template.ApplyingSkillItemId;
+            existing.ReportSource = template.ReportSource?.Copy();
+            existing.SourceSkillRank = template.SourceSkillRank;
+            existing.SourceSkillLevel = template.SourceSkillLevel;
+            existing.SourceSubRank = template.SourceSubRank;
+            existing.SourceProperties = template.SourceProperties == null ? null : Copy(template.SourceProperties);
+            existing.ReplacementProperties = FightStatusPropertyModifiers.Copy(template.ReplacementProperties);
+            existing.BlessPropertyScales = FightStatusPropertyModifiers.Copy(template.BlessPropertyScales);
+            // Do not replace live shield amounts, layer counts, property transitions, trigger
+            // counters or resolved effects with a fresh template's initialization values.
+        }
+
         private static void RecordApplication(FightBattleUnitState unit, FightBattleStatusState template)
         {
             if (template.StatusType < 1 || template.StatusType > 3) return;
@@ -609,6 +642,7 @@ namespace Zjcs.Combat.Official
                         result.Add(new FightBattleStatusStateTrigger
                         {
                             EntityId = value.EntityId,
+                            Origin = value.Origin?.Copy(),
                             BasePercent = value.BasePercent,
                             AffectedByProp = value.AffectedByProp,
                             Source = value.Source,

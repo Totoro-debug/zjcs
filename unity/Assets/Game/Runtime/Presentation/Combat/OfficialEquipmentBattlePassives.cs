@@ -15,6 +15,12 @@ namespace Zjcs.Presentation.Combat
             return progression.EquipmentBattlePassiveTerms(player).Select(term => new FightOfficialPassiveSkillBinding
             {
                 ItemId = term.SkillItemId,
+                Origin = new FightBattleStatusOrigin
+                {
+                    IsSet = true,
+                    EntityKind = term.EquipmentInstanceId > 0 ? FightBattleStatusOrigin.Equipment : FightBattleStatusOrigin.Suit,
+                    EntityId = term.EquipmentInstanceId > 0 ? term.EquipmentInstanceId : term.SuitId
+                },
                 Rank = term.SkillRank,
                 Level = term.SkillLevel,
                 SubRank = ownerSubRank,

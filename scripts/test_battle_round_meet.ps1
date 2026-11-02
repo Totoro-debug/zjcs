@@ -26,7 +26,7 @@ function New-MeetCheckpoint($statusId,$reset){
         $u.Turn.Id=$id;$u.Turn.Hp=$u.Hp;$u.Turn.Speed=$(if($id -eq 1){100}else{1})
         $cp.Units.Add($u)
     }
-    $source=$catalog.CreateStatus($statusId,1,1,990000+$statusId,0,0,5,20,1,$null)
+    $source=$catalog.CreateStatus($statusId,1,1,990000+$statusId,10500,10000,5,20,1,$null)
     $source.RoundStartResetMeetCountOnInvoke=$reset
     $cp.Units[0].Statuses.Add($source)
     return $cp

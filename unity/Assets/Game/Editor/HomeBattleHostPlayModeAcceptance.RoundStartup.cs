@@ -8,6 +8,121 @@ namespace Zjcs.Editor
 {
     public static partial class HomeBattleHostPlayModeAcceptance
     {
+        private static RoundStatusSourcesProbe ConfigureRoundStatusSourcesProbe(FightBattleCheckpoint checkpoint)
+        {
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_STATUS_SOURCES_ACCEPTANCE") != "1") return null;
+            var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
+            foreach (var unit in checkpoint.Units)
+            {
+                long hp = unit.Id == 1 ? 5000000L : 2000000L;
+                foreach (var property in unit.Properties.Concat(unit.BaseProperties))
+                {
+                    if (property.Id == catalog.PropertyType("MaxHp")) property.Value = hp;
+                    if (unit.Id != 1 && property.Id == catalog.PropertyType("Attack")) property.Value = 1000L;
+                }
+                unit.MaxHp = unit.LastMaxHp = unit.Hp = unit.Turn.Hp = hp;
+            }
+            var guard = checkpoint.Units.Single(value => value.Id == 2);
+            foreach (long equipmentId in new[] { 8801L, 8802L })
+            {
+                var passive = catalog.CreateStatus(60560, 2, 2, (int)equipmentId, 60560, 17056, 1, 1, 1, null);
+                passive.Origin = new FightBattleStatusOrigin
+                {
+                    IsSet = true, UnitId = 2, EntityKind = FightBattleStatusOrigin.Equipment,
+                    EntityId = equipmentId, SkillItemId = 17056, SkillEntityId = 60560
+                };
+                guard.Statuses.Add(passive);
+            }
+            guard.Skills.Clear(); guard.SkillState.Slots.Clear();
+            var summon = catalog.CreateSkill(10710, 0, 0, 5, 20, 1, null);
+            summon.LimitedTimes = 1;
+            guard.Skills.Add(summon); guard.SkillState.Slots.Add(catalog.CreateSkillSlot(summon, 0));
+            foreach (var entry in checkpoint.Timeline.Entries) if (entry.Id == 2) entry.Next = 0;
+            checkpoint.Timeline.Entries.Sort((left, right) => left.Next.CompareTo(right.Next));
+            return new RoundStatusSourcesProbe(catalog);
+        }
+
+        private sealed class RoundStatusSourcesProbe
+        {
+            private readonly FightOfficialCombatCatalog catalog;
+            private FightBattleStatusState guardState, rockState;
+            private int rockId, guardCalls, rockCalls;
+            private bool independentEquipmentObserved;
+            public bool ReadyToCapture => guardCalls >= 4;
+            public RoundStatusSourcesProbe(FightOfficialCombatCatalog catalog) { this.catalog = catalog; }
+            private FightBattleStatusState Create(int creator, int instance) =>
+                catalog.CreateStatus(24640, 1, creator, instance, 63280, 0, 5, 20, 1, null);
+            public void ObserveStep(OfficialBattleRuntimeController controller)
+            {
+                var cp = controller.Checkpoint;
+                var player = cp.Units.Single(value => value.Id == 1);
+                if (guardState == null)
+                {
+                    var rock = cp.Units.FirstOrDefault(value => value.MasterId == 2);
+                    if (rock == null) return;
+                    rockId = rock.Id;
+                    foreach (var property in rock.Properties.Concat(rock.BaseProperties))
+                    {
+                        if (property.Id == catalog.PropertyType("MaxHp")) property.Value = 2000000L;
+                        if (property.Id == catalog.PropertyType("Attack")) property.Value = 1000L;
+                    }
+                    rock.MaxHp = rock.LastMaxHp = rock.Hp = rock.Turn.Hp = 2000000L;
+                    // Keep the real summon present throughout this source-isolation fixture.
+                    // Production lifespan remains unchanged; vanished creators are a separate gap.
+                    var lifespan = rock.Statuses.Single(value => value.RemoveApplyEntityOnEnd);
+                    lifespan.DurationRound = lifespan.CurDurationRound = 30;
+                    guardState = FightStatusLifecycle.Apply(player, Create(2, 9924640), player.SkillState.Round, 9924640);
+                    rockState = FightStatusLifecycle.Apply(player, Create(rockId, 9924641), player.SkillState.Round, 9924641);
+                    Require(player.Statuses.Count(value => value.ClassId == 24640) == 2,
+                        "Independent guard/rock status sources were merged on application.");
+                    return;
+                }
+                var step = cp.Receipts.Last().Event;
+                var equipmentEffects = cp.Units.Single(value => value.Id == 2).Statuses
+                    .Where(value => value.ClassId == 60561).ToArray();
+                Require(equipmentEffects.Length == 2 && equipmentEffects.All(value => value.StackCount == 1
+                    && value.Origin.EntityKind == FightBattleStatusOrigin.Equipment)
+                    && equipmentEffects.Select(value => value.Origin.EntityId).OrderBy(value => value)
+                        .SequenceEqual(new[] { 8801L, 8802L }),
+                    "Same-owner equipment summon-count effects collided or accumulated each other's layers.");
+                independentEquipmentObserved = true;
+                foreach (int caster in new[] { 2, rockId })
+                {
+                    var casts = step.SkillCasts.Where(value => value.SkillEntityId == 63280 && value.ActorId == caster).ToArray();
+                    if (casts.Length == 0) continue;
+                    var state = caster == 2 ? guardState : rockState;
+                    int calls = caster == 2 ? ++guardCalls : ++rockCalls;
+                    var damage = step.DamageEvents.Where(value => value.SkillEntityId == 63280 && value.SourceId == caster).ToArray();
+                    Require(casts.Length == 1 && casts[0].TargetIds.SequenceEqual(new[] { 1 })
+                        && damage.Length == 1 && damage[0].TargetId == 1 && damage[0].Damage < 0
+                        && damage[0].AfterHp < damage[0].BeforeHp && state.RoundStartTriggeredCount == calls,
+                        "Independent guard/rock source lost its original victim, actual damage or invocation count.");
+                    Debug.Log("[Status sources hosts] original 24640 -> 63280 -> 63281: caster=" + caster
+                        + ", call=" + calls + ", damage=" + damage[0].Damage + ", personalRound=" + player.SkillState.Round);
+                }
+                if (guardCalls == 1 && guardState.RoundStartStackRoundCount == 1)
+                {
+                    var refreshed = FightStatusLifecycle.Apply(player, Create(2, 9924642), player.SkillState.Round, 9924642);
+                    Require(ReferenceEquals(refreshed, guardState) && guardState.RoundStartTriggeredCount == 1
+                        && FightStatusLifecycle.RoundStartMaximumCount(guardState) == 6
+                        && rockState.RoundStartStackRoundCount == 1 && rockState.RoundStartTriggeredCount == 1,
+                        "Refreshing guard poison replaced its live state or changed rock poison's quota.");
+                }
+            }
+            public void Verify(string host, FightBattleCheckpoint checkpoint)
+            {
+                Require(guardCalls == 6 && rockCalls == 3 && independentEquipmentObserved
+                    && guardState.RoundStartStackRoundCount == 2 && rockState.RoundStartStackRoundCount == 1
+                    && guardState.SourceSkillRank == 5 && guardState.SourceSkillLevel == 20
+                    && !checkpoint.Units.Single(value => value.Id == 1).Statuses.Any(value => value.ClassId == 24640),
+                    host + " did not settle independent renewed and unrenewed poison sources exactly.");
+                string saved = FightBattleCheckpointSerializer.Save(checkpoint);
+                Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
+                    host + " changed independent source state after checkpoint reload.");
+                Debug.Log("[Status sources hosts] " + host + ": guard six calls, rock three calls, two independent equipment summon-count effects, retained live instance and cultivation, independent expiry and checkpoint passed.");
+            }
+        }
+
         private static RoundMergeFormulaProbe ConfigureRoundMergeFormulaProbe(FightBattleCheckpoint checkpoint)
         {
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_ROUND_MERGE_FORMULA_ACCEPTANCE") != "1") return null;
@@ -23,9 +138,7 @@ namespace Zjcs.Editor
                 unit.MaxHp = unit.LastMaxHp = unit.Hp = unit.Turn.Hp = hp;
             }
             var source = catalog.CreateStatus(24640, 1, 2, 9924640, 0, 0, 5, 20, 1, null);
-            // Isolated formula fixture: selection of an old instance is deliberately bypassed.
-            // Production definitions remain unsupported until that missing server rule is resolved.
-            source.RoundStartRulesSupported = true;
+            // Formula-only fixture; the separate source probe exercises actual instance selection.
             FightStatusLifecycle.Initialize(source, 0);
             checkpoint.Units.Single(value => value.Id == 1).Statuses.Add(source);
             return new RoundMergeFormulaProbe(source);
@@ -67,7 +180,7 @@ namespace Zjcs.Editor
                 string saved = FightBattleCheckpointSerializer.Save(checkpoint);
                 Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
                     host + " changed the duration formula fixture after checkpoint reload.");
-                Debug.Log("[Round merge formula hosts] " + host + ": six actual damage calls, exhausted removal and checkpoint passed; instance selection remains disabled.");
+                Debug.Log("[Round merge formula hosts] " + host + ": six actual damage calls, exhausted removal and checkpoint passed; instance selection uses the separate source probe.");
             }
         }
 
@@ -381,7 +494,7 @@ namespace Zjcs.Editor
                 }
                 unit.MaxHp = unit.LastMaxHp = unit.Hp = unit.Turn.Hp = hp;
             }
-            var source = catalog.CreateStatus(24026, 1, 1, 9924026, 0, 0, 5, 20, 1, null);
+            var source = catalog.CreateStatus(24026, 1, 1, 9924026, 10500, 10000, 5, 20, 1, null);
             checkpoint.Units.Single(value => value.Id == 1).Statuses.Add(source);
             return new RoundMeetProbe(source);
         }

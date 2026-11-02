@@ -12,6 +12,8 @@ function Assert-Status($condition, $message) {
 function New-Status($classId, $duration) {
     $status = [Zjcs.Combat.Official.FightBattleStatusState]::new()
     $status.ClassId = $classId
+    $status.CreatorId = 1
+    $status.RootSkillId = 50000 + $classId
     $status.InstanceId = 1
     $status.DurationRound = $duration
     $status.CurDurationRound = $duration
@@ -56,6 +58,7 @@ $unit.Id = 1; $unit.Hp = 100; $unit.MaxHp = 100
 $parallel = New-Status 5010 2
 $parallel.ActionBehOfSameStatus = 0
 [Zjcs.Combat.Official.FightStatusLifecycle]::Apply($unit, $parallel, 1, 1) | Out-Null
+$parallel.CreatorId = 2
 $parallel.StackCount = 2
 [Zjcs.Combat.Official.FightStatusLifecycle]::Apply($unit, $parallel, 1, 2) | Out-Null
 Assert-Status ($unit.Statuses.Count -eq 2) 'Parallel same-status application did not keep both instances'
@@ -65,18 +68,16 @@ $replaceUnit.Id = 2; $replaceUnit.Hp = 100; $replaceUnit.MaxHp = 100
 $immediate = New-Status 5011 2
 $immediate.ActionBehOfSameStatus = 1
 [Zjcs.Combat.Official.FightStatusLifecycle]::Apply($replaceUnit, $immediate, 1, 1) | Out-Null
-$immediate.DurationRound = 5
 [Zjcs.Combat.Official.FightStatusLifecycle]::Apply($replaceUnit, $immediate, 2, 2) | Out-Null
-Assert-Status ($replaceUnit.Statuses.Count -eq 1 -and $replaceUnit.Statuses[0].DurationRound -eq 5 -and $replaceUnit.Statuses[0].StartRound -eq 2) 'Immediate same-status application did not replace the old instance'
+Assert-Status ($replaceUnit.Statuses.Count -eq 1 -and $replaceUnit.Statuses[0].InstanceId -eq 1 -and $replaceUnit.Statuses[0].DurationRound -eq 2 -and $replaceUnit.Statuses[0].StartRound -eq 2) 'Confirmed same-source renewal did not preserve the old instance and refresh its clock'
 
 $discardUnit = [Zjcs.Combat.Official.FightBattleUnitState]::new()
 $discardUnit.Id = 3; $discardUnit.Hp = 100; $discardUnit.MaxHp = 100
 $discard = New-Status 5012 2
 $discard.ActionBehOfSameStatus = 2
 [Zjcs.Combat.Official.FightStatusLifecycle]::Apply($discardUnit, $discard, 1, 1) | Out-Null
-$discard.DurationRound = 9
 [Zjcs.Combat.Official.FightStatusLifecycle]::Apply($discardUnit, $discard, 2, 2) | Out-Null
-Assert-Status ($discardUnit.Statuses.Count -eq 1 -and $discardUnit.Statuses[0].DurationRound -eq 2) 'Discard same-status application replaced the old instance'
+Assert-Status ($discardUnit.Statuses.Count -eq 1 -and $discardUnit.Statuses[0].InstanceId -eq 1 -and $discardUnit.Statuses[0].DurationRound -eq 2 -and $discardUnit.Statuses[0].StartRound -eq 2) 'Confirmed same-source renewal incorrectly discarded the refreshed clock'
 
 $stackUnit = [Zjcs.Combat.Official.FightBattleUnitState]::new()
 $stackUnit.Id = 4; $stackUnit.Hp = 100; $stackUnit.MaxHp = 100

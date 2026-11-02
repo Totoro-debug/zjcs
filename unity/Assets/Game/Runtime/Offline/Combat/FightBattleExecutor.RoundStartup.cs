@@ -11,7 +11,9 @@ namespace Zjcs.Combat.Official
                 || status.RoundStartDefinitionResolved && status.RoundStartTargetRulesResolved
                     && status.RoundStartPropTargetRulesResolved && status.RoundStartMeetRulesResolved
                     && status.RoundStartRandomRulesResolved && status.RoundStartSourceRulesResolved
-                    && status.RoundStartMergeRulesResolved) return;
+                    && status.RoundStartMergeRulesResolved
+                    // Earlier checkpoints parsed merged-count definitions but intentionally blocked them.
+                    && (!status.RoundStartMergeMaxCountOnStackRound || status.RoundStartRulesSupported)) return;
             var definition = statusCatalog.CreateStatus(status.ClassId, status.OwnerId,
                 status.CreatorId, status.InstanceId, status.RootSkillId, status.ApplyingSkillItemId,
                 status.SourceSkillRank, status.SourceSkillLevel, status.SourceSubRank, status.SourceProperties,
