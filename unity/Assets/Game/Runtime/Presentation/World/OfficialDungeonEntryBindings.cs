@@ -11,7 +11,7 @@ namespace Zjcs.Presentation.World
     {
         [Serializable] private sealed class MatchingPanelsDocument { public MatchingPanelPrefab[] prefabs; }
         [Serializable] private sealed class MatchingPanelPrefab
-        { public string name, layoutJson; public MatchingPanelContent[] contents; public MatchingPanelSound[] sounds; public SafeAreaBinding[] safeAreas; }
+        { public string name, layoutJson; public MatchingPanelContent[] contents; public MatchingPanelSound[] sounds; public SafeAreaBinding[] safeAreas; public MatchingPanelContent towerButton; }
         [Serializable] private sealed class SafeAreaBinding
         { public string path; public string[] objects; public bool enabled; public float PaddingTop, PaddingBottom; public bool DisableTopAdapt, DisableBottomAdapt; }
         [Serializable] private sealed class MatchingPanelContent { public string path; public string[] objects; }
@@ -68,6 +68,21 @@ namespace Zjcs.Presentation.World
             var names = (string[])objects.Clone();
             names[0] = root.name;
             return OfficialDungeonUiBindingRuntime.Find(root.transform, path, names);
+        }
+
+        public static UnityEngine.UI.Button TowerEntryButton(GameObject root)
+        {
+            MatchingPanelContent binding = matchingPanels.prefabs.Single(value => value.name == "TravelNotesPanel").towerButton;
+            if (binding == null) throw new InvalidDataException("Original OldPlayEntryBtn.mEntryBtn binding is missing.");
+            return Find(root, binding.path, binding.objects).GetComponent<UnityEngine.UI.Button>()
+                ?? throw new InvalidDataException("Original tower entry Button is missing.");
+        }
+
+        public static void RefreshTowerTravelEntry(GameObject root, bool unlocked, bool preview,
+            IReadOnlyList<KeyValuePair<string, int>> levels)
+        {
+            MatchingPanelPrefab binding = matchingPanels.prefabs.Single(value => value.name == "TravelNotesPanel");
+            OfficialDungeonUiBindingRuntime.RefreshTowerTravelEntry(root, binding.layoutJson, unlocked, preview, levels);
         }
 
         public static void RefreshCatalogueDetail(GameObject root, bool unlocked, bool canEnter)

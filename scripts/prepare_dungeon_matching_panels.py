@@ -55,9 +55,13 @@ def layout_record(obj, cls, fields, path, names):
         row.update(padding=list(struct.unpack_from('<4f',raw,32)),softness=list(struct.unpack_from('<2i',raw,48)))
     return row
 
-def state_records(fields, name, nodes):
+def state_records(fields, name, nodes, *, sprite_proxies=False):
     refs={value['rid']:value for value in fields['references']['RefIds']}
     configs=fields[name]['mStateConfigs']
+    if sprite_proxies:
+        if {refs[v['rid']]['type']['class'] for v in configs}!={'StateGameObjectConfig','StateSpriteAssetProxyConfig'}:
+            raise ValueError('Review original entry state configurations')
+        configs=[v for v in configs if refs[v['rid']]['type']['class']=='StateGameObjectConfig']
     if len(configs)!=1:raise ValueError('Review original object state: '+name+' '+str([refs[v['rid']]['type'] for v in configs]))
     config=refs[configs[0]['rid']]
     if config['type']['class']!='StateGameObjectConfig':raise ValueError('Review original state config: '+name)
@@ -142,6 +146,11 @@ def build():
     apk=Apk.current()
     if apk.version!='884_156692': raise ValueError('Review matching source version before reproduction')
     schemas=CurrentSchemas()
+    from official_manifest import read_asset_manifest
+    from prepare_character_creation_opening import SpriteCache
+    from prepare_dungeon_ui_bindings import sprite_binding, route_texts
+    assets_by_guid={r["guid"]:r for r in read_asset_manifest(apk.source.manifest_bytes("DefaultPackage",apk.archive)) if r["guid"]}
+    sprites=SpriteCache(apk)
     audio_receipt=ROOT/'assets/reference/official-map/map12-ui-audio-source-manifest.json'
     audio=json.loads(audio_receipt.read_bytes())
     package=next(p for p in audio['packages'] if 'ui_sfx_01' in p['name'])
@@ -157,7 +166,7 @@ def build():
     if len(payload)!=current['size'] or hashlib.md5(payload).hexdigest()!=current['hash'] or sha(payload)!=package['sha256']:
         raise ValueError('Current original UI sound package differs from the converted PCM source')
     events={row['id']:row for row in audio['events'] if row['bank']['package']==package['name']}
-    sources=[]; prefabs=[]; retained_sources=[]
+    sources=[]; prefabs=[]; retained_sources=[]; travel_language_sources={}
     historical_asset = None; historical_source = None
     def source(obj,**fields):
         provenance = dict(historical_source, path_id=str(obj.path_id)) if obj.assets_file is historical_asset else apk.provenance(obj)
@@ -174,7 +183,7 @@ def build():
         by_id={go.object_reader.path_id:(path,names) for go,path,names,_ in nodes}
         row=dict(name=name,sourceManifest=historical_source['manifest'] if historical_source else apk.version,
                  contents=[],sounds=[],safeAreas=[])
-        layouts=[]; initial_states=None; detail_states={}
+        layouts=[]; initial_states=None; detail_states={}; travel_entries=[]
         source(prefab,prefab=name)
         for go,path,names,_ in nodes:
             for pair in go.m_Component:
@@ -182,10 +191,52 @@ def build():
                 if obj.type.name!='MonoBehaviour': continue
                 cls=obj.read(check_read=False).m_Script.read().m_ClassName
                 if cls not in ('GameMatchMiniPanel','AnimationSoundPlayer','SafeArea','DailyDungeonEntryPanel',
-                               'DailyDungeonDetailContent','DailyDungeonUnlockContent')+LAYOUTS: continue
+                               'DailyDungeonDetailContent','DailyDungeonUnlockContent','DemonBattleEntry','OldPlayEntryBtn')+LAYOUTS: continue
                 if cls in ('DailyDungeonDetailContent','DailyDungeonUnlockContent') and name!='DailyDungeonDialog':continue
                 fields=schemas.read(obj)
                 source(obj,prefab=name,objects=names,fields=fields)
+                if cls=='OldPlayEntryBtn':
+                    button=PPtr(**fields['mEntryBtn'],assetsfile=obj.assets_file).deref()
+                    button_fields=schemas.read(button)
+                    button_path,button_names=by_id[button_fields['m_GameObject']['m_PathID']]
+                    row['towerButton']=dict(path='/'.join(map(str,button_path)),objects=button_names)
+                    source(button,prefab=name,objects=button_names,fields=button_fields)
+                    continue
+                if cls=='DemonBattleEntry':
+                    refs={r['rid']:r for r in fields['references']['RefIds']}
+                    entry=dict(type=cls,path='/'.join(map(str,path)),objects=names,
+                        states=state_records(fields,'EntryStateSwitcher',by_id,sprite_proxies=True),
+                        countStates=state_records(fields,'UnlockCountSwitcher',by_id),sprites=[],levels=[])
+                    for ref in fields['EntryStateSwitcher']['mStateConfigs']:
+                        config=refs[ref['rid']]
+                        if config['type']['class']!='StateSpriteAssetProxyConfig':continue
+                        for item in config['data']['mStateProxyData']['SpriteRendererConfigs']:
+                            image=PPtr(**item['Img'],assetsfile=obj.assets_file).deref()
+                            image_fields=schemas.read(image)
+                            image_path,image_names=by_id[image_fields['m_GameObject']['m_PathID']]
+                            source(image,prefab=name,objects=image_names,fields=image_fields)
+                            for value in item['Proxy']['mSerializeBuffer']:
+                                guid=value['Value']['mAssetGuid']; asset=assets_by_guid[guid]
+                                target,=[p.deref() for key,p in apk.container(asset['bundle']) if key==asset['path'] and p.type.name=='Sprite']
+                                sprite=sprite_binding(sprites,target.assets_file,0,target.path_id)
+                                meta=ROOT/'unity/Assets/StreamingAssets/Dungeons/UI'/(sprite['file']+'.meta')
+                                meta.write_text('\n'.join(line.rstrip() for line in meta.read_text(encoding='utf-8').splitlines())+'\n',encoding='utf-8',newline='\n')
+                                sprite['sourceGuid']=guid
+                                entry['sprites'].append(dict(path='/'.join(map(str,image_path)),objects=image_names,
+                                    state=value['Key']['mValue'],sprite=sprite))
+                    for pointer in fields['DemonBattleLevelContents']:
+                        component=PPtr(**pointer,assetsfile=obj.assets_file).deref(); value=schemas.read(component)
+                        source(component,prefab=name,fields=value)
+                        level={}
+                        for key,field in [('title','DemonBattlNameText'),('layer','DemonBattleLeve1Text')]:
+                            text=PPtr(**value[field],assetsfile=obj.assets_file).deref(); tf=schemas.read(text)
+                            text_path,text_names=by_id[tf['m_GameObject']['m_PathID']]
+                            level[key]='/'.join(map(str,text_path))
+                            level[key+'Key']=tf['myKey']
+                            source(text,prefab=name,objects=text_names,fields=tf)
+                        entry['levels'].append(level)
+                    travel_entries.append(entry)
+                    continue
                 if cls in LAYOUTS:
                     layouts.append(layout_record(obj,cls,fields,path,names))
                     continue
@@ -232,7 +283,15 @@ def build():
                     row['sounds'].append(binding)
         if name in ('DailyDungeonEntryPanel','DailyDungeonDialog') and (len(row['contents'])!=1 or len(row['sounds'])!=1):
             raise ValueError('Original matching panel bindings are incomplete: '+name)
-        layout=dict(layouts=layouts,**detail_states)
+        if travel_entries:
+            keys={level[key+'Key'] for entry in travel_entries for level in entry['levels'] for key in ('title','layer')}
+            texts,travel_language_sources,missing=route_texts(apk,keys,keys)
+            text_values={value['key']:value['value'] for value in texts}
+            if missing:raise ValueError('Original travel entry language is missing')
+            for entry in travel_entries:
+                for level in entry['levels']:
+                    for key in ('title','layer'):level[key+'Format']=text_values[level[key+'Key']]
+        layout=dict(layouts=layouts,travelEntries=travel_entries,**detail_states)
         if initial_states is not None:layout['initialStates']=initial_states
         row['layoutJson']=json.dumps(layout,ensure_ascii=False,separators=(',',':'))
         prefabs.append(row)
@@ -244,10 +303,18 @@ def build():
     OUTPUT.with_name(OUTPUT.name+'.meta').write_text('fileFormatVersion: 2\nguid: 3c6bacaf46a749de95e0c140ec3509e8\nTextScriptImporter:\n  externalObjects: {}\n  userData:\n  assetBundleName:\n  assetBundleVariant:\n',encoding='utf-8',newline='\n')
     RECEIPT.parent.mkdir(parents=True,exist_ok=True)
     RECEIPT.write_text(json.dumps(dict(manifest=apk.version,apk_manifest=apk.source.apk_version,
-        apk_sha256=apk.source.apk_sha256,sources=sources,retained_native_sources=retained_sources,code_sources=[file_record(code),
+        apk_sha256=apk.source.apk_sha256,travel_language_sources=travel_language_sources,
+        sprite_sources=list(sprites.sources.values()),sources=sources,retained_native_sources=retained_sources,code_sources=[file_record(code),
         file_record(code.parents[1]/'launch-source/AnimationSoundPlayer.cs'),
         file_record(code.parents[1]/'framework-firstpass-source/SafeArea.cs'),
         file_record(code.with_name('DailyDungeonEntryPanel.cs'))],
+        travel_entry_code_sources=[file_record(code.with_name(n)) for n in ('TravelNoteFirstPage.cs','GamePlayNoteEntryCollection.cs','GamePlayNoteEntry.cs','DemonBattleEntry.cs','DemonBattleLevelContent.cs','OldPlayEntryBtn.cs')],
+        tower_entry_condition=dict(code_sources=[file_record(code.parents[1]/'common-source/Common/WorldMapProgressCondition.cs'),
+            file_record(code.parents[1]/'common-source/Common/Formula.cs')],
+            retained_rules=file_record(ROOT/'unity/Assets/StreamingAssets/Home/rules.json'),
+            runtime=file_record(ROOT/'unity/Assets/Game/Runtime/Offline/Home/OfficialHomeRules.cs'),
+            integration=file_record(ROOT/'unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs'),
+            operation='Use the retained explicit personal function-limit conditions and real saved region progress; preserve original Int2Float times 100 truncation. Whole-map progress and later-tower achievement completion are not supplied by this region binding.'),
         detail_code_sources=[file_record(code.with_name('DailyDungeonDetailContent.cs')),
         file_record(code.with_name('DailyDungeonUnlockContent.cs')),
         file_record(code.parents[1]/'common-source/Common/PlayerDailyDungeonDataExt.cs')],

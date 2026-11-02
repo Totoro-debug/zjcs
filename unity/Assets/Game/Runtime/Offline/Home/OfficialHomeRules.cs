@@ -23,6 +23,8 @@ namespace Zjcs.Offline.Home
         public int Rank;
         public int SubRank;
         public int MapClassId;
+        public int Region;
+        public int Progress;
         public string StoryKey;
         public int Status;
         public int ItemType;
@@ -272,6 +274,7 @@ namespace Zjcs.Offline.Home
         public Func<string, int> StoryCount = _ => 0;
         public Func<string, int> StoryStatus = _ => 0;
         public Func<int, bool> HasItemOfType = _ => false;
+        public Func<int, int, int> MapRegionProgress = (_, __) => 0;
         public bool AnyGoddessActive;
         public bool HasManualMeetNpc;
     }
@@ -523,6 +526,10 @@ namespace Zjcs.Offline.Home
                     return Compare(node.Op, context.StoryCount(node.StoryKey), node.Count);
                 case "StoryStatusCondition":
                     return context.StoryStatus(node.StoryKey) == node.Status;
+                case "WorldMapProgressCondition":
+                    return node.Region >= 0
+                        && (int)((float)context.MapRegionProgress(node.MapClassId, node.Region) / 10000f * 100f)
+                            >= (int)((float)node.Progress / 10000f * 100f);
                 case "MapUnlockCondition":
                     return context.UnlockedMapClassIds.Contains(node.MapClassId);
                 case "InitialWeaponCondition":

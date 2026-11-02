@@ -4,13 +4,17 @@
 
 状态：未完成
 
-战斗运行载荷 `TowerPush/tower-battles.json` 恢复原 LF 字节，SHA256 重新匹配既有来源清单的 `411458187ba5d97d13baafd3945a9abbae0ff9038c0f078395780e8de55b535a`；Git 固定 LF，未改动预期哈希或关卡数据。公共战斗直接入口已在带画面的 Play Mode 通过真实62步推进、有效胜负、HUD速度点击、层完成回调及相机／主城根节点恢复，并查看了准备／战斗截图。该验证未从游记窗口点击进入，也未覆盖全部585层、后台自动推关与 Player。
+战斗运行载荷 `TowerPush/tower-battles.json` 恢复原 LF 字节，SHA256 重新匹配既有来源清单的 `411458187ba5d97d13baafd3945a9abbae0ff9038c0f078395780e8de55b535a`；Git 固定 LF，未改动预期哈希或关卡数据。公共战斗直接入口已在带画面的 Play Mode 通过真实62步推进、有效胜负、HUD速度点击、层完成回调及相机／主城根节点恢复，并查看了准备／战斗截图。正式入口另已通过模拟鼠标点击：家园→游记原 `OldPlayEntryBtn`→首塔→当前层“挑战”→公共HUD准备／开战／倍速→62步真实获胜及层数结算／返回。原卡片默认隐藏并与伙伴冒险重叠，改为绑定原旧玩法按钮；修复“挑战”和自动推关子按钮误用名称查找器解析完整路径的问题。探索9999／10000、地图未解锁及预览条件检查通过，静态检查（89,859个GUID）、Unity编译和 `ProjectTools.Validate` 通过。已查看入口、楼层、准备、交战和结算截图；塔选择／楼层／结算仍有缺图、外语占位和主城遮挡，尚不能标记界面完成。未覆盖全部585层、后台自动推关与 Windows Player，本项尚未发布。
 
 ## 功能简介
 
 月影之森、魔能邃渊、云流漩涡、锁妖塔各自保存层数，合计585个原可挑战层；通关原功能93要求的楼层后，可在战斗中开启自动推关并切出后台。
 
-入口由家园游记的 `DemonBattleEntry` 打开。四个入口分别保存最高通关层；普通挑战只能启动当前层。四塔合计585层，战斗、奖励、自动推关和后台结果均在本地保存。
+入口由家园游记的原 `OldPlayEntryBtn.mEntryBtn` 打开；原客户端 `OnClickEntryBtn` 弹出四塔选择窗口。旧 `DemonBattleEntry` 卡片按 prefab 保持隐藏，它与伙伴冒险卡片占用同一位置，不能强行激活。四个入口分别保存最高通关层；普通挑战只能启动当前层。四塔合计585层，战斗、奖励、自动推关和后台结果均在本地保存。
+
+公共绑定通过 `OfficialDungeonEntryBindings` 保留旧 `DemonBattleEntry.EntryStateSwitcher` 的解锁／预览／锁定节点和 Sprite GUID，及原 `UnlockCountSwitcher`、名称／层数文本引用和原语言格式；当前可点击入口单独提取 `OldPlayEntryBtn.mEntryBtn`，使用原节点、按钮和图形，不移动卡片。状态和图标从所选 `884_156692` 的真实 prefab 解码；已保留的 `854_156383` 家园开放配置仍单独记录，没有替换或重标版本。`WorldMapProgressCondition` 接入真实区域存档，并保留 `Formula.Int2Float × 100` 的整数截断。普通挑战使用功能2的入口条件，预览使用功能2的 key0=-1；自动推关的功能93条件不用于普通挑战。入口列表仅显示已解锁或可预览的塔，锁定塔不能进入楼层页。
+
+后续塔的 `DemonBattlePassCondition` 涉及前塔通关和成就完成；家园条件解释器尚未提供该分支，当前保持不满足，不按层数近似放行。游记已完成塔的成就分组筛选、预览说明与四塔原生界面状态仍需补齐；本次入口修复不表示这些内容完成。来源及显式图片绑定见 [matching-panel-source-manifest.json](../../assets/reference/dungeon-ui/matching-panel-source-manifest.json)。
 
 ## 原始官方实现
 

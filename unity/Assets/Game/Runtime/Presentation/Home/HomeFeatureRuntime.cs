@@ -956,6 +956,7 @@ namespace Zjcs.Presentation.Home
                 InitialWeaponType = player.InitialWeaponType,
                 Profession = player.Wardrobe.Profession,
                 ItemCount = profile.InventoryCount,
+                MapRegionProgress = MapRegionProgress,
                 StoryCount = name => StoryCount(name),
                 StoryStatus = name => StoryStatus(name),
                 HasItemOfType = itemType => player.Inventory.Any(stack => stack != null && stack.Count > 0

@@ -40,6 +40,8 @@ namespace Zjcs.Editor
                 player.SubRank = catalog.LevelLimits.Where(value => value.PlayerLevel >= 40
                     && value.PlayerBlessLevel == 0).Min(value => value.SubRank);
                 player.InitialWeaponType = 200;
+                // Official tower condition 411/412: Map11 unlocked and region 5 fully explored.
+                if (!player.UnlockedMapClassIds.Contains(11)) player.UnlockedMapClassIds.Add(11);
                 if (!player.Skills.Skills.Any(value => value.ClassId == 10014))
                     player.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = 10014, Rank = 1 });
                 ConfigureEquipmentBattleProfile(player, catalog.RankOfSubRank(player.SubRank));
@@ -59,7 +61,7 @@ namespace Zjcs.Editor
                     .Concat(home.Arena.Catalog.function_limits.Where(value => value != null
                         && value.Type == 58 && value.Condition != null)
                         .Select(value => (map: value.Condition.MapClassId, region: value.Condition.Region)))
-                    .Distinct().ToArray();
+                    .Append((map: 11, region: 5)).Distinct().ToArray();
                 foreach (var group in regions.GroupBy(value => value.map))
                 {
                     var result = home.Profile.InitializeMap(group.Key, group.Select(value => value.region).ToArray());
@@ -87,8 +89,10 @@ namespace Zjcs.Editor
                     yield return RunDirectHosts(home, output, click);
                     yield break;
                 }
-                bool arenaAndTowerOnly = Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_ENTRY_ONLY") == "arena-tower";
-                if (!arenaAndTowerOnly)
+                string entryOnly = Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_ENTRY_ONLY");
+                bool towerOnly = entryOnly == "tower";
+                bool arenaAndTowerOnly = entryOnly == "arena-tower";
+                if (!arenaAndTowerOnly && !towerOnly)
                 {
                     yield return OpenTravel(home, click);
                     yield return Capture(output, "travel-entry");
@@ -149,33 +153,43 @@ namespace Zjcs.Editor
                     Debug.Log("[Battle hosts] daily actual room completed: " + testedRoom);
                 }
 
-                yield return OpenTravel(home, click);
-                yield return Capture(output, "arena-entry");
-                Require(home.Arena.IsFunctionLimitMet(58, -1, home.MapRegionProgress),
-                    "Arena preview prerequisite was lost from the isolated profile.");
-                int tickets = home.Arena.Tickets, results = home.Arena.Wins + home.Arena.Losses;
-                click(ButtonUnder("ArenaAreaEntry", "EntryBtn"));
-                yield return SettleUi();
-                click(ButtonUnder("OpponentItem", "FightBtn"));
-                yield return SettleUi();
-                if (Root("ArenaConfirm") != null)
+                if (!towerOnly)
                 {
-                    // At direct-win power the left native button selects normal combat.
-                    click(ButtonUnder("ArenaConfirm", "CommonBtn_11"));
+                    yield return OpenTravel(home, click);
+                    yield return Capture(output, "arena-entry");
+                    Require(home.Arena.IsFunctionLimitMet(58, -1, home.MapRegionProgress),
+                        "Arena preview prerequisite was lost from the isolated profile.");
+                    int tickets = home.Arena.Tickets, results = home.Arena.Wins + home.Arena.Losses;
+                    click(ButtonUnder("ArenaAreaEntry", "EntryBtn"));
                     yield return SettleUi();
+                    click(ButtonUnder("OpponentItem", "FightBtn"));
+                    yield return SettleUi();
+                    if (Root("ArenaConfirm") != null)
+                    {
+                        // At direct-win power the left native button selects normal combat.
+                        click(ButtonUnder("ArenaConfirm", "CommonBtn_11"));
+                        yield return SettleUi();
+                    }
+                    yield return RunBattle<ArenaBattleRunner>("arena", output, click);
+                    Require(!home.Arena.HasActiveChallenge && home.Arena.Tickets == tickets - 1
+                        && home.Arena.Wins + home.Arena.Losses == results + 1,
+                        "Arena actual result/ticket transaction was not committed exactly once.");
+                    Debug.Log("[Battle hosts] arena actual battle and settlement passed.");
+
                 }
-                yield return RunBattle<ArenaBattleRunner>("arena", output, click);
-                Require(!home.Arena.HasActiveChallenge && home.Arena.Tickets == tickets - 1
-                    && home.Arena.Wins + home.Arena.Losses == results + 1,
-                    "Arena actual result/ticket transaction was not committed exactly once.");
-                Debug.Log("[Battle hosts] arena actual battle and settlement passed.");
 
                 yield return OpenTravel(home, click);
+                VerifyTowerEntryPrerequisites(home);
+                yield return Capture(output, "tower-travel-entry");
+                Require(!home.Rules.IsFunctionLimited(2) && !home.Rules.IsFunctionLimited(2, 1),
+                    "Official tower Map11/region 5 prerequisite was not satisfied by the isolated profile.");
                 int cleared = home.FantasyTower.GetEntry(1).clearedLayer;
-                click(ButtonUnder("DemonBattleEntry", "EntryBtn"));
+                click(Root("OldPlayEntry").GetComponent<Button>());
                 yield return SettleUi();
+                yield return Capture(output, "tower-entries");
                 click(Active<Button>().Single(value => value.name == "FantasyTowerEntry_1"));
                 yield return SettleUi();
+                yield return Capture(output, "tower-stages");
                 var start = Active<Button>().First(value => value.name == "CommonBtn_12"
                     && value.transform.parent.name == "StartBtn");
                 click(start);
@@ -186,10 +200,36 @@ namespace Zjcs.Editor
                     "Tower settled more than one actual layer.");
                 Debug.Log("[Battle hosts] tower actual battle and result navigation passed.");
                 File.WriteAllText(Path.Combine(output, "battle-hosts-result.txt"),
-                    (arenaAndTowerOnly ? "arena and tower" : "daily, arena and tower")
+                    (towerOnly ? "tower" : arenaAndTowerOnly ? "arena and tower" : "daily, arena and tower")
                     + ": actual HUD input, Begin/Tick, presentation completion and host settlement passed\n");
             }
             finally { home.CloseForNavigation(); }
+        }
+
+        private static void VerifyTowerEntryPrerequisites(HomeFeatureRuntime home)
+        {
+            var saved = home.Rules.CurrentContext;
+            int progress = 0;
+            var context = new Zjcs.Offline.Home.HomeConditionContext {
+                SubRank = 2,
+                UnlockedMapClassIds = new HashSet<int> { 11 },
+                MapRegionProgress = (map, region) => map == 11 && region == 5 ? progress : 0
+            };
+            try
+            {
+                home.Rules.CurrentContext = context;
+                Require(!home.Rules.IsFunctionLimited(2, -1) && home.Rules.IsFunctionLimited(2),
+                    "Tower preview must not bypass the first entry exploration condition.");
+                progress = 9999;
+                Require(home.Rules.IsFunctionLimited(2, 1), "Incomplete Map11 region 5 unlocked the tower.");
+                progress = 10000;
+                Require(!home.Rules.IsFunctionLimited(2, 1) && !home.Rules.IsFunctionLimited(2),
+                    "Completed Map11 region 5 did not unlock the first tower.");
+                context.UnlockedMapClassIds.Clear();
+                Require(home.Rules.IsFunctionLimited(2, 1), "A locked map incorrectly unlocked the tower.");
+                Debug.Log("[Battle hosts] tower official preview/map/exploration prerequisites passed.");
+            }
+            finally { home.Rules.CurrentContext = saved; }
         }
 
         private static IEnumerator RunDirectHosts(HomeFeatureRuntime home, string output, Action<Selectable> click)

@@ -17,6 +17,7 @@ namespace Zjcs.Presentation.World
         { public string name; public PopupBinding popup; public TransformBinding[] transforms; public SafeAreaBinding[] safeAreas; public LayoutBinding[] layouts; public ScrollBinding[] scrolls; public ButtonBinding[] buttons;
           public RoomViewBinding roomView; public RouteWindowBinding routeWindow; public GradeItemBinding gradeItem; public PrivateDetailBinding privateDetail; public PrivateDialogBinding privateDialog; public PrivateUnlockBinding privateUnlock;
           public LocalizationBinding[] localizations; public ObjectStateBinding[] initialStates, detailLockStates, previewStates, catalogueButtonStates;
+          public TravelEntryBinding[] travelEntries;
           public GradeGridBinding[] gradeGrids; public string roomButton; public ImageBinding[] images; public TextBinding[] texts; }
         [Serializable] private sealed class PopupBinding
         { public string path; public string[] objects; public bool enabled, closeByClickMask; public int maskType; public PopupClipBinding[] clips; public PopupMaskBinding mask; public PopupSoundBinding sound; public MatchingBinding matching; }
@@ -88,6 +89,15 @@ namespace Zjcs.Presentation.World
             public string scroll, chooseScroll, grid, chooseGrid, gradeSlot, chooseGradeSlot, gradePrefab, team, tip, countdown;
             public ObjectStateBinding[] chooseStates;
         }
+        [Serializable] private sealed class TravelEntryBinding
+        {
+            public string type, path; public string[] objects;
+            public ObjectStateBinding[] states, countStates;
+            public TravelEntrySpriteBinding[] sprites; public TravelEntryLevelBinding[] levels;
+        }
+        [Serializable] private sealed class TravelEntrySpriteBinding
+        { public string path; public string[] objects; public int state; public SpriteBinding sprite; }
+        [Serializable] private sealed class TravelEntryLevelBinding { public string title, layer, titleFormat, layerFormat; }
         [Serializable] private sealed class ObjectStateBinding { public int state; public string[] objects; }
         [Serializable] private sealed class GradeItemBinding { public string image, fill, text; }
         [Serializable] private sealed class GradeGridBinding { public string path, scroll, rect; }
@@ -451,6 +461,26 @@ namespace Zjcs.Presentation.World
                 layout.objects[0] = root.name;
             RestoreLayouts(root, binding);
             if (binding.initialStates != null) SetObjectState(root, binding.initialStates, 0);
+        }
+
+        internal static void RefreshTowerTravelEntry(GameObject root, string serialized, bool unlocked,
+            bool preview, IReadOnlyList<KeyValuePair<string, int>> levels)
+        {
+            Prefab prefab = JsonUtility.FromJson<Prefab>(serialized);
+            TravelEntryBinding entry = prefab.travelEntries.Single(value => value.type == "DemonBattleEntry");
+            // GamePlayNoteEntry.CalculateAndGetState: Unlock=1, Preview=2, Lock=3.
+            int state = unlocked ? 1 : preview ? 2 : 3;
+            SetObjectState(root, entry.states, state);
+            foreach (TravelEntrySpriteBinding image in entry.sprites.Where(value => value.state == state))
+                Find(root.transform, image.path, image.objects).GetComponent<Image>().sprite = LoadSprite(image.sprite);
+            int count = unlocked ? Math.Min(levels.Count, entry.levels.Length) : 0;
+            SetObjectState(root, entry.countStates, count);
+            for (int i = 0; i < count; i++)
+            {
+                Find(root.transform, entry.levels[i].title, null).GetComponent<TMP_Text>().text = string.Format(entry.levels[i].titleFormat, levels[i].Key);
+                Find(root.transform, entry.levels[i].layer, null).GetComponent<TMP_Text>().text = string.Format(entry.levels[i].layerFormat, levels[i].Value);
+            }
+            // The legacy card stays at its original active state. OldPlayEntryBtn opens the current tower window.
         }
 
         internal static void RefreshCatalogueDetail(GameObject root, string serialized, bool unlocked, bool canEnter)

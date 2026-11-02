@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zjcs.Offline.World;
+using Zjcs.Presentation.World;
 
 namespace Zjcs.Presentation.Home
 {
@@ -75,7 +76,16 @@ namespace Zjcs.Presentation.Home
                     else Notify("竞技场尚未开放");
                 });
             }
-            OriginalTravelEntryButton("DemonBattleEntry").onClick.AddListener(OpenFantasyTowerEntries);
+            bool towerUnlocked = !host.Rules.IsFunctionLimited(2);
+            var towerLevels = Enumerable.Range(1, 4).Where(entry => !host.Rules.IsFunctionLimited(2, entry))
+                .Select(entry => new KeyValuePair<string, int>(TowerEntryName(entry),
+                    host.FantasyTower.GetEntry(entry).clearedLayer)).ToArray();
+            OfficialDungeonEntryBindings.RefreshTowerTravelEntry(travelNotesRoot, towerUnlocked,
+                !host.Rules.IsFunctionLimited(2, -1), towerLevels);
+            OfficialDungeonEntryBindings.TowerEntryButton(travelNotesRoot).onClick.AddListener(() =>
+            {
+                if (towerUnlocked) OpenFantasyTowerEntries();
+            });
         }
 
         private Button OriginalTravelEntryButton(string type)
@@ -109,14 +119,17 @@ namespace Zjcs.Presentation.Home
             float entryRowHeight = panel.root.size_delta != null && panel.root.size_delta.Length > 1
                 ? panel.root.size_delta[1] : 0f;
             if (entryRowHeight <= 0f) throw new InvalidOperationException("Official Fantasy Tower entry row has no height.");
-            ConfigureTowerContent(fantasyTowerRowsRoot.transform as RectTransform, 4 * entryRowHeight);
-            for (int entry = 1; entry <= 4; entry++)
+            int[] visibleEntries = Enumerable.Range(1, 4).Where(entry => !host.Rules.IsFunctionLimited(2, entry)
+                || !host.Rules.IsFunctionLimited(123, entry)).ToArray();
+            ConfigureTowerContent(fantasyTowerRowsRoot.transform as RectTransform, visibleEntries.Length * entryRowHeight);
+            for (int index = 0; index < visibleEntries.Length; index++)
             {
+                int entry = visibleEntries[index];
                 int selectedEntry = entry;
                 GameObject row = Renderer().CreateNode(panel.root, fantasyTowerRowsRoot.transform);
                 row.name = "FantasyTowerEntry_" + entry;
                 RectTransform rect = row.transform as RectTransform;
-                rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, -entryRowHeight * (entry - 1));
+                rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, -entryRowHeight * index);
                 SetNamedText(row.transform, "ChallengeText", "当前 "
                     + host.FantasyTower.GetEntry(entry).clearedLayer + "/" + TowerLayerCount(entry) + " 层");
                 SetNamedText(row.transform, "TimeTxt", "已前进 "
@@ -153,7 +166,7 @@ namespace Zjcs.Presentation.Home
 
         private void OpenFantasyTowerStages(int entry)
         {
-            if (entry < 1 || entry > 4) return;
+            if (entry < 1 || entry > 4 || host.Rules.IsFunctionLimited(2, entry)) return;
             DestroyFantasyTowerPage();
             fantasyTowerEntryIndex = entry;
             fantasyTowerRoot = Renderer().Create("fantasy_tower_stage_list", canvas.transform);
@@ -255,7 +268,7 @@ namespace Zjcs.Presentation.Home
                     if (selectedLayer == currentLayer)
                         button.onClick.AddListener(() => StartFantasyTowerLayer(selectedLayer));
                 }
-                Button start = Find(row.transform, "StartBtn/CommonBtn_12")?.GetComponent<Button>();
+                Button start = FindPath(row.transform, "StartBtn/CommonBtn_12")?.GetComponent<Button>();
                 if (start != null)
                 {
                     start.onClick.RemoveAllListeners();
@@ -264,7 +277,7 @@ namespace Zjcs.Presentation.Home
                     if (selectedLayer == currentLayer)
                         start.onClick.AddListener(() => StartFantasyTowerLayer(selectedLayer));
                 }
-                Button autoPush = Find(row.transform, "Right/AutoPush/CommonBtn_12 (1)")?.GetComponent<Button>();
+                Button autoPush = FindPath(row.transform, "Right/AutoPush/CommonBtn_12 (1)")?.GetComponent<Button>();
                 if (autoPush != null)
                 {
                     autoPush.onClick.RemoveAllListeners();
