@@ -1082,6 +1082,7 @@ namespace Zjcs.Combat.Official
                     && Bool(roundStart, "TryAtStart"),
                 RoundStartDefinitionResolved = true,
                 RoundStartTargetRulesResolved = true,
+                RoundStartPropTargetRulesResolved = true,
                 RoundStartPhase = roundStart != null && Int(roundStart, "RoundStartPhase") == 5 ? 5 : 0,
                 RoundStartExcludedTargetStatuses = roundStart == null ? new List<int>()
                     : new List<int>(IntArray(roundStart, "TriggerTargetNotStatus")),
@@ -2496,12 +2497,28 @@ namespace Zjcs.Combat.Official
                     AffectedByProp = Bool(row, "AffectedByProp"),
                     Source = skill ? Int(row, "Source") : 0,
                     Target = skill ? Int(row, "Target") : Int(row, "ApplyTarget"),
+                    PropTarget = ReadTriggerPropTarget(row),
+                    TargetWithoutStatusIds = IntArray(row, "TargetWithoutStatusIds"),
                     UseAI = skill && Bool(row, "UseAI"),
                     TargetPos = skill ? Int(row, "TargetPos") : 0,
                     StackedCountToDamageFactor = skill
                         && Bool(row, "StackedCountToDamageFactor")
                 });
             }
+        }
+
+        private static FightBattleStatusPropTarget ReadTriggerPropTarget(Dictionary<string, object> trigger)
+        {
+            var target = Component(trigger, "PropTarget");
+            // Official FightStatusTriggerSkillCfg: PropType=None leaves this selector unset.
+            if (target == null || Int(target, "PropType") == 0) return null;
+            return new FightBattleStatusPropTarget
+            {
+                IsEnemy = Bool(target, "IsEnemy"), RoleTypes = IntArray(target, "RoleType"),
+                IncludeApplicator = Bool(target, "IncludeApplicator"),
+                PropertyId = Int(target, "PropType"), Highest = Bool(target, "Heighest"),
+                SupportCustomFilter = Bool(target, "SupportCustomFilter")
+            };
         }
 
         private static bool SupportsRoundStart(Dictionary<string, object> component)
@@ -2531,14 +2548,16 @@ namespace Zjcs.Combat.Official
             foreach (object item in Array(raw, "StatusTriggerSkillCfgs"))
             {
                 Dictionary<string, object> trigger = Object(item, "round start trigger skill");
+                bool hasPropertyTarget = ReadTriggerPropTarget(trigger) != null;
                 if (Bool(trigger, "AffectedByProp") || Int(trigger, "Source") != 2
                     || (Int(trigger, "Target") != 1 && Int(trigger, "Target") != 2
-                        && Int(trigger, "Target") != 7) || Bool(trigger, "UseAI")
-                    || (Int(trigger, "Target") == 2 && ArrayCount(component, "TriggerTargetNotStatus") > 0)
+                        && Int(trigger, "Target") != 7 && !hasPropertyTarget) || Bool(trigger, "UseAI")
+                    || (!hasPropertyTarget && Int(trigger, "Target") == 2
+                        && ArrayCount(component, "TriggerTargetNotStatus") > 0)
                     || Bool(trigger, "StackedCountToDamageFactor")
                     || (Int(trigger, "TargetPos") != 0 && Int(trigger, "TargetPos") != 1)
                     || ArrayCount(trigger, "StatusReplacePropertyValues") > 0
-                    || ArrayCount(trigger, "TargetWithoutStatusIds") > 0) return false;
+                    || (!hasPropertyTarget && ArrayCount(trigger, "TargetWithoutStatusIds") > 0)) return false;
             }
             return true;
         }

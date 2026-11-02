@@ -368,6 +368,15 @@ namespace Zjcs.Combat.Official
             return result;
         }
 
+        public static bool IsEligibleSkillTarget(FightBattleUnitState actor, FightBattleUnitState target,
+            FightBattleSkillDefinition skill)
+        {
+            return actor != null && skill != null && IsSelectable(target)
+                && !HasIgnoredStatus(target, skill)
+                && !IsActionBlockedByStatus(target, skill.BlockingTargetActionTypes)
+                && (skill.TargetType == 5 || MatchesTargetType(actor, target, skill.TargetType, false));
+        }
+
         private static bool MatchesTargetType(FightBattleUnitState actor,
             FightBattleUnitState unit, int targetType, bool ignoreFaction)
         {

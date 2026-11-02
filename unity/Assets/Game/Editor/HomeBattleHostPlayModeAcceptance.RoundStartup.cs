@@ -149,5 +149,61 @@ namespace Zjcs.Editor
                 Debug.Log("[Round targets hosts] " + host + ": original protection once; checkpoint passed.");
             }
         }
+        private static RoundPropsProbe ConfigureRoundPropsProbe(FightBattleCheckpoint checkpoint)
+        {
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_ROUND_PROPS_ACCEPTANCE") != "1") return null;
+            var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
+            foreach (var unit in checkpoint.Units)
+            {
+                long hp = unit.Id == 1 ? 5000000L : 2000000L;
+                foreach (var property in unit.Properties.Concat(unit.BaseProperties))
+                {
+                    if (property.Id == catalog.PropertyType("MaxHp")) property.Value = hp;
+                    if (unit.Id != 1 && property.Id == catalog.PropertyType("Attack")) property.Value = 100L;
+                }
+                unit.MaxHp = unit.LastMaxHp = unit.Hp = unit.Turn.Hp = hp;
+            }
+            var player = checkpoint.Units.Single(value => value.Id == 1);
+            player.Statuses.Add(catalog.CreateStatus(25119, 1, 1, 9925119, 0, 0, 5, 20, 1, null));
+            player.Statuses.Add(catalog.CreateStatus(25206, 1, 1, 9925206, 0, 0, 5, 20, 1, null));
+            return new RoundPropsProbe();
+        }
+
+        private sealed class RoundPropsProbe
+        {
+            private bool observed;
+            public bool ReadyToCapture => observed;
+            public void ObserveStep(OfficialBattleRuntimeController controller)
+            {
+                var cp = controller.Checkpoint;
+                var step = cp.Receipts.Last().Event;
+                var player = cp.Units.Single(value => value.Id == 1);
+                var friendCasts = step.SkillCasts.Where(value => value.SkillEntityId == 12180).ToArray();
+                var enemyCasts = step.SkillCasts.Where(value => value.SkillEntityId == 68020).ToArray();
+                if (friendCasts.Length == 0 && enemyCasts.Length == 0) return;
+                Require(friendCasts.Length == 1 && friendCasts[0].ActorId == 1
+                    && friendCasts[0].TargetIds.SequenceEqual(new[] { 1 })
+                    && enemyCasts.Length == 1 && enemyCasts[0].ActorId == 1
+                    && enemyCasts[0].TargetIds.SequenceEqual(new[] { 2 }),
+                    "Original property selectors lost the eligible friend/enemy targets.");
+                var guard = cp.Units.Single(value => value.Id == 2);
+                Require(player.Statuses.Any(value => value.ClassId == 24395 && value.SourceSkillRank == 5
+                        && value.SourceSkillLevel == 20)
+                    && guard.Statuses.Any(value => value.ClassId == 24673 && value.CreatorId == 1
+                        && value.SourceSkillRank == 5 && value.SourceSkillLevel == 20),
+                    "Property-target casts lost their actual inherited original states.");
+                observed = true;
+                Debug.Log("[Round props hosts] personalRound=" + player.SkillState.Round
+                    + ": 25119 -> 12180 -> 24395 friend 1; 25206 -> 68020 -> 24673 enemy 2; rank5/level20.");
+            }
+            public void Verify(string host, FightBattleCheckpoint checkpoint)
+            {
+                Require(observed, host + " never executed the original property-target skills.");
+                string saved = FightBattleCheckpointSerializer.Save(checkpoint);
+                Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
+                    host + " changed its property-target checkpoint after reload.");
+                Debug.Log("[Round props hosts] " + host + ": original skills/effects and checkpoint passed.");
+            }
+        }
     }
 }

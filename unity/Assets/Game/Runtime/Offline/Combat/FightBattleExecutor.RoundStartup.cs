@@ -7,12 +7,27 @@ namespace Zjcs.Combat.Official
         private void RestoreRoundStartDefinition(FightBattleStatusState status)
         {
             if (!status.HasRoundStartTrigger
-                || status.RoundStartDefinitionResolved && status.RoundStartTargetRulesResolved) return;
+                || status.RoundStartDefinitionResolved && status.RoundStartTargetRulesResolved
+                    && status.RoundStartPropTargetRulesResolved) return;
             var definition = statusCatalog.CreateStatus(status.ClassId, status.OwnerId,
                 status.CreatorId, status.InstanceId, status.RootSkillId, status.ApplyingSkillItemId,
                 status.SourceSkillRank, status.SourceSkillLevel, status.SourceSubRank, status.SourceProperties,
                 replacementProperties: status.ReplacementProperties, blessPropertyScales: status.BlessPropertyScales);
             status.RoundStartRulesSupported = definition.RoundStartRulesSupported;
+            if (!status.RoundStartPropTargetRulesResolved)
+            {
+                for (int i = 0; i < status.RoundStartSkills.Count && i < definition.RoundStartSkills.Count; i++)
+                {
+                    var trigger = status.RoundStartSkills[i];
+                    var original = definition.RoundStartSkills[i];
+                    if (trigger.EntityId != original.EntityId || trigger.Source != original.Source
+                        || trigger.Target != original.Target) continue;
+                    trigger.PropTarget = original.PropTarget?.Copy();
+                    trigger.TargetWithoutStatusIds = original.TargetWithoutStatusIds == null
+                        ? null : (int[])original.TargetWithoutStatusIds.Clone();
+                }
+                status.RoundStartPropTargetRulesResolved = true;
+            }
             if (!status.RoundStartDefinitionResolved)
                 status.RoundStartRemoveWhenNotEnoughTimes = definition.RoundStartRemoveWhenNotEnoughTimes;
             status.RoundStartDefinitionResolved = true;

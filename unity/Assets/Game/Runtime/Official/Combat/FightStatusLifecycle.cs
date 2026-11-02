@@ -269,6 +269,7 @@ namespace Zjcs.Combat.Official
                 RoundStartTryAtStart = template.RoundStartTryAtStart,
                 RoundStartDefinitionResolved = template.RoundStartDefinitionResolved,
                 RoundStartTargetRulesResolved = template.RoundStartTargetRulesResolved,
+                RoundStartPropTargetRulesResolved = template.RoundStartPropTargetRulesResolved,
                 RoundStartPhase = template.RoundStartPhase,
                 RoundStartExcludedTargetStatuses = new List<int>(template.RoundStartExcludedTargetStatuses),
                 RoundStartRemoveWhenNotEnoughTimes = template.RoundStartRemoveWhenNotEnoughTimes,
@@ -598,6 +599,7 @@ namespace Zjcs.Combat.Official
                             TargetPos = value.TargetPos,
                             StackedCountToDamageFactor = value.StackedCountToDamageFactor,
                             ApplyTarget = value.ApplyTarget,
+                            PropTarget = value.PropTarget?.Copy(),
                             TargetWithoutStatusIds = value.TargetWithoutStatusIds == null
                                 ? null : (int[])value.TargetWithoutStatusIds.Clone(),
                             StatusReplacementProperties = FightStatusPropertyModifiers.Copy(

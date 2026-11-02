@@ -127,6 +127,24 @@ namespace Zjcs.Combat.Official
     }
 
     [Serializable]
+    public sealed class FightBattleStatusPropTarget
+    {
+        public bool IsEnemy;
+        public int[] RoleTypes;
+        public bool IncludeApplicator;
+        public int PropertyId;
+        public bool Highest;
+        public bool SupportCustomFilter;
+
+        public FightBattleStatusPropTarget Copy()
+        {
+            var result = (FightBattleStatusPropTarget)MemberwiseClone();
+            result.RoleTypes = RoleTypes == null ? null : (int[])RoleTypes.Clone();
+            return result;
+        }
+    }
+
+    [Serializable]
     public sealed class FightBattleStatusStateTrigger
     {
         public int EntityId;
@@ -142,6 +160,7 @@ namespace Zjcs.Combat.Official
         public int SourceSkillLevel;
         public int SourceSubRank;
         public int ApplyTarget;
+        public FightBattleStatusPropTarget PropTarget;
         public int[] TargetWithoutStatusIds;
         public List<FightStatusReplacementValue> StatusReplacementProperties;
         public List<FightStatusPropertyScale> BlessPropertyScales;
@@ -154,6 +173,7 @@ namespace Zjcs.Combat.Official
             result.SourceSkillLevel = status.SourceSkillLevel;
             result.SourceSubRank = status.SourceSubRank;
             result.ApplyTarget = ApplyTarget;
+            result.PropTarget = PropTarget?.Copy();
             result.TargetWithoutStatusIds = TargetWithoutStatusIds == null
                 ? null : (int[])TargetWithoutStatusIds.Clone();
             result.StatusReplacementProperties = FightStatusPropertyModifiers.Copy(StatusReplacementProperties);
@@ -328,6 +348,7 @@ namespace Zjcs.Combat.Official
         public bool RoundStartStartChecked;
         public bool RoundStartDefinitionResolved;
         public bool RoundStartTargetRulesResolved;
+        public bool RoundStartPropTargetRulesResolved;
         public int RoundStartPhase;
         public List<int> RoundStartExcludedTargetStatuses = new List<int>();
         public bool RoundStartRemoveWhenNotEnoughTimes;

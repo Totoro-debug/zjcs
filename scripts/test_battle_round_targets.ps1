@@ -34,7 +34,7 @@ function New-RoundTargetBattle($mode,$restore,$legacy = $false,$statusId = 25288
         if ($id -eq 3) { $u.Hp=10000 }
         if ($id -eq 5) { $u.Hp=30000; $u.MaxHp=$u.LastMaxHp=5000000 }
         if ($id -eq 6) { $u.Hp=0 }
-        if ($id -eq 7) { $u.Hp=1; $u.CharacterType=2; $u.MasterId=1; $u.Turn.MasterId=1 }
+        if ($id -eq 7) { $u.Hp=1; $u.CharacterType=3; $u.MasterId=1; $u.Turn.MasterId=1 }
         foreach($pair in @(@(1,1000),@(2,1000),@(3,$u.MaxHp),@(4,$(if($id -eq 1){100}else{1})))) {
             $u.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{Id=$pair[0];Value=$pair[1]})
         }

@@ -46,14 +46,17 @@ namespace Zjcs.Combat.Official
                 int added = 0;
                 foreach (FightBattleStatusStateTrigger trigger in status.RoundStartSkills)
                 {
+                    bool hasPropertyTarget = trigger?.PropTarget != null && trigger.PropTarget.PropertyId != 0;
                     if (trigger == null || trigger.EntityId <= 0 || trigger.AffectedByProp
                         || trigger.Source != 2 || (trigger.Target != 1 && trigger.Target != 2
-                            && trigger.Target != 7) || trigger.UseAI
+                            && trigger.Target != 7 && !hasPropertyTarget) || trigger.UseAI
                         || trigger.StackedCountToDamageFactor
                         || (trigger.TargetPos != 0 && trigger.TargetPos != 1)
                         || !Roll(trigger.BasePercent, random)) continue;
-                    var target = ResolveRoundStartSkillTarget(source, listener, trigger.Target, units,
-                        status.RoundStartExcludedTargetStatuses);
+                    var target = hasPropertyTarget
+                        ? ResolveRoundStartPropertyTarget(source, status, trigger, units, catalog)
+                        : ResolveRoundStartSkillTarget(source, listener, trigger.Target, units,
+                            status.RoundStartExcludedTargetStatuses);
                     if (target == null) continue;
                     int targetId = target.Id;
                     result.Add(new FightBattleStatusSkillInvocation
@@ -63,7 +66,7 @@ namespace Zjcs.Combat.Official
                         TargetPositionUnitId = trigger.TargetPos == 1 ? targetId : source.Id,
                         // Keep the existing applicator-scope skill targeting. An explicit
                         // TriggerSource is the listened-to role, including a summon master.
-                        SelectTargets = trigger.Target == 2,
+                        SelectTargets = !hasPropertyTarget && trigger.Target == 2,
                         UseTargetPositionWithSelection = trigger.TargetPos == 1
                     });
                     added++;
@@ -74,6 +77,41 @@ namespace Zjcs.Combat.Official
                 if (added > 0) status.RoundStartTriggeredCount++;
             }
             return result;
+        }
+
+        private static FightBattleUnitState ResolveRoundStartPropertyTarget(FightBattleUnitState owner,
+            FightBattleStatusState status, FightBattleStatusStateTrigger trigger,
+            IReadOnlyList<FightBattleUnitState> units, FightOfficialCombatCatalog catalog)
+        {
+            if (units == null || catalog == null) return null;
+            var rule = trigger.PropTarget;
+            var skill = rule.SupportCustomFilter
+                ? catalog.CreateSkill(trigger.EntityId, 0, FightBattleStatusReportSource.Resolve(status).SkillItemId,
+                    status.SourceSkillRank, status.SourceSkillLevel, status.SourceSubRank, status.SourceProperties)
+                : null;
+            FightBattleUnitState selected = null;
+            long selectedValue = 0;
+            foreach (var candidate in units)
+            {
+                if (!FightBattleTargeting.IsSelectable(candidate)
+                    || (candidate.Side != owner.Side) != rule.IsEnemy
+                    || !rule.IncludeApplicator && candidate.Id == owner.Id
+                    || rule.RoleTypes != null && rule.RoleTypes.Length > 0
+                        && !rule.RoleTypes.Contains(candidate.CharacterType)) continue;
+                // User-confirmed offline custom filter: apply the existing component,
+                // trigger and skill constraints before ranking the remaining final properties.
+                if (rule.SupportCustomFilter
+                    && (candidate.Statuses.Any(value => status.RoundStartExcludedTargetStatuses.Contains(value.ClassId)
+                        || trigger.TargetWithoutStatusIds != null && trigger.TargetWithoutStatusIds.Contains(value.ClassId))
+                        || !FightBattleTargeting.IsEligibleSkillTarget(owner, candidate, skill))) continue;
+                long value = candidate.Properties.FirstOrDefault(property => property.Id == rule.PropertyId)?.Value ?? 0;
+                if (selected == null || (rule.Highest ? value > selectedValue : value < selectedValue))
+                {
+                    selected = candidate;
+                    selectedValue = value;
+                }
+            }
+            return selected;
         }
 
         private static FightBattleUnitState ResolveRoundStartSkillTarget(FightBattleUnitState owner,
