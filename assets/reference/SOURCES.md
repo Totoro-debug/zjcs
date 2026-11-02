@@ -392,3 +392,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 `partner-main-player-source-manifest.json` 记录所选 `884_156692` 的 `PlayerInfoData(Player)`、`PlayerTargetData`、`PlayerPetExt`、`Player`、继承目标及程序集输入，以及本地主角资料适配、现有稳定身份／属性／外观依赖与验证脚本的逐文件哈希。由 `scripts/record_partner_main_player_sources.py` 记录；本批没有美术提取或素材快照。
 
 伙伴当前 UI 外观的选定 `884_156692` 应用源码、程序集及原生端点哈希见[UI 外观代码来源](partner-ui-appearance-source-manifest.json)，入口为 `prepare_partner_ui_appearance.py`。当前 APK 的材质配置对象、UI 染色 shader 与复用默认材质的各自来源、原对象字节及 Windows 显式绑定哈希见[UI 外观资源来源](partner-ui-appearance-assets-source-manifest.json)，由 `prepare_partner_ui_appearance_assets.py` 记录；历史来源不混标，本批未生成完整素材快照。 High 加载器的 APK／同版缓存对象、702 项映射、977 个纹理 GUID、原 ASTC 全部 mip、Windows 转换／同载荷占位图复用及显式加载哈希见[High 纹理来源](partner-ui-high-textures-source-manifest.json)，入口为 `prepare_partner_ui_high_textures.py`。
+
+公共战前助战选择复用既有 Map12 原生邀请面板与伙伴条目，`scripts/record_battle_assist_selection.py` 直接读取选定884_156692的APK优先资源，对照保留871来源的逐对象提取记录；外部引用表编号变化逐项解析并核对目标原始载荷，移除的旧在线外观脚本单独排除。没有修改美术或布局载荷；当前APK／bundle／CAB、历史输入、运行prefab／meta及接线哈希见[来源清单](battle-hud/assist-selection-source-manifest.json)，实现与验证边界见[NPC邀请](../../docs/features/npc-assistance.md)。

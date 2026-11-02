@@ -1,0 +1,1066 @@
+{
+  "manifest": "884_156692",
+  "historical_inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/team-ui-prefabs.json",
+      "sha256": "4d73f1cb130d5943025f5b6d68e9bf8b8c2c1ac9782cfa992b9bd71db26bd7ad"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/team-invite-extra-prefabs.json",
+      "sha256": "5b0475ddd276abd9459270c1ad8d95f7f56f1cfa8a32229dba3165a3991afd8f"
+    }
+  ],
+  "panels": [
+    {
+      "name": "TeamInvitePanel",
+      "historical_manifest": "871_156598",
+      "root": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:3279035751510893174",
+      "nodes": 340,
+      "objects": 1559,
+      "exact_objects": 1548,
+      "pointer_table_changes": [
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:-1538975348707040650",
+          "type": "Animator",
+          "original_sha256": "2d42701238bf3b1a7a0c84e74601d5a72aae52c777c5be5a46e6c4e2ad1be41a",
+          "sha256": "7822f4ae509eac3737f20d755db1714e9068c704fd8c6887c80ac83313321d63",
+          "changes": [
+            {
+              "field": ".m_Controller",
+              "before": {
+                "m_FileID": 21,
+                "m_PathID": -4629522505758015844
+              },
+              "after": {
+                "m_FileID": 20,
+                "m_PathID": -4629522505758015844
+              },
+              "identity": "CAB-fae735c2ceb3404cfd774705eaa8361e:-4629522505758015844",
+              "sha256": "1c4c7ce11510a2e9de1e4955564c41a9a872682fce7091d88a1eca16730aa32e",
+              "source": {
+                "bundle": "defaultpackage_assets_animation_ui_public.bundle",
+                "bundle_hash": "86a8b3049ff5f564e28126d62af4141f",
+                "path_id": "-4629522505758015844",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/86a8b3049ff5f564e28126d62af4141f.bundle",
+                "raw_size": 5937,
+                "raw_sha256": "8f50ce82b2098fdbc053b2c1ad855130ae0fc4feb956a0393d010d6667dfa343"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:-3788590263528070538",
+          "type": "Animation",
+          "original_sha256": "4fedf3d704a930dc20077b9f34f694f7b3ae02a0e55f6ce6938ea8455e5e3bcd",
+          "sha256": "9878f1602a5b29b8d13a525d1f4b769c7b3c6959940eb7f7eb05a4f3f3c83e9d",
+          "changes": [
+            {
+              "field": ".m_Animation",
+              "before": {
+                "m_FileID": 29,
+                "m_PathID": -1553133123068916769
+              },
+              "after": {
+                "m_FileID": 28,
+                "m_PathID": -1553133123068916769
+              },
+              "identity": "CAB-0170758528fdc48420d4ae42427b44d7:-1553133123068916769",
+              "sha256": "baebfff1c471a148a32b244842ae7d3a874d80d7468854ce6a37897eff7dba6a",
+              "source": {
+                "bundle": "defaultpackage_share_a4b039d159484dc5064ae0890a0174a0.bundle",
+                "bundle_hash": "801c9ed3e0b0b019bbaf77233e7ec09a",
+                "path_id": "-1553133123068916769",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/801c9ed3e0b0b019bbaf77233e7ec09a.bundle",
+                "raw_size": 1006,
+                "raw_sha256": "cffcb4c57452b6b0e5473cf43a5d453a8add2259ef681a4926b3bcb2a89dc076"
+              }
+            },
+            {
+              "field": ".m_Animations[0]",
+              "before": {
+                "m_FileID": 29,
+                "m_PathID": -1553133123068916769
+              },
+              "after": {
+                "m_FileID": 28,
+                "m_PathID": -1553133123068916769
+              },
+              "identity": "CAB-0170758528fdc48420d4ae42427b44d7:-1553133123068916769",
+              "sha256": "baebfff1c471a148a32b244842ae7d3a874d80d7468854ce6a37897eff7dba6a",
+              "source": {
+                "bundle": "defaultpackage_share_a4b039d159484dc5064ae0890a0174a0.bundle",
+                "bundle_hash": "801c9ed3e0b0b019bbaf77233e7ec09a",
+                "path_id": "-1553133123068916769",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/801c9ed3e0b0b019bbaf77233e7ec09a.bundle",
+                "raw_size": 1006,
+                "raw_sha256": "cffcb4c57452b6b0e5473cf43a5d453a8add2259ef681a4926b3bcb2a89dc076"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:-3913382215910956426",
+          "type": "Animator",
+          "original_sha256": "b958e97604901e46b80b10d4c0fa6a1e74603e90eec230530e25972309d96ddc",
+          "sha256": "1be280ce2b67e03426027f7446c507c16761ae3eeca227f34309bc48bb61a012",
+          "changes": [
+            {
+              "field": ".m_Controller",
+              "before": {
+                "m_FileID": 17,
+                "m_PathID": -8389467541782740115
+              },
+              "after": {
+                "m_FileID": 16,
+                "m_PathID": -8389467541782740115
+              },
+              "identity": "CAB-acb89e46c0e3f584025132259703b7fd:-8389467541782740115",
+              "sha256": "b3215a43b2336f14a6f01ffad1fae83379818f26d4b64d75d0b9e6f333c52f9f",
+              "source": {
+                "bundle": "defaultpackage_assets_animation_ui.bundle",
+                "bundle_hash": "e64ddd2905926d89597e6ebd4f0178fd",
+                "path_id": "-8389467541782740115",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/e64ddd2905926d89597e6ebd4f0178fd.bundle",
+                "raw_size": 7330,
+                "raw_sha256": "1c77e30ceb3f2e0120d428888f2a51f0b7dcc6edfcdc034615a2588061ce48ff"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:-7838946016348282250",
+          "type": "Animator",
+          "original_sha256": "2c9f608db537e4e694eb02d44bfe326d59b35107be89f1ac6c1d1ec9c55a89c4",
+          "sha256": "a07a0f7ffd2a0785a44e067bf47691d27fe9f845d0f21d058b356081613017ea",
+          "changes": [
+            {
+              "field": ".m_Controller",
+              "before": {
+                "m_FileID": 17,
+                "m_PathID": -8389467541782740115
+              },
+              "after": {
+                "m_FileID": 16,
+                "m_PathID": -8389467541782740115
+              },
+              "identity": "CAB-acb89e46c0e3f584025132259703b7fd:-8389467541782740115",
+              "sha256": "b3215a43b2336f14a6f01ffad1fae83379818f26d4b64d75d0b9e6f333c52f9f",
+              "source": {
+                "bundle": "defaultpackage_assets_animation_ui.bundle",
+                "bundle_hash": "e64ddd2905926d89597e6ebd4f0178fd",
+                "path_id": "-8389467541782740115",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/e64ddd2905926d89597e6ebd4f0178fd.bundle",
+                "raw_size": 7330,
+                "raw_sha256": "1c77e30ceb3f2e0120d428888f2a51f0b7dcc6edfcdc034615a2588061ce48ff"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:-8008447919823527306",
+          "type": "Animator",
+          "original_sha256": "1bf2276f4138f1fbb4af708262dc02eecb96f35bf6bc20692622886287bd3311",
+          "sha256": "e5feefa56f4712a479cc4fd721b2268d004a3084cd6ea5d1168be2ae8e2fac82",
+          "changes": [
+            {
+              "field": ".m_Controller",
+              "before": {
+                "m_FileID": 21,
+                "m_PathID": -4629522505758015844
+              },
+              "after": {
+                "m_FileID": 20,
+                "m_PathID": -4629522505758015844
+              },
+              "identity": "CAB-fae735c2ceb3404cfd774705eaa8361e:-4629522505758015844",
+              "sha256": "1c4c7ce11510a2e9de1e4955564c41a9a872682fce7091d88a1eca16730aa32e",
+              "source": {
+                "bundle": "defaultpackage_assets_animation_ui_public.bundle",
+                "bundle_hash": "86a8b3049ff5f564e28126d62af4141f",
+                "path_id": "-4629522505758015844",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/86a8b3049ff5f564e28126d62af4141f.bundle",
+                "raw_size": 5937,
+                "raw_sha256": "8f50ce82b2098fdbc053b2c1ad855130ae0fc4feb956a0393d010d6667dfa343"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:-8064116854081985930",
+          "type": "Animator",
+          "original_sha256": "0114698f362e984d10da23309f2ce49d6212d0f7e139a93308723554462332ac",
+          "sha256": "7c391e90cdeeffdce411ff699f02938117dfa42cdd31a195fc7f17b3bde7a8cf",
+          "changes": [
+            {
+              "field": ".m_Controller",
+              "before": {
+                "m_FileID": 17,
+                "m_PathID": -8389467541782740115
+              },
+              "after": {
+                "m_FileID": 16,
+                "m_PathID": -8389467541782740115
+              },
+              "identity": "CAB-acb89e46c0e3f584025132259703b7fd:-8389467541782740115",
+              "sha256": "b3215a43b2336f14a6f01ffad1fae83379818f26d4b64d75d0b9e6f333c52f9f",
+              "source": {
+                "bundle": "defaultpackage_assets_animation_ui.bundle",
+                "bundle_hash": "e64ddd2905926d89597e6ebd4f0178fd",
+                "path_id": "-8389467541782740115",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/e64ddd2905926d89597e6ebd4f0178fd.bundle",
+                "raw_size": 7330,
+                "raw_sha256": "1c77e30ceb3f2e0120d428888f2a51f0b7dcc6edfcdc034615a2588061ce48ff"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:1982195797539611254",
+          "type": "Animator",
+          "original_sha256": "afb817bc2ed12d01678ad5302db90a091050b50123467699ff00bb3e81859ac6",
+          "sha256": "6b4afca14ac11af633de77ae08b84931893a24943a1dd9148f7a2a4712fdfdfc",
+          "changes": [
+            {
+              "field": ".m_Controller",
+              "before": {
+                "m_FileID": 21,
+                "m_PathID": -4629522505758015844
+              },
+              "after": {
+                "m_FileID": 20,
+                "m_PathID": -4629522505758015844
+              },
+              "identity": "CAB-fae735c2ceb3404cfd774705eaa8361e:-4629522505758015844",
+              "sha256": "1c4c7ce11510a2e9de1e4955564c41a9a872682fce7091d88a1eca16730aa32e",
+              "source": {
+                "bundle": "defaultpackage_assets_animation_ui_public.bundle",
+                "bundle_hash": "86a8b3049ff5f564e28126d62af4141f",
+                "path_id": "-4629522505758015844",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/86a8b3049ff5f564e28126d62af4141f.bundle",
+                "raw_size": 5937,
+                "raw_sha256": "8f50ce82b2098fdbc053b2c1ad855130ae0fc4feb956a0393d010d6667dfa343"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:4051413404630049398",
+          "type": "Animator",
+          "original_sha256": "ffe5e67fe018fe07f10050d1dfba50079529925e13763c4b85ed14478d7f3bd2",
+          "sha256": "18f5221859f1854dbb489b193ca82b960cf0ce6fc6ef6701268da893f0cb008c",
+          "changes": [
+            {
+              "field": ".m_Controller",
+              "before": {
+                "m_FileID": 17,
+                "m_PathID": -8389467541782740115
+              },
+              "after": {
+                "m_FileID": 16,
+                "m_PathID": -8389467541782740115
+              },
+              "identity": "CAB-acb89e46c0e3f584025132259703b7fd:-8389467541782740115",
+              "sha256": "b3215a43b2336f14a6f01ffad1fae83379818f26d4b64d75d0b9e6f333c52f9f",
+              "source": {
+                "bundle": "defaultpackage_assets_animation_ui.bundle",
+                "bundle_hash": "e64ddd2905926d89597e6ebd4f0178fd",
+                "path_id": "-8389467541782740115",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/e64ddd2905926d89597e6ebd4f0178fd.bundle",
+                "raw_size": 7330,
+                "raw_sha256": "1c77e30ceb3f2e0120d428888f2a51f0b7dcc6edfcdc034615a2588061ce48ff"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:4340522876933104246",
+          "type": "MonoBehaviour",
+          "original_sha256": "6479b157811203e6f77d5c0285ad069bf4387d92dd1ef7bc7985b42fb0c81311",
+          "sha256": "c1a3b039e8914941ba4fca77d76b3eb62253362bdbb94053b5dfa77e289a1757",
+          "changes": [
+            {
+              "field": ".DefaultPrefabSource.Prefab",
+              "before": {
+                "m_FileID": 33,
+                "m_PathID": 3333865766725949682
+              },
+              "after": {
+                "m_FileID": 32,
+                "m_PathID": 3333865766725949682
+              },
+              "identity": "CAB-a5c23490988c9086b706b4e67b4a2509:3333865766725949682",
+              "sha256": "98c235b4a643d2b4ff29f9a1d6e35c93c5114772441cf6072e3de94a1a7ac054",
+              "source": {
+                "bundle": "defaultpackage_assets_prefabs_ui_roommatch.bundle",
+                "bundle_hash": "4f045cfbc9c8cbb330c52feac24b79f4",
+                "path_id": "3333865766725949682",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/4f045cfbc9c8cbb330c52feac24b79f4.bundle",
+                "raw_size": 736276,
+                "raw_sha256": "ad834a8cce4ba4a78f411c5a081a2d9038e66e9e72374f7396dd532451bb3cdd"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:5246571670794134134",
+          "type": "Animator",
+          "original_sha256": "29c38417c25a66c06b09cdec9d43b5adf55b25fc6eefebc1e04fe3dc9bc8356d",
+          "sha256": "d5e55fc259a86a82b4678582c40e9d4093bce0ef6ecd664074bc5a857e30f8fa",
+          "changes": [
+            {
+              "field": ".m_Controller",
+              "before": {
+                "m_FileID": 17,
+                "m_PathID": -8389467541782740115
+              },
+              "after": {
+                "m_FileID": 16,
+                "m_PathID": -8389467541782740115
+              },
+              "identity": "CAB-acb89e46c0e3f584025132259703b7fd:-8389467541782740115",
+              "sha256": "b3215a43b2336f14a6f01ffad1fae83379818f26d4b64d75d0b9e6f333c52f9f",
+              "source": {
+                "bundle": "defaultpackage_assets_animation_ui.bundle",
+                "bundle_hash": "e64ddd2905926d89597e6ebd4f0178fd",
+                "path_id": "-8389467541782740115",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/e64ddd2905926d89597e6ebd4f0178fd.bundle",
+                "raw_size": 7330,
+                "raw_sha256": "1c77e30ceb3f2e0120d428888f2a51f0b7dcc6edfcdc034615a2588061ce48ff"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:6045767206617932406",
+          "type": "Animator",
+          "original_sha256": "73449d8b9adbe8c334982d3a49b039c3656d18bdd3a28863c71ac75e3ffb4107",
+          "sha256": "3b15bd84343900aaa8647c5d4b4a5cc1e4e41afc31511012d7c87bc74ce82f10",
+          "changes": [
+            {
+              "field": ".m_Controller",
+              "before": {
+                "m_FileID": 21,
+                "m_PathID": -4629522505758015844
+              },
+              "after": {
+                "m_FileID": 20,
+                "m_PathID": -4629522505758015844
+              },
+              "identity": "CAB-fae735c2ceb3404cfd774705eaa8361e:-4629522505758015844",
+              "sha256": "1c4c7ce11510a2e9de1e4955564c41a9a872682fce7091d88a1eca16730aa32e",
+              "source": {
+                "bundle": "defaultpackage_assets_animation_ui_public.bundle",
+                "bundle_hash": "86a8b3049ff5f564e28126d62af4141f",
+                "path_id": "-4629522505758015844",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/86a8b3049ff5f564e28126d62af4141f.bundle",
+                "raw_size": 5937,
+                "raw_sha256": "8f50ce82b2098fdbc053b2c1ad855130ae0fc4feb956a0393d010d6667dfa343"
+              }
+            }
+          ]
+        }
+      ],
+      "excluded_online_components": [],
+      "selected_source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_team.bundle",
+        "bundle_hash": "ca5f34151f24d6dc89b6c0759045b64c",
+        "path_id": "3279035751510893174",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/ca5f34151f24d6dc89b6c0759045b64c.bundle",
+        "raw_size": 755276,
+        "raw_sha256": "619e2442b57cf8a58f7d2cd2b6e6977c6b734499b49b788d23b06f82844e52a2"
+      },
+      "native": {
+        "path": "unity/Assets/Game/Resources/Map12/Team/TeamInvitePanel.prefab",
+        "sha256": "a62109a6aa75aa1925de531766e3e5a825140120709fe002812213bafe8c51a4"
+      },
+      "native_meta": {
+        "path": "unity/Assets/Game/Resources/Map12/Team/TeamInvitePanel.prefab.meta",
+        "sha256": "d531a9bbac2c411453cb92f1e8da1a11da180d8652675dae651e9abb0e6ce0c2"
+      }
+    },
+    {
+      "name": "TeamInvitePanelRobotItem",
+      "historical_manifest": "871_156598",
+      "root": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:1893217289237025649",
+      "nodes": 82,
+      "objects": 346,
+      "exact_objects": 329,
+      "pointer_table_changes": [
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:-1398616149300751503",
+          "type": "MonoBehaviour",
+          "original_sha256": "81e5a3b49c5438ccc09c2a418b497e247cd2dc8e6c438a8e98b10d31d03a2cc8",
+          "sha256": "e4630185084a73ff74473afd8afeb74042677b34ee92c65cbf979dcedde6fe6e",
+          "changes": [
+            {
+              "field": ".m_Sprite",
+              "before": {
+                "m_FileID": 23,
+                "m_PathID": -1507405717015331612
+              },
+              "after": {
+                "m_FileID": 22,
+                "m_PathID": -1507405717015331612
+              },
+              "identity": "CAB-6f830ebf76212abbc7cd3f5d25d84b54:-1507405717015331612",
+              "sha256": "7ed15507ff8ae6d83450bcc4c155fc20614999f527d0b438e321e0d4ddd60146",
+              "source": {
+                "bundle": "defaultpackage_assets_image_ui_npcfavor.bundle",
+                "bundle_hash": "7ffc33a902d11fa1c313d8f2e99feac0",
+                "path_id": "-1507405717015331612",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/7ffc33a902d11fa1c313d8f2e99feac0.bundle",
+                "raw_size": 1032244,
+                "raw_sha256": "20e1bb4f9c72d15b5ff3503ebacb793f6704da808ce3d8e2465189e207b3edd5"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:-1769717458451901583",
+          "type": "MonoBehaviour",
+          "original_sha256": "d83d7543b72d4b01d2cd58fc4a6a5e5a0740fd97c3addaeae226744294928d70",
+          "sha256": "e515b3dfd2705e3e840c20c09dca012798c04a9a710d691b30e7bf7c0ce7afff",
+          "changes": [
+            {
+              "field": ".m_Texture",
+              "before": {
+                "m_FileID": 14,
+                "m_PathID": -315167730358365888
+              },
+              "after": {
+                "m_FileID": 13,
+                "m_PathID": -315167730358365888
+              },
+              "identity": "CAB-52859016095a1efab4fd5e850bda8122:-315167730358365888",
+              "sha256": "6963fd7eeb190a847f8a192e5ca1ff64cc786a102de072e7cb2bf8ae719c41cc",
+              "source": {
+                "bundle": "defaultpackage_assets_image_ui_portrait.bundle",
+                "bundle_hash": "b205bc1f1618a18ee23a313c861cffec",
+                "path_id": "-315167730358365888",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/b205bc1f1618a18ee23a313c861cffec.bundle",
+                "raw_size": 4302,
+                "raw_sha256": "d549f47577084b6def5df39f011c749c0ca1869174310b848e9d51c2e6075287"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:-1948377226357058703",
+          "type": "MonoBehaviour",
+          "original_sha256": "5acaf695898a15e48f089957b9992da42525b99d42cc29de4609c1197dce4819",
+          "sha256": "9afb471beac3ff4f839a1bcd30bcad29976fe300bd5066130ccf47af3076b126",
+          "changes": [
+            {
+              "field": ".m_Sprite",
+              "before": {
+                "m_FileID": 25,
+                "m_PathID": -4734218315472550680
+              },
+              "after": {
+                "m_FileID": 24,
+                "m_PathID": -4734218315472550680
+              },
+              "identity": "CAB-45f844f4165f708c712f8593529db77f:-4734218315472550680",
+              "sha256": "1492b086ab1ff874b415048fbdcde5aa31224ed03915d470d19be17a2a630b3b",
+              "source": {
+                "bundle": "defaultpackage_assets_image_ui_task.bundle",
+                "bundle_hash": "63d5ce3b03de9c5fbfbdb324aa41c059",
+                "path_id": "-4734218315472550680",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/63d5ce3b03de9c5fbfbdb324aa41c059.bundle",
+                "raw_size": 165389,
+                "raw_sha256": "37785e455e16f5b02bd20b7ecce49a8e70794af4be63985813e51aff0f8cda9e"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:-35108926703217807",
+          "type": "MonoBehaviour",
+          "original_sha256": "8a82d2eb9e3064e71d7b3d0a38448c059d148ebcc62309d1167c4384beed2dfc",
+          "sha256": "41179e204b9e5bc0bb5f7cb25bb48d257b002e0070f18bd3cc5c5ca20f201b8e",
+          "changes": [
+            {
+              "field": ".m_Sprite",
+              "before": {
+                "m_FileID": 23,
+                "m_PathID": -1507405717015331612
+              },
+              "after": {
+                "m_FileID": 22,
+                "m_PathID": -1507405717015331612
+              },
+              "identity": "CAB-6f830ebf76212abbc7cd3f5d25d84b54:-1507405717015331612",
+              "sha256": "7ed15507ff8ae6d83450bcc4c155fc20614999f527d0b438e321e0d4ddd60146",
+              "source": {
+                "bundle": "defaultpackage_assets_image_ui_npcfavor.bundle",
+                "bundle_hash": "7ffc33a902d11fa1c313d8f2e99feac0",
+                "path_id": "-1507405717015331612",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/7ffc33a902d11fa1c313d8f2e99feac0.bundle",
+                "raw_size": 1032244,
+                "raw_sha256": "20e1bb4f9c72d15b5ff3503ebacb793f6704da808ce3d8e2465189e207b3edd5"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:-4889481207137315983",
+          "type": "MonoBehaviour",
+          "original_sha256": "c773ba61134a47796fbcfc1b8144967447161d84800dd183fc892412ee3c9e72",
+          "sha256": "f8edd884abcae4d2223fb7d639326ad2cf347f2a9b6e3584216c5764b173ec07",
+          "changes": [
+            {
+              "field": ".m_Sprite",
+              "before": {
+                "m_FileID": 23,
+                "m_PathID": -1507405717015331612
+              },
+              "after": {
+                "m_FileID": 22,
+                "m_PathID": -1507405717015331612
+              },
+              "identity": "CAB-6f830ebf76212abbc7cd3f5d25d84b54:-1507405717015331612",
+              "sha256": "7ed15507ff8ae6d83450bcc4c155fc20614999f527d0b438e321e0d4ddd60146",
+              "source": {
+                "bundle": "defaultpackage_assets_image_ui_npcfavor.bundle",
+                "bundle_hash": "7ffc33a902d11fa1c313d8f2e99feac0",
+                "path_id": "-1507405717015331612",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/7ffc33a902d11fa1c313d8f2e99feac0.bundle",
+                "raw_size": 1032244,
+                "raw_sha256": "20e1bb4f9c72d15b5ff3503ebacb793f6704da808ce3d8e2465189e207b3edd5"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:-5067328674497637519",
+          "type": "MonoBehaviour",
+          "original_sha256": "e3adbc0a87649212bb8e7bd4dad2db41b75184ada282137643104a97d9b87d20",
+          "sha256": "861317d8da5f0543916db1d23fced1080119ee578b915cec3d9872d3900cfb3d",
+          "changes": [
+            {
+              "field": ".m_Sprite",
+              "before": {
+                "m_FileID": 23,
+                "m_PathID": 6343399266625921618
+              },
+              "after": {
+                "m_FileID": 22,
+                "m_PathID": 6343399266625921618
+              },
+              "identity": "CAB-6f830ebf76212abbc7cd3f5d25d84b54:6343399266625921618",
+              "sha256": "8b7a4d3925e817167742114f23cfcbe45b41376417aadc62ea79bcabae8c157a",
+              "source": {
+                "bundle": "defaultpackage_assets_image_ui_npcfavor.bundle",
+                "bundle_hash": "7ffc33a902d11fa1c313d8f2e99feac0",
+                "path_id": "6343399266625921618",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/7ffc33a902d11fa1c313d8f2e99feac0.bundle",
+                "raw_size": 1032244,
+                "raw_sha256": "20e1bb4f9c72d15b5ff3503ebacb793f6704da808ce3d8e2465189e207b3edd5"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:-5803140088139558031",
+          "type": "MonoBehaviour",
+          "original_sha256": "d27d263aae6a77ff65495deea5c5abfe4d9429a64686b9ec482213ba67e120f8",
+          "sha256": "33b80a84e971fea3c8f58b867b21a8b41c78f4e94f02c5219915512558d9ab9a",
+          "changes": [
+            {
+              "field": ".m_Sprite",
+              "before": {
+                "m_FileID": 23,
+                "m_PathID": -1507405717015331612
+              },
+              "after": {
+                "m_FileID": 22,
+                "m_PathID": -1507405717015331612
+              },
+              "identity": "CAB-6f830ebf76212abbc7cd3f5d25d84b54:-1507405717015331612",
+              "sha256": "7ed15507ff8ae6d83450bcc4c155fc20614999f527d0b438e321e0d4ddd60146",
+              "source": {
+                "bundle": "defaultpackage_assets_image_ui_npcfavor.bundle",
+                "bundle_hash": "7ffc33a902d11fa1c313d8f2e99feac0",
+                "path_id": "-1507405717015331612",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/7ffc33a902d11fa1c313d8f2e99feac0.bundle",
+                "raw_size": 1032244,
+                "raw_sha256": "20e1bb4f9c72d15b5ff3503ebacb793f6704da808ce3d8e2465189e207b3edd5"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:-6695623141945519247",
+          "type": "MonoBehaviour",
+          "original_sha256": "b1cc6077cc69e921963b79287b30ebfaacaf318a06dc9feb324b98da8baabec2",
+          "sha256": "f599b12d4e4d9e36c43a23243ebe4f178e617d726194eaa425544506c702f384",
+          "changes": [
+            {
+              "field": ".m_Sprite",
+              "before": {
+                "m_FileID": 23,
+                "m_PathID": -1507405717015331612
+              },
+              "after": {
+                "m_FileID": 22,
+                "m_PathID": -1507405717015331612
+              },
+              "identity": "CAB-6f830ebf76212abbc7cd3f5d25d84b54:-1507405717015331612",
+              "sha256": "7ed15507ff8ae6d83450bcc4c155fc20614999f527d0b438e321e0d4ddd60146",
+              "source": {
+                "bundle": "defaultpackage_assets_image_ui_npcfavor.bundle",
+                "bundle_hash": "7ffc33a902d11fa1c313d8f2e99feac0",
+                "path_id": "-1507405717015331612",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/7ffc33a902d11fa1c313d8f2e99feac0.bundle",
+                "raw_size": 1032244,
+                "raw_sha256": "20e1bb4f9c72d15b5ff3503ebacb793f6704da808ce3d8e2465189e207b3edd5"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:-7602669557296409743",
+          "type": "Animation",
+          "original_sha256": "de7a72b549c8dec78684b9a2de81c77f111a9c27dc0788b8aa353c710005aef8",
+          "sha256": "04a1fc36a84968f32cd72467dbc2ff6169a8e32e1d974e282980dd5ae228395d",
+          "changes": [
+            {
+              "field": ".m_Animation",
+              "before": {
+                "m_FileID": 20,
+                "m_PathID": 4115514743812544491
+              },
+              "after": {
+                "m_FileID": 19,
+                "m_PathID": 4115514743812544491
+              },
+              "identity": "CAB-154d0356819b205c30c820e691ce28d4:4115514743812544491",
+              "sha256": "413df69e2bef00884b3e984ccbe11ae39431292e72ac51ace353936953a61ebe",
+              "source": {
+                "bundle": "defaultpackage_assets_animation_ui_cooking.bundle",
+                "bundle_hash": "03b323b61d795e3158347601f0306ead",
+                "path_id": "4115514743812544491",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/03b323b61d795e3158347601f0306ead.bundle",
+                "raw_size": 2367,
+                "raw_sha256": "cd0f1dd8d4c8d9e7153e3f1dc5a2385ca18339f872a48c1171e7ae3ef594e887"
+              }
+            },
+            {
+              "field": ".m_Animations[0]",
+              "before": {
+                "m_FileID": 20,
+                "m_PathID": 4115514743812544491
+              },
+              "after": {
+                "m_FileID": 19,
+                "m_PathID": 4115514743812544491
+              },
+              "identity": "CAB-154d0356819b205c30c820e691ce28d4:4115514743812544491",
+              "sha256": "413df69e2bef00884b3e984ccbe11ae39431292e72ac51ace353936953a61ebe",
+              "source": {
+                "bundle": "defaultpackage_assets_animation_ui_cooking.bundle",
+                "bundle_hash": "03b323b61d795e3158347601f0306ead",
+                "path_id": "4115514743812544491",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/03b323b61d795e3158347601f0306ead.bundle",
+                "raw_size": 2367,
+                "raw_sha256": "cd0f1dd8d4c8d9e7153e3f1dc5a2385ca18339f872a48c1171e7ae3ef594e887"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:-7674389914251635855",
+          "type": "MonoBehaviour",
+          "original_sha256": "9d181bfdab3bf67d7c034588d8156282c7e66ff51853170da5c450e09a375c4c",
+          "sha256": "e90d7926ecbe22dfd83ffd39a6e290d80604e75bd1ef01b8d2e40ec8ecc34a6c",
+          "changes": [
+            {
+              "field": ".m_Sprite",
+              "before": {
+                "m_FileID": 23,
+                "m_PathID": -1507405717015331612
+              },
+              "after": {
+                "m_FileID": 22,
+                "m_PathID": -1507405717015331612
+              },
+              "identity": "CAB-6f830ebf76212abbc7cd3f5d25d84b54:-1507405717015331612",
+              "sha256": "7ed15507ff8ae6d83450bcc4c155fc20614999f527d0b438e321e0d4ddd60146",
+              "source": {
+                "bundle": "defaultpackage_assets_image_ui_npcfavor.bundle",
+                "bundle_hash": "7ffc33a902d11fa1c313d8f2e99feac0",
+                "path_id": "-1507405717015331612",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/7ffc33a902d11fa1c313d8f2e99feac0.bundle",
+                "raw_size": 1032244,
+                "raw_sha256": "20e1bb4f9c72d15b5ff3503ebacb793f6704da808ce3d8e2465189e207b3edd5"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:-8028762695547956367",
+          "type": "MonoBehaviour",
+          "original_sha256": "5e47b0ca4b9478fd5593852a21332fa754d85ce38dae6c8f162469bfc99d046e",
+          "sha256": "453c5368cee6c67170c4026de64a06d0bb7f9d4ebb5faf25becbf631ed391b64",
+          "changes": [
+            {
+              "field": ".m_Sprite",
+              "before": {
+                "m_FileID": 19,
+                "m_PathID": 3004806846982761052
+              },
+              "after": {
+                "m_FileID": 18,
+                "m_PathID": 3004806846982761052
+              },
+              "identity": "CAB-10a52a4dd53e38464b5da8cb2d533ea3:3004806846982761052",
+              "sha256": "82030250cdb09563800dfe0322e417308b1fbad4c1fc0694fb1cb8fdbf5d9db0",
+              "source": {
+                "bundle": "defaultpackage_assets_image_itemicon_professionsmall.bundle",
+                "bundle_hash": "86a17e5f510133abc29bf47869656cf6",
+                "path_id": "3004806846982761052",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/86a17e5f510133abc29bf47869656cf6.bundle",
+                "raw_size": 995544,
+                "raw_sha256": "80b506a678623b1ff6f8879c18232d37396c9b8fdee76dcd9a699f1a9c4051b6"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:-8230612384544664719",
+          "type": "Animation",
+          "original_sha256": "ecd1bed3f9b3c3c73fa5f99107aff53ebf22840636e1fe9b8eff6b0660b46c1e",
+          "sha256": "3fe202cf93fb241331272c121da111e6ce160edfcc7f5acf6448ae0fadddd1aa",
+          "changes": [
+            {
+              "field": ".m_Animation",
+              "before": {
+                "m_FileID": 20,
+                "m_PathID": 4115514743812544491
+              },
+              "after": {
+                "m_FileID": 19,
+                "m_PathID": 4115514743812544491
+              },
+              "identity": "CAB-154d0356819b205c30c820e691ce28d4:4115514743812544491",
+              "sha256": "413df69e2bef00884b3e984ccbe11ae39431292e72ac51ace353936953a61ebe",
+              "source": {
+                "bundle": "defaultpackage_assets_animation_ui_cooking.bundle",
+                "bundle_hash": "03b323b61d795e3158347601f0306ead",
+                "path_id": "4115514743812544491",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/03b323b61d795e3158347601f0306ead.bundle",
+                "raw_size": 2367,
+                "raw_sha256": "cd0f1dd8d4c8d9e7153e3f1dc5a2385ca18339f872a48c1171e7ae3ef594e887"
+              }
+            },
+            {
+              "field": ".m_Animations[0]",
+              "before": {
+                "m_FileID": 20,
+                "m_PathID": 4115514743812544491
+              },
+              "after": {
+                "m_FileID": 19,
+                "m_PathID": 4115514743812544491
+              },
+              "identity": "CAB-154d0356819b205c30c820e691ce28d4:4115514743812544491",
+              "sha256": "413df69e2bef00884b3e984ccbe11ae39431292e72ac51ace353936953a61ebe",
+              "source": {
+                "bundle": "defaultpackage_assets_animation_ui_cooking.bundle",
+                "bundle_hash": "03b323b61d795e3158347601f0306ead",
+                "path_id": "4115514743812544491",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/03b323b61d795e3158347601f0306ead.bundle",
+                "raw_size": 2367,
+                "raw_sha256": "cd0f1dd8d4c8d9e7153e3f1dc5a2385ca18339f872a48c1171e7ae3ef594e887"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:-847961043082095759",
+          "type": "MonoBehaviour",
+          "original_sha256": "520b7ff09765dc0492877865db1987600e61acb409dbd7ad2c8ee2ab8aab2b34",
+          "sha256": "75403fece643a9e46dba0b7ba6bb37805450045a94d4bdc477f44c38595b958d",
+          "changes": [
+            {
+              "field": ".m_Sprite",
+              "before": {
+                "m_FileID": 23,
+                "m_PathID": 1757658604010959594
+              },
+              "after": {
+                "m_FileID": 22,
+                "m_PathID": 1757658604010959594
+              },
+              "identity": "CAB-6f830ebf76212abbc7cd3f5d25d84b54:1757658604010959594",
+              "sha256": "344c0a848a214a607c2a1b1a39538ae3a80c2f0de7b8ec9c5ec21f49a18d3f80",
+              "source": {
+                "bundle": "defaultpackage_assets_image_ui_npcfavor.bundle",
+                "bundle_hash": "7ffc33a902d11fa1c313d8f2e99feac0",
+                "path_id": "1757658604010959594",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/7ffc33a902d11fa1c313d8f2e99feac0.bundle",
+                "raw_size": 1032244,
+                "raw_sha256": "20e1bb4f9c72d15b5ff3503ebacb793f6704da808ce3d8e2465189e207b3edd5"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:1432808445900149617",
+          "type": "MonoBehaviour",
+          "original_sha256": "502c2ad30c6bec231e834548fa9cd518edd3d4470bbd726225ea3c8d7d86f032",
+          "sha256": "8dc368715084ee757a7412fe6a2858ad8a4f929faa6bc8ee297a5b89497ac667",
+          "changes": [
+            {
+              "field": ".m_Sprite",
+              "before": {
+                "m_FileID": 23,
+                "m_PathID": 1757658604010959594
+              },
+              "after": {
+                "m_FileID": 22,
+                "m_PathID": 1757658604010959594
+              },
+              "identity": "CAB-6f830ebf76212abbc7cd3f5d25d84b54:1757658604010959594",
+              "sha256": "344c0a848a214a607c2a1b1a39538ae3a80c2f0de7b8ec9c5ec21f49a18d3f80",
+              "source": {
+                "bundle": "defaultpackage_assets_image_ui_npcfavor.bundle",
+                "bundle_hash": "7ffc33a902d11fa1c313d8f2e99feac0",
+                "path_id": "1757658604010959594",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/7ffc33a902d11fa1c313d8f2e99feac0.bundle",
+                "raw_size": 1032244,
+                "raw_sha256": "20e1bb4f9c72d15b5ff3503ebacb793f6704da808ce3d8e2465189e207b3edd5"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:2343938439097799537",
+          "type": "MonoBehaviour",
+          "original_sha256": "283df0cf07b1f8f1a08504e17b7a7836c889981c98377fdf80ddaa08d38c2ac8",
+          "sha256": "99ee900bf77db492af64303deca8d04fd917cee03d28020ebe90ca228806e58c",
+          "changes": [
+            {
+              "field": ".m_Sprite",
+              "before": {
+                "m_FileID": 30,
+                "m_PathID": 1269196073290117268
+              },
+              "after": {
+                "m_FileID": 29,
+                "m_PathID": 1269196073290117268
+              },
+              "identity": "CAB-5a199247005a7384fc4206faf334a377:1269196073290117268",
+              "sha256": "74e9305e8840937a3a1dd9e464280afa6254bebaf76713b23a067ed7865c2468",
+              "source": {
+                "bundle": "defaultpackage_assets_image_ui_activitychineseodyssey.bundle",
+                "bundle_hash": "cf3bf1cdacfa1a98ba3befd73f929976",
+                "path_id": "1269196073290117268",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/cf3bf1cdacfa1a98ba3befd73f929976.bundle",
+                "raw_size": 10451512,
+                "raw_sha256": "a32df7cce01c220e342315f6f35d0b2e590b7f409ab7abdaa13c1499075fc1da"
+              }
+            }
+          ]
+        },
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:4160449998438257521",
+          "type": "MonoBehaviour",
+          "original_sha256": "451a3e4ae750e6544e5816d451573b04313642c7fef6281deab54b72835c68a7",
+          "sha256": "bcef8695a0fc504800c61f012eba6f8d5464fc7d6ba5a372d71c207b1d657dec",
+          "changes": [
+            {
+              "field": ".m_Sprite",
+              "before": {
+                "m_FileID": 25,
+                "m_PathID": -2685570517113319088
+              },
+              "after": {
+                "m_FileID": 24,
+                "m_PathID": -2685570517113319088
+              },
+              "identity": "CAB-45f844f4165f708c712f8593529db77f:-2685570517113319088",
+              "sha256": "e5fb9e1070462992b78d2f249f2ebb867c6764d0cacc9b2bd6ef4484e37814d0",
+              "source": {
+                "bundle": "defaultpackage_assets_image_ui_task.bundle",
+                "bundle_hash": "63d5ce3b03de9c5fbfbdb324aa41c059",
+                "path_id": "-2685570517113319088",
+                "origin": "apk_zip",
+                "manifest": "884_156692",
+                "apk_manifest": "881_156673",
+                "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+                "apk_entry": "assets/yoo/DefaultPackage/63d5ce3b03de9c5fbfbdb324aa41c059.bundle",
+                "raw_size": 165389,
+                "raw_sha256": "37785e455e16f5b02bd20b7ecce49a8e70794af4be63985813e51aff0f8cda9e"
+              }
+            }
+          ]
+        }
+      ],
+      "excluded_online_components": [
+        {
+          "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:2746271364878488433",
+          "type": "AppearanceSystem.Runtime.AppearanceUI",
+          "original_sha256": "a9131131b0df8debbd0896adb802783040e9b61fc26feb8ef12065961d33d38e",
+          "sha256": "76de02b128bb658aa797e562e3d772a6dfe365aad6fc6986fd132a1563375eb9",
+          "reason": "Removed online appearance logic; not consumed by the shared selector."
+        }
+      ],
+      "selected_source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_team.bundle",
+        "bundle_hash": "ca5f34151f24d6dc89b6c0759045b64c",
+        "path_id": "1893217289237025649",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/ca5f34151f24d6dc89b6c0759045b64c.bundle",
+        "raw_size": 755276,
+        "raw_sha256": "619e2442b57cf8a58f7d2cd2b6e6977c6b734499b49b788d23b06f82844e52a2"
+      },
+      "native": {
+        "path": "unity/Assets/Game/Resources/Map12/Team/TeamInvitePanelRobotItem.prefab",
+        "sha256": "8663381e02bd38b0e949087c65d2b4eb8e691d039dcaea98eb7c2abc4452bd65"
+      },
+      "native_meta": {
+        "path": "unity/Assets/Game/Resources/Map12/Team/TeamInvitePanelRobotItem.prefab.meta",
+        "sha256": "45f9a339a08b936568fc695a134d495b475d9253bf8406366f888e2d782dd767"
+      }
+    }
+  ],
+  "bindings": [
+    {
+      "path": "scripts/record_battle_assist_selection.py",
+      "sha256": "8328016d776b93d5a6ef7e23b3ce724818a99f8126f4ea7ef86ca7bdca26c759"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleAssistSelectionView.cs",
+      "sha256": "f065a59b59a9332d8d91c68ef52356b9471d6b460b8725ccf416402d60e12674"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleAssistSelectionView.cs.meta",
+      "sha256": "c90213235bf412ed9ff24af1cf106c925f307a193f52b2151d209affd1fbb753"
+    }
+  ],
+  "conversion": "Reuse existing native Map12 prefabs without changing layout or asset payloads. Retained hierarchy objects match the selected source; differing external pointer indices resolve to byte-identical original dependencies. Historical input identities remain separate."
+}

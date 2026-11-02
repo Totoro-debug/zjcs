@@ -48,7 +48,7 @@
 
 ## 完整还原部分
 
-入口初始化的局部回归已在内置屏 Direct3D 12 Play Mode 运行：`ProjectTools.Validate`、脚本编译及元数据静态检查通过，模拟点击游记→日常目录→第一张可用卡片→详情“前往副本”后实际创建本地路线；已查看游记、目录及详情的完整窗口截图。继续点击路线房间时，原 `Room_1101` 位于底部且未命中 UI 射线，完整入口到战斗回归未通过，后续将复用已有 Map12 原路线显示器修复。`--zjcs-validate-dungeon-entry <输出目录>` 已提供 Windows Player 隔离入口与受控原音效播放探针；本次尚未执行该 Player 探针，接收器已接回不等于声音实机验证通过。
+日常副本入口已在内置屏 Direct3D 11 Play Mode 通过模拟鼠标点击：游记→日常目录→第一张可用卡片→详情“前往副本”→1101营地→1102战斗房→公共原生助战确认→实际公共战斗。空伙伴选择运行388步后真实失败结算并返回保留的路线，检查点已结束；已查看入口、邀请、准备、战斗和返回画面。Unity编译、`ProjectTools.Validate` 与公共邀请窗口的独立输入检查通过。竞技场完整入口当前停在 `OfficialDungeonUiBindingRuntime.RestoreLayouts` 的原生层级索引越界，尚未到达对战；竞技与塔层的既有运行器检查不代表正式入口通过。`--zjcs-validate-dungeon-entry <输出目录>` 的Windows Player隔离探针尚未执行，本批未发布新Player。助战视图实现与验证边界见[NPC邀请](npc-assistance.md)。
 游记进入战斗前的原生绑定：`prepare_travel_entry_layout.py` 校验当前可用的官方 home bundle 与既有871来源记录的 MD5、SHA256、字节数和 prefab PathID 完全相同，并核对 `SafeArea` 原代码哈希未变；恢复3个原 `SafeArea`、1个 `AspectRatioFitter`、10个 `NoDrawingRayCast` 点击区域和日常副本／竞技／幻境之塔的3个 `EntryButton` PPtr。使用原类型完整字段读取并检查消费字节数，UGUI schema 来自固定 Unity 编辑器编译程序集；未新增图像。历史来源身份保留，当前相同输入的取得位置、对象及转换输出哈希记录于[绑定来源清单](../../assets/reference/dungeon-ui/prefab-binding-source-manifest.json)的 `travel_entry_layout`。日常副本按原 `DailyDungeonEntry` 接入，修正旧实现误将 `MapGamePlayEntry` 连接到日常副本；竞技和幻境之塔按原子按钮引用接入。
 
 

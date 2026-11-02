@@ -87,49 +87,72 @@ namespace Zjcs.Editor
                     yield return RunDirectHosts(home, output, click);
                     yield break;
                 }
-                yield return OpenTravel(home, click);
-                yield return Capture(output, "travel-entry");
-                var entry = ButtonUnder("DailyDungeonEntry", "EntryBtn");
-                File.WriteAllLines(Path.Combine(output, "travel-entry-rects.txt"), entry.GetComponentsInParent<RectTransform>()
-                    .Select(value => value.name + " rect=" + value.rect + " local=" + value.localPosition
-                        + " anchored=" + value.anchoredPosition + " anchors=" + value.anchorMin + "/" + value.anchorMax
-                        + " scale=" + value.localScale + " world=" + value.position));
-                click(entry);
-                yield return SettleUi();
-                yield return Capture(output, "daily-entry");
-                int firstDungeon = home.DailyDungeons.PublicDungeons((map, region) => home.MapRegionProgress(map, region) >= 10000).First().id;
-                click(Active<Button>().Single(value => value.name == "Dungeon_" + firstDungeon));
-                yield return SettleUi();
-                yield return Capture(output, "daily-dialog");
-                click(Root("DailyDungeonDialog").GetComponentsInChildren<Button>().First(value => value.name == "GoToBtn" && value.interactable));
-                yield return SettleUi();
-                Require(home.DailyDungeons.ActiveRun != null, "Daily entry did not create a route.");
-                yield return Capture(output, "daily-route");
-                for (int attempt = 0; attempt < 20 && UnityEngine.Object.FindObjectOfType<DailyDungeonBattleRunner>() == null; attempt++)
+                bool arenaAndTowerOnly = Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_ENTRY_ONLY") == "arena-tower";
+                if (!arenaAndTowerOnly)
                 {
-                    var run = home.DailyDungeons.ActiveRun;
-                    Require(run != null, "Daily route finished without exercising a combat room.");
-                    int roomId = run.currentRoomId;
-                    if (run.clearedRoomIds.Contains(roomId))
-                    {
-                        var current = home.DailyDungeons.FindRoom(roomId);
-                        roomId = (current.nextRoomIds ?? Array.Empty<int>()).FirstOrDefault();
-                        Require(roomId > 0, "Daily route has no next combat room.");
-                    }
-                    click(Active<WorldDailyDungeonRoomItem>().Single(value => value.name == "Room_" + roomId).ClickBtn);
+                    yield return OpenTravel(home, click);
+                    yield return Capture(output, "travel-entry");
+                    var entry = ButtonUnder("DailyDungeonEntry", "EntryBtn");
+                    File.WriteAllLines(Path.Combine(output, "travel-entry-rects.txt"), entry.GetComponentsInParent<RectTransform>()
+                        .Select(value => value.name + " rect=" + value.rect + " local=" + value.localPosition
+                            + " anchored=" + value.anchoredPosition + " anchors=" + value.anchorMin + "/" + value.anchorMax
+                            + " scale=" + value.localScale + " world=" + value.position));
+                    click(entry);
                     yield return SettleUi();
-                    var solo = Active<Button>().FirstOrDefault(value => value.name == "SoloChallengeButton");
-                    if (solo != null) { click(solo); yield return SettleUi(); }
+                    yield return Capture(output, "daily-entry");
+                    int firstDungeon = home.DailyDungeons.PublicDungeons((map, region) => home.MapRegionProgress(map, region) >= 10000).First().id;
+                    click(Active<Button>().Single(value => value.name == "Dungeon_" + firstDungeon));
+                    yield return SettleUi();
+                    yield return Capture(output, "daily-dialog");
+                    click(Root("DailyDungeonDialog").GetComponentsInChildren<Button>().First(value => value.name == "GoToBtn" && value.interactable));
+                    yield return SettleUi();
+                    Require(home.DailyDungeons.ActiveRun != null, "Daily entry did not create a route.");
+                    yield return Capture(output, "daily-route");
+                    for (int attempt = 0; attempt < 20 && UnityEngine.Object.FindObjectOfType<DailyDungeonBattleRunner>() == null; attempt++)
+                    {
+                        var run = home.DailyDungeons.ActiveRun;
+                        Require(run != null, "Daily route finished without exercising a combat room.");
+                        int roomId = run.currentRoomId;
+                        if (run.clearedRoomIds.Contains(roomId))
+                        {
+                            var current = home.DailyDungeons.FindRoom(roomId);
+                            roomId = (current.nextRoomIds ?? Array.Empty<int>()).FirstOrDefault();
+                            Require(roomId > 0, "Daily route has no next combat room.");
+                        }
+                        click(Active<WorldDailyDungeonRoomItem>().Single(value => value.name == "Room_" + roomId).ClickBtn);
+                        yield return SettleUi();
+                        var invitation = Active<Canvas>().FirstOrDefault(value => value.name == "BattleAssistSelection");
+                        if (invitation != null)
+                        {
+                            yield return Capture(output, "daily-assistance");
+                            click(invitation.transform.Find("BgPanel1/Content/MiddleGo/FriendRobotGo/BottomGo")
+                                .GetComponentsInChildren<Button>().First(value => value.name == "CommonBtn_12"));
+                            yield return SettleUi();
+                        }
+                        var afterClick = home.DailyDungeons.ActiveRun;
+                        if (UnityEngine.Object.FindObjectOfType<DailyDungeonBattleRunner>() == null
+                            && afterClick != null && afterClick.currentRoomId == run.currentRoomId
+                            && afterClick.clearedRoomIds.Count == run.clearedRoomIds.Count)
+                        {
+                            yield return Capture(output, "daily-room-stalled");
+                            throw new InvalidOperationException("Daily route click did not advance room " + roomId
+                                + "; invitation=" + (invitation != null) + "; active buttons="
+                                + string.Join(",", Active<Button>().Select(value => value.name)));
+                        }
+                    }
+                    int testedRoom = home.DailyDungeons.ActiveRun.currentRoomId;
+                    yield return RunBattle<DailyDungeonBattleRunner>("daily", output, click);
+                    Require(home.DailyDungeons.ActiveRun != null, "Daily room unexpectedly removed its route.");
+                    Require(string.IsNullOrEmpty(home.DailyDungeons.ActiveRun.activeBattleCheckpoint)
+                        || FightBattleCheckpointSerializer.Load(home.DailyDungeons.ActiveRun.activeBattleCheckpoint).Finished,
+                        "Daily host left an unfinished checkpoint after settlement.");
+                    Debug.Log("[Battle hosts] daily actual room completed: " + testedRoom);
                 }
-                int testedRoom = home.DailyDungeons.ActiveRun.currentRoomId;
-                yield return RunBattle<DailyDungeonBattleRunner>("daily", output, click);
-                Require(home.DailyDungeons.ActiveRun != null, "Daily room unexpectedly removed its route.");
-                Require(string.IsNullOrEmpty(home.DailyDungeons.ActiveRun.activeBattleCheckpoint)
-                    || FightBattleCheckpointSerializer.Load(home.DailyDungeons.ActiveRun.activeBattleCheckpoint).Finished,
-                    "Daily host left an unfinished checkpoint after settlement.");
-                Debug.Log("[Battle hosts] daily actual room completed: " + testedRoom);
 
                 yield return OpenTravel(home, click);
+                yield return Capture(output, "arena-entry");
+                Require(home.Arena.IsFunctionLimitMet(58, -1, home.MapRegionProgress),
+                    "Arena preview prerequisite was lost from the isolated profile.");
                 int tickets = home.Arena.Tickets, results = home.Arena.Wins + home.Arena.Losses;
                 click(ButtonUnder("ArenaAreaEntry", "EntryBtn"));
                 yield return SettleUi();
@@ -163,7 +186,8 @@ namespace Zjcs.Editor
                     "Tower settled more than one actual layer.");
                 Debug.Log("[Battle hosts] tower actual battle and result navigation passed.");
                 File.WriteAllText(Path.Combine(output, "battle-hosts-result.txt"),
-                    "daily, arena and tower: actual HUD input, Begin/Tick, presentation completion and host settlement passed\n");
+                    (arenaAndTowerOnly ? "arena and tower" : "daily, arena and tower")
+                    + ": actual HUD input, Begin/Tick, presentation completion and host settlement passed\n");
             }
             finally { home.CloseForNavigation(); }
         }
