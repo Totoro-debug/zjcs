@@ -414,3 +414,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 伙伴原通话头像的本地主角资料、血条与原生头像接线凭据见[实际主角控件来源](partner-local-player-widgets-source-manifest.json)，入口为 `scripts/record_partner_local_player_widgets.py`；记录既有来源依赖、适配代码及验证工具哈希，并分别核对 `PlayerIconMe`、`PlayerInfoData` 与所选 `884_156692` 原码的逐文件字节一致性，不将其他历史模块混标为当前版本。本批没有美术载荷变更或完整素材快照。
 
 爬塔游记绑定从所选 `884_156692` 的 `TravelNotesPanel` 解码 `OldPlayEntryBtn.mEntryBtn`、旧 `DemonBattleEntry` 状态／Sprite GUID／层数引用及原语言格式；保留原 prefab 节点与隐藏状态。`WorldMapProgressCondition` 与 `Formula.Int2Float` 来源为同版官方共享代码，既有 `854_156383` 家园条件载荷单独记录；原始对象、输入／输出哈希和显式图片绑定见 [dungeon-ui/matching-panel-source-manifest.json](dungeon-ui/matching-panel-source-manifest.json)，重建入口为 `scripts/prepare_dungeon_matching_panels.py`。
+
+伙伴整页打开时的通话事务与原通讯录／播放服务接线凭据见[窗口通话接线来源](partner-conversation-window-source-manifest.json)，入口为 `scripts/record_partner_conversation_window.py`。原通话规则、原整页和图像／声音输入沿用各自所选 `884_156692` 来源清单，本批单独记录组合代码与验证入口哈希；未修改原素材或生成完整快照。

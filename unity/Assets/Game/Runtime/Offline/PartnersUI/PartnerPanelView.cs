@@ -23,6 +23,7 @@ namespace Zjcs.Offline.PartnersUI
         public Func<int, bool> IsFunctionLimit;
         public Action<GameObject> BindNativeTree;
         public Action<AudioClip, GameObject> PostSound;
+        public Action PrepareOpen;
     }
 
     // Own only the binding lifetime. The original prefab owns every control,
@@ -93,6 +94,7 @@ namespace Zjcs.Offline.PartnersUI
             previousSkinClip = ProfessionAppearanceSkinClipBindings.Current;
             try
             {
+                value.PrepareOpen?.Invoke();
                 sounds = new OfflinePartnerUiSoundScope(assets.GetSound);
                 skinClip = new OfflineProfessionNativeSkinClipBindings(previousSkinClip);
                 ProfessionAppearanceSkinClipBindings.Current = skinClip;

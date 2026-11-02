@@ -482,6 +482,12 @@ NPC 资料投影同时保留实际原 `NpcTargetData` 对象的 `ServerId`，头
 
 本节只记录组件图接线；正式伙伴页完整资料、通话、入口及宿主服务生命周期仍待接通，不能据此计作完整窗口或 Windows Player 已完成。
 
+### 原整页打开与通话事务接线（局部）
+
+`OfflinePartnerConversationUiSession` 组合既有原条件／每日限制、本地事务、稳定通讯录视图与原播放服务，绑定 `PartnerPanelContext.PrepareOpen`。`PartnerPanelView.Open` 在激活控件前运行准备，已打开的窗口拒绝重复打开；构造服务不会创建新通话或注册时钟／状态变化钩子。读取已有本地角色身份，通话检查只由打开入口调用，事务成功后再同步 UI 视图；来源与接线哈希见[窗口通话接线来源](../../assets/reference/partner-conversation-window-source-manifest.json)。
+
+隔离 Unity URP Play Mode 使用完整原三页窗口、正式本地组合与真实存档身份；将已自动结识的 8402 好感条件置为 40 后，构造组合仍无通话记录，实际打开窗口才按原顺序创建 2021 通话。三次真实打开只提交一次创建；已打开窗口的重复请求被拒绝，不额外运行准备。经原 EventSystem 射线和模拟输入验证带红点的通讯录折叠／展开、真实预览文本与选择回调、三页切换、原返回动画、关闭后重开和功能限制；运行截图已查看，无 Unity 错误。静态检查（90,066 个 GUID）、主工程导入／编译和 `Zjcs.Editor.ProjectTools.Validate` 通过。通话内容弹窗／节点交互未在本批渲染；正式 Home 入口尚未接入这个组合，不计作完整页面或 Windows Player 完成。
+
 ### 当前主角资料与原通话头像整合（局部）
 
 `OfflinePartnerPlayerInfoBindings` 将 `PlayerIconMe`／`PlayerInfoUI` 的主角、管理器更新通知和 `PlayerInfoData` 接到已提交的本地资料源；名称参数保留原翻译标记，战力参数使用原 `CultureNumberArg.Compact`。图片、职业／阶位配置、伙伴模型、队伍规则和详情弹窗继续由原宿主服务负责，不在资料适配器中生成替代规则或界面。

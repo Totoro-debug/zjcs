@@ -1,0 +1,87 @@
+{
+  "manifest": "884_156692",
+  "dependencies": [
+    {
+      "path": "assets/reference/partner-conversation-transactions-source-manifest.json",
+      "sha256": "fbb0eaf0d9f6fecaedd3be77dd68846cbc8c3fdb77a0c2a48e5cda48b8dc5124"
+    },
+    {
+      "path": "assets/reference/partner-dialogue-local-ui-source-manifest.json",
+      "sha256": "7a51bdf6460160e2c7ba9755de48e16805e66eecf4e842a5bec93ce4c1f6ad32"
+    },
+    {
+      "path": "assets/reference/partner-dialogue-playback-native-source-manifest.json",
+      "sha256": "d73b2f5cfea0b121496c14514ba2ab85e63670281a60b77cf182fbb63a3af76d"
+    },
+    {
+      "path": "assets/reference/partner-panel-runtime-source-manifest.json",
+      "sha256": "a1fab80a5c1b881c32b6867b68bf1fe0dd80a5678f63905c797d7db78024bc0c"
+    },
+    {
+      "path": "assets/reference/partner-npc-icons-source-manifest.json",
+      "sha256": "7750f008ebd44bc8b6bf4997f3eb6f8f6ec1b5e281f44eedf1dca227399996df"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerConversationUiSession.cs",
+      "sha256": "07f9b29904a9b16c623fcb3eab37218418f0f83b41050aa85e85e48afd430f4d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerConversationUiSession.cs.meta",
+      "sha256": "cbe261afa8ba4ad09b2318e12e19bcc3abfa6f5a5a0894322d12cabcb85a64ca"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerPanelView.cs",
+      "sha256": "819ce3d5358fa318092b9977d1e32c0cd98eec9bd113135f4301b32294806c50"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/PartnersUI/PartnerPanelView.cs.meta",
+      "sha256": "10674a3f1ed06586f931b50733a0c82ec2d5426f6ebdf3793abdb6d3280b567a"
+    }
+  ],
+  "reused_runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerDialogueUiServices.cs",
+      "sha256": "cfc66c86b9718cb7271b2c0e3ae2d7d4d756a39677c89a73fe73ff16f2e3697a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerDialoguePlaybackServices.cs",
+      "sha256": "74b365c83d631d10aa5f084739f4556f1ff2a8ca7e4a6d6509af7cdc8962ae71"
+    }
+  ],
+  "helpers": [
+    {
+      "path": "scripts/prepare_partner_conversation_window_validation.py",
+      "sha256": "1b19c0845fdf5fc09b75946d60a1a923387cd4b9f98a22f2915089f426734f12"
+    },
+    {
+      "path": "scripts/prepare_partner_npc_shared_validation.py",
+      "sha256": "be515f22c0174705c2221944a8668a69709239081dcb14bca5960f481a133354"
+    },
+    {
+      "path": "scripts/prepare_partner_npc_icon_validation.py",
+      "sha256": "daa2cd67a4f713d39ba3073fa939ceec27714799b0945f85b85a647d04655afc"
+    },
+    {
+      "path": "scripts/fixtures/partner_npc_icon_validation.cs",
+      "sha256": "91bd967f0a1845b6aecfe0d004f3eee511982aca39427264649afb4ca19046f0"
+    },
+    {
+      "path": "scripts/fixtures/partner_panel_host_validation.cs",
+      "sha256": "478f0e55aac8d7418e803b4bcfc50906c35b03c5bef58eaf287517d08fe1e9a0"
+    }
+  ],
+  "generator": {
+    "path": "scripts/record_partner_conversation_window.py",
+    "sha256": "b876325a3c71b00cb96b14a05938a67fcda92bf10eda2e54dc66ce5896c82d8b"
+  },
+  "operation": [
+    "Compose the existing selected conversation player, atomic transactions, stable saved UI views and original playback boundary.",
+    "Bind preparation to the original full partner window Open before activating controls. Constructing the UI session does not create records or install clock/state hooks.",
+    "Use previously persisted local actor mappings and original NPC order, conditions and day limits. Publish committed source deltas before the original controls subscribe.",
+    "Reject rebinding a window to another source or opening transaction. An already open window does not run preparation again.",
+    "Validation uses the actual full three-page window, original NPC icon and PCM assets, real saved records and simulated pointer input. No hand-created conversation record is inserted.",
+    "No original prefab, artwork, source data or historical receipt is modified. No full asset snapshot is produced."
+  ]
+}
