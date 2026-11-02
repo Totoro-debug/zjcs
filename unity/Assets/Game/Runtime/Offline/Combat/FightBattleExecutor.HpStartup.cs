@@ -59,6 +59,23 @@ namespace Zjcs.Combat.Official
             return changed;
         }
 
+        private void ApplyHpChangeTriggers(FightBattleUnitState changed, FightBattleSkillDefinition sourceSkill)
+        {
+            if (statusCatalog == null) return;
+            var simple = new List<FightBattleStatusStateTrigger>();
+            var configured = new List<FightBattleStatusSkillInvocation>();
+            FightStatusTriggerRuntime.Apply(changed, statusCatalog, false, simple,
+                random, sourceSkill, units, configured, executeHpSkills: ExecuteHpStartupSkills);
+            foreach (var trigger in simple)
+                configured.Add(new FightBattleStatusSkillInvocation
+                {
+                    Trigger = trigger, SourceUnitId = changed.Id, TargetUnitId = changed.Id,
+                    TargetPositionUnitId = changed.Id, SelectTargets = true
+                });
+            ExecuteHpStartupSkills(configured);
+            RebuildBattleProperties();
+        }
+
         private void ExecuteHpStartupSkills(List<FightBattleStatusSkillInvocation> invocations)
         {
             if (invocations.Count == 0) return;

@@ -389,6 +389,7 @@ namespace Zjcs.Editor
             HpListenerProbe hpListener = ConfigureHpListenerProbe(checkpoint);
             HpForbiddenProbe hpForbidden = ConfigureHpForbiddenProbe(checkpoint);
             HpRecoveryProbe hpRecovery = ConfigureHpRecoveryProbe(checkpoint);
+            HpCostProbe hpCost = ConfigureHpCostProbe(checkpoint);
             int initialCounter = checkpoint.Counter;
             controller.StepCompleted += result => {
                 checkpoint = result.Checkpoint;
@@ -401,6 +402,7 @@ namespace Zjcs.Editor
                 hpListener?.ObserveStep(controller);
                 hpForbidden?.ObserveStep(controller);
                 hpRecovery?.ObserveStep(controller);
+                hpCost?.ObserveStep(controller);
                 if (checkpoint.Counter == initialCounter + 1 || checkpoint.Finished)
                     Debug.Log("[Battle hosts] " + name + " step=" + checkpoint.Counter
                         + " finished=" + checkpoint.Finished);
@@ -464,7 +466,7 @@ namespace Zjcs.Editor
             float previousTimeScale = Time.timeScale;
             try
             {
-                Time.timeScale = hpListener == null && hpRecovery == null ? 5 : 1;
+                Time.timeScale = hpListener == null && hpRecovery == null && hpCost == null ? 5 : 1;
                 while (runner != null)
                 {
                     triggerTiming?.ObservePresentation();
@@ -472,11 +474,12 @@ namespace Zjcs.Editor
                     hpListener?.ObservePresentation();
                     hpRecovery?.ObservePresentation();
                     if (!capturedCure && (hpListener != null && hpListener.ReadyToCapture
-                        || hpRecovery != null && hpRecovery.ReadyToCapture))
+                        || hpRecovery != null && hpRecovery.ReadyToCapture
+                        || hpCost != null && hpCost.ReadyToCapture))
                     {
                         float captureTimeScale = Time.timeScale;
                         Time.timeScale = 0f;
-                        try { yield return Capture(output, name + "-hp-cure"); }
+                        try { yield return Capture(output, name + (hpCost != null ? "-hp-cost" : "-hp-cure")); }
                         finally { Time.timeScale = captureTimeScale; }
                         capturedCure = true;
                     }
@@ -513,6 +516,7 @@ namespace Zjcs.Editor
             hpListener?.Verify(name, checkpoint);
             hpForbidden?.Verify(name, checkpoint);
             hpRecovery?.Verify(name, checkpoint);
+            hpCost?.Verify(name, checkpoint);
             VerifyEquipmentBattlePassives(name, checkpoint, true);
             yield return SettleUi();
             yield return Capture(output, name + "-result");

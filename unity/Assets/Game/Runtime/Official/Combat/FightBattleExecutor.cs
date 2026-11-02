@@ -608,6 +608,7 @@ namespace Zjcs.Combat.Official
             long skillCostHp = skillCost == null
                 ? 0L : Math.Max(0L, skillCost.BeforeHp - skillCost.AfterHp);
             FightBattlePetEnergyRuntime.RecordOwnerDamage(units, actor.Id, skillCostHp);
+            if (skillCostHp > 0) ApplyHpChangeTriggers(actor, skill);
 
             if (statusCatalog != null)
             {

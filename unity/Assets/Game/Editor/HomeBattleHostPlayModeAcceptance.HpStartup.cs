@@ -99,6 +99,70 @@ namespace Zjcs.Editor
             }
         }
 
+        private static HpCostProbe ConfigureHpCostProbe(FightBattleCheckpoint checkpoint)
+        {
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HP_COST_ACCEPTANCE") != "1") return null;
+            var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
+            var player = checkpoint.Units.Single(value => value.Id == 1);
+            foreach (var unit in checkpoint.Units)
+            {
+                foreach (var property in unit.Properties.Concat(unit.BaseProperties))
+                {
+                    if (property.Id == catalog.PropertyType("MaxHp")) property.Value = 1000000L;
+                    if (unit != player && property.Id == catalog.PropertyType("Attack"))
+                        property.Value = Math.Min(property.Value, 100L);
+                }
+                unit.MaxHp = unit.LastMaxHp = 1000000L;
+                unit.Hp = unit.Turn.Hp = unit == player ? 600000L : 1000000L;
+            }
+            player.Statuses.Add(catalog.CreateStatus(25067, 1, 1, 9925067));
+            player.Statuses.Add(catalog.CreateStatus(24202, 1, 1, 9924202));
+            // One paid cast in this isolated checkpoint; its original hit graph and presentation
+            // stay intact. This verifies cost notifications without draining HP again next turn.
+            var skill = player.Skills.First(value => value.Slot == 0);
+            skill.CostType = 1; skill.SkillCost = 400000L; skill.CanTriggerChild = true;
+            skill.LimitedTimes = 1;
+            var slot = player.SkillState.Slots.First(value => value.Slot == 0);
+            slot.Cooldown = 0; slot.LimitedTimes = 1;
+            foreach (var entry in checkpoint.Timeline.Entries)
+                entry.Next = entry.Id == player.Id ? 1 : entry.Next;
+            checkpoint.Timeline.Entries.Sort((left, right) => left.Next.CompareTo(right.Next));
+            return new HpCostProbe();
+        }
+
+        private sealed class HpCostProbe
+        {
+            private bool observed;
+            public bool ReadyToCapture => observed;
+            public void ObserveStep(OfficialBattleRuntimeController controller)
+            {
+                if (observed) return;
+                var cp = controller.Checkpoint;
+                var step = cp.Receipts.Last().Event;
+                var player = cp.Units.Single(value => value.Id == 1);
+                var cost = step.DamageEvents.SingleOrDefault(value => value.IsSkillCost);
+                var cast = step.SkillCasts.SingleOrDefault(value => value.SkillEntityId == 10170);
+                Require(step.ActorId == 1 && cost != null && cost.BeforeHp == 600000L && cost.AfterHp == 200000L
+                    && player.Statuses.Any(value => value.ClassId == 24315)
+                    && player.Statuses.All(value => value.ClassId != 24202)
+                    && cast != null && cast.ActorId == 1 && cast.Delay == 0f,
+                    "Real paid cast did not execute original 25067/24202 thresholds immediately after payment.");
+                Require(step.DamageEvents[0].IsSkillCost && step.DamageEvents[1].SkillEntityId == 10170,
+                    "Real paid cast ran its HP skill before payment or after the parent hit.");
+                observed = true;
+                Debug.Log("[HP cost hosts] original paid cast: 600000 -> 200000; 25067 -> 24315 and 24202 -> 10170 before parent hit passed.");
+            }
+            public void Verify(string host, FightBattleCheckpoint checkpoint)
+            {
+                Require(observed && checkpoint.Receipts.SelectMany(value => value.Event.DamageEvents)
+                    .Count(value => value.IsSkillCost) == 1, host + " lost or repeated its one paid cast.");
+                string saved = FightBattleCheckpointSerializer.Save(checkpoint);
+                Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
+                    host + " changed its HP cost checkpoint after reload.");
+                Debug.Log("[HP cost hosts] " + host + ": one paid cast, original HP triggers and checkpoint reload passed.");
+            }
+        }
+
         private static HpRecoveryProbe ConfigureHpRecoveryProbe(FightBattleCheckpoint checkpoint)
         {
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HP_RECOVERY_ACCEPTANCE") != "1") return null;
