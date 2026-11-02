@@ -217,6 +217,8 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 
 当前玩家外观与默认资料输入：`prepare_battle_scene_player_appearance.py` 逐字节核对当前应用与共享迁移来源，从实际APK的 Luban 分包完整解码所选 `884_156692` 的9张表，保留外观消费字段、枚举和集合顺序；全局设置按当前生成构造器读取，包括独立 Luban 向量结构，严格消费全部载荷。`PlayerAppearance` 直接迁自当前应用源码，动画名称组合规则恢复原 ScriptableObject 字段；当前表、默认剑／杖设置和规则使用独立 `Combat/SceneAppearance` 地址。历史共享解析器仅比较已迁移的 PostParse／查询方法，不把已变化、未迁移的随机选择方法纳入复用结论。原程序集／metadata、167份构造器源码、39项应用身份比对、配置对象及输入输出哈希见[玩家外观来源](battle-animation/scene-player-appearance-source-manifest.json)。不读取或复制动画SDK实现；新增载荷未进入完整快照。
 
+当前完整场景动作载荷：`prepare_battle_scene_motions.py` 核对所选884_156692男女两个原动作bundle、独立原生转换凭据及当前骨骼动作名称闭包，保留448条男性和455条女性AnimationClip的原始字段。27份已导入原clip按实际输入身份复用，876份新增载荷逐字节复制，只有导入meta的GUID显式重绑定；动画子资产的容器地址不是唯一动作地址，目录按原性别与动作名称绑定。原包、对象、转换输入、原始与导入meta、输出哈希、完整目录及原始时长差异见[场景动作来源](battle-animation/scene-motions-source-manifest.json)。真实技能clip经过原应用Playable与统一原生绘制端的接线身份见[技能动作接线来源](battle-animation/scene-skill-motions-source-manifest.json)。该清单也记录独立曲线端对原恒定线性区间的精确常量处理及对应源轨道回归入口，保留原始曲线载荷与IK范围保护。未读取或复制动画SDK实现，新增载荷未进入完整快照；实现与实际验证范围只在[战斗执行](../../docs/features/battle-execution.md)维护。
+
 当前统一场景MixNext绘制与通知：`record_battle_scene_bound_mix_next.py` 沿用当前884_156692人物载荷、已有独立混合端与原应用部件通知消费代码，记录统一姿态入口、绘制接线和验证入口的当前身份。原应用、公开行为文档、依赖及输入输出哈希见[统一绘制与通知来源](battle-animation/scene-bound-mix-next-source-manifest.json)。不读取或复制动画SDK实现，不改变人物／武器素材载荷；实现与实际验证范围只在[战斗执行](../../docs/features/battle-execution.md)维护。
 
 当前原生MixNext输入与独立接线：`record_battle_native_mix_next.py` 核对当前884_156692的PlayerModel_Game载荷中原translator配置，并仅从原global-metadata.dat读取相关公开枚举常量，不读取SDK方法实现。原载荷／元数据身份、公开行为文档、局部通道与约束混合、真实Animator验证入口及当前输入输出哈希见[MixNext来源清单](battle-animation/native-mix-next-source-manifest.json)。没有修改人物／武器素材载荷；功能和实际验证范围只在[战斗执行](../../docs/features/battle-execution.md)维护。

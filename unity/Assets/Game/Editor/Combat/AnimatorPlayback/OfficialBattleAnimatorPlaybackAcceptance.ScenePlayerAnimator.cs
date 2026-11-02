@@ -111,6 +111,7 @@ namespace Zjcs.Editor.Combat
                     if (SessionState.GetBool(Key + ".sceneMecanimParts", false)) CheckSceneMecanimParts(player);
                     if (SessionState.GetBool(Key + ".sceneMixNext", false)) CheckSceneMixNext(player);
                     if (SessionState.GetBool(Key + ".sceneBoundMixNext", false)) CheckSceneBoundMixNext(player);
+                    if (SessionState.GetBool(Key + ".sceneSkillMotions", false)) CheckSceneSkillMotions(player);
                     Debug.Log("[Current player Animator] " + selectedController.name + ": direct=" + !useController
                         + "; original idle/skill playable, controller restoration and reapply passed. Native body poses remain explicit pre-physics diagnostics.");
                 }

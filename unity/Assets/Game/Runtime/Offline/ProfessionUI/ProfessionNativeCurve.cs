@@ -80,8 +80,11 @@ namespace Zjcs.Offline.ProfessionUI
             }
             Key a = original[lo];
             if (lo == original.Length - 1 || time == a.time) { value = a.value; return true; }
-            if (a.mode != 2) { value = curve.Evaluate(time); return true; }
             Key b = original[lo + 1];
+            // Weighted native evaluation can turn a constant 1 into 1.00000012.
+            // Preserve the exact source constant instead of clamping IK inputs.
+            if (a.mode == 0 && a.value == b.value) { value = a.value; return true; }
+            if (a.mode != 2) { value = curve.Evaluate(time); return true; }
             double parameter = InvertTime(a.time, a.controls.x, a.controls.z, b.time, time);
             value = (float)Cubic(a.value, a.controls.y, a.controls.w, b.value, parameter);
             return true;

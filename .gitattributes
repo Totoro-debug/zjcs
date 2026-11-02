@@ -1689,6 +1689,16 @@ unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackA
 unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.cs text eol=lf
 assets/reference/battle-animation/scene-bound-mix-next-source-manifest.json text eol=lf
 
+# Preserve complete current original scene motion payloads and their fingerprints.
+unity/Assets/Official/Combat/SceneMotionSources/** -text
+unity/Assets/Official/Combat/SceneMotionSources.meta -text
+unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneMotionCatalog.cs* -text
+scripts/prepare_battle_scene_motions.py text eol=lf
+scripts/record_battle_scene_skill_motions.py text eol=lf
+unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneSkillMotions.cs* text eol=lf
+assets/reference/battle-animation/scene-motions-source-manifest.json text eol=lf
+assets/reference/battle-animation/scene-skill-motions-source-manifest.json text eol=lf
+
 # Preserve the decoded substitute mover and its source fingerprints.
 scripts/prepare_battle_voodoo_grid.py text eol=lf
 unity/Assets/Game/Runtime/Official/Combat/FightOfficialVoodooGridRules.cs* text eol=lf

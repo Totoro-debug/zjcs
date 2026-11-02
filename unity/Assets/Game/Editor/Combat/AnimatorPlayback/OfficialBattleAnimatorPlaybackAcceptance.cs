@@ -72,6 +72,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".sceneMecanimParts", false);
             SessionState.SetBool(Key + ".sceneMixNext", false);
             SessionState.SetBool(Key + ".sceneBoundMixNext", false);
+            SessionState.SetBool(Key + ".sceneSkillMotions", false);
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 180);
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             Hook();
@@ -153,7 +154,9 @@ namespace Zjcs.Editor.Combat
             if (errors == 0)
             {
                 SessionState.SetInt(Key + ".result", 0);
-                Debug.Log(SessionState.GetBool(Key + ".sceneBoundMixNext", false)
+                Debug.Log(SessionState.GetBool(Key + ".sceneSkillMotions", false)
+                    ? "Native complete current motion catalog and real original skill playable/pose rendering passed; explicit pre-physics diagnostics only, full physics, skill prefabs and production battle/Player integration remain required."
+                    : SessionState.GetBool(Key + ".sceneBoundMixNext", false)
                     ? "Native bound MixNext passed actual LateUpdate and animation-and-mesh drawing with original part notifications; pre-physics fixture only, full physics and production battle/Player integration remain required."
                     : SessionState.GetBool(Key + ".sceneMixNext", false)
                     ? "Native actual Animator MixNext transition passed local-channel, discrete-slot, ordered pre-physics constraint and rendered-pose checks; full physics, other mix modes and production battle/Player integration remain required."

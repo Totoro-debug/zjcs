@@ -1,0 +1,110 @@
+{
+  "manifest": "884_156692",
+  "application": [
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyPlayableOverrideAnimator.cs",
+        "sha256": "9d9c4040a9cface2001a60be99a1ac33c72e158d47b69456867cd5594750cad8"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableOverrideAnimator.cs",
+        "sha256": "cc4860469b4e2f43e7ab957fd802b6ed2e505d17f94265bbab569418b1d516c7"
+      }
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyPlayableAnimator.cs",
+        "sha256": "833f0b99dc83f3db92dc90400d8cea36596dde43a024f1ceb3f326e84d0e17b2"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableAnimator.cs",
+        "sha256": "556de9b57b5684be1ca88df986687b9c7817a2bf79ea4b7def4ccf0268a19489"
+      }
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/AnimationController.cs",
+        "sha256": "cd59a6e68288133c542c5b7a8f03049be528775a299ddc841f883f1a1fd15a47"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/AnimationController.cs",
+        "sha256": "03c63e3e8815db97ae7a8d77711459b8f2ae9cc8a38be3865971497b4739d088"
+      }
+    }
+  ],
+  "playback": {
+    "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleAnimatorPlayback.cs",
+    "sha256": "cfbccbc5baf3b37720728795668197446b50f2aa91d12c797d05a2d2af1ed5e5"
+  },
+  "animator_runtime": {
+    "path": "assets/reference/battle-rules/animator-runtime-source-manifest.json",
+    "sha256": "bde3cc55919fe2ec2394ed29416ddd9b59644428fe871def2a29ea8eeb0ab1a1"
+  },
+  "dependencies": [
+    {
+      "path": "assets/reference/battle-animation/scene-motions-source-manifest.json",
+      "sha256": "08d7463ebe4fb69b8eaf54c6d5e7f236fcf25bc0f7baf91086980af65f7ad3cb"
+    },
+    {
+      "path": "assets/reference/battle-animation/scene-bound-mix-next-source-manifest.json",
+      "sha256": "e1eac544166f30e0f2553c358960a8d5d52badc36fbd9ce04af44e3c83553171"
+    },
+    {
+      "path": "assets/reference/battle-animation/scene-player-animator-source-manifest.json",
+      "sha256": "60d4bff844165548a815a57e82c88ee90c150369df68a59fde0223fd943d37fb"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneSkillMotions.cs",
+      "sha256": "946068b1fe580f80000d500b84409659e07031c13c38ad915d5e25467f6ba3b6"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SceneSkillMotions.cs.meta",
+      "sha256": "658d7c01f7dae2b462172abc16d591149ae006ebeb38b4198522b4bb59f9c4d9"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.cs",
+      "sha256": "664a29013e91e92d8d8b748ad7073277ec4f609668ec21e461248278a5d4acd8"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.cs.meta",
+      "sha256": "70cf32819c75d89a60a7e05b420bdaae7a69071c321effa18e0a942844a27b88"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ScenePlayerAnimator.cs",
+      "sha256": "73099c6c9e4e07e0bed0b13645fa5880b5deddb0d34524d260f57ba012886aa2"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ScenePlayerAnimator.cs.meta",
+      "sha256": "cbb4202419e9f63b0b1dfc8e86461ce2a85b17433ba7ebd67fe33b12f736f372"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ScenePlayerAppearance.cs",
+      "sha256": "54579b9f2281443c5faf76ace6992d00d4394b29b12d332b70234e478240bdd5"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ScenePlayerAppearance.cs.meta",
+      "sha256": "9ffd129351209c166be97275583b74c80b932b161e9fe1e8deabe7245c53107c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeCurve.cs",
+      "sha256": "de186ab8dfc1fc84bac268fc04b4c55310b9e0104268f4c1fc8f44d506724526"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeCurve.cs.meta",
+      "sha256": "cd2a90f17ba7a32e72d94033d82176fc38f763390a827ad5bfbee61cd378b7a3"
+    }
+  ],
+  "generator": {
+    "path": "scripts/record_battle_scene_skill_motions.py",
+    "sha256": "f4cc341cef646b03a615eea314d927e439d1d71f98f0cf25a66a5a5526e363dc"
+  },
+  "binding": "Complete current sex/name clip lookup supplies actual original skill AnimationClips to the existing original override playable. Actual Animator state time reaches the common native pose/drawing interface. All current profession skill names are exercised; representative source skills render complete body/weapon camera frames, and actual MixNext reaches original animated slot alpha tracks. Constant linear source intervals retain their exact value, avoiding a reproduced Unity weighted-curve result of 1.00000012 for the original constant-one leg IK tracks in current 200/skill_14; source keys and IK range validation remain unchanged.",
+  "limits": [
+    "The fixture uses an explicit graph-routing probe cue, not a migrated current skill prefab, skill selection rule, FX or audio implementation. It does not use hit/idle clips as substitute skills.",
+    "The common body solver remains explicitly before physics. Independent weapon motion still comes from a diagnostic producer; original Game part-animation ignore branches are preserved.",
+    "All original scene clips are catalogued. Real skill pose coverage is limited to current 100/skill_ and 200/skill_ motions; all other states, mixing domains, culling/update scheduling and production battle/Windows Player integration still require validation.",
+    "Original source skill alpha keys or null-attachment keys may hide the body at the sampled time. Empty body geometry is accepted only when original reached attachment keys explicitly hide every initially visible body slot and no active render attachment remains. Camera fitting/portrait checks do not establish official battle scale or HUD alignment."
+  ]
+}
