@@ -353,3 +353,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 伙伴当前身份／职业／战力运行数据来源见 [partner-npc-runtime-source-manifest.json](partner-npc-runtime-source-manifest.json)。`prepare_partner_shared_identity.ps1`／`prepare_partner_npc_runtime.py` 记录选定 `884_156692` 的官方程序集、元数据与消费源码、原始 Luban／属性二进制、程序集名称及 Windows 文件读取适配、逐方法指令指纹、LiteDB 5.0.20 发布者包和许可证、显式加载绑定及安装 SHA256。与历史地图输入分别登记；本批未生成完整素材快照。
 
 鲸背岛当前定义、地面及模型／镜头／标签来源分别见 `official-map/map16-definition-source-manifest.json`、`map16-current-ground-source-manifest.json` 和 `map16-world-view-source-manifest.json`。三个提取入口按所选884_156692的真实 APK／匹配版本缓存、原格式源码、CAB／PPtr与已校验 Windows 转换记录输入及逐文件输出；公共 `GroundSource` 复用转换路径，资产 GUID 按地图隔离。原生地面公共绑定清单另记录当前 CustomWater.dll 与历史已迁移程序集的字节一致性及六份已安装水面输出校验，不声明整版等价；本批未生成完整素材快照。
+
+战斗角色移动轨迹来源见 [battle-animation/grid-motion-source-manifest.json](battle-animation/grid-motion-source-manifest.json)。`prepare_battle_grid_motion.py` 按现有规则选择的21个角色移动动作，从所选884_156692官方APK优先、同版已校验云端缓存其次解析原prefab及MyPlayableTrack／MyCurveTrack引用，分别记录对象字节、原游戏应用／共享代码、曲线及阶跃切线、原序列时间与Windows显式资源绑定哈希；历史规则的来源单独保留，无新增自绘素材，未生成完整素材快照。

@@ -1130,6 +1130,9 @@ namespace Zjcs.Combat.Official
     public sealed class FightBattleMovementEvent
     {
         public int UnitId;
+        public int MoveBehaviourId;
+        public int MoveSkillEntityId;
+        public bool IsRetreat;
         public float Delay;
         public float MoveDuration = -1f;
         public float MoveSpeed = -1f;

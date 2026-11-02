@@ -1,0 +1,6288 @@
+{
+  "manifest": "884_156692",
+  "rule_selection": {
+    "path": "unity/Assets/Official/Combat/battle-rules.json",
+    "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+  },
+  "application": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightActionSkillMove.cs",
+      "sha256": "87b1e139b0c6fde0e55fc3e35dcef835d60e2339d8276a7d74de8686899b7069"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyPlayableTrack.cs",
+      "sha256": "9652e978fe5ee9e2fa2ca326cb75f3abdefa8df351e400aae8bd4a383cea60d6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyTrack.cs",
+      "sha256": "06df61c577e5971d9e0dbee622e8f307abc65308c65e734d781f6cbdcd3bd171"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyCurveTrack.cs",
+      "sha256": "62d36c4cac6cfe36c213e95ed71c8c5e9c8e5a9f95c0dee3e7eb2b5590e5aa2b"
+    }
+  ],
+  "shared": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightActionSkillMoveComponent.cs",
+      "sha256": "a9abaf1448ee70438a1a6886fc68122f6120c0404c76e7e4f1e726d1c6ef115e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightRoleCharacterComponentInfo.cs",
+      "sha256": "382d1ebe9938ac7b10b4b39d5b01cb1bc8240ea00912acbea1f70d96770497c6"
+    }
+  ],
+  "apply_source": {
+    "path": ".tools/source-packages/current/884_156692/official-code/game-framework-source/GameFramework/ApplyBySource.cs",
+    "sha256": "5295d122baf98dfc982320cb68a73050ce594b1898699029bf95e6f376350a4f"
+  },
+  "objects": [
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15300.bundle",
+        "bundle_hash": "af47683b4192890a2e0c6effd386a339",
+        "path_id": "-2896150045385808534",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/af47683b4192890a2e0c6effd386a339.bundle",
+        "raw_size": 3111,
+        "raw_sha256": "347516218cb42dbf5459243ce9ae576e9135adaab7a202bb7de6d95246007a23"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -5634818090001488534
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1166262812512259364
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": -4372076739705343393
+        },
+        "BlockPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15300.bundle",
+        "bundle_hash": "af47683b4192890a2e0c6effd386a339",
+        "path_id": "-1793648888807525793",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/af47683b4192890a2e0c6effd386a339.bundle",
+        "raw_size": 3111,
+        "raw_sha256": "347516218cb42dbf5459243ce9ae576e9135adaab7a202bb7de6d95246007a23"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -4372076739705343393
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -5229808533791083937
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15300.bundle",
+        "bundle_hash": "af47683b4192890a2e0c6effd386a339",
+        "path_id": "-5229808533791083937",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/af47683b4192890a2e0c6effd386a339.bundle",
+        "raw_size": 3111,
+        "raw_sha256": "347516218cb42dbf5459243ce9ae576e9135adaab7a202bb7de6d95246007a23"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -234317400454106529
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8351234915697891314
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myTrack": {
+          "m_FileID": 0,
+          "m_PathID": 853985573666660940
+        },
+        "myTrackSpeed": 3.333400011062622,
+        "myStartAttachPos": {
+          "AttachTo": 0,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myEndAttachPos": {
+          "AttachTo": 1,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myFixDuration": 1,
+        "myFollowTarget": 0,
+        "myAdditionScale": 1.0,
+        "myTrackEndStopTime": 0.0,
+        "myTrackTriggerList": [],
+        "myTrackTriggerReliable": 1,
+        "myUseTrackRotation": 0,
+        "myUseTrackScale": 0,
+        "myXScaleByRange": 1.0,
+        "myFlipBySourceX": 1,
+        "myFlipByTargetY": 1,
+        "mFlipByDirX": 0,
+        "mIsZEquipY": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15300.bundle",
+        "bundle_hash": "af47683b4192890a2e0c6effd386a339",
+        "path_id": "4405866159324426847",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/af47683b4192890a2e0c6effd386a339.bundle",
+        "raw_size": 3111,
+        "raw_sha256": "347516218cb42dbf5459243ce9ae576e9135adaab7a202bb7de6d95246007a23"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -234317400454106529
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6991185375826225423
+        },
+        "m_Name": "",
+        "ApplyTargetOfNullAttr": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15300.bundle",
+        "bundle_hash": "af47683b4192890a2e0c6effd386a339",
+        "path_id": "853985573666660940",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/af47683b4192890a2e0c6effd386a339.bundle",
+        "raw_size": 3111,
+        "raw_sha256": "347516218cb42dbf5459243ce9ae576e9135adaab7a202bb7de6d95246007a23"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 7541830333030965836
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2131185311169716580
+        },
+        "m_Name": "",
+        "myLoopType": 0,
+        "myDuration": 1.0,
+        "myCurveX": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "myCurveY": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 2.8207437992095947,
+              "outSlope": 2.8207437992095947,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.019184652715921402
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": 0.15966713428497314,
+              "outSlope": 0.15966713428497314,
+              "weightedMode": 0,
+              "inWeight": 0.042366087436676025,
+              "outWeight": 0.3333333432674408
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15310.bundle",
+        "bundle_hash": "f2dd8a38fae4b2ee774b3f273057a12a",
+        "path_id": "-1182490648951059503",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/f2dd8a38fae4b2ee774b3f273057a12a.bundle",
+        "raw_size": 3133,
+        "raw_sha256": "7ef67f25ae60b09c61d679d865a3dee85bf7a9ad0c134d2fc260b1d1bda68a37"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -8967060856626345007
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1166262812512259364
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": -5673364184266096437
+        },
+        "BlockPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15310.bundle",
+        "bundle_hash": "f2dd8a38fae4b2ee774b3f273057a12a",
+        "path_id": "-1994878910650040117",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/f2dd8a38fae4b2ee774b3f273057a12a.bundle",
+        "raw_size": 3133,
+        "raw_sha256": "7ef67f25ae60b09c61d679d865a3dee85bf7a9ad0c134d2fc260b1d1bda68a37"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -5673364184266096437
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 3137932849410031819
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15310.bundle",
+        "bundle_hash": "f2dd8a38fae4b2ee774b3f273057a12a",
+        "path_id": "3137932849410031819",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/f2dd8a38fae4b2ee774b3f273057a12a.bundle",
+        "raw_size": 3133,
+        "raw_sha256": "7ef67f25ae60b09c61d679d865a3dee85bf7a9ad0c134d2fc260b1d1bda68a37"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -1553267520511459125
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8351234915697891314
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myTrack": {
+          "m_FileID": 0,
+          "m_PathID": -2454509285146707808
+        },
+        "myTrackSpeed": 3.333400011062622,
+        "myStartAttachPos": {
+          "AttachTo": 0,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myEndAttachPos": {
+          "AttachTo": 1,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myFixDuration": 1,
+        "myFollowTarget": 0,
+        "myAdditionScale": 1.0,
+        "myTrackEndStopTime": 0.0,
+        "myTrackTriggerList": [],
+        "myTrackTriggerReliable": 1,
+        "myUseTrackRotation": 0,
+        "myUseTrackScale": 0,
+        "myXScaleByRange": 1.0,
+        "myFlipBySourceX": 1,
+        "myFlipByTargetY": 1,
+        "mFlipByDirX": 0,
+        "mIsZEquipY": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15310.bundle",
+        "bundle_hash": "f2dd8a38fae4b2ee774b3f273057a12a",
+        "path_id": "-7047032710737477429",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/f2dd8a38fae4b2ee774b3f273057a12a.bundle",
+        "raw_size": 3133,
+        "raw_sha256": "7ef67f25ae60b09c61d679d865a3dee85bf7a9ad0c134d2fc260b1d1bda68a37"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -1553267520511459125
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6991185375826225423
+        },
+        "m_Name": "",
+        "ApplyTargetOfNullAttr": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15310.bundle",
+        "bundle_hash": "f2dd8a38fae4b2ee774b3f273057a12a",
+        "path_id": "-2454509285146707808",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/f2dd8a38fae4b2ee774b3f273057a12a.bundle",
+        "raw_size": 3133,
+        "raw_sha256": "7ef67f25ae60b09c61d679d865a3dee85bf7a9ad0c134d2fc260b1d1bda68a37"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -6258479661019055968
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2131185311169716580
+        },
+        "m_Name": "",
+        "myLoopType": 0,
+        "myDuration": 1.0,
+        "myCurveX": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "myCurveY": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 2.932962656021118,
+              "outSlope": 2.932962656021118,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.26642394065856934
+            },
+            {
+              "time": 0.15035143494606018,
+              "value": 0.34639856219291687,
+              "inSlope": 1.7188221216201782,
+              "outSlope": 1.7188221216201782,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 0.5949880480766296,
+              "value": 0.8554638624191284,
+              "inSlope": 0.7900938987731934,
+              "outSlope": 0.7900938987731934,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.16991443932056427
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": 0.1497913897037506,
+              "outSlope": 0.1497913897037506,
+              "weightedMode": 0,
+              "inWeight": 0.180146262049675,
+              "outWeight": 0.3333333432674408
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15320.bundle",
+        "bundle_hash": "0f990d03db19388a061a7558bc1abdec",
+        "path_id": "3951186599271148749",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/0f990d03db19388a061a7558bc1abdec.bundle",
+        "raw_size": 2838,
+        "raw_sha256": "186ace6959c36c06800f1c23676325324dfcc385872435e9dfd9b86ac8bf1c0f"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 2036878267089562829
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1166262812512259364
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 489566511281382208
+        },
+        "BlockPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15320.bundle",
+        "bundle_hash": "0f990d03db19388a061a7558bc1abdec",
+        "path_id": "-2448350224757775552",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/0f990d03db19388a061a7558bc1abdec.bundle",
+        "raw_size": 2838,
+        "raw_sha256": "186ace6959c36c06800f1c23676325324dfcc385872435e9dfd9b86ac8bf1c0f"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 489566511281382208
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 6919093367140426560
+            }
+          },
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -2506703443895213248
+            }
+          },
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 379197237011063616
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15320.bundle",
+        "bundle_hash": "0f990d03db19388a061a7558bc1abdec",
+        "path_id": "6919093367140426560",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/0f990d03db19388a061a7558bc1abdec.bundle",
+        "raw_size": 2838,
+        "raw_sha256": "186ace6959c36c06800f1c23676325324dfcc385872435e9dfd9b86ac8bf1c0f"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -7131568643835649216
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8351234915697891314
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myTrack": {
+          "m_FileID": 0,
+          "m_PathID": -3550400324076050576
+        },
+        "myTrackSpeed": 5.0,
+        "myStartAttachPos": {
+          "AttachTo": 0,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myEndAttachPos": {
+          "AttachTo": 1,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myFixDuration": 0,
+        "myFollowTarget": 0,
+        "myAdditionScale": 1.0,
+        "myTrackEndStopTime": 0.0,
+        "myTrackTriggerList": [],
+        "myTrackTriggerReliable": 1,
+        "myUseTrackRotation": 0,
+        "myUseTrackScale": 0,
+        "myXScaleByRange": 1.0,
+        "myFlipBySourceX": 1,
+        "myFlipByTargetY": 1,
+        "mFlipByDirX": 0,
+        "mIsZEquipY": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15320.bundle",
+        "bundle_hash": "0f990d03db19388a061a7558bc1abdec",
+        "path_id": "-5915076656379092160",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/0f990d03db19388a061a7558bc1abdec.bundle",
+        "raw_size": 2838,
+        "raw_sha256": "186ace6959c36c06800f1c23676325324dfcc385872435e9dfd9b86ac8bf1c0f"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -7131568643835649216
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6991185375826225423
+        },
+        "m_Name": "",
+        "ApplyTargetOfNullAttr": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15320.bundle",
+        "bundle_hash": "0f990d03db19388a061a7558bc1abdec",
+        "path_id": "-3550400324076050576",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/0f990d03db19388a061a7558bc1abdec.bundle",
+        "raw_size": 2838,
+        "raw_sha256": "186ace6959c36c06800f1c23676325324dfcc385872435e9dfd9b86ac8bf1c0f"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 8769462912313059184
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2131185311169716580
+        },
+        "m_Name": "",
+        "myLoopType": 0,
+        "myDuration": 1.0,
+        "myCurveX": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "myCurveY": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 1.0,
+              "outSlope": 1.0,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": 1.0,
+              "outSlope": 1.0,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15330.bundle",
+        "bundle_hash": "37d978394d48ba15d6a303fb55cd56df",
+        "path_id": "1489000942395858689",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/37d978394d48ba15d6a303fb55cd56df.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3132,
+        "bundle_sha256": "06ad3388b17f6e19f0dffe538d6070ca910a4154b83cbad09f966a22cb1ee82c"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 2701084330436140801
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1166262812512259364
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": -1615283572100496653
+        },
+        "BlockPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15330.bundle",
+        "bundle_hash": "37d978394d48ba15d6a303fb55cd56df",
+        "path_id": "-9081024080031972621",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/37d978394d48ba15d6a303fb55cd56df.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3132,
+        "bundle_sha256": "06ad3388b17f6e19f0dffe538d6070ca910a4154b83cbad09f966a22cb1ee82c"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -1615283572100496653
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 1620064346201522931
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15330.bundle",
+        "bundle_hash": "37d978394d48ba15d6a303fb55cd56df",
+        "path_id": "1620064346201522931",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/37d978394d48ba15d6a303fb55cd56df.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3132,
+        "bundle_sha256": "06ad3388b17f6e19f0dffe538d6070ca910a4154b83cbad09f966a22cb1ee82c"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 2639762870450062067
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8351234915697891314
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myTrack": {
+          "m_FileID": 0,
+          "m_PathID": -6813791631070536446
+        },
+        "myTrackSpeed": 3.333400011062622,
+        "myStartAttachPos": {
+          "AttachTo": 0,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myEndAttachPos": {
+          "AttachTo": 1,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myFixDuration": 1,
+        "myFollowTarget": 0,
+        "myAdditionScale": 1.0,
+        "myTrackEndStopTime": 0.0,
+        "myTrackTriggerList": [],
+        "myTrackTriggerReliable": 1,
+        "myUseTrackRotation": 0,
+        "myUseTrackScale": 0,
+        "myXScaleByRange": 1.0,
+        "myFlipBySourceX": 1,
+        "myFlipByTargetY": 1,
+        "mFlipByDirX": 0,
+        "mIsZEquipY": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15330.bundle",
+        "bundle_hash": "37d978394d48ba15d6a303fb55cd56df",
+        "path_id": "-851958320415374605",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/37d978394d48ba15d6a303fb55cd56df.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3132,
+        "bundle_sha256": "06ad3388b17f6e19f0dffe538d6070ca910a4154b83cbad09f966a22cb1ee82c"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 2639762870450062067
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6991185375826225423
+        },
+        "m_Name": "",
+        "ApplyTargetOfNullAttr": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15330.bundle",
+        "bundle_hash": "37d978394d48ba15d6a303fb55cd56df",
+        "path_id": "-6813791631070536446",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/37d978394d48ba15d6a303fb55cd56df.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3132,
+        "bundle_sha256": "06ad3388b17f6e19f0dffe538d6070ca910a4154b83cbad09f966a22cb1ee82c"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -6214908765703447294
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2131185311169716580
+        },
+        "m_Name": "",
+        "myLoopType": 0,
+        "myDuration": 1.0,
+        "myCurveX": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "myCurveY": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 2.932962656021118,
+              "outSlope": 2.932962656021118,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.26642394065856934
+            },
+            {
+              "time": 0.15035143494606018,
+              "value": 0.34639856219291687,
+              "inSlope": 1.7188221216201782,
+              "outSlope": 1.7188221216201782,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 0.5949880480766296,
+              "value": 0.8554638624191284,
+              "inSlope": 0.7900938987731934,
+              "outSlope": 0.7900938987731934,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.16991443932056427
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": 0.1497913897037506,
+              "outSlope": 0.1497913897037506,
+              "weightedMode": 0,
+              "inWeight": 0.180146262049675,
+              "outWeight": 0.3333333432674408
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15340.bundle",
+        "bundle_hash": "46833f1b03c53bdabed167276525f614",
+        "path_id": "-7731265027101260169",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/46833f1b03c53bdabed167276525f614.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3012,
+        "bundle_sha256": "8935e16fc6fc1ed263b05ed41b1b39c5b4ae0621b57ceff74247d90f4ac5cac1"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -581427594441357705
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1166262812512259364
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 491790475895824607
+        },
+        "BlockPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15340.bundle",
+        "bundle_hash": "46833f1b03c53bdabed167276525f614",
+        "path_id": "-6143268308697030433",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/46833f1b03c53bdabed167276525f614.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3012,
+        "bundle_sha256": "8935e16fc6fc1ed263b05ed41b1b39c5b4ae0621b57ceff74247d90f4ac5cac1"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 491790475895824607
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 7801045157363310815
+            }
+          },
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 8995398970472587487
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15340.bundle",
+        "bundle_hash": "46833f1b03c53bdabed167276525f614",
+        "path_id": "8995398970472587487",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/46833f1b03c53bdabed167276525f614.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3012,
+        "bundle_sha256": "8935e16fc6fc1ed263b05ed41b1b39c5b4ae0621b57ceff74247d90f4ac5cac1"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2393218267142233889
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8351234915697891314
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myTrack": {
+          "m_FileID": 1,
+          "m_PathID": 4841344913078624741
+        },
+        "myTrackSpeed": 1.5625,
+        "myStartAttachPos": {
+          "AttachTo": 0,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myEndAttachPos": {
+          "AttachTo": 1,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myFixDuration": 1,
+        "myFollowTarget": 0,
+        "myAdditionScale": 1.0,
+        "myTrackEndStopTime": 0.0,
+        "myTrackTriggerList": [],
+        "myTrackTriggerReliable": 1,
+        "myUseTrackRotation": 0,
+        "myUseTrackScale": 0,
+        "myXScaleByRange": 1.0,
+        "myFlipBySourceX": 1,
+        "myFlipByTargetY": 1,
+        "mFlipByDirX": 0,
+        "mIsZEquipY": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_15340.bundle",
+        "bundle_hash": "46833f1b03c53bdabed167276525f614",
+        "path_id": "-7948770757908963105",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/46833f1b03c53bdabed167276525f614.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3012,
+        "bundle_sha256": "8935e16fc6fc1ed263b05ed41b1b39c5b4ae0621b57ceff74247d90f4ac5cac1"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2393218267142233889
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6991185375826225423
+        },
+        "m_Name": "",
+        "ApplyTargetOfNullAttr": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19970.bundle",
+        "bundle_hash": "0d5320935659afdd99f3707cf6a4a422",
+        "path_id": "4841344913078624741",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0d5320935659afdd99f3707cf6a4a422.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2861,
+        "bundle_sha256": "cb2bb1b8f89fe6f7edb37496e9d667b21b9a6a8f379f1cf063c719aedfbda770"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 2867634017923178981
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2131185311169716580
+        },
+        "m_Name": "",
+        "myLoopType": 0,
+        "myDuration": 1.0,
+        "myCurveX": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "myCurveY": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 0.15000000596046448,
+              "value": 0.0,
+              "inSlope": "Infinity",
+              "outSlope": 0.5882352590560913,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": 1.1764705181121826,
+              "outSlope": 1.1764705181121826,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19800.bundle",
+        "bundle_hash": "29e805df651a08ad3764728f37a58f2c",
+        "path_id": "7570332043298160744",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/29e805df651a08ad3764728f37a58f2c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2944,
+        "bundle_sha256": "1a17c2af96463cdccd89f6f46ac588c54f2015b7d56e3a25fca6de11a4d8ec19"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -5640317596693675928
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1166262812512259364
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": -4093146924685987692
+        },
+        "BlockPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19800.bundle",
+        "bundle_hash": "29e805df651a08ad3764728f37a58f2c",
+        "path_id": "-4209915380467830636",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/29e805df651a08ad3764728f37a58f2c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2944,
+        "bundle_sha256": "1a17c2af96463cdccd89f6f46ac588c54f2015b7d56e3a25fca6de11a4d8ec19"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -4093146924685987692
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 2284455689058906260
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19800.bundle",
+        "bundle_hash": "29e805df651a08ad3764728f37a58f2c",
+        "path_id": "2284455689058906260",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/29e805df651a08ad3764728f37a58f2c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2944,
+        "bundle_sha256": "1a17c2af96463cdccd89f6f46ac588c54f2015b7d56e3a25fca6de11a4d8ec19"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -5980759936009375596
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8351234915697891314
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myTrack": {
+          "m_FileID": 0,
+          "m_PathID": 5334846101578516069
+        },
+        "myTrackSpeed": 2.325500011444092,
+        "myStartAttachPos": {
+          "AttachTo": 0,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myEndAttachPos": {
+          "AttachTo": 1,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myFixDuration": 1,
+        "myFollowTarget": 0,
+        "myAdditionScale": 1.0,
+        "myTrackEndStopTime": 0.0,
+        "myTrackTriggerList": [],
+        "myTrackTriggerReliable": 1,
+        "myUseTrackRotation": 0,
+        "myUseTrackScale": 0,
+        "myXScaleByRange": 1.0,
+        "myFlipBySourceX": 1,
+        "myFlipByTargetY": 1,
+        "mFlipByDirX": 0,
+        "mIsZEquipY": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19800.bundle",
+        "bundle_hash": "29e805df651a08ad3764728f37a58f2c",
+        "path_id": "7198411725029896340",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/29e805df651a08ad3764728f37a58f2c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2944,
+        "bundle_sha256": "1a17c2af96463cdccd89f6f46ac588c54f2015b7d56e3a25fca6de11a4d8ec19"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -5980759936009375596
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6991185375826225423
+        },
+        "m_Name": "",
+        "ApplyTargetOfNullAttr": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19800.bundle",
+        "bundle_hash": "29e805df651a08ad3764728f37a58f2c",
+        "path_id": "5334846101578516069",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/29e805df651a08ad3764728f37a58f2c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2944,
+        "bundle_sha256": "1a17c2af96463cdccd89f6f46ac588c54f2015b7d56e3a25fca6de11a4d8ec19"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 4265480802396735077
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2131185311169716580
+        },
+        "m_Name": "",
+        "myLoopType": 0,
+        "myDuration": 1.0,
+        "myCurveX": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "myCurveY": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 1.0,
+              "outSlope": 1.0,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": 1.0,
+              "outSlope": 1.0,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19810.bundle",
+        "bundle_hash": "bfab95dd19729102b675c10c91bfefd9",
+        "path_id": "-6615403332138524677",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/bfab95dd19729102b675c10c91bfefd9.bundle",
+        "raw_size": 2824,
+        "raw_sha256": "a4906217c4e64288bfe972fa7e8a2c3bb036f64e25e67f088dcb3a644479c831"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 8858343147213922299
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1166262812512259364
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": -556303168712577334
+        },
+        "BlockPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19810.bundle",
+        "bundle_hash": "bfab95dd19729102b675c10c91bfefd9",
+        "path_id": "221984168042786506",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/bfab95dd19729102b675c10c91bfefd9.bundle",
+        "raw_size": 2824,
+        "raw_sha256": "a4906217c4e64288bfe972fa7e8a2c3bb036f64e25e67f088dcb3a644479c831"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -556303168712577334
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -7288121175963046198
+            }
+          },
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -8195310425079583030
+            }
+          },
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 3142112869820559050
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19810.bundle",
+        "bundle_hash": "bfab95dd19729102b675c10c91bfefd9",
+        "path_id": "-7288121175963046198",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/bfab95dd19729102b675c10c91bfefd9.bundle",
+        "raw_size": 2824,
+        "raw_sha256": "a4906217c4e64288bfe972fa7e8a2c3bb036f64e25e67f088dcb3a644479c831"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2475523833401479478
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8351234915697891314
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myTrack": {
+          "m_FileID": 0,
+          "m_PathID": -1019242283953131653
+        },
+        "myTrackSpeed": 5.0,
+        "myStartAttachPos": {
+          "AttachTo": 0,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myEndAttachPos": {
+          "AttachTo": 1,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myFixDuration": 0,
+        "myFollowTarget": 0,
+        "myAdditionScale": 1.0,
+        "myTrackEndStopTime": 0.0,
+        "myTrackTriggerList": [],
+        "myTrackTriggerReliable": 1,
+        "myUseTrackRotation": 0,
+        "myUseTrackScale": 0,
+        "myXScaleByRange": 1.0,
+        "myFlipBySourceX": 1,
+        "myFlipByTargetY": 1,
+        "mFlipByDirX": 0,
+        "mIsZEquipY": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19810.bundle",
+        "bundle_hash": "bfab95dd19729102b675c10c91bfefd9",
+        "path_id": "695086203856056010",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/bfab95dd19729102b675c10c91bfefd9.bundle",
+        "raw_size": 2824,
+        "raw_sha256": "a4906217c4e64288bfe972fa7e8a2c3bb036f64e25e67f088dcb3a644479c831"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2475523833401479478
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6991185375826225423
+        },
+        "m_Name": "",
+        "ApplyTargetOfNullAttr": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19810.bundle",
+        "bundle_hash": "bfab95dd19729102b675c10c91bfefd9",
+        "path_id": "-1019242283953131653",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/bfab95dd19729102b675c10c91bfefd9.bundle",
+        "raw_size": 2824,
+        "raw_sha256": "a4906217c4e64288bfe972fa7e8a2c3bb036f64e25e67f088dcb3a644479c831"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 2698161898604294011
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2131185311169716580
+        },
+        "m_Name": "",
+        "myLoopType": 0,
+        "myDuration": 1.0,
+        "myCurveX": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "myCurveY": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 1.0,
+              "outSlope": 1.0,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": 1.0,
+              "outSlope": 1.0,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19820.bundle",
+        "bundle_hash": "b1597a63d7f32def2defab71711139c8",
+        "path_id": "6282039557280031378",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b1597a63d7f32def2defab71711139c8.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3060,
+        "bundle_sha256": "f53563b23ab9df0d173c7d299f189c1dbb7d0dd746ac39a711a0fc76a64b257e"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 7894820242986951314
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1166262812512259364
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": -8072627518329379454
+        },
+        "BlockPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19820.bundle",
+        "bundle_hash": "b1597a63d7f32def2defab71711139c8",
+        "path_id": "-490061165580966526",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b1597a63d7f32def2defab71711139c8.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3060,
+        "bundle_sha256": "f53563b23ab9df0d173c7d299f189c1dbb7d0dd746ac39a711a0fc76a64b257e"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -8072627518329379454
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 101911994813851010
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19820.bundle",
+        "bundle_hash": "b1597a63d7f32def2defab71711139c8",
+        "path_id": "101911994813851010",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b1597a63d7f32def2defab71711139c8.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3060,
+        "bundle_sha256": "f53563b23ab9df0d173c7d299f189c1dbb7d0dd746ac39a711a0fc76a64b257e"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 9155811864572339586
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8351234915697891314
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myTrack": {
+          "m_FileID": 0,
+          "m_PathID": -5363982303277600027
+        },
+        "myTrackSpeed": 1.6666666269302368,
+        "myStartAttachPos": {
+          "AttachTo": 0,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myEndAttachPos": {
+          "AttachTo": 1,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myFixDuration": 1,
+        "myFollowTarget": 0,
+        "myAdditionScale": 1.0,
+        "myTrackEndStopTime": 0.0,
+        "myTrackTriggerList": [],
+        "myTrackTriggerReliable": 1,
+        "myUseTrackRotation": 0,
+        "myUseTrackScale": 0,
+        "myXScaleByRange": 1.0,
+        "myFlipBySourceX": 1,
+        "myFlipByTargetY": 1,
+        "mFlipByDirX": 0,
+        "mIsZEquipY": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19820.bundle",
+        "bundle_hash": "b1597a63d7f32def2defab71711139c8",
+        "path_id": "7055661824350561666",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b1597a63d7f32def2defab71711139c8.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3060,
+        "bundle_sha256": "f53563b23ab9df0d173c7d299f189c1dbb7d0dd746ac39a711a0fc76a64b257e"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 9155811864572339586
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6991185375826225423
+        },
+        "m_Name": "",
+        "ApplyTargetOfNullAttr": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19820.bundle",
+        "bundle_hash": "b1597a63d7f32def2defab71711139c8",
+        "path_id": "-5363982303277600027",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b1597a63d7f32def2defab71711139c8.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 3060,
+        "bundle_sha256": "f53563b23ab9df0d173c7d299f189c1dbb7d0dd746ac39a711a0fc76a64b257e"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 7349291295433634533
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2131185311169716580
+        },
+        "m_Name": "",
+        "myLoopType": 0,
+        "myDuration": 1.0,
+        "myCurveX": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "myCurveY": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 2.0,
+              "outSlope": 2.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19830.bundle",
+        "bundle_hash": "2ab0f5982a3b139a3dcae0d55f0541d6",
+        "path_id": "-6795719862891757614",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2ab0f5982a3b139a3dcae0d55f0541d6.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 37603,
+        "bundle_sha256": "da89a47f904d83390ff73382de68b3d5de81c70c128b805f710462a098cb101d"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 6401090635113775058
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1166262812512259364
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": -94315487523910842
+        },
+        "BlockPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19830.bundle",
+        "bundle_hash": "2ab0f5982a3b139a3dcae0d55f0541d6",
+        "path_id": "7324310503035816774",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2ab0f5982a3b139a3dcae0d55f0541d6.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 37603,
+        "bundle_sha256": "da89a47f904d83390ff73382de68b3d5de81c70c128b805f710462a098cb101d"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -94315487523910842
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 6065089274359696198
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19830.bundle",
+        "bundle_hash": "2ab0f5982a3b139a3dcae0d55f0541d6",
+        "path_id": "6065089274359696198",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2ab0f5982a3b139a3dcae0d55f0541d6.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 37603,
+        "bundle_sha256": "da89a47f904d83390ff73382de68b3d5de81c70c128b805f710462a098cb101d"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2452338409950950586
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8351234915697891314
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myTrack": {
+          "m_FileID": 0,
+          "m_PathID": 3073230895666126899
+        },
+        "myTrackSpeed": 0.6666666269302368,
+        "myStartAttachPos": {
+          "AttachTo": 0,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myEndAttachPos": {
+          "AttachTo": 1,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myFixDuration": 1,
+        "myFollowTarget": 0,
+        "myAdditionScale": 1.0,
+        "myTrackEndStopTime": 0.0,
+        "myTrackTriggerList": [],
+        "myTrackTriggerReliable": 1,
+        "myUseTrackRotation": 0,
+        "myUseTrackScale": 0,
+        "myXScaleByRange": 1.0,
+        "myFlipBySourceX": 1,
+        "myFlipByTargetY": 1,
+        "mFlipByDirX": 0,
+        "mIsZEquipY": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19830.bundle",
+        "bundle_hash": "2ab0f5982a3b139a3dcae0d55f0541d6",
+        "path_id": "-9201311206586922170",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2ab0f5982a3b139a3dcae0d55f0541d6.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 37603,
+        "bundle_sha256": "da89a47f904d83390ff73382de68b3d5de81c70c128b805f710462a098cb101d"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2452338409950950586
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6991185375826225423
+        },
+        "m_Name": "",
+        "ApplyTargetOfNullAttr": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19830.bundle",
+        "bundle_hash": "2ab0f5982a3b139a3dcae0d55f0541d6",
+        "path_id": "3073230895666126899",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2ab0f5982a3b139a3dcae0d55f0541d6.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 37603,
+        "bundle_sha256": "da89a47f904d83390ff73382de68b3d5de81c70c128b805f710462a098cb101d"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 3157956764521357363
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2131185311169716580
+        },
+        "m_Name": "",
+        "myLoopType": 0,
+        "myDuration": 1.5,
+        "myCurveX": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "myCurveY": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 2.0,
+              "outSlope": 2.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 0.5,
+              "value": 1.0,
+              "inSlope": "Infinity",
+              "outSlope": 1.0,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": "Infinity",
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19840.bundle",
+        "bundle_hash": "ae2b3e2b191c8d6707876fb679938802",
+        "path_id": "-4102714216471077980",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ae2b3e2b191c8d6707876fb679938802.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2709,
+        "bundle_sha256": "550328a87ec195cd623cca8733114a7fb841496aa527962f7f466ee4d4957893"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 7304943086540151716
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1166262812512259364
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 8046305491637735122
+        },
+        "BlockPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19840.bundle",
+        "bundle_hash": "ae2b3e2b191c8d6707876fb679938802",
+        "path_id": "3809010970245369554",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ae2b3e2b191c8d6707876fb679938802.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2709,
+        "bundle_sha256": "550328a87ec195cd623cca8733114a7fb841496aa527962f7f466ee4d4957893"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 8046305491637735122
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 3791473767892815570
+            }
+          },
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 927086052040347346
+            }
+          },
+          {
+            "myTime": 0.4399999976158142,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 8541508479822827218
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19840.bundle",
+        "bundle_hash": "ae2b3e2b191c8d6707876fb679938802",
+        "path_id": "8541508479822827218",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ae2b3e2b191c8d6707876fb679938802.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2709,
+        "bundle_sha256": "550328a87ec195cd623cca8733114a7fb841496aa527962f7f466ee4d4957893"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -1604332326295400750
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8351234915697891314
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myTrack": {
+          "m_FileID": 1,
+          "m_PathID": -3263479225240305575
+        },
+        "myTrackSpeed": 4.0,
+        "myStartAttachPos": {
+          "AttachTo": 0,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myEndAttachPos": {
+          "AttachTo": 1,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myFixDuration": 1,
+        "myFollowTarget": 0,
+        "myAdditionScale": 1.0,
+        "myTrackEndStopTime": 0.0,
+        "myTrackTriggerList": [],
+        "myTrackTriggerReliable": 1,
+        "myUseTrackRotation": 0,
+        "myUseTrackScale": 0,
+        "myXScaleByRange": 1.0,
+        "myFlipBySourceX": 1,
+        "myFlipByTargetY": 1,
+        "mFlipByDirX": 0,
+        "mIsZEquipY": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19840.bundle",
+        "bundle_hash": "ae2b3e2b191c8d6707876fb679938802",
+        "path_id": "-3374856678659158318",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/ae2b3e2b191c8d6707876fb679938802.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2709,
+        "bundle_sha256": "550328a87ec195cd623cca8733114a7fb841496aa527962f7f466ee4d4957893"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -1604332326295400750
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6991185375826225423
+        },
+        "m_Name": "",
+        "ApplyTargetOfNullAttr": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19920.bundle",
+        "bundle_hash": "51fc2ecbd38e6d12c7f89571a59b3046",
+        "path_id": "-3263479225240305575",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/51fc2ecbd38e6d12c7f89571a59b3046.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2445,
+        "bundle_sha256": "0ba49235709201411a44a3fffccfaf7cd5106f001bf8a1d0f2275c1e38ef113c"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -9035125681930092455
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2131185311169716580
+        },
+        "m_Name": "",
+        "myLoopType": 0,
+        "myDuration": 1.0,
+        "myCurveX": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "myCurveY": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 2.722097635269165,
+              "outSlope": 2.722097635269165,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 0.36736375093460083,
+              "value": 1.0,
+              "inSlope": "Infinity",
+              "outSlope": "Infinity",
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": "Infinity",
+              "outSlope": 1.0,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19850.bundle",
+        "bundle_hash": "55af099595fc6aaec04be776c90b6281",
+        "path_id": "-4612355101768211508",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/55af099595fc6aaec04be776c90b6281.bundle",
+        "raw_size": 91141,
+        "raw_sha256": "38c6fad37599d963075d3de47e3c3f413c40783ddc9e77369bc538fd364789e2"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -4117065609854508084
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1166262812512259364
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": -16763673799124851
+        },
+        "BlockPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19850.bundle",
+        "bundle_hash": "55af099595fc6aaec04be776c90b6281",
+        "path_id": "-6315784624793741171",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/55af099595fc6aaec04be776c90b6281.bundle",
+        "raw_size": 91141,
+        "raw_sha256": "38c6fad37599d963075d3de47e3c3f413c40783ddc9e77369bc538fd364789e2"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -16763673799124851
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -3392673385698125683
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19850.bundle",
+        "bundle_hash": "55af099595fc6aaec04be776c90b6281",
+        "path_id": "-3392673385698125683",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/55af099595fc6aaec04be776c90b6281.bundle",
+        "raw_size": 91141,
+        "raw_sha256": "38c6fad37599d963075d3de47e3c3f413c40783ddc9e77369bc538fd364789e2"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -434832805992294259
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8351234915697891314
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myTrack": {
+          "m_FileID": 0,
+          "m_PathID": -657895444468787769
+        },
+        "myTrackSpeed": 3.3333330154418945,
+        "myStartAttachPos": {
+          "AttachTo": 0,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myEndAttachPos": {
+          "AttachTo": 1,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myFixDuration": 1,
+        "myFollowTarget": 0,
+        "myAdditionScale": 1.0,
+        "myTrackEndStopTime": 0.0,
+        "myTrackTriggerList": [],
+        "myTrackTriggerReliable": 1,
+        "myUseTrackRotation": 0,
+        "myUseTrackScale": 0,
+        "myXScaleByRange": 1.0,
+        "myFlipBySourceX": 1,
+        "myFlipByTargetY": 1,
+        "mFlipByDirX": 0,
+        "mIsZEquipY": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19850.bundle",
+        "bundle_hash": "55af099595fc6aaec04be776c90b6281",
+        "path_id": "-2353948533787617139",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/55af099595fc6aaec04be776c90b6281.bundle",
+        "raw_size": 91141,
+        "raw_sha256": "38c6fad37599d963075d3de47e3c3f413c40783ddc9e77369bc538fd364789e2"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -434832805992294259
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6991185375826225423
+        },
+        "m_Name": "",
+        "ApplyTargetOfNullAttr": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19850.bundle",
+        "bundle_hash": "55af099595fc6aaec04be776c90b6281",
+        "path_id": "-657895444468787769",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/55af099595fc6aaec04be776c90b6281.bundle",
+        "raw_size": 91141,
+        "raw_sha256": "38c6fad37599d963075d3de47e3c3f413c40783ddc9e77369bc538fd364789e2"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -4394001201223232057
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2131185311169716580
+        },
+        "m_Name": "",
+        "myLoopType": 0,
+        "myDuration": 1.0,
+        "myCurveX": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "myCurveY": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 1.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19870.bundle",
+        "bundle_hash": "051041fe9b075599202a9308adae9a6c",
+        "path_id": "-4120188666487211482",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/051041fe9b075599202a9308adae9a6c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2364,
+        "bundle_sha256": "d1cfe10b26d9939a11bc3602759a7f55c0280518837cc10316b76cc4596980e9"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 1333229434274282022
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1166262812512259364
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": -2305275040507088605
+        },
+        "BlockPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19870.bundle",
+        "bundle_hash": "051041fe9b075599202a9308adae9a6c",
+        "path_id": "-6287096546082475741",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/051041fe9b075599202a9308adae9a6c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2364,
+        "bundle_sha256": "d1cfe10b26d9939a11bc3602759a7f55c0280518837cc10316b76cc4596980e9"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2305275040507088605
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -199909517731024605
+            }
+          },
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -8755978136659480285
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19870.bundle",
+        "bundle_hash": "051041fe9b075599202a9308adae9a6c",
+        "path_id": "-199909517731024605",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/051041fe9b075599202a9308adae9a6c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2364,
+        "bundle_sha256": "d1cfe10b26d9939a11bc3602759a7f55c0280518837cc10316b76cc4596980e9"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -611815752478805725
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8351234915697891314
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myTrack": {
+          "m_FileID": 0,
+          "m_PathID": -7162055511456383970
+        },
+        "myTrackSpeed": 3.0,
+        "myStartAttachPos": {
+          "AttachTo": 0,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myEndAttachPos": {
+          "AttachTo": 1,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myFixDuration": 0,
+        "myFollowTarget": 0,
+        "myAdditionScale": 1.0,
+        "myTrackEndStopTime": 0.0,
+        "myTrackTriggerList": [],
+        "myTrackTriggerReliable": 1,
+        "myUseTrackRotation": 0,
+        "myUseTrackScale": 0,
+        "myXScaleByRange": 1.0,
+        "myFlipBySourceX": 1,
+        "myFlipByTargetY": 1,
+        "mFlipByDirX": 0,
+        "mIsZEquipY": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19870.bundle",
+        "bundle_hash": "051041fe9b075599202a9308adae9a6c",
+        "path_id": "8424144274911605027",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/051041fe9b075599202a9308adae9a6c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2364,
+        "bundle_sha256": "d1cfe10b26d9939a11bc3602759a7f55c0280518837cc10316b76cc4596980e9"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -611815752478805725
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6991185375826225423
+        },
+        "m_Name": "",
+        "ApplyTargetOfNullAttr": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19870.bundle",
+        "bundle_hash": "051041fe9b075599202a9308adae9a6c",
+        "path_id": "-7162055511456383970",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/051041fe9b075599202a9308adae9a6c.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2364,
+        "bundle_sha256": "d1cfe10b26d9939a11bc3602759a7f55c0280518837cc10316b76cc4596980e9"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 3334269652861156382
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2131185311169716580
+        },
+        "m_Name": "",
+        "myLoopType": 0,
+        "myDuration": 1.0,
+        "myCurveX": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "myCurveY": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 1.0,
+              "outSlope": 1.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": 1.0,
+              "outSlope": 1.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19890.bundle",
+        "bundle_hash": "0ac94c1e0af0db0e4886d07ee5e4737f",
+        "path_id": "5456115506029437978",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0ac94c1e0af0db0e4886d07ee5e4737f.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2434,
+        "bundle_sha256": "76544f12c54e6ab60d973a88cfbbb87092484c85c9c6b309ad394a4bdc38fda5"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -7028689380588936166
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1166262812512259364
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 5438816939856058097
+        },
+        "BlockPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19890.bundle",
+        "bundle_hash": "0ac94c1e0af0db0e4886d07ee5e4737f",
+        "path_id": "-3223775213725133071",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0ac94c1e0af0db0e4886d07ee5e4737f.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2434,
+        "bundle_sha256": "76544f12c54e6ab60d973a88cfbbb87092484c85c9c6b309ad394a4bdc38fda5"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 5438816939856058097
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 4349987383664727793
+            }
+          },
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -4440797382456813839
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19890.bundle",
+        "bundle_hash": "0ac94c1e0af0db0e4886d07ee5e4737f",
+        "path_id": "4349987383664727793",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0ac94c1e0af0db0e4886d07ee5e4737f.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2434,
+        "bundle_sha256": "76544f12c54e6ab60d973a88cfbbb87092484c85c9c6b309ad394a4bdc38fda5"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 5545792809432078065
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8351234915697891314
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myTrack": {
+          "m_FileID": 1,
+          "m_PathID": -4019971260141272149
+        },
+        "myTrackSpeed": 5.0,
+        "myStartAttachPos": {
+          "AttachTo": 0,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myEndAttachPos": {
+          "AttachTo": 1,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myFixDuration": 0,
+        "myFollowTarget": 0,
+        "myAdditionScale": 1.0,
+        "myTrackEndStopTime": 0.0,
+        "myTrackTriggerList": [],
+        "myTrackTriggerReliable": 1,
+        "myUseTrackRotation": 0,
+        "myUseTrackScale": 0,
+        "myXScaleByRange": 1.0,
+        "myFlipBySourceX": 1,
+        "myFlipByTargetY": 1,
+        "mFlipByDirX": 0,
+        "mIsZEquipY": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19890.bundle",
+        "bundle_hash": "0ac94c1e0af0db0e4886d07ee5e4737f",
+        "path_id": "2668427840361158385",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0ac94c1e0af0db0e4886d07ee5e4737f.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2434,
+        "bundle_sha256": "76544f12c54e6ab60d973a88cfbbb87092484c85c9c6b309ad394a4bdc38fda5"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 5545792809432078065
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6991185375826225423
+        },
+        "m_Name": "",
+        "ApplyTargetOfNullAttr": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19980.bundle",
+        "bundle_hash": "b043aee65a00a3ada9f6fea37454d75d",
+        "path_id": "-4019971260141272149",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b043aee65a00a3ada9f6fea37454d75d.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2347,
+        "bundle_sha256": "d9471977e23b755948fd15ec8ae7e9e58cd5c076580dd2c35d38486538f3ae5c"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -4507433815813454933
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2131185311169716580
+        },
+        "m_Name": "",
+        "myLoopType": 0,
+        "myDuration": 1.0,
+        "myCurveX": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "myCurveY": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 1.0,
+              "outSlope": 1.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": 1.0,
+              "outSlope": 1.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19910.bundle",
+        "bundle_hash": "5fbc73cfa30cc7ff4faeb781e8e9a445",
+        "path_id": "-6479492599205404782",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5fbc73cfa30cc7ff4faeb781e8e9a445.bundle",
+        "raw_size": 2832,
+        "raw_sha256": "33b2edda2b1113a317336d8261dc9938bf57493064d58d408d933c39add406f1"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -130749255439294574
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1166262812512259364
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": -2676892326845339325
+        },
+        "BlockPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19910.bundle",
+        "bundle_hash": "5fbc73cfa30cc7ff4faeb781e8e9a445",
+        "path_id": "7344791360145205571",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5fbc73cfa30cc7ff4faeb781e8e9a445.bundle",
+        "raw_size": 2832,
+        "raw_sha256": "33b2edda2b1113a317336d8261dc9938bf57493064d58d408d933c39add406f1"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2676892326845339325
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -712338355174299325
+            }
+          },
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 592097499763452227
+            }
+          },
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 7618546211762284867
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19910.bundle",
+        "bundle_hash": "5fbc73cfa30cc7ff4faeb781e8e9a445",
+        "path_id": "-712338355174299325",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5fbc73cfa30cc7ff4faeb781e8e9a445.bundle",
+        "raw_size": 2832,
+        "raw_sha256": "33b2edda2b1113a317336d8261dc9938bf57493064d58d408d933c39add406f1"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -6683004748876142269
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8351234915697891314
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myTrack": {
+          "m_FileID": 0,
+          "m_PathID": 1846335424574595177
+        },
+        "myTrackSpeed": 4.0,
+        "myStartAttachPos": {
+          "AttachTo": 0,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myEndAttachPos": {
+          "AttachTo": 1,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myFixDuration": 0,
+        "myFollowTarget": 0,
+        "myAdditionScale": 1.0,
+        "myTrackEndStopTime": 0.0,
+        "myTrackTriggerList": [],
+        "myTrackTriggerReliable": 1,
+        "myUseTrackRotation": 0,
+        "myUseTrackScale": 0,
+        "myXScaleByRange": 1.0,
+        "myFlipBySourceX": 1,
+        "myFlipByTargetY": 1,
+        "mFlipByDirX": 0,
+        "mIsZEquipY": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19910.bundle",
+        "bundle_hash": "5fbc73cfa30cc7ff4faeb781e8e9a445",
+        "path_id": "8639209214551861571",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5fbc73cfa30cc7ff4faeb781e8e9a445.bundle",
+        "raw_size": 2832,
+        "raw_sha256": "33b2edda2b1113a317336d8261dc9938bf57493064d58d408d933c39add406f1"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -6683004748876142269
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6991185375826225423
+        },
+        "m_Name": "",
+        "ApplyTargetOfNullAttr": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19910.bundle",
+        "bundle_hash": "5fbc73cfa30cc7ff4faeb781e8e9a445",
+        "path_id": "1846335424574595177",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5fbc73cfa30cc7ff4faeb781e8e9a445.bundle",
+        "raw_size": 2832,
+        "raw_sha256": "33b2edda2b1113a317336d8261dc9938bf57493064d58d408d933c39add406f1"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -6728830780495290263
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2131185311169716580
+        },
+        "m_Name": "",
+        "myLoopType": 0,
+        "myDuration": 1.0,
+        "myCurveX": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "myCurveY": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 1.0,
+              "outSlope": 1.0,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": 1.0,
+              "outSlope": 1.0,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19920.bundle",
+        "bundle_hash": "51fc2ecbd38e6d12c7f89571a59b3046",
+        "path_id": "5917368794445868278",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/51fc2ecbd38e6d12c7f89571a59b3046.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2445,
+        "bundle_sha256": "0ba49235709201411a44a3fffccfaf7cd5106f001bf8a1d0f2275c1e38ef113c"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -5667075761680913162
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1166262812512259364
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 3504796534177773828
+        },
+        "BlockPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19920.bundle",
+        "bundle_hash": "51fc2ecbd38e6d12c7f89571a59b3046",
+        "path_id": "5759905155420240132",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/51fc2ecbd38e6d12c7f89571a59b3046.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2445,
+        "bundle_sha256": "0ba49235709201411a44a3fffccfaf7cd5106f001bf8a1d0f2275c1e38ef113c"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 3504796534177773828
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.3400000035762787,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -225363826089150204
+            }
+          },
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -3265553644860753660
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19920.bundle",
+        "bundle_hash": "51fc2ecbd38e6d12c7f89571a59b3046",
+        "path_id": "-225363826089150204",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/51fc2ecbd38e6d12c7f89571a59b3046.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2445,
+        "bundle_sha256": "0ba49235709201411a44a3fffccfaf7cd5106f001bf8a1d0f2275c1e38ef113c"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 8224874736138828036
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8351234915697891314
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myTrack": {
+          "m_FileID": 0,
+          "m_PathID": -3263479225240305575
+        },
+        "myTrackSpeed": 4.0,
+        "myStartAttachPos": {
+          "AttachTo": 0,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myEndAttachPos": {
+          "AttachTo": 1,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myFixDuration": 1,
+        "myFollowTarget": 0,
+        "myAdditionScale": 1.0,
+        "myTrackEndStopTime": 0.0,
+        "myTrackTriggerList": [],
+        "myTrackTriggerReliable": 1,
+        "myUseTrackRotation": 0,
+        "myUseTrackScale": 0,
+        "myXScaleByRange": 1.0,
+        "myFlipBySourceX": 1,
+        "myFlipByTargetY": 1,
+        "mFlipByDirX": 0,
+        "mIsZEquipY": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19920.bundle",
+        "bundle_hash": "51fc2ecbd38e6d12c7f89571a59b3046",
+        "path_id": "-7578375687596361468",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/51fc2ecbd38e6d12c7f89571a59b3046.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2445,
+        "bundle_sha256": "0ba49235709201411a44a3fffccfaf7cd5106f001bf8a1d0f2275c1e38ef113c"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 8224874736138828036
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6991185375826225423
+        },
+        "m_Name": "",
+        "ApplyTargetOfNullAttr": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19920.bundle",
+        "bundle_hash": "51fc2ecbd38e6d12c7f89571a59b3046",
+        "path_id": "-3263479225240305575",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/51fc2ecbd38e6d12c7f89571a59b3046.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2445,
+        "bundle_sha256": "0ba49235709201411a44a3fffccfaf7cd5106f001bf8a1d0f2275c1e38ef113c"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -9035125681930092455
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2131185311169716580
+        },
+        "m_Name": "",
+        "myLoopType": 0,
+        "myDuration": 1.0,
+        "myCurveX": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "myCurveY": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 2.722097635269165,
+              "outSlope": 2.722097635269165,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 0.36736375093460083,
+              "value": 1.0,
+              "inSlope": "Infinity",
+              "outSlope": "Infinity",
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": "Infinity",
+              "outSlope": 1.0,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19930.bundle",
+        "bundle_hash": "85a9051887eaa535c8ab7c1abe2f6695",
+        "path_id": "5732803925712739025",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/85a9051887eaa535c8ab7c1abe2f6695.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2701,
+        "bundle_sha256": "9afe95e8cc2c602ff1b8b22c659c06eac4f351bf1e28dd8b8f28cbe3abc619d2"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 5160818697354386129
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1166262812512259364
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 8380408906764536408
+        },
+        "BlockPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19930.bundle",
+        "bundle_hash": "85a9051887eaa535c8ab7c1abe2f6695",
+        "path_id": "4338417963906845272",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/85a9051887eaa535c8ab7c1abe2f6695.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2701,
+        "bundle_sha256": "9afe95e8cc2c602ff1b8b22c659c06eac4f351bf1e28dd8b8f28cbe3abc619d2"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 8380408906764536408
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -7975545384080946600
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19930.bundle",
+        "bundle_hash": "85a9051887eaa535c8ab7c1abe2f6695",
+        "path_id": "-7975545384080946600",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/85a9051887eaa535c8ab7c1abe2f6695.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2701,
+        "bundle_sha256": "9afe95e8cc2c602ff1b8b22c659c06eac4f351bf1e28dd8b8f28cbe3abc619d2"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -1997417669331432872
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8351234915697891314
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myTrack": {
+          "m_FileID": 0,
+          "m_PathID": -1440005680676668982
+        },
+        "myTrackSpeed": 2.7269999980926514,
+        "myStartAttachPos": {
+          "AttachTo": 0,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myEndAttachPos": {
+          "AttachTo": 1,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myFixDuration": 1,
+        "myFollowTarget": 0,
+        "myAdditionScale": 1.0,
+        "myTrackEndStopTime": 0.0,
+        "myTrackTriggerList": [],
+        "myTrackTriggerReliable": 1,
+        "myUseTrackRotation": 0,
+        "myUseTrackScale": 0,
+        "myXScaleByRange": 1.0,
+        "myFlipBySourceX": 1,
+        "myFlipByTargetY": 1,
+        "mFlipByDirX": 0,
+        "mIsZEquipY": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19930.bundle",
+        "bundle_hash": "85a9051887eaa535c8ab7c1abe2f6695",
+        "path_id": "-5147248579598923176",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/85a9051887eaa535c8ab7c1abe2f6695.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2701,
+        "bundle_sha256": "9afe95e8cc2c602ff1b8b22c659c06eac4f351bf1e28dd8b8f28cbe3abc619d2"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -1997417669331432872
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6991185375826225423
+        },
+        "m_Name": "",
+        "ApplyTargetOfNullAttr": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19930.bundle",
+        "bundle_hash": "85a9051887eaa535c8ab7c1abe2f6695",
+        "path_id": "-1440005680676668982",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/85a9051887eaa535c8ab7c1abe2f6695.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2701,
+        "bundle_sha256": "9afe95e8cc2c602ff1b8b22c659c06eac4f351bf1e28dd8b8f28cbe3abc619d2"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -8117283773974644278
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2131185311169716580
+        },
+        "m_Name": "",
+        "myLoopType": 0,
+        "myDuration": 1.0,
+        "myCurveX": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "myCurveY": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 1.0,
+              "outSlope": 1.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": 1.0,
+              "outSlope": 1.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19950.bundle",
+        "bundle_hash": "a3ac92a0b08bb72bebe6373e5e1aa47a",
+        "path_id": "8186434309184698831",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a3ac92a0b08bb72bebe6373e5e1aa47a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2888,
+        "bundle_sha256": "d06b6f6f804ddef79cec8ac97c8706c0757e3fa323aa408ea368fbeb9e428c53"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -1120180112804070961
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1166262812512259364
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": -6283373640701061990
+        },
+        "BlockPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19950.bundle",
+        "bundle_hash": "a3ac92a0b08bb72bebe6373e5e1aa47a",
+        "path_id": "5977114043679691930",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a3ac92a0b08bb72bebe6373e5e1aa47a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2888,
+        "bundle_sha256": "d06b6f6f804ddef79cec8ac97c8706c0757e3fa323aa408ea368fbeb9e428c53"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -6283373640701061990
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 648327647646635162
+            }
+          },
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 3367330328710206618
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19950.bundle",
+        "bundle_hash": "a3ac92a0b08bb72bebe6373e5e1aa47a",
+        "path_id": "648327647646635162",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a3ac92a0b08bb72bebe6373e5e1aa47a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2888,
+        "bundle_sha256": "d06b6f6f804ddef79cec8ac97c8706c0757e3fa323aa408ea368fbeb9e428c53"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -809160232878287718
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8351234915697891314
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myTrack": {
+          "m_FileID": 1,
+          "m_PathID": 1846335424574595177
+        },
+        "myTrackSpeed": 4.0,
+        "myStartAttachPos": {
+          "AttachTo": 0,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myEndAttachPos": {
+          "AttachTo": 1,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myFixDuration": 0,
+        "myFollowTarget": 0,
+        "myAdditionScale": 1.0,
+        "myTrackEndStopTime": 0.0,
+        "myTrackTriggerList": [],
+        "myTrackTriggerReliable": 1,
+        "myUseTrackRotation": 0,
+        "myUseTrackScale": 0,
+        "myXScaleByRange": 1.0,
+        "myFlipBySourceX": 1,
+        "myFlipByTargetY": 1,
+        "mFlipByDirX": 0,
+        "mIsZEquipY": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19950.bundle",
+        "bundle_hash": "a3ac92a0b08bb72bebe6373e5e1aa47a",
+        "path_id": "-7138193942778030950",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a3ac92a0b08bb72bebe6373e5e1aa47a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2888,
+        "bundle_sha256": "d06b6f6f804ddef79cec8ac97c8706c0757e3fa323aa408ea368fbeb9e428c53"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -809160232878287718
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6991185375826225423
+        },
+        "m_Name": "",
+        "ApplyTargetOfNullAttr": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19910.bundle",
+        "bundle_hash": "5fbc73cfa30cc7ff4faeb781e8e9a445",
+        "path_id": "1846335424574595177",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/5fbc73cfa30cc7ff4faeb781e8e9a445.bundle",
+        "raw_size": 2832,
+        "raw_sha256": "33b2edda2b1113a317336d8261dc9938bf57493064d58d408d933c39add406f1"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -6728830780495290263
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2131185311169716580
+        },
+        "m_Name": "",
+        "myLoopType": 0,
+        "myDuration": 1.0,
+        "myCurveX": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "myCurveY": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 1.0,
+              "outSlope": 1.0,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": 1.0,
+              "outSlope": 1.0,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19960.bundle",
+        "bundle_hash": "0ceb135e93b2255d3bb44a17bde85dc7",
+        "path_id": "2080474645540567389",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0ceb135e93b2255d3bb44a17bde85dc7.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2784,
+        "bundle_sha256": "5a99e85d432e126e7f2f99ce669a595dc816dc4e8821fab23a0ce648926257f9"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 938953636602116445
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1166262812512259364
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": -2188898860355763431
+        },
+        "BlockPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19960.bundle",
+        "bundle_hash": "0ceb135e93b2255d3bb44a17bde85dc7",
+        "path_id": "-5343776711242169575",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0ceb135e93b2255d3bb44a17bde85dc7.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2784,
+        "bundle_sha256": "5a99e85d432e126e7f2f99ce669a595dc816dc4e8821fab23a0ce648926257f9"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2188898860355763431
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 7122878230106194713
+            }
+          },
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 5513454698795746073
+            }
+          },
+          {
+            "myTime": 0.36000001430511475,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -7200589881482427623
+            }
+          },
+          {
+            "myTime": 0.8600000143051147,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -9150373537579744487
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19960.bundle",
+        "bundle_hash": "0ceb135e93b2255d3bb44a17bde85dc7",
+        "path_id": "5513454698795746073",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0ceb135e93b2255d3bb44a17bde85dc7.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2784,
+        "bundle_sha256": "5a99e85d432e126e7f2f99ce669a595dc816dc4e8821fab23a0ce648926257f9"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -4324487307026775271
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8351234915697891314
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myTrack": {
+          "m_FileID": 0,
+          "m_PathID": -2883633094354717151
+        },
+        "myTrackSpeed": 1.0,
+        "myStartAttachPos": {
+          "AttachTo": 0,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myEndAttachPos": {
+          "AttachTo": 1,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myFixDuration": 1,
+        "myFollowTarget": 0,
+        "myAdditionScale": 1.0,
+        "myTrackEndStopTime": 0.0,
+        "myTrackTriggerList": [],
+        "myTrackTriggerReliable": 1,
+        "myUseTrackRotation": 0,
+        "myUseTrackScale": 0,
+        "myXScaleByRange": 1.0,
+        "myFlipBySourceX": 1,
+        "myFlipByTargetY": 1,
+        "mFlipByDirX": 0,
+        "mIsZEquipY": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19960.bundle",
+        "bundle_hash": "0ceb135e93b2255d3bb44a17bde85dc7",
+        "path_id": "8400257107925320473",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0ceb135e93b2255d3bb44a17bde85dc7.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2784,
+        "bundle_sha256": "5a99e85d432e126e7f2f99ce669a595dc816dc4e8821fab23a0ce648926257f9"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -4324487307026775271
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6991185375826225423
+        },
+        "m_Name": "",
+        "ApplyTargetOfNullAttr": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19960.bundle",
+        "bundle_hash": "0ceb135e93b2255d3bb44a17bde85dc7",
+        "path_id": "-2883633094354717151",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0ceb135e93b2255d3bb44a17bde85dc7.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2784,
+        "bundle_sha256": "5a99e85d432e126e7f2f99ce669a595dc816dc4e8821fab23a0ce648926257f9"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 4650695549955356193
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2131185311169716580
+        },
+        "m_Name": "",
+        "myLoopType": 0,
+        "myDuration": 1.5,
+        "myCurveX": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "myCurveY": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 0.5,
+              "value": 0.0,
+              "inSlope": "Infinity",
+              "outSlope": "Infinity",
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 0.800000011920929,
+              "value": 1.0,
+              "inSlope": "Infinity",
+              "outSlope": "Infinity",
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19970.bundle",
+        "bundle_hash": "0d5320935659afdd99f3707cf6a4a422",
+        "path_id": "-4470239065762925932",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0d5320935659afdd99f3707cf6a4a422.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2861,
+        "bundle_sha256": "cb2bb1b8f89fe6f7edb37496e9d667b21b9a6a8f379f1cf063c719aedfbda770"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 2097612405842801300
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1166262812512259364
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": -875935629984022105
+        },
+        "BlockPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19970.bundle",
+        "bundle_hash": "0d5320935659afdd99f3707cf6a4a422",
+        "path_id": "2483952778156360103",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0d5320935659afdd99f3707cf6a4a422.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2861,
+        "bundle_sha256": "cb2bb1b8f89fe6f7edb37496e9d667b21b9a6a8f379f1cf063c719aedfbda770"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -875935629984022105
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -8844071676040003161
+            }
+          },
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 52167085287522727
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19970.bundle",
+        "bundle_hash": "0d5320935659afdd99f3707cf6a4a422",
+        "path_id": "52167085287522727",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0d5320935659afdd99f3707cf6a4a422.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2861,
+        "bundle_sha256": "cb2bb1b8f89fe6f7edb37496e9d667b21b9a6a8f379f1cf063c719aedfbda770"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2836512619785567833
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8351234915697891314
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myTrack": {
+          "m_FileID": 0,
+          "m_PathID": 4841344913078624741
+        },
+        "myTrackSpeed": 1.1764706373214722,
+        "myStartAttachPos": {
+          "AttachTo": 0,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myEndAttachPos": {
+          "AttachTo": 1,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myFixDuration": 1,
+        "myFollowTarget": 0,
+        "myAdditionScale": 1.0,
+        "myTrackEndStopTime": 0.0,
+        "myTrackTriggerList": [],
+        "myTrackTriggerReliable": 1,
+        "myUseTrackRotation": 0,
+        "myUseTrackScale": 0,
+        "myXScaleByRange": 1.0,
+        "myFlipBySourceX": 1,
+        "myFlipByTargetY": 1,
+        "mFlipByDirX": 0,
+        "mIsZEquipY": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19970.bundle",
+        "bundle_hash": "0d5320935659afdd99f3707cf6a4a422",
+        "path_id": "-3572016984888655449",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0d5320935659afdd99f3707cf6a4a422.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2861,
+        "bundle_sha256": "cb2bb1b8f89fe6f7edb37496e9d667b21b9a6a8f379f1cf063c719aedfbda770"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2836512619785567833
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6991185375826225423
+        },
+        "m_Name": "",
+        "ApplyTargetOfNullAttr": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19970.bundle",
+        "bundle_hash": "0d5320935659afdd99f3707cf6a4a422",
+        "path_id": "4841344913078624741",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0d5320935659afdd99f3707cf6a4a422.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2861,
+        "bundle_sha256": "cb2bb1b8f89fe6f7edb37496e9d667b21b9a6a8f379f1cf063c719aedfbda770"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 2867634017923178981
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2131185311169716580
+        },
+        "m_Name": "",
+        "myLoopType": 0,
+        "myDuration": 1.0,
+        "myCurveX": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "myCurveY": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 0.15000000596046448,
+              "value": 0.0,
+              "inSlope": "Infinity",
+              "outSlope": 0.5882352590560913,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": 1.1764705181121826,
+              "outSlope": 1.1764705181121826,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19980.bundle",
+        "bundle_hash": "b043aee65a00a3ada9f6fea37454d75d",
+        "path_id": "-1670420004847819777",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b043aee65a00a3ada9f6fea37454d75d.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2347,
+        "bundle_sha256": "d9471977e23b755948fd15ec8ae7e9e58cd5c076580dd2c35d38486538f3ae5c"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2397952670162885633
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1166262812512259364
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": -5750188527845938324
+        },
+        "BlockPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19980.bundle",
+        "bundle_hash": "b043aee65a00a3ada9f6fea37454d75d",
+        "path_id": "-452460255644325012",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b043aee65a00a3ada9f6fea37454d75d.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2347,
+        "bundle_sha256": "d9471977e23b755948fd15ec8ae7e9e58cd5c076580dd2c35d38486538f3ae5c"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -5750188527845938324
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -1898978948430533780
+            }
+          },
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -2455204554110506132
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19980.bundle",
+        "bundle_hash": "b043aee65a00a3ada9f6fea37454d75d",
+        "path_id": "-1898978948430533780",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b043aee65a00a3ada9f6fea37454d75d.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2347,
+        "bundle_sha256": "d9471977e23b755948fd15ec8ae7e9e58cd5c076580dd2c35d38486538f3ae5c"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -1124587641679811732
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8351234915697891314
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myTrack": {
+          "m_FileID": 0,
+          "m_PathID": -4019971260141272149
+        },
+        "myTrackSpeed": 1.2000000476837158,
+        "myStartAttachPos": {
+          "AttachTo": 0,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myEndAttachPos": {
+          "AttachTo": 1,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myFixDuration": 1,
+        "myFollowTarget": 0,
+        "myAdditionScale": 1.0,
+        "myTrackEndStopTime": 0.0,
+        "myTrackTriggerList": [],
+        "myTrackTriggerReliable": 1,
+        "myUseTrackRotation": 0,
+        "myUseTrackScale": 0,
+        "myXScaleByRange": 1.0,
+        "myFlipBySourceX": 1,
+        "myFlipByTargetY": 1,
+        "mFlipByDirX": 0,
+        "mIsZEquipY": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19980.bundle",
+        "bundle_hash": "b043aee65a00a3ada9f6fea37454d75d",
+        "path_id": "2812503166518324076",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b043aee65a00a3ada9f6fea37454d75d.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2347,
+        "bundle_sha256": "d9471977e23b755948fd15ec8ae7e9e58cd5c076580dd2c35d38486538f3ae5c"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -1124587641679811732
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6991185375826225423
+        },
+        "m_Name": "",
+        "ApplyTargetOfNullAttr": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19980.bundle",
+        "bundle_hash": "b043aee65a00a3ada9f6fea37454d75d",
+        "path_id": "-4019971260141272149",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/b043aee65a00a3ada9f6fea37454d75d.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2347,
+        "bundle_sha256": "d9471977e23b755948fd15ec8ae7e9e58cd5c076580dd2c35d38486538f3ae5c"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -4507433815813454933
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2131185311169716580
+        },
+        "m_Name": "",
+        "myLoopType": 0,
+        "myDuration": 1.0,
+        "myCurveX": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "myCurveY": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 1.0,
+              "outSlope": 1.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": 1.0,
+              "outSlope": 1.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19990.bundle",
+        "bundle_hash": "a08d2e7a455e21dea8b716113239c381",
+        "path_id": "-7174283615648313546",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a08d2e7a455e21dea8b716113239c381.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2782,
+        "bundle_sha256": "ec3c6919b01b97159f7877eb858d97b5e1eded21b12a170c1a603272770190e3"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 819529134275399478
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 1166262812512259364
+        },
+        "m_Name": "",
+        "myPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 1469463046906980433
+        },
+        "BlockPlayablePrefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19990.bundle",
+        "bundle_hash": "a08d2e7a455e21dea8b716113239c381",
+        "path_id": "7935387337721325649",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a08d2e7a455e21dea8b716113239c381.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2782,
+        "bundle_sha256": "ec3c6919b01b97159f7877eb858d97b5e1eded21b12a170c1a603272770190e3"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 1469463046906980433
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 3430910341796472913
+            }
+          },
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 610331145635571793
+            }
+          },
+          {
+            "myTime": 0.36000001430511475,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -5724558444195796911
+            }
+          },
+          {
+            "myTime": 0.8600000143051147,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -4825775404745480111
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19990.bundle",
+        "bundle_hash": "a08d2e7a455e21dea8b716113239c381",
+        "path_id": "610331145635571793",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a08d2e7a455e21dea8b716113239c381.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2782,
+        "bundle_sha256": "ec3c6919b01b97159f7877eb858d97b5e1eded21b12a170c1a603272770190e3"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -3260039315224319919
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8351234915697891314
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myTrack": {
+          "m_FileID": 0,
+          "m_PathID": 4727787025704468517
+        },
+        "myTrackSpeed": 1.0,
+        "myStartAttachPos": {
+          "AttachTo": 0,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myEndAttachPos": {
+          "AttachTo": 1,
+          "myBoneName": "",
+          "myOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "myLinkDir": 0,
+          "myOffsetScale": 0,
+          "IsRotationTowardsTarget": 0
+        },
+        "myFixDuration": 1,
+        "myFollowTarget": 0,
+        "myAdditionScale": 1.0,
+        "myTrackEndStopTime": 0.0,
+        "myTrackTriggerList": [],
+        "myTrackTriggerReliable": 1,
+        "myUseTrackRotation": 0,
+        "myUseTrackScale": 0,
+        "myXScaleByRange": 1.0,
+        "myFlipBySourceX": 1,
+        "myFlipByTargetY": 1,
+        "mFlipByDirX": 0,
+        "mIsZEquipY": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19990.bundle",
+        "bundle_hash": "a08d2e7a455e21dea8b716113239c381",
+        "path_id": "844422207894399057",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a08d2e7a455e21dea8b716113239c381.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2782,
+        "bundle_sha256": "ec3c6919b01b97159f7877eb858d97b5e1eded21b12a170c1a603272770190e3"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -3260039315224319919
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6991185375826225423
+        },
+        "m_Name": "",
+        "ApplyTargetOfNullAttr": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_move_19990.bundle",
+        "bundle_hash": "a08d2e7a455e21dea8b716113239c381",
+        "path_id": "4727787025704468517",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a08d2e7a455e21dea8b716113239c381.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 2782,
+        "bundle_sha256": "ec3c6919b01b97159f7877eb858d97b5e1eded21b12a170c1a603272770190e3"
+      },
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 4579287636869824549
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -2131185311169716580
+        },
+        "m_Name": "",
+        "myLoopType": 0,
+        "myDuration": 1.7669999599456787,
+        "myCurveX": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            },
+            {
+              "time": 1.0,
+              "value": 0.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "myCurveY": {
+          "m_Curve": [
+            {
+              "time": 0.0,
+              "value": 0.0,
+              "inSlope": 3.533569097518921,
+              "outSlope": 3.533569097518921,
+              "weightedMode": 0,
+              "inWeight": 0.0,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 0.28299999237060547,
+              "value": 1.0,
+              "inSlope": "Infinity",
+              "outSlope": "Infinity",
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.3333333432674408
+            },
+            {
+              "time": 1.0,
+              "value": 1.0,
+              "inSlope": 0.0,
+              "outSlope": 0.0,
+              "weightedMode": 0,
+              "inWeight": 0.3333333432674408,
+              "outWeight": 0.0
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Combat/grid-motion.json",
+      "sha256": "319b74ec28164483ccff3169971b30e76cb94c21f8479df0f462a7a188520710"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/grid-motion.json.meta",
+      "sha256": "48862172fa92ba68a92c711af0bd2ff35395e483f9e1c4ca17c7a2cbd33b77f6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.Movement.cs",
+      "sha256": "a561f7325a9752f88b2f70d16d4878e01ad5daa396e59142d4f809bfeddfa74b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.Movement.cs.meta",
+      "sha256": "27429578777439b6ee2c52930268e8224ee95589c79a7337753815c0cb64451c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGridMotion.cs",
+      "sha256": "3aa068b0308ea611ed99b1ff5582a2d1f4aef11da1617044fe8cf7b925b4a51e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleGridMotion.cs.meta",
+      "sha256": "fbfe867617182bc7a733cbbbd616bf75888cb4bf53bcb32f402b96096b1043cb"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.GridMotion.cs",
+      "sha256": "3640126c0889559590771e17b2216554a3513e1c0e274c3cb40d6ee81c721182"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.GridMotion.cs.meta",
+      "sha256": "5da7a72b2d5b3b7ca99b6a943107d763535c2fe732bba470760d74cff18cac3f"
+    }
+  ],
+  "integrations": [
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs",
+    "unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.cs"
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_grid_motion.py",
+    "sha256": "8fa8dda450c5bc35613ed4a3ee35f188cd2d9743f5b934f9c7f768dede4fc5fb"
+  },
+  "binding": "All normal/back/fixed-speed movement action IDs selected by the existing role rules. Source and target use the entity origin. Restore original track duration/speed, curve keys/tangents, distance mapping and mirroring. Native serialized constant infinity mode 2 maps to public WrapMode.ClampForever rather than public enum value 2 (Loop). Rotation and scale application are disabled by every selected prefab.",
+  "limits": [
+    "Skill-specific displacement actions outside the role movement set, blocked effects, sounds and bone-follow effects are not included.",
+    "Movement tracks have selected-current asset provenance; the existing rule payload keeps its own original version. No rule values are replaced or relabeled.",
+    "Role configurations with BackMoveSkillId=0 provide no original retreat action. Existing offline retreat behavior is retained with action ID 0 and an explicit IsRetreat event flag; it is not counted as a restored original track."
+  ]
+}

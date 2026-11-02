@@ -1973,6 +1973,7 @@ namespace Zjcs.Combat.Official
                 FightBattleMovementEvent movement = movements[index];
                 if (movement == null) continue;
                 movement.Delay = move.Delay;
+                movement.MoveBehaviourId = move.MoveBehaviourId;
                 movement.MoveDuration = move.MoveDuration;
                 movement.MoveSpeed = move.MoveSpeed;
                 NotifyMovementStart(movement, statusCatalog?.EntityActionType(move.MoveBehaviourId) ?? 0,
@@ -2293,7 +2294,8 @@ namespace Zjcs.Combat.Official
 
             if (bestPath == null) return false;
             int steps = Math.Min(actor.MoveDist, bestPath.Count - 1);
-            var movement = new FightBattleMovementEvent { UnitId = actor.Id };
+            var movement = statusCatalog?.CreateRoleMovement(actor, false)
+                ?? new FightBattleMovementEvent { UnitId = actor.Id };
             movement.Path.Add(new FightGridPoint(actor.X, actor.Y));
             for (int i = 1; i <= steps; i++)
             {
@@ -2348,7 +2350,8 @@ namespace Zjcs.Combat.Official
                 }
             if (bestPath == null) return false;
 
-            var movement = new FightBattleMovementEvent { UnitId = actor.Id };
+            var movement = statusCatalog?.CreateRoleMovement(actor, true)
+                ?? new FightBattleMovementEvent { UnitId = actor.Id };
             movement.Path.Add(start);
             for (int i = 1; i < bestPath.Count; i++)
             {

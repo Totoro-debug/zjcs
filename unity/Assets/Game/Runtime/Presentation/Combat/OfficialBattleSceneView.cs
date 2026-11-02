@@ -36,6 +36,7 @@ namespace Zjcs.Presentation.Combat
         private readonly Dictionary<int, OfficialBattleUnitWorldHudView> attachedUnitHuds =
             new Dictionary<int, OfficialBattleUnitWorldHudView>();
         private readonly Dictionary<int, UnitMotion> motions = new Dictionary<int, UnitMotion>();
+        private readonly OfficialBattleGridMotion gridMotion = new OfficialBattleGridMotion();
         private readonly List<int> motionScratch = new List<int>();
         private readonly List<PendingDamageFloat> pendingDamageFloats = new List<PendingDamageFloat>();
         private readonly List<PendingUnitAnimation> pendingUnitAnimations = new List<PendingUnitAnimation>();
@@ -68,6 +69,8 @@ namespace Zjcs.Presentation.Combat
             public List<Vector3> Points;
             public List<float> SegmentStarts;
             public List<float> SegmentDurations;
+            public List<int> SegmentActions;
+            public bool SourceFlipped;
             public float Elapsed;
         }
 
@@ -659,7 +662,12 @@ namespace Zjcs.Presentation.Combat
                         float segmentDuration = motion.SegmentDurations[index];
                         float progress = segmentDuration <= 0f ? 1f
                             : Mathf.Clamp01((motion.Elapsed - segmentStart) / segmentDuration);
-                        body.position = Vector3.Lerp(motion.Points[index], motion.Points[index + 1], progress);
+                        if (progress < 1f && gridMotion.TryEvaluate(motion.SegmentActions[index],
+                                motion.Elapsed - segmentStart, motion.Points[index], motion.Points[index + 1],
+                                motion.SourceFlipped, out Vector3 trackPosition))
+                            body.position = trackPosition;
+                        else
+                            body.position = Vector3.Lerp(motion.Points[index], motion.Points[index + 1], progress);
                         if (progress < 1f)
                         {
                             complete = false;
@@ -772,7 +780,9 @@ namespace Zjcs.Presentation.Combat
             {
                 Points = new List<Vector3>(),
                 SegmentStarts = new List<float>(),
-                SegmentDurations = new List<float>()
+                SegmentDurations = new List<float>(),
+                SegmentActions = new List<int>(),
+                SourceFlipped = body.localScale.x < 0f
             };
             float cursor = 0f;
             if (stepEvent.Movements != null)
@@ -788,6 +798,7 @@ namespace Zjcs.Presentation.Combat
                         motion.Points.Add(first);
                         motion.SegmentStarts.Add(cursor);
                         motion.SegmentDurations.Add(0f);
+                        motion.SegmentActions.Add(0);
                     }
                     for (int index = 1; index < movement.Path.Count; index++)
                     {
@@ -799,6 +810,7 @@ namespace Zjcs.Presentation.Combat
                                 : SecondsPerCell;
                         motion.SegmentStarts.Add(cursor);
                         motion.SegmentDurations.Add(duration);
+                        motion.SegmentActions.Add(movement.MoveBehaviourId);
                         motion.Points.Add(next);
                         cursor += duration;
                     }

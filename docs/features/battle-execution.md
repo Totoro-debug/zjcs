@@ -396,7 +396,11 @@ Unity 2022.3.57f1c2 许可证已恢复，内置屏启动的主工程已完成运
 
 NPC 外观复用验证：`OfficialMap12NpcBattleModelView` 是现有 Map12 队伍战斗的原生模型适配器。隔离 Unity 2022.3.57f1c2 内置屏 Play Mode 使用当前编译程序集和同版原 NPC 数据，调用其构造、`Play("idle_01")`、`Tick` 并实际渲染8402／8440／8441／8442，分别得到469／483／606／444个网格顶点；四者均绑定 `Texture2D.whiteTexture`，四张运行画面均为白色多边形，原贴图检查4／4失败。因此它尚不能作为已验证可用的公共 NPC 显示实现。本次未将其复制为 Map13 跟随者。代码核对另确认 `BuildMaterials` 使用白纹理并按批次序号取材质，`EvaluateNativeAnimation` 只应用局部动画通道，未执行 NPC 的 IK／transform／path／physics 约束。须先恢复原图集页、原材质及批次页／混合模式绑定和完整约束，再验证实际技能动作、位移、受击、结束与存档流程；数据读取、非空网格和待机名称解析不能作为可用证明。用户授权手动实现的 Map13 显示类另行恢复了原图集、材质和部分待机约束，四类彩色动态网格检查已通过；完整物理约束和正式流程未通过前不替换现有战斗适配器，具体范围见[泽之国](../maps/map-13.md)。
 
+角色移动轨迹（局部迁移）：`FightOfficialCombatCatalog.CreateRoleMovement` 从角色各自的 `MoveSkillId`／`BackMoveSkillId` 读取动作、延迟和时长；玩家、NPC及怪物配置分别解析，技能位移也把原 `MoveBehaviourId` 传入可保存的事件。`OfficialBattleGridMotion` 消费选定884_156692的21套原 `MyPlayableTrack → MyCurveTrack`，保留逐关键帧切线、阶跃切线、轨迹时长、定速／定时、距离映射和序列内延迟；公共 `OfficialBattleSceneView` 用它替代已绑定动作的匀速插值，路径结束仍回到准确格点。来源、APK优先／已校验云端缓存读取及显式资源绑定见[移动轨迹来源](../../assets/reference/battle-animation/grid-motion-source-manifest.json)，重建入口为 `prepare_battle_grid_motion.py`。历史规则载荷保持原版本，未改标为884。技能移动、命中位移、行动创建与断点恢复规则回归通过；Unity 全工程编译与 ProjectTools.Validate 通过。D3D11 Play Mode 通过公共 runner 与模拟 HUD 输入完成日常、竞技场、塔三类宿主：分别记录 177、3、33 个已绑定原动作的移动事件，并逐次核对断点往返后的动作标识；日常另记录 13 个原配置无后撤技能的既有离线后撤事件。独立原曲线参考值、等待、暂停、逐格边界与最终格点检查通过，已查看三类宿主的实际准备、战斗与退出画面。该验证不覆盖各功能入口窗口、完整结算界面或 Windows Player，尚不计作完整跳跃还原。
+
 ## 尚未实现
+
+移动动作播放尚未完整迁移：上述21套轨迹覆盖角色配置选择的普通／退回／固定速度移动，不能代替原 `MyFightSkill` 的 `run`／`houtui` 触发、各怪物移动动画、骨骼跟随、音频／碰撞表现、逐格朝向恢复与其他技能专属位移轨迹。当前通用动画队列仍存在统一跑步回退；部分怪物的原 `BackMoveSkillId=0`，既有离线后撤以 `IsRetreat` 标识并保留动作编号0，不擅自指定玩家后撤或其他原动作，也不计作原移动轨迹还原。完整跳跃动作与正式Windows Player验证、发布尚未完成。
 
 HP 启动的动画绑定仍有缺项：实际公共宿主中的13500能在零时刻进入动画队列并绑定原200/skill_41，但该路径当前选中的是只有占位曲线的clip，尚不能驱动完整骨骼动作。Animator时间推进或Override绑定成功不计作人物动作还原。自动开战宿主可能在准备截图前已经施法，待机网格检查现仅在Preparing阶段执行；不能用该待机检查代替施法动作验证。
 
