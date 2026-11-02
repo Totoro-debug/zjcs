@@ -348,15 +348,23 @@ Home 赠礼溢出回调现打开原窗口，保留原标题、说明、按钮、
 
 `prepare_partner_conversation_conditions.py` 从同版共享实现提取复合与／或、逻辑取反、伙伴好感、已结束通话、剧情次数、地图进度和区域女神条件，复用已迁移的无条件、等级及区域激活条件。当前全部通话节点引用 208 个条件 ID，闭包共 11 类。保留原短路顺序、好感反向分支、结束通话计数、比较运算，以及地图进度转百分数的浮点计算和整数截断；缺少引用、循环或未支持类型直接报错。原方法、模板、运行输出及验证源码哈希见[通话条件来源](../../assets/reference/partner-conversation-conditions-source-manifest.json)。
 
-纯 C# 验证执行实际配置中的 6,912 处节点／连锁条件，覆盖 8402 好感 20／40 门槛、前段完成要求、地图进度 9,999／10,000、逻辑取反、女神激活和复合条件短路，全部通过。隔离 Unity 实际依赖程序集编译及完整通话表 Resources 加载 Play Mode 通过。地图原始进度公式和女神身份／激活仍由显式玩家端口承接；好感、剧情及结束通话的实际存档读取见下节。当前主工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过，本节不声明完整通话功能完成。
+纯 C# 验证执行实际配置中的 6,912 处节点／连锁条件，覆盖 8402 好感 20／40 门槛、前段完成要求、地图进度 9,999／10,000、逻辑取反、女神激活和复合条件短路，全部通过。隔离 Unity 实际依赖程序集编译及完整通话表 Resources 加载 Play Mode 通过。实际玩家与地图存档读取见下两节，本节不声明完整通话功能完成。
 
 ### 当前通话存档与玩家读取（局部）
 
 `OfflineNpcConversationProgress` 随角色属性落盘，保留原 `PlayerNpcDialogueData` 的玩家／NPC／通话身份、通话类、当前节点、完整历史、状态和更新时间，另存 NPC 类 ID 的本地映射。时间使用 ticks 与 Kind 字段承接 `JsonUtility`，历史复制隔离且保留原重复节点。旧档没有此字段时仅初始化为空，不编造历史通话；身份无效、重复通话 ID、状态或时间越界、历史末节点不一致会拒绝整笔保存。该适配不生成通话、不决定每日触发，也不发放奖励。
 
-`OfflinePartnerConversationPlayer` 每次读取当前已提交角色，接通实际好感、基础等级、库存、地图可进入性、区域激活、剧情次数与结束通话，避免 `Reload` 替换玩家对象后仍使用旧集合。原地图进度计算与女神身份／激活保留必需的世界服务，更新通知保留必需的事务端口。原字段、规则依赖、适配及验证源码哈希见[通话本地来源](../../assets/reference/partner-conversation-local-source-manifest.json)。
+`OfflinePartnerConversationPlayer` 每次读取当前已提交角色，接通实际好感、基础等级、库存、地图可进入性、区域激活、剧情次数与结束通话，避免 `Reload` 替换玩家对象后仍使用旧集合。世界服务绑定见下节，更新通知保留必需的事务端口。原字段、规则依赖、适配及验证源码哈希见[通话本地来源](../../assets/reference/partner-conversation-local-source-manifest.json)。
 
 `prepare_partner_conversation_save_validation.py` 在隔离 Unity Play Mode 读取实际 Resources 通话表与真实角色存档，验证好感门槛读取、2021 完整节点推进、结束历史落盘后解锁 2022 连锁条件、原身份／时间恢复、剧情读取、重复历史与旧档兼容。重复 ID 导致整笔角色／库存变更回滚；实际临时写入路径被占用时，文件、内存和事务凭据均保留，释放后使用同一凭据重试成功。现有赠礼／结识／置顶的原条件、事务、落盘及旧档回归通过。主工程新增代码导入／编译、`Zjcs.Editor.ProjectTools.Validate` 及全工程静态检查（85,063 个 GUID）通过。这些是状态与存档验证，正式触发、奖励事务、原播放窗口、模拟界面输入及 Windows Player 仍未完成。
+
+### 当前通话地图条件与实际存档（局部）
+
+`prepare_partner_conversation_world.py` 从当前官方 MapInfoWrap 与实体扩展配置解码通话实际使用的 11／12／13／14／17／19／21／23 八张地图、831 个区域最大进度，按原 `MapRegionEntityInfoManager` 的实体扩展类型和位置区域恢复两处女神查询。Map11／56 原静态女神身份为 0，Map17／0 为 110；前者即使存在区域激活记录，也保持原女神条件不满足。提取时验证被查询区域中的女神唯一性，避免将不明确的区域记录当作指定实体已经激活。
+
+`OfficialPartnerConversationWorldAssetCatalog` 在 Resources 显式绑定这些本地配置；`OfflinePartnerConversationWorld` 读取当前角色的实际区域进度和激活记录。主线 `RefreshRegionProgress` 已经把原计算器的万分比结果写入 `OfflineRegionProgress.Progress`，此处直接消费该结果，不再次除以区域最大值；原通话条件继续完成百分数转换与截断。当前通话闭包没有整图进度查询，负区域输入明确拒绝。实际包／对象、MessagePack 字段格式、完整消费的实体扩展构造器、生产存档单位、输出与验证源码哈希见[通话地图来源](../../assets/reference/partner-conversation-world-source-manifest.json)。本批未纳入素材快照。
+
+隔离 Unity Play Mode 使用实际 Resources 目录、原通话条件和真实档案适配器执行全部 6,912 处条件，验证未探索状态、9,999／10,000 进度边界、原复合好感条件、ID 0 拒绝区域激活替代、实体 110 激活及读档恢复，全部通过。全工程静态检查通过（85,068 个 GUID），本批主工程 `Zjcs.Editor.ProjectTools.Validate` 未执行成功，Unity 报告工程正由另一实例打开；隔离程序集编译通过。正式 Home 通话触发、奖励事务和原播放窗口仍未接入，本节不表示界面交互或 Windows Player 已完成。
 
 ### 当前原生详情属性区与天赋合并（局部）
 

@@ -321,3 +321,5 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 `prepare_partner_conversation_conditions.py` 从同版共享条件类与 `Formula` 提取实际通话条件闭包，记录原文件／方法、生成模板、复用规则、玩家端口适配及输出 SHA256，见 `partner-conversation-conditions-source-manifest.json`。无新增美术资源；未生成完整素材快照。
 
 `partner-conversation-local-source-manifest.json` 记录当前 `PlayerNpcDialogueData`／包装器身份、本地 JsonUtility 字段适配、已迁移规则依赖、实际存档读取与验证源码哈希；生成入口为 `record_partner_conversation_local_sources.py`。无新增美术资源，未生成完整素材快照。
+
+`prepare_partner_conversation_world.py` 从选定 `884_156692` 的 MapInfoWrap 和实体扩展原载荷提取通话地图事实，并记录实际包／对象、字段格式源码、构造器、已确认的生产存档单位及全部本地安装绑定哈希，见 `partner-conversation-world-source-manifest.json`。未生成完整素材快照。
