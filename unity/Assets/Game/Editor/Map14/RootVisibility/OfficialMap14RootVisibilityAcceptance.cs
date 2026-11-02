@@ -155,7 +155,7 @@ namespace Zjcs.Editor.Map14
             }
             yield return (IEnumerator)typeof(OfficialMap14RootFogAcceptance).GetMethod("Steps",BindingFlags.NonPublic|BindingFlags.Static).Invoke(null,null);
         }
-        private static Pos2d Origin(MyGridVisibilityAgent a)=>(Pos2d)a.GetType().GetMethod("GetUnlockCellSrcPos",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(a,null);
+        private static Pos2d Origin(Zjcs.Official.MapRootVisibility.MyGridVisibilityAgent a)=>(Pos2d)a.GetType().GetMethod("GetUnlockCellSrcPos",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(a,null);
         private static void Unlock(NativeMap14SharedAssemblies s,object native,Pos2d p,bool animated){var pos=Activator.CreateInstance(s.CommonType("Pos2d"),p.X,p.Y);Require((bool)native.GetType().GetMethod("UnlockOneCell").Invoke(native,new object[]{pos,animated}),"original cell was already unlocked");}
         private static object Component(NativeMap14SharedAssemblies s,object owner,string name)=>owner.GetType().GetMethod("GetComponent",new[]{typeof(Type)}).Invoke(owner,new object[]{s.CommonType(name)});
         private static object Field(object owner,string name)=>owner.GetType().GetField(name,BindingFlags.NonPublic|BindingFlags.Instance).GetValue(owner);

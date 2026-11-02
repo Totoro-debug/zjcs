@@ -4,6 +4,8 @@
 
 状态：未完成。当前官方配置、原生地形与环境、全部 486 个环境／地区标签 prefab、两类蝴蝶动画、机关规则及主线剧情数据载荷已恢复并分项验证；原生地形／环境／区域标签视图与 2,961 个放置实体已接入主线地图宿主。正式工程 `ProjectTools.Validate`、静态 GUID 检查和图形 Play Mode 已通过：新地图存档按原 `DefEntryId=101` 定位到 `(247,115)`，原生分区就绪，416 个官方实体 prefab 根及 2,961 个放置均加载，实际截图已查看。独立地图 Map15 的离线状态已按官方 `PlayerWorldAloneAppearNode` 与 `PlayerMapWorldAlonePrepareDataRankLockTime` 接入：剧情节点原子记录 `Preparing` 和出现时间，刷新按 `max(出现时间 + MinDurationS, 金阶解锁时间 + DayOffset)` 推进到 `PrepareEnd`，重复事件幂等并写入存档。隔离 Windows Player BootSplash 启动已通过且未创建角色存档；Map14 正常玩家入口、完整剧情／玩法／HUD、完整存档恢复与地图专属 Windows Player 发布尚未完成。
 
+验证入口编译兼容：根可见性夹具的 `Origin` 参数显式限定原 `MapRootVisibility.MyGridVisibilityAgent`，避免新增同名地图雾类型导致歧义；不改变被测实现或执行逻辑。本项随公共人物Animator验证执行工程编译检查，未据此新增Map14玩法完成结论。
+
 ## 地图简介
 
 14 龙之国，范围按下列原配置与本地决策维护。

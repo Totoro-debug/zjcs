@@ -23,7 +23,9 @@ namespace Zjcs.Editor.Combat
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 600);
         }
 
-        private static IEnumerator ScenePlayerAppearanceSteps()
+        private static IEnumerator ScenePlayerAppearanceSteps(
+            Func<GameObject, OfflineProfessionAppearanceBindings, ScenePlayer> createPlayer = null,
+            Action<ScenePlayer> afterInit = null, string labelSuffix = "")
         {
             var catalog = Resources.Load<ProfessionNativeSceneAppearanceResources>("Combat/SceneCharacters/appearance-resources");
             var weapons = Resources.Load<ProfessionNativeSceneWeaponCatalog>("ProfessionUI/scene-weapon-sources");
@@ -71,12 +73,12 @@ namespace Zjcs.Editor.Combat
                     using var pool = new CharacterPartEntryProvider(poolResources);
                     parts.ConfigureRenderer(native, slot, pool, SortingLayer.IDToName(1182434123), 0);
                     var appearance = root.AddComponent<ProfessionNativeSceneAppearance>();
-                    string action = graph.GetProfessionIdStr(profession) + "/idle_01";
                     appearance.Configure(bindings, parts, state => ProfessionNativeConstraintPose.EvaluateBeforePhysics(
-                        state, new ProfessionNativeAnimationChannels(state.Source, action), .4f, false));
+                        state, new ProfessionNativeAnimationChannels(state.Source, graph.GetProfessionIdStr(graph.Profession) + "/idle_01"), .4f, false));
                     var character = root.AddComponent<SceneCharacter>(); character.Configure(bindings, parts);
                     var observer = root.AddComponent<ScenePlayerAppearanceObserver>(); observer.Character = character;
-                    var player = root.AddComponent<ScenePlayer>(); player.ConfigurePlayerAppearance(graph);
+                    var player = createPlayer == null ? root.AddComponent<ScenePlayer>() : createPlayer(root, graph);
+                    player.ConfigurePlayerAppearance(graph);
                     player.AppendSkinType = AppendSkinType.Game; player.ConfigureAppearance(character, observer, null);
                     int events = 0, completions = 0, independentRefreshes = 0;
                     player.OnAppearanceRefreshed += () =>
@@ -90,6 +92,7 @@ namespace Zjcs.Editor.Combat
                         player.Init(17, onComplete: () => completions++);
                         Require(player.Inited && player.IsSelf && events == 1 && completions == 1,
                             "original self registration, refresh, event and initialization callback");
+                        afterInit?.Invoke(player);
                         Require(saved == JsonUtility.ToJson(profile), "default restoration and player refresh preserve persisted local wardrobe bytes");
                         Require(appearance.Skins.Contains("performFace") && !appearance.Skins.Contains("map_01")
                             && player.AppearanceRuntimeData.SkinMap[SkinType.pWeapon] == (profession == 1 ? "pWeapon_100_G_007" : "pWeapon_200_G_007"),
@@ -101,7 +104,7 @@ namespace Zjcs.Editor.Combat
                             native.LateUpdateMesh(); weaponGo.GetComponent<SkeletonRendererFollower>().ForceUpdate(); weapon.UpdateAnimationAndMesh();
                         };
                         draw();
-                        string label = "player-" + sex + "-" + profession;
+                        string label = "player-" + sex + "-" + profession + labelSuffix;
                         CaptureSceneRendererCamera(SceneCharacterBounds(native, weapon), label + "-visibility"); draw();
                         var bounds = SceneCharacterBounds(native, weapon);
                         var baseline = CaptureSceneRendererCamera(bounds, label + "-default");
@@ -153,6 +156,21 @@ namespace Zjcs.Editor.Combat
                         graph.Refresh(AppearanceOperateSource.Normal); draw();
                         Require(baseline.SequenceEqual(CaptureSceneRendererCamera(bounds, label + "-dye-restored")),
                             "restoring the saved HSV restores exact default portrait pixels");
+                        profile = ScenePlayerProfile(resolver, config, sex, profession == 1 ? 10 : 1);
+                        graph.Refresh(AppearanceOperateSource.Normal);
+                        weaponGo = parts.LoadedSkeletonDict[SkinType.pWeapon].Part.GameObject;
+                        weapon = weaponGo.GetComponentInChildren<ProfessionNativeSceneWeaponRenderer>(true); draw();
+                        CaptureSceneRendererCamera(SceneCharacterBounds(native, weapon), label + "-profession-visibility"); draw();
+                        CaptureSceneRendererCamera(SceneCharacterBounds(native, weapon), label + "-profession-changed");
+                        Require(player.AppearanceRuntimeData.SkinMap[SkinType.pWeapon] == (profession == 1 ? "pWeapon_200_G_007" : "pWeapon_100_G_007"),
+                            "local profession change selects the other original default weapon");
+                        profile = JsonUtility.FromJson<OfflinePlayerProgress>(saved);
+                        graph.Refresh(AppearanceOperateSource.Normal);
+                        weaponGo = parts.LoadedSkeletonDict[SkinType.pWeapon].Part.GameObject;
+                        weapon = weaponGo.GetComponentInChildren<ProfessionNativeSceneWeaponRenderer>(true); draw();
+                        CaptureSceneRendererCamera(SceneCharacterBounds(native, weapon), label + "-profession-restored-visibility"); draw();
+                        Require(baseline.SequenceEqual(CaptureSceneRendererCamera(bounds, label + "-profession-restored")),
+                            "restoring profession restores the original weapon and exact portrait pixels");
                         int beforeClear = events;
                         player.Clear();
                         Require(!player.Inited && !player.IsSelf && player.AppearanceRuntimeData == null && !appearance.Skins.Any()
