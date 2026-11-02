@@ -1,0 +1,167 @@
+{
+  "manifest": "884_156692",
+  "application": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightActionSkillMove.cs",
+      "sha256": "87b1e139b0c6fde0e55fc3e35dcef835d60e2339d8276a7d74de8686899b7069"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyGridTransform.cs",
+      "sha256": "6568a690831e9fc20eb95fcd659f4f8cca5b780d7b735b579406f1a9af8de0bd"
+    }
+  ],
+  "shared": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightActionSkillMoveComponent.cs",
+      "sha256": "a9abaf1448ee70438a1a6886fc68122f6120c0404c76e7e4f1e726d1c6ef115e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleFormulaHandler.cs",
+      "sha256": "ce40db54d87030ded0a9f8a6dc95db5a3a4e46ae02bf76a9d273fe092a703d12"
+    }
+  ],
+  "rule_input": {
+    "path": "unity/Assets/Official/Combat/battle-rules.json",
+    "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+  },
+  "rule_version": "854_156383",
+  "actions": [
+    {
+      "id": 15301,
+      "UpdateFlipX": true,
+      "ReverseFlipX": false
+    },
+    {
+      "id": 15311,
+      "UpdateFlipX": false,
+      "ReverseFlipX": false
+    },
+    {
+      "id": 15321,
+      "UpdateFlipX": true,
+      "ReverseFlipX": false
+    },
+    {
+      "id": 15331,
+      "UpdateFlipX": false,
+      "ReverseFlipX": false
+    },
+    {
+      "id": 15341,
+      "UpdateFlipX": true,
+      "ReverseFlipX": false
+    },
+    {
+      "id": 19801,
+      "UpdateFlipX": true,
+      "ReverseFlipX": false
+    },
+    {
+      "id": 19811,
+      "UpdateFlipX": true,
+      "ReverseFlipX": false
+    },
+    {
+      "id": 19821,
+      "UpdateFlipX": true,
+      "ReverseFlipX": false
+    },
+    {
+      "id": 19831,
+      "UpdateFlipX": true,
+      "ReverseFlipX": false
+    },
+    {
+      "id": 19841,
+      "UpdateFlipX": true,
+      "ReverseFlipX": false
+    },
+    {
+      "id": 19851,
+      "UpdateFlipX": true,
+      "ReverseFlipX": false
+    },
+    {
+      "id": 19871,
+      "UpdateFlipX": true,
+      "ReverseFlipX": false
+    },
+    {
+      "id": 19891,
+      "UpdateFlipX": true,
+      "ReverseFlipX": false
+    },
+    {
+      "id": 19911,
+      "UpdateFlipX": true,
+      "ReverseFlipX": false
+    },
+    {
+      "id": 19921,
+      "UpdateFlipX": true,
+      "ReverseFlipX": false
+    },
+    {
+      "id": 19931,
+      "UpdateFlipX": true,
+      "ReverseFlipX": false
+    },
+    {
+      "id": 19951,
+      "UpdateFlipX": true,
+      "ReverseFlipX": false
+    },
+    {
+      "id": 19961,
+      "UpdateFlipX": true,
+      "ReverseFlipX": false
+    },
+    {
+      "id": 19971,
+      "UpdateFlipX": true,
+      "ReverseFlipX": false
+    },
+    {
+      "id": 19981,
+      "UpdateFlipX": true,
+      "ReverseFlipX": false
+    },
+    {
+      "id": 19991,
+      "UpdateFlipX": true,
+      "ReverseFlipX": false
+    },
+    {
+      "id": 61771,
+      "UpdateFlipX": true,
+      "ReverseFlipX": true
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.Movement.cs",
+      "sha256": "4b47641c138e5b9438395e087e8cf7c2dcd1c1cd1369ab2ea0bcb965b21dbfc9"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.GridMotion.cs",
+      "sha256": "d5571e4cbaa425d2bced7f2334e02d5694520136a89b3c52b5a215d202f28cd3"
+    }
+  ],
+  "integrations": [
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs",
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs"
+  ],
+  "generator": {
+    "path": "scripts/record_battle_movement_facing.py",
+    "sha256": "65d67fdb023ded1d53b8b674cc03c99b29990eca23647818ffc5c8cfcbf1d5ba"
+  },
+  "binding": "StartImpl commits the final FlipX before action-start listeners. CalcFlipX uses grid X, preserving the previous value on vertical moves. ReverseFlipX reverses the last segment. The client temporarily faces intermediate cells toward travel, and restores authoritative FlipX before the final cell. Visual sign changes preserve the existing transform magnitudes.",
+  "limits": [
+    "Historical rule values keep their original 854_156383 version; current application/shared code is 884_156692.",
+    "Legacy checkpoints without explicit FlipX retain the existing Direction-based initial facing until a configured action commits it.",
+    "Unconfigured offline retreats do not invent original facing flags.",
+    "This migration does not complete native body physics, other animations or blocked effects."
+  ]
+}

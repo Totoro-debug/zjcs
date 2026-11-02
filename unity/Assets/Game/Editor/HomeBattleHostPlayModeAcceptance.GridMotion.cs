@@ -13,6 +13,7 @@ namespace Zjcs.Editor
         {
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_GRID_MOTION_ACCEPTANCE") != "1") return null;
             VerifyOriginalGridTracks();
+            VerifyMovementFacing();
             return new GridMotionProbe(controller);
         }
 
@@ -92,6 +93,62 @@ namespace Zjcs.Editor
             }
         }
 
+        private static void VerifyMovementFacing()
+        {
+            var rules = OfficialCombatAssetCatalog.LoadDefault().Load();
+            var player = new FightBattleUnitState { Id = 1, CharacterType = 1, Hp = 100, MaxHp = 100 };
+            var root = new GameObject("MovementFacingFixture");
+            var model = new GameObject("MovementFacingAttachedModel");
+            OfficialBattleSceneView scene = null;
+            try
+            {
+                var grid = new FightBattleGrid { Width = 4, Height = 4 };
+                var mapper = new OfficialBattleGridMapper(root.transform, grid);
+                scene = new OfficialBattleSceneView(OfficialBattleModelCatalog.LoadDefault(), root.transform,
+                    _ => null, mapper, (_, __) => null, (target, unit) =>
+                    {
+                        Vector3 scale = target.localScale;
+                        scale.x = Mathf.Abs(scale.x) * ((unit.HasFlipX ? unit.FlipX : unit.Direction == 1) ? -1 : 1);
+                        target.localScale = scale;
+                    });
+                var checkpoint = new FightBattleCheckpoint { Grid = grid };
+                checkpoint.Units.Add(player); scene.Refresh(checkpoint); scene.AttachUnitTransform(1, model.transform);
+                Transform flipTarget = model.transform.parent;
+                Vector3 scaleBefore = flipTarget.localScale;
+                var back = rules.CreateRoleMovement(player, true);
+                back.Path.AddRange(new[] { new FightGridPoint(2, 0), new FightGridPoint(1, 0), new FightGridPoint(0, 0) });
+                rules.ApplyMovementFacing(player, back);
+                Require(back.HasFacing && !back.EndFlipX && player.HasFlipX && !player.FlipX,
+                    "Original retreat UpdateFlipX=false must retain authoritative facing.");
+                var step = new FightBattleStepEvent { ActorId = 1 }; step.Movements.Add(back);
+                scene.Refresh(checkpoint, step); scene.Tick(.01f);
+                Require(flipTarget.localScale.x < 0, "Intermediate retreat cell did not face its original grid direction.");
+                scene.Tick(back.MoveDuration);
+                Require(flipTarget.localScale.x > 0, "Final retreat cell did not restore authoritative facing before motion ended.");
+                scene.Tick(1f); scene.Refresh(checkpoint);
+                Require(flipTarget.localScale == scaleBefore, "Finishing/refeshing movement changed the restored visual transform.");
+                var forward = rules.CreateRoleMovement(player, false);
+                forward.Path.AddRange(new[] { new FightGridPoint(2, 1), new FightGridPoint(1, 1) });
+                rules.ApplyMovementFacing(player, forward);
+                Require(forward.EndFlipX && player.FlipX, "Forward action did not commit the last grid segment facing.");
+                var vertical = rules.CreateRoleMovement(player, false);
+                vertical.Path.AddRange(new[] { new FightGridPoint(1, 1), new FightGridPoint(1, 2) });
+                rules.ApplyMovementFacing(player, vertical);
+                Require(vertical.EndFlipX && player.FlipX, "Vertical movement lost its previous authoritative facing.");
+                var reverse = new FightBattleMovementEvent { UnitId = 1, MoveBehaviourId = 61771 };
+                reverse.Path.AddRange(forward.Path); rules.ApplyMovementFacing(player, reverse);
+                Require(!reverse.EndFlipX && !player.FlipX, "Original reverse-facing action ignored ReverseFlipX.");
+                player.HasFlipX = false; player.Direction = 1;
+                rules.ApplyMovementFacing(player, vertical);
+                Require(player.FlipX, "Older checkpoints lost their pre-existing direction fallback.");
+                var unknown = new FightBattleMovementEvent { UnitId = 1 };
+                unknown.Path.AddRange(forward.Path); rules.ApplyMovementFacing(player, unknown);
+                Require(!unknown.HasFacing && player.FlipX, "Unconfigured action invented an original facing change.");
+                Debug.Log("[Movement facing] original forward/retreat/vertical, final-cell restore and legacy checkpoint fallback passed.");
+            }
+            finally { scene?.Dispose(); UnityEngine.Object.Destroy(root); UnityEngine.Object.Destroy(model); }
+        }
+
         private sealed class GridMotionProbe
         {
             private readonly OfficialBattleRuntimeController controller;
@@ -116,6 +173,7 @@ namespace Zjcs.Editor
                         unconfiguredRetreats++;
                         continue;
                     }
+                    Require(movement.HasFacing, "Actual movement missed authoritative facing before action-start dispatch.");
                     actions.Add(movement.MoveBehaviourId);
                     movements++;
                 }
@@ -124,6 +182,11 @@ namespace Zjcs.Editor
                     var restored = FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(controller.Checkpoint));
                     Require(restored.Receipts.Last().Event.Movements[0].MoveBehaviourId == step.Movements[0].MoveBehaviourId,
                         "A real host checkpoint lost its movement identity.");
+                    var originalFacing = controller.Checkpoint.Units.Select(unit => unit.HasFlipX + ":" + unit.FlipX);
+                    Require(originalFacing.SequenceEqual(restored.Units.Select(unit => unit.HasFlipX + ":" + unit.FlipX))
+                        && restored.Receipts.Last().Event.Movements[0].HasFacing == step.Movements[0].HasFacing
+                        && restored.Receipts.Last().Event.Movements[0].EndFlipX == step.Movements[0].EndFlipX,
+                        "Actual checkpoint roundtrip lost unit or per-action facing.");
                 }
             }
             public void Verify(string host)

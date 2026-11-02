@@ -361,3 +361,4 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 战斗移动 Animator 来源见 [move-animators-source-manifest.json](battle-animation/move-animators-source-manifest.json)：选定884_156692的原 `MyFightSkill`／`MyFightActionSkillMove` prefab、默认 `MyPlayableSequence` 与 `MyPlayableAnimator` 节点，保留APK优先与校验云端来源、对象字段、输出哈希和未消费的非 Animator 节点；由 `scripts/prepare_battle_move_animators.py` 提取为 `Combat/move-animators`，历史技能／规则载荷保持各自原版本。
 
 伙伴本地身份存档适配的输入及输出哈希随 [通话事务来源](partner-conversation-transactions-source-manifest.json) 登记；复用所选 884_156692 的原节点／好感等级方法与现有配置，新增适配代码、迁移验证源码及记录工具分别记录 SHA256。本批无新增美术载荷或素材快照。
+战斗移动朝向的原客户端／共享实现、保留854版本的规则字段、22份动作配置和输出哈希见 [移动朝向来源](battle-animation/movement-facing-source-manifest.json)；记录脚本为 `scripts/record_battle_movement_facing.py`，只读取原游戏应用／共享代码与既有已校验规则，不读取动画SDK实现。

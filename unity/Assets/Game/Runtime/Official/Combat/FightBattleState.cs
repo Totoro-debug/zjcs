@@ -48,6 +48,9 @@ namespace Zjcs.Combat.Official
         public int X;
         public int Y;
         public int Direction;
+        // Explicit validity retains the existing initial facing for older checkpoints.
+        public bool HasFlipX;
+        public bool FlipX;
         public long Hp;
         public long MaxHp;
         public long LastMaxHp;
@@ -1133,6 +1136,8 @@ namespace Zjcs.Combat.Official
         public int MoveBehaviourId;
         public int MoveSkillEntityId;
         public bool IsRetreat;
+        public bool HasFacing;
+        public bool EndFlipX;
         public float Delay;
         public float MoveDuration = -1f;
         public float MoveSpeed = -1f;

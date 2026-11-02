@@ -1984,8 +1984,10 @@ namespace Zjcs.Combat.Official
         private void NotifyMovementStart(FightBattleMovementEvent movement, int actionType,
             List<FightBattleMovementEvent> movements, FightBattleSkillDefinition sourceSkill = null)
         {
-            if (statusCatalog == null || movementStartContext == null || movement == null
+            if (statusCatalog == null || movement == null
                 || !unitById.TryGetValue(movement.UnitId, out FightBattleUnitState mover)) return;
+            statusCatalog.ApplyMovementFacing(mover, movement);
+            if (movementStartContext == null) return;
             // ActionAgentComponentImplement.StartAction fires StartEvent after AddEntity;
             // FightActionSkillMoveComponent.StartImpl has already committed the path at that point.
             List<FightBattleStatusSkillInvocation> invocations =

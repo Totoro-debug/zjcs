@@ -71,6 +71,7 @@ namespace Zjcs.Presentation.Combat
             public List<float> SegmentStarts;
             public List<float> SegmentDurations;
             public List<int> SegmentActions;
+            public List<int> SegmentFacing;
             public bool SourceFlipped;
             public float Elapsed;
         }
@@ -661,6 +662,15 @@ namespace Zjcs.Presentation.Combat
                             complete = false;
                             break;
                         }
+                        int facing = motion.SegmentFacing[index];
+                        if (facing >= 0)
+                        {
+                            Transform flipTarget = attachedModels.TryGetValue(unitId, out var attachedModel)
+                                ? attachedModel.Model : body;
+                            Vector3 scale = flipTarget.localScale;
+                            scale.x = Mathf.Abs(scale.x) * (facing == 1 ? -1f : 1f);
+                            flipTarget.localScale = scale;
+                        }
                         float segmentDuration = motion.SegmentDurations[index];
                         float progress = segmentDuration <= 0f ? 1f
                             : Mathf.Clamp01((motion.Elapsed - segmentStart) / segmentDuration);
@@ -784,6 +794,7 @@ namespace Zjcs.Presentation.Combat
                 SegmentStarts = new List<float>(),
                 SegmentDurations = new List<float>(),
                 SegmentActions = new List<int>(),
+                SegmentFacing = new List<int>(),
                 SourceFlipped = body.localScale.x < 0f
             };
             float cursor = 0f;
@@ -801,6 +812,7 @@ namespace Zjcs.Presentation.Combat
                         motion.SegmentStarts.Add(cursor);
                         motion.SegmentDurations.Add(0f);
                         motion.SegmentActions.Add(0);
+                        motion.SegmentFacing.Add(-1);
                     }
                     for (int index = 1; index < movement.Path.Count; index++)
                     {
@@ -813,6 +825,15 @@ namespace Zjcs.Presentation.Combat
                         motion.SegmentStarts.Add(cursor);
                         motion.SegmentDurations.Add(duration);
                         motion.SegmentActions.Add(movement.MoveBehaviourId);
+                        // MyFightActionSkillMove turns intermediate cells toward travel, but
+                        // restores authoritative FlipX before playing the final cell.
+                        bool flip = movement.EndFlipX;
+                        if (index < movement.Path.Count - 1)
+                        {
+                            int deltaX = movement.Path[index].X.CompareTo(movement.Path[index - 1].X);
+                            if (deltaX != 0) flip = deltaX < 0;
+                        }
+                        motion.SegmentFacing.Add(movement.HasFacing ? (flip ? 1 : 0) : -1);
                         motion.Points.Add(next);
                         cursor += duration;
                     }

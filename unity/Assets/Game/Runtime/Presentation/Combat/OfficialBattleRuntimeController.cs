@@ -266,7 +266,8 @@ namespace Zjcs.Presentation.Combat
         private static void OrientUnit(Transform root, FightBattleUnitState unit)
         {
             Vector3 scale = root.localScale;
-            scale.x = Mathf.Abs(scale.x) * (unit.Direction == 1 ? -1f : 1f);
+            bool flip = unit.HasFlipX ? unit.FlipX : unit.Direction == 1;
+            scale.x = Mathf.Abs(scale.x) * (flip ? -1f : 1f);
             root.localScale = scale;
         }
 

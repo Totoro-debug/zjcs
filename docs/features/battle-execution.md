@@ -400,9 +400,11 @@ NPC 外观复用验证：`OfficialMap12NpcBattleModelView` 是现有 Map12 队�
 
 移动 Animator 分层播放（局部迁移）：`prepare_battle_move_animators.py` 从选定884_156692的原技能与移动动作 prefab 分别提取21条技能记录（10个 Animator 节点）和21条动作记录（11个 Animator 节点），未配置动画的记录保留为空。`OfficialBattleMovementAnimationCatalog` 保留技能开始时的一次触发以及逐格动作的独立时序，按实际世界路径距离计算定速动作的生命周期；`OfficialBattleSceneView` 仅对具备全部原参数的已附加 Animator 用这些原节点替代通用跑步回退。每格动作到期或取消时经已迁移的 `MyPlayableAnimator.Stop` 恢复原参数，技能自身的无限时长不擅自改成有限时长。原动画规则回归、静态检查（87,407个GUID）、Unity全工程导入／编译与 `ProjectTools.Validate` 通过。D3D11 Play Mode 使用原Game控制器验证原布尔参数施加、暂停、逐格到期、下一格重启和取消后的参数恢复，并独立核对前进／后撤原触发器、技能只触发一次、逐格世界距离时长以及连续路径顺序。通过公共runner和模拟HUD输入完成日常、竞技场、塔三类宿主，分别观察到6、3、26个实际排入队列的原 `run`／`houtui` 触发器；已查看准备、战斗与退出画面。这证明动作配置与Animator接线，不代表相应状态已具备可见的原身体动画，也不覆盖功能入口窗口、完整结算界面或Windows Player。来源、原节点字段、明确未接入的骨骼／音频节点和显式加载路径见[移动 Animator 来源](../../assets/reference/battle-animation/move-animators-source-manifest.json)。
 
+公共移动朝向：按当前原 `FightActionSkillMoveComponent.StartImpl/UpdateFlipX`、`BattleFormulaHandler.CalcFlipX` 和 `MyFightActionSkillMove.DoMoveSourceTurn` 接通配置中的 `UpdateFlipX/ReverseFlipX`，在行动启动监听前提交最终朝向；逐格播放时中间格按网格X方向临时转向，进入最后一格前恢复该动作的最终朝向。竖直移动保留既有朝向，后撤遵从原 `UpdateFlipX=false`，原61771遵从反向标记；未配置的离线后撤不补造标记。单位朝向与每条动作的最终朝向均随公共战斗checkpoint序列化，旧存档缺字段时保留既有Direction初始化。原逻辑、保留854规则版本的配置与迁移入口见 [移动朝向来源](../../assets/reference/battle-animation/movement-facing-source-manifest.json)。Unity导入／编译、`ProjectTools.Validate`、静态检查（87,408 GUID）及动作启动规则测试通过；内置屏Direct3D 11 Play Mode核对前进、后撤、竖移、反向与最终格恢复，并通过日常177／竞技场3／塔33条真实配置移动及checkpoint往返检查，三宿主模拟HUD操作和结算回调通过，已查看11张实际运行画面，编辑器正常退出。该验证从公共Runner进入，完整入口窗口、身体物理、骨骼跟随、音频和Windows Player发布仍未完成。
+
 ## 尚未实现
 
-移动动作播放尚未完整迁移：上述21套轨迹和分层 Animator 接线仍不能代替各怪物原控制器与渲染适配、原可见身体动画、骨骼跟随、音频／碰撞表现、逐格朝向恢复与其他技能专属位移轨迹。没有 Animator 或不具备原参数的模型仍保留通用跑步回退，不计作原移动动作还原；部分怪物的原 `BackMoveSkillId=0`，既有离线后撤以 `IsRetreat` 标识并保留动作编号0，不擅自指定玩家后撤或其他原动作，也不计作原移动轨迹还原。完整跳跃动作与正式Windows Player验证、发布尚未完成。
+移动动作播放尚未完整迁移：上述21套轨迹和分层 Animator 接线仍不能代替各怪物原控制器与渲染适配、原可见身体动画、骨骼跟随、音频／碰撞表现与其他技能专属位移轨迹。没有 Animator 或不具备原参数的模型仍保留通用跑步回退，不计作原移动动作还原；部分怪物的原 `BackMoveSkillId=0`，既有离线后撤以 `IsRetreat` 标识并保留动作编号0，不擅自指定玩家后撤或其他原动作，也不计作原移动轨迹还原。完整跳跃动作与正式Windows Player验证、发布尚未完成。
 
 HP 启动的动画绑定仍有缺项：实际公共宿主中的13500能在零时刻进入动画队列并绑定原200/skill_41，但该路径当前选中的是只有占位曲线的clip，尚不能驱动完整骨骼动作。Animator时间推进或Override绑定成功不计作人物动作还原。自动开战宿主可能在准备截图前已经施法，待机网格检查现仅在Preparing阶段执行；不能用该待机检查代替施法动作验证。
 
