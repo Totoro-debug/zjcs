@@ -1,0 +1,230 @@
+{
+  "manifest": "884_156692",
+  "code_receipt": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+  },
+  "asset_table_sha256": "89288d53cf6b2948673be7e844e86a6a6800df94b7373cf1b457a35c6379fa23",
+  "config_entry": {
+    "address": "Assets/ScriptableConfig/BoneTransformCacheManagerConfig",
+    "path": "Assets/ScriptableConfig/Modules/Spine/BoneTransformCacheManagerConfig.asset",
+    "guid": "ad10748c8d76ae4479d00eeadd7f62f7",
+    "tags": [
+      "Config",
+      "Payd_Base"
+    ],
+    "bundle": "defaultpackage_assets_scriptableconfig_modules_spine.bundle"
+  },
+  "config": {
+    "fields": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      },
+      "m_Enabled": 1,
+      "m_Script": {
+        "m_FileID": 1,
+        "m_PathID": -8379496577805794052
+      },
+      "m_Name": "BoneTransformCacheManagerConfig",
+      "MaleSkeletonDataAsset": {
+        "m_FileID": 3,
+        "m_PathID": -1532103129496961130
+      },
+      "FemaleSkeletonDataAsset": {
+        "m_FileID": 4,
+        "m_PathID": -8680167266147450406
+      },
+      "MaleAnimClipList": [
+        {
+          "m_FileID": 5,
+          "m_PathID": -5672146745658476458
+        },
+        {
+          "m_FileID": 5,
+          "m_PathID": 1888167264553433174
+        }
+      ],
+      "FemaleAnimClipList": [
+        {
+          "m_FileID": 2,
+          "m_PathID": -2038208752858161537
+        },
+        {
+          "m_FileID": 2,
+          "m_PathID": 6029802440678973055
+        }
+      ]
+    },
+    "source": {
+      "bundle": "defaultpackage_assets_scriptableconfig_modules_spine.bundle",
+      "bundle_hash": "34a2731d1d0573ed842651b19c2be5cc",
+      "path_id": "1860116617037693217",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/34a2731d1d0573ed842651b19c2be5cc.bundle",
+      "raw_size": 1850,
+      "raw_sha256": "d1300165f8ebd9b14350886a4f6abd4fe490b782d20969b66e2bf926cd898d9d"
+    },
+    "payload_sha256": "8dc083a2011afc475c2596ff46e2b30b1ab1ea2278eb0399c543b768a0648cc5"
+  },
+  "profiles": [
+    {
+      "sex": "Male",
+      "skeleton": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_character_model_male_1.bundle",
+          "bundle_hash": "c5583f5919c326baa3097449436169ea",
+          "path_id": "-1532103129496961130",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c5583f5919c326baa3097449436169ea.bundle",
+          "raw_size": 2212315,
+          "raw_sha256": "a761e8ac765fda745468ceee73ae467e2ade6c076f1794c217348af95e76d19d"
+        },
+        "payload_sha256": "0b10a99c0b554cc17e14f0b4baf6073e39fc97890b97e9267bc61d903fa30f1f"
+      },
+      "clips": [
+        {
+          "name": "map/idle_01",
+          "source": {
+            "bundle": "defaultpackage_assets_appearanceassets_character_model_male_1_anim.bundle",
+            "bundle_hash": "5063d25752bc12b5b257e50d14c441ca",
+            "path_id": "-5672146745658476458",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/5063d25752bc12b5b257e50d14c441ca.bundle",
+            "raw_size": 25499,
+            "raw_sha256": "7a7349b00593c632ae429b9a8054fa4932281c3b73b8f432d6533db6612e9210"
+          },
+          "payload_sha256": "e5174f3629146153aaf377ecf5648d0e524d994e6f05b9dd57454ced1411cbe3"
+        },
+        {
+          "name": "map/run_01",
+          "source": {
+            "bundle": "defaultpackage_assets_appearanceassets_character_model_male_1_anim.bundle",
+            "bundle_hash": "5063d25752bc12b5b257e50d14c441ca",
+            "path_id": "1888167264553433174",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/5063d25752bc12b5b257e50d14c441ca.bundle",
+            "raw_size": 25499,
+            "raw_sha256": "7a7349b00593c632ae429b9a8054fa4932281c3b73b8f432d6533db6612e9210"
+          },
+          "payload_sha256": "7fd511da3a5ffa7111b69ad154f4fc7ef82ccc26c14fca197ec60417e070fd46"
+        }
+      ]
+    },
+    {
+      "sex": "Female",
+      "skeleton": {
+        "source": {
+          "bundle": "defaultpackage_assets_appearanceassets_character_model_female_1.bundle",
+          "bundle_hash": "1b00f2b44ccd5fb681c208c4cf061a09",
+          "path_id": "-8680167266147450406",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/1b00f2b44ccd5fb681c208c4cf061a09.bundle",
+          "raw_size": 2810751,
+          "raw_sha256": "1bd09602a00ff0ebdf424e5c4c53d1b67315e893253e1efcb2261efe7774cf7f"
+        },
+        "payload_sha256": "f65901e14f0556ca0067bdfc8e5a1b5729f283387df97c1bfb93d8e1d6caa8c6"
+      },
+      "clips": [
+        {
+          "name": "map/idle_01",
+          "source": {
+            "bundle": "defaultpackage_assets_appearanceassets_character_model_female_1_anim.bundle",
+            "bundle_hash": "65bcb13cb93db68f13b7f4016a3be491",
+            "path_id": "-2038208752858161537",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/65bcb13cb93db68f13b7f4016a3be491.bundle",
+            "raw_size": 26985,
+            "raw_sha256": "b1e9a80d9c02a44eefadbe89c91df54d3988a44276a2eb5495449d5a26c29252"
+          },
+          "payload_sha256": "e5174f3629146153aaf377ecf5648d0e524d994e6f05b9dd57454ced1411cbe3"
+        },
+        {
+          "name": "map/run_01",
+          "source": {
+            "bundle": "defaultpackage_assets_appearanceassets_character_model_female_1_anim.bundle",
+            "bundle_hash": "65bcb13cb93db68f13b7f4016a3be491",
+            "path_id": "6029802440678973055",
+            "origin": "apk_zip",
+            "manifest": "884_156692",
+            "apk_manifest": "881_156673",
+            "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+            "apk_entry": "assets/yoo/DefaultPackage/65bcb13cb93db68f13b7f4016a3be491.bundle",
+            "raw_size": 26985,
+            "raw_sha256": "b1e9a80d9c02a44eefadbe89c91df54d3988a44276a2eb5495449d5a26c29252"
+          },
+          "payload_sha256": "7fd511da3a5ffa7111b69ad154f4fc7ef82ccc26c14fca197ec60417e070fd46"
+        }
+      ]
+    }
+  ],
+  "application_sources": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/BoneTransformCacheManager.cs",
+      "sha256": "d8abcc250d234790a6fbe7723fb2d957f8436d69fa3b88b10e404ddfc9e821d2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/BoneTransformCacheManagerConfig.cs",
+      "sha256": "dc239573ad4b20639d2cc5927b345c46cf3def9a73ededd7226c3b8f1ffe408c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/IBoneTransformCacheManager.cs",
+      "sha256": "bfaf152cc989a232adc1d8e58dc84d3af800fd4b97601d05d701ca6ce0862a9d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/SkeletonBoneTransformCache.cs",
+      "sha256": "aa6efa3cbfd990c943d5d7ec4b310609fbea579a941435428b399ae80869bc5e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/SkeletonMecanimCacheHelper.cs",
+      "sha256": "c2e0bcefa79d432e1f24d4e50687c21f81b34f4a1208b3a63fbe2e6de5afa267"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/SkeletonAnimationFrameCalculator.cs",
+      "sha256": "17ae09e1b5336b157726fd6381516199ae159b172dae0888b47b518cfa800f14"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/SkeletonBoneCacheUtils.cs",
+      "sha256": "cd325b31e26a4f47435fffd0ae2945709d687ef66230cb85314362ca819e4cab"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/BoneTransformCache.cs",
+      "sha256": "9c42b99313a8e31626e13b2dfbc3cf1715996af32a14e7f7d442c051b15d3d0f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/FrameCache.cs",
+      "sha256": "3a58417f291b22c376ab58d20de856c692231522c742bff14c0e2c75cc81def9"
+    }
+  ],
+  "schema_reader": {
+    "path": "scripts/current_component_schemas.py",
+    "sha256": "ad1689eb66dd2061acbe79fe5602d2d10e5aa23f97ed2fdabd6dbce473d5ae52"
+  },
+  "generator": {
+    "path": "scripts/record_battle_mecanim_cache_scope.py",
+    "sha256": "77fde0532c51e634ae9a0de1eaa942d3a7cb07585bf54a0e3c8a1bc7178a1751"
+  },
+  "coverage": "Source and serialized configuration evidence only. No runtime migration or verification is claimed."
+}
