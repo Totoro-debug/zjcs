@@ -30,6 +30,8 @@
 
 局部数据入口由 [`prepare_mainline_map_definition.py`](../../scripts/prepare_mainline_map_definition.py) 按地图 ID 提取，输出 `Assets/Official/World/Map/16/map16.json` 及 `Source/` 中的导航、放置、完整 EC、63份递归模板／动作和原配置表。它对比原导航／MapInfoWrap／EC 的身份与实体闭包，核对43区探索上限，验证消费的109份已准备官方源码；不填造默认实体、地图条件或移动规则。来源见[地图定义清单](../../assets/reference/official-map/map16-definition-source-manifest.json)。
 
+[`prepare_mainline_map_interactions.py --map-id 16`](../../scripts/prepare_mainline_map_interactions.py) 校验本图既有定义输入，从同版原表补充状态效果与周期随机奖励，并复用公共英雄结果索引转换器。英雄模板列表按本图原周期奖励组件提取，`Resources/Map16/interactions` 包含6570–6575六种英雄雕像、621项实体扩展参数、本图43区及43个区域的刷新组／间隔；原组件索引、状态 ID、5／25／70奖励权重、费用、地区顺序和空 `DropItems` 保留。原生数据输入另存 `Source/interaction-tables.json`，来源见[交互配置清单](../../assets/reference/official-map/map16-interactions-source-manifest.json)。此为配置投影，尚未登记正式宿主，不代表雕像、资源交互或存档已接通。
+
 公共 `GroundBinding` 接收 `GroundSource` 的地图 ID、原 prefab 地址和 bundle，复用 Map15 的原生依赖恢复路径。Map15 已安装 GUID 保持原值，鲸背岛使用所属地图的 GUID 范围，避免两图复制的载荷互相覆盖。Map16 当前输出位于 `Assets/Official/World/Map/16/NativeCurrent`，资源入口为 `Resources/Map16/Native/current-ground`，含1434个资产／meta输出。脚本只显式绑定已迁移的官方类；原纹理、Windows shader、材质、网格及序列化字段按选定版本和各自哈希恢复。来源见[地面清单](../../assets/reference/official-map/map16-current-ground-source-manifest.json)。
 
 [`prepare_mainline_map15_world_view.py --map-id 16`](../../scripts/prepare_mainline_map15_world_view.py) 读取原3001模型／偏移／排序和原 `WorldCamera` 投影／适配参数，输出 `Resources/Map16/BaseGround/player-view` 与 `Native/region-label-data`。标签按原地区 ID 索引探索上限，保持原表枚举顺序，核对61项实际语言键，包含原倒计时格式所需的14项语言键；公共标签样式、位阶映射和字体仍分别保留历史输入凭据，不声称整个版本等价。来源见[模型、镜头与标签清单](../../assets/reference/official-map/map16-world-view-source-manifest.json)。
@@ -43,6 +45,8 @@ Unity 2022.3.57f1c2 内置屏隔离图形 Play Mode 已通过公共 `MainlineNat
 同一 Play Mode 使用本图实际43行地区配置检查各自14至32天偏移、边界前一秒／恰好到期、时间条件先于等级、较低／较高位阶和缺失日期分支。隔离角色档案通过现有 `SetPlayerProgress` 记录首次位阶4日期、重复赋值保留日期，并重新打开档案冷读核对。该夹具使用测试相机与显式角色／地区状态，无角色／HUD或模拟地图输入；不覆盖自然晋阶、正式地图入口、整图进度存档或 Windows Player。隔离工程不执行全工程校验；另在正式 Unity 工程执行导入／编译和 `ProjectTools.Validate` 通过，静态元数据检查已通过。
 
 本批主工程 Unity 导入／编译、`ProjectTools.Validate` 和静态元数据检查通过；公共转换器回归核对 Map15 的469项、Map16 的1434项既有地面输出逐字节不变，地面与原时间标签 Play Mode 回归及画面检查通过。
+
+本图交互配置已通过重复提取一致性、地区顺序、空奖励列表、区域刷新表与所有英雄结果引用检查；共享转换器七项规则测试覆盖六种原英雄、历史输出不变及不支持的周期组拒绝。 静态元数据检查、主工程 Unity 导入／编译、`ProjectTools.Validate` 及实际配置加载通过。隔离工程仅携带公共加载器、地图配置、原结果数据类型与交互载荷，在 Editor／Play Mode 中核对 Map10–15 历史配置、鲸背岛六种模板，以及错误版本／地图身份／地区数量的拒绝；不包含地图画面或模拟交互。尚未运行本图正式雕像／资源流程，不能据此宣称其 Play Mode 或 Player 验证完成。
 
 ## 自定义实现
 

@@ -1,0 +1,195 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "mapClassId": 16,
+  "definition_receipt": {
+    "path": "assets/reference/official-map/map16-definition-source-manifest.json",
+    "sha256": "ca490cf4032841a750f2493e51af82585f407b4411175fbd15d9b9034d7e2f02"
+  },
+  "definition_inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/16/Source/templates.json",
+      "sha256": "b6d03cea1f16065086561d332a1170ee173b3e1ac19c5ed1dc13c1a98ae83376"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/16/Source/tables.json",
+      "sha256": "632a63ca1c6bbfbb1ea9638ce7d8c4cac2ead4dde9464ded185bf499b3911b02"
+    }
+  ],
+  "inputs": {
+    "/status_effect.g.bytes": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "5894786187494288708",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "payload_sha256": "3c00aa7ab4206b6f369438e60d1d106839c08d2b4f3d92a62a02908edaa28bda",
+      "object_sha256": "7a876dab15a167d611d7b6ccd972a5de35ccf96216babe71a0be525ab44b134e",
+      "bytes": 4035
+    },
+    "/Map/map_periodicity_random_award_interaction.g.bytes": {
+      "bundle": "defaultpackage_assets_config_luban_map.bundle",
+      "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+      "path_id": "-3461417643786305391",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+      "raw_size": 197305,
+      "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7",
+      "payload_sha256": "045e4e2b98c2e0c694c1910f1623b05051211e8719c9af65af4ea1f42606188c",
+      "object_sha256": "8936bc42f17e8fda298a48d6da47621c94590caf64e20184bff4d66e22902f11",
+      "bytes": 222
+    }
+  },
+  "official_code": [
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/CompositeCondition.cs",
+      "sha256": "9e45aefb344d4e75fffe52fa8f0fcea3e4886d3e396b2c3fa10128ebe35cf54d"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/CompositeOrCondition.cs",
+      "sha256": "b4d4f14990bcc59bb196a4bfcc360df4d38f1142e040ec9015c14211b6530aca"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/EntityPositionInfo.cs",
+      "sha256": "e75d7386ca6bf9760d52daf0e3b6dfebe9ccd59a97085302c23f7a557da77976"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/GridMoverComponent.cs",
+      "sha256": "0482718b0260b2fcfb8d765615b1c334d22918d9fae5e180b3a9c0f0b20d29db"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/GridMoverComponentInfo.cs",
+      "sha256": "9192fe7435eab0ca2d4d9df410e1a849695fc724317a74410ff055285fae253a"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/HasItemCondition.cs",
+      "sha256": "fca0fa79cc49354068fc32d136863d5a77181fd9ae93596c1671a9f804641dd5"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/HasStatusCondition.cs",
+      "sha256": "3f2f1dabc98e3d9194411fa343dc530022fe1c46c67cb31d592d482caa7ab86f"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/ICondition.cs",
+      "sha256": "12a4005edaf53df080240808b91e6e3e55fc08bceb91fd154e6c3993cdc704ff"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/LoEntityComponentSpawnSupportInfo.cs",
+      "sha256": "81389b6168743dc0101b598a28793151cdec6138ecd68fc007ca15331eace281"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapInfoWrap.cs",
+      "sha256": "6dc3c84f1a79678ca40fd6ee6046c540d7fc814f121f0f5671b57da603db694a"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapPeriodicityRandomAwardInteractionInfo.cs",
+      "sha256": "140291ef6de443dbd6444a1f7d36612f0d14608e5a13869785512ee02b6d585f"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapRootEntityLiteAreaInfo.cs",
+      "sha256": "6215893315cc876cc30b1f7ed9f6d14d89de6fa3e0f1a817fb057cf4dcf7bca5"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapRootEntityLiteGridInfo.cs",
+      "sha256": "109e0cbac6a87b8220292ee92cc219e185284b0a66b1d8314b3c2314001b7568"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapRootEntityLiteSingleInfo.cs",
+      "sha256": "abe778aac8eea6276d1c2417c9da8e006a3268d541eeb0f4eac385d1f4956966"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapWorldLoEntityInfoWrap.cs",
+      "sha256": "b9195e57ff16a707aaf5b1115394fff07554fade9bc28585c0779e47aaa63e0c"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/SpawnEntityLiteInfo.cs",
+      "sha256": "53195dcf3b0e8f2b640adadceae346bdf759eefd846610a8ca34427054742a50"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/StatusEffectInfo.cs",
+      "sha256": "c6f5f3dcb2aea2c06de59c8be67d6b2c9243a26dd8f1b7452e03adbb3e444853"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/Tables.cs",
+      "sha256": "0e4882f1ad41958e5ec017543447e17f5196c5453f8168c685926ea2c134c9bc"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/TbMapPeriodicityRandomAwardInteractionInfo.cs",
+      "sha256": "9717d0749ae73c780c12dce173c857326761e7449be3256c90eaf8ee1fbcf25b"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/TbStatusEffectInfo.cs",
+      "sha256": "7d42fee7ebdcabf06ca5abe6e6f05026fbf41b3c27ae9cce51110b0946c02de9"
+    },
+    {
+      "path": ".tools/source-packages/official-code/global-metadata.dat",
+      "sha256": "c0fe5e062fb3ed1814781e54fd1b4859757970632655138adc091820ded88e0e"
+    }
+  ],
+  "templates_receipt_scope": "The definition receipt retains the original template, component decoder and map table provenance; only the two additional tables are decoded here.",
+  "operation": "Use the shared original hero result-index converter. Preserve original template component/index identities, ordered weights, status IDs, costs, source region order, empty DropItems and each area refresh group/interval. Do not create runtime readiness or replace a historical source version.",
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/16/Source/interaction-tables.json",
+      "sha256": "29c9746a4c63af617e179899e73d848ad39a651dc705e295d6c6867336894c98"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/16/Source/interaction-tables.json.meta",
+      "sha256": "3fde2318375cfa2a4317f447a0d324f4c1e3b808a7f264e3b530187afa101fc5"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map16/interactions.json",
+      "sha256": "2e029fe8791f1d1d2242b3c8c0c30b5539b881baaf04a2a674da719df35e5d18"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map16/interactions.json.meta",
+      "sha256": "fea97830d3f0eb5f40b2de793276fa78271a1af0a2a6efc9a12a4b6f676c7a1d"
+    }
+  ],
+  "counts": {
+    "heroes": 6,
+    "parameters": 621,
+    "regions": 43,
+    "areas": 43
+  },
+  "tools": [
+    {
+      "path": "scripts/prepare_mainline_map_interactions.py",
+      "sha256": "edeb5ec330db679976ce16501a02eb20f6a6d456becfa7a224a7c8fa9fb089c3"
+    },
+    {
+      "path": "scripts/prepare_mainline_map_definition.py",
+      "sha256": "85e4806ce4261bd87ebab3b03af0b5cc7f3df7e7cd5225012922b1ca8410fd8b"
+    },
+    {
+      "path": "scripts/prepare_unity_map14_interactions.py",
+      "sha256": "b348dfaad120c0642e361e564213544faac2cb51253086346c4b1b9a60b4f55a"
+    }
+  ],
+  "runtime_bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineInteractionCatalog.cs",
+      "hashLineEndings": "LF",
+      "sha256": "c34dbf3bb9eaf1974de7f852a035c4ce4ee4b3e10fb19f1eb64500379edd3ee3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineStatuesModule.HeroStatues.cs",
+      "hashLineEndings": "LF",
+      "sha256": "4296731cbca799417c5c4367220e1fcf91070b69f9d7a7ca194555326e4bd241"
+    }
+  ],
+  "remaining": [
+    "formal mainline profile and host bindings",
+    "statue UI and visual effects",
+    "actual map pointer interaction, progression and save restore",
+    "Windows Player release"
+  ]
+}

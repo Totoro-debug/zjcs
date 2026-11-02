@@ -42,6 +42,8 @@
 
 入口组件保留原 MonoScript GUID 和 `MovedFrom`；纯 C# 模块沿用原脚本 `.meta`，原 prefab、层级、坐标、动画、数值、执行次序与存档 DTO 保持兼容。`OfficialMainlineUiCatalog` 按当前 `MapProfile.NativeUiRoot` 缓存原 UI 目录，HUD、雕像、奖励列表、探寻与小地图共用它；通用文本不再由女神像持有或加载。
 
+公共英雄配置通过 `heroTemplateIds` 声明本图原模板列表，`OfficialMainlineInteractionCatalog` 校验模板身份、唯一性、顺序、原周期权重及地图／版本；历史四种模板的既有载荷保持兼容。共享转换器接收该列表，拒绝尚未迁移的周期组规则，英雄效果与每日访问仍由同一个雕像模块消费。当前鲸背岛已提取六种原模板，正式地图接线与验证范围见[鲸背岛](../maps/map-16.md)。
+
 | 模块 | 当前代码与复用范围 |
 | --- | --- |
 | 地图配置与载荷 | `OfficialMainlineMapProfile` 集中已迁移地图的资源根、原生 UI 根、阶段／故事数量及必须存在的区域条件。`Data` 分部保留各图官方模板、故事图和数量校验。 |

@@ -370,3 +370,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 小地图区域地面来源见 [Map13当前资源](official-map/map13-current-minimap-regions-source-manifest.json)、[Map16当前资源](official-map/map16-current-minimap-regions-source-manifest.json)与[公共绑定代码](official-map/mainline-minimap-regions-source-manifest.json)。`prepare_mainline_minimap_regions.py` 复用公共原生恢复器，记录所选884_156692的APK优先／匹配缓存、原Ground子树、地区prefab、YooAsset索引GUID及Windows转换依赖和逐文件哈希。原YooAsset GUID与转换缓存Unity GUID分别保留；仅核对两份区域管理源码与历史输入逐字节一致，不声明整版等价。历史小地图来源独立保留，本批未生成完整素材快照。
 
 伙伴主角头像的选定884_156692原摄影棚、PlayerPortraitSettings／AppearanceConfig对象字段、三个原Sprite及Windows转换依赖见[主角头像来源](partner-player-portraits-source-manifest.json)。`prepare_partner_player_portraits.py` 记录APK优先／匹配缓存、CAB／对象身份、枚举列表恢复、显式脚本／资源绑定和逐文件哈希；当前角色与外观输入引用各自已校验来源，不混标历史头像配置，本批未生成完整素材快照。
+
+鲸背岛交互配置来源见 [map16-interactions-source-manifest.json](official-map/map16-interactions-source-manifest.json)。`prepare_mainline_map_interactions.py` 按地图ID复用所选884_156692的定义输入与公共英雄结果索引转换器，额外解码原状态效果／周期随机奖励表；记录APK优先／匹配缓存、原构造器源码、模板来源凭据、逐文件输出哈希与工具，不混入历史871配置。本批无新增美术或完整素材快照。

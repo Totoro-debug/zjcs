@@ -52,11 +52,22 @@ def witch_payload(tables, entities):
     return dict(witchInfos=infos, witchResultEffects=effects, witchPeriodicityAwards=awards)
 
 
-def interaction_payload(templates, tables, map_id=14, region_count=111, version=VERSION):
+def interaction_payload(templates, tables, map_id=14, region_count=111, version=VERSION, hero_ids=None):
     statuses = {row["ClassId"]: row for row in tables["status_effect"]}
+    configured_heroes = None if hero_ids is None else list(hero_ids)
+    selected_heroes = (6570, 6571, 6572, 6573) if configured_heroes is None else configured_heroes
+    if not selected_heroes or len(set(selected_heroes)) != len(selected_heroes):
+        raise ValueError("Hero template IDs must be nonempty and unique")
     heroes = []
-    for entity_id in (6570, 6571, 6572, 6573):
+    for entity_id in selected_heroes:
+        if str(entity_id) not in templates:
+            raise ValueError("Original hero template is missing: " + str(entity_id))
         components = templates[str(entity_id)]
+        condition = components["StageConPlayerPeriodicityInteractionComponent"]
+        result = components["StageResultPeriodicityRandomAwardComponent"]
+        if (condition["PeriodicityInteractionGroupIds"] != [1] or condition["IsNegation"]
+                or result["PeriodicityGroupIds"] != [1] or result["PeriodicityRandomAwardGroupIds"] != [2]):
+            raise ValueError("Original hero periodic groups require an unported rule")
         effects = []
         for index, info in enumerate(components["StageResultAwardExtraPropComponent"]["AwardExtraPropInfos"]):
             effects.append(dict(ComponentType=238, ComponentIndex=index, ExtraProps=info["AwardExtraProps"]))
@@ -89,11 +100,14 @@ def interaction_payload(templates, tables, map_id=14, region_count=111, version=
                for row in tables["Map/map_region"] if row["ClassId"] == map_id]
     if sorted(row["Region"] for row in regions) != list(range(region_count)):
         raise ValueError("Original interaction regions changed for map " + str(map_id))
-    return dict(manifest=version, mapClassId=map_id, heroes=heroes,
+    payload = dict(manifest=version, mapClassId=map_id, heroes=heroes,
                 parameters=[dict(EntityClassId=row["EntityClassId"], CompleteState=row["CompleteState"],
                                  PublicDefaultState=row["PublicDefaultState"], Progress=row["Progress"],
                                  CostItems=row["CostItems"] or []) for row in tables["Map/entity_extend_parameter"]],
                 regions=regions, areas=[row for row in tables["Map/map_area"] if row["ClassId"] == map_id])
+    if configured_heroes is not None:
+        payload["heroTemplateIds"] = configured_heroes
+    return payload
 
 
 def build():

@@ -10,6 +10,7 @@ namespace Zjcs.Presentation.World
     {
         public string manifest;
         public int mapClassId;
+        public int[] heroTemplateIds;
         public OfficialMainlineHero[] heroes;
         public OfficialMainlineEntityParameter[] parameters;
         public OfficialMainlineInteractionRegion[] regions;
@@ -18,13 +19,22 @@ namespace Zjcs.Presentation.World
         public static OfficialMainlineInteractionCatalog Load(int selectedMapClassId = 11)
         {
             var profile = OfficialMainlineMapProfile.Get(selectedMapClassId);
-            TextAsset source = Resources.Load<TextAsset>(profile.InteractionResource);
+            return Load(profile.InteractionResource, profile.InteractionManifest, selectedMapClassId, profile.RegionCount);
+        }
+
+        public static OfficialMainlineInteractionCatalog Load(string resource, string expectedManifest, int selectedMapClassId, int regionCount)
+        {
+            TextAsset source = Resources.Load<TextAsset>(resource);
             var result = source == null ? null : JsonUtility.FromJson<OfficialMainlineInteractionCatalog>(source.text);
-            if (result == null || result.manifest != profile.InteractionManifest || result.heroes?.Length != 4
+            int[] expectedHeroes = result?.heroTemplateIds ?? new[] { 6570, 6571, 6572, 6573 };
+            if (result == null || result.manifest != expectedManifest || result.heroes == null
+                || expectedHeroes.Length == 0 || expectedHeroes.Distinct().Count() != expectedHeroes.Length
+                || result.heroes.Any(hero => hero == null)
+                || !result.heroes.Select(hero => hero.EntityClassId).SequenceEqual(expectedHeroes)
                 || result.parameters == null || result.regions == null || result.areas == null
-                || (profile.InteractionResource != "World/Mainline/interactions" && (result.mapClassId != selectedMapClassId
-                    || result.regions.Length != profile.RegionCount || result.regions.Any(region => region.MapClassId != selectedMapClassId)))
-                || result.heroes.Any(hero => hero.PeriodicAwards.Length != 3
+                || (resource != "World/Mainline/interactions" && (result.mapClassId != selectedMapClassId
+                    || result.regions.Length != regionCount || result.regions.Any(region => region == null || region.MapClassId != selectedMapClassId)))
+                || result.heroes.Any(hero => hero.Effects == null || hero.PeriodicAwards == null || hero.PeriodicAwards.Length != 3
                     || hero.PeriodicAwards.Sum(award => award.Weight) != 100))
                 throw new InvalidDataException("The official shared map interaction catalog is incomplete.");
             return result;

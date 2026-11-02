@@ -34,6 +34,8 @@ class CurrentDragonStatueSources(unittest.TestCase):
 
     def test_hero_weights_status_identity_and_region_source_order(self):
         payload = migration.interaction_payload(self.templates, self.tables)
+        self.assertEqual(payload, json.loads(migration.OUTPUT.read_bytes()))
+        self.assertNotIn("heroTemplateIds", payload)
         self.assertEqual([row["EntityClassId"] for row in payload["heroes"]], [6570, 6571, 6572, 6573])
         for hero in payload["heroes"]:
             self.assertEqual([row["Weight"] for row in hero["PeriodicAwards"]], [5, 25, 70])
@@ -45,6 +47,34 @@ class CurrentDragonStatueSources(unittest.TestCase):
         self.assertEqual([row["Region"] for row in payload["regions"]][74:78], [74, 76, 75, 77])
         self.assertEqual(len(payload["regions"]), 111)
         self.assertEqual(len(payload["areas"]), 115)
+
+    def test_selected_map_includes_all_six_original_hero_variants(self):
+        root = migration.ROOT / "unity/Assets/Official/World/Map/16/Source"
+        templates = json.loads((root / "templates.json").read_bytes())
+        tables = json.loads((root / "interaction-tables.json").read_bytes())
+        hero_ids = [int(key) for key, value in templates.items()
+                    if "StageResultPeriodicityRandomAwardComponent" in value]
+        payload = migration.interaction_payload(templates, tables, 16, 43, "884_156692", hero_ids)
+        self.assertEqual(payload["heroTemplateIds"], [6570, 6571, 6572, 6573, 6574, 6575])
+        for hero in payload["heroes"]:
+            original = templates[str(hero["EntityClassId"])]
+            props = [effect["ExtraProps"] for effect in hero["Effects"] if effect["ComponentType"] == 238]
+            self.assertEqual(props, [row["AwardExtraProps"] for row in
+                                    original["StageResultAwardExtraPropComponent"]["AwardExtraPropInfos"]])
+            effects = [effect["StatusEffects"] for effect in hero["Effects"] if effect["ComponentType"] == 235]
+            self.assertEqual([[row["StatusEffectId"] for row in effect] for effect in effects],
+                             [row["mAwardStatusEffects"] for row in
+                              original["StageResultAwardStatusEffectComponent"]["AwardStatusEffectInfos"]])
+            self.assertEqual([row["Weight"] for row in hero["PeriodicAwards"]], [5, 25, 70])
+
+    def test_invalid_hero_selection_and_unported_periodicity_are_rejected(self):
+        for ids in ([], [6570, 6570], [999999]):
+            with self.subTest(ids=ids), self.assertRaises(ValueError):
+                migration.interaction_payload(self.templates, self.tables, hero_ids=ids)
+        changed = copy.deepcopy(self.templates)
+        changed["6570"]["StageResultPeriodicityRandomAwardComponent"]["PeriodicityRandomAwardGroupIds"] = [999]
+        with self.assertRaisesRegex(ValueError, "unported rule"):
+            migration.interaction_payload(changed, self.tables, hero_ids=[6570])
 
     def test_unresolved_original_result_index_is_rejected(self):
         changed = copy.deepcopy(self.tables)
