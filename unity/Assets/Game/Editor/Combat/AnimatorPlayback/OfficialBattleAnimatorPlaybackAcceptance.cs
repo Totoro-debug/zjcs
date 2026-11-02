@@ -66,6 +66,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".sceneRenderer", false);
             SessionState.SetBool(Key + ".sceneIntegratedParts", false);
             SessionState.SetBool(Key + ".sceneCharacterAppearance", false);
+            SessionState.SetBool(Key + ".scenePlayerAppearance", false);
             SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 180);
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             Hook();
@@ -119,7 +120,8 @@ namespace Zjcs.Editor.Combat
 
         private static IEnumerator Verify()
         {
-            var steps = SessionState.GetBool(Key + ".sceneCharacterAppearance", false) ? SceneCharacterAppearanceSteps()
+            var steps = SessionState.GetBool(Key + ".scenePlayerAppearance", false) ? ScenePlayerAppearanceSteps()
+                : SessionState.GetBool(Key + ".sceneCharacterAppearance", false) ? SceneCharacterAppearanceSteps()
                 : SessionState.GetBool(Key + ".sceneIntegratedParts", false) ? SceneIntegratedPartsSteps()
                 : SessionState.GetBool(Key + ".sceneRenderer", false) ? SceneRendererSteps()
                 : SessionState.GetBool(Key + ".sceneTextures", false) ? SceneTextureSteps()
@@ -145,7 +147,9 @@ namespace Zjcs.Editor.Combat
             if (errors == 0)
             {
                 SessionState.SetInt(Key + ".result", 0);
-                Debug.Log(SessionState.GetBool(Key + ".sceneCharacterAppearance", false)
+                Debug.Log(SessionState.GetBool(Key + ".scenePlayerAppearance", false)
+                    ? "Current original player appearance passed selected defaults, local profile, override, notification and rendered lifecycle checks; completed production poses, full physics/mixing and battle/Player integration remain required."
+                    : SessionState.GetBool(Key + ".sceneCharacterAppearance", false)
                     ? "Current original character appearance passed actual native texture/material/dye/weapon camera lifecycle checks; completed production poses, full physics/mixing and battle/Player integration remain required."
                     : SessionState.GetBool(Key + ".sceneIntegratedParts", false)
                     ? "Current native scene integrated parts passed actual camera composition and original pool lifecycle; production pose clocks, full physics/mixing and battle/Player integration remain required."

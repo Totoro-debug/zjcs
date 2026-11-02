@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: 27906d91cabb906c724391bd3f8c92de, type: 3}
+  m_Name: AppearanceAnimNameCombineRule
+  mRules:
+  - Key: profession
+    Content: '{0}/{1}_{2}'
+    Desc: 职业/动作_Id
+    FillList:
+    - 20
+    - 0
+    - 1
+  - Key: profession_sex
+    Content: '{0}/{1}_{2}_{3}'
+    Desc: 职业/动作_性别_Id
+    FillList:
+    - 20
+    - 0
+    - 30
+    - 1
+  - Key: profession_ui
+    Content: '{0}/{1}_UI_{2}'
+    Desc: 职业/动作_UI_Id
+    FillList:
+    - 20
+    - 0
+    - 1
+  - Key: phase
+    Content: '{0}/{1}_{2}'
+    Desc: 场景/动作_Id
+    FillList:
+    - 0
+    - 0
+    - 1
+  - Key: phase_sex
+    Content: '{0}/{1}_{2}_{3}'
+    Desc: 场景/动作_性别_Id
+    FillList:
+    - 0
+    - 0
+    - 30
+    - 1
+  - Key: appearance
+    Content: '{0}/{1}_{2}'
+    Desc: 职业/动作_名称
+    FillList:
+    - 20
+    - 0
+    - 0
+  - Key: phase_1
+    Content: '{0}/{1}_{2}_{3}'
+    Desc: 场景/动作_Id_动画类型
+    FillList:
+    - 0
+    - 0
+    - 1
+    - 0
+  m_EditorClassIdentifier: ''
