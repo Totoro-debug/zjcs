@@ -12,7 +12,7 @@ using Zjcs.Official.World.Map13Entities;
 using Zjcs.Official.World.Map13GridVisibility;
 using Zjcs.Official.World.NativeTerrain.Common;
 using Zjcs.Official.World.NativeLabelUI.Framework;
-using Bodies=Zjcs.Offline.World.NativeMap13GridVisibility.OfflineMap13GridVisibility;
+using Bodies=Zjcs.Offline.World.MapGridVisibility.OfflineMapGridVisibility;
 
 namespace Zjcs.Editor.Map13MiniMap
 {

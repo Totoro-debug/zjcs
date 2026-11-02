@@ -293,3 +293,5 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 ### 当前完整伙伴窗口来源
 
 `prepare_partner_panel_native.py` 按选定 `884_156692` 恢复完整 `NpcPanel`、外部对话条目和实际资源依赖，复用已校验名册卡片与星神分组。先核对 APK，再使用所选云端资源与 Windows 转换缓存；原控制器常量校验、同来源动画 GUID 复用、图节点原码、状态动画支持及安装输出哈希见[完整窗口原生来源](partner-panel-native-source-manifest.json)。独立原生 Canvas 后端、显式 Resources 绑定与验证输入见[窗口运行绑定来源](partner-panel-runtime-source-manifest.json)。行为与验证范围仅在[伙伴功能](../../docs/features/partners.md)维护，本批未纳入素材快照。
+
+公共主线地图网格提取：沿用已核实的 Map13 原共享视野代码／配置来源，不重新标记为当前 APK 版本；离线适配的 Git 前身、未修改的官方实现、公共类与程序集迁移、显式消费绑定和归一化文本 SHA256 见[公共网格来源](official-map/mainline-grid-visibility-source-manifest.json)。生成工具为 `record_mainline_grid_visibility_sources.py`，无新增美术素材；实现及验证范围见[公共地图模块](../../docs/features/mainline-map-modules.md)。

@@ -6,7 +6,7 @@
 
 ## 功能简介
 
-主线地图通过 `OfficialMainlineMapRuntime.Begin(mapClassId, …)` 使用同一套运行时。目前有完整数据绑定的入口是 Map10、Map11；地图资源、区域条件、剧情、实体和进度仍按地图 ID 隔离。新增地图须先迁移其官方数据与专属流程，再登记 `OfficialMainlineMapProfile`，不能仅替换地图 ID 后宣称地图完成。
+主线地图通过 `OfficialMainlineMapRuntime.Begin(mapClassId, …)` 使用同一套运行时。`OfficialMainlineMapProfile` 当前登记 Map10–15；各图数据、表现和游玩完成范围以所属地图页为准，登记或可进入不表示整图完成。地图资源、区域条件、剧情、实体和进度仍按地图 ID 隔离。新增地图须先迁移其官方数据与专属流程，再登记配置，不能仅替换地图 ID 后宣称地图完成。鲸背岛 Map16 尚未登记此运行时。
 
 ## 原始官方实现
 
@@ -41,6 +41,7 @@
 | 女神像与失落的女神像 | `OfficialMainlineStatuesModule` 的 `Goddess.cs` 共用探索条件、原生弹窗、按原阶段顺序激活、回执与传送；地区名称按当前地图 ID 查询。当前接入范围为 Map11，珍宝预览等缺项见[森之国](../maps/map-11.md)。 |
 | 英雄／魔女访问及魔女阶段 | `OfflineMainlineProgressSession.Statues` 提取女神激活、全图魔女计数、英雄／魔女每日共享额度、奖励、HP 与待战斗效果事务；同一 `OfficialMainlineStatuesModule` 的 `Witch` 实现保留原书页、预览、激活与周期访问，`HeroStatues` 实现已接入四种英雄雕像原弹窗、410 等级属性、首次激活与周期访问；原角色／粒子演出仍待恢复。 |
 | 探索进度 | `OfficialMainlineRegionsModule` 与既有 `OfficialMapProgressAdapter`、`OfficialMapExplorationProgress`、`OfficialMapProgressCalculator` 共用官方实体状态和探索点计算。 |
+| 网格可见性与存档 | `OfflineMapGridVisibility` 集中原角色视野、实体身体／营地揭格、区域激活、事件生命周期和 RLE 存档；地图 ID、矩形尺寸、角色模板、视野半径与解锁格通过配置传入。Map13 正式入口及其小地图检查改用这一公共类，原 `map13GridVisibility` JSON 字段和原数据断言保留在 Map13 适配层。其他地图仍须接入各自已核实的官方载荷；该类不承担白雾绘制。 |
 | 地图体力点 | `OfficialMainlineStaminaModule` 与 `OfflineMapStaminaService` 共用金币8011、铁矿8021、时之砂8026和怪物5011的扣费、奖励、战斗回执及本地刷新；原区域／组间隔由 `interactions.json` 加载。 |
 | 区域阴影 | `OfficialMainlineRegionsModule` 按 `MapProfile.HasRegionFog` 挂载 `OfficialMainlineRegionFog`，资源根与数量断言从当前地图配置传入，不再内置 Map11 路径；当前载荷恢复 Map11 的73份原 LightRegion 层级、Freeform网格、原衰减贴图及地区公开后的半径渐退；地表按原 Multiply 光照计算。其他地图及日夜场景装饰切换尚待接入。 |
 | 命运果实与探寻 | `OfflineFruitTreeService` 共用生产、容量、时间推进和收取事务；`OfflineWorldExplorationService` 共用探寻费用、候选／保底、动态实体与历史事务，`OfficialMainlineExplorationModule` 管理原 HUD 入口、动态实体、确认／详情／令牌窗口、遮罩与释放。果树生产服务继续由家园消费同一角色存档，不在地图重建一套生产规则。完整实体交互与演出仍待完成，详见[命运探寻](world-exploration.md)。 |
@@ -74,6 +75,10 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 以下为局部代码／资源接入，完整流程仍受本页缺项限制。
 
 `assets/reference/official-map/mainline-interactions-source-manifest.json` 记录620类实体扩展参数、英雄410等级属性、Map10／11地区等级、刷新间隔与体力点奖励的官方输入；`world-exploration-source-manifest.json` 记录7种令牌、65条实体组变体、28份完整实体模板、68条递归条件，以及奖励／随机包／宝物选择器／等级映射的原配置。运行时显式加载 `Resources/World/Mainline/interactions.json`、英雄属性及 `exploration.json`。探寻本地生成、保底、费用、奖励和存档事务，以及原窗口鼠标操作、令牌拖动、十连、历史分页与动态实体冷启动已通过隔离 Unity 编辑器验证；完整生成实体交互、模型材质、动画与 Player 尚未完成，范围见[命运探寻](world-exploration.md)和[公共模块](mainline-map-modules.md)。旧云端缓存不再保留，历史重建显式复用当前871缓存的相同哈希字节，核对原清单MD5／大小及真实凭据SHA256，来源保持实际版本及URL，不重建旧目录或替换变化资源。
+
+公共网格 Module 位于 `Runtime/Offline/World/MapGridVisibility/`。调用方提供官方可见性／身体配置、当前坐标、已公开地区、地区查询及实体活动状态，使用同一个实例完成移动揭格、区域解锁、实体通知和存档快照。复用原 `GridVisibilityAgentComponent`／`GridVisibilityAgentHandle`，没有另写一套视野算法；旧原实现仍在 `Runtime/Official/World/Map13GridVisibility/`，目录名仅反映最初的迁移来源。尺寸和地图身份沿配置传入内部容器、范围与地区查询，不再限制为 13 或 240×240。来源对应与归一化文本 SHA256 见 [公共网格来源](../../assets/reference/official-map/mainline-grid-visibility-source-manifest.json)。
+
+`SharedMapGridVisibilityAcceptance.Run` 已通过 Unity 2022.3.57f1c2 编译与规则执行：原 Map13 的 148 份身体模板、2,690 份放置、106 地区、57,600 格和 RLE 冷读字节保持一致；四组 17×9 接口夹具验证不同地图身份、角色模板、半径、实例隔离、移动与公开地区、存档及损坏游程拒绝。夹具不代表相应地图已迁移。静态元数据检查与 `ProjectTools.Validate` 通过。图形 Play Mode 中的实际地图入口、移动与冷读范围见[泽之国](../maps/map-13.md)，不据规则测试声明白雾画面或其他地图完成。
 
 ## 自定义实现
 

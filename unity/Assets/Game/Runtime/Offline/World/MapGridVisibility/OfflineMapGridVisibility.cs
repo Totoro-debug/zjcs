@@ -6,13 +6,13 @@ using UnityEngine;
 using Zjcs.Official.World.Map13GridVisibility;
 using Zjcs.Official.World.NativeTerrain.Common;
 
-namespace Zjcs.Offline.World.NativeMap13GridVisibility
+namespace Zjcs.Offline.World.MapGridVisibility
 {
     // Local state/resources supply inputs to the complete original shared component.
-    public sealed class OfflineMap13GridVisibility : IDisposable
+    public sealed class OfflineMapGridVisibility : IDisposable
     {
         [Serializable] public sealed class Configuration
-        { public string manifest; public int mapClassId,viewRange; public int[] size; public Region[] regions; }
+        { public string manifest; public int mapClassId,viewRange; public int characterClassId = 3001; public int[] size; public Region[] regions; }
         [Serializable] public sealed class Region
         { public int region; public Pos2d[] RegionActivedGrids,RegionExtendVisiableGrids; }
         [Serializable] public sealed class BodyConfiguration
@@ -28,14 +28,18 @@ namespace Zjcs.Offline.World.NativeMap13GridVisibility
         private bool disposed;
         public GridVisibilityAgentComponent Component { get; }
 
-        public OfflineMap13GridVisibility(Configuration configuration,BodyConfiguration bodies,Pos2d position,
+        public OfflineMapGridVisibility(Configuration configuration,BodyConfiguration bodies,Pos2d position,
             byte[] savedVisibility,IEnumerable<int> publicRegions,Func<Pos2d,int> regionAt,Func<int,bool> entityActive)
         {
             this.configuration=configuration??throw new ArgumentNullException(nameof(configuration));
-            if(configuration.manifest!="871_156598"||configuration.mapClassId!=13||configuration.size?.Length!=2
-                ||configuration.size[0]!=240||configuration.size[1]!=240||configuration.viewRange!=5||configuration.regions?.Length!=106
-                ||bodies?.manifest!=configuration.manifest||bodies.mapClassId!=13)
-                throw new InvalidDataException("Original Map13 visibility/body configuration is unbound.");
+            if(string.IsNullOrWhiteSpace(configuration.manifest)||configuration.mapClassId<=0||configuration.size?.Length!=2
+                ||configuration.size[0]<=0||configuration.size[1]<=0||(long)configuration.size[0]*configuration.size[1]>int.MaxValue
+                ||configuration.viewRange<0||configuration.characterClassId<=0||configuration.regions==null
+                ||bodies?.manifest!=configuration.manifest||bodies.mapClassId!=configuration.mapClassId
+                ||bodies.templates==null||bodies.entities==null)
+                throw new InvalidDataException("Official map visibility/body configuration is unbound.");
+            if(savedVisibility!=null&&savedVisibility.Length>0&&!IsValidSnapshot(savedVisibility,configuration.size[0],configuration.size[1]))
+                throw new InvalidDataException("Map visibility save differs from the configured dimensions or contains an invalid run.");
             regions=configuration.regions.ToDictionary(r=>r.region,r=>new MapActivedRegionGridInfo
                 {RegionActivedGrids=r.RegionActivedGrids,RegionExtendVisiableGrids=r.RegionExtendVisiableGrids});
             inputs=new Inputs(configuration,bodies,position,regionAt,entityActive);
@@ -54,13 +58,28 @@ namespace Zjcs.Offline.World.NativeMap13GridVisibility
             Component=new GridVisibilityAgentComponent{Host=inputs,ZipedData=(byte[])savedVisibility.Clone()};
             Component.OnAfterDeserialize();
             if(Component.Width!=configuration.size[0]||Component.Height!=configuration.size[1])
-                throw new InvalidDataException("Map13 visibility save dimensions differ from the original map.");
+                throw new InvalidDataException("Map visibility save dimensions differ from the original map.");
             Component.Start();
+        }
+        // Keep the official height/width header and header-only all-visible branch.
+        // Validate before invoking its recovering decoder: a corrupt local save must
+        // not silently become a partially explored map.
+        public static bool IsValidSnapshot(byte[] bytes,int width,int height)
+        {
+            if(bytes==null||bytes.Length<8||bytes.Length>65536||(bytes.Length-8)%8!=0
+                ||width<=0||height<=0||BitConverter.ToInt32(bytes,0)!=height||BitConverter.ToInt32(bytes,4)!=width)return false;
+            long cells=(long)width*height;
+            for(int i=8;i<bytes.Length;i+=8)
+            {
+                int start=BitConverter.ToInt32(bytes,i),count=BitConverter.ToInt32(bytes,i+4);
+                if(start<0||count<0||(long)start+count>cells)return false;
+            }
+            return true;
         }
         public bool IsVisible(Pos2d position)=>Component.GetPosVisibility(position);
         public void MovePlayer(Pos2d position)
         {
-            if(disposed)throw new ObjectDisposedException(nameof(OfflineMap13GridVisibility));
+            if(disposed)throw new ObjectDisposedException(nameof(OfflineMapGridVisibility));
             var grid=inputs.Player.Grid;var previous=grid.Pos;
             if(previous==position)return;
             grid.Pos=position;grid.PosUpdatedEvent.FireEvent(grid,previous);
@@ -88,13 +107,13 @@ namespace Zjcs.Offline.World.NativeMap13GridVisibility
             public readonly ContainerInput ContainerValue;public readonly GroundInput Ground;public readonly MapComponent Map=new MapComponent();
             public readonly AreaInput Area;public readonly EntityInput Root,Player;public readonly CharacterInput Character;
             public readonly Dictionary<int,EntityInput> Entities=new Dictionary<int,EntityInput>();
-            private readonly Dictionary<int,BodyTemplate> templates;private readonly int viewRange;
+            private readonly Dictionary<int,BodyTemplate> templates;private readonly int viewRange; public readonly int MapClassId;
             public Inputs(Configuration config,BodyConfiguration bodies,Pos2d position,Func<Pos2d,int> regionAt,Func<int,bool> active)
             {
-                viewRange=config.viewRange;ContainerValue=new ContainerInput(this);Ground=new GroundInput(config.size,active);Area=new AreaInput(regionAt);
+                MapClassId=config.mapClassId;viewRange=config.viewRange;ContainerValue=new ContainerInput(this);Ground=new GroundInput(config.size,active);Area=new AreaInput(MapClassId,regionAt);
                 templates=bodies.templates.ToDictionary(t=>t.classId);
                 foreach(var template in templates.Values)template.body.Init();
-                Root=new EntityInput(this,0,13,null,null);Player=new EntityInput(this,-1,3001,templates[3001].body,null);Player.SetPosition(position);
+                Root=new EntityInput(this,0,MapClassId,null,null);Player=new EntityInput(this,-1,config.characterClassId,templates[config.characterClassId].body,null);Player.SetPosition(position);
                 Character=new CharacterInput(Player,config.viewRange);Map.MapCharacterDict.Add(1,Character);
                 foreach(var placement in bodies.entities)
                 {
@@ -122,15 +141,15 @@ namespace Zjcs.Offline.World.NativeMap13GridVisibility
                 var result=new HashSet<Pos2d>();
                 foreach(int id in identifiers)
                 {
-                    if(!Entities.TryGetValue(id,out var entity))throw new InvalidDataException("Original Map13 camp member is missing: "+id);
+                    if(!Entities.TryGetValue(id,out var entity))throw new InvalidDataException("Original map camp member is missing: "+id);
                     entity.Body?.GetBodyAddOneRange(entity.Placement.transform.Pos,result);
                 }
                 return result;
             }
-            public override int GetSpawnCharacterViewRange(int mapClassId)=>mapClassId==13?viewRange:throw new InvalidDataException("Unexpected visibility map.");
+            public override int GetSpawnCharacterViewRange(int mapClassId)=>mapClassId==MapClassId?viewRange:throw new InvalidDataException("Unexpected visibility map.");
         }
         private sealed class ContainerInput:EcContainer
-        { private readonly Inputs inputs;public ContainerInput(Inputs inputs){this.inputs=inputs;}public override object Id=>13;public override int ClassId=>13;public override VisibilityEntity RootEntity=>inputs.Root; }
+        { private readonly Inputs inputs;public ContainerInput(Inputs inputs){this.inputs=inputs;}public override object Id=>inputs.MapClassId;public override int ClassId=>inputs.MapClassId;public override VisibilityEntity RootEntity=>inputs.Root; }
         private sealed class EntityInput:VisibilityEntity
         {
             private readonly Inputs inputs;private readonly int id,classId;public readonly GridInput Grid;public readonly GridTransformComponentInfo Body;public readonly BodyPlacement Placement;
@@ -158,7 +177,7 @@ namespace Zjcs.Offline.World.NativeMap13GridVisibility
         private sealed class CharacterInput:IMapCharacter
         { public CharacterInput(EntityInput entity,int range){Entity=entity;ViewRange=range;}public VisibilityEntity Entity{get;}public GridTransformComponent GridTransform=>Entity.GridTransform;public VisibilityCharacterData Character{get;}=new VisibilityCharacterData{PlayerId=1};public int ViewRange{get;} }
         private sealed class AreaInput:AreaAgentComponent
-        { private readonly Func<Pos2d,int> regionAt;public AreaInput(Func<Pos2d,int> regionAt){this.regionAt=regionAt??throw new ArgumentNullException(nameof(regionAt));}public override int GridToRegion(int mapClassId,Pos2d position)=>mapClassId==13?regionAt(position):-1; }
+        { private readonly int mapId;private readonly Func<Pos2d,int> regionAt;public AreaInput(int mapId,Func<Pos2d,int> regionAt){this.mapId=mapId;this.regionAt=regionAt??throw new ArgumentNullException(nameof(regionAt));}public override int GridToRegion(int mapClassId,Pos2d position)=>mapClassId==mapId?regionAt(position):-1; }
         private sealed class GroundInput:GridGroundComponent
         {
             private readonly int[] size;private readonly Func<int,bool> active;private readonly Dictionary<Pos2d,List<EntityInput>> cells=new Dictionary<Pos2d,List<EntityInput>>();

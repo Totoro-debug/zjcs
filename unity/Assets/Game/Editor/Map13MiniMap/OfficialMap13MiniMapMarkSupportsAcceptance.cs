@@ -129,7 +129,7 @@ namespace Zjcs.Editor.Map13MiniMap
             var host=new GameObject("OriginalMarkerSupportFixture");host.SetActive(false);var map=host.AddComponent<Map13SupportFixture>();var handler=host.AddComponent<MiniMapKeepSizeHandler>();var player=new Player();var support=new Support();map.Player=player;map.Support=support;
             map.Settings=AssetDatabase.LoadAssetAtPath<MiniMapSettings>("Assets/Official/World/Map/13/NativeMiniMapSettings/ScriptableConfig/Modules/MapCommon/MiniMapSettings.asset");
             var labels=new DescriptionLabels();var tips=new Tips();var q=new Queries();map.Queries=q;map.ManagerQueries=q;
-            var config=JsonUtility.FromJson<Zjcs.Offline.World.NativeMap13GridVisibility.OfflineMap13GridVisibility.BodyConfiguration>(Resources.Load<TextAsset>("Map13/grid-entities").text);var body=config.templates.First().body;body.Init();
+            var config=JsonUtility.FromJson<Zjcs.Offline.World.MapGridVisibility.OfflineMapGridVisibility.BodyConfiguration>(Resources.Load<TextAsset>("Map13/grid-entities").text);var body=config.templates.First().body;body.Init();
             var visibility=new Visibility();var entity=new Entity{ClassId=8363,Id=new EcEntityIdentifier(13,1)};entity.GridTransform=new Grid{Entity=entity,Info=body,Pos=new Pos2d(110,145)};
             var stage=new Stage{Entity=entity,Active=true};entity.Components[typeof(IMiniMapMarkStage)]=stage;entity.Components[typeof(IMiniMapManagedStage)]=stage;entity.Components[typeof(IClientVisibilityHandler)]=visibility;
             var ownership=new Source{Entity=entity,Ownership=new EntityOwnershipData{Type=EntityOwnershipType.Player,OwnerId=9}};entity.Components[typeof(IMiniMapManagedEntitySource)]=ownership;
