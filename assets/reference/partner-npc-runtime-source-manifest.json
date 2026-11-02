@@ -1,0 +1,525 @@
+{
+  "manifest": "884_156692",
+  "operation": "Retarget assembly identities for historical map coexistence and bind RawFileUtility to bundled Windows files. All other type/field/method instructions must retain the original fingerprint.",
+  "assemblies": {
+    "Console": "4f073457924e149922da0ae155d1accf24aafa51639d51c60d2dfd33e76659c6",
+    "Luban": "de6598af27d573ba225e3d60c57a07034552b2a2b8f399fdead46b0c22b393b2",
+    "Framework.FirstPass.Runtime": "e4af045ab17cc6cb3a80403913c03ef5f15a736875c57bf67f3e44cff415627e"
+  },
+  "adapted_modules": [
+    {
+      "source": "Framework.FirstPass.Runtime",
+      "platformBinding": null,
+      "name": "Zjcs.Partners884.Framework.FirstPass.Runtime",
+      "methodFingerprint": "b02646aa0f368faabec321d20e48502a50bbe88c8c93826d266c77a965d89ddc",
+      "sourceModuleId": "05e23a89-978e-468f-a23f-13fd56e083f1",
+      "moduleId": "2c78f75e-a14a-46e6-9d0f-15082077ea44",
+      "sha256": "25479079b9319d5c9239d743ae8dc82f6ee863f233a6b98716d5e13e832104dc"
+    },
+    {
+      "source": "Console",
+      "platformBinding": {
+        "method": "System.String Common.RawFileUtility::GetRawFilePath(System.String)",
+        "originalInstructions": [
+          "IL_0000: call System.IServiceProvider Framework.DependencyInjection.ApplicationScope::get_Current()",
+          "IL_0005: call !!0 Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions::GetService<Framework.IRawFileLoader>(System.IServiceProvider)",
+          "IL_000a: ldarg.0",
+          "IL_000b: callvirt YooAsset.RawFileHandle Framework.IRawFileLoader::LoadRawFile(System.String)",
+          "IL_0010: stloc.0",
+          "IL_0011: ldloc.0",
+          "IL_0012: callvirt System.String YooAsset.RawFileHandle::GetRawFilePath()",
+          "IL_0017: stloc.1",
+          "IL_0018: leave.s IL_0024",
+          "IL_001a: ldloc.0",
+          "IL_001b: brfalse.s IL_0023",
+          "IL_001d: ldloc.0",
+          "IL_001e: callvirt System.Void System.IDisposable::Dispose()",
+          "IL_0023: endfinally",
+          "IL_0024: ldloc.1",
+          "IL_0025: ret"
+        ],
+        "operation": "Resolve bundled local absolute path; no YooAsset or network cache lookup.",
+        "windowsInstructions": [
+          "IL_0000: ldarg.0",
+          "IL_0001: call System.String System.IO.Path::GetFullPath(System.String)",
+          "IL_0006: ret"
+        ]
+      },
+      "name": "Zjcs.Partners884.Console",
+      "methodFingerprint": "e7e1d35deb84772e6de69fe9570ec5c08426019fdc221c833a241b4d405d38ef",
+      "sourceModuleId": "a20ff94d-1cb1-4735-9028-ff5d6ce07886",
+      "moduleId": "2b5179ae-4d14-0247-5ac1-c35f486186c5",
+      "sha256": "740824cb134816d92c978176d43736efd4f5c743cd0e1d06cb94f6611f489216"
+    },
+    {
+      "source": "publisher LiteDB 5.0.20 netstandard2.0",
+      "name": "LiteDB",
+      "moduleId": "b132ccd6-5c02-42e0-a5e3-839c6502d6c3",
+      "sha256": "cb20227a771e862fe98301d1407a2eaab26b032e54c1c429c1a8fbed6d1d4c7e"
+    }
+  ],
+  "litedb": {
+    "url": "https://api.nuget.org/v3-flatcontainer/litedb/5.0.20/litedb.5.0.20.nupkg",
+    "package_sha256": "5fa8d0e820a5acb7e408201c88be6de1191ac61888c677d476062eaf9025b566",
+    "payload_sha256": "cb20227a771e862fe98301d1407a2eaab26b032e54c1c429c1a8fbed6d1d4c7e"
+  },
+  "tables": [
+    {
+      "location": "Config/Luban/game_settings.g.bytes",
+      "source": {
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "-3869022733471997335",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "payload_sha256": "fca2ae301cb5d5fc345377fedb2a97634682e286f6bede6a738c1be96d1a890e"
+      },
+      "path": "unity/Assets/Official/Partners/NpcRuntime/Tables/game_settings.g.bytes",
+      "sha256": "fca2ae301cb5d5fc345377fedb2a97634682e286f6bede6a738c1be96d1a890e"
+    },
+    {
+      "location": "Config/Luban/npc_dialogue.g.bytes",
+      "source": {
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "2031222805033181728",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "payload_sha256": "ed3c1ac353b2577d67714a8c89930aa7b857e5667e6df9ac97883f3b025f99b1"
+      },
+      "path": "unity/Assets/Official/Partners/NpcRuntime/Tables/npc_dialogue.g.bytes",
+      "sha256": "ed3c1ac353b2577d67714a8c89930aa7b857e5667e6df9ac97883f3b025f99b1"
+    },
+    {
+      "location": "Config/Luban/npc.g.bytes",
+      "source": {
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "-4093373862970861037",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "payload_sha256": "3ae4b5dd63d07b7d80a03ecbc511f04d32839c82b301ef966328be81b71aa76a"
+      },
+      "path": "unity/Assets/Official/Partners/NpcRuntime/Tables/npc.g.bytes",
+      "sha256": "3ae4b5dd63d07b7d80a03ecbc511f04d32839c82b301ef966328be81b71aa76a"
+    },
+    {
+      "location": "Config/Luban/npc_profession_detail.g.bytes",
+      "source": {
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "2225842853266016655",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "payload_sha256": "4b4f55355380754cb7a8257d3f7d28f59bc73d5031747e017c69d27eda1fe592"
+      },
+      "path": "unity/Assets/Official/Partners/NpcRuntime/Tables/npc_profession_detail.g.bytes",
+      "sha256": "4b4f55355380754cb7a8257d3f7d28f59bc73d5031747e017c69d27eda1fe592"
+    },
+    {
+      "location": "Config/Luban/npc_level_detail.g.bytes",
+      "source": {
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "-1434276597398545619",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "payload_sha256": "f618fafc2155a57d5c06aa4e499e4ae81e611998a3d38b65922552bb62017144"
+      },
+      "path": "unity/Assets/Official/Partners/NpcRuntime/Tables/npc_level_detail.g.bytes",
+      "sha256": "f618fafc2155a57d5c06aa4e499e4ae81e611998a3d38b65922552bb62017144"
+    },
+    {
+      "location": "Config/Luban/prop_cfg.g.bytes",
+      "source": {
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "-5504087048174519210",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "payload_sha256": "849cde72b0a26881cb224119dfd31b6af1d7665ec41a2635c4fad97442da046c"
+      },
+      "path": "unity/Assets/Official/Partners/NpcRuntime/Tables/prop_cfg.g.bytes",
+      "sha256": "849cde72b0a26881cb224119dfd31b6af1d7665ec41a2635c4fad97442da046c"
+    },
+    {
+      "location": "Config/Luban/level_prop_default_value.g.bytes",
+      "source": {
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "-3955754053971000225",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "payload_sha256": "e866fc9ed6f08b9c2debb0639c7626817e45efa7451cc5b88514720d5210ef98"
+      },
+      "path": "unity/Assets/Official/Partners/NpcRuntime/Tables/level_prop_default_value.g.bytes",
+      "sha256": "e866fc9ed6f08b9c2debb0639c7626817e45efa7451cc5b88514720d5210ef98"
+    },
+    {
+      "location": "Config/Luban/role_prop_group.g.bytes",
+      "source": {
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "3355735935519861306",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "payload_sha256": "b52c3e07f08399423244cc858114098dc3712902524836fab2e8e03f681ddf13"
+      },
+      "path": "unity/Assets/Official/Partners/NpcRuntime/Tables/role_prop_group.g.bytes",
+      "sha256": "b52c3e07f08399423244cc858114098dc3712902524836fab2e8e03f681ddf13"
+    },
+    {
+      "location": "Config/Luban/level_number.g.bytes",
+      "source": {
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "-5102505721400995906",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "payload_sha256": "dcc3a4302e5b2c71049880398a606e801291321e9ecccf72aa391ec99aa6341c"
+      },
+      "path": "unity/Assets/Official/Partners/NpcRuntime/Tables/level_number.g.bytes",
+      "sha256": "dcc3a4302e5b2c71049880398a606e801291321e9ecccf72aa391ec99aa6341c"
+    },
+    {
+      "location": "Config/Luban/item.g.bytes",
+      "source": {
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "3644532119292667704",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "payload_sha256": "da276129e605494f2392572880d2cbc0354da14c4151bea6d7dcc90a69be7888"
+      },
+      "path": "unity/Assets/Official/Partners/NpcRuntime/Tables/item.g.bytes",
+      "sha256": "da276129e605494f2392572880d2cbc0354da14c4151bea6d7dcc90a69be7888"
+    },
+    {
+      "location": "Config/Luban/skill.g.bytes",
+      "source": {
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "1398458758611605706",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "payload_sha256": "5da6dd4982bdb6259e13043da7e2b7b4dc6b655beff1661b5f92f4fd65e0c81f"
+      },
+      "path": "unity/Assets/Official/Partners/NpcRuntime/Tables/skill.g.bytes",
+      "sha256": "5da6dd4982bdb6259e13043da7e2b7b4dc6b655beff1661b5f92f4fd65e0c81f"
+    },
+    {
+      "location": "Config/Luban/profession_base.g.bytes",
+      "source": {
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "-5402877092816210485",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "payload_sha256": "92eba63835e3300821811c21bb9fc5cbdeb36699e12bbeb9f0c0e1dab79170a5"
+      },
+      "path": "unity/Assets/Official/Partners/NpcRuntime/Tables/profession_base.g.bytes",
+      "sha256": "92eba63835e3300821811c21bb9fc5cbdeb36699e12bbeb9f0c0e1dab79170a5"
+    },
+    {
+      "location": "Config/Luban/entity_prop_group_level.g.bytes",
+      "source": {
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "7464518659288171045",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "payload_sha256": "edefac87ee6014d53b97cf6235c6d73581b1199a65fb5cfd796d1cd2e5fecd27"
+      },
+      "path": "unity/Assets/Official/Partners/NpcRuntime/Tables/entity_prop_group_level.g.bytes",
+      "sha256": "edefac87ee6014d53b97cf6235c6d73581b1199a65fb5cfd796d1cd2e5fecd27"
+    },
+    {
+      "location": "Config/Luban/score_level_group.g.bytes",
+      "source": {
+        "source": {
+          "bundle": "defaultpackage_assets_config_luban.bundle",
+          "bundle_hash": "c127151ca016b1013e487423db2b7090",
+          "path_id": "-1732447024465190596",
+          "origin": "apk_zip",
+          "manifest": "884_156692",
+          "apk_manifest": "881_156673",
+          "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+          "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+          "raw_size": 2142435,
+          "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+        },
+        "payload_sha256": "beba3649421b3ef5f6bcecca40b1396bed911c2f070b40f56a7fce1e5d61174e"
+      },
+      "path": "unity/Assets/Official/Partners/NpcRuntime/Tables/score_level_group.g.bytes",
+      "sha256": "beba3649421b3ef5f6bcecca40b1396bed911c2f070b40f56a7fce1e5d61174e"
+    }
+  ],
+  "binary": {
+    "source": {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/WwiseBnk/11e11b3ef06eaece6061f07f8f399542.rawfile",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431"
+    },
+    "bundle": {
+      "name": "wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile",
+      "hash": "11e11b3ef06eaece6061f07f8f399542",
+      "size": 9107096,
+      "record_offset": 17449,
+      "unity_crc": 0,
+      "file_crc": 1870833886,
+      "encrypted": false,
+      "dependencies": [],
+      "tags": [
+        "Payd_Base"
+      ],
+      "file": "11e11b3ef06eaece6061f07f8f399542.rawfile"
+    },
+    "payload_sha256": "1b8e2cf7029ba8a80750f54aa35658878166d1bfbe2e206317473b43f6af3f1f"
+  },
+  "dependencies": {
+    "catalog": {
+      "path": "unity/Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset",
+      "sha256": "0b2e0cfc6ae2b0d3046b0131a1640871022d29dea080642ad54e5b5524838961",
+      "canonical_lf_sha256": "b64951b1e55d9b90f627d25bf36dd96aa944e462560ca9e8bd7df0b81a763cfe",
+      "text_conversion": "Compare canonical LF text to the existing receipt; retain the actual Windows working-tree hash separately."
+    },
+    "assemblies": [
+      {
+        "name": "Console",
+        "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Console.bytes",
+        "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397",
+        "moduleId": "00786404-401e-459e-8a69-c76aa2a18151"
+      },
+      {
+        "name": "Luban",
+        "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Luban.bytes",
+        "sha256": "de6598af27d573ba225e3d60c57a07034552b2a2b8f399fdead46b0c22b393b2",
+        "moduleId": "19f265d3-52f9-4320-980f-f0fdc35992e1"
+      },
+      {
+        "name": "Framework.FirstPass.Runtime",
+        "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Framework.FirstPass.Runtime.bytes",
+        "sha256": "fe49d4ce3611fbd7f9a2fe73fdd0986253b9f44517eb1044e717d901dd2caabe",
+        "moduleId": "ced27c5d-1d0c-4018-87e1-eac7c2a675d5"
+      },
+      {
+        "name": "Microsoft.Extensions.Logging.Abstractions",
+        "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.Logging.Abstractions.bytes",
+        "sha256": "e899e37dfc2dd433807c205e764c32ea34bb95da083e189d7615947dd16c51e8",
+        "moduleId": "5f591c74-c7fe-413b-91b5-87d6135ea5df"
+      },
+      {
+        "name": "ZLogger",
+        "path": "unity/Assets/Official/World/Map/14/SharedRuntime/ZLogger.bytes",
+        "sha256": "149f3ae932cbd19a24f0597ce9ff8688e0fbf8070aab2d892c241e92defda5af",
+        "moduleId": "a8894818-d2ee-475a-8b33-95b94b7a5e5a"
+      },
+      {
+        "name": "GFrameCore",
+        "path": "unity/Assets/Official/World/Map/14/SharedRuntime/GFrameCore.bytes",
+        "sha256": "5c70676db44ccece73cc86da5c3a8ad4e3bc14184dc380997571d205d606c66c",
+        "moduleId": "a5b9c960-f710-b17e-4315-2137a8a01de2"
+      },
+      {
+        "name": "GFrameCore.Extensions.ZLogger",
+        "path": "unity/Assets/Official/World/Map/14/SharedRuntime/GFrameCore.Extensions.ZLogger.bytes",
+        "sha256": "6b874f480e0f2bd7067a4980d25f2baebe882c67398c1dc2056e64bcfe59a077",
+        "moduleId": "49cb129f-1d48-d7cd-c01a-7c5ab6bec063"
+      }
+    ],
+    "proofs": [
+      {
+        "path": "assets/reference/official-map/map14-shared-ec-runtime-source-manifest.json",
+        "sha256": "72d6dc7bad3dba0060f5cb8dbcf87890a6d02cea5448c518a00a9d25fc981087"
+      },
+      {
+        "path": "assets/reference/official-map/map14-shared-serialization-source-manifest.json",
+        "sha256": "648e21c0f0ee791445730ccf8835ebdfe01cb92e0965818a65da79349cce1b1b"
+      }
+    ]
+  },
+  "official_source_sha256": {
+    ".tools/source-packages/current/884_156692/code-manifest.json": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4",
+    ".tools/source-packages/current/884_156692/official-code/global-metadata.dat": "c0fe5e062fb3ed1814781e54fd1b4859757970632655138adc091820ded88e0e",
+    ".tools/source-packages/current/884_156692/official-code/aot-metadata/source-manifest.json": "aaff0b5a2c873d332f49efd1a625f129aabaa1cb026dabb2ffe69d976c1fffc0",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcTargetData.cs": "8dd82f3532fc35e2016cc794ca1a5ac44cf0bf8f252a201ed7145080d76ceab7",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerLiteInfo.cs": "070e6d3fce2af3e3ca2256e714a6762711c7a8d120c2624a6ffaaf60ba44d47d",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcFightData.cs": "f244861fd8f60e8acb6d4665e2c5d7194bfdeca19bf46ea5f81a709207539f7e",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcInfo.cs": "387c584e748963f1870e9861fee043e68fcc741cf52409fcdeffe294007c6a8d",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcInfoParser.cs": "2323757139ca2742d3a563e983439feaefd03136d71a0b3094583a7c9d6e7eee",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcDialogueInfoParser.cs": "a122b4821249161941dd6309d26cccb3cadd5831606b8b4ecff000302d1ad97c",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcLevelDetailInfo.cs": "6d4f2cac45fa67140eb07f7e0c52ac54287988f8646bbd30e59f9b9c67cdbb38",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcLevelDetailInfoParser.cs": "1c7d00ac761e1512803374f09cb2446671043b899a6a8d8cb47e6fc78fa98b84",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcLevelDetailInfoWrap.cs": "43fddd6808aa0082b5bc09de6ac7790acd0cfad9b7bd5d2991b9e2b1d07283c7",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcProfessionDetailInfoParser.cs": "fdd0e426216bccb356931b176f88a20d1f6270ec3f2de1193d410cda38c6493d",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/BattleFormulaHandler.cs": "ce40db54d87030ded0a9f8a6dc95db5a3a4e46ae02bf76a9d273fe092a703d12",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/FormulaHandler.cs": "1c9d25ef741f342b419a85f53ed3287a7c86a7397847a6170176a62276fbce98",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/CommonCombatRatingRefData.cs": "77de8fecbbea4873a7529449e7c20702f004a86f37b18d6b54c2735fd20a7446",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RolePropGroupInfo.cs": "cabcee2a87ab7cf9b0ef8954c32192760e0009faa40d210b8badaf64ae24a455",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RolePropGroupInfoParser.cs": "0987eb182493b4e9e6d921fa54562d279eb1e603c2f472316f57cb18d9f452d2",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PropCfgInfoParser.cs": "9abccbd9a3d0c6ac9b4e399eb4ea630c9c550514cd7cc768bb59b0f74cd7c075",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/LevelNumberParser.cs": "43d7263626ef46dc66956ab9bdc6f997128d93f259926b6841b9675797fe6049",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/LevelPropParser.cs": "ff101b07975b5f195a9fb88a4e35a89a9ca84a19e0475c4db3416f841530abd8",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/LevelPropBinaryReader.cs": "36050a9a6c01fe4d255cf3966831036c22b67fcf4c232ada943fd002c69d752f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/LevelPropDefaultValueParser.cs": "8bdc9ed5d6aace504a82d66e55c4098f7a255b1fc619c5f861fce97b221996e1",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemInfoParser.cs": "0d7ff59ed30273d1b3f94135f326b3895b82cbc5e97a54a30aaf1f1e3bc6eabb",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/SkillInfoParser.cs": "0cce246f80ada0ddb672576926aff3a219b3850fa78f7a2e1783abbdd464609a",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ProfessionBaseInfoParser.cs": "801c076f2df4bce5ad6db9e9647066af7dc111438bdbc80ec556465381225e10",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/EntityPropGroupLevelInfoParser.cs": "3b2140d3f1ff700a9374e190a3d8ab405636802d8674b4e373630a36fb9697ee",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ScoreLevelGroupInfoParser.cs": "7b8f80071fd0bde50cdd9826f8694ffee54e53278800e7eab2c305d09b798099",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/RawFileUtility.cs": "3109ed557a6301e860bdc2ca57016c4fb6a59d02cc9b265739b6ee2642b4c0eb"
+  },
+  "generator_sha256": {
+    "scripts/prepare_partner_npc_runtime.py": "81670b2390dc9be85fc6bba032ea3706ccf3e4d8c2c63c29f1fc35d4f0e19fab",
+    "scripts/prepare_partner_npc_shared_validation.py": "be515f22c0174705c2221944a8668a69709239081dcb14bca5960f481a133354",
+    "scripts/prepare_partner_shared_identity.ps1": "a9cd8f910a3958b16acb60818c7ca09794c1c0021cfdd6c5f4e8d6a8386c78b1",
+    "scripts/fixtures/partner_npc_shared_validation.cs": "636e6b1ec5d54fa2a9c949aabec72c0647da4d1d8fa055b8a57a32ed676d1986"
+  },
+  "installed_sha256": {
+    "unity/Assets/Official/Partners/NpcRuntime/Zjcs.Partners884.Framework.FirstPass.Runtime.bytes": "25479079b9319d5c9239d743ae8dc82f6ee863f233a6b98716d5e13e832104dc",
+    "unity/Assets/Official/Partners/NpcRuntime/Zjcs.Partners884.Framework.FirstPass.Runtime.bytes.meta": "d1aad9790b7f0c7dca12915e91384a93fc4a055dd6687181ffa3538336d78e07",
+    "unity/Assets/Official/Partners/NpcRuntime/Zjcs.Partners884.Console.bytes": "740824cb134816d92c978176d43736efd4f5c743cd0e1d06cb94f6611f489216",
+    "unity/Assets/Official/Partners/NpcRuntime/Zjcs.Partners884.Console.bytes.meta": "38d0dcdca3fc1d14a5acfe6523d4d73d31b579e65630b45838b989db9c645fec",
+    "unity/Assets/Official/Partners/NpcRuntime/LiteDB.bytes": "cb20227a771e862fe98301d1407a2eaab26b032e54c1c429c1a8fbed6d1d4c7e",
+    "unity/Assets/Official/Partners/NpcRuntime/LiteDB.bytes.meta": "2e6b44f24ffc82d58b14986a74c5d87de5d20c5bedc95af927209e20bb1d4e94",
+    "unity/Assets/Official/Partners/NpcRuntime/LiteDB-LICENSE.txt": "0f077c548c9f6f6181d59a6dc1ddca08f35968a9b38b7f45932932b0cb082081",
+    "unity/Assets/Official/Partners/NpcRuntime/LiteDB-LICENSE.txt.meta": "88f0a20dfcce19f106b11c4a78dc777e29345d03c96776e2b3ebe12405fc5a90",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/game_settings.g.bytes": "fca2ae301cb5d5fc345377fedb2a97634682e286f6bede6a738c1be96d1a890e",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/game_settings.g.bytes.meta": "90dbb507ecfe5b88036db5d6b648635e28b8bd2cb1da38c22a8de77e6a961842",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/npc_dialogue.g.bytes": "ed3c1ac353b2577d67714a8c89930aa7b857e5667e6df9ac97883f3b025f99b1",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/npc_dialogue.g.bytes.meta": "4d0bd2066576e2aed168f55c0000d854ec488f031742571d748cf954155b8ce5",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/npc.g.bytes": "3ae4b5dd63d07b7d80a03ecbc511f04d32839c82b301ef966328be81b71aa76a",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/npc.g.bytes.meta": "1f173300ec81cc2c30c4113ebcffd2a48f1b0eb666c6a9f934cb9a82886c13b8",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/npc_profession_detail.g.bytes": "4b4f55355380754cb7a8257d3f7d28f59bc73d5031747e017c69d27eda1fe592",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/npc_profession_detail.g.bytes.meta": "d4b05c86508acc34f3b344cb36f4b14e3d75ca7a5679bb1674b773f62ed9b91d",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/npc_level_detail.g.bytes": "f618fafc2155a57d5c06aa4e499e4ae81e611998a3d38b65922552bb62017144",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/npc_level_detail.g.bytes.meta": "751b6f80349d6401e2f00866ce3ce118f8113fb37381bafa14bf1e93c85dd2bd",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/prop_cfg.g.bytes": "849cde72b0a26881cb224119dfd31b6af1d7665ec41a2635c4fad97442da046c",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/prop_cfg.g.bytes.meta": "0b1d2d064b1cd5f4af7c02d167ec1b3aff1a2275258ee468ca0fb0b0d7bd9712",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/level_prop_default_value.g.bytes": "e866fc9ed6f08b9c2debb0639c7626817e45efa7451cc5b88514720d5210ef98",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/level_prop_default_value.g.bytes.meta": "0c4d08aea7c9091e40aec83ab11048c3fe4592865955629cff865bc93c379085",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/role_prop_group.g.bytes": "b52c3e07f08399423244cc858114098dc3712902524836fab2e8e03f681ddf13",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/role_prop_group.g.bytes.meta": "75c8ad96c36c374f45dfe30d9de851d265b6578cdcfdb57f1e47fc2e5121260a",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/level_number.g.bytes": "dcc3a4302e5b2c71049880398a606e801291321e9ecccf72aa391ec99aa6341c",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/level_number.g.bytes.meta": "583f43e7367d4a53c09d8c1cead219eaf2ec0302fd3af43487dd6c5661740b0c",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/item.g.bytes": "da276129e605494f2392572880d2cbc0354da14c4151bea6d7dcc90a69be7888",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/item.g.bytes.meta": "86b2e74618ebc4e9ae97f810cd157978252b5a7327a3a9df21c149baee186b9f",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/skill.g.bytes": "5da6dd4982bdb6259e13043da7e2b7b4dc6b655beff1661b5f92f4fd65e0c81f",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/skill.g.bytes.meta": "8957aa701e59ec1633f874875612d5ae25be004e8d2b6995a706b17945a26037",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/profession_base.g.bytes": "92eba63835e3300821811c21bb9fc5cbdeb36699e12bbeb9f0c0e1dab79170a5",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/profession_base.g.bytes.meta": "4cca8bd93f684a5458ee56a6d72bb017015fc14c18a80384d22ab50ee845d899",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/entity_prop_group_level.g.bytes": "edefac87ee6014d53b97cf6235c6d73581b1199a65fb5cfd796d1cd2e5fecd27",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/entity_prop_group_level.g.bytes.meta": "607016bf0cabea151c4f946a82bf97562a30af9ef912cafe6e6c2185ecaa049a",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/score_level_group.g.bytes": "beba3649421b3ef5f6bcecca40b1396bed911c2f070b40f56a7fce1e5d61174e",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables/score_level_group.g.bytes.meta": "4b1ed197a63a829371ee4990cd14250b7808ded76cce22f44917ef5104003ad2",
+    "unity/Assets/StreamingAssets/PartnerNpcShared/Config/Binary/level_prop.g.bytes": "1b8e2cf7029ba8a80750f54aa35658878166d1bfbe2e206317473b43f6af3f1f",
+    "unity/Assets/StreamingAssets/PartnerNpcShared/Config/Binary/level_prop.g.bytes.meta": "0b6e587b162ff9fa1e1cbb1880b51125aef5b2961e0c4249da6b970b643db357",
+    "unity/Assets/Game/Runtime/Offline/PartnersNpc.meta": "7bc0e950404907252f5bc2aaf9c84be93a5c538341bb9246733826a2ae955e23",
+    "unity/Assets/Official/Partners/NpcRuntime.meta": "f7693dbaca703249320926b45e73ca7d86453b889ecd98a03c8ebf3c1c2744bf",
+    "unity/Assets/Official/Partners/NpcRuntime/Tables.meta": "970b44806f2034b8c74999108002a098d2a9856e03871fff01f7d7d0e33d33f1",
+    "unity/Assets/StreamingAssets/PartnerNpcShared/Config/Binary.meta": "563d78c8e9d36e554c9282b68f28a353780e822646a8cc1da9a91c5ffb91573b",
+    "unity/Assets/StreamingAssets/PartnerNpcShared/Config.meta": "3032d7b5ffed4ddc1d2796da4959aa944b22a93fcc132178950f74bcd7a07d2a",
+    "unity/Assets/StreamingAssets/PartnerNpcShared.meta": "01ea73364ef4f9d2e2883d946c53b953a2de4044646fabbb769203d72ca2612b",
+    "unity/Assets/Game/Runtime/Offline/PartnersNpc/OfficialPartnerNpcRuntimeCatalog.cs": "c8ecd8e7fd507ba68605e9287255e400a18012b2935976dc000b03feb747c07b",
+    "unity/Assets/Game/Runtime/Offline/PartnersNpc/OfficialPartnerNpcRuntimeCatalog.cs.meta": "f5b1cecbb7c74735987658b870730fdedd783c8335ce1da741cacf38d906aa4e",
+    "unity/Assets/Game/Runtime/Offline/PartnersNpc/OfflinePartnerNpcAssemblies.cs": "59e9009e397d1a40fef908e1423bc7357198858995a3628c22792f9c1ef49dee",
+    "unity/Assets/Game/Runtime/Offline/PartnersNpc/OfflinePartnerNpcAssemblies.cs.meta": "2e637916016d6a11a7c8d4c8d304a3b39fd0cda7e39ffb3c416415607d16734d",
+    "unity/Assets/Game/Runtime/Offline/PartnersNpc/OfflinePartnerNpcRuntime.cs": "b0daecc6b4e2c9d303e42e44afba8fd5b409d87c88974ae3210fdac17238e48f",
+    "unity/Assets/Game/Runtime/Offline/PartnersNpc/OfflinePartnerNpcRuntime.cs.meta": "b819c68ba877bba439d26210c10211ff5b0298f701dd6b1f6acb036e11344716",
+    "unity/Assets/Game/Runtime/Offline/PartnersNpc/Zjcs.Offline.PartnersNpc.asmdef": "732c36610b5de6860bff4eb3875c15fe05ff0c8b51eabbc3a35718bb2c78f72d",
+    "unity/Assets/Game/Runtime/Offline/PartnersNpc/Zjcs.Offline.PartnersNpc.asmdef.meta": "3b76483a20c7d3d22adb412568fdb2479be34308bda79b7fff05d3a2ed815762",
+    "unity/Assets/Game/Resources/Partners/OfficialPartnerNpcRuntimeCatalog.asset": "53693a470c71d8ca74cd88cad12c5c6e6bfee3b8f1e2ab68ce08ac399dd05432",
+    "unity/Assets/Game/Resources/Partners/OfficialPartnerNpcRuntimeCatalog.asset.meta": "e0300fdc06ad5c4d4cf155539e94cdf6843897273d414bf54feb700fd155ed55"
+  }
+}

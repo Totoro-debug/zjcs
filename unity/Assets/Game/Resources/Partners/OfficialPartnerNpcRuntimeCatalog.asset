@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc9c17a9f70456e48b267879aaa71e49, type: 3}
+  m_Name: OfficialPartnerNpcRuntimeCatalog
+  m_EditorClassIdentifier:
+  manifest: 884_156692
+  dependencies: {fileID: 11400000, guid: 42fa1d4ff6ab10b819187a9729c30396, type: 2}
+  assemblies:
+  - Name: Zjcs.Partners884.Framework.FirstPass.Runtime
+    Sha256: 25479079b9319d5c9239d743ae8dc82f6ee863f233a6b98716d5e13e832104dc
+    ModuleId: 2c78f75e-a14a-46e6-9d0f-15082077ea44
+    Data: {fileID: 4900000, guid: 4b9617af37324e6db7053fad213894e5, type: 3}
+  - Name: Zjcs.Partners884.Console
+    Sha256: 740824cb134816d92c978176d43736efd4f5c743cd0e1d06cb94f6611f489216
+    ModuleId: 2b5179ae-4d14-0247-5ac1-c35f486186c5
+    Data: {fileID: 4900000, guid: cfe6069d801a696884e774772de5707b, type: 3}
+  - Name: LiteDB
+    Sha256: cb20227a771e862fe98301d1407a2eaab26b032e54c1c429c1a8fbed6d1d4c7e
+    ModuleId: b132ccd6-5c02-42e0-a5e3-839c6502d6c3
+    Data: {fileID: 4900000, guid: de4283713e9cff3f6be7ac5837fdd17a, type: 3}
+  tables:
+  - Location: Config/Luban/game_settings.g.bytes
+    Sha256: fca2ae301cb5d5fc345377fedb2a97634682e286f6bede6a738c1be96d1a890e
+    Data: {fileID: 4900000, guid: b65cf1afd8cde8982dae87ab0141517e, type: 3}
+  - Location: Config/Luban/npc_dialogue.g.bytes
+    Sha256: ed3c1ac353b2577d67714a8c89930aa7b857e5667e6df9ac97883f3b025f99b1
+    Data: {fileID: 4900000, guid: 4c52f01c436d80534ce7f4de1cd4fa99, type: 3}
+  - Location: Config/Luban/npc.g.bytes
+    Sha256: 3ae4b5dd63d07b7d80a03ecbc511f04d32839c82b301ef966328be81b71aa76a
+    Data: {fileID: 4900000, guid: cdf7ea89858e37226501ab2cafb2fcfb, type: 3}
+  - Location: Config/Luban/npc_profession_detail.g.bytes
+    Sha256: 4b4f55355380754cb7a8257d3f7d28f59bc73d5031747e017c69d27eda1fe592
+    Data: {fileID: 4900000, guid: 0f2d3a900883dd1e0c3bbf83090ee0c2, type: 3}
+  - Location: Config/Luban/npc_level_detail.g.bytes
+    Sha256: f618fafc2155a57d5c06aa4e499e4ae81e611998a3d38b65922552bb62017144
+    Data: {fileID: 4900000, guid: afbcae620e32341d7ba55133b21b9593, type: 3}
+  - Location: Config/Luban/prop_cfg.g.bytes
+    Sha256: 849cde72b0a26881cb224119dfd31b6af1d7665ec41a2635c4fad97442da046c
+    Data: {fileID: 4900000, guid: 454ebb2a7914bc9394bc689a5f0f0689, type: 3}
+  - Location: Config/Luban/level_prop_default_value.g.bytes
+    Sha256: e866fc9ed6f08b9c2debb0639c7626817e45efa7451cc5b88514720d5210ef98
+    Data: {fileID: 4900000, guid: b5f7b6542ce330bb6f37af54785ee34e, type: 3}
+  - Location: Config/Luban/role_prop_group.g.bytes
+    Sha256: b52c3e07f08399423244cc858114098dc3712902524836fab2e8e03f681ddf13
+    Data: {fileID: 4900000, guid: 2a5cdec18edbcdf0f238e5462b63aeed, type: 3}
+  - Location: Config/Luban/level_number.g.bytes
+    Sha256: dcc3a4302e5b2c71049880398a606e801291321e9ecccf72aa391ec99aa6341c
+    Data: {fileID: 4900000, guid: d81bddcac513a2adb2196631b44aa2af, type: 3}
+  - Location: Config/Luban/item.g.bytes
+    Sha256: da276129e605494f2392572880d2cbc0354da14c4151bea6d7dcc90a69be7888
+    Data: {fileID: 4900000, guid: 82f87cc9173a03722f4ea6f8e301671c, type: 3}
+  - Location: Config/Luban/skill.g.bytes
+    Sha256: 5da6dd4982bdb6259e13043da7e2b7b4dc6b655beff1661b5f92f4fd65e0c81f
+    Data: {fileID: 4900000, guid: 9a14a0ccf53541a849103b1bedeafe90, type: 3}
+  - Location: Config/Luban/profession_base.g.bytes
+    Sha256: 92eba63835e3300821811c21bb9fc5cbdeb36699e12bbeb9f0c0e1dab79170a5
+    Data: {fileID: 4900000, guid: 31ac599994e002e749f885039771a823, type: 3}
+  - Location: Config/Luban/entity_prop_group_level.g.bytes
+    Sha256: edefac87ee6014d53b97cf6235c6d73581b1199a65fb5cfd796d1cd2e5fecd27
+    Data: {fileID: 4900000, guid: 66776ef204159f7c9216fa383859af48, type: 3}
+  - Location: Config/Luban/score_level_group.g.bytes
+    Sha256: beba3649421b3ef5f6bcecca40b1396bed911c2f070b40f56a7fce1e5d61174e
+    Data: {fileID: 4900000, guid: 1a8076d739de787d12dbd8a318bbe8da, type: 3}
+  propertyBinarySha256: 1b8e2cf7029ba8a80750f54aa35658878166d1bfbe2e206317473b43f6af3f1f

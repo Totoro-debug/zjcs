@@ -1745,3 +1745,21 @@ assets/reference/official-map/map15-current-ground-source-manifest.json text eol
 
 # Preserve the original butterfly payload bytes verified at runtime.
 unity/Assets/Official/World/Map/14/NativeButterflies/models.json text eol=lf
+
+# Preserve selected original NPC runtime payloads and their source fingerprints.
+scripts/prepare_partner_npc_runtime.py text eol=lf
+scripts/prepare_partner_npc_shared_validation.py text eol=lf
+scripts/prepare_partner_shared_identity.ps1 text eol=lf
+scripts/fixtures/partner_npc_shared_validation.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersNpc/** text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersNpc.meta text eol=lf
+unity/Assets/Game/Resources/Partners/OfficialPartnerNpcRuntimeCatalog.asset* text eol=lf
+unity/Assets/Official/Partners/NpcRuntime/** -text
+unity/Assets/Official/Partners/NpcRuntime.meta text eol=lf
+unity/Assets/Official/Partners/NpcRuntime/**/*.meta text eol=lf
+unity/Assets/Official/Partners/NpcRuntime/**/*.bytes -diff
+unity/Assets/StreamingAssets/PartnerNpcShared/** -text
+unity/Assets/StreamingAssets/PartnerNpcShared.meta text eol=lf
+unity/Assets/StreamingAssets/PartnerNpcShared/**/*.meta text eol=lf
+unity/Assets/StreamingAssets/PartnerNpcShared/**/*.bytes -diff
+assets/reference/partner-npc-runtime-source-manifest.json text eol=lf

@@ -400,6 +400,14 @@ Home 赠礼溢出回调现打开原窗口，保留原标题、说明、按钮、
 
 隔离 Unity Play Mode 已导入完整原窗口及外部消息行，核对全部组件引用，使用实际 2021 分支、官方字体／文字及原选项按钮模拟鼠标输入，验证真实写盘失败后不改存档／历史、不发通知，重试合法分支后保存节点 3，读档恢复、稳定视图／历史集合身份、过期另一选项拒绝、原组选项隐藏及奖励处理器启停订阅。三次点击均调用原绑定 PCM 的本地播放，选项前后实际渲染截图已查看。该检查明确直接准备原节点 2 并只初始化原选项组，未验证完整消息列表的自动播放、头像、奖励弹窗或超链接导航。主工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过，全工程静态检查通过（86,017 个 GUID）；上文本地通话事务也随本次主工程验证通过。完整窗口交互、Home 调用及 Windows Player 尚未完成。
 
+### 当前原伙伴身份、职业与战力数据（局部）
+
+`OfflinePartnerNpcRuntime` 直接执行选定 `884_156692` 的 `NpcTargetData`、`NpcFightData.CreateByNpcTarget`、`NpcLevelDetailInfoParser` 和 `BattleFormulaHandler`，生成原头像控件需要的身份、姓名键、图标、性别、职业、等级、阶位及战力。当前原表有 148 条 NPC 定义与 97 类有战斗配置的 NPC；无战斗配置的定义不推断职业或战力。保留请求等级／阶位与原详情查询的等级边界、阶位回退、技能生成、属性扣除和战力算法；原通讯录采用的 1 级、Norank 参数与助战承接主角等级／阶位的调用参数分别由所属入口提供，不把 `SubRank.None` 当成 `Norank`。
+
+`OfficialPartnerNpcRuntimeCatalog` 显式绑定 14 张原始 Luban 二进制表及所需程序集，原属性二进制随 Windows 本地文件交付；运行前核对载荷 SHA256 和程序集 MVID。当前 Console／FirstPass 与历史地图模块采用不同程序集名称，避免覆盖历史版本；除 `RawFileUtility.GetRawFilePath` 改为读取已打包的本地绝对路径外，原类型、字段与全部方法指令须通过转换前后指纹核对。LiteDB 使用原程序集要求的 5.0.20 发布者强命名实现并附许可证，不把 IL2CPP 签名占位程序集当作可执行实现。原 `Parsers`、公式和日志服务仅在本次解析／查询作用域内绑定，结束或异常后恢复；释放时关闭原二进制读取器。输入、平台适配指令、发布者包、资源引用及源码哈希见[伙伴运行数据来源](../../assets/reference/partner-npc-runtime-source-manifest.json)，重建入口为 `prepare_partner_shared_identity.ps1`／`prepare_partner_npc_runtime.py`。本批资源未纳入素材快照。
+
+隔离 Unity Play Mode 对照原二进制表的全部 148 条 NPC 身份与 97 类战斗配置，完成 1 级／Norank、20 级／Blackiron3 和 100 级下原参考属性组全部 40 个有效阶位的 4,074 次投影；原 8402 的 1 级／Norank 职业为法师、战力为 1045。原请求身份与等级／阶位保留、空阶位拒绝、未知 NPC 异常后的静态服务恢复、两个配置实例交替查询／释放／重建、历史地图程序集共存及重开均通过。主工程导入／编译和 `Zjcs.Editor.ProjectTools.Validate` 通过，全工程静态检查通过（86,311 个 GUID）。本节尚未绑定正式通讯录／通话的头像控件，未执行对应界面输入或 Windows Player 验证，不表示完整伙伴界面或助战功能已完成。
+
 ### 当前原生详情属性区与天赋合并（局部）
 
 `prepare_partner_detail_properties_ui.py` 迁移选定 `884_156692` 的 `NpcDetailPanelPropContent`，保留属性排序、旅行门槛、每组两项、交替背景、原珍宝百分比及转为整数的截断顺序。`PartnerNpcPropertyFormula` 提取原 `BattleFormulaHandler` 的好感／天赋计算及属性合并方法，读取实际存档的好感等级和已激活天赋节点；按当前 `PropId`、`PropLevel`、`PropTypes` 取值并合并，保留原零值、分支和执行顺序。`OfflinePartnerDetailPropertySource` 使用上文当前属性目录，补齐三类天赋属性，不采用历史总表的缺省值替代。
