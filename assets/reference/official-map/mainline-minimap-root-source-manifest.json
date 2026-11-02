@@ -13,6 +13,14 @@
     {
       "path": ".tools/source-packages/current/884_156692/official-code/client-source/OfflineMiniMapMarkManager.cs",
       "sha256": "7ecf5246233275784ad29ed971ce29d739815684e9fba1f51dfb69881105275b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/OfflineMiniMap.cs",
+      "sha256": "94f82b5b1ecd61a5113bd833aa49ca1b3115a6618d4328d297ab3dd87a3def79"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/framework-source/StateSwitcher.cs",
+      "sha256": "4321aa3e4c2a2c4a4575b20a6f2b7d4cb737ec970c0bc4c5900ad520d979cae5"
     }
   ],
   "outputs": [
@@ -26,7 +34,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/World/MainlineMiniMapRoot/Zjcs.Official.World.MainlineMiniMapRoot.asmdef",
-      "sha256": "e1e21688f4293a5b9ee35ee04342d570c1573e71eb71713a3ddd3ee219b6dc0d"
+      "sha256": "db5c1abeffafc7ea5afcf7ee04a8221efc256b5aa1f5706def04f8e08bdb7f8c"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/World/MainlineMiniMapRoot/Zjcs.Official.World.MainlineMiniMapRoot.asmdef.meta",
@@ -43,16 +51,56 @@
     {
       "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkManagers/OfflineMiniMapMarkManager.cs.meta",
       "sha256": "d581a850be7bc49fbad55d27d728a65d53c56b14461dbcfbebc43e864bae92fd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/MainlineMiniMapRoot/OfflineMiniMap.cs",
+      "sha256": "db27667b2e3ef39cfecd66f11fab8ded639c1d38ccef3ed3429ce741a564fb25"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/MainlineMiniMapRoot/OfflineMiniMap.cs.meta",
+      "sha256": "2ae75046ea125003ee7e3c7b527901bb950b7c7170d8820e2ed2581208aea6c0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/MainlineMiniMapRoot/IMiniMapOfflineDataSource.cs",
+      "sha256": "d912dace4f1df6efa2c7c60210924c6e27709fb9c15405f9099051cc02a8b30b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/MainlineMiniMapRoot/IMiniMapOfflineDataSource.cs.meta",
+      "sha256": "44d7d3923f54a9ee7611d0dccd199027f7a1f3917d9cd8bbc2e081e3977f31b2"
     }
   ],
   "historical_offline_initialization": "assets/reference/official-map/map13-minimap-mark-managers-code-source-manifest.json",
-  "operation": "Copy the complete original MiniMap root lifecycle, range ownership, full-screen ordering, camera positioning, mark lookup and close events. Replace only existing local state/configuration/resource ports, serialized field/property bridges and diagnostics. Preserve the camera view formula and entity body-offset iteration. Supersede only the historical offline marker Init body with the selected original null-data/container/region-list branches; retain its serialized identity and other methods.",
+  "reused_state_switcher": {
+    "historical_receipt": {
+      "path": "assets/reference/official-map/map13-label-core-code-source-manifest.json",
+      "sha256": "8081e6b371ba7c5d82712bb75bf288eea17cd6933602a076c4f4040b193c37d7"
+    },
+    "original": {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-source/StateSwitcher.cs",
+      "sha256": "4321aa3e4c2a2c4a4575b20a6f2b7d4cb737ec970c0bc4c5900ad520d979cae5"
+    },
+    "output": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/StateSwitcher.cs",
+      "sha256": "ebef710792b3eb0602837efe8e76bdf408f1b00ea436184bcd8e50bfb0b6f10c",
+      "meta_sha256": "a37083e9f2ea8eb759316fef6dcb961e149395fd265e86c6cccea46e9a62aec6"
+    }
+  },
+  "validation_preparation": {
+    "path": "scripts/prepare_mainline_minimap_offline_validation.py",
+    "sha256": "3cc250cb2f26b416ba1b4e04443bbe9c29cd0113a48c7ce136ee97d76b080d49"
+  },
+  "validation_fixture": {
+    "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapMasksAcceptance.cs",
+    "sha256": "4adf26c74fc829280e7a5934b4b0862664e7259ad097bb69d7a306bfd83a611b"
+  },
+  "operation": "Copy the complete original MiniMap root lifecycle, range ownership, full-screen ordering, camera positioning, mark lookup and close events. Replace only existing local state/configuration/resource ports, serialized field/property bridges and diagnostics. Preserve the camera view formula and entity body-offset iteration. Supersede only the historical offline marker Init body with the selected original null-data/container/region-list branches; retain its serialized identity and other methods. Copy the complete original OfflineMiniMap coordinator, preserving request/response filters and visible-content -> mask -> marker ordering; replace only the service request handle with a local data-source port. Omit the original editor RequireComponent constraint naming abstract migrated MiniMap; native root binding must validate the complete component before activation. Reuse the existing native StateSwitcher after selected source identity verification.",
   "limitations": [
-    "The original root remains an abstract local-state seam until the production map adapter and original prefab are bound. No formal UI, input, map-save or Player completion is asserted."
+    "The original root remains an abstract local-state seam until the production map adapter and original prefab are bound. No formal UI, input, map-save or Player completion is asserted.",
+    "The offline coordinator data-source seam is verified with deferred fixture responses; its production local-save projection is not yet connected."
   ],
   "hashing": "Repository text outputs use UTF-8 LF.",
   "tool": {
     "path": "scripts/prepare_mainline_minimap_root.py",
-    "sha256": "5833f602432dc82001271bf96c0c71ba4ec7cab651c7ae353e9a8a9cf7e7490b"
+    "sha256": "110b6e7f5b1139ed4cb64cdf927c31969b6e5316b6b15c3b8d1114b44762c4cc"
   }
 }

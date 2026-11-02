@@ -373,7 +373,7 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 
 小地图区域地面来源见 [Map10当前资源](official-map/map10-current-minimap-regions-source-manifest.json)、[Map11当前资源](official-map/map11-current-minimap-regions-source-manifest.json)、[Map12当前资源](official-map/map12-current-minimap-regions-source-manifest.json)、[Map13当前资源](official-map/map13-current-minimap-regions-source-manifest.json)、[Map14当前资源](official-map/map14-current-minimap-regions-source-manifest.json)、[Map16当前资源](official-map/map16-current-minimap-regions-source-manifest.json)与[公共绑定代码](official-map/mainline-minimap-regions-source-manifest.json)。`prepare_mainline_minimap_regions.py` 复用公共原生恢复器，记录所选884_156692的APK优先／匹配缓存、原Ground子树、地区prefab、YooAsset索引GUID及Windows转换依赖和逐文件哈希。原YooAsset GUID与转换缓存Unity GUID分别保留；仅核对两份区域管理源码与历史输入逐字节一致，不声明整版等价。历史小地图来源独立保留，本批未生成完整素材快照。
 
-完整小地图根及离线标记当前初始化的输入、输出与适配来源见[主线小地图根凭据](official-map/mainline-minimap-root-source-manifest.json)。`prepare_mainline_minimap_root.py` 从所选884源码迁移；历史871标记管理器凭据独立保留，当前凭据仅覆盖其中Init方法，重新生成历史管理器后须再运行本转换器。未生成完整素材快照。
+完整小地图根、离线协调组件及离线标记当前初始化的输入、输出与适配来源见[主线小地图根凭据](official-map/mainline-minimap-root-source-manifest.json)。`prepare_mainline_minimap_root.py` 从所选884源码迁移；历史871标记管理器凭据独立保留，当前凭据仅覆盖其中Init方法，重新生成历史管理器后须再运行本转换器。未生成完整素材快照。
 
 伙伴主角头像的选定884_156692原摄影棚、PlayerPortraitSettings／AppearanceConfig对象字段、三个原Sprite及Windows转换依赖见[主角头像来源](partner-player-portraits-source-manifest.json)。`prepare_partner_player_portraits.py` 记录APK优先／匹配缓存、CAB／对象身份、枚举列表恢复、显式脚本／资源绑定和逐文件哈希；当前角色与外观输入引用各自已校验来源，不混标历史头像配置，本批未生成完整素材快照。
 

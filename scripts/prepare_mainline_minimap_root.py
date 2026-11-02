@@ -67,6 +67,54 @@ def port_offline_initialization():
     return original, installed
 
 
+def port_offline_coordinator():
+    original = SOURCE.parent / 'OfflineMiniMap.cs'
+    raw = original.read_bytes()
+    if digest(raw) != '94f82b5b1ecd61a5113bd833aa49ca1b3115a6618d4328d297ab3dd87a3def79':
+        raise ValueError('Review the selected original offline minimap coordinator')
+    text = raw.decode('utf8').replace('\r\n', '\n')
+    text = replace_once(text, 'using Common;',
+        'using Zjcs.Official.World.NativeLabelUI;')
+    # The original editor constraint names MiniMap. Its migrated root is abstract;
+    # the native binding validates root presence before an instance is activated.
+    text = replace_once(text, '[RequireComponent(typeof(MiniMap))]\n', '')
+    text = replace_once(text,
+        'ServiceProxyBase<PlayerServiceProxyImpl>.Instance.OperPlayerGetOfflineMiniMapData(MiniMap.MapClassId)',
+        'DataSource.Request(MiniMap.MapClassId)')
+    text = replace_once(text, 'public class OfflineMiniMap : MiniMapManagerBase\n{',
+        'public class OfflineMiniMap : MiniMapManagerBase\n{\n'
+        '\tpublic IMiniMapOfflineDataSource DataSource { get; set; }\n')
+    output = DESTINATION / 'OfflineMiniMap.cs'
+    write(output, ('// Complete selected original coordinator with an injected local-data request port.\n'
+        'namespace Zjcs.Official.World.Map13MiniMap\n{\n' + text + '\n}\n').encode('utf8'))
+    script_meta(output, 'MonoImporter')
+    ports = DESTINATION / 'IMiniMapOfflineDataSource.cs'
+    write(ports, b'''using System;
+
+namespace Zjcs.Official.World.Map13MiniMap
+{
+    // The source must complete after Request returns, matching the original
+    // request handle's OnComplete subscription. The owner supplies local data.
+    public interface IMiniMapOfflineDataSource
+    {
+        MiniMapOfflineDataRequest Request(int mapClassId);
+    }
+
+    public sealed class MiniMapOfflineDataRequest
+    {
+        public event Action<PlayerOfflineMiniMapDataResponse, int> OnComplete;
+        public void Complete(PlayerOfflineMiniMapDataResponse response, int errorCode)
+            => OnComplete?.Invoke(response, errorCode);
+    }
+}
+''')
+    script_meta(ports, 'MonoImporter')
+    framework = SOURCE.parent.parent / 'framework-source/StateSwitcher.cs'
+    if digest(framework.read_bytes()) != '4321aa3e4c2a2c4a4575b20a6f2b7d4cb737ec970c0bc4c5900ad520d979cae5':
+        raise ValueError('Review selected StateSwitcher before reusing the migrated original')
+    return [original, framework], [output, Path(str(output) + '.meta'), ports, Path(str(ports) + '.meta')]
+
+
 def build():
     raw = SOURCE.read_bytes()
     if digest(raw) != EXPECTED:
@@ -174,25 +222,41 @@ namespace Zjcs.Official.World.Map13MiniMap
         'Map13MiniMapDescriptions', 'Map13MiniMapSizing', 'Map13MiniMapRegions',
         'Map13MiniMapView', 'Map13MiniMapCamera', 'Map13GridVisibility',
         'NativeMap13Labels', 'NativeTerrain', 'NativeCamera')]
-    references += ['Zjcs.Official.StoryPlayables', 'Zjcs.Official.WorldUI', 'Cinemachine']
+    references += ['Zjcs.Official.StoryPlayables', 'Zjcs.Official.WorldUI', 'Zjcs.Official.World.NativeLabelUI', 'Cinemachine']
     assembly = DESTINATION / 'Zjcs.Official.World.MainlineMiniMapRoot.asmdef'
     write(assembly, encode(dict(name='Zjcs.Official.World.MainlineMiniMapRoot', references=references, autoReferenced=True)))
     script_meta(assembly, 'AssemblyDefinitionImporter')
     meta(DESTINATION, folder=True)
     offline_original, offline_installed = port_offline_initialization()
+    coordinator_inputs, coordinator_outputs = port_offline_coordinator()
+    state_receipt = ROOT / 'assets/reference/official-map/map13-label-core-code-source-manifest.json'
+    historical_state = json.loads(state_receipt.read_bytes())
+    state_input, = [row for row in historical_state['inputs'] if row['path'].endswith('/StateSwitcher.cs')]
+    if state_input['sha256'] != digest(coordinator_inputs[1].read_bytes()):
+        raise ValueError('The selected state switcher differs from its historical original source')
+    state_output, = [row for row in historical_state['outputs'] if row['path'].endswith('/StateSwitcher.cs')]
+    for path, expected in ((ROOT / state_output['path'], state_output['sha256']),
+            (ROOT / (state_output['path'] + '.meta'), state_output['meta_sha256'])):
+        if digest(path.read_bytes().replace(b'\r\n', b'\n')) != expected:
+            raise ValueError('The reused original state switcher changed: ' + str(path))
     camera = SOURCE.parent / 'CameraUtils.cs'
     if digest(camera.read_bytes()) != 'c221f4c958c75ce978fe4a166c6234b6f9dce26c04985ed56739e19a54edb303':
         raise ValueError('Review the selected camera view-range formula')
     def record(path):
         return dict(path=path.relative_to(ROOT).as_posix(), sha256=digest(path.read_bytes().replace(b'\r\n', b'\n')))
     paths = [runtime, Path(str(runtime) + '.meta'), assembly, Path(str(assembly) + '.meta'),
-        Path(str(DESTINATION) + '.meta'), offline_installed, Path(str(offline_installed) + '.meta')]
+        Path(str(DESTINATION) + '.meta'), offline_installed, Path(str(offline_installed) + '.meta'), *coordinator_outputs]
     write(RECEIPT, encode(dict(format=1, manifest='884_156692',
         inputs=[dict(path=p.relative_to(ROOT).as_posix(), sha256=digest(p.read_bytes()))
-            for p in (SOURCE, camera, offline_original)], outputs=[record(p) for p in paths],
+            for p in (SOURCE, camera, offline_original, *coordinator_inputs)], outputs=[record(p) for p in paths],
         historical_offline_initialization='assets/reference/official-map/map13-minimap-mark-managers-code-source-manifest.json',
-        operation='Copy the complete original MiniMap root lifecycle, range ownership, full-screen ordering, camera positioning, mark lookup and close events. Replace only existing local state/configuration/resource ports, serialized field/property bridges and diagnostics. Preserve the camera view formula and entity body-offset iteration. Supersede only the historical offline marker Init body with the selected original null-data/container/region-list branches; retain its serialized identity and other methods.',
-        limitations=['The original root remains an abstract local-state seam until the production map adapter and original prefab are bound. No formal UI, input, map-save or Player completion is asserted.'],
+        reused_state_switcher=dict(historical_receipt=record(state_receipt), original=state_input,
+            output=state_output),
+        validation_preparation=record(ROOT / 'scripts/prepare_mainline_minimap_offline_validation.py'),
+        validation_fixture=record(ROOT / 'unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapMasksAcceptance.cs'),
+        operation='Copy the complete original MiniMap root lifecycle, range ownership, full-screen ordering, camera positioning, mark lookup and close events. Replace only existing local state/configuration/resource ports, serialized field/property bridges and diagnostics. Preserve the camera view formula and entity body-offset iteration. Supersede only the historical offline marker Init body with the selected original null-data/container/region-list branches; retain its serialized identity and other methods. Copy the complete original OfflineMiniMap coordinator, preserving request/response filters and visible-content -> mask -> marker ordering; replace only the service request handle with a local data-source port. Omit the original editor RequireComponent constraint naming abstract migrated MiniMap; native root binding must validate the complete component before activation. Reuse the existing native StateSwitcher after selected source identity verification.',
+        limitations=['The original root remains an abstract local-state seam until the production map adapter and original prefab are bound. No formal UI, input, map-save or Player completion is asserted.',
+            'The offline coordinator data-source seam is verified with deferred fixture responses; its production local-save projection is not yet connected.'],
         hashing='Repository text outputs use UTF-8 LF.', tool=record(Path(__file__)))))
     print('Migrated selected original MiniMap root:', runtime.relative_to(ROOT))
 
