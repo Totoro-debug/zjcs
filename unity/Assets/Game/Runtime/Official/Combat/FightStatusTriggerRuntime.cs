@@ -36,13 +36,18 @@ namespace Zjcs.Combat.Official
                     || (onlyStatus != null && status != onlyStatus)
                     || !status.RoundStartRulesSupported || (atStatusStart && !status.RoundStartTryAtStart)
                     || (!atStatusStart && status.RoundStartPhase != phase)
-                    || status.RoundStartDelayRound != 0 || status.RoundStartMeetCount != 1
+                    || status.RoundStartDelayRound != 0 || status.RoundStartMeetCount < 1
                     || (status.RoundStartMaxCount >= 0
                         && status.RoundStartTriggeredCount >= status.RoundStartMaxCount)
                     || FightStatusLifecycle.ResolveTargetUnitId(status,
                         status.RoundStartListenTarget, units) != listener.Id
                     || !Roll(status.RoundStartRate, random)) continue;
 
+                // User-confirmed offline rule: retain a reached threshold until a
+                // successful invocation resets it, when ResetMeetCountOnInvoke is set.
+                if (status.RoundStartMeetProgress < status.RoundStartMeetCount)
+                    status.RoundStartMeetProgress++;
+                if (status.RoundStartMeetProgress < status.RoundStartMeetCount) continue;
                 int added = 0;
                 foreach (FightBattleStatusStateTrigger trigger in status.RoundStartSkills)
                 {
@@ -74,7 +79,11 @@ namespace Zjcs.Combat.Official
                 if (catalog != null)
                     added += ApplyStatusTriggers(source, status, status.RoundStartStatuses,
                         catalog, random);
-                if (added > 0) status.RoundStartTriggeredCount++;
+                if (added > 0)
+                {
+                    status.RoundStartTriggeredCount++;
+                    if (status.RoundStartResetMeetCountOnInvoke) status.RoundStartMeetProgress = 0;
+                }
             }
             return result;
         }

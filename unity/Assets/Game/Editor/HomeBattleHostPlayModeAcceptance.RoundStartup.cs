@@ -205,5 +205,59 @@ namespace Zjcs.Editor
                 Debug.Log("[Round props hosts] " + host + ": original skills/effects and checkpoint passed.");
             }
         }
+        private static RoundMeetProbe ConfigureRoundMeetProbe(FightBattleCheckpoint checkpoint)
+        {
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_ROUND_MEET_ACCEPTANCE") != "1") return null;
+            var catalog = OfficialCombatAssetCatalog.LoadDefault().Load();
+            foreach (var unit in checkpoint.Units)
+            {
+                long hp = unit.Id == 1 ? 5000000L : 2000000L;
+                foreach (var property in unit.Properties.Concat(unit.BaseProperties))
+                {
+                    if (property.Id == catalog.PropertyType("MaxHp")) property.Value = hp;
+                    if (unit.Id != 1 && property.Id == catalog.PropertyType("Attack")) property.Value = 100L;
+                }
+                unit.MaxHp = unit.LastMaxHp = unit.Hp = unit.Turn.Hp = hp;
+            }
+            var source = catalog.CreateStatus(24026, 1, 1, 9924026, 0, 0, 5, 20, 1, null);
+            checkpoint.Units.Single(value => value.Id == 1).Statuses.Add(source);
+            return new RoundMeetProbe(source);
+        }
+
+        private sealed class RoundMeetProbe
+        {
+            private readonly FightBattleStatusState source;
+            private int lastRound;
+            public bool ReadyToCapture => lastRound >= 3;
+            public RoundMeetProbe(FightBattleStatusState source) { this.source = source; }
+            public void ObserveStep(OfficialBattleRuntimeController controller)
+            {
+                var cp = controller.Checkpoint;
+                var player = cp.Units.Single(value => value.Id == 1);
+                int round = player.SkillState.Round;
+                if (round == lastRound) return;
+                lastRound = round;
+                int count = Math.Max(0, round - 2);
+                var effect = player.Statuses.SingleOrDefault(value => value.ClassId == 24478);
+                Require(source.RoundStartMeetProgress == Math.Min(3, round)
+                    && source.RoundStartTriggeredCount == count && (effect != null) == (count > 0),
+                    "Original 24026 invoked before three eligible rounds or lost its reached threshold.");
+                if (effect != null)
+                    Require(effect.StackCount == Math.Min(5, count) && effect.SourceSkillRank == 5
+                        && effect.SourceSkillLevel == 20,
+                        "Original 24026 lost its repeated 24478 application or cultivation.");
+                Debug.Log("[Round meet hosts] personalRound=" + round + ", progress="
+                    + source.RoundStartMeetProgress + ", invoked=" + count + ", 24478 stacks=" + (effect?.StackCount ?? 0));
+            }
+            public void Verify(string host, FightBattleCheckpoint checkpoint)
+            {
+                Require(lastRound >= 4 && source.RoundStartTriggeredCount >= 2,
+                    host + " did not exercise both reaching and retaining the original condition gate.");
+                string saved = FightBattleCheckpointSerializer.Save(checkpoint);
+                Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
+                    host + " changed its condition gate after checkpoint reload.");
+                Debug.Log("[Round meet hosts] " + host + ": third round starts 24478; later rounds retain gate; checkpoint passed.");
+            }
+        }
     }
 }

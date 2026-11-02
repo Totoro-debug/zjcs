@@ -8,12 +8,21 @@ namespace Zjcs.Combat.Official
         {
             if (!status.HasRoundStartTrigger
                 || status.RoundStartDefinitionResolved && status.RoundStartTargetRulesResolved
-                    && status.RoundStartPropTargetRulesResolved) return;
+                    && status.RoundStartPropTargetRulesResolved && status.RoundStartMeetRulesResolved) return;
             var definition = statusCatalog.CreateStatus(status.ClassId, status.OwnerId,
                 status.CreatorId, status.InstanceId, status.RootSkillId, status.ApplyingSkillItemId,
                 status.SourceSkillRank, status.SourceSkillLevel, status.SourceSubRank, status.SourceProperties,
                 replacementProperties: status.ReplacementProperties, blessPropertyScales: status.BlessPropertyScales);
             status.RoundStartRulesSupported = definition.RoundStartRulesSupported;
+            if (!status.RoundStartMeetRulesResolved)
+            {
+                status.RoundStartResetMeetCountOnInvoke = definition.RoundStartResetMeetCountOnInvoke;
+                // Older supported definitions only had MeetCount=1. A recorded
+                // invocation already proves that this non-resetting threshold was met.
+                if (status.RoundStartMeetCount == 1 && status.RoundStartTriggeredCount > 0
+                    && !status.RoundStartResetMeetCountOnInvoke) status.RoundStartMeetProgress = 1;
+                status.RoundStartMeetRulesResolved = true;
+            }
             if (!status.RoundStartPropTargetRulesResolved)
             {
                 for (int i = 0; i < status.RoundStartSkills.Count && i < definition.RoundStartSkills.Count; i++)
@@ -75,7 +84,8 @@ namespace Zjcs.Combat.Official
             ExecuteHpStartupSkills(invocations);
             // User-confirmed offline boundary: finish the final invocation before removing
             // its source. Unlimited triggers never exhaust this counter.
-            if (status.RoundStartRemoveWhenNotEnoughTimes && status.RoundStartMaxCount >= 0
+            if (status.RoundStartTriggeredCount > before && status.RoundStartRemoveWhenNotEnoughTimes
+                && status.RoundStartMaxCount >= 0
                 && status.RoundStartMaxCount - status.RoundStartTriggeredCount < status.RoundStartMeetCount
                 && owner.Statuses.Contains(status)) FightStatusLifecycle.End(owner, status);
             return status.RoundStartTriggeredCount - before;

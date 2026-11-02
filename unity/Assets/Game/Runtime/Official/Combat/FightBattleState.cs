@@ -343,6 +343,9 @@ namespace Zjcs.Combat.Official
         public float RoundStartRate = 1f;
         public int RoundStartMaxCount = -1;
         public int RoundStartMeetCount = 1;
+        public int RoundStartMeetProgress;
+        public bool RoundStartResetMeetCountOnInvoke;
+        public bool RoundStartMeetRulesResolved;
         public int RoundStartTriggeredCount;
         public bool RoundStartTryAtStart;
         public bool RoundStartStartChecked;

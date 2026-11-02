@@ -1078,6 +1078,9 @@ namespace Zjcs.Combat.Official
                     : Int(roundStart, "MaxCount", -1),
                 RoundStartMeetCount = roundStart == null ? 1
                     : Int(roundStart, "MeetCount", 1),
+                RoundStartResetMeetCountOnInvoke = roundStart != null
+                    && Bool(roundStart, "ResetMeetCountOnInvoke"),
+                RoundStartMeetRulesResolved = true,
                 RoundStartTryAtStart = roundStart != null
                     && Bool(roundStart, "TryAtStart"),
                 RoundStartDefinitionResolved = true,
@@ -2526,7 +2529,7 @@ namespace Zjcs.Combat.Official
             return Int(component, "ListenCharacterType") == 0
                 && Int(component, "DelayRound") == 0
                 && Int(component, "DelayRoundType") == 0
-                && Int(component, "MeetCount", 1) == 1
+                && Int(component, "MeetCount", 1) >= 1
                 && (Int(component, "RoundStartPhase") == 0 || Int(component, "RoundStartPhase") == 5)
                 && Float(component, "TargetHpPer", -1f) < 0f
                 && !Bool(component, "TryAtNotForbidden")
