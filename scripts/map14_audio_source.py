@@ -15,16 +15,16 @@ from verify_current_audio_sources import mapping
 ROOT = Path(__file__).resolve().parents[1]
 def sha(raw): return hashlib.sha256(raw).hexdigest()
 class AudioSource:
-    def __init__(self):
+    def __init__(self, expected_version="871_156598", work_directory=None):
         self.selected = OfficialSource()
-        if self.selected.version != "871_156598": raise ValueError("Inspect selected Map14 audio version")
+        if self.selected.version != expected_version: raise ValueError("Inspect selected audio version: " + self.selected.version)
         with self.selected.apk.open("rb") as stream:
             if hashlib.file_digest(stream,"sha256").hexdigest() != self.selected.apk_sha256: raise ValueError("APK hash mismatch")
         self.archive = zipfile.ZipFile(self.selected.apk)
         self.inventory = {b["name"]:b for b in self.selected.manifest("WwiseBnk",self.archive)["bundles"]}
         self.cloud = CloudCache(self.selected.cloud_path,self.selected.version)
         self.packages = {}
-        self.temporary = tempfile.TemporaryDirectory(prefix="zjcs-map14-official-audio-")
+        self.temporary = tempfile.TemporaryDirectory(prefix="official-audio-", dir=work_directory)
         self.by_id = {}
         self.object_payloads = {}
         self.media_search_complete = False

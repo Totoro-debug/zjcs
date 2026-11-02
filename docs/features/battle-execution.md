@@ -410,6 +410,12 @@ NPC 外观复用验证：`OfficialMap12NpcBattleModelView` 是现有 Map12 队�
 
 公共移动朝向：按当前原 `FightActionSkillMoveComponent.StartImpl/UpdateFlipX`、`BattleFormulaHandler.CalcFlipX` 和 `MyFightActionSkillMove.DoMoveSourceTurn` 接通配置中的 `UpdateFlipX/ReverseFlipX`，在行动启动监听前提交最终朝向；逐格播放时中间格按网格X方向临时转向，进入最后一格前恢复该动作的最终朝向。竖直移动保留既有朝向，后撤遵从原 `UpdateFlipX=false`，原61771遵从反向标记；未配置的离线后撤不补造标记。单位朝向与每条动作的最终朝向均随公共战斗checkpoint序列化，旧存档缺字段时保留既有Direction初始化。原逻辑、保留854规则版本的配置与迁移入口见 [移动朝向来源](../../assets/reference/battle-animation/movement-facing-source-manifest.json)。Unity导入／编译、`ProjectTools.Validate`、静态检查（87,408 GUID）及动作启动规则测试通过；内置屏Direct3D 11 Play Mode核对前进、后撤、竖移、反向与最终格恢复，并通过日常177／竞技场3／塔33条真实配置移动及checkpoint往返检查，三宿主模拟HUD操作和结算回调通过，已查看11张实际运行画面，编辑器正常退出。该验证从公共Runner进入，完整入口窗口、身体物理、骨骼跟随、音频和Windows Player发布仍未完成。
 
+移动声音公共调度（局部迁移）：`OfficialBattleSoundCatalog` 从 `Combat/Audio/movement` 读取选定884_156692的21条技能记录、21条逐格动作记录和8个原声音节点，保留原相对时间、事件标识、持续时间、循环间隔与停止事件；历史规则只用于选择待迁移角色移动项，版本保持不变。`OfficialBattleSoundPlayback` 直接复用已迁移的原 `MyPlayableSequence`／`MyPlayableSound`，技能与每格动作各自持有可释放句柄；动作取消清除尚未触发的节点，已触发声音只按原停止事件处理。调用方传入公共战斗的缩放时钟和明确的事件后端，每次原回调结束后恢复原全局UI音频后端，不把某个宿主的音频后端长期写入全局。无原声音配置的记录保持为空，不补造声音。
+
+`prepare_battle_movement_sounds.py` 按APK优先／校验后的当前云端缓存解析5个实际事件及其原Play动作、媒体、父级和效果路由，原WEM经vgmstream解码为未归一化、未烘焙增益的PCM，显式绑定到 `Combat/Audio/Media`。来源、原节点字段、银行对象及原始参数载荷、工具和输出哈希见[移动声音来源](../../assets/reference/battle-animation/movement-sounds-source-manifest.json)。这些PCM尚不能替代原Wwise混音：原音量、总线滤波、EQ、压缩、限制器以及RTPC 414249091驱动的八点保音高变速曲线仍需实现，不能用 `AudioSource.pitch` 近似，也未将干声音频夹具接入正式战斗宿主。其他施法、受击、骨骼跟随声音与特效、完整宿主音频和Windows Player仍未完成。
+
+移动声音验证：内置屏Direct3D 11隔离Play Mode通过，复制的运行代码与当前公共模块逐字节相同；5段原PCM的采样率、声道、帧数和导入后逐样本SHA256一致，实际音频线程产生非零缓冲。21条技能／21条动作的8个原节点核对即时／延迟触发、事件顺序和目标；原序列、原循环阈值、停止事件、已缩放时钟、取消未触发节点、重复停止、同一调度器的并发单位及不同后端互不干扰、无目标时使用Playable自身对象和全局UI后端恢复均通过，编辑器退出0。源音频读取工具5项测试与全工程静态检查（87,656 GUID）通过。最终全工程编译仍被另一地图未提交的 `NativeGroundAcceptance.MiniMapRegions` 类型歧义阻断，原 `ProjectTools.Validate` 未能在该最终工程状态执行，未将隔离验证记为全工程通过。夹具直接派发事件并播放原干声音频，不涉及界面输入、存档、正式宿主或Windows Player发布。
+
 ## 尚未实现
 
 来源隔离仍有边界：旧战斗存档若已丢失装备实例来源，不能从状态ID或相同技能反推出原装备；仅有直接施法／技能元数据时使用现存记录，不编造历史来源。创建者被移除／召唤寿命结束后的持续状态尚未接通；创建者仍留在战场记录但已阵亡的路径保持已确认结算。范围计数型效果与层数组合、同来源重复生产者贡献的撤销及全部复杂触发联动仍需继续迁移验证。

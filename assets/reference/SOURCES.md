@@ -363,4 +363,6 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 伙伴本地身份存档适配的输入及输出哈希随 [通话事务来源](partner-conversation-transactions-source-manifest.json) 登记；复用所选 884_156692 的原节点／好感等级方法与现有配置，新增适配代码、迁移验证源码及记录工具分别记录 SHA256。本批无新增美术载荷或素材快照。
 战斗移动朝向的原客户端／共享实现、保留854版本的规则字段、22份动作配置和输出哈希见 [移动朝向来源](battle-animation/movement-facing-source-manifest.json)；记录脚本为 `scripts/record_battle_movement_facing.py`，只读取原游戏应用／共享代码与既有已校验规则，不读取动画SDK实现。
 
+战斗移动声音的选定884_156692原技能／动作序列、Wwise事件引用、APK优先与已校验云端银行、原HIRC路由／效果参数载荷、WEM和解码PCM身份见[移动声音来源](battle-animation/movement-sounds-source-manifest.json)。`scripts/prepare_battle_movement_sounds.py` 复用银行身份核验与vgmstream解码，保留未归一化、未烘焙增益的原PCM并生成Unity显式资源；规则选择载荷保留854来源，不与当前音频或871历史战斗音频混标。
+
 地区时间公共适配来源见 [mainline-region-time-source-manifest.json](official-map/mainline-region-time-source-manifest.json)。`prepare_mainline_region_time.py`／`record_mainline_region_time_sources.py` 核对所选884_156692的原地区时间判定、日期偏移、UniTask刷新状态机和时间格式源码，记录每实例日期／语言服务绑定与安装输出哈希；当前格式源码仅此文件与历史语言来源逐字节一致，不声明外围程序集或整版等价。地图标签语言键由各图原配置及原时间格式消费路径提取，未新增替代字体或美术；本批未生成完整素材快照。
