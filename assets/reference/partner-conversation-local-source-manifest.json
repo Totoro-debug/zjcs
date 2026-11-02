@@ -1,0 +1,38 @@
+{
+  "manifest": "884_156692",
+  "source_sha256": {
+    ".tools/source-packages/official-code/common-source/Common/PlayerNpcDialogueData.cs": "c9e363cf2ccb8f4fc1408afa36d90e556b3755fbb570dfa9d29e9c07abc407e2",
+    ".tools/source-packages/official-code/common-source/Common/PlayerNpcDialogueDataWrap.cs": "7f249c1e58dfb53d6b8000f36659c2f869e5fcca4f7ef14bb06d420db3f49d6b"
+  },
+  "dependency_sha256": {
+    "assets/reference/partner-conversation-rules-source-manifest.json": "1c32f9f1f11b4b6113ccb7085fce913b446ee2c4a58134bbd809fe8b74c7ff72",
+    "assets/reference/partner-conversation-conditions-source-manifest.json": "1ee39805eef7d53273153cc8ed2631522a4c615af3af3e2dcb0d50cd5cb4a7ae",
+    "unity/Assets/Game/Runtime/Official/Partners/PartnerConversationRules.cs": "529bb58790eea8e8e0fd664a12a4c21dfa30c1ae36ccccb3798050f9388cbd88",
+    "unity/Assets/Game/Runtime/Official/Partners/PartnerConversationConditionRules.cs": "e75187ce4b2f842c61fa867c911760cf380b0f4afdb4f825fd7db33673c74883"
+  },
+  "output_sha256": {
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineNpcConversationProgress.cs": "be26d01eb5e507d25779338820fe37567f756c5227a6099efaf4eefd91403f37",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineNpcConversationProgress.cs.meta": "d2913a1711771eeb08cfa2ccc14bd0654d97741b0e1627d6073f98c72dfd82b2",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerConversationPlayer.cs": "de833f6648e86617f405ec1945852c91d7e6c5297be7007cb9eb711b02ebde54",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerConversationPlayer.cs.meta": "14d3463eae144a63796fbc3a29a2942d0f0541e726392b4c4be61be4f3afcc75",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterPropertyProgress.cs": "8a6dbc14903343f2bf311c2cfe64b8fb823c0ec4833632e81abc68fe2e7c10f7"
+  },
+  "validation_source_sha256": {
+    "scripts/prepare_partner_conversation_save_validation.py": "53a00903fbe48b39486d6118d4c43125193ef3e5f0fbccc0af17606f063380a2",
+    "scripts/fixtures/partner_conversation_save_validation.cs": "6a5b4e8c8b2f5dbfd5ffaccdc96f0518a0098ce7e1f6ffe4ccc285ef3b17f54a",
+    "scripts/fixtures/partner_gift_transaction_validation.cs": "d3ddb1cab54ff8069aa2c807d7715a64665f7e29a131b8018baf512f8f466e8b",
+    "scripts/fixtures/partner_roster_transaction_validation.cs": "ba1cc54eee71fe2b6837f579a277b8692140cb614c70ab12d2ce870ca2667faa"
+  },
+  "generator_sha256": "227a92072721210404e752a624e030d0d9f2e61ff1225e0a0c4399ac8a1ca4ed",
+  "operation": [
+    "Persist the eight original dialogue fields without the MongoDB identity.",
+    "Keep the separate original NPC identity and the offline NPC class mapping.",
+    "Represent DateTime as ticks plus Kind for JsonUtility, deep-copy node history and preserve repeated nodes.",
+    "Normalize absent legacy conversation collections to empty; reject malformed identities, history tails and duplicate dialogue IDs.",
+    "Read actual committed friendship, base level, inventory, map accessibility, activated regions, stories and ended dialogue records.",
+    "Keep raw map progress and goddess identity/activation as explicit actual-world service dependencies."
+  ],
+  "limitations": [
+    "No creation trigger, daily-limit decision, reward transaction, production dialogue notification or playback UI is installed by this adaptation."
+  ]
+}

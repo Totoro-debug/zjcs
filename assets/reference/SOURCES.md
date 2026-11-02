@@ -319,3 +319,5 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 公共地图网格输入来源见 `official-map/mainline-grid-visibility-data-source-manifest.json`。`prepare_mainline_grid_visibility_data.py` 从当前版本原根网格、实体放置／身体／视野与区域解锁包读取真实载荷，使用已核对程序集与已准备源码清单的生成格式解码，保留坐标、区域顺序及营地关系；记录原包对象／载荷、全部消费格式源码、输出哈希。与历史 Map13 输入分别登记，未混写旧版本清单。
 
 `prepare_partner_conversation_conditions.py` 从同版共享条件类与 `Formula` 提取实际通话条件闭包，记录原文件／方法、生成模板、复用规则、玩家端口适配及输出 SHA256，见 `partner-conversation-conditions-source-manifest.json`。无新增美术资源；未生成完整素材快照。
+
+`partner-conversation-local-source-manifest.json` 记录当前 `PlayerNpcDialogueData`／包装器身份、本地 JsonUtility 字段适配、已迁移规则依赖、实际存档读取与验证源码哈希；生成入口为 `record_partner_conversation_local_sources.py`。无新增美术资源，未生成完整素材快照。

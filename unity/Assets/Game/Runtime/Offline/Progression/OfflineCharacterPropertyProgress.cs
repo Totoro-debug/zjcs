@@ -15,6 +15,7 @@ namespace Zjcs.Offline.Progression
         public List<OfflineCookingUse> CookingUses = new List<OfflineCookingUse>();
         public List<OfflineExtraProperty> ExtraProperties = new List<OfflineExtraProperty>();
         public List<OfflineNpcFriendship> NpcFriendships = new List<OfflineNpcFriendship>();
+        public OfflineNpcConversationProgress NpcConversations = new OfflineNpcConversationProgress();
         public List<OfflineNpcTalentTree> NpcTalentTrees = new List<OfflineNpcTalentTree>();
         public List<OfflineCharacterTreasure> Treasures = new List<OfflineCharacterTreasure>();
         public List<OfflineTreasureElementLevel> TreasureElementLevels = new List<OfflineTreasureElementLevel>();
@@ -55,6 +56,7 @@ namespace Zjcs.Offline.Progression
             if (progress.CookingUses == null) progress.CookingUses = new List<OfflineCookingUse>();
             if (progress.ExtraProperties == null) progress.ExtraProperties = new List<OfflineExtraProperty>();
             if (progress.NpcFriendships == null) progress.NpcFriendships = new List<OfflineNpcFriendship>();
+            if (progress.NpcConversations == null) progress.NpcConversations = new OfflineNpcConversationProgress();
             if (progress.NpcTalentTrees == null) progress.NpcTalentTrees = new List<OfflineNpcTalentTree>();
             if (progress.Treasures == null) progress.Treasures = new List<OfflineCharacterTreasure>();
             if (progress.TreasureElementLevels == null)
@@ -75,6 +77,7 @@ namespace Zjcs.Offline.Progression
                 || progress.AstrologicalCost < 0 || progress.CookingUses == null || progress.CookingUses.Count > 5000
                 || progress.ExtraProperties == null || progress.ExtraProperties.Count > 20000
                 || progress.NpcFriendships == null || progress.NpcFriendships.Count > 1000
+                || !OfflineNpcConversationProgress.IsValid(progress.NpcConversations)
                 || progress.NpcTalentTrees == null || progress.NpcTalentTrees.Count > 1000
                 || progress.Treasures == null || progress.Treasures.Count > 5000
                 || progress.TreasureElementLevels == null || progress.TreasureElementLevels.Count > 100
