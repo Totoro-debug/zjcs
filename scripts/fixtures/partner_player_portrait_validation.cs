@@ -144,10 +144,78 @@ public sealed class PartnerPlayerPortraitRunner : MonoBehaviour
                 yield return null;
                 resources.Characters.Loader.TryUnloadUnusedTextures(true);
                 Require(textures.LoadedTextureCount == 0, "Original portrait release unloads every requested body/dye texture");
+                var cacheSteps = CheckManagerCache(resources, appearance, player, tables, rules, defaults,
+                    manager, pool, parts, lowMemory, pixels);
+                while (cacheSteps.MoveNext()) yield return cacheSteps.Current;
             }
             Require(captures == 8, "All four actual sex/profession portraits and recaptures");
         }
         finally { ProfessionAppearanceTextureBindings.Current = old; }
+    }
+
+    static IEnumerator CheckManagerCache(ProfessionNativePortraitStudioResources resources,
+        OfflineProfessionAppearanceBindings appearance, OfflinePlayerProgress saved,
+        ProfessionAppearanceTables tables, AppearanceAnimNameCombineRule rules, ProfessionAppearanceSkinDefaults defaults,
+        AppearanceAssetManager materials, CharacterPartEntryProvider partsPool, Parts parts, GAction lowMemory, byte[] expected)
+    {
+        string root = Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"), "portrait-cache");
+        var request = new CharacterPortraitRequestor();
+        request.SetAnimationName("home/idle_01");
+        request.SetRequestInfo(17, ProfessionPortraitKind.Head, appearance.AppearanceData, (int)appearance.Sex, appearance.Profession, true);
+        Texture2D ownedTexture;
+        long version, hash;
+        string file;
+        using (var session = new OfflineProfessionPortraitSession(root, resources, appearance, tables, materials, partsPool, parts, lowMemory))
+        {
+            request.GetDetailRequestData(session.Settings, session.Manager, session.AppearanceReader, out var details);
+            version = details.VersionId; hash = details.AppearanceHashCode;
+            file = Path.Combine(root, "17", "CharacterPortrait", "17_" + hash);
+            Require(!File.Exists(file), "A new appearance has no pre-existing cache file");
+            var cache = ((ICharacterPortraitManager)session.Manager).GetCharacterPortrait(request);
+            Require(cache.SubcribeTexture(request) == resources.Settings.LoadingTexture.Tex, "Original loading image before the queue runs");
+            for (int frame = 0; frame < 30 && !cache.NeedRecycle; frame++) { session.Update(); yield return null; }
+            Require(cache.NeedRecycle && cache.AppearanceHashCode == hash, "Original queue captures with the actual studio");
+            ownedTexture = cache.ForceGetTexture().Tex;
+            Require(ownedTexture.GetRawTextureData<byte>().ToArray().SequenceEqual(expected)
+                && File.ReadAllBytes(file).SequenceEqual(expected), "Queued GPU pixels and original persistent bytes match direct original capture");
+            Require(ReferenceEquals(cache, ((ICharacterPortraitManager)session.Manager).GetCharacterPortrait(request)), "Original in-memory cache reused");
+            cache.Unsubscribe(request); request.StopRequest();
+        }
+        yield return null;
+        Require(!ownedTexture, "Offline session shutdown destroys its active portrait texture");
+        var restored = new OfflineProfessionAppearanceBindings(17, () => saved, _ => saved.InitialWeaponType,
+            tables, resources.AppearanceConfig, rules, defaults);
+        Require(((AppearanceData)restored.AppearanceData).ModifyTimeStamp != ((AppearanceData)appearance.AppearanceData).ModifyTimeStamp,
+            "Reopened local appearance has a fresh transient timestamp");
+        request.SetRequestInfo(17, ProfessionPortraitKind.Head, restored.AppearanceData, (int)restored.Sex, restored.Profession, true);
+        using (var session = new OfflineProfessionPortraitSession(root, resources, restored, tables, materials, partsPool, parts, lowMemory))
+        {
+            request.GetDetailRequestData(session.Settings, session.Manager, session.AppearanceReader, out var details);
+            Require(details.VersionId == version && details.AppearanceHashCode == hash, "Reopened local snapshot has a stable original cache key");
+            var cache = ((ICharacterPortraitManager)session.Manager).GetCharacterPortrait(request);
+            Require(cache.NeedRecycle && cache.AppearanceHashCode == hash
+                && cache.ForceGetTexture().Tex.GetRawTextureData<byte>().ToArray().SequenceEqual(expected),
+                "Original disk cache restores exact pixels before any manager Update");
+            ownedTexture = cache.ForceGetTexture().Tex;
+            cache.SubcribeTexture(request); cache.Unsubscribe(request); request.StopRequest();
+            var data = OfflineProfessionAppearanceBindings.Clone((AppearanceData)restored.AppearanceData);
+            data.DyeMap.First().Value.Hsv = new Hsv(12, 34, 56);
+            Require(session.AppearanceReader.GetModifyTimeStamp(data) != version, "Local cache version includes dye channels");
+            data = OfflineProfessionAppearanceBindings.Clone((AppearanceData)restored.AppearanceData);
+            data.EquipSkinDict[EquipPos.Weapon] = 123;
+            Require(session.AppearanceReader.GetModifyTimeStamp(data) != version, "Local cache version includes equipment appearances");
+            var pending = new CharacterPortraitRequestor(); pending.SetAnimationName("home/idle_01");
+            pending.SetRequestInfo(99, ProfessionPortraitKind.Head, restored.AppearanceData, (int)restored.Sex, restored.Profession, true);
+            var canceled = ((ICharacterPortraitManager)session.Manager).GetCharacterPortrait(pending);
+            pending.StopRequest();
+            session.Update(); yield return null;
+            Require(!canceled.NeedRecycle && !File.Exists(Path.Combine(root, "17", "CharacterPortrait", "99_" + hash)),
+                "Canceled queue request does not capture or write cache");
+        }
+        yield return null;
+        Require(!ownedTexture, "Restored cache texture released with the offline session");
+        Debug.Log("[Original partner portrait cache] " + appearance.Sex + "-" + appearance.Profession
+            + ": real queue capture, in-memory reuse, disk reopen, stable appearance key, cancellation and texture cleanup");
     }
     static void CheckSlotDepth(ProfessionNativeSceneRenderer renderer)
     {

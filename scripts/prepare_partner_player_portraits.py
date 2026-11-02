@@ -40,7 +40,11 @@ def binding_sources(receipt):
         ('HeadCharacterPortraitBuilder', 'PreviewTool') for suffix in ('.cs', '.cs.meta')]
     paths += [runtime / 'Offline/ProfessionUI' / (name + suffix) for name in
         ('ProfessionNativePortraitAppearance', 'ProfessionNativePortraitStudioResources',
-         'OfflineProfessionPortraitSkinClipBindings', 'OfflineProfessionPortraitStudio') for suffix in ('.cs', '.cs.meta')]
+         'OfflineProfessionPortraitSkinClipBindings', 'OfflineProfessionPortraitStudio',
+         'OfflineProfessionPortraitState', 'OfflineProfessionPortraitSession',
+         'OfflineProfessionPortraitAppearanceReader') for suffix in ('.cs', '.cs.meta')]
+    paths += [runtime / 'Official/ProfessionUI' / (name + '.cs') for name in
+        ('CharacterPortraitManager', 'CharacterPortraitTexturePool')]
     paths += [runtime / 'Offline/ProfessionUI' / (name + '.cs') for name in
         ('ProfessionNativeSceneRenderer', 'ProfessionNativeSceneRendererSettings', 'ProfessionNativeMeshBatches')]
     paths += [ROOT / 'scripts/prepare_partner_player_portrait_validation.py',
@@ -48,7 +52,8 @@ def binding_sources(receipt):
     receipt['binding_source_sha256'] = {p.relative_to(ROOT).as_posix(): sha(p.read_bytes()) for p in paths}
     original = ROOT / '.tools/source-packages/current/884_156692/official-code'
     original_files = [original / 'client-source' / (n + '.cs') for n in
-        ('HeadCharacterPortraitBuilder', 'CharacterPortraitUtils', 'CharacterPortraitPhotographer', 'AppearancePortraitUtils')]
+        ('HeadCharacterPortraitBuilder', 'CharacterPortraitUtils', 'CharacterPortraitPhotographer', 'AppearancePortraitUtils',
+         'CharacterPortraitManager', 'CharacterPortraitPersister', 'CharacterPortraitPersistentCollection', 'CharacterPortraitTexturePool')]
     original_files += [original / 'client-source/AppearanceSystem.Runtime' / (n + '.cs') for n in
         ('AppearanceAnimation', 'AppearanceAnimUtils')]
     original_files += [original / 'framework-source/PreviewTool.cs']
@@ -62,7 +67,9 @@ def binding_sources(receipt):
         'Original 24-object studio hierarchy/fields, Camera, Animator and SortingGroup retained; nine script bindings are explicit.',
         'SkeletonAnimation/AppearanceAnimation draw through the independent native character backend and an added MeshPart; source slot zSpacing is applied after clipping.',
         'Original synchronous frame-zero Head capture, current skin/material/Low texture/clip services and original release path. No elapsed animation or physics simulation is claimed.',
-        'Head and BlindBox share the original builder; other portrait kinds require their own original builder. Full wardrobe effects/independent parts and the production UI manager remain separate integration work.']
+        'Head and BlindBox share the original builder; other portrait kinds require their own original builder. Full wardrobe effects/independent parts and the production Home UI remain separate integration work.',
+        'Offline portrait sessions bind the original queue/hash/persister to the real studio and actor-scoped local cache. A complete canonical appearance/sex/profession digest supplies a stable cache-only version because the local wardrobe has no durable server ModifyTimeStamp; source appearance and original skin XOR remain unchanged.',
+        'Original manager and texture-pool Dispose paths remain intact. Explicit offline session shutdown cancels in the original order, then releases remaining owned cache/free-pool textures and the studio root.']
     receipt['generator_sha256'] = sha(Path(__file__).read_bytes())
 
 

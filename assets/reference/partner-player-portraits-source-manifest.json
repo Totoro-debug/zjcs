@@ -1,6 +1,6 @@
 {
   "manifest": "884_156692",
-  "generator_sha256": "fb7e1abc4573001450bc3aa1a426e8caa5fc69aa0fd97657f535e9603ba7c8e0",
+  "generator_sha256": "f2680c674ca49c3e4103102b36b4e7d3e33f9a2638ecbe3367ff8cd05bd48132",
   "inputs": {
     "scripts/prepare_current_partner_native.py": "1c54fd235607be85882c616e78b079674c1f0b452bb88027229711ba70cb2b23",
     "scripts/official_apk.py": "ffc722b06e62bacc6689d98a7910562527fbcacc1c512c05e57a21bb8aa0ea46",
@@ -9583,17 +9583,29 @@
     "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionPortraitSkinClipBindings.cs.meta": "885c66e13fd5228654b11b40a565d8ce2c1df819ecd05f907f4d3638e95f14e2",
     "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionPortraitStudio.cs": "70cbd06c2f214f8bc25d783f1723a64602a2d5b636f1821570f466998e79c33f",
     "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionPortraitStudio.cs.meta": "3e97b5e1d4f362df8f6c87230da83fb7fb45cac9ed3c0fa187635c1db27c9d37",
+    "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionPortraitState.cs": "e34901de442d2a7c25ef399365e1b3f7a29eee6b111ce41dfb03bacc07bf074a",
+    "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionPortraitState.cs.meta": "b8f3a562388853c19da08927159363734ccac3d7f044929bdcb102e4d5718c8b",
+    "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionPortraitSession.cs": "f9b2aaffee1fca4f799ec1329e69c351acbac657898d1f7303c5f7cceaa82c77",
+    "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionPortraitSession.cs.meta": "094060aef0ee7e678407d51faba5cfc74f98d6c4c7e2546b86f1bd9dff6a55a9",
+    "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionPortraitAppearanceReader.cs": "0271899d03e084085c41d408b6c460dabf0233dd96b93395ea2f95ca0b089802",
+    "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionPortraitAppearanceReader.cs.meta": "86671969f765bbae074c1fdd21e9603bdd714f017d81576b46cf70e889ea9780",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/CharacterPortraitManager.cs": "229d3091492ea0fa5d9901c3e41939845a5d2b86367d8407bc818cc6066e6a51",
+    "unity/Assets/Game/Runtime/Official/ProfessionUI/CharacterPortraitTexturePool.cs": "bc5146bf28ca5c1b48adbb2cf1f6c789cb10da4b3d016edec35eae80f11b37f2",
     "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.cs": "d1aedb4604827994a5947d48720a7df8b432eaede636904dfff0ead6c09735b5",
     "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRendererSettings.cs": "b08c31c1cf3ff5cd8a702997dda694528cdb6e7b53149cca6a2b290ac25bcf87",
     "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeMeshBatches.cs": "8ddd4488479e7d4139effbb1b74beec2704d23fadf24c4c9358eb4ce133fa1e5",
     "scripts/prepare_partner_player_portrait_validation.py": "aecc9a74cb4d7dc4aa834a3792d5ba75cc59a147540935c52a9752d1ea216baf",
-    "scripts/fixtures/partner_player_portrait_validation.cs": "849e41e36a94731330dbded8f2edf235c1134da9d029c7b8ec8162edca44de05"
+    "scripts/fixtures/partner_player_portrait_validation.cs": "14c25cfb0e3cb13dad527924f6cff0f3e73a8c1a2d9a408ce1a37e29cb1f8f9f"
   },
   "original_source_sha256": {
     ".tools/source-packages/current/884_156692/official-code/client-source/HeadCharacterPortraitBuilder.cs": "08a4dbc9c3ac1e706cb2e313d9e759c96cffa19bbdd24e5a3512f5c447f41624",
     ".tools/source-packages/current/884_156692/official-code/client-source/CharacterPortraitUtils.cs": "bf7b1a445c28de1bbcb9db98dd15ffc97e60c6137bd7e4bfec2069dee5094de6",
     ".tools/source-packages/current/884_156692/official-code/client-source/CharacterPortraitPhotographer.cs": "9f6e3fc08ad5a97ca6cbee7b9548b028bb981b6af54c31afe89be3a9f17bb963",
     ".tools/source-packages/current/884_156692/official-code/client-source/AppearancePortraitUtils.cs": "dc6baca920535b5c6e4124c997f9526435a0893fb3c37fadc5f716bd24c121f8",
+    ".tools/source-packages/current/884_156692/official-code/client-source/CharacterPortraitManager.cs": "0ac2bf30dd3e17cc1561d613e085b790d4d4d00beb3e1e8920067d191ea02b0f",
+    ".tools/source-packages/current/884_156692/official-code/client-source/CharacterPortraitPersister.cs": "d417f7b22161f1bd9d2d3d66395f70ff47eed20e2926a059cb1bf5eb0de950e0",
+    ".tools/source-packages/current/884_156692/official-code/client-source/CharacterPortraitPersistentCollection.cs": "140b1062fdae077471ab39acb300bb078ecd071465a9466f47b8bbaad1298366",
+    ".tools/source-packages/current/884_156692/official-code/client-source/CharacterPortraitTexturePool.cs": "1a7b198f8ddb58385a7bb1ae2f365bdbdf28875fec2f83d3c8809f088351396a",
     ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/AppearanceAnimation.cs": "64df12857f7b48369681764b9f8d30abfb4d41954102a8633e1bb2d63a02daa8",
     ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/AppearanceAnimUtils.cs": "32b704601acfdd112d8d289ef4082fa51fb5e7e0dd78281a76a1b56ebd1748c3",
     ".tools/source-packages/current/884_156692/official-code/framework-source/PreviewTool.cs": "66b138f5f124629eb239d4fe9cd3e7b92a5bdd5e3bf691cedc24f6f002982611"
@@ -9608,6 +9620,8 @@
     "Original 24-object studio hierarchy/fields, Camera, Animator and SortingGroup retained; nine script bindings are explicit.",
     "SkeletonAnimation/AppearanceAnimation draw through the independent native character backend and an added MeshPart; source slot zSpacing is applied after clipping.",
     "Original synchronous frame-zero Head capture, current skin/material/Low texture/clip services and original release path. No elapsed animation or physics simulation is claimed.",
-    "Head and BlindBox share the original builder; other portrait kinds require their own original builder. Full wardrobe effects/independent parts and the production UI manager remain separate integration work."
+    "Head and BlindBox share the original builder; other portrait kinds require their own original builder. Full wardrobe effects/independent parts and the production Home UI remain separate integration work.",
+    "Offline portrait sessions bind the original queue/hash/persister to the real studio and actor-scoped local cache. A complete canonical appearance/sex/profession digest supplies a stable cache-only version because the local wardrobe has no durable server ModifyTimeStamp; source appearance and original skin XOR remain unchanged.",
+    "Original manager and texture-pool Dispose paths remain intact. Explicit offline session shutdown cancels in the original order, then releases remaining owned cache/free-pool textures and the studio root."
   ]
 }

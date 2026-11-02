@@ -56,6 +56,28 @@ public class CharacterPortraitManager : ICharacterPortraitManager, ICharacterPor
 		Object.Destroy(mPhotographer.Instance);
 	}
 
+        // The original service lives for the client process. An offline profile
+        // can close earlier; cancel it in the original order, then release its
+        // owned cache textures and the free pool without touching imported art.
+        public void DisposeOfflineSession()
+        {
+            var pool = mTexturePool;
+            if (mDestroyToken != null) Dispose();
+            else
+            {
+                // Initialization may fail before the original destroy token is
+                // created. The offline owner must also release that partial scope.
+                mTexturePool?.Dispose();
+                mTexturePool = null;
+                if (mPhotographer != null) Object.Destroy(mPhotographer.Instance);
+            }
+            foreach (var cache in mCaches.Values)
+                if (cache.NeedRecycle) cache.ForceGetTexture()?.DestroyTexture();
+            mCaches.Clear();
+            mWaitingQueue.Clear();
+            pool?.ReleaseOfflineSessionTextures();
+        }
+
 	CharacterPortraitCache ICharacterPortraitManager.GetCharacterPortrait(ICharacterPortraitRequestor requestor)
 	{
 

@@ -83,6 +83,8 @@ public class CharacterPortraitTexturePool : IDisposable
 		}
 		Debug.Log("低内存强制清理所有Texture资源");
 	}
+
+        internal void ReleaseOfflineSessionTextures() => ForceReleaseAllResourceCache();
 }
 
 }
