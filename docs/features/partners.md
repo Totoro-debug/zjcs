@@ -482,6 +482,16 @@ NPC 资料投影同时保留实际原 `NpcTargetData` 对象的 `ServerId`，头
 
 本节只记录组件图接线；正式伙伴页完整资料、通话、入口及宿主服务生命周期仍待接通，不能据此计作完整窗口或 Windows Player 已完成。
 
+### 当前主角资料与原通话头像整合（局部）
+
+`OfflinePartnerPlayerInfoBindings` 将 `PlayerIconMe`／`PlayerInfoUI` 的主角、管理器更新通知和 `PlayerInfoData` 接到已提交的本地资料源；名称参数保留原翻译标记，战力参数使用原 `CultureNumberArg.Compact`。图片、职业／阶位配置、伙伴模型、队伍规则和详情弹窗继续由原宿主服务负责，不在资料适配器中生成替代规则或界面。
+
+原通话模板中的 `PlayerIconMe`、`PlayerInfoData` 已分别与所选 `884_156692` 原码核对为逐文件字节相同，复用其既有迁移，不将整个历史 UI 目录混标为当前版本。当前 `PlayerInfoUI`、原血条、本地主角状态和原生头像依赖及本批输出哈希见[实际主角控件来源](../../assets/reference/partner-local-player-widgets-source-manifest.json)，入口为 `record_partner_local_player_widgets.py`。
+
+隔离 Unity Play Mode 已实际实例化原通话头像整棵控件，绑定真实隔离角色和存档；通过原 `EventSystem` 射线与模拟按下／抬起／点击验证资料回调及原公共点击事件 `3772241779` 的当前伙伴 PCM 播放。改名不作为翻译键、男性转女性／职业变更、关闭期间取消订阅、重新启用刷新、真实存档重开与 37.5% 血条恢复、销毁后 High 纹理释放均通过，运行头像截图已查看，两种性别的原遮罩与染色显示正常。此处资料弹窗仅验证原回调参数，没有渲染完整资料弹窗；该模板未绑定的等级／战力文字不计作可见展示。正式整页和 Windows Player 验证仍未完成。
+
+本批静态检查通过（90,064 个 GUID），主工程 Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。共享工作区检查期间出现的战报命名空间、小地图验证程序集引用编译问题已在最新共享文件中修复，重跑成功。
+
 ### 当前主角头像摄影棚与原生拍摄（局部）
 
 `prepare_partner_player_portraits.py` 从所选 `884_156692` 的实际头像 bundle 恢复原 `CharacterPortraitStudio` 的 24 个对象，保留五个 GameObject 的层级、变换、原摄影机、Animator、SortingGroup 及组件引用。原 `HeadCharacterPortraitBuilder`、外观排除复制和空 `PreviewTool` 迁入工程；显式依赖替代注入，拍摄仍由原 `CharacterPortraitPhotographer` 执行。摄影棚中的动画与绘制组件接到既有免费原生角色后端，不读取或复制动画 SDK 实现。

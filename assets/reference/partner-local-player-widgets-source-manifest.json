@@ -1,0 +1,102 @@
+{
+  "manifest": "884_156692",
+  "dependencies": [
+    {
+      "path": "assets/reference/partner-main-player-source-manifest.json",
+      "sha256": "a377127189b6c35895ad02e336ac69dff8c8c8cbb2f58ef73843b0d2886a039f"
+    },
+    {
+      "path": "assets/reference/partner-player-info-source-manifest.json",
+      "sha256": "09ad5126c659f202462003481b10a250f832fdabf37c4f6063a4647f0289c768"
+    },
+    {
+      "path": "assets/reference/partner-player-health-source-manifest.json",
+      "sha256": "6cccd46a0ec968a4cb28f4d6d8957846c3c51895e6f2034db87da75e7d04527b"
+    },
+    {
+      "path": "assets/reference/partner-ui-player-bindings-source-manifest.json",
+      "sha256": "33c6fd1ef71afb2e52689de543c787d1f067c1472d2efb7f2e486b99d04e7d41"
+    },
+    {
+      "path": "assets/reference/partner-panel-native-source-manifest.json",
+      "sha256": "bdf7d505ad48a5782ee65320f124dda67d98279d8bb41bd0f02e9e90af88016b"
+    }
+  ],
+  "retained_original_widgets": [
+    {
+      "selected_source": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/PlayerIconMe.cs",
+        "sha256": "906d4192a420ae943e7ed09f77d7373b0ba65a1b4f1c947e4b9211f92d513cad"
+      },
+      "historical_source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayerIconMe.cs",
+        "sha256": "906d4192a420ae943e7ed09f77d7373b0ba65a1b4f1c947e4b9211f92d513cad"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerIconMe.cs",
+        "sha256": "2c52fb866696a75494f66f01601d0325011bff619c06de44d3f2a88c6d70e53e"
+      }
+    },
+    {
+      "selected_source": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/PlayerInfoData.cs",
+        "sha256": "c1107135cca4dc6cfdf1c98bb69784c8b93649412085b286902541903a71b6b9"
+      },
+      "historical_source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayerInfoData.cs",
+        "sha256": "c1107135cca4dc6cfdf1c98bb69784c8b93649412085b286902541903a71b6b9"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerInfoData.cs",
+        "sha256": "bb76039f9c8c2b0f92922fe653b8dc5986aebef5b3ee95d78571e519eb349fe7"
+      }
+    }
+  ],
+  "reused_audio": [
+    {
+      "path": "unity/Assets/Official/Partners/UI/Card/Audio/Main_Cursor_Normal.wav",
+      "sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/Card/Audio/Main_Cursor_Normal.wav.meta",
+      "sha256": "e013acd8c067c2a332ffe549e3e6ff1cbd58e7772f8395c00c3380d3f9568d6e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionSoundHost.cs",
+      "sha256": "5b2c5ce4f403caba7f83384ce4418abcf66e208cfca758830d8d07c2923b1ce1"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerPlayerInfoBindings.cs",
+      "sha256": "2c54d24ddcd0ddd0a1d333e99d32b67e08761bd68101deb7680f72f2aa3e4526"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerPlayerInfoBindings.cs.meta",
+      "sha256": "52cf35946296d5af4ddb0fdd453d25d6147e6161e5d1c2eaa95edc640dfa8798"
+    }
+  ],
+  "helpers": [
+    {
+      "path": "scripts/prepare_partner_local_player_widget_validation.py",
+      "sha256": "a1bb5f14bbca5d39da1872842a8bbce69dbcc8fedbaa2ade96ad966f8a4bc409"
+    },
+    {
+      "path": "scripts/fixtures/partner_local_player_widget_validation.cs",
+      "sha256": "193a7e6362e08fd433cf2f3793535a1aa65e023703dba05b4547af0c8de6811f"
+    }
+  ],
+  "generator": {
+    "path": "scripts/record_partner_local_player_widgets.py",
+    "sha256": "8243014291baa5a5cf0a72357e830fd4f5d5425da5ba25c7029f270272525987"
+  },
+  "operation": [
+    "Use the committed local source for MainPlayer, OnPlayerUpdate and PlayerInfoData. Retain original CultureTextArg translation flags and CultureNumberArg.Compact.",
+    "Delegate existing image/configuration, NPC, team and popup services without assigning replacement rules or rendering new UI.",
+    "Only the two retained source files listed here are byte-identical to the selected current originals; other historical receipts retain their separate version identities.",
+    "The actual original widget is bound before activation to the current native avatar and the live local player health service.",
+    "Simulated original pointer input plays event 3772241779 through the existing native sound host using the selected partner PCM, not the historical profession audio catalog.",
+    "No serialized prefab layout, mask, slider, text, state table or artwork is changed. No full asset snapshot is produced.",
+    "Popup validation covers the original pointer and callback boundary; the full profile popup remains a separate host integration requirement."
+  ]
+}
