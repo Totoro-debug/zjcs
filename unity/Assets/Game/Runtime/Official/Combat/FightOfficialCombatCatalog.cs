@@ -2820,23 +2820,23 @@ namespace Zjcs.Combat.Official
                     || (Int(trigger, "Source") != 2 && Int(trigger, "Source") != 3)
                     || Int(trigger, "Target") != 2 || Bool(trigger, "UseAI")
                     || Int(trigger, "TargetPos") != 1
-                    || Bool(trigger, "StackedCountToDamageFactor")
                     || Float(trigger, "BasePercent", 1f) < 0f
                     || Float(trigger, "BasePercent", 1f) > 1f
                     || ArrayCount(trigger, "StatusReplacePropertyValues") > 0
+                    || ArrayCount(trigger, "TargetWithoutStatusIds") > 0
                     || propTarget != null && (Bool(propTarget, "IsEnemy")
                         || ArrayCount(propTarget, "RoleType") > 0
                         || Bool(propTarget, "IncludeApplicator")
                         || Int(propTarget, "PropType") != 0
                         || Bool(propTarget, "Heighest")
-                        || Bool(propTarget, "SupportCustomFilter")
-                        || custom != null && (Int(custom, "TargetType") != 0
-                            || Int(custom, "BaseProp") != 0
-                            || Bool(custom, "BaseCurrentHp")
-                            || Int(custom, "DamageProp") != 0
-                            || Int(custom, "UpperLimitTarget") != 0
-                            || Int(custom, "UpperLimitPropType") != 0
-                            || Int(custom, "UpperLimitPercent") != 0))) return false;
+                        || Bool(propTarget, "SupportCustomFilter"))
+                    || custom != null && (Int(custom, "TargetType") != 0
+                        || Int(custom, "BaseProp") != 0
+                        || Bool(custom, "BaseCurrentHp")
+                        || Int(custom, "DamageProp") != 0
+                        || Int(custom, "UpperLimitTarget") != 0
+                        || Int(custom, "UpperLimitPropType") != 0
+                        || Int(custom, "UpperLimitPercent") != 0)) return false;
             }
             return true;
         }
@@ -3077,6 +3077,7 @@ namespace Zjcs.Combat.Official
                 result.DamageParam = Long(damage, "DamageParam");
                 result.IgnoreShield = Bool(damage, "DamageIgnoreShield");
                 result.TrueDamage = Bool(damage, "IsTrueDamage");
+                result.UseDamageFactor = Bool(damage, "UseDamageFactor");
                 result.BreakResilience = Bool(damage, "IsBreakResilience");
             }
             if (summon != null) AddSummonConfig(summon, result);

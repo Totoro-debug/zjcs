@@ -39,7 +39,34 @@ namespace Zjcs.Editor
                         ActionType = i == 0 ? 60 : 56, StackCount = 1, DurationRound = -1,
                         CurDurationRound = -1, StartRound = 0 });
             }
-            return new ReplayProbe(skill.EntityId, observeConsumption);
+            bool observeStackFactor = Environment.GetEnvironmentVariable("ZJCS_BATTLE_STACK_FACTOR_ACCEPTANCE") == "1";
+            int factorSourceId = 0;
+            if (observeStackFactor)
+            {
+                skill.ActionType = 6;
+                skill.CanTriggerChild = true;
+                var source = checkpoint.Units.First(value => value.Side != player.Side && value.Hp > 0);
+                factorSourceId = source.Id;
+                var catalog = Zjcs.Presentation.Combat.OfficialCombatAssetCatalog.LoadDefault().Load();
+                // Keep both sides of the observation fixture alive for all three casts. Lethal start damage
+                // is covered separately by test_battle_action_start.ps1 against the real executor.
+                int attack = catalog.PropertyType("Attack");
+                int maxHp = catalog.PropertyType("MaxHp");
+                foreach (var property in source.Properties.Concat(source.BaseProperties))
+                {
+                    if (property.Id == attack) property.Value = Math.Min(property.Value, 100L);
+                    if (property.Id == maxHp) property.Value = 1000000L;
+                }
+                source.MaxHp = source.Hp = source.Turn.Hp = 1000000L;
+                var listener = catalog.CreateStatus(24346, player.Id, source.Id, 9900996,
+                    skill.EntityId, skill.ItemId, skill.Rank, skill.Level, skill.SubRank, source.Properties);
+                listener.StackCount = 3;
+                // Hosts may need several movement turns before their first skill cast.
+                listener.DurationRound = -1;
+                listener.CurDurationRound = -1;
+                player.Statuses.Add(listener);
+            }
+            return new ReplayProbe(skill.EntityId, observeConsumption, factorSourceId);
         }
         private sealed class ReplayProbe
         {
@@ -48,14 +75,32 @@ namespace Zjcs.Editor
             private bool observedConsumptionBuff;
             private int actionExistPhase;
             private int replayed;
-            public ReplayProbe(int entity, bool observeConsumption)
-            { this.entity = entity; this.observeConsumption = observeConsumption; }
+            private readonly int factorSourceId;
+            private bool observedStackFactor;
+            public ReplayProbe(int entity, bool observeConsumption, int factorSourceId)
+            { this.entity = entity; this.observeConsumption = observeConsumption; this.factorSourceId = factorSourceId; }
             public void Observe(FightBattleCheckpoint checkpoint)
             {
                 var player = checkpoint.Units.Single(value => value.Id == 1);
                 Require(player.SkillState.ReplayCounts.All(value => value.Count <= 2), "Replay exceeded configured round limit.");
                 replayed = checkpoint.Receipts.SelectMany(value => value.Event.SkillCasts)
                     .Count(value => value.ActorId == 1 && value.SkillEntityId == entity && value.IsReplay);
+                if (factorSourceId != 0 && !observedStackFactor
+                    && checkpoint.Receipts.Any(value => value.Event.SkillCasts.Any(cast =>
+                        cast.ActorId == 1 && cast.SkillEntityId == entity)))
+                {
+                    var hits = checkpoint.Receipts.SelectMany(value => value.Event.DamageEvents)
+                        .Where(value => value.SkillEntityId == 58980).ToArray();
+                    Require(hits.Length == 3 && hits.All(value => value.SourceId == factorSourceId
+                        && value.TargetId == 1 && value.Damage < 0 && value.Damage % 3 == 0),
+                        "The original three-stack action-start passive did not deal scaled damage for the cast and two replays: "
+                        + string.Join(",", hits.Select(value => value.SourceId + "->" + value.TargetId + ":" + value.Damage))
+                        + "; actor=" + checkpoint.Receipts.Last().Event.ActorId + "; playerHP=" + player.Hp
+                        + "; casts=" + string.Join(",", checkpoint.Receipts.Last().Event.SkillCasts.Select(value => value.SkillEntityId)));
+                    observedStackFactor = true;
+                    // Exercise one original cast plus its two replays; later rounds use the usual fixture.
+                    FightStatusLifecycle.End(player, player.Statuses.Single(value => value.InstanceId == 9900996));
+                }
                 if (observeConsumption)
                 {
                     var listener = player.Statuses.Single(value => value.InstanceId == 9900992);
@@ -91,10 +136,12 @@ namespace Zjcs.Editor
                     name + " did not execute the original cumulative-consumption passive during replay.");
                 Require(!observeConsumption || actionExistPhase == 2,
                     name + " did not verify the action-existence transition across real executor steps.");
+                Require(factorSourceId == 0 || observedStackFactor,
+                    name + " did not exercise the original stacking action-start passive.");
                 string saved = FightBattleCheckpointSerializer.Save(checkpoint);
                 Require(FightBattleCheckpointSerializer.Save(FightBattleCheckpointSerializer.Load(saved)) == saved,
                     name + " did not retain replay counts and results in the checkpoint.");
-                Debug.Log("[Replay hosts] " + name + ": two configured consecutive replays, stack consumption, caps and checkpoint passed.");
+                Debug.Log("[Replay hosts] " + name + ": two configured consecutive replays, stack consumption, caps and checkpoint passed; stacking action-start=" + observedStackFactor + ".");
             }
         }
     }

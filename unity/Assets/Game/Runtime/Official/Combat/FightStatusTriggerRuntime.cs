@@ -368,7 +368,8 @@ namespace Zjcs.Combat.Official
                         Trigger = trigger.WithSource(status),
                         SourceUnitId = sourceId,
                         TargetUnitId = status.OwnerId,
-                        TargetPositionUnitId = actor.Id
+                        TargetPositionUnitId = actor.Id,
+                        DamageFactor = trigger.StackedCountToDamageFactor ? status.StackCount : 1.0
                     });
                     added++;
                 }

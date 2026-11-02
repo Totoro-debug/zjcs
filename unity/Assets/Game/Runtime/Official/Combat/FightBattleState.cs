@@ -169,6 +169,8 @@ namespace Zjcs.Combat.Official
         public float Delay;
         public bool AllowDeadSource;
         public bool AllowDeadTarget;
+        // Capture at trigger time; later stacking must not change an already collected cast.
+        public double DamageFactor = 1.0;
     }
 
     [Serializable]
@@ -813,6 +815,8 @@ namespace Zjcs.Combat.Official
         public int Anchor;
         public bool IgnoreAICount;
         public bool TrueDamage;
+        // FightHitBaseComponentInfo: accepts an external damage factor only when enabled.
+        public bool UseDamageFactor;
         public bool BreakResilience;
         // Official HitScopCfg.Pos offsets: the damage area around the hit anchor. Empty means the
         // hit only applies to the selected target(s).
@@ -882,6 +886,7 @@ namespace Zjcs.Combat.Official
         public int Anchor;
         public bool IgnoreAICount;
         public bool TrueDamage;
+        public bool UseDamageFactor;
         public bool BreakResilience;
         public int ActionType = 4;
         public List<FightGridPoint> Scope = new List<FightGridPoint>();

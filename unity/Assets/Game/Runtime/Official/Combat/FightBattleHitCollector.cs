@@ -140,6 +140,7 @@ namespace Zjcs.Combat.Official
                     Anchor = entity.Anchor,
                     IgnoreAICount = entity.IgnoreAICount,
                     TrueDamage = entity.TrueDamage,
+                    UseDamageFactor = entity.UseDamageFactor,
                     BreakResilience = entity.BreakResilience,
                     Scope = entity.Scope == null
                         ? new List<FightGridPoint>() : new List<FightGridPoint>(entity.Scope),

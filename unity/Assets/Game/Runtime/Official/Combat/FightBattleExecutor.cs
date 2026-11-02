@@ -533,10 +533,11 @@ namespace Zjcs.Combat.Official
         private void ExecuteSkill(FightBattleUnitState actor, FightBattleSkillDefinition skill,
             List<FightBattleUnitState> targets, List<FightBattleSkillCastEvent> casts,
             List<FightBattleDamageEvent> damageEvents, List<FightBattleMovementEvent> movements,
-            out float lastDelay, FightBattleUnitState targetPosition = null, bool allowDeadSource = false)
+            out float lastDelay, FightBattleUnitState targetPosition = null, bool allowDeadSource = false,
+            double externalDamageFactor = 1.0)
         {
             ExecuteSkill(actor, skill, targets, casts, damageEvents, movements, out lastDelay,
-                out _, out _, targetPosition, allowDeadSource);
+                out _, out _, targetPosition, allowDeadSource, externalDamageFactor);
         }
 
         private void ExecuteSkill(FightBattleUnitState actor, FightBattleSkillDefinition skill,
@@ -544,7 +545,7 @@ namespace Zjcs.Combat.Official
             List<FightBattleDamageEvent> damageEvents, List<FightBattleMovementEvent> movements,
             out float lastDelay, out float statusTriggerDuration,
             out float statusTriggerActionDuration, FightBattleUnitState targetPosition = null,
-            bool allowDeadSource = false)
+            bool allowDeadSource = false, double externalDamageFactor = 1.0)
         {
             lastDelay = 0f;
             statusTriggerDuration = 0f;
@@ -581,6 +582,10 @@ namespace Zjcs.Combat.Official
                     lastDelay = Math.Max(lastDelay, triggerDelay);
                 }
             }
+
+            // Start triggers settle synchronously and may kill the actor. Preserve the explicit
+            // death-trigger exception; ordinary hits require a living source.
+            if (!allowDeadSource && actor.Hp <= 0) return;
 
             double skillDamageScale = 1.0;
             if (statusCatalog != null)
@@ -721,7 +726,8 @@ namespace Zjcs.Combat.Official
                     {
                         resolved = hitExecutor.Apply(random, damageId, actor, target,
                             skill, hit, checkpoint.StageType, checkpoint.IsPvp, elementConfrontation,
-                            new List<int>(), allowDeadSource, skillDamageScale);
+                            new List<int>(), allowDeadSource, skillDamageScale
+                                * (hit.UseDamageFactor ? externalDamageFactor : 1.0));
                     }
                     finally
                     {
@@ -1623,7 +1629,8 @@ namespace Zjcs.Combat.Official
                 cast.TargetIds.Add(target.Id);
                 casts.Add(cast);
                 ExecuteSkill(source, skill, targets, casts, damageEvents, movements,
-                    out float delay, targetPosition, invocation.AllowDeadSource);
+                    out float delay, targetPosition, invocation.AllowDeadSource,
+                    invocation.DamageFactor);
                 if (delay > lastDelay) lastDelay = delay;
                 maxDuration = Math.Max(maxDuration, ResolveDuration(skill, delay));
                 float actionDuration = ResolveActionDuration(skill, delay);
