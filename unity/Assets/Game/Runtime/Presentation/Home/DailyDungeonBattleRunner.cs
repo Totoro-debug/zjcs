@@ -26,6 +26,8 @@ namespace Zjcs.Presentation.Home
         private bool resultHandled;
         private int roomId;
         private string dailyAssistEntryId;
+        private int assistPlayType = (int)NpcAssistPlayType.All;
+        private int assistMaxPlayerOverride = -1;
         private bool challengeMode;
         private int challengeActivityId;
         private int challengeDurationHours;
@@ -41,7 +43,7 @@ namespace Zjcs.Presentation.Home
         private string portraitSlotId, portraitSavesRoot;
 
         public void Begin(HomeFeatureRuntime runtime, int selectedRoomId, string assistEntryId,
-            Action<bool> onCompleted)
+            Action<bool> onCompleted, OfficialBattleAssistOptions assistOptions = null)
         {
             host = runtime ?? throw new ArgumentNullException(nameof(runtime));
             battleProfile = host.Profile;
@@ -54,7 +56,8 @@ namespace Zjcs.Presentation.Home
             completed = onCompleted;
             if (string.IsNullOrWhiteSpace(assistEntryId))
                 throw new ArgumentException("Daily dungeon assistance entry identity is required.", nameof(assistEntryId));
-            dailyAssistEntryId = assistEntryId;
+            ConfigureAssist(assistEntryId, assistOptions);
+            assistEntryId = dailyAssistEntryId;
             roomId = selectedRoomId;
             DailyDungeonRunSave run = host.DailyDungeons.ActiveRun;
             if (run == null || run.currentRoomId != roomId) throw new InvalidOperationException("Daily dungeon room is not active.");
@@ -70,9 +73,9 @@ namespace Zjcs.Presentation.Home
             FightBattleCheckpoint checkpoint;
             bool restore = !string.IsNullOrEmpty(run.activeBattleCheckpoint);
             FightOfficialNpcAssistanceCatalog npcCatalog = host.NpcAssistanceCatalog;
-            FightOfficialNpcInviteRule inviteRule = npcCatalog.InviteRule(10);
+            FightOfficialNpcInviteRule inviteRule = npcCatalog.InviteRule(assistPlayType);
             OfflineNpcAssistBattle activeAssist = host.NpcAssistanceProgress.ActiveBattle;
-            if (activeAssist != null && (activeAssist.playType != 10
+            if (activeAssist != null && (activeAssist.playType != assistPlayType
                 || activeAssist.entryId != assistEntryId || activeAssist.stageId != stage.id))
                 throw new InvalidOperationException("另一场 NPC 助战战斗尚未结束。");
             int[] selectedNpcIds;
@@ -86,10 +89,8 @@ namespace Zjcs.Presentation.Home
                     .Select(unit => unit.NpcClassId).ToArray();
                 if (activeAssist != null && !(activeAssist.npcClassIds ?? new List<int>()).SequenceEqual(selectedNpcIds))
                     throw new InvalidOperationException("日常副本助战快照与战斗 checkpoint 不一致。");
-                if (activeAssist == null && selectedNpcIds.Length > 0
-                    && !ResolveDailyChallengeAssistSelection(npcCatalog, inviteRule, assistEntryId)
-                        .SequenceEqual(selectedNpcIds))
-                    throw new InvalidOperationException("日常副本恢复的伙伴与已保存的选择不一致。");
+                if (activeAssist == null && selectedNpcIds.Length > 0)
+                    throw new InvalidOperationException("日常副本的战斗 checkpoint 缺少已提交的助战快照。");
             }
             else
             {
@@ -102,10 +103,10 @@ namespace Zjcs.Presentation.Home
             bool committedAssist = false;
             try
             {
-                if (selectedNpcIds.Length > 0 && activeAssist == null)
+                if (!restore && selectedNpcIds.Length > 0 && activeAssist == null)
                 {
-                    host.NpcAssistanceProgress.CommitBattle(10, assistEntryId, stage.id,
-                        Math.Min(3, inviteRule.MaxPlayer), inviteRule.OneNpcMaxInviteCount,
+                    host.NpcAssistanceProgress.CommitBattle(assistPlayType, assistEntryId, stage.id,
+                        ResolveAssistMaxPlayer(inviteRule), inviteRule.OneNpcMaxInviteCount,
                         inviteRule.MaxInviteCount, (NpcAssistRefreshCycle)inviteRule.RefreshCycle,
                         DateTimeOffset.Now.ToUnixTimeSeconds());
                     committedAssist = true;
@@ -117,7 +118,7 @@ namespace Zjcs.Presentation.Home
             }
             catch
             {
-                if (committedAssist) host.NpcAssistanceProgress.CancelBattle(10, assistEntryId, stage.id);
+                if (committedAssist) host.NpcAssistanceProgress.CancelBattle(assistPlayType, assistEntryId, stage.id);
                 DisposeBattle();
                 throw;
             }
@@ -157,7 +158,8 @@ namespace Zjcs.Presentation.Home
         }
 
         public void BeginChallenge(HomeFeatureRuntime runtime, int activityId, int stageId,
-            int stageType, int durationHours, int dailyLimit, int difficulty, Action<bool> onCompleted)
+            int stageType, int durationHours, int dailyLimit, int difficulty, Action<bool> onCompleted,
+            OfficialBattleAssistOptions assistOptions = null)
         {
             host = runtime ?? throw new ArgumentNullException(nameof(runtime));
             portraitSlotId = host.ActiveProfileSlotId;
@@ -176,6 +178,7 @@ namespace Zjcs.Presentation.Home
             bool restore = !string.IsNullOrEmpty(savedCheckpoint);
             challengeDifficulty = restore
                 ? host.DailyChallenges.ActiveChallengeDifficulty(activityId) : difficulty;
+            ConfigureAssist("daily-challenge:" + activityId, assistOptions);
             if (!restore && !host.DailyChallenges.CanParticipate(activityId, DateTime.Now, durationHours,
                     dailyLimit, out string reason))
                 throw new InvalidOperationException(reason);
@@ -188,11 +191,11 @@ namespace Zjcs.Presentation.Home
             OfficialCombatAssetCatalog combatAssets = OfficialCombatAssetCatalog.LoadDefault();
             FightOfficialCombatCatalog combat = combatAssets.Load();
             FightOfficialNpcAssistanceCatalog npcCatalog = host.NpcAssistanceCatalog;
-            FightOfficialNpcInviteRule inviteRule = npcCatalog.InviteRule(10);
-            string assistEntryId = "daily-challenge:" + activityId;
+            FightOfficialNpcInviteRule inviteRule = npcCatalog.InviteRule(assistPlayType);
+            string assistEntryId = dailyAssistEntryId;
             OfflineNpcAssistBattle activeAssistBattle = host.NpcAssistanceProgress.ActiveBattle;
-            if (activeAssistBattle != null && !restore
-                && (activeAssistBattle.playType != 10 || activeAssistBattle.entryId != assistEntryId
+            if (activeAssistBattle != null
+                && (activeAssistBattle.playType != assistPlayType || activeAssistBattle.entryId != assistEntryId
                     || activeAssistBattle.stageId != stageId))
                 throw new InvalidOperationException("另一场 NPC 助战战斗尚未结束。");
             int[] selectedAssistNpcIds = restore ? Array.Empty<int>()
@@ -206,9 +209,19 @@ namespace Zjcs.Presentation.Home
                     challengeCatalog.Formations);
             if (checkpoint.StageId != stageId)
                 throw new InvalidOperationException("Saved daily challenge checkpoint does not match its activity stage.");
+            if (restore)
+            {
+                int[] restoredNpcIds = checkpoint.Units.Where(unit => unit.NpcClassId > 0)
+                    .Select(unit => unit.NpcClassId).ToArray();
+                if (activeAssistBattle != null
+                    && !(activeAssistBattle.npcClassIds ?? new List<int>()).SequenceEqual(restoredNpcIds))
+                    throw new InvalidOperationException("每日挑战助战快照与战斗 checkpoint 不一致。");
+                if (!checkpoint.Finished && activeAssistBattle == null && restoredNpcIds.Length > 0)
+                    throw new InvalidOperationException("每日挑战的战斗 checkpoint 缺少已提交的助战快照。");
+            }
             if (checkpoint.Finished)
             {
-                FinishDailyChallengeAssist(activityId, stageId);
+                FinishBattleAssist(stageId);
                 IReadOnlyList<OfficialChallengeReward> rewards = FinalizeChallenge(checkpoint,
                     checkpoint.Outcome.Won);
                 host.Hud.OpenDailyChallengeResult(activityId, checkpoint.Outcome.Won, checkpoint, rewards);
@@ -217,19 +230,19 @@ namespace Zjcs.Presentation.Home
                 return;
             }
             checkpoint.StageType = stageType;
-            MountBattle(checkpoint, scene, combatAssets, restore, true);
-            string checkpointJson = FightBattleCheckpointSerializer.Save(controller.Checkpoint);
             bool committedAssist = false;
             try
             {
-                if (!restore)
+                if (!restore && activeAssistBattle == null)
                 {
-                    host.NpcAssistanceProgress.CommitBattle(10, assistEntryId, stageId,
-                        Math.Min(3, inviteRule.MaxPlayer), inviteRule.OneNpcMaxInviteCount,
+                    host.NpcAssistanceProgress.CommitBattle(assistPlayType, assistEntryId, stageId,
+                        ResolveAssistMaxPlayer(inviteRule), inviteRule.OneNpcMaxInviteCount,
                         inviteRule.MaxInviteCount, (NpcAssistRefreshCycle)inviteRule.RefreshCycle,
                         DateTimeOffset.Now.ToUnixTimeSeconds());
                     committedAssist = true;
                 }
+                MountBattle(checkpoint, scene, combatAssets, restore, true);
+                string checkpointJson = FightBattleCheckpointSerializer.Save(controller.Checkpoint);
                 bool recorded = restore
                     ? SaveChallengeCheckpoint(checkpointJson)
                     : host.DailyChallenges.RecordParticipation(activityId, DateTime.Now,
@@ -238,7 +251,7 @@ namespace Zjcs.Presentation.Home
             }
             catch
             {
-                if (committedAssist) host.NpcAssistanceProgress.CancelBattle(10, assistEntryId, stageId);
+                if (committedAssist) host.NpcAssistanceProgress.CancelBattle(assistPlayType, assistEntryId, stageId);
                 DisposeBattle();
                 throw;
             }
@@ -330,8 +343,7 @@ namespace Zjcs.Presentation.Home
                 Destroy(gameObject);
                 return;
             }
-            if (challengeMode) FinishDailyChallengeAssist(challengeActivityId, checkpoint.StageId);
-            else FinishDailyDungeonAssist(checkpoint.StageId);
+            FinishBattleAssist(checkpoint.StageId);
             IReadOnlyList<OfficialChallengeReward> rewards = Array.Empty<OfficialChallengeReward>();
             if (challengeMode) rewards = FinalizeChallenge(checkpoint, won);
             else if (won)
@@ -618,8 +630,8 @@ namespace Zjcs.Presentation.Home
         private int[] ResolveDailyChallengeAssistSelection(FightOfficialNpcAssistanceCatalog npcCatalog,
             FightOfficialNpcInviteRule inviteRule, string entryId)
         {
-            int maxPlayer = Math.Min(3, inviteRule.MaxPlayer);
-            int[] selected = host.NpcAssistanceProgress.Selected(10, entryId).ToArray();
+            int maxPlayer = ResolveAssistMaxPlayer(inviteRule);
+            int[] selected = host.NpcAssistanceProgress.Selected(assistPlayType, entryId).ToArray();
             if (selected.Length > maxPlayer)
                 throw new InvalidOperationException("助战伙伴数量超过官方上限。");
             var friendships = (host.Profile.Save.Player.CharacterProperties.NpcFriendships
@@ -638,7 +650,7 @@ namespace Zjcs.Presentation.Home
                 if (!npcCatalog.CanInviteNpc(npcId, friendships.ContainsKey(npcId), conditionMet))
                     throw new InvalidOperationException("所选助战伙伴当前不满足官方条件：" + npcId);
                 if (inviteRule.OneNpcMaxInviteCount > 0
-                    && host.NpcAssistanceProgress.AssistCount(10, npcId, cycle, now)
+                    && host.NpcAssistanceProgress.AssistCount(assistPlayType, npcId, cycle, now)
                         >= inviteRule.OneNpcMaxInviteCount)
                     throw new InvalidOperationException("所选助战伙伴今日次数已用完：" + npcId);
             }
@@ -697,21 +709,34 @@ namespace Zjcs.Presentation.Home
             }
         }
 
-        private void FinishDailyChallengeAssist(int activityId, int stageId)
+        private void FinishBattleAssist(int stageId)
         {
             OfflineNpcAssistBattle active = host.NpcAssistanceProgress.ActiveBattle;
-            if (active == null) return;
-            string entryId = "daily-challenge:" + activityId;
-            if (active.playType == 10 && active.entryId == entryId && active.stageId == stageId)
-                host.NpcAssistanceProgress.FinishBattle(10, entryId, stageId);
+            if (active != null && active.playType == assistPlayType && active.entryId == dailyAssistEntryId
+                && active.stageId == stageId)
+                host.NpcAssistanceProgress.FinishBattle(assistPlayType, dailyAssistEntryId, stageId);
         }
 
-        private void FinishDailyDungeonAssist(int stageId)
+        private void ConfigureAssist(string defaultEntryId, OfficialBattleAssistOptions options)
         {
-            OfflineNpcAssistBattle active = host.NpcAssistanceProgress.ActiveBattle;
-            if (active != null && active.playType == 10 && active.entryId == dailyAssistEntryId
-                && active.stageId == stageId)
-                host.NpcAssistanceProgress.FinishBattle(10, dailyAssistEntryId, stageId);
+            OfficialBattleAssistOptions resolved = options == null
+                ? new OfficialBattleAssistOptions()
+                : options.Clone();
+            resolved.Validate();
+            assistPlayType = resolved.PlayType;
+            assistMaxPlayerOverride = resolved.MaxPlayerOverride;
+            dailyAssistEntryId = string.IsNullOrWhiteSpace(resolved.EntryId)
+                ? defaultEntryId : resolved.EntryId;
+            if (string.IsNullOrWhiteSpace(dailyAssistEntryId))
+                throw new InvalidOperationException("Battle assist entry identity is required.");
+        }
+
+        private int ResolveAssistMaxPlayer(FightOfficialNpcInviteRule inviteRule)
+        {
+            int officialMax = Math.Max(0, inviteRule.MaxPlayer);
+            return assistMaxPlayerOverride > 0
+                ? Math.Min(assistMaxPlayerOverride, officialMax)
+                : Math.Min(3, officialMax);
         }
 
         private void AssemblePlayer(FightOfficialCombatCatalog combat,

@@ -197,6 +197,11 @@ namespace Zjcs.Editor
                     "Could not enter the fixture's next room.");
             }
             int testedRoom = home.DailyDungeons.ActiveRun.currentRoomId;
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_ASSIST") == "1")
+            {
+                yield return RunConfiguredAssistHost(home, testedRoom, output, click);
+                yield break;
+            }
             Action verifyHome = CaptureHomeRestoration(home);
             bool callback = false;
             var daily = new GameObject("DailyDungeonBattleRunner");

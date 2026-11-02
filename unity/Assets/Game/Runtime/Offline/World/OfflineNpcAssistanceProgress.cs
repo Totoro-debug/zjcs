@@ -7,6 +7,13 @@ using UnityEngine;
 
 namespace Zjcs.Offline.World
 {
+    /// <summary>Official play types that can share the battle assist session.</summary>
+    public enum NpcAssistPlayType
+    {
+        FestivalBoss = 5,
+        All = 10
+    }
+
     public enum NpcAssistRefreshCycle
     {
         Daily = 0,

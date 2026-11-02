@@ -199,7 +199,7 @@ namespace Zjcs.Presentation.Home
                 StartDailyChallenge(activityId, challengeCatalog);
                 return;
             }
-            dailyAssistPlayType = 10;
+            dailyAssistPlayType = (int)NpcAssistPlayType.All;
             dailyAssistEntryId = "daily-challenge:" + activityId;
             dailyAssistConfirmed = _ => StartDailyChallenge(activityId, challengeCatalog);
             BuildDailyAssistPicker();
@@ -207,7 +207,7 @@ namespace Zjcs.Presentation.Home
 
         private void OpenDailyDungeonAssist(int roomId)
         {
-            dailyAssistPlayType = 10;
+            dailyAssistPlayType = (int)NpcAssistPlayType.All;
             dailyAssistEntryId = "daily-dungeon:" + roomId;
             dailyAssistConfirmed = _ => StartDailyDungeonBattle(roomId);
             BuildDailyAssistPicker();
@@ -252,7 +252,7 @@ namespace Zjcs.Presentation.Home
                     ?? new System.Collections.Generic.List<OfflineNpcFriendship>())
                 .Where(value => value != null && value.NpcClassId > 0)
                 .ToDictionary(value => value.NpcClassId, value => value.Level);
-            FightOfficialNpcInviteRule invite = host.NpcAssistanceCatalog.InviteRule(10);
+            FightOfficialNpcInviteRule invite = host.NpcAssistanceCatalog.InviteRule(dailyAssistPlayType);
             OfficialBattleModelCatalog battleModels = OfficialBattleModelCatalog.LoadDefault();
             NpcAssistRefreshCycle cycle = (NpcAssistRefreshCycle)invite.RefreshCycle;
             long now = DateTimeOffset.Now.ToUnixTimeSeconds();
