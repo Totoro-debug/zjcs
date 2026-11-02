@@ -1537,3 +1537,12 @@ unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.Partners.cs* text eol=lf
 unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.cs* text eol=lf
 unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.cs* text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/OfficialDungeonPopupMask.cs* text eol=lf
+
+# Preserve current partner dialogue controllers and original entry bytes.
+scripts/prepare_partner_dialogue_*.py text eol=lf
+scripts/fixtures/partner_dialogue_entry_validation.cs text eol=lf
+assets/reference/partner-dialogue-*-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Roster/*Dialogue*.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerDialogueAssetCatalog.cs* text eol=lf
+unity/Assets/Official/Partners/UI/DialogueEntry.meta -text
+unity/Assets/Official/Partners/UI/DialogueEntry/** -text

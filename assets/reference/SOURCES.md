@@ -277,3 +277,7 @@ Map13 正式原生入口与本地藤蔓：`prepare_unity_map13_tree_world.py` �
 ### 当前伙伴好感说明窗口与模糊遮罩资源
 
 `prepare_partner_friendship_window.py` 按当前 `884_156692` 恢复完整 `NpcFriendshipDialog`，沿原 `MainCanvas` 默认容器的类型 3 遮罩引用恢复确切子树；实际 APK 保持 `881_156673` 身份。窗口与旧版绑定使用独立 GUID，字节相同的依赖复用既有伙伴素材。当前 APK `CustomRenderTexture/ScreenBlur` 程序单独转换为 Windows shader，保持原采样表达式；历史 shader 及材质模板身份分别记录，不混改来源。原空字段、动画根路径、窗口／遮罩原码、Wwise 声音及复用的同事件 PCM、输入／输出及显式绑定哈希见[好感窗口来源](partner-friendship-window-source-manifest.json)。行为与验证范围仅在[伙伴功能](../../docs/features/partners.md)维护。本批未生成完整素材快照。
+
+### 当前伙伴对话名册与原生条目来源
+
+当前 `884_156692` 的三个对话名册控制器、共享排序／红点／名称替换原码见 `partner-dialogue-list-ui-source-manifest.json`；原 `NpcPanel` 的外部 `NpcPanelDialogueItem` 引用及 66 对象子模板、原生转换缓存、资源复用、输入输出哈希与显式目录绑定见 `partner-dialogue-entry-native-source-manifest.json`。资源先核对固定 APK，再使用选定云端资源及现有 Windows 转换缓存；未混用版本，未新增素材快照。

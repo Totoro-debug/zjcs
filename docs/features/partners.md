@@ -294,6 +294,14 @@ Home 赠礼溢出回调现打开原窗口，保留原标题、说明、按钮、
 
 主工程 Play Mode 已通过实际原礼物格、赠礼／属性说明按钮与原模糊遮罩的模拟鼠标射线，验证非空偏好、属性预览、遮罩排序、保留待赠选择、重复打开／返回、关闭所属页时清理窗口及恢复池／语言／声音服务。已查看赠礼与属性入口的两帧 450×800 GPU 画面；称谓输入和赠礼溢出确认回归均通过，并查看五帧画面及核对磁盘恢复。全工程静态检查通过（84,732 个 GUID），主工程导入／编译和 `Zjcs.Editor.ProjectTools.Validate` 通过；11 项安装载荷／目录、24 项运行代码及元数据、46 项输入与 27 份脚本绑定哈希一致。完整伙伴宿主、立绘、助战及 Windows Player 仍未完成。
 
+### 当前对话名册控制器与原生条目（局部）
+
+`prepare_partner_dialogue_list_ui.py` 迁移当前 `NpcPanelDialogueList`、`NpcPanelDialogueListNpcItem` 与 `NpcPanelDialogueListDialogueItem`，保留 NPC 按最近通话时间倒序／类 ID 升序、通话按状态升序／时间倒序／通话 ID 升序、原折叠展开、备用对象数量、逐项淡入、更新／删除刷新和生命周期订阅顺序。原 `ItemComparerBase` 的未检查长整型减法与符号转换保留，原下一节点任一条件满足即显示红点及 `<PN>` 名称替换直接迁移；玩家状态、图标初始化、窗口、条件与实例注入由显式宿主端口承接。代码与 12 份输出及元数据见[对话名册源码凭据](../../assets/reference/partner-dialogue-list-ui-source-manifest.json)。这些端口尚未接入正式通话存档与完整列表宿主。
+
+`prepare_partner_dialogue_entry_native.py` 从当前主窗口真实的 `mItemPrefab` 外部引用找到 `NpcPanelDialogueItem`，再按其 `mDialogueItemPrefab` 提取完整 66 对象条目，保留状态、原图像、字体、矩形、淡入动画及点击音；不使用主窗口内演示副本。恢复空字段及动画根路径，复用 9 项同 GUID、同字节素材，以 `OfficialPartnerDialogueAssetCatalog` 显式绑定本地 prefab；40 项实际安装文件／目录、资源和脚本绑定凭据见[原生对话条目来源](../../assets/reference/partner-dialogue-entry-native-source-manifest.json)。本批资源未纳入素材快照。
+
+隔离 Unity Play Mode 已通过原按钮的实际模拟射线、原 PCM 播放、原开场文字、进行中／暂停／结束状态及红点、重新启用不重复监听、序列显示／隐藏及最终释放，并核对通话排序边界与名称占位符。验证视口使用当前原 1080×1920 缩放和原父级布局参数，已查看进行中、结束两帧 450×800 GPU 画面；这是独立条目验证，完整分页、折叠列表、正式通话窗口和 Windows Player 仍未验证。已从实际安装的 Resources 目录引用重跑并通过；全工程静态检查通过（84,753 个 GUID），40 项安装输出、26 项资源输入、10 份脚本绑定及 12 份控制器输入／输出哈希一致。主工程本轮验证未完成，Unity 报告工程被另一实例打开；隔离工程编译及本条目 Play Mode 通过。
+
 ### 当前原生详情属性区与天赋合并（局部）
 
 `prepare_partner_detail_properties_ui.py` 迁移选定 `884_156692` 的 `NpcDetailPanelPropContent`，保留属性排序、旅行门槛、每组两项、交替背景、原珍宝百分比及转为整数的截断顺序。`PartnerNpcPropertyFormula` 提取原 `BattleFormulaHandler` 的好感／天赋计算及属性合并方法，读取实际存档的好感等级和已激活天赋节点；按当前 `PropId`、`PropLevel`、`PropTypes` 取值并合并，保留原零值、分支和执行顺序。`OfflinePartnerDetailPropertySource` 使用上文当前属性目录，补齐三类天赋属性，不采用历史总表的缺省值替代。
