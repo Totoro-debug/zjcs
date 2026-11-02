@@ -104,6 +104,8 @@
 
 ## 完整还原部分
 
+当前 `884_156692` 的原 `MiniMap_12` 地区地面独立转换至 `Assets/Official/World/Map/12/NativeMiniMapCurrent/`，保留原 Grid、99 个地区插槽／Tilemap、YooAsset GUID、Tile 字段及原管理器的可见性／公开状态／缓存生命周期，使用公共 `MainlineMiniMapRegions`，地图仅提供原生目录与状态适配。来源见[当前地区小地图清单](../../assets/reference/official-map/map12-current-minimap-regions-source-manifest.json)，公共实现见[主线地图公共模块](../features/mainline-map-modules.md)。本批当前资源与本页历史地图载荷分别保留，不据此声明旧版本地图数据等价；本图已通过公共 Interface 的图形 Play Mode：原区域图块、地区0公开后的原 Z 切换、范围处理器替换及旧事件隔离、缓存复用、原游戏时间十秒回收、释放与重挂，实际前后画面已查看；夹具直接提供地区／角色状态，未覆盖输入或地图存档。正式小地图根、标记／白雾、HUD 输入与存档接线仍未完成。
+
 已按 `official-source.json` 选择的 `871_156598` 程序集解码山之国：280×210 导航、99区／105 area、2591个放置实体、148份所需 EC 模板、92张配置表及65份原剧情图。当前云端与旧提取的对应地图、配置和有效剧情端口逐项比对，全部一致才复用旧转换；保留端口执行顺序及原始节点，不能用相似文件替代。129个实际美术 bundle 完成索引长度／MD5／SHA-256校验；更新过的 shader bundle 中7个被引用对象另核对原始对象 SHA-256。
 
 Unity 入口 `Assets/Official/World/Map/12/` 已绑定地形、小地图和实体 prefab：18683个原地形批次、原 Ground Tilemap 的26725块瓦片／56批次、140种实体显示／43份 Spine 帧数据，以及123个原小地图批次。原生地图目录登记12，运行仍未开放山之国完整游玩入口。资源导出不是本图完整还原结论。

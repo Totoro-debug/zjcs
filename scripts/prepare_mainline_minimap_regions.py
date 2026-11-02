@@ -146,6 +146,6 @@ class MiniMapRegionsBinding(GroundBinding):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--map-id', type=int, choices=(13, 16), required=True)
+    parser.add_argument('--map-id', type=int, choices=(10, 11, 12, 13, 14, 16), required=True)
     args = parser.parse_args()
     MiniMapRegionsBinding(validation_directory(), args.map_id).build_regions()

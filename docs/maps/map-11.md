@@ -60,6 +60,8 @@ Map11 实体转换保留 105 类模型中的 24 类状态模型、64 份状态�
 
 ## 完整还原部分
 
+当前 `884_156692` 的原 `MiniMap_11` 地区地面独立转换至 `Assets/Official/World/Map/11/NativeMiniMapCurrent/`，保留原 Grid、77 个地区插槽／Tilemap、YooAsset GUID、Tile 字段及原管理器的可见性／公开状态／缓存生命周期，使用公共 `MainlineMiniMapRegions`，地图仅提供原生目录与状态适配。来源见[当前地区小地图清单](../../assets/reference/official-map/map11-current-minimap-regions-source-manifest.json)，公共实现见[主线地图公共模块](../features/mainline-map-modules.md)。本批当前资源与本页历史地图载荷分别保留，不据此声明旧版本地图数据等价；本图已通过公共 Interface 的图形 Play Mode：原区域图块、地区0公开后的原 Z 切换、范围处理器替换及旧事件隔离、缓存复用、原游戏时间十秒回收、释放与重挂，实际前后画面已查看；夹具直接提供地区／角色状态，未覆盖输入或地图存档。正式小地图根、标记／白雾、HUD 输入与存档接线仍未完成。
+
 共用原生 UI 导入器补回 `6010_11_DialogIcon` 的 `GoddessDialogIcon` 原状态清单，未激活／已激活图标按原对象组互斥显示。两种竖屏尺寸的弹窗按钮模拟点击及图标切换回归通过；该回归使用独立界面夹具，不代表本图完整游玩或存档验证。
 
 地图公共能力由 `OfficialMainlineMapRuntime` 组装 HUD、区域／雾、四类雕像、导航、体力、探寻、小地图七个独立状态模块；本图资源、剧情和进度按地图 ID 注入。模块边界、共享规则与未接入项见[主线地图公共模块](../features/mainline-map-modules.md)。按地图 ID 装载本图资源，沿用本图存档与回执。

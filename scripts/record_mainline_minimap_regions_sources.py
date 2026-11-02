@@ -26,7 +26,7 @@ def build():
         if hashlib.sha256((ROOT / installed['path']).read_bytes()).hexdigest() != installed['sha256']:
             raise ValueError('The already migrated original region manager changed: ' + name)
     resources = []
-    for map_id in (13, 16):
+    for map_id in (10, 11, 12, 13, 14, 16):
         receipt = ROOT / f'assets/reference/official-map/map{map_id}-current-minimap-regions-source-manifest.json'
         data = json.loads(receipt.read_bytes())
         if data['manifest'] != '884_156692' or data['mapClassId'] != map_id:

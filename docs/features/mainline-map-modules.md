@@ -8,7 +8,7 @@
 
 主线地图通过 `OfficialMainlineMapRuntime.Begin(mapClassId, …)` 使用同一套运行时。`OfficialMainlineMapProfile` 当前登记 Map10–15；各图数据、表现和游玩完成范围以所属地图页为准，登记或可进入不表示整图完成。地图资源、区域条件、剧情、实体和进度仍按地图 ID 隔离。新增地图须先迁移其官方数据与专属流程，再登记配置，不能仅替换地图 ID 后宣称地图完成。鲸背岛 Map16 尚未登记此运行时。
 
-小地图区域地面由公共 `MainlineMiniMapRegions` 管理原 prefab 实例、原管理器的状态／范围事件及资源生命周期。各图提供 `MainlineMiniMapRegionAssets` 与 `IMainlineMiniMapRegionState`；模块直接订阅原可见范围事件，替换处理器时切换订阅，停用／销毁时退订；普通状态刷新不会重置原十秒回收期限。所选版本的 Map13／Map16 已分别转换106／43份原区域 Tilemap，复用同一实现；完整原小地图根、白雾、标记及正式宿主接线仍未完成。实际验证范围分别见[泽之国](../maps/map-13.md)和[鲸背岛](../maps/map-16.md)，来源见[公共小地图区域模块](../../assets/reference/official-map/mainline-minimap-regions-source-manifest.json)。
+小地图区域地面由公共 `MainlineMiniMapRegions` 管理原 prefab 实例、原管理器的状态／范围事件及资源生命周期。各图提供 `MainlineMiniMapRegionAssets` 与 `IMainlineMiniMapRegionState`；模块直接订阅原可见范围事件，替换处理器时切换订阅，停用／销毁时退订；普通状态刷新不会重置原十秒回收期限。所选 `884_156692` 的 Map10／11／12／13／14／16 已分别转换5／77／99／106／111／43份原区域 Tilemap，复用同一实现；Map15 原配置没有独立小地图 prefab，不生成空目录。当前原生资源与各图历史来源独立记录，不混接不同版本的区域身份；完整原小地图根、白雾、标记及正式宿主接线仍未完成。各图验证范围见[初始岛](../maps/map-10.md)、[森之国](../maps/map-11.md)、[山之国](../maps/map-12.md)、[泽之国](../maps/map-13.md)、[龙之国](../maps/map-14.md)和[鲸背岛](../maps/map-16.md)，来源见[公共小地图区域模块](../../assets/reference/official-map/mainline-minimap-regions-source-manifest.json)。
 
 ## 原始官方实现
 
@@ -27,6 +27,8 @@
 `prepare_mainline_loop_scroll.py` 从固定官方 `LoopScrollRect.Runtime.dll` 完整反编译并恢复9个类，保留原拖动、惯性、网格和回收分支，仅修复C#反编译基类调用及工程命名空间；程序集、逐文件源码与输出哈希见 [循环列表来源](../../assets/reference/official-map/loop-scroll-source-manifest.json)。`prepare_mainline_popup_effects.py` 核对 APK 恢复的ARM64实现，迁移 `TMPColorGradient` 的原顶点计算以及 `ScreenBlur` 原程序；原窗口模糊保留4级下采样、3级上采样、七个权重、screen/13快照、原遮罩颜色及半秒关闭门槛。元数据／原生映像、方法地址／字节哈希、原shader／material及显式加载绑定见 [弹窗表现来源](../../assets/reference/official-map/popup-effects-source-manifest.json)。这些恢复只覆盖当前原窗口使用的分支，原动作、奖励粒子、图标附件和完整实体交互尚未完成；未生成素材快照。
 
 ## 完整还原部分
+
+公共区域小地图已在 Unity 2022.3.57f1c2 图形 Play Mode 通过六图441份原 Tilemap 的公共 Interface 检查：地区公开状态、原 Z、范围事件替换／旧事件隔离、缓存复用、原游戏时间十秒回收、释放与重挂；12张区域小地图实际画面已查看。夹具按原 UniTask 的游戏时间计时并等待销毁帧，不以墙钟时间替代；地区／角色状态由夹具提供，未覆盖正式根、白雾／标记、HUD 输入、地图存档或 Windows Player。静态元数据检查与主工程 `ProjectTools.Validate` 均通过。
 
 `Resources/Official/Progression/mainline-tasks.json` 的 `output_sha256` 对照 `TextAsset.text`，Git 固定其工作树换行为 LF，确保 Windows `core.autocrlf=true` 检出仍与清单一致。
 

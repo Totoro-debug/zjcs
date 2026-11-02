@@ -1,0 +1,985 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "mapClassId": 10,
+  "input_receipts": {
+    "scripts/prepare_current_partner_native.py": "1c54fd235607be85882c616e78b079674c1f0b452bb88027229711ba70cb2b23",
+    "scripts/official_apk.py": "ffc722b06e62bacc6689d98a7910562527fbcacc1c512c05e57a21bb8aa0ea46",
+    "scripts/official_manifest.py": "1aae5bd86af587511466e17308719c2e6b356be4117942809c7e6ba89e2d7399",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json": "264d79bcd2da2d47f86bc9e1c1956cd4e07853e09ad2248b691e2c92dd125d3c",
+    ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-textures/source-manifest.json": "095eb422b8a241e6468abd81940e22aff9ad22f89bc78161dbdba8bd1f45b3b0",
+    ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders/source-manifest.json": "09b81e5260175a1524a2178d37bea2b78752bdc85f130751e2d95398171fbe0b",
+    ".tools/source-packages/current/884_156692/official-code/client-source/MiniMapPrivateRegionMaskManager.cs": "f90ed2e24a6a44566b054324e7ab268694ead5ec4ce5c5bb9d106c7e82e207b7",
+    ".tools/source-packages/current/884_156692/official-code/client-source/MapMeCharacterUIBase.cs": "158f022010adcbf032fab2d356c334c8d18257c377492a1a56176ef6838d740f",
+    "assets/reference/official-map/map13-minimap-region-manager-code-source-manifest.json": "bd7419799e1b92d2e097e40c0bcdd6854f2c1daf447e3b76dc2445b050b48799",
+    "scripts/prepare_mainline_minimap_regions.py": "0065b061a9d633e2a58016035943693654d51672b52f39965013d5716357f3e0",
+    "unity/Assets/Game/Runtime/Presentation/World/MainlineMiniMapRegions/MainlineMiniMapRegionAssets.cs": "9ac2ba35763be5799b231159812b39f6350b6d7d3fee2e97663f6983182b4dff",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/MapWorld/MiniMapTile/ground_type_11_block.asset": "aa13d7ee880f0633e57e6cb90b815308b38ebcf3bb3f822f0966f6dd35a98dcb",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/MapWorld/MiniMap_Special/ground_type_none1.asset": "3ac15df0e96fb6f1adfef7551722289778955d81e84df454fade10dcba62e6bd",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/MapWorld/MiniMapTile/ground_type_11_none.asset": "629fbe40b329b5ee43132b84c34c3d4e9699a5b6656868aba0ff3857e530241d",
+    ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Materials/Minimap/MaskableTilemap.mat": "b89d037b4e1383bf8b24e54ad8d240ef9c25c14f1674e1c4f6db3ecb0b008f8d"
+  },
+  "root_source": {
+    "name": "Ground",
+    "originalRoot": "cab-d236bc7308512187651fab8a689195a2:-719914350285917298",
+    "originalSource": {
+      "bundle": "defaultpackage_assets_prefabs_map_map_10_minimap.bundle",
+      "bundle_hash": "8a349a096ce5f4735aae74e2472c0463",
+      "path_id": "-719914350285917298",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/8a349a096ce5f4735aae74e2472c0463.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 10438,
+      "bundle_sha256": "4db0cfd8c02f7f5bfb69992ae0b0768a781ba8fae67f167fce90878d6b96fd17"
+    },
+    "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/Map/Map_10/MiniMap/MiniMap_10.prefab",
+    "native_sha256": "74766e6fa2567721811688be812f85f8f2c71482962985727cc3f859b721acde",
+    "mapped_objects": 19,
+    "recovered_components": 0,
+    "unresolved": 0,
+    "pendingBindings": {},
+    "output": "Ground.json",
+    "subtree": {
+      "original_parent": {
+        "fileID": 4632457200066912
+      },
+      "detached_parent": {
+        "fileID": 0
+      }
+    },
+    "nativeMeta_sha256": "e91349fe8fb64a2b734d45df30854bd87182796a67c29d03cf759bca50d95adb",
+    "output_sha256": "97b06a7af9391239c3c5ab6ba300df34c6e18e7cfd55407cee81d08845e66847"
+  },
+  "root_pointer": {
+    "fileID": 1730242686860875,
+    "guid": "b2d66b4b96a11787310f944bd8a7e946",
+    "type": 3
+  },
+  "full_minimap_source": {
+    "name": "MiniMap_10",
+    "originalRoot": "cab-d236bc7308512187651fab8a689195a2:-7865157827853061234",
+    "originalSource": {
+      "bundle": "defaultpackage_assets_prefabs_map_map_10_minimap.bundle",
+      "bundle_hash": "8a349a096ce5f4735aae74e2472c0463",
+      "path_id": "-7865157827853061234",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/8a349a096ce5f4735aae74e2472c0463.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 10438,
+      "bundle_sha256": "4db0cfd8c02f7f5bfb69992ae0b0768a781ba8fae67f167fce90878d6b96fd17"
+    },
+    "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/Map/Map_10/MiniMap/MiniMap_10.prefab",
+    "native_sha256": "74766e6fa2567721811688be812f85f8f2c71482962985727cc3f859b721acde",
+    "mapped_objects": 87,
+    "recovered_components": 2,
+    "unresolved": 10,
+    "pendingBindings": {
+      "cab-b7827e634f01e2d8a5dd0ef0f064ccec:5011813278646008708": {
+        "type": "MonoBehaviour",
+        "payload_sha256": "fed1f2612bfc256dc739e3fbc9b155268146a4e9fdb8f462c3922fd843db1315",
+        "name": "OneCorner"
+      },
+      "cab-b7827e634f01e2d8a5dd0ef0f064ccec:2862798339394418478": {
+        "type": "MonoBehaviour",
+        "payload_sha256": "4fddba399095be6880f3c0ccae6308edccc269a362ce2401e072bdaca15ffc21",
+        "name": "AdjacentCorners"
+      },
+      "cab-b7827e634f01e2d8a5dd0ef0f064ccec:8534842022739760717": {
+        "type": "MonoBehaviour",
+        "payload_sha256": "f6c3616ecdde81ca23ab6c2cc6e5f99c45c77acdbcb9b486309cc5e30f31b468",
+        "name": "AcrossCorners"
+      },
+      "cab-b7827e634f01e2d8a5dd0ef0f064ccec:-5549556372063057854": {
+        "type": "MonoBehaviour",
+        "payload_sha256": "5292e9a41254964c45b77886c7daa85702248831f3769c711f1d6ad49ba50193",
+        "name": "ThreeCorners"
+      },
+      "cab-b7827e634f01e2d8a5dd0ef0f064ccec:-3658875197170299586": {
+        "type": "MonoBehaviour",
+        "payload_sha256": "d4b30c91db655a4ab902728ff56a9dfb63e720d09f9aaea94522235cd8b49f33",
+        "name": "FourCorners"
+      },
+      "cab-b7827e634f01e2d8a5dd0ef0f064ccec:-8567814244428075856": {
+        "type": "MonoBehaviour",
+        "payload_sha256": "26e118022e2c3e0daf1ee9abafdc94a04bb9c17e3c00eb0a06d28013d0ac40e6",
+        "name": "OneEdge"
+      },
+      "cab-b7827e634f01e2d8a5dd0ef0f064ccec:-7986123489197864236": {
+        "type": "MonoBehaviour",
+        "payload_sha256": "5361de3cc1705aef42fa182cade5c7c307898a32fac48667952d4ac21e177a29",
+        "name": "AdjacentEdges"
+      },
+      "cab-b7827e634f01e2d8a5dd0ef0f064ccec:9214890949840752390": {
+        "type": "MonoBehaviour",
+        "payload_sha256": "dc7ca0b8f4c3973197ed7fba0f6269797a39682cf03b02238bb288875e1b1c9f",
+        "name": "ParallelEdges"
+      },
+      "cab-b7827e634f01e2d8a5dd0ef0f064ccec:-1655958206018475147": {
+        "type": "MonoBehaviour",
+        "payload_sha256": "bac4dd2edc152dc33eff465770c2c7efbce27a2c9982d1408d281ca5e3158d03",
+        "name": "ThreeEdges"
+      },
+      "cab-b7827e634f01e2d8a5dd0ef0f064ccec:7146420081687096712": {
+        "type": "MonoBehaviour",
+        "payload_sha256": "e8653f23b06e14d57baf0d6df7dad888c55b862a24937637ec25c4f66dca5845",
+        "name": "FourEdges"
+      }
+    },
+    "output": "MiniMap_10.json",
+    "nativeMeta_sha256": "e91349fe8fb64a2b734d45df30854bd87182796a67c29d03cf759bca50d95adb",
+    "output_sha256": "b1927909f5d731bcf2f2d2f927230d17aafe62b482fbbbe6c0a5a24f7180f16f"
+  },
+  "original_region_sources": [
+    {
+      "name": "RegionGround_0",
+      "originalRoot": "cab-d236bc7308512187651fab8a689195a2:6458392085899875636",
+      "originalSource": {
+        "bundle": "defaultpackage_assets_prefabs_map_map_10_minimap.bundle",
+        "bundle_hash": "8a349a096ce5f4735aae74e2472c0463",
+        "path_id": "6458392085899875636",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/8a349a096ce5f4735aae74e2472c0463.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 10438,
+        "bundle_sha256": "4db0cfd8c02f7f5bfb69992ae0b0768a781ba8fae67f167fce90878d6b96fd17"
+      },
+      "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/Map/Map_10/MiniMap/MinimapRegionTilemap/RegionGround_0.prefab",
+      "native_sha256": "a63666a4adf0553c60e29ceeb6bbcb5ade596ef248675b690ea465855b487b04",
+      "mapped_objects": 4,
+      "recovered_components": 0,
+      "unresolved": 0,
+      "pendingBindings": {},
+      "output": "RegionGround_0.json",
+      "nativeMeta_sha256": "bbb32d6c2d4f6ab5d2061ba472c143f5e41b6bbf312b38e18fbf165304fd1ca7",
+      "output_sha256": "512c808bd9b06c915db89786b6ed4c55ecbdbe53bcb44a271706826a8e34d12b"
+    },
+    {
+      "name": "RegionGround_1",
+      "originalRoot": "cab-d236bc7308512187651fab8a689195a2:-1559119266196597949",
+      "originalSource": {
+        "bundle": "defaultpackage_assets_prefabs_map_map_10_minimap.bundle",
+        "bundle_hash": "8a349a096ce5f4735aae74e2472c0463",
+        "path_id": "-1559119266196597949",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/8a349a096ce5f4735aae74e2472c0463.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 10438,
+        "bundle_sha256": "4db0cfd8c02f7f5bfb69992ae0b0768a781ba8fae67f167fce90878d6b96fd17"
+      },
+      "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/Map/Map_10/MiniMap/MinimapRegionTilemap/RegionGround_1.prefab",
+      "native_sha256": "d0279455261b414190a1723ca268fa285efe3848167b20221d1474a302d8b1cb",
+      "mapped_objects": 4,
+      "recovered_components": 0,
+      "unresolved": 0,
+      "pendingBindings": {},
+      "output": "RegionGround_1.json",
+      "nativeMeta_sha256": "806e523272c6e198cf57ba5a4378383c07a61c304bb41e27f4eb262b99a8bde0",
+      "output_sha256": "3250b84dcf55430b739676ae76fe9fa8423923f3aa1fb707bb81dbf71e43b109"
+    },
+    {
+      "name": "RegionGround_2",
+      "originalRoot": "cab-d236bc7308512187651fab8a689195a2:-7179381145940389687",
+      "originalSource": {
+        "bundle": "defaultpackage_assets_prefabs_map_map_10_minimap.bundle",
+        "bundle_hash": "8a349a096ce5f4735aae74e2472c0463",
+        "path_id": "-7179381145940389687",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/8a349a096ce5f4735aae74e2472c0463.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 10438,
+        "bundle_sha256": "4db0cfd8c02f7f5bfb69992ae0b0768a781ba8fae67f167fce90878d6b96fd17"
+      },
+      "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/Map/Map_10/MiniMap/MinimapRegionTilemap/RegionGround_2.prefab",
+      "native_sha256": "992c34624f4f01da6ed281acc7530971a1f79c4cde6df24d246a478fdf4a76e7",
+      "mapped_objects": 4,
+      "recovered_components": 0,
+      "unresolved": 0,
+      "pendingBindings": {},
+      "output": "RegionGround_2.json",
+      "nativeMeta_sha256": "80a7ede198a977fd76df41ddd68bf06a6573d2a85c0fd5d6e10a48fcaa2c2b71",
+      "output_sha256": "55704f280cd5e88246946d36575b90bfa8d225e80958f2f7fa17a3737a87077b"
+    },
+    {
+      "name": "RegionGround_3",
+      "originalRoot": "cab-d236bc7308512187651fab8a689195a2:342732008446584070",
+      "originalSource": {
+        "bundle": "defaultpackage_assets_prefabs_map_map_10_minimap.bundle",
+        "bundle_hash": "8a349a096ce5f4735aae74e2472c0463",
+        "path_id": "342732008446584070",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/8a349a096ce5f4735aae74e2472c0463.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 10438,
+        "bundle_sha256": "4db0cfd8c02f7f5bfb69992ae0b0768a781ba8fae67f167fce90878d6b96fd17"
+      },
+      "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/Map/Map_10/MiniMap/MinimapRegionTilemap/RegionGround_3.prefab",
+      "native_sha256": "90181a21577bb3f6a059b353d94b04f34c3605452081b248aae922d653258bee",
+      "mapped_objects": 4,
+      "recovered_components": 0,
+      "unresolved": 0,
+      "pendingBindings": {},
+      "output": "RegionGround_3.json",
+      "nativeMeta_sha256": "4c5495b69a9e5fa3aea82228053b4ec4afef230ecaa67d49f32cc25608579941",
+      "output_sha256": "d5d8ae5a65fd4f112906a48e328b772ccb33a27bc54e64d7357f34722376f107"
+    },
+    {
+      "name": "RegionGround_4",
+      "originalRoot": "cab-d236bc7308512187651fab8a689195a2:7188155855210776630",
+      "originalSource": {
+        "bundle": "defaultpackage_assets_prefabs_map_map_10_minimap.bundle",
+        "bundle_hash": "8a349a096ce5f4735aae74e2472c0463",
+        "path_id": "7188155855210776630",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/8a349a096ce5f4735aae74e2472c0463.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 10438,
+        "bundle_sha256": "4db0cfd8c02f7f5bfb69992ae0b0768a781ba8fae67f167fce90878d6b96fd17"
+      },
+      "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/Map/Map_10/MiniMap/MinimapRegionTilemap/RegionGround_4.prefab",
+      "native_sha256": "41fa024781115e6951da2b25454d0a54c6b8ab23ece1329462a327e2c3f2433d",
+      "mapped_objects": 4,
+      "recovered_components": 0,
+      "unresolved": 0,
+      "pendingBindings": {},
+      "output": "RegionGround_4.json",
+      "nativeMeta_sha256": "2e315864bae5b843771be105c4208f5ad7e8da1f9e9447eb6cc8b1fdb802b4d4",
+      "output_sha256": "ba14b0da15e3aaf66b0bcdefb9e3a53e3fe578ed42eb2a60cd449ad4aa2736f4"
+    }
+  ],
+  "original_code_equivalence": [
+    {
+      "selected": ".tools/source-packages/current/884_156692/official-code/client-source/MiniMapPrivateRegionMaskManager.cs",
+      "historical": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/MiniMapPrivateRegionMaskManager.cs",
+        "sha256": "f90ed2e24a6a44566b054324e7ab268694ead5ec4ce5c5bb9d106c7e82e207b7"
+      }
+    },
+    {
+      "selected": ".tools/source-packages/current/884_156692/official-code/client-source/MapMeCharacterUIBase.cs",
+      "historical": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapMeCharacterUIBase.cs",
+        "sha256": "158f022010adcbf032fab2d356c334c8d18257c377492a1a56176ef6838d740f"
+      }
+    }
+  ],
+  "recovered_tile_fields": [
+    {
+      "original": "cab-3f5ffb890d6500fd9c99c610eb359447:-2558258892340700427",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 13312
+        },
+        "m_Name": "ground_type_11_block",
+        "m_Sprite": {
+          "m_FileID": 2,
+          "m_PathID": -2331170906024938460
+        },
+        "m_Color": {
+          "r": 0.2705882489681244,
+          "g": 0.4274510145187378,
+          "b": 0.23137256503105164,
+          "a": 1.0
+        },
+        "m_Transform": {
+          "m00": 1.0,
+          "m10": 0.0,
+          "m20": 0.0,
+          "m30": 0.0,
+          "m01": 0.0,
+          "m11": 1.0,
+          "m21": 0.0,
+          "m31": 0.0,
+          "m02": 0.0,
+          "m12": 0.0,
+          "m22": 1.0,
+          "m32": 0.0,
+          "m03": 0.0,
+          "m13": 0.0,
+          "m23": 0.0,
+          "m33": 1.0
+        },
+        "m_InstancedGameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Flags": 1,
+        "m_ColliderType": 0
+      },
+      "original_sha256": "23314aa4275269b050ef58caa3299b7d064a2767a78e800f661a46adffb3bd0e"
+    },
+    {
+      "original": "cab-84307f147026d581b403b612fc6ebf2d:-6798104596126563818",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 1,
+          "m_PathID": 13312
+        },
+        "m_Name": "ground_type_11_none",
+        "m_Sprite": {
+          "m_FileID": 2,
+          "m_PathID": -2331170906024938460
+        },
+        "m_Color": {
+          "r": 0.5176470875740051,
+          "g": 0.5803921818733215,
+          "b": 0.41568630933761597,
+          "a": 1.0
+        },
+        "m_Transform": {
+          "m00": 1.0,
+          "m10": 0.0,
+          "m20": 0.0,
+          "m30": 0.0,
+          "m01": 0.0,
+          "m11": 1.0,
+          "m21": 0.0,
+          "m31": 0.0,
+          "m02": 0.0,
+          "m12": 0.0,
+          "m22": 1.0,
+          "m32": 0.0,
+          "m03": 0.0,
+          "m13": 0.0,
+          "m23": 0.0,
+          "m33": 1.0
+        },
+        "m_InstancedGameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Flags": 1,
+        "m_ColliderType": 0
+      },
+      "original_sha256": "dcc9e288b4f413196d42d0755b5df542144fa5a656b5f998b7904d8e396d1e31"
+    }
+  ],
+  "resource_manifest_sha256": "89288d53cf6b2948673be7e844e86a6a6800df94b7373cf1b457a35c6379fa23",
+  "original_resource_bindings": [
+    {
+      "address": "",
+      "path": "Assets/Prefabs/Map/Map_10/MiniMap/MinimapRegionTilemap/RegionGround_0.prefab",
+      "guid": "8ca3cc75b7533b448a9d99e627cee7f0",
+      "tags": [
+        "Payd_Priority"
+      ],
+      "bundle": "defaultpackage_assets_prefabs_map_map_10_minimap.bundle"
+    },
+    {
+      "address": "",
+      "path": "Assets/Prefabs/Map/Map_10/MiniMap/MinimapRegionTilemap/RegionGround_1.prefab",
+      "guid": "09037e3571e6aef489886714d6537a4f",
+      "tags": [
+        "Payd_Priority"
+      ],
+      "bundle": "defaultpackage_assets_prefabs_map_map_10_minimap.bundle"
+    },
+    {
+      "address": "",
+      "path": "Assets/Prefabs/Map/Map_10/MiniMap/MinimapRegionTilemap/RegionGround_2.prefab",
+      "guid": "d5de93582506a394498e9e85d67a0edd",
+      "tags": [
+        "Payd_Priority"
+      ],
+      "bundle": "defaultpackage_assets_prefabs_map_map_10_minimap.bundle"
+    },
+    {
+      "address": "",
+      "path": "Assets/Prefabs/Map/Map_10/MiniMap/MinimapRegionTilemap/RegionGround_3.prefab",
+      "guid": "a85f2d168abd225429018cf4bace0ff7",
+      "tags": [
+        "Payd_Priority"
+      ],
+      "bundle": "defaultpackage_assets_prefabs_map_map_10_minimap.bundle"
+    },
+    {
+      "address": "",
+      "path": "Assets/Prefabs/Map/Map_10/MiniMap/MinimapRegionTilemap/RegionGround_4.prefab",
+      "guid": "90fa2eb5879c5674bb51966b7e8dde78",
+      "tags": [
+        "Payd_Priority"
+      ],
+      "bundle": "defaultpackage_assets_prefabs_map_map_10_minimap.bundle"
+    }
+  ],
+  "scope": "Original Ground subtree and regional Tilemaps only. MiniMap/session/controller/resource injection uses the shared runtime; masks, marks, UI and formal map integration are separate.",
+  "objects": {
+    "cab-3f5ffb890d6500fd9c99c610eb359447:-2558258892340700427": {
+      "source": {
+        "bundle": "defaultpackage_share_33746ce253d6ca2563861b7a8f25d2b9.bundle",
+        "bundle_hash": "0136308b7e66314ed0057f55dfdcacef",
+        "path_id": "-2558258892340700427",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/0136308b7e66314ed0057f55dfdcacef.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 621,
+        "bundle_sha256": "43d13749c1a27b21b2546b0faef88ec1e91ecd2983ee0dfbeeca1b96c6c932ca"
+      },
+      "type": "MonoBehaviour",
+      "original_sha256": "23314aa4275269b050ef58caa3299b7d064a2767a78e800f661a46adffb3bd0e",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/MapWorld/MiniMapTile/ground_type_11_block.asset",
+      "output": "Image/MapWorld/MiniMapTile/ground_type_11_block.asset",
+      "guid": "adee48995cf6391e8776047bb28b8424",
+      "geometry": null
+    },
+    "cab-250614a0c2e30e33d4bde1a51f9f894b:-2331170906024938460": {
+      "source": {
+        "bundle": "defaultpackage_share_7467c8f215154c81be50ae1e57a4730b.bundle",
+        "bundle_hash": "2f741861bbb0ea445b6025e344179073",
+        "path_id": "-2331170906024938460",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2f741861bbb0ea445b6025e344179073.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 751,
+        "bundle_sha256": "e8310f7c225ee0be5fdc6bac1cf9371bfbf336689fc9b9dace52de4dc59d2e8e"
+      },
+      "type": "Sprite",
+      "original_sha256": "7b34cc7723e9543cfc6633943ef4b9438da4b71cd159da5025c4c50553606677",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/MapWorld/MiniMap_Special/ground_type_none1.asset",
+      "output": "Image/MapWorld/MiniMap_Special/ground_type_none1.asset",
+      "guid": "663751062edcf0fb51fcfdb492926525",
+      "geometry": {
+        "vertices": 4,
+        "index_bytes": 12,
+        "index_sha256": "769df21c80974149d13f85ca9f01b8361bfe89e3fcadf7aac71e3c59c247ef7b"
+      }
+    },
+    "cab-84307f147026d581b403b612fc6ebf2d:-6798104596126563818": {
+      "source": {
+        "bundle": "defaultpackage_share_6fdd0decd25c0c19f83f593c577b77e5.bundle",
+        "bundle_hash": "2639c22a6d9f0025ecfc03afc76beee2",
+        "path_id": "-6798104596126563818",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2639c22a6d9f0025ecfc03afc76beee2.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 622,
+        "bundle_sha256": "2d923af9f642d814a136912be4d289b6ebaf4b08a43f7f6e40084f40240f1545"
+      },
+      "type": "MonoBehaviour",
+      "original_sha256": "dcc9e288b4f413196d42d0755b5df542144fa5a656b5f998b7904d8e396d1e31",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/MapWorld/MiniMapTile/ground_type_11_none.asset",
+      "output": "Image/MapWorld/MiniMapTile/ground_type_11_none.asset",
+      "guid": "c6be6e8df4e696ad926c76c75d010a9f",
+      "geometry": null
+    },
+    "cab-ec32c08ae7b3bc8b4d399be1cdf872ee:-4645460564417878223": {
+      "source": {
+        "bundle": "defaultpackage_share_b492b8650b807dc61bd604c2b373549d.bundle",
+        "bundle_hash": "6c407e5dbb9d2d46cbc523d7f435f5ab",
+        "path_id": "-4645460564417878223",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/6c407e5dbb9d2d46cbc523d7f435f5ab.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 713,
+        "bundle_sha256": "c1d82649d5c28de786d4e6473b31acdfffda298318d3ff90e4fb2431cc4bed1a"
+      },
+      "type": "Material",
+      "original_sha256": "0ca71bc7ece60127899ffea097668bfd7ccf6adbcfae9371385c3086e86c3f9d",
+      "native_path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Materials/Minimap/MaskableTilemap.mat",
+      "output": "Materials/Minimap/MaskableTilemap.mat",
+      "guid": "95bb98508a305339474417444d27e8f4",
+      "geometry": null
+    },
+    "cab-250614a0c2e30e33d4bde1a51f9f894b:-1725591166742793180": {
+      "source": {
+        "bundle": "defaultpackage_share_7467c8f215154c81be50ae1e57a4730b.bundle",
+        "bundle_hash": "2f741861bbb0ea445b6025e344179073",
+        "path_id": "-1725591166742793180",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/2f741861bbb0ea445b6025e344179073.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 751,
+        "bundle_sha256": "e8310f7c225ee0be5fdc6bac1cf9371bfbf336689fc9b9dace52de4dc59d2e8e"
+      },
+      "type": "Texture2D",
+      "original_sha256": "881aaf89bd5b6a996119a6d67833e71280b557e0e84230c74ae35ab35c3f8167",
+      "native_path": null,
+      "output": "Converted/4dd0c77db0a6fa13.asset",
+      "guid": "92b8ae827cb52c46a342419685fd736a",
+      "geometry": null
+    },
+    "cab-014000ed2538cb87d1aa4612be612002:-7199582879026943748": {
+      "source": {
+        "bundle": "defaultpackage_unityshaders.bundle",
+        "bundle_hash": "465300f28c23d7564868393936041212",
+        "path_id": "-7199582879026943748",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/465300f28c23d7564868393936041212.bundle",
+        "raw_size": 2909118,
+        "raw_sha256": "991da192cbcd00a1b3a2714b7ca649b7f416881f87b656dac17f5f1123da2e46"
+      },
+      "type": "Shader",
+      "original_sha256": "aa462c739d042f964cf58887691af04d16636c19a5987598d73519105362cfb0",
+      "native_path": null,
+      "output": "Converted/6a0d26b417091341.shader",
+      "guid": "9919b1734aabf0455d6b21115711ce60",
+      "geometry": null
+    },
+    "cab-91eecee51a5774559357385fe6706b4b:-2819504007243015429": {
+      "source": {
+        "bundle": "defaultpackage_share_9d31b583b8df31f731edf8b80fa5ac6c.bundle",
+        "bundle_hash": "21f2b376c27e0990977c2597be99fa99",
+        "path_id": "-2819504007243015429",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/21f2b376c27e0990977c2597be99fa99.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 875,
+        "bundle_sha256": "17ff0d43c2ba91da12ff8c6794712feb626fbd7cd5c06579ea7107bf1e8d9429"
+      },
+      "type": "Texture2D",
+      "original_sha256": "cf6584ec0dad9b181bcde6c90838e2fdc5b88b92678e172dbbe4f8d348b671e8",
+      "native_path": null,
+      "output": "Converted/56a80924f31750fc.asset",
+      "guid": "b4960000b157382b0603f3bf02f8de80",
+      "geometry": null
+    }
+  },
+  "skeletons": [],
+  "scripts": {
+    "CullingGroupWrapper": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeEnvironment/CullingGroupWrapper.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "14803255409a2b2bf1e1212dc627ef73",
+        "type": 3
+      },
+      "sha256": "8413b70d58f6c69fb2386aa30e9a8a939dc34f7c9513fb46966d90356e412c8b",
+      "meta_sha256": "d3fa26ad72f0a29042e62c5d8dff00d78ab17fe7562cc4d4bc898241548dd9ff"
+    },
+    "FollowSceneActiveSelfController": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeEnvironment/FollowSceneActiveSelfController.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "6b3a95bc5212ca75634742927c7e752a",
+        "type": 3
+      },
+      "sha256": "892351b0d8ef6338ead9c97f0ae31180d117f697af8c691e54de7bf7b01479db",
+      "meta_sha256": "88f9820798af74c6c7a39520b2f6d1a1ceb990bf74534ecab18b027314b1de2d"
+    },
+    "MapEffect": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeEnvironment/MapEffect.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "03eb635fde4355aa8fedbe1baf5d56db",
+        "type": 3
+      },
+      "sha256": "a6a41ff73953be2a1a6301b779b4099756e42a11bdae1d3671c2d6388c6cbb35",
+      "meta_sha256": "3a7c501cbb753593efa782d57fa1a0643987620068c5253a044fb7bd4dd3d7c8"
+    },
+    "MapEnvEffect": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeEnvironment/MapEnvEffect.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "ab9bd41c20aad82247d3b5ad116924a9",
+        "type": 3
+      },
+      "sha256": "11fa4b36c1bf106beef0fb30a2bf4762f1cfc7cb23f06530d85254a959e2ec8c",
+      "meta_sha256": "64996608e246ec413e44d30c347d89a6f2b35486236cc9b1a003c7284f6789ab"
+    },
+    "MapGroundRoot": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeEnvironment/MapGroundRoot.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "077ef9d3bf924b6bddf170a84a0abf71",
+        "type": 3
+      },
+      "sha256": "7552a6283d75796691dcdd53d80cb717ef7a5e6a0bedb996f343d02d7641a126",
+      "meta_sha256": "9492b96bbccc67612a5b8bf7fc7b9b7445fcaf923ac2f899718e020d07eca135"
+    },
+    "MapGroundTile": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeTerrain/MapGroundTile.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "2ab116098e922a72bc596fb740612219",
+        "type": 3
+      },
+      "sha256": "c71feec1cec1fb5d01e1f8d01584d91966543013082f31299d035908548ff62e",
+      "meta_sha256": "b8b22d4a9c72adecce67c90a67f74d6ae4e0d4006aaa6d823e3027afc9daeec2"
+    },
+    "MapRegionDescItemUI": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/MapRegionDescItemUI.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "f127365ba7a7073f5ec5117408c0565f",
+        "type": 3
+      },
+      "sha256": "3339ae2714372fafed95d66994041914b964915172f793dc75abad2897fd7556",
+      "meta_sha256": "464419e63fcba9b36bd1846fb0aa411a65dbb15c43dfa7be5e580e04068020dc"
+    },
+    "MapRegionDescSupportUI": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/MapRegionDescSupportUI.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "a4e39608feac97b538a2fb190d93a45b",
+        "type": 3
+      },
+      "sha256": "70cde6605247523d7a4289b80825e5e8ad01a4a4af9534a555fad17e1dd78772",
+      "meta_sha256": "572d8faf8befb8e668e5f85ceb323f6d329e293da4d0595254ee69e89e5901d8"
+    },
+    "MapRegionStrengthDisplayUI": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/MapRegionStrengthDisplayUI.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "1b5cc6e40de7f46aaea6639d06796eef",
+        "type": 3
+      },
+      "sha256": "f6f3e894de1641959b57ecf95ef37cb229d26b9fc1f1ae3a513e3b915ab8d709",
+      "meta_sha256": "5a97de0888a04b0de28021f5da789acd59f3e4eb67f6d4e90c9f383ea97efbf9"
+    },
+    "PartitionController": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeTerrain/PartitionController.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "ef742bfd16a045400a4b5cda12e1b0de",
+        "type": 3
+      },
+      "sha256": "cc16c4b97d85ccbdee82ea4eafc8abc80f7273e05d0438e0e4820b1c359bfaab",
+      "meta_sha256": "db349775c0d2390523d4646c320bb7fad4b57d225066cd283258fffcf1b4e686"
+    },
+    "PartitionElement": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeTerrain/PartitionElement.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "df9c6a920121f4cbcf5a38c795b9a150",
+        "type": 3
+      },
+      "sha256": "e83c3376f42961376afdd6d49617922468ab6995d4d13c067795e0fefeb68b87",
+      "meta_sha256": "05f279272121ca6fa2de80a8a1085c0360c90205c83b582fb2c61cee04054f71"
+    },
+    "PartitionGroup": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeTerrain/PartitionGroup.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "37e579e820ea59616ea611d157e7ab82",
+        "type": 3
+      },
+      "sha256": "3f7dbfc3505ec5580639e08cd6e75d9a640dc0b09b75330afaec18c4b9b150bd",
+      "meta_sha256": "c3b57682fad2d79376e588d75d8a13f44af508bfd87b3e33a0b9e5f61d9aa9a9"
+    },
+    "PartitionLayerAssigner": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeTerrain/PartitionLayerAssigner.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "1a043d0be05e96982e979b8980f810c2",
+        "type": 3
+      },
+      "sha256": "2dd3378e26cffe87bcfedba5da75c0243bc2b016f56fd3438a9af19728fb833a",
+      "meta_sha256": "106457051af1dd3c73040d4a557f90c92a44496e1d39bd475f509dfe6094578e"
+    },
+    "PartitionLoader": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeTerrain/PartitionLoader.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "6d11e8d74e2b4a0371bbeb46e3dc5c2b",
+        "type": 3
+      },
+      "sha256": "4ee36910c1a69dfb733b56ae803fed6db283d9878f26da7e012a4ab290ba7efa",
+      "meta_sha256": "e1ebf7e2d0f406e0db3ae3b3006374821a8e547f27dc09373a507fe703fa01a2"
+    },
+    "ShowRemainTimeInfo": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/ShowRemainTimeInfo.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "ae0026fbde00fcabab3ad63e21d41a4d",
+        "type": 3
+      },
+      "sha256": "940657a273cf3199c9ff9c8b2307e7c6abb9065700e4ce7953885f9df7534b51",
+      "meta_sha256": "90d695d26df34a1cb33d11a3590aa24dbdb2570b593112acf0da73848cbac09a"
+    },
+    "TransparentMask": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/TransparentMask.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "d188782d4d9b53cc8e1f73c387ac713e",
+        "type": 3
+      },
+      "sha256": "95c2bde9f2b3ee2497ecc48fc17d66bca83d9f4bdf8e4a0f281d75d4266c5ea3",
+      "meta_sha256": "30e41f00ca0e28cb0856a97dc7fd4ce6e984ef107df317d285d64d72e50ebd5a"
+    },
+    "UIColorByLevel": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/UIColorByLevel.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "74a1b0cdaec04283e72adc349f94d556",
+        "type": 3
+      },
+      "sha256": "cb42eb73eb667ca489c3d028fca03cf6c540802d202fce5c29fb7abeb2d856b8",
+      "meta_sha256": "c5032248fe683c9b1a70d4e1bbc22cee49b3f6cda3a8e7509782f02790f2e7f0"
+    },
+    "WorldMapEditorManager": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeEnvironment/WorldMapEditorManager.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "045fcfa55821962aca7f85135b6361c9",
+        "type": 3
+      },
+      "sha256": "1f992d217c91eb852a575b55e10a3a84f5774dd3c989c141ee81dabd9ed71e11",
+      "meta_sha256": "85d3a5092e1f6f087dea2ecac69d8f16c2a747aadcb507eefc3227e102170e41"
+    },
+    "PartialSubmersion": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/PartialSubmersion.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "44d619afd7eb1e2510e4ce9fde8fe6fd",
+        "type": 3
+      },
+      "sha256": "3d497b9e94959af7feaf805a50abeb513dba191899f1d2da38932b04aed3036f",
+      "meta_sha256": "f0ffe0a342774817f42280c31941c6834e09ddfde3dfcbc9dfe43c5114c9e2a8"
+    },
+    "Pond": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Pond.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "cc76a42215175aeb9d6b39eac0e0d76c",
+        "type": 3
+      },
+      "sha256": "ec36efcd4f95d6a007eafc5da590b969961c3092ab1d0df7c44ca3bebd426ca7",
+      "meta_sha256": "63ea5ea45f88e30e0bb428ecf6217c842a0dda6828ee29533573c6fe4431cc78"
+    },
+    "WaterController": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/WaterController.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "6eb7367f62625ba778425340788c2131",
+        "type": 3
+      },
+      "sha256": "e71867866473ee4ae57e2279c465653d7d5097f59e8bce341fece2358b322aa8",
+      "meta_sha256": "765cf02c8e4d66b9033c6ce39784626ca822383a27e828bd39b04d16c3f76c4e"
+    },
+    "WaterMaskGenerator": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/WaterMaskGenerator.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "316c78387f935698b4e4af34d0b92c05",
+        "type": 3
+      },
+      "sha256": "eb8ab5bb062f29cc796ed238ea49deae220bf26340a478b8153bd1c0ddb93ec7",
+      "meta_sha256": "e1dd47426d96ca9bf7494d60fa86f9d09dc1f5b47986d33557a5fd66f1b674ca"
+    },
+    "WaterMaskRenderer": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/WaterMaskRenderer.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "29321e4b6423e4650ae0150b2e11e137",
+        "type": 3
+      },
+      "sha256": "4af4a1d1c963e8c8b181fb9e839edc18b75a88ce63493f502e50e295ffda73ff",
+      "meta_sha256": "f8dfea433b5fa8b815b34ca0d9a8ed799a42f7714735ff656c915c41907fc25f"
+    },
+    "MultiLanguageText": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/MultiLanguageText.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "21b6ee7e9f6ddc266d16dff59db50a44",
+        "type": 3
+      },
+      "sha256": "009a7127da228140754eab14ba5205193e71802b81b850f9311fbd101325904d",
+      "meta_sha256": "a2131a66ce5f2867694921c4262e6694fc868365f476b5f891e74c247f7ae287"
+    },
+    "TextMeshProColorProxy": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/TextMeshProColorProxy.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "9413e9ac4dea8048c8fc2384b0041f70",
+        "type": 3
+      },
+      "sha256": "19d1c4895df5c676b66187bb6f29f15a929dac6bb0d41bc7af9450b9165bbf17",
+      "meta_sha256": "11f1c255a8bce6f5a1c4176fef687d0e128c8fad2fbc39b20b383b358f1d5078"
+    },
+    "Spine.Unity.SkeletonAnimation": {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/MainlineNativeGround/MainlineGroundAnimation.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "478488512294459fbedaea2ecc56a8fb",
+        "type": 3
+      },
+      "sha256": "b935c2fe36c6eefa854607ec476a937d28f38c29ae098b17db272d960f189665",
+      "meta_sha256": "3e870068c625eeceb7614f9bea32d483b29d43708f250119007d5722f1ed40e5"
+    },
+    "UnityEngine.Rendering.Universal.Light2D": {
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Runtime/2D/Light2D.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "073797afb82c5a1438f328866b10b3f0",
+        "type": 3
+      },
+      "sha256": "1966f8a479ee69de48df5b11dc54547c51064556b4da74d5a10bb68415586225",
+      "meta_sha256": "440e36c8e494f83334d5f61e05043843cab2ad81c77148980d572c2a25af359e"
+    },
+    "UnityEngine.Rendering.Universal.UniversalAdditionalCameraData": {
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Runtime/UniversalAdditionalCameraData.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "a79441f348de89743a2939f4d699eac1",
+        "type": 3
+      },
+      "sha256": "6f8f197a784efe69a56ef14d8d0025579b1ae59f5f5e310bf790d05566b6205f",
+      "meta_sha256": "073ed9d37f3742da3b73a364f7b721cc7f9ee74c4873c0385068be8da7090633"
+    },
+    "TMPro.TextMeshPro": {
+      "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TextMeshPro.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "9541d86e2fd84c1d9990edf0852d74ab",
+        "type": 3
+      },
+      "sha256": "c5b1965cd925f0f8ff20f80191096bad6b018deabddcfdd12e12aca78d0c745c",
+      "meta_sha256": "bfc1c894d80c341bb285b62a75d087caa4d8b3d76eff799b6cda9f36849fd63e"
+    },
+    "TMPro.TMPEffect": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeText/TMPEffect.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "3e2d40fcb3febb5d237c6eaab0dd385a",
+        "type": 3
+      },
+      "sha256": "a91bca648f40bde3666d2d3f9bacf31edce18055bee1d35f590f27c510bef9da",
+      "meta_sha256": "af602f224b9bf014dc051480db5d18c7443115793fea4406cb9781abf643fcd3"
+    },
+    "UnityEngine.UI.ContentSizeFitter": {
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/ContentSizeFitter.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "3245ec927659c4140ac4f8d17403cc18",
+        "type": 3
+      },
+      "sha256": "a6b30a3b6e697524ce16f07e1807e870faf8d0c3e8c43004474eb5b8bb3c887b",
+      "meta_sha256": "0fedd1ac89e603605d4632d8b992eeb450e1b0a82dcf16dc3fd9d4bb5acee9f7"
+    },
+    "MyTile": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeTerrain/MyTile.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "9e58dc8a8af972410442960cb22d965b",
+        "type": 3
+      },
+      "sha256": "061d48a9fb7a009db1702928e36f255019c474e9496a30033c0c30f2f95f57b4",
+      "meta_sha256": "7e55c8ed3412ebdc4f136a9cc2fcea3fb5781d59625daf090f61304fc7198b69"
+    },
+    "MapRegionLight": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeEnvironment/MapRegionLight.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "6bebec7eaedc72e740cde9f28752132c",
+        "type": 3
+      },
+      "sha256": "1e48797a960d623e8fa12e0786f31419fba118efd8a1f25f528c62f30cf2d3b6",
+      "meta_sha256": "818d61b64577541c4ab4051f523fbbc8faeba201770a075df6559d61af11bd9e"
+    },
+    "SeaRendererReplacement": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/SeaRendererReplacement.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "491e197cf42b0bfdd07e5265e3efef57",
+        "type": 3
+      },
+      "sha256": "2424ac689dbe40e350689e4282a0bf3ffd5310684efe97026059d53a4ccae27a",
+      "meta_sha256": "dfc11a5cbcbde2ab60216aad7217a1e394edd1655ee3673b3dc5d75863883ec8"
+    },
+    "WaterConfig": {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/WaterConfig.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "9e364722364b5c6eac748205ab1d2cb7",
+        "type": 3
+      },
+      "sha256": "2ea10375512dd5eb3c2ea08ebad386718b3e70afd2b122d1df6fa684a3cb129d",
+      "meta_sha256": "2c8845ffd904b234913b13a89e9864363a4c912c6c16af3cf101ebc80a687ea0"
+    },
+    "TMPro.TMP_FontAsset": {
+      "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TMP_FontAsset.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "71c1514a6bd24e1e882cebbe1904ce04",
+        "type": 3
+      },
+      "sha256": "4944761e316e6c3e6053507283f4c1b310dd47312830346ef7efc4715ac403af",
+      "meta_sha256": "788d1b900702d38deac8b40940ddb3f065752ee2a1bbb9714dc2a63c6b669e12"
+    },
+    "MiniMapPrivateRegionMaskManager": {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapRegions/MiniMapPrivateRegionMaskManager.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "448597a6bcf753bc86f6299333bf117c",
+        "type": 3
+      },
+      "sha256": "6fc7f2d638c1429deb65fcf4da7b1a407bc7f18307c9042bfb530fd4850544ac",
+      "meta_sha256": "f57bc44bc46f6e178358263c483e0291ca20e2469be475a3e0e148c532e5e085"
+    },
+    "PreviewTool": {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldPreviewTool.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "69e8a521aaaf9b3a4fbbec7048401a00",
+        "type": 3
+      },
+      "sha256": "f05f6f9d6856814596e572e56f5dbe56ee31ab76d6b18a6965dd68b0b0b7f1cb",
+      "meta_sha256": "8aad5ead563199de195eacfec6308f5e55c9e7555472d234a6755ca44ef1e6fe"
+    }
+  },
+  "outputs": {
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Resources/Map10/Native/mini-map-ground.prefab": "7f5431f12cf4faadcb2e1d2c3ca308ad7139f454ede23e2138efc59c5dfc5d17",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Resources/Map10/Native/mini-map-ground.prefab.meta": "4d96646b175374f7e2276489f855f8eeffd5a778c3d351c5c4d196e3648105e6",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Regions/RegionGround_0.prefab": "5d31f21e2bf8b5c21f132a5d5d17276448aff138e1900d2ae797677edca91765",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Regions/RegionGround_0.prefab.meta": "1d720c5e19f75402d3b20eeb19367a4f4733e7f296223343d34c445faf62d4b4",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Regions/RegionGround_1.prefab": "3198c428a3cb9612681233ac760dd9ceff62d98457231db14fef7c8ee6bce351",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Regions/RegionGround_1.prefab.meta": "54a8fd428691ecdfb57520ac6ad97b424a84e455598234b7dc5198dd83a2e135",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Regions/RegionGround_2.prefab": "313e9298a9f570d9add69f0dd6e2f0a654a1f6a9a4eceac459081e21af4e572c",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Regions/RegionGround_2.prefab.meta": "965a85339ee06f15f6c9dea4a82cc4f2df463aedad0aa9c86e66a6298e7e770a",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Regions/RegionGround_3.prefab": "7f40af4ff3ef28f269bedc31c5a599ccddd6dee4430336eb71265dc19ecf5939",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Regions/RegionGround_3.prefab.meta": "3e97fc3227d3ebf664442e7d7c18298b780d36807edd8727d6b1d4d48ed11a19",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Regions/RegionGround_4.prefab": "57ad90b91bb94402c9a6942d9783faf98c5303f756daaa7f54864ae3dab79f66",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Regions/RegionGround_4.prefab.meta": "c64285cea92d21dff40f9740c7a016d14f5bb99dbeea1514abf43da4ad5b36be",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Resources/Map10/Native/mini-map-regions.asset": "b40f8fec47aac42903f0cd76ecfb3e3cdc3c0c53ed9710007f28ae06876ada57",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Resources/Map10/Native/mini-map-regions.asset.meta": "7cee23a64f0acb311f3ed76dba7b0f9adaea1553ce93d20d6db9aca06c59626e",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Image/MapWorld/MiniMapTile/ground_type_11_block.asset": "b5e739ca7e1015c0f8444747b060f0dd11c73df241bb0ca5164c7ea6482df545",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Image/MapWorld/MiniMapTile/ground_type_11_block.asset.meta": "db48ea8f5bb516c8b4326679a5bc9d8f08ed24588af8f1528d52e710b771ce69",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Image/MapWorld/MiniMap_Special/ground_type_none1.asset": "9f85a0727825566acdb88484f9f663de40780aec85727a0d2d45f5c787aba357",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Image/MapWorld/MiniMap_Special/ground_type_none1.asset.meta": "146ab70e86791098df221fcd18cb639dc8ac9da069b38ec24017be406716c9a7",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Image/MapWorld/MiniMapTile/ground_type_11_none.asset": "f6bf11a9b64103395e5494faf69e7d91a70a42766b57018176ddb770afe8c10a",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Image/MapWorld/MiniMapTile/ground_type_11_none.asset.meta": "1b7e9b1de25a948199e31ccd2785a4980b106f6959e9e423a449ef494c89828f",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Materials/Minimap/MaskableTilemap.mat": "1f2979c6226681f4a68470ce7433157b54251833d5e4eec3312983a744c51a52",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Materials/Minimap/MaskableTilemap.mat.meta": "6a0e278cfa2c9e1d564e6dec301c71d64a119960e1b9e24aaf9d4f7c07f0a320",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Converted/4dd0c77db0a6fa13.asset": "a89f30f61e1a00a3af35f56798b32089426b1a06315047bc014bf81c2150c775",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Converted/4dd0c77db0a6fa13.asset.meta": "f1774742a72e513c673f8500af2c783a2663a468f9c139990b9006decdc6ba9b",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Converted/6a0d26b417091341.shader": "3c298f1b61aed97c37ed0ba951106ef5418ad6c62367066948a74348f82da178",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Converted/6a0d26b417091341.shader.meta": "3a2aa1e16f3fa4e1cfb3dc35884556f1664e3219dcb85a2c4f266746ce66d81b",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Converted/56a80924f31750fc.asset": "5c26854124402b4ef5ee369c2e31407f39568a3ec54b15ff9feb682f6bd5d730",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Converted/56a80924f31750fc.asset.meta": "e4aaec6f0238c6004c6bd5492f27905b38648b09b7df15d99b74c303bb3977e5",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent.meta": "77a12e95f6a1d97878d19b401f1852f0e0d21fb7db490505e3d42d75678708a4",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Converted.meta": "197e790b464b469477a6c3e4ba6935f39a979d08867825f036f9d8a510c7c557",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Image.meta": "9305413ad1864a22e7dbd428ddd5c405543f9f5dcc10aa196e841d0377231ebf",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Image/MapWorld.meta": "7787a0a8dc7ca0bacaf15990211ab97d9903b7be34933cf8a2a8977b1b580fcc",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Image/MapWorld/MiniMap_Special.meta": "bfea8467fb3d3a9b62649d908c76fbdab38e2bc646deb0d3169f340f06461089",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Image/MapWorld/MiniMapTile.meta": "7d798c8a56f315104196afc28ff5a6ed4046c0253ad413cc996b4dcd2ed3d5a0",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Materials.meta": "43f77da9583e958897da3acc2197810b934f42779ba664a4d62dcd0364a77723",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Materials/Minimap.meta": "fc9bbbfad5353a1433a85b21ae7cf420c4136bed73abb95d559b9cdd6006748b",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Regions.meta": "47f04cbd79c1ed28704f18cb039435208aaa7804df82b0181ec2cb1b03df327e",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Resources.meta": "693dbf2ed97176bb64a96ada55b4bd8478eb9427f7aacbabe3f1f828879c5f7b",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Resources/Map10.meta": "41b4ad4759d9c20608e3e5249f87175e8b476fe69a420bd1af995d05958bcd52",
+    "unity/Assets/Official/World/Map/10/NativeMiniMapCurrent/Resources/Map10/Native.meta": "600d5049ba5d96d92ebe3cd692636a392b49c38f2b40fa3e2f7834bd9e38ebab"
+  },
+  "format_reader_sha256": "e6a0c0c5a38c811c7b23074fb22381615edbbc0be42db2cd12468764228e8897",
+  "tools": {
+    "scripts/prepare_mainline_map15_native_ground.py": "032906887d4ebac036d3056c42ed48fb2d26135c7a9d076dbee6c5531063de54",
+    "scripts/prepare_current_partner_native.py": "1c54fd235607be85882c616e78b079674c1f0b452bb88027229711ba70cb2b23",
+    "scripts/prepare_partner_card_native.py": "1b7eace9cc46cef7b80c07d0d7882c90c7ea33af4035d1669017603dbfca3778",
+    "scripts/prepare_unity_profession_skeleton_data.py": "308ed647a43a89aef77ca7d91d06124213fd0b18431ca8743834ae267697548c",
+    "scripts/prepare_native_character_geometry.py": "495ca231d89cfc0f04d3244fd554c018a6b35f7c25694a455c0e085e8ce427f6",
+    "scripts/convert_official_skeletons.py": "b93b36907c3c831eb7dd453fa6842742056c1c451e281b9b4ef9b0745a36e9a8"
+  },
+  "operation": "Pair original CAB/PPtr hierarchy and complete selected native fields. Bind exact native GUID dependencies, verified current Windows textures/shaders, and independent original skeleton/atlas data. Preserve native fileIDs, tile sprites, labels, transforms and renderers. Historical terrain exports remain separate."
+}

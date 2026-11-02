@@ -47,12 +47,28 @@
   },
   "resource_receipts": [
     {
+      "path": "assets/reference/official-map/map10-current-minimap-regions-source-manifest.json",
+      "sha256": "c0b7824ede4d03cc3b1b6e31968e42927ece4d9c5453685ae17c1f567b8c8e17"
+    },
+    {
+      "path": "assets/reference/official-map/map11-current-minimap-regions-source-manifest.json",
+      "sha256": "59abfd8313583753fd7337daf13cc8005ab0d8b0965d6626b3181b83a2284887"
+    },
+    {
+      "path": "assets/reference/official-map/map12-current-minimap-regions-source-manifest.json",
+      "sha256": "d072561aa829835e586299039d2e5bd01d36eaa4f64f71d75126aecb94706384"
+    },
+    {
       "path": "assets/reference/official-map/map13-current-minimap-regions-source-manifest.json",
-      "sha256": "26e99d6131f43e6ebc7ba0b50a5eaa3c77c6129dd2111810ce81418405f34f33"
+      "sha256": "a600981feb01341f868c1f36fd22582f40ea6a4a1467ccb02b129bd39e5f1e48"
+    },
+    {
+      "path": "assets/reference/official-map/map14-current-minimap-regions-source-manifest.json",
+      "sha256": "46f97f110a154f3d016e5a960f49bf53c337a94d25747816f6d7d4a6c3c75e43"
     },
     {
       "path": "assets/reference/official-map/map16-current-minimap-regions-source-manifest.json",
-      "sha256": "22155a2039d985c56da6a4a0bead23a27005b6e4f4087d84ed7188eef1844162"
+      "sha256": "7fac82970d2e8d2b8e3e8ce091e18701e08ec284d94e28afe03552cdc3d4969b"
     }
   ],
   "operation": "Bind the original Ground subtree, Grid, region slots and all region Tilemaps. Preserve original region manager initialization, status events, public/private Z, reverse visibility traversal, inactive cache reuse and ten-second retirement. Inject local state/controller/view-range and original GUID asset leases before activation. Subscribe directly to the original range handler; replace and release subscriptions with handler and instance lifetime. Periodic refresh cannot reset retirement. Each map supplies its original asset catalog; original root MiniMap and other UI/marker/mask managers are not replaced or claimed complete.",
@@ -103,7 +119,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.MiniMapRegions.cs",
-      "sha256": "2d4b0bf168b7fcdfee87f0787701b39399d85403aa933f0600ea09c49119ac10"
+      "sha256": "8fc3cfcf037ed7554734f6ffbdc9133e40268747fbd3b73187e07a277bed3c7c"
     },
     {
       "path": "unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.MiniMapRegions.cs.meta",
@@ -127,7 +143,7 @@
     },
     {
       "path": "scripts/prepare_mainline_minimap_regions.py",
-      "sha256": "13a3fe566aabcc2e8e876fbca00fafdbe2238c1279c3e2bfd3d2b021454c05ad"
+      "sha256": "0065b061a9d633e2a58016035943693654d51672b52f39965013d5716357f3e0"
     },
     {
       "path": "scripts/prepare_mainline_map15_native_ground.py",
@@ -135,7 +151,7 @@
     },
     {
       "path": "scripts/prepare_mainline_ground_validation.py",
-      "sha256": "4e1f96cbb68a38911df0ca34299d07322345fbc5febd1fe1d1e89f8c87aa1a08"
+      "sha256": "48844018bc122b14d2d1a158fda54588fdb30f399251409e55b0d224efdde1a3"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldPreviewTool.cs",
@@ -149,6 +165,6 @@
   "hashing": "Repository text outputs use UTF-8 LF; native asset receipts retain raw bytes.",
   "tool": {
     "path": "scripts/record_mainline_minimap_regions_sources.py",
-    "sha256": "2eabec3838f70cf1e22f40bd24a80d01688486ccc19fa2fc40f2b62d285a6f0d"
+    "sha256": "79b0f6d3f1393794b99399d612ab5860baab172d087c6b335d6424859da5372f"
   }
 }

@@ -24,10 +24,13 @@ namespace Zjcs.Editor.MainlineNativeGround
             var previousQuality = QualitySettings.renderPipeline;
             GraphicsSettings.defaultRenderPipeline = pipeline;
             QualitySettings.renderPipeline = null;
-            foreach (int mapId in new[] { 13, 16 })
+            foreach (var expected in new Dictionary<int, int>
+                { { 10, 5 }, { 11, 77 }, { 12, 99 }, { 13, 106 }, { 14, 111 }, { 16, 43 } })
             {
+                int mapId = expected.Key;
                 var assets = Resources.Load<MainlineMiniMapRegionAssets>($"Map{mapId}/Native/mini-map-regions");
-                Require(assets && assets.MapClassId == mapId, "Original regional minimap catalog.");
+                Require(assets && assets.MapClassId == mapId && assets.Regions.Length == expected.Value,
+                    "Original regional minimap identity and selected-source region count.");
                 var state = new MiniMapState(mapId, assets.Regions.Length);
                 var parent = new GameObject("Original regional minimap fixture");
                 var cameraObject = new GameObject("Regional minimap render fixture");
@@ -75,8 +78,10 @@ namespace Zjcs.Editor.MainlineNativeGround
                     state.Range = new FixtureRange();
                     state.Range.SetVisible(false);
                     view.Refresh();
-                    float retireAt = Time.realtimeSinceStartup + 10.25f;
-                    while (Time.realtimeSinceStartup < retireAt)
+                    // The original UniTask wait uses scaled game time. Shader
+                    // imports/frame stalls can advance wall time independently.
+                    float retireAt = Time.time + 10.25f;
+                    while (Time.time < retireAt)
                     {
                         previousRange.SetVisible(true);
                         previousRange.SetVisible(false);
@@ -85,6 +90,7 @@ namespace Zjcs.Editor.MainlineNativeGround
                             "A replaced range handler must not reactivate the current hidden regions.");
                         yield return null;
                     }
+                    yield return null; // Flush original late-loop Destroy calls.
                     Require(parent.GetComponentsInChildren<Tilemap>(true).Length == 0, "Original ten-second inactive retirement.");
                     state.Range.SetVisible(true);
                     yield return null;
@@ -109,7 +115,7 @@ namespace Zjcs.Editor.MainlineNativeGround
             }
             GraphicsSettings.defaultRenderPipeline = previousPipeline;
             QualitySettings.renderPipeline = previousQuality;
-            Debug.Log("Shared original regional minimaps passed for Map13 and Map16: all native Tilemaps, public Z events, range/cache reuse, ten-second retirement, reload, disposal and remount. This fixture does not cover masks, markers, UI/input, formal map saves or a Windows Player.");
+            Debug.Log("Shared original regional minimaps passed for Map10, Map11, Map12, Map13, Map14 and Map16: all native Tilemaps, public Z events, range/cache reuse, ten-second retirement, reload, disposal and remount. This fixture does not cover masks, markers, UI/input, formal map saves or a Windows Player.");
         }
 
         private sealed class MiniMapState : IMainlineMiniMapRegionState
