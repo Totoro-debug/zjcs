@@ -26,7 +26,7 @@ namespace Zjcs.Combat.Official
             FightBattleUnitState source, FightBattleUnitState listener,
             IReadOnlyList<FightBattleUnitState> units, FightRandomStream random,
             FightOfficialCombatCatalog catalog = null, FightBattleStatusState onlyStatus = null,
-            bool atStatusStart = false)
+            bool atStatusStart = false, int phase = 0)
         {
             var result = new List<FightBattleStatusSkillInvocation>();
             if (source == null || listener == null || source.Statuses == null) return result;
@@ -35,6 +35,7 @@ namespace Zjcs.Combat.Official
                 if (status == null || !status.HasRoundStartTrigger
                     || (onlyStatus != null && status != onlyStatus)
                     || !status.RoundStartRulesSupported || (atStatusStart && !status.RoundStartTryAtStart)
+                    || (!atStatusStart && status.RoundStartPhase != phase)
                     || status.RoundStartDelayRound != 0 || status.RoundStartMeetCount != 1
                     || (status.RoundStartMaxCount >= 0
                         && status.RoundStartTriggeredCount >= status.RoundStartMaxCount)
@@ -46,11 +47,15 @@ namespace Zjcs.Combat.Official
                 foreach (FightBattleStatusStateTrigger trigger in status.RoundStartSkills)
                 {
                     if (trigger == null || trigger.EntityId <= 0 || trigger.AffectedByProp
-                        || trigger.Source != 2 || (trigger.Target != 1 && trigger.Target != 2) || trigger.UseAI
+                        || trigger.Source != 2 || (trigger.Target != 1 && trigger.Target != 2
+                            && trigger.Target != 7) || trigger.UseAI
                         || trigger.StackedCountToDamageFactor
                         || (trigger.TargetPos != 0 && trigger.TargetPos != 1)
                         || !Roll(trigger.BasePercent, random)) continue;
-                    int targetId = trigger.Target == 1 ? listener.Id : source.Id;
+                    var target = ResolveRoundStartSkillTarget(source, listener, trigger.Target, units,
+                        status.RoundStartExcludedTargetStatuses);
+                    if (target == null) continue;
+                    int targetId = target.Id;
                     result.Add(new FightBattleStatusSkillInvocation
                     {
                         Trigger = trigger.WithSource(status), SourceUnitId = source.Id,
@@ -69,6 +74,28 @@ namespace Zjcs.Combat.Official
                 if (added > 0) status.RoundStartTriggeredCount++;
             }
             return result;
+        }
+
+        private static FightBattleUnitState ResolveRoundStartSkillTarget(FightBattleUnitState owner,
+            FightBattleUnitState listener, int targetType, IReadOnlyList<FightBattleUnitState> units,
+            List<int> excludedStatuses)
+        {
+            bool Eligible(FightBattleUnitState unit) => unit != null && FightBattleTargeting.IsSelectable(unit)
+                && (excludedStatuses == null || !unit.Statuses.Any(value => excludedStatuses.Contains(value.ClassId)));
+            if (targetType == 1) return Eligible(listener) ? listener : null;
+            if (targetType == 2) return Eligible(owner) ? owner : null;
+            if (targetType != 7 || units == null) return null;
+            FightBattleUnitState selected = null;
+            foreach (var candidate in units)
+            {
+                // User-confirmed offline rule: exclude protected roles before choosing
+                // MinHpPerFriendPlayerNotMe, rather than rejecting the lowest role afterward.
+                if (candidate == null || candidate.Id == owner.Id || candidate.Side != owner.Side || candidate.CharacterType != 1
+                    || candidate.MaxHp <= 0 || !Eligible(candidate)) continue;
+                if (selected == null || (decimal)candidate.Hp / candidate.MaxHp < (decimal)selected.Hp / selected.MaxHp)
+                    selected = candidate;
+            }
+            return selected;
         }
 
         public static List<FightBattleStatusSkillInvocation> CollectRoundEndSkills(

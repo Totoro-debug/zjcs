@@ -1081,6 +1081,10 @@ namespace Zjcs.Combat.Official
                 RoundStartTryAtStart = roundStart != null
                     && Bool(roundStart, "TryAtStart"),
                 RoundStartDefinitionResolved = true,
+                RoundStartTargetRulesResolved = true,
+                RoundStartPhase = roundStart != null && Int(roundStart, "RoundStartPhase") == 5 ? 5 : 0,
+                RoundStartExcludedTargetStatuses = roundStart == null ? new List<int>()
+                    : new List<int>(IntArray(roundStart, "TriggerTargetNotStatus")),
                 RoundStartRemoveWhenNotEnoughTimes = roundStart != null
                     && Bool(roundStart, "RemoveWhenNotEnoughTimes"),
                 HasRoundEndTrigger = roundEnd != null,
@@ -2506,14 +2510,13 @@ namespace Zjcs.Combat.Official
                 && Int(component, "DelayRound") == 0
                 && Int(component, "DelayRoundType") == 0
                 && Int(component, "MeetCount", 1) == 1
-                && Int(component, "RoundStartPhase") == 0
+                && (Int(component, "RoundStartPhase") == 0 || Int(component, "RoundStartPhase") == 5)
                 && Float(component, "TargetHpPer", -1f) < 0f
                 && !Bool(component, "TryAtNotForbidden")
                 && !Bool(component, "StatusRandomOneTrigger")
                 && !Bool(component, "RemoveOldStatusOnInvoke")
                 && !Bool(component, "RemoveOldStatusOnEnd")
                 && ArrayCount(component, "TargetActions") == 0
-                && ArrayCount(component, "TriggerTargetNotStatus") == 0
                 && SupportsRoundStartStatuses(component)
                 && ArrayCount(component, "RoundStartHandles") == 0
                 && ArrayCount(component, "StatusReplacePropertyValues") == 0
@@ -2529,7 +2532,9 @@ namespace Zjcs.Combat.Official
             {
                 Dictionary<string, object> trigger = Object(item, "round start trigger skill");
                 if (Bool(trigger, "AffectedByProp") || Int(trigger, "Source") != 2
-                    || (Int(trigger, "Target") != 1 && Int(trigger, "Target") != 2) || Bool(trigger, "UseAI")
+                    || (Int(trigger, "Target") != 1 && Int(trigger, "Target") != 2
+                        && Int(trigger, "Target") != 7) || Bool(trigger, "UseAI")
+                    || (Int(trigger, "Target") == 2 && ArrayCount(component, "TriggerTargetNotStatus") > 0)
                     || Bool(trigger, "StackedCountToDamageFactor")
                     || (Int(trigger, "TargetPos") != 0 && Int(trigger, "TargetPos") != 1)
                     || ArrayCount(trigger, "StatusReplacePropertyValues") > 0
@@ -2540,6 +2545,8 @@ namespace Zjcs.Combat.Official
 
         private static bool SupportsRoundStartStatuses(Dictionary<string, object> component)
         {
+            if (ArrayCount(component, "TriggerTargetNotStatus") > 0
+                && ArrayCount(component, "StatusTriggerStatusCfgs") > 0) return false;
             if (!component.TryGetValue("StatusTriggerStatusCfgs", out object raw) || raw == null)
                 return true;
             foreach (object item in Array(raw, "StatusTriggerStatusCfgs"))

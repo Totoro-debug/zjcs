@@ -239,6 +239,14 @@ namespace Zjcs.Combat.Official
                 ref stepDuration, ref stepActionDuration);
             CollectStatusCustomActions(statusCustomActions);
 
+            // Official RoundPhase.StartEnd follows Start listeners and precedes Round skills.
+            if (statusCatalog != null)
+                foreach (var source in new List<FightBattleUnitState>(units))
+                {
+                    ExecuteRoundStartTriggers(source, actor, 5);
+                    RebuildBattleProperties();
+                }
+
             while (true)
             {
                 FightBattleSkillDefinition skill = FightBattleTargeting.FindReadySkill(

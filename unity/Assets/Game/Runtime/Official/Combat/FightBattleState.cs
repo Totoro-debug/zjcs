@@ -327,6 +327,9 @@ namespace Zjcs.Combat.Official
         public bool RoundStartTryAtStart;
         public bool RoundStartStartChecked;
         public bool RoundStartDefinitionResolved;
+        public bool RoundStartTargetRulesResolved;
+        public int RoundStartPhase;
+        public List<int> RoundStartExcludedTargetStatuses = new List<int>();
         public bool RoundStartRemoveWhenNotEnoughTimes;
         public List<FightBattleStatusStateTrigger> RoundStartSkills =
             new List<FightBattleStatusStateTrigger>();

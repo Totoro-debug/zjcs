@@ -6,14 +6,22 @@ namespace Zjcs.Combat.Official
     {
         private void RestoreRoundStartDefinition(FightBattleStatusState status)
         {
-            if (!status.HasRoundStartTrigger || status.RoundStartDefinitionResolved) return;
+            if (!status.HasRoundStartTrigger
+                || status.RoundStartDefinitionResolved && status.RoundStartTargetRulesResolved) return;
             var definition = statusCatalog.CreateStatus(status.ClassId, status.OwnerId,
                 status.CreatorId, status.InstanceId, status.RootSkillId, status.ApplyingSkillItemId,
                 status.SourceSkillRank, status.SourceSkillLevel, status.SourceSubRank, status.SourceProperties,
                 replacementProperties: status.ReplacementProperties, blessPropertyScales: status.BlessPropertyScales);
             status.RoundStartRulesSupported = definition.RoundStartRulesSupported;
-            status.RoundStartRemoveWhenNotEnoughTimes = definition.RoundStartRemoveWhenNotEnoughTimes;
+            if (!status.RoundStartDefinitionResolved)
+                status.RoundStartRemoveWhenNotEnoughTimes = definition.RoundStartRemoveWhenNotEnoughTimes;
             status.RoundStartDefinitionResolved = true;
+            if (!status.RoundStartTargetRulesResolved)
+            {
+                status.RoundStartPhase = definition.RoundStartPhase;
+                status.RoundStartExcludedTargetStatuses = new List<int>(definition.RoundStartExcludedTargetStatuses);
+                status.RoundStartTargetRulesResolved = true;
+            }
         }
 
         private static bool IsPendingRoundStart(FightBattleUnitState owner, FightBattleStatusState status)
@@ -32,22 +40,23 @@ namespace Zjcs.Combat.Official
             return ExecuteRoundStartStatus(owner, listener, status, true);
         }
 
-        private void ExecuteRoundStartTriggers(FightBattleUnitState owner, FightBattleUnitState listener)
+        private void ExecuteRoundStartTriggers(FightBattleUnitState owner, FightBattleUnitState listener, int phase = 0)
         {
             foreach (var status in new List<FightBattleStatusState>(owner.Statuses))
-                if (owner.Statuses.Contains(status)) ExecuteRoundStartStatus(owner, listener, status, false);
+                if (owner.Statuses.Contains(status)) ExecuteRoundStartStatus(owner, listener, status, false, phase);
         }
 
         private int ExecuteRoundStartStatus(FightBattleUnitState owner, FightBattleUnitState listener,
-            FightBattleStatusState status, bool atStatusStart)
+            FightBattleStatusState status, bool atStatusStart, int phase = 0)
         {
             if (status == null || !status.HasRoundStartTrigger || !status.RoundStartRulesSupported
+                || !atStatusStart && status.RoundStartPhase != phase
                 || !FightBattleTargeting.IsSelectable(owner) || !FightBattleTargeting.IsSelectable(listener)
                 || FightStatusLifecycle.ResolveTargetUnitId(status, status.RoundStartListenTarget, units) != listener.Id)
                 return 0;
             int before = status.RoundStartTriggeredCount;
             var invocations = FightStatusTriggerRuntime.CollectRoundStartInvocations(owner, listener,
-                units, random, statusCatalog, status, atStatusStart);
+                units, random, statusCatalog, status, atStatusStart, phase);
             ExecuteHpStartupSkills(invocations);
             // User-confirmed offline boundary: finish the final invocation before removing
             // its source. Unlimited triggers never exhaust this counter.
