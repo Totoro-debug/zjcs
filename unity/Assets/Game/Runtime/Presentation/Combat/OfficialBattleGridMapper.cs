@@ -1,10 +1,11 @@
 using System;
 using UnityEngine;
 using Zjcs.Combat.Official;
+using Zjcs.Official.StoryGroundEffects;
 
 namespace Zjcs.Presentation.Combat
 {
-    public sealed class OfficialBattleGridMapper
+    public sealed class OfficialBattleGridMapper : IPlayableGroundSurface
     {
         private readonly Transform groundRoot;
         private readonly FightBattleGrid grid;
@@ -38,6 +39,19 @@ namespace Zjcs.Presentation.Combat
         public FightGridPoint WorldToGrid(Vector3 world)
         {
             Vector3 local = groundRoot.InverseTransformPoint(world);
+            return LocalToGrid(local);
+        }
+
+        public GroundType GetGroundType(Vector3 attachmentLocalPosition)
+        {
+            int value = grid.GroundAt(LocalToGrid(attachmentLocalPosition));
+            // Original GridGroundComponentInfo returns Block for an absent
+            // cell; GroundAt uses -1 for coordinates outside the public grid.
+            return value < 0 ? GroundType.Block : (GroundType)value;
+        }
+
+        private FightGridPoint LocalToGrid(Vector3 local)
+        {
             // GridGroundComponentInfo.PosToGrid -> EntityHandler.DirToGrid: add half a cell,
             // then integer conversion truncates toward zero (including outside-grid pointers).
             return new FightGridPoint((int)(local.x - grid.OriginX + .5f),

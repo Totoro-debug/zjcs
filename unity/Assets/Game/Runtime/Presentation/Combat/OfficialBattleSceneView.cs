@@ -23,6 +23,7 @@ namespace Zjcs.Presentation.Combat
         private readonly Action<Transform, FightBattleUnitState> orientUnit;
         private readonly OfficialBattleHudCatalog hudCatalog;
         private readonly OfficialBattleSkillPlayableCatalog skillPlayableCatalog;
+        private readonly OfficialBattleMovementEffects movementEffects;
         private readonly OfficialBattleMovementAnimationCatalog movementAnimations;
         private readonly OfficialBattleDamageVisibilityCatalog damageVisibility;
         private readonly Transform damageRoot;
@@ -122,6 +123,9 @@ namespace Zjcs.Presentation.Combat
             skillPlayableCatalog = usesOfficialAnimationFallback
                 ? OfficialBattleSkillPlayableCatalog.LoadDefault() : null;
             movementAnimations = usesOfficialAnimationFallback ? new OfficialBattleMovementAnimationCatalog() : null;
+            if (usesOfficialAnimationFallback)
+                movementEffects = new OfficialBattleMovementEffects(this.root,
+                    new OfficialBattleGroundEffectLibrary(() => gridMapper));
             this.animationGroupResolver = animationGroupResolver;
             this.nativeNpcFactory = nativeNpcFactory;
             this.orientUnit = orientUnit ?? ((_, __) => { });
@@ -597,6 +601,7 @@ namespace Zjcs.Presentation.Combat
 
         public void DetachUnitTransform(int unitId)
         {
+            movementEffects?.RemoveUnit(unitId);
             if (attachedSorting.TryGetValue(unitId, out OfficialBattleUnitSorting sorting)) sorting?.Dispose();
             attachedSorting.Remove(unitId);
             attachedTransforms.Remove(unitId);
@@ -752,6 +757,7 @@ namespace Zjcs.Presentation.Combat
             }
             AdvanceAttachedPlayableLifetimes(deltaTime);
             AdvancePendingUnitAnimations(deltaTime);
+            movementEffects?.Tick(deltaTime);
 
             foreach (int id in completedAttachedDeaths)
             {
@@ -841,6 +847,7 @@ namespace Zjcs.Presentation.Combat
             if (motion.SegmentDurations.Count == 0) return;
             body.position = motion.Points[0];
             motions[unitId] = motion;
+            movementEffects?.Schedule(unitId, body, stepEvent, gridToWorld);
         }
 
         private bool IsMotionRunning(int unitId)
@@ -1173,6 +1180,7 @@ namespace Zjcs.Presentation.Combat
 
         private void RemoveUnit(int unitId)
         {
+            movementEffects?.RemoveUnit(unitId);
             RemovePendingAnimations(unitId);
             if (!units.TryGetValue(unitId, out UnitView view)) return;
             view.Hud?.Dispose();
@@ -1191,6 +1199,7 @@ namespace Zjcs.Presentation.Combat
 
         public void Dispose()
         {
+            movementEffects?.Dispose();
             foreach (UnitView view in units.Values)
             {
                 view.Hud?.Dispose();

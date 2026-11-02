@@ -1,0 +1,194 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using Zjcs.Combat.Official;
+using Zjcs.Official.StoryFollowBone;
+using Zjcs.Official.StoryGroundEffects;
+using Zjcs.Official.StoryPlayables;
+using Zjcs.Presentation.Combat;
+
+namespace Zjcs.Editor
+{
+    public static class OfficialBattleMovementEffectAcceptance
+    {
+        private const string Key = "Zjcs.Battle.MovementEffectAcceptance";
+        private static bool started;
+        private static int errors;
+        [Serializable] private sealed class Data { public Entry[] skills, actions; }
+        [Serializable] private sealed class Entry { public int id, followNodes; public string resource; }
+        public static void Run()
+        {
+            Type.GetType("Zjcs.Editor.ProjectTools, Zjcs.Editor", true).GetMethod("Validate").Invoke(null, null);
+            Start();
+        }
+        public static void RunIsolated() => Start();
+        private static void Start()
+        {
+            Environment.SetEnvironmentVariable("ZJCS_CREATION_AUTOMATION", "1");
+            SessionState.SetBool(Key, true); SessionState.SetInt(Key + ".result", 1);
+            SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 300);
+            EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            Hook(); EditorApplication.isPlaying = true;
+        }
+        [InitializeOnLoadMethod] private static void Hook()
+        {
+            if (!SessionState.GetBool(Key, false)) return;
+            EditorApplication.update -= Tick; EditorApplication.update += Tick;
+            EditorApplication.playModeStateChanged -= Mode; EditorApplication.playModeStateChanged += Mode;
+        }
+        private static void Mode(PlayModeStateChange state)
+        {
+            if (state != PlayModeStateChange.EnteredEditMode || !SessionState.GetBool(Key, false)) return;
+            Application.logMessageReceived -= Observe; SessionState.SetBool(Key, false);
+            EditorApplication.update -= Tick; EditorApplication.playModeStateChanged -= Mode;
+            EditorApplication.Exit(SessionState.GetInt(Key + ".result", 1));
+        }
+        private static void Observe(string message, string trace, LogType type)
+        { if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert) errors++; }
+        private static void Tick()
+        {
+            if (EditorApplication.timeSinceStartup > SessionState.GetFloat(Key + ".deadline", 0))
+            { Debug.LogError("Movement effect verification timed out."); EditorApplication.isPlaying = false; return; }
+            if (started || !EditorApplication.isPlaying || EditorApplication.isCompiling) return;
+            started = true; Application.logMessageReceived += Observe;
+            new GameObject("Movement effects verification").AddComponent<Runner>().StartCoroutine(Verify());
+        }
+        private static IEnumerator Verify()
+        {
+            var steps = Steps();
+            try
+            {
+                while (true)
+                {
+                    object next;
+                    try { if (!steps.MoveNext()) break; next = steps.Current; }
+                    catch (Exception error) { Debug.LogException(error); EditorApplication.isPlaying = false; yield break; }
+                    yield return next;
+                }
+                if (errors == 0)
+                {
+                    SessionState.SetInt(Key + ".result", 0);
+                    Debug.Log("Original movement effects Play Mode passed: 10 native graphs/17 reachable follow nodes, original sequence cue times, native particles/materials/shaders, original terrain selection, local grid adapter, per-cell ownership and cleanup.");
+                }
+                EditorApplication.isPlaying = false;
+            }
+            finally { (steps as IDisposable)?.Dispose(); }
+        }
+        private static void Require(bool condition, string message)
+        { if (!condition) throw new InvalidOperationException("Movement effect: " + message); }
+        private static IEnumerator Steps()
+        {
+            var world = new GameObject("Movement effects world"); world.transform.position = new Vector3(3, 4, 0);
+            var source = new GameObject("Official entity"); source.transform.SetParent(world.transform, false);
+            source.transform.localPosition = new Vector3(2, 2, 0);
+            var body = new GameObject("body"); body.transform.SetParent(source.transform, false);
+            var grid = new FightBattleGrid { Width = 8, Height = 8, DefaultGroundType = 0 };
+            var mapper = new OfficialBattleGridMapper(world.transform, grid);
+            Require(mapper.GetGroundType(source.transform.localPosition) == GroundType.None, "local-position ground lookup");
+            Require(mapper.GetGroundType(new Vector3(30, 30, 0)) == GroundType.Block, "original missing-cell fallback");
+            var library = new OfficialBattleGroundEffectLibrary(() => mapper);
+            var data = JsonUtility.FromJson<Data>(Resources.Load<TextAsset>("Combat/movement-effects").text);
+            var entries = new List<Entry>(data.skills); entries.AddRange(data.actions);
+            Require(entries.Count == 10, "reachable graph count");
+            int follows = 0, nativeParticles = 0;
+            foreach (var entry in entries)
+            {
+                var prefab = Resources.Load<GameObject>(entry.resource); Require(prefab != null, "native graph " + entry.id);
+                var instance = UnityEngine.Object.Instantiate(prefab, world.transform, false);
+                var center = new MyPlayableCenter();
+                var sequence = instance.GetComponent<MyPlayableSequence>(); Require(sequence != null, "root sequence " + entry.id);
+                var nodes = instance.GetComponentsInChildren<MyPlayableFollowBone>(true);
+                Require(nodes.Length == entry.followNodes, "native serialized follow bindings " + entry.id); follows += nodes.Length;
+                var starts = new List<float>();
+                foreach (var node in nodes) node.OnPlay += _ => starts.Add(sequence.Time);
+                foreach (var playable in instance.GetComponentsInChildren<MyPlayable>(true)) playable.MyPlayableCenter = center;
+                foreach (var apply in instance.GetComponentsInChildren<ApplyByGroundType>(true)) apply.Host = library;
+                // Same attachment contract as the shared scene view, without
+                // touching any actor/model scale or transform.
+                var agent = source.GetComponent<Zjcs.Official.StoryAttachment.AttachAgent>();
+                if (agent == null)
+                {
+                    agent = source.AddComponent<Zjcs.Official.StoryAttachment.AttachAgent>();
+                    agent.myBoneNameList.Add("body"); agent.myBoneList.Add(body.transform); agent.Init();
+                }
+                sequence.Init(source, source); sequence.TryPlay(); yield return null;
+                for (int frame = 0; frame < 120; frame++)
+                {
+                    center.Update(.05f); center.LateUpdate();
+                    if (frame == 5)
+                    {
+                        foreach (var particle in instance.GetComponentsInChildren<ParticleSystem>(true))
+                            if (particle.gameObject.activeInHierarchy) particle.Simulate(.15f, false, true, true);
+                        foreach (var renderer in instance.GetComponentsInChildren<ParticleSystemRenderer>(true))
+                            foreach (var material in renderer.sharedMaterials)
+                                if (material != null) Require(material.shader != null && material.shader.isSupported, "Windows shader " + material.name);
+                        if (entry.id == 19830 || entry.id == 19850) Capture(source.transform.position, entry.id.ToString());
+                    }
+                    yield return null;
+                }
+                Require(starts.Count == nodes.Length, "all original effect cues execute " + entry.id);
+                foreach (var node in nodes)
+                    Require(node.myApplyComponent != null, "original inline/terrain applicator binding " + entry.id);
+                if (entry.id == 19830)
+                {
+                    Require(Mathf.Abs(starts[0]) < .001f && Mathf.Abs(starts[1] - 2.03f) <= .051f
+                        && Mathf.Abs(starts[2] - 3.35f) <= .051f, "original 19830 sequence times");
+                }
+                nativeParticles += prefab.GetComponentsInChildren<ParticleSystem>(true).Length;
+                sequence.Remove(); UnityEngine.Object.Destroy(instance); center.RemoveAll(); yield return null;
+            }
+            Require(follows == 17 && nativeParticles > 0, "native effect closure totals");
+            // A delayed two-cell action must stop/cancel with its unit, while
+            // another battle's effects remain alive.
+            body.name = "Mapped body attachment";
+            var effects = new OfficialBattleMovementEffects(world.transform, library);
+            var other = new OfficialBattleMovementEffects(world.transform, library);
+            var step = new FightBattleStepEvent();
+            step.Movements.Add(new FightBattleMovementEvent { UnitId = 1, MoveBehaviourId = 15321,
+                Delay = .2f, MoveDuration = .5f, Path = new List<FightGridPoint> {
+                    new FightGridPoint(2, 2), new FightGridPoint(3, 2), new FightGridPoint(4, 2) } });
+            effects.Schedule(1, source.transform, step, mapper.GridToWorld);
+            other.Schedule(1, source.transform, step, mapper.GridToWorld);
+            Require(world.GetComponentsInChildren<MyPlayableSequence>(true).Length == 0, "movement delay precedes graph creation");
+            yield return null; effects.Tick(.25f); other.Tick(.25f);
+            Require(world.GetComponentsInChildren<MyPlayableSequence>(true).Length == 2, "independent hosts each start the first cell");
+            effects.RemoveUnit(1); yield return null;
+            var first = world.GetComponentsInChildren<MyPlayableSequence>(true);
+            Require(first.Length == 1, "unit removal leaves the other host alive");
+            int firstInstance = first[0].GetInstanceID();
+            other.Tick(.49f); yield return null;
+            var second = world.GetComponentsInChildren<MyPlayableSequence>(true);
+            Require(second.Length == 1 && second[0].GetInstanceID() != firstInstance,
+                "cell boundary stops the first graph and starts a distinct second graph");
+            other.Tick(.5f); yield return null;
+            Require(world.GetComponentsInChildren<MyPlayableSequence>(true).Length == 0, "last cell releases its graph");
+            effects.Dispose(); other.Dispose();
+            UnityEngine.Object.Destroy(world); yield return null;
+        }
+        private static void Capture(Vector3 position, string name)
+        {
+            var go = new GameObject("Movement effect fixture camera"); var camera = go.AddComponent<Camera>();
+            camera.transform.position = position + new Vector3(0, 0, -20);
+            camera.orthographic = true; camera.orthographicSize = 4;
+            camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = Color.black;
+            var rt = RenderTexture.GetTemporary(450, 800, 24); camera.targetTexture = rt;
+            var previous = RenderTexture.active;
+            try
+            {
+                camera.Render(); RenderTexture.active = rt;
+                var image = new Texture2D(450, 800, TextureFormat.RGB24, false);
+                image.ReadPixels(new Rect(0, 0, 450, 800), 0, 0); image.Apply();
+                int visible = 0; foreach (var pixel in image.GetPixels32()) if (pixel.r > 8 || pixel.g > 8 || pixel.b > 8) visible++;
+                File.WriteAllBytes(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"), "movement-effect-" + name + ".png"), image.EncodeToPNG());
+                UnityEngine.Object.Destroy(image); Require(visible > 20, "actual native effect pixels " + name);
+                Debug.Log("Original movement effect pixels " + name + ": " + visible);
+            }
+            finally { RenderTexture.active = previous; camera.targetTexture = null; RenderTexture.ReleaseTemporary(rt); UnityEngine.Object.Destroy(go); }
+        }
+        public sealed class Runner : MonoBehaviour { }
+    }
+}

@@ -369,6 +369,8 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 
 地区时间公共适配来源见 [mainline-region-time-source-manifest.json](official-map/mainline-region-time-source-manifest.json)。`prepare_mainline_region_time.py`／`record_mainline_region_time_sources.py` 核对所选884_156692的原地区时间判定、日期偏移、UniTask刷新状态机和时间格式源码，记录每实例日期／语言服务绑定与安装输出哈希；当前格式源码仅此文件与历史语言来源逐字节一致，不声明外围程序集或整版等价。地图标签语言键由各图原配置及原时间格式消费路径提取，未新增替代字体或美术；本批未生成完整素材快照。
 
+战斗移动特效来源见[移动特效清单](battle-animation/movement-effects-source-manifest.json)，重建入口为 `prepare_battle_movement_effects.py`。选定884_156692应用／框架代码及21套移动技能／动作配置按APK优先与匹配云端凭据读取；记录10个原序列的可达特效子图、原DLL脚本fileID校验、复用代码逐方法核对、125项原生资产闭包、53张原贴图全部mip及2份完整Windows shader转换的输入输出哈希。导出PNG只用于方向／解码对照，实际贴图由原压缩mip解码；相邻字节的解码器舍入差异不修改输入哈希。原生转换缓存逐文件核对其来源清单，动画／轨迹／声音分别保留自己的来源，本批未生成完整素材快照。
+
 小地图区域地面来源见 [Map10当前资源](official-map/map10-current-minimap-regions-source-manifest.json)、[Map11当前资源](official-map/map11-current-minimap-regions-source-manifest.json)、[Map12当前资源](official-map/map12-current-minimap-regions-source-manifest.json)、[Map13当前资源](official-map/map13-current-minimap-regions-source-manifest.json)、[Map14当前资源](official-map/map14-current-minimap-regions-source-manifest.json)、[Map16当前资源](official-map/map16-current-minimap-regions-source-manifest.json)与[公共绑定代码](official-map/mainline-minimap-regions-source-manifest.json)。`prepare_mainline_minimap_regions.py` 复用公共原生恢复器，记录所选884_156692的APK优先／匹配缓存、原Ground子树、地区prefab、YooAsset索引GUID及Windows转换依赖和逐文件哈希。原YooAsset GUID与转换缓存Unity GUID分别保留；仅核对两份区域管理源码与历史输入逐字节一致，不声明整版等价。历史小地图来源独立保留，本批未生成完整素材快照。
 
 完整小地图根及离线标记当前初始化的输入、输出与适配来源见[主线小地图根凭据](official-map/mainline-minimap-root-source-manifest.json)。`prepare_mainline_minimap_root.py` 从所选884源码迁移；历史871标记管理器凭据独立保留，当前凭据仅覆盖其中Init方法，重新生成历史管理器后须再运行本转换器。未生成完整素材快照。
