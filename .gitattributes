@@ -1805,5 +1805,14 @@ scripts/fixtures/partner_local_actor_identity_validation.cs text eol=lf
 unity/Assets/Game/Runtime/Offline/Progression/OfflineLocalActorIdentities.cs* text eol=lf
 unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterPropertyProgress.cs text eol=lf
 assets/reference/partner-conversation-transactions-source-manifest.json text eol=lf
+
+# Preserve original region time state machines and the per-instance local clock binding.
+scripts/prepare_mainline_region_time.py text eol=lf
+scripts/record_mainline_region_time_sources.py text eol=lf
+assets/reference/official-map/mainline-region-time-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Offline/World/MapRegionTime/** text eol=lf
+unity/Assets/Game/Runtime/Offline/World/MapRegionTime.meta text eol=lf
+unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/MapRegionLimitStatusRefreshForRankUnlockTime.cs* text eol=lf
+unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.RegionTime.cs* text eol=lf
 /scripts/record_battle_movement_facing.py text eol=lf
 /assets/reference/battle-animation/movement-facing-source-manifest.json text eol=lf

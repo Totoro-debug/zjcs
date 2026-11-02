@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using Zjcs.Offline.World.NativeMap13;
+using Zjcs.Offline.World;
 using Zjcs.Official.World.NativeEnvironment;
 using Zjcs.Official.World.NativeMap14Labels;
 
@@ -22,7 +23,8 @@ namespace Zjcs.Presentation.World
 
         public MainlineNativeGround(Transform parent, GameObject prefab, Camera camera,
             IMainlineWorldGroundState state, Map14LabelData data, MapEnvData environmentData,
-            RenderPipelineAsset pipeline, TMP_FontAsset font, Func<int, bool> regionTimeReached)
+            RenderPipelineAsset pipeline, TMP_FontAsset font, Func<int, bool> regionTimeReached,
+            IMapRegionTime regionTime = null)
         {
             if (!prefab || !camera || data == null || !pipeline)
                 throw new ArgumentException("Original ground, camera, region data and pipeline are required.");
@@ -45,7 +47,7 @@ namespace Zjcs.Presentation.World
                 var ground = instance.GetComponent<MapGroundRoot>();
                 if (!ground) throw new InvalidOperationException("The original native prefab has no MapGroundRoot.");
                 environment = new MainlineWorldEnvironment(ground, environmentData, data, state);
-                labels = new MainlineWorldLabels(data, state, font, regionTimeReached);
+                labels = new MainlineWorldLabels(data, state, font, regionTimeReached, regionTime);
                 NativeMap13EnvironmentBinding.Bind(instance, environment);
                 labels.Bind(instance);
                 root.SetActive(true);

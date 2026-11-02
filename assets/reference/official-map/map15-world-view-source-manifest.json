@@ -171,7 +171,7 @@
   ],
   "tool": {
     "path": "scripts/prepare_mainline_map15_world_view.py",
-    "sha256": "d0b2e03204f4cb535b24678203457751236855a0bb46bebe2a8fb3c834c3064d"
+    "sha256": "0a7f4702bdab0de4a3664236cccdd493bd5e8410061f852e142335b05245c7cc"
   },
   "outputs": [
     {
@@ -180,8 +180,12 @@
     },
     {
       "path": "unity/Assets/Game/Resources/Map15/Native/region-label-data.json",
-      "sha256": "130b35a71dd292fa4900b1b64ba35b4cfed0164cedfd0d8011e3efc9a4db2941"
+      "sha256": "c35bd95f61a67cf62558cbed84b678e2d0c2f7fa6a3ebe817e2a479d536fdcc3"
     }
   ],
+  "time_formatter": {
+    "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/CultureTimeSpanArg.cs",
+    "sha256": "b24e980e074184a812b8ad0a221ec14f9205d0968cefc83ba8ea041cf1d3233a"
+  },
   "operation": "Read original common 3001 player model/offset/sorting and WorldCamera projection/adaptor. Bind original Map15 region rows, native prefab language keys and verified selected language. Index progress maxima by region ID while retaining original row order. Shared historical label themes/rank mapping retain explicit input identities; no full-version equivalence is asserted."
 }

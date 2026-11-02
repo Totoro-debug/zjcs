@@ -13,18 +13,21 @@ using Zjcs.Official.World;
 using Zjcs.Official.World.NativeEnvironment;
 using Zjcs.Official.World.NativeMap14Labels;
 using Zjcs.Presentation.World;
+using Zjcs.Offline.World;
+using Zjcs.Offline.Progression;
 
 namespace Zjcs.Editor.MainlineNativeGround
 {
     // Cross-map check of the production ground Interface. Region/player state
     // is an explicit fixture; this does not test map entry, HUD, input or saves.
-    public static class NativeGroundAcceptance
+    public static partial class NativeGroundAcceptance
     {
         private const string Key = "Zjcs.Mainline.NativeGroundAcceptance";
         private static bool started;
         private static int errors;
         public static void Run()
         {
+            Require(TMP_Settings.instance, "The original TMP package settings must be staged before text Awake.");
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_SIMULATED", "1");
             if (Environment.GetEnvironmentVariable("ZJCS_ISOLATED_NATIVE_GROUND") == "1")
@@ -78,7 +81,7 @@ namespace Zjcs.Editor.MainlineNativeGround
             if (errors == 0)
             {
                 SessionState.SetInt(Key + ".result", 0);
-                Debug.Log("Shared native ground Play Mode passed for Map15 and Map16: original component bindings, native geometry, private/public refresh, camera renders, disposal, pipeline restoration and remount. Fixture states only; map entry, timed access, HUD, input, progression saves and Player release are not covered.");
+                Debug.Log("Shared native ground Play Mode passed for Map15 and Map16: original bindings, geometry, region activation, timed labels, camera renders, disposal, pipeline restoration and remount. Timed-region rules/profile cold save are checked separately; formal map entry, HUD, input, world progression saves and Player release are not covered.");
             }
             EditorApplication.isPlaying = false;
         }
@@ -96,6 +99,7 @@ namespace Zjcs.Editor.MainlineNativeGround
             {
                 string raw = File.ReadAllText(Path.Combine(repository, $"unity/Assets/Official/World/Map/{mapId}/map{mapId}.json"));
                 var definition = JsonUtility.FromJson<OfficialMapDefinition>(raw);
+                if (mapId == 16) VerifyRegionTimes(definition, output);
                 var data = JsonUtility.FromJson<Map14LabelData>(Resources.Load<TextAsset>($"Map{mapId}/Native/region-label-data").text);
                 var prefab = Resources.Load<GameObject>($"Map{mapId}/Native/current-ground");
                 Require(definition.ClassId == mapId && data.mapClassId == mapId && prefab, "Map-specific native resource identities.");
@@ -105,6 +109,12 @@ namespace Zjcs.Editor.MainlineNativeGround
                 var entry = definition.Entities.Single(e => e.Id == 101);
                 var origin = definition.Navigation.Origin;
                 var state = new State { Position = new Vector3(origin.X + entry.Grid[0], origin.Y + entry.Grid[1], origin.Z) };
+                if (mapId == 16) state.SubRank = Array.FindIndex(data.subRankToRank, rank => rank == 4);
+                var clock = DateTime.Now;
+                var rankPlayer = new OfflinePlayerProgress { Rank = 4 };
+                rankPlayer.RankUnlockTimes.Add(new OfflineRankUnlockTime
+                    { Rank = 4, UnixSeconds = new DateTimeOffset(clock.AddDays(-13)).ToUnixTimeSeconds() });
+                IMapRegionTime regionTime = mapId == 16 ? new OfflineCharacterRankRegionTime(definition, () => rankPlayer, () => clock) : null;
                 RenderPipelineAsset previousPipeline = GraphicsSettings.defaultRenderPipeline, previousQuality = QualitySettings.renderPipeline;
                 var cameraObject = new GameObject("Original ground render fixture"); cameraObject.tag = "MainCamera";
                 var camera = cameraObject.AddComponent<Camera>(); camera.orthographic = true; camera.orthographicSize = 12;
@@ -115,12 +125,62 @@ namespace Zjcs.Editor.MainlineNativeGround
                 target.Create(); camera.targetTexture = target;
                 var parent = new GameObject("Original native ground fixture parent");
                 using (var view = new Zjcs.Presentation.World.MainlineNativeGround(parent.transform, prefab, camera, state,
-                    data, environment, pipeline, font, _ => true))
+                    data, environment, pipeline, font, mapId == 15 ? (Func<int, bool>)(_ => true) : null, regionTime))
                 {
                     for (int i = 0; i < 15; i++) yield return null;
                     Require(parent.GetComponentsInChildren<MapGroundRoot>(true).Length == 1, "One original ground root.");
                     Require(parent.GetComponentsInChildren<Renderer>().Any(r => r.enabled), "Original native renderers.");
                     Capture(camera, target, Path.Combine(output, $"map{mapId}-entry-private.png"));
+                    if (mapId == 16)
+                    {
+                        var timers = parent.GetComponentsInChildren<ShowRemainTimeInfo>();
+                        Require(timers.Any(timer => timer.mRemainTimeText && !string.IsNullOrEmpty(
+                            timer.mRemainTimeText.GetComponent<TMP_Text>().text)), "Original active countdown text.");
+                        foreach (var timer in timers.Where(value => value.mRemainTimeText.gameObject.activeInHierarchy))
+                        {
+                            var text = timer.mRemainTimeText.GetComponent<TMP_Text>();
+                            text.ForceMeshUpdate();
+                            Require(text.textInfo != null && text.textInfo.characterCount > 0 && text.mesh.vertexCount > 0,
+                                "Original active countdown generates its glyph geometry.");
+                        }
+                        var label = parent.GetComponentsInChildren<MapRegionDescSupportUI>().First(value =>
+                        {
+                            int region = value.Services.QueryRegion(value.transform.position);
+                            return region >= 0 && !regionTime.IsUnlockTimeReached(region);
+                        });
+                        Vector3 entryCamera = camera.transform.position;
+                        float entrySize = camera.orthographicSize;
+                        camera.transform.position = new Vector3(label.transform.position.x, label.transform.position.y, entryCamera.z);
+                        camera.orthographicSize = 4;
+                        yield return null; yield return null;
+                        Capture(camera, target, Path.Combine(output, "map16-time-locked.png"));
+                        int timedRegion = label.Services.QueryRegion(label.transform.position);
+                        var selectedTimers = label.GetComponentsInChildren<ShowRemainTimeInfo>()
+                            .Where(value => value.mRemainTimeText.gameObject.activeInHierarchy).ToArray();
+                        Require(selectedTimers.Length > 0, "Selected original region has an active time lock.");
+                        clock = regionTime.GetUnlockTime(timedRegion);
+                        // Let the original UniTask/provider refresh on its own;
+                        // no view.Refresh or business callback drives expiry.
+                        yield return new WaitForSecondsRealtime(1.25f);
+                        Require(selectedTimers.All(value => !value.mRemainTimeText.gameObject.activeInHierarchy),
+                            "The original timed provider removes the region time lock at expiry.");
+                        Capture(camera, target, Path.Combine(output, "map16-time-expired.png"));
+                        var laterLabel = parent.GetComponentsInChildren<MapRegionDescSupportUI>().First(value =>
+                        {
+                            int region = value.Services.QueryRegion(value.transform.position);
+                            return region >= 0 && !regionTime.IsUnlockTimeReached(region)
+                                && value.GetComponentsInChildren<ShowRemainTimeInfo>().Any(timer => timer.mRemainTimeText.gameObject.activeInHierarchy);
+                        });
+                        camera.transform.position = new Vector3(laterLabel.transform.position.x, laterLabel.transform.position.y, entryCamera.z);
+                        Capture(camera, target, Path.Combine(output, "map16-time-rank-bypass-locked.png"));
+                        rankPlayer.Rank = 5;
+                        state.SubRank = Array.FindIndex(data.subRankToRank, rank => rank == 5);
+                        view.Refresh();
+                        yield return null; yield return null;
+                        Capture(camera, target, Path.Combine(output, "map16-time-higher-rank.png"));
+                        camera.transform.position = entryCamera;
+                        camera.orthographicSize = entrySize;
+                    }
                     state.PublicRegion = entry.Region;
                     if (mapId == 16)
                     {
@@ -136,7 +196,7 @@ namespace Zjcs.Editor.MainlineNativeGround
                 Require(GraphicsSettings.defaultRenderPipeline == previousPipeline && QualitySettings.renderPipeline == previousQuality, "Restore previous render pipelines.");
                 Require(!camera.GetComponent<UniversalAdditionalCameraData>(), "Release added camera data.");
                 using (var view = new Zjcs.Presentation.World.MainlineNativeGround(parent.transform, prefab, camera, state,
-                    data, environment, pipeline, font, _ => true))
+                    data, environment, pipeline, font, mapId == 15 ? (Func<int, bool>)(_ => true) : null, regionTime))
                 {
                     for (int i = 0; i < 15; i++) yield return null;
                     Capture(camera, target, Path.Combine(output, $"map{mapId}-remount.png"));
@@ -167,10 +227,10 @@ namespace Zjcs.Editor.MainlineNativeGround
         }
         private sealed class State : IMainlineWorldGroundState
         {
-            public Vector3 Position; public int PublicRegion = -1, RevealedRegion = -1;
+            public Vector3 Position; public int PublicRegion = -1, RevealedRegion = -1, SubRank = 12;
             public Vector3 PlayerWorldPosition => Position;
             public int PlayerLevel => 130;
-            public int PlayerSubRank => 12;
+            public int PlayerSubRank => SubRank;
             public long PlayerCombatRating => 6000000;
             public bool IsPublicRegion(int region) => region == PublicRegion;
             public int GetRegionProgress(int region) => 0;

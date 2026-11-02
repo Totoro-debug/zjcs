@@ -54,6 +54,14 @@ namespace Zjcs.Official.World.NativeMap14Labels
         public bool HasCombatRatingLevelValues;
         public int RecommendCombatRatingIndex;
         [NonSerialized] private Func<bool> unlockTimeReached;
+        [NonSerialized] private Func<DateTime> unlockTime;
+        public void BindUnlockTime(Func<bool> reached, Func<DateTime> time)
+        {
+            BindUnlockTimeReached(reached);
+            unlockTime = time ?? throw new ArgumentNullException(nameof(time));
+        }
+        public DateTime GetMapRegionUnlockTime() => (unlockTime
+            ?? throw new InvalidOperationException("Region unlock date is not bound."))();
         // The local adapter supplies the already-confirmed map-access decision;
         // no server rank dates are synthesized by a world label.
         public void BindUnlockTimeReached(Func<bool> value) => unlockTimeReached = value ?? throw new ArgumentNullException(nameof(value));

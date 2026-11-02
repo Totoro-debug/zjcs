@@ -59,7 +59,7 @@ public class MapRegionLimitStatusRefreshHelper
 			switch (mRegionLimitType)
 			{
 			case MapRegionLimitType.RegionUnlockTime:
-				throw new InvalidOperationException("Map14 original region tables contain no timed limits.");
+				((MapRegionLimitStatusRefreshForRankUnlockTime)(mRefreshProvider = new MapRegionLimitStatusRefreshForRankUnlockTime { Services = Services })).Init(mMapRegionInfo, mRemainTimeInfoUI, (Action)RefreshStatus);
 				break;
 			case MapRegionLimitType.Level:
 				((MapRegionLimitStatusRefreshProviderForLevel)(mRefreshProvider = new MapRegionLimitStatusRefreshProviderForLevel { Services = Services })).Init(mMapRegionInfo, mMultiLanguage, (Action)RefreshStatus);

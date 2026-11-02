@@ -1,0 +1,168 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "prepared": {
+    "path": ".tools/source-packages/prepared-code-source-manifest.json",
+    "sha256": "3980e0fee6807cb2ac398a7713cb16cf747c5bef108de89e1c301bc77945d7e9"
+  },
+  "original_code": [
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/MapRegionInfo.cs",
+      "sha256": "c98644f4854ff2f4c4e03b4e517d8d6799d323f6eabb7bbc6f64d281c2537a36"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/MapUtils.cs",
+      "sha256": "af5a3b0458e2fe3d60dfdf9352da1067d5a4fb69c277de31bee63c3cbf2c11af"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/MapRegionLimitStatusRefreshHelper.cs",
+      "sha256": "3e88a1ed122490069ddc88c3599be0a38a36d420b7ef56231c9a7d6e62c9f33e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/MapRegionLimitStatusRefreshForRankUnlockTime.cs",
+      "sha256": "39991c5995d7f3d388646357d90df9ccd13cf08c56d0024298dba72eb3a17b0f"
+    },
+    {
+      "path": ".tools/source-packages/official-code/framework-firstpass-source/Framework/CultureTimeSpanArg.cs",
+      "sha256": "4c531fc89d49f77f3cebc6f7bbd6e0fa2246a35c0d2abbcdb7441dadb7e83913"
+    }
+  ],
+  "original_language_receipt": {
+    "path": "assets/reference/official-map/map13-language-code-source-manifest.json",
+    "sha256": "b431099b587df6d046ed2380eac3ed64919629a501dba977cb49e1db111c3630"
+  },
+  "formatter_source_equivalence": {
+    "selected": {
+      "path": ".tools/source-packages/official-code/framework-firstpass-source/Framework/CultureTimeSpanArg.cs",
+      "sha256": "4c531fc89d49f77f3cebc6f7bbd6e0fa2246a35c0d2abbcdb7441dadb7e83913"
+    },
+    "historical": {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/CultureTimeSpanArg.cs",
+      "sha256": "4c531fc89d49f77f3cebc6f7bbd6e0fa2246a35c0d2abbcdb7441dadb7e83913"
+    },
+    "scope": "Only this original source file matches byte for byte; the enclosing framework assemblies differ."
+  },
+  "formatter_baseline": {
+    "commit": "c0bcf8d89a28e77f8d70f39f0d09a786f1aa20b3",
+    "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/CultureTimeSpanArg.cs",
+    "sha256": "cb779d8404570aca765c1db36860c79b722ab5ae291639cd7621c481da482762",
+    "verification": "Reversing only the optional text-service injection reproduces the installed original formatter byte for byte after LF normalization."
+  },
+  "definition": {
+    "path": "unity/Assets/Official/World/Map/16/map16.json",
+    "sha256": "ee435c5481dc11e5c7a5141acd9ebdd7d3c457ed7ef8625fb036050fdefd0979"
+  },
+  "confirmed_policy": "鲸背岛使用角色位阶与本地时间：首次达到位阶4后按各区原14至32天偏移计时；超过位阶4立即通过。保留等级、绳索剧情及其他条件。不应用服务器合服加速。",
+  "operation": "Preserve original rank-none/lower/higher/missing-date branches, AddDays offset, inclusive time boundary and time-before-level. Restore the original UniTask refresh state machine with explicit clock/date services and the missing nested Awaiter qualification. Inject countdown localization per instance without changing format calculations. Region callbacks belong to each label instance. Existing rank-up records are retained as the first acquisition date.",
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MapRegionTime/OfflineCharacterRankRegionTime.cs",
+      "sha256": "06637d4b0fc241b3e4e5a435e1c42dcd2d9abf0c82ef70a2318616d3892cc237"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MapRegionTime/OfflineCharacterRankRegionTime.cs.meta",
+      "sha256": "21d7578dff2857e4d98a0ae02bc100333aaa9d0218b9c5fc0ed68e177b02705e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MapRegionTime/Zjcs.Offline.World.MapRegionTime.asmdef",
+      "sha256": "cd51645c91367e274458548fb8d68957b77b3aa8cae05227070b720b76ab3930"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MapRegionTime/Zjcs.Offline.World.MapRegionTime.asmdef.meta",
+      "sha256": "9a9dc3f9429563ef2824cf0f949699ff316c139f94411dcc9a87a5f5b5a1303f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MapRegionTime.meta",
+      "sha256": "c6a11f9918f9a624b06a0b1731c6599e4e8bec8944ce8f89f232010c6f883960"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/CultureTimeSpanArg.cs",
+      "sha256": "b24e980e074184a812b8ad0a221ec14f9205d0968cefc83ba8ea041cf1d3233a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.cs",
+      "sha256": "c2e3e365f11460b448095966bb0278e2ab52a92e8cc4a496425d82e84660e962"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/MapRegionLimitStatusRefreshForRankUnlockTime.cs",
+      "sha256": "78b4139dd925fe18c5fb504a6f36281835f91a239fe5b26690e63035c9651b89"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/MapRegionLimitStatusRefreshForRankUnlockTime.cs.meta",
+      "sha256": "ff257875ac644b012444dad303db430d000a97c2d1a186419ac8d93b1c363e06"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/MapRegionLimitStatusRefreshHelper.cs",
+      "sha256": "7df26d74588989246f7de91e9b0cb9b98562e3e5b1125458fd66417d3f415b0a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/Map14LabelServices.cs",
+      "sha256": "eb390444f13eac4beb0905b84102f731db5eee61b820289104d19fa83ff05bb4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/Zjcs.Official.World.NativeMap14Labels.asmdef",
+      "sha256": "a3e9fed2a97674f64303edda3690fb27b16c422703c5c28d89d63a28f7d79190"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/MainlineNativeGround/MainlineWorldLabels.cs",
+      "sha256": "6b01c156ec8184a7dc420d41974ed5a4677dd2f8324d5643b57866a9cc2ef047"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/MainlineNativeGround/MainlineNativeGround.cs",
+      "sha256": "bbab9e2432a0445e4a75faba5ddce635b014f5e96912b21b9106cc9e0aeb1763"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/MainlineNativeGround/Zjcs.Presentation.World.MainlineNativeGround.asmdef",
+      "sha256": "e09ac7c828c4086f49492223c3a58453050a3944cfdcf969ffd3b024012f3916"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap14/Zjcs.Presentation.World.NativeMap14.asmdef",
+      "sha256": "5b4ade2444ce338a5ae40b3982e09832e1a60cee5392bb37febd26a29369b206"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Zjcs.Presentation.World.asmdef",
+      "sha256": "e6effa6cddfbe829f83d8d2ca4bed1e2a983cacd844d77448f5ba98ae3ebad01"
+    },
+    {
+      "path": "scripts/prepare_mainline_region_time.py",
+      "sha256": "8ef8fcd7d31f20deb29b02b2960747f54457a1636de62c9a7ba82ac638128c59"
+    },
+    {
+      "path": "scripts/prepare_mainline_ground_validation.py",
+      "sha256": "07efa192ba408aab22ee3353ce8938611613bbfa6b30ffb80e89a1054605c58e"
+    },
+    {
+      "path": "scripts/prepare_mainline_map15_world_view.py",
+      "sha256": "0a7f4702bdab0de4a3664236cccdd493bd5e8410061f852e142335b05245c7cc"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.cs",
+      "sha256": "e30f4195a6c11fa92a1cdba0b832202a74c5c22846efa45a9cb9fcee12ae7285"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.cs.meta",
+      "sha256": "3b3eae4bb8239b87854eaaca81227b0048a8dc939d11e637289f2f45ff21465f"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.RegionTime.cs",
+      "sha256": "c5473f33cd18e2ab81b24899eacfa6b4b7290209c720f9d9c4da28a3e8b3a5c2"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.RegionTime.cs.meta",
+      "sha256": "abe37e608cc3c21837a0d54bb7d863cc15d3bb6965ea2ed169e760503059d6bb"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineNativeGround/Zjcs.Editor.MainlineNativeGround.asmdef",
+      "sha256": "15672676033246d7009ed79e606d68761733ddd1206629e21083c4331b69792c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineNativeGround/Zjcs.Editor.MainlineNativeGround.asmdef.meta",
+      "sha256": "afe5d031fd337e456da38e599578865000216fb5c0279d987bef0307e78ff183"
+    }
+  ],
+  "hashing": "Installed text outputs use UTF-8 LF; original input records retain raw bytes.",
+  "tool": {
+    "path": "scripts/record_mainline_region_time_sources.py",
+    "sha256": "c4e7fc7195ca1a0b2a39b0d2d1817ebd5c36b36c941c676b12f70156cb4b0c6b"
+  }
+}

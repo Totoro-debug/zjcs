@@ -26,15 +26,19 @@
 
 公共 `GroundBinding` 接收 `GroundSource` 的地图 ID、原 prefab 地址和 bundle，复用 Map15 的原生依赖恢复路径。Map15 已安装 GUID 保持原值，鲸背岛使用所属地图的 GUID 范围，避免两图复制的载荷互相覆盖。Map16 当前输出位于 `Assets/Official/World/Map/16/NativeCurrent`，资源入口为 `Resources/Map16/Native/current-ground`，含1434个资产／meta输出。脚本只显式绑定已迁移的官方类；原纹理、Windows shader、材质、网格及序列化字段按选定版本和各自哈希恢复。来源见[地面清单](../../assets/reference/official-map/map16-current-ground-source-manifest.json)。
 
-[`prepare_mainline_map15_world_view.py --map-id 16`](../../scripts/prepare_mainline_map15_world_view.py) 读取原3001模型／偏移／排序和原 `WorldCamera` 投影／适配参数，输出 `Resources/Map16/BaseGround/player-view` 与 `Native/region-label-data`。标签按原地区 ID 索引探索上限，保持原表枚举顺序，核对47项实际语言键；公共标签样式、位阶映射和字体仍分别保留历史输入凭据，不声称整个版本等价。来源见[模型、镜头与标签清单](../../assets/reference/official-map/map16-world-view-source-manifest.json)。
+[`prepare_mainline_map15_world_view.py --map-id 16`](../../scripts/prepare_mainline_map15_world_view.py) 读取原3001模型／偏移／排序和原 `WorldCamera` 投影／适配参数，输出 `Resources/Map16/BaseGround/player-view` 与 `Native/region-label-data`。标签按原地区 ID 索引探索上限，保持原表枚举顺序，核对61项实际语言键，包含原倒计时格式所需的14项语言键；公共标签样式、位阶映射和字体仍分别保留历史输入凭据，不声称整个版本等价。来源见[模型、镜头与标签清单](../../assets/reference/official-map/map16-world-view-source-manifest.json)。
 
 公共网格输入已从当前所选版本单独提取：140×120网格、43份区域揭格列表、61份身体模板、1021个实体放置，资源为 `Resources/World/Mainline/Visibility/Map16/visibility` 与 `bodies`。原 `MapRoot_16` 完整雾层 subtree 与依赖为 `Resources/World/Mainline/Fog/Map16`。来源分别见[公共网格输入](../../assets/reference/official-map/mainline-grid-visibility-data-source-manifest.json)和[公共雾层](../../assets/reference/official-map/mainline-grid-fog-source-manifest.json)。这些当前版载荷尚未接入本图正式宿主。
 
-Unity 2022.3.57f1c2 内置屏隔离图形 Play Mode 已通过公共 `MainlineNativeGround` Interface 加载、释放和重新加载 Map15／16 原地面，检查原组件绑定、几何、URP／相机恢复，并实际查看两图各三张画面。鲸背岛以原入口坐标和显式地区夹具验证私有阴影、单区公开后的原 `MapEnvEffect.UnlockRegion`／区域灯演出及揭格回调，重新加载同一地区状态后画面一致。状态刷新本身不替代原区域激活动作；公共女神像路径已接入这项地面调用。该夹具使用测试相机、无角色／HUD、无模拟地图输入，也不验证位阶计时、完整正式宿主、存档或 Windows Player；隔离工程未执行全工程校验；另在正式 Unity 工程执行导入／编译和 `ProjectTools.Validate` 通过，静态元数据检查通过（87,399 GUID）。
+原 `MapRegionLimitStatusRefreshForRankUnlockTime` 的 UniTask 状态机已迁移，按原顺序取得地区开放时间、等待并刷新状态。公共标签通过每实例 `IMapRegionTime` 注入日期和位阶，保留原 `CultureTimeSpanArg` 的格式计算；只增加每实例语言服务注入，避免修改其他地图的全局语言。区域行的时间回调属于标签实例，不写回共享资源。当前版原倒计时格式源码与历史已迁移的该文件逐字节一致，外围程序集并不相同；来源及适配哈希见[地区时间清单](../../assets/reference/official-map/mainline-region-time-source-manifest.json)。
+
+Unity 2022.3.57f1c2 内置屏隔离图形 Play Mode 已通过公共 `MainlineNativeGround` Interface 加载、释放和重新加载 Map15／16 原地面，检查原组件绑定、几何、URP／相机恢复，并实际查看两图各三张画面。鲸背岛以原入口坐标和显式地区夹具验证私有阴影、单区公开后的原 `MapEnvEffect.UnlockRegion`／区域灯演出及揭格回调，重新加载保留同一区域灯光状态。状态刷新本身不替代原区域激活动作；公共女神像路径已接入这项地面调用。另核对原标签倒计时文字网格，实际查看位阶4倒计时、到期自动解除时间锁、另一未到期地区及其位阶5取消时间锁的四张运行画面。到期检查只推进注入时钟并等待原 UniTask 刷新，不直接调用业务回调或视图刷新。隔离工程按依赖闭包携带原字体、材质、TMP Settings 及其 shader include，文字不以非空字符串代替渲染验证。
+
+同一 Play Mode 使用本图实际43行地区配置检查各自14至32天偏移、边界前一秒／恰好到期、时间条件先于等级、较低／较高位阶和缺失日期分支。隔离角色档案通过现有 `SetPlayerProgress` 记录首次位阶4日期、重复赋值保留日期，并重新打开档案冷读核对。该夹具使用测试相机与显式角色／地区状态，无角色／HUD或模拟地图输入；不覆盖自然晋阶、正式地图入口、整图进度存档或 Windows Player。隔离工程不执行全工程校验；另在正式 Unity 工程执行导入／编译和 `ProjectTools.Validate` 通过，静态元数据检查已通过。
 
 ## 自定义实现
 
-地区时间门槛采用用户确认的单机规则：角色首次达到位阶4时记录本地时间，14天后满足原 `LimitServerRank=4`／`LimitServerRankUnlockDayOffset=14` 条件；其他地区继续使用各自原配置的15至32天偏移，复用同一位阶4起算时间。角色超过位阶4立即满足这些时间条件。绳索准备剧情、等级及其他原条件继续保留。此方案尚未接入本图正式宿主或完成存档与运行验证。
+地区时间门槛采用用户确认的单机规则：角色首次达到位阶4时记录本地时间，14天后满足原 `LimitServerRank=4`／`LimitServerRankUnlockDayOffset=14` 条件；其他地区继续使用各自原配置的15至32天偏移，复用同一位阶4起算时间。角色超过位阶4立即满足这些时间条件。绳索准备剧情、等级及其他原条件继续保留。`OfflineCharacterRankRegionTime` 消费现有角色 `RankUnlockTimes`，不应用服务器合服加速；现有晋阶事务保留已有首次日期。公共时间适配器及隔离存档／标签运行检查已完成，正式地图宿主仍待接入。
 
 沿用已确认的独立地图领奖方案：原客户端 `AloneWorldMapEntryItemContentCommonBase.FinshAward` 只发出 `OperPlayerAloneMapFinshAward(16)` 请求；单机按原奖励规则770／771发放钻石200、金币80000，奖励、剧情、随机状态与一次性领取记录同事务写盘，失败回滚，冷读后防重复。表现保留 `SourceOperate.AloneMapAward=222`、Popup 与原 `AwardPanel`。完整本地领取事务和原界面接线仍需实现与验证。
 

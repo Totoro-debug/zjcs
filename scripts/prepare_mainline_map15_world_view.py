@@ -77,6 +77,9 @@ def build(map_id=15):
     if not (native / f"Resources/Map{map_id}/Native/current-ground.prefab").is_file():
         raise ValueError(f"Bind the complete selected original Map{map_id} native ground first")
     required = {f"region_{map_id}_" + str(r["Region"]) for r in regions}
+    time_formatter = ROOT / 'unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/CultureTimeSpanArg.cs'
+    if any(r['LimitServerRank'] or r['ReleaseTimeId'] for r in regions):
+        required.update(re.findall(r'"((?:TwoDay|Day|Hour|Second|Minutes)Countdown[^"\n]*|time_[a-z_]+)"', time_formatter.read_text('utf8')))
     prefab_inputs = []
     for prefab in sorted(native.rglob("*.prefab")):
         text = prefab.read_text(encoding="utf8")
@@ -111,6 +114,7 @@ def build(map_id=15):
         schema_assembly=assembly, prepared_code=record(prepared_path), schema_types=sorted(schemas.records),
         configuration_input=record(definition_path), historical_shared_inputs=[record(shared_path), record(ui_path)],
         tool=record(Path(__file__)), outputs=outputs,
+        time_formatter=record(time_formatter),
         operation=f"Read original common 3001 player model/offset/sorting and WorldCamera projection/adaptor. Bind original Map{map_id} region rows, native prefab language keys and verified selected language. Index progress maxima by region ID while retaining original row order. Shared historical label themes/rank mapping retain explicit input identities; no full-version equivalence is asserted.")
     write(ROOT / f"assets/reference/official-map/map{map_id}-world-view-source-manifest.json", encode(proof))
     apk.archive.close()

@@ -36,6 +36,8 @@
 
 公共原生地面转换器 `GroundBinding` 以 `GroundSource` 显式接收地图 ID、原 prefab 地址和 bundle；Map15 的原 GUID 保持不变，Map16 采用独立范围。地图定义和角色／镜头／标签数据提取同样按地图 ID 消费实际官方输入，尚未迁移的地图不自动注册。`MainlineNativeGround.UnlockRegion` 保留原环境激活动作与揭格回调顺序，区别于普通状态刷新；女神像的公共地面调用使用该 Interface。两图已通过隔离图形 Play Mode 的同一宿主生命周期夹具，具体范围及缺口见[鲸背岛](../maps/map-16.md)。所用 CustomWater.dll 已与当前所选版本逐字节核对一致，仅此程序集可复用原水面代码凭据，不能据此认定其他历史输入等价。
 
+原地区倒计时通过 `IMapRegionTime` 注入地区开放日期、当前时间和角色位阶，标签消费原刷新状态机及原时间格式；日期规则不散落在地形或 HUD 中。`OfflineCharacterRankRegionTime` 使用现有角色进度存档，标签只绑定自身地区副本和语言服务。已确认的本地日期策略、43区边界／存档检查与原倒计时画面范围集中见[鲸背岛](../maps/map-16.md)，正式地图宿主的接入尚未完成。代码与来源见[地区时间清单](../../assets/reference/official-map/mainline-region-time-source-manifest.json)。
+
 入口组件保留原 MonoScript GUID 和 `MovedFrom`；纯 C# 模块沿用原脚本 `.meta`，原 prefab、层级、坐标、动画、数值、执行次序与存档 DTO 保持兼容。`OfficialMainlineUiCatalog` 按当前 `MapProfile.NativeUiRoot` 缓存原 UI 目录，HUD、雕像、奖励列表、探寻与小地图共用它；通用文本不再由女神像持有或加载。
 
 | 模块 | 当前代码与复用范围 |

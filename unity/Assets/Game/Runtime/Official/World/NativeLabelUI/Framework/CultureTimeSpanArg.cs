@@ -7,14 +7,18 @@ using System.Collections.Generic;
 
 public sealed class CultureTimeSpanArg : ArgBase
 {
+    private readonly ICultureTextFormatter text;
+    private ICultureTextFormatter Text => text ?? Culture.Text;
 	public TimeSpan Value { get; }
 
 	public ETimeSpanFormatType Format { get; }
 
-	public CultureTimeSpanArg(TimeSpan value, ETimeSpanFormatType format = ETimeSpanFormatType.Normal)
+	public CultureTimeSpanArg(TimeSpan value, ETimeSpanFormatType format = ETimeSpanFormatType.Normal,
+        ICultureTextFormatter text = null)
 	{
 		Value = value;
 		Format = format;
+        this.text = text;
 	}
 
 	public override string ToString()
@@ -39,17 +43,17 @@ public sealed class CultureTimeSpanArg : ArgBase
 		{
 			if (totalHours <= 0.0)
 			{
-				return Culture.Text.GetTextFormatted("TwoDayCountdown", num);
+				return Text.GetTextFormatted("TwoDayCountdown", num);
 			}
-			return Culture.Text.GetTextFormatted("TwoDayCountdown2", num, Value.Hours);
+			return Text.GetTextFormatted("TwoDayCountdown2", num, Value.Hours);
 		}
 		if (num >= 1)
 		{
 			if (totalHours <= 0.0)
 			{
-				return Culture.Text.GetTextFormatted("DayCountdown", num);
+				return Text.GetTextFormatted("DayCountdown", num);
 			}
-			return Culture.Text.GetTextFormatted("DayCountdown2", num, Value.Hours);
+			return Text.GetTextFormatted("DayCountdown2", num, Value.Hours);
 		}
 		if (totalHours >= 1.0)
 		{
@@ -66,25 +70,25 @@ public sealed class CultureTimeSpanArg : ArgBase
 		{
 			if (totalHours <= 0.0)
 			{
-				return Culture.Text.GetTextFormatted("DayCountdown", (int)totalDays);
+				return Text.GetTextFormatted("DayCountdown", (int)totalDays);
 			}
-			return Culture.Text.GetTextFormatted("DayCountdown2", (int)totalDays, Value.Hours);
+			return Text.GetTextFormatted("DayCountdown2", (int)totalDays, Value.Hours);
 		}
 		if (totalHours >= 1.0)
 		{
-			return Culture.Text.GetTextFormatted("time_hour", (int)totalHours);
+			return Text.GetTextFormatted("time_hour", (int)totalHours);
 		}
 		double totalMinutes = Value.TotalMinutes;
 		if (totalMinutes >= 1.0)
 		{
-			return Culture.Text.GetTextFormatted("time_minute", (int)totalMinutes);
+			return Text.GetTextFormatted("time_minute", (int)totalMinutes);
 		}
 		double totalSeconds = Value.TotalSeconds;
 		if (totalSeconds > 0.0)
 		{
-			return Culture.Text.GetTextFormatted("time_second", (int)Math.Ceiling(totalSeconds));
+			return Text.GetTextFormatted("time_second", (int)Math.Ceiling(totalSeconds));
 		}
-		return Culture.Text.GetTextFormatted("time_end");
+		return Text.GetTextFormatted("time_end");
 	}
 
 	private string ToDetailString()
@@ -105,7 +109,7 @@ public sealed class CultureTimeSpanArg : ArgBase
 		{
 			text = ((!(totalMinutes >= 1.0)) ? "SecondCountdownDetail" : "MinutesCountdownDetail");
 		}
-		string text2 = Culture.Text.GetText(text);
+		string text2 = Text.GetText(text);
 		if (text2 == text)
 		{
 			return text;
@@ -118,24 +122,24 @@ public sealed class CultureTimeSpanArg : ArgBase
 		double totalDays = Value.TotalDays;
 		if (totalDays >= 1.0)
 		{
-			return Culture.Text.GetTextFormatted("DayCountdown", isFloor ? ((long)totalDays) : ((long)Math.Ceiling(totalDays)));
+			return Text.GetTextFormatted("DayCountdown", isFloor ? ((long)totalDays) : ((long)Math.Ceiling(totalDays)));
 		}
 		double totalHours = Value.TotalHours;
 		if (totalHours >= 1.0)
 		{
-			return Culture.Text.GetTextFormatted("time_hour", isFloor ? ((long)totalHours) : ((long)Math.Ceiling(totalHours)));
+			return Text.GetTextFormatted("time_hour", isFloor ? ((long)totalHours) : ((long)Math.Ceiling(totalHours)));
 		}
 		double totalMinutes = Value.TotalMinutes;
 		if (totalMinutes >= 1.0)
 		{
-			return Culture.Text.GetTextFormatted("time_minute", isFloor ? ((long)totalMinutes) : ((long)Math.Ceiling(totalMinutes)));
+			return Text.GetTextFormatted("time_minute", isFloor ? ((long)totalMinutes) : ((long)Math.Ceiling(totalMinutes)));
 		}
 		double totalSeconds = Value.TotalSeconds;
 		if (totalSeconds > 0.0)
 		{
-			return Culture.Text.GetTextFormatted("time_second", (long)Math.Ceiling(totalSeconds));
+			return Text.GetTextFormatted("time_second", (long)Math.Ceiling(totalSeconds));
 		}
-		return Culture.Text.GetTextFormatted("time_end");
+		return Text.GetTextFormatted("time_end");
 	}
 
 	private string ToAdaptedString()
@@ -144,26 +148,26 @@ public sealed class CultureTimeSpanArg : ArgBase
 		int days = Value.Days;
 		if (days != 0)
 		{
-			list.Add(Culture.Text.GetTextFormatted("time_day", days));
+			list.Add(Text.GetTextFormatted("time_day", days));
 		}
 		int hours = Value.Hours;
 		if (hours != 0)
 		{
-			list.Add(Culture.Text.GetTextFormatted("time_hour", hours));
+			list.Add(Text.GetTextFormatted("time_hour", hours));
 		}
 		int minutes = Value.Minutes;
 		if (minutes != 0)
 		{
-			list.Add(Culture.Text.GetTextFormatted("time_minute_abbreviation", minutes));
+			list.Add(Text.GetTextFormatted("time_minute_abbreviation", minutes));
 		}
 		int seconds = Value.Seconds;
 		if (seconds != 0)
 		{
-			list.Add(Culture.Text.GetTextFormatted("time_second", seconds));
+			list.Add(Text.GetTextFormatted("time_second", seconds));
 		}
 		if (list.Count == 0)
 		{
-			list.Add(Culture.Text.GetTextFormatted("time_second", 0));
+			list.Add(Text.GetTextFormatted("time_second", 0));
 		}
 		return string.Join(string.Empty, list);
 	}

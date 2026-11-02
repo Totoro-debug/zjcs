@@ -912,8 +912,11 @@ namespace Zjcs.Offline.Progression
                 {
                     OfflineRankUnlockTime unlock = player.RankUnlockTimes.FirstOrDefault(value => value.Rank == player.Rank);
                     if (unlock == null)
-                        player.RankUnlockTimes.Add(unlock = new OfflineRankUnlockTime { Rank = player.Rank });
-                    unlock.UnixSeconds = DateTimeOffset.Now.ToUnixTimeSeconds();
+                        player.RankUnlockTimes.Add(new OfflineRankUnlockTime
+                        {
+                            Rank = player.Rank,
+                            UnixSeconds = DateTimeOffset.Now.ToUnixTimeSeconds()
+                        });
                 }
                 RefreshDerivedProgress(player);
             }, eventId);

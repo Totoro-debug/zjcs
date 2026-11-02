@@ -62,6 +62,10 @@ def main():
     shared = (source / 'Assets/Game/Resources/Map12/Native/world-assets.asset').read_bytes()
     pending = [index[re.search(rb'(?m)^  ' + name + rb':.*guid: ([a-f0-9]{32})', shared)[1]]
         for name in (b'Pipeline', b'EnvironmentData', b'Font')]
+    pending.append(source / 'Assets/Game/Resources/Map14/world-alone-preparation.json')
+    # Package TextMeshPro.Awake waits for this Resources asset in the editor;
+    # a serialized text component alone otherwise never generates its mesh.
+    pending.append(source / 'Assets/TextMesh Pro/Resources/TMP Settings.asset')
     for map_id in (15, 16):
         pending.append(source / f'Assets/Official/World/Map/{map_id}/NativeCurrent/Resources/Map{map_id}/Native/current-ground.prefab')
         pending.extend((source / f'Assets/Game/Resources/Map{map_id}/Native').glob('*.json'))
@@ -81,6 +85,13 @@ def main():
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(path, target)
         raw = asset.read_bytes()
+        if asset.suffix in ('.shader', '.cginc'):
+            for name in re.findall(rb'#include\s+"([^"\r\n]+)"', raw):
+                include = asset.parent / name.decode('utf8')
+                if include.is_file():
+                    pending.append(include)
+                elif name.startswith(b'TMPro_'):
+                    raise ValueError('Missing original TMP shader include: ' + str(include))
         if raw.startswith(b'%YAML'):
             for guid in set(re.findall(rb'guid: ([a-f0-9]{32})', raw)):
                 if guid.startswith(b'000000') or guid in package_guids:
