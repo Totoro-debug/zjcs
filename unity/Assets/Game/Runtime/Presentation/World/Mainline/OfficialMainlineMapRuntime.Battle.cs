@@ -507,7 +507,13 @@ namespace Zjcs.Presentation.World
                 LeaveBattle();
         }
 
-        public void OnBattleStepCompleted(FightBattleExecutionResult result) { }
+        public void OnBattleStepCompleted(FightBattleExecutionResult result)
+        {
+            // The shared controller emits a checkpoint after every resolved action. Keep the
+            // map resume payload on the same cadence; SaveActiveBattle throttles disk writes.
+            if (result?.Checkpoint != null && !result.Checkpoint.Finished)
+                SaveActiveBattle(false);
+        }
 
         public void OnBattleReportReady(FightBattleReport report) { }
 
