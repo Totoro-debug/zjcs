@@ -36,7 +36,7 @@
 
 ## 完整还原部分
 
-官方 `MyPlayableAnimation`、`MyPlayableDefault` 和 `MyPlayableRenderSortLayer` 已迁入 StoryPlayables，分别保留 Animation 动作播放、Transform 持续时间节点以及 Renderer 排序层／排序序号设置；来源见[动作 Playable 来源清单](../../assets/reference/battle-animation/skill-animation-playable-runtime-source-manifest.json)。
+官方 `MyPlayableAnimation`、`MyPlayableDefault`、`MyPlayableRenderSortLayer`、`MyPlayableLight` 和 `MyPlayableLight2D` 已迁入 StoryPlayables，保留动作播放、Transform 持续时间、Renderer 排序以及 Light／Light2D 强度曲线和循环行为；来源见[动作 Playable 来源清单](../../assets/reference/battle-animation/skill-animation-playable-runtime-source-manifest.json)。
 
 官方 `ApplyOverrideToMaster` 已迁入：按 `UseSourceDataToOverride` 从原施法者或目标查找角色母体，再按 `OverrideSource` 替换 Playable 的 source 或 target；scope 通过显式 `IBattleMasterEntityResolver` 提供母体查询。Editor Play Mode 验收入口已覆盖两种替换方向，但本次隔离工程全量导入超时，尚未取得这两条断言的运行结果。生产实体容器尚无 `MasterId → GameObject` resolver 绑定，完整技能图与生产调度仍未接通；官方来源与范围见[母体覆盖来源凭据](../../assets/reference/battle-animation/skill-master-override-runtime-source-manifest.json)。
 

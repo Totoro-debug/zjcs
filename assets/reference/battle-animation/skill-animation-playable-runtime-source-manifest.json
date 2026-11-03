@@ -13,6 +13,14 @@
     {
       "path": ".tools/source-packages/official-code/client-source/MyPlayableRenderSortLayer.cs",
       "sha256": "873ff93c9c493470fd1a61bba8c8e6c125fba370d4dc7b081bfe72031c0634bd"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/MyPlayableLight.cs",
+      "sha256": "ce777e83f4bee1c6e630b2218ab2a1cbfdd6643a3d167db7b1eb7f5357ded9d1"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/MyPlayableLight2D.cs",
+      "sha256": "afc273cfcab127ccbe968f359e719e2fd8f7d695daad33f57eca18ed83111f34"
     }
   ],
   "migrated_outputs": [
@@ -27,6 +35,14 @@
     {
       "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableRenderSortLayer.cs",
       "sha256": "78c86f324da9d7298851e240dcdb349469a2517c78c3a76718a477d81514a489"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableLight.cs",
+      "sha256": "abcdc7542feb5fd029175994a50a3a7e54b83c0029c5c3b0f8a2bc63681a3a0b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableLight2D.cs",
+      "sha256": "c46efc2411626b60c379b438463019588b936f5664190a100843afc28e28d4be"
     }
   ],
   "meta_outputs": [
@@ -41,8 +57,16 @@
     {
       "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableRenderSortLayer.cs.meta",
       "sha256": "1e5369978f1f6973b3fc059cb9369b72da788b4e55fc6a425dbac8c440a60044"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableLight.cs.meta",
+      "sha256": "643f88b2420f72683777a243c06176fcb5c445e0ef872624fb0cf13c0e2aca38"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableLight2D.cs.meta",
+      "sha256": "e6be50ea1cb63664b9491c31ff4df81912fecb475a0157f267e0a18677b06721"
     }
   ],
-  "adaptation": "Preserve the official Animation target, serialized animation name, Play call and duration, plus the Transform-only duration node and Renderer sorting-layer/sorting-order node. The classes use the existing MyPlayableApply lifecycle.",
+  "adaptation": "Preserve the official Animation target, serialized animation name, Play call and duration, plus the Transform-only duration node, Renderer sorting-layer/sorting-order node, and Light/Light2D intensity curves, looping and duration. The classes use the existing MyPlayableApply lifecycle.",
   "runtime_validation": "Static Unity metadata validation passed. Unity import/compile and Play Mode execution remain pending because the shared full-project import is currently blocked by concurrent project changes and the isolated import timed out."
 }
