@@ -26,7 +26,10 @@ class MainlineEntityScriptBindingAuditTests(unittest.TestCase):
         )
         self.source_file = self.source_root / "Demo/MapEntity.cs"
         self.source_file.parent.mkdir(parents=True)
-        self.source_file.write_text("namespace Demo\n{\n    public class MapEntity {}\n}\n", encoding="utf-8")
+        self.source_file.write_text(
+            "namespace Demo\n{\n    public class MapEntity\n    {\n        public int serializedConfig;\n    }\n}\n",
+            encoding="utf-8",
+        )
         self.runtime_file = self.runtime_root / "Demo/MapEntity.cs"
         self.runtime_file.parent.mkdir(parents=True)
         self.runtime_file.write_text(
@@ -66,6 +69,8 @@ class MainlineEntityScriptBindingAuditTests(unittest.TestCase):
             "runtime_type_matches": 1, "runtime_type_missing": 0,
             "runtime_name_candidates": 1,
             "candidate_field_name_matches": 1,
+            "candidate_field_type_differences": 0,
+            "candidate_field_types_match": 1,
         })
         script = result["scripts"][0]
         self.assertEqual((script["namespace"], script["type"]), ("Demo", "MapEntity"))
@@ -73,6 +78,7 @@ class MainlineEntityScriptBindingAuditTests(unittest.TestCase):
         self.assertEqual(script["runtime_name_candidates"], script["runtime"])
         self.assertEqual(script["serialized_fields"], ["serializedConfig"])
         self.assertEqual(script["runtime_name_candidates"][0]["serialized_field_names_missing"], [])
+        self.assertEqual(script["runtime_name_candidates"][0]["serialized_field_types_unresolved"], [])
 
     def test_rejects_prefab_that_does_not_match_export_receipt(self):
         self.prefab_path.write_text("changed", encoding="utf-8")
@@ -98,6 +104,19 @@ class MainlineEntityScriptBindingAuditTests(unittest.TestCase):
         self.assertEqual(result["scripts"][0]["runtime_name_candidates"][0]["serialized_field_names_missing"],
                          ["serializedConfig"])
         self.assertEqual(result["counts"]["candidate_field_name_matches"], 0)
+
+    def test_reports_serialized_field_type_differences(self):
+        self.runtime_file.write_text(
+            "namespace Demo\n{\n    public class MapEntity\n    {\n        public long serializedConfig;\n    }\n}\n",
+            encoding="utf-8",
+        )
+        result = build(16, self.roots_path, self.export_path,
+                       self.source_root, self.runtime_root, self.root)
+        self.assertEqual(result["scripts"][0]["runtime_name_candidates"][0]["serialized_field_type_differences"], [{
+            "field": "serializedConfig", "source_types": ["int"], "runtime_types": ["long"],
+        }])
+        self.assertEqual(result["counts"]["candidate_field_type_differences"], 1)
+        self.assertEqual(result["counts"]["candidate_field_types_match"], 0)
 
     def test_preserves_unresolved_client_script_ids(self):
         unknown = script_file_id("Demo", "MissingEntity")

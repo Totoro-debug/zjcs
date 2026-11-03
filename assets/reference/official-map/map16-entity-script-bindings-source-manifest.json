@@ -22,8 +22,8 @@
   "runtime_source_policy": "Only clean tracked working-tree files are considered; modified and untracked runtime files are excluded.",
   "generator": {
     "path": "scripts/audit_mainline_entity_script_bindings.py",
-    "sha256": "fdaf80b84ec9500e8856273d707608f8614812f9364333f65eb8b3db45a06a3a",
-    "bytes": 12435
+    "sha256": "3abdf17518f5904ea19e41d605332910f27a391330a617264be1533ba9250dd1",
+    "bytes": 14542
   },
   "counts": {
     "client_script_ids": 103,
@@ -31,7 +31,9 @@
     "runtime_type_matches": 0,
     "runtime_type_missing": 103,
     "runtime_name_candidates": 39,
-    "candidate_field_name_matches": 20
+    "candidate_field_name_matches": 20,
+    "candidate_field_type_differences": 7,
+    "candidate_field_types_match": 14
   },
   "scripts": [
     {
@@ -103,7 +105,9 @@
             "bytes": 251
           },
           "guid": "4a24fa9e74ff8eb37f0e012bf7162441",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [
@@ -204,7 +208,9 @@
             "bytes": 240
           },
           "guid": "5197bffd156702458fc536b70bd13ed9",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [],
@@ -289,7 +295,9 @@
             "bytes": 240
           },
           "guid": "2ab4e0d775d70f0914067f770b8d1e81",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [
@@ -341,7 +349,9 @@
             "bytes": 187
           },
           "guid": "0225563e4b1c58c6b3de928c6a46cc73",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [
@@ -439,7 +449,9 @@
             "bytes": 251
           },
           "guid": "05074565bf59198624f0ca85603a5c0d",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [
@@ -487,7 +499,14 @@
             "TextureLoaderGuid",
             "mPartHandler",
             "mSkeletonRenderer"
-          ]
+          ],
+          "serialized_field_types_unresolved": [
+            "SkinTextureAssetGuid",
+            "TextureLoaderGuid",
+            "mPartHandler",
+            "mSkeletonRenderer"
+          ],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [
@@ -581,7 +600,19 @@
             "bytes": 251
           },
           "guid": "0c3208fc280a871ae5c29010ecdfdc19",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": [
+            {
+              "field": "mMyEntity",
+              "source_types": [
+                "MyEntity"
+              ],
+              "runtime_types": [
+                "ECViewEntityBinding"
+              ]
+            }
+          ]
         }
       ],
       "serialized_fields": [
@@ -670,7 +701,19 @@
             "bytes": 240
           },
           "guid": "b2a54dc1ab99416861b29e907bdd86f3",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": [
+            {
+              "field": "mPriority",
+              "source_types": [
+                "AwardManager.AwardHandlerPriority"
+              ],
+              "runtime_types": [
+                "EntityAwardHandlerPriority"
+              ]
+            }
+          ]
         }
       ],
       "serialized_fields": [
@@ -778,7 +821,9 @@
             "bytes": 240
           },
           "guid": "6c33245f5b5d01e118b0e34d8685508d",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         },
         {
           "namespace": "Zjcs.Official.World.Map13Attachment",
@@ -793,7 +838,9 @@
             "bytes": 187
           },
           "guid": "557039ef2d10571fba1d489811783b81",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [
@@ -864,7 +911,9 @@
             "bytes": 251
           },
           "guid": "3923a93fbfd7328a0064ab6bbb3c5412",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [],
@@ -1029,7 +1078,9 @@
             "bytes": 240
           },
           "guid": "cb5ffd3b0d327bb7f062a6fdb3a2f6be",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [],
@@ -1068,7 +1119,9 @@
             "bytes": 240
           },
           "guid": "f6a35a33db723a53d3e583f04365569c",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [],
@@ -1230,7 +1283,9 @@
             "bytes": 251
           },
           "guid": "3dfa5640c04901447a4ea83d0aaceed7",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [
@@ -1294,7 +1349,28 @@
             "bytes": 60
           },
           "guid": "b18cdec6c89198bae959e0b9eeae3eb1",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": [
+            {
+              "field": "IconMeHpSlider",
+              "source_types": [
+                "PlayerIconMeHpSlider"
+              ],
+              "runtime_types": [
+                "Component"
+              ]
+            },
+            {
+              "field": "PanelPopupSceneType",
+              "source_types": [
+                "PlayerInfoPanelBase.PanelPopupSceneType"
+              ],
+              "runtime_types": [
+                "int"
+              ]
+            }
+          ]
         }
       ],
       "serialized_fields": [
@@ -1371,7 +1447,9 @@
             "bytes": 251
           },
           "guid": "e11eda0d4257e65c871a5a4c72805465",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [],
@@ -1509,7 +1587,9 @@
             "bytes": 240
           },
           "guid": "c15222ca9046d327e8d06824fbb58f8c",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [],
@@ -1664,7 +1744,9 @@
             "bytes": 240
           },
           "guid": "46f63f6b784be179ce3666bf00c5f29b",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [],
@@ -1804,7 +1886,9 @@
             "bytes": 251
           },
           "guid": "2fd25e3a13f9149396a66518de79159b",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [
@@ -1859,7 +1943,9 @@
             "bytes": 240
           },
           "guid": "5e6eb9222b9aa4ddf30148f2f3fc7a78",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [],
@@ -1938,7 +2024,9 @@
             "bytes": 240
           },
           "guid": "270c0c140771702d7a738fcef6072145",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [],
@@ -2036,7 +2124,28 @@
             "bytes": 60
           },
           "guid": "579b7bca63ba39df17b3531e70a1e3f6",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": [
+            {
+              "field": "RenderExistingMeshes",
+              "source_types": [
+                "List<CustomRenderExistingMesh>"
+              ],
+              "runtime_types": [
+                "List<Component>"
+              ]
+            },
+            {
+              "field": "SkeletonRenderer",
+              "source_types": [
+                "SkeletonRenderer"
+              ],
+              "runtime_types": [
+                "Component"
+              ]
+            }
+          ]
         }
       ],
       "serialized_fields": [
@@ -2125,7 +2234,9 @@
             "bytes": 240
           },
           "guid": "a5d95b8262d98223a6671058c3472004",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [
@@ -2179,7 +2290,15 @@
             "mSkeletonRenderer",
             "mSlot",
             "mSortingLayer"
-          ]
+          ],
+          "serialized_field_types_unresolved": [
+            "IgnoreSkinTypes",
+            "mDefaultSortingOrder",
+            "mSkeletonRenderer",
+            "mSlot",
+            "mSortingLayer"
+          ],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [
@@ -2257,7 +2376,28 @@
             "bytes": 60
           },
           "guid": "fca05a2acfb99374aa9ad763f6a01d2c",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": [
+            {
+              "field": "mAppearanceCharacter",
+              "source_types": [
+                "AppearanceCharacter"
+              ],
+              "runtime_types": [
+                "Component"
+              ]
+            },
+            {
+              "field": "mAppearanceSpine",
+              "source_types": [
+                "AppearanceSpine"
+              ],
+              "runtime_types": [
+                "Component"
+              ]
+            }
+          ]
         }
       ],
       "serialized_fields": [
@@ -2297,7 +2437,9 @@
             "bytes": 252
           },
           "guid": "6b6c8d9caa63a035e2484ff8197e78dc",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         },
         {
           "namespace": "Zjcs.Official.SteleEntities",
@@ -2312,7 +2454,9 @@
             "bytes": 241
           },
           "guid": "037ee7036207d06ad92a8ebc0e039521",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [],
@@ -2473,7 +2617,9 @@
             "bytes": 240
           },
           "guid": "41a0ead55177bf087a1386cdde96e231",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [],
@@ -2512,7 +2658,9 @@
             "bytes": 251
           },
           "guid": "eb314f5494eaf925f4a4fbd315f1e222",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         },
         {
           "namespace": "Zjcs.Official.World.Map13MiniMap",
@@ -2527,7 +2675,9 @@
             "bytes": 149
           },
           "guid": "a3c7a0ee0561289d87ccc4e58665e1ae",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [],
@@ -2595,7 +2745,9 @@
             "bytes": 240
           },
           "guid": "30834a9ebaeb176b0b225efa08a97b87",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [],
@@ -2688,7 +2840,9 @@
             "bytes": 251
           },
           "guid": "8f6e1821a3db87dc5284f893b9e209f8",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [
@@ -2745,7 +2899,9 @@
             "bytes": 169
           },
           "guid": "f662e5d7b5ed953f1e09b59b688a7bda",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [
@@ -2955,7 +3111,9 @@
             "bytes": 60
           },
           "guid": "2469f436c8646020642edda723fa9580",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [],
@@ -3045,7 +3203,9 @@
             "bytes": 240
           },
           "guid": "6b6877e0fecf9f49197626935cdeec11",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [],
@@ -3118,7 +3278,9 @@
             "bytes": 251
           },
           "guid": "1a61d2a171b1beb0621708736b48f910",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [
@@ -3219,7 +3381,13 @@
             "AppearanceCharacter",
             "AppendSkinType",
             "mAppearanceInfoList"
-          ]
+          ],
+          "serialized_field_types_unresolved": [
+            "AppearanceCharacter",
+            "AppendSkinType",
+            "mAppearanceInfoList"
+          ],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [
@@ -3421,7 +3589,9 @@
             "bytes": 251
           },
           "guid": "546d8ffec4f37a09cef60b34b48f862c",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [
@@ -3459,7 +3629,19 @@
             "bytes": 251
           },
           "guid": "b7171e742f2aaab4474344b11e556539",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": [
+            {
+              "field": "mSkeletonRenderer",
+              "source_types": [
+                "SkeletonRenderer"
+              ],
+              "runtime_types": [
+                "NativeActorFadeRenderer"
+              ]
+            }
+          ]
         }
       ],
       "serialized_fields": [
@@ -3642,7 +3824,9 @@
             "bytes": 240
           },
           "guid": "b28bbf320bb4bf4c2662a3d825ea9f53",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [],
@@ -3815,7 +3999,9 @@
             "bytes": 187
           },
           "guid": "24b927401af15f39a0ac5f142b4e129b",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         }
       ],
       "serialized_fields": [
@@ -3870,7 +4056,9 @@
             "bytes": 60
           },
           "guid": "8b2446d274ac5a3880149798351c0efe",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": []
         },
         {
           "namespace": "Zjcs.Official.ProfessionUI",
@@ -3885,7 +4073,19 @@
             "bytes": 60
           },
           "guid": "be482acf769b62f2d8594a50af181dfa",
-          "serialized_field_names_missing": []
+          "serialized_field_names_missing": [],
+          "serialized_field_types_unresolved": [],
+          "serialized_field_type_differences": [
+            {
+              "field": "mPartHandler",
+              "source_types": [
+                "AppearancePartHandler"
+              ],
+              "runtime_types": [
+                "Component"
+              ]
+            }
+          ]
         }
       ],
       "serialized_fields": [
@@ -3917,8 +4117,8 @@
     }
   ],
   "limitations": [
-    "Type-name and namespace matches do not prove serialized field type compatibility, Windows asset readiness, or runtime behavior.",
-    "Serialized field checks compare names only against declarations in the candidate source file; they do not verify field types, inheritance, or Unity deserialization.",
+    "Field type comparisons use C# source spelling and declarations found by a source scan; they do not resolve aliases, inheritance, generics, or Unity object assignability.",
+    "Matching serialized field names and type spellings do not prove Unity deserialization, Windows asset readiness, or runtime behavior.",
     "The source and runtime paths are evidence for follow-up binding work; this audit does not rewrite prefab YAML."
   ]
 }

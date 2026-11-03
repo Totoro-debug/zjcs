@@ -23,10 +23,10 @@ SCRIPT_REFERENCE = re.compile(
     r"(?m)^\s*m_Script:\s*\{fileID:\s*(-?\d+),\s*guid:\s*([0-9a-f]{32})"
 )
 SERIALIZED_FIELD = re.compile(r"(?m)^  ([A-Za-z_]\w*):")
-CS_FIELD = re.compile(
+CS_FIELD_DECLARATION = re.compile(
     r"(?m)^\s*(?:public|private|protected|internal)\s+"
     r"(?:(?:static|readonly|new|virtual|override|sealed|const)\s+)*"
-    r"[\w<>,\[\].?]+\s+(\w+)\s*(?:[;={])"
+    r"([\w<>,.\[\]?]+)\s+(\w+)\s*(?:[;={])"
 )
 UNITY_MONO_BEHAVIOUR_FIELDS = {
     "m_ObjectHideFlags", "m_CorrespondingSourceObject", "m_PrefabInstance",
@@ -176,10 +176,31 @@ def build(map_id: int, roots_path: Path, export_path: Path, source_root: Path,
         candidates = runtime_by_type.get((source["namespace"], source["type"]), []) if source else []
         same_name = runtime_by_name.get(source["type"], []) if source else []
         prefab_fields = sorted(serialized_fields.get(file_id, set()))
+        source_field_types: dict[str, set[str]] = {}
+        if source:
+            for identity in source["paths"]:
+                source_text = (repository_root / identity["path"]).read_text(encoding="utf-8-sig", errors="ignore")
+                for field_type, field_name in CS_FIELD_DECLARATION.findall(source_text):
+                    source_field_types.setdefault(field_name, set()).add(field_type)
         for candidate in same_name:
-            runtime_fields = set(CS_FIELD.findall(
-                (repository_root / candidate["script"]["path"]).read_text(encoding="utf-8-sig", errors="ignore")))
+            runtime_text = (repository_root / candidate["script"]["path"]).read_text(
+                encoding="utf-8-sig", errors="ignore")
+            runtime_declarations = CS_FIELD_DECLARATION.findall(runtime_text)
+            runtime_fields = {field_name for _, field_name in runtime_declarations}
+            runtime_field_types: dict[str, set[str]] = {}
+            for field_type, field_name in runtime_declarations:
+                runtime_field_types.setdefault(field_name, set()).add(field_type)
             candidate["serialized_field_names_missing"] = sorted(set(prefab_fields) - runtime_fields)
+            candidate["serialized_field_types_unresolved"] = sorted(
+                field_name for field_name in prefab_fields
+                if not source_field_types.get(field_name) or not runtime_field_types.get(field_name))
+            candidate["serialized_field_type_differences"] = [
+                {"field": field_name, "source_types": sorted(source_field_types[field_name]),
+                 "runtime_types": sorted(runtime_field_types[field_name])}
+                for field_name in prefab_fields
+                if field_name in source_field_types and field_name in runtime_field_types
+                and source_field_types[field_name] != runtime_field_types[field_name]
+            ]
         scripts.append({
             "fileID": file_id,
             "type": source["type"] if source else None,
@@ -212,11 +233,21 @@ def build(map_id: int, roots_path: Path, export_path: Path, source_root: Path,
                 bool(row["serialized_fields"]) and any(
                     not candidate["serialized_field_names_missing"] for candidate in row["runtime_name_candidates"])
                 for row in scripts),
+            "candidate_field_type_differences": sum(
+                bool(candidate["serialized_field_type_differences"])
+                for row in scripts for candidate in row["runtime_name_candidates"]),
+            "candidate_field_types_match": sum(
+                bool(row["serialized_fields"]) and any(
+                    not candidate["serialized_field_names_missing"]
+                    and not candidate["serialized_field_types_unresolved"]
+                    and not candidate["serialized_field_type_differences"]
+                    for candidate in row["runtime_name_candidates"])
+                for row in scripts),
         },
         "scripts": scripts,
         "limitations": [
-            "Type-name and namespace matches do not prove serialized field type compatibility, Windows asset readiness, or runtime behavior.",
-            "Serialized field checks compare names only against declarations in the candidate source file; they do not verify field types, inheritance, or Unity deserialization.",
+            "Field type comparisons use C# source spelling and declarations found by a source scan; they do not resolve aliases, inheritance, generics, or Unity object assignability.",
+            "Matching serialized field names and type spellings do not prove Unity deserialization, Windows asset readiness, or runtime behavior.",
             "The source and runtime paths are evidence for follow-up binding work; this audit does not rewrite prefab YAML.",
         ],
     }
