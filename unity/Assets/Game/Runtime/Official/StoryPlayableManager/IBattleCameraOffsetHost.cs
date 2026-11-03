@@ -37,4 +37,17 @@ namespace Zjcs.Official.StoryPlayableManager
     {
         void BindAfterimageHost(IBattleAfterimageHost host);
     }
+
+    public interface IBattleCameraPerformanceHost
+    {
+        long BlockGameObjectInput();
+        void UnblockGameObjectInput(long operationId);
+        void SwitchInPerformanceCamera();
+        void SwitchOutPerformanceCamera();
+    }
+
+    public interface IBattleCameraPerformancePlayable
+    {
+        void BindCameraPerformanceHost(IBattleCameraPerformanceHost host);
+    }
 }

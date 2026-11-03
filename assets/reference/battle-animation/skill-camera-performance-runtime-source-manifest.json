@@ -1,0 +1,44 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "official_client_sources": [
+    {
+      "path": ".tools/source-packages/official-code/client-source/MyPlayableFightCameraPerformance.cs",
+      "sha256": "c46b62368c8f985f9f5508e61eebf92b6959319ac1f8d9d9b715e898d173277b"
+    }
+  ],
+  "migrated_outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableFightCameraPerformance.cs",
+      "sha256": "138437256925347939b1882b3e583a00a3440260b62ba2c639f0bd9b78111256"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/IBattleCameraOffsetHost.cs",
+      "sha256": "b46e86834e66a0198dc2f28700086e401ac60fc8fd4506682e2c5823ad05e603"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleNativePlayableScope.cs",
+      "sha256": "b971ca1aa9f6dafc2b531ea57e0536445d268618ac46670f65aa31ab77366b93"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/BattleCameraPerformancePlayableAcceptance.cs",
+      "sha256": "cda79d8f8a064b739d271e9e12f8334a7235bb129793c00e00eba1b46e861d9f"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/Zjcs.Editor.Combat.asmdef",
+      "sha256": "505c16d5dfb4c1d9da70c66fe676cbbebf042862e35f82001caf785d709eaa1a"
+    }
+  ],
+  "meta_outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableFightCameraPerformance.cs.meta",
+      "sha256": "229c31929c68a1f30c8493d23b287d1a00861e728e6ef288394bea70fd763e02"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/BattleCameraPerformancePlayableAcceptance.cs.meta",
+      "sha256": "0a2ecd53ab094d4c2cf5deaa7fb2d27f4b80ce7211c12633b4e0da4e3f203990"
+    }
+  ],
+  "adaptation": "Preserve the official component fields, camera switch timing, source/apply-object position changes and game-object input block lifetime. Replace injected ICameraControlManager and IInputOperationModule with IBattleCameraPerformanceHost, bound explicitly by OfflineBattleNativePlayableScope. Production controller host binding remains pending.",
+  "runtime_validation": "Unity import, compilation, ProjectTools.Validate and component-level Editor Play Mode lifecycle acceptance passed. The acceptance exercised source/apply-object positions, configured duration, performance-camera entry/exit and paired game-object input-block token. Original skill graph Play Mode remains pending because native graph resources and production scope scheduling are not connected."
+}

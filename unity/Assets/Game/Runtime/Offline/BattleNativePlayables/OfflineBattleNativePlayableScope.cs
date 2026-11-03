@@ -16,6 +16,7 @@ namespace Zjcs.Offline.BattleNativePlayables
         private readonly GameObject root, staging;
         private readonly IProfessionSoundHost sound;
         private readonly IBattleCameraOffsetHost cameraOffsetHost;
+        private readonly IBattleCameraPerformanceHost cameraPerformanceHost;
         private readonly IBattleCharacterPartVisibilityHost characterPartVisibilityHost;
         private readonly BattleAfterimageTexturePool afterimageTextures = new BattleAfterimageTexturePool();
         private readonly MyPlayableCenter center = new MyPlayableCenter();
@@ -26,10 +27,12 @@ namespace Zjcs.Offline.BattleNativePlayables
 
         public OfflineBattleNativePlayableScope(Transform parent, IProfessionSoundHost sound,
             IBattleCameraOffsetHost cameraOffsetHost = null,
-            IBattleCharacterPartVisibilityHost characterPartVisibilityHost = null)
+            IBattleCharacterPartVisibilityHost characterPartVisibilityHost = null,
+            IBattleCameraPerformanceHost cameraPerformanceHost = null)
         {
             this.sound = sound ?? throw new ArgumentNullException(nameof(sound));
             this.cameraOffsetHost = cameraOffsetHost;
+            this.cameraPerformanceHost = cameraPerformanceHost;
             this.characterPartVisibilityHost = characterPartVisibilityHost;
             root = new GameObject("Original battle native playables");
             root.transform.SetParent(parent, false);
@@ -63,6 +66,8 @@ namespace Zjcs.Offline.BattleNativePlayables
                     visibilityPlayable.BindCharacterPartVisibilityHost(characterPartVisibilityHost);
                 if (component is IBattleAfterimagePlayable afterimagePlayable)
                     afterimagePlayable.BindAfterimageHost(this);
+                if (component is IBattleCameraPerformancePlayable performancePlayable)
+                    performancePlayable.BindCameraPerformanceHost(cameraPerformanceHost);
             }
             instance.transform.SetParent(parent, worldPositionStays);
             return instance;
