@@ -18,6 +18,7 @@ namespace Zjcs.Offline.Progression
     public sealed class WeeklyChallengePeriodSave
     {
         public long startLocalTicks;
+        public long demonKingDamage;
         public List<WeeklyChallengeStageSave> stages = new List<WeeklyChallengeStageSave>();
     }
 
@@ -72,6 +73,12 @@ namespace Zjcs.Offline.Progression
             return false;
         }
 
+        public long DemonKingDamage(long periodStartLocalTicks)
+        {
+            WeeklyChallengePeriodSave period = save.periods.FirstOrDefault(value => value.startLocalTicks == periodStartLocalTicks);
+            return period == null ? 0 : period.demonKingDamage;
+        }
+
         public void StartBattle(int stageId, long periodStartLocalTicks, string initialCheckpoint)
         {
             if (stageId <= 0) throw new ArgumentOutOfRangeException(nameof(stageId));
@@ -89,11 +96,18 @@ namespace Zjcs.Offline.Progression
             Persist();
         }
 
-        public void CompleteBattle(int stageId, long periodStartLocalTicks, bool won)
+        public void CompleteBattle(int stageId, long periodStartLocalTicks, bool won, long playerDemonKingDamage = 0)
         {
+            if (playerDemonKingDamage < 0) throw new ArgumentOutOfRangeException(nameof(playerDemonKingDamage));
             WeeklyChallengeStageSave stage = GetStage(periodStartLocalTicks, stageId);
+            if (string.IsNullOrEmpty(stage.activeBattleCheckpoint)) return;
             if (won) stage.wins = checked(stage.wins + 1);
             stage.activeBattleCheckpoint = string.Empty;
+            if (stageId == 4800)
+            {
+                WeeklyChallengePeriodSave period = save.periods.First(value => value.startLocalTicks == periodStartLocalTicks);
+                period.demonKingDamage = checked(period.demonKingDamage + playerDemonKingDamage);
+            }
             Persist();
         }
 

@@ -32,9 +32,28 @@ namespace Zjcs.Editor
             Require(nextPeriod > currentPeriod && session.TryResumeBattle(4800, out restored, out restoredPeriod)
                 && restored == checkpoint && restoredPeriod == currentPeriod,
                 "A period rollover preserves an already-entered battle checkpoint.");
-            session.CompleteBattle(4800, currentPeriod, true);
+            session.CompleteBattle(4800, currentPeriod, true, 1234);
+            session.CompleteBattle(4800, currentPeriod, true, 999);
             session = new OfflineWeeklyChallengeSession(path);
             Require(!session.TryResumeBattle(4800, out _, out _), "A settled weekly battle no longer resumes.");
+            Require(session.DemonKingDamage(currentPeriod) == 1234,
+                "Only the first settlement adds personal demon king damage to its period.");
+            session.StartBattle(4800, nextPeriod, "next-period-checkpoint");
+            session.CompleteBattle(4800, nextPeriod, false, 500);
+            session = new OfflineWeeklyChallengeSession(path);
+            Require(session.DemonKingDamage(currentPeriod) == 1234 && session.DemonKingDamage(nextPeriod) == 500,
+                "Demon king damage is cumulative within, and isolated between, weekly periods.");
+            session.StartBattle(4700, nextPeriod, "unrelated-stage-checkpoint");
+            session.CompleteBattle(4700, nextPeriod, false, 777);
+            Require(session.DemonKingDamage(nextPeriod) == 500,
+                "Other weekly stages do not add damage to the demon king total.");
+
+            string legacyPath = Path.Combine(root, "weekly-challenge-legacy-save.json");
+            File.WriteAllText(legacyPath, "{\"schema\":1,\"highestObservedLocalTicks\":0,\"periods\":[{\"startLocalTicks\":"
+                + currentPeriod + ",\"stages\":[]}]}");
+            var legacySession = new OfflineWeeklyChallengeSession(legacyPath);
+            Require(legacySession.DemonKingDamage(currentPeriod) == 0,
+                "A legacy period without a demon king damage field loads with a zero total.");
             string persisted = File.ReadAllText(path);
             Require(persisted.Contains("\"attempts\": 1") && persisted.Contains("\"wins\": 1"),
                 "A resume does not count a second attempt and settlement records the win.");

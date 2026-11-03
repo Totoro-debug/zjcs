@@ -116,7 +116,8 @@ namespace Zjcs.Presentation.Home
             if (complete || checkpoint == null) return;
             complete = true;
             session.CompleteBattle(stageId, periodStartLocalTicks,
-                checkpoint.Outcome != null && checkpoint.Outcome.Won);
+                checkpoint.Outcome != null && checkpoint.Outcome.Won,
+                stageId == 4800 ? PlayerDamageDealt(checkpoint) : 0);
             DisposeBattle();
             Completed?.Invoke(checkpoint);
             Destroy(this);
@@ -138,6 +139,20 @@ namespace Zjcs.Presentation.Home
                 FightBattleCheckpointSerializer.Save(result.Checkpoint));
         }
         public void OnBattleReportReady(FightBattleReport report) { finalReport = report; }
+
+        private static long PlayerDamageDealt(FightBattleCheckpoint checkpoint)
+        {
+            FightBattleReport report = FightBattleReportBuilder.Build(checkpoint);
+            FightBattleReportPlayerGroups groups = FightBattleReportGrouping.Build(report, 1);
+            FightBattleReportPlayerGroup player = groups.Players.Find(value => value.TargetId == 1);
+            if (player == null) return 0;
+            long damage = 0;
+            foreach (FightBattleReportUnit unit in player.Normal) damage = checked(damage + Math.Max(0, unit.DamageDealt));
+            foreach (FightBattleReportUnit unit in player.Summon) damage = checked(damage + Math.Max(0, unit.DamageDealt));
+            foreach (FightBattleReportUnit unit in player.Pet) damage = checked(damage + Math.Max(0, unit.DamageDealt));
+            return damage;
+        }
+
         private void OnDestroy() => DisposeBattle();
 
         private void DisposeBattle()
