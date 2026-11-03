@@ -1,0 +1,83 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    "scripts/templates/partner_talent/PartnerTalentRules.cs": "e1ccd7841737cffa8272d0fb99219caa0eb6c78f7f42c322324ae93e63e643fb",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcTalentTreeNpcMapInfoParser.cs": "bc267f95260ddaa84ece89b4d697cc27b1e75a3ba6d750e188b686b12c8bfc5f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ENodeType.cs": "327e24f54ed18da1aad8e6ba7c267dd26f55e85071d036674b497f16c1e0f4ae",
+    ".tools/source-packages/current/884_156692/official-code/client-source/NpcTalentTreeUIUtils.cs": "6fdf14b3f0631e06163eae8ed8f775aa028f742ea85c3d02ec46f1a8a80571dc",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcTalentTreeNpcMapInfo.cs": "3894ec4840580fcd03865162d60fb02ae34d82bf6d93f1a9ab48280a90999823",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/Player.cs": "e0b324d6cf965e194cc517c176e8fae80f16dda7019e42d705ed6ae7d44da611",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerItemManagerExt.cs": "1ebcf8aeaee499afc7700ead7791c0156d24624cc0e9cf9d3ebac37a4c506356",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NoneCondition.cs": "f52b9e5e8f51ffec64b2781a9a0395ca38f6032ed367960a6198fdd803ad586f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcFriendshipLevelCondition.cs": "e642aad9b169d7a9cd54b1995aaed4f61c602e553726fd684e93963696e6759d",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcFriendshipMaxLevelCondition.cs": "065bba17b71ec77ba1dae670af19f29096c0a948b08cad9e989573b351c3d0f1",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcTalentTreeNodePreNodeActiveCountCondition.cs": "53006a3f6500eebe8eb69882ebc3c264ea6349073219593c26724e98a2b9e839",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcTalentItemInfoParser.cs": "0abd5c9b663216f327e18123c451a98646cd12c932be42ef5da3e1f03c1b2b65",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerNpcTalentTreeExt.cs": "d577e1d3070278f2634464040a64b9eed46017d7422cebfe2a493108f1c70494",
+    "unity/Assets/Official/Partners/partner-rules.json": "1ab5dd32c4ef68297aea6a847cb0e5ced686634bb4fb7f4c28a1aa7bf70398fd",
+    "official-source.json": "a29067dd1363590c8fde67a7d5326fcb5a4632441e8c73ae8b64300aa491a3a6",
+    "assets/reference/partner-gift-configuration-source-manifest.json": "a5343710ccb0a916b8c6d30e3d90723aa5b3bac28f7cebfc725e03a0125e697f",
+    "unity/Assets/Game/Runtime/Official/Partners/PartnerConditionRules.cs": "b60dbfbfac661fd48cf92a8fc07ad72f7d5fccb6520a1b9151c4efeccc0aaedb"
+  },
+  "methods": {
+    "common-source/Common/NpcTalentTreeNpcMapInfoParser.cs": {
+      "TalentGraph and TalentNodeInfo": "00665e4b5c9d9d0ff70e062ebeacfe3223e360473c2d94487ca21ad31d842fa7"
+    },
+    "common-source/Common/Player.cs": {
+      "public long GetNpcTalentAllPointCount(int npcClassId)": "6e28215342c6375ab60e9a6ca760c17c8d9390bfac45f0957726dfe4e328256a",
+      "public long GetNpcTalentNeedRemainingTalentPoint(int npcClassId)": "a7e954ce7c0dccc9f83f56c64c539f0c95c7854aedd1723e91fb9bbce65b0dea",
+      "public IReadOnlyCollection<int> GetNpcTalentTreeLockedNodeIds(int npcClassId)": "0a18117b756f1bfd8915762c3dd8549b9d489ce0810c8934f0cca6f055874457"
+    },
+    "common-source/Common/PlayerItemManagerExt.cs": {
+      "public static bool HasItems(this Player player, Dictionary<int, long> items)": "1ea3d328baf6f3ca624d5371d64c6485b73ede5c11d3544f6b82436f523616b2"
+    },
+    "common-source/Common/NoneCondition.cs": {
+      "public override bool IsMet(DataHub dataHub)": "7bfda4f9f7b9a135c4a6f8fceb57bb1ca9334c963208738f34a4895eb312ee6e"
+    },
+    "common-source/Common/NpcFriendshipLevelCondition.cs": {
+      "public override bool IsMet(DataHub dataHub)": "845399dea66d3b37a938de7c19b2935ee189b35b18083f87c45dfdd2c8f7b38a",
+      "public override (long current, long target) GetProgress(DataHub dataHub)": "611e9bdf84a3ba32c56685688f9787726d5fdc556a46563b19270de25d4f345b",
+      "private long GetValue(DataHub dataHub)": "739b517fa6452cb330f27ad8c13e9aea6e3e03e8e1331774989d476c5d1788be"
+    },
+    "common-source/Common/NpcFriendshipMaxLevelCondition.cs": {
+      "public override bool IsMet(DataHub dataHub)": "077b58fb535d9d35391ec549b056618650343d2b9db046bddec0bdfaf1e02705",
+      "public override (long current, long target) GetProgress(DataHub dataHub)": "4f4eaf6d15967893a96300d3f3a9c9ea0d40d74e4c85843222e1e5df0404f1cb",
+      "private bool IsMaxLevel(Player player)": "e8c7ade5105454332d8f0a6417071f4235131a1bd4c6f28e2667cdce49e76685",
+      "private bool GetValue(DataHub dataHub)": "3acb7518b6fc5be17503f5f566a66c727b61ad664f2bd412e0dd5ff11d8ab08e"
+    },
+    "common-source/Common/NpcTalentTreeNodePreNodeActiveCountCondition.cs": {
+      "public override bool IsMet(DataHub dataHub)": "3105635d095b7d65d1ed67888bc505b36801a69f5f89c8722fc8907a8a686e6a",
+      "public override (long current, long target) GetProgress(DataHub dataHub)": "94878d541cd21bd988f6ae8e45d24a020435c7358919c1a14d1d471f8173db8c",
+      "protected long GetValue(DataHub dataHub)": "6134280a7bc276e1a194842c338878e2fac9755f99fd6625caf65e26e92f0841"
+    },
+    "common-source/Common/NpcTalentItemInfoParser.cs": {
+      "public bool IsTransformFunctionLimit(Player player, int npcId)": "c83dbe70b40aaceb0ea30701f50ac3191f3cfa6b78686885ee03ba574dca811b",
+      "public bool IsTalentTreeFunctionLimit(Player player, int npcId)": "76ce3039050b33da27b74d298e6b5f84ccd1971e206e67ae104f506c50ba53b3"
+    },
+    "common-source/Common/PlayerNpcTalentTreeExt.cs": {
+      "private static (long TalentPoint, long TalentExp) TransExpToTalentPoint(long exp)": "e0795232c2fdee17789d0246c5e2f8823283d2b4f9fb9a4f546211b2e08621a0",
+      "public static long TransformGiftToTalentExp(this Player player, int npcClassId, IReadOnlyDictionary<int, long> gifts)": "45ff5c9080964979829eccc186694bc07647bc4875986b5ae7c70e02d19ced84",
+      "public static (long TalentPoint, long TalentExp) TransformGiftToTalentPoint(this Player player, int npcClassId, IReadOnlyDictionary<int, long> gifts)": "85255e20ffe2f7bfb210eff0edfaf79507772d63fcde1ffaa72e5656955cd43d",
+      "public static bool IsNpcTalentPointCanActive(this Player player, int npcClassId, int nodeId, out bool isItemNotEnough)": "4d28b323cd60bc71b9ddb9098f5247cc6cc170f799fce2b94fa701bcd197ac97"
+    },
+    "client-source/NpcTalentTreeUIUtils.cs": {
+      "public static bool IsGiftCanTransformTalentPoint(Player player, int npcId)": "29c37abaa2ec19f9105f98a20ee13784cba749b532b9243ab568b107d48a5975",
+      "public static EPointState GetPointState(NpcTalentTreeNpcMapInfoParser.TalentNodeInfo nodeInfo, IReadOnlyCollection<int> activatedSet)": "1b54f8c6d716f44746177343a9de819109e73f31d9b4b419009df57287114cb9"
+    }
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/Partners/PartnerTalentRules.cs": "b5b49bd506e621e7e1e07d47c5306ac27f465453ffd27ba46fda85f88f464bcd",
+    "unity/Assets/Game/Runtime/Official/Partners/PartnerTalentRules.cs.meta": "bd1c6cac8ba0e50eecbc5a40b25d93991bb5f0b27a55512028b80bfe5a9d9c49"
+  },
+  "generator_sha256": "95d32bf693f2f7aa8aeaf519219e9b5367c88e846830a289ea7b00e9d4104f40",
+  "validation_helpers": {
+    "scripts/fixtures/partner_talent_validation.cs": "9970388fffbb8994369d023441ed2acd3fab546993f7fecad9d05299f78a29b2",
+    "scripts/prepare_partner_talent_validation.py": "c10c7cd5f5ecaf2445a6a7ca84ca298c89c635144b0e076d0cdf7e6ab344029a"
+  },
+  "operation": [
+    "Port original game-owned talent graph, node conditions, point-state and gift transformation predicates without a framework implementation.",
+    "Preserve original node/edge construction order, bridge traversal, costs, friendship limits, quantity casts and quotient/remainder.",
+    "Replace parser/player slots with explicit selected configuration and live read-only player interfaces. No invented activation or conversion transaction.",
+    "Reuse the existing selected partner tables. No new or changed art, prefab, layout, save mutation or full asset snapshot."
+  ]
+}
