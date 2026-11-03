@@ -1,0 +1,91 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    "scripts/templates/partner_achievements/PartnerFriendshipAchievementRules.cs": "bc09d4514b4cb070dd5a26c460a2bcc8bde83fdd2a388e4bf5043ed1dd2b2917",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AchievementState.cs": "c05dbbf7794988edee6ee82f4630ad8661f1c8f8396d40558c704fc37a59aa08",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AchievementType.cs": "8140905032389b68099b84f1ee536f195111e916453139f86af50f35172c60fb",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AchievementDataKey.cs": "533c436096be7c9d19e25ac242693bc56c5e1870d62fc3f935319c33b6371139",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AchievementDataKeyNormal.cs": "f37d9b75f6db4d7284e8c641dc2c3782a30feb7d2a845e83aa6d4eac6c01a164",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AchievementDataKeyNpcFriendshipLevel.cs": "33770f1560e715b71fd08c6dc5af1bd34360deb846611ba23922c801593d5df8",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AchievementDataKeyStarGodNpcFriendshipLevel.cs": "ff966a436fc9f8b674fbb1562bba50b2fbd6c1124ea37f966015f304d88b18c3",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AchievementInfo.cs": "f8e542e362bc04d5c7ec2643b7737b3125e973ee23a8be9c25af9a3e193c0093",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerAchievementRecordDataWrap.cs": "e568e5bd50070757bb5ee42d4f85148e6059d3d606612073afe332dda8354d07",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerAchievement.cs": "66b3691c3ba83feac58ed106911d87a4500298cde1df27dd2fc333ce05276805",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/Player.cs": "e0b324d6cf965e194cc517c176e8fae80f16dda7019e42d705ed6ae7d44da611",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AchievementTaskNpcFriendshipLevel.cs": "1eee39deeda264953b53a0e6791e09c428dc33a89929b93e999d4dcd1ee6067f",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AchievementTaskStarGodNpcFriendshipLevel.cs": "af3e8cac29d1a0fefdce809c736f09f7a5ba0dd168ce8f34c6478b61df69a0af",
+    "unity/Assets/Official/Partners/partner-rules.json": "1ab5dd32c4ef68297aea6a847cb0e5ced686634bb4fb7f4c28a1aa7bf70398fd",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AchievementRawInfoParser.cs": "73402cd4fc2aa3b03f2d107724fc5004f778ab620c7083af01389da121efc124",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AchievementRecordData.cs": "6436f73def116bddce8c5b07d85d9a73504a2d020a278cd557c8c2bb05f2aa3a",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AchievementDataNpcFriendshipLevel.cs": "696918a0c14310dfc512f138754749627a249951d15cbe226c9739b23186c321",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/AchievementDataStarGodNpcFriendshipLevel.cs": "f4c27317bf3a903bd3be3f248cc28db102353a5a832efb705ce4ee2f0468e84e",
+    ".tools/source-packages/current/884_156692/official-code/client-source/AchievementPanelItem.cs": "c3ac99b742acd58042ae33cfce3833a2645697c8a1beadecf99dd553f2596a99"
+  },
+  "original_methods": {
+    "AchievementDataKey": {
+      "public override bool Equals(object obj)": "1e0b0b811e9d3a100cdbdc77fce2b4b00d9aef65a67d1d5450d289561b20caa5",
+      "public override int GetHashCode()": "9381e60e7812598a3c30fc35ad086cb86d8fc2a2fd26a870965623945f202306"
+    },
+    "AchievementInfo": {
+      "public static int GroupAndIndexToId(int groupId, int index)": "e03dca409d248648ba8380ebea4a8577a4ab0909a4d829a3193ea884659d83d5",
+      "public static (int groupId, int index) GetGroupAndIndex(int id)": "27f67e3f6a5a12fd8d9f7eab19317dfdfa81d6d9bc1b32efac03b30de32a7721"
+    },
+    "PlayerAchievementRecordDataWrap": {
+      "public bool IsCanGetReward(int index)": "3ff8813d9eacbc4804b695d52b27916eed429eb8a0b64937e7793cde20a31aa8",
+      "public bool IsAlreadyGotReward(int index)": "85c4f04d57e3db244a5f674195dad58f105ab86ff19561378c3f05b1cfb3a8cf",
+      "public bool IsAnyCanGetReward()": "7ea2a99ad062b5dd36bd5e59f5bf63235f958a80b91fb5b8f480db9219d50f44",
+      "public bool TryAddGotRewardByIndex(long playerId, int index)": "3f16af0f9fbd845420b4ec93870a0f6b8eb27f130e03cca6e8aacd8c577c3b37",
+      "public bool TrySetCanRewardsMaxIndex(int maxIndex)": "14710a529f49be21ec3c547c8d2e06d0be9ac78618684fbe1e582e68d935c9e7"
+    },
+    "PlayerAchievement": {
+      "public PlayerAchievementRecordDataWrap GetGroupRecord(int groupId)": "68248252e34016822b3a0b595f969c2e7bcdd120f95573e153fcfe253f379ab3"
+    },
+    "Player": {
+      "public bool IsCanGetAchievementReward(AchievementInfo info)": "c7250db70281cec5cee9a79780eab9f50cebe66efb852291c383d39acc39c2ac",
+      "public bool IsAlreadyGotAchievementReward(AchievementInfo info)": "0a9b95bf28b64d8aebbd81f31b8a4b12bb11f310d900ddd0dc5970150f3a5990",
+      "public bool IsAnyCanGetAchievementReward(List<AchievementDataKey> dataKeys)": "9bdc7dadf9e84be0c47161c06b84d436c6c9b93c9f636d1d70db8616ca008bd1",
+      "public bool IsAnyCanGetAchievementReward(AchievementDataKey dataKey)": "43e436fe7755831e32475b2d4a8815b9187d0d220809ae7473531fb481b9a206",
+      "public bool TryGetCanGetAchievementRewardMaxIndex(int groupId, out int maxCanRewardIndex)": "da9e82e0314301faa4033541eb8015ad20145827299e3625a5579708447c6889",
+      "public int TryRecordAlreadyGotAchievementReward(int groupId, int count, out HashSet<int> gotRewardIds, out List<Dictionary<int, long>> rewards, bool needInvoke = true)": "91798002bbe1f7e6b5478bfd29d307e56da9de55ed7a67e043c62a95e0403952",
+      "public void FireOnRecordAlreadyGotAchievementRewardBatch()": "057e053c0170e9dbffcfa2beb824d5561ee867d3c8ea90f6b95f05fb999ff427",
+      "public void FireOnUpdateAchievementData(AchievementDataKey dataKey)": "a71f79229aea880a12e5ce6116acdfb446fad4c8fef68ad8078d78f4abf24bdf",
+      "public void RecordAchievementRewardByMaxIndex(AchievementDataKey dataKey, int maxIndex)": "4b2f1373e4df725770cfaad8f19faa5afc3704528013e4068a8faadb37bc32a1",
+      "public void RecordAchievementRewardByDict(Dictionary<AchievementDataKey, int> achievementRewardsDict)": "0af79f5afbfa2c9bec848e93192b5bd150d34071de9c9309cc2db406783a5477",
+      "public bool TryResetAchievementGroupRecord(AchievementDataKey dataKey)": "48419be3ffddab30382ee70a0b81a393d59aeecd0b7a1d2c317509a0d8947418"
+    },
+    "AchievementTaskNpcFriendshipLevel": {
+      "public override AchievementState GetAchievementState(int id, Player player)": "ae6005a53ed9e6926be0551615c942f3fc2bebe57426c408dc5310af7db7006d",
+      "public override (long maxValue, long currentValue) GetProgressValue(int id, Player player)": "66abda61430057d90e9a22194e15d8a3f958d3b9c6bf93d19fe918e62bc4ca4d"
+    },
+    "AchievementTaskStarGodNpcFriendshipLevel": {
+      "public override AchievementState GetAchievementState(int id, Player player)": "148ca5d3f456c7068e55fbb8ff897d083887645c6c36b2883cbaf4c75d7241a0",
+      "public override (long maxValue, long currentValue) GetProgressValue(int id, Player player)": "ecdb3609fc2d6c87131e5df1e5dd398d35278d1d73b3b7dc7722191e4ec71584"
+    }
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/Partners/PartnerFriendshipAchievementRules.cs": "353d82a754be0acfedec2b352d5af2d40ec4068b37085526bb1eba905a8114ba",
+    "unity/Assets/Game/Runtime/Official/Partners/PartnerFriendshipAchievementRules.cs.meta": "681dd9cc6e462b79faa82ec38e6381f7707880d3ff7f3622540c23ba7b95eee9",
+    "unity/Assets/Game/Runtime/Official/Partners/Zjcs.Official.Partners.asmdef": "9786a236871b2debfbaebf648e4acab87518a23c976894c63c7e2725ec7e4a49",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterPropertyProgress.cs": "e3763fe298f3f19bab78d2997fdb005625ddeeda510ee4ec20f2f4a922b2b8af",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerAchievementRecord.cs": "2a7ae7664b23f98648998d08d756a01bf4e31ae50b6a6b384e7d3143a105329c",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerAchievementRecord.cs.meta": "885acd04c6afca4f43e3c0b1403c5fd5baa66b97963a05aaa0f9b36292ffe316",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerAchievementService.cs": "35787c0f3791f38b874d8e000fa4f38e66630ebc963fcf7d735644e94ab5f51b",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerAchievementService.cs.meta": "d1fac1ad8ff71c9fd1a6f9ef04b5d7d8f136e5b5ce80627e9d33731b7f5bdc92"
+  },
+  "generator_sha256": "3009453ec2024f934735e1c5fc27e4bf5d95a840e44e80be06f2295a6f66c36c",
+  "rows": 1980,
+  "groups": 99,
+  "validation_helpers": {
+    "scripts/prepare_partner_achievement_validation.py": "4546893971a894474f8f9549871655f698c688ad5cc368036bfa6616b27ae80a",
+    "scripts/fixtures/partner_achievement_validation.cs": "a28912d603ee624136f3933433ac6169f9f8a0f82d22cfe728a90ea9fa99dc94"
+  },
+  "operation": [
+    "Retain selected normal/star-god friendship task order, original key equality/hash/opcodes, encoded group/index identity, independent template ordering, record defaults and sequential claim calculation.",
+    "Replace Mongo/player/parser dependency access with an explicit in-memory player and selected catalog; preserve all original event and return-code branches.",
+    "Only the selected independent friendship templates are projected; reject future cycle configurations. JSON parameters use the existing Newtonsoft dependency.",
+    "User-confirmed local server replacement: refresh eligible indices from original friendship task conditions after load/meet/friendship change; re-read the profile for claims and atomically save configured rewards and receipt indices, publishing notifications only after the write.",
+    "The local service exposes explicit refresh/claim endpoints; normal and star types stay distinct even when the same NPC has both groups. Same-type requests cover only met, open partners of the requested original type.",
+    "Legacy absent records normalize to an empty list. Generic save validation preserves the original 12-bit group and 20-bit index domains; selected-table checks reject out-of-range saved records at the service boundary.",
+    "Formal host refresh triggers, original achievement UI/request binding, production tip ownership and Windows Player verification are not yet connected."
+  ]
+}

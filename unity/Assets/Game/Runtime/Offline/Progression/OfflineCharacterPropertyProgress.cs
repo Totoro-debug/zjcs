@@ -18,6 +18,7 @@ namespace Zjcs.Offline.Progression
         public OfflineNpcConversationProgress NpcConversations = new OfflineNpcConversationProgress();
         public OfflineLocalActorIdentities LocalActorIdentities = new OfflineLocalActorIdentities();
         public List<OfflineNpcTalentTree> NpcTalentTrees = new List<OfflineNpcTalentTree>();
+        public List<OfflinePartnerAchievementRecord> PartnerAchievements = new List<OfflinePartnerAchievementRecord>();
         public List<OfflineCharacterTreasure> Treasures = new List<OfflineCharacterTreasure>();
         public List<OfflineTreasureElementLevel> TreasureElementLevels = new List<OfflineTreasureElementLevel>();
         public List<OfflinePeriodicCard> PeriodicCards = new List<OfflinePeriodicCard>();
@@ -63,6 +64,7 @@ namespace Zjcs.Offline.Progression
             OfflineNpcConversationProgress.Normalize(progress.NpcConversations);
             if (progress.LocalActorIdentities == null) progress.LocalActorIdentities = new OfflineLocalActorIdentities();
             if (progress.NpcTalentTrees == null) progress.NpcTalentTrees = new List<OfflineNpcTalentTree>();
+            if (progress.PartnerAchievements == null) progress.PartnerAchievements = new List<OfflinePartnerAchievementRecord>();
             if (progress.Treasures == null) progress.Treasures = new List<OfflineCharacterTreasure>();
             if (progress.TreasureElementLevels == null)
                 progress.TreasureElementLevels = new List<OfflineTreasureElementLevel>();
@@ -85,6 +87,7 @@ namespace Zjcs.Offline.Progression
                 || !OfflineNpcConversationProgress.IsValid(progress.NpcConversations)
                 || !OfflineLocalActorIdentities.IsValid(progress)
                 || progress.NpcTalentTrees == null || progress.NpcTalentTrees.Count > 1000
+                || !OfflinePartnerAchievementRecord.IsValid(progress.PartnerAchievements)
                 || progress.Treasures == null || progress.Treasures.Count > 5000
                 || progress.TreasureElementLevels == null || progress.TreasureElementLevels.Count > 100
                 || progress.PeriodicCards == null || progress.PeriodicCards.Count > 100
