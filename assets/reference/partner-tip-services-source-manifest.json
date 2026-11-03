@@ -1,0 +1,47 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    "official-source.json": "a29067dd1363590c8fde67a7d5326fcb5a4632441e8c73ae8b64300aa491a3a6",
+    "unity/Assets/Official/Partners/partner-rules.json": "1ab5dd32c4ef68297aea6a847cb0e5ced686634bb4fb7f4c28a1aa7bf70398fd",
+    "assets/reference/partner-condition-handler-source-manifest.json": "6c012c6407b7cfaacde0242a1f61dacff1ba674a8ba0942a2e073e67bc13159a",
+    "assets/reference/partner-tip-player-source-manifest.json": "9c610b32c37191a87b4525ee00eca27acd0b46e67beba2cfb498d1a40671bf36",
+    "assets/reference/partner-talent-source-manifest.json": "20e7f805f0c3594209f8ad52c6712e9b733527a45ae1c3f40a84f43c76197c85",
+    "assets/reference/partner-profile-source-manifest.json": "156af42302ce2b58de8178264f1f505a1ee14325bac105f4f36cd222f3e67f27",
+    "assets/reference/partner-gift-configuration-source-manifest.json": "a5343710ccb0a916b8c6d30e3d90723aa5b3bac28f7cebfc725e03a0125e697f",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/PartnerTipDotServices.cs": "6f72ea9f7a07f5b591fa164364ffa899d80d25ae4f3879b39e887388da6e2ecb",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerTalentPlayer.cs": "f211159bc39f0f156ea738db323379331a3add703d71bba25749a7e548ee8de8",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.Partners.cs": "9143a1448033fb9b079b78e855ad715a6568c1c7c9ebbd1a6e734743aef9d7bf",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfficialCharacterCatalog.Partners.cs": "4acc36624040a680f0f01cf757d698f4f7cebf44df20a3b255f30356877373a1",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcInfoParser.cs": "2323757139ca2742d3a563e983439feaefd03136d71a0b3094583a7c9d6e7eee",
+    ".tools/source-packages/current/884_156692/official-code/common-source/NpcHelper.cs": "37ae9a0c2c0acfdc482bc71682c52608777d749c148deec0729bc1c0ffeca0f8",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcProfileInfoParser.cs": "1c4b58e8543964f9291868b67771f81f585b444d2b56d17a6c4f093c46ca4098",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcTalentItemInfoParser.cs": "0abd5c9b663216f327e18123c451a98646cd12c932be42ef5da3e1f03c1b2b65",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/NpcTalentTreeNpcMapInfoParser.cs": "bc267f95260ddaa84ece89b4d697cc27b1e75a3ba6d750e188b686b12c8bfc5f",
+    ".tools/source-packages/current/884_156692/official-code/client-source/TipDotNpcProfileCanUnlockConditionNode.cs": "6f839a9b7ea36a22fd9530a4bc5080dcb00c2f35f5e4afe1b066026273b5e819",
+    ".tools/source-packages/current/884_156692/official-code/client-source/TipDotNpcTalentTreeGiftCanActivePoint.cs": "667d6cdb6102c64df1d7ec75e4321939d1358268b9c968fcf246f79fac2362c9",
+    ".tools/source-packages/current/884_156692/official-code/client-source/TipDotNpcTalentTreeGiftCanTransToTalentPoint.cs": "efc7ce775caf849960eb4c06145b7248da91a372b9ca7c71ca5a635c6d062e94",
+    ".tools/source-packages/current/884_156692/official-code/client-source/NpcTalentTreeUIUtils.cs": "6fdf14b3f0631e06163eae8ed8f775aa028f742ea85c3d02ec46f1a8a80571dc",
+    "unity/Assets/Official/Character/character-progression.json": "d92b18206c2a9ccbfc0a7ab6aa82744207da8efd92c1a7c01d883efed0a1c19c",
+    "unity/Assets/Official/Character/item-time-limits.json": "4fa59e0a6ce92bd782200dcb5d142ee22f6f69fd9834a81b222aea0e5327434d",
+    "unity/Assets/Official/CharacterCreation/wardrobe.json": "d58c3e67746a841b0d462152b587b1e978410474fbccadc868da46a2fe185917",
+    "unity/Assets/Official/CharacterCreation/wardrobe-rules.json": "d9ab0c98ebdd84038b96ed1144c8385ef3cc0afffec2035fc40db638799338fb",
+    "unity/Assets/Official/Character/character-overview.json": "c814deeacfe912d3638d6d0246ec4872fe8f80faefe81163a6c291ed0288e062"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerTipDotServices.cs": "e7d56d13c32f1f74310d7a1503bc848d42b9b72c6bb4e84f63a9b823632c2b7d",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerTipDotServices.cs.meta": "271940bab15114db3e8eca8a6468a423fd8aad437ce08245f14465bd4fb29899"
+  },
+  "recorder_sha256": "f26c233eed373b41b4ab15cf0187dad321beb2a6c2d64c1eed71dfdbb752cb37",
+  "validation_helpers": {
+    "scripts/prepare_partner_tip_services_validation.py": "2edf4779f9173a706d72aa9ea9729d5402ae9e5d5577e844d5b03973be56af87",
+    "scripts/fixtures/partner_tipdot_services_validation.cs": "a3833cc3f5d39ce247ee2116194632ba997ec6bde8aa4e03a1b6d32ce62fbcdc"
+  },
+  "operation": [
+    "Bind the original tip-node parser and condition-handler slots to existing selected profile/talent/gift rules and the current saved player.",
+    "Keep stable profile/node/graph identities, original chapter/node ordering, exact node condition context and original missing parser defaults.",
+    "NpcInfoParser.GetNpcs(ignoreType) excludes bosses and includes star gods; omit only the user-confirmed closed collaboration IDs from visible enumeration/profile entries.",
+    "Meet status reuses the current-rule progression service; condition subscriptions reuse the original dispatcher and owning lifetime.",
+    "Achievement-key lookup remains a required explicit owner provider, preserving its original NPC ID and normal/star-god arguments; achievement progress/claims and formal full-window ownership are not supplied by this adapter.",
+    "Existing historical character inputs retain their recorded 854 identity; selected partner predicates/configuration remain 884. No new assets, save fields, dialogue triggers or reward rules."
+  ]
+}
