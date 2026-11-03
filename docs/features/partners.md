@@ -614,6 +614,16 @@ NPC 资料投影同时保留实际原 `NpcTargetData` 对象的 `ServerId`，头
 
 原方法、配置、适配与工具哈希见[馈赠规则与事务来源](../../assets/reference/partner-achievement-rules-source-manifest.json)，重建与验证入口为 `scripts/prepare_partner_achievements.py`、`scripts/prepare_partner_achievement_validation.py`。实际隔离 Unity Play Mode 已通过全部 1980 项门槛／奖励、99 组键与原编码、顺序及数量分支、真实文件占用失败／重试、原奖励库存溢出整体回滚、普通与星神组隔离、同类型请求、实际读档及旧档空字段。原整页、档案 8 次模拟指针点击／滚动、385 章节、252 天赋节点及提示执行器回归通过，已查看本轮实际 GPU 截图；静态检查通过（90785 GUID）。主工程 Unity 2022.3.57f1c2 导入／编译及 `ProjectTools.Validate` 通过，正式界面的刷新触发、馈赠领取／提示绑定及 Windows Player 仍未完成；本节不作为伙伴功能或发布完成结论，临时产物沿用前述清理限制。
 
+### 原生馈赠页与领取交互（局部）
+
+`prepare_partner_achievement_ui.py` 从当前原 `AchievementPanel`、`AchievementPanelBase`、`AchievementPanelItem`、`AchievementUtils` 和好感内容处理器迁入伙伴专用控制器，保留原键切换、索引检索范围、已领取／进行中筛选、完成项优先排序、五行绑定、进度参数顺序、领取整组请求及成功回调。普通伙伴内容使用原 NPC 名称参数，星神使用原通用内容键；两类好感任务均不使用进度黑板键。现有职业专用控件未改动，不再将伙伴请求误接到职业组。
+
+`prepare_partner_achievement_native.py` 通过原 `NpcDetailPanel.mAchievementPanel` 的实际引用选择完整子树，只分离根节点父引用，校验内部引用闭合；原层级、锚点、尺寸、标题、五个奖励槽、按钮、状态切换、动画、音效、字体、遮罩和材质继续使用官方输入。`prepare_partner_achievement_assets.py` 恢复两类配置涉及的八个原奖励图像、中文文本、显式 Resources 目录及 `OfficialPartnerAchievementAssetCatalog`；先核对 APK，再使用所选版本官方缓存和已有转换缓存。共享按钮控制器的原空名称序列化差异已登记并保留既有文件，不覆盖共享资源。输入版本、对象、绑定、原始与输出哈希见[原生馈赠页来源](../../assets/reference/partner-achievement-ui-source-manifest.json)。
+
+`OfflinePartnerAchievementUiServices` 将原控件接到前节本地成就服务，保留原显示数量及同类型显示配置；功能限制、图标与消息由窗口宿主显式提供。实际领取仍重读存档，奖励与索引成功保存后才执行原成功回调，失败保持可领取状态。普通与星神键分别选择自己的组；星神伙伴同时拥有的普通组不随星神组领取而被消费。
+
+`prepare_partner_achievement_ui_validation.py` 在已有隔离原窗口工程内完成 Play Mode：原生五行、原名称／进度／奖励图像、可领排序、三次实际模拟鼠标点击、文件占用失败后重试、整组两档领取、读档防重、功能限制分支、普通／星神独立领取和停用回收均通过。已查看未达标、待领取、领取后真实 GPU 截图；原整页与档案八次点击／滚动及规则、事务、提示回归通过。静态检查通过（90989 GUID）；主工程 Unity 2022.3.57f1c2 导入／编译及 `ProjectTools.Validate` 通过。正式详情宿主、主页面成就刷新／提示接线、助战邀请及 Windows Player 仍未完成，本节不作整体完成或发布结论。临时产物沿用前述清理限制。
+
 ## 自定义实现
 
 用户已确认：自定义伙伴称谓通过原字库与长度校验后直接在本地保存，不等待线上文本审核；保留原伙伴资格及好感等级门槛。自动伙伴在创建角色及读档后检查原相遇条件，满足且尚未拥有时自动结识，初始好感使用原配置；此触发时机是确认的单机方案，不声称取得服务器实现。
