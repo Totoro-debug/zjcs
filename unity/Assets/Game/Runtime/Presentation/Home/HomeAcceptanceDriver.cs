@@ -84,6 +84,19 @@ namespace Zjcs.Presentation.Home
                 yield break;
             }
 
+            if (Environment.GetCommandLineArgs().Contains("-partnerAutoMeetLoadAcceptance"))
+            {
+                ok &= Check("partner-auto-meet-on-load", () =>
+                {
+                    int count = runtime.Profile.Save.Player.CharacterProperties.NpcFriendships
+                        .Count(value => value.NpcClassId == 8402);
+                    Assert(count == 1, "original auto-meet partner 8402 is added exactly once on profile load");
+                    return "partner 8402 loaded into the local friendship roster";
+                });
+                Finish(ok);
+                yield break;
+            }
+
             if (Environment.GetCommandLineArgs().Contains("-dungeonsAcceptance"))
             {
                 HideForeignCanvases();

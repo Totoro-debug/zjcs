@@ -754,6 +754,10 @@ namespace Zjcs.Presentation.Home
             homeProgression = new OfflineHomeProgression(rules);
             BlessingLevel = 1;
             ReloadContext();
+            ProgressionResult autoMeet = progression.MeetAutomaticNpcs();
+            if (!autoMeet.IsApplied && autoMeet.Status != ProgressionResultStatus.Unchanged)
+                throw new InvalidOperationException(autoMeet.Message ?? "自动结识伙伴失败。");
+            if (autoMeet.IsApplied) ReloadContext();
             long openedAt = Now();
             fruitTree.TryAutoRepairProduction(profile.Save.Player.Level, context.AnyGoddessActive,
                 openedAt, "home:fruit-tree:auto-repair:" + slotId);

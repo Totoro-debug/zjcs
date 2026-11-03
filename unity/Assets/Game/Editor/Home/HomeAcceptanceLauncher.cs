@@ -183,6 +183,11 @@ namespace Zjcs.Editor.Home
                 foreach (int mapId in new[] { 11, 12, 13, 14, 17 })
                     if (!player.UnlockedMapClassIds.Contains(mapId)) player.UnlockedMapClassIds.Add(mapId);
             });
+            if (Environment.GetCommandLineArgs().Contains("-partnerAutoMeetLoadAcceptance"))
+            {
+                Apply("partner-auto-meet-load", player =>
+                    player.CharacterProperties.NpcFriendships.RemoveAll(value => value.NpcClassId == 8402));
+            }
             if (Environment.GetCommandLineArgs().Contains("-partnersAcceptance"))
             {
                 OfflinePartnerGiftConfiguration configuration = OfficialPartnerGiftAssetCatalog.LoadDefault();
