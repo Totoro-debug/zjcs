@@ -458,3 +458,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 伙伴条件订阅迁移复用所选 `884_156692` 的 `Common.ConditionHandler`、`ConditionInfoParser.Expand/Distinct` 和当前实际条件类的 `Type` 声明，沿用既有完整原条件枚举与伙伴配置；原方法、条件类型、订阅结构、存档事件边界和验证工具的哈希见[条件订阅来源](partner-condition-handler-source-manifest.json)，入口为 `scripts/prepare_partner_condition_handler.py`。不新增素材载荷或完整素材快照。
 
 伙伴提示配置服务的接线复用所选 `884_156692` 的 NPC、档案、好感、礼物与天赋解析器及提示节点端口，原码、既有配置／规则依赖、本地接线和验证工具的输入输出哈希见[配置服务来源](partner-tip-services-source-manifest.json)。入口为 `scripts/record_partner_tip_services.py`；历史人物载荷保留原 `854_156383` 身份，当前伙伴配置保持所选版本，不新增美术或完整素材快照。
+
+活动战斗难度选择条：`scripts/prepare_activity_battle_selector_native.py` 从所选884原包与已验证原生转换恢复 `ActivityDomainBossNumCell` 和详情页 `mNumScrollView` 原子树，复用现有官方脚本、Windows 贴图／shader／Sprite／Animator 与解码音频；按官方 CN／zh_CN 字体配置核对 FZY4K TTF 长度和 MD5，并显式恢复离线源字体绑定。`activity-selector-runtime-source-manifest.json` 记录三项客户端类与迁移代码哈希，`activity-selector-native-source-manifest.json` 记录原包身份、资源闭包、字体配置、转换输入、安装输出和显式绑定；两份清单位于 `assets/reference/daily-challenges/`。功能范围与验证结论集中维护于 [圣兽试炼与双影幻境](../../docs/features/daily-challenges.md)。

@@ -58,6 +58,8 @@ NPC 战斗属性和技能由当前版 `npc_level_detail`、`npc_profession_detai
 
 原生活动 UI 恢复（进行中）：已从所选884原包与已验证转换缓存核对圣兽入口、双影入口、两种结果页及难度条目共5个 prefab、5,898个对象的层级和组件对应，恢复全部2,323个脚本组件字段；工具对缓存之外的组件继续按原包类型树或选定程序集解码，不再跳过。两种结算的 `GameEndPanelBase` 按钮及入口的解锁／预览分支均保留，脚本字段覆盖率逐组件核对；仍需接入运行时组件与资源闭包，未安装为可游玩的新界面。可复现入口为 `scripts/prepare_activity_battle_native.py`，原包对象、原生转换输入及输出哈希见[原生界面来源](../../assets/reference/daily-challenges/native-ui-source-manifest.json)。通用 YAML 读取器现按 Unity 字符串类型保留数字、布尔字样及空值字样的 `m_Name`，避免原结算节点 `1`／`2`／`3` 被误读为数字；五种名称与数值字段不变对照、上述五个官方 prefab 的严格映射通过；共用工具另回归伙伴条目与好感度属性组，459个对象、117个脚本组件完整恢复通过。此项仅证明恢复输入可继续使用，不代表活动实战或界面验证完成。
 
+活动难度选择模块（局部完成）：从所选884客户端迁入 `ActivityFestivalBossNumContext`、`ActivityFestivalBossNumCell`、`ActivityFestivalBossNumScrollView`，复用已迁移的官方 FancyScrollView、Scroller、状态切换、字典与文字效果模块。保留原索引、选中阈值、四种选中／解锁样式、锁图标、奖励红点、动画采样、切换回调及滚动参数；Wwise 选择事件通过本地 AudioClip 适配器传出。`scripts/prepare_activity_battle_selector_native.py` 安装原版 `ActivityDomainBossNumCell`，并提取原详情页 `mNumScrollView` 指向的完整21对象子树，仅解除其根父引用，未重画控件。字体按同版本官方 CN／zh_CN 字体配置及源字体 MD5／长度绑定 FZY4K TTF，保留原 TMP 参数，单独持有动态字体、材质及图集；文本取官方 `activity_domain_boss_num_cell_text`。运行代码与原生资产来源分别见 [脚本清单](../../assets/reference/daily-challenges/activity-selector-runtime-source-manifest.json)、[原生绑定清单](../../assets/reference/daily-challenges/activity-selector-native-source-manifest.json)。隔离 Play Mode 已模拟条目点击，核对四种样式、中文实际字形、奖励红点、采样动画及重复启用回调并查看运行画面；原版滚动容器另通过模拟指针点击、拖拽吸附、前后切换、越界保护、数据刷新和本地选择音效事件参数检查，并查看完整运行画面。工程静态检查、Unity 导入／编译及 `ProjectTools.Validate` 已通过；上述 UI 使用隔离测试宿主，整页活动入口、活动实战、实际音频播放、结算与存档恢复尚未通过本项验证，未发布新版本。
+
 圣兽难度奖励及双影阶段奖励按当前配置为单物品固定数量；双影宝箱按官方权重表抽取。宝箱领取先将随机种子、抽取结果和角色物品事务 ID 写入本地，再提交幂等物品事务，进程崩溃后可继续完成同一笔领取。
 
 当前公共战斗接线已通过隔离 Unity 导入／编译、`ProjectTools.Validate` 和工程静态检查；本功能的实际运行范围及原生 UI 缺口见上文。

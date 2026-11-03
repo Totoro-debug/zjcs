@@ -1,0 +1,62 @@
+{
+  "manifest": "884_156692",
+  "classes": [
+    {
+      "source": ".tools/source-packages/current/884_156692/official-code/client-source/ActivityFestivalBossNumContext.cs",
+      "source_sha256": "116792c259b3d8fb8790e631ff3098dab8c21999678001b939023060e2f47f6e",
+      "output": "unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityFestivalBossNumContext.cs",
+      "sha256": "ec02b1550cb149f96326df103bacfeab0fba86a338c54e35cb52959f620e5b5d"
+    },
+    {
+      "source": ".tools/source-packages/current/884_156692/official-code/client-source/ActivityFestivalBossNumCell.cs",
+      "source_sha256": "4d9dfb99cf054f1b581830ea3eea3eee9c27a94957c9bf4c9a1abaa6a3407704",
+      "output": "unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityFestivalBossNumCell.cs",
+      "sha256": "ef882c4c96ad6a835940f902699ecceef5daf3109d5f8d4ea9811fc4d68ad412"
+    },
+    {
+      "source": ".tools/source-packages/current/884_156692/official-code/client-source/ActivityFestivalBossNumScrollView.cs",
+      "source_sha256": "2b06add0ad760ebba259e08cbe6d7a1dc95740a31a5357d4a4eee63e60f7fd27",
+      "output": "unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityFestivalBossNumScrollView.cs",
+      "sha256": "f87bb6abef78f4d4d2282b6786a0ecd0b708d5fd62bceff267484e0e1204def9"
+    }
+  ],
+  "adaptations": [
+    "Namespace/type bindings reuse the existing official FancyScrollView, scroller, dictionary, state and TMP implementations.",
+    "Diagnostic logger replaced with Debug.LogError; gameplay branches and thresholds retained.",
+    "Wwise event resolved to local AudioClip; Post supplies the existing local audio player."
+  ],
+  "bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityFestivalBossNumCell.cs",
+      "sha256": "ef882c4c96ad6a835940f902699ecceef5daf3109d5f8d4ea9811fc4d68ad412"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityFestivalBossNumCell.cs.meta",
+      "sha256": "417697312d452056e51ab49722320a27a426e0465d1a3b7380e2a408b02200b9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityFestivalBossNumContext.cs",
+      "sha256": "ec02b1550cb149f96326df103bacfeab0fba86a338c54e35cb52959f620e5b5d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityFestivalBossNumContext.cs.meta",
+      "sha256": "eb02e62427516c7d12633612d1aaba71903912595f74f79ac1ab101780ca65b4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityFestivalBossNumScrollView.cs",
+      "sha256": "f87bb6abef78f4d4d2282b6786a0ecd0b708d5fd62bceff267484e0e1204def9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ActivityBattleUI/ActivityFestivalBossNumScrollView.cs.meta",
+      "sha256": "b3eb820bccffdcc254de150ec74734f144b3fa7200c55a785372e0a3588531b3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ActivityBattleUI/Zjcs.Official.ActivityBattleUI.asmdef",
+      "sha256": "b6508d48aefc74d409f2bcd4f3536cd5df9a8ddf06ad779f3da146cd6cf6df36"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ActivityBattleUI/Zjcs.Official.ActivityBattleUI.asmdef.meta",
+      "sha256": "4a95f2073bb29cfb9e728fa90c74ca5ec1762a3c589e95e916cab1666569f7f2"
+    }
+  ]
+}
