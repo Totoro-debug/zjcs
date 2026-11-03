@@ -1049,15 +1049,21 @@ namespace Zjcs.Presentation.Home
                 return "original experience and one gift consumed, restored from disk";
             });
             yield return Capture("partners-gift-saved.png");
-            ok &= Check("partner-friendship", () =>
+            MethodInfo friendship = runtime.Hud.GetType().GetMethod("OpenPartnerFriendshipDialog",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            ok &= Check("partner-friendship-route", () =>
             {
-                MethodInfo friendship = runtime.Hud.GetType().GetMethod("OpenPartnerFriendshipDialog",
-                    BindingFlags.Instance | BindingFlags.NonPublic);
                 Assert(friendship != null, "friendship dialog route exists");
                 PartnerGiftNpcInfo npc = runtime.PartnerGiftServices.GetNpcInfo(8402);
                 Assert(npc != null, "friendship dialog partner metadata exists");
                 Action<IPartnerGiftFriendshipDialog> initialize = dialog => dialog.Init(npc);
                 friendship.Invoke(runtime.Hud, new object[] { initialize });
+                return "opening original friendship window";
+            });
+            for (int frame = 0; frame < 120 && GameObject.Find("OfficialPartnerFriendshipDialog") == null; frame++)
+                yield return null;
+            ok &= Check("partner-friendship", () =>
+            {
                 GameObject root = GameObject.Find("OfficialPartnerFriendshipDialog");
                 Assert(root != null, "official friendship dialog root opens");
                 Assert(root.GetComponents<MonoBehaviour>().Any(value => value.GetType().Name == "NpcFriendshipDialog"),
