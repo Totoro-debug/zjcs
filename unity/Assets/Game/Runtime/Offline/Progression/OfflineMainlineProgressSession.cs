@@ -1155,6 +1155,7 @@ namespace Zjcs.Offline.Progression
         private ProgressionResult Commit(OfflineMainlineSave next, ProgressionResult result, long nowUnixSeconds)
         {
             RefreshMap15Preparation(next, nowUnixSeconds);
+            RefreshMap16Preparation(next, nowUnixSeconds);
             string json = JsonUtility.ToJson(next, true);
             if (!Validate(next, out string reason))
                 throw new InvalidDataException("The save payload does not match the current profile format: " + reason);

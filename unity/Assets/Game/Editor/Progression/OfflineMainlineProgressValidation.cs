@@ -120,6 +120,64 @@ namespace Zjcs.Editor.Progression
                     && preparationRestored.GetMap15PreparationState(preparationStartedAt).CountdownStarted
                     && preparationRestored.GetMap15PreparationState(preparationStartedAt).Unlocked,
                     "Restore the Map15 countdown and unlocked state after reopening the profile");
+                string map16RankFourSlot = slots.CreateSlot();
+                OfflineMainlineProgressSession map16RankFour = OfflineMainlineProgressSession.Open(
+                    slots, map16RankFourSlot, catalog, readDemonBattleLayer);
+                long rankFourReachedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                Require(map16RankFour.ApplyCharacterMutation(player =>
+                {
+                    player.Rank = 4;
+                    player.RankUnlockTimes.Add(new OfflineRankUnlockTime
+                    {
+                        Rank = 4,
+                        UnixSeconds = rankFourReachedAt
+                    });
+                }, "map16-rank-four").IsApplied,
+                    "Persist the first local Silver rank timestamp for Map16 preparation");
+                long map16PreparationStartedAt = rankFourReachedAt + 7L * 24 * 60 * 60;
+                long map16RankFourUnlockAt = rankFourReachedAt + 14L * 24 * 60 * 60;
+                Require(map16RankFour.StartMap16Preparation(map16PreparationStartedAt).IsApplied
+                    && map16RankFour.GetMap16PreparationState(map16RankFourUnlockAt - 1).UnlockAtUnixSeconds
+                        == map16RankFourUnlockAt
+                    && map16RankFour.RefreshMap16Preparation(map16RankFourUnlockAt - 1).Status
+                        == ProgressionResultStatus.Unchanged
+                    && map16RankFour.RefreshMap16Preparation(map16RankFourUnlockAt).IsApplied
+                    && map16RankFour.GetMap16PreparationState(map16RankFourUnlockAt).Unlocked,
+                    "Require 14 days after first Silver rank and unlock exactly at the boundary");
+
+                string map16MinimumSlot = slots.CreateSlot();
+                OfflineMainlineProgressSession map16Minimum = OfflineMainlineProgressSession.Open(
+                    slots, map16MinimumSlot, catalog, readDemonBattleLayer);
+                long map16MinimumStart = rankFourReachedAt + 30L * 24 * 60 * 60;
+                Require(map16Minimum.ApplyCharacterMutation(player =>
+                {
+                    player.Rank = 4;
+                    player.RankUnlockTimes.Add(new OfflineRankUnlockTime
+                    {
+                        Rank = 4,
+                        UnixSeconds = rankFourReachedAt
+                    });
+                }, "map16-rank-four-minimum").IsApplied
+                    && map16Minimum.StartMap16Preparation(map16MinimumStart).IsApplied
+                    && map16Minimum.GetMap16PreparationState(map16MinimumStart).UnlockAtUnixSeconds
+                        == map16MinimumStart + 300
+                    && map16Minimum.RefreshMap16Preparation(map16MinimumStart + 299).Status
+                        == ProgressionResultStatus.Unchanged
+                    && map16Minimum.RefreshMap16Preparation(map16MinimumStart + 300).IsApplied,
+                    "Keep the 300-second minimum when the Silver-rank delay has already elapsed");
+
+                string map16HigherRankSlot = slots.CreateSlot();
+                OfflineMainlineProgressSession map16HigherRank = OfflineMainlineProgressSession.Open(
+                    slots, map16HigherRankSlot, catalog, readDemonBattleLayer);
+                Require(map16HigherRank.ApplyCharacterMutation(player => player.Rank = 5,
+                        "map16-rank-five").IsApplied
+                    && map16HigherRank.StartMap16Preparation(map16MinimumStart).IsApplied
+                    && map16HigherRank.GetMap16PreparationState(map16MinimumStart).UnlockAtUnixSeconds
+                        == map16MinimumStart + 300
+                    && map16HigherRank.RefreshMap16Preparation(map16MinimumStart + 299).Status
+                        == ProgressionResultStatus.Unchanged
+                    && map16HigherRank.RefreshMap16Preparation(map16MinimumStart + 300).IsApplied,
+                    "Skip the 14-day delay above Silver while retaining the 300-second minimum");
                 Require(OfficialMainlineMapRuntime.ResolveHomeReturnMap(session.Save) == 10,
                     "Keep Map11 closed until Map10 task 1040 is claimed");
                 session.Save.Tasks.ClaimedMainlineTaskIds.Add(1040);

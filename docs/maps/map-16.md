@@ -64,7 +64,9 @@ Unity 2022.3.57f1c2 内置屏隔离图形 Play Mode 已通过公共 `MainlineNat
 
 ## 自定义实现
 
-地区时间门槛采用用户确认的单机规则：角色首次达到位阶4时记录本地时间，14天后满足原 `LimitServerRank=4`／`LimitServerRankUnlockDayOffset=14` 条件；其他地区继续使用各自原配置的15至32天偏移，复用同一位阶4起算时间。角色超过位阶4立即满足这些时间条件。绳索准备剧情、等级及其他原条件继续保留。`OfflineCharacterRankRegionTime` 消费现有角色 `RankUnlockTimes`，不应用服务器合服加速；现有晋阶事务保留已有首次日期。公共时间适配器及隔离存档／标签运行检查已完成，正式地图宿主仍待接入。
+地区时间门槛采用用户确认的单机规则：角色首次达到位阶4时记录本地时间，14天后满足原 `LimitServerRank=4`／`LimitServerRankUnlockDayOffset=14` 条件；其他地区继续使用各自原配置的15至32天偏移，复用同一位阶4起算时间。角色超过位阶4立即满足这些时间条件。绳索准备剧情、等级及其他原条件继续保留。`OfflineCharacterRankRegionTime` 消费现有角色 `RankUnlockTimes`，不应用服务器合服加速；现有晋阶事务保留已有首次日期，正式地图宿主仍待接入。
+
+独立地图准备的官方 `Silver/14/300秒` 配置由 [`prepare_map16_alone_configuration.py`](../../scripts/prepare_map16_alone_configuration.py) 解码并输出至 `Resources/Map16/world-alone-configuration.json`。用户确认单机准备时间为：准备开始后至少300秒；角色恰为位阶4时，还须距首次达到位阶4满14天，采用两者较晚时间；角色高于位阶4时免除14天等待，但仍须完成300秒。原绳索剧情、位阶、等级和其他条件继续保留。`OfflineMainlineProgressSession` 已实现准备状态、开始、到时解锁和提交时刷新；规则提取测试通过，正式入口卡片与鲸背岛宿主尚未接线或运行验证。
 
 沿用已确认的独立地图领奖方案：原客户端 `AloneWorldMapEntryItemContentCommonBase.FinshAward` 只发出 `OperPlayerAloneMapFinshAward(16)` 请求；单机按原奖励规则770／771发放钻石200、金币80000，奖励、剧情、随机状态与一次性领取记录同事务写盘，失败回滚，冷读后防重复。表现保留 `SourceOperate.AloneMapAward=222`、Popup 与原 `AwardPanel`。完整本地领取事务和原界面接线仍需实现与验证。
 

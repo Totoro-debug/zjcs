@@ -28,6 +28,9 @@ class Map16AloneConfigurationTests(unittest.TestCase):
     def test_extracts_official_whale_island_configuration_in_declared_story_order(self):
         result = MODULE.extract_configuration([self.map_row], [self.condition], self.stories)
         self.assertEqual(result["manifest"], "884_156692")
+        self.assertEqual(result["preparationRule"], {
+            "rank": 4, "rankName": "Silver", "dayOffset": 14, "minDurationS": 300,
+        })
         self.assertEqual(result["aloneWorld"]["PreparingDataParam"],
                          "{Rank:'Silver',DayOffset:14,MinDurationS:300}")
         self.assertEqual(result["prepareEndCondition"], self.condition)

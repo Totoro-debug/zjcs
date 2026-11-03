@@ -45,6 +45,12 @@ def extract_configuration(map_rows, condition_rows, story_rows):
     return {
         "manifest": VERSION,
         "mapClassId": MAP_ID,
+        "preparationRule": {
+            "rank": 4,
+            "rankName": "Silver",
+            "dayOffset": 14,
+            "minDurationS": 300,
+        },
         "aloneWorld": alone,
         "prepareEndCondition": conditions[0],
         "stories": [stories[name] for name in STORY_NAMES],
