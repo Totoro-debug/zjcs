@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Cinemachine;
 using UnityEditor;
 using UnityEngine;
 using Zjcs.Offline.BattleNativePlayables;
@@ -83,6 +84,39 @@ namespace Zjcs.Editor.Combat
                 Require(camera.Events.Count == 4 && camera.Events[2] == "camera-out"
                     && camera.Events[3] == "unblock:41", "camera and input are restored in order");
 
+                prefab = new GameObject("Original camera shake playable");
+                var impulseSource = prefab.AddComponent<CinemachineImpulseSource>();
+                impulseSource.m_ImpulseDefinition.m_ImpulseShape = CinemachineImpulseDefinition.ImpulseShapes.Custom;
+                impulseSource.m_ImpulseDefinition.m_CustomImpulseShape = AnimationCurve.Linear(0, 1, 1, 1);
+                impulseSource.m_ImpulseDefinition.m_ImpulseDuration = 1;
+                var shakeConfig = prefab.AddComponent<MyPlayableCameraShake>();
+                shakeConfig.Offset = new Vector3(7, 8, -9);
+                shakeConfig.Duration = 0.75f;
+                float previousImpulseTime = CinemachineCore.CurrentTimeOverride;
+                CinemachineCore.CurrentTimeOverride = 10;
+                MyPlayable shakePlayable;
+                try
+                {
+                    shakePlayable = scope.Play(prefab, source, target);
+                    CinemachineCore.CurrentTimeOverride = 10.1f;
+                    Require(CinemachineImpulseManager.Instance.GetImpulseAt(
+                        source.transform.position + new Vector3(7, 8, -9), false, 1,
+                        out Vector3 impulsePosition, out _) && impulsePosition != Vector3.zero,
+                        "camera shake broadcasts an impulse consumed at the configured origin");
+                }
+                finally
+                {
+                    CinemachineCore.CurrentTimeOverride = previousImpulseTime;
+                }
+                Require(shakePlayable.GetDuration() == 0.75f,
+                    "camera-shake duration is retained");
+                Require(shakePlayable.GetComponent<CinemachineImpulseSource>().transform.position
+                    == source.transform.position + new Vector3(7, 8, -9),
+                    "camera impulse source moves to the official source-plus-offset position");
+                scope.Stop(shakePlayable, true);
+                scope.Tick(0.01f); scope.LateTick();
+                UnityEngine.Object.DestroyImmediate(prefab); prefab = null;
+
                 prefab = CreateMasterOverridePrefab(overrideSource: true, useSourceData: true);
                 MyPlayable sourceOverride = scope.Play(prefab, source, target);
                 Require(sourceOverride.mySource == master,
@@ -121,7 +155,7 @@ namespace Zjcs.Editor.Combat
                 Require(skinPlayable.myStatus == MyPlayable.PlayableStatus.Stop,
                     "appearance playable completes the original stop lifecycle");
 
-                Debug.Log("Skill visual Play Mode acceptance passed: camera lifecycle, source/target master overrides, and ordered appearance skin operations.");
+                Debug.Log("Skill visual Play Mode acceptance passed: camera lifecycle and impulse, source/target master overrides, and ordered appearance skin operations.");
                 scope.Dispose(); scope = null;
                 UnityEngine.Object.DestroyImmediate(prefab); prefab = null;
                 UnityEngine.Object.DestroyImmediate(source); source = null;

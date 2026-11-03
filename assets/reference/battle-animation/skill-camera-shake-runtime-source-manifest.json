@@ -1,0 +1,32 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "official_client_sources": [
+    {
+      "path": ".tools/source-packages/official-code/client-source/MyPlayableCameraShake.cs",
+      "sha256": "2b4095b015f2b3624fafb8b154c5424b6cb43a2cfcc7ef28222bd2fd912a2992"
+    }
+  ],
+  "migrated_outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableCameraShake.cs",
+      "sha256": "9c3953d800711c529a187d33abc6d4977a1db08a4331c74dc007fe2d1ca73bb2"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/BattleCameraPerformancePlayableAcceptance.cs",
+      "sha256": "b961c357b1d3cbbb20525d7539bb89ea71b019a742cba2bb93776a9049941de2"
+    }
+  ],
+  "meta_outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableCameraShake.cs.meta",
+      "sha256": "523d774c36e82cbefea2784762584523831343ee165db23de1fa0fb9e31cbdd0"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/BattleCameraPerformancePlayableAcceptance.cs.meta",
+      "sha256": "0a2ecd53ab094d4c2cf5deaa7fb2d27f4b80ce7211c12633b4e0da4e3f203990"
+    }
+  ],
+  "adaptation": "Directly preserve the official MyPlayableCameraShake fields, source-relative impulse position, GenerateImpulse call and configured duration. The runtime assembly explicitly references the repository's bundled Cinemachine package.",
+  "runtime_validation": "Static Unity project check passed. Editor Play Mode acceptance was not reached because Unity compilation is blocked by OfflinePartnerConversationService in Zjcs.Offline.Progression referencing Zjcs.Offline.PartnersUI, while that assembly already references progression. Original native skill graph scheduling and production camera listener wiring remain pending."
+}

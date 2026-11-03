@@ -477,6 +477,7 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 技能翻转触发器使用所选 `884_156692` 的 `MyPlayableFixFlipXTrigger` 和 `MyGridTransform`；本地在现有 EntityLifecycle 程序集中保留 source/target 选择与 `SetScaleByFlipX` 调用，来源、输出与 Unity meta 哈希见[翻转触发器来源清单](battle-animation/skill-trigger-playable-runtime-source-manifest.json)。
 技能效果淡出触发序列使用所选 `884_156692` 的 `MyPlayableFadeEffectSequence`，调用既有原 `MyEffectFadeOut`；原数组顺序、起始时间、持续时间及重触发取消保持不变，UniTask 逐帧状态机适配为 Unity Coroutine。输入、输出与 meta 哈希见[触发序列来源清单](battle-animation/skill-trigger-fade-sequence-source-manifest.json)。
 
+技能相机震动使用所选 `884_156692` 的 `MyPlayableCameraShake`，保留原 Cinemachine Impulse Source 定位、默认偏移、广播调用和持续时间；程序集显式引用项目自带 Cinemachine。官方源码、输出、Unity meta、程序集与 Play Mode 验收哈希见[相机震动代码凭据](battle-animation/skill-camera-shake-runtime-source-manifest.json)。
 
 伙伴提示配置服务的接线复用所选 `884_156692` 的 NPC、档案、好感、礼物与天赋解析器及提示节点端口，原码、既有配置／规则依赖、本地接线和验证工具的输入输出哈希见[配置服务来源](partner-tip-services-source-manifest.json)。入口为 `scripts/record_partner_tip_services.py`；历史人物载荷保留原 `854_156383` 身份，当前伙伴配置保持所选版本，不新增美术或完整素材快照。
 

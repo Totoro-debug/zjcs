@@ -14,7 +14,7 @@
   "migrated_outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyPlayableFadeEffectSequence.cs",
-      "sha256": "5eeb629e99b7a1d813adfc5c1865a0d15b1a1be499333e0329bba361b398d784"
+      "sha256": "167e5de5e8e94e28bf385c6a69cab88479d52334efd35a3b4ff6640e986df4ef"
     }
   ],
   "meta_outputs": [
@@ -24,5 +24,5 @@
     }
   ],
   "adaptation": "Preserve the original serialized start-time/duration/effect array order, cumulative frame delta timing, immediate due entries, next-frame progression between entries, and per-effect FadeOut call. Unity Coroutine carries the original cancel-and-restart lifecycle in place of the generated UniTask state machine.",
-  "runtime_validation": "Source and output hashes recorded. Unity import/compile and Play Mode timing/cancellation checks remain pending."
+  "runtime_validation": "The missing Zjcs.Official.StoryPlayables namespace import was required for Unity compilation and is recorded in the output hash. Unity Play Mode timing/cancellation checks remain pending."
 }
