@@ -56,6 +56,7 @@ namespace Zjcs.Presentation.Home
         private OfflineCharacterProgressionService progression;
         private OfficialPartnerRosterAssetCatalog partnerRosterAssets;
         private OfflinePartnerRosterUiServices partnerRoster;
+        private OfflinePartnerStarGodUiServices partnerStarGod;
         private OfficialPartnerDetailPropertyAssetCatalog partnerDetailAssets;
         private OfflinePartnerDetailPropertyServices partnerDetailServices;
         private OfflinePartnerDetailPropertySource partnerDetailSource;
@@ -160,6 +161,7 @@ namespace Zjcs.Presentation.Home
         public FightOfficialNpcAssistanceCatalog NpcAssistanceCatalog => npcAssistanceCatalog;
         public OfficialPartnerRosterAssetCatalog PartnerRosterAssets => partnerRosterAssets;
         public OfflinePartnerRosterUiServices PartnerRoster => partnerRoster;
+        public OfflinePartnerStarGodUiServices PartnerStarGod => partnerStarGod;
         public OfflinePartnerTipDotRuntime PartnerTipDots => partnerTipDots;
         public OfflinePartnerConversationOpenRefresher PartnerConversationOpenRefresher => partnerConversationOpenRefresher;
         public OfficialPartnerDetailPropertyAssetCatalog PartnerDetailAssets => partnerDetailAssets;
@@ -811,6 +813,8 @@ namespace Zjcs.Presentation.Home
             partnerGiftPlayer.OnItemCountUpdate += OnPartnerGiftInventoryUpdated;
             partnerGiftBindings = new OfflinePartnerGiftRuntimeBindings(profile, partnerCatalog, partnerGiftAssets,
                 id => new OfflinePartnerItemInfo(partnerCatalog, id), key => localization.GetText(key, LanguageType.zh_CN));
+            partnerStarGod = new OfflinePartnerStarGodUiServices(profile, partnerCatalog, partnerRoster,
+                OfficialPartnerStarGodAssetCatalog.LoadDefault(), hud, partnerGiftBindings.BindGiftIcon);
             partnerGiftServices = new OfflinePartnerGiftUiServices(profile, partnerGiftPlayer,
                 giftConfiguration, properties, partnerGiftBindings,
                 partnerDetailImages, hud);
@@ -1956,6 +1960,8 @@ namespace Zjcs.Presentation.Home
 
         private void DisposePartnerTipDots()
         {
+            partnerStarGod?.Dispose();
+            partnerStarGod = null;
             if (partnerRoster != null)
             {
                 partnerRoster.NpcAdded -= OnPartnerRosterAdded;
