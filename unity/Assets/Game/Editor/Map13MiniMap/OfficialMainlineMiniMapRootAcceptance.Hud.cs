@@ -77,6 +77,12 @@ namespace Zjcs.Editor.Map13MiniMap
             public override void PopupPublicMapBranchLineDialog()=>BranchPopups++;
         }
         private static T HudField<T>(Object instance,string field) where T:Object=>new SerializedObject(instance).FindProperty(field).objectReferenceValue as T;
+        private static void SaveHudImage(Camera camera,RenderTexture target,string name)
+        {
+            camera.Render();var previous=RenderTexture.active;RenderTexture.active=target;
+            var image=new Texture2D(target.width,target.height,TextureFormat.RGBA32,false);image.ReadPixels(new Rect(0,0,image.width,image.height),0,0);image.Apply();RenderTexture.active=previous;
+            File.WriteAllBytes(Path.Combine(Workspace,name),image.EncodeToPNG());Object.Destroy(image);
+        }
         private static IEnumerator ClickHud(Button button,MiniMapHudSimulatedMouse mouse,EventSystem events,Camera camera)
         {
             Canvas.ForceUpdateCanvases();var buttonCanvas=button.GetComponentInParent<Canvas>().rootCanvas;var eventCamera=buttonCanvas.renderMode==RenderMode.ScreenSpaceOverlay?null:camera;mouse.Position=RectTransformUtility.WorldToScreenPoint(eventCamera,button.GetComponent<RectTransform>().TransformPoint(button.GetComponent<RectTransform>().rect.center));
@@ -107,11 +113,17 @@ namespace Zjcs.Editor.Map13MiniMap
             for(int i=0;i<8;i++)yield return null;
             var small=canvas.GetComponentInChildren<MiniMapMaskedUI>(true);var area=small.GetComponent<AreaInfoUI>();var branch=small.GetComponentInChildren<PublicMapBranchLineBtn>(true);var content=HudField<GameObject>(branch,"mContent");
             Require(HudField<RawImage>(small,"mRawImage").texture==module.Texture,"Original HUD binds owned minimap texture");
-            Require(grid.Receivers.Count==1&&hudState.Subscribers==3&&!content.activeSelf,"Original private/single-line HUD state and subscriptions");
+            Require(grid.Receivers.Count==1&&hudState.Subscribers==1&&!content.activeSelf,"Local single-line HUD retains only the original region subscription");
+            Require(branch.Context.GroupMapIdOrderList.SequenceEqual(new long[]{42})&&branch.Context.GetMapLineIndex()==1,"One local channel uses the actual public container identity");
+            branch.Context.GroupMapIdOrderList.Add(999);Require(branch.Context.GroupMapIdOrderList.Count==1,"Callers cannot mutate the local channel count");
             int region=state.QueryRegion(grid.Position);Require(area.MyRegionInfoText.Text.Contains(labels.Text("region_13_"+region)),"Original region localization");
             labels.SetProgress(region,Math.Max(1,labels.Data.maxProgress[region]/2));string progress=(labels.Data.CalcWorldMapRegionProgress(13,region,labels.Progress[region])/100).ToString();Require(area.MyRegionProgress.Text.Contains(progress),"HUD uses original region exploration formula");
             string before=area.MyRegionInfoText.Text;var previous=grid.Position;grid.Move(new Pos2d(previous.X+1,previous.Y));Require(area.MyRegionInfoText.Text!=before,"HUD position event refreshes formatted coordinates");grid.Move(previous);
-            hudState.Public();Require(!content.activeSelf,"Original one-line hide flag");hudState.AddLine();yield return null;Require(content.activeSelf,"Original configured multi-line fixture becomes visible");hudState.Busy();Require(HudField<Image>(branch,"mSwitchImage").color==Color.yellow,"Original status refresh reads current state");
+            hudState.Public();Require(!content.activeSelf&&branch.Context.MapRegionStatusDict[13][0]==Status.Public,"One-line hide retains original public-region state");hudState.AddLine();yield return null;Require(!content.activeSelf,"Underlying channel lists cannot reveal the single-player button");hudState.Busy();Require(HudField<Image>(branch,"mSwitchImage").color==Color.green,"The sole local channel remains free");
+            SaveHudImage(camera,target,"native-minimap-single-channel-hud.png");
+            // The remaining channel checks exercise the untouched original
+            // button explicitly with its old multi-channel test adapter.
+            branch.gameObject.SetActive(false);branch.Context=hudState;branch.gameObject.SetActive(true);yield return null;Require(content.activeSelf,"Original multi-channel compatibility fixture");Require(HudField<Image>(branch,"mSwitchImage").color==Color.yellow,"Original status refresh reads current state");
             var input=new GameObject("HudSimulatedInput",typeof(EventSystem),typeof(StandaloneInputModule));var events=input.GetComponent<EventSystem>();var mouse=input.AddComponent<MiniMapHudSimulatedMouse>();input.GetComponent<StandaloneInputModule>().inputOverride=mouse;yield return null;
             var click=ClickHud(small.MiniMapBtn,mouse,events,camera);while(click.MoveNext())yield return click.Current;Require(hudState.PopupCount==1&&sounds==1,"Simulated original minimap button dispatch and sound");
             hudState.Current=14;hudState.Deferred(hudState);Require(hudState.InitializedMap==14,"Original popup callback reads map identity when initialized");hudState.Current=13;

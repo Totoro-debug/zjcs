@@ -42,14 +42,15 @@ public class OfflineMiniMapMarkManager : MonoBehaviour, IMiniMapMark, IMiniMapMa
 			else
 			{
 				bool num = data.ActiveRegions != null && data.ActiveRegions.Contains(containerEntityInfo.PosInfo.Region);
-				MiniMapMarkExtendInfo entityExtendParameterInfo = entityExtendParameterInfoParser.GetEntityExtend(containerEntityInfo.DefSpawnEntityInfo.ClassId);
-				if (num || (item.Value.State != entityExtendParameterInfo.CompleteState && item.Value.State >= 0) || !entityExtendParameterInfo.MiniMapMarkHideInEnd)
+				MiniMapMarkExtendInfo entityExtendParameterInfo = entityExtendParameterInfoParser.GetEntityExtend(data.UseLatestLocalEntityStates ? item.Value.EntityClassId : containerEntityInfo.DefSpawnEntityInfo.ClassId);
+				if ((!data.UseLatestLocalEntityStates && num) || (item.Value.State != entityExtendParameterInfo.CompleteState && item.Value.State >= 0) || !entityExtendParameterInfo.MiniMapMarkHideInEnd)
 				{
 					CreateEntityIconObject(mapClassId, item.Key, item.Value.EntityClassId, item.Value.State, containerEntityInfo.PosInfo.Area);
 				}
 			}
 		}
-		if (data.ActiveRegions == null)
+		// Local public entities already have latest states; skip default recreation.
+		if (data.UseLatestLocalEntityStates || data.ActiveRegions == null)
 		{
 			return;
 		}

@@ -101,12 +101,13 @@ namespace Zjcs.Editor.Map13MiniMap
         private sealed class Queries : IMiniMapManagedQueries,IMiniMapManagedAreaAgent,IMiniMapMarkGridGround
         {
             public Func<Pos2d,int> RegionAt;
+            public Func<int,int,IEnumerable<MiniMapMarkLoEntityInfo>> RegionEntities;
             public long MainPlayerId=>1;
             public MiniMapManagedMapPartInfo GetMapPartInfo(int map)=>new MiniMapManagedMapPartInfo{SupportPrivateRegion=true,SupportPublicRegion=true};
             public List<Status> GetCurrentMapStatus()=>Enumerable.Repeat(Status.None,106).ToList();
             public bool TryGetStatusByContainerId(long id,out Status status){status=Status.None;return false;}
             public IMiniMapSpawnEntity GetEntity(Zjcs.Official.StoryPlayables.EcEntityIdentifier id)=>null;
-            public IEnumerable<MiniMapMarkLoEntityInfo> GetEntityByMapRegion(int map,int region)=>Array.Empty<MiniMapMarkLoEntityInfo>();
+            public IEnumerable<MiniMapMarkLoEntityInfo> GetEntityByMapRegion(int map,int region)=>RegionEntities?.Invoke(map,region)??Array.Empty<MiniMapMarkLoEntityInfo>();
             public Dictionary<Zjcs.Official.StoryPlayables.EcEntityIdentifier,IMiniMapSpawnEntity> GetAreaEntity(int area)=>null;
             public int GridToRegion(int map,Pos2d position)=>RegionAt?.Invoke(position)??0;
             public IMiniMapMarkCell GetPosData(Pos2d position)=>null;
@@ -188,6 +189,7 @@ namespace Zjcs.Editor.Map13MiniMap
             state.RegionalPrefabs=new Dictionary<string,GameObject>();var catalog=new SerializedObject(AssetDatabase.LoadAssetAtPath<ScriptableObject>("Assets/Official/World/Map/13/NativeMiniMapCurrent/Resources/Map13/Native/mini-map-regions.asset"));var entries=catalog.FindProperty("Regions");for(int i=0;i<entries.arraySize;i++){var entry=entries.GetArrayElementAtIndex(i);state.RegionalPrefabs.Add(entry.FindPropertyRelative("OriginalGuid").stringValue,(GameObject)entry.FindPropertyRelative("Prefab").objectReferenceValue);}
             var grid=host.AddComponent<MyGridTransform>();grid.Component=new GridData{Position=center,Lite=lite};var characters=new Characters{MyGridTransform=grid};var data=new Data();var services=new Services();
             var bindings=new MainlineMiniMapBindings{State=state,Settings=description.Settings,MinimapConfigId=2,MapViewRangeExtraSize=0,Characters=characters,ResourcePoints=new ResourcePoints{LabelServices=labels},OfflineData=data,MarkerServices=services,MarkerPerformance=services,ClickInput=services,CameraControl=services,ClickPublisher=services};
+            var localData=VerifyLocalData(state,queries,bits);while(localData.MoveNext())yield return localData.Current;
             var module=MainlineMiniMap.Create(prefab,null,bindings);for(int i=0;i<4;i++)yield return null;
             Require(data.Requests==1,"Complete original prefab requests offline data after injection");
             var root=Object.FindObjectOfType<MainlineNativeMiniMapRoot>();var offline=root.GetComponent<OfflineMiniMap>();Require(!offline.HaveDataShow.State,"Original prefab content hidden while pending");

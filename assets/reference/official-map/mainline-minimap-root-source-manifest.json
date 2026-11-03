@@ -1,6 +1,7 @@
 {
   "format": 1,
   "manifest": "884_156692",
+  "single_player_policy": "LocalMiniMapDataSource selects previously explored entities or public-region entities, preserving latest local class/state. UseLatestLocalEntityStates applies the original completed/negative-state hide predicate even in public regions, resolves hide configuration from the current class, and skips default completed public-entity recreation. False preserves the original transport-consumption branches.",
   "inputs": [
     {
       "path": ".tools/source-packages/current/884_156692/official-code/client-source/MiniMap.cs",
@@ -46,7 +47,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkManagers/OfflineMiniMapMarkManager.cs",
-      "sha256": "fb1c3060bb79b40fb77e44d97949bfe0ce055ddb977a216e67eee42cc7d86348"
+      "sha256": "ac9fec98244fe9222906992bb55e83312026ff5688d61af373cb05b1287a2ba1"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkManagers/OfflineMiniMapMarkManager.cs.meta",
@@ -87,7 +88,7 @@
   },
   "validation_preparation": {
     "path": "scripts/prepare_mainline_minimap_offline_validation.py",
-    "sha256": "c705f2f391b9302f8b6a7e3034912e3b72ab18434b972bb560140ece2aaaea56"
+    "sha256": "fb7267b53d34ab8d01cb7eed6f73be344924e663b10fbc53d189a8b59c7b6a6d"
   },
   "validation_fixture": {
     "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapMasksAcceptance.cs",
@@ -101,6 +102,6 @@
   "hashing": "Repository text outputs use UTF-8 LF.",
   "tool": {
     "path": "scripts/prepare_mainline_minimap_root.py",
-    "sha256": "bf962a14c02f7199ffaa8417387b241821178c76dc31e1fecfeda6ee8192a07f"
+    "sha256": "73448d0bfaf6890c47fb24acb9de1348d5e1e02cac33e4e60a4193483f8ede07"
   }
 }

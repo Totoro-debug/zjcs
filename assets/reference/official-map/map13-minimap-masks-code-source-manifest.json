@@ -55,7 +55,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapMasks/PlayerOfflineMiniMapDataResponse.cs",
-      "sha256": "4cfeac1c94f44c71c419ffa219176ec9574e74163bf628dbc062c5b40973c9a5"
+      "sha256": "5d9ac4e5d4fe99d05a764ebd71b7f87332b9bcce8459fb19bb36d1d8f2943cdf"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapMasks/PlayerOfflineMiniMapLiteEntityData.cs",
@@ -94,81 +94,12 @@
   ],
   "generator": {
     "path": "scripts/prepare_unity_map13_minimap_masks.py",
-    "sha256": "0512d07f7f35c69c80382d19a8175ae7bdf6c6671b6a2bff00afcd173e133416",
-    "worktree_sha256": "0512d07f7f35c69c80382d19a8175ae7bdf6c6671b6a2bff00afcd173e133416",
+    "sha256": "b08423a612c3f02b215e23e3cde607cd158402b1373967eac5fa788076148835",
+    "worktree_sha256": "b08423a612c3f02b215e23e3cde607cd158402b1373967eac5fa788076148835",
     "normalization": "Repository LF text; original executed worktree bytes recorded separately"
   },
   "operation": "Copy complete original MiniMapManagerBase, mask base, active and offline mask managers, plus complete original offline minimap response/lite records and entity enum. Keep exact locked-tile arrays and reverse grid traversal, visible bounds/drag formulas (including original integer centers and aspect in both target extents), active-region fill, original visibility codec, per-frame unlock batching and full-screen subscriptions. Only namespace, transport annotations/base and map/player/grid singletons become explicit local ports. Reuse original UIBase/controller/mask handler/grid visibility.",
   "limitations": [
     "Native mask manager/prefab bindings, actual root/local-state provider, Play Mode rendering/input/save and Windows Player remain required."
-  ],
-  "local_validation": {
-    "editor": "2022.3.57f1c2",
-    "playmode": {
-      "tiles": 11,
-      "sprites": 9,
-      "grid_cells": 57600,
-      "live_locked": 27106,
-      "live_visible": 121,
-      "event_unlocks": 12,
-      "offline_fill": 1326,
-      "offline_locked": 25880,
-      "default_slot_clears": 1,
-      "drag_cases": 4,
-      "gpu_variants": 4,
-      "live_pixels": 17809,
-      "offline_pixels": 86258,
-      "full_original_managers": true,
-      "native_tilemap": true,
-      "exact_tile_arrays": true,
-      "original_codec": true,
-      "batched_unlock": true,
-      "subscriptions": true,
-      "reentry": true,
-      "source_region_fill": true,
-      "isolated_disk_restore": true
-    },
-    "entry": {
-      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapMasksAcceptance.cs",
-      "sha256": "eff8ebcd64027af97855e4881e061f0f499111dc798a732d91acc5fc3aeeb92a"
-    },
-    "log_sha256": "0a1f10ecd42c6c543e4d5c4e7907f976c1906d37d4fa4f1336bf1ad239fdcd67",
-    "rules_sha256": "c35153273d092bab7d2bea40ad2bffd5edd800bc6ea55f15ef5486b51a2ade0b",
-    "screenshots": [
-      {
-        "sha256": "91132d88fdfb1fac73db9b3bfee748be0d1e0c6d3d390bf6a69120f8480c4a11",
-        "width": 768,
-        "height": 1024,
-        "viewed": true
-      },
-      {
-        "sha256": "0653f98d5666c50140b3bd0f96804c91e86b39d14ab7b55269c50c355f36e1a5",
-        "width": 768,
-        "height": 1024,
-        "viewed": true
-      }
-    ],
-    "input_scope": "Actual original components and native GPU rendering, explicit fixture inputs; no formal mouse/root/player completion claim. Original zero-slot clear at grid 111,146 retained.",
-    "checks": {
-      "unity_import_compile": true,
-      "project_tools_validate": {
-        "exit_code": 0,
-        "log_sha256": "fe127d303ca741f607ebcb1b1eb5aed7dff7216c1035bd29a9f3e462dca04a84"
-      },
-      "isolated_metadata": {
-        "passed": true,
-        "guids": 35624,
-        "log_sha256": "2ebb288db2d6c6793e868561734e9feacd7a72673e46bb5c2abf195ffb07756d"
-      },
-      "root_metadata": {
-        "passed": false,
-        "log_sha256": "deb1830b9d4cc2707c67b8250b2097c49594c4ce845f8c265acdc78a61ca0586",
-        "errors": [
-          "ProfessionUI ItemQuality atlas duplicate GUID",
-          "ProfessionUI ImgMask duplicate GUID"
-        ],
-        "scope": "Shared changes outside this Map13 module; retained intact."
-      }
-    }
-  }
+  ]
 }

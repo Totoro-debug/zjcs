@@ -37,6 +37,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
                 throw new ArgumentException("Complete original HUD bindings for this minimap are required.");
             var inactive = new GameObject("MiniMapHudBinding");
             inactive.SetActive(false);
+            var localState = new SingleChannelMiniMapHud(bindings.State);
             try
             {
                 hud = Object.Instantiate(prefab, inactive.transform, false);
@@ -44,12 +45,12 @@ namespace Zjcs.Offline.World.MainlineMiniMap
                 if (hud.GetComponent<MiniMapMaskedUI>() == null || hud.GetComponent<AreaInfoUI>() == null
                     || hud.GetComponentInChildren<PublicMapBranchLineBtn>(true) == null)
                     throw new ArgumentException("The complete original minimap HUD prefab is required.");
-                foreach (var ui in hud.GetComponentsInChildren<UIBase>(true)) ui.Services = root.Bindings.State.LabelServices;
+                foreach (var ui in hud.GetComponentsInChildren<UIBase>(true)) ui.Services = root.LabelServices;
                 foreach (var ui in hud.GetComponentsInChildren<MapMeCharacterUIBase>(true)) ui.MapMyCharacterManager = root.Bindings.Characters;
                 foreach (var small in hud.GetComponentsInChildren<MiniMapMaskedUI>(true))
-                { small.Context = bindings.State; small.GetMiniMapTexture = () => Texture; }
-                foreach (var area in hud.GetComponentsInChildren<AreaInfoUI>(true)) area.Context = bindings.State;
-                foreach (var branch in hud.GetComponentsInChildren<PublicMapBranchLineBtn>(true)) branch.Context = bindings.State;
+                { small.Context = localState; small.GetMiniMapTexture = () => Texture; }
+                foreach (var area in hud.GetComponentsInChildren<AreaInfoUI>(true)) area.Context = localState;
+                foreach (var branch in hud.GetComponentsInChildren<PublicMapBranchLineBtn>(true)) branch.Context = localState;
                 foreach (var text in hud.GetComponentsInChildren<MultiLanguageText>(true))
                 {
                     text.GetComponent<TMPro.TMP_Text>().font = bindings.Fonts.GetMultiLanguageFontAsset().FontAsset;

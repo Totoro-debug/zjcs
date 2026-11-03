@@ -58,6 +58,15 @@ def port_offline_initialization():
     for before, after in {'MapWorldLoEntityInfoWrap': 'MiniMapMarkLoEntityInfo',
             'EntityExtendParameterInfo': 'MiniMapMarkExtendInfo'}.items():
         body = re.sub(r'\b' + before + r'\b', after, body)
+    # Confirmed offline policy: public entities also use the latest local
+    # class/state; the server response's default-public fallback is inapplicable.
+    body = replace_once(body,
+        'GetEntityExtend(containerEntityInfo.DefSpawnEntityInfo.ClassId)',
+        'GetEntityExtend(data.UseLatestLocalEntityStates ? item.Value.EntityClassId : containerEntityInfo.DefSpawnEntityInfo.ClassId)')
+    body = replace_once(body, 'if (num || ', 'if ((!data.UseLatestLocalEntityStates && num) || ')
+    body = replace_once(body, 'if (data.ActiveRegions == null)',
+        '// Local public entities already have latest states; skip default recreation.\n'
+        '\t\tif (data.UseLatestLocalEntityStates || data.ActiveRegions == null)')
     installed = ROOT / 'unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkManagers/OfflineMiniMapMarkManager.cs'
     text = installed.read_text('utf8').replace('\r\n', '\n')
     previous = method(text, signature)
@@ -247,6 +256,7 @@ namespace Zjcs.Official.World.Map13MiniMap
     paths = [runtime, Path(str(runtime) + '.meta'), assembly, Path(str(assembly) + '.meta'),
         Path(str(DESTINATION) + '.meta'), offline_installed, Path(str(offline_installed) + '.meta'), *coordinator_outputs]
     write(RECEIPT, encode(dict(format=1, manifest='884_156692',
+        single_player_policy='LocalMiniMapDataSource selects previously explored entities or public-region entities, preserving latest local class/state. UseLatestLocalEntityStates applies the original completed/negative-state hide predicate even in public regions, resolves hide configuration from the current class, and skips default completed public-entity recreation. False preserves the original transport-consumption branches.',
         inputs=[dict(path=p.relative_to(ROOT).as_posix(), sha256=digest(p.read_bytes()))
             for p in (SOURCE, camera, offline_original, *coordinator_inputs)], outputs=[record(p) for p in paths],
         historical_offline_initialization='assets/reference/official-map/map13-minimap-mark-managers-code-source-manifest.json',

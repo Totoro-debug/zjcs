@@ -439,6 +439,8 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 
 共享小地图地区计时接线复用所选 `884_156692` 的 `Common.MapRegionInfo`、地区限制刷新助手、原 UniTask 倒计时状态机与 `ShowRemainTimeInfo`；原输入、时钟适配、每实例地区行及语言绑定、验证入口和工具哈希见[地区时间凭据](official-map/mainline-region-time-source-manifest.json)。入口为 `scripts/prepare_mainline_region_time.py` 和 `scripts/record_mainline_region_time_sources.py`。原生小地图根、HUD、全屏页及共享渲染器的原输出经原提取工具重建核对，载荷内容保持一致，所属凭据更新脚本及接线哈希；未生成完整素材快照。
 
+共享小地图本地响应继续复用所选 `884_156692` 的原离线标记初始化和协调器；用户确认的筛选／最新状态消费适配由[完整根来源](official-map/mainline-minimap-root-source-manifest.json)另记，原响应 DTO 的本地策略字段由[遮罩与响应来源](official-map/map13-minimap-masks-code-source-manifest.json)记录。历史871输入缓存按既有 SHA256 从相同源码恢复，保留原版本身份。单分线 HUD 与本地数据适配、验证入口哈希写入各原生小地图根及共享 HUD／全屏页／渲染器的接线凭据；原 prefab 与图像没有替换，未生成完整素材快照。
+
 全员战报绑定：`scripts/prepare_shared_battle_report.py` 继续解码所选884_156692的 `fightendallplayerreportpanel.bundle`（167节点、1,336项布局）与 `fightendreportsplit.bundle`，核对原玩家行／分隔线资源引用和原标题绑定，生成独立 `Combat/BattleReport/all-player-report-window-bindings.json` 与稳定 meta。四项分组中文从对应 WwiseBnk 原语言 rawfile 提取，先检查所选 APK，按相同索引的实际文件及长度／MD5验证缓存；语言来源与旧854报告语言载荷分开记录。个人绑定清单同步记录扩展后的公共运行适配及生成器哈希；没有替换既有 prefab、美术或字体。原对象、代码、APK／缓存语言、布局核对、生成及运行输出见[全员窗口来源清单](battle-hud/all-player-report-window-source-manifest.json)，功能与验证范围维护于[战斗执行](../../docs/features/battle-execution.md)。
 
 伙伴天赋条件的本地玩家读取沿用既有 `NpcTalentTrees`、好感与库存存档字段，原读取依据为所选 `884_156692` 的 `Player`、`PlayerSingleNpcTalentTreeData`、`PlayerItemManagerExt` 与 `ItemType`。本地只读接线、既有原计算依赖及验证工具哈希见[天赋玩家读取来源](partner-talent-player-source-manifest.json)，入口为 `scripts/record_partner_talent_player.py`；不新增存档格式、资源载荷或完整素材快照。
