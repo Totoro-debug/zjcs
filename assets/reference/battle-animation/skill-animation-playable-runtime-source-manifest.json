@@ -5,20 +5,44 @@
     {
       "path": ".tools/source-packages/official-code/client-source/MyPlayableAnimation.cs",
       "sha256": "31808442c982eb85bd79bb2643bcdcdf67de49301ad21804b7cecde7e4077b66"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/MyPlayableDefault.cs",
+      "sha256": "8da60cc2835caae4f2cfe249644ba811837a94e9c45de380301a9ca2178dec05"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/MyPlayableRenderSortLayer.cs",
+      "sha256": "873ff93c9c493470fd1a61bba8c8e6c125fba370d4dc7b081bfe72031c0634bd"
     }
   ],
   "migrated_outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableAnimation.cs",
       "sha256": "549abb9cfd721ab8537190fec488b8881f4f06fab7c68e247d03efde8c86e6a5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableDefault.cs",
+      "sha256": "a88df66b51c7bf768226ec393db4225cd836acff69a74448a472de8b0589aa2e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableRenderSortLayer.cs",
+      "sha256": "78c86f324da9d7298851e240dcdb349469a2517c78c3a76718a477d81514a489"
     }
   ],
   "meta_outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableAnimation.cs.meta",
       "sha256": "d9a9265c002d546aac09e45568f544e695170ecc4436980faeefbacdbcae27e7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableDefault.cs.meta",
+      "sha256": "92ad502a80e9775aea2302c99cd885c8995abec5c6b2243e8d9ecc64895e104d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableRenderSortLayer.cs.meta",
+      "sha256": "1e5369978f1f6973b3fc059cb9369b72da788b4e55fc6a425dbac8c440a60044"
     }
   ],
-  "adaptation": "Preserve the official Animation target, serialized animation name, Play call and duration. The class is placed in the local StoryPlayables assembly and uses the existing MyPlayableApply lifecycle.",
+  "adaptation": "Preserve the official Animation target, serialized animation name, Play call and duration, plus the Transform-only duration node and Renderer sorting-layer/sorting-order node. The classes use the existing MyPlayableApply lifecycle.",
   "runtime_validation": "Static Unity metadata validation passed. Unity import/compile and Play Mode execution remain pending because the shared full-project import is currently blocked by concurrent project changes and the isolated import timed out."
 }
