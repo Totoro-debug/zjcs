@@ -31,14 +31,15 @@ namespace Zjcs.Offline.PartnersUI
         private readonly MainPlayerProxy player;
         public OfflinePartnerGiftRuntimeBindings(OfflineMainlineProgressSession session,
             OfficialPartnerCatalog catalog, OfficialPartnerGiftPageAssetCatalog assets,
-            Func<int, IProfessionItemInfo> getItemInfo, Func<string, string> text)
+            Func<int, IProfessionItemInfo> getItemInfo, Func<string, string> text,
+            IProfessionImageResourceLoader attachmentResources = null)
         {
             this.session = session ?? throw new ArgumentNullException(nameof(session));
             this.catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
             this.assets = assets ?? throw new ArgumentNullException(nameof(assets));
             this.getItemInfo = getItemInfo ?? throw new ArgumentNullException(nameof(getItemInfo));
             this.text = text ?? (key => key);
-            attachments = new ItemIconAttachmentManager(new OfflineProfessionImageResourceLoader(assets.Images),
+            attachments = new ItemIconAttachmentManager(attachmentResources ?? new OfflineProfessionImageResourceLoader(assets.Images),
                 () => assets.AttachmentConfig, new GAction());
             player = new MainPlayerProxy(this);
         }

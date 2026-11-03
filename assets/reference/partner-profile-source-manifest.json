@@ -1,0 +1,46 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    "official-source.json": "a29067dd1363590c8fde67a7d5326fcb5a4632441e8c73ae8b64300aa491a3a6",
+    "assets/reference/partner-profile-native-source-manifest.json": "6c326aba3c0097f0de7a078a022db2c893c8d3a1d1e8ab566fc04c1b974df013",
+    "assets/reference/partner-profile-assets-source-manifest.json": "3e006099c7f3179a178891bf078bf4428a51be231e162e020f8c705b5ca4a0fa",
+    "unity/Assets/Official/Partners/partner-rules.json": "1ab5dd32c4ef68297aea6a847cb0e5ced686634bb4fb7f4c28a1aa7bf70398fd",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineProgressSession.cs": "be33450fa00309f2371e15d53240f9c81acbc05b103a8e1343f3ae997b2e2d0d",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineInventoryOperations.cs": "a5d785eece9dea609d5a3ebc0beb73bb329eaac42e596fe7127307cf71bffd45",
+    "unity/Assets/Game/Runtime/Offline/State/LocalJsonSaveFile.cs": "6f0ebf066dd0c09dd76bd5453bf4371ee9de36b643141e3e23d58b3fab6b3055",
+    ".tools/source-packages/current/884_156692/official-code/client-source/NpcDetailPanelProfileContent.cs": "9eabedee5dc1e091ba84e03865eaa09d0a3f9ceaa84a39c030f8526aad66ddd6",
+    ".tools/source-packages/current/884_156692/official-code/common-source/MsgPlayerNpc.cs": "e775cda9b3b0558b2ff7786e667aaa861dd4d70a47c9df2e4ee8d30096317276",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerNpcDataWrap.cs": "43f73f3d2654dc14f0c8c4e11cdde157dcc7be6dfc2b98ca274ddf61d7fa64c5",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerNpcReceivedProfileRewardsWrap.cs": "4a78f03c6d7d6325b4d5b24ace669f2271dff814a2ae7e98539e2fd9dfc82fc2"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerProfileService.cs": "ebad0fd52c7020c5cbdc0ab5b2e4874c913ce37839d72f8372e4c2ae86f12732",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerProfileService.cs.meta": "7c7d8d242c3124df529e3d51afbf363e3659944ee60aae46f6c9f5724e99488d",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterPropertyProgress.cs": "30baeecccf13f34837dc48c187ef074a2a3c0f9e8a0d3131780699ef39ebf217",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterPropertyProgress.cs.meta": "660d3b7b2d5b96c9731cbfbe071b236233f175eab30d24fe91f60da686dfbaeb",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerProfileUiServices.cs": "01726777f14f96a45038059b272cea723599caaf0d1ea6d43f5e366c9d144b68",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerProfileUiServices.cs.meta": "fc6eeef742d00e9a51837e2771d6c08476e3294b2c51db87c05839162e45f0d4",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerProfileAssetCatalog.cs": "1c693372f651ff0da9ee17e3bbb36f3f3636ea5c205c4dfb69f8ff01ce96da3c",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerProfileAssetCatalog.cs.meta": "36a52ce8f157529959885fcce19691b7da8791c51fa3298f8a27a9da2c5ce100",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftRuntimeBindings.cs": "d845edc6b3fcba09a0df5837f2d641b207f92aa7ceecb18a4aa74ed8597e25d7",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftRuntimeBindings.cs.meta": "ebc1861730b2340d46bbd6fca9b80119d2dbead38cd0dff7850d7b7ed6a2e6c9"
+  },
+  "recorder_sha256": "f42125aaf13df942fecbafe2ed54966b4208d5bcbc6dcd29db87df021cd3c812",
+  "validation_helpers": {
+    "scripts/prepare_partner_profile_ui.py": "1daba9d38b99ef8ca4da54d6190cc219d4561daa034e71107d40ddf6c4d9c3b6",
+    "scripts/prepare_partner_profile_native.py": "541035a8e8388ade2c021f7ea2e5618cc2cd9b0728e9be783ea2b52db8b76caf",
+    "scripts/prepare_partner_profile_assets.py": "94e35e420e7c70eecadc171ec5257469990f4c59b15e8b7ca25d4a7060a29184",
+    "scripts/prepare_partner_profile_validation.py": "5361bcfa9c52ad27e2b7ea8ccba0b3d9b7d51e626a9c56169517f64be221b0a5",
+    "scripts/fixtures/partner_profile_transaction_validation.cs": "6ffcb059e1304c06bf023acf185f0e10576d6ba6a9f37b592891b388e9e69126",
+    "scripts/fixtures/partner_profile_ui_validation.cs": "f89e2a13a8bb9fe50091d096e72ef331e0ac9b8deffa19f7ef40fa7ad28879f9"
+  },
+  "confirmed_offline_decision": "On unlock click reload the current save, require a met NPC and original chapter friendship condition, grant configured rewards and chapter receipt atomically; failed save stays locked, retries and revisits never grant twice.",
+  "operation": [
+    "Preserve original chapter order, three/five-tab choice, eligible-tab preference, one-frame scroll and all lock/content/reward states.",
+    "Use the selected original native profile subtree, reward ItemIcon prefab, language and configured reward sprites; preserve original geometry and animation.",
+    "Project receipts and friendship from the current Save.Player after every transaction or reload; return detached receipt reads.",
+    "Missing legacy receipt fields normalize to the original empty collection; validate positive unique chapter IDs.",
+    "Perform checked inventory grants on the transaction clone and publish success only after the atomic save; catch disk/access failures at the profile boundary.",
+    "Closed collaboration NPCs remain unavailable. Formal Home detail host, production tip graph and Windows Player remain pending."
+  ]
+}

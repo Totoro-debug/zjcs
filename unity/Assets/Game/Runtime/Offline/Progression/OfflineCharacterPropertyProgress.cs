@@ -57,6 +57,8 @@ namespace Zjcs.Offline.Progression
             if (progress.CookingUses == null) progress.CookingUses = new List<OfflineCookingUse>();
             if (progress.ExtraProperties == null) progress.ExtraProperties = new List<OfflineExtraProperty>();
             if (progress.NpcFriendships == null) progress.NpcFriendships = new List<OfflineNpcFriendship>();
+            foreach (OfflineNpcFriendship npc in progress.NpcFriendships)
+                if (npc != null && npc.ReceivedProfileRewards == null) npc.ReceivedProfileRewards = new List<int>();
             if (progress.NpcConversations == null) progress.NpcConversations = new OfflineNpcConversationProgress();
             OfflineNpcConversationProgress.Normalize(progress.NpcConversations);
             if (progress.LocalActorIdentities == null) progress.LocalActorIdentities = new OfflineLocalActorIdentities();
@@ -119,6 +121,9 @@ namespace Zjcs.Offline.Progression
                 return false;
             if (progress.NpcFriendships.Any(value => value == null || value.NpcClassId <= 0
                     || value.Level < 0 || value.FriendshipExp < 0
+                    || value.ReceivedProfileRewards == null || value.ReceivedProfileRewards.Count > 1000
+                    || value.ReceivedProfileRewards.Any(chapter => chapter <= 0)
+                    || value.ReceivedProfileRewards.Distinct().Count() != value.ReceivedProfileRewards.Count
                     || value.ActivateTimeTicks < 0 || value.ActivateTimeTicks > System.DateTime.MaxValue.Ticks
                     || value.CollectedTimeTicks < 0 || value.CollectedTimeTicks > System.DateTime.MaxValue.Ticks)
                 || progress.NpcFriendships.Select(value => value.NpcClassId).Distinct().Count()
@@ -178,6 +183,7 @@ namespace Zjcs.Offline.Progression
         public int NpcClassId;
         public int Level;
         public long FriendshipExp;
+        public List<int> ReceivedProfileRewards = new List<int>();
         // Zero preserves the unknown date in legacy saves; never infer a meeting date.
         public long ActivateTimeTicks;
         public bool IsCollected;
