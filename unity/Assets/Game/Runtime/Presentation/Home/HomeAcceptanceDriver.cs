@@ -86,6 +86,9 @@ namespace Zjcs.Presentation.Home
 
             if (Environment.GetCommandLineArgs().Contains("-partnerAutoMeetLoadAcceptance"))
             {
+                HideForeignCanvases();
+                DumpFullscreen();
+                yield return Capture("partner-auto-meet-load.png");
                 ok &= Check("partner-auto-meet-on-load", () =>
                 {
                     int count = runtime.Profile.Save.Player.CharacterProperties.NpcFriendships
