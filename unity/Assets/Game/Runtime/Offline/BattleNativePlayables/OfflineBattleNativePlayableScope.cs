@@ -17,6 +17,7 @@ namespace Zjcs.Offline.BattleNativePlayables
         private readonly IProfessionSoundHost sound;
         private readonly IBattleCameraOffsetHost cameraOffsetHost;
         private readonly IBattleCameraPerformanceHost cameraPerformanceHost;
+        private readonly IBattleMasterEntityResolver masterEntityResolver;
         private readonly IBattleCharacterPartVisibilityHost characterPartVisibilityHost;
         private readonly BattleAfterimageTexturePool afterimageTextures = new BattleAfterimageTexturePool();
         private readonly MyPlayableCenter center = new MyPlayableCenter();
@@ -28,11 +29,13 @@ namespace Zjcs.Offline.BattleNativePlayables
         public OfflineBattleNativePlayableScope(Transform parent, IProfessionSoundHost sound,
             IBattleCameraOffsetHost cameraOffsetHost = null,
             IBattleCharacterPartVisibilityHost characterPartVisibilityHost = null,
-            IBattleCameraPerformanceHost cameraPerformanceHost = null)
+            IBattleCameraPerformanceHost cameraPerformanceHost = null,
+            IBattleMasterEntityResolver masterEntityResolver = null)
         {
             this.sound = sound ?? throw new ArgumentNullException(nameof(sound));
             this.cameraOffsetHost = cameraOffsetHost;
             this.cameraPerformanceHost = cameraPerformanceHost;
+            this.masterEntityResolver = masterEntityResolver;
             this.characterPartVisibilityHost = characterPartVisibilityHost;
             root = new GameObject("Original battle native playables");
             root.transform.SetParent(parent, false);
@@ -68,6 +71,8 @@ namespace Zjcs.Offline.BattleNativePlayables
                     afterimagePlayable.BindAfterimageHost(this);
                 if (component is IBattleCameraPerformancePlayable performancePlayable)
                     performancePlayable.BindCameraPerformanceHost(cameraPerformanceHost);
+                if (component is IBattleMasterEntityOverridePlayable masterOverridePlayable)
+                    masterOverridePlayable.BindMasterEntityResolver(masterEntityResolver);
             }
             instance.transform.SetParent(parent, worldPositionStays);
             return instance;

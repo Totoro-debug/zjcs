@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using Zjcs.Offline.BattleNativePlayables;
@@ -39,7 +40,7 @@ namespace Zjcs.Editor.Combat
         {
             EditorApplication.update -= Verify;
             SessionState.SetBool(Key, false);
-            GameObject root = null, source = null, prefab = null;
+            GameObject root = null, source = null, prefab = null, target = null, master = null;
             OfflineBattleNativePlayableScope scope = null;
             try
             {
@@ -47,10 +48,15 @@ namespace Zjcs.Editor.Combat
                 source = new GameObject("Original skill source");
                 source.transform.SetParent(root.transform, false);
                 source.transform.localPosition = new Vector3(2, 3, 4);
+                target = new GameObject("Original skill target");
+                target.transform.SetParent(root.transform, false);
+                master = new GameObject("Master entity");
+                master.transform.SetParent(root.transform, false);
                 var sound = new SoundHost();
                 var camera = new CameraHost();
                 scope = new OfflineBattleNativePlayableScope(root.transform, sound,
-                    cameraPerformanceHost: camera);
+                    cameraPerformanceHost: camera,
+                    masterEntityResolver: new MasterResolver(source, target, master));
 
                 prefab = new GameObject("Original camera performance playable");
                 var config = prefab.AddComponent<MyPlayableFightCameraPerformance>();
@@ -77,6 +83,20 @@ namespace Zjcs.Editor.Combat
                 Require(camera.Events.Count == 4 && camera.Events[2] == "camera-out"
                     && camera.Events[3] == "unblock:41", "camera and input are restored in order");
 
+                prefab = CreateMasterOverridePrefab(overrideSource: true, useSourceData: true);
+                MyPlayable sourceOverride = scope.Play(prefab, source, target);
+                Require(sourceOverride.mySource == master,
+                    "source override resolves the source character's master entity");
+                scope.Stop(sourceOverride, true); scope.Tick(0.01f); scope.LateTick();
+                UnityEngine.Object.DestroyImmediate(prefab); prefab = null;
+
+                prefab = CreateMasterOverridePrefab(overrideSource: false, useSourceData: false);
+                MyPlayable targetOverride = scope.Play(prefab, source, target);
+                Require(targetOverride.myTarget == master,
+                    "target override resolves the target character's master entity");
+                scope.Stop(targetOverride, true); scope.Tick(0.01f); scope.LateTick();
+                UnityEngine.Object.DestroyImmediate(prefab); prefab = null;
+
                 AppearanceCombineSkin appearance = source.AddComponent<AppearanceCombineSkin>();
                 prefab = new GameObject("Original appearance-combine-skin playable");
                 prefab.SetActive(false);
@@ -101,7 +121,7 @@ namespace Zjcs.Editor.Combat
                 Require(skinPlayable.myStatus == MyPlayable.PlayableStatus.Stop,
                     "appearance playable completes the original stop lifecycle");
 
-                Debug.Log("Skill visual Play Mode acceptance passed: camera position/switch/input-block lifecycle and ordered appearance skin add/remove.");
+                Debug.Log("Skill visual Play Mode acceptance passed: camera lifecycle, source/target master overrides, and ordered appearance skin operations.");
                 scope.Dispose(); scope = null;
                 UnityEngine.Object.DestroyImmediate(prefab); prefab = null;
                 UnityEngine.Object.DestroyImmediate(source); source = null;
@@ -115,6 +135,8 @@ namespace Zjcs.Editor.Combat
                 scope?.Dispose();
                 if (prefab) UnityEngine.Object.DestroyImmediate(prefab);
                 if (source) UnityEngine.Object.DestroyImmediate(source);
+                if (target) UnityEngine.Object.DestroyImmediate(target);
+                if (master) UnityEngine.Object.DestroyImmediate(master);
                 if (root) UnityEngine.Object.DestroyImmediate(root);
                 EditorApplication.isPlaying = false;
                 EditorApplication.Exit(1);
@@ -124,6 +146,21 @@ namespace Zjcs.Editor.Combat
         private static void Require(bool condition, string message)
         {
             if (!condition) throw new InvalidOperationException("Camera performance Play Mode acceptance: " + message);
+        }
+
+        private static GameObject CreateMasterOverridePrefab(bool overrideSource, bool useSourceData)
+        {
+            var prefab = new GameObject("Original master-override playable");
+            prefab.SetActive(false);
+            Type playableType = Type.GetType(
+                "Zjcs.Official.BattleStatusPlayables.ApplyOverrideToMaster, Zjcs.Official.BattleStatusPlayables",
+                throwOnError: true);
+            Component playable = prefab.AddComponent(playableType);
+            playableType.GetField("OverrideSource", BindingFlags.Public | BindingFlags.Instance)
+                .SetValue(playable, overrideSource);
+            playableType.GetField("UseSourceDataToOverride", BindingFlags.Public | BindingFlags.Instance)
+                .SetValue(playable, useSourceData);
+            return prefab;
         }
 
         private sealed class SoundHost : IProfessionSoundHost
@@ -138,6 +175,20 @@ namespace Zjcs.Editor.Combat
             public void UnblockGameObjectInput(long operationId) => Events.Add("unblock:" + operationId);
             public void SwitchInPerformanceCamera() => Events.Add("camera-in");
             public void SwitchOutPerformanceCamera() => Events.Add("camera-out");
+        }
+
+        private sealed class MasterResolver : IBattleMasterEntityResolver
+        {
+            private readonly GameObject source, target, master;
+            public MasterResolver(GameObject source, GameObject target, GameObject master)
+            {
+                this.source = source; this.target = target; this.master = master;
+            }
+            public bool TryGetMasterEntity(GameObject character, out GameObject resolved)
+            {
+                resolved = character == source || character == target ? master : null;
+                return resolved != null;
+            }
         }
     }
 }

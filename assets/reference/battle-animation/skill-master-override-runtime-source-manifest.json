@@ -1,0 +1,40 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "official_client_sources": [
+    {
+      "path": ".tools/source-packages/official-code/client-source/ApplyOverrideToMaster.cs",
+      "sha256": "dba625182c4623f136968e05452c0f81409bfeb2ecb811196377b3a7224fe2ff"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/MyFightRoleCharacter.cs",
+      "sha256": "4d0935f892cce5ecb4e797f5a5b4f3fa0913f4bac33aef0fe44bd402c58df3c6"
+    }
+  ],
+  "migrated_outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/ApplyOverrideToMaster.cs",
+      "sha256": "f2fe5b1ccd49a2b215a1be92b816d9cf2096c724f1a6bf09e3fa21e44e819c29"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/IBattleCameraOffsetHost.cs",
+      "sha256": "9714280de70aee8552393ce055be0b9ad9e4c7c5fd8f6aa28bc476d694671b57"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleNativePlayableScope.cs",
+      "sha256": "ee094cd52e33ac604a127db692707fc2566dc543627fced133ebcb1258c2e5ee"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/BattleCameraPerformancePlayableAcceptance.cs",
+      "sha256": "cc34cc03a8d4fbbbb2fd154773dab1bda631c4f9db3e86547c27be3866fc0545"
+    }
+  ],
+  "meta_outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleStatusPlayables/ApplyOverrideToMaster.cs.meta",
+      "sha256": "94aefebf576933d06175e87451b894479af9c6334b91a18c6b718b1b1be89f71"
+    }
+  ],
+  "adaptation": "Preserve official UseSourceDataToOverride and OverrideSource behavior. Resolve the selected source or target character's master through an explicit offline resolver because the original MyFightRoleCharacter/MyEntity container view is not part of the offline battle model. Missing resolver, character, or master leaves the original source and target unchanged.",
+  "runtime_validation": "The Editor Play Mode acceptance entry covers both source and target override branches through OfflineBattleNativePlayableScope, but the updated isolated project import timed out before those assertions ran. Production battle entity resolver wiring and native skill graph scheduling remain incomplete."
+}

@@ -50,4 +50,14 @@ namespace Zjcs.Official.StoryPlayableManager
     {
         void BindCameraPerformanceHost(IBattleCameraPerformanceHost host);
     }
+
+    public interface IBattleMasterEntityResolver
+    {
+        bool TryGetMasterEntity(GameObject character, out GameObject master);
+    }
+
+    public interface IBattleMasterEntityOverridePlayable
+    {
+        void BindMasterEntityResolver(IBattleMasterEntityResolver resolver);
+    }
 }
