@@ -2,7 +2,7 @@
 
 [总索引](../README.md)
 
-状态：未完成
+状态：局部完成。周常战斗数据与公共战斗执行器已接入，活动入口、周期存档与奖励事务仍未完成。
 
 ## 功能简介
 
@@ -24,7 +24,7 @@
 
 ## 完整还原部分
 
-尚无完整 Unity 流程的完成结论；已取得源码和转换素材仅作迁移依据。
+已从当前 `884_156692` 官方 APK／配置缓存提取 200 个虚空裂隙阶段及魔王 4800 的原始阶段、怪物编队、网格、阵营入口、波次起点和技能绑定。900、1412、902 三个官方战斗场景均由当前 `FightStage_part*.g.bytes` 解码，运行时目录由 `OfflineWeeklyChallengeBattleCatalog` 严格校验并复用公共 `OfficialBattleRuntimeController` 的 HUD、准备、行动、技能、冷却、结算和战报管线。生成器和输入哈希记录在 `scripts/prepare_unity_weekly_battle_data.py` 与 `assets/reference/weekly-challenges/battle-stages-source-manifest.json`。
 
 ## 自定义实现
 
@@ -48,7 +48,7 @@
 
 ## 尚未实现
 
-- 虚空、混沌、阶段实体、地图方向、单人实战、跨次保底、自动推进、本人伤害累计和家园商人。
+- 虚空、混沌的正式活动入口、阶段实体、地图方向、跨次保底、自动推进、本人伤害累计和家园商人。
 
 - 完成 Unity 实际入口、交互／表现、存档与失败恢复验证，并发布对应 Windows 可执行版本。
 

@@ -31,12 +31,35 @@ namespace Zjcs.Presentation.Home
             host = runtime ?? throw new ArgumentNullException(nameof(runtime));
             request = settings ?? throw new ArgumentNullException(nameof(settings));
             var data = JsonUtility.FromJson<Map10RuntimeBattleData>(request.BattleRuntimeJson);
-            if (data == null || data.manifest != "854_156383") throw new InvalidOperationException("Original damage-test battle data is absent.");
+            if (data == null || (data.manifest != "854_156383" && data.manifest != "884_156692"))
+                throw new InvalidOperationException("Original battle data is absent.");
             Map10RuntimeStage stage = data.stages.Single(value => value.Id == request.StageId);
             Map10RuntimeRoster roster = data.monsterRosters.Single(value => value.StageId == request.StageId);
             Map10RuntimeBattleScene scene = data.battleScenes.Single(value => value.GameId == stage.GameId);
             FightBattleCheckpoint checkpoint = BuildCheckpoint(stage, roster, scene);
             MountBattle(checkpoint, scene, stage);
+        }
+
+        // Weekly activities use the same public battle host and checkpoint
+        // pipeline. Their activity service remains responsible for period and
+        // reward state; this entry only selects the verified official stage.
+        public void BeginWeekly(HomeFeatureRuntime runtime, int stageId)
+        {
+            TextAsset asset = Resources.Load<TextAsset>("WeeklyChallenges/battle-stages");
+            if (asset == null) throw new InvalidOperationException("Official weekly battle catalog is absent.");
+            Map10RuntimeBattleData data = JsonUtility.FromJson<Map10RuntimeBattleData>(asset.text);
+            Map10RuntimeStage stage = data?.stages?.SingleOrDefault(value => value != null && value.Id == stageId);
+            if (stage == null) throw new InvalidOperationException("Official weekly stage is absent: " + stageId);
+            Begin(runtime, new OfficialSkillDamageTestRequest
+            {
+                StageId = stage.Id,
+                Difficulty = 0,
+                MonsterLevel = Mathf.Max(1, Mathf.RoundToInt(stage.Level)),
+                MaxRound = stage.MaxRound,
+                EnableMonsterOneDamage = false,
+                EnableMonsterUnlimitHp = false,
+                BattleRuntimeJson = asset.text
+            });
         }
 
         private void MountBattle(FightBattleCheckpoint checkpoint, Map10RuntimeBattleScene scene, Map10RuntimeStage stage)
