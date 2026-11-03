@@ -13,6 +13,7 @@ namespace Zjcs.Combat.Official
     {
         public int ItemId;
         public int EntityId;
+        public int UserType;
         public int AiPriorityId = -1;
         public int LastAiPriorityId = -1;
         public int PassiveRankPropId;
@@ -84,6 +85,7 @@ namespace Zjcs.Combat.Official
                 {
                     ItemId = itemId,
                     EntityId = entityId,
+                    UserType = FightOfficialCombatCatalog.ReadInt(skill, "UserType"),
                     AiPriorityId = FightOfficialCombatCatalog.ReadInt(skill, "AiPriorityId", -1),
                     LastAiPriorityId = FightOfficialCombatCatalog.ReadInt(skill, "LastAiPriorityId", -1),
                     PassiveRankPropId = FightOfficialCombatCatalog.ReadInt(skill, "PassiveRankPropId"),

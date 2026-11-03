@@ -304,13 +304,15 @@ namespace Zjcs.Presentation.Home
             yield return null;
             click(result.GetComponentsInChildren<Button>().First(value => value.name == "BtnBattleData"));
             yield return new WaitForSecondsRealtime(.4f);
-            var report = UnityEngine.Object.FindObjectsOfType<Transform>().First(value => value.name == "damage_test_report");
+            var report = UnityEngine.Object.FindObjectsOfType<Transform>().First(value => value.name == "FightEndReportPanel");
             Require(report.GetComponentsInChildren<Zjcs.Official.WorldUI.WorldBattleReportPlayerRow>().Length == 1,
                 "The native battle report did not show the player's statistics.");
             RequireReportPortrait(report);
             ScreenCapture.CaptureScreenshot(Path.Combine(outputDirectory, "skills-damage-player-report.png"));
             yield return null;
-            click(report.GetComponentsInChildren<Button>().First(value => value.name == "TabGroupItem_11 (1)"));
+            var reportTabs = report.GetComponentsInChildren<Zjcs.Official.WorldUI.WorldTabGroup>(true)
+                .Single(value => value.GetAllTabs().Length == 2);
+            click(reportTabs.GetAllTabs()[1]);
             yield return new WaitForSecondsRealtime(.4f);
             Require(report.GetComponentsInChildren<Zjcs.Official.WorldUI.WorldBattleReportSkillRow>().Length > 0,
                 "The native skill report did not show skill rows.");
@@ -345,7 +347,7 @@ namespace Zjcs.Presentation.Home
                 "The offline result still exposes online report sharing.");
             Require(!Directory.Exists(Path.Combine(new ProfileSlotCatalog(root).GetSlotDirectory(slot), "skill-damage-reports")),
                 "A temporary damage-test report was persisted to the profile.");
-            Require(!FindObjectsOfType<Transform>().Any(value => value.name == "damage_test_report"),
+            Require(!FindObjectsOfType<Transform>().Any(value => value.name == "FightEndReportPanel"),
                 "Closing the statistics page left its report window alive.");
             click(result.GetComponentsInChildren<Button>().First(value => value.name == "Setting"));
             yield return new WaitForSecondsRealtime(.5f);

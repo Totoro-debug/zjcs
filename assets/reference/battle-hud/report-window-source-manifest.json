@@ -1,0 +1,622 @@
+{
+  "manifest": "884_156692",
+  "apk_manifest": "881_156673",
+  "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+  "native": {
+    "path": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportPanel.prefab",
+    "sha256": "201dd91256bfb421efde2f914fdd2850d96d8559e83fe2d7284b1a3576db7240",
+    "hashLineEndings": "LF"
+  },
+  "prefab_source": {
+    "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportpanel.bundle",
+    "bundle_hash": "9b96851b16bb76746f044f141a36570a",
+    "path_id": "-7869414039956856154",
+    "origin": "official_cdn",
+    "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/9b96851b16bb76746f044f141a36570a.bundle",
+    "manifest": "884_156692",
+    "bundle_size": 22288,
+    "bundle_sha256": "893c404eda7a038aa3b2f9036cd4128c6c7a0e5aeb75825e7ef0b9e7d928c791"
+  },
+  "retained_mask": {
+    "document": {
+      "path": "unity/Assets/Official/Skills/skill-ui.json",
+      "sha256": "365560c582ccfc8e68f195a7bb2faa82d6f8566fd5a8dc79d35fa74efb7a767c",
+      "hashLineEndings": "LF"
+    },
+    "binding": {
+      "fields": {
+        "mMaskType": 3,
+        "mBtn": "/WorldCanvas/Content/Popup/BlurMask",
+        "mMaskImg": null,
+        "mImage": "/WorldCanvas/Content/Popup/BlurMask"
+      },
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_map_world.bundle",
+        "bundle_hash": "95607c486d7931f2026961598dc46c85",
+        "path_id": "1420618657708515698",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/95607c486d7931f2026961598dc46c85.bundle",
+        "raw_size": 396072,
+        "raw_sha256": "6ac5d0f541addd66f33db2fc109eba52642c35380877a48e71ced8ad116b1b9d"
+      },
+      "prefab_resource": "Map11/UI/WorldCanvas",
+      "prefab_path": "Content/Popup/BlurMask",
+      "blur_material": "World/Mainline/ScreenBlur",
+      "raw_image": {
+        "m_UVRect": [
+          0.0,
+          0.0,
+          1.0,
+          1.0
+        ],
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ui_map_world.bundle",
+          "bundle_hash": "95607c486d7931f2026961598dc46c85",
+          "path_id": "-7393980279058390670",
+          "origin": "apk_zip",
+          "manifest": "854_156383",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "apk_entry": "assets/yoo/DefaultPackage/95607c486d7931f2026961598dc46c85.bundle",
+          "raw_size": 396072,
+          "raw_sha256": "6ac5d0f541addd66f33db2fc109eba52642c35380877a48e71ced8ad116b1b9d"
+        },
+        "source_sha256": "06e78f4991bce8f8ed98b15e08a94d2042f1e4f0645973dc20baab00770a9c36"
+      }
+    },
+    "resources": [
+      {
+        "path": "unity/Assets/Game/Resources/Map11/UI/WorldCanvas.prefab",
+        "sha256": "2fb840d6a496a8efee791478bc224119e9e10347ac0a507b09ee27c498ae99df",
+        "hashLineEndings": "LF"
+      },
+      {
+        "path": "unity/Assets/Game/Resources/World/Mainline/ScreenBlur.mat",
+        "sha256": "bce39eb309216972db2b7ed0b483c7ee38e816aee6ac82a23f64f0f3a5d98797",
+        "hashLineEndings": "LF"
+      },
+      {
+        "path": "unity/Assets/Game/Runtime/Presentation/World/Shaders/ScreenBlur.shader",
+        "sha256": "b690f962e335b2676ff82fdfd7d40397d4192a566ab00233fc46b16c8c9e5ab6",
+        "hashLineEndings": "LF"
+      }
+    ]
+  },
+  "hierarchy_nodes": 135,
+  "verified_layout_fields": 1080,
+  "sources": [
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportpanel.bundle",
+        "bundle_hash": "9b96851b16bb76746f044f141a36570a",
+        "path_id": "-4541461346699812186",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/9b96851b16bb76746f044f141a36570a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 22288,
+        "bundle_sha256": "893c404eda7a038aa3b2f9036cd4128c6c7a0e5aeb75825e7ef0b9e7d928c791"
+      },
+      "payload_sha256": "822feb70a8fcc4f1158a8add8415f851d9dd39dae069b4413051bb309a6d603a",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -7869414039956856154
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -1020441917908962761
+        },
+        "m_Name": "",
+        "mShowClip": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mHideClip": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mLoopClip": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mMaskType": 3,
+        "mWindowType": 1,
+        "mFullScreen": 0,
+        "mCloseByClickMask": 0,
+        "mAutoCloseWhenContainerDisable": 0,
+        "mIsDuplicate": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportpanel.bundle",
+        "bundle_hash": "9b96851b16bb76746f044f141a36570a",
+        "path_id": "7102516957731512998",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/9b96851b16bb76746f044f141a36570a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 22288,
+        "bundle_sha256": "893c404eda7a038aa3b2f9036cd4128c6c7a0e5aeb75825e7ef0b9e7d928c791"
+      },
+      "payload_sha256": "2e7c6040d9042f214f49ab6f0747feae898f205bbb4914f1528381460b2dbb06",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -7869414039956856154
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 4950757006332050384
+        },
+        "m_Name": "",
+        "TabVisualObj": {
+          "m_FileID": 0,
+          "m_PathID": -2978789757541588314
+        },
+        "TabGroup": {
+          "m_FileID": 0,
+          "m_PathID": 9102317007365497510
+        },
+        "CloseBtn": {
+          "m_FileID": 0,
+          "m_PathID": 4886529571587318438
+        },
+        "RoundCountText": {
+          "m_FileID": 0,
+          "m_PathID": -901778768210926938
+        },
+        "PlayerTabView": {
+          "m_FileID": 0,
+          "m_PathID": 2491384284729533094
+        },
+        "SkillTabView": {
+          "m_FileID": 0,
+          "m_PathID": -5066114166948339034
+        },
+        "TabTypeSwitcher": {
+          "mStateConfigs": [
+            {
+              "rid": 8919978664048722295
+            }
+          ],
+          "mOwner": {
+            "m_FileID": 0,
+            "m_PathID": -7869414039956856154
+          }
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": 8919978664048722295,
+              "type": {
+                "class": "StateGameObjectConfig",
+                "ns": "",
+                "asm": "Framework"
+              },
+              "data": {
+                "mStateGameObjectData": {
+                  "GoConfig": [
+                    {
+                      "State": {
+                        "mValue": 0
+                      },
+                      "GameObjects": [
+                        {
+                          "m_FileID": 0,
+                          "m_PathID": 6016001438337032870
+                        }
+                      ]
+                    },
+                    {
+                      "State": {
+                        "mValue": 1
+                      },
+                      "GameObjects": [
+                        {
+                          "m_FileID": 0,
+                          "m_PathID": -2052000669498121562
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportpanel.bundle",
+        "bundle_hash": "9b96851b16bb76746f044f141a36570a",
+        "path_id": "2491384284729533094",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/9b96851b16bb76746f044f141a36570a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 22288,
+        "bundle_sha256": "893c404eda7a038aa3b2f9036cd4128c6c7a0e5aeb75825e7ef0b9e7d928c791"
+      },
+      "payload_sha256": "0be34c4bc7aba642bd0480fd4a23b519d388550de9c54324797b82da3d9b74a4",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 6016001438337032870
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -4308426212132345409
+        },
+        "m_Name": "",
+        "PlayerSlot": {
+          "m_FileID": 0,
+          "m_PathID": -4913949905883471194
+        },
+        "PrefabObj": {
+          "m_FileID": 2,
+          "m_PathID": -8811045736953628941
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportpanel.bundle",
+        "bundle_hash": "9b96851b16bb76746f044f141a36570a",
+        "path_id": "-5066114166948339034",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/9b96851b16bb76746f044f141a36570a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 22288,
+        "bundle_sha256": "893c404eda7a038aa3b2f9036cd4128c6c7a0e5aeb75825e7ef0b9e7d928c791"
+      },
+      "payload_sha256": "ed8b66c955bcd699449184bd0ac586d927da76476b58847b8eb8334f116ea41a",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2052000669498121562
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 8784723807813948628
+        },
+        "m_Name": "",
+        "mTitleScrollRect": {
+          "m_FileID": 0,
+          "m_PathID": 350898274247926438
+        },
+        "mItemScrollRect": {
+          "m_FileID": 0,
+          "m_PathID": 1757284935104291494
+        },
+        "mGMStateSwitcher": {
+          "mStateConfigs": [
+            {
+              "rid": 8140112727386357861
+            }
+          ],
+          "mOwner": {
+            "m_FileID": 0,
+            "m_PathID": -2052000669498121562
+          }
+        },
+        "mTabGroupGO": {
+          "m_FileID": 0,
+          "m_PathID": -386481705626148186
+        },
+        "mTabGroup": {
+          "m_FileID": 0,
+          "m_PathID": -6966885575697210714
+        },
+        "mShowEquipTermReportSwitcher": {
+          "mStateConfigs": [
+            {
+              "rid": 17002371843883028
+            }
+          ],
+          "mOwner": {
+            "m_FileID": 0,
+            "m_PathID": -2052000669498121562
+          }
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": 17002371843883028,
+              "type": {
+                "class": "StateGameObjectConfig",
+                "ns": "",
+                "asm": "Framework"
+              },
+              "data": {
+                "mStateGameObjectData": {
+                  "GoConfig": [
+                    {
+                      "State": {
+                        "mValue": 1
+                      },
+                      "GameObjects": [
+                        {
+                          "m_FileID": 0,
+                          "m_PathID": 2999630504126079654
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "rid": 8140112727386357861,
+              "type": {
+                "class": "StateGameObjectConfig",
+                "ns": "",
+                "asm": "Framework"
+              },
+              "data": {
+                "mStateGameObjectData": {
+                  "GoConfig": [
+                    {
+                      "State": {
+                        "mValue": 1
+                      },
+                      "GameObjects": [
+                        {
+                          "m_FileID": 0,
+                          "m_PathID": -6614399739561221466
+                        },
+                        {
+                          "m_FileID": 0,
+                          "m_PathID": -3473726851321535834
+                        },
+                        {
+                          "m_FileID": 0,
+                          "m_PathID": 8958962332941902502
+                        },
+                        {
+                          "m_FileID": 0,
+                          "m_PathID": -422256081242922330
+                        },
+                        {
+                          "m_FileID": 0,
+                          "m_PathID": 1425634453905433254
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportpanel.bundle",
+        "bundle_hash": "9b96851b16bb76746f044f141a36570a",
+        "path_id": "-6724179514519756122",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/9b96851b16bb76746f044f141a36570a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 22288,
+        "bundle_sha256": "893c404eda7a038aa3b2f9036cd4128c6c7a0e5aeb75825e7ef0b9e7d928c791"
+      },
+      "payload_sha256": "f904ded9b8e747634930d25d4b06390d5cbb465b8bd30a8182b24b535e3b863f",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -5954112681130696026
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 7831727250904919120
+        },
+        "m_Name": "",
+        "mTabType": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportpanel.bundle",
+        "bundle_hash": "9b96851b16bb76746f044f141a36570a",
+        "path_id": "-8710642698530692442",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/9b96851b16bb76746f044f141a36570a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 22288,
+        "bundle_sha256": "893c404eda7a038aa3b2f9036cd4128c6c7a0e5aeb75825e7ef0b9e7d928c791"
+      },
+      "payload_sha256": "3ece11dad220ef6d3b22fe520e14b1ba6250588217a902c73a90e8057b7793ad",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -4734459241945341274
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 7831727250904919120
+        },
+        "m_Name": "",
+        "mTabType": 1
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportpanel.bundle",
+        "bundle_hash": "9b96851b16bb76746f044f141a36570a",
+        "path_id": "365151905154032294",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/9b96851b16bb76746f044f141a36570a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 22288,
+        "bundle_sha256": "893c404eda7a038aa3b2f9036cd4128c6c7a0e5aeb75825e7ef0b9e7d928c791"
+      },
+      "payload_sha256": "177a49a88641ecbbe8656d19f59237211dbf00080f81ad89dd8cadec5ee049bf",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 2999630504126079654
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 7831727250904919120
+        },
+        "m_Name": "",
+        "mTabType": 2
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportpanel.bundle",
+        "bundle_hash": "9b96851b16bb76746f044f141a36570a",
+        "path_id": "5214499720564007590",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/9b96851b16bb76746f044f141a36570a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 22288,
+        "bundle_sha256": "893c404eda7a038aa3b2f9036cd4128c6c7a0e5aeb75825e7ef0b9e7d928c791"
+      },
+      "payload_sha256": "975fcbbfd6469f1aa5845570a5a72a583c9b15beea2332378086ddc8ba94e041",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -4099919433876741466
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 5197579171762352518
+        },
+        "m_Name": "",
+        "mTabType": 0
+      }
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportpanel.bundle",
+        "bundle_hash": "9b96851b16bb76746f044f141a36570a",
+        "path_id": "-9049237829119810906",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/9b96851b16bb76746f044f141a36570a.bundle",
+        "manifest": "884_156692",
+        "bundle_size": 22288,
+        "bundle_sha256": "893c404eda7a038aa3b2f9036cd4128c6c7a0e5aeb75825e7ef0b9e7d928c791"
+      },
+      "payload_sha256": "d12571341f23bb482c508f36fd3b59e690909381c64a1d4b30aac53ca46ff85c",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 8738982719383233190
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 5197579171762352518
+        },
+        "m_Name": "",
+        "mTabType": 1
+      }
+    }
+  ],
+  "output": {
+    "path": "unity/Assets/Game/Resources/Combat/BattleReport/report-window-bindings.json",
+    "sha256": "e11544b26cf3076b1c3076ba005db7f35f8e02a0bb1f92e7b35ff005fdc36c1d",
+    "hashLineEndings": "LF"
+  },
+  "official_code": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/FightEndReportPanelBase.cs",
+      "sha256": "c61826e31af6f031ff8c546856d213602fc0c0ec4f1f6c9b8184ed9965b80f9a",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/FightEndReportPanel.cs",
+      "sha256": "96eee3549b775e125eda15173f6b29bc69043e37beac3588a1fba95d08529cdb",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/FightEndReportSkillTabView.cs",
+      "sha256": "93051dc2e83184d1abc817eba821d466e386e949289b6bf9a9517993979abaee",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/FightEndReportPlayerTabView.cs",
+      "sha256": "6faa2f2a7b64cf035783de108215de5e6eee582310b042d2055956502c5a97d1",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/FightEndReportPanelTabItem.cs",
+      "sha256": "6e5ae115492569e9135472fee012a58a9136155537badca5fff254e47ca84a4d",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/FightEndReportSkillTabItem.cs",
+      "sha256": "c5a9f59198ec5b763bc960ca6339a731a6cb93c427b66adc3319d8f9669a4344",
+      "hashLineEndings": "LF"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_shared_battle_report.py",
+    "sha256": "827cf59e016b47fd65f5f89e882f625e04e07dd0695a4a3d0db7b929ff738367",
+    "hashLineEndings": "LF"
+  },
+  "runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleReportView.cs",
+      "sha256": "44c6f8ae16df005752ebaa27e809282487c5766f38bfa5c10e025b8f173e0228",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleReportView.cs.meta",
+      "sha256": "4536f1ad89f1c6fcbd8a74241846917ff132f365498f1a60a7bbe02a7dff6eb4",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePopupMask.cs",
+      "sha256": "5af5897b20e2b75ead8f95687c067ba2cc981162baeb1bb061fe8ee434defcd0",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePopupMask.cs.meta",
+      "sha256": "36bd1bed7b11a6bb56cd1026202e5583604371fac9bd34c58e4e7ca7720da9d0",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Character/OfficialSkillPopupMask.cs",
+      "sha256": "eaa32064b5310bfd4ac8ad18b1722e048e5355ca5bfb74bfee40f0075fd5483e",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Character/CharacterSkillPanel.BattleReport.cs",
+      "sha256": "67aa674d26fc6361fc8eee98e9844900842173b1583cee5e96eab65e1a852a5e",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialSkillItemCatalog.cs",
+      "sha256": "cac8ebc88de95d860df9d536746ec1912de4f95e972da1b3b077fe92e1441770",
+      "hashLineEndings": "LF"
+    }
+  ],
+  "equipment_user_type": {
+    "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/SkillUserType.cs",
+    "sha256": "9e327306233e659a89d0bdee7d8729809696fcaecc2b9089940e10a337344a27",
+    "hashLineEndings": "LF"
+  },
+  "output_meta": {
+    "path": "unity/Assets/Game/Resources/Combat/BattleReport/report-window-bindings.json.meta",
+    "sha256": "0ded6e4840dfa9b7d12b99704d286ecc91e9c00ff9a3ce6be3bb5d4326f1b502",
+    "hashLineEndings": "LF"
+  }
+}

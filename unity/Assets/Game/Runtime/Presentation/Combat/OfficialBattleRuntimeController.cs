@@ -483,12 +483,14 @@ namespace Zjcs.Presentation.Combat
                 BattleReportReady?.Invoke(completedReport);
                 adapter?.OnBattleReportReady(completedReport);
             }
+            // Hosts may dispose the session from OnBattleCompleted. Presentation
+            // observers must see the final checkpoint and BattleEnd before that handoff.
+            StepPresentationCompleted?.Invoke();
             if (completedCheckpoint != null)
             {
                 BattleCompleted?.Invoke(completedCheckpoint);
                 adapter?.OnBattleCompleted(completedCheckpoint);
             }
-            StepPresentationCompleted?.Invoke();
         }
 
         public void AttachUnitTransform(int unitId, Transform transform)

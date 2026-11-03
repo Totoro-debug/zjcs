@@ -1,0 +1,95 @@
+{
+  "window": {
+    "path": "",
+    "tabVisual": "0/2/0/0",
+    "tabs": "0/2/0/0/1",
+    "close": "0/2/0/1",
+    "round": "0/0/2",
+    "player": "0/0/0",
+    "skill": "0/0/1",
+    "states": [
+      {
+        "state": 0,
+        "objects": [
+          "0/0/0"
+        ]
+      },
+      {
+        "state": 1,
+        "objects": [
+          "0/0/1"
+        ]
+      }
+    ],
+    "maskType": 3,
+    "closeByMask": false,
+    "mask": {
+      "prefabResource": "Map11/UI/WorldCanvas",
+      "prefabPath": "Content/Popup/BlurMask",
+      "blurMaterial": "World/Mainline/ScreenBlur",
+      "buttonPath": "",
+      "imagePath": "",
+      "uvRect": [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "player": {
+    "path": "0/0/0",
+    "slot": "0/0/0/3/0/0"
+  },
+  "skill": {
+    "path": "0/0/1",
+    "titleScroll": "0/0/1/1/1",
+    "itemScroll": "0/0/1/1/2",
+    "tabGroupGo": "0/0/1/2",
+    "tabs": "0/0/1/2/1",
+    "gmStates": [
+      {
+        "state": 1,
+        "objects": [
+          "0/0/1/1/1/0/0/8",
+          "0/0/1/1/1/0/0/9",
+          "0/0/1/1/1/0/0/10",
+          "0/0/1/1/1/0/0/11",
+          "0/0/1/1/1/0/0/12"
+        ]
+      }
+    ],
+    "equipmentStates": [
+      {
+        "state": 1,
+        "objects": [
+          "0/0/1/2/1/2"
+        ]
+      }
+    ]
+  },
+  "panelTabs": [
+    {
+      "path": "0/2/0/0/1/0",
+      "type": 0
+    },
+    {
+      "path": "0/2/0/0/1/1",
+      "type": 1
+    }
+  ],
+  "skillTabs": [
+    {
+      "path": "0/0/1/2/1/0",
+      "type": 0
+    },
+    {
+      "path": "0/0/1/2/1/1",
+      "type": 1
+    },
+    {
+      "path": "0/0/1/2/1/2",
+      "type": 2
+    }
+  ]
+}

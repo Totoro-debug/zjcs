@@ -25,6 +25,8 @@ namespace Zjcs.Presentation.Character
         private void CloseAuxiliary()
         {
             auxiliaryReturn = null;
+            battleReport?.Dispose();
+            battleReport = null;
             CloseSkillVideo();
             if (auxiliaryDialog != null) { auxiliaryDialog.SetActive(false); Destroy(auxiliaryDialog); }
             auxiliaryDialog = null;

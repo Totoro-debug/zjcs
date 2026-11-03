@@ -43,6 +43,12 @@ namespace Zjcs.Editor
         [MenuItem("Zjcs/Validate/Map10 Battle Real Input Play Mode")]
         public static void RunRealInput() => Start(false, true);
 
+        public static void RunSharedReport()
+        {
+            ProjectTools.Validate();
+            RunRealInput();
+        }
+
         private static void Start(bool portraitOnly, bool realInput = false)
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
@@ -650,6 +656,9 @@ namespace Zjcs.Editor
                 Require(checkpointField("Finished") != 0, "The complete battle did not reach a final result.");
                 Require(finalPresentationHeld && finalPresentationCompleted,
                     "The complete battle did not exercise final presentation hold and release.");
+                if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_WINDOW") == "1")
+                    yield return Combat.OfficialSharedBattleReportAcceptance.Exercise(
+                        (Zjcs.Combat.Official.FightBattleCheckpoint)checkpoint());
                 if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_STATISTICS") == "1")
                     Combat.OfficialBattleReportStatisticsAcceptance.Verify(
                         (Zjcs.Combat.Official.FightBattleCheckpoint)checkpoint());

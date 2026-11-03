@@ -422,3 +422,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 伙伴整页打开时的通话事务与原通讯录／播放服务接线凭据见[窗口通话接线来源](partner-conversation-window-source-manifest.json)，入口为 `scripts/record_partner_conversation_window.py`。原通话规则、原整页和图像／声音输入沿用各自所选 `884_156692` 来源清单，本批单独记录组合代码与验证入口哈希；未修改原素材或生成完整快照。
 
 伙伴原提示图执行器使用所选 `884_156692` 官方客户端的节点管理器／仓库、图资源缓存、UI 状态控制器、系统生命周期和屏蔽策略管理器；原文件与适配输出、既有节点／原图依赖及工具哈希见[提示图执行器来源](partner-tipdot-runtime-source-manifest.json)。`scripts/prepare_partner_tipdot_runtime.py` 直接转换游戏自有源码，将 DI、玩家／配置／资源及订阅替换为明确宿主端口，恢复原脏节点异步循环；未复制第三方 SDK 实现，未修改原素材或生成完整快照。
+
+公共战报窗口绑定：`scripts/prepare_shared_battle_report.py` 从当前所选 `884_156692`（APK `881_156673`）的 `defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportpanel.bundle` 解码面板、玩家／技能视图、五个页签和 PopupWindow 的9个组件，核对135个原节点及1,080项 Transform／RectTransform 字段与既有原生 prefab 一致。新增 `Combat/BattleReport/report-window-bindings.json` 显式绑定及稳定 meta，保留原生图形、字体和 prefab 的既有历史来源，不重标版本或替换素材。遮罩复用既有854原 WorldCanvas 载荷，单独保留其源对象与原 RawImage UV、文档输入及资源引用，未混记为884资产。原对象来源、官方客户端与 SkillUserType 代码、原生 prefab、生成器、运行适配及输出哈希见[窗口来源清单](battle-hud/report-window-source-manifest.json)。功能与验证范围见[战斗执行](../../docs/features/battle-execution.md)。
