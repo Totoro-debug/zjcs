@@ -118,7 +118,11 @@ def main():
             source='SpineBoneAfterimageRTParamsProvider.cs',
             runtime='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/SpineBoneAfterimageRTParamsProvider.cs'),
             -1055498065: dict(name='RTRenderer', namespace='', source='RTRenderer.cs',
-            runtime='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/RTRenderer.cs')},
+            runtime='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/RTRenderer.cs'),
+            -2038699262: dict(name='GrapplingLineCtrl', namespace='', source='GrapplingLineCtrl.cs',
+            runtime='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/GrapplingLineCtrl.cs'),
+            1371266483: dict(name='MyPlayableGrapplingLine', namespace='', source='MyPlayableGrapplingLine.cs',
+            runtime='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableGrapplingLine.cs')},
         limits=['Converted roots are taken from active-version FightSkill entity prefab fields. '
                 'Production battle entity binding and runtime Playable lifecycle are tracked separately.'])
 
