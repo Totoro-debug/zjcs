@@ -1,0 +1,219 @@
+{
+  "counts": {
+    "demonBattlefieldStages": 589,
+    "monsterArrays": 21,
+    "monsterRosters": 201,
+    "scenes": 3,
+    "selectedStages": 201,
+    "voidFissureStages": 200
+  },
+  "format": 1,
+  "generator": {
+    "path": "scripts/prepare_unity_weekly_battle_data.py",
+    "sha256": "0858204ef0a1cc4f257041c220747c0c4044bb712fc058cb40209937dbb19ee2"
+  },
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-data/tables.json",
+      "sha256": "8d9e905e55967a46ebf59484ac8faf0356515e1c214faaeebcbc303fc03de333"
+    },
+    {
+      "path": "assets/reference/official-map/current-resource-preparation-source-manifest.json",
+      "sha256": "415563c4339bbd256ff3e849e25d02cd936ee8abb8ff2e95bc7800af857a498c"
+    },
+    {
+      "asset": "stage_voidfissure.g.bytes",
+      "decoded_table": ".tools/source-packages/current/884_156692/official-data/tables.json",
+      "manifest": "884_156692",
+      "path": ".tools/source-packages/current/884_156692/official-data/stage_voidfissure.g.bytes",
+      "sha256": "4fe7d2dffff9ee91ab22746dfcb7e374664fc92b0f9ad11fc2ea674c62996694"
+    },
+    {
+      "asset": "stage_demon_battlefield.g.bytes",
+      "decoded_table": ".tools/source-packages/current/884_156692/official-data/tables.json",
+      "manifest": "884_156692",
+      "path": ".tools/source-packages/current/884_156692/official-data/stage_demon_battlefield.g.bytes",
+      "sha256": "7458f2eba649e0bc722f3f982e8b0e5e2babca6911370859e3b34bcb597c3004"
+    },
+    {
+      "asset": "stage.g.bytes",
+      "decoded_table": ".tools/source-packages/current/884_156692/official-data/tables.json",
+      "manifest": "884_156692",
+      "path": ".tools/source-packages/current/884_156692/official-data/stage.g.bytes",
+      "sha256": "24eb6aa8e55d897082067b7907d785a8639c088d658811bf8da6f154970339e3"
+    },
+    {
+      "asset": "stage_monster_array.g.bytes",
+      "decoded_table": ".tools/source-packages/current/884_156692/official-data/tables.json",
+      "manifest": "884_156692",
+      "path": ".tools/source-packages/current/884_156692/official-data/stage_monster_array.g.bytes",
+      "sha256": "d55afa7dc69899f769ec78e6050f4b3e575b6591f41cedaffc1068444aea3f96"
+    },
+    {
+      "asset": "skill.g.bytes",
+      "decoded_table": ".tools/source-packages/current/884_156692/official-data/tables.json",
+      "manifest": "884_156692",
+      "path": ".tools/source-packages/current/884_156692/official-data/skill.g.bytes",
+      "sha256": "5da6dd4982bdb6259e13043da7e2b7b4dc6b655beff1661b5f92f4fd65e0c81f"
+    },
+    {
+      "asset": "item.g.bytes",
+      "decoded_table": ".tools/source-packages/current/884_156692/official-data/tables.json",
+      "manifest": "884_156692",
+      "path": ".tools/source-packages/current/884_156692/official-data/item.g.bytes",
+      "sha256": "da276129e605494f2392572880d2cbc0354da14c4151bea6d7dcc90a69be7888"
+    },
+    {
+      "asset": "monster_group.g.bytes",
+      "decoded_table": ".tools/source-packages/current/884_156692/official-data/tables.json",
+      "manifest": "884_156692",
+      "path": ".tools/source-packages/current/884_156692/official-data/monster_group.g.bytes",
+      "sha256": "4b85269ea6e5a90133030a715b064d1441971656e88443a06add9d1ab00a481c"
+    },
+    {
+      "asset": "role_prop_group.g.bytes",
+      "decoded_table": ".tools/source-packages/current/884_156692/official-data/tables.json",
+      "manifest": "884_156692",
+      "path": ".tools/source-packages/current/884_156692/official-data/role_prop_group.g.bytes",
+      "sha256": "b52c3e07f08399423244cc858114098dc3712902524836fab2e8e03f681ddf13"
+    },
+    {
+      "bundle": {
+        "dependencies": [],
+        "encrypted": false,
+        "file": "11e11b3ef06eaece6061f07f8f399542.rawfile",
+        "file_crc": 1870833886,
+        "hash": "11e11b3ef06eaece6061f07f8f399542",
+        "name": "wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile",
+        "record_offset": 17449,
+        "size": 9107096,
+        "tags": [
+          "Payd_Base"
+        ],
+        "unity_crc": 0
+      },
+      "entry": "assets/yoo/WwiseBnk/11e11b3ef06eaece6061f07f8f399542.rawfile",
+      "manifest": "884_156692",
+      "origin": "apk_zip",
+      "sha256": "1b8e2cf7029ba8a80750f54aa35658878166d1bfbe2e206317473b43f6af3f1f"
+    },
+    {
+      "asset": "Assets/Config/EC/FightStage_part1.g.bytes",
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "bundle_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "manifest": "884_156692",
+      "payload_sha256": "00ac2e84e25cddbea72346cdc5eb99fe11dfba3958260ccf7584327c15cce535"
+    },
+    {
+      "asset": "Assets/Config/EC/FightStage_part10.g.bytes",
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "bundle_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "manifest": "884_156692",
+      "payload_sha256": "43938ec3263c176a5e9af901bb19b670a6ba734c0c8482340ec9258d3c80a9de"
+    },
+    {
+      "asset": "Assets/Config/EC/FightStage_part11.g.bytes",
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "bundle_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "manifest": "884_156692",
+      "payload_sha256": "f6e3da0a586b504ad51277da09a22ed3cefb0df6cfa86e94eca2a213a30dcb00"
+    },
+    {
+      "asset": "Assets/Config/EC/FightStage_part12.g.bytes",
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "bundle_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "manifest": "884_156692",
+      "payload_sha256": "fa84215324beb5b8d9d7ac351b54f4618fd99815a301e5e5f452004011bd2cc3"
+    },
+    {
+      "asset": "Assets/Config/EC/FightStage_part13.g.bytes",
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "bundle_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "manifest": "884_156692",
+      "payload_sha256": "a76d4ce3fc36a9c8edacc8e2dfaa48ef08238e097ad224bae390cb2b33d8fcef"
+    },
+    {
+      "asset": "Assets/Config/EC/FightStage_part2.g.bytes",
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "bundle_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "manifest": "884_156692",
+      "payload_sha256": "de21dc425ffb41a498623996511058e9403d6caf37f24840b46de5c22b2e719a"
+    },
+    {
+      "asset": "Assets/Config/EC/FightStage_part3.g.bytes",
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "bundle_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "manifest": "884_156692",
+      "payload_sha256": "df5383f5511b33c196553bf6af0857c2dd3a519d4aeccd0e3f55ca123db823ac"
+    },
+    {
+      "asset": "Assets/Config/EC/FightStage_part4.g.bytes",
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "bundle_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "manifest": "884_156692",
+      "payload_sha256": "d7e249f6a800ddb245946f0eeca6f5b58471705fc871195f9928b73fd7c28fa7"
+    },
+    {
+      "asset": "Assets/Config/EC/FightStage_part5.g.bytes",
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "bundle_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "manifest": "884_156692",
+      "payload_sha256": "1418145d8c5364d712b060632b68cecd0afc1080a7b3d8874a09fe97ef20933a"
+    },
+    {
+      "asset": "Assets/Config/EC/FightStage_part6.g.bytes",
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "bundle_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "manifest": "884_156692",
+      "payload_sha256": "5d719c9c169c953c955831519794d6ab3ac94ff6106b4d21071060a14d896d56"
+    },
+    {
+      "asset": "Assets/Config/EC/FightStage_part7.g.bytes",
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "bundle_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "manifest": "884_156692",
+      "payload_sha256": "b13ca7878cf236d5c339a6acf46af2d5d91276027f62fe816774e00e38495aeb"
+    },
+    {
+      "asset": "Assets/Config/EC/FightStage_part8.g.bytes",
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "bundle_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "manifest": "884_156692",
+      "payload_sha256": "cf628d5fae93a08ffafb29ffa09cb5c00a059879cadf14b73133b797499365f7"
+    },
+    {
+      "asset": "Assets/Config/EC/FightStage_part9.g.bytes",
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "9d66af1ccf3d15813270d7ce90a48c7e",
+      "bundle_sha256": "4e4e26d1e2ada24aaf234f33d43e03d630fedf33e0398b9e251268392066867f",
+      "manifest": "884_156692",
+      "payload_sha256": "c1cc4abc2e4330d2f897cb376db0df87ef381299f5ceb6e497d81f488491a500"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8",
+      "usage": "Verify original active skill entities against the migrated combat catalog"
+    }
+  ],
+  "manifest": "884_156692",
+  "operation": "Decode the selected official weekly stage tables, EC fight-stage grid components, formations and monster rosters without changing their values.",
+  "output": {
+    "path": "unity/Assets/Game/Resources/WeeklyChallenges/battle-stages.json",
+    "sha256": "492ab605cd6d10a81245dc9a8bb591d458450e0a45b53345489ba123e3d0006c",
+    "size": 4012971
+  },
+  "propertyTypeSourceSha256": "265a81dbeab87b90e3a1c1423884610ed43ea9b535e488e20de0e0c41f9831b0",
+  "tableProofSha256": "415563c4339bbd256ff3e849e25d02cd936ee8abb8ff2e95bc7800af857a498c"
+}
