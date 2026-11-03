@@ -337,7 +337,8 @@ namespace Zjcs.Editor.Map13Mainline
             var visibility=Field<OfflineMapGridVisibility>(runtime,"mapGridVisibility");
             Require(snapshot.GridVisibility.SequenceEqual(visibility.Snapshot()),"Cold minimap changed original fog bytes.");
             PlayerOfflineMiniMapDataResponse response=null;
-            new LocalMiniMapDataSource(reader.Read).Request(MapId).OnComplete+=(value,error)=>
+            MainlineMapMiniMapSnapshots.CreateOfflineDataSource(OfficialWorldMapAssetCatalog.LoadDefault(),slots,slot)
+                .Request(MapId).OnComplete+=(value,error)=>
             {Require(error==0,"Formal local minimap request failed.");response=value;};
             for(int i=0;i<4&&response==null;i++)yield return null;
             Require(response!=null&&response.UseLatestLocalEntityStates,"Formal world snapshot did not reach original offline response consumption.");

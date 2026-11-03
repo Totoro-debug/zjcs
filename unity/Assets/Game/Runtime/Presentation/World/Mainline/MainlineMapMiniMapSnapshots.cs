@@ -146,6 +146,13 @@ namespace Zjcs.Presentation.World
             return snapshot;
         }
 
+        public static LocalMiniMapDataSource CreateOfflineDataSource(
+            OfficialWorldMapAssetCatalog assets, ProfileSlotCatalog slots, string slotId, Func<long> now = null)
+        {
+            var snapshots = new MainlineMapMiniMapSnapshots(assets, slots, slotId, now);
+            return new LocalMiniMapDataSource(snapshots.Read);
+        }
+
         private static Map10RuntimeStoryData ReadStoryData(OfficialMainlineMapProfile map)
         {
             if (map.MapClassId == 15) return null;
