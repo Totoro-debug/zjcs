@@ -32,11 +32,12 @@ namespace Zjcs.Presentation.World
                 nativeMiniMap = Instantiate(prefab, slot, false);
                 nativeMiniMap.name = "MiniMapMaskedUI";
                 Transform Find(string path) => nativeMiniMap.transform.Find(path.Substring("/MiniMapMaskedUI/".Length));
-                // PublicMapBranchLineBtn.IsShowBtn requires public region and line
-                // records; neither exists in this local private-map session.
+                // The offline configuration owns one local channel per map, so
+                // the original channel selector stays hidden at the same
+                // <=1 threshold used by PublicMapBranchLineBtn.IsShowBtn.
                 var branch = miniMapUiData.components.Single(value => value.panel == "MiniMapMaskedUI"
                     && value.type == "PublicMapBranchLineBtn").fields;
-                Find(branch.mContent).gameObject.SetActive(false);
+                Find(branch.mContent).gameObject.SetActive(host.MapProfile.LocalChannelCount > 1);
                 OfficialMap11UiComponentFields fields = miniMapUiData.components.Single(value =>
                     value.panel == "MiniMapMaskedUI" && value.type == "MiniMapMaskedUI").fields;
                 minimapImage = Find(fields.mRawImage).GetComponent<RawImage>();

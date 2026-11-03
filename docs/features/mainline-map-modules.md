@@ -12,6 +12,8 @@
 
 `MainlineMapMiniMapSnapshots.CreateOfflineDataSource` 将当前角色槽位的只读地图快照与原离线响应消费接口组合，避免调用方自行实现跨图实体筛选或状态恢复。已访问地图只提供本地探索过的实体及公开地区实体；隐藏／激活和图标状态从最新本地存档投影，读取不装载地图场景、不推进存档。地图外小地图调用与 Map13 正式地图回归现走同一组合入口；`OfficialMainlineMapRuntime` 在原小地图根激活前注入该数据源，保留原协调器当前图不请求、跨图请求的分支。完整白雾、标记状态、HUD输入与Player验证仍待完成。
 
+`OfficialMainlineMapProfile.LocalChannelCount` 是单机分线配置；当前已迁移地图均固定为一条本地分线。公共 HUD 按原 `PublicMapBranchLineBtn.IsShowBtn` 的数量阈值隐藏分线按钮，同时不改变地图的私有／公开地区状态或其他地图玩法。未接入原生小地图 HUD 的地图仍须在正式宿主接线时消费同一配置。
+
 ## 原始官方实现
 
 当前 `884_156692` 的完整原 `MiniMap` 根代码已迁入内部 `MainlineMiniMapRoot`，保留角色／全图视野处理器的缓存和订阅切换、原全屏显隐调用顺序、相机定位／边界裁剪、标记查找及关闭事件；配置、状态与资源从既有本地端口接入。公共 `MainlineMiniMap.Create` 通过具体脚本 `MainlineNativeMiniMapRoot` 绑定完整原 prefab，在激活前注入状态、角色、离线响应、资源、标记、点击和白雾坐标端口；实例统一管理显隐、全屏、关闭事件、纹理和销毁。初始岛、森之国、山之国、泽之国、龙之国与鲸背岛使用同一入口及各自配置，正式地图宿主／HUD接线仍未完成。离线标记初始化另按当前官方源码补入缺实体字典、容器实体及地区实体列表的分支；原64组条件、64次回调、24组归属条件及新增缺数据路径已在 Play Mode 通过。历史871源码凭据保留，只有 `OfflineMiniMapMarkManager.Init` 由当前源码覆盖，见[完整根与当前初始化来源](../../assets/reference/official-map/mainline-minimap-root-source-manifest.json)。
