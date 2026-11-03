@@ -1,0 +1,28 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "official_client_sources": [
+    {
+      "path": ".tools/source-packages/official-code/client-source/MyPlayableFixFlipXTrigger.cs",
+      "sha256": "557dbc16201e27f61c3d9724200d11b9f6cb7992128ea8550e3d41a821ea61e8"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/MyGridTransform.cs",
+      "sha256": "6568a690831e9fc20eb95fcd659f4f8cca5b780d7b735b579406f1a9af8de0bd"
+    }
+  ],
+  "migrated_outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyPlayableFixFlipXTrigger.cs",
+      "sha256": "71f2607b291b53a64ec1519728f89fa777e3726974c14d0b36c018469290aa19"
+    }
+  ],
+  "meta_outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyPlayableFixFlipXTrigger.cs.meta",
+      "sha256": "19485b5e509e025f64727825cbd40ffb80535eaeae7bd31c27400f2409a5b117"
+    }
+  ],
+  "adaptation": "Preserve the official source/target selection and MyGridTransform.SetScaleByFlipX call. Place the trigger in the existing EntityLifecycle assembly because that assembly already owns MyGridTransform and references StoryPlayables.",
+  "runtime_validation": "Source and output hash recording is complete. Unity import/compile and Play Mode execution remain pending."
+}

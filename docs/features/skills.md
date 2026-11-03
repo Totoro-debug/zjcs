@@ -38,6 +38,8 @@
 
 官方 `MyPlayableAnimation`、`MyPlayableDefault`、`MyPlayableRenderSortLayer`、`MyPlayableLight` 和 `MyPlayableLight2D` 已迁入 StoryPlayables，保留动作播放、Transform 持续时间、Renderer 排序以及 Light／Light2D 强度曲线和循环行为；来源见[动作 Playable 来源清单](../../assets/reference/battle-animation/skill-animation-playable-runtime-source-manifest.json)。
 
+官方 `MyPlayableFixFlipXTrigger` 已迁入 EntityLifecycle，保留按 source/target 选择角色并调用 `MyGridTransform.SetScaleByFlipX` 的触发行为；来源见[翻转触发器来源清单](../../assets/reference/battle-animation/skill-trigger-playable-runtime-source-manifest.json)。
+
 官方 `ApplyOverrideToMaster` 已迁入：按 `UseSourceDataToOverride` 从原施法者或目标查找角色母体，再按 `OverrideSource` 替换 Playable 的 source 或 target；scope 通过显式 `IBattleMasterEntityResolver` 提供母体查询。Editor Play Mode 验收入口已覆盖两种替换方向，但本次隔离工程全量导入超时，尚未取得这两条断言的运行结果。生产实体容器尚无 `MasterId → GameObject` resolver 绑定，完整技能图与生产调度仍未接通；官方来源与范围见[母体覆盖来源凭据](../../assets/reference/battle-animation/skill-master-override-runtime-source-manifest.json)。
 
 主线、日常副本、竞技场及幻境之塔入战的主动技能、秘法属性计算与秘法状态绑定统一读取 `SkillProgression.SlotLevel(..., SkillContext().CurrentSeasonId)`，保留基础槽级与当前赛季祝福之和，其他赛季不参与。官方依据为 `PlayerSkllSlotDataExt.GetSkillSlotLevel`；不改变技能品阶、子技能实体或公式。已通过内置屏带画面 Play Mode：从隔离档案加载阶位 4 的赛季归属，主动基础 10＋祝福 3 得到等级 13，第三秘法槽基础 12＋祝福 5 得到等级 17；另一赛季各 99 级祝福不参与，秘法属性、状态来源及检查点往返保留完整槽级。主线模拟输入完成准备开始、倍速、缩放和返回地图；其余三个公开 Runner 在隔离档案中逐一入战，模拟开始／倍速，执行到真实胜负并检查主城相机、角色和显隐恢复，已查看实际战斗截图。三个 Runner 的页面入口点击另待验证，不把直接调用入战接口计为入口交互通过。Unity 导入／编译、`ProjectTools.Validate`、方案／祝福边界、状态施加、子技能、状态回合／技能开始结束及检查点规则回归与静态检查通过；本项未构建或发布 Windows Player，完整演出与 HUD 缺项仍见[战斗执行](battle-execution.md)。
