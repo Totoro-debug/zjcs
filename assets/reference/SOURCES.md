@@ -454,3 +454,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 伙伴提示的当前玩家接线复用所选 `884_156692` 的原 `Player` 通知参数、`MsgPlayerNpc/MsgPlayerNpcRemove`、物品枚举与已迁入提示节点读取端口，输入、当前存档读取／事件适配、程序集绑定及验证工具哈希见[提示玩家来源](partner-tip-player-source-manifest.json)。入口为 `scripts/record_partner_tip_player.py`；复用既有伙伴配置与档案、赠礼、天赋存档，不新增资源载荷或完整素材快照。
 
 `scripts/prepare_activity_battle_native.py` 使用选定 `884_156692` 的官方 APK／资源清单、程序集字段描述和既有 `native-export-all` 转换凭据，逐字节核对五个活动入口／结算／难度 prefab 及其 `.meta` 输入；原 CAB／PathID、原组件字段、原生对象对应和中间输出哈希见[活动战斗原生界面来源](../../assets/reference/daily-challenges/native-ui-source-manifest.json)。中间数据写入会话验证目录，绑定后的可运行资产另按相应素材接入流程记录。
+
+伙伴条件订阅迁移复用所选 `884_156692` 的 `Common.ConditionHandler`、`ConditionInfoParser.Expand/Distinct` 和当前实际条件类的 `Type` 声明，沿用既有完整原条件枚举与伙伴配置；原方法、条件类型、订阅结构、存档事件边界和验证工具的哈希见[条件订阅来源](partner-condition-handler-source-manifest.json)，入口为 `scripts/prepare_partner_condition_handler.py`。不新增素材载荷或完整素材快照。
