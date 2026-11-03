@@ -20,6 +20,7 @@ namespace Zjcs.Offline.World.NativeMap14EntityAssets
         public Entry[] Entries;
 
         public int MapClassId => 14;
+        string IMainlineEntityPrefabProvider.SourceManifest => Manifest;
 
         private Dictionary<string, GameObject> lookup;
 

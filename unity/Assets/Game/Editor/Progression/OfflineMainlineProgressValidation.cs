@@ -35,7 +35,9 @@ namespace Zjcs.Editor.Progression
                     "Copy the profile creation time into its progress save");
                 OfficialMainlineMapProfile dragonProfile = OfficialMainlineMapProfile.Get(14);
                 Require(dragonProfile.RegionCount == 111 && dragonProfile.DefaultEntryPlacementId == 101
-                    && dragonProfile.RequiredAccessConditions.Count == 16 && dragonProfile.IsRuntimeEntryReady,
+                    && dragonProfile.RequiredAccessConditions.Count == 16 && dragonProfile.IsRuntimeEntryReady
+                    && dragonProfile.EntityPrefabCatalogResource == "Map14/Native/entity-prefab-catalog"
+                    && dragonProfile.EntityPrefabManifest == "871_156598",
                     "Register Dragon Country source metadata and the connected native-world entry");
                 OfficialMainlineMapProfile mountainProfile = OfficialMainlineMapProfile.Get(12);
                 Require(mountainProfile.RegionShadowCount == 98 && mountainProfile.RegionCount == 99

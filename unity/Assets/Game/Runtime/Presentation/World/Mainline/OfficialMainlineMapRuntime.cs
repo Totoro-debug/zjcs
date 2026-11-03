@@ -13,7 +13,6 @@ using Zjcs.Offline.Progression;
 using Zjcs.Offline.Skills;
 using Zjcs.Offline.State;
 using Zjcs.Offline.World;
-using Zjcs.Offline.World.NativeMap14EntityAssets;
 using Zjcs.Presentation.Combat;
 using Zjcs.Presentation.Character;
 using Zjcs.Presentation.Commerce;
@@ -369,12 +368,14 @@ namespace Zjcs.Presentation.World
             if (entityData == null) throw new InvalidOperationException("Official Map" + mapClassId + " entity data is missing.");
             Vector2 mapOrigin = new Vector2(session.Definition.Navigation.Origin.X,
                 session.Definition.Navigation.Origin.Y);
-            if (mapClassId == 14)
+            if (!string.IsNullOrWhiteSpace(MapProfile.EntityPrefabCatalogResource))
             {
-                var prefabCatalog = Resources.Load<NativeMap14EntityPrefabCatalog>("Map14/Native/entity-prefab-catalog");
-                if (!prefabCatalog || prefabCatalog.Manifest != "871_156598")
-                    throw new InvalidDataException("Original Map14 entity prefab catalog is missing or stale.");
-                mainlineEntityPrefabFactory = new MainlineEntityPrefabVisualFactory(prefabCatalog, mapClassId);
+                var prefabAsset = Resources.Load<ScriptableObject>(MapProfile.EntityPrefabCatalogResource);
+                var prefabProvider = prefabAsset as IMainlineEntityPrefabProvider;
+                if (!prefabAsset || prefabProvider == null || prefabProvider.MapClassId != mapClassId
+                    || prefabProvider.SourceManifest != MapProfile.EntityPrefabManifest)
+                    throw new InvalidDataException("Original Map" + mapClassId + " entity prefab catalog is missing or stale.");
+                mainlineEntityPrefabFactory = new MainlineEntityPrefabVisualFactory(prefabProvider, mapClassId);
                 entityView.NativeVisualFactory = (info, host) =>
                 {
                     mainlineEntityPrefabFactory.Create(info.EntityClassId, host.transform);

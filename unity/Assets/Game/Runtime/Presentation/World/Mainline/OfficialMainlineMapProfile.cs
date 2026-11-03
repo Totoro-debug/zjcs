@@ -30,7 +30,8 @@ namespace Zjcs.Presentation.World
                 [14] = new OfficialMainlineMapProfile(14, 217, 85, null,
                     new[] { 1255, 1256, 1257, 1258, 1259, 1260, 1261, 1262, 4209, 4210, 4211, 4212, 4213, 4228, 4229, 4236 },
                     true, 0, 111, 101, interactionResource: "Map14/interactions", interactionManifest: "871_156598",
-                    requiresMiniMapPrefab: false, localChannelCount: 1),
+                    requiresMiniMapPrefab: false, localChannelCount: 1,
+                    entityPrefabCatalogResource: "Map14/Native/entity-prefab-catalog", entityPrefabManifest: "871_156598"),
                 [15] = new OfficialMainlineMapProfile(15, 0, 0, null,
                     new[] { 115 }, true, 0, 1, 101,
                     visibilityResource: "World/Mainline/Visibility/Map15/visibility",
@@ -60,13 +61,16 @@ namespace Zjcs.Presentation.World
         public string PlayerViewResource { get; }
         public string NativeGroundLabelResource { get; }
         public string NativeGroundPrefabResource { get; }
+        public string EntityPrefabCatalogResource { get; }
+        public string EntityPrefabManifest { get; }
 
         private OfficialMainlineMapProfile(int id, int stages, int stories, string nativeUiRoot, int[] conditions,
             bool runtimeEntryReady, int regionShadowCount = 0, int regionCount = 0, int defaultEntryPlacementId = 0,
             string visibilityResource = null, string bodiesResource = null, string fogResource = null,
             string interactionResource = "World/Mainline/interactions", string interactionManifest = "854_156383",
             bool requiresMiniMapPrefab = true, string playerViewResource = null, string nativeGroundLabelResource = null,
-            string nativeGroundPrefabResource = null, int localChannelCount = 1)
+            string nativeGroundPrefabResource = null, int localChannelCount = 1,
+            string entityPrefabCatalogResource = null, string entityPrefabManifest = null)
         {
             MapClassId = id;
             StageCount = stages;
@@ -88,6 +92,10 @@ namespace Zjcs.Presentation.World
             PlayerViewResource = playerViewResource ?? (nativeUiRoot == null ? null : "Map" + id + "/BaseGround/player-view");
             NativeGroundLabelResource = nativeGroundLabelResource;
             NativeGroundPrefabResource = nativeGroundPrefabResource;
+            if (string.IsNullOrWhiteSpace(entityPrefabCatalogResource) != string.IsNullOrWhiteSpace(entityPrefabManifest))
+                throw new ArgumentException("Entity prefab resource and source manifest must be configured together.");
+            EntityPrefabCatalogResource = entityPrefabCatalogResource;
+            EntityPrefabManifest = entityPrefabManifest;
         }
 
         public string Resource(string path) => "Map" + MapClassId + "/" + path;
