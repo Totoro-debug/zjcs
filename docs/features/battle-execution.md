@@ -539,8 +539,6 @@ HP 启动的动画绑定仍有缺项：实际公共宿主中的13500能在零时
 
 状态启动调度仍有缺项：近身范围、HP检查与已支持Start／StartEnd阶段的 `RoundStart.TryAtStart` 已接通启动调用，原24478的友方HP监听、减层与零延迟连续治疗已接通。条件累计、触发后重置、上述监听者回合延迟与25285友方条件已接通；全局回合延迟、特殊处理器和其余复杂目标分支仍未完整执行。其余立即／延迟技能与状态变化的完整交错、除吸血、技能生命消耗与替身直传外的非命中HP变化通知、跨单位死亡来源、绕过统一结束入口的禁用移除通知及阈值不满足后的完整状态移除时机仍未覆盖全部配置分支；带延迟的技能不得按当前同步执行器推定为已按原注释完成即时重查。不能将配置解析、启动执行或阈值收集测试视为这些流程已经还原。
 
-公共状态装配的初始重复绑定已补齐：`FightStatusLifecycle.AttachInitial` 在执行器安装实时回合解析器之前，按官方启动时钟回合 0 刷新同源的初始状态，保留持续回合、叠层与来源快照，不再把合法的重复初始配置误判为缺失回合时钟。该修正由所有 `OfficialBattleRuntimeController` 宿主共同使用；战斗中途的状态刷新仍必须通过执行器提供的实际回合解析器。
-
 重放时序仍未覆盖没有有限动作结束条件的配置：`ActionDuration`、`AllEndedActionDuration`、`AllRelevantEndedActionDuration` 全为负数时，现有离线适配仍保留零起点，不能宣称已恢复无限动作的实体调度。`AllEnded` 与 `AllRelevantEnded` 的完整实体结束依赖、多个原槽技能之间的动作顺序、即时状态变化及完整技能特效仍未接齐。
 
 战斗挂接角色的 Animator 参数播放接入既有官方 `AnimationController`／`MyPlayableAnimator` 与新增迁移的 `MyPlayableOverrideAnimator`，由 `OfficialBattleAnimatorPlayback` 绑定原 cue 字段并驱动官方 `MyPlayableCenter` 的两个帧阶段；移除本地重复的参数栈和片段覆盖实现。原组件负责前置状态检查、参数层、持续时间、速度及停止恢复，片段覆盖保持在前置状态检查之前。每个兼容的挂接角色保留独立控制器副本及既有覆盖，退出恢复共享控制器。新增类来自当前 `884_156692` 已核验客户端；三个既有依赖的当前原源码与其历史迁移凭据逐字节一致，原技能 cue／clip 载荷仍保留各自历史版本，不混改资产来源。代码／依赖输入与生成哈希见 [Animator 运行来源](../../assets/reference/battle-rules/animator-runtime-source-manifest.json)。独立参数夹具已在带图形设备的 Play Mode 验证无限／有限／零时长、零速与倍速、参数恢复、前置状态、覆盖顺序及副本恢复，Unity 导入／编译、`ProjectTools.Validate` 和 132 个片段的固定来源校验通过；夹具不代表原战斗模型的动作画面。

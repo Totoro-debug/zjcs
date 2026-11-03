@@ -554,14 +554,7 @@ namespace Zjcs.Combat.Official
             var existing = FindMatchingStatus(unit, template, origin);
             if (existing == null) unit.Statuses.Add(template);
             else if (existing.StartRound >= 0) Apply(unit, template, -1, template.InstanceId);
-            else
-            {
-                // Initial status assembly happens before the executor installs its live
-                // round resolver. The official startup clock is round zero, so a duplicate
-                // initial binding must renew against that explicit clock instead of being
-                // treated as an unresolved in-battle refresh.
-                RefreshExisting(unit, existing, template, origin, 0);
-            }
+            else RefreshExisting(unit, existing, template, origin, -1);
         }
 
         private static FightBattleStatusState FindMatchingStatus(FightBattleUnitState unit,
