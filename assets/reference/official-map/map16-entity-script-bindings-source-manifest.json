@@ -22,15 +22,16 @@
   "runtime_source_policy": "Only clean tracked working-tree files are considered; modified and untracked runtime files are excluded.",
   "generator": {
     "path": "scripts/audit_mainline_entity_script_bindings.py",
-    "sha256": "6a11554409ba33a21e92bd3ea6d9187ae687de4cf563609aa1967c3b07757c10",
-    "bytes": 10588
+    "sha256": "fdaf80b84ec9500e8856273d707608f8614812f9364333f65eb8b3db45a06a3a",
+    "bytes": 12435
   },
   "counts": {
     "client_script_ids": 103,
     "source_resolved": 103,
     "runtime_type_matches": 0,
     "runtime_type_missing": 103,
-    "runtime_name_candidates": 39
+    "runtime_name_candidates": 39,
+    "candidate_field_name_matches": 20
   },
   "scripts": [
     {
@@ -46,6 +47,9 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "mAppearanceRenderer"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -64,6 +68,9 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "mOverrideWalkableGroundTypes"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8363.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/Map_13_Bonus/8368.prefab",
@@ -95,8 +102,16 @@
             "sha256": "898f8062fd903c804ef38b3f95f78b08285bbbc6ac3a1b1bf67d3352cf569c5e",
             "bytes": 251
           },
-          "guid": "4a24fa9e74ff8eb37f0e012bf7162441"
+          "guid": "4a24fa9e74ff8eb37f0e012bf7162441",
+          "serialized_field_names_missing": []
         }
+      ],
+      "serialized_fields": [
+        "ClientOverrideEntityDimensionBounds",
+        "UpdatePosImmediately",
+        "mFlipTransform",
+        "mOffsetZ",
+        "mSetZ"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
@@ -188,9 +203,11 @@
             "sha256": "547ef2947723913a1c21027fb7ab6ff8534db24804e40a9aa85b104affd29df0",
             "bytes": 240
           },
-          "guid": "5197bffd156702458fc536b70bd13ed9"
+          "guid": "5197bffd156702458fc536b70bd13ed9",
+          "serialized_field_names_missing": []
         }
       ],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6570.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6571.prefab",
@@ -213,6 +230,9 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "mForbidTurn"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab",
@@ -232,6 +252,13 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "ContentCG",
+        "mDialogContentText",
+        "mShowInterval",
+        "mWordInterval",
+        "mWriteEffect"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldNPC/Map_13_NPC/8443.prefab"
       ]
@@ -261,8 +288,13 @@
             "sha256": "de9c8485c172991182ac6a3ffdc85bbae57a788899f45b18341adea9287ee666",
             "bytes": 240
           },
-          "guid": "2ab4e0d775d70f0914067f770b8d1e81"
+          "guid": "2ab4e0d775d70f0914067f770b8d1e81",
+          "serialized_field_names_missing": []
         }
+      ],
+      "serialized_fields": [
+        "mRadarEffectSlot",
+        "mRadarTipPrefab"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8200.prefab",
@@ -308,8 +340,19 @@
             "sha256": "f20c2f3f3e78f4e43f80c95a3ba27939ac72a2d3eaeb17f78fe00e0f7a5ffbaa",
             "bytes": 187
           },
-          "guid": "0225563e4b1c58c6b3de928c6a46cc73"
+          "guid": "0225563e4b1c58c6b3de928c6a46cc73",
+          "serialized_field_names_missing": []
         }
+      ],
+      "serialized_fields": [
+        "mAnticlockwise",
+        "mColor",
+        "mFillAmount",
+        "mFillMode",
+        "mFillOrigin",
+        "mMaterial",
+        "mSize",
+        "mSprite"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
@@ -395,8 +438,15 @@
             "sha256": "ebad30b6d8fe0f3e13497ae2e62985aa6da6d84ede73cfa07fd5dbcfc82420e3",
             "bytes": 251
           },
-          "guid": "05074565bf59198624f0ca85603a5c0d"
+          "guid": "05074565bf59198624f0ca85603a5c0d",
+          "serialized_field_names_missing": []
         }
+      ],
+      "serialized_fields": [
+        "myAutoGridSize",
+        "myHeight",
+        "myManualGridSize",
+        "myRadius"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
@@ -431,8 +481,20 @@
             "sha256": "0f5ff431b5e53b01539fdf2069c43b698b91bb44ea2c36b47669829f935b38a7",
             "bytes": 60
           },
-          "guid": "d2d5a05327b05b27a0529c6eed85acaa"
+          "guid": "d2d5a05327b05b27a0529c6eed85acaa",
+          "serialized_field_names_missing": [
+            "SkinTextureAssetGuid",
+            "TextureLoaderGuid",
+            "mPartHandler",
+            "mSkeletonRenderer"
+          ]
         }
+      ],
+      "serialized_fields": [
+        "SkinTextureAssetGuid",
+        "TextureLoaderGuid",
+        "mPartHandler",
+        "mSkeletonRenderer"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
@@ -452,6 +514,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -517,8 +580,12 @@
             "sha256": "c970b90bb5d4671e2e35bc350dc7e7c45276ba51d3468ed15b6535e1cff15508",
             "bytes": 251
           },
-          "guid": "0c3208fc280a871ae5c29010ecdfdc19"
+          "guid": "0c3208fc280a871ae5c29010ecdfdc19",
+          "serialized_field_names_missing": []
         }
+      ],
+      "serialized_fields": [
+        "mMyEntity"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
@@ -602,8 +669,13 @@
             "sha256": "24285e379b0da5eee04a72f52827299d1610aca33c137ffbf20be1c181f6b789",
             "bytes": 240
           },
-          "guid": "b2a54dc1ab99416861b29e907bdd86f3"
+          "guid": "b2a54dc1ab99416861b29e907bdd86f3",
+          "serialized_field_names_missing": []
         }
+      ],
+      "serialized_fields": [
+        "mEntity",
+        "mPriority"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6570.prefab",
@@ -627,6 +699,9 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "mParentTransform"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -645,6 +720,12 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "SecondWeapons",
+        "Weapons",
+        "myAttachAgent",
+        "myRenderer"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -663,6 +744,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6541.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6544.prefab",
@@ -695,7 +777,8 @@
             "sha256": "21dfcfbf1e6e5a3f75df8821e2a04f9823d3378e874e98fff9d92a51453452be",
             "bytes": 240
           },
-          "guid": "6c33245f5b5d01e118b0e34d8685508d"
+          "guid": "6c33245f5b5d01e118b0e34d8685508d",
+          "serialized_field_names_missing": []
         },
         {
           "namespace": "Zjcs.Official.World.Map13Attachment",
@@ -709,8 +792,23 @@
             "sha256": "d4c60f7862028a9872e329a510ad0d5fbb4b71c47cb413da9c779bed85bf0101",
             "bytes": 187
           },
-          "guid": "557039ef2d10571fba1d489811783b81"
+          "guid": "557039ef2d10571fba1d489811783b81",
+          "serialized_field_names_missing": []
         }
+      ],
+      "serialized_fields": [
+        "AttachmentName",
+        "BoneName",
+        "FollowLocalScale",
+        "FollowRotation",
+        "FollowSkeletonTransformFlipX",
+        "FollowZSpacing",
+        "Gos",
+        "InitializeOnAwake",
+        "SkeletonGraphic",
+        "SkeletonRenderer",
+        "SlotName",
+        "ZFront"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
@@ -732,6 +830,10 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "myAllowTeamNode",
+        "myMonsterSprite"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/8601.prefab"
       ]
@@ -761,9 +863,11 @@
             "sha256": "4491c759ffc4e28245beba5620453fd1eea887e10533db7baf4db27f4e88e9ef",
             "bytes": 251
           },
-          "guid": "3923a93fbfd7328a0064ab6bbb3c5412"
+          "guid": "3923a93fbfd7328a0064ab6bbb3c5412",
+          "serialized_field_names_missing": []
         }
       ],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -840,6 +944,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6501.prefab"
       ]
@@ -857,6 +962,10 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "ShowDialogType",
+        "mShowDelayTime"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -919,9 +1028,11 @@
             "sha256": "a1137747c7c98d021c34d78bc535f21c2396d388386f6cfeb5ffa8fb8fe577b3",
             "bytes": 240
           },
-          "guid": "cb5ffd3b0d327bb7f062a6fdb3a2f6be"
+          "guid": "cb5ffd3b0d327bb7f062a6fdb3a2f6be",
+          "serialized_field_names_missing": []
         }
       ],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6570.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6571.prefab",
@@ -956,9 +1067,11 @@
             "sha256": "447715199854480e66d86cbc8f430003b29f9c878ef1ae8046acd92ab3647140",
             "bytes": 240
           },
-          "guid": "f6a35a33db723a53d3e583f04365569c"
+          "guid": "f6a35a33db723a53d3e583f04365569c",
+          "serialized_field_names_missing": []
         }
       ],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -1021,6 +1134,10 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "mLazyLoadSpineType",
+        "mSplitBinarySo"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldNPC/Map_13_NPC/8443.prefab"
       ]
@@ -1038,6 +1155,10 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "mEffectKeys",
+        "mSlideEffectKey"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1056,6 +1177,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1074,6 +1196,9 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "mSkeletonRenderer"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1104,8 +1229,16 @@
             "sha256": "825696467f88cfa17cde0f5baa98b1165500f5c657db5474ed0e13595ea47d10",
             "bytes": 251
           },
-          "guid": "3dfa5640c04901447a4ea83d0aaceed7"
+          "guid": "3dfa5640c04901447a4ea83d0aaceed7",
+          "serialized_field_names_missing": []
         }
+      ],
+      "serialized_fields": [
+        "CreateOverrideController",
+        "InitOnAwake",
+        "NotCreateGraph",
+        "mResetAnimatorInitedOnDisable",
+        "myAnimator"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8363.prefab",
@@ -1127,6 +1260,9 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "HpSlider"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1157,8 +1293,16 @@
             "sha256": "8f49c81533f2ebb3d0cc785931ef1ebf30283d4a1e07b403fa49eddbe11185cd",
             "bytes": 60
           },
-          "guid": "b18cdec6c89198bae959e0b9eeae3eb1"
+          "guid": "b18cdec6c89198bae959e0b9eeae3eb1",
+          "serialized_field_names_missing": []
         }
+      ],
+      "serialized_fields": [
+        "AutoInit",
+        "IconMeHpSlider",
+        "InfoUI",
+        "PanelPopupSceneType",
+        "PopInfoType"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
@@ -1178,6 +1322,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6501.prefab"
       ]
@@ -1195,6 +1340,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6011.prefab"
       ]
@@ -1224,9 +1370,11 @@
             "sha256": "6502ecddf68d074174456a925bf596a3c5410951431e9c271930f44da305cc92",
             "bytes": 251
           },
-          "guid": "e11eda0d4257e65c871a5a4c72805465"
+          "guid": "e11eda0d4257e65c871a5a4c72805465",
+          "serialized_field_names_missing": []
         }
       ],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -1303,6 +1451,15 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "NotOwnerShowObjs",
+        "OwnerShowObjs",
+        "SpriteRenderers",
+        "mIsNotOwnerColor",
+        "mIsOwnerColor",
+        "myEntitySourceTypeShows",
+        "myExploreSlider"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/8601.prefab"
       ]
@@ -1320,6 +1477,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1350,9 +1508,11 @@
             "sha256": "84ba0e820171e75c57d3ac378aa1cb4c022e3c157ac1c18901ac8587b3b1c12d",
             "bytes": 240
           },
-          "guid": "c15222ca9046d327e8d06824fbb58f8c"
+          "guid": "c15222ca9046d327e8d06824fbb58f8c",
+          "serialized_field_names_missing": []
         }
       ],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -1422,6 +1582,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1440,6 +1601,12 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "MonsterLoader",
+        "mAwardDialogType",
+        "mShowDelayTime",
+        "myAllowTeamNode"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6320.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6350.prefab",
@@ -1463,6 +1630,9 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "mECViewDriver"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1493,9 +1663,11 @@
             "sha256": "c8339b215e38569aa852242755233ff5613fed6347b960449b5d83a096eb46b2",
             "bytes": 240
           },
-          "guid": "46f63f6b784be179ce3666bf00c5f29b"
+          "guid": "46f63f6b784be179ce3666bf00c5f29b",
+          "serialized_field_names_missing": []
         }
       ],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -1563,6 +1735,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -1630,8 +1803,13 @@
             "sha256": "d40c29442c1c40f4cdbffe38e12f62510873ca44304935b42c5309910abcacba",
             "bytes": 251
           },
-          "guid": "2fd25e3a13f9149396a66518de79159b"
+          "guid": "2fd25e3a13f9149396a66518de79159b",
+          "serialized_field_names_missing": []
         }
+      ],
+      "serialized_fields": [
+        "myBoneList",
+        "myBoneNameList"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8203.prefab",
@@ -1680,9 +1858,11 @@
             "sha256": "52ce3bc97d3067e37adb3711103432955295f1d0871fcb5e64524f3f22235650",
             "bytes": 240
           },
-          "guid": "5e6eb9222b9aa4ddf30148f2f3fc7a78"
+          "guid": "5e6eb9222b9aa4ddf30148f2f3fc7a78",
+          "serialized_field_names_missing": []
         }
       ],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6570.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6571.prefab",
@@ -1705,6 +1885,9 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "mMyEntity"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1723,6 +1906,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1753,9 +1937,11 @@
             "sha256": "0891a780b6a920954793bb0dc776509a18757528a841ee1d5cfb5ca984097a58",
             "bytes": 240
           },
-          "guid": "270c0c140771702d7a738fcef6072145"
+          "guid": "270c0c140771702d7a738fcef6072145",
+          "serialized_field_names_missing": []
         }
       ],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6570.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6571.prefab",
@@ -1778,6 +1964,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1796,6 +1983,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1814,6 +2002,9 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "mIgnoreClick"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1844,8 +2035,14 @@
             "sha256": "8b052d66fc3a2376bf2916e79967d4e5e9489e640e416ede3049acf021ca41fe",
             "bytes": 60
           },
-          "guid": "579b7bca63ba39df17b3531e70a1e3f6"
+          "guid": "579b7bca63ba39df17b3531e70a1e3f6",
+          "serialized_field_names_missing": []
         }
+      ],
+      "serialized_fields": [
+        "LevelOfResolution",
+        "RenderExistingMeshes",
+        "SkeletonRenderer"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldNPC/Map_13_NPC/8443.prefab"
@@ -1864,6 +2061,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8201.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6501.prefab",
@@ -1886,6 +2084,16 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "myContents",
+        "myFriendshipInfo",
+        "myHpSlider",
+        "myHpSpriteSlider",
+        "myIcon",
+        "myLiteStatusText",
+        "myOfflineGo",
+        "myOnlineGo"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1916,8 +2124,14 @@
             "sha256": "6666a923b406cabdd9df8304ba3024e79926750ba78eb3e27b18dd73c2a6008d",
             "bytes": 240
           },
-          "guid": "a5d95b8262d98223a6671058c3472004"
+          "guid": "a5d95b8262d98223a6671058c3472004",
+          "serialized_field_names_missing": []
         }
+      ],
+      "serialized_fields": [
+        "MeshRenderer",
+        "mAppearanceRenderer",
+        "mAppearanceRendererLite"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMonster/5001.prefab",
@@ -1958,8 +2172,22 @@
             "sha256": "05f2cc3af8aa7c3626c58832b3c02339b523e2a7c0ba6127c14eee8aaa6a3537",
             "bytes": 60
           },
-          "guid": "981f3cc995b0e053ae6a84ae534ede91"
+          "guid": "981f3cc995b0e053ae6a84ae534ede91",
+          "serialized_field_names_missing": [
+            "IgnoreSkinTypes",
+            "mDefaultSortingOrder",
+            "mSkeletonRenderer",
+            "mSlot",
+            "mSortingLayer"
+          ]
         }
+      ],
+      "serialized_fields": [
+        "IgnoreSkinTypes",
+        "mDefaultSortingOrder",
+        "mSkeletonRenderer",
+        "mSlot",
+        "mSortingLayer"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
@@ -1979,6 +2207,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldNPC/Map_13_NPC/8443.prefab"
       ]
@@ -1996,6 +2225,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6000.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6011.prefab"
@@ -2026,8 +2256,15 @@
             "sha256": "cca5e512de287ebb779fefa73ff4ace3cd9fe6c05b19d0655b8567c948f108e7",
             "bytes": 60
           },
-          "guid": "fca05a2acfb99374aa9ad763f6a01d2c"
+          "guid": "fca05a2acfb99374aa9ad763f6a01d2c",
+          "serialized_field_names_missing": []
         }
+      ],
+      "serialized_fields": [
+        "mAppearanceCharacter",
+        "mAppearanceSpine",
+        "mClipMeshProvideSlotName",
+        "mSkinType"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
@@ -2059,7 +2296,8 @@
             "sha256": "626ea46d38a919d2d9707696b2a6597398e3ff197685a71a5c849cb14e17e80b",
             "bytes": 252
           },
-          "guid": "6b6c8d9caa63a035e2484ff8197e78dc"
+          "guid": "6b6c8d9caa63a035e2484ff8197e78dc",
+          "serialized_field_names_missing": []
         },
         {
           "namespace": "Zjcs.Official.SteleEntities",
@@ -2073,9 +2311,11 @@
             "sha256": "7d932c147b9bc0b9d07cacf712ccc25626e26d2e5d9457a743bb954559b1f937",
             "bytes": 241
           },
-          "guid": "037ee7036207d06ad92a8ebc0e039521"
+          "guid": "037ee7036207d06ad92a8ebc0e039521",
+          "serialized_field_names_missing": []
         }
       ],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/8601.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
@@ -2201,6 +2441,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/Map_13_Bonus/8368.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/Map_13_Bonus/8370.prefab"
@@ -2231,9 +2472,11 @@
             "sha256": "c62251bac74c3c4704ec1efbf27d95586f192f19223eba5c47be7c0a3ca8d22d",
             "bytes": 240
           },
-          "guid": "41a0ead55177bf087a1386cdde96e231"
+          "guid": "41a0ead55177bf087a1386cdde96e231",
+          "serialized_field_names_missing": []
         }
       ],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6570.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6571.prefab",
@@ -2268,7 +2511,8 @@
             "sha256": "bbe0897078966efa51ee087817df565195257a561ff06923e58777863178c583",
             "bytes": 251
           },
-          "guid": "eb314f5494eaf925f4a4fbd315f1e222"
+          "guid": "eb314f5494eaf925f4a4fbd315f1e222",
+          "serialized_field_names_missing": []
         },
         {
           "namespace": "Zjcs.Official.World.Map13MiniMap",
@@ -2282,9 +2526,11 @@
             "sha256": "b32379d281e66961bfdd9425098ed4e1e7e2bd77c200aa106185d52877c08356",
             "bytes": 149
           },
-          "guid": "a3c7a0ee0561289d87ccc4e58665e1ae"
+          "guid": "a3c7a0ee0561289d87ccc4e58665e1ae",
+          "serialized_field_names_missing": []
         }
       ],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldNPC/Map_13_NPC/8443.prefab",
         "Assets/Prefabs/Map/Common/EntityDisplaysWorldBuilding/6000_view.prefab",
@@ -2317,6 +2563,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6320.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldNPC/Map_13_NPC/8443.prefab"
@@ -2347,9 +2594,11 @@
             "sha256": "c5622485f16d96cc80eeabd1d29328207c1298fdb865de58dfd1bf6670511b23",
             "bytes": 240
           },
-          "guid": "30834a9ebaeb176b0b225efa08a97b87"
+          "guid": "30834a9ebaeb176b0b225efa08a97b87",
+          "serialized_field_names_missing": []
         }
       ],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -2438,8 +2687,14 @@
             "sha256": "89d3b489c3e2c1bbeacee0bcc70ded87e9e4c1e6b40937d9afdfc5566b75e956",
             "bytes": 251
           },
-          "guid": "8f6e1821a3db87dc5284f893b9e209f8"
+          "guid": "8f6e1821a3db87dc5284f893b9e209f8",
+          "serialized_field_names_missing": []
         }
+      ],
+      "serialized_fields": [
+        "mDuration",
+        "mFixedDuration",
+        "mWordInterval"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldNPC/Map_13_NPC/8443.prefab"
@@ -2458,6 +2713,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6011.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6501.prefab"
@@ -2488,8 +2744,12 @@
             "sha256": "d2fc6a7e5adc72d8aa295689387277e09e3fdaa89353ca23081baf25bb3d0006",
             "bytes": 169
           },
-          "guid": "f662e5d7b5ed953f1e09b59b688a7bda"
+          "guid": "f662e5d7b5ed953f1e09b59b688a7bda",
+          "serialized_field_names_missing": []
         }
+      ],
+      "serialized_fields": [
+        "mFixedGlobalScale"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldNPC/Map_13_NPC/8443.prefab",
@@ -2523,6 +2783,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2541,6 +2802,15 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "InfoUI",
+        "IsShowNpcInfo",
+        "ShowInfoOnClick",
+        "mPanelPopupSceneType",
+        "myForceShowStatus",
+        "myIconStatus",
+        "myKeepUpdate"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2559,6 +2829,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2577,6 +2848,13 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "ShadowPrefab",
+        "Slot",
+        "SpriteRendererList",
+        "mShadowSlot",
+        "mSkeletonFollower"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMonster/5001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMonster/5003.prefab",
@@ -2596,6 +2874,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6530.prefab"
       ]
@@ -2613,6 +2892,17 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "Duration",
+        "FollowTarget",
+        "IsUI",
+        "SkeletonRendererFade",
+        "Slot",
+        "WeaponSkeleton",
+        "WeaponSkeletonUI",
+        "mFaceRight",
+        "mProfession"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2631,6 +2921,9 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "mData"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2661,9 +2954,11 @@
             "sha256": "d8c71fa2d771c091abf9c014bbca68ff4d01b2131e8f894def542fe5cb7ef624",
             "bytes": 60
           },
-          "guid": "2469f436c8646020642edda723fa9580"
+          "guid": "2469f436c8646020642edda723fa9580",
+          "serialized_field_names_missing": []
         }
       ],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2682,6 +2977,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6530.prefab"
       ]
@@ -2699,6 +2995,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/8601.prefab"
       ]
@@ -2716,6 +3013,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2746,9 +3044,11 @@
             "sha256": "212494a42defbf56ba202c23034681cf5aedf9c3a2330e577975e7945ea28a3d",
             "bytes": 240
           },
-          "guid": "6b6877e0fecf9f49197626935cdeec11"
+          "guid": "6b6877e0fecf9f49197626935cdeec11",
+          "serialized_field_names_missing": []
         }
       ],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2767,6 +3067,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6000.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6011.prefab"
@@ -2785,6 +3086,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2815,8 +3117,12 @@
             "sha256": "37c1bca62c3f18ee7ae04cc407f650a3cf2a6a87713454e7345366e71e67bf4e",
             "bytes": 251
           },
-          "guid": "1a61d2a171b1beb0621708736b48f910"
+          "guid": "1a61d2a171b1beb0621708736b48f910",
+          "serialized_field_names_missing": []
         }
+      ],
+      "serialized_fields": [
+        "myContainer"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
@@ -2908,8 +3214,21 @@
             "sha256": "3b8c94a94831a5817d47d6a81eb6d543d1a5923b375cc1e28b263483fb084b2d",
             "bytes": 60
           },
-          "guid": "e72f0e5738c6561985c604d4fc314cd9"
+          "guid": "e72f0e5738c6561985c604d4fc314cd9",
+          "serialized_field_names_missing": [
+            "AppearanceCharacter",
+            "AppendSkinType",
+            "mAppearanceInfoList"
+          ]
         }
+      ],
+      "serialized_fields": [
+        "AnimController",
+        "Animator",
+        "AppearanceCharacter",
+        "AppendSkinType",
+        "PlayerPhase",
+        "mAppearanceInfoList"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
@@ -2929,6 +3248,11 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "ShowDialogType",
+        "mIconSpriteRenderer",
+        "mShowDelayTime"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8212.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8213.prefab",
@@ -2948,6 +3272,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6530.prefab"
       ]
@@ -2965,6 +3290,11 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "PlayerOfflineObj",
+        "PlayerShowUpPlayable",
+        "myAnimationController"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2983,6 +3313,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -3036,6 +3367,9 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "TagType"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab",
@@ -3055,6 +3389,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -3085,8 +3420,12 @@
             "sha256": "bf37794ce69c25ec76c84244af25678418d09e83b8918d73dd33acc84143b186",
             "bytes": 251
           },
-          "guid": "546d8ffec4f37a09cef60b34b48f862c"
+          "guid": "546d8ffec4f37a09cef60b34b48f862c",
+          "serialized_field_names_missing": []
         }
+      ],
+      "serialized_fields": [
+        "mSetZ"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
@@ -3119,8 +3458,19 @@
             "sha256": "e56729d194945ff62a894b86c13f2ca5f39581866966e3d74a1323a85c801fcf",
             "bytes": 251
           },
-          "guid": "b7171e742f2aaab4474344b11e556539"
+          "guid": "b7171e742f2aaab4474344b11e556539",
+          "serialized_field_names_missing": []
         }
+      ],
+      "serialized_fields": [
+        "AheadInTime",
+        "FadeInCompleteActiveGO",
+        "mCustomFadeList",
+        "mFordingSpriteList",
+        "mSkeletonRenderer",
+        "myFadeinTime",
+        "myFadeoutTime",
+        "mySpriteList"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
@@ -3220,6 +3570,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldNPC/Map_13_NPC/8443.prefab"
       ]
@@ -3237,6 +3588,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6501.prefab"
       ]
@@ -3254,6 +3606,12 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "CombineSkins",
+        "IsUI",
+        "UseRandomSkin",
+        "WorkOnPlaying"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldNPC/Map_13_NPC/8443.prefab"
       ]
@@ -3283,9 +3641,11 @@
             "sha256": "b985802c7d3f326d666bdcacc3b5031bd191fe41c740e47644693e1b388f1871",
             "bytes": 240
           },
-          "guid": "b28bbf320bb4bf4c2662a3d825ea9f53"
+          "guid": "b28bbf320bb4bf4c2662a3d825ea9f53",
+          "serialized_field_names_missing": []
         }
       ],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6000.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6011.prefab",
@@ -3324,6 +3684,10 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "StatusListenLIst",
+        "mActiveSceneType"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -3342,6 +3706,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/8601.prefab"
       ]
@@ -3359,6 +3724,24 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "FadeAnimator",
+        "FadeAnimatorInitBoolKey",
+        "FadeAnimatorPlayBoolKey",
+        "HpAddEffectTopAnim",
+        "HpAddEffectTopAnimPlayKey",
+        "HpAddEffectTsf",
+        "HpAddSlider",
+        "HpSlider",
+        "HpSubSlider",
+        "MaxValue",
+        "MinValue",
+        "OnceUpdateDurationS",
+        "OnlyUpdateShow",
+        "OutLineEffect",
+        "ShieldSlider",
+        "WhenMapFront"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -3377,6 +3760,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -3395,6 +3779,11 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [
+        "ChannelTypeList",
+        "CheckDis",
+        "mActiveSceneType"
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -3425,8 +3814,12 @@
             "sha256": "329429f5f2635df8efbe81ea4516724eec3e97f9e9808023d92b1f0758df31c6",
             "bytes": 187
           },
-          "guid": "24b927401af15f39a0ac5f142b4e129b"
+          "guid": "24b927401af15f39a0ac5f142b4e129b",
+          "serialized_field_names_missing": []
         }
+      ],
+      "serialized_fields": [
+        "mRenderer"
       ],
       "prefabs": [
         "Assets/Prefabs/Map/Common/EntityDisplaysWorldBonusTouch/8363_snow_view.prefab",
@@ -3446,6 +3839,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6011.prefab"
       ]
@@ -3475,7 +3869,8 @@
             "sha256": "ac1111d971d46a2b2f4c73e29d5f0945ef95d3c2eea932df61e0e4e58f6d9925",
             "bytes": 60
           },
-          "guid": "8b2446d274ac5a3880149798351c0efe"
+          "guid": "8b2446d274ac5a3880149798351c0efe",
+          "serialized_field_names_missing": []
         },
         {
           "namespace": "Zjcs.Official.ProfessionUI",
@@ -3489,8 +3884,12 @@
             "sha256": "9392e87aeaf85747cf9e8db0ad1e8b03fcd8fe3e8a7734c72ab899f7ebee33c6",
             "bytes": 60
           },
-          "guid": "be482acf769b62f2d8594a50af181dfa"
+          "guid": "be482acf769b62f2d8594a50af181dfa",
+          "serialized_field_names_missing": []
         }
+      ],
+      "serialized_fields": [
+        "mPartHandler"
       ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
@@ -3510,6 +3909,7 @@
       ],
       "runtime": [],
       "runtime_name_candidates": [],
+      "serialized_fields": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -3517,7 +3917,8 @@
     }
   ],
   "limitations": [
-    "Type-name and namespace matches do not prove serialized field compatibility, Windows asset readiness, or runtime behavior.",
+    "Type-name and namespace matches do not prove serialized field type compatibility, Windows asset readiness, or runtime behavior.",
+    "Serialized field checks compare names only against declarations in the candidate source file; they do not verify field types, inheritance, or Unity deserialization.",
     "The source and runtime paths are evidence for follow-up binding work; this audit does not rewrite prefab YAML."
   ]
 }

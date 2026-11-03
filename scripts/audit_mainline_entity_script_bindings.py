@@ -13,14 +13,26 @@ from Crypto.Hash import MD4
 
 ROOT = Path(__file__).resolve().parents[1]
 CLIENT_SCRIPT_GUID = "06dd3d5416bf43ea368cc39ff96e6d5a"
-SCRIPT_REFERENCE = re.compile(
-    r"(?m)^\s*m_Script:\s*\{fileID:\s*(-?\d+),\s*guid:\s*([0-9a-f]{32})"
-)
 TYPE_DECLARATION = re.compile(
     r"\b(?:class|struct|interface|enum)\s+([A-Za-z_]\w*)"
 )
 NAMESPACE = re.compile(r"(?m)^\s*namespace\s+([A-Za-z_][\w.]*)")
 GUID = re.compile(r"(?m)^guid:\s*([0-9a-f]{32})\s*$")
+MONO_BEHAVIOUR = re.compile(r"(?ms)^--- !u!114\b.*?(?=^--- !u!|\Z)")
+SCRIPT_REFERENCE = re.compile(
+    r"(?m)^\s*m_Script:\s*\{fileID:\s*(-?\d+),\s*guid:\s*([0-9a-f]{32})"
+)
+SERIALIZED_FIELD = re.compile(r"(?m)^  ([A-Za-z_]\w*):")
+CS_FIELD = re.compile(
+    r"(?m)^\s*(?:public|private|protected|internal)\s+"
+    r"(?:(?:static|readonly|new|virtual|override|sealed|const)\s+)*"
+    r"[\w<>,\[\].?]+\s+(\w+)\s*(?:[;={])"
+)
+UNITY_MONO_BEHAVIOUR_FIELDS = {
+    "m_ObjectHideFlags", "m_CorrespondingSourceObject", "m_PrefabInstance",
+    "m_PrefabAsset", "m_GameObject", "m_Enabled", "m_EditorHideFlags",
+    "m_Script", "m_Name", "m_EditorClassIdentifier",
+}
 
 
 def sha(raw: bytes) -> str:
@@ -32,8 +44,15 @@ def script_file_id(namespace: str, type_name: str) -> int:
     return struct.unpack("<i", MD4.new(raw).digest()[:4])[0]
 
 
-def parse_script_references(text: str) -> list[tuple[int, str]]:
-    return [(int(file_id), guid) for file_id, guid in SCRIPT_REFERENCE.findall(text)]
+def parse_serialized_components(text: str) -> list[tuple[int, str, set[str]]]:
+    components = []
+    for document in MONO_BEHAVIOUR.findall(text):
+        reference = SCRIPT_REFERENCE.search(document)
+        if reference is None:
+            continue
+        fields = set(SERIALIZED_FIELD.findall(document)) - UNITY_MONO_BEHAVIOUR_FIELDS
+        components.append((int(reference.group(1)), reference.group(2), fields))
+    return components
 
 
 def read_types(path: Path) -> list[tuple[str, str]]:
@@ -67,6 +86,7 @@ def build(map_id: int, roots_path: Path, export_path: Path, source_root: Path,
     outputs = {row.get("path"): row for row in export.get("outputs", []) if isinstance(row, dict)}
     asset_root = export_path.parent / export_directory / "ExportedProject/Assets"
     references: dict[int, set[str]] = {}
+    serialized_fields: dict[int, set[str]] = {}
     for prefab in roots.get("prefabs", []):
         relative = prefab.get("path", "")
         pure = PurePosixPath(relative)
@@ -81,9 +101,10 @@ def build(map_id: int, roots_path: Path, export_path: Path, source_root: Path,
         raw = path.read_bytes()
         if len(raw) != proof.get("bytes") or sha(raw) != proof.get("sha256"):
             raise ValueError("Selected native prefab differs from its export receipt: " + output_path)
-        for file_id, guid in parse_script_references(raw.decode("utf-8-sig", errors="ignore")):
+        for file_id, guid, fields in parse_serialized_components(raw.decode("utf-8-sig", errors="ignore")):
             if guid == CLIENT_SCRIPT_GUID and file_id:
                 references.setdefault(file_id, set()).add(relative)
+                serialized_fields.setdefault(file_id, set()).update(fields)
 
     if not references:
         raise ValueError("Selected prefab roots contain no client Assembly-CSharp scripts")
@@ -154,6 +175,11 @@ def build(map_id: int, roots_path: Path, export_path: Path, source_root: Path,
         source = source_by_id.get(file_id)
         candidates = runtime_by_type.get((source["namespace"], source["type"]), []) if source else []
         same_name = runtime_by_name.get(source["type"], []) if source else []
+        prefab_fields = sorted(serialized_fields.get(file_id, set()))
+        for candidate in same_name:
+            runtime_fields = set(CS_FIELD.findall(
+                (repository_root / candidate["script"]["path"]).read_text(encoding="utf-8-sig", errors="ignore")))
+            candidate["serialized_field_names_missing"] = sorted(set(prefab_fields) - runtime_fields)
         scripts.append({
             "fileID": file_id,
             "type": source["type"] if source else None,
@@ -161,6 +187,7 @@ def build(map_id: int, roots_path: Path, export_path: Path, source_root: Path,
             "source": source["paths"] if source else [],
             "runtime": candidates,
             "runtime_name_candidates": same_name,
+            "serialized_fields": prefab_fields,
             "prefabs": sorted(references[file_id]),
         })
 
@@ -181,10 +208,15 @@ def build(map_id: int, roots_path: Path, export_path: Path, source_root: Path,
             "runtime_type_matches": sum(bool(row["runtime"]) for row in scripts),
             "runtime_type_missing": sum(not row["runtime"] for row in scripts),
             "runtime_name_candidates": sum(bool(row["runtime_name_candidates"]) for row in scripts),
+            "candidate_field_name_matches": sum(
+                bool(row["serialized_fields"]) and any(
+                    not candidate["serialized_field_names_missing"] for candidate in row["runtime_name_candidates"])
+                for row in scripts),
         },
         "scripts": scripts,
         "limitations": [
-            "Type-name and namespace matches do not prove serialized field compatibility, Windows asset readiness, or runtime behavior.",
+            "Type-name and namespace matches do not prove serialized field type compatibility, Windows asset readiness, or runtime behavior.",
+            "Serialized field checks compare names only against declarations in the candidate source file; they do not verify field types, inheritance, or Unity deserialization.",
             "The source and runtime paths are evidence for follow-up binding work; this audit does not rewrite prefab YAML.",
         ],
     }

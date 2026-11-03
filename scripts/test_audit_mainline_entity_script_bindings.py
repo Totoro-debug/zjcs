@@ -20,6 +20,7 @@ class MainlineEntityScriptBindingAuditTests(unittest.TestCase):
             "--- !u!114 &1\nMonoBehaviour:\n  m_Script: {fileID: "
             + str(script_file_id("Demo", "MapEntity"))
             + ", guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}\n"
+            + "  serializedConfig: 4\n"
             + "  m_Script: {fileID: 5, guid: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, type: 3}\n",
             encoding="utf-8",
         )
@@ -28,7 +29,10 @@ class MainlineEntityScriptBindingAuditTests(unittest.TestCase):
         self.source_file.write_text("namespace Demo\n{\n    public class MapEntity {}\n}\n", encoding="utf-8")
         self.runtime_file = self.runtime_root / "Demo/MapEntity.cs"
         self.runtime_file.parent.mkdir(parents=True)
-        self.runtime_file.write_text("namespace Demo\n{\n    public class MapEntity {}\n}\n", encoding="utf-8")
+        self.runtime_file.write_text(
+            "namespace Demo\n{\n    public class MapEntity\n    {\n        public int serializedConfig;\n    }\n}\n",
+            encoding="utf-8",
+        )
         Path(str(self.runtime_file) + ".meta").write_text(
             "fileFormatVersion: 2\nguid: 0123456789abcdef0123456789abcdef\nMonoImporter:\n",
             encoding="utf-8",
@@ -61,11 +65,14 @@ class MainlineEntityScriptBindingAuditTests(unittest.TestCase):
             "client_script_ids": 1, "source_resolved": 1,
             "runtime_type_matches": 1, "runtime_type_missing": 0,
             "runtime_name_candidates": 1,
+            "candidate_field_name_matches": 1,
         })
         script = result["scripts"][0]
         self.assertEqual((script["namespace"], script["type"]), ("Demo", "MapEntity"))
         self.assertEqual(script["runtime"][0]["guid"], "0123456789abcdef0123456789abcdef")
         self.assertEqual(script["runtime_name_candidates"], script["runtime"])
+        self.assertEqual(script["serialized_fields"], ["serializedConfig"])
+        self.assertEqual(script["runtime_name_candidates"][0]["serialized_field_names_missing"], [])
 
     def test_rejects_prefab_that_does_not_match_export_receipt(self):
         self.prefab_path.write_text("changed", encoding="utf-8")
@@ -75,7 +82,8 @@ class MainlineEntityScriptBindingAuditTests(unittest.TestCase):
 
     def test_reports_renamed_namespace_as_candidate_without_direct_binding(self):
         self.runtime_file.write_text(
-            "namespace MigratedDemo\n{\n    public class MapEntity {}\n}\n", encoding="utf-8")
+            "namespace MigratedDemo\n{\n    public class MapEntity\n    {\n        public int serializedConfig;\n    }\n}\n",
+            encoding="utf-8")
         result = build(16, self.roots_path, self.export_path,
                        self.source_root, self.runtime_root, self.root)
         self.assertEqual(result["counts"]["runtime_type_matches"], 0)
@@ -83,10 +91,18 @@ class MainlineEntityScriptBindingAuditTests(unittest.TestCase):
         self.assertEqual(result["scripts"][0]["runtime_name_candidates"][0]["guid"],
                          "0123456789abcdef0123456789abcdef")
 
+    def test_reports_serialized_field_names_missing_from_candidate(self):
+        self.runtime_file.write_text("namespace Demo\n{\n    public class MapEntity {}\n}\n", encoding="utf-8")
+        result = build(16, self.roots_path, self.export_path,
+                       self.source_root, self.runtime_root, self.root)
+        self.assertEqual(result["scripts"][0]["runtime_name_candidates"][0]["serialized_field_names_missing"],
+                         ["serializedConfig"])
+        self.assertEqual(result["counts"]["candidate_field_name_matches"], 0)
+
     def test_preserves_unresolved_client_script_ids(self):
         unknown = script_file_id("Demo", "MissingEntity")
         self.prefab_path.write_text(
-            "m_Script: {fileID: " + str(unknown)
+            "--- !u!114 &1\nMonoBehaviour:\n  m_Script: {fileID: " + str(unknown)
             + ", guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}\n",
             encoding="utf-8",
         )
