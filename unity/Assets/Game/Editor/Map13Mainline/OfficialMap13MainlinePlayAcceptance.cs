@@ -179,6 +179,10 @@ namespace Zjcs.Editor.Map13Mainline
             if(MapId==12)Require((int)Call(runtime,"GetDefaultEntryId")==101&&initial.Equals(new MapGridPoint(248,32)),"Original Map12 entry 101 at (248,32) was not used.");
             if(MapId==15)Require((int)Call(runtime,"GetDefaultEntryId")==101&&initial.Equals(new MapGridPoint(12,6)),"Original Map15 entry 101 at (12,6) was not used.");
             Require(Field<object>(runtime,"mapGridVisibility")!=null,"Formal original grid component is not bound.");
+            var visibilityAtEntry=Field<OfflineMapGridVisibility>(runtime,"mapGridVisibility");
+            var entityViewsAtEntry=Field<OfficialMap10EntityView>(runtime,"entityView");
+            Require(visibilityAtEntry.ExploredEntityIds.All(id=>entityViewsAtEntry.FindEntityObject(id)?.activeSelf==true),
+                "A fresh formal map recorded an entity whose actual world object is inactive.");
             yield return new WaitForSecondsRealtime(2);Canvas.ForceUpdateCanvases();
             if(MapId==15)
             {
@@ -220,11 +224,17 @@ namespace Zjcs.Editor.Map13Mainline
             Require(CheckFog(runtime)>initialVisible,"Simulated movement did not reveal additional original fog cells.");
             string mapSave=Path.Combine(slots.GetSlotDirectory(slot),"map-"+MapId+"-save.json");
             var before=JsonUtility.FromJson<VisibilitySave>(File.ReadAllText(mapSave));Require(!string.IsNullOrEmpty(before.Encoded(MapId)),"Formal map save omitted original compressed visibility.");
+            var explored=Field<OfflineMapGridVisibility>(runtime,"mapGridVisibility").ExploredEntityIds;
+            Require(explored.Length>0&&before.exploredEntityPlacements!=null&&explored.SequenceEqual(before.exploredEntityPlacements),
+                "Formal map did not persist its actually revealed entity placements after simulated movement.");
             ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map"+MapId+"-formal-moved.png"));yield return new WaitForSecondsRealtime(.5f);
             Call(runtime,"CloseMap");yield return null;yield return null;
             runtime=Open(slot,saves,canvas.transform);yield return new WaitForSecondsRealtime(3);
             Require(Field<MapGridPoint>(Field<object>(runtime,"navigation"),"currentGrid").Equals(target),"Formal map position did not survive reopen.");
             var after=JsonUtility.FromJson<VisibilitySave>(File.ReadAllText(mapSave));Require(before.Encoded(MapId)==after.Encoded(MapId),"Formal visibility bytes changed on cold reopen.");
+            Require(before.exploredEntityPlacements.SequenceEqual(after.exploredEntityPlacements)
+                &&after.exploredEntityPlacements.SequenceEqual(Field<OfflineMapGridVisibility>(runtime,"mapGridVisibility").ExploredEntityIds),
+                "Formal entity exploration history changed on cold reopen.");
             CheckFog(runtime);
             ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map"+MapId+"-formal-restored.png"));yield return new WaitForSecondsRealtime(.5f);
             Call(runtime,"CloseMap");yield return null;yield return null;
@@ -381,7 +391,7 @@ namespace Zjcs.Editor.Map13Mainline
             runtime.MapMusicVolume=()=>0;runtime.MapVoiceVolume=()=>0;runtime.Begin(MapId,slot,saves,ui,model,name,null);return runtime;
         }
         private static void Require(bool value,string message){if(!value)throw new InvalidDataException(message);}
-        [Serializable]private sealed class VisibilitySave{public string map13GridVisibility,gridVisibility;public string Encoded(int map)=>map==13?map13GridVisibility:gridVisibility;}
+        [Serializable]private sealed class VisibilitySave{public string map13GridVisibility,gridVisibility;public int[] exploredEntityPlacements;public string Encoded(int map)=>map==13?map13GridVisibility:gridVisibility;}
         [Serializable]private sealed class Proof{public string editor,backend;public bool play_mode,simulated_pointer,save_reopen;public int map_id,entry_x,entry_y,moved_x,moved_y;}
         private sealed class Runner:MonoBehaviour{}
     }

@@ -48,7 +48,7 @@
   "outputs": {
     "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftInventoryRules.cs": "0ad23a85f9398b607d191122c1511dac1a2bc9383795d714f667d84786f768d8",
     "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftInventoryRules.cs.meta": "9a33e367539814e8eb9d13e04aace9463a7871179d84a238e74d1c0f2fe82801",
-    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftPlayer.cs": "978739fce163073b387405cdf4a98888528b292746af5002119c649d9b8079a6",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftPlayer.cs": "04fffae25c2cec5ec4c9bc8491dd7f39ea98f9e050447d43b972feaf3cf0719d",
     "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerGiftPlayer.cs.meta": "4b6298d714843c4103ea7d5c0e147b4e8f6262c071e8eccc5aa3a0914ed4bb86",
     "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerFriendshipTags.cs": "9b73be9ec3d310a0eab1c7a2cd29b9e7fd042ff7346de5c621337c650bbbb2cf",
     "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerFriendshipTags.cs.meta": "7d5c6fbb196542dff3ca36041de374513d6f45a6e22222274c084989df691fb4"
@@ -65,6 +65,7 @@
     "Existing local overflow-confirmation and arithmetic range checks are retained.",
     "Confirmed offline custom-title policy saves after original character/length checks and existing NPC/level eligibility.",
     "Optional legacy title host ports remain available; the default local player reads/writes the current atomic save.",
-    "Custom-title response runs after saving; replay and write-failure retry use the existing character event mechanism."
+    "Custom-title response runs after saving; replay and write-failure retry use the existing character event mechanism.",
+    "Qualify the existing profession item quality enum explicitly when the partner UI also defines Quality; preserve IProfessionItemData.GetQuality and the original returned value."
   ]
 }

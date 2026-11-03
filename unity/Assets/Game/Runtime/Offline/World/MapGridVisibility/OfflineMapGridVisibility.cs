@@ -25,11 +25,14 @@ namespace Zjcs.Offline.World.MapGridVisibility
         private readonly Configuration configuration;
         private readonly Inputs inputs;
         private readonly Dictionary<int,MapActivedRegionGridInfo> regions;
+        private readonly Func<int,bool> entityActive;
+        private readonly HashSet<int> exploredEntities;
         private bool disposed;
         public GridVisibilityAgentComponent Component { get; }
 
         public OfflineMapGridVisibility(Configuration configuration,BodyConfiguration bodies,Pos2d position,
-            byte[] savedVisibility,IEnumerable<int> publicRegions,Func<Pos2d,int> regionAt,Func<int,bool> entityActive)
+            byte[] savedVisibility,IEnumerable<int> publicRegions,Func<Pos2d,int> regionAt,Func<int,bool> entityActive,
+            IEnumerable<int> exploredEntityIds=null,Func<int,Pos2d> entityPosition=null)
         {
             this.configuration=configuration??throw new ArgumentNullException(nameof(configuration));
             if(string.IsNullOrWhiteSpace(configuration.manifest)||configuration.mapClassId<=0||configuration.size?.Length!=2
@@ -42,7 +45,13 @@ namespace Zjcs.Offline.World.MapGridVisibility
                 throw new InvalidDataException("Map visibility save differs from the configured dimensions or contains an invalid run.");
             regions=configuration.regions.ToDictionary(r=>r.region,r=>new MapActivedRegionGridInfo
                 {RegionActivedGrids=r.RegionActivedGrids,RegionExtendVisiableGrids=r.RegionExtendVisiableGrids});
-            inputs=new Inputs(configuration,bodies,position,regionAt,entityActive);
+            inputs=new Inputs(configuration,bodies,position,regionAt,entityActive,entityPosition);
+            this.entityActive=entityActive;
+            int[] previousExploration=(exploredEntityIds??Array.Empty<int>()).ToArray();
+            if(previousExploration.Any(id=>id<=0||!inputs.Entities.ContainsKey(id))
+                ||previousExploration.Distinct().Count()!=previousExploration.Length)
+                throw new InvalidDataException("Explored entities differ from the configured map placements.");
+            exploredEntities=new HashSet<int>(previousExploration);
             // Confirmed offline inference: seed a new map from the local player
             // and activated goddesses. Never change the original header-only codec.
             if(savedVisibility==null||savedVisibility.Length==0)
@@ -60,6 +69,7 @@ namespace Zjcs.Offline.World.MapGridVisibility
             if(Component.Width!=configuration.size[0]||Component.Height!=configuration.size[1])
                 throw new InvalidDataException("Map visibility save dimensions differ from the original map.");
             Component.Start();
+            CaptureExploredEntities();
         }
         // Keep the official height/width header and header-only all-visible branch.
         // Validate before invoking its recovering decoder: a corrupt local save must
@@ -77,25 +87,52 @@ namespace Zjcs.Offline.World.MapGridVisibility
             return true;
         }
         public bool IsVisible(Pos2d position)=>Component.GetPosVisibility(position);
+        // Local minimap policy: discovery follows the same revealed
+        // entity-anchor cell as the world. Keep IDs after movement/destruction;
+        // the minimap response independently projects the latest class/state.
+        public int[] ExploredEntityIds
+        {
+            get
+            {
+                if(disposed)throw new ObjectDisposedException(nameof(OfflineMapGridVisibility));
+                CaptureExploredEntities();return exploredEntities.OrderBy(id=>id).ToArray();
+            }
+        }
+        private void CaptureExploredEntities()
+        {
+            foreach(var entity in inputs.Entities.Values)
+                if(!exploredEntities.Contains(entity.Placement.placementId)
+                    &&entityActive(entity.Placement.placementId)&&inputs.Ground.InGround(entity.Grid.Pos)
+                    &&Component.GetPosVisibility(entity.Grid.Pos))exploredEntities.Add(entity.Placement.placementId);
+        }
         public void MovePlayer(Pos2d position)
         {
             if(disposed)throw new ObjectDisposedException(nameof(OfflineMapGridVisibility));
             var grid=inputs.Player.Grid;var previous=grid.Pos;
+            CaptureExploredEntities();
             if(previous==position)return;
             grid.Pos=position;grid.PosUpdatedEvent.FireEvent(grid,previous);
+            CaptureExploredEntities();
         }
         public IEnumerable<Pos2d> RegionPositions(int region)=>new MapActivedRegionGridInfoEnumerator(regions.TryGetValue(region,out var info)?info:null);
         public void UnlockRegion(int region)
         {
             foreach(var point in RegionPositions(region))Component.SetPosVisibility(point,true);
+            CaptureExploredEntities();
         }
         public void SetEntityPosition(int placementId,Pos2d position)
         {
             if(!inputs.Entities.TryGetValue(placementId,out var entity))return;
+            CaptureExploredEntities();
             inputs.Ground.Remove(entity);entity.SetPosition(position);inputs.Ground.Add(entity);
+            CaptureExploredEntities();
         }
         public void NotifyEntityStarted(int placementId,bool newEntity)
-        { if(inputs.Entities.TryGetValue(placementId,out var entity))inputs.ContainerValue.StartEntityEvent.FireEvent(entity,newEntity); }
+        {
+            CaptureExploredEntities();
+            if(inputs.Entities.TryGetValue(placementId,out var entity))inputs.ContainerValue.StartEntityEvent.FireEvent(entity,newEntity);
+            CaptureExploredEntities();
+        }
         public byte[] Snapshot(){Component.OnBeforeSerialize();return (byte[])Component.ZipedData.Clone();}
         public void Dispose()
         {
@@ -108,7 +145,7 @@ namespace Zjcs.Offline.World.MapGridVisibility
             public readonly AreaInput Area;public readonly EntityInput Root,Player;public readonly CharacterInput Character;
             public readonly Dictionary<int,EntityInput> Entities=new Dictionary<int,EntityInput>();
             private readonly Dictionary<int,BodyTemplate> templates;private readonly int viewRange; public readonly int MapClassId;
-            public Inputs(Configuration config,BodyConfiguration bodies,Pos2d position,Func<Pos2d,int> regionAt,Func<int,bool> active)
+            public Inputs(Configuration config,BodyConfiguration bodies,Pos2d position,Func<Pos2d,int> regionAt,Func<int,bool> active,Func<int,Pos2d> entityPosition)
             {
                 MapClassId=config.mapClassId;viewRange=config.viewRange;ContainerValue=new ContainerInput(this);Ground=new GroundInput(config.size,active);Area=new AreaInput(MapClassId,regionAt);
                 templates=bodies.templates.ToDictionary(t=>t.classId);
@@ -119,7 +156,7 @@ namespace Zjcs.Offline.World.MapGridVisibility
                 {
                     templates.TryGetValue(placement.classId,out var template);
                     var entity=new EntityInput(this,placement.placementId,placement.classId,template?.body,placement);
-                    entity.SetPosition(placement.transform.Pos);Entities.Add(placement.placementId,entity);Ground.Add(entity);
+                    entity.SetPosition(entityPosition?.Invoke(placement.placementId)??placement.transform.Pos);Entities.Add(placement.placementId,entity);Ground.Add(entity);
                 }
             }
             public override VisibilityEntity Entity=>Root;public override EcContainer Container=>ContainerValue;

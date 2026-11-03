@@ -48,6 +48,7 @@ namespace Zjcs.Presentation.World
             localSave.aloneWorldClassIds ??= Array.Empty<int>();
             localSave.interactionRangeOverrides ??= Array.Empty<Map10RuntimeInteractionRangeOverride>();
             localSave.map13WaterStates ??= Array.Empty<Map13WaterState>();
+            localSave.exploredEntityPlacements ??= Array.Empty<int>();
             RecoverMap12ChestCompletions();
             RecoverMap12SteleCompletions();
         }
@@ -75,6 +76,9 @@ namespace Zjcs.Presentation.World
                 return parsed != null && parsed.schema == 1 && parsed.slotId == slotId
                     && parsed.gridX >= 0 && parsed.gridX < width && parsed.gridY >= 0 && parsed.gridY < height
                     && ValidMapVisibility(mapClassId == 13 ? parsed.map13GridVisibility : parsed.gridVisibility, width, height)
+                    && (parsed.exploredEntityPlacements == null
+                        || parsed.exploredEntityPlacements.All(value => value > 0)
+                        && parsed.exploredEntityPlacements.Distinct().Count() == parsed.exploredEntityPlacements.Length)
                     && (mapClassId != 13 || parsed.map13WaterStates == null
                         || parsed.map13WaterStates.All(value => value != null && value.PlacementId > 0
                             && value.Grid.X >= 0 && value.Grid.X < 240 && value.Grid.Y >= 0 && value.Grid.Y < 240

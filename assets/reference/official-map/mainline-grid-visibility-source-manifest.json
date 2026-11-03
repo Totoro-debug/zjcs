@@ -163,10 +163,11 @@
     }
   ],
   "text_hashing": "UTF-8 file bytes with CRLF normalized to LF; original source receipts retain their own hash conventions.",
+  "local_entity_exploration": "Confirmed offline minimap selection consumes ever-discovered entity placement IDs. The local visibility adapter records active entities at their current revealed anchor cells, retains IDs after movement/inactivation/completion, returns defensive sorted snapshots and rejects duplicate/foreign IDs. Preserve original default positions for camp calculations. Persist IDs in each map's existing local file alongside the unchanged original RLE; absent legacy history is reconstructed only from currently revealed active entities. The formal adapter reads actual world-object activation, rather than the placement default, and captures newly enabled entities before subsequent interactions. Map12 puzzle and Map13 water-entity movement update the original visibility bodies; restore puzzle state before rebuilding visibility on failed persistence.",
   "outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MapGridVisibility/OfflineMapGridVisibility.cs",
-      "sha256": "3e5916a8d1dc86d7e25dced6516768c4ac8661955df259a84949d8c9a14344c3"
+      "sha256": "c9aec1db6b664aa91596c808672acfdbc4deacc840ebb41dc883f290aaac144f"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MapGridVisibility/OfflineMapGridVisibility.cs.meta",
@@ -190,7 +191,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Zjcs.Presentation.World.asmdef",
-      "sha256": "cbd7dddadc48c9ec85af82758a0bd736d0af1a581cd4f6f59bc82cbd0995c2bf"
+      "sha256": "e6effa6cddfbe829f83d8d2ca4bed1e2a983cacd844d77448f5ba98ae3ebad01"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13GridVisibility/OfficialMap13LocalVisibilityAcceptance.cs",
@@ -202,7 +203,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Map13GridVisibility/SharedMapGridVisibilityAcceptance.cs",
-      "sha256": "e119f010afb2847a9a4822e6758817aae43430d06067f071f13f5cf45a8e1fe8"
+      "sha256": "49d54badeb0db4f1e36b89736f1e8c7536f590d0c7a74c3f46b07028b2a30628"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13GridVisibility/SharedMapGridVisibilityAcceptance.cs.meta",
@@ -210,7 +211,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.GridVisibility.cs",
-      "sha256": "9bcbdb5e5c867825ea63f9b144d524ff1c0b83354aee23cda44be4ac5f061ddb"
+      "sha256": "eeaececd29607b853964b858eeffd406c44a9e47205a7cf9ec93517a6fbbef2b"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.GridVisibility.cs.meta",
@@ -226,7 +227,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineInteractionCatalog.cs",
-      "sha256": "b479568e7fab1a52afc245d7c99df32042ee520170c6ef85afdf7b37ac8e5e32"
+      "sha256": "c34dbf3bb9eaf1974de7f852a035c4ce4ee4b3e10fb19f1eb64500379edd3ee3"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMiniMapModule.HudControls.cs",
@@ -234,11 +235,15 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Persistence.cs",
-      "sha256": "ee162d8ad900cf53f202cb775ec4d6af0290c951ff64c52924d4edd16b0c6129"
+      "sha256": "79050a332a31921edb2c7cf69998c6ed41f89e8f5dece62516405ba1edb4a959"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Puzzles.cs",
-      "sha256": "fd1d74df9d805bd66fa238de1a73c44b2b7f6382c15d18da25f02c0cc9e45055"
+      "sha256": "dc8241893d86163655437739bc96df80d4b10894b6663919e48948d7f78053aa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Interactions.cs",
+      "sha256": "98e81e3d08140faeea4c7e422eae89981c0a235652f176449c31e1a719cadb12"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Map13Trees.cs",
@@ -262,11 +267,11 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialMap10RuntimeData.cs",
-      "sha256": "f91d0f6e0321b85b77adbd59fc77149b2bad6d2059883c1f917779ff3a78d294"
+      "sha256": "a415d4ad5298288b776c3a1925ebabac5624e286b80a334452e1a21d1ff58095"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13Mainline/OfficialMap13MainlinePlayAcceptance.cs",
-      "sha256": "00110016ff1e9b54e66c7c9225dce44154605d5d4060312e9f17491eaeeff938"
+      "sha256": "2544d323e6f6340cd65358243b9286296d984aa1306b0ea2a3a4cc44f6988935"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13Mainline/Zjcs.Editor.Map13Mainline.asmdef",
@@ -278,7 +283,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapMarkManagersAcceptance.cs",
-      "sha256": "a4db5130b36da0a8a003aee6297f7b1959c1fafba109050f181cc16e4c1567ab"
+      "sha256": "e60f830d53c49b51d0a210ed836adcd1addb837c34bad3d56556d671c9bc4fde"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapMarkSpawnAcceptance.cs",
@@ -290,15 +295,15 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapMasksAcceptance.cs",
-      "sha256": "e385d0afdf6943dbf842c1497af9c18c041eab6e85c8db32224b775b163efa3a"
+      "sha256": "4adf26c74fc829280e7a5934b4b0862664e7259ad097bb69d7a306bfd83a611b"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/Zjcs.Editor.Map13.MiniMap.asmdef",
-      "sha256": "f4486d6c20e77e5ac2485479609575eb5078f26e3ce686541cdcf6d9e19b6e7c"
+      "sha256": "9e96ce79598b457776d4f64fdf98524991cf7e89f45c3b45a52cda88d0507dba"
     }
   ],
   "tool": {
     "path": "scripts/record_mainline_grid_visibility_sources.py",
-    "sha256": "0cac90b25b2511d4c8193ac77479902ae50a8bb56c7390dbbea405b99fbbb615"
+    "sha256": "68b5eb0553039186c67939c6d7b15ae72ca4c8022ad26f2cb41f1a1cc5376e67"
   }
 }

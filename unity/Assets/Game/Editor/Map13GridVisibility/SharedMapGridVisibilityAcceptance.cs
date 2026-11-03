@@ -47,6 +47,7 @@ namespace Zjcs.Editor.MapGridVisibility
 
         public static void Run()
         {
+            RunExploredEntities();
             // First exercise the original 57,600-cell payload and its persisted
             // bytes through the same interface used by the formal map host.
             Map13GridVisibility.OfficialMap13LocalVisibilityAcceptance.Run();
@@ -106,6 +107,74 @@ namespace Zjcs.Editor.MapGridVisibility
             }
             Debug.Log("Shared map visibility passed: original Map13 payload/save plus four independent rectangular-map fixtures, configurable character/sight/regions, exact cold restore and corrupt-run rejection.");
         }
+
+        private static void RunExploredEntities()
+        {
+            var source = JsonUtility.FromJson<OfflineMapGridVisibility.BodyConfiguration>(Resources.Load<TextAsset>("Map13/grid-entities").text);
+            foreach (int mapId in new[] { 11, 16 })
+            {
+                var config = new OfflineMapGridVisibility.Configuration
+                {
+                    manifest = "exploration-interface-fixture", mapClassId = mapId, size = new[] { 17, 9 },
+                    viewRange = 1, characterClassId = 4500,
+                    regions = new[] { new OfflineMapGridVisibility.Region { region = 7,
+                        RegionActivedGrids = new[] { new Pos2d(14, 5) }, RegionExtendVisiableGrids = Array.Empty<Pos2d>() } }
+                };
+                // Non-body marks isolate the anchor-cell discovery rule from the
+                // separately tested official whole-body/camp reveal calculation.
+                var bodies = new OfflineMapGridVisibility.BodyConfiguration
+                {
+                    manifest = config.manifest, mapClassId = mapId,
+                    templates = new[] { new OfflineMapGridVisibility.BodyTemplate { classId = 4500,
+                        body = source.templates.Single(t => t.classId == 3001).body } },
+                    entities = new[] { Placement(101, 2, 2), Placement(102, 14, 5), Placement(103, 2, 3),
+                        Placement(104, 14, 6), Placement(105, 2, 3) }
+                };
+                var inactive = new System.Collections.Generic.HashSet<int> { 103 };
+                Pos2d Position(int id) => id == 104 ? new Pos2d(2, 3) : id == 105 ? new Pos2d(14, 6)
+                    : bodies.entities.Single(e => e.placementId == id).transform.Pos;
+                using var map = new OfflineMapGridVisibility(config, bodies, new Pos2d(2, 2), null,
+                    Array.Empty<int>(), _ => 7, id => !inactive.Contains(id), null, Position);
+                using var isolated = new OfflineMapGridVisibility(config, bodies, new Pos2d(2, 2), null,
+                    Array.Empty<int>(), _ => 7, id => !inactive.Contains(id), null, Position);
+                Require(map.ExploredEntityIds.SequenceEqual(new[] { 101, 104 }), "Hidden/inactive or default-position entities leaked into discovery.");
+                int[] copy = map.ExploredEntityIds; copy[0] = 999;
+                map.SetEntityPosition(101, new Pos2d(14, 7));
+                map.SetEntityPosition(105, new Pos2d(2, 3));
+                inactive.Remove(103);
+                map.MovePlayer(new Pos2d(3, 2));
+                Require(map.ExploredEntityIds.SequenceEqual(new[] { 101, 103, 104, 105 }), "Movement, activation or defensive exploration snapshots differ.");
+                Require(!isolated.ExploredEntityIds.Contains(105), "Independent map instances share moved entities or exploration.");
+                map.UnlockRegion(7);
+                Require(map.ExploredEntityIds.SequenceEqual(new[] { 101, 102, 103, 104, 105 }), "Region reveal failed to discover its entity.");
+                inactive.UnionWith(new[] { 101, 102, 103, 104, 105 });
+                var saved = new ExplorationSave { mapId = mapId, visibility = Convert.ToBase64String(map.Snapshot()), entities = map.ExploredEntityIds };
+                string path = Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR")
+                    ?? throw new InvalidDataException("Explicit validation directory required."), "entity-exploration-" + mapId + ".json");
+                File.WriteAllText(path, JsonUtility.ToJson(saved));
+                var read = JsonUtility.FromJson<ExplorationSave>(File.ReadAllText(path));
+                Require(read.mapId == mapId, "Exploration save map identity differs.");
+                using var restored = new OfflineMapGridVisibility(config, bodies, new Pos2d(3, 2), Convert.FromBase64String(read.visibility),
+                    Array.Empty<int>(), _ => 7, _ => false, read.entities, Position);
+                Require(restored.ExploredEntityIds.SequenceEqual(saved.entities)
+                    && restored.Snapshot().SequenceEqual(map.Snapshot()), "Inactive/moved discoveries or original RLE changed on disk cold restore.");
+                foreach (int[] invalid in new[] { new[] { 101, 101 }, new[] { -1 }, new[] { 999 } })
+                {
+                    bool rejected = false;
+                    try { using var broken = new OfflineMapGridVisibility(config, bodies, new Pos2d(2, 2), null,
+                        Array.Empty<int>(), _ => 7, _ => true, invalid); }
+                    catch (InvalidDataException) { rejected = true; }
+                    Require(rejected, "Invalid/foreign exploration placement IDs were accepted.");
+                }
+            }
+            Debug.Log("MAINLINE_ENTITY_EXPLORATION_PASS: two map configurations; fog/inactive exclusion, current positions, movement, region reveal, isolation, defensive copies, disk cold restore and invalid save rejection.");
+        }
+
+        private static OfflineMapGridVisibility.BodyPlacement Placement(int id, int x, int y) => new OfflineMapGridVisibility.BodyPlacement
+        { placementId = id, classId = 9101, transform = new OfflineMapGridVisibility.PlacementTransform { Pos = new Pos2d(x, y) } };
+
+        [Serializable] private sealed class ExplorationSave
+        { public int mapId; public string visibility; public int[] entities; }
 
         private static void Require(bool condition, string message)
         {

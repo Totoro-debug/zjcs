@@ -59,8 +59,11 @@ namespace Zjcs.Presentation.World
             var publicRegions = progressionSave.Save.World.ActivatedGoddessRegions.Where(r => r.MapClassId == mapClassId).Select(r => r.Region);
             mapGridVisibility?.Dispose();
             mapGridVisibility = new OfflineMapGridVisibility(config, bodies, new Pos2d(navigation.currentGrid.X, navigation.currentGrid.Y),
-                saved, publicRegions, regionAt, id => mapEntities.TryGetValue(id, out var entity) && entity.Active
-                    && !localSave.completedEntityPlacements.Contains(id) && !IsMapLogicEntityDestroyed(id));
+                saved, publicRegions, regionAt, id => mapEntities.TryGetValue(id, out var entity)
+                    && entityView.FindEntityObject(id) is GameObject view && view != null && view.activeSelf
+                    && !localSave.completedEntityPlacements.Contains(id) && !IsMapLogicEntityDestroyed(id),
+                localSave.exploredEntityPlacements,
+                id => new Pos2d(mapEntities[id].Grid.X, mapEntities[id].Grid.Y));
             if (reattach) AttachMapGridFog();
         }
 
@@ -76,6 +79,7 @@ namespace Zjcs.Presentation.World
         {
             if (mapGridVisibility == null) return;
             mapGridVisibility.MovePlayer(new Pos2d(navigation.currentGrid.X, navigation.currentGrid.Y));
+            localSave.exploredEntityPlacements = mapGridVisibility.ExploredEntityIds;
             string encoded = Convert.ToBase64String(mapGridVisibility.Snapshot());
             if (mapClassId == 13) localSave.map13GridVisibility = encoded;
             else localSave.gridVisibility = encoded;

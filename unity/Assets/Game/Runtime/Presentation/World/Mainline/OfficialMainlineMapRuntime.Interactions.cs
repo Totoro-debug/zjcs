@@ -225,6 +225,9 @@ namespace Zjcs.Presentation.World
                     ? map13NavigationSession.Water.State(entity.PlacementId) : null;
                 if (waterState != null)
                 {
+                    if (!entity.Grid.Equals(waterState.Grid))
+                        mapGridVisibility?.SetEntityPosition(entity.PlacementId,
+                            new Zjcs.Official.World.NativeTerrain.Common.Pos2d(waterState.Grid.X, waterState.Grid.Y));
                     entity.Grid = waterState.Grid;
                     state = waterState.State;
                     entity.Active = waterState.Spawned;
@@ -254,6 +257,9 @@ namespace Zjcs.Presentation.World
             }
             SynchronizePuzzleGround();
             map12SteleEntities?.Refresh();
+            // Remember newly enabled entities before a later interaction removes them.
+            if (mapGridVisibility != null)
+                _ = mapGridVisibility.ExploredEntityIds;
             if (MapProfile.HasNativeUi) miniMap.RefreshNativeMiniMapMarks();
         }
 

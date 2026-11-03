@@ -657,6 +657,7 @@ namespace Zjcs.Presentation.World
         public Map10RuntimeInteractionRangeOverride[] interactionRangeOverrides = Array.Empty<Map10RuntimeInteractionRangeOverride>();
         public string map13GridVisibility;
         public string gridVisibility;
+        public int[] exploredEntityPlacements = Array.Empty<int>();
         public Zjcs.Offline.World.Map13WaterState[] map13WaterStates = Array.Empty<Zjcs.Offline.World.Map13WaterState>();
     }
 

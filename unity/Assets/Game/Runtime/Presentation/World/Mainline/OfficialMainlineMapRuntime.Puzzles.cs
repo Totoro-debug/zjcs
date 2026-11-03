@@ -156,6 +156,11 @@ namespace Zjcs.Presentation.World
                 mapEntities[rule.PlacementId].State = puzzles.State(rule.PlacementId);
                 if (mapClassId == 12)
                 {
+                    if (!mapEntities[rule.PlacementId].Grid.Equals(puzzles.Position(rule.PlacementId)))
+                    {
+                        var position = puzzles.Position(rule.PlacementId);
+                        mapGridVisibility?.SetEntityPosition(rule.PlacementId, new Zjcs.Official.World.NativeTerrain.Common.Pos2d(position.X, position.Y));
+                    }
                     mapEntities[rule.PlacementId].Grid = puzzles.Position(rule.PlacementId);
                     entityView.SetEntityGrid(rule.PlacementId, puzzles.Position(rule.PlacementId));
                 }
@@ -184,6 +189,7 @@ namespace Zjcs.Presentation.World
 
         private bool SavePuzzleMutation(Action mutation)
         {
+            if (mapGridVisibility != null) localSave.exploredEntityPlacements = mapGridVisibility.ExploredEntityIds;
             string before = JsonUtility.ToJson(localSave);
             MapPuzzleEntityState[] states = puzzles.Save();
             Map13WaterState[] waterStates = map13NavigationSession?.Water.Save();
@@ -199,8 +205,8 @@ namespace Zjcs.Presentation.World
                 if (waterStates != null)
                     map13NavigationSession = Map13NavigationAssets.LoadDefault().Open(waterStates);
                 navigation.SetAvatarPosition(player);
-                if (map13VisibilityBefore != null) RestoreMapVisibility(map13VisibilityBefore);
                 SynchronizePuzzleEntities();
+                if (map13VisibilityBefore != null) RestoreMapVisibility(map13VisibilityBefore);
                 puzzleRegionProgressPending = progressPendingBefore;
                 if (hud.ui != null) hud.ShowOfficialNotice("保存失败，请稍后重试");
                 return false;

@@ -50,6 +50,8 @@
 
 ## 自定义实现
 
+入口层已接入[公共实体探索记录](../features/mainline-map-modules.md#自定义实现)。正式共享宿主的图形 Play Mode 使用模拟地图点击，验证实体探索记录随位置／原可见数据保存和冷读一致；已查看实际画面。此项不代表后续楼层、跨图浏览或整图完成。
+
 按用户明确确认，沿用龙之国的单机自动解谜方案。固定版客户端／Common 的 `StageResultAutoPuzzleComponentImplement`、`StageResultResetPuzzleComponentImplement` 及相关请求保留目标、费用和结果标记，缺少服务端执行器；本地适配不标为原服务端逻辑。依据为 [`MyStageResultAutoPuzzle.cs`](../../.tools/source-packages/official-code/client-source/MyStageResultAutoPuzzle.cs)、[`MyStageResultResetPuzzle.cs`](../../.tools/source-packages/official-code/client-source/MyStageResultResetPuzzle.cs) 及对应 Common 标记组件。通天塔 5 处火炮终端只清除原 `NeedRemoveLoEntityIds`，2 处特殊锁及 5 处普通锁终端只解开原 `LockLoEntityIds`，使用原交互费用（道具 325×1），不补发炮、失败演出或奖励。重置仅恢复指定目标，保留其他状态、背包、奖励凭据和角色位置；原配置仅 4 个终端有重置分支，保留其余终端的原菜单，不新增重置按钮。
 
 离线入口规则按用户确认自定义为“达到位阶 5 后可手动发起；发起时写入本地倒计时起点，经过 14 天开放”。计时起点与开放状态进入现有主线 JSON 存档；位阶升级、入口出现记录和读取入口状态都不会自动开始倒计时。暂不应用服务端合服加速。入口地形标签的时间条件消费同一份已解锁地图状态，仍先判断时间条件、再判断等级，不另造服务器开放时间。`OfflineMainlineProgressSession.StartMap15Preparation`、`GetMap15PreparationState` 与 `RefreshMap15Preparation` 承载该规则；旧存档中已开放的状态保留为已开放。Map14 入口实体 103 已接入官方 `Map14/UI/CostItemConfirmDialog`：访问入口会显示位阶要求或剩余天数，达到位阶 5 且未开始时可手动开始本地 14 天倒计时；倒计时完成后确认框提供“进入通天塔”，由主线入口控制器重新打开 Map15。

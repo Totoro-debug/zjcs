@@ -56,7 +56,7 @@ def build():
         "OfficialMainlineMapProfile.cs", "OfficialMainlineMapRuntime.cs",
         "OfficialMainlineInteractionCatalog.cs",
         "OfficialMainlineMiniMapModule.HudControls.cs",
-        "OfficialMainlineMapRuntime.Persistence.cs", "OfficialMainlineMapRuntime.Puzzles.cs",
+        "OfficialMainlineMapRuntime.Persistence.cs", "OfficialMainlineMapRuntime.Puzzles.cs", "OfficialMainlineMapRuntime.Interactions.cs",
         "OfficialMainlineMapRuntime.Map13Trees.cs", "OfficialMainlineStatuesModule.Goddess.cs")]
     outputs += ["unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.NativeMap12.cs",
         "unity/Assets/Game/Runtime/Presentation/World/NativeMap12/OfficialMap12NativeWorldAssets.cs",
@@ -85,6 +85,7 @@ def build():
         "unchanged_official_implementation": [record(p.relative_to(ROOT).as_posix()) for p in sorted(
             (ROOT / "unity/Assets/Game/Runtime/Official/World/Map13GridVisibility").glob("*.cs"))],
         "text_hashing": "UTF-8 file bytes with CRLF normalized to LF; original source receipts retain their own hash conventions.",
+        "local_entity_exploration": "Confirmed offline minimap selection consumes ever-discovered entity placement IDs. The local visibility adapter records active entities at their current revealed anchor cells, retains IDs after movement/inactivation/completion, returns defensive sorted snapshots and rejects duplicate/foreign IDs. Preserve original default positions for camp calculations. Persist IDs in each map's existing local file alongside the unchanged original RLE; absent legacy history is reconstructed only from currently revealed active entities. The formal adapter reads actual world-object activation, rather than the placement default, and captures newly enabled entities before subsequent interactions. Map12 puzzle and Map13 water-entity movement update the original visibility bodies; restore puzzle state before rebuilding visibility on failed persistence.",
         "outputs": [record(p) for p in outputs],
         "tool": record(Path(__file__).relative_to(ROOT).as_posix()),
     }
