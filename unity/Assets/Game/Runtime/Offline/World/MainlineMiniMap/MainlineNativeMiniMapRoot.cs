@@ -11,8 +11,9 @@ namespace Zjcs.Offline.World.MainlineMiniMap
 {
     // Concrete MonoScript for the recovered original prefab. All original root
     // behaviour remains in MainlineMiniMapRoot; this adapter supplies its state.
-    public sealed class MainlineNativeMiniMapRoot : MainlineMiniMapRoot
+    public sealed class MainlineNativeMiniMapRoot : MainlineMiniMapRoot, IMiniMapFilterMapContext
     {
+        MiniMapResourcePointManager IMiniMapFilterMapContext.ResourcePointManager => ResourcePointManager;
         internal MainlineMiniMapBindings Bindings;
         private MiniMapManagedContext State => Bindings.State;
         protected override MiniMapSettings Settings => Bindings.Settings;

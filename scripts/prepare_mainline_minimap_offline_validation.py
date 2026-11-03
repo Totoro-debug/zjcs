@@ -1,5 +1,5 @@
 """Stage the original offline-minimap coordinator and its native fog integration fixture."""
-import json,re,shutil,subprocess
+import argparse,json,re,shutil,subprocess
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 from official_apk import ROOT
@@ -8,10 +8,13 @@ from prepare_partner_star_god_validation import copy_modules
 
 
 def main():
+    parser=argparse.ArgumentParser(__doc__)
+    parser.add_argument('--refresh',action='store_true',help='Refresh this owned, stopped validation project while retaining its import cache')
+    args=parser.parse_args()
     work=validation_directory()
     if not (work/'.zjcs-validation.json').is_file():raise ValueError('Owned validation workspace required')
     project=work/'minimap-unity'
-    if project.exists():raise ValueError('Preserve existing minimap validation project')
+    if project.exists() and not args.refresh:raise ValueError('Preserve existing minimap validation project')
     source=ROOT/'unity';runtime=source/'Assets/Game/Runtime'
     # This native rendering fixture deliberately reuses the installed Map13 source,
     # while the coordinated request and dispatch code comes from selected 884.
@@ -37,7 +40,7 @@ def main():
       if n in selected or n not in modules:continue
       selected.add(n);added.add(n);pending.extend(json.loads(modules[n].read_bytes()).get('references',[]))
      copy_modules(project,runtime,modules,added)
-    fixture=source/'Assets/Game/Editor/Map13MiniMap';stage_modules(json.loads((fixture/'Zjcs.Editor.Map13.MiniMap.asmdef').read_bytes())['references']);shutil.copytree(fixture,project/'Assets/Game/Editor/Map13MiniMap')
+    fixture=source/'Assets/Game/Editor/Map13MiniMap';stage_modules(json.loads((fixture/'Zjcs.Editor.Map13.MiniMap.asmdef').read_bytes())['references']);shutil.copytree(fixture,project/'Assets/Game/Editor/Map13MiniMap',dirs_exist_ok=args.refresh)
     files=subprocess.check_output(['git','ls-files','-co','--exclude-standard','-z','--','unity/Assets'],cwd=ROOT).split(b'\0')
     metas=[ROOT/n.decode() for n in set(files) if n.endswith(b'.meta')]
     def identity(meta):
@@ -56,6 +59,13 @@ def main():
     pending=[p for name in ['NativeMiniMapRegions','NativeMiniMapSettings','NativeMiniMapMasks','NativeMiniMapDescriptions','NativeMiniMapCurrent','NativeMiniMapRootCurrent'] for p in (base/name).rglob('*') if p.is_file() and p.suffix!='.meta']
     pending += [p for name in ['NativeMiniMapCurrent','NativeMiniMapRootCurrent'] for p in (source/'Assets/Official/World/Map/16'/name).rglob('*') if p.is_file() and p.suffix!='.meta']
     pending += [p for p in shared_hud.rglob('*') if p.is_file() and p.suffix!='.meta']
+    shared_panel=source/'Assets/Official/World/Shared/NativeMiniMapPanelCurrent'
+    if not shared_panel.is_dir():raise ValueError('Prepare the complete selected fullscreen minimap window')
+    pending += [p for p in shared_panel.rglob('*') if p.is_file() and p.suffix!='.meta']
+    pending.append(source/'Assets/Game/Resources/Map13/Native/minimap-resource-point-assets.asset')
+    shared_renderer=source/'Assets/Official/World/Shared/NativeMiniMapRendererCurrent'
+    if not shared_renderer.is_dir():raise ValueError('Prepare the complete selected shared minimap renderer')
+    pending += [p for p in shared_renderer.rglob('*') if p.is_file() and p.suffix!='.meta']
     for map_id in (10,11,12,14):
      native=source/f'Assets/Official/World/Map/{map_id}/NativeMiniMapRootCurrent'
      if not native.is_dir():raise ValueError('Prepare the complete selected minimap root: '+str(map_id))
@@ -87,9 +97,9 @@ def main():
        if guid.startswith(b'000000') or guid in package_guids:continue
        if guid not in index:raise ValueError('Unbound native asset '+guid.decode()+' '+str(p))
        pending.append(index[guid])
-    shutil.copytree(source/'Packages',project/'Packages')
-    shutil.copytree(source/'Assets/StreamingAssets/Map13/NativeText',project/'Assets/StreamingAssets/Map13/NativeText')
-    settings=project/'ProjectSettings';settings.mkdir()
+    shutil.copytree(source/'Packages',project/'Packages',dirs_exist_ok=args.refresh)
+    shutil.copytree(source/'Assets/StreamingAssets/Map13/NativeText',project/'Assets/StreamingAssets/Map13/NativeText',dirs_exist_ok=args.refresh)
+    settings=project/'ProjectSettings';settings.mkdir(exist_ok=args.refresh)
     for n in ['ProjectVersion.txt','ProjectSettings.asset','TagManager.asset']:shutil.copy2(source/'ProjectSettings'/n,settings/n)
     print('Prepared isolated actual minimap coordinator:',len(selected),'assemblies,',len(seen),'original assets',flush=True)
 

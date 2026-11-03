@@ -1969,6 +1969,21 @@ unity/Assets/Official/World/Shared/NativeMiniMapHudCurrent.meta text eol=lf
 unity/Assets/Official/World/Shared.meta text eol=lf
 unity/Assets/Official/World/Shared/NativeMiniMapHudCurrent/**/*.wav -text
 
+# Selected shared original fullscreen minimap window and configuration.
+scripts/prepare_mainline_minimap_panel_code.py text eol=lf
+scripts/prepare_mainline_minimap_native_panel.py text eol=lf
+scripts/prepare_mainline_minimap_native_renderer.py text eol=lf
+assets/reference/official-map/mainline-*minimap-panel*-source-manifest.json text eol=lf
+assets/reference/official-map/mainline-current-minimap-renderer-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/World/MainlineMiniMapPanel/** text eol=lf
+unity/Assets/Game/Runtime/Official/World/MainlineMiniMapPanel.meta text eol=lf
+unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Panel.cs* text eol=lf
+unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/** text eol=lf
+unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent.meta text eol=lf
+unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/**/*.wav -text
+unity/Assets/Official/World/Shared/NativeMiniMapRendererCurrent/** text eol=lf
+unity/Assets/Official/World/Shared/NativeMiniMapRendererCurrent.meta text eol=lf
+
 # Original status playable lifecycle and native orbit graphs.
 scripts/prepare_battle_status_*.py text eol=lf
 assets/reference/battle-animation/status-*-source-manifest.json text eol=lf

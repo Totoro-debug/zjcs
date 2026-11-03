@@ -173,7 +173,7 @@
   "integration": [
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMap.cs",
-      "sha256": "687c2a1060d9675fb9ec4e1f22114c3b6e71101b18ab8575c1facd9c51708443"
+      "sha256": "ebcce3c6249d53059ddee47ec565fb02fbca3965ece7191885ab013f52b2c90f"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMap.cs.meta",
@@ -188,8 +188,16 @@
       "sha256": "cde07172ce86151bf89b74b27ee87e5d6feb3776330af55f5254fb37985fce65"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMap.Panel.cs",
+      "sha256": "b35f3e714426578120a45c59e143ce2b2ffe541afaa759c0879e98ce111e48d0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMap.Panel.cs.meta",
+      "sha256": "601f469c3f2735a1e914650b49a8c6cbf1af2fa9090da326261530c78ecae42d"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapBindings.cs",
-      "sha256": "9711641b992297cc2b28fca3b7e52c826a8e850f2d1e382f7a8dc270124e7676"
+      "sha256": "6027154c676201b416b9ddd6956c4147f9a8593f158dc0f0e60a430c3d6af094"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapBindings.cs.meta",
@@ -197,7 +205,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineNativeMiniMapRoot.cs",
-      "sha256": "0b6037ca7587151691ecbf7cffa7a96ed3b5ac6fe004a39b5b40a25d9bde2be1"
+      "sha256": "1b01b328300411214129d304a1e21a4c3e6830ed339db73059ccd5bef9b29817"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineNativeMiniMapRoot.cs.meta",
@@ -205,7 +213,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/Zjcs.Offline.World.MainlineMiniMap.asmdef",
-      "sha256": "a56ef4023006504118c3276e21ebc0b545908ed9daeac6ba58d9097a89cc659d"
+      "sha256": "b583568cfa047cc653dea97e7af79ef64d91ca4ea09c3063c38ced094b901bb3"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/Zjcs.Offline.World.MainlineMiniMap.asmdef.meta",
@@ -213,11 +221,11 @@
     },
     {
       "path": "scripts/prepare_mainline_minimap_offline_validation.py",
-      "sha256": "1dbc11279a4f5fa6a249963217e18d168abe5346901276a055582a0156f67266"
+      "sha256": "826f3c1fe6d8ee8c37cabcc27e02f50a3ebdfbc205e3517075372321fddb934a"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.cs",
-      "sha256": "2c05ccfa147f864a223953ebe77b128184ba5338b937506ac036680804210ad0"
+      "sha256": "fadc8a9560f2b139d2609e3b3cf0ce597ff080bf5b28195a2699672df31448da"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.cs.meta",
@@ -225,11 +233,19 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Hud.cs",
-      "sha256": "4f28748f13748a16b3206460e9c520b05c0528f2466bee8e254f0ef3e77a817b"
+      "sha256": "25889a68e1f5d660da4cf62a41b413ef782cf53bd781e3f0a0c40a6cd99db4ec"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Hud.cs.meta",
       "sha256": "21eb7cc795b0a97cf2b529c413f940be5beac06ceefd84cc85b63b86bba1edf3"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Panel.cs",
+      "sha256": "37e86c89c8cc142ccd53453911ad91a25eb6b863b69ec1fc9ad3b5cd0f59b62f"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Panel.cs.meta",
+      "sha256": "5e4a9b2130317fb3efb21e2b29081e57f127aee00063ecef9c2f11a94668ac98"
     }
   ],
   "scope": "Shared original HUD prefab only. Preserve every original layout field and component. Replace Wwise posting with the decoded original event clip and an instance sound port. Production world-canvas placement and state wiring remain pending.",
@@ -1006,6 +1022,16 @@
       "sha256": "76fae28aa890d8169ae95f1ed2c9d0dee8fbda104e8b424c4d9feb6ba5a472d5",
       "meta_sha256": "858b0f522a82957be37004917d776500b5a6d617b11bc1c7738232ac46859f91"
     },
+    "TipDotBanManager": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotBanManager.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "5578b60df5963f869ecabc0552ac5e9a",
+        "type": 3
+      },
+      "sha256": "7b0d2d5626b5af59aeda1635ae1ad3c50a45b16c57d8c93a81c4e2881052331f",
+      "meta_sha256": "2ba65b1bc18a98604a4df1d7762831ac8e4baab91027c0730fd117b76172e6d6"
+    },
     "TipDotDynamicLinkNodeBase": {
       "path": "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotDynamicLinkNodeBase.cs",
       "pointer": {
@@ -1035,6 +1061,16 @@
       },
       "sha256": "35b393af56f24120a0d5adbcaa278a3d525c0d751587a731570c61f0d0048b96",
       "meta_sha256": "a7928f0ddfdad2b4776994ab6ee23331bb4bd36bcb2daa85843d6ad53e83488b"
+    },
+    "TipDotGraphHandler": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotGraphHandler.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "c1da7f012fc1e3bd525e0777c060b3e5",
+        "type": 3
+      },
+      "sha256": "5aa850751e3049d0828084d6205ce96c136356d06f393b234866e74f40601e44",
+      "meta_sha256": "973687f575685b2aeda52869c82254260a54b578e65ab50a50e0bb110d89810d"
     },
     "TipDotHasAnyNpcDialogueConditionNode": {
       "path": "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotHasAnyNpcDialogueConditionNode.cs",
@@ -1096,6 +1132,16 @@
       "sha256": "8952f726853555cf71e0cf2d9e3de408869da362f761786e976673a85d2671a4",
       "meta_sha256": "6aed430cd700d234a82bb8e45bfe74e26cf0fc18231d9b845a43f8861482388a"
     },
+    "TipDotNodeDataRepository": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotNodeDataRepository.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "3ef703a9562b78cf2dfa3b8da485a11f",
+        "type": 3
+      },
+      "sha256": "8197ac4d7a88bed2265de409eb8d0a3dc026fd0e850e79b52767cbbd17aba95e",
+      "meta_sha256": "03a6f11aab83a68fd3784ed9ee16d2ffca6f7f1de0723f9ade8aea49e4d6ffb8"
+    },
     "TipDotNodeFactory": {
       "path": "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotNodeFactory.cs",
       "pointer": {
@@ -1105,6 +1151,16 @@
       },
       "sha256": "ae537844bdeb2ba2ce17e56fb6f860ada6f236aaa3719712f5615e7031ab30b8",
       "meta_sha256": "c396b499541e105118e7fdfdad046e31751f1a07134d5ddcc357608ef8177a98"
+    },
+    "TipDotNodeManager": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotNodeManager.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "0ecc7faeac3659677f4a670011dc6d03",
+        "type": 3
+      },
+      "sha256": "f99dc4d2aa940a433066a4ca66589c47ab40f31cc25af2f4a428ca7883496db7",
+      "meta_sha256": "4d3e9045f0c4b7be18bdaba9ff4336e28ff6ec436b76168a57f6c4e0fdd811a9"
     },
     "TipDotNpcCanSendGiftConditionNode": {
       "path": "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotNpcCanSendGiftConditionNode.cs",
@@ -1195,6 +1251,26 @@
       },
       "sha256": "50e5a6eec59d018eb6c0606653805eb604a3e8fd176253f618d2f3130ad4eeb3",
       "meta_sha256": "4d72fb17a6951394673e6f89cd1ff2dfb3a21b22b3c62895805d0032ca032fa8"
+    },
+    "TipDotSystem": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotSystem.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "fe705e738870faaed89141add081fe1b",
+        "type": 3
+      },
+      "sha256": "af966b0731df07981b2ef5f9a8d17ba7b59e96d2d47b63b61496977afb75ab3a",
+      "meta_sha256": "efce558972c891b0d987209abc544d041f6c6720ae923a270393efe859087036"
+    },
+    "TipDotSystemController": {
+      "path": "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotSystemController.cs",
+      "pointer": {
+        "fileID": 11500000,
+        "guid": "6271a0dc02969a5a8e82a8a02ad74606",
+        "type": 3
+      },
+      "sha256": "2a41386f1fe5d612540b90d330deaa1d8bdfeff7ae808b3692f93ca098e3a930",
+      "meta_sha256": "584ba5b2b8aefe493fe5d51d1b41bb19269461dbcf297eeb1ebce2f1d3cfab4d"
     },
     "TipNpcAchievementHasTipConditionNode": {
       "path": "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipNpcAchievementHasTipConditionNode.cs",
@@ -2993,7 +3069,7 @@
         "guid": "485cb1970f2c584495834103ad197fe3",
         "type": 3
       },
-      "sha256": "0b6037ca7587151691ecbf7cffa7a96ed3b5ac6fe004a39b5b40a25d9bde2be1",
+      "sha256": "1b01b328300411214129d304a1e21a4c3e6830ed339db73059ccd5bef9b29817",
       "meta_sha256": "d4cec09309d6ee189e14a721fd70ed49a4427130503f38174400cabb46d535f7"
     },
     "OfflineMiniMap": {

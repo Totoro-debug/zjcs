@@ -39,6 +39,8 @@ namespace Zjcs.Offline.World.MainlineMiniMap
                 var instance = Object.Instantiate(prefab, owner.transform, false);
                 var root = instance.GetComponent<MainlineNativeMiniMapRoot>();
                 root.Bindings = bindings;
+                // MapRootSwitchMapSupport.CreateMiniMap binds the shared slot's renderer.
+                root.NonMaskableManager = bindings.NonMaskableManager;
                 foreach (var ui in instance.GetComponentsInChildren<UIBase>(true)) ui.Services = bindings.State.LabelServices;
                 foreach (var ui in instance.GetComponentsInChildren<MapMeCharacterUIBase>(true)) ui.MapMyCharacterManager = bindings.Characters;
                 foreach (var spawn in instance.GetComponentsInChildren<MiniMapMarkSpawnManager>(true))
@@ -77,6 +79,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
         public void SetActive(bool active)
         {
             if (disposed) throw new ObjectDisposedException(nameof(MainlineMiniMap));
+            if (!active) CloseFullScreen();
             if (!active && hud != null) hud.SetActive(false);
             owner.SetActive(active);
             if (active && hud != null) hud.SetActive(true);
@@ -85,6 +88,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
         {
             if (disposed) return;
             disposed = true;
+            CloseFullScreen();
             DisposeHud();
             if (owner != null) { owner.SetActive(false); Object.Destroy(owner); }
             if (texture != null) { texture.Release(); Object.Destroy(texture); texture = null; }

@@ -79,13 +79,13 @@ namespace Zjcs.Editor.Map13MiniMap
         private static T HudField<T>(Object instance,string field) where T:Object=>new SerializedObject(instance).FindProperty(field).objectReferenceValue as T;
         private static IEnumerator ClickHud(Button button,MiniMapHudSimulatedMouse mouse,EventSystem events,Camera camera)
         {
-            Canvas.ForceUpdateCanvases();mouse.Position=RectTransformUtility.WorldToScreenPoint(camera,button.GetComponent<RectTransform>().TransformPoint(button.GetComponent<RectTransform>().rect.center));
+            Canvas.ForceUpdateCanvases();var buttonCanvas=button.GetComponentInParent<Canvas>().rootCanvas;var eventCamera=buttonCanvas.renderMode==RenderMode.ScreenSpaceOverlay?null:camera;mouse.Position=RectTransformUtility.WorldToScreenPoint(eventCamera,button.GetComponent<RectTransform>().TransformPoint(button.GetComponent<RectTransform>().rect.center));
             var hits=new List<RaycastResult>();events.RaycastAll(new PointerEventData(events){position=mouse.Position},hits);
-            Require(hits.Any(h=>h.gameObject.GetComponentInParent<Button>()==button),"Original HUD button receives simulated pointer raycast");
+            Require(hits.Any(h=>h.gameObject.GetComponentInParent<Button>()==button),"Original button receives simulated pointer raycast: "+button.name+" at "+mouse.Position+" hits "+string.Join(",",hits.Select(h=>h.gameObject.name)));
             mouse.Down=true;mouse.Held=true;int frame=Time.frameCount;while(Time.frameCount<frame+2)yield return null;
             mouse.Down=false;mouse.Held=false;mouse.Up=true;frame=Time.frameCount;while(Time.frameCount<frame+2)yield return null;mouse.Up=false;yield return null;
         }
-        private static IEnumerator VerifyHud(MainlineMiniMap module,MainlineNativeMiniMapRoot root,MainlineMiniMapRootStateFixture state,DescriptionLabels labels,GridData grid,Queries queries)
+        private static IEnumerator VerifyHud(MainlineMiniMap module,MainlineNativeMiniMapRoot root,MainlineMiniMapRootStateFixture state,DescriptionLabels labels,GridData grid,Queries queries,IMiniMapCharacterManager characters)
         {
             const string native="Assets/Official/World/Shared/NativeMiniMapHudCurrent/";
             var prefab=AssetDatabase.LoadAssetAtPath<GameObject>(native+"Resources/World/Native/mini-map-hud.prefab");Require(prefab,"Complete original shared HUD");
@@ -99,10 +99,11 @@ namespace Zjcs.Editor.Map13MiniMap
             Require(groups.GetLanguageGroupByType(LanguageType.zh_CN)==LanguageGroup.Zh,"Original Chinese language-group config");
             var hudState=new HudState{Source=state,Text=texts};int sounds=0;
             var camera=new GameObject("HudFixtureCamera",typeof(Camera)).GetComponent<Camera>();camera.tag="MainCamera";camera.orthographic=true;camera.transform.position=new Vector3(0,0,-100);camera.cullingMask=1<<5;camera.clearFlags=CameraClearFlags.SolidColor;camera.backgroundColor=new Color(.2f,.2f,.2f);
-            var target=new RenderTexture(768,1024,24);target.Create();camera.targetTexture=target;
+            var target=new RenderTexture(720,1280,24);target.Create();camera.targetTexture=target;
             var canvas=new GameObject("OriginalHudFixtureSlot",typeof(RectTransform),typeof(Canvas),typeof(GraphicRaycaster));var c=canvas.GetComponent<Canvas>();c.renderMode=RenderMode.ScreenSpaceCamera;c.worldCamera=camera;c.planeDistance=1;
             queries.RegionAt=pos=>state.QueryRegion(pos);Require(state.Current==13&&root.Character.enabled&&root.Character.CharacterMe.activeSelf,"Original current-map character branch starts active");
-            module.AttachHud(prefab,canvas.transform,new MainlineMiniMapHudBindings{State=hudState,LanguageUI=ui,Language=language,Text=texts,Fonts=fonts,LanguageGroups=groups,PlaySound=(clip,emitter)=>{Require(clip&&clip.name=="Main_Cursor_Normal","Original decoded click event");sounds++;}});
+            var hudBindings=new MainlineMiniMapHudBindings{State=hudState,LanguageUI=ui,Language=language,Text=texts,Fonts=fonts,LanguageGroups=groups,PlaySound=(clip,emitter)=>{Require(clip&&(clip.name=="Main_Cursor_Normal"||clip.name=="Main_Tag"),"Original decoded click event");sounds++;}};
+            module.AttachHud(prefab,canvas.transform,hudBindings);
             for(int i=0;i<8;i++)yield return null;
             var small=canvas.GetComponentInChildren<MiniMapMaskedUI>(true);var area=small.GetComponent<AreaInfoUI>();var branch=small.GetComponentInChildren<PublicMapBranchLineBtn>(true);var content=HudField<GameObject>(branch,"mContent");
             Require(HudField<RawImage>(small,"mRawImage").texture==module.Texture,"Original HUD binds owned minimap texture");
@@ -119,6 +120,7 @@ namespace Zjcs.Editor.Map13MiniMap
             camera.Render();var old=RenderTexture.active;RenderTexture.active=module.Texture;var mapImage=new Texture2D(module.Texture.width,module.Texture.height,TextureFormat.RGBA32,false);mapImage.ReadPixels(new Rect(0,0,mapImage.width,mapImage.height),0,0);mapImage.Apply();Require(mapImage.GetPixels32().Count(p=>p.r>50&&p.g>60&&p.b<180)>30,"Original character renderer draws regional geometry into owned HUD texture");Object.Destroy(mapImage);
             RenderTexture.active=target;var image=new Texture2D(target.width,target.height,TextureFormat.RGBA32,false);image.ReadPixels(new Rect(0,0,target.width,target.height),0,0);image.Apply();RenderTexture.active=old;File.WriteAllBytes(Path.Combine(Workspace,"native-minimap-hud.png"),image.EncodeToPNG());Object.Destroy(image);
             module.SetActive(false);Require(grid.Receivers.Count==0&&!small.gameObject.activeInHierarchy,"Public module disable hides HUD and releases grid receiver");module.SetActive(true);for(int i=0;i<3;i++)yield return null;Require(grid.Receivers.Count==1&&small.gameObject.activeInHierarchy,"Public module re-enable restores one HUD receiver");
+            var fullscreen=VerifyPanel(module,root,state,labels,grid,characters,hudBindings,c,camera,target,mouse,events);while(fullscreen.MoveNext())yield return fullscreen.Current;
             module.Dispose();yield return null;Require(!small&&grid.Receivers.Count==0&&hudState.Subscribers==0,"Public module destruction owns HUD and releases all local subscriptions");
             Object.Destroy(input);Object.Destroy(canvas);
             queries.RegionAt=null;Object.Destroy(camera.gameObject);Object.Destroy(target);fonts.Dispose();texts.Dispose();ui.Dispose();

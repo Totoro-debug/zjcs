@@ -10,6 +10,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using Zjcs.Offline.World.MainlineMiniMap;
 using Zjcs.Offline.World.MapGridVisibility;
+using Zjcs.Offline.World.NativeMap13MiniMapResources;
 using Zjcs.Official.EntityLifecycle;
 using Zjcs.Official.EntityTransformViews;
 using Zjcs.Official.World.Map13GridVisibility;
@@ -141,7 +142,19 @@ namespace Zjcs.Editor.Map13MiniMap
             }
             return lite;
         }
-        public static void Run(){Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION","1");SessionState.SetBool(Key,true);Hook();EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);EditorApplication.isPlaying=true;}
+        public static void Run(){Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION","1");SetPortraitFixture();SessionState.SetBool(Key,true);Hook();EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);EditorApplication.isPlaying=true;}
+        private static void SetPortraitFixture()
+        {
+            foreach(var sceneView in Resources.FindObjectsOfTypeAll<SceneView>())sceneView.Close();
+            var editor=typeof(EditorWindow).Assembly;var sizesType=editor.GetType("UnityEditor.GameViewSizes");
+            var sizes=typeof(ScriptableSingleton<>).MakeGenericType(sizesType).GetProperty("instance").GetValue(null);
+            var group=sizesType.GetMethod("GetGroup").Invoke(sizes,new[]{Enum.Parse(editor.GetType("UnityEditor.GameViewSizeGroupType"),"Standalone")});
+            var flags=System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.Public|System.Reflection.BindingFlags.NonPublic;
+            var size=Activator.CreateInstance(editor.GetType("UnityEditor.GameViewSize"),flags,null,new object[]{Enum.ToObject(editor.GetType("UnityEditor.GameViewSizeType"),1),720,1280,"Original minimap fixture"},null);
+            group.GetType().GetMethod("AddCustomSize").Invoke(group,new[]{size});
+            var viewType=editor.GetType("UnityEditor.GameView");var view=EditorWindow.GetWindow(viewType,false,"Game",false);
+            viewType.GetProperty("selectedSizeIndex",flags).SetValue(view,(int)group.GetType().GetMethod("GetTotalCount").Invoke(group,null)-1);view.Repaint();
+        }
         [InitializeOnLoadMethod] private static void Hook(){if(!SessionState.GetBool(Key,false))return;errors=0;Application.logMessageReceived+=Observe;EditorApplication.playModeStateChanged+=Mode;}
         private static void Observe(string message,string trace,LogType kind){if(kind==LogType.Error||kind==LogType.Exception||kind==LogType.Assert)errors++;}
         private static void Mode(PlayModeStateChange mode){if(mode==PlayModeStateChange.EnteredPlayMode){routine=Verify();EditorApplication.update+=Advance;}}
@@ -203,10 +216,17 @@ namespace Zjcs.Editor.Map13MiniMap
             module.Dispose();module.Dispose();yield return null;Require(characters.Subscribers==0&&!miniTexture,"Complete native hierarchy releases character subscriptions and owned texture");
             state.Current=13;
             host.AddComponent<MyEntity>();host.AddComponent<MyTransform>().Position=lite.GridToPos(center);
+            var originalResourcePoints=bindings.ResourcePoints;
+            var resourceAssets=Resources.Load<MiniMapResourcePointAssets>("Map13/Native/minimap-resource-point-assets");Require(resourceAssets,"Original resource-point catalog");
+            var localResourcePoints=new LocalMiniMapResourcePointContext(resourceAssets,labels);bindings.ResourcePoints=localResourcePoints;
+            var nonmaskPrefab=Resources.Load<GameObject>("World/Native/mini-map-nonmaskable");Require(nonmaskPrefab,"Original shared fullscreen renderer");
+            foreach(var transform in nonmaskPrefab.GetComponentsInChildren<Transform>(true))Require(transform.GetComponents<MonoBehaviour>().All(c=>c),"Every shared renderer script imported");
+            foreach(var component in nonmaskPrefab.GetComponentsInChildren<Component>(true)){var property=new SerializedObject(component).GetIterator();while(property.Next(true))if(property.propertyType==SerializedPropertyType.ObjectReference)Require(property.objectReferenceValue||property.objectReferenceInstanceIDValue==0,"Shared renderer original reference: "+property.propertyPath);}
+            var nonmaskInstance=Object.Instantiate(nonmaskPrefab);bindings.NonMaskableManager=nonmaskInstance.GetComponent<MiniMapNonMaskableManager>();
             var hudModule=MainlineMiniMap.Create(prefab,null,bindings);for(int i=0;i<5;i++)yield return null;
             var hudRoot=Object.FindObjectOfType<MainlineNativeMiniMapRoot>();
-            var hudTest=VerifyHud(hudModule,hudRoot,state,labels,(GridData)grid.Component,queries);while(hudTest.MoveNext())yield return hudTest.Current;
-            hudModule.Dispose();yield return null;Require(characters.Subscribers==0,"Current-map native HUD instance cleanup");state.Current=16;
+            var hudTest=VerifyHud(hudModule,hudRoot,state,labels,(GridData)grid.Component,queries,characters);while(hudTest.MoveNext())yield return hudTest.Current;
+            hudModule.Dispose();yield return null;Require(characters.Subscribers==0,"Current-map native HUD instance cleanup");localResourcePoints.Dispose();bindings.ResourcePoints=originalResourcePoints;Object.Destroy(nonmaskInstance);bindings.NonMaskableManager=null;state.Current=16;
             // A second actual map uses the same factory and its own original
             // geometry/settings. Its unresolved local response policy stays pending.
             var islandInput=JsonUtility.FromJson<Fixture>(File.ReadAllText(Path.Combine(Workspace,"minimap-description-fixture-16.json")));

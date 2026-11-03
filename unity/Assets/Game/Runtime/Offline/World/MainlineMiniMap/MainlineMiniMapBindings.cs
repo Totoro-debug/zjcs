@@ -12,6 +12,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
         public int MinimapConfigId;
         public int MapViewRangeExtraSize;
         public IMiniMapCharacterManager Characters;
+        public MiniMapNonMaskableManager NonMaskableManager;
         public MiniMapResourcePointContext ResourcePoints;
         public IMiniMapOfflineDataSource OfflineData;
         public IServiceProvider MarkerServices;

@@ -27,13 +27,19 @@
 | 龙之国 | 732 | 280×280 | 111 | 2 | [完整根](../../assets/reference/official-map/map14-current-minimap-root-source-manifest.json) |
 | 鲸背岛 | 315 | 140×120 | 43 | 4 | [完整根](../../assets/reference/official-map/map16-current-minimap-root-source-manifest.json) |
 
-隔离 GUI Play Mode 已验证六张完整原 prefab 的全部 MonoScript、托管引用类型和序列化对象引用。泽之国使用原57,600格／106地区夹具，通过延迟离线响应、原白雾及标记初始化、全屏视野切换与缓存恢复、关闭事件、重新启用、订阅释放；已查看温泉乡原层级实际渲染截图。原尺寸的小地图纹理复用同一实例，公共工厂停用实例后释放纹理，重复销毁不重复处理。初始岛、森之国、山之国、龙之国与鲸背岛分别使用本图已安装的导航、地区和原配置，通过同一工厂验证原根加载、地区插槽数量、离线请求保持隐藏和销毁释放；未给它们套用泽之国离线响应。此夹具的实体／资源查询为空，关闭事件直接调用原入口，尚未验证正式HUD中的模拟点击、真实实体图标、采集资源、地图存档响应投影或Windows Player。主工程 Unity 导入／编译、`ProjectTools.Validate` 与静态元数据检查通过。
+隔离 GUI Play Mode 已验证六张完整原 prefab 的全部 MonoScript、托管引用类型和序列化对象引用。泽之国使用原57,600格／106地区夹具，通过延迟离线响应、原白雾及标记初始化、全屏视野切换与缓存恢复、关闭事件、重新启用、订阅释放；已查看温泉乡原层级实际渲染截图。原尺寸的小地图纹理复用同一实例，公共工厂销毁实例时先停用再释放纹理，重复销毁不重复处理。初始岛、森之国、山之国、龙之国与鲸背岛分别使用本图已安装的导航、地区和原配置，通过同一工厂验证原根加载、地区插槽数量、离线请求保持隐藏和销毁释放；未给它们套用泽之国离线响应。上述原根夹具的实体／资源查询为空，关闭事件直接调用原入口，HUD和全屏窗口另按下文验证；真实实体图标、采集资源、正式地图存档响应投影或Windows Player仍未完成。主工程 Unity 导入／编译、`ProjectTools.Validate` 与静态元数据检查通过。
 
 公共小地图 HUD 另迁入当前原 `MiniMapMaskedUI`、`AreaInfoUI`、`PublicMapBranchLineBtn` 完整路径及 `MultiLanguageTMPControler`／语言组配置，原局部坐标、区域名称、原探索度公式、延迟弹窗回调取当前地图、公开地区与频道数显隐、战斗错误4131及状态配色分支均保留。`MainlineMiniMap.AttachHud` 在原父插槽内实例化完整79对象的 `MiniMapMaskedUI.prefab`，激活前绑定地图／角色／语言／字体／窗口／声音；与主实例共同显隐并先销毁 HUD，再释放纹理。原按钮声音 `Main_Cursor_Normal` 从实际 Wwise 事件、bank和媒体解码，不用替代声音。资源、脚本与逐文件原输入等价凭据见[原 HUD 代码](../../assets/reference/official-map/mainline-minimap-hud-code-source-manifest.json)和[原生 HUD](../../assets/reference/official-map/mainline-current-minimap-hud-source-manifest.json)。
 
-隔离 GUI Play Mode 使用泽之国当前地图实例，通过原角色渲染器将真实已探索地块绘入原尺寸 RenderTexture，再由原圆形 HUD 显示；已查看实际截图。模拟鼠标经原 GraphicRaycaster／Button 验证打开全屏页的请求及延迟初始化地图ID、战斗中禁止切线和非战斗时请求分线窗口；窗口内容使用显式夹具，仅验证原按钮消费路径。真实导航地区查询、坐标事件、探索度更新、单频道隐藏／多频道显示、当前状态配色、模块显隐／销毁和全部订阅释放通过。频道列表和颜色使用显式测试数据，未据此决定正式单机分线；女神头像地区通知、正式 WorldCanvas 插槽、完整全屏／分线窗口、正式存档状态及 Player 接线仍待完成。
+隔离 GUI Play Mode 使用泽之国当前地图实例，通过原角色渲染器将真实已探索地块绘入原尺寸 RenderTexture，再由原圆形 HUD 显示；已查看实际截图。模拟鼠标经原 GraphicRaycaster／Button 验证打开全屏页的请求及延迟初始化地图ID、战斗中禁止切线和非战斗时请求分线窗口；窗口内容使用显式夹具，仅验证原按钮消费路径。真实导航地区查询、坐标事件、探索度更新、单频道隐藏／多频道显示、当前状态配色、模块显隐／销毁和全部订阅释放通过。频道列表和颜色使用显式测试数据，未据此决定正式单机分线；女神头像地区通知、正式 WorldCanvas 插槽、全屏窗口正式接线／分线窗口、正式存档状态及 Player 接线仍待完成。
 
 主线地图共享原 WorldCanvas／WorldStage 界面、地区条件、导航、交互、剧情、机关、雕像、小地图和进度规则；单图放置及差异由地图页维护。
+
+全屏小地图另迁入所选884的完整 `MiniMapFullScreenPanel`、页签、主角／道具方向指引、原几何计算和关闭按钮，保留原已访问地图／切换组枚举、半秒页签冷却、异步请求版本丢弃、当前图复用、相机与滑条同步、筛选刷新及禁用恢复顺序。`MainlineMiniMap.OpenFullScreen` 在激活前绑定原窗口依赖，实例关闭、停用和销毁统一释放窗口；状态、头像和浏览其他地图仍由所属宿主适配。原窗口294个对象、两个筛选条目的15／31个对象及完整依赖由 `prepare_mainline_minimap_native_panel.py` 显式恢复；原按钮控制器的三个压缩常量缩放通道按路径哈希、浮点字节和循环参数逐项核对导出曲线。373条地图和201条标志记录按原构造器解码，只投影当前窗口消费字段；97个动态图标覆盖当前六图切换组及原有筛选条件，不为原表未选中的废弃记录制造替代素材。来源见[全屏原代码](../../assets/reference/official-map/mainline-minimap-panel-code-source-manifest.json)与[全屏原生资源](../../assets/reference/official-map/mainline-current-minimap-panel-source-manifest.json)。原 WorldCanvas 的 CanvasScaler 从当前实际对象提取，保留1080×1920参考尺寸及原缩放模式。正式 WorldCanvas／存档／跨图实体／头像与 Windows Player 接线仍未完成。
+
+原 `MapRootSwitchMapSupport.CreateMiniMap` 还将当前图绑定到地图插槽共用的 `MiniMapNonMaskableManager`；此引用由公共工厂绑定，完整16对象的当前原渲染器由 `prepare_mainline_minimap_native_renderer.py` 恢复，来源见[共享渲染器](../../assets/reference/official-map/mainline-current-minimap-renderer-source-manifest.json)。原 Quad、内置材质／shader选择器、相机、排序、网格和材质引用保留；内置资源按GUID与fileID组合记录，不能按GUID合并成单一对象。窗口通过原 `PopupWindow.Show`／即时隐藏生命周期开启和释放。
+
+隔离 GUI Play Mode 使用720×1280实际 Game View、当前原1080×1920缩放、原URP叠加相机和界面画布，通过公共模块打开完整窗口。原全屏相机实际绘出已探索地块、地区边线和说明，帧末截图已查看；原三列筛选条目完整显示。模拟鼠标经原射线／按钮验证相机滑条、打开筛选、全选写入端口、关闭恢复圆形HUD和重开；窗口、筛选钩子、网格位置订阅与纹理释放通过。资源板加载使用既有871原目录及本地适配器，保持其来源独立；当前夹具只登记泽之国为已访问，不决定跨图实体快照策略。筛选写入、主角资料／头像和世界HUD显隐由显式夹具提供，未覆盖正式磁盘冷读、实际头像、道具指引或完整存档宿主。
 
 ### 官方代码与资源依据
 
