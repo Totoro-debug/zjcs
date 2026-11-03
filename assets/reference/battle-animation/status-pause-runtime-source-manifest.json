@@ -1,0 +1,113 @@
+{
+  "manifest": "884_156692",
+  "code_extraction": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+  },
+  "original": {
+    "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyPlayableAnimationControllerPause.cs",
+    "sha256": "c90f7e760bdfe23a4690b35d141c915269a1a895b2db2cae2852692ef08dec8a"
+  },
+  "original_mono_script_file_id": 498949265,
+  "original_method_bodies": {
+    "protected override void PlayImpl()": "3dbd86c7a97de8976d9ef4758d6adfcb107ff9b9441a54893b2d24112d5f4914",
+    "public override float GetDuration()": "3b92154bc848e9e97cda189e51fe083f672f2c28093fb5c7956fafac592e0daa",
+    "public override void Stop(bool immediate = false)": "507674e48a38a6031c97f5929435f9de53108cf359bff7e0b427557fccbc003d",
+    "protected override void StopImpl()": "b5581c995dd2562b7558762cf28b72116c296b3386b56041a9282807d1136b51",
+    "private void TryResume()": "d7c5831b7d7d9c685da2f519c3c5ea32812fe24c45bcf020051a847536314699"
+  },
+  "adapted_method_bodies": {
+    "protected override void PlayImpl()": "e7f101c3b0cf6830f34175f95f372bae3da339e0edcd7a8d4c2451fbf989700c",
+    "public override float GetDuration()": "3b92154bc848e9e97cda189e51fe083f672f2c28093fb5c7956fafac592e0daa",
+    "public override void Stop(bool immediate = false)": "507674e48a38a6031c97f5929435f9de53108cf359bff7e0b427557fccbc003d",
+    "protected override void StopImpl()": "b5581c995dd2562b7558762cf28b72116c296b3386b56041a9282807d1136b51",
+    "private void TryResume()": "d7c5831b7d7d9c685da2f519c3c5ea32812fe24c45bcf020051a847536314699"
+  },
+  "controller_source": {
+    "path": ".tools/source-packages/current/884_156692/official-code/client-source/AnimationController.cs",
+    "sha256": "cd59a6e68288133c542c5b7a8f03049be528775a299ddc841f883f1a1fd15a47"
+  },
+  "controller_target": {
+    "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/AnimationController.cs",
+    "sha256": "03c63e3e8815db97ae7a8d77711459b8f2ae9cc8a38be3865971497b4739d088"
+  },
+  "verified_unchanged_controller_methods": [
+    "Pause",
+    "Resume",
+    "ForceResumeAllPause"
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleAnimationPlayables/MyPlayableAnimationControllerPause.cs",
+      "sha256": "04a916182aa51393f0d0a6bda2ea38af30b6c6aaf9e8ac2d386461f790c87d65"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleAnimationPlayables/MyPlayableAnimationControllerPause.cs.meta",
+      "sha256": "48a14205bd4d73167cc0dc625bfe76589de3e02b2a5540ccf10c5bd749dc85f0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleAnimationPlayables/Zjcs.Official.BattleAnimationPlayables.asmdef",
+      "sha256": "f65d38b2324f6f1f4baa85391e62fdfe8017fd25f89b86dec80fa865fcbd7469"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleAnimationPlayables/Zjcs.Official.BattleAnimationPlayables.asmdef.meta",
+      "sha256": "3ac5b073de6e02cb6b5041517aafe68e82edc4bc6201a667dc3894805035ee73"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleAnimationPlayables.meta",
+      "sha256": "3387bda51c114ffd22391d99f884ae3ec338d071e2ebe78db357c528652811b2"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_status_pause_runtime.py",
+    "sha256": "1433e6134a121eb09c35cfcfd97a64f59cc115a86b814ed6d9795a173ef8dd33"
+  },
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.StatusPause.cs",
+      "sha256": "b43a357e5e9f017d19ac65e5b92f743f9c046e486428f185076011b1759ed71e"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ScenePlayerAnimator.cs",
+      "sha256": "73099c6c9e4e07e0bed0b13645fa5880b5deddb0d34524d260f57ba012886aa2"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ScenePlayerAppearance.cs",
+      "sha256": "7eb5935258e7fa239b3887ff56c4c552a19a664604440f3f62c99f0fd9792034"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.cs",
+      "sha256": "bd0fe519a555be7a21423927f1677349fa82d653c22547747ae720c3e4d51ba3"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.StatusMaterials.cs",
+      "sha256": "f91c4e0c9c9a1763893c6acbd262a4becaf69f89133f0afaa178668391d3c3b4"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/Zjcs.Editor.Combat.AnimatorPlayback.asmdef",
+      "sha256": "36d67b2b99d91e0b52754f84974e9f88540cd1e64ed46b176b19e0c03abc6fe9"
+    }
+  ],
+  "reused_adapters": [
+    {
+      "path": "scripts/prepare_battle_status_material_runtime.py",
+      "sha256": "e7be6a7a774c30e563ea0c95b0db9c6945897c583c303bf5ffe0392292b28365"
+    },
+    {
+      "path": "scripts/prepare_unity_story_playable_runtime.py",
+      "sha256": "a7fb5b558c63f4896d510067e103fd406cc82d94b599c27766661776de874711"
+    },
+    {
+      "path": "scripts/prepare_battle_status_pause_assets.py",
+      "sha256": "d49f344b9d85b18cad65330f38db6945a5857a4f50ee9cc37340207a8e467f59"
+    }
+  ],
+  "adaptation": "Only namespace imports and one framework diagnostic are adapted. Preserve the original AnimationController cast, pause call, explicit Stop versus StopImpl resume timing, ResumeOnDestroy and one-shot mResumed guard. Controller pause/ref-count/restoration methods match the selected current source.",
+  "limits": [
+    "Other freeze graphs and formal status actor/timeline installation remain separate integration work."
+  ]
+}

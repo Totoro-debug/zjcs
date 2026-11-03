@@ -324,6 +324,12 @@ HP 启动的当前验证：静态检查通过84993个GUID；HP启动、状态启
 
 原生环绕图验证：独立Play Mode通过实际 `MyFightStatus` 参数、正式层数加减、原播放管理器／对象池／中心驱动三个完整原生图；逐项核对序列节点、1→配置最大层数→1的数量、保留已有环绕物、均匀间距／半径／轴向／播放时间、骨骼挂点移动跟随、面向目标和24477负速度。停止时同时检查原对象列表清空、所有已创建对象确实归还原池并关闭自身，以及状态监听解除；同一图在同层数下再次借用后仍正常创建。原区间切换、优先级、状态生命周期与跨状态参数复用回归同时通过。Unity 2022.3.57f1c2在内置屏BOE0CD1、Direct3D11运行退出0；已查看三张675×400实际运行画面，分别为三把剑、三片羽翼及五个爱心，检测到1175／12346／4960个可见像素。副本状态源码／meta及全部原生环绕安装输出与工作区／来源凭据逐文件哈希一致；静态检查通过90122个GUID，共享工程导入／编译与 `ProjectTools.Validate` 通过。全部状态图、对应状态完整表现入口及正式人物／时间轴仍未接通，本项未构建／发布新Windows Player。
 
+原版状态动画暂停（局部实现）：迁入当前884_156692的 `MyPlayableAnimationControllerPause`，五个原方法只替换诊断与命名空间；复用的 `AnimationController.Pause/Resume/ForceResumeAllPause` 三个方法与当前原码逐体一致。保留对AnimationController的原转换与无效目标诊断；第一次暂停记录原Animator速度并置0，后续暂停累计计数，最后一个归还才恢复原速度。显式Stop在基类调用后立即尝试归还，StopImpl再次尝试，由原mResumed位防重；`ResumeOnDestroy=false` 保留暂停，由控制器的强制恢复入口归还。代码入口为 `Runtime/Official/BattleAnimationPlayables/`，重建入口为 `scripts/prepare_battle_status_pause_runtime.py`。
+
+原生动画暂停图（局部实现）：当前24390完整 `playable24390.prefab` 保留原层级、序列、无限暂停、骨骼跟随、粒子及停止淡出；20张全mip纹理、17个材质、6个网格和完整Windows Shader与原APK对象／原生转换缓存核对，45项资源／106个输出显式绑定到 `Combat/status-animations.json` 与 `Official/Combat/StatusAnimations/`。完整图转换入口继续复用已核验实现；GlobalPlayable的两项Frozen图、其他技能暂停图、全部状态角色安装与正式战斗逐事件接线仍待完成。
+
+状态动画暂停验证：内置屏BOE0CD1、Direct3D11、Unity 2022.3.57f1c2 Play Mode一次通过并正常退出0；八组原人物／Animator生命周期回归通过，其中四组带原AnimationController的男／女、剑／杖人物使用实际24390图验证双重暂停计数、原0.75速度恢复、显式Stop立即归还与重复Stop防重、同池重放、自然时长结束、关闭自动恢复及原强制恢复入口。暂停期间真实Animator时钟与原生骨骼矩阵保持不变；清理后回到相同原动作采样时刻，GPU像素与基线逐字节一致，恢复推进后原生骨骼继续变化。生成156张675×1463实际运行截图，已查看20张暂停前／暂停中／恢复与继续动画画面；保留首次跟随可见性探针，稳定帧再比较。全工程导入／编译、`ProjectTools.Validate`、静态检查（90,263个GUID）及既有材质图58项输出哈希回归通过。夹具显式提供body挂点、未混合物理前原生姿态与暂停事件，不代表正式单位prefab挂点、完整动画混合／物理、状态触发生产者、正式HUD输入或战斗存档已接通；本项未构建／发布Windows Player。
+
 原版状态材质链（局部实现）：从所选884_156692的已核验程序集与客户端源码迁入 `MeshMaterialProperty`、`MyPlayableMaterialProperty`、`PlayableMaterialPropertyProvider`、`PlayableMaterialPropertyStencilProvider` 四类，记录41个方法体指纹；保留全部字段、材质收集优先顺序、属性存在检查、关键字／浮点／颜色的引用计数与逐材质默认值、清空恢复、渐变／曲线、正／零／负时长、提供者调用及停止恢复顺序。完整外观先收集原独立材质字典，再收集已加载部件的轻量外观材质；轻量外观与直接MeshRenderer分支继续走对应官方实现。适配仅涉及命名空间、诊断及反编译C#的out参数、KeyValuePair解构和显式运算符语法，不修改效果数值。代码入口为 `Runtime/Official/BattleMaterialPlayables/`，重建入口为 `scripts/prepare_battle_status_material_runtime.py`。
 
 原生材质播放图（局部实现）：24059的完整 `playable24059.prefab` 保留所有节点、两个原序列叶、粒子、原骨骼跟随和材质参数；6个原材质、13张纹理的全部原mip及完整Windows Shader通过原APK对象、转换清单与逐文件哈希核对，21项资源／58个输出显式绑定到 `Combat/status-materials.json` 与 `Official/Combat/StatusMaterials/`。转换入口复用原完整图转换器，原三组环绕图的88个输出经回归保持逐字一致。这里只恢复一组完整材质播放图；24348等其他材质图、全部状态表现槽、正式战斗人物与逐事件时间轴接线仍未完成。
