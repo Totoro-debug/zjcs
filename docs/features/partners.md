@@ -488,6 +488,14 @@ NPC 资料投影同时保留实际原 `NpcTargetData` 对象的 `ServerId`，头
 
 隔离 Unity URP Play Mode 使用完整原三页窗口、正式本地组合与真实存档身份；将已自动结识的 8402 好感条件置为 40 后，构造组合仍无通话记录，实际打开窗口才按原顺序创建 2021 通话。三次真实打开只提交一次创建；已打开窗口的重复请求被拒绝，不额外运行准备。经原 EventSystem 射线和模拟输入验证带红点的通讯录折叠／展开、真实预览文本与选择回调、三页切换、原返回动画、关闭后重开和功能限制；运行截图已查看，无 Unity 错误。静态检查（90,066 个 GUID）、主工程导入／编译和 `Zjcs.Editor.ProjectTools.Validate` 通过。通话内容弹窗／节点交互未在本批渲染；正式 Home 入口尚未接入这个组合，不计作完整页面或 Windows Player 完成。
 
+### 原提示图配置与资源目录（局部）
+
+`OfficialPartnerTipDotAssetCatalog` 保留所选 `884_156692` 的全部 376 条 `tip_dot` 配置及原顺序，显式绑定当前伙伴窗口实际引用的 `DiningTable`、`NpcDetailItem`、`NpcProfileItem` 三张原图。复用已验证的 APK 表提取缓存，按所选官方 Luban 构造器解码；表载荷、官方构造器、原图和输出哈希见[提示图目录来源](../../assets/reference/partner-tipdot-catalog-source-manifest.json)，入口为 `prepare_partner_tipdot_catalog.py`。
+
+原客户端的链接器／管理器读取配置表的图类型及作用域；两张动态子图资源仍序列化了静态类型，迁移保留两种原输入，不改原图来迁就配置。三张原图均通过具体编号节点作为入口，没有标记零号根节点，仍沿用原节点选择器。其他功能的配置条目保留，但尚未提供对应原图时明确报未绑定，不伪装为无提示。原图、节点和 prefab 没有复制、裁剪或修改；本地状态条件及正式 Home 宿主仍待接线。
+
+隔离 Unity URP Play Mode 已实际加载三张原图的 36 个原节点，检查全部节点及管理引用类型、原图归属、编号、双向端口引用及表／资源的独立类型。运行后继续通过原执行器检查及原三页窗口、通话事务和模拟点击回归，运行截图已查看。静态检查（90,193 个 GUID）、主工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过；未把目录导入视作原提示图已接入本地状态或正式入口。
+
 ### 原提示图执行器（局部）
 
 从所选 `884_156692` 官方客户端直接迁入 `TipDotNodeManager`、`TipDotNodeDataRepository`、`TipDotGraphHandler`、`TipDotSystemController`、`TipDotSystem` 及屏蔽策略管理器，复用已迁移的原节点工厂、条件节点和序列化图。DI、玩家／配置／资源查询与事件订阅改为明确的宿主端口；动态连接的逆序处理、沿父节点检查环路并撤回连接、图实例身份、监听时立即回传状态、初始化／清理事件顺序保留。原异步状态机恢复为 `async UniTaskVoid`，仍以 `DelayFrame(1, (PlayerLoopTiming)8)` 更新；先复制并清空脏集合，再逐个处理，处理中再次变脏的节点留到后续帧。宿主销毁额外结束该宿主的更新循环。

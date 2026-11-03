@@ -1,0 +1,88 @@
+{
+  "manifest": "884_156692",
+  "table": {
+    "name": "tip_dot.g.bytes",
+    "source": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "917256892062949517",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+    },
+    "payload_sha256": "adac4b019c293bdc723138254f56b675a93d8738b6fb8f57f774d63fd4f5e9bf"
+  },
+  "inputs": {
+    "assets/reference/partner-panel-native-source-manifest.json": "bdf7d505ad48a5782ee65320f124dda67d98279d8bb41bd0f02e9e90af88016b",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TbTipDotInfo.cs": "0e896fa45f33f8c426891c3c8d183c42ac01d02311b710eaadbe91f33bb36e16",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/TipDotInfo.cs": "20b16c3a67f50f765b411b7bfc54970cb36dcd34987fa207dc8d42813e2254e4"
+  },
+  "reused_original_graphs": {
+    "unity/Assets/Official/Partners/UI/Panel/Graph/65c863354b905727.asset": "ac7ada09211b5bbe0ca9c0714c862f5c5b655b1b2337c5f73f25220e2cd8c5b4",
+    "unity/Assets/Official/Partners/UI/Panel/Graph/65c863354b905727.asset.meta": "984ab00b28bc4a150d2993d9adb28689a88f0ea1e200e0ea92e3d9a41124ca8b",
+    "unity/Assets/Official/Partners/UI/Card/Graph/f89cc69ce5f93418.asset": "5d2aeff0233a5aa08cafe53be15bcdb442dcb84abac12adda6297b5683917da3",
+    "unity/Assets/Official/Partners/UI/Card/Graph/f89cc69ce5f93418.asset.meta": "9018b2ef026ee88b75cb66a443c524a14646ed59efc81fa7cb194aebf6a316ea",
+    "unity/Assets/Official/Partners/UI/Card/Graph/cf8b4773fedab97d.asset": "21f5e5bc07cf61ae180408072de617e148b52076a24797b702f428b3015a7580",
+    "unity/Assets/Official/Partners/UI/Card/Graph/cf8b4773fedab97d.asset.meta": "8addcaecb4c191e71be6d4637c88a7b5053c45040dc67d43359d73c650b048b0"
+  },
+  "original_graph_metadata": {
+    "DiningTable": {
+      "serialized_type": 0,
+      "serialized_scope": 0,
+      "configuration": {
+        "GraphName": "DiningTable",
+        "GraphPath": "Home/DiningTable",
+        "GraphType": 0,
+        "GraphScope": 0
+      }
+    },
+    "NpcDetailItem": {
+      "serialized_type": 0,
+      "serialized_scope": 0,
+      "configuration": {
+        "GraphName": "NpcDetailItem",
+        "GraphPath": "Home/NpcDetailItem",
+        "GraphType": 1,
+        "GraphScope": 0
+      }
+    },
+    "NpcProfileItem": {
+      "serialized_type": 0,
+      "serialized_scope": 0,
+      "configuration": {
+        "GraphName": "NpcProfileItem",
+        "GraphPath": "Home/NpcProfileItem",
+        "GraphType": 1,
+        "GraphScope": 0
+      }
+    }
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerTipDotAssetCatalog.cs": "42a4f4d7a3e3c43da512a6372eafd6b5799c0bfd1e3a2fee239e663f2610f7e2",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfficialPartnerTipDotAssetCatalog.cs.meta": "8b3d3f24fb2d7df607182e33ca8c97f532aa46f6619a1714ca5e29a2ed2805ac",
+    "unity/Assets/Game/Resources/Partners/OfficialPartnerTipDotAssetCatalog.asset": "308a86913012431fc459008d7299421c9550158d1a2f20b71e994775137bfb18",
+    "unity/Assets/Game/Resources/Partners/OfficialPartnerTipDotAssetCatalog.asset.meta": "8376d158090562df3f468357a8463c2a7f25e23a6a64bfabafaaa2c26192bb71"
+  },
+  "generator_sha256": "198106cc2c1eb8e46404b98fd4a853dcb4cf68860700bb22ccac8936e9cbff06",
+  "rows": 376,
+  "bound_graphs": [
+    "DiningTable",
+    "NpcDetailItem",
+    "NpcProfileItem"
+  ],
+  "validation_helpers": {
+    "scripts/fixtures/partner_tipdot_catalog_validation.cs": "824c4efa956afbfd4f27ab6d26de40cbd6830eb6a0cb5271de2fc549e22b444b",
+    "scripts/prepare_partner_tipdot_catalog_validation.py": "1026bd9c577785cf87580cb3161b8507d1a2873db7ec5ba906a90c6d4b72a57f"
+  },
+  "operation": [
+    "Reuse the verified selected APK table extraction cache; decode the entire table with selected official Luban constructors.",
+    "Preserve all graph names, paths, type/scope ordinals and table order. Explicitly reference only the three recovered original partner graphs.",
+    "Verify root names. Preserve serialized graph Type/Scope separately from TipDotInfo: original runtime consumers use the table even where graph authoring metadata differs.",
+    "Graphs outside this module retain configuration identity and fail explicitly if requested without a native binding.",
+    "Do not rename, clone, modify, approximate or prune the original graph assets or nodes. No full asset snapshot."
+  ]
+}
