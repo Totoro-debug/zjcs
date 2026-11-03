@@ -131,6 +131,11 @@ namespace Zjcs.Editor.Combat
                             while (clock.MoveNext()) yield return clock.Current;
                         }
                         afterInit?.Invoke(player);
+                        if (SessionState.GetBool(Key + ".spineFollowers", false))
+                        {
+                            var followerSteps = CheckSpineFollowers(player);
+                            while (followerSteps.MoveNext()) yield return followerSteps.Current;
+                        }
                         if (SessionState.GetBool(Key + ".statusMaterials", false))
                         {
                             var materialSteps = CheckStatusMaterials(player);

@@ -28,7 +28,7 @@ namespace Zjcs.Offline.ProfessionUI
             public float C => World.m10;
             public float D => World.m11;
         }
-        private sealed class Slot : IProfessionNativeDeformSlot, IProfessionFollowerSlot
+        private sealed class Slot : IProfessionNativeDeformSlot, IProfessionFollowerSlotAlpha
         {
             private readonly ProfessionNativeAppearanceSkeleton owner;
             public int Index { get; }
@@ -37,6 +37,7 @@ namespace Zjcs.Offline.ProfessionUI
             internal Slot(ProfessionNativeAppearanceSkeleton owner, int index) { this.owner = owner; Index = index; }
             public ProfessionNativeBonePose Pose => owner.Pose;
             public object Attachment => owner.attachments.Attachment(Index);
+            public float Alpha => owner.nativeColors ? owner.animationColors[Index].a : owner.SlotPose.Color(Index).a / 255f;
             public IReadOnlyList<float> Deform => owner.deforms[Index];
         }
         private readonly ProfessionNativeSkinSlots attachments;

@@ -71,6 +71,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".statusMaterials", false);
             SessionState.SetBool(Key + ".statusPause", false);
             SessionState.SetBool(Key + ".statusFrozen", false);
+            SessionState.SetBool(Key + ".spineFollowers", false);
             SessionState.SetBool(Key + ".sceneAnimatorPose", false);
             SessionState.SetBool(Key + ".sceneMecanimParts", false);
             SessionState.SetBool(Key + ".sceneMixNext", false);

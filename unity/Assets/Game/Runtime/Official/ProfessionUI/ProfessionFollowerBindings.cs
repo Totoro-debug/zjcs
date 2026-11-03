@@ -21,6 +21,11 @@ namespace Zjcs.Official.ProfessionUI
         int Index { get; }
         float zOrder { get; }
     }
+    // Optional slot-color boundary for the original attachment visibility tracker.
+    public interface IProfessionFollowerSlotAlpha : IProfessionFollowerSlot
+    {
+        float Alpha { get; }
+    }
     public interface IProfessionFollowerSkeleton
     {
         IProfessionFollowerBone FindBone(string name);

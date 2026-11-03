@@ -1,0 +1,268 @@
+{
+  "manifest": "884_156692",
+  "code_extraction": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+  },
+  "originals": [
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/AttachmentFollower.cs",
+        "sha256": "d8f8077dbbc72c21783e2af0d9b34b5b9109b829c51980cf7e6decf3b8ce79b2"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSpinePlayables/AttachmentFollower.cs",
+        "sha256": "db424477824968b6426f4f587ca69fe731d06de2ee9c843caa7bb13881b298e9"
+      },
+      "original_mono_script_file_id": -1421533442,
+      "diagnostics_adapted": 3,
+      "original_method_bodies": {
+        "private void Awake()": "f8083ed1ce71286693ed6c227982667590fcd35018446d71b744273d011bffbe",
+        "private void OnDestroy()": "0018cbbbec72ee1d5c29706986da58b9d5e33919f9c63f01d613731e4f12c30d",
+        "private void Update()": "c477c46bbe704d5372eda94a7a621216ff1ece06f3eaba158c95b2090943f061",
+        "private void LateUpdate()": "ebffa71ff759a17f1d9c8098fc0db8e2b8c83ce327ffebc724f531dec36bd9f6",
+        "public void InitFollowTarget(GameObject target)": "0edcdb9fa3dd0196fbd11fc2d39fef26f7dfe5fed6cfca53433a2954565b64ff",
+        "public void ForceUpdate()": "bc0d59c0bdfd3001f0289da051c56cb8f6fb2a77d3528847b68669e26432bb61",
+        "public void Initialize()": "0da608b0b7371b9c58a58b74d1b55c5b96228e76a037ec982ea3593a49517066",
+        "private void Bind()": "99068adb94058534f15000c4618887d6a6f67d9d04a03bcfc29123055277fac4",
+        "private void UnBind()": "fcdd7431e10cb639cc05bb25fc15a3eb79008c6c013a6129032aa7103bb8a551",
+        "private void HandleRebuildGraphic(SkeletonGraphic _)": "520ec8e6c1a98849204f426a81702118090ddcf40a3aa06e4b9284024f517130",
+        "private void HandleRebuildRenderer(SkeletonRenderer skeletonRenderer)": "520ec8e6c1a98849204f426a81702118090ddcf40a3aa06e4b9284024f517130",
+        "public void SetSkeletonRenderer(SkeletonRenderer skeletonRenderer)": "ee0e27b8353ee179acd317846516fe6a3f8ba0bf1d153fcc35f8ea50bd323f52",
+        "public void SetSkeletonGraphic(SkeletonGraphic skeletonGraphic)": "f9a822093d370c2600f97469063af5c16c73eed735c6e479811d9d10157a522e",
+        "private void InitSettings()": "c6dbd678f0851a0c41d41e283594767f1987d59a10f24ab2ac8d72779e6ad35c",
+        "private Vector3 GetBoneLocalPosition()": "c3a20562d6550c8f3713bb33c1cca945000faa518cbe80844aeb52687a591bef",
+        "private bool IsSkeletonComponentValid()": "b38641c5a3ea72d8ce999ce3709140b62b213ae9c48502740b2caeef060a74b4",
+        "private void UpdateSkeleton()": "20abb21daaefffdc40a9e73d2c4444a6b7c1e369a2cd77adfb88292445e34890",
+        "private void UpdateSkeletonTransform()": "c9808b3a14f95f2573dc2a09342ce0b4c9de57da147e677bd76f68c1321f434a",
+        "private float GetPosZ()": "29c61cf809824b87bd79f6253484e53d896c9bbcb5273c44368cbef650c70ae0",
+        "private void EnableFollow()": "39418506b79166e7cc05293809d2a95a53c3e3e16ae66bcc5924d0997bc3bc16",
+        "private void DisableFollow()": "af8edf4b52eb2986b701c4ff879df8e5771ecfc272085fb387b9ea176ea74bcf",
+        "private void SetFollowActive(bool active)": "2b22148a431e7b619ec07a4576814b7a41ee9083e147b674616fb2bb9af0e53c"
+      },
+      "adapted_method_bodies": {
+        "private void Awake()": "f8083ed1ce71286693ed6c227982667590fcd35018446d71b744273d011bffbe",
+        "private void OnDestroy()": "0018cbbbec72ee1d5c29706986da58b9d5e33919f9c63f01d613731e4f12c30d",
+        "private void Update()": "c477c46bbe704d5372eda94a7a621216ff1ece06f3eaba158c95b2090943f061",
+        "private void LateUpdate()": "f87ce4b3d8d6f94a144b7d882745629e1bff7b65c379b9c8517ad79d4e80b5a6",
+        "public void InitFollowTarget(GameObject target)": "11f5fa987ee090fda21ba7278d4289ece9585a67dcd08d193eb39aeb4d9a1f2e",
+        "public void ForceUpdate()": "bc0d59c0bdfd3001f0289da051c56cb8f6fb2a77d3528847b68669e26432bb61",
+        "public void Initialize()": "6e8ada6b3fc347ec6791ad35e583855be8ae5cb2c69cb071178e06f96f8a9364",
+        "private void Bind()": "b7ac81fc60cb9e6e584c0160e1f4ab0bc1f342de96a3214ee9e2442215bdec7a",
+        "private void UnBind()": "e45ffb427ca69ed5af38bce6981472c4739e606bdbf4ad5e73d380ee5d478057",
+        "private void HandleRebuildGraphic(IProfessionFollowerAnimation _)": "520ec8e6c1a98849204f426a81702118090ddcf40a3aa06e4b9284024f517130",
+        "private void HandleRebuildRenderer(IProfessionFollowerAnimation skeletonRenderer)": "520ec8e6c1a98849204f426a81702118090ddcf40a3aa06e4b9284024f517130",
+        "public void SetSkeletonRenderer(SkeletonRenderer skeletonRenderer)": "ee0e27b8353ee179acd317846516fe6a3f8ba0bf1d153fcc35f8ea50bd323f52",
+        "public void SetSkeletonGraphic(SkeletonGraphic skeletonGraphic)": "f9a822093d370c2600f97469063af5c16c73eed735c6e479811d9d10157a522e",
+        "private void InitSettings()": "9a2a72c91ae4a49b59d72203dcb9ac948f86b6381f311d8aed9d8e614ee45014",
+        "private Vector3 GetBoneLocalPosition()": "c3a20562d6550c8f3713bb33c1cca945000faa518cbe80844aeb52687a591bef",
+        "private bool IsSkeletonComponentValid()": "605f37658f698fb25038906bf4d64e64b829d7ab76f5c0f035158c5a944d26f0",
+        "private void UpdateSkeleton()": "8b1ac55a3305b854b63a80acd38db8623d99f85ff93b74a8545b203355e13b7f",
+        "private void UpdateSkeletonTransform()": "5dddc499a8cf9dbf110f0fc721d68dc87a81c10ceb81c9213a907c02a3f9cfa4",
+        "private float GetPosZ()": "18f17686345fed61b1079ea52363d3f58e08ade6f48cc4ca9a8b67bfa860ecc1",
+        "private void EnableFollow()": "39418506b79166e7cc05293809d2a95a53c3e3e16ae66bcc5924d0997bc3bc16",
+        "private void DisableFollow()": "af8edf4b52eb2986b701c4ff879df8e5771ecfc272085fb387b9ea176ea74bcf",
+        "private void SetFollowActive(bool active)": "2b22148a431e7b619ec07a4576814b7a41ee9083e147b674616fb2bb9af0e53c"
+      },
+      "unchanged_methods": [
+        "Awake",
+        "OnDestroy",
+        "Update",
+        "ForceUpdate",
+        "SetSkeletonRenderer",
+        "SetSkeletonGraphic",
+        "GetBoneLocalPosition",
+        "EnableFollow",
+        "DisableFollow",
+        "SetFollowActive"
+      ]
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/SkeletonAttachmentActiveTracker.cs",
+        "sha256": "baa3bd2d538e9ed3491ea75ba083c3e0492464750801b8446477d698510398c3"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSpinePlayables/SkeletonAttachmentActiveTracker.cs",
+        "sha256": "c455aaa4216fa6a28a72c0ee0f03b42746d5c8b8382e960360252006ed6c34b0"
+      },
+      "original_mono_script_file_id": 742782826,
+      "diagnostics_adapted": 0,
+      "original_method_bodies": {
+        "private void Awake()": "520ec8e6c1a98849204f426a81702118090ddcf40a3aa06e4b9284024f517130",
+        "public void Initialize()": "f7b3ade38be64edabc473753441a6a427bf767622894e640b899512f59f9fbda",
+        "private void Update()": "32485f0232cd75b481dbf3c37cfe6ea02947207ddc1cec025db3eee38948132e",
+        "private void SetActive(bool active)": "238e4489f08acc4617e599a38a8f35ce9a15e833c55c459444f62535a5debacf"
+      },
+      "adapted_method_bodies": {
+        "private void Awake()": "520ec8e6c1a98849204f426a81702118090ddcf40a3aa06e4b9284024f517130",
+        "public void Initialize()": "7ecf8d4f4dd4294891c61a706ee283a92e658ae3fddd9bd4110d689e52c38745",
+        "private void Update()": "f5ee8f869e7deaf1ce852364b12576bbd43022c1cd6535743e6b7b76e3f6b6df",
+        "private void SetActive(bool active)": "238e4489f08acc4617e599a38a8f35ce9a15e833c55c459444f62535a5debacf"
+      },
+      "unchanged_methods": [
+        "Awake",
+        "SetActive"
+      ]
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyPlayableFollowSpinePart.cs",
+        "sha256": "1324e411d818566e165436156ba1b37e5743c86f0c9a70ced3efbf1e2777e5ae"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSpinePlayables/MyPlayableFollowSpinePart.cs",
+        "sha256": "1074d4fc9b2bf34e6f26b1c07f1ad08eaf13fb84c7912f37d73d3aaea02ba034"
+      },
+      "original_mono_script_file_id": 1391534298,
+      "diagnostics_adapted": 0,
+      "original_method_bodies": {
+        "protected override void Awake()": "d179d6140929177e071033e80c2f4342ea08bc6096957e69d40209cf9c1b28e7",
+        "protected override void PlayImpl()": "a90b73ea33906ae7a29284704c30d911bf8f30b7887aaa26dad80223e9ece8d9",
+        "protected override bool ProcessFrameImpl(float deltaTime)": "b6cd30ab6dd44953674d1261ae13e450a05085d1b314db0d74d839b42b3e387b",
+        "protected override void StopImpl()": "355275dcf011be26683f35daa0e9a458229d22b1f52759f3eedf6f9720a2d11a",
+        "public override float GetDuration()": "3b92154bc848e9e97cda189e51fe083f672f2c28093fb5c7956fafac592e0daa",
+        "private void FollowShowHide()": "2f0c8bdccbfadbdba2276323ad046e811e5cfcfd2a69de4eee0cf54d5c0ae578",
+        "private bool GetIsActive()": "41ef19303e47dc18eb626add39896daffef16bf88519d08cd3df2d5ef7c2a13b",
+        "private void StartFollow()": "7a82a76531d9b33829d0ad173e74eabc954b1aaebd04a6f17f8f070096632dfa",
+        "private void StopFollow()": "dad268152e9907c1082328c62b8fb24ff5ffc3790af9e2c51ccd678f1f161a64",
+        "private void HideFollower()": "28846443f1044804605355a0e69282717fb17932de7eb510f6f35cddd03ea610"
+      },
+      "adapted_method_bodies": {
+        "protected override void Awake()": "d179d6140929177e071033e80c2f4342ea08bc6096957e69d40209cf9c1b28e7",
+        "protected override void PlayImpl()": "b52de39b96429ac883c51cf74b5959d84954b8754de72fee7438908aaefbd377",
+        "protected override bool ProcessFrameImpl(float deltaTime)": "b6cd30ab6dd44953674d1261ae13e450a05085d1b314db0d74d839b42b3e387b",
+        "protected override void StopImpl()": "355275dcf011be26683f35daa0e9a458229d22b1f52759f3eedf6f9720a2d11a",
+        "public override float GetDuration()": "3b92154bc848e9e97cda189e51fe083f672f2c28093fb5c7956fafac592e0daa",
+        "private void FollowShowHide()": "2f0c8bdccbfadbdba2276323ad046e811e5cfcfd2a69de4eee0cf54d5c0ae578",
+        "private bool GetIsActive()": "41ef19303e47dc18eb626add39896daffef16bf88519d08cd3df2d5ef7c2a13b",
+        "private void StartFollow()": "7a82a76531d9b33829d0ad173e74eabc954b1aaebd04a6f17f8f070096632dfa",
+        "private void StopFollow()": "dad268152e9907c1082328c62b8fb24ff5ffc3790af9e2c51ccd678f1f161a64",
+        "private void HideFollower()": "28846443f1044804605355a0e69282717fb17932de7eb510f6f35cddd03ea610"
+      },
+      "unchanged_methods": [
+        "Awake",
+        "ProcessFrameImpl",
+        "StopImpl",
+        "GetDuration",
+        "FollowShowHide",
+        "GetIsActive",
+        "StartFollow",
+        "StopFollow",
+        "HideFollower"
+      ]
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_spine_follower_runtime.py",
+    "sha256": "e6d44ec39ad647e80d8717289d55fd14d5ebcbace591cb961b9c1765260317eb"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSpinePlayables/AttachmentFollower.cs",
+      "sha256": "db424477824968b6426f4f587ca69fe731d06de2ee9c843caa7bb13881b298e9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSpinePlayables/AttachmentFollower.cs.meta",
+      "sha256": "21dfcfbf1e6e5a3f75df8821e2a04f9823d3378e874e98fff9d92a51453452be"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSpinePlayables/SkeletonAttachmentActiveTracker.cs",
+      "sha256": "c455aaa4216fa6a28a72c0ee0f03b42746d5c8b8382e960360252006ed6c34b0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSpinePlayables/SkeletonAttachmentActiveTracker.cs.meta",
+      "sha256": "4e785dac523f22e1943a5144c225589b4e7413861609ba9d86c9af202a0af71d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSpinePlayables/MyPlayableFollowSpinePart.cs",
+      "sha256": "1074d4fc9b2bf34e6f26b1c07f1ad08eaf13fb84c7912f37d73d3aaea02ba034"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSpinePlayables/MyPlayableFollowSpinePart.cs.meta",
+      "sha256": "20ce4a8198ec708d2f8a43622a4eb60599230d9b30099d418ce227c9ac77b2a1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSpinePlayables/Zjcs.Official.BattleSpinePlayables.asmdef",
+      "sha256": "a0fbd594825a69411a61285c557fb75c1d713602a97853c1ab0984bf2f033ca0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSpinePlayables/Zjcs.Official.BattleSpinePlayables.asmdef.meta",
+      "sha256": "5c5e8d87b0e4c49214f72662f68f90880e89a71015891de1907636549c583fec"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSpinePlayables.meta",
+      "sha256": "7d48573d773aba2c99370abf6b9f22cd677a2089fcc3a6795b87a15b30c1b205"
+    }
+  ],
+  "reused_apply_by_bone": {
+    "original": {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/ApplyByBone.cs",
+      "sha256": "c56f44356f94efa0c6cb99b5b0cf17baa3ab0b8db849fd2809d24659fcdbeeff"
+    },
+    "migrated": {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13TreePlayables/ApplyByBone.cs",
+      "sha256": "76a30a691656802464e73b7f6506f91a4427040727c3c9ac830bf256a4862e9d"
+    },
+    "verified_current_methods": {
+      "protected override void Awake()": "7ce6ac098ec2ae680495a4c5f11ce044aabd39920cc82bea37d45514ce43c66f",
+      "protected override void OnDestroy()": "5cc46a993240e2c00526aa1b285754f292d2184653234078666ade8f5b293b05",
+      "protected override void InitImpl(MyPlayable playable, MyPlayableApplyAttribute applyAttr)": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "protected override void PlayImpl(MyPlayable playable, MyPlayableApplyAttribute applyAttr)": "882b5f921f8a75e815fc4d0680e2a797a484196640426e9cdb705036ca57bbf0",
+      "private void OnPlayableStop(MyPlayable playable)": "b6c69934809540ff563758055009618ad27b68dd19a37af99c3e4f13b6354f46",
+      "private AttachAgent GetAttachAgent(MyPlayable playable)": "f72124df3040dd99572f7c8d3371979b1edd9bace052d1f616dde6cb8d3d1c88"
+    },
+    "adaptation": "Diagnostic logging only; all six current method bodies compared after the logging adapter."
+  },
+  "reused_attachment_origin_enum": {
+    "original": {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AttachAgentGoType.cs",
+      "sha256": "d377079d986c96fc2ec59abca7f6eeca6edd78e886a7628187fd3919b72b5488"
+    },
+    "migrated": {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13TreePlayables/AttachAgentGoType.cs",
+      "sha256": "f66e3f4b60a0ded5fb939b79fef82e2237ca788bea6a63eda85dd8178e252af7"
+    },
+    "verified_values": "None,Source,Target,AttachAgentGoFromParam"
+  },
+  "verification_tools": [
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SpineFollowers.cs",
+      "sha256": "1e53bab952877714df7e5bf3674995d9cf5601961b695db494c80ba48c033926"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ScenePlayerAppearance.cs",
+      "sha256": "ae8807805cab90c435ffe76d1b4c85e20a852e44f494226d0dcf8dc70021a552"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/Zjcs.Editor.Combat.AnimatorPlayback.asmdef",
+      "sha256": "54b4a2e66440d04bf5a9fc8594e280588c7618f680894c9d20244d9f2978e2ea"
+    }
+  ],
+  "reused_dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionFollowerBindings.cs",
+      "sha256": "0b3e1364ceb21e92762ca6f8e192abc637e4b79324b889e1a0a67297a9bf5d2a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/BaseSkeletonFollower.cs",
+      "sha256": "ba2ef614a29d46fb92d24e1a6a8e8c5876f35190f9957564d8f478cfa1d447e2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/SkeletonRendererFollower.cs",
+      "sha256": "ee3128c81b45da2963f66c3c9c7a5ce73051a4323c332a07b3ee28fba1616f34"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAppearanceSkeleton.cs",
+      "sha256": "fc07641fee3f9cab157aa0ba5e96ae965daf6c30471752bc877c367d1b743584"
+    }
+  ],
+  "adaptation": "Original application classes, serialized field names, method order and branches retained. SDK data types use existing independent native follower interfaces; renderer/graphic fields remain serialized Components. Rebuild events, initialization, validity (an initialized native pose exists), attachment lookup by slot index, draw-order arrays and live slot alpha cross explicit native boundaries. No animation SDK code is copied.",
+  "limits": [
+    "Runtime components require native renderer/graphic endpoints with the declared initialization interfaces. Native graph bindings and actual actor integration require separate verification."
+  ]
+}
