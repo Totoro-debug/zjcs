@@ -5,6 +5,7 @@ using UnityEngine;
 using Zjcs.Offline.BattleNativePlayables;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Official.StoryPlayableManager;
+using Zjcs.Official.StoryPlayables;
 
 namespace Zjcs.Editor.Combat
 {
@@ -76,7 +77,31 @@ namespace Zjcs.Editor.Combat
                 Require(camera.Events.Count == 4 && camera.Events[2] == "camera-out"
                     && camera.Events[3] == "unblock:41", "camera and input are restored in order");
 
-                Debug.Log("Camera performance Play Mode acceptance passed: source/apply-object transforms, duration, camera switching and paired input block lifetime.");
+                AppearanceCombineSkin appearance = source.AddComponent<AppearanceCombineSkin>();
+                prefab = new GameObject("Original appearance-combine-skin playable");
+                prefab.SetActive(false);
+                prefab.AddComponent<ApplyBySource>();
+                var skinConfig = prefab.AddComponent<MyPlayableAppearanceCombineSkin>();
+                skinConfig.Duration = 2;
+                skinConfig.SkinOperates = new[]
+                {
+                    new MyPlayableAppearanceCombineSkin.SkinOperate
+                        { SkinName = "body_armor_a", OperateType = MyPlayableAppearanceCombineSkin.OperateType.Add },
+                    new MyPlayableAppearanceCombineSkin.SkinOperate
+                        { SkinName = "head_hood_a", OperateType = MyPlayableAppearanceCombineSkin.OperateType.Add },
+                    new MyPlayableAppearanceCombineSkin.SkinOperate
+                        { SkinName = "body_armor_a", OperateType = MyPlayableAppearanceCombineSkin.OperateType.Remove }
+                };
+                MyPlayable skinPlayable = scope.Play(prefab, source, source);
+                Require(appearance.CombineSkins.Count == 1 && appearance.CombineSkins[0] == "head_hood_a",
+                    "skin operations execute in serialized order through the original AppearanceCombineSkin API");
+                Require(skinPlayable.GetDuration() == 2, "appearance playable duration is retained");
+                scope.Stop(skinPlayable, true);
+                scope.Tick(0.01f); scope.LateTick();
+                Require(skinPlayable.myStatus == MyPlayable.PlayableStatus.Stop,
+                    "appearance playable completes the original stop lifecycle");
+
+                Debug.Log("Skill visual Play Mode acceptance passed: camera position/switch/input-block lifecycle and ordered appearance skin add/remove.");
                 scope.Dispose(); scope = null;
                 UnityEngine.Object.DestroyImmediate(prefab); prefab = null;
                 UnityEngine.Object.DestroyImmediate(source); source = null;

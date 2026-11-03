@@ -471,6 +471,9 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 
 技能战斗相机演出行为取所选 `884_156692` 的 `MyPlayableFightCameraPerformance`；本地以显式宿主端口承接原相机切换和输入封锁，源码、接口、scope适配和 meta 哈希见[相机演出来源清单](battle-animation/skill-camera-performance-runtime-source-manifest.json)。生产战斗的相机／输入宿主及技能图仍未接线。
 
+技能角色组合皮肤 Playable 使用所选 `884_156692` 的 `MyPlayableAppearanceCombineSkin` 与原 `AppearanceCombineSkin` 操作契约；源文件、输出和 Unity meta 哈希见[组合皮肤来源清单](battle-animation/skill-appearance-skin-runtime-source-manifest.json)，实跑范围见[技能](../../docs/features/skills.md)。
+
+
 
 伙伴馈赠规则与本地领取迁移复用所选 `884_156692` 的原普通／星神好感任务、成就键、`AchievementInfo`、`PlayerAchievementRecordDataWrap`、`Player` 领取计算与当前完整配置表；输入、选用方法、生成规则、本地事务、存档字段和验证工具哈希见[馈赠规则与事务来源](partner-achievement-rules-source-manifest.json)，入口为 `scripts/prepare_partner_achievements.py`。不新增美术载荷或完整素材快照；单机决策与功能范围见[伙伴](../../docs/features/partners.md)。
 

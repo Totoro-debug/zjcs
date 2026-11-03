@@ -1,0 +1,28 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "official_client_sources": [
+    {
+      "path": ".tools/source-packages/official-code/client-source/MyPlayableAppearanceCombineSkin.cs",
+      "sha256": "aaf446e2980d14f97f2207ebbde876243cacfd7f88f14bbae540d033ef5f31f4"
+    }
+  ],
+  "migrated_outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableAppearanceCombineSkin.cs",
+      "sha256": "9e627a3060d22768daf532292d1be035aab03e98f080f99054d8f7a0ecf08188"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/BattleCameraPerformancePlayableAcceptance.cs",
+      "sha256": "caa06668792b9ceaa4f7d64c56ef938d6e8c1873ca0faafa0fe9783cd770fd35"
+    }
+  ],
+  "meta_outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableAppearanceCombineSkin.cs.meta",
+      "sha256": "2649547ac8fb5e5f607ee73581eabce734a0bc11f2263ec47ed87610fab479ad"
+    }
+  ],
+  "adaptation": "Preserve the official serialized operation enum, SkinOperate array order, duration and per-operation Add/Remove calls. Resolve the official AppearanceCombineSkin through the original MyPlayableApply attribute and invoke its original API.",
+  "runtime_validation": "Unity import, compilation and ProjectTools.Validate passed. Actual Editor Play Mode used the original ApplyBySource component and OfflineBattleNativePlayableScope; serialized Add/Add/Remove operations produced the expected ordered skin list and the playable completed its stop lifecycle."
+}
