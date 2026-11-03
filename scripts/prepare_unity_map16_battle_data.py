@@ -25,6 +25,10 @@ def sha(raw: bytes) -> str:
     return hashlib.sha256(raw).hexdigest()
 
 
+def sha_source(path: Path) -> str:
+    return sha(path.read_bytes().replace(b"\r\n", b"\n"))
+
+
 def build():
     apk = Apk.current()
     if apk.version != VERSION:
@@ -136,7 +140,7 @@ def build():
                "operation": "Decode current official stage and monster-array tables, entity bindings, and fight-stage EC fragments. Roster/property projection is not included because the installed skill and combat rules are a different source version.",
                "inputs": inputs,
                "generator": {"path": Path(__file__).relative_to(ROOT).as_posix(),
-                             "sha256": sha(Path(__file__).read_bytes())},
+                             "sha256": sha_source(Path(__file__))},
                "sharedPorts": [{"symbol": function.__name__,
                                 "module": "scripts/prepare_unity_map10_battle_data.py",
                                 "source_sha256_lf": sha(inspect.getsource(function).replace("\r\n", "\n").encode())}
@@ -152,9 +156,18 @@ def build():
                           "arrays": len(selected_arrays), "entityStageBindings": len(component_bindings),
                           "storyStages": len(story_bindings)}}
     OUTPUT.write_bytes(raw)
-    write_meta(OUTPUT, "TextScriptImporter")
     meta_path = OUTPUT.with_suffix(OUTPUT.suffix + ".meta")
-    meta_path.write_bytes(meta_path.read_bytes().replace(b" \r\n", b"\r\n").replace(b" \n", b"\n"))
+    relative = OUTPUT.relative_to(ROOT / "unity").as_posix()
+    guid = hashlib.md5(("zjcs-official:" + relative).encode("utf-8")).hexdigest()
+    expected_meta = (f"fileFormatVersion: 2\nguid: {guid}\nTextScriptImporter:\n  externalObjects: {{}}\n"
+                     "  userData:\n  assetBundleName:\n  assetBundleVariant:\n").encode("utf-8")
+    if meta_path.exists():
+        existing_meta = meta_path.read_bytes().replace(b" \r\n", b"\r\n").replace(b" \n", b"\n")
+        if existing_meta != expected_meta:
+            raise ValueError("Existing Map16 battle source meta differs from its deterministic importer data")
+    else:
+        write_meta(OUTPUT, "TextScriptImporter")
+        meta_path.write_bytes(meta_path.read_bytes().replace(b" \r\n", b"\r\n").replace(b" \n", b"\n"))
     RECEIPT.write_bytes(json_bytes(receipt))
     print(json.dumps(receipt["counts"], ensure_ascii=False))
     return result
