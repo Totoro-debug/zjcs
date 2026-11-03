@@ -1,0 +1,76 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "official_client_sources": [
+    {
+      "path": ".tools/source-packages/official-code/client-source/MyPlayableAfterimage.cs",
+      "sha256": "942c61b38299bc656cd9af4889858a10154eabdbe453908a03d9b87126302a1c"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/AfterimageData.cs",
+      "sha256": "deb42a2a1b0d1acd870d6f29bc63fd0f2e67492bed38f61a9136bfbbeabf2c39"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/MeshRendererZSortComparer.cs",
+      "sha256": "5c99e7fbde6f3a1e1017d2d2da1e3d072bd7c6d7eeb65f0bc27bde56b485817b"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/RTUtils.cs",
+      "sha256": "90d8f12cd3fe6712776ee300ec27f7650080e219b2417145c2b1c21703b6b5f8"
+    }
+  ],
+  "migrated_outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableAfterimage.cs",
+      "sha256": "36968841c5077a9071402d4e27a7f2d44d492e2512586730900a02f4e2a20819"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/AfterimageData.cs",
+      "sha256": "8c13c857dd26733d55daa91f83b595b9f008c9d2cdc7bec6c997f6dc5186f09c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MeshRendererZSortComparer.cs",
+      "sha256": "938d56ad26b88d848893a4b3616bc19d740dea4a00405d00aff3e40e51898001"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/BattleAfterimageRTUtils.cs",
+      "sha256": "7feff620a33026439bb35e1cb35cb9761e894720631408c6754baa5d15fa4e8d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/BattleNativePlayables/BattleAfterimageTexturePool.cs",
+      "sha256": "5ee09e16616bd16e849d939aa15bc4840f682826aef27a9c00a8818aae6ec2a1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/IBattleCameraOffsetHost.cs",
+      "sha256": "002616db2943cedc8f698275173ef8ba76a86c3928bb9080ecde63f1c231faa4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleNativePlayableScope.cs",
+      "sha256": "421c6bf4ff4d7264bb622746ecd9c225b513089561b7417992969373e8b502d2"
+    }
+  ],
+  "meta_outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableAfterimage.cs.meta",
+      "sha256": "770bc5df36d37eabd2eee01e455b00eaf8713f2c4b12039e562b77b5ebd066f0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/AfterimageData.cs.meta",
+      "sha256": "a71911758e87ecfaabaca7e8ba70edff8327a2848ed55c5996d8656500f67e7e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MeshRendererZSortComparer.cs.meta",
+      "sha256": "190cf575e9391e0b0b13bd8c41cafc6195fd3d462d4fd80820c68da2ded9f7e8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/BattleAfterimageRTUtils.cs.meta",
+      "sha256": "8d93bd1dbe8f8589445aca5506402d04301107ddf21ce59fab49d3f30ec34bc2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/BattleNativePlayables/BattleAfterimageTexturePool.cs.meta",
+      "sha256": "99fde1cd288cea507a3272a6ea524b2cf49e9b2716f4a358c12ee0f27c21579d"
+    }
+  ],
+  "adaptation": "Port the official capture timing, fade curves, renderer selection and Z sort. Replace Framework.DependencyInjection RenderTexturePool with a battle-scope RTHandle pool preserving the 5 MiB active allocation limit, 128-pixel clamp, RGBA8 format, point filtering, clamp wrapping and disposal at scope end. Instantiate the authored RTRenderer prefab directly; bind the pool through the native battle playable scope.",
+  "runtime_validation": "Unity import, compilation and Zjcs.Editor.ProjectTools.Validate passed. Actual original skill graph Play Mode capture remains pending."
+}

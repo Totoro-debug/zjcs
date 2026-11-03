@@ -467,6 +467,9 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 
 原生技能轨迹使用所选 `884_156692` 的游戏自有 `MyTrack`、`MyCurveTrack`、`AnimationTrack`、`ParabolicTrack` 和 `MyPlayableTrack` 完整源码；程序集、整类与方法摘要、原 `MyContainer.ToLocalPos` 坐标方法、显式接口适配及工具哈希见[代码凭据](battle-animation/track-runtime-source-manifest.json)，入口为 `scripts/prepare_battle_track_runtime.py`。`prepare_battle_track_assets.py` 按已核验的APK对象、完整原生导出图及CAB引用恢复10951_2／10584_move／11171三图，保留原曲线和序列参数；子图独立纹理按导出meta中的原bundle精确加载并继续验证原对象及哈希。输出meta仅规范化行尾空白，保留全部GUID与字段值。28项原生资源、10张全mip纹理、完整Windows shader、显式Resources／脚本绑定及输出哈希见[素材凭据](battle-animation/track-assets-source-manifest.json)。既有五类素材凭据同步记录共享转换器身份；没有替代美术，本批未生成完整素材快照。
 
+技能Spine残影捕获迁移取所选 `884_156692` 的 `MyPlayableAfterimage`、`AfterimageData` 与 `MeshRendererZSortComparer`；原码、输出及其RTHandle scope适配哈希见[残影代码凭据](battle-animation/skill-afterimage-runtime-source-manifest.json)。离线Battle Playable scope持有RT池并在销毁时释放；完整prefab图资源和生产调用接线尚未完成，范围见[技能](../../docs/features/skills.md)。
+
+
 伙伴馈赠规则与本地领取迁移复用所选 `884_156692` 的原普通／星神好感任务、成就键、`AchievementInfo`、`PlayerAchievementRecordDataWrap`、`Player` 领取计算与当前完整配置表；输入、选用方法、生成规则、本地事务、存档字段和验证工具哈希见[馈赠规则与事务来源](partner-achievement-rules-source-manifest.json)，入口为 `scripts/prepare_partner_achievements.py`。不新增美术载荷或完整素材快照；单机决策与功能范围见[伙伴](../../docs/features/partners.md)。
 
 伙伴原生馈赠页迁移使用所选 `884_156692` 原 `NpcDetailPanel.mAchievementPanel` 实际引用、成就面板原码、奖励配置、原语言文件及 APK／同版本官方缓存；通过既有原生转换缓存恢复 Windows prefab、图像、字体、动画、材质及脚本绑定。重建入口为 `scripts/prepare_partner_achievement_ui.py`、`scripts/prepare_partner_achievement_native.py`、`scripts/prepare_partner_achievement_assets.py`，源码、对象、输入输出、引用选择和复用差异哈希见[原生馈赠页来源](partner-achievement-ui-source-manifest.json)。本轮未生成素材快照，功能范围与验证结论维护于[伙伴](../../docs/features/partners.md)。

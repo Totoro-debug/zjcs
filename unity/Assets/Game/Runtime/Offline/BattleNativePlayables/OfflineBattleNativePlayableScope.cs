@@ -10,12 +10,14 @@ namespace Zjcs.Offline.BattleNativePlayables
 {
     // Explicit battle DI boundary. The original manager, center, sequence and
     // FIFO pools own execution; the supplied backend owns original event DSP.
-    public sealed class OfflineBattleNativePlayableScope : IStoryPlayableInstanceFactory, IMyPlayableManager, IDisposable
+    public sealed class OfflineBattleNativePlayableScope : IStoryPlayableInstanceFactory, IMyPlayableManager,
+        IBattleAfterimageHost, IDisposable
     {
         private readonly GameObject root, staging;
         private readonly IProfessionSoundHost sound;
         private readonly IBattleCameraOffsetHost cameraOffsetHost;
         private readonly IBattleCharacterPartVisibilityHost characterPartVisibilityHost;
+        private readonly BattleAfterimageTexturePool afterimageTextures = new BattleAfterimageTexturePool();
         private readonly MyPlayableCenter center = new MyPlayableCenter();
         private readonly MyPlayableManager manager;
         private readonly HashSet<MyPlayable> owned = new HashSet<MyPlayable>();
@@ -59,6 +61,8 @@ namespace Zjcs.Offline.BattleNativePlayables
                     cameraPlayable.BindCameraOffsetHost(cameraOffsetHost);
                 if (component is IBattleCharacterPartVisibilityPlayable visibilityPlayable)
                     visibilityPlayable.BindCharacterPartVisibilityHost(characterPartVisibilityHost);
+                if (component is IBattleAfterimagePlayable afterimagePlayable)
+                    afterimagePlayable.BindAfterimageHost(this);
             }
             instance.transform.SetParent(parent, worldPositionStays);
             return instance;
@@ -93,6 +97,18 @@ namespace Zjcs.Offline.BattleNativePlayables
             => Dispatch(() => manager.SetObjectPool(pools));
 
         public void ForceReleaseObjectPool() => Dispatch(() => manager.ForceReleaseObjectPool());
+
+        public RenderTexture GetRT(int width, int height)
+        {
+            RequireLive();
+            return afterimageTextures.GetRT(width, height).rt;
+        }
+
+        public void ReturnRT(RenderTexture texture)
+        {
+            RequireLive();
+            afterimageTextures.ReturnRT(texture);
+        }
 
         public void Tick(float deltaTime)
         {
@@ -143,6 +159,7 @@ namespace Zjcs.Offline.BattleNativePlayables
             finally
             {
                 disposed = true; owned.Clear(); Application.lowMemory -= OnLowMemory;
+                afterimageTextures.Dispose();
                 UnityEngine.Object.Destroy(root);
             }
         }

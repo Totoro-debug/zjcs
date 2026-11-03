@@ -26,4 +26,15 @@ namespace Zjcs.Official.StoryPlayableManager
     {
         void BindCharacterPartVisibilityHost(IBattleCharacterPartVisibilityHost host);
     }
+
+    public interface IBattleAfterimageHost
+    {
+        UnityEngine.RenderTexture GetRT(int width, int height);
+        void ReturnRT(UnityEngine.RenderTexture texture);
+    }
+
+    public interface IBattleAfterimagePlayable
+    {
+        void BindAfterimageHost(IBattleAfterimageHost host);
+    }
 }
