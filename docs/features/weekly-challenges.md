@@ -24,7 +24,7 @@
 
 ## 完整还原部分
 
-已从当前 `884_156692` 官方 APK／配置缓存提取 200 个虚空裂隙阶段及魔王 4800 的原始阶段、怪物编队、网格、阵营入口、波次起点和技能绑定。900、1412、902 三个官方战斗场景均由当前 `FightStage_part*.g.bytes` 解码，运行时目录由 `OfflineWeeklyChallengeBattleCatalog` 严格校验并复用公共 `OfficialBattleRuntimeController` 的 HUD、准备、行动、技能、冷却、结算和战报管线。生成器和输入哈希记录在 `scripts/prepare_unity_weekly_battle_data.py` 与 `assets/reference/weekly-challenges/battle-stages-source-manifest.json`。
+已从当前 `884_156692` 官方 APK／配置缓存提取 200 个虚空裂隙阶段及魔王 4800 的原始阶段、怪物编队、网格、阵营入口、波次起点和技能绑定。900、1412、902 三个官方战斗场景均由当前 `FightStage_part*.g.bytes` 解码，`OfflineWeeklyChallengeBattleCatalog` 严格校验目录，独立 `WeeklyChallengeBattleRunner` 直接使用公共 Map10 检查点构造器与 `OfficialBattleRuntimeController` 的 HUD、准备、行动、技能、冷却、结算和战报管线。`OfflineWeeklyChallengeSession` 按本地角色槽位保存周日08:00周期标记、各阶段挑战次数／胜场和逐行动战斗检查点；重新进入同一阶段时恢复已保存战斗，周期切换不删除已入场检查点，胜负结算后清除本场检查点。生成器和输入哈希记录在 `scripts/prepare_unity_weekly_battle_data.py` 与 `assets/reference/weekly-challenges/battle-stages-source-manifest.json`。正式活动页与原生周常结算面板、活动奖励事务和 Windows Player 仍未完成。
 
 ## 自定义实现
 
