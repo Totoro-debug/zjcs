@@ -110,7 +110,15 @@ def main():
             2062756666: dict(name='ApplyByCustom', namespace='GameFramework',
             source_root='game-framework-source/GameFramework', source='ApplyByCustom.cs',
             target_namespace='Zjcs.Official.StoryPlayables',
-            runtime='unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyByCustom.cs')},
+            runtime='unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyByCustom.cs'),
+            1420873720: dict(name='TargetSourceInitByGameCamera', namespace='',
+            source='TargetSourceInitByGameCamera.cs',
+            runtime='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/TargetSourceInitByGameCamera.cs'),
+            -1154579867: dict(name='SpineBoneAfterimageRTParamsProvider', namespace='',
+            source='SpineBoneAfterimageRTParamsProvider.cs',
+            runtime='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/SpineBoneAfterimageRTParamsProvider.cs'),
+            -1055498065: dict(name='RTRenderer', namespace='', source='RTRenderer.cs',
+            runtime='unity/Assets/Game/Runtime/Official/BattleSkillPlayables/RTRenderer.cs')},
         limits=['Converted roots are taken from active-version FightSkill entity prefab fields. '
                 'Production battle entity binding and runtime Playable lifecycle are tracked separately.'])
 
