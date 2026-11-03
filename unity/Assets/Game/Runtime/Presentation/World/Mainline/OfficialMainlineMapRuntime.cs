@@ -75,7 +75,7 @@ namespace Zjcs.Presentation.World
         private GameObject avatar;
         private Camera worldCamera;
         private OfficialMap10EntityView entityView;
-        private NativeMap14EntityPrefabVisualFactory nativeMap14EntityFactory;
+        private MainlineEntityPrefabVisualFactory mainlineEntityPrefabFactory;
         private OfficialMap10EnvironmentView environmentView;
         private OfficialMap10DialoguePortraitView dialoguePortraits;
         private OfficialMap10DialoguePortraitView optionDialoguePortraits;
@@ -374,10 +374,10 @@ namespace Zjcs.Presentation.World
                 var prefabCatalog = Resources.Load<NativeMap14EntityPrefabCatalog>("Map14/Native/entity-prefab-catalog");
                 if (!prefabCatalog || prefabCatalog.Manifest != "871_156598")
                     throw new InvalidDataException("Original Map14 entity prefab catalog is missing or stale.");
-                nativeMap14EntityFactory = new NativeMap14EntityPrefabVisualFactory(prefabCatalog);
+                mainlineEntityPrefabFactory = new MainlineEntityPrefabVisualFactory(prefabCatalog, mapClassId);
                 entityView.NativeVisualFactory = (info, host) =>
                 {
-                    nativeMap14EntityFactory.TryCreate(info.EntityClassId, host.transform, out _);
+                    mainlineEntityPrefabFactory.Create(info.EntityClassId, host.transform);
                     return true;
                 };
             }
@@ -569,8 +569,8 @@ namespace Zjcs.Presentation.World
             DisposeNativeMap14();
             configuredNativeGround?.Dispose();
             configuredNativeGround = null;
-            nativeMap14EntityFactory?.Dispose();
-            nativeMap14EntityFactory = null;
+            mainlineEntityPrefabFactory?.Dispose();
+            mainlineEntityPrefabFactory = null;
             DisposeNativeMap13();
             miniMap.CloseNativeFullMiniMap();
             hud.CloseNativeWorldFunctions();

@@ -10,6 +10,10 @@
 
 实体资源寻址已有通用官方输入解析器 [`prepare_mainline_entity_prefab_roots.py`](../../scripts/prepare_mainline_entity_prefab_roots.py)：它从原地图放置、导航角色类别、EC `index.g.txt` 和展示表导出真实 prefab 地址，按选定 APK／CDN bundle 核验 GameObject 身份并闭合CAB依赖；不把显示用的 `PenPath` 当资源路径，也不声明 Android 输入可直接作为 Windows 运行资源。Map16 已通过该解析器，实体视觉的 Windows 转换和宿主接线仍未完成，见[鲸背岛](../maps/map-16.md)。
 
+原生实体 prefab 实例化使用 `IMainlineEntityPrefabProvider` 与 `MainlineEntityPrefabVisualFactory` 公共契约；地图专属目录按地图 ID 校验身份并提供原实体类 prefab。Map14 已通过该接口接入现有主线宿主，目录序列化与官方路径查找保持原样。其他地图仍需按各自原生资源与 prefab 来源实现 provider，并完成显式资源绑定和运行验证；该接口不代表这些地图实体已迁移。
+
+该接口改动的 Unity 编译与 Play Mode 尚未完成：Unity 编译被工作区未提交的 BattleSkill／Spine 缺失引用错误阻断，修复后复测又因 Unity 报告项目已由另一实例打开而未启动；此前旧版 Map14 provider 的 Play Mode 通过不覆盖本次 factory 重构。静态项目检查已通过。
+
 小地图区域地面由公共 `MainlineMiniMapRegions` 管理原 prefab 实例、原管理器的状态／范围事件及资源生命周期。各图提供 `MainlineMiniMapRegionAssets` 与 `IMainlineMiniMapRegionState`；模块直接订阅原可见范围事件，替换处理器时切换订阅，停用／销毁时退订；普通状态刷新不会重置原十秒回收期限。所选 `884_156692` 的 Map10／11／12／13／14／16 已分别转换5／77／99／106／111／43份原区域 Tilemap，复用同一实现；Map15 原配置没有独立小地图 prefab，不生成空目录。当前原生资源与各图历史来源独立记录，不混接不同版本的区域身份；完整原小地图根已提供公共实例绑定；白雾、标记及正式宿主的完整状态接线仍未完成。各图验证范围见[初始岛](../maps/map-10.md)、[森之国](../maps/map-11.md)、[山之国](../maps/map-12.md)、[泽之国](../maps/map-13.md)、[龙之国](../maps/map-14.md)和[鲸背岛](../maps/map-16.md)，来源见[公共小地图区域模块](../../assets/reference/official-map/mainline-minimap-regions-source-manifest.json)。
 
 `MainlineMapMiniMapSnapshots.CreateOfflineDataSource` 将当前角色槽位的只读地图快照与原离线响应消费接口组合，避免调用方自行实现跨图实体筛选或状态恢复。已访问地图只提供本地探索过的实体及公开地区实体；隐藏／激活和图标状态从最新本地存档投影，读取不装载地图场景、不推进存档。地图外小地图调用与 Map13 正式地图回归现走同一组合入口；`OfficialMainlineMapRuntime` 在原小地图根激活前注入该数据源，保留原协调器当前图不请求、跨图请求的分支。完整白雾、标记状态、HUD输入与Player验证仍待完成。

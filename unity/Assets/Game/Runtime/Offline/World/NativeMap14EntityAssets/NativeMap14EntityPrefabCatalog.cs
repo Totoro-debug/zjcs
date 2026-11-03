@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Zjcs.Offline.World.NativeMap14EntityAssets
 {
     [CreateAssetMenu(menuName = "Zjcs/Map14/Entity Prefab Catalog")]
-    public sealed class NativeMap14EntityPrefabCatalog : ScriptableObject
+    public sealed class NativeMap14EntityPrefabCatalog : ScriptableObject, IMainlineEntityPrefabProvider
     {
         [Serializable]
         public sealed class Entry
@@ -18,6 +18,8 @@ namespace Zjcs.Offline.World.NativeMap14EntityAssets
 
         public string Manifest;
         public Entry[] Entries;
+
+        public int MapClassId => 14;
 
         private Dictionary<string, GameObject> lookup;
 
