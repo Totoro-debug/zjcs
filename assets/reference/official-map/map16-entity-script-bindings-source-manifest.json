@@ -22,14 +22,15 @@
   "runtime_source_policy": "Only clean tracked working-tree files are considered; modified and untracked runtime files are excluded.",
   "generator": {
     "path": "scripts/audit_mainline_entity_script_bindings.py",
-    "sha256": "541c9ba0575932ea84b939f1abe020f78ab4fc189fde443e3cdbf494c6047adc",
-    "bytes": 10169
+    "sha256": "6a11554409ba33a21e92bd3ea6d9187ae687de4cf563609aa1967c3b07757c10",
+    "bytes": 10588
   },
   "counts": {
     "client_script_ids": 103,
     "source_resolved": 103,
     "runtime_type_matches": 0,
-    "runtime_type_missing": 103
+    "runtime_type_missing": 103,
+    "runtime_name_candidates": 39
   },
   "scripts": [
     {
@@ -44,6 +45,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -61,6 +63,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8363.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/Map_13_Bonus/8368.prefab",
@@ -79,6 +82,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.EntityLifecycle",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyGridTransform.cs",
+            "sha256": "ac974c0d9b51a6ed4805fc8ab0169484f8495a5fb9dfffca5520da1910f5a15c",
+            "bytes": 6934
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyGridTransform.cs.meta",
+            "sha256": "898f8062fd903c804ef38b3f95f78b08285bbbc6ac3a1b1bf67d3352cf569c5e",
+            "bytes": 251
+          },
+          "guid": "4a24fa9e74ff8eb37f0e012bf7162441"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -156,6 +175,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.EntityClientComponents",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyStageResultPeriodicityRandomAward.cs",
+            "sha256": "20be364674837ccc80fa5dd7c17806b51bad286f52ca99e5385a0f6e3b19feb1",
+            "bytes": 280
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyStageResultPeriodicityRandomAward.cs.meta",
+            "sha256": "547ef2947723913a1c21027fb7ab6ff8534db24804e40a9aa85b104affd29df0",
+            "bytes": 240
+          },
+          "guid": "5197bffd156702458fc536b70bd13ed9"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6570.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6571.prefab",
@@ -177,6 +212,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab",
@@ -195,6 +231,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldNPC/Map_13_NPC/8443.prefab"
       ]
@@ -211,6 +248,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.EntityRadar",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityRadar/MapControllerEntityRadarSupport.cs",
+            "sha256": "dde0eb1740ef7654d0beac01d4a8fed76740bd403aa01699d69d012d650f9631",
+            "bytes": 2720
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityRadar/MapControllerEntityRadarSupport.cs.meta",
+            "sha256": "de9c8485c172991182ac6a3ffdc85bbae57a788899f45b18341adea9287ee666",
+            "bytes": 240
+          },
+          "guid": "2ab4e0d775d70f0914067f770b8d1e81"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8200.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8201.prefab",
@@ -242,6 +295,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.World.Map13EntityRendering",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityRendering/SlicedFilledRender.cs",
+            "sha256": "6a4b10d515444d4e137081244aa683a292b216a79666c3cbe282f7df9c1054fc",
+            "bytes": 13797
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityRendering/SlicedFilledRender.cs.meta",
+            "sha256": "f20c2f3f3e78f4e43f80c95a3ba27939ac72a2d3eaeb17f78fe00e0f7a5ffbaa",
+            "bytes": 187
+          },
+          "guid": "0225563e4b1c58c6b3de928c6a46cc73"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab",
@@ -313,6 +382,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.StoryFollowBone",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MySizeCfg.cs",
+            "sha256": "96a3732e56fad0248b1677dc48d8200ae11f0753365c087e4ee8135dbcc11bbc",
+            "bytes": 2981
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MySizeCfg.cs.meta",
+            "sha256": "ebad30b6d8fe0f3e13497ae2e62985aa6da6d84ede73cfa07fd5dbcfc82420e3",
+            "bytes": 251
+          },
+          "guid": "05074565bf59198624f0ca85603a5c0d"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab",
@@ -333,6 +418,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.CombatAppearance",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceMecanim.cs",
+            "sha256": "8cfb108b68034bb3556df62fc7df30fd5d4cbdfa19ddb3e97a0e28a8b86a6ae3",
+            "bytes": 1433
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceMecanim.cs.meta",
+            "sha256": "0f5ff431b5e53b01539fdf2069c43b698b91bb44ea2c36b47669829f935b38a7",
+            "bytes": 60
+          },
+          "guid": "d2d5a05327b05b27a0529c6eed85acaa"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -350,6 +451,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -402,6 +504,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.MapDisplays",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/MapDisplays/MyMapDisplay.cs",
+            "sha256": "1158530fba39a7fe49daf044e7440e619099b7f8ee8befcb3acf3a22edbd5f71",
+            "bytes": 2321
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/MapDisplays/MyMapDisplay.cs.meta",
+            "sha256": "c970b90bb5d4671e2e35bc350dc7e7c45276ba51d3468ed15b6535e1cff15508",
+            "bytes": 251
+          },
+          "guid": "0c3208fc280a871ae5c29010ecdfdc19"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -471,6 +589,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.EntityAwardHook",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityAwardHook/EntityAwardItemHook.cs",
+            "sha256": "39674a9e0c37ec01e40f5829d95e1f87fd21bc246e7c8bf0d12a881dce22ced2",
+            "bytes": 1579
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityAwardHook/EntityAwardItemHook.cs.meta",
+            "sha256": "24285e379b0da5eee04a72f52827299d1610aca33c137ffbf20be1c181f6b789",
+            "bytes": 240
+          },
+          "guid": "b2a54dc1ab99416861b29e907bdd86f3"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6570.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6571.prefab",
@@ -492,6 +626,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -509,6 +644,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -526,6 +662,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6541.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6544.prefab",
@@ -545,6 +682,36 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.BattleSpinePlayables",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/BattleSpinePlayables/AttachmentFollower.cs",
+            "sha256": "db424477824968b6426f4f587ca69fe731d06de2ee9c843caa7bb13881b298e9",
+            "bytes": 10251
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/BattleSpinePlayables/AttachmentFollower.cs.meta",
+            "sha256": "21dfcfbf1e6e5a3f75df8821e2a04f9823d3378e874e98fff9d92a51453452be",
+            "bytes": 240
+          },
+          "guid": "6c33245f5b5d01e118b0e34d8685508d"
+        },
+        {
+          "namespace": "Zjcs.Official.World.Map13Attachment",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/World/Map13Attachment/AttachmentFollower.cs",
+            "sha256": "3c377e3900bee8641ddaadd6159c85d25c7170db5b78f06849f605f0ddf8ed0b",
+            "bytes": 10030
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/World/Map13Attachment/AttachmentFollower.cs.meta",
+            "sha256": "d4c60f7862028a9872e329a510ad0d5fbb4b71c47cb413da9c779bed85bf0101",
+            "bytes": 187
+          },
+          "guid": "557039ef2d10571fba1d489811783b81"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab",
@@ -564,6 +731,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/8601.prefab"
       ]
@@ -580,6 +748,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.EntityRootVisibility",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityRootVisibility/MyVisibilityGrid.cs",
+            "sha256": "cee3f868793f931c74cf91a24ec74857468f952f58154c54d3fb42c7c9c9530f",
+            "bytes": 480
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityRootVisibility/MyVisibilityGrid.cs.meta",
+            "sha256": "4491c759ffc4e28245beba5620453fd1eea887e10533db7baf4db27f4e88e9ef",
+            "bytes": 251
+          },
+          "guid": "3923a93fbfd7328a0064ab6bbb3c5412"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -655,6 +839,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6501.prefab"
       ]
@@ -671,6 +856,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -720,6 +906,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.EntityClientComponents",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyStageResultAwardStatusEffect.cs",
+            "sha256": "1f3e05dd6cbb8c214d8d832131a461055b7d01c289d7cc7a84722ae419e52c3d",
+            "bytes": 382
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyStageResultAwardStatusEffect.cs.meta",
+            "sha256": "a1137747c7c98d021c34d78bc535f21c2396d388386f6cfeb5ffa8fb8fe577b3",
+            "bytes": 240
+          },
+          "guid": "cb5ffd3b0d327bb7f062a6fdb3a2f6be"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6570.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6571.prefab",
@@ -741,6 +943,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.EntityWorldInput",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/MyEntityPlayerInteraction.cs",
+            "sha256": "41553a450934b6ed640d005dce1d4ac0aa32528416ad2935e2b45f81b982090e",
+            "bytes": 967
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/MyEntityPlayerInteraction.cs.meta",
+            "sha256": "447715199854480e66d86cbc8f430003b29f9c878ef1ae8046acd92ab3647140",
+            "bytes": 240
+          },
+          "guid": "f6a35a33db723a53d3e583f04365569c"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -802,6 +1020,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldNPC/Map_13_NPC/8443.prefab"
       ]
@@ -818,6 +1037,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -835,6 +1055,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -852,6 +1073,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -869,6 +1091,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.StoryAnimation",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/AnimationController.cs",
+            "sha256": "03c63e3e8815db97ae7a8d77711459b8f2ae9cc8a38be3865971497b4739d088",
+            "bytes": 13447
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/AnimationController.cs.meta",
+            "sha256": "825696467f88cfa17cde0f5baa98b1165500f5c657db5474ed0e13595ea47d10",
+            "bytes": 251
+          },
+          "guid": "3dfa5640c04901447a4ea83d0aaceed7"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8363.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
@@ -888,6 +1126,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -905,6 +1144,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.ProfessionUI",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerIconMe.cs",
+            "sha256": "2c52fb866696a75494f66f01601d0325011bff619c06de44d3f2a88c6d70e53e",
+            "bytes": 5318
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerIconMe.cs.meta",
+            "sha256": "8f49c81533f2ebb3d0cc785931ef1ebf30283d4a1e07b403fa49eddbe11185cd",
+            "bytes": 60
+          },
+          "guid": "b18cdec6c89198bae959e0b9eeae3eb1"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -922,6 +1177,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6501.prefab"
       ]
@@ -938,6 +1194,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6011.prefab"
       ]
@@ -954,6 +1211,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.LegacyWorldStages",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/LegacyWorldStages/MyWorldStage.cs",
+            "sha256": "a7e8dcc197a6501d06056634a4ec225f63955b627ceae8684fcf464324bd3ce9",
+            "bytes": 8925
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/LegacyWorldStages/MyWorldStage.cs.meta",
+            "sha256": "6502ecddf68d074174456a925bf596a3c5410951431e9c271930f44da305cc92",
+            "bytes": 251
+          },
+          "guid": "e11eda0d4257e65c871a5a4c72805465"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -1029,6 +1302,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/8601.prefab"
       ]
@@ -1045,6 +1319,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1062,6 +1337,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.EntityClientComponents",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyWorldEntityLevel.cs",
+            "sha256": "8574d4b0ff4c3aeae543d1d44ce2720ddc4aa4876e6166f0a886ccdca2b759f5",
+            "bytes": 238
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyWorldEntityLevel.cs.meta",
+            "sha256": "84ba0e820171e75c57d3ac378aa1cb4c022e3c157ac1c18901ac8587b3b1c12d",
+            "bytes": 240
+          },
+          "guid": "c15222ca9046d327e8d06824fbb58f8c"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -1130,6 +1421,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1147,6 +1439,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6320.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6350.prefab",
@@ -1169,6 +1462,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1186,6 +1480,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.EntityClientComponents",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyStageBehTouch.cs",
+            "sha256": "51af65d09eebda25c3defc11f26e4fb46182f47de8875eac0b30e1010a10d2f1",
+            "bytes": 240
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyStageBehTouch.cs.meta",
+            "sha256": "c8339b215e38569aa852242755233ff5613fed6347b960449b5d83a096eb46b2",
+            "bytes": 240
+          },
+          "guid": "46f63f6b784be179ce3666bf00c5f29b"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -1252,6 +1562,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -1306,6 +1617,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.StoryAttachment",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/AttachAgent.cs",
+            "sha256": "20cabe4d3c961627bc74487ed75d02d2b6aef0d5fffb250b96bc2f92ea2d4755",
+            "bytes": 3436
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/AttachAgent.cs.meta",
+            "sha256": "d40c29442c1c40f4cdbffe38e12f62510873ca44304935b42c5309910abcacba",
+            "bytes": 251
+          },
+          "guid": "2fd25e3a13f9149396a66518de79159b"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8203.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8206.prefab",
@@ -1340,6 +1667,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.EntityClientComponents",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyStageResultModifyHpPercent.cs",
+            "sha256": "a9d12470a712a2b0d2a42a5e9d28e40844246850426c189a0bd0091bd8434c52",
+            "bytes": 266
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyStageResultModifyHpPercent.cs.meta",
+            "sha256": "52ce3bc97d3067e37adb3711103432955295f1d0871fcb5e64524f3f22235650",
+            "bytes": 240
+          },
+          "guid": "5e6eb9222b9aa4ddf30148f2f3fc7a78"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6570.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6571.prefab",
@@ -1361,6 +1704,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1378,6 +1722,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1395,6 +1740,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.EntityClientComponents",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyStageConPlayerPeriodicityInteraction.cs",
+            "sha256": "be1fa8b1c613866e2af9bbc9ed6bc838670e21af31eea5092a228f163ff4117c",
+            "bytes": 396
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyStageConPlayerPeriodicityInteraction.cs.meta",
+            "sha256": "0891a780b6a920954793bb0dc776509a18757528a841ee1d5cfb5ca984097a58",
+            "bytes": 240
+          },
+          "guid": "270c0c140771702d7a738fcef6072145"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6570.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6571.prefab",
@@ -1416,6 +1777,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1433,6 +1795,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1450,6 +1813,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1467,6 +1831,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.ProfessionUI",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceRendererLite.cs",
+            "sha256": "f07bc35c75cd47472901dcfc5d505e7a1c220975b45f85e79a6aac870998cb17",
+            "bytes": 7455
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceRendererLite.cs.meta",
+            "sha256": "8b052d66fc3a2376bf2916e79967d4e5e9489e640e416ede3049acf021ca41fe",
+            "bytes": 60
+          },
+          "guid": "579b7bca63ba39df17b3531e70a1e3f6"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldNPC/Map_13_NPC/8443.prefab"
       ]
@@ -1483,6 +1863,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8201.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6501.prefab",
@@ -1504,6 +1885,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1521,6 +1903,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.BattleMaterialPlayables",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/BattleMaterialPlayables/MeshMaterialProperty.cs",
+            "sha256": "a9dfd46fdc2b94b9ac617ac29f6ad2a7f8fb6365f8af173649288a77d8aaae60",
+            "bytes": 10493
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/BattleMaterialPlayables/MeshMaterialProperty.cs.meta",
+            "sha256": "6666a923b406cabdd9df8304ba3024e79926750ba78eb3e27b18dd73c2a6008d",
+            "bytes": 240
+          },
+          "guid": "a5d95b8262d98223a6671058c3472004"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMonster/5001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMonster/5003.prefab",
@@ -1547,6 +1945,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.ProfessionUI",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceRendererPartHandler.cs",
+            "sha256": "48da4cff7425c535f82ed794c007a7a78f1b36fd8691b37d4099f83a650b6e23",
+            "bytes": 10865
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceRendererPartHandler.cs.meta",
+            "sha256": "05f2cc3af8aa7c3626c58832b3c02339b523e2a7c0ba6127c14eee8aaa6a3537",
+            "bytes": 60
+          },
+          "guid": "981f3cc995b0e053ae6a84ae534ede91"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1564,6 +1978,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldNPC/Map_13_NPC/8443.prefab"
       ]
@@ -1580,6 +1995,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6000.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6011.prefab"
@@ -1597,6 +2013,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.ProfessionUI",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceSkinClip.cs",
+            "sha256": "991363d3cc0254b9f179958f20a45ebbe728ecdf80f9fe85265b44922dee6b10",
+            "bytes": 7765
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceSkinClip.cs.meta",
+            "sha256": "cca5e512de287ebb779fefa73ff4ace3cd9fe6c05b19d0655b8567c948f108e7",
+            "bytes": 60
+          },
+          "guid": "fca05a2acfb99374aa9ad763f6a01d2c"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1614,6 +2046,36 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.EntityViews",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECViewDriver.cs",
+            "sha256": "50005bf41df35ab989c891c6c04655ea04678864bbdd4b7f275d65e6c58ea5dd",
+            "bytes": 6646
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECViewDriver.cs.meta",
+            "sha256": "626ea46d38a919d2d9707696b2a6597398e3ff197685a71a5c849cb14e17e80b",
+            "bytes": 252
+          },
+          "guid": "6b6c8d9caa63a035e2484ff8197e78dc"
+        },
+        {
+          "namespace": "Zjcs.Official.SteleEntities",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/SteleEntities/ECViewDriver.cs",
+            "sha256": "679e1518974096aef67120e9c09e4e20c20d42d55eba59fd94c619681b9589bb",
+            "bytes": 2532
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/SteleEntities/ECViewDriver.cs.meta",
+            "sha256": "7d932c147b9bc0b9d07cacf712ccc25626e26d2e5d9457a743bb954559b1f937",
+            "bytes": 241
+          },
+          "guid": "037ee7036207d06ad92a8ebc0e039521"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/8601.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
@@ -1738,6 +2200,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/Map_13_Bonus/8368.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/Map_13_Bonus/8370.prefab"
@@ -1755,6 +2218,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.EntityClientComponents",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyStageResultAwardExtraProp.cs",
+            "sha256": "8125f431f3fc9af789ee5a0df771db980ba3ccdf7577cf7d1099f047e962a183",
+            "bytes": 375
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyStageResultAwardExtraProp.cs.meta",
+            "sha256": "c62251bac74c3c4704ec1efbf27d95586f192f19223eba5c47be7c0a3ca8d22d",
+            "bytes": 240
+          },
+          "guid": "41a0ead55177bf087a1386cdde96e231"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6570.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6571.prefab",
@@ -1776,6 +2255,36 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.EntityTipDotViews",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityTipDotViews/MapEntityTipDotNodeLinker.cs",
+            "sha256": "f177905dc773d0b94474d4bbca57e9c1012c1fb28a0934cae26bb653cd281ac2",
+            "bytes": 3030
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityTipDotViews/MapEntityTipDotNodeLinker.cs.meta",
+            "sha256": "bbe0897078966efa51ee087817df565195257a561ff06923e58777863178c583",
+            "bytes": 251
+          },
+          "guid": "eb314f5494eaf925f4a4fbd315f1e222"
+        },
+        {
+          "namespace": "Zjcs.Official.World.Map13MiniMap",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkSupports/MapEntityTipDotNodeLinker.cs",
+            "sha256": "a663842551c679e74e67877ab810235f22876036cbf18f14d59c8c93f4efec8b",
+            "bytes": 3153
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapMarkSupports/MapEntityTipDotNodeLinker.cs.meta",
+            "sha256": "b32379d281e66961bfdd9425098ed4e1e7e2bd77c200aa106185d52877c08356",
+            "bytes": 149
+          },
+          "guid": "a3c7a0ee0561289d87ccc4e58665e1ae"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldNPC/Map_13_NPC/8443.prefab",
         "Assets/Prefabs/Map/Common/EntityDisplaysWorldBuilding/6000_view.prefab",
@@ -1807,6 +2316,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6320.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldNPC/Map_13_NPC/8443.prefab"
@@ -1824,6 +2334,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.EntityClientComponents",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyEntitySource.cs",
+            "sha256": "3ac7770e622f116197bfe5e2b3aa6fd126190bf6e7e4cc53167aa36d5ef66bc6",
+            "bytes": 230
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityClientComponents/MyEntitySource.cs.meta",
+            "sha256": "c5622485f16d96cc80eeabd1d29328207c1298fdb865de58dfd1bf6670511b23",
+            "bytes": 240
+          },
+          "guid": "30834a9ebaeb176b0b225efa08a97b87"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -1899,6 +2425,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.StoryBubbles",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/TMP_TypeWriterEffect.cs",
+            "sha256": "dd0eaebebe82cac4e8f9163a5474025af1b7bbb6f78f9ce9c1977a9a9d8b3ef3",
+            "bytes": 2686
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/StoryBubbles/TMP_TypeWriterEffect.cs.meta",
+            "sha256": "89d3b489c3e2c1bbeacee0bcc70ded87e9e4c1e6b40937d9afdfc5566b75e956",
+            "bytes": 251
+          },
+          "guid": "8f6e1821a3db87dc5284f893b9e209f8"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldNPC/Map_13_NPC/8443.prefab"
       ]
@@ -1915,6 +2457,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6011.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6501.prefab"
@@ -1932,6 +2475,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.World.Map13MiniMapWindows",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapWindows/MaintainGlobalScale.cs",
+            "sha256": "46f3424021447ab14ff0334ea3385720ad11926146e4c317cdb73567ee5d98ba",
+            "bytes": 4563
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapWindows/MaintainGlobalScale.cs.meta",
+            "sha256": "d2fc6a7e5adc72d8aa295689387277e09e3fdaa89353ca23081baf25bb3d0006",
+            "bytes": 169
+          },
+          "guid": "f662e5d7b5ed953f1e09b59b688a7bda"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldNPC/Map_13_NPC/8443.prefab",
         "Assets/Prefabs/Map/Common/EntityDisplaysWorldBuilding/6000_view.prefab",
@@ -1963,6 +2522,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1980,6 +2540,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -1997,6 +2558,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2014,6 +2576,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMonster/5001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMonster/5003.prefab",
@@ -2032,6 +2595,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6530.prefab"
       ]
@@ -2048,6 +2612,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2065,6 +2630,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2082,6 +2648,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.ProfessionUI",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerInfoUI.cs",
+            "sha256": "b0731d0c6dfbf45fdace06e73ca444be4f34c0e984c33c5ebf9ba8714eec965a",
+            "bytes": 12693
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerInfoUI.cs.meta",
+            "sha256": "d8c71fa2d771c091abf9c014bbca68ff4d01b2131e8f894def542fe5cb7ef624",
+            "bytes": 60
+          },
+          "guid": "2469f436c8646020642edda723fa9580"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2099,6 +2681,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6530.prefab"
       ]
@@ -2115,6 +2698,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/8601.prefab"
       ]
@@ -2131,6 +2715,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2148,6 +2733,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.EntityRadar",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityRadar/MapControllerEntityRadar.cs",
+            "sha256": "7ab487cecd5330da06899ec2498031dea5be281d012794a1283743e98a637383",
+            "bytes": 8806
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityRadar/MapControllerEntityRadar.cs.meta",
+            "sha256": "212494a42defbf56ba202c23034681cf5aedf9c3a2330e577975e7945ea28a3d",
+            "bytes": 240
+          },
+          "guid": "6b6877e0fecf9f49197626935cdeec11"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2165,6 +2766,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6000.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6011.prefab"
@@ -2182,6 +2784,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2199,6 +2802,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.EntityLifecycle",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyEntity.cs",
+            "sha256": "a79da2de6a96b7b999cca9ccc0b63268f6721203ee5d103300ccddc4112c8c8e",
+            "bytes": 6948
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyEntity.cs.meta",
+            "sha256": "37c1bca62c3f18ee7ae04cc407f650a3cf2a6a87713454e7345366e71e67bf4e",
+            "bytes": 251
+          },
+          "guid": "1a61d2a171b1beb0621708736b48f910"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -2276,6 +2895,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.CombatAppearance",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimatorAppearance.cs",
+            "sha256": "caf341be6b116551f94e481fcc1f6209cefb04cc1fe8929266164c828a4cdc32",
+            "bytes": 3010
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/PlayerAnimatorAppearance.cs.meta",
+            "sha256": "3b8c94a94831a5817d47d6a81eb6d543d1a5923b375cc1e28b263483fb084b2d",
+            "bytes": 60
+          },
+          "guid": "e72f0e5738c6561985c604d4fc314cd9"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2293,6 +2928,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8212.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8213.prefab",
@@ -2311,6 +2947,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6530.prefab"
       ]
@@ -2327,6 +2964,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2344,6 +2982,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8007.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBonus/CommonBonus/8008.prefab",
@@ -2396,6 +3035,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab",
@@ -2414,6 +3054,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2431,6 +3072,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.EntityLifecycle",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyTransform.cs",
+            "sha256": "4f3992afc8ebf2f480ca1e7551a926e615a6240313d6013bc89b35808d641b14",
+            "bytes": 1918
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyTransform.cs.meta",
+            "sha256": "bf37794ce69c25ec76c84244af25678418d09e83b8918d73dd33acc84143b186",
+            "bytes": 251
+          },
+          "guid": "546d8ffec4f37a09cef60b34b48f862c"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab",
@@ -2449,6 +3106,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.StorySourceFade",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/StorySourceFade/SpriteRendererList.cs",
+            "sha256": "34ccb44bf2ab7cd7ca83af3b5ecc0ac6d91ce09859efc9a1d164e68f0a0537f7",
+            "bytes": 12751
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/StorySourceFade/SpriteRendererList.cs.meta",
+            "sha256": "e56729d194945ff62a894b86c13f2ca5f39581866966e3d74a1323a85c801fcf",
+            "bytes": 251
+          },
+          "guid": "b7171e742f2aaab4474344b11e556539"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab",
@@ -2546,6 +3219,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldNPC/Map_13_NPC/8443.prefab"
       ]
@@ -2562,6 +3236,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/6501.prefab"
       ]
@@ -2578,6 +3253,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldNPC/Map_13_NPC/8443.prefab"
       ]
@@ -2594,6 +3270,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.EntityWorldInput",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/WorldStageInput.cs",
+            "sha256": "75338b0eed38ac32268eb08d8a702f5c750357df04697960b693af3c8317d49a",
+            "bytes": 6267
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/WorldStageInput.cs.meta",
+            "sha256": "b985802c7d3f326d666bdcacc3b5031bd191fe41c740e47644693e1b388f1871",
+            "bytes": 240
+          },
+          "guid": "b28bbf320bb4bf4c2662a3d825ea9f53"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6000.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6011.prefab",
@@ -2631,6 +3323,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2648,6 +3341,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldGamePlay/CommonPlay/8601.prefab"
       ]
@@ -2664,6 +3358,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2681,6 +3376,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2698,6 +3394,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2715,6 +3412,22 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.World.Map13Rendering",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/World/Map13Rendering/ResetMaterialPropertyBlock.cs",
+            "sha256": "75d3e2a16492ef3cc84fb9f3b82dc4d1ca81c2be0fcf55ab116d91cdd7f1bec5",
+            "bytes": 390
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/World/Map13Rendering/ResetMaterialPropertyBlock.cs.meta",
+            "sha256": "329429f5f2635df8efbe81ea4516724eec3e97f9e9808023d92b1f0758df31c6",
+            "bytes": 187
+          },
+          "guid": "24b927401af15f39a0ac5f142b4e129b"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/Map/Common/EntityDisplaysWorldBonusTouch/8363_snow_view.prefab",
         "Assets/Prefabs/Map/Common/EntityDisplaysWorldBonusTouch/8363_view.prefab"
@@ -2732,6 +3445,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldBuilding/CommonBuilding/6011.prefab"
       ]
@@ -2748,6 +3462,36 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [
+        {
+          "namespace": "Zjcs.Official.CombatAppearance",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs",
+            "sha256": "d89b6bfaac4e7a0b982928e151b121de40f2662c7b9e76df34ab151d4f963c99",
+            "bytes": 4644
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceCharacter.cs.meta",
+            "sha256": "ac1111d971d46a2b2f4c73e29d5f0945ef95d3c2eea932df61e0e4e58f6d9925",
+            "bytes": 60
+          },
+          "guid": "8b2446d274ac5a3880149798351c0efe"
+        },
+        {
+          "namespace": "Zjcs.Official.ProfessionUI",
+          "script": {
+            "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceCharacter.cs",
+            "sha256": "dc4a212b52f40146b63e34a4307fa95bbd104702689e8f8e39a65ab823622cf4",
+            "bytes": 5343
+          },
+          "meta": {
+            "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceCharacter.cs.meta",
+            "sha256": "9392e87aeaf85747cf9e8db0ad1e8b03fcd8fe3e8a7734c72ab899f7ebee33c6",
+            "bytes": 60
+          },
+          "guid": "be482acf769b62f2d8594a50af181dfa"
+        }
+      ],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"
@@ -2765,6 +3509,7 @@
         }
       ],
       "runtime": [],
+      "runtime_name_candidates": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3001.prefab",
         "Assets/Prefabs/EcEntity/MapWorld/WorldMapCharacter/3002.prefab"

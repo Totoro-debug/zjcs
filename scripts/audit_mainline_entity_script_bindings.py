@@ -110,6 +110,7 @@ def build(map_id: int, roots_path: Path, export_path: Path, source_root: Path,
 
     required_types = {(row["namespace"], row["type"]) for row in source_by_id.values()}
     runtime_by_type: dict[tuple[str, str], list[dict]] = {}
+    runtime_by_name: dict[str, list[dict]] = {}
     dirty_runtime_paths: set[str] = set()
     try:
         runtime_relative = runtime_root.relative_to(repository_root).as_posix()
@@ -135,13 +136,16 @@ def build(map_id: int, roots_path: Path, export_path: Path, source_root: Path,
             if match is None:
                 continue
             for namespace, type_name in types:
+                candidate = {
+                    "namespace": namespace,
+                    "script": source_identity(path, repository_root),
+                    "meta": source_identity(meta_path, repository_root),
+                    "guid": match.group(1),
+                }
+                runtime_by_name.setdefault(type_name, []).append(candidate)
                 key = (namespace, type_name)
                 if key in required_types:
-                    runtime_by_type.setdefault(key, []).append({
-                        "script": source_identity(path, repository_root),
-                        "meta": source_identity(meta_path, repository_root),
-                        "guid": match.group(1),
-                    })
+                    runtime_by_type.setdefault(key, []).append(candidate)
         except OSError:
             continue
 
@@ -149,12 +153,14 @@ def build(map_id: int, roots_path: Path, export_path: Path, source_root: Path,
     for file_id in sorted(references):
         source = source_by_id.get(file_id)
         candidates = runtime_by_type.get((source["namespace"], source["type"]), []) if source else []
+        same_name = runtime_by_name.get(source["type"], []) if source else []
         scripts.append({
             "fileID": file_id,
             "type": source["type"] if source else None,
             "namespace": source["namespace"] if source else None,
             "source": source["paths"] if source else [],
             "runtime": candidates,
+            "runtime_name_candidates": same_name,
             "prefabs": sorted(references[file_id]),
         })
 
@@ -174,6 +180,7 @@ def build(map_id: int, roots_path: Path, export_path: Path, source_root: Path,
             "source_resolved": sum(bool(row["source"]) for row in scripts),
             "runtime_type_matches": sum(bool(row["runtime"]) for row in scripts),
             "runtime_type_missing": sum(not row["runtime"] for row in scripts),
+            "runtime_name_candidates": sum(bool(row["runtime_name_candidates"]) for row in scripts),
         },
         "scripts": scripts,
         "limitations": [
