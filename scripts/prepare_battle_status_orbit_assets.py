@@ -132,6 +132,22 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
                     material = ptr.deref().read(); material.m_Shader.deref()
                     for _, env in material.m_SavedProperties.m_TexEnvs:
                         if env.m_Texture.m_PathID: env.m_Texture.deref()
+        # A selected child graph can reference an asset that the numeric root
+        # does not load. Resolve the verified exporter metadata's exact source
+        # bundle before looking up its original texture/shader object.
+        for path in sorted(found):
+            if path.suffix != '.png' and '/Shaders/' not in path.as_posix():
+                continue
+            source_meta = Path(str(path)+'.meta')
+            bundle_name = re.search(r'(?m)^  assetBundleName: (\S+)$', read(source_meta).decode())
+            if bundle_name is None:
+                # Built-in/exported shader metadata may omit a bundle. Its
+                # real original object must still resolve uniquely below.
+                continue
+            bundle = bundle_name[1]+'.bundle'
+            assert bundle in apk.index, (path,bundle)
+            for _ in apk.objects(bundle):
+                pass
         native = {}
         for bundle in list(apk.loaded.values()):
             for file in serialized_files(bundle):

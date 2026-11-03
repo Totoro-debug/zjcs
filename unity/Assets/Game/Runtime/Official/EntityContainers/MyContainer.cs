@@ -16,7 +16,7 @@ using UnityEngine;
 
 namespace Zjcs.Official.EntityContainers
 {
-public class MyContainer : Zjcs.Official.EntityLifecycle.MyContainer, IEntityLoadContainer
+public class MyContainer : Zjcs.Official.EntityLifecycle.MyContainer, IEntityLoadContainer, IEntityContainerLocalPosition
 {
 	public MyContainerAddEntityEventDelegate EntityAddEvent = new MyContainerAddEntityEventDelegate();
 

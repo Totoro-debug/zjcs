@@ -13,6 +13,10 @@ namespace Zjcs.Official.EntityLifecycle
         public abstract ILogger Logger { get; }
         public static ILogger CreateLogger(string category) => Debug.unityLogger;
     }
+    public interface IEntityContainerLocalPosition
+    {
+        Vector3 ToLocalPos(Vector3 position);
+    }
     public abstract class EntityGridGroundData { }
     public interface IEntityComponentInfoSource { object ComponentInfo { get; } }
     public static class EntityLifecycleServices

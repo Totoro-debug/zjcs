@@ -1,0 +1,225 @@
+{
+  "manifest": "884_156692",
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+  },
+  "code_extraction": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "originals": [
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyTrack.cs",
+        "sha256": "06df61c577e5971d9e0dbee622e8f307abc65308c65e734d781f6cbdcd3bd171"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/MyTrack.cs",
+        "sha256": "1ef7121b471722de685e6dae15600744d93d29c0cf2e7688d7bbd71bcf054965"
+      },
+      "original_mono_script_file_id": 602813528,
+      "whole_class_normalized_sha256": "6a80772dd4f8c8465279d97747af0491a56362daa9c871d00597c61cc5da54d9",
+      "original_method_bodies": {
+        "public void Evaluate(float time, Vector3 startPos, Vector3 endPos, out Vector3 pos, out Quaternion rot, out Vector3 scale, float xRangeScale = 1f, float xExtraScale = 1f)": "d5bdd0580e7c67b542fd2413a11a7f14b9cff015233c5226c6ff2c420d272283",
+        "public virtual void Evaluate(float time, Vector3 direction, out Vector3 pos, out Quaternion rot, out Vector3 scale)": "e93bd79a756d90042cc92af45470f8092fada61710e89741a6894d7b458381cc",
+        "protected void CalcRotAndScale(Vector3? prePos, Vector3 pos, Vector3? nextPos, out Quaternion rot, out Vector3 scale)": "1307a148ee71b7a68b4f80c33608029e700fffaf1da9872121fe4c79794fb2d6"
+      },
+      "adaptation": "Namespaced and decompiler comments removed. The track player explicitly casts the existing container to the coordinate interface; all complete class bodies, nested calculators and serialized fields compared after reversing that cast."
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyCurveTrack.cs",
+        "sha256": "62d36c4cac6cfe36c213e95ed71c8c5e9c8e5a9f95c0dee3e7eb2b5590e5aa2b"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/MyCurveTrack.cs",
+        "sha256": "519463b9320704de4fce29c3b15b7c11af6b40ead320d36c94051516fac14f30"
+      },
+      "original_mono_script_file_id": 1801709843,
+      "whole_class_normalized_sha256": "ae88f313ef918d2390a2c77019a2db0071f390f79ae149b715ac08dfd7cb529d",
+      "original_method_bodies": {
+        "public override float GetDuration()": "e219c72c29fe9fca76c680e419fd49d04aa65f25986d918e2f3449a24b853a9e",
+        "public override void Evaluate(float time, Vector3 direction, out Vector3 pos, out Quaternion rot, out Vector3 scale)": "fc56b77f35e8540a3b7c68086f5b18512b9e7b015d2f6189680c434087bdd131",
+        "private Vector3 CalcPos(float time)": "f94709bbfae28cde7d0f11d0cfcf63dff3a0f1e29cafd338101332c8730b2fe1",
+        "public MyCurveTrack()": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+      },
+      "adaptation": "Namespaced and decompiler comments removed. The track player explicitly casts the existing container to the coordinate interface; all complete class bodies, nested calculators and serialized fields compared after reversing that cast."
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/AnimationTrack.cs",
+        "sha256": "bef94a1887a68da39352b2bdfaa3d9aea079498026cd839cd0fbdc2702ef1930"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/AnimationTrack.cs",
+        "sha256": "e58f175ae1cd9bc2260143a3964f8ab9fb7b7452a675f07e57d5ede76b80cb32"
+      },
+      "original_mono_script_file_id": 180732079,
+      "whole_class_normalized_sha256": "373fb22b56e5b238d5f56f347eb1d142812ff8b8a5660f8d5c1a545618b59541",
+      "original_method_bodies": {
+        "public override float GetDuration()": "f8404d505aaed42cd9f9443c322eb8b136526ddd19cb5cbc319cf6a7742b8792",
+        "public override void Evaluate(float time, Vector3 direction, out Vector3 pos, out Quaternion rot, out Vector3 scale)": "f22e8a55c0c4dc36d6adf92cb84d1c763256051fac1ec459ffa64fff5249897e"
+      },
+      "adaptation": "Namespaced and decompiler comments removed. The track player explicitly casts the existing container to the coordinate interface; all complete class bodies, nested calculators and serialized fields compared after reversing that cast."
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/ParabolicTrack.cs",
+        "sha256": "b6f11d695e0fcdb485a2b571d2afa10893d1fd29c457521a1620737974f61968"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/ParabolicTrack.cs",
+        "sha256": "8a7841c4d1877d2b7d19d50d91297719f0b419c1b8011a57b964c35c5a8a89ea"
+      },
+      "original_mono_script_file_id": 116049708,
+      "whole_class_normalized_sha256": "56f6392f3e1169147018d12ba725d8ca48527a0936f742085dd6e6ee4e9b0ba5",
+      "original_method_bodies": {
+        "public override float GetDuration()": "b0d9510722c4f25fca3ace761e84cee06aca1731a631d83bb3e7e01ae86ea172",
+        "public override void Evaluate(float time, Vector3 direction, out Vector3 pos, out Quaternion rot, out Vector3 scale)": "a5e227da8be2abb99a925031abe7c50115547200f7ac8594f26b042ca0014507",
+        "private void UpdateDirection(Vector3 direction)": "3847f850d99d6b72c9649cd52969aecd6976e33aa1e0c02ccc03e0aa2e14e4ba",
+        "private static Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, Quaternion rotation)": "c5538033b285fe278bb4c333d2fc1f68f7b86e02bdb158f8e87affe932b4d1ec",
+        "private void OnDestroy()": "4816d81cd6b6727d52e01d3fc91cfee8f53f029c4991b3f824ba268cec17d95c"
+      },
+      "adaptation": "Namespaced and decompiler comments removed. The track player explicitly casts the existing container to the coordinate interface; all complete class bodies, nested calculators and serialized fields compared after reversing that cast."
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyPlayableTrack.cs",
+        "sha256": "9652e978fe5ee9e2fa2ca326cb75f3abdefa8df351e400aae8bd4a383cea60d6"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/MyPlayableTrack.cs",
+        "sha256": "78c470f83dc6204baf45957f9c11fc77b0fdf13b24e010e89e134211e0ed3e1f"
+      },
+      "original_mono_script_file_id": -741389653,
+      "whole_class_normalized_sha256": "87d4cf1046175d5084b506db34c6d5aff254e376543fb9636eaaf7a87f56188e",
+      "original_method_bodies": {
+        "protected override void InitImpl()": "c3bc458f538051886297c57a394edb0297e59f7064ec5c6fbef87492c746000c",
+        "public void CalcInitialDurationSpd(out float duration, out float speed)": "d0a024edd9f778726f8b6e04c8eacccfd0346f313e8ad136a5aa7c5052c099fa",
+        "private void InitDataOnPlay()": "c846b5250d15e5fa971f04a448458a60d90e0ea53c9be90bd308ec1ca4d1e0b2",
+        "protected override void PlayImpl()": "0588d87ee98668fb9b86ca10bd38a4d7d7411ffbef79d2a4bd4ae4ebd0045e4b",
+        "private void InitFlip()": "78f67a3541f57cd11eb00cb81e44add02418d37fdd74202de744bf0527af0a6e",
+        "private void InitStartPos()": "1701c0e974686b76bf1b798eaf280a9eb06141bcbd06b4d0b77860574f27db37",
+        "private void UpdateEndPos()": "8130568f18bf227c377f01ebe4872b5277bdd120ab4755b1140847d706e71398",
+        "private void CalcPos(float t, out Vector3 pos, out Quaternion rot, out Vector3 scale)": "3b2ef3bc017451f65ffa25a9871de8ca4142e8276b35cc1969c29025372962fb",
+        "protected override bool ProcessFrameImpl(float deltaTime)": "38af17082996b3fe7e67943be2530e1e6cb753228e2834ea2d012783802469ce",
+        "protected override void StopImpl()": "f5258e610fe7ae754ad2bc48dc213bad2253127e523070fd93fcc1c2cbe4ae8a",
+        "public override void StopBeforeResetData()": "ee8449ca5de758f2dc015fa2e274104e7e45391f30e32023109ffcad983ca038",
+        "public override float GetDuration()": "4da19e9958a01977cef4efe7d46aade39f028eb578d60d28f43c943c20ee20d3",
+        "private void DoTrackTriggerReliable()": "9617bed72b35227e879a68b69758fe1beeb884860832d1c299c3ce675e050424",
+        "public void SetAttachOffset(Vector3 offset)": "3dba3a0ad95e60c022c0f60e598189b26991401ea76f7c48e30b4917f6bce19e"
+      },
+      "adaptation": "Namespaced and decompiler comments removed. The track player explicitly casts the existing container to the coordinate interface; all complete class bodies, nested calculators and serialized fields compared after reversing that cast."
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_track_runtime.py",
+    "sha256": "f8bf033336fbf45339a92d541aa3a991505976341a35ae9d5e26a950a9004fe2"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/MyTrack.cs",
+      "sha256": "1ef7121b471722de685e6dae15600744d93d29c0cf2e7688d7bbd71bcf054965"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/MyTrack.cs.meta",
+      "sha256": "7fea5085afc62dd7b64b31c2b32aadfcd6a4b1f4dcf0751a25d3c6fd9d3907ac"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/MyCurveTrack.cs",
+      "sha256": "519463b9320704de4fce29c3b15b7c11af6b40ead320d36c94051516fac14f30"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/MyCurveTrack.cs.meta",
+      "sha256": "c33c653ad871d4d738cfcc31962f1ddc0546a61d27d919025cce835aace8a004"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/AnimationTrack.cs",
+      "sha256": "e58f175ae1cd9bc2260143a3964f8ab9fb7b7452a675f07e57d5ede76b80cb32"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/AnimationTrack.cs.meta",
+      "sha256": "25a6f5ac7ba895535ae732a7ce31eb9c857990e2738ef80896197d305e449511"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/ParabolicTrack.cs",
+      "sha256": "8a7841c4d1877d2b7d19d50d91297719f0b419c1b8011a57b964c35c5a8a89ea"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/ParabolicTrack.cs.meta",
+      "sha256": "0615570eab3344d0ac39dcb9889bf69de21177e38c73195b3c39597298e3f921"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/MyPlayableTrack.cs",
+      "sha256": "78c470f83dc6204baf45957f9c11fc77b0fdf13b24e010e89e134211e0ed3e1f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/MyPlayableTrack.cs.meta",
+      "sha256": "5884b4cf11961d3299764ba9a52f5a7a6ba243f6e56cea8590d51a45707a4bb7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/Zjcs.Official.BattleTrackPlayables.asmdef",
+      "sha256": "c7ca38dee25532dc62f554d7fd9b8e88fa79013700644b1909ce916c1f3ad214"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables/Zjcs.Official.BattleTrackPlayables.asmdef.meta",
+      "sha256": "c9fbbd06cd014a70989155d83cbe1d2428c38e31d0814bcaee030473e4a8d4ce"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleTrackPlayables.meta",
+      "sha256": "2ef998e0d35066be8bb43acb8d0f504d827b7775ed7ff5b102876147a30c5377"
+    }
+  ],
+  "coordinate_method": {
+    "original": {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyContainer.cs",
+      "sha256": "744693c441dc12be8675e705ed1d8292f36911e6e46ef4fd21ad61c6929be836"
+    },
+    "migrated": {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/MyContainer.cs",
+      "sha256": "252f1563773409b0e3f9fe64720dd7705357390e53901845e34e0aaa5f42f8b5"
+    },
+    "method": "ToLocalPos",
+    "normalized_body_sha256": "3e4bb57358e980a5ace2a32fc20381f68f6d2b4e641519927c73da6e8aac9ece"
+  },
+  "verification_tools": [
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.Tracks.cs",
+      "sha256": "427b914d3e9dcee1655557cc0bf837ffed6bd988ff7f1a034a536a164548f165"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ScenePlayerAppearance.cs",
+      "sha256": "fb72e466e30effc705f1a5dbb2a6bc38672f43b789f07ae152bb8eb87f63e1fe"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.cs",
+      "sha256": "f13ddbe6cddd994b91cae73d4eb4e2b43b81f3ca338e15569fbaf55c23614491"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/Zjcs.Editor.Combat.AnimatorPlayback.asmdef",
+      "sha256": "a73fcb787e469283c0f6f4cdfaf81908b0d014dad342937dd025149f024e76e1"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/EntityLifecycleBindings.cs",
+      "sha256": "388dc4a7f57d0e6000ed9c51cabada1db9260b63c90dba758045e203f92c442e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/MyContainer.cs",
+      "sha256": "252f1563773409b0e3f9fe64720dd7705357390e53901845e34e0aaa5f42f8b5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/AttachPosCfg.cs",
+      "sha256": "bed13f24e3a87ef7c9ea767d1ab5f89b2453ae0cdcfa29986d15d046fbdbe0c8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/IPlayableOverrideAttachOffset.cs",
+      "sha256": "f3128f8eef145a3d56389a0b7560995242f1b4944f1583885e49b2526665f9f9"
+    }
+  ],
+  "limits": [
+    "Full native graph installation, runtime verification and production battle integration are separate requirements."
+  ]
+}
