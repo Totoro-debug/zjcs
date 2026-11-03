@@ -32,6 +32,8 @@
 
 局部数据入口由 [`prepare_mainline_map_definition.py`](../../scripts/prepare_mainline_map_definition.py) 按地图 ID 提取，输出 `Assets/Official/World/Map/16/map16.json` 及 `Source/` 中的导航、放置、完整 EC、63份递归模板／动作和原配置表。它对比原导航／MapInfoWrap／EC 的身份与实体闭包，核对43区探索上限，验证消费的109份已准备官方源码；不填造默认实体、地图条件或移动规则。来源见[地图定义清单](../../assets/reference/official-map/map16-definition-source-manifest.json)。
 
+[`prepare_mainline_entity_prefab_roots.py --map-id 16`](../../scripts/prepare_mainline_entity_prefab_roots.py) 按当前地图放置记录、角色／成员类别、原 EC `index.g.txt` 与当前 `TbEntityMapDisplayInfo` 解析真实 prefab 地址，不使用 `PenPath` 猜资源名。鲸背岛的1021个放置引用62种角色／实体类别，解析出164个 GameObject prefab，命中18个所选 `884_156692` APK／官方 CDN bundle，877份序列化文件的CAB依赖闭包完整；来源身份、对象哈希、源码及工具哈希见[实体 prefab 输入清单](../../assets/reference/official-map/map16-entity-prefab-roots-source-manifest.json)。这些仍是 Android 原始转换输入，Windows prefab、脚本、材质、动画和正式实体宿主尚未接入。
+
 [`prepare_mainline_map_interactions.py --map-id 16`](../../scripts/prepare_mainline_map_interactions.py) 校验本图既有定义输入，从同版原表补充状态效果与周期随机奖励，并复用公共英雄结果索引转换器。英雄模板列表按本图原周期奖励组件提取，`Resources/Map16/interactions` 包含6570–6575六种英雄雕像、621项实体扩展参数、本图43区及43个区域的刷新组／间隔；原组件索引、状态 ID、5／25／70奖励权重、费用、地区顺序和空 `DropItems` 保留。原生数据输入另存 `Source/interaction-tables.json`，来源见[交互配置清单](../../assets/reference/official-map/map16-interactions-source-manifest.json)。此为配置投影，尚未登记正式宿主，不代表雕像、资源交互或存档已接通。
 
 公共 `GroundBinding` 接收 `GroundSource` 的地图 ID、原 prefab 地址和 bundle，复用 Map15 的原生依赖恢复路径。Map15 已安装 GUID 保持原值，鲸背岛使用所属地图的 GUID 范围，避免两图复制的载荷互相覆盖。Map16 当前输出位于 `Assets/Official/World/Map/16/NativeCurrent`，资源入口为 `Resources/Map16/Native/current-ground`，含1434个资产／meta输出。脚本只显式绑定已迁移的官方类；原纹理、Windows shader、材质、网格及序列化字段按选定版本和各自哈希恢复。来源见[地面清单](../../assets/reference/official-map/map16-current-ground-source-manifest.json)。
