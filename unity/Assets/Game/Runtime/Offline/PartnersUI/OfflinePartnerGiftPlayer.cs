@@ -5,6 +5,7 @@ using Zjcs.Offline.Progression;
 using Zjcs.Official.Partners;
 using Zjcs.Official.PartnersUI;
 using Zjcs.Official.ProfessionUI;
+using Quality = Zjcs.Official.ProfessionUI.Quality;
 
 namespace Zjcs.Offline.PartnersUI
 {
