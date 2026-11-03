@@ -1,0 +1,106 @@
+{
+  "manifest": "884_156692",
+  "mapClassId": 16,
+  "aloneWorld": {
+    "AloneMapEntryId": 16,
+    "PreparingType": 1,
+    "PreparingDataParam": "{Rank:'Silver',DayOffset:14,MinDurationS:300}",
+    "TakGroupIdForPreparing": 0,
+    "PrepareEndConditionId": 116,
+    "PrepareEndStoryId": "DiscoverWhaleIsland",
+    "PrepareEndActiveMapClassIds": [
+      16
+    ],
+    "FinishStoryId": "WhaleIslandLeave",
+    "FinishRewardConditionId": 0,
+    "FinishRewardRuleIds": [
+      770,
+      771
+    ],
+    "UiPrefabPath": "UI/AloneWorldMap/AloneWorldMapEntryItemContentMap16",
+    "BgIconPath": "UI/ItemNotes/BigMapStageBg/map_13_stage_bg",
+    "DialogIconPrefab": "Map/Map_16/Map16_DialogIcon",
+    "ExtendDataType": 0,
+    "ExtendDataParam": ""
+  },
+  "prepareEndCondition": {
+    "ClassId": 116,
+    "Condition": {
+      "Jumpable": null,
+      "MapClassId": 16,
+      "_type": "MapUnlockCondition"
+    }
+  },
+  "stories": [
+    {
+      "StoryName": "LookForWhaleIsland",
+      "Order": 10000,
+      "IsShowSkipBtn": false,
+      "AllowToRunAsTeammate": false,
+      "AllowRunInFight": false,
+      "MaxCount": 1,
+      "AutoRunOnMeetCondition": false,
+      "ResPath": "Map13Story/WhaleIsland/LookForWhaleIsland"
+    },
+    {
+      "StoryName": "SubmitRopes",
+      "Order": 10000,
+      "IsShowSkipBtn": false,
+      "AllowToRunAsTeammate": false,
+      "AllowRunInFight": false,
+      "MaxCount": -1,
+      "AutoRunOnMeetCondition": false,
+      "ResPath": "Map13Story/WhaleIsland/SubmitRopes"
+    },
+    {
+      "StoryName": "DiscoverWhaleIsland",
+      "Order": 10000,
+      "IsShowSkipBtn": false,
+      "AllowToRunAsTeammate": false,
+      "AllowRunInFight": false,
+      "MaxCount": 1,
+      "AutoRunOnMeetCondition": false,
+      "ResPath": "Map13Story/WhaleIsland/DiscoverWhaleIsland"
+    },
+    {
+      "StoryName": "WhaleIslandArrive",
+      "Order": 10000,
+      "IsShowSkipBtn": false,
+      "AllowToRunAsTeammate": false,
+      "AllowRunInFight": false,
+      "MaxCount": -1,
+      "AutoRunOnMeetCondition": false,
+      "ResPath": "Map13Story/WhaleIsland/WhaleIslandArrive"
+    },
+    {
+      "StoryName": "WhaleIslandFinish",
+      "Order": 10000,
+      "IsShowSkipBtn": false,
+      "AllowToRunAsTeammate": false,
+      "AllowRunInFight": false,
+      "MaxCount": 1,
+      "AutoRunOnMeetCondition": true,
+      "ResPath": "Map13Story/WhaleIsland/WhaleIslandFinish"
+    },
+    {
+      "StoryName": "WhaleIslandFinishLoop",
+      "Order": 10000,
+      "IsShowSkipBtn": false,
+      "AllowToRunAsTeammate": false,
+      "AllowRunInFight": false,
+      "MaxCount": -1,
+      "AutoRunOnMeetCondition": false,
+      "ResPath": "Map13Story/WhaleIsland/WhaleIslandFinishLoop"
+    },
+    {
+      "StoryName": "WhaleIslandLeave",
+      "Order": 10000,
+      "IsShowSkipBtn": false,
+      "AllowToRunAsTeammate": false,
+      "AllowRunInFight": false,
+      "MaxCount": 1,
+      "AutoRunOnMeetCondition": false,
+      "ResPath": "Map13Story/WhaleIsland/WhaleIslandLeave"
+    }
+  ]
+}

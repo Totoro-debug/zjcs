@@ -399,6 +399,8 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 
 鲸背岛交互配置来源见 [map16-interactions-source-manifest.json](official-map/map16-interactions-source-manifest.json)。`prepare_mainline_map_interactions.py` 按地图ID复用所选884_156692的定义输入与公共英雄结果索引转换器，额外解码原状态效果／周期随机奖励表；记录APK优先／匹配缓存、原构造器源码、模板来源凭据、逐文件输出哈希与工具，不混入历史871配置。本批无新增美术或完整素材快照。
 
+鲸背岛独立地图准备条件、地图激活条件与七条剧情标识来自所选 `884_156692` APK 的 `TbMapWorldAloneInfo`、`TbConditionInfo` 和 `TbStoryInfo`。`prepare_map16_alone_configuration.py` 使用同版反编译 Luban 构造器解码，锁定原准备参数、条件116、奖励规则770／771及剧情路径／次数字段；输入对象、载荷与配置输出哈希见[独立地图配置清单](official-map/map16-alone-configuration-source-manifest.json)。该配置投影没有剧情图和 UI 资源转换，不构成其执行或 Windows 绑定凭据。
+
 
 伙伴主角血量读取／恢复采用所选884_156692的Common.Player、FormulaHandler、TimeManager与BattleFormulaHandler，原头像血条采用同版PlayerIconMeHpSliderNormal；输入、代码绑定与依赖哈希见[主角血量来源](partner-player-health-source-manifest.json)，由 `record_partner_player_health_sources.py` 记录。本批不新增美术载荷或素材快照。
 
@@ -478,6 +480,7 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 技能效果淡出触发序列使用所选 `884_156692` 的 `MyPlayableFadeEffectSequence`，调用既有原 `MyEffectFadeOut`；原数组顺序、起始时间、持续时间及重触发取消保持不变，UniTask 逐帧状态机适配为 Unity Coroutine。输入、输出与 meta 哈希见[触发序列来源清单](battle-animation/skill-trigger-fade-sequence-source-manifest.json)。
 
 技能相机震动使用所选 `884_156692` 的 `MyPlayableCameraShake`，保留原 Cinemachine Impulse Source 定位、默认偏移、广播调用和持续时间；程序集显式引用项目自带 Cinemachine。官方源码、输出、Unity meta、程序集与 Play Mode 验收哈希见[相机震动代码凭据](battle-animation/skill-camera-shake-runtime-source-manifest.json)。
+
 
 伙伴提示配置服务的接线复用所选 `884_156692` 的 NPC、档案、好感、礼物与天赋解析器及提示节点端口，原码、既有配置／规则依赖、本地接线和验证工具的输入输出哈希见[配置服务来源](partner-tip-services-source-manifest.json)。入口为 `scripts/record_partner_tip_services.py`；历史人物载荷保留原 `854_156383` 身份，当前伙伴配置保持所选版本，不新增美术或完整素材快照。
 

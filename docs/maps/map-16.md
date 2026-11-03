@@ -42,6 +42,8 @@
 
 [`prepare_mainline_map_interactions.py --map-id 16`](../../scripts/prepare_mainline_map_interactions.py) 校验本图既有定义输入，从同版原表补充状态效果与周期随机奖励，并复用公共英雄结果索引转换器。英雄模板列表按本图原周期奖励组件提取，`Resources/Map16/interactions` 包含6570–6575六种英雄雕像、621项实体扩展参数、本图43区及43个区域的刷新组／间隔；原组件索引、状态 ID、5／25／70奖励权重、费用、地区顺序和空 `DropItems` 保留。原生数据输入另存 `Source/interaction-tables.json`，来源见[交互配置清单](../../assets/reference/official-map/map16-interactions-source-manifest.json)。此为配置投影，尚未登记正式宿主，不代表雕像、资源交互或存档已接通。
 
+[`prepare_map16_alone_configuration.py`](../../scripts/prepare_map16_alone_configuration.py) 直接解码所选 `884_156692` 的 `TbMapWorldAloneInfo`、`TbConditionInfo` 与 `TbStoryInfo`，输出 `Resources/Map16/world-alone-configuration`。原准备条件为 Silver、14天及300秒，条件116为地图16解锁，保留770／771奖励规则、入口 prefab 地址及七条鲸背岛剧情的原路径／次数／自动运行字段；测试核对字段差异、故事缺项拒绝。该配置尚未绑定入口 UI、故事资源、存档事务或公共地图宿主，不代表准备／登岛／离岛剧情已可运行。来源见[独立地图配置清单](../../assets/reference/official-map/map16-alone-configuration-source-manifest.json)。
+
 公共 `GroundBinding` 接收 `GroundSource` 的地图 ID、原 prefab 地址和 bundle，复用 Map15 的原生依赖恢复路径。Map15 已安装 GUID 保持原值，鲸背岛使用所属地图的 GUID 范围，避免两图复制的载荷互相覆盖。Map16 当前输出位于 `Assets/Official/World/Map/16/NativeCurrent`，资源入口为 `Resources/Map16/Native/current-ground`，含1434个资产／meta输出。脚本只显式绑定已迁移的官方类；原纹理、Windows shader、材质、网格及序列化字段按选定版本和各自哈希恢复。来源见[地面清单](../../assets/reference/official-map/map16-current-ground-source-manifest.json)。
 
 [`prepare_mainline_map15_world_view.py --map-id 16`](../../scripts/prepare_mainline_map15_world_view.py) 读取原3001模型／偏移／排序和原 `WorldCamera` 投影／适配参数，输出 `Resources/Map16/BaseGround/player-view` 与 `Native/region-label-data`。标签按原地区 ID 索引探索上限，保持原表枚举顺序，核对61项实际语言键，包含原倒计时格式所需的14项语言键；公共标签样式、位阶映射和字体仍分别保留历史输入凭据，不声称整个版本等价。来源见[模型、镜头与标签清单](../../assets/reference/official-map/map16-world-view-source-manifest.json)。

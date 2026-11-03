@@ -1,0 +1,72 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "mapClassId": 16,
+  "operation": "Decode selected-version MapWorldAloneInfo, ConditionInfo and StoryInfo rows with original Luban constructors.",
+  "codeManifestSha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4",
+  "inputs": [
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban_map.bundle",
+        "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+        "path_id": "-2368084752692534464",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+        "raw_size": 197305,
+        "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7"
+      },
+      "payloadSha256": "b110093890b7ebe306c1455602426a72f79a23a89de43b75a3f822c408fdbac7",
+      "bytes": 1555,
+      "constructor": "TbMapWorldAloneInfo"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "c127151ca016b1013e487423db2b7090",
+        "path_id": "2135504609496173008",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+        "raw_size": 2142435,
+        "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+      },
+      "payloadSha256": "87610428d6195c06ff55291ae24423cc949df7ac25bfb8953cc3798a1aaa31e5",
+      "bytes": 68061,
+      "constructor": "TbConditionInfo"
+    },
+    {
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "c127151ca016b1013e487423db2b7090",
+        "path_id": "5337393257897255075",
+        "origin": "apk_zip",
+        "manifest": "884_156692",
+        "apk_manifest": "881_156673",
+        "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+        "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+        "raw_size": 2142435,
+        "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74"
+      },
+      "payloadSha256": "3db490217b4748fa01515ea9c3ef7a2e69aeb0380dbccf013cb42cb572c69c23",
+      "bytes": 58365,
+      "constructor": "TbStoryInfo"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Map16/world-alone-configuration.json",
+      "bytes": 2985,
+      "sha256": "596f4bfbbd419a9bafeb44fa1e999d840ea7ff86455bd70c85288d02a8935b01"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map16/world-alone-configuration.json.meta",
+      "bytes": 155,
+      "sha256": "ac962f456126aec1c21f6e82e92945531535a40dd74c9320ee2cb92233a5155f"
+    }
+  ]
+}
