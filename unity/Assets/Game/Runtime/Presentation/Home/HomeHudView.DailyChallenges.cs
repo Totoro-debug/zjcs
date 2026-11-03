@@ -37,9 +37,10 @@ namespace Zjcs.Presentation.Home
             Transform source = Find(travelNotesRoot == null ? null : travelNotesRoot.transform, "DailyActivityEntry");
             if (source == null) throw new InvalidOperationException("Official travel notes daily activity entry is missing.");
             dailyChallengeSelectionRoot = new GameObject("DailyChallengeEntries", typeof(RectTransform),
-                typeof(Image), typeof(Button));
+                typeof(Canvas), typeof(GraphicRaycaster), typeof(Image), typeof(Button));
             dailyChallengeSelectionRoot.transform.SetParent(canvas.transform, false);
             dailyChallengeSelectionRoot.transform.SetAsLastSibling();
+            PlaceModalCanvasOnTop(dailyChallengeSelectionRoot);
             RectTransform selectionRect = (RectTransform)dailyChallengeSelectionRoot.transform;
             selectionRect.anchorMin = Vector2.zero;
             selectionRect.anchorMax = Vector2.one;
@@ -105,6 +106,7 @@ namespace Zjcs.Presentation.Home
             dailyChallengeRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
             dailyChallengeRoot.name = funnyBoss ? "AnniversaryFunnyBossEntryPanel" : "ActivityDomainBossPanel";
             dailyChallengeRoot.transform.SetAsLastSibling();
+            PlaceModalCanvasOnTop(dailyChallengeRoot);
 
             OfficialDailyChallengeCatalog catalog = OfficialDailyChallengeCatalog.LoadDefault();
             int duration = catalog.DurationHours(activityId);
@@ -343,7 +345,10 @@ namespace Zjcs.Presentation.Home
         public void OpenDailyChallengeResult(int activityId, bool won, FightBattleCheckpoint checkpoint,
             System.Collections.Generic.IReadOnlyList<OfficialChallengeReward> rewards = null)
         {
-            if (dailyChallengeResultRoot != null) UnityEngine.Object.Destroy(dailyChallengeResultRoot);
+            if (dailyChallengeResultRoot != null) {
+                dailyChallengeResultRoot.SetActive(false);
+                UnityEngine.Object.Destroy(dailyChallengeResultRoot);
+            }
             string resource = activityId == OfflineDailyChallengeService.FunnyBossActivityId
                 ? "DailyChallenges/GameEndPanelActivityFunnyBoss"
                 : "DailyChallenges/GameEndPanelActivityDomainBoss";
@@ -352,11 +357,12 @@ namespace Zjcs.Presentation.Home
             dailyChallengeResultRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
             dailyChallengeResultRoot.name = "DailyChallengeResult";
             dailyChallengeResultRoot.transform.SetAsLastSibling();
+            PlaceModalCanvasOnTop(dailyChallengeResultRoot);
             SetPrefabActive(dailyChallengeResultRoot, "WinObj", won);
             SetPrefabActive(dailyChallengeResultRoot, "ShareBtn", false);
             SetPrefabActive(dailyChallengeResultRoot, "SaveRecordBtn", false);
             SetPrefabActive(dailyChallengeResultRoot, "ThumbUpReportSwitchBtn", false);
-            SetPrefabActive(dailyChallengeResultRoot, "BtnBattleData", false);
+            BindDailyChallengeBattleReport(dailyChallengeResultRoot, resource, checkpoint);
             SetNamedText(dailyChallengeResultRoot.transform, "NameTxt", activityId switch
             {
                 209 => "圣兽试炼",
@@ -466,7 +472,10 @@ namespace Zjcs.Presentation.Home
 
         private void CloseDailyChallengeResult()
         {
-            if (dailyChallengeResultRoot != null) UnityEngine.Object.Destroy(dailyChallengeResultRoot);
+            if (dailyChallengeResultRoot != null) {
+                dailyChallengeResultRoot.SetActive(false);
+                UnityEngine.Object.Destroy(dailyChallengeResultRoot);
+            }
             dailyChallengeResultRoot = null;
             OpenDailyChallengePage();
         }

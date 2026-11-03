@@ -65,14 +65,19 @@ namespace Zjcs.Presentation.Character
             Bound("mSettingButton").GetComponent<Button>().onClick.AddListener(() => { CloseAuxiliary(); settings(); OpenOriginalDamageTest(); });
             Bound("mLeaveGameBtn").GetComponent<Button>().onClick.AddListener(() => { CloseAuxiliary(); leave(); });
             auxiliaryReturn = leave;
-            Action restoreResult = () => ShowOriginalDamageTestResult(request, checkpoint, again, settings, leave);
             var common = FindOriginalComponent(root, "GameEndPanelBase") ?? binding;
-            resultNodes[Convert.ToString(common["mSkillItemReportBtn"])].GetComponent<Button>().onClick.AddListener(
-                () => OpenOriginalBattleReport(checkpoint, request.MaxRound, restoreResult));
-            var share = resultNodes[Convert.ToString(common["mGamePlaybackShareBtn"])].GetComponent<Button>();
-            // Offline choice: statistics live only for this completed battle.
-            // The online record/link share action is unavailable.
-            share.gameObject.SetActive(false);
+            Button Control(string field) => common.TryGetValue(field, out var raw) && raw is string path
+                && resultNodes.TryGetValue(path, out var node) ? node.GetComponent<Button>() : null;
+            Transform popupParent = panel != null ? panel.transform.parent : transform.parent;
+            resultReport = Zjcs.Presentation.Combat.OfficialBattleResultReport.Attach(auxiliaryDialog,
+                new Zjcs.Presentation.Combat.OfficialBattleResultReport.Binding {
+                    Report = Control("mSkillItemReportBtn"),
+                    PlaybackShare = Control("mGamePlaybackShareBtn"),
+                    SaveRecord = Control("mGameSaveRecordBtn"),
+                    ThumbUp = Control("mThumbUpReportSwitchBtn"),
+                    PopupParent = popupParent, Checkpoint = checkpoint,
+                    Presentation = lifetime => CreateBattleReportPresentation(lifetime, request.MaxRound, popupParent)
+                });
         }
     }
 }

@@ -54,9 +54,11 @@ NPC 战斗属性和技能由当前版 `npc_level_detail`、`npc_profession_detai
 
 `DailyDungeonBattleRunner` (`unity/Assets/Game/Runtime/Presentation/Home/DailyDungeonBattleRunner.cs`) 将圣兽 stage type 102 与双影 stage type 103 接到共用战斗执行器。挑战 checkpoint 从挑战战斗目录补充阵型到构建用的映射，不改写普通日常副本目录。难度选择按钮和 `ActivityDomainBossNumCell` 按官方 prefab 层级接入；胜利推进圣兽难度并发放配置的每日固定奖励。双影记录玩家及其召唤单位的实际 HP 伤害与护盾吸收，按首领最大 HP 折算最高万分比进度；阶段领奖一次结清所有已达成未领档位。`FightBattleHitExecutor` 与 `FightBattleStatistics` 独立记录护盾吸收，不改变实际扣血统计。战斗结束后使用官方 `GameEndPanelActivityDomainBoss`／`GameEndPanelActivityFunnyBoss` 显示胜负和实际伤害，返回按钮回到当前挑战页。
 
+圣兽／双影原结算页已准备[公共结算战报模块](battle-execution.md)适配器和原按钮字段，旧导出 prefab 的 UGUI、图形及业务字段尚未恢复，正式活动战报入口仍未接通；缺少原按钮时不创建替代控件。活动选择层已复用现有弹窗 Canvas 排序，修复被游记独立 Canvas 遮挡的问题，未更改卡片坐标。内置屏隔离 Play Mode 已模拟游记、活动卡片和选择层点击；随后因原挑战页的解锁状态与 UGUI 未恢复而停止，尚未验证活动实战、结果页、助战画面及存档恢复。
+
 圣兽难度奖励及双影阶段奖励按当前配置为单物品固定数量；双影宝箱按官方权重表抽取。宝箱领取先将随机种子、抽取结果和角色物品事务 ID 写入本地，再提交幂等物品事务，进程崩溃后可继续完成同一笔领取。
 
-Unity Editor／C# 编译：未取得有效结果。现有 Editor 由其他验收流程使用；尝试以 batchmode 启动时，Unity 检测到工程已由另一实例打开并在导入／编译前退出。静态工程检查运行超过可用等待时间后被中止；此前一次检查报告 `Assets/Official/Gathering/Prefabs` 与 `Assets/Game/Resources/Gathering` 缺少稳定 `.meta`，与本功能无关且未修改。挑战 Play Mode 鼠标／键盘、真实画面及存档恢复尚未验证。
+当前公共战斗接线已通过隔离 Unity 导入／编译、`ProjectTools.Validate` 和工程静态检查；本功能的实际运行范围及原生 UI 缺口见上文。
 
 ## 自定义实现
 

@@ -257,6 +257,9 @@ namespace Zjcs.Presentation.Home
             ScreenCapture.CaptureScreenshot(Path.Combine(outputDirectory, "skills-damage-result.png"));
             yield return null;
             Transform result = UnityEngine.Object.FindObjectsOfType<Transform>().First(value => value.name == "damage_test_result");
+            int resultInstanceId = result.GetInstanceID();
+            var resultReport = result.GetComponent<Zjcs.Presentation.Combat.OfficialBattleResultReport>();
+            Require(resultReport != null, "The damage-test result did not bind the shared report lifecycle.");
             var resultPose = FindObjectsOfType<Zjcs.Presentation.Character.OfficialSkillResultNativePose>().Single();
             Require(resultPose.AnimationName == (defeat ? "map/injuried_idle" : "map/win_01"),
                 "The completed damage test did not bind the animation for its real outcome.");
@@ -343,6 +346,10 @@ namespace Zjcs.Presentation.Home
             click(report.GetComponentsInChildren<Button>().First(value => value.name == "CloseBtn"));
             yield return new WaitForSecondsRealtime(.4f);
             result = UnityEngine.Object.FindObjectsOfType<Transform>().First(value => value.name == "damage_test_result");
+            Require(result.GetInstanceID() == resultInstanceId && !resultReport.IsOpen && resultPose != null,
+                "Closing the shared report rebuilt the damage-test result or its animated appearance.");
+            Require(!FindObjectsOfType<Transform>().Any(value => value.name == "BattleResultReportLifetime"),
+                "Closing the damage-test report leaked its appearance/detail lifetime.");
             Require(!result.GetComponentsInChildren<Button>().Any(value => value.name == "ShareBtn"),
                 "The offline result still exposes online report sharing.");
             Require(!Directory.Exists(Path.Combine(new ProfileSlotCatalog(root).GetSlotDirectory(slot), "skill-damage-reports")),

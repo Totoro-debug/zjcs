@@ -468,6 +468,10 @@ prepare_treasure_tasks.py补充固定871_156598的BattleEventType、原TreasureD
 
 全员战报验证：公共竞技场 runner 在隔离档案中实际完成6步、3回合失败战斗，随后以该真实结束检查点验证双方统计和角色切换；补齐四项标题中文及等待原下拉关闭动画后，原全员窗口连续打开／关闭两次，模拟双方角色选择、分页、横向拖动、外部指针收起及遮罩释放均通过。另用非全员关卡类型对照接入同一结束数据，个人窗口连续两次回归通过。最终 Unity 导入／编译、ProjectTools.Validate 与带画面 Play Mode 退出0，相关实际运行画面已查看。报告输入夹具只提供测试下拉名称，未提供正式头像／技能图标，原预览名称及空头像不能视为宿主身份已完成；正式技能宿主的外观验证继续沿上文记录。主页已有异常几何和入口白块未作为本项画面通过结论。本子项未构建／发布 Windows Player。
 
+结算战报入口（局部实现）：`OfficialBattleResultReport.Attach` 统一消费原 `GameEndPanelBase` 的战报按钮、完成检查点及宿主表现适配器，按原快速胜利／无效结果规则隐藏按钮，保留本地完成数据副本；在线分享／保存／点赞仍沿已确认单机方案隐藏。技能试打已接入；圣兽／双影适配器与原按钮引用已准备，但旧活动 prefab 的 UGUI 及业务字段仍为空壳，正式活动入口与结果页接线尚未通过，未恢复的按钮不创建替代控件；战报关闭后保留同一结算页和动画对象，结算页禁用或销毁时统一关闭战报、只读技能详情并释放头像、字体及模糊遮罩的临时资源。`OfficialBattleReportIdentityView` 消费原玩家／NPC 状态分支、名字、职业图标、头像 UV／颜色／射线字段；本地玩家仍使用既有官方头像拍摄，NPC 使用现有选定版原图标绑定，其实际助战战斗画面未在本项验证。原按钮与身份绑定由 `prepare_battle_result_report.py` 从所选884原包提取，核对两种结果和一个战报条目共187个节点、1,476项布局字段，不改变原布局或新增美术；凭据见[结算战报来源](../../assets/reference/battle-hud/result-report-source-manifest.json)。其余宿主正式入口及 Windows 发布仍待完成。
+
+公共结算生命周期验证：内置屏隔离工程的 Unity 导入／编译与 `ProjectTools.Validate` 通过；技能试打正式入口模拟点击后实际运行10回合，结果页、玩家／技能统计、原只读快照详情、关闭返回同一结果及其动画对象、返回设置与物品数量不变均通过，运行画面已查看。活动209的选择遮挡已修复，但原活动页缺失 UGUI 和解锁状态字段，验证未进入活动战斗，不能据此声称该宿主或 NPC 身份已完成。规则专项与全量静态检查通过（90,687个GUID），本子项未构建／发布 Windows Player。
+
 现有 `OfficialMap10BattlePlayModeAcceptance` 已增加公共接口回归：无效时间参数不改变会话、重复启动不替换现有会话，以及准备／暂停／当前步骤演出期间的大时间步禁止越过门控；原有末次命中等待和结束阶段检查继续保留。测试通过调用方同一 `Begin/Tick/Checkpoint` 接口检查结果，不读取执行器或播放计时器内部字段。该组新增回归已在主工程内置屏 Play Mode 模拟输入中通过，进程退出码为 0。测试存档创建在 `ZJCS_VALIDATION_DIR` 指定的隔离会话内。验收入口将运行时错误记录到待处理状态，由下一次编辑器更新结束测试，避免在原生资源加载的日志回调栈内退出引擎；对照失败场景已正常返回退出码 1，未再出现栈溢出。输入工具只通过实际 EventSystem 射线与指针事件分发模拟点击，已移除真实鼠标和抢前台分支；批处理下保留单个 Game View，截图尺寸与输入视口同步。
 
 已执行并通过：`test_battle_step_timing.ps1`、`test_battle_phase_machine.ps1`、`test_battle_checkpoint_persistence.ps1`、`test_battle_cooldown_status.ps1`、`test_battle_report.ps1`（使用 PowerShell 7）。它们验证已有规则时序、阶段、序列化恢复、CD 与统计，不代表新请求接口或场景接线已通过运行验收。综合 `test_unity_combat.ps1` 因缺少未受 Git 管理的 `assets/reference/battle-rules/damage-reference.json` 停止，未生成替代预期值。

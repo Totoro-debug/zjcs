@@ -198,6 +198,7 @@ namespace Zjcs.Presentation.Character
         {
             if (skillVideoDialog != null) { CloseSkillVideo(); return true; }
             if (detailDialog != null && detailDialog.name == "skill_plain_detail") { CloseSkillDetail(); return true; }
+            if (resultReport != null && resultReport.IsOpen) { resultReport.Close(); return true; }
             if (auxiliaryDialog != null) { var back = auxiliaryReturn; CloseAuxiliary(); back?.Invoke(); return true; }
             if (installMask != null)
             {
