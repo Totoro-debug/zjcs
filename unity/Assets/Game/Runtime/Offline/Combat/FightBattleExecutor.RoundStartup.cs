@@ -124,14 +124,16 @@ namespace Zjcs.Combat.Official
 
         private int RoundStartClockRound(FightBattleStatusState status)
         {
+            if (status.RoundStartDelayRoundType == 2) return turns.GlobalRound();
             int id = FightStatusLifecycle.ResolveTargetUnitId(status, status.RoundStartListenTarget, units);
             return unitById.TryGetValue(id, out var listener) ? listener.SkillState.Round : -1;
         }
 
         private void InitializeRoundStartDelay(FightBattleStatusState status)
         {
-            if (status != null && status.HasRoundStartTrigger && status.RoundStartDelayRound > 0
-                && status.RoundStartDelayRoundType == 1 && status.RoundStartDelayStartRound < 0)
+            if (status == null || !status.HasRoundStartTrigger || status.RoundStartDelayRound <= 0
+                || status.RoundStartDelayStartRound >= 0) return;
+            if (status.RoundStartDelayRoundType == 1 || status.RoundStartDelayRoundType == 2)
                 status.RoundStartDelayStartRound = RoundStartClockRound(status);
         }
 

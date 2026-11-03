@@ -97,6 +97,23 @@ foreach($round in 0..2){
     [Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectRoundStartInvocations($owner,$owner,[Zjcs.Combat.Official.FightBattleUnitState[]]@($owner),$rng,$catalog,$source,($round -eq 0))|Out-Null
     Assert-Delay ($source.RoundStartTriggeredCount -eq 0 -and $source.RoundStartMeetProgress -eq 0 -and $rng.Seed -eq $seed) 'Waiting consumed RNG, accumulated conditions or honored TryAtStart despite its delay'
 }
+# DelayRoundType.GlobalRound uses the shared master-unit clock rather than the listener clock.
+$owner=[Zjcs.Combat.Official.FightBattleUnitState]@{Id=1;Side=1;Hp=1000;MaxHp=1000;CharacterType=1}
+$owner.Turn.Id=1;$owner.Turn.Hp=1000;$owner.Turn.RoundOffset=0;$owner.Turn.ActionRound=0
+$template=[Zjcs.Combat.Official.FightBattleStatusState]@{InstanceId=1;OwnerId=1;CreatorId=1;ClassId=990001;
+    HasRoundStartTrigger=$true;RoundStartRulesSupported=$true;RoundStartDelayRound=1;RoundStartDelayRoundType=2;
+    RoundStartDelayStartRound=1;RoundStartListenTarget=2;RoundStartRate=1;RoundStartMeetCount=2}
+$owner.Statuses.Add($template);$rng=[Zjcs.Combat.Official.FightRandomStream]::new(23)
+foreach($actionRound in 0,1){
+    $owner.Turn.ActionRound=$actionRound;$seed=$rng.Seed
+    [Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectRoundStartInvocations($owner,$owner,
+        [Zjcs.Combat.Official.FightBattleUnitState[]]@($owner),$rng,$null)|Out-Null
+    Assert-Delay ($rng.Seed -eq $seed -and $template.RoundStartMeetProgress -eq 0) 'Global delay consumed probability or progress before its configured global rounds elapsed'
+}
+$owner.Turn.ActionRound=2;$seed=$rng.Seed
+[Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectRoundStartInvocations($owner,$owner,
+    [Zjcs.Combat.Official.FightBattleUnitState[]]@($owner),$rng,$null)|Out-Null
+Assert-Delay ($template.RoundStartMeetProgress -eq 1) 'Global delay did not resume checks after its configured round interval'
 # Original 25285 checks any alive/present friend (self, NPC or summon), before probability/progress.
 foreach($kind in 'self','player','npc','summon','enemy','dead','departed','excluded24207','excluded24301'){
     $owner=[Zjcs.Combat.Official.FightBattleUnitState]@{Id=1;Side=1;Hp=1000;MaxHp=1000;CharacterType=1}

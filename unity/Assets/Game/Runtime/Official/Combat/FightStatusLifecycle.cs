@@ -592,11 +592,12 @@ namespace Zjcs.Combat.Official
         internal static void InitializeRoundStartDelay(FightBattleUnitState owner, FightBattleStatusState status)
         {
             if (status == null || !status.HasRoundStartTrigger || status.RoundStartDelayRound <= 0
-                || status.RoundStartDelayRoundType != 1 || status.RoundStartDelayStartRound >= 0) return;
-            if (owner.RoundStartClockResolver != null)
+                || status.RoundStartDelayStartRound >= 0) return;
+            if ((status.RoundStartDelayRoundType == 1 || status.RoundStartDelayRoundType == 2)
+                && owner.RoundStartClockResolver != null)
                 status.RoundStartDelayStartRound = owner.RoundStartClockResolver(status);
-            else if (status.RoundStartListenTarget == TargetApplicator
-                || status.RoundStartListenTarget == TargetCreator && status.CreatorId == owner.Id)
+            else if (status.RoundStartDelayRoundType == 1 && (status.RoundStartListenTarget == TargetApplicator
+                || status.RoundStartListenTarget == TargetCreator && status.CreatorId == owner.Id))
                 status.RoundStartDelayStartRound = owner.SkillState.Round;
         }
 

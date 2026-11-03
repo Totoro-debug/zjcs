@@ -154,8 +154,13 @@ namespace Zjcs.Combat.Official
 
         public int GlobalRound()
         {
+            return GlobalRound(unitOrder);
+        }
+
+        public static int GlobalRound(IEnumerable<FightTurnUnit> units)
+        {
             int round = int.MaxValue;
-            foreach (FightTurnUnit unit in unitOrder)
+            foreach (FightTurnUnit unit in units)
                 if (unit.Hp > 0 && !unit.Ended && unit.RoundType != 1 && unit.MasterId == 0)
                     round = Math.Min(round, unit.RoundOffset + Math.Max(0, unit.ActionRound));
             return round == int.MaxValue ? 1 : round + 1;

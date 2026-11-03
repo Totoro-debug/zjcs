@@ -2567,6 +2567,8 @@ namespace Zjcs.Combat.Official
             return Int(component, "ListenCharacterType") == 0
                 && (Int(component, "DelayRound") == 0 && Int(component, "DelayRoundType") == 0
                     || Int(component, "DelayRound") > 0 && Int(component, "DelayRoundType") == 1
+                        && Int(component, "ListenTargetType") >= 1 && Int(component, "ListenTargetType") <= 4
+                    || Int(component, "DelayRound") > 0 && Int(component, "DelayRoundType") == 2
                         && Int(component, "ListenTargetType") >= 1 && Int(component, "ListenTargetType") <= 4)
                 && Int(component, "MeetCount", 1) >= 1
                 && (Int(component, "RoundStartPhase") == 0 || Int(component, "RoundStartPhase") == 5)

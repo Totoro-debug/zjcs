@@ -43,9 +43,7 @@ namespace Zjcs.Combat.Official
                         && status.RoundStartTriggeredCount >= FightStatusLifecycle.RoundStartMaximumCount(status))
                     || FightStatusLifecycle.ResolveTargetUnitId(status,
                         status.RoundStartListenTarget, units) != listener.Id
-                    || status.RoundStartDelayRound > 0 && (atStatusStart
-                        || status.RoundStartDelayRoundType != 1 || status.RoundStartDelayStartRound < 0
-                        || (long)listener.SkillState.Round - status.RoundStartDelayStartRound <= status.RoundStartDelayRound)
+                    || status.RoundStartDelayRound > 0 && !RoundStartDelayElapsed(status, listener, units, atStatusStart)
                     || !RoundStartFriendConditionMatches(source, status, units)
                     || !Roll(status.RoundStartRate, random)) continue;
 
@@ -102,6 +100,30 @@ namespace Zjcs.Combat.Official
                 }
             }
             return result;
+        }
+
+        private static bool RoundStartDelayElapsed(FightBattleStatusState status,
+            FightBattleUnitState listener, IReadOnlyList<FightBattleUnitState> units, bool atStatusStart)
+        {
+            if (atStatusStart || status.RoundStartDelayStartRound < 0) return false;
+            if (status.RoundStartDelayRoundType == 1)
+                return (long)listener.SkillState.Round - status.RoundStartDelayStartRound
+                    > status.RoundStartDelayRound;
+            if (status.RoundStartDelayRoundType == 2)
+            {
+                int round = GlobalRound(units);
+                return (long)round - status.RoundStartDelayStartRound > status.RoundStartDelayRound;
+            }
+            return false;
+        }
+
+        private static int GlobalRound(IReadOnlyList<FightBattleUnitState> units)
+        {
+            var turnUnits = new List<FightTurnUnit>();
+            if (units != null)
+                for (int i = 0; i < units.Count; i++)
+                    if (units[i]?.Turn != null) turnUnits.Add(units[i].Turn);
+            return FightTurnQueue.GlobalRound(turnUnits);
         }
 
         private static bool RoundStartFriendConditionMatches(FightBattleUnitState owner,
