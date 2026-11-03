@@ -13,6 +13,7 @@ namespace Zjcs.Presentation.Combat
         public int Priority;
         public int Order;
         public OfficialBattleSkillPlayableCue SkillPlayable;
+        public FightBattleSkillCastEvent SkillCast;
         public FightBattleMovementEvent Movement;
         public float StopAfter = -1f;
     }
@@ -85,7 +86,8 @@ namespace Zjcs.Presentation.Combat
                             Delay = NormalizeDelay(cast.Delay) + NormalizeDelay(playable.time),
                             Priority = 1,
                             Order = order++,
-                            SkillPlayable = playable
+                            SkillPlayable = playable,
+                            SkillCast = cast
                         });
                     }
                 }

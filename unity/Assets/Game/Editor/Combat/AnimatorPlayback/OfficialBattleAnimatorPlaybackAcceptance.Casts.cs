@@ -6,6 +6,8 @@ using System.Security.Cryptography;
 using System.Threading;
 using UnityEditor;
 using UnityEngine;
+using Zjcs.Combat.Official;
+using Zjcs.Presentation.Combat;
 using Zjcs.Offline.BattleNativePlayables;
 using Zjcs.Offline.ProfessionUI;
 using Zjcs.Official.BattleTrackPlayables;
@@ -23,7 +25,38 @@ namespace Zjcs.Editor.Combat
     {
         public static void RunCasts()
         {
+            VerifySkillCastCueBindings();
             RunScenePlayerAnimator(); SessionState.SetBool(Key + ".casts", true);
+        }
+
+        private static void VerifySkillCastCueBindings()
+        {
+            var cast = new FightBattleSkillCastEvent
+            {
+                ActorId = 12,
+                Delay = .25f,
+                Slot = 3,
+                SkillEntityId = 11170,
+                SkillItemId = 10032,
+                IsReplay = true,
+                ReplayType = 2,
+                ReplayStatusInstanceId = 74,
+                TargetIds = new List<int> { 31, 32, 33 }
+            };
+            var step = new FightBattleStepEvent();
+            step.SkillCasts.Add(cast);
+            var catalog = new OfficialBattleSkillPlayableCatalogData();
+            var record = new OfficialBattleSkillPlayableRecord { skill_entity_id = 11170 };
+            record.playables.Add(new OfficialBattleSkillPlayableCue { kind = 0, time = .14f });
+            record.playables.Add(new OfficialBattleSkillPlayableCue { kind = 1, time = .3f, animation = "100/skill_34" });
+            catalog.skills.Add(record);
+
+            List<OfficialBattleAnimationCue> cues = OfficialBattleAnimationTimeline.Build(step, catalog);
+            Require(cues.Count == 2 && cues.TrueForAll(value => ReferenceEquals(value.SkillCast, cast))
+                && cues[0].UnitId == cast.ActorId && Math.Abs(cues[0].Delay - .39f) < .0001f
+                && cast.TargetIds.Count == 3 && cast.TargetIds[2] == 33
+                && cast.IsReplay && cast.ReplayType == 2 && cast.ReplayStatusInstanceId == 74,
+                "Official animation cues lost their source cast, replay identity, timing, or target list.");
         }
 
         // The dry backend verifies exact source samples and dispatch, not Wwise DSP.
