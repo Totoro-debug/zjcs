@@ -13,6 +13,84 @@ namespace Zjcs.Offline.PartnersUI
     // Owns the verified partner graph runtime for the lifetime of the home UI.
     public sealed class OfflinePartnerTipDotRuntime : IDisposable
     {
+        private sealed class EmptyPetManager : PartnerPanelPetManager
+        {
+            public override PartnerPanelPetRecord this[long id] => null;
+            public override bool TryGetValue(long id, out PartnerPanelPetRecord pet) { pet = null; return false; }
+            public override IEnumerable<PartnerPanelPetRecord> GetAllPet() => Array.Empty<PartnerPanelPetRecord>();
+        }
+
+        private sealed class PanelPlayer : IPartnerPanelTipDotPlayer
+        {
+            private readonly OfflinePartnerTipDotPlayer player;
+            private readonly EmptyPetManager pets = new EmptyPetManager();
+            private IPartnerDialogueUiServices dialogues;
+            public PanelPlayer(OfflinePartnerTipDotPlayer player) { this.player = player; }
+            public bool HasFurniture(int id) => false;
+            public bool HasItems(object items) => false;
+            public bool HasAnyNpcDialogueRedDot() => dialogues != null && dialogues.Dialogues.Values
+                .Any(value => PartnerDialogueListRules.HasRedDot(value, dialogues));
+            public PartnerPanelPetManager PetManager => pets;
+            public bool PetCanEvolution(long id) => false;
+            public bool PetCanUpgradePotentialLevel(long id) => false;
+            public long GetItemAmount(int id) => player.GetItemAmount(id);
+            public event Action<int> OnRepairFurniture;
+            public event Action<object> OnNpcDialogueAdd, OnNpcDialogueUpdate, OnNpcDialogueRemove;
+            public event Action<PartnerPanelPetRecord> OnPetDataUpdate, OnGetPet;
+            public event Action<PartnerTipDotItem, long, object> OnItemCountUpdate;
+            public void BindDialogues(IPartnerDialogueUiServices value)
+            {
+                if (ReferenceEquals(dialogues, value)) return;
+                if (dialogues != null)
+                {
+                    dialogues.DialogueAdded -= OnDialogueAdded;
+                    dialogues.DialogueUpdated -= OnDialogueUpdated;
+                    dialogues.DialogueRemoved -= OnDialogueRemoved;
+                }
+                dialogues = value;
+                if (dialogues != null)
+                {
+                    dialogues.DialogueAdded += OnDialogueAdded;
+                    dialogues.DialogueUpdated += OnDialogueUpdated;
+                    dialogues.DialogueRemoved += OnDialogueRemoved;
+                }
+            }
+            public void Dispose() => BindDialogues(null);
+            private void OnDialogueAdded(PartnerDialogueData value) => OnNpcDialogueAdd?.Invoke(value);
+            private void OnDialogueUpdated(PartnerDialogueData value) => OnNpcDialogueUpdate?.Invoke(value);
+            private void OnDialogueRemoved(PartnerDialogueData value) => OnNpcDialogueRemove?.Invoke(value);
+        }
+
+        private sealed class PanelServices : IPartnerPanelTipDotServices
+        {
+            private static readonly IReadOnlyList<(int, long)> NoFoods = Array.Empty<(int, long)>();
+            private readonly OfflinePartnerTipDotServices partners;
+            private readonly Dictionary<int, NpcRoleType> npcRoles;
+            public PanelServices(OfflinePartnerTipDotServices partners, PanelPlayer player, OfficialPartnerCatalog catalog)
+            {
+                this.partners = partners; Player = player;
+                npcRoles = catalog.Rows("npc").ToDictionary(row => Convert.ToInt32(row["Id"]),
+                    row => (NpcRoleType)Convert.ToInt32(row["NpcRoleType"]));
+            }
+            public IPartnerPanelTipDotPlayer Player { get; }
+            public PartnerPanelFurnitureInfo GetFurniture(int id) => new PartnerPanelFurnitureInfo {
+                UnlockCondition = new PartnerPanelCondition(_ => false), RepairCost = Array.Empty<int>() };
+            public IEnumerable<PartnerPanelNpcInfo> MapExploreNpcs() => partners.MapExploreNpcs()
+                .Select(npc => new PartnerPanelNpcInfo { Id = npc.Id, NpcRoleType = npcRoles[npc.Id] });
+            public PartnerPanelPetInfo GetPet(int id) => null;
+            public Dictionary<int, PartnerPanelPetAbilityInfo> GetPetAbilities(int id) => new Dictionary<int, PartnerPanelPetAbilityInfo>();
+            public object PetAbilityPropInfoParser => null;
+            public PartnerPanelPetEvolutionInfo GetPetEvolution(int id, PetEvolutionPhase phase)
+                => new PartnerPanelPetEvolutionInfo { PromotableSkills = new List<int>() };
+            public IReadOnlyList<(int, long)> SortedFoods => NoFoods;
+            public bool TryCalcLevelUpExpRequire(PartnerPanelPetRecord pet, int levels, out long required)
+            { required = 0; return false; }
+            public PartnerPanelCondition GetPetPotentialCondition() => new PartnerPanelCondition(_ => false);
+            public void RegisterCondition(PartnerPanelCondition condition, Action changed) { }
+            public void DeregisterCondition(PartnerPanelCondition condition, Action changed) { }
+            public string ItemName(int id) => id.ToString();
+        }
+
         private sealed class Subscription : IDisposable
         {
             private Action dispose;
@@ -101,6 +179,8 @@ namespace Zjcs.Offline.PartnersUI
 
         private readonly OfflinePartnerTipDotPlayer player;
         private readonly OfflinePartnerTipDotServices services;
+        private readonly PanelPlayer panelPlayer;
+        private readonly PanelServices panelServices;
         private readonly AchievementPlayer achievementPlayer;
         private readonly TipDotSystem system;
         private readonly TipDotSystemController controller;
@@ -124,12 +204,18 @@ namespace Zjcs.Offline.PartnersUI
             services = new OfflinePartnerTipDotServices(session, catalog, gifts, player, progression,
                 (id, starGod) => FriendshipKey(achievementRules, id, starGod),
                 (error, type) => UnityEngine.Debug.LogException(new InvalidOperationException("Partner tip condition failed: " + type, error)));
+            panelPlayer = new PanelPlayer(player);
+            panelServices = new PanelServices(services, panelPlayer, catalog);
 
             var assets = OfficialPartnerTipDotAssetCatalog.LoadDefault();
             var graphHandler = new TipDotGraphHandler(assets.LoadGraph);
             var bans = new TipDotBanManager(Array.Empty<ITipDotBanStrategy>());
+            TipDotNodeManager graphManager = null;
             var factory = new TipDotNodeFactory(graphHandler.GetNodeGraph, node => {
+                node.NodeManager = graphManager;
+                node.TipDotBanManager = bans;
                 if (node is IPartnerTipDotNode partnerNode) partnerNode.Services = services;
+                if (node is IPartnerPanelTipDotNode panelNode) panelNode.Services = panelServices;
                 if (node is TipDotConditionNodeBase conditionNode)
                 { conditionNode.Player = achievementPlayer; conditionNode.Rules = rulePort; }
             });
@@ -137,7 +223,8 @@ namespace Zjcs.Offline.PartnersUI
                 assets.GetAllGraphs, assets.GetGraphType,
                 (add, remove) => { add?.Invoke(this); return new Subscription(remove); },
                 _ => new Subscription(null));
-            manager = new TipDotNodeManager(new TipDotNodeDataRepository(), factory, graphHandler, bindings);
+            graphManager = new TipDotNodeManager(new TipDotNodeDataRepository(), factory, graphHandler, bindings);
+            manager = graphManager;
             system = new TipDotSystem(manager, bans, bindings);
             controller = new TipDotSystemController(manager);
             system.Initialize();
@@ -161,6 +248,12 @@ namespace Zjcs.Offline.PartnersUI
             linker.SetNodeInstanceInfo(new NpcNodeInstanceInfo(npcId));
         }
 
+        public void BindDialogues(IPartnerDialogueUiServices dialogues)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfflinePartnerTipDotRuntime));
+            panelPlayer.BindDialogues(dialogues);
+        }
+
         public void BindNativeTree(GameObject root)
         {
             if (root == null || disposed) return;
@@ -178,6 +271,7 @@ namespace Zjcs.Offline.PartnersUI
             system.Dispose();
             manager.Dispose();
             services.Dispose();
+            panelPlayer.Dispose();
             achievementPlayer.Dispose();
         }
 
@@ -187,7 +281,8 @@ namespace Zjcs.Offline.PartnersUI
                 ? new AchievementRules.AchievementDataKeyStarGodNpcFriendshipLevel(npcId)
                 : new AchievementRules.AchievementDataKeyNpcFriendshipLevel(npcId);
             int group = rules.GetAchievementKeyToGroup(key);
-            if (group <= 0) throw new InvalidOperationException("Original NPC friendship achievement group is missing: " + npcId);
+            // Original same-type achievement nodes expand to every configured group;
+            // NPCs without a dedicated group still need the original type discriminator.
             return new ProfessionTipDotAchievementKey { AchievementType = (int)key.AchievementType, GroupId = group };
         }
 

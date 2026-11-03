@@ -610,7 +610,7 @@ NPC 资料投影同时保留实际原 `NpcTargetData` 对象的 `ServerId`，头
 
 主页拥有者在角色页面生命周期内创建已迁移的 `TipDotNodeManager`、`TipDotSystem` 与 `TipDotSystemController`，按 Resources 目录绑定原伙伴图。官方 `NpcPanelNpcItem` 交给本地伙伴 ID 后，Linker 使用原 `NpcNodeInstanceInfo` 和 prefab 节点选择器注册图实例；状态由原聚合节点和原 `TipDotNodeLinker` 更新。普通／星神好感成就键映射到各自原配置组，节点读取本地成就、档案及天赋条件服务。关闭 Home 时先释放原节点，再解除条件和玩家事件订阅。
 
-打开名册时先重读存档并刷新原好感成就可领索引，再生成原生名册项；名册期间本地相遇、赠礼库存或好感提交事件会同步刷新图条件，不模拟服务器推送。档案奖励提交后的提示刷新依赖正式档案页宿主接线。当前 Home 适配器仅提供伙伴图所需的成就读取和通用节点端口默认值，不承接其他职业提示规则。入口为 `OfflinePartnerTipDotRuntime`、`HomeFeatureRuntime` 与 `HomeHudView.Partners`。Unity Play Mode 已在真实官方名册卡片上验证 Linker 绑定以及可领时 `TipLevel`／原状态切换器为 `Important`，并检查了整页运行截图；截图未清楚显示红色图标，像素级可见效果仍待定位和复验。达成／领取后的提示刷新、重复开关及 Home 销毁释放也未完成 Play Mode 验证；本节不能作为完整提示功能或 Windows Player 已完成的依据。
+打开名册时先重读存档并刷新原好感成就可领索引，再生成原生名册项；名册期间本地相遇、赠礼库存或好感提交事件会同步刷新图条件，不模拟服务器推送。档案奖励提交后的提示刷新依赖正式档案页宿主接线。伙伴页面图中的原面板节点现已注入本地端口：通话红点复用原 `PartnerDialogueListRules.HasRedDot` 和本地解锁条件，NPC 角色类别读取所选原配置；尚未迁移的家具／宠物状态显式为空，不报告可领取状态。该端口不承接其他职业提示规则。入口为 `OfflinePartnerTipDotRuntime`、`PartnerPanelView`、`OfflinePartnerConversationUiSession`、`HomeFeatureRuntime` 与 `HomeHudView.Partners`。隔离 Unity Play Mode 已检查实际官方原生卡片截图，红点显示在绯乐头像右上角且使用原 `ImgRedDot`；并以模拟指针完整跑过伙伴、通话、星神页切换、关闭、重开和功能限制流程，错误计数为零。正式 Home 对话宿主接入后的红点更新、档案奖励后提示刷新及 Home 销毁释放仍待验证；本节不能作为完整提示功能或 Windows Player 已完成的依据。
 
 ### 伙伴馈赠成就与本地领取（局部）
 

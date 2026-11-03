@@ -805,7 +805,7 @@ namespace Zjcs.Offline.Progression
                 return Result(ProgressionResultStatus.InvalidState, message: exception.Message);
             }
             if (!string.IsNullOrWhiteSpace(eventId)) next.Player.AppliedCharacterEventIds.Add(eventId);
-            if (!Validate(next))
+            if (!Validate(next, out _))
                 return Result(ProgressionResultStatus.InvalidState, message: "Character data failed profile validation.");
             return Commit(next, Result(ProgressionResultStatus.Applied));
         }
@@ -830,7 +830,7 @@ namespace Zjcs.Offline.Progression
             }
             if (!changed) return Result(ProgressionResultStatus.Unchanged);
             if (!string.IsNullOrWhiteSpace(eventId)) next.Player.AppliedCharacterEventIds.Add(eventId);
-            if (!Validate(next))
+            if (!Validate(next, out _))
                 return Result(ProgressionResultStatus.InvalidState, message: "Character data failed profile validation.");
             return Commit(next, Result(ProgressionResultStatus.Applied));
         }
@@ -1066,7 +1066,7 @@ namespace Zjcs.Offline.Progression
                 return Result(ProgressionResultStatus.Unchanged);
             OfflineMainlineSave next = Clone(Save);
             next.Player.NpcFollowerClassIds = desired.ToList();
-            if (!Validate(next))
+            if (!Validate(next, out _))
                 return Result(ProgressionResultStatus.InvalidState,
                     message: "NPC follower update produced an invalid player save.");
             return Commit(next, Result(ProgressionResultStatus.Applied));
@@ -1120,7 +1120,7 @@ namespace Zjcs.Offline.Progression
                     openedChestId.Value, openedChestCount, eventId))
                     throw new InvalidOperationException("Chest count could not be recorded.");
                 next.Player.AppliedInventoryEventIds.Add(eventId);
-                if (!Validate(next))
+                if (!Validate(next, out _))
                     return Result(ProgressionResultStatus.InvalidState, message: "Inventory transaction produced an invalid player save.");
             }
             catch (Exception exception)
@@ -1215,7 +1215,7 @@ namespace Zjcs.Offline.Progression
 
         private static bool IsValidSaveJson(string json)
         {
-            try { return Validate(ParseSave(json)); }
+            try { return Validate(ParseSave(json), out _); }
             catch { return false; }
         }
 

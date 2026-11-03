@@ -25,7 +25,7 @@ using Object = UnityEngine.Object;
 [InitializeOnLoad]
 public static class PartnerPanelHostValidation
 {
-    const string Key = "PartnerPanelHostValidation.Active";
+    const string Key = "PartnerPanelHostValidation.TipRuntime.Active";
     static PartnerPanelHostValidation()
     {
         EditorApplication.playModeStateChanged += state => {
@@ -164,7 +164,8 @@ public sealed class PartnerPanelHostRunner : MonoBehaviour, IOfflinePartnerPrese
             Roster = roster, StarGod = services, Dialogues = new NewProfileDialogueFixture(), Windows = new Windows(this),
             Images = new OfflineProfessionImageResourceLoader(mergedImages), Font = font,
             Localize = key => words.TryGetValue(key, out var word) ? word : localizeRoster(key),
-            IsFunctionLimit = limited.Contains, BindNativeTree = BindNativeTree, PostSound = PostSound
+            IsFunctionLimit = limited.Contains, BindNativeTree = BindNativeTree,
+            BindPartnerTipDotDialogues = tipDots.BindDialogues, PostSound = PostSound
         };
         view.Open(OfficialPartnerPanelAssetCatalog.Load(), context);
         yield return null; yield return new WaitForSeconds(0.7f);
@@ -177,10 +178,20 @@ public sealed class PartnerPanelHostRunner : MonoBehaviour, IOfflinePartnerPrese
             .Single(item => Get<NpcRosterItem>(item, "mNpcDataWrap")?.NpcClassId == 8402);
         var partnerLinker = Get<TipDotNodeLinker>(originalPartner, "mTipDotNodeLinker");
         var tipLevelState = Get<WorldStateSwitcher<ETipDotLevelType>>(partnerLinker, "mTipLevelState");
+        var stateConfigs = (IList<IWorldStateConfig>)typeof(WorldStateSwitcher<ETipDotLevelType>)
+            .GetField("mStateConfigs", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(tipLevelState);
+        var levelGameObjects = stateConfigs.OfType<WorldStateGameObjectConfig>().Single();
+        var levelData = Get<WorldStateGameObjectData>(levelGameObjects, "mStateGameObjectData");
+        var importantObjects = levelData.GoConfig.Where(entry => (int)entry.State == (int)ETipDotLevelType.Important)
+            .SelectMany(entry => entry.GameObjects).ToArray();
+        Debug.Log("PARTNER TIP INDICATOR " + string.Join(";", importantObjects.SelectMany(root => root == null
+            ? Array.Empty<Graphic>() : root.GetComponentsInChildren<Graphic>(true))
+            .Select(graphic => graphic.name + ":" + graphic.enabled + ":" + graphic.gameObject.activeInHierarchy + ":"
+                + graphic.color.a + ":" + (graphic is Image image ? image.sprite?.name : string.Empty))));
         Require(partnerLinker.Controller is TipDotSystemController && partnerLinker.TipDotSystem is TipDotSystem
             && partnerLinker.IsShowTip && partnerLinker.StateInfo.TipLevel == ETipDotLevelType.Important
-            && tipLevelState.State == ETipDotLevelType.Important,
-            "Original partner linker and native state switcher display the claimable friendship tip");
+            && tipLevelState.State == ETipDotLevelType.Important && importantObjects.Any(value => value != null && value.activeInHierarchy),
+            "Original partner linker and active native Important-level indicator display the claimable friendship tip");
         Capture("panel-host-roster.png");
         Click(tabs[NpcPanelTabType.Dialogue].gameObject);
         VerifyTabSound();

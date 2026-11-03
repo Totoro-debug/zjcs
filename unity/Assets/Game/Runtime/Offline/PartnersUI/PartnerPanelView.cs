@@ -22,6 +22,7 @@ namespace Zjcs.Offline.PartnersUI
         public Func<string, string> Localize;
         public Func<int, bool> IsFunctionLimit;
         public Action<GameObject> BindNativeTree;
+        public Action<IPartnerDialogueUiServices> BindPartnerTipDotDialogues;
         public Action<AudioClip, GameObject> PostSound;
         public Action PrepareOpen;
     }

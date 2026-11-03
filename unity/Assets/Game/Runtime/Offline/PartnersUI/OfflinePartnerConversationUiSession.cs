@@ -51,6 +51,7 @@ namespace Zjcs.Offline.PartnersUI
             if (context.PrepareOpen != null && context.PrepareOpen != PreparePanelOpen)
                 throw new InvalidOperationException("The partner window already has another opening transaction.");
             context.Dialogues = Playback;
+            context.BindPartnerTipDotDialogues?.Invoke(Playback);
             context.PrepareOpen = PreparePanelOpen;
         }
     }
