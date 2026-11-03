@@ -36,7 +36,7 @@
 
 [`verify_mainline_entity_native_exports.py --map-id 16`](../../scripts/verify_mainline_entity_native_exports.py) 将上述164个根地址与同版 AssetRipper 完整导出逐一配对，并校验每个 prefab 与 `.meta` 对应的输出 SHA256／长度；逐项结果见[原生转换输入收据](../../assets/reference/official-map/map16-native-entity-prefab-exports-source-manifest.json)。该收据锁定后续 Windows 转换所用的准确 YAML 输入，不表示原 Assembly-CSharp 脚本、材质、shader、动画或正式实体宿主已经恢复。
 
-[`audit_mainline_entity_script_bindings.py --map-id 16`](../../scripts/audit_mainline_entity_script_bindings.py) 从164个已校验 prefab 中识别103个原 `Assembly-CSharp` 脚本 ID，并按884版源码的 MonoScript local file ID 规则全部还原到官方类型。当前 Unity 运行时仅1类存在完整类型名／命名空间匹配，另102类无可直接绑定的迁入类型；逐项来源、候选路径及引用 prefab 见[实体脚本绑定审计](../../assets/reference/official-map/map16-entity-script-bindings-source-manifest.json)。这只核对脚本类型身份，不证明序列化字段、Windows 资源或实体行为已恢复，故原生 prefab 暂不能接入正式宿主。
+[`audit_mainline_entity_script_bindings.py --map-id 16`](../../scripts/audit_mainline_entity_script_bindings.py) 从164个已校验 prefab 中识别103个原 `Assembly-CSharp` 脚本 ID，并按884版反编译源码的 MonoScript local file ID 规则全部还原到官方类型。当前已提交 Unity 运行时代码没有完整类型名／命名空间匹配项；逐项来源及引用 prefab 见[实体脚本绑定审计](../../assets/reference/official-map/map16-entity-script-bindings-source-manifest.json)。这只核对脚本类型身份，不证明序列化字段、Windows 资源或实体行为已恢复，故原生 prefab 暂不能接入正式宿主。
 
 [`prepare_mainline_map_interactions.py --map-id 16`](../../scripts/prepare_mainline_map_interactions.py) 校验本图既有定义输入，从同版原表补充状态效果与周期随机奖励，并复用公共英雄结果索引转换器。英雄模板列表按本图原周期奖励组件提取，`Resources/Map16/interactions` 包含6570–6575六种英雄雕像、621项实体扩展参数、本图43区及43个区域的刷新组／间隔；原组件索引、状态 ID、5／25／70奖励权重、费用、地区顺序和空 `DropItems` 保留。原生数据输入另存 `Source/interaction-tables.json`，来源见[交互配置清单](../../assets/reference/official-map/map16-interactions-source-manifest.json)。此为配置投影，尚未登记正式宿主，不代表雕像、资源交互或存档已接通。
 

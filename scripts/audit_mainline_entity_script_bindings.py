@@ -6,6 +6,7 @@ import hashlib
 import json
 import re
 import struct
+import subprocess
 from pathlib import Path, PurePosixPath
 
 from Crypto.Hash import MD4
@@ -88,22 +89,42 @@ def build(map_id: int, roots_path: Path, export_path: Path, source_root: Path,
         raise ValueError("Selected prefab roots contain no client Assembly-CSharp scripts")
 
     source_by_id: dict[int, dict] = {}
-    for path in source_root.rglob("*.cs"):
-        try:
-            types = read_types(path)
-        except OSError:
-            continue
-        for namespace, type_name in types:
-            file_id = script_file_id(namespace, type_name)
-            if file_id in references:
-                row = source_by_id.setdefault(file_id, {"namespace": namespace, "type": type_name, "paths": []})
-                if (row["namespace"], row["type"]) != (namespace, type_name):
-                    raise ValueError("Client MonoScript local ID collision: " + str(file_id))
-                row["paths"].append(source_identity(path, repository_root))
+    source_directories = [source_root / name for name in
+                          ("client-source", "common-source", "game-framework-source")
+                          if (source_root / name).is_dir()]
+    if not source_directories:
+        source_directories = [source_root]
+    for source_directory in source_directories:
+        for path in source_directory.rglob("*.cs"):
+            try:
+                types = read_types(path)
+            except OSError:
+                continue
+            for namespace, type_name in types:
+                file_id = script_file_id(namespace, type_name)
+                if file_id in references:
+                    row = source_by_id.setdefault(file_id, {"namespace": namespace, "type": type_name, "paths": []})
+                    if (row["namespace"], row["type"]) != (namespace, type_name):
+                        raise ValueError("Client MonoScript local ID collision: " + str(file_id))
+                    row["paths"].append(source_identity(path, repository_root))
 
     required_types = {(row["namespace"], row["type"]) for row in source_by_id.values()}
     runtime_by_type: dict[tuple[str, str], list[dict]] = {}
+    dirty_runtime_paths: set[str] = set()
+    try:
+        runtime_relative = runtime_root.relative_to(repository_root).as_posix()
+        status = subprocess.run(
+            ["git", "status", "--porcelain", "--untracked-files=all", "--", runtime_relative],
+            cwd=repository_root, check=False, capture_output=True, text=True,
+        )
+        if status.returncode == 0:
+            dirty_runtime_paths = {line[3:].strip().replace("\\", "/")
+                                   for line in status.stdout.splitlines() if len(line) > 3}
+    except (OSError, ValueError):
+        pass
     for path in runtime_root.rglob("*.cs"):
+        if path.relative_to(repository_root).as_posix() in dirty_runtime_paths:
+            continue
         try:
             types = read_types(path)
             meta_path = Path(str(path) + ".meta")
@@ -144,7 +165,9 @@ def build(map_id: int, roots_path: Path, export_path: Path, source_root: Path,
         "roots_receipt": source_identity(roots_path, repository_root),
         "export_receipt": source_identity(export_path, repository_root),
         "source_root": source_root.relative_to(repository_root).as_posix(),
+        "source_directories": [path.relative_to(repository_root).as_posix() for path in source_directories],
         "runtime_root": runtime_root.relative_to(repository_root).as_posix(),
+        "runtime_source_policy": "Only clean tracked working-tree files are considered; modified and untracked runtime files are excluded.",
         "generator": source_identity(Path(__file__), ROOT),
         "counts": {
             "client_script_ids": len(scripts),

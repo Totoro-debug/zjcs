@@ -13,17 +13,23 @@
     "bytes": 114378086
   },
   "source_root": ".tools/source-packages/current/884_156692/official-code",
+  "source_directories": [
+    ".tools/source-packages/current/884_156692/official-code/client-source",
+    ".tools/source-packages/current/884_156692/official-code/common-source",
+    ".tools/source-packages/current/884_156692/official-code/game-framework-source"
+  ],
   "runtime_root": "unity/Assets/Game/Runtime",
+  "runtime_source_policy": "Only clean tracked working-tree files are considered; modified and untracked runtime files are excluded.",
   "generator": {
     "path": "scripts/audit_mainline_entity_script_bindings.py",
-    "sha256": "cd863608997961f34e93fbd8370e60b14e565b59acf0d754f6b3c997ce598ea2",
-    "bytes": 8830
+    "sha256": "541c9ba0575932ea84b939f1abe020f78ab4fc189fde443e3cdbf494c6047adc",
+    "bytes": 10169
   },
   "counts": {
     "client_script_ids": 103,
     "source_resolved": 103,
-    "runtime_type_matches": 1,
-    "runtime_type_missing": 102
+    "runtime_type_matches": 0,
+    "runtime_type_missing": 103
   },
   "scripts": [
     {
@@ -31,11 +37,6 @@
       "type": "MyCharacterShallowEffect",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyCharacterShallowEffect.cs",
           "sha256": "b697e38860f98124ff0947ae064c0fa959a91c83f0f50a524d15693c1bc3d024",
@@ -54,16 +55,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/OverlapGridMoverOverrideMoveMask.cs",
           "sha256": "c764171c2d1b8b53df964761e6cded46713cc4e0ed5ce47500f7d75fcb77fbe1",
           "bytes": 3024
@@ -81,11 +72,6 @@
       "type": "MyGridTransform",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyGridTransform.cs",
           "sha256": "6568a690831e9fc20eb95fcd659f4f8cca5b780d7b735b579406f1a9af8de0bd",
@@ -164,11 +150,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyStageResultPeriodicityRandomAward.cs",
           "sha256": "49e583cc95bd116a142c2b1d52baabb11270f229a9f5e79802e1a9eba7e51cea",
           "bytes": 179
@@ -190,11 +171,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MoveAgent.cs",
           "sha256": "9c00d07a51c84708d51643b3dd23d1d0d5249e3fb73d6cbe1d6754eded7bdf88",
           "bytes": 4186
@@ -213,16 +189,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/BubbleTipUI.cs",
           "sha256": "81b8beebdfd30ce6ecad470d6d191246c9dd6aafcf414bd91de0b0e0799c6ae9",
           "bytes": 4817
@@ -238,11 +204,6 @@
       "type": "MapControllerEntityRadarSupport",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MapControllerEntityRadarSupport.cs",
           "sha256": "405e7ef767a6d39441999bb3d2695778cb44268dcd1547cfb449cc2cd7232f0f",
@@ -274,21 +235,6 @@
       "type": "SlicedFilledRender",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/SlicedFilledRender.cs",
           "sha256": "268ce972693a815b024682437f8d44b39c99222a3c48f7698f1c82e092cb895c",
@@ -361,11 +307,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MySizeCfg.cs",
           "sha256": "998f1c434c57045a7c095b897346d749f1c47d699583ab898441780558e32d09",
           "bytes": 2588
@@ -402,11 +343,6 @@
       "type": "MyEntityLockBodyGroundTypeOverride",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyEntityLockBodyGroundTypeOverride.cs",
           "sha256": "d38e26cd78a432a4563c7e45eb1b37beecc3ba7792e7c77f70b3a9f85c397175",
@@ -459,11 +395,6 @@
       "type": "MyMapDisplay",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyMapDisplay.cs",
           "sha256": "a15b02f4853a248f2be42ca24b8a8d8494ae47f1866d861cce6eda5c32c4312c",
@@ -534,11 +465,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/EntityAwardItemHook.cs",
           "sha256": "23155440f3c0e2be8ac887460a93cd7c42040ff81a0e828e6473ec9c380f6923",
           "bytes": 1462
@@ -560,11 +486,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/TransformLocker.cs",
           "sha256": "0dcd13e79626010ea7f815eb7d644aba61e0f7d17f5e2db723812d3147647b41",
           "bytes": 2782
@@ -582,16 +503,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyEquipAgent.cs",
           "sha256": "ecc66b63722c6bfb50521cf44453e5652fdf49a4f4321346eb7d6163173e5b2d",
           "bytes": 6865
@@ -608,21 +519,6 @@
       "type": "MyCharacterPositionOverlapDetector",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyCharacterPositionOverlapDetector.cs",
           "sha256": "abb127a16616b5827b512940cfc5a2b18884c2e2bbd64c37250c840216b6bdb5",
@@ -643,11 +539,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/AttachmentFollower.cs",
           "sha256": "d8f8077dbbc72c21783e2af0d9b34b5b9109b829c51980cf7e6decf3b8ce79b2",
           "bytes": 15360
@@ -667,11 +558,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyStageBehStageCamp.cs",
           "sha256": "4300d7e4a48f0f43f5448d302e36a97609f64b4059155e144ea4ad3f2c467628",
           "bytes": 378
@@ -687,11 +573,6 @@
       "type": "MyVisibilityGrid",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyVisibilityGrid.cs",
           "sha256": "3d4ed9d1860e76d549d27a50d422d2f1c6f58d2b5b4030ca6ea14073945d9751",
@@ -768,11 +649,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyStageResultAutoPuzzle.cs",
           "sha256": "409223b90ed95e281b7d599e4cea0a33225506a6798ad8f981c3829ee9afdcc9",
           "bytes": 179
@@ -788,11 +664,6 @@
       "type": "MyStageResultAward",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyStageResultAward.cs",
           "sha256": "2e22bd4b23ca1f63f80bf4af8c382b6ecae9bf87d53b3467e3f62407274a2389",
@@ -843,11 +714,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyStageResultAwardStatusEffect.cs",
           "sha256": "234a17d9638a2666c19716d91524178f47deed7b1ba85a5496db721def15f119",
           "bytes": 315
@@ -868,11 +734,6 @@
       "type": "MyEntityPlayerInteraction",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyEntityPlayerInteraction.cs",
           "sha256": "329dbaef860c5a6a69514d92051f8df750f6155c1d9b220a93262f15cbfba699",
@@ -935,16 +796,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/SpineLazyAnimLoad.cs",
           "sha256": "54040ad518a1c58f6a8828ce22f52d111d3c0f3c4aa66b0c911366f54cdeb495",
           "bytes": 11175
@@ -960,11 +811,6 @@
       "type": "TerrainStepEffect",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/TerrainStepEffect.cs",
           "sha256": "abb4369823b915477eb90808d99c5ffa4ff9a16de77517faaf2d26c4dee52948",
@@ -983,11 +829,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyNpcFollowerController.cs",
           "sha256": "cdd5673c254d3d221adc9547d2bdd675b16176809b40bea311b654ae73b49144",
           "bytes": 143
@@ -1005,11 +846,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/SkeletonRendererFade.cs",
           "sha256": "e84b3b988659bda9fca8aa07addb6b1ebcdbd801d205ce58a977ce1f9c3abf4c",
           "bytes": 754
@@ -1026,16 +862,6 @@
       "type": "AnimationController",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/AnimationController.cs",
           "sha256": "cd59a6e68288133c542c5b7a8f03049be528775a299ddc841f883f1a1fd15a47",
@@ -1056,11 +882,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/PlayerIconMeHpSliderEffect.cs",
           "sha256": "faf916264663ed7f0dca6f3f3d15f73c57dc8a8ef89803711bcf799e0f288a6a",
           "bytes": 617
@@ -1077,26 +898,6 @@
       "type": "PlayerIconMe",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/PlayerIconMe.cs",
           "sha256": "906d4192a420ae943e7ed09f77d7373b0ba65a1b4f1c947e4b9211f92d513cad",
@@ -1115,11 +916,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyEntityPuzzleTerminal.cs",
           "sha256": "2a25fbf8c9419cf6a68d8b8e5c2370792b49b1cbc8ffcaffc9896c7dd7f8c576",
           "bytes": 189
@@ -1136,11 +932,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyStageConRegionProgressFull.cs",
           "sha256": "0527db6cf5411e11f3587927d145430327c1cee7bee1c38a8ee4044293b64790",
           "bytes": 158
@@ -1156,16 +947,6 @@
       "type": "MyWorldStage",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyWorldStage.cs",
           "sha256": "9aab7850ff249a91188f262c44a56dd3dd96e4fcf59e52aaae5e2fc9711e3085",
@@ -1242,16 +1023,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyEntityInteractionShow.cs",
           "sha256": "2f0d98280231bbc866bfd4070cba1fb090959ef9fd934a1ec73f13f5769ff9cc",
           "bytes": 6094
@@ -1267,11 +1038,6 @@
       "type": "MyGridMover",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyGridMover.cs",
           "sha256": "5a258db7e524b9075ed8675e2a99731030fca4f148d3d08880cfa0b725baed23",
@@ -1289,11 +1055,6 @@
       "type": "MyWorldEntityLevel",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyWorldEntityLevel.cs",
           "sha256": "7cf8b5426900d2736675f312b6b62e248a0037e1b69049dde46d2ef6bdec8303",
@@ -1363,11 +1124,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyActionAgent.cs",
           "sha256": "b5ed46aeb39e8e872b7af0fd23de65fbe98a57256f51173d1c828be6b1378a41",
           "bytes": 1252
@@ -1384,11 +1140,6 @@
       "type": "MyStageBehStage",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyStageBehStage.cs",
           "sha256": "ca365a411867c335331c5fb8a003a485d4a33d6483d8f420adce5919c624504c",
@@ -1412,11 +1163,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MapCharacterUniformFloatMovementTargetSupport.cs",
           "sha256": "2e4322922c5249193e7f2821e7b2e3368922c4277d8ea3e882d57e2cd1e0465f",
           "bytes": 960
@@ -1433,11 +1179,6 @@
       "type": "MyStageBehTouch",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyStageBehTouch.cs",
           "sha256": "b1006d2dc33382bc39e9f1b2b5412d6571fb3b02bef9640732b6a42290ed27fb",
@@ -1505,11 +1246,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyEntityLock.cs",
           "sha256": "86a63da705f36615ff7fd8a0b1f651f064b325d8cb0cfd42e39616ab1f10da54",
           "bytes": 2996
@@ -1564,11 +1300,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/AttachAgent.cs",
           "sha256": "5cb97759a33d2a7f81736445c630f776826fa8684ad167dedf2216f1f8dda915",
           "bytes": 4917
@@ -1603,11 +1334,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyStageResultModifyHpPercent.cs",
           "sha256": "48b519beaa77ec15c5445cd8bfac94ea8007bf597e85431322e2512bc32fc80d",
           "bytes": 158
@@ -1629,11 +1355,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/ColliderEntityInputRedirectSupporter.cs",
           "sha256": "23035249aca5cdd17fc454ee541e51697c75396d2bd0bc0cdb125c3522363d61",
           "bytes": 384
@@ -1651,11 +1372,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MapMePlayerLowHpShowHpSlider.cs",
           "sha256": "6960621892fbc0834d949364606d14000917b2e65671a8ecb189015aefe2de90",
           "bytes": 957
@@ -1672,11 +1388,6 @@
       "type": "MyStageConPlayerPeriodicityInteraction",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyStageConPlayerPeriodicityInteraction.cs",
           "sha256": "ad26e29e9b06108ff46f3c6fe8c66faed603adcba9c7fcd554dea559584ee905",
@@ -1699,11 +1410,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyVisibilityCustom.cs",
           "sha256": "0255dbec863e16698a9bc9b95c859b4922d59e55aaaf126d223a4f8d58ed9459",
           "bytes": 98
@@ -1721,11 +1427,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/PlayerBubbleController.cs",
           "sha256": "026be64ba0d9d07b0ddc2c0710486471c12c7573aa6049f1eb9083bfd55e23b1",
           "bytes": 2183
@@ -1742,26 +1443,6 @@
       "type": "WorldPlayerInput",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/WorldPlayerInput.cs",
           "sha256": "2f104041aebb00aff10e11731b7768f288ed218eb5e1303a7b62f9878f4697d8",
@@ -1796,11 +1477,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyWorldStageActive.cs",
           "sha256": "7c60ed341056315319f0b776ed9a47f112e8b493ed521607f31a65e5fc8f3bf4",
           "bytes": 128
@@ -1822,26 +1498,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/PlayerIconStatus.cs",
           "sha256": "d57c470d139be654dc38495dff6d56cdb9019504585cad18c2ac6fb9ed4882a0",
           "bytes": 4563
@@ -1858,11 +1514,6 @@
       "type": "MeshMaterialProperty",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MeshMaterialProperty.cs",
           "sha256": "615d3a9e06729e34c7de475a481756c12e7e7d5add4ad0a383b2197c32190706",
@@ -1890,11 +1541,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceRendererPartHandler.cs",
           "sha256": "804544278a0fc4757daed0f1a89c91bf4c20816a883134d6a19c6c1f6f45e97d",
           "bytes": 15491
@@ -1912,11 +1558,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyWorldNpc.cs",
           "sha256": "d63fe12df6a3d25fbe8065deb1ce2e083d4fa88e493629de556298b7285b4542",
           "bytes": 104
@@ -1932,11 +1573,6 @@
       "type": "MyWorldActiveableEntity",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyWorldActiveableEntity.cs",
           "sha256": "7936f494f0423c2434881473d721e6470f0d641f32ade4d39e11bc1863247d81",
@@ -1971,21 +1607,6 @@
       "type": "ECViewDriver",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/ECViewDriver.cs",
           "sha256": "46808b5f955b1e120c939a78bbe64aed8f5b1d66d2e290b11e84c08c20ec07d7",
@@ -2111,11 +1732,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyStageResultOverrideBodyGroundType.cs",
           "sha256": "e97576e078fd1760b8023023746ed80000b111faf62e0498934fa7b5b18f519d",
           "bytes": 179
@@ -2132,11 +1748,6 @@
       "type": "MyStageResultAwardExtraProp",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyStageResultAwardExtraProp.cs",
           "sha256": "b8c1fc343ac325829b0aca758e20516e2863310a54152090c8ec81870b223b12",
@@ -2158,11 +1769,6 @@
       "type": "MapEntityTipDotNodeLinker",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MapEntityTipDotNodeLinker.cs",
           "sha256": "6440fc4d7173f3b83ad4ab73cf5f9a262b4c0b224ac70f7ba16430dca76cf17b",
@@ -2195,11 +1801,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyEntityExtraData.cs",
           "sha256": "368a4f35814b00a002ad53c8ea8b206a1d8b32cb3d0e0ef3f5072a95a09a564b",
           "bytes": 125
@@ -2216,11 +1817,6 @@
       "type": "MyEntitySource",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyEntitySource.cs",
           "sha256": "0127e0b805d2280cc69c04b416955fd88a58dc842d89accbde3456fabdc5dd67",
@@ -2297,16 +1893,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/TMP_TypeWriterEffect.cs",
           "sha256": "97adcf6e2acd9b6e7c101cc5da05457592317ee86f71a0d465cbc2525275e776",
           "bytes": 3081
@@ -2322,11 +1908,6 @@
       "type": "MyStageResultSelfStateUpdate",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyStageResultSelfStateUpdate.cs",
           "sha256": "338636342a976d969dc0ef279576d80ebd5d536e09e2af8a9bf6a7f33d9a22a7",
@@ -2344,11 +1925,6 @@
       "type": "MaintainGlobalScale",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MaintainGlobalScale.cs",
           "sha256": "6755e9666d8e48ffcabcf2335ec3b95901b8ea1867eacedb313c5c2c1f7aa9e8",
@@ -2381,11 +1957,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyLevel.cs",
           "sha256": "37ba3fbcd2834c45f36acf7ed47e4d72d0830cb0b2be5618a01a8ed219fc3fc1",
           "bytes": 75
@@ -2402,31 +1973,6 @@
       "type": "PlayerIconOther",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/PlayerIconOther.cs",
           "sha256": "3501e95fc3365531cdd41109594285cf5587148899e259459c3ba90026c212ea",
@@ -2445,16 +1991,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/PlayerIcon.cs",
           "sha256": "92e8d8cfb9ce3f1407b22b590fe96d69c18038b84acd32972d8044a16fe62c25",
           "bytes": 3342
@@ -2471,11 +2007,6 @@
       "type": "MapMonsterLoader",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MapMonsterLoader.cs",
           "sha256": "9ae4ee9a3b2f4e7f6879a88a2b9a68912220e35cfe1519529643409d3b7d7c8b",
@@ -2495,11 +2026,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyStageResultStateUpdate.cs",
           "sha256": "4a3b249a45862a77a637015e0243223d90b7cb7fd2a3dada77502cc26cde64cd",
           "bytes": 109
@@ -2515,11 +2041,6 @@
       "type": "FollowPlayerWeapon",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/FollowPlayerWeapon.cs",
           "sha256": "11579c13a75b0b25bb1841826503975c297195ba08b21fd660064145cd4035c3",
@@ -2538,11 +2059,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyWorldMapCharacter.cs",
           "sha256": "0b1cfe3c6010f6521c632a610cbc9e9ab7951c7fd880510d393d516cf3e90923",
           "bytes": 6069
@@ -2559,11 +2075,6 @@
       "type": "PlayerInfoUI",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/PlayerInfoUI.cs",
           "sha256": "622cc9e51e18ca793b7ea0fb0b89f839a20d0d420d229a8441be6f189c1d2a03",
@@ -2582,11 +2093,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyStageResultLoEntitySpawn.cs",
           "sha256": "f2ceb8863aedbe7970407759405973250c0d93b1629572bee723875784917227",
           "bytes": 113
@@ -2603,11 +2109,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/WorldCampInput.cs",
           "sha256": "1c33af91828a5896257569e8bcd9852d15b4a96c27330483a42cf061ced07cec",
           "bytes": 1754
@@ -2623,11 +2124,6 @@
       "type": "MyMapRegionStatus",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyMapRegionStatus.cs",
           "sha256": "1a73bd3de30dd1533f2c0b6f5dccdf45fb9639fb0c08d6fe804e2d66dd7f203c",
@@ -2646,11 +2142,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MapControllerEntityRadar.cs",
           "sha256": "dc89f9b17a37a1dcc1fb54c434499ad672716f5fdd14245795c536f7d8cabc13",
           "bytes": 9764
@@ -2667,11 +2158,6 @@
       "type": "MyStageResultActiveableEntityActive",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyStageResultActiveableEntityActive.cs",
           "sha256": "642fd0fc8e59db67ca51bbe562ddcf808667781cc99c580c13d478f1044f7613",
@@ -2690,11 +2176,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/BattleHpBloodEffect.cs",
           "sha256": "83ddddfe418a0bffe488d03d04246fb9504f486047562eb86fc2794917c41c73",
           "bytes": 193
@@ -2711,16 +2192,6 @@
       "type": "MyEntity",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyEntity.cs",
           "sha256": "1d3cb29ee8e21bb2e8717aa95c8922434f1a20bf90fafb941b5ffcbf26bd2ae1",
@@ -2816,11 +2287,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyStageResultAwardItem.cs",
           "sha256": "e7138236e16d271aa46c06d674c7e07a52add50352d889b7be29c04e270641f4",
           "bytes": 2656
@@ -2839,11 +2305,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyEntityUnlockWorldStateComplete.cs",
           "sha256": "2b3d75143ad8b9700ea50ffce9e559950d4af67e07fd8584994a2d4b58ec9537",
           "bytes": 216
@@ -2859,11 +2320,6 @@
       "type": "MyCharacter",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyCharacter.cs",
           "sha256": "1e73df0036b8402fc0ece33c25d7576379e69a2b9f5faa5c48137bac8e04e7c6",
@@ -2881,11 +2337,6 @@
       "type": "WorldLockedEntityInput",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/WorldLockedEntityInput.cs",
           "sha256": "2a11b9504b9f3b9fc197ab0e99f397ceda2872503845ba6bc931b29d2a3845e1",
@@ -2939,11 +2390,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MapEntityTag.cs",
           "sha256": "7d1c129a71dd22024d728daae939c95b7b6d44e7ea94faf0a8527df2dfe43758",
           "bytes": 216
@@ -2962,11 +2408,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MapCharacterMoveEffectSupport.cs",
           "sha256": "be72a3a747a4a351b6deb1daade002049021616f888ca09d8a80ef1fc4eb1709",
           "bytes": 4036
@@ -2983,11 +2424,6 @@
       "type": "MyTransform",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyTransform.cs",
           "sha256": "75775226b2ff4efbc2853dff3d9964d5f11cd5032ca69ccd304d298944f5d5b9",
@@ -3006,26 +2442,6 @@
       "type": "SpriteRendererList",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/SpriteRendererList.cs",
           "sha256": "08414d0e53f109e2e2f2666503f60299de5e0624b6b546eef3f35e271ee6b3b6",
@@ -3124,11 +2540,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyEntityFoucsController.cs",
           "sha256": "bc2cd523294abb65f31d4ccd53466feb44137a1e117741ec188fbfdfde4c2d1d",
           "bytes": 1494
@@ -3144,11 +2555,6 @@
       "type": "MyStageResultResetPuzzle",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyStageResultResetPuzzle.cs",
           "sha256": "e869076e186b4637399dac23344d4ff7654627d634086c40eb6a6a8819ba2c24",
@@ -3166,31 +2572,12 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceCombineSkin.cs",
           "sha256": "424b0443d2cc9769b53068dbd751b36d6a0d162191835751892ed611272fe2d4",
           "bytes": 5333
         }
       ],
-      "runtime": [
-        {
-          "script": {
-            "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/AppearanceCombineSkin.cs",
-            "sha256": "829d206ef6450bfcea960083d4c9f624929633bb551a9180b568ce9ed1021c4b",
-            "bytes": 4558
-          },
-          "meta": {
-            "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/AppearanceCombineSkin.cs.meta",
-            "sha256": "678a470f2e0aa705f9ddecc8b4c70d513f7aee5760454b7fe96a0ea229be0545",
-            "bytes": 241
-          },
-          "guid": "a0f7065cbcdc4ca4a3bdf6f058b70018"
-        }
-      ],
+      "runtime": [],
       "prefabs": [
         "Assets/Prefabs/EcEntity/MapWorld/WorldNPC/Map_13_NPC/8443.prefab"
       ]
@@ -3200,11 +2587,6 @@
       "type": "WorldStageInput",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/WorldStageInput.cs",
           "sha256": "79cfbc5c2adb2e251e5b7cf848d92ec1d1d58554e24bed180a8e9f95368ad4c6",
@@ -3243,11 +2625,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/PlayerBubbleHandlerBehaviour.cs",
           "sha256": "60a8fd456a2c6b6d5d77c923ee011d2b9a080e104c36571d9c83a867590d7e6e",
           "bytes": 4327
@@ -3265,11 +2642,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyEntityCamp.cs",
           "sha256": "ac2fefa48ea5231ca3156c3163da6689d00076adb2c14f81cd90a2c22d86bdb4",
           "bytes": 85
@@ -3285,16 +2657,6 @@
       "type": "HpSliderEffectMap",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/HpSliderEffectMap.cs",
           "sha256": "c9552d7b94588742fa463d42bc70804fd2004e61e863f42266d5203d4b4a98db",
@@ -3313,11 +2675,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyProp.cs",
           "sha256": "0749af8aeab03af5e847c7a81ca68feb111070ed9745873e189209346416da69",
           "bytes": 73
@@ -3334,11 +2691,6 @@
       "type": "PlayerBubbleHandlerChatMap",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/PlayerBubbleHandlerChatMap.cs",
           "sha256": "96dad104740b06b413527ac538967982a5e019bf31d9b4b5f108eba66c74bbd2",
@@ -3357,11 +2709,6 @@
       "namespace": "",
       "source": [
         {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
-        {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/ResetMaterialPropertyBlock.cs",
           "sha256": "410829e8992ca3debc08f87bb5af01da0f6daf357361485d89867f40a521b005",
           "bytes": 487
@@ -3378,11 +2725,6 @@
       "type": "MyLostGoddessFurnitureProp",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyLostGoddessFurnitureProp.cs",
           "sha256": "2c97621ad3b69452bce7acc7daf45b8739a9303b3a16c97a4322d4fe8e9ab433",
@@ -3416,11 +2758,6 @@
       "type": "MyMapStatusAgent",
       "namespace": "",
       "source": [
-        {
-          "path": ".tools/source-packages/current/884_156692/official-code/aot-metadata/dump.cs",
-          "sha256": "a1f2edc33bf9571df7f676e85e918ca77da0c3fbbe2936728e1116fc3c6bb578",
-          "bytes": 118684139
-        },
         {
           "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyMapStatusAgent.cs",
           "sha256": "7d68b14a32eb8ee0bb7ec72e01f5e495b8d4f1d7123437e37186df68bc481762",
