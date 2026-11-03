@@ -100,20 +100,24 @@ foreach($round in 0..2){
 # DelayRoundType.GlobalRound uses the shared master-unit clock rather than the listener clock.
 $owner=[Zjcs.Combat.Official.FightBattleUnitState]@{Id=1;Side=1;Hp=1000;MaxHp=1000;CharacterType=1}
 $owner.Turn.Id=1;$owner.Turn.Hp=1000;$owner.Turn.RoundOffset=0;$owner.Turn.ActionRound=0
+$owner.SkillState.Round=7
+$ally=[Zjcs.Combat.Official.FightBattleUnitState]@{Id=2;Side=1;Hp=1000;MaxHp=1000;CharacterType=1}
+$ally.Turn.Id=2;$ally.Turn.Hp=1000;$ally.Turn.RoundOffset=0;$ally.Turn.ActionRound=0
+$globalUnits=[Zjcs.Combat.Official.FightBattleUnitState[]]@($owner,$ally)
 $template=[Zjcs.Combat.Official.FightBattleStatusState]@{InstanceId=1;OwnerId=1;CreatorId=1;ClassId=990001;
     HasRoundStartTrigger=$true;RoundStartRulesSupported=$true;RoundStartDelayRound=1;RoundStartDelayRoundType=2;
     RoundStartDelayStartRound=1;RoundStartListenTarget=2;RoundStartRate=1;RoundStartMeetCount=2}
 $owner.Statuses.Add($template);$rng=[Zjcs.Combat.Official.FightRandomStream]::new(23)
 foreach($actionRound in 0,1){
-    $owner.Turn.ActionRound=$actionRound;$seed=$rng.Seed
+    $owner.Turn.ActionRound=$actionRound;$ally.Turn.ActionRound=$actionRound;$seed=$rng.Seed
     [Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectRoundStartInvocations($owner,$owner,
-        [Zjcs.Combat.Official.FightBattleUnitState[]]@($owner),$rng,$null)|Out-Null
+        $globalUnits,$rng,$null)|Out-Null
     Assert-Delay ($rng.Seed -eq $seed -and $template.RoundStartMeetProgress -eq 0) 'Global delay consumed probability or progress before its configured global rounds elapsed'
 }
-$owner.Turn.ActionRound=2;$seed=$rng.Seed
+$owner.Turn.ActionRound=2;$ally.Turn.ActionRound=2;$seed=$rng.Seed
 [Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectRoundStartInvocations($owner,$owner,
-    [Zjcs.Combat.Official.FightBattleUnitState[]]@($owner),$rng,$null)|Out-Null
-Assert-Delay ($template.RoundStartMeetProgress -eq 1) 'Global delay did not resume checks after its configured round interval'
+    $globalUnits,$rng,$null)|Out-Null
+Assert-Delay ($template.RoundStartMeetProgress -eq 1) 'Global delay followed the leading listener clock or did not resume after all master units advanced'
 # Original 25285 checks any alive/present friend (self, NPC or summon), before probability/progress.
 foreach($kind in 'self','player','npc','summon','enemy','dead','departed','excluded24207','excluded24301'){
     $owner=[Zjcs.Combat.Official.FightBattleUnitState]@{Id=1;Side=1;Hp=1000;MaxHp=1000;CharacterType=1}
