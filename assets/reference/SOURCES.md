@@ -10,6 +10,8 @@
 
 状态实体表现代码取所选 `884_156692` 已核验的 Assembly-CSharp.dll、Framework.FirstPass.Runtime.dll 与七份应用／框架源码；共享层数和可叠层元数据另登记五份原始边界证据。原文件、22个核心方法的显式实体访问替换核对、原脚本fileID、诊断／绑定适配、输出C#／meta及依赖哈希见[状态实体表现代码来源](battle-animation/status-view-runtime-source-manifest.json)，入口为 `scripts/prepare_battle_status_view_runtime.py`。本批复用既有原生水波粒子夹具，无新增美术或完整素材快照；行为与验证范围见[战斗执行](../../docs/features/battle-execution.md)。
 
+原生状态材质链取所选 `884_156692` 的 Assembly-CSharp.dll、`MeshMaterialProperty`／`MyPlayableMaterialProperty` 及两个属性提供者，复用已迁入的完整／轻量人物外观与部件收集边界；四类源文件、41个方法体指纹、显式C#语法／诊断适配、脚本fileID与输出哈希见[材质代码来源](battle-animation/status-material-runtime-source-manifest.json)。原24059完整prefab、13张全mip纹理、6个材质及全量Windows Shader的原APK对象和转换输入输出见[材质资源来源](battle-animation/status-material-assets-source-manifest.json)。重建入口为 `scripts/prepare_battle_status_material_runtime.py`／`scripts/prepare_battle_status_material_assets.py`，后者复用已核验的完整播放图转换入口；未生成完整素材快照，行为及验证边界见[战斗执行](../../docs/features/battle-execution.md)。
+
 原生状态环绕输入取所选 `884_156692` Assembly-CSharp.dll、`MyPlayableOrbitMovement`、三组原prefab及其已核验原生导出／Windows转换缓存；原APK对象、每个纹理mip、全量Shader转换、脚本fileID、十九个方法适配指纹、34个资源及显式绑定哈希见[环绕代码来源](battle-animation/status-orbit-runtime-source-manifest.json)和[环绕资源来源](battle-animation/status-orbit-assets-source-manifest.json)。重建入口为 `scripts/prepare_battle_status_orbit_runtime.py`／`scripts/prepare_battle_status_orbit_assets.py`，对象池适配及验证范围见[战斗执行](../../docs/features/battle-execution.md)。本批未生成完整素材快照。
 
 原装备被动词条选择输入：`record_battle_equipment_selection_sources.py` 校验 `884_156692` 的战斗词条过滤／互斥比较、套装阈值、被动属性、技能品阶与 `854_156383` 装备／战斗数据；源代码、配置及运行适配 SHA256 见[装备被动选择来源](battle-rules/equipment-selection-source-manifest.json)，行为与验证见[装备功能](../../docs/features/equipment.md)。

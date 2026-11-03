@@ -29,7 +29,9 @@ def sha(raw):
     return sha256(raw).hexdigest()
 
 
-def build():
+def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
+          family='StatusOrbits', shader_prefix='StatusOrbit_', runtime_receipts=None,
+          generator=None, limits=None):
     work = Path(os.environ['ZJCS_VALIDATION_DIR']).resolve()
     assert work.parent == (ROOT/'output/validation').resolve() and (work/'.zjcs-validation.json').is_file()
     export_receipt = CACHE/'native-export-all-source-manifest.json'
@@ -135,7 +137,7 @@ def build():
             target = DEST/path.relative_to(EXPORTED)
             if path.suffix == '.png': target = target.with_name(target.stem+'.texture.asset')
             elif '/Shaders/' in path.as_posix():
-                target = ROOT/'unity/Assets/Game/Runtime/Presentation/Combat/Shaders'/('StatusOrbit_'+path.stem+'.shader')
+                target = ROOT/'unity/Assets/Game/Runtime/Presentation/Combat/Shaders'/(shader_prefix+path.stem+'.shader')
             target.parent.mkdir(parents=True, exist_ok=True); meta(target)
             old = GUID.search(read(Path(str(path)+'.meta')).decode('utf-8-sig'))[1]
             new = GUID.search(Path(str(target)+'.meta').read_text(encoding='utf-8-sig'))[1]
@@ -156,7 +158,7 @@ def build():
                 converted = shader_cache/record['path']
                 assert sha(converted.read_bytes()) == record['sha256']
                 text = converted.read_text(encoding='utf-8-sig')
-                raw = text.replace('Shader "'+name+'"', 'Shader "Zjcs/Official/Combat/StatusOrbits/'+path.stem+'"', 1).encode()
+                raw = text.replace('Shader "'+name+'"', 'Shader "Zjcs/Official/Combat/'+family+'/'+path.stem+'"', 1).encode()
                 shaders.append(dict(source=apk.provenance(obj), object_sha256=object_sha,
                                     conversion=identity(record_path), converted=identity(converted)))
             elif path.suffix == '.png':
@@ -203,7 +205,7 @@ def build():
             guid = GUID.search(Path(str(target)+'.meta').read_text(encoding='utf-8-sig'))[1]
             importer = 'ShaderImporter' if target.suffix == '.shader' else 'PrefabImporter' if target.suffix == '.prefab' else 'NativeFormatImporter'
             write_changed(Path(str(target)+'.meta'), 'fileFormatVersion: 2\nguid: '+guid+'\n'+importer+':\n  externalObjects: {}\n')
-        rows = [dict(id=key, resource='Combat/StatusOrbits/Prefabs/EcEntity/Fight/FightSkill/'+str(key)+'/'+name)
+        rows = [dict(id=key, resource='Combat/'+family+'/Prefabs/EcEntity/Fight/FightSkill/'+str(key)+'/'+name)
                 for key, name in ROOTS.items()]
         DATA.parent.mkdir(parents=True, exist_ok=True)
         write_changed(DATA, json.dumps(dict(manifest=apk.version, graphs=rows), indent=2)+'\n'); meta(DATA)
@@ -220,10 +222,11 @@ def build():
             texture_conversion_receipt=identity(texture_receipt), converted_inputs=converted_inputs,
             textures=textures, shaders=shaders, application=script_records,
             runtime_receipts=[identity(ROOT/'assets/reference/battle-animation'/name) for name in (
-                'status-orbit-runtime-source-manifest.json', 'status-view-runtime-source-manifest.json')],
-            generator=identity(Path(__file__)), outputs=[identity(path) for path in sorted(set(outputs))],
+                runtime_receipts or ('status-orbit-runtime-source-manifest.json', 'status-view-runtime-source-manifest.json'))],
+            generator=identity(generator or Path(__file__)), graph_asset_adapter=identity(Path(__file__)),
+            outputs=[identity(path) for path in sorted(set(outputs))],
             operation='Full original graphs: no components, sequence leaves or local objects removed. Preserve native local fileIDs, transforms, particles, orbit configuration and dependencies. Remap migrated application scripts/GUIDs, decode all original texture mips through hash-matched conversion cache and use verified full Windows shaders.',
-            limits=['These three graph resources do not install all status lifecycle roles or formal battle actor/timeline binding.']),
+            limits=limits or ['These three graph resources do not install all status lifecycle roles or formal battle actor/timeline binding.']),
             ensure_ascii=False, indent=2)+'\n')
         print('Original orbit graphs:', len(rows), 'assets:', len(targets), 'textures:', len(textures), 'shaders:', len(shaders))
     finally:

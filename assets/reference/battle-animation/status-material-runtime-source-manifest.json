@@ -1,0 +1,265 @@
+{
+  "manifest": "884_156692",
+  "code_extraction": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+  },
+  "originals": [
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MeshMaterialProperty.cs",
+        "sha256": "615d3a9e06729e34c7de475a481756c12e7e7d5add4ad0a383b2197c32190706"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleMaterialPlayables/MeshMaterialProperty.cs",
+        "sha256": "a9dfd46fdc2b94b9ac617ac29f6ad2a7f8fb6365f8af173649288a77d8aaae60"
+      },
+      "original_mono_script_file_id": 119707416,
+      "diagnostics_adapted": 4,
+      "original_method_bodies": {
+        "private void OnDestroy()": "8093aa541cb35948d2111aa09dd36c9f79a664a98c8c94d2f2fe9d74f240acaf",
+        "public void Init()": "51a76824d5bacc7be95d472539176cdff8c0ddda333b267262da7eaa3c58edb0",
+        "public void SetAppearanceTarget(GameObject go)": "221cc2d3b604367eace54b6b027731f68f5ab173c41a7cca904caa882c9cc54e",
+        "private IEnumerable<Material> CollectAppearanceRendererMaterials()": "620a3decc7f7425448243f6a9151f100aec516ce93f0dc85387ffb2f6314bca5",
+        "public bool HasFloat(string key)": "c53531694bffde4ed053e0fb4f1aae7be022a033884a5a4d3564df48adbfcfd5",
+        "public bool HasColor(string key)": "cde144bab595ad0de8142cab510dacaf6b253ffcb7ea307fdca1d546b5a086af",
+        "public void UseKeyword(string keyword, bool enable)": "25c2099bc1b734d7d3f24fadcde8bb69af4ea83c9ab56cd702ce5df5937c0748",
+        "public void UseFloat(string propertyName)": "e890d8134a39168d0054a929d4bdf18fa46592f37611790b146a6b366f0f1a17",
+        "public void UseColor(string propertyName)": "444d101f5857876537abfc9de3c95823f4c3d7aca6c0c39cde353c83f426050d",
+        "public void SetKeyword(string key, bool value)": "91c24008b68e267f5450756af01c4dab900ceed60e962ca36509a23196685f3a",
+        "public void SetFloat(string key, float value)": "9c013684f249cd795d823ea13196ae45fe26575cc1937e2efd5a629375b6ccdc",
+        "public void SetColor(string key, Color value)": "72ffa18849574ea62843afd2d1c6c30e20792f46b95a1e7ff569d313b09224c5",
+        "public void SetVector(string key, Vector4 value)": "4f81d036835cac1d85de2a0f014fb2960005bb15ea306d67bcbd640af44f4887",
+        "public void ReturnKeyword(string keyword)": "d96bc050215b4cc28ec0db4faa3f48a809fbb6a1db58acc58c433ae32be05066",
+        "public void ReturnFloat(string propertyName)": "f8df898364e7b653bdeddc9782d8f040784721b84032583f287fd2e386fa46b9",
+        "public void ReturnColor(string propertyName)": "1eeb04d9d468659e0b9d1315b22722995516a60507605136f9c9b7ede31e5eeb",
+        "private void Clear()": "62f07444b08a00aa84defc471e844444cb33671cfb3b0725c23cdcdbfb30a8c5",
+        "private void Clear<T>(Dictionary<string, List<T>> cacheDic, Action<string> ret)": "4a87e2e6f78a36ce43170a41524fae8090768486dd5bd992c6847267ba29f3fe",
+        "private bool Use(string key)": "15ce98ec28e642b268cfce7d2d9f6e1640a18672271d5d6375f189b1086d9312",
+        "private void UseAndCacheDefaultValue<T>(string key, Dictionary<string, List<T>> cacheDic, Func<Material, string, T> getter) where T : struct": "7b4737dfef3ac9924f0dc4e6df0af890b78dd2c9b1db1190a5b97e0b5ce067a6",
+        "private bool Return(string key)": "f05bf7e15606288087a98d15c5964abd6327bffb749ab8f3637035bbb4c3e260",
+        "private void ReturnAndReset<T>(string key, Dictionary<string, List<T>> cacheDic, Action<Material, string, T> setter) where T : struct": "46f8626a403bbb095d5fe2a9f8b5879b60b9b143ac2e4dbf999469fae5812f7a",
+        "private List<T> GetOrAddValue<T>(Dictionary<string, List<T>> dict, string key) where T : struct": "89af56bd199aff7d6f77fa4f180a4931f6a5445d94848d2ead9e8a754602802a",
+        "private string GetTargetName()": "cfa5ee92d13bb1aa9b08b4cd676f9c48b930d81b36a23523086bb87c3feaeacb",
+        "private float GetMaterialFloat(Material material, string key)": "843a0c6cfb9857172c72a0f12387a6dec2e35d8990e79be80ce35d2149b3062a",
+        "private Color GetMaterialColor(Material material, string key)": "a5234a942cc3ff358d875f1e4837a0f48ab26dd890bb4eaea56f957f6f77d4d5",
+        "private bool GetMaterialKeyword(Material material, string key)": "b88c243b3f8d646eca6cc5a53ee0318e040f95d3cdc0fa3fa9a68b3696d66344",
+        "private void SetMaterialFloat(Material material, string key, float value)": "8bdb358f8667952647b72782f765a8071a0237f00af4a15f3f18be4d269a43c9",
+        "private void SetMaterialColor(Material material, string key, Color color)": "3e0a27c9010781293db3554039a1e21d32c45c8d756f2539670bdda5bccf15a5",
+        "private void SetMaterialKeyword(Material material, string key, bool value)": "15e2fbca1b30512da6607b6888204d000518ab47f9652040d6ac74a5bc753bec",
+        "private void SetMaterialVector(Material material, string key, Vector4 value)": "a56b0410d06452cb2911a4a471965fd65ef6ecbd7b53c6c6f6ad78e075a06049"
+      },
+      "adapted_method_bodies": {
+        "private void OnDestroy()": "8093aa541cb35948d2111aa09dd36c9f79a664a98c8c94d2f2fe9d74f240acaf",
+        "public void Init()": "cf81be9ba903a139c42ece095704bd8e9a78c950bd20a1ab7ee56bf558f41beb",
+        "public void SetAppearanceTarget(GameObject go)": "0d9e3ac3c527cb8196f1a7511061c8a2979a62493797bc897fbacf4a16b71e3f",
+        "private IEnumerable<Material> CollectAppearanceRendererMaterials()": "627568ad9a6452bf70be9ead0f597edb5192d249bc350139d6c3a12404d39219",
+        "public bool HasFloat(string key)": "e81b9121e556f8081b2a804a689e8fb41ed347d7c2356ba3e4038e1d49c8f974",
+        "public bool HasColor(string key)": "72789cf3d5491e087d31c443d99a57e28d311fd26169ce387ae8ac7f0e54a09b",
+        "public void UseKeyword(string keyword, bool enable)": "25c2099bc1b734d7d3f24fadcde8bb69af4ea83c9ab56cd702ce5df5937c0748",
+        "public void UseFloat(string propertyName)": "e890d8134a39168d0054a929d4bdf18fa46592f37611790b146a6b366f0f1a17",
+        "public void UseColor(string propertyName)": "444d101f5857876537abfc9de3c95823f4c3d7aca6c0c39cde353c83f426050d",
+        "public void SetKeyword(string key, bool value)": "91c24008b68e267f5450756af01c4dab900ceed60e962ca36509a23196685f3a",
+        "public void SetFloat(string key, float value)": "9c013684f249cd795d823ea13196ae45fe26575cc1937e2efd5a629375b6ccdc",
+        "public void SetColor(string key, Color value)": "72ffa18849574ea62843afd2d1c6c30e20792f46b95a1e7ff569d313b09224c5",
+        "public void SetVector(string key, Vector4 value)": "4f81d036835cac1d85de2a0f014fb2960005bb15ea306d67bcbd640af44f4887",
+        "public void ReturnKeyword(string keyword)": "d96bc050215b4cc28ec0db4faa3f48a809fbb6a1db58acc58c433ae32be05066",
+        "public void ReturnFloat(string propertyName)": "f8df898364e7b653bdeddc9782d8f040784721b84032583f287fd2e386fa46b9",
+        "public void ReturnColor(string propertyName)": "1eeb04d9d468659e0b9d1315b22722995516a60507605136f9c9b7ede31e5eeb",
+        "private void Clear()": "62f07444b08a00aa84defc471e844444cb33671cfb3b0725c23cdcdbfb30a8c5",
+        "private void Clear<T>(Dictionary<string, List<T>> cacheDic, Action<string> ret)": "4a87e2e6f78a36ce43170a41524fae8090768486dd5bd992c6847267ba29f3fe",
+        "private bool Use(string key)": "15ce98ec28e642b268cfce7d2d9f6e1640a18672271d5d6375f189b1086d9312",
+        "private void UseAndCacheDefaultValue<T>(string key, Dictionary<string, List<T>> cacheDic, Func<Material, string, T> getter) where T : struct": "7b4737dfef3ac9924f0dc4e6df0af890b78dd2c9b1db1190a5b97e0b5ce067a6",
+        "private bool Return(string key)": "f05bf7e15606288087a98d15c5964abd6327bffb749ab8f3637035bbb4c3e260",
+        "private void ReturnAndReset<T>(string key, Dictionary<string, List<T>> cacheDic, Action<Material, string, T> setter) where T : struct": "46f8626a403bbb095d5fe2a9f8b5879b60b9b143ac2e4dbf999469fae5812f7a",
+        "private List<T> GetOrAddValue<T>(Dictionary<string, List<T>> dict, string key) where T : struct": "89af56bd199aff7d6f77fa4f180a4931f6a5445d94848d2ead9e8a754602802a",
+        "private string GetTargetName()": "cfa5ee92d13bb1aa9b08b4cd676f9c48b930d81b36a23523086bb87c3feaeacb",
+        "private float GetMaterialFloat(Material material, string key)": "843a0c6cfb9857172c72a0f12387a6dec2e35d8990e79be80ce35d2149b3062a",
+        "private Color GetMaterialColor(Material material, string key)": "a5234a942cc3ff358d875f1e4837a0f48ab26dd890bb4eaea56f957f6f77d4d5",
+        "private bool GetMaterialKeyword(Material material, string key)": "b88c243b3f8d646eca6cc5a53ee0318e040f95d3cdc0fa3fa9a68b3696d66344",
+        "private void SetMaterialFloat(Material material, string key, float value)": "8bdb358f8667952647b72782f765a8071a0237f00af4a15f3f18be4d269a43c9",
+        "private void SetMaterialColor(Material material, string key, Color color)": "3e0a27c9010781293db3554039a1e21d32c45c8d756f2539670bdda5bccf15a5",
+        "private void SetMaterialKeyword(Material material, string key, bool value)": "15e2fbca1b30512da6607b6888204d000518ab47f9652040d6ac74a5bc753bec",
+        "private void SetMaterialVector(Material material, string key, Vector4 value)": "a56b0410d06452cb2911a4a471965fd65ef6ecbd7b53c6c6f6ad78e075a06049"
+      },
+      "adapted_source_sha256": "a9dfd46fdc2b94b9ac617ac29f6ad2a7f8fb6365f8af173649288a77d8aaae60"
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyPlayableMaterialProperty.cs",
+        "sha256": "f6f57c8fe6da2cca042799f4c7838d0a400e528a97eecfc76be2c7a8824c39e1"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleMaterialPlayables/MyPlayableMaterialProperty.cs",
+        "sha256": "190ba459566db143c76ee1bf10545af3653f8385bf40953f71aebd8661a70d1a"
+      },
+      "original_mono_script_file_id": 1574993081,
+      "diagnostics_adapted": 0,
+      "original_method_bodies": {
+        "protected override void PlayImpl()": "ddc3acabcdc08769b437bb4fe5b0fdae07e4d50785d6c0cccb554e986919aca5",
+        "protected override bool ProcessFrameImpl(float deltaTime)": "cfd04abbc837ad42eb26d5b4a7a434a8a9d398f05a0a4da90b1a4bcc41f29b98",
+        "private float GetTime()": "19b12649fba91a490bd724a648bd1eb38f46e630ddd176e03f4265adfa601f99",
+        "protected override void StopImpl()": "8c27074cf802750e9f6a01b4ef72b2b60847bf4e316f4841c240de6085bf066f",
+        "public override float GetDuration()": "3b92154bc848e9e97cda189e51fe083f672f2c28093fb5c7956fafac592e0daa",
+        "private void TryResumeParam()": "6fe6800b49a47ae8409268020bb721b8c14697f8e49332840f817571fd6b56f0"
+      },
+      "adapted_method_bodies": {
+        "protected override void PlayImpl()": "ddc3acabcdc08769b437bb4fe5b0fdae07e4d50785d6c0cccb554e986919aca5",
+        "protected override bool ProcessFrameImpl(float deltaTime)": "cfd04abbc837ad42eb26d5b4a7a434a8a9d398f05a0a4da90b1a4bcc41f29b98",
+        "private float GetTime()": "19b12649fba91a490bd724a648bd1eb38f46e630ddd176e03f4265adfa601f99",
+        "protected override void StopImpl()": "8c27074cf802750e9f6a01b4ef72b2b60847bf4e316f4841c240de6085bf066f",
+        "public override float GetDuration()": "3b92154bc848e9e97cda189e51fe083f672f2c28093fb5c7956fafac592e0daa",
+        "private void TryResumeParam()": "6fe6800b49a47ae8409268020bb721b8c14697f8e49332840f817571fd6b56f0"
+      },
+      "adapted_source_sha256": "190ba459566db143c76ee1bf10545af3653f8385bf40953f71aebd8661a70d1a"
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/PlayableMaterialPropertyProvider.cs",
+        "sha256": "c7078dd071d621c992d10addaf78653a7be2fbbcc28fd0792508a3051bdcf7a9"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleMaterialPlayables/PlayableMaterialPropertyProvider.cs",
+        "sha256": "1655884a2c3f2986a285be6292fde4022a69dd03220f80a7083c68cea166f379"
+      },
+      "original_mono_script_file_id": -617987999,
+      "diagnostics_adapted": 0,
+      "original_method_bodies": {
+        "public virtual void ProcessFrame(MeshMaterialProperty meshMaterialProperty)": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "public virtual void Resume(MeshMaterialProperty meshMaterialProperty)": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+      },
+      "adapted_method_bodies": {
+        "public virtual void ProcessFrame(MeshMaterialProperty meshMaterialProperty)": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "public virtual void Resume(MeshMaterialProperty meshMaterialProperty)": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+      },
+      "adapted_source_sha256": "1655884a2c3f2986a285be6292fde4022a69dd03220f80a7083c68cea166f379"
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/PlayableMaterialPropertyStencilProvider.cs",
+        "sha256": "fddd094d37831537bcbc790b91c8a323da9b1dac2e74524f9b16a0838c72fe62"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleMaterialPlayables/PlayableMaterialPropertyStencilProvider.cs",
+        "sha256": "89903c99fd4b86fe51b3f2d2ae17a2ed17350a6c9a261406aaac2959c7e773e8"
+      },
+      "original_mono_script_file_id": 1231486083,
+      "diagnostics_adapted": 0,
+      "original_method_bodies": {
+        "public override void Play(MeshMaterialProperty meshMaterialProperty)": "153b1519df53a1988b7597f5c6c8e16ad648428eefcfa83a9862ce3ca443019c",
+        "public override void Resume(MeshMaterialProperty meshMaterialProperty)": "fef0915a793ce929312cb86c55757b03fc25fdd08e83e98f76d22a928cad0ab6"
+      },
+      "adapted_method_bodies": {
+        "public override void Play(MeshMaterialProperty meshMaterialProperty)": "153b1519df53a1988b7597f5c6c8e16ad648428eefcfa83a9862ce3ca443019c",
+        "public override void Resume(MeshMaterialProperty meshMaterialProperty)": "fef0915a793ce929312cb86c55757b03fc25fdd08e83e98f76d22a928cad0ab6"
+      },
+      "adapted_source_sha256": "89903c99fd4b86fe51b3f2d2ae17a2ed17350a6c9a261406aaac2959c7e773e8"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_status_material_runtime.py",
+    "sha256": "e7be6a7a774c30e563ea0c95b0db9c6945897c583c303bf5ffe0392292b28365"
+  },
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.StatusMaterials.cs",
+      "sha256": "f91c4e0c9c9a1763893c6acbd262a4becaf69f89133f0afaa178668391d3c3b4"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.cs",
+      "sha256": "f04ecac9423ef960eaaf12fe864860967eefad784ed5403a4c29128f484ecd31"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ScenePlayerAppearance.cs",
+      "sha256": "53f83433bac1ef14c45f93c196568be281d54b4673744a658e8235cd7fbaed30"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/Zjcs.Editor.Combat.AnimatorPlayback.asmdef",
+      "sha256": "143dc2f6935036723a6832b81c7cd0f13600a16c891c9b0b28fde24eb9e7bcca"
+    },
+    {
+      "path": "scripts/prepare_battle_status_material_assets.py",
+      "sha256": "885b24282a65976458b7498f940958a8a8bd34ba948943453aef9fae564c8399"
+    },
+    {
+      "path": "scripts/prepare_battle_status_orbit_assets.py",
+      "sha256": "fe925e292941663c2ccb19d834c0a827e520cfe9f498dec0cf08a165c32e27de"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleMaterialPlayables/MeshMaterialProperty.cs",
+      "sha256": "a9dfd46fdc2b94b9ac617ac29f6ad2a7f8fb6365f8af173649288a77d8aaae60"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleMaterialPlayables/MeshMaterialProperty.cs.meta",
+      "sha256": "6666a923b406cabdd9df8304ba3024e79926750ba78eb3e27b18dd73c2a6008d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleMaterialPlayables/MyPlayableMaterialProperty.cs",
+      "sha256": "190ba459566db143c76ee1bf10545af3653f8385bf40953f71aebd8661a70d1a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleMaterialPlayables/MyPlayableMaterialProperty.cs.meta",
+      "sha256": "37c4423ffc9d007f8b1889518ab5b14ef21a534b6824c611bc7bb405130358e3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleMaterialPlayables/PlayableMaterialPropertyProvider.cs",
+      "sha256": "1655884a2c3f2986a285be6292fde4022a69dd03220f80a7083c68cea166f379"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleMaterialPlayables/PlayableMaterialPropertyProvider.cs.meta",
+      "sha256": "aca18b05a215467ebcbfff6323ab67a431fc5b07b59c2f0f6b7af69ea44e0901"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleMaterialPlayables/PlayableMaterialPropertyStencilProvider.cs",
+      "sha256": "89903c99fd4b86fe51b3f2d2ae17a2ed17350a6c9a261406aaac2959c7e773e8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleMaterialPlayables/PlayableMaterialPropertyStencilProvider.cs.meta",
+      "sha256": "b55a835d3361fe411f26f5d6f01150175cad54f5b91b125cf812a404badb54d2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleMaterialPlayables/Zjcs.Official.BattleMaterialPlayables.asmdef",
+      "sha256": "5c1f4df98b410cb07ad78ee3ae9bf48e6b08665d4f39bb286bdd7ab8ab6ebe3f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleMaterialPlayables/Zjcs.Official.BattleMaterialPlayables.asmdef.meta",
+      "sha256": "8473edbd89232a9be0cddcd1421211f5a9ec3dff14fe366dbab20e4b057e2e2c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleMaterialPlayables.meta",
+      "sha256": "00b346f3364866298df6f832cb23638b841dfc746e0d1348e2205d5ad3fe6e89"
+    }
+  ],
+  "reused_dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/CombatAppearance/AppearanceRenderer.cs",
+      "sha256": "d111fa5b8d8a10df13c3df2775eb8795004881208597c6edbd4c18a0ee434c05"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceRendererLite.cs",
+      "sha256": "f07bc35c75cd47472901dcfc5d505e7a1c220975b45f85e79a6aac870998cb17"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceRendererPartHandler.cs",
+      "sha256": "48da4cff7425c535f82ed794c007a7a78f1b36fd8691b37d4099f83a650b6e23"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceSkeletonPartEntry.cs",
+      "sha256": "e6b68fda283edefe7cd0767249eabb145bafc430a01f682d11aea0c62ee59164"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IAppearanceSkeletonPart.cs",
+      "sha256": "de9c5ef05e0d087ad506dd7892215c77f3a4684206788c55c88c17678c4ed3bb"
+    }
+  ],
+  "adaptation": "Namespace imports bind the existing migrated original full/lite appearance and loaded part collection. Only diagnostics, ILSpy Vector2/Object operator syntax, TryGetComponent out arguments and KeyValuePair deconstruction syntax change. All four original classes, serialized fields, branches, curves, material selection order, per-property reference counts, provider callbacks and restore order are retained.",
+  "limits": [
+    "Formal battle actors, every native material graph and status lifecycle installation are separate integration work."
+  ]
+}
