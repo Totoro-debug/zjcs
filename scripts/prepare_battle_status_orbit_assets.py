@@ -31,7 +31,8 @@ def sha(raw):
 
 def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
           family='StatusOrbits', shader_prefix='StatusOrbit_', runtime_receipts=None,
-          generator=None, limits=None, graph_roots=None, reference_scripts=None):
+          generator=None, limits=None, graph_roots=None, reference_scripts=None,
+          external_scripts=None, source_scripts=None):
     work = Path(os.environ['ZJCS_VALIDATION_DIR']).resolve()
     assert work.parent == (ROOT/'output/validation').resolve() and (work/'.zjcs-validation.json').is_file()
     export_receipt = CACHE/'native-export-all-source-manifest.json'
@@ -49,8 +50,10 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
 
     index_path = work/'status-orbit-guid-index.json'
     if index_path.exists(): index = json.loads(index_path.read_bytes())
+    complete_index_built = False
 
     def resolve(guid):
+        nonlocal complete_index_built
         if guid not in index:
             for category in ('Effect', 'Shaders', 'Material', 'Materials', 'Mesh', 'Meshes', 'Packages', 'AnimatorController', 'AnimationClip',
                              'Texture2D', 'Textures', 'Shader', 'effect_shader', 'Light', 'Prefabs',
@@ -63,6 +66,12 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
                 index[flag] = True
                 index_path.write_bytes(json.dumps(index).encode())
                 if guid in index: break
+        if guid not in index and not complete_index_built:
+            for path in EXPORTED.rglob('*.meta'):
+                match = GUID.search(path.read_text(encoding='utf-8-sig'))
+                if match: index[match[1]] = path.relative_to(EXPORTED).as_posix()[:-5]
+            index_path.write_bytes(json.dumps(index).encode())
+            complete_index_built = True
         assert guid in index, ('Unresolved native orbit reference', guid)
         return EXPORTED/index[guid]
 
@@ -93,12 +102,54 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
         script_records.append(dict(file_id=file_id, original_native_reference=identity(original),
             migrated=identity(target), migrated_meta=identity(Path(str(target)+'.meta')),
             field_bridge_receipt=identity(ROOT/binding['receipt'])))
+    for file_id, binding in (external_scripts or {}).items():
+        original = EXPORTED/binding['native_meta']
+        read(original)
+        target = ROOT/binding['runtime']
+        target_meta = Path(str(target)+'.meta')
+        original_text = target.read_text(encoding='utf-8-sig')
+        namespace = re.search(r'(?m)^namespace ([\w.]+)', original_text)
+        actual_namespace = namespace[1] if namespace else ''
+        assert actual_namespace == binding['namespace'] and target.stem == binding['name']
+        assert re.search(r'\bclass\s+'+re.escape(target.stem)+r'\b', original_text)
+        if binding.get('verify_file_id_hash'):
+            assert struct.unpack('<i', MD4.new(('s\0\0\0'+actual_namespace+target.stem).encode()).digest()[:4])[0] == file_id
+        source = ROOT/binding['source']
+        assert source.is_file()
+        script_guids[file_id] = GUID.search(target_meta.read_text(encoding='utf-8-sig'))[1]
+        script_records.append(dict(file_id=file_id, original_native_reference=identity(original),
+            migrated=identity(source), migrated_script=identity(target),
+            migrated_meta=identity(target_meta),
+            verification='namespace, type name, original native plugin reference'+
+                (' and source script ID hash' if binding.get('verify_file_id_hash') else '')))
+    for file_id, binding in (source_scripts or {}).items():
+        original = CODE/binding.get('source_root', 'client-source')/binding['source']
+        original_text = original.read_text(encoding='utf-8-sig')
+        namespace = re.search(r'(?m)^namespace ([\w.]+)', original_text)
+        actual_namespace = namespace[1] if namespace else ''
+        assert actual_namespace == binding['namespace']
+        assert re.search(r'\bclass\s+'+re.escape(binding['name'])+r'\b', original_text)
+        target = ROOT/binding['runtime']
+        target_text = target.read_text(encoding='utf-8-sig')
+        target_namespace = re.search(r'(?m)^namespace ([\w.]+)', target_text)
+        assert (target_namespace[1] if target_namespace else '') == binding.get('target_namespace', actual_namespace)
+        assert re.search(r'\bclass\s+'+re.escape(binding['name'])+r'\b', target_text)
+        target_meta = Path(str(target)+'.meta')
+        script_guids[file_id] = GUID.search(target_meta.read_text(encoding='utf-8-sig'))[1]
+        script_records.append(dict(file_id=file_id, original=identity(original),
+            migrated=identity(target), migrated_meta=identity(target_meta),
+            verification='official source type and namespace; ID bound by active-version prefab reference'))
     local_scripts = set(script_guids.values())
+    unmapped_scripts = {}
+    unmapped_script_samples = {}
 
-    def adapt(text):
+    def adapt(text, path):
         def script(match):
             file_id = int(match[1])
-            assert file_id in script_guids, ('Unmigrated orbit node', file_id)
+            if file_id not in script_guids:
+                unmapped_scripts[file_id] = unmapped_scripts.get(file_id, 0) + 1
+                unmapped_script_samples.setdefault(file_id, set()).add(path.relative_to(EXPORTED).as_posix())
+                return match[0]
             return 'm_Script: {fileID: 11500000, guid: '+script_guids[file_id]+', type: 3}'
         return SCRIPT.sub(script, text)
 
@@ -111,9 +162,17 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
         if path in found: continue
         found.add(path)
         raw = read(path); read(Path(str(path)+'.meta'))
-        if path.suffix == '.png': continue
-        text = adapt(raw.decode('utf-8-sig'))
-        pending += [resolve(guid) for guid in set(GUID.findall(text))-BUILTINS-local_scripts]
+        if path.suffix in ('.png', '.bytes'): continue
+        try:
+            text = adapt(raw.decode('utf-8-sig'), path)
+        except UnicodeDecodeError as error:
+            raise ValueError(('Non-text asset in skill graph closure', path, error.start)) from error
+        original_script_guids = {match[2] for match in SCRIPT.finditer(text)}
+        pending += [resolve(guid) for guid in set(GUID.findall(text))-BUILTINS-local_scripts-original_script_guids]
+    if unmapped_scripts:
+        raise AssertionError(('Unmigrated skill graph scripts (occurrences, sample paths)',
+            {file_id: dict(occurrences=count, paths=sorted(unmapped_script_samples[file_id])[:3])
+             for file_id, count in sorted(unmapped_scripts.items())}))
 
     apk = Apk.current()
     try:
@@ -193,7 +252,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
                          for path in found if path.suffix == '.png'}
         shader_guids = {GUID.search(Path(str(target)+'.meta').read_text(encoding='utf-8-sig'))[1]
                         for target in targets.values() if target.suffix == '.shader'}
-        textures, shaders, converted_inputs = [], [], []
+        textures, shaders, binary_assets, converted_inputs = [], [], [], []
         for path, target in targets.items():
             raw = read(path)
             if target.suffix == '.shader':
@@ -240,17 +299,25 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
                     compressed_sha256=sha(image_data), native_format=record['native_format'],
                     pixel_bytes=record['pixel_bytes'], pixels_sha256=record['pixels_sha256'],
                     mips=record['mips'], exported_png_channel_max_delta=min(comparison), converted=identity(converted)))
+            elif path.suffix == '.bytes':
+                binary_assets.append(dict(source=identity(path), source_sha256=sha(raw)))
             else:
-                text = adapt(raw.decode('utf-8-sig'))
+                text = adapt(raw.decode('utf-8-sig'), path)
                 text = GUID.sub(lambda m: 'guid: '+(m[1] if m[1] in BUILTINS|local_scripts else replacements[m[1]]), text)
                 text = re.sub(r'(fileID: 2800000, guid: )([a-f0-9]{32})(, type: )3',
                     lambda m: m[1]+m[2]+m[3]+('2' if m[2] in texture_guids else '3'), text)
                 text = re.sub(r'(fileID: 4800000, guid: )([a-f0-9]{32})(, type: )2',
                     lambda m: m[1]+m[2]+m[3]+('3' if m[2] in shader_guids else '2'), text)
                 raw = text.encode()
-            write_changed(target, raw.decode('utf-8'))
+            if target.suffix == '.bytes':
+                if not target.exists() or target.read_bytes() != raw:
+                    target.write_bytes(raw)
+            else:
+                write_changed(target, raw.decode('utf-8'))
             guid = GUID.search(Path(str(target)+'.meta').read_text(encoding='utf-8-sig'))[1]
-            importer = 'ShaderImporter' if target.suffix == '.shader' else 'PrefabImporter' if target.suffix == '.prefab' else 'NativeFormatImporter'
+            importer = ('ShaderImporter' if target.suffix == '.shader' else
+                'PrefabImporter' if target.suffix == '.prefab' else
+                'TextScriptImporter' if target.suffix == '.bytes' else 'NativeFormatImporter')
             write_changed(Path(str(target)+'.meta'), 'fileFormatVersion: 2\nguid: '+guid+'\n'+importer+':\n  externalObjects: {}\n')
         rows = [dict(id=key, resource='Combat/'+family+'/'+str(Path(path).with_suffix('')).replace('\\', '/'))
                 for key, path in graph_paths.items()]
@@ -268,7 +335,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
         write_changed(RECEIPT, json.dumps(dict(manifest=apk.version, originals=originals,
             native_export_receipt=identity(export_receipt), native_inputs=[inputs[key] for key in sorted(inputs)],
             texture_conversion_receipt=identity(texture_receipt), converted_inputs=converted_inputs,
-            textures=textures, shaders=shaders, application=script_records,
+            textures=textures, shaders=shaders, binary_assets=binary_assets, application=script_records,
             runtime_receipts=[identity(ROOT/'assets/reference/battle-animation'/name) for name in (
                 runtime_receipts or ('status-orbit-runtime-source-manifest.json', 'status-view-runtime-source-manifest.json'))],
             generator=identity(generator or Path(__file__)), graph_asset_adapter=identity(Path(__file__)),
