@@ -475,6 +475,7 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 技能角色母体替换复用所选 `884_156692` 的 `ApplyOverrideToMaster` 与 `MyFightRoleCharacter.Component.MasterId` 查找规则；本地由显式 `IBattleMasterEntityResolver` 适配缺失的离线实体容器，并保留原 `UseSourceDataToOverride`／`OverrideSource` 分支。源码、resolver、scope、Unity meta 与 Editor Play Mode 验收哈希见[母体覆盖来源清单](battle-animation/skill-master-override-runtime-source-manifest.json)，生产 resolver 尚未绑定，范围见[技能](../../docs/features/skills.md)。
 技能动作 Playable 使用所选 `884_156692` 的 `MyPlayableAnimation`、`MyPlayableDefault`、`MyPlayableRenderSortLayer`、`MyPlayableLight` 和 `MyPlayableLight2D`；本地保留原 Animation 播放、Transform 持续时间、Renderer 排序及 Light／Light2D 强度曲线字段，来源、输出与 Unity meta 哈希见[动作 Playable 来源清单](battle-animation/skill-animation-playable-runtime-source-manifest.json)。
 技能翻转触发器使用所选 `884_156692` 的 `MyPlayableFixFlipXTrigger` 和 `MyGridTransform`；本地在现有 EntityLifecycle 程序集中保留 source/target 选择与 `SetScaleByFlipX` 调用，来源、输出与 Unity meta 哈希见[翻转触发器来源清单](battle-animation/skill-trigger-playable-runtime-source-manifest.json)。
+技能效果淡出触发序列使用所选 `884_156692` 的 `MyPlayableFadeEffectSequence`，调用既有原 `MyEffectFadeOut`；原数组顺序、起始时间、持续时间及重触发取消保持不变，UniTask 逐帧状态机适配为 Unity Coroutine。输入、输出与 meta 哈希见[触发序列来源清单](battle-animation/skill-trigger-fade-sequence-source-manifest.json)。
 
 
 伙伴提示配置服务的接线复用所选 `884_156692` 的 NPC、档案、好感、礼物与天赋解析器及提示节点端口，原码、既有配置／规则依赖、本地接线和验证工具的输入输出哈希见[配置服务来源](partner-tip-services-source-manifest.json)。入口为 `scripts/record_partner_tip_services.py`；历史人物载荷保留原 `854_156383` 身份，当前伙伴配置保持所选版本，不新增美术或完整素材快照。

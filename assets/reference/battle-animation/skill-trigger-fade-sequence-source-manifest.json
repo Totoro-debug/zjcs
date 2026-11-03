@@ -1,0 +1,28 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "official_client_sources": [
+    {
+      "path": ".tools/source-packages/official-code/client-source/MyPlayableFadeEffectSequence.cs",
+      "sha256": "72ec7b275a81c95c2b48023908692c5d2dcfae1f6365fed769329b4dda04661b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyEffectFadeOut.cs",
+      "sha256": "d8e26b3a16e420a3f4cce2471c34c354518c719a0774ebe680222cd78fce0084"
+    }
+  ],
+  "migrated_outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyPlayableFadeEffectSequence.cs",
+      "sha256": "5eeb629e99b7a1d813adfc5c1865a0d15b1a1be499333e0329bba361b398d784"
+    }
+  ],
+  "meta_outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyPlayableFadeEffectSequence.cs.meta",
+      "sha256": "968c453784b643d1200fc5ce0e49be454dd460e2f27dec105eb64323568fe6eb"
+    }
+  ],
+  "adaptation": "Preserve the original serialized start-time/duration/effect array order, cumulative frame delta timing, immediate due entries, next-frame progression between entries, and per-effect FadeOut call. Unity Coroutine carries the original cancel-and-restart lifecycle in place of the generated UniTask state machine.",
+  "runtime_validation": "Source and output hashes recorded. Unity import/compile and Play Mode timing/cancellation checks remain pending."
+}
