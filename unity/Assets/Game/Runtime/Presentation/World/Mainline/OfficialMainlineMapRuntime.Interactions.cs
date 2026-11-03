@@ -213,12 +213,10 @@ namespace Zjcs.Presentation.World
             if (entityView == null || localSave == null) return;
             SynchronizeMap12ClaimedChests();
             SynchronizeMap12BuildingCompletions();
+            var presentation = new MainlineMapEntityPresentation(session.Definition, MapProfile, localSave,
+                progressionSave.Save, mapLogicTags, regions.IsRegionAccessible, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
             foreach (Map10RuntimeEntity entity in mapEntities.Values)
             {
-                bool goddess = MapProfile.HasNativeUi && entity.TypeId == 202;
-                bool goddessActivated = goddess
-                    && progressionSave.Save.World.ActivatedGoddessRegions.Any(value =>
-                    value.MapClassId == mapClassId && value.Region == entity.Region);
                 int state = entity.State;
                 Map13WaterState waterState = mapClassId == 13 && map13NavigationSession != null
                     && map13NavigationSession.Water.PlacementIds.Contains(entity.PlacementId)
@@ -233,24 +231,11 @@ namespace Zjcs.Presentation.World
                     entity.Active = waterState.Spawned;
                     entityView.SetEntityGrid(entity.PlacementId, waterState.Grid);
                 }
-                if (mapLogicTags.TryGetValue(entity.PlacementId, out Map10RuntimeLogicTag tag))
-                    state = localSave.mapLogicStates.FirstOrDefault(value => value != null && value.Tag == tag.Tag)?.State ?? state;
-                if (goddessActivated) state = 1;
-                if (entity.TypeId == 223) state = regions.IsPublicRegion(entity.Region) ? 2 : statues.HeroActivated(entity) ? 1 : 0;
-                entityView.SetEntityState(entity.PlacementId, state);
                 bool spawned = waterState != null ? waterState.Spawned
                     : IsPuzzleEntity(entity.PlacementId) ? puzzles.IsSpawned(entity.PlacementId) : entity.Active;
-                if (OfficialMainlineStaminaModule.IsStaminaPoint(entity))
-                {
-                    var placement = stamina.StaminaPlacement(entity);
-                    bool[] flags = regions.IsPublicRegion(entity.Region) ? placement.Public : placement.Private;
-                    spawned = flags != null && flags.Length > 0 && flags[0]
-                        && stamina.Stamina.Available(mapClassId, entity.PlacementId, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
-                }
-                bool active = (spawned || goddess) && regions.IsRegionAccessible(entity.Region)
-                    && (entity.TypeId == 223 || IsMap12StelePresentation(entity)
-                        || !localSave.completedEntityPlacements.Contains(entity.PlacementId))
-                    && !IsMapLogicEntityDestroyed(entity.PlacementId);
+                MainlineMapEntityPresentation.Result result = presentation.Read(entity, state, spawned);
+                entityView.SetEntityState(entity.PlacementId, result.State);
+                bool active = result.Active;
                 if (mapClassId == 13 && localSave.completedEntityPlacements.Contains(entity.PlacementId)
                     && map13Trees != null && map13Trees.KeepRemovalActive(entity.PlacementId)) active = true;
                 entityView.SetEntityActive(entity.PlacementId, active);
@@ -265,9 +250,7 @@ namespace Zjcs.Presentation.World
 
         private bool IsMapLogicEntityDestroyed(int placementId)
         {
-            if (!mapLogicTags.TryGetValue(placementId, out Map10RuntimeLogicTag tag)) return false;
-            return progressionSave.Save.World.CompletedEntityTags.Contains(tag.Tag)
-                || localSave.mapLogicStates.Any(value => value != null && value.Tag == tag.Tag && value.State < 0);
+            return MainlineMapEntityPresentation.IsDestroyed(placementId, mapLogicTags, localSave, progressionSave.Save);
         }
 
         private void ApplyStoryMapLogicStates(Map10RuntimeMapLogicState[] states)
@@ -300,7 +283,7 @@ namespace Zjcs.Presentation.World
             SaveLocalProgress();
         }
 
-        private sealed class Map10RuntimeEntity
+        internal sealed class Map10RuntimeEntity
         {
             public int PlacementId;
             public int State;

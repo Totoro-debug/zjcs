@@ -29,7 +29,7 @@ namespace Zjcs.Presentation.World
                     int index = WitchActivationIndex(entity);
                     if (index < 0) continue;
                     Map11RuntimeWitchInfo info = witchInfos.Single(value => value.ActiveCount == index);
-                    if (info.IsNextState || WitchSpawnDefeated(entity))
+                    if (MainlineMapEntityRestore.WitchNextState(info, host.localSave, entity.PlacementId))
                     {
                         entity.State = 1;
                         host.entityView.SetEntityState(entity.PlacementId, 1);

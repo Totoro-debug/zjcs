@@ -24,6 +24,8 @@ using Zjcs.Offline.World.NativeMap13TreeEntities;
 using Zjcs.Offline.World.MapGridVisibility;
 using Zjcs.Official.MapRootFog;
 using Zjcs.Official.World.NativeTerrain.Common;
+using Zjcs.Offline.World.MainlineMiniMap;
+using Zjcs.Official.World.Map13MiniMap;
 
 namespace Zjcs.Editor.Map13Mainline
 {
@@ -83,6 +85,18 @@ namespace Zjcs.Editor.Map13Mainline
             GraphicsSettings.defaultRenderPipeline=null;QualitySettings.renderPipeline=null;
         }
         public static void RunMap12(){Run();SessionState.SetInt(Key+".map",12);}
+        public static void RunSavedSnapshots()
+        {
+            foreach(int map in new[]{11,12})
+            {
+                SessionState.SetInt(Key+".map",map);
+                string root=Directory.GetDirectories(Output,"formal-map13-profile-*")
+                    .Where(path=>File.Exists(Path.Combine(path,"saves","slot-1","map-"+map+"-save.json")))
+                    .OrderByDescending(Directory.GetCreationTimeUtc).First();
+                VerifySnapshotFreshness(new ProfileSlotCatalog(root),"slot-1");
+            }
+            Debug.Log("MAINLINE_FORMAL_SAVED_SNAPSHOTS_PASS");
+        }
         public static void RunSharedMaps(){RunMap12();SessionState.SetString(Key+".queue","15,13");}
         public static void RunMap15And13(){RunMap15();SessionState.SetString(Key+".queue","13");}
         public static void RunMap15()
@@ -227,6 +241,7 @@ namespace Zjcs.Editor.Map13Mainline
             var explored=Field<OfflineMapGridVisibility>(runtime,"mapGridVisibility").ExploredEntityIds;
             Require(explored.Length>0&&before.exploredEntityPlacements!=null&&explored.SequenceEqual(before.exploredEntityPlacements),
                 "Formal map did not persist its actually revealed entity placements after simulated movement.");
+            yield return VerifyMiniMapSnapshot(runtime,slots,slot,"moved");
             ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map"+MapId+"-formal-moved.png"));yield return new WaitForSecondsRealtime(.5f);
             Call(runtime,"CloseMap");yield return null;yield return null;
             runtime=Open(slot,saves,canvas.transform);yield return new WaitForSecondsRealtime(3);
@@ -236,10 +251,12 @@ namespace Zjcs.Editor.Map13Mainline
                 &&after.exploredEntityPlacements.SequenceEqual(Field<OfflineMapGridVisibility>(runtime,"mapGridVisibility").ExploredEntityIds),
                 "Formal entity exploration history changed on cold reopen.");
             CheckFog(runtime);
+            yield return VerifyMiniMapSnapshot(runtime,slots,slot,"restored");
             ScreenCapture.CaptureScreenshot(Path.Combine(Output,"map"+MapId+"-formal-restored.png"));yield return new WaitForSecondsRealtime(.5f);
             Call(runtime,"CloseMap");yield return null;yield return null;
             if(SessionState.GetBool(Key+".trees",false))yield return TreeSteps(slot,saves,canvas.transform,mapSave);
             if(MapId==11||MapId==12)yield return GoddessSteps(slot,saves,canvas.transform);
+            if(MapId==11||MapId==12)VerifySnapshotFreshness(slots,slot);
             Require(!failed,"Formal map entry emitted runtime errors.");
             File.WriteAllText(Path.Combine(Output,"map"+MapId+"-formal-entry.json"),JsonUtility.ToJson(new Proof{map_id=MapId,editor=Application.unityVersion,backend=SystemInfo.graphicsDeviceType.ToString(),play_mode=true,simulated_pointer=true,save_reopen=true,entry_x=initial.X,entry_y=initial.Y,moved_x=target.X,moved_y=target.Y},true));
             Debug.Log("Map"+MapId+" formal entry passed: shared map host, simulated map pointer, local grid visibility/position save and cold reopen.");
@@ -292,9 +309,115 @@ namespace Zjcs.Editor.Map13Mainline
             runtime=Open(slot,saves,ui);yield return new WaitForSecondsRealtime(3);
             visibility=Field<OfflineMapGridVisibility>(runtime,"mapGridVisibility");
             Require(visibility.RegionPositions(goddess.Region).All(visibility.IsVisible),"Activated region visibility did not survive cold reopen.");
-            CheckFog(runtime);Call(runtime,"CloseMap");yield return null;yield return null;
+            CheckFog(runtime);
+            yield return VerifyMiniMapSnapshot(runtime,new ProfileSlotCatalog(saves),slot,"public-region");
+            Call(runtime,"CloseMap");yield return null;yield return null;
             Debug.Log("Map"+MapId+" original goddess input passed: explicit region completion fixture, simulated map/button clicks, immediate grid unlock and cold restore.");
         }
+        private static IEnumerator VerifyMiniMapSnapshot(OfficialMainlineMapRuntime runtime,ProfileSlotCatalog slots,
+            string slot,string phase)
+        {
+            var files=Directory.GetFiles(slots.GetSlotDirectory(slot),"*",SearchOption.AllDirectories)
+                .ToDictionary(path=>path,path=>Convert.ToBase64String(File.ReadAllBytes(path)));
+            var reader=new MainlineMapMiniMapSnapshots(OfficialWorldMapAssetCatalog.LoadDefault(),slots,slot);
+            var beforeObjects=UnityEngine.Object.FindObjectsOfType<GameObject>(true).Select(value=>value.GetInstanceID()).OrderBy(id=>id).ToArray();
+            var snapshot=reader.Read(MapId);
+            Require(beforeObjects.SequenceEqual(UnityEngine.Object.FindObjectsOfType<GameObject>(true)
+                .Select(value=>value.GetInstanceID()).OrderBy(id=>id)),"A cold minimap read mounted scene objects.");
+            var views=Field<OfficialMap10EntityView>(runtime,"entityView");
+            var active=views.EntityInfos.Where(info=>views.FindEntityObject(info.PlacementId)?.activeSelf==true)
+                .Select(info=>info.PlacementId).OrderBy(id=>id).ToArray();
+            var actual=snapshot.Entities.Select(value=>value.PlacementId).OrderBy(id=>id).ToArray();
+            Require(active.SequenceEqual(actual),"Cold minimap entities differ from the live world's actual activation: missing="
+                +string.Join(",",active.Except(actual).Take(20))+" extra="+string.Join(",",actual.Except(active).Take(20)));
+            foreach(var info in views.EntityInfos.Where(value=>snapshot.PublicRegions.Contains(value.Region)
+                &&(value.TypeId==202||value.TypeId==223)&&active.Contains(value.PlacementId)))
+                Require(snapshot.Entities.Single(value=>value.PlacementId==info.PlacementId).State==(info.TypeId==202?1:2),
+                    "Cold minimap did not use the latest public goddess/hero state.");
+            var visibility=Field<OfflineMapGridVisibility>(runtime,"mapGridVisibility");
+            Require(snapshot.GridVisibility.SequenceEqual(visibility.Snapshot()),"Cold minimap changed original fog bytes.");
+            PlayerOfflineMiniMapDataResponse response=null;
+            new LocalMiniMapDataSource(reader.Read).Request(MapId).OnComplete+=(value,error)=>
+            {Require(error==0,"Formal local minimap request failed.");response=value;};
+            for(int i=0;i<4&&response==null;i++)yield return null;
+            Require(response!=null&&response.UseLatestLocalEntityStates,"Formal world snapshot did not reach original offline response consumption.");
+            var expected=snapshot.Entities.Where(value=>value.Explored||snapshot.PublicRegions.Contains(value.Region))
+                .Select(value=>value.PlacementId).OrderBy(id=>id);
+            Require(expected.SequenceEqual(response.LiteEntityDataDict.Keys.OrderBy(id=>id)),"Formal response leaked private unexplored entities.");
+            Require(files.Count==Directory.GetFiles(slots.GetSlotDirectory(slot),"*",SearchOption.AllDirectories).Length
+                &&files.All(pair=>Convert.ToBase64String(File.ReadAllBytes(pair.Key))==pair.Value),"Browsing changed profile/world/backup files.");
+            bool rejected=false;try{reader.Read(16);}catch(InvalidDataException){rejected=true;}
+            Require(rejected,"An unvisited world supplied offline data.");
+            Debug.Log("MAINLINE_FORMAL_MINIMAP_SNAPSHOT_PASS map="+MapId+" phase="+phase
+                +" active="+active.Length+" markers="+response.LiteEntityDataDict.Count);
+        }
+
+        private static void VerifySnapshotFreshness(ProfileSlotCatalog slots,string slot)
+        {
+            string mapPath=Path.Combine(slots.GetSlotDirectory(slot),"map-"+MapId+"-save.json");
+            string profilePath=slots.GetProgressPath(slot),backupPath=mapPath+".bak";
+            byte[] originalMap=File.ReadAllBytes(mapPath),originalProfile=File.ReadAllBytes(profilePath),originalBackup=File.ReadAllBytes(backupPath);
+            long clock=DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var reader=new MainlineMapMiniMapSnapshots(OfficialWorldMapAssetCatalog.LoadDefault(),slots,slot,()=>clock);
+            try
+            {
+                var definition=OfficialWorldMapAssetCatalog.LoadDefault().LoadMap(MapId).Definition;
+                var resource=definition.Entities.First(value=>value.Region==0&&value.EntityId==8011
+                    ||value.Region==0&&value.EntityId==8021);
+                string mapJson=System.Text.Encoding.UTF8.GetString(originalMap);
+                var completed=Regex.Match(mapJson,"\"completedEntityPlacements\"\\s*:\\s*\\[([^\\]]*)\\]");
+                Require(completed.Success,"Resource fixture cannot read completed placements.");
+                string remaining=string.Join(",",completed.Groups[1].Value.Split(',').Select(value=>value.Trim())
+                    .Where(value=>value.Length>0&&value!=resource.Id.ToString()));
+                mapJson=mapJson.Remove(completed.Index,completed.Length).Insert(completed.Index,"\"completedEntityPlacements\":["+remaining+"]");
+                File.WriteAllText(mapPath,mapJson);
+                var profile=JsonUtility.FromJson<OfflineMainlineSave>(System.Text.Encoding.UTF8.GetString(originalProfile));
+                if(!profile.World.ActivatedGoddessRegions.Any(value=>value.MapClassId==MapId&&value.Region==0))
+                    profile.World.ActivatedGoddessRegions.Add(new OfflineMapRegionKey{MapClassId=MapId,Region=0});
+                profile.World.MapInteractions.RemoveAll(value=>value.MapClassId==MapId&&value.PlacementId==resource.Id);
+                File.WriteAllText(profilePath,JsonUtility.ToJson(profile,true));
+                Require(reader.Read(MapId).Entities.Any(value=>value.PlacementId==resource.Id),"Public resource fixture is not visible.");
+                profile.World.MapInteractions.Add(new OfflineMapInteractionState{MapClassId=MapId,PlacementId=resource.Id,AvailableAt=clock+60});
+                int serial=profile.World.Exploration.NextSerial++;
+                var generated=new OfflineExploreEntity{Serial=serial,MapClassId=MapId,Area=resource.Area,Region=0,
+                    X=resource.Grid[0],Y=resource.Grid[1],EntityClassId=8364,Group=1,Variant=1,CreatedAt=clock,ExpiresAt=clock+60};
+                profile.World.Exploration.Entities.Add(generated);
+                File.WriteAllText(profilePath,JsonUtility.ToJson(profile,true));
+                byte[] prepared=File.ReadAllBytes(profilePath);
+                var before=reader.Read(MapId);
+                Require(!before.Entities.Any(value=>value.PlacementId==resource.Id)
+                    &&before.Entities.Any(value=>value.PlacementId==generated.PlacementId),"Same reader did not consume latest resource/generated entity state.");
+                var replacement=OfficialWorldExplorationCatalog.Load().Data.entities.First(value=>value.entityClassId!=8364
+                    &&value.parameters.WorldStageType!=202&&value.parameters.WorldStageType!=223);
+                generated.EntityClassId=replacement.entityClassId;generated.State=replacement.parameters.PublicDefaultState;
+                File.WriteAllText(profilePath,JsonUtility.ToJson(profile,true));prepared=File.ReadAllBytes(profilePath);
+                var changed=reader.Read(MapId).Entities.Single(value=>value.PlacementId==generated.PlacementId);
+                Require(changed.EntityClassId==generated.EntityClassId&&changed.State==generated.State,
+                    "Same reader reused a generated entity's stale class/state.");
+                clock+=60;
+                var after=reader.Read(MapId);
+                Require(after.Entities.Any(value=>value.PlacementId==resource.Id)
+                    &&!after.Entities.Any(value=>value.PlacementId==generated.PlacementId),"Resource refresh and generated expiry failed at the exact local time boundary.");
+                Require(prepared.SequenceEqual(File.ReadAllBytes(profilePath)),"Time projection rewrote the profile.");
+                File.WriteAllBytes(backupPath,originalMap);File.WriteAllText(mapPath,"invalid map primary");
+                Require(reader.Read(MapId).GridVisibility.SequenceEqual(before.GridVisibility),"Cold map backup recovery changed original fog.");
+                Require(File.ReadAllText(mapPath)=="invalid map primary","Browsing repaired or overwrote the primary file.");
+                File.WriteAllText(backupPath,"invalid map backup");
+                bool rejected=false;try{reader.Read(MapId);}catch(InvalidDataException){rejected=true;}
+                Require(rejected,"Two corrupt map files supplied a minimap.");
+                string noFog=Regex.Replace(System.Text.Encoding.UTF8.GetString(originalMap),
+                    "\"gridVisibility\"\\s*:\\s*\"[^\"]*\"","\"gridVisibility\":\"\"");
+                File.WriteAllText(mapPath,noFog);
+                rejected=false;try{reader.Read(MapId);}catch(InvalidDataException){rejected=true;}
+                Require(rejected&&File.ReadAllText(mapPath)==noFog,"Missing exploration was replaced with invented fog or written back.");
+                Debug.Log("MAINLINE_FORMAL_MINIMAP_FRESHNESS_PASS map="+MapId+" resource="+resource.Id+" generated="+generated.PlacementId);
+            }
+            finally
+            {
+                File.WriteAllBytes(mapPath,originalMap);File.WriteAllBytes(profilePath,originalProfile);File.WriteAllBytes(backupPath,originalBackup);
+            }
+        }
+
         private static IEnumerator TreeSteps(string slot,string saves,Transform ui,string mapSave)
         {
             var source=Resources.Load<NativeMap13TreeWorldAssets>("Map13/Native/tree-world-assets");

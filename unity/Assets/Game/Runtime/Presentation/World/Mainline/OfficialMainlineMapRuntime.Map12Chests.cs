@@ -47,22 +47,13 @@ namespace Zjcs.Presentation.World
         {
             if (mapClassId != 12) return;
             map12Chests ??= OfficialMap12ChestCatalog.Load();
-            localSave.completedEntityPlacements = localSave.completedEntityPlacements.Concat(map12Chests.Data.chests
-                .Where(v => progressionSave.Save.World.CompletedEntityTags.Contains(OfficialMap12ChestCatalog.CompletionTag(v.PlacementId)))
-                .Select(v => v.PlacementId)).Distinct().ToArray();
+            MainlineMapEntityRestore.RecoverChests(map12Chests, localSave, progressionSave.Save);
         }
 
         private void SynchronizeMap12ClaimedChests()
         {
             if (mapClassId != 12 || map12Chests == null || puzzles == null) return;
-            foreach (var chest in map12Chests.Data.chests.Where(v => localSave.completedEntityPlacements.Contains(v.PlacementId)))
-            {
-                if (!mapEntities.TryGetValue(chest.PlacementId, out var entity)) continue;
-                entity.State = chest.CompleteState;
-                // Native AutoNextState + DestroyOnEnd also releases occupancy.
-                // Keep claimed puzzle rewards absent through terminal resets.
-                puzzles.SynchronizeExternalEntity(chest.PlacementId, chest.CompleteState, false, entity.Grid);
-            }
+            MainlineMapEntityRestore.SynchronizeChests(map12Chests, localSave, mapEntities, puzzles);
         }
 
         private void FlushMap12ChestProgress()

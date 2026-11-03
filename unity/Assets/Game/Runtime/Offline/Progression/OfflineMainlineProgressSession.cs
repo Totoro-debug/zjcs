@@ -504,6 +504,19 @@ namespace Zjcs.Offline.Progression
             if (catalog == null) throw new ArgumentNullException(nameof(catalog));
             string path = slots.GetProgressPath(slotId);
             SaveReadResult result = LocalJsonSaveFile.Read(path, IsValidSaveJson);
+            if (result.Status == SaveReadStatus.Recovered && File.Exists(path))
+            {
+                try
+                {
+                    OfflineMainlineSave rejected = ParseSave(File.ReadAllText(path));
+                    Validate(rejected, out string rejection);
+                    Debug.LogWarning("Profile primary save rejected during backup recovery: " + rejection);
+                }
+                catch (Exception exception)
+                {
+                    Debug.LogWarning("Profile primary save could not be parsed during backup recovery: " + exception.Message);
+                }
+            }
             if (result.Status == SaveReadStatus.Corrupt)
                 throw new InvalidDataException("The selected profile progress save is corrupt.");
             OfflineMainlineSave save = result.Json == null ? new OfflineMainlineSave() : ParseSave(result.Json);
@@ -728,6 +741,10 @@ namespace Zjcs.Offline.Progression
             next.Player.GuildName = guildName;
             if (next.Player.RankUnlockTimes == null)
                 next.Player.RankUnlockTimes = new List<OfflineRankUnlockTime>();
+            // A native profile sync can report a lower rank than a stale local
+            // receipt. Future rank timestamps must not survive that authoritative
+            // synchronization, or the next profile commit becomes invalid.
+            next.Player.RankUnlockTimes.RemoveAll(value => value == null || value.Rank > rank);
             long acquiredAt = nowUnixSeconds > 0 ? nowUnixSeconds : DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             for (int acquiredRank = Save.Player.Rank + 1; acquiredRank <= rank; acquiredRank++)
             {
@@ -1139,6 +1156,8 @@ namespace Zjcs.Offline.Progression
         {
             RefreshMap15Preparation(next, nowUnixSeconds);
             string json = JsonUtility.ToJson(next, true);
+            if (!Validate(next, out string reason))
+                throw new InvalidDataException("The save payload does not match the current profile format: " + reason);
             LocalJsonSaveFile.Write(savePath, json, IsValidSaveJson);
             UpdateSessionItemMarks(Save.Player, next.Player);
             Save = next;
@@ -1233,10 +1252,11 @@ namespace Zjcs.Offline.Progression
             return save;
         }
 
-        private static bool Validate(OfflineMainlineSave save)
+        private static bool Validate(OfflineMainlineSave save, out string reason)
         {
+            reason = string.Empty;
             if (save == null || save.schema != 1 || save.Player == null || save.World == null || save.Tasks == null)
-                return false;
+            { reason = "root"; return false; }
             Normalize(save);
             if (save.Player.Experience < 0 || save.Player.Level < 0 || save.Player.Rank < 0
                 || !OfflinePlayerHealthProgress.IsValid(save.Player.Health)
@@ -1285,7 +1305,7 @@ namespace Zjcs.Offline.Progression
                 || save.World.ActivatedWitches.Count > 100000
                 || save.World.OpenChestCounts.Count > 10000 || save.World.AppliedEventIds.Count > 200000
                 || save.Tasks.ClaimedMainlineTaskIds.Count > 10000)
-                return false;
+            { reason = "player-or-counts"; return false; }
             if (save.Player.StatueVisitDate.Length > 0
                 && !DateTime.TryParseExact(save.Player.StatueVisitDate, "yyyyMMdd",
                     CultureInfo.InvariantCulture, DateTimeStyles.None, out _)) return false;
@@ -1299,7 +1319,7 @@ namespace Zjcs.Offline.Progression
                     || effect.StatusEffectClassIds.Count > 100
                     || effect.StatusEffectClassIds.Any(value => value <= 0)
                     || effect.StatusEffectClassIds.Distinct().Count() != effect.StatusEffectClassIds.Count)
-                    return false;
+                { reason = "statue-effects"; return false; }
             }
 
             var items = new HashSet<int>();
@@ -1307,61 +1327,63 @@ namespace Zjcs.Offline.Progression
                 if (item == null || item.ItemId <= 0 || item.Count < 0 || !items.Add(item.ItemId)
                     || item.UnitRecords == null || item.UnitRecords.Count > item.Count
                     || item.UnitRecords.Any(record => record == null || record.AcquiredAtUnixSeconds < 0
-                        || record.ExpiresAtUnixSeconds < 0)) return false;
+                        || record.ExpiresAtUnixSeconds < 0)) { reason = "inventory"; return false; }
             if (!UniqueStrings(save.Player.AppliedCharacterEventIds) || !UniqueStrings(save.Player.AppliedInventoryEventIds)
                 || !ValidateWardrobe(save.Player.Wardrobe, save.Player.Inventory)
-                || !ValidateEquipment(save.Player.Equipment)) return false;
-            if (!UniquePositiveIds(save.Player.UnlockedMapClassIds)) return false;
+                || !ValidateEquipment(save.Player.Equipment)) { reason = "player-records"; return false; }
+            if (!UniquePositiveIds(save.Player.UnlockedMapClassIds)) { reason = "unlocked-maps"; return false; }
             var rankUnlocks = new HashSet<int>();
             foreach (OfflineRankUnlockTime unlock in save.Player.RankUnlockTimes)
                 if (unlock == null || unlock.Rank <= 0 || unlock.Rank > save.Player.Rank
-                    || unlock.UnixSeconds < 0 || !rankUnlocks.Add(unlock.Rank)) return false;
+                    || unlock.UnixSeconds < 0 || !rankUnlocks.Add(unlock.Rank))
+                { reason = "rank-unlocks:" + (unlock == null ? "null" : unlock.Rank + "/" + save.Player.Rank + "/" + unlock.UnixSeconds); return false; }
             var storyKeys = new HashSet<string>(StringComparer.Ordinal);
             foreach (OfflineStoryProgress story in save.Player.Stories)
                 if (story == null || string.IsNullOrWhiteSpace(story.Key) || story.Key.Length > 256
-                    || story.Count < 0 || !storyKeys.Add(story.Key)) return false;
+                    || story.Count < 0 || !storyKeys.Add(story.Key)) { reason = "stories"; return false; }
             var handInIds = new HashSet<int>();
             foreach (OfflineHandInItemProgress handIn in save.Player.HandInItems)
-                if (handIn == null || handIn.Id <= 0 || handIn.Count <= 0 || !handInIds.Add(handIn.Id)) return false;
+                if (handIn == null || handIn.Id <= 0 || handIn.Count <= 0 || !handInIds.Add(handIn.Id)) { reason = "hand-ins"; return false; }
             var mapIds = new HashSet<int>();
             foreach (OfflineMapProgress map in save.World.Maps)
             {
                 if (map == null || map.MapClassId <= 0 || map.Regions == null || map.Regions.Count == 0
-                    || !mapIds.Add(map.MapClassId)) return false;
+                    || !mapIds.Add(map.MapClassId)) { reason = "map-record"; return false; }
                 var regions = new HashSet<int>();
                 foreach (OfflineRegionProgress region in map.Regions)
                     if (region == null || region.Region < 0 || region.Progress < 0 || region.Progress > 10000
-                        || !regions.Add(region.Region)) return false;
+                        || !regions.Add(region.Region)) { reason = "map-region"; return false; }
             }
             var aloneMapIds = new HashSet<int>();
             foreach (OfflineWorldAloneStatus status in save.World.AloneWorldStatuses)
                 if (status == null || status.MapClassId <= 0 || status.Status < 0 || status.Status > 1
                     || status.AppearTimeUnixSeconds <= 0 || status.PreparationStartedAtUnixSeconds < 0
                     || (status.Status == 1 && status.PreparationStartedAtUnixSeconds <= 0)
-                    || !aloneMapIds.Add(status.MapClassId)) return false;
+                    || !aloneMapIds.Add(status.MapClassId)) { reason = "alone-status"; return false; }
             foreach (OfflineMapBattleCount battle in save.World.BattleCounts)
                 if (battle == null || battle.MapClassId <= 0 || battle.Region < 0 || battle.Result < 0
-                    || battle.Count < 0 || !HasMapRegion(save, battle.MapClassId, battle.Region)) return false;
+                    || battle.Count < 0 || !HasMapRegion(save, battle.MapClassId, battle.Region)) { reason = "battle-count"; return false; }
             var stageIds = new HashSet<int>();
             foreach (OfflineStageWinCount stage in save.World.StageWinCounts)
-                if (stage == null || stage.StageId <= 0 || stage.Count < 0 || !stageIds.Add(stage.StageId)) return false;
-            if (!UniqueStrings(save.World.CompletedEntityTags) || !UniqueStrings(save.World.AppliedEventIds)) return false;
+                if (stage == null || stage.StageId <= 0 || stage.Count < 0 || !stageIds.Add(stage.StageId)) { reason = "stage-wins"; return false; }
+            if (!UniqueStrings(save.World.CompletedEntityTags) || !UniqueStrings(save.World.AppliedEventIds)) { reason = "world-events"; return false; }
             var interactionKeys = new HashSet<string>(StringComparer.Ordinal);
-            if (!ValidateExploration(save.World.Exploration)) return false;
+            if (!ValidateExploration(save.World.Exploration)) { reason = "exploration"; return false; }
             foreach (OfflineMapInteractionState interaction in save.World.MapInteractions)
                 if (interaction == null || interaction.MapClassId <= 0 || interaction.PlacementId <= 0
                     || interaction.Generation < 0 || interaction.Attempt < 0 || interaction.AvailableAt < 0
                     || !interactionKeys.Add(interaction.MapClassId + ":" + interaction.PlacementId)
-                    || interaction.BattleEventId == null || interaction.BattleEventId.Length > 256) return false;
+                    || interaction.BattleEventId == null || interaction.BattleEventId.Length > 256) { reason = "interactions"; return false; }
             foreach (OfflineMapRegionKey region in save.World.ActivatedGoddessRegions)
-                if (region == null || !HasMapRegion(save, region.MapClassId, region.Region)) return false;
+                if (region == null || !HasMapRegion(save, region.MapClassId, region.Region)) { reason = "goddess-regions"; return false; }
             var witchKeys = new HashSet<string>(StringComparer.Ordinal);
             foreach (OfflineMapEntityKey witch in save.World.ActivatedWitches)
                 if (witch == null || witch.PlacementId <= 0 || !mapIds.Contains(witch.MapClassId)
-                    || !witchKeys.Add(witch.MapClassId + ":" + witch.PlacementId)) return false;
+                    || !witchKeys.Add(witch.MapClassId + ":" + witch.PlacementId)) { reason = "witches"; return false; }
             foreach (OfflineChestCount chest in save.World.OpenChestCounts)
-                if (chest == null || chest.ChestId < 0 || chest.Count < 0) return false;
-            return UniquePositiveIds(save.Tasks.ClaimedMainlineTaskIds);
+                if (chest == null || chest.ChestId < 0 || chest.Count < 0) { reason = "chests"; return false; }
+            if (!UniquePositiveIds(save.Tasks.ClaimedMainlineTaskIds)) { reason = "tasks"; return false; }
+            return true;
         }
 
         private static void Normalize(OfflineMainlineSave save)
@@ -1394,6 +1416,19 @@ namespace Zjcs.Offline.Progression
                     : DateTimeOffset.Now.ToUnixTimeSeconds();
                 for (int rank = 1; rank <= save.Player.Rank; rank++)
                     save.Player.RankUnlockTimes.Add(new OfflineRankUnlockTime { Rank = rank, UnixSeconds = acquiredAt });
+            }
+            else if (save.Player.Rank > 0)
+            {
+                // Older local migrations could retain higher-rank receipts while
+                // omitting an intermediate rank. Keep the original timestamps and
+                // use the earliest known unlock time only for the missing entries.
+                save.Player.RankUnlockTimes.RemoveAll(value => value == null || value.Rank > save.Player.Rank);
+                long fallback = save.Player.RankUnlockTimes.Where(value => value != null && value.UnixSeconds > 0)
+                    .Select(value => value.UnixSeconds).DefaultIfEmpty(
+                        save.CreatedAtUnixSeconds > 0 ? save.CreatedAtUnixSeconds : DateTimeOffset.Now.ToUnixTimeSeconds()).Min();
+                for (int rank = 1; rank <= save.Player.Rank; rank++)
+                    if (!save.Player.RankUnlockTimes.Any(value => value != null && value.Rank == rank))
+                        save.Player.RankUnlockTimes.Add(new OfflineRankUnlockTime { Rank = rank, UnixSeconds = fallback });
             }
             if (save.Player.AppliedCharacterEventIds == null) save.Player.AppliedCharacterEventIds = new List<string>();
             if (save.Player.Stories == null) save.Player.Stories = new List<OfflineStoryProgress>();

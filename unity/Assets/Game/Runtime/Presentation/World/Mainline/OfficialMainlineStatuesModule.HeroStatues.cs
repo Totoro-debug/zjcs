@@ -13,14 +13,16 @@ namespace Zjcs.Presentation.World
     {
         private sealed partial class OfficialMainlineStatuesModule
         {
-            private string HeroReceipt(Map10RuntimeEntity entity) => "hero-activation:" + host.mapClassId + ":" + entity.PlacementId;
-            public bool HeroActivated(Map10RuntimeEntity entity) => host.progressionSave.Save.Player.AppliedInventoryEventIds.Contains(HeroReceipt(entity));
+            private string HeroReceipt(Map10RuntimeEntity entity) => MainlineMapEntityPresentation.HeroReceipt(host.mapClassId, entity.PlacementId);
+            public bool HeroActivated(Map10RuntimeEntity entity) => MainlineMapEntityPresentation.HeroActivated(
+                host.progressionSave.Save, host.mapClassId, entity.PlacementId);
 
             public void RecoverHeroStates()
             {
                 foreach (Map10RuntimeEntity entity in host.mapEntities.Values.Where(value => value.TypeId == 223))
                 {
-                    entity.State = host.regions.IsPublicRegion(entity.Region) ? 2 : HeroActivated(entity) ? 1 : 0;
+                    entity.State = MainlineMapEntityPresentation.HeroState(host.progressionSave.Save,
+                        host.mapClassId, entity.PlacementId, host.regions.IsPublicRegion(entity.Region));
                     if (HeroActivated(entity) && !host.localSave.completedEntityPlacements.Contains(entity.PlacementId))
                         host.localSave.completedEntityPlacements = host.localSave.completedEntityPlacements.Concat(new[] { entity.PlacementId }).ToArray();
                 }

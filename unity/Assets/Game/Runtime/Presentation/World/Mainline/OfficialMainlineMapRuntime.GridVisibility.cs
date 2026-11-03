@@ -85,13 +85,6 @@ namespace Zjcs.Presentation.World
             else localSave.gridVisibility = encoded;
         }
 
-        private static bool ValidMapVisibility(string encoded, int width, int height)
-        {
-            if (string.IsNullOrEmpty(encoded)) return true;
-            if (encoded.Length > 87384) return false;
-            return OfflineMapGridVisibility.IsValidSnapshot(Convert.FromBase64String(encoded), width, height);
-        }
-
         private void DisposeMapVisibility()
         {
             gridFog?.Dispose(); gridFog = null;

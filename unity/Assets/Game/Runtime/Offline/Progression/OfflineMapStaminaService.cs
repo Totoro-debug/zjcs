@@ -62,7 +62,11 @@ namespace Zjcs.Offline.Progression
         {
             return session.Save.World.MapInteractions?.SingleOrDefault(value => value.MapClassId == map && value.PlacementId == placement);
         }
-        public bool Available(int map, int placement, long now) => (State(map, placement)?.AvailableAt ?? 0) <= now;
+        public bool Available(int map, int placement, long now) => Available(session.Save, map, placement, now);
+
+        public static bool Available(OfflineMainlineSave save, int map, int placement, long now) =>
+            (save.World.MapInteractions?.SingleOrDefault(value => value.MapClassId == map
+                && value.PlacementId == placement)?.AvailableAt ?? 0) <= now;
 
         public ProgressionResult StartBattle(int map, int placement, IReadOnlyDictionary<int, long> costs, long now)
         {

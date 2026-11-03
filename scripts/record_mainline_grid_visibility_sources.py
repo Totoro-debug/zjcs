@@ -68,6 +68,17 @@ def build():
         "OfficialMap13MiniMapMarkDataAcceptance.cs", "OfficialMap13MiniMapMarkManagersAcceptance.cs",
         "OfficialMap13MiniMapMarkSpawnAcceptance.cs", "OfficialMap13MiniMapMarkSupportsAcceptance.cs",
         "OfficialMap13MiniMapMasksAcceptance.cs", "Zjcs.Editor.Map13.MiniMap.asmdef")]
+    outputs += ["unity/Assets/Game/Runtime/Presentation/World/Mainline/" + name for name in (
+        "MainlineMapLocalSaveFile.cs", "MainlineMapLocalSaveFile.cs.meta",
+        "MainlineMapEntityPresentation.cs", "MainlineMapEntityPresentation.cs.meta",
+        "MainlineMapEntityRestore.cs", "MainlineMapEntityRestore.cs.meta",
+        "MainlineMapMiniMapSnapshots.cs", "MainlineMapMiniMapSnapshots.cs.meta",
+        "OfficialMainlineMapRuntime.Map12Chests.cs", "OfficialMainlineMapRuntime.Map12Steles.cs",
+        "OfficialMainlineRegionsModule.Regions.cs", "OfficialMainlineStatuesModule.HeroStatues.cs",
+        "OfficialMainlineStatuesModule.Witch.cs", "OfficialMainlineExplorationModule.Exploration.cs")]
+    outputs += ["unity/Assets/Game/Runtime/Presentation/World/OfficialMap10EntityView.cs",
+        "unity/Assets/Game/Runtime/Offline/Progression/OfflineMapStaminaService.cs"]
+    outputs = list(dict.fromkeys(outputs))
     result = {
         "format": 1,
         "operation": "Extract the existing local visibility implementation into one configuration-driven module. Preserve the migrated original component, body/camp queries, event ordering, RLE and legacy Map13 save field. Bind Map11, Map12, Map13 and Map15 through the same placement-checked loader, snapshot lifecycle; Map15 preserves its original absent fog. Map12 forwards the original region-light unlock callback to the same module. Other maps use the generic gridVisibility save field. Restore also rebinds live fog after a rollback. Keep original Map13-specific source assertions in its loader. Validate local snapshot runs before the original recovering decoder.",
@@ -85,6 +96,8 @@ def build():
         "unchanged_official_implementation": [record(p.relative_to(ROOT).as_posix()) for p in sorted(
             (ROOT / "unity/Assets/Game/Runtime/Official/World/Map13GridVisibility").glob("*.cs"))],
         "text_hashing": "UTF-8 file bytes with CRLF normalized to LF; original source receipts retain their own hash conventions.",
+        "official_minimap_source_receipt": record("assets/reference/official-map/mainline-minimap-root-source-manifest.json"),
+        "local_minimap_snapshot": "Read visited maps through MainlineMapMiniMapSnapshots.Read without mounting scene objects or committing profile/map state. Share the active host's map-file validation, backup recovery, entity catalog parser, puzzle dependency closure, Map12 completion recovery, region point calculation and entity presentation projection. Inspect fresh profile data on every read; preserve original fog bytes, public regions and recorded exploration. Reuse existing hero receipts, Map11 witch state, Map13 water restoration and generated exploration entity templates. Availability and expiry use one injected local time per read. Missing world files or visibility snapshots, unvisited maps and corrupt worlds cannot reveal fallback data. Native fullscreen host binding remains outside this receipt's implementation scope.",
         "local_entity_exploration": "Confirmed offline minimap selection consumes ever-discovered entity placement IDs. The local visibility adapter records active entities at their current revealed anchor cells, retains IDs after movement/inactivation/completion, returns defensive sorted snapshots and rejects duplicate/foreign IDs. Preserve original default positions for camp calculations. Persist IDs in each map's existing local file alongside the unchanged original RLE; absent legacy history is reconstructed only from currently revealed active entities. The formal adapter reads actual world-object activation, rather than the placement default, and captures newly enabled entities before subsequent interactions. Map12 puzzle and Map13 water-entity movement update the original visibility bodies; restore puzzle state before rebuilding visibility on failed persistence.",
         "outputs": [record(p) for p in outputs],
         "tool": record(Path(__file__).relative_to(ROOT).as_posix()),

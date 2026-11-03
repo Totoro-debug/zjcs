@@ -163,6 +163,11 @@
     }
   ],
   "text_hashing": "UTF-8 file bytes with CRLF normalized to LF; original source receipts retain their own hash conventions.",
+  "official_minimap_source_receipt": {
+    "path": "assets/reference/official-map/mainline-minimap-root-source-manifest.json",
+    "sha256": "89f7566d0652d7f7a00646a7ec38856993f839e7fe01c06270f564343e82b837"
+  },
+  "local_minimap_snapshot": "Read visited maps through MainlineMapMiniMapSnapshots.Read without mounting scene objects or committing profile/map state. Share the active host's map-file validation, backup recovery, entity catalog parser, puzzle dependency closure, Map12 completion recovery, region point calculation and entity presentation projection. Inspect fresh profile data on every read; preserve original fog bytes, public regions and recorded exploration. Reuse existing hero receipts, Map11 witch state, Map13 water restoration and generated exploration entity templates. Availability and expiry use one injected local time per read. Missing world files or visibility snapshots, unvisited maps and corrupt worlds cannot reveal fallback data. Native fullscreen host binding remains outside this receipt's implementation scope.",
   "local_entity_exploration": "Confirmed offline minimap selection consumes ever-discovered entity placement IDs. The local visibility adapter records active entities at their current revealed anchor cells, retains IDs after movement/inactivation/completion, returns defensive sorted snapshots and rejects duplicate/foreign IDs. Preserve original default positions for camp calculations. Persist IDs in each map's existing local file alongside the unchanged original RLE; absent legacy history is reconstructed only from currently revealed active entities. The formal adapter reads actual world-object activation, rather than the placement default, and captures newly enabled entities before subsequent interactions. Map12 puzzle and Map13 water-entity movement update the original visibility bodies; restore puzzle state before rebuilding visibility on failed persistence.",
   "outputs": [
     {
@@ -191,7 +196,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Zjcs.Presentation.World.asmdef",
-      "sha256": "e6effa6cddfbe829f83d8d2ca4bed1e2a983cacd844d77448f5ba98ae3ebad01"
+      "sha256": "1ce6b3edd02047aac9a99510160aede1605d00c17dc065bedf9957d60323c575"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13GridVisibility/OfficialMap13LocalVisibilityAcceptance.cs",
@@ -211,7 +216,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.GridVisibility.cs",
-      "sha256": "eeaececd29607b853964b858eeffd406c44a9e47205a7cf9ec93517a6fbbef2b"
+      "sha256": "f47f4e5929de001ac7502168c3a6a3ea452d778d82f652f97bbd1f16a823cc0f"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.GridVisibility.cs.meta",
@@ -235,15 +240,15 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Persistence.cs",
-      "sha256": "79050a332a31921edb2c7cf69998c6ed41f89e8f5dece62516405ba1edb4a959"
+      "sha256": "b46b59bdc043d17ae3c5c6741bee0990c11784b62abce265a00c30a490e63f63"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Puzzles.cs",
-      "sha256": "dc8241893d86163655437739bc96df80d4b10894b6663919e48948d7f78053aa"
+      "sha256": "0b7fe39720666cb01b27b490533bba4beafb8724ecfb098372105e07ff109acd"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Interactions.cs",
-      "sha256": "98e81e3d08140faeea4c7e422eae89981c0a235652f176449c31e1a719cadb12"
+      "sha256": "1a4cafe4ea18827af5be95b6149f4c2d9d467968f05457cdef112d71b90535e0"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Map13Trees.cs",
@@ -271,11 +276,11 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Map13Mainline/OfficialMap13MainlinePlayAcceptance.cs",
-      "sha256": "2544d323e6f6340cd65358243b9286296d984aa1306b0ea2a3a4cc44f6988935"
+      "sha256": "981cc59b7a75c56e21ef2d94525c0b43023f5cfd20f3be92adc877c7f6cefccc"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13Mainline/Zjcs.Editor.Map13Mainline.asmdef",
-      "sha256": "c73217b220f5c2887c97991356a55a91c3600b967a6f300ce3adc658c1f848e2"
+      "sha256": "9196e5241eefb96269e0cbae452b5d26b4c90c31cac78b1b21c23675c7530ad6"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapMarkDataAcceptance.cs",
@@ -300,10 +305,74 @@
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/Zjcs.Editor.Map13.MiniMap.asmdef",
       "sha256": "9e96ce79598b457776d4f64fdf98524991cf7e89f45c3b45a52cda88d0507dba"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/MainlineMapLocalSaveFile.cs",
+      "sha256": "bf660e4c85b25be9ce0a291613bb64eaf9352ffd28d0de1ec36fd1a759aac13b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/MainlineMapLocalSaveFile.cs.meta",
+      "sha256": "11cb65c746c9e46d479aac89fa859892b6ac9e9505b0a01fcbfd6ce98adac6b0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/MainlineMapEntityPresentation.cs",
+      "sha256": "4b0b9c7b40f527152152ec974bce33fa7d3e216b59a18a4fc2ed14239e232c17"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/MainlineMapEntityPresentation.cs.meta",
+      "sha256": "ecfbf314b735f62691cc7367c6e09c1ede51e6e0290d88f9fb7c933769b8c62f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/MainlineMapEntityRestore.cs",
+      "sha256": "f338d9538bc1c051c4ae7e0a44d384a457dbbfbc2bb77bb4cc19cc0979f57afc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/MainlineMapEntityRestore.cs.meta",
+      "sha256": "c3f3e7c42e1f8ab9e24d698f92d304ace8d127458fd8cd10a2b15107aca81c95"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/MainlineMapMiniMapSnapshots.cs",
+      "sha256": "d38596e6b5562109b6f2b35925b528e102fd9b6d39f4ed2888171791c4ccbc17"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/MainlineMapMiniMapSnapshots.cs.meta",
+      "sha256": "8a69b16c0102c9c3f7d7b186d3830051702b5c91b63e17e442b39bb72166d1b2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Map12Chests.cs",
+      "sha256": "ea86a3b1ea5ecc3cbefd0085b9ae9713b29015680239596e624d65ef6eee431a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Map12Steles.cs",
+      "sha256": "03e650e2302ed27dcd9548f831da1f96c3f59a119c4e15464f5686a3eaed8c90"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineRegionsModule.Regions.cs",
+      "sha256": "8ed3528f4e18c5bee85d887a4c519bde4814c670ea8b3bc299064a67de582219"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineStatuesModule.HeroStatues.cs",
+      "sha256": "6659027f39661f06f4b7205f2c07c2c3a80fb6dcbae4d1a82f2c01e0be657660"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineStatuesModule.Witch.cs",
+      "sha256": "21d10a866f00a8fde885c9846d35a1d280ae15b8163157d28af2b46eec05f103"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineExplorationModule.Exploration.cs",
+      "sha256": "0757a0f62e740a958ade45248c8b9b815b12c66617b660839c9f2d54de1f1804"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialMap10EntityView.cs",
+      "sha256": "85bb6d01f45d600af603c6ba497650c2ea53f4fdd2c2225402d42beba1fc0f5a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Progression/OfflineMapStaminaService.cs",
+      "sha256": "ffcb26ac4125a10b01d5590c9ae27fc2c3bfba7e065474c944443e7e3b798f24"
     }
   ],
   "tool": {
     "path": "scripts/record_mainline_grid_visibility_sources.py",
-    "sha256": "68b5eb0553039186c67939c6d7b15ae72ca4c8022ad26f2cb41f1a1cc5376e67"
+    "sha256": "29de15dca60c0a89476d23cf8efcd1e4795bbc5efd04ca2eb8c97d6bcfa9f18c"
   }
 }

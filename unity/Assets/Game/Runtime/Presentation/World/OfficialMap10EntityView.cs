@@ -130,12 +130,7 @@ namespace Zjcs.Presentation.World
             inputCamera = camera != null ? camera : Camera.main;
             this.mapOrigin = mapOrigin;
 
-            EntityCatalogPayload catalog = JsonUtility.FromJson<EntityCatalogPayload>(source.text);
-            if (catalog == null || catalog.mapClassId != expectedMapClassId || catalog.entities == null
-                || (expectedMapClassId == 10 && catalog.entities.Length != 82)
-                || (expectedMapClassId == 11 && catalog.entities.Length != 1803)
-                || catalog.models == null || catalog.models.Length == 0)
-                throw new InvalidDataException("Official map entity catalog is malformed for map " + expectedMapClassId + ".");
+            EntityCatalogPayload catalog = ReadCatalog(source, expectedMapClassId);
 
             generatedRoot = new GameObject("Official Map " + expectedMapClassId + " entities").transform;
             generatedRoot.SetParent(mapRoot, false);
@@ -285,6 +280,34 @@ namespace Zjcs.Presentation.World
                     throw new InvalidDataException("Official Map10 entity Spine binding is malformed: " + model.modelPath);
             }
             return new GeneratedModel { batches = batches.ToArray(), spines = model.spines };
+        }
+
+        private static EntityCatalogPayload ReadCatalog(TextAsset source, int expectedMapClassId)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            EntityCatalogPayload catalog = JsonUtility.FromJson<EntityCatalogPayload>(source.text);
+            if (catalog == null || catalog.mapClassId != expectedMapClassId || catalog.entities == null
+                || (expectedMapClassId == 10 && catalog.entities.Length != 82)
+                || (expectedMapClassId == 11 && catalog.entities.Length != 1803)
+                || catalog.models == null || catalog.models.Length == 0)
+                throw new InvalidDataException("Official map entity catalog is malformed for map " + expectedMapClassId + ".");
+
+            return catalog;
+        }
+
+        internal static OfficialMap10EntityInfo[] ReadEntityInfos(TextAsset source, int expectedMapClassId)
+        {
+            EntityCatalogPayload catalog = ReadCatalog(source, expectedMapClassId);
+            var result = new List<OfficialMap10EntityInfo>(catalog.entities.Length);
+            var ids = new HashSet<int>();
+            foreach (EntityRecord record in catalog.entities)
+            {
+                if (record == null || record.grid == null || record.grid.Length != 2
+                    || record.placementId <= 0 || !ids.Add(record.placementId))
+                    throw new InvalidDataException("Official map entity record is malformed or duplicated.");
+                result.Add(new OfficialMap10EntityInfo(record));
+            }
+            return result.ToArray();
         }
 
         private GameObject CreateEntity(EntityRecord record, Vector2 mapOrigin, bool interactable = true)

@@ -54,18 +54,7 @@ namespace Zjcs.Presentation.World
         {
             if (mapClassId != 12) return;
             map12Steles ??= OfficialMap12SteleCatalog.Load();
-            foreach (var source in map12Steles.Data.Steles.Where(v => progressionSave.Save.World.CompletedEntityTags
-                .Contains(OfficialMap12SteleCatalog.CompletionTag(v.PlacementId))))
-            {
-                // A profile award commit may precede the separate map-file
-                // write. Restore once-only eligibility from the profile first.
-                if (!localSave.completedStages.Contains(source.StageId))
-                    localSave.completedStages = localSave.completedStages.Concat(new[] { source.StageId }).ToArray();
-                if (!localSave.completedPeriodicityGroups.Contains(source.PeriodicityGroupId))
-                    localSave.completedPeriodicityGroups = localSave.completedPeriodicityGroups.Concat(new[] { source.PeriodicityGroupId }).ToArray();
-                if (!localSave.completedEntityPlacements.Contains(source.PlacementId))
-                    localSave.completedEntityPlacements = localSave.completedEntityPlacements.Concat(new[] { source.PlacementId }).ToArray();
-            }
+            MainlineMapEntityRestore.RecoverSteles(map12Steles, localSave, progressionSave.Save);
         }
     }
 }

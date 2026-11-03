@@ -88,9 +88,8 @@ namespace Zjcs.Presentation.World
                         EntityClassId = entity.EntityClassId,
                         Components = template.templateComponents.Select(v => new Map10RuntimeTemplateComponent { Type = v.Type, Json = v.Json }).ToArray()
                     });
-                    var record = new OfficialMap10EntityView.EntityRecord { placementId = entity.PlacementId, entityClassId = entity.EntityClassId,
-                        typeId = template.parameters.WorldStageType, grid = new[] { entity.X, entity.Y }, region = entity.Region, area = entity.Area,
-                        state = entity.State, active = true, modelPath = template.displayPaths.Single(v => v.mapClassId == host.mapClassId).path };
+                    var record = MainlineMapEntityRestore.ExploreRecord(ExploreService.Catalog, entity);
+                    record.modelPath = template.displayPaths.Single(value => value.mapClassId == host.mapClassId).path;
                     host.mapEntities.Add(entity.PlacementId, new Map10RuntimeEntity(host.entityView.SpawnRuntimeEntity(record)));
                 }
             }

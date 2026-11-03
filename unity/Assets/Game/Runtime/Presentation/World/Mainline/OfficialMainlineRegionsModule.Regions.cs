@@ -28,15 +28,8 @@ namespace Zjcs.Presentation.World
         {
             public void RefreshRegionProgress(bool persist = true)
             {
-                var completed = new HashSet<int>(host.localSave.completedEntityPlacements);
-                var privateStates = (host.localSave.puzzleStates ?? Array.Empty<MapPuzzleEntityState>())
-                    .ToDictionary(value => value.PlacementId, value => value.State);
-                foreach (Map10RuntimeEntity entity in host.mapEntities.Values) privateStates[entity.PlacementId] = entity.State;
-                foreach (Map10RuntimeMapLogicState state in host.localSave.mapLogicStates)
-                    foreach (Map10RuntimeLogicTag tag in host.mapLogicTags.Values.Where(value => value.Tag == state.Tag))
-                        privateStates[tag.LogicId] = state.State;
-                Dictionary<int, int> points = OfficialMapProgressAdapter.CalculateRegionPoints(
-                    host.session.Definition, privateStates, completed);
+                Dictionary<int, int> points = MainlineMapEntityRestore.RegionPoints(
+                    host.session.Definition, host.localSave, host.mapEntities.Values, host.mapLogicTags);
                 regionPoints.Clear();
                 foreach (KeyValuePair<int, int> region in points) regionPoints.Add(region.Key, region.Value);
                 foreach (KeyValuePair<int, int> region in points)

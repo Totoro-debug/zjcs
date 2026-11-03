@@ -25,23 +25,8 @@ namespace Zjcs.Presentation.World
             if (puzzleRules == null || (mapClassId == 11 && puzzleRules.Count(value => value.TerminalLockIds.Length > 0) != 7)
                 || ((mapClassId == 12 || mapClassId == 13) && puzzleRules.Count(value => value.TerminalPuzzleType > 0) != 11))
                 throw new InvalidDataException("Map" + mapClassId + " official puzzle bindings are incomplete.");
-            puzzleEntityIds = new HashSet<int>(puzzleRules.Where(value => value.TerminalPuzzleType > 0
-                || value.HasPushResult || value.HasOverlapDetector || value.LockType > 1
-                || value.EntityClassId == 6503).Select(value => value.PlacementId));
-            if (mapClassId == 11) puzzleEntityIds.UnionWith(puzzleRules.Select(value => value.PlacementId));
-            if (mapClassId == 12) puzzleEntityIds.UnionWith(new[] { 503, 3501 });
-            bool added;
-            do
-            {
-                added = false;
-                foreach (MapPuzzleRule rule in puzzleRules.Where(value => puzzleEntityIds.Contains(value.PlacementId)).ToArray())
-                    foreach (int id in rule.TerminalLockIds.Concat(rule.TerminalRemoveIds).Concat(rule.TerminalBoxIds)
-                        .Concat(rule.PushBoxDetectorIds).Concat(rule.PushBoxIds).Concat(rule.SpawnIds)
-                        .Concat(rule.LockConditions.Select(value => value.PlacementId))
-                        .Concat(rule.Notify.SelectMany(value => value.Infos).Select(value => value.LoEntId))
-                        .Concat(rule.OtherStates.SelectMany(value => value.StageDatas).Select(value => value.LoEntId)))
-                        if (mapEntities.ContainsKey(id)) added |= puzzleEntityIds.Add(id);
-            } while (added);
+            puzzleEntityIds = MainlineMapEntityRestore.SelectPuzzles(mapClassId, puzzleRules,
+                new HashSet<int>(mapEntities.Keys));
             CreatePuzzleSession(localSave.puzzleStates);
             if (mapClassId == 12 || mapClassId == 13) entityView.ContainsGridInput = (id, position) =>
             {
