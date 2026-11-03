@@ -1,0 +1,66 @@
+{
+  "format": 1,
+  "mapClassId": 16,
+  "manifest": "884_156692",
+  "spriteGuid": "5db3a929a5462c34d9e25967f68a5727",
+  "textureGuid": "ca1d4aa91394d5f4e8cab7add736d525",
+  "spriteGeometry": {
+    "rect": [
+      668.0761,
+      610.0761,
+      29.897127,
+      29.897127
+    ],
+    "vertices": 8,
+    "indices": 18,
+    "uvTransform": [
+      100,
+      683,
+      100,
+      625
+    ]
+  },
+  "texture": {
+    "width": 1024,
+    "height": 2048,
+    "sourceFormat": "ASTC 6x6",
+    "installedFormat": "PNG/RGBA import"
+  },
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/World/World_Atlas/Img_RoundLoad.asset",
+      "sha256": "d88986ba6e43111b166e5b46315f8291009f6535976ae0a8a7f16742249dc1ba"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/World/World_Atlas/Img_RoundLoad.asset.meta",
+      "sha256": "a203848b6502443bbcc31fcc460b2de76007c526b1097d548e1a90dee7cf8638"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Texture2D/sactx-0-1024x2048-ASTC 6x6-World_Atlas-68ad306f.png",
+      "sha256": "e9600374f87302f27efeb503c810f2bb6484a88b0ecf9fc1cca81b90baf20864"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Texture2D/sactx-0-1024x2048-ASTC 6x6-World_Atlas-68ad306f.png.meta",
+      "sha256": "a89b46105627a835a0bb33d8790223ba4be2a886a310927ce36d03a2c1f32152"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/16/NativeCurrent/Image/UI/World/World_Atlas/Img_RoundLoad.asset",
+      "sha256": "d88986ba6e43111b166e5b46315f8291009f6535976ae0a8a7f16742249dc1ba"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/16/NativeCurrent/Image/UI/World/World_Atlas/Img_RoundLoad.asset.meta",
+      "sha256": "a203848b6502443bbcc31fcc460b2de76007c526b1097d548e1a90dee7cf8638"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/16/NativeCurrent/Image/UI/World/World_Atlas/World_Atlas.png",
+      "sha256": "e9600374f87302f27efeb503c810f2bb6484a88b0ecf9fc1cca81b90baf20864"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/16/NativeCurrent/Image/UI/World/World_Atlas/World_Atlas.png.meta",
+      "sha256": "ab14ecc44946938f949ec1da0952675b5ec51f9fb258594d1044f83330cc75fb"
+    }
+  ],
+  "operation": "Keep the original Sprite native asset, GUID, mesh/index/UV data and atlas coordinates. Install the full AssetRipper-decoded original atlas as an uncompressed 2D Texture2D using its original texture GUID; do not substitute the same-name cropped image."
+}

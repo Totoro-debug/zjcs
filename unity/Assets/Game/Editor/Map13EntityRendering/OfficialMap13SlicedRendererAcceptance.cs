@@ -101,6 +101,7 @@ namespace Zjcs.Editor.Map13EntityRendering
             camera.gameObject.AddComponent<UniversalAdditionalCameraData>();
             var target = new RenderTexture(128, 128, 24); target.Create(); camera.targetTexture = target;
             var image = new Texture2D(128, 128, TextureFormat.RGBA32, false);
+            VerifyMap16OriginalProgressSprite(camera, target, image);
             var full = new Texture2D(1536, 1024, TextureFormat.RGBA32, false); var half = new Texture2D(1536, 1024, TextureFormat.RGBA32, false);
             full.SetPixels32(new Color32[1536 * 1024]); half.SetPixels32(new Color32[1536 * 1024]);
             int poses = 0, meshFields = 0, pixels = 0, index = 0;
@@ -163,6 +164,38 @@ namespace Zjcs.Editor.Map13EntityRendering
             var proof = new Proof { source_sha256 = Hash(bytes), components = index, sampled_meshes = poses, mesh_fields = meshFields, rendered_pixels = pixels, backend = SystemInfo.graphicsDeviceType.ToString(), editor = Application.unityVersion, play_mode = Application.isPlaying, coverage = "Original sliced renderer lifecycle, original 84 configurations, native Sprite/atlas material binding, linear/radial fill meshes, dirty service LateUpdate and enable/disable. Diagnostic source-size objects only; full native prefab, entity EC/input/save and Windows Player remain pending." };
             File.WriteAllText(Path.Combine(Output, "native-sliced-execution.json"), JsonUtility.ToJson(proof, true));
             Debug.Log("Map13 original sliced renderer passed: " + index + " components, " + poses + " meshes, " + meshFields + " finite fields.");
+        }
+        private static void VerifyMap16OriginalProgressSprite(Camera camera, RenderTexture target, Texture2D readback)
+        {
+            const string spritePath = "Assets/Official/World/Map/16/NativeCurrent/Image/UI/World/World_Atlas/Img_RoundLoad.asset";
+            const string texturePath = "Assets/Official/World/Map/16/NativeCurrent/Image/UI/World/World_Atlas/World_Atlas.png";
+            Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
+            Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath);
+            Require(sprite && texture && sprite.texture == texture, "Map16 original Sprite did not resolve its full atlas texture.");
+            Require(AssetDatabase.AssetPathToGUID(spritePath) == "5db3a929a5462c34d9e25967f68a5727"
+                && AssetDatabase.AssetPathToGUID(texturePath) == "ca1d4aa91394d5f4e8cab7add736d525",
+                "Map16 original Sprite/Texture2D GUID binding differs.");
+            Require(Mathf.Abs(sprite.rect.x - 668.0761f) < .001f && Mathf.Abs(sprite.rect.y - 610.0761f) < .001f
+                && Mathf.Abs(sprite.rect.width - 29.897127f) < .001f && Mathf.Abs(sprite.rect.height - 29.897127f) < .001f
+                && sprite.vertices.Length == 8 && sprite.triangles.Length == 18 && texture.width == 1024 && texture.height == 2048,
+                "Map16 original Sprite geometry or atlas dimensions differ.");
+
+            var gameObject = new GameObject("Map16 original Img_RoundLoad atlas render check");
+            gameObject.layer = 31;
+            var renderer = gameObject.AddComponent<SpriteRenderer>();
+            renderer.sprite = sprite;
+            camera.transform.position = new Vector3(0, 0, -50);
+            camera.orthographicSize = .6f;
+            camera.Render();
+            var previous = RenderTexture.active;
+            RenderTexture.active = target;
+            readback.ReadPixels(new Rect(0, 0, 128, 128), 0, 0);
+            readback.Apply();
+            RenderTexture.active = previous;
+            Require(readback.GetPixels32().Count(color => color.a > 0) > 100,
+                "Map16 original progress Sprite rendered no atlas pixels.");
+            File.WriteAllBytes(Path.Combine(Output, "map16-roundload-atlas.png"), readback.EncodeToPNG());
+            UnityEngine.Object.DestroyImmediate(gameObject);
         }
         private static bool Dirty(SlicedFilledRender target) => (bool)typeof(SlicedFilledRender).GetField("mDirty", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(target);
         private static IEnumerator WaitForRefresh(SlicedFilledRender target)
