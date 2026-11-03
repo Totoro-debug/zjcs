@@ -1,0 +1,55 @@
+{
+  "manifest": "884_156692",
+  "code_extraction": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+  },
+  "original": {
+    "path": ".tools/source-packages/current/884_156692/official-code/client-source/PlayableMaterialBoundingBoxProvider.cs",
+    "sha256": "4063534b5f95c3f1cc1c686d11597188d5eb6b0bd4ab389d74d5bde185fb3b1c"
+  },
+  "original_mono_script_file_id": -425368815,
+  "original_method_bodies": {
+    "public override void Play(MeshMaterialProperty meshMaterialProperty)": "eee16c812db4177dc084dd16931b47219e3b77cc2c92d3d385092a04ef9f3f33"
+  },
+  "adapted_method_bodies": {
+    "public override void Play(MeshMaterialProperty meshMaterialProperty)": "a31ce7c565b18e96f7e7441f05ac7ffdcc42963b041fe1acfb21d8dc058ed8f4"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleMaterialPlayables/PlayableMaterialBoundingBoxProvider.cs",
+      "sha256": "9458354a577a4b0eff215048b07245ad2581456b0c4d691d1b2d20a13d8bec64"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleMaterialPlayables/PlayableMaterialBoundingBoxProvider.cs.meta",
+      "sha256": "f69c7bf9b9665feb5f2051fc6fbe73b9306ad165663fb9a74406fd3d040f96f4"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_status_frozen_runtime.py",
+    "sha256": "a9fed0ac434c3b856d383c3f897e7b155b09341e35b250e50d443422efffcd26"
+  },
+  "reused_adapter": {
+    "path": "scripts/prepare_battle_status_material_runtime.py",
+    "sha256": "e7be6a7a774c30e563ea0c95b0db9c6945897c583c303bf5ffe0392292b28365"
+  },
+  "adaptation": "Namespace imports and ILSpy Vector4 implicit conversion syntax only. Preserve the serialized Key and one-time Play callback; the original provider has no ProcessFrame or Resume override.",
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.StatusFrozen.cs",
+      "sha256": "17972e335a1504326612731cf4c236357011336e919c914ae42caa920672cc41"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ScenePlayerAppearance.cs",
+      "sha256": "de5d97b8408bec552825a46c561a97de63b01c19cec8e82c3eeacdfd1682f9b3"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.cs",
+      "sha256": "c273f73d1ba6e59327416004a424e25aabd1003ebf560c8ffea3d884bb1acd29"
+    }
+  ]
+}

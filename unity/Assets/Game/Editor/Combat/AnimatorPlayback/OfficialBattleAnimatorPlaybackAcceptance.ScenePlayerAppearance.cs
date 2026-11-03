@@ -141,6 +141,11 @@ namespace Zjcs.Editor.Combat
                             var pauseSteps = CheckStatusPause(pausedPlayer);
                             while (pauseSteps.MoveNext()) yield return pauseSteps.Current;
                         }
+                        if (SessionState.GetBool(Key + ".statusFrozen", false) && player is PlayerAnimatorAppearance frozenPlayer && frozenPlayer.AnimController)
+                        {
+                            var frozenSteps = CheckStatusFrozen(frozenPlayer);
+                            while (frozenSteps.MoveNext()) yield return frozenSteps.Current;
+                        }
                         Require(saved == JsonUtility.ToJson(profile), "default restoration and player refresh preserve persisted local wardrobe bytes");
                         Require(appearance.Skins.Contains("performFace") && !appearance.Skins.Contains("map_01")
                             && player.AppearanceRuntimeData.SkinMap[SkinType.pWeapon] == (profession == 1 ? "pWeapon_100_G_007" : "pWeapon_200_G_007"),

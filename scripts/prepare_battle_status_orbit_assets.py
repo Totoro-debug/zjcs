@@ -31,7 +31,7 @@ def sha(raw):
 
 def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
           family='StatusOrbits', shader_prefix='StatusOrbit_', runtime_receipts=None,
-          generator=None, limits=None):
+          generator=None, limits=None, graph_roots=None):
     work = Path(os.environ['ZJCS_VALIDATION_DIR']).resolve()
     assert work.parent == (ROOT/'output/validation').resolve() and (work/'.zjcs-validation.json').is_file()
     export_receipt = CACHE/'native-export-all-source-manifest.json'
@@ -88,7 +88,9 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
             return 'm_Script: {fileID: 11500000, guid: '+script_guids[file_id]+', type: 3}'
         return SCRIPT.sub(script, text)
 
-    selected = [EXPORTED/f'Prefabs/EcEntity/Fight/FightSkill/{key}/{name}.prefab' for key, name in ROOTS.items()]
+    graph_paths = {key: f'Prefabs/EcEntity/Fight/FightSkill/{key}/{name}.prefab' for key, name in ROOTS.items()}
+    graph_paths.update(graph_roots or {})
+    selected = [EXPORTED/path for path in graph_paths.values()]
     found, pending = set(), list(selected)
     while pending:
         path = pending.pop()
@@ -104,10 +106,25 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
         assert apk.version == '884_156692'
         manifest = read_asset_manifest(apk.source.manifest_bytes('DefaultPackage', apk.archive))
         originals = []
-        for key in ROOTS:
-            asset = next(row for row in manifest if row['path'].endswith(f'/FightSkill/{key}/{key}.prefab'))
-            go = apk.asset(asset['bundle'], '/'+str(key)+'.prefab')
-            originals.append(dict(id=key, asset=asset, source=apk.provenance(go)))
+        for key, path in graph_paths.items():
+            if key in (graph_roots or {}):
+                # Shared dependency prefabs have no independent address entry.
+                # The verified native exporter preserves their original bundle.
+                source_meta = Path(str(EXPORTED/path)+'.meta')
+                bundle = re.search(r'(?m)^  assetBundleName: (.+)$', read(source_meta).decode())[1]+'.bundle'
+                assert bundle in apk.index, bundle
+                candidates = [obj for obj in apk.objects(bundle) if obj.type.name == 'GameObject'
+                              and obj.read().m_Name == Path(path).stem]
+                assert len(candidates) == 1, (path, len(candidates))
+                go = candidates[0]
+                originals.append(dict(id=key, shared_dependency_bundle=bundle,
+                    native_export_meta=identity(source_meta), original_game_object_name=go.read().m_Name,
+                    original_game_object_sha256=sha(go.get_raw_data()), source=apk.provenance(go)))
+            else:
+                source_path = f'Prefabs/EcEntity/Fight/FightSkill/{key}/{key}.prefab'
+                asset = next(row for row in manifest if row['path'].endswith('/'+source_path))
+                go = apk.asset(asset['bundle'], '/'+Path(source_path).name)
+                originals.append(dict(id=key, asset=asset, source=apk.provenance(go)))
             for obj in go.assets_file.objects.values():
                 if obj.type.name != 'ParticleSystemRenderer': continue
                 for ptr in obj.read().m_Materials:
@@ -205,8 +222,8 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
             guid = GUID.search(Path(str(target)+'.meta').read_text(encoding='utf-8-sig'))[1]
             importer = 'ShaderImporter' if target.suffix == '.shader' else 'PrefabImporter' if target.suffix == '.prefab' else 'NativeFormatImporter'
             write_changed(Path(str(target)+'.meta'), 'fileFormatVersion: 2\nguid: '+guid+'\n'+importer+':\n  externalObjects: {}\n')
-        rows = [dict(id=key, resource='Combat/'+family+'/Prefabs/EcEntity/Fight/FightSkill/'+str(key)+'/'+name)
-                for key, name in ROOTS.items()]
+        rows = [dict(id=key, resource='Combat/'+family+'/'+str(Path(path).with_suffix('')).replace('\\', '/'))
+                for key, path in graph_paths.items()]
         DATA.parent.mkdir(parents=True, exist_ok=True)
         write_changed(DATA, json.dumps(dict(manifest=apk.version, graphs=rows), indent=2)+'\n'); meta(DATA)
         outputs = [DATA, Path(str(DATA)+'.meta')]
@@ -218,7 +235,7 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
                 if parent.is_relative_to(DEST.parents[2]): outputs.append(Path(str(parent)+'.meta'))
                 parent = parent.parent
         write_changed(RECEIPT, json.dumps(dict(manifest=apk.version, originals=originals,
-            native_export_receipt=identity(export_receipt), native_inputs=list(inputs.values()),
+            native_export_receipt=identity(export_receipt), native_inputs=[inputs[key] for key in sorted(inputs)],
             texture_conversion_receipt=identity(texture_receipt), converted_inputs=converted_inputs,
             textures=textures, shaders=shaders, application=script_records,
             runtime_receipts=[identity(ROOT/'assets/reference/battle-animation'/name) for name in (

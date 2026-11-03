@@ -1984,6 +1984,12 @@ unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/**/*.wav -text
 unity/Assets/Official/World/Shared/NativeMiniMapRendererCurrent/** text eol=lf
 unity/Assets/Official/World/Shared/NativeMiniMapRendererCurrent.meta text eol=lf
 
+# Original global frozen graphs and their native dependencies.
+unity/Assets/Game/Resources/Combat/status-frozen.json* text eol=lf
+unity/Assets/Official/Combat/StatusFrozen/** text eol=lf
+unity/Assets/Official/Combat/StatusFrozen.meta text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/Shaders/StatusFrozen_*.shader* text eol=lf
+
 # Original status animation pause and native graph.
 unity/Assets/Game/Runtime/Official/BattleAnimationPlayables/** text eol=lf
 unity/Assets/Game/Runtime/Official/BattleAnimationPlayables.meta text eol=lf

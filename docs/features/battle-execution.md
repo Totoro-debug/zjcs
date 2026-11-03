@@ -324,6 +324,12 @@ HP 启动的当前验证：静态检查通过84993个GUID；HP启动、状态启
 
 原生环绕图验证：独立Play Mode通过实际 `MyFightStatus` 参数、正式层数加减、原播放管理器／对象池／中心驱动三个完整原生图；逐项核对序列节点、1→配置最大层数→1的数量、保留已有环绕物、均匀间距／半径／轴向／播放时间、骨骼挂点移动跟随、面向目标和24477负速度。停止时同时检查原对象列表清空、所有已创建对象确实归还原池并关闭自身，以及状态监听解除；同一图在同层数下再次借用后仍正常创建。原区间切换、优先级、状态生命周期与跨状态参数复用回归同时通过。Unity 2022.3.57f1c2在内置屏BOE0CD1、Direct3D11运行退出0；已查看三张675×400实际运行画面，分别为三把剑、三片羽翼及五个爱心，检测到1175／12346／4960个可见像素。副本状态源码／meta及全部原生环绕安装输出与工作区／来源凭据逐文件哈希一致；静态检查通过90122个GUID，共享工程导入／编译与 `ProjectTools.Validate` 通过。全部状态图、对应状态完整表现入口及正式人物／时间轴仍未接通，本项未构建／发布新Windows Player。
 
+原版全局冰冻图（局部实现）：按当前884_156692原码迁入 `PlayableMaterialBoundingBoxProvider`，仅适配命名空间及ILSpy的Vector4隐式转换语法；保留原Key和仅在Play时读取一次边界的行为，原ProcessFrame／Resume没有更新或还原边界向量。完整迁入 `playable_Frozen_1`、`playable_Frozen_2` 的全部层级、序列叶、粒子、网格与材质：两个图均以原配置同时暂停AnimationController、应用 `_FROZEN`／`_BaseStrength=0.5` 及跟随特效；第一个图的边界提供者未列入调用列表，第二个图列入，保留该差异。外观收集器未绑定MeshRenderer时沿用原Vector2.one，绑定渲染器时读取localBounds的xy尺寸。载荷入口为 `unity/Assets/Official/Combat/StatusFrozen/`，显式目录为 `Combat/status-frozen.json`；完整40项资产／95个输出文件保持原图，无删节点投影。
+
+冰冻代码和共享依赖包来源分别见[代码清单](../../assets/reference/battle-animation/status-frozen-runtime-source-manifest.json)、[完整图清单](../../assets/reference/battle-animation/status-frozen-assets-source-manifest.json)。两个原对象均从APK包内定位，15张纹理使用全部原mip的既有哈希匹配转换，17份材质、5份网格和完整Windows shader显式重绑；原生导出与APK共享bundle／CAB分别核验，未将资源导出等同于独立地址索引。共享完整图转换器补入共享依赖对象入口并固定输入清单排序，已重新核对既有三个环绕图、24059材质图、24390暂停图的载荷未变化。
+
+冰冻当前验证：完整Unity工程导入／编译、`ProjectTools.Validate` 及内置屏D3D11 Play Mode通过，静态检查90323个GUID。男女剑士／法师四个实际原生人物分别验证两个完整图、原材质与暂停同时执行、实际Animator时钟／骨骼冻结、重叠租约最后解除恢复非默认速度与原材质、两图各自对象池复用、渲染器边界只在Play采样。实际查看28张本模块画面（含首次挂点可见性探针）；同一Animator时刻的解除后人物像素与基线完全相同，随后推进时钟可恢复动作。同步通过既有八种人物控制器生命周期回归；没有声称查看全部旧回归截图。验证使用显式body／body_bottom挂点和未混合的约束前原生姿态采样，恢复像素对比前显式重采样相同时刻；正式战斗状态生产者、完整挂点、时间线及物理解算仍待接通，因此本项仍为局部实现，未据此发布新Player。
+
 原版状态动画暂停（局部实现）：迁入当前884_156692的 `MyPlayableAnimationControllerPause`，五个原方法只替换诊断与命名空间；复用的 `AnimationController.Pause/Resume/ForceResumeAllPause` 三个方法与当前原码逐体一致。保留对AnimationController的原转换与无效目标诊断；第一次暂停记录原Animator速度并置0，后续暂停累计计数，最后一个归还才恢复原速度。显式Stop在基类调用后立即尝试归还，StopImpl再次尝试，由原mResumed位防重；`ResumeOnDestroy=false` 保留暂停，由控制器的强制恢复入口归还。代码入口为 `Runtime/Official/BattleAnimationPlayables/`，重建入口为 `scripts/prepare_battle_status_pause_runtime.py`。
 
 原生动画暂停图（局部实现）：当前24390完整 `playable24390.prefab` 保留原层级、序列、无限暂停、骨骼跟随、粒子及停止淡出；20张全mip纹理、17个材质、6个网格和完整Windows Shader与原APK对象／原生转换缓存核对，45项资源／106个输出显式绑定到 `Combat/status-animations.json` 与 `Official/Combat/StatusAnimations/`。完整图转换入口继续复用已核验实现；GlobalPlayable的两项Frozen图、其他技能暂停图、全部状态角色安装与正式战斗逐事件接线仍待完成。
