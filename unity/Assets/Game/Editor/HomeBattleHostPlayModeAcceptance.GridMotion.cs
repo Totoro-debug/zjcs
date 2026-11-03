@@ -83,7 +83,35 @@ namespace Zjcs.Editor
                     + " expected=" + middle.ToString("R") + " duration=" + forward.MoveDuration.ToString("R"));
                 scene.Tick(.31f);
                 Require((body.position - end).sqrMagnitude < 1e-7f, "The path failed to restore its final grid.");
-                Debug.Log("[Grid motion] original forward/back identities, delay, pause, independent non-linear reference, cell boundary and final grid passed.");
+
+                back.MoveDuration = .3f;
+                back.Delay = 0f;
+                back.Path.AddRange(new[] { new FightGridPoint(2, 1), new FightGridPoint(1, 1) });
+                player.X = 1;
+                player.Y = 1;
+                var retreatStep = new FightBattleStepEvent { ActorId = player.Id };
+                retreatStep.Movements.Add(back);
+                scene.Refresh(checkpoint, retreatStep);
+                Vector3 retreatStart = mapper.GridToWorld(back.Path[0]);
+                Vector3 retreatEnd = mapper.GridToWorld(back.Path[1]);
+                scene.Tick(.03f);
+                float u = .1f / .15035143494606018f;
+                float u2 = u * u;
+                float u3 = u2 * u;
+                float segment = .15035143494606018f;
+                float retreatProgress = (u3 - 2f * u2 + u) * segment * 2.932962656021118f
+                    + (-2f * u3 + 3f * u2) * .34639856219291687f
+                    + (u3 - u2) * segment * 1.7188221216201782f;
+                Vector3 retreatExpected = Vector3.LerpUnclamped(retreatStart, retreatEnd, retreatProgress);
+                Require((body.position - retreatExpected).sqrMagnitude < 1e-7f,
+                    "Retreat did not follow its original non-linear curve: actual=" + body.position.ToString("R")
+                    + " expected=" + retreatExpected.ToString("R"));
+                Require((body.position - Vector3.Lerp(retreatStart, retreatEnd, .1f)).sqrMagnitude > .001f,
+                    "The retreat regression still accepts straight linear interpolation.");
+                scene.Tick(.27f);
+                Require((body.position - retreatEnd).sqrMagnitude < 1e-7f,
+                    "Retreat did not land on its final grid cell.");
+                Debug.Log("[Grid motion] original forward/back identities, delay, pause, independent forward and retreat curve references, cell boundary and final grids passed.");
             }
             finally
             {

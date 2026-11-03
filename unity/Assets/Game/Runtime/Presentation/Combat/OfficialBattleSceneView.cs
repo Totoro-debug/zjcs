@@ -1048,6 +1048,9 @@ namespace Zjcs.Presentation.Combat
             if (unit.NativeModel != null && unit.NativeModel.HasAnimation(exactAnimation))
             {
                 unit.NativeModel.Play(exactAnimation, false, restart: true);
+                if (unit.NativeModel is IOfficialBattleNativeModelSpeed speed)
+                    speed.SetPlaybackSpeed(playable.speed > 0f && !float.IsNaN(playable.speed)
+                        && !float.IsInfinity(playable.speed) ? playable.speed : 1f);
                 unit.CurrentAnimation = exactAnimation;
                 unit.AnimationLoops = false;
                 return;

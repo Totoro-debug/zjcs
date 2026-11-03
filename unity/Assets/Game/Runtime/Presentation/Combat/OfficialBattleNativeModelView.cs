@@ -5,7 +5,7 @@ using UnityEngine.Rendering;
 
 namespace Zjcs.Presentation.Combat
 {
-    public sealed class OfficialBattleNativeModelView : IOfficialBattleNativeModel
+    public sealed class OfficialBattleNativeModelView : IOfficialBattleNativeModel, IOfficialBattleNativeModelSpeed
     {
         private sealed class DrawView
         {
@@ -20,6 +20,7 @@ namespace Zjcs.Presentation.Combat
         private readonly Vector3 modelScale;
         private OfficialBattleNativeAnimationData animation;
         private float elapsed;
+        private float playbackSpeed = 1f;
         private int currentFrame = -1;
         private bool loop;
         private bool disposed;
@@ -71,6 +72,7 @@ namespace Zjcs.Presentation.Combat
             animation = next;
             loop = loopAnimation;
             elapsed = 0f;
+            playbackSpeed = 1f;
             IsAnimationFinished = false;
             currentFrame = -1;
             ModelTransform.localScale = modelScale * next.scale;
@@ -78,10 +80,15 @@ namespace Zjcs.Presentation.Combat
             return true;
         }
 
+        public void SetPlaybackSpeed(float speed)
+        {
+            playbackSpeed = speed > 0f && !float.IsNaN(speed) && !float.IsInfinity(speed) ? speed : 1f;
+        }
+
         public void Tick(float deltaTime)
         {
             if (disposed || animation == null || IsAnimationFinished || deltaTime <= 0f) return;
-            elapsed += deltaTime;
+            elapsed += deltaTime * playbackSpeed;
             int frame = Mathf.FloorToInt(elapsed * animation.fps);
             if (loop)
                 frame %= animation.frames.Length;

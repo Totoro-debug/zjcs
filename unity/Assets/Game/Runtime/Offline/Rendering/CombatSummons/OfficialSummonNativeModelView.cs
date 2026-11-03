@@ -16,9 +16,14 @@ namespace Zjcs.Presentation.Combat
         void Tick(float deltaTime);
     }
 
+    public interface IOfficialBattleNativeModelSpeed
+    {
+        void SetPlaybackSpeed(float speed);
+    }
+
     // Independent planar geometry adapter. All bones, weights, curves and polygons are source data;
     // Unity owns the native Transform hierarchy, Meshes, Materials and AnimationCurves.
-    public sealed class OfficialSummonNativeModelView : IOfficialBattleNativeModel
+    public sealed class OfficialSummonNativeModelView : IOfficialBattleNativeModel, IOfficialBattleNativeModelSpeed
     {
         private sealed class Draw
         { public GameObject Object; public Mesh Mesh; public MeshRenderer Renderer; }
@@ -37,6 +42,7 @@ namespace Zjcs.Presentation.Combat
         private readonly Color[] colors;
         private OfficialSummonAnimation animation;
         private float elapsed;
+        private float playbackSpeed = 1f;
         private bool loop,disposed;
         public Transform Transform { get; }
         public Transform ModelTransform { get; }
@@ -95,12 +101,13 @@ namespace Zjcs.Presentation.Combat
             if(disposed) throw new ObjectDisposedException(nameof(OfficialSummonNativeModelView));
             var next=source.animations.FirstOrDefault(a=>a.name==name);if(next==null)return false;
             if(animation==next && loop==loopAnimation && !restart)return true;
-            animation=next;elapsed=0;loop=loopAnimation;IsAnimationFinished=false;ApplyPose(next,0);return true;
+            animation=next;elapsed=0;loop=loopAnimation;playbackSpeed=1f;IsAnimationFinished=false;ApplyPose(next,0);return true;
         }
+        public void SetPlaybackSpeed(float speed) { playbackSpeed = speed > 0f && !float.IsNaN(speed) && !float.IsInfinity(speed) ? speed : 1f; }
         public void Tick(float deltaTime)
         {
             if(animation==null || disposed || IsAnimationFinished || deltaTime<=0)return;
-            elapsed+=deltaTime;float time=elapsed;
+            elapsed+=deltaTime*playbackSpeed;float time=elapsed;
             if(loop && animation.duration>0)time=Mathf.Repeat(time,animation.duration);
             else if(time>=animation.duration){time=animation.duration;IsAnimationFinished=true;}
             ApplyPose(animation,time);

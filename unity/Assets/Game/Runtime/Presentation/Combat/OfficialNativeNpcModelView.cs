@@ -11,7 +11,7 @@ namespace Zjcs.Presentation.Combat
 {
     // World followers and battle participants consume the same original NPC
     // skeletons. Keep atlas/material ownership and animation lifetime here.
-    public sealed class OfficialNativeNpcModelView : IOfficialBattleNativeModel
+    public sealed class OfficialNativeNpcModelView : IOfficialBattleNativeModel, IOfficialBattleNativeModelSpeed
     {
         [Serializable] private sealed class Catalog { public Binding[] renderers; public Model[] models; }
         [Serializable] private sealed class Binding
@@ -26,6 +26,7 @@ namespace Zjcs.Presentation.Combat
         private readonly int classId, sortingLayer, sortingOrder;
         private ProfessionNativeAnimationChannels channels;
         private float elapsed;
+        private float playbackSpeed = 1f;
         private bool loop = true, disposed;
 
         public Transform Transform { get; }
@@ -115,15 +116,16 @@ namespace Zjcs.Presentation.Combat
             if (resolved == null) return false;
             if (!restart && channels?.Name == resolved && loop == loopAnimation) return true;
             channels = new ProfessionNativeAnimationChannels(skeleton.Source, resolved);
-            loop = loopAnimation; elapsed = 0; IsAnimationFinished = false;
+            loop = loopAnimation; elapsed = 0; playbackSpeed = 1f; IsAnimationFinished = false;
             Render();
             return true;
         }
+        public void SetPlaybackSpeed(float speed) { playbackSpeed = speed > 0f && !float.IsNaN(speed) && !float.IsInfinity(speed) ? speed : 1f; }
         public void Tick(float deltaTime)
         {
             if (disposed) return;
             if (float.IsNaN(deltaTime) || float.IsInfinity(deltaTime) || deltaTime < 0) throw new ArgumentOutOfRangeException(nameof(deltaTime));
-            elapsed += deltaTime;
+            elapsed += deltaTime * playbackSpeed;
             if (!loop && elapsed >= channels.Duration) { elapsed = channels.Duration; IsAnimationFinished = true; }
             Render();
         }
