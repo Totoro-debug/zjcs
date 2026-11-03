@@ -164,7 +164,7 @@ namespace Zjcs.Editor
             private static bool Visible(ProbePlayable playable)
             { return playable != null && playable.myApplyComponent.gameObject.activeInHierarchy; }
 
-            private void Capture(string name)
+            private void Capture(string name, bool expectVisible = true)
             {
                 string directory = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
                 Require(!string.IsNullOrEmpty(directory), "Validation workspace is unbound.");
@@ -177,7 +177,8 @@ namespace Zjcs.Editor
                     camera.targetTexture = target; camera.Render(); RenderTexture.active = target;
                     image.ReadPixels(new Rect(0, 0, 675, 400), 0, 0); image.Apply();
                     int visible = image.GetPixels32().Count(pixel => pixel.r > 40 || pixel.g > 40 || pixel.b > 40);
-                    Require(visible > 20, "Original particle raster is empty: " + name + ", pixels=" + visible);
+                    Require(expectVisible ? visible > 20 : visible <= 20,
+                        "Original particle visibility differs: " + name + ", pixels=" + visible);
                     File.WriteAllBytes(Path.Combine(directory, "status-playable-" + name + ".png"), image.EncodeToPNG());
                     Debug.Log("[Status playable raster] " + name + " visible=" + visible);
                 }
@@ -262,6 +263,8 @@ namespace Zjcs.Editor
                 while (lifecycle.MoveNext()) yield return lifecycle.Current;
                 IEnumerator orbits = OrbitSteps();
                 while (orbits.MoveNext()) yield return orbits.Current;
+                IEnumerator death = DeathForbiddenSteps();
+                while (death.MoveNext()) yield return death.Current;
             }
 
             public void Dispose()

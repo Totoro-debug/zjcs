@@ -93,6 +93,9 @@ namespace Zjcs.Combat.Official
             if (initialize) Initialize();
             else if (statusCatalog != null)
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
+            foreach (var unit in units) SynchronizeDeathForbidden(unit);
+            if (statusCatalog != null)
+                FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
             foreach (var unit in units)
                 foreach (var status in unit.Statuses) InitializeRoundStartDelay(status);
         }
@@ -502,6 +505,7 @@ namespace Zjcs.Combat.Official
                 ExecuteSkill(caster, skill, targets, casts, damageEvents, movements,
                     out float lastDelay, out float skillDuration, out float actionDuration);
                 owner.Hp = Math.Max(0L, Math.Min(owner.MaxHp, caster.Hp));
+                SynchronizeDeathForbidden(owner);
                 owner.Turn.Hp = owner.Hp;
                 stepDuration = Math.Max(stepDuration,
                     Math.Max(ResolveDuration(skill, lastDelay), skillDuration));
@@ -623,7 +627,11 @@ namespace Zjcs.Combat.Official
             long skillCostHp = skillCost == null
                 ? 0L : Math.Max(0L, skillCost.BeforeHp - skillCost.AfterHp);
             FightBattlePetEnergyRuntime.RecordOwnerDamage(units, actor.Id, skillCostHp);
-            if (skillCostHp > 0) ApplyHpChangeTriggers(actor, skill);
+            if (skillCostHp > 0)
+            {
+                ApplyHpChangeTriggers(actor, skill);
+                SynchronizeDeathForbidden(actor);
+            }
 
             if (statusCatalog != null)
             {
@@ -894,6 +902,9 @@ namespace Zjcs.Combat.Official
                     if (hemophagiaTriggerSkills.Count > 0)
                         ExecuteTriggerSkills(actor, hemophagiaTriggerSkills, casts, damageEvents, movements,
                             ref lastDelay);
+                    // Confirm death after this hit's HP effects and immediate revival,
+                    // including role-death responses, rather than on the first zero HP.
+                    if (recoveredHp && actor != target) SynchronizeDeathForbidden(actor);
                     if (target.Hp <= 0)
                     {
                         List<FightBattleStatusSkillInvocation> roleDieInvocations =
@@ -902,9 +913,11 @@ namespace Zjcs.Combat.Official
                         if (roleDieInvocations.Count > 0)
                             ExecuteConfiguredStatusSkills(roleDieInvocations, casts, damageEvents,
                                 movements, ref lastDelay, out _, out _);
+                        SynchronizeDeathForbidden(target);
                         FightStatusTriggerRuntime.ApplyKillSkills(actor, target, skill, units,
                             statusCatalog, random, configuredKillSkillInvocations);
                     }
+                    else SynchronizeDeathForbidden(target);
                     if (configuredKillSkillInvocations.Count > 0)
                     {
                         ExecuteConfiguredStatusSkills(configuredKillSkillInvocations, casts,
@@ -2584,7 +2597,11 @@ namespace Zjcs.Combat.Official
 
         private void RefreshTurnUnits()
         {
-            foreach (FightBattleUnitState unit in units) SynchronizeTurn(unit);
+            foreach (FightBattleUnitState unit in new List<FightBattleUnitState>(units))
+            {
+                SynchronizeDeathForbidden(unit);
+                SynchronizeTurn(unit);
+            }
         }
 
         private static void SynchronizeTurn(FightBattleUnitState unit)

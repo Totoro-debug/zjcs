@@ -217,6 +217,19 @@ namespace Zjcs.Editor
                         .SetValue(owner, new Action<FightBattleUnitState, FightBattleStatusState, bool>((unit, status, before)
                             => OnForbiddenChanged?.Invoke(this, before)));
                 }
+                public State(FightBattleUnitState owner, FightBattleStatusState data)
+                { this.owner = owner; this.data = data; }
+                public void ObserveExecutorStep()
+                {
+                    var field = typeof(FightBattleUnitState).GetField("StatusForbiddenChanged",
+                        BindingFlags.Instance | BindingFlags.NonPublic);
+                    var original = (Action<FightBattleUnitState, FightBattleStatusState, bool>)field.GetValue(owner);
+                    field.SetValue(owner, new Action<FightBattleUnitState, FightBattleStatusState, bool>((unit, status, before) =>
+                    {
+                        original?.Invoke(unit, status, before);
+                        if (status == data) OnForbiddenChanged?.Invoke(this, before);
+                    }));
+                }
                 public int StackedCount => data.StackCount;
                 public bool CanStackCount => data.IsOpenStack;
                 public bool Forbidden => data.ForbiddenType != 0;

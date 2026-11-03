@@ -61,6 +61,7 @@ namespace Zjcs.Combat.Official
                 Math.Max(0, damage.BeforeHp - damage.AfterHp), statusCatalog, random,
                 sourceSkill: syncTriggerContext);
             ApplyHpChangeTriggers(target, syncTriggerContext);
+            SynchronizeDeathForbidden(target);
             TransmitVoodooDamage(target, damage, events, casts, visited);
         }
 

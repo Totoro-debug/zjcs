@@ -34,7 +34,8 @@ function Battle($restore = $false, $replay = $false, $producer = $false) {
     $skill.Hits.Add($hit)
     if ($replay) {
         $skill.HasReplay = $true; $skill.ReplayMaxCountEachRound = 1; $skill.ReplayUsesRate = $true
-        # Parallel official trap entities must each start, including during a replay.
+        # A replay reapplies the same entity/skill origin: renew its existing trap
+        # without manufacturing another status-start event.
     }
     $cp.Units[0].Skills.Add($skill)
     $cp.Units[0].SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{ Slot = 0; LimitedTimes = -1 })
@@ -85,25 +86,33 @@ Assert-Start ([Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($norm
     [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($restored.Checkpoint)) 'Mid-hit startup changed after restoration'
 $replayed = Battle $false $true
 $replayCasts = @($replayed.Event.SkillCasts | Where-Object SkillEntityId -eq 12570)
-Assert-Start ($replayCasts.Count -eq 2 -and [Math]::Abs($replayCasts[1].Delay - 2.4) -lt 0.00001) 'Replay status startup lost its local time or ran twice'
+Assert-Start ($replayCasts.Count -eq 1 -and [Math]::Abs($replayCasts[0].Delay - 1.4) -lt 0.00001 `
+    -and @($replayed.Checkpoint.Units[1].Statuses | Where-Object ClassId -eq 12353).Count -eq 1) `
+    'Same-origin replay renewed the trap by creating a duplicate entity/start event'
 [void](Battle $false $false $true)
 
 # The start event belongs to the new entity, not each application or added stack.
 $owner = [Zjcs.Combat.Official.FightBattleUnitState]::new(); $owner.Id = 1; $owner.Hp = $owner.MaxHp = 100
-$template = $catalog.CreateStatus(12353, 1, 1, 1)
+$template = $catalog.CreateStatus(12353, 1, 1, 1, 990001)
 $script:startCount = 0
 $callback = $owner.GetType().GetField('StatusStarted', [Reflection.BindingFlags]'Instance,NonPublic')
 $callback.SetValue($owner, [Action[Zjcs.Combat.Official.FightBattleUnitState,Zjcs.Combat.Official.FightBattleStatusState]]{ param($u,$s) $script:startCount++ })
 $first = [Zjcs.Combat.Official.FightStatusLifecycle]::Apply($owner, $template, 0, 1)
 $first.ActionBehOfSameStatus = 2
 [void][Zjcs.Combat.Official.FightStatusLifecycle]::Apply($owner, $template, 0, 2)
-Assert-Start ($script:startCount -eq 1) 'Discarding an existing status restarted it'
+Assert-Start ($script:startCount -eq 1) 'Same-origin renewal restarted the status'
 $first.IsOpenStack = $true; $first.MaxStackedCount = 10
 [void][Zjcs.Combat.Official.FightStatusLifecycle]::Apply($owner, $template, 0, 2)
 Assert-Start ($script:startCount -eq 1) 'Adding a stack restarted the same entity'
 $first.IsOpenStack = $false; $first.ActionBehOfSameStatus = 1
 [void][Zjcs.Combat.Official.FightStatusLifecycle]::Apply($owner, $template, 0, 2)
-Assert-Start ($script:startCount -eq 2 -and $owner.Statuses.Count -eq 1) 'Replacing a status failed to start the new entity once'
+Assert-Start ($script:startCount -eq 1 -and $owner.Statuses.Count -eq 1 `
+    -and [object]::ReferenceEquals($owner.Statuses[0], $first) -and $first.StackCount -eq 2) `
+    'Same-origin renewal replaced the entity or discarded preserved stacks'
+$other = $catalog.CreateStatus(12353, 1, 1, 3, 990004)
+[void][Zjcs.Combat.Official.FightStatusLifecycle]::Apply($owner, $other, 0, 3)
+Assert-Start ($script:startCount -eq 2 -and $owner.Statuses.Count -eq 2) `
+    'A different source skill failed to create and start its independent status'
 $callback.SetValue($owner, $null)
 $near = $owner.Statuses[0]; $near.MoveNearMaxCountEachRound = 0
 $enemy = [Zjcs.Combat.Official.FightBattleUnitState]::new()
@@ -115,4 +124,4 @@ $invocations = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectMoveNear
     $units, [Zjcs.Combat.Official.FightStatusTriggerRuntime]::MoveNearEventStart, $null,
     [Zjcs.Combat.Official.FightRandomStream]::new(23), $near)
 Assert-Start ($invocations.Count -eq 1) 'Official MaxCountEachRound=0 was treated as a disabled trigger'
-Write-Output 'Status startup passed: mid-hit official 12353 -> 12570 in the same step, parent/trigger/hit times, replay offsets, no next-turn duplication, scoped callback and deterministic save.'
+Write-Output 'Status startup passed: mid-hit official 12353 -> 12570, parent/trigger/hit times, same-origin replay renewal, preserved stacks, independent skill origins, no next-turn duplication, scoped callback and deterministic save.'

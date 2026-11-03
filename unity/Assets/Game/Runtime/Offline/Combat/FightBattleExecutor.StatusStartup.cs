@@ -12,7 +12,11 @@ namespace Zjcs.Combat.Official
                     || unit.RoundStartClockResolver != null)
                     throw new InvalidOperationException("A battle unit is already executing a step.");
             bool mutexChanged = false;
-            foreach (var unit in units) mutexChanged |= statusMutex.Synchronize(unit);
+            foreach (var unit in units)
+            {
+                mutexChanged |= SynchronizeDeathForbidden(unit);
+                mutexChanged |= statusMutex.Synchronize(unit);
+            }
             if (mutexChanged && statusCatalog != null)
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
             foreach (var unit in units)
@@ -59,6 +63,7 @@ namespace Zjcs.Combat.Official
 
         private void OnStatusStarted(FightBattleUnitState owner, FightBattleStatusState status)
         {
+            InitializeStatusDeathForbidden(owner, status);
             statusMutex.Add(owner, status);
             if (statusCatalog != null && status != null && status.HasPropertyComponent)
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
