@@ -8,6 +8,8 @@
 
 本页只维护所有战斗共用的会话、阶段、准备、格网、单位、行动队列、技能、命中、伤害／治疗、状态、召唤、胜负、HUD、战报、演出和检查点。具体地图、剧情、任务、掉落、活动入口、养成事务和玩法奖励不属于本页。
 
+所有战斗宿主通过 `IOfficialBattleModeAdapter` 接入同一控制器，并保留控制器生成的 `FinalReport`；宿主只负责各自的持久化、奖励和离场处理。日常、竞技场、幻境之塔、技能试伤、周常和主线地图均实现该报告契约；每日挑战原生结算页的总伤害与角色伤害统计及战报按钮、技能试伤原生结算页的总伤害与战报按钮均消费同一份最终报告，不再从检查点重建统计。公共单位战报包含官方 `DamageAndShieldDamageDealt` 字段。窗口化 Play Mode 实测周常112步和竞技场6步至结算，报告的关卡、结局、单位／技能行数及伤害、承伤、治疗、护盾总量与最终检查点统计一致；竞技场实测原生全员战报两次打开、玩家切换、技能页和关闭释放。技能试伤实测主页入口、设置、10回合战斗、原生结算页、公共报告／最终检查点统计一致、战报打开及返回设置；验证使用隔离存档。Map10 主线实战现加入同一最终报告／最终检查点统计断言，尚待本轮窗口化 Play Mode 执行。每日挑战完整入口到原生结算页仍待实际流程验证。相关 Windows Player 发布尚未完成。
+
 “完整还原”表示当前 Unity 代码和资源已经覆盖并完成相应检查；“自定义实现”表示客户端或共享代码没有提供服务器裁决，按已确认的单机规则补足。配置存在、资源已提取或旧引擎测试通过，都不能单独视为通用战斗完成。
 
 ### 官方来源与证据边界
@@ -148,6 +150,8 @@ prepare_home_ui.py 从固定 871_156598 的 FurnitureFastHangUpDialog、其 Item
 
 战斗召唤继承使用已取得的官方 `BattleFormulaHandler.CalcSummonMonsterInheritProp`、`SummonRankAdditiveFactorParser` 和详情合并调用。当前871与历史871相应反编译文件逐字节一致，运行时保持871已校验配置；输入哈希、程序集与转换入口见 [召唤继承清单](../../assets/reference/battle-rules/summon-inheritance-source-manifest.json)，生成脚本为 `scripts/prepare_battle_summon_inheritance.py`。
 
+召唤继承缺配置分支：按所选884原 `BattleFormulaHandler.CalcSummonMonsterInheritProp`，缺少固定配置时保留两项 null 输出；固定配置存在但缺加成配置时保留已计算固定属性和空继承字典，诊断不终止战斗。公共执行器只合入非 null 结果，未补造继承值；双影原召唤物3925沿此分支继续使用已有怪物属性。来源与移植哈希见[缺配置分支清单](../../assets/reference/battle-rules/summon-missing-config-source-manifest.json)。召唤规则夹具覆盖3925空输出、既有三类精确继承系数、实际岩灵生成与检查点；四项活动的真实战斗及公共战报交互范围见[圣兽与双影](daily-challenges.md)，完整窗口仍待恢复。
+
 战斗岩灵／替身模型：模型3181／4600、原骨骼与atlas文本、完整纹理mip、原shader对象及岩灵头像Sprite原网格按APK优先和当前871云端来源恢复，转换／输入／输出哈希见[模型来源清单](../../assets/reference/battle-rules/summon-models-source-manifest.json)；Unity原生材质、骨骼数据、 shader及原URP管线显式绑定哈希见[模型绑定清单](../../assets/reference/battle-rules/summon-models-binding-source-manifest.json)。Play Mode只证明这两个模型和直接姿态采样，Animator过渡、其他模型、完整特效及Windows Player仍待实现，未生成完整素材快照。
 
 ## 完整还原部分
@@ -173,14 +177,14 @@ prepare_home_ui.py 从固定 871_156598 的 FurnitureFastHangUpDialog、其 Item
 - 公共技能装配器 `OfficialBattleSkillAssembler` 已接入上述现有战斗入口的玩家、怪物和竞技守卫单位。各入口只提供技能槽、实体、装备／皮肤、职业可用性、等级和被动绑定；公共实现统一按本场属性计算技能属性快照与 CD，并创建被动状态和战斗技能状态。主线保留官方零值属性列表语义，其他入口保留原有非零过滤语义。
 - `OfficialBattlePlayerLoadoutAssembler` 已将主线地图、日常副本、竞技场及 Map10 系列入口的玩家主动／被动槽、皮肤、槽级、武器职业可用性、装备被动收敛到公共装配。主线显式保留零值技能属性并要求有效主动技能，其余入口沿用非零过滤；日常副本仍由自己的适配层添加 NPC 助战并调整 Boss 属性，竞技场仍自行装配竞技对手的守卫技能，Map10 builder 仍处理关卡与怪物编队。
 - 公共单位装配器 `OfficialBattleUnitAssembler` 已接入上述入口的角色和怪物初始化。入口提供位置、阵营、波次、怪物／NPC 标识、方向和 MaxHpPlies 等玩法字段；公共实现统一从属性初始化 HP／MaxHP／属性列表、移动距离和行动条速度，保持主线零值属性与其他入口非零属性的既有语义。
-- 公共检查点装配器 `OfficialBattleCheckpointAssembler` 已接入日常副本、竞技场、幻境之塔、技能伤害测试和主线地图。各入口只提供阶段类型、回合限制、随机种子、网格、试伤规则和模式专属结果规则；公共实现统一创建可序列化的阶段状态快照及检查点默认结构，新增周常／活动适配器可复用同一契约。
+- 公共检查点装配器 `OfficialBattleCheckpointAssembler` 已接入日常副本、竞技场、幻境之塔、技能伤害测试、周常和主线地图。`OfficialMapBattleCheckpointBuilder` 将官方 Map10 场景的网格、玩家属性／技能、怪物波次／属性／技能统一转换为检查点；`OfficialMapBattleSessionOptionsBuilder` 统一读取 Map10 stage 的准备、离场、镜头和快进配置，站位范围仍由主线、塔层、试伤和周常适配器提供。幻境塔使用配置怪物属性，试伤按请求等级计算怪物属性，周常使用阶段中的原始等级与编队。玩法适配器仍负责模式规则、场景挂载、周期、奖励和存档。
 - 公共助战事务配置 `OfficialBattleAssistOptions` 已接入日常副本／每日挑战 Runner。入口只提供官方 `PlayType`、入口标识和可选人数覆盖；选择校验、次数提交／回滚、检查点恢复身份和战斗结束清理继续由同一宿主流程执行。节庆首领可传入官方 PlayType 5 复用该边界，但其活动层、奖励和入口仍需独立适配器接通。
 - 公共控制器现在通过 `BattleCompleted` 在最终技能／受击演出完成后交付最终检查点；日常副本、竞技场、幻境之塔、技能试伤和主线入口均由该事件触发模式结算，入口不再各自轮询 `CanCompleteBattle`。公共模块继续负责最终命中等待、回合推进、统计和 HUD／场景收尾，模式适配器只处理奖励、存档和场外事务。
 - 同一完成边界现在生成一次 `FightBattleReport`，通过 `BattleReportReady` 和 `FinalReport` 对外提供单位／技能统计、伤害、治疗、护盾、状态和胜负结果；模式适配器可以直接消费公共报告，不再从各自检查点重复拼接统计。
 - `IOfficialBattleModeAdapter` 现在是公共控制器与玩法宿主的结算 seam：主线地图、日常／每日挑战、竞技场、幻境之塔和技能试伤均把自身作为适配器传入请求。控制器在步骤应用、最终战报生成、完成演出释放和 HUD 离场输入后统一回调适配器；玩法只保留检查点持久化、奖励事务、场外恢复和离场行为，不再手动订阅或解除公共事件。公共宿主 Play Mode 验收会反射确认运行中的控制器持有当前宿主适配器，避免入口退回各自事件链。
 - 当前版本已通过 `Zjcs.Editor.ProjectTools.Validate`（Unity 2022.3.57f1c2，退出码0），并以本机可用的 Mono Windows 后端构建发布至 `D:/Desktop/杖剑传说/杖剑传说.exe`；Player 已实际启动并正常退出。IL2CPP 后端因编辑器未安装 Windows IL2CPP 模块，本次未使用。
 - 各入口每帧只调用 `Tick(deltaTime)` 请求推进。准备、暂停和当前演出由模块统一门控；初始等待默认为既有本地入口的0.8秒，后续推进等待当前演出完成。删除独立的 `OfficialBattleProgressDriver` 和各 Runner 的战斗计时器；主线保留的延迟只用于地图／剧情过渡。所有实时结果交接均等待 `CanCompleteBattle`，步骤回执只保存检查点，防止致命一击尚未播完就销毁场景。已经结束的每日挑战存档在挂载之前按检查点结算恢复。
-- 家园各入口传入各自官方场景 GameId，并复用公共技能动作解析，移除始终返回 `idle_01` 的适配器。玩法适配器继续负责角色原挂点恢复、入口隐藏、消耗／奖励原子事务及持久化；战斗胜负、战报计数和检查点结构复用已有规则实现。请求支持后续周常／活动入口使用同一模块，但尚未接入的玩法不计为已迁移。主线 Map10 与技能试伤入口已通过模拟输入运行验证；日常副本、竞技场和幻境之塔已验证公共 Runner 启动、HUD 开始／倍速输入、真实胜负及主城恢复，三个入口窗口的完整点击流程仍待验证。
+- 家园各入口传入各自官方场景 GameId，并复用公共技能动作解析，移除始终返回 `idle_01` 的适配器。玩法适配器继续负责角色原挂点恢复、入口隐藏、消耗／奖励原子事务及持久化；战斗胜负、战报计数和检查点结构复用已有规则实现。周常通过 `WeeklyChallengeBattleRunner` 消费官方目录并调用公共控制器；关卡4800已在 Play Mode 验证真实战斗、模拟 HUD 开始／倍速输入、终局检查点回调、公共战报阶段／胜负／单位统计一致性及主城人物姿态恢复。虚空／混沌正式活动入口、周期／奖励、原生周常结算面板和 Windows Player 仍未完成。
 - `OfficialBattleNativeAnimationLibrary` 和 `OfficialBattleNativeModelView` 已能加载已恢复的原生模型数据；固定版原动画采样包包含403个模型的4609条动画数据，纹理页按来源清单校验。岩灵／替身模型、HUD 绑定和部分骨骼姿态已做局部  Play Mode 检查；抽帧网格不等同 Animator 状态切换、逐骨骼混合或完整战斗演出。
 - 战报构建和统计已保留施放、命中、治疗、护盾、承伤、破韧、状态及来源信息；缺失的旧存档字段保持未知，不从剩余 HP／护盾倒推。
 

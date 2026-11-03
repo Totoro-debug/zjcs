@@ -654,6 +654,24 @@ namespace Zjcs.Editor
                     yield return null;
                 yield return null; // Allow deferred destruction of the temporary renderer group.
                 Require(checkpointField("Finished") != 0, "The complete battle did not reach a final result.");
+                var mainlineReport = runtime.FinalReport;
+                var expectedMainlineReport = Zjcs.Combat.Official.FightBattleReportBuilder.Build(
+                    (Zjcs.Combat.Official.FightBattleCheckpoint)checkpoint());
+                Require(mainlineReport != null && mainlineReport.StageId == expectedMainlineReport.StageId
+                    && mainlineReport.Won == expectedMainlineReport.Won
+                    && mainlineReport.Round == expectedMainlineReport.Round
+                    && mainlineReport.Units.Count == expectedMainlineReport.Units.Count
+                    && mainlineReport.Skills.Count == expectedMainlineReport.Skills.Count
+                    && mainlineReport.TotalDamageDealt == expectedMainlineReport.TotalDamageDealt
+                    && mainlineReport.TotalDamageTaken == expectedMainlineReport.TotalDamageTaken
+                    && mainlineReport.TotalHealDealt == expectedMainlineReport.TotalHealDealt
+                    && mainlineReport.TotalShieldGranted == expectedMainlineReport.TotalShieldGranted,
+                    "The mainline adapter did not retain the shared final report matching its completed battle.");
+                foreach (var expectedUnit in expectedMainlineReport.Units)
+                    Require(mainlineReport.Unit(expectedUnit.UnitId)?.DamageAndShieldDamageDealt
+                        == expectedUnit.DamageAndShieldDamageDealt,
+                        "The mainline adapter changed the official damage-and-shield statistic for unit "
+                        + expectedUnit.UnitId + ".");
                 Require(finalPresentationHeld && finalPresentationCompleted,
                     "The complete battle did not exercise final presentation hold and release.");
                 if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_WINDOW") == "1")
