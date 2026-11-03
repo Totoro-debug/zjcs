@@ -604,7 +604,13 @@ NPC 资料投影同时保留实际原 `NpcTargetData` 对象的 `ServerId`，头
 
 天赋配置复用原三棵树与 252 个节点，原节点条件携带各自 NPC／节点上下文，节点费用、已激活状态、桥接点、树解锁及礼物转换仍由 `PartnerTalentRules` 计算；好感阶位上限、经验换算及礼物偏好加成继续调用原解析器。相遇状态复用当前伙伴规则的本地成长服务；条件订阅复用上节原调度。配置对象保持稳定，玩家记录随事务或读档替换时读取新状态。服务拥有者最后建立订阅并在释放时解除，不新增存档字段或通话触发时机。
 
-输入、代码边界及验证入口见[提示配置服务来源](../../assets/reference/partner-tip-services-source-manifest.json)，记录入口为 `scripts/record_partner_tip_services.py`。成就键查询保留 NPC ID／普通或星神类型参数，要求窗口拥有者显式提供对应服务；本适配器尚未提供成就进度／领取、完整提示图上下文或正式窗口绑定。隔离工程实际 Play Mode 已核对全部 252 个天赋节点的原上下文／费用／状态，并加载原 `NpcProfileItem` 提示图，经原 `TipDotSystemController` 界面监听激活，验证好感达标刷新、原功能 65 限制、领取写失败／重试／奖励与凭据同存、读档重建不重复提示、监听与条件订阅释放。原完整伙伴三标签窗口及档案页 8 次模拟指针点击／滚动回归通过，实际查看本轮运行截图；静态检查通过（90778 GUID），主工程 Unity 2022.3.57f1c2 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。本节仍为局部接线，不作为伙伴功能或发布完成结论；临时产物沿用前述清理限制。
+输入、代码边界及验证入口见[提示配置服务来源](../../assets/reference/partner-tip-services-source-manifest.json)，记录入口为 `scripts/record_partner_tip_services.py`。成就键查询保留 NPC ID／普通或星神类型参数；Home 伙伴名册现由 `OfflinePartnerTipDotRuntime` 提供原图执行器、上下文及本地成就读取／刷新。档案页领取完成后的提示刷新尚未接入这个 Home 生命周期。隔离工程实际 Play Mode 已核对全部 252 个天赋节点的原上下文／费用／状态，并加载原 `NpcProfileItem` 提示图，经原 `TipDotSystemController` 界面监听激活，验证好感达标刷新、原功能 65 限制、领取写失败／重试／奖励与凭据同存、读档重建不重复提示、监听与条件订阅释放。原完整伙伴三标签窗口及档案页 8 次模拟指针点击／滚动回归通过，实际查看本轮运行截图；静态检查通过（90778 GUID），主工程 Unity 2022.3.57f1c2 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。本节仍为局部接线，不作为伙伴功能或发布完成结论；临时产物沿用前述清理限制。
+
+### 当前主页伙伴提示图绑定（局部）
+
+主页拥有者在角色页面生命周期内创建已迁移的 `TipDotNodeManager`、`TipDotSystem` 与 `TipDotSystemController`，按 Resources 目录绑定原伙伴图。官方 `NpcPanelNpcItem` 交给本地伙伴 ID 后，Linker 使用原 `NpcNodeInstanceInfo` 和 prefab 节点选择器注册图实例；状态由原聚合节点和原 `TipDotNodeLinker` 更新。普通／星神好感成就键映射到各自原配置组，节点读取本地成就、档案及天赋条件服务。关闭 Home 时先释放原节点，再解除条件和玩家事件订阅。
+
+打开名册时先重读存档并刷新原好感成就可领索引，再生成原生名册项；名册期间本地相遇、赠礼库存或好感提交事件会同步刷新图条件，不模拟服务器推送。档案奖励提交后的提示刷新依赖正式档案页宿主接线。当前 Home 适配器仅提供伙伴图所需的成就读取和通用节点端口默认值，不承接其他职业提示规则。入口为 `OfflinePartnerTipDotRuntime`、`HomeFeatureRuntime` 与 `HomeHudView.Partners`。Unity Play Mode 已在真实官方名册卡片上验证 Linker 绑定以及可领时 `TipLevel`／原状态切换器为 `Important`，并检查了整页运行截图；截图未清楚显示红色图标，像素级可见效果仍待定位和复验。达成／领取后的提示刷新、重复开关及 Home 销毁释放也未完成 Play Mode 验证；本节不能作为完整提示功能或 Windows Player 已完成的依据。
 
 ### 伙伴馈赠成就与本地领取（局部）
 

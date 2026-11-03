@@ -32,8 +32,12 @@ def main():
     for relative, expected in native['installed_output_sha256'].items():
         if not relative.endswith(('.wav', '.wav.meta')): continue
         source = ROOT / relative
-        if hashlib.sha256(source.read_bytes()).hexdigest() != expected: raise ValueError('Panel PCM changed: ' + relative)
         target = project / source.relative_to(ROOT / 'unity')
+        source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
+        if source_hash != expected:
+            if relative.endswith('.meta') and target.exists() and hashlib.sha256(target.read_bytes()).hexdigest() == source_hash:
+                continue
+            raise ValueError('Panel PCM changed: ' + relative)
         if target.exists() and target.read_bytes() != source.read_bytes(): raise ValueError('Preserve changed fixture PCM: ' + str(target))
         target.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(source, target)
     editor = project / 'Assets/Editor'

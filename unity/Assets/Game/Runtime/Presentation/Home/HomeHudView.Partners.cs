@@ -20,6 +20,7 @@ namespace Zjcs.Presentation.Home
         private void OpenPartnerRoster()
         {
             CloseDialog();
+            host.PartnerTipDots?.Refresh();
             var root = new GameObject("PartnerRosterDialog", typeof(RectTransform), typeof(Image), typeof(Button));
             root.transform.SetParent(canvas.transform, false);
             var rect = (RectTransform)root.transform;
@@ -35,7 +36,8 @@ namespace Zjcs.Presentation.Home
             activePanelKey = "partner_roster";
         }
 
-        void IOfflinePartnerPresentation.BindNpcTipDot(TipDotNodeLinker linker, int npcClassId) { }
+        void IOfflinePartnerPresentation.BindNpcTipDot(TipDotNodeLinker linker, int npcClassId)
+            => host.PartnerTipDots?.Bind(linker, npcClassId);
         void IOfflinePartnerPresentation.PostSound(AudioClip sound, GameObject owner)
         {
             if (sound == null || owner == null) return;

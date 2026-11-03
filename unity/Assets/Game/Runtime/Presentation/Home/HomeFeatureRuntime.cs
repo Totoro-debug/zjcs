@@ -24,6 +24,7 @@ using Zjcs.Presentation.Wishes;
 using Zjcs.Presentation.Combat;
 using Zjcs.Combat.Official;
 using Zjcs.Offline.PartnersUI;
+using Zjcs.Official.PartnersUI;
 using Zjcs.Official.ProfessionUI;
 using Zjcs.Official.World.NativeLabelUI.Framework;
 
@@ -59,6 +60,7 @@ namespace Zjcs.Presentation.Home
         private OfflinePartnerDetailPropertyServices partnerDetailServices;
         private OfflinePartnerDetailPropertySource partnerDetailSource;
         private OfflinePartnerGiftPlayer partnerGiftPlayer;
+        private OfflinePartnerTipDotRuntime partnerTipDots;
         private OfflineProfessionImageResourceLoader partnerDetailImages;
         private OfficialPartnerGiftPageAssetCatalog partnerGiftAssets;
         private OfflinePartnerGiftRuntimeBindings partnerGiftBindings;
@@ -157,6 +159,7 @@ namespace Zjcs.Presentation.Home
         public FightOfficialNpcAssistanceCatalog NpcAssistanceCatalog => npcAssistanceCatalog;
         public OfficialPartnerRosterAssetCatalog PartnerRosterAssets => partnerRosterAssets;
         public OfflinePartnerRosterUiServices PartnerRoster => partnerRoster;
+        public OfflinePartnerTipDotRuntime PartnerTipDots => partnerTipDots;
         public OfficialPartnerDetailPropertyAssetCatalog PartnerDetailAssets => partnerDetailAssets;
         public OfflinePartnerDetailPropertyServices PartnerDetailServices => partnerDetailServices;
         public OfficialPartnerGiftPageAssetCatalog PartnerGiftAssets => partnerGiftAssets;
@@ -792,6 +795,11 @@ namespace Zjcs.Presentation.Home
             var giftConfiguration = OfficialPartnerGiftAssetCatalog.LoadDefault();
             partnerGiftPlayer = new OfflinePartnerGiftPlayer(profile, partnerCatalog,
                 giftConfiguration, id => new OfflinePartnerItemInfo(partnerCatalog, id), () => false);
+            partnerTipDots = new OfflinePartnerTipDotRuntime(profile, partnerCatalog, giftConfiguration, progression);
+            partnerRoster.NpcAdded += OnPartnerRosterAdded;
+            partnerRoster.NpcFriendshipUpdated += OnPartnerRosterFriendshipUpdated;
+            partnerGiftPlayer.OnNpcFriendshipLevelUpdate += OnPartnerGiftFriendshipUpdated;
+            partnerGiftPlayer.OnItemCountUpdate += OnPartnerGiftInventoryUpdated;
             partnerGiftBindings = new OfflinePartnerGiftRuntimeBindings(profile, partnerCatalog, partnerGiftAssets,
                 id => new OfflinePartnerItemInfo(partnerCatalog, id), key => localization.GetText(key, LanguageType.zh_CN));
             partnerGiftServices = new OfflinePartnerGiftUiServices(profile, partnerGiftPlayer,
@@ -1851,6 +1859,7 @@ namespace Zjcs.Presentation.Home
             catalog = null;
             if (hud != null) hud.Dispose();
             hud = null;
+            DisposePartnerTipDots();
             homeRenderPipeline?.Dispose();
             homeRenderPipeline = null;
             if (invokeCallback) onClose?.Invoke();
@@ -1922,12 +1931,34 @@ namespace Zjcs.Presentation.Home
             homePlayer?.Dispose();
             homePlayer = null;
             StopFruitTreeTutorialVoice();
+            DisposePartnerTipDots();
             HomeAudioSettings.Unregister(fruitTreeTutorialVoiceSource);
             HomeAudioSettings.Unregister(settingsClickSource);
             if (settingsClickClip != null) Destroy(settingsClickClip);
             settingsClickClip = null;
             homeRenderPipeline?.Dispose();
             homeRenderPipeline = null;
+        }
+
+        private void OnPartnerRosterAdded(int id, NpcMeetType type) => partnerTipDots?.Refresh();
+        private void OnPartnerRosterFriendshipUpdated(int id) => partnerTipDots?.Refresh();
+        private void OnPartnerGiftFriendshipUpdated(int id, int oldLevel, int newLevel) => partnerTipDots?.Refresh();
+        private void OnPartnerGiftInventoryUpdated(IProfessionItemData item, long previous, object context) => partnerTipDots?.Refresh();
+
+        private void DisposePartnerTipDots()
+        {
+            if (partnerRoster != null)
+            {
+                partnerRoster.NpcAdded -= OnPartnerRosterAdded;
+                partnerRoster.NpcFriendshipUpdated -= OnPartnerRosterFriendshipUpdated;
+            }
+            if (partnerGiftPlayer != null)
+            {
+                partnerGiftPlayer.OnNpcFriendshipLevelUpdate -= OnPartnerGiftFriendshipUpdated;
+                partnerGiftPlayer.OnItemCountUpdate -= OnPartnerGiftInventoryUpdated;
+            }
+            partnerTipDots?.Dispose();
+            partnerTipDots = null;
         }
 
         private void OnApplicationPause(bool pauseStatus)

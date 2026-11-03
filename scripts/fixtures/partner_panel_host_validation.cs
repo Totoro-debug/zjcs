@@ -80,24 +80,13 @@ public static class PartnerPanelHostValidation
 
 public sealed class PartnerPanelHostRunner : MonoBehaviour, IOfflinePartnerPresentation, IProfessionSoundHost, IProfessionSoundObjectHost
 {
-    sealed class Tips : IProfessionTipDotSystem, IProfessionTipDotSystemController
-    {
-        public bool IsShowTipDot => true;
-        public bool TempLimitShowTip => false;
-        public Action OnTipDotShowChanged { get; set; }
-        public SafeAction OnTipDotSystemInited { get; set; } = new SafeAction();
-        public SafeAction OnTipDotSystemPreClear { get; set; } = new SafeAction();
-        public TipDotGraphType? GetGraphType(string name) => TipDotGraphType.Dynamic;
-        public bool LinkNodeStateChange(TipDotNodeKey key, GameObject owner, Action<TipDotStateInfo> callback) { callback(default); return true; }
-        public bool UnlinkNodeStateChange(TipDotNodeKey key, GameObject owner, Action<TipDotStateInfo> callback) => true;
-    }
-    readonly Tips tips = new Tips();
     EventSystem events;
     Camera cameraUi;
     RenderTexture target;
     OfflineMainlineProgressSession session;
     OfflinePartnerStarGodUiServices services;
     OfflinePartnerRosterUiServices roster;
+    OfflinePartnerTipDotRuntime tipDots;
     OfflinePartnerGiftRuntimeBindings icons;
     PartnerPanelView view;
     NpcRosterItem met;
@@ -141,6 +130,11 @@ public sealed class PartnerPanelHostRunner : MonoBehaviour, IOfflinePartnerPrese
         var rosterAssets = OfficialPartnerRosterAssetCatalog.LoadDefault();
         images.Entries = images.Entries.Concat(rosterAssets.Images.Entries).GroupBy(row => row.Path).Select(group => group.First()).ToArray();
         roster = new OfflinePartnerRosterUiServices(session, character, progression, new OfflineProfessionImageResourceLoader(images), this);
+        Require(session.ApplyCharacterMutation(player =>
+            player.CharacterProperties.NpcFriendships.Single(row => row.NpcClassId == 8402).Level = roster.FriendshipMaxLevel(8402)).IsApplied,
+            "Seed isolated partner at the original configured friendship cap");
+        tipDots = new OfflinePartnerTipDotRuntime(session, selected, OfficialPartnerGiftAssetCatalog.LoadDefault(), progression);
+        tipDots.Refresh();
         icons = new OfflinePartnerGiftRuntimeBindings(session, selected, OfficialPartnerGiftPageAssetCatalog.LoadDefault(),
             id => new OfflinePartnerItemInfo(selected, id), key => key);
         services = new OfflinePartnerStarGodUiServices(session, selected, roster, assets, this, icons.BindGiftIcon);
@@ -179,6 +173,14 @@ public sealed class PartnerPanelHostRunner : MonoBehaviour, IOfflinePartnerPrese
         var tabs = Get<MonoDictionary<NpcPanelTabType, WorldTabItem>>(panel, "mTabType2TabItemDict");
         Require(tabs[NpcPanelTabType.NpcList].isOn && Get<GameObject>(panel, "mNpcListGo").activeInHierarchy, "Original default roster");
         Require(view.Content.GetComponentsInChildren<NpcPanelNpcItem>().Length > 0, "Original roster pool populated");
+        var originalPartner = view.Content.GetComponentsInChildren<NpcPanelNpcItem>()
+            .Single(item => Get<NpcRosterItem>(item, "mNpcDataWrap")?.NpcClassId == 8402);
+        var partnerLinker = Get<TipDotNodeLinker>(originalPartner, "mTipDotNodeLinker");
+        var tipLevelState = Get<WorldStateSwitcher<ETipDotLevelType>>(partnerLinker, "mTipLevelState");
+        Require(partnerLinker.Controller is TipDotSystemController && partnerLinker.TipDotSystem is TipDotSystem
+            && partnerLinker.IsShowTip && partnerLinker.StateInfo.TipLevel == ETipDotLevelType.Important
+            && tipLevelState.State == ETipDotLevelType.Important,
+            "Original partner linker and native state switcher display the claimable friendship tip");
         Capture("panel-host-roster.png");
         Click(tabs[NpcPanelTabType.Dialogue].gameObject);
         VerifyTabSound();
@@ -264,11 +266,8 @@ public sealed class PartnerPanelHostRunner : MonoBehaviour, IOfflinePartnerPrese
             });
         }
     }
-    void BindNativeTree(GameObject root)
-    {
-        foreach (var linker in root.GetComponentsInChildren<TipDotNodeLinker>(true)) { linker.Controller = tips; linker.TipDotSystem = tips; }
-    }
-    public void BindNpcTipDot(TipDotNodeLinker linker, int id) => linker.SetNodeInstanceInfo(new NpcNodeInstanceInfo(id));
+    void BindNativeTree(GameObject root) => tipDots.BindNativeTree(root);
+    public void BindNpcTipDot(TipDotNodeLinker linker, int id) => tipDots.Bind(linker, id);
     public void PostSound(AudioClip clip, GameObject owner)
     {
         Require(clip && clip.samples > 0, "Actual official PCM"); var source = owner.GetComponent<AudioSource>();
@@ -295,6 +294,7 @@ public sealed class PartnerPanelHostRunner : MonoBehaviour, IOfflinePartnerPrese
     public void SetDefaultListeners(GameObject emitter) { }
     public void SetScalingFactor(GameObject emitter, float factor) { }
     public void UnregisterGameObject(GameObject emitter) { }
+    void OnDestroy() => tipDots?.Dispose();
     void VerifyTabSound()
     {
         var clip = OfficialPartnerPanelAssetCatalog.Load().GetSound(680474747);
