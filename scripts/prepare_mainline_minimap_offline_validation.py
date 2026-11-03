@@ -70,7 +70,7 @@ def main():
      native=source/f'Assets/Official/World/Map/{map_id}/NativeMiniMapRootCurrent'
      if not native.is_dir():raise ValueError('Prepare the complete selected minimap root: '+str(map_id))
      pending += [p for p in native.rglob('*') if p.is_file() and p.suffix!='.meta']
-    pending += [base/'NativePipeline/UniversalRenderPipeline.asset',base/'NativeText/FZY4K-Dynamic.asset',base/'Resources/Map13/Native/region-label-data.json',source/'Assets/Game/Resources/Map13/Native/combat-rating-config.asset',base/'Resources/Map13/grid-visibility.json',source/'Assets/TextMesh Pro/Resources/TMP Settings.asset']
+    pending += [base/'NativePipeline/UniversalRenderPipeline.asset',base/'NativeText/FZY4K-Dynamic.asset',base/'Resources/Map13/Native/region-label-data.json',source/'Assets/Game/Resources/Map13/Native/combat-rating-config.asset',base/'Resources/Map13/grid-visibility.json',base/'Resources/Map13/grid-entities.json',source/'Assets/TextMesh Pro/Resources/TMP Settings.asset']
     seen=set()
     while pending:
      p=pending.pop()

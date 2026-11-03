@@ -223,10 +223,16 @@ namespace Zjcs.Editor.Map13MiniMap
             foreach(var transform in nonmaskPrefab.GetComponentsInChildren<Transform>(true))Require(transform.GetComponents<MonoBehaviour>().All(c=>c),"Every shared renderer script imported");
             foreach(var component in nonmaskPrefab.GetComponentsInChildren<Component>(true)){var property=new SerializedObject(component).GetIterator();while(property.Next(true))if(property.propertyType==SerializedPropertyType.ObjectReference)Require(property.objectReferenceValue||property.objectReferenceInstanceIDValue==0,"Shared renderer original reference: "+property.propertyPath);}
             var nonmaskInstance=Object.Instantiate(nonmaskPrefab);bindings.NonMaskableManager=nonmaskInstance.GetComponent<MiniMapNonMaskableManager>();
+            var bodies=JsonUtility.FromJson<OfflineMapGridVisibility.BodyConfiguration>(Resources.Load<TextAsset>("Map13/grid-entities").text);
+            visibility.characterClassId=3001;
+            var liveVisibility=new OfflineMapGridVisibility(visibility,bodies,center,GridVisibilityCompressUtils.DoMyZip(bits),Array.Empty<int>(),description.QueryRegion,id=>false);
+            bindings.Visibility=liveVisibility.Component;
             var hudModule=MainlineMiniMap.Create(prefab,null,bindings);for(int i=0;i<5;i++)yield return null;
             var hudRoot=Object.FindObjectOfType<MainlineNativeMiniMapRoot>();
+            var liveAgent=(MainlineMiniMapVisibilityAgent)hudRoot.VisibilityAgent;Require(ReferenceEquals(liveAgent.Component,liveVisibility.Component),"World and minimap share one official visibility component");
+            var liveTest=VerifyLiveVisibility(hudRoot,liveVisibility,liveAgent,visibility,bodies,description,center);while(liveTest.MoveNext())yield return liveTest.Current;
             var hudTest=VerifyHud(hudModule,hudRoot,state,labels,(GridData)grid.Component,queries,characters);while(hudTest.MoveNext())yield return hudTest.Current;
-            hudModule.Dispose();yield return null;Require(characters.Subscribers==0,"Current-map native HUD instance cleanup");localResourcePoints.Dispose();bindings.ResourcePoints=originalResourcePoints;Object.Destroy(nonmaskInstance);bindings.NonMaskableManager=null;state.Current=16;
+            hudModule.Dispose();yield return null;Require(characters.Subscribers==0,"Current-map native HUD instance cleanup");liveVisibility.MovePlayer(center);liveVisibility.Dispose();bindings.Visibility=null;localResourcePoints.Dispose();bindings.ResourcePoints=originalResourcePoints;Object.Destroy(nonmaskInstance);bindings.NonMaskableManager=null;state.Current=16;
             // A second actual map uses the same factory and its own original
             // geometry/settings. Its unresolved local response policy stays pending.
             var islandInput=JsonUtility.FromJson<Fixture>(File.ReadAllText(Path.Combine(Workspace,"minimap-description-fixture-16.json")));

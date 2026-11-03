@@ -30,15 +30,27 @@ namespace Zjcs.Offline.World.MainlineMiniMap
                 || template.MapClassId != bindings.ResourcePoints.MapClassId
                 || bindings.Settings.GetMinimapSetting(bindings.MinimapConfigId) == null)
                 throw new InvalidDataException("Original minimap identity or setting differs from its local bindings.");
+            if (bindings.Visibility != null && (template.MapClassId != bindings.State.CurrentMapClassId
+                || bindings.Visibility.Host?.Entity?.ClassId != template.MapClassId
+                || !bindings.State.TryGetMapLiteData(template.MapClassId, out var ground)
+                || ground.MapGroundSize.X != bindings.Visibility.Width || ground.MapGroundSize.Y != bindings.Visibility.Height))
+                throw new InvalidDataException("Live minimap visibility must belong to the current original ground.");
 
             var owner = new GameObject(prefab.name + "_Instance");
             owner.SetActive(false);
             owner.transform.SetParent(parent, false);
+            MainlineMiniMapVisibilityAgent visibility = null;
             try
             {
                 var instance = Object.Instantiate(prefab, owner.transform, false);
                 var root = instance.GetComponent<MainlineNativeMiniMapRoot>();
                 root.Bindings = bindings;
+                if (bindings.Visibility != null)
+                {
+                    visibility = instance.AddComponent<MainlineMiniMapVisibilityAgent>();
+                    visibility.Bind(bindings.Visibility);
+                    root.LiveVisibility = visibility;
+                }
                 // MapRootSwitchMapSupport.CreateMiniMap binds the shared slot's renderer.
                 root.NonMaskableManager = bindings.NonMaskableManager;
                 foreach (var ui in instance.GetComponentsInChildren<UIBase>(true)) ui.Services = bindings.State.LabelServices;
@@ -58,6 +70,8 @@ namespace Zjcs.Offline.World.MainlineMiniMap
             }
             catch
             {
+                owner.SetActive(false);
+                visibility?.Dispose();
                 Object.Destroy(owner);
                 throw;
             }
@@ -90,7 +104,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
             disposed = true;
             CloseFullScreen();
             DisposeHud();
-            if (owner != null) { owner.SetActive(false); Object.Destroy(owner); }
+            if (owner != null) { owner.SetActive(false); root.LiveVisibility?.Dispose(); Object.Destroy(owner); }
             if (texture != null) { texture.Release(); Object.Destroy(texture); texture = null; }
         }
     }

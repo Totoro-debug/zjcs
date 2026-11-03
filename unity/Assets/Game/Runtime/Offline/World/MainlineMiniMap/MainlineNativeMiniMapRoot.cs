@@ -15,6 +15,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
     {
         MiniMapResourcePointManager IMiniMapFilterMapContext.ResourcePointManager => ResourcePointManager;
         internal MainlineMiniMapBindings Bindings;
+        internal MainlineMiniMapVisibilityAgent LiveVisibility;
         private MiniMapManagedContext State => Bindings.State;
         protected override MiniMapSettings Settings => Bindings.Settings;
         protected override int MinimapConfigId => Bindings.MinimapConfigId;
@@ -30,9 +31,12 @@ namespace Zjcs.Offline.World.MainlineMiniMap
         public override GameObject InstantiateRegion(GameObject prefab,Transform parent,bool worldPositionStays)
             => State.InstantiateRegion(prefab,parent,worldPositionStays);
         public override IMap13LabelServices LabelServices => State.LabelServices;
-        public override bool HasGridVisibilityAgent => State.HasGridVisibilityAgent;
+        public override bool HasGridVisibilityAgent => LiveVisibility || State.HasGridVisibilityAgent;
         public override event Action<Pos2d,bool,bool> OnPosVisibilityUpdate
-        { add => State.OnPosVisibilityUpdate += value; remove => State.OnPosVisibilityUpdate -= value; }
+        {
+            add { if (LiveVisibility) LiveVisibility.OnPosVisibilityUpdate += value; else State.OnPosVisibilityUpdate += value; }
+            remove { if (LiveVisibility) LiveVisibility.OnPosVisibilityUpdate -= value; else State.OnPosVisibilityUpdate -= value; }
+        }
         public override bool TryGetMapLiteData(int map,out MapRootEntityLiteSingleInfo info) => State.TryGetMapLiteData(map,out info);
         public override IMiniMapGridMover GetSpawnGridMover(int map) => State.GetSpawnGridMover(map);
         public override IReadOnlyDictionary<int,MiniMapRegionInfo> GetMapRegionDict(int map) => State.GetMapRegionDict(map);
@@ -47,7 +51,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
             => State.InstantiateDescription(prefab,parent);
         public override GameObject InstantiateDisplay(GameObject prefab,Transform parent) => State.InstantiateDisplay(prefab,parent);
         public override IMiniMapDescriptionAssetLease<GameObject> LoadPrefab(string path) => State.LoadPrefab(path);
-        public override MiniMapVisibilityAgent VisibilityAgent => State.VisibilityAgent;
+        public override MiniMapVisibilityAgent VisibilityAgent => LiveVisibility ? LiveVisibility : State.VisibilityAgent;
         public override int CharacterViewRange => State.CharacterViewRange;
         public override Pos2d CharacterGridPos => State.CharacterGridPos;
         public override IEnumerable<Pos2d> ForEachMapRegionActivedAllGrid(int map,int region)

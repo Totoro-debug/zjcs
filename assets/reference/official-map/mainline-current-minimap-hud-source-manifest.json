@@ -19,7 +19,7 @@
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat": "f465cf50b955ba2a9f593f4594bcc53e831682c68fce2eec2bfca9e873f8b69a",
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBg_CountText_0.asset": "1233f7ce0167fdd7f8da08dc801cbee3475f0dd0c4e7c47b169c5aa2e3e436c8",
     "scripts/prepare_mainline_minimap_native_hud.py": "8aa11a9cfe7fc882caf30bdf0da449ca04b6c0561113801c009b3bfda13958d4",
-    "scripts/prepare_mainline_minimap_native_root.py": "1566076ceb8604fdfe8549d26732b2d7b68b1cfe3fb7a39088730e9febbdc173",
+    "scripts/prepare_mainline_minimap_native_root.py": "24bbc468678433f2dc492e108b4c75d425e2b6510f57ea36ac3f9e878e9f1ed4",
     "scripts/prepare_mainline_minimap_regions.py": "0065b061a9d633e2a58016035943693654d51672b52f39965013d5716357f3e0",
     "assets/reference/official-map/mainline-minimap-hud-code-source-manifest.json": "45c43bcdcf40157d07ed16b695106cc079ee3355831e03c9951c216e87daecc8",
     ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source/MultiLanguageText.cs": "3229b04b116900b276a925e0ec9186717dbbf4cb91470b4758a4f514f216e963",
@@ -173,7 +173,7 @@
   "integration": [
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMap.cs",
-      "sha256": "ebcce3c6249d53059ddee47ec565fb02fbca3965ece7191885ab013f52b2c90f"
+      "sha256": "828edebc4d4a4f3779a5f941c702860d7e20e83e0b2dc8e193656584e6d2e3c3"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMap.cs.meta",
@@ -197,15 +197,23 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapBindings.cs",
-      "sha256": "6027154c676201b416b9ddd6956c4147f9a8593f158dc0f0e60a430c3d6af094"
+      "sha256": "a4d55f77e20763799ffb1cd5a7d0ee7d0064b840ea406bbad1cac6fd99a8a4f8"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapBindings.cs.meta",
       "sha256": "a8c1f20ef893ee4075c1ab01aba45dbd03b91fb151253b371a4df732ca363f29"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapVisibilityAgent.cs",
+      "sha256": "ad75ac2a000257a058de4191fa2bedc2a607b5ebca81e3362b5324bf3a59eef7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapVisibilityAgent.cs.meta",
+      "sha256": "de0735990729b4b943d4de517388d5b493c5ce8a3ed575048a7198026ebad381"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineNativeMiniMapRoot.cs",
-      "sha256": "1b01b328300411214129d304a1e21a4c3e6830ed339db73059ccd5bef9b29817"
+      "sha256": "4570690ffcd8f713be1c0c72c413f4cf9c8a6065f29179db8aed80171a25b6db"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineNativeMiniMapRoot.cs.meta",
@@ -221,11 +229,11 @@
     },
     {
       "path": "scripts/prepare_mainline_minimap_offline_validation.py",
-      "sha256": "826f3c1fe6d8ee8c37cabcc27e02f50a3ebdfbc205e3517075372321fddb934a"
+      "sha256": "fb7267b53d34ab8d01cb7eed6f73be344924e663b10fbc53d189a8b59c7b6a6d"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.cs",
-      "sha256": "fadc8a9560f2b139d2609e3b3cf0ce597ff080bf5b28195a2699672df31448da"
+      "sha256": "d62f28eab7e7866231dd950c1d53f9002008541334ec57fda43d6e3c57a638dd"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.cs.meta",
@@ -246,6 +254,14 @@
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Panel.cs.meta",
       "sha256": "5e4a9b2130317fb3efb21e2b29081e57f127aee00063ecef9c2f11a94668ac98"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Visibility.cs",
+      "sha256": "e26da269f29a9688ea87e1ad3204d2a95c876e86b89c4443e8852d255fd28334"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Visibility.cs.meta",
+      "sha256": "1216b9823148659319e5b115f756549bffd45f1b1dfee34ce2dca5662c6af8db"
     }
   ],
   "scope": "Shared original HUD prefab only. Preserve every original layout field and component. Replace Wwise posting with the decoded original event clip and an instance sound port. Production world-canvas placement and state wiring remain pending.",
@@ -3069,7 +3085,7 @@
         "guid": "485cb1970f2c584495834103ad197fe3",
         "type": 3
       },
-      "sha256": "1b01b328300411214129d304a1e21a4c3e6830ed339db73059ccd5bef9b29817",
+      "sha256": "4570690ffcd8f713be1c0c72c413f4cf9c8a6065f29179db8aed80171a25b6db",
       "meta_sha256": "d4cec09309d6ee189e14a721fd70ed49a4427130503f38174400cabb46d535f7"
     },
     "OfflineMiniMap": {

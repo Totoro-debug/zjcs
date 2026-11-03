@@ -20,15 +20,38 @@ def integration_sources():
     return [dict(path=p.relative_to(ROOT).as_posix(),sha256=sha(p.read_bytes())) for p in paths]
 
 
-def refresh_integration(map_id):
-    receipt_path = ROOT / f'assets/reference/official-map/map{map_id}-current-minimap-root-source-manifest.json'
+def refresh_receipt_integration(receipt_path):
     receipt = json.loads(receipt_path.read_bytes())
+    tool = Path(__file__).relative_to(ROOT).as_posix()
+    for name, expected in receipt['input_receipts'].items():
+        if name != tool and sha((ROOT / name).read_bytes()) != expected:
+            raise ValueError('Rebuild changed original input before refreshing integration: ' + name)
     for name, expected in receipt['outputs'].items():
         if sha((ROOT / name).read_bytes()) != expected:
             raise ValueError('Preserve changed original root output: ' + name)
+    module = 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/'
+    for script in receipt['scripts'].values():
+        path = ROOT / script['path']
+        meta = Path(str(path) + '.meta')
+        if sha(meta.read_bytes()) != script['meta_sha256']:
+            raise ValueError('Review changed original MonoScript metadata: ' + script['path'])
+        if script['path'].startswith(module):
+            if script['pointer'] != dict(fileID=11500000, guid=guid(meta), type=3):
+                raise ValueError('Preserve original MonoScript binding: ' + script['path'])
+            script['sha256'] = sha(path.read_bytes())
+        elif sha(path.read_bytes()) != script['sha256']:
+            raise ValueError('Rebuild changed official script before refreshing integration: ' + script['path'])
     receipt['integration'] = integration_sources()
-    receipt['input_receipts'][Path(__file__).relative_to(ROOT).as_posix()] = sha(Path(__file__).read_bytes())
+    receipt['input_receipts'][tool] = sha(Path(__file__).read_bytes())
     receipt_path.write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n',encoding='utf8',newline='\n')
+    print('Refreshed verified unchanged native integration:', receipt_path.name)
+
+
+def refresh_integration(map_id, include_shared=False):
+    refresh_receipt_integration(ROOT / f'assets/reference/official-map/map{map_id}-current-minimap-root-source-manifest.json')
+    if include_shared:
+        for kind in ('hud', 'renderer', 'panel'):
+            refresh_receipt_integration(ROOT / f'assets/reference/official-map/mainline-current-minimap-{kind}-source-manifest.json')
     print('Refreshed verified unchanged native root integration:',map_id)
 
 
@@ -235,8 +258,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(__doc__)
     parser.add_argument('--map-id', type=int, choices=(10, 11, 12, 13, 14, 16), required=True)
     parser.add_argument('--refresh-integration', action='store_true', help='Verify unchanged native outputs and refresh shared factory/fixture hashes only')
+    parser.add_argument('--include-shared', action='store_true', help='Also verify and refresh the shared HUD, renderer and fullscreen window integration')
     args = parser.parse_args()
     if args.refresh_integration:
-        refresh_integration(args.map_id)
+        refresh_integration(args.map_id, args.include_shared)
     else:
         MiniMapRootBinding(validation_directory(), args.map_id).build_root()

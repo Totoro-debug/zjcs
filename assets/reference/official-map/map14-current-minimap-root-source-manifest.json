@@ -38,7 +38,7 @@
     ".tools/source-packages/current/884_156692/official-code/client-source/OfflineMiniMap.cs": "94f82b5b1ecd61a5113bd833aa49ca1b3115a6618d4328d297ab3dd87a3def79",
     ".tools/source-packages/current/884_156692/official-code/client-source/OfflineMiniMapMarkManager.cs": "7ecf5246233275784ad29ed971ce29d739815684e9fba1f51dfb69881105275b",
     ".tools/source-packages/current/884_156692/official-code/client-source/OfflineMiniMapMaskManager.cs": "53d7cd8efdc094362aa63cb304d00391f5733018f00b31e6aeff497408e68e5a",
-    "scripts/prepare_mainline_minimap_native_root.py": "1566076ceb8604fdfe8549d26732b2d7b68b1cfe3fb7a39088730e9febbdc173",
+    "scripts/prepare_mainline_minimap_native_root.py": "24bbc468678433f2dc492e108b4c75d425e2b6510f57ea36ac3f9e878e9f1ed4",
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Materials/Minimap/MaskableTilemap.mat": "b89d037b4e1383bf8b24e54ad8d240ef9c25c14f1674e1c4f6db3ecb0b008f8d",
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/MapWorld/MiniMap_Special/ground_type_none1.asset": "3ac15df0e96fb6f1adfef7551722289778955d81e84df454fade10dcba62e6bd",
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/MapWorld/MiniMap_Atlas/Mask/OneCorner_pic.asset": "3ea0fd85125d5625cd7221cf75df14b8e423259ec0dce5af42cbb8032b2e5c33",
@@ -431,7 +431,7 @@
   "integration": [
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMap.cs",
-      "sha256": "ebcce3c6249d53059ddee47ec565fb02fbca3965ece7191885ab013f52b2c90f"
+      "sha256": "828edebc4d4a4f3779a5f941c702860d7e20e83e0b2dc8e193656584e6d2e3c3"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMap.cs.meta",
@@ -455,15 +455,23 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapBindings.cs",
-      "sha256": "6027154c676201b416b9ddd6956c4147f9a8593f158dc0f0e60a430c3d6af094"
+      "sha256": "a4d55f77e20763799ffb1cd5a7d0ee7d0064b840ea406bbad1cac6fd99a8a4f8"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapBindings.cs.meta",
       "sha256": "a8c1f20ef893ee4075c1ab01aba45dbd03b91fb151253b371a4df732ca363f29"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapVisibilityAgent.cs",
+      "sha256": "ad75ac2a000257a058de4191fa2bedc2a607b5ebca81e3362b5324bf3a59eef7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapVisibilityAgent.cs.meta",
+      "sha256": "de0735990729b4b943d4de517388d5b493c5ce8a3ed575048a7198026ebad381"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineNativeMiniMapRoot.cs",
-      "sha256": "1b01b328300411214129d304a1e21a4c3e6830ed339db73059ccd5bef9b29817"
+      "sha256": "4570690ffcd8f713be1c0c72c413f4cf9c8a6065f29179db8aed80171a25b6db"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineNativeMiniMapRoot.cs.meta",
@@ -479,11 +487,11 @@
     },
     {
       "path": "scripts/prepare_mainline_minimap_offline_validation.py",
-      "sha256": "826f3c1fe6d8ee8c37cabcc27e02f50a3ebdfbc205e3517075372321fddb934a"
+      "sha256": "fb7267b53d34ab8d01cb7eed6f73be344924e663b10fbc53d189a8b59c7b6a6d"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.cs",
-      "sha256": "fadc8a9560f2b139d2609e3b3cf0ce597ff080bf5b28195a2699672df31448da"
+      "sha256": "d62f28eab7e7866231dd950c1d53f9002008541334ec57fda43d6e3c57a638dd"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.cs.meta",
@@ -504,6 +512,14 @@
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Panel.cs.meta",
       "sha256": "5e4a9b2130317fb3efb21e2b29081e57f127aee00063ecef9c2f11a94668ac98"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Visibility.cs",
+      "sha256": "e26da269f29a9688ea87e1ad3204d2a95c876e86b89c4443e8852d255fd28334"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Visibility.cs.meta",
+      "sha256": "1216b9823148659319e5b115f756549bffd45f1b1dfee34ce2dca5662c6af8db"
     }
   ],
   "scope": "Complete original root hierarchy and serialized references. The shared factory supplies local dependencies before activation; formal map/HUD/Player integration remains separate.",
@@ -2298,7 +2314,7 @@
         "guid": "485cb1970f2c584495834103ad197fe3",
         "type": 3
       },
-      "sha256": "0b6037ca7587151691ecbf7cffa7a96ed3b5ac6fe004a39b5b40a25d9bde2be1",
+      "sha256": "4570690ffcd8f713be1c0c72c413f4cf9c8a6065f29179db8aed80171a25b6db",
       "meta_sha256": "d4cec09309d6ee189e14a721fd70ed49a4427130503f38174400cabb46d535f7"
     },
     "OfflineMiniMap": {

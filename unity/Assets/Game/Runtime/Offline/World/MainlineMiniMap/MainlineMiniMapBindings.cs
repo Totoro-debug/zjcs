@@ -1,4 +1,5 @@
 using System;
+using Zjcs.Official.World.Map13GridVisibility;
 using Zjcs.Official.World.Map13MiniMap;
 
 namespace Zjcs.Offline.World.MainlineMiniMap
@@ -13,6 +14,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
         public int MapViewRangeExtraSize;
         public IMiniMapCharacterManager Characters;
         public MiniMapNonMaskableManager NonMaskableManager;
+        public GridVisibilityAgentComponent Visibility;
         public MiniMapResourcePointContext ResourcePoints;
         public IMiniMapOfflineDataSource OfflineData;
         public IServiceProvider MarkerServices;
