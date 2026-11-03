@@ -10,7 +10,7 @@ namespace Zjcs.Offline.BattleNativePlayables
 {
     // Explicit battle DI boundary. The original manager, center, sequence and
     // FIFO pools own execution; the supplied backend owns original event DSP.
-    public sealed class OfflineBattleNativePlayableScope : IStoryPlayableInstanceFactory, IDisposable
+    public sealed class OfflineBattleNativePlayableScope : IStoryPlayableInstanceFactory, IMyPlayableManager, IDisposable
     {
         private readonly GameObject root, staging;
         private readonly IProfessionSoundHost sound;
@@ -59,6 +59,27 @@ namespace Zjcs.Offline.BattleNativePlayables
             if (playable) owned.Add(playable);
             return playable;
         }
+
+        public Transform PlayableSlot { get { RequireLive(); return manager.PlayableSlot; } }
+
+        // Shared entity notifications can stop original leaves synchronously.
+        // Keep their original callbacks inside the same explicit sound boundary.
+        public void Dispatch(Action callback)
+        {
+            RequireLive();
+            if (callback == null) throw new ArgumentNullException(nameof(callback));
+            WithSound(() => { callback(); return 0; });
+        }
+
+        public void RemoveAllPlayable(bool isReleasePool)
+        {
+            Dispatch(() => manager.RemoveAllPlayable(isReleasePool));
+        }
+
+        public void SetObjectPool(GamePrefabTypeSetPools<MyPlayable, GameObjectPoolBase<MyPlayable>> pools)
+            => Dispatch(() => manager.SetObjectPool(pools));
+
+        public void ForceReleaseObjectPool() => Dispatch(() => manager.ForceReleaseObjectPool());
 
         public void Tick(float deltaTime)
         {

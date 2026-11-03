@@ -158,6 +158,19 @@ namespace Zjcs.Editor.Combat
                 }
                 yield return new WaitForSecondsRealtime(.2f);
                 Require(Volatile.Read(ref CastAudioProbe.NonzeroBuffers) > 0, "original cast sample reaches actual native audio buffers");
+                if (SessionState.GetBool(Key + ".skillViews", false))
+                    yield return CheckSkillViews(actor, target, prefab, scope, Pump,
+                        phase =>
+                        {
+                            Draw();
+                            // Original ResetScale acts on the fixture source root.
+                            // Reframe its actual current geometry after that change.
+                            var visible = actor.GetComponentsInChildren<Renderer>().Where(r => r.enabled && r.gameObject.activeInHierarchy).ToArray();
+                            var currentBounds = visible[0].bounds;
+                            foreach (var renderer in visible.Skip(1)) currentBounds.Encapsulate(renderer.bounds);
+                            currentBounds.Expand(new Vector3(2, 2, 0)); currentBounds.Encapsulate(target.transform.position);
+                            CaptureSceneRendererCamera(currentBounds, label + "-skill-view-" + phase);
+                        });
                 using (var independent = new OfflineBattleNativePlayableScope(scopeRoot.transform, other))
                 {
                     var sibling = independent.Play(prefab, actor, target);

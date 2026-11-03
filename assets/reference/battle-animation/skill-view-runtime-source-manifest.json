@@ -1,0 +1,183 @@
+{
+  "manifest": "884_156692",
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "b9494d40d990087c257b74908a0faee95ebcded05a2a6d7bd032ffedda24299d"
+  },
+  "code_extraction": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "originals": [
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightSkill.cs",
+        "sha256": "9c6035e4ef62e7a7acd5c4346cd2e52bbc6a7e058bee59010ca048bee2fd92af"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkill.cs",
+        "sha256": "06988c66e147bd3b58321fc01422d19ab1c10b15ad4bddb84a7a98e019e89355"
+      },
+      "whole_class_normalized_sha256": "e6e48810a8cc2d74dcf40ebadb939eb0dc70ce7c0c2c300587402307bcb3c6a5",
+      "replacements": [
+        {
+          "original": "myContainer.GetEntity(",
+          "migrated": "ViewServices.GetEntity("
+        },
+        {
+          "original": "myContainer.MyRootEntity.Entity.GetComponent<GridGroundComponent>().GridToPos(",
+          "migrated": "ViewServices.GridToPos("
+        },
+        {
+          "original": "MySerializable userData",
+          "migrated": "object userData"
+        },
+        {
+          "original": "\t[Inject]\n",
+          "migrated": ""
+        },
+        {
+          "original": "\t[Label(\"显示技能重播\")]\n",
+          "migrated": ""
+        }
+      ],
+      "comparison": "Complete class compared after reversing explicit query boundary and object payload adaptation; Inject/Label attributes removed. Serialized fields and every method retained. MyFightSkill adds only an explicit ViewServices injection property.",
+      "original_mono_script_file_id": 1725120999
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightSkillAgent.cs",
+        "sha256": "f67d0cb66ebe0784b95e8d88615f8723215a1c075663adce7b46d006a9020e04"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkillAgent.cs",
+        "sha256": "6e616f6a482e78edd2400c62eaba77aec27bf0a064de89fcd0bde694b076ee3b"
+      },
+      "whole_class_normalized_sha256": "e372c639099d234f83cb407524a26fd347999dc542b06cb28d6d70bc1b960406",
+      "replacements": [],
+      "comparison": "Complete class compared after reversing explicit query boundary and object payload adaptation; Inject/Label attributes removed. Serialized fields and every method retained. MyFightSkill adds only an explicit ViewServices injection property.",
+      "original_mono_script_file_id": 874247159
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/client-source/Common/IFightGetUsePlayable.cs",
+        "sha256": "3f031360051f91f26f767894b184f341e7ffa45f00b8e3fbb17b5c078db7f442"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/IFightGetUsePlayable.cs",
+        "sha256": "535cca8eebffbbedc4c36e048be4237389901c5c587c3f31b9c430c9f4630947"
+      },
+      "whole_class_normalized_sha256": "f26b9bf1dfa82deb683c82752efe899b6703991baac7b9e91fc8c139c84fd81f",
+      "replacements": [],
+      "comparison": "Complete class compared after reversing explicit query boundary and object payload adaptation; Inject/Label attributes removed. Serialized fields and every method retained. MyFightSkill adds only an explicit ViewServices injection property."
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_skill_view_runtime.py",
+    "sha256": "7a579547972ec1a56db6c4cde2f9f737e1693ddd9f78307593af014ae74fadcf"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkill.cs",
+      "sha256": "06988c66e147bd3b58321fc01422d19ab1c10b15ad4bddb84a7a98e019e89355"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkill.cs.meta",
+      "sha256": "a8ce174ac94b84978ddcee006544c7f8adc4138d74b4021f6b9252ac1a42d5c4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkillAgent.cs",
+      "sha256": "6e616f6a482e78edd2400c62eaba77aec27bf0a064de89fcd0bde694b076ee3b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkillAgent.cs.meta",
+      "sha256": "99e7378f5848199c4189bce538de8e216b76206ee5c9a460b8036d01577df00b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/IFightGetUsePlayable.cs",
+      "sha256": "535cca8eebffbbedc4c36e048be4237389901c5c587c3f31b9c430c9f4630947"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/IFightGetUsePlayable.cs.meta",
+      "sha256": "3230265e708332cb1e2a1f004dfd14f7bfb3fc60618c8204a556a15bcd503752"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/Zjcs.Official.BattleSkillPlayables.asmdef",
+      "sha256": "8e3d28897a9183b8896358ce35296534d582e82d5cb40431d939d72ce319c095"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/Zjcs.Official.BattleSkillPlayables.asmdef.meta",
+      "sha256": "cd61ff0eb66eaae7172148b238b84e15445068e0df692e74b484fbc4d6e217de"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables.meta",
+      "sha256": "5a5cd6710dd2102845f08569e0535b7092f8bc1bad4aa53598a5889906deebdf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightSkillViewBindings.cs",
+      "sha256": "16e6d561130cc9e53bcab42f43677f3a9ff8795e6c73c543ca5618df1327c65b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/FightSkillViewBindings.cs.meta",
+      "sha256": "1ccc1dc5638611dc767143ab8cd3c6f84df58bd5773d433b867e73dfeb3357e8"
+    }
+  ],
+  "verification_tools": [
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SkillViews.cs",
+      "sha256": "f177f3cb6e6f6b6e961890a4c3eab8237fcdc796c2a9a113ad9b388108055927"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.Casts.cs",
+      "sha256": "bc3dff0efaca3625e441eae2b47689de2962033543bcea88ec2bc97c88e4c4a3"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.cs",
+      "sha256": "5ce48cd61e457ff61f62470362018944e78b0f9c0c2300b8eb82d998a335716f"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/Zjcs.Editor.Combat.AnimatorPlayback.asmdef",
+      "sha256": "af2eaefb9e77994e60c38ec7b4add46ef9bcea049d0e2b6c98d2e4a0e90e43e0"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyComponent.cs",
+      "sha256": "b149d2c70ab16ae6e42c99800fa39ff2aea98f25bfc64ef537d5b36422cbe016"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyEntity.cs",
+      "sha256": "a79da2de6a96b7b999cca9ccc0b63268f6721203ee5d103300ccddc4112c8c8e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyGridTransform.cs",
+      "sha256": "ac974c0d9b51a6ed4805fc8ab0169484f8495a5fb9dfffca5520da1910f5a15c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/BattleNativePlayables/OfflineBattleNativePlayableScope.cs",
+      "sha256": "16e64f3409ce4fc8251ca408146fed89642502e845d5dad5ff395219913056af"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/IMyPlayableManager.cs",
+      "sha256": "8d99eff4d37f2fedf3bd5ad54fdaaa8fb52ff2b6dd8e6773ae78b875defd9854"
+    }
+  ],
+  "consumed_shared_contracts": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillComponent.cs",
+      "sha256": "f8f1bfec783d0313e0719ced2b777bdb1ccd04f17e61be9900c35c3ac1495792"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillComponentInfo.cs",
+      "sha256": "a8fd469ff28f0aa1142f3ab9e8a643d8d7ededd80c70dc0ee88a371155445008"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/FightSkillAgentComponent.cs",
+      "sha256": "a6b2a096e5f5a1dc89e9ff49f79608952bfd284f3c1806a8a87355e3e02318be"
+    }
+  ],
+  "boundary": "Abstract shared component projections only. Entity lookup, root GridToPos, component info and interruption notifications must be supplied by an explicit host. No server lifecycle or combat rules are inferred.",
+  "limits": [
+    "Formal battle ECS/timeline installation and production sound backend remain separate integration requirements."
+  ]
+}

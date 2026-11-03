@@ -53,7 +53,8 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
     def resolve(guid):
         if guid not in index:
             for category in ('Effect', 'Shaders', 'Material', 'Materials', 'Mesh', 'Meshes',
-                             'Texture2D', 'Textures', 'Shader', 'effect_shader', 'Light', 'Prefabs'):
+                             'Texture2D', 'Textures', 'Shader', 'effect_shader', 'Light', 'Prefabs',
+                             'AppearanceAssets', 'Wwise'):
                 flag = '@' + category
                 if flag in index: continue
                 for path in (EXPORTED/category).rglob('*.meta'):
