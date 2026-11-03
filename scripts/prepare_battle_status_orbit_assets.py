@@ -52,9 +52,9 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
 
     def resolve(guid):
         if guid not in index:
-            for category in ('Effect', 'Shaders', 'Material', 'Materials', 'Mesh', 'Meshes',
+            for category in ('Effect', 'Shaders', 'Material', 'Materials', 'Mesh', 'Meshes', 'Packages', 'AnimatorController', 'AnimationClip',
                              'Texture2D', 'Textures', 'Shader', 'effect_shader', 'Light', 'Prefabs',
-                             'AppearanceAssets', 'Wwise'):
+                             'AppearanceAssets', 'Wwise', 'UIEffect', 'Sprite'):
                 flag = '@' + category
                 if flag in index: continue
                 for path in (EXPORTED/category).rglob('*.meta'):
@@ -260,7 +260,8 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
         for target in targets.values():
             outputs += [target, Path(str(target)+'.meta')]
             parent = target.parent
-            while parent.name != 'Assets':
+            assets_root = ROOT/'unity/Assets'
+            while parent != assets_root and parent.is_relative_to(assets_root):
                 if not Path(str(parent)+'.meta').exists(): meta(parent, folder=True)
                 if parent.is_relative_to(DEST.parents[2]): outputs.append(Path(str(parent)+'.meta'))
                 parent = parent.parent

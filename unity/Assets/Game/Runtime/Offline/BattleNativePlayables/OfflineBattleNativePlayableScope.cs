@@ -14,15 +14,21 @@ namespace Zjcs.Offline.BattleNativePlayables
     {
         private readonly GameObject root, staging;
         private readonly IProfessionSoundHost sound;
+        private readonly IBattleCameraOffsetHost cameraOffsetHost;
+        private readonly IBattleCharacterPartVisibilityHost characterPartVisibilityHost;
         private readonly MyPlayableCenter center = new MyPlayableCenter();
         private readonly MyPlayableManager manager;
         private readonly HashSet<MyPlayable> owned = new HashSet<MyPlayable>();
         private readonly Zjcs.Official.StoryPlayables.GAction lowMemory = new Zjcs.Official.StoryPlayables.GAction();
         private bool disposed;
 
-        public OfflineBattleNativePlayableScope(Transform parent, IProfessionSoundHost sound)
+        public OfflineBattleNativePlayableScope(Transform parent, IProfessionSoundHost sound,
+            IBattleCameraOffsetHost cameraOffsetHost = null,
+            IBattleCharacterPartVisibilityHost characterPartVisibilityHost = null)
         {
             this.sound = sound ?? throw new ArgumentNullException(nameof(sound));
+            this.cameraOffsetHost = cameraOffsetHost;
+            this.characterPartVisibilityHost = characterPartVisibilityHost;
             root = new GameObject("Original battle native playables");
             root.transform.SetParent(parent, false);
             staging = new GameObject("Original battle inactive injection");
@@ -47,6 +53,13 @@ namespace Zjcs.Offline.BattleNativePlayables
             // Inject before Awake/OnEnable: preserve original leaf subscriptions.
             var instance = UnityEngine.Object.Instantiate(prefab, staging.transform, worldPositionStays);
             foreach (var playable in instance.GetComponentsInChildren<MyPlayable>(true)) playable.MyPlayableCenter = center;
+            foreach (MonoBehaviour component in instance.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                if (component is IBattleCameraPlayable cameraPlayable)
+                    cameraPlayable.BindCameraOffsetHost(cameraOffsetHost);
+                if (component is IBattleCharacterPartVisibilityPlayable visibilityPlayable)
+                    visibilityPlayable.BindCharacterPartVisibilityHost(characterPartVisibilityHost);
+            }
             instance.transform.SetParent(parent, worldPositionStays);
             return instance;
         }

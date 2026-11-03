@@ -317,6 +317,9 @@ namespace Zjcs.Editor.Map13Mainline
         private static IEnumerator VerifyMiniMapSnapshot(OfficialMainlineMapRuntime runtime,ProfileSlotCatalog slots,
             string slot,string phase)
         {
+            var formalOffline=runtime.GetComponentsInChildren<OfflineMiniMap>(true);
+            Require(formalOffline.Length>0&&formalOffline.All(value=>value.DataSource!=null),
+                "Formal map minimap did not receive the shared local snapshot data source.");
             var files=Directory.GetFiles(slots.GetSlotDirectory(slot),"*",SearchOption.AllDirectories)
                 .ToDictionary(path=>path,path=>Convert.ToBase64String(File.ReadAllBytes(path)));
             var reader=new MainlineMapMiniMapSnapshots(OfficialWorldMapAssetCatalog.LoadDefault(),slots,slot);

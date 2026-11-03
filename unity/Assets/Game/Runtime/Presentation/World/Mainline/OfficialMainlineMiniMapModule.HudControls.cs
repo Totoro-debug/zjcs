@@ -13,6 +13,8 @@ using Zjcs.Offline.Progression;
 using Zjcs.Offline.Skills;
 using Zjcs.Offline.State;
 using Zjcs.Offline.World;
+using Zjcs.Offline.World.MainlineMiniMap;
+using Zjcs.Official.World.Map13MiniMap;
 using Zjcs.Presentation.Combat;
 using Zjcs.Presentation.Character;
 using Zjcs.Presentation.Commerce;
@@ -34,10 +36,18 @@ namespace Zjcs.Presentation.World
                 if (prefab == null) throw new InvalidOperationException("Official Map" + host.mapClassId + " minimap prefab is missing.");
                 var viewRoot = new GameObject("Map10MinimapCameraRoot");
                 viewRoot.transform.SetParent(host.transform, false);
+                viewRoot.SetActive(false);
                 GameObject map = Instantiate(prefab, viewRoot.transform, false);
                 map.name = "NativeMiniMap_10";
-                map.SetActive(true);
                 SetLayerRecursively(map, 30);
+                if (host.MapProfile.HasNativeUi)
+                {
+                    LocalMiniMapDataSource offlineData = MainlineMapMiniMapSnapshots.CreateOfflineDataSource(
+                        OfficialWorldMapAssetCatalog.LoadDefault(),
+                        new ProfileSlotCatalog(host.persistentDataPath), host.slotId);
+                    foreach (OfflineMiniMap offline in map.GetComponentsInChildren<OfflineMiniMap>(true))
+                        offline.DataSource = offlineData;
+                }
                 minimapTexture = new RenderTexture(256, 256, host.MapProfile.HasNativeUi ? 0 : 16, RenderTextureFormat.ARGB32)
                 {
                     name = "Map10OfficialMinimap",
@@ -58,6 +68,7 @@ namespace Zjcs.Presentation.World
                 if (host.MapProfile.HasNativeUi)
                 {
                     InitializeNativeMiniMap();
+                    viewRoot.SetActive(true);
                     return;
                 }
                 var minimapObject = new GameObject("OfficialMap10MiniMap", typeof(RectTransform), typeof(RawImage));
@@ -71,6 +82,7 @@ namespace Zjcs.Presentation.World
                 rect.pivot = Vector2.one;
                 rect.anchoredPosition = new Vector2(-18f, -20f);
                 rect.sizeDelta = new Vector2(156f, 156f);
+                viewRoot.SetActive(true);
             }
 
             public void ToggleExpandedMinimap()

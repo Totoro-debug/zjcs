@@ -10,7 +10,7 @@
 
 小地图区域地面由公共 `MainlineMiniMapRegions` 管理原 prefab 实例、原管理器的状态／范围事件及资源生命周期。各图提供 `MainlineMiniMapRegionAssets` 与 `IMainlineMiniMapRegionState`；模块直接订阅原可见范围事件，替换处理器时切换订阅，停用／销毁时退订；普通状态刷新不会重置原十秒回收期限。所选 `884_156692` 的 Map10／11／12／13／14／16 已分别转换5／77／99／106／111／43份原区域 Tilemap，复用同一实现；Map15 原配置没有独立小地图 prefab，不生成空目录。当前原生资源与各图历史来源独立记录，不混接不同版本的区域身份；完整原小地图根已提供公共实例绑定；白雾、标记及正式宿主的完整状态接线仍未完成。各图验证范围见[初始岛](../maps/map-10.md)、[森之国](../maps/map-11.md)、[山之国](../maps/map-12.md)、[泽之国](../maps/map-13.md)、[龙之国](../maps/map-14.md)和[鲸背岛](../maps/map-16.md)，来源见[公共小地图区域模块](../../assets/reference/official-map/mainline-minimap-regions-source-manifest.json)。
 
-`MainlineMapMiniMapSnapshots.CreateOfflineDataSource` 将当前角色槽位的只读地图快照与原离线响应消费接口组合，避免调用方自行实现跨图实体筛选或状态恢复。已访问地图只提供本地探索过的实体及公开地区实体；隐藏／激活和图标状态从最新本地存档投影，读取不装载地图场景、不推进存档。地图外小地图调用与 Map13 正式地图回归现走同一组合入口；正式地图宿主仍未装配完整 HUD、白雾与标记状态，也未完成 Player 验证。
+`MainlineMapMiniMapSnapshots.CreateOfflineDataSource` 将当前角色槽位的只读地图快照与原离线响应消费接口组合，避免调用方自行实现跨图实体筛选或状态恢复。已访问地图只提供本地探索过的实体及公开地区实体；隐藏／激活和图标状态从最新本地存档投影，读取不装载地图场景、不推进存档。地图外小地图调用与 Map13 正式地图回归现走同一组合入口；`OfficialMainlineMapRuntime` 在原小地图根激活前注入该数据源，保留原协调器当前图不请求、跨图请求的分支。完整白雾、标记状态、HUD输入与Player验证仍待完成。
 
 ## 原始官方实现
 
