@@ -1,0 +1,45 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    ".tools/source-packages/current/884_156692/official-code/client-source/TipDotNodeDataRepository.cs": "f699f386fcfd5141a454bbef2b01370d59d2864732cf8e947bef65c5deb5f4fc",
+    ".tools/source-packages/current/884_156692/official-code/client-source/TipDotNodeManager.cs": "6ecb1c015059849fb3e6b55dec23ecd4db3e0effd8d59be91009a9e64ad1d248",
+    ".tools/source-packages/current/884_156692/official-code/client-source/TipDotGraphHandler.cs": "d09bee4551f32290b4041eeacaa63ee61ddcfea60231813fd843f6bbf3ca6b7a",
+    ".tools/source-packages/current/884_156692/official-code/client-source/TipDotSystemController.cs": "e59862b9f2ab8a9fac0b020f66b3d957c57c6fb2db51d64975f1c4a27bc333e7",
+    ".tools/source-packages/current/884_156692/official-code/client-source/TipDotSystem.cs": "0674ee50157e38e8487d16595216b1e98ca43eadbc8ee5e4bcd7ef0e557581c3",
+    ".tools/source-packages/current/884_156692/official-code/client-source/TipDotBanManager.cs": "916d6bc085ee41bef36637992d2ecf69b6773a0ed580907f1c3d6205d6c50e12",
+    ".tools/source-packages/current/884_156692/official-code/client-source/ITipDotBanStrategy.cs": "a3c44dbe702083711b69c399582d3f528306f32a2a2dec017c4de849856767c2"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotNodeDataRepository.cs": "8197ac4d7a88bed2265de409eb8d0a3dc026fd0e850e79b52767cbbd17aba95e",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotNodeDataRepository.cs.meta": "03a6f11aab83a68fd3784ed9ee16d2ffca6f7f1de0723f9ade8aea49e4d6ffb8",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotNodeManager.cs": "f99dc4d2aa940a433066a4ca66589c47ab40f31cc25af2f4a428ca7883496db7",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotNodeManager.cs.meta": "4d3e9045f0c4b7be18bdaba9ff4336e28ff6ec436b76168a57f6c4e0fdd811a9",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotGraphHandler.cs": "5aa850751e3049d0828084d6205ce96c136356d06f393b234866e74f40601e44",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotGraphHandler.cs.meta": "973687f575685b2aeda52869c82254260a54b578e65ab50a50e0bb110d89810d",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotSystemController.cs": "2a41386f1fe5d612540b90d330deaa1d8bdfeff7ae808b3692f93ca098e3a930",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotSystemController.cs.meta": "584ba5b2b8aefe493fe5d51d1b41bb19269461dbcf297eeb1ebce2f1d3cfab4d",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotSystem.cs": "af966b0731df07981b2ef5f9a8d17ba7b59e96d2d47b63b61496977afb75ab3a",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotSystem.cs.meta": "efce558972c891b0d987209abc544d041f6c6720ae923a270393efe859087036",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotBanManager.cs": "7b0d2d5626b5af59aeda1635ae1ad3c50a45b16c57d8c93a81c4e2881052331f",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotBanManager.cs.meta": "2ba65b1bc18a98604a4df1d7762831ac8e4baab91027c0730fd117b76172e6d6",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/ITipDotBanStrategy.cs": "49636f38648b2313934923041cddf8da4484ee157439a58075cc390650393a5b",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/ITipDotBanStrategy.cs.meta": "f4af7760c1d4295e725a98598b8acdffc17012dd60103dbbffbcc3485eea1c1e",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/PartnerTipDotRuntimeBindings.cs": "e82e16424b87b54bb6258d001c6e1827e0688d6b37344c28dd2c090c46705ff3",
+    "unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/PartnerTipDotRuntimeBindings.cs.meta": "210a1c8f219f6bb3da3ec99b8a4b7591a64d224f42000ca6c3b203ca8eb1fc81"
+  },
+  "operation": [
+    "Direct game-source migration: repository, graph cache, graph manager, UI controller, lifecycle and ordered ban strategies.",
+    "Replace DI, structured logging, player/config/resource lookup and event subscriptions with explicit owner bindings; retain branches, graph traversal and execution order.",
+    "Restore the game async dirty-node state machine to async UniTaskVoid with original DelayFrame(1, timing 8). Dispose terminates the owner worker.",
+    "Reuse the existing original node factory and condition nodes; no third-party SDK implementation is copied."
+  ],
+  "helper_sha256": "42b2f32e92a1c6fff48354d867cba3364348ebf59ded0749cf9fc9aed668ea0d",
+  "validation_helpers": {
+    "scripts/fixtures/partner_tipdot_runtime_validation.cs": "6bc790bbcfaf7bf47ec497a503579623ddca07e1a387456553a9634a90891b4d",
+    "scripts/prepare_partner_tipdot_runtime_validation.py": "8b24262889d5a36450138c4322ec295fe6c3fc97fd84d0c3d87691050af74efb"
+  },
+  "dependencies": {
+    "assets/reference/partner-tipdot-source-manifest.json": "3510554812daf1874e5428c9ec6f1bd836945bec3e3902647060cd69bedd1869",
+    "assets/reference/partner-panel-native-source-manifest.json": "bdf7d505ad48a5782ee65320f124dda67d98279d8bb41bd0f02e9e90af88016b"
+  }
+}

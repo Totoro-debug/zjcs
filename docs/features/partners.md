@@ -488,6 +488,14 @@ NPC 资料投影同时保留实际原 `NpcTargetData` 对象的 `ServerId`，头
 
 隔离 Unity URP Play Mode 使用完整原三页窗口、正式本地组合与真实存档身份；将已自动结识的 8402 好感条件置为 40 后，构造组合仍无通话记录，实际打开窗口才按原顺序创建 2021 通话。三次真实打开只提交一次创建；已打开窗口的重复请求被拒绝，不额外运行准备。经原 EventSystem 射线和模拟输入验证带红点的通讯录折叠／展开、真实预览文本与选择回调、三页切换、原返回动画、关闭后重开和功能限制；运行截图已查看，无 Unity 错误。静态检查（90,066 个 GUID）、主工程导入／编译和 `Zjcs.Editor.ProjectTools.Validate` 通过。通话内容弹窗／节点交互未在本批渲染；正式 Home 入口尚未接入这个组合，不计作完整页面或 Windows Player 完成。
 
+### 原提示图执行器（局部）
+
+从所选 `884_156692` 官方客户端直接迁入 `TipDotNodeManager`、`TipDotNodeDataRepository`、`TipDotGraphHandler`、`TipDotSystemController`、`TipDotSystem` 及屏蔽策略管理器，复用已迁移的原节点工厂、条件节点和序列化图。DI、玩家／配置／资源查询与事件订阅改为明确的宿主端口；动态连接的逆序处理、沿父节点检查环路并撤回连接、图实例身份、监听时立即回传状态、初始化／清理事件顺序保留。原异步状态机恢复为 `async UniTaskVoid`，仍以 `DelayFrame(1, (PlayerLoopTiming)8)` 更新；先复制并清空脏集合，再逐个处理，处理中再次变脏的节点留到后续帧。宿主销毁额外结束该宿主的更新循环。
+
+源码输入、适配后输出、既有图／节点依赖与工具哈希见[提示图执行器来源](../../assets/reference/partner-tipdot-runtime-source-manifest.json)，入口为 `prepare_partner_tipdot_runtime.py`。本批未修改原美术、prefab 或素材快照。执行器的配置／本地状态端口尚未接入正式 Home 窗口，不能据此认定正式名册、通话、星神页的提示图已全部运行。
+
+隔离 Unity Play Mode 使用验证图覆盖真正的原工厂／执行器：等值 NPC 身份查找、两位 NPC 的实例隔离及分别销毁、未显示时延后脏条件、UI 监听激活子图、立即回传与后续聚合通知、重复变脏合并、处理中再次变脏跨帧保留、环路撤回、双向断连／重连、父节点排序、资源缓存、屏蔽策略短路、作用域切换、重复显示设置通知及换角色时的节点／订阅释放。验证图只提供测试拓扑和条件，不代替原正式图或玩法配置。同场回归原三页窗口的模拟点击、实际通话打开事务、原动画及关闭／重开，运行截图已查看；验证工程补齐赠礼模板通过资源引用的共享窗口脚本依赖和 Tilemap 包，重跑通过且无模板缺脚本警告。静态检查（90,148 个 GUID）、主工程导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过；整页本地提示图绑定和 Windows Player 尚未完成。
+
 ### 当前主角资料与原通话头像整合（局部）
 
 `OfflinePartnerPlayerInfoBindings` 将 `PlayerIconMe`／`PlayerInfoUI` 的主角、管理器更新通知和 `PlayerInfoData` 接到已提交的本地资料源；名称参数保留原翻译标记，战力参数使用原 `CultureNumberArg.Compact`。图片、职业／阶位配置、伙伴模型、队伍规则和详情弹窗继续由原宿主服务负责，不在资料适配器中生成替代规则或界面。

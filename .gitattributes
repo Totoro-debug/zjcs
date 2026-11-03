@@ -1998,3 +1998,15 @@ scripts/prepare_partner_conversation_window_validation.py text eol=lf
 scripts/record_partner_conversation_window.py text eol=lf
 assets/reference/partner-conversation-window-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerConversationUiSession.cs* text eol=lf
+
+# Original partner tip graph runtime.
+scripts/prepare_partner_tipdot_runtime*.py text eol=lf
+scripts/fixtures/partner_tipdot_runtime_validation.cs text eol=lf
+assets/reference/partner-tipdot-runtime-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/PartnerTipDotRuntimeBindings.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotNodeManager.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotNodeDataRepository.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotGraphHandler.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotSystem*.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/TipDotBanManager.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/PartnersUI/Roster/TipDots/ITipDotBanStrategy.cs* text eol=lf
