@@ -11,6 +11,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using Zjcs.Offline.World.NativeMap13EntityAssets;
 using Zjcs.Official.World.Map13EntityRendering;
+using Zjcs.Presentation.World;
 
 namespace Zjcs.Editor.Map13EntityRendering
 {
@@ -91,7 +92,7 @@ namespace Zjcs.Editor.Map13EntityRendering
             var recipe = JsonUtility.FromJson<Recipe>(File.ReadAllText("Assets/Official/World/Map/13/Source/native-entity-sliced-renderers.json"));
             Require(recipe.renderers.Length == 84, "Original sliced renderer inventory differs.");
             var catalog = Resources.Load<NativeMap13EntitySpriteCatalog>("Map13/Native/entity-sprite-catalog");
-            var service = new GameObject("Offline original sliced renderer service owner").AddComponent<ServiceOwner>();
+            new GameObject("Public mainline map renderer host").AddComponent<OfficialMainlineMapRuntime>();
             var light = new GameObject("Sliced renderer verification illumination").AddComponent<Light2D>(); light.lightType = Light2D.LightType.Global; light.intensity = 1;
             var camera = new GameObject("Native sliced renderer diagnostic camera", typeof(Camera)).GetComponent<Camera>();
             camera.orthographic = true; camera.orthographicSize = .6f; camera.aspect = 1;
@@ -158,7 +159,7 @@ namespace Zjcs.Editor.Map13EntityRendering
             }
             Require(pixels > 10000 && !error, "Original sliced renderer execution produced insufficient pixels/errors.");
             full.Apply(); half.Apply(); File.WriteAllBytes(Path.Combine(Output, "native-sliced-full.png"), full.EncodeToPNG()); File.WriteAllBytes(Path.Combine(Output, "native-sliced-half.png"), half.EncodeToPNG());
-            camera.targetTexture = null; target.Release(); UnityEngine.Object.Destroy(target); UnityEngine.Object.Destroy(image); UnityEngine.Object.Destroy(full); UnityEngine.Object.Destroy(half); UnityEngine.Object.Destroy(camera.gameObject); UnityEngine.Object.Destroy(service.gameObject);
+            camera.targetTexture = null; target.Release(); UnityEngine.Object.Destroy(target); UnityEngine.Object.Destroy(image); UnityEngine.Object.Destroy(full); UnityEngine.Object.Destroy(half); UnityEngine.Object.Destroy(camera.gameObject);
             var proof = new Proof { source_sha256 = Hash(bytes), components = index, sampled_meshes = poses, mesh_fields = meshFields, rendered_pixels = pixels, backend = SystemInfo.graphicsDeviceType.ToString(), editor = Application.unityVersion, play_mode = Application.isPlaying, coverage = "Original sliced renderer lifecycle, original 84 configurations, native Sprite/atlas material binding, linear/radial fill meshes, dirty service LateUpdate and enable/disable. Diagnostic source-size objects only; full native prefab, entity EC/input/save and Windows Player remain pending." };
             File.WriteAllText(Path.Combine(Output, "native-sliced-execution.json"), JsonUtility.ToJson(proof, true));
             Debug.Log("Map13 original sliced renderer passed: " + index + " components, " + poses + " meshes, " + meshFields + " finite fields.");
@@ -181,7 +182,6 @@ namespace Zjcs.Editor.Map13EntityRendering
         private static string Hash(byte[] bytes) { using (var hash = SHA256.Create()) return BitConverter.ToString(hash.ComputeHash(bytes)).Replace("-", "").ToLowerInvariant(); }
         private static void Require(bool value, string message) { if (!value) throw new InvalidDataException(message); }
         private sealed class Runner : MonoBehaviour { }
-        private sealed class ServiceOwner : MonoBehaviour { private void LateUpdate() { SlicedFilledRenderService.Current.LateUpdate(); } }
         [Serializable] private sealed class Source { public OutputSpec[] outputs; }
         [Serializable] private sealed class OutputSpec { public string path, sha256; }
         [Serializable] private sealed class Recipe { public Record[] renderers; }

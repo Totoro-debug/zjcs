@@ -18,6 +18,7 @@ using Zjcs.Presentation.Character;
 using Zjcs.Presentation.Commerce;
 using Zjcs.Presentation.OfflineWorld;
 using Zjcs.Official.World;
+using Zjcs.Official.World.Map13EntityRendering;
 using Zjcs.Official.WorldUI;
 
 namespace Zjcs.Presentation.World
@@ -286,6 +287,7 @@ namespace Zjcs.Presentation.World
 
         private void LateUpdate()
         {
+            SlicedFilledRenderService.Current.LateUpdate();
             if (worldCamera == null || avatar == null || closed || map12PrivateDungeonBattleActive) return;
             RefreshNativeMap12State();
             RefreshNativeMap13State();

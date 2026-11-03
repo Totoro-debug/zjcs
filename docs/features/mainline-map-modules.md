@@ -20,6 +20,8 @@
 
 `OfficialMainlineMapProfile.LocalChannelCount` 是单机分线配置；当前已迁移地图均固定为一条本地分线。公共 HUD 按原 `PublicMapBranchLineBtn.IsShowBtn` 的数量阈值隐藏分线按钮，同时不改变地图的私有／公开地区状态或其他地图玩法。未接入原生小地图 HUD 的地图仍须在正式宿主接线时消费同一配置。
 
+原 `SlicedFilledRenderService` 的脏网格刷新由 `OfficialMainlineMapRuntime.LateUpdate` 驱动，地图实体 prefab 可共用同一进度组件生命周期；泽之国的独立实体宿主仍保留自身刷新入口。该公共刷新只负责推进已迁移组件，不表示各图原 Sprite、材质或实体 prefab 已完成 Windows 绑定。
+
 ## 原始官方实现
 
 当前 `884_156692` 的完整原 `MiniMap` 根代码已迁入内部 `MainlineMiniMapRoot`，保留角色／全图视野处理器的缓存和订阅切换、原全屏显隐调用顺序、相机定位／边界裁剪、标记查找及关闭事件；配置、状态与资源从既有本地端口接入。公共 `MainlineMiniMap.Create` 通过具体脚本 `MainlineNativeMiniMapRoot` 绑定完整原 prefab，在激活前注入状态、角色、离线响应、资源、标记、点击和白雾坐标端口；实例统一管理显隐、全屏、关闭事件、纹理和销毁。初始岛、森之国、山之国、泽之国、龙之国与鲸背岛使用同一入口及各自配置，正式地图宿主／HUD接线仍未完成。离线标记初始化另按当前官方源码补入缺实体字典、容器实体及地区实体列表的分支；原64组条件、64次回调、24组归属条件及新增缺数据路径已在 Play Mode 通过。历史871源码凭据保留，只有 `OfflineMiniMapMarkManager.Init` 由当前源码覆盖，见[完整根与当前初始化来源](../../assets/reference/official-map/mainline-minimap-root-source-manifest.json)。
