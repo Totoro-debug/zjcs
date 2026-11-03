@@ -2152,3 +2152,14 @@ unity/Assets/Game/Resources/Partners/OfficialPartnerAchievement*.asset* text eol
 unity/Assets/Official/Partners/UI/Achievements/** text eol=lf
 unity/Assets/Official/Partners/UI/Achievements/**/*.wav binary
 unity/Assets/Official/Partners/UI/Achievements.meta text eol=lf
+
+# Complete original skill cast graphs and explicit playable scope.
+scripts/prepare_battle_cast_assets.py text eol=lf
+assets/reference/battle-animation/cast-assets-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Offline/BattleNativePlayables/** text eol=lf
+unity/Assets/Game/Runtime/Offline/BattleNativePlayables.meta text eol=lf
+unity/Assets/Game/Resources/Combat/casts.json* text eol=lf
+unity/Assets/Game/Resources/Combat/cast-audio.json* text eol=lf
+unity/Assets/Official/Combat/Casts/** text eol=lf
+unity/Assets/Official/Combat/Casts/**/*.wav binary
+unity/Assets/Official/Combat/Casts.meta text eol=lf

@@ -131,6 +131,11 @@ namespace Zjcs.Editor.Combat
                             while (clock.MoveNext()) yield return clock.Current;
                         }
                         afterInit?.Invoke(player);
+                        if (SessionState.GetBool(Key + ".casts", false) && player is PlayerAnimatorAppearance castingPlayer)
+                        {
+                            var castSteps = CheckCasts(castingPlayer);
+                            while (castSteps.MoveNext()) yield return castSteps.Current;
+                        }
                         if (SessionState.GetBool(Key + ".tracks", false))
                         {
                             var trackSteps = CheckTracks(player);

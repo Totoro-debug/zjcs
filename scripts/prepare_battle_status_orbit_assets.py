@@ -31,7 +31,7 @@ def sha(raw):
 
 def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
           family='StatusOrbits', shader_prefix='StatusOrbit_', runtime_receipts=None,
-          generator=None, limits=None, graph_roots=None):
+          generator=None, limits=None, graph_roots=None, reference_scripts=None):
     work = Path(os.environ['ZJCS_VALIDATION_DIR']).resolve()
     assert work.parent == (ROOT/'output/validation').resolve() and (work/'.zjcs-validation.json').is_file()
     export_receipt = CACHE/'native-export-all-source-manifest.json'
@@ -79,6 +79,19 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
             migrated_meta=identity(Path(str(target)+'.meta')),
             verified_current_runtime_methods=runtime_equivalence(original_text,
                 target.read_text(encoding='utf-8-sig'), name)))
+    for file_id, binding in (reference_scripts or {}).items():
+        # SDK reference assets have no managed client method body. Verify the
+        # original serialized type and retain the existing typed field bridge.
+        original = EXPORTED/binding['native_asset']
+        text = read(original).decode('utf-8-sig')
+        read(Path(str(original)+'.meta'))
+        assert int(SCRIPT.search(text)[1]) == file_id
+        assert struct.unpack('<i', MD4.new(('s\0\0\0'+binding.get('namespace', '')+binding['name']).encode()).digest()[:4])[0] == file_id
+        target = ROOT/binding['runtime']
+        script_guids[file_id] = GUID.search(Path(str(target)+'.meta').read_text(encoding='utf-8-sig'))[1]
+        script_records.append(dict(file_id=file_id, original_native_reference=identity(original),
+            migrated=identity(target), migrated_meta=identity(Path(str(target)+'.meta')),
+            field_bridge_receipt=identity(ROOT/binding['receipt'])))
     local_scripts = set(script_guids.values())
 
     def adapt(text):
