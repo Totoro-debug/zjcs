@@ -659,6 +659,8 @@ namespace Zjcs.Editor
             VerifyEquipmentBattlePassives(name, checkpoint, true);
             yield return SettleUi();
             yield return Capture(output, name + "-result");
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_ALL_PLAYER_REPORT") == "1" && name == "arena")
+                yield return Combat.OfficialSharedBattleReportAcceptance.Exercise(checkpoint, true);
             Debug.Log("[Battle hosts] " + name + " completed counter=" + checkpoint.Counter + " won=" + checkpoint.Outcome.Won);
         }
 

@@ -5,6 +5,8 @@ import json
 import math
 import re
 import uuid
+import struct
+import xxhash
 
 from current_component_schemas import CurrentSchemas
 from official_apk import Apk
@@ -45,11 +47,49 @@ def verify_native_layout(native, nodes):
     return count
 
 
-def build():
+def section_language(apk):
+    # Check the selected APK first, then only its matching cached official rawfiles.
+    manifest = apk.source.manifest('WwiseBnk', apk.archive)
+    values, inputs = {}, []
+    for suffix in ('launch_config_binary_language_zh_cn_text_g_bytes.rawfile',
+                   'config_binary_language_zh_cn_text_g_bytes.rawfile'):
+        name = 'wwisebnk_assets_' + suffix
+        bundle = next(row for row in manifest['bundles'] if row['name'] == name)
+        entry = 'assets/yoo/WwiseBnk/' + bundle['file']
+        if entry in apk.available:
+            raw = apk.archive.read(entry)
+            source = dict(origin='apk_zip', apk_entry=entry, apk_sha256=apk.source.apk_sha256)
+        else:
+            cached = apk.cloud.read('WwiseBnk', bundle)
+            if cached is None: raise FileNotFoundError('Original all-player report language: ' + name)
+            raw, source = cached
+        if len(raw) != bundle['size'] or hashlib.md5(raw).hexdigest() != bundle['hash']:
+            raise ValueError('Original all-player report language size/MD5 mismatch: ' + name)
+        count = struct.unpack_from('<i', raw)[0]
+        start = 4 + count * 12
+        for i in range(count):
+            identity, offset = struct.unpack_from('<Qi', raw, 4 + i * 12)
+            position = start + offset
+            if offset < 0 or position + 2 > len(raw): raise ValueError('Invalid language entry offset')
+            size = struct.unpack_from('<H', raw, position)[0]
+            if position + 2 + size > len(raw): raise ValueError('Truncated language entry')
+            values[identity] = raw[position + 2:position + 2 + size].decode('utf-8')
+        inputs.append(dict(name=name, source=source, sha256=hashlib.sha256(raw).hexdigest(),
+                           md5=bundle['hash'], bytes=len(raw), entries=count))
+    code = ROOT / '.tools/source-packages/current' / apk.version / 'official-code/client-source/FightEndReportAllPlayerTabView.cs'
+    keys = re.findall(r'public const string k\w+Faction = "([^"]+)"', code.read_text(encoding='utf-8'))
+    if len(keys) != 4: raise ValueError('Original all-player report section keys changed')
+    texts = [dict(key=key, text=values[xxhash.xxh64_intdigest(key.encode('utf-8'))]) for key in keys]
+    return texts, inputs
+
+
+def build(all_players=False):
+    output = OUTPUT.with_name("all-player-report-window-bindings.json") if all_players else OUTPUT
+    receipt_path = RECEIPT.with_name("all-player-report-window-source-manifest.json") if all_players else RECEIPT
     apk = Apk.current()
     schemas = CurrentSchemas()
-    name = 'FightEndReportPanel'
-    bundle = 'defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportpanel.bundle'
+    name = 'FightEndAllPlayerReportPanel' if all_players else 'FightEndReportPanel'
+    bundle = 'defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_' + name.lower() + '.bundle'
     prefab = next(pointer.deref() for key, pointer in apk.container(bundle)
                   if key.endswith('/' + name + '.prefab'))
     nodes = list(relative_transform_path(prefab.read()))
@@ -84,6 +124,7 @@ def build():
                 continue
             cls = obj.read(check_read=False).m_Script.read().m_ClassName
             if cls not in ('FightEndReportPanel', 'FightEndReportPlayerTabView',
+                           'FightEndAllPlayerReportPanel', 'FightEndReportAllPlayerTabView',
                            'FightEndReportSkillTabView', 'FightEndReportPanelTabItem',
                            'FightEndReportSkillTabItem', 'PopupWindow'):
                 continue
@@ -95,15 +136,26 @@ def build():
                 if any(fields[key]['m_PathID'] for key in ('mShowClip', 'mHideClip', 'mLoopClip')):
                     raise ValueError('Report popup animation bindings require migration')
                 popup = dict(maskType=fields['mMaskType'], closeByMask=bool(fields['mCloseByClickMask']))
-            elif cls == 'FightEndReportPanel':
+            elif cls in ('FightEndReportPanel', 'FightEndAllPlayerReportPanel'):
                 row.update({key: target(obj, fields[field]) for key, field in (
                     ('tabVisual', 'TabVisualObj'), ('tabs', 'TabGroup'),
                     ('close', 'CloseBtn'), ('round', 'RoundCountText'),
                     ('player', 'PlayerTabView'), ('skill', 'SkillTabView'))})
                 row['states'] = state_records(fields, 'TabTypeSwitcher', by_id)
+                if all_players:
+                    row.update({key: target(obj, fields[field]) for key, field in (
+                        ('dropdown', 'PlayerSelectDropdown'), ('skillRound', 'SkillTableRoundCountText'))})
+                    row.update({key: bool(fields[field]) if key == 'hideTabsWithoutMe' else fields[field] for key, field in (
+                        ('ownColor', 'OwnColor'), ('otherColor', 'OtherColor'), ('selectedColor', 'SelectedColor'),
+                        ('hideTabsWithoutMe', 'HideTabVisualObjWithoutMe'))})
                 result['window'] = row
-            elif cls == 'FightEndReportPlayerTabView':
+            elif cls in ('FightEndReportPlayerTabView', 'FightEndReportAllPlayerTabView'):
                 row['slot'] = target(obj, fields['PlayerSlot'])
+                for field, expected in [('PrefabObj', 'FightEndReportPlayerTabViewItem')] + (
+                        [('SplitObj', 'FightEndReportSplit')] if all_players else []):
+                    resource = PPtr(**fields[field], assetsfile=obj.assets_file).deref().read()
+                    if resource.m_Name != expected:
+                        raise ValueError('Original report prefab reference differs: ' + field)
                 result['player'] = row
             elif cls == 'FightEndReportSkillTabView':
                 row.update({key: target(obj, fields[field]) for key, field in (
@@ -134,9 +186,35 @@ def build():
         blurMaterial=mask['blur_material'], buttonPath=relative('mBtn'), imagePath=relative('mImage'),
         uvRect=mask['raw_image']['m_UVRect'])
     result['window'].update(popup)
-    write(OUTPUT, (json.dumps(result, ensure_ascii=False, indent=2) + '\n').encode())
-    identity = uuid.uuid5(uuid.NAMESPACE_URL, 'zjcs/shared-battle-report/' + OUTPUT.relative_to(ROOT).as_posix()).hex
-    write(OUTPUT.with_suffix(OUTPUT.suffix + '.meta'), (
+    split_record = None
+    if all_players:
+        split_bundle = 'defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportsplit.bundle'
+        split = next(pointer.deref() for key, pointer in apk.container(split_bundle)
+                     if key.endswith('/FightEndReportSplit.prefab'))
+        split_nodes = list(relative_transform_path(split.read()))
+        split_native = native.with_name('FightEndReportSplit.prefab')
+        if {'/'.join(map(str, path)): list(names) for _, path, names, _ in split_nodes} != native_hierarchy(split_native):
+            raise ValueError('Original report split hierarchy differs')
+        split_layout = verify_native_layout(split_native, split_nodes)
+        for go, _, _, _ in split_nodes:
+            for pair in go.m_Component:
+                obj = pair.component.deref()
+                if obj.type.name != 'MonoBehaviour' or obj.read(check_read=False).m_Script.read().m_ClassName != 'FightEndReportSplit':
+                    continue
+                fields = schemas.read(obj)
+                title = PPtr(**fields['Title'], assetsfile=obj.assets_file).deref()
+                title_go = schemas.read(title)['m_GameObject']['m_PathID']
+                result['player']['splitTitle'] = next('/'.join(map(str, path)) for go, path, _, _ in split_nodes
+                                                     if go.object_reader.path_id == title_go)
+                split_record = dict(source=apk.provenance(obj), fields=fields,
+                    payload_sha256=hashlib.sha256(obj.get_raw_data()).hexdigest(), native=file_record(split_native),
+                    verified_layout_fields=split_layout)
+        if split_record is None: raise ValueError('Original report split title binding is missing')
+    if all_players:
+        result["texts"], language_inputs = section_language(apk)
+    write(output, (json.dumps(result, ensure_ascii=False, indent=2) + '\n').encode())
+    identity = uuid.uuid5(uuid.NAMESPACE_URL, 'zjcs/shared-battle-report/' + output.relative_to(ROOT).as_posix()).hex
+    write(output.with_suffix(output.suffix + '.meta'), (
         'fileFormatVersion: 2\nguid: ' + identity + '\nTextScriptImporter:\n'
         '  externalObjects: {}\n  userData:\n  assetBundleName:\n  assetBundleVariant:\n').encode())
     receipt = dict(manifest=apk.version, apk_manifest=apk.source.apk_version,
@@ -147,15 +225,27 @@ def build():
                        'unity/Assets/Game/Resources/World/Mainline/ScreenBlur.mat',
                        'unity/Assets/Game/Runtime/Presentation/World/Shaders/ScreenBlur.shader')]),
                    hierarchy_nodes=len(paths), verified_layout_fields=layout_fields,
-                   sources=sources, output=file_record(OUTPUT),
+                   sources=sources, output=file_record(output),
                    official_code=[file_record(ROOT / '.tools/source-packages/current' / apk.version /
                        'official-code/client-source' / (cls + '.cs')) for cls in (
                        'FightEndReportPanelBase', 'FightEndReportPanel', 'FightEndReportSkillTabView',
                        'FightEndReportPlayerTabView', 'FightEndReportPanelTabItem', 'FightEndReportSkillTabItem')],
                    generator=file_record(Path(__file__).resolve()))
+    if all_players:
+        receipt['split'] = split_record
+        receipt['language_inputs'] = language_inputs
+        receipt['official_code'].extend(file_record(ROOT / '.tools/source-packages/current' / apk.version /
+            'official-code/client-source' / (cls + '.cs')) for cls in (
+                'FightEndReportPanelProvider', 'FightEndAllPlayerReportPanel', 'FightEndReportAllPlayerTabView', 'FightEndReportSplit'))
+        receipt['stage_type'] = file_record(ROOT / '.tools/source-packages/current' / apk.version /
+            'official-code/common-source/Common/StageType.cs')
+        receipt['stage_parser'] = file_record(ROOT / '.tools/source-packages/current' / apk.version /
+            'official-code/common-source/Common/StageInfoParser.cs')
     receipt['runtime'] = [file_record(ROOT / path) for path in (
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleReportView.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleReportView.cs.meta',
+        'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleReportView.AllPlayers.cs',
+        'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePopupPointer.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePopupMask.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePopupMask.cs.meta',
         'unity/Assets/Game/Runtime/Presentation/Character/OfficialSkillPopupMask.cs',
@@ -163,10 +253,11 @@ def build():
         'unity/Assets/Game/Runtime/Official/Combat/FightOfficialSkillItemCatalog.cs')]
     receipt['equipment_user_type'] = file_record(ROOT / '.tools/source-packages/current' / apk.version /
         'official-code/common-source/Common/SkillUserType.cs')
-    receipt['output_meta'] = file_record(OUTPUT.with_suffix(OUTPUT.suffix + '.meta'))
-    write(RECEIPT, (json.dumps(receipt, ensure_ascii=False, indent=2) + '\n').encode())
+    receipt['output_meta'] = file_record(output.with_suffix(output.suffix + '.meta'))
+    write(receipt_path, (json.dumps(receipt, ensure_ascii=False, indent=2) + '\n').encode())
     print('Verified shared native report bindings:', len(paths), 'nodes,', len(sources), 'components')
 
 
 if __name__ == '__main__':
     build()
+    build(all_players=True)

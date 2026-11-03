@@ -11,7 +11,7 @@ namespace Zjcs.Presentation.Combat
 {
     // Hosts supply appearance/detail providers; the native window, statistics,
     // ownership groups, tabs and scrolling belong to the shared battle module.
-    public sealed class OfficialBattleReportView : IDisposable, LoopScrollDataSource
+    public sealed partial class OfficialBattleReportView : IDisposable, LoopScrollDataSource
     {
         public sealed class Presentation
         {
@@ -22,6 +22,7 @@ namespace Zjcs.Presentation.Combat
             // The original client disables this when no server environment tags are present.
             public bool ShowEquipmentSkills;
             public Action<Component, int> PlayerIcon;
+            public Func<int, string> PlayerName;
             public Action<Transform, FightBattleReportSkill, FightBattleSkillDefinition> SkillIcon;
             public Action<FightBattleSkillDefinition> SkillDetail;
             public Action Closed;
@@ -30,13 +31,15 @@ namespace Zjcs.Presentation.Combat
         [Serializable] private sealed class Bindings
         {
             public Window window; public Player player; public Skill skill;
-            public Tab[] panelTabs, skillTabs;
+            public Tab[] panelTabs, skillTabs; public Text[] texts;
         }
         [Serializable] private sealed class Window
-        { public string path, tabVisual, tabs, close, round, player, skill; public State[] states; public int maskType; public bool closeByMask; public OfficialBattlePopupMask.Binding mask; }
-        [Serializable] private sealed class Player { public string path, slot; }
+        { public string path, tabVisual, tabs, close, round, player, skill; public State[] states; public int maskType; public bool closeByMask; public OfficialBattlePopupMask.Binding mask;
+            public string dropdown, skillRound; public Color ownColor, otherColor, selectedColor; public bool hideTabsWithoutMe; }
+        [Serializable] private sealed class Player { public string path, slot, splitTitle; }
         [Serializable] private sealed class Skill
         { public string path, titleScroll, itemScroll, tabGroupGo, tabs; public State[] gmStates, equipmentStates; }
+        [Serializable] private sealed class Text { public string key, text; }
         [Serializable] private sealed class Tab { public string path; public int type; }
         [Serializable] private sealed class State { public int state; public string[] objects; }
 
@@ -49,7 +52,8 @@ namespace Zjcs.Presentation.Combat
         private readonly LoopVerticalScrollRect scroll;
         private readonly WorldBattleReportSkillScrollSync sync;
         private readonly WorldTabGroup tabs, skillTabs;
-        private readonly HashSet<int> playerUnits, petUnits;
+        private HashSet<int> playerUnits, petUnits;
+        private readonly bool allPlayers;
         private FightBattleReportSkill[] skills = Array.Empty<FightBattleReportSkill>();
         private bool disposed;
 
@@ -68,18 +72,21 @@ namespace Zjcs.Presentation.Combat
             var groups = FightBattleReportGrouping.Build(report, presentation.Side);
             var assets = OfficialCombatAssetCatalog.LoadDefault();
             skillItems = assets.LoadSkillItems();
-            var records = OfficialBattleReportPlayerRowBinder.PlayerRows(groups, assets.LoadReportScoreSettings());
+            var settings = assets.LoadReportScoreSettings();
+            allPlayers = settings.ReportAllPlayerStages.Contains(checkpoint.StageType);
             FightBattleReportPlayerGroup owner = groups.Players.SingleOrDefault(value => value.TargetId == presentation.PlayerId);
             playerUnits = new HashSet<int>(owner == null ? Enumerable.Empty<int>()
                 : owner.Normal.Concat(owner.Summon).Select(value => value.UnitId));
             petUnits = new HashSet<int>(owner == null ? Enumerable.Empty<int>() : owner.Pet.Select(value => value.UnitId));
-            TextAsset data = Resources.Load<TextAsset>("Combat/BattleReport/report-window-bindings");
+            TextAsset data = Resources.Load<TextAsset>("Combat/BattleReport/" +
+                (allPlayers ? "all-player-report-window-bindings" : "report-window-bindings"));
             if (data == null) throw new InvalidOperationException("The original report window bindings are missing.");
             bindings = JsonUtility.FromJson<Bindings>(data.text);
-            GameObject prefab = Resources.Load<GameObject>("Combat/BattleReport/FightEndReportPanel");
+            string prefabName = allPlayers ? "FightEndAllPlayerReportPanel" : "FightEndReportPanel";
+            GameObject prefab = Resources.Load<GameObject>("Combat/BattleReport/" + prefabName);
             if (prefab == null) throw new InvalidOperationException("The original report window prefab is missing.");
             root = UnityEngine.Object.Instantiate(prefab, parent, false);
-            root.name = "FightEndReportPanel";
+            root.name = prefabName;
             root.SetActive(false);
             try
             {
@@ -89,23 +96,13 @@ namespace Zjcs.Presentation.Combat
                 Node(bindings.window.round).GetComponent<WorldMultiLanguageText>()
                     .SetKey("ui_battle_data_round", ReportRound());
                 Node(bindings.window.close).GetComponent<Button>().onClick.AddListener(Close);
-                Node(bindings.window.tabVisual).gameObject.SetActive(owner != null);
+                if (!allPlayers || bindings.window.hideTabsWithoutMe)
+                    Node(bindings.window.tabVisual).gameObject.SetActive(owner != null);
 
                 Transform playerSlot = Node(bindings.player.slot);
                 foreach (Transform child in playerSlot) { child.gameObject.SetActive(false); UnityEngine.Object.Destroy(child.gameObject); }
-                var rows = new List<WorldBattleReportPlayerRow>();
-                GameObject rowPrefab = Resources.Load<GameObject>("Combat/BattleReport/FightEndReportPlayerTabViewItem");
-                foreach (var record in records)
-                {
-                    var row = UnityEngine.Object.Instantiate(rowPrefab, playerSlot, false);
-                    BindFont(row);
-                    var view = row.GetComponent<WorldBattleReportPlayerRow>();
-                    if (view.PlayerIcon == null) view.PlayerIcon = row.transform.Find("PublicPlayerIcon");
-                    if (view.PlayerIcon == null) throw new InvalidOperationException("The original report player icon slot is missing.");
-                    rows.Add(view);
-                }
-                OfficialBattleReportPlayerRowBinder.InitRows(rows, records, presentation.PlayerId,
-                    (icon, id) => presentation.PlayerIcon?.Invoke(icon, checked((int)id)));
+                if (allPlayers) BuildAllPlayerRows(playerSlot, groups, settings);
+                else BuildPlayerRows(playerSlot, groups, settings);
 
                 scroll = Node(bindings.skill.itemScroll).GetComponent<LoopVerticalScrollRect>();
                 sync = Node(bindings.skill.path).GetComponent<WorldBattleReportSkillScrollSync>();
@@ -120,13 +117,15 @@ namespace Zjcs.Presentation.Combat
                 if (tabs == null || skillTabs == null) throw new InvalidOperationException("The original report tab groups are missing.");
                 tabs.OnTabItemChanged.AddListener(OnTabChanged);
                 skillTabs.OnTabItemChanged.AddListener(OnSkillTabChanged);
+                if (allPlayers) InitializePlayerDropdown();
                 SelectSkills(0);
                 root.SetActive(true);
                 skillTabs.ResetTabItem(true);
                 tabs.ResetTabItem(true);
                 if (bindings.window.maskType != 0)
                     root.AddComponent<OfficialBattlePopupMask>().Show(bindings.window.mask,
-                        bindings.window.maskType, bindings.window.closeByMask, Close, null);
+                        bindings.window.maskType, bindings.window.closeByMask, Close, null,
+                        allPlayers ? (Action<Vector2>)dropdown.OnGlobalPointerDown : null);
             }
             catch { Dispose(); throw; }
         }
@@ -153,6 +152,7 @@ namespace Zjcs.Presentation.Combat
             if (!selected || disposed) return;
             int type = bindings.panelTabs.Single(value => Node(value.path) == item.transform).type;
             SetState(bindings.window.states, type);
+            if (dropdown != null) dropdown.Hide();
             if (type == 1) RefreshSkills();
         }
 
@@ -248,6 +248,7 @@ namespace Zjcs.Presentation.Combat
             if (tabs != null) tabs.OnTabItemChanged.RemoveListener(OnTabChanged);
             if (skillTabs != null) skillTabs.OnTabItemChanged.RemoveListener(OnSkillTabChanged);
             if (scroll != null) scroll.dataSource = null;
+            if (dropdown != null) dropdown.OnDropdownUpdate -= OnPlayerChanged;
             if (root != null) { root.SetActive(false); UnityEngine.Object.Destroy(root); }
         }
     }

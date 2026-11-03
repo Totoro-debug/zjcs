@@ -30,7 +30,7 @@ namespace Zjcs.Presentation.Combat
             public float[] uvRect;
         }
 
-        public void Show(Binding binding, int maskType, bool closeByMask, Action onClose, Action onReady)
+        public void Show(Binding binding, int maskType, bool closeByMask, Action onClose, Action onReady, Action<Vector2> onPointerDown = null)
         {
             close = onClose; allowClose = closeByMask;
             windowCanvas = GetComponent<Canvas>();
@@ -58,10 +58,10 @@ namespace Zjcs.Presentation.Combat
             windowGroup.alpha = 0;
             windowGroup.interactable = windowGroup.blocksRaycasts = false;
             windowRaycaster.enabled = false;
-            StartCoroutine(Prepare(binding, parent, maskType, onReady));
+            StartCoroutine(Prepare(binding, parent, maskType, onReady, onPointerDown));
         }
 
-        private IEnumerator Prepare(Binding binding, Canvas parent, int maskType, Action onReady)
+        private IEnumerator Prepare(Binding binding, Canvas parent, int maskType, Action onReady, Action<Vector2> onPointerDown)
         {
             if (maskType == 3) yield return new WaitForEndOfFrame();
             GameObject source = Resources.Load<GameObject>(binding.prefabResource);
@@ -130,6 +130,7 @@ namespace Zjcs.Presentation.Combat
                     image.uvRect = uv;
                 }
             }
+            if (onPointerDown != null) mask.AddComponent<OfficialBattlePopupPointer>().PointerDown = onPointerDown;
             button.onClick.AddListener(() => { if (allowClose && IsReady && Time.time - shownAt > .5f) close?.Invoke(); });
             if (mask.GetComponent<GraphicRaycaster>() == null) mask.AddComponent<GraphicRaycaster>();
             foreach (Canvas child in nestedCanvases)

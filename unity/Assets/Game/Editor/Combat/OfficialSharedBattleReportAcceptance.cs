@@ -13,9 +13,9 @@ using Zjcs.Presentation.Combat;
 
 namespace Zjcs.Editor.Combat
 {
-    public static class OfficialSharedBattleReportAcceptance
+    public static partial class OfficialSharedBattleReportAcceptance
     {
-        public static IEnumerator Exercise(FightBattleCheckpoint checkpoint)
+        public static IEnumerator Exercise(FightBattleCheckpoint checkpoint, bool expectAllPlayers = false)
         {
             Require(checkpoint.Finished && checkpoint.Outcome != null && !checkpoint.Outcome.Invalid,
                 "The shared report must consume a completed real battle.");
@@ -36,8 +36,11 @@ namespace Zjcs.Editor.Combat
                 for (int pass = 0; pass < 2; pass++)
                 {
                     int closed = 0;
+                    var populatedSkillUnits = new List<int>();
                     using (var view = new OfficialBattleReportView(fixture.transform, checkpoint,
-                        new OfficialBattleReportView.Presentation { Closed = () => closed++ }))
+                        new OfficialBattleReportView.Presentation { Closed = () => closed++,
+                            PlayerName = id => "UI fixture " + id,
+                            SkillIcon = (_, skill, __) => populatedSkillUnits.Add(skill.UnitId) }))
                     {
                         float deadline = Time.realtimeSinceStartup + 10f;
                         while (!view.IsReady && Time.realtimeSinceStartup < deadline) yield return null;
@@ -50,11 +53,19 @@ namespace Zjcs.Editor.Combat
                         WorldTabItem[] tabs = group.GetAllTabs();
                         Require(tabs[0].isOn && tabs.Count(value => value.isOn) == 1,
                             "The report did not initialize the original default player tab.");
+                        Require((view.Root.name == "FightEndAllPlayerReportPanel") == expectAllPlayers,
+                            "Official report-stage configuration selected the wrong native panel.");
                         var expected = OfficialBattleReportPlayerRowBinder.PlayerRows(
                             FightBattleReportGrouping.Build(FightBattleReportBuilder.Build(checkpoint), 1),
                             OfficialCombatAssetCatalog.LoadDefault().LoadReportScoreSettings());
+                        if (expectAllPlayers)
+                            foreach (int side in checkpoint.Units.Select(value => value.Side).Distinct().Where(value => value != 1))
+                                expected.AddRange(OfficialBattleReportPlayerRowBinder.PlayerRows(
+                                    FightBattleReportGrouping.Build(FightBattleReportBuilder.Build(checkpoint), side),
+                                    OfficialCombatAssetCatalog.LoadDefault().LoadReportScoreSettings()));
                         Require(view.Root.GetComponentsInChildren<WorldBattleReportPlayerRow>().Length == expected.Count,
                             "The native player report lost real roster/statistics rows.");
+                        yield return new WaitForSecondsRealtime(.4f);
                         yield return Capture(output, "shared-report-players-" + pass);
                         Click(tabs[1]);
                         yield return null;
@@ -78,6 +89,8 @@ namespace Zjcs.Editor.Combat
                         Require(scroll.content.anchoredPosition.x < -1f,
                             "The shared report did not reveal later columns through simulated dragging.");
                         yield return Capture(output, "shared-report-columns-" + pass);
+                        if (expectAllPlayers)
+                            yield return ExerciseDropdown(view, checkpoint, populatedSkillUnits, output, pass);
                         Click(tabs[0]);
                         yield return null;
                         Require(tabs[0].isOn && tabs.Count(value => value.isOn) == 1,
