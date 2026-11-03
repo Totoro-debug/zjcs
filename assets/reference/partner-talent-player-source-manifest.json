@@ -1,0 +1,30 @@
+{
+  "manifest": "884_156692",
+  "inputs": {
+    "official-source.json": "a29067dd1363590c8fde67a7d5326fcb5a4632441e8c73ae8b64300aa491a3a6",
+    "assets/reference/partner-talent-source-manifest.json": "20e7f805f0c3594209f8ad52c6712e9b733527a45ae1c3f40a84f43c76197c85",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterPropertyProgress.cs": "aeb2919e455e844a401b510c4a7151c29e6211b55819b32b6266665c2cd2bce4",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineProgressSession.cs": "be33450fa00309f2371e15d53240f9c81acbc05b103a8e1343f3ae997b2e2d0d",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfficialPartnerAssetCatalog.cs": "66c5107850172f8ed4ae3434f8d773084a8db00bedb7e7064bb51d891b5189eb",
+    "unity/Assets/Official/Partners/partner-rules.json": "1ab5dd32c4ef68297aea6a847cb0e5ced686634bb4fb7f4c28a1aa7bf70398fd",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/Player.cs": "e0b324d6cf965e194cc517c176e8fae80f16dda7019e42d705ed6ae7d44da611",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerItemManagerExt.cs": "1ebcf8aeaee499afc7700ead7791c0156d24624cc0e9cf9d3ebac37a4c506356",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/ItemType.cs": "8a1a33483ed28de00b9bc37dd60899ae0cb2fa7d7bd821b42f6e43cdcb3dbcaf",
+    ".tools/source-packages/current/884_156692/official-code/common-source/Common/PlayerSingleNpcTalentTreeData.cs": "9f6f9a25ddb55942995d6c2528a45c2fc4df18c3cdc9eab275e48ad140c62a96"
+  },
+  "outputs": {
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerTalentPlayer.cs": "f211159bc39f0f156ea738db323379331a3add703d71bba25749a7e548ee8de8",
+    "unity/Assets/Game/Runtime/Offline/PartnersUI/OfflinePartnerTalentPlayer.cs.meta": "f2aa4546139f38714bde7aaa68ca5dc25f4d2d0337599b2d08dfab85eff9f0f0"
+  },
+  "validation_helpers": {
+    "scripts/fixtures/partner_talent_player_validation.cs": "0601ed7930a6e569f3026ace08e196e3c123a2d30488ad4dff7e49c25f596d57",
+    "scripts/prepare_partner_talent_player_validation.py": "7686d96ecf4c6a3e4f936683600d30a5ac8eed6423be3e53d9776128a8a2aedc"
+  },
+  "recorder_sha256": "36dea944223222ce983ee73c8aaed5f2392ae37043762088f8537e1be361605f",
+  "operation": [
+    "Bind original talent predicates to the current Save.Player and its existing NpcTalentTrees, NpcFriendships and inventory fields.",
+    "Read the provider on every query, return detached node IDs, and preserve original absent-tree zero experience / empty-node observations without mutating a save.",
+    "Project only original ItemType.NpcGift (328) inventory, independently of friendship gift preferences and NPC fragments.",
+    "No new save schema, activation or gift-conversion transaction, artwork, prefab, layout or full asset snapshot."
+  ]
+}
