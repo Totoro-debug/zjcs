@@ -796,6 +796,7 @@ namespace Zjcs.Presentation.Home
             partnerGiftPlayer = new OfflinePartnerGiftPlayer(profile, partnerCatalog,
                 giftConfiguration, id => new OfflinePartnerItemInfo(partnerCatalog, id), () => false);
             partnerTipDots = new OfflinePartnerTipDotRuntime(profile, partnerCatalog, giftConfiguration, progression);
+            partnerTipDots.Refresh();
             partnerRoster.NpcAdded += OnPartnerRosterAdded;
             partnerRoster.NpcFriendshipUpdated += OnPartnerRosterFriendshipUpdated;
             partnerGiftPlayer.OnNpcFriendshipLevelUpdate += OnPartnerGiftFriendshipUpdated;
