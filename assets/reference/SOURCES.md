@@ -452,3 +452,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 原技能附件跟随使用所选 `884_156692` 的游戏自有 `AttachmentFollower`、`SkeletonAttachmentActiveTracker`、`MyPlayableFollowSpinePart` 及既有 `ApplyByBone` 应用代码；程序集、原方法摘要、原生接口适配、生成及验证工具哈希见[代码凭据](battle-animation/spine-follower-runtime-source-manifest.json)。`scripts/prepare_battle_spine_follower_assets.py` 先核验 APK 数字状态对象，再按完整原生导出图恢复24207／24227及CAB闭包，复用全部原mip纹理与Windows shader转换；原对象、原生输入、转换哈希、显式脚本／Resources绑定和80个输出见[素材凭据](battle-animation/spine-follower-assets-source-manifest.json)。运行时只消费随包原生资源，没有替代美术；本次未生成完整素材快照。
 
 伙伴提示的当前玩家接线复用所选 `884_156692` 的原 `Player` 通知参数、`MsgPlayerNpc/MsgPlayerNpcRemove`、物品枚举与已迁入提示节点读取端口，输入、当前存档读取／事件适配、程序集绑定及验证工具哈希见[提示玩家来源](partner-tip-player-source-manifest.json)。入口为 `scripts/record_partner_tip_player.py`；复用既有伙伴配置与档案、赠礼、天赋存档，不新增资源载荷或完整素材快照。
+
+`scripts/prepare_activity_battle_native.py` 使用选定 `884_156692` 的官方 APK／资源清单、程序集字段描述和既有 `native-export-all` 转换凭据，逐字节核对五个活动入口／结算／难度 prefab 及其 `.meta` 输入；原 CAB／PathID、原组件字段、原生对象对应和中间输出哈希见[活动战斗原生界面来源](../../assets/reference/daily-challenges/native-ui-source-manifest.json)。中间数据写入会话验证目录，绑定后的可运行资产另按相应素材接入流程记录。

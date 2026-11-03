@@ -229,15 +229,18 @@ class PartnerNativeRecovery:
             scripts.append(dict(nativeFileID=target, original=identity(obj),
                 namespace=script.m_Namespace, type=script.m_ClassName,
                 assembly=script.m_AssemblyName, scriptFileID=script_id(script)))
-            if identity(obj) not in self.cached:
-                continue
+            # The cache accelerates decoding; absence is not an instruction to
+            # discard the component. fields() already decoded the same source
+            # while learning its external references above.
             fields = self.fields(obj)
             native_fields = docs[target]['MonoBehaviour']
             for key, value in fields.items():
                 if key not in ('m_GameObject', 'm_Enabled', 'm_Script', 'm_Name'):
                     native_fields[key] = convert(value, obj)
             recovered.append(dict(original=identity(obj), nativeFileID=target,
-                scriptType=self.cached[identity(obj)]['type'], payload_sha256=digest(obj.get_raw_data())))
+                scriptType=self.cached.get(identity(obj), {}).get('type',
+                    '.'.join(filter(None, [script.m_Namespace, script.m_ClassName]))),
+                payload_sha256=digest(obj.get_raw_data())))
         destination.mkdir(parents=True, exist_ok=True)
         output = destination / (name + '.json')
         data = dict(documents=docs, root=native_root, external=external,
