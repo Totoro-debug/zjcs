@@ -63,8 +63,13 @@ def main():
         for left in (source, Path(str(source) + '.meta')):
             target = project / left.relative_to(ROOT / 'unity')
             target.parent.mkdir(parents=True, exist_ok=True)
-            if target.exists() and target.read_bytes() != left.read_bytes(): raise ValueError('Preserve differing fixture asset: ' + str(target))
-            shutil.copy2(left, target)
+            if target.exists():
+                current = target.read_bytes()
+                source_bytes = left.read_bytes()
+                if current != source_bytes and current.splitlines() != source_bytes.splitlines():
+                    raise ValueError('Preserve differing fixture asset: ' + str(target))
+            else:
+                shutil.copy2(left, target)
             copied[left.relative_to(ROOT).as_posix()] = hashlib.sha256(left.read_bytes()).hexdigest()
         raw = source.read_bytes()
         if raw.startswith(b'%YAML'):

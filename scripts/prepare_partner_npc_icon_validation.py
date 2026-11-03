@@ -3,11 +3,24 @@ import hashlib
 import json
 from pathlib import Path
 import shutil
+import subprocess
 
 from official_apk import ROOT
 from prepare_partner_panel_host_validation import main as prepare_host
 from validation_workspace import validation_directory
 from prepare_current_partner_native import documents
+
+
+def verified_source(source, expected, label):
+    data = source.read_bytes()
+    if hashlib.sha256(data).hexdigest() == expected:
+        return data
+    relative = source.relative_to(ROOT).as_posix()
+    tracked = subprocess.run(['git', 'show', 'HEAD:' + relative], cwd=ROOT,
+        check=True, capture_output=True).stdout
+    if hashlib.sha256(tracked).hexdigest() == expected and data.splitlines() == tracked.splitlines():
+        return tracked
+    raise ValueError(label + relative)
 
 
 def main():
@@ -29,16 +42,20 @@ def main():
         if not path.endswith(('.cs', '.cs.meta'))})
     for relative, expected in bindings.items():
         source = ROOT / relative
-        if hashlib.sha256(source.read_bytes()).hexdigest() != expected: raise ValueError('Icon source differs: ' + relative)
+        data = verified_source(source, expected, 'Icon source differs: ')
         target = project / source.relative_to(ROOT / 'unity')
-        if target.exists() and target.read_bytes() != source.read_bytes(): raise ValueError('Preserve changed fixture icon: ' + str(target))
-        target.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(source, target)
+        if target.exists():
+            current = target.read_bytes()
+            if current != data and current.splitlines() != data.splitlines():
+                raise ValueError('Preserve changed fixture icon: ' + str(target))
+        else:
+            target.parent.mkdir(parents=True, exist_ok=True); target.write_bytes(data)
     fixture = ROOT / 'scripts/fixtures/partner_panel_host_validation.cs'
     language = ROOT / 'unity/Assets/Game/Resources/Partners/OfficialPartnerDialoguePlaybackAssetCatalog.asset'
     language_proof = ROOT / 'assets/reference/partner-dialogue-playback-native-source-manifest.json'
     expected = json.loads(language_proof.read_bytes())['installed_output_sha256'][language.relative_to(ROOT).as_posix()]
-    if hashlib.sha256(language.read_bytes()).hexdigest() != expected: raise ValueError('Original dialogue language catalog changed')
-    words = documents(language.read_text('utf8'))[11400000]['MonoBehaviour']['texts']
+    words = documents(verified_source(language, expected,
+        'Original dialogue language catalog changed: ').decode('utf8'))[11400000]['MonoBehaviour']['texts']
     (project / 'Assets/Editor/npc-icon-dialogue-texts.json').write_text(json.dumps(dict(texts=words), ensure_ascii=False), 'utf8', newline='\n')
     text = fixture.read_text('utf8')
     replacements = {

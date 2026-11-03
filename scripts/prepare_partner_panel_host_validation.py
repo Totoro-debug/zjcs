@@ -35,11 +35,18 @@ def main():
         target = project / source.relative_to(ROOT / 'unity')
         source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
         if source_hash != expected:
-            if relative.endswith('.meta') and target.exists() and hashlib.sha256(target.read_bytes()).hexdigest() == source_hash:
+            if (relative.endswith('.meta') and target.exists()
+                    and hashlib.sha256(target.read_bytes()).hexdigest() == expected
+                    and target.read_bytes().splitlines() == source.read_bytes().splitlines()):
                 continue
             raise ValueError('Panel PCM changed: ' + relative)
-        if target.exists() and target.read_bytes() != source.read_bytes(): raise ValueError('Preserve changed fixture PCM: ' + str(target))
-        target.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(source, target)
+        if target.exists():
+            current = target.read_bytes()
+            source_bytes = source.read_bytes()
+            if current != source_bytes and current.splitlines() != source_bytes.splitlines():
+                raise ValueError('Preserve changed fixture PCM: ' + str(target))
+        else:
+            target.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(source, target)
     editor = project / 'Assets/Editor'
     for name in ('PartnerPanelNativeGraphicValidation.cs', 'PartnerStarGodLocalValidation.cs'):
         (editor / name).unlink(missing_ok=True)

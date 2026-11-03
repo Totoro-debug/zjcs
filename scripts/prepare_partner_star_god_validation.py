@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import shutil
 import re
+import subprocess
 
 from official_apk import ROOT
 from validation_workspace import validation_directory
@@ -29,6 +30,17 @@ def copy_modules(project, runtime, modules, selected):
             shutil.copy2(source, target)
 
 
+def verified_installed_bytes(source, expected, relative):
+    data = source.read_bytes()
+    if hashlib.sha256(data).hexdigest() == expected:
+        return data
+    tracked = subprocess.run(['git', 'show', 'HEAD:' + relative], cwd=ROOT,
+        check=True, capture_output=True).stdout
+    if hashlib.sha256(tracked).hexdigest() == expected and data.splitlines() == tracked.splitlines():
+        return tracked
+    raise ValueError('Installed star-god asset changed: ' + relative)
+
+
 def main():
     work = validation_directory()
     if not (work / '.zjcs-validation.json').is_file(): raise ValueError('Owned validation workspace required')
@@ -46,40 +58,41 @@ def main():
             continue
         selected.add(name)
         pending.extend(json.loads(modules[name].read_bytes()).get('references', []))
-    if external - {'Unity.ugui', 'UnityEngine.UI', 'Unity.TextMeshPro', 'UniTask'}:
+    if external - {'Unity.ugui', 'UnityEngine.UI', 'Unity.TextMeshPro', 'Unity.Newtonsoft.Json', 'UniTask'}:
         raise ValueError('Inspect validation dependencies: ' + repr(external))
     copy_modules(project, runtime, modules, selected)
     editor = project / 'Assets/Editor'
     editor.mkdir(parents=True)
     shutil.copy2(ROOT / 'scripts/fixtures/partner_star_god_validation.cs', editor / 'PartnerStarGodValidation.cs')
     (editor / 'Validation.asmdef').write_text(json.dumps(dict(name='PartnerStarGodValidation', includePlatforms=['Editor'],
-        references=['Unity.ugui', 'Unity.TextMeshPro', 'Unity.RenderPipelines.Universal.Runtime', 'Unity.RenderPipelines.Core.Runtime',
+        references=['Unity.ugui', 'Unity.TextMeshPro', 'Unity.Newtonsoft.Json', 'Unity.RenderPipelines.Universal.Runtime', 'Unity.RenderPipelines.Core.Runtime',
             'Zjcs.Official.PartnerRosterUI', 'Zjcs.Official.Partners', 'Zjcs.Official.WorldUI',
             'Zjcs.Official.PartnersUI', 'Zjcs.Official.ProfessionUI', 'Zjcs.Offline.ProfessionUI'])), 'utf8', newline='\n')
     installed = json.loads((ROOT / 'assets/reference/partner-star-god-native-source-manifest.json').read_bytes())
     for name, expected in installed['installed_output_sha256'].items():
         source = ROOT / name
-        if hashlib.sha256(source.read_bytes()).hexdigest() != expected: raise ValueError('Installed star-god asset changed: ' + name)
+        data = verified_installed_bytes(source, expected, name)
         target = editor / source.name if '/Runtime/' in name else project / source.relative_to(ROOT / 'unity')
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, target)
+        target.write_bytes(data)
     # AkEvent retains its original event ID; route the common click to its
     # already verified original PCM, shared with the native dialogue entry.
     clicks = json.loads((ROOT / 'assets/reference/partner-dialogue-entry-native-source-manifest.json').read_bytes())
     for name, expected in clicks['installed_output_sha256'].items():
         if '/Audio/Main_Cursor_Normal.wav' not in name: continue
         source = ROOT / name
-        if hashlib.sha256(source.read_bytes()).hexdigest() != expected: raise ValueError('Original click PCM changed: ' + name)
+        data = verified_installed_bytes(source, expected, name)
         target = project / source.relative_to(ROOT / 'unity')
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, target)
+        target.write_bytes(data)
     (editor / 'star-god-fixture.json').write_text(json.dumps(dict(root=installed['roots']['NpcPanelStarGodContent'],
         **installed['star_god_images']), ensure_ascii=False), 'utf8', newline='\n')
     shutil.copytree(ROOT / 'unity/Assets/TextMesh Pro', project / 'Assets/TextMesh Pro')
     shutil.copy2(ROOT / 'unity/Assets/Official/World/Map/12/UI/Team/FZY4K.ttf', editor / 'FZY4K.ttf')
     packages = project / 'Packages'
     packages.mkdir()
-    dependencies = {'com.unity.ugui': '1.0.0', 'com.unity.textmeshpro': '3.0.6'}
+    dependencies = {'com.unity.ugui': '1.0.0', 'com.unity.textmeshpro': '3.0.6',
+        'com.unity.nuget.newtonsoft-json': '3.2.1'}
     for name in ('com.cysharp.unitask', 'com.unity.render-pipelines.universal'):
         shutil.copytree(ROOT / 'unity/Packages' / name, packages / name)
         dependencies[name] = 'file:' + name

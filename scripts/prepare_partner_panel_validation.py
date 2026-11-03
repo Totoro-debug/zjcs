@@ -59,8 +59,14 @@ def main():
         if source.suffix in ('.cs', '.asmdef'): continue
         for path in (source, Path(str(source) + '.meta')):
             target = project / path.relative_to(ROOT / 'unity'); target.parent.mkdir(parents=True, exist_ok=True)
-            if target.exists() and target.read_bytes() != path.read_bytes(): raise ValueError('Preserve differing fixture input: ' + str(target))
-            shutil.copy2(path, target); copied[path.relative_to(ROOT).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
+            if target.exists():
+                current = target.read_bytes()
+                source_bytes = path.read_bytes()
+                if current != source_bytes and current.splitlines() != source_bytes.splitlines():
+                    raise ValueError('Preserve differing fixture input: ' + str(target))
+            else:
+                shutil.copy2(path, target)
+            copied[path.relative_to(ROOT).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
         raw = source.read_bytes()
         if raw.startswith(b'%YAML'):
             for key in set(re.findall(rb'guid: ([0-9a-f]{32})', raw)):
