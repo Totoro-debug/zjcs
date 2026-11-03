@@ -624,6 +624,14 @@ NPC 资料投影同时保留实际原 `NpcTargetData` 对象的 `ServerId`，头
 
 `prepare_partner_achievement_ui_validation.py` 在已有隔离原窗口工程内完成 Play Mode：原生五行、原名称／进度／奖励图像、可领排序、三次实际模拟鼠标点击、文件占用失败后重试、整组两档领取、读档防重、功能限制分支、普通／星神独立领取和停用回收均通过。已查看未达标、待领取、领取后真实 GPU 截图；原整页与档案八次点击／滚动及规则、事务、提示回归通过。静态检查通过（90989 GUID）；主工程 Unity 2022.3.57f1c2 导入／编译及 `ProjectTools.Validate` 通过。正式详情宿主、主页面成就刷新／提示接线、助战邀请及 Windows Player 仍未完成，本节不作整体完成或发布结论。临时产物沿用前述清理限制。
 
+### 详情原生对白与尺寸控制（局部）
+
+`prepare_partner_detail_talk.py` 从所选原 `NpcTalkUI`、`NpcCustomSizeController` 迁入完整控制器。对白复用已迁入的原 `TMP_TypeWriterEffect`，保留设置文本、显示状态、入场状态、逐字播放、正常结束后等待配置时长、结束状态及停用时取消等待的执行顺序；替换对白重新开始打字，不触发被中断对白的延迟关闭。尺寸控制沿用原 NPC 字典查询、默认配置、偏移与缩放及空目标分支。这里只迁入客户端表现，不增加触摸好感或修改赠礼回调。
+
+原 `NpcDetailPanel.mDetailContent.mNpcTalkUI` 对应完整子树仅分离根父引用；气泡图像、字体、布局、状态引用、Legacy Animation 与三段入场／循环／退场曲线保留原数据。原 Legacy clip 直接保存未压缩路径，转换为 YAML 空值的根路径逐项核对 APK 实际空字符串后恢复，不套用 Animator 编译路径哈希。`OfficialPartnerDetailTalkAssetCatalog` 显式绑定 prefab 与当前 `npc_talk` 表的 62 条原文，键形式来自原详情控制器。来源、复用依赖、转换工具和输入输出哈希见[详情对白来源](../../assets/reference/partner-detail-talk-source-manifest.json)；本批不生成完整素材快照。
+
+`prepare_partner_detail_talk_validation.py` 在隔离原窗口 Play Mode 中加载原子树，验证三段 Legacy 动画绑定、逐字文本推进、替换对白、配置延迟关闭、停用取消与重开，并检查原尺寸字典的配置／默认／空目标分支；实际 GPU 截图核对入场文字、完整文字和退场空画面。原成就页领取、档案及提示服务窗口回归通过，Unity 项目静态检查为 91,019 GUID，主工程 `ProjectTools.Validate` 返回码 0。该验证用 API 调用对白组件，未验证角色触摸按钮或完整详情路由；正式详情控制器、立绘／角色模型仍待迁移，Windows Player 未发布。
+
 ## 自定义实现
 
 用户已确认：自定义伙伴称谓通过原字库与长度校验后直接在本地保存，不等待线上文本审核；保留原伙伴资格及好感等级门槛。自动伙伴在创建角色及读档后检查原相遇条件，满足且尚未拥有时自动结识，初始好感使用原配置；此触发时机是确认的单机方案，不声称取得服务器实现。
