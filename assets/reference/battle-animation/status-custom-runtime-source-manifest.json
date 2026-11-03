@@ -1,0 +1,128 @@
+{
+  "manifest": "884_156692",
+  "code_extraction": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/884_156692/official-code/managed/decoded/GameFramework.Runtime.dll",
+    "sha256": "737c1e6b4313b330530aa84b6d9b59dd01a470c69937d95a6cf69cd13c61e253"
+  },
+  "original": {
+    "path": ".tools/source-packages/current/884_156692/official-code/game-framework-source/GameFramework/ApplyByCustom.cs",
+    "sha256": "f8d1b07ddf849287a0a19c87e04f3a22e875dfcb926a44bf40574152f4d6b05d"
+  },
+  "original_mono_script_file_id": 795837747,
+  "original_method_bodies": {
+    "protected override void InitImpl(MyPlayable playable, MyPlayableApplyAttribute applyAttr)": "3451499ff06b882f312e919619c92ef841124d6de3045511b0ea7b69434e466e",
+    "protected override void PlayImpl(MyPlayable playable, MyPlayableApplyAttribute applyAttr)": "3451499ff06b882f312e919619c92ef841124d6de3045511b0ea7b69434e466e",
+    "private void SetMyApplyComponent(MyPlayable playable, MyPlayableApplyAttribute applyAttr)": "df059aa3dc9b18a91fcd850ed4d70b08459aa4d01b95fc03c8c30c38de30bb3c"
+  },
+  "adapted_method_bodies": {
+    "protected override void InitImpl(MyPlayable playable, MyPlayableApplyAttribute applyAttr)": "3451499ff06b882f312e919619c92ef841124d6de3045511b0ea7b69434e466e",
+    "protected override void PlayImpl(MyPlayable playable, MyPlayableApplyAttribute applyAttr)": "3451499ff06b882f312e919619c92ef841124d6de3045511b0ea7b69434e466e",
+    "private void SetMyApplyComponent(MyPlayable playable, MyPlayableApplyAttribute applyAttr)": "df059aa3dc9b18a91fcd850ed4d70b08459aa4d01b95fc03c8c30c38de30bb3c"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyByCustom.cs",
+      "sha256": "3483d2562951f0a491e03e1b8cfd6d70ffc1c8617933c5a85bfd5df0afc7a190"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyByCustom.cs.meta",
+      "sha256": "6ba24eb5cd7d47fd2479d1cb3cb3dcb9760010570f6f0ca9006cbe01bea8e078"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_status_custom_runtime.py",
+    "sha256": "1e641d97838af7b60122baf3bcf16187aa3753509410508d30931c9deb4ad26c"
+  },
+  "reused_dependencies": [
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/game-framework-source/GameFramework/MyPlayableOnInit.cs",
+        "sha256": "b9d435c7149bd7efe641ef1b70c684bbee966be853d032183f0d881e6cf8dab9"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableOnInit.cs",
+        "sha256": "f8f19d9e491a01116f89c5f3c637d3642f75c234a5c6b7e519d8fdebeb3fb4c7"
+      },
+      "unchanged_methods": [
+        "Awake",
+        "OnEnable",
+        "OnDisable",
+        "OnDestroy",
+        "OnPlayableInit",
+        "OnPlayablePlay"
+      ]
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/game-framework-source/GameFramework/MyPlayableApplyUtils.cs",
+        "sha256": "409ad13fe298e46b1ef43f24f3a9225d415cd8c5d4747d242b3b9587b775a3b2"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableApplyUtils.cs",
+        "sha256": "9d81cdf37334349d9ac16f1f471c9fb8b5c63dba977e75badf5ce3feff6b7548"
+      },
+      "unchanged_methods": [
+        "SetPlayableApplyComponent"
+      ]
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/current/884_156692/official-code/game-framework-source/GameFramework/MyPlayableApplyAttribute.cs",
+        "sha256": "6689d588ce555357de440eb928ea1d6e283b4917b828b1430d1f19dd34756c1d"
+      },
+      "migrated": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableApplyAttribute.cs",
+        "sha256": "f3818d454e9350dbd946ec6d541b1bac300d877700dc2cd911b0bc8093095b49"
+      },
+      "unchanged_methods": [
+        "GetApplyComponent"
+      ]
+    }
+  ],
+  "native_export_receipt": {
+    "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json",
+    "sha256": "264d79bcd2da2d47f86bc9e1c1956cd4e07853e09ad2248b691e2c92dd125d3c"
+  },
+  "native_use_sites": [
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/58220/playable_58222_Mastercast.prefab",
+      "sha256": "dfe49ee0cea28b4d1188f2aa3033530d30b50cc0e3150e1300cb1bb8c9d8bf90"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/58220/playable_58223_Mastercast.prefab",
+      "sha256": "27ea06dc45f2a3a26cd8a1283f320eac7d3a9c9fe8f264a656b350a748a57a8e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/58220/playable_58224_Mastercast.prefab",
+      "sha256": "f90d27c53cd5bbd34ffd0cbdbffcdf16bde1ea3a3f55be8c0adf4bbd3480f0e1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/58230/playable_58233_Mastercast.prefab",
+      "sha256": "813bd0675d6faae51d0736a9bd6aa07e8d92b7d4679fd7d9d6bb1a1bd9fbc38c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/58250/playable_58252_Mastercast.prefab",
+      "sha256": "fab143b7ff4b1c9dcb4780e5921510ad6c2362c7502efca0573140f259c5a666"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/58250/playable_58253_Mastercast.prefab",
+      "sha256": "be6dbaa952bf162128b2a93d1d72ad94ddb86f4b827caf634eed6af1fa8ce5c1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/58250/playable_58254_Mastercast.prefab",
+      "sha256": "44b847926ac11cae1ffeb3694742542e56f44b107b47ad91f59f00d97abcbc92"
+    }
+  ],
+  "validation": {
+    "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.StatusMaterials.cs",
+    "sha256": "47cbbfcf9d81e14afedcf74cbd33144b41053f898be83b3d58b1191410af98d7"
+  },
+  "adaptation": "Namespace and C# 9 namespace braces only. Preserve CustomApplyObj, ApplyTargetOfNullAttr, Init and Play selection and binding side effects.",
+  "limits": [
+    "The seven original master-cast graphs still require their original skeleton animation and track dependencies. Actual native material graphs are used as modified fixture templates only."
+  ]
+}

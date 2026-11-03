@@ -10,6 +10,8 @@
 
 状态实体表现代码取所选 `884_156692` 已核验的 Assembly-CSharp.dll、Framework.FirstPass.Runtime.dll 与七份应用／框架源码；共享层数和可叠层元数据另登记五份原始边界证据。原文件、22个核心方法的显式实体访问替换核对、原脚本fileID、诊断／绑定适配、输出C#／meta及依赖哈希见[状态实体表现代码来源](battle-animation/status-view-runtime-source-manifest.json)，入口为 `scripts/prepare_battle_status_view_runtime.py`。本批复用既有原生水波粒子夹具，无新增美术或完整素材快照；行为与验证范围见[战斗执行](../../docs/features/battle-execution.md)。
 
+原生自定义目标绑定取所选 `884_156692` 的 `GameFramework.Runtime.dll` 与 `ApplyByCustom.cs`，三个方法体不变，保留原CustomApplyObj和无目标类型约束时的标记字段；复用依赖八个方法的当前源码核对、七个原生施法图使用点的已核验导出哈希、脚本fileID和输出哈希见[自定义目标绑定来源](battle-animation/status-custom-runtime-source-manifest.json)。入口为 `scripts/prepare_battle_status_custom_runtime.py`，未据此转换或删减七个完整施法图。
+
 原生全局冰冻图取所选 `884_156692` 的已核验客户端程序集、`PlayableMaterialBoundingBoxProvider` 与两个原生 `playable_Frozen_1/2` 依赖 prefab；代码适配和脚本fileID见[冰冻代码来源](battle-animation/status-frozen-runtime-source-manifest.json)。原生导出 meta 的 bundle 名定位到 APK 中两个共享依赖包，逐包核对当前索引、原始 GameObject 名称／对象哈希和 CAB 来源；完整40项资产、15张全mip纹理、17份材质、5份网格、2个完整prefab及1份完整Windows shader的输入／输出哈希、依赖与显式资源目录见[冰冻图来源](battle-animation/status-frozen-assets-source-manifest.json)。转换入口为 `scripts/prepare_battle_status_frozen_runtime.py` 与 `scripts/prepare_battle_status_frozen_assets.py`，复用既有完整图转换器；独立共享依赖对象不伪装为地址索引条目。
 
 原生状态动画暂停输入取所选 `884_156692` 已核验程序集、`MyPlayableAnimationControllerPause` 与 `AnimationController`；五个播放节点方法、三个控制器方法的当前源码核对、脚本fileID、诊断适配及输出哈希见[暂停代码来源](battle-animation/status-pause-runtime-source-manifest.json)。原24390完整播放图及其原APK对象、Windows原生转换缓存、所有mip／Shader和显式加载绑定见[暂停资源来源](battle-animation/status-pause-assets-source-manifest.json)；重建入口为 `scripts/prepare_battle_status_pause_runtime.py`／`scripts/prepare_battle_status_pause_assets.py`。本批复用完整图转换入口，未生成完整素材快照；实现和验证范围见[战斗执行](../../docs/features/battle-execution.md)。

@@ -157,6 +157,9 @@ namespace Zjcs.Editor.Combat
                 Require(materials.All(m => Mathf.Approximately(m.GetFloat("_DitherAlpha"), .123f)), "renderer branch keeps overlapping lease");
                 rendererProperties.ReturnFloat("_DitherAlpha"); Restored();
                 Object.DestroyImmediate(rendererTarget);
+                var customSteps = CheckCustomMaterialTarget(prefab, root, actor, manager, materials, Pump, bounds, label);
+                while (customSteps.MoveNext()) yield return customSteps.Current;
+                Restored();
                 manager.RemoveAllPlayable(true); center.RemoveAll();
                 Object.DestroyImmediate(root);
                 Require(baseline.SequenceEqual(CaptureSceneRendererCamera(bounds, label + "-restored")), "native character GPU pixels return to exact baseline");
@@ -169,6 +172,58 @@ namespace Zjcs.Editor.Combat
                 Object.DestroyImmediate(properties); Object.DestroyImmediate(attachment);
                 if (root) Object.DestroyImmediate(root);
             }
+        }
+
+        private static IEnumerator CheckCustomMaterialTarget(GameObject prefab, GameObject scope, GameObject actor,
+            MyPlayableManager manager, Material[] materials, Func<IEnumerator> pump, Bounds bounds, string label)
+        {
+            var firstTarget = new GameObject("Custom apply material target A"); firstTarget.transform.SetParent(scope.transform, false);
+            var secondTarget = new GameObject("Custom apply material target B"); secondTarget.transform.SetParent(scope.transform, false);
+            MeshMaterialProperty Receiver(GameObject go)
+            {
+                var renderer = go.AddComponent<MeshRenderer>(); renderer.sharedMaterials = materials;
+                var receiver = go.AddComponent<MeshMaterialProperty>(); receiver.MeshRenderer = renderer; receiver.Init(); return receiver;
+            }
+            var firstReceiver = Receiver(firstTarget); var secondReceiver = Receiver(secondTarget);
+            var template = Object.Instantiate(prefab, scope.transform); template.SetActive(false);
+            var config = template.GetComponentInChildren<MyPlayableMaterialProperty>(true);
+            // A modified fixture template isolates the original custom binding;
+            // no official native graph or its serialized configuration is edited.
+            Object.DestroyImmediate(config.GetComponent<ApplyBySource>());
+            var custom = config.gameObject.AddComponent<ApplyByCustom>(); custom.CustomApplyObj = firstTarget;
+            var graph = manager.Play(template, actor, actor);
+            var leaf = graph.GetComponentInChildren<MyPlayableMaterialProperty>(true);
+            Require(leaf.myApplyComponent == firstReceiver && leaf.mySource == actor && leaf.myTarget == actor,
+                "original custom target overrides source/target while retaining them as context");
+            yield return pump();
+            graph.Stop(true); yield return pump();
+            var binding = leaf.GetComponent<ApplyByCustom>();
+            int initialized = 0, played = 0;
+            Action<MyPlayable> initializedHandler = entry =>
+            {
+                Require(entry.myApplyComponent == firstReceiver, "custom Init resolves the current configured object");
+                initialized++; binding.CustomApplyObj = secondTarget;
+            };
+            Action<MyPlayable> playedHandler = entry =>
+            {
+                Require(entry.myApplyComponent == secondReceiver, "custom Play re-evaluates the object after Init"); played++;
+            };
+            leaf.OnInit += initializedHandler; leaf.OnPostPlay += playedHandler;
+            try
+            {
+                var replay = manager.Play(template, actor, actor);
+                Require(ReferenceEquals(replay, graph), "custom binding runs on an actual native material graph pooled instance");
+                yield return pump();
+                Require(initialized == 1 && played == 1 && leaf.myApplyComponent == secondReceiver,
+                    "custom Init and Play each run once after pool reset and retain the final receiver");
+                Require(materials.All(material => material.IsKeywordEnabled("_DITHER_FADE")
+                    && Mathf.Approximately(material.GetFloat("_DitherAlpha"), config.FloatCurve.Evaluate(1))),
+                    "custom selected receiver drives the real native character material effect");
+                CaptureSceneRendererCamera(bounds, label + "-custom-target");
+                replay.Stop(true); yield return pump();
+            }
+            finally { leaf.OnInit -= initializedHandler; leaf.OnPostPlay -= playedHandler; }
+            Debug.Log("[Original custom target] Native character material graph fixture: source/target retained, configured receiver selected, Init-to-Play retargeting and actual pool replay passed.");
         }
 
         private sealed class StatusMaterialFactory : IStoryPlayableInstanceFactory
