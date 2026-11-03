@@ -27,7 +27,7 @@ def prepare(work):
     (assets / 'Editor/Validation.asmdef').write_text(json.dumps(dict(name='PartnerGiftValidation', includePlatforms=['Editor'],
         references=['Zjcs.Offline.Progression', 'Zjcs.Offline.State', 'Zjcs.Official.Partners'])), encoding='utf8')
     (project / 'Packages').mkdir()
-    (project / 'Packages/manifest.json').write_text('{"dependencies":{"com.unity.modules.jsonserialize":"1.0.0","com.unity.modules.animation":"1.0.0","com.unity.modules.audio":"1.0.0"}}', encoding='utf8')
+    (project / 'Packages/manifest.json').write_text('{"dependencies":{"com.unity.modules.jsonserialize":"1.0.0","com.unity.modules.animation":"1.0.0","com.unity.modules.audio":"1.0.0","com.unity.nuget.newtonsoft-json":"3.2.1"}}', encoding='utf8')
     (project / 'ProjectSettings').mkdir()
     shutil.copy2(ROOT / 'unity/ProjectSettings/ProjectVersion.txt', project / 'ProjectSettings/ProjectVersion.txt')
     return project

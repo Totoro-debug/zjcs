@@ -20,6 +20,10 @@ namespace Zjcs.Presentation.Home
         private void OpenPartnerRoster()
         {
             CloseDialog();
+            var conversations = host.PartnerConversationOpenRefresher?.RefreshOnOpen();
+            if (conversations != null && !conversations.IsApplied
+                && conversations.Status != ProgressionResultStatus.Unchanged)
+                Notify(conversations.Message ?? "伙伴通话刷新失败");
             host.PartnerTipDots?.Refresh();
             var root = new GameObject("PartnerRosterDialog", typeof(RectTransform), typeof(Image), typeof(Button));
             root.transform.SetParent(canvas.transform, false);

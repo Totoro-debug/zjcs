@@ -1,11 +1,62 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using Zjcs.Official.Partners;
 
 namespace Zjcs.Offline.Progression
 {
+    // Own the confirmed open-only trigger at the progression boundary so Home
+    // and the native panel use the same original-condition transaction.
+    public sealed class OfflinePartnerConversationOpenRefresher
+    {
+        private readonly OfflineMainlineProgressSession session;
+        private readonly OfficialCharacterCatalog character;
+        private readonly IPartnerConversationConfiguration configuration;
+        private readonly IOfflinePartnerConversationWorld world;
+        private readonly Func<DateTime> clock;
+        private readonly Func<bool> functionLimited;
+        private readonly int serverTimeZoneHours;
+
+        public OfflinePartnerConversationOpenRefresher(OfflineMainlineProgressSession session,
+            OfficialCharacterCatalog character, OfficialPartnerCatalog partners,
+            Func<DateTime> clock, Func<bool> functionLimited, int serverTimeZoneHours)
+        {
+            this.session = session ?? throw new ArgumentNullException(nameof(session));
+            this.character = character ?? throw new ArgumentNullException(nameof(character));
+            if (partners == null) throw new ArgumentNullException(nameof(partners));
+            this.clock = clock ?? throw new ArgumentNullException(nameof(clock));
+            this.functionLimited = functionLimited ?? throw new ArgumentNullException(nameof(functionLimited));
+            this.serverTimeZoneHours = serverTimeZoneHours;
+
+            var conditionRules = new PartnerConversationConditionRules(partners.Conditions,
+                partners.Rows("conditions"));
+            configuration = OfficialPartnerConversationAssetCatalog.LoadDefault().Load(conditionRules.Bind);
+            world = new OfflinePartnerConversationWorld(session,
+                OfficialPartnerConversationWorldAssetCatalog.LoadDefault());
+        }
+
+        public ProgressionResult RefreshOnOpen()
+        {
+            try
+            {
+                var identity = session.EnsureLocalActorIdentities();
+                if (!identity.IsApplied && identity.Status != ProgressionResultStatus.Unchanged) return identity;
+
+                var player = new OfflinePartnerConversationPlayer(session, character, configuration,
+                    world, clock, _ => { });
+                var transactions = new OfflinePartnerConversationService(session, character, player,
+                    functionLimited, serverTimeZoneHours, () => { });
+                return transactions.RefreshOnPanelOpen();
+            }
+            catch (IOException error) { return Invalid(error.Message); }
+            catch (UnauthorizedAccessException error) { return Invalid(error.Message); }
+        }
+        private static ProgressionResult Invalid(string message) => new ProgressionResult {
+            Status = ProgressionResultStatus.InvalidState, Message = message };
+    }
+
     // User-confirmed local boundary for the unavailable refresh/ack server:
     // refresh only when opening the partner panel; reward each newly accepted
     // node atomically with its original history/status transition.

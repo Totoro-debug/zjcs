@@ -61,6 +61,7 @@ namespace Zjcs.Presentation.Home
         private OfflinePartnerDetailPropertySource partnerDetailSource;
         private OfflinePartnerGiftPlayer partnerGiftPlayer;
         private OfflinePartnerTipDotRuntime partnerTipDots;
+        private OfflinePartnerConversationOpenRefresher partnerConversationOpenRefresher;
         private OfflineProfessionImageResourceLoader partnerDetailImages;
         private OfficialPartnerGiftPageAssetCatalog partnerGiftAssets;
         private OfflinePartnerGiftRuntimeBindings partnerGiftBindings;
@@ -160,6 +161,7 @@ namespace Zjcs.Presentation.Home
         public OfficialPartnerRosterAssetCatalog PartnerRosterAssets => partnerRosterAssets;
         public OfflinePartnerRosterUiServices PartnerRoster => partnerRoster;
         public OfflinePartnerTipDotRuntime PartnerTipDots => partnerTipDots;
+        public OfflinePartnerConversationOpenRefresher PartnerConversationOpenRefresher => partnerConversationOpenRefresher;
         public OfficialPartnerDetailPropertyAssetCatalog PartnerDetailAssets => partnerDetailAssets;
         public OfflinePartnerDetailPropertyServices PartnerDetailServices => partnerDetailServices;
         public OfficialPartnerGiftPageAssetCatalog PartnerGiftAssets => partnerGiftAssets;
@@ -777,6 +779,8 @@ namespace Zjcs.Presentation.Home
             partnerDetailAssets = OfficialPartnerDetailPropertyAssetCatalog.LoadDefault();
             var friendshipAssets = OfficialPartnerFriendshipAssetCatalog.LoadDefault();
             var partnerCatalog = OfficialPartnerAssetCatalog.LoadDefault();
+            partnerConversationOpenRefresher = new OfflinePartnerConversationOpenRefresher(profile,
+                progression.Catalog, partnerCatalog, () => DateTime.UtcNow, () => false, 8);
             partnerDetailImages = new OfflineProfessionImageResourceLoader(partnerDetailAssets.Common.Images);
             partnerGiftAssets = OfficialPartnerGiftPageAssetCatalog.LoadDefault();
             var partnerGiftImages = new OfflineProfessionImageResourceLoader(partnerGiftAssets.Images);

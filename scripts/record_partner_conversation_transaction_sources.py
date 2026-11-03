@@ -47,6 +47,7 @@ def main():
         'unity/Assets/Official/Partners/partner-dialogue-rules.json',
         'unity/Assets/Game/Runtime/Offline/Progression/OfflineInventoryOperations.cs']
     validations = ['scripts/prepare_partner_conversation_transaction_validation.py',
+        'scripts/prepare_partner_gift_validation.py',
         'scripts/fixtures/partner_conversation_transaction_validation.cs',
         'scripts/fixtures/partner_local_actor_identity_validation.cs']
     receipt = dict(manifest=version, source_sha256=sources,

@@ -177,6 +177,20 @@ public sealed class PartnerConversationTransactionRunner : MonoBehaviour
             && clonePlayer.GetNpcFriendshipLevel(8402) == 1 && player.GetNpcFriendshipLevel(8402) >= 40,
             "Original conditions inside reward transaction read the cloned player, without publishing it");
         PartnerLocalActorIdentityValidation.Validate(slots, session, character, conversations, now);
+        var openSlots = new ProfileSlotCatalog(Path.Combine(work, "open-refresher-profiles"));
+        var openSession = OfflineMainlineProgressSession.OpenCharacter(openSlots, openSlots.CreateSlot());
+        Require(openSession.ApplyCharacterMutation(value => {
+            value.CharacterCreated = true; value.CharacterName = "通话入口刷新验证"; value.Level = 1;
+            value.CharacterProperties.NpcFriendships.Add(new OfflineNpcFriendship { NpcClassId = 8402, Level = 40 });
+        }).IsApplied, "Create independent profile for the production open refresher");
+        var openRefresher = new OfflinePartnerConversationOpenRefresher(openSession, character, partner,
+            () => now, () => false, 8);
+        Require(openRefresher.RefreshOnOpen().IsApplied
+            && openSession.Save.Player.CharacterProperties.NpcConversations.Records.Single().DialogueClassId == 2021,
+            "Open refresher loads original conditions and creates the eligible first conversation");
+        Require(openRefresher.RefreshOnOpen().Status == ProgressionResultStatus.Unchanged
+            && openSession.Save.Player.CharacterProperties.NpcConversations.Records.Count == 1,
+            "Open refresher reload is idempotent");
         Debug.Log("PARTNER_CONVERSATION_TRANSACTIONS_PASSED: actual open-only creation, original complete dialogue 2021, exact node reward 110 x3, disk rollback, receipts, same-day 2022 chain and original daily quota. Native UI/Player not exercised.");
     }
 }

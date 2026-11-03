@@ -19,19 +19,20 @@
     "unity/Assets/Game/Runtime/Offline/Progression/OfflineInventoryOperations.cs": "a5d785eece9dea609d5a3ebc0beb73bb329eaac42e596fe7127307cf71bffd45"
   },
   "installed_output_sha256": {
-    "unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerConversationService.cs": "a5aff56a12491d9e3ba8c1bafaadd9c43bddba59309c7308b4cd27083ed63976",
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerConversationService.cs": "648b8486fedbfcd2d15942e118281e19792b18ad8b996147259700e7f8012f69",
     "unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerConversationService.cs.meta": "e8a76abbfdc5f83d9c29a7a9eb35f6e2f78dd267677e24d26cc7658566914494",
     "unity/Assets/Game/Runtime/Offline/Progression/OfflinePartnerConversationPlayer.cs": "ad8d702c17e0bebb7faf0872f16fd342f90b21595395d9621a5403b11146becb",
     "unity/Assets/Game/Runtime/Offline/Progression/OfflineLocalActorIdentities.cs": "440b218cde44dfc4239031c54ab19ee46d510cc92b60932e014f52df8cfddac3",
     "unity/Assets/Game/Runtime/Offline/Progression/OfflineLocalActorIdentities.cs.meta": "d276c5fb20a66a3359cd648590c1cf9fe8318417a34728cbcd9f0a903a46d997",
-    "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterPropertyProgress.cs": "aeb2919e455e844a401b510c4a7151c29e6211b55819b32b6266665c2cd2bce4"
+    "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterPropertyProgress.cs": "e3763fe298f3f19bab78d2997fdb005625ddeeda510ee4ec20f2f4a922b2b8af"
   },
   "validation_source_sha256": {
-    "scripts/prepare_partner_conversation_transaction_validation.py": "1bdddc69f7b426517f437926a379b6976d0fa230adf4040b4f180efde35ac148",
-    "scripts/fixtures/partner_conversation_transaction_validation.cs": "ec233a3f05d4cf410c541a23e2d5d815d6636d5780e7b778a3d13112f2555b60",
+    "scripts/prepare_partner_conversation_transaction_validation.py": "d8db82d00daa58aedcb611b4ab2d9e8987e69afcfb9761a60dd78468f37b46a6",
+    "scripts/prepare_partner_gift_validation.py": "b213108c3f42579f82bdcb1dc2d8dfc9f54ed8a5dbbfa89e080e9163212971c1",
+    "scripts/fixtures/partner_conversation_transaction_validation.cs": "1da42fb5eb44ea7f7b7ba99d6813c677d80a016b3d28a83940cce9a53f383d53",
     "scripts/fixtures/partner_local_actor_identity_validation.cs": "305dbc5c33d27bce3d940c0478ef2852562d22964c247b9741b7974d4dd94bda"
   },
-  "recorder_sha256": "414b7fabf2cf69ebc5a1115be9fa2cd8f959849fb7f16aca5be1b7561205810c",
+  "recorder_sha256": "87997c15c287a0132bd8ec60b2fd698298f36b693d2455c43371c67bc6b83b7f",
   "original": [
     "Use original NPC Dialogues order, node unlock/chain conditions, Auto type and original daily check/record methods.",
     "Use original Create and SetCurrentNodeAndUpdateStatus; capture their update notification until disk commit.",
