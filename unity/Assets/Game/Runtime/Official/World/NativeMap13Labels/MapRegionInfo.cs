@@ -17,6 +17,14 @@ namespace Zjcs.Official.World.NativeMap13Labels
         // JsonUtility changes null lists to empty lists. Keep the original null branch.
         public bool HasCombatRatingLevelValues;
         public int RecommendCombatRatingIndex;
+        [NonSerialized] private Func<bool> unlockTimeReached;
+        [NonSerialized] private Func<DateTime> unlockTime;
+        public void BindUnlockTime(Func<bool> reached, Func<DateTime> time)
+        {
+            unlockTimeReached = reached ?? throw new ArgumentNullException(nameof(reached));
+            unlockTime = time ?? throw new ArgumentNullException(nameof(time));
+        }
+        public DateTime GetMapRegionUnlockTime() => (unlockTime ?? throw new InvalidOperationException("Region time is not bound."))();
         public long CombatRating
         {
             get
@@ -33,7 +41,7 @@ namespace Zjcs.Official.World.NativeMap13Labels
         }
         public bool ExistLimit()
         {
-            ValidateScope();
+            if (unlockTimeReached == null) ValidateScope();
             if (LimitLevel <= 0 && LimitServerRank == Rank.None) return ExistReleaseTimeLimit();
             return true;
         }
@@ -41,9 +49,8 @@ namespace Zjcs.Official.World.NativeMap13Labels
         public bool IsLimited(int level) => IsLimitedByType(level) != MapRegionLimitType.None;
         public MapRegionLimitType IsLimitedByType(int level)
         {
-            ValidateScope();
-            // The original IsUnlockTimeReached always returns true for the
-            // verified zero server-rank/date fields of every Map13 region.
+            if (unlockTimeReached == null) ValidateScope();
+            else if (!unlockTimeReached()) return MapRegionLimitType.RegionUnlockTime;
             if (level < LimitLevel) return MapRegionLimitType.Level;
             return MapRegionLimitType.None;
         }

@@ -16,7 +16,7 @@
 
 地区表保留各区原等级、子位阶、奖励与相邻区。时间条件包含无时间限制和位阶4加14至32天的不同偏移；不得把所有地区统一改成14天。原 `Common.MapRegionInfo` 保留时间条件先于等级的判定、超过指定服务器位阶立即通过、缺少开放日期时关闭等分支；原 `MapUtils.TryGetMapUnlockTimeByServerRank` 在开放日期上 `AddDays(offset)`。本地日期来源的已确认替代见下文。
 
-地面 prefab 的原层级含4224个 Unity 对象，引用区域灯、世界标签、水面及 `SeaRendererReplacement`。其 `Water_map13` 是实际引用的共享水面配置，继续按原 CAB／PPtr 恢复；名称含13不表示改用另一张地图的配置。独立小地图引用43份 `MinimapRegionTilemap/RegionGround_*` 原 prefab；区域地面已原生转换，完整小地图根与正式地图接线仍待完成。
+地面 prefab 的原层级含4224个 Unity 对象，引用区域灯、世界标签、水面及 `SeaRendererReplacement`。其 `Water_map13` 是实际引用的共享水面配置，继续按原 CAB／PPtr 恢复；名称含13不表示改用另一张地图的配置。独立小地图引用43份 `MinimapRegionTilemap/RegionGround_*` 原 prefab；区域地面及完整小地图根已原生转换，正式地图接线仍待完成。
 
 ## 完整还原部分
 
@@ -41,6 +41,8 @@
 公共网格输入已从当前所选版本单独提取：140×120网格、43份区域揭格列表、61份身体模板、1021个实体放置，资源为 `Resources/World/Mainline/Visibility/Map16/visibility` 与 `bodies`。原 `MapRoot_16` 完整雾层 subtree 与依赖为 `Resources/World/Mainline/Fog/Map16`。来源分别见[公共网格输入](../../assets/reference/official-map/mainline-grid-visibility-data-source-manifest.json)和[公共雾层](../../assets/reference/official-map/mainline-grid-fog-source-manifest.json)。这些当前版载荷尚未接入本图正式宿主。
 
 原 `MapRegionLimitStatusRefreshForRankUnlockTime` 的 UniTask 状态机已迁移，按原顺序取得地区开放时间、等待并刷新状态。公共标签通过每实例 `IMapRegionTime` 注入日期和位阶，保留原 `CultureTimeSpanArg` 的格式计算；只增加每实例语言服务注入，避免修改其他地图的全局语言。区域行的时间回调属于标签实例，不写回共享资源。当前版原倒计时格式源码与历史已迁移的该文件逐字节一致，外围程序集并不相同；来源及适配哈希见[地区时间清单](../../assets/reference/official-map/mainline-region-time-source-manifest.json)。
+
+完整原小地图工厂也已消费同一时间适配，保留本图43区的原时间字段。隔离 GUI Play Mode 已通过工厂创建本图实例，核对全部偏移、位阶高低与准确到期边界；另正常初始化本图当前原地区说明 prefab，实际查看原“鲸背岛一”名称与倒计时，等待原刷新任务解除时间锁，并核对重进、独立实例和释放。小地图完整数据响应仍未接通，此项为原标签和公共工厂的组合检查，详细边界见[公共模块](../features/mainline-map-modules.md)。
 
 Unity 2022.3.57f1c2 内置屏隔离图形 Play Mode 已通过公共 `MainlineNativeGround` Interface 加载、释放和重新加载 Map15／16 原地面，检查原组件绑定、几何、URP／相机恢复，并实际查看两图各三张画面。鲸背岛以原入口坐标和显式地区夹具验证私有阴影、单区公开后的原 `MapEnvEffect.UnlockRegion`／区域灯演出及揭格回调，重新加载保留同一区域灯光状态。状态刷新本身不替代原区域激活动作；公共女神像路径已接入这项地面调用。另核对原标签倒计时文字网格，实际查看位阶4倒计时、到期自动解除时间锁、另一未到期地区及其位阶5取消时间锁的四张运行画面。到期检查只推进注入时钟并等待原 UniTask 刷新，不直接调用业务回调或视图刷新。隔离工程按依赖闭包携带原字体、材质、TMP Settings 及其 shader include，文字不以非空字符串代替渲染验证。
 

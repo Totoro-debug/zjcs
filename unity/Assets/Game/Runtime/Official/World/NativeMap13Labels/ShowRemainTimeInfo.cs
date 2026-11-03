@@ -75,7 +75,7 @@ public class ShowRemainTimeInfo : UIBase
 
 	private void RefrshTimeText(TimeSpan timeSpan)
 	{
-		object obj = new CultureTimeSpanArg(timeSpan, mFormat);
+		object obj = new CultureTimeSpanArg(timeSpan, mFormat, new BoundTimeText(mRemainTimeText.LocalizationTextService));
 		if (mCustomKey != null)
 		{
 			mRemainTimeText.SetKey(mCustomKey, obj);
@@ -137,6 +137,14 @@ public class ShowRemainTimeInfo : UIBase
 		{
 			StartTimer();
 		}
+	}
+	private sealed class BoundTimeText : ICultureTextFormatter
+	{
+		private readonly ILocalizationTextService text;
+		public BoundTimeText(ILocalizationTextService text) { this.text = text; }
+		public LanguageType LanguageType => text.CurrentLanguage;
+		public string GetText(string key) => text.GetText(key, LanguageType);
+		public string GetTextFormatted(string key, params object[] args) => text.GetTextFormated(key, LanguageType, args);
 	}
 }
 

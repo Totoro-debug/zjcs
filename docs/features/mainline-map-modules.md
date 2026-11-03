@@ -73,6 +73,10 @@
 
 原地区倒计时通过 `IMapRegionTime` 注入地区开放日期、当前时间和角色位阶，标签消费原刷新状态机及原时间格式；日期规则不散落在地形或 HUD 中。`OfflineCharacterRankRegionTime` 使用现有角色进度存档，标签只绑定自身地区副本和语言服务。已确认的本地日期策略、43区边界／存档检查与原倒计时画面范围集中见[鲸背岛](../maps/map-16.md)，正式地图宿主的接入尚未完成。代码与来源见[地区时间清单](../../assets/reference/official-map/mainline-region-time-source-manifest.json)。
 
+完整原小地图工厂另通过 `MainlineMiniMapBindings.RegionTime` 消费同一地区计时模块，并核对时钟、地区数据与原根地图ID。每个实例复制原地区行和区域列表，地区说明与强度标签读取同一副本；原配置资源不保存窗口回调。原 `MapRegionLimitStatusRefreshHelper` 的时间分支及 `MapRegionLimitStatusRefreshForRankUnlockTime` 状态机已恢复到共享小地图标签路径，保持时间先于等级、到期刷新和取消顺序。原 `ShowRemainTimeInfo` 使用该实例的时钟和文本模块，保留原倒计时计算与格式；正式存档宿主组合仍未接通。
+
+隔离图形 Play Mode 已通过同一工厂核对鲸背岛全部原时间偏移、超过位阶4立即通过、较低位阶继续受限、准确到期边界及两个窗口的时钟／配置隔离。完整当前原地区说明 prefab 正常初始化，实际画面中的原名称与倒计时已查看；推进注入时钟后由原 UniTask 自动解除时间限制，重进会重建计时。混合条件夹具组合本图原时间字段与泽之国一项原等级门槛，验证时间优先、随后切换等级提示及原等级事件解除，不写回地图配置。标签关闭后保留父小地图仍需的边线订阅，整个模块销毁后全部订阅释放；原 HUD／全屏页／筛选模拟点击与实时白雾回归通过。此项使用显式宿主与隔离时钟，未覆盖正式入口、完整鲸背岛小地图或 Windows Player。
+
 入口组件保留原 MonoScript GUID 和 `MovedFrom`；纯 C# 模块沿用原脚本 `.meta`，原 prefab、层级、坐标、动画、数值、执行次序与存档 DTO 保持兼容。`OfficialMainlineUiCatalog` 按当前 `MapProfile.NativeUiRoot` 缓存原 UI 目录，HUD、雕像、奖励列表、探寻与小地图共用它；通用文本不再由女神像持有或加载。
 
 公共英雄配置通过 `heroTemplateIds` 声明本图原模板列表，`OfficialMainlineInteractionCatalog` 校验模板身份、唯一性、顺序、原周期权重及地图／版本；历史四种模板的既有载荷保持兼容。共享转换器接收该列表，拒绝尚未迁移的周期组规则，英雄效果与每日访问仍由同一个雕像模块消费。当前鲸背岛已提取六种原模板，正式地图接线与验证范围见[鲸背岛](../maps/map-16.md)。

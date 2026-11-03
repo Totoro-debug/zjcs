@@ -18,6 +18,7 @@ def build():
     for relative in ('common-source/Common/MapRegionInfo.cs', 'common-source/MapUtils.cs',
             'client-source/MapRegionLimitStatusRefreshHelper.cs',
             'client-source/MapRegionLimitStatusRefreshForRankUnlockTime.cs',
+            'client-source/ShowRemainTimeInfo.cs',
             'framework-firstpass-source/Framework/CultureTimeSpanArg.cs'):
         path = ROOT / '.tools/source-packages/official-code' / relative
         if prepared['manifest'] != '884_156692' or expected.get(path.relative_to(ROOT).as_posix()) != sha(path.read_bytes()):
@@ -52,6 +53,18 @@ def build():
         'unity/Assets/Game/Runtime/Presentation/World/Zjcs.Presentation.World.asmdef',
         'scripts/prepare_mainline_region_time.py', 'scripts/prepare_mainline_ground_validation.py',
         'scripts/prepare_mainline_map15_world_view.py']
+    paths += ['scripts/prepare_unity_map13_region_components.py',
+        'unity/Assets/Game/Runtime/Official/World/NativeMap13Labels/MapRegionInfo.cs',
+        'unity/Assets/Game/Runtime/Official/World/NativeMap13Labels/MapRegionLimitStatusRefreshHelper.cs',
+        'unity/Assets/Game/Runtime/Official/World/NativeMap13Labels/ShowRemainTimeInfo.cs',
+        'unity/Assets/Game/Runtime/Official/World/NativeMap13Labels/MapRegionLimitStatusRefreshForRankUnlockTime.cs',
+        'unity/Assets/Game/Runtime/Official/World/NativeMap13Labels/MapRegionLimitStatusRefreshForRankUnlockTime.cs.meta',
+        'unity/Assets/Game/Runtime/Official/World/NativeMap13Labels/Zjcs.Official.World.NativeMap13Labels.asmdef',
+        'unity/Assets/Game/Editor/Map13MiniMap/Zjcs.Editor.Map13.MiniMap.asmdef']
+    paths += [p.relative_to(ROOT).as_posix() for p in
+        sorted((ROOT / 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap').iterdir()) if p.is_file()]
+    paths += [p.relative_to(ROOT).as_posix() for p in
+        sorted((ROOT / 'unity/Assets/Game/Editor/Map13MiniMap').glob('OfficialMainlineMiniMapRootAcceptance*.cs*'))]
     fixture = ROOT / 'unity/Assets/Game/Editor/MainlineNativeGround'
     outputs += [ROOT / p for p in paths] + sorted(p for p in fixture.iterdir() if p.is_file())
     proof = dict(format=1, manifest=prepared['manifest'], prepared=record(prepared_path), original_code=inputs,
@@ -61,6 +74,8 @@ def build():
         formatter_baseline=dict(commit=BASELINE, path=formatter, sha256=sha(original.encode()),
             verification='Reversing only the optional text-service injection reproduces the installed original formatter byte for byte after LF normalization.'),
         definition=record(ROOT / 'unity/Assets/Official/World/Map/16/map16.json'),
+        minimap_label_definition=record(ROOT / 'unity/Assets/Game/Resources/Map16/Native/region-label-data.json'),
+        minimap_label_definition_receipt=record(ROOT / 'assets/reference/official-map/map16-world-view-source-manifest.json'),
         confirmed_policy='鲸背岛使用角色位阶与本地时间：首次达到位阶4后按各区原14至32天偏移计时；超过位阶4立即通过。保留等级、绳索剧情及其他条件。不应用服务器合服加速。',
         operation='Preserve original rank-none/lower/higher/missing-date branches, AddDays offset, inclusive time boundary and time-before-level. Restore the original UniTask refresh state machine with explicit clock/date services and the missing nested Awaiter qualification. Inject countdown localization per instance without changing format calculations. Region callbacks belong to each label instance. Existing rank-up records are retained as the first acquisition date.',
         outputs=[dict(path=p.relative_to(ROOT).as_posix(), sha256=sha(p.read_bytes().replace(b'\r\n', b'\n'))) for p in outputs],

@@ -16,6 +16,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
         MiniMapResourcePointManager IMiniMapFilterMapContext.ResourcePointManager => ResourcePointManager;
         internal MainlineMiniMapBindings Bindings;
         internal MainlineMiniMapVisibilityAgent LiveVisibility;
+        internal MainlineMiniMapLabels TimedLabels;
         private MiniMapManagedContext State => Bindings.State;
         protected override MiniMapSettings Settings => Bindings.Settings;
         protected override int MinimapConfigId => Bindings.MinimapConfigId;
@@ -30,7 +31,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
         public override IMiniMapRegionAssetLease LoadAssetByGuid(string guid) => State.LoadAssetByGuid(guid);
         public override GameObject InstantiateRegion(GameObject prefab,Transform parent,bool worldPositionStays)
             => State.InstantiateRegion(prefab,parent,worldPositionStays);
-        public override IMap13LabelServices LabelServices => State.LabelServices;
+        public override IMap13LabelServices LabelServices => TimedLabels ?? State.LabelServices;
         public override bool HasGridVisibilityAgent => LiveVisibility || State.HasGridVisibilityAgent;
         public override event Action<Pos2d,bool,bool> OnPosVisibilityUpdate
         {
@@ -39,8 +40,10 @@ namespace Zjcs.Offline.World.MainlineMiniMap
         }
         public override bool TryGetMapLiteData(int map,out MapRootEntityLiteSingleInfo info) => State.TryGetMapLiteData(map,out info);
         public override IMiniMapGridMover GetSpawnGridMover(int map) => State.GetSpawnGridMover(map);
-        public override IReadOnlyDictionary<int,MiniMapRegionInfo> GetMapRegionDict(int map) => State.GetMapRegionDict(map);
-        public override MiniMapRegionInfo GetRegion(int map,int region) => State.GetRegion(map,region);
+        public override IReadOnlyDictionary<int,MiniMapRegionInfo> GetMapRegionDict(int map)
+            => TimedLabels != null ? TimedLabels.GetRegions(map) : State.GetMapRegionDict(map);
+        public override MiniMapRegionInfo GetRegion(int map,int region)
+            => TimedLabels != null ? TimedLabels.GetRegions(map)[region] : State.GetRegion(map,region);
         public override int AreaToRegion(int map,int area) => State.AreaToRegion(map,area);
         public override int QueryRegion(Pos2d pos) => State.QueryRegion(pos);
         public override List<int> GetWorldMapProgresses(int map) => State.GetWorldMapProgresses(map);

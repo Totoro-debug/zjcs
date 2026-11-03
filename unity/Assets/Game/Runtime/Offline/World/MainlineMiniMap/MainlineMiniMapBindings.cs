@@ -15,6 +15,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
         public IMiniMapCharacterManager Characters;
         public MiniMapNonMaskableManager NonMaskableManager;
         public GridVisibilityAgentComponent Visibility;
+        public IMapRegionTime RegionTime;
         public MiniMapResourcePointContext ResourcePoints;
         public IMiniMapOfflineDataSource OfflineData;
         public IServiceProvider MarkerServices;

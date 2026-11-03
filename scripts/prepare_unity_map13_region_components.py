@@ -1,7 +1,7 @@
 """Restore the official world-label call path for all 106 Map13 regions.
 
-The original support passes null minimap/positions. Source tables prove that no
-Map13 region has a server-rank/date release limit; expanded scope is rejected.
+The original support passes null minimap/positions. Map13 has no time limits;
+the shared minimap additionally binds the restored provider through local clocks.
 """
 from pathlib import Path
 import json
@@ -99,13 +99,24 @@ def build():
         if name == "MapRegionDescHelper":
             text = text.replace("\t\tmMapRegionInfo = mapRegionInfo;", "\t\tmLimitStatusRefreshHelper.Services = Services;\n\t\tmMapRegionInfo = mapRegionInfo;")
         if name == "MapRegionLimitStatusRefreshHelper":
-            text = text.replace("((MapRegionLimitStatusRefreshForRankUnlockTime)(mRefreshProvider = new MapRegionLimitStatusRefreshForRankUnlockTime())).Init(mMapRegionInfo, mRemainTimeInfoUI, (Action)RefreshStatus);", 'throw new InvalidOperationException("Verified Map13 source has no server-rank/date region limits.");')
+            text = text.replace("new MapRegionLimitStatusRefreshForRankUnlockTime()", "new MapRegionLimitStatusRefreshForRankUnlockTime { Services = Services }")
             text = text.replace("new MapRegionLimitStatusRefreshProviderForLevel()", "new MapRegionLimitStatusRefreshProviderForLevel { Services = Services }")
         if name == "UIColorByLevel":
             text = text.replace("public IScriptableObjectConfig<CombatRatingConfig> CombatRatingConfig { get; set; }", "")
             text = text.replace("CombatRatingConfig.Value.TryGetLevelColor", "Services.Colors.TryGetLevelColor")
         if name == "ShowRemainTimeInfo":
             text = text.replace("TimeManager.Instance.GetDateTime()", "Services.Now").replace("TimeManager.Instance.CalcRemainSecond", "Services.CalcRemainSecond")
+            text = text.replace("new CultureTimeSpanArg(timeSpan, mFormat)", "new CultureTimeSpanArg(timeSpan, mFormat, new BoundTimeText(mRemainTimeText.LocalizationTextService))")
+            position = text.rfind("}")
+            text = text[:position] + '''\tprivate sealed class BoundTimeText : ICultureTextFormatter
+\t{
+\t\tprivate readonly ILocalizationTextService text;
+\t\tpublic BoundTimeText(ILocalizationTextService text) { this.text = text; }
+\t\tpublic LanguageType LanguageType => text.CurrentLanguage;
+\t\tpublic string GetText(string key) => text.GetText(key, LanguageType);
+\t\tpublic string GetTextFormatted(string key, params object[] args) => text.GetTextFormated(key, LanguageType, args);
+\t}
+''' + text[position:]
         if name == "MapUIBase":
             text = text.replace("protected MapComponent mMap;", "protected object mMap;")
             text = text.replace("private IMapRootManagerProxy MapRootManager { get; set; }", "")
@@ -161,7 +172,7 @@ def build():
     for name in ["Map13LabelServices", "Map13LabelData", "MapRegionInfo"]:
         p = DEST / (name + ".cs"); import_meta(p, "MonoImporter"); outputs.append(p)
     asm = DEST / (NS + ".asmdef")
-    write(asm, encode(dict(name=NS, references=["Unity.TextMeshPro", "Unity.ugui", CORE], autoReferenced=True)))
+    write(asm, encode(dict(name=NS, references=["Unity.TextMeshPro", "Unity.ugui", CORE, "UniTask"], autoReferenced=True)))
     import_meta(asm, "AssemblyDefinitionImporter"); import_meta(DEST, "DefaultImporter", folder=True); outputs.append(asm)
     game = apk.asset("config_luban", "/game_settings.g.bytes")
     constructors = Constructors(code)
@@ -196,7 +207,7 @@ def build():
         native_config_inputs=[dict(bundle=bundle, path_id=str(obj.path_id), source=apk.provenance(obj), object_sha256=sha(obj.get_raw_data())) for bundle, obj in [("config_luban",game),("scriptableconfig_modules_combatrating",rating)]],
         scope=dict(regions=106, level_limited_regions=sum(r["LimitLevel"]>0 for r in regions), time_or_server_rank_limits=0,
                    world_call="Init(CurrentMapClassId, region, null, null)",
-                   excluded="Minimap-only branches/window ancestor API and unreachable server/date limit provider; reject changed scope."),
+                   excluded="Minimap-only branches/window ancestor API. The shared region-time receipt separately records the restored time provider and callback bindings."),
         outputs=[dict(path=source_path(p), sha256=sha(p.read_bytes()), meta_sha256=sha(Path(str(p)+".meta").read_bytes())) for p in sorted(outputs)],
         generator=dict(path=source_path(Path(__file__)), sha256=sha(Path(__file__).read_bytes())),
         adapters=[dict(path=source_path(p),sha256=sha(p.read_bytes())) for p in sorted((ROOT / "unity/Assets/Game/Runtime/Offline/World/NativeMap13Labels").glob("*.cs"))],

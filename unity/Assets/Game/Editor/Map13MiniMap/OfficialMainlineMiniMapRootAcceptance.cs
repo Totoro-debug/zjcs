@@ -28,9 +28,11 @@ namespace Zjcs.Editor.Map13MiniMap
         internal Map13MaskFixture Mask;
         internal int BoundMap=13,BoundRegionCount=106;
         internal MapRootEntityLiteSingleInfo OtherLite;
+        internal IMap13LabelServices LabelOverride;
+        internal IReadOnlyDictionary<int,MiniMapRegionInfo> RegionsOverride;
         public override int MapClassId => BoundMap;
         internal Dictionary<string,GameObject> RegionalPrefabs;
-        public override IMap13LabelServices LabelServices => Mask.LabelServices;
+        public override IMap13LabelServices LabelServices => LabelOverride ?? Mask.LabelServices;
         public override bool HasGridVisibilityAgent => true;
         public override MiniMapVisibilityAgent VisibilityAgent => Mask.Agent;
         public override Pos2d CharacterGridPos => Mask.Position;
@@ -39,8 +41,8 @@ namespace Zjcs.Editor.Map13MiniMap
         public override bool TryGetMapLiteData(int map,out MapRootEntityLiteSingleInfo info)
         { if(OtherLite.MapClassId!=0&&map==OtherLite.MapClassId){info=OtherLite;return true;}return Mask.TryGetMapLiteData(map,out info); }
         public override IMiniMapGridMover GetSpawnGridMover(int map) => Mask.GetSpawnGridMover(map);
-        public override IReadOnlyDictionary<int,MiniMapRegionInfo> GetMapRegionDict(int map) => Mask.GetMapRegionDict(map);
-        public override MiniMapRegionInfo GetRegion(int map,int region) => Mask.GetRegion(map,region);
+        public override IReadOnlyDictionary<int,MiniMapRegionInfo> GetMapRegionDict(int map) => RegionsOverride ?? Mask.GetMapRegionDict(map);
+        public override MiniMapRegionInfo GetRegion(int map,int region) => RegionsOverride != null ? RegionsOverride[region] : Mask.GetRegion(map,region);
         public override int AreaToRegion(int map,int area) => Mask.AreaToRegion(map,area);
         public override int QueryRegion(Pos2d pos) => Mask.QueryRegion(pos);
         public override List<int> GetWorldMapProgresses(int map) => Mask.GetWorldMapProgresses(map);
@@ -245,6 +247,8 @@ namespace Zjcs.Editor.Map13MiniMap
             var islandModule=MainlineMiniMap.Create(islandPrefab,null,bindings);for(int i=0;i<4;i++)yield return null;
             var islandRoot=Object.FindObjectOfType<MainlineNativeMiniMapRoot>();Require(data.Requests==3&&islandRoot.MapClassId==16&&!islandRoot.GetComponent<OfflineMiniMap>().HaveDataShow.State,"Island identity and pending offline lifecycle");
             islandModule.Dispose();yield return null;Require(characters.Subscribers==0,"Island native instance releases subscriptions");
+            var timed=VerifyRegionTime(islandPrefab,bindings,state,labels,islandInput);
+            while(timed.MoveNext())yield return timed.Current;
             foreach(int map in new[]{10,11,12,14})
             {
                 var otherInput=JsonUtility.FromJson<Fixture>(File.ReadAllText(Path.Combine(Workspace,$"minimap-description-fixture-{map}.json")));

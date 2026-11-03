@@ -136,7 +136,7 @@
     },
     "output": "MiniMap_14.json",
     "nativeMeta_sha256": "758ef1a2c9bce69634662f3b0a2f14300a9cdfb412c669b5acbd8119dfbf2e05",
-    "output_sha256": "a9f5858a72aa49f95e3d09ce01cacec454c7e8a23958271ef5aea982c13fe393"
+    "output_sha256": "2fbaee87cc490e34dcec6ceaa12660080cabc707c2fe29d353f92203cd4c8235"
   },
   "root_pointer": {
     "fileID": 1709254077376921,
@@ -431,7 +431,7 @@
   "integration": [
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMap.cs",
-      "sha256": "828edebc4d4a4f3779a5f941c702860d7e20e83e0b2dc8e193656584e6d2e3c3"
+      "sha256": "8d82110650e35cdb94d6ee8f81fc12e676dbdc1b72422879743bd4015020d164"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMap.cs.meta",
@@ -455,11 +455,19 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapBindings.cs",
-      "sha256": "a4d55f77e20763799ffb1cd5a7d0ee7d0064b840ea406bbad1cac6fd99a8a4f8"
+      "sha256": "785747ba74581b6dcfab297a51fa053c9aa3da2e5e9c47079c45f3d68165710b"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapBindings.cs.meta",
       "sha256": "a8c1f20ef893ee4075c1ab01aba45dbd03b91fb151253b371a4df732ca363f29"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapLabels.cs",
+      "sha256": "2cf3761e14ec80fa45ec9067166b92ef8b9584b2e6b10d94e3c1187957e2e204"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapLabels.cs.meta",
+      "sha256": "fc25f1fe099a6ed100a9c49c2b7a897ec850a09ade2eeb95e1db8a249339c363"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapVisibilityAgent.cs",
@@ -471,7 +479,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineNativeMiniMapRoot.cs",
-      "sha256": "4570690ffcd8f713be1c0c72c413f4cf9c8a6065f29179db8aed80171a25b6db"
+      "sha256": "a181ad77060842aaf2d292f6af709615e3312a9968cdc6b3c2fae2b73a7454df"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineNativeMiniMapRoot.cs.meta",
@@ -479,7 +487,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/Zjcs.Offline.World.MainlineMiniMap.asmdef",
-      "sha256": "b583568cfa047cc653dea97e7af79ef64d91ca4ea09c3063c38ced094b901bb3"
+      "sha256": "6b81dbfef9ce3452b7e3ecc7ae269e8a98462c6b2cc128576463d531afdd5494"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/Zjcs.Offline.World.MainlineMiniMap.asmdef.meta",
@@ -491,7 +499,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.cs",
-      "sha256": "d62f28eab7e7866231dd950c1d53f9002008541334ec57fda43d6e3c57a638dd"
+      "sha256": "d8505498e720dc2e776b7b683943f4cea19305736a9a16ae76b8d2817bb1bcbe"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.cs.meta",
@@ -512,6 +520,14 @@
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Panel.cs.meta",
       "sha256": "5e4a9b2130317fb3efb21e2b29081e57f127aee00063ecef9c2f11a94668ac98"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.RegionTime.cs",
+      "sha256": "12b0489e8b28701648f32434f12b7a3d08efd97aee9cde53a50c2adce0b0ff3c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.RegionTime.cs.meta",
+      "sha256": "c22ba6294c7e7908c8072f2f4ca65aac474e242ab94a3cb3ac5aeb6eae36d983"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Visibility.cs",
@@ -2074,7 +2090,7 @@
         "guid": "66e572422a370538a09745990cda137b",
         "type": 3
       },
-      "sha256": "e31503c1467a2c4f58d3d054669f5d221cf1ddb4672cfd97b718e02f6f0f3ee4",
+      "sha256": "064b87f28b0e02947c0ad9cf8783fa7831bc32f8ed9dc69f91337f1f6b6246e4",
       "meta_sha256": "6cb779f6b51525b89a6b97fc85f9fbf8e3b86e2289068c5ba34040e91466d783"
     },
     "TransparentMask": {
@@ -2314,7 +2330,7 @@
         "guid": "485cb1970f2c584495834103ad197fe3",
         "type": 3
       },
-      "sha256": "4570690ffcd8f713be1c0c72c413f4cf9c8a6065f29179db8aed80171a25b6db",
+      "sha256": "a181ad77060842aaf2d292f6af709615e3312a9968cdc6b3c2fae2b73a7454df",
       "meta_sha256": "d4cec09309d6ee189e14a721fd70ed49a4427130503f38174400cabb46d535f7"
     },
     "OfflineMiniMap": {

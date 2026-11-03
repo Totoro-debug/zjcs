@@ -35,6 +35,8 @@ namespace Zjcs.Offline.World.MainlineMiniMap
                 || !bindings.State.TryGetMapLiteData(template.MapClassId, out var ground)
                 || ground.MapGroundSize.X != bindings.Visibility.Width || ground.MapGroundSize.Y != bindings.Visibility.Height))
                 throw new InvalidDataException("Live minimap visibility must belong to the current original ground.");
+            if (bindings.RegionTime != null && bindings.RegionTime.MapClassId != template.MapClassId)
+                throw new InvalidDataException("Region time must belong to the original minimap.");
 
             var owner = new GameObject(prefab.name + "_Instance");
             owner.SetActive(false);
@@ -45,6 +47,8 @@ namespace Zjcs.Offline.World.MainlineMiniMap
                 var instance = Object.Instantiate(prefab, owner.transform, false);
                 var root = instance.GetComponent<MainlineNativeMiniMapRoot>();
                 root.Bindings = bindings;
+                if (bindings.RegionTime != null)
+                    root.TimedLabels = new MainlineMiniMapLabels(bindings.State, bindings.RegionTime);
                 if (bindings.Visibility != null)
                 {
                     visibility = instance.AddComponent<MainlineMiniMapVisibilityAgent>();
@@ -53,7 +57,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
                 }
                 // MapRootSwitchMapSupport.CreateMiniMap binds the shared slot's renderer.
                 root.NonMaskableManager = bindings.NonMaskableManager;
-                foreach (var ui in instance.GetComponentsInChildren<UIBase>(true)) ui.Services = bindings.State.LabelServices;
+                foreach (var ui in instance.GetComponentsInChildren<UIBase>(true)) ui.Services = root.LabelServices;
                 foreach (var ui in instance.GetComponentsInChildren<MapMeCharacterUIBase>(true)) ui.MapMyCharacterManager = bindings.Characters;
                 foreach (var spawn in instance.GetComponentsInChildren<MiniMapMarkSpawnManager>(true))
                 { spawn.ServiceProvider = bindings.MarkerServices; spawn.PerformanceMiniMapMarkProxy = bindings.MarkerPerformance; }

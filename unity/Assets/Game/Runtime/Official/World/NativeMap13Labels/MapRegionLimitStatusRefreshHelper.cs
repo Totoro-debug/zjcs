@@ -60,7 +60,7 @@ public class MapRegionLimitStatusRefreshHelper
 			switch (mRegionLimitType)
 			{
 			case MapRegionLimitType.RegionUnlockTime:
-				throw new InvalidOperationException("Verified Map13 source has no server-rank/date region limits.");
+				((MapRegionLimitStatusRefreshForRankUnlockTime)(mRefreshProvider = new MapRegionLimitStatusRefreshForRankUnlockTime { Services = Services })).Init(mMapRegionInfo, mRemainTimeInfoUI, (Action)RefreshStatus);
 				break;
 			case MapRegionLimitType.Level:
 				((MapRegionLimitStatusRefreshProviderForLevel)(mRefreshProvider = new MapRegionLimitStatusRefreshProviderForLevel { Services = Services })).Init(mMapRegionInfo, mMultiLanguage, (Action)RefreshStatus);

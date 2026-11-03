@@ -10,6 +10,7 @@ namespace Zjcs.Offline.World
 {
     public interface IMapRegionTime
     {
+        int MapClassId { get; }
         DateTime Now { get; }
         int Rank { get; }
         bool IsUnlockTimeReached(int region);
@@ -27,6 +28,7 @@ namespace Zjcs.Offline.World
             Func<OfflinePlayerProgress> player, Func<DateTime> now)
         {
             if (definition == null) throw new ArgumentNullException(nameof(definition));
+            MapClassId = definition.ClassId;
             this.player = player ?? throw new ArgumentNullException(nameof(player));
             this.now = now ?? throw new ArgumentNullException(nameof(now));
             regions = new Dictionary<int, RegionConfig>();
@@ -48,6 +50,7 @@ namespace Zjcs.Offline.World
                 throw new InvalidDataException("Original timed-region closure differs from the map.");
         }
 
+        public int MapClassId { get; }
         public DateTime Now => now();
         public int Rank => player().Rank;
 
