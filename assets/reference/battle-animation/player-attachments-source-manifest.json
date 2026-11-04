@@ -2413,15 +2413,21 @@
     "path": "unity/Assets/Game/Resources/Combat/player-attachments.json.meta",
     "sha256": "64522497f9c480a36cb3bb12305d91406a63e017a697cefb4451bf16ac8813f0"
   },
-  "generator_sha256": "ceb39e81c396987af5f88c8cd42a661ace11452a2d89f4c056cd7a133b973092",
+  "generator_sha256": "8f17e7d529431a53c1d09b0cfd0798c894dd40ed6b9cf9ef2128626f0fb62063",
   "bindings": {
-    "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBattlePlayerAttachments.cs": "d8d3ce1253b125ae7b121f05f41cd357d3a320afecf077b38272b63935a5a21f",
+    "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBattlePlayerAttachments.cs": "31cf247d08363f7004474d15b6f207c2887e251e8b46d256a47ef9872d0478df",
     "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBattlePlayerAttachments.cs.meta": "2e854df519f55f19df62a9f2cb237cbeba946da962e09c25a24bbbedb6ee98b6",
+    "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePlayerBoneFollower.cs": "8df2057f59264f985e85d54b25567905133d16c6a4d43bbef0161386b4dac46f",
+    "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePlayerBoneFollower.cs.meta": "a1614af4d0292e8e53feb5517e65aa2dc91d34b392849bbce0b41a98d13c41ad",
     "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBattlePlayerActor.cs": "0e9c5dd2bad39f13d2c65dfe52ae81f6bf07eaaadd461b9ecca7f2d5f59421f2",
     "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBattlePlayerActor.cs.meta": "0a4650d63e35ebe2e438cb2aa3a2aa1103b12495b7444f053782deed81fb79d4",
-    "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerAttachments.cs": "510f2ca27882303c82da818b27332656c63cd7ae7a1066b23d50383863407eee",
+    "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerAttachments.cs": "344ed0eb2095dbe0dc65d3ae3b9ec583862694d93f34659ff7a9127fb01b02ed",
     "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerAttachments.cs.meta": "9a69c82f43514adc262246c65f1249205ee5a19b03d51f52946c8283b9166a78",
-    "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerActor.cs": "7e338ce8b702a92a217a44369de453915984552b4938f4305f50b064704f95d6",
+    "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerBoneFollowers.cs": "87e07e2c1a065a49ec6c5f5f1ab1a4581665b9e31c7c5ce49b89a563a23e297d",
+    "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerBoneFollowers.cs.meta": "2b43b515e9adedc4e7c7fbed7ed7e4280e7b44ae65db51c44a9326664b8257f6",
+    "unity/Assets/Game/Editor/Combat/AnimatorPlayback/Zjcs.Editor.Combat.AnimatorPlayback.asmdef": "215e5ad19c98a5ac2d28b742c9337f10252791721977b19554d88acfa28158ce",
+    "unity/Assets/Game/Editor/Combat/AnimatorPlayback/Zjcs.Editor.Combat.AnimatorPlayback.asmdef.meta": "60a41e788389a0ca31df7a62c6ed31a19a58311b7e5195ed49858fbd2d779bc6",
+    "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerActor.cs": "54b3e59eb94eeff928d27f65126ad93640f770310256c0cd19085ea4ed6e2691",
     "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerActor.cs.meta": "e191fd2cd503a65100132f31dfa6b6ef8bdcca7dd9216d42fb5d25f1d42619cb",
     "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.cs": "8240c06b42a0d8251e960dac23077904f71173aa06d6b04980c70bdead8952ec",
     "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.cs.meta": "2d5d88da76093fb2985f3cbe852610a6fa9426a9696c4cfe6c58a36fdf82707b"
@@ -2432,12 +2438,13 @@
     "AttachPosRotCfg": "2fbcc29c99fd945cab2edf6ce0a4dda3c69396a5bb9b979dd4f6fb794d1b731d"
   },
   "dependencies": {
-    "player-animation-binding": "4568893181fc270a05fc5ece211f3c5d164a8c4cabd53991d4648f608051c75d",
+    "player-animation-binding": "a508dcc4a5410c086142f2466cc0c830176252b2543d17c81796839cba45c1cf",
     "player-scene-bindings": "d897bb86f71cd891c4a833c1f8f59cd21fb825138da365993a9ad71d2207dcf0"
   },
   "limits": [
     "Only serialized hierarchy and attachment application data; no third-party animation implementation is read.",
-    "Two serialized SDK BoneFollower components are recorded, with runtime behavior still separate.",
+    "The two direct-child bone followers use independent geometry checked against public API outputs; no SDK algorithm source is read or copied.",
+    "The player native skeleton has unit global scale. Other follower parent relationships, flags and axis orientations are outside this adapter.",
     "Other original ECS, UI, rendering and effect components are not instantiated by the attachment binding."
   ]
 }

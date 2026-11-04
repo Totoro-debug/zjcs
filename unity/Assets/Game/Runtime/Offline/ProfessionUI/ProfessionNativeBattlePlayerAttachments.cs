@@ -8,15 +8,17 @@ using Zjcs.Official.StoryAttachment;
 
 namespace Zjcs.Offline.ProfessionUI
 {
-    // Original attachment Transform branches and application followers only.
-    // Other original UI/ECS/effect components and SDK BoneFollowers are separate.
+    // Original attachment branches and application followers, with independent
+    // geometry for the two verified direct-child bone followers.
     public sealed class ProfessionNativeBattlePlayerAttachments
     {
         public AttachAgent Agent { get; }
         public IReadOnlyDictionary<string, Transform> Transforms => transforms;
         public IReadOnlyList<AttachmentFollower> Followers => followers;
+        public IReadOnlyList<ProfessionNativePlayerBoneFollower> BoneFollowers => boneFollowers;
         private readonly Dictionary<string, Transform> transforms = new Dictionary<string, Transform>();
         private readonly List<AttachmentFollower> followers = new List<AttachmentFollower>();
+        private readonly List<ProfessionNativePlayerBoneFollower> boneFollowers = new List<ProfessionNativePlayerBoneFollower>();
 
         public ProfessionNativeBattlePlayerAttachments(ProfessionNativeBattlePlayerActor actor)
         {
@@ -100,8 +102,20 @@ namespace Zjcs.Offline.ProfessionUI
                     }
                     finally { go.SetActive(active); }
                 }
+                else if (Equals(component["type"], "BoneFollower"))
+                {
+                    var renderer = Resolve(renderers, references, "/skeletonRenderer") as ProfessionNativeSceneRenderer;
+                    bool active = go.activeSelf; go.SetActive(false);
+                    try
+                    {
+                        var follower = go.AddComponent<ProfessionNativePlayerBoneFollower>();
+                        follower.Bind(renderer, fields); follower.enabled = Flag(fields, "m_Enabled");
+                        boneFollowers.Add(follower);
+                    }
+                    finally { go.SetActive(active); }
+                }
             }
-            if (!Agent || Agent.myBoneNameList.Count != 49 || followers.Count != 3)
+            if (!Agent || Agent.myBoneNameList.Count != 49 || followers.Count != 3 || boneFollowers.Count != 2)
                 throw new InvalidOperationException("Original player attachment set differs.");
         }
 

@@ -91,8 +91,11 @@ def build():
                  bindings={path + suffix: hashlib.sha256((ROOT / (path + suffix)).read_bytes()).hexdigest()
                            for path in (
                                'unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBattlePlayerAttachments.cs',
+                               'unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePlayerBoneFollower.cs',
                                'unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBattlePlayerActor.cs',
                                'unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerAttachments.cs',
+                               'unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerBoneFollowers.cs',
+                               'unity/Assets/Game/Editor/Combat/AnimatorPlayback/Zjcs.Editor.Combat.AnimatorPlayback.asmdef',
                                'unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerActor.cs',
                                'unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.cs',
                            ) for suffix in ('', '.meta')},
@@ -103,7 +106,8 @@ def build():
                                                     / (name + '-source-manifest.json')).read_bytes()).hexdigest()
                                for name in ('player-animation-binding', 'player-scene-bindings')},
                  limits=['Only serialized hierarchy and attachment application data; no third-party animation implementation is read.',
-                         'Two serialized SDK BoneFollower components are recorded, with runtime behavior still separate.',
+                         'The two direct-child bone followers use independent geometry checked against public API outputs; no SDK algorithm source is read or copied.',
+                         'The player native skeleton has unit global scale. Other follower parent relationships, flags and axis orientations are outside this adapter.',
                          'Other original ECS, UI, rendering and effect components are not instantiated by the attachment binding.'])
     receipt.write_bytes((json.dumps(proof, ensure_ascii=False, indent=2) + '\n').encode())
     print('Recovered original 3100 attachment hierarchy:', len(nodes), 'nodes.')

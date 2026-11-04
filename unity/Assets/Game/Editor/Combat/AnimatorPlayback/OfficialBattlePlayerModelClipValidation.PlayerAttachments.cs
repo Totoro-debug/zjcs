@@ -18,6 +18,7 @@ namespace Zjcs.Editor.Combat
     {
         public static void RunPlayerAttachments()
         {
+            CheckPlayerBoneFollowerGeometry();
             RunPlayerActors();
             SessionState.SetBool(Key + ".player-attachments", true);
         }
@@ -51,6 +52,7 @@ namespace Zjcs.Editor.Combat
             }
             Require(actor.Attachments.Followers.Count == 3 && actor.Attachments.Followers.Count(f => f.enabled) == 1,
                 "original shadow follower enabled; two original weapon attachment followers disabled");
+            CheckPlayerBoneFollowers(actor);
             Require(AttachPosRotCfg.GetBone(actor.Root, "body") == actor.Root.transform.Find("3100_view/body"),
                 "original skill attachment resolves body instead of falling back to the entity root");
             var shadow = actor.Attachments.Followers.Single(f => f.enabled);
@@ -111,6 +113,7 @@ namespace Zjcs.Editor.Combat
                         sampled = true;
                         if (nextSample < sampleTimes.Length && actor.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= sampleTimes[nextSample])
                         {
+                            CheckPlayerBoneFollowers(actor);
                             capture(label + "-skill-" + id + "-" + repeat + "-" + nextSample);
                             nextSample++;
                         }

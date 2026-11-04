@@ -93,9 +93,17 @@ namespace Zjcs.Editor.Combat
                     if (SessionState.GetBool(Key + ".player-attachments", false))
                     {
                         CheckPlayerAttachmentRegistry(actor);
+                        Require(actor.Attachments.BoneFollowers.All(f => !f.gameObject.activeSelf), "both original SDK follower branches start inactive");
+                        foreach (var follower in actor.Attachments.BoneFollowers) follower.gameObject.SetActive(true);
+                        yield return null;
+                        CheckPlayerBoneFollowers(actor);
                         var graphs = CheckPlayerAttachmentGraphs(actor, scope, profession, label, CaptureActor);
                         try { while (graphs.MoveNext()) yield return graphs.Current; }
-                        finally { (graphs as IDisposable)?.Dispose(); }
+                        finally
+                        {
+                            (graphs as IDisposable)?.Dispose();
+                            foreach (var follower in actor.Attachments.BoneFollowers) follower.gameObject.SetActive(false);
+                        }
                     }
                     var state = native.State; float before = native.PlayerPhysicsTime;
                     playerBindings.Refresh(AppearanceOperateSource.Normal);
