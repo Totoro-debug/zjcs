@@ -15,6 +15,19 @@ namespace Zjcs.Editor
     {
         private const string Key = "Zjcs.SharedMainlineProbe";
 
+        public static void ValidateProfileDataManifests()
+        {
+            string[] battle = { "854_156383", "854_156383", "854_156383", "854_156383", "871_156598", "854_156383" };
+            string[] story = { "854_156383", "854_156383", "854_156383", "871_156598", "871_156598", "871_156598" };
+            for (int mapId = 10; mapId <= 15; mapId++)
+            {
+                OfficialMainlineMapProfile profile = OfficialMainlineMapProfile.Get(mapId);
+                int index = mapId - 10;
+                if (profile.BattleDataManifest != battle[index] || profile.StoryDataManifest != story[index])
+                    throw new InvalidDataException("Mainline map source manifests differ from the pinned map inputs: " + mapId);
+            }
+        }
+
         public static void ValidateWhaleIslandStoryCondition()
         {
             const string tag = "金宝箱_鲸岛神龟";

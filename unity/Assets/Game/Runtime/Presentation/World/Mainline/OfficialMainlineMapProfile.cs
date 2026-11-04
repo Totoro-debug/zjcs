@@ -26,18 +26,21 @@ namespace Zjcs.Presentation.World
                     new[] { 1224, 1225, 1226, 1227, 1228, 1229, 1230, 1231, 4139, 4153, 4157, 4160, 4163 }, true, regionCount: 106,
                     visibilityResource: "Map13/grid-visibility", bodiesResource: "Map13/grid-entities",
                     fogResource: "World/Mainline/Fog/Map13",
-                    interactionResource: "Map13/interactions", interactionManifest: "871_156598", localChannelCount: 1),
+                    interactionResource: "Map13/interactions", interactionManifest: "871_156598", localChannelCount: 1,
+                    storyDataManifest: "871_156598"),
                 [14] = new OfficialMainlineMapProfile(14, 217, 85, null,
                     new[] { 1255, 1256, 1257, 1258, 1259, 1260, 1261, 1262, 4209, 4210, 4211, 4212, 4213, 4228, 4229, 4236 },
                     true, 0, 111, 101, interactionResource: "Map14/interactions", interactionManifest: "871_156598",
                     requiresMiniMapPrefab: false, localChannelCount: 1,
-                    entityPrefabCatalogResource: "Map14/Native/entity-prefab-catalog", entityPrefabManifest: "871_156598"),
+                    entityPrefabCatalogResource: "Map14/Native/entity-prefab-catalog", entityPrefabManifest: "871_156598",
+                    battleDataManifest: "871_156598", storyDataManifest: "871_156598"),
                 [15] = new OfficialMainlineMapProfile(15, 0, 0, null,
                     new[] { 115 }, true, 0, 1, 101,
                     visibilityResource: "World/Mainline/Visibility/Map15/visibility",
                     bodiesResource: "World/Mainline/Visibility/Map15/bodies", requiresMiniMapPrefab: false,
                     playerViewResource: "Map15/BaseGround/player-view", nativeGroundLabelResource: "Map15/Native/region-label-data",
-                    nativeGroundPrefabResource: "Map15/Native/current-ground", localChannelCount: 1) // Original root has no cloud; MiniMapPath is empty.
+                    nativeGroundPrefabResource: "Map15/Native/current-ground", localChannelCount: 1,
+                    storyDataManifest: "871_156598") // Original root has no cloud; MiniMapPath is empty.
             });
 
         public int MapClassId { get; }
@@ -63,6 +66,8 @@ namespace Zjcs.Presentation.World
         public string NativeGroundPrefabResource { get; }
         public string EntityPrefabCatalogResource { get; }
         public string EntityPrefabManifest { get; }
+        public string BattleDataManifest { get; }
+        public string StoryDataManifest { get; }
 
         private OfficialMainlineMapProfile(int id, int stages, int stories, string nativeUiRoot, int[] conditions,
             bool runtimeEntryReady, int regionShadowCount = 0, int regionCount = 0, int defaultEntryPlacementId = 0,
@@ -70,7 +75,8 @@ namespace Zjcs.Presentation.World
             string interactionResource = "World/Mainline/interactions", string interactionManifest = "854_156383",
             bool requiresMiniMapPrefab = true, string playerViewResource = null, string nativeGroundLabelResource = null,
             string nativeGroundPrefabResource = null, int localChannelCount = 1,
-            string entityPrefabCatalogResource = null, string entityPrefabManifest = null)
+            string entityPrefabCatalogResource = null, string entityPrefabManifest = null,
+            string battleDataManifest = "854_156383", string storyDataManifest = null)
         {
             MapClassId = id;
             StageCount = stages;
@@ -96,6 +102,10 @@ namespace Zjcs.Presentation.World
                 throw new ArgumentException("Entity prefab resource and source manifest must be configured together.");
             EntityPrefabCatalogResource = entityPrefabCatalogResource;
             EntityPrefabManifest = entityPrefabManifest;
+            BattleDataManifest = string.IsNullOrWhiteSpace(battleDataManifest)
+                ? throw new ArgumentException("A battle source manifest is required.", nameof(battleDataManifest))
+                : battleDataManifest;
+            StoryDataManifest = string.IsNullOrWhiteSpace(storyDataManifest) ? battleDataManifest : storyDataManifest;
         }
 
         public string Resource(string path) => "Map" + MapClassId + "/" + path;

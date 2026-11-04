@@ -151,7 +151,7 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 
 公共可见性的加载、坐标／实体来源核对、区域查询、快照、白雾绑定和清理集中至 `OfficialMainlineMapRuntime.GridVisibility.cs`。Map13 保留旧 JSON 字段，其他地图使用 `gridVisibility`；事务回滚更换可见性实例时同时重新绑定雾层事件，避免继续监听已释放实例。当前接入与验证范围见各地图页。
 
-地图档案显式配置网格／身体／白雾地址、是否要求独立小地图 prefab 及交互配置版本，公共载入层不再按 Map14 写专用分支。Map12／13 的地区、奖励预览、区域刷新和英雄结果索引从各自已校验的 `871_156598` 原表转换，避免误用仅含 Map10／11 的早期共享地区数组。空奖励列表按原表保留；来源与绑定哈希见[各图交互配置](../../assets/reference/official-map/mainline-interaction-maps-source-manifest.json)。
+地图档案显式配置网格／身体／白雾地址、是否要求独立小地图 prefab、交互配置版本及战斗／剧情数据版本，公共载入层不再按地图ID选择来源版本。当前 Map10–13、15 的战斗数据使用 `854_156383`，Map14 的战斗数据使用 `871_156598`；Map10–12 的剧情数据使用 `854_156383`，Map13–15 的剧情数据使用 `871_156598`。Map12／13 的地区、奖励预览、区域刷新和英雄结果索引从各自已校验的 `871_156598` 原表转换，避免误用仅含 Map10／11 的早期共享地区数组。空奖励列表按原表保留；来源与绑定哈希见[各图交互配置](../../assets/reference/official-map/mainline-interaction-maps-source-manifest.json)。Map16 尚未注册到共享档案；鲸背岛专属来源版本仍由其地图页维护。
 
 ## 自定义实现
 
