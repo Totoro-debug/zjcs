@@ -1,0 +1,131 @@
+{
+  "counts": {
+    "entityStageBindings": 237,
+    "monsterGroups": 38,
+    "monsterRosters": 70,
+    "rosterUnits": 540,
+    "scenes": 9,
+    "stages": 70
+  },
+  "format": 1,
+  "generator": {
+    "bytes": 8148,
+    "path": "scripts/prepare_unity_map16_battle_runtime.py",
+    "sha256": "ffc730d2c28ec87985b48a6ab6c5655b7482743ef175ff31015de62aa8002446"
+  },
+  "inputs": [
+    {
+      "bytes": 1016665,
+      "path": "unity/Assets/Official/World/Map/16/map16-battles-source.json",
+      "sha256": "832178096218ecb270dbd3eed4525f0cfe853f2df78350f174d4468f6287d042"
+    },
+    {
+      "bytes": 17064,
+      "path": "assets/reference/official-map/map16-battles-source-manifest.json",
+      "sha256": "7986364dff093f1ba659c5b5adc4b1bb56293a97c147b500be7dcbcb817ecee6"
+    },
+    {
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "asset": "monster_group.g.bytes",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "manifest": "884_156692",
+      "object_sha256": "784218e48035f84c119b88e6685f4b057411a8445f08fc5a4a4969fce2f8ff78",
+      "origin": "apk_zip",
+      "path_id": "-5059552782443174708",
+      "payload_sha256": "4b85269ea6e5a90133030a715b064d1441971656e88443a06add9d1ab00a481c",
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "raw_size": 2142435
+    },
+    {
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "asset": "role_prop_group.g.bytes",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "manifest": "884_156692",
+      "object_sha256": "34f800c7977fd069a33ad1dee892119077264e0da2964e7de531d3321975fe99",
+      "origin": "apk_zip",
+      "path_id": "3355735935519861306",
+      "payload_sha256": "b52c3e07f08399423244cc858114098dc3712902524836fab2e8e03f681ddf13",
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "raw_size": 2142435
+    },
+    {
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "asset": "skill.g.bytes",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "manifest": "884_156692",
+      "object_sha256": "5f5cf749e0186ca524be7bce5c36c14cbb73d1579a62c510632a445434bf5b34",
+      "origin": "apk_zip",
+      "path_id": "1398458758611605706",
+      "payload_sha256": "5da6dd4982bdb6259e13043da7e2b7b4dc6b655beff1661b5f92f4fd65e0c81f",
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "raw_size": 2142435
+    },
+    {
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "asset": "item.g.bytes",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "manifest": "884_156692",
+      "object_sha256": "3f81dc44b9bbcea0ed38aca080b8b38ccc9f04cc4d8e8e4bf62fce88dc55a5cf",
+      "origin": "apk_zip",
+      "path_id": "3644532119292667704",
+      "payload_sha256": "da276129e605494f2392572880d2cbc0354da14c4151bea6d7dcc90a69be7888",
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "raw_size": 2142435
+    },
+    {
+      "bundle": {
+        "dependencies": [],
+        "encrypted": false,
+        "file": "11e11b3ef06eaece6061f07f8f399542.rawfile",
+        "file_crc": 1870833886,
+        "hash": "11e11b3ef06eaece6061f07f8f399542",
+        "name": "wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile",
+        "record_offset": 17449,
+        "size": 9107096,
+        "tags": [
+          "Payd_Base"
+        ],
+        "unity_crc": 0
+      },
+      "entry": "assets/yoo/WwiseBnk/11e11b3ef06eaece6061f07f8f399542.rawfile",
+      "manifest": "884_156692",
+      "origin": "apk",
+      "sha256": "1b8e2cf7029ba8a80750f54aa35658878166d1bfbe2e206317473b43f6af3f1f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/PropType.cs",
+      "sha256": "265a81dbeab87b90e3a1c1423884610ed43ea9b535e488e20de0e0c41f9831b0"
+    }
+  ],
+  "manifest": "884_156692",
+  "mapClassId": 16,
+  "operation": "Expand the pinned 884_156692 Map16 stages, formations, official monster properties, skills, scenes and placement bindings for the shared offline battle host.",
+  "outputs": [
+    {
+      "bytes": 3031594,
+      "path": "unity/Assets/Game/Resources/Map16/battle-runtime.json",
+      "sha256": "7fe98adf3688035725b3d27885a82d1f724fc8bb6aefe60314afb31de11142cc"
+    },
+    {
+      "bytes": 155,
+      "path": "unity/Assets/Game/Resources/Map16/battle-runtime.json.meta",
+      "sha256": "bd46052004cf7ec700ecd07d997a21523d47a8bce1408c8a6485e5e2f08cc318"
+    }
+  ],
+  "pendingRuntimeBindings": [
+    "Map16 mainline map host",
+    "official monster visual assets"
+  ]
+}
