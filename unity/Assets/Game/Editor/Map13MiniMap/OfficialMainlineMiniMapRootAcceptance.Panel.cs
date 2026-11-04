@@ -211,10 +211,15 @@ namespace Zjcs.Editor.Map13MiniMap
         }
         private static IEnumerator CapturePanelFrame(RenderTexture target,string name)
         {
+            float shaderDeadline=Time.realtimeSinceStartup+60;
+            while(ShaderUtil.anythingCompiling){Require(Time.realtimeSinceStartup<shaderDeadline,"Original UI shader compilation timeout");yield return null;}
             var runner=new GameObject("EndOfFrameMinimapCapture").AddComponent<MiniMapPanelFrameCapture>();runner.Begin();float deadline=Time.realtimeSinceStartup+15;
             while(!runner.Done){Require(Time.realtimeSinceStartup<deadline,"Actual Game View frame capture timeout");yield return null;}
             var image=runner.Image;Require(image&&image.width==target.width&&image.height==target.height,"Actual portrait Game View screenshot: "+(image?image.width+"x"+image.height:"missing"));
+            int fallbackPixels=image.GetPixels32().Count(pixel=>pixel.r<5&&pixel.g>245&&pixel.b>245);
+            int pixelCount=image.width*image.height;
             File.WriteAllBytes(Path.Combine(Workspace,name),image.EncodeToPNG());Object.Destroy(image);
+            Require(fallbackPixels<pixelCount/100,"Original portrait capture contains a pending-shader cyan overlay");
             Object.Destroy(runner.gameObject);
         }
     }

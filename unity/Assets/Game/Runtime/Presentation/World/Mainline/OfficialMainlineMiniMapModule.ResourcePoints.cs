@@ -29,7 +29,8 @@ namespace Zjcs.Presentation.World
                 EnsureMiniMapFilterState();
                 var definition = host.session.Definition;
                 var world = new MainlineMiniMapWorldData(new[] { definition },
-                    Resources.Load<TextAsset>("MainlineMiniMap/current-region-displays"));
+                    Resources.Load<TextAsset>("MainlineMiniMap/current-region-displays"),
+                    Resources.Load<TextAsset>("MainlineMiniMap/current-entity-data"));
                 if (!world.TryGetMapLiteData(host.mapClassId, out var lite))
                     throw new InvalidOperationException("Original minimap world data is not bound.");
                 var data = new Map13LabelData

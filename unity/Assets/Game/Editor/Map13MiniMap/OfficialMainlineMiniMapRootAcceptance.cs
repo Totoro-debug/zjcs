@@ -164,6 +164,8 @@ namespace Zjcs.Editor.Map13MiniMap
         private static void Advance(){try{if(routine.MoveNext())return;Require(errors==0,"Native root runtime errors: "+errors);SessionState.EraseBool(Key);EditorApplication.update-=Advance;EditorApplication.Exit(0);}catch(Exception e){Debug.LogException(e);SessionState.EraseBool(Key);EditorApplication.update-=Advance;EditorApplication.Exit(1);}}
         private static IEnumerator Verify()
         {
+            // Set after Play Mode's domain reload, before any original UI draws.
+            ShaderUtil.allowAsyncCompilation=false;
             var pipeline=AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>("Assets/Official/World/Map/13/NativePipeline/UniversalRenderPipeline.asset");GraphicsSettings.renderPipelineAsset=pipeline;QualitySettings.renderPipeline=pipeline;
             const string native="Assets/Official/World/Map/13/NativeMiniMapRootCurrent/";
             var prefab=AssetDatabase.LoadAssetAtPath<GameObject>(native+"Resources/Map13/Native/mini-map-root.prefab");
@@ -193,7 +195,7 @@ namespace Zjcs.Editor.Map13MiniMap
             var module=MainlineMiniMap.Create(prefab,null,bindings);for(int i=0;i<4;i++)yield return null;
             Require(data.Requests==1,"Complete original prefab requests offline data after injection");
             var root=Object.FindObjectOfType<MainlineNativeMiniMapRoot>();VerifyWorldDataBinding(root,bindings);var offline=root.GetComponent<OfflineMiniMap>();Require(!offline.HaveDataShow.State,"Original prefab content hidden while pending");
-            data.Pending.Complete(new PlayerOfflineMiniMapDataResponse{MapClassId=13,GridVisibilityByte=GridVisibilityCompressUtils.DoMyZip(bits),ActiveRegions=new List<int>{38},LiteEntityDataDict=new Dictionary<int,PlayerOfflineMiniMapLiteEntityData>(),ActiveableEntDataDict=new Dictionary<MapWorldActiveableEntityType,List<int>>()},0);
+            data.Pending.Complete(new PlayerOfflineMiniMapDataResponse{MapClassId=13,UseLatestLocalEntityStates=true,GridVisibilityByte=GridVisibilityCompressUtils.DoMyZip(bits),ActiveRegions=new List<int>{38},LiteEntityDataDict=new Dictionary<int,PlayerOfflineMiniMapLiteEntityData>(),ActiveableEntDataDict=new Dictionary<MapWorldActiveableEntityType,List<int>>()},0);
             for(int i=0;i<5;i++)yield return null;Require(offline.HaveDataShow.State,"Original prefab response activates bound content");
             Require(root.ViewRangeHandler!=null&&root.GetComponentsInChildren<MiniMapPrivateRegionMaskManager>(true).Length==1,"Original root owns range and actual regional hierarchy");
             var miniTexture=module.Texture;var originalSize=new SerializedObject(prefab.GetComponent<MainlineNativeMiniMapRoot>().Character).FindProperty("mMiniMapUiTextureSize").vector2IntValue;

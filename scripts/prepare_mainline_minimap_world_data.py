@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 from official_apk import Apk, ROOT
-from official_map_codec import ground
+from official_map_codec import ground, unpack, entities
 from official_tables import Constructors
 
 MAPS = (10, 11, 12, 13, 14, 16)
@@ -41,6 +41,8 @@ def build():
 
         maps = table('map', 'TbMapInfo')
         regions = table('map_region', 'TbMapRegionInfo')
+        areas = table('map_area', 'TbMapAreaInfo')
+        tags = table('map_logic_entity_tag', 'TbMapLogicEntityTagInfo')
         # Find the actual configured object rather than guessing the CSV address.
         addresses = [address for address, _ in apk.container('config_luban_map')
             if address.rsplit('/', 1)[-1].replace('_', '').lower() == 'minimapregiondisplay.g.bytes']
@@ -69,11 +71,47 @@ def build():
             geometry = lambda rows: {row['Region']: (row['Areas'], row['RegionTag']) for row in rows}
             if geometry(installed_regions) != geometry(selected_regions):
                 raise ValueError('World/minimap area-to-region geometry differs: ' + str(mid))
+            current_placements = entities(payload('config_mapinfowrap', f'/mapinfowrap_{mid}.g.bytes'))
+            placement_fields = lambda rows: {row['id']: (row['entity'], row['grid'], row['area'], row['region']) for row in rows}
+            installed_placements = [dict(id=row['Id'], entity=row['EntityId'], grid=row['Grid'],
+                area=row['Area'], region=row['Region']) for row in definition['Entities']]
+            if current_placements['id'] != mid or placement_fields(current_placements['entities']) != placement_fields(installed_placements):
+                raise ValueError('Installed marker placements differ from the selected original world: ' + str(mid))
             bindings.append(dict(mapClassId=mid, definition=record(definition_path),
                 cells=nav['Width'] * nav['Height'], regions=len(installed_regions),
                 checked_navigation_fields=list(current), checked_map_fields=['MinimapConfigId', 'MapGroupId', 'MiniMapPath'],
-                checked_region_fields=['Region', 'Areas', 'RegionTag']))
+                checked_region_fields=['Region', 'Areas', 'RegionTag'],
+                checked_placements=len(installed_placements), checked_placement_fields=['Id', 'EntityId', 'Grid', 'Area', 'Region']))
         selected_displays = [row for row in displays if row['MapClassId'] in MAPS]
+        transport_pack = unpack(payload('config_map', '/MapTransportEntityInfoPack.g.bytes'))
+        if not isinstance(transport_pack, list) or len(transport_pack) != 1 or not isinstance(transport_pack[0], dict):
+            raise ValueError('Review the original transport MessagePack layout')
+        transports = []
+        transport_destinations = []
+        for mid, entries in transport_pack[0].items():
+            if mid not in MAPS:
+                continue
+            definition = json.loads((ROOT / f'unity/Assets/Official/World/Map/{mid}/map{mid}.json').read_bytes())
+            placements = {row['Id']: row for row in definition['Entities']}
+            for placement_id, row in entries.items():
+                if len(row) != 6 or row[:2] != [placement_id, mid] or placement_id not in placements:
+                    raise ValueError('Original transport placement identity differs')
+                target_path = ROOT / f'unity/Assets/Official/World/Map/{row[4]}/map{row[4]}.json'
+                transport_destinations.append(target_path)
+                target = next(value for value in json.loads(target_path.read_bytes())['Entities'] if value['Id'] == row[2])
+                if row[3] != target['Grid'] or row[5] != target['Region']:
+                    raise ValueError('Original transport target differs from the installed destination')
+                transports.append(dict(MapClassId=mid, LoEntityId=placement_id, TargetLoEntityId=row[2],
+                    TargetPos=dict(X=row[3][0], Y=row[3][1]), TargetMapClassId=row[4], TargetRegion=row[5]))
+        transport_destination = ROOT / 'unity/Assets/Game/Resources/MainlineMiniMap/current-entity-data.json'
+        transport_destination.write_text(json.dumps(dict(Manifest=apk.version, Transports=transports,
+            Areas=[dict(MapClassId=row['ClassId'], Area=row['Area'], AreaTag=row['AreaTag']) for row in areas if row['ClassId'] in MAPS],
+            EntityTags=[row for row in tags if row['MapClass'] in MAPS]),
+            ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
+        transport_meta = Path(str(transport_destination) + '.meta')
+        if not transport_meta.is_file():
+            transport_meta.write_text('fileFormatVersion: 2\nguid: '
+                + hashlib.md5(b'zjcs:mainline-minimap-entity-data:884').hexdigest() + '\n', 'utf8')
         destination = ROOT / 'unity/Assets/Game/Resources/MainlineMiniMap/current-region-displays.json'
         destination.write_text(json.dumps(dict(Manifest=apk.version, Displays=selected_displays),
             ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
@@ -84,15 +122,24 @@ def build():
             ROOT / 'scripts/official_map_codec.py', ROOT / 'scripts/official_tables.py',
             CODE / 'common-source/Common/MinimapRegionDisplayInfoParser.cs',
             CODE / 'common-source/Common/MapRegionInfoParser.cs', CODE / 'common-source/Common/GridMoverComponentInfo.cs',
-            CODE / 'common-source/Common/MapRootEntityLiteSingleInfo.cs']
+            CODE / 'common-source/Common/MapRootEntityLiteSingleInfo.cs',
+            CODE / 'common-source/Common/MapRegionEntityInfoManager.cs',
+            CODE / 'common-source/Common/MapLogicEntityTagInfoParser.cs', CODE / 'common-source/Common/MapEntityExtra.cs',
+            CODE / 'common-source/Common/MapTransportEntityInfoPackParser.cs',
+            CODE / 'common-source/Common/MapTransportEntityTargetInfo.cs',
+            CODE / 'common-source/MessagePack.Formatters.Common/MapTransportEntityTargetInfoFormatter.cs']
+        sources.extend(transport_destinations)
         for name in constructors.sources:
             sources.extend(path for folder in ('Common', 'Common.LubanGen')
                 if (path := CODE / 'common-source' / folder / (name + '.cs')).is_file())
         receipt = dict(format=1, manifest=apk.version, inputs=inputs, sources=[record(p) for p in dict.fromkeys(sources)],
-            bindings=bindings, outputs=[record(destination), record(meta)],
+            bindings=bindings, transport_targets=len(transports),
+            outputs=[record(destination), record(meta), record(transport_destination), record(transport_meta)],
             integration=[record(ROOT / path) for path in (
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapWorldData.cs',
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapWorldData.cs.meta',
+                'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapWorldQueries.cs',
+                'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapWorldQueries.cs.meta',
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMap.cs',
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapBindings.cs',
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapLabels.cs',
@@ -101,9 +148,10 @@ def build():
                 'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.WorldData.cs',
                 'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.WorldData.cs.meta',
                 'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.cs',
+                'unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMiniMapModule.ResourcePoints.cs',
                 'scripts/prepare_mainline_minimap_offline_validation.py',
                 'scripts/test_mainline_minimap_native_bindings.py')],
-            operation='Compare every installed navigation field/cell, map/minimap identity and region area membership against the selected actual ground. Preserve historical definition versions and all other configuration fields; no whole-version equivalence. Extract complete original minimap region-display rows without substitutions.')
+            operation='Compare every installed navigation field/cell, map/minimap identity, region area membership, and every marker placement ID/class/grid/area/region against the selected actual ground and map-info wrap. Preserve historical definition versions; no whole-version equivalence. Extract original region-display rows, area tags, logic tags and transport MessagePack records. Verify each transport target against its installed destination. Bind original root and marker-factory static queries to this one instance-owned projection; live state and commands remain with the owning map adapter.')
         target = ROOT / 'assets/reference/official-map/mainline-minimap-world-data-source-manifest.json'
         target.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
         print('Bound original minimap world data:', len(bindings), 'maps,', sum(r['cells'] for r in bindings),

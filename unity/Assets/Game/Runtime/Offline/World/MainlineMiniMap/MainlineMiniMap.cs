@@ -71,6 +71,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
                 var instance = Object.Instantiate(prefab, owner.transform, false);
                 var root = instance.GetComponent<MainlineNativeMiniMapRoot>();
                 root.Bindings = bindings;
+                root.WorldQueries = new MainlineMiniMapWorldQueries(bindings.WorldData, bindings.State, bindings.MarkerServices);
                 if (bindings.RegionTime != null)
                     root.TimedLabels = new MainlineMiniMapLabels(bindings.State, bindings.RegionTime, bindings.WorldData);
                 if (bindings.Visibility != null)
@@ -84,8 +85,8 @@ namespace Zjcs.Offline.World.MainlineMiniMap
                 foreach (var ui in instance.GetComponentsInChildren<UIBase>(true)) ui.Services = root.LabelServices;
                 foreach (var ui in instance.GetComponentsInChildren<MapMeCharacterUIBase>(true)) ui.MapMyCharacterManager = bindings.Characters;
                 foreach (var spawn in instance.GetComponentsInChildren<MiniMapMarkSpawnManager>(true))
-                { spawn.ServiceProvider = bindings.MarkerServices; spawn.PerformanceMiniMapMarkProxy = bindings.MarkerPerformance; }
-                foreach (var marks in instance.GetComponentsInChildren<OfflineMiniMapMarkManager>(true)) marks.ServiceProvider = bindings.MarkerServices;
+                { spawn.ServiceProvider = root.WorldQueries; spawn.PerformanceMiniMapMarkProxy = bindings.MarkerPerformance; }
+                foreach (var marks in instance.GetComponentsInChildren<OfflineMiniMapMarkManager>(true)) marks.ServiceProvider = root.WorldQueries;
                 foreach (var offline in instance.GetComponentsInChildren<OfflineMiniMap>(true)) offline.DataSource = bindings.OfflineData;
                 foreach (var mask in instance.GetComponentsInChildren<MiniMapMaskHandler>(true)) mask.GridToWorld = root.GridToWorld;
                 foreach (var click in instance.GetComponentsInChildren<MiniMapMarkClick>(true))

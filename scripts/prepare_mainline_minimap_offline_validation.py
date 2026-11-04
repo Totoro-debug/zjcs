@@ -69,6 +69,7 @@ def main():
      pending.append(current_markers)
      pending.append(source/'Assets/Game/Resources/MainlineMiniMap/current-marker-data.json')
      pending.append(source/'Assets/Game/Resources/MainlineMiniMap/current-region-displays.json')
+     pending.append(source/'Assets/Game/Resources/MainlineMiniMap/current-entity-data.json')
      pending.extend(source/f'Assets/Official/World/Map/{mid}/map{mid}.json' for mid in (10,11,12,13,14,16))
     shared_renderer=source/'Assets/Official/World/Shared/NativeMiniMapRendererCurrent'
     if not shared_renderer.is_dir():raise ValueError('Prepare the complete selected shared minimap renderer')

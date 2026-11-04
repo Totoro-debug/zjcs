@@ -17,6 +17,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
         internal MainlineMiniMapBindings Bindings;
         internal MainlineMiniMapVisibilityAgent LiveVisibility;
         internal MainlineMiniMapLabels TimedLabels;
+        internal MainlineMiniMapWorldQueries WorldQueries;
         private MiniMapManagedContext State => Bindings.State;
         protected override MiniMapSettings Settings => Bindings.Settings;
         protected override int MinimapConfigId => Bindings.MinimapConfigId;
@@ -72,11 +73,11 @@ namespace Zjcs.Offline.World.MainlineMiniMap
         public override void Popup(Type dialogType,Action<MiniMapMarkDialogBase> callback) => State.Popup(dialogType,callback);
         public override void CloseWindow(GameObject window) => State.CloseWindow(window);
         public override void ShowError(int code) => State.ShowError(code);
-        public override IMiniMapMarkDataQueries MarkDataQueries => State.MarkDataQueries;
+        public override IMiniMapMarkDataQueries MarkDataQueries => WorldQueries;
         public override IMiniMapDescriptionAssetLease<GameObject> LoadMarkPrefab(string path) => State.LoadMarkPrefab(path);
         public override GameObject InstantiateMark(GameObject prefab,Transform parent,bool worldPositionStays)
             => State.InstantiateMark(prefab,parent,worldPositionStays);
-        public override IMiniMapManagedQueries ManagedQueries => State.ManagedQueries;
+        public override IMiniMapManagedQueries ManagedQueries => WorldQueries;
         public override MiniMapManagedEvents ManagedEvents => State.ManagedEvents;
         public override IMiniMapManagedAreaAgent ManagedAreaAgent => State.ManagedAreaAgent;
         public override IMiniMapMarkGridGround ManagedGridGround => State.ManagedGridGround;
