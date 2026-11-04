@@ -28,16 +28,25 @@ def main():
     outputs.extend(runtime / name for name in (
         'StoryFollowBone/ApplyOnStopCheckSourceDie.cs',
         'CombatAppearance/AppearanceCharacter.cs', 'ProfessionUI/AppearanceAnimationPartHandler.cs'))
+    outputs.extend(ROOT / 'unity/Assets/Game' / name for name in (
+        'Runtime/Presentation/Combat/OfficialBattleSpineCloneAnimation.cs',
+        'Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.cs',
+        'Runtime/Offline/ProfessionUI/ProfessionNativeSceneRendererSettings.cs',
+        'Editor/Combat/AnimatorPlayback/OfficialBattleSpineCloneAnimationValidation.cs'))
     proof = dict(manifest=record['manifest'], code_receipt=identity(receipt), assembly=identity(assembly),
         official_sources=[identity(p) for p in sources],
         migrated_components_and_ports=[identity(p) for p in outputs],
         metadata=[identity(Path(str(p) + '.meta')) for p in outputs],
+        clone_settings_receipt=identity(ROOT / 'assets/reference/battle-animation/spine-clone-settings-source-manifest.json'),
         generator=identity(Path(__file__).resolve()),
         operation='Retain clone init/activate/play and clear/deactivate/stop order, original duration, '
-            'player appearance source, zero-mix animation application and empty PreviewTool marker. '
-            'Expose the animation state through existing read-only appearance ports; replace EC view '
-            'lookup and split-animation loading with explicit scene dependencies.',
-        limits=['The clone appearance renderer/resource injection, split clip loader and source death '
+            'player appearance source and empty PreviewTool marker. Bind source renderer selection '
+            'through IProfessionFollowerRenderer and serialized targets through Component, so current '
+            'native characters can participate without an SDK renderer. Expose the original track-zero, '
+            'zero-mix, immediate-pose animation request and read-only state through an independent native '
+            'track and physical clock. Load all renderer/clock settings from five verified original clone '
+            'targets; replace EC view lookup with a scene dependency.',
+        limits=['Appearance renderer/resource injection, physics inheritance of world movement and source death '
             'view require production scene binding and actual Play Mode/Windows Player validation. '
             'Source mapping and successful prefab loading alone do not prove those effects work.'])
     target = ROOT / 'assets/reference/battle-animation/spine-clone-runtime-source-manifest.json'

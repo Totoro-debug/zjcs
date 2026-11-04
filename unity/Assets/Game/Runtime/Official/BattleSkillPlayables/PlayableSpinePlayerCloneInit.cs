@@ -1,4 +1,3 @@
-using Spine.Unity;
 using UnityEngine;
 using Zjcs.Official.CombatAppearance;
 
@@ -7,7 +6,7 @@ public class PlayableSpinePlayerCloneInit : PlayableSpineCloneInit
 {
     public AppearanceCharacter AppearanceCharacter;
 
-    public override void Init(SkeletonRenderer skeletonRenderer)
+    public override void Init(Component skeletonRenderer)
     {
         if (skeletonRenderer.TryGetComponent<PlayerAppearance>(out var playerAppearance))
             AppearanceCharacter.SetRuntimeData(playerAppearance.AppearanceRuntimeData);

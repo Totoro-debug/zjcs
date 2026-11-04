@@ -11,6 +11,7 @@ namespace Zjcs.Editor
     {
         public static void Validate()
         {
+            ProjectTools.Validate();
             var json = Resources.Load<TextAsset>("Combat/skill-native-graphs");
             Require(json != null, "The generated skill graph catalog is missing.");
             var data = JsonUtility.FromJson<OfficialBattleSkillGraphCatalogData>(json.text);

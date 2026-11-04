@@ -51,6 +51,16 @@ namespace Zjcs.Offline.ProfessionUI
             return result;
         }
 
+        public static ProfessionNativeSceneRendererSettings LoadAnimation(TextAsset source, string nodeName)
+        {
+            var result = Load(source, nodeName, "Spine.Unity.SkeletonAnimation", 0, false, true);
+            if (Convert.ToSingle(result.skeleton["timeScale"]) != 1
+                || Int(result.skeleton, "updateTiming") != 1 || Flag(result.skeleton, "unscaledTime")
+                || result.UpdateWhenInvisible != 3)
+                throw new NotSupportedException("Bind additional original clone animation clock settings.");
+            return result;
+        }
+
         private static ProfessionNativeSceneRendererSettings Load(TextAsset source, string nodeName,
             string skeletonType, int materialCount, bool allowImmutableTriangles, bool allowZSpacing = false)
         {

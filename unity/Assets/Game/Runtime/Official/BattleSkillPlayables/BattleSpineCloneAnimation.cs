@@ -1,50 +1,29 @@
 using System;
-using Spine.Unity;
 using UnityEngine;
+using Zjcs.Official.ProfessionUI;
 
-// AppearanceAnimUtils.PlayAnimation(SkeletonAnimation), SetAnimation and
-// UpdateAnimation, preserving the original zero-mix and immediate pose update.
-// Split clips remain an explicit local-resource dependency.
+// Native endpoint for AppearanceAnimUtils.PlayAnimation(SkeletonAnimation).
+// Its implementation must resolve the official split clip, select track zero
+// with zero mix, and immediately apply animation and update the mesh, retaining
+// the original null-data and not-yet-initialized state branches.
+public interface IBattleSpineCloneAnimationBackend : IAppearanceAnimComponent { }
+
 public static class BattleSpineCloneAnimation
 {
-    public interface ISplitAnimationLoader
+    public static IBattleSpineCloneAnimationBackend Backend(Component skeleton)
     {
-        bool TryLoad(SkeletonAnimation skeleton, string name, out Spine.Animation animation);
+        var backend = skeleton as IBattleSpineCloneAnimationBackend;
+        if (backend == null && skeleton != null) backend = skeleton.GetComponent<IBattleSpineCloneAnimationBackend>();
+        return backend ?? throw new InvalidOperationException("Bind the native original clone animation backend.");
     }
 
-    public static void PlayAnimation(SkeletonAnimation skeleton, string name, bool loop)
+    public static void PlayAnimation(Component skeleton, string name, bool loop)
     {
         if (skeleton == null)
         {
             Debug.LogError("skeletonAnimation为空！Anim:" + name);
             return;
         }
-        if (skeleton.skeletonDataAsset == null) return;
-        var state = skeleton.AnimationState;
-        if (state == null)
-        {
-            skeleton.loop = loop;
-            skeleton.AnimationName = name;
-            return;
-        }
-        var data = skeleton.skeletonDataAsset.GetSkeletonData(true);
-        var animation = data?.FindAnimation(name);
-        if (animation == null)
-        {
-            var loader = skeleton.GetComponent<ISplitAnimationLoader>();
-            if (loader == null)
-                throw new InvalidOperationException("Bind the original split-animation loader for clone clip: " + name);
-            if (!loader.TryLoad(skeleton, name, out animation))
-            {
-                Debug.LogWarning("不存在指定的动画:" + name);
-                return;
-            }
-        }
-        var entry = state.SetAnimation(0, animation, loop);
-        entry.MixDuration = 0f;
-        entry.MixTime = 0f;
-        if (skeleton.TryGetComponent<SkeletonMecanim>(out var mecanim)) mecanim.ApplyAnimation();
-        else if (skeleton.TryGetComponent<SkeletonAnimation>(out var animated)) animated.ApplyAnimation();
-        skeleton.LateUpdateMesh();
+        Backend(skeleton).PlayAnimation(name, loop);
     }
 }

@@ -24,6 +24,7 @@ namespace Zjcs.Offline.ProfessionUI
         private ProfessionNativeSceneRendererSettings settings;
         private TextAsset appliedHierarchy;
         private TextAsset portraitHierarchy;
+        private string independentAnimationNode;
         private readonly Dictionary<Material, Material> replacements = new Dictionary<Material, Material>();
         public ScriptableObject skeletonDataAsset { get; set; }
         public ProfessionNativeAppearanceSkeleton State { get; private set; }
@@ -72,7 +73,18 @@ namespace Zjcs.Offline.ProfessionUI
             if (State != null) throw new InvalidOperationException("Configure the original studio before initializing its actor.");
             Configure(catalog);
             _ = ProfessionNativeSceneRendererSettings.LoadPortrait(hierarchy);
+            independentAnimationNode = null;
             portraitHierarchy = hierarchy;
+        }
+
+        public void ConfigureAnimation(ProfessionNativeSceneAppearanceResources catalog, TextAsset hierarchy, string nodeName)
+        {
+            if (!hierarchy || string.IsNullOrEmpty(nodeName)) throw new ArgumentNullException(nameof(hierarchy));
+            if (State != null) throw new InvalidOperationException("Configure the original clone before initializing its skeleton.");
+            Configure(catalog);
+            _ = ProfessionNativeSceneRendererSettings.LoadAnimation(hierarchy, nodeName);
+            portraitHierarchy = hierarchy;
+            independentAnimationNode = nodeName;
         }
 
         public void Initialize(bool overwrite, bool quiet)
@@ -85,10 +97,13 @@ namespace Zjcs.Offline.ProfessionUI
             var hierarchy = portraitHierarchy ? portraitHierarchy : asset.Hierarchy;
             if (appliedHierarchy && appliedHierarchy != hierarchy)
                 throw new NotSupportedException("Rebuild the original scene hierarchy before switching to a different renderer prefab.");
-            var nextSettings = portraitHierarchy ? ProfessionNativeSceneRendererSettings.LoadPortrait(hierarchy)
+            var nextSettings = independentAnimationNode != null ? ProfessionNativeSceneRendererSettings.LoadAnimation(hierarchy, independentAnimationNode)
+                : portraitHierarchy ? ProfessionNativeSceneRendererSettings.LoadPortrait(hierarchy)
                 : ProfessionNativeSceneRendererSettings.Load(hierarchy);
             var next = new ProfessionNativeAppearanceSkeleton(asset.Data);
-            var initial = next.Data.FindSkin(nextSettings.InitialSkin);
+            // SkeletonRenderer uses the data's default skin when no initial
+            // skin name is configured (as in the original clone prefabs).
+            var initial = next.Data.FindSkin(string.IsNullOrEmpty(nextSettings.InitialSkin) ? "default" : nextSettings.InitialSkin);
             if (initial == null) throw new InvalidOperationException("Original scene initial skin is unavailable.");
             next.SetSkin(initial); next.SetToSetupPose(); next.UpdateCache();
             bool keepSeparator = separator && backend != null;

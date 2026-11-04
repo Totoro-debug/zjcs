@@ -53,23 +53,23 @@
   "migrated_components_and_ports": [
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyPlayableSpineClone.cs",
-      "sha256": "404563801678a5d52051c970ed4574fb940a6b332ba2f9d04d7121e2a3dd8847"
+      "sha256": "cda56413e9f9df71118141f6c62c428cdf23fde7d4ce7564fe878cf2082d1bd9"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/PlayableSpineCloneInit.cs",
-      "sha256": "edddaea051e33faaaedf83647181fce15166102402a08eedb00a352a72c34923"
+      "sha256": "6677c841cf84c3aa0d65f6e75943f11058a1414dd8a35226e542fd3104c5a3d5"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/PlayableSpinePlayerCloneInit.cs",
-      "sha256": "6e8b147c2ee1e83388e5040b9a136f15af96ab49c4c4c1bfe066777c60ab31f2"
+      "sha256": "4dca8f710caba80cd994f4d7f039dfa1fa269d0bdabc1cba23d133602c866b0b"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/AppearanceAnimation.cs",
-      "sha256": "4e29f4068521d22ae29f8675a6f7189d6abc07a483f0e794cbdb9c5d8fc11544"
+      "sha256": "51a853a7a4b7731c275d445185540db6c5b7efaee934c97aa914b1fd7dd711bc"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/BattleSpineCloneAnimation.cs",
-      "sha256": "4f1faad63a723cada0208ed8496e1fc2ac9cbc0d0f30ddf1c8b6f98a21352d0e"
+      "sha256": "536e4f9916a8f12031c9c476190b48b50524a85baa94f8ea6615f4bcdcbfc5e0"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/PreviewTool.cs",
@@ -86,6 +86,22 @@
     {
       "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceAnimationPartHandler.cs",
       "sha256": "47d6e9f8c60fff582ff5ce490821cb9557f806d76d577ba5c2c8b3fed05f5545"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSpineCloneAnimation.cs",
+      "sha256": "62e416a82801ed26897e93277b12427993f93c4084e07d61ceb1af765f2837c5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.cs",
+      "sha256": "9ef68640ba312e40f3f1e8c689f0e330762ecefb9214c10bcc6946dc3d7867c8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRendererSettings.cs",
+      "sha256": "63b5af82438a70bd9924ccd6f2fea1f97fd717c9c9d906cca62743936e076abe"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSpineCloneAnimationValidation.cs",
+      "sha256": "3b58ccfd3dc4f2a1e371df095f28fca124d225c2db2379e747e8cff92c285ee8"
     }
   ],
   "metadata": [
@@ -124,14 +140,34 @@
     {
       "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceAnimationPartHandler.cs.meta",
       "sha256": "7891589408be7a3c3757b0c4051e087d5a75a91744ffaac564be017dd3234c17"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSpineCloneAnimation.cs.meta",
+      "sha256": "65b95dc88430b7fa7eefc78107d4b787cf21da1bb51e0e50c60adb1ead9ddb70"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.cs.meta",
+      "sha256": "7782124572671f703b0b22842ca8fbc1a57fd8df46a7c5d2ebd293a97c511188"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRendererSettings.cs.meta",
+      "sha256": "a2ed58ecb2fb97845e252e4cf359f54d5ce9e91e4ce105e77b821dd752002c08"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleSpineCloneAnimationValidation.cs.meta",
+      "sha256": "ec0ced7cb0120f081a4d3efba67e1a379dd9734bb68babed53be2d504978b822"
     }
   ],
+  "clone_settings_receipt": {
+    "path": "assets/reference/battle-animation/spine-clone-settings-source-manifest.json",
+    "sha256": "817440aec6c39ef1706d5b1e3e572d100d2f7b07e6ec3c39cb22c4b87f75549c"
+  },
   "generator": {
     "path": "scripts/prepare_battle_spine_clone_runtime_receipt.py",
-    "sha256": "df07072261e265a29dccac816b6247eb6c74511fb45c1ff7acb6e276dc260aae"
+    "sha256": "75d409c3a55951948d1423c90700a62d8d66c2e535d2962043f9dfaa9883af82"
   },
-  "operation": "Retain clone init/activate/play and clear/deactivate/stop order, original duration, player appearance source, zero-mix animation application and empty PreviewTool marker. Expose the animation state through existing read-only appearance ports; replace EC view lookup and split-animation loading with explicit scene dependencies.",
+  "operation": "Retain clone init/activate/play and clear/deactivate/stop order, original duration, player appearance source and empty PreviewTool marker. Bind source renderer selection through IProfessionFollowerRenderer and serialized targets through Component, so current native characters can participate without an SDK renderer. Expose the original track-zero, zero-mix, immediate-pose animation request and read-only state through an independent native track and physical clock. Load all renderer/clock settings from five verified original clone targets; replace EC view lookup with a scene dependency.",
   "limits": [
-    "The clone appearance renderer/resource injection, split clip loader and source death view require production scene binding and actual Play Mode/Windows Player validation. Source mapping and successful prefab loading alone do not prove those effects work."
+    "Appearance renderer/resource injection, physics inheritance of world movement and source death view require production scene binding and actual Play Mode/Windows Player validation. Source mapping and successful prefab loading alone do not prove those effects work."
   ]
 }

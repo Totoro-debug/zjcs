@@ -1,42 +1,15 @@
-using Spine.Unity;
 using UnityEngine;
 using Zjcs.Official.ProfessionUI;
 using AppearanceRenderer = Zjcs.Official.CombatAppearance.AppearanceRenderer;
 
-// Original AppearanceSystem.Runtime.AppearanceAnimation. The SDK state is
-// exposed through the same read-only state port as the other appearance views.
-[RequireComponent(typeof(SkeletonAnimation))]
+// Original AppearanceSystem.Runtime.AppearanceAnimation, using the same native
+// renderer/application boundary as the other current character appearances.
 public class AppearanceAnimation : AppearanceRenderer, IAppearanceAnimComponent
 {
-    private SkeletonAnimation mSkeletonAnimation;
-    public SkeletonAnimation SkeletonAnimation => mSkeletonAnimation
-        ? mSkeletonAnimation : (mSkeletonAnimation = GetComponent<SkeletonAnimation>());
-    public IProfessionAppearanceAnimationState AnimState => SkeletonAnimation.state == null
-        ? null : new AnimationState(SkeletonAnimation.state);
+    private Component mSkeletonAnimation;
+    public Component SkeletonAnimation => mSkeletonAnimation
+        ? mSkeletonAnimation : (mSkeletonAnimation = GetComponent<IBattleSpineCloneAnimationBackend>() as Component);
+    public IProfessionAppearanceAnimationState AnimState => BattleSpineCloneAnimation.Backend(SkeletonAnimation).AnimState;
     public void PlayAnimation(string animationName, bool loop)
         => BattleSpineCloneAnimation.PlayAnimation(SkeletonAnimation, animationName, loop);
-
-    private sealed class AnimationState : IProfessionAppearanceAnimationState
-    {
-        private readonly Spine.AnimationState state;
-        public AnimationState(Spine.AnimationState state) { this.state = state; }
-        public IProfessionAppearanceTrack GetCurrent(int track)
-        {
-            var entry = state?.GetCurrent(track);
-            return entry == null ? null : new Track(entry);
-        }
-    }
-    private sealed class Track : IProfessionAppearanceTrack
-    {
-        private readonly Spine.TrackEntry track;
-        public Track(Spine.TrackEntry track) { this.track = track; }
-        public IProfessionAppearanceAnimation Animation => track.Animation == null
-            ? null : new Animation(track.Animation);
-    }
-    private sealed class Animation : IProfessionAppearanceAnimation
-    {
-        private readonly Spine.Animation animation;
-        public Animation(Spine.Animation animation) { this.animation = animation; }
-        public string Name => animation.Name;
-    }
 }

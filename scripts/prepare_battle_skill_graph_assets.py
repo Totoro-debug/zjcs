@@ -168,7 +168,7 @@ def main():
     write_changed(RECEIPT, json.dumps(proof, ensure_ascii=False, indent=2) + '\n')
     print('Active-version skill graph bindings:', len(skills),
           'official skill entities;', len(roots), 'directed graph roots;',
-          len(resources), 'converted graph assets.')
+          len(set(resources.values())), 'distinct converted graph assets.')
 
 
 if __name__ == '__main__':
