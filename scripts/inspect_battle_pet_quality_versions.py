@@ -61,6 +61,44 @@ class OfficialApkRanges(io.RawIOBase):
         return raw
 
 
+def legacy_quality_record(raw):
+    header = Reader(raw)
+    if header.read("I") != 0x00594F4F or header.string() != "2.0.0":
+        raise ValueError("Review historical manifest format")
+    # V2 length-prefixed BundleTable fields, verified against ManifestTools.
+    name = b"defaultpackage_assets_image_ui_itemquality.bundle"
+    needle = len(name).to_bytes(2, "little") + name
+    if raw.count(needle) != 1: raise ValueError("Ambiguous historical quality bundle record")
+    record = Reader(raw); record.pos = raw.index(needle)
+    bundle_name = record.string(); unity_crc = record.read("I")
+    bundle_hash = record.string(); file_crc = record.string(); size = record.read("q"); encrypted = record.read("?")
+    if not re.fullmatch("[a-f0-9]{32}", bundle_hash) or encrypted:
+        raise ValueError("Review historical quality bundle identity/encryption")
+    return dict(bundle_name=bundle_name, bundle_md5=bundle_hash, unity_crc=unity_crc,
+                file_crc=file_crc, size=size)
+
+
+def inspect_legacy_cdn():
+    root = "https://zhangjcsdl.leiting.com/patch/202509301228340/Android/DefaultPackage/"
+    def read(name):
+        return urllib.request.urlopen(urllib.request.Request(root + name,
+            headers={"User-Agent": "Mozilla/5.0"}), timeout=30).read()
+    version = read("PackageManifest_DefaultPackage.version").decode("ascii").strip()
+    if version != "340_153141": raise ValueError("Review changed historical CDN version")
+    entry = "PackageManifest_DefaultPackage_" + version
+    expected = read(entry + ".hash").decode("ascii").strip()
+    raw = read(entry + ".bytes")
+    if hashlib.md5(raw).hexdigest() != expected: raise ValueError("Historical CDN manifest MD5 differs")
+    record = legacy_quality_record(raw)
+    filename = record["bundle_md5"] + ".bundle"
+    payload = read(filename)
+    if len(payload) != record["size"] or hashlib.md5(payload).hexdigest() != record["bundle_md5"]:
+        raise ValueError("Historical CDN quality bundle differs")
+    return inspect(payload, dict(version=version, origin="official_cdn", url=root + filename,
+        manifest=dict(url=root + entry + ".bytes", md5=expected, sha256=sha(raw)),
+        bundle_sha256=sha(payload), **record))
+
+
 def inspect_older_apk():
     # This URL is the full-update target of the official 152594 config branch.
     config_url = "https://zhangjcsupdate.leiting.com/zhangjcs/version/release/110001_Main.dis"
@@ -75,19 +113,8 @@ def inspect_older_apk():
         expected = archive.read(entry.removesuffix(".bytes") + ".hash").decode("ascii").strip()
         if hashlib.md5(raw).hexdigest() != expected:
             raise ValueError("Historical APK manifest MD5 differs")
-        header = Reader(raw)
-        if header.read("I") != 0x00594F4F or header.string() != "2.0.0":
-            raise ValueError("Review historical manifest format")
-        # V2 BundleTable's length-prefixed UTF8 name, UnityCRC, FileHash,
-        # FileCRC, FileSize and Encrypted fields, from YooAsset ManifestTools.
-        name = b"defaultpackage_assets_image_ui_itemquality.bundle"
-        needle = len(name).to_bytes(2, "little") + name
-        if raw.count(needle) != 1: raise ValueError("Ambiguous historical quality bundle record")
-        record = Reader(raw); record.pos = raw.index(needle)
-        bundle_name = record.string(); unity_crc = record.read("I")
-        bundle_hash = record.string(); file_crc = record.string(); size = record.read("q"); encrypted = record.read("?")
-        if not re.fullmatch("[a-f0-9]{32}", bundle_hash) or encrypted:
-            raise ValueError("Review historical quality bundle identity/encryption")
+        record = legacy_quality_record(raw)
+        bundle_hash, size = record["bundle_md5"], record["size"]
         candidates = [value for value in archive.namelist()
             if value.startswith("assets/yoo/DefaultPackage/") and bundle_hash in value and value.endswith(".bundle")]
         if len(candidates) != 1: raise ValueError("Historical quality payload is not uniquely packaged")
@@ -97,8 +124,7 @@ def inspect_older_apk():
         return inspect(payload, dict(version="332_153082", origin="official_apk_zip_ranges", url=url,
             configuration=dict(url=config_url, sha256=sha(config)), apk_size=remote.length, apk_etag=remote.etag,
             full_apk_sha256_verified=False, entry=candidates[0], zip_crc32=archive.getinfo(candidates[0]).CRC,
-            manifest=dict(entry=entry, md5=expected, sha256=sha(raw)), bundle_name=bundle_name,
-            bundle_md5=bundle_hash, bundle_sha256=sha(payload), unity_crc=unity_crc, file_crc=file_crc,
+            manifest=dict(entry=entry, md5=expected, sha256=sha(raw)), bundle_sha256=sha(payload), **record,
             v2_record_layout="https://raw.githubusercontent.com/tuyoogame/YooAsset/2.3.12/Assets/YooAsset/Runtime/ResourcePackage/ManifestTools.cs"))
 
 
@@ -140,6 +166,7 @@ def build():
     finally:
         apk.archive.close()
     results.append(inspect_older_apk())
+    results.append(inspect_legacy_cdn())
     target = ROOT / "assets/reference/battle-hud/pet-quality-version-source-manifest.json"
     target.write_bytes((json.dumps(dict(generator_sha256=sha(Path(__file__).read_bytes()), versions=results,
         operation="Inspect actual original Sprite objects in each independently verified version. No replacement art, version repinning or runtime asset changes."),
