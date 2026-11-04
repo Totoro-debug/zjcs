@@ -315,6 +315,8 @@ HP 启动的当前验证：静态检查通过84993个GUID；HP启动、状态启
 
 ## 自定义实现
 
+人物附加特效排序适配（用户已确认，尚未完成）：官方 `AppearanceRendererPartHandler` 收集效果的插槽分段，原 AOT `SkeletonRenderSeparator.OptimizeRender` 没有可在当前 Windows 运行的实现。按官方 `SlotName`／`ZFront` 把已绑定效果放到对应插槽前后，保留粒子原排序层和排序号的相对优先级；未绑定插槽的效果继续使用原配置。这是已确认的原生渲染适配规则，不宣称复用了 SDK 排序实现。
+
 回合触发延迟（局部实现）：官方 `FightStatusRoundStartComponentInfo` 提供DelayRound／DelayRoundType，说明监听者回合延迟要求有效ListenTargetType，且存在延迟时TryAtStart无效；客户端未提供服务器等待实现。按用户确认，从施加或同来源刷新的监听者个人回合起完整等待配置回合，延迟2时第3回合起允许判定；只等待开始的一次，成功后不重新延迟；刷新重新等待，保留实际调用次数与MeetCount累计。`RoundStartDelayStartRound` 单独保存监听者时钟，不复用可能属于另一单位的状态寿命时钟，等待在概率抽取、条件累计和效果之前判断。执行器在新状态、同来源续期、初始装配和真实新步骤前取得监听者回合，运行期委托不入存档，重复回执不推进等待。旧检查点按原配置恢复此前阻止的延迟分支；九项原配置的监听／寿命均指向持有者，故可从已保存StartRound恢复原等待起点，不重新等待或重置次数。
 
 原64603／64613／64623／64633／64643／16693在第3回合执行原64604／64614／64624／64634／64644／16750，原25140在第3回合后连续添加24431，原25213只添加一次24852。`test_battle_round_delay.ps1` 覆盖九项实际技能／状态、前两回合不调用、第3回合调用、原有限状态到期、无限状态后续连续触发、刷新后第4／5回合等待且第6回合恢复、累计与实例保留、不同监听／寿命时钟、延迟时忽略TryAtStart且不提前耗随机数／累计、旧字段恢复及逐回合检查点逐字一致。25285的AnyFriendMatchFilter→LogicNotFilter→EntityHasAnyStatusFilter按用户确认补足：存在至少一个存活、在场且没有24207／24301任一状态的友方时才允许触发，包含自身、NPC与召唤物，不另加可选中限制；先检查条件，再抽概率和累计，不满足则跳过且等待不重启。配置类型链、IncludeMe和排除状态列表原样读取并深复制，其他未支持过滤树仍阻止执行。规则验证覆盖自身／玩家／NPC／召唤物、敌方、阵亡、离场及两项独立排除，确认失败条件不耗随机数或累计；25285→13370实际执行及旧检查点恢复通过。当前载荷没有GlobalRound延迟配置，该类型仍未开放。
@@ -670,6 +672,10 @@ HP 启动的动画绑定仍有缺项：实际公共宿主中的13500能在零时
 当前原Game人物装配接线（局部实现）：`OfflineProfessionScenePlayerBindings` 为失活的原 `PlayerModel_Game` 注入本地人物、材质、外观特效服务及部件池；核对并复用原基础 `AppearanceRendererPartHandler`、PartSlot、排序、皮肤／纹理加载引用、Game阶段及原Animator引用，不改模型层级或缩放。保留原 `PlayerAnimatorAppearance.Init／RefreshAppearance` 的职业控制器选择、人物与部件装配、零时间Animator求值及自身外观事件订阅／解除顺序；首次无有效动作时只完成初始约束与零时间物理姿态，同一人物后续刷新不重绑物理历史。入口为 `OfficialBattlePlayerModelClipValidation.RunPlayerAppearanceBindings`，来源见[原Game人物装配来源](../../assets/reference/battle-animation/player-scene-bindings-source-manifest.json)。这是可注入正式服务的模型绑定端；公共战斗宿主、原3100外层实体／ECS视图、HP事件及全部技能仍待接入，不能据此视为完整人物工厂。
 
 原Game人物装配接线验证（局部）：固定共用源码与本地资源的隔离工程完成Unity2022.3.57f1c2编译、ProjectTools.Validate、内置屏BOE0CD1／Direct3D11实际Play Mode，退出0；主工程静态检查通过（123834个GUID）。四组男女战士／法师使用原三节点prefab、真实职业控制器与隔离本地人物投影，原Init完成／外观事件通知、初始零时间姿态、实际LateUpdate物理、幂等绑定、禁用时解除订阅、回池恢复时刷新且保留历史、完整部件回收及人物数据不变均通过。回归另覆盖571帧实际LateUpdate（419帧混合、120次物理变化对照）、重入重绘、死亡／复活、离屏恢复、真实shader裁剪及独立材质；8张原人物生命周期图、16张动作图和12张裁剪／显隐图共36张已全部查看，长法杖纳入完整取景。夹具未覆盖外观附加特效、实际UI输入或磁盘存档；正式公共战斗宿主／完整3100实体、全部技能及Windows构建／发布仍未完成。
+
+战斗人物资源归属（局部实现）：`ProfessionAppearanceTextureBindings.Register` 按显式本地图集身份及纹理GUID注册资源持有者，`OfflineProfessionBattleSceneTextures.Register` 复用既有本体Low／独立武器High路由。注册不替换主界面的 `Current` 端点，未注册请求仍回到该端点；重叠注册可嵌套或乱序释放，重复释放不重复移除，已经取得的纹理句柄仍由原资源持有者释放。原 `UnsafeAssetProxy`、按需加载器、材质引用计数及部件池的控制流程保持原移植实现。代码与官方输入身份见[人物资源归属来源](../../assets/reference/battle-animation/player-resource-ownership-source-manifest.json)。正式人物工厂和公共宿主仍未接通。
+
+人物资源归属验证（局部）：主工程静态检查通过（125347个GUID），固定源码副本静态检查通过（124036个GUID），Unity2022.3.57f1c2编译、ProjectTools.Validate及内置屏BOE0CD1／Direct3D11实际Play Mode退出0。用真实本地图集及纹理句柄核对重叠注册、嵌套／乱序／重复释放、旧句柄释放不卸载仍在使用的纹理、本体／武器图集共存及未注册请求回退；主界面端点引用始终不变。四组男女战士／法师在主界面端点主动拒绝人物纹理请求的夹具中，全部通过注册路由完成实际待机、外观刷新、普通／开场死亡、复活及资源回收；16张动作图和12张武器裁剪／显隐图共28张已全部查看。入口为 `OfficialBattlePlayerModelClipValidation.RunPlayerResourceRoutes`；本项没有运行实际主界面人物与战斗人物同时显示、UI输入、磁盘存档或Windows构建／发布。
 
 当前3100玩家模型／根控制器分支（局部实现）：`ProfessionNativeBattlePlayerActor` 使用当前884原包的 `3100 → 3100_view → body → PlayerModel_Game` 四层变换，保留嵌入模型的原局部位置 `(0,-0.5,0)`、缩放 `(0.3,0.3,1)` 及对象层；复用原Game模型和人物装配端，将原 `AnimationController` 放回实体根节点，按原字段设置独立覆盖控制器、关闭额外图创建及禁用时保留初始化，并恢复 `PlayerAnimatorAppearance.AnimController`／空直接Animator交叉引用。原外观刷新继续选择职业控制器，自动LateUpdate仍是人物物理的唯一逐帧推进；所有新建覆盖控制器和租用武器在关闭时释放。来源与提取入口见[3100玩家控制器来源](../../assets/reference/battle-animation/player-animation-binding-source-manifest.json)，验证入口为 `OfficialBattlePlayerModelClipValidation.RunPlayerActors`。这只恢复原实体的模型／控制器分支，完整ECS、HUD、阴影和公共宿主／HP通知接线仍由后续角色视图负责。
 

@@ -1,0 +1,68 @@
+{
+  "manifest": "884_156692",
+  "originals": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source/UnsafeAssetProxy.cs",
+      "sha256": "4a00451ea95e909a382316546dbfb145a774eb50857d9951e2f25bfe32c99377"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceAssetManager.cs",
+      "sha256": "1a6ab8d07fe0c4cd8026497cf6e8df085e69bfb0cb444e3f3d2f084af1d82fe8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/AppearanceOnDemandTextureLoader.cs",
+      "sha256": "2b3619bb979fce0483e373c14bd8854c2848a228d0ab5743695815da7eda7463"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/CharacterPartEntryProvider.cs",
+      "sha256": "4065b017813cd0c379f9f5051028554d77b79aec7359c476213d800afb7be87d"
+    }
+  ],
+  "runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceTextureBindings.cs",
+      "sha256": "d9662a1185283534384dd73906c52a775ee95bff8ead68df2760ed44b8cd4118"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionBattleSceneTextures.cs",
+      "sha256": "7f41d8901bdecd4144fe9de585769f402bbfd6450cb1eee72168f5f513d28976"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.cs",
+      "sha256": "ffadf3fd71a390b046d1ba48ecfe11a6b1b6ab3bc8ea38be57fcd5eedbc6f3a9"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.ResourceRoutes.cs",
+      "sha256": "5b59d170dccb6a7c23c3a6acac2a28d04d24c1f3bc67b8e36a51fd3c48b79970"
+    }
+  ],
+  "metadata": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceTextureBindings.cs.meta",
+      "sha256": "dc6cbdf2c7a01a9f0a0fdd5254adc4fc04705a09c4c5ac85fe8700184e2c9b78"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionBattleSceneTextures.cs.meta",
+      "sha256": "ea6618a70f7cc9eb6ac334d97ab90b4995091ae95feaeb00e1112d4385e797bc"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.cs.meta",
+      "sha256": "2d5d88da76093fb2985f3cbe852610a6fa9426a9696c4cfe6c58a36fdf82707b"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.ResourceRoutes.cs.meta",
+      "sha256": "b3fb49f7e71f14ee5a50cdd531fd7876f0b7791f06c7abd4420db923de1d7fa4"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_player_resource_ownership.py",
+    "sha256": "e33bf6d952f1f66b05d5116c53b02020e078287d83ec76c13a6d31366c9f258f"
+  },
+  "operation": "Keep original application proxy handles, material references and release callbacks. Register exact packaged texture GUIDs and atlas identities without replacing the host UI endpoint. Registrations may end in any order; handles retain their original resource owner.",
+  "binding": "OfflineProfessionBattleSceneTextures.Register",
+  "limits": [
+    "Production player factory, host input, disk-save flow and Windows Player remain separate."
+  ]
+}

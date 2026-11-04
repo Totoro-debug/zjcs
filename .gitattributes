@@ -2301,3 +2301,9 @@ unity/Assets/Official/World/Map/14/map14.json text eol=lf
 scripts/prepare_mainline_minimap_dialog_catalog.py text eol=lf
 assets/reference/official-map/mainline-minimap-mark-dialog-catalog-source-manifest.json text eol=lf
 unity/Assets/Game/Resources/MainlineMiniMap/mark-dialog-assets.asset* text eol=lf
+
+# Keep the native player resource ownership port and input identities stable.
+assets/reference/battle-animation/player-resource-ownership-source-manifest.json text eol=lf
+scripts/prepare_battle_player_resource_ownership.py text eol=lf
+unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.ResourceRoutes.cs text eol=lf
+unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.ResourceRoutes.cs.meta text eol=lf

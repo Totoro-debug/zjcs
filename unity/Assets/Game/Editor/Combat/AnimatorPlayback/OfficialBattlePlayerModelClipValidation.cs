@@ -34,6 +34,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".player-actor", false);
             SessionState.SetBool(Key + ".player-attachments", false);
             SessionState.SetBool(Key + ".player-effects", false);
+            SessionState.SetBool(Key + ".player-resource-routes", false);
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             Type.GetType("Zjcs.Editor.ProjectTools, Zjcs.Editor", true).GetMethod("Validate").Invoke(null, null);
             if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR")))
@@ -116,9 +117,13 @@ namespace Zjcs.Editor.Combat
                 using var manager = new AppearanceAssetManager(weaponTextures.ManagerConfig, _ => new Subscription());
                 var materialBindings = new OfflineProfessionWeaponTextureResources(config, manager, weaponTextures);
                 var previous = ProfessionAppearanceTextureBindings.Current;
-                ProfessionAppearanceTextureBindings.Current = new OfflineProfessionBattleSceneTextures(catalog, textures, weaponTextures, materialBindings);
+                var sceneTextures = new OfflineProfessionBattleSceneTextures(catalog, textures, weaponTextures, materialBindings);
+                bool checkRoutes = SessionState.GetBool(Key + ".player-resource-routes", false);
+                using var routes = checkRoutes ? sceneTextures.Register() : null;
+                ProfessionAppearanceTextureBindings.Current = checkRoutes ? new RejectTextureRoutes() : (IProfessionAppearanceTextureBindings)sceneTextures;
                 try
                 {
+                    if (checkRoutes) CheckPlayerTextureRoutes(sceneTextures, catalog, weaponTextures);
                     if (SessionState.GetBool(Key + ".player-actor", false))
                     {
                         var actorCheck = CheckPlayerActors(prefab, catalog, weapons, manager, materialBindings, config, resolver);

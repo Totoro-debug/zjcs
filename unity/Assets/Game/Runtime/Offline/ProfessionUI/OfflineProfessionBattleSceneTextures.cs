@@ -32,5 +32,6 @@ namespace Zjcs.Offline.ProfessionUI
             if (!atlas || !byAtlas.TryGetValue(atlas, out var binding)) throw new NotSupportedException("Original battle scene atlas identity is unbound.");
             return binding.GetAtlasMaterial(atlas, materialIndex);
         }
+        public IDisposable Register() => ProfessionAppearanceTextureBindings.Register(this, byGuid.Keys, byAtlas.Keys);
     }
 }
