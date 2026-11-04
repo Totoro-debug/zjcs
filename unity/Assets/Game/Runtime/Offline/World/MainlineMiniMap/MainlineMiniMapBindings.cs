@@ -23,5 +23,12 @@ namespace Zjcs.Offline.World.MainlineMiniMap
         public IMiniMapClickInput ClickInput;
         public IMiniMapClickCameraControl CameraControl;
         public IMiniMapClickPublisher ClickPublisher;
+
+        internal MainlineMiniMapBindings WithResourcePoints(MiniMapResourcePointContext resources)
+        {
+            var copy = (MainlineMiniMapBindings)MemberwiseClone();
+            copy.ResourcePoints = resources;
+            return copy;
+        }
     }
 }

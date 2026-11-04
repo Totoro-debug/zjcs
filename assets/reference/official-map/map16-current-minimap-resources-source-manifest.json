@@ -843,5 +843,6 @@
   },
   "operation": "Pair original CAB/PPtr hierarchy and complete selected native fields. Bind exact native GUID dependencies, verified current Windows textures/shaders, and independent original skeleton/atlas data. Preserve native fileIDs, tile sprites, labels, transforms and renderers. Historical terrain exports remain separate.",
   "metadata_text_normalization": "UTF-8 LF; remove trailing spaces from empty importer fields without changing fields or GUIDs.",
+  "rect_serialization": "Original Rectf x/y/width/height fields use Unity YAML serializedVersion 2; preserve all four original numeric values.",
   "sprite_geometry": []
 }

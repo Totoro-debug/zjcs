@@ -3,6 +3,7 @@ using System.IO;
 using UnityEngine;
 using Zjcs.Official.World.Map13MiniMap;
 using Zjcs.Official.World.NativeMap13Labels;
+using Zjcs.Offline.World.NativeMap13MiniMapResources;
 using Object = UnityEngine.Object;
 
 namespace Zjcs.Offline.World.MainlineMiniMap
@@ -15,8 +16,28 @@ namespace Zjcs.Offline.World.MainlineMiniMap
         private readonly MainlineNativeMiniMapRoot root;
         private RenderTexture texture;
         private bool disposed;
+        private IDisposable ownedResourcePoints;
         private MainlineMiniMap(GameObject owner, MainlineNativeMiniMapRoot root)
         { this.owner = owner; this.root = root; }
+
+        public static MainlineMiniMap Create(GameObject prefab, Transform parent, MainlineMiniMapBindings bindings,
+            MiniMapResourcePointAssets resources, Func<string, Sprite> resourceSpriteResolver = null)
+        {
+            if (bindings?.State == null || bindings.ResourcePoints != null)
+                throw new ArgumentException("Provide the original resource catalog or an external resource context, once.");
+            var context = new LocalMiniMapResourcePointContext(resources, bindings.State.LabelServices, resourceSpriteResolver);
+            try
+            {
+                var map = Create(prefab, parent, bindings.WithResourcePoints(context));
+                map.ownedResourcePoints = context;
+                return map;
+            }
+            catch
+            {
+                context.Dispose();
+                throw;
+            }
+        }
 
         public static MainlineMiniMap Create(GameObject prefab, Transform parent, MainlineMiniMapBindings bindings)
         {
@@ -109,6 +130,8 @@ namespace Zjcs.Offline.World.MainlineMiniMap
             CloseFullScreen();
             DisposeHud();
             if (owner != null) { owner.SetActive(false); root.LiveVisibility?.Dispose(); Object.Destroy(owner); }
+            ownedResourcePoints?.Dispose();
+            ownedResourcePoints = null;
             if (texture != null) { texture.Release(); Object.Destroy(texture); texture = null; }
         }
     }

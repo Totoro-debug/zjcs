@@ -189,6 +189,10 @@ class MiniMapRootBinding(MiniMapRegionsBinding):
         return result
 
     def replace(self, value):
+        if isinstance(value, dict) and set(value) == {'x', 'y', 'width', 'height'}:
+            # APK Rectf fields use width/height. Unity YAML without this version
+            # reads the legacy xMin/yMin/xMax/yMax form and collapses UVs to zero.
+            return dict(serializedVersion=2, **value)
         if isinstance(value, dict) and set(value) == {'class', 'ns', 'asm'}:
             if value['class'] in ('StateGameObjectConfig', 'StateAlphaConfig', 'StateGraphicColorConfig'):
                 return dict(value, ns='Zjcs.Official.World.NativeLabelUI', asm='Zjcs.Official.World.NativeLabelUI')
@@ -210,6 +214,7 @@ class MiniMapRootBinding(MiniMapRegionsBinding):
             if name.endswith('.meta'):
                 receipt['outputs'][name] = sha((ROOT / name).read_bytes())
         receipt['metadata_text_normalization'] = 'UTF-8 LF; remove trailing spaces from empty importer fields without changing fields or GUIDs.'
+        receipt['rect_serialization'] = 'Original Rectf x/y/width/height fields use Unity YAML serializedVersion 2; preserve all four original numeric values.'
         self.receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', encoding='utf8', newline='\n')
 
     def build_root(self):

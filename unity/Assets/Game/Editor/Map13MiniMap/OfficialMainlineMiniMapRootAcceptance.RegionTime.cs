@@ -9,6 +9,7 @@ using UnityEngine;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.World;
 using Zjcs.Offline.World.MainlineMiniMap;
+using Zjcs.Offline.World.NativeMap13MiniMapResources;
 using Zjcs.Official.World;
 using Zjcs.Official.World.Map13MiniMap;
 using Zjcs.Official.World.NativeLabelUI;
@@ -92,7 +93,13 @@ namespace Zjcs.Editor.Map13MiniMap
             var player = new OfflinePlayerProgress { Rank = 4 };
             player.RankUnlockTimes.Add(new OfflineRankUnlockTime { Rank = 4, UnixSeconds = acquired.ToUnixTimeSeconds() });
             bindings.RegionTime = new OfflineCharacterRankRegionTime(definition, () => player, () => clock);
-            var module = MainlineMiniMap.Create(prefab, null, bindings);
+            var resources = Resources.Load<MiniMapResourcePointAssets>("Map16/Native/current-resource-point-assets");
+            bool wrongMapRejected = false;
+            try { MainlineMiniMap.Create(prefab, null, bindings, Resources.Load<MiniMapResourcePointAssets>("Map13/Native/current-resource-point-assets")); }
+            catch (InvalidDataException) { wrongMapRejected = true; }
+            Require(wrongMapRejected && labels.Subscribers == 0 && bindings.ResourcePoints == null,
+                "A wrong-map catalog releases its temporary subscription and leaves caller bindings untouched");
+            var module = MainlineMiniMap.Create(prefab, null, bindings, resources);
             yield return null;
             var root = Object.FindObjectOfType<MainlineNativeMiniMapRoot>();
             var row0 = root.GetRegion(16, 0).LabelInfo;
@@ -107,7 +114,7 @@ namespace Zjcs.Editor.Map13MiniMap
             player.Rank = 4;
             var secondClock = clock.AddDays(-1);
             bindings.RegionTime = new OfflineCharacterRankRegionTime(definition, () => player, () => secondClock);
-            var second = MainlineMiniMap.Create(prefab, null, bindings);
+            var second = MainlineMiniMap.Create(prefab, null, bindings, resources);
             yield return null;
             var secondRoot = Object.FindObjectsOfType<MainlineNativeMiniMapRoot>().Single(candidate => candidate != root);
             var secondRow = secondRoot.GetRegion(16, 0).LabelInfo;

@@ -41,7 +41,7 @@
 | 龙之国 | 732 | 280×280 | 111 | 2 | [完整根](../../assets/reference/official-map/map14-current-minimap-root-source-manifest.json) |
 | 鲸背岛 | 315 | 140×120 | 43 | 4 | [完整根](../../assets/reference/official-map/map16-current-minimap-root-source-manifest.json) |
 
-隔离 GUI Play Mode 已验证六张完整原 prefab 的全部 MonoScript、托管引用类型和序列化对象引用。泽之国使用原57,600格／106地区夹具，通过延迟离线响应、原白雾及标记初始化、全屏视野切换与缓存恢复、关闭事件、重新启用、订阅释放；已查看温泉乡原层级实际渲染截图。原尺寸的小地图纹理复用同一实例，公共工厂销毁实例时先停用再释放纹理，重复销毁不重复处理。初始岛、森之国、山之国、龙之国与鲸背岛分别使用本图已安装的导航、地区和原配置，通过同一工厂验证原根加载、地区插槽数量、离线请求保持隐藏和销毁释放；未给它们套用泽之国离线响应。上述原根夹具的实体／资源查询为空，关闭事件直接调用原入口，HUD和全屏窗口另按下文验证；真实实体图标、采集资源、正式地图存档响应投影或Windows Player仍未完成。主工程 Unity 导入／编译、`ProjectTools.Validate` 与静态元数据检查通过。
+隔离 GUI Play Mode 已验证六张完整原 prefab 的全部 MonoScript、托管引用类型和序列化对象引用。泽之国使用原57,600格／106地区夹具，通过延迟离线响应、原白雾及标记初始化、全屏视野切换与缓存恢复、关闭事件、重新启用、订阅释放；已查看温泉乡原层级实际渲染截图。原尺寸的小地图纹理复用同一实例，公共工厂销毁实例时先停用再释放纹理，重复销毁不重复处理。初始岛、森之国、山之国、龙之国与鲸背岛分别使用本图已安装的导航、地区和原配置，通过同一工厂验证原根加载、地区插槽数量、离线请求保持隐藏和销毁释放；未给它们套用泽之国离线响应。上述原根夹具的实体查询仍由显式夹具提供，资源上下文已改为当前资源目录；关闭事件直接调用原入口，HUD和全屏窗口另按下文验证。真实实体图标、采集资源交互、正式地图存档响应投影或Windows Player仍未完成。主工程 Unity 导入／编译、`ProjectTools.Validate` 与静态元数据检查通过。
 
 公共小地图 HUD 另迁入当前原 `MiniMapMaskedUI`、`AreaInfoUI`、`PublicMapBranchLineBtn` 完整路径及 `MultiLanguageTMPControler`／语言组配置，原局部坐标、区域名称、原探索度公式、延迟弹窗回调取当前地图、公开地区与频道数显隐、战斗错误4131及状态配色分支均保留。`MainlineMiniMap.AttachHud` 在原父插槽内实例化完整79对象的 `MiniMapMaskedUI.prefab`，激活前绑定地图／角色／语言／字体／窗口／声音；与主实例共同显隐并先销毁 HUD，再释放纹理。原按钮声音 `Main_Cursor_Normal` 从实际 Wwise 事件、bank和媒体解码，不用替代声音。资源、脚本与逐文件原输入等价凭据见[原 HUD 代码](../../assets/reference/official-map/mainline-minimap-hud-code-source-manifest.json)和[原生 HUD](../../assets/reference/official-map/mainline-current-minimap-hud-source-manifest.json)。
 
@@ -159,9 +159,13 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 
 公共小地图资源点已扩展到当前 `884_156692` 的六个原地图目录。`LocalMiniMapResourcePointContext` 直接从原地区配置取得地图身份，同一构造入口消费各图资源目录、地区状态与可选图标解析器，不再固定为泽之国13；旧目录没有新增存档字段，原泽之国目录继续按原地区行识别。原 `MiniMapResourcePointManager`／`Board`／`TapItem` 等六类当前源码与已迁移版本字节一致，复用同一实现。Map10／11／12／13／14／16 的原资源板数量分别为0／18／23／23／30／0，空列表保留；其余四图共94块原资源板与94条动态图标路径，物品定位106条、刷新组定位212条均由当前原 Luban 构造器读取，地区分别为5／77／99／106／111／43条。
 
-原资源管理器从完整原根提取三对象子树，只断开父引用，完整保留原字典；资源板按原 GUID 显式绑定，Sprite 恢复原逻辑矩形、原网格、有效图集 UV、像素单位与 pivot，纹理沿当前 Windows 原生转换链。当前载荷位于 `Assets/Official/World/Map/{ID}/NativeMiniMapResourcesCurrent`，目录入口为 `Map{ID}/Native/current-resource-point-assets`；历史871目录保持独立。生成器为 `prepare_mainline_minimap_resource_points.py`，来源分别见 `assets/reference/official-map/map{ID}-current-minimap-resources-source-manifest.json`；隔离图形验证入口为 `OfficialMap13MiniMapResourcePointsAcceptance.RunCurrent`，工程由 `prepare_mainline_minimap_resource_validation.py` 准备。当前资源目录尚待正式公共原生小地图工厂消费，不能将独立管理器验证视为正式HUD或Windows Player完成。
+原资源管理器从完整原根提取三对象子树，只断开父引用，完整保留原字典；资源板按原 GUID 显式绑定，Sprite 恢复原逻辑矩形、原网格、有效图集 UV、像素单位与 pivot，纹理沿当前 Windows 原生转换链。当前载荷位于 `Assets/Official/World/Map/{ID}/NativeMiniMapResourcesCurrent`，目录入口为 `Map{ID}/Native/current-resource-point-assets`；历史871目录保持独立。生成器为 `prepare_mainline_minimap_resource_points.py`，来源分别见 `assets/reference/official-map/map{ID}-current-minimap-resources-source-manifest.json`；隔离图形验证入口为 `OfficialMap13MiniMapResourcePointsAcceptance.RunCurrent`，工程由 `prepare_mainline_minimap_resource_validation.py` 准备。当前资源目录已由公共原生小地图工厂消费；正式地图宿主尚待切换，不能将独立管理器验证视为正式HUD或Windows Player完成。
 
-六图资源目录的隔离图形 Play Mode 已通过：94块原资源板、620个标记点（山之国121、森之国160、泽之国178、龙之国161），全部 Sprite 逻辑字段、网格／图集UV与来源凭据一致；覆盖原资源层顺序、物品／怪物定位过滤、地区映射、公开／私有／未知状态事件、显式选择与引导取消、缓存复用及全部租约释放。已实际查看四张资源标记渲染截图；测试直接驱动原管理器，不代表正式地图鼠标操作或存档流程。两项来源／绑定检查、全量静态元数据检查（118,396个GUID）、正式工程Unity导入／编译与 `ProjectTools.Validate` 通过。当前没有发布新的Windows Player。
+`MainlineMiniMap.Create` 的资源目录入口在原根激活前创建本地资源适配器，并与绑定副本一起交给既有完整根工厂；调用方原绑定保持不变。工厂统一持有并释放适配器，创建失败也退订，不销毁外部目录拥有的原生资产；直接提供外部资源上下文的既有入口继续由调用方持有，两个入口不能同时提供上下文与目录。额外引导图标可通过原适配器已有的精灵解析依赖注入。回归入口已将泽之国HUD、鲸背岛地区计时及其余五图原根改为读取当前资源目录；图形Play Mode通过同一工厂验证目录地图身份、原图层顺序、调用方绑定不变、创建失败退订及销毁后的全部订阅释放。正式宿主与完整地图路线仍未切换。
+
+完整原生小地图转换链为官方 Rectf 补齐 Unity YAML 的版本标记，保持原坐标、宽高与UV数值；缺少版本会使原RawImage的UV宽高在导入后变为0。图形回归同时检查原UV矩形与圆形HUD最终画面中的地形像素，后台纹理有像素不再单独作为HUD显示通过条件。修复后原HUD、全屏页、筛选、单分线隐藏及鲸背岛计时回归通过；七张实际画面已查看，圆框中的地形、角色点与原遮罩正常显示。
+
+六图资源目录的隔离图形 Play Mode 已通过：94块原资源板、620个标记点（森之国121、山之国160、泽之国178、龙之国161），全部 Sprite 逻辑字段、网格／图集UV与来源凭据一致；覆盖原资源层顺序、物品／怪物定位过滤、地区映射、公开／私有／未知状态事件、显式选择与引导取消、缓存复用及全部租约释放。已实际查看四张资源标记渲染截图；测试直接驱动原管理器，不代表正式地图鼠标操作或存档流程。三项来源／绑定检查、全量静态元数据检查（118,404个GUID）、正式工程Unity导入／编译与 `ProjectTools.Validate` 通过。当前没有发布新的Windows Player。
 
 ## 自定义实现
 

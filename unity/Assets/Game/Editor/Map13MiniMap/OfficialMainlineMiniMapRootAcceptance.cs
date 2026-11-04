@@ -220,9 +220,8 @@ namespace Zjcs.Editor.Map13MiniMap
             module.Dispose();module.Dispose();yield return null;Require(characters.Subscribers==0&&!miniTexture,"Complete native hierarchy releases character subscriptions and owned texture");
             state.Current=13;
             host.AddComponent<MyEntity>();host.AddComponent<MyTransform>().Position=lite.GridToPos(center);
-            var originalResourcePoints=bindings.ResourcePoints;
-            var resourceAssets=Resources.Load<MiniMapResourcePointAssets>("Map13/Native/minimap-resource-point-assets");Require(resourceAssets,"Original resource-point catalog");
-            var localResourcePoints=new LocalMiniMapResourcePointContext(resourceAssets,labels);bindings.ResourcePoints=localResourcePoints;
+            var resourceAssets=Resources.Load<MiniMapResourcePointAssets>("Map13/Native/current-resource-point-assets");Require(resourceAssets,"Current original resource-point catalog");
+            bindings.ResourcePoints=null;
             var nonmaskPrefab=Resources.Load<GameObject>("World/Native/mini-map-nonmaskable");Require(nonmaskPrefab,"Original shared fullscreen renderer");
             foreach(var transform in nonmaskPrefab.GetComponentsInChildren<Transform>(true))Require(transform.GetComponents<MonoBehaviour>().All(c=>c),"Every shared renderer script imported");
             foreach(var component in nonmaskPrefab.GetComponentsInChildren<Component>(true)){var property=new SerializedObject(component).GetIterator();while(property.Next(true))if(property.propertyType==SerializedPropertyType.ObjectReference)Require(property.objectReferenceValue||property.objectReferenceInstanceIDValue==0,"Shared renderer original reference: "+property.propertyPath);}
@@ -231,22 +230,24 @@ namespace Zjcs.Editor.Map13MiniMap
             visibility.characterClassId=3001;
             var liveVisibility=new OfflineMapGridVisibility(visibility,bodies,center,GridVisibilityCompressUtils.DoMyZip(bits),Array.Empty<int>(),description.QueryRegion,id=>false);
             bindings.Visibility=liveVisibility.Component;
-            var hudModule=MainlineMiniMap.Create(prefab,null,bindings);for(int i=0;i<5;i++)yield return null;
+            var hudModule=MainlineMiniMap.Create(prefab,null,bindings,resourceAssets);for(int i=0;i<5;i++)yield return null;
+            Require(bindings.ResourcePoints==null,"The factory must not store owned state in the caller's bindings");
             var hudRoot=Object.FindObjectOfType<MainlineNativeMiniMapRoot>();
             var liveAgent=(MainlineMiniMapVisibilityAgent)hudRoot.VisibilityAgent;Require(ReferenceEquals(liveAgent.Component,liveVisibility.Component),"World and minimap share one official visibility component");
             var liveTest=VerifyLiveVisibility(hudRoot,liveVisibility,liveAgent,visibility,bodies,description,center);while(liveTest.MoveNext())yield return liveTest.Current;
             var hudTest=VerifyHud(hudModule,hudRoot,state,labels,(GridData)grid.Component,queries,characters);while(hudTest.MoveNext())yield return hudTest.Current;
-            hudModule.Dispose();yield return null;Require(characters.Subscribers==0,"Current-map native HUD instance cleanup");liveVisibility.MovePlayer(center);liveVisibility.Dispose();bindings.Visibility=null;localResourcePoints.Dispose();bindings.ResourcePoints=originalResourcePoints;Object.Destroy(nonmaskInstance);bindings.NonMaskableManager=null;state.Current=16;
+            hudModule.Dispose();yield return null;Require(characters.Subscribers==0,"Current-map native HUD instance cleanup");liveVisibility.MovePlayer(center);liveVisibility.Dispose();bindings.Visibility=null;Object.Destroy(nonmaskInstance);bindings.NonMaskableManager=null;state.Current=16;
             // A second actual map uses the same factory and its own original
             // geometry/settings. Its unresolved local response policy stays pending.
             var islandInput=JsonUtility.FromJson<Fixture>(File.ReadAllText(Path.Combine(Workspace,"minimap-description-fixture-16.json")));
             Require(islandInput.width==140&&islandInput.height==120&&islandInput.regions.Length==43,"Original island fixture identity");
             var islandLite=ReadNavigation(16,islandInput);
             Require(islandInput.mapClassId==16&&islandInput.configId==4,"Original island setting identity");
-            state.BoundMap=16;state.BoundRegionCount=43;state.OtherLite=islandLite;state.Current=13;data.ExpectedMap=16;bindings.MinimapConfigId=islandInput.configId;((ResourcePoints)bindings.ResourcePoints).BoundMap=16;
+            state.BoundMap=16;state.BoundRegionCount=43;state.OtherLite=islandLite;state.Current=13;data.ExpectedMap=16;bindings.MinimapConfigId=islandInput.configId;
             var islandPrefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Official/World/Map/16/NativeMiniMapRootCurrent/Resources/Map16/Native/mini-map-root.prefab");
             Require(islandPrefab&&islandPrefab.GetComponent<MainlineNativeMiniMapRoot>().MapClassId==16,"Second complete original prefab");
-            var islandModule=MainlineMiniMap.Create(islandPrefab,null,bindings);for(int i=0;i<4;i++)yield return null;
+            var islandResources=Resources.Load<MiniMapResourcePointAssets>("Map16/Native/current-resource-point-assets");
+            var islandModule=MainlineMiniMap.Create(islandPrefab,null,bindings,islandResources);for(int i=0;i<4;i++)yield return null;
             var islandRoot=Object.FindObjectOfType<MainlineNativeMiniMapRoot>();Require(data.Requests==3&&islandRoot.MapClassId==16&&!islandRoot.GetComponent<OfflineMiniMap>().HaveDataShow.State,"Island identity and pending offline lifecycle");
             islandModule.Dispose();yield return null;Require(characters.Subscribers==0,"Island native instance releases subscriptions");
             var timed=VerifyRegionTime(islandPrefab,bindings,state,labels,islandInput);
@@ -256,12 +257,14 @@ namespace Zjcs.Editor.Map13MiniMap
                 var otherInput=JsonUtility.FromJson<Fixture>(File.ReadAllText(Path.Combine(Workspace,$"minimap-description-fixture-{map}.json")));
                 Require(otherInput.mapClassId==map&&otherInput.configId>0,"Original map and setting identity");
                 var otherLite=ReadNavigation(map,otherInput);
-                state.BoundMap=map;state.BoundRegionCount=otherInput.regions.Length;state.OtherLite=otherLite;data.ExpectedMap=map;bindings.MinimapConfigId=otherInput.configId;((ResourcePoints)bindings.ResourcePoints).BoundMap=map;
+                state.BoundMap=map;state.BoundRegionCount=otherInput.regions.Length;state.OtherLite=otherLite;data.ExpectedMap=map;bindings.MinimapConfigId=otherInput.configId;
                 var otherPrefab=AssetDatabase.LoadAssetAtPath<GameObject>($"Assets/Official/World/Map/{map}/NativeMiniMapRootCurrent/Resources/Map{map}/Native/mini-map-root.prefab");
                 Require(otherPrefab&&otherPrefab.GetComponent<MainlineNativeMiniMapRoot>().MapClassId==map,"Complete selected original map root");
                 var regional=otherPrefab.GetComponentInChildren<MiniMapPrivateRegionMaskManager>(true);Require(new SerializedObject(regional).FindProperty("mRegionTilemapSlots").arraySize==otherInput.regions.Length,"Original region slots match installed configuration");
-                int requested=data.Requests;var otherModule=MainlineMiniMap.Create(otherPrefab,null,bindings);for(int i=0;i<4;i++)yield return null;
+                var otherResources=Resources.Load<MiniMapResourcePointAssets>($"Map{map}/Native/current-resource-point-assets");
+                int requested=data.Requests;var otherModule=MainlineMiniMap.Create(otherPrefab,null,bindings,otherResources);for(int i=0;i<4;i++)yield return null;
                 var otherRoot=Object.FindObjectOfType<MainlineNativeMiniMapRoot>();Require(data.Requests==requested+1&&otherRoot.MapClassId==map&&!otherRoot.GetComponent<OfflineMiniMap>().HaveDataShow.State,"Configured pending original map instance");
+                Require(otherRoot.ResourcePointManager.Context.MapClassId==map&&otherRoot.ResourcePointManager.ForeachLayer().Select(v=>v.Key).SequenceEqual(otherResources.Boards.Select(v=>v.RefreshGroup)),"Factory binds this map's actual resource catalog");
                 otherModule.Dispose();yield return null;Require(characters.Subscribers==0,"Configured instance subscription release");
             }
             Object.Destroy(host);Object.Destroy(cameraHost);Object.Destroy(texture);yield return null;labels.Dispose();

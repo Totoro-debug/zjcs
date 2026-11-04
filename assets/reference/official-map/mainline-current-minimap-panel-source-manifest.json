@@ -2,7 +2,7 @@
   "format": 1,
   "manifest": "884_156692",
   "input_receipts": {
-    "scripts/prepare_current_partner_native.py": "1c54fd235607be85882c616e78b079674c1f0b452bb88027229711ba70cb2b23",
+    "scripts/prepare_current_partner_native.py": "1fd0789f3bd5448a1d7ec87e1c068db4a8f99140f4ac23357ef45a474d23cc6e",
     "scripts/official_apk.py": "ffc722b06e62bacc6689d98a7910562527fbcacc1c512c05e57a21bb8aa0ea46",
     "scripts/official_manifest.py": "1aae5bd86af587511466e17308719c2e6b356be4117942809c7e6ba89e2d7399",
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json": "264d79bcd2da2d47f86bc9e1c1956cd4e07853e09ad2248b691e2c92dd125d3c",
@@ -191,8 +191,7 @@
     ".tools/source-packages/current/884_156692/official-code/client-source/CollectSortGroupItem.cs": "c710f579caab54e1c49bb4c61fbdde7a1bd2e7d75a005b0033a3994a931788df",
     ".tools/source-packages/official-code/client-source/CollectSortGroupItem.cs": "c710f579caab54e1c49bb4c61fbdde7a1bd2e7d75a005b0033a3994a931788df",
     ".tools/source-packages/current/884_156692/official-code/client-source/UIBloomGroup.cs": "8b0067368de53b85fa7e005eb79189a404a7ebe36f7e80ba48feed550c1886d1",
-    ".tools/source-packages/official-code/client-source/UIBloomGroup.cs": "8b0067368de53b85fa7e005eb79189a404a7ebe36f7e80ba48feed550c1886d1",
-    "scripts/prepare_mainline_minimap_native_root.py": "24bbc468678433f2dc492e108b4c75d425e2b6510f57ea36ac3f9e878e9f1ed4"
+    ".tools/source-packages/official-code/client-source/UIBloomGroup.cs": "8b0067368de53b85fa7e005eb79189a404a7ebe36f7e80ba48feed550c1886d1"
   },
   "root_source": {
     "name": "MiniMapFullScreenPanel",
@@ -210,12 +209,12 @@
     "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Map/MiniMap/MiniMapFullScreenPanel.prefab",
     "native_sha256": "ad05b475930d72be56aae7656528097e685fbdf82d6561710fc1ba88547138f1",
     "mapped_objects": 294,
-    "recovered_components": 4,
+    "recovered_components": 105,
     "unresolved": 0,
     "pendingBindings": {},
     "output": "MiniMapFullScreenPanel.json",
     "nativeMeta_sha256": "a476fc52fa2d0df5eb126c7d8230e09edca8b5c4d04e891d39569232610cd048",
-    "output_sha256": "045fdc08dda7cfceaa7b555b220da4fa543f3b046bcc43d3023e7ff833ab1911"
+    "output_sha256": "4913b5917bd9f74b9b952aa4148947d23f6484519aa09e2727076152acdfdea1"
   },
   "root_pointer": {
     "fileID": 1709254077376921,
@@ -240,12 +239,12 @@
       "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Map/MiniMap/Filter/MarkUIFilterEntryItem.prefab",
       "native_sha256": "3580a69ca0ca4a2a15a9315cad0a0cf031136f2f6cc3fa46fc560396fddd1404",
       "mapped_objects": 15,
-      "recovered_components": 0,
+      "recovered_components": 7,
       "unresolved": 0,
       "pendingBindings": {},
       "output": "MarkUIFilterEntryItem.json",
       "nativeMeta_sha256": "aa01dd96435074e627abfe07b80efcf863eeb60ab464f7d58f4b857abee22ad4",
-      "output_sha256": "63ae9ec9d5047ecbe5b3ee144f520f21ffcb9fc99e4a8947cdc3b47c01646e2f"
+      "output_sha256": "955a07f0731ea1e1b78b5b62ca92a0e3e097a52de1730a2c3ea016938691a3fa"
     },
     {
       "name": "MiniMapMarkFilterItem",
@@ -263,12 +262,12 @@
       "nativeSource": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/UI/Map/MiniMap/Filter/MiniMapMarkFilterItem.prefab",
       "native_sha256": "2df61f301bec473caf9fe4f182d6cf855ce36e69b062ab38d7d99010e9548577",
       "mapped_objects": 31,
-      "recovered_components": 1,
+      "recovered_components": 13,
       "unresolved": 0,
       "pendingBindings": {},
       "output": "MiniMapMarkFilterItem.json",
       "nativeMeta_sha256": "a2105cc28bdc78133b6e8137f042d0f8c525d68c088b6d3cc0e547667db4b55f",
-      "output_sha256": "1b1659721a00cdfa1d31cf1e44243eed183bfdc6352e17cb92eef63feb6382ea"
+      "output_sha256": "d4959282696965f17210c055980a99396b29b2197bc7683cf8d61c689fdec976"
     }
   ],
   "audio": {
@@ -2348,7 +2347,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMap.cs",
-      "sha256": "8d82110650e35cdb94d6ee8f81fc12e676dbdc1b72422879743bd4015020d164"
+      "sha256": "a9d1576ff28859e0b03264302f4b6f711b1758b180ca94082fb886b6337b9f7e"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMap.cs.meta",
@@ -2372,7 +2371,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapBindings.cs",
-      "sha256": "785747ba74581b6dcfab297a51fa053c9aa3da2e5e9c47079c45f3d68165710b"
+      "sha256": "caad1d0c82ec0b9563e446210c54726f56c827b4b0a6ed68c496456f67e5b060"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapBindings.cs.meta",
@@ -2412,7 +2411,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/Zjcs.Offline.World.MainlineMiniMap.asmdef",
-      "sha256": "910c916caebc9e4ad92fd7f5c7f02de05d469af041cb3cb1817ffe8eae3dcf01"
+      "sha256": "437ddb61d7cd2df3d01236928b3422433fd7bf9b9480daf4a5afe22377258f34"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/Zjcs.Offline.World.MainlineMiniMap.asmdef.meta",
@@ -2424,7 +2423,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.cs",
-      "sha256": "aaf2dfe0484a147914fa4fffe258dd4dbd2dd8908f68966b4cb615744770ac9b"
+      "sha256": "88c3bc6e2e764b311ccba1b217baff64c3a154ba9235689ecb9cfed74b4748cc"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.cs.meta",
@@ -2432,7 +2431,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Hud.cs",
-      "sha256": "8b50f83aa60d6af5e1e78089fbd3b19c463d85312f83286dc658f7bec1b7ce39"
+      "sha256": "f2b0cbabe642f54279012ea5b18a2d685e865a303ce3912d5c7e446c40a4cca1"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Hud.cs.meta",
@@ -2456,7 +2455,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.RegionTime.cs",
-      "sha256": "12b0489e8b28701648f32434f12b7a3d08efd97aee9cde53a50c2adce0b0ff3c"
+      "sha256": "c8a24448636d21216a83b37bbdf1ff6ba4717a68d731aca9e8ae35179af27ea0"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.RegionTime.cs.meta",
@@ -8859,7 +8858,7 @@
     }
   },
   "outputs": {
-    "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Resources/World/Native/mini-map-panel.prefab": "38abbd9d7a8f3da94feaf6a6161c805fd3d0fa4ef1ffeeae6da63255114506f9",
+    "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Resources/World/Native/mini-map-panel.prefab": "fc824eab27f0e4e3443d5b7101d3599c0de411e63a00eed3df2a308498e17b98",
     "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Resources/World/Native/mini-map-panel.prefab.meta": "d2e9b51f15f9d7b37fa616a9d95a744d291047b567e7e1c1cc5098facb22659c",
     "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Image/MapWorld/MiniMap_Atlas/C_MiniMap_Business.asset": "ca08b22c8bef4fb76025872084cf5f973044dd880707aa2ea2408b962472f7f0",
     "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Image/MapWorld/MiniMap_Atlas/C_MiniMap_Business.asset.meta": "4a1a63da5b4389209d95561990f8bc397360d6cf8f338859bb7c6124a9b82caa",
@@ -9069,9 +9068,9 @@
     "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat.meta": "14cec3628c945e763c81f44a2f8d8ebf9f0831aa47ea9e7d1fcc72b2e5716e23",
     "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Image/UI/Common/Common_Atlas/ImgLine_Title2_0.asset": "b34223ef5c5a135745e4ac44d0fb4cc82701499c8d0fc1326aa28c41fc19cff3",
     "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Image/UI/Common/Common_Atlas/ImgLine_Title2_0.asset.meta": "5ff7d3b3f8281436acca76602f83b3b4ea9368102174e6ecbeee2f74b415a4fd",
-    "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Dependencies/Prefabs/UI/Map/MiniMap/Filter/MarkUIFilterEntryItem.prefab": "a5886a51c53a02359250152a71209c0d1541b14b030b756e08e6f6e1c2c180aa",
+    "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Dependencies/Prefabs/UI/Map/MiniMap/Filter/MarkUIFilterEntryItem.prefab": "e27d19bd8bb95b56d82f729928d4356714f79fcb28625499ec3791fa2d63a7bb",
     "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Dependencies/Prefabs/UI/Map/MiniMap/Filter/MarkUIFilterEntryItem.prefab.meta": "8ad5757c0e54e79296f7bfa8d2f98944e38b8d4a496edc782242fb245c3695a6",
-    "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Dependencies/Prefabs/UI/Map/MiniMap/Filter/MiniMapMarkFilterItem.prefab": "1ecc00cfd62e114aa3903b50628dabf4fe2233920e488f98fe622c8e568607a4",
+    "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Dependencies/Prefabs/UI/Map/MiniMap/Filter/MiniMapMarkFilterItem.prefab": "9516eaee3770cb93f115eef84d5ba2cd9eb6659c48ad35d3b49e0db21f15b6e7",
     "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Dependencies/Prefabs/UI/Map/MiniMap/Filter/MiniMapMarkFilterItem.prefab.meta": "dec3dd42bfab8e34372e35037cbc1091f4dd2b32ff39bfca2d05f1f352de8e1d",
     "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Image/UI/MiniMap/MiniMap_Atlas/ImgMiniLegend.asset": "93754a722a47ad5c05caaa5d587846fc41662d5841f57b6aeea32600fa78796f",
     "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Image/UI/MiniMap/MiniMap_Atlas/ImgMiniLegend.asset.meta": "36de98be09f7d2c2ce466bd39e92a02e351c7fc56a877391cb655474c56cdd49",
@@ -9103,7 +9102,7 @@
     "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Image/UI/MiniMap/MiniMap_Atlas/ImgTxtBg.asset.meta": "0311a563f30eab5d2cd441bd3a7ccc9dabb0f6cbd223ba9749c1a4083e0fbc28",
     "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Image/UI/MiniMap/MiniMap_Atlas/ImgMapSwitch_Sel.asset": "0bf4d339be359b35c76e76488e9ec80096a891c31fbe26f7905ad7213a6a8aae",
     "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Image/UI/MiniMap/MiniMap_Atlas/ImgMapSwitch_Sel.asset.meta": "3507f19d3f9c9bc5ebbe1ecb4b888fe1d6e0a5e02d105f7549c86cacd52b7eef",
-    "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Animation/UI/Common/Btn_Base_Click_0.controller": "79cc2bbcb7ae6acb4918cf53aa96f5b54be144e68e8641cfcefc2b4f5a033d2b",
+    "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Animation/UI/Common/Btn_Base_Click_0.controller": "f55db07fe7f28e7234cc31e4461612ac1439583e157de14e70fd25df81c565e3",
     "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Animation/UI/Common/Btn_Base_Click_0.controller.meta": "62469d870ceecb3aeba2f7020c62c45c4ff2e2356937ae62ba63aae2e29630ec",
     "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Image/UI/Common/Common_Atlas/ImgReturnBg_0.asset": "9b02e098dae910fbcec473eb636c8e2f67edd71a4c6e99a42fc781887c52e4ec",
     "unity/Assets/Official/World/Shared/NativeMiniMapPanelCurrent/Image/UI/Common/Common_Atlas/ImgReturnBg_0.asset.meta": "057343bf382a2a22211c76db489df829f0651b62cd3c5a126c581ca03b440041",
@@ -9199,12 +9198,13 @@
   "format_reader_sha256": "e6a0c0c5a38c811c7b23074fb22381615edbbc0be42db2cd12468764228e8897",
   "tools": {
     "scripts/prepare_mainline_map15_native_ground.py": "032906887d4ebac036d3056c42ed48fb2d26135c7a9d076dbee6c5531063de54",
-    "scripts/prepare_current_partner_native.py": "1c54fd235607be85882c616e78b079674c1f0b452bb88027229711ba70cb2b23",
+    "scripts/prepare_current_partner_native.py": "1fd0789f3bd5448a1d7ec87e1c068db4a8f99140f4ac23357ef45a474d23cc6e",
     "scripts/prepare_partner_card_native.py": "1b7eace9cc46cef7b80c07d0d7882c90c7ea33af4035d1669017603dbfca3778",
     "scripts/prepare_unity_profession_skeleton_data.py": "308ed647a43a89aef77ca7d91d06124213fd0b18431ca8743834ae267697548c",
     "scripts/prepare_native_character_geometry.py": "495ca231d89cfc0f04d3244fd554c018a6b35f7c25694a455c0e085e8ce427f6",
     "scripts/convert_official_skeletons.py": "b93b36907c3c831eb7dd453fa6842742056c1c451e281b9b4ef9b0745a36e9a8"
   },
   "operation": "Pair original CAB/PPtr hierarchy and complete selected native fields. Bind exact native GUID dependencies, verified current Windows textures/shaders, and independent original skeleton/atlas data. Preserve native fileIDs, tile sprites, labels, transforms and renderers. Historical terrain exports remain separate.",
-  "metadata_text_normalization": "UTF-8 LF; remove trailing spaces from empty importer fields without changing fields or GUIDs."
+  "metadata_text_normalization": "UTF-8 LF; remove trailing spaces from empty importer fields without changing fields or GUIDs.",
+  "rect_serialization": "Original Rectf x/y/width/height fields use Unity YAML serializedVersion 2; preserve all four original numeric values."
 }
