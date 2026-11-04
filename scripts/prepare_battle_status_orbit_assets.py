@@ -264,15 +264,17 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
         def exported_pixels(path):
             with Image.open(path) as image:
                 return image.convert('RGBA')
-        def texture_candidates(name):
+        def texture_candidates(name, related=False):
             candidates = dict(native.get(('Texture2D', name), {}))
             base = re.sub(r'_\d+$', '', name)
             object_shas = list(texture_records_by_name.get(name, ()))
             object_shas.extend(object_sha for object_sha in texture_records_by_name.get(base, ())
                                if object_sha not in object_shas)
-            object_shas.extend(object_sha for object_sha in texture_records_by_base.get(base, ())
-                               if object_sha not in object_shas
-                               and texture_records[object_sha]['source'].get('name', '').startswith(base+'_'))
+            if related:
+                object_shas.extend(object_sha for object_sha in texture_records_by_base.get(base, ())
+                                   if object_sha not in object_shas
+                                   and texture_records[object_sha]['source'].get('name', '').startswith(base+'_'))
+            wanted_shas = set(object_shas)
             seen_bundles = set()
             for object_sha in object_shas:
                 record = texture_records[object_sha]
@@ -287,9 +289,9 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
                 for obj in objects:
                     if obj.type.name != 'Texture2D': continue
                     object_sha = sha(obj.get_raw_data())
-                    if object_sha not in texture_records: continue
+                    if object_sha not in wanted_shas: continue
                     value = obj.read()
-                    if value.m_Name in (name, base) or value.m_Name.startswith(base+'_'):
+                    if value.m_Name in (name, base) or (related and value.m_Name.startswith(base+'_')):
                         candidates[object_sha] = (obj, value)
             return candidates
         shader_cache = CACHE/'all-assets/windows-shaders'
@@ -298,9 +300,11 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
             row = json.loads(path.read_bytes())
             shader_records[row['source']['object_sha256']] = (path, row)
         def export_png_delta(path, object_sha):
+            record = texture_records[object_sha]
+            exported = exported_pixels(path)
+            if (record['source']['width'], record['source']['height']) != exported.size: return 256
             image = converted_pixels(object_sha)
             if image is None: return 256
-            exported = exported_pixels(path)
             if image.size != exported.size: return 256
             differences = [max(hi for lo, hi in ImageChops.difference(exported, sample).getextrema())
                            for sample in (image, image.transpose(Image.Transpose.FLIP_TOP_BOTTOM))]
@@ -358,8 +362,8 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
                 source_meta = Path(str(path)+'.meta')
                 bundle_name = re.search(r'(?m)^  assetBundleName: ([^\s\r\n]+)[ \t]*$',
                                         read(source_meta).decode('utf-8-sig'))
+                source_bundle = bundle_name[1] + '.bundle' if bundle_name is not None else None
                 if bundle_name is not None and len(candidates) > 1:
-                    source_bundle = bundle_name[1] + '.bundle'
                     candidates = {object_sha: value for object_sha, value in candidates.items()
                         if texture_records[object_sha]['source']['input'].endswith('/'+source_bundle)}
                 if not candidates:
@@ -378,15 +382,15 @@ def build(DEST=DEST, DATA=DATA, RECEIPT=RECEIPT, ROOTS=ROOTS, MAPPED=MAPPED,
                     candidates = {object_sha: candidates[object_sha]}
                 if not candidates or (len(candidates) == 1
                                       and export_png_delta(path, next(iter(candidates))) > 1):
-                    recovered = {}
-                    for object_sha in exact_records:
-                        if export_png_delta(path, object_sha) > 1:
-                            continue
-                        bundle_name = Path(texture_records[object_sha]['source']['input']).name
-                        for obj in apk.objects(bundle_name):
-                            if obj.type.name == 'Texture2D' and sha(obj.get_raw_data()) == object_sha:
-                                recovered[object_sha] = (obj, obj.read())
-                    candidates = recovered
+                    recovered = texture_candidates(name, related=True)
+                    if bundle_name is not None:
+                        scoped = {object_sha: value for object_sha, value in recovered.items()
+                            if texture_records[object_sha]['source']['input'].endswith('/'+source_bundle)}
+                        if scoped: recovered = scoped
+                    deltas = {object_sha: export_png_delta(path, object_sha) for object_sha in recovered}
+                    best = min(deltas.values(), default=256)
+                    candidates = {object_sha: recovered[object_sha] for object_sha, delta in deltas.items()
+                                  if delta == best and delta <= 1}
                 assert len(candidates) == 1, (path, len(candidates))
                 object_sha, (obj, value) = next(iter(candidates.items()))
                 record = texture_records[object_sha]
