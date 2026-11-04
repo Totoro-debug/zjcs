@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using Zjcs.Official.ProfessionUI;
 
 namespace Zjcs.Offline.ProfessionUI
@@ -7,6 +8,8 @@ namespace Zjcs.Offline.ProfessionUI
     public sealed partial class ProfessionNativeSceneRenderer : IProfessionAppearancePartMecanim
     {
         private ProfessionNativeAnimatorPose animatorPose;
+        private ProfessionNativeScenePlayerPlayback playerPlayback;
+        public float PlayerPhysicsTime => playerPlayback?.PhysicsTime ?? 0;
         private ProfessionNativeAppearanceSkeleton notifiedSkeleton;
         private readonly Dictionary<ProfessionNativeAnimationChannels, float> notifiedTimes = new Dictionary<ProfessionNativeAnimationChannels, float>();
         public event ProfessionPartClipApplied OnClipApplied;
@@ -16,7 +19,28 @@ namespace Zjcs.Offline.ProfessionUI
         public void BindAnimatorPose(ProfessionNativeAnimatorPose pose)
         {
             animatorPose = pose ?? throw new ArgumentNullException(nameof(pose));
+            playerPlayback = null;
             ClearAnimatorNotification();
+        }
+
+        public void BindPlayerAnimator(Animator animator)
+        {
+            Initialize(false, false);
+            if (!animator || animator.gameObject != gameObject)
+                throw new ArgumentException("Bind the original player model's own Animator.", nameof(animator));
+            settings.ValidatePlayerPlayback();
+            playerPlayback = new ProfessionNativeScenePlayerPlayback(animator);
+            animatorPose = playerPlayback.Pose;
+            ClearAnimatorNotification();
+        }
+
+        private void AdvanceBoundAnimatorPose()
+        {
+            if (playerPlayback == null) { UpdateBoundAnimatorPose(); return; }
+            if (UpdateMode == 0) return;
+            playerPlayback.DeltaTime = Time.deltaTime;
+            try { ApplyAnimatorPose(); }
+            finally { playerPlayback.DeltaTime = 0; }
         }
 
         public ProfessionNativeAnimatorPose.AppliedFrame ApplyAnimatorPose()

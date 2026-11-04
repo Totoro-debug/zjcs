@@ -38,6 +38,19 @@ namespace Zjcs.Offline.ProfessionUI
         }
         public float PhysicsRotationInheritanceFactor => Convert.ToSingle(skeleton["physicsRotationInheritanceFactor"]);
 
+        public void ValidatePlayerPlayback()
+        {
+            var relative = Obj(skeleton["physicsMovementRelativeTo"]);
+            var translator = Obj(skeleton["translator"]);
+            if (Int(skeleton, "updateTiming") != 1 || UpdateWhenInvisible != 0
+                || PhysicsPositionInheritanceFactor != Vector2.zero || PhysicsRotationInheritanceFactor != 0
+                || Convert.ToInt64(relative["m_PathID"]) != 0 || Int(relative, "m_FileID") != 0
+                || !Flag(translator, "autoReset") || !Flag(translator, "useCustomMixMode")
+                || !Arr(translator["layerMixModes"]).Select(Convert.ToInt32).SequenceEqual(new[] { 1 })
+                || !Arr(translator["layerBlendModes"]).Select(Convert.ToInt32).SequenceEqual(new[] { 1 }))
+                throw new NotSupportedException("Bind additional original player Mecanim timing, mixing or movement inheritance settings.");
+        }
+
         public static ProfessionNativeSceneRendererSettings Load(TextAsset source)
             => Load(source, null, "Spine.Unity.SkeletonMecanim", 0, false);
 

@@ -137,7 +137,7 @@ namespace Zjcs.Offline.ProfessionUI
         }
 
         public void UpdateAnimationAndMesh() { UpdateBoundAnimatorPose(); LateUpdateMesh(); }
-        private void LateUpdate() { if (State != null) { UpdateBoundAnimatorPose(); LateUpdateMesh(); } }
+        private void LateUpdate() { if (State != null) { AdvanceBoundAnimatorPose(); LateUpdateMesh(); } }
 
         public void LateUpdateMesh()
         {

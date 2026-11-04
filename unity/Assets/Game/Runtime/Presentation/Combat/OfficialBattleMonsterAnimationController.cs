@@ -56,6 +56,9 @@ namespace Zjcs.Presentation.Combat
             }
             catch { Dispose(); throw; }
             finally { entity.gameObject.SetActive(active); }
+            // Edit-mode validation has no automatic MonoBehaviour Awake.
+            if (!Application.isPlaying && entity.gameObject.activeInHierarchy && binding.initOnAwake)
+                Controller.Init();
             if (entity.gameObject.activeInHierarchy && binding.initOnAwake && !Controller.myInited)
             { Dispose(); throw new InvalidOperationException("Original monster application controller did not initialize."); }
         }

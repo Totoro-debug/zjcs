@@ -29,6 +29,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".weapon-low", false);
             SessionState.SetBool(Key + ".weapon-prefabs", false);
             SessionState.SetBool(Key + ".weapon-host-motion", false);
+            SessionState.SetBool(Key + ".player-live-physics", false);
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             Type.GetType("Zjcs.Editor.ProjectTools, Zjcs.Editor", true).GetMethod("Validate").Invoke(null, null);
             if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR")))
@@ -78,9 +79,9 @@ namespace Zjcs.Editor.Combat
                 var weaponTextures = weapons.Textures;
                 bool useHighPipeline = SessionState.GetBool(Key + ".high-textures", false)
                     || SessionState.GetBool(Key + ".weapon-bones", false) || SessionState.GetBool(Key + ".weapon-prefabs", false);
-                using var highPipeline = useHighPipeline
-                    ? Resources.Load<Zjcs.Presentation.Combat.OfficialBattleRenderPipelineAssets>("Combat/OfficialBattleRenderPipelineAssets").Enter() : null;
-                if (useHighPipeline)
+                // Every original Game body/weapon uses this pipeline, including
+                // the ordinary clipping and live-physics probes in a fresh project.
+                using var pipeline = Resources.Load<Zjcs.Presentation.Combat.OfficialBattleRenderPipelineAssets>("Combat/OfficialBattleRenderPipelineAssets").Enter();
                 {
                     // An empty scene has no camera and does not initialize its
                     // render pipeline. Render one actual camera frame first.
@@ -98,6 +99,9 @@ namespace Zjcs.Editor.Combat
                         warmupCamera.enabled = false; warmupCamera.targetTexture = null;
                         Object.Destroy(warmup); RenderTexture.ReleaseTemporary(warmupTarget);
                     }
+                }
+                if (useHighPipeline)
+                {
                     if (SessionState.GetBool(Key + ".high-textures", false)) CheckHighTextures();
                     if (SessionState.GetBool(Key + ".weapon-low", false)) CheckHighTextures(low: true);
                     if (SessionState.GetBool(Key + ".weapon-physics", false)) CheckWeaponPhysics();
@@ -163,6 +167,7 @@ namespace Zjcs.Editor.Combat
                             Require(material.HasProperty(AppearanceMaterialUtils.sWorldClipHeight), "actual original shader world clipping uniform");
                             var psGo = new GameObject("Clip particle property-block diagnostic"); psGo.transform.SetParent(part.GameObject.transform, false);
                             var ps = psGo.AddComponent<ParticleSystem>(); ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                            var particleMain = ps.main; particleMain.playOnAwake = false;
                             var particle = psGo.GetComponent<ParticleSystemRenderer>();
                             // Original disabled initialization has not cached a weapon material.
                             // First enable must discover both actual weapon and its active particles.
@@ -175,6 +180,8 @@ namespace Zjcs.Editor.Combat
                             Require(material != original && material.mainTexture && !material.mainTexture.name.EndsWith("_placeholder", StringComparison.Ordinal),
                                 "real independent High material after actual visibility demand: " + material.name + "/" + material.mainTexture?.name);
                             if (SessionState.GetBool(Key + ".physics", false)) CheckMixedPhysics(native, weapon, group);
+                            if (SessionState.GetBool(Key + ".player-live-physics", false))
+                                yield return CheckLivePlayerPhysics(native, weapon, group);
                             native.State.SetSlotAttachment(slot.Index, attachment); yield return null;
                             Require(Mathf.Abs(material.GetFloat(AppearanceMaterialUtils.sWorldClipHeight) - ground.position.y) < .0001f,
                                 "actual attachment identity enables world-height clipping");
@@ -245,6 +252,9 @@ namespace Zjcs.Editor.Combat
                 RenderTexture.active = rt;
                 texture.ReadPixels(new Rect(0, 0, 384, 512), 0, 0); texture.Apply();
                 Require(texture.GetPixels32().Count(p => p.r > 16 || p.g > 16 || p.b > 16) > 100, "visible actual GPU output");
+                if (SessionState.GetBool(Key + ".player-live-physics", false))
+                    Require(!texture.GetPixels32().Any(p => p.r > 240 && p.g < 20 && p.b > 240),
+                        "live body/clipping probe has no error-shader diagnostic particles");
                 var bytes = texture.EncodeToPNG();
                 File.WriteAllBytes(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR"), name + ".png"), bytes);
                 return bytes;

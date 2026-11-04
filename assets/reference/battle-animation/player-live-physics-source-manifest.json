@@ -1,0 +1,162 @@
+{
+  "manifest": "884_156692",
+  "hierarchy": {
+    "path": "unity/Assets/Official/Combat/SceneCharacterSources/PlayerModel_Game-source.json",
+    "sha256": "eadc90ce5c44c08bc54ef39b107ccd77626db193df30bdf406f109c4f1b7a517"
+  },
+  "original_component": {
+    "type": "Spine.Unity.SkeletonMecanim",
+    "fields": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": -5782892318397170653
+      },
+      "m_Enabled": 1,
+      "m_Script": {
+        "m_FileID": 0,
+        "m_PathID": -623833692247436080
+      },
+      "m_Name": "",
+      "skeletonDataAsset": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      },
+      "initialSkinName": "default",
+      "initialFlipX": 0,
+      "initialFlipY": 0,
+      "updateWhenInvisible": 0,
+      "separatorSlotNames": [],
+      "zSpacing": 0.0,
+      "useClipping": 1,
+      "immutableTriangles": 0,
+      "pmaVertexColors": 1,
+      "clearStateOnDisable": 0,
+      "tintBlack": 0,
+      "singleSubmesh": 0,
+      "fixDrawOrder": 0,
+      "addNormals": 0,
+      "calculateTangents": 0,
+      "maskInteraction": 0,
+      "maskMaterials": {
+        "materialsMaskDisabled": [],
+        "materialsInsideMask": [],
+        "materialsOutsideMask": []
+      },
+      "disableRenderingOnOverride": 1,
+      "physicsPositionInheritanceFactor": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "physicsRotationInheritanceFactor": 0.0,
+      "physicsMovementRelativeTo": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      },
+      "translator": {
+        "autoReset": 1,
+        "useCustomMixMode": 1,
+        "layerMixModes": [
+          1
+        ],
+        "layerBlendModes": [
+          1
+        ]
+      },
+      "updateTiming": 1
+    },
+    "source": {
+      "bundle": "defaultpackage_assets_prefabs_appearance_player.bundle",
+      "bundle_hash": "a10a501f3d609ca4d5ea912e6a709b57",
+      "path_id": "4966496450495380515",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/a10a501f3d609ca4d5ea912e6a709b57.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 7300,
+      "bundle_sha256": "2067484c47aff3d6190de67b2ee26c54ae7d47526d91096c2b728d3cbe1f6395"
+    },
+    "payload_sha256": "dc7fe413b4b03d7a62eb3460b4015e966da8253203bd9f4cfad29ca08e45aaab"
+  },
+  "dependencies": [
+    {
+      "path": "assets/reference/battle-animation/player-model-prefab-source-manifest.json",
+      "sha256": "16dabd3f205fa045a4e960dc2dd3eb489f0af0e4b04ab6e1e4ee66ba168f0acc"
+    },
+    {
+      "path": "assets/reference/battle-animation/player-mixed-physics-source-manifest.json",
+      "sha256": "436aaf1803299d3e3b10ef445b3e3d1e232b5e8b1a4cd94ca051f5f58cf2f2b8"
+    },
+    {
+      "path": "assets/reference/battle-animation/scene-bound-mix-next-source-manifest.json",
+      "sha256": "0fa94327b49a349ecc89d118dd7a59c21461f398d074220ce70ed20f0a7bdcd9"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeScenePlayerPlayback.cs",
+      "sha256": "b45e9a620869af3e71b8b9983b7b84aae3a0a9cd9668148cb5db1f5498273f4e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeScenePlayerPlayback.cs.meta",
+      "sha256": "9638e194ff584b207e821dd0e2068a490b59781885801e17fde34016046df4d2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.Animator.cs",
+      "sha256": "548caa8a7bab1b2ce4be25e5ec8089ee371d1c7847a1617ba4f8e758e9838424"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.Animator.cs.meta",
+      "sha256": "78bbd418dabbaa148056058d30c638634b1535cabac3e85eba5885a48f90fe4f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.cs",
+      "sha256": "d839f9b8829dfe07d04765665ff21b92a8568ea5cc914b9b12a8fbb797b0cd01"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.cs.meta",
+      "sha256": "7782124572671f703b0b22842ca8fbc1a57fd8df46a7c5d2ebd293a97c511188"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRendererSettings.cs",
+      "sha256": "b7c58eb1d276f3af3bcc33c37135f7743faf85b43a5ad85873abb08e4f59e73f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRendererSettings.cs.meta",
+      "sha256": "a2ed58ecb2fb97845e252e4cf359f54d5ce9e91e4ce105e77b821dd752002c08"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.LivePhysics.cs",
+      "sha256": "a423712e1abf0547771f7efc74585b84ad3d4302b278eba57ab0117dc890dfcf"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.LivePhysics.cs.meta",
+      "sha256": "f10b395c6baf144855b4fd49a95182a53c712f47f931d3cf744cc2b43659305e"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.cs",
+      "sha256": "2c4743bad3638163e593ec10ce2ec21cb9aad20c255456574e45fc6165bf6165"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.cs.meta",
+      "sha256": "2d5d88da76093fb2985f3cbe852610a6fa9426a9696c4cfe6c58a36fdf82707b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMonsterAnimationController.cs",
+      "sha256": "749bf6757fd2516f7b922a51aaaa900ea364e58383ab5e55abee976604484918"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMonsterAnimationController.cs.meta",
+      "sha256": "851faa4e5e3ab212c229d801f2644a76a540935aa7a65ec51ffaaba753367b67"
+    }
+  ],
+  "generator": {
+    "path": "scripts/record_battle_player_live_physics.py",
+    "sha256": "71427dd7ecb843f94d40309eda538ffaf08085c1d83a6e0b553a11811ac3758a"
+  },
+  "binding": "Explicit BindPlayerAnimator validates the original player Mecanim settings. Actual renderer LateUpdate consumes the already evaluated Animator and advances its skeleton physics once by scaled frame delta. Explicit pose/mesh redraw uses Physics.Pose with zero elapsed time. The same native physics owner survives motion restart, transitions, renderer disable and inactive pooling. Rebuilt skeletons bind fresh histories. Invisible UpdateMode zero skips advancement. Original zero body movement inheritance is retained.",
+  "limits": [
+    "An explicit independent native engine lifecycle adapter; not a claim of every SDK internal timing or callback scalar convention.",
+    "Formal player factory, playable graph integration, all skills, interrupted transitions, alternate timing/mixing/inheritance settings and Windows Player remain separate.",
+    "The rendered probe covers both sexes and warrior/mage controllers, actual LateUpdate, mixed hit, death/revival, repeated/reentrant redraw, disable, inactive pooling and real visibility culling. It uses no UI input or user save.",
+    "Shared edit-mode validation explicitly initializes the original monster application controller because automatic MonoBehaviour Awake is unavailable there; playing mode retains the original activation lifecycle."
+  ]
+}
