@@ -24,6 +24,8 @@ def script_file_id():
 
 
 def main():
+    export_receipt = json.loads(EXPORT_RECEIPT.read_text(encoding='utf-8'))
+    verified = {row['path']: row['sha256'] for row in export_receipt['outputs']}
     guid_paths = defaultdict(list)
     for metadata in EXPORT.rglob('*.meta'):
         match = re.search(r'(?m)^guid: ([a-f0-9]{32})$', metadata.read_text(encoding='utf-8-sig'))
@@ -32,9 +34,18 @@ def main():
 
     component_id = script_file_id()
     skills = []
+    entity_ids = set()
     for path in sorted(EXPORT.glob('[0-9]*/[0-9]*.prefab')):
-        skill_id = int(path.parent.name)
+        # Numeric directories group a skill with its children. Each numeric
+        # prefab names its own entity (10160/10163 is entity 10163).
+        skill_id = int(path.stem)
+        raw = path.read_bytes()
+        digest = sha256(raw).hexdigest()
+        if digest != verified[path.relative_to(EXPORT.parents[5]).as_posix()]:
+            raise ValueError(f'Official skill entity differs from its export receipt: {path}')
         text = path.read_text(encoding='utf-8-sig')
+        if not re.search(rf'(?m)^  m_Name: {skill_id}$', text):
+            raise ValueError(f'Official skill entity name does not match its prefab: {path}')
         matches = []
         for component in re.finditer(
                 r'(?ms)^--- !u!114 &(?P<id>\d+)\nMonoBehaviour:\n(?P<body>.*?)(?=^--- !u!|\Z)', text):
@@ -51,6 +62,9 @@ def main():
             continue
         if len(matches) != 1:
             raise ValueError(f'Expected one official MyFightSkill component in {path}, found {len(matches)}.')
+        if skill_id in entity_ids:
+            raise ValueError(f'Official skill entity ID is duplicated: {skill_id}')
+        entity_ids.add(skill_id)
         resolved = {}
         for field, ref in matches[0].items():
             candidates = guid_paths.get(ref['guid'], [])
@@ -60,11 +74,10 @@ def main():
                 ref['candidates'] = candidates
             resolved[field] = ref
         skills.append({'skill_id': skill_id, 'entity_prefab': path.relative_to(EXPORT).as_posix(),
-                       'entity_prefab_sha256': sha256(path.read_bytes()).hexdigest(),
+                       'entity_prefab_sha256': digest,
                        'playables': resolved})
 
     referenced = {ref['path'] for skill in skills for ref in skill['playables'].values() if 'path' in ref}
-    export_receipt = json.loads(EXPORT_RECEIPT.read_text(encoding='utf-8'))
     result = {
         'manifest': '884_156692',
         'source': SOURCE.relative_to(ROOT).as_posix(),
