@@ -1,0 +1,116 @@
+"""Bind installed world geometry to the selected original minimap configuration."""
+import hashlib
+import json
+from pathlib import Path
+
+from official_apk import Apk, ROOT
+from official_map_codec import ground
+from official_tables import Constructors
+
+MAPS = (10, 11, 12, 13, 14, 16)
+CODE = ROOT / '.tools/source-packages/current/884_156692/official-code'
+
+
+def sha(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+
+def record(path):
+    return dict(path=path.relative_to(ROOT).as_posix(), sha256=sha(path.read_bytes()))
+
+
+def build():
+    apk = Apk.current()
+    try:
+        if apk.version != '884_156692':
+            raise ValueError('Review the selected world/minimap source version')
+        code_manifest = CODE.parent / 'code-manifest.json'
+        if sha((CODE / 'global-metadata.dat').read_bytes()) != json.loads(code_manifest.read_bytes())['metadata_sha256']:
+            raise ValueError('Selected constructor metadata differs from its extraction receipt')
+        constructors = Constructors(CODE)
+        inputs = []
+
+        def payload(bundle, suffix):
+            obj = apk.asset(bundle, suffix)
+            raw = obj.read().m_Script.encode('utf8', 'surrogateescape')
+            inputs.append(dict(source=apk.provenance(obj), payload_sha256=sha(raw)))
+            return raw
+
+        def table(name, kind):
+            return constructors.table(payload('config_luban_map', '/' + name + '.g.bytes'), kind)
+
+        maps = table('map', 'TbMapInfo')
+        regions = table('map_region', 'TbMapRegionInfo')
+        # Find the actual configured object rather than guessing the CSV address.
+        addresses = [address for address, _ in apk.container('config_luban_map')
+            if address.rsplit('/', 1)[-1].replace('_', '').lower() == 'minimapregiondisplay.g.bytes']
+        if len(addresses) != 1:
+            raise ValueError('Original minimap region-display table identity is ambiguous: ' + repr(addresses))
+        displays = constructors.table(payload('config_luban_map', addresses[0]), 'TbMinimapRegionDisplayInfo')
+        bindings = []
+        for mid in MAPS:
+            definition_path = ROOT / f'unity/Assets/Official/World/Map/{mid}/map{mid}.json'
+            definition = json.loads(definition_path.read_bytes())
+            nav = definition['Navigation']
+            current = ground(payload('config_ec_maprootentitylite', f'/{mid}.g.bytes'))
+            expected = dict(id=mid, character=nav['CharacterId'], member=nav['MemberId'],
+                size=[nav['Width'], nav['Height']], origin=[nav['Origin'][k] for k in 'XYZ'],
+                cells=[[c['RawValues'] for c in row['Cells']] for row in nav['Rows']],
+                areas=[[row['Cell'], row['Value']] for row in nav['AreaMappings']], max_steps=nav['MaxSteps'])
+            if current != expected:
+                raise ValueError('Installed world navigation differs from the selected actual minimap ground: ' + str(mid))
+            installed = next(json.loads(row['Json']) for row in definition['Configs'] if row['TableName'] == 'TbMapInfo')
+            selected = next(row for row in maps if row['ClassId'] == mid)
+            for key in ('MinimapConfigId', 'MapGroupId', 'MiniMapPath'):
+                if installed[key] != selected[key]:
+                    raise ValueError('World/minimap identity differs: ' + str(mid) + '/' + key)
+            installed_regions = [json.loads(row['Json']) for row in definition['Configs'] if row['TableName'] == 'TbMapRegionInfo']
+            selected_regions = [row for row in regions if row['ClassId'] == mid]
+            geometry = lambda rows: {row['Region']: (row['Areas'], row['RegionTag']) for row in rows}
+            if geometry(installed_regions) != geometry(selected_regions):
+                raise ValueError('World/minimap area-to-region geometry differs: ' + str(mid))
+            bindings.append(dict(mapClassId=mid, definition=record(definition_path),
+                cells=nav['Width'] * nav['Height'], regions=len(installed_regions),
+                checked_navigation_fields=list(current), checked_map_fields=['MinimapConfigId', 'MapGroupId', 'MiniMapPath'],
+                checked_region_fields=['Region', 'Areas', 'RegionTag']))
+        selected_displays = [row for row in displays if row['MapClassId'] in MAPS]
+        destination = ROOT / 'unity/Assets/Game/Resources/MainlineMiniMap/current-region-displays.json'
+        destination.write_text(json.dumps(dict(Manifest=apk.version, Displays=selected_displays),
+            ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
+        meta = Path(str(destination) + '.meta')
+        if not meta.is_file():
+            meta.write_text('fileFormatVersion: 2\nguid: ' + hashlib.md5(b'zjcs:mainline-minimap-region-displays:884').hexdigest() + '\n', 'utf8')
+        sources = [Path(__file__), code_manifest, CODE / 'global-metadata.dat',
+            ROOT / 'scripts/official_map_codec.py', ROOT / 'scripts/official_tables.py',
+            CODE / 'common-source/Common/MinimapRegionDisplayInfoParser.cs',
+            CODE / 'common-source/Common/MapRegionInfoParser.cs', CODE / 'common-source/Common/GridMoverComponentInfo.cs',
+            CODE / 'common-source/Common/MapRootEntityLiteSingleInfo.cs']
+        for name in constructors.sources:
+            sources.extend(path for folder in ('Common', 'Common.LubanGen')
+                if (path := CODE / 'common-source' / folder / (name + '.cs')).is_file())
+        receipt = dict(format=1, manifest=apk.version, inputs=inputs, sources=[record(p) for p in dict.fromkeys(sources)],
+            bindings=bindings, outputs=[record(destination), record(meta)],
+            integration=[record(ROOT / path) for path in (
+                'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapWorldData.cs',
+                'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapWorldData.cs.meta',
+                'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMap.cs',
+                'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapBindings.cs',
+                'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapLabels.cs',
+                'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineNativeMiniMapRoot.cs',
+                'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/Zjcs.Offline.World.MainlineMiniMap.asmdef',
+                'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.WorldData.cs',
+                'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.WorldData.cs.meta',
+                'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.cs',
+                'scripts/prepare_mainline_minimap_offline_validation.py',
+                'scripts/test_mainline_minimap_native_bindings.py')],
+            operation='Compare every installed navigation field/cell, map/minimap identity and region area membership against the selected actual ground. Preserve historical definition versions and all other configuration fields; no whole-version equivalence. Extract complete original minimap region-display rows without substitutions.')
+        target = ROOT / 'assets/reference/official-map/mainline-minimap-world-data-source-manifest.json'
+        target.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
+        print('Bound original minimap world data:', len(bindings), 'maps,', sum(r['cells'] for r in bindings),
+            'cells,', len(selected_displays), 'display rows', flush=True)
+    finally:
+        apk.archive.close()
+
+
+if __name__ == '__main__':
+    build()

@@ -31,6 +31,14 @@ class MainlineMiniMapNativeBindingsTests(unittest.TestCase):
             with self.subTest(path=row['path']):
                 self.assertEqual(hashlib.sha256((ROOT / row['path']).read_bytes()).hexdigest(), row['sha256'])
 
+    def test_selected_world_data_sources_and_bindings(self):
+        receipt = json.loads((ROOT / 'assets/reference/official-map/mainline-minimap-world-data-source-manifest.json').read_bytes())
+        self.assertEqual(receipt['manifest'], '884_156692')
+        self.assertEqual(sum(row['cells'] for row in receipt['bindings']), 258400)
+        for row in receipt['sources'] + receipt['outputs'] + receipt['integration'] + [row['definition'] for row in receipt['bindings']]:
+            with self.subTest(path=row['path']):
+                self.assertEqual(hashlib.sha256((ROOT / row['path']).read_bytes()).hexdigest(), row['sha256'])
+
 
 if __name__ == '__main__':
     unittest.main()

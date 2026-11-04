@@ -63,10 +63,13 @@ def main():
     if not shared_panel.is_dir():raise ValueError('Prepare the complete selected fullscreen minimap window')
     pending += [p for p in shared_panel.rglob('*') if p.is_file() and p.suffix!='.meta']
     pending.append(source/'Assets/Game/Resources/Map13/Native/minimap-resource-point-assets.asset')
+    pending.extend(source/f'Assets/Official/World/Map/{mid}/NativeMiniMapResourcesCurrent/Resources/Map{mid}/Native/current-resource-point-assets.asset' for mid in (10,11,12,13,14,16))
     current_markers=source/'Assets/Official/World/Shared/NativeMiniMapMarkersCurrent/Resources/MainlineMiniMap/current-marker-assets.asset'
     if current_markers.is_file():
      pending.append(current_markers)
      pending.append(source/'Assets/Game/Resources/MainlineMiniMap/current-marker-data.json')
+     pending.append(source/'Assets/Game/Resources/MainlineMiniMap/current-region-displays.json')
+     pending.extend(source/f'Assets/Official/World/Map/{mid}/map{mid}.json' for mid in (10,11,12,13,14,16))
     shared_renderer=source/'Assets/Official/World/Shared/NativeMiniMapRendererCurrent'
     if not shared_renderer.is_dir():raise ValueError('Prepare the complete selected shared minimap renderer')
     pending += [p for p in shared_renderer.rglob('*') if p.is_file() and p.suffix!='.meta']

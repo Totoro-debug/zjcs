@@ -41,7 +41,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
 
         public static MainlineMiniMap Create(GameObject prefab, Transform parent, MainlineMiniMapBindings bindings)
         {
-            if (prefab == null || bindings?.State == null || bindings.Settings == null
+            if (prefab == null || bindings?.State == null || bindings.WorldData == null || bindings.Settings == null
                 || bindings.Characters == null || bindings.ResourcePoints == null || bindings.OfflineData == null
                 || bindings.MarkerServices == null || bindings.MarkerPerformance == null || bindings.ClickInput == null
                 || bindings.CameraControl == null || bindings.ClickPublisher == null)
@@ -51,9 +51,12 @@ namespace Zjcs.Offline.World.MainlineMiniMap
                 || template.MapClassId != bindings.ResourcePoints.MapClassId
                 || bindings.Settings.GetMinimapSetting(bindings.MinimapConfigId) == null)
                 throw new InvalidDataException("Original minimap identity or setting differs from its local bindings.");
+            if (!bindings.WorldData.TryGetMapLiteData(template.MapClassId, out _)
+                || bindings.WorldData.GetMinimapConfigId(template.MapClassId) != bindings.MinimapConfigId)
+                throw new InvalidDataException("Original world data differs from its minimap binding.");
             if (bindings.Visibility != null && (template.MapClassId != bindings.State.CurrentMapClassId
                 || bindings.Visibility.Host?.Entity?.ClassId != template.MapClassId
-                || !bindings.State.TryGetMapLiteData(template.MapClassId, out var ground)
+                || !bindings.WorldData.TryGetMapLiteData(template.MapClassId, out var ground)
                 || ground.MapGroundSize.X != bindings.Visibility.Width || ground.MapGroundSize.Y != bindings.Visibility.Height))
                 throw new InvalidDataException("Live minimap visibility must belong to the current original ground.");
             if (bindings.RegionTime != null && bindings.RegionTime.MapClassId != template.MapClassId)
@@ -69,7 +72,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
                 var root = instance.GetComponent<MainlineNativeMiniMapRoot>();
                 root.Bindings = bindings;
                 if (bindings.RegionTime != null)
-                    root.TimedLabels = new MainlineMiniMapLabels(bindings.State, bindings.RegionTime);
+                    root.TimedLabels = new MainlineMiniMapLabels(bindings.State, bindings.RegionTime, bindings.WorldData);
                 if (bindings.Visibility != null)
                 {
                     visibility = instance.AddComponent<MainlineMiniMapVisibilityAgent>();

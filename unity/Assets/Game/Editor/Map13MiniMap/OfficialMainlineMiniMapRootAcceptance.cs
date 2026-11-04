@@ -188,11 +188,11 @@ namespace Zjcs.Editor.Map13MiniMap
             var state=host.AddComponent<MainlineMiniMapRootStateFixture>();state.Mask=mask;state.Current=16;var queries=new Queries();state.ManagerQueries=queries;state.Area=queries;state.GroundInput=queries;
             state.RegionalPrefabs=new Dictionary<string,GameObject>();var catalog=new SerializedObject(AssetDatabase.LoadAssetAtPath<ScriptableObject>("Assets/Official/World/Map/13/NativeMiniMapCurrent/Resources/Map13/Native/mini-map-regions.asset"));var entries=catalog.FindProperty("Regions");for(int i=0;i<entries.arraySize;i++){var entry=entries.GetArrayElementAtIndex(i);state.RegionalPrefabs.Add(entry.FindPropertyRelative("OriginalGuid").stringValue,(GameObject)entry.FindPropertyRelative("Prefab").objectReferenceValue);}
             var grid=host.AddComponent<MyGridTransform>();grid.Component=new GridData{Position=center,Lite=lite};var characters=new Characters{MyGridTransform=grid};var data=new Data();var services=new Services();
-            var bindings=new MainlineMiniMapBindings{State=state,Settings=description.Settings,MinimapConfigId=2,MapViewRangeExtraSize=0,Characters=characters,ResourcePoints=new ResourcePoints{LabelServices=labels},OfflineData=data,MarkerServices=services,MarkerPerformance=services,ClickInput=services,CameraControl=services,ClickPublisher=services};
+            var bindings=new MainlineMiniMapBindings{WorldData=VerifyWorldData(),State=state,Settings=description.Settings,MinimapConfigId=2,MapViewRangeExtraSize=0,Characters=characters,ResourcePoints=new ResourcePoints{LabelServices=labels},OfflineData=data,MarkerServices=services,MarkerPerformance=services,ClickInput=services,CameraControl=services,ClickPublisher=services};
             var localData=VerifyLocalData(state,queries,bits);while(localData.MoveNext())yield return localData.Current;
             var module=MainlineMiniMap.Create(prefab,null,bindings);for(int i=0;i<4;i++)yield return null;
             Require(data.Requests==1,"Complete original prefab requests offline data after injection");
-            var root=Object.FindObjectOfType<MainlineNativeMiniMapRoot>();var offline=root.GetComponent<OfflineMiniMap>();Require(!offline.HaveDataShow.State,"Original prefab content hidden while pending");
+            var root=Object.FindObjectOfType<MainlineNativeMiniMapRoot>();VerifyWorldDataBinding(root,bindings);var offline=root.GetComponent<OfflineMiniMap>();Require(!offline.HaveDataShow.State,"Original prefab content hidden while pending");
             data.Pending.Complete(new PlayerOfflineMiniMapDataResponse{MapClassId=13,GridVisibilityByte=GridVisibilityCompressUtils.DoMyZip(bits),ActiveRegions=new List<int>{38},LiteEntityDataDict=new Dictionary<int,PlayerOfflineMiniMapLiteEntityData>(),ActiveableEntDataDict=new Dictionary<MapWorldActiveableEntityType,List<int>>()},0);
             for(int i=0;i<5;i++)yield return null;Require(offline.HaveDataShow.State,"Original prefab response activates bound content");
             Require(root.ViewRangeHandler!=null&&root.GetComponentsInChildren<MiniMapPrivateRegionMaskManager>(true).Length==1,"Original root owns range and actual regional hierarchy");
@@ -248,7 +248,7 @@ namespace Zjcs.Editor.Map13MiniMap
             Require(islandPrefab&&islandPrefab.GetComponent<MainlineNativeMiniMapRoot>().MapClassId==16,"Second complete original prefab");
             var islandResources=Resources.Load<MiniMapResourcePointAssets>("Map16/Native/current-resource-point-assets");
             var islandModule=MainlineMiniMap.Create(islandPrefab,null,bindings,islandResources);for(int i=0;i<4;i++)yield return null;
-            var islandRoot=Object.FindObjectOfType<MainlineNativeMiniMapRoot>();Require(data.Requests==3&&islandRoot.MapClassId==16&&!islandRoot.GetComponent<OfflineMiniMap>().HaveDataShow.State,"Island identity and pending offline lifecycle");
+            var islandRoot=Object.FindObjectOfType<MainlineNativeMiniMapRoot>();VerifyWorldDataBinding(islandRoot,bindings);Require(data.Requests==3&&islandRoot.MapClassId==16&&!islandRoot.GetComponent<OfflineMiniMap>().HaveDataShow.State,"Island identity and pending offline lifecycle");
             islandModule.Dispose();yield return null;Require(characters.Subscribers==0,"Island native instance releases subscriptions");
             var timed=VerifyRegionTime(islandPrefab,bindings,state,labels,islandInput);
             while(timed.MoveNext())yield return timed.Current;
@@ -263,7 +263,7 @@ namespace Zjcs.Editor.Map13MiniMap
                 var regional=otherPrefab.GetComponentInChildren<MiniMapPrivateRegionMaskManager>(true);Require(new SerializedObject(regional).FindProperty("mRegionTilemapSlots").arraySize==otherInput.regions.Length,"Original region slots match installed configuration");
                 var otherResources=Resources.Load<MiniMapResourcePointAssets>($"Map{map}/Native/current-resource-point-assets");
                 int requested=data.Requests;var otherModule=MainlineMiniMap.Create(otherPrefab,null,bindings,otherResources);for(int i=0;i<4;i++)yield return null;
-                var otherRoot=Object.FindObjectOfType<MainlineNativeMiniMapRoot>();Require(data.Requests==requested+1&&otherRoot.MapClassId==map&&!otherRoot.GetComponent<OfflineMiniMap>().HaveDataShow.State,"Configured pending original map instance");
+                var otherRoot=Object.FindObjectOfType<MainlineNativeMiniMapRoot>();VerifyWorldDataBinding(otherRoot,bindings);Require(data.Requests==requested+1&&otherRoot.MapClassId==map&&!otherRoot.GetComponent<OfflineMiniMap>().HaveDataShow.State,"Configured pending original map instance");
                 Require(otherRoot.ResourcePointManager.Context.MapClassId==map&&otherRoot.ResourcePointManager.ForeachLayer().Select(v=>v.Key).SequenceEqual(otherResources.Boards.Select(v=>v.RefreshGroup)),"Factory binds this map's actual resource catalog");
                 otherModule.Dispose();yield return null;Require(characters.Subscribers==0,"Configured instance subscription release");
             }

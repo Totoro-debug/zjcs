@@ -38,16 +38,16 @@ namespace Zjcs.Offline.World.MainlineMiniMap
             add { if (LiveVisibility) LiveVisibility.OnPosVisibilityUpdate += value; else State.OnPosVisibilityUpdate += value; }
             remove { if (LiveVisibility) LiveVisibility.OnPosVisibilityUpdate -= value; else State.OnPosVisibilityUpdate -= value; }
         }
-        public override bool TryGetMapLiteData(int map,out MapRootEntityLiteSingleInfo info) => State.TryGetMapLiteData(map,out info);
-        public override IMiniMapGridMover GetSpawnGridMover(int map) => State.GetSpawnGridMover(map);
+        public override bool TryGetMapLiteData(int map,out MapRootEntityLiteSingleInfo info) => Bindings.WorldData.TryGetMapLiteData(map,out info);
+        public override IMiniMapGridMover GetSpawnGridMover(int map) => Bindings.WorldData.GetSpawnGridMover(map);
         public override IReadOnlyDictionary<int,MiniMapRegionInfo> GetMapRegionDict(int map)
-            => TimedLabels != null ? TimedLabels.GetRegions(map) : State.GetMapRegionDict(map);
+            => TimedLabels != null ? TimedLabels.GetRegions(map) : Bindings.WorldData.GetMapRegionDict(map);
         public override MiniMapRegionInfo GetRegion(int map,int region)
-            => TimedLabels != null ? TimedLabels.GetRegions(map)[region] : State.GetRegion(map,region);
-        public override int AreaToRegion(int map,int area) => State.AreaToRegion(map,area);
-        public override int QueryRegion(Pos2d pos) => State.QueryRegion(pos);
+            => TimedLabels != null ? TimedLabels.GetRegions(map)[region] : Bindings.WorldData.GetRegion(map,region);
+        public override int AreaToRegion(int map,int area) => Bindings.WorldData.AreaToRegion(map,area);
+        public override int QueryRegion(Pos2d pos) => Bindings.WorldData.GridToRegion(MapClassId,pos);
         public override List<int> GetWorldMapProgresses(int map) => State.GetWorldMapProgresses(map);
-        public override MiniMapRegionDisplayInfo GetRegionDisplay(int map,int region) => State.GetRegionDisplay(map,region);
+        public override MiniMapRegionDisplayInfo GetRegionDisplay(int map,int region) => Bindings.WorldData.GetRegionDisplay(map,region);
         public override object QueryCommonGridGround(int map) => State.QueryCommonGridGround(map);
         public override object QuerySceneContainer(Component component) => State.QuerySceneContainer(component);
         public override MiniMapRegionDescItem InstantiateDescription(MiniMapRegionDescItem prefab,Transform parent)

@@ -56,7 +56,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMap.cs",
-      "sha256": "a9d1576ff28859e0b03264302f4b6f711b1758b180ca94082fb886b6337b9f7e"
+      "sha256": "0f647cb7c9f2a292487e5dc2b7fb759b6d9c13364bbfae617cfaa01e9ddec4ad"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMap.cs.meta",
@@ -80,7 +80,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapBindings.cs",
-      "sha256": "caad1d0c82ec0b9563e446210c54726f56c827b4b0a6ed68c496456f67e5b060"
+      "sha256": "25e44f2082f2f15496becddb9616090b51077aab76c87ef38f06e9f56455722c"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapBindings.cs.meta",
@@ -88,7 +88,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapLabels.cs",
-      "sha256": "2cf3761e14ec80fa45ec9067166b92ef8b9584b2e6b10d94e3c1187957e2e204"
+      "sha256": "d6c6db09f78c021e415b934cf29af843cb92ee8e99206ab780dba2b3488af49e"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapLabels.cs.meta",
@@ -111,8 +111,16 @@
       "sha256": "de0735990729b4b943d4de517388d5b493c5ce8a3ed575048a7198026ebad381"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapWorldData.cs",
+      "sha256": "29bd9422dabe836799dcbb3f9406525c0d31ca3b90152d353c154df15ba6252f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapWorldData.cs.meta",
+      "sha256": "aa9da1d8d9018523e9a78a780202326d59f3f5c3ba7f8ddba787fb4fc3938f06"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineNativeMiniMapRoot.cs",
-      "sha256": "a181ad77060842aaf2d292f6af709615e3312a9968cdc6b3c2fae2b73a7454df"
+      "sha256": "b14910be485670cc7d09162ac46b6a68ef8187cbd6b6da5bc753e061754c6eb1"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineNativeMiniMapRoot.cs.meta",
@@ -128,7 +136,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/Zjcs.Offline.World.MainlineMiniMap.asmdef",
-      "sha256": "cb16b82cf0025ccd3237790f3d6a998bb19cb937dd01a3453a1fa4b03bbe0de5"
+      "sha256": "81ab9239c26b135146fa24a7f067e4dd1e5df94cdd3ae5c336d56403ad807f18"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/Zjcs.Offline.World.MainlineMiniMap.asmdef.meta",
@@ -136,11 +144,11 @@
     },
     {
       "path": "scripts/prepare_mainline_minimap_offline_validation.py",
-      "sha256": "02fdad1ae2d8338a3f03bad35d3b0f3d5ded5ed144d927a53ddc0e29cfa86391"
+      "sha256": "4cb918817d12a8b7b15f9495a9f9c147c69d5b7fff9ea3ff8565ce8eb90a9f53"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.cs",
-      "sha256": "88c3bc6e2e764b311ccba1b217baff64c3a154ba9235689ecb9cfed74b4748cc"
+      "sha256": "e8a951604bebff6249cc0c5d2ae1b7712c5588fcced977b60dbb9f1aba25e9a7"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.cs.meta",
@@ -185,6 +193,14 @@
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Visibility.cs.meta",
       "sha256": "1216b9823148659319e5b115f756549bffd45f1b1dfee34ce2dca5662c6af8db"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.WorldData.cs",
+      "sha256": "ab48f9e962140df17cb4fc0cc84817c5c48992aca00121dba9834fb8f9228545"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.WorldData.cs.meta",
+      "sha256": "7d7b70a5dde4ae5de2a1fb380336fa7de02a0aebdedcd923a329e9fd48c46579"
     }
   ],
   "builtin_references": {
@@ -2660,7 +2676,7 @@
         "guid": "485cb1970f2c584495834103ad197fe3",
         "type": 3
       },
-      "sha256": "a181ad77060842aaf2d292f6af709615e3312a9968cdc6b3c2fae2b73a7454df",
+      "sha256": "b14910be485670cc7d09162ac46b6a68ef8187cbd6b6da5bc753e061754c6eb1",
       "meta_sha256": "d4cec09309d6ee189e14a721fd70ed49a4427130503f38174400cabb46d535f7"
     },
     "OfflineMiniMap": {

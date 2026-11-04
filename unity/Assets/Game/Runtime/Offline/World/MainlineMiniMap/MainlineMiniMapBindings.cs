@@ -9,6 +9,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
     public sealed class MainlineMiniMapBindings
     {
         public MiniMapManagedContext State;
+        public MainlineMiniMapWorldData WorldData;
         public MiniMapSettings Settings;
         public int MinimapConfigId;
         public int MapViewRangeExtraSize;

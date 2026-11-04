@@ -15,13 +15,13 @@ namespace Zjcs.Offline.World.MainlineMiniMap
         private readonly IMapRegionTime time;
         private readonly Dictionary<int, MiniMapRegionInfo> regions = new Dictionary<int, MiniMapRegionInfo>();
 
-        public MainlineMiniMapLabels(MiniMapManagedContext context, IMapRegionTime time)
+        public MainlineMiniMapLabels(MiniMapManagedContext context, IMapRegionTime time, MainlineMiniMapWorldData worldData)
         {
             source = context.LabelServices ?? throw new ArgumentException("Original label inputs are required.");
             this.time = time;
             if (source.MapClassId != time.MapClassId || source.Data.mapClassId != time.MapClassId)
                 throw new InvalidDataException("Original label data and region clock belong to different maps.");
-            foreach (var entry in context.GetMapRegionDict(time.MapClassId))
+            foreach (var entry in worldData.GetMapRegionDict(time.MapClassId))
             {
                 var original = entry.Value;
                 if (original.ClassId != time.MapClassId || entry.Key != original.Region)
