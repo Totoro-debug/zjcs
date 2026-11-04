@@ -218,6 +218,16 @@ def main():
     receipt["fight_npc_appearance"] = dict(inputs=list(inputs.values()), reassembly=repacked,
         generator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), fighters=fighters,
         skipped=skipped, override_events_sha256=hashlib.sha256(effects_bytes).hexdigest())
+    if partner_mode:
+        binding_paths = [
+            ROOT / "unity/Assets/Game/Editor/Combat/OfficialPartnerBattleFighterTools.cs",
+            ROOT / "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleModelCatalog.cs",
+            ROOT / "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs",
+            ROOT / "unity/Assets/Game/Resources/Combat/OfficialBattleModelCatalog.asset",
+        ]
+        receipt["fight_npc_appearance"]["runtime_bindings"] = [dict(
+            path=path.relative_to(ROOT).as_posix(), bytes=path.stat().st_size,
+            sha256=hashlib.sha256(path.read_bytes()).hexdigest()) for path in binding_paths]
     paths = {row["path"] for row in outputs}
     receipt["outputs"] = [row for row in receipt["outputs"] if row["path"] not in paths] + outputs
     reference.parent.mkdir(parents=True, exist_ok=True)

@@ -15,9 +15,29 @@ namespace Zjcs.Presentation.Combat
         public string key;
         public int monsterId;
         public string skin;
+        public string[] skins = Array.Empty<string>();
         public float scale = 1f;
         public OfficialBattleAnimationAlias[] animations = Array.Empty<OfficialBattleAnimationAlias>();
         public SkeletonDataAsset skeleton;
+
+        public int ApplySkinCombination(Spine.Skeleton target)
+        {
+            if (target == null) throw new ArgumentNullException(nameof(target));
+            if (skins == null || skins.Length == 0) return 0;
+            var combined = new Spine.Skin("combineSkin");
+            int applied = 0;
+            foreach (string name in skins)
+            {
+                Spine.Skin source = target.Data.FindSkin(name);
+                if (source == null) continue;
+                combined.AddSkin(source);
+                applied++;
+            }
+            if (applied == 0) return 0;
+            target.SetSkin(combined);
+            target.SetSlotsToSetupPose();
+            return applied;
+        }
     }
 
     [Serializable]

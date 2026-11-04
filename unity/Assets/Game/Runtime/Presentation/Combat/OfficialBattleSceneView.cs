@@ -1294,6 +1294,7 @@ namespace Zjcs.Presentation.Combat
                 UnityEngine.Object.Destroy(gameObject);
                 throw new InvalidOperationException("Official battle skeleton failed to initialize: " + key);
             }
+            binding.ApplySkinCombination(skeleton.Skeleton);
             if (binding.scale <= 0)
             {
                 UnityEngine.Object.Destroy(gameObject);

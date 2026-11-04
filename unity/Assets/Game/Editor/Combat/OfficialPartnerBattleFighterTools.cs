@@ -115,6 +115,7 @@ namespace Zjcs.Editor.Combat
                 bindings.Add(new OfficialBattleModelBinding {
                     key = "body_" + fighter.classId,
                     skin = fighter.skins[0],
+                    skins = fighter.skins,
                     scale = fighter.scale,
                     animations = fighter.animations,
                     skeleton = skeleton
@@ -130,6 +131,10 @@ namespace Zjcs.Editor.Combat
                 row.FindPropertyRelative("key").stringValue = bindings[i].key;
                 row.FindPropertyRelative("monsterId").intValue = 0;
                 row.FindPropertyRelative("skin").stringValue = bindings[i].skin;
+                SerializedProperty skins = row.FindPropertyRelative("skins");
+                skins.arraySize = bindings[i].skins.Length;
+                for (int j = 0; j < bindings[i].skins.Length; j++)
+                    skins.GetArrayElementAtIndex(j).stringValue = bindings[i].skins[j];
                 row.FindPropertyRelative("scale").floatValue = bindings[i].scale;
                 row.FindPropertyRelative("skeleton").objectReferenceValue = bindings[i].skeleton;
                 SerializedProperty animations = row.FindPropertyRelative("animations");
@@ -152,6 +157,10 @@ namespace Zjcs.Editor.Combat
                 if (binding == null || binding.skeleton == null
                     || !loaded.HasNpcBattleAnimations(fighter.classId))
                     throw new InvalidDataException("Imported partner fighter is not playable in the battle model catalog: "
+                        + fighter.classId);
+                var skeleton = new Spine.Skeleton(binding.skeleton.GetSkeletonData(false));
+                if (binding.ApplySkinCombination(skeleton) == 0)
+                    throw new InvalidDataException("Original partner skin combination has no available skins: "
                         + fighter.classId);
             }
             Debug.Log("Official partner battle Spine assets imported: " + bindings.Count + " fighters.");

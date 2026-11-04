@@ -13053,7 +13053,7 @@
         "atlas_sha256": "b441c16dcf30246b55ebaaeb52c274c7624470f3bcb2cf1d576ede2d96b078d0"
       }
     },
-    "generator_sha256": "ccd4a5a42fef73aba597d228af54eaf872520bd0d76f9299efdafcc6517d5714",
+    "generator_sha256": "d240e2c84853a0a1fc6f5b87b7c296a47187de77dffe665491b9f64cec18ac73",
     "fighters": [
       {
         "classId": 8401,
@@ -23506,6 +23506,28 @@
         "reason": "No original SkeletonMecanim NPC rig"
       }
     ],
-    "override_events_sha256": "b894fdd760af1a182c84198f358c489d401109801ced95398cdb2436883e83d9"
+    "override_events_sha256": "b894fdd760af1a182c84198f358c489d401109801ced95398cdb2436883e83d9",
+    "runtime_bindings": [
+      {
+        "path": "unity/Assets/Game/Editor/Combat/OfficialPartnerBattleFighterTools.cs",
+        "bytes": 9998,
+        "sha256": "e214035e72cdb6798ec71150921c188fe5ef93016d879f7f5c2506b306f6b19c"
+      },
+      {
+        "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleModelCatalog.cs",
+        "bytes": 10786,
+        "sha256": "1b40e3bdf5db38c6f865ee46acaa5ca5b6cee12988a65b989abd4f897eb2bdac"
+      },
+      {
+        "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs",
+        "bytes": 71030,
+        "sha256": "2686c3eb96a30d49dc656a87dcb4ddfab285a6f1e6e09d3db438420da1f56f29"
+      },
+      {
+        "path": "unity/Assets/Game/Resources/Combat/OfficialBattleModelCatalog.asset",
+        "bytes": 405392,
+        "sha256": "d1808f5eae0a6e29b94310ed76bcf6a41d661e788b1b92f9c5688a91a5901f3a"
+      }
+    ]
   }
 }
