@@ -1,0 +1,1207 @@
+{
+  "manifest": "884_156692",
+  "generator": {
+    "path": "scripts/prepare_partner_native_battle_assets.py",
+    "sha256": "214822591a8a07b74c79a6b39f3247eb30d42bed3a2351b4a14b6d1cb13fb1f1"
+  },
+  "inputs": [
+    {
+      "path": "assets/reference/partner-native-battle-source-manifest.json",
+      "sha256": "a13707973bd4e7b7d720d9e5ef778f3b4de977f28e04a43acd2f1107ef7dcc25"
+    },
+    {
+      "path": "assets/reference/partner-native-battle-animators-source-manifest.json",
+      "sha256": "cb29e60c8f6425e7c363fc618fa5f70d3641c800e12d9dd07269fef7076b2aa5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders/source-manifest.json",
+      "sha256": "09b81e5260175a1524a2178d37bea2b78752bdc85f130751e2d95398171fbe0b"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders/Assets/Shaders/b29a473e62738eead13653b36769455d26786718ce89594fb7c40dba0d56a85f.shader",
+      "sha256": "2effb82caa6118b46eb095c038bb361859913e823f61ce549e5f82fca256931e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders/Assets/Shaders/b29a473e62738eead13653b36769455d26786718ce89594fb7c40dba0d56a85f.shader.meta",
+      "sha256": "9098f5e0295f71665ade7f023948dbb323afcb9147e73676d87182fa5d08a8af"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativePartners/catalog.json",
+      "sha256": "16fb18038440cdbec323c9d727e3192bedec7fe47bf181633b1851e37747b918"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativePartnerAnimators/Resources/Combat/NativePartnerAnimators/catalog.asset",
+      "sha256": "e8877a042f64c12ce20ea57c76e4d8c392d8d93ab9cd3290a5dfe0cb2acf545c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/PartnerNativeBattleAssetCatalog.cs",
+      "sha256": "10a054b34e4437ab6efd291717232216a34552fbddadd12241ca1938733f0aa5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/PartnerNativeBattleAssetCatalog.cs.meta",
+      "sha256": "53c43083461b247f70494a1879120d7c2a222ad16d719acf8df13cdb52ed01a4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/PartnerNativeBattleActor.cs",
+      "sha256": "6bc1fb09cad01645395e1cb11401eebbdb538deb9a7ff332d6597959735a8396"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/PartnerNativeBattleActor.cs.meta",
+      "sha256": "09db1450df740063af9d7e0e73421f26874dec08cdc2ddc2af7a27243a999073"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/OfficialPartnerNativeBattleRuntimeAcceptance.cs",
+      "sha256": "6e0643c4f577ae67dcbfb9847b8898065a369b8abc8460bd2541ae57d58b90ce"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/OfficialPartnerNativeBattleRuntimeAcceptance.cs.meta",
+      "sha256": "0c773c6ad347232cef58c6b56897459accdbff25f4acff611712db1373ad20df"
+    },
+    {
+      "path": "scripts/prepare_partner_native_battle_validation.py",
+      "sha256": "3d09a19b66e343ac1383514c2f63142de2c6ea2348421f99eefdc8a96d09ad46"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimatorPose.cs",
+      "sha256": "63156fee5ba194ce0df00185d8ceddd2e45edd9e238155189c984d761bcbcc51"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneMeshPart.cs",
+      "sha256": "15d04d7efce3ba00d07b57ffeb9915dbc01b774ae704a0ed2360b68fa22d1ebf"
+    }
+  ],
+  "bindings": [
+    {
+      "file": "10608/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/10608/battle.bytes",
+        "sha256": "58ac12ceae4451fce37740dfd255216ef28d2681c2c585445df38a4cb9cd3047"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/10608/battle.bytes.meta",
+        "sha256": "75c44bb96ecf9a9f803c95441ae0bc3fc2ae3db6b26b130f82fd638003f6606f"
+      }
+    },
+    {
+      "file": "10608/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/10608/materials.json",
+        "sha256": "e668d3d0278f7756b8f6303b5e3e7f343b736b43e9215adcfde810d98446da60"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/10608/materials.json.meta",
+        "sha256": "1abf2675f7425e97608d3194f11cfbf9c7002b012a69f0b79de1f41d63627325"
+      }
+    },
+    {
+      "file": "10708/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/10708/battle.bytes",
+        "sha256": "d8d6a2a18627cebed2b34a0363a6cdf26d0687bd31dbf51b0fc26a276989ff06"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/10708/battle.bytes.meta",
+        "sha256": "dd87b5bd4cae659fd97f7f7b881919884b5813a6bacc9c3abfe8a377b595a763"
+      }
+    },
+    {
+      "file": "10708/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/10708/materials.json",
+        "sha256": "a9179df09f8242a82a931155a3806684cab8c10474b718940b294b6a4ab19236"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/10708/materials.json.meta",
+        "sha256": "3c91699a79188b2b0f27fde3e5844e1575085ed4780f826aea7e7cbf0f8ff00d"
+      }
+    },
+    {
+      "file": "11001/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11001/battle.bytes",
+        "sha256": "64003aa7cf054af4524c43cf748515e7125794179b80afccb21d081fd76e5c1b"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11001/battle.bytes.meta",
+        "sha256": "8cc0418cd4e230493a33701099bef3ac84fad5e1b90fdab75d4dbd880b3d41e4"
+      }
+    },
+    {
+      "file": "11001/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11001/materials.json",
+        "sha256": "a9b034abe0627b3ec9b3665f17a3b996ba3a45744e0f6fdba0df5d7bbbbfaed2"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11001/materials.json.meta",
+        "sha256": "c41965910b8c5b70e4c2b9ca990cad38b221d020784c65b4e87bff7a640febf5"
+      }
+    },
+    {
+      "file": "11002/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11002/battle.bytes",
+        "sha256": "ecee0be8540a6f945b109d594d16ab571baaa46163d382f8d6d84e7d2f0c27ea"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11002/battle.bytes.meta",
+        "sha256": "78e0f1a589caa1738340f7cfa2204142ca89670365531703093139fb9eb31b1f"
+      }
+    },
+    {
+      "file": "11002/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11002/materials.json",
+        "sha256": "10ac759c6c2cc408ab22c26b72b40387e96f11908363e6120e8ec0a6ff774c5f"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11002/materials.json.meta",
+        "sha256": "a8a1ffb458efcc5795d728fca31d345e15b063ab6084f1d8a95ead15a0d69020"
+      }
+    },
+    {
+      "file": "11003/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11003/battle.bytes",
+        "sha256": "69f56251e77edde1fb9ac315b209df591e32ac09c11bea7da6c4f33b37a3d5fa"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11003/battle.bytes.meta",
+        "sha256": "5d85fe6e5896f2d39e698b43c6bc36c46826a181f480c050d57cbdccdcb198ad"
+      }
+    },
+    {
+      "file": "11003/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11003/materials.json",
+        "sha256": "9db5a0468f941625b49869b43b7bfd2c0c72a5b9087cb03687a6c373a571560c"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11003/materials.json.meta",
+        "sha256": "b1f3d7bab41d77e3d744d0cb2a51b0d172e00c24238516b6ac0c58aec5739a6b"
+      }
+    },
+    {
+      "file": "11004/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11004/battle.bytes",
+        "sha256": "54a38ca83e3d943393c3960144d978c5960737f1c776e3063e98e19fe258d614"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11004/battle.bytes.meta",
+        "sha256": "4b31c35091d4c531a03bbbb44d4f6e4ba91dc0706a23c4d912ed9170888437c7"
+      }
+    },
+    {
+      "file": "11004/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11004/materials.json",
+        "sha256": "962050b9dd7aec4f5bbbbd9ccd31fcc694cac7c34877bdebb5f6ecfd1d9cc0de"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11004/materials.json.meta",
+        "sha256": "47448f439ffa7c3a693e65fc88eebad35ecad97c92a3be080b60a0c62a80e56b"
+      }
+    },
+    {
+      "file": "11005/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11005/battle.bytes",
+        "sha256": "2d368b46ef65a1982ecf1ef00c8b7634140bfb10030042ce60ed884df7f670e9"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11005/battle.bytes.meta",
+        "sha256": "2736d197485af1c6f8fe53e5004c7063faf61968e17f388c65675501c2a80aed"
+      }
+    },
+    {
+      "file": "11005/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11005/materials.json",
+        "sha256": "d62501041ea071095cd0ad02cd9b0f9b85c8aef38d27f44550c5e530d019bfb0"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11005/materials.json.meta",
+        "sha256": "2d54fe505306033fa27305934a22bc8e5c6d7e152bc1516561d06c15bac7ab38"
+      }
+    },
+    {
+      "file": "11005/parts/1/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11005/parts/1/battle.bytes",
+        "sha256": "fe25b96d7778a4803f1b3aeeb582d02ff55a34b5e78384a7486dfc5e79e82457"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11005/parts/1/battle.bytes.meta",
+        "sha256": "dbdfe54386f018c597dd312fa024acdc656344d80b12235961f461632da87ec2"
+      }
+    },
+    {
+      "file": "11005/parts/1/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11005/parts/1/materials.json",
+        "sha256": "02b67bd20b20581f7fefc0ca2f986156ec4be63a83c36fa11a8cfb579e45ac9a"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11005/parts/1/materials.json.meta",
+        "sha256": "3767d5be1279742c359e884173c9765b733c84cfea00f98839c75ce1f3aae81f"
+      }
+    },
+    {
+      "file": "11006/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11006/battle.bytes",
+        "sha256": "88327ae1efab323c8440abb968e89ef99117c7bfafbecd6bd67efa30851c5e3e"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11006/battle.bytes.meta",
+        "sha256": "37e7b5276cef9ecd7c0f153c2e338a6642c4748efaba8c4f86dca633ee06b242"
+      }
+    },
+    {
+      "file": "11006/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11006/materials.json",
+        "sha256": "9cf4d9211bb6065a1ac6d0f6dd6168f616df83d909f5c48d65f1d3726c1be8c7"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11006/materials.json.meta",
+        "sha256": "129ce1fd0b18534720bb575499737274de613bd21f6fb7a28b14f36144918d16"
+      }
+    },
+    {
+      "file": "11007/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11007/battle.bytes",
+        "sha256": "56c36c61da80a6eadb1e9312092b1354fd205b47bce8fd7ab429f0afb79e3a74"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11007/battle.bytes.meta",
+        "sha256": "3af570726458e82f92a2ba78b8e1196c82d5e45374d4fa78fedae9bbe148a7a1"
+      }
+    },
+    {
+      "file": "11007/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11007/materials.json",
+        "sha256": "af042d5b6694e58fbb822eb4aafbbdcdbfa216c0c45ef05916df3c7bd8767b82"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11007/materials.json.meta",
+        "sha256": "c6d986aab4dcb4cba3fb1a4fa47b5c485bb8113ba434e0b707895b1e826c4cd3"
+      }
+    },
+    {
+      "file": "11008/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11008/battle.bytes",
+        "sha256": "57cf8a8176a92eeae638aaaf99cf674ba6ebf1fe3320387ec09182f55b900ca9"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11008/battle.bytes.meta",
+        "sha256": "f5a2d418d26da3a56ed8800a13f33e44c3722a6286cf52d5a411e4ad27126b29"
+      }
+    },
+    {
+      "file": "11008/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11008/materials.json",
+        "sha256": "370097261b93186cedd392f402f3573015b389d814ca20eb7f85fb0adfdb9a37"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11008/materials.json.meta",
+        "sha256": "a42101cf6af6dc75d5af123ef895f319ac461c35721ecc41fa1f20ea18a6aeb2"
+      }
+    },
+    {
+      "file": "11009/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11009/battle.bytes",
+        "sha256": "d657ed30fe45b3b1fbdccd40485bad8e1626262e1599a69c163ea0c7d48792e9"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11009/battle.bytes.meta",
+        "sha256": "64f2ebe0f6dfb319bf178f98e0d5ebba5943c60e7bd51292709e731893394bf7"
+      }
+    },
+    {
+      "file": "11009/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11009/materials.json",
+        "sha256": "80a9851d8a657074d5187db274328a33d2284014be883973334fc6a609414dbe"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11009/materials.json.meta",
+        "sha256": "fea3f82fd6348886ff884b0bb226e16bac0318253058ecd1668bed598e1a0e25"
+      }
+    },
+    {
+      "file": "11010/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11010/battle.bytes",
+        "sha256": "fdbdaed58529d22a8417951bef36e8c6751b3d7d7609dd50d65eb356904793bf"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11010/battle.bytes.meta",
+        "sha256": "f0071178e105b692c147fc63a9ae7da99233843f366d5cf685bf5d0d8bf57dfe"
+      }
+    },
+    {
+      "file": "11010/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11010/materials.json",
+        "sha256": "ddf5c4f534025ef7f9f356f0e68965145b1656224c8393bb3cbd594ab350d224"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11010/materials.json.meta",
+        "sha256": "57d3646bbd197039fd52236e95f40a0aca1c9beec4ee320a206e9deea1c3694e"
+      }
+    },
+    {
+      "file": "11011/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11011/battle.bytes",
+        "sha256": "9441c2c52049d92a37b798ed3bcadb1884f42d65fee4936827c07cb914d2ee9c"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11011/battle.bytes.meta",
+        "sha256": "9296c8d9c45c2f34589f9b84afcd9dad2fcf130fdeddc6dfd58a48f8a66f0109"
+      }
+    },
+    {
+      "file": "11011/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11011/materials.json",
+        "sha256": "536e51727d6c6562c885a7679ea51fad951b1d0c50a5ba1978761da07c93a2ed"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11011/materials.json.meta",
+        "sha256": "599329d34d72b3644b09a0c6aa78f806f33f19b66b1ea10c3b98ec81c875b05f"
+      }
+    },
+    {
+      "file": "11012/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11012/battle.bytes",
+        "sha256": "9f73c9a4714d8fecf78adc797c3ee563669715971575af27c095d86038945968"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11012/battle.bytes.meta",
+        "sha256": "d3634dac942f7a3ed778e5dc269857e7b49f33e268b836929d7bb1423f1795ea"
+      }
+    },
+    {
+      "file": "11012/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11012/materials.json",
+        "sha256": "60626c54a28bcfbcacf5fc9d6446062a0d6798cda450791ab4776aceff31d6a3"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11012/materials.json.meta",
+        "sha256": "172d0a96fc03e8f3a216d7ab86993300220cbb5b5373c3a7ce3cacc0208ed237"
+      }
+    },
+    {
+      "file": "11013/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11013/battle.bytes",
+        "sha256": "5e305128e1a834bea30dc5ea8ef18430d62e955f80a86ae5fe8b3b5a2fbbdd7f"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11013/battle.bytes.meta",
+        "sha256": "f5999de6af575cd3671ed1eb2819d54d42d23b090f28b2539db6e188ebbccdf4"
+      }
+    },
+    {
+      "file": "11013/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11013/materials.json",
+        "sha256": "a04c0d1ae5606bdcea09e3035f9692fdd136376b3acdc9abd42d9098d519e8d2"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11013/materials.json.meta",
+        "sha256": "01fa00c765161923963ed703aec7f1a8a04a4c7d321ca5d27ddcb0dbdae75bd2"
+      }
+    },
+    {
+      "file": "11014/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11014/battle.bytes",
+        "sha256": "3b92dcaed03087572152d034707904b60419fa775bab3c6658b57f733a4a5574"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11014/battle.bytes.meta",
+        "sha256": "0e3ef5e7c9086807e97d7f67ef9f8cbb3dcbbae79aea4a9d603a4f73c88e5d40"
+      }
+    },
+    {
+      "file": "11014/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11014/materials.json",
+        "sha256": "3a44cea084513a3f70ebb0bc872bd74eb3dee97d5db574850f4787c103968947"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11014/materials.json.meta",
+        "sha256": "083b9b41d79dabdf8c4597282adf03e7d9983eaa93303920c6376f30b19f10a0"
+      }
+    },
+    {
+      "file": "11015/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11015/battle.bytes",
+        "sha256": "bb30e7dfac2a92b1bf206464b75ad9b83e631735706fb5fc21cd526355a32311"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11015/battle.bytes.meta",
+        "sha256": "50b7bf5f8c8c18a4d57d7d3f61133720c64009b76c58ddb549f44f1cdceda076"
+      }
+    },
+    {
+      "file": "11015/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11015/materials.json",
+        "sha256": "205b41451b67340058e6023315c4a4a3437e83da9f46a78bcea03ddb7c164185"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11015/materials.json.meta",
+        "sha256": "27f412b86f4f608c6c3ecbd6a329ce01545634dc48fef8d0c268849565fa6eda"
+      }
+    },
+    {
+      "file": "11016/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11016/battle.bytes",
+        "sha256": "14f853041288a5b30fe053d7e1cc93d30a3ab5c09661bce9f17f51a8cae2d612"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11016/battle.bytes.meta",
+        "sha256": "65d9144bc32992946b63e3eefa6496e7334b3d06734fd4a9774a6dba868fd956"
+      }
+    },
+    {
+      "file": "11016/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11016/materials.json",
+        "sha256": "4cdb8de3301e19ab469526047a0db16c3423a66f47188e61f8016bc7a5cb6045"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11016/materials.json.meta",
+        "sha256": "c0aaf98fc854e2622361ae89b8d36acbbde17c39899066d7ade2fc19b4f331d0"
+      }
+    },
+    {
+      "file": "11017/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11017/battle.bytes",
+        "sha256": "0f265de9ef8be88e6d68b4fb58f542225dacc055dd05dac950fed70dba381d75"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11017/battle.bytes.meta",
+        "sha256": "020fc3175b69fc28a83e968a92d298ae96f50fe8e88c6903276a5b4a549a1671"
+      }
+    },
+    {
+      "file": "11017/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11017/materials.json",
+        "sha256": "4c1a22d1a481a623afbeab41ddac40c55d20817e3984192cea7f5aa54f63ebf6"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11017/materials.json.meta",
+        "sha256": "7427d61b130d7c0996981e6acc2a619c891f687c88e34d4d06421043560180d8"
+      }
+    },
+    {
+      "file": "11018/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11018/battle.bytes",
+        "sha256": "20ed91d671712f497e5b10666eca1103ede1f6b2e814db8a85d8cd7466f00820"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11018/battle.bytes.meta",
+        "sha256": "183fcb4fc0e489bae979b2ae3761085f382dd4b8e3fafb021881a1fa9c63f349"
+      }
+    },
+    {
+      "file": "11018/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11018/materials.json",
+        "sha256": "9102c24046d032b1c1516fa40d5ce8ab5a9dcf113cb697ad6032da8862a3eebb"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11018/materials.json.meta",
+        "sha256": "f48c6b23c5074fe4d438b4cf9b42e6339a9e1ddb4fd279636de3fba5030f85c9"
+      }
+    },
+    {
+      "file": "11019/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11019/battle.bytes",
+        "sha256": "6bdb3b9559783c3382ee01c81186cd301464a71ae3f94ef82d043682c5cf8a6f"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11019/battle.bytes.meta",
+        "sha256": "5020bfcbb05247346d58b87cde7fd7bda8f91d2a14c02e0b2f0a7942391da4c6"
+      }
+    },
+    {
+      "file": "11019/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11019/materials.json",
+        "sha256": "89e0ec340e96a75e94068239a4731f66a6725974bbc0e36af435d858a873cb4b"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11019/materials.json.meta",
+        "sha256": "7c0461fcd1a8fa2a86c4715332d5388e7a3cd54df4842377b832e504b17eed40"
+      }
+    },
+    {
+      "file": "11020/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11020/battle.bytes",
+        "sha256": "5a19134090957722220f5c8caccd31ee377db3753e6cc4f3426213ecf269ed2f"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11020/battle.bytes.meta",
+        "sha256": "53fa5563a9b7f541816bc5bcff07cafa4caf78f4825ae78429dc34617f89391c"
+      }
+    },
+    {
+      "file": "11020/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11020/materials.json",
+        "sha256": "db87ee1dc0ad2b5281cbca6c8d8bf7f3b905e42e8e2d5fa19d88f6404064f636"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11020/materials.json.meta",
+        "sha256": "be5688a40a1217d2120771ea7e3f81eab532778bf8985e041ceaf52396b340e8"
+      }
+    },
+    {
+      "file": "11021/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11021/battle.bytes",
+        "sha256": "1b5f74048475a58b226895d5824c27ef2e96b91255a2e1d19d50385c7345f69f"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11021/battle.bytes.meta",
+        "sha256": "f6fbe46642d02253447cc4bffd65b7ec078f0932f75815385d4372e0665cce9e"
+      }
+    },
+    {
+      "file": "11021/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11021/materials.json",
+        "sha256": "bba0f5c4aca09bf37c1da7936f06ed886f538e7a8423a855db7d260db48f9466"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11021/materials.json.meta",
+        "sha256": "212e63d5d3e0d9bc6e4b22ddd916784c055b2ffe03297e79c7c02b264ca08f78"
+      }
+    },
+    {
+      "file": "11022/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11022/battle.bytes",
+        "sha256": "7d2b9a6871f6a5cc6cfaecfe559f0ae0dabfaf29e610eb385147f5a511001740"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11022/battle.bytes.meta",
+        "sha256": "1192a1091591ea0abc66a39c4808500113b215fa369a762361b4d6a9eb45808d"
+      }
+    },
+    {
+      "file": "11022/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11022/materials.json",
+        "sha256": "f3ac5d058f9bdceed7ac93358fb5a31b54417b3abaafc3b98dc09502d0151067"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11022/materials.json.meta",
+        "sha256": "e8dbb8ab95dbe6d8d7ffcb04a3cd012053117e1355e1e1371cbbe7d46b0004da"
+      }
+    },
+    {
+      "file": "11024/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11024/battle.bytes",
+        "sha256": "63e5d469fde4fc520a64891774f84100d3f458dbd0eb7cce36d807eabe030ffe"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11024/battle.bytes.meta",
+        "sha256": "08cc069547d48aa6a914999c3db60d739d38ca4e1351ebeaf01cad59d567072a"
+      }
+    },
+    {
+      "file": "11024/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11024/materials.json",
+        "sha256": "f33ca1b18b0a4a063971b6312b9c93997d1c92907c7a311d0aa7d0afb6e1e15b"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11024/materials.json.meta",
+        "sha256": "adfb16257d6386f960fb54373a41c4700d4fbd091ded1a9059bfa45cd111d1e1"
+      }
+    },
+    {
+      "file": "11025/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11025/battle.bytes",
+        "sha256": "2a189a446f4845e65bfc213fbbd94b721af52bd0a38900adfa92fc5be5c5a2ae"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11025/battle.bytes.meta",
+        "sha256": "896f63690f66bc72af4dbc58b6f87795569001c7ec88f2c11ba40e55609cd636"
+      }
+    },
+    {
+      "file": "11025/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11025/materials.json",
+        "sha256": "3aec2b6c8098cd9340b45cf9fc008a4f9d8521dad7e97b52cc9e7abd99045c49"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11025/materials.json.meta",
+        "sha256": "81ab268455eac7dfe69ef26072a25cc20703f0061e2949be5729d85b4c5fdc33"
+      }
+    },
+    {
+      "file": "11026/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11026/battle.bytes",
+        "sha256": "9aed8d3bc10ff4c45602d614c5f3694677f610f5c7453799ee35e725442228c7"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11026/battle.bytes.meta",
+        "sha256": "971ffc6e69e4183692084418b6dbc55e312d79ba26352cb0b4672fbb7e786615"
+      }
+    },
+    {
+      "file": "11026/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11026/materials.json",
+        "sha256": "9dbe40741f0e017f51265028623ce9d25e33639dbfb46afc6bded44141d98ed2"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11026/materials.json.meta",
+        "sha256": "8bc87a6839669be86510323c02f7c5ac9652802d8ac85dc211c2105879be6a7e"
+      }
+    },
+    {
+      "file": "11027/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11027/battle.bytes",
+        "sha256": "c1bf274761a15f075bf97871337146c88a76cc0c4d1808c8417c7a4981a258bb"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11027/battle.bytes.meta",
+        "sha256": "c4d1fdd006cf1f0cc3000535c1ec16f524cb85e37b99dfc3f5aad00d8d1062db"
+      }
+    },
+    {
+      "file": "11027/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11027/materials.json",
+        "sha256": "a2982014bfab9154f18169ac31bc741794397cee4c9ea3da658268acf35b1bbe"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11027/materials.json.meta",
+        "sha256": "0f57223c3f035fd662747c57ce4fbc92494b57f023cdf21f74837ff568f1d5c8"
+      }
+    },
+    {
+      "file": "11033/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11033/battle.bytes",
+        "sha256": "2e75e6a532911b21c9880468058e279efc74057bc1289d0ec93bd8cc72231c46"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11033/battle.bytes.meta",
+        "sha256": "bddc1388d594fff052a96af070b071e11b5a276d21f0dbb537f2dc3233d887f6"
+      }
+    },
+    {
+      "file": "11033/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11033/materials.json",
+        "sha256": "92e27fb224f7e65bc51b424adb787cefe9fc4401b3ffb1541be59759ce8b7fd0"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11033/materials.json.meta",
+        "sha256": "9a0423869fd238241241035a5ef8d91df518aa1a188e4168e38c3571a01b9f2f"
+      }
+    },
+    {
+      "file": "11038/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11038/battle.bytes",
+        "sha256": "ea676ee26e912193f3f7bd78ea2387cc846e49a46f02d85f67b6b8086b91c284"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11038/battle.bytes.meta",
+        "sha256": "7ea2a142c6351dbe7d6b77cbc3e8d8f090a57bf4e682cf45a9e78f9e0ed24b38"
+      }
+    },
+    {
+      "file": "11038/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11038/materials.json",
+        "sha256": "5848cf5cf9ad24cba3f91b84f7b1b38aeeadc34f6d57752e51ff69227f8282c5"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11038/materials.json.meta",
+        "sha256": "f8accc009772d660e40ef66848ec4d60a590d0815a0d313636b559053ce5ce7f"
+      }
+    },
+    {
+      "file": "11039/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11039/battle.bytes",
+        "sha256": "b18dc14523a2c50d3e51e8525ec652eb16fc67c1b122d1ed950c9bfc82918f9b"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11039/battle.bytes.meta",
+        "sha256": "6fe9b4efeddbf8e4b1eec9e2e21188b4c1a8ceac4a15fc7669e28f76c1cca183"
+      }
+    },
+    {
+      "file": "11039/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11039/materials.json",
+        "sha256": "931a81f9deb7f3a2c4f3dd829bad2f5e481de03efc3c3f852a23ceb09eb3e785"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11039/materials.json.meta",
+        "sha256": "e3f7d537e8fcc2e00e59e9c7539caf8e8ab8da58f0b678730db0d2db93508c4c"
+      }
+    },
+    {
+      "file": "11040/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11040/battle.bytes",
+        "sha256": "560712dc04e5987060dbb1a3bae1fe0e550afe69388a2a90cc89cdf471604f28"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11040/battle.bytes.meta",
+        "sha256": "a2cf3844a8c7fc4fbbc070911256c6996aeff501e1afd7765cb397ec0112734d"
+      }
+    },
+    {
+      "file": "11040/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11040/materials.json",
+        "sha256": "247912d3752744bf79f6f9cc2b482b41b8e18b809494abd39360bfd70511b3ad"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11040/materials.json.meta",
+        "sha256": "4a6cc05c546767d8806ae7292dc14451038fab4f5549e150ddae278d5196b844"
+      }
+    },
+    {
+      "file": "11041/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11041/battle.bytes",
+        "sha256": "54083448aec2887780bbd2377a74d37501cfa8c777d6b83b0d87a62a395416d2"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11041/battle.bytes.meta",
+        "sha256": "18bc8302e73b5b9e678e255319b1cc8aeda5a8e7629e479a8af3dc85fe40c03b"
+      }
+    },
+    {
+      "file": "11041/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11041/materials.json",
+        "sha256": "1ba325f6aaa133eb147819858d33298ed176f3bf6ac1f46be0326b64ff5707f6"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11041/materials.json.meta",
+        "sha256": "1e79338da482349f13d0396046805794cb1b2ac7ccf8de0f272cdd663cd78e4b"
+      }
+    },
+    {
+      "file": "11042/battle.bytes",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11042/battle.bytes",
+        "sha256": "719009c71a067a4d9b1e5f5063904f66d7fcd4fb6f3e9b02e254cdfb4f8a4098"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11042/battle.bytes.meta",
+        "sha256": "3451dff64505d9c0c7e19601120804331245707f5a519a4191f65a5826e3f65f"
+      }
+    },
+    {
+      "file": "11042/materials.json",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11042/materials.json",
+        "sha256": "2dcbcaedc7ed64effd4c5ba1258b2278f51b3279b5377b7e95931ce2323aedab"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/11042/materials.json.meta",
+        "sha256": "9d6b2b886233cf9fc477988919e2adad86fd5cee9723afdf1adaf3601892a3c2"
+      }
+    },
+    {
+      "file": "runtime-textures/01727740056c7aa7a82cc96626d0731ca68f2ec45cdc9eddd5e5ce76d0fa76d1.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/01727740056c7aa7a82cc96626d0731ca68f2ec45cdc9eddd5e5ce76d0fa76d1.png",
+        "sha256": "01727740056c7aa7a82cc96626d0731ca68f2ec45cdc9eddd5e5ce76d0fa76d1"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/01727740056c7aa7a82cc96626d0731ca68f2ec45cdc9eddd5e5ce76d0fa76d1.png.meta",
+        "sha256": "c156412e89b31daee3cd10f7ff9cb379c819af5773e7bc683aebbb8383bb5483"
+      }
+    },
+    {
+      "file": "runtime-textures/0947a3aac216adfc986326e218608781376f83c6831e0e8e84a99da97db6e9bc.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/0947a3aac216adfc986326e218608781376f83c6831e0e8e84a99da97db6e9bc.png",
+        "sha256": "0947a3aac216adfc986326e218608781376f83c6831e0e8e84a99da97db6e9bc"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/0947a3aac216adfc986326e218608781376f83c6831e0e8e84a99da97db6e9bc.png.meta",
+        "sha256": "80229b95bf739bfbada490afa3fa7751d5a2a2c83898cda8c0c6a1e497a68447"
+      }
+    },
+    {
+      "file": "runtime-textures/0b92327864244a52041fb791e62f06ecd2b9e449119d2c3d2085136de14ae641.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/0b92327864244a52041fb791e62f06ecd2b9e449119d2c3d2085136de14ae641.png",
+        "sha256": "0b92327864244a52041fb791e62f06ecd2b9e449119d2c3d2085136de14ae641"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/0b92327864244a52041fb791e62f06ecd2b9e449119d2c3d2085136de14ae641.png.meta",
+        "sha256": "2809f0a804906e628f80f86f75904b9954cd264e3b8b0894371e287e8c05c25f"
+      }
+    },
+    {
+      "file": "runtime-textures/0dd02a27e03255d558c1391094b2c8bec9c3bbffb7045e975f31d0747cb94a8b.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/0dd02a27e03255d558c1391094b2c8bec9c3bbffb7045e975f31d0747cb94a8b.png",
+        "sha256": "0dd02a27e03255d558c1391094b2c8bec9c3bbffb7045e975f31d0747cb94a8b"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/0dd02a27e03255d558c1391094b2c8bec9c3bbffb7045e975f31d0747cb94a8b.png.meta",
+        "sha256": "e5ac1a9d9a05c0f24593a7902ad2570745ecdf80f75820c79979943a245d28aa"
+      }
+    },
+    {
+      "file": "runtime-textures/1094ccdb40c9a5eaf3cb4323022847e0cfb4ca0a6298faf6600ad3926ad3d092.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/1094ccdb40c9a5eaf3cb4323022847e0cfb4ca0a6298faf6600ad3926ad3d092.png",
+        "sha256": "1094ccdb40c9a5eaf3cb4323022847e0cfb4ca0a6298faf6600ad3926ad3d092"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/1094ccdb40c9a5eaf3cb4323022847e0cfb4ca0a6298faf6600ad3926ad3d092.png.meta",
+        "sha256": "6e98b4e56c961688562eb8c48ae4fcff5192ea32bedcf5ac832d06b3078b3090"
+      }
+    },
+    {
+      "file": "runtime-textures/1487fc47f0a632e66cef2fc021459d8948b960a2f1b4f91d39d5f3228a7ff294.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/1487fc47f0a632e66cef2fc021459d8948b960a2f1b4f91d39d5f3228a7ff294.png",
+        "sha256": "1487fc47f0a632e66cef2fc021459d8948b960a2f1b4f91d39d5f3228a7ff294"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/1487fc47f0a632e66cef2fc021459d8948b960a2f1b4f91d39d5f3228a7ff294.png.meta",
+        "sha256": "478b26b29bb248bd255fc2ec7bb21dbc69c17e958d0b082fa05ecee2822b172c"
+      }
+    },
+    {
+      "file": "runtime-textures/1844d7f6d17c97b808e85bdb377bc30e5616d3f81ac8beffc3d9e3de57e24f59.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/1844d7f6d17c97b808e85bdb377bc30e5616d3f81ac8beffc3d9e3de57e24f59.png",
+        "sha256": "1844d7f6d17c97b808e85bdb377bc30e5616d3f81ac8beffc3d9e3de57e24f59"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/1844d7f6d17c97b808e85bdb377bc30e5616d3f81ac8beffc3d9e3de57e24f59.png.meta",
+        "sha256": "ba44aee3d62fa2bcf21a327c909f6a5859bb587387f0d050dafb70ea66ff0929"
+      }
+    },
+    {
+      "file": "runtime-textures/1935e75b1ddb7931343863ed04eb8b041ab0b9cc4f03db3bdbdfc2bdd95d9376.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/1935e75b1ddb7931343863ed04eb8b041ab0b9cc4f03db3bdbdfc2bdd95d9376.png",
+        "sha256": "1935e75b1ddb7931343863ed04eb8b041ab0b9cc4f03db3bdbdfc2bdd95d9376"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/1935e75b1ddb7931343863ed04eb8b041ab0b9cc4f03db3bdbdfc2bdd95d9376.png.meta",
+        "sha256": "fdc9155eecb01de83ffe8d778e93a9a6e3363e60800c61d691b565d73fa81121"
+      }
+    },
+    {
+      "file": "runtime-textures/1e48d7868077c23f2eb9d96c3aeb958e3399a474dd8d552ad39eedf2d433adf2.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/1e48d7868077c23f2eb9d96c3aeb958e3399a474dd8d552ad39eedf2d433adf2.png",
+        "sha256": "1e48d7868077c23f2eb9d96c3aeb958e3399a474dd8d552ad39eedf2d433adf2"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/1e48d7868077c23f2eb9d96c3aeb958e3399a474dd8d552ad39eedf2d433adf2.png.meta",
+        "sha256": "21fc98424c5320821c10f5a0499c7d5de1e6ad21d4078654e1ad79c715e28297"
+      }
+    },
+    {
+      "file": "runtime-textures/236a5e27b44945a3a270dd8ab011ff0190463b9aaa14fda2d6f03029372942ed.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/236a5e27b44945a3a270dd8ab011ff0190463b9aaa14fda2d6f03029372942ed.png",
+        "sha256": "236a5e27b44945a3a270dd8ab011ff0190463b9aaa14fda2d6f03029372942ed"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/236a5e27b44945a3a270dd8ab011ff0190463b9aaa14fda2d6f03029372942ed.png.meta",
+        "sha256": "0209c0364d389ed3bb27b3293a57e6034bcec1ced2df8ff4d19ca93e00246982"
+      }
+    },
+    {
+      "file": "runtime-textures/32d509c4643fe92bdd98eeeafac0320722810c2845354428e2b7e1ec55f82eb2.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/32d509c4643fe92bdd98eeeafac0320722810c2845354428e2b7e1ec55f82eb2.png",
+        "sha256": "32d509c4643fe92bdd98eeeafac0320722810c2845354428e2b7e1ec55f82eb2"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/32d509c4643fe92bdd98eeeafac0320722810c2845354428e2b7e1ec55f82eb2.png.meta",
+        "sha256": "724ebdbcceafd6fc69c6564ae96868375340b20c69808206be2efad52bc3219e"
+      }
+    },
+    {
+      "file": "runtime-textures/3d038b3dc8fe1de6b2fc03da2557eda7d2aac129cb7e3aa32e8e093888d6c944.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/3d038b3dc8fe1de6b2fc03da2557eda7d2aac129cb7e3aa32e8e093888d6c944.png",
+        "sha256": "3d038b3dc8fe1de6b2fc03da2557eda7d2aac129cb7e3aa32e8e093888d6c944"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/3d038b3dc8fe1de6b2fc03da2557eda7d2aac129cb7e3aa32e8e093888d6c944.png.meta",
+        "sha256": "b643df7370b6463f9129e32d355f10ebc3c18936b51a4d45aa524ba8496e2c81"
+      }
+    },
+    {
+      "file": "runtime-textures/4a8ce32df56a320160ed6c94c4f905e929139e8ec6f360001ae70bd87c097a78.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/4a8ce32df56a320160ed6c94c4f905e929139e8ec6f360001ae70bd87c097a78.png",
+        "sha256": "4a8ce32df56a320160ed6c94c4f905e929139e8ec6f360001ae70bd87c097a78"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/4a8ce32df56a320160ed6c94c4f905e929139e8ec6f360001ae70bd87c097a78.png.meta",
+        "sha256": "0eeb997680c64e447d8ec7cdf77263068930559932549d2e48f4fb381418dbdf"
+      }
+    },
+    {
+      "file": "runtime-textures/4d2d298a788ec2ea40c6702b76cc8a994b9d867b6749bc72523447b9342936da.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/4d2d298a788ec2ea40c6702b76cc8a994b9d867b6749bc72523447b9342936da.png",
+        "sha256": "4d2d298a788ec2ea40c6702b76cc8a994b9d867b6749bc72523447b9342936da"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/4d2d298a788ec2ea40c6702b76cc8a994b9d867b6749bc72523447b9342936da.png.meta",
+        "sha256": "bcc20c6243a39668518e06fb3a61e43bba9263cc829d93176b68ec484bed8024"
+      }
+    },
+    {
+      "file": "runtime-textures/63964ddbc146ab382bb455bf7d7b96b319fa8d2211a7f53a8ec4d3b8a887d167.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/63964ddbc146ab382bb455bf7d7b96b319fa8d2211a7f53a8ec4d3b8a887d167.png",
+        "sha256": "63964ddbc146ab382bb455bf7d7b96b319fa8d2211a7f53a8ec4d3b8a887d167"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/63964ddbc146ab382bb455bf7d7b96b319fa8d2211a7f53a8ec4d3b8a887d167.png.meta",
+        "sha256": "3c5b457302a8768d381ec58319daac3eda5f164a7b2b1d0e788c62bee0037e21"
+      }
+    },
+    {
+      "file": "runtime-textures/6b1d6e1224bbde3709ddbf92dc471e6a3e6d82a168bd8985ea7d1d6356c1caeb.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/6b1d6e1224bbde3709ddbf92dc471e6a3e6d82a168bd8985ea7d1d6356c1caeb.png",
+        "sha256": "6b1d6e1224bbde3709ddbf92dc471e6a3e6d82a168bd8985ea7d1d6356c1caeb"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/6b1d6e1224bbde3709ddbf92dc471e6a3e6d82a168bd8985ea7d1d6356c1caeb.png.meta",
+        "sha256": "411e3c46d856f6287b38f5510bbc3050d3115ae58a82136049bdab5d8517fdcc"
+      }
+    },
+    {
+      "file": "runtime-textures/6f1c77cb13ee3fa621bb10e7ca07f54bf0aa3f91aeaf918938ee919bb5082948.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/6f1c77cb13ee3fa621bb10e7ca07f54bf0aa3f91aeaf918938ee919bb5082948.png",
+        "sha256": "6f1c77cb13ee3fa621bb10e7ca07f54bf0aa3f91aeaf918938ee919bb5082948"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/6f1c77cb13ee3fa621bb10e7ca07f54bf0aa3f91aeaf918938ee919bb5082948.png.meta",
+        "sha256": "569135b1b2c5427d41e95c5f30092c08725fb99d96a90da49ada91c8916404ba"
+      }
+    },
+    {
+      "file": "runtime-textures/75eba14a487e8dc9eac0e5ebd03f8842e4843641d10f4decc2158899b3d8ae18.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/75eba14a487e8dc9eac0e5ebd03f8842e4843641d10f4decc2158899b3d8ae18.png",
+        "sha256": "75eba14a487e8dc9eac0e5ebd03f8842e4843641d10f4decc2158899b3d8ae18"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/75eba14a487e8dc9eac0e5ebd03f8842e4843641d10f4decc2158899b3d8ae18.png.meta",
+        "sha256": "c1308b020ff131bf6e4e471d28f9b88f9ac68ba4b9c97bb629838e03110fe2f3"
+      }
+    },
+    {
+      "file": "runtime-textures/7beb61c770eb5811012e33aa1b8259872c709afc011325580995635f36e47d7c.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/7beb61c770eb5811012e33aa1b8259872c709afc011325580995635f36e47d7c.png",
+        "sha256": "7beb61c770eb5811012e33aa1b8259872c709afc011325580995635f36e47d7c"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/7beb61c770eb5811012e33aa1b8259872c709afc011325580995635f36e47d7c.png.meta",
+        "sha256": "5cf35c910bcb7b25b5308777bb209d0cbb6d46dfd85ef6a48a7cc438ef4ef264"
+      }
+    },
+    {
+      "file": "runtime-textures/901be795f8580ba78cf297fce007cbb9776b137ecabbb48ab7aa651f7dc27f2d.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/901be795f8580ba78cf297fce007cbb9776b137ecabbb48ab7aa651f7dc27f2d.png",
+        "sha256": "901be795f8580ba78cf297fce007cbb9776b137ecabbb48ab7aa651f7dc27f2d"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/901be795f8580ba78cf297fce007cbb9776b137ecabbb48ab7aa651f7dc27f2d.png.meta",
+        "sha256": "f32bc8729a412ba3d51bd496c7cad38a0ad81ef83a47a0807d389babb00dfa8e"
+      }
+    },
+    {
+      "file": "runtime-textures/91fa494cf3de1da0fbbd1576163c2c51adfab37fcf2de0d41bd94dfc5e3ba29b.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/91fa494cf3de1da0fbbd1576163c2c51adfab37fcf2de0d41bd94dfc5e3ba29b.png",
+        "sha256": "91fa494cf3de1da0fbbd1576163c2c51adfab37fcf2de0d41bd94dfc5e3ba29b"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/91fa494cf3de1da0fbbd1576163c2c51adfab37fcf2de0d41bd94dfc5e3ba29b.png.meta",
+        "sha256": "37a2254db1820fcdbff1d2a8509234f69b9865e689e07e0225582228ceb6ccf3"
+      }
+    },
+    {
+      "file": "runtime-textures/bb33fc74dc909430f107c53a57022f166e79a3179a3bc7b156be82cbbaeda5f8.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/bb33fc74dc909430f107c53a57022f166e79a3179a3bc7b156be82cbbaeda5f8.png",
+        "sha256": "bb33fc74dc909430f107c53a57022f166e79a3179a3bc7b156be82cbbaeda5f8"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/bb33fc74dc909430f107c53a57022f166e79a3179a3bc7b156be82cbbaeda5f8.png.meta",
+        "sha256": "e15760cfc9f5e64bd7c7b2bc9e35558b6a775c0fdf1f8ef7f909c01b6ac96eb5"
+      }
+    },
+    {
+      "file": "runtime-textures/c3bd1438869c903bbd183f1b1bee58c348d966de646d9005a4035b5065926f92.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/c3bd1438869c903bbd183f1b1bee58c348d966de646d9005a4035b5065926f92.png",
+        "sha256": "c3bd1438869c903bbd183f1b1bee58c348d966de646d9005a4035b5065926f92"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/c3bd1438869c903bbd183f1b1bee58c348d966de646d9005a4035b5065926f92.png.meta",
+        "sha256": "258be821c2017c9bd8aba421d1da4242ccc7c4188305b9372d36700543439b9c"
+      }
+    },
+    {
+      "file": "runtime-textures/d1b4f718d4412f8d88d8559c3ec0d64ce709b24b99e8b385db91eca6e46b9a65.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/d1b4f718d4412f8d88d8559c3ec0d64ce709b24b99e8b385db91eca6e46b9a65.png",
+        "sha256": "d1b4f718d4412f8d88d8559c3ec0d64ce709b24b99e8b385db91eca6e46b9a65"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/d1b4f718d4412f8d88d8559c3ec0d64ce709b24b99e8b385db91eca6e46b9a65.png.meta",
+        "sha256": "05caf39bf6b22e9df16beeacef991b0cb65d294ae72b10775029f79b8a0ad72d"
+      }
+    },
+    {
+      "file": "runtime-textures/e9cc37d036f6c7d6b403ac901e680def1248053694dfcadeadc524d0c9539c96.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/e9cc37d036f6c7d6b403ac901e680def1248053694dfcadeadc524d0c9539c96.png",
+        "sha256": "e9cc37d036f6c7d6b403ac901e680def1248053694dfcadeadc524d0c9539c96"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/e9cc37d036f6c7d6b403ac901e680def1248053694dfcadeadc524d0c9539c96.png.meta",
+        "sha256": "759cb3a0301342f1f86ba03360154483f335f67bce460e86a137ca62a0deb5ef"
+      }
+    },
+    {
+      "file": "runtime-textures/ed53376c78fd1e0bb9f0d1c70c1a120b4a93d73755121bacbc78635711d46b9c.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/ed53376c78fd1e0bb9f0d1c70c1a120b4a93d73755121bacbc78635711d46b9c.png",
+        "sha256": "ed53376c78fd1e0bb9f0d1c70c1a120b4a93d73755121bacbc78635711d46b9c"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/ed53376c78fd1e0bb9f0d1c70c1a120b4a93d73755121bacbc78635711d46b9c.png.meta",
+        "sha256": "10572754823d9d2270e6ac2ef99ddabd14ba8ba889298b4da0af1bd3e4b89c7a"
+      }
+    },
+    {
+      "file": "runtime-textures/f5287bc12eccbb9f0100288497006e18f272f3ea0ac569c8ee4d1c3886e5cc35.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/f5287bc12eccbb9f0100288497006e18f272f3ea0ac569c8ee4d1c3886e5cc35.png",
+        "sha256": "f5287bc12eccbb9f0100288497006e18f272f3ea0ac569c8ee4d1c3886e5cc35"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/f5287bc12eccbb9f0100288497006e18f272f3ea0ac569c8ee4d1c3886e5cc35.png.meta",
+        "sha256": "9d61ef9cb12142f3a95acebd08d83d1e86a7980ed24377036251fb3b04a2164c"
+      }
+    },
+    {
+      "file": "runtime-textures/faef53341c57700027496236e91607f27648332879eeeda84c72db24a5b27458.png",
+      "asset": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/faef53341c57700027496236e91607f27648332879eeeda84c72db24a5b27458.png",
+        "sha256": "faef53341c57700027496236e91607f27648332879eeeda84c72db24a5b27458"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/Combat/NativePartners/runtime-textures/faef53341c57700027496236e91607f27648332879eeeda84c72db24a5b27458.png.meta",
+        "sha256": "6591778202f4f9bdea6134e34ff838e03f0e2c42d06f7f7d239ba8cdb5bb337d"
+      }
+    }
+  ],
+  "shader_source": {
+    "input": "inputs/DefaultPackage/defaultpackage_unityshaders.bundle",
+    "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+    "path_id": "9169776915593584302",
+    "type": "Shader",
+    "object_sha256": "4aa96ea56babfdc788805e559c0c1d94e1d64b7ed36719d12e61f6a08bb850ae",
+    "name": "Universal Render Pipeline/Spine/SkeletonEffect-2D",
+    "platforms": [
+      9,
+      18
+    ],
+    "subshaders": 1,
+    "passes": 1
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/Combat/NativePartnerAssets.meta",
+      "sha256": "c89e4b6d9c7033043ac8e08b07cb717deaf21942c6f8de0a3d770a3dadb0f498"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativePartnerAssets/Resources.meta",
+      "sha256": "3d28108a73123909423431cc883e8e728b2f58e6508ba48ef05609f798ede3ee"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativePartnerAssets/Resources/Combat.meta",
+      "sha256": "04d5eccd679f0a551bebe08be16b081da88a009f3dc0144b73279492ee355495"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativePartnerAssets/Resources/Combat/NativePartnerAssets.meta",
+      "sha256": "efd461be6a8bd095dd30ab9a5e55aecabffca3d4aa299d43af1cd932acb1319f"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativePartnerAssets/OriginalSkeletonEffect.shader",
+      "sha256": "2effb82caa6118b46eb095c038bb361859913e823f61ce549e5f82fca256931e"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativePartnerAssets/OriginalSkeletonEffect.shader.meta",
+      "sha256": "9098f5e0295f71665ade7f023948dbb323afcb9147e73676d87182fa5d08a8af"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativePartnerAssets/Resources/Combat/NativePartnerAssets/catalog.asset",
+      "sha256": "3ec28fc58e9787da7d2090b2ab0f277a8f7397a6de9a0899107d73fc269b56bf"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/NativePartnerAssets/Resources/Combat/NativePartnerAssets/catalog.asset.meta",
+      "sha256": "f2b43ca52e709703decfd8d8b679bb38970424b8e1808d5e34666635a5121c4f"
+    }
+  ],
+  "binding": "Combat/NativePartnerAssets/catalog: original inventory, 35 packages, 35 material field payloads, 28 runtime textures, current original Windows shader and 34 original controllers.",
+  "operation": "Bind local Unity object references; retain original payloads, transforms, renderer settings, material fields and shader bytes. No new image or substitute shader.",
+  "limitations": [
+    "Formal battle candidates and full battle playback remain unbound until the native actor is integrated and validated.",
+    "Eight original 11015-11022 Low texture objects are 24x24. Preserve the selected original resources; do not infer a completed appearance from asset binding alone."
+  ]
+}

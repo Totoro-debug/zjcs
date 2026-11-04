@@ -78,6 +78,10 @@ scripts/prepare_dungeon_bindings.py 从 prefabs_ui_fight_changebattleposarea 的
 
 ## 尚未实现
 
+完整骨骼分支已增加随包交付的本地资源目录与原生角色对象。`prepare_partner_native_battle_assets.py` 校验既有数据／Animator 凭据，再以 `PartnerNativeBattleAssetCatalog` 显式绑定35个骨骼包、35份原材质字段、28份运行时贴图和34个原控制器；原 shader 对象对应的 Windows 转换载荷按原字节安装至 `NativePartnerAssets/`。`PartnerNativeBattleActor` 恢复原 Transform 链、组合皮肤、材质参数与渲染设置，由原 Animator 驱动独立几何，并单独推进11005背饰；运行时只读取 Unity 本地对象引用。输入、输出、shader 对象及绑定元数据哈希见[本地绑定来源凭据](../../assets/reference/partner-native-battle-assets-source-manifest.json)。
+
+内置屏 Direct3D Play Mode 通过上述本地目录逐一创建34名伙伴／35个渲染器，检查原主体节点位置／缩放／层、实际 Animator 片段、shader／贴图绑定和有限网格；每名各检查待机及一个原技能状态，68张实际运行截图已查看。26名显示原贴图；11015–11022 显示与当前24×24原纹理对应的白色轮廓，不计作完整外观恢复，仍需继续核对所选来源。正式工程导入／编译及 `ProjectTools.Validate`、静态检查（119,626个 GUID）通过，2,341项本地目录／数据／Animator 来源与输出哈希一致。该角色对象尚未接入正式战斗的候选资格、事件播放、状态特效及附着点；未完成正式邀请入口、完整实战或 Windows Player 验证，未生成完整素材快照。
+
 完整骨骼分支的数据与原贴图映射已恢复，战斗绑定仍未完成。`prepare_partner_native_battle.py` 按选定 `884_156692` APK／匹配云端依赖检查余下 34 个不含 `SpineLazyAnimLoad` 的实体，完整读取原 Spine binary，恢复 35 个骨骼渲染器和 791 段动画，包括 11005 的独立 `SkeletonAnimation` 背饰；保留 Atlas、原材质／MeshRenderer 参数、Animator 状态／别名、实体根至骨骼的 Transform 链及 BoneFollower／AttachmentFollower 字段，安装至 `unity/Assets/Official/Combat/NativePartners/`。独立 `ZJCSPNBT` 包由 `ProfessionNativeSkeletonData.LoadPartnerBattle` 校验版本、NPC 身份、解压长度与内容哈希；不与立绘包混用。原 11007 的 Transform `bone41.mixY=-0.4` 保留，显式战斗包沿用已验证的有限外推几何分支。
 
 完整骨骼分支的原 Animator 资产已恢复。`prepare_partner_native_battle_animators.py` 复用固定原生转换缓存，复制34个原控制器和532个片段文件，仅重绑外部资产 GUID；逐项核对原编译资源的参数顺序／类型／默认值、层、默认状态、状态数值／动作、过渡顺序／目标／条件／时长／打断标记和片段时长。11004、11014 的原一维混合树及子节点阈值／速度／偏移／镜像保留。`PartnerNativeBattleAnimatorCatalog` 在 `Combat/NativePartnerAnimators/catalog` 显式绑定 NPC 与控制器，载荷位于 `unity/Assets/Official/Combat/NativePartnerAnimators/`；来源与输入输出哈希见[Animator来源凭据](../../assets/reference/partner-native-battle-animators-source-manifest.json)。

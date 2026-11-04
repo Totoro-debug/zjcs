@@ -1,6 +1,7 @@
 """Create an owned Unity project for original partner battle data and textures."""
 import json
 from pathlib import Path
+import re
 import shutil
 
 from official_apk import ROOT
@@ -41,6 +42,9 @@ def main():
     animator_validation = ROOT / "unity/Assets/Game/Editor/ProfessionUI/OfficialPartnerNativeBattleAnimatorAcceptance.cs"
     if animator_validation.is_file():
         shutil.copy2(animator_validation, editor)
+    runtime_validation = ROOT / "unity/Assets/Game/Editor/ProfessionUI/OfficialPartnerNativeBattleRuntimeAcceptance.cs"
+    if runtime_validation.is_file():
+        shutil.copy2(runtime_validation, editor)
     (editor / "Validation.asmdef").write_text(json.dumps(dict(name="PartnerNativeBattleDataValidation",
         includePlatforms=["Editor"], references=["Zjcs.Offline.ProfessionUI", "Zjcs.Official.ProfessionUI",
             "Zjcs.Offline.Equipment", "Unity.RenderPipelines.Universal.Runtime"])), encoding="utf-8", newline="\n")
@@ -49,6 +53,9 @@ def main():
     animators = ROOT / "unity/Assets/Official/Combat/NativePartnerAnimators"
     if animators.is_dir():
         shutil.copytree(animators, project / "Assets/Official/Combat/NativePartnerAnimators")
+    native_assets = ROOT / "unity/Assets/Official/Combat/NativePartnerAssets"
+    if native_assets.is_dir():
+        shutil.copytree(native_assets, project / "Assets/Official/Combat/NativePartnerAssets")
     shader_cache = ROOT / ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders"
     shader_receipt = json.loads((shader_cache / "source-manifest.json").read_bytes())
     shader, = [row for row in shader_receipt["shaders"] if row["source"]["object_sha256"] ==
@@ -61,7 +68,13 @@ def main():
     shader_destination = project / "Assets/PartnerNativeBattleValidation/OriginalSkeletonEffect.shader"
     shader_destination.parent.mkdir()
     shutil.copy2(shader_path, shader_destination)
-    shutil.copy2(str(shader_path) + ".meta", str(shader_destination) + ".meta")
+    # The installed catalog keeps the exact converted shader GUID. Give this
+    # path-loaded fixture copy its own identity so Unity never rewrites either
+    # reference due to a duplicate GUID in the isolated project.
+    metadata = Path(str(shader_path) + ".meta").read_text("utf-8")
+    fixture_guid = sha256(b"zjcs:partner-native-battle:fixture-shader").hexdigest()[:32]
+    Path(str(shader_destination) + ".meta").write_text(re.sub(r"(?m)^guid: [0-9a-f]{32}$",
+        "guid: " + fixture_guid, metadata), encoding="utf-8", newline="\n")
     packages = project / "Packages"
     packages.mkdir()
     shutil.copytree(ROOT / "unity/Packages/com.cysharp.unitask", packages / "com.cysharp.unitask")
