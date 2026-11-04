@@ -5393,6 +5393,43 @@
       ]
     }
   },
+  "dialogRoles": [
+    {
+      "RoleId": 840200,
+      "EntityClassId": 8402,
+      "RoleName": "绯乐",
+      "PortraitPath": "UI/Portrait/Npc_Portrait_8402"
+    },
+    {
+      "RoleId": 843800,
+      "EntityClassId": 8438,
+      "RoleName": "大泽荣一",
+      "PortraitPath": "UI/Portrait/Npc_Portrait_8438"
+    }
+  ],
+  "mapLogicTags": [
+    {
+      "Tag": "大泽荣一_登陆鲸岛",
+      "MapClass": 16,
+      "LogicId": 106,
+      "EntityClass": 8443,
+      "IsRecordBlackbroad": false
+    },
+    {
+      "Tag": "金宝箱_鲸岛神龛",
+      "MapClass": 16,
+      "LogicId": 4305,
+      "EntityClass": 8203,
+      "IsRecordBlackbroad": true
+    },
+    {
+      "Tag": "大泽荣一_鲸岛神龛",
+      "MapClass": 16,
+      "LogicId": 4313,
+      "EntityClass": 8443,
+      "IsRecordBlackbroad": false
+    }
+  ],
   "storyOptions": [
     {
       "StoryName": "WhaleIslandFinish",
@@ -5453,6 +5490,16 @@
       "MinorText": "",
       "ConditionType": 0,
       "ConditionParams": ""
+    }
+  ],
+  "fixedRewards": [],
+  "handInItems": [
+    {
+      "Id": 3,
+      "Items": {
+        "43039": 5
+      },
+      "CanHandTimes": 1
     }
   ],
   "localization": {

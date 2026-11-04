@@ -161,8 +161,8 @@ def build() -> dict:
     schemas = ScriptSchemas(code_root=code_root)
     inputs = []
 
-    def table(name: str, constructor: str) -> list[dict]:
-        obj = apk.asset("config_luban", "/" + name + ".g.bytes")
+    def table(name: str, constructor: str, package: str = "config_luban") -> list[dict]:
+        obj = apk.asset(package, "/" + name + ".g.bytes")
         raw = obj.read().m_Script.encode("utf8", "surrogateescape")
         inputs.append(dict(apk.provenance(obj), table=name, payload_sha256=sha(raw),
             object_sha256=sha(obj.get_raw_data()), bytes=len(raw), constructor=constructor))
@@ -185,6 +185,30 @@ def build() -> dict:
     for groups in dialogues.values():
         for rows in groups.values():
             rows.sort(key=lambda row: row["Order"])
+    role_ids = {row["RoleId"] for groups in dialogues.values() for rows in groups.values()
+                for row in rows if row["RoleId"] > 0}
+    dialog_roles = [row for row in table("Dialog/dialog_role", "TbDialogRoleInfo", "config_luban_dialog")
+                    if row["RoleId"] in role_ids]
+    if {row["RoleId"] for row in dialog_roles} != role_ids:
+        raise ValueError("Map16 story dialogue references an unavailable original role")
+    map_logic_tags = [row for row in table("Map/map_logic_entity_tag", "TbMapLogicEntityTagInfo", "config_luban_map")
+                      if row["MapClass"] == MAP_ID]
+    hand_in_ids = {int(node.get("HandInItemId", node.get("HandleItemId", 0)))
+                   for graph in graphs.values() for node in graph["nodes"].values()
+                   if node["_type"] in ("CanHandInItemNode", "HandInItemNode")}
+    hand_in_ids.discard(0)
+    hand_in_items = [row for row in table("hand_in_item", "TbHandInItemInfo")
+                     if row["Id"] in hand_in_ids]
+    if {row["Id"] for row in hand_in_items} != hand_in_ids:
+        raise ValueError("Map16 story references a missing original hand-in item configuration")
+    fixed_reward_ids = {int(node.get("FixedRewardId", node.get("AwardId", 0)))
+                        for graph in graphs.values() for node in graph["nodes"].values()
+                        if node["_type"] in ("GetFixAwardNode", "CanGetFixedRewardNode")}
+    fixed_reward_ids.discard(0)
+    fixed_rewards = [row for row in table("fixed_reward", "TbFixedRewardInfo")
+                     if row["Id"] in fixed_reward_ids]
+    if {row["Id"] for row in fixed_rewards} != fixed_reward_ids:
+        raise ValueError("Map16 story references a missing original fixed reward")
     keys = {f"dialog_{story}_{row['Id']}_{row['Order']}" for story, groups in dialogues.items()
         for rows in groups.values() for row in rows}
     keys.update(f"story_{row['StoryName']}_{row['Id']}_option" for row in options)
@@ -224,7 +248,11 @@ def build() -> dict:
         "storyRows": selected_rows,
         "graphs": graphs,
         "dialogues": dialogues,
+        "dialogRoles": dialog_roles,
+        "mapLogicTags": map_logic_tags,
         "storyOptions": options,
+        "fixedRewards": fixed_rewards,
+        "handInItems": hand_in_items,
         "localization": localized,
         "serverRecords": server_records,
     }
@@ -233,7 +261,7 @@ def build() -> dict:
     DESTINATION.write_bytes(output)
     meta(DESTINATION)
     record = dict(format=1, manifest=VERSION, mapClassId=MAP_ID,
-        operation="Decode only the official Map16 whale-island story table rows, graph bundle, dialogue/options, Chinese text and paired server records; no story runtime or server execution is inferred.",
+        operation="Decode official Map16 whale-island story graphs, dialogue, roles, map logic tags, options, referenced rewards and hand-in configuration, Chinese text and paired server records; no story runtime or server execution is inferred.",
         codeManifestSha256=sha(code_manifest_path.read_bytes()),
         tables=inputs,
         localizationInputs=localization_inputs,
@@ -247,7 +275,9 @@ def build() -> dict:
                 sha256=sha(DESTINATION.with_name(DESTINATION.name + ".meta").read_bytes()))],
         counts=dict(stories=len(graphs), storyNodes=sum(len(value["nodes"]) for value in graphs.values()),
             dialogues=sum(len(value) for value in dialogues.values()), dialogueRows=len(dialogs),
-            options=len(options), localizationKeys=len(localized), serverRecords=len(server_records)))
+            dialogRoles=len(dialog_roles), mapLogicTags=len(map_logic_tags), options=len(options),
+            fixedRewards=len(fixed_rewards), handInItems=len(hand_in_items),
+            localizationKeys=len(localized), serverRecords=len(server_records)))
     RECEIPT.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf8", newline="\n")
     apk.archive.close()
     print(json.dumps(record["counts"], ensure_ascii=False, sort_keys=True))

@@ -2,7 +2,7 @@
   "format": 1,
   "manifest": "884_156692",
   "mapClassId": 16,
-  "operation": "Decode only the official Map16 whale-island story table rows, graph bundle, dialogue/options, Chinese text and paired server records; no story runtime or server execution is inferred.",
+  "operation": "Decode official Map16 whale-island story graphs, dialogue, roles, map logic tags, options, referenced rewards and hand-in configuration, Chinese text and paired server records; no story runtime or server execution is inferred.",
   "codeManifestSha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4",
   "tables": [
     {
@@ -55,6 +55,74 @@
       "object_sha256": "e3b914631efe067fadf30044521e6f0799198d3f2b385054f28a4f9817f84144",
       "bytes": 106496,
       "constructor": "TbStoryOptionInfo"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban_dialog.bundle",
+      "bundle_hash": "cc48a2130d3e62f6e57a055ecb02734e",
+      "path_id": "-7830826545954998254",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/cc48a2130d3e62f6e57a055ecb02734e.bundle",
+      "raw_size": 5754,
+      "raw_sha256": "49220d32853c833bf6d9a261f60469093548d34aa7528fd03acc8e6bbda67484",
+      "table": "Dialog/dialog_role",
+      "payload_sha256": "17fc1e8c41473daea75b04ca34e5a03049773058af417b6e561148b4fdccf81e",
+      "object_sha256": "2737764d3dd2a3c5aa447c84f99c47ae745104953ccda1be6cf7b500d0eedf34",
+      "bytes": 9668,
+      "constructor": "TbDialogRoleInfo"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban_map.bundle",
+      "bundle_hash": "7fbfcac56fd13b9c08b5ba321bb78e66",
+      "path_id": "308904620314379306",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/7fbfcac56fd13b9c08b5ba321bb78e66.bundle",
+      "raw_size": 197305,
+      "raw_sha256": "68c37764598a8e27803e5a6b3fb937e259cdebbaf28a9ed6e389a790a04d1ec7",
+      "table": "Map/map_logic_entity_tag",
+      "payload_sha256": "8258e30225942a9c93bcb90d555a9bab918bb83da057723aa9fe8d52b2c43c8d",
+      "object_sha256": "3d223c755a67ff458a04a6a772158642a4f457a56837aef47d23d6bae6530bcc",
+      "bytes": 13850,
+      "constructor": "TbMapLogicEntityTagInfo"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "-5499522060049166237",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "table": "hand_in_item",
+      "payload_sha256": "ceb5c9aabf95074d84d1fd0772d02fcaca3027d132bff0b2c20dbea88b7b4289",
+      "object_sha256": "55b8a56d55c00c9363739414c1d97f5aa945e09f22b3c1d7339267a21e5407ec",
+      "bytes": 124,
+      "constructor": "TbHandInItemInfo"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "c127151ca016b1013e487423db2b7090",
+      "path_id": "-8225714882639404604",
+      "origin": "apk_zip",
+      "manifest": "884_156692",
+      "apk_manifest": "881_156673",
+      "apk_sha256": "f8f54a38ec74b6ea09f39109282e23671fd91bf704e7802063cfcdba21c5c431",
+      "apk_entry": "assets/yoo/DefaultPackage/c127151ca016b1013e487423db2b7090.bundle",
+      "raw_size": 2142435,
+      "raw_sha256": "fb8b559e2f6fb007c549dfb3178ba191213cd15b99199614a08c435654818b74",
+      "table": "fixed_reward",
+      "payload_sha256": "5b4d59aadecc669e6c3a7b8a21752ef90f8aafa4bd70013ecf9f0ee393af5949",
+      "object_sha256": "e2917cc741e30b0f39b64c1b03f66838a4c4370d896570815ee7941992c83862",
+      "bytes": 1318,
+      "constructor": "TbFixedRewardInfo"
     },
     {
       "bundle": "defaultpackage_assets_config_story.bundle",
@@ -16869,8 +16937,8 @@
   "outputs": [
     {
       "path": "unity/Assets/Official/World/Map/16/Source/story-source.json",
-      "bytes": 223523,
-      "sha256": "f1a08bfc97b6b91d598ca1dabcab94e96898c5d54bc4d8983b7953570ab71064"
+      "bytes": 224492,
+      "sha256": "734100292801536dcb6365da73721311a4c0983fed8cde7c43d0f03358a96671"
     },
     {
       "path": "unity/Assets/Official/World/Map/16/Source/story-source.json.meta",
@@ -16883,7 +16951,11 @@
     "storyNodes": 94,
     "dialogues": 17,
     "dialogueRows": 45,
+    "dialogRoles": 2,
+    "mapLogicTags": 3,
     "options": 6,
+    "fixedRewards": 0,
+    "handInItems": 1,
     "localizationKeys": 51,
     "serverRecords": 7
   }
