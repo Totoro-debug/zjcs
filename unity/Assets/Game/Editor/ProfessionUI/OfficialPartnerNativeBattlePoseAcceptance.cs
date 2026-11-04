@@ -51,7 +51,7 @@ namespace Zjcs.Editor.ProfessionUI
     public sealed class PartnerNativeBattlePoseRunner : MonoBehaviour
     {
         private const string Root = "Assets/Official/Combat/NativePartners/";
-        private sealed class Actor : IDisposable
+        internal sealed class Actor : IDisposable
         {
             public Dictionary<string, object> Row, Renderer;
             public ProfessionNativeAppearanceSkeleton Skeleton;
@@ -133,7 +133,7 @@ namespace Zjcs.Editor.ProfessionUI
             }
             Destroy(target); Destroy(pipeline);
         }
-        private static Bounds VisibleBounds(IEnumerable<Actor> actors)
+        internal static Bounds VisibleBounds(IEnumerable<Actor> actors)
         {
             // Validation framing ignores authored zero-alpha slots. Their full
             // original meshes still render; distant invisible path geometry
@@ -154,7 +154,7 @@ namespace Zjcs.Editor.ProfessionUI
             }
             return bounds ?? throw new InvalidDataException("Original partner validation pose has no visible vertices.");
         }
-        private static Actor CreateActor(Dictionary<string, object> row, Transform parent,
+        internal static Actor CreateActor(Dictionary<string, object> row, Transform parent,
             Dictionary<string, Transform> transforms, Shader shader)
         {
             var actor = new Actor { Row = row, Renderer = Obj(row["renderer"]) };
@@ -205,7 +205,7 @@ namespace Zjcs.Editor.ProfessionUI
             }
             catch { actor.Dispose(); throw; }
         }
-        private static void Draw(Actor actor)
+        internal static void Draw(Actor actor)
         {
             actor.Batches.Build(actor.Skeleton.Pose, actor.Skeleton.CreateDrawSlots(), Flag(actor.Renderer, "useClipping"),
                 Flag(actor.Renderer, "pmaVertexColors"), Number(actor.Renderer, "zSpacing"), true);
@@ -226,7 +226,7 @@ namespace Zjcs.Editor.ProfessionUI
             }
             for (; index < actor.Draws.Count; index++) actor.Draws[index].enabled = false;
         }
-        private static void Capture(Camera camera, RenderTexture target, string name)
+        internal static void Capture(Camera camera, RenderTexture target, string name)
         {
             RenderPipeline.SubmitRenderRequest(camera, new UniversalRenderPipeline.SingleCameraRequest { destination = target });
             RenderTexture.active = target; var image = new Texture2D(target.width, target.height, TextureFormat.RGB24, false);

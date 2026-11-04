@@ -38,11 +38,17 @@ def main():
     gpu_validation = ROOT / "unity/Assets/Game/Editor/ProfessionUI/OfficialPartnerNativeBattlePoseAcceptance.cs"
     if gpu_validation.is_file():
         shutil.copy2(gpu_validation, editor)
+    animator_validation = ROOT / "unity/Assets/Game/Editor/ProfessionUI/OfficialPartnerNativeBattleAnimatorAcceptance.cs"
+    if animator_validation.is_file():
+        shutil.copy2(animator_validation, editor)
     (editor / "Validation.asmdef").write_text(json.dumps(dict(name="PartnerNativeBattleDataValidation",
         includePlatforms=["Editor"], references=["Zjcs.Offline.ProfessionUI", "Zjcs.Official.ProfessionUI",
             "Zjcs.Offline.Equipment", "Unity.RenderPipelines.Universal.Runtime"])), encoding="utf-8", newline="\n")
     shutil.copytree(ROOT / "unity/Assets/Official/Combat/NativePartners",
                     project / "Assets/Official/Combat/NativePartners")
+    animators = ROOT / "unity/Assets/Official/Combat/NativePartnerAnimators"
+    if animators.is_dir():
+        shutil.copytree(animators, project / "Assets/Official/Combat/NativePartnerAnimators")
     shader_cache = ROOT / ".tools/source-packages/current/884_156692/native-conversion/all-assets/windows-shaders"
     shader_receipt = json.loads((shader_cache / "source-manifest.json").read_bytes())
     shader, = [row for row in shader_receipt["shaders"] if row["source"]["object_sha256"] ==

@@ -25,7 +25,7 @@ def documents(raw):
     return {int(key): next(iter(value.values())) for key, value in zip(ids, yaml.safe_load_all(text))}
 
 
-def verify_graph(original, native, native_names):
+def verify_graph(original, native, native_names, verify_motion=None):
     tree = original.read_typetree()
     strings = dict(tree["m_TOS"])
     constant = tree["m_Controller"]
@@ -79,15 +79,18 @@ def verify_graph(original, native, native_names):
             for field in ("m_Speed", "m_CycleOffset", "m_IKOnFeet", "m_WriteDefaultValues", "m_Mirror"):
                 if row[field] != states[name][field]:
                     raise ValueError("Original Animator state field differs: " + name + "/" + field)
-            trees = row["m_BlendTreeConstantArray"]
-            if len(trees) != 1 or len(trees[0]["data"]["m_NodeArray"]) != 1:
-                raise ValueError("Verify additional original blend tree: " + name)
-            node = trees[0]["data"]["m_NodeArray"][0]["data"]
-            if node["m_ChildIndices"]:
-                raise ValueError("Verify original blended state motion: " + name)
-            clip = original.read().m_AnimationClips[node["m_ClipID"]].read()
-            if native_names[states[name]["m_Motion"]["guid"]] != clip.m_Name:
-                raise ValueError("Original Animator state clip differs: " + name)
+            if verify_motion is not None:
+                verify_motion(original, row, states[name], native, native_names)
+            else:
+                trees = row["m_BlendTreeConstantArray"]
+                if len(trees) != 1 or len(trees[0]["data"]["m_NodeArray"]) != 1:
+                    raise ValueError("Verify additional original blend tree: " + name)
+                node = trees[0]["data"]["m_NodeArray"][0]["data"]
+                if node["m_ChildIndices"]:
+                    raise ValueError("Verify original blended state motion: " + name)
+                clip = original.read().m_AnimationClips[node["m_ClipID"]].read()
+                if native_names[states[name]["m_Motion"]["guid"]] != clip.m_Name:
+                    raise ValueError("Original Animator state clip differs: " + name)
             transitions(row["m_TransitionConstantArray"], states[name]["m_Transitions"])
         result.append(dict(layer=layer["m_Name"], states=state_names,
             transitions=len(machine["m_AnyStateTransitionConstantArray"]) + sum(len(row["m_TransitionConstantArray"]) for row in state_constants)))

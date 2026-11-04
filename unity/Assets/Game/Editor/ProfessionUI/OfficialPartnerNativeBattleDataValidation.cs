@@ -41,6 +41,24 @@ namespace Zjcs.Editor.ProfessionUI
         public static void Validate() => ValidateCore(false);
         public static void ValidateOrderedConstraints() => ValidateCore(true);
 
+        public static void ImportRuntimeTextures()
+        {
+            AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+            var catalog = JsonUtility.FromJson<Catalog>(File.ReadAllText(Root + "catalog.json"));
+            var imported = new Dictionary<string, string>(StringComparer.Ordinal);
+            foreach (var renderer in catalog.fighters.Cast<Renderer>().Concat(catalog.fighters.SelectMany(value => value.parts)))
+                foreach (var material in JsonUtility.FromJson<Materials>("{\"rows\":" + File.ReadAllText(Root + renderer.materials) + "}").rows)
+                    foreach (var texture in material.runtimeTextures)
+                    {
+                        string settings = JsonUtility.ToJson(texture);
+                        if (imported.TryGetValue(texture.file, out string previous))
+                        {
+                            if (previous != settings) throw new InvalidDataException("Original shared partner texture settings differ.");
+                        }
+                        else { ImportTexture(texture); imported.Add(texture.file, settings); }
+                    }
+        }
+
         private static void ValidateCore(bool ordered)
         {
             if (ordered) ValidateOrderedGeometry();
