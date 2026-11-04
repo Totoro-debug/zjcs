@@ -258,10 +258,10 @@ namespace Zjcs.Presentation.Combat
                 {
                     cameraView = new OfficialBattleCameraView(hostPresentation.Camera, worldRoot,
                         environmentGameId, initialCamera, sceneView.Body);
-                    skillGraphPlayback?.BindCameraHost(cameraView);
                     cameraView.Refresh(checkpoint, Phase);
                     cameraView.SetVisible(hudVisible);
                 }
+                skillGraphPlayback?.BindSceneHosts(cameraView, masterResolver: sceneView);
                 if (hudRoot != null) hudRoot.SetActive(hudVisible);
             }
             catch

@@ -37,9 +37,10 @@ namespace Zjcs.Presentation.Combat
         public void BindSourceDeathView(Zjcs.Official.StoryPlayables.IBattleSourceDeathView view)
             => scope.BindSourceDeathView(view);
 
-        public void BindCameraHost(IBattleCameraOffsetHost cameraHost)
+        public void BindSceneHosts(IBattleCameraOffsetHost cameraHost,
+            IBattleCharacterPartVisibilityHost visibilityHost = null, IBattleMasterEntityResolver masterResolver = null)
         {
-            scope.BindHosts(cameraHost, cameraPerformanceHost: cameraHost as IBattleCameraPerformanceHost);
+            scope.BindHosts(cameraHost, visibilityHost, cameraHost as IBattleCameraPerformanceHost, masterResolver);
         }
 
         public void Play(FightBattleStepEvent stepEvent, FightBattleCheckpoint checkpoint,

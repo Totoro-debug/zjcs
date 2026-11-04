@@ -59,7 +59,7 @@ namespace Zjcs.Editor.Combat
                 new OfficialBattleSkillEntityPlayback(root.transform,
                     new OfficialBattleGridMapper(root.transform, new Zjcs.Combat.Official.FightBattleGrid { Width = 8, Height = 8 }),
                     scope, _ => null));
-            graphPlayback.BindCameraHost(offsets);
+            graphPlayback.BindSceneHosts(offsets);
             try
             {
                 Require(original.Duration == 1.77f && original.IsMoveSource

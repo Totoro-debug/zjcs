@@ -148,6 +148,19 @@ namespace Zjcs.Editor.Combat
             {
                 Time.captureDeltaTime = .01f; yield return null;
                 OfficialWwiseEvent.Host = other;
+                if (SessionState.GetBool(Key + ".masterBindings", false))
+                {
+                    yield return CheckMasterBindings(actor, target, Pump, phase =>
+                    {
+                        Draw();
+                        var visible = actor.GetComponentsInChildren<Renderer>().Where(r => r.enabled && r.gameObject.activeInHierarchy).ToArray();
+                        var currentBounds = visible[0].bounds;
+                        foreach (var renderer in visible.Skip(1)) currentBounds.Encapsulate(renderer.bounds);
+                        currentBounds.Expand(new Vector3(2, 2, 0)); currentBounds.Encapsulate(target.transform.position);
+                        CaptureSceneRendererCamera(currentBounds, label + "-" + phase);
+                    });
+                    yield break;
+                }
                 var prefab = Resources.Load<GameObject>("Combat/Casts/Prefabs/EcEntity/Fight/FightSkill/11170/playable11170");
                 Require(prefab && prefab.GetComponentsInChildren<MyPlayable>(true).Length == 4, "all original parent playable nodes retained");
                 var graph = scope.Play(prefab, actor, target); yield return Pump(2, .01f);

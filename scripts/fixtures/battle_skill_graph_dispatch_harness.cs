@@ -19,10 +19,6 @@ namespace UnityEngine
     public static class JsonUtility { public static object Data; public static T FromJson<T>(string text) { return (T)Data; } }
     public static class Mathf { public static float Max(float a, float b) { return Math.Max(a, b); } }
 }
-namespace Zjcs.Official.StoryPlayables
-{
-    public interface IBattleSourceDeathView {}
-}
 namespace Zjcs.Combat.Official
 {
     public class FightBattleUnitState { public int Id, Direction; public long Hp; }
@@ -35,6 +31,12 @@ namespace Zjcs.Official.StoryPlayableManager
 {
     public interface IBattleCameraOffsetHost {}
     public interface IBattleCameraPerformanceHost {}
+    public interface IBattleCharacterPartVisibilityHost {}
+    public interface IBattleMasterEntityResolver {}
+}
+namespace Zjcs.Official.StoryPlayables
+{
+    public interface IBattleSourceDeathView {}
 }
 namespace Zjcs.Presentation.Combat
 {
@@ -63,7 +65,9 @@ namespace Zjcs.Offline.BattleNativePlayables
         public bool Disposed;
         public void BindSourceDeathView(Zjcs.Official.StoryPlayables.IBattleSourceDeathView view) {}
         public void BindHosts(Zjcs.Official.StoryPlayableManager.IBattleCameraOffsetHost host,
-            Zjcs.Official.StoryPlayableManager.IBattleCameraPerformanceHost cameraPerformanceHost = null) {}
+            Zjcs.Official.StoryPlayableManager.IBattleCharacterPartVisibilityHost visibilityHost = null,
+            Zjcs.Official.StoryPlayableManager.IBattleCameraPerformanceHost cameraPerformanceHost = null,
+            Zjcs.Official.StoryPlayableManager.IBattleMasterEntityResolver masterResolver = null) {}
         public void Tick(float delta) { Clock += delta; }
         public void LateTick() { LateTicks++; }
         public void Play(GameObject prefab, GameObject source, GameObject target, float speed,
@@ -109,8 +113,26 @@ public static class BattleSkillGraphDispatchHarness
             }
         }
         Resources.Assets.Remove(fields[0]);
-        Require(catalog.Find(10, fields[0]).name == "fallback", "Missing direction did not fall back to the original default");
+        bool missingDirection = false;
+        try { catalog.Find(10, fields[0]); }
+        catch (InvalidOperationException exception)
+        {
+            missingDirection = exception.Message.Contains("skill=10")
+                && exception.Message.Contains("field=" + fields[0]) && exception.Message.Contains("resource=" + fields[0]);
+        }
+        Require(missingDirection, "A declared directional asset must not silently select the default");
+        Require(catalog.Find(20, fields[0]).name == "fallback", "An originally absent direction must use the original default");
         Resources.Assets[fields[0]] = new GameObject(fields[0]);
+        Resources.Assets.Remove("fallback");
+        bool missingDefault = false;
+        try { catalog.Find(20, fields[0]); }
+        catch (InvalidOperationException exception)
+        {
+            missingDefault = exception.Message.Contains("skill=20")
+                && exception.Message.Contains("field=myPlayablePrefab") && exception.Message.Contains("resource=fallback");
+        }
+        Require(missingDefault, "A declared default asset must not silently drop the cast");
+        Resources.Assets["fallback"] = new GameObject("fallback");
         // Settlement may already have turned the actor again before presentation starts.
         actor.Direction = 3;
         var captured = Cast(10, .2f);

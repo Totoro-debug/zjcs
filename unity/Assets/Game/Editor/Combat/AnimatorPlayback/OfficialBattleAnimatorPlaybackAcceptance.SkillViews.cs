@@ -246,6 +246,7 @@ namespace Zjcs.Editor.Combat
             }
             yield return CheckProductionSkillViews(actor, victim, prefab, pump, capture);
             yield return CheckPerformanceCamera(actor, pump);
+            yield return CheckMasterBindings(actor, victim, pump, capture);
         }
     }
 }

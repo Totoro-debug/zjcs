@@ -64,13 +64,19 @@ namespace Zjcs.Presentation.Combat
             {
                 if (binding == null || string.IsNullOrEmpty(binding.resource)) continue;
                 if (binding.field == direction)
-                {
-                    GameObject prefab = Resources.Load<GameObject>(binding.resource);
-                    if (prefab != null) return prefab;
-                }
+                    return LoadDeclaredPrefab(skillEntityId, binding);
                 if (binding.field == "myPlayablePrefab") fallback = binding;
             }
-            return fallback == null ? null : Resources.Load<GameObject>(fallback.resource);
+            return fallback == null ? null : LoadDeclaredPrefab(skillEntityId, fallback);
+        }
+
+        private static GameObject LoadDeclaredPrefab(int skillEntityId, OfficialBattleSkillGraphBinding binding)
+        {
+            GameObject prefab = Resources.Load<GameObject>(binding.resource);
+            if (prefab == null)
+                throw new InvalidOperationException("Official battle skill graph asset is missing: skill="
+                    + skillEntityId + ", field=" + binding.field + ", resource=" + binding.resource);
+            return prefab;
         }
     }
 }
