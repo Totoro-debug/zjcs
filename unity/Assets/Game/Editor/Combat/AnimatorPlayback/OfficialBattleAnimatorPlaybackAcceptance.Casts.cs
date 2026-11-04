@@ -148,6 +148,11 @@ namespace Zjcs.Editor.Combat
             {
                 Time.captureDeltaTime = .01f; yield return null;
                 OfficialWwiseEvent.Host = other;
+                if (SessionState.GetBool(Key + ".shadows", false))
+                {
+                    yield return CheckShadows(actor, Pump, label);
+                    yield break;
+                }
                 if (SessionState.GetBool(Key + ".masterBindings", false))
                 {
                     yield return CheckMasterBindings(actor, target, Pump, phase =>

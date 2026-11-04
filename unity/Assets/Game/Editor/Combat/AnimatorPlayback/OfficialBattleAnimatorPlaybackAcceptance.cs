@@ -76,6 +76,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".casts", false);
             SessionState.SetBool(Key + ".skillViews", false);
             SessionState.SetBool(Key + ".masterBindings", false);
+            SessionState.SetBool(Key + ".shadows", false);
             SessionState.SetBool(Key + ".sceneAnimatorPose", false);
             SessionState.SetBool(Key + ".sceneMecanimParts", false);
             SessionState.SetBool(Key + ".sceneMixNext", false);

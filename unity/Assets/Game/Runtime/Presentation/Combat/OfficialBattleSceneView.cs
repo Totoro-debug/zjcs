@@ -589,6 +589,7 @@ namespace Zjcs.Presentation.Combat
             Transform body = attachedModel.Root;
             attachedTransforms[unitId] = body;
             attachedSorting[unitId] = OfficialBattleSceneBindings.BindModel(attachedModel.Model, entityId);
+            BindAttachedShadow(unitId, entityId, body, transform);
             PlaceUnit(unitId, body, state, null);
             orientUnit(attachedModel.Model, state);
             if (state.Hp <= 0)
@@ -602,6 +603,7 @@ namespace Zjcs.Presentation.Combat
 
         public void DetachUnitTransform(int unitId)
         {
+            ReleaseAttachedShadow(unitId);
             movementEffects?.RemoveUnit(unitId);
             if (attachedSorting.TryGetValue(unitId, out OfficialBattleUnitSorting sorting)) sorting?.Dispose();
             attachedSorting.Remove(unitId);
@@ -1205,6 +1207,7 @@ namespace Zjcs.Presentation.Combat
 
         public void Dispose()
         {
+            ReleaseAttachedShadows();
             movementEffects?.Dispose();
             foreach (UnitView view in units.Values)
             {

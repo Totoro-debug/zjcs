@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Zjcs.Combat.Official;
 using Zjcs.Presentation.Home;
 
 namespace Zjcs.Editor
@@ -11,7 +12,7 @@ namespace Zjcs.Editor
         [Serializable] private sealed class SceneModel { public SceneTransform[] transforms; }
         [Serializable] private sealed class SceneTransform { public string name; public float[] position, scale; }
 
-        private static void VerifyAttachedPlayerPresentation(MonoBehaviour runner)
+        private static void VerifyAttachedPlayerPresentation(MonoBehaviour runner, FightBattleCheckpoint checkpoint)
         {
             Transform player = runner.GetComponentInParent<HomeFeatureRuntime>().HomePlayerTransform;
             Transform entity = player;
@@ -34,6 +35,11 @@ namespace Zjcs.Editor
                 && Vector3.Distance(player.localScale, Vector3.one) < .001f,
                 "The attached player retained a second map offset/scale.");
             Transform hud = entity.Find("OfficialBattleUnitHud_1");
+            // A completed death releases its HUD. Keep requiring the original
+            // anchor while a live player or a retained death HUD is present.
+            var state = checkpoint?.Units?.Find(unit => unit.Id == 1);
+            Require(state != null, "The presentation fixture lost its actual player checkpoint.");
+            if (state.Hp <= 0 && hud == null) return;
             Require(hud != null && hud.parent == entity && hud.localPosition.sqrMagnitude < .000001f,
                 "The player's health bar no longer shares the moving battle entity origin.");
             var camera = runner.GetComponentInParent<HomeFeatureRuntime>().Scene.Camera;

@@ -2192,3 +2192,13 @@ assets/reference/official-map/mainline-handin-ui*-source-manifest.json -text
 unity/Assets/Official/World/Map/*/NativeMiniMapResourcesCurrent/** -text
 unity/Assets/Official/World/Map/*/NativeMiniMapResourcesCurrent.meta -text
 assets/reference/official-map/map*-current-minimap-resources-source-manifest.json -text
+
+# Selected original role shadow assets and byte-verified conversion receipts.
+scripts/prepare_battle_character_shadows.py text eol=lf
+assets/reference/battle-scenes/character-shadow-source-manifest.json text eol=lf
+unity/Assets/Game/Resources/Combat/character-shadow-bindings.json* text eol=lf
+unity/Assets/Official/Combat/CharacterShadows/** text eol=lf
+unity/Assets/Official/Combat/CharacterShadows.meta text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleShadow*.cs* text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.Shadows.cs* text eol=lf
+unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.Shadows.cs* text eol=lf

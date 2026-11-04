@@ -527,7 +527,7 @@ namespace Zjcs.Editor
             // Compare the HUD anchor and scene timeline after this frame's LateUpdate.
             yield return new WaitForEndOfFrame();
             VerifyTimelineProjection();
-            VerifyAttachedPlayerPresentation(runner);
+            VerifyAttachedPlayerPresentation(runner, checkpoint);
             // Auto-start hosts may already be casting by this point. A spell's geometry is
             // not an idle-pose check; observe idle only while the host is still preparing.
             if (controller.Phase == FightBattlePhase.Preparing)
@@ -628,7 +628,7 @@ namespace Zjcs.Editor
                         yield return new WaitForEndOfFrame();
                         // Compare scene/HUD after this frame's LateUpdate.
                         VerifyTimelineProjection();
-                        VerifyAttachedPlayerPresentation(runner);
+                        VerifyAttachedPlayerPresentation(runner, checkpoint);
                         foreach (var current in VerifyCharacterPortraits(checkpoint))
                             Require(portraitSprites.TryGetValue(current.Key, out Sprite original) && original == current.Value,
                                 name + " recaptured a character head while advancing the timeline.");
