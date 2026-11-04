@@ -15,13 +15,14 @@ using SceneCharacter = Zjcs.Official.CombatAppearance.AppearanceCharacter;
 
 namespace Zjcs.Editor.Combat
 {
-    public static class OfficialBattlePlayerModelClipValidation
+    public static partial class OfficialBattlePlayerModelClipValidation
     {
         private const string Key = "Zjcs.OriginalGamePlayerClip";
         private static bool started;
         private static int errors;
         public static void Run()
         {
+            SessionState.SetBool(Key + ".physics", false);
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             Type.GetType("Zjcs.Editor.ProjectTools, Zjcs.Editor", true).GetMethod("Validate").Invoke(null, null);
             if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR")))
@@ -138,6 +139,7 @@ namespace Zjcs.Editor.Combat
                             weapon.UpdateAnimationAndMesh();
                             Require(material != original && material.mainTexture && !material.mainTexture.name.EndsWith("_placeholder", StringComparison.Ordinal),
                                 "real independent High material after actual visibility demand: " + material.name + "/" + material.mainTexture?.name);
+                            if (SessionState.GetBool(Key + ".physics", false)) CheckMixedPhysics(native, weapon, group);
                             native.State.SetSlotAttachment(slot.Index, attachment); yield return null;
                             Require(Mathf.Abs(material.GetFloat(AppearanceMaterialUtils.sWorldClipHeight) - ground.position.y) < .0001f,
                                 "actual attachment identity enables world-height clipping");

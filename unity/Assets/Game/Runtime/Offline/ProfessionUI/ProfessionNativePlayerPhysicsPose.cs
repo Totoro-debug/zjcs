@@ -41,16 +41,56 @@ namespace Zjcs.Offline.ProfessionUI
 
         public void Apply(ProfessionNativeAppearanceSkeleton skeleton, ProfessionNativeAnimationChannels channels,
             float animationTime, bool loop, float deltaTime)
+            => Apply(skeleton, channels, animationTime, loop, deltaTime, true);
+
+        public void Apply(ProfessionNativeAppearanceSkeleton skeleton, ProfessionNativeAnimationChannels channels,
+            float animationTime, bool loop, float deltaTime, bool updatePhysics)
+        {
+            Validate(skeleton, channels, animationTime, deltaTime, updatePhysics);
+            float position = Position(channels, animationTime, loop);
+            var physics = (channels?.Physics ?? setupPhysics).Sample(position, skeleton.SkinConstraints);
+            ApplyCompleted(skeleton, physics, deltaTime, updatePhysics, () =>
+            {
+                if (channels == null) ProfessionNativeConstraintPose.EvaluateSetupBeforePhysics(skeleton, setupConstraints);
+                else ProfessionNativeConstraintPose.EvaluateBeforePhysics(skeleton, channels, animationTime, loop);
+            });
+        }
+
+        public void ApplyMixNext(ProfessionNativeAppearanceSkeleton skeleton,
+            ProfessionNativeAnimationChannels outgoing, float outgoingTime, bool outgoingLoop,
+            ProfessionNativeAnimationChannels incoming, float incomingTime, bool incomingLoop,
+            float weight, float deltaTime, bool updatePhysics = true)
+        {
+            if (outgoing == null || incoming == null) throw new ArgumentNullException();
+            Validate(skeleton, outgoing, outgoingTime, deltaTime, updatePhysics);
+            Validate(skeleton, incoming, incomingTime, deltaTime, updatePhysics);
+            var physics = outgoing.Physics.Sample(Position(outgoing, outgoingTime, outgoingLoop), skeleton.SkinConstraints);
+            incoming.Physics.ApplyReplace(physics, Position(incoming, incomingTime, incomingLoop), weight);
+            ApplyCompleted(skeleton, physics, deltaTime, updatePhysics, () =>
+                ProfessionNativeConstraintPose.EvaluateMixNextBeforePhysics(skeleton,
+                    outgoing, outgoingTime, outgoingLoop, incoming, incomingTime, incomingLoop, weight));
+        }
+
+        private void Validate(ProfessionNativeAppearanceSkeleton skeleton, ProfessionNativeAnimationChannels channels,
+            float animationTime, float deltaTime, bool updatePhysics)
         {
             if (skeleton == null || !ReferenceEquals(skeleton.Source, data))
                 throw new ArgumentException("Bind physics to its exact original skeleton data.", nameof(skeleton));
             if (float.IsNaN(animationTime) || float.IsInfinity(animationTime) || animationTime < 0 ||
                 float.IsNaN(deltaTime) || float.IsInfinity(deltaTime) || deltaTime < 0)
                 throw new ArgumentOutOfRangeException(nameof(deltaTime));
+            if (!updatePhysics && deltaTime != 0)
+                throw new ArgumentException("Physics.Pose does not advance the physical clock.", nameof(deltaTime));
             if (channels != null && !ReferenceEquals(channels.OriginalFields, data.GetAnimation(channels.Name)))
                 throw new ArgumentException("Original physics animation belongs to another skeleton.", nameof(channels));
-            float position = channels != null && loop && channels.Duration > 0 ? animationTime % channels.Duration : animationTime;
-            var physics = (channels?.Physics ?? setupPhysics).Sample(position, skeleton.SkinConstraints);
+        }
+
+        private static float Position(ProfessionNativeAnimationChannels channels, float time, bool loop)
+            => channels != null && loop && channels.Duration > 0 ? time % channels.Duration : time;
+
+        private void ApplyCompleted(ProfessionNativeAppearanceSkeleton skeleton,
+            ProfessionNativePhysicsAnimation.State[] physics, float deltaTime, bool updatePhysics, Action solve)
+        {
             int lastOther = -1;
             for (int index = 0; index < data.Constraints.Count; index++)
             {
@@ -70,8 +110,9 @@ namespace Zjcs.Offline.ProfessionUI
             bool nextOwner = !ReferenceEquals(owner, skeleton);
             float next = (nextOwner ? 0 : clock) + deltaTime;
             if (float.IsInfinity(next)) throw new ArgumentOutOfRangeException(nameof(deltaTime));
-            if (channels == null) ProfessionNativeConstraintPose.EvaluateSetupBeforePhysics(skeleton, setupConstraints);
-            else ProfessionNativeConstraintPose.EvaluateBeforePhysics(skeleton, channels, animationTime, loop);
+            // Solve the already mixed local pose and geometric constraints once,
+            // then advance this skeleton's same physical history once.
+            solve();
             if (nextOwner) { histories.Clear(); owner = skeleton; clock = 0; }
             foreach (var state in physics)
             {
@@ -92,7 +133,7 @@ namespace Zjcs.Offline.ProfessionUI
                     Turn = state.Rotate, Limit = state.Limit, Step = state.Step, Inertia = state.Inertia,
                     Strength = state.Strength, Damping = state.Damping, InverseMass = state.MassInverse,
                     Wind = state.Wind, Gravity = state.Gravity, Mix = state.Mix, Reference = reference };
-                var result = history.Solver.Evaluate(input, parameters, next);
+                var result = updatePhysics ? history.Solver.Evaluate(input, parameters, next) : history.Solver.Pose(input, parameters);
                 matrix.m00 = result.A; matrix.m01 = result.B; matrix.m10 = result.C; matrix.m11 = result.D;
                 matrix.m03 = result.X; matrix.m13 = result.Y;
                 skeleton.Pose.OverrideWorld(state.Bone, matrix);

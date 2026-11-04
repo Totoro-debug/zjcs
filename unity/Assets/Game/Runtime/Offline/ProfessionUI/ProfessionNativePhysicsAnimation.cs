@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Zjcs.Offline.ProfessionUI
 {
-    // Original physics setup and unmixed parameter timelines only. These values
+    // Original physics setup and parameter timelines. These values
     // do not advance a physical simulation or modify bone world matrices.
     public sealed class ProfessionNativePhysicsAnimation
     {
@@ -105,6 +105,25 @@ namespace Zjcs.Offline.ProfessionUI
                 if (definition.Kind == "physics" && (!Bool(definition.Fields, "skin") || selected.Contains(i))) result.Add(Sample(i, time));
             }
             return result.OrderBy(state => state.Order).ToArray();
+        }
+
+        // Original Game MixNext: outgoing pose is already applied at full
+        // weight, then reached incoming keys replace it by their clip weight.
+        // An absent/unreached incoming key leaves the outgoing value intact.
+        public void ApplyReplace(State[] states, float time, float weight)
+        {
+            if (states == null) throw new ArgumentNullException(nameof(states));
+            ValidateTime(time);
+            if (float.IsNaN(weight) || float.IsInfinity(weight) || weight < 0 || weight > 1)
+                throw new ArgumentOutOfRangeException(nameof(weight));
+            foreach (var state in states)
+                if (state == null || state.ConstraintIndex < 0 || state.ConstraintIndex >= data.Constraints.Count
+                    || !ReferenceEquals(state.OriginalFields, data.Constraints[state.ConstraintIndex].Fields))
+                    throw new ArgumentException("Bind original physics states from this skeleton.", nameof(states));
+            if (weight == 0) return;
+            foreach (var state in states)
+                if (mixes.TryGetValue(state.Name, out var curve) && curve.TryEvaluate(time, out float value))
+                    state.Mix += (value - state.Mix) * weight;
         }
 
         private State Sample(int index, float time)

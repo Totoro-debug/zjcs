@@ -38,6 +38,7 @@ namespace Zjcs.Offline.ProfessionUI
             Validate(pose); Validate(parameters); ValidateTime(time);
             var p = parameters;
             if (p.Mix == 0) return pose;
+            var unconstrained = pose;
             float dt = Math.Max(0, time - lastTime);
             lastTime = time;
             residual += dt;
@@ -77,12 +78,24 @@ namespace Zjcs.Offline.ProfessionUI
                 angle += angularVelocity * p.Step;
             }
 
+            pose = Pose(unconstrained, p);
+            tipX = pose.A * pose.Length; tipY = pose.C * pose.Length;
+            return pose;
+        }
+
+        // Public Physics.Pose behavior: apply the existing displacement without
+        // changing inertia, velocities, residual time or previous input poses.
+        public Affine Pose(Affine pose, Parameters p)
+        {
+            if (!initialized) throw new InvalidOperationException("Bind the initial original world pose before applying physics.");
+            Validate(pose); Validate(p);
+            if (p.Mix == 0) return pose;
+            pose.X += offsetX * p.Mix * p.X; pose.Y += offsetY * p.Mix * p.Y;
             float rotation = angle * p.Mix * p.Turn;
             float cosine = (float)Math.Cos(rotation), sine = (float)Math.Sin(rotation);
             float a = pose.A * cosine - pose.C * sine, b = pose.B * cosine - pose.D * sine;
             pose.C = pose.A * sine + pose.C * cosine; pose.D = pose.B * sine + pose.D * cosine;
             pose.A = a; pose.B = b;
-            tipX = pose.A * pose.Length; tipY = pose.C * pose.Length;
             Validate(pose);
             return pose;
         }

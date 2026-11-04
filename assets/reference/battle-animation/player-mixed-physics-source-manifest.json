@@ -1,0 +1,122 @@
+{
+  "manifest": "884_156692",
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/SceneCharacterSources/male.bytes",
+      "sha256": "8f97682b90384ce84601a1ec1e86b7bd6bb1f71f96b32a8d1760212c9ba5c57a"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/SceneCharacterSources/female.bytes",
+      "sha256": "3f2ceef9d2b254d418acb213d04ced2241efa2fcfa238c924065e2f328e773c2"
+    }
+  ],
+  "core": {
+    "path": "assets/reference/battle-animation/scene-core-source-manifest.json",
+    "sha256": "69384a713035cb15c226880fa3c6f11cda7da9ca4f7d5d195fa4d45e38560396"
+  },
+  "statistics": [
+    {
+      "sex": "male",
+      "animations": 448,
+      "physics_tracks": 321,
+      "constraints": 1543
+    },
+    {
+      "sex": "female",
+      "animations": 455,
+      "physics_tracks": 453,
+      "constraints": 1807
+    }
+  ],
+  "translator": {
+    "path": "assets/reference/battle-animation/native-mix-next-source-manifest.json",
+    "sha256": "66c52ba44a0b667f13cbf191bfd931c3ad504194846cce474d5595acfe04f778"
+  },
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimatorPose.cs",
+      "sha256": "63156fee5ba194ce0df00185d8ceddd2e45edd9e238155189c984d761bcbcc51"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeConstraintPose.cs",
+      "sha256": "057e05470231374185f4b83127b014143aa67a83360fff111597ed52eed0ce69"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSpringConstraint.cs",
+      "sha256": "9021d9aba66ed46a699c5c4b506f246fdad835274159f5c5320fe1d399cfb77f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimationChannels.cs",
+      "sha256": "760024ffc2bf3f53ba4d2c65fd0f53da3e16ec69bd660b191d327eb1178d179a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeCurve.cs",
+      "sha256": "df4bb0cdb4b785a884359df7792311ea9eaedab0946dffd8037680d9f647cfe3"
+    }
+  ],
+  "helper": {
+    "path": "scripts/prepare_battle_constraint_channel_fixtures.py",
+    "sha256": "50546b0fcafe264ffb0bf74ca0423ee8e94db4a5f6a65f1e6559c627449973bb"
+  },
+  "numerical_reference": [
+    {
+      "path": "scripts/test_partner_player_physics.py",
+      "sha256": "8593520120abcbeed3ea54d9ccc96bce4703872b322544b63df4032e565d9f4a"
+    },
+    {
+      "path": "scripts/fixtures/partner_player_physics_validation.cs",
+      "sha256": "dc262741b3c227042225acc93690a6428a9207f6a570de0680c5f2e16cea9b99"
+    },
+    {
+      "path": "scripts/fixtures/partner_player_physics_reference.txt",
+      "sha256": "42d8f4ea6cbb4a8011e302b6cfa5714b712183f04a31b2e3f12172e7441bb7f0"
+    }
+  ],
+  "scalar_cases": 15670,
+  "fixture_sha256": "6d7f5d6af9dc2a0f5237992ab6a6a4c6b3e94e084cce5835ec895f96d2d56143",
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePhysicsAnimation.cs",
+      "sha256": "65b6cc57835578ac4f1b1b31b0e1924574594db8dafd35024c1f5885b4832a87"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativePlayerPhysicsPose.cs",
+      "sha256": "78fbb3c917f1b0507f1fa64f38ae17ee4f716b53359892200b60490fbb96d0ef"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimatorPose.cs",
+      "sha256": "63156fee5ba194ce0df00185d8ceddd2e45edd9e238155189c984d761bcbcc51"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSpringConstraint.cs",
+      "sha256": "9021d9aba66ed46a699c5c4b506f246fdad835274159f5c5320fe1d399cfb77f"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.cs",
+      "sha256": "aad4b4dfd266720d293581323426e23a2b11458462334cb1c63331afcff3d018"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.Physics.cs",
+      "sha256": "649a84e28a641fa1652fabcdf25ae6e78501da34af5307f89c440379144f882a"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.Physics.cs.meta",
+      "sha256": "3444e97a2f3d642121458a0b381e37ce1b5f78916ce114dd5fffd8bb4a6acfce"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_player_mixed_physics.py",
+    "sha256": "696f715db4819a3819e7f41063ce35b223611d7bbfc5bce7cc09eb049ed1ca85"
+  },
+  "documentation": [
+    "https://esotericsoftware.com/spine-api-reference-4.2#MixBlend",
+    "https://esotericsoftware.com/spine-api-reference-4.2#Physics",
+    "https://esotericsoftware.com/spine-api-reference-4.2#PhysicsConstraint",
+    "https://en.esotericsoftware.com/spine-unity-main-components-4.2#Animation-Blending-Control"
+  ],
+  "binding": "Outgoing original physics parameters followed by reached incoming Replace mix keys at the actual clip weight; solve mixed local/geometric pose once, advance the same physical clock/history once. Replay does not reset physical time. Explicit updatePhysics=false selects public Physics.Pose behavior and requires zero delta, reapplying stored displacements without changing history. Existing unmixed/setup entry uses the same integration stage.",
+  "limits": [
+    "This extends the existing independent player solver domain (physics after IK/transform, translation/rotation). Additional parameter kinds and interleaved constraints remain explicitly rejected.",
+    "The fixture exercises current four player controllers and original complete Game prefab. Independent weapon animation clocks, production player factory/battle lifecycle and Windows Player remain separate. No SDK implementation is read or copied."
+  ]
+}

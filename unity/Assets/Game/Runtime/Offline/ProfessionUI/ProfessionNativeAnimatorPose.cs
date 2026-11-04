@@ -42,6 +42,7 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly Action<ProfessionNativeAppearanceSkeleton, ProfessionNativeAnimationChannels, float, bool> solve;
         private readonly Action<ProfessionNativeAppearanceSkeleton, MixNextFrame> mix;
         private readonly bool allowPartnerBlendTrees;
+        private readonly bool originalBezierSegments;
         private readonly List<AnimatorClipInfo> clips = new List<AnimatorClipInfo>(1);
         private readonly List<AnimatorClipInfo> nextClips = new List<AnimatorClipInfo>(1);
         private readonly Dictionary<string, ProfessionNativeAnimationChannels> channels = new Dictionary<string, ProfessionNativeAnimationChannels>(StringComparer.Ordinal);
@@ -50,12 +51,13 @@ namespace Zjcs.Offline.ProfessionUI
         public ProfessionNativeAnimatorPose(Animator animator,
             Action<ProfessionNativeAppearanceSkeleton, ProfessionNativeAnimationChannels, float, bool> solve,
             Action<ProfessionNativeAppearanceSkeleton, MixNextFrame> mixNext = null,
-            bool allowPartnerBlendTrees = false)
+            bool allowPartnerBlendTrees = false, bool originalBezierSegments = false)
         {
             this.animator = animator ? animator : throw new ArgumentNullException(nameof(animator));
             this.solve = solve ?? throw new ArgumentNullException(nameof(solve));
             mix = mixNext;
             this.allowPartnerBlendTrees = allowPartnerBlendTrees;
+            this.originalBezierSegments = originalBezierSegments;
         }
 
         // Callers consume one completed pose without inspecting the Animator
@@ -153,7 +155,7 @@ namespace Zjcs.Offline.ProfessionUI
             { channels.Clear(); source = skeleton.Source; }
             if (!channels.TryGetValue(clip.name, out var animation))
             {
-                animation = new ProfessionNativeAnimationChannels(source, clip.name);
+                animation = new ProfessionNativeAnimationChannels(source, clip.name, originalBezierSegments: originalBezierSegments);
                 channels.Add(clip.name, animation);
             }
             // Original name-carrier clips retain their animation duration. A
