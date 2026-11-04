@@ -13,7 +13,7 @@ using Zjcs.Offline.ProfessionUI;
 namespace Zjcs.Editor.ProfessionUI
 {
     [InitializeOnLoad]
-    public static class OfficialBattleMonsterRuntimeValidation
+    public static partial class OfficialBattleMonsterRuntimeValidation
     {
         private const string Active = "Zjcs.BattleLiveMonster.Validation";
         private static bool ready;
@@ -40,6 +40,11 @@ namespace Zjcs.Editor.ProfessionUI
             SessionState.SetFloat(Active + ".Deadline", (float)EditorApplication.timeSinceStartup + 300);
             EditorApplication.EnterPlaymode();
         }
+        public static void RunAnimator()
+        {
+            SessionState.SetBool(Active + ".Animator", true);
+            Run();
+        }
         private static void Update()
         {
             if (!SessionState.GetBool(Active, false)) return;
@@ -48,7 +53,7 @@ namespace Zjcs.Editor.ProfessionUI
                 if (EditorApplication.timeSinceStartup > SessionState.GetFloat(Active + ".Deadline", 0))
                     throw new TimeoutException("Original monster Play Mode validation timed out.");
                 if (!ready || !EditorApplication.isPlaying) return;
-                steps ??= Steps().GetEnumerator();
+                steps ??= (SessionState.GetBool(Active + ".Animator", false) ? AnimatorSteps() : Steps()).GetEnumerator();
                 if (!steps.MoveNext()) Finish(0);
             }
             catch (Exception error) { Debug.LogException(error); Finish(1); }
@@ -124,6 +129,7 @@ namespace Zjcs.Editor.ProfessionUI
         private static void Finish(int code)
         {
             SessionState.SetBool(Active, false);
+            SessionState.SetBool(Active + ".Animator", false);
             if (root) UnityEngine.Object.Destroy(root.gameObject);
             if (camera) { camera.targetTexture = null; UnityEngine.Object.Destroy(camera.gameObject); }
             if (target) { target.Release(); UnityEngine.Object.Destroy(target); }

@@ -11,7 +11,7 @@ namespace Zjcs.Offline.ProfessionUI
     // Full source channels feed the common independent skeleton and mesh backend.
     // The owning battle supplies time; followers read the same completed pose.
     [RequireComponent(typeof(ProfessionNativeSceneMeshPart))]
-    public sealed class BattleNativeMonsterRenderer : MonoBehaviour, IProfessionFollowerRenderer
+    public sealed partial class BattleNativeMonsterRenderer : MonoBehaviour, IProfessionFollowerRenderer
     {
         private ProfessionNativeAppearanceSkeleton state;
         private ProfessionNativeMeshBatches batches;
@@ -23,8 +23,11 @@ namespace Zjcs.Offline.ProfessionUI
         private bool loop;
         public Transform EntityRoot { get; private set; }
         public ProfessionNativeAppearanceSkeleton State => state;
-        public bool IsAnimationFinished => motion != null && !loop && elapsed >= motion.Duration;
-        public string Animation => motion?.Name;
+        public bool IsAnimationFinished => Animator
+            ? !Animator.IsInTransition(0) && !Animator.GetCurrentAnimatorStateInfo(0).loop
+                && Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1
+            : motion != null && !loop && elapsed >= motion.Duration;
+        public string Animation => Animator ? AnimatorFrame.Current.Animation?.Name : motion?.Name;
         public IEnumerable<string> AnimationNames => state.Source.AnimationNames;
         public bool UseCustomZSpacing => false;
         public int UpdateWhenInvisible => Int(settings, "updateWhenInvisible");
@@ -86,6 +89,7 @@ namespace Zjcs.Offline.ProfessionUI
         public bool Play(string name, bool repeat, bool restart = false)
         {
             if (state == null) throw new InvalidOperationException("Initialize the original monster first.");
+            if (Animator) throw new InvalidOperationException("The bound original Animator owns monster motion selection.");
             if (!state.Source.AnimationNames.Contains(name)) return false;
             if (!restart && motion?.Name == name && loop == repeat && !IsAnimationFinished) return true;
             motion = new ProfessionNativeAnimationChannels(state.Source, name, originalBezierSegments: true);
@@ -94,6 +98,7 @@ namespace Zjcs.Offline.ProfessionUI
         public void Advance(float deltaTime)
         {
             if (!float.IsFinite(deltaTime) || deltaTime < 0) throw new ArgumentOutOfRangeException(nameof(deltaTime));
+            if (Animator) { AdvanceAnimator(deltaTime); return; }
             if (motion == null) return;
             elapsed += deltaTime;
             Draw(deltaTime);
@@ -103,6 +108,10 @@ namespace Zjcs.Offline.ProfessionUI
             float time = loop ? elapsed : Mathf.Min(elapsed, motion.Duration);
             if (physics != null) physics.Apply(state, motion, time, loop, deltaTime);
             else ProfessionNativeOrderedConstraintPose.EvaluateBeforePhysics(state, motion, time, loop);
+            DrawCompletedPose();
+        }
+        private void DrawCompletedPose()
+        {
             batches.Build(state.Pose, state.CreateDrawSlots(), Flag(settings, "useClipping"),
                 Flag(settings, "pmaVertexColors"), ZSpacing, allowConcaveClipping: true);
             GetComponent<ProfessionNativeSceneMeshPart>().Assign(batches.Batches, batch => batch.Blend == 0

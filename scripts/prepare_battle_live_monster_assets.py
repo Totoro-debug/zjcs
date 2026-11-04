@@ -92,6 +92,7 @@ def build():
         implementation={path: sha((ROOT / path).read_bytes()) for path in (
             "unity/Assets/Game/Runtime/Offline/ProfessionUI/BattleNativeMonsterAssets.cs",
             "unity/Assets/Game/Runtime/Offline/ProfessionUI/BattleNativeMonsterRenderer.cs",
+            "unity/Assets/Game/Runtime/Offline/ProfessionUI/BattleNativeMonsterRenderer.Animator.cs",
             "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkeletonData.BattleMonster.cs",
             "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkeletonData.cs",
             "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeOrderedConstraintPose.cs")},

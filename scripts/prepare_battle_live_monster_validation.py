@@ -17,12 +17,12 @@ def main(refresh=False):
     if refresh:
         if not (project / "ProjectSettings/ProjectVersion.txt").is_file() or (project / "Temp/UnityLockfile").exists():
             raise ValueError("Refresh only an existing stopped owned monster project")
-        for name in ("BattleNativeMonsterAssets", "BattleNativeMonsterRenderer", "ProfessionNativeSkeletonData.BattleMonster",
+        for name in ("BattleNativeMonsterAssets", "BattleNativeMonsterRenderer", "BattleNativeMonsterRenderer.Animator", "ProfessionNativeSkeletonData.BattleMonster",
                      "ProfessionNativeSkeletonData", "ProfessionNativeOrderedConstraintPose"):
             source = ROOT / "unity/Assets/Game/Runtime/Offline/ProfessionUI" / (name + ".cs")
             for path in (source, Path(str(source) + ".meta")):
                 shutil.copy2(path, project / "Assets/Game/Runtime/Offline/ProfessionUI" / path.name)
-        for name in ("OfficialBattleMonsterDataValidation", "OfficialBattleMonsterRuntimeValidation"):
+        for name in ("OfficialBattleMonsterDataValidation", "OfficialBattleMonsterRuntimeValidation", "OfficialBattleMonsterRuntimeValidation.Animator"):
             source = ROOT / "unity/Assets/Game/Editor/ProfessionUI" / (name + ".cs")
             for path in (source, Path(str(source) + ".meta")):
                 shutil.copy2(path, project / "Assets/Editor" / path.name)
@@ -49,7 +49,7 @@ def main(refresh=False):
     copy_modules(project, runtime, modules, selected)
     editor = project / "Assets/Editor"
     editor.mkdir(parents=True)
-    for name in ("OfficialBattleMonsterDataValidation", "OfficialBattleMonsterRuntimeValidation"):
+    for name in ("OfficialBattleMonsterDataValidation", "OfficialBattleMonsterRuntimeValidation", "OfficialBattleMonsterRuntimeValidation.Animator"):
         shutil.copy2(ROOT / "unity/Assets/Game/Editor/ProfessionUI" / (name + ".cs"), editor)
     (editor / "Validation.asmdef").write_text(json.dumps(dict(name="MonsterNativeDataValidation", includePlatforms=["Editor"],
         references=["Zjcs.Offline.ProfessionUI", "Zjcs.Official.ProfessionUI", "Zjcs.Offline.Equipment",
