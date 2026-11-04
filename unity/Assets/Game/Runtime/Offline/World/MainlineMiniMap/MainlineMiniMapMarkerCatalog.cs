@@ -92,6 +92,16 @@ namespace Zjcs.Offline.World.MainlineMiniMap
                 ? originalPath : originalPath + ".asset");
         }
 
+        public GameObject LoadDialogBlurMask()
+        {
+            var prefab = Resources.Load<GameObject>("MainlineMiniMap/BlurMask");
+            if (prefab == null || prefab.GetComponent<Zjcs.Official.World.Map13MiniMapWindows.WindowBlurMask>() == null)
+                throw new InvalidDataException("The complete original world popup blur mask is missing.");
+            return prefab;
+        }
+
+        public Material LoadDialogBlurMaterial() => DialogAssets.Load<Material>("CustomRenderTexture/ScreenBlur");
+
         private NativeMap13AssetCatalog DialogAssets
         {
             get

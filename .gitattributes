@@ -2310,3 +2310,12 @@ assets/reference/battle-animation/player-resource-ownership-source-manifest.json
 scripts/prepare_battle_player_resource_ownership.py text eol=lf
 unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.ResourceRoutes.cs text eol=lf
 unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.ResourceRoutes.cs.meta text eol=lf
+
+# Keep original shared minimap window masks and their provenance byte-stable.
+scripts/prepare_mainline_minimap_window_masks.py text eol=lf
+assets/reference/official-map/mainline-minimap-window-masks-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/World/Map13MiniMapWindows/WindowMask*.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/World/Map13MiniMapWindows/WindowBlurMask.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/World/Map13MiniMapWindows/IBlurManager.cs* text eol=lf
+unity/Assets/Official/World/Shared/NativeMiniMapWindows/** -text
+unity/Assets/Official/World/Shared/NativeMiniMapWindows.meta -text

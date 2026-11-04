@@ -203,11 +203,15 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 
 六图资源目录的隔离图形 Play Mode 已通过：94块原资源板、620个标记点（森之国121、山之国160、泽之国178、龙之国161），全部 Sprite 逻辑字段、网格／图集UV与来源凭据一致；覆盖原资源层顺序、物品／怪物定位过滤、地区映射、公开／私有／未知状态事件、显式选择与引导取消、缓存复用及全部租约释放。已实际查看四张资源标记渲染截图；共用Sprite恢复代码后的六图回归同样通过。测试直接驱动原管理器，不代表正式地图鼠标操作或存档流程。三项来源／绑定检查、全量静态元数据检查（119,305个GUID）、正式工程Unity导入／编译与 `ProjectTools.Validate` 通过。当前没有发布新的Windows Player。
 
-共享标记目录现在按原 `MiniMapWindowAttribute` 地址读取三个完整原生标记弹窗，`LoadDialogPrefab(Type)` 核对原控制器与 `PopupWindow` 类型，`LoadDialogSprite` 复用同一目录的17份原 Sprite；入口为 `Resources/MainlineMiniMap/mark-dialog-assets`。目录只引用既有原 prefab、图集、字体、材质、动画与声音，不修改层级或布局。历史871原生资源和当前884标记配置分别保留来源身份，不认定整版等价，见[共享弹窗资源凭据](../../assets/reference/official-map/mainline-minimap-mark-dialog-catalog-source-manifest.json)。正式弹窗宿主、原遮罩与地图状态 Adapter 的组合仍未接通。
+共享标记目录按原 `MiniMapWindowAttribute` 地址读取三个完整原生标记弹窗，`LoadDialogPrefab(Type)` 核对原控制器与 `PopupWindow` 类型，`LoadDialogSprite` 复用17份原 Sprite；入口为 `Resources/MainlineMiniMap/mark-dialog-assets`。该目录另按实际GUID绑定已独立转换的当前884版原 `ScreenBlur` 材质，保留其原始shader对象凭据；历史871原生弹窗和当前884标记配置、模糊资源分别记录来源，不认定整版等价，见[共享弹窗资源凭据](../../assets/reference/official-map/mainline-minimap-mark-dialog-catalog-source-manifest.json)。
 
-共享弹窗的正式工程图形 Play Mode 已改为通过上述 Resources 目录加载全部原 prefab／Sprite，验证402个层级对象、1,488个组件的托管与对象引用、原中文标签与背景、7份动画、42次窗口状态变化、两次模拟鼠标传送按钮、原音频播放、显示／隐藏事件顺序、暂停恢复、半秒遮罩点击保护、重入／取消及全部背景资源租约释放。已查看三个实际运行弹窗画面；这些画面来自原窗口测试宿主，尚未覆盖正式地图的实体详情或原模糊遮罩画面，本批未发布新 Windows Player。全量静态元数据检查（124,797个GUID）、正式工程导入／编译、`ProjectTools.Validate` 及来源／输出／绑定哈希检查通过。
+`prepare_mainline_minimap_window_masks.py` 从当前884版原 `WorldCanvas/Content/Popup/BlurMask` 恢复全部8个原生对象及7个组件，作为 `Resources/MainlineMiniMap/BlurMask` 供同一目录加载。迁移原 `WindowMaskBase`、`WindowBlurMask`、遮罩效果与原 `IBlurManager`，保留原截图下一帧、重新开窗截图复用、全屏UV、排序、暂停恢复及窗口释放行为；依赖注入改为显式绑定，修复反编译的异步正文和 `Dictionary.Remove` 输出参数。原截图通道源码与已有桌面转换的输入逐字节核对，当前shader另核对当前APK对象哈希，不以历史shader代替。输入、原对象与输出记录见[共享遮罩来源](../../assets/reference/official-map/mainline-minimap-window-masks-source-manifest.json)。正式地图弹窗宿主与实体状态 Adapter 的组合仍未接通。
+
+共享弹窗的正式工程图形 Play Mode 通过 Resources 加载三个原弹窗、原模糊遮罩和全部17份 Sprite，验证403个层级对象、1,495个组件的托管与对象引用、原中文标签与背景、7份动画、42次窗口状态变化、两次模拟鼠标传送按钮及一次原遮罩关闭、原音频播放、显示／隐藏事件顺序、暂停恢复、半秒遮罩点击保护、重入／取消、三次原模糊截图及全部纹理与背景租约释放。已查看三个含原模糊遮罩的实际运行画面；这些来自原窗口测试宿主，尚未覆盖正式地图实体详情，本批未发布新 Windows Player。来源／输出／绑定的92项哈希检查通过。全量静态元数据检查（125,350个GUID）、正式工程导入／编译与 `ProjectTools.Validate` 通过。
 
 ## 自定义实现
+
+公共原 EC 实体的初始化方案已确认：以全新存档创建，将原 `LoGridTransform`、`LoWorldStage`、`LoWorldActiveableEntity` 的配置值写入对应运行时字段，未指定字段保留原实体模板默认值；地区出生继续使用原 `RegionStatusSupported`／`BlockDefaultSpawnInMap` 条件，刷新沿所属功能已确认规则。该方案尚待接入公共实体创建。
 
 鲸背岛数据由公共 `OfficialWorldMapAssetCatalog.LoadMap(16)` 统一读取和校验来源，图形 Play Mode 已检查本图数据身份与未开放入口状态。公共夹具的 `-verify-map15-only` 分支另通过通天塔模拟移动、冷读及每日访问效果冷读；后者比较访问前已有记录及新增的一条精确效果，不依赖被跳过的英雄雕像步骤。整图与资源接线边界见[鲸背岛](../maps/map-16.md)。
 

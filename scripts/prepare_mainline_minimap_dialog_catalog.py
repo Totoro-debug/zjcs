@@ -65,6 +65,16 @@ def build():
         inputs += [record(path, raw), dict(record(metadata, metadata.read_bytes().replace(b"\r\n", b"\n")), hashLineEndings="LF")]
     if len(bindings) != 20 or sum(key.endswith(".prefab") for key, _, _ in bindings) != 3:
         raise ValueError("Expected all three original marker dialogs and 17 native sprites")
+    blur_source = ROOT / "assets/reference/partner-friendship-window-source-manifest.json"
+    blur = json.loads(blur_source.read_bytes())
+    if blur["manifest"] != "884_156692":
+        raise ValueError("The separately restored current original blur shader is required")
+    blur_root = ROOT / "unity/Assets/Official/Partners/UI/FriendshipWindow"
+    for name in ("PartnerScreenBlur.mat", "PartnerScreenBlur.mat.meta", "PartnerScreenBlur.shader", "PartnerScreenBlur.shader.meta"):
+        path = blur_root / name
+        inputs.append(record(path, verified_native(path, blur["outputs"][name])))
+    material_guid = re.search(r"(?m)^guid: ([a-f0-9]{32})$", (blur_root / "PartnerScreenBlur.mat.meta").read_text("utf8"))[1]
+    bindings.append(("CustomRenderTexture/ScreenBlur", 2100000, material_guid))
     script = ROOT / "unity/Assets/Game/Runtime/Offline/World/NativeMap13/NativeMap13AssetCatalog.cs"
     script_guid = re.search(r"(?m)^guid: ([a-f0-9]{32})$", Path(str(script) + ".meta").read_text(encoding="utf8"))[1]
     lines = ["%YAML 1.1", "%TAG !u! tag:unity3d.com,2011:", "--- !u!114 &11400000", "MonoBehaviour:",
@@ -90,11 +100,12 @@ def build():
             ROOT / "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapMarkerCatalog.cs",
             ROOT / "unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapMarkDialogsAcceptance.cs"]
     result = {"format": 1, "native_manifest": source["manifest"], "native_source_receipt": dict(record(SOURCE, SOURCE.read_bytes().replace(b"\r\n", b"\n")), hashLineEndings="LF"),
-              "operation": "Bind complete already restored original marker dialog prefabs and sprites by their original UI addresses. No prefab, texture, animation or layout payload is rewritten. Native 871 provenance remains separate from selected 884 marker configuration.",
+              "operation": "Bind complete already restored original marker dialog prefabs and sprites by their original UI addresses, plus the separately restored current 884 ScreenBlur material by its actual GUID. No prefab, texture, shader, material, animation or layout payload is rewritten. Native 871 provenance remains separate from selected 884 marker configuration and blur conversion.",
               "inputs": inputs + [dict(record(path, path.read_bytes().replace(b"\r\n", b"\n")), hashLineEndings="LF") for path in code],
-              "output": dict(record(DEST), prefabCount=3, spriteCount=17, resource="MainlineMiniMap/mark-dialog-assets"),
+              "blur_source_receipt": dict(record(blur_source, blur_source.read_bytes().replace(b"\r\n", b"\n")), hashLineEndings="LF"),
+              "output": dict(record(DEST), prefabCount=3, spriteCount=17, materialCount=1, resource="MainlineMiniMap/mark-dialog-assets"),
               "metadata": record(metadata), "tool": record(Path(__file__)),
-              "limitations": ["This resource catalog does not install a popup host, mask or formal minimap state adapter."]}
+              "limitations": ["This resource catalog does not install the formal popup host or minimap state adapter."]}
     RECEIPT.write_bytes((json.dumps(result, ensure_ascii=False, indent=2) + "\n").encode())
     print("Bound original minimap marker dialogs:", len(bindings), "native assets")
 

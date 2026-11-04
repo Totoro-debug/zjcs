@@ -6,7 +6,7 @@
     "sha256": "4eb6966b4c5c5fe1227e2f1f1c4dea2bb0be2b4d75d7f7fc978f40362fd74a84",
     "hashLineEndings": "LF"
   },
-  "operation": "Bind complete already restored original marker dialog prefabs and sprites by their original UI addresses. No prefab, texture, animation or layout payload is rewritten. Native 871 provenance remains separate from selected 884 marker configuration.",
+  "operation": "Bind complete already restored original marker dialog prefabs and sprites by their original UI addresses, plus the separately restored current 884 ScreenBlur material by its actual GUID. No prefab, texture, shader, material, animation or layout payload is rewritten. Native 871 provenance remains separate from selected 884 marker configuration and blur conversion.",
   "inputs": [
     {
       "path": "unity/Assets/Official/World/Map/13/NativeMiniMapMarkDialogs/Prefabs/UI/Map/MiniMap/MiniMapMarkDialog/MiniMapDisplayMarkDialog.prefab",
@@ -189,6 +189,22 @@
       "hashLineEndings": "LF"
     },
     {
+      "path": "unity/Assets/Official/Partners/UI/FriendshipWindow/PartnerScreenBlur.mat",
+      "sha256": "c359ad77b38628452b823584e085e9cbd44815af4b98e170ba1f0279da59e34b"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/FriendshipWindow/PartnerScreenBlur.mat.meta",
+      "sha256": "ca59d993fa74325eafee82cc573d843e03d2d50590f7572602b9a9f5425adbc8"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/FriendshipWindow/PartnerScreenBlur.shader",
+      "sha256": "06bc329111b8645e2b85b0f904330bcef0c429d3efbc99746123dc00a8d298a5"
+    },
+    {
+      "path": "unity/Assets/Official/Partners/UI/FriendshipWindow/PartnerScreenBlur.shader.meta",
+      "sha256": "5f2f2d93b564fb154b8adaa0cd0131bf3641d594fc9d9b6e77d65dfe97b901b2"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13/NativeMap13AssetCatalog.cs",
       "sha256": "ac4beead9730aaf0092d580f11cd2e6bfe5eb0b0d818880556332839b53e1698",
       "hashLineEndings": "LF"
@@ -200,20 +216,26 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapMarkerCatalog.cs",
-      "sha256": "f85af330664ed1fc092aeddc143298416ef96a4d83eb3dabedb77a380dc8a6ac",
+      "sha256": "7ed7c7e9f452c924f11971f710677380c9af2be4d5f36375c5a2f22c73ebbc8d",
       "hashLineEndings": "LF"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapMarkDialogsAcceptance.cs",
-      "sha256": "f4748190b2b4fa4f8f9e83fe8cb384821f1929ddb5bdcedcab381da5f783fb12",
+      "sha256": "8da1048f6120c1532c9491a6cc4c33a42662df5bf40a5dcf9bfb59b052df5856",
       "hashLineEndings": "LF"
     }
   ],
+  "blur_source_receipt": {
+    "path": "assets/reference/partner-friendship-window-source-manifest.json",
+    "sha256": "163815d9b38da6528271cbeb4c61bb39944ca605c5f912420ba00798567128b7",
+    "hashLineEndings": "LF"
+  },
   "output": {
     "path": "unity/Assets/Game/Resources/MainlineMiniMap/mark-dialog-assets.asset",
-    "sha256": "8dfcfbd8344ccbf3a58f21402fa2f1a6f8283d6a6e7a315eab073a192545ba3b",
+    "sha256": "dd46500f9700c526f539c742e6f32839c8ea38315fe00977ef4c8a36b3f49484",
     "prefabCount": 3,
     "spriteCount": 17,
+    "materialCount": 1,
     "resource": "MainlineMiniMap/mark-dialog-assets"
   },
   "metadata": {
@@ -222,9 +244,9 @@
   },
   "tool": {
     "path": "scripts/prepare_mainline_minimap_dialog_catalog.py",
-    "sha256": "6d26aed7a39ecadd4dbe7b6c614b35a7cf15126f027e1808f80b74edf66d1751"
+    "sha256": "828e227f136b6a99c88759655e48173125b86a9e66c19dc5e9c08656682cc1e6"
   },
   "limitations": [
-    "This resource catalog does not install a popup host, mask or formal minimap state adapter."
+    "This resource catalog does not install the formal popup host or minimap state adapter."
   ]
 }
