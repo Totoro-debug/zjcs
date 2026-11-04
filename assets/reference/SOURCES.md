@@ -561,3 +561,5 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 选定884伙伴阴影：`scripts/prepare_partner_native_shadows.py` 复用公共阴影转换器，从34份原伙伴实体提取完整阴影子树、共享 Sprite 和纹理，核对原生导出及匹配的 Windows 转换缓存，显式绑定为 `Combat/NativePartnerAssets/partner-shadow-bindings` 与 `RoleShadows/`；输入输出 SHA256 及处理方式见[伙伴阴影来源](partner-native-shadows-source-manifest.json)。未生成完整素材快照；功能范围见[伙伴助战](../../docs/features/npc-assistance.md)。
 
 公共小地图实体查询输入见 [mainline-minimap-world-data-source-manifest.json](official-map/mainline-minimap-world-data-source-manifest.json)：所选 `884_156692` 的 `map_area`、`map_logic_entity_tag` Luban表、`MapTransportEntityInfoPack.g.bytes` MessagePack及六图 `mapinfowrap`，提取为 `unity/Assets/Game/Resources/MainlineMiniMap/current-entity-data.json`。来源清单记录原对象／载荷、官方解析器／formatter、当前输入与输出哈希；逐项核对安装地图实体ID／类／位置／地区／区域及传送目标，历史地图定义仍保留各自版本。处理方式为 `scripts/prepare_mainline_minimap_world_data.py`，运行绑定见所属[主线地图公共模块](../../docs/features/mainline-map-modules.md)。
+
+公共小地图实体索引的事件顺序核对所选884的 `Common.EcContainer` 三个原容器操作，原源文件及本地适配／验证代码哈希记入[共用地图查询来源](official-map/mainline-minimap-world-data-source-manifest.json)。生成的地区／实体元数据固定 UTF-8 LF，GUID与官方载荷保持原值；完整根、HUD及窗口凭据仅在核对原输入和资源输出未变后刷新接线哈希。

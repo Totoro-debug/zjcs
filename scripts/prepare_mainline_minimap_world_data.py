@@ -111,19 +111,20 @@ def build():
         transport_meta = Path(str(transport_destination) + '.meta')
         if not transport_meta.is_file():
             transport_meta.write_text('fileFormatVersion: 2\nguid: '
-                + hashlib.md5(b'zjcs:mainline-minimap-entity-data:884').hexdigest() + '\n', 'utf8')
+                + hashlib.md5(b'zjcs:mainline-minimap-entity-data:884').hexdigest() + '\n', 'utf8', newline='\n')
         destination = ROOT / 'unity/Assets/Game/Resources/MainlineMiniMap/current-region-displays.json'
         destination.write_text(json.dumps(dict(Manifest=apk.version, Displays=selected_displays),
             ensure_ascii=False, indent=2) + '\n', 'utf8', newline='\n')
         meta = Path(str(destination) + '.meta')
         if not meta.is_file():
-            meta.write_text('fileFormatVersion: 2\nguid: ' + hashlib.md5(b'zjcs:mainline-minimap-region-displays:884').hexdigest() + '\n', 'utf8')
+            meta.write_text('fileFormatVersion: 2\nguid: ' + hashlib.md5(b'zjcs:mainline-minimap-region-displays:884').hexdigest() + '\n', 'utf8', newline='\n')
         sources = [Path(__file__), code_manifest, CODE / 'global-metadata.dat',
             ROOT / 'scripts/official_map_codec.py', ROOT / 'scripts/official_tables.py',
             CODE / 'common-source/Common/MinimapRegionDisplayInfoParser.cs',
             CODE / 'common-source/Common/MapRegionInfoParser.cs', CODE / 'common-source/Common/GridMoverComponentInfo.cs',
             CODE / 'common-source/Common/MapRootEntityLiteSingleInfo.cs',
             CODE / 'common-source/Common/MapRegionEntityInfoManager.cs',
+            CODE / 'common-source/Common/EcContainer.cs',
             CODE / 'common-source/Common/MapLogicEntityTagInfoParser.cs', CODE / 'common-source/Common/MapEntityExtra.cs',
             CODE / 'common-source/Common/MapTransportEntityInfoPackParser.cs',
             CODE / 'common-source/Common/MapTransportEntityTargetInfo.cs',
@@ -136,6 +137,8 @@ def build():
             bindings=bindings, transport_targets=len(transports),
             outputs=[record(destination), record(meta), record(transport_destination), record(transport_meta)],
             integration=[record(ROOT / path) for path in (
+                'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapEntityIndex.cs',
+                'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapEntityIndex.cs.meta',
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapWorldData.cs',
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapWorldData.cs.meta',
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapWorldQueries.cs',
@@ -145,6 +148,8 @@ def build():
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapLabels.cs',
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineNativeMiniMapRoot.cs',
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/Zjcs.Offline.World.MainlineMiniMap.asmdef',
+                'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.EntityIndex.cs',
+                'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.EntityIndex.cs.meta',
                 'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.WorldData.cs',
                 'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.WorldData.cs.meta',
                 'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.cs',

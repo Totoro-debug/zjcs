@@ -97,6 +97,7 @@ namespace Zjcs.Editor.Map13MiniMap
             Require(checkedCells == 258400 && checkedRegions == 441 && checkedPlacements == 11148,
                 "Complete actual six-map world query scope");
             Debug.Log("Shared original minimap world data passed: six maps, 258400 cells, 441 regions, 11148 placements, tags and original transports; independent instances.");
+            VerifyEntityIndex(data, definitions);
             return data;
         }
 

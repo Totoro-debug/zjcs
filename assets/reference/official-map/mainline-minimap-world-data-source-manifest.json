@@ -264,7 +264,7 @@
   "sources": [
     {
       "path": "scripts/prepare_mainline_minimap_world_data.py",
-      "sha256": "2c6417f23279e89a7cc4b77608a7d0f61567ee0cc8e4116a2439b136f7700441"
+      "sha256": "e4ca0f164c5143718c0aa88e682c6745636e1136ef8009216bd437ddfb014030"
     },
     {
       "path": ".tools/source-packages/current/884_156692/code-manifest.json",
@@ -301,6 +301,10 @@
     {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapRegionEntityInfoManager.cs",
       "sha256": "cf1f3269b19712c36b03cc52bc49c74404db7a7e14d049b44d23183e827ce297"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EcContainer.cs",
+      "sha256": "741ffc352286627a3c847c1a2f5cd56c0a6beb48fc770d31b62ecb1fe6f68a1e"
     },
     {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapLogicEntityTagInfoParser.cs",
@@ -619,10 +623,18 @@
     },
     {
       "path": "unity/Assets/Game/Resources/MainlineMiniMap/current-entity-data.json.meta",
-      "sha256": "1f074ab446f3ca9105545200c6a3ccd19db13080a22583f2a032771c650090c8"
+      "sha256": "61163b13993c983e6439b8e41b8dbdd57c88a3f4013fc56c63fcf5757e5516fb"
     }
   ],
   "integration": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapEntityIndex.cs",
+      "sha256": "97f57a2711c1a5740ccfa10a59f9b35b50f6d9d3278ef5d570ff06b4436b6617"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapEntityIndex.cs.meta",
+      "sha256": "17044d36e6c5ec5bfca76ab46c7a7c8c7dec103e6357f1b018f07e2948770cde"
+    },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapWorldData.cs",
       "sha256": "f6d3233fa60e88373596721b98b3402589d84cc6d7217dcb32ac30066f895389"
@@ -657,11 +669,19 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/Zjcs.Offline.World.MainlineMiniMap.asmdef",
-      "sha256": "81ab9239c26b135146fa24a7f067e4dd1e5df94cdd3ae5c336d56403ad807f18"
+      "sha256": "306b66bfb9aa895e310476404d614cb74d01bc6c1ec162e3bae4e6f6698ee5c8"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.EntityIndex.cs",
+      "sha256": "e0c82cb42443f28c4be3be781d9633879cf5a021946366e0b53a85286d8ddee3"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.EntityIndex.cs.meta",
+      "sha256": "87ec48c91096678029835ee094cfb1c661cfccfcf5a1516d19c773d1e025ef8d"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.WorldData.cs",
-      "sha256": "d5080ceb0f7fa2570aeef6545c581c6faf3e7f59499cc5d0ddd8454d265d1598"
+      "sha256": "248ae4cf1e92fab305df766ce066d9e0121961d3831d5c9848907435b04b72bf"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.WorldData.cs.meta",
