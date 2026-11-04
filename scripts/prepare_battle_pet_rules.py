@@ -47,7 +47,7 @@ def build():
         'pet_evolution': ('ClassId', 'EvolutionPhase', 'EntitySkill', 'FightEntityClassId', 'EntityActiveSkills', 'EntityPassiveSkills', 'DeactiveEntityPassiveSkills', 'SupportSkills'),
         'pet_ability_prop': ('ClassId', 'NodeId', 'NodeLevel', 'PropId', 'PropScaleFactorId'),
         'pet_ability_prop_scale_factor': ('ClassId', 'ScaleFactors'),
-        'skill': ('ClassId', 'InitEnergy', 'TriggerNeedEnergy'),
+        'skill': ('ClassId', 'EcEntityId', 'InitEnergy', 'TriggerNeedEnergy', 'PassiveRankPropId', 'PassiveGroupLevelPropId', 'PassiveRankFactorId', 'PassivePropFactors', 'PassiveStatusIdList'),
         'item': ('ClassId', 'Quality'),
         'skill_rank': ('Rank', 'Quality')}
     for table, keys in fields.items():
@@ -82,6 +82,7 @@ def build():
     receipt = ROOT / 'assets/reference/battle-rules/pet-assembly-source-manifest.json'
     receipt.write_bytes((json.dumps(dict(manifest='854_156383', generator=identity(Path(__file__).resolve()),
         inputs=[identity(rules_path), identity(source_path), identity(raw_path), identity(character_source)],
+        original_code=identity(ROOT / '.tools/source-packages/official-code/common-source/Common/FightRolePetSkillItem.cs'),
         active_comparison=dict(manifest=apk.version, tables=comparisons,
             properties=dict(record=record, source=origin, payload_sha256=hashlib.sha256(active_raw).hexdigest(), groups=sorted(wanted))),
         outputs=[identity(output), identity(output.with_name('pet-battle-rules-source-manifest.json'))],

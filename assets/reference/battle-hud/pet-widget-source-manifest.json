@@ -2,7 +2,7 @@
   "manifest": "854_156383",
   "generator": {
     "path": "scripts/prepare_battle_pet_hud.py",
-    "sha256": "0fddca7ffb2a772cda7ea047311709e653d75931fce127ceec2359608766297b"
+    "sha256": "d383beb9de5f796f789e7d34915d7071024dbf8f47a3178db196b4f59395f1d9"
   },
   "installed_panels": {
     "path": "unity/Assets/Official/Combat/HUD/panels.json",
@@ -2334,6 +2334,20 @@
       }
     ]
   },
+  "discharge_clip": {
+    "source": {
+      "bundle": "defaultpackage_share_2c5f0e5af1aca8075e1f6b05c99883ef.bundle",
+      "bundle_hash": "c3129108100da9b590d6530128a58586",
+      "path_id": "-6970601554146919297",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/c3129108100da9b590d6530128a58586.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 6733,
+      "bundle_sha256": "7c4961517fd0d7e602eee9fad208b37014f6750a0ae337ed71fc567cdd3006d1"
+    },
+    "object_sha256": "1203b12186c005286b9f43a400c904972d899f87d7ab8c750b04f48ec237bfc3",
+    "operation": "Compare every installed scalar curve to the original; restore quaternion channels as a native legacy clip and omitted scale Z on the existing scalar clock."
+  },
   "application_sources": [
     {
       "path": ".tools/source-packages/official-code/client-source/GamePetSkillIcon.cs",
@@ -2342,6 +2356,14 @@
     {
       "path": ".tools/source-packages/current/884_156692/official-code/client-source/GamePetSkillIcon.cs",
       "sha256": "32dfd13be817a1ae1a856f51baf563f04ca96f188390ba00b21cc5d5d4832f23"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/FightSkillListDataEntityProvider.cs",
+      "sha256": "9ca060dae7f3558d9fa93b949381939c0b4add9dcfee5e54682457a7223d904e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/FightSkillListDataProvider.cs",
+      "sha256": "5e857be2a0a3a3340f122eef921c4f5ad945c129914c5f51ff5bb42c4bf103a7"
     },
     {
       "path": ".tools/source-packages/official-code/common-source/Common/FormulaHandler.cs",
@@ -2358,12 +2380,20 @@
   ],
   "runtime_sources": [
     {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudAnimationPlayer.cs",
+      "sha256": "598b98a4f257b038eec13c38a77b3626bc291dfe18f53234558a902ac6da91ad"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs",
+      "sha256": "42af53773a22949a625bcc68868b7583918881f00f51e79f95a420233719706c"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePetHudView.cs",
-      "sha256": "26d0c52152d041c599362da14efb1a1ced4592d9d8a9ad252c5bc7a8a44c4157"
+      "sha256": "2216c908004f596d2d061f9e3954879524c25e24264f424427bb0178e285f7d0"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.Pet.cs",
-      "sha256": "b0da1649db9f75e1823871d4b70be756b3c24e02e349c9f5c88d60318a6dd50f"
+      "sha256": "0dc4107c9c55e8875be89783691307765986b332b21e44bfad31f4aef89e0086"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillQualityCatalog.cs",
@@ -2371,21 +2401,21 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs",
-      "sha256": "6ff8b67588babc4692510b02c436e66ab541c71ec967cc073696b4bbebd424a5"
+      "sha256": "83b51a2811ddf7678e2695dd19a3ce13b821eb285bb464429a49a3e47b1f4685"
     },
     {
       "path": "unity/Assets/Game/Editor/OfficialBattlePetHudAcceptance.cs",
-      "sha256": "67a30e764105aaa697cc893c2ecfe459ea800a3306c9e469f816f7742fcdef46"
+      "sha256": "9eef57b98e57fb56b7ae39d83458ccfc5143486c7e4946b2565d899b5794b511"
     }
   ],
   "outputs": [
     {
       "path": "unity/Assets/Game/Resources/Combat/battle-pet-hud.json",
-      "sha256": "b7595009646335746dc43080b8cddacbf8f8e575edae8d9651e05d785b61e104"
+      "sha256": "9c2cac0e68b8c4b80daf2b6b29a3bf8db239f9a20b3f674dc2e6b8dd70404b8a"
     },
     {
       "path": "unity/Assets/Game/Resources/Combat/battle-pet-hud-source-manifest.json",
-      "sha256": "96baa840b1700d67a3678e85d2ec28919d133aa0ce686a00bf07d47afb77db99"
+      "sha256": "516462b39be8aee49d98dc99314cf30fa0633a2618ea0d756cdd7b36455890e9"
     }
   ],
   "operation": "Restore original GamePetSkillIcon field references without changing the HUD hierarchy or layout."

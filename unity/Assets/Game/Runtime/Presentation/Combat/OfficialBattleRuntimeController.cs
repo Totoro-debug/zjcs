@@ -196,6 +196,7 @@ namespace Zjcs.Presentation.Combat
                             id => nextExecutor.State.Units.Find(unit => unit.Id == id));
                         entityViews.SkillStarted += nextHud.OnSkillStarted;
                         entityViews.SkillEnded += nextHud.OnSkillEnded;
+                        entityViews.CastStarted += nextHud.OnPetSkillStarted;
                         nextSkillGraphPlayback = new OfficialBattleSkillGraphPlayback(graphCatalog, nativeScope, entityViews);
                     }
                     catch { nativeScope.Dispose(); throw; }
@@ -212,7 +213,7 @@ namespace Zjcs.Presentation.Combat
                 if (sessionOptions.ShowMainPanelDelay <= 0)
                 {
                     nextHudRoot = nextHud.Mount(hudParent, hostPresentation?.Camera);
-                    RefreshPetFunction(nextHud);
+                    RefreshPetFunction(nextHud, nextExecutor.State);
                     nextHud.Refresh(checkpoint);
                     nextHud.RefreshSkillSlots(checkpoint, skillIcon);
                     nextHud.RefreshTimeline(checkpoint, timelinePortrait, timelineFactionIcon, false);
@@ -669,17 +670,17 @@ namespace Zjcs.Presentation.Combat
             hudView?.RefreshPrepareCountdown(remaining);
         }
 
-        private void RefreshPetFunction(OfficialBattleHudView view)
+        private void RefreshPetFunction(OfficialBattleHudView view, FightBattleCheckpoint checkpoint)
         {
             if (statueProgress?.Save?.Player == null) return;
-            view.RefreshPet(Checkpoint, statueProgress.Save.Player);
+            view.RefreshPet(checkpoint, statueProgress.Save.Player);
         }
 
         private void MountDelayedHud()
         {
             if (executor == null || hudView == null || pendingHudParent == null || hudRoot != null) return;
             hudRoot = hudView.Mount(pendingHudParent, hostPresentation?.Camera);
-            RefreshPetFunction(hudView);
+            RefreshPetFunction(hudView, Checkpoint);
             hudView.Refresh(Checkpoint);
             hudView.RefreshSkillSlots(Checkpoint, skillIconResolver);
             hudView.RefreshTimeline(Checkpoint, timelinePortraitResolver, timelineFactionResolver, false);

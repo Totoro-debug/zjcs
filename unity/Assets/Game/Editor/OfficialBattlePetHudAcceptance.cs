@@ -68,6 +68,7 @@ namespace Zjcs.Editor.Combat
                 view = new OfficialBattleHudView(OfficialBattleHudCatalog.LoadDefault());
                 view.Mount(canvas.transform);
                 Verify(view);
+                VerifyDischarge(view);
             }
             catch (Exception error) { failure = error; Debug.LogException(error); }
             if (failure == null)
@@ -99,19 +100,30 @@ namespace Zjcs.Editor.Combat
             view.RefreshPet(checkpoint, player);
             Require(view.Find(Pet + "/BgNone").activeSelf, "An owned but unequipped pet must show the original empty state.");
             player.Skills.Plans[0].PetIndex = 1;
-            int portraits = 0, entities = 0;
+            int portraits = 0, entities = 0, supports = 0;
             foreach (var evolution in data.evolutions.Where(value => value.classId != 1619))
             {
                 pet.ClassId = evolution.classId; pet.EvolutionPhase = evolution.phase;
                 var owner = Owner(combat);
                 bool configured = OfficialBattlePetEnergyAssembler.TryConfigure(owner, player, catalog, combat, combatAssets.LoadSkillItems());
                 checkpoint.Units.Clear(); checkpoint.Units.Add(owner);
-                if (configured)
+                if (configured && owner.PetEnergy.Enabled)
                 {
                     FightBattlePetEnergyRuntime.Initialize(owner);
                     Require(owner.PetEnergy.NeedEnergy > 0 && owner.PetEnergy.EntityProperties.Count > 0,
                         "Pet entity properties/energy were not assembled for " + pet.ClassId);
                     entities++;
+                }
+                else if (configured)
+                {
+                    Require(evolution.phase == 1 && owner.PetEnergy.SupportSkillsApplied
+                        && owner.Statuses.Count > 0 && !owner.PetEnergy.Enabled,
+                        "Childhood passive support must not create an energy transfer entity.");
+                    string before = FightBattleCheckpointSerializer.Save(checkpoint);
+                    Require(OfficialBattlePetEnergyAssembler.TryConfigure(owner, player, catalog, combat, combatAssets.LoadSkillItems())
+                        && before == FightBattleCheckpointSerializer.Save(checkpoint),
+                        "Repeated pet support assembly must not duplicate properties/statuses.");
+                    supports++;
                 }
                 view.RefreshPet(checkpoint, player);
                 var icon = view.Find(Pet + "/Content/Bg/Anim/Mask/PetIcon").GetComponent<Image>();
@@ -123,7 +135,7 @@ namespace Zjcs.Editor.Combat
                     "Equipped pet visibility differs from the original widget.");
                 portraits++;
             }
-            Require(portraits == 39 && entities == 18 && !catalog.Rows("pet_evolution").Any(),
+            Require(portraits == 39 && entities == 18 && supports == 9 && !catalog.Rows("pet_evolution").Any(),
                 "Pet source coverage or original catalog isolation differs.");
             pet.ClassId = 1600; pet.EvolutionPhase = 2;
             var main = Owner(combat);
@@ -155,6 +167,70 @@ namespace Zjcs.Editor.Combat
             view.RefreshPet(checkpoint, player);
             Debug.Log("Pet HUD verified: 39 original evolution portraits; " + entities
                 + " configured entity phases; untouched base catalog; original empty/equipped states; actual initialize/recover/consume energy; 0/64.9/120 percent; saved rank quality.");
+        }
+
+        private static void VerifyDischarge(OfficialBattleHudView view)
+        {
+            var combat = OfficialCombatAssetCatalog.LoadDefault().Load();
+            var player = new OfflinePlayerProgress();
+            player.Pets.Pets.Add(new OfflinePetInstance { Index = 1, ClassId = 1600, EvolutionPhase = 2 });
+            player.Skills.Plans[0].PetIndex = 1;
+            var checkpoint = new FightBattleCheckpoint();
+            var owner = Owner(combat); var other = Owner(combat); other.Id = 2;
+            checkpoint.Units.Add(owner); checkpoint.Units.Add(other);
+            view.RefreshPet(checkpoint, player);
+            var animation = view.Find("/FightMainPanel").GetComponent<OfficialBattleHudAnimationPlayer>();
+            animation.enabled = false;
+            var support = view.Find(Pet + "/SupportSkillRoot");
+            var group = support.GetComponent<CanvasGroup>() ?? support.AddComponent<CanvasGroup>();
+            group.alpha = .7f;
+            var world = new GameObject("Pet support native event probe");
+            var actor = new GameObject("Owner"); actor.transform.SetParent(world.transform);
+            var victim = new GameObject("Other"); victim.transform.SetParent(world.transform);
+            try
+            {
+                var mapper = new OfficialBattleGridMapper(world.transform, new FightBattleGrid { Width = 8, Height = 8 });
+                using var scope = new Zjcs.Offline.BattleNativePlayables.OfflineBattleNativePlayableScope(world.transform, null);
+                using var entities = new OfficialBattleSkillEntityPlayback(world.transform, mapper, scope,
+                    id => checkpoint.Units.SingleOrDefault(unit => unit.Id == id));
+                entities.CastStarted += view.OnPetSkillStarted;
+                void Start(int actorId, int itemId) => entities.Start(new FightBattleSkillCastEvent {
+                    ActorId = actorId, Slot = -1, SkillEntityId = 50000, SkillItemId = itemId,
+                    Presentation = new FightBattleSkillCastPresentation { TargetId = actorId == 1 ? 2 : 1,
+                        TargetX = 1, FacingIndex = 3, SkillTargetType = 1, Duration = .5f }
+                }, null, actorId == 1 ? actor.transform : victim.transform,
+                    actorId == 1 ? victim.transform : actor.transform);
+                // The native entity/agent path is real; this notification fixture
+                // intentionally omits the world's full skill-effect graph.
+                Start(2, 16000); Start(1, 10032);
+                Require(Mathf.Abs(group.alpha - .7f) < .00001f, "Foreign/unrelated skills animated the pet HUD.");
+                Start(1, 16000);
+                Require(group.alpha == 0 && Mathf.Abs(support.transform.localScale.x - .31054f) < .00001f,
+                    "Native negative-slot childhood support did not start the original discharge.");
+                var nativeRotation = view.Find(Pet).GetComponent<Animation>();
+                var originalStart = new Quaternion(0f, 0f, -.373231709f, .92773819f);
+                Require(nativeRotation && Mathf.Abs(Quaternion.Dot(support.transform.localRotation, originalStart)) > .999999f,
+                    "Original native quaternion start was lost.");
+                nativeRotation["FightMainPanel_GamePetSkillIconItem_Discharge"].time = .2f;
+                nativeRotation.Sample();
+                Require(Mathf.Abs(Quaternion.Dot(support.transform.localRotation, originalStart)) < .99f,
+                    "Original quaternion animation did not advance.");
+                animation.Tick(.2f);
+                Require(group.alpha == 1 && Mathf.Abs(support.transform.localScale.x - 1f) < .00001f,
+                    "Original pet discharge curves were not sampled.");
+                Start(1, 16300);
+                Require(group.alpha == 0 && Mathf.Abs(support.transform.localScale.x - .31054f) < .00001f,
+                    "Current-evolution support did not restart the original animation from zero.");
+                animation.Tick(1.25f);
+                Require(group.alpha == 0 && Mathf.Abs(support.transform.localScale.x - .36368f) < .00001f,
+                    "Original discharge ending differs.");
+                player.Skills.Plans[0].PetIndex = 0; view.RefreshPet(checkpoint, player);
+                group.alpha = .7f; Start(1, 16000);
+                Require(Mathf.Abs(group.alpha - .7f) < .00001f, "Unequipped pet animated a stale support item.");
+                player.Skills.Plans[0].PetIndex = 1; view.RefreshPet(checkpoint, player);
+                Debug.Log("Pet support native start/foreign owner/item filtering/negative slot/original discharge/restart/end checks passed.");
+            }
+            finally { animation.enabled = true; UnityEngine.Object.Destroy(world); }
         }
 
         private static FightBattleUnitState Owner(FightOfficialCombatCatalog combat)

@@ -2,7 +2,7 @@
   "manifest": "854_156383",
   "generator": {
     "path": "scripts/prepare_battle_pet_rules.py",
-    "sha256": "8d7cfaacfda292eb7af0cd677ed3eba9c4367eafd33b2e89addcea1d07b0b0e3"
+    "sha256": "a162ff6f9fc59e7d9773bb8df7507920f54c0444e798e67749344ca00146aee1"
   },
   "inputs": [
     {
@@ -22,6 +22,10 @@
       "sha256": "a7c0d59bb02abf22ce608c464486055946007b121ab47c993d5d2905c95e117e"
     }
   ],
+  "original_code": {
+    "path": ".tools/source-packages/official-code/common-source/Common/FightRolePetSkillItem.cs",
+    "sha256": "e61df37eaf5715e99cb1156db4bf69b760e9a29c2ca4f39558a3a0caa55ae03a"
+  },
   "active_comparison": {
     "manifest": "884_156692",
     "tables": [
@@ -228,7 +232,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePetEnergyAssembler.cs",
-      "sha256": "d0b1f955329fbe7805ceb6dbe047f0187e1d9fcb25c6c7620754016baa6af241"
+      "sha256": "df5a8a8eac3d6ce1bf6601377873527e7e3993269a58f659d7ff99c78d064156"
     }
   ],
   "operation": "Copy the existing battle pet tables and decode original pet entity/ability property groups; no formula changes."

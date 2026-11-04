@@ -218,7 +218,32 @@ def build():
                            sha256=hashlib.sha256(target.get_raw_data()).hexdigest()))
     output = ROOT / "unity/Assets/Game/Resources/Combat/battle-pet-hud.json"
     config, visual_proof = visuals(apk, obj, component)
-    write(output, dict(manifest=source["manifest"], references=references, **config))
+    animation = obj.assets_file.objects[component["mTriggerSupportSkillAnim"]["m_PathID"]].read()
+    clip = animation.m_Animations[0].deref()
+    original_clip = clip.read_typetree()
+    if original_clip["m_Name"] != "FightMainPanel_GamePetSkillIconItem_Discharge" or not original_clip["m_Legacy"]:
+        raise ValueError("Unexpected original pet discharge clip")
+    rotations = [dict(path=row["path"], keys=row["curve"]["m_Curve"]) for row in original_clip["m_RotationCurves"]]
+    installed = [value for node in trees["nodes"] for value in node.get("animations", [])
+                 if value["name"] == original_clip["m_Name"] and value["owner"] == references["mTriggerSupportSkillAnim"]]
+    if len(installed) != 1:
+        raise ValueError("Original discharge scalar animation is not uniquely installed")
+    scalar = {}
+    owner_path = references["mTriggerSupportSkillAnim"]
+    for row in original_clip["m_FloatCurves"]:
+        scalar[(owner_path + "/" + row["path"], row["attribute"])] = row["curve"]["m_Curve"]
+    for row in original_clip["m_ScaleCurves"]:
+        for axis in "xyz":
+            scalar[(owner_path + "/" + row["path"], "scale." + axis)] = [dict(time=k["time"], value=k["value"][axis],
+                inSlope=k["inSlope"][axis], outSlope=k["outSlope"][axis], inWeight=k["inWeight"][axis], outWeight=k["outWeight"][axis], weightedMode=k["weightedMode"]) for k in row["curve"]["m_Curve"]]
+    for track in installed[0]["tracks"]:
+        keys = scalar.pop((track["path"], track["property"]))
+        expected = [dict(time=k["time"], value=k["value"], in_tangent=k["inSlope"], out_tangent=k["outSlope"]) for k in keys]
+        if track["keys"] != expected or any(k["weightedMode"] != 0 for k in keys):
+            raise ValueError("Installed pet discharge scalar curve differs from the original")
+    extra_curves = [dict(path=path[len(owner_path) + 1:], property=prop.replace("scale.", "localScale."), keys=keys)
+                    for (path, prop), keys in scalar.items()]
+    write(output, dict(manifest=source["manifest"], references=references, rotations=rotations, extraCurves=extra_curves, **config))
     write(output.with_name("battle-pet-hud-source-manifest.json"),
           dict(manifest=source["manifest"], output_sha256=identity(output)["sha256"]))
     code = ROOT / ".tools/source-packages/official-code/client-source/GamePetSkillIcon.cs"
@@ -229,11 +254,18 @@ def build():
         installed_panels=identity(panels), installed_runtime=identity(runtime), original_bundle=source,
         apk_checked=dict(path=str(apk.source.apk.relative_to(ROOT)), packaged=packaged in apk.available),
         original_component=dict(path_id=str(obj.path_id), sha256=hashlib.sha256(obj.get_raw_data()).hexdigest()),
-        references=inputs, visuals=visual_proof, application_sources=[identity(code), identity(current),
+        references=inputs, visuals=visual_proof,
+        discharge_clip=dict(source=apk.provenance(clip), object_sha256=hashlib.sha256(clip.get_raw_data()).hexdigest(),
+            operation="Compare every installed scalar curve to the original; restore quaternion channels as a native legacy clip and omitted scale Z on the existing scalar clock."),
+        application_sources=[identity(code), identity(current),
+            identity(ROOT / '.tools/source-packages/official-code/client-source/FightSkillListDataEntityProvider.cs'),
+            identity(ROOT / '.tools/source-packages/official-code/client-source/FightSkillListDataProvider.cs'),
             identity(ROOT / '.tools/source-packages/official-code/common-source/Common/FormulaHandler.cs'),
             identity(ROOT / '.tools/source-packages/official-code/framework-firstpass-source/Framework/CultureNumberFormatterBase.cs'),
             identity(ROOT / '.tools/source-packages/official-code/framework-firstpass-source/Framework/NumberFormatHelper.cs')],
         runtime_sources=[identity(ROOT / path) for path in (
+            'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudAnimationPlayer.cs',
+            'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs',
             'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattlePetHudView.cs',
             'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.Pet.cs',
             'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillQualityCatalog.cs',

@@ -43,7 +43,29 @@ namespace Zjcs.Presentation.Combat
             public SupportIcon[] supportIcons;
             public Rank[] ranks;
             public DefaultRank[] defaultRanks;
+            public Rotation[] rotations;
+            public ExtraCurve[] extraCurves;
         }
+        [Serializable] private sealed class Rotation
+        { public string path; public RotationKey[] keys; }
+        [Serializable] private sealed class RotationKey
+        {
+            public float time;
+            public Vector4 value, inSlope, outSlope, inWeight, outWeight;
+            public int weightedMode;
+        }
+        [Serializable] private sealed class ExtraCurve
+        { public string path, property; public FloatKey[] keys; }
+        [Serializable] private sealed class FloatKey
+        { public float time, value, inSlope, outSlope, inWeight, outWeight; public int weightedMode; }
+        private sealed class NativeClipLifetime : MonoBehaviour
+        {
+            internal AnimationClip Clip;
+            private void OnDestroy() { if (Clip) UnityEngine.Object.Destroy(Clip); }
+        }
+        private readonly Animation nativeAnimation;
+        private const string Discharge = "FightMainPanel_GamePetSkillIconItem_Discharge";
+
         [Serializable] private sealed class Receipt { public string manifest, output_sha256; }
         private static Data loaded;
         private readonly Data data;
@@ -51,13 +73,49 @@ namespace Zjcs.Presentation.Combat
         private readonly TMP_Text energyText;
         private readonly GameObject empty, supportRoot, iconRoot, disabled;
         private int lastClassId = -1, lastPhase, lastRank;
+        private readonly OfficialBattleHudAnimationPlayer animations;
+        private int childhoodSupportSkill, currentSupportSkill;
 
-        internal OfficialBattlePetHudView(OfficialBattleHudRenderer renderer)
+        internal void PlaySkill(int itemId)
+        {
+            // Original GamePetSkillIcon.PlaySkill accepts either evolution's
+            // support item. Play replaces this owner's playback from time zero.
+            if (lastClassId <= 0 || itemId <= 0
+                || itemId != childhoodSupportSkill && itemId != currentSupportSkill) return;
+            if (!animations || !animations.Play(data.references.mTriggerSupportSkillAnim,
+                Discharge))
+                throw new InvalidOperationException("Original pet discharge animation is not bound.");
+            nativeAnimation.Stop(); nativeAnimation.Play(Discharge); nativeAnimation.Sample();
+        }
+
+        internal OfficialBattlePetHudView(OfficialBattleHudRenderer renderer, OfficialBattleHudAnimationPlayer animations)
         {
             data = Load();
+            this.animations = animations;
             GameObject Node(string path) => renderer.Find(path)
                 ?? throw new InvalidOperationException("Original pet HUD field is missing: " + path);
             var refs = data.references;
+            // The historical scalar HUD export omitted the clip's quaternion
+            // channel. Let Unity sample the original legacy rotation curves. Scale Z uses the existing HUD clock.
+            var animationOwner = Node(refs.mTriggerSupportSkillAnim);
+            nativeAnimation = animationOwner.AddComponent<Animation>();
+            nativeAnimation.playAutomatically = false;
+            var clip = new AnimationClip { name = Discharge, legacy = true, wrapMode = WrapMode.ClampForever };
+            foreach (var track in data.rotations)
+                for (int axis = 0; axis < 4; axis++)
+                {
+                    var keys = track.keys.Select(key => new Keyframe(key.time, key.value[axis],
+                        key.inSlope[axis], key.outSlope[axis], key.inWeight[axis], key.outWeight[axis])
+                        { weightedMode = (WeightedMode)key.weightedMode }).ToArray();
+                    clip.SetCurve(track.path, typeof(Transform), "localRotation." + "xyzw"[axis], new AnimationCurve(keys));
+                }
+            foreach (var track in data.extraCurves)
+                animations.RestoreCurve(refs.mTriggerSupportSkillAnim, Discharge,
+                    refs.mTriggerSupportSkillAnim + "/" + track.path, track.property.Replace("localScale.", "scale."),
+                    new AnimationCurve(track.keys.Select(key => new Keyframe(key.time, key.value, key.inSlope,
+                        key.outSlope, key.inWeight, key.outWeight) { weightedMode = (WeightedMode)key.weightedMode }).ToArray()));
+            nativeAnimation.AddClip(clip, Discharge);
+            animationOwner.AddComponent<NativeClipLifetime>().Clip = clip;
             petIcon = Node(refs.mPetIcon).GetComponent<Image>();
             energy = Node(refs.mPetEnergyProgressImg).GetComponent<Image>();
             energyText = Node(refs.mPetEnergyProgressText).GetComponent<TMP_Text>();
@@ -84,6 +142,8 @@ namespace Zjcs.Presentation.Combat
             var childhood = data.evolutions.SingleOrDefault(value => value.classId == pet.ClassId && value.phase == 1);
             if (phase == null || childhood == null)
                 throw new InvalidOperationException("Original battle pet evolution is not bound: " + pet.ClassId + "/" + pet.EvolutionPhase);
+            childhoodSupportSkill = childhood.supportSkillId;
+            currentSupportSkill = phase.supportSkillId;
             int skill = childhood.supportSkillId;
             int rank = pet.SkillRanks?.FirstOrDefault(value => value != null && value.SkillId == skill)?.Rank
                 ?? data.defaultRanks.Single(value => value.itemId == skill).rank;
@@ -141,7 +201,7 @@ namespace Zjcs.Presentation.Combat
             var result = JsonUtility.FromJson<Data>(text.text);
             if (receipt.manifest != "854_156383" || receipt.output_sha256 != hash || result.manifest != receipt.manifest
                 || result.references == null || result.evolutions == null || result.supportIcons == null
-                || result.ranks == null || result.defaultRanks == null)
+                || result.ranks == null || result.defaultRanks == null || result.rotations == null || result.extraCurves == null)
                 throw new InvalidOperationException("Original battle pet HUD source differs.");
             loaded = result;
             return result;

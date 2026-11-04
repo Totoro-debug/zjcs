@@ -49,7 +49,26 @@ namespace Zjcs.Presentation.Combat
                             return false;
                         }
             int skillItemId = Integer(evolution, "EntitySkill");
-            if (skillItemId <= 0) return false;
+            if (skillItemId <= 0)
+            {
+                // Childhood has no transfer/energy skill. Its passive support
+                // still belongs to the owner, using the same original item
+                // properties/status binding path as an entityized pet.
+                int[] supportIds = IntArray(evolution, "SupportSkills");
+                if (supportIds.Length == 0 || supportIds.Any(id =>
+                    !skillItems.TryGet(id, out FightOfficialSkillItem support)
+                    || support.PassiveStatusIds == null || support.PassiveStatusIds.Length == 0))
+                    return false; // Active support requires the separate skill agent.
+                var supportState = owner.PetEnergy ?? new FightBattlePetEnergyState
+                {
+                    OwnerUnitId = owner.Id, PetUnitId = owner.Id, PetClassId = pet.ClassId,
+                    PetEvolutionPhase = pet.EvolutionPhase
+                };
+                ApplySupportSkillsOnce(supportState, evolution, pet, characterCatalog, combat,
+                    skillItems, owner, Math.Max(1, pet.Level), owner.SubRank);
+                owner.PetEnergy = supportState;
+                return true;
+            }
             int skillEntityId = skillItemId;
             if (skillItems.TryGet(skillItemId, out FightOfficialSkillItem item))
                 skillEntityId = item.EntityId;

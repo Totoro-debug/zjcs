@@ -107,6 +107,10 @@ namespace Zjcs.Presentation.Combat
         // by slot. Keep the unit identity so another unit cannot alter the HUD.
         public event Action<int, int> SkillStarted;
         public event Action<int, int> SkillEnded;
+        // Original pet provider consumes FightSkillAgentComponent.OnSkillStarted,
+        // including negative-slot casts. Preserve the source item separately
+        // from MyFightSkill's main-slot-only applied/ended notifications.
+        public event Action<FightBattleSkillCastEvent> CastStarted;
 
         public OfficialBattleSkillEntityPlayback(Transform root, OfficialBattleGridMapper gridMapper,
             OfflineBattleNativePlayableScope scope, Func<int, FightBattleUnitState> unitState)
@@ -165,6 +169,7 @@ namespace Zjcs.Presentation.Combat
                 ? float.PositiveInfinity : cast.Presentation.Duration });
             go.SetActive(true);
             scope.Dispatch(entity.MyStart);
+            CastStarted?.Invoke(cast);
         }
 
         // Split native updates at entity removal as well as cast creation. Original

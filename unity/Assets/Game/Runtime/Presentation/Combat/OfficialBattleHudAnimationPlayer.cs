@@ -78,6 +78,21 @@ namespace Zjcs.Presentation.Combat
             }
         }
 
+        // Supplement omitted original channels without changing the shared
+        // serialized HUD or giving the channel a second playback clock.
+        internal void RestoreCurve(string ownerPath, string animationName,
+            string path, string property, AnimationCurve curve)
+        {
+            if (!animations.TryGetValue(Key(ownerPath, animationName), out var animation))
+                throw new InvalidOperationException("Original HUD animation is not installed: " + animationName);
+            foreach (var track in animation.tracks)
+                if (track.path == path && track.property == property)
+                    throw new InvalidOperationException("Original HUD animation channel already exists: " + path + "/" + property);
+            var tracks = new List<CompiledTrack>(animation.tracks);
+            tracks.Add(new CompiledTrack { path = path, property = property, curve = curve });
+            animation.tracks = tracks.ToArray();
+        }
+
         public bool Play(string ownerPath, string animationName)
         {
             if (string.IsNullOrEmpty(ownerPath) || string.IsNullOrEmpty(animationName)
