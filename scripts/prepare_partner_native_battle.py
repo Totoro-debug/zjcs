@@ -16,6 +16,8 @@ from convert_official_skeletons import reader_type, WHEEL_SHA256
 from official_apk import Apk, ROOT
 from official_battle_spine_component import read_component
 from official_unity_schema import ScriptSchemas
+from current_component_schemas import CurrentSchemas
+from official_manifest import read_asset_manifest
 from prepare_character_creation_native_data import read_aligned_string
 from prepare_native_character_geometry import atlas_regions
 from validation_workspace import validation_directory
@@ -45,7 +47,10 @@ def build(work, install=False):
     pairs = sorted({(int(row["FightEntityId"]), int(row["Id"])) for row in rules["npc"]
                     if int(row.get("NpcType", 0)) == 4 and int(row.get("FightEntityId", 0)) > 0})
     reader_class, _ = reader_type()
-    schemas = ScriptSchemas()
+    schemas, current_schemas = ScriptSchemas(), CurrentSchemas()
+    table_raw = apk.source.manifest_bytes("DefaultPackage", apk.archive)
+    asset_table = read_asset_manifest(table_raw)
+    by_guid = {row["guid"]: row for row in asset_table if row["guid"]}
     destination = work / "native-battle"
     destination.mkdir(exist_ok=True)
     sources, outputs, fighters = {}, {}, []
@@ -78,20 +83,25 @@ def build(work, install=False):
     def text(obj):
         return record(obj).read(check_read=False).m_Script.encode("utf-8", "surrogateescape")
 
-    for entity_id, npc_id in pairs:
-        bundle = f"defaultpackage_assets_prefabs_ecentity_fight_fightnpc_{entity_id}.bundle"
-        objects = apk.objects(bundle)
-        components = {}
-        for obj in objects:
-            if obj.type.name == "MonoBehaviour":
-                value = obj.read(check_read=False)
-                name = value.m_Script.read().m_ClassName
-                if name in ("SkeletonMecanim", "SpineLazyAnimLoad", "AppearanceCombineSkin"):
-                    components[name] = obj
-        if "SpineLazyAnimLoad" in components:
-            continue
-        renderer_obj = record(components["SkeletonMecanim"])
-        renderer = read_component(renderer_obj.get_raw_data(), "SkeletonMecanim")
+    def followers_for(game_object):
+        result = []
+        for reference in game_object.read().m_Component:
+            obj = reference.component.deref()
+            if obj.type.name != "MonoBehaviour":
+                continue
+            name = obj.read(check_read=False).m_Script.read().m_ClassName
+            if name in ("BoneFollower", "AttachmentFollower"):
+                result.append(dict(type=name, fields=current_schemas.read(record(obj))))
+        return result
+
+    config_location = next(row for row in asset_table if row["path"].endswith("/AppearanceConfig.asset"))
+    config_obj = record(apk.asset(config_location["bundle"], config_location["path"]))
+    appearance_config = current_schemas.read(config_obj)
+    skeleton_paths = {row["SkeletonName"]: row["Path"] for row in appearance_config["mAppearanceSkeletonPaths"]}
+    document("appearance-config.json", appearance_config)
+
+    def recover_renderer(entity_id, npc_id, objects, components, appearances, renderer_obj, kind, prefix):
+        renderer = read_component(record(renderer_obj).get_raw_data(), kind)
         skeleton_asset = pointer(renderer_obj, renderer["skeletonDataAsset"])
         raw = skeleton_asset.get_raw_data()
         _, offset = read_aligned_string(raw, 28)
@@ -111,6 +121,32 @@ def build(work, install=False):
         atlas_file = at(atlas_asset, atlas_offset + 16)
         atlas_bytes = text(atlas_file)
         regions = atlas_regions(atlas_bytes.decode("utf-8"))
+        appearance_candidates = [obj for obj in appearances if current_schemas.read(obj)["SkeletonRenderer"]
+            == dict(m_FileID=0, m_PathID=renderer_obj.path_id)]
+        if len(appearance_candidates) != 1:
+            raise ValueError("Review original partner appearance renderer identity: " + str(npc_id))
+        appearance_obj = record(appearance_candidates[0])
+        appearance = current_schemas.read(appearance_obj)
+        if appearance["SkeletonRenderer"] != dict(m_FileID=0, m_PathID=renderer_obj.path_id):
+            raise ValueError("Review original partner appearance renderer identity: " + str(npc_id))
+        resolution = {1: "Low", 2: "High"}[appearance["LevelOfResolution"]]
+        skeleton_name = skeleton_asset.read(check_read=False).m_Name.removesuffix("_SkeletonData")
+        loader_candidates = [row for row in asset_table
+            if row["path"] == skeleton_paths[skeleton_name] + "/" + skeleton_name + "_TextureLoader_" + resolution + ".asset"]
+        if len(loader_candidates) != 1:
+            raise ValueError("Original partner texture loader is ambiguous: " + skeleton_name)
+        loader_location = loader_candidates[0]
+        loader_obj = record(apk.asset(loader_location["bundle"], loader_location["path"]))
+        loader = current_schemas.read(loader_obj)
+        if loader["LevelOfResolution"] != appearance["LevelOfResolution"]:
+            raise ValueError("Original partner texture resolution differs.")
+        mappings = {}
+        for mapping in loader["placeholderMap"]:
+            placeholder = pointer(loader_obj, mapping["placeholderTexture"])
+            key = placeholder.assets_file.name + ":" + str(placeholder.path_id)
+            if key in mappings:
+                raise ValueError("Duplicate original partner texture placeholder.")
+            mappings[key] = mapping
         skins = (schemas.read(record(components["AppearanceCombineSkin"]))["CombineSkins"]
                  if "AppearanceCombineSkin" in components else [renderer["initialSkinName"] or "default"])
         game_object = record(renderer_obj.read(check_read=False).m_GameObject.deref())
@@ -118,7 +154,10 @@ def build(work, install=False):
         transform_obj = game_object.read().m_Component[0].component.deref()
         while True:
             transform = record(transform_obj).read()
-            transforms.append(dict(name=record(transform.m_GameObject.deref()).read().m_Name,
+            node_obj = record(transform.m_GameObject.deref())
+            node = node_obj.read()
+            transforms.append(dict(name=node.m_Name, sourceKey=transform_obj.assets_file.name + ":" + str(transform_obj.path_id),
+                active=node.m_IsActive, layer=node.m_Layer, followers=followers_for(node_obj),
                 position={axis: getattr(transform.m_LocalPosition, axis) for axis in "xyz"},
                 rotation={axis: getattr(transform.m_LocalRotation, axis) for axis in "xyzw"},
                 scale={axis: getattr(transform.m_LocalScale, axis) for axis in "xyz"}))
@@ -126,32 +165,34 @@ def build(work, install=False):
                 break
             transform_obj = transform.m_Father.deref()
         transforms.reverse()
-        animator = next(record(obj) for obj in objects if obj.type.name == "Animator"
-                        and obj.read().m_GameObject.path_id == game_object.path_id)
-        controller = record(animator.read().m_Controller.deref())
-        controller_tree = controller.read_typetree()
-        clips = [record(clip.deref()).read().m_Name for clip in controller.read().m_AnimationClips]
-        strings = dict(controller_tree["m_TOS"])
-        aliases = {}
-        for machine in controller_tree["m_Controller"]["m_StateMachineArray"]:
-            for item in machine["data"]["m_StateConstantArray"]:
-                state = item["data"]
-                state_name = strings[state["m_NameID"]]
-                for tree in state["m_BlendTreeConstantArray"]:
-                    for node in tree["data"]["m_NodeArray"]:
-                        clip_id = node["data"]["m_ClipID"]
-                        if clip_id < len(clips) and clips[clip_id] in skeleton["animations"]:
-                            aliases[state_name] = clips[clip_id]
-        for alias, state in (("idle_01", "Idle"), ("run_01", "Run"), ("die_01", "Die"),
-                             ("hit_01", "Damage"), ("skill_01", "Skill"), ("attack_01", "Skill")):
-            if state in aliases:
-                aliases[alias] = aliases[state]
+        controller_tree, aliases = None, {}
+        if kind == "SkeletonMecanim":
+            animator = next(record(obj) for obj in objects if obj.type.name == "Animator"
+                            and obj.read().m_GameObject.path_id == game_object.path_id)
+            controller = record(animator.read().m_Controller.deref())
+            controller_tree = controller.read_typetree()
+            clips = [record(clip.deref()).read().m_Name for clip in controller.read().m_AnimationClips]
+            strings = dict(controller_tree["m_TOS"])
+            aliases = {}
+            for machine in controller_tree["m_Controller"]["m_StateMachineArray"]:
+                for item in machine["data"]["m_StateConstantArray"]:
+                    state = item["data"]
+                    state_name = strings[state["m_NameID"]]
+                    for tree in state["m_BlendTreeConstantArray"]:
+                        for node in tree["data"]["m_NodeArray"]:
+                            clip_id = node["data"]["m_ClipID"]
+                            if clip_id < len(clips) and clips[clip_id] in skeleton["animations"]:
+                                aliases[state_name] = clips[clip_id]
+            for alias, state in (("idle_01", "Idle"), ("run_01", "Run"), ("die_01", "Die"),
+                                 ("hit_01", "Damage"), ("skill_01", "Skill"), ("attack_01", "Skill")):
+                if state in aliases:
+                    aliases[alias] = aliases[state]
         materials = []
         material_count = struct.unpack_from("<i", atlas_raw, atlas_offset + 28)[0]
         for index in range(material_count):
             material = at(atlas_asset, atlas_offset + 32 + index * 12)
             value = material.read()
-            textures = []
+            textures, runtime_textures = [], []
             for property_name, environment in value.m_SavedProperties.m_TexEnvs:
                 if not environment.m_Texture.path_id:
                     continue
@@ -166,12 +207,41 @@ def build(work, install=False):
                     width=texture.m_Width, height=texture.m_Height, format=int(texture.m_TextureFormat),
                     mip_count=texture.m_MipCount, color_space=texture.m_ColorSpace,
                     file=write("textures/" + sha(buffer.getvalue()) + ".png", buffer.getvalue())))
+                key = texture_obj.assets_file.name + ":" + str(texture_obj.path_id)
+                if property_name == "_MainTex":
+                    if key not in mappings:
+                        raise ValueError("Original main texture has no loader mapping: " + key)
+                    mapping = mappings[key]
+                    for field, runtime_property in (("targetTextureReference", "_MainTex"),
+                                                    ("dyeTextureReference", "_DyeTex")):
+                        guid = mapping[field]["AssetReference"]["mAssetGuid"]
+                        if not guid:
+                            continue
+                        location = by_guid[guid]
+                        target_obj = record(apk.asset(location["bundle"], location["path"]))
+                        target = target_obj.read()
+                        if target.m_MipCount != 1:
+                            raise ValueError("Restore every original partner target mip: " + location["path"])
+                        target_pixels = target.image.convert("RGBA")
+                        target_buffer = io.BytesIO()
+                        target_pixels.save(target_buffer, format="PNG")
+                        settings = target.m_TextureSettings
+                        runtime_textures.append(dict(property=runtime_property, guid=guid, path=location["path"],
+                            source=target_obj.assets_file.name + ":" + str(target_obj.path_id),
+                            name=target.m_Name, placeholder=key, encoded_sha256=sha(target.get_image_data()),
+                            rgba_sha256=sha(target_pixels.tobytes()), width=target.m_Width, height=target.m_Height,
+                            mip_count=target.m_MipCount, color_space=target.m_ColorSpace, is_readable=target.m_IsReadable,
+                            filter_mode=settings.m_FilterMode, aniso=settings.m_Aniso, mip_bias=settings.m_MipBias,
+                            wrap_u=settings.m_WrapU, wrap_v=settings.m_WrapV, wrap_w=settings.m_WrapW,
+                            file=write("runtime-textures/" + sha(target_buffer.getvalue()) + ".png", target_buffer.getvalue())))
             shader = record(value.m_Shader.deref())
             materials.append(dict(fields=material.read_typetree(), shader=shader.read().m_ParsedForm.m_Name,
-                                  textures=textures))
-        prefix = str(npc_id) + "/"
-        fighter = dict(npcId=npc_id, entityId=entity_id, scale=scale, renderer=renderer, skins=skins,
-            transforms=transforms, controller=document(prefix + "controller.json", controller_tree),
+                                  textures=textures, runtimeTextures=runtime_textures))
+        mesh_obj = next(record(reference.component.deref()) for reference in game_object.read().m_Component
+            if reference.component.type.name == "MeshRenderer")
+        fighter = dict(npcId=npc_id, entityId=entity_id, scale=scale, renderer=renderer, rendererKind=kind, skins=skins,
+            meshRenderer=mesh_obj.read_typetree(),
+            transforms=transforms, controller=document(prefix + "controller.json", controller_tree) if controller_tree is not None else None,
             skeleton=document(prefix + "skeleton.json", skeleton),
             binary=write(prefix + "original.skel.bytes", binary_raw),
             atlas=write(prefix + "original.atlas.txt", atlas_bytes),
@@ -180,21 +250,61 @@ def build(work, install=False):
             package=write(prefix + "battle.bytes", package(npc_id, scale,
                 json.dumps(skeleton, ensure_ascii=False, separators=(",", ":"), allow_nan=False).encode(),
                 json.dumps(regions, ensure_ascii=False, separators=(",", ":"), allow_nan=False).encode())),
-            aliases=aliases,
+            aliases=aliases, appearance=appearance,
+            textureLoader=dict(path=loader_location["path"], resolution=resolution,
+                fields=document(prefix + "texture-loader.json", loader)),
             counts={name: len(skeleton.get(name, [])) for name in
                     ("bones", "slots", "skins", "animations", "ik", "transform", "path", "physics")},
             animationNames=list(skeleton.get("animations", {})),
             attachmentTypes=dict(Counter(attachment.get("type", "region") for skin in skeleton["skins"]
                 for entries in skin.get("attachments", {}).values() for attachment in entries.values())))
+        fighter["followers"] = followers_for(game_object)
+        return fighter
+
+    for entity_id, npc_id in pairs:
+        bundle = f"defaultpackage_assets_prefabs_ecentity_fight_fightnpc_{entity_id}.bundle"
+        objects = apk.objects(bundle)
+        components, appearances, renderers = {}, [], []
+        for obj in objects:
+            if obj.type.name != "MonoBehaviour":
+                continue
+            name = obj.read(check_read=False).m_Script.read().m_ClassName
+            if name == "AppearanceRendererLite":
+                appearances.append(obj)
+            if name in ("SkeletonMecanim", "SkeletonAnimation"):
+                renderers.append((name, obj))
+            if name in ("SpineLazyAnimLoad", "AppearanceCombineSkin"):
+                components[name] = obj
+        if "SpineLazyAnimLoad" in components:
+            continue
+        bodies = [(kind, obj) for kind, obj in renderers if kind == "SkeletonMecanim"]
+        if len(bodies) != 1:
+            raise ValueError("Review original primary partner battle renderer: " + str(npc_id))
+        kind, obj = bodies[0]
+        fighter = recover_renderer(entity_id, npc_id, objects, components, appearances, obj, kind, str(npc_id) + "/")
+        fighter["parts"] = []
+        for index, (kind, obj) in enumerate(renderers):
+            if kind == "SkeletonMecanim":
+                continue
+            fighter["parts"].append(recover_renderer(entity_id, npc_id, objects, components, appearances,
+                obj, kind, str(npc_id) + "/parts/" + str(index) + "/"))
         fighters.append(fighter)
-        print("Recovered original fighter", npc_id, fighter["counts"], flush=True)
+        print("Recovered original fighter", npc_id, fighter["counts"], "parts", len(fighter["parts"]), flush=True)
     inputs = ["official-source.json", "scripts/prepare_partner_native_battle.py",
+        "scripts/prepare_partner_native_battle_validation.py",
         "scripts/convert_official_skeletons.py", "scripts/prepare_native_character_geometry.py",
         "scripts/official_battle_spine_component.py", "scripts/official_unity_schema.py",
+        "scripts/current_component_schemas.py", "scripts/official_manifest.py",
+        "unity/ProjectSettings/ProjectSettings.asset",
+        ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem/AppearanceRendererLite.cs",
+        ".tools/source-packages/current/884_156692/official-code/client-source/AppearanceSystem.Runtime/AppearanceAddressUtils.cs",
+        "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceRendererLite.cs",
+        "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceAssetManager.cs",
         "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkeletonData.PartnerBattle.cs",
         "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeConstraintPose.cs",
         "unity/Assets/Game/Editor/ProfessionUI/OfficialPartnerNativeBattleDataValidation.cs"]
-    proof = dict(manifest=apk.version, selection=selected, rules_sha256=sha(rules_raw), fighters=fighters,
+    proof = dict(manifest=apk.version, selection=selected, rules_sha256=sha(rules_raw),
+        asset_table_sha256=sha(table_raw), fighters=fighters,
         decoder=dict(name="SkelToJson", version="1.0.1", license="MIT", wheel_sha256=WHEEL_SHA256),
         generator_sha256=sha((ROOT / "scripts/prepare_partner_native_battle.py").read_bytes()),
         inputs=[dict(path=path, sha256=sha((ROOT / path).read_bytes())) for path in inputs],
@@ -209,6 +319,8 @@ def build(work, install=False):
             installed.append(write_with_meta(target / relative, (destination / relative).read_bytes()))
         installed.append(write_with_meta(target / "catalog.json", json.dumps(dict(manifest=apk.version,
             fighters=fighters), ensure_ascii=False, separators=(",", ":"), allow_nan=False).encode()))
+        for entry in installed:
+            entry["meta_sha256"] = sha((ROOT / (entry["path"] + ".meta")).read_bytes())
         proof["installed"] = installed
         reference = ROOT / "assets/reference/partner-native-battle-source-manifest.json"
         reference.write_text(json.dumps(proof, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")

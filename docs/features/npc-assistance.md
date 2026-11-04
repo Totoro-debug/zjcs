@@ -78,7 +78,11 @@ scripts/prepare_dungeon_bindings.py 从 prefabs_ui_fight_changebattleposarea 的
 
 ## 尚未实现
 
-完整骨骼分支的数据恢复已完成，战斗绑定仍未完成。`prepare_partner_native_battle.py` 按选定 `884_156692` APK／匹配云端依赖检查余下 34 个不含 `SpineLazyAnimLoad` 的实体，完整读取原 Spine binary，恢复 790 段动画、27 张原贴图、Atlas、原材质参数、Animator 状态／别名及实体根至骨骼的 Transform 链，安装至 `unity/Assets/Official/Combat/NativePartners/`。独立 `ZJCSPNBT` 包由 `ProfessionNativeSkeletonData.LoadPartnerBattle` 校验版本、NPC 身份、解压长度与内容哈希；不与立绘包混用。原 11007 的 Transform `bone41.mixY=-0.4` 保留，显式战斗包沿用已验证的有限外推几何分支。Unity 编译及数据检查通过：34 个包的原动画名一致，错误 NPC 身份全部拒绝；每段动画在起点、中点、终点构建网格，634 段通过，156 段明确拒绝尚未支持的交错约束顺序、路径、IK 分支或选择继承。`ProjectTools.Validate` 与静态检查（117,515 个 GUID）通过，275 项安装输出／转换输入哈希一致。该检查未验证材质渲染、Animator 播放、正式战斗或 Windows Player，34 个伙伴尚未加入战斗候选。输入对象、解码器、转换及安装输出哈希见[完整骨骼战斗数据来源](../../assets/reference/partner-native-battle-source-manifest.json)。未生成完整素材快照。
+完整骨骼分支的数据与原贴图映射已恢复，战斗绑定仍未完成。`prepare_partner_native_battle.py` 按选定 `884_156692` APK／匹配云端依赖检查余下 34 个不含 `SpineLazyAnimLoad` 的实体，完整读取原 Spine binary，恢复 35 个骨骼渲染器和 791 段动画，包括 11005 的独立 `SkeletonAnimation` 背饰；保留 Atlas、原材质／MeshRenderer 参数、Animator 状态／别名、实体根至骨骼的 Transform 链及 BoneFollower／AttachmentFollower 字段，安装至 `unity/Assets/Official/Combat/NativePartners/`。独立 `ZJCSPNBT` 包由 `ProfessionNativeSkeletonData.LoadPartnerBattle` 校验版本、NPC 身份、解压长度与内容哈希；不与立绘包混用。原 11007 的 Transform `bone41.mixY=-0.4` 保留，显式战斗包沿用已验证的有限外推几何分支。
+
+贴图沿原 `AppearanceRendererLite.SkeletonRenderer` 指针、`AppearanceConfig` 骨骼路径和 `AppearanceAddressUtils.GetTextureLoaderPath` 恢复。35 个渲染器均使用原 Low 分辨率；原材质的占位页与运行时 `TextureLoader_Low` 的实际目标分别保存，35 项映射对应 28 份不同的目标 PNG。11015–11022 的原 Low 目标为 24×24，当前原 High 目标也为该尺寸，未以其他图片替换。隔离 Unity 工程复用正式工程的 Linear 颜色空间；全部目标导入后的 RGBA 像素哈希、尺寸、mip、颜色空间、过滤／各轴 Wrap 参数一致，并恢复原可读性。
+
+Unity 编译及数据检查通过：35 个包的原动画名一致，错误 NPC 身份全部拒绝；791 段动画分别在起点、中点、终点构建网格，635 段通过，156 段明确拒绝尚未支持的交错约束顺序、路径、IK 分支或选择继承。`ProjectTools.Validate` 与静态检查（117,636 个 GUID）通过，354 项源码／安装文件哈希及安装元数据一致。材质渲染、Animator 播放、正式战斗和 Windows Player 尚未验证，34 个伙伴尚未加入战斗候选。输入对象、原贴图加载配置、解码器、转换及安装载荷／元数据哈希见[完整骨骼战斗数据来源](../../assets/reference/partner-native-battle-source-manifest.json)。未生成完整素材快照。
 
 - 素材秘境（2）、道路属性门槛（1）、探索首领（All=10）、节庆首领（5）、联合行动（4）各自的实际选择入口、条件筛选、官方属性排序／门槛、站位、战斗加入、快照提交及结算接线；不能用日常副本的 All 规则替代这些玩法。
 - 羁绊冒险（6）的 NPC 战斗邀请入口和战斗接线；NPC 旅行是派遣系统，不等同战斗助战。
