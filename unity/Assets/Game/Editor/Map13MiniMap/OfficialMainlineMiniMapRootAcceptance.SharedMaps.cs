@@ -84,34 +84,81 @@ namespace Zjcs.Editor.Map13MiniMap
             }
         }
 
+        private static void VerifySharedWorldCancellation(NativeMap14SharedAssemblyCatalog catalog)
+        {
+            using (var shared = new NativeMap14SharedAssemblies(catalog))
+            {
+                var parsers = shared.Shared.GetType("Parsers", true).GetField("Instance");
+                var previousParsers = parsers.GetValue(null);
+                var previousLoader = GConfig.FileLoader.sFileLoader;
+                var previousResolver = MessagePackSerializer.DefaultResolver;
+                void Restored() => Require(ReferenceEquals(parsers.GetValue(null), previousParsers)
+                    && ReferenceEquals(GConfig.FileLoader.sFileLoader, previousLoader)
+                    && ReferenceEquals(MessagePackSerializer.DefaultResolver, previousResolver),
+                    "Cancelled or failed world restores the original parser, loader and formatter scopes");
+                bool rejected = false;
+                try { using (var missing = new MainlineSharedWorld(catalog, int.MaxValue, 1)) { } }
+                catch (InvalidOperationException) { rejected = true; }
+                Require(rejected, "Missing map configuration fails construction");
+                Restored();
+                using (var interrupted = new MainlineSharedWorld(catalog, 10, 10))
+                {
+                    var load = interrupted.Load();
+                    Require(load.MoveNext() && load.Current is GConfig.ConfigRequest request && request.Success
+                        && interrupted.Root == null, "A yielded parser request is complete before cancellation");
+                    rejected = false;
+                    try { interrupted.Load(); } catch (InvalidOperationException) { rejected = true; }
+                    Require(rejected, "A world cannot install a second load into its own scope");
+                    ((IDisposable)load).Dispose();
+                    Require(!interrupted.IsReady && interrupted.Data == null && interrupted.Configuration == null,
+                        "Abandoning the load enumerator releases its unfinished world");
+                    Restored();
+                }
+                using (var closed = new MainlineSharedWorld(catalog, 11, 11))
+                {
+                    var load = closed.Load();
+                    Require(load.MoveNext(), "Map load yields before its native root starts");
+                    closed.Dispose();
+                    rejected = false;
+                    try { load.MoveNext(); } catch (ObjectDisposedException) { rejected = true; }
+                    Require(rejected, "A closed map load cannot resume using restored global dependencies");
+                    Restored();
+                }
+            }
+            Debug.Log("MAINLINE_SHARED_WORLD_LIFETIME_PASS: failed construction, cancelled parser load, duplicate load and closed-map resume preserve borrowed global scopes.");
+        }
+
         private static IEnumerator VerifySharedMaps()
         {
             object Get(object value, string name) => NativeMap14SharedPrefabs.Get(value, name);
             var catalog = Resources.Load<NativeMap14SharedAssemblyCatalog>("Map14/Native/shared-assembly-catalog");
             int cells = 0, placements = 0;
-            using (var shared = new NativeMap14SharedAssemblies(catalog))
+            VerifySharedWorldCancellation(catalog);
             foreach (int map in new[] { 10, 11, 12, 13, 14, 15, 16 })
             {
                 var definition = JsonUtility.FromJson<OfficialMapDefinition>(AssetDatabase.LoadAssetAtPath<TextAsset>(
                     $"Assets/Official/World/Map/{map}/map{map}.json").text);
-                using (var configuration = new NativeMap14SharedConfiguration(shared))
+                using (var world = new MainlineSharedWorld(catalog, map, 1000L + map))
                 {
+                    var shared = world.Assemblies;
+                    var configuration = world.Configuration;
                     bool rejected = false;
                     try { using (var wrong = new NativeMap14SharedData(shared, configuration, map == 10 ? 11 : 10,
                         $"MainlineSharedWorld/{map}/catalog")) { } }
                     catch (ArgumentException) { rejected = true; }
                     Require(rejected, "Original shared catalog rejects a different map identity");
-                    using (var data = new NativeMap14SharedData(shared, configuration, map, $"MainlineSharedWorld/{map}/catalog"))
+                    var data = world.Data;
                     {
-                        var load = data.LoadAll(false);
+                        Require(!world.IsReady && world.Root == null, "Map root starts only after all original data is loaded");
+                        var load = world.Load();
                         while (load.MoveNext()) yield return load.Current;
                         Require(data.Loaded && data.MapClassId == map, "Configured original shared map load");
                         VerifySharedMapComponentBytes(shared, data);
-                        using (var root = new NativeMap14SharedRoot(shared, configuration, data, 1000L + map, "MainlineSharedWorld/container-binding"))
+                        Require(world.IsReady, "Common world module completes original startup");
+                        var root = world.Root;
                         {
                             Require((int)Get(root.Container, "ClassId") == map && (long)Get(root.Container, "Id") == 1000L + map
                                 && (int)Get(root.Root, "ClassId") == map, "Original container and root use the requested map");
-                            root.Start();
                             var nav = definition.Navigation;
                             var originalCells = (Array)Get(data.Navigation, "PosDataArray");
                             var gridMask = root.Ground.GetType().GetMethod("GetGridMask");
@@ -148,14 +195,16 @@ namespace Zjcs.Editor.Map13MiniMap
                                     "Original default spawned entity template is available");
                                 placements++;
                             }
-                            root.Dispose(); root.Dispose();
-                            Require((bool)Get(root.Root, "Ended"), "Original configured root teardown");
+                            world.Dispose(); world.Dispose();
+                            Require(!world.IsReady && world.Root == null && world.Data == null
+                                && world.Configuration == null && world.Assemblies == null
+                                && (bool)Get(root.Root, "Ended"), "Common module ends the original root and releases the scope");
                         }
                     }
                 }
             }
             Require(placements == 11174, "All seven original maps' placement templates");
-            Debug.Log($"MAINLINE_SHARED_MAPS_PASS: seven original roots, {cells} initialized cells, {placements} fresh full placement templates and default common prefab lookups. No server spawning/state or formal host proof.");
+            Debug.Log($"MAINLINE_SHARED_MAPS_PASS: seven common-module original roots, {cells} initialized cells, {placements} fresh full placement templates and default common prefab lookups. No server spawning/state or formal host proof.");
         }
     }
 }

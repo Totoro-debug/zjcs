@@ -96,8 +96,11 @@ def build():
         meta(DESTINATION)
         outputs.append(record(Path(str(DESTINATION) + '.meta')))
         integration = [ROOT / path for path in (
+            'unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedWorld.cs',
+            'unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/MainlineSharedWorld.cs.meta',
             'unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedData.cs',
             'unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedRoot.cs',
+            'unity/Assets/Game/Runtime/Presentation/World/NativeMap14/OfficialMap14NativeWorldView.cs',
             'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.SharedMaps.cs',
             'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.SharedMaps.cs.meta')]
         receipt.write_text(json.dumps(dict(manifest=source.apk.version, mapClassIds=list(MAPS),

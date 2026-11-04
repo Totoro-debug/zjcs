@@ -10,6 +10,8 @@
 
 公共绑定已通过 Unity 2022.3.57f1c2 的完整 `ProjectTools.Validate` 及 Direct3D11 地形 Play Mode：原111区、九组件根、地形／环境／标签同时挂载；仅公开地区75时，状态75为公开且76仍未公开，验证原表枚举先76后75不会错位。原区域光刷新、加载中断、释放、服务绑定恢复和重新挂载通过，入口未公开／公开、中央公开与重挂四张实际画面已查看。蝴蝶 `models.json` 固定检出为原 LF 字节，保持现有源清单和 `SourceSha256` 校验值。本夹具直接提供地区状态，未覆盖地图点击、女神、剧情存档或 Windows Player 发布。
 
+原共享地图装载与释放现由 `MainlineSharedWorld` 公共模块管理，本图以地图编号14和原容器身份接入；当前884原地图数据、历史871共享程序集／GameSettings及原生地形分别保留来源。正式地形宿主已通过加载、地区刷新、分区移动、释放重挂和加载中断的带图形 Play Mode，已查看入口与重挂画面。原实体创建、存档恢复和小地图标记的组合仍待完成；公共生命周期和七图验证范围集中见[主线地图公共模块](../features/mainline-map-modules.md)，当前接线见[共享数据来源](../../assets/reference/official-map/mainline-shared-world-data-source-manifest.json)。
+
 ## 地图简介
 
 14 龙之国，范围按下列原配置与本地决策维护。
