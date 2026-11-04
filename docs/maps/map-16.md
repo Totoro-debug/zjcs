@@ -62,7 +62,7 @@ Unity 2022.3.57f1c2 内置屏隔离图形 Play Mode 已通过公共 `MainlineNat
 
 本批主工程 Unity 导入／编译、`ProjectTools.Validate` 和静态元数据检查通过；公共转换器回归核对 Map15 的469项、Map16 的1434项既有地面输出逐字节不变，地面与原时间标签 Play Mode 回归及画面检查通过。
 
-本图交互配置已通过重复提取一致性、地区顺序、空奖励列表、区域刷新表与所有英雄结果引用检查；共享转换器七项规则测试覆盖六种原英雄、历史输出不变及不支持的周期组拒绝。 静态元数据检查、主工程 Unity 导入／编译、`ProjectTools.Validate` 及实际配置加载通过。隔离工程仅携带公共加载器、地图配置、原结果数据类型与交互载荷，在 Editor／Play Mode 中核对 Map10–15 历史配置、鲸背岛六种模板，以及错误版本／地图身份／地区数量的拒绝；不包含地图画面或模拟交互。尚未运行本图正式雕像／资源流程，不能据此宣称其 Play Mode 或 Player 验证完成。
+本图交互配置已通过重复提取一致性、地区顺序、空奖励列表、区域刷新表与所有英雄结果引用检查；共享转换器七项规则测试覆盖六种原英雄、历史输出不变及不支持的周期组拒绝。静态元数据检查、主工程 Unity 导入／编译、`ProjectTools.Validate` 及实际配置加载通过。`ProjectTools.Validate` 通过共享档案 `Load(16)` 实际加载并核对六种原英雄、43个地区和同版来源身份；隔离工程另核对 Map10–15 历史配置，以及错误版本／地图身份／地区数量的拒绝；不包含地图画面或模拟交互。尚未运行本图正式雕像／资源流程，不能据此宣称其 Play Mode 或 Player 验证完成。
 
 ## 自定义实现
 
@@ -82,7 +82,7 @@ Unity 2022.3.57f1c2 内置屏隔离图形 Play Mode 已通过公共 `MainlineNat
 
 本图尚未注册到公共正式宿主。鲸背岛7张原剧情图、94个节点、45条对白、6个选项、51个中文文本键、7份配对服务端记录、2个实际引用对白角色、3条Map16地图逻辑标签、1条绳索交付规则和0条固定奖励配置已从同版 `884_156692` APK 按实际所属的 `config_luban`、`config_luban_dialog`、`config_luban_map` bundle 提取至 `Assets/Official/World/Map/16/Source/story-source.json`；来源收据记录每张表的bundle、APK条目、对象／payload哈希，测试锁定版本与角色／地图标签表的bundle身份。`prepare_map16_story_source.py` 复用官方构造器，拒绝缺少图引用的角色、交付物或固定奖励配置；`test_prepare_map16_story_source.py` 的4项检查通过。`prepare_unity_map16_story_runtime.py` 使用公共 `normalize_story` 生成 `Resources/Map16/stories.json`，保留原图、节点、端口、对白、角色、选项、地图标签和交付物规则；输出为6张主图、1张子图、17个对白组，并由 `test_prepare_unity_map16_story_runtime.py` 校验收据、哈希和闭包。`test_prepare_map16_story_normalization.py` 另验证入口、唯一子图、节点原文、端口连接、完整对白及已确认触发映射的官方锚点，4项通过。共享 `Map13OfflinePlayerConditionEvaluator` 现允许 Map16 剧情节点使用官方 `MapLogicEntityEndByTag` 条件，并以当前本地完成标签状态判断；`ProjectTools.Validate` 增加该条件的匹配、反向条件及不匹配检查。两段官方演出引用的GUID仍未进入本图运行时绑定；触发映射已由用户确认，正式宿主仍未消费该载荷或注册故事数据。
 
-`prepare_unity_map16_battle_data.py` 从同版 `884_156692` 提取70个阶段、9个战斗场景、46个怪物编组表和237个实体阶段绑定，输出 `Assets/Official/World/Map/16/map16-battles-source.json`；来源测试覆盖哈希、阶段／场景／编组闭包及剧情无战斗启动节点，3项通过。`prepare_unity_map16_battle_runtime.py` 复用公共怪物阵容转换及官方等级属性解码器，生成 `Resources/Map16/battle-runtime.json`，包含70个阶段与阵容、9个场景、38个实际引用怪物组、540个阵位和237个实体阶段绑定。逐阵位怪物索引与 `884_156692` 官方 `StageMonsterArrayInfoParser.GenerateMonsters` 一致；超出原怪物列表的编组阵位依官方异常处理不生成额外单位，原阶段数据仍保留。`test_prepare_unity_map16_battle_runtime.py` 校验同版哈希、阶段／阵容集合、场景和绑定数、输出收据。7张原剧情图均无 `StoryStartStageNode`。战斗载荷的生成不代表玩法已接通：地图档案仍未登记Map16，官方怪物 Windows 视觉绑定、故事演出绑定、NPC／登岛／离岛触发和地图 HUD／正式宿主仍待迁移；不得用已生成战斗与剧情JSON宣称地图可玩。接下来须完成剩余配置及接线，再接通原HUD、地区开放与本地位阶日期、四类雕像与每日访问、探索度、白雾、资源刷新、独立大小地图及标记，按原 `CanExplore=false` 保留本图探寻差异，并验证完整场景交互、退出与存档恢复。
+`prepare_unity_map16_battle_data.py` 从同版 `884_156692` 提取70个阶段、9个战斗场景、46个怪物编组表和237个实体阶段绑定，输出 `Assets/Official/World/Map/16/map16-battles-source.json`；来源测试覆盖哈希、阶段／场景／编组闭包及剧情无战斗启动节点，3项通过。`prepare_unity_map16_battle_runtime.py` 复用公共怪物阵容转换及官方等级属性解码器，生成 `Resources/Map16/battle-runtime.json`，包含70个阶段与阵容、9个场景、38个实际引用怪物组、540个阵位和237个实体阶段绑定。逐阵位怪物索引与 `884_156692` 官方 `StageMonsterArrayInfoParser.GenerateMonsters` 一致；超出原怪物列表的编组阵位依官方异常处理不生成额外单位，原阶段数据仍保留。`test_prepare_unity_map16_battle_runtime.py` 校验同版哈希、阶段／阵容集合、场景和绑定数、输出收据。7张原剧情图均无 `StoryStartStageNode`。战斗载荷的生成不代表玩法已接通：Map16 已登记公共数据档案但 `IsRuntimeEntryReady=false`；官方怪物 Windows 视觉绑定、故事演出绑定、NPC／登岛／离岛触发和地图 HUD／正式宿主仍待迁移，不得用已生成战斗与剧情JSON宣称地图可玩。接下来须完成剩余配置及接线，再接通原HUD、地区开放与本地位阶日期、四类雕像与每日访问、探索度、白雾、资源刷新、独立大小地图及标记，按原 `CanExplore=false` 保留本图探寻差异，并验证完整场景交互、退出与存档恢复。
 
 小地图使用公共模块确认的单本地分线配置，原分线数 `≤1` 时隐藏按钮，地区私有／公开状态与玩法保持原配置；规则及公共适配范围见[主线地图公共模块](../features/mainline-map-modules.md)。此配置尚未接入本图正式宿主。
 

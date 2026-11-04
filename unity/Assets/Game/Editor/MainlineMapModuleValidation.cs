@@ -72,13 +72,16 @@ namespace Zjcs.Editor
                 var heroes = (Array)type.GetField("heroes").GetValue(loadMap.Invoke(null, new object[] { map }));
                 if (heroes.Length != 4) throw new InvalidDataException("Historical hero selection changed: " + map);
             }
-            MethodInfo load = type.GetMethod("Load", new[] { typeof(string), typeof(string), typeof(int), typeof(int) });
-            object[] selected = { "Map16/interactions", "884_156692", 16, 43 };
-            object catalog = load.Invoke(null, selected);
+            object catalog = loadMap.Invoke(null, new object[] { 16 });
             var variants = (Array)type.GetField("heroes").GetValue(catalog);
             int[] ids = variants.Cast<object>().Select(hero => (int)hero.GetType().GetField("EntityClassId").GetValue(hero)).ToArray();
             if (!ids.SequenceEqual(new[] { 6570, 6571, 6572, 6573, 6574, 6575 }))
-                throw new InvalidDataException("Whale Island original hero variants are incomplete.");
+                throw new InvalidDataException("Whale Island profile did not load all six original hero variants.");
+            var regions = (Array)type.GetField("regions").GetValue(catalog);
+            if (regions.Length != 43 || regions.Cast<object>().Any(region =>
+                (int)region.GetType().GetField("MapClassId").GetValue(region) != 16))
+                throw new InvalidDataException("Whale Island profile did not load its 43 original interaction regions.");
+            MethodInfo load = type.GetMethod("Load", new[] { typeof(string), typeof(string), typeof(int), typeof(int) });
             foreach (object[] invalid in new[] {
                 new object[] { "Map16/interactions", "871_156598", 16, 43 },
                 new object[] { "Map16/interactions", "884_156692", 13, 43 },
@@ -88,7 +91,6 @@ namespace Zjcs.Editor
                 catch (TargetInvocationException error) when (error.InnerException is InvalidDataException) { continue; }
                 throw new InvalidDataException("The shared interaction loader accepted another source identity.");
             }
-            ProjectTools.Validate();
             Debug.Log("Shared interaction catalog validation passed: historical maps 10-15, six Whale Island heroes and source identity guards.");
         }
 

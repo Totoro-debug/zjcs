@@ -71,6 +71,7 @@ namespace Zjcs.Editor
             FightCombatValidation.RunSmokeTest();
             Zjcs.Editor.Combat.OfficialBattleHudAssetTools.ValidateRenderer();
             MainlineMapModuleValidation.ValidateProfileDataManifests();
+            MainlineMapModuleValidation.RunInteractionCatalogs();
             MainlineMapModuleValidation.ValidateWhaleIslandStoryCondition();
             try
             {
