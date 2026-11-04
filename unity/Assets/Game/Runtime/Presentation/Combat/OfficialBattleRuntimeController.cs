@@ -194,6 +194,8 @@ namespace Zjcs.Presentation.Combat
                     {
                         var entityViews = new OfficialBattleSkillEntityPlayback(worldRoot, gridMapper, nativeScope,
                             id => nextExecutor.State.Units.Find(unit => unit.Id == id));
+                        entityViews.SkillStarted += nextHud.OnSkillStarted;
+                        entityViews.SkillEnded += nextHud.OnSkillEnded;
                         nextSkillGraphPlayback = new OfficialBattleSkillGraphPlayback(graphCatalog, nativeScope, entityViews);
                     }
                     catch { nativeScope.Dispose(); throw; }
@@ -325,17 +327,19 @@ namespace Zjcs.Presentation.Combat
                 FightBattleExecutionResult result = executor.Step(executor.State.Sequence,
                     executor.State.Counter + 1);
                 sceneView.Refresh(result.Checkpoint, result.Event);
-                skillGraphPlayback?.Play(result.Event, result.Checkpoint,
-                    sceneView.TryGetUnitTransform);
                 if (hudRoot != null)
                 {
                     hudView.Refresh(result.Checkpoint);
-                    hudView.RefreshSkillSlots(result.Checkpoint, skillIconResolver, result.Event);
+                    hudView.RefreshSkillSlots(result.Checkpoint, skillIconResolver);
                     hudView.RefreshTimeline(result.Checkpoint, timelinePortraitResolver,
                         timelineFactionResolver, true, result.Event);
                     hudView.RefreshBoss(result.Checkpoint, UnitName);
                     hudView.RefreshStageStatus(result.Checkpoint);
                 }
+                // Install the settled CD snapshot before native zero-delay starts.
+                // Delayed starts and each skill's own Remove drive subsequent states.
+                skillGraphPlayback?.Play(result.Event, result.Checkpoint,
+                    sceneView.TryGetUnitTransform);
                 if (!result.Replayed)
                     sceneView.ShowDamageFloats(result.Event, result.Checkpoint, hudCatalog.Font, damageColors);
                 LastStepSeconds = result.Event != null && result.Event.Duration > 0f

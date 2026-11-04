@@ -46,6 +46,8 @@ namespace Zjcs.Presentation.Combat
 
         public int Count => records.Count;
 
+        internal bool ContainsSkill(int skillEntityId) => records.ContainsKey(skillEntityId);
+
         public static OfficialBattleSkillGraphCatalog TryLoadDefault()
         {
             TextAsset asset = Resources.Load<TextAsset>(ResourcePath);

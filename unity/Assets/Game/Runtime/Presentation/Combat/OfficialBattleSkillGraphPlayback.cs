@@ -59,7 +59,7 @@ namespace Zjcs.Presentation.Combat
                 int targetId = TargetId(cast);
                 string direction = ResolveDirection(cast.Presentation?.FacingIndex ?? actor.Direction);
                 GameObject prefab = catalog.Find(cast.SkillEntityId, direction);
-                if (prefab == null) continue;
+                if (prefab == null && !catalog.ContainsSkill(cast.SkillEntityId)) continue;
                 var scheduled = new ScheduledCast
                 {
                     Cast = cast,

@@ -78,6 +78,7 @@ namespace Zjcs.Editor.Combat
                 yield return null;
                 Require(actor.GetComponent<MyEntity>() == priorEntity && actor.GetComponent<MyFightSkillAgent>() == null,
                     "production teardown releases only its own source bindings");
+                yield return CheckSkillSlotLifecycle(actor, target, prefab, pump);
                 Debug.Log("[Production shared skill view] original flags, distinct Skill entity, entity/position target branches, exact duration end, native particles and scoped teardown passed.");
             }
             finally

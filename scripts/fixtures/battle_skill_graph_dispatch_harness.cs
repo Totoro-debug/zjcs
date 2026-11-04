@@ -47,8 +47,9 @@ namespace Zjcs.Presentation.Combat
         private readonly OfflineBattleNativePlayableScope scope;
         public OfficialBattleSkillEntityPlayback(OfflineBattleNativePlayableScope scope) { this.scope = scope; }
         public void Start(FightBattleSkillCastEvent cast, GameObject prefab, Transform source, Transform target)
-            => scope.Play(prefab, source.gameObject, target?.gameObject ?? source.gameObject, 1,
-                scope.PlayableSlot.gameObject, new Dictionary<string, object>());
+            { scope.EntitiesStarted.Add(cast.SkillEntityId);
+              if (prefab != null) scope.Play(prefab, source.gameObject, target?.gameObject ?? source.gameObject, 1,
+                scope.PlayableSlot.gameObject, new Dictionary<string, object>()); }
         public void Tick(float delta) => scope.Tick(delta);
         public void Dispose() => scope.Dispose();
     }
@@ -58,6 +59,8 @@ namespace Zjcs.Offline.BattleNativePlayables
     public class OfflineBattleNativePlayableScope : IDisposable
     {
         public readonly Transform PlayableSlot = new Transform("slot");
+        public readonly List<int> EntitiesStarted = new List<int>();
+        public void BindNativePrefabAdapter(Action<GameObject> adapter) {}
         public readonly List<string> Plays = new List<string>();
         public readonly List<float> Times = new List<float>();
         public float Clock;
@@ -76,6 +79,8 @@ namespace Zjcs.Offline.BattleNativePlayables
         public void Dispose() { Disposed = true; }
     }
 }
+namespace Zjcs.Offline.ProfessionUI
+{ public static class PartnerNativeSkillSkeleton { public static void BindOriginalPrefab(GameObject value) {} } }
 public static class BattleSkillGraphDispatchHarness
 {
     static void Require(bool value, string message) { if (!value) throw new Exception(message); }
@@ -93,7 +98,8 @@ public static class BattleSkillGraphDispatchHarness
         foreach (string field in fields) { Resources.Assets[field] = new GameObject(field); bindings.Add(Binding(field, field)); }
         JsonUtility.Data = new OfficialBattleSkillGraphCatalogData { manifest = "884_156692", skills = new[] {
             new OfficialBattleSkillGraphRecord { skill_entity_id = 10, playables = bindings.ToArray() },
-            new OfficialBattleSkillGraphRecord { skill_entity_id = 20, playables = new[] { Binding("myPlayablePrefab", "fallback") } }
+            new OfficialBattleSkillGraphRecord { skill_entity_id = 20, playables = new[] { Binding("myPlayablePrefab", "fallback") } },
+            new OfficialBattleSkillGraphRecord { skill_entity_id = 30, playables = Array.Empty<OfficialBattleSkillGraphBinding>() }
         } };
         var catalog = OfficialBattleSkillGraphCatalog.TryLoadDefault();
         var checkpoint = new FightBattleCheckpoint();
@@ -143,6 +149,19 @@ public static class BattleSkillGraphDispatchHarness
             playback.Play(new FightBattleStepEvent { SkillCasts = new List<FightBattleSkillCastEvent> { captured } }, checkpoint, resolve);
             playback.Tick(.2f);
             Require(capturedScope.Plays[0] == "LeftPlayablePrefab:target", "Settled actor direction replaced the skill creation snapshot");
+        }
+        var empty = new OfflineBattleNativePlayableScope();
+        using (var playback = new OfficialBattleSkillGraphPlayback(catalog, empty, new OfficialBattleSkillEntityPlayback(empty)))
+        {
+            playback.Play(new FightBattleStepEvent { SkillCasts = new List<FightBattleSkillCastEvent> {
+                Cast(30, .5f), Cast(999, 0) } }, checkpoint, resolve);
+            playback.Tick(.25f);
+            Require(empty.EntitiesStarted.Count == 0, "Empty graph cast started before its delay");
+            playback.Tick(.25f);
+            Require(empty.EntitiesStarted.Count == 1 && empty.EntitiesStarted[0] == 30 && empty.Plays.Count == 0,
+                "Known empty graph must create a native entity; unknown ID must remain excluded");
+            playback.Tick(.5f);
+            Require(empty.EntitiesStarted.Count == 1, "Empty graph cast was duplicated");
         }
         actor.Direction = 2;
         var timed = new OfflineBattleNativePlayableScope();

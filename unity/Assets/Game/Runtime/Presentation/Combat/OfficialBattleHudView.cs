@@ -168,8 +168,7 @@ namespace Zjcs.Presentation.Combat
             rect.offsetMax = new Vector2(unlocked ? 0f : binding.noUnlockPetOffset, offsetMax.y);
         }
 
-        public void RefreshSkillSlots(FightBattleCheckpoint checkpoint, Func<int, Sprite> skillIcon,
-            FightBattleStepEvent stepEvent = null)
+        public void RefreshSkillSlots(FightBattleCheckpoint checkpoint, Func<int, Sprite> skillIcon)
         {
             if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
             if (skillIcon == null) throw new ArgumentNullException(nameof(skillIcon));
@@ -180,6 +179,7 @@ namespace Zjcs.Presentation.Combat
             if (player == null) throw new InvalidOperationException("Battle HUD cannot find the main player unit.");
 
             var cooldowns = new FightSkillState(player.SkillState);
+            equippedSkillSlots.Clear();
             // FightMainPanelSkillUI.RefreshView iterates the serialized SkillIcons list, including
             // empty slots. Reuse those objects so their original layout/animations remain bound.
             for (int index = 0; index < skillSlots.Length; index++)
@@ -190,9 +190,11 @@ namespace Zjcs.Presentation.Combat
                 WorldGameSkillIcon card = skillSlots[index];
                 if (skill == null)
                 {
+                    activeSkillSlots.Remove(index);
                     card.SetUIState(WorldGameSkillIcon.State.None);
                     continue;
                 }
+                equippedSkillSlots.Add(index);
                 int iconItemId = skill.UseItemId > 0 ? skill.UseItemId : skill.ItemId;
                 Sprite icon = skillIcon(iconItemId);
                 if (icon == null) throw new InvalidOperationException("Official battle skill icon is not bound for item " + iconItemId);
@@ -204,7 +206,7 @@ namespace Zjcs.Presentation.Combat
                 else if (skill.LimitedTimes >= 0 && slotState != null && slotState.ReleasedTimes >= skill.LimitedTimes)
                     card.SetUIState(WorldGameSkillIcon.State.LimitedTimes);
                 else card.SetSkillCd(cooldowns.LeftCooldown(index));
-                if (stepEvent != null && stepEvent.ActorId == player.Id && HasCast(stepEvent, index))
+                if (activeSkillSlots.Contains(index))
                     card.SetUIState(WorldGameSkillIcon.State.Applied);
             }
         }
@@ -729,14 +731,6 @@ namespace Zjcs.Presentation.Combat
             foreach (FightSkillSlotState candidate in state.Slots)
                 if (candidate != null && candidate.Slot == slot) return candidate;
             return null;
-        }
-
-        private static bool HasCast(FightBattleStepEvent stepEvent, int slot)
-        {
-            if (stepEvent.SkillCasts == null) return false;
-            foreach (FightBattleSkillCastEvent skillCast in stepEvent.SkillCasts)
-                if (skillCast != null && skillCast.Slot == slot) return true;
-            return false;
         }
 
         private static bool IsWaveSpawned(FightBattleCheckpoint checkpoint, int unitId)

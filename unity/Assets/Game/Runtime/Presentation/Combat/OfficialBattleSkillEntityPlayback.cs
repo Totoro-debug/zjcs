@@ -80,6 +80,8 @@ namespace Zjcs.Presentation.Combat
             public MyGridTransform GridView;
             public ECGridTransformData PreviousGrid;
             public Grid Projection;
+            public MyFightSkillAgent SkillAgent;
+            public Action<MyFightSkill> SkillApplied, SkillEnded;
             public readonly List<Component> Added = new List<Component>();
         }
 
@@ -100,6 +102,11 @@ namespace Zjcs.Presentation.Combat
         private readonly List<ActiveCast> casts = new List<ActiveCast>();
         private int serial;
         private bool disposed;
+
+        // FightSkillListDataEntityProvider forwards these original agent events
+        // by slot. Keep the unit identity so another unit cannot alter the HUD.
+        public event Action<int, int> SkillStarted;
+        public event Action<int, int> SkillEnded;
 
         public OfficialBattleSkillEntityPlayback(Transform root, OfficialBattleGridMapper gridMapper,
             OfflineBattleNativePlayableScope scope, Func<int, FightBattleUnitState> unitState)
@@ -204,7 +211,11 @@ namespace Zjcs.Presentation.Combat
             lease.Entity = Bind<MyEntity>();
             lease.GridView = Bind<MyGridTransform>();
             lease.PreviousGrid = lease.GridView.Component;
-            Bind<MyFightSkillAgent>();
+            lease.SkillAgent = Bind<MyFightSkillAgent>();
+            lease.SkillApplied = skill => SkillStarted?.Invoke(id, skill.Component.SkillSlot);
+            lease.SkillEnded = skill => SkillEnded?.Invoke(id, skill.Component.SkillSlot);
+            lease.SkillAgent.OnSkillApplied += lease.SkillApplied;
+            lease.SkillAgent.OnSkillEnded += lease.SkillEnded;
             if (lease.Added.Contains(lease.Entity))
                 lease.Entity.Bind(null, new EntityData { TypeId = OfficialBattleSceneBindings.EntityId(state),
                     Identifier = UnitId(id), Grid = lease.Projection }, true);
@@ -238,6 +249,11 @@ namespace Zjcs.Presentation.Combat
 
         private static void ReleaseUnit(UnitLease lease)
         {
+            if (lease.SkillAgent != null)
+            {
+                lease.SkillAgent.OnSkillApplied -= lease.SkillApplied;
+                lease.SkillAgent.OnSkillEnded -= lease.SkillEnded;
+            }
             if (lease.GridView != null) lease.GridView.Component = lease.PreviousGrid;
             for (int i = lease.Added.Count - 1; i >= 0; i--) if (lease.Added[i] != null) Destroy(lease.Added[i]);
         }

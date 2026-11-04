@@ -1,0 +1,161 @@
+{
+  "known_empty_graph": {
+    "entity_id": 10100,
+    "original_prefab": {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Prefabs/EcEntity/Fight/FightSkill/10100/10100.prefab",
+      "sha256": "ecfe0c11a841d94b7aa564ea8315443b0f6c4518bb83efab80e2dd688dc5dd19"
+    },
+    "native_export_receipt": {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all-source-manifest.json",
+      "sha256": "264d79bcd2da2d47f86bc9e1c1956cd4e07853e09ad2248b691e2c92dd125d3c"
+    },
+    "original_null_fields": [
+      "myPlayablePrefab",
+      "UpPlayablePrefab",
+      "DownPlayablePrefab",
+      "LeftPlayablePrefab",
+      "RightPlayablePrefab"
+    ]
+  },
+  "matching_catalog_entity_count": 1884,
+  "manifest": "884_156692",
+  "generator": {
+    "path": "scripts/record_battle_skill_slot_lifecycle.py",
+    "sha256": "bb0383e4fd6ce94a6ee99642131fad2c480dd94fba4a7432b70a1dd7f40cad88"
+  },
+  "application_sources": [
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightSkill.cs",
+      "sha256": "9c6035e4ef62e7a7acd5c4346cd2e52bbc6a7e058bee59010ca048bee2fd92af"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/MyFightSkillAgent.cs",
+      "sha256": "f67d0cb66ebe0784b95e8d88615f8723215a1c075663adce7b46d006a9020e04"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/FightSkillListDataEntityProvider.cs",
+      "sha256": "9ca060dae7f3558d9fa93b949381939c0b4add9dcfee5e54682457a7223d904e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/FightSkillListDataProvider.cs",
+      "sha256": "5e857be2a0a3a3340f122eef921c4f5ad945c129914c5f51ff5bb42c4bf103a7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/FightMainPanelSkillUI.cs",
+      "sha256": "025ceb03d0acc74fbe19cabcd2e2246df5805840ad32aa6db05300c23383f4f7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/client-source/GameSkillIcon.cs",
+      "sha256": "b0c964f5e3c189af345260ff8de09e24ecbdd57e4a132728e96087a560218ce0"
+    }
+  ],
+  "source_code_manifest": {
+    "path": ".tools/source-packages/current/884_156692/code-manifest.json",
+    "sha256": "87e1cd87783893fc64d4b507cc286a41504b442a28ba5cdc79ed52eed9b502e4"
+  },
+  "runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillEntityPlayback.cs",
+      "sha256": "965fa20178dc2e1c9eb344399afe17c070296de3e6eda08d32ed3159bb3f25d9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillGraphCatalog.cs",
+      "sha256": "d951f2bc2a3d0af7f6d180bf1bfaffc435302b8b89fdb54b6dce3afc8825c57f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillGraphPlayback.cs",
+      "sha256": "e247856d359609745277b1b16f6b891ddafc4f2c1d8564bd56fd811ea07c981f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs",
+      "sha256": "5e20129f7c60c8c53f7b1fac952ba8d61b6e61d1257293459355c261405cf300"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.cs",
+      "sha256": "4f8fe8dfb720cd0a049321ba78babd4fe44bbd33196bcd13218e6bda5d8103e9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.SkillLifecycle.cs",
+      "sha256": "1a5d9d3a6e9c5453bea856ce1972a5cb72de81241ff8416d0dd36d1663aff66f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.SkillLifecycle.cs.meta",
+      "sha256": "f4400b2eb521123ea0f6ffbc56aab3691e82138074ca775307f863155eac3cd5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkill.cs",
+      "sha256": "06988c66e147bd3b58321fc01422d19ab1c10b15ad4bddb84a7a98e019e89355"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/BattleSkillPlayables/MyFightSkillAgent.cs",
+      "sha256": "6e616f6a482e78edd2400c62eaba77aec27bf0a064de89fcd0bde694b076ee3b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldGameSkillIcon.cs",
+      "sha256": "9a23407008f6a3b802eee1f83f1e6da0411cd4895a373cec2c2f26e4aaf684dd"
+    }
+  ],
+  "fixtures": [
+    {
+      "path": "unity/Assets/Game/Editor/Combat/OfficialBattleSkillSlotAcceptance.cs",
+      "sha256": "6674f3a6b641743e9728e81114115c6a22e9964c9122ddc84901c997c4582c19"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.ProductionSkillViews.cs",
+      "sha256": "d6fab6688b65cbd811cf3232f0372c9027cd5bcaa0101b60f3ad49b3d657bc25"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SkillSlotLifecycle.cs",
+      "sha256": "b277a7fb9df7870659db04a515fb5a2f1323b6b6184cc8b431c1c5f7c532d70d"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattleAnimatorPlaybackAcceptance.SkillSlotLifecycle.cs.meta",
+      "sha256": "d10a0aff0a3b42a7a9ac45a39462afeb4607ab7b8155167756098f653ea913c9"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/Zjcs.Editor.Combat.AnimatorPlayback.asmdef",
+      "sha256": "32c427eba4e116a320b3e2f5d76c0f79ddb50ae923f60d49dc185acdef3d00ef"
+    },
+    {
+      "path": "scripts/fixtures/battle_skill_graph_dispatch_harness.cs",
+      "sha256": "dcda624acf8787ef75aa9b8436907a0ff4b17ee71f40792e0bf3381739994a92"
+    },
+    {
+      "path": "scripts/test_battle_skill_graph_dispatch.ps1",
+      "sha256": "5a8c73c48911eda8c325344fd0fca7e56608b3a12e64b813832b08ee9a7d9087"
+    }
+  ],
+  "existing_bindings": [
+    {
+      "path": "assets/reference/battle-animation/skill-entity-views-source-manifest.json",
+      "sha256": "f31579e4e6c17b2ed52bca6041fa7406b613f8294e760a9ebe599f76c54aa4bc"
+    },
+    {
+      "path": "assets/reference/battle-animation/skill-native-graph-assets-source-manifest.json",
+      "sha256": "1d2dc65bd7613a302d601e2f6d5496544c50e2d6bc5beaf764d0f78c9e8c25f3"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/skill-native-graphs.json",
+      "sha256": "0c7898c589f23c1a72c7cae48c3380eb718fa6833e47aad5656081f910438d15"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/skill-entity-views.json",
+      "sha256": "92a96bda4f5524c9c82450c78d523caa7fbe3159a6d07f6c612ff911fa726621"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/battle-skill-slots.json",
+      "sha256": "55fddbd736f1684da9a38d953978c09129297acfa38ce58556f9aeb4ecae9b36"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/battle-skill-slots-source-manifest.json",
+      "sha256": "70f7f180bfda952bc6cc73a2f6c1735fec82ee13b3e47210112d6b776beec09c"
+    }
+  ],
+  "operation": "Forward original MyFightSkillAgent start/end notifications by source unit and slot into the shared HUD. Keep original Applied/Ended state switches and native entity removal time; detach borrowed-agent subscriptions. Reuse the existing 854 HUD bindings with their own source identity, without substituting 884 art or altering layout.",
+  "limits": [
+    "No new UI layout, artwork, numerical rule or server skill creation implementation.",
+    "Isolated canvas output does not display the complete skill row; state assertions verify original bound objects, not full HUD visual acceptance.",
+    "Known original empty playables still instantiate skill entities. Unknown IDs remain excluded; declared missing assets still throw.",
+    "The finite view probe does not validate rule-selected durations, interrupts, actual audio, complete menus, saves or Windows Player."
+  ]
+}
