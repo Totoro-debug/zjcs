@@ -264,7 +264,7 @@
   "sources": [
     {
       "path": "scripts/prepare_mainline_minimap_world_data.py",
-      "sha256": "e4ca0f164c5143718c0aa88e682c6745636e1136ef8009216bd437ddfb014030"
+      "sha256": "35d028ac77271ce9c406dff2678e6bbefdacb216d484c7d71045a91c2c6e5720"
     },
     {
       "path": ".tools/source-packages/current/884_156692/code-manifest.json",
@@ -305,6 +305,66 @@
     {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EcContainer.cs",
       "sha256": "741ffc352286627a3c847c1a2f5cd56c0a6beb48fc770d31b62ecb1fe6f68a1e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/WorldStageComponent.cs",
+      "sha256": "2f17ef2e71858d2ad8e5333951a83fe6e59c8188cdd4793b1d10d4a67b890266"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/WorldStageActiveComponent.cs",
+      "sha256": "993e883646dda8dce429ea4d850826629d4302d1d2d874374cb587ed0b7f3df0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GridTransformComponent.cs",
+      "sha256": "6317a98b45782f004e871886effb70264ad7cb708b6d8665933970c1dd7160e9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/GridTransformComponentInfo.cs",
+      "sha256": "7aa393429e451d3e1b9a579e768ed1242067925e9fb3e866746f08098b3b853d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/WorldActiveableEntityComponent.cs",
+      "sha256": "41059445e996062eab89f3cd2a46fca9afee74738ab96e01c9fed6573bcc30d4"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/WayPointComponent.cs",
+      "sha256": "5c305d9744bcb162377d709cbd56cb06c7a099c8451c0896ab61941a2d3e1412"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/WayPointComponentImplement.cs",
+      "sha256": "86752737b04c2634f982cc322e8659e9bb54cf8ec61a50f8c0dc711a52d21af7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/StageResultTransportComponent.cs",
+      "sha256": "040cf65d14bc30e575aa26d2b1cf3d61f884d62c7b447e12ca56f3ca11a1b9ba"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EntitySourceComponent.cs",
+      "sha256": "da6ea11504efe0f6ca6ab7ae861846212c23277d8d099ba86ef83556bbbaffa3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/EntityOwnershipData.cs",
+      "sha256": "8d10287843b387975675dc02b4cf11067913a0b7970f13d4f4158689003df5e1"
+    },
+    {
+      "path": "assets/reference/official-map/map14-shared-ec-runtime-source-manifest.json",
+      "sha256": "72d6dc7bad3dba0060f5cb8dbcf87890a6d02cea5448c518a00a9d25fc981087"
+    },
+    {
+      "path": "assets/reference/official-map/map14-shared-view-source-manifest.json",
+      "sha256": "6e72a25613c15b3afab5de00e71143717aa99ec2509120c701a3a8189c62a961"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Console.bytes",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/hero-shared-prefabs.json",
+      "sha256": "777977c2fbe09c6f252a928faca6aac9ffd438a9278018f784c360af836506a4"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset",
+      "sha256": "0b2e0cfc6ae2b0d3046b0131a1640871022d29dea080642ad54e5b5524838961"
     },
     {
       "path": ".tools/source-packages/current/884_156692/official-code/common-source/Common/MapLogicEntityTagInfoParser.cs",
@@ -383,6 +443,18 @@
       "sha256": "fd66bdc54219bcf5adfe6f7048a202a3eeb6f1e7b41b8c220daca4053c0af049"
     }
   ],
+  "shared_entity_payload": {
+    "manifest": "871_156598",
+    "payload": {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Console.bytes",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    },
+    "source_receipt": {
+      "path": "assets/reference/official-map/map14-shared-ec-runtime-source-manifest.json",
+      "sha256": "72d6dc7bad3dba0060f5cb8dbcf87890a6d02cea5448c518a00a9d25fc981087"
+    },
+    "operation": "Borrow existing original entity/view objects; read native grid conversion/body, stage state/activity and component fields. Forward the original stage event and release only the owned receiver. The historical payload is not relabeled as current IL; this adapter supplies no spawn or server state rules."
+  },
   "bindings": [
     {
       "mapClassId": 10,
@@ -628,6 +700,38 @@
   ],
   "integration": [
     {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMapEntities.meta",
+      "sha256": "94e160be3e06917aa978b0c78f6fa0d99414da37aab9985bbaf0f83fdfe9b576"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMapEntities/MainlineMiniMapSharedEntity.cs",
+      "sha256": "3cea625d99fbe01ad72a379eb2cf666159d6464db6cfb4dd1a96d003e1df2a36"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMapEntities/MainlineMiniMapSharedEntity.cs.meta",
+      "sha256": "8e3d346c264f147f892ff78db09c272bead93df1ee53fc41d8af8917daefdee1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMapEntities/Zjcs.Offline.World.MainlineMiniMapEntities.asmdef",
+      "sha256": "eed65ee9821f321c44e34a726f4742a30a091ef4bfef21031f1169a2c2d92ad8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMapEntities/Zjcs.Offline.World.MainlineMiniMapEntities.asmdef.meta",
+      "sha256": "8d7d32eb3fd9f798f7a90305743380b2b54c94d598083f3a35c95e61cb420210"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.SharedEntities.cs",
+      "sha256": "4a59a1d8eb18ea52f22623ac040d66b42f4410c8c2ebd6ec98911e7790937ac5"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.SharedEntities.cs.meta",
+      "sha256": "83f41a6668d0371b5711f9fe2df90bc03aa62f74815fc58aee5fcf4b19a56a5d"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/Zjcs.Editor.Map13.MiniMap.asmdef",
+      "sha256": "e029000718394c0e9f3507fc9bf0dfcc17e447ec91a31e3a9553a9559b050b8e"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapEntityIndex.cs",
       "sha256": "97f57a2711c1a5740ccfa10a59f9b35b50f6d9d3278ef5d570ff06b4436b6617"
     },
@@ -681,7 +785,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.WorldData.cs",
-      "sha256": "248ae4cf1e92fab305df766ce066d9e0121961d3831d5c9848907435b04b72bf"
+      "sha256": "d5c85f18b9566ba97d3d9e30798908a701b2ebaaa19664a0e217b6a105ea79eb"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.WorldData.cs.meta",
@@ -697,7 +801,7 @@
     },
     {
       "path": "scripts/prepare_mainline_minimap_offline_validation.py",
-      "sha256": "75c815e31750f678f67e09a7c26c66214a6418b56d8503a9afb173c3d2153f99"
+      "sha256": "2a68c1cd2cb319618abfc4499e6e05b7134d1d89e0179943630d5093fa83754f"
     },
     {
       "path": "scripts/test_mainline_minimap_native_bindings.py",

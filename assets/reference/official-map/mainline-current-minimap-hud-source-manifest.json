@@ -19,7 +19,7 @@
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_2.mat": "f465cf50b955ba2a9f593f4594bcc53e831682c68fce2eec2bfca9e873f8b69a",
     ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/UI/Common/Common_Atlas/ImgBg_CountText_0.asset": "1233f7ce0167fdd7f8da08dc801cbee3475f0dd0c4e7c47b169c5aa2e3e436c8",
     "scripts/prepare_mainline_minimap_native_hud.py": "8aa11a9cfe7fc882caf30bdf0da449ca04b6c0561113801c009b3bfda13958d4",
-    "scripts/prepare_mainline_minimap_native_root.py": "f00f5df903c2c954280c82020accec7a2f4ac3877f2000fdc798be6f34ba61ec",
+    "scripts/prepare_mainline_minimap_native_root.py": "44f53c6b84065475aaeeb1bd24d71ba652404d0170e819521f8d885ccaf0780b",
     "scripts/prepare_mainline_minimap_regions.py": "0065b061a9d633e2a58016035943693654d51672b52f39965013d5716357f3e0",
     "assets/reference/official-map/mainline-minimap-hud-code-source-manifest.json": "45c43bcdcf40157d07ed16b695106cc079ee3355831e03c9951c216e87daecc8",
     ".tools/source-packages/current/884_156692/official-code/framework-firstpass-source/MultiLanguageText.cs": "3229b04b116900b276a925e0ec9186717dbbf4cb91470b4758a4f514f216e963",
@@ -284,8 +284,28 @@
       "sha256": "e9f0a25ff371d04d28554f01a5fcb2cedc4bf3f97e433cfddf931c57c591e2be"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMapEntities.meta",
+      "sha256": "94e160be3e06917aa978b0c78f6fa0d99414da37aab9985bbaf0f83fdfe9b576"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMapEntities/MainlineMiniMapSharedEntity.cs",
+      "sha256": "3cea625d99fbe01ad72a379eb2cf666159d6464db6cfb4dd1a96d003e1df2a36"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMapEntities/MainlineMiniMapSharedEntity.cs.meta",
+      "sha256": "8e3d346c264f147f892ff78db09c272bead93df1ee53fc41d8af8917daefdee1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMapEntities/Zjcs.Offline.World.MainlineMiniMapEntities.asmdef",
+      "sha256": "eed65ee9821f321c44e34a726f4742a30a091ef4bfef21031f1169a2c2d92ad8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/MainlineMiniMapEntities/Zjcs.Offline.World.MainlineMiniMapEntities.asmdef.meta",
+      "sha256": "8d7d32eb3fd9f798f7a90305743380b2b54c94d598083f3a35c95e61cb420210"
+    },
+    {
       "path": "scripts/prepare_mainline_minimap_offline_validation.py",
-      "sha256": "75c815e31750f678f67e09a7c26c66214a6418b56d8503a9afb173c3d2153f99"
+      "sha256": "2a68c1cd2cb319618abfc4499e6e05b7134d1d89e0179943630d5093fa83754f"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.cs",
@@ -336,6 +356,14 @@
       "sha256": "c22ba6294c7e7908c8072f2f4ca65aac474e242ab94a3cb3ac5aeb6eae36d983"
     },
     {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.SharedEntities.cs",
+      "sha256": "4a59a1d8eb18ea52f22623ac040d66b42f4410c8c2ebd6ec98911e7790937ac5"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.SharedEntities.cs.meta",
+      "sha256": "83f41a6668d0371b5711f9fe2df90bc03aa62f74815fc58aee5fcf4b19a56a5d"
+    },
+    {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Visibility.cs",
       "sha256": "e26da269f29a9688ea87e1ad3204d2a95c876e86b89c4443e8852d255fd28334"
     },
@@ -345,7 +373,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.WorldData.cs",
-      "sha256": "248ae4cf1e92fab305df766ce066d9e0121961d3831d5c9848907435b04b72bf"
+      "sha256": "d5c85f18b9566ba97d3d9e30798908a701b2ebaaa19664a0e217b6a105ea79eb"
     },
     {
       "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.WorldData.cs.meta",

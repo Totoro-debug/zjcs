@@ -15,6 +15,8 @@ from validation_workspace import validation_directory
 def integration_sources():
     module = ROOT / 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap'
     paths = sorted(p for p in module.iterdir() if p.is_file())
+    entities = module.parent / 'MainlineMiniMapEntities'
+    paths += [Path(str(entities) + '.meta'), *sorted(p for p in entities.iterdir() if p.is_file())]
     paths += [ROOT / 'scripts/prepare_mainline_minimap_offline_validation.py']
     paths += sorted((ROOT / 'unity/Assets/Game/Editor/Map13MiniMap').glob('OfficialMainlineMiniMapRootAcceptance*.cs*'))
     return [dict(path=p.relative_to(ROOT).as_posix(),sha256=sha(p.read_bytes())) for p in paths]

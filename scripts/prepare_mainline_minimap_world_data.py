@@ -28,6 +28,12 @@ def build():
         if sha((CODE / 'global-metadata.dat').read_bytes()) != json.loads(code_manifest.read_bytes())['metadata_sha256']:
             raise ValueError('Selected constructor metadata differs from its extraction receipt')
         constructors = Constructors(CODE)
+        shared_receipt = ROOT / 'assets/reference/official-map/map14-shared-ec-runtime-source-manifest.json'
+        shared_source = json.loads(shared_receipt.read_bytes())
+        shared_payload = ROOT / 'unity/Assets/Official/World/Map/14/SharedRuntime/Console.bytes'
+        original_console = next(row for row in shared_source['assemblies'] if row['path'].endswith('/Console.dll'))
+        if shared_source['manifest'] != '871_156598' or sha(shared_payload.read_bytes()) != original_console['sha256']:
+            raise ValueError('Preserve the separately recorded historical original entity IL')
         inputs = []
 
         def payload(bundle, suffix):
@@ -125,6 +131,17 @@ def build():
             CODE / 'common-source/Common/MapRootEntityLiteSingleInfo.cs',
             CODE / 'common-source/Common/MapRegionEntityInfoManager.cs',
             CODE / 'common-source/Common/EcContainer.cs',
+            *[CODE / 'common-source/Common' / (name + '.cs') for name in (
+                'WorldStageComponent', 'WorldStageActiveComponent', 'GridTransformComponent',
+                'GridTransformComponentInfo', 'WorldActiveableEntityComponent', 'WayPointComponent', 'WayPointComponentImplement',
+                'StageResultTransportComponent', 'EntitySourceComponent', 'EntityOwnershipData')],
+            # This existing unchanged IL payload has its own historical source
+            # receipt. Do not relabel it as the selected current configuration.
+            ROOT / 'assets/reference/official-map/map14-shared-ec-runtime-source-manifest.json',
+            ROOT / 'assets/reference/official-map/map14-shared-view-source-manifest.json',
+            ROOT / 'unity/Assets/Official/World/Map/14/SharedRuntime/Console.bytes',
+            ROOT / 'unity/Assets/Official/World/Map/14/SharedRuntime/hero-shared-prefabs.json',
+            ROOT / 'unity/Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset',
             CODE / 'common-source/Common/MapLogicEntityTagInfoParser.cs', CODE / 'common-source/Common/MapEntityExtra.cs',
             CODE / 'common-source/Common/MapTransportEntityInfoPackParser.cs',
             CODE / 'common-source/Common/MapTransportEntityTargetInfo.cs',
@@ -134,9 +151,20 @@ def build():
             sources.extend(path for folder in ('Common', 'Common.LubanGen')
                 if (path := CODE / 'common-source' / folder / (name + '.cs')).is_file())
         receipt = dict(format=1, manifest=apk.version, inputs=inputs, sources=[record(p) for p in dict.fromkeys(sources)],
+            shared_entity_payload=dict(manifest=shared_source['manifest'], payload=record(shared_payload),
+                source_receipt=record(shared_receipt),
+                operation='Borrow existing original entity/view objects; read native grid conversion/body, stage state/activity and component fields. Forward the original stage event and release only the owned receiver. The historical payload is not relabeled as current IL; this adapter supplies no spawn or server state rules.'),
             bindings=bindings, transport_targets=len(transports),
             outputs=[record(destination), record(meta), record(transport_destination), record(transport_meta)],
             integration=[record(ROOT / path) for path in (
+                'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMapEntities.meta',
+                'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMapEntities/MainlineMiniMapSharedEntity.cs',
+                'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMapEntities/MainlineMiniMapSharedEntity.cs.meta',
+                'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMapEntities/Zjcs.Offline.World.MainlineMiniMapEntities.asmdef',
+                'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMapEntities/Zjcs.Offline.World.MainlineMiniMapEntities.asmdef.meta',
+                'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.SharedEntities.cs',
+                'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.SharedEntities.cs.meta',
+                'unity/Assets/Game/Editor/Map13MiniMap/Zjcs.Editor.Map13.MiniMap.asmdef',
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapEntityIndex.cs',
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapEntityIndex.cs.meta',
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapWorldData.cs',

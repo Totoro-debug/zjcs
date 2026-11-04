@@ -98,6 +98,7 @@ namespace Zjcs.Editor.Map13MiniMap
                 "Complete actual six-map world query scope");
             Debug.Log("Shared original minimap world data passed: six maps, 258400 cells, 441 regions, 11148 placements, tags and original transports; independent instances.");
             VerifyEntityIndex(data, definitions);
+            VerifySharedEntities(data);
             return data;
         }
 
