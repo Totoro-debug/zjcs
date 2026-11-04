@@ -1,0 +1,157 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31f715a104a399b4cb62a7eb627ed35b, type: 3}
+  m_Name: MainlineMiniMapMarkers
+  m_EditorClassIdentifier: ''
+  Bindings:
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapArena.prefab
+    Asset: {fileID: 1709254077376921, guid: 00c91e54e92a3eab26d06ad6d17a4e19, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapBattlefield_1.prefab
+    Asset: {fileID: 1709254077376921, guid: 45b87aa6680e3045c07f9b59c10a8e13, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapBattlefield_2.prefab
+    Asset: {fileID: 1709254077376921, guid: e512af7ced54628c4b79957cbaf048d5, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapBattlefield_3.prefab
+    Asset: {fileID: 1709254077376921, guid: 2932d973d2fbe70d6ecd03202f55a796, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapBattlefield_4.prefab
+    Asset: {fileID: 1709254077376921, guid: c7eac6d4e6d5288685d27e2f947e4e50, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapBridge1.prefab
+    Asset: {fileID: 1709254077376921, guid: 55b479e779b17e4d2f1c411d4720af70, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapCannon0.prefab
+    Asset: {fileID: 1709254077376921, guid: 2cfcb1a9f633b8669193de3e6057329c, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapCannon1.prefab
+    Asset: {fileID: 1709254077376921, guid: 0aabad62d4b0e427fb93835708a0a903, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapCannon2.prefab
+    Asset: {fileID: 1709254077376921, guid: cbac3f5c93c64702a6a36fa3a99e8f0a, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapCannon3.prefab
+    Asset: {fileID: 1709254077376921, guid: 658d52bc15d464d2ea9a6fd3ace24a28, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapCannon4.prefab
+    Asset: {fileID: 1709254077376921, guid: 9f439ee248dddba1465d8e4dc32938d7, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapCave.prefab
+    Asset: {fileID: 1709254077376921, guid: abd270a5d1c551deb2c672d9fb4711de, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapChallengestela.prefab
+    Asset: {fileID: 1709254077376921, guid: c197173163230c98f62e762d5f1e6537, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapChest.prefab
+    Asset: {fileID: 1709254077376921, guid: 25ecdbbad5587e70231c953f0f3aee2f, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapCloudBridge.prefab
+    Asset: {fileID: 1709254077376921, guid: d7c91ee5cc5b43cf3402763e20f02491, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapCollection.prefab
+    Asset: {fileID: 1709254077376921, guid: b94d09fe834484a395d3d9e12924acb6, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapDailyDungeon_1.prefab
+    Asset: {fileID: 1709254077376921, guid: 3e18764047b1c2795d369059b26d2eee, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapDailyDungeon_10.prefab
+    Asset: {fileID: 1709254077376921, guid: 756b1b96fa9678afce4438bd73cd1aca, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapDailyDungeon_12.prefab
+    Asset: {fileID: 1709254077376921, guid: 674518817b7dee8466f972c457a867d5, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapDailyDungeon_3.prefab
+    Asset: {fileID: 1709254077376921, guid: 3382bbea3781d4e9d3ab4509f6d65ff6, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapDailyDungeon_4.prefab
+    Asset: {fileID: 1709254077376921, guid: 4ea6fcb09cf0e886aa327821378e9a64, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapDailyDungeon_5.prefab
+    Asset: {fileID: 1709254077376921, guid: dd5a7a78109dba0826a1d1fa14a3e64a, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapDailyDungeon_6.prefab
+    Asset: {fileID: 1709254077376921, guid: 3165d4f1c389fdbf6377f091b4d45190, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapDailyDungeon_7.prefab
+    Asset: {fileID: 1709254077376921, guid: 243ba3dc320acf91dfd29fe20adf266b, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapDailyDungeon_8.prefab
+    Asset: {fileID: 1709254077376921, guid: aff3f1e992fb6464ad201fb4a62426b1, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapDailyDungeon_9.prefab
+    Asset: {fileID: 1709254077376921, guid: 7037ae1c6cb02a131cf5dd985ff69eb4, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapEntry.prefab
+    Asset: {fileID: 1709254077376921, guid: 3c4f4023d9fb88a9beb0fe45ab80ae5d, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapEntry1.prefab
+    Asset: {fileID: 1709254077376921, guid: 7e561a1847f558e81c8cbcfadabc4dd3, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapFootpath.prefab
+    Asset: {fileID: 1709254077376921, guid: 82edda374701427b48626cf547d195ba, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapGateBlock1.prefab
+    Asset: {fileID: 1709254077376921, guid: 7bc848b6cff9843c24ba99ced1b3123c, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapGateBlock2.prefab
+    Asset: {fileID: 1709254077376921, guid: fd67a06d0143b6ea7445529cc2235ebf, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapGateBlock3.prefab
+    Asset: {fileID: 1709254077376921, guid: efbe07e6267a339583f14aa7f3a396bf, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapGateElement1.prefab
+    Asset: {fileID: 1709254077376921, guid: 269e81150c2fac1dc13d8882b7f0d412, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapGateElement2.prefab
+    Asset: {fileID: 1709254077376921, guid: 9a36e121d0731b578d6d40eb96d9675d, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapGateKey.prefab
+    Asset: {fileID: 1709254077376921, guid: 64ecb84a16cf8d3e7871f493381ea4a2, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapGateLevel.prefab
+    Asset: {fileID: 1709254077376921, guid: 6ad1f3dbc4644c887c5ab8ef68f2f52e, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapGatePower.prefab
+    Asset: {fileID: 1709254077376921, guid: 68f09500222678fe5cc441386f05295c, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapGateRank.prefab
+    Asset: {fileID: 1709254077376921, guid: 2373ba7158d9ddc00d9f7bde1dca5cd2, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapGateRankBridge.prefab
+    Asset: {fileID: 1709254077376921, guid: 1927046af5a5601ded82f831ac0822f9, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapGearstela.prefab
+    Asset: {fileID: 1709254077376921, guid: cbb39969dd565c548baa5b834350c693, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapGodMonster_1.prefab
+    Asset: {fileID: 1709254077376921, guid: 160532a409a8e7021f2713f37bd10222, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapGodMonster_2.prefab
+    Asset: {fileID: 1709254077376921, guid: adcb0fabebcd829eda08eb4325433050, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapGodMonster_3.prefab
+    Asset: {fileID: 1709254077376921, guid: c4622225b25c32379b7dae6eb784a7d9, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapGoddess.prefab
+    Asset: {fileID: 1709254077376921, guid: 00e843e3435072edc03277cdf94ac8b3, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapGoddesslittle.prefab
+    Asset: {fileID: 1709254077376921, guid: e3c265c27e98ca2e2cb2e3078508414d, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapGrave.prefab
+    Asset: {fileID: 1709254077376921, guid: ed8928383f0d4271d5c9ceeb03c19ace, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapHerostatue.prefab
+    Asset: {fileID: 1709254077376921, guid: c4045fa7c6708249479ec9b95649d0fe, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapJointStrike.prefab
+    Asset: {fileID: 1709254077376921, guid: ac92fae21e2a73835ad75be8742b3bc5, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapMineGold.prefab
+    Asset: {fileID: 1709254077376921, guid: 2ba00072fc0cd1bb12d8f8d8da018e99, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapMineIron.prefab
+    Asset: {fileID: 1709254077376921, guid: 1623fcd4ea2b0d9e6737736166638d9c, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapMineSand.prefab
+    Asset: {fileID: 1709254077376921, guid: 90c6f138f7b7d8923f7752d1eb051d48, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapMisfortune.prefab
+    Asset: {fileID: 1709254077376921, guid: 5e2249f85eadf53b6e5d2cdfcadc83ac, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapMonster1.prefab
+    Asset: {fileID: 1709254077376921, guid: 5b010e0a37bccf9e05618e7c65cf4007, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapMonster2.prefab
+    Asset: {fileID: 1709254077376921, guid: 0da7cc26453654498cad86637b74dd3d, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapMonster3.prefab
+    Asset: {fileID: 1709254077376921, guid: ca5f4b7f18a302960c69b50eaed110ac, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapMonster4.prefab
+    Asset: {fileID: 1709254077376921, guid: 73b3396e7ff026c85ee156ccb486db87, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapMonster4_2.prefab
+    Asset: {fileID: 1709254077376921, guid: cfdccc8135e230c77f8b685532bdcf95, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapNPC.prefab
+    Asset: {fileID: 1709254077376921, guid: 8dfa87323814a02fa7e58d324592db24, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapNPC_Story.prefab
+    Asset: {fileID: 1709254077376921, guid: 3d0e404838823e0f9f0a9dfb68804868, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapPuzzlemonster.prefab
+    Asset: {fileID: 1709254077376921, guid: 7fe11934c95399f1296ca8e5ec92d06a, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapRattan.prefab
+    Asset: {fileID: 1709254077376921, guid: 8dbad7c94fd1a608680730fca02ce05c, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapRoulette.prefab
+    Asset: {fileID: 1709254077376921, guid: 3420e8cbd9f03e952812053f00208a61, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapSokoban_1.prefab
+    Asset: {fileID: 1709254077376921, guid: b008a789ee7694c45cb0eb87bafa03b7, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapSokoban_2.prefab
+    Asset: {fileID: 1709254077376921, guid: 2ecfd364ceb3ab1ad9f77dbba7c3dc80, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapStele.prefab
+    Asset: {fileID: 1709254077376921, guid: aae3ca2887c89497c51a10644dd16f62, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapStele2.prefab
+    Asset: {fileID: 1709254077376921, guid: 11c3b049baa34585c371ec725cbf15b7, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapStorystela.prefab
+    Asset: {fileID: 1709254077376921, guid: 76315d8974b99b396d81ae5c3ed5e323, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapSwitch1.prefab
+    Asset: {fileID: 1709254077376921, guid: 2bdaf9604a57720e31c34404ad2afa16, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapSwitch2.prefab
+    Asset: {fileID: 1709254077376921, guid: 71f78196698c3fb39af574917fcc13b7, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapTaskboard.prefab
+    Asset: {fileID: 1709254077376921, guid: 1ecd1c8bdb701c3eb996f26cf54f1f40, type: 3}
+  - OfficialPath: UI/Map/MiniMap/MiniMapMark/MiniMapTemple.prefab
+    Asset: {fileID: 1709254077376921, guid: 2503b98969f9a5eb04ca4fe2e63b4b02, type: 3}

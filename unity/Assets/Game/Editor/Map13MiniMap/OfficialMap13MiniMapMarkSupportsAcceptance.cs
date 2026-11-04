@@ -15,6 +15,7 @@ using Zjcs.Official.World.NativeLabelUI;
 using Zjcs.Official.World.Map13GridVisibility;
 using Zjcs.Official.World.Map13Entities;
 using Zjcs.Official.World.Map13EntityVisibilityViews;
+using Zjcs.Offline.World.NativeMap13;
 using EcEntityIdentifier=Zjcs.Official.StoryPlayables.EcEntityIdentifier;
 using Object=UnityEngine.Object;
 using MapRegionStatus=Zjcs.Official.World.NativeTerrain.Common.MapRegionStatus;
@@ -32,6 +33,7 @@ namespace Zjcs.Editor.Map13MiniMap
     public static class OfficialMap13MiniMapMarkSupportsAcceptance
     {
         private const string Key="Zjcs.Map13.MarkSupports.Running";
+        private const string CurrentKey="Zjcs.Mainline.CurrentMarkers.Running";
         private static IEnumerator routine;private static int errors;
         private static string Workspace=>Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
         private const string Native="Assets/Official/World/Map/13/NativeMiniMapMarks/Prefabs/UI/Map/MiniMap/MiniMapMark/";
@@ -87,6 +89,10 @@ namespace Zjcs.Editor.Map13MiniMap
 
 
         [Serializable] private sealed class Receipt{public string[] roots;}
+        [Serializable] private sealed class SpriteRect{public float x,y,width,height;}
+        [Serializable] private sealed class SpriteGeometry
+        {public string path;public SpriteRect rect;public float ppu;public Vector2 pivot;public Vector2[] vertices,uv;public int[] triangles;}
+        [Serializable] private sealed class CurrentReceipt{public SpriteGeometry[] sprite_geometry;}
         [Serializable] private sealed class Proof{public string editor;public int prefabs,sprites,stage_transitions,periodicity_cases,npc_events,tip_links,rendered_pixels;public bool original_support_binding,original_owner_checks,original_tip_identity,tip_show_switch,tip_number_cap,event_unsubscribe,reentry,native_render,play_mode;}
         private sealed class Player:IMiniMapMarkSupportPlayer
         {public long Id=>7;public int Count;public event Action<int,int> OnPeriodicityInteractionChanged;public int GetWorldPeriodicityInteractionCount(int id)=>Count;public void Change(int value){Count=value;OnPeriodicityInteractionChanged?.Invoke(7,value);}public int Subscribers=>OnPeriodicityInteractionChanged?.GetInvocationList().Length??0;}
@@ -117,6 +123,7 @@ namespace Zjcs.Editor.Map13MiniMap
         }
         private static object Get(object target,string name){for(var type=target.GetType();type!=null;type=type.BaseType){var f=type.GetField(name,System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.Public|System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.DeclaredOnly);if(f!=null)return f.GetValue(target);}throw new MissingFieldException(name);}
         public static void Run(){Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION","1");errors=0;Application.logMessageReceived+=Observe;SessionState.SetBool(Key,true);EditorApplication.playModeStateChanged+=State;EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);EditorApplication.EnterPlaymode();}
+        public static void RunCurrent(){SessionState.SetBool(CurrentKey,true);Run();}
         private static void Observe(string a,string b,LogType t){if(t==LogType.Error||t==LogType.Exception||t==LogType.Assert)errors++;}
         [InitializeOnLoadMethod] private static void Resume(){if(SessionState.GetBool(Key,false)){errors=0;Application.logMessageReceived+=Observe;EditorApplication.playModeStateChanged+=State;}}
         private static void State(PlayModeStateChange state){if(state==PlayModeStateChange.EnteredPlayMode&&SessionState.GetBool(Key,false)){routine=Verify();EditorApplication.update+=Advance;}}
@@ -134,17 +141,38 @@ namespace Zjcs.Editor.Map13MiniMap
             var stage=new Stage{Entity=entity,Active=true};entity.Components[typeof(IMiniMapMarkStage)]=stage;entity.Components[typeof(IMiniMapManagedStage)]=stage;entity.Components[typeof(IClientVisibilityHandler)]=visibility;
             var ownership=new Source{Entity=entity,Ownership=new EntityOwnershipData{Type=EntityOwnershipType.Player,OwnerId=9}};entity.Components[typeof(IMiniMapManagedEntitySource)]=ownership;
             entity.Components[typeof(IMiniMapMarkWayPoint)]=new WayPoint{Entity=entity,Queries=q};entity.Components[typeof(IMiniMapMarkWorldEntry)]=new Entry{Entity=entity,Active=true};q.Common=entity;q.Entities[entity.Id]=entity;
-            var receipt=JsonUtility.FromJson<Receipt>(File.ReadAllText(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_REPOSITORY_ROOT"),"assets/reference/official-map/map13-native-minimap-marks-source-manifest.json")));Require(receipt.roots.Length==41,"Actual Map13 selection");
-            var instances=new List<MiniMapMarkUIBase>();int sprites=0;
-            foreach(var path in receipt.roots)
+            bool current=SessionState.GetBool(CurrentKey,false);SessionState.EraseBool(CurrentKey);
+            var catalog=current?Resources.Load<NativeMap13AssetCatalog>("MainlineMiniMap/current-marker-assets"):null;
+            string[] paths;
+            if(current)
             {
-                var prefab=AssetDatabase.LoadAssetAtPath<GameObject>(Native+Path.GetFileName(path));Require(prefab,"Actual original marker prefab "+path);var go=Object.Instantiate(prefab,host.transform,false);labels.Bind(go);
+                Require(catalog&&catalog.Bindings.Length>41,"Shared current marker catalog");
+                paths=catalog.Bindings.Select(binding=>binding.OfficialPath).ToArray();
+                var receipt=JsonUtility.FromJson<CurrentReceipt>(File.ReadAllText(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_REPOSITORY_ROOT"),"assets/reference/official-map/mainline-current-minimap-markers-source-manifest.json")));
+                foreach(var expected in receipt.sprite_geometry)
+                {
+                    var sprite=AssetDatabase.LoadAssetAtPath<Sprite>(expected.path.Substring("unity/".Length));
+                    Require(sprite&&sprite.rect==new Rect(expected.rect.x,expected.rect.y,expected.rect.width,expected.rect.height)&&sprite.pixelsPerUnit==expected.ppu&&Vector2.Distance(sprite.pivot,expected.pivot)<.0001f,"Original marker Sprite logical fields: "+expected.path);
+                    Require(sprite.triangles.Select(v=>(int)v).SequenceEqual(expected.triangles)&&sprite.vertices.Length==expected.vertices.Length&&sprite.uv.Length==expected.uv.Length,"Original marker Sprite geometry dimensions");
+                    for(int v=0;v<expected.vertices.Length;v++)Require(Vector2.Distance(sprite.vertices[v],expected.vertices[v])<.00001f&&Vector2.Distance(sprite.uv[v],expected.uv[v])<.00001f,"Original marker mesh/Atlas UVs: "+expected.path);
+                }
+            }
+            else
+            {
+                var receipt=JsonUtility.FromJson<Receipt>(File.ReadAllText(Path.Combine(Environment.GetEnvironmentVariable("ZJCS_REPOSITORY_ROOT"),"assets/reference/official-map/map13-native-minimap-marks-source-manifest.json")));
+                paths=receipt.roots;Require(paths.Length==41,"Actual Map13 selection");
+            }
+            var instances=new List<MiniMapMarkUIBase>();int sprites=0;
+            foreach(var path in paths)
+            {
+                var prefab=current?catalog.Load<GameObject>(path):AssetDatabase.LoadAssetAtPath<GameObject>(Native+Path.GetFileName(path));Require(prefab,"Actual original marker prefab "+path);var go=Object.Instantiate(prefab,host.transform,false);labels.Bind(go);
                 Require(go.GetComponentsInChildren<Transform>(true).All(t=>GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(t.gameObject)==0),"Original marker component binding");sprites+=go.GetComponentsInChildren<SpriteRenderer>(true).Length;
                 foreach(var link in go.GetComponentsInChildren<MapEntityTipDotNodeLinker>(true)){link.Controller=tips;link.TipDotSystem=tips;link.Context=map;link.MiniMap=map;}
                 instances.Add(go.GetComponent<MiniMapMarkUIBase>());
             }
             host.SetActive(true);yield return null;
-            for(int i=0;i<instances.Count;i++){var ui=instances[i];ui.Init(map,MiniMapEntityMark.Create(q,ui.MarkType,13,38,entity));ui.transform.localPosition=new Vector3((i%7-3)*8,(2.5f-i/7)*8,0);}
+            int columns=current?10:7;float spacing=current?6:8;
+            for(int i=0;i<instances.Count;i++){var ui=instances[i];ui.Init(map,MiniMapEntityMark.Create(q,ui.MarkType,13,38,entity));ui.transform.localPosition=new Vector3((i%columns-(columns-1)*.5f)*spacing,((instances.Count/columns)*.5f-i/columns)*spacing,0);}
             Require(tips.Links>0&&visibility.Subscribers>0&&player.Subscribers>0,"Actual original support subscriptions");
             var camera=new GameObject("OriginalNativeMarkerCamera",typeof(Camera)).GetComponent<Camera>();camera.orthographic=true;camera.orthographicSize=26;camera.nearClipPlane=-2;camera.farClipPlane=3;camera.transform.position=new Vector3(0,0,-1);camera.cullingMask=1<<16;camera.clearFlags=CameraClearFlags.SolidColor;camera.backgroundColor=Color.black;camera.gameObject.AddComponent<UniversalAdditionalCameraData>().SetRenderer(1);
             var target=new RenderTexture(1200,720,24,RenderTextureFormat.ARGB32);target.Create();camera.targetTexture=target;
@@ -164,7 +192,7 @@ namespace Zjcs.Editor.Map13MiniMap
             foreach(var ui in instances)ui.Init(map,MiniMapEntityMark.Create(q,ui.MarkType,13,38,entity));Require(player.Subscribers>0&&visibility.Subscribers>0&&tips.Callbacks.Count>0,"Original marker reuse reinstalls support listeners");
             // Original release runs again from OnDestroy; no UI/state fixtures replace prefabs.
             Object.Destroy(host);Object.Destroy(camera.gameObject);yield return null;Require(player.Subscribers==0&&visibility.Subscribers==0&&tips.Callbacks.Count==0&&tips.OnTipDotShowChanged==null,"Original marker destruction removes all subscriptions");labels.Dispose();Object.Destroy(target);yield return null;
-            File.WriteAllText(Path.Combine(Workspace,"minimap-mark-supports-proof.json"),JsonUtility.ToJson(new Proof{editor=Application.unityVersion,prefabs=41,sprites=sprites,stage_transitions=stageTransitions,periodicity_cases=periodicityCases,npc_events=4,tip_links=tips.Links,rendered_pixels=rendered,original_support_binding=true,original_owner_checks=true,original_tip_identity=true,tip_show_switch=true,tip_number_cap=true,event_unsubscribe=true,reentry=true,native_render=true,play_mode=Application.isPlaying},true));Debug.Log("MAP13_ORIGINAL_MARK_SUPPORTS_PASS");
+            File.WriteAllText(Path.Combine(Workspace,"minimap-mark-supports-proof.json"),JsonUtility.ToJson(new Proof{editor=Application.unityVersion,prefabs=paths.Length,sprites=sprites,stage_transitions=stageTransitions,periodicity_cases=periodicityCases,npc_events=4,tip_links=tips.Links,rendered_pixels=rendered,original_support_binding=true,original_owner_checks=true,original_tip_identity=true,tip_show_switch=true,tip_number_cap=true,event_unsubscribe=true,reentry=true,native_render=true,play_mode=Application.isPlaying},true));Debug.Log(current?"MAINLINE_CURRENT_MARK_SUPPORTS_PASS":"MAP13_ORIGINAL_MARK_SUPPORTS_PASS");
         }
     }
 }
