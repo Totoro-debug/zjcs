@@ -992,6 +992,14 @@ namespace Zjcs.Presentation.Combat
                         continue;
                     }
                 }
+                if (!hasAttached && units[cue.UnitId].NativeModel is OfficialBattleLiveMonsterModelView liveMonster
+                    && cue.Movement != null && movementCues.TryGetValue(cue.Movement, out var monsterMoves)
+                    && monsterMoves.TrueForAll(value => liveMonster.Supports(value.SkillPlayable)))
+                {
+                    foreach (var original in monsterMoves)
+                        pendingUnitAnimations.Add(new PendingUnitAnimation { Cue = original, Serial = ++pendingAnimationSerial });
+                    continue;
+                }
                 if (hasAttached && cue.Movement != null
                     && movementCues.TryGetValue(cue.Movement, out var originals))
                 {
@@ -1079,6 +1087,17 @@ namespace Zjcs.Presentation.Combat
             {
                 partner.PlayMovement(playable, eventCue.StopAfter < 0f ? -1f : eventCue.StopAfter - elapsedSinceScheduled);
                 return;
+            }
+            if (unit.NativeModel is OfficialBattleLiveMonsterModelView liveMonster)
+            {
+                AnimationClip clip = skillPlayableCatalog?.LoadClip(playable);
+                if (liveMonster.PlaySkill(playable, clip,
+                    eventCue.StopAfter < 0f ? -1f : eventCue.StopAfter - elapsedSinceScheduled))
+                {
+                    unit.CurrentAnimation = playable.animation;
+                    unit.AnimationLoops = false;
+                    return;
+                }
             }
             string exactAnimation = playable.kind == 1 ? playable.animation : null;
             if (string.IsNullOrEmpty(exactAnimation)) return;

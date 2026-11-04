@@ -27,6 +27,8 @@ namespace Zjcs.Editor.ProfessionUI
         private static RenderPipelineAsset previousDefault, previousQuality;
         private static UniversalRenderPipelineAsset pipeline;
         private static Renderer2DData rendererData;
+        [Serializable] private sealed class MovementSource { public int id; public OfficialBattleSkillPlayableCue[] playables; }
+        [Serializable] private sealed class MovementSources { public MovementSource[] actions; }
 
         static OfficialBattleMonsterSceneValidation() { EditorApplication.update += Update; }
         public static void Run()
@@ -89,6 +91,12 @@ namespace Zjcs.Editor.ProfessionUI
                 {
                     // Cross the same public model seam used by all battle modes.
                     model = OfficialBattleLiveMonsterModelView.TryCreate(unit, root.transform);
+                    if (!model.HasAnimation(name))
+                    {
+                        model.Dispose(); model = null;
+                        yield return 0;
+                        continue;
+                    }
                     Require(model != null && model.Play(name, false, true), "Shared model rejected original action: " + name);
                     var ownNative = model.ModelTransform.GetComponent<BattleNativeMonsterRenderer>();
                     var ownFollower = model.Transform.GetComponentInChildren<OfficialBattleShadowBoneFollower>();
@@ -99,11 +107,23 @@ namespace Zjcs.Editor.ProfessionUI
                         model.Transform.position = new Vector3(sample * .3f, sample * -.2f, 0);
                         model.Transform.localScale = new Vector3(sample % 2 == 0 ? 1 : -1, 1, 1);
                         model.Tick(sample == 0 ? 0 : duration / 8);
+                        if (name == "die_01") Require(ownNative.Animator.GetBool("die")
+                            && ownNative.AnimatorFrame.Current.Animation?.Name == name,
+                            "Original death parameter/state was released before its owner: " + id);
                         CheckFollower(ownNative, ownFollower);
                         samples++;
                     }
-                    Require(model.IsAnimationFinished, "Nonloop action did not finish at its speed-adjusted duration.");
+                    for (int tail = 0; tail < 60 && !model.IsAnimationFinished; tail++) model.Tick(1f / 60);
+                    Require(model.IsAnimationFinished, "Original nonloop state did not finish or leave its original state.");
                     Require(!model.Play("__unbound_action__", false), "Unknown action was silently substituted.");
+                    if (name == "die_01")
+                    {
+                        Require(model.Play("idle_01", true, true), "Revived monster did not accept its original idle.");
+                        model.Tick(1f / 60);
+                        Require(!ownNative.Animator.GetBool("die") && !model.IsAnimationFinished
+                            && ownNative.AnimatorFrame.Current.Animation?.Name == "idle_01",
+                            "Revival retained the original death parameter/state: " + id);
+                    }
                     Transform ownedRoot = model.Transform;
                     model.Dispose(); model.Dispose(); model = null;
                     animations++;
@@ -137,10 +157,12 @@ namespace Zjcs.Editor.ProfessionUI
                 { CharacterType = 1, MonsterTemplateId = 3198 }, root.transform) == null, "Role-player guard became a monster.");
             Require(OfficialBattleLiveMonsterModelView.TryCreate(new FightBattleUnitState
                 { MonsterId = 3198, MonsterTemplateId = 999999 }, root.transform) == null, "Stat row overrode an explicit entity template.");
-            Require(models == 18 && animations == 224 && samples == 1120, "Native monster coverage changed.");
+            int skills = 0;
+            foreach (int step in SkillSteps(assets)) { if (step == 1) skills++; yield return 0; }
+            Require(models == 18 && animations == 204 && samples == 1020 && skills == 10, "Native monster Animator coverage changed.");
             File.WriteAllText(Path.Combine(output, "shared-monster-result.json"),
                 "{\"models\":" + models + ",\"animations\":" + animations + ",\"samples\":" + samples
-                + ",\"shadowPixels\":" + changedPixels + ",\"failures\":[]}");
+                + ",\"shadowPixels\":" + changedPixels + ",\"skillCarriers\":" + skills + ",\"failures\":[]}");
             Debug.Log("[Shared monster scene validation] passed: " + models + " models / " + animations + " actions / " + samples + " follower samples.");
         }
         private static void CheckFollower(BattleNativeMonsterRenderer native, OfficialBattleShadowBoneFollower follower)
@@ -151,6 +173,87 @@ namespace Zjcs.Editor.ProfessionUI
             Require(Vector3.Distance(expected, actual) < .001f, "Original shadow diverged from its posed bone.");
             Require(Vector3.Distance(follower.transform.localScale, new Vector3(bone.ScaleX, bone.ScaleY, 1)) < .001f,
                 "Original shadow lost bone local scale.");
+        }
+        private static IEnumerable<int> SkillSteps(BattleNativeMonsterAssets assets)
+        {
+            foreach (int id in assets.EntityIds.OrderBy(value => value))
+            {
+                var row = assets.Find(id);
+                var original = assets.Resolve<RuntimeAnimatorController>((string)row["nativeController"]);
+                if (!original.animationClips.Any(value => value.name == "shoot")) continue;
+                AnimationClip clip = original.animationClips.First(value => value.name.StartsWith("skill_", StringComparison.Ordinal));
+                model = OfficialBattleLiveMonsterModelView.TryCreate(new FightBattleUnitState
+                    { Id = id, MonsterTemplateId = id, Hp = 100, MaxHp = 100 }, root.transform);
+                var native = model.ModelTransform.GetComponent<BattleNativeMonsterRenderer>();
+                var cue = new OfficialBattleSkillPlayableCue { kind = 1, origin_clip_name = "shoot",
+                    trigger_param = "shoot", animation = clip.name, speed = 1, my_duration = .25f, end_resume_param = true };
+                Require(model.PlaySkill(cue, clip, .25f), "Original monster override playable was rejected: " + id);
+                bool seen = false;
+                for (int frame = 0; frame < 12; frame++)
+                {
+                    model.Tick(1f / 60);
+                    CheckFollower(native, model.Transform.GetComponentInChildren<OfficialBattleShadowBoneFollower>());
+                    if (native.AnimatorFrame.Current.Clip == clip && native.AnimatorFrame.Current.Animation.Name == clip.name) seen = true;
+                }
+                Require(seen, "Original shoot carrier never consumed its actual skill override: " + id);
+                var overrides = native.Animator.runtimeAnimatorController as AnimatorOverrideController;
+                Require(overrides && overrides["shoot"] == clip, "Original skill did not bind the exact native clip.");
+                model.Tick(.1f);
+                // The source override persists after playable end; it is released
+                // with the owning controller, not reset to a nonexistent pose.
+                Require(overrides["shoot"] == clip, "Playable end changed the original persistent override.");
+                Require(model.Play("idle_01", true, true), "Original monster did not return to its own idle.");
+                Require(!model.PlaySkill(cue, clip, 0), "An ended skill owner restarted a playable.");
+                Transform owned = model.Transform;
+                model.Dispose(); model.Dispose(); model = null;
+                yield return 1;
+                Require(!owned && !overrides && original, "Original monster skill disposal leaked an owned controller/root.");
+                Debug.Log("[Shared monster skill carrier] " + id + " original shoot -> " + clip.name);
+            }
+            // Exercise the production scene's public event route, including a
+            // parameter-only cue that the sampled native-model route skipped.
+            var record = OfficialBattleSkillPlayableCatalog.LoadDefault().Data.skills.First(value => value.playables.Count == 1
+                && value.playables[0].kind == 0 && value.playables[0].trigger_param == "skill_01"
+                && value.playables[0].pre_state_name_allow_list.Count == 0);
+            var checkpoint = new FightBattleCheckpoint();
+            checkpoint.Units.Add(new FightBattleUnitState { Id = 3904, MonsterTemplateId = 3904,
+                Hp = 100, MaxHp = 100, X = 2, Y = 2 });
+            scene.Refresh(checkpoint);
+            var nativeScene = root.transform.Find("BattleUnit_3904").GetComponentInChildren<BattleNativeMonsterRenderer>();
+            var cast = new FightBattleStepEvent { ActorId = 3904 };
+            cast.SkillCasts.Add(new FightBattleSkillCastEvent { ActorId = 3904, SkillEntityId = record.skill_entity_id });
+            scene.Refresh(checkpoint, cast);
+            bool dispatched = false;
+            for (int frame = 0; frame < 12; frame++)
+            {
+                scene.Tick(1f / 60);
+                if (nativeScene.AnimatorFrame.Current.Animation?.Name == "skill_01") dispatched = true;
+                yield return 0;
+            }
+            Require(dispatched, "Shared scene ignored an original parameter-only skill cue.");
+            var moves = JsonUtility.FromJson<MovementSources>(Resources.Load<TextAsset>("Combat/move-animators").text);
+            var action = moves.actions.First(value => value.playables.Any(cue => cue.my_bool_param == "run"
+                && cue.my_bool_value && cue.end_resume_param));
+            var unit = checkpoint.Units[0]; unit.X = 1; unit.Y = 1; scene.Refresh(checkpoint);
+            unit.X = 3;
+            var move = new FightBattleStepEvent { ActorId = unit.Id };
+            move.Movements.Add(new FightBattleMovementEvent { UnitId = unit.Id, MoveBehaviourId = action.id,
+                MoveDuration = .25f, Path = new List<FightGridPoint> { new FightGridPoint(1, 1),
+                    new FightGridPoint(2, 1), new FightGridPoint(3, 1) } });
+            scene.Refresh(checkpoint, move);
+            bool ran = false;
+            for (int frame = 0; frame < 40; frame++)
+            {
+                scene.Tick(1f / 60);
+                if (nativeScene.Animator.GetBool("run") && nativeScene.AnimatorFrame.Current.Animation?.Name == "run_01") ran = true;
+                CheckFollower(nativeScene, nativeScene.EntityRoot.GetComponentInChildren<OfficialBattleShadowBoneFollower>());
+                yield return 0;
+            }
+            Require(ran && !nativeScene.Animator.GetBool("run"), "Original per-cell movement owner did not start/resume its run parameter.");
+            scene.Refresh(new FightBattleCheckpoint());
+            yield return 0;
+            Require(!nativeScene, "Shared scene leaked its parameter-driven skill unit.");
+            Debug.Log("[Shared monster skill event] consumed original cue " + record.skill_entity_id);
         }
         private static Color32[] Capture(string file)
         {

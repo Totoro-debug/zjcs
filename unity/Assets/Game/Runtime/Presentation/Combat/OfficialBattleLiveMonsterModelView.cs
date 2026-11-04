@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Zjcs.Combat.Official;
 using Zjcs.Offline.ProfessionUI;
+using Zjcs.Official.StoryAttachment;
 
 namespace Zjcs.Presentation.Combat
 {
@@ -15,13 +16,21 @@ namespace Zjcs.Presentation.Combat
         private readonly OfficialBattleUnitSorting sorting;
         private readonly OfficialBattleShadowView shadow;
         private readonly OfficialBattleShadowBoneFollower follower;
+        private readonly BattleNativeMonsterAssets assets;
+        private readonly OfficialBattleMonsterAnimatorBindings.State[] states;
+        private OfficialBattleAnimatorPlayback skillPlaybacks;
         private float playbackSpeed = 1f;
+        private int requestedState;
         private bool loop = true;
+        private bool skillControlled;
         private bool disposed;
 
         public Transform Transform => renderer.EntityRoot;
         public Transform ModelTransform => renderer.transform;
-        public bool IsAnimationFinished => !disposed && renderer.IsAnimationFinished;
+        public bool IsAnimationFinished => !disposed && !loop && !skillControlled
+            && !renderer.Animator.IsInTransition(0)
+            && (renderer.Animator.GetCurrentAnimatorStateInfo(0).fullPathHash != requestedState
+                || renderer.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
 
         public static OfficialBattleLiveMonsterModelView TryCreate(FightBattleUnitState state, Transform parent)
         {
@@ -39,7 +48,18 @@ namespace Zjcs.Presentation.Combat
         {
             try
             {
+                this.assets = assets;
+                states = OfficialBattleMonsterAnimatorBindings.Find(entityId);
                 renderer = BattleNativeMonsterRenderer.Create(assets, entityId, parent, name);
+                renderer.BindOriginalAnimator(assets, entityId);
+                Transform body = renderer.transform.parent;
+                if (!body || body.name != "body" || !body.IsChildOf(renderer.EntityRoot))
+                    throw new InvalidOperationException("Original monster body transform is unbound: " + entityId);
+                var attachment = Transform.gameObject.AddComponent<AttachAgent>();
+                attachment.myBoneNameList.Add("body");
+                attachment.myBoneList.Add(body);
+                attachment.Init();
+                requestedState = renderer.Animator.GetCurrentAnimatorStateInfo(0).fullPathHash;
                 var source = (Dictionary<string, object>)assets.Find(entityId)["meshRenderer"];
                 sorting = new OfficialBattleUnitSorting(renderer.transform,
                     checked(Convert.ToInt32(source["m_SortingLayer"]) * 1000 + Convert.ToInt32(source["m_SortingOrder"])));
@@ -51,15 +71,49 @@ namespace Zjcs.Presentation.Combat
             catch { Dispose(); throw; }
         }
 
-        public bool HasAnimation(string name) => !disposed && renderer.AnimationNames.Contains(name);
+        public bool HasAnimation(string name) => !disposed && renderer.AnimationNames.Contains(name)
+            && OfficialBattleMonsterAnimatorBindings.UniqueState(states, name) != null;
         public bool Play(string name, bool loopAnimation, bool restart = false)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleLiveMonsterModelView));
             if (!HasAnimation(name)) return false;
-            bool changed = restart || renderer.Animation != name || loop != loopAnimation || renderer.IsAnimationFinished;
-            if (!renderer.Play(name, loopAnimation, restart)) return false;
+            var state = OfficialBattleMonsterAnimatorBindings.UniqueState(states, name);
+            int hash = Animator.StringToHash(state.state);
+            if (!renderer.Animator.HasState(0, hash)) throw new InvalidOperationException("Original monster state is missing: " + state.state);
+            bool changed = restart || renderer.Animation != name || loop != loopAnimation || IsAnimationFinished;
+            if (!changed) return true;
+            skillPlaybacks?.Stop();
+            // The original death playable holds die=true until its owner stops.
+            // Idle is the common scene's explicit live/revival request.
+            if (name == "die_01" || name == "idle_01") renderer.Animator.SetBool("die", name == "die_01");
+            renderer.Animator.speed = 1f;
+            renderer.Animator.Play(hash, 0, 0);
+            renderer.Animator.Update(0);
+            renderer.ApplyAnimatorPose(0);
+            requestedState = hash;
+            skillControlled = false;
             loop = loopAnimation;
             if (changed) playbackSpeed = 1f;
+            follower.ForceUpdate();
+            return true;
+        }
+
+        public bool Supports(OfficialBattleSkillPlayableCue cue) => !disposed
+            && OfficialBattleAnimatorPlayback.Supports(renderer.Animator, cue);
+
+        public bool PlaySkill(OfficialBattleSkillPlayableCue cue, AnimationClip marker, float ownerDuration = -1f)
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(OfficialBattleLiveMonsterModelView));
+            if (ownerDuration == 0 || !OfficialBattleAnimatorPlayback.Supports(renderer.Animator, cue)) return false;
+            AnimationClip motion = cue.kind == 1
+                ? OfficialBattleMonsterAnimatorBindings.ResolveMotion(assets, states, marker) : null;
+            if (cue.kind == 1 && (!motion || !renderer.AnimationNames.Contains(motion.name))) return false;
+            skillPlaybacks ??= new OfficialBattleAnimatorPlayback(renderer.Animator, Transform);
+            skillPlaybacks.Play(cue, motion, ownerDuration);
+            loop = false; skillControlled = true; playbackSpeed = 1f;
+            renderer.Animator.Update(0);
+            renderer.ApplyAnimatorPose(0);
+            requestedState = renderer.Animator.GetCurrentAnimatorStateInfo(0).fullPathHash;
             follower.ForceUpdate();
             return true;
         }
@@ -68,6 +122,7 @@ namespace Zjcs.Presentation.Combat
         public void Tick(float deltaTime)
         {
             if (disposed) return;
+            skillPlaybacks?.Tick(deltaTime);
             renderer.Advance(deltaTime * playbackSpeed);
             follower.ForceUpdate();
         }
@@ -75,6 +130,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) return;
             disposed = true;
+            skillPlaybacks?.Dispose();
             shadow?.Dispose();
             sorting?.Dispose();
             if (renderer) renderer.Release();
