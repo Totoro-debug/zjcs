@@ -2213,3 +2213,8 @@ unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMonsterAnimationCont
 scripts/record_battle_player_scene_bindings.py text eol=lf
 assets/reference/battle-animation/player-scene-bindings-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Offline/ProfessionUI/OfflineProfessionScenePlayerBindings.cs* text eol=lf
+
+# Keep current original 3100 player controller bindings byte-stable.
+scripts/prepare_battle_player_animation_binding.py text eol=lf
+assets/reference/battle-animation/player-animation-binding-source-manifest.json text eol=lf
+unity/Assets/Game/Resources/Combat/player-animation-binding.json* text eol=lf
