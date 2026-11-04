@@ -101,6 +101,8 @@ namespace Zjcs.Presentation.World
             File.WriteAllText(Path.Combine(output, "passed.txt"),
                 Environment.GetCommandLineArgs().Contains("-verify-exploration-only")
                     ? "Exploration pointer flow: native HUD, confirmation, probability/detail/history, token scrolling/selection/cost, guide chest reward without stamina, ten-times exploration and cold reload passed."
+                    : Environment.GetCommandLineArgs().Contains("-verify-map15-only")
+                    ? "Whale Island verified data binding, Map15 pointer navigation and cold reload, shared statue visit transaction and cold reload passed."
                     : "Map10/11 shared runtime: region conditions, pointer navigation, HUD, minimap tabs/filter, goddess activation, hero UI/permanent rewards/daily effects, stamina gathering/award animation/respawn, exploration and cold save reload passed.");
             Debug.Log("Shared mainline map modules passed: " + output);
             Complete(true);
@@ -108,6 +110,11 @@ namespace Zjcs.Presentation.World
 
         private IEnumerator Verify()
         {
+            WorldMapAssets whaleIsland = OfficialWorldMapAssetCatalog.LoadDefault().LoadMap(16);
+            Require(whaleIsland.Definition.ClassId == 16 && whaleIsland.Definition.Entities.Length == 1021
+                && whaleIsland.Definition.Navigation.Width == 140 && whaleIsland.Definition.Navigation.Height == 120
+                && !OfficialMainlineMapProfile.Get(16).IsRuntimeEntryReady,
+                "Load Whale Island's verified public data binding without opening its unfinished entry");
             yield return null;
             // Editor startup may already have mounted the normal opening screen.
             foreach (string name in new[] { "CharacterCreationFlow", "CharacterCreationCanvas" })
@@ -243,12 +250,18 @@ namespace Zjcs.Presentation.World
             Destroy(runtime.gameObject);
             yield return null;
             progress = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
+            string[] effectsBeforeVisit = progress.Save.Player.PendingStatueBattleEffects
+                .Select(value => JsonUtility.ToJson(value)).ToArray();
             Require(progress.ApplyStatueVisit("20261025", "witch", 11, 2801, "probe-witch", -1f, new[] { 28500 },
                 Array.Empty<OfflineItemStack>(), 1).IsApplied, "Witch visit transaction");
             Require(progress.ApplyStatueVisit("20261025", "hero", 10, 9002, "probe-hero", 0f, Array.Empty<int>(),
                 Array.Empty<OfflineItemStack>(), 1).Status == ProgressionResultStatus.NotReady, "Hero and witch share one daily visit");
             progress = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
-            Require(progress.HasVisitedStatueOn("20261025") && progress.Save.Player.PendingStatueBattleEffects.Count == 3,
+            var effects = progress.Save.Player.PendingStatueBattleEffects;
+            Require(progress.HasVisitedStatueOn("20261025") && effects.Count == effectsBeforeVisit.Length + 1
+                && effects.Take(effectsBeforeVisit.Length).Select(value => JsonUtility.ToJson(value)).SequenceEqual(effectsBeforeVisit)
+                && effects.Last().EventId == "probe-witch" && effects.Last().HpPercentChange == -1f
+                && effects.Last().StatusEffectClassIds.SequenceEqual(new[] { 28500 }),
                 "Daily visit and battle effects survive cold reload");
             Destroy(canvas);
         }

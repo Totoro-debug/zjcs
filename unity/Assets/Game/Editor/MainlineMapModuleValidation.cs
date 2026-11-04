@@ -43,9 +43,12 @@ namespace Zjcs.Editor
                 || Resources.Load<TextAsset>(whaleIsland.Resource("battle-runtime")) == null
                 || Resources.Load<TextAsset>(whaleIsland.Resource("stories")) == null)
                 throw new InvalidDataException("Whale Island profile resources or access condition are not loadable.");
-            var definitionAsset = AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/Official/World/Map/16/map16.json");
-            if (definitionAsset == null) throw new InvalidDataException("Whale Island official definition is missing.");
-            var definition = JsonUtility.FromJson<Zjcs.Official.World.OfficialMapDefinition>(definitionAsset.text);
+            WorldMapAssets map = OfficialWorldMapAssetCatalog.LoadDefault().LoadMap(16);
+            var definition = map.Definition;
+            if (definition.Navigation.Width != 140 || definition.Navigation.Height != 120
+                || definition.Navigation.MaxSteps != 35 || definition.Entities.Length != 1021
+                || definition.MaxRegionProgress.Length != whaleIsland.RegionCount)
+                throw new InvalidDataException("Whale Island public catalog definition differs from its official map.");
             var regions = new OfficialMainlineRegionPolicy(definition, whaleIsland);
             var points = new System.Collections.Generic.Dictionary<int, int>();
             foreach (var region in definition.MaxRegionProgress)

@@ -22,6 +22,8 @@
 
 鲸背岛已加入共享 `OfficialMainlineMapProfile` 作为数据档案，配置同版网格／身体／白雾资源、43区、默认入口实体101、单本地分线、交互资源及 `884_156692` 战斗／剧情来源；`IsRuntimeEntryReady=false`，正式地图入口仍关闭。网格资源、白雾 prefab 和交互配置尚未接入本图正式地图宿主，剧情、战斗及实体视觉仍有独立缺项。
 
+`World/OfficialWorldMapAssetCatalog` 已显式绑定本图 `map16.json` 与 `source-manifest.json`，通过公共 `LoadMap(16)` 校验输入摘要和定义哈希后读取140×120网格、35步上限及1021个实体。Unity 编译／`ProjectTools.Validate` 与内置屏 Play Mode 的公共目录读取通过；同次限定回归覆盖通天塔模拟点击移动／冷读和共享每日访问事务／效果冷读，已查看通天塔实际画面。本图地面、小地图及实体 prefab 尚未在该目录中绑定，正式入口仍关闭，未执行鲸背岛交互或 Windows Player。
+
 43个官方地区的 `AccessibleConditionId` 均为0，因此公共档案的 `RequiredAccessConditions` 为空；整图解锁条件116仍由独立入口配置保留，不混作地区条件。`ProjectTools.Validate` 从真实Map16定义构造 `OfficialMainlineRegionPolicy` 并检查全部43区，通过当前无地区剧情门槛的分支；这不绕过等级、位阶日期、登岛准备和剧情条件，也不开放正式入口。
 
 完整原小地图 prefab 已接入公共 `MainlineMiniMap` 实例工厂，保留原根315个序列化对象文档及全部原外部说明／接缝线引用；`MapAreaTile` 保留原继承关系、区域编号和完整Tile字段。隔离 GUI Play Mode 已检查本图完整 prefab 的脚本、托管类型及对象引用；使用本图140×120网格、43地区和配置4，通过与泽之国相同工厂的加载、原离线请求／等待隐藏和订阅释放。此项尚未提供本图正式存档响应、地区白雾／实体图标实播或HUD模拟交互；不视为本图完整小地图完成。来源见[当前完整小地图根](../../assets/reference/official-map/map16-current-minimap-root-source-manifest.json)，公共生命周期与验证边界见[公共模块](../features/mainline-map-modules.md)。

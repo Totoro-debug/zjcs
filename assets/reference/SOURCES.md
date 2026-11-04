@@ -404,6 +404,8 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 
 公共剧情载荷由 `prepare_unity_map13_story_runtime.py` 的官方图归一化生成，分别读取查询节点 `HandInItemId` 和执行节点 `HandleItemId`。Map13／Map16 的输入、转换器及输出哈希见[泽之国剧情运行时来源](official-map/map13-story-runtime-source-manifest.json)和[鲸背岛剧情运行时来源](official-map/map16-story-runtime-source-manifest.json)；实现与验证范围见所属地图页。
 
+鲸背岛现有定义与来源收据通过 `World/OfficialWorldMapAssetCatalog` 的地图16条目显式绑定；加载入口为 `LoadMap(16)`，输入输出摘要仍由[地图定义清单](official-map/map16-definition-source-manifest.json)及原 `source-manifest.json` 提供，未重新生成或替换官方数据载荷。
+
 
 伙伴主角血量读取／恢复采用所选884_156692的Common.Player、FormulaHandler、TimeManager与BattleFormulaHandler，原头像血条采用同版PlayerIconMeHpSliderNormal；输入、代码绑定与依赖哈希见[主角血量来源](partner-player-health-source-manifest.json)，由 `record_partner_player_health_sources.py` 记录。本批不新增美术载荷或素材快照。
 
