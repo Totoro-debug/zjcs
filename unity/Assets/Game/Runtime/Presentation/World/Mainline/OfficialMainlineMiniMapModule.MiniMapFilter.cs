@@ -31,18 +31,10 @@ namespace Zjcs.Presentation.World
                 miniMapFilterEntry = FullMiniMapObject(miniMapFilterFields.mEntry).gameObject;
                 miniMapFilterDropdown = FullMiniMapObject(miniMapFilterFields.mFilter).gameObject;
                 miniMapFilterItems.Clear();
-                if (miniMapFilterState == null)
-                {
-                    miniMapFilterState = new MainlineMiniMapFilterPersistentState(
-                        new ProfileSlotCatalog(host.persistentDataPath), host.slotId);
-                    foreach (var row in miniMapFilterState.State.FilterState) miniMapFilters.Add(row.Key, row.Value);
-                }
+                EnsureMiniMapFilterState();
                 var assets = Resources.Load<OfficialMap11UiAssets>(host.NativeUiResource("DynamicItems"));
                 foreach (var mark in miniMapUiData.minimapMarks)
                 {
-                    // AcquireMark defaults entity marks to true and unselected
-                    // resource layers to false, matching the source dictionary lookup.
-                    if (!miniMapFilters.ContainsKey(mark.name)) miniMapFilters.Add(mark.name, !int.TryParse(mark.name, out _));
                     if (mark.showOnEntry)
                     {
                         var entry = new OfficialMap11WitchWindow("MarkUIFilterEntryItem",
@@ -118,6 +110,17 @@ namespace Zjcs.Presentation.World
                         FullMiniMapObject(path).gameObject.SetActive(active.Contains(path));
                 }
                 RefreshNativeMiniMapMarks();
+            }
+
+            private void EnsureMiniMapFilterState()
+            {
+                if (miniMapFilterState != null) return;
+                miniMapFilterState = new MainlineMiniMapFilterPersistentState(
+                    new ProfileSlotCatalog(host.persistentDataPath), host.slotId);
+                foreach (var row in miniMapFilterState.State.FilterState) miniMapFilters.Add(row.Key, row.Value);
+                // Original AcquireMark defaults entity marks to true and resource layers to false.
+                foreach (var mark in miniMapUiData.minimapMarks)
+                    if (!miniMapFilters.ContainsKey(mark.name)) miniMapFilters.Add(mark.name, !int.TryParse(mark.name, out _));
             }
 
             private void SaveMiniMapFilter()

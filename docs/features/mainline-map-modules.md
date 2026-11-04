@@ -165,7 +165,11 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 
 公共小地图资源点已扩展到当前 `884_156692` 的六个原地图目录。`LocalMiniMapResourcePointContext` 直接从原地区配置取得地图身份，同一构造入口消费各图资源目录、地区状态与可选图标解析器，不再固定为泽之国13；旧目录没有新增存档字段，原泽之国目录继续按原地区行识别。原 `MiniMapResourcePointManager`／`Board`／`TapItem` 等六类当前源码与已迁移版本字节一致，复用同一实现。Map10／11／12／13／14／16 的原资源板数量分别为0／18／23／23／30／0，空列表保留；其余四图共94块原资源板与94条动态图标路径，物品定位106条、刷新组定位212条均由当前原 Luban 构造器读取，地区分别为5／77／99／106／111／43条。
 
-原资源管理器从完整原根提取三对象子树，只断开父引用，完整保留原字典；资源板按原 GUID 显式绑定，Sprite 恢复原逻辑矩形、原网格、有效图集 UV、像素单位与 pivot，纹理沿当前 Windows 原生转换链。当前载荷位于 `Assets/Official/World/Map/{ID}/NativeMiniMapResourcesCurrent`，目录入口为 `Map{ID}/Native/current-resource-point-assets`；历史871目录保持独立。生成器为 `prepare_mainline_minimap_resource_points.py`，来源分别见 `assets/reference/official-map/map{ID}-current-minimap-resources-source-manifest.json`；隔离图形验证入口为 `OfficialMap13MiniMapResourcePointsAcceptance.RunCurrent`，工程由 `prepare_mainline_minimap_resource_validation.py` 准备。当前资源目录已由公共原生小地图工厂消费；正式地图宿主尚待切换，不能将独立管理器验证视为正式HUD或Windows Player完成。
+原资源管理器从完整原根提取三对象子树，只断开父引用，完整保留原字典；资源板按原 GUID 显式绑定，Sprite 恢复原逻辑矩形、原网格、有效图集 UV、像素单位与 pivot，纹理沿当前 Windows 原生转换链。当前载荷位于 `Assets/Official/World/Map/{ID}/NativeMiniMapResourcesCurrent`，目录入口为 `Map{ID}/Native/current-resource-point-assets`；历史871目录保持独立。生成器为 `prepare_mainline_minimap_resource_points.py`，来源分别见 `assets/reference/official-map/map{ID}-current-minimap-resources-source-manifest.json`；隔离图形验证入口为 `OfficialMap13MiniMapResourcePointsAcceptance.RunCurrent`，工程由 `prepare_mainline_minimap_resource_validation.py` 准备。当前资源目录已由公共原生小地图工厂消费；正式地图宿主的资源层接入范围见下文，完整原根HUD与Windows Player仍未完成。
+
+正式地图中已有原生 UI 的森之国、山之国与泽之国，将原资源筛选状态交给同一个 `MiniMapResourcePointManager`，载入本图当前884版原资源板、刷新分组与图标目录；地区状态由 `MainlineMapLabelContext` 读取正式玩家进度并发送原事件。未公开地区的资源板区域保持隐藏，地区公开后沿原事件刷新；切换浏览其他地图时隐藏当前地图资源层。筛选状态在圆形HUD初始化时恢复，不再等到首次打开全屏窗口；地图退出先停用原视图，再释放本地事件与字体实例。实体标记的公开显示读取共享原扩展配置，资源分布交给原资源板，避免同时显示公开地区的私有资源标记。完整公共原根和跨图浏览的资源层接线仍未完成。
+
+静态元数据检查（120,461个GUID）、主工程导入／编译、`ProjectTools.Validate`、主线进度／体力／世界探索规则校验和内置屏图形 Play Mode 回归通过。新增森之国模拟鼠标检查覆盖资源全选／取消／恢复、私有地区隐藏、地区公开后原图标显示，以及进入地图时恢复筛选、原 `Start` 初始化后恢复公开区域；采集消耗／奖励／刷新、英雄雕像、命运探寻和通天塔移动／冷读回归通过。已查看资源分布、采集奖励、英雄标记和通天塔冷读的实际画面；森之国全屏底图及部分世界表现仍有缺项。山之国与泽之国的同一接线尚未逐图运行验证，本模块未发布新的 Windows Player。
 
 公共动态标记目录使用当前 `884_156692` 的放置数据、原实体扩展／展示表和刷新分组全部候选，保留区域／实体标签的标记备选，具体优先级继续由原运行时选择。六图共用71份完整原标记 prefab 和105份原生 Sprite；Map10／11／12／13／14／16 的依赖名称分别为10／37／45／42／51／16种。目录位于 `Assets/Official/World/Shared/NativeMiniMapMarkersCurrent`，`Resources` 入口为 `MainlineMiniMap/current-marker-assets`，沿既有 `NativeMap13AssetCatalog.Load<T>(officialPath)` 按原完整地址查找；该目录类型不限制地图ID，历史泽之国871目录独立保留。生成器为 `prepare_mainline_minimap_markers.py`，来源为 `mainline-current-minimap-markers-source-manifest.json`。原标记组件逐文件核对当前源码与已迁移来源哈希，资源点和动态标记共同使用 `mainline_minimap_native_sprite.py` 恢复逻辑矩形、网格、轴心和图集UV。正式宿主的状态与标记创建仍待接入。
 
@@ -215,7 +219,7 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 - [命运果实与命运探寻](world-exploration.md)的全部实体交互与演出。果树生产继续复用已有 [果树服务](fruit-tree.md)，探寻费用、候选／保底、动态实体、历史和原窗口已部分验证；遗失女神结算已接入规则层，原领奖界面与地图入口仍待完成。
 - 地图体力怪物的实际战斗完整操作和冷读回归、铁矿／时之砂地图点击、奖励粒子及全部原生材质；不能仅以服务事务检查替代运行验证。
 - Map11原日夜专属场景装饰、局部灯光和小地图未探索遮罩；区域地表阴影与原渐退已接通，但 `ActiveRegionTilemapDisplayHelper`／`ActiveRegionTileMapDisplayHandler` 及其他地图原载荷仍待接入。
-- 正式宿主尚需以公共原生工厂接通小地图 HUD、全屏页签、正式快照读取、公共地区资源提供器及各图实体图标与详情；当前森之国全屏小地图底图仍缺失，实际画面仅见标记等UI。未完成的官方表现和各图完整路线继续按所属地图页维护，共享底层不自动完成单张地图。
+- 正式宿主尚需以公共原生工厂接通小地图 HUD、全屏页签、正式快照读取、跨图公共地区资源层及各图实体图标与详情；当前森之国全屏小地图底图仍缺失，实际画面仅见标记等UI。未完成的官方表现和各图完整路线继续按所属地图页维护，共享底层不自动完成单张地图。
 
 共享原演出核心见 `Runtime/Official/StoryPlayables/` 与 `scripts/prepare_unity_story_playable_runtime.py`：原 `MyPlayable` 状态机、双阶段中心、序列、触发器、有序容器与粒子淡入淡出保留；离线显式注入及调用方帧阶段替代原服务注册。隔离 Unity 完整校验、Play Mode 调度／状态／异常恢复及 3 项迁移回归通过，视觉和输入未覆盖；正式宿主、原 prefab、动画／骨骼、Timeline、相机和音频仍待绑定。来源与验证范围见[龙之国](../maps/map-14.md)，不据此开放完整地图。
 

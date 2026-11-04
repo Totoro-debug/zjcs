@@ -31,7 +31,9 @@ namespace Zjcs.Presentation.World
                     if (!entityPresentations.TryGetValue(entity.PlacementId, out var presentation)) continue;
                     int state = presentation.State;
                     bool completed = state == binding.completeState;
-                    bool active = presentation.Active && !(binding.hideInEnd && completed);
+                    bool active = presentation.Active && !(binding.hideInEnd && completed)
+                        && (!host.regions.IsPublicRegion(entity.Region)
+                            || resourceMarkerCatalog.GetExtend(entity.EntityClassId)?.MiniMapMarkShowInPublic == true);
                     if (!nativeMiniMapMarks.TryGetValue(entity.PlacementId, out var mark))
                     {
                         if (!active) continue;
@@ -60,6 +62,7 @@ namespace Zjcs.Presentation.World
                     }
                 }
                 RefreshNativeMiniMapMarkScale();
+                RefreshNativeResourcePoints();
             }
 
             private Transform MiniMapMarkObject(NativeMiniMapMark mark, string path)

@@ -11,6 +11,7 @@ using UnityEngine.UI;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.State;
 using Zjcs.Offline.World;
+using Zjcs.Official.World.Map13MiniMap;
 using Zjcs.Official.WorldUI;
 using Zjcs.Presentation.Character;
 using Zjcs.Presentation.CharacterCreation;
@@ -216,6 +217,12 @@ namespace Zjcs.Presentation.World
                         Require(Field<OfflineMainlineProgressSession>("progressionSave").Save.World.ActivatedGoddessRegions.Count == 3,
                             "Goddess activation survives a cold reload");
                         VerifyHeroMiniMapVisibility(true);
+                        var restoredResources = Field<MiniMapResourcePointManager>("nativeResourcePoints");
+                        Require(restoredResources.IsBoardActive(1), "Native resource selection restores on map entry");
+                        // Original MapUIBase.Start initializes the board's region visibility.
+                        yield return null;
+                        Require(restoredResources.GetSelectResourcePointDatas(1, 0).Active,
+                            "Native public resource area restores before reopening the minimap");
                         Require(Field<OfficialMainlineRegionFog>("regionFog").VisibleShadowCount == 70,
                             "Cold map entry keeps all three public region shadows cleared");
                     }
@@ -417,9 +424,35 @@ namespace Zjcs.Presentation.World
                 "Hero permanent property restores exactly once");
         }
 
+        private IEnumerator SelectNativeResourceLayers()
+        {
+            var data = JsonUtility.FromJson<OfficialMap11UiData>(Resources.Load<TextAsset>("Map11/UI/catalog").text);
+            string button = data.components.Single(row => row.panel == "MiniMapMaskedUI"
+                && row.type == "MiniMapMaskedUI").fields.MiniMapBtn;
+            var openButton = Field<GameObject>("nativeMiniMap").transform
+                .Find(button.Substring("/MiniMapMaskedUI/".Length)).GetComponent<Button>();
+            yield return Click(openButton);
+            var full = Field<GameObject>("fullMiniMapPanel");
+            var fields = data.components.Single(row => row.panel == "MiniMapFullScreenPanel"
+                && row.type == "MiniMapMarkUIFilter").fields;
+            yield return Click(full.transform.Find(fields.mEntryBtn.Substring("/MiniMapFullScreenPanel/".Length)).GetComponent<Button>());
+            yield return Click(full.transform.Find(fields.mButton.Substring("/MiniMapFullScreenPanel/".Length)).GetComponent<Button>());
+            var manager = Field<MiniMapResourcePointManager>("nativeResourcePoints");
+            Require(manager.IsBoardActive(1) && !manager.GetSelectResourcePointDatas(1, 0).Active,
+                "Original resource board is selected while its private area remains hidden");
+            var allButton = full.transform.Find(fields.mButton.Substring("/MiniMapFullScreenPanel/".Length)).GetComponent<Button>();
+            yield return Click(allButton);
+            Require(!manager.IsBoardActive(1), "Canceling the original resource filter hides its board");
+            yield return Click(allButton);
+            Require(manager.IsBoardActive(1), "Selecting the original resource filter restores its board");
+            yield return Click(full.transform.Find("Content/CloseBtn_dark").GetComponent<Button>());
+            yield return Click(openButton);
+        }
+
         private IEnumerator VerifyStaminaGathering()
         {
             var progress = Field<OfflineMainlineProgressSession>("progressionSave");
+            yield return SelectNativeResourceLayers();
             progress.SetMapRegionProgress(11, 0, 10000);
             Require(progress.RecordGoddessActivated(11, 0, "probe-public-stamina-region").IsApplied, "Public resource region fixture");
             Require(progress.ApplyInventoryTransaction("probe-map-stamina", save =>
@@ -428,6 +461,11 @@ namespace Zjcs.Presentation.World
                     throw new InvalidOperationException("Stamina fixture failed.");
             }).IsApplied, "Isolated gather stamina fixture");
             Invoke("RefreshEntityActivity");
+            var resourceArea = Field<MiniMapResourcePointManager>("nativeResourcePoints").GetSelectResourcePointDatas(1, 0);
+            Require(resourceArea.Active && resourceArea.Datas.All(row => row.Item.gameObject.activeInHierarchy),
+                "The original resource board responds to the region becoming public");
+            yield return Capture("map-11-resource-layers");
+            yield return Click(Field<GameObject>("fullMiniMapPanel").transform.Find("Content/CloseBtn_dark").GetComponent<Button>());
             object entity = Field<IDictionary>("mapEntities")[115];
             var grid = (MapGridPoint)entity.GetType().GetField("Grid").GetValue(entity);
             var session = Field<OfficialWorldMapSession>("session");

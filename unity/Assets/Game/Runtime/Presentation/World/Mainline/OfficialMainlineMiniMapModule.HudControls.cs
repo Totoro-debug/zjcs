@@ -68,7 +68,9 @@ namespace Zjcs.Presentation.World
                 if (host.MapProfile.HasNativeUi)
                 {
                     InitializeNativeMiniMap();
+                    InitializeNativeResourcePoints(viewRoot.transform);
                     viewRoot.SetActive(true);
+                    RefreshNativeResourcePoints();
                     return;
                 }
                 var minimapObject = new GameObject("OfficialMap10MiniMap", typeof(RectTransform), typeof(RawImage));

@@ -123,6 +123,7 @@ namespace Zjcs.Presentation.World
                 if (minimapImage != null) Destroy(minimapImage.gameObject);
                 minimapImage = null;
                 entityPresentations.Clear();
+                DisposeNativeResourcePoints();
             }
         }
     }
