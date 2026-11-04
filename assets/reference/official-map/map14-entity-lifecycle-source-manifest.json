@@ -138,7 +138,8 @@
     },
     {
       "source": "MyGridTransform.cs",
-      "diagnosticBlocks": 0
+      "diagnosticBlocks": 0,
+      "hostInjection": "BindFlipTransform supplies a native visual transform to the existing original flip calculation; no scale formula or lifecycle order is changed."
     },
     {
       "source": "IMyVisibility.cs",
@@ -216,7 +217,7 @@
   "tools": [
     {
       "path": "scripts/prepare_unity_entity_lifecycle_runtime.py",
-      "sha256": "0e6469edbd01f7ff853f3bd793788c2754096eee52d91b2f6c6bf2c2156d7fbc"
+      "sha256": "cae8a444617827625ab379e6338439980d0ecb9b6d066746234b2bf55515ef0d"
     }
   ],
   "outputs": [
@@ -246,7 +247,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyGridTransform.cs",
-      "sha256": "7f29364e8f9a9ed62365b2007c015b4494715c8eea0cc9355f46040a7582e70c"
+      "sha256": "4c85f5729c5acecc8a4ce17b12e1c566d7f2ee486743dfe20e4e0d03363340f4"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyGridTransform.cs.meta",

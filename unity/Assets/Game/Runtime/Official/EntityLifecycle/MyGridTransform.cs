@@ -29,6 +29,13 @@ public class MyGridTransform : MyComponent<ECGridTransformData, ECGridTransformI
 	[SerializeField]
 	private Transform mFlipTransform;
 
+	// Host injection for an existing native model; the original flip calculation
+	// below remains unchanged and preserves this transform's scale magnitude.
+	public void BindFlipTransform(Transform visualTransform)
+	{
+		mFlipTransform = visualTransform;
+	}
+
 	[Tooltip("客户端表现相关的Entity的Bounds配置")]
 	public List<Pos2d> ClientOverrideEntityDimensionBounds;
 

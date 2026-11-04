@@ -190,7 +190,13 @@ namespace Zjcs.Presentation.Combat
                 {
                     var nativeScope = new OfflineBattleNativePlayableScope(worldRoot,
                         request.SkillPlayableSoundHost);
-                    nextSkillGraphPlayback = new OfficialBattleSkillGraphPlayback(graphCatalog, nativeScope);
+                    try
+                    {
+                        var entityViews = new OfficialBattleSkillEntityPlayback(worldRoot, gridMapper, nativeScope,
+                            id => nextExecutor.State.Units.Find(unit => unit.Id == id));
+                        nextSkillGraphPlayback = new OfficialBattleSkillGraphPlayback(graphCatalog, nativeScope, entityViews);
+                    }
+                    catch { nativeScope.Dispose(); throw; }
                 }
                 if (environmentGameId > 0)
                     nextEnvironment = OfficialBattleEnvironmentView.Load(worldRoot, environmentGameId,
@@ -266,10 +272,10 @@ namespace Zjcs.Presentation.Combat
                 }
                 else
                 {
+                    nextSkillGraphPlayback?.Dispose();
                     nextScene?.Dispose();
                     nextEnvironment?.Dispose();
                     nextNativeModels?.Dispose();
-                    nextSkillGraphPlayback?.Dispose();
                     if (nextHudRoot != null) Destroy(nextHudRoot);
                     renderPipelineScope?.Dispose();
                     renderPipelineScope=null;
@@ -534,6 +540,9 @@ namespace Zjcs.Presentation.Combat
 
         public void DisposeSession()
         {
+            // Original graph Stop callbacks still need the live camera and unit hosts.
+            skillGraphPlayback?.Dispose();
+            skillGraphPlayback = null;
             cameraView?.Dispose();
             cameraView = null;
             hostPresentation?.Dispose();
@@ -557,7 +566,6 @@ namespace Zjcs.Presentation.Combat
                 preparationView = null;
             }
             sceneView?.Dispose();
-            skillGraphPlayback?.Dispose();
             environmentView?.Dispose();
             renderPipelineScope?.Dispose();
             renderPipelineScope=null;

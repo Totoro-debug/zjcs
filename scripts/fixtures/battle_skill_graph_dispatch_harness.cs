@@ -23,11 +23,26 @@ namespace Zjcs.Combat.Official
 {
     public class FightBattleUnitState { public int Id, Direction; public long Hp; }
     public class FightBattleCheckpoint { public List<FightBattleUnitState> Units = new List<FightBattleUnitState>(); }
-    public class FightBattleSkillCastPresentation { public int FacingIndex; }
+    public class FightBattleSkillCastPresentation { public int FacingIndex, TargetId; }
     public class FightBattleSkillCastEvent { public int ActorId, SkillEntityId; public float Delay; public FightBattleSkillCastPresentation Presentation; public List<int> TargetIds = new List<int>(); }
     public class FightBattleStepEvent { public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>(); }
 }
 namespace Zjcs.Official.StoryPlayableManager { public interface IBattleCameraOffsetHost {} }
+namespace Zjcs.Presentation.Combat
+{
+    // Exercise dispatch through its real entity-lifecycle seam. Native entity
+    // playback is verified in Unity with the actual original MyFightSkill.
+    public class OfficialBattleSkillEntityPlayback : IDisposable
+    {
+        private readonly OfflineBattleNativePlayableScope scope;
+        public OfficialBattleSkillEntityPlayback(OfflineBattleNativePlayableScope scope) { this.scope = scope; }
+        public void Start(FightBattleSkillCastEvent cast, GameObject prefab, Transform source, Transform target)
+            => scope.Play(prefab, source.gameObject, target?.gameObject ?? source.gameObject, 1,
+                scope.PlayableSlot.gameObject, new Dictionary<string, object>());
+        public void Tick(float delta) => scope.Tick(delta);
+        public void Dispose() => scope.Dispose();
+    }
+}
 namespace Zjcs.Offline.BattleNativePlayables
 {
     public class OfflineBattleNativePlayableScope : IDisposable
@@ -77,7 +92,7 @@ public static class BattleSkillGraphDispatchHarness
         {
             actor.Direction = facingIndices[direction];
             var scope = new OfflineBattleNativePlayableScope();
-            using (var playback = new OfficialBattleSkillGraphPlayback(catalog, scope))
+            using (var playback = new OfficialBattleSkillGraphPlayback(catalog, scope, new OfficialBattleSkillEntityPlayback(scope)))
             {
                 playback.Play(new FightBattleStepEvent { SkillCasts = new List<FightBattleSkillCastEvent> { Cast(10, 0) } }, checkpoint, resolve);
                 Require(scope.Plays.Count == 1 && scope.Plays[0] == fields[direction] + ":target", "Official direction or settled-dead cast was lost");
@@ -89,9 +104,9 @@ public static class BattleSkillGraphDispatchHarness
         // Settlement may already have turned the actor again before presentation starts.
         actor.Direction = 3;
         var captured = Cast(10, .2f);
-        captured.Presentation = new FightBattleSkillCastPresentation { FacingIndex = 1 };
+        captured.Presentation = new FightBattleSkillCastPresentation { FacingIndex = 1, TargetId = 2 };
         var capturedScope = new OfflineBattleNativePlayableScope();
-        using (var playback = new OfficialBattleSkillGraphPlayback(catalog, capturedScope))
+        using (var playback = new OfficialBattleSkillGraphPlayback(catalog, capturedScope, new OfficialBattleSkillEntityPlayback(capturedScope)))
         {
             playback.Play(new FightBattleStepEvent { SkillCasts = new List<FightBattleSkillCastEvent> { captured } }, checkpoint, resolve);
             playback.Tick(.2f);
@@ -99,7 +114,7 @@ public static class BattleSkillGraphDispatchHarness
         }
         actor.Direction = 2;
         var timed = new OfflineBattleNativePlayableScope();
-        var queue = new OfficialBattleSkillGraphPlayback(catalog, timed);
+        var queue = new OfficialBattleSkillGraphPlayback(catalog, timed, new OfficialBattleSkillEntityPlayback(timed));
         queue.Play(new FightBattleStepEvent { SkillCasts = new List<FightBattleSkillCastEvent> {
             Cast(10, .75f), Cast(20, .25f), Cast(10, .25f), Cast(999, 0) } }, checkpoint, resolve);
         Require(timed.Plays.Count == 0, "Delayed casts played immediately");

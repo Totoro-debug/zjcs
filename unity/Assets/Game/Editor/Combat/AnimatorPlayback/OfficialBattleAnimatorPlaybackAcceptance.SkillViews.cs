@@ -199,6 +199,9 @@ namespace Zjcs.Editor.Combat
                 Require(positionView.GetPlayableTargetGo() == positionTarget, "missing entity target falls back to configured position");
                 scope.Stop(positionGraph, true); yield return pump(3, .01f); Remove(positionView);
                 Object.Destroy(positionView.gameObject); yield return null;
+                // OnDestroy schedules destruction of the cached target; Unity can
+                // defer that nested Destroy until the following rendered frame.
+                yield return null;
                 Require(!positionTarget, "original OnDestroy releases its cached position target");
 
                 var directions = new[] { Direction.Up, Direction.Down, Direction.Left, Direction.Right };
@@ -241,6 +244,7 @@ namespace Zjcs.Editor.Combat
                 if (ownEntity) Object.DestroyImmediate(sourceEntity);
                 Object.DestroyImmediate(root);
             }
+            yield return CheckProductionSkillViews(actor, victim, prefab, pump, capture);
         }
     }
 }

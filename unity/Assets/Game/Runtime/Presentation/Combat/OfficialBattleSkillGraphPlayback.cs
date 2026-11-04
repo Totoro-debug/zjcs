@@ -20,14 +20,16 @@ namespace Zjcs.Presentation.Combat
 
         private readonly OfficialBattleSkillGraphCatalog catalog;
         private readonly OfflineBattleNativePlayableScope scope;
+        private readonly OfficialBattleSkillEntityPlayback entityViews;
         private readonly List<ScheduledCast> pending = new List<ScheduledCast>();
         private bool disposed;
 
         public OfficialBattleSkillGraphPlayback(OfficialBattleSkillGraphCatalog catalog,
-            OfflineBattleNativePlayableScope scope)
+            OfflineBattleNativePlayableScope scope, OfficialBattleSkillEntityPlayback entityViews)
         {
             this.catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
             this.scope = scope ?? throw new ArgumentNullException(nameof(scope));
+            this.entityViews = entityViews ?? throw new ArgumentNullException(nameof(entityViews));
         }
 
         public int CatalogCount => catalog.Count;
@@ -48,8 +50,7 @@ namespace Zjcs.Presentation.Combat
                 FightBattleUnitState actor = FindUnit(checkpoint, cast.ActorId);
                 Transform source = unitTransform(cast.ActorId);
                 if (actor == null || source == null) continue;
-                int targetId = cast.TargetIds != null && cast.TargetIds.Count > 0
-                    ? cast.TargetIds[0] : cast.ActorId;
+                int targetId = TargetId(cast);
                 string direction = ResolveDirection(cast.Presentation?.FacingIndex ?? actor.Direction);
                 GameObject prefab = catalog.Find(cast.SkillEntityId, direction);
                 if (prefab == null) continue;
@@ -60,8 +61,7 @@ namespace Zjcs.Presentation.Combat
                     UnitTransform = unitTransform,
                     Remaining = Mathf.Max(0f, cast.Delay)
                 };
-                if (scheduled.Remaining <= 0f) Start(scheduled, prefab, source.gameObject,
-                    (unitTransform(targetId) ?? source).gameObject);
+                if (scheduled.Remaining <= 0f) Start(scheduled, prefab, source, unitTransform(targetId));
                 else
                 {
                     int index = pending.FindIndex(value => value.Remaining > scheduled.Remaining);
@@ -80,20 +80,18 @@ namespace Zjcs.Presentation.Combat
             while (pending.Count > 0 && pending[0].Remaining <= remaining)
             {
                 float elapsed = pending[0].Remaining;
-                if (elapsed > 0f) scope.Tick(elapsed);
+                if (elapsed > 0f) entityViews.Tick(elapsed);
                 remaining -= elapsed;
                 foreach (ScheduledCast value in pending) value.Remaining -= elapsed;
                 ScheduledCast scheduled = pending[0];
                 pending.RemoveAt(0);
                 Transform source = scheduled.UnitTransform(scheduled.Cast.ActorId);
                 if (source == null) continue;
-                int targetId = scheduled.Cast.TargetIds != null && scheduled.Cast.TargetIds.Count > 0
-                    ? scheduled.Cast.TargetIds[0] : scheduled.Cast.ActorId;
-                Transform target = scheduled.UnitTransform(targetId) ?? source;
-                Start(scheduled, scheduled.Prefab, source.gameObject, target.gameObject);
+                Transform target = scheduled.UnitTransform(TargetId(scheduled.Cast));
+                Start(scheduled, scheduled.Prefab, source, target);
             }
             foreach (ScheduledCast value in pending) value.Remaining -= remaining;
-            if (remaining > 0f) scope.Tick(remaining);
+            entityViews.Tick(remaining);
         }
 
         public void LateTick()
@@ -102,22 +100,21 @@ namespace Zjcs.Presentation.Combat
             scope.LateTick();
         }
 
-        private void Start(ScheduledCast scheduled, GameObject prefab, GameObject source, GameObject target)
+        private void Start(ScheduledCast scheduled, GameObject prefab, Transform source, Transform target)
         {
-            var parameters = new Dictionary<string, object>
-            {
-                { "Skill", source },
-                { "SkillCast", scheduled.Cast }
-            };
-            scope.Play(prefab, source, target, 1f, scope.PlayableSlot.gameObject, parameters);
+            entityViews.Start(scheduled.Cast, prefab, source, target);
         }
+
+        private static int TargetId(FightBattleSkillCastEvent cast) => cast.Presentation != null
+            ? cast.Presentation.TargetId : cast.TargetIds != null && cast.TargetIds.Count > 0
+                ? cast.TargetIds[0] : 0;
 
         public void Dispose()
         {
             if (disposed) return;
             disposed = true;
             pending.Clear();
-            scope.Dispose();
+            entityViews.Dispose();
         }
 
         private static FightBattleUnitState FindUnit(FightBattleCheckpoint checkpoint, int id)

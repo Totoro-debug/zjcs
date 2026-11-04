@@ -81,6 +81,14 @@ def build():
             text = re.sub(r'\bEcComponent\b', 'object', text)
             text = text.replace('(TInfo)Component._Info', '(TInfo)EntityLifecycleServices.Info(Component)')
         elif path.stem == 'MyGridTransform':
+            text = text.replace('private Transform mFlipTransform;', '''private Transform mFlipTransform;
+
+	// Host injection for an existing native model; the original flip calculation
+	// below remains unchanged and preserves this transform's scale magnitude.
+	public void BindFlipTransform(Transform visualTransform)
+	{
+		mFlipTransform = visualTransform;
+	}''')
             text = text.replace('GridTransformComponentInfo', 'ECGridTransformInfo').replace('GridTransformComponent', 'ECGridTransformData')
             text = text.replace('GridGroundComponent', 'EntityGridGroundData').replace('MoveAgent', 'ECViewMoveAgent')
             text = text.replace('Component.PosUpdatedEvent += (IGridTransformPosUpdatedEventReceiver)this;', 'Component.AddPosUpdatedReceiver(this);')
@@ -103,7 +111,11 @@ def build():
         text = imports + text[:first] + 'namespace ' + NAMESPACE + '\n{\n' + text[first:] + '\n}\n'
         target = OUTPUT / path.name
         write(target, text.encode('utf-8')); runtime_meta(target); outputs += [target, target.with_suffix('.cs.meta')]
-        changes.append(dict(source=path.name, diagnosticBlocks=diagnostics))
+        change = dict(source=path.name, diagnosticBlocks=diagnostics)
+        if path.stem == 'MyGridTransform':
+            change['hostInjection'] = ('BindFlipTransform supplies a native visual transform to the existing original '
+                                       'flip calculation; no scale formula or lifecycle order is changed.')
+        changes.append(change)
     target = OUTPUT / 'EntityLifecycleBindings.cs'
     write(target, BOUNDARIES.encode('utf-8')); runtime_meta(target); outputs += [target, target.with_suffix('.cs.meta')]
     asmdef = OUTPUT / (NAMESPACE + '.asmdef')
