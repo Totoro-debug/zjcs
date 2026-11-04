@@ -7,7 +7,7 @@ namespace Zjcs.Offline.ProfessionUI
 {
     public sealed class ProfessionNativeWeaponTextureResources : ScriptableObject
     {
-        [Serializable] private sealed class TextureBinding { public string Guid; public Texture Texture; }
+        [Serializable] private sealed class TextureBinding { public string Guid, Resource; public Texture Texture; }
         [SerializeField] private string loaderPath, loaderGuid;
         [SerializeField] private YooAssetTextureLoader loader;
         [SerializeField] private ProfessionNativeTextureAtlas atlas;
@@ -30,6 +30,12 @@ namespace Zjcs.Offline.ProfessionUI
             if (string.IsNullOrEmpty(guid)) throw new ArgumentException("Original texture GUID is empty.", nameof(guid));
             foreach (var entry in textures)
                 if (entry.Guid == guid) return entry.Texture ? entry.Texture : throw new InvalidOperationException("Original weapon texture payload is unbound: " + guid);
+            throw new NotSupportedException("Original weapon high texture is not converted: " + guid);
+        }
+        public string TextureResource(string guid)
+        {
+            if (string.IsNullOrEmpty(guid)) throw new ArgumentException("Original texture GUID is empty.", nameof(guid));
+            foreach (var entry in textures) if (entry.Guid == guid) return entry.Resource;
             throw new NotSupportedException("Original weapon high texture is not converted: " + guid);
         }
     }

@@ -23,6 +23,7 @@ namespace Zjcs.Editor.Combat
         public static void Run()
         {
             SessionState.SetBool(Key + ".physics", false);
+            SessionState.SetBool(Key + ".high-textures", false);
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             Type.GetType("Zjcs.Editor.ProjectTools, Zjcs.Editor", true).GetMethod("Validate").Invoke(null, null);
             if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR")))
@@ -69,11 +70,35 @@ namespace Zjcs.Editor.Combat
                 var weapons = Resources.Load<ProfessionNativeSceneWeaponCatalog>("ProfessionUI/scene-weapon-sources");
                 var config = Resources.Load<AppearanceConfig>("Combat/SceneAppearance/AppearanceConfig");
                 var resolver = new ProfessionAppearanceResolver(ProfessionAppearanceTables.Load(Resources.Load<TextAsset>("Combat/SceneAppearance/appearance-tables").text));
+                var weaponTextures = weapons.Textures;
+                using var highPipeline = SessionState.GetBool(Key + ".high-textures", false)
+                    ? Resources.Load<Zjcs.Presentation.Combat.OfficialBattleRenderPipelineAssets>("Combat/OfficialBattleRenderPipelineAssets").Enter() : null;
+                if (SessionState.GetBool(Key + ".high-textures", false))
+                {
+                    // An empty scene has no camera and does not initialize its
+                    // render pipeline. Render one actual camera frame first.
+                    var warmup = new GameObject("Original High weapon pipeline warmup camera");
+                    var warmupCamera = warmup.AddComponent<Camera>();
+                    var warmupTarget = RenderTexture.GetTemporary(16, 16, 24);
+                    warmupCamera.targetTexture = warmupTarget;
+                    try
+                    {
+                        RenderPipeline.SubmitRenderRequest(warmupCamera, new RenderPipeline.StandardRequest { destination = warmupTarget });
+                        yield return null;
+                    }
+                    finally
+                    {
+                        warmupCamera.enabled = false; warmupCamera.targetTexture = null;
+                        Object.Destroy(warmup); RenderTexture.ReleaseTemporary(warmupTarget);
+                    }
+                    CheckHighTextures();
+                    weaponTextures = Resources.Load<ProfessionNativeWeaponTextureResources>("Combat/Weapons/texture-resources");
+                }
                 using var textures = new OfflineProfessionSceneTextureResources(catalog);
-                using var manager = new AppearanceAssetManager(weapons.Textures.ManagerConfig, _ => new Subscription());
-                var materialBindings = new OfflineProfessionWeaponTextureResources(config, manager, weapons.Textures);
+                using var manager = new AppearanceAssetManager(weaponTextures.ManagerConfig, _ => new Subscription());
+                var materialBindings = new OfflineProfessionWeaponTextureResources(config, manager, weaponTextures);
                 var previous = ProfessionAppearanceTextureBindings.Current;
-                ProfessionAppearanceTextureBindings.Current = new OfflineProfessionBattleSceneTextures(catalog, textures, weapons.Textures, materialBindings);
+                ProfessionAppearanceTextureBindings.Current = new OfflineProfessionBattleSceneTextures(catalog, textures, weaponTextures, materialBindings);
                 try
                 {
                     foreach (var model in catalog.Models)
@@ -199,7 +224,10 @@ namespace Zjcs.Editor.Combat
             var previous = RenderTexture.active;
             try
             {
-                camera.targetTexture = rt; camera.Render(); RenderTexture.active = rt;
+                if (GraphicsSettings.currentRenderPipeline)
+                    RenderPipeline.SubmitRenderRequest(camera, new RenderPipeline.StandardRequest { destination = rt });
+                else { camera.targetTexture = rt; camera.Render(); }
+                RenderTexture.active = rt;
                 texture.ReadPixels(new Rect(0, 0, 384, 512), 0, 0); texture.Apply();
                 Require(texture.GetPixels32().Count(p => p.r > 16 || p.g > 16 || p.b > 16) > 100, "visible actual GPU output");
                 var bytes = texture.EncodeToPNG();
