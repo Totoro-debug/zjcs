@@ -333,6 +333,8 @@ Map13 原剧情 prefab Windows 转换与 NPC 序列：固定 871_156598 的 278 
 
 本图正式地图文件的读取、校验与实体显隐已复用[主线地图公共模块](../features/mainline-map-modules.md)中的公共存档读取及状态投影；跨图快照的具体规则与验证范围在该页维护。公共原生小地图 HUD／全屏窗口与本图正式入口的组合接线尚未完成。
 
+当前原生小地图资源目录已接入[公共资源点适配器](../features/mainline-map-modules.md)，来源见[本图当前资源板清单](../../assets/reference/official-map/map13-current-minimap-resources-source-manifest.json)。六图共用同一管理器／本地状态入口；本图目录的独立 Play Mode 已通过，正式地图 HUD 与 Windows Player 接线仍待完成。具体共享规则和验证范围集中维护在公共模块页。
+
 ## 自定义实现
 
 本图已接入[公共实体探索记录](../features/mainline-map-modules.md#自定义实现)。正式共享宿主的图形 Play Mode 使用模拟地图点击，验证实体探索记录随位置／原白雾数据保存和冷读一致；已查看实际画面。此项不代表跨图小地图或整图完成。

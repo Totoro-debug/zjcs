@@ -345,6 +345,8 @@ Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式
 
 龙之国原地图根雾层：按 APK 优先顺序核对当前871云端资源，恢复 `14.prefab` 的19份完整依赖、1,614个对象及23组托管引用；从原根对象完整保留10对象雾层子树、原云纹／噪声／遮罩贴图、序列化 Sprite、三份材质。完整迁入 `CloudController2`，只适配相机／场景服务边界、原生组件类型消费和反编译运算符语法；网格、两圈边界掩码、邻域扩展、相机裁剪、半尺寸R8目标、遮罩命令、曼哈顿距离消散及执行顺序均沿用官方。三份原 `Cloud/CloudMask/CloudDisappear` GLES 程序按原属性／pass状态机械转换为 Windows HLSL，未使用导出占位 shader。原地面与可见性输入调用未改写的 Console 方法。来源见[根输入](../../assets/reference/official-map/map14-native-root-input-source-manifest.json)与[根雾层](../../assets/reference/official-map/map14-root-fog-source-manifest.json)；入口为 `Runtime/Official/MapRootFog`、`Offline/World/NativeMap14RootFog` 和 `Assets/Official/World/Map/14/RootFog`。Unity 2022.3.57f1c2内置屏D3D11隔离导入／编译及Play Mode通过，原格子／边界掩码、坐标、动态云层／淡出网格、消散计时和结束、增删、相机／场景判断及此前根组件／实体／雕像／雷达回归通过，实际遮蔽／消散／清除画面已复核。此验证直接调用原控制器，不代表模拟点击的正式地图流程；根目录静态检查本模块未报错，当前被并行职业模块缺少稳定metadata阻挡；全工程 `ProjectTools.Validate` 和 Windows Player 未执行。`MyGridVisibilityAgent` 事件生命周期、完整根 prefab、正式地图／角色／HUD／存档和发布仍未完成；新增载荷尚未纳入完整备份快照。
 
+当前原生小地图资源目录已接入[公共资源点适配器](../features/mainline-map-modules.md)，来源见[本图当前资源板清单](../../assets/reference/official-map/map14-current-minimap-resources-source-manifest.json)。六图共用同一管理器／本地状态入口；本图目录的独立 Play Mode 已通过，正式地图 HUD 与 Windows Player 接线仍待完成。具体共享规则和验证范围集中维护在公共模块页。
+
 ## 自定义实现
 
 共享序列化的 Windows 依赖适配：使用固定 MIT MessagePack `1.9.11` 发布包及其仓库提交 `6cbd8196e7dbe9b8810d7620f4542c3db9388753` 的 Unity 类型支持；该版本仅为平台依赖，不声称是官方原版本。依官方固定 AOT 方法修正原始单精度浮点编码，并迁入原 Vector3／Quaternion 方法，通过 GFrameCore 类型转发维持原 Console ABI；原生成格式器 IL 与地图载荷不改写。完整发布许可随本地资源交付，加载器及反射注册表作用域结束后恢复原绑定。

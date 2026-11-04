@@ -68,6 +68,8 @@ Unity 2022.3.57f1c2 内置屏隔离图形 Play Mode 已通过公共 `MainlineNat
 
 本图交互配置已通过重复提取一致性、地区顺序、空奖励列表、区域刷新表与所有英雄结果引用检查；共享转换器七项规则测试覆盖六种原英雄、历史输出不变及不支持的周期组拒绝。静态元数据检查、主工程 Unity 导入／编译、`ProjectTools.Validate` 及实际配置加载通过。`ProjectTools.Validate` 通过共享档案 `Load(16)` 实际加载并核对六种原英雄、43个地区和同版来源身份；隔离工程另核对 Map10–15 历史配置，以及错误版本／地图身份／地区数量的拒绝；不包含地图画面或模拟交互。尚未运行本图正式雕像／资源流程，不能据此宣称其 Play Mode 或 Player 验证完成。
 
+当前原生小地图资源目录已接入[公共资源点适配器](../features/mainline-map-modules.md)，来源见[本图当前资源板清单](../../assets/reference/official-map/map16-current-minimap-resources-source-manifest.json)。六图共用同一管理器／本地状态入口；本图目录的独立 Play Mode 已通过，正式地图 HUD 与 Windows Player 接线仍待完成。具体共享规则和验证范围集中维护在公共模块页。
+
 ## 自定义实现
 
 地区时间门槛采用用户确认的单机规则：角色首次达到位阶4时记录本地时间，14天后满足原 `LimitServerRank=4`／`LimitServerRankUnlockDayOffset=14` 条件；其他地区继续使用各自原配置的15至32天偏移，复用同一位阶4起算时间。角色超过位阶4立即满足这些时间条件。绳索准备剧情、等级及其他原条件继续保留。`OfflineCharacterRankRegionTime` 消费现有角色 `RankUnlockTimes`，不应用服务器合服加速；现有晋阶事务保留已有首次日期，正式地图宿主仍待接入。

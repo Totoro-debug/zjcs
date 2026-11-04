@@ -32,16 +32,19 @@ namespace Zjcs.Offline.World.NativeMap13MiniMapResources
         private readonly Func<string,Sprite> additionalSpriteResolver;
         private readonly IMap13LabelPlayer player;
         private bool disposed;
-        public int MapClassId=>13;
+        public int MapClassId{get;}
         public bool HasMainPlayer=>player!=null;
         public IMap13LabelServices LabelServices{get;}
         public event Action<int,int,MapRegionStatus,MapRegionStatus> OnMapStatusUpdate;
 
         public LocalMiniMapResourcePointContext(MiniMapResourcePointAssets assets,IMap13LabelServices labels,Func<string,Sprite> additionalSpriteResolver=null)
         {
-            if(!assets||!assets.SourceData)throw new ArgumentException("Map13 original resource-point assets are required",nameof(assets));
+            if(!assets||!assets.SourceData)throw new ArgumentException("Original resource-point assets are required",nameof(assets));
             LabelServices=labels??throw new ArgumentNullException(nameof(labels));this.additionalSpriteResolver=additionalSpriteResolver;player=labels.Player;
             var data=JsonUtility.FromJson<Data>(assets.SourceData.text);
+            if(data?.Regions==null||data.Regions.Length==0||data.Regions[0].ClassId<=0)
+                throw new InvalidOperationException("Original resource-point catalog requires an explicit map identity");
+            MapClassId=data.Regions[0].ClassId;
             foreach(var g in data.Groups)groups.Add(g.Id,new MiniMapResourcePointEntityGroupInfo{Icon=g.Icon});
             foreach(var item in data.ItemLocations)itemLocations.Add(item.ItemId,item.Data==null?null:new MiniMapResourcePointItemLocationData{RuleIds=item.Data.RuleIds});
             foreach(var location in data.WorldLocations)

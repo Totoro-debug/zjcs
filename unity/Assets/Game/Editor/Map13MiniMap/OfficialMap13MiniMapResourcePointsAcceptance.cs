@@ -19,7 +19,7 @@ using CommonStatus=Zjcs.Official.World.NativeTerrain.Common.MapRegionStatus;
 
 namespace Zjcs.Editor.Map13MiniMap
 {
-    public static class OfficialMap13MiniMapResourcePointsAcceptance
+    public static partial class OfficialMap13MiniMapResourcePointsAcceptance
     {
         private const string Key="Zjcs.Map13.MiniMapResourcePoints.Running";
         private static IEnumerator routine;private static int errors;
@@ -52,11 +52,12 @@ namespace Zjcs.Editor.Map13MiniMap
             public bool RegionIsActived(int map,int region)=>Current==Status.Public;
             public Status GetMapRegionStatus(int map,int region)=>Current;
             public int GetWorldMapRegionProgress(int map,int region)=>0;
-            public void Set(Status value){var previous=Current;Current=value;OnMapStatusUpdate?.Invoke(13,0,previous,value);}
+            public int MapClassId=13;
+            public void Set(Status value){var previous=Current;Current=value;OnMapStatusUpdate?.Invoke(MapClassId,0,previous,value);}
         }
         private sealed class Labels:IMap13LabelServices
         {
-            public readonly Player Actor=new Player();public int MapClassId=>13;public object Map{get;}=new object();public event Action Initialized;public IMap13LabelPlayer Player=>Actor;public bool IsTeamMember=>false;public int QueryRegion(Vector3 position)=>0;public MapRegionInfo GetRegion(int map,int region)=>null;public Map13LabelData Data=>null;public CombatRatingConfig Colors=>null;public DateTime Now=>DateTime.UtcNow;public double CalcRemainSecond(DateTime end)=>(end-Now).TotalSeconds;
+            public readonly Player Actor=new Player();public int MapClassId=>Actor.MapClassId;public object Map{get;}=new object();public event Action Initialized;public IMap13LabelPlayer Player=>Actor;public bool IsTeamMember=>false;public int QueryRegion(Vector3 position)=>0;public MapRegionInfo GetRegion(int map,int region)=>null;public Map13LabelData Data=>null;public CombatRatingConfig Colors=>null;public DateTime Now=>DateTime.UtcNow;public double CalcRemainSecond(DateTime end)=>(end-Now).TotalSeconds;
         }
         private sealed class Observed:MiniMapResourcePointContext,IDisposable
         {
@@ -72,6 +73,11 @@ namespace Zjcs.Editor.Map13MiniMap
         }
         private static IEnumerator Verify()
         {
+            if(SessionState.GetBool(CurrentKey,false))
+            {
+                var current=VerifyCurrent();while(current.MoveNext())yield return current.Current;
+                SessionState.EraseBool(CurrentKey);yield break;
+            }
             var pipeline=AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>("Assets/Official/World/Map/13/NativePipeline/UniversalRenderPipeline.asset");Require(pipeline,"Original URP pipeline");GraphicsSettings.renderPipelineAsset=pipeline;QualitySettings.renderPipeline=pipeline;
             var assets=Resources.Load<MiniMapResourcePointAssets>("Map13/Native/minimap-resource-point-assets");Require(assets&&assets.Boards.Count==23&&assets.Icons.Count==23&&assets.SourceData&&assets.ManagerFields,"Complete native resource-board catalog");
             var expected=JsonUtility.FromJson<Receipt>(File.ReadAllText(Path.Combine(Repository,"assets/reference/official-map/map13-native-minimap-resource-points-source-manifest.json")));foreach(var e in expected.icons)

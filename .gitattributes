@@ -2187,3 +2187,8 @@ unity/Assets/Game/Resources/World/Mainline/HandIn.meta -text
 unity/Assets/Official/World/Mainline/HandIn/** -text
 unity/Assets/Official/World/Mainline/HandIn.meta -text
 assets/reference/official-map/mainline-handin-ui*-source-manifest.json -text
+
+# Preserve current original minimap resource-board conversion fingerprints.
+unity/Assets/Official/World/Map/*/NativeMiniMapResourcesCurrent/** -text
+unity/Assets/Official/World/Map/*/NativeMiniMapResourcesCurrent.meta -text
+assets/reference/official-map/map*-current-minimap-resources-source-manifest.json -text

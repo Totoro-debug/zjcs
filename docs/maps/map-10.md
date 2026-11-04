@@ -65,6 +65,8 @@ Map10 原生 prefab 的来源清单记录 UTF-8/LF 字节哈希；根目录 `.gi
 
 Windows D3D11 构建已复现并修复水面 shader 的 `TRANSFORM_TEX` 复合参数展开错误：对传入的 UV 表达式整体加括号，避免 `.xy` 被应用到末尾标量。保留原有参数、纹理及 UV 计算表达式；原生重建文件的输出哈希同步到 `rendering-source-manifest.json.environment.water.material.reconstructionSha256`。Windows Player 构建通过且无 shader 编译错误；该项不代表地图水面动态画面与完整路线已验收。
 
+当前原生小地图资源目录已接入[公共资源点适配器](../features/mainline-map-modules.md)，来源见[本图当前资源板清单](../../assets/reference/official-map/map10-current-minimap-resources-source-manifest.json)。六图共用同一管理器／本地状态入口；本图目录的独立 Play Mode 已通过，正式地图 HUD 与 Windows Player 接线仍待完成。具体共享规则和验证范围集中维护在公共模块页。
+
 ## 自定义实现
 
 `OfficialMainlineMapRuntime.RunStoryGraph` 对 `RemoveMapExclusiveNpcNode` 只保留一个分支：配置删除 playable 时先播放，再删除 NPC 并沿 `Exit` 继续；未配置时直接删除。执行顺序依据官方 `RemoveMapEntitiesByCfgNode.PlayPlayables/OnPlayableStop`。工程启用 Unity 内置 `unitywebrequest` 与 `unitywebrequestaudio` 模块，供 `OfficialMap10AudioPlayer` 从本地文件 URI 解码音频；模块启用不代表音频播放已验收。

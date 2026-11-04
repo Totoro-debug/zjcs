@@ -157,6 +157,12 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 
 地图档案显式配置网格／身体／白雾地址、是否要求独立小地图 prefab、交互配置版本及战斗／剧情数据版本，公共载入层不再按地图ID选择来源版本。当前 Map10–13、15 的战斗数据使用 `854_156383`，Map14 的战斗数据使用 `871_156598`，Map16 使用 `884_156692`；Map10–12 的剧情数据使用 `854_156383`，Map13–15 使用 `871_156598`，Map16 使用 `884_156692`。Map12／13 的地区、奖励预览、区域刷新和英雄结果索引从各自已校验的 `871_156598` 原表转换，避免误用仅含 Map10／11 的早期共享地区数组。空奖励列表按原表保留；`ProjectTools.Validate` 经档案公共加载入口核验 Map10–16 交互配置和鲸背岛六种英雄／43区；来源与绑定哈希见[各图交互配置](../../assets/reference/official-map/mainline-interaction-maps-source-manifest.json)。
 
+公共小地图资源点已扩展到当前 `884_156692` 的六个原地图目录。`LocalMiniMapResourcePointContext` 直接从原地区配置取得地图身份，同一构造入口消费各图资源目录、地区状态与可选图标解析器，不再固定为泽之国13；旧目录没有新增存档字段，原泽之国目录继续按原地区行识别。原 `MiniMapResourcePointManager`／`Board`／`TapItem` 等六类当前源码与已迁移版本字节一致，复用同一实现。Map10／11／12／13／14／16 的原资源板数量分别为0／18／23／23／30／0，空列表保留；其余四图共94块原资源板与94条动态图标路径，物品定位106条、刷新组定位212条均由当前原 Luban 构造器读取，地区分别为5／77／99／106／111／43条。
+
+原资源管理器从完整原根提取三对象子树，只断开父引用，完整保留原字典；资源板按原 GUID 显式绑定，Sprite 恢复原逻辑矩形、原网格、有效图集 UV、像素单位与 pivot，纹理沿当前 Windows 原生转换链。当前载荷位于 `Assets/Official/World/Map/{ID}/NativeMiniMapResourcesCurrent`，目录入口为 `Map{ID}/Native/current-resource-point-assets`；历史871目录保持独立。生成器为 `prepare_mainline_minimap_resource_points.py`，来源分别见 `assets/reference/official-map/map{ID}-current-minimap-resources-source-manifest.json`；隔离图形验证入口为 `OfficialMap13MiniMapResourcePointsAcceptance.RunCurrent`，工程由 `prepare_mainline_minimap_resource_validation.py` 准备。当前资源目录尚待正式公共原生小地图工厂消费，不能将独立管理器验证视为正式HUD或Windows Player完成。
+
+六图资源目录的隔离图形 Play Mode 已通过：94块原资源板、620个标记点（山之国121、森之国160、泽之国178、龙之国161），全部 Sprite 逻辑字段、网格／图集UV与来源凭据一致；覆盖原资源层顺序、物品／怪物定位过滤、地区映射、公开／私有／未知状态事件、显式选择与引导取消、缓存复用及全部租约释放。已实际查看四张资源标记渲染截图；测试直接驱动原管理器，不代表正式地图鼠标操作或存档流程。两项来源／绑定检查、全量静态元数据检查（118,396个GUID）、正式工程Unity导入／编译与 `ProjectTools.Validate` 通过。当前没有发布新的Windows Player。
+
 ## 自定义实现
 
 鲸背岛数据由公共 `OfficialWorldMapAssetCatalog.LoadMap(16)` 统一读取和校验来源，图形 Play Mode 已检查本图数据身份与未开放入口状态。公共夹具的 `-verify-map15-only` 分支另通过通天塔模拟移动、冷读及每日访问效果冷读；后者比较访问前已有记录及新增的一条精确效果，不依赖被跳过的英雄雕像步骤。整图与资源接线边界见[鲸背岛](../maps/map-16.md)。
