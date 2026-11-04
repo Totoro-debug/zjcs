@@ -14,6 +14,8 @@ Map13 的三处 `ItemQuikBuyNode` 已按官方配置以 Item325 的原价执行�
 
 ## 地图简介
 
+公共剧情转换器按官方节点的两种字段名分别保留交付编号：查询节点 `CanHandInItemNode.HandInItemId`、执行节点 `HandInItemNode.HandleItemId`。`SubmitSwordOfDaZe`／`SubmitSeaTears`／`SubmitRopes` 的查询编号已从错误的0修复为1／2／3，重新生成的 `Resources/Map13/stories.json` 仅改变这三处字段。三组查询、提交与配置规则的闭包回归通过；完整剧情测试10项中7项通过，另3项被旧来源收据中的 `official_ec_codec.py`、`map13_native_schemas.py`、`official_managed_reference_conversion.py` 工具哈希差异阻断，未改写旧预期哈希。此修正尚无正式交付 UI／Play Mode／Player 流程验证；当前共享运行器的交付弹窗仍只接 Map14，不能据查询配置正确宣称三条剧情已完成。
+
 13 泽之国，范围按下列原配置与本地决策维护。
 
 ## 原始官方实现

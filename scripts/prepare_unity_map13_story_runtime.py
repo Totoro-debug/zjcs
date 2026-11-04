@@ -121,7 +121,9 @@ def normalize_story(name: str, graph: dict, metadata: dict, dialogues: dict,
             "dialogId": int(source.get("DialogId", -1)),
             "awardId": int(source.get("AwardId", 0)),
             "fixedRewardId": int(source.get("FixedRewardId", source.get("AwardId", 0))),
-            "handInItemId": int(source.get("HandleItemId", 0)),
+            "handInItemId": int(source.get("HandInItemId", 0)
+                                if source.get("_type") == "CanHandInItemNode"
+                                else source.get("HandleItemId", 0)),
             "storyName": source.get("StoryName", source.get("Name", "")),
             "subgraphName": source.get("subgraph_name", source.get("SubgraphName", "")),
             "storyStatus": int(source.get("Status", source.get("State", 0))),

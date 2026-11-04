@@ -78,6 +78,8 @@ Unity 2022.3.57f1c2 内置屏隔离图形 Play Mode 已通过公共 `MainlineNat
 
 ## 尚未实现
 
+公共剧情转换已修复 `CanHandInItemNode.HandInItemId` 与 `HandInItemNode.HandleItemId` 的字段差异：`SubmitRopes` 查询编号从0恢复为3，与绳索 `43039×5`、一次交付规则相连；Map16载荷只改变此字段。5项图归一化回归、运行时载荷检查及4项来源检查通过。正式宿主和交付 UI 尚未接通，未验证实际NPC交付、Play Mode或Player。
+
 原鲸背岛入口卡片、坎斯汀 NPC10801 的准备／提交 `43039×5` 绳索／登岛／离岛剧情、全部任务和战斗、五组踩格机关及奖励770／771的完整原流程仍待接线。对应当前官方配置、故事图和消费路径须逐项核对，不能把历史转换记录当作当前已交付载荷。
 
 本图尚未注册到公共正式宿主。鲸背岛7张原剧情图、94个节点、45条对白、6个选项、51个中文文本键、7份配对服务端记录、2个实际引用对白角色、3条Map16地图逻辑标签、1条绳索交付规则和0条固定奖励配置已从同版 `884_156692` APK 按实际所属的 `config_luban`、`config_luban_dialog`、`config_luban_map` bundle 提取至 `Assets/Official/World/Map/16/Source/story-source.json`；来源收据记录每张表的bundle、APK条目、对象／payload哈希，测试锁定版本与角色／地图标签表的bundle身份。`prepare_map16_story_source.py` 复用官方构造器，拒绝缺少图引用的角色、交付物或固定奖励配置；`test_prepare_map16_story_source.py` 的4项检查通过。`prepare_unity_map16_story_runtime.py` 使用公共 `normalize_story` 生成 `Resources/Map16/stories.json`，保留原图、节点、端口、对白、角色、选项、地图标签和交付物规则；输出为6张主图、1张子图、17个对白组，并由 `test_prepare_unity_map16_story_runtime.py` 校验收据、哈希和闭包。`test_prepare_map16_story_normalization.py` 另验证入口、唯一子图、节点原文、端口连接、完整对白及已确认触发映射的官方锚点，4项通过。共享 `Map13OfflinePlayerConditionEvaluator` 现允许 Map16 剧情节点使用官方 `MapLogicEntityEndByTag` 条件，并以当前本地完成标签状态判断；`ProjectTools.Validate` 增加该条件的匹配、反向条件及不匹配检查。两段官方演出引用的GUID仍未进入本图运行时绑定；触发映射已由用户确认，正式宿主仍未消费该载荷或注册故事数据。

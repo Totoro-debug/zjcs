@@ -114,6 +114,18 @@ class Map13StoryDependencyRegression(unittest.TestCase):
                 self.assertIn(talk["TalkId"], converted)
         self.assertEqual(len(self.runtime["mapTalkEntries"]), 64)
 
+    def test_hand_in_queries_resolve_to_the_configured_transactions(self):
+        graphs = {row["key"]: row for row in self.runtime["stories"] + self.runtime["subgraphs"]}
+        rules = {row["Id"]: row for row in self.runtime["handInItems"]}
+        for name, identity in (("SubmitSwordOfDaZe", 1), ("SubmitSeaTears", 2), ("SubmitRopes", 3)):
+            with self.subTest(story=name):
+                queries = [node for node in graphs[name]["nodes"] if node["type"] == "CanHandInItemNode"]
+                submissions = [node for node in graphs[name]["nodes"] if node["type"] == "HandInItemNode"]
+                self.assertEqual([identity], [node["handInItemId"] for node in queries])
+                self.assertEqual([identity], [node["handInItemId"] for node in submissions])
+                self.assertEqual(1, rules[identity]["CanHandTimes"])
+                self.assertTrue(rules[identity]["Items"])
+
     def test_followers_use_original_ec_components_in_order(self):
         templates = json.loads((SOURCE / "templates.json").read_bytes())
         templates.update(self.dependencies["entityTemplates"])

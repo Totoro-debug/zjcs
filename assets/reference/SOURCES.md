@@ -402,6 +402,8 @@ Map15 入口当前原生地面来源见 `official-map/map15-current-ground-sourc
 
 鲸背岛独立地图准备条件、地图激活条件与七条剧情标识来自所选 `884_156692` APK 的 `TbMapWorldAloneInfo`、`TbConditionInfo` 和 `TbStoryInfo`。`prepare_map16_alone_configuration.py` 使用同版反编译 Luban 构造器解码，锁定原准备参数、条件116、奖励规则770／771及剧情路径／次数字段；输入对象、载荷与配置输出哈希见[独立地图配置清单](official-map/map16-alone-configuration-source-manifest.json)。`prepare_map16_story_source.py` 进一步提取七张鲸背岛原剧情图、对白／选项、中文文本与配对服务端记录；节点类型、实际 StoryGraph 对象、官方代码版本、逐文件哈希及转换结果见[鲸背岛剧情来源清单](official-map/map16-story-source-manifest.json)。该产物是官方源数据，不是可运行剧情配置，不实现服务端逻辑或 Windows 表现。
 
+公共剧情载荷由 `prepare_unity_map13_story_runtime.py` 的官方图归一化生成，分别读取查询节点 `HandInItemId` 和执行节点 `HandleItemId`。Map13／Map16 的输入、转换器及输出哈希见[泽之国剧情运行时来源](official-map/map13-story-runtime-source-manifest.json)和[鲸背岛剧情运行时来源](official-map/map16-story-runtime-source-manifest.json)；实现与验证范围见所属地图页。
+
 
 伙伴主角血量读取／恢复采用所选884_156692的Common.Player、FormulaHandler、TimeManager与BattleFormulaHandler，原头像血条采用同版PlayerIconMeHpSliderNormal；输入、代码绑定与依赖哈希见[主角血量来源](partner-player-health-source-manifest.json)，由 `record_partner_player_health_sources.py` 记录。本批不新增美术载荷或素材快照。
 

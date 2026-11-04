@@ -77,6 +77,16 @@ class Map16StoryNormalizationTests(unittest.TestCase):
         self.assertEqual(94, sum(counts.values()))
         self.assertEqual(7, counts["StartStoryNode"])
 
+    def test_rope_query_and_submission_use_the_same_official_transaction(self):
+        nodes = self.records["SubmitRopes"]["nodes"]
+        queries = [node for node in nodes if node["type"] == "CanHandInItemNode"]
+        submissions = [node for node in nodes if node["type"] == "HandInItemNode"]
+        self.assertEqual([3], [node["handInItemId"] for node in queries])
+        self.assertEqual([3], [node["handInItemId"] for node in submissions])
+        rule = next(row for row in self.source["handInItems"] if row["Id"] == 3)
+        self.assertEqual(1, rule["CanHandTimes"])
+        self.assertEqual({"43039": 5}, rule["Items"])
+
     def test_confirmed_manual_story_triggers_match_official_anchors(self):
         manual = {name for name, row in self.rows.items() if not row["AutoRunOnMeetCondition"]}
         self.assertEqual({"LookForWhaleIsland", "SubmitRopes", "DiscoverWhaleIsland",
