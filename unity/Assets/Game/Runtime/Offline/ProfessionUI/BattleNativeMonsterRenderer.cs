@@ -116,6 +116,7 @@ namespace Zjcs.Offline.ProfessionUI
                 Flag(settings, "pmaVertexColors"), ZSpacing, allowConcaveClipping: true);
             GetComponent<ProfessionNativeSceneMeshPart>().Assign(batches.Batches, batch => batch.Blend == 0
                 ? material : throw new NotSupportedException("Bind original monster non-normal material."));
+            Attachments?.UpdateFollowers();
         }
         private static Material CreateMaterial(BattleNativeMonsterAssets assets, Dictionary<string, object> source,
             Dictionary<string, object> textures)

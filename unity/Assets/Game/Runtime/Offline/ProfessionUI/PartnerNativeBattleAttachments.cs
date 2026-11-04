@@ -24,6 +24,8 @@ namespace Zjcs.Offline.ProfessionUI
             { Transform = transform; Skeleton = skeleton; Settings = settings; Material = material; }
         }
         private readonly List<AttachmentFollower> followers = new List<AttachmentFollower>();
+        private readonly List<(Transform Transform, Component Renderer, Dictionary<string, object> Fields)> boneFollowers =
+            new List<(Transform, Component, Dictionary<string, object>)>();
         private readonly Dictionary<string, Transform> transforms;
         public AttachAgent Agent { get; }
         public Dictionary<string, object> OriginalRow { get; }
@@ -32,23 +34,33 @@ namespace Zjcs.Offline.ProfessionUI
 
         internal PartnerNativeBattleAttachments(PartnerNativeBattleActor actor,
             Dictionary<string, Transform> transforms, RendererBinding[] bindings)
+            : this(actor.Root, actor.Root, FindPartner(actor), transforms, bindings, actor.ApplyPose) { }
+
+        private static Dictionary<string, object> FindPartner(PartnerNativeBattleActor actor)
         {
-            this.transforms = transforms;
             var asset = Resources.Load<TextAsset>("Combat/NativePartnerAssets/attachments");
             if (!asset) throw new FileNotFoundException("Original partner attachment graph is not packaged.");
             var root = Obj(OfficialEquipmentJson.Parse(asset.text));
-            OriginalRow = Arr(root["partners"]).Select(Obj).Single(row => Int(row, "npcId") == Int(actor.OriginalRow, "npcId"));
+            return Arr(root["partners"]).Select(Obj).Single(row => Int(row, "npcId") == Int(actor.OriginalRow, "npcId"));
+        }
+
+        internal PartnerNativeBattleAttachments(Transform container, Transform activationRoot,
+            Dictionary<string, object> originalRow, Dictionary<string, Transform> transforms,
+            RendererBinding[] bindings, Action applyPose, bool bindBoneFollowers = false)
+        {
+            this.transforms = transforms;
+            OriginalRow = originalRow;
             var nodes = Arr(OriginalRow["nodes"]).Select(Obj).ToArray();
             var renderers = new Dictionary<string, Component>(StringComparer.Ordinal);
-            bool active = actor.Root.gameObject.activeSelf;
-            actor.Root.gameObject.SetActive(false);
+            bool active = activationRoot.gameObject.activeSelf;
+            activationRoot.gameObject.SetActive(false);
             try
             {
                 foreach (var row in nodes)
                 {
                     string key = (string)row["sourceKey"];
                     string parentKey = (string)row["parentKey"];
-                    Transform parent = parentKey.Length == 0 ? actor.Root : transforms[parentKey];
+                    Transform parent = parentKey.Length == 0 ? container : transforms[parentKey];
                     if (!transforms.TryGetValue(key, out Transform transform))
                     {
                         transform = (Equals(row["transformType"], "RectTransform")
@@ -75,7 +87,7 @@ namespace Zjcs.Offline.ProfessionUI
                         var binding = bindings.Single(value => value.Transform == transform);
                         var port = transform.gameObject.AddComponent<PartnerNativeBattleRendererPort>();
                         port.Bind(binding.Skeleton, binding.Material, Int(binding.Settings, "updateWhenInvisible"),
-                            Number(binding.Settings, "zSpacing"), (string)component["skeletonDataName"], actor.ApplyPose);
+                            Number(binding.Settings, "zSpacing"), (string)component["skeletonDataName"], applyPose);
                         renderers.Add((string)component["sourceKey"], port);
                     }
                 }
@@ -111,16 +123,44 @@ namespace Zjcs.Offline.ProfessionUI
                         follower.InitializeOnAwake = Flag(fields, "InitializeOnAwake"); follower.enabled = Flag(fields, "m_Enabled");
                         followers.Add(follower);
                     }
+                    else if (Equals(component["type"], "BoneFollower") && bindBoneFollowers)
+                    {
+                        if (Flag(fields, "followSkeletonFlip") || Flag(fields, "followParentWorldScale")
+                            || Int(fields, "maintainedAxisOrientation") != 1)
+                            throw new NotSupportedException("Bind additional original native bone follower flags.");
+                        boneFollowers.Add((go.transform, Resolve(renderers, references, "/skeletonRenderer"), fields));
+                    }
                 }
                 OriginalRenderers = renderers;
             }
-            finally { actor.Root.gameObject.SetActive(active); }
+            finally { activationRoot.gameObject.SetActive(active); }
             if (!Agent) throw new InvalidDataException("Original partner attachment registry is absent.");
             foreach (var follower in followers) if (follower.InitializeOnAwake) follower.Initialize();
             UpdateFollowers();
         }
         public void UpdateFollowers()
         {
+            foreach (var follower in boneFollowers)
+            {
+                if (!follower.Transform || !follower.Renderer || !follower.Transform.gameObject.activeInHierarchy
+                    || !Flag(follower.Fields, "m_Enabled")) continue;
+                var native = (Zjcs.Official.ProfessionUI.IProfessionFollowerRenderer)follower.Renderer;
+                var bone = native.Skeleton.FindBone((string)follower.Fields["boneName"])
+                    ?? throw new InvalidDataException("Original native attachment bone is absent.");
+                Vector3 point = follower.Renderer.transform.TransformPoint(new Vector3(bone.WorldX, bone.WorldY, 0));
+                Vector3 position = follower.Transform.position;
+                if (Flag(follower.Fields, "followXYPosition")) { position.x = point.x; position.y = point.y; }
+                if (Flag(follower.Fields, "followZPosition")) position.z = point.z;
+                follower.Transform.position = position;
+                if (Flag(follower.Fields, "followBoneRotation"))
+                {
+                    Vector3 axis = follower.Renderer.transform.TransformVector(new Vector3(bone.A, bone.C, 0));
+                    if (follower.Transform.parent) axis = follower.Transform.parent.InverseTransformVector(axis);
+                    if (axis.sqrMagnitude > 0) follower.Transform.localRotation = Quaternion.FromToRotation(Vector3.right, axis);
+                }
+                if (Flag(follower.Fields, "followLocalScale"))
+                    follower.Transform.localScale = new Vector3(bone.ScaleX, bone.ScaleY, 1);
+            }
             foreach (var follower in followers)
                 if (follower && follower.isActiveAndEnabled) follower.ForceUpdate();
         }
@@ -145,6 +185,7 @@ namespace Zjcs.Offline.ProfessionUI
                     Agent.myBoneList[index] = current;
             Agent.Init();
             followers.RemoveAll(value => value && (value.transform == previous || value.transform.IsChildOf(previous)));
+            boneFollowers.RemoveAll(value => value.Transform && (value.Transform == previous || value.Transform.IsChildOf(previous)));
             followers.AddRange(shadow.GetComponentsInChildren<AttachmentFollower>(true));
             previous.gameObject.SetActive(false);
             if (Application.isPlaying) UnityEngine.Object.Destroy(previous.gameObject);

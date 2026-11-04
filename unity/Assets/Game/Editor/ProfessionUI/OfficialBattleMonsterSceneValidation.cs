@@ -149,7 +149,7 @@ namespace Zjcs.Editor.ProfessionUI
                 { MonsterId = 3198, MonsterTemplateId = 999999 }, root.transform) == null, "Stat row overrode an explicit entity template.");
             int skills = 0;
             foreach (int step in SkillSteps(assets)) { if (step == 1) skills++; yield return 0; }
-            Require(models == 18 && animations == 204 && samples == 1020 && skills == 10, "Native monster Animator coverage changed.");
+            Require(models == 20 && animations == 222 && samples == 1110 && skills == 10, "Native monster Animator coverage changed.");
             File.WriteAllText(Path.Combine(output, "shared-monster-result.json"),
                 "{\"models\":" + models + ",\"animations\":" + animations + ",\"samples\":" + samples
                 + ",\"shadowPixels\":" + changedPixels + ",\"skillCarriers\":" + skills + ",\"failures\":[]}");
@@ -163,6 +163,19 @@ namespace Zjcs.Editor.ProfessionUI
             Require(Vector3.Distance(expected, actual) < .001f, "Original shadow diverged from its posed bone.");
             Require(Vector3.Distance(follower.transform.localScale, new Vector3(bone.ScaleX, bone.ScaleY, 1)) < .001f,
                 "Original shadow lost bone local scale.");
+            if (native.Attachments != null && Convert.ToInt32(native.Attachments.OriginalRow["entityId"]) == 3207)
+                foreach (string name in new[] { "bone29", "bone32" })
+                {
+                    var attachmentBone = ((IProfessionFollowerRenderer)native).Skeleton.FindBone(name);
+                    Transform attachment = native.Attachments.Agent.GetBone(name);
+                    Vector3 point = native.transform.TransformPoint(new Vector3(attachmentBone.WorldX, attachmentBone.WorldY, 0));
+                    point.z = attachment.position.z;
+                    Require(Vector3.Distance(attachment.position, point) < .001f,
+                        "The dungeon monster's skill attachment left its live bone: " + name);
+                    Vector3 tangent = native.transform.TransformVector(new Vector3(attachmentBone.A, attachmentBone.C, 0));
+                    Require(Vector3.Dot(attachment.TransformVector(Vector3.right).normalized, tangent.normalized) > .99999f,
+                        "The dungeon monster's skill attachment lost its live rotation: " + name);
+                }
         }
         private static IEnumerable<int> SkillSteps(BattleNativeMonsterAssets assets)
         {

@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 using Zjcs.Combat.Official;
 using Zjcs.Offline.ProfessionUI;
-using Zjcs.Official.StoryAttachment;
 
 namespace Zjcs.Presentation.Combat
 {
@@ -55,21 +54,20 @@ namespace Zjcs.Presentation.Combat
                 states = OfficialBattleMonsterAnimatorBindings.Find(entityId);
                 renderer = BattleNativeMonsterRenderer.Create(assets, entityId, parent, name);
                 renderer.BindOriginalAnimator(assets, entityId);
+                renderer.BindOriginalAttachments(entityId);
                 application = new OfficialBattleMonsterAnimationController(renderer.EntityRoot, renderer.Animator, entityId);
                 UsesNativeSkillGraphs = nativeSkillGraphs;
                 Transform body = renderer.transform.parent;
                 if (!body || body.name != "body" || !body.IsChildOf(renderer.EntityRoot))
                     throw new InvalidOperationException("Original monster body transform is unbound: " + entityId);
-                var attachment = Transform.gameObject.AddComponent<AttachAgent>();
-                attachment.myBoneNameList.Add("body");
-                attachment.myBoneList.Add(body);
-                attachment.Init();
                 requestedState = renderer.Animator.GetCurrentAnimatorStateInfo(0).fullPathHash;
                 var source = (Dictionary<string, object>)assets.Find(entityId)["meshRenderer"];
                 sorting = new OfficialBattleUnitSorting(renderer.transform,
                     checked(Convert.ToInt32(source["m_SortingLayer"]) * 1000 + Convert.ToInt32(source["m_SortingOrder"])));
                 shadow = OfficialBattleShadowView.Create(entityId, renderer.EntityRoot, renderer)
+                    ?? OfficialBattleShadowView.Create(entityId, renderer.EntityRoot, renderer, "Combat/NativeMonsters/shadow-bindings")
                     ?? throw new InvalidOperationException("Original monster shadow is unbound: " + entityId);
+                renderer.Attachments.RebindOriginalShadow(shadow.Root);
                 follower = shadow.Root.GetComponent<OfficialBattleShadowBoneFollower>();
                 if (!follower) throw new InvalidOperationException("Original monster bone follower is unbound: " + entityId);
             }

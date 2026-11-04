@@ -103,8 +103,9 @@ namespace Zjcs.Presentation.Combat
         public void SwitchOutPerformanceCamera()
         {
             if (disposed) return;
-            normalCamera.SetActive(true);
-            camera.gameObject.SetActive(false);
+            // Scene unload can destroy either camera before the scoped owner.
+            if (normalCamera != null) normalCamera.SetActive(true);
+            if (camera != null) camera.gameObject.SetActive(false);
         }
 
         public void SetOffset(Vector3 value) => offset.m_Offset = new Vector3(value.x, value.y, 0f);

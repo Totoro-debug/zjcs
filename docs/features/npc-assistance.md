@@ -114,6 +114,8 @@ scripts/prepare_dungeon_bindings.py 从 prefabs_ui_fight_changebattleposarea 的
 
 隔离内置屏 Direct3D Play Mode 经公共场景实际创建26名当前开放伙伴，核对原阴影、原移动参数与动画、移动终点、死亡／复活及死亡 checkpoint 的原序列和位置恢复，78张站立／移动／死亡运行截图已查看。正式工程导入／编译与 `ProjectTools.Validate` 通过，静态检查通过（123,495个 GUID）。11015–11022按[已确认联动范围](offline-access.md#暂不开放的联动活动及伙伴)不开放，原资源保留。该检查直接构造场景与状态，不代表正式邀请鼠标流程、完整血条／状态表现、实战结算、声音或 Windows Player 已验证；这些仍须继续完成。
 
+原生伙伴宿主集成现使用11001／11004／11005与本地主角进入实际日常副本场景；夹具按原 FestivalBoss 的3人上限，以独立测试入口保存选择和提交记录，检查 checkpoint 暂停／恢复、调用方选项修改隔离、错误玩法恢复拒绝且原事务不变，模拟公共HUD输入后完成37步胜利，再核对助战清理和主城状态恢复。断言包含三名伙伴的原 Transform 链、Animator、实际网格与阴影，以及本场3206／3207的原挂点表；原16010技能不再发生停止挂接异常，怪物迁移边界见[战斗执行](battle-execution.md)。准备、播放和返回运行截图已查看，伙伴模型和阴影可见；完整伙伴血条仍待接入，主城既有黑白几何／白块等显示问题仍存在。该夹具直接建立测试选择，不证明正式邀请窗口资格／选中／确认的完整鼠标流程、活动正式入口或奖励、自然技能收尾全覆盖、实际声音及Windows Player发布。26名开放原生伙伴的站立／移动／死亡／复活与恢复死亡回归再次通过，78张运行帧已查看。本次整工程导入／编译、`ProjectTools.Validate` 和静态检查通过（123,549个GUID）。专用批处理验收入口在完成验证后关闭本进程自动资源刷新，以保持与其他会话并行写入时的编译快照；不修改全局编辑器设置。
+
 贴图沿原 `AppearanceRendererLite.SkeletonRenderer` 指针、`AppearanceConfig` 骨骼路径和 `AppearanceAddressUtils.GetTextureLoaderPath` 恢复。35 个渲染器均使用原 Low 分辨率；原材质的占位页与运行时 `TextureLoader_Low` 的实际目标分别保存，35 项映射对应 28 份不同的目标 PNG。11015–11022 的原 Low 目标为 24×24，当前原 High 目标也为该尺寸，未以其他图片替换。隔离 Unity 工程复用正式工程的 Linear 颜色空间；全部目标导入后的 RGBA 像素哈希、尺寸、mip、颜色空间、过滤／各轴 Wrap 参数一致，并恢复原可读性。
 
 `ProfessionNativeOrderedConstraintPose` 按原 order 交错求解 IK 与 Transform，保留前序约束结果；`ProfessionNativeAffineIk` 使用独立平面几何处理单骨骼、双骨骼的圆形／非均匀缩放椭圆及反射坐标，保留原混合、弯曲、伸展和适用的柔化分支。非均匀缩放时子骨骼 Y 归零且不伸展，依据[公开 IK 约束说明](https://esotericsoftware.com/spine-ik-constraints)；该分支的非零 softness 仍显式拒绝，当前相关原配置和动画均为零。恢复原 noScaleOrReflection 继承、11042 的相对局部旋转；原非凸裁剪边界通过独立三角剖分接入既有半平面裁剪，保持原三角形朝向与插值 UV，不复制动画 SDK。

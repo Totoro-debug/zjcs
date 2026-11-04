@@ -31,7 +31,16 @@ def build():
         target = destination / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         if target.exists() and target.read_bytes() != raw:
-            raise ValueError("Preserve changed original monster asset: " + str(target))
+            if relative != "inventory.json":
+                raise ValueError("Preserve changed original monster asset: " + str(target))
+            previous = json.loads((ROOT / "assets/reference/battle-animation/live-monsters-source-manifest.json").read_bytes())
+            if previous["outputs"][target.relative_to(ROOT).as_posix()] != sha(target.read_bytes()):
+                raise ValueError("Preserve modified original monster inventory")
+            before, after = json.loads(target.read_bytes()), json.loads(raw)
+            retained = {row["entityId"]: row for row in after["models"]}
+            if before["manifest"] != after["manifest"] or any(
+                    retained.get(row["entityId"]) != row for row in before["models"]):
+                raise ValueError("An incremental monster install must preserve every installed source binding")
         target.write_bytes(raw)
         metadata = Path(str(target) + ".meta")
         if not metadata.exists(): meta(target)

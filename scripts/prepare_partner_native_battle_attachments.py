@@ -14,11 +14,12 @@ from prepare_battle_scene_appearance_runtime import identity, meta, write_change
 from UnityPy.classes import PPtr
 
 
-def build(work):
+def build(work, monsters=False):
     work = work.resolve()
     if work.parent != ROOT / 'output/validation' or not (work / '.zjcs-validation.json').is_file():
         raise ValueError('Use an owned attachment validation workspace')
-    inventory = ROOT / 'unity/Assets/Official/Combat/NativePartners/catalog.json'
+    inventory = ROOT / ('unity/Assets/Official/Combat/NativeMonsters/inventory.json' if monsters
+        else 'unity/Assets/Official/Combat/NativePartners/catalog.json')
     selected = json.loads(inventory.read_bytes())
     apk, schemas = Apk.current(), CurrentSchemas()
     if apk.version != selected['manifest'] or apk.version != '884_156692':
@@ -91,7 +92,7 @@ def build(work):
 
     try:
         assets = read_asset_manifest(apk.source.manifest_bytes('DefaultPackage', apk.archive))
-        for partner in selected['fighters']:
+        for partner in selected['models' if monsters else 'fighters']:
             entity = partner['entityId']
             candidates = [row for row in assets if row['path'].endswith('/' + str(entity) + '.prefab')]
             if len(candidates) != 1:
@@ -101,18 +102,20 @@ def build(work):
             transform, = [obj for obj in components if obj.type.name == 'Transform']
             nodes = []
             walk(transform, '', nodes)
-            if nodes[0]['sourceKey'] != partner['transforms'][0]['sourceKey']:
+            if (nodes[0]['name'] != partner['transforms'][0]['name'] if monsters else
+                    nodes[0]['sourceKey'] != partner['transforms'][0]['sourceKey']):
                 raise ValueError('Original partner entity hierarchy identity differs')
             bindings = [component['type'] for node in nodes for component in node['components'] if 'fields' in component]
-            results.append(dict(npcId=partner['npcId'], entityId=entity, nodes=nodes))
-            print(partner['npcId'], 'nodes', len(nodes), 'bindings', bindings, flush=True)
+            results.append(dict(npcId=entity if monsters else partner['npcId'], entityId=entity, nodes=nodes))
+            print(entity if monsters else partner['npcId'], 'nodes', len(nodes), 'bindings', bindings, flush=True)
     finally:
         apk.archive.close()
-    target = work / 'partner-native-attachments.json'
+    prefix = 'monster' if monsters else 'partner'
+    target = work / (prefix + '-native-attachments.json')
     write_changed(target, json.dumps(dict(manifest=apk.version, partners=results), ensure_ascii=False, separators=(',', ':')) + '\n')
     proof = dict(manifest=apk.version, selection=identity(inventory), objects=objects,
         component_schemas=schemas.records, output=identity(target), generator=identity(Path(__file__).resolve()))
-    write_changed(work / 'partner-native-attachments-source-manifest.json', json.dumps(proof, ensure_ascii=False, indent=2) + '\n')
+    write_changed(work / (prefix + '-native-attachments-source-manifest.json'), json.dumps(proof, ensure_ascii=False, indent=2) + '\n')
     return results
 
 

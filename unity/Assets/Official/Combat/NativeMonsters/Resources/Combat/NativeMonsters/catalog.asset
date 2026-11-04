@@ -16,6 +16,10 @@ MonoBehaviour:
   bindings:
   - File: 3198/model.bytes
     Asset: {fileID: 4900000, guid: 14540e24744050e6b953bedb09cda9e8, type: 3}
+  - File: 3206/model.bytes
+    Asset: {fileID: 4900000, guid: 79014b04063c570eae384e72d86e4f62, type: 3}
+  - File: 3207/model.bytes
+    Asset: {fileID: 4900000, guid: 3f4b68c3025152b39c503e632c263c4d, type: 3}
   - File: 3709/model.bytes
     Asset: {fileID: 4900000, guid: 7ea850592f7157de97d41be4edf1abcd, type: 3}
   - File: 3903/model.bytes
@@ -58,6 +62,46 @@ MonoBehaviour:
     Asset: {fileID: 7400000, guid: 7d449a06b86d25a3523b94889d3b9bee, type: 2}
   - File: animators/AnimationClip/hit_02_375.anim
     Asset: {fileID: 7400000, guid: 7c9ef6fa287f59e04f22bb9c715749f8, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3206/block_01.anim
+    Asset: {fileID: 7400000, guid: 2641374c2697fba8680d49e17593e4ce, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3206/die_01.anim
+    Asset: {fileID: 7400000, guid: 03234d5cb0a19dfd4b12a7c92c75d2f3, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3206/floating_01.anim
+    Asset: {fileID: 7400000, guid: 84531b4a2fd2c763dbae73a9d6371086, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3206/hit_01.anim
+    Asset: {fileID: 7400000, guid: 231a7989aa5c006c2a362a181b0c1f18, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3206/hit_02.anim
+    Asset: {fileID: 7400000, guid: ef5b94470f454e03000558c963f4d86b, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3206/idle_01.anim
+    Asset: {fileID: 7400000, guid: c3d60daad06596bfcc78efd9485f676b, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3206/monster_3206_Controller.controller
+    Asset: {fileID: 9100000, guid: 577d19e18f5dde63f9b7c6c6f953721c, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3206/run_01.anim
+    Asset: {fileID: 7400000, guid: 23c1e9a341a202e361f43121b2d3604c, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3206/skill_01.anim
+    Asset: {fileID: 7400000, guid: 363325280965b63af364c73a854d7d9e, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3206/skill_02.anim
+    Asset: {fileID: 7400000, guid: 23996b1b81ececcde0dbbb7f18a31205, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3206/stun_01.anim
+    Asset: {fileID: 7400000, guid: b4c2cf7118c120f426b54e2a39b7f6dd, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3207/block_01.anim
+    Asset: {fileID: 7400000, guid: 0e0e02d97c2057474f8003be9ffb0753, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3207/die_01.anim
+    Asset: {fileID: 7400000, guid: 21c8823cae86d4afb57e391f757e7f75, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3207/hit_01.anim
+    Asset: {fileID: 7400000, guid: e1fd8c33d13f95e5616bba960d259376, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3207/hit_02.anim
+    Asset: {fileID: 7400000, guid: 42616d50a6f0cc2cd7c589dc0d253c51, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3207/idle_01.anim
+    Asset: {fileID: 7400000, guid: d485c85a4287f24fc838caaf8d8b76ce, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3207/monster_3207_Controller.controller
+    Asset: {fileID: 9100000, guid: 47747baf7a60eea0f1ad8c8bf732a6fc, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3207/run_01.anim
+    Asset: {fileID: 7400000, guid: 530116d940121407132ef3db14c7231c, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3207/skill_01.anim
+    Asset: {fileID: 7400000, guid: b43166b2dc08c2f41b5af646ed77b5be, type: 2}
+  - File: animators/AppearanceAssets/Monster/monster_3207/stun_01.anim
+    Asset: {fileID: 7400000, guid: f7b3a1b553202af825b1cff8cbdf13e8, type: 2}
   - File: animators/AppearanceAssets/Monster/monster_3270/block_01.anim
     Asset: {fileID: 7400000, guid: 1e829ff80a8a3bf3410f95a662a6d791, type: 2}
   - File: animators/AppearanceAssets/Monster/monster_3270/die_01.anim
@@ -472,6 +516,8 @@ MonoBehaviour:
     Asset: {fileID: 2800000, guid: 1319a83f6a475557a03fa4eda650d6e0, type: 2}
   - File: textures/2bb78acd79cd8671f2b689a932928e9a37318c4bc6a0c7814a6fcc6f7373cc94.asset
     Asset: {fileID: 2800000, guid: 4a01dab7338f5f1a8c21be21f9586f9c, type: 2}
+  - File: textures/2d72e60b14c4a946c993b6df2a9bee7ab491c54fd52bd9face967ed12817dcb6.asset
+    Asset: {fileID: 2800000, guid: 0f3c7fe210305c0ea98753b595b3f09d, type: 2}
   - File: textures/2fcf526d85d910a30d54f4426cca49ae3e0e3728988aa630cb50b45d78936f5c.asset
     Asset: {fileID: 2800000, guid: 506c004be1fb5cb380cd14db9152c69c, type: 2}
   - File: textures/307a40a9a546b00f2d63b2c9753e69229d453bc1fa28c83f95570cf40ced9043.asset
@@ -500,5 +546,7 @@ MonoBehaviour:
     Asset: {fileID: 2800000, guid: 1d74fe1fe7de547fb9acb908979c30cd, type: 2}
   - File: textures/ad9f09e7b31b57918ac7d2018ec175f4618635699df0c62eca6cd22c658e8cae.asset
     Asset: {fileID: 2800000, guid: 3b6c723fdacf54109e3fbc142897afdd, type: 2}
+  - File: textures/b8fb5f7d015536b9e2d85d9618ce624d601cf170014c02b5ec5ce659ae1d64c3.asset
+    Asset: {fileID: 2800000, guid: 68d5367e5ddd5326a4f595712d986181, type: 2}
   - File: textures/c3612c06695e36e766e9b6c75fc5fd6ba62657b18d2291e164da9ed833aa839e.asset
     Asset: {fileID: 2800000, guid: ba7b298cf3d653d3aa9510c45c33685b, type: 2}
