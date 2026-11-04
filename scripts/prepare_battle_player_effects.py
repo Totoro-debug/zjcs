@@ -117,8 +117,10 @@ def main():
     asset(catalog, 'Original Renderer appearance effects', RUNTIME / 'OfflineProfessionImageCatalog.cs', dict(Entries=entries))
     outputs.extend((catalog, Path(str(catalog) + '.meta')))
     runtime = [RUNTIME / 'SkeletonRendererAttachmentBacker.cs', RUNTIME / 'ProfessionNativeSceneRenderer.cs',
+        RUNTIME / 'ProfessionNativeSceneRenderer.Effects.cs',
         RUNTIME / 'ProfessionNativeAttachment.cs', RUNTIME / 'OfflineProfessionAppearancePartBindings.cs',
-        OFFICIAL / 'AppearanceRendererPartHandler.cs', OFFICIAL / 'SkeletonRendererFollower.cs']
+        OFFICIAL / 'AppearanceRendererPartHandler.cs', OFFICIAL / 'SkeletonRendererFollower.cs',
+        OFFICIAL / 'ProfessionAppearanceRendererPartBindings.cs']
     proof = dict(manifest='884_156692', source_table=identity(SCENE / 'appearance-tables.json'),
         source_config=identity(SCENE / 'AppearanceConfig.asset'), sources=sources,
         schemas=schemas.records, required_effect_skins=sorted(effects), integrated_part_skins=integrated,
@@ -128,7 +130,8 @@ def main():
         original_mesh_bake=identity(ROOT / '.tools/source-packages/current/884_156692/official-code/client-source/SpineMeshBakeUtils.cs'),
         validation=[identity(ROOT / ('unity/Assets/Game/Editor/Combat/AnimatorPlayback/' + name + '.cs')) for name in (
             'OfficialBattlePlayerModelClipValidation', 'OfficialBattlePlayerModelClipValidation.PlayerActor',
-            'OfficialBattlePlayerModelClipValidation.PlayerEffects')], binding='Combat/PlayerEffects/catalog',
+            'OfficialBattlePlayerModelClipValidation.PlayerEffects',
+            'OfficialBattlePlayerModelClipValidation.EffectOrder')], binding='Combat/PlayerEffects/catalog',
         limits=['Production player factory and Windows Player remain unverified.'])
     write_changed(ROOT / 'assets/reference/battle-animation/player-effects-source-manifest.json',
         json.dumps(proof, ensure_ascii=False, indent=2) + '\n')

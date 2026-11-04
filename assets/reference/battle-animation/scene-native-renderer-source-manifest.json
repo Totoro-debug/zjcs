@@ -34,7 +34,7 @@
   "outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.cs",
-      "sha256": "09958980a901261aecee301288cd6122e19d7fd06357d5bcb89f37f5f82927d5"
+      "sha256": "789e988825da20133a117a62f1b845506511a55de4e632a3f12e870614a2a6f9"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneMeshSeparator.cs",
@@ -152,7 +152,7 @@
   },
   "pool_receipt": {
     "path": "assets/reference/battle-animation/renderer-parts-source-manifest.json",
-    "sha256": "19a6671de28c1e523240b0a2b1cdb479bf1ac0c3a0d2976e22cbb48677765af0"
+    "sha256": "1033022c8498172880b91b895fb4f854a752598206f4cbaa0a80fd1d1ecf38f8"
   },
   "native_ordering": "Internal SortingGroups retain source draw-slot order while original MeshRenderer fields stay intact. Even keys identify fragment starts; the actual G_007 independent sword/staff binds an odd after-point key between its two body fragments. Existing ordering objects remain with pooled parts for same-frame reuse. Current original part renderer layer/order must be uniform.",
   "independent_parts": "Assemble all four source nodes and transforms, original SkeletonRendererFollower fields and AppearanceSkeletonPart/AppearanceRendererLite application code. Native body Low and weapon High resources share one explicit GUID/atlas router. A mandatory external pose producer receives animation changes and separately completes the current pose after skin/setup resets, without restarting or advancing time; drawing performs no clock, physics or mixing. Prior extraction receipts retain their historical runtime identities; current catalog/resource binding extensions are recorded above without changing the extracted payloads.",

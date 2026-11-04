@@ -120,6 +120,7 @@ namespace Zjcs.Official.ProfessionUI
 
         public override void Release(bool tryUnloadAllAssets = false)
         {
+            (PartRenderer as IProfessionAppearanceEffectRenderer)?.BindEffectFollowers(Array.Empty<BaseSkeletonFollower>());
             foreach (var item in mLoadedSkeletonDict)
             {
                 if (tryUnloadAllAssets && item.Value.Part.SkeletonTarget.TryGetComponent<IProfessionAppearanceUnloadable>(out var unloadable))
@@ -137,6 +138,7 @@ namespace Zjcs.Official.ProfessionUI
         protected virtual void OnSkinUpdate()
         {
             UpdateSeparatorSlots();
+            (PartRenderer as IProfessionAppearanceEffectRenderer)?.BindEffectFollowers(mEffectSkeletonFollowers);
             var separator = PartRenderer.Separator;
             if (separator != null) separator.ReInitPartRenderers(SortingLayer.NameToID(mSortingLayer), 0, 0, mDefaultSortingOrder);
             else

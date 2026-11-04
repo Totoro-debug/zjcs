@@ -99,6 +99,7 @@ namespace Zjcs.Editor.Combat
                 foreach (var follower in effect.GetComponentsInChildren<SkeletonRendererFollower>(true))
                     Require(follower.transform.parent == effect ? follower.SkeletonRenderer == actor.Renderer : !follower.SkeletonRenderer,
                         "original handler binds direct-child followers and preserves other null references");
+                CheckPlayerEffectOrdering(actor, effect, sourceNodes, nodes, sex + "-" + item.name);
                 foreach (var backer in effect.GetComponentsInChildren<SkeletonRendererAttachmentBacker>(true))
                 {
                     // Each cape has a source-disabled alternate branch. Exercise

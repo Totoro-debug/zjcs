@@ -18900,7 +18900,7 @@
   ],
   "asset_conversion": {
     "path": "assets/reference/battle-animation/player-effect-assets-source-manifest.json",
-    "sha256": "c876f6548b81ddce08dc77cb67e24c14c476c26200d084896e37a94bab66be6f"
+    "sha256": "0aac030f59d98afeb54739c7431ec89367acc67d3baf8ab8bc06f653aa666b51"
   },
   "outputs": [
     {
@@ -19178,7 +19178,7 @@
   ],
   "generator": {
     "path": "scripts/prepare_battle_player_effects.py",
-    "sha256": "b743ddb52158bf30973bd45b5de4e653697b5460f25323589a295d669339d232"
+    "sha256": "e9c46a7a9f7f843718cd5b1843024f712850a6dd7200c4aef77b428f466b1540"
   },
   "runtime": [
     {
@@ -19187,7 +19187,11 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.cs",
-      "sha256": "e016a07cb9256ddf6086f0472ea4bfd5a2beaef76c20c94d2ee4416c5bea6db8"
+      "sha256": "789e988825da20133a117a62f1b845506511a55de4e632a3f12e870614a2a6f9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSceneRenderer.Effects.cs",
+      "sha256": "79174f84bb7601dcec7988680e723479b233197da2cd856efb044e3d73f21266"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAttachment.cs",
@@ -19199,11 +19203,15 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceRendererPartHandler.cs",
-      "sha256": "48da4cff7425c535f82ed794c007a7a78f1b36fd8691b37d4099f83a650b6e23"
+      "sha256": "9e2028dc00eaa7fb0b19202e6bacd6d3c9add3154aa949e077e33b0ade97109d"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/SkeletonRendererFollower.cs",
       "sha256": "ee3128c81b45da2963f66c3c9c7a5ce73051a4323c332a07b3ee28fba1616f34"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceRendererPartBindings.cs",
+      "sha256": "7db758efaad51dc06c2e8b0729e910efeb11f4d7a931264a41668f3b8cc22b32"
     }
   ],
   "original_mesh_bake": {
@@ -19601,7 +19609,7 @@
   "validation": [
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.cs",
-      "sha256": "87da06ff1f04123dfa7d0a1680aecd9ae491bde1b2f36c60b5762b014a5c5b80"
+      "sha256": "ffadf3fd71a390b046d1ba48ecfe11a6b1b6ab3bc8ea38be57fcd5eedbc6f3a9"
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerActor.cs",
@@ -19609,7 +19617,11 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.PlayerEffects.cs",
-      "sha256": "72f73a37914c14409f4c0f6aa8f56d173cb8345f3ecf16cbc13da29426d7c383"
+      "sha256": "45132ce604e800de75c32adbe5eb8d2b46abe3f799e0b33eeb88e00c94fcc7b2"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/AnimatorPlayback/OfficialBattlePlayerModelClipValidation.EffectOrder.cs",
+      "sha256": "53bba4fd73a2c2db1ddd5b552b115bd822a24b2bf37a3545643494cb721133a7"
     }
   ]
 }

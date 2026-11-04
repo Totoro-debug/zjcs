@@ -152,11 +152,18 @@ namespace Zjcs.Offline.ProfessionUI
                 if (draw < 0 || !cuts.Add(draw)) throw new ArgumentException("Original separator slots must be unique identities from the current scene skeleton.");
                 slotIndices.Add(State.SlotPose.DrawSlot(draw));
             }
+            AddEffectOrderingCuts(order, cuts);
+            slotIndices = cuts.Select(draw => State.SlotPose.DrawSlot(draw)).ToList();
             if (cuts.Count > 0 && backend == null) throw new InvalidOperationException("Initialize original separator parts before drawing split geometry.");
             if (sceneParts.Count > 0 && backend == null) throw new InvalidOperationException("Bind original separator slots before drawing independent scene parts.");
             batches.Build(State.Pose, State.CreateDrawSlots(slotIndices), settings.UseClipping, settings.PmaVertexColors, settings.ZSpacing);
             if (backend != null)
             {
+                if (backend.PartsRenderers.Count < cuts.Count + 1)
+                {
+                    var source = backend.PartsRenderers[0].MeshRenderer;
+                    separator.ReInitPartRenderers(source.sortingLayerID, cuts.Count - SeparatorSlots.Count, 0, source.sortingOrder);
+                }
                 backend.Render(batches.Batches, cuts.ToArray(), MaterialFor);
                 ApplySlotDrawOrder(cuts.ToArray());
                 Main.MeshRenderer.enabled = !settings.DisableRenderingOnOverride && settings.Enabled;
@@ -193,6 +200,7 @@ namespace Zjcs.Offline.ProfessionUI
                 group.sortingOrder = order;
             }
             UpdateScenePartOrder(State.DrawOrder, cuts, first);
+            UpdateEffectDrawOrder(State.DrawOrder, first);
             SortingGroup.UpdateAllSortingGroups();
         }
 
@@ -251,6 +259,7 @@ namespace Zjcs.Offline.ProfessionUI
 
         private void ReleaseSkeleton(bool keepSeparator)
         {
+            RestoreEffectDrawOrder();
             SuspendSceneParts();
             if (keepSeparator)
             {

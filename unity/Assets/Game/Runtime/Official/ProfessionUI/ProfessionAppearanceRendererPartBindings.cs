@@ -24,6 +24,12 @@ namespace Zjcs.Official.ProfessionUI
         void LateUpdateMesh();
     }
 
+    // Optional native ordering port for the original handler's collected effects.
+    public interface IProfessionAppearanceEffectRenderer
+    {
+        void BindEffectFollowers(IReadOnlyList<BaseSkeletonFollower> followers);
+    }
+
     // Identity is the original animation object, not its name or Unity clip.
     public delegate void ProfessionPartClipApplied(object animation, string name, int layer, float weight,
         float time, float lastTime, bool playsBackward);
