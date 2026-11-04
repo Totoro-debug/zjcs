@@ -131,6 +131,7 @@ def build():
             CODE / 'common-source/Common/MapRootEntityLiteSingleInfo.cs',
             CODE / 'common-source/Common/MapRegionEntityInfoManager.cs',
             CODE / 'common-source/Common/EcContainer.cs', CODE / 'common-source/Common/EcEntity.cs',
+            CODE / 'client-source/MiniMapMarkManager.cs',
             *[CODE / 'common-source/Common' / (name + '.cs') for name in (
                 'WorldStageComponent', 'WorldStageActiveComponent', 'GridTransformComponent',
                 'GridTransformComponentInfo', 'WorldActiveableEntityComponent', 'WayPointComponent', 'WayPointComponentImplement',
@@ -179,6 +180,10 @@ def build():
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapWorldQueries.cs',
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapWorldQueries.cs.meta',
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMap.cs',
+                'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMap.Events.cs',
+                'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMap.Events.cs.meta',
+                'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Events.cs',
+                'unity/Assets/Game/Editor/Map13MiniMap/OfficialMainlineMiniMapRootAcceptance.Events.cs.meta',
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapBindings.cs',
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineMiniMapLabels.cs',
                 'unity/Assets/Game/Runtime/Offline/World/MainlineMiniMap/MainlineNativeMiniMapRoot.cs',

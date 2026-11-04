@@ -110,7 +110,9 @@ namespace Zjcs.Editor.Map13MiniMap
                 && ReferenceEquals(root.GetMapRegionDict(root.MapClassId), bindings.WorldData.GetMapRegionDict(root.MapClassId))
                 && ReferenceEquals(root.GetSpawnGridMover(root.MapClassId), bindings.WorldData.GetSpawnGridMover(root.MapClassId)),
                 "Complete original root consumes the shared world projection: " + root.MapClassId);
-            Require(ReferenceEquals(root.ManagedEvents, bindings.Entities.Events)
+            Require(ReferenceEquals(root.ManagedEvents.AddEntityEvent, bindings.Entities.Events.AddEntityEvent)
+                && ReferenceEquals(root.ManagedEvents.RemoveEntityEvent, bindings.Entities.Events.RemoveEntityEvent)
+                && ReferenceEquals(root.ManagedEvents.ReplaceEntityEvent, bindings.Entities.Events.ReplaceEntityEvent)
                 && ReferenceEquals(root.ManagedAreaAgent, bindings.Entities)
                 && ReferenceEquals(root.ManagedGridGround, bindings.Entities),
                 "Original mark managers share one injected entity source independent of state fixture ports");

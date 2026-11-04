@@ -66,11 +66,14 @@ namespace Zjcs.Offline.World.MainlineMiniMap
             owner.SetActive(false);
             owner.transform.SetParent(parent, false);
             MainlineMiniMapVisibilityAgent visibility = null;
+            EventBindings events = null;
             try
             {
                 var instance = Object.Instantiate(prefab, owner.transform, false);
                 var root = instance.GetComponent<MainlineNativeMiniMapRoot>();
                 root.Bindings = bindings;
+                events = new EventBindings(bindings.Entities, bindings.State);
+                root.MarkerEvents = events.Events;
                 root.WorldQueries = new MainlineMiniMapWorldQueries(bindings.WorldData, bindings.State, bindings.Entities, bindings.MarkerServices);
                 if (bindings.RegionTime != null)
                     root.TimedLabels = new MainlineMiniMapLabels(bindings.State, bindings.RegionTime, bindings.WorldData);
@@ -95,11 +98,12 @@ namespace Zjcs.Offline.World.MainlineMiniMap
                     throw new InvalidDataException("The original minimap prefab has incomplete root references.");
                 instance.SetActive(true);
                 owner.SetActive(true);
-                return new MainlineMiniMap(owner, root);
+                return new MainlineMiniMap(owner, root) { eventBindings = events };
             }
             catch
             {
                 owner.SetActive(false);
+                events?.Dispose();
                 visibility?.Dispose();
                 Object.Destroy(owner);
                 throw;
@@ -134,6 +138,8 @@ namespace Zjcs.Offline.World.MainlineMiniMap
             CloseFullScreen();
             DisposeHud();
             if (owner != null) { owner.SetActive(false); root.LiveVisibility?.Dispose(); Object.Destroy(owner); }
+            eventBindings?.Dispose();
+            eventBindings = null;
             ownedResourcePoints?.Dispose();
             ownedResourcePoints = null;
             if (texture != null) { texture.Release(); Object.Destroy(texture); texture = null; }

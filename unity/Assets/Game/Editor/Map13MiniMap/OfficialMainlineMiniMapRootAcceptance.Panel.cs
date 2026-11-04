@@ -148,7 +148,12 @@ namespace Zjcs.Editor.Map13MiniMap
             MainlineMiniMapHudBindings ui,Canvas canvas,Camera camera,RenderTexture target,MiniMapHudSimulatedMouse mouse,EventSystem events)
         {
             const string native="Assets/Official/World/Shared/NativeMiniMapPanelCurrent/";
-            Require(Screen.width==720&&Screen.height==1280,"Portrait Game View matches original safe-area dimensions");
+            if(Screen.width!=720||Screen.height!=1280)
+            {
+                SetPortraitFixture();
+                for(int viewWaitFrame=0;viewWaitFrame<60&&(Screen.width!=720||Screen.height!=1280);viewWaitFrame++)yield return null;
+            }
+            Require(Screen.width==720&&Screen.height==1280,"Portrait Game View matches original safe-area dimensions: "+Screen.width+"x"+Screen.height);
             var prefab=AssetDatabase.LoadAssetAtPath<GameObject>(native+"Resources/World/Native/mini-map-panel.prefab");
             var catalog=Resources.Load<MiniMapPanelResources>("World/Native/mini-map-panel-data");
             Require(prefab&&catalog&&catalog.Maps.Length==373&&catalog.Marks.Length==201,"Complete original fullscreen hierarchy and selected tables");

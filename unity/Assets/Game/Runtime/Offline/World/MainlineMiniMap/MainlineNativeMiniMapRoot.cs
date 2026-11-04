@@ -18,6 +18,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
         internal MainlineMiniMapVisibilityAgent LiveVisibility;
         internal MainlineMiniMapLabels TimedLabels;
         internal MainlineMiniMapWorldQueries WorldQueries;
+        internal MiniMapManagedEvents MarkerEvents;
         private MiniMapManagedContext State => Bindings.State;
         protected override MiniMapSettings Settings => Bindings.Settings;
         protected override int MinimapConfigId => Bindings.MinimapConfigId;
@@ -78,7 +79,7 @@ namespace Zjcs.Offline.World.MainlineMiniMap
         public override GameObject InstantiateMark(GameObject prefab,Transform parent,bool worldPositionStays)
             => State.InstantiateMark(prefab,parent,worldPositionStays);
         public override IMiniMapManagedQueries ManagedQueries => WorldQueries;
-        public override MiniMapManagedEvents ManagedEvents => Bindings.Entities.Events;
+        public override MiniMapManagedEvents ManagedEvents => MarkerEvents;
         public override IMiniMapManagedAreaAgent ManagedAreaAgent => Bindings.Entities;
         public override IMiniMapMarkGridGround ManagedGridGround => Bindings.Entities;
         public override void InstantiateMarkAsync(string path,Transform parent,Action<MiniMapMarkUIBase> callback)

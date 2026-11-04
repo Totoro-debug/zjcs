@@ -30,6 +30,11 @@ namespace Zjcs.Editor.Map13MiniMap
         internal MapRootEntityLiteSingleInfo OtherLite;
         internal IMap13LabelServices LabelOverride;
         internal IReadOnlyDictionary<int,MiniMapRegionInfo> RegionsOverride;
+        private event Action<int,int,Status,Status> StatusUpdated;
+        public override event Action<int,int,Status,Status> OnMapStatusUpdate
+        { add => StatusUpdated += value; remove => StatusUpdated -= value; }
+        internal int StatusSubscribers => StatusUpdated?.GetInvocationList().Length ?? 0;
+        internal void EmitStatus(int map,int region,Status previous,Status value) => StatusUpdated?.Invoke(map,region,previous,value);
         public override int MapClassId => BoundMap;
         internal Dictionary<string,GameObject> RegionalPrefabs;
         public override IMap13LabelServices LabelServices => LabelOverride ?? Mask.LabelServices;
@@ -193,6 +198,7 @@ namespace Zjcs.Editor.Map13MiniMap
             var worldData=VerifyWorldData();
             var bindings=new MainlineMiniMapBindings{WorldData=worldData,Entities=new MainlineMiniMapEntityIndex(worldData,13),State=state,Settings=description.Settings,MinimapConfigId=2,MapViewRangeExtraSize=0,Characters=characters,ResourcePoints=new ResourcePoints{LabelServices=labels},OfflineData=data,MarkerServices=services,MarkerPerformance=services,ClickInput=services,CameraControl=services,ClickPublisher=services};
             var localData=VerifyLocalData(state,queries,bits);while(localData.MoveNext())yield return localData.Current;
+            var eventScopes=VerifyEventScopes(prefab,bindings,state);while(eventScopes.MoveNext())yield return eventScopes.Current;data.Requests=0;
             var module=MainlineMiniMap.Create(prefab,null,bindings);for(int i=0;i<4;i++)yield return null;
             Require(data.Requests==1,"Complete original prefab requests offline data after injection");
             var root=Object.FindObjectOfType<MainlineNativeMiniMapRoot>();VerifyWorldDataBinding(root,bindings);var offline=root.GetComponent<OfflineMiniMap>();Require(!offline.HaveDataShow.State,"Original prefab content hidden while pending");
