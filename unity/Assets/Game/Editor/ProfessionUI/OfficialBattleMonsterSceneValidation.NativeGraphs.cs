@@ -16,6 +16,10 @@ namespace Zjcs.Editor.ProfessionUI
     public static partial class OfficialBattleMonsterSceneValidation
     {
         private static OfficialBattleSkillGraphPlayback nativeGraphPlayback;
+        [Serializable] private sealed class BoundMonster { public int entityId; }
+        [Serializable] private sealed class BoundMonsters { public BoundMonster[] models; }
+        private static IEnumerable<int> BoundMonsterIds() => JsonUtility.FromJson<BoundMonsters>(
+            Resources.Load<TextAsset>("Combat/monster-animation-controllers").text).models.Select(value => value.entityId);
         private sealed class SoundProbe : Zjcs.Official.ProfessionUI.IProfessionSoundHost
         {
             public readonly List<uint> Events = new List<uint>();
@@ -28,7 +32,7 @@ namespace Zjcs.Editor.ProfessionUI
             var mapper = InitializeRenderScene();
             var assets = BattleNativeMonsterAssets.Load();
             int count = 0;
-            foreach (int id in assets.EntityIds.OrderBy(value => value))
+            foreach (int id in BoundMonsterIds().OrderBy(value => value))
             {
                 model = OfficialBattleLiveMonsterModelView.TryCreate(new FightBattleUnitState {
                     Id = id, MonsterTemplateId = id, Hp = 100, MaxHp = 100 }, root.transform, true);
@@ -115,10 +119,11 @@ namespace Zjcs.Editor.ProfessionUI
             scene.Dispose(); scene = null;
             yield return 0;
             Require(!entity && !application, "Native monster graph/scene disposal leaked its source controller.");
-            Require(count == 18, "Original monster controller coverage changed.");
+            Require(count == BoundMonsterIds().Count(), "Original monster controller coverage changed.");
+            foreach (int frame in ConfiguredMonsterGraphSteps(mapper, output)) yield return frame;
             File.WriteAllText(Path.Combine(output, "monster-native-graph-result.json"),
-                "{\"controllers\":18,\"completeGraph\":15510,\"nativeMotion\":\"skill_01\",\"flatCueDuplicated\":false,\"sharedMovement\":true,\"failures\":[]}");
-            Debug.Log("[Monster native graph] passed: 18 original controllers, complete 15510 graph, shared movement, disposal.");
+                "{\"controllers\":" + count + ",\"completeGraph\":15510,\"nativeMotion\":\"skill_01\",\"flatCueDuplicated\":false,\"sharedMovement\":true,\"failures\":[]}");
+            Debug.Log($"[Monster native graph] passed: {count} original controllers, complete 15510 graph, shared movement, disposal.");
         }
     }
 }
