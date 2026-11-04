@@ -22,6 +22,8 @@ namespace Zjcs.Editor.Skills
         private const string SlotKey = "Zjcs.Skills.Acceptance.Slot";
         private const string ResultKey = "Zjcs.Skills.Acceptance.Passed";
         private const string ExitKey = "Zjcs.Skills.Acceptance.ExitPending";
+        private const string PartnerBattleModelKey = "Zjcs.Skills.Acceptance.PartnerBattleModel";
+        public static bool PartnerBattleModelAcceptanceRequested => SessionState.GetBool(PartnerBattleModelKey, false);
         private static string ValidationDirectory {
             get {
                 string path = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
@@ -81,6 +83,18 @@ namespace Zjcs.Editor.Skills
                     EditorApplication.delayCall += () => EditorApplication.Exit(1);
                 else throw;
             }
+        }
+
+        [MenuItem("Zjcs/Validate/Partner Battle Model Play Mode")]
+        public static void RunPartnerBattleModelAcceptance()
+        {
+            SessionState.SetBool(PartnerBattleModelKey, true);
+            Environment.SetEnvironmentVariable("ZJCS_SKILLS_AUTORUN", "1");
+            Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
+            Environment.SetEnvironmentVariable("ZJCS_BATTLE_HOSTS_ACCEPTANCE", "1");
+            Environment.SetEnvironmentVariable("ZJCS_BATTLE_HOSTS_ASSIST", "1");
+            Environment.SetEnvironmentVariable("ZJCS_BATTLE_HOSTS_ASSIST_PARTNERS", "8402");
+            Run();
         }
 
         private static void BeginValidation()
@@ -252,7 +266,8 @@ namespace Zjcs.Editor.Skills
             OfficialSkillRecommendationSet recommendations = assets.LoadSkillRecommendations();
             progression.AttachSkillRules(assets.LoadSkillRules(), recommendations.recommendations);
             ValidateOriginalDetailProperties(progression);
-            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_ACCEPTANCE") == "1")
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_ACCEPTANCE") == "1"
+                || PartnerBattleModelAcceptanceRequested)
             {
                 yield return HomeBattleHostPlayModeAcceptance.Exercise(slot, root, ValidationDirectory, SimulatePointerClick);
                 Finish(true, null);
@@ -1197,6 +1212,7 @@ namespace Zjcs.Editor.Skills
             EditorApplication.update -= OnUpdate;
             SessionState.SetBool(ActiveKey, false);
             SessionState.SetBool(ResultKey, passed);
+            SessionState.SetBool(PartnerBattleModelKey, false);
             SessionState.SetBool(ExitKey, Environment.GetEnvironmentVariable("ZJCS_SKILLS_AUTORUN") == "1");
             if (reloadLocked) { reloadLocked = false; EditorApplication.UnlockReloadAssemblies(); }
             EditorApplication.isPlaying = false;

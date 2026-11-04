@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using Zjcs.Combat.Official;
 using Zjcs.Offline.World;
 using Zjcs.Presentation.Combat;
 using Zjcs.Presentation.Home;
@@ -19,7 +21,13 @@ namespace Zjcs.Editor
             const string entryId = "battle-host-assistance-fixture";
             int stageId = home.DailyDungeons.FindRoom(roomId).stageId;
             var invite = home.NpcAssistanceCatalog.InviteRule(playType);
-            Require(home.NpcAssistanceProgress.SetSelection(playType, entryId, Array.Empty<int>(),
+            string selectionText = Environment.GetEnvironmentVariable("ZJCS_BATTLE_HOSTS_ASSIST_PARTNERS");
+            if (string.IsNullOrWhiteSpace(selectionText)
+                && Skills.SkillPlayModeAcceptance.PartnerBattleModelAcceptanceRequested)
+                selectionText = "8402";
+            int[] selectedNpcIds = string.IsNullOrWhiteSpace(selectionText) ? Array.Empty<int>()
+                : selectionText.Split(',').Select(value => int.Parse(value.Trim())).ToArray();
+            Require(home.NpcAssistanceProgress.SetSelection(playType, entryId, selectedNpcIds,
                 invite.MaxPlayer), "Could not prepare the isolated assistance selection.");
             var snapshot = home.NpcAssistanceProgress.CommitBattle(playType, entryId, stageId,
                 invite.MaxPlayer, invite.OneNpcMaxInviteCount, invite.MaxInviteCount,
@@ -34,6 +42,10 @@ namespace Zjcs.Editor
             first.GetComponent<OfficialBattleRuntimeController>().SetPaused(true);
             Require(!string.IsNullOrEmpty(home.DailyDungeons.ActiveRun.activeBattleCheckpoint),
                 "The configured battle did not persist its checkpoint.");
+            FightBattleCheckpoint savedBattle = FightBattleCheckpointSerializer.Load(
+                home.DailyDungeons.ActiveRun.activeBattleCheckpoint);
+            Require(selectedNpcIds.All(npcId => savedBattle.Units.Any(unit => unit.NpcClassId == npcId)),
+                "The selected partner was not included in the persisted battle checkpoint.");
             // Later edits by the caller must not change the identity of the active battle.
             options.PlayType = (int)NpcAssistPlayType.All;
             options.EntryId = "changed-after-begin";
@@ -68,7 +80,8 @@ namespace Zjcs.Editor
             Require(callback && home.NpcAssistanceProgress.ActiveBattle == null,
                 "The shared host failed to finish the configured assistance identity.");
             File.WriteAllText(Path.Combine(output, "battle-assistance-result.txt"),
-                "PlayType 5 custom entry: checkpoint restore, default-type rejection, unchanged committed snapshot, "
+                "PlayType 5 custom entry, selected NPCs " + string.Join(",", selectedNpcIds)
+                + ": checkpoint restore, default-type rejection, unchanged committed snapshot, "
                 + "actual battle completion, assistance cleanup and host restoration passed.\n");
         }
     }

@@ -84,9 +84,12 @@ def main():
                 name = component.m_Script.read().m_ClassName
                 if name in ("AppearanceCombineSkin", "SpineLazyAnimLoad", "SkeletonMecanim"):
                     components[name] = record(obj)
-        if any(name not in components for name in ("AppearanceCombineSkin", "SpineLazyAnimLoad", "SkeletonMecanim")):
+        missing_components = [name for name in ("AppearanceCombineSkin", "SpineLazyAnimLoad", "SkeletonMecanim")
+                              if name not in components]
+        if missing_components:
             if partner_mode:
-                skipped.append(dict(entityClassId=class_id, classId=npc_id, reason="No original SkeletonMecanim NPC rig"))
+                skipped.append(dict(entityClassId=class_id, classId=npc_id,
+                                    reason="Unsupported original rig components: " + ", ".join(missing_components)))
                 continue
             raise ValueError("Opening NPC rig is incomplete: " + str(npc_id))
         renderer_obj = components["SkeletonMecanim"]
@@ -115,8 +118,10 @@ def main():
         skin_names = schemas.read(components["AppearanceCombineSkin"])["CombineSkins"]
         lazy = schemas.read(components["SpineLazyAnimLoad"])
         definition = parse_split_binary_object(ptr(lazy["mSplitBinarySo"], components["SpineLazyAnimLoad"]).get_raw_data())
+        renderer_game_object = renderer_obj.read(check_read=False).m_GameObject
         controller_obj = next((record(obj) for obj in apk.objects(bundle) if obj.type.name == "Animator"
-                              and obj.read().m_GameObject.read().m_Name in ("PlayerModel_Game", "NpcModel_" + str(class_id))), None)
+                              and obj.read().m_GameObject.path_id == renderer_game_object.path_id
+                              and obj.assets_file.name == renderer_obj.assets_file.name), None)
         if controller_obj is None:
             if partner_mode:
                 skipped.append(dict(entityClassId=class_id, classId=npc_id, reason="No original NPC Animator"))
@@ -221,6 +226,8 @@ def main():
     if partner_mode:
         binding_paths = [
             ROOT / "unity/Assets/Game/Editor/Combat/OfficialPartnerBattleFighterTools.cs",
+            ROOT / "unity/Assets/Game/Editor/HomeBattleHostPlayModeAcceptance.Assistance.cs",
+            ROOT / "unity/Assets/Game/Editor/Skills/SkillPlayModeAcceptance.cs",
             ROOT / "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleModelCatalog.cs",
             ROOT / "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs",
             ROOT / "unity/Assets/Game/Resources/Combat/OfficialBattleModelCatalog.asset",

@@ -32,7 +32,7 @@ namespace Zjcs.Editor.Combat
             AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
             Payload payload = JsonUtility.FromJson<Payload>(File.ReadAllText(Root + "fighters.json"));
             if (payload == null || payload.manifest != "884_156692" || payload.fighters == null
-                || payload.fighters.Length != 48)
+                || payload.fighters.Length != 51)
                 throw new InvalidDataException("Official partner fighter source is not pinned or is incomplete.");
 
             OfficialBattleModelCatalog catalog = AssetDatabase.LoadAssetAtPath<OfficialBattleModelCatalog>(CatalogPath);
