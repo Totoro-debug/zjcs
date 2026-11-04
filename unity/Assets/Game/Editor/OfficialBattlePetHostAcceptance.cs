@@ -22,6 +22,14 @@ namespace Zjcs.Editor.Combat
 
         public static void Run()
         {
+            var portraits = Resources.Load<OfficialBattleMonsterPortraitCatalog>("Combat/OfficialBattlePetPortraitCatalog");
+            Require(portraits && portraits.Count == 19, "Original pet timeline portrait catalog is incomplete.");
+            foreach (int id in new[] {9301,9302,9303,9304,9305,9306,9307,9308,9309,9310,9311,9312,9314,9315,9316,9317,9318,9320,9322})
+            {
+                var sprite = portraits.Find(id);
+                Require(sprite && sprite.name == "G_" + id && sprite.vertices.Length > 0 && sprite.triangles.Length > 0,
+                    "Original pet timeline Sprite mesh is unbound: " + id);
+            }
             Environment.SetEnvironmentVariable(Flag, "1");
             Environment.SetEnvironmentVariable("ZJCS_SKILLS_AUTORUN", "1");
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
@@ -62,6 +70,14 @@ namespace Zjcs.Editor.Combat
                     var renderer = root ? root.GetComponentInChildren<BattleNativeMonsterRenderer>(true) : null;
                     Require(renderer && renderer.Animator && renderer.Animator.runtimeAnimatorController,
                         "Actual pet entity has no original native skeleton/controller in the common scene.");
+                    var card = UnityEngine.Object.FindObjectsOfType<OfficialBattleSceneTimelineView>()
+                        .Select(timeline => timeline.transform.Find("Slot/GameRoundCharacterItem_" + pet.Id))
+                        .SingleOrDefault(value => value != null);
+                    Require(card, "Actual pet has no shared timeline card.");
+                    var expected = Resources.Load<OfficialBattleMonsterPortraitCatalog>("Combat/OfficialBattlePetPortraitCatalog").Find(pet.MonsterId);
+                    Require(card.Find("IconGo/MonsterIconImg").GetComponent<SpriteRenderer>().sprite == expected
+                        && card.Find("IconGo/MonsterIconImg/MonsterHurtImg").GetComponent<SpriteRenderer>().sprite == expected,
+                        "Actual pet timeline normal/hurt portraits differ from GetPetIcon(PetEntityClassId).");
                     modelSamples++;
                     if (!captured)
                     {

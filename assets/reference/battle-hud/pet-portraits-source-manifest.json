@@ -1,0 +1,804 @@
+{
+  "manifest": "884_156692",
+  "generator": {
+    "path": "scripts/prepare_battle_pet_portraits.py",
+    "sha256": "b617ec2fa15cd9710fc5b836747557f7f1bdc3c1f8078e6e2909541d54a5e777"
+  },
+  "rules": {
+    "path": "unity/Assets/Game/Resources/Combat/pet-battle-rules.json",
+    "sha256": "17f02dc29b1af307d4ba8a412b3b32f3285c5e0d534f0969ce70837e3ce13e9c"
+  },
+  "application_sources": [
+    {
+      "path": ".tools/source-packages/official-code/client-source/GameRoundCharacterItem.cs",
+      "sha256": "a39369a28ad43b171feb499e02a8413e0d5419faa15cf02e3f7c181a5a017dcf"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/GameRoundCharacterItemScene.cs",
+      "sha256": "7474e6f45c431f317e40fba608189c79a95dcbb3c2b7bf4e5cc6bcde754cebf0"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/LanguageUtils.cs",
+      "sha256": "ddc94bb5dd46f8c71b6d58ab0f03e2048cde72911de11e343304ce73e4b9a61c"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9301.png",
+      "sha256": "c0189d3b58e4d20f7936661fef30e9da4dc968cf5f15d6d35bf689cddf8c44b0"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9301.asset",
+      "sha256": "8a0da03f9a041c8b90871b000837c2fe6d8a432c8bb0f73351e7dcb71fa16dde"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9301.png.meta",
+      "sha256": "385c0c84005f6c80a22333ea2d9c01048d213905cc7d5ba63041aa037e926cd4"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_pet.bundle",
+      "bundle_hash": "27ab360cc0ce30ecd2745a35d04efe69",
+      "path_id": "-3261411678822892394",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/27ab360cc0ce30ecd2745a35d04efe69.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 120733,
+      "bundle_sha256": "5f1c0a9d74758a4eb09cd5428be864c27dd1b75a44b1398dacecd5d7ca03aaa3",
+      "object_sha256": "50c22747121a44fdbe9bc3300f6691fe92884e767ee8f745c35bbf0be99ece30"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9302.png",
+      "sha256": "c3af8c3f9bdc641ce1bdee2277b3885d7554932ab1c3187e3557406073fe31b7"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9302.asset",
+      "sha256": "1423cb530201b581386e3760cf7447d814a45220df7d6c27d3583904d5d7d9d8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9302.png.meta",
+      "sha256": "6bbe28d3eb96f90191885a5be2ea055fed8306e57291aa43e17e1db89d939fa7"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_pet.bundle",
+      "bundle_hash": "27ab360cc0ce30ecd2745a35d04efe69",
+      "path_id": "-2015782167287707581",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/27ab360cc0ce30ecd2745a35d04efe69.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 120733,
+      "bundle_sha256": "5f1c0a9d74758a4eb09cd5428be864c27dd1b75a44b1398dacecd5d7ca03aaa3",
+      "object_sha256": "23f4f17eb710b5f53714e8261aca9b693902a29b06e30402864873d3e87dc7d9"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9303.png",
+      "sha256": "6d67165dfda5c6aea7f4aff627c8b78a3b7eb10a831784f55de05ff994ed3067"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9303.asset",
+      "sha256": "bd08efde560fcd6c85d6170c3cc458a7b327fddb642caec7975673bc3c0493f6"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9303.png.meta",
+      "sha256": "5ab47da50907f326a5430d325205628d5e807b2eb82cd6220093c12a92dcaefe"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_pet.bundle",
+      "bundle_hash": "27ab360cc0ce30ecd2745a35d04efe69",
+      "path_id": "-7416980739266697701",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/27ab360cc0ce30ecd2745a35d04efe69.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 120733,
+      "bundle_sha256": "5f1c0a9d74758a4eb09cd5428be864c27dd1b75a44b1398dacecd5d7ca03aaa3",
+      "object_sha256": "7e37440d5087c64270333693c83597efab06e2db4cc65a227151552b0dd7fdbd"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9304.png",
+      "sha256": "a6ae6f910a11163157289e2733789e3c203c5b9a3aee841f303fba0cd48564db"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9304.asset",
+      "sha256": "7bb12cc5fd82607afa938048cb4238cf90c6bfc10c153846c734955c17737fce"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9304.png.meta",
+      "sha256": "a204a82bbccdac73611239e73249cb455dd24da21a93853ac6a9cc8e8cdfcab4"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_pet.bundle",
+      "bundle_hash": "27ab360cc0ce30ecd2745a35d04efe69",
+      "path_id": "6373160156472022197",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/27ab360cc0ce30ecd2745a35d04efe69.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 120733,
+      "bundle_sha256": "5f1c0a9d74758a4eb09cd5428be864c27dd1b75a44b1398dacecd5d7ca03aaa3",
+      "object_sha256": "cd1e86ec9dd9ece62dd34c861e02fe151d4be8c0fb658aba411e81d2c54c7fb1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9305.png",
+      "sha256": "ed2ce328312f1bb0f160e4ec17dd662b0d839d8f841cadf80ee6b2816283d99a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9305.asset",
+      "sha256": "3ed05bbd3828ecfeb9856fb6a692226155d527876e950e143983ec66e1d3e06d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9305.png.meta",
+      "sha256": "ac6ccd209f58cebef32a7141aed60a52ba061d8f0199a402b10667f27e7c7cd0"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_pet.bundle",
+      "bundle_hash": "27ab360cc0ce30ecd2745a35d04efe69",
+      "path_id": "3162047491935658045",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/27ab360cc0ce30ecd2745a35d04efe69.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 120733,
+      "bundle_sha256": "5f1c0a9d74758a4eb09cd5428be864c27dd1b75a44b1398dacecd5d7ca03aaa3",
+      "object_sha256": "90c7cfcfede747a298bfc989fef08a888048bb067105aba796794c8d9275f176"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9306.png",
+      "sha256": "2c225d248c1c962de17a65836236c0fe1aff7a9b5b9695e8199d1c94504d0279"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9306.asset",
+      "sha256": "4a90b10c9dbd28223cacb90ac75e707e7edca160b5b19cf208d5c1c9a3bd7aa8"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9306.png.meta",
+      "sha256": "eea4251304c9dee61f7c35817c4535f782d649bab7969fc10e2f133a7c4119d7"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_pet.bundle",
+      "bundle_hash": "27ab360cc0ce30ecd2745a35d04efe69",
+      "path_id": "7701609435086003080",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/27ab360cc0ce30ecd2745a35d04efe69.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 120733,
+      "bundle_sha256": "5f1c0a9d74758a4eb09cd5428be864c27dd1b75a44b1398dacecd5d7ca03aaa3",
+      "object_sha256": "2171450c0019844f4ac3ca27e4c586efc83656ce8f7d16dd91ae3dd4362c89c4"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9307.png",
+      "sha256": "69fae6667f56183c53686612c15059c30e06716cb1d164736d6dc7ecd681244c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9307.asset",
+      "sha256": "3a3ef869dd576455c9dd92b39e14239ee8d7907851a5aea078808235550f7026"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9307.png.meta",
+      "sha256": "b271a9831831c886c281c278d11ae568bb7b267aa551152da22c14224f3ecd27"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_pet.bundle",
+      "bundle_hash": "27ab360cc0ce30ecd2745a35d04efe69",
+      "path_id": "1869657847508776897",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/27ab360cc0ce30ecd2745a35d04efe69.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 120733,
+      "bundle_sha256": "5f1c0a9d74758a4eb09cd5428be864c27dd1b75a44b1398dacecd5d7ca03aaa3",
+      "object_sha256": "d77b82f69b050c63e9585cbc8368e3a8ed59d9adaba75087876e892e5280066d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9308.png",
+      "sha256": "b49d4330df48c62b75108057bda0b9e03434e67aef243cf9a65864e25214553d"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9308.asset",
+      "sha256": "deea66fe77e1403559a494816a70c657e215d998e72596f42cec36c8ee9bcfa4"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9308.png.meta",
+      "sha256": "265deb57b6d5ddf5dddd6643829e98788e37a4ba250036f07eb1404628196240"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_pet.bundle",
+      "bundle_hash": "27ab360cc0ce30ecd2745a35d04efe69",
+      "path_id": "8542356755817828047",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/27ab360cc0ce30ecd2745a35d04efe69.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 120733,
+      "bundle_sha256": "5f1c0a9d74758a4eb09cd5428be864c27dd1b75a44b1398dacecd5d7ca03aaa3",
+      "object_sha256": "7b79108325df2c585cd7a0c3e0727b0ab607973835cb7d8b297fe241e4bce05a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9309.png",
+      "sha256": "a11b373ea6d04c218600a92c55ea1d22f705e907e5e640a961a21d16738505d5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9309.asset",
+      "sha256": "0e0123e24cde88648a881c791c2c994d0dd4e245b86af3683ec989ea6839e51c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9309.png.meta",
+      "sha256": "a30260c24c86b3381a77a17c56ab28ef80d0e26d97532874a425197f399856ca"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_pet.bundle",
+      "bundle_hash": "27ab360cc0ce30ecd2745a35d04efe69",
+      "path_id": "-4919663384193847726",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/27ab360cc0ce30ecd2745a35d04efe69.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 120733,
+      "bundle_sha256": "5f1c0a9d74758a4eb09cd5428be864c27dd1b75a44b1398dacecd5d7ca03aaa3",
+      "object_sha256": "838e4f72293e9508570f49bb47152b95f1647f4e549d2a90c8027139bc77e312"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9310.png",
+      "sha256": "af330e3d89ec4f6a927a5f168f9194c675685e0b99b31a717be3e2aff3ef522c"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9310.asset",
+      "sha256": "e5cf0626e751911df6ee8b80491467b3e7e3e5a1aa0f4e92d1b435befc2d61dd"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9310.png.meta",
+      "sha256": "a8a32f47229b23497c067bda708433610cd06c32fd3ce33d8a626b404e83b08e"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_pet.bundle",
+      "bundle_hash": "27ab360cc0ce30ecd2745a35d04efe69",
+      "path_id": "2693607174357496895",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/27ab360cc0ce30ecd2745a35d04efe69.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 120733,
+      "bundle_sha256": "5f1c0a9d74758a4eb09cd5428be864c27dd1b75a44b1398dacecd5d7ca03aaa3",
+      "object_sha256": "97ca0e4b7039cbadf9dd8297bb4f36d7813389f641bdaa42a7787d0e99813d34"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9311.png",
+      "sha256": "258e50298bf1b73b93f562b599f233fbf225c25a97002c992e90dd761b90ad06"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9311.asset",
+      "sha256": "caa499eb871da5f3c0cc980440189009482b1dd1ae5d20e1fd83b37582604223"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9311.png.meta",
+      "sha256": "00dcd288f9c4c358d9eede0bcb41eecd3dc5326c9c971bbb5a5363ba9045c8fc"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_pet.bundle",
+      "bundle_hash": "27ab360cc0ce30ecd2745a35d04efe69",
+      "path_id": "6559719266609691212",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/27ab360cc0ce30ecd2745a35d04efe69.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 120733,
+      "bundle_sha256": "5f1c0a9d74758a4eb09cd5428be864c27dd1b75a44b1398dacecd5d7ca03aaa3",
+      "object_sha256": "9d5c8df8acbd9984a23ae261cc5875c6df9594b9963f409dc40bd6c1f5b01d9e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9312.png",
+      "sha256": "2ed316708dcb3954d1674901b9b2bf2eaf977de4a5558897d17531b1bed8a7c2"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9312.asset",
+      "sha256": "6c181b88f72f5588011212159f033015578dfde61c5be41817c12efa08cefe2e"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9312.png.meta",
+      "sha256": "e1616f4204e4aff906e1245805a12c5f48cff8f3ac42fbab95be219cae12aa72"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_pet.bundle",
+      "bundle_hash": "27ab360cc0ce30ecd2745a35d04efe69",
+      "path_id": "4004283268322116717",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/27ab360cc0ce30ecd2745a35d04efe69.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 120733,
+      "bundle_sha256": "5f1c0a9d74758a4eb09cd5428be864c27dd1b75a44b1398dacecd5d7ca03aaa3",
+      "object_sha256": "77b21ed78177447ee0e43f5e93a2fd2157b5eb541ecd21feac26a4d27b1aa5db"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9314.png",
+      "sha256": "22340999adeefc47a45b858c344bda3b7d4a9010c7149d783f40b1d1610ea6c3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9314.asset",
+      "sha256": "dd21744a9e5c4f884f5967e743136f47573e890f2928eae400a3b1b0c5ee0ffe"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9314.png.meta",
+      "sha256": "366a4be35322659a908755a0652169926f0ff57efb9a9f198a7536fbe5cbe2af"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_pet.bundle",
+      "bundle_hash": "27ab360cc0ce30ecd2745a35d04efe69",
+      "path_id": "-6487944144826177280",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/27ab360cc0ce30ecd2745a35d04efe69.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 120733,
+      "bundle_sha256": "5f1c0a9d74758a4eb09cd5428be864c27dd1b75a44b1398dacecd5d7ca03aaa3",
+      "object_sha256": "7a99d6fd36c2c4a4df2294f4e02b758ec2a07f00468f9c02c3b0cde2e780cfba"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9315.png",
+      "sha256": "9575d905b54706058f05bd706b79614c8f28761b12b12730bcfc3c976e618a76"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9315.asset",
+      "sha256": "7f0d2c2aaf08c8f83fff988e6074b09f294d0fd8f3cfeb7aac16e267f55b4f76"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9315.png.meta",
+      "sha256": "63468208625759e3ab1be50ca5e51e5ada458bcda10c8f73b54a31e268a67e57"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_pet.bundle",
+      "bundle_hash": "27ab360cc0ce30ecd2745a35d04efe69",
+      "path_id": "-6439304490096196513",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/27ab360cc0ce30ecd2745a35d04efe69.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 120733,
+      "bundle_sha256": "5f1c0a9d74758a4eb09cd5428be864c27dd1b75a44b1398dacecd5d7ca03aaa3",
+      "object_sha256": "b8d93a60e343d7c4f7cc2314ae38487e1e701556ef8f1a548affbd52c31d8122"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9316.png",
+      "sha256": "2864d40ad284df7f67c3215e7eb6325ec2db6356d8c01c5a376ad5771ccad614"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9316.asset",
+      "sha256": "ce22b33b5d76cdbd873088aecd08696f69a3300e2831f4a12f45c5a8cbd065f3"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9316.png.meta",
+      "sha256": "9d63ec995ededdae212527af9a8a71622dc6c09c8de34932fb0d3cee616d0b07"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_pet.bundle",
+      "bundle_hash": "27ab360cc0ce30ecd2745a35d04efe69",
+      "path_id": "-7801133510789019276",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/27ab360cc0ce30ecd2745a35d04efe69.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 120733,
+      "bundle_sha256": "5f1c0a9d74758a4eb09cd5428be864c27dd1b75a44b1398dacecd5d7ca03aaa3",
+      "object_sha256": "0a92d3e7247c6c6a98343523511cb6dd79d83af8b0cdbfc10a33685a2c2c8134"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9317.png",
+      "sha256": "6a26b8ff39710642c930b0a00b095776f48bbb05aa893743d6eb2c9364c0b267"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9317.asset",
+      "sha256": "40cde0d79d565ac2bb5afbfff6fbfc7ff5f1aa86b9de21d43b5f3cea7cf2c740"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9317.png.meta",
+      "sha256": "0284654b96f50cbe3491241ad6ad4f76b4ae459545699178d29217bb538c9e1f"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_pet.bundle",
+      "bundle_hash": "27ab360cc0ce30ecd2745a35d04efe69",
+      "path_id": "-6742745883306968958",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/27ab360cc0ce30ecd2745a35d04efe69.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 120733,
+      "bundle_sha256": "5f1c0a9d74758a4eb09cd5428be864c27dd1b75a44b1398dacecd5d7ca03aaa3",
+      "object_sha256": "7903b3fe4861f90fa39aeb73cd7fb2a91988cbddd304299ee7f9b6c7ad4939db"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9318.png",
+      "sha256": "0e3764ed61b0d09c9ca586ed17e2ed76e37602c7f81219dd041dcd0809913d1a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9318.asset",
+      "sha256": "4b8b2d3f7a434b334b2a704cbffe828bbd0c0ae616e4396087ef9555dfc42235"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9318.png.meta",
+      "sha256": "79098e1120985052eed8325dc6842c27592bdc6b0d8ed1ee32b14fc40e30e640"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_pet.bundle",
+      "bundle_hash": "27ab360cc0ce30ecd2745a35d04efe69",
+      "path_id": "-8031183443314787528",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/27ab360cc0ce30ecd2745a35d04efe69.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 120733,
+      "bundle_sha256": "5f1c0a9d74758a4eb09cd5428be864c27dd1b75a44b1398dacecd5d7ca03aaa3",
+      "object_sha256": "3caffe5fe9c67b2ba54e4d1a53ad0b4877bfa705968fc7514185510bb9b51de5"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9320.png",
+      "sha256": "995b9374cfc59b94bd97e741cc45e9448536e2b0da1eb0b1696c7bc468a26956"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9320.asset",
+      "sha256": "803eec712fb37055d453fcbdfac9c3fe2cc2334a580807b188090c8d5609cb4a"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9320.png.meta",
+      "sha256": "e8324b82fef5fb52997da1479f77410a1c407335f9b992647eba56a95fd1d6f9"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_pet.bundle",
+      "bundle_hash": "27ab360cc0ce30ecd2745a35d04efe69",
+      "path_id": "-6037512813016768369",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/27ab360cc0ce30ecd2745a35d04efe69.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 120733,
+      "bundle_sha256": "5f1c0a9d74758a4eb09cd5428be864c27dd1b75a44b1398dacecd5d7ca03aaa3",
+      "object_sha256": "fd92918cde477d9127a394085d9f9c88068c2670c8669e7852597c92bb9ac215"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9322.png",
+      "sha256": "1cdfb48fc32d3c6743e3c63c900a56935930bac2cb6cf4457aa47512898553e1"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9322.asset",
+      "sha256": "d2df51ebd55c76f61ae8d3350a6a12747b204e266d046401c9dd61a0d9995d2f"
+    },
+    {
+      "path": ".tools/source-packages/current/884_156692/native-conversion/native-export-all/ExportedProject/Assets/Image/ItemIcon/GameHeadIcon/Pet/G_9322.png.meta",
+      "sha256": "6cbc8e3ffc03ef9ef66e0aa4dd849a101f000732d128f2ef7d8ad988b2d2b98e"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_pet.bundle",
+      "bundle_hash": "27ab360cc0ce30ecd2745a35d04efe69",
+      "path_id": "-7940630736312287175",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610291150884/Android/DefaultPackage/27ab360cc0ce30ecd2745a35d04efe69.bundle",
+      "manifest": "884_156692",
+      "bundle_size": 120733,
+      "bundle_sha256": "5f1c0a9d74758a4eb09cd5428be864c27dd1b75a44b1398dacecd5d7ca03aaa3",
+      "object_sha256": "5643c1b0587f4c0e6ab80a78f65db4d74ccfe19d3737edc62cefec8c8efa067e"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9301.asset",
+      "sha256": "abc52c03b61e15256d285dbd89fad93fc2f8b84c1b9de2454a065f87cdaf8c66"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9301.png",
+      "sha256": "c0189d3b58e4d20f7936661fef30e9da4dc968cf5f15d6d35bf689cddf8c44b0"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9301.png.meta",
+      "sha256": "18e0ea6b1b6676ed31857ddd5697023074d24c37ebc2b0925b2897a6c37504f3"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9301.asset.meta",
+      "sha256": "da09a22babee3e4e79a13e8cbb985b35ea9b14df2fc4cb84f63219c80c836490"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9302.asset",
+      "sha256": "b9197750e64267e0a42d332ec3dfea135c7779e11816b7ae07ed0440df9d9fe7"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9302.png",
+      "sha256": "c3af8c3f9bdc641ce1bdee2277b3885d7554932ab1c3187e3557406073fe31b7"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9302.png.meta",
+      "sha256": "83e6504df493f013dce12a82f3804163eac72de49fe0ace065890f603012c51f"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9302.asset.meta",
+      "sha256": "1f2b1caf04cfa0786704a5afe453235ccfef3501c36c068a4165b2f038952fb9"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9303.asset",
+      "sha256": "9d4dd2c95e08591de5339921e12bc1e7609621fa627d15903f23ede2fd3b6b01"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9303.png",
+      "sha256": "6d67165dfda5c6aea7f4aff627c8b78a3b7eb10a831784f55de05ff994ed3067"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9303.png.meta",
+      "sha256": "dc80468cfe844bc98d1398171b43526df3d0d62fe7c49b3a0d8bc2c907829f12"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9303.asset.meta",
+      "sha256": "198a87b760ea883e5adb1efc2d79bea572267af90d85c80ecd77ca1434f82325"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9304.asset",
+      "sha256": "ee97677b7bdcfe63ca5e0c1fe28598bfb741ebcf8c34e43dcfd1ae1135da1a43"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9304.png",
+      "sha256": "a6ae6f910a11163157289e2733789e3c203c5b9a3aee841f303fba0cd48564db"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9304.png.meta",
+      "sha256": "e94353c89ceba51493293c46bd809656b2acb681067ef40abc302967438616d7"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9304.asset.meta",
+      "sha256": "fa053334d38283a0680e9a98882a0a0860a655cccb37f7aca7f3cdc179a617f4"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9305.asset",
+      "sha256": "daff20c406e5562d40f74bc3853b2db557291d52e6491bff86b427893d6c021e"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9305.png",
+      "sha256": "ed2ce328312f1bb0f160e4ec17dd662b0d839d8f841cadf80ee6b2816283d99a"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9305.png.meta",
+      "sha256": "ddb789f005282de4654245a701879372645d6c7c1b109ac58e21249738092a9b"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9305.asset.meta",
+      "sha256": "a305b897cb2a68aa18d6bdca5b29d6faae06ab6373ec2785ba953f567e191461"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9306.asset",
+      "sha256": "5d0a76c806962f90e25220b973429af09a4807a4c2d925ebb9724617e968a921"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9306.png",
+      "sha256": "2c225d248c1c962de17a65836236c0fe1aff7a9b5b9695e8199d1c94504d0279"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9306.png.meta",
+      "sha256": "dedb6a530f3f61c68b90e8f01b8eee3bdd519b4dc7aa7df236897338034d6df5"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9306.asset.meta",
+      "sha256": "d2b54090fbca242851cbd7b702639a0701ab32a19f5b4e19270198b63708e346"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9307.asset",
+      "sha256": "b08b892d676025023856b658895ccc27bb66146c9c1d2a0ab92f4efdab6ec211"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9307.png",
+      "sha256": "69fae6667f56183c53686612c15059c30e06716cb1d164736d6dc7ecd681244c"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9307.png.meta",
+      "sha256": "cc6df78713143ef3567f6dc6fdf1c49947c71a722896aec91ef5c4b8f7b0848b"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9307.asset.meta",
+      "sha256": "d57cb9133300999da06645db235fe99e6916a52265026f50f661a7eb945c0881"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9308.asset",
+      "sha256": "01ea4fe7a0eb5d96bcde46bd749f44fefbc0b0306ffd10177f48be56c325ae74"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9308.png",
+      "sha256": "b49d4330df48c62b75108057bda0b9e03434e67aef243cf9a65864e25214553d"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9308.png.meta",
+      "sha256": "6698d33f1a12b1acb6f8c2270aff09194cab6b2976f7718f8390d5ed802e8244"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9308.asset.meta",
+      "sha256": "765f67c079f96d3ac77a66c13a1d11691c46a83c5101dbfcffa1132aa163fc5e"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9309.asset",
+      "sha256": "58431694b630e3efd24e04bc08efdb0b8d0bec0b23b581e4da93a4a20317a9bf"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9309.png",
+      "sha256": "a11b373ea6d04c218600a92c55ea1d22f705e907e5e640a961a21d16738505d5"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9309.png.meta",
+      "sha256": "b68e70336a3e9b39ff8f6d9d5ca50296a870defbb8889ef9acb91768bc14e787"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9309.asset.meta",
+      "sha256": "c88778756fa0b3bdc2d8de802db34d5841805d5bc168c328b2b82896f153241e"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9310.asset",
+      "sha256": "435ad74c328e392754054da39124590a75e035fce25d1551fb424f5c93c4cea2"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9310.png",
+      "sha256": "af330e3d89ec4f6a927a5f168f9194c675685e0b99b31a717be3e2aff3ef522c"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9310.png.meta",
+      "sha256": "d2dc91833a59398cbe83a59a5155cc38b999f5146aea9580bb800d0d1312c5e9"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9310.asset.meta",
+      "sha256": "1a12e4a85057457329788d7eb815e284de60dc120866a876c6fe9be9c005f7c6"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9311.asset",
+      "sha256": "aa197e80aded7bfb560d47faf1b076bb89eaf83bee3f167251a7dff61cd3020d"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9311.png",
+      "sha256": "258e50298bf1b73b93f562b599f233fbf225c25a97002c992e90dd761b90ad06"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9311.png.meta",
+      "sha256": "f7f8938fc8c82165e1dfc68813f9f990603a6d109b5ec7890d21b5374d711334"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9311.asset.meta",
+      "sha256": "b32bff5be452418e6f5d51b263ba5afd721b4279c57d7fe968d30041aecff2dc"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9312.asset",
+      "sha256": "c27bade3b6098535edaa926605ec8afdf227a77bcd8833e19dd6055c6befbc70"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9312.png",
+      "sha256": "2ed316708dcb3954d1674901b9b2bf2eaf977de4a5558897d17531b1bed8a7c2"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9312.png.meta",
+      "sha256": "c7e4a98de138d38931a1dbc9b1ae35a7e07530914759326b6cf8285f34e9fc76"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9312.asset.meta",
+      "sha256": "0fecbbfa99d34fd9e3a6b97bcba380b162a7fc666679ddce605f2e18773dae32"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9314.asset",
+      "sha256": "ba14c82647b571b7462d653a0ee976d70b33bf6545e1f991f55edfc4667d1a32"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9314.png",
+      "sha256": "22340999adeefc47a45b858c344bda3b7d4a9010c7149d783f40b1d1610ea6c3"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9314.png.meta",
+      "sha256": "c73e58f032f5261b4bbdc8c67e09a861ff3f32bc08a07c8c12831d76d8f86e1d"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9314.asset.meta",
+      "sha256": "8c548bde4f809a49f350180b1bef9076eddcff178d70a6adb5a9dfb9ce0a23eb"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9315.asset",
+      "sha256": "40aa7b93fe25751ccc2561864fc3182c260f385ad84c0bf6701e58980a217b6d"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9315.png",
+      "sha256": "9575d905b54706058f05bd706b79614c8f28761b12b12730bcfc3c976e618a76"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9315.png.meta",
+      "sha256": "12f419816aba5fd10ee7df36ab9e400aa205f0aa3d0a66eee010b944ca5497bf"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9315.asset.meta",
+      "sha256": "fee0ba09fa3283eb41a781fcf6a51b4c60336fd9bfad6cac60b0110474bec43d"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9316.asset",
+      "sha256": "f45281fc4ceb9dd475ca05ccc80091f2d59a660ba2a0e9fb99b4c32bf43a72b6"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9316.png",
+      "sha256": "2864d40ad284df7f67c3215e7eb6325ec2db6356d8c01c5a376ad5771ccad614"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9316.png.meta",
+      "sha256": "721d6356793d059197643623359d67a57a30ce587c612cc82464af1721c81a3f"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9316.asset.meta",
+      "sha256": "c38b916117f129644ae97d247dd861f8816f5ad55716b49b8229c0fbabaf2826"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9317.asset",
+      "sha256": "54c7f81829b75bed9bab6911fbdf7e8677420d400b4861cecceb680d6199c4cf"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9317.png",
+      "sha256": "6a26b8ff39710642c930b0a00b095776f48bbb05aa893743d6eb2c9364c0b267"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9317.png.meta",
+      "sha256": "f37d884b31bcf53a59080fb1a2617b17b44e2def369450bf2315c7daea40a6dd"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9317.asset.meta",
+      "sha256": "102a079a20a1f5bf068b1405ccb61dffa62fde511da8243fa4f8d0f2b9e7dd5c"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9318.asset",
+      "sha256": "c104d9fb60d5cac50c51f9cf20a83c459fcaadc9c17488389bd0775e1b36b273"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9318.png",
+      "sha256": "0e3764ed61b0d09c9ca586ed17e2ed76e37602c7f81219dd041dcd0809913d1a"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9318.png.meta",
+      "sha256": "011fbd8e0c592306fcbce0f78157eb1b3372a5d3fff19f8416f39716144e6a20"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9318.asset.meta",
+      "sha256": "ca55e95cf12d68efa8218f4426b05cde02bc376db06fc1366cf8638569be5225"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9320.asset",
+      "sha256": "75ff5e643c1cee3fac487b1bb6a8e41607a3a1fe3d583aaa889696e5241f5f62"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9320.png",
+      "sha256": "995b9374cfc59b94bd97e741cc45e9448536e2b0da1eb0b1696c7bc468a26956"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9320.png.meta",
+      "sha256": "094c4e0b09cfb8e01a0ba269b68993c0bd9e2240e7358e73eb519f0b2a25eeea"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9320.asset.meta",
+      "sha256": "62d12a0045a885209932953075522e6bcf80da98d07fc87779e6c7ff58e8ee97"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9322.asset",
+      "sha256": "294b6afff1f759840de1a01ca47ddae1cf2d7ec1b686542d448481a00c4bb1f1"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9322.png",
+      "sha256": "1cdfb48fc32d3c6743e3c63c900a56935930bac2cb6cf4457aa47512898553e1"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9322.png.meta",
+      "sha256": "b80e2d2588ce51947e88417348040e46e7db088b9980a5286ab9fdb1bf8f0bda"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits/G_9322.asset.meta",
+      "sha256": "37f682077eb9a9570908e011fddf8be8dde693ab0b42d94fa936ecbb1d2e8801"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/PetPortraits.meta",
+      "sha256": "f7e83b7886659b912a0fe6e0a92384580c92f2dfa18deb57369cc51245ed5ff2"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/OfficialBattlePetPortraitCatalog.asset",
+      "sha256": "1b3b3c17be4a45bf2a054e880c3c141f65f89de8839a04a1ee9e2045a43a8e4f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/OfficialBattlePetPortraitCatalog.asset.meta",
+      "sha256": "1fcb242a1ff4f49fe27ba7ee029b24c3dc4a3ec6872dc102cf32a42fd2b92e28"
+    }
+  ],
+  "entity_ids": [
+    9301,
+    9302,
+    9303,
+    9304,
+    9305,
+    9306,
+    9307,
+    9308,
+    9309,
+    9310,
+    9311,
+    9312,
+    9314,
+    9315,
+    9316,
+    9317,
+    9318,
+    9320,
+    9322
+  ],
+  "operation": "GameRoundCharacterItem pet branch uses LanguageUtils.GetPetIcon(PetEntityClassId), ItemIcon/GameHeadIcon/Pet/G_ID; retain verified native exported Sprite meshes/UVs and decoded source textures, explicitly bind a separate catalog of the existing shared catalog type."
+}

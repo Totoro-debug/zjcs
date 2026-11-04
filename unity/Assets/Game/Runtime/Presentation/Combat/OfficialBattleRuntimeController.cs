@@ -155,9 +155,13 @@ namespace Zjcs.Presentation.Combat
             }
             var portraitOverride = timelinePortrait;
             var portraits = OfficialBattleMonsterPortraitCatalog.TryLoadDefault();
+            var petPortraits = Resources.Load<OfficialBattleMonsterPortraitCatalog>("Combat/OfficialBattlePetPortraitCatalog");
             Sprite portraitFallback = resolvedHudCatalog.FindSprite("C_none-fa3e084e40.png");
             if (portraitFallback == null) throw new InvalidOperationException("Official battle fallback portrait is missing.");
-            timelinePortrait = unit => portraitOverride?.Invoke(unit) ?? (unit.MonsterId > 0
+            // GameRoundCharacterItem.RefreshIcon checks FightRolePetEntityComponent
+            // before the monster branch and uses GetPetIcon(PetEntityClassId).
+            timelinePortrait = unit => portraitOverride?.Invoke(unit) ?? (unit.CharacterType == 7
+                ? petPortraits?.Find(unit.MonsterId) : unit.MonsterId > 0
                 && unit.CharacterType != 1 ? portraits?.Find(combatCatalog.MonsterIconId(unit.MonsterId)) : null)
                 ?? portraitFallback;
             this.statueProgress = statueProgress;
