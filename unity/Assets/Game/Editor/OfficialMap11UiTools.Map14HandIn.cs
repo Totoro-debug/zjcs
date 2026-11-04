@@ -40,16 +40,27 @@ namespace Zjcs.Editor
 
         public static void ImportMap14HandIn()
         {
-            const string sourcePath = "Assets/Official/World/Map/14/UI/HandIn/handin-ui.json";
-            const string destination = "Assets/Game/Resources/Map14/UI/HandIn";
+            ImportHandIn("Assets/Official/World/Map/14/UI/HandIn/handin-ui.json",
+                "Assets/Game/Resources/Map14/UI/HandIn", "871_156598", 14, 39, 94, 18);
+        }
+
+        public static void ImportMainlineHandIn()
+        {
+            ImportHandIn("Assets/Official/World/Mainline/HandIn/handin-ui.json",
+                "Assets/Game/Resources/World/Mainline/HandIn", "884_156692", 0, 43, 101, 19);
+        }
+
+        private static void ImportHandIn(string sourcePath, string destination, string manifest,
+            int mapClassId, int dialogNodes, int componentCount, int spriteCount)
+        {
             AssetDatabase.Refresh();
             string raw = File.ReadAllText(sourcePath);
             var data = JsonUtility.FromJson<OfficialMap11UiData>(raw);
-            if (data.manifest != "871_156598" || data.mapClassId != 14 || data.panels.Length != 2
-                || data.panels.Single(p => p.key == "DialogHandInItemDialog").nodes.Length != 39
+            if (data.manifest != manifest || data.mapClassId != mapClassId || data.panels.Length != 2
+                || data.panels.Single(p => p.key == "DialogHandInItemDialog").nodes.Length != dialogNodes
                 || data.panels.Single(p => p.key == "ItemIconDefault").nodes.Length != 19
-                || data.components.Length != 94 || data.sprites.Length != 18)
-                throw new InvalidDataException("Pinned Map14 hand-in hierarchy is incomplete.");
+                || data.components.Length != componentCount || data.sprites.Length != spriteCount)
+                throw new InvalidDataException("Pinned official hand-in hierarchy is incomplete: " + sourcePath);
             var document = (Dictionary<string, object>)OfficialEquipmentJson.Parse(raw, true);
             var rawComponents = ((List<object>)document["components"]).Cast<Dictionary<string, object>>().ToArray();
             AudioClip EventClip(Dictionary<string, object> fields, string name)
@@ -217,6 +228,7 @@ namespace Zjcs.Editor
                         var fields = rawComponents.Single(c => (string)c["panel"] == panel.key && (string)c["type"] == panel.key);
                         var values = (Dictionary<string, object>)fields["fields"];
                         var view = root.AddComponent<OfficialMap14HandInDialogView>();
+                        view.resourceRoot = destination.Substring("Assets/Game/Resources/".Length);
                         view.grayImageMaterial = RestoreHandInGrayMaterial((Dictionary<string, object>)document["grayMaterial"], destination);
                         view.mSubmitItemSlot = Require((string)values["mSubmitItemSlot"]);
                         view.mCancelBtn = Require((string)values["mCancelBtn"]).GetComponent<Button>();
@@ -234,7 +246,8 @@ namespace Zjcs.Editor
                     UnityEngine.Object.DestroyImmediate(root);
                 }
                 AssetDatabase.SaveAssets();
-                Debug.Log("Map14 official hand-in prefabs restored: 58 nodes, 94 component records, 18 sprites and original popup/button animations.");
+                Debug.Log("Official hand-in prefabs restored: " + (dialogNodes + 19) + " nodes, "
+                    + componentCount + " component records, " + spriteCount + " sprites and original popup/button animations.");
             }
             finally { UnityEngine.Object.DestroyImmediate(host); }
             Dictionary<string, object> Fields(OfficialMap11UiComponent c) => (Dictionary<string, object>)

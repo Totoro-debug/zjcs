@@ -11,15 +11,16 @@ KEY = "DialogHandInItemDialog"
 BUNDLE = "defaultpackage_assets_prefabs_ui_itemdetail.bundle"
 
 
-def extract(output: Path):
+def extract(output: Path, *, apk=None, schemas=None, localize=None, audio_loader=None):
     from official_apk import Apk
     from official_unity_schema import ScriptSchemas
     from map11_support_ui import Map11SupportUi
     from prepare_unity_map11_ui import extract_panels
-    apk = Apk.current()
-    if apk.version != "871_156598":
-        raise ValueError("Map14 UI requires the pinned current source")
-    schemas = ScriptSchemas()
+    if apk is None:
+        apk = Apk.current()
+        if apk.version != "871_156598":
+            raise ValueError("Map14 UI requires the pinned current source")
+    schemas = schemas if schemas is not None else ScriptSchemas()
     exporter = Map11SupportUi(apk, schemas, output / "Sprites")
     from UnityPy.classes.PPtr import PPtr
     icon_config = apk.asset("scriptableconfig_modules_itemicon", "/ItemIconManagerConfig.asset")
@@ -111,22 +112,25 @@ def extract(output: Path):
             record["frameRate"]=native.read().m_SampleRate
             record["objectSha256"]=hashlib.sha256(native.get_raw_data()).hexdigest()
     components.extend(extra)
-    language_manifest=ROOT/"assets/reference/official-map/localization-source-manifest.json"
-    language_inputs=json.loads(language_manifest.read_text(encoding="utf-8"))["inputs"]
     wanted_keys={n["localization_key"] for p in panels for n in p["nodes"] if n["localization_key"]}
     wanted_keys.update(("task_handinitem_succeed_tip", "ui_ItemIcon_count_key", "ui_common_count_plus"))
-    wanted={xxhash.xxh64_intdigest(k.encode()):k for k in wanted_keys}
-    texts={}
-    for record in language_inputs.values():
-        raw_language=apk.archive.read(record["source"]["path"])
-        if hashlib.sha256(raw_language).hexdigest()!=record["sha256"]:
-            raise ValueError("Pinned APK language hash mismatch")
-        count=struct.unpack_from("<i",raw_language)[0];start=4+count*12
-        for i in range(count):
-            identity,offset=struct.unpack_from("<Qi",raw_language,4+i*12)
-            if identity not in wanted: continue
-            pos=start+offset;size=struct.unpack_from("<H",raw_language,pos)[0]
-            texts[wanted[identity]]=raw_language[pos+2:pos+2+size].decode("utf-8")
+    if localize is not None:
+        texts, language_inputs = localize(apk, wanted_keys, wanted_keys - {"{0}", "0", "1"})
+    else:
+        language_manifest=ROOT/"assets/reference/official-map/localization-source-manifest.json"
+        language_inputs=json.loads(language_manifest.read_text(encoding="utf-8"))["inputs"]
+        wanted={xxhash.xxh64_intdigest(k.encode()):k for k in wanted_keys}
+        texts={}
+        for record in language_inputs.values():
+            raw_language=apk.archive.read(record["source"]["path"])
+            if hashlib.sha256(raw_language).hexdigest()!=record["sha256"]:
+                raise ValueError("Pinned APK language hash mismatch")
+            count=struct.unpack_from("<i",raw_language)[0];start=4+count*12
+            for i in range(count):
+                identity,offset=struct.unpack_from("<Qi",raw_language,4+i*12)
+                if identity not in wanted: continue
+                pos=start+offset;size=struct.unpack_from("<H",raw_language,pos)[0]
+                texts[wanted[identity]]=raw_language[pos+2:pos+2+size].decode("utf-8")
     for k in wanted_keys-set(texts):
         if k in ("{0}","0","1"):texts[k]=k
         else:raise ValueError("Unresolved original UI language key: "+k)
@@ -173,34 +177,37 @@ def extract(output: Path):
         "keywords":gray.m_ValidKeywords,"variantKeywords":[v["keywords"] for v in variants]}
     # Reuse already converted official audio only after proving the entire bank
     # payloads still match the active version, including APK-first provenance.
-    from official_source import OfficialSource
-    audio_receipt_path=ROOT/"assets/reference/commerce-components/audio-source-manifest.json"
-    audio_receipt=json.loads(audio_receipt_path.read_text(encoding="utf-8"))
-    selected=OfficialSource();current_banks={r["name"]:r for r in selected.manifest("WwiseBnk")["bundles"]}
-    index_dir=ROOT/".tools/source-packages/WwiseBnk"
-    bank_receipts=json.loads((index_dir/"bundle-sources.json").read_text(encoding="utf-8"))
-    audio_banks=[]
-    for key,previous in sorted(audio_receipt["packages"].items()):
-        package=index_dir/key;raw=package.read_bytes();current=current_banks[key]
-        if hashlib.sha256(raw).hexdigest()!=previous["sha256"] or hashlib.md5(raw).hexdigest()!=current["hash"]:
-            raise ValueError("Current UI audio bank needs conversion: "+key)
-        entry="assets/yoo/WwiseBnk/"+current["file"]
-        packaged=entry in apk.archive.namelist()
-        if packaged and apk.archive.read(entry)!=raw:raise ValueError("APK-first UI audio package mismatch")
-        audio_banks.append({"apkEntry":entry if packaged else None,"path":package.relative_to(ROOT).as_posix(),"sha256":previous["sha256"],
-                           "currentManifest":current,"source":bank_receipts[key]})
-    payload["audioBanks"]=audio_banks
-    payload["audioReceipt"]={"path":audio_receipt_path.relative_to(ROOT).as_posix(),
-        "sha256":hashlib.sha256(audio_receipt_path.read_bytes()).hexdigest()}
-    payload["audio"]={}
-    for uri,record in audio_receipt["resources"].items():
-        if record["event"] not in ("Main_Cursor_Normal","Main_Cursor_Back"):continue
-        original=ROOT/uri.removeprefix("res://")
-        native=ROOT/"unity/Assets/Official/Commerce/Art/audio"/original.name
-        if hashlib.sha256(original.read_bytes()).hexdigest()!=record["sha256"] or native.read_bytes()!=original.read_bytes():
-            raise ValueError("Verified official UI audio changed: "+uri)
-        payload["audio"][record["event"]]=dict(record,uri=uri,unityAssetPath=native.relative_to(ROOT/"unity").as_posix())
-    if len(payload["audio"])!=2:raise ValueError("Both original hand-in sound events are required")
+    if audio_loader is not None:
+        payload.update(audio_loader(apk, output))
+    else:
+        from official_source import OfficialSource
+        audio_receipt_path=ROOT/"assets/reference/commerce-components/audio-source-manifest.json"
+        audio_receipt=json.loads(audio_receipt_path.read_text(encoding="utf-8"))
+        selected=OfficialSource();current_banks={r["name"]:r for r in selected.manifest("WwiseBnk")["bundles"]}
+        index_dir=ROOT/".tools/source-packages/WwiseBnk"
+        bank_receipts=json.loads((index_dir/"bundle-sources.json").read_text(encoding="utf-8"))
+        audio_banks=[]
+        for key,previous in sorted(audio_receipt["packages"].items()):
+            package=index_dir/key;raw=package.read_bytes();current=current_banks[key]
+            if hashlib.sha256(raw).hexdigest()!=previous["sha256"] or hashlib.md5(raw).hexdigest()!=current["hash"]:
+                raise ValueError("Current UI audio bank needs conversion: "+key)
+            entry="assets/yoo/WwiseBnk/"+current["file"]
+            packaged=entry in apk.archive.namelist()
+            if packaged and apk.archive.read(entry)!=raw:raise ValueError("APK-first UI audio package mismatch")
+            audio_banks.append({"apkEntry":entry if packaged else None,"path":package.relative_to(ROOT).as_posix(),"sha256":previous["sha256"],
+                               "currentManifest":current,"source":bank_receipts[key]})
+        payload["audioBanks"]=audio_banks
+        payload["audioReceipt"]={"path":audio_receipt_path.relative_to(ROOT).as_posix(),
+            "sha256":hashlib.sha256(audio_receipt_path.read_bytes()).hexdigest()}
+        payload["audio"]={}
+        for uri,record in audio_receipt["resources"].items():
+            if record["event"] not in ("Main_Cursor_Normal","Main_Cursor_Back"):continue
+            original=ROOT/uri.removeprefix("res://")
+            native=ROOT/"unity/Assets/Official/Commerce/Art/audio"/original.name
+            if hashlib.sha256(original.read_bytes()).hexdigest()!=record["sha256"] or native.read_bytes()!=original.read_bytes():
+                raise ValueError("Verified official UI audio changed: "+uri)
+            payload["audio"][record["event"]]=dict(record,uri=uri,unityAssetPath=native.relative_to(ROOT/"unity").as_posix())
+        if len(payload["audio"])!=2:raise ValueError("Both original hand-in sound events are required")
     target = output / "handin-ui.json"
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

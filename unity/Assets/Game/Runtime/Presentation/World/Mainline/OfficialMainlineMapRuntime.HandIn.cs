@@ -27,7 +27,8 @@ namespace Zjcs.Presentation.World
             public OfficialMap11UiText[] texts;
         }
 
-        private static readonly Dictionary<string, string> Map14HandInTexts =
+        private const string HandInResourceRoot = "World/Mainline/HandIn";
+        private static readonly Dictionary<string, string> HandInTexts =
             new Dictionary<string, string>(StringComparer.Ordinal);
         private GameObject handInDialogRoot;
         private OfficialMap14HandInDialogView handInDialog;
@@ -35,13 +36,12 @@ namespace Zjcs.Presentation.World
 
         private void RunHandInItemNode(Map10RuntimeStoryNode node)
         {
-            if (mapClassId != 14) throw new InvalidDataException("Hand-in nodes are not migrated for Map" + mapClassId + ".");
             if (!handInItems.TryGetValue(node.handInItemId, out Map13RuntimeHandInItem config))
-                throw new InvalidDataException("Official Map14 hand-in configuration is missing: " + node.handInItemId);
+                throw new InvalidDataException("Official mainline hand-in configuration is missing: " + node.handInItemId);
             HandInStoryFields fields = JsonUtility.FromJson<HandInStoryFields>(node.sourceJson);
             if (fields == null || fields.HandleItemId != config.Id || fields.NeedHandInWindow < 0
                 || fields.NeedHandInWindow > 1 || config.Items.Length != 1)
-                throw new InvalidDataException("Official Map14 hand-in node differs from its configured transaction.");
+                throw new InvalidDataException("Official mainline hand-in node differs from its configured transaction.");
 
             if (fields.NeedHandInWindow == 0)
             {
@@ -50,30 +50,30 @@ namespace Zjcs.Presentation.World
             }
 
             if (handInDialogRoot != null)
-                throw new InvalidOperationException("An official Map14 hand-in dialog is already active.");
+                throw new InvalidOperationException("An official mainline hand-in dialog is already active.");
             handInInventoryAssets ??= OfficialInventoryAssetCatalog.LoadDefault();
             int itemId = config.Items[0].ItemId;
             Dictionary<string, object> item = progression.EquipmentCatalog.Find("item", itemId);
             if (item == null) throw new InvalidDataException("Official hand-in item is missing from the local item table: " + itemId);
-            TextAsset localizationSource = Resources.Load<TextAsset>("Map14/UI/HandIn/catalog");
+            TextAsset localizationSource = Resources.Load<TextAsset>(HandInResourceRoot + "/catalog");
             HandInLocalization localization = localizationSource == null ? null
                 : JsonUtility.FromJson<HandInLocalization>(localizationSource.text);
-            if (localization == null || localization.manifest != "871_156598"
-                || localization.mapClassId != 14 || localization.texts == null)
+            if (localization == null || localization.manifest != "884_156692"
+                || localization.mapClassId != 0 || localization.texts == null)
                 throw new InvalidDataException("Pinned official hand-in UI localization is missing.");
             string UiText(string key)
             {
-                if (Map14HandInTexts.TryGetValue(key, out string value)) return value;
+                if (HandInTexts.TryGetValue(key, out string value)) return value;
                 OfficialMap11UiText entry = localization.texts.SingleOrDefault(text => text != null && text.key == key);
                 if (entry == null || string.IsNullOrEmpty(entry.value))
                     throw new InvalidDataException("Official hand-in UI localization key is missing: " + key);
-                Map14HandInTexts.Add(key, entry.value);
+                HandInTexts.Add(key, entry.value);
                 return entry.value;
             }
 
-            GameObject prefab = Resources.Load<GameObject>("Map14/UI/HandIn/DialogHandInItemDialog");
-            if (prefab == null) throw new InvalidDataException("Official Map14 hand-in dialog prefab is missing.");
-            handInDialogRoot = new GameObject("Map14HandInUI", typeof(RectTransform), typeof(Canvas),
+            GameObject prefab = Resources.Load<GameObject>(HandInResourceRoot + "/DialogHandInItemDialog");
+            if (prefab == null) throw new InvalidDataException("Official mainline hand-in dialog prefab is missing.");
+            handInDialogRoot = new GameObject("MainlineHandInUI", typeof(RectTransform), typeof(Canvas),
                 typeof(CanvasScaler), typeof(GraphicRaycaster));
             handInDialogRoot.transform.SetParent(uiParent, false);
             Canvas canvas = handInDialogRoot.GetComponent<Canvas>();

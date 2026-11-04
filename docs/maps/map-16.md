@@ -82,7 +82,7 @@ Unity 2022.3.57f1c2 内置屏隔离图形 Play Mode 已通过公共 `MainlineNat
 
 ## 尚未实现
 
-公共剧情转换已修复 `CanHandInItemNode.HandInItemId` 与 `HandInItemNode.HandleItemId` 的字段差异：`SubmitRopes` 查询编号从0恢复为3，与绳索 `43039×5`、一次交付规则相连；Map16载荷只改变此字段。5项图归一化回归、运行时载荷检查及4项来源检查通过。正式宿主和交付 UI 尚未接通，未验证实际NPC交付、Play Mode或Player。
+公共剧情转换已修复 `CanHandInItemNode.HandInItemId` 与 `HandInItemNode.HandleItemId` 的字段差异：`SubmitRopes` 查询编号从0恢复为3，与绳索 `43039×5`、一次交付规则相连；Map16载荷只改变此字段。5项图归一化回归、运行时载荷检查及4项来源检查通过。所选884版公共交付窗口已通过绳索 `0/5` 禁用、`5/5` 确认、取消／中断、原声音、精确扣除和冷读的隔离 Play Mode，来源与公共范围见[主线地图公共模块](../features/mainline-map-modules.md)。本图正式宿主和实际NPC交付尚未接通，未验证完整地图 Play Mode 或 Player。
 
 原鲸背岛入口卡片、坎斯汀 NPC10801 的准备／提交 `43039×5` 绳索／登岛／离岛剧情、全部任务和战斗、五组踩格机关及奖励770／771的完整原流程仍待接线。对应当前官方配置、故事图和消费路径须逐项核对，不能把历史转换记录当作当前已交付载荷。
 

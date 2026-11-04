@@ -1,0 +1,219 @@
+{
+  "format": 1,
+  "manifest": "884_156692",
+  "mapClassId": 0,
+  "operation": "Restore original 43/19-node native UI prefabs, component references, managed-reference progress state, three Animator settings, original popup clips, verified original button controller/clips, original grayscale material and current-bank-equivalent Wwise audio bindings. Resolve dynamic item art from the local official inventory asset catalog.",
+  "sourceManifest": {
+    "path": "assets/reference/official-map/mainline-handin-ui-source-manifest.json",
+    "sha256": "92ffa601051da043b53ea2293731dab01dcef7e5950d543ea468bd60ecda8ad7"
+  },
+  "inputs": [
+    {
+      "path": "assets/reference/official-map/mainline-handin-ui-source-manifest.json",
+      "sha256": "92ffa601051da043b53ea2293731dab01dcef7e5950d543ea468bd60ecda8ad7"
+    },
+    {
+      "path": "scripts/record_unity_map14_handin_ui.py",
+      "sha256": "52cb9c7d7c5e3957665d6d0be9cf950419e62bf5ac9e1fe78bef5f23148b8c4d",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap11UiTools.Map14HandIn.cs",
+      "sha256": "fc34cbdfae623edd691b64f10cc9d69084a707f79d8c3f0f84234803568c1ed6",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap11UiTools.Map14HandInAnimation.cs",
+      "sha256": "db11fee6f8d7aa06d27dadac5cf1fd1f3059e08b4e72d20328fbd07d1b29f44c",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap14HandInAcceptance.cs",
+      "sha256": "ba190b41f7505d4dda0628eced4a00be226ee71240e245293fb900233a7d1be1",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMap14HandInDialogView.cs",
+      "sha256": "b998550b870bb0e3843ef53a655a1d79c35956e08731760a8f2b0b3e2b84a1d9",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.HandIn.cs",
+      "sha256": "22d4e23574d3194f929d95fa6cb6a34a0e62a65bc845a6d055876fd2500c51bc",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/Map14HandInUiAudio.cs",
+      "sha256": "2fa431c9db23b217ac5d8eba887de38fae9c178a81d8fc0d3670a5676a402f94",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/AwardPanelLayoutElement.cs",
+      "sha256": "58c6aa942b5e4545bdcfcd6ecf2442bd467a177823264f83e05f875167fad0a8",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldItemIcon.cs",
+      "sha256": "7236f3e2aed84e36f2e872542993bb5669a327cfbd9e3194cfe55bc18e7f031b",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldItemProgress.cs",
+      "sha256": "53c6cef6fdd7e4bbf3b63e36f3025ca2771fe2731eab992f50419a7b232ab058",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldStateSwitcher.cs",
+      "sha256": "e2fd20a63aa5e3b82ab98ec3d17cc8c973c3558bb0b2083ef54a2bf80188a2dc",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldMultiLanguageText.cs",
+      "sha256": "490825671794bffc638d37170ab39c2e1523cd8bbfdb016cf4bf4e0966ea63ad",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldMaintainGlobalScale.cs",
+      "sha256": "2ee0c5af7ab3e030360e8316edc13210e457521b6c2e9759d20a4e27b082be65",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldMaintainGlobalScaleUI.cs",
+      "sha256": "898cfa7af3819f05d02c2da1ff02f8ec1de4c5a136bb7b79841e57a471cc1bf9",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldPopupWindow.cs",
+      "sha256": "e98deef5c2a07375d6166a0a4ae17c316abe28a369e926b750f7863faf65f912",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldButtonSound.cs",
+      "sha256": "038406fe11c63a303c01b666b845e04aecaefaa35c56fe2d8b9e3f67bd865eb1",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldPopupWindowSound.cs",
+      "sha256": "d2a3fd58ecc0543386af1c103261dacebedf43eec3ee7f2bbb48f7282b9cdfdd",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldBgDialogElement.cs",
+      "sha256": "a19e724a0900fdfa69066921ee41d7f97fc18de99c6a6f99589fb626e0bbfc4e",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldUIBloomGroup.cs",
+      "sha256": "275d4c0e1566fd29e8ec5e6e469408c1c2b5339aa74919cd3cdd407a1a4a21eb",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldCountRedDotImage.cs",
+      "sha256": "213df4a5c0d58803007b8be43ee7987ff945d9da62aa0929d5be50808962bbb3",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldPreviewTool.cs",
+      "sha256": "cac60f774a77274ddd2aecded199ed7d8e1a518393b43c6a989878660d5eb9dc",
+      "hashLineEndings": "LF"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/Btn_Base_Click.controller",
+      "sha256": "29c3954e9c3232f905943dfb399bb66f14e7bc2f50e35101474704a6ba19b535"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/Btn_Base_Click.controller.meta",
+      "sha256": "e8ecb445bfa78875943f6fcf31ce26c2788db860633f4306fbec723b6fb1833e"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/catalog.json",
+      "sha256": "7350396e84fcf0ee0deb9159842f7af0cf8a251d7cea6714ae858a5e7cc65dbb"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/catalog.json.meta",
+      "sha256": "5e7c86456fa2f7c1541586602d7b9c4268f73c0b2b63798f78c1878972f4341a"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/DialogHandInItemDialog.prefab",
+      "sha256": "18a5e10b8ea8c0ec475c5949bbead4f765bdfb0c1a96888b36b24bfee69f1160"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/DialogHandInItemDialog.prefab.meta",
+      "sha256": "201edbf5cde2c36b68d110a2a3826187d63a4a9f24eeadd816f27efd4c1c7b58"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/Disabled.anim",
+      "sha256": "fd758250c96b133b3195660a6c88a0591f91af5f7f5df43e83c9f19eaa013e51"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/Disabled.anim.meta",
+      "sha256": "9df3825a24aa96430d442d0825aed814beaf75c80b10dc5969f27c790083b3cb"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/Highlighted.anim",
+      "sha256": "11c0bfc0348200c8a9d70e2ab44c681a447bb73e5ecfd20e0ac930e35e80ee07"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/Highlighted.anim.meta",
+      "sha256": "4650f31f929cb623e8b91975be5e322e5c255356b780bd003ef0ef5a4094c1a5"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/ItemIconDefault.prefab",
+      "sha256": "120ec47ce780dccb61f0ba7629925e6046c4fccec6026d70a50ad5adf76db33b"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/ItemIconDefault.prefab.meta",
+      "sha256": "d0f9b66a503bc66c9b2283bcba52641641db9bff3186b86a03ac18080294662f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/Normal.anim",
+      "sha256": "4dd795bea32dfbcfc1e82ead0098f004f2d9ba93010e9022fb2ce328e2187952"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/Normal.anim.meta",
+      "sha256": "d430ee55f9ac6996af8116bab76487ca54dc0bcfc7fd1eef7c2f932ee53ac5d0"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/Pressed.anim",
+      "sha256": "6115af211859758598fa85d9e665897bdd12ac92d35237f82aeb4c2d7dfe3a49"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/Pressed.anim.meta",
+      "sha256": "178f0801d621ad77cf251a5d4b4927a595d795563ab666510d9c8868bfb16528"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/Selected.anim",
+      "sha256": "cc4c01706fbbd7a9bed9fa6f7f01ffc2c050c0909916d85ee553149d6d14a1b3"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/Selected.anim.meta",
+      "sha256": "08aa9c0293999092493d7e1e09fcffcc9974f353822d68c81e0ba298004a1b02"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/UIDialog_Hide.anim",
+      "sha256": "d5dade41b7eb6c1d14c9abf1c32ba580f88cf1e1577c504ff0dc7ef5183d0680"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/UIDialog_Hide.anim.meta",
+      "sha256": "2db6d5eecb86a2df234aa57b0f3fdbd273bb2b0a88dc1ec9ed2d4222ce5eded2"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/UIDialog_Show.anim",
+      "sha256": "4b4896bc31189ce284cbe77ecda8403540938262a124d9b9a18f413d0b7e3c87"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/UIDialog_Show.anim.meta",
+      "sha256": "aa74bccf9663574540eb8dd7079d007f97d72ca4d94ebc435f55fe501b48b0ca"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/UIGray.mat",
+      "sha256": "89c489c41553ee04e857b87741eb8d5f480ea5eba12a100daeb063437c7536bb"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/HandIn/UIGray.mat.meta",
+      "sha256": "ebfddef89303a3b37434808f727825d2f32a3a14be167192a86a8d596d741275"
+    }
+  ]
+}

@@ -20,6 +20,7 @@ namespace Zjcs.Presentation.World
         public Transform mSubmitItemSlot;
         public Button mCancelBtn, mComfirmBtn;
         public Material grayImageMaterial;
+        public string resourceRoot = "Map14/UI/HandIn";
         private Action confirmed, canceled, interrupted, hidden;
         private bool resolved;
 
@@ -42,7 +43,7 @@ namespace Zjcs.Presentation.World
             mCancelBtn.onClick.AddListener(HandleCancel);
             mComfirmBtn.onClick.AddListener(HandleConfirm);
 
-            var iconPrefab = Resources.Load<GameObject>("Map14/UI/HandIn/ItemIconDefault");
+            var iconPrefab = Resources.Load<GameObject>(resourceRoot + "/ItemIconDefault");
             if (iconPrefab == null) throw new InvalidDataException("Pinned official hand-in item prefab is missing.");
             var icon = Instantiate(iconPrefab, mSubmitItemSlot, false).GetComponent<WorldItemIcon>();
             Sprite sprite = inventoryAssets.FindItemSprite(itemId);
@@ -73,14 +74,14 @@ namespace Zjcs.Presentation.World
             }
         }
 
-        private static void ShowRequireCount(WorldItemIcon icon, long owned, long required)
+        private void ShowRequireCount(WorldItemIcon icon, long owned, long required)
         {
             var progress=icon.GetComponentInChildren<WorldItemProgress>(true);
             if (progress==null) throw new InvalidDataException("Original item progress component is missing.");
             progress.Compact=OfficialPropFormat.Compact;
             progress.gameObject.SetActive(true);
             progress.Init(owned,required,WorldItemProgress.ProgressType.Require);
-            var document=(Dictionary<string,object>)OfficialEquipmentJson.Parse(Resources.Load<TextAsset>("Map14/UI/HandIn/catalog").text,true);
+            var document=(Dictionary<string,object>)OfficialEquipmentJson.Parse(Resources.Load<TextAsset>(resourceRoot + "/catalog").text,true);
             Color ColorOf(string name)
             {
                 var values=(List<object>)document[name];

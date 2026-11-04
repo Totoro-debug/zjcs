@@ -23,11 +23,20 @@ namespace Zjcs.Editor
         private const string Key = "Zjcs.Map14.HandInAcceptance";
         private static bool started;
         private static int errors;
-        public static void Run()
+        private static bool Shared => SessionState.GetBool(Key + ".shared", false);
+        private static string ResourceRoot => Shared ? "World/Mainline/HandIn" : "Map14/UI/HandIn";
+        private static string ValidationRoot => Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR")
+            ?? throw new InvalidOperationException("Set ZJCS_VALIDATION_DIR to an isolated validation workspace.");
+        public static void Run() => RunCore(false);
+        public static void RunMainline() => RunCore(true);
+        private static void RunCore(bool shared)
         {
+            Directory.CreateDirectory(ValidationRoot);
+            SessionState.SetBool(Key + ".shared", shared);
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_SIMULATED", "1");
-            OfficialMap11UiTools.ImportMap14HandIn();
+            if (shared) OfficialMap11UiTools.ImportMainlineHandIn();
+            else OfficialMap11UiTools.ImportMap14HandIn();
             if (!Environment.GetCommandLineArgs().Contains("-map14HandInQuick")) ProjectTools.Validate();
             SessionState.SetBool(Key,true);
             SessionState.SetInt(Key+".result",1);
@@ -75,13 +84,27 @@ namespace Zjcs.Editor
             if(errors==0)
             {
                 SessionState.SetInt(Key+".result",0);
-                Debug.Log("Map14 hand-in Play Mode passed: original 58 nodes, UI input through simulated mouse, official disabled-gray shader, original UI sounds, disabled confirmation, cancel, interrupt, atomic configured submission, replay/limit, rollback and profile cold reload. Mainline host is not covered by this isolated fixture.");
+                Debug.Log("Official hand-in Play Mode passed: " + (Shared ? "current 62 nodes and all four installed configurations" : "legacy 58 nodes") + ", UI input through simulated mouse, official disabled-gray shader, original UI sounds, disabled confirmation, cancel, interrupt, atomic configured submission, replay/limit, rollback and profile cold reload. Mainline host is not covered by this isolated fixture.");
             }
             EditorApplication.isPlaying=false;
         }
         private static IEnumerator Steps()
         {
+            if (!Shared) { yield return Case(4, 2208, 1); yield break; }
+            foreach (int map in new[] { 13, 14 })
+            {
+                var data = JsonUtility.FromJson<Map10RuntimeStoryData>(Resources.Load<TextAsset>("Map" + map + "/stories").text);
+                foreach (Map13RuntimeHandInItem config in data.handInItems)
+                {
+                    Require(config.Items.Length == 1, "Inspect new official hand-in requirements before extending this fixture");
+                    yield return Case(config.Id, config.Items[0].ItemId, config.Items[0].Count);
+                }
+            }
+        }
+        private static IEnumerator Case(int configId, int itemId, long requiredCount)
+        {
             Application.runInBackground = true;
+            SessionState.SetString(Key+".case",configId.ToString());
             var events = new GameObject("HandInEventSystem",typeof(EventSystem),typeof(StandaloneInputModule));
             var input=events.AddComponent<SimulatedMouse>();
             events.GetComponent<StandaloneInputModule>().inputOverride=input;
@@ -93,23 +116,24 @@ namespace Zjcs.Editor
             var camera=new GameObject("HandInCamera",typeof(Camera)).GetComponent<Camera>();
             camera.gameObject.AddComponent<AudioListener>();
             camera.clearFlags=CameraClearFlags.SolidColor;camera.backgroundColor=Color.black;
-            string saveRoot=Path.GetFullPath("../.tools/map14-handin-acceptance-"+Guid.NewGuid().ToString("N"));
+            string saveRoot=Path.Combine(ValidationRoot,"save-"+configId);
             SessionState.SetString(Key+".saveRoot",saveRoot);
             var slots=new ProfileSlotCatalog(saveRoot);string slot=slots.CreateSlot();
             var session=OfflineMainlineProgressSession.OpenCharacter(slots,slot);
-            var catalog=JsonUtility.FromJson<OfficialMap11UiData>(Resources.Load<TextAsset>("Map14/UI/HandIn/catalog").text);
+            var catalog=JsonUtility.FromJson<OfficialMap11UiData>(Resources.Load<TextAsset>(ResourceRoot + "/catalog").text);
             string Text(string key) => catalog.texts.Single(t=>t.key==key).value;
             var assets=OfficialInventoryAssetCatalog.LoadDefault();
-            var prefab=Resources.Load<GameObject>("Map14/UI/HandIn/DialogHandInItemDialog");
+            var prefab=Resources.Load<GameObject>(ResourceRoot + "/DialogHandInItemDialog");
             Require(prefab!=null,"Original hand-in prefab loads");
             int confirms=0,cancels=0,interrupts=0,normalSounds=0,backSounds=0; float maxSoundDuration=0;
-            var requirements=new Dictionary<int,long>{{2208,1}};
+            var requirements=new Dictionary<int,long>{{itemId,requiredCount}};
+            var item = Zjcs.Offline.Equipment.OfficialEquipmentAssetCatalog.LoadDefault().Load().Find("item", itemId);
             OfficialMap14HandInDialogView Open()
             {
                 var view=UnityEngine.Object.Instantiate(prefab,canvas.transform,false).GetComponent<OfficialMap14HandInDialogView>();
-                view.Initialize(assets,2208,3,1,session.InventoryCount(2208),Text,()=>{
+                view.Initialize(assets,itemId,Convert.ToInt32(item["Quality"]),requiredCount,session.InventoryCount(itemId),Text,()=>{
                     confirms++;
-                    Require(session.SubmitHandInItem(4,1,requirements,100,"map14:test:hand-in").IsApplied,"Apply original configured hand-in");
+                    Require(session.SubmitHandInItem(configId,1,requirements,100,"mainline:test:hand-in").IsApplied,"Apply original configured hand-in");
                 },()=>cancels++,()=>interrupts++);
                 void ObserveSound(AudioClip clip, GameObject emitter)
                 {
@@ -132,46 +156,50 @@ namespace Zjcs.Editor
             yield return Capture("before-click");
             yield return Click(input,missing.mComfirmBtn);
             Require(normalSounds==0 && backSounds==0,"Disabled confirmation does not post button or close sound");
-            Require(confirms==0 && session.HandInItemCount(4)==0,"Disabled confirmation does not mutate state");
+            Require(confirms==0 && session.HandInItemCount(configId)==0,"Disabled confirmation does not mutate state");
             yield return Capture("missing");
             yield return Click(input,missing.mCancelBtn);yield return new WaitForSeconds(.4f);
-            Require(cancels==1 && confirms==0 && interrupts==0 && session.HandInItemCount(4)==0,"Cancel routes once without a transaction");
+            Require(cancels==1 && confirms==0 && interrupts==0 && session.HandInItemCount(configId)==0,"Cancel routes once without a transaction");
             Require(normalSounds==1 && backSounds==1,"Cancel posts original button and popup close events once");
             var externallyClosed=Open();yield return new WaitForSeconds(.4f);
             externallyClosed.GetComponent<WorldPopupWindow>().Hide(null);yield return new WaitForSeconds(.4f);
-            Require(interrupts==1 && session.HandInItemCount(4)==0,"Popup manager close routes interrupt at original OnHide without consuming inventory");
+            Require(interrupts==1 && session.HandInItemCount(configId)==0,"Popup manager close routes interrupt at original OnHide without consuming inventory");
             var interrupted=Open();yield return new WaitForSeconds(.4f);
             UnityEngine.Object.Destroy(interrupted.gameObject);yield return null;
-            Require(interrupts==2 && session.HandInItemCount(4)==0,"External close routes interrupt without consuming inventory");
+            Require(interrupts==2 && session.HandInItemCount(configId)==0,"External close routes interrupt without consuming inventory");
             Require(session.ApplyInventoryTransaction("seed",save=>{
-                Require(OfflineInventoryOperations.Grant(save.Player,2208,1,100).IsApplied,"Seed isolated configured item");
+                Require(OfflineInventoryOperations.Grant(save.Player,itemId,requiredCount,100).IsApplied,"Seed isolated configured item");
             }).IsApplied,"Persist isolated inventory seed");
             var ready=Open();yield return new WaitForSeconds(.4f);
             Require(ready.mComfirmBtn.interactable,"Owned item enables confirmation");
             var left=ready.transform.Find("BgDialog1/Content/ScrollRect/ViewPort/Content/ItemIconDefault(Clone)/Content/Progress/BgCountText/LeftTxt").GetComponent<TMP_Text>();
-            Require(left.text=="1","Original requirement progress displays owned count");
+            Require(left.text==requiredCount.ToString(System.Globalization.CultureInfo.InvariantCulture),"Original requirement progress displays owned count");
             yield return Capture("ready");
             yield return Click(input,ready.mComfirmBtn);yield return new WaitForSeconds(.4f);
-            Require(confirms==1 && cancels==1 && interrupts==2 && session.InventoryCount(2208)==0 && session.HandInItemCount(4)==1,"Confirm consumes one item and increments one time");
-            Require(session.SubmitHandInItem(4,1,requirements,100,"map14:test:hand-in").Status==ProgressionResultStatus.Unchanged,"Duplicate receipt is idempotent");
-            Require(session.SubmitHandInItem(4,1,requirements,100,"map14:test:limit").Status==ProgressionResultStatus.InvalidState,"Configured one-time limit enforced");
+            Require(confirms==1 && cancels==1 && interrupts==2 && session.InventoryCount(itemId)==0 && session.HandInItemCount(configId)==1,"Confirm consumes one item and increments one time");
+            Require(session.SubmitHandInItem(configId,1,requirements,100,"mainline:test:hand-in").Status==ProgressionResultStatus.Unchanged,"Duplicate receipt is idempotent");
+            Require(session.SubmitHandInItem(configId,1,requirements,100,"mainline:test:limit").Status==ProgressionResultStatus.InvalidState,"Configured one-time limit enforced");
             var reloaded=OfflineMainlineProgressSession.OpenCharacter(new ProfileSlotCatalog(saveRoot),slot);
-            Require(reloaded.InventoryCount(2208)==0 && reloaded.HandInItemCount(4)==1,"Cold save restores atomic item consumption and count");
+            Require(reloaded.InventoryCount(itemId)==0 && reloaded.HandInItemCount(configId)==1,"Cold save restores atomic item consumption and count");
             Require(normalSounds==2 && backSounds==3,"Confirmation posts original button and popup close events once");
             yield return new WaitForSecondsRealtime(maxSoundDuration+.1f);
             Require(UnityEngine.Object.FindObjectsOfType<Map14HandInUiAudio>().Length==0,"Completed original audio releases its temporary sources");
             string rollbackSlot=slots.CreateSlot();var rollback=OfflineMainlineProgressSession.OpenCharacter(slots,rollbackSlot);
-            rollback.ApplyInventoryTransaction("seed-rollback",save=>OfflineInventoryOperations.Grant(save.Player,2208,1,100));
-            Require(rollback.SubmitHandInItem(4,1,new Dictionary<int,long>{{2208,1},{2209,1}},100,"rollback").Status==ProgressionResultStatus.InvalidState
-                && rollback.InventoryCount(2208)==1 && rollback.HandInItemCount(4)==0,"A later missing fixture ingredient rolls back earlier consumption");
+            rollback.ApplyInventoryTransaction("seed-rollback",save=>OfflineInventoryOperations.Grant(save.Player,itemId,requiredCount,100));
+            Require(rollback.SubmitHandInItem(configId,1,new Dictionary<int,long>{{itemId,requiredCount},{2209,1}},100,"rollback").Status==ProgressionResultStatus.InvalidState
+                && rollback.InventoryCount(itemId)==requiredCount && rollback.HandInItemCount(configId)==0,"A later missing fixture ingredient rolls back earlier consumption");
             yield return Capture("closed");
             Require(errors==0,"No rendering, lifecycle or input errors");
-            Debug.Log("Map14 hand-in fixture save root: "+saveRoot);
+            Debug.Log("Official hand-in fixture save root: "+saveRoot);
+            UnityEngine.Object.Destroy(events);
+            UnityEngine.Object.Destroy(canvas);
+            UnityEngine.Object.Destroy(camera.gameObject);
+            yield return null;
         }
         private static IEnumerator Capture(string name)
         {
             yield return new WaitForEndOfFrame();
-            string dir=Path.GetFullPath("../.tools/map14-handin-screens");Directory.CreateDirectory(dir);
+            string dir=Path.Combine(ValidationRoot,"screens",SessionState.GetString(Key+".case","legacy"));Directory.CreateDirectory(dir);
             var image=ScreenCapture.CaptureScreenshotAsTexture();
             File.WriteAllBytes(Path.Combine(dir,name+".png"),image.EncodeToPNG());UnityEngine.Object.Destroy(image);
         }

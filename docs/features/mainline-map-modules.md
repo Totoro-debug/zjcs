@@ -73,6 +73,10 @@
 
 ## 完整还原部分
 
+公共剧情交付窗口使用所选 `884_156692` 的 `DialogHandInItemDialog`，资源入口为 `World/Mainline/HandIn`。官方43个弹窗节点、19个道具图标节点、101份组件记录、19张切片、原按钮 controller／五态动画、弹出／关闭动画、灰色材质与原中文文本均显式恢复；新增概率说明区域保留原默认隐藏状态。两条按钮／关闭声音从当前 Wwise 事件链按原增益解码，与已安装官方 PCM 逐字节一致后复用。公共宿主按节点 `HandleItemId`、`NeedHandInWindow` 和原交付配置选择事务及分支，不再限制 Map14。旧版 Map14 资源和单独恢复入口保留独立来源，不将其版本身份改为当前版。转换与绑定见[公共交付窗口来源](../../assets/reference/official-map/mainline-handin-ui-source-manifest.json)和[原生绑定](../../assets/reference/official-map/mainline-handin-ui-bindings-source-manifest.json)。
+
+内置屏带图形 Play Mode 已通过四组已安装配置的原窗口模拟鼠标验证：缺物品禁用、取消、弹窗关闭／销毁中断、原音效播放与释放、按配置数量原子扣除、次数上限、回执幂等、失败回滚和存档冷读；已查看缺物品和绳索足量的实际渲染画面。该夹具直接实例化公共窗口并调用同一存档事务，未覆盖正式 NPC 剧情入口、完整图运行或 Windows Player。官方成功系统提示、图标详情及全局剧情遮罩仍需接线，不能将公共窗口验证视为整图交付完成。
+
 公共区域小地图已在 Unity 2022.3.57f1c2 图形 Play Mode 通过六图441份原 Tilemap 的公共 Interface 检查：地区公开状态、原 Z、范围事件替换／旧事件隔离、缓存复用、原游戏时间十秒回收、释放与重挂；12张区域小地图实际画面已查看。夹具按原 UniTask 的游戏时间计时并等待销毁帧，不以墙钟时间替代；地区／角色状态由夹具提供，未覆盖正式根、白雾／标记、HUD 输入、地图存档或 Windows Player。静态元数据检查与主工程 `ProjectTools.Validate` 均通过。
 
 `Resources/Official/Progression/mainline-tasks.json` 的 `output_sha256` 对照 `TextAsset.text`，Git 固定其工作树换行为 LF，确保 Windows `core.autocrlf=true` 检出仍与清单一致。
@@ -179,7 +183,7 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 
 ## 尚未实现
 
-当前主工程编译、`ProjectTools.Validate` 及经 profile 的 Map10–16 交互加载校验通过；全量静态元数据检查被工作区 `Combat/SkillGraphRuntime` 的孤立 `.meta` 阻断。本次未覆盖地图 Play Mode 或 Windows Player。
+当前主工程编译、`ProjectTools.Validate`、经 profile 的 Map10–16 交互加载校验和全量静态元数据检查通过（117,636个GUID）。公共交付窗口的隔离 Play Mode 已通过；本次未覆盖正式NPC剧情地图流程或 Windows Player。
 
 - 英雄雕像原激活动作与三种周期效果的角色、粒子、音效和 MyPlayable 演出；界面与永久属性事务已有实际指针验证，完整表现未完成。
 - [命运果实与命运探寻](world-exploration.md)的全部实体交互与演出。果树生产继续复用已有 [果树服务](fruit-tree.md)，探寻费用、候选／保底、动态实体、历史和原窗口已部分验证；遗失女神结算已接入规则层，原领奖界面与地图入口仍待完成。
