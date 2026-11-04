@@ -29,6 +29,14 @@ def build():
         "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkeletonData.World.cs",
         "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkeletonData.World.cs.meta",
         "unity/Assets/Game/Editor/Map14/WorldHost/Zjcs.Editor.Map14.WorldHost.asmdef"]]
+    outputs += [ROOT / p for p in [
+        "unity/Assets/Game/Runtime/Presentation/World/NativeMap13/OfficialMap13NativeWorldView.cs",
+        "unity/Assets/Game/Runtime/Presentation/World/NativeMap13/OfficialMap13NativeWorldAssets.cs",
+        "unity/Assets/Game/Runtime/Presentation/World/NativeMap13/Zjcs.Presentation.World.NativeMap13.asmdef",
+        "unity/Assets/Game/Editor/Map13NativeWorld/OfficialMap13NativeWorldHostAcceptance.cs",
+        "unity/Assets/Game/Editor/Map13NativeWorld/Zjcs.Editor.Map13NativeWorld.asmdef",
+        "unity/Assets/Game/Editor/Map13NpcAppearancePlayables/Zjcs.Editor.Map13.NpcAppearancePlayables.asmdef",
+        "unity/Assets/Game/Editor/Map13StoryPlayableRequests/Zjcs.Editor.Map13.StoryPlayableRequests.asmdef"]]
     fixture = ROOT / "unity/Assets/Game/Editor/MainlineNativeGround"
     outputs += sorted(p for p in fixture.iterdir() if p.is_file()) + [Path(str(fixture) + ".meta")]
     water_receipt = ROOT / "assets/reference/official-map/map13-native-water-code-source-manifest.json"
@@ -48,6 +56,12 @@ def build():
     proof = dict(format=1, operation="Extract the existing original-component binding into one shared labels/environment module. Preserve bind-before-Awake, original status/progress events, region data and renderer pipeline ownership. Partitioned Map14 reuses the same services; non-partitioned prefabs use MainlineNativeGround. Map15's confirmed local unlocked-map state supplies the time-reached port; the original time-before-level branch is retained. Unbound timed/rank scopes fail closed; no server dates are invented.",
         predecessor=dict(commit=PREDECESSOR, path=previous_path, sha256=sha(previous)),
         original_label_receipt=record(ROOT / "assets/reference/official-map/map14-label-components-code-source-manifest.json"),
+        map13_label_receipt=record(ROOT / "assets/reference/official-map/map13-label-components-code-source-manifest.json"),
+        map13_language_receipt=record(ROOT / "assets/reference/official-map/map13-language-code-source-manifest.json"),
+        label_context_extraction=dict(commit="b62fd4cca31eaee27e3a1e9c76e562fd01e9db91",
+            path="unity/Assets/Game/Runtime/Presentation/World/NativeMap13/Map13WorldLabels.cs",
+            sha256=sha(subprocess.check_output(["git", "show", "b62fd4cca31eaee27e3a1e9c76e562fd01e9db91:unity/Assets/Game/Runtime/Presentation/World/NativeMap13/Map13WorldLabels.cs"], cwd=ROOT)),
+            operation="Extract the existing Map13 label binding into MainlineMapLabelContext. Inject local state, original data/font/colors/language files and optional region clock; copy configuration per instance, preserve original event order and address state by region ID. The Map13 production terrain caller uses this same context. Other-map checks cover state/time ports, not completed terrain or minimap integration."),
         original_region_limit_code=record(official_path),
         original_view_receipt=record(ROOT / "assets/reference/official-map/map15-world-view-source-manifest.json"),
         current_water_equivalence=dict(manifest=selected["manifest"], assembly=record(assembly),

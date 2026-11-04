@@ -1,6 +1,7 @@
 """Stage the common ground Interface and original dependency closure in an owned project."""
 from concurrent.futures import ThreadPoolExecutor
 import json
+import os
 from pathlib import Path
 import re
 import shutil
@@ -22,6 +23,10 @@ def main():
     modules = {json.loads(p.read_bytes())['name']: p for p in runtime.rglob('*.asmdef')}
     fixture = ROOT / 'unity/Assets/Game/Editor/MainlineNativeGround'
     pending = json.loads((fixture / 'Zjcs.Editor.MainlineNativeGround.asmdef').read_bytes())['references']
+    labels = os.environ.get('ZJCS_NATIVE_LABEL_CONTEXT') == '1'
+    host_fixture = ROOT / 'unity/Assets/Game/Editor/Map13NativeWorld'
+    if labels:
+        pending += json.loads((host_fixture / 'Zjcs.Editor.Map13NativeWorld.asmdef').read_bytes())['references']
     pending += ['Zjcs.Official.World.NativeWater', 'Zjcs.Official.World.NativeText']
     selected, external = set(), set()
     while pending:
@@ -33,10 +38,12 @@ def main():
             continue
         selected.add(name)
         pending.extend(json.loads(modules[name].read_bytes()).get('references', []))
-    if external - {'Unity.ugui', 'Unity.TextMeshPro', 'UniTask', 'Unity.RenderPipelines.Universal.Runtime', 'Unity.RenderPipelines.Core.Runtime'}:
+    if external - {'Unity.Newtonsoft.Json', 'Unity.ugui', 'Unity.TextMeshPro', 'UniTask', 'Unity.RenderPipelines.Universal.Runtime', 'Unity.RenderPipelines.Core.Runtime'}:
         raise ValueError('Inspect ground validation dependencies: ' + repr(external))
     copy_modules(project, runtime, modules, selected)
     shutil.copytree(fixture, project / 'Assets/Game/Editor/MainlineNativeGround')
+    if labels:
+        shutil.copytree(host_fixture, project / 'Assets/Game/Editor/Map13NativeWorld')
     source = ROOT / 'unity'
     files = subprocess.check_output(['git', 'ls-files', '-co', '--exclude-standard', '-z', '--', 'unity/Assets'], cwd=ROOT).split(b'\0')
     metas = [ROOT / name.decode('utf8') for name in set(files) if name.endswith(b'.meta')]
@@ -66,11 +73,24 @@ def main():
     # Package TextMeshPro.Awake waits for this Resources asset in the editor;
     # a serialized text component alone otherwise never generates its mesh.
     pending.append(source / 'Assets/TextMesh Pro/Resources/TMP Settings.asset')
-    for map_id in (10, 11, 12, 13, 14, 16):
-        pending.append(source / f'Assets/Official/World/Map/{map_id}/NativeMiniMapCurrent/Resources/Map{map_id}/Native/mini-map-regions.asset')
-    for map_id in (15, 16):
-        pending.append(source / f'Assets/Official/World/Map/{map_id}/NativeCurrent/Resources/Map{map_id}/Native/current-ground.prefab')
-        pending.extend((source / f'Assets/Game/Resources/Map{map_id}/Native').glob('*.json'))
+    if labels:
+        pending.extend(source / ('Assets/Game/Resources/Map13/Native/native-' + name + '-catalog.asset')
+            for name in ('terrain', 'scene', 'environment-scene', 'region-labels', 'render-pipeline', 'text'))
+        pending.append(source / 'Assets/Game/Resources/Map13/Native/map-env-data.asset')
+        pending.append(source / 'Assets/Game/Resources/Map13/Native/combat-rating-config.asset')
+        pending.extend((source / 'Assets/Game/Resources/Map13/Native').glob('*.json'))
+        # Original label data is installed under separate native Resources roots.
+        pending.extend(source.glob('Assets/Official/World/Map/13/**/Resources/Map13/Native/region-label-data.json'))
+        shutil.copytree(source / 'Assets/StreamingAssets/Map13/NativeText',
+            project / 'Assets/StreamingAssets/Map13/NativeText')
+    if labels:
+        pending.append(source / 'Assets/Game/Resources/Map16/Native/region-label-data.json')
+    else:
+        for map_id in (10, 11, 12, 13, 14, 16):
+            pending.append(source / f'Assets/Official/World/Map/{map_id}/NativeMiniMapCurrent/Resources/Map{map_id}/Native/mini-map-regions.asset')
+        for map_id in (15, 16):
+            pending.append(source / f'Assets/Official/World/Map/{map_id}/NativeCurrent/Resources/Map{map_id}/Native/current-ground.prefab')
+            pending.extend((source / f'Assets/Game/Resources/Map{map_id}/Native').glob('*.json'))
     visited = set()
     while pending:
         asset = pending.pop()

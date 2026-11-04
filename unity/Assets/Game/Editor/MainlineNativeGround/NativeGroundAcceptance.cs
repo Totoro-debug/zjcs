@@ -25,6 +25,11 @@ namespace Zjcs.Editor.MainlineNativeGround
         private const string Key = "Zjcs.Mainline.NativeGroundAcceptance";
         private static bool started;
         private static int errors;
+        public static void RunLabels()
+        {
+            SessionState.SetBool(Key + ".labels", true);
+            Run();
+        }
         public static void Run()
         {
             Require(TMP_Settings.instance, "The original TMP package settings must be staged before text Awake.");
@@ -54,6 +59,7 @@ namespace Zjcs.Editor.MainlineNativeGround
             if (mode != PlayModeStateChange.EnteredEditMode || !SessionState.GetBool(Key, false)) return;
             Application.logMessageReceived -= Observe;
             SessionState.SetBool(Key, false);
+            SessionState.SetBool(Key + ".labels", false);
             EditorApplication.update -= Tick; EditorApplication.playModeStateChanged -= Mode;
             PlayerSettings.colorSpace = (ColorSpace)SessionState.GetInt(Key + ".color", 0);
             EditorApplication.Exit(SessionState.GetInt(Key + ".result", 1));
@@ -70,7 +76,8 @@ namespace Zjcs.Editor.MainlineNativeGround
         }
         private static IEnumerator Verify()
         {
-            var steps = Steps();
+            bool labels = SessionState.GetBool(Key + ".labels", false);
+            var steps = labels ? VerifyLabelContext() : Steps();
             while (true)
             {
                 object next;
@@ -81,8 +88,10 @@ namespace Zjcs.Editor.MainlineNativeGround
             if (errors == 0)
             {
                 SessionState.SetInt(Key + ".result", 0);
-                Debug.Log("Shared native ground Play Mode passed for Map15 and Map16: original bindings, geometry, region activation, timed labels, camera renders, disposal, pipeline restoration and remount. Timed-region rules/profile cold save are checked separately; formal map entry, HUD, input, world progression saves and Player release are not covered.");
+                Debug.Log(labels ? "Shared label context Play Mode passed: original Map13/16 data, region-ID state/events, copied configuration, independent clocks, rank bypass and disposal. Original rendering is checked by the Map13 world host fixture; formal minimap integration, input, saves and Player release are not covered."
+                    : "Shared native ground Play Mode passed for Map15 and Map16: original bindings, geometry, region activation, timed labels, camera renders, disposal, pipeline restoration and remount. Timed-region rules/profile cold save are checked separately; formal map entry, HUD, input, world progression saves and Player release are not covered.");
             }
+            SessionState.SetBool(Key + ".labels", false);
             EditorApplication.isPlaying = false;
         }
         private static IEnumerator Steps()

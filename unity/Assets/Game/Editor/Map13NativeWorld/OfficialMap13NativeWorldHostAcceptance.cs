@@ -122,13 +122,17 @@ namespace Zjcs.Editor.Map13
                     throw new InvalidDataException("Original Map13 moving partition is not ready: " + region);
                 if (!root.GetComponentsInChildren<TilemapRenderer>(true).Any())
                     throw new InvalidDataException("Original Map13 native tiles were not instantiated.");
-                yield return new WaitForEndOfFrame();
+                // Batch-mode Editor does not resume WaitForEndOfFrame. Render
+                // the real camera explicitly before reading its native target.
+                yield return null;
+                camera.Render();
                 TraceLabels(root, camera, region);
                 Capture(target, "private-" + region);
                 fixture.PublicRegions.Add(region);
                 view.UnlockRegion(fixture.Position);
                 yield return new WaitForSecondsRealtime(5.2f);
-                yield return new WaitForEndOfFrame();
+                yield return null;
+                camera.Render();
                 Capture(target, "public-" + region);
                 if (!fixture.VisibilityUnlocks.Contains(region))
                     throw new InvalidDataException("Original Map13 region visibility callback was not forwarded: " + region);
@@ -164,7 +168,8 @@ namespace Zjcs.Editor.Map13
             Color32[] pixels = image.GetPixels32();
             int distinct = pixels.Where((p, i) => i % 17 == 0).Distinct().Count();
             if (distinct < 128) throw new InvalidDataException("Original Map13 rendered an empty frame: " + name);
-            string output = Path.GetFullPath("../.tools/map13-native-world-current");
+            string output = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR")
+                ?? throw new InvalidOperationException("Owned validation workspace is required.");
             Directory.CreateDirectory(output);
             File.WriteAllBytes(Path.Combine(output, name + ".png"), image.EncodeToPNG());
             UnityEngine.Object.Destroy(image);

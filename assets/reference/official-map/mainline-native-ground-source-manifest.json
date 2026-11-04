@@ -10,6 +10,20 @@
     "path": "assets/reference/official-map/map14-label-components-code-source-manifest.json",
     "sha256": "9568e6ed3dd48cef702b8e4a0c856cc1b5817a396b9c2e37000561748450a262"
   },
+  "map13_label_receipt": {
+    "path": "assets/reference/official-map/map13-label-components-code-source-manifest.json",
+    "sha256": "abbf63f1b25afdf897a1c7644720f0523688ccb91c7a31e14ff1230cbdd16fe6"
+  },
+  "map13_language_receipt": {
+    "path": "assets/reference/official-map/map13-language-code-source-manifest.json",
+    "sha256": "b431099b587df6d046ed2380eac3ed64919629a501dba977cb49e1db111c3630"
+  },
+  "label_context_extraction": {
+    "commit": "b62fd4cca31eaee27e3a1e9c76e562fd01e9db91",
+    "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap13/Map13WorldLabels.cs",
+    "sha256": "0c5ab97d52c935555a908409bad0d37a3d079e4a7a251ffc38de819735bf6211",
+    "operation": "Extract the existing Map13 label binding into MainlineMapLabelContext. Inject local state, original data/font/colors/language files and optional region clock; copy configuration per instance, preserve original event order and address state by region ID. The Map13 production terrain caller uses this same context. Other-map checks cover state/time ports, not completed terrain or minimap integration."
+  },
   "original_region_limit_code": {
     "path": ".tools/source-packages/official-code/common-source/Common/MapRegionInfo.cs",
     "sha256": "c98644f4854ff2f4c4e03b4e517d8d6799d323f6eabb7bbc6f64d281c2537a36"
@@ -104,6 +118,14 @@
       "sha256": "f4d5afd3505b0496b2a4feaee5f109b305f8861e66f459f6bdb7031175f28047"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/MainlineNativeGround/MainlineMapLabelContext.cs",
+      "sha256": "4ac56bda50cb297d2df6360744ecdd043eef80ec217c7e43f4a8e3eabc6c0685"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/MainlineNativeGround/MainlineMapLabelContext.cs.meta",
+      "sha256": "7f6f5e095bcc0e56a858f2ff2048f9eee2423af9c7888c38d157c5c2ba699088"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Presentation/World/MainlineNativeGround/MainlineNativeGround.cs",
       "sha256": "bbab9e2432a0445e4a75faba5ddce635b014f5e96912b21b9106cc9e0aeb1763"
     },
@@ -129,7 +151,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/MainlineNativeGround/Zjcs.Presentation.World.MainlineNativeGround.asmdef",
-      "sha256": "e09ac7c828c4086f49492223c3a58453050a3944cfdcf969ffd3b024012f3916"
+      "sha256": "2e1fe26f851497bb7bc54c5f1d258482794e88360fa56b7431f1f6af3d266728"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/MainlineNativeGround/Zjcs.Presentation.World.MainlineNativeGround.asmdef.meta",
@@ -149,7 +171,7 @@
     },
     {
       "path": "scripts/prepare_mainline_ground_validation.py",
-      "sha256": "4e1f96cbb68a38911df0ca34299d07322345fbc5febd1fe1d1e89f8c87aa1a08"
+      "sha256": "a9b2ce2b76e1fa724f2c35a2c5e772ada09e553dd39e5e9044e15112590042f8"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap14/Zjcs.Presentation.World.NativeMap14.asmdef",
@@ -173,15 +195,15 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs",
-      "sha256": "2dc6d3141fa79e8ed7bbe118b1b8dfb38ddfbf581a175d829b4c3b1fa4a19a2d"
+      "sha256": "87f0caeaa3ec32da7ffe86417aea5210530de8a4eebc9354d184cd07027733f7"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapProfile.cs",
-      "sha256": "c9d188e91d2c77d6523c295e067aba44ae71fe3c6dc66be586a71caefed73b0d"
+      "sha256": "6361bcb4daa05aea87e99b591f77fc856dc5b38f58b78fdb1dcd1ba5fdee77b1"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Zjcs.Presentation.World.asmdef",
-      "sha256": "e6effa6cddfbe829f83d8d2ca4bed1e2a983cacd844d77448f5ba98ae3ebad01"
+      "sha256": "375d966332daca803203a2d03435a17f458791ad14096bdedec23de97a53c4a0"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14Labels/Map14LabelBinding.cs",
@@ -212,16 +234,52 @@
       "sha256": "e41e66dded448120b182f5c5246d78184b7efe2005a5b918b303850d3cb5c086"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap13/OfficialMap13NativeWorldView.cs",
+      "sha256": "d19047589d3ad0a35ea31c4fc0626c2604ccaf3511f235b83ad545ae547374e4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap13/OfficialMap13NativeWorldAssets.cs",
+      "sha256": "1f5a17f7c5a322a3eac5de85280878dcc1449540f445dd519bd4e9d7751271d0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap13/Zjcs.Presentation.World.NativeMap13.asmdef",
+      "sha256": "4135303f974b677e82348c691fbba0194f77b84adf02600de1371e8113446080"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13NativeWorld/OfficialMap13NativeWorldHostAcceptance.cs",
+      "sha256": "06da3afda93bde364bd0a29fa144ad039b82fa84db2c377a7dbc45744d348286"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13NativeWorld/Zjcs.Editor.Map13NativeWorld.asmdef",
+      "sha256": "7230a47885105a478c8fa4e8590fb6cf0d303ef5076df4c04c1691a819285c5d"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13NpcAppearancePlayables/Zjcs.Editor.Map13.NpcAppearancePlayables.asmdef",
+      "sha256": "61d51ef54bb15087383ee0b8efee67b4a63b087d816ce4a86e599f01915a2389"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13StoryPlayableRequests/Zjcs.Editor.Map13.StoryPlayableRequests.asmdef",
+      "sha256": "cfc81c4b90b11ed0f961c5cde304316b96df01f32fb143429c6a539c58260103"
+    },
+    {
       "path": "unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.cs",
-      "sha256": "0a413354885835686502e0ac7c7aa4c8472b2f7b8195f060f4c130f885f80cae"
+      "sha256": "f15625759ebdb446d85bbd8da097cb53ebd54bedc1e1e47660246458123f9aed"
     },
     {
       "path": "unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.cs.meta",
       "sha256": "3b3eae4bb8239b87854eaaca81227b0048a8dc939d11e637289f2f45ff21465f"
     },
     {
+      "path": "unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.Labels.cs",
+      "sha256": "779d163b8305992d7401d52f6723dd5458fb3261b5cce51fd2b7c4ebee62e779"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.Labels.cs.meta",
+      "sha256": "8683e7ea4ad61286920204f2163bccddf9e5adb388e4cc9f74f425cba2a8fb20"
+    },
+    {
       "path": "unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.MiniMapRegions.cs",
-      "sha256": "f8b45fd6b2ca248fdcf8deae6703a4b4b17bde8baab35b752999d9d39f8d176d"
+      "sha256": "8fc3cfcf037ed7554734f6ffbdc9133e40268747fbd3b73187e07a277bed3c7c"
     },
     {
       "path": "unity/Assets/Game/Editor/MainlineNativeGround/NativeGroundAcceptance.MiniMapRegions.cs.meta",
@@ -237,7 +295,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/MainlineNativeGround/Zjcs.Editor.MainlineNativeGround.asmdef",
-      "sha256": "6496a3d786b4b86cb6f386ba7ace8392af6b12893ade13368cf46eef775bad3a"
+      "sha256": "bef0c0b3c8ba3d6fc79939af63e5e0d68b048d2f37a8e3f6a6cb20abd73ecbb9"
     },
     {
       "path": "unity/Assets/Game/Editor/MainlineNativeGround/Zjcs.Editor.MainlineNativeGround.asmdef.meta",
@@ -250,6 +308,6 @@
   ],
   "tool": {
     "path": "scripts/record_mainline_native_ground_sources.py",
-    "sha256": "d8257363863f8daea7f536d4691c9bf8e828626a257e9fce06424416ca2a6560"
+    "sha256": "7497c671fb6acfe83b20d8981bf3acb1de1f1b2d3a9026375e7dcc46db9a84b3"
   }
 }

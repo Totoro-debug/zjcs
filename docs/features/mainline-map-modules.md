@@ -85,6 +85,10 @@
 
 原生地形的公共绑定在独立程序集 `Zjcs.Presentation.World.MainlineNativeGround`：`MainlineWorldLabels` 将原区域描述／战力／多语言标签绑定到地图数据和 `IMainlineWorldLabelState`；`MainlineWorldEnvironment` 对原灯光、环境和分区组件提供同一份区域、进度、位置与揭格服务。状态与进度数组按 Region ID 索引，保留原配置的枚举顺序；不能把 Map14 原表中先76后75的顺序当成状态下标。Map14 分区视图复用这两项服务；`MainlineNativeGround` 为 Map15 整图 prefab 提供非激活实例化、依赖绑定、原 URP 管线切换和退出恢复。角色／镜头资源地址独立于 HUD 是否迁移，避免无 HUD 的地图跳过原模型缩放和镜头参数。此项仍不等于通天塔完整 HUD、楼层与交互已经迁移。来源见[原生地形公共绑定清单](../../assets/reference/official-map/mainline-native-ground-source-manifest.json)。
 
+`MainlineMapLabelContext` 复用 `IMainlineWorldLabelState`，集中提供原 `IMap13LabelServices` 路径的地区状态／探索度事件、原二进制语言／字体绑定和生命周期；泽之国地形宿主已用它替代地图专属标签包装。调用者提供所属版本的原地图数据、颜色／字体、语言文件与本地状态，在原 prefab 激活前绑定，退出时先释放视图再释放模块。模块复制地区行、网格和进度上限，按地区 ID 寻址状态，避免两个地图实例互改配置或时间回调；有时间条件的地图必须注入对应 `IMapRegionTime`。现有 Map14 标签端口保持独立，完整原小地图的正式状态组合仍待接通，不能将此抽取视为各图 HUD 已完成。
+
+该模块的同一公共 Interface 已在隔离 Play Mode 核对泽之国／鲸背岛真实地区数据、乱序行的地区 ID 索引、等级／战力／公开／进度通知顺序、无变化刷新、跨图状态隔离、配置复制、两个实例的独立时钟、准确到期边界、高位阶放行和重复释放。时间状态由夹具提供，此检查不证明鲸背岛原标签文字／画面或正式小地图已接通；原场景渲染范围另见泽之国所属页。
+
 公共宿主通过 `OfficialMainlineMapRuntime.NativeGround.cs` 的 `MainlineNativeGroundState` Adapter 提供角色位置、等级／战力、地区状态、探索点及公共揭格；整图资源地址由地图档案传入。`NativeMap14.cs` 仅保留龙之国分区视图的创建、刷新与释放，消费同一状态 Interface。骨骼地面载荷通过 `MainlineGroundAnimation` 复用项目独立原生绘制端；原素材与具体运行验证范围见[通天塔入口](../maps/map-15.md)。
 
 公共原生地面转换器 `GroundBinding` 以 `GroundSource` 显式接收地图 ID、原 prefab 地址和 bundle；Map15 的原 GUID 保持不变，Map16 采用独立范围。地图定义和角色／镜头／标签数据提取同样按地图 ID 消费实际官方输入，尚未迁移的地图不自动注册。`MainlineNativeGround.UnlockRegion` 保留原环境激活动作与揭格回调顺序，区别于普通状态刷新；女神像的公共地面调用使用该 Interface。两图已通过隔离图形 Play Mode 的同一宿主生命周期夹具，具体范围及缺口见[鲸背岛](../maps/map-16.md)。所用 CustomWater.dll 已与当前所选版本逐字节核对一致，仅此程序集可复用原水面代码凭据，不能据此认定其他历史输入等价。

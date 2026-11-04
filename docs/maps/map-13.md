@@ -34,6 +34,8 @@ Map13 的三处 `ItemQuikBuyNode` 已按官方配置以 Item325 的原价执行�
 
 泽之国原生地图显示宿主复用已有地形、环境、地区标签、语言和字体来源及显式资源目录，新增 `Presentation/World/NativeMap13/` 仅提供本地状态／资源服务接线，未替换原 prefab。内置屏隔离 Play Mode 已验证三个地区的按位置加载、原文字网格、公开状态／光照演出和资源释放，并查看实际公／私图画面；测试工程带入项目 TMP Resources 配置。正式主线入口、交互、存档和 Windows Player 仍待完成，范围见[泽之国](map-13.md)。
 
+地区标签的本地绑定现改用公共 `MainlineMapLabelContext`，由本图宿主提供既有原配置、原颜色／字体和二进制语言文件；原 prefab、坐标、文字和状态切换逻辑继续由官方实现消费。模块为每个实例复制配置，保留等级、战力、地区状态、探索度的原通知顺序；公共状态／时间测试范围集中见[主线地图公共模块](../features/mainline-map-modules.md)。替换后在内置屏隔离图形 Play Mode 重跑地区0／55／104的实际分区、原文字网格、公开演出、揭格回调及释放，并查看六张公／私画面；批处理夹具显式渲染真实相机后读取目标，不依赖批处理模式不会恢复的帧末等待。主工程编译、`ProjectTools.Validate`、静态元数据及共享绑定来源输出哈希核对均通过。此项不代表当前版本完整小地图已接入，也不改变本图正式玩法与 Player 的未完成状态；未发布新 Player。
+
 泽之国原藤蔓演出：从两份原 ECDriver 的实际 PPtr 恢复 Treevine_birth_playable、Treevine_loop_playable、Treevine_dissolve1_playable，完整 205 个原对象、27 组粒子与六份材质绑定保留，原始 CAB／对象哈希、437 份转换输入及 Windows 输出分别记录；未读取或移植 Spine runtime 或使用导出脚本空壳。出现／循环的数量触发、骨骼特效、原材质属性块消散与淡出销毁处理器复用官方应用代码，原序列继承完整实现，Editor 导入适配只延后执行同一原检查。完整实体／UI、正式状态与地图输入／存档及 Player 仍待接通，见[泽之国](map-13.md)。素材未进入完整快照。
 
 依据：[原演出清单](../../assets/reference/official-map/map13-native-tree-playables-source-manifest.json)、[原应用代码](../../assets/reference/official-map/map13-tree-playable-runtime-source-manifest.json)、[原淡出处理器](../../assets/reference/official-map/map13-entity-fade-handlers-source-manifest.json)、[原生 prefab 转换](../../assets/reference/official-map/map13-native-tree-playable-prefabs-source-manifest.json)、[Play Mode 来源与执行](../../assets/reference/official-map/map13-native-tree-playables-playmode-source-manifest.json)。

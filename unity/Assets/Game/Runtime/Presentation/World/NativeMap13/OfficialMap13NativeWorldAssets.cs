@@ -36,14 +36,9 @@ namespace Zjcs.Presentation.World.NativeMap13
         }
     }
 
-    public interface IMap13NativeWorldState
+    public interface IMap13NativeWorldState : IMainlineWorldLabelState
     {
         Vector3 PlayerWorldPosition { get; }
-        int PlayerLevel { get; }
-        int PlayerSubRank { get; }
-        long PlayerCombatRating { get; }
-        bool IsPublicRegion(int region);
-        int GetRegionProgress(int region);
         int GetRegionGoddessId(int region);
         void UnlockAllRegionPositions(int region);
     }

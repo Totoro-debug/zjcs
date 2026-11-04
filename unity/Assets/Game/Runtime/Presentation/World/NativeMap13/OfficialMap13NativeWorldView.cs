@@ -9,6 +9,8 @@ using Zjcs.Offline.World.NativePartition;
 using Zjcs.Official.World.NativeTerrain;
 using Zjcs.Official.World.NativeTerrain.Common;
 using Zjcs.Official.World.NativeEnvironment;
+using Zjcs.Official.World.NativeMap13Labels;
+using Zjcs.Offline.World.NativeLabelResources;
 
 namespace Zjcs.Presentation.World.NativeMap13
 {
@@ -18,7 +20,7 @@ namespace Zjcs.Presentation.World.NativeMap13
         public bool IsReady { get; private set; }
         private NativeMap13AssetCatalog catalog;
         private Map13WorldEnvironment environment;
-        private Map13WorldLabels labels;
+        private MainlineMapLabelContext labels;
         private RenderPipelineAsset previousPipeline, previousQuality;
         private bool pipelineBound, disposed;
         private UniversalAdditionalCameraData addedCameraData;
@@ -64,7 +66,9 @@ namespace Zjcs.Presentation.World.NativeMap13
             GroundRoot = instance.GetComponent<MapGroundRoot>();
             var data = assets.Terrain.Load<PartitionData>("Assets/MonoBehaviour/partition_data");
             environment = new Map13WorldEnvironment(GroundRoot, assets.EnvironmentData, state);
-            labels = new Map13WorldLabels(state, environment, assets.Font);
+            labels = new MainlineMapLabelContext(environment.Data, state, GroundRoot,
+                Resources.Load<CombatRatingConfig>("Map13/Native/combat-rating-config"), assets.Font,
+                new LocalLanguageFiles(Application.streamingAssetsPath));
             NativeMap13EnvironmentBinding.Bind(instance, environment);
             labels.Bind(instance);
             var resources = gameObject.AddComponent<NativeMap13ResourceLoader>();
