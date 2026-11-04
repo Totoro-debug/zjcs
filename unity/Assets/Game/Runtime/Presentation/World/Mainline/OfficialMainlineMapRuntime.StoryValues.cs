@@ -158,9 +158,9 @@ namespace Zjcs.Presentation.World
             switch (input.type)
             {
                 case "PlayerConditionNode":
-                    if (mapClassId != 13 || map13PlayerConditionEvaluator == null)
+                    if ((mapClassId != 13 && mapClassId != 16) || playerConditionEvaluator == null)
                         throw new InvalidDataException("Official player conditions are not loaded for Map" + mapClassId + ".");
-                    return map13PlayerConditionEvaluator.Evaluate(input.playerConditionType,
+                    return playerConditionEvaluator.Evaluate(input.playerConditionType,
                         input.playerConditionParam, input.playerConditionIds, input.playerConditionNot);
                 case "AndNode":
                     Map10RuntimeStoryConnection[] connections = input.ports?.FirstOrDefault(value => value.name == "Input")?.connections;

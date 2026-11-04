@@ -46,8 +46,10 @@ namespace Zjcs.Presentation.World
 
             Map10RuntimeBattleData battles = JsonUtility.FromJson<Map10RuntimeBattleData>(battleData.text);
             Map10RuntimeStoryData storyDataValue = JsonUtility.FromJson<Map10RuntimeStoryData>(storyData.text);
-            string expectedBattleManifest = mapClassId == 14 ? "871_156598" : "854_156383";
-            string expectedStoryManifest = mapClassId >= 13 ? "871_156598" : "854_156383";
+            string expectedBattleManifest = mapClassId == 14 ? "871_156598"
+                : mapClassId == 16 ? "884_156692" : "854_156383";
+            string expectedStoryManifest = mapClassId == 16 ? "884_156692"
+                : mapClassId >= 13 ? "871_156598" : "854_156383";
             puzzleRules = storyDataValue?.puzzleRules;
             statues.witchInfos = storyDataValue?.witchInfos ?? Array.Empty<Map11RuntimeWitchInfo>();
             statues.witchResults = storyDataValue?.witchResultEffects ?? Array.Empty<Map11RuntimeWitchResult>();
@@ -228,11 +230,13 @@ namespace Zjcs.Presentation.World
                     throw new InvalidDataException("Official Map" + mapClassId + " logic entity tag is malformed.");
                 mapLogicTags.Add(value.LogicId, value);
             }
-            if (mapClassId == 13)
+            if (mapClassId == 13 || mapClassId == 16)
             {
-                map13PlayerConditionEvaluator = new Map13OfflinePlayerConditionEvaluator(storyDataValue.playerConditions,
+                Map13RuntimePlayerCondition[] conditions = mapClassId == 13
+                    ? storyDataValue.playerConditions : Array.Empty<Map13RuntimePlayerCondition>();
+                playerConditionEvaluator = new Map13OfflinePlayerConditionEvaluator(conditions,
                     StoryItemCount, GetStoryPlayCount, key => progressionSave.StoryStatus(key),
-                    id => progressionSave.StageWinCount(id), Map13RegionProgress, IsMap13StoryTagCompleted);
+                    id => progressionSave.StageWinCount(id), Map13RegionProgress, IsStoryTagCompleted);
             }
             foreach (Map10RuntimeTalkConditionInfo value in storyDataValue.mapTalkConditions)
             {
@@ -286,7 +290,7 @@ namespace Zjcs.Presentation.World
                 .FirstOrDefault(value => value.Region == region)?.Progress ?? 0
             : 0;
 
-        private bool IsMap13StoryTagCompleted(string tag) => mapClassId == 13 &&
+        private bool IsStoryTagCompleted(string tag) =>
             (progressionSave.Save.World.CompletedEntityTags.Contains(tag)
                 || localSave.mapLogicStates.Any(value => value != null && value.Tag == tag && value.State < 0));
     }

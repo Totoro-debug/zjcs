@@ -15,6 +15,23 @@ namespace Zjcs.Editor
     {
         private const string Key = "Zjcs.SharedMainlineProbe";
 
+        public static void ValidateWhaleIslandStoryCondition()
+        {
+            const string tag = "金宝箱_鲸岛神龟";
+            Type evaluatorType = typeof(OfficialMainlineMapProfile).Assembly.GetType(
+                "Zjcs.Presentation.World.Map13OfflinePlayerConditionEvaluator", true);
+            object evaluator = Activator.CreateInstance(evaluatorType,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                null, new object[] { Array.Empty<Map13RuntimePlayerCondition>(), (Func<int, long>)(_ => 0),
+                    (Func<string, int>)(_ => 0), (Func<string, int>)(_ => 0), (Func<int, int>)(_ => 0),
+                    (Func<int, int, int>)((_, _) => 0), (Func<string, bool>)(value => value == tag) }, null);
+            MethodInfo evaluate = evaluatorType.GetMethod("Evaluate");
+            bool Evaluate(string value, int not) => (bool)evaluate.Invoke(evaluator, new object[] {
+                "MapLogicEntityEndByTag", new Map13RuntimePlayerConditionData { Tag = value }, null, not });
+            if (!Evaluate(tag, 0) || Evaluate(tag, 1) || Evaluate("another-tag", 0) || !Evaluate("another-tag", 1))
+                throw new InvalidDataException("Shared mainline completed-tag story condition changed.");
+        }
+
         public static void RunInteractionCatalogs()
         {
             Type type = typeof(OfficialMainlineMapProfile).Assembly.GetType(

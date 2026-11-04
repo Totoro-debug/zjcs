@@ -70,6 +70,7 @@ namespace Zjcs.Editor
             BindCombatCatalog();
             FightCombatValidation.RunSmokeTest();
             Zjcs.Editor.Combat.OfficialBattleHudAssetTools.ValidateRenderer();
+            MainlineMapModuleValidation.ValidateWhaleIslandStoryCondition();
             try
             {
                 OfficialMap10Tools.Validate();

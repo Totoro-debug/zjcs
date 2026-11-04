@@ -45,7 +45,7 @@ namespace Zjcs.Presentation.World
         private readonly Dictionary<string, Map10RuntimePlayable> officialPlayables =
             new Dictionary<string, Map10RuntimePlayable>(StringComparer.Ordinal);
         private readonly Dictionary<int, Map10RuntimeLogicTag> mapLogicTags = new Dictionary<int, Map10RuntimeLogicTag>();
-        private Map13OfflinePlayerConditionEvaluator map13PlayerConditionEvaluator;
+        private Map13OfflinePlayerConditionEvaluator playerConditionEvaluator;
         private readonly Dictionary<int, Map10RuntimeTalkCondition> mapTalkConditions = new Dictionary<int, Map10RuntimeTalkCondition>();
         private readonly Dictionary<string, Map10RuntimeStoryOption> storyOptions = new Dictionary<string, Map10RuntimeStoryOption>(StringComparer.Ordinal);
         private readonly Dictionary<int, GameObject> storyEntities = new Dictionary<int, GameObject>();
