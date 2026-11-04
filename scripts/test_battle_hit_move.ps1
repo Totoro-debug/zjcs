@@ -129,6 +129,7 @@ $pullPlayer = New-Unit 1 1 0 0 1000
 $pullEnemy = New-Unit 2 2 2 0 5000
 $pull = Invoke-MoveBattle (New-MoveSkill 2 1 $true $false) $pullPlayer $pullEnemy
 Assert-Move ($pullEnemy.X -eq 1) 'Towards-target displacement did not pull the target closer'
+Assert-Move ($pull.Event.SkillCasts[0].Presentation.TargetX -eq 2 -and $pull.Event.SkillCasts[0].Presentation.SourceX -eq 0) 'Hit displacement replaced the cast-time target position with its settled position'
 
 $blockedPlayer = New-Unit 1 1 0 0 1000
 $blockedEnemy = New-Unit 2 2 9 0 5000

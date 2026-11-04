@@ -338,7 +338,8 @@ namespace Zjcs.Presentation.Combat
                     foreach (FightBattleDamageEvent damage in result.Event.DamageEvents)
                         if (damage != null) LastStepSeconds = Mathf.Max(LastStepSeconds, damage.Delay);
                     foreach (FightBattleSkillCastEvent cast in result.Event.SkillCasts)
-                        if (cast != null) LastStepSeconds = Mathf.Max(LastStepSeconds, cast.Delay);
+                        if (cast != null) LastStepSeconds = Mathf.Max(LastStepSeconds, cast.Delay
+                            + Mathf.Max(0f, cast.Presentation?.Duration ?? 0f));
                 }
                 // A settled result is not a completed presentation. In particular the last lethal
                 // hit must reach its configured time before the mode destroys the battle scene.

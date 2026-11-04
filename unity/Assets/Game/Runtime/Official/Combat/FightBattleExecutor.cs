@@ -287,6 +287,7 @@ namespace Zjcs.Combat.Official
 
                 // FightSkillAgentComponentImplement.UpdateSkillDataOnRun records this
                 // release before its end callbacks can check LimitedTimes or modify CD.
+                var presentation = FightBattleSkillCastPresentation.Capture(actor, skill, targets);
                 skillState.RunSkill(skill.Slot);
                 ExecuteSkill(actor, skill, targets, casts, damageEvents, movements,
                     out float castLastDelay, out float skillStartDuration,
@@ -304,11 +305,13 @@ namespace Zjcs.Combat.Official
                 var cast = new FightBattleSkillCastEvent
                 {
                     ActorId = actor.Id,
+                    Presentation = presentation,
                     Slot = skill.Slot,
                     SkillEntityId = skill.EntityId,
                     SkillItemId = skill.ItemId
                 };
                 foreach (FightBattleUnitState target in targets) cast.TargetIds.Add(target.Id);
+                CompleteCastPresentation(cast, skill, castLastDelay);
                 casts.Add(cast);
                 ExecutePendingCooldownModifySkills(casts, damageEvents, movements,
                     ref stepDuration, ref stepActionDuration);
@@ -494,6 +497,7 @@ namespace Zjcs.Combat.Official
                 var cast = new FightBattleSkillCastEvent
                 {
                     ActorId = owner.Id,
+                    Presentation = FightBattleSkillCastPresentation.Capture(caster, skill, targets),
                     Slot = -1,
                     SkillEntityId = skill.EntityId,
                     SkillItemId = skill.ItemId,
@@ -504,6 +508,7 @@ namespace Zjcs.Combat.Official
                 checkpoint.Statistics.RecordCast(owner.Id, skill.EntityId, skill.ItemId);
                 ExecuteSkill(caster, skill, targets, casts, damageEvents, movements,
                     out float lastDelay, out float skillDuration, out float actionDuration);
+                CompleteCastPresentation(cast, skill, lastDelay);
                 owner.Hp = Math.Max(0L, Math.Min(owner.MaxHp, caster.Hp));
                 SynchronizeDeathForbidden(owner);
                 owner.Turn.Hp = owner.Hp;
@@ -1470,6 +1475,7 @@ namespace Zjcs.Combat.Official
             var cast = new FightBattleSkillCastEvent
             {
                 ActorId = actor.Id,
+                Presentation = FightBattleSkillCastPresentation.Capture(actor, skill, targets, target),
                 Slot = -1,
                 SkillEntityId = skill.EntityId,
                 SkillItemId = skill.ItemId
@@ -1478,6 +1484,7 @@ namespace Zjcs.Combat.Official
             casts.Add(cast);
             ExecuteSkill(actor, skill, targets, casts, damageEvents, movements,
                 out float delay, target);
+            CompleteCastPresentation(cast, skill, delay);
             if (delay > lastDelay) lastDelay = delay;
         }
 
@@ -1538,6 +1545,7 @@ namespace Zjcs.Combat.Official
                 var cast = new FightBattleSkillCastEvent
                 {
                     ActorId = actor.Id,
+                    Presentation = FightBattleSkillCastPresentation.Capture(actor, extraSkill, targets),
                     Slot = -1,
                     SkillEntityId = extraSkill.EntityId,
                     SkillItemId = extraSkill.ItemId
@@ -1546,6 +1554,7 @@ namespace Zjcs.Combat.Official
                 casts.Add(cast);
                 ExecuteSkill(actor, extraSkill, targets, casts, damageEvents, movements,
                     out float delay);
+                CompleteCastPresentation(cast, extraSkill, delay);
                 if (delay > lastDelay) lastDelay = delay;
             }
         }
@@ -1605,6 +1614,7 @@ namespace Zjcs.Combat.Official
                 var cast = new FightBattleSkillCastEvent
                 {
                     ActorId = owner.Id,
+                    Presentation = FightBattleSkillCastPresentation.Capture(owner, skill, targets),
                     Slot = -1,
                     SkillEntityId = skill.EntityId,
                     SkillItemId = skill.ItemId
@@ -1612,6 +1622,7 @@ namespace Zjcs.Combat.Official
                 foreach (FightBattleUnitState target in targets) cast.TargetIds.Add(target.Id);
                 casts.Add(cast);
                 ExecuteSkill(owner, skill, targets, casts, damageEvents, movements, out float delay);
+                CompleteCastPresentation(cast, skill, delay);
                 if (delay > lastDelay) lastDelay = delay;
             }
         }
@@ -1663,6 +1674,7 @@ namespace Zjcs.Combat.Official
                 var cast = new FightBattleSkillCastEvent
                 {
                     ActorId = owner.Id,
+                    Presentation = FightBattleSkillCastPresentation.Capture(owner, skill, targets, targetPosition),
                     Slot = -1,
                     SkillEntityId = skill.EntityId,
                     SkillItemId = skill.ItemId
@@ -1671,6 +1683,7 @@ namespace Zjcs.Combat.Official
                 casts.Add(cast);
                 ExecuteSkill(owner, skill, targets, casts, damageEvents, movements,
                     out float delay, targetPosition);
+                CompleteCastPresentation(cast, skill, delay);
                 if (delay > lastDelay) lastDelay = delay;
                 maxDuration = Math.Max(maxDuration, ResolveDuration(skill, delay));
                 float actionDuration = ResolveActionDuration(skill, delay);
@@ -1738,6 +1751,9 @@ namespace Zjcs.Combat.Official
                 var cast = new FightBattleSkillCastEvent
                 {
                     ActorId = source.Id,
+                    Presentation = FightBattleSkillCastPresentation.Capture(source, skill, targets,
+                        !invocation.SelectTargets || invocation.UseTargetPositionWithSelection
+                            ? targetPosition : null),
                     Slot = -1,
                     SkillEntityId = skill.EntityId,
                     SkillItemId = skill.ItemId
@@ -1749,6 +1765,7 @@ namespace Zjcs.Combat.Official
                     !invocation.SelectTargets || invocation.UseTargetPositionWithSelection
                         ? targetPosition : null, invocation.AllowDeadSource,
                     invocation.DamageFactor);
+                CompleteCastPresentation(cast, skill, delay);
                 // FightStatusMoveNearComponentInfo.SkillTriggerDelayTime delays the entire skill,
                 // including its nested triggers. Keep each event relative until execution returns.
                 float offset = Math.Max(0f, invocation.Delay);

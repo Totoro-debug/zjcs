@@ -35,6 +35,7 @@ namespace Zjcs.Combat.Official
                         skill.CustomDamage = FightStatusAccumulatedDamageRuntime.CustomDamage(status);
                         var targets = new List<FightBattleUnitState> { owner };
                         var cast = new FightBattleSkillCastEvent { ActorId = source.Id, Slot = -1,
+                            Presentation = FightBattleSkillCastPresentation.Capture(source, skill, targets, owner),
                             SkillEntityId = skill.EntityId, SkillItemId = skill.ItemId };
                         cast.TargetIds.Add(owner.Id);
                         casts.Add(cast);
@@ -42,6 +43,7 @@ namespace Zjcs.Combat.Official
                         int firstDamage = damageEvents.Count;
                         ExecuteSkill(source, skill, targets, casts, damageEvents, movements,
                             out float delay, owner, allowDeadSource: source.Hp <= 0);
+                        CompleteCastPresentation(cast, skill, delay);
                         long hpDamage = 0;
                         for (int i = firstDamage; i < damageEvents.Count; i++)
                         {

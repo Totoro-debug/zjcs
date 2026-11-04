@@ -58,6 +58,12 @@ Assert-Timing ($result.Event.DamageEvents.Count -eq 2) 'Timed skill did not reso
 Assert-Timing ([Math]::Abs($result.Event.DamageEvents[0].Delay - 0.2) -lt 0.0001 -and [Math]::Abs($result.Event.DamageEvents[1].Delay - 0.6) -lt 0.0001) 'Hit delay was not recorded on the damage events'
 Assert-Timing ([Math]::Abs($result.Event.Duration - 1.0) -lt 0.0001) 'Step duration did not use the last hit delay plus AllRelevantEndedDuration'
 Assert-Timing ([Math]::Abs($result.Event.ActionDuration - 1.2) -lt 0.0001) 'Step action duration did not use the configured ActionDuration'
+$castPresentation = $result.Event.SkillCasts[0].Presentation
+Assert-Timing ($null -ne $castPresentation -and $castPresentation.SourceX -eq 0 -and $castPresentation.TargetX -eq 1 -and $castPresentation.TargetId -eq 2 -and $castPresentation.FacingIndex -eq 3) 'Cast did not capture its original source, target and facing'
+Assert-Timing ([Math]::Abs($castPresentation.Duration - 1.0) -lt 0.0001 -and [Math]::Abs($castPresentation.ActionDuration - 1.2) -lt 0.0001) 'Cast lifetime did not retain its own configured ending times'
+$savedPresentation = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(
+    [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($result.Checkpoint)).Receipts[0].Event.SkillCasts[0].Presentation
+Assert-Timing ($savedPresentation.TargetId -eq 2 -and $savedPresentation.TargetX -eq 1 -and $savedPresentation.Duration -eq $castPresentation.Duration) 'Cast view inputs did not survive checkpoint restoration'
 
 # Root references carry their own delay and anchor, not the shared hit entity's defaults.
 $rootedPlayer = New-Unit 1 1 0 0 1000 100

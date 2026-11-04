@@ -23,7 +23,8 @@ namespace Zjcs.Combat.Official
 {
     public class FightBattleUnitState { public int Id, Direction; public long Hp; }
     public class FightBattleCheckpoint { public List<FightBattleUnitState> Units = new List<FightBattleUnitState>(); }
-    public class FightBattleSkillCastEvent { public int ActorId, SkillEntityId; public float Delay; public List<int> TargetIds = new List<int>(); }
+    public class FightBattleSkillCastPresentation { public int FacingIndex; }
+    public class FightBattleSkillCastEvent { public int ActorId, SkillEntityId; public float Delay; public FightBattleSkillCastPresentation Presentation; public List<int> TargetIds = new List<int>(); }
     public class FightBattleStepEvent { public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>(); }
 }
 namespace Zjcs.Official.StoryPlayableManager { public interface IBattleCameraOffsetHost {} }
@@ -71,9 +72,10 @@ public static class BattleSkillGraphDispatchHarness
         checkpoint.Units.Add(actor);
         var transforms = new Dictionary<int, Transform> { { 1, new Transform("actor") }, { 2, new Transform("target") } };
         Func<int, Transform> resolve = id => transforms.TryGetValue(id, out var value) ? value : null;
+        int[] facingIndices = { 2, 0, 1, 3 }; // Pos2d.FourDirs -> Common.Direction.
         for (int direction = 0; direction < 4; direction++)
         {
-            actor.Direction = direction;
+            actor.Direction = facingIndices[direction];
             var scope = new OfflineBattleNativePlayableScope();
             using (var playback = new OfficialBattleSkillGraphPlayback(catalog, scope))
             {
@@ -84,7 +86,18 @@ public static class BattleSkillGraphDispatchHarness
         Resources.Assets.Remove(fields[0]);
         Require(catalog.Find(10, fields[0]).name == "fallback", "Missing direction did not fall back to the original default");
         Resources.Assets[fields[0]] = new GameObject(fields[0]);
-        actor.Direction = 0;
+        // Settlement may already have turned the actor again before presentation starts.
+        actor.Direction = 3;
+        var captured = Cast(10, .2f);
+        captured.Presentation = new FightBattleSkillCastPresentation { FacingIndex = 1 };
+        var capturedScope = new OfflineBattleNativePlayableScope();
+        using (var playback = new OfficialBattleSkillGraphPlayback(catalog, capturedScope))
+        {
+            playback.Play(new FightBattleStepEvent { SkillCasts = new List<FightBattleSkillCastEvent> { captured } }, checkpoint, resolve);
+            playback.Tick(.2f);
+            Require(capturedScope.Plays[0] == "LeftPlayablePrefab:target", "Settled actor direction replaced the skill creation snapshot");
+        }
+        actor.Direction = 2;
         var timed = new OfflineBattleNativePlayableScope();
         var queue = new OfficialBattleSkillGraphPlayback(catalog, timed);
         queue.Play(new FightBattleStepEvent { SkillCasts = new List<FightBattleSkillCastEvent> {

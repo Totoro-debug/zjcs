@@ -24,6 +24,8 @@
 
 公共技能图调度由 `OfficialBattleSkillGraphCatalog`／`OfficialBattleSkillGraphPlayback` 统一负责，控制器消费同一步内各次施法的 `Delay`，等时事件保持原顺序，并把大帧拆到各施法时点推进原生 Playable 时钟；`LateUpdate` 单独驱动原 `PostProcessFrame`。目录保留 `MyFightSkill` 的 `UpPlayablePrefab`／`DownPlayablePrefab`／`LeftPlayablePrefab`／`RightPlayablePrefab` 和 `myPlayablePrefab` 字段，方向资源为空时使用原默认资源。步骤结束至少等待全部施法时点，退出清除未播放队列并释放原生作用域。`scripts/test_battle_skill_graph_dispatch.ps1` 编译实际目录与调度类，以记录型作用域检查方向绑定／默认回退、结算后已死亡施法者、延迟／等时顺序、大帧时钟、收尾与释放；静态元数据检查、全工程 Unity 编译及 `ProjectTools.Validate` 通过。本检查不证明完整技能资源已导入或正式技能演出已接通：资源目录仍待完整生成，当前 `Skill` 参数／技能实体、目标位置、技能自身方向与单位方向的差异及显隐／主人宿主仍需按原实体生命周期接入并通过 Play Mode；未构建或发布 Windows Player。
 
+技能施放事件现保存 `FightBattleSkillCastPresentation`：在主技能、幻兽能量技、子技能、额外技能、普通／配置／状态触发及累计伤害触发执行前，捕获源／目标格点、目标实体、朝向、翻转及 `FlipSource`／`SkillTargetType`；执行后保存本次施法自己的持续和行动时长。后续命中、牵引、其他施法转向及步骤结算不会覆盖这些输入，检查点序列化保留快照。方向按原 `Pos2d.FourDirs` 的下／左／上／右索引转换到原生 Playable 字段，避免把执行器索引误作 `Common.Direction` 枚举。步骤结束等待各技能延迟加持续时长。延迟触发、牵引前后目标位置、范围子技能各自目标、时长与检查点恢复及结算后转向调度测试通过；全工程 Unity 编译和 `ProjectTools.Validate` 通过。这里只完成规则事件向原生表现传递输入，官方技能实体生命周期及实战技能图仍待后续接入与运行验证。
+
 场景行动条从公共表现上下文显式取得本场输出相机，覆盖 HUD 立即挂载及延迟挂载路径；不再依赖主城未设置的 `Camera.main`。原 `GameRoundScene` 的屏幕锚点转换、相机尺寸缩放和 prefab 坐标保持原计算，适配仅补足相机引用。位置回归在渲染帧末比较原 HUD 锚点与行动条实际投影，避免在 Cinemachine 本帧更新前读取旧位置。日常、竞技场和塔层的准备／播放投影检查均通过，已检查其实际画面；Windows Player 技能试打的行动条位置也已核对。
 
 Map12 私有日常副本通过 `BeginPrivateMapRoom` 显式传入同一表现上下文，公共模块接管地图相机与宿主场景／HUD 的隐藏和恢复；私图活动期间暂停地图镜头的 `LateUpdate`，避免地图跟随覆盖战斗取景。表现上下文支持额外的原生 HUD 根节点，主线及私图入口均显式传入独立 `WorldCanvas`，避免地图小地图／任务栏叠加到战斗 HUD。Map10 的独立 HUD 显隐及返回恢复断言也已通过。Map12 已通过模拟地图／路线输入、12102及四个后续房间、相机／角色／HUD 恢复与存档冷读，已查看完整450×800战斗和返回截图；具体范围见[山之国](../maps/map-12.md)。

@@ -649,6 +649,7 @@ namespace Zjcs.Combat.Official
                 BlockingTargetActionTypes = BlockingStatusActionTypes(
                     Int(skill, "HitTargetActionType")),
                 SkillTargetType = Int(skill, "SkillTargetType"),
+                FlipSource = Bool(skill, "FlipSource", true),
                 ElementType = Int(skill, "ElementType"),
                 NeedConditionStatusMeetToRelease = Bool(skill,
                     "NeedConditionStatusMeetToRelease"),

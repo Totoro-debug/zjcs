@@ -50,7 +50,7 @@ namespace Zjcs.Presentation.Combat
                 if (actor == null || source == null) continue;
                 int targetId = cast.TargetIds != null && cast.TargetIds.Count > 0
                     ? cast.TargetIds[0] : cast.ActorId;
-                string direction = ResolveDirection(actor.Direction);
+                string direction = ResolveDirection(cast.Presentation?.FacingIndex ?? actor.Direction);
                 GameObject prefab = catalog.Find(cast.SkillEntityId, direction);
                 if (prefab == null) continue;
                 var scheduled = new ScheduledCast
@@ -131,9 +131,10 @@ namespace Zjcs.Presentation.Combat
         {
             switch (direction)
             {
-                case 0: return "UpPlayablePrefab";
-                case 1: return "DownPlayablePrefab";
-                case 2: return "LeftPlayablePrefab";
+                // Combat directions index the original Pos2d.FourDirs list.
+                case 0: return "DownPlayablePrefab";
+                case 1: return "LeftPlayablePrefab";
+                case 2: return "UpPlayablePrefab";
                 case 3: return "RightPlayablePrefab";
                 default: return "myPlayablePrefab";
             }

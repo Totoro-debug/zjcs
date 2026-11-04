@@ -796,6 +796,7 @@ namespace Zjcs.Combat.Official
         public List<int> BlockingSourceActionTypes = new List<int>();
         public List<int> BlockingTargetActionTypes = new List<int>();
         public int SkillTargetType;
+        public bool FlipSource = true;
         public int ElementType;
         public bool NeedConditionStatusMeetToRelease;
         public int SummonCountLimit = -1;
@@ -1213,6 +1214,8 @@ namespace Zjcs.Combat.Official
     public sealed class FightBattleSkillCastEvent
     {
         public int ActorId;
+        // Captured before settling this cast: later hits/moves must not retarget its view.
+        public FightBattleSkillCastPresentation Presentation;
         // Start time relative to this step; Playable cue times are relative to this cast.
         public float Delay;
         public int Slot;

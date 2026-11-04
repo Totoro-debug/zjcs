@@ -50,9 +50,11 @@ function Battle($immediate = $false, $nested = $false, $restore = $false, $liste
     Assert-Timing ($casts.Count -eq 1 -and ($nested -or $hits.Count -gt 0)) "Delayed skill $entity did not execute"
     $offset = $(if ($immediate) { 0.0 } else { 1.0 })
     Assert-Timing ($casts[0].Delay -eq $offset) 'Configured delayed cast lost its start time'
+    Assert-Timing ($null -ne $casts[0].Presentation) 'Triggered cast lost its original skill-view input snapshot'
     if (-not $nested) {
         Assert-Timing ([Math]::Abs($hits[0].Delay - ($offset + 0.2)) -lt 0.00001) 'The trap hit lost its 0.2s delay relative to the delayed skill'
         Assert-Timing ([Math]::Abs($result.Event.Duration - ($offset + 0.7)) -lt 0.00001) 'The delayed skill lifetime lost or counted its trigger delay twice'
+        Assert-Timing ([Math]::Abs($casts[0].Presentation.Duration - 0.7) -lt 0.00001) 'Trigger delay was folded into the cast-local lifetime'
     }
     return $result
 }

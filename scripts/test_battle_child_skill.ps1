@@ -134,6 +134,8 @@ $multipleCasts = @($multiple.Event.SkillCasts | Where-Object { $_.SkillEntityId 
 $multipleDamage = @($multiple.Event.DamageEvents | Where-Object { $_.SkillEntityId -eq 11050 })
 Assert-Child ($multipleCasts.Count -eq 2 -and $multipleDamage.Count -eq 2) 'Area parent did not execute one child per original hit'
 Assert-Child ((($multipleDamage.TargetId | Sort-Object) -join ',') -eq '2,3') 'Child damage did not retain each original hit position'
+Assert-Child ((($multipleCasts.Presentation.TargetId | Sort-Object) -join ',') -eq '2,3') 'Area-hit children did not retain their distinct entity targets for playback'
+Assert-Child (@($multipleCasts | Where-Object { $null -eq $_.Presentation }).Count -eq 0) 'Child skill has no cast-time view snapshot'
 Assert-Child (@($multipleDamage | Where-Object { $_.SourceId -ne 1 }).Count -eq 0) 'Area child lost its original caster'
 
 # The original healing child keeps the caster's side and heals the original friendly hit target.
