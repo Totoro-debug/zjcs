@@ -198,7 +198,7 @@ def build():
     proof = dict(manifest=apk.version, native_receipt=identity(receipt_path), payload_catalog=identity(payload_catalog),
         generator=identity(Path(__file__).resolve()), verifier=identity(ROOT / "scripts/prepare_battle_game_animators.py"),
         graphs=graphs, original_duration_differences=duration_differences,
-        assets=list(records.values()), folder_metadata=[identity(path) for path in sorted(folders)],
+        assets=[records[key] for key in sorted(records)], folder_metadata=[identity(path) for path in sorted(folders)],
         outputs=[identity(path) for path in outputs], inputs=[identity(path) for path in inputs],
         operation="Copy exact converted original controllers and clip closure. Remap external asset GUIDs and metadata GUIDs only. Verify original parameter order/types/defaults, layers, default states, state speed/offset/mirror/write-defaults/IK, state motions, ordered transition conditions/targets/timings/interruption flags and clip durations against the compiled official assets.",
         binding="Combat/NativePartnerAnimators/catalog: explicit NPC ID to original native RuntimeAnimatorController.",

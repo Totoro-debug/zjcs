@@ -25,7 +25,10 @@ namespace Zjcs.Editor.ProfessionUI
                     new GameObject("Original partner Animator validation").AddComponent<PartnerNativeBattleAnimatorRunner>();
             };
         }
-        public static void Run()
+        public static bool BlendTreesOnly => SessionState.GetBool(Active + ".BlendTreesOnly", false);
+        public static void Run() => Prepare(false);
+        public static void RunBlendTrees() => Prepare(true);
+        private static void Prepare(bool blendTreesOnly)
         {
             string project = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
             string workspace = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
@@ -34,6 +37,7 @@ namespace Zjcs.Editor.ProfessionUI
                 throw new InvalidOperationException("Partner Animator validation requires its isolated project.");
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             OfficialPartnerNativeBattleDataValidation.ImportRuntimeTextures();
+            SessionState.SetBool(Active + ".BlendTreesOnly", blendTreesOnly);
             SessionState.SetBool(Active, true);
             EditorApplication.EnterPlaymode();
         }
@@ -41,8 +45,9 @@ namespace Zjcs.Editor.ProfessionUI
         {
             SessionState.SetBool(Active, false);
             if (error != null) Debug.LogException(error);
-            else Debug.Log("PARTNER_NATIVE_BATTLE_ANIMATORS_PASSED: exact original controller/clip bindings and selected native Mecanim poses. "
-                + "Blended-tree pose consumption, formal battle and Windows Player remain unvalidated.");
+            else Debug.Log(BlendTreesOnly
+                ? "PARTNER_NATIVE_BATTLE_BLEND_TREES_PASSED: original 11004/11014 two-motion MixNext poses, endpoints and intermediate weights. Formal battle and Windows Player remain unvalidated."
+                : "PARTNER_NATIVE_BATTLE_ANIMATORS_PASSED: exact original controller/clip bindings and selected native Mecanim poses. Blended-tree pose consumption, formal battle and Windows Player remain unvalidated.");
             EditorApplication.Exit(error == null ? 0 : 1);
         }
     }
@@ -68,6 +73,12 @@ namespace Zjcs.Editor.ProfessionUI
         }
         private IEnumerator Check()
         {
+            if (OfficialPartnerNativeBattleAnimatorAcceptance.BlendTreesOnly)
+            {
+                var steps = CheckBlendTrees();
+                while (steps.MoveNext()) yield return steps.Current;
+                yield break;
+            }
             var library = Resources.Load<PartnerNativeBattleAnimatorCatalog>("Combat/NativePartnerAnimators/catalog");
             if (!library || library.Entries.Count != 34 || library.Find(-1))
                 throw new InvalidDataException("Original partner Animator inventory differs.");
@@ -200,6 +211,95 @@ namespace Zjcs.Editor.ProfessionUI
                     Debug.Log("Original partner run transition: npc=" + id + ", sampled=30, mixed=" + mixedFrames);
                 }
                 finally { foreach (var actor in actors) actor.Dispose(); Destroy(root); }
+                yield return null;
+            }
+            Destroy(target); Destroy(pipeline);
+        }
+        private IEnumerator CheckBlendTrees()
+        {
+            var library = Resources.Load<PartnerNativeBattleAnimatorCatalog>("Combat/NativePartnerAnimators/catalog");
+            var catalog = Obj(OfficialEquipmentJson.Parse(File.ReadAllText(Root + "catalog.json")));
+            var pipeline = UniversalRenderPipelineAsset.Create(ScriptableObject.CreateInstance<Renderer2DData>());
+            GraphicsSettings.defaultRenderPipeline = pipeline; QualitySettings.renderPipeline = pipeline;
+            var camera = new GameObject("Original blend tree pose camera", typeof(Camera)).GetComponent<Camera>();
+            camera.orthographic = true; camera.clearFlags = CameraClearFlags.SolidColor;
+            camera.backgroundColor = new Color(.15f, .18f, .2f);
+            var target = new RenderTexture(768, 1365, 24); camera.targetTexture = target;
+            var light = new GameObject("Validation global 2D light", typeof(Light2D)).GetComponent<Light2D>();
+            light.lightType = Light2D.LightType.Global; light.intensity = 1; light.color = Color.white;
+            var shader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/PartnerNativeBattleValidation/OriginalSkeletonEffect.shader");
+            foreach (int id in new[] { 11004, 11014 })
+            {
+                var row = Arr(catalog["fighters"]).Select(Obj).Single(value => Convert.ToInt32(value["npcId"]) == id);
+                var root = new GameObject("Original two-motion partner " + id);
+                var actor = PartnerNativeBattlePoseRunner.CreateActor(row, root.transform, new Dictionary<string, Transform>(), shader);
+                try
+                {
+                    var data = actor.Skeleton.Source;
+                    var animator = actor.Transform.gameObject.AddComponent<Animator>();
+                    animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                    animator.runtimeAnimatorController = library.Find(id); animator.enabled = false;
+                    var controller = (AnimatorController)animator.runtimeAnimatorController;
+                    var tree = (BlendTree)controller.layers[0].stateMachine.states.Single(value => value.state.name == "Idle").state.motion;
+                    var pose = new ProfessionNativeAnimatorPose(animator, ProfessionNativeOrderedConstraintPose.EvaluateBeforePhysics,
+                        (skeleton, mix) => ProfessionNativeOrderedConstraintPose.EvaluateMixNextBeforePhysics(skeleton,
+                            mix.Outgoing.Animation, mix.Outgoing.Time, mix.Outgoing.Loop,
+                            mix.Incoming.Animation, mix.Incoming.Time, mix.Incoming.Loop, mix.Weight), allowPartnerBlendTrees: true);
+                    var reference = new ProfessionNativeAppearanceSkeleton(data);
+                    reference.SetSkin(data.CreateCombinedNpcSkin(Arr(row["skins"]).Select(value => (string)value).ToArray()));
+                    int checkedPositions = 0;
+                    var constrained = new HashSet<int>(data.Constraints.SelectMany(value =>
+                        value.Fields.TryGetValue("bones", out object names) ? Arr(names).Select(name => data.FindBone((string)name)) : Enumerable.Empty<int>()));
+                    foreach (float value in new[] { 0f, .25f, .5f, .75f, 1f })
+                    {
+                        animator.Rebind(); animator.SetFloat(tree.blendParameter, value);
+                        animator.Play(controller.layers[0].name + ".Idle", 0, .37f); animator.Update(0);
+                        if (value == .5f)
+                        {
+                            bool rejected = false;
+                            try { new ProfessionNativeAnimatorPose(animator, ProfessionNativeOrderedConstraintPose.EvaluateBeforePhysics).Apply(actor.Skeleton); }
+                            catch (NotSupportedException) { rejected = true; }
+                            if (!rejected) throw new InvalidDataException("The default native sampler accepted an unbound blend tree.");
+                        }
+                        var frame = pose.Apply(actor.Skeleton);
+                        if (frame.Incoming.HasValue)
+                        {
+                            var first = frame.Current; var second = frame.Incoming.Value;
+                            if (Mathf.Abs(frame.IncomingWeight - value) > .0001f)
+                                throw new InvalidDataException("Original partner blend tree changed Unity's motion weight.");
+                            reference.EvaluateNativeAnimation(first.Animation, first.Time, first.Loop);
+                            Vector2[] expected = Enumerable.Range(0, data.BoneCount).Select(reference.Pose.LocalPosition).ToArray();
+                            reference.EvaluateNativeAnimation(second.Animation, second.Time, second.Loop);
+                            foreach (var track in second.Animation.BoneTracks)
+                            {
+                                if ((track.Channel != 1 && track.Channel != 2) || constrained.Contains(track.Bone)
+                                    || !track.Curve.TryEvaluate(second.Time, out _)) continue;
+                                int axis = track.Channel - 1;
+                                float expectedPosition = Mathf.LerpUnclamped(expected[track.Bone][axis], reference.Pose.LocalPosition(track.Bone)[axis], value);
+                                if (Mathf.Abs(actor.Skeleton.Pose.LocalPosition(track.Bone)[axis] - expectedPosition) > .0001f)
+                                    throw new InvalidDataException("Original partner blend tree did not interpolate the authored local position.");
+                                checkedPositions++;
+                            }
+                        }
+                        else
+                        {
+                            ProfessionNativeOrderedConstraintPose.EvaluateBeforePhysics(reference, frame.Current.Animation, frame.Current.Time, frame.Current.Loop);
+                            for (int bone = 0; bone < data.BoneCount; bone++)
+                                for (int element = 0; element < 16; element++)
+                                    if (Mathf.Abs(reference.Pose.World(bone)[element] - actor.Skeleton.Pose.World(bone)[element]) > .0001f)
+                                        throw new InvalidDataException("An original partner blend endpoint differs from its single motion.");
+                        }
+                        PartnerNativeBattlePoseRunner.Draw(actor);
+                        Bounds bounds = PartnerNativeBattlePoseRunner.VisibleBounds(new[] { actor });
+                        camera.transform.position = new Vector3(bounds.center.x, bounds.center.y, bounds.min.z - 10);
+                        camera.orthographicSize = Mathf.Max(bounds.extents.y, bounds.extents.x / camera.aspect) * 1.12f;
+                        yield return null;
+                        PartnerNativeBattlePoseRunner.Capture(camera, target, "blend-" + id + "-" + value.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture));
+                    }
+                    if (checkedPositions == 0) throw new InvalidDataException("Original partner blend test checked no keyed local positions.");
+                    Debug.Log("Original two-motion blend tree: npc=" + id + ", positions=" + checkedPositions + ", weights=0,0.25,0.5,0.75,1");
+                }
+                finally { actor.Dispose(); Destroy(root); }
                 yield return null;
             }
             Destroy(target); Destroy(pipeline);
