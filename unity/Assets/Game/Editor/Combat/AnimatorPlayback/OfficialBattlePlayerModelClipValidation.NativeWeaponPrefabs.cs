@@ -87,6 +87,8 @@ namespace Zjcs.Editor.Combat
                             for (int frame = 0; frame < 8; frame++) yield return null;
                             Require(NativeWeaponClock(renderer) > 0, "native weapon physical clock advances: " + row.name);
                             CheckNativeWeaponPose(renderer, row.name);
+                            if (SessionState.GetBool(Key + ".weapon-host-motion", false))
+                                yield return CheckWeaponHostMovement(body, renderer, row.name);
                             if (row.z_spacing != 0)
                                 Require(renderer.GetComponentsInChildren<MeshFilter>(true).Where(f => f.sharedMesh)
                                     .SelectMany(f => f.sharedMesh.vertices).Any(v => Mathf.Abs(v.z) > .00001f),

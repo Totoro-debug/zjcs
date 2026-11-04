@@ -39,6 +39,21 @@ namespace Zjcs.Offline.ProfessionUI
 
         public float PhysicsTime => clock;
 
+        public void Translate(float x, float y)
+        {
+            if (float.IsNaN(x) || float.IsInfinity(x) || float.IsNaN(y) || float.IsInfinity(y))
+                throw new ArgumentOutOfRangeException(nameof(x));
+            foreach (var history in histories.Values) history.Solver.Translate(x, y);
+        }
+
+        public void Rotate(float x, float y, float degrees)
+        {
+            if (float.IsNaN(x) || float.IsInfinity(x) || float.IsNaN(y) || float.IsInfinity(y)
+                || float.IsNaN(degrees) || float.IsInfinity(degrees))
+                throw new ArgumentOutOfRangeException(nameof(degrees));
+            foreach (var history in histories.Values) history.Solver.Rotate(x, y, degrees);
+        }
+
         public void Apply(ProfessionNativeAppearanceSkeleton skeleton, ProfessionNativeAnimationChannels channels,
             float animationTime, bool loop, float deltaTime)
             => Apply(skeleton, channels, animationTime, loop, deltaTime, true);

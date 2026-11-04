@@ -28,6 +28,15 @@ namespace Zjcs.Offline.ProfessionUI
         public int UpdateWhenInvisible => Int(skeleton, "updateWhenInvisible");
         public string InitialAnimation => (string)skeleton["_animationName"];
         public bool Loop => Flag(skeleton, "loop");
+        public Vector2 PhysicsPositionInheritanceFactor
+        {
+            get
+            {
+                var value = Obj(skeleton["physicsPositionInheritanceFactor"]);
+                return new Vector2(Convert.ToSingle(value["x"]), Convert.ToSingle(value["y"]));
+            }
+        }
+        public float PhysicsRotationInheritanceFactor => Convert.ToSingle(skeleton["physicsRotationInheritanceFactor"]);
 
         public static ProfessionNativeSceneRendererSettings Load(TextAsset source)
             => Load(source, null, "Spine.Unity.SkeletonMecanim", 0, false);
@@ -39,6 +48,13 @@ namespace Zjcs.Offline.ProfessionUI
                 || Int(result.skeleton, "updateTiming") != 1 || Flag(result.skeleton, "unscaledTime")
                 || result.UpdateWhenInvisible != 0)
                 throw new NotSupportedException("Bind additional original independent weapon clock settings before drawing.");
+            var reference = Obj(result.skeleton["physicsMovementRelativeTo"]);
+            if (Convert.ToInt64(reference["m_PathID"]) != 0 || Convert.ToInt32(reference["m_FileID"]) != 0)
+                throw new NotSupportedException("Bind the original weapon's relative physics reference transform.");
+            var factor = result.PhysicsPositionInheritanceFactor;
+            if (float.IsNaN(factor.x) || float.IsInfinity(factor.x) || float.IsNaN(factor.y) || float.IsInfinity(factor.y)
+                || float.IsNaN(result.PhysicsRotationInheritanceFactor) || float.IsInfinity(result.PhysicsRotationInheritanceFactor))
+                throw new InvalidOperationException("Nonfinite original physics inheritance factor.");
             return result;
         }
 

@@ -28,6 +28,7 @@ namespace Zjcs.Editor.Combat
             SessionState.SetBool(Key + ".weapon-bones", false);
             SessionState.SetBool(Key + ".weapon-low", false);
             SessionState.SetBool(Key + ".weapon-prefabs", false);
+            SessionState.SetBool(Key + ".weapon-host-motion", false);
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             Type.GetType("Zjcs.Editor.ProjectTools, Zjcs.Editor", true).GetMethod("Validate").Invoke(null, null);
             if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR")))

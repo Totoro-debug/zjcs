@@ -32,6 +32,26 @@ namespace Zjcs.Offline.ProfessionUI
             initialized = true;
         }
 
+        // An external movement changes the previous pivot positions. It does
+        // not advance time or overwrite the spring's displacement/velocities.
+        public void Translate(float x, float y)
+        {
+            Finite(x); Finite(y);
+            if (!initialized) return;
+            previousX -= x; previousY -= y;
+            physicalX -= x; physicalY -= y;
+        }
+
+        public void Rotate(float x, float y, float degrees)
+        {
+            Finite(x); Finite(y); Finite(degrees);
+            if (!initialized) return;
+            float radians = degrees * (float)(Math.PI / 180);
+            float cosine = (float)Math.Cos(radians), sine = (float)Math.Sin(radians);
+            float dx = physicalX - x, dy = physicalY - y;
+            Translate(dx * cosine - dy * sine - dx, dx * sine + dy * cosine - dy);
+        }
+
         public Affine Evaluate(Affine pose, Parameters parameters, float time)
         {
             if (!initialized) throw new InvalidOperationException("Bind the initial original world pose before advancing physics.");

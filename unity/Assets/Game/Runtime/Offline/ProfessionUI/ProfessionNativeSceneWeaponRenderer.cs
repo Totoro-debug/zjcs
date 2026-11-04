@@ -18,6 +18,7 @@ namespace Zjcs.Offline.ProfessionUI
         private ProfessionNativeMeshBatches batches;
         private IProfessionNativeSceneWeaponPoseProducer poses;
         private ProfessionNativeSceneWeaponPlayback playback;
+        private readonly ProfessionNativeScenePhysicsMovement movement = new ProfessionNativeScenePhysicsMovement();
         private bool fieldsApplied;
         public ProfessionNativeAppearanceSkeleton State { get; private set; }
         public Component Component => this;
@@ -65,6 +66,7 @@ namespace Zjcs.Offline.ProfessionUI
             // replaces them; otherwise the next frame draws placeholder art.
             ClearGeometry();
             State = next; settings = nextSettings;
+            movement.Reset(transform);
             batches = new ProfessionNativeMeshBatches(next.SlotCount);
             if (!fieldsApplied) { settings.Apply(Main.MeshRenderer); fieldsApplied = true; }
             Main.MeshRenderer.enabled = settings.Enabled;
@@ -126,7 +128,11 @@ namespace Zjcs.Offline.ProfessionUI
         private void Update()
         {
             if (State != null && playback != null && UpdateMode != 0)
+            {
+                movement.Apply(transform, State.Source.DataScale, settings.PhysicsPositionInheritanceFactor,
+                    settings.PhysicsRotationInheritanceFactor, playback.Translate, playback.Rotate);
                 playback.Advance(Time.deltaTime);
+            }
         }
         private void LateUpdate() { if (State != null) UpdateAnimationAndMesh(); }
         public void Release()
@@ -138,6 +144,7 @@ namespace Zjcs.Offline.ProfessionUI
         private void ClearGeometry()
         {
             batches?.Dispose(); batches = null; State = null; settings = null;
+            movement.Reset();
             var main = Main;
             // Keep an initialized renderer in its existing sorting group while
             // replacing geometry. Only an explicit release retires the draw.

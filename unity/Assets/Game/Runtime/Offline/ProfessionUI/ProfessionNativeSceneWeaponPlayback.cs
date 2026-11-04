@@ -17,6 +17,9 @@ namespace Zjcs.Offline.ProfessionUI
         public float PhysicsTime => physics?.PhysicsTime ?? 0;
         public event Action<ProfessionNativeAppearanceSkeleton> UpdateLocal, UpdateComplete;
 
+        public void Translate(float x, float y) => physics?.Translate(x, y);
+        public void Rotate(float x, float y, float degrees) => physics?.Rotate(x, y, degrees);
+
         private void ApplyPose(bool updatePhysics, float delta)
             => physics.Apply(state, animation, time, false, delta, updatePhysics,
                 () => UpdateLocal?.Invoke(state), () => UpdateComplete?.Invoke(state));
