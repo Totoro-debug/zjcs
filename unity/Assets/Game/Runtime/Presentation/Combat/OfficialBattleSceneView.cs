@@ -1266,6 +1266,15 @@ namespace Zjcs.Presentation.Combat
                     return npcView;
                 }
             }
+            var liveMonster = OfficialBattleLiveMonsterModelView.TryCreate(state, root);
+            if (liveMonster != null)
+            {
+                var liveView = new UnitView { State = state, NativeModel = liveMonster };
+                PlayAnimation(liveView, "idle_01", true);
+                liveView.Hud = OfficialBattleUnitWorldHudView.Create(hudCatalog, state, liveMonster.Transform);
+                units.Add(state.Id, liveView);
+                return liveView;
+            }
             if (nativeModelLibrary != null)
             {
                 string nativeKey = nativeModelLibrary.ResolveModelKey(state);
