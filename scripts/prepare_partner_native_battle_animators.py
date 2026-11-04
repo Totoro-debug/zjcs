@@ -61,6 +61,27 @@ def key_times(value):
             yield from key_times(child)
 
 
+def verify_constant_timelines(value):
+    if isinstance(value, dict):
+        if "time" in value:
+            raise ValueError("Unbound standalone motion key")
+        for child in value.values():
+            verify_constant_timelines(child)
+    elif isinstance(value, list) and value:
+        if isinstance(value[0], dict):
+            first = value[0]
+            if first.get("time", 0) != 0:
+                raise ValueError("Original static timeline starts after zero")
+            fields = lambda row: {key: child for key, child in row.items() if key not in ("time", "curve")}
+            for previous, following in zip(value, value[1:]):
+                if previous.get("curve") not in (None, "stepped") or fields(first) != fields(following):
+                    raise ValueError("Original zero-length carrier has a changing skeleton pose")
+            verify_constant_timelines(fields(first))
+        else:
+            for child in value:
+                verify_constant_timelines(child)
+
+
 def build():
     apk = Apk.current()
     if apk.version != "884_156692":
@@ -145,8 +166,13 @@ def build():
                 if abs(settings["m_StopTime"] - duration) > 1 / 30 + .00001:
                     if (npc_id, fields["m_Name"], settings["m_StopTime"], duration) != (11033, "200/die_02", 0, .3333333432674408):
                         raise ValueError("Review additional original clip/skeleton duration difference: " + relative)
+                    animation = animations[fields["m_Name"]]
+                    if "events" in animation:
+                        raise ValueError("Review original zero-duration motion events")
+                    verify_constant_timelines(animation)
                     duration_differences.append(dict(npc_id=npc_id, animation=fields["m_Name"],
-                        original_clip_stop=settings["m_StopTime"], original_skeleton_duration=duration))
+                        original_clip_stop=settings["m_StopTime"], original_skeleton_duration=duration,
+                        constant_pose=True, runtime_clock="Original zero-length carrier samples the unchanged skeleton pose at zero."))
             remap = {key: sha(("zjcs:partner-battle-animator:" + target.relative_to(
                         export / "ExportedProject/Assets/AppearanceAssets/Npc").as_posix()).encode())[:32]
                      for key, target in by_guid.items() if target in closure}
@@ -203,7 +229,7 @@ def build():
         operation="Copy exact converted original controllers and clip closure. Remap external asset GUIDs and metadata GUIDs only. Verify original parameter order/types/defaults, layers, default states, state speed/offset/mirror/write-defaults/IK, state motions, ordered transition conditions/targets/timings/interruption flags and clip durations against the compiled official assets.",
         binding="Combat/NativePartnerAnimators/catalog: explicit NPC ID to original native RuntimeAnimatorController.",
         limitations=["Assets require the independent native skeleton/Mecanim pose consumer. This catalog alone does not enable formal combat candidates.",
-            "Original 11033 200/die_02 carrier clip has zero duration while its skeleton keys end at 0.3333333432674408 seconds. Preserve both source assets; native playback of this original mismatch remains unbound."])
+            "Original 11033 200/die_02 carrier clip has zero duration while its skeleton keys end at 0.3333333432674408 seconds. Every channel is constant; preserve both source assets and the zero carrier clock. Formal battle playback remains unvalidated."])
     path = ROOT / "assets/reference/partner-native-battle-animators-source-manifest.json"
     path.write_text(json.dumps(proof, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     print("Recovered", len(entries), "partner controllers and", len(records) - len(entries), "original clips.")

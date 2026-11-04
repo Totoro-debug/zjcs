@@ -25,10 +25,12 @@ namespace Zjcs.Editor.ProfessionUI
                     new GameObject("Original partner Animator validation").AddComponent<PartnerNativeBattleAnimatorRunner>();
             };
         }
-        public static bool BlendTreesOnly => SessionState.GetBool(Active + ".BlendTreesOnly", false);
-        public static void Run() => Prepare(false);
-        public static void RunBlendTrees() => Prepare(true);
-        private static void Prepare(bool blendTreesOnly)
+        public static bool BlendTreesOnly => SessionState.GetInt(Active + ".Mode", 0) == 1;
+        public static bool StaticPoseOnly => SessionState.GetInt(Active + ".Mode", 0) == 2;
+        public static void Run() => Prepare(0);
+        public static void RunBlendTrees() => Prepare(1);
+        public static void RunStaticPose() => Prepare(2);
+        private static void Prepare(int mode)
         {
             string project = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
             string workspace = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR");
@@ -37,7 +39,7 @@ namespace Zjcs.Editor.ProfessionUI
                 throw new InvalidOperationException("Partner Animator validation requires its isolated project.");
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             OfficialPartnerNativeBattleDataValidation.ImportRuntimeTextures();
-            SessionState.SetBool(Active + ".BlendTreesOnly", blendTreesOnly);
+            SessionState.SetInt(Active + ".Mode", mode);
             SessionState.SetBool(Active, true);
             EditorApplication.EnterPlaymode();
         }
@@ -45,7 +47,9 @@ namespace Zjcs.Editor.ProfessionUI
         {
             SessionState.SetBool(Active, false);
             if (error != null) Debug.LogException(error);
-            else Debug.Log(BlendTreesOnly
+            else Debug.Log(StaticPoseOnly
+                ? "PARTNER_NATIVE_STATIC_MOTION_PASSED: original zero-length 11033 death carrier preserves its constant skeleton pose and rejects unrelated duration mismatches. Formal battle and Windows Player remain unvalidated."
+                : BlendTreesOnly
                 ? "PARTNER_NATIVE_BATTLE_BLEND_TREES_PASSED: original 11004/11014 two-motion MixNext poses, endpoints and intermediate weights. Formal battle and Windows Player remain unvalidated."
                 : "PARTNER_NATIVE_BATTLE_ANIMATORS_PASSED: exact original controller/clip bindings and selected native Mecanim poses. Blended-tree pose consumption, formal battle and Windows Player remain unvalidated.");
             EditorApplication.Exit(error == null ? 0 : 1);
@@ -73,6 +77,12 @@ namespace Zjcs.Editor.ProfessionUI
         }
         private IEnumerator Check()
         {
+            if (OfficialPartnerNativeBattleAnimatorAcceptance.StaticPoseOnly)
+            {
+                var steps = CheckStaticPose();
+                while (steps.MoveNext()) yield return steps.Current;
+                yield break;
+            }
             if (OfficialPartnerNativeBattleAnimatorAcceptance.BlendTreesOnly)
             {
                 var steps = CheckBlendTrees();
@@ -100,7 +110,7 @@ namespace Zjcs.Editor.ProfessionUI
                             || Mathf.Abs(channels.Duration - .3333333432674408f) > .000001f)
                             throw new InvalidDataException("Original partner clip/skeleton duration differs: " + entry.NpcId + "/" + clip.name);
                         Debug.Log("Preserved original 11033/200/die_02: carrier length=0, skeleton duration=" + channels.Duration
-                            + "; native pose consumption of this source mismatch remains unbound.");
+                            + "; constant-pose zero-clock consumption is checked by RunStaticPose.");
                     }
                     clips++;
                 }
@@ -303,6 +313,69 @@ namespace Zjcs.Editor.ProfessionUI
                 yield return null;
             }
             Destroy(target); Destroy(pipeline);
+        }
+
+        private IEnumerator CheckStaticPose()
+        {
+            var library = Resources.Load<PartnerNativeBattleAnimatorCatalog>("Combat/NativePartnerAnimators/catalog");
+            var catalog = Obj(OfficialEquipmentJson.Parse(File.ReadAllText(Root + "catalog.json")));
+            var row = Arr(catalog["fighters"]).Select(Obj).Single(value => Convert.ToInt32(value["npcId"]) == 11033);
+            var pipeline = UniversalRenderPipelineAsset.Create(ScriptableObject.CreateInstance<Renderer2DData>());
+            GraphicsSettings.defaultRenderPipeline = pipeline; QualitySettings.renderPipeline = pipeline;
+            var camera = new GameObject("Original static death camera", typeof(Camera)).GetComponent<Camera>();
+            camera.orthographic = true; camera.clearFlags = CameraClearFlags.SolidColor;
+            camera.backgroundColor = new Color(.15f, .18f, .2f);
+            var target = new RenderTexture(768, 1365, 24); camera.targetTexture = target;
+            var light = new GameObject("Validation global 2D light", typeof(Light2D)).GetComponent<Light2D>();
+            light.lightType = Light2D.LightType.Global; light.intensity = 1; light.color = Color.white;
+            var shader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/PartnerNativeBattleValidation/OriginalSkeletonEffect.shader");
+            var root = new GameObject("Original static death partner");
+            var actor = PartnerNativeBattlePoseRunner.CreateActor(row, root.transform, new Dictionary<string, Transform>(), shader);
+            try
+            {
+                var animator = actor.Transform.gameObject.AddComponent<Animator>();
+                animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                animator.runtimeAnimatorController = library.Find(11033); animator.enabled = false;
+                var controller = (AnimatorController)animator.runtimeAnimatorController;
+                var pose = new ProfessionNativeAnimatorPose(animator, ProfessionNativeOrderedConstraintPose.EvaluateBeforePhysics);
+                var channels = new ProfessionNativeAnimationChannels(actor.Skeleton.Source, "200/die_02");
+                var reference = new ProfessionNativeAppearanceSkeleton(actor.Skeleton.Source);
+                reference.SetSkin(actor.Skeleton.Source.CreateCombinedNpcSkin(Arr(row["skins"]).Select(value => (string)value).ToArray()));
+                animator.Rebind(); animator.SetBool("immediately_die", true);
+                animator.Play(controller.layers[0].name + ".immediately_die", 0, 0); animator.Update(0);
+                foreach (float elapsed in new[] { 0f, .1f, .333333343f, 1f })
+                {
+                    animator.Update(elapsed);
+                    var frame = pose.Apply(actor.Skeleton);
+                    if (frame.Current.Clip.length != 0 || frame.Current.MotionTime != 0 || frame.Current.Time != 0)
+                        throw new InvalidDataException("Original zero-length death carrier acquired an invented clock.");
+                    ProfessionNativeOrderedConstraintPose.EvaluateBeforePhysics(reference, channels, elapsed, false);
+                    for (int bone = 0; bone < reference.Pose.Count; bone++)
+                        for (int element = 0; element < 16; element++)
+                            if (Mathf.Abs(reference.Pose.World(bone)[element] - actor.Skeleton.Pose.World(bone)[element]) > .0001f)
+                                throw new InvalidDataException("Original zero-length death differs from the authored constant pose.");
+                    PartnerNativeBattlePoseRunner.Draw(actor);
+                    Bounds bounds = PartnerNativeBattlePoseRunner.VisibleBounds(new[] { actor });
+                    camera.transform.position = new Vector3(bounds.center.x, bounds.center.y, bounds.min.z - 10);
+                    camera.orthographicSize = Mathf.Max(bounds.extents.y, bounds.extents.x / camera.aspect) * 1.12f;
+                    yield return null;
+                    PartnerNativeBattlePoseRunner.Capture(camera, target, "static-death-" + elapsed.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture));
+                }
+                var invalid = new AnimationClip { name = "200/idle_01" };
+                var overridden = new AnimatorOverrideController(controller);
+                try
+                {
+                    overridden["200/idle_01"] = invalid; animator.runtimeAnimatorController = overridden;
+                    animator.Rebind(); animator.SetBool("immediately_die", false);
+                    animator.Play(controller.layers[0].name + ".Idle", 0, .5f); animator.Update(0);
+                    bool rejected = false;
+                    try { pose.Apply(actor.Skeleton); }
+                    catch (InvalidOperationException) { rejected = true; }
+                    if (!rejected) throw new InvalidDataException("A different duration mismatch bypassed the native binding guard.");
+                }
+                finally { animator.runtimeAnimatorController = controller; Destroy(overridden); Destroy(invalid); }
+            }
+            finally { actor.Dispose(); Destroy(root); Destroy(target); Destroy(pipeline); }
         }
         private static Dictionary<string, object> Obj(object value) => (Dictionary<string, object>)value;
         private static List<object> Arr(object value) => (List<object>)value;

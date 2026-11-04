@@ -156,18 +156,75 @@ namespace Zjcs.Offline.ProfessionUI
                 animation = new ProfessionNativeAnimationChannels(source, clip.name);
                 channels.Add(clip.name, animation);
             }
-            float time = state.normalizedTime * clip.length;
-            if (float.IsNaN(time) || float.IsInfinity(time)) throw new InvalidOperationException("Animator motion time is not finite.");
-            float motionTime = time;
             // Original name-carrier clips retain their animation duration. A
             // mismatched binding must be restored, never stretched to fit.
-            if (Mathf.Abs(clip.length - animation.Duration) > 1f / 30f + .00001f)
+            bool mismatch = Mathf.Abs(clip.length - animation.Duration) > 1f / 30f + .00001f;
+            bool staticOriginal = mismatch && IsStaticOriginalPartnerMotion(skeleton, clip, animation);
+            if (mismatch && !staticOriginal)
                 throw new InvalidOperationException("Original Animator and skeleton motion durations differ: " + clip.name);
+            float time = staticOriginal ? 0 : state.normalizedTime * clip.length;
+            if (float.IsNaN(time) || float.IsInfinity(time)) throw new InvalidOperationException("Animator motion time is not finite.");
+            float motionTime = time;
             time = state.loop && animation.Duration > 0
                 ? time - Mathf.Floor(time / animation.Duration) * animation.Duration
                 : Mathf.Clamp(time, 0, animation.Duration);
             return new Frame(clip, animation, time, motionTime, state.loop,
                 animator.speed * state.speed * state.speedMultiplier < 0);
+        }
+
+        // The original 11033 death carrier is zero-length. Its only later key
+        // repeats the first value after a stepped segment; every other channel
+        // starts with one key at zero. Sampling at zero preserves that complete
+        // constant pose without changing either original duration or clock.
+        private static bool IsStaticOriginalPartnerMotion(ProfessionNativeAppearanceSkeleton skeleton,
+            AnimationClip clip, ProfessionNativeAnimationChannels animation)
+        {
+            if (skeleton.Source.Manifest != "884_156692" || skeleton.Source.Sex != "partner-battle:11033"
+                || clip.name != "200/die_02" || clip.length != 0
+                || Mathf.Abs(animation.Duration - .3333333432674408f) > .000001f
+                || animation.OriginalFields.ContainsKey("events")) return false;
+            return ConstantTimelines(animation.OriginalFields);
+        }
+
+        private static bool ConstantTimelines(object value)
+        {
+            if (value is IReadOnlyDictionary<string, object> map)
+            {
+                foreach (var pair in map)
+                    if (pair.Key == "time" || !ConstantTimelines(pair.Value)) return false;
+            }
+            else if (value is List<object> list && list.Count > 0)
+            {
+                if (list[0] is IReadOnlyDictionary<string, object> first)
+                {
+                    if (first.TryGetValue("time", out object start) && Convert.ToDouble(start) != 0) return false;
+                    var previous = first;
+                    for (int index = 1; index < list.Count; index++)
+                    {
+                        if (list[index] is not IReadOnlyDictionary<string, object> next
+                            || !SameFrameValues(first, next)
+                            || (previous.TryGetValue("curve", out object curve) && !Equals(curve, "stepped"))) return false;
+                        previous = next;
+                    }
+                    foreach (var pair in first)
+                        if (pair.Key != "time" && pair.Key != "curve" && !ConstantTimelines(pair.Value)) return false;
+                }
+                else foreach (object child in list) if (!ConstantTimelines(child)) return false;
+            }
+            return true;
+        }
+
+        private static bool SameFrameValues(IReadOnlyDictionary<string, object> first, IReadOnlyDictionary<string, object> next)
+        {
+            int firstCount = 0, nextCount = 0;
+            foreach (var pair in first)
+            {
+                if (pair.Key == "time" || pair.Key == "curve") continue;
+                firstCount++;
+                if (!next.TryGetValue(pair.Key, out object value) || !Equals(pair.Value, value)) return false;
+            }
+            foreach (var pair in next) if (pair.Key != "time" && pair.Key != "curve") nextCount++;
+            return firstCount == nextCount;
         }
     }
 }

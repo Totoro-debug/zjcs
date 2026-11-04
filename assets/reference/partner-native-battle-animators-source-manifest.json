@@ -10,7 +10,7 @@
   },
   "generator": {
     "path": "scripts/prepare_partner_native_battle_animators.py",
-    "sha256": "5013b1657f4c03030da44129a0a07a64d313f3591fa0f6b469ed410d4f51c0a7"
+    "sha256": "6c92d5bc076d18250f8a342aed702487c6069efde9dd0bd48f14cacf7b54b170"
   },
   "verifier": {
     "path": "scripts/prepare_battle_game_animators.py",
@@ -3006,7 +3006,9 @@
       "npc_id": 11033,
       "animation": "200/die_02",
       "original_clip_stop": 0,
-      "original_skeleton_duration": 0.3333333432674408
+      "original_skeleton_duration": 0.3333333432674408,
+      "constant_pose": true,
+      "runtime_clock": "Original zero-length carrier samples the unchanged skeleton pose at zero."
     }
   ],
   "assets": [
@@ -19636,7 +19638,7 @@
   "inputs": [
     {
       "path": "unity/Assets/Game/Editor/ProfessionUI/OfficialPartnerNativeBattleAnimatorAcceptance.cs",
-      "sha256": "a9b9759e3d7da553ac3af0e26c45508fad77a2f270341d3d67850c21b162217b"
+      "sha256": "3a0dcdd6138d75969e6cb63fcd1fcd90c7990d1027b4d49da08965ab96e10cc8"
     },
     {
       "path": "unity/Assets/Game/Editor/ProfessionUI/OfficialPartnerNativeBattleAnimatorAcceptance.cs.meta",
@@ -19656,13 +19658,13 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAnimatorPose.cs",
-      "sha256": "19804fc0bc5bcacf639f1b34c0dfd12d99c34d56f990085cd326cf01f3adedf2"
+      "sha256": "65bae51beb6fd42b57f1a7710f7099f95a7fbab6e521d6b3bd86aac627bf5b53"
     }
   ],
   "operation": "Copy exact converted original controllers and clip closure. Remap external asset GUIDs and metadata GUIDs only. Verify original parameter order/types/defaults, layers, default states, state speed/offset/mirror/write-defaults/IK, state motions, ordered transition conditions/targets/timings/interruption flags and clip durations against the compiled official assets.",
   "binding": "Combat/NativePartnerAnimators/catalog: explicit NPC ID to original native RuntimeAnimatorController.",
   "limitations": [
     "Assets require the independent native skeleton/Mecanim pose consumer. This catalog alone does not enable formal combat candidates.",
-    "Original 11033 200/die_02 carrier clip has zero duration while its skeleton keys end at 0.3333333432674408 seconds. Preserve both source assets; native playback of this original mismatch remains unbound."
+    "Original 11033 200/die_02 carrier clip has zero duration while its skeleton keys end at 0.3333333432674408 seconds. Every channel is constant; preserve both source assets and the zero carrier clock. Formal battle playback remains unvalidated."
   ]
 }
